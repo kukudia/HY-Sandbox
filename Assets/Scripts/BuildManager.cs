@@ -15,6 +15,13 @@ public class BuildManager : MonoBehaviour
     public Button redoButton;
     public Button deleteButton;
     public bool isBuilding;
+
+    public GameObject currentGhost;        // 当前的 ghost 实例
+
+    public string currentBlockResourcePath;
+
+    public Connector hoveredConnector;     // 鼠标当前指向的连接点
+
     private Material originalMaterial;
     private Renderer selectedRenderer;
 
@@ -27,7 +34,6 @@ public class BuildManager : MonoBehaviour
     // 历史记录
     private Stack<IBlockAction> undoStack = new Stack<IBlockAction>();
     private Stack<IBlockAction> redoStack = new Stack<IBlockAction>();
-
 
     private string savePath => Path.Combine(Application.persistentDataPath, "blocks.json");
 
@@ -52,29 +58,40 @@ public class BuildManager : MonoBehaviour
         {
             isBuilding = !isBuilding;
             Cursor.lockState = isBuilding ? CursorLockMode.Confined : CursorLockMode.Locked;
+
+            if (!isBuilding && currentGhost != null)
+            {
+                Destroy(currentGhost);
+                hoveredConnector = null;
+            }
         }
 
-        // 撤销 (Ctrl+Z)
-        if (Keyboard.current.leftCtrlKey.isPressed && Keyboard.current.zKey.wasPressedThisFrame)
+        if (isBuilding)
         {
-            UndoAction();
+            if (currentBlockResourcePath == string.Empty)
+            {
+                if (currentGhost != null)
+                {
+                    Destroy(currentGhost);
+                    hoveredConnector = null;
+                }
+                HandleSelection();
+                HandleMovement();
+            }
+            else
+            {
+                HandleBuildingPreview();
+            }
         }
 
-        // 重做 (Ctrl+Y)
-        if (Keyboard.current.leftCtrlKey.isPressed && Keyboard.current.yKey.wasPressedThisFrame)
-        {
-            RedoAction();
-        }
+        // 撤销重做
+        if (Keyboard.current.leftCtrlKey.isPressed && Keyboard.current.zKey.wasPressedThisFrame) UndoAction();
+        if (Keyboard.current.leftCtrlKey.isPressed && Keyboard.current.yKey.wasPressedThisFrame) RedoAction();
 
-        // 删除选中的方块
-        if (selectedBlock != null && Keyboard.current.deleteKey.wasPressedThisFrame)
-        {
-            DeleteBlock();
-        }
-
-        HandleSelection();
-        HandleMovement();
+        // 删除
+        if (selectedBlock != null && Keyboard.current.deleteKey.wasPressedThisFrame) DeleteBlock();
     }
+
 
     void HandleSelection()
     {
@@ -157,6 +174,8 @@ public class BuildManager : MonoBehaviour
         if (Keyboard.current.eKey.wasPressedThisFrame) moveDir += camUp;
         if (Keyboard.current.qKey.wasPressedThisFrame) moveDir -= camUp;
 
+        //Debug.Log($"{camForward} {camRight} {camUp}");
+
         if (moveDir != Vector3.zero)
         {
             Vector3 oldPos = selectedBlock.transform.position;
@@ -184,9 +203,96 @@ public class BuildManager : MonoBehaviour
         }
     }
 
-    public void CreateBlock(string resourcePath, Vector3 pos, Quaternion rot)
+    void HandleBuildingPreview()
     {
-        GameObject prefab = Resources.Load<GameObject>(resourcePath);
+        // 目标预制体
+        GameObject prefab = Resources.Load<GameObject>(currentBlockResourcePath);
+        Block prefabBlock = prefab.GetComponent<Block>();
+
+        Vector3 rawPos = Vector3.zero;
+        Vector3 snappedPos = Vector3.zero;
+
+        Vector2 mousePos = Mouse.current.position.ReadValue();
+        Ray ray = mainCamera.ScreenPointToRay(mousePos);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f, blockLayer))
+        {
+            Block block = hit.collider.GetComponentInParent<Block>();
+            if (block != null)
+            {
+                // 找最近的 connector
+                float minDist = float.MaxValue;
+                Connector nearest = null;
+                Vector3 nearestWorldPos = Vector3.zero;
+                Vector3 nearestNormal = Vector3.zero;
+
+                foreach (var c in block.connectors)
+                {
+                    if (!c.canConnect) continue;
+
+                    Vector3 worldPos = block.transform.TransformPoint(c.localPos);
+                    float dist = Vector3.Distance(hit.point, worldPos);
+                    if (dist < minDist)
+                    {
+                        minDist = dist;
+                        nearest = c;
+                        nearestWorldPos = worldPos;
+                        nearestNormal = block.transform.TransformDirection(c.normal);
+                    }
+                }
+
+                if (nearest != null)
+                {
+                    hoveredConnector = nearest;
+
+                    // 生成或更新 Ghost
+                    if (currentGhost == null)
+                    {
+                        currentGhost = Instantiate(prefab.transform.Find("Model").gameObject);
+                    }
+
+                    // 计算 Snap 后的位置
+                    rawPos = nearestWorldPos + nearestNormal * 0.5f;
+                    snappedPos = SnapCenterByMinCorner(rawPos, prefabBlock);
+
+                    currentGhost.transform.position = snappedPos;
+                    currentGhost.transform.rotation = Quaternion.LookRotation(nearestNormal);
+                }
+            }
+        }
+        else
+        {
+            if (currentGhost != null)
+            {
+                Destroy(currentGhost);
+                hoveredConnector = null;
+            }
+        }
+
+        if (currentGhost != null)
+        {
+            bool isBlocked = IsBlocked(snappedPos, prefabBlock);
+
+            Renderer[] renderers = currentGhost.GetComponentsInChildren<Renderer>();
+            foreach (Renderer renderer in renderers)
+            {
+                renderer.material = highlightMaterial;
+                if (renderer.material.HasProperty("_Color"))
+                    renderer.material.color = isBlocked ? new Color(1, 0, 0, 0.5f) : new Color(0, 1, 0, 0.5f);
+            }
+
+            // 鼠标左键点击 → 真正生成方块
+            if (Mouse.current.leftButton.wasPressedThisFrame && !isBlocked)
+            {
+                CreateBlock(prefab, currentBlockResourcePath, currentGhost.transform.position, currentGhost.transform.rotation);
+
+            }
+        }
+    }
+
+
+    public void CreateBlock(GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot)
+    {
         if (prefab != null)
         {
             GameObject obj = Instantiate(prefab, pos, rot);
@@ -204,7 +310,6 @@ public class BuildManager : MonoBehaviour
             Debug.LogWarning($"Prefab not found at Resources/{resourcePath}");
         }
     }
-
 
     public void DeleteBlock()
     {
@@ -269,6 +374,18 @@ public class BuildManager : MonoBehaviour
         }
     }
 
+    public void ClearUnloadableData(string id)
+    {
+        int index = cachedData.blocks.FindIndex(b => b.id == id);
+        if (index >= 0)
+        {
+            cachedData.blocks.RemoveAt(index);
+            string json = JsonUtility.ToJson(cachedData, true);
+            File.WriteAllText(savePath, json);
+            Debug.Log($"Removed unload data {id}");
+        }
+    }
+
     public void LoadAllBlocks()
     {
         if (!File.Exists(savePath))
@@ -286,13 +403,20 @@ public class BuildManager : MonoBehaviour
             return;
         }
 
+        List<string> unloadIds = new List<string>();
+        int failCount = 0;
+        int sucessCount = 0;
+        int i = 0;
         foreach (var data in cachedData.blocks)
         {
+            i++;
             // 从 Resources 目录加载 prefab
             GameObject prefab = Resources.Load<GameObject>(ConvertToResourcesPath(data.resourcePath));
             if (prefab == null)
             {
-                Debug.LogWarning($"找不到资源路径: {data.resourcePath}");
+                Debug.LogWarning($"第{i}个方块 找不到资源路径: {data.resourcePath}");
+                unloadIds.Add(data.id);
+                failCount++;
                 continue;
             }
 
@@ -306,12 +430,21 @@ public class BuildManager : MonoBehaviour
                 block.z = data.z;
                 block.resourcePath = data.resourcePath;
                 block.uniqueId = data.id; // 保持唯一 ID 一致
+
+                sucessCount++;
             }
         }
 
-        Debug.Log($"加载完成，共恢复 {cachedData.blocks.Count} 个方块。");
-    }
+        Debug.Log($"加载完成，耗时{Time.timeSinceLevelLoadAsDouble}s，共{cachedData.blocks.Count}个方块, 恢复成功{sucessCount}个方块，恢复失败{failCount}个方块");
 
+        if ( unloadIds.Count > 0 )
+        {
+            foreach (string id in unloadIds)
+            {
+                ClearUnloadableData(id);
+            }
+        }
+    }
 
     void UndoAction()
     {
@@ -334,7 +467,7 @@ public class BuildManager : MonoBehaviour
     }
 
     // 轴对齐方块的精确吸附：先对齐最小角，再还原中心
-    Vector3 SnapCenterByMinCorner(Vector3 center, Block b)
+    public Vector3 SnapCenterByMinCorner(Vector3 center, Block b)
     {
         // 方块在世界中的“占用尺寸”（单位：格子）
         Vector3 worldSize = new Vector3(b.x * gridSize, b.y * gridSize, b.z * gridSize);
@@ -361,7 +494,7 @@ public class BuildManager : MonoBehaviour
         // 检测范围（目标位置 + 半尺寸）
         Collider[] hits = Physics.OverlapBox(
             targetCenter,
-            halfExtents * 0.95f,    // 稍微缩小，避免边界浮点误差
+            halfExtents,    // 稍微缩小，避免边界浮点误差
             Quaternion.identity,
             blockLayer              // 只检测方块层
         );
