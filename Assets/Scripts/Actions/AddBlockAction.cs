@@ -25,6 +25,7 @@ public class AddBlockAction : IBlockAction
     {
         if (createdObject != null)
         {
+            BuildManager.instance.RemoveBlock(createdObject.GetComponent<Block>());
             Object.Destroy(createdObject);
             createdObject = null;
         }
@@ -43,10 +44,7 @@ public class AddBlockAction : IBlockAction
                 block.y = y;
                 block.z = z;
                 block.resourcePath = resourcePath;
-            }
-            else
-            {
-                Debug.LogWarning($"Prefab not found at Resources/{resourcePath}");
+                BuildManager.instance.SaveBlock(block);
             }
         }
     }

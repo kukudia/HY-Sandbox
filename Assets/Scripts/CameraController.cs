@@ -18,8 +18,6 @@ public class CameraController : MonoBehaviour
     [Header("Free Fly Settings")]
     public float freeFlySpeed = 10f;
 
-    public bool isBuilt;
-
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked; // Ëø¶¨Êó±ê
@@ -27,15 +25,9 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        if (Keyboard.current.bKey.wasPressedThisFrame)
-        {
-            isBuilt = !isBuilt;
-            Cursor.lockState = isBuilt ? CursorLockMode.Confined : CursorLockMode.Locked;
-        }
-
         HandleModeSwitch();
 
-        if (!isBuilt)
+        if (!BuildManager.instance.isBuilding)
         {
             BuildManager.instance.DeselectBlock();
             HandleLook();

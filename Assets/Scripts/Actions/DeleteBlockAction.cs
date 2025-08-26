@@ -18,7 +18,7 @@ public class DeleteBlockAction : IBlockAction
         y = deletedBlock.y;
         z = deletedBlock.z;
 
-        resourcePath = ConvertToResourcesPath(deletedBlock.resourcePath); // 保存运行时资源路径
+        resourcePath = BuildManager.ConvertToResourcesPath(deletedBlock.resourcePath); // 保存运行时资源路径
     }
 
     public void Undo()
@@ -35,6 +35,7 @@ public class DeleteBlockAction : IBlockAction
                 deletedBlock.y = y;
                 deletedBlock.z = z;
                 deletedBlock.resourcePath = resourcePath; // 继续保留路径
+                BuildManager.instance.SaveBlock(deletedBlock);
             }
             else
             {
@@ -47,22 +48,9 @@ public class DeleteBlockAction : IBlockAction
     {
         if (deletedBlock != null)
         {
+            BuildManager.instance.RemoveBlock(deletedBlock.GetComponent<Block>());
             Object.Destroy(deletedBlock.gameObject);
+            deletedBlock = null;
         }
-    }
-
-    string ConvertToResourcesPath(string fullPath)
-    {
-        if (fullPath.StartsWith("Assets/Resources/"))
-        {
-            fullPath = fullPath.Substring("Assets/Resources/".Length);
-        }
-
-        if (fullPath.EndsWith(".prefab"))
-        {
-            fullPath = fullPath.Substring(0, fullPath.Length - ".prefab".Length);
-        }
-
-        return fullPath;
     }
 }

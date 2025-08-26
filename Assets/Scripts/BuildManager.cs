@@ -13,6 +13,8 @@ public class BuildManager : MonoBehaviour
     public Block selectedBlock;
     public Button undoButton;
     public Button redoButton;
+    public Button deleteButton;
+    public bool isBuilding;
     private Material originalMaterial;
     private Renderer selectedRenderer;
 
@@ -36,10 +38,21 @@ public class BuildManager : MonoBehaviour
         instance = this;
     }
 
+    private void Start()
+    {
+        undoButton.onClick.AddListener(UndoAction);
+        redoButton.onClick.AddListener(RedoAction);
+        deleteButton.onClick.AddListener(DeleteBlock);
+        LoadAllBlocks();
+    }
+
     void Update()
     {
-        HandleSelection();
-        HandleMovement();
+        if (Keyboard.current.bKey.wasPressedThisFrame)
+        {
+            isBuilding = !isBuilding;
+            Cursor.lockState = isBuilding ? CursorLockMode.Confined : CursorLockMode.Locked;
+        }
 
         // 撤销 (Ctrl+Z)
         if (Keyboard.current.leftCtrlKey.isPressed && Keyboard.current.zKey.wasPressedThisFrame)
@@ -56,8 +69,11 @@ public class BuildManager : MonoBehaviour
         // 删除选中的方块
         if (selectedBlock != null && Keyboard.current.deleteKey.wasPressedThisFrame)
         {
-            DeleteBlock(selectedBlock);
+            DeleteBlock();
         }
+
+        HandleSelection();
+        HandleMovement();
     }
 
     void HandleSelection()
@@ -83,12 +99,12 @@ public class BuildManager : MonoBehaviour
                 }
                 else
                 {
-                    DeselectBlock();
+                    //DeselectBlock();
                 }
             }
             else
             {
-                DeselectBlock();
+                //DeselectBlock();
             }
         }
     }
@@ -154,6 +170,7 @@ public class BuildManager : MonoBehaviour
             if (!IsBlocked(newPos, selectedBlock))
             {
                 selectedBlock.transform.position = newPos;
+                SaveBlock(selectedBlock);
 
                 // 记录操作到 Undo 栈
                 var action = new MoveBlockAction(selectedBlock, oldPos, newPos);
@@ -167,44 +184,64 @@ public class BuildManager : MonoBehaviour
         }
     }
 
-    public void DeleteBlock(Block block)
+    public void CreateBlock(string resourcePath, Vector3 pos, Quaternion rot)
     {
-        if (block == null) return;
-
-        string id = block.GetInstanceID().ToString();
-
-        // 1. 在缓存列表中移除
-        int index = cachedData.blocks.FindIndex(b => b.id == id);
-        if (index >= 0)
+        GameObject prefab = Resources.Load<GameObject>(resourcePath);
+        if (prefab != null)
         {
-            cachedData.blocks.RemoveAt(index);
-        }
+            GameObject obj = Instantiate(prefab, pos, rot);
+            Block block = obj.GetComponent<Block>();
+            block.resourcePath = resourcePath;
+            SaveBlock(block);
 
-        // 2. 写回到文件
-        string json = JsonUtility.ToJson(cachedData, true);
-        File.WriteAllText(savePath, json);
-        Debug.Log($"Deleted block {block.name}");
+            // 记录到 Undo 栈
+            var action = new AddBlockAction(block);
+            undoStack.Push(action);
+            redoStack.Clear();
+        }
+        else
+        {
+            Debug.LogWarning($"Prefab not found at Resources/{resourcePath}");
+        }
+    }
+
+
+    public void DeleteBlock()
+    {
+        if (selectedBlock == null) return;
+
+        string id = selectedBlock.GetInstanceID().ToString();
+
+        //// 1. 在缓存列表中移除
+        //int index = cachedData.blocks.FindIndex(b => b.id == id);
+        //if (index >= 0)
+        //{
+        //    cachedData.blocks.RemoveAt(index);
+        //}
+
+        //// 2. 写回到文件
+        //string json = JsonUtility.ToJson(cachedData, true);
+        //File.WriteAllText(savePath, json);
+        //Debug.Log($"Deleted block {selectedBlock.name}");
 
         // 3. 销毁场景中的方块对象
         // 记录操作
-        var action = new DeleteBlockAction(block);
+
+        RemoveBlock(selectedBlock);
+        var action = new DeleteBlockAction(selectedBlock);
         undoStack.Push(action);
         redoStack.Clear();
 
         action.Redo(); // 执行删除
 
         // 4. 如果删除的是当前选中的方块，清空选中状态
-        if (selectedBlock == block)
-        {
-            DeselectBlock();
-        }
+        DeselectBlock();
     }
 
     public void SaveBlock(Block block)
     {
         BlockData data = new BlockData(block);
 
-        // 检查缓存里是否已有这个方块，更新而不是重复添加
         int index = cachedData.blocks.FindIndex(b => b.id == data.id);
         if (index >= 0)
         {
@@ -220,25 +257,61 @@ public class BuildManager : MonoBehaviour
         Debug.Log($"Saved block {block.name} at {block.transform.position}");
     }
 
-    public void LoadBlocks(GameObject blockPrefab)
+    public void RemoveBlock(Block block)
     {
-        if (!File.Exists(savePath)) return;
+        int index = cachedData.blocks.FindIndex(b => b.id == block.uniqueId);
+        if (index >= 0)
+        {
+            cachedData.blocks.RemoveAt(index);
+            string json = JsonUtility.ToJson(cachedData, true);
+            File.WriteAllText(savePath, json);
+            Debug.Log($"Removed block {block.name}");
+        }
+    }
+
+    public void LoadAllBlocks()
+    {
+        if (!File.Exists(savePath))
+        {
+            Debug.Log("没有找到保存文件，跳过加载。");
+            return;
+        }
 
         string json = File.ReadAllText(savePath);
         cachedData = JsonUtility.FromJson<BlockDataList>(json);
 
+        if (cachedData == null || cachedData.blocks == null)
+        {
+            Debug.Log("保存文件为空或损坏。");
+            return;
+        }
+
         foreach (var data in cachedData.blocks)
         {
-            GameObject obj = Instantiate(blockPrefab);
-            Block block = obj.GetComponent<Block>();
-            block.x = data.x;
-            block.y = data.y;
-            block.z = data.z;
+            // 从 Resources 目录加载 prefab
+            GameObject prefab = Resources.Load<GameObject>(ConvertToResourcesPath(data.resourcePath));
+            if (prefab == null)
+            {
+                Debug.LogWarning($"找不到资源路径: {data.resourcePath}");
+                continue;
+            }
 
-            obj.transform.position = data.position;
-            obj.transform.rotation = data.rotation;
+            GameObject obj = Instantiate(prefab, new Vector3(data.posX, data.posY, data.posZ), new Quaternion(data.rotX, data.rotY, data.rotZ, data.rotW));
+            obj.transform.SetParent(blocksParent);
+            Block block = obj.GetComponent<Block>();
+            if (block != null)
+            {
+                block.x = data.x;
+                block.y = data.y;
+                block.z = data.z;
+                block.resourcePath = data.resourcePath;
+                block.uniqueId = data.id; // 保持唯一 ID 一致
+            }
         }
+
+        Debug.Log($"加载完成，共恢复 {cachedData.blocks.Count} 个方块。");
     }
+
 
     void UndoAction()
     {
@@ -304,24 +377,49 @@ public class BuildManager : MonoBehaviour
         return false;
     }
 
+    public static string ConvertToResourcesPath(string fullPath)
+    {
+        if (fullPath.StartsWith("Assets/Resources/"))
+        {
+            fullPath = fullPath.Substring("Assets/Resources/".Length);
+        }
+
+        if (fullPath.EndsWith(".prefab"))
+        {
+            fullPath = fullPath.Substring(0, fullPath.Length - ".prefab".Length);
+        }
+
+        return fullPath;
+    }
 }
 
 [System.Serializable]
 public class BlockData
 {
-    public string id;   // 每个方块唯一标识，可以用 GetInstanceID 或自定义
+    public string id;
     public int x, y, z;
-    public Vector3 position;
-    public Quaternion rotation;
+    public float posX, posY, posZ;
+    public float rotX, rotY, rotZ, rotW;
+    public string resourcePath;
 
     public BlockData(Block block)
     {
-        id = block.GetInstanceID().ToString();
+        id = block.uniqueId;
         x = block.x;
         y = block.y;
         z = block.z;
-        position = block.transform.position;
-        rotation = block.transform.rotation;
+
+        var t = block.transform;
+        posX = t.position.x;
+        posY = t.position.y;
+        posZ = t.position.z;
+
+        rotX = t.rotation.x;
+        rotY = t.rotation.y;
+        rotZ = t.rotation.z;
+        rotW = t.rotation.w;
+
+        resourcePath = block.resourcePath;
     }
 }
 

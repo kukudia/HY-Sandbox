@@ -22,6 +22,16 @@ public class Block : MonoBehaviour
     public bool showConnectors = true;
     public bool showLabel = true;
 
+    public string uniqueId;
+
+    private void Awake()
+    {
+        if (string.IsNullOrEmpty(uniqueId))
+        {
+            uniqueId = System.Guid.NewGuid().ToString();
+        }
+    }
+
     private void OnValidate()
     {
 #if UNITY_EDITOR

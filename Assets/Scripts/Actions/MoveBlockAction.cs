@@ -15,11 +15,20 @@ public class MoveBlockAction : IBlockAction
 
     public void Undo()
     {
-        if (block != null) block.transform.position = oldPos;
+        if (block != null)
+        {
+            block.transform.position = oldPos;
+            BuildManager.instance.SaveBlock(block);
+        }
     }
 
     public void Redo()
     {
-        if (block != null) block.transform.position = newPos;
+        if (block != null)
+        {
+            block.transform.position = newPos;
+            BuildManager.instance.SaveBlock(block);
+        }
     }
+
 }
