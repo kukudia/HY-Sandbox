@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Block : MonoBehaviour
 {
@@ -137,6 +138,73 @@ public class Block : MonoBehaviour
         connector.normal = normal;
         connector.order = order;
         connectors.Add(connector);
+    }
+
+    public void CheckConnection()
+    {
+        if (connectors == null || connectors.Count == 0) return;
+
+        Transform parent = connectorParent != null ? connectorParent : transform;
+
+        for (int i = 0; i < connectors.Count; i++)
+        {
+            Connector c = connectors[i];
+            Vector3 worldPos = parent.TransformPoint(c.localPos);
+            Vector3 worldNormal = parent.TransformDirection(c.normal);
+
+            // 默认无连接
+            c.isConnected = false;
+
+            if (Physics.Raycast(worldPos, worldNormal, out RaycastHit hit, 0.55f, BuildManager.instance.blockLayer))
+            {
+                Block otherBlock = hit.collider.GetComponentInParent<Block>();
+                if (otherBlock != null && otherBlock != this)
+                {
+                    // 反向检测：找最近的对方 connector
+                    Transform otherParent = otherBlock.connectorParent;
+
+                    foreach (var otherC in otherBlock.connectors)
+                    {
+                        Vector3 otherWorldPos = otherParent.TransformPoint(otherC.localPos);
+                        Vector3 otherWorldNormal = otherParent.TransformDirection(otherC.normal);
+
+                        // 判断位置是否接近 + 法向是否相反
+                        if (Vector3.Distance(otherWorldPos, worldPos) < 0.1f &&
+                            Vector3.Dot(otherWorldNormal, -worldNormal) > 0.9f) // 方向接近相反
+                        {
+                            c.isConnected = true;
+                            otherC.isConnected = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public bool IsBlockedGhost()
+    {
+        Transform parent = connectorParent != null ? connectorParent : transform;
+
+        for (int i = 0; i < connectors.Count; i++)
+        {
+            Connector c = connectors[i];
+            Vector3 worldPos = parent.TransformPoint(c.localPos);
+            Vector3 worldNormal = parent.TransformDirection(c.normal);
+
+            c.isConnected = false;
+
+            // 用小射线探测相邻是否有方块
+            if (Physics.Raycast(worldPos, -worldNormal, out RaycastHit hit, 0.55f, BuildManager.instance.blockLayer))
+            {
+                Block otherBlock = hit.collider.GetComponentInParent<Block>();
+                if (otherBlock != null && otherBlock != this)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 #if UNITY_EDITOR

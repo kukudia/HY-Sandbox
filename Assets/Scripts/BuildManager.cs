@@ -14,8 +14,7 @@ public class BuildManager : MonoBehaviour
     public Button undoButton;
     public Button redoButton;
     public Button deleteButton;
-    public bool isBuilding;
-
+    public GameObject axis;
     public GameObject currentGhost;        // 当前的 ghost 实例
 
     public string currentBlockResourcePath;
@@ -39,6 +38,9 @@ public class BuildManager : MonoBehaviour
 
     private BlockDataList cachedData = new BlockDataList();
 
+    public bool buildMode;
+    public bool penetrationMode;
+
     private void Awake()
     {
         instance = this;
@@ -56,17 +58,17 @@ public class BuildManager : MonoBehaviour
     {
         if (Keyboard.current.bKey.wasPressedThisFrame)
         {
-            isBuilding = !isBuilding;
-            Cursor.lockState = isBuilding ? CursorLockMode.Confined : CursorLockMode.Locked;
+            buildMode = !buildMode;
+            Cursor.lockState = buildMode ? CursorLockMode.Confined : CursorLockMode.Locked;
 
-            if (!isBuilding && currentGhost != null)
+            if (!buildMode && currentGhost != null)
             {
                 Destroy(currentGhost);
                 hoveredConnector = null;
             }
         }
 
-        if (isBuilding)
+        if (buildMode)
         {
             if (currentBlockResourcePath == string.Empty)
             {
@@ -186,7 +188,7 @@ public class BuildManager : MonoBehaviour
             );
 
             // 检查是否被阻挡
-            if (!IsBlocked(newPos, selectedBlock))
+            if (!IsMovementBlocked(newPos, selectedBlock))
             {
                 selectedBlock.transform.position = newPos;
                 SaveBlock(selectedBlock);
@@ -211,6 +213,8 @@ public class BuildManager : MonoBehaviour
 
         Vector3 rawPos = Vector3.zero;
         Vector3 snappedPos = Vector3.zero;
+        Vector3 nearestWorldPos = Vector3.zero;
+        Vector3 nearestNormal = Vector3.zero;
 
         Vector2 mousePos = Mouse.current.position.ReadValue();
         Ray ray = mainCamera.ScreenPointToRay(mousePos);
@@ -223,12 +227,10 @@ public class BuildManager : MonoBehaviour
                 // 找最近的 connector
                 float minDist = float.MaxValue;
                 Connector nearest = null;
-                Vector3 nearestWorldPos = Vector3.zero;
-                Vector3 nearestNormal = Vector3.zero;
 
                 foreach (var c in block.connectors)
                 {
-                    if (!c.canConnect) continue;
+                    if (!c.canConnect || c.isConnected) continue;
 
                     Vector3 worldPos = block.transform.TransformPoint(c.localPos);
                     float dist = Vector3.Distance(hit.point, worldPos);
@@ -248,7 +250,12 @@ public class BuildManager : MonoBehaviour
                     // 生成或更新 Ghost
                     if (currentGhost == null)
                     {
-                        currentGhost = Instantiate(prefab.transform.Find("Model").gameObject);
+                        currentGhost = Instantiate(prefab);
+                        Collider[] colliders = currentGhost.GetComponentsInChildren<Collider>();
+                        foreach (var collider in colliders)
+                        {
+                            collider.gameObject.layer = 0;
+                        }
                     }
 
                     // 计算 Snap 后的位置
@@ -256,7 +263,7 @@ public class BuildManager : MonoBehaviour
                     snappedPos = SnapCenterByMinCorner(rawPos, prefabBlock);
 
                     currentGhost.transform.position = snappedPos;
-                    currentGhost.transform.rotation = Quaternion.LookRotation(nearestNormal);
+                    //currentGhost.transform.rotation = Quaternion.LookRotation(nearestNormal);
                 }
             }
         }
@@ -271,7 +278,16 @@ public class BuildManager : MonoBehaviour
 
         if (currentGhost != null)
         {
-            bool isBlocked = IsBlocked(snappedPos, prefabBlock);
+            bool isBlocked = currentGhost.GetComponent<Block>().IsBlockedGhost();
+
+            if (penetrationMode)
+            {
+                while (isBlocked)
+                {
+                    currentGhost.transform.position += nearestNormal;
+                    isBlocked = currentGhost.GetComponent<Block>().IsBlockedGhost();
+                }
+            }
 
             Renderer[] renderers = currentGhost.GetComponentsInChildren<Renderer>();
             foreach (Renderer renderer in renderers)
@@ -285,7 +301,6 @@ public class BuildManager : MonoBehaviour
             if (Mouse.current.leftButton.wasPressedThisFrame && !isBlocked)
             {
                 CreateBlock(prefab, currentBlockResourcePath, currentGhost.transform.position, currentGhost.transform.rotation);
-
             }
         }
     }
@@ -345,6 +360,7 @@ public class BuildManager : MonoBehaviour
 
     public void SaveBlock(Block block)
     {
+        block.CheckConnection();
         BlockData data = new BlockData(block);
 
         int index = cachedData.blocks.FindIndex(b => b.id == data.id);
@@ -359,7 +375,7 @@ public class BuildManager : MonoBehaviour
 
         string json = JsonUtility.ToJson(cachedData, true);
         File.WriteAllText(savePath, json);
-        Debug.Log($"Saved block {block.name} at {block.transform.position}");
+        Debug.Log($"Saved block {block.name} at {block.transform.position}, {block.transform.rotation.eulerAngles}");
     }
 
     public void RemoveBlock(Block block)
@@ -430,7 +446,7 @@ public class BuildManager : MonoBehaviour
                 block.z = data.z;
                 block.resourcePath = data.resourcePath;
                 block.uniqueId = data.id; // 保持唯一 ID 一致
-
+                block.CheckConnection();
                 sucessCount++;
             }
         }
@@ -486,7 +502,7 @@ public class BuildManager : MonoBehaviour
         return snappedMin + 0.5f * worldSize;
     }
 
-    bool IsBlocked(Vector3 targetCenter, Block block)
+    bool IsMovementBlocked(Vector3 targetCenter, Block block)
     {
         // 方块的半尺寸
         Vector3 halfExtents = new Vector3(block.x, block.y, block.z) * 0.5f;

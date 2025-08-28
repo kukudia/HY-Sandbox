@@ -27,7 +27,7 @@ public class CameraController : MonoBehaviour
     {
         HandleModeSwitch();
 
-        if (!BuildManager.instance.isBuilding)
+        if (!BuildManager.instance.buildMode)
         {
             BuildManager.instance.DeselectBlock();
             HandleLook();
