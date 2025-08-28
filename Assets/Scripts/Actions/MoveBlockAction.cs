@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class MoveBlockAction : IBlockAction
 {
+    public string ActionName => "Move";
+
     private Block block;
     private Vector3 oldPos;
     private Vector3 newPos;

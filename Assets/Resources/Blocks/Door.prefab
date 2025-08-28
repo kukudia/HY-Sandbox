@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 199097415977098526}
   - component: {fileID: 5357469564833557730}
   m_Layer: 3
-  m_Name: 1x2x1 1
+  m_Name: Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -110,9 +110,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canSpawnConnector: 0
+  canBeDeleted: 1
   x: 1
   y: 2
   z: 1
+  resourcePath: 
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
   connectorParent: {fileID: 2695719906485559115}
   connectors:
@@ -131,56 +133,56 @@ MonoBehaviour:
     normal: {x: 0, y: -1, z: 0}
     order: 1
   - name: Forward 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 2
     localPos: {x: 0, y: -0.5, z: 0.5}
     normal: {x: 0, y: 0, z: 1}
     order: 1
   - name: Forward 2
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 2
     localPos: {x: 0, y: 0.5, z: 0.5}
     normal: {x: 0, y: 0, z: 1}
     order: 2
   - name: Back 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 3
     localPos: {x: 0, y: -0.5, z: -0.5}
     normal: {x: 0, y: 0, z: -1}
     order: 1
   - name: Back 2
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 3
     localPos: {x: 0, y: 0.5, z: -0.5}
     normal: {x: 0, y: 0, z: -1}
     order: 2
   - name: Left 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 4
     localPos: {x: -0.5, y: -0.5, z: 0}
     normal: {x: -1, y: 0, z: 0}
     order: 1
   - name: Left 2
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 4
     localPos: {x: -0.5, y: 0.5, z: 0}
     normal: {x: -1, y: 0, z: 0}
     order: 2
   - name: Right 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 5
     localPos: {x: 0.5, y: -0.5, z: 0}
     normal: {x: 1, y: 0, z: 0}
     order: 1
   - name: Right 2
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 5
     localPos: {x: 0.5, y: 0.5, z: 0}
@@ -189,6 +191,7 @@ MonoBehaviour:
   showCube: 1
   showConnectors: 1
   showLabel: 1
+  uniqueId: 
 --- !u!1 &6747092251865225875
 GameObject:
   m_ObjectHideFlags: 0

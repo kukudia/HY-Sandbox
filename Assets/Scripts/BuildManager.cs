@@ -10,16 +10,11 @@ public class BuildManager : MonoBehaviour
     public Camera mainCamera;
     public Transform blocksParent;
     public LayerMask blockLayer;   // 方块所在的层
-    public Block selectedBlock;
+
     public Button undoButton;
     public Button redoButton;
     public Button deleteButton;
     public GameObject axis;
-    public GameObject currentGhost;        // 当前的 ghost 实例
-
-    public string currentBlockResourcePath;
-
-    public Connector hoveredConnector;     // 鼠标当前指向的连接点
 
     private Material originalMaterial;
     private Renderer selectedRenderer;
@@ -30,13 +25,18 @@ public class BuildManager : MonoBehaviour
 
     public Material highlightMaterial;
     private float moveStep = 1f;    // 移动步长
-    // 历史记录
-    private Stack<IBlockAction> undoStack = new Stack<IBlockAction>();
-    private Stack<IBlockAction> redoStack = new Stack<IBlockAction>();
 
+    public BlockDataList cachedData = new BlockDataList();
+
+    [Header("Current")]
+    public Block selectedBlock;
+    public GameObject currentGhost;        // 当前的 ghost 实例
+    public string currentBlockResourcePath;
+    public string currentSaveName;
+    public Connector hoveredConnector;     // 鼠标当前指向的连接点
+
+    private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
     private string savePath => Path.Combine(Application.persistentDataPath, "blocks.json");
-
-    private BlockDataList cachedData = new BlockDataList();
 
     public bool buildMode;
     public bool penetrationMode;
@@ -48,8 +48,8 @@ public class BuildManager : MonoBehaviour
 
     private void Start()
     {
-        undoButton.onClick.AddListener(UndoAction);
-        redoButton.onClick.AddListener(RedoAction);
+        undoButton.onClick.AddListener(() => ActionManager.instance.Undo());
+        redoButton.onClick.AddListener(() => ActionManager.instance.Redo());
         deleteButton.onClick.AddListener(DeleteBlock);
         LoadAllBlocks();
     }
@@ -87,8 +87,8 @@ public class BuildManager : MonoBehaviour
         }
 
         // 撤销重做
-        if (Keyboard.current.leftCtrlKey.isPressed && Keyboard.current.zKey.wasPressedThisFrame) UndoAction();
-        if (Keyboard.current.leftCtrlKey.isPressed && Keyboard.current.yKey.wasPressedThisFrame) RedoAction();
+        if (Keyboard.current.leftCtrlKey.isPressed && Keyboard.current.zKey.wasPressedThisFrame) ActionManager.instance.Undo();
+        if (Keyboard.current.leftCtrlKey.isPressed && Keyboard.current.yKey.wasPressedThisFrame) ActionManager.instance.Redo();
 
         // 删除
         if (selectedBlock != null && Keyboard.current.deleteKey.wasPressedThisFrame) DeleteBlock();
@@ -195,8 +195,7 @@ public class BuildManager : MonoBehaviour
 
                 // 记录操作到 Undo 栈
                 var action = new MoveBlockAction(selectedBlock, oldPos, newPos);
-                undoStack.Push(action);
-                redoStack.Clear();
+                ActionManager.instance.Push(action);
             }
             else
             {
@@ -316,9 +315,8 @@ public class BuildManager : MonoBehaviour
             SaveBlock(block);
 
             // 记录到 Undo 栈
-            var action = new AddBlockAction(block);
-            undoStack.Push(action);
-            redoStack.Clear();
+            var action = new CreateBlockAction(block);
+            ActionManager.instance.Push(action);
         }
         else
         {
@@ -349,8 +347,7 @@ public class BuildManager : MonoBehaviour
 
         RemoveBlock(selectedBlock);
         var action = new DeleteBlockAction(selectedBlock);
-        undoStack.Push(action);
-        redoStack.Clear();
+        ActionManager.instance.Push(action);
 
         action.Redo(); // 执行删除
 
@@ -360,7 +357,6 @@ public class BuildManager : MonoBehaviour
 
     public void SaveBlock(Block block)
     {
-        block.CheckConnection();
         BlockData data = new BlockData(block);
 
         int index = cachedData.blocks.FindIndex(b => b.id == data.id);
@@ -376,10 +372,22 @@ public class BuildManager : MonoBehaviour
         string json = JsonUtility.ToJson(cachedData, true);
         File.WriteAllText(savePath, json);
         Debug.Log($"Saved block {block.name} at {block.transform.position}, {block.transform.rotation.eulerAngles}");
+
+        block.CheckConnection();
+        List<Block> blockNeighbors = block.Neighbors();
+        if (blockNeighbors.Count > 0)
+        {
+            foreach (Block blockNeighbor in blockNeighbors)
+            {
+                blockNeighbor.CheckConnection();
+            }
+        }
     }
 
     public void RemoveBlock(Block block)
     {
+        List<Block> blockNeighbors = block.Neighbors();
+
         int index = cachedData.blocks.FindIndex(b => b.id == block.uniqueId);
         if (index >= 0)
         {
@@ -388,17 +396,13 @@ public class BuildManager : MonoBehaviour
             File.WriteAllText(savePath, json);
             Debug.Log($"Removed block {block.name}");
         }
-    }
 
-    public void ClearUnloadableData(string id)
-    {
-        int index = cachedData.blocks.FindIndex(b => b.id == id);
-        if (index >= 0)
+        if (blockNeighbors.Count > 0)
         {
-            cachedData.blocks.RemoveAt(index);
-            string json = JsonUtility.ToJson(cachedData, true);
-            File.WriteAllText(savePath, json);
-            Debug.Log($"Removed unload data {id}");
+            foreach (Block blockNeighbor in blockNeighbors)
+            {
+                blockNeighbor.CheckConnection();
+            }
         }
     }
 
@@ -462,23 +466,15 @@ public class BuildManager : MonoBehaviour
         }
     }
 
-    void UndoAction()
+    public void ClearUnloadableData(string id)
     {
-        if (undoStack.Count > 0)
+        int index = cachedData.blocks.FindIndex(b => b.id == id);
+        if (index >= 0)
         {
-            var action = undoStack.Pop();
-            action.Undo();
-            redoStack.Push(action);
-        }
-    }
-
-    void RedoAction()
-    {
-        if (redoStack.Count > 0)
-        {
-            var action = redoStack.Pop();
-            action.Redo();
-            undoStack.Push(action);
+            cachedData.blocks.RemoveAt(index);
+            string json = JsonUtility.ToJson(cachedData, true);
+            File.WriteAllText(savePath, json);
+            Debug.Log($"Removed unload data {id}");
         }
     }
 

@@ -142,9 +142,7 @@ public class Block : MonoBehaviour
 
     public void CheckConnection()
     {
-        if (connectors == null || connectors.Count == 0) return;
-
-        Transform parent = connectorParent != null ? connectorParent : transform;
+        Transform parent = connectorParent;
 
         for (int i = 0; i < connectors.Count; i++)
         {
@@ -152,10 +150,9 @@ public class Block : MonoBehaviour
             Vector3 worldPos = parent.TransformPoint(c.localPos);
             Vector3 worldNormal = parent.TransformDirection(c.normal);
 
-            // 默认无连接
             c.isConnected = false;
 
-            if (Physics.Raycast(worldPos, worldNormal, out RaycastHit hit, 0.55f, BuildManager.instance.blockLayer))
+            if (Physics.Raycast(worldPos, worldNormal, out RaycastHit hit, 0.1f, BuildManager.instance.blockLayer))
             {
                 Block otherBlock = hit.collider.GetComponentInParent<Block>();
                 if (otherBlock != null && otherBlock != this)
@@ -182,6 +179,29 @@ public class Block : MonoBehaviour
         }
     }
 
+    public List<Block> Neighbors()
+    {
+        Transform parent = connectorParent;
+        List<Block> neighbors = new List<Block>();
+        for (int i = 0; i < connectors.Count; i++)
+        {
+            Connector c = connectors[i];
+            Vector3 worldPos = parent.TransformPoint(c.localPos);
+            Vector3 worldNormal = parent.TransformDirection(c.normal);
+
+            if (Physics.Raycast(worldPos, worldNormal, out RaycastHit hit, 0.1f, BuildManager.instance.blockLayer))
+            {
+                Block otherBlock = hit.collider.GetComponentInParent<Block>();
+                if (otherBlock != null && otherBlock != this)
+                {
+                    neighbors.Add(otherBlock);
+                }
+            }
+        }
+        Debug.Log($"Find {neighbors.Count} neighbors.");
+        return neighbors;
+    }
+
     public bool IsBlockedGhost()
     {
         Transform parent = connectorParent != null ? connectorParent : transform;
@@ -195,7 +215,7 @@ public class Block : MonoBehaviour
             c.isConnected = false;
 
             // 用小射线探测相邻是否有方块
-            if (Physics.Raycast(worldPos, -worldNormal, out RaycastHit hit, 0.55f, BuildManager.instance.blockLayer))
+            if (Physics.Raycast(worldPos, -worldNormal, out RaycastHit hit, 0.1f, BuildManager.instance.blockLayer))
             {
                 Block otherBlock = hit.collider.GetComponentInParent<Block>();
                 if (otherBlock != null && otherBlock != this)

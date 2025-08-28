@@ -1,7 +1,9 @@
 using UnityEngine;
 
-public class AddBlockAction : IBlockAction
+public class CreateBlockAction : IBlockAction
 {
+    public string ActionName => "Create";
+
     private string resourcePath;
     private Vector3 pos;
     private Quaternion rot;
@@ -9,7 +11,7 @@ public class AddBlockAction : IBlockAction
 
     private GameObject createdObject;
 
-    public AddBlockAction(Block block)
+    public CreateBlockAction(Block block)
     {
         resourcePath = block.resourcePath;
         pos = block.transform.position;

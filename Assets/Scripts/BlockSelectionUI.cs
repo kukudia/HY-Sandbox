@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BlockSelection : MonoBehaviour
+public class BlockSelectionUI : MonoBehaviour
 {
     public Button defaultButton;
     public List<BlockButton> blockButtons = new List<BlockButton>();

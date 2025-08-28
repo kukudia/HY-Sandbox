@@ -2,6 +2,8 @@ using System.Collections.Generic;
 
 public class GroupAction : IBlockAction
 {
+    public string ActionName => "Group";
+
     private List<IBlockAction> actions = new List<IBlockAction>();
 
     public GroupAction(IEnumerable<IBlockAction> actions)

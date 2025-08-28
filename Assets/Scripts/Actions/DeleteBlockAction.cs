@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class DeleteBlockAction : IBlockAction
 {
+    public string ActionName => "Delete";
+
     private string resourcePath;
     private Block deletedBlock;
     private Vector3 pos;
