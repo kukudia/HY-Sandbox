@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using Unity.IO.Archive;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -14,10 +15,14 @@ public class BuildManager : MonoBehaviour
     public Button undoButton;
     public Button redoButton;
     public Button deleteButton;
-    public GameObject axis;
+    public GameObject moveAxis;
 
     private Material originalMaterial;
     private Renderer selectedRenderer;
+
+    private MoveAxisHandle activeHandle = null;
+    private Vector3 dragStartPos;
+    private Vector3 blockStartPos;
 
     // 网格参数
     private float gridSize = 1f;
@@ -35,7 +40,21 @@ public class BuildManager : MonoBehaviour
     public string currentSaveName;
     public Connector hoveredConnector;     // 鼠标当前指向的连接点
 
-    private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
+    private Vector3 axisForward;
+    private Vector3 axisRight;
+    private Vector3 axisUp;
+
+    private Vector3[] dirs = new Vector3[]
+    {
+        Vector3.right,
+        -Vector3.right,
+        Vector3.up,
+        -Vector3.up,
+        Vector3.forward,
+        -Vector3.forward
+    };
+
+private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
     private string savePath => Path.Combine(Application.persistentDataPath, "blocks.json");
 
     public bool buildMode;
@@ -86,6 +105,12 @@ public class BuildManager : MonoBehaviour
             }
         }
 
+        if (buildMode && selectedBlock != null)
+        {
+            AlignMoveAxisToNearestWorldDir();
+            HandleAxisDrag();
+        }
+
         // 撤销重做
         if (Keyboard.current.leftCtrlKey.isPressed && Keyboard.current.zKey.wasPressedThisFrame) ActionManager.instance.Undo();
         if (Keyboard.current.leftCtrlKey.isPressed && Keyboard.current.yKey.wasPressedThisFrame) ActionManager.instance.Redo();
@@ -94,6 +119,40 @@ public class BuildManager : MonoBehaviour
         if (selectedBlock != null && Keyboard.current.deleteKey.wasPressedThisFrame) DeleteBlock();
     }
 
+    void AlignMoveAxisToNearestWorldDir()
+    {
+        if (moveAxis == null || !moveAxis.activeSelf) return;
+
+        Vector3 camForward = mainCamera.transform.forward.normalized;
+
+        // 找到与相机 forward 最接近的方向
+        Vector3 nearest = dirs[0];
+        float maxDot = Vector3.Dot(camForward, nearest);
+        for (int i = 1; i < dirs.Length; i++)
+        {
+            float dot = Vector3.Dot(camForward, dirs[i]);
+            if (dot > maxDot)
+            {
+                maxDot = dot;
+                nearest = dirs[i];
+            }
+        }
+
+        // 分类讨论，避免 forward 和 up 共线
+        Vector3 up = Vector3.up;
+        if (Mathf.Abs(Vector3.Dot(nearest, Vector3.up)) > 0.5f)
+        {
+            up = Vector3.right; // 如果 forward 接近 ±Y，就改用 Z 当 up
+        }
+
+        // 设置 Gizmo 旋转
+        moveAxis.transform.rotation = Quaternion.LookRotation(nearest, up);
+
+        // 保存坐标系三方向，供移动用
+        axisForward = nearest;
+        axisRight = Vector3.Cross(up, axisForward).normalized;
+        axisUp = Vector3.Cross(axisForward, axisRight).normalized;
+    }
 
     void HandleSelection()
     {
@@ -142,6 +201,14 @@ public class BuildManager : MonoBehaviour
             originalMaterial = selectedRenderer.sharedMaterial;
             selectedRenderer.sharedMaterial = highlightMaterial;
         }
+
+        // 生成移动轴 Gizmo
+        if (moveAxis != null)
+        {
+            moveAxis.SetActive(true);
+            moveAxis.transform.position = selectedBlock.transform.position;
+            moveAxis.transform.SetParent(selectedBlock.transform); // 绑定在方块上
+        }
     }
 
     public void DeselectBlock()
@@ -149,6 +216,12 @@ public class BuildManager : MonoBehaviour
         if (selectedRenderer != null && originalMaterial != null)
         {
             selectedRenderer.sharedMaterial = originalMaterial;
+        }
+
+        if (moveAxis != null)
+        {
+            moveAxis.SetActive(false);
+            moveAxis.transform.SetParent(null);
         }
 
         selectedBlock = null;
@@ -169,12 +242,12 @@ public class BuildManager : MonoBehaviour
         camRight.Normalize();
         camUp.Normalize();
 
-        if (Keyboard.current.wKey.wasPressedThisFrame) moveDir += camForward;
-        if (Keyboard.current.sKey.wasPressedThisFrame) moveDir -= camForward;
-        if (Keyboard.current.dKey.wasPressedThisFrame) moveDir += camRight;
-        if (Keyboard.current.aKey.wasPressedThisFrame) moveDir -= camRight;
-        if (Keyboard.current.eKey.wasPressedThisFrame) moveDir += camUp;
-        if (Keyboard.current.qKey.wasPressedThisFrame) moveDir -= camUp;
+        if (Keyboard.current.wKey.wasPressedThisFrame) moveDir += axisForward;
+        if (Keyboard.current.sKey.wasPressedThisFrame) moveDir -= axisForward;
+        if (Keyboard.current.dKey.wasPressedThisFrame) moveDir += axisRight;
+        if (Keyboard.current.aKey.wasPressedThisFrame) moveDir -= axisRight;
+        if (Keyboard.current.eKey.wasPressedThisFrame) moveDir += axisUp;
+        if (Keyboard.current.qKey.wasPressedThisFrame) moveDir -= axisUp;
 
         //Debug.Log($"{camForward} {camRight} {camUp}");
 
@@ -201,6 +274,63 @@ public class BuildManager : MonoBehaviour
             {
                 Debug.Log("移动失败，被其他方块阻挡");
             }
+        }
+    }
+
+    void HandleAxisDrag()
+    {
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+            if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+            {
+                MoveAxisHandle handle = hit.collider.GetComponent<MoveAxisHandle>();
+                if (handle != null)
+                {
+                    activeHandle = handle;
+                    dragStartPos = hit.point;
+                    blockStartPos = selectedBlock.transform.position;
+                }
+            }
+        }
+
+        if (Mouse.current.leftButton.isPressed && activeHandle != null)
+        {
+            // 根据 handle 名称选择方向
+            Vector3 dir = Vector3.zero;
+            if (activeHandle.name.Contains("Forward")) dir = axisForward;
+            if (activeHandle.name.Contains("Right")) dir = axisRight;
+            if (activeHandle.name.Contains("Up")) dir = axisUp;
+
+            // 构建一个拖拽平面：法线 = 相机方向 × 拖拽方向
+            Vector3 planeNormal = Vector3.Cross(dir, mainCamera.transform.up);
+            if (planeNormal == Vector3.zero)
+                planeNormal = Vector3.Cross(dir, mainCamera.transform.right);
+
+            Plane dragPlane = new Plane(planeNormal, blockStartPos);
+
+            Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+            if (dragPlane.Raycast(ray, out float enter))
+            {
+                Vector3 hitPoint = ray.GetPoint(enter);
+                Vector3 delta = hitPoint - dragStartPos;
+
+                // 投影到拖拽方向
+                float moveAmount = Vector3.Dot(delta, dir.normalized);
+
+                // 步进对齐
+                Vector3 targetPos = blockStartPos + dir.normalized * Mathf.Round(moveAmount / moveStep) * moveStep;
+
+                // 更新位置
+                selectedBlock.transform.position = targetPos;
+                moveAxis.transform.position = targetPos;
+            }
+        }
+
+        if (Mouse.current.leftButton.wasReleasedThisFrame && activeHandle != null)
+        {
+            SaveBlock(selectedBlock);
+            activeHandle = null;
         }
     }
 
@@ -329,21 +459,6 @@ public class BuildManager : MonoBehaviour
         if (selectedBlock == null) return;
 
         string id = selectedBlock.GetInstanceID().ToString();
-
-        //// 1. 在缓存列表中移除
-        //int index = cachedData.blocks.FindIndex(b => b.id == id);
-        //if (index >= 0)
-        //{
-        //    cachedData.blocks.RemoveAt(index);
-        //}
-
-        //// 2. 写回到文件
-        //string json = JsonUtility.ToJson(cachedData, true);
-        //File.WriteAllText(savePath, json);
-        //Debug.Log($"Deleted block {selectedBlock.name}");
-
-        // 3. 销毁场景中的方块对象
-        // 记录操作
 
         RemoveBlock(selectedBlock);
         var action = new DeleteBlockAction(selectedBlock);
