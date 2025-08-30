@@ -18,8 +18,7 @@ public class ActionManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null) instance = this;
-        else Destroy(gameObject);
+        instance = this;
     }
 
     /// <summary>

@@ -617,9 +617,11 @@ MonoBehaviour:
   redoButton: {fileID: 1172466473}
   deleteButton: {fileID: 155310770}
   moveAxis: {fileID: 1684497321}
+  rotateAxis: {fileID: 0}
   highlightMaterial: {fileID: 2100000, guid: 79befef2596e13740b829440b3317d67, type: 2}
   cachedData:
     blocks: []
+  currentSelectType: 0
   selectedBlock: {fileID: 0}
   currentGhost: {fileID: 0}
   currentBlockResourcePath: 

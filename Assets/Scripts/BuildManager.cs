@@ -16,6 +16,7 @@ public class BuildManager : MonoBehaviour
     public Button redoButton;
     public Button deleteButton;
     public GameObject moveAxis;
+    public GameObject rotateAxis;
 
     private Material originalMaterial;
     private Renderer selectedRenderer;
@@ -34,6 +35,7 @@ public class BuildManager : MonoBehaviour
     public BlockDataList cachedData = new BlockDataList();
 
     [Header("Current")]
+    public SelectType currentSelectType;
     public Block selectedBlock;
     public GameObject currentGhost;        // 当前的 ghost 实例
     public string currentBlockResourcePath;
@@ -96,8 +98,17 @@ private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
                     Destroy(currentGhost);
                     hoveredConnector = null;
                 }
+
                 HandleSelection();
-                HandleMovement();
+                
+                if (currentSelectType == SelectType.Move)
+                {
+                    HandleMovement();
+                }
+                else if (currentSelectType == SelectType.Rotate)
+                {
+                    HandleRotation();
+                }
             }
             else
             {
@@ -124,33 +135,39 @@ private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
         if (moveAxis == null || !moveAxis.activeSelf) return;
 
         Vector3 camForward = mainCamera.transform.forward.normalized;
+        Vector3 camUp = mainCamera.transform.up.normalized;
 
         // 找到与相机 forward 最接近的方向
-        Vector3 nearest = dirs[0];
-        float maxDot = Vector3.Dot(camForward, nearest);
+        Vector3 nearestForward = dirs[0];
+        Vector3 nearestUp = dirs[0];
+
+        float maxDotForward = Vector3.Dot(camForward, nearestForward);
+        float maxDotUp = Vector3.Dot(camForward, nearestUp);
+
         for (int i = 1; i < dirs.Length; i++)
         {
-            float dot = Vector3.Dot(camForward, dirs[i]);
-            if (dot > maxDot)
+            float dotForward = Vector3.Dot(camForward, dirs[i]);
+            float dotUp = Vector3.Dot(camUp, dirs[i]);
+
+            if (dotForward > maxDotForward)
             {
-                maxDot = dot;
-                nearest = dirs[i];
+                maxDotForward = dotForward;
+                nearestForward = dirs[i];
+            }
+
+            if (dotUp > maxDotUp)
+            {
+                maxDotUp = dotUp;
+                nearestUp = dirs[i];
             }
         }
 
-        // 分类讨论，避免 forward 和 up 共线
-        Vector3 up = Vector3.up;
-        if (Mathf.Abs(Vector3.Dot(nearest, Vector3.up)) > 0.5f)
-        {
-            up = Vector3.right; // 如果 forward 接近 ±Y，就改用 Z 当 up
-        }
-
         // 设置 Gizmo 旋转
-        moveAxis.transform.rotation = Quaternion.LookRotation(nearest, up);
+        moveAxis.transform.rotation = Quaternion.LookRotation(nearestForward, nearestUp);
 
         // 保存坐标系三方向，供移动用
-        axisForward = nearest;
-        axisRight = Vector3.Cross(up, axisForward).normalized;
+        axisForward = nearestForward;
+        axisRight = Vector3.Cross(nearestUp, axisForward).normalized;
         axisUp = Vector3.Cross(axisForward, axisRight).normalized;
     }
 
@@ -234,14 +251,6 @@ private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
 
         Vector3 moveDir = Vector3.zero;
 
-        Vector3 camForward = mainCamera.transform.forward;
-        Vector3 camRight = mainCamera.transform.right;
-        Vector3 camUp = mainCamera.transform.up;
-
-        camForward.Normalize();
-        camRight.Normalize();
-        camUp.Normalize();
-
         if (Keyboard.current.wKey.wasPressedThisFrame) moveDir += axisForward;
         if (Keyboard.current.sKey.wasPressedThisFrame) moveDir -= axisForward;
         if (Keyboard.current.dKey.wasPressedThisFrame) moveDir += axisRight;
@@ -249,19 +258,18 @@ private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
         if (Keyboard.current.eKey.wasPressedThisFrame) moveDir += axisUp;
         if (Keyboard.current.qKey.wasPressedThisFrame) moveDir -= axisUp;
 
-        //Debug.Log($"{camForward} {camRight} {camUp}");
-
         if (moveDir != Vector3.zero)
         {
             Vector3 oldPos = selectedBlock.transform.position;
 
             Vector3 newPos = SnapCenterByMinCorner(
                 oldPos + moveDir * moveStep,
+                selectedBlock.transform.rotation,
                 selectedBlock
             );
 
             // 检查是否被阻挡
-            if (!IsMovementBlocked(newPos, selectedBlock))
+            if (!IsBlocked(newPos, selectedBlock.transform.rotation, selectedBlock))
             {
                 selectedBlock.transform.position = newPos;
                 SaveBlock(selectedBlock);
@@ -273,6 +281,51 @@ private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
             else
             {
                 Debug.Log("移动失败，被其他方块阻挡");
+            }
+        }
+    }
+
+    void HandleRotation()
+    {
+        if (selectedBlock == null) return;
+
+        Vector3 moveEuler = Vector3.zero;
+
+        if (Keyboard.current.wKey.wasPressedThisFrame) moveEuler += axisRight * 90;
+        if (Keyboard.current.sKey.wasPressedThisFrame) moveEuler -= axisRight * 90;
+        if (Keyboard.current.dKey.wasPressedThisFrame) moveEuler += axisUp * 90;
+        if (Keyboard.current.aKey.wasPressedThisFrame) moveEuler -= axisUp * 90;
+        if (Keyboard.current.eKey.wasPressedThisFrame) moveEuler += axisForward * 90;
+        if (Keyboard.current.qKey.wasPressedThisFrame) moveEuler -= axisForward * 90;
+
+        if (moveEuler != Vector3.zero)
+        {
+            Quaternion oldRot = selectedBlock.transform.rotation;
+
+            Quaternion newRot = oldRot * Quaternion.Euler(moveEuler);
+
+            Vector3 oldPos = selectedBlock.transform.position;
+
+            Vector3 newPos = SnapCenterByMinCorner(
+                oldPos,
+                newRot,
+                selectedBlock
+            );
+
+            // 检查是否被阻挡
+            if (!IsBlocked(newPos, newRot, selectedBlock))
+            {
+                selectedBlock.transform.position = newPos;
+                selectedBlock.transform.rotation = newRot;
+                SaveBlock(selectedBlock);
+
+                // 记录操作到 Undo 栈
+                var action = new RotateBlockAction(selectedBlock, oldPos, newPos, oldRot, newRot);
+                ActionManager.instance.Push(action);
+            }
+            else
+            {
+                Debug.Log("旋转失败，被其他方块阻挡");
             }
         }
     }
@@ -389,7 +442,7 @@ private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
 
                     // 计算 Snap 后的位置
                     rawPos = nearestWorldPos + nearestNormal * 0.5f;
-                    snappedPos = SnapCenterByMinCorner(rawPos, prefabBlock);
+                    snappedPos = SnapCenterByMinCorner(rawPos, block.transform.rotation, prefabBlock);
 
                     currentGhost.transform.position = snappedPos;
                     //currentGhost.transform.rotation = Quaternion.LookRotation(nearestNormal);
@@ -594,26 +647,51 @@ private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
     }
 
     // 轴对齐方块的精确吸附：先对齐最小角，再还原中心
-    public Vector3 SnapCenterByMinCorner(Vector3 center, Block b)
+    public Vector3 SnapCenterByMinCorner(Vector3 targetCenter, Quaternion targetRotation, Block b)
     {
-        // 方块在世界中的“占用尺寸”（单位：格子）
-        Vector3 worldSize = new Vector3(b.x * gridSize, b.y * gridSize, b.z * gridSize);
+        // 方块的局部半尺寸（不含旋转）
+        Vector3 halfSize = new Vector3(b.x * gridSize, b.y * gridSize, b.z * gridSize) * 0.5f;
 
-        // 计算当前最小角（min）在世界空间的位置
-        Vector3 min = center - 0.5f * worldSize;
+        // 计算旋转后的 8 个顶点
+        Vector3[] corners = new Vector3[8];
+        int i = 0;
+        for (int xi = -1; xi <= 1; xi += 2)
+        {
+            for (int yi = -1; yi <= 1; yi += 2)
+            {
+                for (int zi = -1; zi <= 1; zi += 2)
+                {
+                    Vector3 localCorner = new Vector3(xi * halfSize.x, yi * halfSize.y, zi * halfSize.z);
+                    corners[i++] = targetCenter + targetRotation * localCorner;
+                }
+            }
+        }
 
-        // 将最小角对齐到网格（考虑 gridOrigin）
+        // 得到 AABB 的 min/max
+        Vector3 min = corners[0];
+        Vector3 max = corners[0];
+        foreach (var c in corners)
+        {
+            min = Vector3.Min(min, c);
+            max = Vector3.Max(max, c);
+        }
+
+        // 将 min 对齐到网格
         Vector3 snappedMin = new Vector3(
             Mathf.Round((min.x - gridOrigin.x) / gridSize) * gridSize + gridOrigin.x,
             Mathf.Round((min.y - gridOrigin.y) / gridSize) * gridSize + gridOrigin.y,
             Mathf.Round((min.z - gridOrigin.z) / gridSize) * gridSize + gridOrigin.z
         );
 
-        // 用对齐后的最小角 + 半尺寸 = 新的中心
-        return snappedMin + 0.5f * worldSize;
+        // 新中心 = snappedMin + 半尺寸 (要在旋转空间里算)
+        Vector3 offset = targetRotation * halfSize; // 半尺寸在旋转后的偏移
+        Vector3 snappedCenter = snappedMin + (max - min) * 0.5f;
+
+        return snappedCenter;
     }
 
-    bool IsMovementBlocked(Vector3 targetCenter, Block block)
+
+    bool IsBlocked(Vector3 targetCenter, Quaternion targetRotation, Block block)
     {
         // 方块的半尺寸
         Vector3 halfExtents = new Vector3(block.x, block.y, block.z) * 0.5f;
@@ -622,7 +700,7 @@ private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
         Collider[] hits = Physics.OverlapBox(
             targetCenter,
             halfExtents,    // 稍微缩小，避免边界浮点误差
-            Quaternion.identity,
+            targetRotation,
             blockLayer              // 只检测方块层
         );
 
@@ -651,6 +729,12 @@ private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
 
         return fullPath;
     }
+}
+
+public enum SelectType
+{
+    Move,
+    Rotate
 }
 
 [System.Serializable]
