@@ -64,9 +64,7 @@ public class SaveManager : MonoBehaviour
     {
         currentSaveName = saveName;
 
-        // Çå¿Õ³¡¾°·½¿é
-        foreach (Transform child in BuildManager.instance.blocksParent)
-            Destroy(child.gameObject);
+        Destroy(BuildManager.instance.blocksParent.gameObject);
 
         BuildManager.instance.cachedData = new BlockDataList();
         BuildManager.instance.currentSaveName = saveName;

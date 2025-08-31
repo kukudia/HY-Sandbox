@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using Unity.IO.Archive;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -10,11 +11,9 @@ public class BuildManager : MonoBehaviour
     public static BuildManager instance;
     public Camera mainCamera;
     public Transform blocksParent;
+    public LayerMask axisLayer;
     public LayerMask blockLayer;   // 方块所在的层
 
-    public Button undoButton;
-    public Button redoButton;
-    public Button deleteButton;
     public GameObject moveAxis;
     public GameObject rotateAxis;
 
@@ -24,6 +23,11 @@ public class BuildManager : MonoBehaviour
     private MoveAxisHandle activeHandle = null;
     private Vector3 dragStartPos;
     private Vector3 blockStartPos;
+
+    private RotateAxisHandle activeRotateHandle = null;
+    private Vector3 rotateDragStart;
+    private Quaternion blockStartRot;
+
 
     // 网格参数
     private float gridSize = 1f;
@@ -39,7 +43,7 @@ public class BuildManager : MonoBehaviour
     public Block selectedBlock;
     public GameObject currentGhost;        // 当前的 ghost 实例
     public string currentBlockResourcePath;
-    public string currentSaveName;
+    public string currentSaveName = "default";
     public Connector hoveredConnector;     // 鼠标当前指向的连接点
 
     private Vector3 axisForward;
@@ -56,8 +60,8 @@ public class BuildManager : MonoBehaviour
         -Vector3.forward
     };
 
-private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
-    private string savePath => Path.Combine(Application.persistentDataPath, "blocks.json");
+    private string savePath => SaveManager.instance.GetSavePath(currentSaveName);
+
 
     public bool buildMode;
     public bool penetrationMode;
@@ -69,9 +73,6 @@ private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
 
     private void Start()
     {
-        undoButton.onClick.AddListener(() => ActionManager.instance.Undo());
-        redoButton.onClick.AddListener(() => ActionManager.instance.Redo());
-        deleteButton.onClick.AddListener(DeleteBlock);
         LoadAllBlocks();
     }
 
@@ -118,8 +119,16 @@ private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
 
         if (buildMode && selectedBlock != null)
         {
-            AlignMoveAxisToNearestWorldDir();
-            HandleAxisDrag();
+            AlignAxisToNearestWorldDir();
+
+            if (currentSelectType == SelectType.Move)
+            {
+                HandleMoveAxisDrag();
+            }
+            else if (currentSelectType == SelectType.Rotate)
+            {
+                HandleRotateAxisDrag();
+            }
         }
 
         // 撤销重做
@@ -130,10 +139,8 @@ private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
         if (selectedBlock != null && Keyboard.current.deleteKey.wasPressedThisFrame) DeleteBlock();
     }
 
-    void AlignMoveAxisToNearestWorldDir()
+    void AlignAxisToNearestWorldDir()
     {
-        if (moveAxis == null || !moveAxis.activeSelf) return;
-
         Vector3 camForward = mainCamera.transform.forward.normalized;
         Vector3 camUp = mainCamera.transform.up.normalized;
 
@@ -162,23 +169,56 @@ private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
             }
         }
 
-        // 设置 Gizmo 旋转
-        moveAxis.transform.rotation = Quaternion.LookRotation(nearestForward, nearestUp);
-
         // 保存坐标系三方向，供移动用
         axisForward = nearestForward;
         axisRight = Vector3.Cross(nearestUp, axisForward).normalized;
         axisUp = Vector3.Cross(axisForward, axisRight).normalized;
+
+        if (moveAxis != null)
+        {
+            moveAxis.transform.rotation = Quaternion.LookRotation(nearestForward, nearestUp);
+        }
+
+        if (rotateAxis != null)
+        {
+            rotateAxis.transform.rotation = Quaternion.LookRotation(nearestForward, nearestUp);
+        }
     }
 
     void HandleSelection()
     {
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             Vector2 mousePos = Mouse.current.position.ReadValue();
             Ray ray = mainCamera.ScreenPointToRay(mousePos);
 
-            if (Physics.Raycast(ray, out RaycastHit hit, 100f, blockLayer))
+            if (Physics.Raycast(ray, out RaycastHit hit, 100f, axisLayer))
+            {
+                MoveAxisHandle moveHandle = hit.collider.GetComponent<MoveAxisHandle>();
+                if (moveHandle != null)
+                {
+                    activeHandle = moveHandle;
+                    dragStartPos = hit.point;
+                    blockStartPos = selectedBlock.transform.position;
+                    return;
+                }
+
+                RotateAxisHandle rotateHandle = hit.collider.GetComponent<RotateAxisHandle>();
+                if (rotateHandle != null)
+                {
+                    activeRotateHandle = rotateHandle;
+                    rotateDragStart = hit.point;
+                    blockStartRot = selectedBlock.transform.rotation;
+                    return;
+                }
+            }
+
+            if (Physics.Raycast(ray, out hit, 100f, blockLayer))
             {
                 Block block = hit.collider.GetComponentInParent<Block>();
                 if (block != null)
@@ -196,10 +236,9 @@ private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
                 {
                     //DeselectBlock();
                 }
-            }
-            else
-            {
-                //DeselectBlock();
+
+                MainUIButtons mainUIButtons = FindFirstObjectByType<MainUIButtons>();
+                mainUIButtons.deleteButton.gameObject.SetActive(selectedBlock != null);
             }
         }
     }
@@ -330,23 +369,8 @@ private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
         }
     }
 
-    void HandleAxisDrag()
+    void HandleMoveAxisDrag()
     {
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (Physics.Raycast(ray, out RaycastHit hit, 100f))
-            {
-                MoveAxisHandle handle = hit.collider.GetComponent<MoveAxisHandle>();
-                if (handle != null)
-                {
-                    activeHandle = handle;
-                    dragStartPos = hit.point;
-                    blockStartPos = selectedBlock.transform.position;
-                }
-            }
-        }
-
         if (Mouse.current.leftButton.isPressed && activeHandle != null)
         {
             // 根据 handle 名称选择方向
@@ -386,6 +410,51 @@ private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
             activeHandle = null;
         }
     }
+
+    void HandleRotateAxisDrag()
+    {
+        if (Mouse.current.leftButton.isPressed && activeRotateHandle != null)
+        {
+            // 旋转轴（世界空间）
+            Vector3 axis = activeRotateHandle.axis;
+
+            // 从相机发射射线，与一个垂直于旋转轴的平面相交
+            Plane dragPlane = new Plane(axis, selectedBlock.transform.position);
+
+            Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+            if (dragPlane.Raycast(ray, out float enter))
+            {
+                Vector3 hitPoint = ray.GetPoint(enter);
+
+                // 起点和当前点在平面上的向量
+                Vector3 from = (rotateDragStart - selectedBlock.transform.position).normalized;
+                Vector3 to = (hitPoint - selectedBlock.transform.position).normalized;
+
+                // 计算旋转角度
+                float angle = Vector3.SignedAngle(from, to, axis);
+
+                // 步进（比如 15°/45°）
+                float step = 15f;
+                float snappedAngle = Mathf.Round(angle / step) * step;
+
+                Quaternion newRot = blockStartRot * Quaternion.AngleAxis(snappedAngle, axis);
+
+                // 检查是否阻挡
+                if (!IsBlocked(selectedBlock.transform.position, newRot, selectedBlock))
+                {
+                    selectedBlock.transform.rotation = newRot;
+                    rotateAxis.transform.rotation = newRot; // gizmo 跟随
+                }
+            }
+        }
+
+        if (Mouse.current.leftButton.wasReleasedThisFrame && activeRotateHandle != null)
+        {
+            SaveBlock(selectedBlock);
+            activeRotateHandle = null;
+        }
+    }
+
 
     void HandleBuildingPreview()
     {
@@ -576,9 +645,20 @@ private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
 
     public void LoadAllBlocks()
     {
+        if (blocksParent != null)
+        {
+            Destroy(blocksParent);
+        }
+
+        GameObject gameObject = new GameObject();
+        gameObject.name = savePath;
+        blocksParent = gameObject.transform;
+
         if (!File.Exists(savePath))
         {
-            Debug.Log("没有找到保存文件，跳过加载。");
+            Debug.Log($"没有在{savePath}找到保存文件，跳过加载。");
+            MainUIPanels mainUIPanels = FindFirstObjectByType<MainUIPanels>();
+            mainUIPanels.ShowCreatePanel();
             return;
         }
 
