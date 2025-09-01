@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
-using Unity.IO.Archive;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class BuildManager : MonoBehaviour
 {
@@ -41,6 +39,7 @@ public class BuildManager : MonoBehaviour
     [Header("Current")]
     public SelectType currentSelectType;
     public Block selectedBlock;
+    public Block lastSaveBlock;
     public GameObject currentGhost;        // 当前的 ghost 实例
     public string currentBlockResourcePath;
     public string currentSaveName = "default";
@@ -299,6 +298,13 @@ public class BuildManager : MonoBehaviour
 
         if (moveDir != Vector3.zero)
         {
+            Debug.Log($"Move direction: {moveDir}");
+
+            //if (Keyboard.current.shiftKey.isPressed)
+            //{
+            //    moveStep 
+            //}
+
             Vector3 oldPos = selectedBlock.transform.position;
 
             Vector3 newPos = SnapCenterByMinCorner(
@@ -310,12 +316,19 @@ public class BuildManager : MonoBehaviour
             // 检查是否被阻挡
             if (!IsBlocked(newPos, selectedBlock.transform.rotation, selectedBlock))
             {
-                selectedBlock.transform.position = newPos;
-                SaveBlock(selectedBlock);
+                if (Keyboard.current.shiftKey.isPressed)
+                {
+                    HandleDuplicate(newPos, selectedBlock.transform.rotation);
+                }
+                else
+                {
+                    selectedBlock.transform.position = newPos;
+                    SaveBlock(selectedBlock);
 
-                // 记录操作到 Undo 栈
-                var action = new MoveBlockAction(selectedBlock, oldPos, newPos);
-                ActionManager.instance.Push(action);
+                    // 记录操作到 Undo 栈
+                    var action = new MoveBlockAction(selectedBlock, oldPos, newPos);
+                    ActionManager.instance.Push(action);
+                }
             }
             else
             {
@@ -395,12 +408,35 @@ public class BuildManager : MonoBehaviour
                 // 投影到拖拽方向
                 float moveAmount = Vector3.Dot(delta, dir.normalized);
 
-                // 步进对齐
-                Vector3 targetPos = blockStartPos + dir.normalized * Mathf.Round(moveAmount / moveStep) * moveStep;
+                Vector3 oldPos = selectedBlock.transform.position;
 
-                // 更新位置
-                selectedBlock.transform.position = targetPos;
-                moveAxis.transform.position = targetPos;
+                // 步进对齐
+                Vector3 newPos = blockStartPos + dir.normalized * Mathf.Round(moveAmount / moveStep) * moveStep;
+
+                if (newPos != oldPos)
+                {
+                    // 检查是否被阻挡
+                    if (!IsBlocked(newPos, selectedBlock.transform.rotation, selectedBlock))
+                    {
+                        if (Keyboard.current.shiftKey.isPressed)
+                        {
+                            HandleDuplicate(newPos, selectedBlock.transform.rotation);
+                        }
+                        else
+                        {
+                            selectedBlock.transform.position = newPos;
+                            SaveBlock(selectedBlock);
+
+                            // 记录操作到 Undo 栈
+                            var action = new MoveBlockAction(selectedBlock, oldPos, newPos);
+                            ActionManager.instance.Push(action);
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("移动失败，被其他方块阻挡");
+                    }
+                }
             }
         }
 
@@ -453,6 +489,24 @@ public class BuildManager : MonoBehaviour
             SaveBlock(selectedBlock);
             activeRotateHandle = null;
         }
+    }
+
+    void HandleDuplicate(Vector3 newPos, Quaternion newRot)
+    {
+        string resourcePath = selectedBlock.resourcePath;
+        Debug.Log(resourcePath);
+        GameObject prefab = Resources.Load<GameObject>(resourcePath);
+
+        Vector3 moveDir = (newPos - selectedBlock.transform.position).normalized;
+        float step = GetMoveStep(selectedBlock, moveDir);
+
+        // 复制时对齐到步长
+        newPos = selectedBlock.transform.position + moveDir * step;
+
+        DeselectBlock();
+
+        CreateBlock(prefab, resourcePath, newPos, newRot);
+        SelectBlock(lastSaveBlock);
     }
 
 
@@ -562,6 +616,7 @@ public class BuildManager : MonoBehaviour
         if (prefab != null)
         {
             GameObject obj = Instantiate(prefab, pos, rot);
+            obj.transform.parent = blocksParent;
             Block block = obj.GetComponent<Block>();
             block.resourcePath = resourcePath;
             SaveBlock(block);
@@ -594,6 +649,7 @@ public class BuildManager : MonoBehaviour
 
     public void SaveBlock(Block block)
     {
+        lastSaveBlock = block;
         BlockData data = new BlockData(block);
 
         int index = cachedData.blocks.FindIndex(b => b.id == data.id);
@@ -651,7 +707,7 @@ public class BuildManager : MonoBehaviour
         }
 
         GameObject gameObject = new GameObject();
-        gameObject.name = savePath;
+        gameObject.name = currentSaveName;
         blocksParent = gameObject.transform;
 
         if (!File.Exists(savePath))
@@ -703,7 +759,12 @@ public class BuildManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"加载完成，耗时{Time.timeSinceLevelLoadAsDouble}s，共{cachedData.blocks.Count}个方块, 恢复成功{sucessCount}个方块，恢复失败{failCount}个方块");
+        if (cachedData.blocks.Count == 0)
+        {
+            InitialBlock();
+        }
+
+        Debug.Log($"加载{savePath}完成，耗时{Time.timeSinceLevelLoadAsDouble}s，共{cachedData.blocks.Count}个方块, 恢复成功{sucessCount}个方块，恢复失败{failCount}个方块");
 
         if ( unloadIds.Count > 0 )
         {
@@ -724,6 +785,14 @@ public class BuildManager : MonoBehaviour
             File.WriteAllText(savePath, json);
             Debug.Log($"Removed unload data {id}");
         }
+    }
+
+    void InitialBlock()
+    {
+        string cockpitResourcePath = ConvertToResourcesPath("Assets/Resources/Blocks/Cockpit.prefab");
+        GameObject prefab = Resources.Load<GameObject>(cockpitResourcePath);
+        Block prefabBlock = prefab.GetComponent<Block>();
+        CreateBlock(prefab, cockpitResourcePath, Vector3.zero, Quaternion.identity);
     }
 
     // 轴对齐方块的精确吸附：先对齐最小角，再还原中心
@@ -794,6 +863,32 @@ public class BuildManager : MonoBehaviour
         }
         return false;
     }
+
+    float GetMoveStep(Block block, Vector3 moveDir)
+    {
+        // 方块的局部半尺寸（不考虑旋转）
+        Vector3 halfSize = new Vector3(block.x, block.y, block.z) * gridSize * 0.5f;
+
+        // 方块旋转
+        Quaternion rot = block.transform.rotation;
+
+        // 取旋转后局部坐标轴
+        Vector3 right = rot * Vector3.right;
+        Vector3 up = rot * Vector3.up;
+        Vector3 forward = rot * Vector3.forward;
+
+        // 移动方向（归一化）
+        Vector3 dir = moveDir.normalized;
+
+        // 在这个方向上的“投影厚度” = 各轴厚度在 dir 上的分量绝对值
+        float step =
+            Mathf.Abs(Vector3.Dot(dir, right)) * (halfSize.x * 2) +
+            Mathf.Abs(Vector3.Dot(dir, up)) * (halfSize.y * 2) +
+            Mathf.Abs(Vector3.Dot(dir, forward)) * (halfSize.z * 2);
+
+        return step;
+    }
+
 
     public static string ConvertToResourcesPath(string fullPath)
     {

@@ -17,6 +17,7 @@ public class MainUIPanels : MonoBehaviour
 
     public void ShowCreatePanel()
     {
+        BuildManager.instance.enabled = false;
         buildPanel.SetActive(false);
         createPanel.SetActive(true);
         inputName.text = "";

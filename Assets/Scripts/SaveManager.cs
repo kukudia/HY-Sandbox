@@ -13,6 +13,8 @@ public class SaveManager : MonoBehaviour
 
     public string currentSaveName = "default"; // 当前存档槽
 
+    public List<string> saves = new List<string>();
+
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -25,17 +27,19 @@ public class SaveManager : MonoBehaviour
     /// <summary>
     /// 获取所有存档名字
     /// </summary>
-    public List<string> GetAllSaveNames()
+    public void GetAllSaveNames()
     {
-        List<string> saves = new List<string>();
+        saves.Clear();
+
         if (!Directory.Exists(saveDirectory))
-            return saves;
+        {
+            return;
+        }
 
         foreach (var file in Directory.GetFiles(saveDirectory, "*.json"))
         {
             saves.Add(Path.GetFileNameWithoutExtension(file));
         }
-        return saves;
     }
 
     /// <summary>
@@ -55,6 +59,8 @@ public class SaveManager : MonoBehaviour
         File.WriteAllText(path, JsonUtility.ToJson(BuildManager.instance.cachedData, true));
 
         Debug.Log($"新建存档 {saveName}");
+
+        SaveUIPanel.instance.RefreshList();
     }
 
     /// <summary>
@@ -85,6 +91,7 @@ public class SaveManager : MonoBehaviour
             File.Delete(path);
             Debug.Log($"删除存档 {saveName}");
         }
+        SaveUIPanel.instance.RefreshList();
     }
 
     /// <summary>
@@ -93,5 +100,18 @@ public class SaveManager : MonoBehaviour
     public string GetSavePath(string saveName)
     {
         return Path.Combine(saveDirectory, saveName + ".json");
+    }
+
+    public string GetSaveFileSize(string saveName)
+    {
+        string path = SaveManager.instance.GetSavePath(saveName);
+        if (File.Exists(path))
+        {
+            long bytes = new FileInfo(path).Length;
+            if (bytes < 1024) return bytes + "b";
+            else if (bytes < 1024 * 1024) return (bytes / 1024f).ToString("F1") + "kb";
+            else return (bytes / (1024f * 1024f)).ToString("F1") + "mb";
+        }
+        return "0 B";
     }
 }
