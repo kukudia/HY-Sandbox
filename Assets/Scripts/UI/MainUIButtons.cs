@@ -5,18 +5,26 @@ using UnityEngine.UI;
 
 public class MainUIButtons : MonoBehaviour
 {
+    public static MainUIButtons instance;
     public Button undoButton;
     public Button redoButton;
+    public Button actionClearButton;
     public Button deleteButton;
     public Button defaultButton;
     public Button moveButton;
     public Button rotateButton;
+    public Button playButton;
     public Button showCreateButton;
-    public Button confirmButton;
-    public Button cancelButton;
+    public Button confirmCreateButton;
+    public Button cancelCreateButton;
+    public Button confirmDeleteButton;
+    public Button cancelDeleteButton;
     public List<BlockButton> blockButtons = new List<BlockButton>();
 
-    private MainUIPanels mainUIPanels;
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void OnValidate()
     {
@@ -35,20 +43,20 @@ public class MainUIButtons : MonoBehaviour
 
     private void Start()
     {
-        mainUIPanels = GetComponent<MainUIPanels>();
-
-        undoButton.onClick.AddListener(() => ActionManager.instance.Undo());
-        redoButton.onClick.AddListener(() => ActionManager.instance.Redo());
-        deleteButton.onClick.AddListener(() => BuildManager.instance.DeleteBlock());
+        undoButton.onClick.AddListener(ActionManager.instance.Undo);
+        redoButton.onClick.AddListener(ActionManager.instance.Redo);
+        actionClearButton.onClick.AddListener(ActionManager.instance.Clear);
+        deleteButton.onClick.AddListener(BuildManager.instance.DeleteBlock);
         defaultButton.onClick.AddListener(SetDefault);
         moveButton.onClick.AddListener(SetDefault);
         rotateButton.onClick.AddListener(SetDefault);
         moveButton.onClick.AddListener(SetMove);
         rotateButton.onClick.AddListener(SetRotate);
-
-        showCreateButton.onClick.AddListener(mainUIPanels.ShowCreatePanel);
-        confirmButton.onClick.AddListener(mainUIPanels.OnConfirm);
-        cancelButton.onClick.AddListener(mainUIPanels.OnCancel);
+        playButton.onClick.AddListener(MainUIPanels.instance.PlayStart);
+        showCreateButton.onClick.AddListener(MainUIPanels.instance.ShowCreatePanel);
+        confirmCreateButton.onClick.AddListener(MainUIPanels.instance.OnConfirmCreate);
+        cancelCreateButton.onClick.AddListener(MainUIPanels.instance.HideCreatePanel);
+        cancelDeleteButton.onClick.AddListener(MainUIPanels.instance.HideDeletePanel);
 
         foreach (BlockButton blockButton in blockButtons)
         {

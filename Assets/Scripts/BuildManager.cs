@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -72,7 +73,8 @@ public class BuildManager : MonoBehaviour
 
     private void Start()
     {
-        LoadAllBlocks();
+        buildMode = true;
+        SetBuildMode();
     }
 
     void Update()
@@ -80,13 +82,7 @@ public class BuildManager : MonoBehaviour
         if (Keyboard.current.bKey.wasPressedThisFrame)
         {
             buildMode = !buildMode;
-            Cursor.lockState = buildMode ? CursorLockMode.Confined : CursorLockMode.Locked;
-
-            if (!buildMode && currentGhost != null)
-            {
-                Destroy(currentGhost);
-                hoveredConnector = null;
-            }
+            SetBuildMode();
         }
 
         if (buildMode)
@@ -136,6 +132,25 @@ public class BuildManager : MonoBehaviour
 
         // 删除
         if (selectedBlock != null && Keyboard.current.deleteKey.wasPressedThisFrame) DeleteBlock();
+    }
+
+    void SetBuildMode()
+    {
+        Cursor.lockState = buildMode ? CursorLockMode.Confined : CursorLockMode.Locked;
+
+        if (!buildMode)
+        {
+            if (selectedBlock != null)
+            {
+                DeselectBlock();
+            }
+
+            if (currentGhost != null)
+            {
+                Destroy(currentGhost);
+                hoveredConnector = null;
+            }
+        }
     }
 
     void AlignAxisToNearestWorldDir()
@@ -706,17 +721,20 @@ public class BuildManager : MonoBehaviour
             Destroy(blocksParent);
         }
 
+        if (currentSaveName == String.Empty && SaveManager.instance.saves.Count > 0)
+        {
+            currentSaveName = SaveManager.instance.saves[0];
+        }
+
         GameObject gameObject = new GameObject();
         gameObject.name = currentSaveName;
         blocksParent = gameObject.transform;
 
-        if (!File.Exists(savePath))
-        {
-            Debug.Log($"没有在{savePath}找到保存文件，跳过加载。");
-            MainUIPanels mainUIPanels = FindFirstObjectByType<MainUIPanels>();
-            mainUIPanels.ShowCreatePanel();
-            return;
-        }
+        //if (!File.Exists(savePath))
+        //{
+        //    Debug.Log($"没有在{savePath}找到保存文件，跳过加载。");
+        //    return;
+        //}
 
         string json = File.ReadAllText(savePath);
         cachedData = JsonUtility.FromJson<BlockDataList>(json);

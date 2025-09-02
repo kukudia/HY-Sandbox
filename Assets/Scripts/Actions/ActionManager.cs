@@ -58,6 +58,12 @@ public class ActionManager : MonoBehaviour
         }
     }
 
+    public void Clear()
+    {
+        undoStack.Clear();
+        redoStack.Clear();
+    }
+
     /// <summary>
     /// 统计动作
     /// </summary>

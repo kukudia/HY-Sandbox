@@ -29,6 +29,7 @@ public class SaveManager : MonoBehaviour
     /// </summary>
     public void GetAllSaveNames()
     {
+        //Debug.Log("GetAllSaveNames");
         saves.Clear();
 
         if (!Directory.Exists(saveDirectory))
@@ -39,6 +40,12 @@ public class SaveManager : MonoBehaviour
         foreach (var file in Directory.GetFiles(saveDirectory, "*.json"))
         {
             saves.Add(Path.GetFileNameWithoutExtension(file));
+        }
+
+        if (saves.Count == 0)
+        {
+            Debug.Log("saves.Count == 0");
+            MainUIPanels.instance.ShowCreatePanel();
         }
     }
 
@@ -52,8 +59,13 @@ public class SaveManager : MonoBehaviour
 
         // 清空 BuildManager 内的缓存和方块
         BuildManager.instance.cachedData = new BlockDataList();
-        foreach (Transform child in BuildManager.instance.blocksParent)
-            Destroy(child.gameObject);
+        if (BuildManager.instance.blocksParent != null)
+        {
+            foreach (Transform child in BuildManager.instance.blocksParent)
+            {
+                Destroy(child.gameObject);
+            }
+        }
 
         // 保存一个空存档文件
         File.WriteAllText(path, JsonUtility.ToJson(BuildManager.instance.cachedData, true));
@@ -70,7 +82,10 @@ public class SaveManager : MonoBehaviour
     {
         currentSaveName = saveName;
 
-        Destroy(BuildManager.instance.blocksParent.gameObject);
+        if (BuildManager.instance.blocksParent != null)
+        {
+            Destroy(BuildManager.instance.blocksParent.gameObject);
+        }
 
         BuildManager.instance.cachedData = new BlockDataList();
         BuildManager.instance.currentSaveName = saveName;

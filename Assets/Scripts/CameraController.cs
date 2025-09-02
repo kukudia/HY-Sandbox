@@ -3,8 +3,7 @@ using UnityEngine.InputSystem; // 新输入系统命名空间
 
 public class CameraController : MonoBehaviour
 {
-    public enum CameraMode { FirstPerson, FreeFly }
-    public CameraMode currentMode = CameraMode.FirstPerson;
+    public static CameraMode currentMode = CameraMode.FirstPerson;
 
     [Header("General Settings")]
     public float mouseSensitivity = 2f;
@@ -18,18 +17,21 @@ public class CameraController : MonoBehaviour
     [Header("Free Fly Settings")]
     public float freeFlySpeed = 10f;
 
-    void Start()
-    {
-        Cursor.lockState = CursorLockMode.Locked; // 锁定鼠标
-    }
-
     void Update()
     {
         HandleModeSwitch();
 
         if (!BuildManager.instance.buildMode)
         {
-            BuildManager.instance.DeselectBlock();
+            currentMode = CameraMode.FreeFly;
+        }
+        else
+        {
+            currentMode = CameraMode.Lock;
+        }
+
+        if (currentMode != CameraMode.Lock)
+        {
             HandleLook();
             HandleMovement();
         }
@@ -92,4 +94,11 @@ public class CameraController : MonoBehaviour
             transform.position += move * speed * Time.deltaTime;
         }
     }
+}
+
+public enum CameraMode
+{
+    FirstPerson,
+    FreeFly,
+    Lock
 }

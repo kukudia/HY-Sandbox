@@ -1,36 +1,85 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class MainUIPanels : MonoBehaviour
 {
+    public static MainUIPanels instance;
     public GameObject buildPanel;
     public GameObject createPanel;
+    public GameObject deletePanel;
     public InputField inputName; // 输入框
-    private MainUIButtons mainUIButtons;
+    public float fadeDuration = 0.3f; // 淡入淡出时长
 
-
-    private void Start()
+    private void Awake()
     {
-        //mainUIButtons = GetComponent<MainUIButtons>();
-        createPanel.SetActive(false); // 初始隐藏
+        instance = this;
+    }
+
+    // 通用淡入淡出方法
+    private IEnumerator Fade(GameObject panel, bool show)
+    {
+        if (show)
+            panel.SetActive(true);
+
+        CanvasGroup cg = panel.GetComponent<CanvasGroup>();
+        if (cg == null)
+            cg = panel.AddComponent<CanvasGroup>();
+
+        float start = cg.alpha;
+        float end = show ? 1f : 0f;
+        float t = 0f;
+
+        cg.interactable = show;
+        cg.blocksRaycasts = show;
+
+        while (t < fadeDuration)
+        {
+            t += Time.unscaledDeltaTime; // UI 用 unscaledDeltaTime 更自然
+            cg.alpha = Mathf.Lerp(start, end, t / fadeDuration);
+            yield return null;
+        }
+
+        cg.alpha = end;
+
+        if (!show)
+            panel.SetActive(false);
     }
 
     public void ShowCreatePanel()
     {
+        Cursor.lockState = CursorLockMode.Confined;
+        StartCoroutine(Fade(buildPanel, false));
+        StartCoroutine(Fade(createPanel, true));
         BuildManager.instance.enabled = false;
-        buildPanel.SetActive(false);
-        createPanel.SetActive(true);
         inputName.text = "";
     }
 
     public void HideCreatePanel()
     {
-        createPanel.SetActive(false);
-        buildPanel.SetActive(true);
+        StartCoroutine(Fade(createPanel, false));
+        StartCoroutine(Fade(buildPanel, true));
         BuildManager.instance.enabled = true;
     }
 
-    public void OnConfirm()
+    public void ShowDeletePanel(string save)
+    {
+        MainUIButtons.instance.confirmDeleteButton.onClick.AddListener(() => OnConfirmDelete(save));
+        Cursor.lockState = CursorLockMode.Confined;
+        deletePanel.transform.Find("DeleteTextPanel").GetComponentInChildren<Text>().text = $"Are you sure you want to delete {save}?";
+        StartCoroutine(Fade(buildPanel, false));
+        StartCoroutine(Fade(deletePanel, true));
+        BuildManager.instance.enabled = false;
+    }
+
+    public void HideDeletePanel()
+    {
+        StartCoroutine(Fade(deletePanel, false));
+        StartCoroutine(Fade(buildPanel, true));
+        BuildManager.instance.enabled = true;
+    }
+
+    public void OnConfirmCreate()
     {
         string name = inputName.text.Trim();
         if (!string.IsNullOrEmpty(name))
@@ -41,12 +90,23 @@ public class MainUIPanels : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("存档名字不能为空！");
+            Debug.LogWarning("存档名字不能为空");
         }
     }
 
-    public void OnCancel()
+    void OnConfirmDelete(string save)
     {
-        HideCreatePanel();
+        SaveManager.instance.DeleteSave(save);
+        if (SaveManager.instance.saves.Count > 0)
+        {
+            SaveManager.instance.LoadSave(SaveManager.instance.saves[0]);
+        }
+        HideDeletePanel();
+    }
+
+    public void PlayStart()
+    {
+        StartCoroutine(Fade(buildPanel, false));
+        PlayManager.instance.PlayStart();
     }
 }
