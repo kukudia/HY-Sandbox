@@ -11,6 +11,10 @@ public class Block : MonoBehaviour
 
     public int x = 1, y = 1, z = 1;
 
+    public float density = 1;
+
+    public float mass;
+
     public string resourcePath; // 运行时使用的预制体路径
 
     public GameObject connectorPrefab;
@@ -47,6 +51,7 @@ public class Block : MonoBehaviour
         x = Mathf.Max(1, x);
         y = Mathf.Max(1, y);
         z = Mathf.Max(1, z);
+        mass = x * y * z * density;
 
         if (canSpawnConnector)
         {

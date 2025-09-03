@@ -96,15 +96,6 @@ public class BuildManager : MonoBehaviour
                 }
 
                 HandleSelection();
-                
-                if (currentSelectType == SelectType.Move)
-                {
-                    HandleMovement();
-                }
-                else if (currentSelectType == SelectType.Rotate)
-                {
-                    HandleRotation();
-                }
             }
             else
             {
@@ -118,10 +109,12 @@ public class BuildManager : MonoBehaviour
 
             if (currentSelectType == SelectType.Move)
             {
+                HandleMovement();
                 HandleMoveAxisDrag();
             }
             else if (currentSelectType == SelectType.Rotate)
             {
+                HandleRotation();
                 HandleRotateAxisDrag();
             }
         }
