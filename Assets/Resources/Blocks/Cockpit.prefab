@@ -290,6 +290,7 @@ GameObject:
   m_Component:
   - component: {fileID: 199097415977098526}
   - component: {fileID: 5357469564833557730}
+  - component: {fileID: -390060922572916423}
   m_Layer: 3
   m_Name: Cockpit
   m_TagString: Untagged
@@ -331,6 +332,8 @@ MonoBehaviour:
   x: 2
   y: 2
   z: 2
+  density: 1
+  mass: 8
   resourcePath: 
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
   connectorParent: {fileID: 2695719906485559115}
@@ -507,3 +510,15 @@ MonoBehaviour:
   showConnectors: 1
   showLabel: 1
   uniqueId: 
+--- !u!114 &-390060922572916423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004239489873974274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15ee5b7c30b38874ba9fb4936c782e01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

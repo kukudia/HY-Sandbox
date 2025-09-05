@@ -6,6 +6,7 @@ public class MainUIPanels : MonoBehaviour
 {
     public static MainUIPanels instance;
     public GameObject buildPanel;
+    public GameObject playPanel;
     public GameObject createPanel;
     public GameObject deletePanel;
     public InputField inputName; //  ‰»ÎøÚ
@@ -107,6 +108,14 @@ public class MainUIPanels : MonoBehaviour
     public void PlayStart()
     {
         StartCoroutine(Fade(buildPanel, false));
+        StartCoroutine(Fade(playPanel, true));
         PlayManager.instance.PlayStart();
+    }
+
+    public void PlayEnd()
+    {
+        PlayManager.instance.PlayEnd();
+        StartCoroutine(Fade(playPanel, false));
+        StartCoroutine(Fade(buildPanel, true));
     }
 }

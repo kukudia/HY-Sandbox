@@ -14,6 +14,7 @@ public class MainUIButtons : MonoBehaviour
     public Button moveButton;
     public Button rotateButton;
     public Button playButton;
+    public Button exitButton;
     public Button showCreateButton;
     public Button confirmCreateButton;
     public Button cancelCreateButton;
@@ -53,6 +54,7 @@ public class MainUIButtons : MonoBehaviour
         moveButton.onClick.AddListener(SetMove);
         rotateButton.onClick.AddListener(SetRotate);
         playButton.onClick.AddListener(MainUIPanels.instance.PlayStart);
+        exitButton.onClick.AddListener(MainUIPanels.instance.PlayEnd);
         showCreateButton.onClick.AddListener(MainUIPanels.instance.ShowCreatePanel);
         confirmCreateButton.onClick.AddListener(MainUIPanels.instance.OnConfirmCreate);
         cancelCreateButton.onClick.AddListener(MainUIPanels.instance.HideCreatePanel);

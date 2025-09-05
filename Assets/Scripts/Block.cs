@@ -23,6 +23,7 @@ public class Block : MonoBehaviour
 
     public List<Connector> connectors= new List<Connector>();
 
+    public bool canRotate = true;
     public bool showCube = true;
     public bool showConnectors = true;
     public bool showLabel = true;

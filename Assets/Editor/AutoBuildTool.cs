@@ -29,6 +29,8 @@ public class AutoBuildTool
         Debug.Log($"Build 完成: {targetDir}");
 
         // === 3. 生成日志文件 ===
+        if (!Directory.Exists(targetDir))
+            Directory.CreateDirectory(targetDir);
         string logPath = Path.Combine(targetDir, "BuildInfo.txt");
         File.WriteAllText(logPath,
             $"Game: {buildName}\n" +

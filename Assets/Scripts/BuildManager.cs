@@ -15,6 +15,7 @@ public class BuildManager : MonoBehaviour
 
     public GameObject moveAxis;
     public GameObject rotateAxis;
+    public GameObject blocksParentPrefab;
 
     private Material originalMaterial;
     private Renderer selectedRenderer;
@@ -114,8 +115,11 @@ public class BuildManager : MonoBehaviour
             }
             else if (currentSelectType == SelectType.Rotate)
             {
-                HandleRotation();
-                HandleRotateAxisDrag();
+                if (selectedBlock.canRotate)
+                {
+                    HandleRotation();
+                    HandleRotateAxisDrag();
+                }
             }
         }
 
@@ -301,8 +305,8 @@ public class BuildManager : MonoBehaviour
         if (Keyboard.current.sKey.wasPressedThisFrame) moveDir -= axisForward;
         if (Keyboard.current.dKey.wasPressedThisFrame) moveDir += axisRight;
         if (Keyboard.current.aKey.wasPressedThisFrame) moveDir -= axisRight;
-        if (Keyboard.current.eKey.wasPressedThisFrame) moveDir += axisUp;
-        if (Keyboard.current.qKey.wasPressedThisFrame) moveDir -= axisUp;
+        if (Keyboard.current.qKey.wasPressedThisFrame) moveDir += axisUp;
+        if (Keyboard.current.eKey.wasPressedThisFrame) moveDir -= axisUp;
 
         if (moveDir != Vector3.zero)
         {
@@ -709,6 +713,8 @@ public class BuildManager : MonoBehaviour
 
     public void LoadAllBlocks()
     {
+        double time0 = Time.timeAsDouble;
+
         if (blocksParent != null)
         {
             Destroy(blocksParent);
@@ -719,7 +725,7 @@ public class BuildManager : MonoBehaviour
             currentSaveName = SaveManager.instance.saves[0];
         }
 
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = Instantiate(blocksParentPrefab);
         gameObject.name = currentSaveName;
         blocksParent = gameObject.transform;
 
@@ -775,8 +781,6 @@ public class BuildManager : MonoBehaviour
             InitialBlock();
         }
 
-        Debug.Log($"加载{savePath}完成，耗时{Time.timeSinceLevelLoadAsDouble}s，共{cachedData.blocks.Count}个方块, 恢复成功{sucessCount}个方块，恢复失败{failCount}个方块");
-
         if ( unloadIds.Count > 0 )
         {
             foreach (string id in unloadIds)
@@ -784,6 +788,10 @@ public class BuildManager : MonoBehaviour
                 ClearUnloadableData(id);
             }
         }
+
+        double time1 = Time.timeAsDouble;
+
+        Debug.Log($"加载{savePath}完成，耗时{time1 - time0}s，共{cachedData.blocks.Count}个方块, 恢复成功{sucessCount}个方块，恢复失败{failCount}个方块");
     }
 
     public void ClearUnloadableData(string id)
