@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class MainUIButtons : MonoBehaviour
@@ -68,6 +69,21 @@ public class MainUIButtons : MonoBehaviour
                 {
                     blockButton.button.onClick.AddListener(() => SetCurrentBlock(blockButton.block.name));
                 }
+            }
+        }
+    }
+
+    private void Update()
+    {
+        if (Keyboard.current.pKey.wasPressedThisFrame)
+        {
+            if (!PlayManager.instance.playMode)
+            {
+                MainUIPanels.instance.PlayStart();
+            }
+            else
+            {
+                MainUIPanels.instance.PlayEnd();
             }
         }
     }

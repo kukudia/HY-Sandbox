@@ -4,15 +4,13 @@ using UnityEngine.InputSystem;
 public class UniversalThruster : Thruster
 {
     [Header("Thrust Settings")]
-    public float thrustPower = 1000f;   // 推力大小（N）
+    //public float thrustPower = 1000f;   // 推力大小（N）
     public bool alignVisual = true;     // 是否旋转推进器朝向
     public float rotationSpeed = 5f;    // 推进器旋转速度 (deg/sec)
     public Transform cameraTransform;   // 主摄像机（必须指定）
 
     private void FixedUpdate()
     {
-
-
         if (ShouldActivate())
         {
             Vector3 inputDir = GetInputDirection();
@@ -68,7 +66,7 @@ public class UniversalThruster : Thruster
         }
 
         // 推力施加
-        rb.AddForceAtPosition(transform.forward * thrustPower, transform.position);
+        rb.AddForceAtPosition(transform.forward * thrust, transform.position);
     }
 
     public override bool ShouldActivate()

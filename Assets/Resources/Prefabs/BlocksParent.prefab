@@ -57,7 +57,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 1
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!114 &4169096309527571663
@@ -72,17 +72,65 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a80f9d58f40f8e8448632cacf5281bac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetHoverHeight: 10
+  heightTolerance: 0.1
+  tiltP: 8
+  tiltD: 2
+  maxTiltAngle: 15
+  rotationSmoothing: 5
+  baseHeightP: 5
+  minHeightP: 2
+  maxHeightP: 15
+  heightPResponseCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0.2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 10
+      value: 3
+      inSlope: 0.2
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  velocityHeightPAdjustment:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -5
+      value: 1.5
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 5
+      value: 1.5
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  heightI: 0.1
+  heightD: 2
+  gravityCompensationFactor: 1
   thrusters: []
-  hoverHeight: 5
-  kpPerMass: 1
-  ki: 1
-  kdPerMass: 2
-  attitudeKp: 1
-  forceWeight: 1
-  torqueWeight: 1
-  damping: 0.01
-  allocatorIters: 12
-  thrustSmoothTime: 0.08
-  integralMin: -1000
-  integralMax: 1000
   showUI: 1

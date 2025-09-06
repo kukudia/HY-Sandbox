@@ -1450,6 +1450,7 @@ MonoBehaviour:
     localPos: {x: 0.5, y: 0, z: 0}
     normal: {x: 1, y: 0, z: 0}
     order: 1
+  canRotate: 1
   showCube: 1
   showConnectors: 1
   showLabel: 1
@@ -1466,5 +1467,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57334dc6d946f994f8225fbf6ee3a5f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thrustPower: 500
+  model: {fileID: 0}
+  thrust: 250
   thrustDirection: {x: 0, y: 0, z: 1}

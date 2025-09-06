@@ -30,7 +30,7 @@ public class BuildManager : MonoBehaviour
 
 
     // Íø¸ñ²ÎÊý
-    private float gridSize = 1f;
+    public float gridSize = 1f;
     private Vector3 gridOrigin = Vector3.zero;
 
     public Material highlightMaterial;
@@ -728,6 +728,7 @@ public class BuildManager : MonoBehaviour
         GameObject gameObject = Instantiate(blocksParentPrefab);
         gameObject.name = currentSaveName;
         blocksParent = gameObject.transform;
+        PlayManager.instance.blocksParent = blocksParent;
 
         //if (!File.Exists(savePath))
         //{

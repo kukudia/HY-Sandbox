@@ -6,6 +6,7 @@ public class HoverThruster : Thruster
     public float maxThrust = 250f;   // 最大推力
     public float rotationSpeed = 5f;
     public float hoverHeight = 5f;    // 悬浮目标高度（可选）
+    public float heightP;
     public bool isHovered;
 
     private void Update()
@@ -28,7 +29,7 @@ public class HoverThruster : Thruster
     {
         //float eulerZ = transform.rotation.eulerAngles.z;
 
-        //if (eulerZ > -30 &&  eulerZ < 30)
+        //if (eulerZ > -30 && eulerZ < 30)
         //{
         //    Quaternion targetRot = Quaternion.LookRotation(transform.forward, Vector3.up);
         //    transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, rotationSpeed * Time.fixedDeltaTime * 60f);

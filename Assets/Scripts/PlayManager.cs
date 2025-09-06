@@ -1,5 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayManager : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class PlayManager : MonoBehaviour
 
     public void PlayStart()
     {
-        blocksParent = BuildManager.instance.blocksParent;
+        //blocksParent = BuildManager.instance.blocksParent;
 
         rb = blocksParent.GetComponent<Rigidbody>();
 
@@ -41,12 +42,10 @@ public class PlayManager : MonoBehaviour
             hoverFlightController.enabled = true;
             hoverFlightController.Init();
         }
-        else
-        {
-            hoverFlightController.enabled = false;
-        }
 
         Camera.main.GetComponent<CameraController>().playerBody = blocksParent;
+
+        BuildManager.instance.DeselectBlock();
         BuildManager.instance.enabled = false;
         playMode = true;
     }
@@ -56,7 +55,7 @@ public class PlayManager : MonoBehaviour
         rb.linearDamping = 0.5f;      // 增加空气阻力，减缓水平漂移
         rb.angularDamping = 2f; // 增加角阻力，抑制小幅旋转
 
-        rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        //rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
         rb.isKinematic = false;
     }
 
@@ -88,6 +87,9 @@ public class PlayManager : MonoBehaviour
 
     public void PlayEnd()
     {
+        playMode = false;
+        hoverFlightController = blocksParent.GetComponent<HoverFlightController>();
+        hoverFlightController.enabled = false;
         BuildManager.instance.enabled = true;
         GameManager.Init();
     }
