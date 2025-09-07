@@ -1450,6 +1450,7 @@ MonoBehaviour:
     localPos: {x: 0.5, y: 0, z: 0}
     normal: {x: 1, y: 0, z: 0}
     order: 1
+  canRotate: 1
   showCube: 1
   showConnectors: 1
   showLabel: 1
@@ -1466,8 +1467,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2046c8acffab30e439727a99f017b258, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thrust: 10
-  thrustDirection: {x: 0, y: 1, z: 0}
+  model: {fileID: 0}
+  cameraTransform: {fileID: 0}
+  thrust: 0
   maxThrust: 100
+  maxThrustChangeRate: 50
+  thrustDirection: {x: 0, y: 0, z: 1}
+  rotationSpeed: 5
   hoverHeight: 5
-  activate: 0
+  heightP: 0
+  isHovered: 0

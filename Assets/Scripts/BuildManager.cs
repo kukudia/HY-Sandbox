@@ -725,9 +725,9 @@ public class BuildManager : MonoBehaviour
             currentSaveName = SaveManager.instance.saves[0];
         }
 
-        GameObject gameObject = Instantiate(blocksParentPrefab);
-        gameObject.name = currentSaveName;
-        blocksParent = gameObject.transform;
+        GameObject gameObj = Instantiate(blocksParentPrefab);
+        gameObj.name = currentSaveName;
+        blocksParent = gameObj.transform;
         PlayManager.instance.blocksParent = blocksParent;
 
         //if (!File.Exists(savePath))
@@ -793,6 +793,8 @@ public class BuildManager : MonoBehaviour
         double time1 = Time.timeAsDouble;
 
         Debug.Log($"加载{savePath}完成，耗时{time1 - time0}s，共{cachedData.blocks.Count}个方块, 恢复成功{sucessCount}个方块，恢复失败{failCount}个方块");
+
+        Camera.main.GetComponent<CameraController>().FocusCameraOnBlock(blocksParent.gameObject);
     }
 
     public void ClearUnloadableData(string id)
@@ -949,14 +951,22 @@ public class BlockData
         z = block.z;
 
         var t = block.transform;
-        posX = t.position.x;
-        posY = t.position.y;
-        posZ = t.position.z;
+        // 强制对齐到0.5的倍数
+        posX = Mathf.Round(t.position.x * 2) / 2f;
+        posY = Mathf.Round(t.position.y * 2) / 2f;
+        posZ = Mathf.Round(t.position.z * 2) / 2f;
 
-        rotX = t.rotation.x;
-        rotY = t.rotation.y;
-        rotZ = t.rotation.z;
-        rotW = t.rotation.w;
+        // 将旋转对齐到90度的倍数
+        Vector3 euler = t.rotation.eulerAngles;
+        euler.x = Mathf.Round(euler.x / 90) * 90;
+        euler.y = Mathf.Round(euler.y / 90) * 90;
+        euler.z = Mathf.Round(euler.z / 90) * 90;
+
+        Quaternion snappedRot = Quaternion.Euler(euler);
+        rotX = snappedRot.x;
+        rotY = snappedRot.y;
+        rotZ = snappedRot.z;
+        rotW = snappedRot.w;
 
         resourcePath = block.resourcePath;
     }

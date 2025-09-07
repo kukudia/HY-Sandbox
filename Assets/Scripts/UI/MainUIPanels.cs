@@ -98,9 +98,9 @@ public class MainUIPanels : MonoBehaviour
     void OnConfirmDelete(string save)
     {
         SaveManager.instance.DeleteSave(save);
-        if (SaveManager.instance.saves.Count > 0)
+        if (!string.IsNullOrEmpty(SaveManager.instance.currentSaveName))
         {
-            SaveManager.instance.LoadSave(SaveManager.instance.saves[0]);
+            SaveManager.instance.LoadSave(SaveManager.instance.currentSaveName);
         }
         HideDeletePanel();
     }

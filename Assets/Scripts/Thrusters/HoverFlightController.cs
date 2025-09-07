@@ -27,20 +27,8 @@ public class HoverFlightController : MonoBehaviour
     public float rotationSmoothing = 5f;
 
     [Header("高度控制参数")]
-    [Tooltip("基础高度比例系数")]
-    public float baseHeightP = 5f;
-
-    [Tooltip("高度比例系数的最小值")]
-    public float minHeightP = 2f;
-
-    [Tooltip("高度比例系数的最大值")]
-    public float maxHeightP = 15f;
-
-    [Tooltip("高度误差的响应曲线（X轴：高度误差，Y轴：比例系数乘数）")]
-    public AnimationCurve heightPResponseCurve = AnimationCurve.Linear(0, 1, 10, 3);
-
-    [Tooltip("基于速度的比例系数调整曲线（X轴：垂直速度，Y轴：比例系数乘数）")]
-    public AnimationCurve velocityHeightPAdjustment = AnimationCurve.Linear(-5, 1.5f, 5, 1.5f);
+    [Tooltip("高度比例系数")]
+    private float HeightP = 0.5f;
 
     [Tooltip("高度PID积分系数")]
     public float heightI = 0.1f;
@@ -59,7 +47,6 @@ public class HoverFlightController : MonoBehaviour
 
     private float heightErrorIntegral; // 高度误差的积分项（用于PID控制）
     private float lastHeightError;     // 上一帧的高度误差
-    private float lastHeight;          // 上一帧的飞行器高度
 
     // 姿态控制相关
     private Vector3 lastUpVector;       // 上一帧的上方向向量
@@ -68,10 +55,9 @@ public class HoverFlightController : MonoBehaviour
 
     // 动态高度系数相关
     private float currentHeightP;
-    private float verticalVelocity;
 
-    [Tooltip("是否在游戏运行时显示调试UI")]
     public bool showUI = true;
+    public bool setHeight = false;
 
     private GUIStyle headerStyle; // GUI标题样式
     private GUIStyle labelStyle;  // GUI标签样式
@@ -79,30 +65,10 @@ public class HoverFlightController : MonoBehaviour
     public void Init()
     {
         rb = GetComponent<Rigidbody>();
-        lastHeight = transform.position.y;
         lastUpVector = transform.up;
 
         // 初始化动态高度系数
-        currentHeightP = baseHeightP;
-
-        // 设置默认响应曲线（如果未在编辑器中设置）
-        if (heightPResponseCurve.length == 0)
-        {
-            heightPResponseCurve = new AnimationCurve(
-                new Keyframe(0f, 1f),
-                new Keyframe(5f, 2f),
-                new Keyframe(10f, 3f)
-            );
-        }
-
-        if (velocityHeightPAdjustment.length == 0)
-        {
-            velocityHeightPAdjustment = new AnimationCurve(
-                new Keyframe(-10f, 1.8f),
-                new Keyframe(0f, 1f),
-                new Keyframe(10f, 1.8f)
-            );
-        }
+        currentHeightP = rb.mass * HeightP;
 
         // 配置所有推进器
         foreach (var thruster in thrusters)
@@ -125,14 +91,15 @@ public class HoverFlightController : MonoBehaviour
             targetHoverHeight -= 0.2f;
         }
 
-        float currentHeight = transform.position.y;
-        float heightError = targetHoverHeight - currentHeight;
+        if (Keyboard.current.eKey.wasReleasedThisFrame || Keyboard.current.qKey.wasReleasedThisFrame)
+        {
+            targetHoverHeight = transform.position.y;
+        }
+
+        float heightError = targetHoverHeight - transform.position.y;
 
         // 高度PID控制
         float heightAdjustment = CalculateHeightAdjustment(heightError);
-
-        // 计算垂直速度
-        verticalVelocity = (transform.position.y - lastHeight) / Time.fixedDeltaTime;
 
         // 重力补偿计算
         float gravityCompensation = CalculateGravityCompensation();
@@ -148,14 +115,13 @@ public class HoverFlightController : MonoBehaviour
 
         // 更新状态
         lastHeightError = heightError;
-        lastHeight = currentHeight;
         lastUpVector = transform.up;
     }
 
     private float CalculateHeightAdjustment(float heightError)
     {
         // 计算动态高度比例系数
-        UpdateDynamicHeightP(heightError);
+        //UpdateDynamicHeightP(heightError);
 
         // 积分项
         heightErrorIntegral += heightError * Time.fixedDeltaTime;
@@ -173,16 +139,6 @@ public class HoverFlightController : MonoBehaviour
     {
         // 1. 基于高度误差的调整
         float absError = Mathf.Abs(heightError);
-        float errorAdjustment = heightPResponseCurve.Evaluate(absError);
-
-        // 2. 基于垂直速度的调整
-        float velocityAdjustment = velocityHeightPAdjustment.Evaluate(verticalVelocity);
-
-        // 3. 组合调整因子
-        float combinedAdjustment = errorAdjustment * velocityAdjustment;
-
-        // 4. 计算最终高度P值（应用限制）
-        currentHeightP = Mathf.Clamp(baseHeightP * combinedAdjustment, minHeightP, maxHeightP);
 
         // 5. 当接近目标高度时降低响应（防止振荡）
         if (absError < heightTolerance * 2)
@@ -333,6 +289,8 @@ public class HoverFlightController : MonoBehaviour
     // 在编辑器中可视化
     private void OnDrawGizmosSelected()
     {
+        if (rb == null) return;
+
         // 绘制目标高度平面
         Gizmos.color = Color.green;
         Vector3 planeCenter = new Vector3(transform.position.x, targetHoverHeight, transform.position.z);
@@ -372,8 +330,9 @@ public class HoverFlightController : MonoBehaviour
         GUILayout.Space(8);
         GUILayout.Label($"Target Height: {targetHoverHeight:F2}", labelStyle);
         GUILayout.Label($"Current Height: {transform.position.y:F2}", labelStyle);
-        GUILayout.Label($"Dynamic Height P: {currentHeightP:F2}", labelStyle);
-        GUILayout.Label($"Vertical Velocity: {verticalVelocity:F2} m/s", labelStyle);
+        GUILayout.Label($"Height P: {currentHeightP:F2}", labelStyle);
+        GUILayout.Label($"Vertical Velocity: {PlayManager.instance.verticalVelocity:F2} m/s", labelStyle);
+        GUILayout.Label($"Horizontal Velocity: {PlayManager.instance.horizontalVelocity:F2} m/s", labelStyle);
 
         GUILayout.Space(10);
         GUILayout.Label("Hover Thrusters:", headerStyle);

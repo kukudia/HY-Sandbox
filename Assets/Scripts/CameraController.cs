@@ -45,7 +45,7 @@ public class CameraController : MonoBehaviour
             }
         }
 
-        if (!BuildManager.instance.buildMode)
+        if (!BuildManager.instance.buildMode && !PlayManager.instance.playMode)
         {
             currentMode = CameraMode.FreeFly;
         }
@@ -149,7 +149,7 @@ public class CameraController : MonoBehaviour
     }
 
     // 新增：摄像机聚焦方法
-    private void FocusCameraOnBlock(GameObject obj)
+    public void FocusCameraOnBlock(GameObject obj)
     {
         if (obj == null) return;
 

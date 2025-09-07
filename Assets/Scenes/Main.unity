@@ -1121,9 +1121,14 @@ MonoBehaviour:
   cockpits: []
   mainThrusters: []
   hoverThrusters: []
+  lastHeight: 0
+  currentHeight: 0
+  verticalVelocity: 0
+  horizontalVelocity: 0
   showCube: 0
   showConnectors: 1
   showLabel: 0
+  showUI: 1
 --- !u!1 &276395679
 GameObject:
   m_ObjectHideFlags: 0
@@ -5760,7 +5765,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c891fad8b54060d4881a65bd373cafd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentSaveName: default
+  currentSaveName: 
   saves: []
 --- !u!1 &1586849415
 GameObject:
@@ -8552,7 +8557,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7328598409950567192, guid: 88306f50d6a54bb49a92f7e8ac88d624, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7328598409950567192, guid: 88306f50d6a54bb49a92f7e8ac88d624, type: 3}
       propertyPath: m_AnchorMin.x
@@ -8560,7 +8565,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7328598409950567192, guid: 88306f50d6a54bb49a92f7e8ac88d624, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7328598409950567192, guid: 88306f50d6a54bb49a92f7e8ac88d624, type: 3}
       propertyPath: m_SizeDelta.x
@@ -8600,11 +8605,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7328598409950567192, guid: 88306f50d6a54bb49a92f7e8ac88d624, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7328598409950567192, guid: 88306f50d6a54bb49a92f7e8ac88d624, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -25
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7328598409950567192, guid: 88306f50d6a54bb49a92f7e8ac88d624, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

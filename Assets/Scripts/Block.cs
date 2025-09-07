@@ -36,7 +36,20 @@ public class Block : MonoBehaviour
         {
             uniqueId = System.Guid.NewGuid().ToString();
         }
+
+        Vector3 pos = Vector3.zero;
+        pos.x = Mathf.Round(transform.position.x * 2) / 2f;
+        pos.y = Mathf.Round(transform.position.y * 2) / 2f;
+        pos.z = Mathf.Round(transform.position.z * 2) / 2f;
+        transform.position = pos;
+
+        Vector3 euler = transform.rotation.eulerAngles;
+        euler.x = Mathf.Round(euler.x / 90) * 90;
+        euler.y = Mathf.Round(euler.y / 90) * 90;
+        euler.z = Mathf.Round(euler.z / 90) * 90;
+        transform.rotation = Quaternion.Euler(euler);
     }
+
 
     private void OnValidate()
     {

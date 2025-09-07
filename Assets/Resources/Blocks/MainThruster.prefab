@@ -1468,5 +1468,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 0}
+  cameraTransform: {fileID: 0}
   thrust: 250
+  maxThrust: 250
+  maxThrustChangeRate: 50
   thrustDirection: {x: 0, y: 0, z: 1}
+  alignVisual: 1
+  rotationSpeed: 5

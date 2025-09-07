@@ -3,26 +3,15 @@ using UnityEngine.InputSystem;
 
 public class HoverThruster : Thruster
 {
-    public float maxThrust = 250f;   // 最大推力
     public float rotationSpeed = 5f;
     public float hoverHeight = 5f;    // 悬浮目标高度（可选）
     public float heightP;
     public bool isHovered;
 
-    private void Update()
-    {
-        if (Keyboard.current.spaceKey.wasPressedThisFrame)
-        {
-            isHovered = !isHovered;
-        }
-    }
-
     private void FixedUpdate()
     {
-        if (ShouldActivate())
-        {
-            ApplyThrust();
-        }
+        ApplyThrustChangeRateLimit();
+        ApplyThrust();
     }
 
     public virtual void ApplyThrust()
