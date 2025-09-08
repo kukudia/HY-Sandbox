@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -7,16 +9,14 @@ public class PlayManager : MonoBehaviour
     public static PlayManager instance;
     public bool playMode = false;
     public Transform blocksParent;
-    public Block[] blocks;
-    public Cockpit[] cockpits;
-    public MainThruster[] mainThrusters;
-    public HoverThruster[] hoverThrusters;
+    public List<ControlUnit> controlUnits = new List<ControlUnit>();
+    public List<Block> blocks = new List<Block>();
+
     public float lastHeight;
     public float currentHeight;
     public float verticalVelocity;
     public float horizontalVelocity;
 
-    public bool showCube = true;
     public bool showConnectors = true;
     public bool showLabel = true;
 
@@ -26,34 +26,9 @@ public class PlayManager : MonoBehaviour
     private GUIStyle headerStyle; // GUI标题样式
     private GUIStyle labelStyle;  // GUI标签样式
 
-    private Rigidbody rb;
-    private HoverFlightController hoverFlightController;
-
     private void Awake()
     {
         instance = this;
-    }
-
-    private void Update()
-    {
-        if (Keyboard.current.spaceKey.wasPressedThisFrame)
-        {
-            foreach (HoverThruster thruster in hoverThrusters)
-            {
-                thruster.isHovered = !thruster.isHovered;
-            }
-
-            if (!hoverFlightController.setHeight)
-            {
-                hoverFlightController.targetHoverHeight = (int)blocksParent.position.y + 10;
-                hoverFlightController.setHeight = true;
-            }
-            else
-            {
-                hoverFlightController.targetHoverHeight = 0;
-                hoverFlightController.setHeight = false;
-            }
-        }
     }
 
     private void FixedUpdate()
@@ -66,27 +41,22 @@ public class PlayManager : MonoBehaviour
 
             lastHeight = currentHeight;
 
-            horizontalVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z).magnitude;
+            //horizontalVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z).magnitude;
         }
     }
 
     public void PlayStart()
     {
-        //blocksParent = BuildManager.instance.blocksParent;
+        GameObject previousParent = blocksParent.gameObject;
+        blocks = blocksParent.GetComponentsInChildren<Block>().ToList();
+        AssignBlocksToParentGroups(blocks);
+        Destroy(previousParent);
 
-        rb = blocksParent.GetComponent<Rigidbody>();
-
-        SetRigibody();
-        GetBlocks();
-        GetCockpits();
-        GetThrusters();
-
-        hoverFlightController = blocksParent.GetComponent<HoverFlightController>();
-        if (hoverThrusters.Length > 0)
+        controlUnits = FindObjectsOfType<ControlUnit>().ToList();
+        
+        foreach (ControlUnit controlUnit in controlUnits)
         {
-            hoverFlightController.thrusters = hoverThrusters;
-            hoverFlightController.enabled = true;
-            hoverFlightController.Init();
+            controlUnit.PlayStart();
         }
 
         lastHeight = blocksParent.position.y;
@@ -98,57 +68,63 @@ public class PlayManager : MonoBehaviour
         playMode = true;
     }
 
-    void SetRigibody()
-    {
-        rb.linearDamping = 0.5f;      // 增加空气阻力，减缓水平漂移
-        rb.angularDamping = 2f; // 增加角阻力，抑制小幅旋转
 
-        //rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
-        rb.isKinematic = false;
-    }
-
-    public void GetBlocks()
-    {
-        blocks = blocksParent.GetComponentsInChildren<Block>();
-        float mass = 0;
-        foreach (Block block in blocks)
-        {
-            mass += block.mass;
-            block.showCube = showCube;
-            block.showConnectors = showConnectors;
-            block.showLabel = showLabel;
-        }
-        rb.mass = mass;
-        Debug.Log($"{blocksParent.name} mass: {mass}");
-    }
-
-    void GetCockpits()
-    {
-        cockpits = blocksParent.GetComponentsInChildren<Cockpit>();
-    }
-
-    void GetThrusters()
-    {
-        mainThrusters = blocksParent.GetComponentsInChildren<MainThruster>();
-        hoverThrusters = blocksParent.GetComponentsInChildren<HoverThruster>();
-    }
 
     public void PlayEnd()
     {
+        controlUnits = FindObjectsOfType<ControlUnit>().ToList();
+        foreach (ControlUnit controlUnit in controlUnits)
+        {
+            controlUnit.PlayEnd();
+        }
+
         playMode = false;
-        hoverFlightController = blocksParent.GetComponent<HoverFlightController>();
-        hoverFlightController.enabled = false;
         BuildManager.instance.enabled = true;
         GameManager.Init();
     }
 
-    public bool hasCockpit()
+    // 为每个分组创建父物体并分配Block
+    public static void AssignBlocksToParentGroups(List<Block> allBlocks)
     {
-        if (cockpits.Length> 0)
+        // 获取所有Block的分组
+        List<List<Block>> groups = BlockGroupManager.GroupBlocks(allBlocks);
+        GameObject parentPrefab = Resources.Load<GameObject>("Prefabs/BlocksParent");
+        int groupIndex = 1;
+        foreach (List<Block> group in groups)
         {
-            return true;
+            // 为每个组创建父物体
+            GameObject groupParent = Instantiate(parentPrefab);
+            groupParent.name = $"Group_{groupIndex++}";
+            groupParent.transform.position = BlockGroupManager.CalculateGroupCenter(group);
+
+            float mass = 0;
+            // 将所有Block移动到该父物体下
+            foreach (Block block in group)
+            {
+                if (block.GetComponent<Cockpit>())
+                {
+                    groupParent.name = SaveManager.instance.currentSaveName;
+                    BuildManager.instance.blocksParent = groupParent.transform;
+                    PlayManager.instance.blocksParent = groupParent.transform;
+                }
+
+                block.transform.SetParent(groupParent.transform);
+
+                mass += block.mass;
+                block.showConnectors = PlayManager.instance.showConnectors;
+                block.showLabel = PlayManager.instance.showLabel;
+            }
+
+            Debug.Log($"{groupParent.name} mass: {mass}");
+
+            Rigidbody rb = groupParent.GetComponent<Rigidbody>();
+            rb.mass = mass;
+            rb.linearDamping = 0.5f;      // 增加空气阻力，减缓水平漂移
+            rb.angularDamping = 2f; // 增加角阻力，抑制小幅旋转
+
+            //rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+            rb.isKinematic = false;
         }
-        return false;
     }
 
     //void OnGUI()

@@ -11,9 +11,13 @@ public class SaveManager : MonoBehaviour
 
     private string saveDirectory => Path.Combine(Application.persistentDataPath, "Saves");
 
-    public string currentSaveName = "default"; // 当前存档槽
+    public string currentSaveName; // 当前存档槽
 
     public List<string> saves = new List<string>();
+
+    public BlockDataList cachedData = new BlockDataList();
+
+    public List<Block> blocks = new List<Block>();
 
     private void Awake()
     {
@@ -58,7 +62,7 @@ public class SaveManager : MonoBehaviour
         string path = GetSavePath(saveName);
 
         // 清空 BuildManager 内的缓存和方块
-        BuildManager.instance.cachedData = new BlockDataList();
+        cachedData = new BlockDataList();
         if (BuildManager.instance.blocksParent != null)
         {
             foreach (Transform child in BuildManager.instance.blocksParent)
@@ -68,7 +72,7 @@ public class SaveManager : MonoBehaviour
         }
 
         // 保存一个空存档文件
-        File.WriteAllText(path, JsonUtility.ToJson(BuildManager.instance.cachedData, true));
+        File.WriteAllText(path, JsonUtility.ToJson(cachedData, true));
 
         Debug.Log($"新建存档 {saveName}");
 
@@ -82,12 +86,19 @@ public class SaveManager : MonoBehaviour
     {
         currentSaveName = saveName;
 
+        ControlUnit[] deleteObjs = FindObjectsOfType<ControlUnit>();
+
+        foreach (ControlUnit obj in deleteObjs)
+        {
+            Destroy(obj.gameObject);
+        }
+
         if (BuildManager.instance.blocksParent != null)
         {
             Destroy(BuildManager.instance.blocksParent.gameObject);
         }
 
-        BuildManager.instance.cachedData = new BlockDataList();
+        cachedData = new BlockDataList();
         BuildManager.instance.currentSaveName = saveName;
 
         BuildManager.instance.LoadAllBlocks();

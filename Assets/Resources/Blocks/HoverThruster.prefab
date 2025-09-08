@@ -1450,6 +1450,7 @@ MonoBehaviour:
     localPos: {x: 0.5, y: 0, z: 0}
     normal: {x: 1, y: 0, z: 0}
     order: 1
+  connectedBlocks: []
   canRotate: 1
   showCube: 1
   showConnectors: 1

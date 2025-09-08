@@ -226,6 +226,7 @@ public class HoverFlightController : MonoBehaviour
 
             // 应用推力
             thruster.thrust = thruster.ShouldActivate() ? finalThrust : 0;
+            thruster.ApplyThrustChangeRateLimit();
         }
     }
 

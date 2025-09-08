@@ -10,7 +10,7 @@ public class HoverThruster : Thruster
 
     private void FixedUpdate()
     {
-        ApplyThrustChangeRateLimit();
+        //ApplyThrustChangeRateLimit();
         ApplyThrust();
     }
 
@@ -39,18 +39,21 @@ public class HoverThruster : Thruster
     {
         if (isHovered)
         {
-            if (PlayManager.instance.playMode && PlayManager.instance.hasCockpit())
+            if (controlUnit == null)
+                controlUnit = GetComponentInParent<ControlUnit>();
+
+            if (PlayManager.instance.playMode && controlUnit.HasCockpit())
             {
                 return true;
             }
-            else if (!PlayManager.instance.playMode)
-            {
-                Debug.LogWarning("Not in play mode.");
-            }
-            else if (!PlayManager.instance.hasCockpit())
-            {
-                Debug.LogWarning("Lack of cockpit.");
-            }
+            //else if (!PlayManager.instance.playMode)
+            //{
+            //    Debug.LogWarning("Not in play mode.");
+            //}
+            //else if (!controlUnit.HasCockpit())
+            //{
+            //    Debug.LogWarning("Lack of cockpit.");
+            //}
         }
         return false;
     }

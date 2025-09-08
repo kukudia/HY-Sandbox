@@ -1361,6 +1361,7 @@ GameObject:
   - component: {fileID: 199097415977098526}
   - component: {fileID: 5357469564833557730}
   - component: {fileID: 1823892824885758489}
+  - component: {fileID: 3875986997659188477}
   m_Layer: 3
   m_Name: MainThruster
   m_TagString: Untagged
@@ -1407,16 +1408,17 @@ MonoBehaviour:
   resourcePath: 
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
   connectorParent: {fileID: 2695719906485559115}
+  raycastCollider: {fileID: 3875986997659188477}
   connectors:
   - name: Up 1
-    canConnect: 0
+    canConnect: 1
     isConnected: 0
     connectType: 0
     localPos: {x: 0, y: 0.5, z: 0}
     normal: {x: 0, y: 1, z: 0}
     order: 1
   - name: Down 1
-    canConnect: 0
+    canConnect: 1
     isConnected: 0
     connectType: 1
     localPos: {x: 0, y: -0.5, z: 0}
@@ -1437,21 +1439,21 @@ MonoBehaviour:
     normal: {x: 0, y: 0, z: -1}
     order: 1
   - name: Left 1
-    canConnect: 0
+    canConnect: 1
     isConnected: 0
     connectType: 4
     localPos: {x: -0.5, y: 0, z: 0}
     normal: {x: -1, y: 0, z: 0}
     order: 1
   - name: Right 1
-    canConnect: 0
+    canConnect: 1
     isConnected: 0
     connectType: 5
     localPos: {x: 0.5, y: 0, z: 0}
     normal: {x: 1, y: 0, z: 0}
     order: 1
+  neighbors: []
   canRotate: 1
-  showCube: 1
   showConnectors: 1
   showLabel: 1
   uniqueId: 
@@ -1473,5 +1475,27 @@ MonoBehaviour:
   maxThrust: 250
   maxThrustChangeRate: 50
   thrustDirection: {x: 0, y: 0, z: 1}
+  rb: {fileID: 0}
   alignVisual: 1
   rotationSpeed: 5
+--- !u!65 &3875986997659188477
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004239489873974274}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}

@@ -10,22 +10,16 @@ public class UniversalThruster : Thruster
     private void FixedUpdate()
     {
         Vector3 inputDir = GetInputDirection();
-        if (inputDir.sqrMagnitude > 1e-6f)
-        {
-            thrust = ShouldActivate() ? thrust : 0;
-            ApplyThrustChangeRateLimit();
-            ApplyThrust(inputDir);
-        }
+        RotateThruster(inputDir);
+        thrust = ShouldActivate() ? thrust : 0;
+        ApplyThrustChangeRateLimit();
+        ApplyThrust();
     }
 
-    public void ApplyThrust(Vector3 worldDir)
+    void RotateThruster(Vector3 worldDir)
     {
-        if (rb == null)
-            rb = GetComponentInParent<Rigidbody>();
-        if (rb == null) return;
-
         // 旋转推进器方向
-        if (alignVisual && worldDir.sqrMagnitude > 1e-6f)
+        if (alignVisual && worldDir.sqrMagnitude > 1e-6f && ShouldActivate())
         {
             Quaternion targetRot = Quaternion.LookRotation(worldDir, Vector3.up);
             transform.rotation = Quaternion.RotateTowards(
@@ -34,6 +28,13 @@ public class UniversalThruster : Thruster
                 rotationSpeed * Time.fixedDeltaTime * 60f // rotationSpeed = deg/sec
             );
         }
+    }
+
+    public void ApplyThrust()
+    {
+        if (rb == null)
+            rb = GetComponentInParent<Rigidbody>();
+        if (rb == null) return;
 
         // 推力施加
         rb.AddForceAtPosition(transform.forward * thrust, transform.position);
@@ -41,18 +42,21 @@ public class UniversalThruster : Thruster
 
     public override bool ShouldActivate()
     {
-        if (PlayManager.instance.playMode && PlayManager.instance.hasCockpit())
+        if (controlUnit == null)
+            controlUnit = GetComponentInParent<ControlUnit>();
+
+        if (PlayManager.instance.playMode && controlUnit.HasCockpit())
         {
             return true;
         }
-        else if (!PlayManager.instance.playMode)
-        {
-            Debug.LogWarning("Not in play mode.");
-        }
-        else if (!PlayManager.instance.hasCockpit())
-        {
-            Debug.LogWarning("Lack of cockpit.");
-        }
+        //else if (!PlayManager.instance.playMode)
+        //{
+        //    Debug.LogWarning("Not in play mode.");
+        //}
+        //else if (!controlUnit.HasCockpit())
+        //{
+        //    Debug.LogWarning("Lack of cockpit.");
+        //}
         return false;
     }
 }

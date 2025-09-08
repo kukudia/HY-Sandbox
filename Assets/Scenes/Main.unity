@@ -672,8 +672,6 @@ MonoBehaviour:
   blocksParentPrefab: {fileID: 4618851689854561715, guid: 0221886726b5fc44ba372bb01b4f1dba, type: 3}
   gridSize: 1
   highlightMaterial: {fileID: 2100000, guid: 79befef2596e13740b829440b3317d67, type: 2}
-  cachedData:
-    blocks: []
   currentSelectType: 0
   selectedBlock: {fileID: 0}
   lastSaveBlock: {fileID: 0}
@@ -1117,15 +1115,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playMode: 0
   blocksParent: {fileID: 0}
+  controlUnits: []
   blocks: []
-  cockpits: []
-  mainThrusters: []
-  hoverThrusters: []
   lastHeight: 0
   currentHeight: 0
   verticalVelocity: 0
   horizontalVelocity: 0
-  showCube: 0
   showConnectors: 1
   showLabel: 0
   showUI: 1
@@ -2915,6 +2910,52 @@ Transform:
   - {fileID: 413713253}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &700819257
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 700819258}
+  - component: {fileID: 700819259}
+  m_Layer: 0
+  m_Name: PerformanceMonitor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &700819258
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 700819257}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1636278286}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &700819259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 700819257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20419a479836d9d4f911f90e55a2a9e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  updateInterval: 0.5
+  targetFrameRate: 60
 --- !u!1 &701657971
 GameObject:
   m_ObjectHideFlags: 0
@@ -3801,6 +3842,64 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: +
+--- !u!1 &991723914
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 991723915}
+  - component: {fileID: 991723916}
+  m_Layer: 0
+  m_Name: MetrorShower
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &991723915
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 991723914}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1636278286}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &991723916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 991723914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04570ca592742f744a5c5022a54ef40d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meteorPrefab: {fileID: 2394733832372066508, guid: babd59adaa6535d489e46b3a34624110, type: 3}
+  spawnAreaSize: 500
+  minMeteorSize: 1
+  maxMeteorSize: 20
+  minSpawnHeight: 100
+  maxSpawnHeight: 300
+  minFallSpeed: 10
+  maxFallSpeed: 50
+  minHorizontalSpeed: 0
+  maxHorizontalSpeed: 20
+  minRotationSpeed: 10
+  maxRotationSpeed: 100
+  spawnRate: 10
+  maxMeteors: 100
 --- !u!1 &1099996843
 GameObject:
   m_ObjectHideFlags: 0
@@ -5767,6 +5866,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentSaveName: 
   saves: []
+  cachedData:
+    blocks: []
+  blocks: []
 --- !u!1 &1586849415
 GameObject:
   m_ObjectHideFlags: 0
@@ -6235,6 +6337,8 @@ Transform:
   - {fileID: 186965333}
   - {fileID: 2013624195}
   - {fileID: 247660642}
+  - {fileID: 991723915}
+  - {fileID: 700819258}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1643337840

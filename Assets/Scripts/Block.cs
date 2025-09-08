@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -21,10 +22,13 @@ public class Block : MonoBehaviour
 
     public Transform connectorParent;
 
+    public BoxCollider raycastCollider;
+
     public List<Connector> connectors= new List<Connector>();
 
+    public List<Block> neighbors = new List<Block>();
+
     public bool canRotate = true;
-    public bool showCube = true;
     public bool showConnectors = true;
     public bool showLabel = true;
 
@@ -66,6 +70,18 @@ public class Block : MonoBehaviour
         y = Mathf.Max(1, y);
         z = Mathf.Max(1, z);
         mass = x * y * z * density;
+
+        if (GetComponent<BoxCollider>() == null)
+        {
+            raycastCollider = gameObject.AddComponent<BoxCollider>();
+        }
+        else
+        {
+            raycastCollider = GetComponent<BoxCollider>();
+        }
+
+        raycastCollider.isTrigger = true;
+        raycastCollider.size = new Vector3(x - 0.1f, y - 0.1f, z - 0.1f);
 
         if (canSpawnConnector)
         {
@@ -163,9 +179,9 @@ public class Block : MonoBehaviour
     {
         Transform parent = connectorParent;
 
-        for (int i = 0; i < connectors.Count; i++)
+        foreach (Connector c in connectors)
         {
-            Connector c = connectors[i];
+            if (!c.canConnect) continue;
             Vector3 worldPos = parent.TransformPoint(c.localPos);
             Vector3 worldNormal = parent.TransformDirection(c.normal);
 
@@ -179,17 +195,19 @@ public class Block : MonoBehaviour
                     // 反向检测：找最近的对方 connector
                     Transform otherParent = otherBlock.connectorParent;
 
-                    foreach (var otherC in otherBlock.connectors)
+                    foreach (Connector otherC in otherBlock.connectors)
                     {
+                        if (!otherC.canConnect) continue;
+
                         Vector3 otherWorldPos = otherParent.TransformPoint(otherC.localPos);
                         Vector3 otherWorldNormal = otherParent.TransformDirection(otherC.normal);
 
                         // 判断位置是否接近 + 法向是否相反
-                        if (Vector3.Distance(otherWorldPos, worldPos) < 0.1f &&
-                            Vector3.Dot(otherWorldNormal, -worldNormal) > 0.9f) // 方向接近相反
+                        if (Vector3.Distance(otherWorldPos, worldPos) < 0.1f && Vector3.Dot(otherWorldNormal, -worldNormal) > 0.9f) // 方向接近相反
                         {
                             c.isConnected = true;
                             otherC.isConnected = true;
+                            Debug.Log($"{name} | {c.name} connect with {otherBlock.name} | {otherC.name}");
                             break;
                         }
                     }
@@ -200,24 +218,33 @@ public class Block : MonoBehaviour
 
     public List<Block> Neighbors()
     {
-        Transform parent = connectorParent;
         List<Block> neighbors = new List<Block>();
         for (int i = 0; i < connectors.Count; i++)
         {
             Connector c = connectors[i];
-            Vector3 worldPos = parent.TransformPoint(c.localPos);
-            Vector3 worldNormal = parent.TransformDirection(c.normal);
+            if (!c.canConnect) continue;
+            Vector3 worldPos = connectorParent.TransformPoint(c.localPos);
+            Vector3 worldNormal = connectorParent.TransformDirection(c.normal);
 
             if (Physics.Raycast(worldPos, worldNormal, out RaycastHit hit, 0.1f, BuildManager.instance.blockLayer))
             {
                 Block otherBlock = hit.collider.GetComponentInParent<Block>();
                 if (otherBlock != null && otherBlock != this)
                 {
-                    neighbors.Add(otherBlock);
+                    if (!neighbors.Contains(otherBlock))
+                    {
+                        neighbors.Add(otherBlock);
+                    }
+
+                    if (!otherBlock.neighbors.Contains(this))
+                    {
+                        otherBlock.neighbors.Add(this);
+                    }
                 }
             }
         }
-        Debug.Log($"Find {neighbors.Count} neighbors.");
+        neighbors.RemoveAll(item => item == null);
+        Debug.Log($"{name} find {neighbors.Count} neighbors.");
         return neighbors;
     }
 
@@ -249,11 +276,6 @@ public class Block : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (showCube)
-        {
-            Gizmos.DrawWireCube(transform.position, new Vector3(x, y, z));
-        }
-
         Transform parent = connectorParent != null ? connectorParent : transform;
 
         for (int i = 0; i < connectors.Count; i++)

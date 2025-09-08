@@ -1317,7 +1317,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 0.5000001, z: 1.0000002}
+  m_Size: {x: 1, y: 0.5, z: 1.0000002}
   m_Center: {x: 0, y: 0.15000004, z: 0}
 --- !u!1 &4230452062418621529
 GameObject:
@@ -1416,40 +1416,41 @@ MonoBehaviour:
     normal: {x: 0, y: 1, z: 0}
     order: 1
   - name: Down 1
-    canConnect: 0
+    canConnect: 1
     isConnected: 0
     connectType: 1
     localPos: {x: 0, y: -0.5, z: 0}
     normal: {x: 0, y: -1, z: 0}
     order: 1
   - name: Forward 1
-    canConnect: 0
+    canConnect: 1
     isConnected: 0
     connectType: 2
     localPos: {x: 0, y: 0, z: 0.5}
     normal: {x: 0, y: 0, z: 1}
     order: 1
   - name: Back 1
-    canConnect: 0
+    canConnect: 1
     isConnected: 0
     connectType: 3
     localPos: {x: 0, y: 0, z: -0.5}
     normal: {x: 0, y: 0, z: -1}
     order: 1
   - name: Left 1
-    canConnect: 0
+    canConnect: 1
     isConnected: 0
     connectType: 4
     localPos: {x: -0.5, y: 0, z: 0}
     normal: {x: -1, y: 0, z: 0}
     order: 1
   - name: Right 1
-    canConnect: 0
+    canConnect: 1
     isConnected: 0
     connectType: 5
     localPos: {x: 0.5, y: 0, z: 0}
     normal: {x: 1, y: 0, z: 0}
     order: 1
+  neighbors: []
   canRotate: 1
   showCube: 1
   showConnectors: 1
@@ -1467,7 +1468,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f543cb2ac4c31aa4a8e8ba0cc0963046, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  model: {fileID: 0}
+  cameraTransform: {fileID: 0}
   thrust: 100
+  maxThrust: 100
+  maxThrustChangeRate: 50
   thrustDirection: {x: 0, y: 0, z: 1}
-  thrustPower: 1000
   alignVisual: 1
+  rotationSpeed: 5

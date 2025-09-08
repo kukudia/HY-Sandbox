@@ -3,19 +3,19 @@ using UnityEngine.InputSystem;
 
 public abstract class Thruster : MonoBehaviour
 {
+    public ControlUnit controlUnit;
     public Transform model;
     public Transform cameraTransform;   // 主摄像机
     public float thrust;     // 推力大小
+    public float lastThrustValue;
     public float maxThrust = 100f;
 
     [Tooltip("最大推力变化率（单位/秒），防止推力瞬间变化")]
     public float maxThrustChangeRate = 50f;
 
-    private float lastThrustValue;
-
     public Vector3 thrustDirection = Vector3.forward; // 推力方向（本地坐标）
 
-    protected Rigidbody rb;
+    public Rigidbody rb;
 
     // 子类必须实现：如何启用推进器（输入控制/自动触发）
     public abstract bool ShouldActivate();

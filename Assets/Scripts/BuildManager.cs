@@ -36,8 +36,6 @@ public class BuildManager : MonoBehaviour
     public Material highlightMaterial;
     private float moveStep = 1f;    // 移动步长
 
-    public BlockDataList cachedData = new BlockDataList();
-
     [Header("Current")]
     public SelectType currentSelectType;
     public Block selectedBlock;
@@ -344,7 +342,7 @@ public class BuildManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("移动失败，被其他方块阻挡");
+                
             }
         }
     }
@@ -389,7 +387,7 @@ public class BuildManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("旋转失败，被其他方块阻挡");
+                
             }
         }
     }
@@ -446,7 +444,7 @@ public class BuildManager : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log("移动失败，被其他方块阻挡");
+                        
                     }
                 }
             }
@@ -664,25 +662,25 @@ public class BuildManager : MonoBehaviour
         lastSaveBlock = block;
         BlockData data = new BlockData(block);
 
-        int index = cachedData.blocks.FindIndex(b => b.id == data.id);
+        int index = SaveManager.instance.cachedData.blocks.FindIndex(b => b.id == data.id);
         if (index >= 0)
         {
-            cachedData.blocks[index] = data;
+            SaveManager.instance.cachedData.blocks[index] = data;
         }
         else
         {
-            cachedData.blocks.Add(data);
+            SaveManager.instance.cachedData.blocks.Add(data);
         }
 
-        string json = JsonUtility.ToJson(cachedData, true);
+        string json = JsonUtility.ToJson(SaveManager.instance.cachedData, true);
         File.WriteAllText(savePath, json);
         Debug.Log($"Saved block {block.name} at {block.transform.position}, {block.transform.rotation.eulerAngles}");
 
         block.CheckConnection();
-        List<Block> blockNeighbors = block.Neighbors();
-        if (blockNeighbors.Count > 0)
+        block.neighbors = block.Neighbors();
+        if (block.neighbors.Count > 0)
         {
-            foreach (Block blockNeighbor in blockNeighbors)
+            foreach (Block blockNeighbor in block.neighbors)
             {
                 blockNeighbor.CheckConnection();
             }
@@ -691,20 +689,20 @@ public class BuildManager : MonoBehaviour
 
     public void RemoveBlock(Block block)
     {
-        List<Block> blockNeighbors = block.Neighbors();
+        block.neighbors = block.Neighbors();
 
-        int index = cachedData.blocks.FindIndex(b => b.id == block.uniqueId);
+        int index = SaveManager.instance.cachedData.blocks.FindIndex(b => b.id == block.uniqueId);
         if (index >= 0)
         {
-            cachedData.blocks.RemoveAt(index);
-            string json = JsonUtility.ToJson(cachedData, true);
+            SaveManager.instance.cachedData.blocks.RemoveAt(index);
+            string json = JsonUtility.ToJson(SaveManager.instance.cachedData, true);
             File.WriteAllText(savePath, json);
             Debug.Log($"Removed block {block.name}");
         }
 
-        if (blockNeighbors.Count > 0)
+        if (block.neighbors.Count > 0)
         {
-            foreach (Block blockNeighbor in blockNeighbors)
+            foreach (Block blockNeighbor in block.neighbors)
             {
                 blockNeighbor.CheckConnection();
             }
@@ -719,6 +717,8 @@ public class BuildManager : MonoBehaviour
         {
             Destroy(blocksParent);
         }
+
+        SaveManager.instance.blocks.Clear();
 
         if (currentSaveName == String.Empty && SaveManager.instance.saves.Count > 0)
         {
@@ -737,9 +737,9 @@ public class BuildManager : MonoBehaviour
         //}
 
         string json = File.ReadAllText(savePath);
-        cachedData = JsonUtility.FromJson<BlockDataList>(json);
+        SaveManager.instance.cachedData = JsonUtility.FromJson<BlockDataList>(json);
 
-        if (cachedData == null || cachedData.blocks == null)
+        if (SaveManager.instance.cachedData == null || SaveManager.instance.cachedData.blocks == null)
         {
             Debug.Log("保存文件为空或损坏。");
             return;
@@ -749,7 +749,7 @@ public class BuildManager : MonoBehaviour
         int failCount = 0;
         int sucessCount = 0;
         int i = 0;
-        foreach (var data in cachedData.blocks)
+        foreach (var data in SaveManager.instance.cachedData.blocks)
         {
             i++;
             // 从 Resources 目录加载 prefab
@@ -772,17 +772,17 @@ public class BuildManager : MonoBehaviour
                 block.z = data.z;
                 block.resourcePath = data.resourcePath;
                 block.uniqueId = data.id; // 保持唯一 ID 一致
-                block.CheckConnection();
+                SaveManager.instance.blocks.Add(block);
                 sucessCount++;
             }
         }
 
-        if (cachedData.blocks.Count == 0)
+        if (SaveManager.instance.cachedData.blocks.Count == 0)
         {
             InitialBlock();
         }
 
-        if ( unloadIds.Count > 0 )
+        if (unloadIds.Count > 0 )
         {
             foreach (string id in unloadIds)
             {
@@ -790,20 +790,26 @@ public class BuildManager : MonoBehaviour
             }
         }
 
+        foreach (Block block in SaveManager.instance.blocks)
+        {
+            block.neighbors = block.Neighbors();
+            block.CheckConnection();
+        }
+
         double time1 = Time.timeAsDouble;
 
-        Debug.Log($"加载{savePath}完成，耗时{time1 - time0}s，共{cachedData.blocks.Count}个方块, 恢复成功{sucessCount}个方块，恢复失败{failCount}个方块");
+        Debug.Log($"加载{savePath}完成，耗时{time1 - time0}s，共{SaveManager.instance.cachedData.blocks.Count}个方块, 恢复成功{sucessCount}个方块，恢复失败{failCount}个方块");
 
         Camera.main.GetComponent<CameraController>().FocusCameraOnBlock(blocksParent.gameObject);
     }
 
     public void ClearUnloadableData(string id)
     {
-        int index = cachedData.blocks.FindIndex(b => b.id == id);
+        int index = SaveManager.instance.cachedData.blocks.FindIndex(b => b.id == id);
         if (index >= 0)
         {
-            cachedData.blocks.RemoveAt(index);
-            string json = JsonUtility.ToJson(cachedData, true);
+            SaveManager.instance.cachedData.blocks.RemoveAt(index);
+            string json = JsonUtility.ToJson(SaveManager.instance.cachedData, true);
             File.WriteAllText(savePath, json);
             Debug.Log($"Removed unload data {id}");
         }
@@ -880,6 +886,7 @@ public class BuildManager : MonoBehaviour
             Block other = hit.GetComponentInParent<Block>();
             if (other != null && other != block)
             {
+                Debug.Log($"被{other}阻挡");
                 return true; // 有别的方块 → 阻挡
             }
         }
