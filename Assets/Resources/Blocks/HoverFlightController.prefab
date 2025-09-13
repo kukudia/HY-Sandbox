@@ -128,7 +128,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: bf936858d16fcc94e8ddc6860c5857bb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -167,7 +167,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -181,10 +181,11 @@ GameObject:
   m_Component:
   - component: {fileID: 199097415977098526}
   - component: {fileID: 5357469564833557730}
-  - component: {fileID: -4279398651480766575}
-  - component: {fileID: 4245157779349812274}
+  - component: {fileID: -6340499038674698693}
+  - component: {fileID: 551971835264929317}
+  - component: {fileID: -1265573550926785464}
   m_Layer: 3
-  m_Name: 1x1x1
+  m_Name: HoverFlightController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -233,7 +234,7 @@ MonoBehaviour:
   resourcePath: 
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
   connectorParent: {fileID: 2695719906485559115}
-  raycastCollider: {fileID: 4245157779349812274}
+  raycastCollider: {fileID: 551971835264929317}
   connectors:
   - name: Up 1
     canConnect: 1
@@ -288,7 +289,7 @@ MonoBehaviour:
   showConnectors: 1
   showLabel: 0
   uniqueId: 
---- !u!114 &-4279398651480766575
+--- !u!114 &-6340499038674698693
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -297,14 +298,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 6004239489873974274}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f887aec31b46cb74db9436ab89ebf777, type: 3}
+  m_Script: {fileID: 11500000, guid: a80f9d58f40f8e8448632cacf5281bac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxDurability: 100
-  collisionSpeedThreshold: 5
-  damageMultiplier: 10
-  debugLog: 1
---- !u!65 &4245157779349812274
+  targetHoverHeight: 10
+  heightTolerance: 0.1
+  tiltP: 8
+  tiltD: 2
+  maxTiltAngle: 15
+  rotationSmoothing: 5
+  heightI: 0.1
+  heightD: 2
+  gravityCompensationFactor: 1
+  thrusters: []
+  showUI: 1
+  setHeight: 0
+--- !u!65 &551971835264929317
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -325,3 +334,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.9, y: 0.9, z: 0.9}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-1265573550926785464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004239489873974274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f887aec31b46cb74db9436ab89ebf777, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxDurability: 100
+  collisionSpeedThreshold: 5
+  damageMultiplier: 10
+  debugLog: 1

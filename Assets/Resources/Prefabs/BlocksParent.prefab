@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7555097777954425116}
   - component: {fileID: 678570301665682291}
-  - component: {fileID: 4169096309527571663}
   - component: {fileID: 4273985791846731182}
   m_Layer: 0
   m_Name: BlocksParent
@@ -60,31 +59,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!114 &4169096309527571663
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4618851689854561715}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a80f9d58f40f8e8448632cacf5281bac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetHoverHeight: 10
-  heightTolerance: 0.1
-  tiltP: 8
-  tiltD: 2
-  maxTiltAngle: 15
-  rotationSmoothing: 5
-  heightI: 0.1
-  heightD: 2
-  gravityCompensationFactor: 1
-  thrusters: []
-  showUI: 1
-  setHeight: 0
+  m_CollisionDetection: 2
 --- !u!114 &4273985791846731182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,3 +72,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a5fe22249f25274a85d0f62de5a8851, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverFlightController: {fileID: 0}
+  cockpit: {fileID: 0}
+  mainThrusters: []
+  hoverThrusters: []

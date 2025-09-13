@@ -62,7 +62,7 @@ public class BuildManager : MonoBehaviour
     private string savePath => SaveManager.instance.GetSavePath(currentSaveName);
 
 
-    public bool buildMode;
+    public bool lockView;
     public bool penetrationMode;
 
     private void Awake()
@@ -72,7 +72,7 @@ public class BuildManager : MonoBehaviour
 
     private void Start()
     {
-        buildMode = true;
+        lockView = true;
         SetBuildMode();
     }
 
@@ -80,11 +80,11 @@ public class BuildManager : MonoBehaviour
     {
         if (Keyboard.current.bKey.wasPressedThisFrame)
         {
-            buildMode = !buildMode;
+            lockView = !lockView;
             SetBuildMode();
         }
 
-        if (buildMode)
+        if (lockView)
         {
             if (currentBlockResourcePath == string.Empty)
             {
@@ -102,7 +102,7 @@ public class BuildManager : MonoBehaviour
             }
         }
 
-        if (buildMode && selectedBlock != null)
+        if (lockView && selectedBlock != null)
         {
             AlignAxisToNearestWorldDir();
 
@@ -131,9 +131,9 @@ public class BuildManager : MonoBehaviour
 
     void SetBuildMode()
     {
-        Cursor.lockState = buildMode ? CursorLockMode.Confined : CursorLockMode.Locked;
+        Cursor.lockState = lockView ? CursorLockMode.Confined : CursorLockMode.Locked;
 
-        if (!buildMode)
+        if (!lockView)
         {
             if (selectedBlock != null)
             {

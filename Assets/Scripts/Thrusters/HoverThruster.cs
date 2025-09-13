@@ -4,14 +4,31 @@ using UnityEngine.InputSystem;
 public class HoverThruster : Thruster
 {
     public float rotationSpeed = 5f;
-    public float hoverHeight = 5f;    // 悬浮目标高度（可选）
     public float heightP;
     public bool isHovered;
 
     private void FixedUpdate()
     {
-        //ApplyThrustChangeRateLimit();
-        ApplyThrust();
+        if (!PlayManager.instance.playMode) return;
+
+        if (controlUnit == null)
+        {
+            controlUnit = GetComponentInParent<ControlUnit>();
+        }
+
+        if (controlUnit.hoverFlightController != null)
+        {
+            //ApplyThrustChangeRateLimit();
+            ApplyThrust();
+        }
+        else
+        {
+            thrust = ShouldActivate() ? maxThrust * 0.75f : 0;
+            ApplyThrustChangeRateLimit();
+            ApplyThrust();
+        }
+
+        VisualizeThrust();
     }
 
     public virtual void ApplyThrust()
@@ -30,7 +47,7 @@ public class HoverThruster : Thruster
         }
         else
         {
-            thrustDirection = transform.up;
+            thrustDirection = new Vector3(0, 1, 0);
             rb.AddForceAtPosition(transform.TransformDirection(thrustDirection) * thrust, transform.position);
         }
     }
@@ -39,10 +56,7 @@ public class HoverThruster : Thruster
     {
         if (isHovered)
         {
-            if (controlUnit == null)
-                controlUnit = GetComponentInParent<ControlUnit>();
-
-            if (PlayManager.instance.playMode && controlUnit.HasCockpit())
+            if (PlayManager.instance.playMode)
             {
                 return true;
             }

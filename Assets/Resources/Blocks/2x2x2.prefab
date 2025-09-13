@@ -136,7 +136,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -181,6 +181,8 @@ GameObject:
   m_Component:
   - component: {fileID: 199097415977098526}
   - component: {fileID: 5357469564833557730}
+  - component: {fileID: -2256568320768975002}
+  - component: {fileID: 7347779500678055298}
   m_Layer: 3
   m_Name: 2x2x2
   m_TagString: Untagged
@@ -224,10 +226,14 @@ MonoBehaviour:
   z: 2
   density: 1
   mass: 8
+  maxDurability: 100
+  currentDurability: 0
+  collisionSpeedThreshold: 5
+  damageMultiplier: 10
   resourcePath: 
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
   connectorParent: {fileID: 2695719906485559115}
-  raycastCollider: {fileID: 0}
+  raycastCollider: {fileID: 7347779500678055298}
   connectors:
   - name: Up 1
     canConnect: 1
@@ -236,6 +242,7 @@ MonoBehaviour:
     localPos: {x: -0.5, y: 1, z: -0.5}
     normal: {x: 0, y: 1, z: 0}
     order: 1
+    connector: {fileID: 0}
   - name: Up 2
     canConnect: 1
     isConnected: 0
@@ -243,6 +250,7 @@ MonoBehaviour:
     localPos: {x: -0.5, y: 1, z: 0.5}
     normal: {x: 0, y: 1, z: 0}
     order: 2
+    connector: {fileID: 0}
   - name: Up 3
     canConnect: 1
     isConnected: 0
@@ -250,6 +258,7 @@ MonoBehaviour:
     localPos: {x: 0.5, y: 1, z: -0.5}
     normal: {x: 0, y: 1, z: 0}
     order: 3
+    connector: {fileID: 0}
   - name: Up 4
     canConnect: 1
     isConnected: 0
@@ -257,6 +266,7 @@ MonoBehaviour:
     localPos: {x: 0.5, y: 1, z: 0.5}
     normal: {x: 0, y: 1, z: 0}
     order: 4
+    connector: {fileID: 0}
   - name: Down 1
     canConnect: 1
     isConnected: 0
@@ -264,6 +274,7 @@ MonoBehaviour:
     localPos: {x: -0.5, y: -1, z: -0.5}
     normal: {x: 0, y: -1, z: 0}
     order: 1
+    connector: {fileID: 0}
   - name: Down 2
     canConnect: 1
     isConnected: 0
@@ -271,6 +282,7 @@ MonoBehaviour:
     localPos: {x: -0.5, y: -1, z: 0.5}
     normal: {x: 0, y: -1, z: 0}
     order: 2
+    connector: {fileID: 0}
   - name: Down 3
     canConnect: 1
     isConnected: 0
@@ -278,6 +290,7 @@ MonoBehaviour:
     localPos: {x: 0.5, y: -1, z: -0.5}
     normal: {x: 0, y: -1, z: 0}
     order: 3
+    connector: {fileID: 0}
   - name: Down 4
     canConnect: 1
     isConnected: 0
@@ -285,6 +298,7 @@ MonoBehaviour:
     localPos: {x: 0.5, y: -1, z: 0.5}
     normal: {x: 0, y: -1, z: 0}
     order: 4
+    connector: {fileID: 0}
   - name: Forward 1
     canConnect: 1
     isConnected: 0
@@ -292,6 +306,7 @@ MonoBehaviour:
     localPos: {x: -0.5, y: -0.5, z: 1}
     normal: {x: 0, y: 0, z: 1}
     order: 1
+    connector: {fileID: 0}
   - name: Forward 2
     canConnect: 1
     isConnected: 0
@@ -299,6 +314,7 @@ MonoBehaviour:
     localPos: {x: -0.5, y: 0.5, z: 1}
     normal: {x: 0, y: 0, z: 1}
     order: 2
+    connector: {fileID: 0}
   - name: Forward 3
     canConnect: 1
     isConnected: 0
@@ -306,6 +322,7 @@ MonoBehaviour:
     localPos: {x: 0.5, y: -0.5, z: 1}
     normal: {x: 0, y: 0, z: 1}
     order: 3
+    connector: {fileID: 0}
   - name: Forward 4
     canConnect: 1
     isConnected: 0
@@ -313,6 +330,7 @@ MonoBehaviour:
     localPos: {x: 0.5, y: 0.5, z: 1}
     normal: {x: 0, y: 0, z: 1}
     order: 4
+    connector: {fileID: 0}
   - name: Back 1
     canConnect: 1
     isConnected: 0
@@ -320,6 +338,7 @@ MonoBehaviour:
     localPos: {x: -0.5, y: -0.5, z: -1}
     normal: {x: 0, y: 0, z: -1}
     order: 1
+    connector: {fileID: 0}
   - name: Back 2
     canConnect: 1
     isConnected: 0
@@ -327,6 +346,7 @@ MonoBehaviour:
     localPos: {x: -0.5, y: 0.5, z: -1}
     normal: {x: 0, y: 0, z: -1}
     order: 2
+    connector: {fileID: 0}
   - name: Back 3
     canConnect: 1
     isConnected: 0
@@ -334,6 +354,7 @@ MonoBehaviour:
     localPos: {x: 0.5, y: -0.5, z: -1}
     normal: {x: 0, y: 0, z: -1}
     order: 3
+    connector: {fileID: 0}
   - name: Back 4
     canConnect: 1
     isConnected: 0
@@ -341,6 +362,7 @@ MonoBehaviour:
     localPos: {x: 0.5, y: 0.5, z: -1}
     normal: {x: 0, y: 0, z: -1}
     order: 4
+    connector: {fileID: 0}
   - name: Left 1
     canConnect: 1
     isConnected: 0
@@ -348,6 +370,7 @@ MonoBehaviour:
     localPos: {x: -1, y: -0.5, z: -0.5}
     normal: {x: -1, y: 0, z: 0}
     order: 1
+    connector: {fileID: 0}
   - name: Left 2
     canConnect: 1
     isConnected: 0
@@ -355,6 +378,7 @@ MonoBehaviour:
     localPos: {x: -1, y: -0.5, z: 0.5}
     normal: {x: -1, y: 0, z: 0}
     order: 2
+    connector: {fileID: 0}
   - name: Left 3
     canConnect: 1
     isConnected: 0
@@ -362,6 +386,7 @@ MonoBehaviour:
     localPos: {x: -1, y: 0.5, z: -0.5}
     normal: {x: -1, y: 0, z: 0}
     order: 3
+    connector: {fileID: 0}
   - name: Left 4
     canConnect: 1
     isConnected: 0
@@ -369,6 +394,7 @@ MonoBehaviour:
     localPos: {x: -1, y: 0.5, z: 0.5}
     normal: {x: -1, y: 0, z: 0}
     order: 4
+    connector: {fileID: 0}
   - name: Right 1
     canConnect: 1
     isConnected: 0
@@ -376,6 +402,7 @@ MonoBehaviour:
     localPos: {x: 1, y: -0.5, z: -0.5}
     normal: {x: 1, y: 0, z: 0}
     order: 1
+    connector: {fileID: 0}
   - name: Right 2
     canConnect: 1
     isConnected: 0
@@ -383,6 +410,7 @@ MonoBehaviour:
     localPos: {x: 1, y: -0.5, z: 0.5}
     normal: {x: 1, y: 0, z: 0}
     order: 2
+    connector: {fileID: 0}
   - name: Right 3
     canConnect: 1
     isConnected: 0
@@ -390,6 +418,7 @@ MonoBehaviour:
     localPos: {x: 1, y: 0.5, z: -0.5}
     normal: {x: 1, y: 0, z: 0}
     order: 3
+    connector: {fileID: 0}
   - name: Right 4
     canConnect: 1
     isConnected: 0
@@ -397,8 +426,46 @@ MonoBehaviour:
     localPos: {x: 1, y: 0.5, z: 0.5}
     normal: {x: 1, y: 0, z: 0}
     order: 4
+    connector: {fileID: 0}
   neighbors: []
   canRotate: 1
   showConnectors: 1
-  showLabel: 1
+  showLabel: 0
   uniqueId: 
+--- !u!114 &-2256568320768975002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004239489873974274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f887aec31b46cb74db9436ab89ebf777, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxDurability: 100
+  collisionSpeedThreshold: 5
+  damageMultiplier: 10
+  debugLog: 1
+--- !u!65 &7347779500678055298
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004239489873974274}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.9, y: 1.9, z: 1.9}
+  m_Center: {x: 0, y: 0, z: 0}

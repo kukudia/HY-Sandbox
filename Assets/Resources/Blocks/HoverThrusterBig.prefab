@@ -60,13 +60,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3730603083279271060}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0.36}
-  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
+  m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: 0.75, z: 0}
+  m_LocalScale: {x: 1.9, y: 1.9, z: 1.9}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2664907610342847789}
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 180, y: 0, z: 0}
 --- !u!114 &866700046263514153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1360,12 +1360,12 @@ GameObject:
   m_Component:
   - component: {fileID: 199097415977098526}
   - component: {fileID: 5357469564833557730}
-  - component: {fileID: 1823892824885758489}
-  - component: {fileID: 3875986997659188477}
+  - component: {fileID: -4862313250293461290}
+  - component: {fileID: 5947620224889456253}
   - component: {fileID: 6991563941806482924}
-  - component: {fileID: -5236499378836057712}
+  - component: {fileID: 2987011142618657170}
   m_Layer: 3
-  m_Name: MainThruster
+  m_Name: HoverThrusterBig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1402,11 +1402,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canSpawnConnector: 0
   canBeDeleted: 1
-  x: 1
-  y: 1
-  z: 1
+  x: 2
+  y: 2
+  z: 2
   density: 1
-  mass: 1
+  mass: 8
   maxDurability: 100
   currentDurability: 0
   collisionSpeedThreshold: 5
@@ -1414,62 +1414,206 @@ MonoBehaviour:
   resourcePath: 
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
   connectorParent: {fileID: 2695719906485559115}
-  raycastCollider: {fileID: 3875986997659188477}
+  raycastCollider: {fileID: 5947620224889456253}
   connectors:
   - name: Up 1
     canConnect: 1
     isConnected: 0
     connectType: 0
-    localPos: {x: 0, y: 0.5, z: 0}
+    localPos: {x: -0.5, y: 1, z: -0.5}
     normal: {x: 0, y: 1, z: 0}
     order: 1
+    connector: {fileID: 0}
+  - name: Up 2
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 1, z: 0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 2
+    connector: {fileID: 0}
+  - name: Up 3
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 1, z: -0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 3
+    connector: {fileID: 0}
+  - name: Up 4
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 1, z: 0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 4
     connector: {fileID: 0}
   - name: Down 1
     canConnect: 1
     isConnected: 0
     connectType: 1
-    localPos: {x: 0, y: -0.5, z: 0}
+    localPos: {x: -0.5, y: -1, z: -0.5}
     normal: {x: 0, y: -1, z: 0}
     order: 1
+    connector: {fileID: 0}
+  - name: Down 2
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -1, z: 0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 2
+    connector: {fileID: 0}
+  - name: Down 3
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -1, z: -0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 3
+    connector: {fileID: 0}
+  - name: Down 4
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -1, z: 0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 4
     connector: {fileID: 0}
   - name: Forward 1
     canConnect: 1
     isConnected: 0
     connectType: 2
-    localPos: {x: 0, y: 0, z: 0.5}
+    localPos: {x: -0.5, y: -0.5, z: 1}
     normal: {x: 0, y: 0, z: 1}
     order: 1
+    connector: {fileID: 0}
+  - name: Forward 2
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: -0.5, y: 0.5, z: 1}
+    normal: {x: 0, y: 0, z: 1}
+    order: 2
+    connector: {fileID: 0}
+  - name: Forward 3
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: 0.5, y: -0.5, z: 1}
+    normal: {x: 0, y: 0, z: 1}
+    order: 3
+    connector: {fileID: 0}
+  - name: Forward 4
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: 0.5, y: 0.5, z: 1}
+    normal: {x: 0, y: 0, z: 1}
+    order: 4
     connector: {fileID: 0}
   - name: Back 1
     canConnect: 1
     isConnected: 0
     connectType: 3
-    localPos: {x: 0, y: 0, z: -0.5}
+    localPos: {x: -0.5, y: -0.5, z: -1}
     normal: {x: 0, y: 0, z: -1}
     order: 1
+    connector: {fileID: 0}
+  - name: Back 2
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: -0.5, y: 0.5, z: -1}
+    normal: {x: 0, y: 0, z: -1}
+    order: 2
+    connector: {fileID: 0}
+  - name: Back 3
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: 0.5, y: -0.5, z: -1}
+    normal: {x: 0, y: 0, z: -1}
+    order: 3
+    connector: {fileID: 0}
+  - name: Back 4
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: 0.5, y: 0.5, z: -1}
+    normal: {x: 0, y: 0, z: -1}
+    order: 4
     connector: {fileID: 0}
   - name: Left 1
     canConnect: 1
     isConnected: 0
     connectType: 4
-    localPos: {x: -0.5, y: 0, z: 0}
+    localPos: {x: -1, y: -0.5, z: -0.5}
     normal: {x: -1, y: 0, z: 0}
     order: 1
+    connector: {fileID: 0}
+  - name: Left 2
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -1, y: -0.5, z: 0.5}
+    normal: {x: -1, y: 0, z: 0}
+    order: 2
+    connector: {fileID: 0}
+  - name: Left 3
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -1, y: 0.5, z: -0.5}
+    normal: {x: -1, y: 0, z: 0}
+    order: 3
+    connector: {fileID: 0}
+  - name: Left 4
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -1, y: 0.5, z: 0.5}
+    normal: {x: -1, y: 0, z: 0}
+    order: 4
     connector: {fileID: 0}
   - name: Right 1
     canConnect: 1
     isConnected: 0
     connectType: 5
-    localPos: {x: 0.5, y: 0, z: 0}
+    localPos: {x: 1, y: -0.5, z: -0.5}
     normal: {x: 1, y: 0, z: 0}
     order: 1
+    connector: {fileID: 0}
+  - name: Right 2
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 1, y: -0.5, z: 0.5}
+    normal: {x: 1, y: 0, z: 0}
+    order: 2
+    connector: {fileID: 0}
+  - name: Right 3
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 1, y: 0.5, z: -0.5}
+    normal: {x: 1, y: 0, z: 0}
+    order: 3
+    connector: {fileID: 0}
+  - name: Right 4
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 1, y: 0.5, z: 0.5}
+    normal: {x: 1, y: 0, z: 0}
+    order: 4
     connector: {fileID: 0}
   neighbors: []
   canRotate: 1
   showConnectors: 1
   showLabel: 0
   uniqueId: 
---- !u!114 &1823892824885758489
+--- !u!114 &-4862313250293461290
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1478,15 +1622,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 6004239489873974274}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57334dc6d946f994f8225fbf6ee3a5f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 2046c8acffab30e439727a99f017b258, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   controlUnit: {fileID: 0}
   model: {fileID: 0}
   thrust: 0
   lastThrustValue: 0
-  maxThrust: 250
-  maxThrustChangeRate: 50
+  maxThrust: 800
+  maxThrustChangeRate: 400
   thrustDirection: {x: 0, y: 0, z: 1}
   cameraTransform: {fileID: 0}
   rb: {fileID: 0}
@@ -1522,10 +1666,11 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
-  alignVisual: 1
   rotationSpeed: 5
-  inputDir: {x: 0, y: 0, z: 0}
---- !u!65 &3875986997659188477
+  hoverHeight: 5
+  heightP: 0
+  isHovered: 0
+--- !u!65 &5947620224889456253
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1544,7 +1689,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.9, y: 0.9, z: 0.9}
+  m_Size: {x: 1.9, y: 1.9, z: 1.9}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!120 &6991563941806482924
 LineRenderer:
@@ -1652,7 +1797,7 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &-5236499378836057712
+--- !u!114 &2987011142618657170
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

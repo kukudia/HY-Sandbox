@@ -45,7 +45,7 @@ public class CameraController : MonoBehaviour
             }
         }
 
-        if (!BuildManager.instance.buildMode && !PlayManager.instance.playMode)
+        if (!BuildManager.instance.lockView && !PlayManager.instance.playMode)
         {
             currentMode = CameraMode.FreeFly;
         }

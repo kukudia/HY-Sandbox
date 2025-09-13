@@ -5,19 +5,28 @@ public class MainThruster : Thruster
 {
     public bool alignVisual = true;     // 是否旋转推进器朝向
     public float rotationSpeed = 5f;    // 推进器旋转速度 (deg/sec)
+    public Vector3 inputDir;
 
     private void FixedUpdate()
     {
-        Vector3 inputDir = GetInputDirection();
+        if (!PlayManager.instance.playMode) return;
+
+        if (controlUnit == null)
+        {
+            controlUnit = GetComponentInParent<ControlUnit>();
+        }
+
+        if (controlUnit.cockpit != null)
+        {
+            inputDir = GetInputDirection();
+        }
         thrustDirection = transform.forward;
 
         thrust = maxThrust * GetProjectionLength(inputDir, thrustDirection);
-        if (inputDir.sqrMagnitude > 1e-6f)
-        {
-            thrust = ShouldActivate() ? thrust : 0;
-            ApplyThrustChangeRateLimit();
-            ApplyThrust();
-        }
+        thrust = ShouldActivate() ? thrust : 0;
+        ApplyThrustChangeRateLimit();
+        ApplyThrust();
+        VisualizeThrust();
     }
 
     public void ApplyThrust()
@@ -32,21 +41,21 @@ public class MainThruster : Thruster
 
     public override bool ShouldActivate()
     {
-        if (controlUnit == null)
-            controlUnit = GetComponentInParent<ControlUnit>();
-
-        if (PlayManager.instance.playMode && controlUnit.HasCockpit())
+        if (inputDir.sqrMagnitude > 1e-6f)
         {
-            return true;
+            if (PlayManager.instance.playMode)
+            {
+                return true;
+            }
+            //else if (!PlayManager.instance.playMode)
+            //{
+            //    Debug.LogWarning("Not in play mode.");
+            //}
+            //else if (!controlUnit.HasCockpit())
+            //{
+            //    Debug.LogWarning("Lack of cockpit.");
+            //}
         }
-        //else if (!PlayManager.instance.playMode)
-        //{
-        //    Debug.LogWarning("Not in play mode.");
-        //}
-        //else if (!controlUnit.HasCockpit())
-        //{
-        //    Debug.LogWarning("Lack of cockpit.");
-        //}
         return false;
     }
 

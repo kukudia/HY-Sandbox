@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -15,6 +16,14 @@ public class Block : MonoBehaviour
     public float density = 1;
 
     public float mass;
+
+    public float maxDurability = 100f; // 最大耐久值
+
+    public float currentDurability;
+
+    public float collisionSpeedThreshold = 1f; // 触发耐久减少的最小速度
+
+    public float damageMultiplier = 10f; // 伤害系数（速度越大伤害越高）
 
     public string resourcePath; // 运行时使用的预制体路径
 
@@ -33,6 +42,14 @@ public class Block : MonoBehaviour
     public bool showLabel = true;
 
     public string uniqueId;
+
+    void Start()
+    {
+        currentDurability = maxDurability; // 初始化耐久值
+    }
+
+    // 碰撞检测
+    
 
     private void Awake()
     {
@@ -80,7 +97,12 @@ public class Block : MonoBehaviour
             raycastCollider = GetComponent<BoxCollider>();
         }
 
-        raycastCollider.isTrigger = true;
+        if (GetComponent<Durability>() == null)
+        {
+            gameObject.AddComponent<Durability>();
+        }
+
+        raycastCollider.isTrigger = false;
         raycastCollider.size = new Vector3(x - 0.1f, y - 0.1f, z - 0.1f);
 
         if (canSpawnConnector)
@@ -207,11 +229,36 @@ public class Block : MonoBehaviour
                         {
                             c.isConnected = true;
                             otherC.isConnected = true;
-                            Debug.Log($"{name} | {c.name} connect with {otherBlock.name} | {otherC.name}");
+
+                            if (c.connector == null && otherC.connector == null && c.isConnected)
+                            {
+                                GameObject connector = Instantiate(connectorPrefab, connectorParent);
+                                connector.transform.localPosition = c.localPos;
+                                c.connector = connector;
+                                otherC.connector = connector;
+                            }
+
+                            if (c.connector == null && otherC.connector != null && c.isConnected)
+                            {
+                                c.connector = otherC.connector;
+                            }
+
+                            if (c.connector != null && otherC.connector == null && otherC.isConnected)
+                            {
+                                otherC.connector = c.connector;
+                                Debug.Log("c.connector != null && otherC.connector == null");
+                            }
+
+                            //Debug.Log($"{name} | {c.name} connect with {otherBlock.name} | {otherC.name}");
                             break;
                         }
                     }
                 }
+            }
+
+            if (c.connector != null && !c.isConnected)
+            {
+                Destroy(c.connector);
             }
         }
     }
@@ -324,6 +371,7 @@ public class Connector
     public Vector3 localPos;
     public Vector3 normal;
     public int order;
+    public GameObject connector;
 }
 
 public enum ConnectType

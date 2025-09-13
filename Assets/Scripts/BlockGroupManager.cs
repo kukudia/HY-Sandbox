@@ -9,10 +9,10 @@ public class BlockGroupManager : MonoBehaviour
     public static List<List<Block>> GroupBlocks(List<Block> allBlocks)
     {
         // 更新所有Block的连接状态
-        foreach (Block block in allBlocks)
-        {
-            block.CheckConnection();
-        }
+        //foreach (Block block in allBlocks)
+        //{
+        //    block.CheckConnection();
+        //}
 
         // 构建邻接表
         Dictionary<Block, List<Block>> adjacencyList = new Dictionary<Block, List<Block>>();
@@ -39,6 +39,8 @@ public class BlockGroupManager : MonoBehaviour
             {
                 Block current = queue.Dequeue();
                 currentGroup.Add(current);
+
+                if (adjacencyList[current] == null) continue;
 
                 foreach (Block neighbor in adjacencyList[current])
                 {
@@ -68,31 +70,4 @@ public class BlockGroupManager : MonoBehaviour
         }
         return center / group.Count;
     }
-
-    // 在编辑器中使用的按钮方法
-//    [ContextMenu("Group Blocks and Assign Parents")]
-//    public void GroupAndAssignParents()
-//    {
-//        List<Block> allBlocks = FindObjectsOfType<Block>().ToList();
-//        AssignBlocksToParentGroups(allBlocks);
-//        Debug.Log($"已创建{allBlocks.Count}个Block的分组父物体");
-//    }
-
-//#if UNITY_EDITOR
-//    // 在编辑器中添加一个按钮
-//    [CustomEditor(typeof(BlockGroupManager))]
-//    public class BlockGroupManagerEditor : Editor
-//    {
-//        public override void OnInspectorGUI()
-//        {
-//            base.OnInspectorGUI();
-
-//            BlockGroupManager manager = (BlockGroupManager)target;
-//            if (GUILayout.Button("分组并分配父物体"))
-//            {
-//                manager.GroupAndAssignParents();
-//            }
-//        }
-//    }
-//#endif
 }

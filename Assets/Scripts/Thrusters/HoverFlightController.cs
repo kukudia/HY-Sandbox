@@ -56,7 +56,7 @@ public class HoverFlightController : MonoBehaviour
     // 动态高度系数相关
     private float currentHeightP;
 
-    public bool showUI = true;
+    public bool showUI = false;
     public bool setHeight = false;
 
     private GUIStyle headerStyle; // GUI标题样式
@@ -64,22 +64,28 @@ public class HoverFlightController : MonoBehaviour
 
     public void Init()
     {
-        rb = GetComponent<Rigidbody>();
+        rb = GetComponentInParent<Rigidbody>();
         lastUpVector = transform.up;
 
         // 初始化动态高度系数
         currentHeightP = rb.mass * HeightP;
 
         // 配置所有推进器
-        foreach (var thruster in thrusters)
-        {
-            thruster.hoverHeight = targetHoverHeight;
-        }
+        //foreach (var thruster in thrusters)
+        //{
+        //    thruster.hoverHeight = targetHoverHeight;
+        //}
     }
 
     private void FixedUpdate()
     {
         if (thrusters.Length == 0) return;
+
+        if (rb == null)
+        {
+            rb = GetComponentInParent<Rigidbody>();
+            //return;
+        }
 
         if (Keyboard.current.qKey.isPressed && !Keyboard.current.eKey.isPressed)
         {
@@ -187,44 +193,39 @@ public class HoverFlightController : MonoBehaviour
 
     private void DistributeThrust(float heightAdjustment, Vector3 tiltAdjustment)
     {
-        // 计算重心位置
         Vector3 centerOfMass = rb.centerOfMass + transform.position;
+        float totalMaxThrust = GetTotalMaxThrust();
 
-        // 计算总推力需求
-        float totalThrustRequired = Mathf.Clamp(
-            heightAdjustment,
-            0,
-            GetTotalMaxThrust()
-        );
+        // 计算总需求推力（限制在最大能力范围内）
+        float totalThrustRequired = Mathf.Clamp(heightAdjustment, 0, totalMaxThrust);
 
+        // 按推进器最大推力比例分配基础推力
         foreach (var thruster in thrusters)
         {
-            // 1. 基础高度推力分配
-            float baseThrust = totalThrustRequired / thrusters.Length;
+            if (thruster ==  null) continue;
 
-            // 2. 姿态调整推力分配
+            // 核心修改：按推力占比分配基础推力
+            float thrustRatio = thruster.maxThrust / totalMaxThrust;
+            float baseThrust = totalThrustRequired * thrustRatio;
+
+            // 姿态调整推力（保持原逻辑）
             Vector3 positionFromCOM = thruster.transform.position - centerOfMass;
             float tiltThrust = 0f;
-
             if (tiltAdjustment != Vector3.zero)
             {
-                // 计算推进器位置对扭矩的贡献
                 Vector3 torqueDirection = Vector3.Cross(positionFromCOM, transform.up).normalized;
                 float torqueEffectiveness = Vector3.Dot(torqueDirection, tiltAdjustment.normalized);
-
-                // 根据距离重心距离加权
                 float distanceWeight = positionFromCOM.magnitude / GetMaxDistanceFromCOM();
                 tiltThrust = tiltCorrectionForce * torqueEffectiveness * distanceWeight;
             }
 
-            // 3. 组合推力并限制范围
+            // 合并推力并限制范围
             float finalThrust = Mathf.Clamp(
                 baseThrust + tiltThrust,
                 0,
                 thruster.maxThrust
             );
 
-            // 应用推力
             thruster.thrust = thruster.ShouldActivate() ? finalThrust : 0;
             thruster.ApplyThrustChangeRateLimit();
         }
@@ -259,6 +260,7 @@ public class HoverFlightController : MonoBehaviour
         float total = 0f;
         foreach (var thruster in thrusters)
         {
+            if (thruster == null) continue;
             total += thruster.maxThrust;
         }
         return total;
@@ -271,20 +273,12 @@ public class HoverFlightController : MonoBehaviour
 
         foreach (var thruster in thrusters)
         {
+            if (thruster == null) continue;
             float distance = Vector3.Distance(thruster.transform.position, centerOfMass);
             if (distance > maxDistance) maxDistance = distance;
         }
 
         return maxDistance > 0 ? maxDistance : 1f;
-    }
-
-    public void SetTargetHeight(float newHeight)
-    {
-        targetHoverHeight = newHeight;
-        foreach (var thruster in thrusters)
-        {
-            thruster.hoverHeight = newHeight;
-        }
     }
 
     // 在编辑器中可视化
@@ -313,7 +307,7 @@ public class HoverFlightController : MonoBehaviour
 
     void OnGUI()
     {
-        if (!showUI || thrusters == null) return;
+        if (!showUI || thrusters == null || !PlayManager.instance.playMode) return;
 
         headerStyle = new GUIStyle(GUI.skin.label);
         headerStyle.fontSize = 16;
