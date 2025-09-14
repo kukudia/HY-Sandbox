@@ -24,11 +24,32 @@ public class DestroyManager : MonoBehaviour
         }
     }
 
-    private float _refreshDelay = 0.1f; // 合并调用的延迟时间（秒）
+    private float _refreshDelay = 0.2f; // 合并调用的延迟时间（秒）
     private bool _isRefreshScheduled = false;
 
     // 被销毁物体的计数器（按需替换为其他数据结构）
     private int _destroyedCount = 0;
+
+    public void DestroyGameObject(GameObject obj)
+    {
+        Debug.Log($"{name} 耐久值为0，物体被销毁");
+
+        ControlUnit unit = obj.GetComponentInParent<ControlUnit>();
+        //obj.GetComponent<Block>().DisConnectAllConnectors();
+        Destroy(obj);
+
+        if (PlayManager.instance.playMode)
+        {
+            if (GetComponent<Cockpit>() != null)
+            {
+                MainUIPanels.instance.PlayEnd();
+                return;
+            }
+
+            //DestroyManager.Instance.NotifyObjectDestroyed();
+            PlayManager.instance.RefreshGroup(unit);
+        }
+    }
 
     // 物体销毁时调用此方法
     public void NotifyObjectDestroyed()
@@ -55,7 +76,7 @@ public class DestroyManager : MonoBehaviour
     private void ExecuteRefresh()
     {
         Debug.Log($"Refreshing after {_destroyedCount} objects destroyed");
-        PlayManager.instance.RefreshGroups();
+        //PlayManager.instance.RefreshGroups();
         _destroyedCount = 0;
     }
 }

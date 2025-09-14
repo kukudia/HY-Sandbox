@@ -35,7 +35,8 @@ public class MainThruster : Thruster
             rb = GetComponentInParent<Rigidbody>();
         if (rb == null) return;
 
-        // 施加推力
+        // 推力施加
+        thrustDirection = model.forward;
         rb.AddForceAtPosition(thrustDirection * thrust, transform.position);
     }
 

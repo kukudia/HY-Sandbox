@@ -20,9 +20,7 @@ public class PlayManager : MonoBehaviour
     public Material highlightMaterial;
 
     public Block selectedBlock;
-
-    public List<ControlUnit> controlUnits = new List<ControlUnit>();
-    public List<Block> blocks = new List<Block>();
+    public List<ControlUnit> allControlUnits = new List<ControlUnit>(); // 新增列表
 
     public float lastHeight;
     public float currentHeight;
@@ -48,6 +46,11 @@ public class PlayManager : MonoBehaviour
     {
         if (playMode)
         {
+            if (blocksParent == null)
+            {
+                PlayManager.instance.PlayEnd();
+            }
+
             if (Keyboard.current.bKey.wasPressedThisFrame)
             {
                 lockView = !lockView;
@@ -61,7 +64,8 @@ public class PlayManager : MonoBehaviour
 
     public void PlayStart()
     {
-        RefreshGroups();
+        ControlUnit controlUnit = BuildManager.instance.blocksParent.GetComponent<ControlUnit>();
+        RefreshGroup(controlUnit);
 
         lastHeight = blocksParent.position.y;
 
@@ -71,16 +75,22 @@ public class PlayManager : MonoBehaviour
         playMode = true;
     }
 
-    public void RefreshGroups()
+    public void RefreshGroup(ControlUnit unit)
     {
-        AssignBlocksToParentGroups();
+        List<Block> blocks = unit.GetComponentsInChildren<Block>().ToList();
+        //blocks.RemoveAll(item => item == null);
+        if (blocks.Count > 1)
+        {
+            AssignBlocksToParentGroups(blocks);
+            //unit.RefreshChildren();
+        }
 
-        controlUnits = FindObjectsOfType<ControlUnit>().ToList();
-        
-        foreach (ControlUnit controlUnit in controlUnits)
+        foreach (ControlUnit controlUnit in allControlUnits)
         {
             controlUnit.RefreshChildren();
         }
+
+        Debug.Log($"Find {allControlUnits.Count} controls");
     }
 
     void SetPlayMode()
@@ -160,8 +170,9 @@ public class PlayManager : MonoBehaviour
         Rack rack = selectedBlock.GetComponent<Rack>();
         if (rack != null)
         {
-            rack.DisConnectAllConnectors();
-            RefreshGroups();
+            ControlUnit unit = rack.GetComponentInParent<ControlUnit>();
+            selectedBlock.DisConnectAllConnectors();
+            RefreshGroup(unit);
         }
     }
 
@@ -178,7 +189,7 @@ public class PlayManager : MonoBehaviour
 
     public void PlayEnd()
     {
-        controlUnits = FindObjectsOfType<ControlUnit>().ToList();
+        List<ControlUnit> controlUnits = FindObjectsOfType<ControlUnit>().ToList();
         foreach (ControlUnit controlUnit in controlUnits)
         {
             controlUnit.PlayEnd();
@@ -190,10 +201,8 @@ public class PlayManager : MonoBehaviour
     }
 
     // 为每个分组创建父物体并分配Block
-    public void AssignBlocksToParentGroups()
+    public void AssignBlocksToParentGroups(List<Block> blocks)
     {
-        blocks = FindObjectsOfType<Block>().ToList();
-
         // 获取所有Block的分组
         List<List<Block>> groups = BlockGroupManager.GroupBlocks(blocks);
         GameObject parentPrefab = Resources.Load<GameObject>("Prefabs/BlocksParent");
@@ -238,66 +247,15 @@ public class PlayManager : MonoBehaviour
         Camera.main.GetComponent<CameraController>().playerBody = blocksParent;
     }
 
-    //void OnGUI()
-    //{
-    //    if (!showUI && !playMode) return;
+    public void RegisterControlUnit(ControlUnit unit)
+    {
+        if (!allControlUnits.Contains(unit))
+            allControlUnits.Add(unit);
+    }
 
-    //    headerStyle = new GUIStyle(GUI.skin.label);
-    //    headerStyle.fontSize = 16;
-    //    headerStyle.fontStyle = FontStyle.Bold;
-    //    headerStyle.normal.textColor = Color.cyan;
-
-    //    labelStyle = new GUIStyle(GUI.skin.label);
-    //    labelStyle.fontSize = 13;
-    //    labelStyle.normal.textColor = Color.white;
-
-    //    GUILayout.BeginArea(new Rect(20, 20, 320, 600), GUI.skin.window);
-
-    //    if (hoverFlightController.enabled)
-    //    {
-    //        GUILayout.Label("Hover Flight Controll System", headerStyle);
-
-    //        GUILayout.Space(8);
-    //        GUILayout.Label($"Target Height: {hoverFlightController.targetHoverHeight:F2}", labelStyle);
-    //        GUILayout.Label($"Current Height: {transform.position.y:F2}", labelStyle);
-    //        GUILayout.Label($"Dynamic Height P: {hoverFlightController.currentHeightP:F2}", labelStyle);
-    //        GUILayout.Label($"Vertical Velocity: {hoverFlightController.verticalVelocity:F2} m/s", labelStyle);
-
-    //        GUILayout.Space(10);
-    //        GUILayout.Label("Hover Thrusters:", headerStyle);
-
-    //        Thruster[] thrusters = hoverThrusters;
-
-    //        for (int i = 0; i < thrusters.Length; i++)
-    //        {
-    //            if (thrusters[i] == null) continue;
-
-    //            float norm = thrusters[i].maxThrust > 1e-5f ? thrusters[i].thrust / thrusters[i].maxThrust : 0f;
-    //            Color barColor = Color.Lerp(Color.red, Color.green, norm);
-
-    //            GUILayout.BeginHorizontal();
-    //            GUILayout.Label($"#{i} {thrusters[i].thrust:F1}/{thrusters[i].maxThrust}", labelStyle);
-
-    //            if (thrusters[i].thrust > 0)
-    //            {
-    //                // 画进度条背景
-    //                Rect r = GUILayoutUtility.GetRect(100, 18);
-    //                GUI.color = Color.gray;
-    //                GUI.Box(r, GUIContent.none);
-
-    //                // 画推力值条
-    //                Rect filled = new Rect(r.x, r.y, r.width * norm, r.height);
-    //                GUI.color = barColor;
-    //                GUI.Box(filled, GUIContent.none);
-    //            }
-    //        }
-
-    //        // 恢复颜色
-    //        GUI.color = Color.white;
-
-    //        GUILayout.EndHorizontal();
-    //    }
-
-    //    GUILayout.EndArea();
-    //}
+    public void UnregisterControlUnit(ControlUnit unit)
+    {
+        if (allControlUnits.Contains(unit))
+            allControlUnits.Remove(unit);
+    }
 }

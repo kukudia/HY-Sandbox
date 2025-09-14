@@ -1,21 +1,20 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Durability : MonoBehaviour
 {
     [Header("耐久值设置")]
     public float maxDurability = 100f;
-    public float collisionSpeedThreshold = 5f;
-    public float damageMultiplier = 1f;
+    public float collisionSpeedThreshold = 20f;
+    public float damageMultiplier = 0.5f;
     public bool debugLog = true;
 
-    private float currentDurability;
+    public float currentDurability;
     private Material originalMaterial;
     private Renderer objectRenderer;
 
     void Start()
     {
-        currentDurability = maxDurability;
-
         // 获取渲染器和原始材质
         objectRenderer = GetComponent<Renderer>();
         if (objectRenderer != null)
@@ -32,7 +31,7 @@ public class Durability : MonoBehaviour
         if (collisionSpeed > collisionSpeedThreshold)
         {
             // 计算伤害
-            float damage = (collisionSpeed - collisionSpeedThreshold) * damageMultiplier;
+            float damage = Mathf.Max(50, (collisionSpeed - collisionSpeedThreshold) * damageMultiplier);
             TakeDamage(damage);
 
             if (debugLog)
@@ -42,37 +41,32 @@ public class Durability : MonoBehaviour
         }
     }
 
+    // 在Durability类中添加以下方法
+    public void Repair(float amount)
+    {
+        currentDurability = Mathf.Min(maxDurability, currentDurability + amount);
+
+        if (debugLog)
+        {
+            Debug.Log($"{name} 被修复: +{amount:F1}, 当前耐久度: {currentDurability:F1}/{maxDurability}");
+        }
+    }
+
+    // 修改TakeDamage方法以支持修复（负伤害）
     public void TakeDamage(float damage)
     {
         currentDurability -= damage;
 
-        // 检查是否销毁物体
+        // 检查是否被破坏
         if (currentDurability <= 0)
         {
-            DestroyObject();
-        }
-    }
-
-    void DestroyObject()
-    {
-        Debug.Log($"{name} 耐久值为0，物体被销毁");
-
-        // 销毁当前子物体
-        Destroy(gameObject);
-    }
-
-    private void OnDestroy()
-    {
-        if (PlayManager.instance.playMode)
-        {
-            DestroyManager.Instance.NotifyObjectDestroyed();
-
-            if (GetComponent<Cockpit>() != null)
+            if (RepairBotManager.Instance != null)
             {
-                MainUIPanels.instance.PlayEnd();
+                RepairBotManager.Instance.NotifyBlockDestroyed(this);
             }
-        }
 
+            DestroyManager.Instance.DestroyGameObject(gameObject);
+        }
     }
 
     // 在编辑器中显示当前耐久值（调试用）
@@ -80,9 +74,11 @@ public class Durability : MonoBehaviour
     {
         if (debugLog)
         {
+            if (currentDurability == maxDurability) return;
             Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
-            GUI.Label(new Rect(screenPos.x, Screen.height - screenPos.y, 200, 20),
-                     $"{name}: {currentDurability:F1}/{maxDurability}");
+            GUIStyle style = GUI.skin.label;
+            style.normal.textColor = Color.Lerp(Color.red, Color.green, currentDurability / maxDurability);
+            GUI.Label(new Rect(screenPos.x, Screen.height - screenPos.y, 200, 20), $"{currentDurability:F1}/{maxDurability}", style);
         }
     }
 }

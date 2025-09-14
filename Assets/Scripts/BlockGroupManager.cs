@@ -38,9 +38,12 @@ public class BlockGroupManager : MonoBehaviour
             while (queue.Count > 0)
             {
                 Block current = queue.Dequeue();
-                currentGroup.Add(current);
+
+                if (current == null) continue;
 
                 if (adjacencyList[current] == null) continue;
+
+                currentGroup.Add(current);
 
                 foreach (Block neighbor in adjacencyList[current])
                 {

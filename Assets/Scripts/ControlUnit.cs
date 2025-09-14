@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,12 +8,26 @@ public class ControlUnit : MonoBehaviour
     public Cockpit cockpit;
     public MainThruster[] mainThrusters;
     public HoverThruster[] hoverThrusters;
+    private float cooldownTime = 0.2f;
+    private bool _isOnCooldown;
+
+    private void Start()
+    {
+        // 在ControlUnit启动时向PlayManager注册
+        if (PlayManager.instance != null)
+            PlayManager.instance.RegisterControlUnit(this);
+
+        Invoke("RefreshChildren", 2f);
+    }
 
     private void Update()
     {
         if (!PlayManager.instance.playMode) return;
 
-        if (transform.childCount == 0) Destroy(gameObject);
+        if (transform.childCount == 0)
+        {
+            Destroy(gameObject);
+        }
 
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
@@ -39,10 +54,23 @@ public class ControlUnit : MonoBehaviour
 
     public void RefreshChildren()
     {
-        hoverFlightController = GetComponentInChildren<HoverFlightController>();
-        cockpit = GetComponentInChildren<Cockpit>();
-        mainThrusters = GetComponentsInChildren<MainThruster>();
-        hoverThrusters = GetComponentsInChildren<HoverThruster>();
+        // 只有在缓存为空或需要强制刷新时才重新获取
+        if (hoverFlightController == null)
+            hoverFlightController = GetComponentInChildren<HoverFlightController>();
+
+        if (cockpit ==  null)
+            cockpit = GetComponentInChildren<Cockpit>();
+
+        if (mainThrusters == null)
+            mainThrusters = GetComponentsInChildren<MainThruster>();
+
+        if (hoverThrusters != null)
+            hoverThrusters = GetComponentsInChildren<HoverThruster>();
+
+        if (hoverFlightController == null)
+        {
+            Debug.LogWarning($"Cannot find HoverFlightController in {gameObject}");
+        }
 
         if (hoverFlightController != null && hoverThrusters.Length > 0)
         {
@@ -51,6 +79,18 @@ public class ControlUnit : MonoBehaviour
             hoverFlightController.showUI = true;
             hoverFlightController.Init();
         }
+
+        //Collider[] siblingColliders = GetComponentsInChildren<Collider>();
+
+        //// 双重循环遍历所有碰撞体组合
+        //for (int i = 0; i < siblingColliders.Length; i++)
+        //{
+        //    for (int j = i + 1; j < siblingColliders.Length; j++)
+        //    {
+        //        // 忽略两个碰撞体之间的碰撞
+        //        Physics.IgnoreCollision(siblingColliders[i], siblingColliders[j], true);
+        //    }
+        //}
     }
 
     public void PlayEnd()
@@ -64,6 +104,8 @@ public class ControlUnit : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (!PlayManager.instance.playMode) return;
+
+        if (_isOnCooldown) return;
 
         foreach (ContactPoint contact in collision.contacts)
         {
@@ -79,5 +121,24 @@ public class ControlUnit : MonoBehaviour
                 childHandler.CollisionEnter(collision);
             }
         }
+
+        StartCoroutine(StartCooldown());
+    }
+
+    private void OnDestroy()
+    {
+        // 在销毁时反注册
+        if (PlayManager.instance != null)
+            PlayManager.instance.UnregisterControlUnit(this);
+    }
+
+    private IEnumerator StartCooldown()
+    {
+        // 设置状态为冷却中
+        _isOnCooldown = true;
+        // 等待指定的冷却时间
+        yield return new WaitForSeconds(cooldownTime);
+        // 冷却结束，重置状态
+        _isOnCooldown = false;
     }
 }

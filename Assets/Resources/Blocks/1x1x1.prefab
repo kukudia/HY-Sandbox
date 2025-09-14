@@ -301,9 +301,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxDurability: 100
-  collisionSpeedThreshold: 5
-  damageMultiplier: 10
+  collisionSpeedThreshold: 20
+  damageMultiplier: 0.5
   debugLog: 1
+  currentDurability: 0
 --- !u!65 &4245157779349812274
 BoxCollider:
   m_ObjectHideFlags: 0

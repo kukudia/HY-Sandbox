@@ -199,17 +199,19 @@ public class Block : MonoBehaviour
 
     public void CheckConnection()
     {
-        Transform parent = connectorParent;
+        //Transform parent = connectorParent;
+
+        //if (parent == null) return;
 
         foreach (Connector c in connectors)
         {
             if (!c.canConnect) continue;
-            Vector3 worldPos = parent.TransformPoint(c.localPos);
-            Vector3 worldNormal = parent.TransformDirection(c.normal);
+            Vector3 worldPos = transform.TransformPoint(c.localPos);
+            Vector3 worldNormal = transform.TransformDirection(c.normal);
 
             c.isConnected = false;
 
-            if (Physics.Raycast(worldPos, worldNormal, out RaycastHit hit, 0.1f, BuildManager.instance.blockLayer))
+            if (Physics.Raycast(worldPos, worldNormal, out RaycastHit hit, 0.25f, BuildManager.instance.blockLayer))
             {
                 Block otherBlock = hit.collider.GetComponentInParent<Block>();
                 if (otherBlock != null && otherBlock != this)
@@ -225,7 +227,7 @@ public class Block : MonoBehaviour
                         Vector3 otherWorldNormal = otherParent.TransformDirection(otherC.normal);
 
                         // 判断位置是否接近 + 法向是否相反
-                        if (Vector3.Distance(otherWorldPos, worldPos) < 0.1f && Vector3.Dot(otherWorldNormal, -worldNormal) > 0.9f) // 方向接近相反
+                        if (Vector3.Distance(otherWorldPos, worldPos) < 0.25f && Vector3.Dot(otherWorldNormal, -worldNormal) > 0.75f) // 方向接近相反
                         {
                             c.isConnected = true;
                             otherC.isConnected = true;
@@ -273,7 +275,7 @@ public class Block : MonoBehaviour
             Vector3 worldPos = connectorParent.TransformPoint(c.localPos);
             Vector3 worldNormal = connectorParent.TransformDirection(c.normal);
 
-            if (Physics.Raycast(worldPos, worldNormal, out RaycastHit hit, 0.1f, BuildManager.instance.blockLayer))
+            if (Physics.Raycast(worldPos, worldNormal, out RaycastHit hit, 0.25f, BuildManager.instance.blockLayer))
             {
                 Block otherBlock = hit.collider.GetComponentInParent<Block>();
                 if (otherBlock != null && otherBlock != this)
@@ -291,8 +293,24 @@ public class Block : MonoBehaviour
             }
         }
         neighbors.RemoveAll(item => item == null);
-        Debug.Log($"{name} find {neighbors.Count} neighbors.");
+        //Debug.Log($"{name} find {neighbors.Count} neighbors.");
         return neighbors;
+    }
+
+    public void DisConnectAllConnectors()
+    {
+        LayerMask rackLayer = 0;
+        Collider[] colliders = GetComponentsInChildren<Collider>();
+        foreach (Collider collider in colliders)
+        {
+            collider.gameObject.layer = rackLayer;
+        }
+
+        foreach (Block neighbor in neighbors)
+        {
+            neighbor.CheckConnection();
+        }
+        neighbors.Clear();
     }
 
     public bool IsBlockedGhost()

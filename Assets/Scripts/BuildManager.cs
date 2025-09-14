@@ -677,14 +677,26 @@ public class BuildManager : MonoBehaviour
         Debug.Log($"Saved block {block.name} at {block.transform.position}, {block.transform.rotation.eulerAngles}");
 
         block.CheckConnection();
-        block.neighbors = block.Neighbors();
-        if (block.neighbors.Count > 0)
+        Collider[] hits = Physics.OverlapBox(
+            transform.position,
+            new Vector3(block.x * 2, block.y * 2, block.z * 2),
+            transform.rotation,
+            blockLayer              // 只检测方块层
+        );
+
+        foreach (var hit in hits)
         {
-            foreach (Block blockNeighbor in block.neighbors)
-            {
-                blockNeighbor.CheckConnection();
-            }
+            hit.GetComponent<Block>().CheckConnection();
         }
+
+        block.neighbors = block.Neighbors();
+        //if (block.neighbors.Count > 0)
+        //{
+        //    foreach (Block blockNeighbor in block.neighbors)
+        //    {
+        //        blockNeighbor.CheckConnection();
+        //    }
+        //}
     }
 
     public void RemoveBlock(Block block)
@@ -730,6 +742,8 @@ public class BuildManager : MonoBehaviour
         blocksParent = gameObj.transform;
         PlayManager.instance.blocksParent = blocksParent;
 
+        blocksParent.GetComponent<Rigidbody>().isKinematic = true;
+
         //if (!File.Exists(savePath))
         //{
         //    Debug.Log($"没有在{savePath}找到保存文件，跳过加载。");
@@ -774,6 +788,11 @@ public class BuildManager : MonoBehaviour
                 block.uniqueId = data.id; // 保持唯一 ID 一致
                 SaveManager.instance.blocks.Add(block);
                 sucessCount++;
+            }
+            Durability durability = obj.GetComponent<Durability>();
+            if (durability != null)
+            {
+                durability.currentDurability = durability.maxDurability;
             }
         }
 
