@@ -189,7 +189,7 @@ public class PlayManager : MonoBehaviour
 
     public void PlayEnd()
     {
-        List<ControlUnit> controlUnits = FindObjectsOfType<ControlUnit>().ToList();
+        List<ControlUnit> controlUnits = Object.FindObjectsByType<ControlUnit>(FindObjectsSortMode.None).ToList();
         foreach (ControlUnit controlUnit in controlUnits)
         {
             controlUnit.PlayEnd();

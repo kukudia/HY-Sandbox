@@ -86,7 +86,7 @@ public class SaveManager : MonoBehaviour
     {
         currentSaveName = saveName;
 
-        ControlUnit[] deleteObjs = FindObjectsOfType<ControlUnit>();
+        ControlUnit[] deleteObjs = Object.FindObjectsByType<ControlUnit>(FindObjectsSortMode.None);
 
         foreach (ControlUnit obj in deleteObjs)
         {

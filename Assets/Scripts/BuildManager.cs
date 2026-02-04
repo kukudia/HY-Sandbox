@@ -686,7 +686,15 @@ public class BuildManager : MonoBehaviour
 
         foreach (var hit in hits)
         {
-            hit.GetComponent<Block>().CheckConnection();
+            Block hitBlock = hit.GetComponent<Block>();
+            if (hitBlock != null)
+            {
+                hitBlock.CheckConnection();
+            }
+            else
+            {
+                Debug.LogWarning($"Hit object [{hit.name}] is not a Block");
+            }
         }
 
         block.neighbors = block.Neighbors();

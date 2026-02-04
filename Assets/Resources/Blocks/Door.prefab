@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2664907610342847789}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74,6 +74,7 @@ GameObject:
   - component: {fileID: 199097415977098526}
   - component: {fileID: 5357469564833557730}
   - component: {fileID: -6765461515779915700}
+  - component: {fileID: 8854057453224865978}
   m_Layer: 3
   m_Name: Door
   m_TagString: Untagged
@@ -124,7 +125,7 @@ MonoBehaviour:
   resourcePath: 
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
   connectorParent: {fileID: 2695719906485559115}
-  raycastCollider: {fileID: 0}
+  raycastCollider: {fileID: 8854057453224865978}
   connectors:
   - name: Up 1
     canConnect: 1
@@ -228,6 +229,27 @@ MonoBehaviour:
   damageMultiplier: 0.5
   debugLog: 1
   currentDurability: 0
+--- !u!65 &8854057453224865978
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004239489873974274}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.9, y: 1.9, z: 0.9}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6747092251865225875
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,7 +262,7 @@ GameObject:
   - component: {fileID: 6713529867188557292}
   - component: {fileID: 1341242416225556629}
   - component: {fileID: 1449790381781292913}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -290,6 +312,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -311,9 +335,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &1449790381781292913
 BoxCollider:

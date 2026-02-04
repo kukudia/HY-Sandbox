@@ -12,7 +12,7 @@ public class DestroyManager : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = FindObjectOfType<DestroyManager>();
+                _instance = Object.FindFirstObjectByType<DestroyManager>();
                 if (_instance == null)
                 {
                     GameObject go = new GameObject("DestroyManager");
