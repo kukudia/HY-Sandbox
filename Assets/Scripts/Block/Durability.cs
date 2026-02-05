@@ -60,11 +60,6 @@ public class Durability : MonoBehaviour
         // ºÏ≤È «∑Ò±ª∆∆ªµ
         if (currentDurability <= 0)
         {
-            if (RepairBotManager.Instance != null)
-            {
-                RepairBotManager.Instance.NotifyBlockDestroyed(this);
-            }
-
             DestroyManager.Instance.DestroyGameObject(gameObject);
         }
     }

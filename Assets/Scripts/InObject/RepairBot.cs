@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class RepairBot : MonoBehaviour
 {
     public Transform home;
+    public Vector3 homeOffset = new Vector3(0, 0, 0);
 
     [Header("修复设置")]
     public float repairAmount = 10f; // 每次修复量
@@ -25,10 +26,9 @@ public class RepairBot : MonoBehaviour
     public float beamWidth = 0.2f;
 
     public Durability currentTarget;
-    private float lastRepairTime;
-    private bool isRepairing;
+    public float lastRepairTime;
+    public bool isRepairing;
     private Vector3 avoidanceDirection;
-    private bool isReturningHome; // 是否正在返回基地
     private Rigidbody rb; // 刚体组件
 
     void Start()
@@ -54,7 +54,8 @@ public class RepairBot : MonoBehaviour
             repairBeam.enabled = false;
         }
 
-        isReturningHome = false; // 初始化返回基地状态
+        home = transform.parent; // 设置基地为父对象
+        homeOffset = transform.localPosition; // 设置基地偏移
     }
 
     void FixedUpdate()
@@ -68,7 +69,6 @@ public class RepairBot : MonoBehaviour
             // 如果没有找到目标且基地不为空，返回基地
             if (currentTarget == null && home != null)
             {
-                isReturningHome = true;
                 NavigateToTarget(home);
 
                 // 检查是否到达基地
@@ -80,12 +80,11 @@ public class RepairBot : MonoBehaviour
             }
             else
             {
-                isReturningHome = false;
+
             }
         }
         else
         {
-            isReturningHome = false;
             // 有目标时导航到目标
             NavigateToTarget(currentTarget.transform);
 
@@ -98,9 +97,10 @@ public class RepairBot : MonoBehaviour
     void ReturnHome()
     {
         // 停止移动
-        isReturningHome = false;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+        rb.isKinematic = true; // 设置为运动学状态
+        rb.detectCollisions = false;
 
         // 设置为基地的子对象
         if (transform.parent != home)
@@ -109,8 +109,16 @@ public class RepairBot : MonoBehaviour
         }
 
         // 重置位置和旋转
-        transform.localPosition = Vector3.zero;
+        transform.localPosition = homeOffset;
         transform.localRotation = Quaternion.identity;
+    }
+
+    void LeaveHome()
+    {
+        // 离开基地
+        transform.parent = null;
+        rb.isKinematic = false; // 取消运动学状态
+        rb.detectCollisions = true;
     }
 
     void FindDamagedBlock()
@@ -153,10 +161,18 @@ public class RepairBot : MonoBehaviour
 
     void NavigateToTarget(Transform target)
     {
+        if (transform.parent == home)
+        {
+            LeaveHome();
+        }
+
         Vector3 direction = (target.position - transform.position).normalized;
 
-        // 使用避障算法计算避障方向
-        avoidanceDirection = CalculateAvoidanceDirection();
+        if (target != home)
+        {
+            // 使用避障算法计算避障方向
+            avoidanceDirection = CalculateAvoidanceDirection();
+        }
 
         // 结合目标方向和避障方向
         if (avoidanceDirection != Vector3.zero)
