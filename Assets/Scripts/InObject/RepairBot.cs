@@ -5,11 +5,14 @@ using System.Collections.Generic;
 public class RepairBot : MonoBehaviour
 {
     public Transform home;
+    public Transform outside;
+    public Transform navigateTarget;
     public Vector3 homeOffset = new Vector3(0, 0, 0);
 
     [Header("修复设置")]
     public float repairAmount = 10f; // 每次修复量
     public float repairCooldown = 1f; // 修复冷却时间
+    public float findTargetInterval = 1f; // 寻找目标间隔时间
     public float detectionRange = 50f; // 检测范围
     public float movementSpeed = 5f; // 移动速度
     public float rotationSpeed = 2f; // 旋转速度
@@ -27,6 +30,7 @@ public class RepairBot : MonoBehaviour
 
     public Durability currentTarget;
     public float lastRepairTime;
+    public float lastFindTime;
     public bool isRepairing;
     private Vector3 avoidanceDirection;
     private Rigidbody rb; // 刚体组件
@@ -73,7 +77,7 @@ public class RepairBot : MonoBehaviour
 
                 // 检查是否到达基地
                 float distanceToHome = Vector3.Distance(transform.position, home.position);
-                if (distanceToHome < 2f) // 阈值
+                if (distanceToHome < 5f) // 阈值
                 {
                     ReturnHome();
                 }
@@ -116,14 +120,15 @@ public class RepairBot : MonoBehaviour
     void LeaveHome()
     {
         // 离开基地
-        transform.parent = null;
+        transform.parent = outside;
         rb.isKinematic = false; // 取消运动学状态
         rb.detectCollisions = true;
     }
 
     void FindDamagedBlock()
     {
-        if (PlayManager.instance.blocksParent == null) return;
+        if (Time.time - lastFindTime < findTargetInterval) return;
+        //if (PlayManager.instance.blocksParent == null) return;
 
         // 找到所有带有Durability组件的方块
         Durability[] allBlocks = PlayManager.instance.blocksParent.GetComponentsInChildren<Durability>();
@@ -132,9 +137,11 @@ public class RepairBot : MonoBehaviour
         // 筛选出损坏的方块
         foreach (Durability block in allBlocks)
         {
-            if (block.currentDurability < block.maxDurability)
+            if (block.needToRepair)
             {
                 damagedBlocks.Add(block);
+                //
+                //break; // 只修复一个方块
             }
         }
 
@@ -157,10 +164,17 @@ public class RepairBot : MonoBehaviour
         }
 
         currentTarget = closestBlock;
+
+        if (currentTarget == null && home != null)
+        {
+            NavigateToTarget(home);
+        }
     }
 
     void NavigateToTarget(Transform target)
     {
+        navigateTarget = target;
+
         if (transform.parent == home)
         {
             LeaveHome();
@@ -240,7 +254,7 @@ public class RepairBot : MonoBehaviour
             if (Time.time - lastRepairTime >= repairCooldown)
             {
                 // 修复目标
-                currentTarget.TakeDamage(-repairAmount); // 负值表示修复
+                currentTarget.UpdateDurablility(repairAmount); // 负值表示修复
                 lastRepairTime = Time.time;
 
                 // 检查是否完全修复

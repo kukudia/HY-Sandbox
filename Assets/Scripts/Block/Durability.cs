@@ -10,6 +10,7 @@ public class Durability : MonoBehaviour
     public bool debugLog = true;
 
     public float currentDurability;
+    public bool needToRepair => currentDurability < maxDurability;
     private Material originalMaterial;
     private Renderer objectRenderer;
 
@@ -32,7 +33,7 @@ public class Durability : MonoBehaviour
         {
             // 计算伤害
             float damage = Mathf.Max(50, (collisionSpeed - collisionSpeedThreshold) * damageMultiplier);
-            TakeDamage(damage);
+            UpdateDurablility(-damage);
 
             if (debugLog)
             {
@@ -52,14 +53,18 @@ public class Durability : MonoBehaviour
         }
     }
 
-    // 修改TakeDamage方法以支持修复（负伤害）
-    public void TakeDamage(float damage)
+    public void UpdateDurablility(float value)
     {
-        currentDurability -= damage;
+        currentDurability += value;
 
-        // 检查是否被破坏
+        if (currentDurability > maxDurability)
+        {
+            currentDurability = maxDurability;
+        }
+
         if (currentDurability <= 0)
         {
+            currentDurability = 0;
             DestroyManager.Instance.DestroyGameObject(gameObject);
         }
     }
