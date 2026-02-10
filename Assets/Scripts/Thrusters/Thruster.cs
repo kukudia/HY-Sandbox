@@ -81,7 +81,7 @@ public abstract class Thruster : MonoBehaviour
         if (thrustLine == null) return;
 
         // 计算推力向量（本地空间方向）
-        Vector3 thrustVec = thrustDirection.normalized *
+        Vector3 thrustVec = -thrustDirection.normalized *
                           (thrust / maxThrust) *
                           maxLineLength;
 

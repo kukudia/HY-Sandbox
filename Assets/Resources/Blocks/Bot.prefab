@@ -127,16 +127,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 0}
+  outside: {fileID: 0}
+  navigateTarget: {fileID: 0}
   homeOffset: {x: 0, y: 0, z: 0}
   repairAmount: 10
   repairCooldown: 1
+  findTargetInterval: 1
   detectionRange: 50
   movementSpeed: 20
   rotationSpeed: 5
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 9
-  avoidanceRange: 10
+    m_Bits: 8
+  avoidanceRange: 5
   avoidanceForce: 10
   avoidanceRays: 8
   repairBeam: {fileID: 0}
@@ -173,6 +176,7 @@ MonoBehaviour:
   beamWidth: 0.2
   currentTarget: {fileID: 0}
   lastRepairTime: 0
+  lastFindTime: 0
   isRepairing: 0
 --- !u!54 &7373213081769946802
 Rigidbody:

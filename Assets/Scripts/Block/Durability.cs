@@ -5,8 +5,8 @@ public class Durability : MonoBehaviour
 {
     [Header("耐久值设置")]
     public float maxDurability = 100f;
-    public float collisionSpeedThreshold = 20f;
-    public float damageMultiplier = 0.5f;
+    private float collisionSpeedThreshold = 5f;
+    private float damageMultiplier = 0.5f;
     public bool debugLog = true;
 
     public float currentDurability;
@@ -14,7 +14,7 @@ public class Durability : MonoBehaviour
     private Material originalMaterial;
     private Renderer objectRenderer;
 
-    void Start()
+    void Awake()
     {
         // 获取渲染器和原始材质
         objectRenderer = GetComponent<Renderer>();
@@ -24,6 +24,11 @@ public class Durability : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        currentDurability = maxDurability;
+    }
+
     public void CollisionEnter(Collision collision)
     {
         // 获取碰撞相对速度
@@ -31,13 +36,19 @@ public class Durability : MonoBehaviour
 
         if (collisionSpeed > collisionSpeedThreshold)
         {
+            //if (collision.gameObject.layer.)
+            //{
+            //    //碰撞时伤害减半
+            //    damageMultiplier *= 0.5f;
+            //}
+
             // 计算伤害
-            float damage = Mathf.Max(50, (collisionSpeed - collisionSpeedThreshold) * damageMultiplier);
+            float damage = Mathf.Min(40, (collisionSpeed - collisionSpeedThreshold) * damageMultiplier);
             UpdateDurablility(-damage);
 
             if (debugLog)
             {
-                Debug.Log($"{name} 碰撞速度: {collisionSpeed:F1}, 伤害: {damage:F1}, 剩余耐久: {currentDurability:F1}");
+                Debug.Log($"{name} 碰撞速度: {collisionSpeed:F1}, 碰撞源: {collision.transform.name}, 伤害: {damage:F1}, 剩余耐久: {currentDurability:F1}");
             }
         }
     }

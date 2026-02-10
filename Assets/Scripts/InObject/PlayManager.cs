@@ -48,7 +48,7 @@ public class PlayManager : MonoBehaviour
         {
             if (blocksParent == null)
             {
-                PlayManager.instance.PlayEnd();
+                MainUIPanels.instance.PlayEnd();
             }
 
             if (Keyboard.current.bKey.wasPressedThisFrame)
@@ -187,6 +187,7 @@ public class PlayManager : MonoBehaviour
         selectedRenderer = null;
     }
 
+    //必须从MainUIPanel调用
     public void PlayEnd()
     {
         List<ControlUnit> controlUnits = Object.FindObjectsByType<ControlUnit>(FindObjectsSortMode.None).ToList();

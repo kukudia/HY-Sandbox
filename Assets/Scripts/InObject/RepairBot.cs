@@ -16,9 +16,9 @@ public class RepairBot : MonoBehaviour
     public float detectionRange = 50f; // 检测范围
     public float movementSpeed = 5f; // 移动速度
     public float rotationSpeed = 2f; // 旋转速度
-    public LayerMask obstacleMask; // 障碍物层
 
     [Header("避障设置")]
+    public LayerMask obstacleMask; // 障碍物层
     public float avoidanceRange = 8f; // 避障检测范围
     public float avoidanceForce = 5f; // 避障力度
     public int avoidanceRays = 8; // 避障射线数量
@@ -164,11 +164,6 @@ public class RepairBot : MonoBehaviour
         }
 
         currentTarget = closestBlock;
-
-        if (currentTarget == null && home != null)
-        {
-            NavigateToTarget(home);
-        }
     }
 
     void NavigateToTarget(Transform target)

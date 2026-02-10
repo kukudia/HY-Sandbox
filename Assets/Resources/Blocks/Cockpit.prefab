@@ -44,7 +44,6 @@ GameObject:
   - component: {fileID: 2676225529838491618}
   - component: {fileID: 9054990285764881187}
   - component: {fileID: 4098104116738311877}
-  - component: {fileID: 8185120130895345542}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -124,27 +123,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8185120130895345542
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4065952082231044716}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4230452062418621529
 GameObject:
   m_ObjectHideFlags: 0
@@ -187,7 +165,6 @@ GameObject:
   - component: {fileID: 6926007788546892444}
   - component: {fileID: 2648160281190301615}
   - component: {fileID: 6111531339123242139}
-  - component: {fileID: 4846878363886081521}
   m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Untagged
@@ -267,27 +244,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &4846878363886081521
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5329663276937333184}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6004239489873974274
 GameObject:
   m_ObjectHideFlags: 0
@@ -578,6 +534,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f887aec31b46cb74db9436ab89ebf777, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ignoreCollisionLayer:
+    serializedVersion: 2
+    m_Bits: 136
   maxDurability: 100
   collisionSpeedThreshold: 20
   damageMultiplier: 0.5
@@ -612,6 +571,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 199097415977098526}
     m_Modifications:
+    - target: {fileID: -4279398651480766575, guid: 8874a998f663cb5489cc7df61a95430e, type: 3}
+      propertyPath: ignoreCollisionLayer.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 199097415977098526, guid: 8874a998f663cb5489cc7df61a95430e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.5
@@ -654,7 +617,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5357469564833557730, guid: 8874a998f663cb5489cc7df61a95430e, type: 3}
       propertyPath: resourcePath
-      value: Assets/Resources/Blocks/RepairBot.prefab
+      value: Assets/Resources/Blocks/RepairBotContianer.prefab
       objectReference: {fileID: 0}
     - target: {fileID: 6004239489873974274, guid: 8874a998f663cb5489cc7df61a95430e, type: 3}
       propertyPath: m_Name
@@ -678,6 +641,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 199097415977098526}
     m_Modifications:
+    - target: {fileID: -4279398651480766575, guid: 8874a998f663cb5489cc7df61a95430e, type: 3}
+      propertyPath: ignoreCollisionLayer.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 199097415977098526, guid: 8874a998f663cb5489cc7df61a95430e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.5
@@ -720,7 +687,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5357469564833557730, guid: 8874a998f663cb5489cc7df61a95430e, type: 3}
       propertyPath: resourcePath
-      value: Assets/Resources/Blocks/RepairBot.prefab
+      value: Assets/Resources/Blocks/RepairBotContianer.prefab
       objectReference: {fileID: 0}
     - target: {fileID: 6004239489873974274, guid: 8874a998f663cb5489cc7df61a95430e, type: 3}
       propertyPath: m_Name
@@ -744,6 +711,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 199097415977098526}
     m_Modifications:
+    - target: {fileID: -4279398651480766575, guid: 8874a998f663cb5489cc7df61a95430e, type: 3}
+      propertyPath: ignoreCollisionLayer.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 199097415977098526, guid: 8874a998f663cb5489cc7df61a95430e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.5
@@ -786,7 +757,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5357469564833557730, guid: 8874a998f663cb5489cc7df61a95430e, type: 3}
       propertyPath: resourcePath
-      value: Assets/Resources/Blocks/RepairBot.prefab
+      value: Assets/Resources/Blocks/RepairBotContianer.prefab
       objectReference: {fileID: 0}
     - target: {fileID: 6004239489873974274, guid: 8874a998f663cb5489cc7df61a95430e, type: 3}
       propertyPath: m_Name
@@ -810,6 +781,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 199097415977098526}
     m_Modifications:
+    - target: {fileID: -4279398651480766575, guid: 8874a998f663cb5489cc7df61a95430e, type: 3}
+      propertyPath: ignoreCollisionLayer.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 199097415977098526, guid: 8874a998f663cb5489cc7df61a95430e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.5
@@ -852,7 +827,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5357469564833557730, guid: 8874a998f663cb5489cc7df61a95430e, type: 3}
       propertyPath: resourcePath
-      value: Assets/Resources/Blocks/RepairBot.prefab
+      value: Assets/Resources/Blocks/RepairBotContianer.prefab
       objectReference: {fileID: 0}
     - target: {fileID: 6004239489873974274, guid: 8874a998f663cb5489cc7df61a95430e, type: 3}
       propertyPath: m_Name

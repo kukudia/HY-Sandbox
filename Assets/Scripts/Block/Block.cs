@@ -17,10 +17,6 @@ public class Block : MonoBehaviour
 
     public float mass;
 
-    public float maxDurability = 100f; // 最大耐久值
-
-    public float currentDurability;
-
     public float collisionSpeedThreshold = 1f; // 触发耐久减少的最小速度
 
     public float damageMultiplier = 10f; // 伤害系数（速度越大伤害越高）
@@ -42,13 +38,6 @@ public class Block : MonoBehaviour
     public bool showLabel = true;
 
     public string uniqueId;
-
-    void Start()
-    {
-        currentDurability = maxDurability; // 初始化耐久值
-    }
-
-    // 碰撞检测
     
 
     private void Awake()

@@ -44,7 +44,6 @@ GameObject:
   - component: {fileID: 4750786471303210924}
   - component: {fileID: 600357657118864566}
   - component: {fileID: 785634210377554897}
-  - component: {fileID: 5708767635293615231}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -124,27 +123,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &5708767635293615231
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1381559959187565587}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4230452062418621529
 GameObject:
   m_ObjectHideFlags: 0
@@ -187,7 +165,6 @@ GameObject:
   - component: {fileID: 2552286919547165878}
   - component: {fileID: 6747460648171256281}
   - component: {fileID: 4747750075120113839}
-  - component: {fileID: 2766294025485573798}
   m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Untagged
@@ -267,27 +244,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2766294025485573798
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5497401552702438861}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6004239489873974274
 GameObject:
   m_ObjectHideFlags: 0
@@ -449,6 +405,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f887aec31b46cb74db9436ab89ebf777, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ignoreCollisionLayer:
+    serializedVersion: 2
+    m_Bits: 136
   maxDurability: 100
   collisionSpeedThreshold: 20
   damageMultiplier: 0.5
