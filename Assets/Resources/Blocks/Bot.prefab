@@ -134,19 +134,28 @@ MonoBehaviour:
   repairCooldown: 1
   findTargetInterval: 1
   detectionRange: 50
-  movementSpeed: 15
+  movementSpeed: 12
   rotationSpeed: 5
   obstacleMask:
     serializedVersion: 2
     m_Bits: 9
-  avoidanceRange: 15
-  avoidanceForce: 3
-  basicDirectionOffset: 3
+  emergencyAvoidanceRange: 3
+  primaryAvoidanceRange: 8
+  predictiveAvoidanceRange: 15
+  emergencyAvoidanceForce: 15
+  primaryAvoidanceForce: 5
+  predictiveAvoidanceForce: 2
+  targetDirectionWeight: 3
   avoidanceRays: 6
+  groundNormalThreshold: 0.9
+  groundHeightThreshold: -2
+  speedDampingFactor: 0.51
+  pathSmoothness: 0.7
   showTrail: 1
   trailDuration: 5
   showAvoidanceRays: 1
   showDirectionVectors: 1
+  showAvoidanceZones: 1
   repairBeam: {fileID: 0}
   repairBeamGradient:
     serializedVersion: 2

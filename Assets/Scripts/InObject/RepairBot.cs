@@ -17,40 +17,93 @@ public class RepairBot : MonoBehaviour
     public float movementSpeed = 5f;
     public float rotationSpeed = 2f;
 
-    [Header("避障设置")]
+    [Header("优化避障设置")]
     public LayerMask obstacleMask;
-    public float avoidanceRange = 8f;
-    public float avoidanceForce = 5f;
-    public float basicDirectionOffset = 2f;
-    public int avoidanceRays = 8; // 用于可视化射线数量
+
+    [Tooltip("紧急避障距离（立即反应）")]
+    public float emergencyAvoidanceRange = 3f;
+    [Tooltip("主要避障距离")]
+    public float primaryAvoidanceRange = 8f;
+    [Tooltip("预测避障距离（提前规划）")]
+    public float predictiveAvoidanceRange = 15f;
+
+    [Tooltip("紧急避障力度")]
+    public float emergencyAvoidanceForce = 10f;
+    [Tooltip("主要避障力度")]
+    public float primaryAvoidanceForce = 5f;
+    [Tooltip("预测避障力度")]
+    public float predictiveAvoidanceForce = 2f;
+
+    [Tooltip("目标方向基础权重")]
+    public float targetDirectionWeight = 3f;
+
+    [Tooltip("射线检测数量")]
+    public int avoidanceRays = 12;
+
+    [Tooltip("地面法线点积阈值")]
+    public float groundNormalThreshold = 0.9f;
+    [Tooltip("忽略此高度以下的障碍物")]
+    public float groundHeightThreshold = -2f;
+
+    [Tooltip("速度衰减系数（障碍物密集时减速）")]
+    public float speedDampingFactor = 0.5f;
+    [Tooltip("路径平滑系数（0-1，越大越平滑）")]
+    public float pathSmoothness = 0.7f;
 
     [Header("可视化设置")]
-    [Tooltip("是否显示移动轨迹")]
     public bool showTrail = true;
-    [Tooltip("轨迹保留时间(秒)")]
     public float trailDuration = 5f;
-    [Tooltip("是否显示避障射线")]
     public bool showAvoidanceRays = true;
-    [Tooltip("是否显示方向向量")]
     public bool showDirectionVectors = true;
+    public bool showAvoidanceZones = true;
 
     [Header("修复效果")]
     public LineRenderer repairBeam;
     public Gradient repairBeamGradient;
     public float beamWidth = 0.2f;
 
+    // 公共状态
     public Durability currentTarget;
     public float lastRepairTime;
     public float lastFindTime;
     public bool isRepairing;
-    private Vector3 avoidanceDirection;
-    private Rigidbody rb;
 
-    // ===== 可视化增强新增字段 =====
+    // 私有变量
+    private Rigidbody rb;
+    private Vector3 currentAvoidanceDirection;
+    private Vector3 smoothedDirection;
+    private float currentSpeedMultiplier = 1f;
     private TrailRenderer trailRenderer;
-    private List<RaycastHit> debugRaycastHits = new List<RaycastHit>(); // 存储避障射线命中结果用于绘制
+
+    // 调试信息
+    private List<AvoidanceDebugInfo> debugAvoidanceInfo = new List<AvoidanceDebugInfo>();
+
+    // 避障调试信息结构
+    private struct AvoidanceDebugInfo
+    {
+        public Vector3 hitPoint;
+        public Vector3 avoidanceVector;
+        public float distance;
+        public AvoidanceLevel level;
+    }
+
+    private enum AvoidanceLevel
+    {
+        Emergency,
+        Primary,
+        Predictive
+    }
 
     void Start()
+    {
+        InitializeComponents();
+        InitializeTrail();
+
+        home = transform.parent;
+        homeOffset = transform.localPosition;
+    }
+
+    void InitializeComponents()
     {
         rb = GetComponent<Rigidbody>();
         if (rb == null)
@@ -60,6 +113,7 @@ public class RepairBot : MonoBehaviour
         rb.useGravity = false;
         rb.linearDamping = 2f;
         rb.angularDamping = 3f;
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
         // 初始化修复光束
         if (repairBeam == null)
@@ -71,8 +125,10 @@ public class RepairBot : MonoBehaviour
             repairBeam.endWidth = beamWidth * 0.5f;
             repairBeam.enabled = false;
         }
+    }
 
-        // 初始化轨迹渲染器
+    void InitializeTrail()
+    {
         if (showTrail)
         {
             trailRenderer = GetComponent<TrailRenderer>();
@@ -88,19 +144,10 @@ public class RepairBot : MonoBehaviour
                 trailRenderer.enabled = true;
             }
         }
-
-        home = transform.parent;
-        homeOffset = transform.localPosition;
     }
 
     void FixedUpdate()
     {
-        // 更新避障射线用于可视化（即使不避障也更新用于绘制）
-        if (showAvoidanceRays)
-        {
-            UpdateAvoidanceRaycasts();
-        }
-
         if (currentTarget == null)
         {
             FindDamagedBlock();
@@ -124,35 +171,300 @@ public class RepairBot : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void NavigateToTarget(Transform target)
     {
-        if (collision.gameObject.layer == LayerMask.GetMask("Default"))
+        navigateTarget = target;
+
+        if (transform.parent == home)
         {
-            // 简单的碰撞反弹效果
-            Vector3 reflectDir = (rb.linearVelocity - collision.contacts[0].point).normalized;
-            rb.AddForce(reflectDir * movementSpeed * 10, ForceMode.VelocityChange);
+            LeaveHome();
         }
+
+        // 计算目标方向
+        Vector3 targetDirection = (target.position - transform.position).normalized;
+
+        // ===== 优化的避障系统 =====
+        AdvancedAvoidanceResult avoidanceResult = CalculateAdvancedAvoidance(targetDirection);
+
+        // 融合目标方向和避障方向
+        Vector3 finalDirection = BlendDirections(
+            targetDirection,
+            avoidanceResult.avoidanceDirection,
+            avoidanceResult.avoidanceStrength
+        );
+
+        // 应用路径平滑
+        smoothedDirection = Vector3.Lerp(smoothedDirection, finalDirection, 1f - pathSmoothness);
+
+        // 根据障碍物密度调整速度
+        currentSpeedMultiplier = Mathf.Lerp(
+            currentSpeedMultiplier,
+            avoidanceResult.speedMultiplier,
+            Time.fixedDeltaTime * 3f
+        );
+
+        // 旋转朝向移动方向
+        if (smoothedDirection.magnitude > 0.1f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(smoothedDirection);
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                targetRotation,
+                rotationSpeed * Time.fixedDeltaTime
+            );
+        }
+
+        // 应用移动力
+        float effectiveSpeed = movementSpeed * currentSpeedMultiplier;
+        rb.AddForce(transform.forward * effectiveSpeed, ForceMode.Acceleration);
+
+        // 限制最大速度
+        if (rb.linearVelocity.magnitude > effectiveSpeed * 2f)
+        {
+            rb.linearVelocity = rb.linearVelocity.normalized * effectiveSpeed * 2f;
+        }
+
+        // 保存当前避障方向用于可视化
+        currentAvoidanceDirection = avoidanceResult.avoidanceDirection;
     }
 
-    // ===== 避障射线可视化专用方法 =====
-    void UpdateAvoidanceRaycasts()
+    // ===== 优化的避障算法核心 =====
+    private struct AdvancedAvoidanceResult
     {
-        debugRaycastHits.Clear();
-        float angleStep = 360f / avoidanceRays;
+        public Vector3 avoidanceDirection;
+        public float avoidanceStrength;
+        public float speedMultiplier;
+        public int obstacleCount;
+    }
 
+    private AdvancedAvoidanceResult CalculateAdvancedAvoidance(Vector3 targetDirection)
+    {
+        debugAvoidanceInfo.Clear();
+
+        Vector3 emergencyAvoidance = Vector3.zero;
+        Vector3 primaryAvoidance = Vector3.zero;
+        Vector3 predictiveAvoidance = Vector3.zero;
+
+        int emergencyCount = 0;
+        int primaryCount = 0;
+        int predictiveCount = 0;
+
+        // 1. 射线检测法（精确检测）
+        float angleStep = 360f / avoidanceRays;
         for (int i = 0; i < avoidanceRays; i++)
         {
             Quaternion rotation = Quaternion.AngleAxis(angleStep * i, Vector3.up);
             Vector3 direction = rotation * Vector3.forward;
-            Vector3 rayStart = transform.position + Vector3.up * 0.5f; // 抬高避免地面干扰
 
-            if (Physics.Raycast(rayStart, direction, out RaycastHit hit, avoidanceRange, obstacleMask))
+            if (Physics.Raycast(transform.position, direction, out RaycastHit hit, predictiveAvoidanceRange, obstacleMask))
             {
-                debugRaycastHits.Add(hit);
+                // 过滤地面
+                if (Vector3.Dot(hit.normal, Vector3.up) >= groundNormalThreshold)
+                    continue;
+
+                if (hit.point.y - transform.position.y < groundHeightThreshold)
+                    continue;
+
+                ProcessRaycastHit(hit, ref emergencyAvoidance, ref primaryAvoidance, ref predictiveAvoidance,
+                    ref emergencyCount, ref primaryCount, ref predictiveCount);
             }
+        }
+
+        // 2. 球形检测法（补充检测盲区）
+        Collider[] nearbyColliders = Physics.OverlapSphere(
+            transform.position,
+            primaryAvoidanceRange,
+            obstacleMask
+        );
+
+        foreach (var collider in nearbyColliders)
+        {
+            if (collider.transform == transform ||
+                (currentTarget != null && collider.transform == currentTarget.transform))
+                continue;
+
+            Vector3 obstaclePos = collider.ClosestPoint(transform.position);
+            float distance = Vector3.Distance(transform.position, obstaclePos);
+
+            // 过滤地面
+            if (obstaclePos.y - transform.position.y < groundHeightThreshold)
+                continue;
+
+            ProcessSphereCollider(obstaclePos, distance, ref emergencyAvoidance, ref primaryAvoidance,
+                ref emergencyCount, ref primaryCount);
+        }
+
+        // 3. 前方预测检测（基于当前速度）
+        if (rb.linearVelocity.magnitude > 0.5f)
+        {
+            Vector3 predictedPosition = transform.position + rb.linearVelocity.normalized * predictiveAvoidanceRange;
+            Vector3 predictionDirection = (predictedPosition - transform.position).normalized;
+
+            if (Physics.Raycast(transform.position, predictionDirection, out RaycastHit predictHit,
+                predictiveAvoidanceRange, obstacleMask))
+            {
+                if (Vector3.Dot(predictHit.normal, Vector3.up) < groundNormalThreshold &&
+                    predictHit.point.y - transform.position.y >= groundHeightThreshold)
+                {
+                    Vector3 avoidDir = Vector3.Cross(predictHit.normal, Vector3.up).normalized;
+                    if (Vector3.Dot(avoidDir, targetDirection) < 0)
+                        avoidDir = -avoidDir;
+
+                    predictiveAvoidance += avoidDir;
+                    predictiveCount++;
+                }
+            }
+        }
+
+        // 4. 综合计算避障向量
+        Vector3 totalAvoidance = Vector3.zero;
+        float totalWeight = 0f;
+
+        if (emergencyCount > 0)
+        {
+            totalAvoidance += (emergencyAvoidance / emergencyCount) * emergencyAvoidanceForce;
+            totalWeight += emergencyAvoidanceForce;
+        }
+
+        if (primaryCount > 0)
+        {
+            totalAvoidance += (primaryAvoidance / primaryCount) * primaryAvoidanceForce;
+            totalWeight += primaryAvoidanceForce;
+        }
+
+        if (predictiveCount > 0)
+        {
+            totalAvoidance += (predictiveAvoidance / predictiveCount) * predictiveAvoidanceForce;
+            totalWeight += predictiveAvoidanceForce;
+        }
+
+        // 5. 计算速度衰减
+        int totalObstacles = emergencyCount + primaryCount + predictiveCount;
+        float speedMultiplier = 1f;
+
+        if (emergencyCount > 0)
+            speedMultiplier = speedDampingFactor * 0.3f; // 紧急情况大幅减速
+        else if (primaryCount > 0)
+            speedMultiplier = Mathf.Lerp(1f, speedDampingFactor, primaryCount / 5f);
+        else if (predictiveCount > 0)
+            speedMultiplier = Mathf.Lerp(1f, speedDampingFactor * 1.5f, predictiveCount / 8f);
+
+        return new AdvancedAvoidanceResult
+        {
+            avoidanceDirection = totalAvoidance.normalized,
+            avoidanceStrength = Mathf.Clamp01(totalWeight / 10f),
+            speedMultiplier = speedMultiplier,
+            obstacleCount = totalObstacles
+        };
+    }
+
+    private void ProcessRaycastHit(RaycastHit hit,
+        ref Vector3 emergency, ref Vector3 primary, ref Vector3 predictive,
+        ref int emergencyCount, ref int primaryCount, ref int predictiveCount)
+    {
+        float distance = hit.distance;
+        Vector3 avoidDir = (transform.position - hit.point).normalized;
+
+        // 倾向于绕向目标方向的一侧
+        if (navigateTarget != null)
+        {
+            Vector3 toTarget = (navigateTarget.position - transform.position).normalized;
+            Vector3 sideDir = Vector3.Cross(avoidDir, Vector3.up);
+
+            if (Vector3.Dot(sideDir, toTarget) < 0)
+                avoidDir = Quaternion.Euler(0, 30, 0) * avoidDir;
+            else
+                avoidDir = Quaternion.Euler(0, -30, 0) * avoidDir;
+        }
+
+        if (distance < emergencyAvoidanceRange)
+        {
+            float force = 1f - (distance / emergencyAvoidanceRange);
+            emergency += avoidDir * force;
+            emergencyCount++;
+
+            debugAvoidanceInfo.Add(new AvoidanceDebugInfo
+            {
+                hitPoint = hit.point,
+                avoidanceVector = avoidDir * force,
+                distance = distance,
+                level = AvoidanceLevel.Emergency
+            });
+        }
+        else if (distance < primaryAvoidanceRange)
+        {
+            float force = 1f - (distance / primaryAvoidanceRange);
+            primary += avoidDir * force;
+            primaryCount++;
+
+            debugAvoidanceInfo.Add(new AvoidanceDebugInfo
+            {
+                hitPoint = hit.point,
+                avoidanceVector = avoidDir * force,
+                distance = distance,
+                level = AvoidanceLevel.Primary
+            });
+        }
+        else
+        {
+            float force = 1f - (distance / predictiveAvoidanceRange);
+            predictive += avoidDir * force;
+            predictiveCount++;
+
+            debugAvoidanceInfo.Add(new AvoidanceDebugInfo
+            {
+                hitPoint = hit.point,
+                avoidanceVector = avoidDir * force,
+                distance = distance,
+                level = AvoidanceLevel.Predictive
+            });
         }
     }
 
+    private void ProcessSphereCollider(Vector3 obstaclePos, float distance,
+        ref Vector3 emergency, ref Vector3 primary,
+        ref int emergencyCount, ref int primaryCount)
+    {
+        Vector3 avoidDir = (transform.position - obstaclePos).normalized;
+
+        if (distance < emergencyAvoidanceRange)
+        {
+            float force = 1f - (distance / emergencyAvoidanceRange);
+            emergency += avoidDir * force;
+            emergencyCount++;
+        }
+        else if (distance < primaryAvoidanceRange)
+        {
+            float force = 1f - (distance / primaryAvoidanceRange);
+            primary += avoidDir * force;
+            primaryCount++;
+        }
+    }
+
+    private Vector3 BlendDirections(Vector3 targetDir, Vector3 avoidanceDir, float avoidanceStrength)
+    {
+        if (avoidanceStrength < 0.01f)
+            return targetDir;
+
+        // 动态调整权重
+        float targetWeight = targetDirectionWeight * (1f - avoidanceStrength * 0.5f);
+        float avoidanceWeight = Mathf.Lerp(1f, 10f, avoidanceStrength);
+
+        Vector3 blended = (targetDir * targetWeight + avoidanceDir * avoidanceWeight).normalized;
+
+        // 确保不会完全偏离目标
+        float maxDeviation = Mathf.Lerp(90f, 120f, avoidanceStrength);
+        float angle = Vector3.Angle(targetDir, blended);
+
+        if (angle > maxDeviation)
+        {
+            blended = Vector3.RotateTowards(targetDir, blended, maxDeviation * Mathf.Deg2Rad, 0f);
+        }
+
+        return blended.normalized;
+    }
+
+    // ===== 其他方法（保持原有逻辑）=====
     void ReturnHome()
     {
         rb.linearVelocity = Vector3.zero;
@@ -168,7 +480,6 @@ public class RepairBot : MonoBehaviour
         transform.localPosition = homeOffset;
         transform.localRotation = Quaternion.identity;
 
-        // 返回基地时清除轨迹
         if (trailRenderer != null) trailRenderer.Clear();
     }
 
@@ -177,6 +488,7 @@ public class RepairBot : MonoBehaviour
         transform.parent = outside;
         rb.isKinematic = false;
         rb.detectCollisions = true;
+        smoothedDirection = transform.forward;
     }
 
     void FindDamagedBlock()
@@ -212,62 +524,7 @@ public class RepairBot : MonoBehaviour
         }
 
         currentTarget = closestBlock;
-        lastFindTime = Time.time; // 更新查找时间
-    }
-
-    void NavigateToTarget(Transform target)
-    {
-        navigateTarget = target;
-
-        if (transform.parent == home)
-        {
-            LeaveHome();
-        }
-
-        Vector3 direction = (target.position - transform.position).normalized;
-
-        if (target != home)
-        {
-            avoidanceDirection = CalculateAvoidanceDirection();
-        }
-
-        if (avoidanceDirection != Vector3.zero)
-        {
-            direction = (direction * basicDirectionOffset + avoidanceDirection * avoidanceForce).normalized;
-        }
-
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
-
-        rb.AddForce(transform.forward * movementSpeed, ForceMode.Acceleration);
-    }
-
-    Vector3 CalculateAvoidanceDirection()
-    {
-        Vector3 avoidanceDir = Vector3.zero;
-        int hitCount = 0;
-
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, avoidanceRange, obstacleMask);
-
-        foreach (var hitCollider in hitColliders)
-        {
-            // 忽略自身和目标物体
-            if (hitCollider.transform == transform ||
-                (currentTarget != null && hitCollider.transform == currentTarget.transform))
-                continue;
-
-            Vector3 dirToObstacle = transform.position - hitCollider.transform.position;
-            float distance = dirToObstacle.magnitude;
-
-            if (distance > 0.1f) // 避免除零
-            {
-                float force = (avoidanceRange - distance) / avoidanceRange;
-                avoidanceDir += dirToObstacle.normalized * force;
-                hitCount++;
-            }
-        }
-
-        return hitCount > 0 ? avoidanceDir / hitCount : Vector3.zero;
+        lastFindTime = Time.time;
     }
 
     void CheckAndRepair()
@@ -282,7 +539,6 @@ public class RepairBot : MonoBehaviour
         if (distance < 10f)
         {
             isRepairing = true;
-            //rb.linearVelocity = Vector3.zero;
             rb.linearVelocity *= 0.8f;
             rb.angularVelocity = Vector3.zero;
             UpdateRepairBeam(true);
@@ -298,7 +554,6 @@ public class RepairBot : MonoBehaviour
                     isRepairing = false;
                     UpdateRepairBeam(false);
 
-                    // 完成修复后清除轨迹起点
                     if (trailRenderer != null) trailRenderer.Clear();
                 }
             }
@@ -318,8 +573,8 @@ public class RepairBot : MonoBehaviour
 
         if (active && currentTarget != null)
         {
-            repairBeam.SetPosition(0, transform.position + Vector3.up * 0.5f); // 抬高光束起点
-            repairBeam.SetPosition(1, currentTarget.transform.position + Vector3.up * 0.5f);
+            repairBeam.SetPosition(0, transform.position);
+            repairBeam.SetPosition(1, currentTarget.transform.position);
 
             float durabilityRatio = Mathf.Clamp01(currentTarget.currentDurability / currentTarget.maxDurability);
             Color beamColor = repairBeamGradient.Evaluate(durabilityRatio);
@@ -328,7 +583,7 @@ public class RepairBot : MonoBehaviour
             newGradient.SetKeys(
                 new GradientColorKey[] {
                     new GradientColorKey(beamColor, 0f),
-                    new GradientColorKey(Color.white, 1f) // 尖端白色增强视觉效果
+                    new GradientColorKey(Color.white, 1f)
                 },
                 new GradientAlphaKey[] {
                     new GradientAlphaKey(1f, 0f),
@@ -348,57 +603,59 @@ public class RepairBot : MonoBehaviour
         if (trailRenderer != null) trailRenderer.Clear();
     }
 
-    // ===== 增强版可视化绘制 =====
+    // ===== 增强版可视化 =====
     void OnDrawGizmosSelected()
     {
-        if (!Application.isPlaying) return; // 仅在运行时绘制动态数据
+        if (!Application.isPlaying) return;
 
-        Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
-
-        // 1. 检测范围（黄色）
-        Gizmos.color = new Color(1f, 1f, 0f, 0.3f);
-        Gizmos.DrawSphere(Vector3.zero, detectionRange);
-
-        // 2. 避障范围（蓝色半透明）
-        Gizmos.color = new Color(0f, 0.5f, 1f, 0.2f);
-        Gizmos.DrawSphere(Vector3.zero, avoidanceRange);
-
-        // 3. 避障射线可视化
-        if (showAvoidanceRays && debugRaycastHits.Count > 0)
+        // 1. 避障区域可视化
+        if (showAvoidanceZones)
         {
-            Gizmos.color = Color.red;
-            foreach (var hit in debugRaycastHits)
-            {
-                Vector3 localHitPoint = transform.InverseTransformPoint(hit.point);
-                Gizmos.DrawLine(Vector3.up * 0.5f, localHitPoint); // 从抬高的起点绘制
+            // 紧急区域（红色）
+            Gizmos.color = new Color(1f, 0f, 0f, 0.2f);
+            Gizmos.DrawSphere(transform.position, emergencyAvoidanceRange);
 
-                // 绘制命中点小球
-                Gizmos.color = Color.magenta;
-                Gizmos.DrawSphere(localHitPoint, 0.3f);
-            }
+            // 主要区域（黄色）
+            Gizmos.color = new Color(1f, 1f, 0f, 0.15f);
+            Gizmos.DrawSphere(transform.position, primaryAvoidanceRange);
 
-            // 绘制未命中的射线（绿色）
-            Gizmos.color = new Color(0f, 1f, 0f, 0.5f);
-            float angleStep = 360f / avoidanceRays;
-            for (int i = 0; i < avoidanceRays; i++)
+            // 预测区域（绿色）
+            Gizmos.color = new Color(0f, 1f, 0f, 0.1f);
+            Gizmos.DrawSphere(transform.position, predictiveAvoidanceRange);
+        }
+
+        // 2. 检测范围
+        Gizmos.color = new Color(0f, 0.8f, 1f, 0.3f);
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
+
+        // 3. 避障信息可视化
+        if (showAvoidanceRays && debugAvoidanceInfo.Count > 0)
+        {
+            foreach (var info in debugAvoidanceInfo)
             {
-                bool hitExists = false;
-                foreach (var hit in debugRaycastHits)
+                // 根据避障等级设置颜色
+                switch (info.level)
                 {
-                    Vector3 dir = (hit.point - (transform.position + Vector3.up * 0.5f)).normalized;
-                    Quaternion rotation = Quaternion.AngleAxis(angleStep * i, Vector3.up);
-                    if (Vector3.Angle(dir, rotation * Vector3.forward) < angleStep / 2)
-                    {
-                        hitExists = true;
+                    case AvoidanceLevel.Emergency:
+                        Gizmos.color = Color.red;
                         break;
-                    }
+                    case AvoidanceLevel.Primary:
+                        Gizmos.color = Color.yellow;
+                        break;
+                    case AvoidanceLevel.Predictive:
+                        Gizmos.color = Color.green;
+                        break;
                 }
 
-                if (!hitExists)
-                {
-                    Quaternion rotation = Quaternion.AngleAxis(angleStep * i, Vector3.up);
-                    Gizmos.DrawRay(Vector3.up * 0.5f, rotation * Vector3.forward * avoidanceRange);
-                }
+                // 绘制检测射线
+                Gizmos.DrawLine(transform.position, info.hitPoint);
+
+                // 绘制避障向量
+                Gizmos.color = Color.magenta;
+                Gizmos.DrawRay(info.hitPoint, info.avoidanceVector * 3f);
+
+                // 绘制命中点
+                Gizmos.DrawSphere(info.hitPoint, 0.3f);
             }
         }
 
@@ -406,83 +663,82 @@ public class RepairBot : MonoBehaviour
         if (showDirectionVectors && navigateTarget != null)
         {
             Vector3 targetDir = (navigateTarget.position - transform.position).normalized;
-            Vector3 localTargetDir = transform.InverseTransformDirection(targetDir);
 
             // 目标方向（青色）
             Gizmos.color = Color.cyan;
-            Gizmos.DrawRay(Vector3.zero, localTargetDir * 8f);
+            Gizmos.DrawRay(transform.position, targetDir * 10f);
 
-            // 避障方向（品红）
-            if (avoidanceDirection != Vector3.zero)
+            // 避障方向（红色）
+            if (currentAvoidanceDirection.magnitude > 0.1f)
             {
-                Vector3 localAvoidanceDir = transform.InverseTransformDirection(avoidanceDirection.normalized);
-                Gizmos.color = Color.magenta;
-                Gizmos.DrawRay(Vector3.zero, localAvoidanceDir * 5f);
+                Gizmos.color = Color.red;
+                Gizmos.DrawRay(transform.position, currentAvoidanceDirection * 7f);
             }
 
-            // 实际移动方向（白色）
+            // 平滑后的实际方向（白色，粗线）
             Gizmos.color = Color.white;
-            Gizmos.DrawRay(Vector3.zero, Vector3.forward * 6f);
+            Gizmos.DrawRay(transform.position, smoothedDirection * 8f);
+            Gizmos.DrawSphere(transform.position + smoothedDirection * 8f, 0.4f);
 
-            // 速度方向（黄色）
-            if (rb != null)
+            // 当前速度方向（黄色）
+            if (rb != null && rb.linearVelocity.magnitude > 0.1f)
             {
-                Vector3 velocityDir = rb.linearVelocity.normalized;
-                if (velocityDir.magnitude > 0.1f)
-                {
-                    Vector3 localVelocityDir = transform.InverseTransformDirection(velocityDir);
-                    Gizmos.color = Color.yellow;
-                    Gizmos.DrawRay(Vector3.zero, localVelocityDir * Mathf.Min(rb.linearVelocity.magnitude * 0.5f, 10f));
-                }
+                Gizmos.color = Color.yellow;
+                float velocityLength = Mathf.Min(rb.linearVelocity.magnitude, 10f);
+                Gizmos.DrawRay(transform.position, rb.linearVelocity.normalized * velocityLength);
             }
         }
 
-        // 5. 重置矩阵
-        Gizmos.matrix = Matrix4x4.identity;
-
-        // 6. 目标连线
+        // 5. 目标连线
         if (currentTarget != null)
         {
-            Gizmos.color = isRepairing ? Color.green : Color.red;
+            Gizmos.color = isRepairing ? Color.green : new Color(1f, 0.5f, 0f);
             Gizmos.DrawLine(transform.position, currentTarget.transform.position);
-
-            // 绘制目标点标记
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(currentTarget.transform.position, 0.5f);
+            Gizmos.DrawWireSphere(currentTarget.transform.position, 1f);
         }
         else if (home != null && navigateTarget == home)
         {
-            // 返回基地时的连线
             Gizmos.color = new Color(0.5f, 0.5f, 1f, 0.7f);
             Gizmos.DrawLine(transform.position, home.position);
         }
 
-        // 7. 基地位置标记
+        // 6. 基地标记
         if (home != null)
         {
             Gizmos.color = new Color(0.3f, 0.3f, 1f, 0.5f);
             Gizmos.DrawSphere(home.position, 1.5f);
         }
+
+        // 7. 速度信息文本（需要Handles）
+#if UNITY_EDITOR
+        UnityEditor.Handles.Label(
+            transform.position + Vector3.up * 3f,
+            $"Speed: {currentSpeedMultiplier:F2}x\nObstacles: {debugAvoidanceInfo.Count}"
+        );
+#endif
     }
 
-    // 编辑器下静态可视化（非运行时）
     void OnDrawGizmos()
     {
         if (Application.isPlaying) return;
 
-        // 始终显示检测/避障范围
-        Gizmos.color = new Color(1f, 0.8f, 0f, 0.4f);
+        // 编辑器下的静态预览
+        Gizmos.color = new Color(1f, 0f, 0f, 0.3f);
+        Gizmos.DrawWireSphere(transform.position, emergencyAvoidanceRange);
+
+        Gizmos.color = new Color(1f, 1f, 0f, 0.3f);
+        Gizmos.DrawWireSphere(transform.position, primaryAvoidanceRange);
+
+        Gizmos.color = new Color(0f, 1f, 0f, 0.3f);
+        Gizmos.DrawWireSphere(transform.position, predictiveAvoidanceRange);
+
+        Gizmos.color = new Color(0f, 0.8f, 1f, 0.4f);
         Gizmos.DrawWireSphere(transform.position, detectionRange);
 
-        Gizmos.color = new Color(0f, 0.6f, 1f, 0.4f);
-        Gizmos.DrawWireSphere(transform.position, avoidanceRange);
-
-        // 显示设置的目标点
         if (navigateTarget != null)
         {
             Gizmos.color = Color.cyan;
             Gizmos.DrawLine(transform.position, navigateTarget.position);
-            Gizmos.DrawWireSphere(navigateTarget.position, 1f);
         }
     }
 }
