@@ -1,37 +1,35 @@
 using System.Collections.Generic;
-using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
 public class BlockGroupManager : MonoBehaviour
 {
-    // ·Ö×éËã·¨£¨ÓëÖ®Ç°ÏàÍ¬£©
+    // ä¼˜åŒ–çš„åˆ†ç»„ç®—æ³•ï¼šä½¿ç”¨æ›´é«˜æ•ˆçš„é‚»æ¥è¡¨æ„å»ºå’Œ BFS éå†
     public static List<List<Block>> GroupBlocks(List<Block> allBlocks)
     {
-        // ¸üĞÂËùÓĞBlockµÄÁ¬½Ó×´Ì¬
-        //foreach (Block block in allBlocks)
-        //{
-        //    block.CheckConnection();
-        //}
-
-        // ¹¹½¨ÁÚ½Ó±í
-        Dictionary<Block, List<Block>> adjacencyList = new Dictionary<Block, List<Block>>();
+        if (allBlocks == null || allBlocks.Count == 0) return new List<List<Block>>();
+        
+        // é¢„å…ˆåˆ†é…å®¹é‡ï¼Œå‡å°‘æ‰©å®¹å¼€é”€
+        int blockCount = allBlocks.Count;
+        Dictionary<Block, List<Block>> adjacencyList = new Dictionary<Block, List<Block>>(blockCount);
+        
+        // æ„å»ºé‚»æ¥è¡¨ - é¿å…é‡å¤è®¡ç®—
         foreach (Block block in allBlocks)
         {
+            if (block == null) continue;
             List<Block> neighbors = block.Neighbors();
             adjacencyList[block] = neighbors;
         }
 
-        // BFS±éÀú·Ö×é
+        // BFS éå†åˆ†ç»„ - ä½¿ç”¨é¢„åˆ†é…çš„ HashSet
         List<List<Block>> groups = new List<List<Block>>();
-        HashSet<Block> visited = new HashSet<Block>();
+        HashSet<Block> visited = new HashSet<Block>(blockCount);
 
         foreach (Block block in allBlocks)
         {
-            if (visited.Contains(block)) continue;
+            if (block == null || visited.Contains(block)) continue;
 
             List<Block> currentGroup = new List<Block>();
-            Queue<Block> queue = new Queue<Block>();
+            Queue<Block> queue = new Queue<Block>(blockCount);
             queue.Enqueue(block);
             visited.Add(block);
 
@@ -41,11 +39,11 @@ public class BlockGroupManager : MonoBehaviour
 
                 if (current == null) continue;
 
-                if (adjacencyList[current] == null) continue;
+                if (!adjacencyList.TryGetValue(current, out List<Block> neighbors) || neighbors == null) continue;
 
                 currentGroup.Add(current);
 
-                foreach (Block neighbor in adjacencyList[current])
+                foreach (Block neighbor in neighbors)
                 {
                     if (neighbor != null && !visited.Contains(neighbor))
                     {
@@ -61,16 +59,21 @@ public class BlockGroupManager : MonoBehaviour
         return groups;
     }
 
-    // ¼ÆËã×éµÄÖĞĞÄµã£¨¿ÉÑ¡£©
+    // è®¡ç®—ç»„çš„ä¸­å¿ƒç‚¹ï¼ˆå¯é€‰ï¼‰- ä¼˜åŒ–ç‰ˆæœ¬
     public static Vector3 CalculateGroupCenter(List<Block> group)
     {
         if (group == null || group.Count == 0) return Vector3.zero;
 
         Vector3 center = Vector3.zero;
+        int count = 0;
         foreach (Block block in group)
         {
-            center += block.transform.position;
+            if (block != null)
+            {
+                center += block.transform.position;
+                count++;
+            }
         }
-        return center / group.Count;
+        return count > 0 ? center / count : Vector3.zero;
     }
 }

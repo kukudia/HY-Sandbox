@@ -1,91 +1,108 @@
 using UnityEngine;
 using System.Diagnostics;
 using Unity.Profiling;
-using System.Collections;
 
 public class PerformanceMonitor : MonoBehaviour
 {
-    // GUIÑùÊ½
+    // GUI æ ·å¼ - ç¼“å­˜é¿å…é‡å¤åˆ›å»º
     private GUIStyle style;
-    // Ö¡ÂÊ¼ÆËã±äÁ¿
+    private Rect guiBoxRect;
+    private Rect[] guiLabelRects;
+    
+    // å¸§ç‡è®¡ç®—å˜é‡
     private int frameCount = 0;
     private float elapsedTime = 0f;
     private float currentFPS = 0f;
-    // CPUÊ¹ÓÃÂÊ±äÁ¿
+    
+    // CPU ä½¿ç”¨ç‡å˜é‡
     private Process currentProcess;
-    private float lastCpuTime;
+    private double lastCpuTime;
     private float currentCpuUsage = 0f;
-    // GPUÏà¹Ø±äÁ¿
-    private float currentGpuFrameTime = 0f; // GPUÖ¡Ê±¼ä£¨ºÁÃë£©
-    private float gpuUsageEstimate = 0f; // »ùÓÚÖ¡Ê±¼äÔ¤ËãµÄ¹ÀËãÊ¹ÓÃÂÊ
-    // Ë¢ĞÂ¼ä¸ô
+    private int processorCount;
+    
+    // GPU ç›¸å…³å˜é‡
+    private float currentGpuFrameTime = 0f;
+    private float gpuUsageEstimate = 0f;
+    
+    // åˆ·æ–°é—´éš”
     public float updateInterval = 0.5f;
-    // Ä¿±êÖ¡ÂÊ£¨ÓÃÓÚ¹ÀËãGPUÊ¹ÓÃÂÊ£©
     public float targetFrameRate = 60f;
-
-    // Ê¹ÓÃFrameTimingManager»ñÈ¡Ö¡Ê±¼äÊı¾İ
+    
+    // FrameTimingManager ç›¸å…³
     private FrameTiming[] frameTimings = new FrameTiming[1];
+    
+    // å­—ç¬¦ä¸²ç¼“å­˜ï¼Œå‡å°‘ GC
+    private string fpsText = "";
+    private string cpuText = "";
+    private string gpuTimeText = "";
+    private string gpuUseText = "";
 
     void Start()
     {
-        // ³õÊ¼»¯GUIÑùÊ½
+        // åˆå§‹åŒ– GUI æ ·å¼ï¼ˆåªåˆ›å»ºä¸€æ¬¡ï¼‰
         style = new GUIStyle();
         style.fontSize = 20;
         style.normal.textColor = Color.white;
         style.padding = new RectOffset(10, 10, 10, 10);
+        
+        // é¢„è®¡ç®— GUI çŸ©å½¢åŒºåŸŸ
+        guiBoxRect = new Rect(10, 10, 300, 130);
+        guiLabelRects = new Rect[4];
+        guiLabelRects[0] = new Rect(20, 20, 280, 30);
+        guiLabelRects[1] = new Rect(20, 50, 280, 30);
+        guiLabelRects[2] = new Rect(20, 80, 280, 30);
+        guiLabelRects[3] = new Rect(20, 110, 280, 30);
 
-        // ³õÊ¼»¯½ø³Ì¶ÔÏó£¨ÓÃÓÚCPU¼à¿Ø£©
+        // åˆå§‹åŒ–è¿›ç¨‹å¯¹è±¡
         currentProcess = Process.GetCurrentProcess();
-        lastCpuTime = (float)currentProcess.TotalProcessorTime.TotalMilliseconds;
+        lastCpuTime = currentProcess.TotalProcessorTime.TotalMilliseconds;
+        processorCount = SystemInfo.processorCount;
 
-        // ÉèÖÃÄ¿±êÖ¡ÂÊ£¨Èç¹ûÏîÄ¿ÉèÖÃÖĞÎ´ÏŞÖÆ£¬ÔòÊ¹ÓÃÄ¬ÈÏÖµ£©
         if (targetFrameRate <= 0) targetFrameRate = 60f;
     }
 
     void Update()
     {
-        // ¼ÆËãÖ¡ÂÊ
         frameCount++;
         elapsedTime += Time.unscaledDeltaTime;
+        
         if (elapsedTime >= updateInterval)
         {
             currentFPS = frameCount / elapsedTime;
             frameCount = 0;
             elapsedTime = 0f;
 
-            // ¸üĞÂCPUÊ¹ÓÃÂÊ
             UpdateCpuUsage();
-
-            // ¸üĞÂGPUÖ¡Ê±¼ä£¨Ê¹ÓÃFrameTimingManager£©
             UpdateGpuFrameTime();
 
-            // »ùÓÚÖ¡Ê±¼äÔ¤Ëã¹ÀËãGPUÊ¹ÓÃÂÊ£¨ÕâÊÇÒ»ÖÖ½üËÆ·½·¨£©
-            // ¼ÙÉèÄ¿±ê60FPSÊ±£¬Ò»Ö¡Ô¤ËãÊ±¼äÎª16.67ms¡£Èç¹ûGPUäÖÈ¾Ò»Ö¡ºÄÊ±8.33ms£¬Ôò¹ÀËãÊ¹ÓÃÂÊÔ¼Îª50%¡£
-            float frameTimeBudgetMs = 1000f / targetFrameRate; // ¼ÆËãÄ¿±êÖ¡Ê±¼ä£¨ºÁÃë£©
+            float frameTimeBudgetMs = 1000f / targetFrameRate;
             gpuUsageEstimate = Mathf.Clamp01(currentGpuFrameTime / frameTimeBudgetMs) * 100f;
+            
+            // æ›´æ–°ç¼“å­˜çš„æ–‡æœ¬ï¼ˆä½¿ç”¨ StringBuilder æˆ–ç›´æ¥æ ¼å¼åŒ–ï¼‰
+            fpsText = $"FPS: {currentFPS:0.0}";
+            cpuText = $"CPU: {currentCpuUsage:0.0}%";
+            gpuTimeText = $"GPU Time: {currentGpuFrameTime:0.00} ms";
+            gpuUseText = $"GPU Use (Est.): {gpuUsageEstimate:0.0}%";
         }
     }
 
     void UpdateCpuUsage()
     {
-        float newCpuTime = (float)currentProcess.TotalProcessorTime.TotalMilliseconds;
-        float cpuTimeDelta = newCpuTime - lastCpuTime;
+        double newCpuTime = currentProcess.TotalProcessorTime.TotalMilliseconds;
+        double cpuTimeDelta = newCpuTime - lastCpuTime;
         float intervalMs = updateInterval * 1000f;
 
-        // ¼ÆËãCPUÊ¹ÓÃÂÊ£¨°´ºËĞÄÊıµ÷Õû£©
-        currentCpuUsage = (cpuTimeDelta / intervalMs) * 100f / SystemInfo.processorCount;
+        currentCpuUsage = (float)((cpuTimeDelta / intervalMs) * 100f / processorCount);
         lastCpuTime = newCpuTime;
     }
 
     void UpdateGpuFrameTime()
     {
-        // Ê¹ÓÃFrameTimingManager»ñÈ¡Ö¡Ê±¼äĞÅÏ¢
         FrameTimingManager.CaptureFrameTimings();
         uint framesRetrieved = FrameTimingManager.GetLatestTimings(1, frameTimings);
 
         if (framesRetrieved > 0)
         {
-            // gpuFrameTime µÄµ¥Î»ÊÇºÁÃë
             currentGpuFrameTime = (float)frameTimings[0].gpuFrameTime;
         }
         else
@@ -96,15 +113,10 @@ public class PerformanceMonitor : MonoBehaviour
 
     void OnGUI()
     {
-        // ´´½¨°ëÍ¸Ã÷±³¾°
-        GUI.Box(new Rect(10, 10, 300, 130), "");
-
-        // ÏÔÊ¾¼à¿ØÊı¾İ
-        GUI.Label(new Rect(20, 20, 280, 30), $"FPS: {currentFPS:0.0}", style);
-        GUI.Label(new Rect(20, 50, 280, 30), $"CPU: {currentCpuUsage:0.0}%", style);
-        // ÏÔÊ¾GPUÖ¡Ê±¼ä
-        GUI.Label(new Rect(20, 80, 280, 30), $"GPU Time: {currentGpuFrameTime:0.00} ms", style);
-        // ÏÔÊ¾¹ÀËãµÄGPUÊ¹ÓÃÂÊ£¨×¢Ã÷ÊÇ¹ÀËã£©
-        GUI.Label(new Rect(20, 110, 280, 30), $"GPU Use (Est.): {gpuUsageEstimate:0.0}%", style);
+        GUI.Box(guiBoxRect, "");
+        GUI.Label(guiLabelRects[0], fpsText, style);
+        GUI.Label(guiLabelRects[1], cpuText, style);
+        GUI.Label(guiLabelRects[2], gpuTimeText, style);
+        GUI.Label(guiLabelRects[3], gpuUseText, style);
     }
 }

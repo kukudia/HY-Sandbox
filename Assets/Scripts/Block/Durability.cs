@@ -1,26 +1,33 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Durability : MonoBehaviour
 {
-    [Header("ÄÍ¾ÃÖµÉèÖÃ")]
+    [Header("è€ä¹…å€¼è®¾ç½®")]
     public float maxDurability = 100f;
     private float collisionSpeedThreshold = 5f;
     private float damageMultiplier = 0.5f;
     public bool debugLog = true;
-
+    
     public float currentDurability;
     public bool needToRepair => currentDurability < maxDurability;
-    private Material originalMaterial;
+    
+    // ç¼“å­˜ç»„ä»¶å¼•ç”¨ï¼Œé¿å…é‡å¤æŸ¥æ‰¾
     private Renderer objectRenderer;
-
+    private MaterialPropertyBlock materialPropertyBlock;
+    private static readonly int HealthColorId = Shader.PropertyToID("_HealthColor");
+    
+    // GUI ç›¸å…³ç¼“å­˜
+    private GUIStyle labelStyle;
+    private Vector3 lastScreenPos;
+    private string durabilityText;
+    private bool isVisible;
+    
     void Awake()
     {
-        // »ñÈ¡äÖÈ¾Æ÷ºÍÔ­Ê¼²ÄÖÊ
         objectRenderer = GetComponent<Renderer>();
         if (objectRenderer != null)
         {
-            originalMaterial = objectRenderer.material;
+            materialPropertyBlock = new MaterialPropertyBlock();
         }
     }
 
@@ -31,36 +38,27 @@ public class Durability : MonoBehaviour
 
     public void CollisionEnter(Collision collision)
     {
-        // »ñÈ¡Åö×²Ïà¶ÔËÙ¶È
         float collisionSpeed = collision.relativeVelocity.magnitude;
 
         if (collisionSpeed > collisionSpeedThreshold)
         {
-            //if (collision.gameObject.layer.)
-            //{
-            //    //Åö×²Ê±ÉËº¦¼õ°ë
-            //    damageMultiplier *= 0.5f;
-            //}
-
-            // ¼ÆËãÉËº¦
             float damage = Mathf.Min(40, (collisionSpeed - collisionSpeedThreshold) * damageMultiplier);
             UpdateDurablility(-damage);
 
             if (debugLog)
             {
-                Debug.Log($"{name} Åö×²ËÙ¶È: {collisionSpeed:F1}, Åö×²Ô´: {collision.transform.name}, ÉËº¦: {damage:F1}, Ê£ÓàÄÍ¾Ã: {currentDurability:F1}");
+                Debug.Log($"{name} ç¢°æ’žé€Ÿåº¦ï¼š{collisionSpeed:F1}, ç¢°æ’žæºï¼š{collision.transform.name}, ä¼¤å®³ï¼š{damage:F1}, å‰©ä½™è€ä¹…ï¼š{currentDurability:F1}");
             }
         }
     }
 
-    // ÔÚDurabilityÀàÖÐÌí¼ÓÒÔÏÂ·½·¨
     public void Repair(float amount)
     {
         currentDurability = Mathf.Min(maxDurability, currentDurability + amount);
 
         if (debugLog)
         {
-            Debug.Log($"{name} ±»ÐÞ¸´: +{amount:F1}, µ±Ç°ÄÍ¾Ã¶È: {currentDurability:F1}/{maxDurability}");
+            Debug.Log($"{name} è¢«ä¿®å¤ï¼š+{amount:F1}, å½“å‰è€ä¹…åº¦ï¼š{currentDurability:F1}/{maxDurability}");
         }
     }
 
@@ -80,16 +78,34 @@ public class Durability : MonoBehaviour
         }
     }
 
-    // ÔÚ±à¼­Æ÷ÖÐÏÔÊ¾µ±Ç°ÄÍ¾ÃÖµ£¨µ÷ÊÔÓÃ£©
+    void LateUpdate()
+    {
+        if (!debugLog || currentDurability >= maxDurability)
+        {
+            isVisible = false;
+            return;
+        }
+        
+        if (Camera.main == null) return;
+        
+        lastScreenPos = Camera.main.WorldToScreenPoint(transform.position);
+        isVisible = lastScreenPos.z > 0;
+        durabilityText = $"{currentDurability:F1}/{maxDurability}";
+    }
+
     void OnGUI()
     {
-        if (debugLog)
+        if (!debugLog || !isVisible || currentDurability >= maxDurability) return;
+        
+        if (labelStyle == null)
         {
-            if (currentDurability == maxDurability) return;
-            Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
-            GUIStyle style = GUI.skin.label;
-            style.normal.textColor = Color.Lerp(Color.red, Color.green, currentDurability / maxDurability);
-            GUI.Label(new Rect(screenPos.x, Screen.height - screenPos.y, 200, 20), $"{currentDurability:F1}/{maxDurability}", style);
+            labelStyle = new GUIStyle(GUI.skin.label);
         }
+        
+        float healthRatio = currentDurability / maxDurability;
+        labelStyle.normal.textColor = Color.Lerp(Color.red, Color.green, healthRatio);
+        
+        Rect labelRect = new Rect(lastScreenPos.x - 50, Screen.height - lastScreenPos.y - 10, 100, 20);
+        GUI.Label(labelRect, durabilityText, labelStyle);
     }
 }
