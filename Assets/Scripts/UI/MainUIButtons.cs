@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using Unity.VisualScripting;
+锘縰sing System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -33,7 +32,7 @@ public class MainUIButtons : MonoBehaviour
 #if UNITY_EDITOR
         foreach (BlockButton blockButton in blockButtons)
         {
-            if (blockButton != null)
+            if (blockButton != null && blockButton.block != null && blockButton.button != null)
             {
                 blockButton.name = blockButton.block.name;
                 blockButton.button.GetComponentInChildren<Text>().text = blockButton.block.name;
@@ -63,14 +62,14 @@ public class MainUIButtons : MonoBehaviour
 
         foreach (BlockButton blockButton in blockButtons)
         {
-            if (blockButton != null)
+            if (blockButton?.button != null && blockButton.block != null)
             {
-                if (blockButton.button != null)
-                {
-                    blockButton.button.onClick.AddListener(() => SetCurrentBlock(blockButton.block.name));
-                }
+                string blockName = blockButton.block.name;
+                blockButton.button.onClick.AddListener(() => SetCurrentBlock(blockName));
             }
         }
+
+        RegisterDiscoveredBlockButtons();
     }
 
     private void Update()
@@ -111,7 +110,52 @@ public class MainUIButtons : MonoBehaviour
         {
             Destroy(BuildManager.instance.currentGhost);
         }
-        Debug.Log($"当前建造方块切换为 {resourcePath}");
+        Debug.Log($"Current build block changed to {resourcePath}");
+    }
+
+    private void RegisterDiscoveredBlockButtons()
+    {
+        if (blockButtons.Count == 0 || blockButtons[0].button == null) return;
+
+        Button template = blockButtons[0].button;
+        Transform parent = template.transform.parent;
+        HashSet<string> existingNames = new HashSet<string>();
+
+        foreach (BlockButton blockButton in blockButtons)
+        {
+            if (blockButton != null && !string.IsNullOrEmpty(blockButton.name))
+            {
+                existingNames.Add(blockButton.name);
+            }
+        }
+
+        GameObject[] prefabs = Resources.LoadAll<GameObject>("Blocks");
+        foreach (GameObject prefab in prefabs)
+        {
+            if (prefab == null || existingNames.Contains(prefab.name)) continue;
+
+            Button button = Instantiate(template, parent);
+            button.name = prefab.name + "Button";
+
+            Text text = button.GetComponentInChildren<Text>();
+            if (text != null)
+            {
+                text.text = prefab.name;
+            }
+
+            string blockName = prefab.name;
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => SetCurrentBlock(blockName));
+
+            blockButtons.Add(new BlockButton
+            {
+                name = blockName,
+                button = button,
+                block = prefab
+            });
+
+            existingNames.Add(blockName);
+        }
     }
 }
 

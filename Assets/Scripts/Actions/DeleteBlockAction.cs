@@ -1,5 +1,4 @@
-using UnityEditor;
-using UnityEngine;
+锘縰sing UnityEngine;
 
 public class DeleteBlockAction : IBlockAction
 {
@@ -20,7 +19,7 @@ public class DeleteBlockAction : IBlockAction
         y = deletedBlock.y;
         z = deletedBlock.z;
 
-        resourcePath = BuildManager.ConvertToResourcesPath(deletedBlock.resourcePath); // 保存运行时资源路径
+        resourcePath = BuildManager.ConvertToResourcesPath(deletedBlock.resourcePath);
     }
 
     public void Undo()
@@ -36,7 +35,8 @@ public class DeleteBlockAction : IBlockAction
                 deletedBlock.x = x;
                 deletedBlock.y = y;
                 deletedBlock.z = z;
-                deletedBlock.resourcePath = resourcePath; // 继续保留路径
+                deletedBlock.resourcePath = resourcePath;
+                BuildManager.instance.ApplyBlockBuildDefaults(deletedBlock);
                 BuildManager.instance.SaveBlock(deletedBlock);
             }
             else

@@ -1,4 +1,4 @@
-using System.Collections;
+锘縰sing System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,18 +6,29 @@ public class ControlUnit : MonoBehaviour
 {
     public HoverFlightController hoverFlightController;
     public Cockpit cockpit;
+    public Cockpit[] cockpits;
     public MainThruster[] mainThrusters;
     public HoverThruster[] hoverThrusters;
+    public UnitFaction faction = UnitFaction.Player;
+    public bool hasValidCockpit;
+    public Vector3 movementInput;
+    public Transform target;
+
     private float cooldownTime = 0.2f;
     private bool _isOnCooldown;
 
+    public bool HasValidCockpit => hasValidCockpit && cockpit != null;
+    public bool IsPlayer => faction == UnitFaction.Player;
+    public Vector3 MovementInput => movementInput;
+
     private void Start()
     {
-        // 在ControlUnit启动时向PlayManager注册
         if (PlayManager.instance != null)
+        {
             PlayManager.instance.RegisterControlUnit(this);
+        }
 
-        Invoke("RefreshChildren", 2f);
+        Invoke(nameof(RefreshChildren), 2f);
     }
 
     private void Update()
@@ -27,9 +38,21 @@ public class ControlUnit : MonoBehaviour
         if (transform.childCount == 0)
         {
             Destroy(gameObject);
+            return;
         }
 
-        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        if (!HasValidCockpit)
+        {
+            movementInput = Vector3.zero;
+            return;
+        }
+
+        if (IsPlayer)
+        {
+            movementInput = GetPlayerMovementInput();
+        }
+
+        if (IsPlayer && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             foreach (HoverThruster thruster in hoverThrusters)
             {
@@ -54,25 +77,30 @@ public class ControlUnit : MonoBehaviour
 
     public void RefreshChildren()
     {
-        // 只有在缓存为空或需要强制刷新时才重新获取
-        if (hoverFlightController == null)
-            hoverFlightController = GetComponentInChildren<HoverFlightController>();
+        hoverFlightController = GetComponentInChildren<HoverFlightController>();
+        cockpits = GetComponentsInChildren<Cockpit>(true);
+        mainThrusters = GetComponentsInChildren<MainThruster>();
+        hoverThrusters = GetComponentsInChildren<HoverThruster>();
 
-        if (cockpit ==  null)
-            cockpit = GetComponentInChildren<Cockpit>();
+        hasValidCockpit = cockpits.Length == 1;
+        cockpit = hasValidCockpit ? cockpits[0] : null;
 
-        if (mainThrusters == null)
-            mainThrusters = GetComponentsInChildren<MainThruster>();
-
-        if (hoverThrusters != null)
-            hoverThrusters = GetComponentsInChildren<HoverThruster>();
+        if (hasValidCockpit)
+        {
+            faction = cockpit.faction;
+        }
+        else
+        {
+            movementInput = Vector3.zero;
+            Debug.LogWarning($"{name} requires exactly one Cockpit, found {cockpits.Length}.");
+        }
 
         if (hoverFlightController == null)
         {
             Debug.LogWarning($"Cannot find HoverFlightController in {gameObject}");
         }
 
-        if (hoverFlightController != null && hoverThrusters.Length > 0)
+        if (hoverFlightController != null && hoverThrusters.Length > 0 && hasValidCockpit)
         {
             hoverFlightController.thrusters = hoverThrusters;
             hoverFlightController.enabled = true;
@@ -80,17 +108,10 @@ public class ControlUnit : MonoBehaviour
             hoverFlightController.Init();
         }
 
-        //Collider[] siblingColliders = GetComponentsInChildren<Collider>();
-
-        //// 双重循环遍历所有碰撞体组合
-        //for (int i = 0; i < siblingColliders.Length; i++)
-        //{
-        //    for (int j = i + 1; j < siblingColliders.Length; j++)
-        //    {
-        //        // 忽略两个碰撞体之间的碰撞
-        //        Physics.IgnoreCollision(siblingColliders[i], siblingColliders[j], true);
-        //    }
-        //}
+        if (hasValidCockpit && faction == UnitFaction.Enemy && GetComponent<ModularEnemyController>() == null)
+        {
+            gameObject.AddComponent<ModularEnemyController>();
+        }
     }
 
     public void PlayEnd()
@@ -99,22 +120,50 @@ public class ControlUnit : MonoBehaviour
         {
             hoverFlightController.enabled = false;
         }
+
+        movementInput = Vector3.zero;
+    }
+
+    public void SetMovementInput(Vector3 worldDirection)
+    {
+        movementInput = Vector3.ClampMagnitude(worldDirection, 1f);
+    }
+
+    public void SetTarget(Transform newTarget)
+    {
+        target = newTarget;
+    }
+
+    private Vector3 GetPlayerMovementInput()
+    {
+        Vector3 dir = Vector3.zero;
+        Transform cameraTransform = Camera.main != null ? Camera.main.transform : null;
+        if (cameraTransform == null) return dir;
+
+        Vector3 camForward = cameraTransform.forward;
+        camForward.y = 0f;
+        camForward.Normalize();
+
+        Vector3 camRight = cameraTransform.right;
+        camRight.y = 0f;
+        camRight.Normalize();
+
+        if (Keyboard.current.wKey.isPressed) dir += camForward;
+        if (Keyboard.current.sKey.isPressed) dir -= camForward;
+        if (Keyboard.current.aKey.isPressed) dir -= camRight;
+        if (Keyboard.current.dKey.isPressed) dir += camRight;
+
+        return Vector3.ClampMagnitude(dir, 1f);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (!PlayManager.instance.playMode) return;
-
         if (_isOnCooldown) return;
 
         foreach (ContactPoint contact in collision.contacts)
         {
-            Collider thisCollider = contact.thisCollider;   // 我方子Collider
-            Collider otherCollider = contact.otherCollider; // 对方Collider
-
-            //Debug.Log($"子项 [{thisCollider.name}] 碰到了 [{otherCollider.name}]，碰撞点 {contact.point}");
-
-            // 如果子项上有 ChildCollisionHandler，转发消息
+            Collider thisCollider = contact.thisCollider;
             var childHandler = thisCollider.GetComponent<Durability>();
             if (childHandler != null)
             {
@@ -127,18 +176,16 @@ public class ControlUnit : MonoBehaviour
 
     private void OnDestroy()
     {
-        // 在销毁时反注册
         if (PlayManager.instance != null)
+        {
             PlayManager.instance.UnregisterControlUnit(this);
+        }
     }
 
     private IEnumerator StartCooldown()
     {
-        // 设置状态为冷却中
         _isOnCooldown = true;
-        // 等待指定的冷却时间
         yield return new WaitForSeconds(cooldownTime);
-        // 冷却结束，重置状态
         _isOnCooldown = false;
     }
 }

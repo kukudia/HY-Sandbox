@@ -1,76 +1,78 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class HoverFlightController : MonoBehaviour
 {
-    [Header("Ğü¸¡²ÎÊı")]
-    [Tooltip("·ÉĞĞÆ÷ĞèÒªÎ¬³ÖµÄÄ¿±êĞü¸¡¸ß¶È£¨µ¥Î»£ºÃ×£©")]
+    [Header("æ‚¬æµ®å‚æ•°")]
+    [Tooltip("é£è¡Œå™¨éœ€è¦ç»´æŒçš„ç›®æ ‡æ‚¬æµ®é«˜åº¦ï¼ˆå•ä½ï¼šç±³ï¼‰")]
     public float targetHoverHeight = 10f;
 
-    [Tooltip("ÔÊĞíµÄ¸ß¶ÈÎó²î·¶Î§£¬ÔÚ´Ë·¶Î§ÄÚ²»»á½øĞĞ¸ß¶Èµ÷Õû")]
+    [Tooltip("å…è®¸çš„é«˜åº¦è¯¯å·®èŒƒå›´ï¼Œåœ¨æ­¤èŒƒå›´å†…ä¸ä¼šè¿›è¡Œé«˜åº¦è°ƒæ•´")]
     public float heightTolerance = 0.1f;
 
-    //[Tooltip("×î´óÍÆÁ¦³ËÊı£¬ÔÊĞíÍÆ½øÆ÷³¬¹ıÆä±ê³Æ×î´óÍÆÁ¦µÄ±¶Êı")]
+    //[Tooltip("æœ€å¤§æ¨åŠ›ä¹˜æ•°ï¼Œå…è®¸æ¨è¿›å™¨è¶…è¿‡å…¶æ ‡ç§°æœ€å¤§æ¨åŠ›çš„å€æ•°")]
     //public float maxThrustMultiplier = 1.5f;
 
-    [Header("×ËÌ¬¿ØÖÆ²ÎÊı")]
-    [Tooltip("ÇãĞ±¿ØÖÆµÄ±ÈÀıÏµÊı - Ó°Ïì×ËÌ¬»Ö¸´ËÙ¶È")]
+    [Header("å§¿æ€æ§åˆ¶å‚æ•°")]
+    [Tooltip("å€¾æ–œæ§åˆ¶çš„æ¯”ä¾‹ç³»æ•° - å½±å“å§¿æ€æ¢å¤é€Ÿåº¦")]
     public float tiltP = 8f;
 
-    [Tooltip("ÇãĞ±¿ØÖÆµÄÎ¢·ÖÏµÊı - ¼õÉÙ×ËÌ¬Õñµ´")]
+    [Tooltip("å€¾æ–œæ§åˆ¶çš„å¾®åˆ†ç³»æ•° - å‡å°‘å§¿æ€æŒ¯è¡")]
     public float tiltD = 2f;
 
-    [Tooltip("ÔÊĞíµÄ×î´óÇãĞ±½Ç¶È£¨µ¥Î»£º¶È£©£¬³¬¹ı´Ë½Ç¶È½«´¥·¢×ËÌ¬½ÃÕı")]
+    [Tooltip("å…è®¸çš„æœ€å¤§å€¾æ–œè§’åº¦ï¼ˆå•ä½ï¼šåº¦ï¼‰ï¼Œè¶…è¿‡æ­¤è§’åº¦å°†è§¦å‘å§¿æ€çŸ«æ­£")]
     public float maxTiltAngle = 15f;
 
-    [Tooltip("×ËÌ¬µ÷ÕûµÄÆ½»¬¶È£¨ÖµÔ½¸ßµ÷ÕûÔ½¿ì£©")]
+    [Tooltip("å§¿æ€è°ƒæ•´çš„å¹³æ»‘åº¦ï¼ˆå€¼è¶Šé«˜è°ƒæ•´è¶Šå¿«ï¼‰")]
     public float rotationSmoothing = 5f;
 
-    [Header("¸ß¶È¿ØÖÆ²ÎÊı")]
-    [Tooltip("¸ß¶È±ÈÀıÏµÊı")]
+    [Header("é«˜åº¦æ§åˆ¶å‚æ•°")]
+    [Tooltip("é«˜åº¦æ¯”ä¾‹ç³»æ•°")]
     private float HeightP = 0.5f;
 
-    [Tooltip("¸ß¶ÈPID»ı·ÖÏµÊı")]
+    [Tooltip("é«˜åº¦PIDç§¯åˆ†ç³»æ•°")]
     public float heightI = 0.1f;
 
-    [Tooltip("¸ß¶ÈPIDÎ¢·ÖÏµÊı")]
+    [Tooltip("é«˜åº¦PIDå¾®åˆ†ç³»æ•°")]
     public float heightD = 2f;
 
-    [Header("ÖØÁ¦²¹³¥")]
-    [Tooltip("ÖØÁ¦²¹³¥ÏµÊı£¨1.0 = ÍêÈ«µÖÏûÖØÁ¦£©")]
+    [Header("é‡åŠ›è¡¥å¿")]
+    [Tooltip("é‡åŠ›è¡¥å¿ç³»æ•°ï¼ˆ1.0 = å®Œå…¨æŠµæ¶ˆé‡åŠ›ï¼‰")]
     public float gravityCompensationFactor = 1.0f;
 
-    private Rigidbody rb; // ·ÉĞĞÆ÷µÄ¸ÕÌå×é¼ş
+    private Rigidbody rb; // é£è¡Œå™¨çš„åˆšä½“ç»„ä»¶
+    private ControlUnit controlUnit;
 
-    [Tooltip("·ÉĞĞÆ÷ÉÏËùÓĞµÄĞü¸¡ÍÆ½øÆ÷Êı×é£¨»á×Ô¶¯´Ó×ÓÎïÌåÊÕ¼¯£©")]
+    [Tooltip("é£è¡Œå™¨ä¸Šæ‰€æœ‰çš„æ‚¬æµ®æ¨è¿›å™¨æ•°ç»„ï¼ˆä¼šè‡ªåŠ¨ä»å­ç‰©ä½“æ”¶é›†ï¼‰")]
     public HoverThruster[] thrusters;
 
-    private float heightErrorIntegral; // ¸ß¶ÈÎó²îµÄ»ı·ÖÏî£¨ÓÃÓÚPID¿ØÖÆ£©
-    private float lastHeightError;     // ÉÏÒ»Ö¡µÄ¸ß¶ÈÎó²î
+    private float heightErrorIntegral; // é«˜åº¦è¯¯å·®çš„ç§¯åˆ†é¡¹ï¼ˆç”¨äºPIDæ§åˆ¶ï¼‰
+    private float lastHeightError;     // ä¸Šä¸€å¸§çš„é«˜åº¦è¯¯å·®
 
-    // ×ËÌ¬¿ØÖÆÏà¹Ø
-    private Vector3 lastUpVector;       // ÉÏÒ»Ö¡µÄÉÏ·½ÏòÏòÁ¿
-    private Vector3 targetUpVector = Vector3.up; // Ä¿±êÉÏ·½Ïò£¨Ê¼ÖÕ´¹Ö±ÏòÉÏ£©
-    private float tiltCorrectionForce;  // µ±Ç°ÇãĞ±½ÃÕıÁ¦µÄ´óĞ¡
+    // å§¿æ€æ§åˆ¶ç›¸å…³
+    private Vector3 lastUpVector;       // ä¸Šä¸€å¸§çš„ä¸Šæ–¹å‘å‘é‡
+    private Vector3 targetUpVector = Vector3.up; // ç›®æ ‡ä¸Šæ–¹å‘ï¼ˆå§‹ç»ˆå‚ç›´å‘ä¸Šï¼‰
+    private float tiltCorrectionForce;  // å½“å‰å€¾æ–œçŸ«æ­£åŠ›çš„å¤§å°
 
-    // ¶¯Ì¬¸ß¶ÈÏµÊıÏà¹Ø
+    // åŠ¨æ€é«˜åº¦ç³»æ•°ç›¸å…³
     private float currentHeightP;
 
     public bool showUI = false;
     public bool setHeight = false;
 
-    private GUIStyle headerStyle; // GUI±êÌâÑùÊ½
-    private GUIStyle labelStyle;  // GUI±êÇ©ÑùÊ½
+    private GUIStyle headerStyle; // GUIæ ‡é¢˜æ ·å¼
+    private GUIStyle labelStyle;  // GUIæ ‡ç­¾æ ·å¼
 
     public void Init()
     {
         rb = GetComponentInParent<Rigidbody>();
+        controlUnit = GetComponentInParent<ControlUnit>();
         lastUpVector = transform.up;
 
-        // ³õÊ¼»¯¶¯Ì¬¸ß¶ÈÏµÊı
+        // åˆå§‹åŒ–åŠ¨æ€é«˜åº¦ç³»æ•°
         currentHeightP = rb.mass * HeightP;
 
-        // ÅäÖÃËùÓĞÍÆ½øÆ÷
+        // é…ç½®æ‰€æœ‰æ¨è¿›å™¨
         //foreach (var thruster in thrusters)
         //{
         //    thruster.hoverHeight = targetHoverHeight;
@@ -87,55 +89,57 @@ public class HoverFlightController : MonoBehaviour
             //return;
         }
 
-        if (Keyboard.current.qKey.isPressed && !Keyboard.current.eKey.isPressed)
+        bool acceptsPlayerInput = controlUnit == null || controlUnit.faction == UnitFaction.Player;
+
+        if (acceptsPlayerInput && Keyboard.current.qKey.isPressed && !Keyboard.current.eKey.isPressed)
         {
             targetHoverHeight += 0.2f;
         }
 
-        if (Keyboard.current.eKey.isPressed && !Keyboard.current.qKey.isPressed)
+        if (acceptsPlayerInput && Keyboard.current.eKey.isPressed && !Keyboard.current.qKey.isPressed)
         {
             targetHoverHeight -= 0.2f;
         }
 
-        if (Keyboard.current.eKey.wasReleasedThisFrame || Keyboard.current.qKey.wasReleasedThisFrame)
+        if (acceptsPlayerInput && (Keyboard.current.eKey.wasReleasedThisFrame || Keyboard.current.qKey.wasReleasedThisFrame))
         {
             targetHoverHeight = transform.position.y;
         }
 
         float heightError = targetHoverHeight - transform.position.y;
 
-        // ¸ß¶ÈPID¿ØÖÆ
+        // é«˜åº¦PIDæ§åˆ¶
         float heightAdjustment = CalculateHeightAdjustment(heightError);
 
-        // ÖØÁ¦²¹³¥¼ÆËã
+        // é‡åŠ›è¡¥å¿è®¡ç®—
         float gravityCompensation = CalculateGravityCompensation();
 
-        // ×ËÌ¬ÎÈ¶¨¿ØÖÆ
+        // å§¿æ€ç¨³å®šæ§åˆ¶
         Vector3 tiltAdjustment = CalculateTiltAdjustment();
 
-        // ·ÖÅäÍÆÁ¦µ½¸÷¸öÍÆ½øÆ÷
+        // åˆ†é…æ¨åŠ›åˆ°å„ä¸ªæ¨è¿›å™¨
         DistributeThrust(heightAdjustment + gravityCompensation, tiltAdjustment);
 
-        // Ó¦ÓÃĞı×ªĞŞÕı
+        // åº”ç”¨æ—‹è½¬ä¿®æ­£
         ApplyRotationCorrection();
 
-        // ¸üĞÂ×´Ì¬
+        // æ›´æ–°çŠ¶æ€
         lastHeightError = heightError;
         lastUpVector = transform.up;
     }
 
     private float CalculateHeightAdjustment(float heightError)
     {
-        // ¼ÆËã¶¯Ì¬¸ß¶È±ÈÀıÏµÊı
+        // è®¡ç®—åŠ¨æ€é«˜åº¦æ¯”ä¾‹ç³»æ•°
         //UpdateDynamicHeightP(heightError);
 
-        // »ı·ÖÏî
+        // ç§¯åˆ†é¡¹
         heightErrorIntegral += heightError * Time.fixedDeltaTime;
 
-        // Î¢·ÖÏî
+        // å¾®åˆ†é¡¹
         float heightErrorDerivative = (heightError - lastHeightError) / Time.fixedDeltaTime;
 
-        // PID¼ÆËã (Ê¹ÓÃ¶¯Ì¬heightP)
+        // PIDè®¡ç®— (ä½¿ç”¨åŠ¨æ€heightP)
         return heightError * currentHeightP +
                heightErrorIntegral * heightI +
                heightErrorDerivative * heightD;
@@ -143,10 +147,10 @@ public class HoverFlightController : MonoBehaviour
 
     private void UpdateDynamicHeightP(float heightError)
     {
-        // 1. »ùÓÚ¸ß¶ÈÎó²îµÄµ÷Õû
+        // 1. åŸºäºé«˜åº¦è¯¯å·®çš„è°ƒæ•´
         float absError = Mathf.Abs(heightError);
 
-        // 5. µ±½Ó½üÄ¿±ê¸ß¶ÈÊ±½µµÍÏìÓ¦£¨·ÀÖ¹Õñµ´£©
+        // 5. å½“æ¥è¿‘ç›®æ ‡é«˜åº¦æ—¶é™ä½å“åº”ï¼ˆé˜²æ­¢æŒ¯è¡ï¼‰
         if (absError < heightTolerance * 2)
         {
             currentHeightP *= Mathf.Clamp01(absError / heightTolerance);
@@ -155,10 +159,10 @@ public class HoverFlightController : MonoBehaviour
 
     private float CalculateGravityCompensation()
     {
-        // ¼ÆËã¿Ë·şÖØÁ¦ËùĞèµÄ×îĞ¡ÍÆÁ¦
+        // è®¡ç®—å…‹æœé‡åŠ›æ‰€éœ€çš„æœ€å°æ¨åŠ›
         float gravityForce = rb.mass * Physics.gravity.magnitude * gravityCompensationFactor;
 
-        // ¸ù¾İ¸ß¶ÈÎó²îµ÷Õû²¹³¥Á¦¶È
+        // æ ¹æ®é«˜åº¦è¯¯å·®è°ƒæ•´è¡¥å¿åŠ›åº¦
         float heightError = targetHoverHeight - transform.position.y;
         float compensationFactor = Mathf.Clamp01(Mathf.Abs(heightError) / heightTolerance);
 
@@ -167,19 +171,19 @@ public class HoverFlightController : MonoBehaviour
 
     private Vector3 CalculateTiltAdjustment()
     {
-        // ¼ÆËãµ±Ç°ÇãĞ±½Ç¶È
+        // è®¡ç®—å½“å‰å€¾æ–œè§’åº¦
         float tiltAngle = Vector3.Angle(transform.up, Vector3.up);
 
         if (tiltAngle > maxTiltAngle)
         {
-            // ¼ÆËãÇãĞ±·½Ïò
+            // è®¡ç®—å€¾æ–œæ–¹å‘
             Vector3 tiltDirection = Vector3.Cross(transform.up, Vector3.up).normalized;
 
-            // ¼ÆËã½ÇËÙ¶È
+            // è®¡ç®—è§’é€Ÿåº¦
             Vector3 angularVelocity = rb.angularVelocity;
             Vector3 angularVelocityInTiltDir = Vector3.Project(angularVelocity, tiltDirection);
 
-            // PID¼ÆËã
+            // PIDè®¡ç®—
             float tiltError = tiltAngle * Mathf.Deg2Rad;
             float tiltErrorDerivative = angularVelocityInTiltDir.magnitude;
 
@@ -196,19 +200,19 @@ public class HoverFlightController : MonoBehaviour
         Vector3 centerOfMass = rb.centerOfMass + transform.position;
         float totalMaxThrust = GetTotalMaxThrust();
 
-        // ¼ÆËã×ÜĞèÇóÍÆÁ¦£¨ÏŞÖÆÔÚ×î´óÄÜÁ¦·¶Î§ÄÚ£©
+        // è®¡ç®—æ€»éœ€æ±‚æ¨åŠ›ï¼ˆé™åˆ¶åœ¨æœ€å¤§èƒ½åŠ›èŒƒå›´å†…ï¼‰
         float totalThrustRequired = Mathf.Clamp(heightAdjustment, 0, totalMaxThrust);
 
-        // °´ÍÆ½øÆ÷×î´óÍÆÁ¦±ÈÀı·ÖÅä»ù´¡ÍÆÁ¦
+        // æŒ‰æ¨è¿›å™¨æœ€å¤§æ¨åŠ›æ¯”ä¾‹åˆ†é…åŸºç¡€æ¨åŠ›
         foreach (var thruster in thrusters)
         {
             if (thruster ==  null) continue;
 
-            // ºËĞÄĞŞ¸Ä£º°´ÍÆÁ¦Õ¼±È·ÖÅä»ù´¡ÍÆÁ¦
+            // æ ¸å¿ƒä¿®æ”¹ï¼šæŒ‰æ¨åŠ›å æ¯”åˆ†é…åŸºç¡€æ¨åŠ›
             float thrustRatio = thruster.maxThrust / totalMaxThrust;
             float baseThrust = totalThrustRequired * thrustRatio;
 
-            // ×ËÌ¬µ÷ÕûÍÆÁ¦£¨±£³ÖÔ­Âß¼­£©
+            // å§¿æ€è°ƒæ•´æ¨åŠ›ï¼ˆä¿æŒåŸé€»è¾‘ï¼‰
             Vector3 positionFromCOM = thruster.transform.position - centerOfMass;
             float tiltThrust = 0f;
             if (tiltAdjustment != Vector3.zero)
@@ -219,7 +223,7 @@ public class HoverFlightController : MonoBehaviour
                 tiltThrust = tiltCorrectionForce * torqueEffectiveness * distanceWeight;
             }
 
-            // ºÏ²¢ÍÆÁ¦²¢ÏŞÖÆ·¶Î§
+            // åˆå¹¶æ¨åŠ›å¹¶é™åˆ¶èŒƒå›´
             float finalThrust = Mathf.Clamp(
                 baseThrust + tiltThrust,
                 0,
@@ -233,17 +237,17 @@ public class HoverFlightController : MonoBehaviour
 
     private void ApplyRotationCorrection()
     {
-        // ¼ÆËãÄ¿±êĞı×ª£¨´¹Ö±ÏòÉÏ£©
+        // è®¡ç®—ç›®æ ‡æ—‹è½¬ï¼ˆå‚ç›´å‘ä¸Šï¼‰
         Quaternion targetRotation = Quaternion.FromToRotation(transform.up, Vector3.up) * rb.rotation;
 
-        // Æ½»¬Ğı×ª
+        // å¹³æ»‘æ—‹è½¬
         Quaternion newRotation = Quaternion.Slerp(
             rb.rotation,
             targetRotation,
             rotationSmoothing * Time.fixedDeltaTime
         );
 
-        // Ó¦ÓÃĞı×ª£¨Í¨¹ı½ÇËÙ¶ÈÊµÏÖÆ½»¬ÎïÀíĞ§¹û£©
+        // åº”ç”¨æ—‹è½¬ï¼ˆé€šè¿‡è§’é€Ÿåº¦å®ç°å¹³æ»‘ç‰©ç†æ•ˆæœï¼‰
         Quaternion rotationDelta = newRotation * Quaternion.Inverse(rb.rotation);
         rotationDelta.ToAngleAxis(out float angle, out Vector3 axis);
 
@@ -281,22 +285,22 @@ public class HoverFlightController : MonoBehaviour
         return maxDistance > 0 ? maxDistance : 1f;
     }
 
-    // ÔÚ±à¼­Æ÷ÖĞ¿ÉÊÓ»¯
+    // åœ¨ç¼–è¾‘å™¨ä¸­å¯è§†åŒ–
     private void OnDrawGizmosSelected()
     {
         if (rb == null) return;
 
-        // »æÖÆÄ¿±ê¸ß¶ÈÆ½Ãæ
+        // ç»˜åˆ¶ç›®æ ‡é«˜åº¦å¹³é¢
         Gizmos.color = Color.green;
         Vector3 planeCenter = new Vector3(transform.position.x, targetHoverHeight, transform.position.z);
         Gizmos.DrawWireCube(planeCenter, new Vector3(5, 0.01f, 5));
 
-        // »æÖÆÖØĞÄÎ»ÖÃ
+        // ç»˜åˆ¶é‡å¿ƒä½ç½®
         Gizmos.color = Color.red;
         Vector3 comPosition = transform.position + rb.centerOfMass;
         Gizmos.DrawSphere(comPosition, 0.2f);
 
-        // »æÖÆÍÆ½øÆ÷Î»ÖÃ
+        // ç»˜åˆ¶æ¨è¿›å™¨ä½ç½®
         Gizmos.color = Color.blue;
         foreach (var thruster in thrusters)
         {
@@ -344,18 +348,18 @@ public class HoverFlightController : MonoBehaviour
 
             if (thrusters[i].thrust > 0)
             {
-                // »­½ø¶ÈÌõ±³¾°
+                // ç”»è¿›åº¦æ¡èƒŒæ™¯
                 Rect r = GUILayoutUtility.GetRect(100, 18);
                 GUI.color = Color.gray;
                 GUI.Box(r, GUIContent.none);
 
-                // »­ÍÆÁ¦ÖµÌõ
+                // ç”»æ¨åŠ›å€¼æ¡
                 Rect filled = new Rect(r.x, r.y, r.width * norm, r.height);
                 GUI.color = barColor;
                 GUI.Box(filled, GUIContent.none);
             }
 
-            // »Ö¸´ÑÕÉ«
+            // æ¢å¤é¢œè‰²
             GUI.color = Color.white;
 
             GUILayout.EndHorizontal();

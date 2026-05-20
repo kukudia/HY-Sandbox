@@ -1,19 +1,18 @@
-using System.Collections.Generic;
+锘縰sing System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-/// <summary>
-/// 存档管理器：负责创建、加载、删除存档，并通知 BuildManager 切换
-/// </summary>
 public class SaveManager : MonoBehaviour
 {
     public static SaveManager instance;
 
     private string saveDirectory => Path.Combine(Application.persistentDataPath, "Saves");
+    private string enemyBlueprintDirectory => Path.Combine(Application.persistentDataPath, "EnemyBlueprints");
 
-    public string currentSaveName; // 当前存档槽
+    public string currentSaveName;
 
     public List<string> saves = new List<string>();
+    public List<string> enemyBlueprints = new List<string>();
 
     public BlockDataList cachedData = new BlockDataList();
 
@@ -24,16 +23,24 @@ public class SaveManager : MonoBehaviour
         if (instance == null) instance = this;
         else Destroy(gameObject);
 
-        if (!Directory.Exists(saveDirectory))
-            Directory.CreateDirectory(saveDirectory);
+        EnsureSaveDirectories();
     }
 
-    /// <summary>
-    /// 获取所有存档名字
-    /// </summary>
+    public void EnsureSaveDirectories()
+    {
+        if (!Directory.Exists(saveDirectory))
+        {
+            Directory.CreateDirectory(saveDirectory);
+        }
+
+        if (!Directory.Exists(enemyBlueprintDirectory))
+        {
+            Directory.CreateDirectory(enemyBlueprintDirectory);
+        }
+    }
+
     public void GetAllSaveNames()
     {
-        //Debug.Log("GetAllSaveNames");
         saves.Clear();
 
         if (!Directory.Exists(saveDirectory))
@@ -53,15 +60,22 @@ public class SaveManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 新建存档（如果已存在则覆盖）
-    /// </summary>
+    public void GetAllEnemyBlueprintNames()
+    {
+        enemyBlueprints.Clear();
+        EnsureSaveDirectories();
+
+        foreach (var file in Directory.GetFiles(enemyBlueprintDirectory, "*.json"))
+        {
+            enemyBlueprints.Add(Path.GetFileNameWithoutExtension(file));
+        }
+    }
+
     public void CreateNewSave(string saveName)
     {
         currentSaveName = saveName;
         string path = GetSavePath(saveName);
 
-        // 清空 BuildManager 内的缓存和方块
         cachedData = new BlockDataList();
         if (BuildManager.instance.blocksParent != null)
         {
@@ -71,17 +85,27 @@ public class SaveManager : MonoBehaviour
             }
         }
 
-        // 保存一个空存档文件
         File.WriteAllText(path, JsonUtility.ToJson(cachedData, true));
 
-        Debug.Log($"新建存档 {saveName}");
+        Debug.Log($"New save created: {saveName}");
 
         SaveUIPanel.instance.RefreshList();
     }
 
-    /// <summary>
-    /// 切换存档并加载
-    /// </summary>
+    public void CreateNewEnemyBlueprint(string blueprintName)
+    {
+        EnsureSaveDirectories();
+        string path = GetEnemyBlueprintPath(blueprintName);
+
+        if (!File.Exists(path))
+        {
+            File.WriteAllText(path, JsonUtility.ToJson(new BlockDataList(), true));
+        }
+
+        GetAllEnemyBlueprintNames();
+        Debug.Log($"Enemy blueprint ready: {blueprintName}");
+    }
+
     public void LoadSave(string saveName)
     {
         currentSaveName = saveName;
@@ -100,32 +124,34 @@ public class SaveManager : MonoBehaviour
 
         cachedData = new BlockDataList();
         BuildManager.instance.currentSaveName = saveName;
+        BuildManager.instance.ExitEnemyBlueprintBuildMode(false);
 
         BuildManager.instance.LoadAllBlocks();
 
-        Debug.Log($"切换到存档 {saveName}");
+        Debug.Log($"Loaded save: {saveName}");
     }
 
-    /// <summary>
-    /// 删除指定存档
-    /// </summary>
     public void DeleteSave(string saveName)
     {
         string path = GetSavePath(saveName);
         if (File.Exists(path))
         {
             File.Delete(path);
-            Debug.Log($"删除存档 {saveName}");
+            Debug.Log($"Deleted save: {saveName}");
         }
         SaveUIPanel.instance.RefreshList();
     }
 
-    /// <summary>
-    /// 获取存档文件路径
-    /// </summary>
     public string GetSavePath(string saveName)
     {
+        EnsureSaveDirectories();
         return Path.Combine(saveDirectory, saveName + ".json");
+    }
+
+    public string GetEnemyBlueprintPath(string blueprintName)
+    {
+        EnsureSaveDirectories();
+        return Path.Combine(enemyBlueprintDirectory, blueprintName + ".json");
     }
 
     public string GetSaveFileSize(string saveName)

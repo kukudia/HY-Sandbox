@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class Cockpit : MonoBehaviour
 {
-
+    public UnitFaction faction = UnitFaction.Player;
 }

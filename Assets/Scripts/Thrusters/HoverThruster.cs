@@ -1,5 +1,4 @@
-using UnityEngine;
-using UnityEngine.InputSystem;
+﻿using UnityEngine;
 
 public class HoverThruster : Thruster
 {
@@ -16,9 +15,15 @@ public class HoverThruster : Thruster
             controlUnit = GetComponentInParent<ControlUnit>();
         }
 
+        if (controlUnit == null || !controlUnit.HasValidCockpit)
+        {
+            thrust = 0;
+            VisualizeThrust();
+            return;
+        }
+
         if (controlUnit.hoverFlightController != null)
         {
-            //ApplyThrustChangeRateLimit();
             ApplyThrust();
         }
         else
@@ -33,42 +38,22 @@ public class HoverThruster : Thruster
 
     public virtual void ApplyThrust()
     {
-        //float eulerZ = transform.rotation.eulerAngles.z;
-
-        //if (eulerZ > -30 && eulerZ < 30)
-        //{
-        //    Quaternion targetRot = Quaternion.LookRotation(transform.forward, Vector3.up);
-        //    transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, rotationSpeed * Time.fixedDeltaTime * 60f);
-        //}
-
         if (rb == null)
         {
             rb = GetComponentInParent<Rigidbody>();
         }
-        else
-        {
-            thrustDirection = new Vector3(0, 1, 0);
-            rb.AddForceAtPosition(transform.TransformDirection(thrustDirection) * thrust, transform.position);
-        }
+
+        if (rb == null) return;
+
+        thrustDirection = new Vector3(0, 1, 0);
+        rb.AddForceAtPosition(transform.TransformDirection(thrustDirection) * thrust, transform.position);
     }
 
     public override bool ShouldActivate()
     {
-        if (isHovered)
-        {
-            if (PlayManager.instance.playMode)
-            {
-                return true;
-            }
-            //else if (!PlayManager.instance.playMode)
-            //{
-            //    Debug.LogWarning("Not in play mode.");
-            //}
-            //else if (!controlUnit.HasCockpit())
-            //{
-            //    Debug.LogWarning("Lack of cockpit.");
-            //}
-        }
-        return false;
+        return isHovered
+            && PlayManager.instance.playMode
+            && controlUnit != null
+            && controlUnit.HasValidCockpit;
     }
 }

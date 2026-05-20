@@ -297,3 +297,5 @@ out/
 *.ani.ani.ico.meta
 *.ani.ani.cur.meta
 ```
+/.vs
+/Builds

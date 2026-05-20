@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -11,7 +11,7 @@ public class BuildManager : MonoBehaviour
     public Camera mainCamera;
     public Transform blocksParent;
     public LayerMask axisLayer;
-    public LayerMask blockLayer;   // ·½¿éËùÔÚµÄ²ã
+    public LayerMask blockLayer;   // æ–¹å—æ‰€åœ¨çš„å±‚
 
     public GameObject moveAxis;
     public GameObject rotateAxis;
@@ -29,21 +29,23 @@ public class BuildManager : MonoBehaviour
     private Quaternion blockStartRot;
 
 
-    // Íø¸ñ²ÎÊı
+    // ç½‘æ ¼å‚æ•°
     public float gridSize = 1f;
     private Vector3 gridOrigin = Vector3.zero;
 
     public Material highlightMaterial;
-    private float moveStep = 1f;    // ÒÆ¶¯²½³¤
+    private float moveStep = 1f;    // ç§»åŠ¨æ­¥é•¿
 
     [Header("Current")]
     public SelectType currentSelectType;
     public Block selectedBlock;
     public Block lastSaveBlock;
-    public GameObject currentGhost;        // µ±Ç°µÄ ghost ÊµÀı
+    public GameObject currentGhost;        // å½“å‰çš„ ghost å®ä¾‹
     public string currentBlockResourcePath;
     public string currentSaveName = "default";
-    public Connector hoveredConnector;     // Êó±êµ±Ç°Ö¸ÏòµÄÁ¬½Óµã
+    public string currentEnemyBlueprintName = "default_enemy";
+    public bool enemyBlueprintBuildMode;
+    public Connector hoveredConnector;     // é¼ æ ‡å½“å‰æŒ‡å‘çš„è¿æ¥ç‚¹
 
     private Vector3 axisForward;
     private Vector3 axisRight;
@@ -59,7 +61,23 @@ public class BuildManager : MonoBehaviour
         -Vector3.forward
     };
 
-    private string savePath => SaveManager.instance.GetSavePath(currentSaveName);
+    private string savePath => enemyBlueprintBuildMode
+        ? SaveManager.instance.GetEnemyBlueprintPath(currentEnemyBlueprintName)
+        : SaveManager.instance.GetSavePath(currentSaveName);
+
+    public UnitFaction CurrentBuildFaction => enemyBlueprintBuildMode ? UnitFaction.Enemy : UnitFaction.Player;
+    public string CurrentBuildName => enemyBlueprintBuildMode ? currentEnemyBlueprintName : currentSaveName;
+    public bool DeveloperToolsAvailable
+    {
+        get
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            return true;
+#else
+            return false;
+#endif
+        }
+    }
 
 
     public bool lockView;
@@ -82,6 +100,14 @@ public class BuildManager : MonoBehaviour
         {
             lockView = !lockView;
             SetBuildMode();
+        }
+
+        if (DeveloperToolsAvailable
+            && Keyboard.current.leftCtrlKey.isPressed
+            && Keyboard.current.leftShiftKey.isPressed
+            && Keyboard.current.eKey.wasPressedThisFrame)
+        {
+            ToggleEnemyBlueprintBuildMode();
         }
 
         if (lockView)
@@ -121,11 +147,11 @@ public class BuildManager : MonoBehaviour
             }
         }
 
-        // ³·ÏúÖØ×ö
+        // æ’¤é”€é‡åš
         if (Keyboard.current.leftCtrlKey.isPressed && Keyboard.current.zKey.wasPressedThisFrame) ActionManager.instance.Undo();
         if (Keyboard.current.leftCtrlKey.isPressed && Keyboard.current.yKey.wasPressedThisFrame) ActionManager.instance.Redo();
 
-        // É¾³ı
+        // åˆ é™¤
         if (selectedBlock != null && Keyboard.current.deleteKey.wasPressedThisFrame) DeleteBlock();
     }
 
@@ -148,12 +174,90 @@ public class BuildManager : MonoBehaviour
         }
     }
 
+    public void ToggleEnemyBlueprintBuildMode()
+    {
+        if (enemyBlueprintBuildMode)
+        {
+            ExitEnemyBlueprintBuildMode(true);
+        }
+        else
+        {
+            EnterEnemyBlueprintBuildMode(currentEnemyBlueprintName);
+        }
+    }
+
+    public void EnterEnemyBlueprintBuildMode(string blueprintName)
+    {
+        if (!DeveloperToolsAvailable)
+        {
+            Debug.LogWarning("Enemy blueprint build mode is developer-only.");
+            return;
+        }
+
+        if (PlayManager.instance != null && PlayManager.instance.playMode)
+        {
+            Debug.LogWarning("Cannot enter enemy blueprint build mode during play mode.");
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(blueprintName))
+        {
+            blueprintName = "default_enemy";
+        }
+
+        currentEnemyBlueprintName = blueprintName.Trim();
+        enemyBlueprintBuildMode = true;
+        currentBlockResourcePath = string.Empty;
+        DeselectBlock();
+
+        if (currentGhost != null)
+        {
+            Destroy(currentGhost);
+            hoveredConnector = null;
+        }
+
+        if (ActionManager.instance != null)
+        {
+            ActionManager.instance.Clear();
+        }
+        SaveManager.instance.CreateNewEnemyBlueprint(currentEnemyBlueprintName);
+        LoadAllBlocks();
+        Debug.Log($"Entered enemy blueprint build mode: {currentEnemyBlueprintName}");
+    }
+
+    public void ExitEnemyBlueprintBuildMode(bool reloadPlayerSave)
+    {
+        if (!enemyBlueprintBuildMode) return;
+
+        enemyBlueprintBuildMode = false;
+        currentBlockResourcePath = string.Empty;
+        DeselectBlock();
+
+        if (currentGhost != null)
+        {
+            Destroy(currentGhost);
+            hoveredConnector = null;
+        }
+
+        if (ActionManager.instance != null)
+        {
+            ActionManager.instance.Clear();
+        }
+
+        if (reloadPlayerSave && SaveManager.instance != null && !string.IsNullOrEmpty(currentSaveName))
+        {
+            SaveManager.instance.LoadSave(currentSaveName);
+        }
+
+        Debug.Log("Exited enemy blueprint build mode.");
+    }
+
     void AlignAxisToNearestWorldDir()
     {
         Vector3 camForward = mainCamera.transform.forward.normalized;
         Vector3 camUp = mainCamera.transform.up.normalized;
 
-        // ÕÒµ½ÓëÏà»ú forward ×î½Ó½üµÄ·½Ïò
+        // æ‰¾åˆ°ä¸ç›¸æœº forward æœ€æ¥è¿‘çš„æ–¹å‘
         Vector3 nearestForward = dirs[0];
         Vector3 nearestUp = dirs[0];
 
@@ -178,7 +282,7 @@ public class BuildManager : MonoBehaviour
             }
         }
 
-        // ±£´æ×ø±êÏµÈı·½Ïò£¬¹©ÒÆ¶¯ÓÃ
+        // ä¿å­˜åæ ‡ç³»ä¸‰æ–¹å‘ï¼Œä¾›ç§»åŠ¨ç”¨
         axisForward = nearestForward;
         axisRight = Vector3.Cross(nearestUp, axisForward).normalized;
         axisUp = Vector3.Cross(axisForward, axisRight).normalized;
@@ -267,12 +371,12 @@ public class BuildManager : MonoBehaviour
             selectedRenderer.sharedMaterial = highlightMaterial;
         }
 
-        // Éú³ÉÒÆ¶¯Öá Gizmo
+        // ç”Ÿæˆç§»åŠ¨è½´ Gizmo
         if (moveAxis != null)
         {
             moveAxis.SetActive(true);
             moveAxis.transform.position = selectedBlock.transform.position;
-            moveAxis.transform.SetParent(selectedBlock.transform); // °ó¶¨ÔÚ·½¿éÉÏ
+            moveAxis.transform.SetParent(selectedBlock.transform); // ç»‘å®šåœ¨æ–¹å—ä¸Š
         }
     }
 
@@ -323,7 +427,7 @@ public class BuildManager : MonoBehaviour
                 selectedBlock
             );
 
-            // ¼ì²éÊÇ·ñ±»×èµ²
+            // æ£€æŸ¥æ˜¯å¦è¢«é˜»æŒ¡
             if (!IsBlocked(newPos, selectedBlock.transform.rotation, selectedBlock))
             {
                 if (Keyboard.current.shiftKey.isPressed)
@@ -335,7 +439,7 @@ public class BuildManager : MonoBehaviour
                     selectedBlock.transform.position = newPos;
                     SaveBlock(selectedBlock);
 
-                    // ¼ÇÂ¼²Ù×÷µ½ Undo Õ»
+                    // è®°å½•æ“ä½œåˆ° Undo æ ˆ
                     var action = new MoveBlockAction(selectedBlock, oldPos, newPos);
                     ActionManager.instance.Push(action);
                 }
@@ -374,14 +478,14 @@ public class BuildManager : MonoBehaviour
                 selectedBlock
             );
 
-            // ¼ì²éÊÇ·ñ±»×èµ²
+            // æ£€æŸ¥æ˜¯å¦è¢«é˜»æŒ¡
             if (!IsBlocked(newPos, newRot, selectedBlock))
             {
                 selectedBlock.transform.position = newPos;
                 selectedBlock.transform.rotation = newRot;
                 SaveBlock(selectedBlock);
 
-                // ¼ÇÂ¼²Ù×÷µ½ Undo Õ»
+                // è®°å½•æ“ä½œåˆ° Undo æ ˆ
                 var action = new RotateBlockAction(selectedBlock, oldPos, newPos, oldRot, newRot);
                 ActionManager.instance.Push(action);
             }
@@ -396,13 +500,13 @@ public class BuildManager : MonoBehaviour
     {
         if (Mouse.current.leftButton.isPressed && activeHandle != null)
         {
-            // ¸ù¾İ handle Ãû³ÆÑ¡Ôñ·½Ïò
+            // æ ¹æ® handle åç§°é€‰æ‹©æ–¹å‘
             Vector3 dir = Vector3.zero;
             if (activeHandle.name.Contains("Forward")) dir = axisForward;
             if (activeHandle.name.Contains("Right")) dir = axisRight;
             if (activeHandle.name.Contains("Up")) dir = axisUp;
 
-            // ¹¹½¨Ò»¸öÍÏ×§Æ½Ãæ£º·¨Ïß = Ïà»ú·½Ïò ¡Á ÍÏ×§·½Ïò
+            // æ„å»ºä¸€ä¸ªæ‹–æ‹½å¹³é¢ï¼šæ³•çº¿ = ç›¸æœºæ–¹å‘ Ã— æ‹–æ‹½æ–¹å‘
             Vector3 planeNormal = Vector3.Cross(dir, mainCamera.transform.up);
             if (planeNormal == Vector3.zero)
                 planeNormal = Vector3.Cross(dir, mainCamera.transform.right);
@@ -415,17 +519,17 @@ public class BuildManager : MonoBehaviour
                 Vector3 hitPoint = ray.GetPoint(enter);
                 Vector3 delta = hitPoint - dragStartPos;
 
-                // Í¶Ó°µ½ÍÏ×§·½Ïò
+                // æŠ•å½±åˆ°æ‹–æ‹½æ–¹å‘
                 float moveAmount = Vector3.Dot(delta, dir.normalized);
 
                 Vector3 oldPos = selectedBlock.transform.position;
 
-                // ²½½ø¶ÔÆë
+                // æ­¥è¿›å¯¹é½
                 Vector3 newPos = blockStartPos + dir.normalized * Mathf.Round(moveAmount / moveStep) * moveStep;
 
                 if (newPos != oldPos)
                 {
-                    // ¼ì²éÊÇ·ñ±»×èµ²
+                    // æ£€æŸ¥æ˜¯å¦è¢«é˜»æŒ¡
                     if (!IsBlocked(newPos, selectedBlock.transform.rotation, selectedBlock))
                     {
                         if (Keyboard.current.shiftKey.isPressed)
@@ -437,7 +541,7 @@ public class BuildManager : MonoBehaviour
                             selectedBlock.transform.position = newPos;
                             SaveBlock(selectedBlock);
 
-                            // ¼ÇÂ¼²Ù×÷µ½ Undo Õ»
+                            // è®°å½•æ“ä½œåˆ° Undo æ ˆ
                             var action = new MoveBlockAction(selectedBlock, oldPos, newPos);
                             ActionManager.instance.Push(action);
                         }
@@ -461,10 +565,10 @@ public class BuildManager : MonoBehaviour
     {
         if (Mouse.current.leftButton.isPressed && activeRotateHandle != null)
         {
-            // Ğı×ªÖá£¨ÊÀ½ç¿Õ¼ä£©
+            // æ—‹è½¬è½´ï¼ˆä¸–ç•Œç©ºé—´ï¼‰
             Vector3 axis = activeRotateHandle.axis;
 
-            // ´ÓÏà»ú·¢ÉäÉäÏß£¬ÓëÒ»¸ö´¹Ö±ÓÚĞı×ªÖáµÄÆ½ÃæÏà½»
+            // ä»ç›¸æœºå‘å°„å°„çº¿ï¼Œä¸ä¸€ä¸ªå‚ç›´äºæ—‹è½¬è½´çš„å¹³é¢ç›¸äº¤
             Plane dragPlane = new Plane(axis, selectedBlock.transform.position);
 
             Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
@@ -472,24 +576,24 @@ public class BuildManager : MonoBehaviour
             {
                 Vector3 hitPoint = ray.GetPoint(enter);
 
-                // ÆğµãºÍµ±Ç°µãÔÚÆ½ÃæÉÏµÄÏòÁ¿
+                // èµ·ç‚¹å’Œå½“å‰ç‚¹åœ¨å¹³é¢ä¸Šçš„å‘é‡
                 Vector3 from = (rotateDragStart - selectedBlock.transform.position).normalized;
                 Vector3 to = (hitPoint - selectedBlock.transform.position).normalized;
 
-                // ¼ÆËãĞı×ª½Ç¶È
+                // è®¡ç®—æ—‹è½¬è§’åº¦
                 float angle = Vector3.SignedAngle(from, to, axis);
 
-                // ²½½ø£¨±ÈÈç 15¡ã/45¡ã£©
+                // æ­¥è¿›ï¼ˆæ¯”å¦‚ 15Â°/45Â°ï¼‰
                 float step = 15f;
                 float snappedAngle = Mathf.Round(angle / step) * step;
 
                 Quaternion newRot = blockStartRot * Quaternion.AngleAxis(snappedAngle, axis);
 
-                // ¼ì²éÊÇ·ñ×èµ²
+                // æ£€æŸ¥æ˜¯å¦é˜»æŒ¡
                 if (!IsBlocked(selectedBlock.transform.position, newRot, selectedBlock))
                 {
                     selectedBlock.transform.rotation = newRot;
-                    rotateAxis.transform.rotation = newRot; // gizmo ¸úËæ
+                    rotateAxis.transform.rotation = newRot; // gizmo è·Ÿéš
                 }
             }
         }
@@ -510,7 +614,7 @@ public class BuildManager : MonoBehaviour
         Vector3 moveDir = (newPos - selectedBlock.transform.position).normalized;
         float step = GetMoveStep(selectedBlock, moveDir);
 
-        // ¸´ÖÆÊ±¶ÔÆëµ½²½³¤
+        // å¤åˆ¶æ—¶å¯¹é½åˆ°æ­¥é•¿
         newPos = selectedBlock.transform.position + moveDir * step;
 
         DeselectBlock();
@@ -522,7 +626,7 @@ public class BuildManager : MonoBehaviour
 
     void HandleBuildingPreview()
     {
-        // Ä¿±êÔ¤ÖÆÌå
+        // ç›®æ ‡é¢„åˆ¶ä½“
         GameObject prefab = Resources.Load<GameObject>(currentBlockResourcePath);
         Block prefabBlock = prefab.GetComponent<Block>();
 
@@ -539,7 +643,7 @@ public class BuildManager : MonoBehaviour
             Block block = hit.collider.GetComponentInParent<Block>();
             if (block != null)
             {
-                // ÕÒ×î½üµÄ connector
+                // æ‰¾æœ€è¿‘çš„ connector
                 float minDist = float.MaxValue;
                 Connector nearest = null;
 
@@ -562,7 +666,7 @@ public class BuildManager : MonoBehaviour
                 {
                     hoveredConnector = nearest;
 
-                    // Éú³É»ò¸üĞÂ Ghost
+                    // ç”Ÿæˆæˆ–æ›´æ–° Ghost
                     if (currentGhost == null)
                     {
                         currentGhost = Instantiate(prefab);
@@ -573,7 +677,7 @@ public class BuildManager : MonoBehaviour
                         }
                     }
 
-                    // ¼ÆËã Snap ºóµÄÎ»ÖÃ
+                    // è®¡ç®— Snap åçš„ä½ç½®
                     rawPos = nearestWorldPos + nearestNormal * 0.5f;
                     snappedPos = SnapCenterByMinCorner(rawPos, block.transform.rotation, prefabBlock);
 
@@ -612,7 +716,7 @@ public class BuildManager : MonoBehaviour
                     renderer.material.color = isBlocked ? new Color(1, 0, 0, 0.5f) : new Color(0, 1, 0, 0.5f);
             }
 
-            // Êó±ê×ó¼üµã»÷ ¡ú ÕæÕıÉú³É·½¿é
+            // é¼ æ ‡å·¦é”®ç‚¹å‡» â†’ çœŸæ­£ç”Ÿæˆæ–¹å—
             if (Mouse.current.leftButton.wasPressedThisFrame && !isBlocked)
             {
                 CreateBlock(prefab, currentBlockResourcePath, currentGhost.transform.position, currentGhost.transform.rotation);
@@ -623,15 +727,22 @@ public class BuildManager : MonoBehaviour
 
     public void CreateBlock(GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot)
     {
+        if (!CanCreateBlock(prefab, out string reason))
+        {
+            Debug.LogWarning(reason);
+            return;
+        }
+
         if (prefab != null)
         {
             GameObject obj = Instantiate(prefab, pos, rot);
             obj.transform.parent = blocksParent;
             Block block = obj.GetComponent<Block>();
             block.resourcePath = resourcePath;
+            ApplyBlockBuildDefaults(block);
             SaveBlock(block);
 
-            // ¼ÇÂ¼µ½ Undo Õ»
+            // è®°å½•åˆ° Undo æ ˆ
             var action = new CreateBlockAction(block);
             ActionManager.instance.Push(action);
         }
@@ -645,21 +756,28 @@ public class BuildManager : MonoBehaviour
     {
         if (selectedBlock == null) return;
 
+        if (selectedBlock.GetComponent<Cockpit>() != null && CountCockpitsInCurrentConstruct() <= 1)
+        {
+            Debug.LogWarning("Cannot delete the last Cockpit. A modular unit must have exactly one Cockpit.");
+            return;
+        }
+
         string id = selectedBlock.GetInstanceID().ToString();
 
         RemoveBlock(selectedBlock);
         var action = new DeleteBlockAction(selectedBlock);
         ActionManager.instance.Push(action);
 
-        action.Redo(); // Ö´ĞĞÉ¾³ı
+        action.Redo(); // æ‰§è¡Œåˆ é™¤
 
-        // 4. Èç¹ûÉ¾³ıµÄÊÇµ±Ç°Ñ¡ÖĞµÄ·½¿é£¬Çå¿ÕÑ¡ÖĞ×´Ì¬
+        // 4. å¦‚æœåˆ é™¤çš„æ˜¯å½“å‰é€‰ä¸­çš„æ–¹å—ï¼Œæ¸…ç©ºé€‰ä¸­çŠ¶æ€
         DeselectBlock();
     }
 
     public void SaveBlock(Block block)
     {
         lastSaveBlock = block;
+        ApplyBlockBuildDefaults(block);
         BlockData data = new BlockData(block);
 
         int index = SaveManager.instance.cachedData.blocks.FindIndex(b => b.id == data.id);
@@ -681,7 +799,7 @@ public class BuildManager : MonoBehaviour
             transform.position,
             new Vector3(block.x * 2, block.y * 2, block.z * 2),
             transform.rotation,
-            blockLayer              // Ö»¼ì²â·½¿é²ã
+            blockLayer              // åªæ£€æµ‹æ–¹å—å±‚
         );
 
         foreach (var hit in hits)
@@ -735,35 +853,34 @@ public class BuildManager : MonoBehaviour
 
         if (blocksParent != null)
         {
-            Destroy(blocksParent);
+            Destroy(blocksParent.gameObject);
         }
 
         SaveManager.instance.blocks.Clear();
 
-        if (currentSaveName == String.Empty && SaveManager.instance.saves.Count > 0)
+        if (!enemyBlueprintBuildMode && currentSaveName == String.Empty && SaveManager.instance.saves.Count > 0)
         {
             currentSaveName = SaveManager.instance.saves[0];
         }
 
         GameObject gameObj = Instantiate(blocksParentPrefab);
-        gameObj.name = currentSaveName;
+        gameObj.name = CurrentBuildName;
         blocksParent = gameObj.transform;
         PlayManager.instance.blocksParent = blocksParent;
 
         blocksParent.GetComponent<Rigidbody>().isKinematic = true;
 
-        //if (!File.Exists(savePath))
-        //{
-        //    Debug.Log($"Ã»ÓĞÔÚ{savePath}ÕÒµ½±£´æÎÄ¼ş£¬Ìø¹ı¼ÓÔØ¡£");
-        //    return;
-        //}
+        if (!File.Exists(savePath))
+        {
+            File.WriteAllText(savePath, JsonUtility.ToJson(new BlockDataList(), true));
+        }
 
         string json = File.ReadAllText(savePath);
         SaveManager.instance.cachedData = JsonUtility.FromJson<BlockDataList>(json);
 
         if (SaveManager.instance.cachedData == null || SaveManager.instance.cachedData.blocks == null)
         {
-            Debug.Log("±£´æÎÄ¼şÎª¿Õ»òËğ»µ¡£");
+            Debug.Log("ä¿å­˜æ–‡ä»¶ä¸ºç©ºæˆ–æŸåã€‚");
             return;
         }
 
@@ -774,11 +891,11 @@ public class BuildManager : MonoBehaviour
         foreach (var data in SaveManager.instance.cachedData.blocks)
         {
             i++;
-            // ´Ó Resources Ä¿Â¼¼ÓÔØ prefab
+            // ä» Resources ç›®å½•åŠ è½½ prefab
             GameObject prefab = Resources.Load<GameObject>(ConvertToResourcesPath(data.resourcePath));
             if (prefab == null)
             {
-                Debug.LogWarning($"µÚ{i}¸ö·½¿é ÕÒ²»µ½×ÊÔ´Â·¾¶: {data.resourcePath}");
+                Debug.LogWarning($"ç¬¬{i}ä¸ªæ–¹å— æ‰¾ä¸åˆ°èµ„æºè·¯å¾„: {data.resourcePath}");
                 unloadIds.Add(data.id);
                 failCount++;
                 continue;
@@ -793,7 +910,8 @@ public class BuildManager : MonoBehaviour
                 block.y = data.y;
                 block.z = data.z;
                 block.resourcePath = data.resourcePath;
-                block.uniqueId = data.id; // ±£³ÖÎ¨Ò» ID Ò»ÖÂ
+                block.uniqueId = data.id; // ä¿æŒå”¯ä¸€ ID ä¸€è‡´
+                ApplyBlockBuildDefaults(block);
                 SaveManager.instance.blocks.Add(block);
                 sucessCount++;
             }
@@ -825,7 +943,7 @@ public class BuildManager : MonoBehaviour
 
         double time1 = Time.timeAsDouble;
 
-        Debug.Log($"¼ÓÔØ{savePath}Íê³É£¬ºÄÊ±{time1 - time0}s£¬¹²{SaveManager.instance.cachedData.blocks.Count}¸ö·½¿é, »Ö¸´³É¹¦{sucessCount}¸ö·½¿é£¬»Ö¸´Ê§°Ü{failCount}¸ö·½¿é");
+        Debug.Log($"åŠ è½½{savePath}å®Œæˆï¼Œè€—æ—¶{time1 - time0}sï¼Œå…±{SaveManager.instance.cachedData.blocks.Count}ä¸ªæ–¹å—, æ¢å¤æˆåŠŸ{sucessCount}ä¸ªæ–¹å—ï¼Œæ¢å¤å¤±è´¥{failCount}ä¸ªæ–¹å—");
 
         Camera.main.GetComponent<CameraController>().FocusCameraOnBlock(blocksParent.gameObject);
     }
@@ -846,17 +964,16 @@ public class BuildManager : MonoBehaviour
     {
         string cockpitResourcePath = ConvertToResourcesPath("Assets/Resources/Blocks/Cockpit.prefab");
         GameObject prefab = Resources.Load<GameObject>(cockpitResourcePath);
-        Block prefabBlock = prefab.GetComponent<Block>();
         CreateBlock(prefab, cockpitResourcePath, Vector3.zero, Quaternion.identity);
     }
 
-    // Öá¶ÔÆë·½¿éµÄ¾«È·Îü¸½£ºÏÈ¶ÔÆë×îĞ¡½Ç£¬ÔÙ»¹Ô­ÖĞĞÄ
+    // è½´å¯¹é½æ–¹å—çš„ç²¾ç¡®å¸é™„ï¼šå…ˆå¯¹é½æœ€å°è§’ï¼Œå†è¿˜åŸä¸­å¿ƒ
     public Vector3 SnapCenterByMinCorner(Vector3 targetCenter, Quaternion targetRotation, Block b)
     {
-        // ·½¿éµÄ¾Ö²¿°ë³ß´ç£¨²»º¬Ğı×ª£©
+        // æ–¹å—çš„å±€éƒ¨åŠå°ºå¯¸ï¼ˆä¸å«æ—‹è½¬ï¼‰
         Vector3 halfSize = new Vector3(b.x * gridSize, b.y * gridSize, b.z * gridSize) * 0.5f;
 
-        // ¼ÆËãĞı×ªºóµÄ 8 ¸ö¶¥µã
+        // è®¡ç®—æ—‹è½¬åçš„ 8 ä¸ªé¡¶ç‚¹
         Vector3[] corners = new Vector3[8];
         int i = 0;
         for (int xi = -1; xi <= 1; xi += 2)
@@ -871,7 +988,7 @@ public class BuildManager : MonoBehaviour
             }
         }
 
-        // µÃµ½ AABB µÄ min/max
+        // å¾—åˆ° AABB çš„ min/max
         Vector3 min = corners[0];
         Vector3 max = corners[0];
         foreach (var c in corners)
@@ -880,15 +997,15 @@ public class BuildManager : MonoBehaviour
             max = Vector3.Max(max, c);
         }
 
-        // ½« min ¶ÔÆëµ½Íø¸ñ
+        // å°† min å¯¹é½åˆ°ç½‘æ ¼
         Vector3 snappedMin = new Vector3(
             Mathf.Round((min.x - gridOrigin.x) / gridSize) * gridSize + gridOrigin.x,
             Mathf.Round((min.y - gridOrigin.y) / gridSize) * gridSize + gridOrigin.y,
             Mathf.Round((min.z - gridOrigin.z) / gridSize) * gridSize + gridOrigin.z
         );
 
-        // ĞÂÖĞĞÄ = snappedMin + °ë³ß´ç (ÒªÔÚĞı×ª¿Õ¼äÀïËã)
-        Vector3 offset = targetRotation * halfSize; // °ë³ß´çÔÚĞı×ªºóµÄÆ«ÒÆ
+        // æ–°ä¸­å¿ƒ = snappedMin + åŠå°ºå¯¸ (è¦åœ¨æ—‹è½¬ç©ºé—´é‡Œç®—)
+        Vector3 offset = targetRotation * halfSize; // åŠå°ºå¯¸åœ¨æ—‹è½¬åçš„åç§»
         Vector3 snappedCenter = snappedMin + (max - min) * 0.5f;
 
         return snappedCenter;
@@ -897,15 +1014,15 @@ public class BuildManager : MonoBehaviour
 
     bool IsBlocked(Vector3 targetCenter, Quaternion targetRotation, Block block)
     {
-        // ·½¿éµÄ°ë³ß´ç
+        // æ–¹å—çš„åŠå°ºå¯¸
         Vector3 halfExtents = new Vector3(block.x, block.y, block.z) * 0.5f;
 
-        // ¼ì²â·¶Î§£¨Ä¿±êÎ»ÖÃ + °ë³ß´ç£©
+        // æ£€æµ‹èŒƒå›´ï¼ˆç›®æ ‡ä½ç½® + åŠå°ºå¯¸ï¼‰
         Collider[] hits = Physics.OverlapBox(
             targetCenter,
-            halfExtents,    // ÉÔÎ¢ËõĞ¡£¬±ÜÃâ±ß½ç¸¡µãÎó²î
+            halfExtents,    // ç¨å¾®ç¼©å°ï¼Œé¿å…è¾¹ç•Œæµ®ç‚¹è¯¯å·®
             targetRotation,
-            blockLayer              // Ö»¼ì²â·½¿é²ã
+            blockLayer              // åªæ£€æµ‹æ–¹å—å±‚
         );
 
         foreach (var hit in hits)
@@ -913,8 +1030,8 @@ public class BuildManager : MonoBehaviour
             Block other = hit.GetComponentInParent<Block>();
             if (other != null && other != block)
             {
-                Debug.Log($"±»{other}×èµ²");
-                return true; // ÓĞ±ğµÄ·½¿é ¡ú ×èµ²
+                Debug.Log($"è¢«{other}é˜»æŒ¡");
+                return true; // æœ‰åˆ«çš„æ–¹å— â†’ é˜»æŒ¡
             }
         }
         return false;
@@ -922,21 +1039,21 @@ public class BuildManager : MonoBehaviour
 
     float GetMoveStep(Block block, Vector3 moveDir)
     {
-        // ·½¿éµÄ¾Ö²¿°ë³ß´ç£¨²»¿¼ÂÇĞı×ª£©
+        // æ–¹å—çš„å±€éƒ¨åŠå°ºå¯¸ï¼ˆä¸è€ƒè™‘æ—‹è½¬ï¼‰
         Vector3 halfSize = new Vector3(block.x, block.y, block.z) * gridSize * 0.5f;
 
-        // ·½¿éĞı×ª
+        // æ–¹å—æ—‹è½¬
         Quaternion rot = block.transform.rotation;
 
-        // È¡Ğı×ªºó¾Ö²¿×ø±êÖá
+        // å–æ—‹è½¬åå±€éƒ¨åæ ‡è½´
         Vector3 right = rot * Vector3.right;
         Vector3 up = rot * Vector3.up;
         Vector3 forward = rot * Vector3.forward;
 
-        // ÒÆ¶¯·½Ïò£¨¹éÒ»»¯£©
+        // ç§»åŠ¨æ–¹å‘ï¼ˆå½’ä¸€åŒ–ï¼‰
         Vector3 dir = moveDir.normalized;
 
-        // ÔÚÕâ¸ö·½ÏòÉÏµÄ¡°Í¶Ó°ºñ¶È¡± = ¸÷Öáºñ¶ÈÔÚ dir ÉÏµÄ·ÖÁ¿¾ø¶ÔÖµ
+        // åœ¨è¿™ä¸ªæ–¹å‘ä¸Šçš„â€œæŠ•å½±åšåº¦â€ = å„è½´åšåº¦åœ¨ dir ä¸Šçš„åˆ†é‡ç»å¯¹å€¼
         float step =
             Mathf.Abs(Vector3.Dot(dir, right)) * (halfSize.x * 2) +
             Mathf.Abs(Vector3.Dot(dir, up)) * (halfSize.y * 2) +
@@ -945,6 +1062,52 @@ public class BuildManager : MonoBehaviour
         return step;
     }
 
+
+    private bool CanCreateBlock(GameObject prefab, out string reason)
+    {
+        reason = string.Empty;
+
+        if (enemyBlueprintBuildMode && !DeveloperToolsAvailable)
+        {
+            reason = "Enemy blueprint build mode is developer-only.";
+            return false;
+        }
+
+        if (prefab == null)
+        {
+            reason = "Prefab is missing.";
+            return false;
+        }
+
+        if (prefab.GetComponent<Cockpit>() != null && CountCockpitsInCurrentConstruct() >= 1)
+        {
+            reason = "Cannot place another Cockpit. A modular unit must have exactly one Cockpit.";
+            return false;
+        }
+
+        return true;
+    }
+
+    public void ApplyBlockBuildDefaults(Block block)
+    {
+        if (block == null) return;
+
+        Cockpit cockpit = block.GetComponent<Cockpit>();
+        if (cockpit != null)
+        {
+            cockpit.faction = CurrentBuildFaction;
+        }
+    }
+
+    private int CountCockpitsInCurrentConstruct()
+    {
+        if (blocksParent == null)
+        {
+            return 0;
+        }
+
+        return blocksParent.GetComponentsInChildren<Cockpit>(true).Length;
+    }
 
     public static string ConvertToResourcesPath(string fullPath)
     {
@@ -985,12 +1148,12 @@ public class BlockData
         z = block.z;
 
         var t = block.transform;
-        // Ç¿ÖÆ¶ÔÆëµ½0.5µÄ±¶Êı
+        // å¼ºåˆ¶å¯¹é½åˆ°0.5çš„å€æ•°
         posX = Mathf.Round(t.position.x * 2) / 2f;
         posY = Mathf.Round(t.position.y * 2) / 2f;
         posZ = Mathf.Round(t.position.z * 2) / 2f;
 
-        // ½«Ğı×ª¶ÔÆëµ½90¶ÈµÄ±¶Êı
+        // å°†æ—‹è½¬å¯¹é½åˆ°90åº¦çš„å€æ•°
         Vector3 euler = t.rotation.eulerAngles;
         euler.x = Mathf.Round(euler.x / 90) * 90;
         euler.y = Mathf.Round(euler.y / 90) * 90;

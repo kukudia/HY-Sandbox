@@ -41,11 +41,17 @@ public class CreateBlockAction : IBlockAction
             if (prefab != null)
             {
                 createdObject = Object.Instantiate(prefab, pos, rot);
+                if (BuildManager.instance.blocksParent != null)
+                {
+                    createdObject.transform.SetParent(BuildManager.instance.blocksParent);
+                }
+
                 Block block = createdObject.GetComponent<Block>();
                 block.x = x;
                 block.y = y;
                 block.z = z;
                 block.resourcePath = resourcePath;
+                BuildManager.instance.ApplyBlockBuildDefaults(block);
                 BuildManager.instance.SaveBlock(block);
             }
         }

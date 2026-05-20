@@ -1,7 +1,5 @@
-using System.Collections.Generic;
+锘縰sing System.Collections.Generic;
 using System.Linq;
-using Unity.IO.Archive;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -13,14 +11,14 @@ public class PlayManager : MonoBehaviour
     public Transform blocksParent;
 
     public Camera mainCamera;
-    public LayerMask blockLayer;   // 方块所在的层
+    public LayerMask blockLayer;
 
     private Material originalMaterial;
     private Renderer selectedRenderer;
     public Material highlightMaterial;
 
     public Block selectedBlock;
-    public List<ControlUnit> allControlUnits = new List<ControlUnit>(); // 新增列表
+    public List<ControlUnit> allControlUnits = new List<ControlUnit>();
 
     public float lastHeight;
     public float currentHeight;
@@ -31,11 +29,8 @@ public class PlayManager : MonoBehaviour
     public bool showConnectors = true;
     public bool showLabel = true;
 
-    [Tooltip("是否在游戏运行时显示调试UI")]
+    [Tooltip("Show runtime debug UI")]
     public bool showUI = true;
-
-    private GUIStyle headerStyle; // GUI标题样式
-    private GUIStyle labelStyle;  // GUI标签样式
 
     private void Awake()
     {
@@ -44,26 +39,32 @@ public class PlayManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (playMode)
+        if (!playMode) return;
+
+        if (blocksParent == null)
         {
-            if (blocksParent == null)
-            {
-                MainUIPanels.instance.PlayEnd();
-            }
-
-            if (Keyboard.current.bKey.wasPressedThisFrame)
-            {
-                lockView = !lockView;
-                SetPlayMode();
-            }
-
-            HandleSelection();
-            CalculateVelocity();
+            MainUIPanels.instance.PlayEnd();
+            return;
         }
+
+        if (Keyboard.current.bKey.wasPressedThisFrame)
+        {
+            lockView = !lockView;
+            SetPlayMode();
+        }
+
+        HandleSelection();
+        CalculateVelocity();
     }
 
     public void PlayStart()
     {
+        if (!CanStartPlay(out string reason))
+        {
+            Debug.LogWarning(reason);
+            return;
+        }
+
         ControlUnit controlUnit = BuildManager.instance.blocksParent.GetComponent<ControlUnit>();
         RefreshGroup(controlUnit);
 
@@ -75,50 +76,78 @@ public class PlayManager : MonoBehaviour
         playMode = true;
     }
 
+    public bool CanStartPlay(out string reason)
+    {
+        reason = string.Empty;
+
+        if (BuildManager.instance == null || BuildManager.instance.blocksParent == null)
+        {
+            reason = "Cannot start play mode without a loaded construct.";
+            return false;
+        }
+
+        if (BuildManager.instance.enemyBlueprintBuildMode)
+        {
+            reason = "Cannot start player play mode while editing an enemy blueprint.";
+            return false;
+        }
+
+        if (!ModularUnitValidator.TryGetSingleCockpit(BuildManager.instance.blocksParent, out Cockpit cockpit, out reason))
+        {
+            return false;
+        }
+
+        if (cockpit.faction != UnitFaction.Player)
+        {
+            reason = "The player construct must contain exactly one Player Cockpit.";
+            return false;
+        }
+
+        return true;
+    }
+
     public void RefreshGroup(ControlUnit unit)
     {
+        if (unit == null) return;
+
         List<Block> blocks = unit.GetComponentsInChildren<Block>().ToList();
-        //blocks.RemoveAll(item => item == null);
         if (blocks.Count > 1)
         {
             AssignBlocksToParentGroups(blocks);
-            //unit.RefreshChildren();
         }
 
-        foreach (ControlUnit controlUnit in allControlUnits)
+        foreach (ControlUnit controlUnit in allControlUnits.ToArray())
         {
-            controlUnit.RefreshChildren();
+            if (controlUnit != null)
+            {
+                controlUnit.RefreshChildren();
+            }
         }
 
         Debug.Log($"Find {allControlUnits.Count} controls");
     }
 
-    void SetPlayMode()
+    private void SetPlayMode()
     {
         Cursor.lockState = lockView ? CursorLockMode.Confined : CursorLockMode.Locked;
 
-        if (!lockView)
+        if (!lockView && selectedBlock != null)
         {
-            if (selectedBlock != null)
-            {
-                DeselectBlock();
-            }
+            DeselectBlock();
         }
     }
 
-    void CalculateVelocity()
+    private void CalculateVelocity()
     {
         currentHeight = blocksParent.position.y;
-        // 计算垂直速度
         verticalVelocity = (blocksParent.position.y - lastHeight) / Time.fixedDeltaTime;
-
         lastHeight = currentHeight;
 
         Rigidbody rb = blocksParent.GetComponent<Rigidbody>();
-        horizontalVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z).magnitude;
+        horizontalVelocity = rb != null ? new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z).magnitude : 0f;
     }
 
-    void HandleSelection()
+    private void HandleSelection()
     {
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
         {
@@ -144,15 +173,11 @@ public class PlayManager : MonoBehaviour
                         SelectBlock(block);
                     }
                 }
-                else
-                {
-                    //DeselectBlock();
-                }
             }
         }
     }
 
-    void SelectBlock(Block block)
+    private void SelectBlock(Block block)
     {
         if (selectedBlock == block) return;
 
@@ -187,7 +212,6 @@ public class PlayManager : MonoBehaviour
         selectedRenderer = null;
     }
 
-    //必须从MainUIPanel调用
     public void PlayEnd()
     {
         List<ControlUnit> controlUnits = Object.FindObjectsByType<ControlUnit>(FindObjectsSortMode.None).ToList();
@@ -201,62 +225,73 @@ public class PlayManager : MonoBehaviour
         GameManager.Init();
     }
 
-    // 为每个分组创建父物体并分配Block
     public void AssignBlocksToParentGroups(List<Block> blocks)
     {
-        // 获取所有Block的分组
         List<List<Block>> groups = BlockGroupManager.GroupBlocks(blocks);
         GameObject parentPrefab = Resources.Load<GameObject>("Prefabs/BlocksParent");
         int groupIndex = 1;
+
         foreach (List<Block> group in groups)
         {
-            // 为每个组创建父物体
             GameObject groupParent = Instantiate(parentPrefab);
             groupParent.name = $"Group_{groupIndex++}";
             groupParent.transform.position = BlockGroupManager.CalculateGroupCenter(group);
 
-            float mass = 0;
-            // 将所有Block移动到该父物体下
+            float mass = 0f;
+            ControlUnit groupControl = groupParent.GetComponent<ControlUnit>();
+
             foreach (Block block in group)
             {
-                if (block.GetComponent<Cockpit>())
+                Cockpit cockpit = block.GetComponent<Cockpit>();
+                if (cockpit != null)
                 {
-                    groupParent.name = SaveManager.instance.currentSaveName;
-                    blocksParent = groupParent.transform;
-                    BuildManager.instance.blocksParent = groupParent.transform;
-                    Debug.Log($"Change new block parent {blocksParent}.");
+                    groupControl.faction = cockpit.faction;
+
+                    if (cockpit.faction == UnitFaction.Player)
+                    {
+                        groupParent.name = SaveManager.instance.currentSaveName;
+                        blocksParent = groupParent.transform;
+                        BuildManager.instance.blocksParent = groupParent.transform;
+                        Debug.Log($"Change new block parent {blocksParent}.");
+                    }
                 }
 
                 block.transform.SetParent(groupParent.transform);
-
                 mass += block.mass;
-                block.showConnectors = PlayManager.instance.showConnectors;
-                block.showLabel = PlayManager.instance.showLabel;
+                block.showConnectors = showConnectors;
+                block.showLabel = showLabel;
             }
 
             Debug.Log($"{groupParent.name} mass: {mass}");
 
             Rigidbody rb = groupParent.GetComponent<Rigidbody>();
             rb.mass = mass;
-            rb.linearDamping = 0.5f;      // 增加空气阻力，减缓水平漂移
-            rb.angularDamping = 2f; // 增加角阻力，抑制小幅旋转
-
-            //rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+            rb.linearDamping = 0.5f;
+            rb.angularDamping = 2f;
             rb.isKinematic = false;
+
+            groupControl.RefreshChildren();
         }
 
-        Camera.main.GetComponent<CameraController>().playerBody = blocksParent;
+        if (blocksParent != null)
+        {
+            Camera.main.GetComponent<CameraController>().playerBody = blocksParent;
+        }
     }
 
     public void RegisterControlUnit(ControlUnit unit)
     {
         if (!allControlUnits.Contains(unit))
+        {
             allControlUnits.Add(unit);
+        }
     }
 
     public void UnregisterControlUnit(ControlUnit unit)
     {
         if (allControlUnits.Contains(unit))
+        {
             allControlUnits.Remove(unit);
+        }
     }
 }

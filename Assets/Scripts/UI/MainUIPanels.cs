@@ -1,6 +1,6 @@
+锘縰sing System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public class MainUIPanels : MonoBehaviour
 {
@@ -9,23 +9,26 @@ public class MainUIPanels : MonoBehaviour
     public GameObject playPanel;
     public GameObject createPanel;
     public GameObject deletePanel;
-    public InputField inputName; // 输入框
-    public float fadeDuration = 0.3f; // 淡入淡出时长
+    public InputField inputName;
+    public float fadeDuration = 0.3f;
 
     private void Awake()
     {
         instance = this;
     }
 
-    // 通用淡入淡出方法
     private IEnumerator Fade(GameObject panel, bool show)
     {
         if (show)
+        {
             panel.SetActive(true);
+        }
 
         CanvasGroup cg = panel.GetComponent<CanvasGroup>();
         if (cg == null)
+        {
             cg = panel.AddComponent<CanvasGroup>();
+        }
 
         float start = cg.alpha;
         float end = show ? 1f : 0f;
@@ -36,7 +39,7 @@ public class MainUIPanels : MonoBehaviour
 
         while (t < fadeDuration)
         {
-            t += Time.unscaledDeltaTime; // UI 用 unscaledDeltaTime 更自然
+            t += Time.unscaledDeltaTime;
             cg.alpha = Mathf.Lerp(start, end, t / fadeDuration);
             yield return null;
         }
@@ -44,7 +47,9 @@ public class MainUIPanels : MonoBehaviour
         cg.alpha = end;
 
         if (!show)
+        {
             panel.SetActive(false);
+        }
     }
 
     public void ShowCreatePanel()
@@ -82,20 +87,20 @@ public class MainUIPanels : MonoBehaviour
 
     public void OnConfirmCreate()
     {
-        string name = inputName.text.Trim();
-        if (!string.IsNullOrEmpty(name))
+        string saveName = inputName.text.Trim();
+        if (!string.IsNullOrEmpty(saveName))
         {
-            SaveManager.instance.CreateNewSave(name);
-            SaveManager.instance.LoadSave(name);
+            SaveManager.instance.CreateNewSave(saveName);
+            SaveManager.instance.LoadSave(saveName);
             HideCreatePanel();
         }
         else
         {
-            Debug.LogWarning("存档名字不能为空");
+            Debug.LogWarning("Save name cannot be empty.");
         }
     }
 
-    void OnConfirmDelete(string save)
+    private void OnConfirmDelete(string save)
     {
         SaveManager.instance.DeleteSave(save);
         if (!string.IsNullOrEmpty(SaveManager.instance.currentSaveName))
@@ -107,6 +112,12 @@ public class MainUIPanels : MonoBehaviour
 
     public void PlayStart()
     {
+        if (!PlayManager.instance.CanStartPlay(out string reason))
+        {
+            Debug.LogWarning(reason);
+            return;
+        }
+
         StartCoroutine(Fade(buildPanel, false));
         StartCoroutine(Fade(playPanel, true));
         PlayManager.instance.PlayStart();
