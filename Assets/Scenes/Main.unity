@@ -683,6 +683,8 @@ MonoBehaviour:
   currentGhost: {fileID: 0}
   currentBlockResourcePath: 
   currentSaveName: 
+  currentEnemyBlueprintName: default_enemy
+  enemyBlueprintBuildMode: 0
   hoveredConnector:
     name: 
     canConnect: 0
@@ -2339,6 +2341,61 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 440634128}
   m_CullTransparentMesh: 1
+--- !u!1 &464527969
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 464527970}
+  - component: {fileID: 464527971}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &464527970
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 464527969}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1636278286}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &464527971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 464527969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81f2df6c35da4d33894981decc21c30b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ModularEnemySpawner
+  blocksParentPrefab: {fileID: 0}
+  spawnOnStart: 1
+  useSavedBlueprint: 1
+  enemyBlueprintName: default_enemy
+  blueprint:
+  - blockResourcePath: Blocks/Cockpit
+    localPosition: {x: 0, y: 0, z: 0}
+    localEulerAngles: {x: 0, y: 0, z: 0}
+  - blockResourcePath: Blocks/Turret
+    localPosition: {x: 0, y: 1.5, z: 0}
+    localEulerAngles: {x: 0, y: 0, z: 0}
 --- !u!1 &491055021
 GameObject:
   m_ObjectHideFlags: 0
@@ -6508,6 +6565,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentSaveName: 
   saves: []
+  enemyBlueprints: []
   cachedData:
     blocks: []
   blocks: []
@@ -7060,6 +7118,7 @@ Transform:
   - {fileID: 2013624195}
   - {fileID: 247660642}
   - {fileID: 700819258}
+  - {fileID: 464527970}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1643337840

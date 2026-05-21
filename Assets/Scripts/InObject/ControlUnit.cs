@@ -92,12 +92,12 @@ public class ControlUnit : MonoBehaviour
         else
         {
             movementInput = Vector3.zero;
-            Debug.LogWarning($"{name} requires exactly one Cockpit, found {cockpits.Length}.");
+            //Debug.LogWarning($"{name} requires exactly one Cockpit, found {cockpits.Length}.");
         }
 
         if (hoverFlightController == null)
         {
-            Debug.LogWarning($"Cannot find HoverFlightController in {gameObject}");
+            //Debug.LogWarning($"Cannot find HoverFlightController in {gameObject}");
         }
 
         if (hoverFlightController != null && hoverThrusters.Length > 0 && hasValidCockpit)
