@@ -90,8 +90,17 @@ public class MainUIPanels : MonoBehaviour
         string saveName = inputName.text.Trim();
         if (!string.IsNullOrEmpty(saveName))
         {
-            SaveManager.instance.CreateNewSave(saveName);
-            SaveManager.instance.LoadSave(saveName);
+            if (BuildManager.instance != null && BuildManager.instance.enemyBlueprintBuildMode)
+            {
+                SaveManager.instance.CreateNewEnemyBlueprint(saveName);
+                SaveManager.instance.LoadSave(saveName);
+            }
+            else
+            {
+                SaveManager.instance.CreateNewSave(saveName);
+                SaveManager.instance.LoadSave(saveName);
+            }
+            
             HideCreatePanel();
         }
         else
@@ -102,7 +111,15 @@ public class MainUIPanels : MonoBehaviour
 
     private void OnConfirmDelete(string save)
     {
-        SaveManager.instance.DeleteSave(save);
+        if (BuildManager.instance != null && BuildManager.instance.enemyBlueprintBuildMode)
+        {
+            SaveManager.instance.DeleteEnemyBlueprint(save);
+        }
+        else
+        {
+            SaveManager.instance.DeleteSave(save);
+        }
+
         if (!string.IsNullOrEmpty(SaveManager.instance.currentSaveName))
         {
             SaveManager.instance.LoadSave(SaveManager.instance.currentSaveName);

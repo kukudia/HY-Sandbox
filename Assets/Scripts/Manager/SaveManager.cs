@@ -10,6 +10,7 @@ public class SaveManager : MonoBehaviour
     private string enemyBlueprintDirectory => Path.Combine(Application.persistentDataPath, "EnemyBlueprints");
 
     public string currentSaveName;
+    public string currentEnemyBlueprintName;
 
     public List<string> saves = new List<string>();
     public List<string> enemyBlueprints = new List<string>();
@@ -94,7 +95,7 @@ public class SaveManager : MonoBehaviour
 
     public void CreateNewEnemyBlueprint(string blueprintName)
     {
-        EnsureSaveDirectories();
+        currentEnemyBlueprintName = blueprintName;
         string path = GetEnemyBlueprintPath(blueprintName);
 
         if (!File.Exists(path))
@@ -131,6 +132,12 @@ public class SaveManager : MonoBehaviour
         Debug.Log($"Loaded save: {saveName}");
     }
 
+    public void LoadEnemyBlueprint(string blueprintName)
+    {
+        
+        Debug.Log($"Loaded enemy blueprint: {blueprintName}");
+    }
+
     public void DeleteSave(string saveName)
     {
         string path = GetSavePath(saveName);
@@ -138,6 +145,17 @@ public class SaveManager : MonoBehaviour
         {
             File.Delete(path);
             Debug.Log($"Deleted save: {saveName}");
+        }
+        SaveUIPanel.instance.RefreshList();
+    }
+
+    public void DeleteEnemyBlueprint(string blueprintName)
+    {
+        string path = GetEnemyBlueprintPath(blueprintName);
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+            Debug.Log($"Deleted enemy blueprint: {blueprintName}");
         }
         SaveUIPanel.instance.RefreshList();
     }
@@ -159,11 +177,11 @@ public class SaveManager : MonoBehaviour
         string path;
         if (BuildManager.instance != null && BuildManager.instance.enemyBlueprintBuildMode)
         {
-            path = SaveManager.instance.GetEnemyBlueprintPath(saveName);
+            path = GetEnemyBlueprintPath(saveName);
         }
         else
         {
-            path = SaveManager.instance.GetSavePath(saveName);
+            path = GetSavePath(saveName);
         }
 
         if (File.Exists(path))
