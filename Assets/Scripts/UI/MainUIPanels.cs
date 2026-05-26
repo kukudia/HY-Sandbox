@@ -133,10 +133,12 @@ public class MainUIPanels : MonoBehaviour
     public void EnterEnemyBlueprintBuildMode()
     {
         MainUIButtons.instance.playButton.gameObject.SetActive(false);
+        SaveUIPanel.instance.RefreshList();
     }
 
     public void ExitEnemyBlueprintBuildMode()
     {
         MainUIButtons.instance.playButton.gameObject.SetActive(true);
+        SaveUIPanel.instance.RefreshList();
     }
 }
