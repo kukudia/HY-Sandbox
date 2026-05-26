@@ -156,7 +156,16 @@ public class SaveManager : MonoBehaviour
 
     public string GetSaveFileSize(string saveName)
     {
-        string path = SaveManager.instance.GetSavePath(saveName);
+        string path;
+        if (BuildManager.instance != null && BuildManager.instance.enemyBlueprintBuildMode)
+        {
+            path = SaveManager.instance.GetEnemyBlueprintPath(saveName);
+        }
+        else
+        {
+            path = SaveManager.instance.GetSavePath(saveName);
+        }
+
         if (File.Exists(path))
         {
             long bytes = new FileInfo(path).Length;

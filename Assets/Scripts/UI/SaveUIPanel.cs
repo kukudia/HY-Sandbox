@@ -21,23 +21,48 @@ public class SaveUIPanel : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        SaveManager.instance.GetAllSaveNames();
-
-        if (SaveManager.instance.saves.Count > 0)
+        if (BuildManager.instance.enemyBlueprintBuildMode)
         {
-            foreach (string save in SaveManager.instance.saves)
+            SaveManager.instance.GetAllEnemyBlueprintNames();
+
+            if (SaveManager.instance.enemyBlueprints.Count > 0)
             {
-                GameObject obj = Instantiate(savePrefab, listParent);
+                foreach (string blueprint in SaveManager.instance.enemyBlueprints)
+                {
+                    GameObject obj = Instantiate(savePrefab, listParent);
 
-                Button savePrefabButton = obj.transform.Find("SavePrefabButton").GetComponent<Button>();
-                savePrefabButton.GetComponentInChildren<Text>().text = "\t" + save;
-                savePrefabButton.onClick.AddListener(() => OnSaveClicked(save));
+                    Button savePrefabButton = obj.transform.Find("SavePrefabButton").GetComponent<Button>();
+                    savePrefabButton.GetComponentInChildren<Text>().text = "\t" + blueprint;
+                    savePrefabButton.onClick.AddListener(() => OnEnemyBlueprintClicked(blueprint));
 
-                Button deleteButton = obj.transform.Find("DeleteSaveButton").GetComponent<Button>();
-                deleteButton.onClick.AddListener(() => MainUIPanels.instance.ShowDeletePanel(save));
+                    Button deleteButton = obj.transform.Find("DeleteSaveButton").GetComponent<Button>();
+                    deleteButton.onClick.AddListener(() => MainUIPanels.instance.ShowDeletePanel(blueprint));
 
-                Text saveSizeText = obj.transform.Find("Size").GetComponent<Text>();
-                saveSizeText.text = SaveManager.instance.GetSaveFileSize(save);
+                    Text saveSizeText = obj.transform.Find("Size").GetComponent<Text>();
+                    saveSizeText.text = SaveManager.instance.GetSaveFileSize(blueprint);
+                }
+            }
+        }
+        else
+        {
+            SaveManager.instance.GetAllSaveNames();
+
+            if (SaveManager.instance.saves.Count > 0)
+            {
+                foreach (string save in SaveManager.instance.saves)
+                {
+                    GameObject obj = Instantiate(savePrefab, listParent);
+
+                    Button savePrefabButton = obj.transform.Find("SavePrefabButton").GetComponent<Button>();
+                    savePrefabButton.GetComponentInChildren<Text>().text = "\t" + save;
+                    savePrefabButton.onClick.AddListener(() => OnSaveClicked(save));
+
+                    Button deleteButton = obj.transform.Find("DeleteSaveButton").GetComponent<Button>();
+                    deleteButton.onClick.AddListener(() => MainUIPanels.instance.ShowDeletePanel(save));
+
+                    Text saveSizeText = obj.transform.Find("Size").GetComponent<Text>();
+                    saveSizeText.text = SaveManager.instance.GetSaveFileSize(save);
+                }
             }
         }
     }
@@ -45,6 +70,11 @@ public class SaveUIPanel : MonoBehaviour
     private void OnSaveClicked(string saveName)
     {
         SaveManager.instance.LoadSave(saveName);
+    }
+
+    private void OnEnemyBlueprintClicked(string blueprintName)
+    {
+        BuildManager.instance.EnterEnemyBlueprintBuildMode(blueprintName);
     }
 
     //private void OnDeleteClicked(string saveName)
