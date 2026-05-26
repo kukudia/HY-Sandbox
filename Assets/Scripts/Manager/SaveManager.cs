@@ -134,7 +134,23 @@ public class SaveManager : MonoBehaviour
 
     public void LoadEnemyBlueprint(string blueprintName)
     {
-        
+        currentEnemyBlueprintName = blueprintName;
+
+        ControlUnit[] deleteObjs = Object.FindObjectsByType<ControlUnit>(FindObjectsSortMode.None);
+
+        foreach (ControlUnit obj in deleteObjs)
+        {
+            Destroy(obj.gameObject);
+        }
+
+        if (BuildManager.instance.blocksParent != null)
+        {
+            Destroy(BuildManager.instance.blocksParent.gameObject);
+        }
+
+        cachedData = new BlockDataList();
+        BuildManager.instance.EnterEnemyBlueprintBuildMode(blueprintName);
+
         Debug.Log($"Loaded enemy blueprint: {blueprintName}");
     }
 
