@@ -23,6 +23,7 @@ public class SaveUIPanel : MonoBehaviour
 
         if (BuildManager.instance.enemyBlueprintBuildMode)
         {
+            Debug.Log("Refreshing enemy blueprint list...");
             SaveManager.instance.GetAllEnemyBlueprintNames();
 
             if (SaveManager.instance.enemyBlueprints.Count > 0)
@@ -45,6 +46,7 @@ public class SaveUIPanel : MonoBehaviour
         }
         else
         {
+            Debug.Log("Refreshing save list...");
             SaveManager.instance.GetAllSaveNames();
 
             if (SaveManager.instance.saves.Count > 0)

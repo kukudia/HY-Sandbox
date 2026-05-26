@@ -63,7 +63,7 @@ public class SaveManager : MonoBehaviour
     public void GetAllEnemyBlueprintNames()
     {
         enemyBlueprints.Clear();
-        EnsureSaveDirectories();
+        //EnsureSaveDirectories();
 
         foreach (var file in Directory.GetFiles(enemyBlueprintDirectory, "*.json"))
         {

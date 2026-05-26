@@ -129,4 +129,14 @@ public class MainUIPanels : MonoBehaviour
         StartCoroutine(Fade(playPanel, false));
         StartCoroutine(Fade(buildPanel, true));
     }
+
+    public void EnterEnemyBlueprintBuildMode()
+    {
+        MainUIButtons.instance.playButton.gameObject.SetActive(false);
+    }
+
+    public void ExitEnemyBlueprintBuildMode()
+    {
+        MainUIButtons.instance.playButton.gameObject.SetActive(true);
+    }
 }

@@ -220,6 +220,8 @@ public class BuildManager : MonoBehaviour
         {
             ActionManager.instance.Clear();
         }
+
+        MainUIPanels.instance.EnterEnemyBlueprintBuildMode();
         SaveManager.instance.CreateNewEnemyBlueprint(currentEnemyBlueprintName);
         LoadAllBlocks();
         Debug.Log($"Entered enemy blueprint build mode: {currentEnemyBlueprintName}");
@@ -249,6 +251,7 @@ public class BuildManager : MonoBehaviour
             SaveManager.instance.LoadSave(currentSaveName);
         }
 
+        MainUIPanels.instance.ExitEnemyBlueprintBuildMode();
         Debug.Log("Exited enemy blueprint build mode.");
     }
 
