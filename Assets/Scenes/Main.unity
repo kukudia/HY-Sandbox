@@ -3041,7 +3041,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Confirm'
+  m_Text: Confirm
 --- !u!222 &601520656
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6564,6 +6564,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentSaveName: 
+  currentEnemyBlueprintName: 
   saves: []
   enemyBlueprints: []
   cachedData:

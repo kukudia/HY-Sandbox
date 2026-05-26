@@ -93,7 +93,7 @@ public class MainUIPanels : MonoBehaviour
             if (BuildManager.instance != null && BuildManager.instance.enemyBlueprintBuildMode)
             {
                 SaveManager.instance.CreateNewEnemyBlueprint(saveName);
-                SaveManager.instance.LoadSave(saveName);
+                SaveManager.instance.LoadEnemyBlueprint(saveName);
             }
             else
             {
