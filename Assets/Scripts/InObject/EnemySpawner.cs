@@ -6,6 +6,29 @@ public class EnemySpawner : MonoBehaviour
 {
     private void Start()
     {
+        // Delay spawning until PlayManager is ready and playMode starts
+        if (PlayManager.instance != null)
+        {
+            // Wait for playMode to start before spawning enemies
+            StartCoroutine(SpawnWhenPlayModeStarts());
+        }
+        else
+        {
+            Debug.LogWarning("PlayManager instance not found. Enemy spawning disabled.");
+        }
+    }
+
+    private System.Collections.IEnumerator SpawnWhenPlayModeStarts()
+    {
+        // Wait until playMode is active
+        while (!PlayManager.instance.playMode)
+        {
+            yield return null;
+        }
+
+        // Small delay to ensure everything is initialized
+        yield return new WaitForSeconds(0.1f);
+
         SpawnEnemy();
     }
 
@@ -114,6 +137,12 @@ public class EnemySpawner : MonoBehaviour
         {
             unit.faction = UnitFaction.Enemy;
             unit.RefreshChildren();
+            
+            // Register the enemy control unit with PlayManager
+            if (PlayManager.instance != null)
+            {
+                PlayManager.instance.RegisterControlUnit(unit);
+            }
         }
 
         Debug.Log($"Spawned enemy {unitObject.name} at {unitObject.transform} with {spawnedBlocks.Count} blocks and total mass {mass}.");
