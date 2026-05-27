@@ -10,7 +10,6 @@ public class EnemySpawner : MonoBehaviour
     // Pool of pre-spawned enemy templates (hidden in edit mode)
     private List<ControlUnit> enemyPool = new List<ControlUnit>();
     private bool isPoolingInitialized = false;
-    private bool isSpawningStarted = false;
     
     private float spawnTimer = 0f;
     
@@ -66,18 +65,6 @@ public class EnemySpawner : MonoBehaviour
         
         isPoolingInitialized = true;
         Debug.Log($"Enemy pool initialized with {enemyPool.Count} enemies.");
-    }
-    
-    private System.Collections.IEnumerator SpawnWhenPlayModeStarts()
-    {
-        // This method is kept for backward compatibility but no longer used
-        yield return null;
-    }
-    
-    private System.Collections.IEnumerator SpawnClonesPeriodically()
-    {
-        // This method is kept for backward compatibility but no longer used
-        yield return null;
     }
     
     /// <summary>

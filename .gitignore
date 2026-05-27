@@ -1,55 +1,65 @@
-# Compiled and build artifacts
-*.pyc
-__pycache__/
-*.o
-*.obj
+```
+# Build artifacts
 *.dll
-*.so
-*.a
-*.class
 *.exe
-*.out
+*.pdb
+*.unitypackage
+*.apk
+*.aab
+*.app
+*.deb
+*.dmg
+*.msi
+*.pkg
+*.rpm
+*.snap
 
-# Dependencies
-node_modules/
-venv/
-.venv/
+# Unity specific
+Library/
+Temp/
+Obj/
+Build/
+Builds/
+*.unityproj
+*.sln
+*.csproj
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.cache
+*.meta
+*.prefab
+*.a
+*.lib
+*.so
+*.dylib
+*.manifest
+
+# Logs
+*.log
+
+# Environment
 .env
 .env.local
 .env.*
 
-# Build directories
-dist/
-build/
-target/
-.gradle/
+# Dependencies
+node_modules/
+Packages/
 
-# Python specific
-*.pyc
-__pycache__/
-*.pyo
-*.pyd
-.Python
-*.so
-.Python
-*.egg-info/
-.eggs/
-.mypy_cache/
-.pytest_cache/
-.coverage
-coverage/
-htmlcov/
-
-# Logs and temp files
-*.log
-*.tmp
-*.swp
-*.swo
-
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# Editors
+# Editor
 .vscode/
 .idea/
+*.swp
+*.swo
+*.tmp
+
+# OS generated
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+.CFUserTextEncoding
+```
