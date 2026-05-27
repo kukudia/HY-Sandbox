@@ -10,23 +10,51 @@ public class EnemySpawner : MonoBehaviour
     // Pool of pre-spawned enemy templates (hidden in edit mode)
     private List<ControlUnit> enemyPool = new List<ControlUnit>();
     private bool isPoolingInitialized = false;
+    private bool isSpawningStarted = false;
     
     private void Start()
     {
-        // Initialize enemy pool in edit mode (not playMode)
-        if (PlayManager.instance != null && !PlayManager.instance.playMode)
+        // Initialize enemy pool
+        InitializeEnemyPool();
+        
+        // If in playMode, start spawning clones
+        if (PlayManager.instance != null && PlayManager.instance.playMode)
         {
-            InitializeEnemyPool();
+            StartSpawning();
         }
-        else if (PlayManager.instance != null)
-        {
-            // If somehow started in playMode, still initialize pool but don't spawn clones yet
-            InitializeEnemyPool();
-        }
-        else
+        else if (PlayManager.instance == null)
         {
             Debug.LogWarning("PlayManager instance not found. Enemy spawning disabled.");
         }
+    }
+    
+    private void OnEnable()
+    {
+        // Subscribe to play mode changes if needed
+        if (PlayManager.instance != null && PlayManager.instance.playMode && !isSpawningStarted && isPoolingInitialized)
+        {
+            StartSpawning();
+        }
+    }
+    
+    /// <summary>
+    /// Called when PlayManager starts play mode - used to trigger enemy spawning
+    /// </summary>
+    public void OnPlayModeStart()
+    {
+        if (!isSpawningStarted && isPoolingInitialized && enemyPool.Count > 0)
+        {
+            StartSpawning();
+        }
+    }
+    
+    private void StartSpawning()
+    {
+        if (isSpawningStarted) return;
+        
+        isSpawningStarted = true;
+        StartCoroutine(SpawnClonesPeriodically());
+        Debug.Log("Enemy spawning started.");
     }
     
     private void InitializeEnemyPool()
@@ -58,12 +86,6 @@ public class EnemySpawner : MonoBehaviour
         
         isPoolingInitialized = true;
         Debug.Log($"Enemy pool initialized with {enemyPool.Count} enemies.");
-        
-        // If already in playMode, start spawning clones immediately
-        if (PlayManager.instance != null && PlayManager.instance.playMode)
-        {
-            StartCoroutine(SpawnClonesPeriodically());
-        }
     }
     
     private System.Collections.IEnumerator SpawnWhenPlayModeStarts()

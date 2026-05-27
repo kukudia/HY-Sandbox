@@ -1,34 +1,91 @@
 ```
-# Build artifacts
-*.dll
-*.exe
-*.pdb
-*.unity3d
-Build/
+# Unity specific
 Library/
-obj/
 Temp/
+Obj/
+Build/
+Builds/
+*.unityproj
+*.sln
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.meta
+!Assets/**/.gitignore
+!Assets/**/.gitattributes
+*.log
+
+# Unity cache
+.vs/
+.vscode/
+
+# Build results
+[Bb]uild/
+[Bb]uilds/
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+Logs/
+MemoryCaptures/
+
+# Asset store tools
+AssetStoreTools*
+
+# Unity generated files
+*.unitypackage
+
+# User-specific settings
+Preferences/
+EditorUserSettings/
+*/Library/
+*/Temp/
+*/Obj/
+*/Build/
+*/Logs/
+*/MemoryCaptures/
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.opendb
+*.opendbx
+
+# Cache
+.cache/
+*.cache
+
+# Environment
+.env
+.env.local
+.env.*
 
 # Dependencies
 Packages/
-ProjectSettings/Packages/
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Logs
 *.log
 
-# User settings
-*.userprefs
-*.suo
-*.user
-.vs/
-.idea/
-
-# Configuration
-.env
-.env.local
-*.lock
+# Temp files
+*.tmp
+*.temp
+*.bak
+*.backup
+*.swp
+*.swo
 
 # OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+desktop.ini
 ```

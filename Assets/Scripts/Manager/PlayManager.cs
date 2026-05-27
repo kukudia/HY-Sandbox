@@ -74,6 +74,13 @@ public class PlayManager : MonoBehaviour
         BuildManager.instance.enabled = false;
 
         playMode = true;
+        
+        // Notify enemy spawners to start spawning
+        EnemySpawner[] spawners = FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None);
+        foreach (EnemySpawner spawner in spawners)
+        {
+            spawner.OnPlayModeStart();
+        }
     }
 
     public bool CanStartPlay(out string reason)
