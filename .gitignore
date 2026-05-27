@@ -1,91 +1,55 @@
-```
-# Unity specific
-Library/
-Temp/
-Obj/
-Build/
-Builds/
-*.unityproj
-*.sln
-*.user
-*.userprefs
-*.pidb
-*.booproj
-*.svd
-*.meta
-!Assets/**/.gitignore
-!Assets/**/.gitattributes
-*.log
+# Compiled and build artifacts
+*.pyc
+__pycache__/
+*.o
+*.obj
+*.dll
+*.so
+*.a
+*.class
+*.exe
+*.out
 
-# Unity cache
-.vs/
-.vscode/
-
-# Build results
-[Bb]uild/
-[Bb]uilds/
-[Ll]ibrary/
-[Tt]emp/
-[Oo]bj/
-Logs/
-MemoryCaptures/
-
-# Asset store tools
-AssetStoreTools*
-
-# Unity generated files
-*.unitypackage
-
-# User-specific settings
-Preferences/
-EditorUserSettings/
-*/Library/
-*/Temp/
-*/Obj/
-*/Build/
-*/Logs/
-*/MemoryCaptures/
-*.userprefs
-*.pidb
-*.booproj
-*.svd
-*.opendb
-*.opendbx
-
-# Cache
-.cache/
-*.cache
-
-# Environment
+# Dependencies
+node_modules/
+venv/
+.venv/
 .env
 .env.local
 .env.*
 
-# Dependencies
-Packages/
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Build directories
+dist/
+build/
+target/
+.gradle/
 
-# Logs
+# Python specific
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+*.so
+.Python
+*.egg-info/
+.eggs/
+.mypy_cache/
+.pytest_cache/
+.coverage
+coverage/
+htmlcov/
+
+# Logs and temp files
 *.log
-
-# Temp files
 *.tmp
-*.temp
-*.bak
-*.backup
 *.swp
 *.swo
 
 # OS generated files
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
-desktop.ini
-```
+
+# Editors
+.vscode/
+.idea/

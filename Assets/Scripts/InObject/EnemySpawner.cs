@@ -12,49 +12,29 @@ public class EnemySpawner : MonoBehaviour
     private bool isPoolingInitialized = false;
     private bool isSpawningStarted = false;
     
+    private float spawnTimer = 0f;
+    
     private void Start()
     {
         // Initialize enemy pool
         InitializeEnemyPool();
+    }
+    
+    private void Update()
+    {
+        // Only spawn when in playMode and pool is initialized
+        if (!PlayManager.instance.playMode || !isPoolingInitialized || enemyPool.Count == 0)
+        {
+            return;
+        }
         
-        // If in playMode, start spawning clones
-        if (PlayManager.instance != null && PlayManager.instance.playMode)
+        // Accumulate time and spawn when interval is reached
+        spawnTimer += Time.deltaTime;
+        if (spawnTimer >= spawnInterval)
         {
-            StartSpawning();
+            spawnTimer = 0f;
+            SpawnRandomEnemyClone();
         }
-        else if (PlayManager.instance == null)
-        {
-            Debug.LogWarning("PlayManager instance not found. Enemy spawning disabled.");
-        }
-    }
-    
-    private void OnEnable()
-    {
-        // Subscribe to play mode changes if needed
-        if (PlayManager.instance != null && PlayManager.instance.playMode && !isSpawningStarted && isPoolingInitialized)
-        {
-            StartSpawning();
-        }
-    }
-    
-    /// <summary>
-    /// Called when PlayManager starts play mode - used to trigger enemy spawning
-    /// </summary>
-    public void OnPlayModeStart()
-    {
-        if (!isSpawningStarted && isPoolingInitialized && enemyPool.Count > 0)
-        {
-            StartSpawning();
-        }
-    }
-    
-    private void StartSpawning()
-    {
-        if (isSpawningStarted) return;
-        
-        isSpawningStarted = true;
-        StartCoroutine(SpawnClonesPeriodically());
-        Debug.Log("Enemy spawning started.");
     }
     
     private void InitializeEnemyPool()
@@ -90,32 +70,14 @@ public class EnemySpawner : MonoBehaviour
     
     private System.Collections.IEnumerator SpawnWhenPlayModeStarts()
     {
-        // Wait until playMode is active
-        while (!PlayManager.instance.playMode)
-        {
-            yield return null;
-        }
-
-        // Small delay to ensure everything is initialized
-        yield return new WaitForSeconds(0.1f);
-
-        // Start spawning clones from the pool
-        StartCoroutine(SpawnClonesPeriodically());
+        // This method is kept for backward compatibility but no longer used
+        yield return null;
     }
     
     private System.Collections.IEnumerator SpawnClonesPeriodically()
     {
-        if (enemyPool.Count == 0)
-        {
-            Debug.LogWarning("Enemy pool is empty. Cannot spawn clones.");
-            yield break;
-        }
-        
-        while (PlayManager.instance != null && PlayManager.instance.playMode)
-        {
-            SpawnRandomEnemyClone();
-            yield return new WaitForSeconds(spawnInterval);
-        }
+        // This method is kept for backward compatibility but no longer used
+        yield return null;
     }
     
     /// <summary>
