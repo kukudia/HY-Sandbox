@@ -116,7 +116,7 @@ public class EnemySpawner : MonoBehaviour
             unit.RefreshChildren();
         }
 
-        Debug.Log($"Spawned enemy unit from blueprint {enemyBlueprint} with {spawnedBlocks.Count} blocks and total mass {mass}.");
+        Debug.Log($"Spawned enemy {unitObject.name} at {unitObject.transform} with {spawnedBlocks.Count} blocks and total mass {mass}.");
         return unit;
     }
 }
