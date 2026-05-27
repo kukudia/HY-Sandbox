@@ -70,6 +70,12 @@ public class SaveManager : MonoBehaviour
         {
             enemyBlueprints.Add(Path.GetFileNameWithoutExtension(file));
         }
+
+        if (BuildManager.instance.enemyBlueprintBuildMode && enemyBlueprints.Count == 0)
+        {
+            Debug.Log("enemyBlueprints.Count == 0");
+            MainUIPanels.instance.ShowCreatePanel();
+        }
     }
 
     public void CreateNewSave(string saveName)
