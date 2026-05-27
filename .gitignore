@@ -1,34 +1,55 @@
-```
-# Build artifacts
+# Compiled and build artifacts
+*.pyc
+__pycache__/
+*.o
+*.obj
 *.dll
+*.so
+*.a
+*.class
 *.exe
-*.pdb
-*.unity3d
-Build/
-Library/
-obj/
-Temp/
+*.out
 
 # Dependencies
-Packages/
-ProjectSettings/Packages/
-
-# Logs
-*.log
-
-# User settings
-*.userprefs
-*.suo
-*.user
-.vs/
-.idea/
-
-# Configuration
+node_modules/
+venv/
+.venv/
 .env
 .env.local
-*.lock
+.env.*
+
+# Build directories
+dist/
+build/
+target/
+.gradle/
+
+# Python specific
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+*.so
+.Python
+*.egg-info/
+.eggs/
+.mypy_cache/
+.pytest_cache/
+.coverage
+coverage/
+htmlcov/
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+*.swo
 
 # OS generated files
 .DS_Store
 Thumbs.db
-```
+
+# Editors
+.vscode/
+.idea/
