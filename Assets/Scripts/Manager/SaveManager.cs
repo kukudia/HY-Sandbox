@@ -78,9 +78,9 @@ public class SaveManager : MonoBehaviour
         string path = GetSavePath(saveName);
 
         cachedData = new BlockDataList();
-        if (BuildManager.instance.blocksParent != null)
+        if (GameManager.instance.blocksParent != null)
         {
-            foreach (Transform child in BuildManager.instance.blocksParent)
+            foreach (Transform child in GameManager.instance.blocksParent)
             {
                 Destroy(child.gameObject);
             }
@@ -118,9 +118,9 @@ public class SaveManager : MonoBehaviour
             Destroy(obj.gameObject);
         }
 
-        if (BuildManager.instance.blocksParent != null)
+        if (GameManager.instance.blocksParent != null)
         {
-            Destroy(BuildManager.instance.blocksParent.gameObject);
+            Destroy(GameManager.instance.blocksParent.gameObject);
         }
 
         cachedData = new BlockDataList();
@@ -143,9 +143,9 @@ public class SaveManager : MonoBehaviour
             Destroy(obj.gameObject);
         }
 
-        if (BuildManager.instance.blocksParent != null)
+        if (GameManager.instance.blocksParent != null)
         {
-            Destroy(BuildManager.instance.blocksParent.gameObject);
+            Destroy(GameManager.instance.blocksParent.gameObject);
         }
 
         cachedData = new BlockDataList();

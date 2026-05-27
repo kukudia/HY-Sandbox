@@ -9,7 +9,6 @@ public class BuildManager : MonoBehaviour
 {
     public static BuildManager instance;
     public Camera mainCamera;
-    public Transform blocksParent;
     public LayerMask axisLayer;
     public LayerMask blockLayer;   // 方块所在的层
 
@@ -739,7 +738,7 @@ public class BuildManager : MonoBehaviour
         if (prefab != null)
         {
             GameObject obj = Instantiate(prefab, pos, rot);
-            obj.transform.parent = blocksParent;
+            obj.transform.parent = GameManager.instance.blocksParent;
             Block block = obj.GetComponent<Block>();
             block.resourcePath = resourcePath;
             ApplyBlockBuildDefaults(block);
@@ -854,9 +853,9 @@ public class BuildManager : MonoBehaviour
     {
         double time0 = Time.timeAsDouble;
 
-        if (blocksParent != null)
+        if (GameManager.instance.blocksParent != null)
         {
-            Destroy(blocksParent.gameObject);
+            Destroy(GameManager.instance.blocksParent.gameObject);
         }
 
         SaveManager.instance.blocks.Clear();
@@ -868,10 +867,10 @@ public class BuildManager : MonoBehaviour
 
         GameObject gameObj = Instantiate(blocksParentPrefab);
         gameObj.name = CurrentBuildName;
-        blocksParent = gameObj.transform;
-        PlayManager.instance.blocksParent = blocksParent;
+        GameManager.instance.blocksParent = gameObj.transform;
+        PlayManager.instance.blocksParent = GameManager.instance.blocksParent;
 
-        blocksParent.GetComponent<Rigidbody>().isKinematic = true;
+        GameManager.instance.blocksParent.GetComponent<Rigidbody>().isKinematic = true;
 
         if (!File.Exists(savePath))
         {
@@ -905,7 +904,7 @@ public class BuildManager : MonoBehaviour
             }
 
             GameObject obj = Instantiate(prefab, new Vector3(data.posX, data.posY, data.posZ), new Quaternion(data.rotX, data.rotY, data.rotZ, data.rotW));
-            obj.transform.SetParent(blocksParent);
+            obj.transform.SetParent(GameManager.instance.blocksParent);
             Block block = obj.GetComponent<Block>();
             if (block != null)
             {
@@ -948,7 +947,7 @@ public class BuildManager : MonoBehaviour
 
         Debug.Log($"加载{savePath}完成，耗时{time1 - time0}s，共{SaveManager.instance.cachedData.blocks.Count}个方块, 恢复成功{sucessCount}个方块，恢复失败{failCount}个方块");
 
-        Camera.main.GetComponent<CameraController>().FocusCameraOnBlock(blocksParent.gameObject);
+        Camera.main.GetComponent<CameraController>().FocusCameraOnBlock(GameManager.instance.blocksParent.gameObject);
     }
 
     public void ClearUnloadableData(string id)
@@ -1104,12 +1103,12 @@ public class BuildManager : MonoBehaviour
 
     private int CountCockpitsInCurrentConstruct()
     {
-        if (blocksParent == null)
+        if (GameManager.instance.blocksParent == null)
         {
             return 0;
         }
 
-        return blocksParent.GetComponentsInChildren<Cockpit>(true).Length;
+        return GameManager.instance.blocksParent.GetComponentsInChildren<Cockpit>(true).Length;
     }
 
     public static string ConvertToResourcesPath(string fullPath)

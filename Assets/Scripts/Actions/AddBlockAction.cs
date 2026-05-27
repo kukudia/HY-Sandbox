@@ -41,9 +41,9 @@ public class CreateBlockAction : IBlockAction
             if (prefab != null)
             {
                 createdObject = Object.Instantiate(prefab, pos, rot);
-                if (BuildManager.instance.blocksParent != null)
+                if (GameManager.instance.blocksParent != null)
                 {
-                    createdObject.transform.SetParent(BuildManager.instance.blocksParent);
+                    createdObject.transform.SetParent(GameManager.instance.blocksParent);
                 }
 
                 Block block = createdObject.GetComponent<Block>();

@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
     <Compile Include="Assets\Scripts\Thrusters\ThrusterAllocator.cs" />
     <Compile Include="Assets\Scripts\UI\MainUIPanels.cs" />
+    <Compile Include="Assets\Scripts\InObject\EnemySpawner.cs" />
     <Compile Include="Assets\Scripts\Actions\AddBlockAction.cs" />
     <Compile Include="Assets\Scripts\Manager\GameManager.cs" />
     <Compile Include="Assets\Scripts\Block\Block.cs" />
@@ -79,8 +80,8 @@
     <Compile Include="Assets\Scripts\UI\ActionCounterUI.cs" />
     <Compile Include="Assets\Scripts\InObject\ControlUnit.cs" />
     <Compile Include="Assets\Scripts\InObject\Rack.cs" />
-    <Compile Include="Assets\Scripts\InObject\ModularEnemySpawner.cs" />
     <Compile Include="Assets\Scripts\InObject\TurretWeapon.cs" />
+    <Compile Include="Assets\Scripts\InObject\EnemyController.cs" />
     <Compile Include="Assets\Scripts\Actions\DeleteBlockAction.cs" />
     <Compile Include="Assets\Scripts\Manager\PerformanceMonitor.cs" />
     <Compile Include="Assets\Scripts\InObject\RotateAxisHandle.cs" />
@@ -90,7 +91,6 @@
     <Compile Include="Assets\Scripts\Thrusters\HoverThruster.cs" />
     <Compile Include="Assets\Scripts\Thrusters\Thruster.cs" />
     <Compile Include="Assets\Scripts\Actions\GroupAction.cs" />
-    <Compile Include="Assets\Scripts\InObject\ModularEnemyController.cs" />
     <Compile Include="Assets\Scripts\Manager\SaveManager.cs" />
     <Compile Include="Assets\Scripts\UI\SaveUIPanel.cs" />
     <Compile Include="Assets\Scripts\Actions\IBlockAction.cs" />
@@ -123,6 +123,7 @@
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\Logs\v0.1.11.txt" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+    <None Include="Assets\Logs\v0.1.18.txt" />
     <None Include="Assets\Logs\v0.1.14.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />

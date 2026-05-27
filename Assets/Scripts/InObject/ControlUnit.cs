@@ -108,9 +108,9 @@ public class ControlUnit : MonoBehaviour
             hoverFlightController.Init();
         }
 
-        if (hasValidCockpit && faction == UnitFaction.Enemy && GetComponent<ModularEnemyController>() == null)
+        if (hasValidCockpit && faction == UnitFaction.Enemy && GetComponent<EnemyController>() == null)
         {
-            gameObject.AddComponent<ModularEnemyController>();
+            gameObject.AddComponent<EnemyController>();
         }
     }
 

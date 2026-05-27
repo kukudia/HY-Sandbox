@@ -2,6 +2,14 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
+    public Transform blocksParent;
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
     private void Start()
     {
         Init();

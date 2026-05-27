@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(ControlUnit))]
-public class ModularEnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour
 {
     public float detectionRange = 80f;
     public float desiredDistance = 18f;

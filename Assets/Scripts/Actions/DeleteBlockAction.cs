@@ -30,7 +30,7 @@ public class DeleteBlockAction : IBlockAction
             if (prefab != null)
             {
                 GameObject obj = Object.Instantiate(prefab, pos, rot);
-                obj.transform.parent = BuildManager.instance.blocksParent;
+                obj.transform.parent = GameManager.instance.blocksParent;
                 deletedBlock = obj.GetComponent<Block>();
                 deletedBlock.x = x;
                 deletedBlock.y = y;

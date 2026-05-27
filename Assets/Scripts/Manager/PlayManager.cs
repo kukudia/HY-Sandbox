@@ -65,7 +65,7 @@ public class PlayManager : MonoBehaviour
             return;
         }
 
-        ControlUnit controlUnit = BuildManager.instance.blocksParent.GetComponent<ControlUnit>();
+        ControlUnit controlUnit = GameManager.instance.blocksParent.GetComponent<ControlUnit>();
         RefreshGroup(controlUnit);
 
         lastHeight = blocksParent.position.y;
@@ -80,7 +80,7 @@ public class PlayManager : MonoBehaviour
     {
         reason = string.Empty;
 
-        if (BuildManager.instance == null || BuildManager.instance.blocksParent == null)
+        if (BuildManager.instance == null || GameManager.instance.blocksParent == null)
         {
             reason = "Cannot start play mode without a loaded construct.";
             return false;
@@ -92,7 +92,7 @@ public class PlayManager : MonoBehaviour
             return false;
         }
 
-        if (!ModularUnitValidator.TryGetSingleCockpit(BuildManager.instance.blocksParent, out Cockpit cockpit, out reason))
+        if (!ModularUnitValidator.TryGetSingleCockpit(GameManager.instance.blocksParent, out Cockpit cockpit, out reason))
         {
             return false;
         }
@@ -251,7 +251,7 @@ public class PlayManager : MonoBehaviour
                     {
                         groupParent.name = SaveManager.instance.currentSaveName;
                         blocksParent = groupParent.transform;
-                        BuildManager.instance.blocksParent = groupParent.transform;
+                        GameManager.instance.blocksParent = groupParent.transform;
                         Debug.Log($"Change new block parent {blocksParent}.");
                     }
                 }
