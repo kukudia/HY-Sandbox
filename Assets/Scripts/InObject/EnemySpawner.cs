@@ -6,12 +6,22 @@ public class EnemySpawner : MonoBehaviour
 {
     [Tooltip("Time interval in seconds between spawning enemies from the pool")]
     public float spawnInterval = 10f;
+
+    [Tooltip("Spawn one enemy immediately when play mode starts")]
+    public bool spawnOnPlayStart = true;
+
+    [Tooltip("Distance from the player construct used when choosing a spawn point")]
+    public float spawnDistance = 45f;
+
+    [Tooltip("Vertical offset above the player construct used when spawning enemies")]
+    public float spawnHeightOffset = 6f;
     
     // Pool of pre-spawned enemy templates (hidden in edit mode)
     private List<ControlUnit> enemyPool = new List<ControlUnit>();
     private bool isPoolingInitialized = false;
     
     private float spawnTimer = 0f;
+    private Transform spawnAnchor;
     
     private void Start()
     {
@@ -32,6 +42,18 @@ public class EnemySpawner : MonoBehaviour
         if (spawnTimer >= spawnInterval)
         {
             spawnTimer = 0f;
+            SpawnRandomEnemyClone();
+        }
+    }
+
+    public void BeginPlayMode(Transform anchor)
+    {
+        spawnAnchor = anchor;
+        InitializeEnemyPool();
+        spawnTimer = 0f;
+
+        if (spawnOnPlayStart)
+        {
             SpawnRandomEnemyClone();
         }
     }
@@ -85,14 +107,17 @@ public class EnemySpawner : MonoBehaviour
             return;
         }
         
-        // Instantiate a clone at the spawner's position
-        GameObject cloneObject = Instantiate(randomEnemy.gameObject, transform.position, transform.rotation);
+        // Instantiate a clone near the active player construct instead of at the hidden template position
+        Vector3 spawnPosition = GetSpawnPosition();
+        Quaternion spawnRotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
+        GameObject cloneObject = Instantiate(randomEnemy.gameObject, spawnPosition, spawnRotation);
         cloneObject.SetActive(true);
         
         // Ensure the clone is properly registered
         ControlUnit cloneUnit = cloneObject.GetComponent<ControlUnit>();
         if (cloneUnit != null)
         {
+            PrepareRuntimeEnemy(cloneUnit);
             cloneUnit.RefreshChildren();
             if (PlayManager.instance != null)
             {
@@ -111,12 +136,13 @@ public class EnemySpawner : MonoBehaviour
         {
             if (pooledEnemy != null)
             {
-                GameObject cloneObject = Instantiate(pooledEnemy.gameObject, transform.position, transform.rotation);
+                GameObject cloneObject = Instantiate(pooledEnemy.gameObject, GetSpawnPosition(), transform.rotation);
                 cloneObject.SetActive(true);
                 
                 ControlUnit cloneUnit = cloneObject.GetComponent<ControlUnit>();
                 if (cloneUnit != null)
                 {
+                    PrepareRuntimeEnemy(cloneUnit);
                     cloneUnit.RefreshChildren();
                     if (PlayManager.instance != null)
                     {
@@ -244,5 +270,44 @@ public class EnemySpawner : MonoBehaviour
         }
         
         return unit;
+    }
+
+    private Vector3 GetSpawnPosition()
+    {
+        Transform anchor = spawnAnchor != null ? spawnAnchor : PlayManager.instance?.blocksParent;
+        if (anchor == null)
+        {
+            return transform.position;
+        }
+
+        Vector2 randomCircle = Random.insideUnitCircle.normalized;
+        if (randomCircle.sqrMagnitude < 0.01f)
+        {
+            randomCircle = Vector2.right;
+        }
+
+        Vector3 offset = new Vector3(randomCircle.x, 0f, randomCircle.y) * spawnDistance;
+        return anchor.position + offset + Vector3.up * spawnHeightOffset;
+    }
+
+    private void PrepareRuntimeEnemy(ControlUnit enemy)
+    {
+        if (enemy == null) return;
+
+        Rigidbody rb = enemy.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        enemy.faction = UnitFaction.Enemy;
+
+        Cockpit[] cockpits = enemy.GetComponentsInChildren<Cockpit>(true);
+        foreach (Cockpit cockpit in cockpits)
+        {
+            cockpit.faction = UnitFaction.Enemy;
+        }
     }
 }

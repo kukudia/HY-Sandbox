@@ -19,6 +19,7 @@ public class PlayManager : MonoBehaviour
 
     public Block selectedBlock;
     public List<ControlUnit> allControlUnits = new List<ControlUnit>();
+    private EnemySpawner enemySpawner;
 
     public float lastHeight;
     public float currentHeight;
@@ -74,6 +75,7 @@ public class PlayManager : MonoBehaviour
         BuildManager.instance.enabled = false;
 
         playMode = true;
+        EnsureEnemySpawner().BeginPlayMode(blocksParent);
     }
 
     public bool CanStartPlay(out string reason)
@@ -293,5 +295,23 @@ public class PlayManager : MonoBehaviour
         {
             allControlUnits.Remove(unit);
         }
+    }
+
+    private EnemySpawner EnsureEnemySpawner()
+    {
+        if (enemySpawner != null)
+        {
+            return enemySpawner;
+        }
+
+        enemySpawner = Object.FindFirstObjectByType<EnemySpawner>();
+        if (enemySpawner != null)
+        {
+            return enemySpawner;
+        }
+
+        GameObject spawnerObject = new GameObject("EnemySpawner");
+        enemySpawner = spawnerObject.AddComponent<EnemySpawner>();
+        return enemySpawner;
     }
 }
