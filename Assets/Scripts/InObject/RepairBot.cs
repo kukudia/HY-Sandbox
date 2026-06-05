@@ -74,6 +74,7 @@ public class RepairBot : MonoBehaviour
     private Vector3 smoothedDirection;
     private float currentSpeedMultiplier = 1f;
     private TrailRenderer trailRenderer;
+    private ControlUnit ownerUnit;
 
     // 调试信息
     private List<AvoidanceDebugInfo> debugAvoidanceInfo = new List<AvoidanceDebugInfo>();
@@ -101,6 +102,7 @@ public class RepairBot : MonoBehaviour
 
         home = transform.parent;
         homeOffset = transform.localPosition;
+        ResolveOwnerUnit();
     }
 
     void InitializeComponents()
@@ -166,6 +168,12 @@ public class RepairBot : MonoBehaviour
         }
         else
         {
+            if (!IsOwnedTarget(currentTarget))
+            {
+                ClearTarget();
+                return;
+            }
+
             NavigateToTarget(currentTarget.transform);
             CheckAndRepair();
         }
@@ -494,9 +502,11 @@ public class RepairBot : MonoBehaviour
     void FindDamagedBlock()
     {
         if (Time.time - lastFindTime < findTargetInterval) return;
-        if (PlayManager.instance?.blocksParent == null) return;
 
-        Durability[] allBlocks = PlayManager.instance.blocksParent.GetComponentsInChildren<Durability>();
+        ControlUnit repairOwner = ResolveOwnerUnit();
+        if (repairOwner == null) return;
+
+        Durability[] allBlocks = repairOwner.GetComponentsInChildren<Durability>();
         List<Durability> damagedBlocks = new List<Durability>();
 
         foreach (Durability block in allBlocks)
@@ -525,6 +535,29 @@ public class RepairBot : MonoBehaviour
 
         currentTarget = closestBlock;
         lastFindTime = Time.time;
+    }
+
+    private ControlUnit ResolveOwnerUnit()
+    {
+        ControlUnit homeOwner = home != null ? home.GetComponentInParent<ControlUnit>() : null;
+        if (homeOwner != null)
+        {
+            ownerUnit = homeOwner;
+        }
+        else if (ownerUnit == null)
+        {
+            ownerUnit = GetComponentInParent<ControlUnit>();
+        }
+
+        return ownerUnit;
+    }
+
+    private bool IsOwnedTarget(Durability target)
+    {
+        if (target == null) return false;
+
+        ControlUnit repairOwner = ResolveOwnerUnit();
+        return repairOwner != null && target.GetComponentInParent<ControlUnit>() == repairOwner;
     }
 
     void CheckAndRepair()
