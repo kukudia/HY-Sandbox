@@ -318,6 +318,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetFaction: 1
+  horizontalAxis: {fileID: 2664907610342847789}
+  verticalAxis: {fileID: 8654168488286171785}
   aimPivot: {fileID: 2664907610342847789}
   muzzle: {fileID: 0}
   range: 45

@@ -3,6 +3,8 @@ using UnityEngine;
 public class TurretWeapon : MonoBehaviour
 {
     public UnitFaction targetFaction = UnitFaction.Enemy;
+    public Transform horizontalAxis;
+    public Transform verticalAxis;
     public Transform aimPivot;
     public Transform muzzle;
     public float range = 45f;
@@ -23,10 +25,20 @@ public class TurretWeapon : MonoBehaviour
 
     private void Awake()
     {
+        Transform model = transform.Find("Model");
         if (aimPivot == null)
         {
-            Transform model = transform.Find("Model");
             aimPivot = model != null ? model : transform;
+        }
+
+        if (horizontalAxis == null)
+        {
+            horizontalAxis = aimPivot != null ? aimPivot : model != null ? model : transform;
+        }
+
+        if (verticalAxis == null)
+        {
+            verticalAxis = horizontalAxis;
         }
     }
 
@@ -173,15 +185,44 @@ public class TurretWeapon : MonoBehaviour
         Vector3 direction = aimPoint - origin;
         if (direction.sqrMagnitude < 0.01f) return;
 
-        Quaternion targetRotation = Quaternion.LookRotation(direction.normalized, Vector3.up);
-        aimPivot.rotation = Quaternion.RotateTowards(aimPivot.rotation, targetRotation, turnSpeed * Time.fixedDeltaTime);
+        Vector3 aimDirection = direction.normalized;
+        AimAt(aimDirection);
 
-        float angle = Vector3.Angle(aimPivot.forward, direction.normalized);
+        Vector3 fireDirection = GetAimForward();
+        float angle = Vector3.Angle(fireDirection, aimDirection);
         if (angle <= maxFireAngle && Time.time >= nextFireTime)
         {
-            Fire(origin, aimPivot.forward, GetEffectiveTargetFaction());
+            Fire(origin, fireDirection, GetEffectiveTargetFaction());
             nextFireTime = Time.time + fireInterval;
         }
+    }
+
+    private void AimAt(Vector3 worldDirection)
+    {
+        if (horizontalAxis == null) return;
+
+        float maxDegreesDelta = turnSpeed * Time.fixedDeltaTime;
+        if (verticalAxis == null || verticalAxis == horizontalAxis)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(worldDirection, Vector3.up);
+            horizontalAxis.rotation = Quaternion.RotateTowards(horizontalAxis.rotation, targetRotation, maxDegreesDelta);
+            return;
+        }
+
+        Vector3 horizontalUp = horizontalAxis.parent != null ? horizontalAxis.parent.up : Vector3.up;
+        Vector3 flatDirection = Vector3.ProjectOnPlane(worldDirection, horizontalUp);
+        if (flatDirection.sqrMagnitude > 0.001f)
+        {
+            Quaternion yawRotation = Quaternion.LookRotation(flatDirection.normalized, horizontalUp);
+            horizontalAxis.rotation = Quaternion.RotateTowards(horizontalAxis.rotation, yawRotation, maxDegreesDelta);
+        }
+
+        Vector3 localDirection = horizontalAxis.InverseTransformDirection(worldDirection);
+        if (localDirection.z <= 0.001f) return;
+
+        Vector3 pitchDirection = new Vector3(0f, localDirection.y, localDirection.z).normalized;
+        Quaternion pitchRotation = Quaternion.LookRotation(pitchDirection, Vector3.up);
+        verticalAxis.localRotation = Quaternion.RotateTowards(verticalAxis.localRotation, pitchRotation, maxDegreesDelta);
     }
 
     private void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)
@@ -219,7 +260,28 @@ public class TurretWeapon : MonoBehaviour
             return muzzle.position;
         }
 
-        return aimPivot.position + aimPivot.forward * 0.7f;
+        Transform origin = verticalAxis != null ? verticalAxis : horizontalAxis != null ? horizontalAxis : aimPivot != null ? aimPivot : transform;
+        return origin.position + GetAimForward() * 0.7f;
+    }
+
+    private Vector3 GetAimForward()
+    {
+        if (muzzle != null)
+        {
+            return muzzle.forward;
+        }
+
+        if (verticalAxis != null)
+        {
+            return verticalAxis.forward;
+        }
+
+        if (horizontalAxis != null)
+        {
+            return horizontalAxis.forward;
+        }
+
+        return aimPivot != null ? aimPivot.forward : transform.forward;
     }
 
     private static UnitFaction Opposite(UnitFaction faction)
