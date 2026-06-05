@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 
 public class ControlUnit : MonoBehaviour
 {
+    public string runtimeUnitId;
     public HoverFlightController hoverFlightController;
     public Cockpit cockpit;
     public Cockpit[] cockpits;
@@ -23,6 +24,9 @@ public class ControlUnit : MonoBehaviour
 
     private void Start()
     {
+        EnsureRuntimeUnitId();
+        AssignRuntimeOwnershipToBlocks(false);
+
         if (PlayManager.instance != null)
         {
             PlayManager.instance.RegisterControlUnit(this);
@@ -77,6 +81,8 @@ public class ControlUnit : MonoBehaviour
 
     public void RefreshChildren()
     {
+        EnsureRuntimeUnitId();
+
         hoverFlightController = GetComponentInChildren<HoverFlightController>();
         cockpits = GetComponentsInChildren<Cockpit>(true);
         mainThrusters = GetComponentsInChildren<MainThruster>();
@@ -111,6 +117,33 @@ public class ControlUnit : MonoBehaviour
         if (hasValidCockpit && faction == UnitFaction.Enemy && GetComponent<EnemyController>() == null)
         {
             gameObject.AddComponent<EnemyController>();
+        }
+    }
+
+    public void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)
+    {
+        EnsureRuntimeUnitId();
+
+        Block[] blocks = GetComponentsInChildren<Block>();
+        foreach (Block block in blocks)
+        {
+            if (block == null) continue;
+
+            RuntimeUnitMember member = block.GetComponent<RuntimeUnitMember>();
+            if (!overwriteExisting && member != null && !string.IsNullOrEmpty(member.ownerUnitId))
+            {
+                continue;
+            }
+
+            RuntimeUnitMember.Ensure(block.gameObject, runtimeUnitId, faction);
+        }
+    }
+
+    public void EnsureRuntimeUnitId()
+    {
+        if (string.IsNullOrEmpty(runtimeUnitId))
+        {
+            runtimeUnitId = System.Guid.NewGuid().ToString();
         }
     }
 
@@ -187,5 +220,29 @@ public class ControlUnit : MonoBehaviour
         _isOnCooldown = true;
         yield return new WaitForSeconds(cooldownTime);
         _isOnCooldown = false;
+    }
+}
+
+public class RuntimeUnitMember : MonoBehaviour
+{
+    public string ownerUnitId;
+    public UnitFaction ownerFaction;
+
+    public static RuntimeUnitMember Ensure(GameObject obj, string unitId, UnitFaction faction)
+    {
+        if (obj == null)
+        {
+            return null;
+        }
+
+        RuntimeUnitMember member = obj.GetComponent<RuntimeUnitMember>();
+        if (member == null)
+        {
+            member = obj.AddComponent<RuntimeUnitMember>();
+        }
+
+        member.ownerUnitId = unitId;
+        member.ownerFaction = faction;
+        return member;
     }
 }

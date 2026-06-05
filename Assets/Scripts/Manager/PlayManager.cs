@@ -67,6 +67,11 @@ public class PlayManager : MonoBehaviour
         }
 
         ControlUnit controlUnit = GameManager.instance.blocksParent.GetComponent<ControlUnit>();
+        if (controlUnit != null)
+        {
+            controlUnit.AssignRuntimeOwnershipToBlocks(true);
+        }
+
         RefreshGroup(controlUnit);
 
         lastHeight = blocksParent.position.y;
@@ -273,6 +278,7 @@ public class PlayManager : MonoBehaviour
             rb.isKinematic = false;
 
             groupControl.RefreshChildren();
+            groupControl.AssignRuntimeOwnershipToBlocks(false);
         }
 
         if (blocksParent != null)

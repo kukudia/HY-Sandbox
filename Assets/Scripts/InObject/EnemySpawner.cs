@@ -211,6 +211,7 @@ public class EnemySpawner : MonoBehaviour
             unit.faction = UnitFaction.Enemy;
             PrepareRuntimeEnemy(unit);
             unit.RefreshChildren();
+            unit.AssignRuntimeOwnershipToBlocks(true);
             
             if (PlayManager.instance != null)
             {

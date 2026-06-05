@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DestroyManager : MonoBehaviour
@@ -23,8 +24,10 @@ public class DestroyManager : MonoBehaviour
     }
 
     private float _refreshDelay = 0.2f;
+    private float _unitCleanupDelay = 5f;
     private bool _isRefreshScheduled;
     private int _destroyedCount;
+    private HashSet<string> _scheduledUnitCleanups = new HashSet<string>();
 
     public void DestroyGameObject(GameObject obj)
     {
@@ -32,13 +35,22 @@ public class DestroyManager : MonoBehaviour
 
         Cockpit cockpit = obj.GetComponent<Cockpit>();
         ControlUnit unit = obj.GetComponentInParent<ControlUnit>();
+        if (unit != null)
+        {
+            unit.EnsureRuntimeUnitId();
+            unit.AssignRuntimeOwnershipToBlocks(false);
+        }
+
+        RuntimeUnitMember member = obj.GetComponent<RuntimeUnitMember>();
+        string ownerUnitId = member != null ? member.ownerUnitId : unit?.runtimeUnitId;
+        UnitFaction ownerFaction = member != null ? member.ownerFaction : cockpit != null ? cockpit.faction : unit != null ? unit.faction : UnitFaction.Enemy;
         Destroy(obj);
 
         if (!PlayManager.instance.playMode) return;
 
-        if (cockpit != null && cockpit.faction == UnitFaction.Player)
+        if (cockpit != null)
         {
-            MainUIPanels.instance.PlayEnd();
+            ScheduleUnitCleanup(ownerUnitId, ownerFaction);
             return;
         }
 
@@ -46,6 +58,43 @@ public class DestroyManager : MonoBehaviour
         {
             PlayManager.instance.RefreshGroup(unit);
         }
+    }
+
+    private void ScheduleUnitCleanup(string ownerUnitId, UnitFaction ownerFaction)
+    {
+        if (string.IsNullOrEmpty(ownerUnitId) || _scheduledUnitCleanups.Contains(ownerUnitId))
+        {
+            return;
+        }
+
+        _scheduledUnitCleanups.Add(ownerUnitId);
+        StartCoroutine(CleanupUnitAfterDelay(ownerUnitId, ownerFaction));
+    }
+
+    private IEnumerator CleanupUnitAfterDelay(string ownerUnitId, UnitFaction ownerFaction)
+    {
+        yield return new WaitForSeconds(_unitCleanupDelay);
+
+        RuntimeUnitMember[] members = Object.FindObjectsByType<RuntimeUnitMember>(FindObjectsSortMode.None);
+        foreach (RuntimeUnitMember member in members)
+        {
+            if (member == null || member.ownerUnitId != ownerUnitId) continue;
+
+            PlayDisappearEffect(member.gameObject);
+            Destroy(member.gameObject);
+        }
+
+        _scheduledUnitCleanups.Remove(ownerUnitId);
+
+        if (ownerFaction == UnitFaction.Player && PlayManager.instance != null && PlayManager.instance.playMode)
+        {
+            MainUIPanels.instance.PlayEnd();
+        }
+    }
+
+    private void PlayDisappearEffect(GameObject obj)
+    {
+        // Reserved hook for a future death/disappear VFX before the block is destroyed.
     }
 
     public void NotifyObjectDestroyed()
