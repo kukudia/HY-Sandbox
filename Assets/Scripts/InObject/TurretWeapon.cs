@@ -83,6 +83,31 @@ public class TurretWeapon : MonoBehaviour
         nearestDurability = null;
         float nearestSqrDistance = range * range;
 
+        if (ShouldPrioritizeEnemyCockpit())
+        {
+            foreach (ControlUnit candidate in units)
+            {
+                if (candidate == null || candidate == owner) continue;
+                if (!candidate.HasValidCockpit || candidate.faction != faction) continue;
+
+                Durability cockpitDurability = FindCockpitDurability(candidate);
+                if (cockpitDurability == null) continue;
+
+                float sqrDistance = (cockpitDurability.transform.position - transform.position).sqrMagnitude;
+                if (sqrDistance < nearestSqrDistance)
+                {
+                    nearest = candidate;
+                    nearestDurability = cockpitDurability;
+                    nearestSqrDistance = sqrDistance;
+                }
+            }
+
+            if (nearestDurability != null)
+            {
+                return nearest;
+            }
+        }
+
         foreach (ControlUnit candidate in units)
         {
             if (candidate == null || candidate == owner) continue;
@@ -122,6 +147,23 @@ public class TurretWeapon : MonoBehaviour
         }
 
         return nearest;
+    }
+
+    private bool ShouldPrioritizeEnemyCockpit()
+    {
+        return owner != null
+            && owner.faction == UnitFaction.Player
+            && GetEffectiveTargetFaction() == UnitFaction.Enemy;
+    }
+
+    private Durability FindCockpitDurability(ControlUnit unit)
+    {
+        if (unit == null || unit.cockpit == null)
+        {
+            return null;
+        }
+
+        return unit.cockpit.GetComponentInParent<Durability>();
     }
 
     private void AimAndFire(Durability aimTarget)
