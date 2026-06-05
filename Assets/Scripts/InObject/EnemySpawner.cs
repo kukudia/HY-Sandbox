@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [Tooltip("Time interval in seconds between spawning enemies from the pool")]
+    [Tooltip("Time interval in seconds between spawning enemies from the blueprint list")]
     public float spawnInterval = 10f;
 
     [Tooltip("Spawn one enemy immediately when play mode starts")]
@@ -16,23 +16,21 @@ public class EnemySpawner : MonoBehaviour
     [Tooltip("Vertical offset above the player construct used when spawning enemies")]
     public float spawnHeightOffset = 6f;
     
-    // Pool of pre-spawned enemy templates (hidden in edit mode)
-    private List<ControlUnit> enemyPool = new List<ControlUnit>();
-    private bool isPoolingInitialized = false;
+    private readonly List<EnemyBlueprintData> enemyBlueprintPool = new List<EnemyBlueprintData>();
+    private bool isBlueprintPoolInitialized = false;
     
     private float spawnTimer = 0f;
     private Transform spawnAnchor;
     
     private void Start()
     {
-        // Initialize enemy pool
-        InitializeEnemyPool();
+        InitializeEnemyBlueprintPool();
     }
     
     private void Update()
     {
-        // Only spawn when in playMode and pool is initialized
-        if (!PlayManager.instance.playMode || !isPoolingInitialized || enemyPool.Count == 0)
+        // Only spawn when in playMode and blueprint pool is initialized
+        if (!PlayManager.instance.playMode || !isBlueprintPoolInitialized || enemyBlueprintPool.Count == 0)
         {
             return;
         }
@@ -42,32 +40,32 @@ public class EnemySpawner : MonoBehaviour
         if (spawnTimer >= spawnInterval)
         {
             spawnTimer = 0f;
-            SpawnRandomEnemyClone();
+            SpawnRandomEnemy();
         }
     }
 
     public void BeginPlayMode(Transform anchor)
     {
         spawnAnchor = anchor;
-        InitializeEnemyPool();
+        InitializeEnemyBlueprintPool();
         spawnTimer = 0f;
 
         if (spawnOnPlayStart)
         {
-            SpawnRandomEnemyClone();
+            SpawnRandomEnemy();
         }
     }
     
-    private void InitializeEnemyPool()
+    private void InitializeEnemyBlueprintPool()
     {
-        if (isPoolingInitialized) return;
+        if (isBlueprintPoolInitialized) return;
         
         SaveManager.instance.GetAllEnemyBlueprintNames();
 
         if (SaveManager.instance.enemyBlueprints.Count == 0)
         {
             Debug.LogWarning("No enemy blueprints found in SaveManager.");
-            isPoolingInitialized = true;
+            isBlueprintPoolInitialized = true;
             return;
         }
 
@@ -77,96 +75,68 @@ public class EnemySpawner : MonoBehaviour
             if (File.Exists(path))
             {
                 BlockDataList dataList = JsonUtility.FromJson<BlockDataList>(File.ReadAllText(path));
-                ControlUnit pooledEnemy = SpawnBlockData(dataList, enemyBlueprint, isForPool: true);
-                if (pooledEnemy != null)
+                if (IsValidBlueprint(dataList, enemyBlueprint))
                 {
-                    enemyPool.Add(pooledEnemy);
+                    enemyBlueprintPool.Add(new EnemyBlueprintData(enemyBlueprint, dataList));
                 }
             }
         }
         
-        isPoolingInitialized = true;
-        Debug.Log($"Enemy pool initialized with {enemyPool.Count} enemies.");
+        isBlueprintPoolInitialized = true;
+        Debug.Log($"Enemy blueprint pool initialized with {enemyBlueprintPool.Count} enemies.");
     }
     
     /// <summary>
-    /// Spawns a clone of a random enemy from the pool into the scene
+    /// Spawns a random enemy from cached blueprint data into the scene.
     /// </summary>
-    public void SpawnRandomEnemyClone()
+    public void SpawnRandomEnemy()
     {
-        if (enemyPool.Count == 0)
+        if (enemyBlueprintPool.Count == 0)
         {
-            Debug.LogWarning("Enemy pool is empty.");
+            Debug.LogWarning("Enemy blueprint pool is empty.");
             return;
         }
         
-        ControlUnit randomEnemy = enemyPool[Random.Range(0, enemyPool.Count)];
-        if (randomEnemy == null)
+        EnemyBlueprintData randomEnemy = enemyBlueprintPool[Random.Range(0, enemyBlueprintPool.Count)];
+        if (randomEnemy == null || randomEnemy.dataList == null)
         {
-            Debug.LogWarning("Selected enemy from pool is null.");
+            Debug.LogWarning("Selected enemy blueprint is null.");
             return;
         }
         
-        // Instantiate a clone near the active player construct instead of at the hidden template position
         Vector3 spawnPosition = GetSpawnPosition();
         Quaternion spawnRotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
-        GameObject cloneObject = Instantiate(randomEnemy.gameObject, spawnPosition, spawnRotation);
-        cloneObject.SetActive(true);
-        
-        // Ensure the clone is properly registered
-        ControlUnit cloneUnit = cloneObject.GetComponent<ControlUnit>();
-        if (cloneUnit != null)
-        {
-            PrepareRuntimeEnemy(cloneUnit);
-            cloneUnit.RefreshChildren();
-            if (PlayManager.instance != null)
-            {
-                PlayManager.instance.RegisterControlUnit(cloneUnit);
-            }
-            Debug.Log($"Spawned enemy clone {cloneObject.name} at {cloneObject.transform.position}.");
-        }
+        SpawnBlockData(randomEnemy.dataList, randomEnemy.name, spawnPosition, spawnRotation);
     }
 
     /// <summary>
-    /// Legacy method for backward compatibility - spawns all enemies as clones
+    /// Legacy method for backward compatibility - spawns all enemies from cached blueprints.
     /// </summary>
     public void SpawnEnemy()
     {
-        foreach (ControlUnit pooledEnemy in enemyPool)
+        foreach (EnemyBlueprintData enemyBlueprint in enemyBlueprintPool)
         {
-            if (pooledEnemy != null)
+            if (enemyBlueprint != null)
             {
-                GameObject cloneObject = Instantiate(pooledEnemy.gameObject, GetSpawnPosition(), transform.rotation);
-                cloneObject.SetActive(true);
-                
-                ControlUnit cloneUnit = cloneObject.GetComponent<ControlUnit>();
-                if (cloneUnit != null)
-                {
-                    PrepareRuntimeEnemy(cloneUnit);
-                    cloneUnit.RefreshChildren();
-                    if (PlayManager.instance != null)
-                    {
-                        PlayManager.instance.RegisterControlUnit(cloneUnit);
-                    }
-                }
+                SpawnBlockData(enemyBlueprint.dataList, enemyBlueprint.name, GetSpawnPosition(), transform.rotation);
             }
         }
     }
 
-    private ControlUnit SpawnBlockData(BlockDataList dataList, string enemyBlueprint, bool isForPool = false)
+    private bool IsValidBlueprint(BlockDataList dataList, string enemyBlueprint)
     {
-        if (SaveManager.instance == null || string.IsNullOrWhiteSpace(enemyBlueprint))
-        {
-            return null;
-        }
-
-        string path = SaveManager.instance.GetEnemyBlueprintPath(enemyBlueprint);
-        if (!File.Exists(path))
-        {
-            return null;
-        }
-
         if (dataList == null || dataList.blocks == null || dataList.blocks.Count == 0)
+        {
+            Debug.LogWarning($"Enemy blueprint {enemyBlueprint} is empty.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private ControlUnit SpawnBlockData(BlockDataList dataList, string enemyBlueprint, Vector3 spawnPosition, Quaternion spawnRotation)
+    {
+        if (!IsValidBlueprint(dataList, enemyBlueprint))
         {
             return null;
         }
@@ -179,14 +149,8 @@ public class EnemySpawner : MonoBehaviour
             return null;
         }
 
-        GameObject unitObject = Instantiate(parentPrefab, transform.position, transform.rotation);
+        GameObject unitObject = Instantiate(parentPrefab, spawnPosition, spawnRotation);
         unitObject.name = string.IsNullOrWhiteSpace(enemyBlueprint) ? "ModularEnemy" : enemyBlueprint;
-
-        // If this is for the pool, hide it and make it static
-        if (isForPool)
-        {
-            unitObject.SetActive(false);
-        }
 
         float mass = 0f;
         List<Block> spawnedBlocks = new List<Block>();
@@ -239,35 +203,22 @@ public class EnemySpawner : MonoBehaviour
         {
             rb.mass = Mathf.Max(1f, mass);
             rb.isKinematic = false;
-            
-            // For pool objects, make them kinematic to prevent physics simulation while hidden
-            if (isForPool)
-            {
-                rb.isKinematic = true;
-            }
         }
 
         ControlUnit unit = unitObject.GetComponent<ControlUnit>();
         if (unit != null)
         {
             unit.faction = UnitFaction.Enemy;
+            PrepareRuntimeEnemy(unit);
             unit.RefreshChildren();
             
-            // Only register with PlayManager if not in pool (pool objects are registered when cloned)
-            if (!isForPool && PlayManager.instance != null)
+            if (PlayManager.instance != null)
             {
                 PlayManager.instance.RegisterControlUnit(unit);
             }
         }
 
-        if (!isForPool)
-        {
-            Debug.Log($"Spawned enemy {unitObject.name} at {unitObject.transform} with {spawnedBlocks.Count} blocks and total mass {mass}.");
-        }
-        else
-        {
-            Debug.Log($"Created pooled enemy template {unitObject.name} with {spawnedBlocks.Count} blocks and total mass {mass}.");
-        }
+        Debug.Log($"Spawned enemy {unitObject.name} at {unitObject.transform.position} with {spawnedBlocks.Count} blocks and total mass {mass}.");
         
         return unit;
     }
@@ -308,6 +259,18 @@ public class EnemySpawner : MonoBehaviour
         foreach (Cockpit cockpit in cockpits)
         {
             cockpit.faction = UnitFaction.Enemy;
+        }
+    }
+
+    private class EnemyBlueprintData
+    {
+        public readonly string name;
+        public readonly BlockDataList dataList;
+
+        public EnemyBlueprintData(string name, BlockDataList dataList)
+        {
+            this.name = name;
+            this.dataList = dataList;
         }
     }
 }
