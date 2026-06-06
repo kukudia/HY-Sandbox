@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public class SaveUIPanel : MonoBehaviour
 {
     public static SaveUIPanel instance;
-    public Transform listParent;   // ´æµµ°´Å¥Éú³ÉµÄ¸¸ÎïÌå£¨±ÈÈç ScrollView Content£©
-    public GameObject savePrefab; // ´æµµ°´Å¥Ô¤ÖÆÌå
+    public Transform listParent;   // å­˜æ¡£æŒ‰é’®ç”Ÿæˆçš„çˆ¶ç‰©ä½“ï¼ˆæ¯”å¦‚ ScrollView Contentï¼‰
+    public GameObject savePrefab; // å­˜æ¡£æŒ‰é’®é¢„åˆ¶ä½“
 
     private void Awake()
     {
@@ -15,7 +15,7 @@ public class SaveUIPanel : MonoBehaviour
 
     public void RefreshList()
     {
-        // Çå¿Õ¾É°´Å¥
+        // æ¸…ç©ºæ—§æŒ‰é’®
         foreach (Transform child in listParent)
         {
             Destroy(child.gameObject);
@@ -32,15 +32,7 @@ public class SaveUIPanel : MonoBehaviour
                 {
                     GameObject obj = Instantiate(savePrefab, listParent);
 
-                    Button savePrefabButton = obj.transform.Find("SavePrefabButton").GetComponent<Button>();
-                    savePrefabButton.GetComponentInChildren<Text>().text = "\t" + blueprint;
-                    savePrefabButton.onClick.AddListener(() => OnEnemyBlueprintClicked(blueprint));
-
-                    Button deleteButton = obj.transform.Find("DeleteSaveButton").GetComponent<Button>();
-                    deleteButton.onClick.AddListener(() => MainUIPanels.instance.ShowDeletePanel(blueprint));
-
-                    Text saveSizeText = obj.transform.Find("Size").GetComponent<Text>();
-                    saveSizeText.text = SaveManager.instance.GetSaveFileSize(blueprint);
+                    ConfigureSaveItem(obj, blueprint, () => OnEnemyBlueprintClicked(blueprint));
                 }
             }
         }
@@ -55,18 +47,44 @@ public class SaveUIPanel : MonoBehaviour
                 {
                     GameObject obj = Instantiate(savePrefab, listParent);
 
-                    Button savePrefabButton = obj.transform.Find("SavePrefabButton").GetComponent<Button>();
-                    savePrefabButton.GetComponentInChildren<Text>().text = "\t" + save;
-                    savePrefabButton.onClick.AddListener(() => OnSaveClicked(save));
-
-                    Button deleteButton = obj.transform.Find("DeleteSaveButton").GetComponent<Button>();
-                    deleteButton.onClick.AddListener(() => MainUIPanels.instance.ShowDeletePanel(save));
-
-                    Text saveSizeText = obj.transform.Find("Size").GetComponent<Text>();
-                    saveSizeText.text = SaveManager.instance.GetSaveFileSize(save);
+                    ConfigureSaveItem(obj, save, () => OnSaveClicked(save));
                 }
             }
         }
+    }
+
+    private void ConfigureSaveItem(GameObject obj, string saveName, UnityEngine.Events.UnityAction onOpen)
+    {
+        Button savePrefabButton = obj.transform.Find("SavePrefabButton").GetComponent<Button>();
+        savePrefabButton.GetComponentInChildren<Text>().text = "\t" + saveName;
+        savePrefabButton.onClick.AddListener(onOpen);
+
+        Button deleteButton = obj.transform.Find("DeleteSaveButton").GetComponent<Button>();
+        Button renameButton = CreateRenameButton(deleteButton, obj.transform);
+        renameButton.onClick.AddListener(() => MainUIPanels.instance.ShowRenamePanel(saveName));
+        deleteButton.onClick.AddListener(() => MainUIPanels.instance.ShowDeletePanel(saveName));
+
+        Text saveSizeText = obj.transform.Find("Size").GetComponent<Text>();
+        saveSizeText.text = SaveManager.instance.GetSaveFileSize(saveName);
+    }
+
+    private Button CreateRenameButton(Button deleteButton, Transform parent)
+    {
+        Button renameButton = Instantiate(deleteButton, parent);
+        renameButton.name = "RenameSaveButton";
+        renameButton.onClick.RemoveAllListeners();
+
+        RectTransform renameRect = renameButton.GetComponent<RectTransform>();
+        RectTransform deleteRect = deleteButton.GetComponent<RectTransform>();
+        renameRect.anchoredPosition = deleteRect.anchoredPosition + new Vector2(-55f, 0f);
+
+        Text text = renameButton.GetComponentInChildren<Text>();
+        if (text != null)
+        {
+            text.text = "R";
+        }
+
+        return renameButton;
     }
 
     private void OnSaveClicked(string saveName)

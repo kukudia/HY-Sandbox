@@ -12,6 +12,9 @@ public class MainUIPanels : MonoBehaviour
     public InputField inputName;
     public float fadeDuration = 0.3f;
 
+    private bool renameMode;
+    private string renameTargetName;
+
     private void Awake()
     {
         instance = this;
@@ -54,18 +57,52 @@ public class MainUIPanels : MonoBehaviour
 
     public void ShowCreatePanel()
     {
+        renameMode = false;
+        renameTargetName = string.Empty;
         Cursor.lockState = CursorLockMode.Confined;
         StartCoroutine(Fade(buildPanel, false));
         StartCoroutine(Fade(createPanel, true));
         BuildManager.instance.enabled = false;
+        SetInputPlaceholder(BuildManager.instance != null && BuildManager.instance.enemyBlueprintBuildMode
+            ? "Create new blueprint..."
+            : "Create new save...");
         inputName.text = "";
+        inputName.Select();
+        inputName.ActivateInputField();
+    }
+
+    public void ShowRenamePanel(string save)
+    {
+        renameMode = true;
+        renameTargetName = save;
+        Cursor.lockState = CursorLockMode.Confined;
+        StartCoroutine(Fade(buildPanel, false));
+        StartCoroutine(Fade(createPanel, true));
+        BuildManager.instance.enabled = false;
+        SetInputPlaceholder(BuildManager.instance != null && BuildManager.instance.enemyBlueprintBuildMode
+            ? "Rename blueprint..."
+            : "Rename save...");
+        inputName.text = save;
+        inputName.Select();
+        inputName.ActivateInputField();
     }
 
     public void HideCreatePanel()
     {
+        renameMode = false;
+        renameTargetName = string.Empty;
         StartCoroutine(Fade(createPanel, false));
         StartCoroutine(Fade(buildPanel, true));
         BuildManager.instance.enabled = true;
+    }
+
+    private void SetInputPlaceholder(string text)
+    {
+        Text placeholder = inputName.placeholder as Text;
+        if (placeholder != null)
+        {
+            placeholder.text = text;
+        }
     }
 
     public void ShowDeletePanel(string save)
@@ -88,6 +125,20 @@ public class MainUIPanels : MonoBehaviour
     public void OnConfirmCreate()
     {
         string saveName = inputName.text.Trim();
+        if (renameMode)
+        {
+            bool renamed = BuildManager.instance != null && BuildManager.instance.enemyBlueprintBuildMode
+                ? SaveManager.instance.RenameEnemyBlueprint(renameTargetName, saveName)
+                : SaveManager.instance.RenameSave(renameTargetName, saveName);
+
+            if (renamed)
+            {
+                HideCreatePanel();
+            }
+
+            return;
+        }
+
         if (!string.IsNullOrEmpty(saveName))
         {
             if (BuildManager.instance != null && BuildManager.instance.enemyBlueprintBuildMode)

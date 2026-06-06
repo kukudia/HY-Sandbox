@@ -182,6 +182,140 @@ public class SaveManager : MonoBehaviour
         SaveUIPanel.instance.RefreshList();
     }
 
+    public bool RenameSave(string oldSaveName, string newSaveName)
+    {
+        oldSaveName = (oldSaveName ?? string.Empty).Trim();
+        newSaveName = (newSaveName ?? string.Empty).Trim();
+
+        if (!CanUseFileName(newSaveName, out string reason))
+        {
+            Debug.LogWarning(reason);
+            return false;
+        }
+
+        if (string.Equals(oldSaveName, newSaveName, System.StringComparison.Ordinal))
+        {
+            SaveUIPanel.instance.RefreshList();
+            return true;
+        }
+
+        string oldPath = GetSavePath(oldSaveName);
+        string newPath = GetSavePath(newSaveName);
+
+        if (!File.Exists(oldPath))
+        {
+            Debug.LogWarning($"Save not found: {oldSaveName}");
+            return false;
+        }
+
+        if (File.Exists(newPath))
+        {
+            Debug.LogWarning($"Save already exists: {newSaveName}");
+            return false;
+        }
+
+        bool renamedCurrentSave = currentSaveName == oldSaveName
+            || (BuildManager.instance != null && BuildManager.instance.currentSaveName == oldSaveName);
+
+        File.Move(oldPath, newPath);
+
+        if (currentSaveName == oldSaveName)
+        {
+            currentSaveName = newSaveName;
+        }
+
+        if (BuildManager.instance != null && BuildManager.instance.currentSaveName == oldSaveName)
+        {
+            BuildManager.instance.currentSaveName = newSaveName;
+        }
+
+        if (renamedCurrentSave && GameManager.instance != null && GameManager.instance.blocksParent != null)
+        {
+            GameManager.instance.blocksParent.name = newSaveName;
+        }
+
+        Debug.Log($"Renamed save: {oldSaveName} -> {newSaveName}");
+        SaveUIPanel.instance.RefreshList();
+        return true;
+    }
+
+    public bool RenameEnemyBlueprint(string oldBlueprintName, string newBlueprintName)
+    {
+        oldBlueprintName = (oldBlueprintName ?? string.Empty).Trim();
+        newBlueprintName = (newBlueprintName ?? string.Empty).Trim();
+
+        if (!CanUseFileName(newBlueprintName, out string reason))
+        {
+            Debug.LogWarning(reason);
+            return false;
+        }
+
+        if (string.Equals(oldBlueprintName, newBlueprintName, System.StringComparison.Ordinal))
+        {
+            SaveUIPanel.instance.RefreshList();
+            return true;
+        }
+
+        string oldPath = GetEnemyBlueprintPath(oldBlueprintName);
+        string newPath = GetEnemyBlueprintPath(newBlueprintName);
+
+        if (!File.Exists(oldPath))
+        {
+            Debug.LogWarning($"Enemy blueprint not found: {oldBlueprintName}");
+            return false;
+        }
+
+        if (File.Exists(newPath))
+        {
+            Debug.LogWarning($"Enemy blueprint already exists: {newBlueprintName}");
+            return false;
+        }
+
+        bool renamedCurrentBlueprint = currentEnemyBlueprintName == oldBlueprintName
+            || (BuildManager.instance != null && BuildManager.instance.currentEnemyBlueprintName == oldBlueprintName);
+
+        File.Move(oldPath, newPath);
+
+        if (currentEnemyBlueprintName == oldBlueprintName)
+        {
+            currentEnemyBlueprintName = newBlueprintName;
+        }
+
+        if (BuildManager.instance != null && BuildManager.instance.currentEnemyBlueprintName == oldBlueprintName)
+        {
+            BuildManager.instance.currentEnemyBlueprintName = newBlueprintName;
+        }
+
+        if (renamedCurrentBlueprint && GameManager.instance != null && GameManager.instance.blocksParent != null)
+        {
+            GameManager.instance.blocksParent.name = newBlueprintName;
+        }
+
+        Debug.Log($"Renamed enemy blueprint: {oldBlueprintName} -> {newBlueprintName}");
+        SaveUIPanel.instance.RefreshList();
+        return true;
+    }
+
+    private bool CanUseFileName(string fileName, out string reason)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            reason = "Name cannot be empty.";
+            return false;
+        }
+
+        if (fileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0
+            || fileName.EndsWith(" ")
+            || fileName.EndsWith("."))
+        {
+            reason = $"Invalid file name: {fileName}";
+            return false;
+        }
+
+        reason = string.Empty;
+        return true;
+    }
+
     public string GetSavePath(string saveName)
     {
         EnsureSaveDirectories();
