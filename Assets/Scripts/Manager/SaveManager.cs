@@ -71,7 +71,7 @@ public class SaveManager : MonoBehaviour
             enemyBlueprints.Add(Path.GetFileNameWithoutExtension(file));
         }
 
-        if (BuildManager.instance.enemyBlueprintBuildMode && enemyBlueprints.Count == 0)
+        if (BuildManager.instance.IsEditingEnemyBlueprint && enemyBlueprints.Count == 0)
         {
             Debug.Log("enemyBlueprints.Count == 0");
             MainUIPanels.instance.ShowCreatePanel();
@@ -130,7 +130,7 @@ public class SaveManager : MonoBehaviour
         }
 
         cachedData = new BlockDataList();
-        BuildManager.instance.currentSaveName = saveName;
+        BuildManager.instance.SetCurrentSaveName(saveName);
         BuildManager.instance.ExitEnemyBlueprintBuildMode(false);
 
         BuildManager.instance.LoadAllBlocks();
@@ -226,7 +226,7 @@ public class SaveManager : MonoBehaviour
 
         if (BuildManager.instance != null && BuildManager.instance.currentSaveName == oldSaveName)
         {
-            BuildManager.instance.currentSaveName = newSaveName;
+            BuildManager.instance.SetCurrentSaveName(newSaveName);
         }
 
         if (renamedCurrentSave && GameManager.instance != null && GameManager.instance.blocksParent != null)
@@ -283,7 +283,7 @@ public class SaveManager : MonoBehaviour
 
         if (BuildManager.instance != null && BuildManager.instance.currentEnemyBlueprintName == oldBlueprintName)
         {
-            BuildManager.instance.currentEnemyBlueprintName = newBlueprintName;
+            BuildManager.instance.SetCurrentEnemyBlueprintName(newBlueprintName);
         }
 
         if (renamedCurrentBlueprint && GameManager.instance != null && GameManager.instance.blocksParent != null)
@@ -331,7 +331,7 @@ public class SaveManager : MonoBehaviour
     public string GetSaveFileSize(string saveName)
     {
         string path;
-        if (BuildManager.instance != null && BuildManager.instance.enemyBlueprintBuildMode)
+        if (BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint)
         {
             path = GetEnemyBlueprintPath(saveName);
         }

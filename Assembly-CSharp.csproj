@@ -64,6 +64,7 @@
     <Compile Include="Assets\Scripts\Thrusters\HoverFlightController.cs" />
     <Compile Include="Assets\Scripts\Manager\BlockGroupManager.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
+    <Compile Include="Assets\Scripts\Data\BuildTargetContext.cs" />
     <Compile Include="Assets\Scripts\Data\BlockData.cs" />
     <Compile Include="Assets\Layer Lab\Scripts\PanelControl.cs" />
     <Compile Include="Assets\Scripts\Thrusters\ThrusterAllocator.cs" />

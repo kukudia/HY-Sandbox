@@ -21,7 +21,7 @@ public class SaveUIPanel : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        if (BuildManager.instance.enemyBlueprintBuildMode)
+        if (BuildManager.instance.IsEditingEnemyBlueprint)
         {
             Debug.Log("Refreshing enemy blueprint list...");
             SaveManager.instance.GetAllEnemyBlueprintNames();
@@ -100,7 +100,7 @@ public class SaveUIPanel : MonoBehaviour
 
     private void OnEnemyBlueprintClicked(string blueprintName)
     {
-        BuildManager.instance.EnterEnemyBlueprintBuildMode(blueprintName);
+        SaveManager.instance.LoadEnemyBlueprint(blueprintName);
     }
 
     //private void OnDeleteClicked(string saveName)

@@ -60,12 +60,16 @@ public class BuildManager : MonoBehaviour
         -Vector3.forward
     };
 
-    private string savePath => enemyBlueprintBuildMode
-        ? SaveManager.instance.GetEnemyBlueprintPath(currentEnemyBlueprintName)
-        : SaveManager.instance.GetSavePath(currentSaveName);
+    private BuildTargetContext CurrentBuildContext => enemyBlueprintBuildMode
+        ? BuildTargetContext.EnemyBlueprint(currentSaveName, currentEnemyBlueprintName)
+        : BuildTargetContext.PlayerSave(currentSaveName, currentEnemyBlueprintName);
 
-    public UnitFaction CurrentBuildFaction => enemyBlueprintBuildMode ? UnitFaction.Enemy : UnitFaction.Player;
-    public string CurrentBuildName => enemyBlueprintBuildMode ? currentEnemyBlueprintName : currentSaveName;
+    private string savePath => CurrentBuildContext.GetSavePath(SaveManager.instance);
+
+    public bool IsEditingEnemyBlueprint => CurrentBuildContext.IsEnemyBlueprint;
+    public BuildTargetKind CurrentBuildTarget => CurrentBuildContext.Kind;
+    public UnitFaction CurrentBuildFaction => CurrentBuildContext.Faction;
+    public string CurrentBuildName => CurrentBuildContext.Name;
     public bool DeveloperToolsAvailable
     {
         get
@@ -173,7 +177,7 @@ public class BuildManager : MonoBehaviour
 
     public void ToggleEnemyBlueprintBuildMode()
     {
-        if (enemyBlueprintBuildMode)
+        if (IsEditingEnemyBlueprint)
         {
             ExitEnemyBlueprintBuildMode(true);
         }
@@ -197,13 +201,7 @@ public class BuildManager : MonoBehaviour
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(blueprintName))
-        {
-            blueprintName = "default_enemy";
-        }
-
-        currentEnemyBlueprintName = blueprintName.Trim();
-        enemyBlueprintBuildMode = true;
+        SetBuildTarget(BuildTargetContext.EnemyBlueprint(currentSaveName, blueprintName));
         currentBlockResourcePath = string.Empty;
         ResetBuildState();
 
@@ -215,9 +213,9 @@ public class BuildManager : MonoBehaviour
 
     public void ExitEnemyBlueprintBuildMode(bool reloadPlayerSave)
     {
-        if (!enemyBlueprintBuildMode) return;
+        if (!IsEditingEnemyBlueprint) return;
 
-        enemyBlueprintBuildMode = false;
+        SetBuildTarget(BuildTargetContext.PlayerSave(currentSaveName, currentEnemyBlueprintName));
         currentBlockResourcePath = string.Empty;
         ResetBuildState();
 
@@ -234,6 +232,16 @@ public class BuildManager : MonoBehaviour
     {
         currentBlockResourcePath = resourcePath;
         ClearCurrentGhost();
+    }
+
+    public void SetCurrentSaveName(string saveName)
+    {
+        SetBuildTarget(BuildTargetContext.PlayerSave(saveName, currentEnemyBlueprintName));
+    }
+
+    public void SetCurrentEnemyBlueprintName(string blueprintName)
+    {
+        SetBuildTarget(BuildTargetContext.EnemyBlueprint(currentSaveName, blueprintName));
     }
 
     void AlignAxisToNearestWorldDir()
@@ -836,7 +844,7 @@ public class BuildManager : MonoBehaviour
 
         SaveManager.instance.blocks.Clear();
 
-        if (!enemyBlueprintBuildMode && currentSaveName == String.Empty && SaveManager.instance.saves.Count > 0)
+        if (!IsEditingEnemyBlueprint && currentSaveName == String.Empty && SaveManager.instance.saves.Count > 0)
         {
             currentSaveName = SaveManager.instance.saves[0];
         }
@@ -1042,7 +1050,7 @@ public class BuildManager : MonoBehaviour
     {
         reason = string.Empty;
 
-        if (enemyBlueprintBuildMode && !DeveloperToolsAvailable)
+        if (IsEditingEnemyBlueprint && !DeveloperToolsAvailable)
         {
             reason = "Enemy blueprint build mode is developer-only.";
             return false;
@@ -1093,6 +1101,13 @@ public class BuildManager : MonoBehaviour
         {
             ActionManager.instance.Clear();
         }
+    }
+
+    private void SetBuildTarget(BuildTargetContext context)
+    {
+        enemyBlueprintBuildMode = context.IsEnemyBlueprint;
+        currentSaveName = context.SaveName;
+        currentEnemyBlueprintName = context.EnemyBlueprintName;
     }
 
     private void ClearCurrentGhost()

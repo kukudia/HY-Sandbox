@@ -63,7 +63,7 @@ public class MainUIPanels : MonoBehaviour
         StartCoroutine(Fade(buildPanel, false));
         StartCoroutine(Fade(createPanel, true));
         BuildManager.instance.enabled = false;
-        SetInputPlaceholder(BuildManager.instance != null && BuildManager.instance.enemyBlueprintBuildMode
+        SetInputPlaceholder(BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint
             ? "Create new blueprint..."
             : "Create new save...");
         inputName.text = "";
@@ -79,7 +79,7 @@ public class MainUIPanels : MonoBehaviour
         StartCoroutine(Fade(buildPanel, false));
         StartCoroutine(Fade(createPanel, true));
         BuildManager.instance.enabled = false;
-        SetInputPlaceholder(BuildManager.instance != null && BuildManager.instance.enemyBlueprintBuildMode
+        SetInputPlaceholder(BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint
             ? "Rename blueprint..."
             : "Rename save...");
         inputName.text = save;
@@ -127,7 +127,7 @@ public class MainUIPanels : MonoBehaviour
         string saveName = inputName.text.Trim();
         if (renameMode)
         {
-            bool renamed = BuildManager.instance != null && BuildManager.instance.enemyBlueprintBuildMode
+            bool renamed = BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint
                 ? SaveManager.instance.RenameEnemyBlueprint(renameTargetName, saveName)
                 : SaveManager.instance.RenameSave(renameTargetName, saveName);
 
@@ -141,7 +141,7 @@ public class MainUIPanels : MonoBehaviour
 
         if (!string.IsNullOrEmpty(saveName))
         {
-            if (BuildManager.instance != null && BuildManager.instance.enemyBlueprintBuildMode)
+            if (BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint)
             {
                 SaveManager.instance.CreateNewEnemyBlueprint(saveName);
                 SaveManager.instance.LoadEnemyBlueprint(saveName);
@@ -162,7 +162,7 @@ public class MainUIPanels : MonoBehaviour
 
     private void OnConfirmDelete(string save)
     {
-        if (BuildManager.instance != null && BuildManager.instance.enemyBlueprintBuildMode)
+        if (BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint)
         {
             SaveManager.instance.DeleteEnemyBlueprint(save);
         }

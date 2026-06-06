@@ -93,7 +93,7 @@ public class PlayManager : MonoBehaviour
             return false;
         }
 
-        if (BuildManager.instance.enemyBlueprintBuildMode)
+        if (BuildManager.instance.IsEditingEnemyBlueprint)
         {
             reason = "Cannot start player play mode while editing an enemy blueprint.";
             return false;
