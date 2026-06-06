@@ -236,7 +236,7 @@ public class EnemySpawner : MonoBehaviour
 
         if (!IsIntegerVector(cleaned))
         {
-            Debug.LogWarning($"Enemy block [{blockName}] blueprint local position is not integer: {position}");
+            // Debug.LogWarning($"Enemy block [{blockName}] blueprint local position is not integer: {position}");
         }
 
         return cleaned;
@@ -253,7 +253,7 @@ public class EnemySpawner : MonoBehaviour
 
         if (!IsRightAngleVector(cleanedEuler))
         {
-            Debug.LogWarning($"Enemy block [{blockName}] blueprint local rotation is not a 90-degree increment: {euler}");
+            //Debug.LogWarning($"Enemy block [{blockName}] blueprint local rotation is not a 90-degree increment: {euler}");
         }
 
         return Quaternion.Euler(cleanedEuler);
