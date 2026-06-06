@@ -60,8 +60,14 @@ public class SaveUIPanel : MonoBehaviour
         savePrefabButton.onClick.AddListener(onOpen);
 
         Button deleteButton = obj.transform.Find("DeleteSaveButton").GetComponent<Button>();
-        Button renameButton = CreateRenameButton(deleteButton, obj.transform);
+        Transform renameTransform = obj.transform.Find("RenameSaveButton");
+        Button renameButton = renameTransform != null
+            ? renameTransform.GetComponent<Button>()
+            : CreateRenameButton(deleteButton, obj.transform);
+
+        renameButton.onClick.RemoveAllListeners();
         renameButton.onClick.AddListener(() => MainUIPanels.instance.ShowRenamePanel(saveName));
+        deleteButton.onClick.RemoveAllListeners();
         deleteButton.onClick.AddListener(() => MainUIPanels.instance.ShowDeletePanel(saveName));
 
         Text saveSizeText = obj.transform.Find("Size").GetComponent<Text>();
