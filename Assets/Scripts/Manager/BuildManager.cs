@@ -115,8 +115,7 @@ public class BuildManager : MonoBehaviour
             {
                 if (currentGhost != null)
                 {
-                    Destroy(currentGhost);
-                    hoveredConnector = null;
+                    ClearCurrentGhost();
                 }
 
                 HandleSelection();
@@ -167,8 +166,7 @@ public class BuildManager : MonoBehaviour
 
             if (currentGhost != null)
             {
-                Destroy(currentGhost);
-                hoveredConnector = null;
+                ClearCurrentGhost();
             }
         }
     }
@@ -207,18 +205,7 @@ public class BuildManager : MonoBehaviour
         currentEnemyBlueprintName = blueprintName.Trim();
         enemyBlueprintBuildMode = true;
         currentBlockResourcePath = string.Empty;
-        DeselectBlock();
-
-        if (currentGhost != null)
-        {
-            Destroy(currentGhost);
-            hoveredConnector = null;
-        }
-
-        if (ActionManager.instance != null)
-        {
-            ActionManager.instance.Clear();
-        }
+        ResetBuildState();
 
         MainUIPanels.instance.EnterEnemyBlueprintBuildMode();
         SaveManager.instance.CreateNewEnemyBlueprint(currentEnemyBlueprintName);
@@ -232,18 +219,7 @@ public class BuildManager : MonoBehaviour
 
         enemyBlueprintBuildMode = false;
         currentBlockResourcePath = string.Empty;
-        DeselectBlock();
-
-        if (currentGhost != null)
-        {
-            Destroy(currentGhost);
-            hoveredConnector = null;
-        }
-
-        if (ActionManager.instance != null)
-        {
-            ActionManager.instance.Clear();
-        }
+        ResetBuildState();
 
         if (reloadPlayerSave && SaveManager.instance != null && !string.IsNullOrEmpty(currentSaveName))
         {
@@ -252,6 +228,12 @@ public class BuildManager : MonoBehaviour
 
         MainUIPanels.instance.ExitEnemyBlueprintBuildMode();
         Debug.Log("Exited enemy blueprint build mode.");
+    }
+
+    public void SetCurrentBlockResource(string resourcePath)
+    {
+        currentBlockResourcePath = resourcePath;
+        ClearCurrentGhost();
     }
 
     void AlignAxisToNearestWorldDir()
@@ -692,8 +674,7 @@ public class BuildManager : MonoBehaviour
         {
             if (currentGhost != null)
             {
-                Destroy(currentGhost);
-                hoveredConnector = null;
+                ClearCurrentGhost();
             }
         }
 
@@ -792,8 +773,7 @@ public class BuildManager : MonoBehaviour
             SaveManager.instance.cachedData.blocks.Add(data);
         }
 
-        string json = JsonUtility.ToJson(SaveManager.instance.cachedData, true);
-        File.WriteAllText(savePath, json);
+        WriteCachedData();
         Debug.Log($"Saved block {block.name} at {block.transform.position}, {block.transform.rotation.eulerAngles}");
 
         block.CheckConnection();
@@ -831,12 +811,8 @@ public class BuildManager : MonoBehaviour
     {
         block.neighbors = block.Neighbors();
 
-        int index = SaveManager.instance.cachedData.blocks.FindIndex(b => b.id == block.uniqueId);
-        if (index >= 0)
+        if (RemoveCachedBlockData(block.uniqueId))
         {
-            SaveManager.instance.cachedData.blocks.RemoveAt(index);
-            string json = JsonUtility.ToJson(SaveManager.instance.cachedData, true);
-            File.WriteAllText(savePath, json);
             Debug.Log($"Removed block {block.name}");
         }
 
@@ -874,7 +850,8 @@ public class BuildManager : MonoBehaviour
 
         if (!File.Exists(savePath))
         {
-            File.WriteAllText(savePath, JsonUtility.ToJson(new BlockDataList(), true));
+            SaveManager.instance.cachedData = new BlockDataList();
+            WriteCachedData();
         }
 
         string json = File.ReadAllText(savePath);
@@ -952,12 +929,8 @@ public class BuildManager : MonoBehaviour
 
     public void ClearUnloadableData(string id)
     {
-        int index = SaveManager.instance.cachedData.blocks.FindIndex(b => b.id == id);
-        if (index >= 0)
+        if (RemoveCachedBlockData(id))
         {
-            SaveManager.instance.cachedData.blocks.RemoveAt(index);
-            string json = JsonUtility.ToJson(SaveManager.instance.cachedData, true);
-            File.WriteAllText(savePath, json);
             Debug.Log($"Removed unload data {id}");
         }
     }
@@ -1111,6 +1084,42 @@ public class BuildManager : MonoBehaviour
         return GameManager.instance.blocksParent.GetComponentsInChildren<Cockpit>(true).Length;
     }
 
+    private void ResetBuildState()
+    {
+        DeselectBlock();
+        ClearCurrentGhost();
+
+        if (ActionManager.instance != null)
+        {
+            ActionManager.instance.Clear();
+        }
+    }
+
+    private void ClearCurrentGhost()
+    {
+        if (currentGhost == null) return;
+
+        Destroy(currentGhost);
+        currentGhost = null;
+        hoveredConnector = null;
+    }
+
+    private bool RemoveCachedBlockData(string id)
+    {
+        int index = SaveManager.instance.cachedData.blocks.FindIndex(b => b.id == id);
+        if (index < 0) return false;
+
+        SaveManager.instance.cachedData.blocks.RemoveAt(index);
+        WriteCachedData();
+        return true;
+    }
+
+    private void WriteCachedData()
+    {
+        string json = JsonUtility.ToJson(SaveManager.instance.cachedData, true);
+        File.WriteAllText(savePath, json);
+    }
+
     public static string ConvertToResourcesPath(string fullPath)
     {
         if (fullPath.StartsWith("Assets/Resources/"))
@@ -1131,48 +1140,4 @@ public enum SelectType
 {
     Move,
     Rotate
-}
-
-[System.Serializable]
-public class BlockData
-{
-    public string id;
-    public int x, y, z;
-    public float posX, posY, posZ;
-    public float rotX, rotY, rotZ, rotW;
-    public string resourcePath;
-
-    public BlockData(Block block)
-    {
-        id = block.uniqueId;
-        x = block.x;
-        y = block.y;
-        z = block.z;
-
-        var t = block.transform;
-        // 强制对齐到0.5的倍数
-        posX = Mathf.Round(t.position.x * 2) / 2f;
-        posY = Mathf.Round(t.position.y * 2) / 2f;
-        posZ = Mathf.Round(t.position.z * 2) / 2f;
-
-        // 将旋转对齐到90度的倍数
-        Vector3 euler = t.rotation.eulerAngles;
-        euler.x = Mathf.Round(euler.x / 90) * 90;
-        euler.y = Mathf.Round(euler.y / 90) * 90;
-        euler.z = Mathf.Round(euler.z / 90) * 90;
-
-        Quaternion snappedRot = Quaternion.Euler(euler);
-        rotX = snappedRot.x;
-        rotY = snappedRot.y;
-        rotZ = snappedRot.z;
-        rotW = snappedRot.w;
-
-        resourcePath = block.resourcePath;
-    }
-}
-
-[System.Serializable]
-public class BlockDataList
-{
-    public List<BlockData> blocks = new List<BlockData>();
 }

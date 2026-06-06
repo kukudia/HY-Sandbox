@@ -89,7 +89,7 @@ public class MainUIButtons : MonoBehaviour
 
     public void SetDefault()
     {
-        BuildManager.instance.currentBlockResourcePath = string.Empty;
+        BuildManager.instance.SetCurrentBlockResource(string.Empty);
     }
 
     public void SetMove()
@@ -105,11 +105,7 @@ public class MainUIButtons : MonoBehaviour
     public void SetCurrentBlock(string fileName)
     {
         string resourcePath = "Blocks/" + fileName;
-        BuildManager.instance.currentBlockResourcePath = resourcePath;
-        if (BuildManager.instance.currentGhost != null)
-        {
-            Destroy(BuildManager.instance.currentGhost);
-        }
+        BuildManager.instance.SetCurrentBlockResource(resourcePath);
         Debug.Log($"Current build block changed to {resourcePath}");
     }
 
