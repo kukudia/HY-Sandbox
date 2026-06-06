@@ -64,6 +64,7 @@
     <Compile Include="Assets\Scripts\Thrusters\HoverFlightController.cs" />
     <Compile Include="Assets\Scripts\Manager\BlockGroupManager.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
+    <Compile Include="Assets\Layer Lab\Scripts\PanelControl.cs" />
     <Compile Include="Assets\Scripts\Thrusters\ThrusterAllocator.cs" />
     <Compile Include="Assets\Scripts\UI\MainUIPanels.cs" />
     <Compile Include="Assets\Scripts\InObject\EnemySpawner.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Assets\Scripts\InObject\Cockpit.cs" />
     <Compile Include="Assets\Scripts\Thrusters\UniversalThruster.cs" />
     <Compile Include="Assets\Scripts\Actions\RotateBlockAction.cs" />
+    <Compile Include="Assets\Layer Lab\Scripts\PanelView.cs" />
     <Compile Include="Assets\Scripts\UI\MainUIButtons.cs" />
     <Compile Include="Assets\Scripts\Manager\MeteorShower.cs" />
     <Compile Include="Assets\Scripts\InObject\RepairBot.cs" />
