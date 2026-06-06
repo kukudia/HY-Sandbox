@@ -166,12 +166,8 @@ public class EnemySpawner : MonoBehaviour
 
             Vector3 localPosition = new Vector3(data.posX, data.posY, data.posZ);
             Quaternion localRotation = new Quaternion(data.rotX, data.rotY, data.rotZ, data.rotW);
-            GameObject blockObject = Instantiate(
-                prefab,
-                unitObject.transform.TransformPoint(localPosition),
-                unitObject.transform.rotation * localRotation,
-                unitObject.transform
-            );
+            GameObject blockObject = Instantiate(prefab, unitObject.transform);
+            ApplyBlueprintLocalTransform(blockObject.transform, localPosition, localRotation);
 
             Block block = blockObject.GetComponent<Block>();
             if (block != null)
@@ -222,6 +218,30 @@ public class EnemySpawner : MonoBehaviour
         Debug.Log($"Spawned enemy [{unitObject.name}] at {unitObject.transform.position} with {spawnedBlocks.Count} blocks and total mass {mass}.");
         
         return unit;
+    }
+
+    private void ApplyBlueprintLocalTransform(Transform blockTransform, Vector3 localPosition, Quaternion localRotation)
+    {
+        blockTransform.localPosition = SnapIntegerPosition(localPosition);
+        blockTransform.localRotation = SnapRightAngleRotation(localRotation);
+    }
+
+    private Vector3 SnapIntegerPosition(Vector3 position)
+    {
+        return new Vector3(
+            Mathf.Round(position.x),
+            Mathf.Round(position.y),
+            Mathf.Round(position.z)
+        );
+    }
+
+    private Quaternion SnapRightAngleRotation(Quaternion rotation)
+    {
+        Vector3 euler = rotation.eulerAngles;
+        euler.x = Mathf.Round(euler.x / 90f) * 90f;
+        euler.y = Mathf.Round(euler.y / 90f) * 90f;
+        euler.z = Mathf.Round(euler.z / 90f) * 90f;
+        return Quaternion.Euler(euler);
     }
 
     private Vector3 GetSpawnPosition()
