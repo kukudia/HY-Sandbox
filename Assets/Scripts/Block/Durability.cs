@@ -47,7 +47,7 @@ public class Durability : MonoBehaviour
 
             if (debugLog)
             {
-                Debug.Log($"{name} 碰撞速度：{collisionSpeed:F1}, 碰撞源：{collision.transform.name}, 伤害：{damage:F1}, 剩余耐久：{currentDurability:F1}");
+                // Debug.Log($"{name} 碰撞速度：{collisionSpeed:F1}, 碰撞源：{collision.transform.name}, 伤害：{damage:F1}, 剩余耐久：{currentDurability:F1}");
             }
         }
     }

@@ -219,7 +219,7 @@ public class EnemySpawner : MonoBehaviour
             }
         }
 
-        Debug.Log($"Spawned enemy {unitObject.name} at {unitObject.transform.position} with {spawnedBlocks.Count} blocks and total mass {mass}.");
+        Debug.Log($"Spawned enemy [{unitObject.name}] at {unitObject.transform.position} with {spawnedBlocks.Count} blocks and total mass {mass}.");
         
         return unit;
     }

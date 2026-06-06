@@ -269,7 +269,7 @@ public class PlayManager : MonoBehaviour
                 block.showLabel = showLabel;
             }
 
-            Debug.Log($"{groupParent.name} mass: {mass}");
+            // Debug.Log($"{groupParent.name} mass: {mass}");
 
             Rigidbody rb = groupParent.GetComponent<Rigidbody>();
             rb.mass = mass;
