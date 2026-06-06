@@ -222,26 +222,74 @@ public class EnemySpawner : MonoBehaviour
 
     private void ApplyBlueprintLocalTransform(Transform blockTransform, Vector3 localPosition, Quaternion localRotation)
     {
-        blockTransform.localPosition = SnapIntegerPosition(localPosition);
-        blockTransform.localRotation = SnapRightAngleRotation(localRotation);
+        blockTransform.localPosition = CleanIntegerPosition(localPosition, blockTransform.name);
+        blockTransform.localRotation = CleanRightAngleRotation(localRotation, blockTransform.name);
     }
 
-    private Vector3 SnapIntegerPosition(Vector3 position)
+    private Vector3 CleanIntegerPosition(Vector3 position, string blockName)
     {
-        return new Vector3(
-            Mathf.Round(position.x),
-            Mathf.Round(position.y),
-            Mathf.Round(position.z)
+        Vector3 cleaned = new Vector3(
+            SnapNearInteger(position.x),
+            SnapNearInteger(position.y),
+            SnapNearInteger(position.z)
         );
+
+        if (!IsIntegerVector(cleaned))
+        {
+            Debug.LogWarning($"Enemy block [{blockName}] blueprint local position is not integer: {position}");
+        }
+
+        return cleaned;
     }
 
-    private Quaternion SnapRightAngleRotation(Quaternion rotation)
+    private Quaternion CleanRightAngleRotation(Quaternion rotation, string blockName)
     {
         Vector3 euler = rotation.eulerAngles;
-        euler.x = Mathf.Round(euler.x / 90f) * 90f;
-        euler.y = Mathf.Round(euler.y / 90f) * 90f;
-        euler.z = Mathf.Round(euler.z / 90f) * 90f;
-        return Quaternion.Euler(euler);
+        Vector3 cleanedEuler = new Vector3(
+            SnapNearRightAngle(euler.x),
+            SnapNearRightAngle(euler.y),
+            SnapNearRightAngle(euler.z)
+        );
+
+        if (!IsRightAngleVector(cleanedEuler))
+        {
+            Debug.LogWarning($"Enemy block [{blockName}] blueprint local rotation is not a 90-degree increment: {euler}");
+        }
+
+        return Quaternion.Euler(cleanedEuler);
+    }
+
+    private float SnapNearInteger(float value)
+    {
+        float rounded = Mathf.Round(value);
+        return Mathf.Abs(value - rounded) < 0.001f ? rounded : value;
+    }
+
+    private float SnapNearRightAngle(float angle)
+    {
+        float rounded = Mathf.Round(angle / 90f) * 90f;
+        return Mathf.Abs(Mathf.DeltaAngle(angle, rounded)) < 0.001f ? rounded : angle;
+    }
+
+    private bool IsIntegerVector(Vector3 value)
+    {
+        return IsNearlyInteger(value.x) && IsNearlyInteger(value.y) && IsNearlyInteger(value.z);
+    }
+
+    private bool IsRightAngleVector(Vector3 euler)
+    {
+        return IsNearlyRightAngle(euler.x) && IsNearlyRightAngle(euler.y) && IsNearlyRightAngle(euler.z);
+    }
+
+    private bool IsNearlyInteger(float value)
+    {
+        return Mathf.Abs(value - Mathf.Round(value)) < 0.001f;
+    }
+
+    private bool IsNearlyRightAngle(float angle)
+    {
+        float rounded = Mathf.Round(angle / 90f) * 90f;
+        return Mathf.Abs(Mathf.DeltaAngle(angle, rounded)) < 0.001f;
     }
 
     private Vector3 GetSpawnPosition()
