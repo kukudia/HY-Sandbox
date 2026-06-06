@@ -3,6 +3,8 @@ using UnityEngine;
 [RequireComponent(typeof(ControlUnit))]
 public class EnemyController : MonoBehaviour
 {
+    private const int MaxObstacleHits = 16;
+
     public float detectionRange = 80f;
     public float desiredDistance = 18f;
     public float updateInterval = 0.25f;
@@ -19,6 +21,7 @@ public class EnemyController : MonoBehaviour
     private Rigidbody rb;
     private ControlUnit currentTarget;
     private float nextUpdateTime;
+    private readonly RaycastHit[] obstacleHits = new RaycastHit[MaxObstacleHits];
 
     private void Awake()
     {
@@ -75,9 +78,14 @@ public class EnemyController : MonoBehaviour
 
     private ControlUnit FindNearestPlayer()
     {
-        ControlUnit[] units = Object.FindObjectsByType<ControlUnit>(FindObjectsSortMode.None);
+        var units = PlayManager.instance != null ? PlayManager.instance.GetControlUnits() : null;
         ControlUnit nearest = null;
         float nearestSqrDistance = detectionRange * detectionRange;
+
+        if (units == null)
+        {
+            return null;
+        }
 
         foreach (ControlUnit candidate in units)
         {
@@ -159,13 +167,14 @@ public class EnemyController : MonoBehaviour
     private Vector3 ProbeObstacle(Vector3 direction, float weight)
     {
         Vector3 origin = transform.position + Vector3.up * 0.5f;
-        RaycastHit[] hits = Physics.SphereCastAll(origin, obstacleProbeRadius, direction.normalized, obstacleAvoidanceDistance, obstacleLayers);
-        if (hits == null || hits.Length == 0) return Vector3.zero;
+        int hitCount = Physics.SphereCastNonAlloc(origin, obstacleProbeRadius, direction.normalized, obstacleHits, obstacleAvoidanceDistance, obstacleLayers);
+        if (hitCount == 0) return Vector3.zero;
 
-        System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+        System.Array.Sort(obstacleHits, 0, hitCount, RaycastHitDistanceComparer.Instance);
 
-        foreach (RaycastHit hit in hits)
+        for (int i = 0; i < hitCount; i++)
         {
+            RaycastHit hit = obstacleHits[i];
             ControlUnit hitUnit = hit.collider.GetComponentInParent<ControlUnit>();
             if (hitUnit == unit) continue;
 
@@ -187,5 +196,15 @@ public class EnemyController : MonoBehaviour
         }
 
         return Vector3.zero;
+    }
+
+    private sealed class RaycastHitDistanceComparer : System.Collections.Generic.IComparer<RaycastHit>
+    {
+        public static readonly RaycastHitDistanceComparer Instance = new RaycastHitDistanceComparer();
+
+        public int Compare(RaycastHit a, RaycastHit b)
+        {
+            return a.distance.CompareTo(b.distance);
+        }
     }
 }

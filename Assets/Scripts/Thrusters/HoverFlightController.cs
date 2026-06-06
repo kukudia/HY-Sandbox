@@ -62,6 +62,13 @@ public class HoverFlightController : MonoBehaviour
 
     private GUIStyle headerStyle; // GUI标题样式
     private GUIStyle labelStyle;  // GUI标签样式
+    private string targetHeightText;
+    private string currentHeightText;
+    private string heightPText;
+    private string verticalVelocityText;
+    private string horizontalVelocityText;
+    private readonly string[] thrusterTexts = new string[64];
+    private float nextUiRefreshTime;
 
     public void Init()
     {
@@ -313,25 +320,19 @@ public class HoverFlightController : MonoBehaviour
     {
         if (!showUI || thrusters == null || !PlayManager.instance.playMode) return;
 
-        headerStyle = new GUIStyle(GUI.skin.label);
-        headerStyle.fontSize = 16;
-        headerStyle.fontStyle = FontStyle.Bold;
-        headerStyle.normal.textColor = Color.cyan;
-
-        labelStyle = new GUIStyle(GUI.skin.label);
-        labelStyle.fontSize = 13;
-        labelStyle.normal.textColor = Color.white;
+        EnsureGuiStyles();
+        RefreshUiText();
 
         GUILayout.BeginArea(new Rect(20, 20, 320, 600), GUI.skin.window);
 
         GUILayout.Label("Hover Flight Controll System", headerStyle);
 
         GUILayout.Space(8);
-        GUILayout.Label($"Target Height: {targetHoverHeight:F2}", labelStyle);
-        GUILayout.Label($"Current Height: {transform.position.y:F2}", labelStyle);
-        GUILayout.Label($"Height P: {currentHeightP:F2}", labelStyle);
-        GUILayout.Label($"Vertical Velocity: {PlayManager.instance.verticalVelocity:F2} m/s", labelStyle);
-        GUILayout.Label($"Horizontal Velocity: {PlayManager.instance.horizontalVelocity:F2} m/s", labelStyle);
+        GUILayout.Label(targetHeightText, labelStyle);
+        GUILayout.Label(currentHeightText, labelStyle);
+        GUILayout.Label(heightPText, labelStyle);
+        GUILayout.Label(verticalVelocityText, labelStyle);
+        GUILayout.Label(horizontalVelocityText, labelStyle);
 
         GUILayout.Space(10);
         GUILayout.Label("Hover Thrusters:", headerStyle);
@@ -344,7 +345,7 @@ public class HoverFlightController : MonoBehaviour
             Color barColor = Color.Lerp(Color.red, Color.green, norm);
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label($"#{i} {thrusters[i].thrust:F1}/{thrusters[i].maxThrust}", labelStyle);
+            GUILayout.Label(i < thrusterTexts.Length ? thrusterTexts[i] : string.Empty, labelStyle);
 
             if (thrusters[i].thrust > 0)
             {
@@ -366,5 +367,53 @@ public class HoverFlightController : MonoBehaviour
         }
 
         GUILayout.EndArea();
+    }
+
+    private void EnsureGuiStyles()
+    {
+        if (headerStyle != null && labelStyle != null)
+        {
+            return;
+        }
+
+        headerStyle = new GUIStyle(GUI.skin.label)
+        {
+            fontSize = 16,
+            fontStyle = FontStyle.Bold
+        };
+        headerStyle.normal.textColor = Color.cyan;
+
+        labelStyle = new GUIStyle(GUI.skin.label)
+        {
+            fontSize = 13
+        };
+        labelStyle.normal.textColor = Color.white;
+    }
+
+    private void RefreshUiText()
+    {
+        if (Time.unscaledTime < nextUiRefreshTime)
+        {
+            return;
+        }
+
+        nextUiRefreshTime = Time.unscaledTime + 0.2f;
+        targetHeightText = $"Target Height: {targetHoverHeight:F2}";
+        currentHeightText = $"Current Height: {transform.position.y:F2}";
+        heightPText = $"Height P: {currentHeightP:F2}";
+        verticalVelocityText = $"Vertical Velocity: {PlayManager.instance.verticalVelocity:F2} m/s";
+        horizontalVelocityText = $"Horizontal Velocity: {PlayManager.instance.horizontalVelocity:F2} m/s";
+
+        int count = Mathf.Min(thrusters.Length, thrusterTexts.Length);
+        for (int i = 0; i < count; i++)
+        {
+            if (thrusters[i] == null)
+            {
+                thrusterTexts[i] = string.Empty;
+                continue;
+            }
+
+            thrusterTexts[i] = $"#{i} {thrusters[i].thrust:F1}/{thrusters[i].maxThrust}";
+        }
     }
 }

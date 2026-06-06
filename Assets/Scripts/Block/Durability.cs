@@ -80,22 +80,25 @@ public class Durability : MonoBehaviour
 
     void LateUpdate()
     {
-        if (!debugLog || currentDurability >= maxDurability)
+        if (!ShouldShowDebugLabel() || currentDurability >= maxDurability)
         {
             isVisible = false;
             return;
         }
         
-        if (Camera.main == null) return;
+        Camera camera = PlayManager.instance != null && PlayManager.instance.mainCamera != null
+            ? PlayManager.instance.mainCamera
+            : Camera.main;
+        if (camera == null) return;
         
-        lastScreenPos = Camera.main.WorldToScreenPoint(transform.position);
+        lastScreenPos = camera.WorldToScreenPoint(transform.position);
         isVisible = lastScreenPos.z > 0;
         durabilityText = $"{currentDurability:F1}/{maxDurability}";
     }
 
     void OnGUI()
     {
-        if (!debugLog || !isVisible || currentDurability >= maxDurability) return;
+        if (!ShouldShowDebugLabel() || !isVisible || currentDurability >= maxDurability) return;
         
         if (labelStyle == null)
         {
@@ -107,5 +110,12 @@ public class Durability : MonoBehaviour
         
         Rect labelRect = new Rect(lastScreenPos.x - 50, Screen.height - lastScreenPos.y - 10, 100, 20);
         GUI.Label(labelRect, durabilityText, labelStyle);
+    }
+
+    private bool ShouldShowDebugLabel()
+    {
+        return debugLog
+            && PlayManager.instance != null
+            && PlayManager.instance.showLabel;
     }
 }

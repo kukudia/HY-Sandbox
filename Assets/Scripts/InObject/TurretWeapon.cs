@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class TurretWeapon : MonoBehaviour
 {
+    private const int MaxRaycastHits = 16;
+
     public UnitFaction targetFaction = UnitFaction.Enemy;
     public Transform horizontalAxis;
     public Transform verticalAxis;
@@ -22,6 +24,8 @@ public class TurretWeapon : MonoBehaviour
     private float nextSearchTime;
     private float nextFireTime;
     private float hideLineTime;
+    private readonly RaycastHit[] raycastHits = new RaycastHit[MaxRaycastHits];
+    private readonly System.Collections.Generic.Dictionary<ControlUnit, Durability[]> durabilityCache = new System.Collections.Generic.Dictionary<ControlUnit, Durability[]>();
 
     private void Awake()
     {
@@ -90,10 +94,15 @@ public class TurretWeapon : MonoBehaviour
 
     private ControlUnit FindNearestTarget(UnitFaction faction, out Durability nearestDurability)
     {
-        ControlUnit[] units = Object.FindObjectsByType<ControlUnit>(FindObjectsSortMode.None);
+        var units = PlayManager.instance != null ? PlayManager.instance.GetControlUnits() : null;
         ControlUnit nearest = null;
         nearestDurability = null;
         float nearestSqrDistance = range * range;
+
+        if (units == null)
+        {
+            return null;
+        }
 
         if (ShouldPrioritizeEnemyCockpit())
         {
@@ -142,7 +151,7 @@ public class TurretWeapon : MonoBehaviour
 
     private Durability FindNearestDurability(ControlUnit unit)
     {
-        Durability[] durabilities = unit.GetComponentsInChildren<Durability>();
+        Durability[] durabilities = GetDurabilities(unit);
         Durability nearest = null;
         float nearestSqrDistance = float.MaxValue;
 
@@ -159,6 +168,22 @@ public class TurretWeapon : MonoBehaviour
         }
 
         return nearest;
+    }
+
+    private Durability[] GetDurabilities(ControlUnit unit)
+    {
+        if (unit == null)
+        {
+            return System.Array.Empty<Durability>();
+        }
+
+        if (!durabilityCache.TryGetValue(unit, out Durability[] durabilities) || durabilities == null)
+        {
+            durabilities = unit.GetComponentsInChildren<Durability>();
+            durabilityCache[unit] = durabilities;
+        }
+
+        return durabilities;
     }
 
     private bool ShouldPrioritizeEnemyCockpit()
@@ -228,11 +253,12 @@ public class TurretWeapon : MonoBehaviour
     private void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)
     {
         Vector3 end = origin + direction * range;
-        RaycastHit[] hits = Physics.RaycastAll(origin, direction, range, hitLayers);
-        System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+        int hitCount = Physics.RaycastNonAlloc(origin, direction, raycastHits, range, hitLayers);
+        System.Array.Sort(raycastHits, 0, hitCount, RaycastHitDistanceComparer.Instance);
 
-        foreach (RaycastHit hit in hits)
+        for (int i = 0; i < hitCount; i++)
         {
+            RaycastHit hit = raycastHits[i];
             ControlUnit hitUnit = hit.collider.GetComponentInParent<ControlUnit>();
             if (hitUnit == owner) continue;
 
@@ -287,5 +313,15 @@ public class TurretWeapon : MonoBehaviour
     private static UnitFaction Opposite(UnitFaction faction)
     {
         return faction == UnitFaction.Player ? UnitFaction.Enemy : UnitFaction.Player;
+    }
+
+    private sealed class RaycastHitDistanceComparer : System.Collections.Generic.IComparer<RaycastHit>
+    {
+        public static readonly RaycastHitDistanceComparer Instance = new RaycastHitDistanceComparer();
+
+        public int Compare(RaycastHit a, RaycastHit b)
+        {
+            return a.distance.CompareTo(b.distance);
+        }
     }
 }

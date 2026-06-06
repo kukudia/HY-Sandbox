@@ -221,10 +221,13 @@ public class PlayManager : MonoBehaviour
 
     public void PlayEnd()
     {
-        List<ControlUnit> controlUnits = Object.FindObjectsByType<ControlUnit>(FindObjectsSortMode.None).ToList();
+        List<ControlUnit> controlUnits = allControlUnits.ToList();
         foreach (ControlUnit controlUnit in controlUnits)
         {
-            controlUnit.PlayEnd();
+            if (controlUnit != null)
+            {
+                controlUnit.PlayEnd();
+            }
         }
 
         playMode = false;
@@ -289,7 +292,7 @@ public class PlayManager : MonoBehaviour
 
     public void RegisterControlUnit(ControlUnit unit)
     {
-        if (!allControlUnits.Contains(unit))
+        if (unit != null && !allControlUnits.Contains(unit))
         {
             allControlUnits.Add(unit);
         }
@@ -301,6 +304,19 @@ public class PlayManager : MonoBehaviour
         {
             allControlUnits.Remove(unit);
         }
+    }
+
+    public IReadOnlyList<ControlUnit> GetControlUnits()
+    {
+        for (int i = allControlUnits.Count - 1; i >= 0; i--)
+        {
+            if (allControlUnits[i] == null)
+            {
+                allControlUnits.RemoveAt(i);
+            }
+        }
+
+        return allControlUnits;
     }
 
     private EnemySpawner EnsureEnemySpawner()

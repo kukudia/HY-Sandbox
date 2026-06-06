@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class RepairBot : MonoBehaviour
 {
+    private const int MaxNearbyColliders = 32;
+
     public Transform home;
     public Transform outside;
     public Transform navigateTarget;
@@ -75,6 +77,11 @@ public class RepairBot : MonoBehaviour
     private float currentSpeedMultiplier = 1f;
     private TrailRenderer trailRenderer;
     private ControlUnit ownerUnit;
+    private Durability[] ownedDurabilities;
+    private readonly Collider[] nearbyColliders = new Collider[MaxNearbyColliders];
+    private readonly GradientColorKey[] repairBeamColorKeys = new GradientColorKey[2];
+    private readonly GradientAlphaKey[] repairBeamAlphaKeys = new GradientAlphaKey[2];
+    private Gradient runtimeRepairBeamGradient;
 
     // 调试信息
     private List<AvoidanceDebugInfo> debugAvoidanceInfo = new List<AvoidanceDebugInfo>();
@@ -127,6 +134,10 @@ public class RepairBot : MonoBehaviour
             repairBeam.endWidth = beamWidth * 0.5f;
             repairBeam.enabled = false;
         }
+
+        runtimeRepairBeamGradient = new Gradient();
+        repairBeamAlphaKeys[0] = new GradientAlphaKey(1f, 0f);
+        repairBeamAlphaKeys[1] = new GradientAlphaKey(0.5f, 1f);
     }
 
     void InitializeTrail()
@@ -279,14 +290,16 @@ public class RepairBot : MonoBehaviour
         }
 
         // 2. 球形检测法（补充检测盲区）
-        Collider[] nearbyColliders = Physics.OverlapSphere(
+        int nearbyColliderCount = Physics.OverlapSphereNonAlloc(
             transform.position,
             primaryAvoidanceRange,
+            nearbyColliders,
             obstacleMask
         );
 
-        foreach (var collider in nearbyColliders)
+        for (int i = 0; i < nearbyColliderCount; i++)
         {
+            Collider collider = nearbyColliders[i];
             if (collider.transform == transform ||
                 (currentTarget != null && collider.transform == currentTarget.transform))
                 continue;
@@ -506,25 +519,18 @@ public class RepairBot : MonoBehaviour
         ControlUnit repairOwner = ResolveOwnerUnit();
         if (repairOwner == null) return;
 
-        Durability[] allBlocks = repairOwner.GetComponentsInChildren<Durability>();
-        List<Durability> damagedBlocks = new List<Durability>();
-
-        foreach (Durability block in allBlocks)
+        if (ownedDurabilities == null || ownedDurabilities.Length == 0 || ownerUnit != repairOwner)
         {
-            if (block.needToRepair)
-            {
-                damagedBlocks.Add(block);
-            }
+            ownedDurabilities = repairOwner.GetComponentsInChildren<Durability>();
         }
-
-        if (damagedBlocks.Count == 0)
-            return;
 
         float closestDistance = Mathf.Infinity;
         Durability closestBlock = null;
 
-        foreach (Durability block in damagedBlocks)
+        foreach (Durability block in ownedDurabilities)
         {
+            if (block == null || !block.needToRepair) continue;
+
             float distance = Vector3.Distance(transform.position, block.transform.position);
             if (distance < closestDistance && distance <= detectionRange)
             {
@@ -542,14 +548,27 @@ public class RepairBot : MonoBehaviour
         ControlUnit homeOwner = home != null ? home.GetComponentInParent<ControlUnit>() : null;
         if (homeOwner != null)
         {
-            ownerUnit = homeOwner;
+            SetOwnerUnit(homeOwner);
         }
         else if (ownerUnit == null)
         {
-            ownerUnit = GetComponentInParent<ControlUnit>();
+            SetOwnerUnit(GetComponentInParent<ControlUnit>());
         }
 
         return ownerUnit;
+    }
+
+    private void SetOwnerUnit(ControlUnit newOwner)
+    {
+        if (ownerUnit == newOwner)
+        {
+            return;
+        }
+
+        ownerUnit = newOwner;
+        ownedDurabilities = ownerUnit != null
+            ? ownerUnit.GetComponentsInChildren<Durability>()
+            : null;
     }
 
     private bool IsOwnedTarget(Durability target)
@@ -612,19 +631,10 @@ public class RepairBot : MonoBehaviour
             float durabilityRatio = Mathf.Clamp01(currentTarget.currentDurability / currentTarget.maxDurability);
             Color beamColor = repairBeamGradient.Evaluate(durabilityRatio);
 
-            Gradient newGradient = new Gradient();
-            newGradient.SetKeys(
-                new GradientColorKey[] {
-                    new GradientColorKey(beamColor, 0f),
-                    new GradientColorKey(Color.white, 1f)
-                },
-                new GradientAlphaKey[] {
-                    new GradientAlphaKey(1f, 0f),
-                    new GradientAlphaKey(0.5f, 1f)
-                }
-            );
-
-            repairBeam.colorGradient = newGradient;
+            repairBeamColorKeys[0] = new GradientColorKey(beamColor, 0f);
+            repairBeamColorKeys[1] = new GradientColorKey(Color.white, 1f);
+            runtimeRepairBeamGradient.SetKeys(repairBeamColorKeys, repairBeamAlphaKeys);
+            repairBeam.colorGradient = runtimeRepairBeamGradient;
         }
     }
 
