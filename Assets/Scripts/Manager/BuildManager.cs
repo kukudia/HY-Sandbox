@@ -89,6 +89,7 @@ public class BuildManager : MonoBehaviour
 
     public float BlockLoadIntervalSeconds = 0.1f;
     public bool moveCameraDuringBlockLoad = true;
+    public int minBlocksForLoadCameraOrbit = 5;
     public float blockLoadCameraMoveDuration = 0.35f;
     public float blockLoadCameraOrbitPitch = 25f;
     public float blockLoadCameraOrbitRadiusVariation = 0.25f;
@@ -1276,6 +1277,7 @@ public class BuildManager : MonoBehaviour
     private void StartLoadingCameraOrbit(GameObject frameObject, int blockCount)
     {
         if (!moveCameraDuringBlockLoad || frameObject == null) return;
+        if (blockCount < minBlocksForLoadCameraOrbit) return;
 
         CameraController cameraController = loadingCameraController != null
             ? loadingCameraController
