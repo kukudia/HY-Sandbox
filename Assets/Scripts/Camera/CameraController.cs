@@ -225,6 +225,35 @@ public class CameraController : MonoBehaviour
         focusCoroutine = StartCoroutine(SmoothOrbitRoutine(orbitCenter, yawDegrees, targetPitch, targetRadius, duration));
     }
 
+    public void StartContinuousOrbitCameraAroundBlock(GameObject frameObj, Vector3 orbitCenter, float startYawDegrees, float orbitDegreesPerSecond, float pitchDegrees, float radiusVariation, float radiusWaveDegrees, float radiusSmoothTime)
+    {
+        if (frameObj == null) return;
+
+        if (focusCoroutine != null)
+        {
+            StopCoroutine(focusCoroutine);
+        }
+
+        focusCoroutine = StartCoroutine(ContinuousOrbitRoutine(
+            frameObj,
+            orbitCenter,
+            startYawDegrees,
+            orbitDegreesPerSecond,
+            Mathf.Clamp(pitchDegrees, -75f, 75f),
+            Mathf.Max(0f, radiusVariation),
+            Mathf.Max(1f, radiusWaveDegrees),
+            Mathf.Max(0.01f, radiusSmoothTime)
+        ));
+    }
+
+    public void StopCameraMotion()
+    {
+        if (focusCoroutine == null) return;
+
+        StopCoroutine(focusCoroutine);
+        focusCoroutine = null;
+    }
+
     private IEnumerator SmoothFocusRoutine(Vector3 targetPosition, Quaternion targetRotation, float duration)
     {
         Vector3 startPosition = transform.position;
@@ -253,6 +282,49 @@ public class CameraController : MonoBehaviour
         transform.position = targetPosition;
         transform.rotation = targetRotation;
         focusCoroutine = null;
+    }
+
+    private IEnumerator ContinuousOrbitRoutine(GameObject frameObj, Vector3 orbitCenter, float startYawDegrees, float orbitDegreesPerSecond, float pitchDegrees, float radiusVariation, float radiusWaveDegrees, float radiusSmoothTime)
+    {
+        float yaw = startYawDegrees;
+        float currentRadius = 0f;
+        float radiusVelocity = 0f;
+        bool hasRadius = false;
+
+        while (frameObj != null)
+        {
+            if (TryCalculateBlockBounds(frameObj, out Bounds frameBounds))
+            {
+                yaw += orbitDegreesPerSecond * Time.deltaTime;
+                float radiusMultiplier = CalculateOrbitRadiusMultiplier(yaw, radiusVariation, radiusWaveDegrees);
+                float targetRadius = CalculateFramingDistance(frameBounds, orbitCenter) * radiusMultiplier;
+
+                if (!hasRadius)
+                {
+                    currentRadius = targetRadius;
+                    hasRadius = true;
+                }
+                else
+                {
+                    currentRadius = Mathf.SmoothDamp(currentRadius, targetRadius, ref radiusVelocity, radiusSmoothTime);
+                }
+
+                SetOrbitPose(orbitCenter, yaw, pitchDegrees, currentRadius);
+            }
+
+            yield return null;
+        }
+
+        focusCoroutine = null;
+    }
+
+    private float CalculateOrbitRadiusMultiplier(float yawDegrees, float radiusVariation, float radiusWaveDegrees)
+    {
+        if (radiusVariation <= 0f) return 1f;
+
+        float phase = yawDegrees / radiusWaveDegrees * Mathf.PI * 2f;
+        float wave = (Mathf.Sin(phase) + 1f) * 0.5f;
+        return 1f + wave * radiusVariation;
     }
 
     private IEnumerator SmoothOrbitRoutine(Vector3 orbitCenter, float targetYaw, float targetPitch, float targetRadius, float duration)
