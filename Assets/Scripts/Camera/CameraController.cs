@@ -206,7 +206,14 @@ public class CameraController : MonoBehaviour
         if (frameObj == null) return;
         if (!TryCalculateBlockBounds(frameObj, out Bounds frameBounds)) return;
 
-        Vector3 orbitCenter = frameBounds.center;
+        SmoothOrbitCameraAroundBlock(frameObj, frameBounds.center, yawDegrees, pitchDegrees, radiusMultiplier, duration);
+    }
+
+    public void SmoothOrbitCameraAroundBlock(GameObject frameObj, Vector3 orbitCenter, float yawDegrees, float pitchDegrees, float radiusMultiplier, float duration)
+    {
+        if (frameObj == null) return;
+        if (!TryCalculateBlockBounds(frameObj, out Bounds frameBounds)) return;
+
         float targetRadius = CalculateFramingDistance(frameBounds, orbitCenter) * Mathf.Max(radiusMultiplier, 0.1f);
         float targetPitch = Mathf.Clamp(pitchDegrees, -75f, 75f);
 

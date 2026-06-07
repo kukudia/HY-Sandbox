@@ -100,6 +100,7 @@ public class BuildManager : MonoBehaviour
     private string loadingBuildSavePath = string.Empty;
     private CameraController loadingCameraController;
     private float loadingCameraOrbitAngle;
+    private Vector3 loadingCameraOrbitCenter;
 
     public bool IsLoadingBlocks { get; private set; }
 
@@ -920,7 +921,8 @@ public class BuildManager : MonoBehaviour
         loadingBuildTarget = loadTarget;
         loadingBuildSavePath = loadSavePath;
         loadingCameraController = GetMainCameraController();
-        loadingCameraOrbitAngle = GetCameraOrbitAngle(gameObj.transform.position);
+        loadingCameraOrbitCenter = CalculateLoadingCameraOrbitCenter(blocksToLoad, gameObj.transform.position);
+        loadingCameraOrbitAngle = GetCameraOrbitAngle(loadingCameraOrbitCenter);
         IsLoadingBlocks = true;
         loadAllBlocksCoroutine = StartCoroutine(LoadAllBlocksRoutine(loadVersion, loadSavePath, gameObj.transform, blocksToLoad, time0));
     }
@@ -1286,7 +1288,7 @@ public class BuildManager : MonoBehaviour
             : target;
 
         loadingCameraOrbitAngle += blockLoadCameraOrbitDegrees;
-        cameraController.SmoothOrbitCameraAroundBlock(frameObject, loadingCameraOrbitAngle, blockLoadCameraOrbitPitch, GetLoadingCameraOrbitRadiusMultiplier(), duration);
+        cameraController.SmoothOrbitCameraAroundBlock(frameObject, loadingCameraOrbitCenter, loadingCameraOrbitAngle, blockLoadCameraOrbitPitch, GetLoadingCameraOrbitRadiusMultiplier(), duration);
     }
 
     private void FocusLoadedConstructCamera()
@@ -1302,7 +1304,7 @@ public class BuildManager : MonoBehaviour
         if (moveCameraDuringBlockLoad)
         {
             float duration = Mathf.Max(0f, blockLoadCameraMoveDuration);
-            cameraController.SmoothOrbitCameraAroundBlock(GameManager.instance.blocksParent.gameObject, loadingCameraOrbitAngle, blockLoadCameraOrbitPitch, GetLoadingCameraOrbitRadiusMultiplier(), duration);
+            cameraController.SmoothOrbitCameraAroundBlock(GameManager.instance.blocksParent.gameObject, loadingCameraOrbitCenter, loadingCameraOrbitAngle, blockLoadCameraOrbitPitch, GetLoadingCameraOrbitRadiusMultiplier(), duration);
         }
         else
         {
@@ -1325,6 +1327,38 @@ public class BuildManager : MonoBehaviour
         if (cameraOffset.sqrMagnitude < 0.001f) return 135f;
 
         return Mathf.Atan2(cameraOffset.x, cameraOffset.z) * Mathf.Rad2Deg;
+    }
+
+    private Vector3 CalculateLoadingCameraOrbitCenter(List<BlockData> blocksToLoad, Vector3 fallbackCenter)
+    {
+        if (blocksToLoad == null || blocksToLoad.Count == 0) return fallbackCenter;
+
+        bool hasBounds = false;
+        Bounds bounds = new Bounds(fallbackCenter, Vector3.zero);
+        foreach (BlockData data in blocksToLoad)
+        {
+            if (data == null) continue;
+
+            Vector3 center = new Vector3(data.posX, data.posY, data.posZ);
+            Vector3 size = new Vector3(
+                Mathf.Max(data.x * gridSize, gridSize),
+                Mathf.Max(data.y * gridSize, gridSize),
+                Mathf.Max(data.z * gridSize, gridSize)
+            );
+
+            Bounds blockBounds = new Bounds(center, size);
+            if (!hasBounds)
+            {
+                bounds = blockBounds;
+                hasBounds = true;
+            }
+            else
+            {
+                bounds.Encapsulate(blockBounds);
+            }
+        }
+
+        return hasBounds ? bounds.center : fallbackCenter;
     }
 
     private float GetLoadingCameraOrbitRadiusMultiplier()
