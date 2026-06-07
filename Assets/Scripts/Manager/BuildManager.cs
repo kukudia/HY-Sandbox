@@ -90,7 +90,6 @@ public class BuildManager : MonoBehaviour
     public float BlockLoadIntervalSeconds = 0.1f;
     public bool moveCameraDuringBlockLoad = true;
     public float blockLoadCameraMoveDuration = 0.35f;
-    public float blockLoadCameraOrbitDegreesPerSecond = 60f;
     public float blockLoadCameraOrbitPitch = 25f;
     public float blockLoadCameraOrbitRadiusVariation = 0.25f;
     public float blockLoadCameraOrbitRadiusWaveDegrees = 120f;
@@ -923,7 +922,7 @@ public class BuildManager : MonoBehaviour
         loadingCameraController = GetMainCameraController();
         loadingCameraOrbitCenter = CalculateLoadingCameraOrbitCenter(blocksToLoad, gameObj.transform.position);
         loadingCameraOrbitAngle = GetCameraOrbitAngle(loadingCameraOrbitCenter);
-        StartLoadingCameraOrbit(gameObj);
+        StartLoadingCameraOrbit(gameObj, blocksToLoad.Count);
         IsLoadingBlocks = true;
         loadAllBlocksCoroutine = StartCoroutine(LoadAllBlocksRoutine(loadVersion, loadSavePath, gameObj.transform, blocksToLoad, time0));
     }
@@ -1274,7 +1273,7 @@ public class BuildManager : MonoBehaviour
         loadingBuildSavePath = string.Empty;
     }
 
-    private void StartLoadingCameraOrbit(GameObject frameObject)
+    private void StartLoadingCameraOrbit(GameObject frameObject, int blockCount)
     {
         if (!moveCameraDuringBlockLoad || frameObject == null) return;
 
@@ -1284,7 +1283,7 @@ public class BuildManager : MonoBehaviour
 
         if (cameraController == null) return;
 
-        float orbitDegreesPerSecond = blockLoadCameraOrbitDegreesPerSecond;
+        float orbitDegreesPerSecond = CalculateLoadingCameraOrbitDegreesPerSecond(blockCount);
         cameraController.StartContinuousOrbitCameraAroundBlock(
             frameObject,
             loadingCameraOrbitCenter,
@@ -1295,6 +1294,12 @@ public class BuildManager : MonoBehaviour
             blockLoadCameraOrbitRadiusWaveDegrees,
             Mathf.Max(0.01f, blockLoadCameraMoveDuration)
         );
+    }
+
+    private float CalculateLoadingCameraOrbitDegreesPerSecond(int blockCount)
+    {
+        float expectedLoadDuration = Mathf.Max(BlockLoadIntervalSeconds * Mathf.Max(blockCount - 1, 1), 0.01f);
+        return 360f / expectedLoadDuration;
     }
 
     private void StopLoadingCameraOrbit()
