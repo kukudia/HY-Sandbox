@@ -205,14 +205,17 @@ public class CameraController : MonoBehaviour
     {
         if (frameObj == null) return;
         if (!TryCalculateBlockBounds(frameObj, out Bounds frameBounds)) return;
-        if (!TryGetOrbitPose(frameBounds, yawDegrees, pitchDegrees, radiusMultiplier, out Vector3 targetPosition, out Quaternion targetRotation)) return;
+
+        Vector3 orbitCenter = frameBounds.center;
+        float targetRadius = CalculateFramingDistance(frameBounds, orbitCenter) * Mathf.Max(radiusMultiplier, 0.1f);
+        float targetPitch = Mathf.Clamp(pitchDegrees, -75f, 75f);
 
         if (focusCoroutine != null)
         {
             StopCoroutine(focusCoroutine);
         }
 
-        focusCoroutine = StartCoroutine(SmoothFocusRoutine(targetPosition, targetRotation, duration));
+        focusCoroutine = StartCoroutine(SmoothOrbitRoutine(orbitCenter, yawDegrees, targetPitch, targetRadius, duration));
     }
 
     private IEnumerator SmoothFocusRoutine(Vector3 targetPosition, Quaternion targetRotation, float duration)
@@ -243,6 +246,68 @@ public class CameraController : MonoBehaviour
         transform.position = targetPosition;
         transform.rotation = targetRotation;
         focusCoroutine = null;
+    }
+
+    private IEnumerator SmoothOrbitRoutine(Vector3 orbitCenter, float targetYaw, float targetPitch, float targetRadius, float duration)
+    {
+        Vector3 startOffset = transform.position - orbitCenter;
+        float startRadius = startOffset.magnitude;
+        float startYaw = targetYaw;
+        float startPitch = targetPitch;
+
+        if (startRadius > 0.001f)
+        {
+            startYaw = Mathf.Atan2(startOffset.x, startOffset.z) * Mathf.Rad2Deg;
+            float horizontalDistance = new Vector2(startOffset.x, startOffset.z).magnitude;
+            startPitch = Mathf.Atan2(startOffset.y, horizontalDistance) * Mathf.Rad2Deg;
+        }
+        else
+        {
+            startRadius = targetRadius;
+        }
+
+        if (duration <= 0f)
+        {
+            SetOrbitPose(orbitCenter, targetYaw, targetPitch, targetRadius);
+            focusCoroutine = null;
+            yield break;
+        }
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            t = t * t * (3f - 2f * t);
+
+            float yaw = Mathf.LerpAngle(startYaw, targetYaw, t);
+            float pitch = Mathf.Lerp(startPitch, targetPitch, t);
+            float radius = Mathf.Lerp(startRadius, targetRadius, t);
+            SetOrbitPose(orbitCenter, yaw, pitch, radius);
+            yield return null;
+        }
+
+        SetOrbitPose(orbitCenter, targetYaw, targetPitch, targetRadius);
+        focusCoroutine = null;
+    }
+
+    private void SetOrbitPose(Vector3 orbitCenter, float yawDegrees, float pitchDegrees, float radius)
+    {
+        float yaw = yawDegrees * Mathf.Deg2Rad;
+        float pitch = Mathf.Clamp(pitchDegrees, -75f, 75f) * Mathf.Deg2Rad;
+        float cosPitch = Mathf.Cos(pitch);
+        Vector3 cameraDirection = new Vector3(
+            Mathf.Sin(yaw) * cosPitch,
+            Mathf.Sin(pitch),
+            Mathf.Cos(yaw) * cosPitch
+        ).normalized;
+
+        transform.position = orbitCenter + cameraDirection * Mathf.Max(radius, 0.1f);
+        Vector3 lookDirection = orbitCenter - transform.position;
+        if (lookDirection.sqrMagnitude > 0.001f)
+        {
+            transform.rotation = Quaternion.LookRotation(lookDirection.normalized, Vector3.up);
+        }
     }
 
     private bool TryGetFocusPose(GameObject obj, out Vector3 targetPosition, out Quaternion targetRotation)
