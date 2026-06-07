@@ -115,6 +115,13 @@ public class SaveManager : MonoBehaviour
 
     public void LoadSave(string saveName)
     {
+        if (BuildManager.instance != null
+            && BuildManager.instance.IsLoadingBuildTarget(BuildTargetKind.PlayerSave, saveName, BuildManager.instance.currentEnemyBlueprintName))
+        {
+            Debug.Log($"Save {saveName} is already loading.");
+            return;
+        }
+
         currentSaveName = saveName;
 
         ControlUnit[] deleteObjs = Object.FindObjectsByType<ControlUnit>(FindObjectsSortMode.None);
@@ -140,6 +147,13 @@ public class SaveManager : MonoBehaviour
 
     public void LoadEnemyBlueprint(string blueprintName)
     {
+        if (BuildManager.instance != null
+            && BuildManager.instance.IsLoadingBuildTarget(BuildTargetKind.EnemyBlueprint, BuildManager.instance.currentSaveName, blueprintName))
+        {
+            Debug.Log($"Enemy blueprint {blueprintName} is already loading.");
+            return;
+        }
+
         currentEnemyBlueprintName = blueprintName;
 
         ControlUnit[] deleteObjs = Object.FindObjectsByType<ControlUnit>(FindObjectsSortMode.None);

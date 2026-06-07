@@ -90,6 +90,8 @@ public class BuildManager : MonoBehaviour
     public float BlockLoadIntervalSeconds = 0.1f;
     private Coroutine loadAllBlocksCoroutine;
     private int loadAllBlocksVersion;
+    private BuildTargetContext loadingBuildTarget;
+    private string loadingBuildSavePath = string.Empty;
 
     public bool IsLoadingBlocks { get; private set; }
 
@@ -213,7 +215,14 @@ public class BuildManager : MonoBehaviour
             return;
         }
 
-        SetBuildTarget(BuildTargetContext.EnemyBlueprint(currentSaveName, blueprintName));
+        BuildTargetContext targetContext = BuildTargetContext.EnemyBlueprint(currentSaveName, blueprintName);
+        if (IsLoadingBuildTarget(targetContext))
+        {
+            Debug.Log($"Enemy blueprint {targetContext.EnemyBlueprintName} is already loading.");
+            return;
+        }
+
+        SetBuildTarget(targetContext);
         currentBlockResourcePath = string.Empty;
         ResetBuildState();
 
@@ -852,6 +861,19 @@ public class BuildManager : MonoBehaviour
     {
         double time0 = Time.timeAsDouble;
 
+        if (!IsEditingEnemyBlueprint && currentSaveName == String.Empty && SaveManager.instance.saves.Count > 0)
+        {
+            currentSaveName = SaveManager.instance.saves[0];
+        }
+
+        BuildTargetContext loadTarget = CurrentBuildContext;
+        string loadSavePath = loadTarget.GetSavePath(SaveManager.instance);
+        if (IsLoadingBuildTarget(loadTarget))
+        {
+            Debug.Log($"Already loading {loadSavePath}, skip duplicate load request.");
+            return;
+        }
+
         StopActiveBlockLoad();
         DeselectBlock();
         ClearCurrentGhost();
@@ -863,19 +885,12 @@ public class BuildManager : MonoBehaviour
 
         SaveManager.instance.blocks.Clear();
 
-        if (!IsEditingEnemyBlueprint && currentSaveName == String.Empty && SaveManager.instance.saves.Count > 0)
-        {
-            currentSaveName = SaveManager.instance.saves[0];
-        }
-
         GameObject gameObj = Instantiate(blocksParentPrefab);
         gameObj.name = CurrentBuildName;
         GameManager.instance.blocksParent = gameObj.transform;
         PlayManager.instance.blocksParent = GameManager.instance.blocksParent;
 
         GameManager.instance.blocksParent.GetComponent<Rigidbody>().isKinematic = true;
-
-        string loadSavePath = savePath;
 
         if (!File.Exists(loadSavePath))
         {
@@ -894,6 +909,8 @@ public class BuildManager : MonoBehaviour
 
         List<BlockData> blocksToLoad = new List<BlockData>(SaveManager.instance.cachedData.blocks);
         int loadVersion = ++loadAllBlocksVersion;
+        loadingBuildTarget = loadTarget;
+        loadingBuildSavePath = loadSavePath;
         IsLoadingBlocks = true;
         loadAllBlocksCoroutine = StartCoroutine(LoadAllBlocksRoutine(loadVersion, loadSavePath, gameObj.transform, blocksToLoad, time0));
     }
@@ -980,6 +997,7 @@ public class BuildManager : MonoBehaviour
 
         IsLoadingBlocks = false;
         loadAllBlocksCoroutine = null;
+        ClearLoadingBuildTarget();
 
         Debug.Log($"加载{loadSavePath}完成，耗时{time1 - time0}s，共{blocksToLoad.Count}个方块, 恢复成功{sucessCount}个方块，恢复失败{failCount}个方块");
 
@@ -989,6 +1007,26 @@ public class BuildManager : MonoBehaviour
     public void ClearUnloadableData(string id)
     {
         ClearUnloadableData(id, savePath);
+    }
+
+    public bool IsLoadingBuildTarget(BuildTargetKind kind, string saveName, string enemyBlueprintName)
+    {
+        BuildTargetContext context = kind == BuildTargetKind.EnemyBlueprint
+            ? BuildTargetContext.EnemyBlueprint(saveName, enemyBlueprintName)
+            : BuildTargetContext.PlayerSave(saveName, enemyBlueprintName);
+
+        return IsLoadingBuildTarget(context);
+    }
+
+    private bool IsLoadingBuildTarget(BuildTargetContext context)
+    {
+        if (!IsLoadingBlocks || SaveManager.instance == null) return false;
+        if (loadAllBlocksCoroutine == null || GameManager.instance == null || GameManager.instance.blocksParent == null) return false;
+
+        return loadingBuildTarget.Kind == context.Kind
+            && string.Equals(loadingBuildTarget.SaveName, context.SaveName, StringComparison.Ordinal)
+            && string.Equals(loadingBuildTarget.EnemyBlueprintName, context.EnemyBlueprintName, StringComparison.Ordinal)
+            && string.Equals(loadingBuildSavePath, context.GetSavePath(SaveManager.instance), StringComparison.OrdinalIgnoreCase);
     }
 
     private void ClearUnloadableData(string id, string targetSavePath)
@@ -1177,6 +1215,7 @@ public class BuildManager : MonoBehaviour
         }
 
         IsLoadingBlocks = false;
+        ClearLoadingBuildTarget();
     }
 
     private bool IsCurrentBlockLoad(int loadVersion, string loadSavePath, Transform loadParent)
@@ -1194,6 +1233,7 @@ public class BuildManager : MonoBehaviour
 
         loadAllBlocksCoroutine = null;
         IsLoadingBlocks = false;
+        ClearLoadingBuildTarget();
 
         bool ownsLoadParent = GameManager.instance != null && GameManager.instance.blocksParent == loadParent;
         if (ownsLoadParent)
@@ -1208,6 +1248,12 @@ public class BuildManager : MonoBehaviour
 
             SaveManager.instance.blocks.Clear();
         }
+    }
+
+    private void ClearLoadingBuildTarget()
+    {
+        loadingBuildTarget = default;
+        loadingBuildSavePath = string.Empty;
     }
 
     private void ClearCurrentGhost()
