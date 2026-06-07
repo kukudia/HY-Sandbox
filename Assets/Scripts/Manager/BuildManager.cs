@@ -643,14 +643,14 @@ public class BuildManager : MonoBehaviour
                 {
                     if (!c.canConnect || c.isConnected) continue;
 
-                    Vector3 worldPos = block.transform.TransformPoint(c.localPos);
+                    Vector3 worldPos = block.GetConnectorWorldPosition(c);
                     float dist = Vector3.Distance(hit.point, worldPos);
                     if (dist < minDist)
                     {
                         minDist = dist;
                         nearest = c;
                         nearestWorldPos = worldPos;
-                        nearestNormal = block.transform.TransformDirection(c.normal);
+                        nearestNormal = block.GetConnectorWorldNormal(c);
                     }
                 }
 
@@ -753,9 +753,6 @@ public class BuildManager : MonoBehaviour
             return;
         }
 
-        string id = selectedBlock.GetInstanceID().ToString();
-
-        RemoveBlock(selectedBlock);
         var action = new DeleteBlockAction(selectedBlock);
         ActionManager.instance.Push(action);
 
@@ -786,15 +783,15 @@ public class BuildManager : MonoBehaviour
 
         block.CheckConnection();
         Collider[] hits = Physics.OverlapBox(
-            transform.position,
-            new Vector3(block.x * 2, block.y * 2, block.z * 2),
-            transform.rotation,
+            block.transform.position,
+            new Vector3(block.x, block.y, block.z) * gridSize,
+            block.transform.rotation,
             blockLayer              // 只检测方块层
         );
 
         foreach (var hit in hits)
         {
-            Block hitBlock = hit.GetComponent<Block>();
+            Block hitBlock = hit.GetComponentInParent<Block>();
             if (hitBlock != null)
             {
                 hitBlock.CheckConnection();
@@ -818,17 +815,23 @@ public class BuildManager : MonoBehaviour
     public void RemoveBlock(Block block)
     {
         block.neighbors = block.Neighbors();
+        List<Block> blockNeighbors = new List<Block>(block.neighbors);
 
         if (RemoveCachedBlockData(block.uniqueId))
         {
             Debug.Log($"Removed block {block.name}");
         }
 
-        if (block.neighbors.Count > 0)
+        block.DisConnectAllConnectors();
+
+        if (blockNeighbors.Count > 0)
         {
-            foreach (Block blockNeighbor in block.neighbors)
+            foreach (Block blockNeighbor in blockNeighbors)
             {
-                blockNeighbor.CheckConnection();
+                if (blockNeighbor != null)
+                {
+                    blockNeighbor.CheckConnection();
+                }
             }
         }
     }

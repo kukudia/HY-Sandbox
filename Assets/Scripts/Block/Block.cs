@@ -17,11 +17,11 @@ public class Block : MonoBehaviour
 
     public float mass;
 
-    public float collisionSpeedThreshold = 1f; // ¥•∑¢ƒÕæ√ºı…Ÿµƒ◊Ó–°ÀŸ∂»
+    public float collisionSpeedThreshold = 1f; // Ëß¶ÂèëËÄê‰πÖÂáèÂ∞ëÁöÑÊúÄÂ∞èÈÄüÂ∫¶
 
-    public float damageMultiplier = 10f; // …À∫¶œµ ˝£®ÀŸ∂»‘Ω¥Û…À∫¶‘Ω∏ﬂ£©
+    public float damageMultiplier = 10f; // ‰º§ÂÆ≥Á≥ªÊï∞ÔºàÈÄüÂ∫¶Ë∂äÂ§ß‰º§ÂÆ≥Ë∂äÈ´òÔºâ
 
-    public string resourcePath; // ‘À–– ± π”√µƒ‘§÷∆ÃÂ¬∑æ∂
+    public string resourcePath; // ËøêË°åÊó∂‰ΩøÁî®ÁöÑÈ¢ÑÂà∂‰ΩìË∑ØÂæÑ
 
     public GameObject connectorPrefab;
 
@@ -38,6 +38,11 @@ public class Block : MonoBehaviour
     public bool showLabel = true;
 
     public string uniqueId;
+
+    private const float connectionProbeOffset = 0.05f;
+    private const float connectionProbeRadius = 0.08f;
+    private const float connectorMatchDistance = 0.25f;
+    private const float oppositeNormalDotThreshold = 0.75f;
     
 
     private void Awake()
@@ -71,7 +76,7 @@ public class Block : MonoBehaviour
         }
 #endif
 
-        // ∑¿÷π∏∫ ˝
+        // Èò≤Ê≠¢Ë¥üÊï∞
         x = Mathf.Max(1, x);
         y = Mathf.Max(1, y);
         z = Mathf.Max(1, z);
@@ -172,7 +177,7 @@ public class Block : MonoBehaviour
     }
 
     /// <summary>
-    /// ¥¥Ω®“ª∏ˆ¡¨Ω”µ„
+    /// ÂàõÂª∫‰∏Ä‰∏™ËøûÊé•ÁÇπ
     /// </summary>
     void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)
     {
@@ -186,71 +191,110 @@ public class Block : MonoBehaviour
         connectors.Add(connector);
     }
 
+    private Transform ConnectorRoot => connectorParent != null ? connectorParent : transform;
+
+    public Vector3 GetConnectorWorldPosition(Connector connector)
+    {
+        return ConnectorRoot.TransformPoint(connector.localPos);
+    }
+
+    public Vector3 GetConnectorWorldNormal(Connector connector)
+    {
+        return ConnectorRoot.TransformDirection(connector.normal).normalized;
+    }
+
     public void CheckConnection()
     {
-        //Transform parent = connectorParent;
-
-        //if (parent == null) return;
-
         foreach (Connector c in connectors)
         {
-            if (!c.canConnect) continue;
-            Vector3 worldPos = transform.TransformPoint(c.localPos);
-            Vector3 worldNormal = transform.TransformDirection(c.normal);
-
             c.isConnected = false;
 
-            if (Physics.Raycast(worldPos, worldNormal, out RaycastHit hit, 0.25f, BuildManager.instance.blockLayer))
+            if (!c.canConnect)
             {
-                Block otherBlock = hit.collider.GetComponentInParent<Block>();
-                if (otherBlock != null && otherBlock != this)
-                {
-                    // ∑¥œÚºÏ≤‚£∫’“◊ÓΩ¸µƒ∂‘∑Ω connector
-                    Transform otherParent = otherBlock.connectorParent;
+                ClearConnector(c);
+                continue;
+            }
 
-                    foreach (Connector otherC in otherBlock.connectors)
-                    {
-                        if (!otherC.canConnect) continue;
+            Block otherBlock = FindBlockAcrossConnector(c);
+            Connector otherConnector = otherBlock != null ? FindMatchingConnector(otherBlock, c) : null;
 
-                        Vector3 otherWorldPos = otherParent.TransformPoint(otherC.localPos);
-                        Vector3 otherWorldNormal = otherParent.TransformDirection(otherC.normal);
-
-                        // ≈–∂œŒª÷√ «∑ÒΩ”Ω¸ + ∑®œÚ «∑Òœ‡∑¥
-                        if (Vector3.Distance(otherWorldPos, worldPos) < 0.25f && Vector3.Dot(otherWorldNormal, -worldNormal) > 0.75f) // ∑ΩœÚΩ”Ω¸œ‡∑¥
-                        {
-                            c.isConnected = true;
-                            otherC.isConnected = true;
-
-                            if (c.connector == null && otherC.connector == null && c.isConnected)
-                            {
-                                GameObject connector = Instantiate(connectorPrefab, connectorParent);
-                                connector.transform.localPosition = c.localPos;
-                                c.connector = connector;
-                                otherC.connector = connector;
-                            }
-
-                            if (c.connector == null && otherC.connector != null && c.isConnected)
-                            {
-                                c.connector = otherC.connector;
-                            }
-
-                            if (c.connector != null && otherC.connector == null && otherC.isConnected)
-                            {
-                                otherC.connector = c.connector;
-                                Debug.Log("c.connector != null && otherC.connector == null");
-                            }
-
-                            //Debug.Log($"{name} | {c.name} connect with {otherBlock.name} | {otherC.name}");
-                            break;
-                        }
-                    }
-                }
+            if (otherConnector != null)
+            {
+                ConnectTo(c, otherConnector);
             }
 
             if (c.connector != null && !c.isConnected)
             {
-                Destroy(c.connector);
+                ClearConnector(c);
             }
+        }
+    }
+
+    private Block FindBlockAcrossConnector(Connector connector)
+    {
+        Vector3 worldPos = GetConnectorWorldPosition(connector);
+        Vector3 worldNormal = GetConnectorWorldNormal(connector);
+        Vector3 probeCenter = worldPos + worldNormal * connectionProbeOffset;
+
+        Collider[] hits = Physics.OverlapSphere(probeCenter, connectionProbeRadius, BuildManager.instance.blockLayer);
+        foreach (Collider hit in hits)
+        {
+            Block otherBlock = hit.GetComponentInParent<Block>();
+            if (otherBlock != null && otherBlock != this)
+            {
+                return otherBlock;
+            }
+        }
+
+        return null;
+    }
+
+    private Connector FindMatchingConnector(Block otherBlock, Connector connector)
+    {
+        Vector3 worldPos = GetConnectorWorldPosition(connector);
+        Vector3 worldNormal = GetConnectorWorldNormal(connector);
+
+        foreach (Connector otherConnector in otherBlock.connectors)
+        {
+            if (!otherConnector.canConnect) continue;
+
+            Vector3 otherWorldPos = otherBlock.GetConnectorWorldPosition(otherConnector);
+            Vector3 otherWorldNormal = otherBlock.GetConnectorWorldNormal(otherConnector);
+
+            if (Vector3.Distance(otherWorldPos, worldPos) < connectorMatchDistance
+                && Vector3.Dot(otherWorldNormal, -worldNormal) > oppositeNormalDotThreshold)
+            {
+                return otherConnector;
+            }
+        }
+
+        return null;
+    }
+
+    private void ConnectTo(Connector connector, Connector otherConnector)
+    {
+        connector.isConnected = true;
+        otherConnector.isConnected = true;
+
+        GameObject connectorObject = connector.connector != null ? connector.connector : otherConnector.connector;
+
+        if (connectorObject == null)
+        {
+            connectorObject = Instantiate(connectorPrefab, ConnectorRoot);
+            connectorObject.transform.localPosition = connector.localPos;
+            connectorObject.transform.localRotation = Quaternion.identity;
+        }
+
+        connector.connector = connectorObject;
+        otherConnector.connector = connectorObject;
+    }
+
+    private void ClearConnector(Connector connector)
+    {
+        if (connector.connector != null)
+        {
+            Destroy(connector.connector);
+            connector.connector = null;
         }
     }
 
@@ -261,23 +305,18 @@ public class Block : MonoBehaviour
         {
             Connector c = connectors[i];
             if (!c.canConnect) continue;
-            Vector3 worldPos = connectorParent.TransformPoint(c.localPos);
-            Vector3 worldNormal = connectorParent.TransformDirection(c.normal);
 
-            if (Physics.Raycast(worldPos, worldNormal, out RaycastHit hit, 0.25f, BuildManager.instance.blockLayer))
+            Block otherBlock = FindBlockAcrossConnector(c);
+            if (otherBlock != null)
             {
-                Block otherBlock = hit.collider.GetComponentInParent<Block>();
-                if (otherBlock != null && otherBlock != this)
+                if (!neighbors.Contains(otherBlock))
                 {
-                    if (!neighbors.Contains(otherBlock))
-                    {
-                        neighbors.Add(otherBlock);
-                    }
+                    neighbors.Add(otherBlock);
+                }
 
-                    if (!otherBlock.neighbors.Contains(this))
-                    {
-                        otherBlock.neighbors.Add(this);
-                    }
+                if (!otherBlock.neighbors.Contains(this))
+                {
+                    otherBlock.neighbors.Add(this);
                 }
             }
         }
@@ -314,7 +353,7 @@ public class Block : MonoBehaviour
 
             c.isConnected = false;
 
-            // ”√–°…‰œﬂÃΩ≤‚œ‡¡⁄ «∑Ò”–∑ΩøÈ
+            // Áî®Â∞èÂ∞ÑÁ∫øÊé¢ÊµãÁõ∏ÈÇªÊòØÂê¶ÊúâÊñπÂùó
             if (Physics.Raycast(worldPos, -worldNormal, out RaycastHit hit, 0.1f, BuildManager.instance.blockLayer))
             {
                 Block otherBlock = hit.collider.GetComponentInParent<Block>();
