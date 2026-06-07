@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem; // 新输入系统命名空间
 
@@ -28,6 +29,7 @@ public class CameraController : MonoBehaviour
     public float zoomSpeed = 2f;
     public float minZoom = -2f;   // 最近
     public float maxZoom = -10f;  // 最远
+    private Coroutine focusCoroutine;
 
     void Update()
     {
@@ -153,28 +155,96 @@ public class CameraController : MonoBehaviour
     {
         if (obj == null) return;
 
+        if (focusCoroutine != null)
+        {
+            StopCoroutine(focusCoroutine);
+            focusCoroutine = null;
+        }
+
+        if (!TryGetFocusPose(obj, out Vector3 targetPosition, out Quaternion targetRotation)) return;
+
+        // 设置摄像机位置和旋转
+        transform.position = targetPosition;
+        transform.rotation = targetRotation;
+    }
+
+    public void SmoothFocusCameraOnBlock(GameObject obj, float duration)
+    {
+        if (obj == null) return;
+        if (!TryGetFocusPose(obj, out Vector3 targetPosition, out Quaternion targetRotation)) return;
+
+        if (focusCoroutine != null)
+        {
+            StopCoroutine(focusCoroutine);
+        }
+
+        focusCoroutine = StartCoroutine(SmoothFocusRoutine(targetPosition, targetRotation, duration));
+    }
+
+    private IEnumerator SmoothFocusRoutine(Vector3 targetPosition, Quaternion targetRotation, float duration)
+    {
+        Vector3 startPosition = transform.position;
+        Quaternion startRotation = transform.rotation;
+
+        if (duration <= 0f)
+        {
+            transform.position = targetPosition;
+            transform.rotation = targetRotation;
+            focusCoroutine = null;
+            yield break;
+        }
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            t = t * t * (3f - 2f * t);
+
+            transform.position = Vector3.Lerp(startPosition, targetPosition, t);
+            transform.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
+            yield return null;
+        }
+
+        transform.position = targetPosition;
+        transform.rotation = targetRotation;
+        focusCoroutine = null;
+    }
+
+    private bool TryGetFocusPose(GameObject obj, out Vector3 targetPosition, out Quaternion targetRotation)
+    {
+        targetPosition = transform.position;
+        targetRotation = transform.rotation;
+
         // 获取方块的包围盒
-        Bounds bounds = CalculateBlockBounds(obj);
+        if (!TryCalculateBlockBounds(obj, out Bounds bounds)) return false;
 
         // 计算包围盒中心
         Vector3 blockCenter = bounds.center;
 
         // 根据包围盒大小计算所需距离
         float maxExtent = Mathf.Max(bounds.extents.x, bounds.extents.y, bounds.extents.z);
-        float distance = maxExtent * 3f; // 3倍距离确保完整显示
+        float distance = Mathf.Max(maxExtent * 3f, 1f); // 3倍距离确保完整显示
 
         // 确定摄像机位置（从方块中心沿摄像机当前方向后退）
         Vector3 cameraDirection = transform.forward;
-        Vector3 targetPosition = blockCenter - cameraDirection * distance;
+        if (cameraDirection.sqrMagnitude < 0.001f)
+        {
+            cameraDirection = Vector3.forward;
+        }
 
-        // 设置摄像机位置和旋转
-        transform.position = targetPosition;
-        transform.LookAt(blockCenter);
+        targetPosition = blockCenter - cameraDirection.normalized * distance;
+        Vector3 lookDirection = blockCenter - targetPosition;
+        if (lookDirection.sqrMagnitude < 0.001f) return false;
+
+        targetRotation = Quaternion.LookRotation(lookDirection.normalized, Vector3.up);
+        return true;
     }
 
     // 新增：计算方块包围盒
-    private Bounds CalculateBlockBounds(GameObject obj)
+    private bool TryCalculateBlockBounds(GameObject obj, out Bounds bounds)
     {
+        bounds = default;
         Renderer[] renderers = obj.GetComponentsInChildren<Renderer>();
 
         Block block = obj.GetComponent<Block>();
@@ -182,16 +252,19 @@ public class CameraController : MonoBehaviour
         {
             //使用默认尺寸估算
             Vector3 size = new Vector3(block.x, block.y, block.z) * BuildManager.instance.gridSize;
-            return new Bounds(block.transform.position, size);
+            bounds = new Bounds(block.transform.position, size);
+            return true;
         }
 
+        if (renderers.Length == 0) return false;
+
         // 计算所有渲染器的总包围盒
-        Bounds bounds = renderers[0].bounds;
+        bounds = renderers[0].bounds;
         for (int i = 1; i < renderers.Length; i++)
         {
             bounds.Encapsulate(renderers[i].bounds);
         }
-        return bounds;
+        return true;
     }
 }
 

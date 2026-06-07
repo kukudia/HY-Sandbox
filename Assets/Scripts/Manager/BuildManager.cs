@@ -88,10 +88,13 @@ public class BuildManager : MonoBehaviour
     public bool penetrationMode;
 
     public float BlockLoadIntervalSeconds = 0.1f;
+    public bool moveCameraDuringBlockLoad = true;
+    public float blockLoadCameraMoveDuration = 0.35f;
     private Coroutine loadAllBlocksCoroutine;
     private int loadAllBlocksVersion;
     private BuildTargetContext loadingBuildTarget;
     private string loadingBuildSavePath = string.Empty;
+    private CameraController loadingCameraController;
 
     public bool IsLoadingBlocks { get; private set; }
 
@@ -911,6 +914,7 @@ public class BuildManager : MonoBehaviour
         int loadVersion = ++loadAllBlocksVersion;
         loadingBuildTarget = loadTarget;
         loadingBuildSavePath = loadSavePath;
+        loadingCameraController = GetMainCameraController();
         IsLoadingBlocks = true;
         loadAllBlocksCoroutine = StartCoroutine(LoadAllBlocksRoutine(loadVersion, loadSavePath, gameObj.transform, blocksToLoad, time0));
     }
@@ -954,6 +958,7 @@ public class BuildManager : MonoBehaviour
                     ApplyBlockBuildDefaults(block);
                     SaveManager.instance.blocks.Add(block);
                     sucessCount++;
+                    FocusLoadingCamera(block.gameObject);
                 }
                 Durability durability = obj.GetComponent<Durability>();
                 if (durability != null)
@@ -1001,7 +1006,8 @@ public class BuildManager : MonoBehaviour
 
         Debug.Log($"加载{loadSavePath}完成，耗时{time1 - time0}s，共{blocksToLoad.Count}个方块, 恢复成功{sucessCount}个方块，恢复失败{failCount}个方块");
 
-        Camera.main.GetComponent<CameraController>().FocusCameraOnBlock(GameManager.instance.blocksParent.gameObject);
+        FocusLoadedConstructCamera();
+        loadingCameraController = null;
     }
 
     public void ClearUnloadableData(string id)
@@ -1216,6 +1222,7 @@ public class BuildManager : MonoBehaviour
 
         IsLoadingBlocks = false;
         ClearLoadingBuildTarget();
+        loadingCameraController = null;
     }
 
     private bool IsCurrentBlockLoad(int loadVersion, string loadSavePath, Transform loadParent)
@@ -1234,6 +1241,7 @@ public class BuildManager : MonoBehaviour
         loadAllBlocksCoroutine = null;
         IsLoadingBlocks = false;
         ClearLoadingBuildTarget();
+        loadingCameraController = null;
 
         bool ownsLoadParent = GameManager.instance != null && GameManager.instance.blocksParent == loadParent;
         if (ownsLoadParent)
@@ -1254,6 +1262,47 @@ public class BuildManager : MonoBehaviour
     {
         loadingBuildTarget = default;
         loadingBuildSavePath = string.Empty;
+    }
+
+    private void FocusLoadingCamera(GameObject target)
+    {
+        if (!moveCameraDuringBlockLoad || target == null) return;
+
+        CameraController cameraController = loadingCameraController != null
+            ? loadingCameraController
+            : GetMainCameraController();
+
+        if (cameraController == null) return;
+
+        float duration = Mathf.Max(0f, blockLoadCameraMoveDuration);
+        cameraController.SmoothFocusCameraOnBlock(target, duration);
+    }
+
+    private void FocusLoadedConstructCamera()
+    {
+        if (GameManager.instance == null || GameManager.instance.blocksParent == null) return;
+
+        CameraController cameraController = loadingCameraController != null
+            ? loadingCameraController
+            : GetMainCameraController();
+
+        if (cameraController == null) return;
+
+        if (moveCameraDuringBlockLoad)
+        {
+            float duration = Mathf.Max(0f, blockLoadCameraMoveDuration);
+            cameraController.SmoothFocusCameraOnBlock(GameManager.instance.blocksParent.gameObject, duration);
+        }
+        else
+        {
+            cameraController.FocusCameraOnBlock(GameManager.instance.blocksParent.gameObject);
+        }
+    }
+
+    private CameraController GetMainCameraController()
+    {
+        Camera camera = mainCamera != null ? mainCamera : Camera.main;
+        return camera != null ? camera.GetComponent<CameraController>() : null;
     }
 
     private void ClearCurrentGhost()
