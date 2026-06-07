@@ -1275,7 +1275,11 @@ public class BuildManager : MonoBehaviour
         if (cameraController == null) return;
 
         float duration = Mathf.Max(0f, blockLoadCameraMoveDuration);
-        cameraController.SmoothFocusCameraOnBlock(target, duration);
+        GameObject frameObject = GameManager.instance != null && GameManager.instance.blocksParent != null
+            ? GameManager.instance.blocksParent.gameObject
+            : target;
+
+        cameraController.SmoothFocusCameraOnBlockFramedBy(target, frameObject, duration);
     }
 
     private void FocusLoadedConstructCamera()

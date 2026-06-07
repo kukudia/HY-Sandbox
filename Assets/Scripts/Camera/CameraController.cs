@@ -181,6 +181,21 @@ public class CameraController : MonoBehaviour
         focusCoroutine = StartCoroutine(SmoothFocusRoutine(targetPosition, targetRotation, duration));
     }
 
+    public void SmoothFocusCameraOnBlockFramedBy(GameObject lookObj, GameObject frameObj, float duration)
+    {
+        if (lookObj == null || frameObj == null) return;
+        if (!TryCalculateBlockBounds(lookObj, out Bounds lookBounds)) return;
+        if (!TryCalculateBlockBounds(frameObj, out Bounds frameBounds)) return;
+        if (!TryGetFocusPose(frameBounds, lookBounds.center, out Vector3 targetPosition, out Quaternion targetRotation)) return;
+
+        if (focusCoroutine != null)
+        {
+            StopCoroutine(focusCoroutine);
+        }
+
+        focusCoroutine = StartCoroutine(SmoothFocusRoutine(targetPosition, targetRotation, duration));
+    }
+
     private IEnumerator SmoothFocusRoutine(Vector3 targetPosition, Quaternion targetRotation, float duration)
     {
         Vector3 startPosition = transform.position;
@@ -218,27 +233,57 @@ public class CameraController : MonoBehaviour
 
         // 获取方块的包围盒
         if (!TryCalculateBlockBounds(obj, out Bounds bounds)) return false;
+        return TryGetFocusPose(bounds, bounds.center, out targetPosition, out targetRotation);
+    }
 
-        // 计算包围盒中心
-        Vector3 blockCenter = bounds.center;
+    private bool TryGetFocusPose(Bounds frameBounds, Vector3 lookPoint, out Vector3 targetPosition, out Quaternion targetRotation)
+    {
+        targetPosition = transform.position;
+        targetRotation = transform.rotation;
 
-        // 根据包围盒大小计算所需距离
-        float maxExtent = Mathf.Max(bounds.extents.x, bounds.extents.y, bounds.extents.z);
-        float distance = Mathf.Max(maxExtent * 3f, 1f); // 3倍距离确保完整显示
-
-        // 确定摄像机位置（从方块中心沿摄像机当前方向后退）
-        Vector3 cameraDirection = transform.forward;
-        if (cameraDirection.sqrMagnitude < 0.001f)
+        Vector3 cameraDirection = transform.position - lookPoint;
+        if (frameBounds.Contains(transform.position) || cameraDirection.sqrMagnitude < 0.001f)
         {
-            cameraDirection = Vector3.forward;
+            cameraDirection = new Vector3(1f, 0.6f, -1f);
         }
 
-        targetPosition = blockCenter - cameraDirection.normalized * distance;
-        Vector3 lookDirection = blockCenter - targetPosition;
+        cameraDirection.Normalize();
+        float distance = CalculateFramingDistance(frameBounds, lookPoint);
+        targetPosition = lookPoint + cameraDirection * distance;
+
+        Vector3 lookDirection = lookPoint - targetPosition;
         if (lookDirection.sqrMagnitude < 0.001f) return false;
 
         targetRotation = Quaternion.LookRotation(lookDirection.normalized, Vector3.up);
         return true;
+    }
+
+    private float CalculateFramingDistance(Bounds bounds, Vector3 lookPoint)
+    {
+        Vector3 extents = bounds.extents;
+        Vector3 center = bounds.center;
+        float radius = 0f;
+
+        for (int x = -1; x <= 1; x += 2)
+        {
+            for (int y = -1; y <= 1; y += 2)
+            {
+                for (int z = -1; z <= 1; z += 2)
+                {
+                    Vector3 corner = center + Vector3.Scale(extents, new Vector3(x, y, z));
+                    radius = Mathf.Max(radius, Vector3.Distance(lookPoint, corner));
+                }
+            }
+        }
+
+        Camera cameraComponent = GetComponent<Camera>();
+        float verticalFov = cameraComponent != null ? cameraComponent.fieldOfView : 60f;
+        float aspect = cameraComponent != null ? cameraComponent.aspect : 16f / 9f;
+        float horizontalFov = Mathf.Rad2Deg * 2f * Mathf.Atan(Mathf.Tan(verticalFov * Mathf.Deg2Rad * 0.5f) * aspect);
+        float fitFov = Mathf.Min(verticalFov, horizontalFov) * Mathf.Deg2Rad;
+        float distance = radius / Mathf.Sin(Mathf.Max(fitFov * 0.5f, 0.01f));
+
+        return Mathf.Max(distance * 1.15f, radius + 1f, 1f);
     }
 
     // 新增：计算方块包围盒
