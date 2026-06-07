@@ -93,6 +93,12 @@ public class PlayManager : MonoBehaviour
             return false;
         }
 
+        if (BuildManager.instance.IsLoadingBlocks)
+        {
+            reason = "Cannot start play mode while blocks are still loading.";
+            return false;
+        }
+
         if (BuildManager.instance.IsEditingEnemyBlueprint)
         {
             reason = "Cannot start player play mode while editing an enemy blueprint.";

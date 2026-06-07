@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -86,6 +87,12 @@ public class BuildManager : MonoBehaviour
     public bool lockView;
     public bool penetrationMode;
 
+    private const float BlockLoadIntervalSeconds = 0.5f;
+    private Coroutine loadAllBlocksCoroutine;
+    private int loadAllBlocksVersion;
+
+    public bool IsLoadingBlocks { get; private set; }
+
     private void Awake()
     {
         instance = this;
@@ -111,6 +118,11 @@ public class BuildManager : MonoBehaviour
             && Keyboard.current.eKey.wasPressedThisFrame)
         {
             ToggleEnemyBlueprintBuildMode();
+        }
+
+        if (IsLoadingBlocks)
+        {
+            return;
         }
 
         if (lockView)
@@ -840,6 +852,10 @@ public class BuildManager : MonoBehaviour
     {
         double time0 = Time.timeAsDouble;
 
+        StopActiveBlockLoad();
+        DeselectBlock();
+        ClearCurrentGhost();
+
         if (GameManager.instance.blocksParent != null)
         {
             Destroy(GameManager.instance.blocksParent.gameObject);
@@ -859,13 +875,15 @@ public class BuildManager : MonoBehaviour
 
         GameManager.instance.blocksParent.GetComponent<Rigidbody>().isKinematic = true;
 
-        if (!File.Exists(savePath))
+        string loadSavePath = savePath;
+
+        if (!File.Exists(loadSavePath))
         {
             SaveManager.instance.cachedData = new BlockDataList();
             WriteCachedData();
         }
 
-        string json = File.ReadAllText(savePath);
+        string json = File.ReadAllText(loadSavePath);
         SaveManager.instance.cachedData = JsonUtility.FromJson<BlockDataList>(json);
 
         if (SaveManager.instance.cachedData == null || SaveManager.instance.cachedData.blocks == null)
@@ -874,45 +892,72 @@ public class BuildManager : MonoBehaviour
             return;
         }
 
+        List<BlockData> blocksToLoad = new List<BlockData>(SaveManager.instance.cachedData.blocks);
+        int loadVersion = ++loadAllBlocksVersion;
+        IsLoadingBlocks = true;
+        loadAllBlocksCoroutine = StartCoroutine(LoadAllBlocksRoutine(loadVersion, loadSavePath, gameObj.transform, blocksToLoad, time0));
+    }
+
+    private IEnumerator LoadAllBlocksRoutine(int loadVersion, string loadSavePath, Transform loadParent, List<BlockData> blocksToLoad, double time0)
+    {
         List<string> unloadIds = new List<string>();
         int failCount = 0;
         int sucessCount = 0;
-        int i = 0;
-        foreach (var data in SaveManager.instance.cachedData.blocks)
+        WaitForSeconds blockLoadWait = new WaitForSeconds(BlockLoadIntervalSeconds);
+
+        for (int i = 0; i < blocksToLoad.Count; i++)
         {
-            i++;
+            if (!IsCurrentBlockLoad(loadVersion, loadSavePath, loadParent))
+            {
+                AbortBlockLoadIfCurrent(loadVersion, loadParent);
+                yield break;
+            }
+
+            BlockData data = blocksToLoad[i];
             // 从 Resources 目录加载 prefab
             GameObject prefab = Resources.Load<GameObject>(ConvertToResourcesPath(data.resourcePath));
             if (prefab == null)
             {
-                Debug.LogWarning($"第{i}个方块 找不到资源路径: {data.resourcePath}");
+                Debug.LogWarning($"第{i + 1}个方块 找不到资源路径: {data.resourcePath}");
                 unloadIds.Add(data.id);
                 failCount++;
-                continue;
+            }
+            else
+            {
+                GameObject obj = Instantiate(prefab, new Vector3(data.posX, data.posY, data.posZ), new Quaternion(data.rotX, data.rotY, data.rotZ, data.rotW));
+                obj.transform.SetParent(loadParent);
+                Block block = obj.GetComponent<Block>();
+                if (block != null)
+                {
+                    block.x = data.x;
+                    block.y = data.y;
+                    block.z = data.z;
+                    block.resourcePath = data.resourcePath;
+                    block.uniqueId = data.id; // 保持唯一 ID 一致
+                    ApplyBlockBuildDefaults(block);
+                    SaveManager.instance.blocks.Add(block);
+                    sucessCount++;
+                }
+                Durability durability = obj.GetComponent<Durability>();
+                if (durability != null)
+                {
+                    durability.currentDurability = durability.maxDurability;
+                }
             }
 
-            GameObject obj = Instantiate(prefab, new Vector3(data.posX, data.posY, data.posZ), new Quaternion(data.rotX, data.rotY, data.rotZ, data.rotW));
-            obj.transform.SetParent(GameManager.instance.blocksParent);
-            Block block = obj.GetComponent<Block>();
-            if (block != null)
+            if (i < blocksToLoad.Count - 1)
             {
-                block.x = data.x;
-                block.y = data.y;
-                block.z = data.z;
-                block.resourcePath = data.resourcePath;
-                block.uniqueId = data.id; // 保持唯一 ID 一致
-                ApplyBlockBuildDefaults(block);
-                SaveManager.instance.blocks.Add(block);
-                sucessCount++;
-            }
-            Durability durability = obj.GetComponent<Durability>();
-            if (durability != null)
-            {
-                durability.currentDurability = durability.maxDurability;
+                yield return blockLoadWait;
             }
         }
 
-        if (SaveManager.instance.cachedData.blocks.Count == 0)
+        if (!IsCurrentBlockLoad(loadVersion, loadSavePath, loadParent))
+        {
+            AbortBlockLoadIfCurrent(loadVersion, loadParent);
+            yield break;
+        }
+
+        if (blocksToLoad.Count == 0)
         {
             InitialBlock();
         }
@@ -921,7 +966,7 @@ public class BuildManager : MonoBehaviour
         {
             foreach (string id in unloadIds)
             {
-                ClearUnloadableData(id);
+                ClearUnloadableData(id, loadSavePath);
             }
         }
 
@@ -933,14 +978,22 @@ public class BuildManager : MonoBehaviour
 
         double time1 = Time.timeAsDouble;
 
-        Debug.Log($"加载{savePath}完成，耗时{time1 - time0}s，共{SaveManager.instance.cachedData.blocks.Count}个方块, 恢复成功{sucessCount}个方块，恢复失败{failCount}个方块");
+        IsLoadingBlocks = false;
+        loadAllBlocksCoroutine = null;
+
+        Debug.Log($"加载{loadSavePath}完成，耗时{time1 - time0}s，共{blocksToLoad.Count}个方块, 恢复成功{sucessCount}个方块，恢复失败{failCount}个方块");
 
         Camera.main.GetComponent<CameraController>().FocusCameraOnBlock(GameManager.instance.blocksParent.gameObject);
     }
 
     public void ClearUnloadableData(string id)
     {
-        if (RemoveCachedBlockData(id))
+        ClearUnloadableData(id, savePath);
+    }
+
+    private void ClearUnloadableData(string id, string targetSavePath)
+    {
+        if (RemoveCachedBlockData(id, targetSavePath))
         {
             Debug.Log($"Removed unload data {id}");
         }
@@ -1113,6 +1166,50 @@ public class BuildManager : MonoBehaviour
         currentEnemyBlueprintName = context.EnemyBlueprintName;
     }
 
+    private void StopActiveBlockLoad()
+    {
+        loadAllBlocksVersion++;
+
+        if (loadAllBlocksCoroutine != null)
+        {
+            StopCoroutine(loadAllBlocksCoroutine);
+            loadAllBlocksCoroutine = null;
+        }
+
+        IsLoadingBlocks = false;
+    }
+
+    private bool IsCurrentBlockLoad(int loadVersion, string loadSavePath, Transform loadParent)
+    {
+        return loadVersion == loadAllBlocksVersion
+            && loadParent != null
+            && GameManager.instance != null
+            && GameManager.instance.blocksParent == loadParent
+            && string.Equals(savePath, loadSavePath, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private void AbortBlockLoadIfCurrent(int loadVersion, Transform loadParent)
+    {
+        if (loadVersion != loadAllBlocksVersion) return;
+
+        loadAllBlocksCoroutine = null;
+        IsLoadingBlocks = false;
+
+        bool ownsLoadParent = GameManager.instance != null && GameManager.instance.blocksParent == loadParent;
+        if (ownsLoadParent)
+        {
+            Destroy(loadParent.gameObject);
+            GameManager.instance.blocksParent = null;
+
+            if (PlayManager.instance != null && PlayManager.instance.blocksParent == loadParent)
+            {
+                PlayManager.instance.blocksParent = null;
+            }
+
+            SaveManager.instance.blocks.Clear();
+        }
+    }
+
     private void ClearCurrentGhost()
     {
         if (currentGhost == null) return;
@@ -1124,18 +1221,28 @@ public class BuildManager : MonoBehaviour
 
     private bool RemoveCachedBlockData(string id)
     {
+        return RemoveCachedBlockData(id, savePath);
+    }
+
+    private bool RemoveCachedBlockData(string id, string targetSavePath)
+    {
         int index = SaveManager.instance.cachedData.blocks.FindIndex(b => b.id == id);
         if (index < 0) return false;
 
         SaveManager.instance.cachedData.blocks.RemoveAt(index);
-        WriteCachedData();
+        WriteCachedData(targetSavePath);
         return true;
     }
 
     private void WriteCachedData()
     {
+        WriteCachedData(savePath);
+    }
+
+    private void WriteCachedData(string targetSavePath)
+    {
         string json = JsonUtility.ToJson(SaveManager.instance.cachedData, true);
-        File.WriteAllText(savePath, json);
+        File.WriteAllText(targetSavePath, json);
     }
 
     public static string ConvertToResourcesPath(string fullPath)
