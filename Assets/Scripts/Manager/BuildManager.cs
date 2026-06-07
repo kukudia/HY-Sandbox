@@ -92,6 +92,8 @@ public class BuildManager : MonoBehaviour
     public float blockLoadCameraMoveDuration = 0.35f;
     public float blockLoadCameraOrbitDegrees = 18f;
     public float blockLoadCameraOrbitPitch = 25f;
+    public float blockLoadCameraOrbitRadiusVariation = 0.25f;
+    public float blockLoadCameraOrbitRadiusWaveDegrees = 120f;
     private Coroutine loadAllBlocksCoroutine;
     private int loadAllBlocksVersion;
     private BuildTargetContext loadingBuildTarget;
@@ -1284,7 +1286,7 @@ public class BuildManager : MonoBehaviour
             : target;
 
         loadingCameraOrbitAngle += blockLoadCameraOrbitDegrees;
-        cameraController.SmoothOrbitCameraAroundBlock(frameObject, loadingCameraOrbitAngle, blockLoadCameraOrbitPitch, duration);
+        cameraController.SmoothOrbitCameraAroundBlock(frameObject, loadingCameraOrbitAngle, blockLoadCameraOrbitPitch, GetLoadingCameraOrbitRadiusMultiplier(), duration);
     }
 
     private void FocusLoadedConstructCamera()
@@ -1300,7 +1302,7 @@ public class BuildManager : MonoBehaviour
         if (moveCameraDuringBlockLoad)
         {
             float duration = Mathf.Max(0f, blockLoadCameraMoveDuration);
-            cameraController.SmoothOrbitCameraAroundBlock(GameManager.instance.blocksParent.gameObject, loadingCameraOrbitAngle, blockLoadCameraOrbitPitch, duration);
+            cameraController.SmoothOrbitCameraAroundBlock(GameManager.instance.blocksParent.gameObject, loadingCameraOrbitAngle, blockLoadCameraOrbitPitch, GetLoadingCameraOrbitRadiusMultiplier(), duration);
         }
         else
         {
@@ -1323,6 +1325,17 @@ public class BuildManager : MonoBehaviour
         if (cameraOffset.sqrMagnitude < 0.001f) return 135f;
 
         return Mathf.Atan2(cameraOffset.x, cameraOffset.z) * Mathf.Rad2Deg;
+    }
+
+    private float GetLoadingCameraOrbitRadiusMultiplier()
+    {
+        float variation = Mathf.Max(0f, blockLoadCameraOrbitRadiusVariation);
+        if (variation <= 0f) return 1f;
+
+        float waveDegrees = Mathf.Max(1f, blockLoadCameraOrbitRadiusWaveDegrees);
+        float phase = loadingCameraOrbitAngle / waveDegrees * Mathf.PI * 2f;
+        float wave = (Mathf.Sin(phase) + 1f) * 0.5f;
+        return 1f + wave * variation;
     }
 
     private void ClearCurrentGhost()

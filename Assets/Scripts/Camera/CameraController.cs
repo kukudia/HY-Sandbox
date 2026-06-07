@@ -198,9 +198,14 @@ public class CameraController : MonoBehaviour
 
     public void SmoothOrbitCameraAroundBlock(GameObject frameObj, float yawDegrees, float pitchDegrees, float duration)
     {
+        SmoothOrbitCameraAroundBlock(frameObj, yawDegrees, pitchDegrees, 1f, duration);
+    }
+
+    public void SmoothOrbitCameraAroundBlock(GameObject frameObj, float yawDegrees, float pitchDegrees, float radiusMultiplier, float duration)
+    {
         if (frameObj == null) return;
         if (!TryCalculateBlockBounds(frameObj, out Bounds frameBounds)) return;
-        if (!TryGetOrbitPose(frameBounds, yawDegrees, pitchDegrees, out Vector3 targetPosition, out Quaternion targetRotation)) return;
+        if (!TryGetOrbitPose(frameBounds, yawDegrees, pitchDegrees, radiusMultiplier, out Vector3 targetPosition, out Quaternion targetRotation)) return;
 
         if (focusCoroutine != null)
         {
@@ -272,7 +277,7 @@ public class CameraController : MonoBehaviour
         return true;
     }
 
-    private bool TryGetOrbitPose(Bounds frameBounds, float yawDegrees, float pitchDegrees, out Vector3 targetPosition, out Quaternion targetRotation)
+    private bool TryGetOrbitPose(Bounds frameBounds, float yawDegrees, float pitchDegrees, float radiusMultiplier, out Vector3 targetPosition, out Quaternion targetRotation)
     {
         targetPosition = transform.position;
         targetRotation = transform.rotation;
@@ -288,6 +293,7 @@ public class CameraController : MonoBehaviour
         ).normalized;
 
         float distance = CalculateFramingDistance(frameBounds, lookPoint);
+        distance *= Mathf.Max(radiusMultiplier, 0.1f);
         targetPosition = lookPoint + cameraDirection * distance;
 
         Vector3 lookDirection = lookPoint - targetPosition;
