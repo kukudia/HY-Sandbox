@@ -695,6 +695,7 @@ MonoBehaviour:
     connector: {fileID: 0}
   lockView: 0
   penetrationMode: 0
+  BlockLoadIntervalSeconds: 0.05
 --- !u!4 &186965333
 Transform:
   m_ObjectHideFlags: 0

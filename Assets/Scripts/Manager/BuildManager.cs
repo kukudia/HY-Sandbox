@@ -87,7 +87,7 @@ public class BuildManager : MonoBehaviour
     public bool lockView;
     public bool penetrationMode;
 
-    private const float BlockLoadIntervalSeconds = 0.5f;
+    public float BlockLoadIntervalSeconds = 0.1f;
     private Coroutine loadAllBlocksCoroutine;
     private int loadAllBlocksVersion;
 
