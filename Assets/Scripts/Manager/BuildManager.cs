@@ -90,7 +90,7 @@ public class BuildManager : MonoBehaviour
     public float BlockLoadIntervalSeconds = 0.1f;
     public bool moveCameraDuringBlockLoad = true;
     public float blockLoadCameraMoveDuration = 0.35f;
-    public float blockLoadCameraOrbitDegrees = 18f;
+    public float blockLoadCameraOrbitDegreesPerSecond = 60f;
     public float blockLoadCameraOrbitPitch = 25f;
     public float blockLoadCameraOrbitRadiusVariation = 0.25f;
     public float blockLoadCameraOrbitRadiusWaveDegrees = 120f;
@@ -1284,8 +1284,7 @@ public class BuildManager : MonoBehaviour
 
         if (cameraController == null) return;
 
-        float interval = Mathf.Max(BlockLoadIntervalSeconds, 0.01f);
-        float orbitDegreesPerSecond = blockLoadCameraOrbitDegrees / interval;
+        float orbitDegreesPerSecond = blockLoadCameraOrbitDegreesPerSecond;
         cameraController.StartContinuousOrbitCameraAroundBlock(
             frameObject,
             loadingCameraOrbitCenter,
