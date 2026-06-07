@@ -90,11 +90,14 @@ public class BuildManager : MonoBehaviour
     public float BlockLoadIntervalSeconds = 0.1f;
     public bool moveCameraDuringBlockLoad = true;
     public float blockLoadCameraMoveDuration = 0.35f;
+    public float blockLoadCameraOrbitDegrees = 18f;
+    public float blockLoadCameraOrbitPitch = 25f;
     private Coroutine loadAllBlocksCoroutine;
     private int loadAllBlocksVersion;
     private BuildTargetContext loadingBuildTarget;
     private string loadingBuildSavePath = string.Empty;
     private CameraController loadingCameraController;
+    private float loadingCameraOrbitAngle;
 
     public bool IsLoadingBlocks { get; private set; }
 
@@ -915,6 +918,7 @@ public class BuildManager : MonoBehaviour
         loadingBuildTarget = loadTarget;
         loadingBuildSavePath = loadSavePath;
         loadingCameraController = GetMainCameraController();
+        loadingCameraOrbitAngle = GetCameraOrbitAngle(gameObj.transform.position);
         IsLoadingBlocks = true;
         loadAllBlocksCoroutine = StartCoroutine(LoadAllBlocksRoutine(loadVersion, loadSavePath, gameObj.transform, blocksToLoad, time0));
     }
@@ -1279,7 +1283,8 @@ public class BuildManager : MonoBehaviour
             ? GameManager.instance.blocksParent.gameObject
             : target;
 
-        cameraController.SmoothFocusCameraOnBlockFramedBy(target, frameObject, duration);
+        loadingCameraOrbitAngle += blockLoadCameraOrbitDegrees;
+        cameraController.SmoothOrbitCameraAroundBlock(frameObject, loadingCameraOrbitAngle, blockLoadCameraOrbitPitch, duration);
     }
 
     private void FocusLoadedConstructCamera()
@@ -1295,7 +1300,7 @@ public class BuildManager : MonoBehaviour
         if (moveCameraDuringBlockLoad)
         {
             float duration = Mathf.Max(0f, blockLoadCameraMoveDuration);
-            cameraController.SmoothFocusCameraOnBlock(GameManager.instance.blocksParent.gameObject, duration);
+            cameraController.SmoothOrbitCameraAroundBlock(GameManager.instance.blocksParent.gameObject, loadingCameraOrbitAngle, blockLoadCameraOrbitPitch, duration);
         }
         else
         {
@@ -1307,6 +1312,17 @@ public class BuildManager : MonoBehaviour
     {
         Camera camera = mainCamera != null ? mainCamera : Camera.main;
         return camera != null ? camera.GetComponent<CameraController>() : null;
+    }
+
+    private float GetCameraOrbitAngle(Vector3 orbitCenter)
+    {
+        if (loadingCameraController == null) return 135f;
+
+        Vector3 cameraOffset = loadingCameraController.transform.position - orbitCenter;
+        cameraOffset.y = 0f;
+        if (cameraOffset.sqrMagnitude < 0.001f) return 135f;
+
+        return Mathf.Atan2(cameraOffset.x, cameraOffset.z) * Mathf.Rad2Deg;
     }
 
     private void ClearCurrentGhost()

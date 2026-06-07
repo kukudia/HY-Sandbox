@@ -196,6 +196,20 @@ public class CameraController : MonoBehaviour
         focusCoroutine = StartCoroutine(SmoothFocusRoutine(targetPosition, targetRotation, duration));
     }
 
+    public void SmoothOrbitCameraAroundBlock(GameObject frameObj, float yawDegrees, float pitchDegrees, float duration)
+    {
+        if (frameObj == null) return;
+        if (!TryCalculateBlockBounds(frameObj, out Bounds frameBounds)) return;
+        if (!TryGetOrbitPose(frameBounds, yawDegrees, pitchDegrees, out Vector3 targetPosition, out Quaternion targetRotation)) return;
+
+        if (focusCoroutine != null)
+        {
+            StopCoroutine(focusCoroutine);
+        }
+
+        focusCoroutine = StartCoroutine(SmoothFocusRoutine(targetPosition, targetRotation, duration));
+    }
+
     private IEnumerator SmoothFocusRoutine(Vector3 targetPosition, Quaternion targetRotation, float duration)
     {
         Vector3 startPosition = transform.position;
@@ -248,6 +262,31 @@ public class CameraController : MonoBehaviour
         }
 
         cameraDirection.Normalize();
+        float distance = CalculateFramingDistance(frameBounds, lookPoint);
+        targetPosition = lookPoint + cameraDirection * distance;
+
+        Vector3 lookDirection = lookPoint - targetPosition;
+        if (lookDirection.sqrMagnitude < 0.001f) return false;
+
+        targetRotation = Quaternion.LookRotation(lookDirection.normalized, Vector3.up);
+        return true;
+    }
+
+    private bool TryGetOrbitPose(Bounds frameBounds, float yawDegrees, float pitchDegrees, out Vector3 targetPosition, out Quaternion targetRotation)
+    {
+        targetPosition = transform.position;
+        targetRotation = transform.rotation;
+
+        Vector3 lookPoint = frameBounds.center;
+        float yaw = yawDegrees * Mathf.Deg2Rad;
+        float pitch = Mathf.Clamp(pitchDegrees, -75f, 75f) * Mathf.Deg2Rad;
+        float cosPitch = Mathf.Cos(pitch);
+        Vector3 cameraDirection = new Vector3(
+            Mathf.Sin(yaw) * cosPitch,
+            Mathf.Sin(pitch),
+            Mathf.Cos(yaw) * cosPitch
+        ).normalized;
+
         float distance = CalculateFramingDistance(frameBounds, lookPoint);
         targetPosition = lookPoint + cameraDirection * distance;
 
