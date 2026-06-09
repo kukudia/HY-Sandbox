@@ -4,60 +4,105 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(LineRenderer))]
 public abstract class Thruster : MonoBehaviour
 {
+    protected const float InputEpsilonSqr = 1e-6f;
+    private const float DirectionEpsilonSqr = 1e-6f;
+
+    private static Material sharedLineMaterial;
+
     public ControlUnit controlUnit;
     public Transform model;
-    public float thrust;     // ÍÆÁ¦´óĞ¡
+    public float thrust;     // æ¨åŠ›å¤§å°
     public float lastThrustValue;
     public float maxThrust = 100f;
 
-    [Tooltip("×î´óÍÆÁ¦±ä»¯ÂÊ£¨µ¥Î»/Ãë£©£¬·ÀÖ¹ÍÆÁ¦Ë²¼ä±ä»¯")]
+    [Tooltip("æœ€å¤§æ¨åŠ›å˜åŒ–ç‡ï¼ˆå•ä½/ç§’ï¼‰ï¼Œé˜²æ­¢æ¨åŠ›ç¬é—´å˜åŒ–")]
     public float maxThrustChangeRate = 50f;
 
-    public Vector3 thrustDirection = Vector3.forward; // ÍÆÁ¦·½Ïò£¨±¾µØ×ø±ê£©
+    public Vector3 thrustDirection = Vector3.forward; // æ¨åŠ›æ–¹å‘ï¼ˆæœ¬åœ°åæ ‡ï¼‰
 
-    public Transform cameraTransform;   // Ö÷ÉãÏñ»ú
+    public Transform cameraTransform;   // ä¸»æ‘„åƒæœº
 
     public Rigidbody rb;
 
-    [Header("ÍÆÁ¦¿ÉÊÓ»¯")]
-    public LineRenderer thrustLine;      // ÏßäÖÈ¾Æ÷×é¼ş
-    public float maxLineLength = 2f;      // ×î´óÏß³¤¶È£¨¶ÔÓ¦×î´óÍÆÁ¦£©
-    public Gradient thrustColorGradient;  // ¸ù¾İÍÆÁ¦±ä»¯µÄÑÕÉ«
+    [Header("æ¨åŠ›å¯è§†åŒ–")]
+    public LineRenderer thrustLine;      // çº¿æ¸²æŸ“å™¨ç»„ä»¶
+    public float maxLineLength = 2f;      // æœ€å¤§çº¿é•¿åº¦ï¼ˆå¯¹åº”æœ€å¤§æ¨åŠ›ï¼‰
+    public Gradient thrustColorGradient;  // æ ¹æ®æ¨åŠ›å˜åŒ–çš„é¢œè‰²
 
-    // ×ÓÀà±ØĞëÊµÏÖ£ºÈçºÎÆôÓÃÍÆ½øÆ÷£¨ÊäÈë¿ØÖÆ/×Ô¶¯´¥·¢£©
+    [Tooltip("æ¨åŠ›å¯è§†åŒ–åˆ·æ–°é—´éš”ï¼ˆç§’ï¼‰ï¼Œé™ä½ LineRenderer åœ¨ç‰©ç†å¸§ä¸­çš„æ›´æ–°é¢‘ç‡")]
+    public float visualizationInterval = 0.05f;
+
+    private float nextVisualizationTime;
+    private bool modelLookupComplete;
+    private readonly Vector3[] linePositions = new Vector3[2];
+
+    // å­ç±»å¿…é¡»å®ç°ï¼šå¦‚ä½•å¯ç”¨æ¨è¿›å™¨ï¼ˆè¾“å…¥æ§åˆ¶/è‡ªåŠ¨è§¦å‘ï¼‰
     public abstract bool ShouldActivate();
+
+    protected virtual void Awake()
+    {
+        CacheLocalReferences();
+    }
 
     protected virtual void Start()
     {
-        if (model == null)
+        CacheLocalReferences();
+        EnsureLineRenderer();
+        EnsureThrustGradient();
+        VisualizeThrust(true);
+    }
+
+    private void OnTransformChildrenChanged()
+    {
+        modelLookupComplete = false;
+    }
+
+    public void SetRuntimeReferences(ControlUnit owner, Rigidbody ownerRigidbody)
+    {
+        controlUnit = owner;
+        rb = ownerRigidbody;
+        CacheLocalReferences();
+    }
+
+    protected bool RefreshRuntimeReferences()
+    {
+        CacheLocalReferences();
+
+        if (controlUnit == null)
+        {
+            controlUnit = GetComponentInParent<ControlUnit>();
+        }
+
+        TryEnsureRigidbody();
+        return controlUnit != null && rb != null;
+    }
+
+    protected bool TryEnsureRigidbody()
+    {
+        if (rb == null)
+        {
+            rb = GetComponentInParent<Rigidbody>();
+        }
+
+        return rb != null;
+    }
+
+    protected bool IsPlayModeActive()
+    {
+        return PlayManager.instance != null && PlayManager.instance.playMode;
+    }
+
+    protected bool HasValidRuntimeOwner()
+    {
+        return controlUnit != null && controlUnit.HasValidCockpit;
+    }
+
+    protected void CacheLocalReferences()
+    {
+        if (model == null && !modelLookupComplete)
         {
             model = transform.Find("Model");
-        }
-
-        // ³õÊ¼»¯ÏßäÖÈ¾Æ÷
-        if (thrustLine == null)
-        {
-            thrustLine = GetComponent<LineRenderer>();
-            thrustLine.positionCount = 2;
-            thrustLine.useWorldSpace = false;
-            thrustLine.widthCurve = AnimationCurve.Linear(0, 0.1f, 1, 0.05f);
-            thrustLine.material = new Material(Shader.Find("Unlit/Color"));
-        }
-
-        // Ó¦ÓÃÑÕÉ«Ìİ¶È
-        if (thrustColorGradient == null)
-        {
-            thrustColorGradient = new Gradient();
-            thrustColorGradient.SetKeys(
-                new GradientColorKey[] {
-                    new GradientColorKey(Color.blue, 0.0f),
-                    new GradientColorKey(Color.red, 1.0f)
-                },
-                new GradientAlphaKey[] {
-                    new GradientAlphaKey(0.7f, 0.0f),
-                    new GradientAlphaKey(1.0f, 1.0f)
-                }
-            );
+            modelLookupComplete = true;
         }
     }
 
@@ -65,34 +110,53 @@ public abstract class Thruster : MonoBehaviour
     {
         float maxChange = maxThrustChangeRate * Time.fixedDeltaTime;
 
-        // ¼ÆËãÔÊĞíµÄÍÆÁ¦±ä»¯·¶Î§
+        // è®¡ç®—å…è®¸çš„æ¨åŠ›å˜åŒ–èŒƒå›´
         float minT = Mathf.Max(0, lastThrustValue - maxChange);
         float maxT = Mathf.Min(maxThrust, lastThrustValue + maxChange);
 
-        // Ó¦ÓÃÏŞÖÆ
+        // åº”ç”¨é™åˆ¶
         thrust = Mathf.Clamp(thrust, minT, maxT);
 
-        // ¼ÇÂ¼µ±Ç°ÍÆÁ¦¹©ÏÂÒ»Ö¡Ê¹ÓÃ
+        // è®°å½•å½“å‰æ¨åŠ›ä¾›ä¸‹ä¸€å¸§ä½¿ç”¨
         lastThrustValue = thrust;
     }
 
     public virtual void VisualizeThrust()
     {
+        VisualizeThrust(false);
+    }
+
+    public virtual void VisualizeThrust(bool forceUpdate)
+    {
+        EnsureLineRenderer();
+        EnsureThrustGradient();
+
         if (thrustLine == null) return;
 
-        // ¼ÆËãÍÆÁ¦ÏòÁ¿£¨±¾µØ¿Õ¼ä·½Ïò£©
-        Vector3 thrustVec = -thrustDirection.normalized *
-                          (thrust / maxThrust) *
-                          maxLineLength;
+        Vector3 lineDirection = GetNormalizedThrustDirection();
+        float currentTime = Time.unscaledTime;
 
-        // ÉèÖÃÏß¶ÎÎ»ÖÃ£¨´ÓÍÆ½øÆ÷ÖĞĞÄ¿ªÊ¼£©
-        thrustLine.SetPosition(0, Vector3.zero);
-        thrustLine.SetPosition(1, thrustVec);
+        if (!forceUpdate && visualizationInterval > 0f && currentTime < nextVisualizationTime)
+        {
+            return;
+        }
 
-        // ¸ù¾İÍÆÁ¦Ç¿¶ÈÉèÖÃÑÕÉ«
-        float thrustRatio = thrust / maxThrust;
-        thrustLine.startColor = thrustColorGradient.Evaluate(thrustRatio);
-        thrustLine.endColor = thrustColorGradient.Evaluate(thrustRatio);
+        nextVisualizationTime = currentTime + Mathf.Max(0f, visualizationInterval);
+
+        // è®¡ç®—æ¨åŠ›å‘é‡ï¼ˆæœ¬åœ°ç©ºé—´æ–¹å‘ï¼‰
+        float thrustRatio = maxThrust > 1e-5f ? Mathf.Clamp01(thrust / maxThrust) : 0f;
+        Vector3 thrustVec = -lineDirection * thrustRatio * maxLineLength;
+
+        // è®¾ç½®çº¿æ®µä½ç½®ï¼ˆä»æ¨è¿›å™¨ä¸­å¿ƒå¼€å§‹ï¼‰
+        linePositions[0] = Vector3.zero;
+        linePositions[1] = thrustVec;
+        thrustLine.SetPositions(linePositions);
+
+        // æ ¹æ®æ¨åŠ›å¼ºåº¦è®¾ç½®é¢œè‰²
+        Color thrustColor = thrustColorGradient.Evaluate(thrustRatio);
+        thrustLine.startColor = thrustColor;
+        thrustLine.endColor = thrustColor;
+
     }
 
     public virtual Vector3 GetInputDirection()
@@ -101,21 +165,114 @@ public abstract class Thruster : MonoBehaviour
 
         if (cameraTransform == null)
         {
-            cameraTransform = Camera.main.transform;
+            Camera mainCamera = Camera.main;
+            if (mainCamera == null) return dir;
+
+            cameraTransform = mainCamera.transform;
         }
 
-        // ÉãÏñ»ú forward / right µÄË®Æ½·ÖÁ¿
+        // æ‘„åƒæœº forward / right çš„æ°´å¹³åˆ†é‡
         Vector3 camFwd = cameraTransform.forward; camFwd.y = 0f; camFwd.Normalize();
         Vector3 camRight = cameraTransform.right; camRight.y = 0f; camRight.Normalize();
 
-        if (Keyboard.current.wKey.isPressed) dir += camFwd;
-        if (Keyboard.current.sKey.isPressed) dir -= camFwd;
-        if (Keyboard.current.aKey.isPressed) dir -= camRight;
-        if (Keyboard.current.dKey.isPressed) dir += camRight;
+        Keyboard keyboard = Keyboard.current;
+        if (keyboard == null) return dir;
 
-        if (dir.sqrMagnitude > 1e-6f)
+        if (keyboard.wKey.isPressed) dir += camFwd;
+        if (keyboard.sKey.isPressed) dir -= camFwd;
+        if (keyboard.aKey.isPressed) dir -= camRight;
+        if (keyboard.dKey.isPressed) dir += camRight;
+
+        if (dir.sqrMagnitude > InputEpsilonSqr)
             dir.Normalize();
 
         return dir;
+    }
+
+    private void EnsureLineRenderer()
+    {
+        if (thrustLine == null)
+        {
+            thrustLine = GetComponent<LineRenderer>();
+        }
+
+        if (thrustLine == null)
+        {
+            return;
+        }
+
+        if (thrustLine.positionCount != 2)
+        {
+            thrustLine.positionCount = 2;
+        }
+
+        thrustLine.useWorldSpace = false;
+
+        if (thrustLine.widthCurve == null || thrustLine.widthCurve.length == 0)
+        {
+            thrustLine.widthCurve = AnimationCurve.Linear(0, 0.1f, 1, 0.05f);
+        }
+
+        if (thrustLine.sharedMaterial == null)
+        {
+            thrustLine.sharedMaterial = GetSharedLineMaterial();
+        }
+    }
+
+    private static Material GetSharedLineMaterial()
+    {
+        if (sharedLineMaterial != null)
+        {
+            return sharedLineMaterial;
+        }
+
+        Shader shader = Shader.Find("Unlit/Color");
+        if (shader != null)
+        {
+            sharedLineMaterial = new Material(shader)
+            {
+                name = "Shared Thruster Line Material"
+            };
+        }
+
+        return sharedLineMaterial;
+    }
+
+    private void EnsureThrustGradient()
+    {
+        if (thrustColorGradient != null)
+        {
+            return;
+        }
+
+        thrustColorGradient = new Gradient();
+        thrustColorGradient.SetKeys(
+            new GradientColorKey[] {
+                new GradientColorKey(Color.blue, 0.0f),
+                new GradientColorKey(Color.red, 1.0f)
+            },
+            new GradientAlphaKey[] {
+                new GradientAlphaKey(0.7f, 0.0f),
+                new GradientAlphaKey(1.0f, 1.0f)
+            }
+        );
+    }
+
+    private Vector3 GetNormalizedThrustDirection()
+    {
+        Vector3 direction = thrustDirection;
+        float sqrMagnitude = direction.sqrMagnitude;
+
+        if (sqrMagnitude <= DirectionEpsilonSqr)
+        {
+            return Vector3.forward;
+        }
+
+        if (Mathf.Abs(sqrMagnitude - 1f) <= 0.001f)
+        {
+            return direction;
+        }
+
+        return direction / Mathf.Sqrt(sqrMagnitude);
     }
 }

@@ -8,17 +8,16 @@ public class HoverThruster : Thruster
 
     private void FixedUpdate()
     {
-        if (!PlayManager.instance.playMode) return;
+        if (!IsPlayModeActive()) return;
 
-        if (controlUnit == null)
-        {
-            controlUnit = GetComponentInParent<ControlUnit>();
-        }
+        RefreshRuntimeReferences();
 
-        if (controlUnit == null || !controlUnit.HasValidCockpit)
+        if (!HasValidRuntimeOwner())
         {
-            thrust = 0;
-            VisualizeThrust();
+            bool hadThrust = thrust > 0f || lastThrustValue > 0f;
+            thrust = 0f;
+            lastThrustValue = 0f;
+            VisualizeThrust(hadThrust);
             return;
         }
 
@@ -38,22 +37,16 @@ public class HoverThruster : Thruster
 
     public virtual void ApplyThrust()
     {
-        if (rb == null)
-        {
-            rb = GetComponentInParent<Rigidbody>();
-        }
+        if (thrust <= 0f || !TryEnsureRigidbody()) return;
 
-        if (rb == null) return;
-
-        thrustDirection = new Vector3(0, 1, 0);
-        rb.AddForceAtPosition(transform.TransformDirection(thrustDirection) * thrust, transform.position);
+        thrustDirection = Vector3.up;
+        rb.AddForceAtPosition(transform.up * thrust, transform.position);
     }
 
     public override bool ShouldActivate()
     {
         return isHovered
-            && PlayManager.instance.playMode
-            && controlUnit != null
-            && controlUnit.HasValidCockpit;
+            && IsPlayModeActive()
+            && HasValidRuntimeOwner();
     }
 }

@@ -8,18 +8,16 @@ public class MainThruster : Thruster
 
     private void FixedUpdate()
     {
-        if (!PlayManager.instance.playMode) return;
+        if (!IsPlayModeActive()) return;
 
-        if (controlUnit == null)
-        {
-            controlUnit = GetComponentInParent<ControlUnit>();
-        }
+        RefreshRuntimeReferences();
 
-        inputDir = controlUnit != null && controlUnit.HasValidCockpit ? controlUnit.MovementInput : Vector3.zero;
+        bool hasValidOwner = HasValidRuntimeOwner();
+        inputDir = hasValidOwner ? controlUnit.MovementInput : Vector3.zero;
         thrustDirection = transform.forward;
 
-        thrust = maxThrust * GetProjectionLength(inputDir, thrustDirection);
-        thrust = ShouldActivate() ? thrust : 0;
+        bool active = hasValidOwner && inputDir.sqrMagnitude > InputEpsilonSqr;
+        thrust = active ? maxThrust * Mathf.Max(0f, Vector3.Dot(inputDir, thrustDirection)) : 0f;
         ApplyThrustChangeRateLimit();
         ApplyThrust();
         VisualizeThrust();
@@ -27,28 +25,16 @@ public class MainThruster : Thruster
 
     public void ApplyThrust()
     {
-        if (rb == null)
-        {
-            rb = GetComponentInParent<Rigidbody>();
-        }
+        if (thrust <= 0f || !TryEnsureRigidbody()) return;
 
-        if (rb == null) return;
-
-        thrustDirection = model.forward;
+        thrustDirection = model != null ? model.forward : transform.forward;
         rb.AddForceAtPosition(thrustDirection * thrust, transform.position);
     }
 
     public override bool ShouldActivate()
     {
-        return inputDir.sqrMagnitude > 1e-6f
-            && PlayManager.instance.playMode
-            && controlUnit != null
-            && controlUnit.HasValidCockpit;
-    }
-
-    private float GetProjectionLength(Vector3 vector, Vector3 thrustDir)
-    {
-        thrustDir = thrustDir.normalized;
-        return Vector3.Dot(vector, thrustDir);
+        return inputDir.sqrMagnitude > InputEpsilonSqr
+            && IsPlayModeActive()
+            && HasValidRuntimeOwner();
     }
 }

@@ -57,6 +57,24 @@ public class HoverFlightController : MonoBehaviour
     // 动态高度系数相关
     private float currentHeightP;
 
+    private HoverThruster[] cachedThrusters = new HoverThruster[0];
+    private Transform[] cachedThrusterTransforms = new Transform[0];
+    private float[] cachedThrustRatios = new float[0];
+    private HoverThruster[] cachedSourceThrusters;
+    private int cachedSourceThrusterCount = -1;
+    private bool thrusterCacheDirty = true;
+    private float totalMaxThrust;
+    private float maxDistanceFromCOM = 1f;
+    private float cachedMass = -1f;
+    private float cachedFixedDeltaTime = -1f;
+    private float inverseFixedDeltaTime;
+    private Vector3 cachedGravity;
+    private float cachedGravityMagnitude;
+    private float cachedMaxTiltAngle = float.MinValue;
+    private float maxTiltAngleCos;
+    private bool hasTiltCorrection;
+    private Vector3 tiltCorrectionDirection;
+
     public bool showUI = false;
     public bool setHeight = false;
 
@@ -76,8 +94,8 @@ public class HoverFlightController : MonoBehaviour
         controlUnit = GetComponentInParent<ControlUnit>();
         lastUpVector = transform.up;
 
-        // 初始化动态高度系数
-        currentHeightP = rb.mass * HeightP;
+        RefreshCachedPhysicsValues();
+        RebuildThrusterCache();
 
         // 配置所有推进器
         //foreach (var thruster in thrusters)
@@ -86,53 +104,195 @@ public class HoverFlightController : MonoBehaviour
         //}
     }
 
+    private void OnEnable()
+    {
+        thrusterCacheDirty = true;
+    }
+
+    private void OnValidate()
+    {
+        thrusterCacheDirty = true;
+        RefreshTiltLimitCache();
+    }
+
     private void FixedUpdate()
     {
-        if (thrusters.Length == 0) return;
-
-        if (rb == null)
-        {
-            rb = GetComponentInParent<Rigidbody>();
-            //return;
-        }
+        if (!EnsureControllerReady()) return;
 
         bool acceptsPlayerInput = controlUnit == null || controlUnit.faction == UnitFaction.Player;
+        Keyboard keyboard = Keyboard.current;
 
-        if (acceptsPlayerInput && Keyboard.current.qKey.isPressed && !Keyboard.current.eKey.isPressed)
+        if (acceptsPlayerInput && keyboard != null && keyboard.qKey.isPressed && !keyboard.eKey.isPressed)
         {
             targetHoverHeight += 0.2f;
         }
 
-        if (acceptsPlayerInput && Keyboard.current.eKey.isPressed && !Keyboard.current.qKey.isPressed)
+        if (acceptsPlayerInput && keyboard != null && keyboard.eKey.isPressed && !keyboard.qKey.isPressed)
         {
             targetHoverHeight -= 0.2f;
         }
 
-        if (acceptsPlayerInput && (Keyboard.current.eKey.wasReleasedThisFrame || Keyboard.current.qKey.wasReleasedThisFrame))
+        Vector3 position = transform.position;
+        Vector3 currentUp = transform.up;
+
+        if (acceptsPlayerInput && keyboard != null && (keyboard.eKey.wasReleasedThisFrame || keyboard.qKey.wasReleasedThisFrame))
         {
-            targetHoverHeight = transform.position.y;
+            targetHoverHeight = position.y;
         }
 
-        float heightError = targetHoverHeight - transform.position.y;
+        float heightError = targetHoverHeight - position.y;
+        float absHeightError = Mathf.Abs(heightError);
 
         // 高度PID控制
         float heightAdjustment = CalculateHeightAdjustment(heightError);
 
         // 重力补偿计算
-        float gravityCompensation = CalculateGravityCompensation();
+        float gravityCompensation = CalculateGravityCompensation(absHeightError);
 
         // 姿态稳定控制
-        Vector3 tiltAdjustment = CalculateTiltAdjustment();
+        CalculateTiltAdjustment(currentUp);
 
         // 分配推力到各个推进器
-        DistributeThrust(heightAdjustment + gravityCompensation, tiltAdjustment);
+        DistributeThrust(heightAdjustment + gravityCompensation, currentUp);
 
         // 应用旋转修正
-        ApplyRotationCorrection();
+        ApplyRotationCorrection(currentUp);
 
         // 更新状态
         lastHeightError = heightError;
-        lastUpVector = transform.up;
+        lastUpVector = currentUp;
+    }
+
+    private bool EnsureControllerReady()
+    {
+        if (rb == null)
+        {
+            rb = GetComponentInParent<Rigidbody>();
+        }
+
+        if (rb == null)
+        {
+            return false;
+        }
+
+        if (controlUnit == null)
+        {
+            controlUnit = GetComponentInParent<ControlUnit>();
+        }
+
+        RefreshCachedPhysicsValues();
+
+        if (thrusterCacheDirty ||
+            !ReferenceEquals(cachedSourceThrusters, thrusters) ||
+            cachedSourceThrusterCount != (thrusters != null ? thrusters.Length : 0))
+        {
+            RebuildThrusterCache();
+        }
+
+        return cachedThrusters.Length > 0 && totalMaxThrust > 1e-5f;
+    }
+
+    private void RefreshCachedPhysicsValues()
+    {
+        float fixedDeltaTime = Time.fixedDeltaTime;
+        if (!Mathf.Approximately(cachedFixedDeltaTime, fixedDeltaTime))
+        {
+            cachedFixedDeltaTime = fixedDeltaTime;
+            inverseFixedDeltaTime = fixedDeltaTime > 1e-5f ? 1f / fixedDeltaTime : 0f;
+        }
+
+        if (rb != null && !Mathf.Approximately(cachedMass, rb.mass))
+        {
+            cachedMass = rb.mass;
+            currentHeightP = cachedMass * HeightP;
+        }
+
+        Vector3 gravity = Physics.gravity;
+        if (cachedGravity != gravity)
+        {
+            cachedGravity = gravity;
+            cachedGravityMagnitude = gravity.magnitude;
+        }
+
+        if (!Mathf.Approximately(cachedMaxTiltAngle, maxTiltAngle))
+        {
+            RefreshTiltLimitCache();
+        }
+    }
+
+    private void RefreshTiltLimitCache()
+    {
+        cachedMaxTiltAngle = maxTiltAngle;
+        maxTiltAngleCos = Mathf.Cos(maxTiltAngle * Mathf.Deg2Rad);
+    }
+
+    private void RebuildThrusterCache()
+    {
+        cachedSourceThrusters = thrusters;
+        cachedSourceThrusterCount = thrusters != null ? thrusters.Length : 0;
+        thrusterCacheDirty = false;
+        totalMaxThrust = 0f;
+
+        if (thrusters == null || thrusters.Length == 0)
+        {
+            cachedThrusters = new HoverThruster[0];
+            cachedThrusterTransforms = new Transform[0];
+            cachedThrustRatios = new float[0];
+            maxDistanceFromCOM = 1f;
+            return;
+        }
+
+        int validCount = 0;
+        for (int i = 0; i < thrusters.Length; i++)
+        {
+            HoverThruster thruster = thrusters[i];
+            if (thruster == null || thruster.maxThrust <= 0f) continue;
+
+            totalMaxThrust += thruster.maxThrust;
+            validCount++;
+        }
+
+        if (validCount == 0 || totalMaxThrust <= 1e-5f)
+        {
+            cachedThrusters = new HoverThruster[0];
+            cachedThrusterTransforms = new Transform[0];
+            cachedThrustRatios = new float[0];
+            maxDistanceFromCOM = 1f;
+            return;
+        }
+
+        if (cachedThrusters.Length != validCount)
+        {
+            cachedThrusters = new HoverThruster[validCount];
+            cachedThrusterTransforms = new Transform[validCount];
+            cachedThrustRatios = new float[validCount];
+        }
+
+        Vector3 centerOfMass = rb != null ? rb.worldCenterOfMass : transform.position;
+        float maxDistanceSqr = 0f;
+        int cachedIndex = 0;
+
+        for (int i = 0; i < thrusters.Length; i++)
+        {
+            HoverThruster thruster = thrusters[i];
+            if (thruster == null || thruster.maxThrust <= 0f) continue;
+
+            Transform thrusterTransform = thruster.transform;
+            thruster.SetRuntimeReferences(controlUnit, rb);
+            cachedThrusters[cachedIndex] = thruster;
+            cachedThrusterTransforms[cachedIndex] = thrusterTransform;
+            cachedThrustRatios[cachedIndex] = thruster.maxThrust / totalMaxThrust;
+
+            float distanceSqr = (thrusterTransform.position - centerOfMass).sqrMagnitude;
+            if (distanceSqr > maxDistanceSqr)
+            {
+                maxDistanceSqr = distanceSqr;
+            }
+
+            cachedIndex++;
+        }
+
+        maxDistanceFromCOM = maxDistanceSqr > 1e-5f ? Mathf.Sqrt(maxDistanceSqr) : 1f;
     }
 
     private float CalculateHeightAdjustment(float heightError)
@@ -141,10 +301,10 @@ public class HoverFlightController : MonoBehaviour
         //UpdateDynamicHeightP(heightError);
 
         // 积分项
-        heightErrorIntegral += heightError * Time.fixedDeltaTime;
+        heightErrorIntegral += heightError * cachedFixedDeltaTime;
 
         // 微分项
-        float heightErrorDerivative = (heightError - lastHeightError) / Time.fixedDeltaTime;
+        float heightErrorDerivative = (heightError - lastHeightError) * inverseFixedDeltaTime;
 
         // PID计算 (使用动态heightP)
         return heightError * currentHeightP +
@@ -164,70 +324,90 @@ public class HoverFlightController : MonoBehaviour
         }
     }
 
-    private float CalculateGravityCompensation()
+    private float CalculateGravityCompensation(float absHeightError)
     {
         // 计算克服重力所需的最小推力
-        float gravityForce = rb.mass * Physics.gravity.magnitude * gravityCompensationFactor;
+        float gravityForce = cachedMass * cachedGravityMagnitude * gravityCompensationFactor;
 
         // 根据高度误差调整补偿力度
-        float heightError = targetHoverHeight - transform.position.y;
-        float compensationFactor = Mathf.Clamp01(Mathf.Abs(heightError) / heightTolerance);
+        float safeHeightTolerance = Mathf.Max(heightTolerance, 1e-5f);
+        float compensationFactor = Mathf.Clamp01(absHeightError / safeHeightTolerance);
 
         return gravityForce * compensationFactor;
     }
 
-    private Vector3 CalculateTiltAdjustment()
+    private void CalculateTiltAdjustment(Vector3 currentUp)
     {
-        // 计算当前倾斜角度
-        float tiltAngle = Vector3.Angle(transform.up, Vector3.up);
+        hasTiltCorrection = false;
+        tiltCorrectionForce = 0f;
 
-        if (tiltAngle > maxTiltAngle)
+        // 计算当前倾斜角度
+        float upDot = Mathf.Clamp(Vector3.Dot(currentUp, targetUpVector), -1f, 1f);
+
+        if (upDot < maxTiltAngleCos)
         {
             // 计算倾斜方向
-            Vector3 tiltDirection = Vector3.Cross(transform.up, Vector3.up).normalized;
+            Vector3 tiltDirection = Vector3.Cross(currentUp, targetUpVector);
+            float tiltDirectionSqr = tiltDirection.sqrMagnitude;
+            if (tiltDirectionSqr <= 1e-6f)
+            {
+                return;
+            }
+
+            tiltDirection /= Mathf.Sqrt(tiltDirectionSqr);
 
             // 计算角速度
-            Vector3 angularVelocity = rb.angularVelocity;
-            Vector3 angularVelocityInTiltDir = Vector3.Project(angularVelocity, tiltDirection);
+            float angularVelocityInTiltDir = Mathf.Abs(Vector3.Dot(rb.angularVelocity, tiltDirection));
 
             // PID计算
-            float tiltError = tiltAngle * Mathf.Deg2Rad;
-            float tiltErrorDerivative = angularVelocityInTiltDir.magnitude;
+            float tiltError = Mathf.Acos(upDot);
+            float tiltErrorDerivative = angularVelocityInTiltDir;
 
             tiltCorrectionForce = tiltError * tiltP + tiltErrorDerivative * tiltD;
+            tiltCorrectionDirection = tiltDirection;
+            hasTiltCorrection = tiltCorrectionForce > 1e-5f;
 
-            return tiltDirection * tiltCorrectionForce;
+            return;
         }
-
-        return Vector3.zero;
     }
 
-    private void DistributeThrust(float heightAdjustment, Vector3 tiltAdjustment)
+    private void DistributeThrust(float heightAdjustment, Vector3 currentUp)
     {
-        Vector3 centerOfMass = rb.centerOfMass + transform.position;
-        float totalMaxThrust = GetTotalMaxThrust();
+        Vector3 centerOfMass = rb.worldCenterOfMass;
+        float inverseMaxDistance = maxDistanceFromCOM > 1e-5f ? 1f / maxDistanceFromCOM : 1f;
 
         // 计算总需求推力（限制在最大能力范围内）
         float totalThrustRequired = Mathf.Clamp(heightAdjustment, 0, totalMaxThrust);
 
         // 按推进器最大推力比例分配基础推力
-        foreach (var thruster in thrusters)
+        for (int i = 0; i < cachedThrusters.Length; i++)
         {
-            if (thruster ==  null) continue;
+            HoverThruster thruster = cachedThrusters[i];
+            Transform thrusterTransform = cachedThrusterTransforms[i];
+            if (thruster == null || thrusterTransform == null)
+            {
+                thrusterCacheDirty = true;
+                continue;
+            }
 
             // 核心修改：按推力占比分配基础推力
-            float thrustRatio = thruster.maxThrust / totalMaxThrust;
-            float baseThrust = totalThrustRequired * thrustRatio;
+            float baseThrust = totalThrustRequired * cachedThrustRatios[i];
 
             // 姿态调整推力（保持原逻辑）
-            Vector3 positionFromCOM = thruster.transform.position - centerOfMass;
             float tiltThrust = 0f;
-            if (tiltAdjustment != Vector3.zero)
+            if (hasTiltCorrection)
             {
-                Vector3 torqueDirection = Vector3.Cross(positionFromCOM, transform.up).normalized;
-                float torqueEffectiveness = Vector3.Dot(torqueDirection, tiltAdjustment.normalized);
-                float distanceWeight = positionFromCOM.magnitude / GetMaxDistanceFromCOM();
-                tiltThrust = tiltCorrectionForce * torqueEffectiveness * distanceWeight;
+                Vector3 positionFromCOM = thrusterTransform.position - centerOfMass;
+                Vector3 torqueDirection = Vector3.Cross(positionFromCOM, currentUp);
+                float torqueDirectionSqr = torqueDirection.sqrMagnitude;
+
+                if (torqueDirectionSqr > 1e-6f)
+                {
+                    torqueDirection /= Mathf.Sqrt(torqueDirectionSqr);
+                    float torqueEffectiveness = Vector3.Dot(torqueDirection, tiltCorrectionDirection);
+                    float distanceWeight = Mathf.Sqrt(positionFromCOM.sqrMagnitude) * inverseMaxDistance;
+                    tiltThrust = tiltCorrectionForce * torqueEffectiveness * distanceWeight;
+                }
             }
 
             // 合并推力并限制范围
@@ -242,16 +422,21 @@ public class HoverFlightController : MonoBehaviour
         }
     }
 
-    private void ApplyRotationCorrection()
+    private void ApplyRotationCorrection(Vector3 currentUp)
     {
+        if (rotationSmoothing <= 0f || Vector3.Dot(currentUp, targetUpVector) > 0.99995f)
+        {
+            return;
+        }
+
         // 计算目标旋转（垂直向上）
-        Quaternion targetRotation = Quaternion.FromToRotation(transform.up, Vector3.up) * rb.rotation;
+        Quaternion targetRotation = Quaternion.FromToRotation(currentUp, targetUpVector) * rb.rotation;
 
         // 平滑旋转
         Quaternion newRotation = Quaternion.Slerp(
             rb.rotation,
             targetRotation,
-            rotationSmoothing * Time.fixedDeltaTime
+            rotationSmoothing * cachedFixedDeltaTime
         );
 
         // 应用旋转（通过角速度实现平滑物理效果）
@@ -261,40 +446,19 @@ public class HoverFlightController : MonoBehaviour
         if (angle > 180f) angle -= 360f;
         if (Mathf.Abs(angle) > 0.01f)
         {
-            Vector3 angularVelocity = axis * angle * Mathf.Deg2Rad / Time.fixedDeltaTime;
+            Vector3 angularVelocity = axis * angle * Mathf.Deg2Rad * inverseFixedDeltaTime;
             rb.angularVelocity = Vector3.Lerp(rb.angularVelocity, angularVelocity, 0.1f);
         }
-    }
-
-    private float GetTotalMaxThrust()
-    {
-        float total = 0f;
-        foreach (var thruster in thrusters)
-        {
-            if (thruster == null) continue;
-            total += thruster.maxThrust;
-        }
-        return total;
-    }
-
-    private float GetMaxDistanceFromCOM()
-    {
-        Vector3 centerOfMass = rb.centerOfMass + transform.position;
-        float maxDistance = 0f;
-
-        foreach (var thruster in thrusters)
-        {
-            if (thruster == null) continue;
-            float distance = Vector3.Distance(thruster.transform.position, centerOfMass);
-            if (distance > maxDistance) maxDistance = distance;
-        }
-
-        return maxDistance > 0 ? maxDistance : 1f;
     }
 
     // 在编辑器中可视化
     private void OnDrawGizmosSelected()
     {
+        if (rb == null)
+        {
+            rb = GetComponentInParent<Rigidbody>();
+        }
+
         if (rb == null) return;
 
         // 绘制目标高度平面
@@ -309,8 +473,12 @@ public class HoverFlightController : MonoBehaviour
 
         // 绘制推进器位置
         Gizmos.color = Color.blue;
+        if (thrusters == null) return;
+
         foreach (var thruster in thrusters)
         {
+            if (thruster == null) continue;
+
             Gizmos.DrawLine(comPosition, thruster.transform.position);
             Gizmos.DrawSphere(thruster.transform.position, 0.1f);
         }

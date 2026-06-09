@@ -88,6 +88,15 @@ public class ControlUnit : MonoBehaviour
         mainThrusters = GetComponentsInChildren<MainThruster>();
         hoverThrusters = GetComponentsInChildren<HoverThruster>();
 
+        Rigidbody unitRigidbody = GetComponent<Rigidbody>();
+        Thruster[] allThrusters = GetComponentsInChildren<Thruster>();
+        foreach (Thruster thruster in allThrusters)
+        {
+            if (thruster == null) continue;
+
+            thruster.SetRuntimeReferences(this, unitRigidbody);
+        }
+
         hasValidCockpit = cockpits.Length == 1;
         cockpit = hasValidCockpit ? cockpits[0] : null;
 

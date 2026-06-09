@@ -8,25 +8,24 @@ public class UniversalThruster : Thruster
 
     private void FixedUpdate()
     {
-        if (!PlayManager.instance.playMode) return;
+        if (!IsPlayModeActive()) return;
 
-        if (controlUnit == null)
-        {
-            controlUnit = GetComponentInParent<ControlUnit>();
-        }
+        RefreshRuntimeReferences();
 
-        inputDir = controlUnit != null && controlUnit.HasValidCockpit ? controlUnit.MovementInput : Vector3.zero;
+        bool hasValidOwner = HasValidRuntimeOwner();
+        inputDir = hasValidOwner ? controlUnit.MovementInput : Vector3.zero;
+        bool active = hasValidOwner && inputDir.sqrMagnitude > InputEpsilonSqr;
 
-        RotateThruster(inputDir);
-        thrust = ShouldActivate() ? maxThrust : 0;
+        RotateThruster(inputDir, active);
+        thrust = active ? maxThrust : 0f;
         ApplyThrustChangeRateLimit();
         ApplyThrust();
         VisualizeThrust();
     }
 
-    private void RotateThruster(Vector3 worldDir)
+    private void RotateThruster(Vector3 worldDir, bool active)
     {
-        if (!alignVisual || !ShouldActivate()) return;
+        if (!alignVisual || !active || model == null) return;
 
         Quaternion targetRot = Quaternion.LookRotation(worldDir, Vector3.up);
         model.rotation = Quaternion.RotateTowards(
@@ -38,22 +37,16 @@ public class UniversalThruster : Thruster
 
     public void ApplyThrust()
     {
-        if (rb == null)
-        {
-            rb = GetComponentInParent<Rigidbody>();
-        }
+        if (thrust <= 0f || !TryEnsureRigidbody()) return;
 
-        if (rb == null) return;
-
-        thrustDirection = model.forward;
+        thrustDirection = model != null ? model.forward : transform.forward;
         rb.AddForceAtPosition(thrustDirection * thrust, transform.position);
     }
 
     public override bool ShouldActivate()
     {
-        return inputDir.sqrMagnitude > 1e-6f
-            && PlayManager.instance.playMode
-            && controlUnit != null
-            && controlUnit.HasValidCockpit;
+        return inputDir.sqrMagnitude > InputEpsilonSqr
+            && IsPlayModeActive()
+            && HasValidRuntimeOwner();
     }
 }
