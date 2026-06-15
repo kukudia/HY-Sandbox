@@ -44,6 +44,15 @@ public class DestroyManager : MonoBehaviour
         RuntimeUnitMember member = obj.GetComponent<RuntimeUnitMember>();
         string ownerUnitId = member != null ? member.ownerUnitId : unit?.runtimeUnitId;
         UnitFaction ownerFaction = member != null ? member.ownerFaction : cockpit != null ? cockpit.faction : unit != null ? unit.faction : UnitFaction.Enemy;
+        Block block = obj.GetComponent<Block>();
+        if (block != null)
+        {
+            VisualEffectsManager.TryPlayBlockRemoved(block);
+        }
+        else
+        {
+            VisualEffectsManager.TryPlayObjectDestroyed(obj);
+        }
         Destroy(obj);
 
         if (!PlayManager.instance.playMode) return;
@@ -94,7 +103,7 @@ public class DestroyManager : MonoBehaviour
 
     private void PlayDisappearEffect(GameObject obj)
     {
-        // Reserved hook for a future death/disappear VFX before the block is destroyed.
+        VisualEffectsManager.TryPlayObjectDestroyed(obj);
     }
 
     public void NotifyObjectDestroyed()

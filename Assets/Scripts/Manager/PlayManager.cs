@@ -205,6 +205,8 @@ public class PlayManager : MonoBehaviour
             selectedRenderer.sharedMaterial = highlightMaterial;
         }
 
+        VisualEffectsManager.TryShowBlockSelection(selectedBlock);
+
         Rack rack = selectedBlock.GetComponent<Rack>();
         if (rack != null)
         {
@@ -216,6 +218,8 @@ public class PlayManager : MonoBehaviour
 
     public void DeselectBlock()
     {
+        VisualEffectsManager.TryClearBlockSelection(selectedBlock);
+
         if (selectedRenderer != null && originalMaterial != null)
         {
             selectedRenderer.sharedMaterial = originalMaterial;

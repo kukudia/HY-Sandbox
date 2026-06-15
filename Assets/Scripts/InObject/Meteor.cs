@@ -14,6 +14,8 @@ public class Meteor : MonoBehaviour
 
     void Start()
     {
+        VisualEffectsManager.TryDecorateMeteor(this);
+
         // 随机化视觉效果
         if (trailRenderer != null)
         {
@@ -38,6 +40,12 @@ public class Meteor : MonoBehaviour
             Quaternion rotation = Quaternion.FromToRotation(Vector3.up, contact.normal);
             Vector3 position = contact.point;
             Instantiate(impactEffect, position, rotation);
+        }
+
+        if (collision.contactCount > 0)
+        {
+            ContactPoint contact = collision.contacts[0];
+            VisualEffectsManager.TryPlayMeteorImpact(contact.point, contact.normal, transform.lossyScale.magnitude, collision.relativeVelocity.magnitude);
         }
 
         // 移除物理组件

@@ -72,6 +72,7 @@
     <Compile Include="Assets\Scripts\Data\BlockData.cs" />
     <Compile Include="Assets\Scripts\Actions\AddBlockAction.cs" />
     <Compile Include="Assets\Scripts\Manager\GameManager.cs" />
+    <Compile Include="Assets\Scripts\Manager\VisualEffectsManager.cs" />
     <Compile Include="Assets\Scripts\Block\Block.cs" />
     <Compile Include="Assets\Scripts\Manager\BuildManager.cs" />
     <Compile Include="Assets\Scripts\InObject\Meteor.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\Thrusters\HoverThruster.cs" />
     <Compile Include="Assets\Scripts\Thrusters\Thruster.cs" />
+    <Compile Include="Assets\Scripts\Thrusters\ThrusterVisualEffect.cs" />
     <Compile Include="Assets\Scripts\Actions\GroupAction.cs" />
     <Compile Include="Assets\Scripts\Manager\SaveManager.cs" />
     <Compile Include="Assets\Scripts\UI\SaveUIPanel.cs" />

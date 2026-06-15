@@ -27,7 +27,9 @@ public class CreateBlockAction : IBlockAction
     {
         if (createdObject != null)
         {
-            BuildManager.instance.RemoveBlock(createdObject.GetComponent<Block>());
+            Block block = createdObject.GetComponent<Block>();
+            VisualEffectsManager.TryPlayBlockRemoved(block);
+            BuildManager.instance.RemoveBlock(block);
             Object.Destroy(createdObject);
             createdObject = null;
         }
@@ -53,6 +55,7 @@ public class CreateBlockAction : IBlockAction
                 block.resourcePath = resourcePath;
                 BuildManager.instance.ApplyBlockBuildDefaults(block);
                 BuildManager.instance.SaveBlock(block);
+                VisualEffectsManager.TryPlayBlockPlaced(block);
             }
         }
     }

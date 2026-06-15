@@ -21,6 +21,7 @@ public class MoveBlockAction : IBlockAction
         {
             block.transform.position = oldPos;
             BuildManager.instance.SaveBlock(block);
+            VisualEffectsManager.TryPlayBlockMoved(block, newPos, oldPos);
         }
     }
 
@@ -30,6 +31,7 @@ public class MoveBlockAction : IBlockAction
         {
             block.transform.position = newPos;
             BuildManager.instance.SaveBlock(block);
+            VisualEffectsManager.TryPlayBlockMoved(block, oldPos, newPos);
         }
     }
 

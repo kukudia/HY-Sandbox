@@ -25,6 +25,7 @@ public class RotateBlockAction : IBlockAction
         {
             block.transform.rotation = oldRot;
             BuildManager.instance.SaveBlock(block);
+            VisualEffectsManager.TryPlayBlockRotated(block);
         }
     }
 
@@ -34,6 +35,7 @@ public class RotateBlockAction : IBlockAction
         {
             block.transform.rotation = newRot;
             BuildManager.instance.SaveBlock(block);
+            VisualEffectsManager.TryPlayBlockRotated(block);
         }
     }
 

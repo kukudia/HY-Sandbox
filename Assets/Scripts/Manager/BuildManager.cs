@@ -400,10 +400,14 @@ public class BuildManager : MonoBehaviour
             moveAxis.transform.position = selectedBlock.transform.position;
             moveAxis.transform.SetParent(selectedBlock.transform); // 绑定在方块上
         }
+
+        VisualEffectsManager.TryShowBlockSelection(selectedBlock);
     }
 
     public void DeselectBlock()
     {
+        VisualEffectsManager.TryClearBlockSelection(selectedBlock);
+
         if (selectedRenderer != null && originalMaterial != null)
         {
             selectedRenderer.sharedMaterial = originalMaterial;
@@ -464,6 +468,7 @@ public class BuildManager : MonoBehaviour
                     // 记录操作到 Undo 栈
                     var action = new MoveBlockAction(selectedBlock, oldPos, newPos);
                     ActionManager.instance.Push(action);
+                    VisualEffectsManager.TryPlayBlockMoved(selectedBlock, oldPos, newPos);
                 }
             }
             else
@@ -510,6 +515,7 @@ public class BuildManager : MonoBehaviour
                 // 记录操作到 Undo 栈
                 var action = new RotateBlockAction(selectedBlock, oldPos, newPos, oldRot, newRot);
                 ActionManager.instance.Push(action);
+                VisualEffectsManager.TryPlayBlockRotated(selectedBlock);
             }
             else
             {
@@ -566,6 +572,7 @@ public class BuildManager : MonoBehaviour
                             // 记录操作到 Undo 栈
                             var action = new MoveBlockAction(selectedBlock, oldPos, newPos);
                             ActionManager.instance.Push(action);
+                            VisualEffectsManager.TryPlayBlockMoved(selectedBlock, oldPos, newPos);
                         }
                     }
                     else
@@ -736,6 +743,7 @@ public class BuildManager : MonoBehaviour
                 if (renderer.material.HasProperty("_Color"))
                     renderer.material.color = isBlocked ? new Color(1, 0, 0, 0.5f) : new Color(0, 1, 0, 0.5f);
             }
+            VisualEffectsManager.TryUpdateGhostPreview(currentGhost, isBlocked);
 
             // 鼠标左键点击 → 真正生成方块
             if (Mouse.current.leftButton.wasPressedThisFrame && !isBlocked)
@@ -762,6 +770,7 @@ public class BuildManager : MonoBehaviour
             block.resourcePath = resourcePath;
             ApplyBlockBuildDefaults(block);
             SaveBlock(block);
+            VisualEffectsManager.TryPlayBlockPlaced(block);
 
             // 记录到 Undo 栈
             var action = new CreateBlockAction(block);
@@ -1368,6 +1377,7 @@ public class BuildManager : MonoBehaviour
     {
         if (currentGhost == null) return;
 
+        VisualEffectsManager.TryClearGhostPreview(currentGhost);
         Destroy(currentGhost);
         currentGhost = null;
         hoveredConnector = null;

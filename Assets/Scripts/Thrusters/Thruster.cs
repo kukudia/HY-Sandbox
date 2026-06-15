@@ -35,6 +35,7 @@ public abstract class Thruster : MonoBehaviour
     private float nextVisualizationTime;
     private bool modelLookupComplete;
     private readonly Vector3[] linePositions = new Vector3[2];
+    private ThrusterVisualEffect visualEffect;
 
     // 子类必须实现：如何启用推进器（输入控制/自动触发）
     public abstract bool ShouldActivate();
@@ -49,6 +50,7 @@ public abstract class Thruster : MonoBehaviour
         CacheLocalReferences();
         EnsureLineRenderer();
         EnsureThrustGradient();
+        EnsureVisualEffect();
         VisualizeThrust(true);
     }
 
@@ -157,6 +159,8 @@ public abstract class Thruster : MonoBehaviour
         thrustLine.startColor = thrustColor;
         thrustLine.endColor = thrustColor;
 
+        EnsureVisualEffect();
+        visualEffect.SetThrust(thrustRatio, lineDirection);
     }
 
     public virtual Vector3 GetInputDirection()
@@ -256,6 +260,21 @@ public abstract class Thruster : MonoBehaviour
                 new GradientAlphaKey(1.0f, 1.0f)
             }
         );
+    }
+
+    private void EnsureVisualEffect()
+    {
+        if (visualEffect == null)
+        {
+            visualEffect = GetComponent<ThrusterVisualEffect>();
+        }
+
+        if (visualEffect == null)
+        {
+            visualEffect = gameObject.AddComponent<ThrusterVisualEffect>();
+        }
+
+        visualEffect.Initialize(this);
     }
 
     private Vector3 GetNormalizedThrustDirection()

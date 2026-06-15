@@ -38,6 +38,7 @@ public class DeleteBlockAction : IBlockAction
                 deletedBlock.resourcePath = resourcePath;
                 BuildManager.instance.ApplyBlockBuildDefaults(deletedBlock);
                 BuildManager.instance.SaveBlock(deletedBlock);
+                VisualEffectsManager.TryPlayBlockPlaced(deletedBlock);
             }
             else
             {
@@ -50,6 +51,7 @@ public class DeleteBlockAction : IBlockAction
     {
         if (deletedBlock != null)
         {
+            VisualEffectsManager.TryPlayBlockRemoved(deletedBlock);
             BuildManager.instance.RemoveBlock(deletedBlock.GetComponent<Block>());
             Object.Destroy(deletedBlock.gameObject);
             deletedBlock = null;
