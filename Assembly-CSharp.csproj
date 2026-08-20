@@ -66,13 +66,13 @@
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
     <Compile Include="Assets\Layer Lab\Scripts\PanelControl.cs" />
     <Compile Include="Assets\Scripts\Thrusters\ThrusterAllocator.cs" />
+    <Compile Include="Assets\Scripts\Thrusters\ThrusterVisualEffect.cs" />
     <Compile Include="Assets\Scripts\UI\MainUIPanels.cs" />
     <Compile Include="Assets\Scripts\InObject\EnemySpawner.cs" />
     <Compile Include="Assets\Scripts\Data\BuildTargetContext.cs" />
     <Compile Include="Assets\Scripts\Data\BlockData.cs" />
     <Compile Include="Assets\Scripts\Actions\AddBlockAction.cs" />
     <Compile Include="Assets\Scripts\Manager\GameManager.cs" />
-    <Compile Include="Assets\Scripts\Manager\VisualEffectsManager.cs" />
     <Compile Include="Assets\Scripts\Block\Block.cs" />
     <Compile Include="Assets\Scripts\Manager\BuildManager.cs" />
     <Compile Include="Assets\Scripts\InObject\Meteor.cs" />
@@ -80,6 +80,7 @@
     <Compile Include="Assets\Scripts\Block\Durability.cs" />
     <Compile Include="Assets\Scripts\InObject\ModularUnitValidator.cs" />
     <Compile Include="Assets\Scripts\InObject\UnitFaction.cs" />
+    <Compile Include="Assets\Scripts\Manager\VisualEffectsManager.cs" />
     <Compile Include="Assets\Scripts\Actions\ActionManager.cs" />
     <Compile Include="Assets\Scripts\UI\ActionCounterUI.cs" />
     <Compile Include="Assets\Scripts\InObject\ControlUnit.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Assets\Scripts\InObject\TurretWeapon.cs" />
     <Compile Include="Assets\Scripts\InObject\EnemyController.cs" />
     <Compile Include="Assets\Scripts\Actions\DeleteBlockAction.cs" />
+    <Compile Include="Assets\Scripts\Manager\StylizedRingEffect.cs" />
     <Compile Include="Assets\Scripts\Manager\PerformanceMonitor.cs" />
     <Compile Include="Assets\Scripts\InObject\RotateAxisHandle.cs" />
     <Compile Include="Assets\Scripts\Actions\MoveBlockAction.cs" />
@@ -94,10 +96,10 @@
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\Thrusters\HoverThruster.cs" />
     <Compile Include="Assets\Scripts\Thrusters\Thruster.cs" />
-    <Compile Include="Assets\Scripts\Thrusters\ThrusterVisualEffect.cs" />
     <Compile Include="Assets\Scripts\Actions\GroupAction.cs" />
     <Compile Include="Assets\Scripts\Manager\SaveManager.cs" />
     <Compile Include="Assets\Scripts\UI\SaveUIPanel.cs" />
+    <Compile Include="Assets\Scripts\Manager\StylizedBeamEffect.cs" />
     <Compile Include="Assets\Scripts\Actions\IBlockAction.cs" />
     <Compile Include="Assets\Scripts\InObject\Cockpit.cs" />
     <Compile Include="Assets\Scripts\Thrusters\UniversalThruster.cs" />

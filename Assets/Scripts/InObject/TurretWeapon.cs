@@ -20,7 +20,7 @@ public class TurretWeapon : MonoBehaviour
     private ControlUnit owner;
     private ControlUnit target;
     private Durability targetDurability;
-    private LineRenderer fireLine;
+    private StylizedBeamEffect fireBeam;
     private float nextSearchTime;
     private float nextFireTime;
     private float hideLineTime;
@@ -49,14 +49,20 @@ public class TurretWeapon : MonoBehaviour
     private void Start()
     {
         owner = GetComponentInParent<ControlUnit>();
-        fireLine = gameObject.AddComponent<LineRenderer>();
-        fireLine.positionCount = 2;
-        fireLine.enabled = false;
-        fireLine.startWidth = 0.04f;
-        fireLine.endWidth = 0.01f;
-        fireLine.material = new Material(Shader.Find("Unlit/Color"));
-        fireLine.startColor = Color.yellow;
-        fireLine.endColor = Color.red;
+        LineRenderer legacyFireLine = GetComponent<LineRenderer>();
+        if (legacyFireLine != null)
+        {
+            legacyFireLine.enabled = false;
+        }
+
+        fireBeam = GetComponent<StylizedBeamEffect>();
+        if (fireBeam == null)
+        {
+            fireBeam = gameObject.AddComponent<StylizedBeamEffect>();
+        }
+        fireBeam.Configure(0.035f, 6f, 7, 0.008f, 2.2f, 18f);
+        fireBeam.SetColor(new Color(1f, 0.46f, 0.08f, 1f));
+        fireBeam.SetVisible(false);
     }
 
     private void FixedUpdate()
@@ -81,9 +87,13 @@ public class TurretWeapon : MonoBehaviour
             AimAndFire(targetDurability);
         }
 
-        if (fireLine.enabled && Time.time >= hideLineTime)
+        if (fireBeam != null && Time.time < hideLineTime)
         {
-            fireLine.enabled = false;
+            fireBeam.SetIntensity(Mathf.Clamp01((hideLineTime - Time.time) / 0.085f));
+        }
+        else if (fireBeam != null)
+        {
+            fireBeam.SetVisible(false);
         }
     }
 
@@ -273,10 +283,10 @@ public class TurretWeapon : MonoBehaviour
             break;
         }
 
-        fireLine.enabled = true;
-        fireLine.SetPosition(0, origin);
-        fireLine.SetPosition(1, end);
-        hideLineTime = Time.time + 0.06f;
+        fireBeam.SetEndpoints(origin, end);
+        fireBeam.SetIntensity(1f);
+        fireBeam.SetVisible(true);
+        hideLineTime = Time.time + 0.085f;
     }
 
     private Vector3 GetMuzzlePosition()

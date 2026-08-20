@@ -156,7 +156,6 @@ MonoBehaviour:
   showAvoidanceRays: 1
   showDirectionVectors: 1
   showAvoidanceZones: 1
-  repairBeam: {fileID: 0}
   repairBeamGradient:
     serializedVersion: 2
     key0: {r: 0, g: 1, b: 0, a: 1}

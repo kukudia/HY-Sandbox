@@ -60,7 +60,6 @@ public class RepairBot : MonoBehaviour
     public bool showAvoidanceZones = true;
 
     [Header("修复效果")]
-    public LineRenderer repairBeam;
     public Gradient repairBeamGradient;
     public float beamWidth = 0.2f;
 
@@ -79,9 +78,7 @@ public class RepairBot : MonoBehaviour
     private ControlUnit ownerUnit;
     private Durability[] ownedDurabilities;
     private readonly Collider[] nearbyColliders = new Collider[MaxNearbyColliders];
-    private readonly GradientColorKey[] repairBeamColorKeys = new GradientColorKey[2];
-    private readonly GradientAlphaKey[] repairBeamAlphaKeys = new GradientAlphaKey[2];
-    private Gradient runtimeRepairBeamGradient;
+    private StylizedBeamEffect repairBeamEffect;
 
     // 调试信息
     private List<AvoidanceDebugInfo> debugAvoidanceInfo = new List<AvoidanceDebugInfo>();
@@ -125,19 +122,22 @@ public class RepairBot : MonoBehaviour
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
         // 初始化修复光束
-        if (repairBeam == null)
+        LineRenderer legacyRepairBeam = GetComponent<LineRenderer>();
+        if (legacyRepairBeam != null)
         {
-            repairBeam = gameObject.AddComponent<LineRenderer>();
-            repairBeam.material = new Material(Shader.Find("Sprites/Default"));
-            repairBeam.colorGradient = repairBeamGradient;
-            repairBeam.startWidth = beamWidth;
-            repairBeam.endWidth = beamWidth * 0.5f;
-            repairBeam.enabled = false;
+            legacyRepairBeam.enabled = false;
         }
 
-        runtimeRepairBeamGradient = new Gradient();
-        repairBeamAlphaKeys[0] = new GradientAlphaKey(1f, 0f);
-        repairBeamAlphaKeys[1] = new GradientAlphaKey(0.5f, 1f);
+        repairBeamEffect = GetComponent<StylizedBeamEffect>();
+        if (repairBeamEffect == null)
+        {
+            repairBeamEffect = gameObject.AddComponent<StylizedBeamEffect>();
+        }
+        repairBeamEffect.Configure(beamWidth * 0.28f, 5.5f, 14, beamWidth * 0.16f, 3.2f, 9f);
+        repairBeamEffect.SetVisible(false);
+
+        EnsureRepairBeamGradient();
+
     }
 
     void InitializeTrail()
@@ -619,23 +619,39 @@ public class RepairBot : MonoBehaviour
 
     void UpdateRepairBeam(bool active)
     {
-        if (repairBeam == null) return;
+        if (repairBeamEffect == null) return;
 
-        repairBeam.enabled = active;
+        repairBeamEffect.SetVisible(active);
 
         if (active && currentTarget != null)
         {
-            repairBeam.SetPosition(0, transform.position);
-            repairBeam.SetPosition(1, currentTarget.transform.position);
+            repairBeamEffect.SetEndpoints(transform.position, currentTarget.transform.position);
 
             float durabilityRatio = Mathf.Clamp01(currentTarget.currentDurability / currentTarget.maxDurability);
             Color beamColor = repairBeamGradient.Evaluate(durabilityRatio);
 
-            repairBeamColorKeys[0] = new GradientColorKey(beamColor, 0f);
-            repairBeamColorKeys[1] = new GradientColorKey(Color.white, 1f);
-            runtimeRepairBeamGradient.SetKeys(repairBeamColorKeys, repairBeamAlphaKeys);
-            repairBeam.colorGradient = runtimeRepairBeamGradient;
+            repairBeamEffect.SetColor(Color.Lerp(beamColor, Color.white, 0.18f));
+            repairBeamEffect.SetIntensity(0.82f + Mathf.Sin(Time.unscaledTime * 11f) * 0.18f);
         }
+    }
+
+    private void EnsureRepairBeamGradient()
+    {
+        if (repairBeamGradient != null) return;
+
+        repairBeamGradient = new Gradient();
+        repairBeamGradient.SetKeys(
+            new[]
+            {
+                new GradientColorKey(new Color(1f, 0.28f, 0.12f), 0f),
+                new GradientColorKey(new Color(0.1f, 1f, 0.62f), 1f)
+            },
+            new[]
+            {
+                new GradientAlphaKey(1f, 0f),
+                new GradientAlphaKey(1f, 1f)
+            }
+        );
     }
 
     public void ClearTarget()

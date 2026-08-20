@@ -1,13 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(LineRenderer))]
+[DisallowMultipleComponent]
 public abstract class Thruster : MonoBehaviour
 {
     protected const float InputEpsilonSqr = 1e-6f;
     private const float DirectionEpsilonSqr = 1e-6f;
-
-    private static Material sharedLineMaterial;
 
     public ControlUnit controlUnit;
     public Transform model;
@@ -25,16 +23,11 @@ public abstract class Thruster : MonoBehaviour
     public Rigidbody rb;
 
     [Header("推力可视化")]
-    public LineRenderer thrustLine;      // 线渲染器组件
-    public float maxLineLength = 2f;      // 最大线长度（对应最大推力）
-    public Gradient thrustColorGradient;  // 根据推力变化的颜色
-
-    [Tooltip("推力可视化刷新间隔（秒），降低 LineRenderer 在物理帧中的更新频率")]
+    [Tooltip("推力可视化刷新间隔（秒），降低粒子系统在物理帧中的更新频率")]
     public float visualizationInterval = 0.05f;
 
     private float nextVisualizationTime;
     private bool modelLookupComplete;
-    private readonly Vector3[] linePositions = new Vector3[2];
     private ThrusterVisualEffect visualEffect;
 
     // 子类必须实现：如何启用推进器（输入控制/自动触发）
@@ -43,13 +36,12 @@ public abstract class Thruster : MonoBehaviour
     protected virtual void Awake()
     {
         CacheLocalReferences();
+        DisableLegacyLineRenderer();
     }
 
     protected virtual void Start()
     {
         CacheLocalReferences();
-        EnsureLineRenderer();
-        EnsureThrustGradient();
         EnsureVisualEffect();
         VisualizeThrust(true);
     }
@@ -130,11 +122,6 @@ public abstract class Thruster : MonoBehaviour
 
     public virtual void VisualizeThrust(bool forceUpdate)
     {
-        EnsureLineRenderer();
-        EnsureThrustGradient();
-
-        if (thrustLine == null) return;
-
         Vector3 lineDirection = GetNormalizedThrustDirection();
         float currentTime = Time.unscaledTime;
 
@@ -145,20 +132,7 @@ public abstract class Thruster : MonoBehaviour
 
         nextVisualizationTime = currentTime + Mathf.Max(0f, visualizationInterval);
 
-        // 计算推力向量（本地空间方向）
         float thrustRatio = maxThrust > 1e-5f ? Mathf.Clamp01(thrust / maxThrust) : 0f;
-        Vector3 thrustVec = -lineDirection * thrustRatio * maxLineLength;
-
-        // 设置线段位置（从推进器中心开始）
-        linePositions[0] = Vector3.zero;
-        linePositions[1] = thrustVec;
-        thrustLine.SetPositions(linePositions);
-
-        // 根据推力强度设置颜色
-        Color thrustColor = thrustColorGradient.Evaluate(thrustRatio);
-        thrustLine.startColor = thrustColor;
-        thrustLine.endColor = thrustColor;
-
         EnsureVisualEffect();
         visualEffect.SetThrust(thrustRatio, lineDirection);
     }
@@ -193,73 +167,13 @@ public abstract class Thruster : MonoBehaviour
         return dir;
     }
 
-    private void EnsureLineRenderer()
+    private void DisableLegacyLineRenderer()
     {
-        if (thrustLine == null)
+        LineRenderer legacyLine = GetComponent<LineRenderer>();
+        if (legacyLine != null)
         {
-            thrustLine = GetComponent<LineRenderer>();
+            legacyLine.enabled = false;
         }
-
-        if (thrustLine == null)
-        {
-            return;
-        }
-
-        if (thrustLine.positionCount != 2)
-        {
-            thrustLine.positionCount = 2;
-        }
-
-        thrustLine.useWorldSpace = false;
-
-        if (thrustLine.widthCurve == null || thrustLine.widthCurve.length == 0)
-        {
-            thrustLine.widthCurve = AnimationCurve.Linear(0, 0.1f, 1, 0.05f);
-        }
-
-        if (thrustLine.sharedMaterial == null)
-        {
-            thrustLine.sharedMaterial = GetSharedLineMaterial();
-        }
-    }
-
-    private static Material GetSharedLineMaterial()
-    {
-        if (sharedLineMaterial != null)
-        {
-            return sharedLineMaterial;
-        }
-
-        Shader shader = Shader.Find("Unlit/Color");
-        if (shader != null)
-        {
-            sharedLineMaterial = new Material(shader)
-            {
-                name = "Shared Thruster Line Material"
-            };
-        }
-
-        return sharedLineMaterial;
-    }
-
-    private void EnsureThrustGradient()
-    {
-        if (thrustColorGradient != null)
-        {
-            return;
-        }
-
-        thrustColorGradient = new Gradient();
-        thrustColorGradient.SetKeys(
-            new GradientColorKey[] {
-                new GradientColorKey(Color.blue, 0.0f),
-                new GradientColorKey(Color.red, 1.0f)
-            },
-            new GradientAlphaKey[] {
-                new GradientAlphaKey(0.7f, 0.0f),
-                new GradientAlphaKey(1.0f, 1.0f)
-            }
-        );
     }
 
     private void EnsureVisualEffect()

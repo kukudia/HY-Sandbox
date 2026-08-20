@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class VisualEffectsManager : MonoBehaviour
 {
-    private const int RingSegments = 96;
+    private const int RingSegments = 64;
     private const int MaxMeteorGlowLights = 24;
 
     private static Material sharedParticleMaterial;
@@ -25,12 +25,12 @@ public class VisualEffectsManager : MonoBehaviour
 
     private Block selectedBlock;
     private GameObject selectionRing;
-    private LineRenderer selectionLine;
+    private StylizedRingEffect selectionRingEffect;
 
     private Transform ghostTarget;
     private bool ghostBlocked;
     private GameObject ghostRing;
-    private LineRenderer ghostLine;
+    private StylizedRingEffect ghostRingEffect;
 
     private Coroutine cameraShakeRoutine;
     private Transform shakenCamera;
@@ -278,6 +278,10 @@ public class VisualEffectsManager : MonoBehaviour
         {
             selectionRing.SetActive(false);
         }
+        if (selectionRingEffect != null)
+        {
+            selectionRingEffect.SetVisible(false);
+        }
     }
 
     private void UpdateGhostPreview(Transform ghost, bool isBlocked)
@@ -296,6 +300,10 @@ public class VisualEffectsManager : MonoBehaviour
         if (ghostRing != null)
         {
             ghostRing.SetActive(false);
+        }
+        if (ghostRingEffect != null)
+        {
+            ghostRingEffect.SetVisible(false);
         }
     }
 
@@ -356,7 +364,7 @@ public class VisualEffectsManager : MonoBehaviour
 
     private void UpdateSelectionRing()
     {
-        if (selectionRing == null || selectionLine == null) return;
+        if (selectionRing == null || selectionRingEffect == null) return;
         if (selectedBlock == null)
         {
             selectionRing.SetActive(false);
@@ -371,13 +379,13 @@ public class VisualEffectsManager : MonoBehaviour
         selectionRing.transform.position = new Vector3(bounds.center.x, bounds.min.y + 0.045f, bounds.center.z);
         selectionRing.transform.rotation = Quaternion.identity;
         selectionRing.transform.localScale = Vector3.one * radius * pulse;
-        selectionLine.widthMultiplier = 0.045f + Mathf.Sin(Time.unscaledTime * 6f) * 0.01f;
-        SetLineColor(selectionLine, color);
+        selectionRingEffect.SetVisual(color, 0.05f);
+        selectionRingEffect.SetVisible(true);
     }
 
     private void UpdateGhostRing()
     {
-        if (ghostRing == null || ghostLine == null) return;
+        if (ghostRing == null || ghostRingEffect == null) return;
         if (ghostTarget == null)
         {
             ghostRing.SetActive(false);
@@ -394,15 +402,15 @@ public class VisualEffectsManager : MonoBehaviour
         ghostRing.transform.position = new Vector3(bounds.center.x, bounds.min.y + 0.055f, bounds.center.z);
         ghostRing.transform.rotation = Quaternion.identity;
         ghostRing.transform.localScale = Vector3.one * radius * pulse;
-        ghostLine.widthMultiplier = ghostBlocked ? 0.075f : 0.052f;
-        SetLineColor(ghostLine, WithAlpha(color, ghostBlocked ? 0.78f : 0.64f));
+        ghostRingEffect.SetVisual(color, ghostBlocked ? 0.075f : 0.052f);
+        ghostRingEffect.SetVisible(true);
     }
 
     private void EnsureSelectionRing()
     {
         if (selectionRing != null) return;
 
-        selectionRing = CreateRingObject("Selection Ring VFX", out selectionLine);
+        selectionRing = CreateRingObject("Selection Ring VFX", out selectionRingEffect);
         selectionRing.SetActive(false);
     }
 
@@ -410,55 +418,39 @@ public class VisualEffectsManager : MonoBehaviour
     {
         if (ghostRing != null) return;
 
-        ghostRing = CreateRingObject("Ghost Preview Ring VFX", out ghostLine);
+        ghostRing = CreateRingObject("Ghost Preview Ring VFX", out ghostRingEffect);
         ghostRing.SetActive(false);
     }
 
-    private static GameObject CreateRingObject(string name, out LineRenderer line)
+    private static GameObject CreateRingObject(string name, out StylizedRingEffect ringEffect)
     {
         GameObject ring = new GameObject(name);
-        line = ring.AddComponent<LineRenderer>();
-        line.sharedMaterial = GetSharedLineMaterial();
-        line.useWorldSpace = false;
-        line.loop = true;
-        line.positionCount = RingSegments;
-        line.numCornerVertices = 3;
-        line.numCapVertices = 3;
-
-        for (int i = 0; i < RingSegments; i++)
-        {
-            float angle = (i / (float)RingSegments) * Mathf.PI * 2f;
-            line.SetPosition(i, new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)));
-        }
+        ringEffect = ring.AddComponent<StylizedRingEffect>();
+        ringEffect.Configure(RingSegments, 0.05f);
 
         return ring;
     }
 
     private void CreateTransientRing(string name, Vector3 position, Vector3 normal, Color color, float radius, float duration, float width)
     {
-        GameObject ring = CreateRingObject(name, out LineRenderer line);
+        GameObject ring = CreateRingObject(name, out StylizedRingEffect ringEffect);
         ring.transform.position = position;
         ring.transform.rotation = Quaternion.FromToRotation(Vector3.up, normal.sqrMagnitude > 0.001f ? normal.normalized : Vector3.up);
         ring.transform.localScale = Vector3.one * 0.15f;
-        line.widthMultiplier = width;
-        SetLineColor(line, color);
-        ring.AddComponent<RingFade>().Initialize(line, color, Mathf.Max(0.05f, radius), Mathf.Max(0.05f, duration), width);
+        ringEffect.SetVisual(color, width);
+        ringEffect.SetVisible(true);
+        ring.AddComponent<RingFade>().Initialize(ringEffect, color, Mathf.Max(0.05f, radius), Mathf.Max(0.05f, duration), width);
     }
 
     private void CreateLineStreak(Vector3 from, Vector3 to, Color color, float duration, float width)
     {
         GameObject streak = new GameObject("Movement Streak VFX");
-        LineRenderer line = streak.AddComponent<LineRenderer>();
-        line.sharedMaterial = GetSharedLineMaterial();
-        line.useWorldSpace = true;
-        line.positionCount = 2;
-        line.numCapVertices = 3;
-        line.widthMultiplier = width;
-        line.widthCurve = AnimationCurve.EaseInOut(0f, 0.8f, 1f, 0.1f);
-        line.SetPosition(0, from);
-        line.SetPosition(1, to);
-        SetLineColor(line, color);
-        streak.AddComponent<LineFade>().Initialize(line, color, Mathf.Max(0.05f, duration));
+        StylizedBeamEffect beam = streak.AddComponent<StylizedBeamEffect>();
+        beam.Configure(width, 3.8f, 8, 0.015f, 2.4f, 14f);
+        beam.SetEndpoints(from, to);
+        beam.SetColor(color);
+        beam.SetVisible(true);
+        streak.AddComponent<BeamFade>().Initialize(beam, color, Mathf.Max(0.05f, duration));
     }
 
     private void CreateParticleBurst(
@@ -480,6 +472,7 @@ public class VisualEffectsManager : MonoBehaviour
         burstObject.transform.position = position;
 
         ParticleSystem particles = burstObject.AddComponent<ParticleSystem>();
+        particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         ParticleSystem.MainModule main = particles.main;
         main.duration = Mathf.Max(0.05f, maxLifetime);
         main.loop = false;
@@ -629,12 +622,6 @@ public class VisualEffectsManager : MonoBehaviour
         return gradient;
     }
 
-    private static void SetLineColor(LineRenderer line, Color color)
-    {
-        line.startColor = color;
-        line.endColor = WithAlpha(color, color.a * 0.35f);
-    }
-
     private static Color WithAlpha(Color color, float alpha)
     {
         color.a = Mathf.Clamp01(alpha);
@@ -705,16 +692,16 @@ public class VisualEffectsManager : MonoBehaviour
 
     private sealed class RingFade : MonoBehaviour
     {
-        private LineRenderer line;
+        private StylizedRingEffect ringEffect;
         private Color color;
         private float targetRadius;
         private float duration;
         private float width;
         private float elapsed;
 
-        public void Initialize(LineRenderer lineRenderer, Color lineColor, float radius, float lifetime, float lineWidth)
+        public void Initialize(StylizedRingEffect effect, Color lineColor, float radius, float lifetime, float lineWidth)
         {
-            line = lineRenderer;
+            ringEffect = effect;
             color = lineColor;
             targetRadius = radius;
             duration = lifetime;
@@ -723,7 +710,7 @@ public class VisualEffectsManager : MonoBehaviour
 
         private void Update()
         {
-            if (line == null)
+            if (ringEffect == null)
             {
                 Destroy(gameObject);
                 return;
@@ -734,8 +721,7 @@ public class VisualEffectsManager : MonoBehaviour
             float eased = 1f - Mathf.Pow(1f - t, 3f);
 
             transform.localScale = Vector3.one * Mathf.Lerp(0.15f, targetRadius, eased);
-            line.widthMultiplier = Mathf.Lerp(width, width * 0.18f, t);
-            SetLineColor(line, WithAlpha(color, color.a * (1f - t) * (1f - t)));
+            ringEffect.SetIntensity((1f - t) * (1f - t));
 
             if (t >= 1f)
             {
@@ -744,23 +730,23 @@ public class VisualEffectsManager : MonoBehaviour
         }
     }
 
-    private sealed class LineFade : MonoBehaviour
+    private sealed class BeamFade : MonoBehaviour
     {
-        private LineRenderer line;
+        private StylizedBeamEffect beam;
         private Color color;
         private float duration;
         private float elapsed;
 
-        public void Initialize(LineRenderer lineRenderer, Color lineColor, float lifetime)
+        public void Initialize(StylizedBeamEffect effect, Color lineColor, float lifetime)
         {
-            line = lineRenderer;
+            beam = effect;
             color = lineColor;
             duration = lifetime;
         }
 
         private void Update()
         {
-            if (line == null)
+            if (beam == null)
             {
                 Destroy(gameObject);
                 return;
@@ -768,10 +754,11 @@ public class VisualEffectsManager : MonoBehaviour
 
             elapsed += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
-            SetLineColor(line, WithAlpha(color, color.a * (1f - t)));
+            beam.SetIntensity(1f - t);
 
             if (t >= 1f)
             {
+                beam.SetVisible(false);
                 Destroy(gameObject);
             }
         }
