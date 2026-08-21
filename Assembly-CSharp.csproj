@@ -88,7 +88,7 @@
     <Compile Include="Assets\Scripts\InObject\TurretWeapon.cs" />
     <Compile Include="Assets\Scripts\InObject\EnemyController.cs" />
     <Compile Include="Assets\Scripts\Actions\DeleteBlockAction.cs" />
-    <Compile Include="Assets\Scripts\Manager\StylizedRingEffect.cs" />
+    <Compile Include="Assets\Scripts\Effect\StylizedRingEffect.cs" />
     <Compile Include="Assets\Scripts\Manager\PerformanceMonitor.cs" />
     <Compile Include="Assets\Scripts\InObject\RotateAxisHandle.cs" />
     <Compile Include="Assets\Scripts\Actions\MoveBlockAction.cs" />
@@ -99,11 +99,12 @@
     <Compile Include="Assets\Scripts\Actions\GroupAction.cs" />
     <Compile Include="Assets\Scripts\Manager\SaveManager.cs" />
     <Compile Include="Assets\Scripts\UI\SaveUIPanel.cs" />
-    <Compile Include="Assets\Scripts\Manager\StylizedBeamEffect.cs" />
     <Compile Include="Assets\Scripts\Actions\IBlockAction.cs" />
     <Compile Include="Assets\Scripts\InObject\Cockpit.cs" />
     <Compile Include="Assets\Scripts\Thrusters\UniversalThruster.cs" />
+    <Compile Include="Assets\Scripts\Effect\StylizedBeamEffect.cs" />
     <Compile Include="Assets\Scripts\Actions\RotateBlockAction.cs" />
+    <Compile Include="Assets\Scripts\Player\Player.cs" />
     <Compile Include="Assets\Layer Lab\Scripts\PanelView.cs" />
     <Compile Include="Assets\Scripts\UI\MainUIButtons.cs" />
     <Compile Include="Assets\Scripts\Manager\MeteorShower.cs" />

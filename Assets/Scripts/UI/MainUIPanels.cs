@@ -9,6 +9,7 @@ public class MainUIPanels : MonoBehaviour
     public GameObject playPanel;
     public GameObject createPanel;
     public GameObject deletePanel;
+    public GameObject deathPanel;
     public InputField inputName;
     public float fadeDuration = 0.3f;
 
@@ -196,6 +197,12 @@ public class MainUIPanels : MonoBehaviour
         PlayManager.instance.PlayEnd();
         StartCoroutine(Fade(playPanel, false));
         StartCoroutine(Fade(buildPanel, true));
+    }
+
+    public void PlayerDeath()
+    {
+        StartCoroutine(Fade(playPanel, false));
+        StartCoroutine(Fade(deathPanel, true));
     }
 
     public void EnterEnemyBlueprintBuildMode()

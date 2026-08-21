@@ -97,7 +97,8 @@ public class DestroyManager : MonoBehaviour
 
         if (ownerFaction == UnitFaction.Player && PlayManager.instance != null && PlayManager.instance.playMode)
         {
-            MainUIPanels.instance.PlayEnd();
+            //MainUIPanels.instance.PlayEnd();
+            MainUIPanels.instance.PlayerDeath();
         }
     }
 

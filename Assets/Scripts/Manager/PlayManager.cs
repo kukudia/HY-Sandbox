@@ -42,11 +42,11 @@ public class PlayManager : MonoBehaviour
     {
         if (!playMode) return;
 
-        if (blocksParent == null)
-        {
-            MainUIPanels.instance.PlayEnd();
-            return;
-        }
+        //if (blocksParent == null)
+        //{
+        //    MainUIPanels.instance.PlayEnd();
+        //    return;
+        //}
 
         if (Keyboard.current.bKey.wasPressedThisFrame)
         {

@@ -20,6 +20,8 @@ public class MainUIButtons : MonoBehaviour
     public Button cancelCreateButton;
     public Button confirmDeleteButton;
     public Button cancelDeleteButton;
+    public Button backToMenuButton;
+    public Button respawnButton;
     public List<BlockButton> blockButtons = new List<BlockButton>();
 
     private void Awake()
@@ -59,6 +61,8 @@ public class MainUIButtons : MonoBehaviour
         confirmCreateButton.onClick.AddListener(MainUIPanels.instance.OnConfirmCreate);
         cancelCreateButton.onClick.AddListener(MainUIPanels.instance.HideCreatePanel);
         cancelDeleteButton.onClick.AddListener(MainUIPanels.instance.HideDeletePanel);
+        //backToMenuButton;
+        respawnButton.onClick.AddListener(MainUIPanels.instance.PlayEnd);
 
         foreach (BlockButton blockButton in blockButtons)
         {

@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem; // ÐÂÊäÈëÏµÍ³ÃüÃû¿Õ¼ä
+using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
@@ -12,7 +12,7 @@ public class CameraController : MonoBehaviour
     public float sprintMultiplier = 2f;
 
     [Header("First Person Settings")]
-    public Transform playerBody;   // ½ÇÉ«ÉíÌå£¨Í¨³£ÊÇÒ»¸ö½ºÄÒÌå£©
+    public Transform playerBody;
     private float xRotation = 0f;
 
     [Header("Free Fly Settings")]
@@ -22,13 +22,13 @@ public class CameraController : MonoBehaviour
     public Vector3 thirdPersonOffset = new Vector3(0f, 2f, -5f);
     public float thirdPersonSmooth = 10f;
     private float tpYaw = 0f;
-    private float tpPitch = 15f; // ÉÔÎ¢¸©ÊÓ
+    private float tpPitch = 15f;
     private Vector3 camVelocity = Vector3.zero;
 
     [Header("Third Person Zoom")]
     public float zoomSpeed = 2f;
-    public float minZoom = -2f;   // ×î½ü
-    public float maxZoom = -10f;  // ×îÔ¶
+    public float minZoom = -2f;
+    public float maxZoom = -10f;
     private Coroutine focusCoroutine;
 
     void Update()
@@ -74,7 +74,7 @@ public class CameraController : MonoBehaviour
     {
         if (Keyboard.current.tabKey.wasPressedThisFrame)
         {
-            // ÔÚÈýÖÖÄ£Ê½Ö®¼äÑ­»·ÇÐ»»
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½Ö®ï¿½ï¿½Ñ­ï¿½ï¿½ï¿½Ð»ï¿½
             if (currentMode == CameraMode.FirstPerson)
                 currentMode = CameraMode.ThirdPerson;
             else if (currentMode == CameraMode.ThirdPerson)
@@ -108,16 +108,13 @@ public class CameraController : MonoBehaviour
         {
             if (playerBody == null) return;
 
-            // Ðý×ª¿ØÖÆ
             tpYaw += mouseX;
             tpPitch -= mouseY;
             tpPitch = Mathf.Clamp(tpPitch, -30f, 60f);
 
-            // ¹öÂÖËõ·Å
             float scroll = Mouse.current.scroll.ReadValue().y * zoomSpeed * Time.deltaTime;
             thirdPersonOffset.z = Mathf.Clamp(thirdPersonOffset.z + scroll, maxZoom, minZoom);
 
-            // ¼ÆËãÏà»úÎ»ÖÃ
             Quaternion rotation = Quaternion.Euler(tpPitch, tpYaw, 0f);
             Vector3 desiredPos = playerBody.position + rotation * thirdPersonOffset;
 
@@ -125,9 +122,9 @@ public class CameraController : MonoBehaviour
                 transform.position,
                 desiredPos,
                 ref camVelocity,
-                0.05f // Æ½»¬Ê±¼ä£¬ÊýÖµÔ½Ð¡Ô½¸úËæ½ô
+                0.05f // Æ½ï¿½ï¿½Ê±ï¿½ä£¬ï¿½ï¿½ÖµÔ½Ð¡Ô½ï¿½ï¿½ï¿½ï¿½ï¿½
             );
-            transform.LookAt(playerBody.position + Vector3.up * 1.5f); // ¿´Ïò½ÇÉ«Í·²¿Î»ÖÃ
+            transform.LookAt(playerBody.position + Vector3.up * 1.5f); // ï¿½ï¿½ï¿½ï¿½ï¿½É«Í·ï¿½ï¿½Î»ï¿½ï¿½
         }
     }
 
@@ -150,7 +147,6 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    // ÐÂÔö£ºÉãÏñ»ú¾Û½¹·½·¨
     public void FocusCameraOnBlock(GameObject obj)
     {
         if (obj == null) return;
@@ -163,7 +159,7 @@ public class CameraController : MonoBehaviour
 
         if (!TryGetFocusPose(obj, out Vector3 targetPosition, out Quaternion targetRotation)) return;
 
-        // ÉèÖÃÉãÏñ»úÎ»ÖÃºÍÐý×ª
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½Ãºï¿½ï¿½ï¿½×ª
         transform.position = targetPosition;
         transform.rotation = targetRotation;
     }
@@ -394,7 +390,6 @@ public class CameraController : MonoBehaviour
         targetPosition = transform.position;
         targetRotation = transform.rotation;
 
-        // »ñÈ¡·½¿éµÄ°üÎ§ºÐ
         if (!TryCalculateBlockBounds(obj, out Bounds bounds)) return false;
         return TryGetFocusPose(bounds, bounds.center, out targetPosition, out targetRotation);
     }
@@ -475,7 +470,6 @@ public class CameraController : MonoBehaviour
         return Mathf.Max(distance * 1.15f, radius + 1f, 1f);
     }
 
-    // ÐÂÔö£º¼ÆËã·½¿é°üÎ§ºÐ
     private bool TryCalculateBlockBounds(GameObject obj, out Bounds bounds)
     {
         bounds = default;
@@ -484,7 +478,6 @@ public class CameraController : MonoBehaviour
         Block block = obj.GetComponent<Block>();
         if (block != null)
         {
-            //Ê¹ÓÃÄ¬ÈÏ³ß´ç¹ÀËã
             Vector3 size = new Vector3(block.x, block.y, block.z) * BuildManager.instance.gridSize;
             bounds = new Bounds(block.transform.position, size);
             return true;
@@ -492,7 +485,6 @@ public class CameraController : MonoBehaviour
 
         if (renderers.Length == 0) return false;
 
-        // ¼ÆËãËùÓÐäÖÈ¾Æ÷µÄ×Ü°üÎ§ºÐ
         bounds = renderers[0].bounds;
         for (int i = 1; i < renderers.Length; i++)
         {
