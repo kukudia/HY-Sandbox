@@ -7643,7 +7643,7 @@ MonoBehaviour:
   playPanel: {fileID: 633202306}
   createPanel: {fileID: 1423540025}
   deletePanel: {fileID: 49607140}
-  deathPanel: {fileID: 0}
+  deathPanel: {fileID: 2104107304}
   inputName: {fileID: 2029497389}
   fadeDuration: 0.3
 --- !u!114 &1680095193

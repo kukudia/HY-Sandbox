@@ -195,6 +195,7 @@ public class MainUIPanels : MonoBehaviour
     public void PlayEnd()
     {
         PlayManager.instance.PlayEnd();
+        StartCoroutine(Fade(deathPanel, false));
         StartCoroutine(Fade(playPanel, false));
         StartCoroutine(Fade(buildPanel, true));
     }
