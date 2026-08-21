@@ -141,13 +141,7 @@ public class EnemySpawner : MonoBehaviour
             return null;
         }
 
-        GameObject parentPrefab = Resources.Load<GameObject>("Prefabs/BlocksParent");
-
-        if (parentPrefab == null)
-        {
-            Debug.LogWarning("Cannot spawn modular enemy because BlocksParent prefab is missing.");
-            return null;
-        }
+        GameObject parentPrefab = Resources.Load<GameObject>("BlocksParent/BlocksParent");
 
         GameObject unitObject = Instantiate(parentPrefab, spawnPosition, spawnRotation);
         unitObject.name = string.IsNullOrWhiteSpace(enemyBlueprint) ? "ModularEnemy" : enemyBlueprint;

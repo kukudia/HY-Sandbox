@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ¹ÜÀíËùÓÐ·½¿é¶¯×÷£¨Undo / Redo£©
+/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð·ï¿½ï¿½é¶¯ï¿½ï¿½ï¿½ï¿½Undo / Redoï¿½ï¿½
 /// </summary>
 public class ActionManager : MonoBehaviour
 {
@@ -12,9 +12,9 @@ public class ActionManager : MonoBehaviour
     private Stack<IBlockAction> undoStack = new Stack<IBlockAction>();
     private Stack<IBlockAction> redoStack = new Stack<IBlockAction>();
 
-    // ¶¯×÷¼ÆÊýÆ÷
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     private Dictionary<string, int> actionCounter = new Dictionary<string, int>();
-    private int totalActionCount = 0; // ÀúÊ·ÀÛ¼Æ
+    private int totalActionCount = 0; // ï¿½ï¿½Ê·ï¿½Û¼ï¿½
 
     private void Awake()
     {
@@ -22,7 +22,7 @@ public class ActionManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Ñ¹ÈëÒ»¸öÐÂ¶¯×÷£¨Çå¿Õ Redo Õ»£©
+    /// Ñ¹ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Â¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Redo Õ»ï¿½ï¿½
     /// </summary>
     public void Push(IBlockAction action)
     {
@@ -33,7 +33,7 @@ public class ActionManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ³·Ïú
+    /// ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     public void Undo()
     {
@@ -46,7 +46,7 @@ public class ActionManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ÖØ×ö
+    /// ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     public void Redo()
     {
@@ -65,7 +65,7 @@ public class ActionManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Í³¼Æ¶¯×÷
+    /// Í³ï¿½Æ¶ï¿½ï¿½ï¿½
     /// </summary>
     private void CountAction(IBlockAction action)
     {
@@ -77,12 +77,12 @@ public class ActionManager : MonoBehaviour
     }
 
     /// <summary>
-    /// »ñÈ¡¶¯×÷×ÜÊý£¨ÀÛ¼Æ£©
+    /// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Û¼Æ£ï¿½
     /// </summary>
     public int GetTotalActionCount() => totalActionCount;
 
     /// <summary>
-    /// »ñÈ¡Ä³ÖÖÀàÐÍ¶¯×÷Êý
+    /// ï¿½ï¿½È¡Ä³ï¿½ï¿½ï¿½ï¿½ï¿½Í¶ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     public int GetActionCount(string actionName)
     {
@@ -91,16 +91,16 @@ public class ActionManager : MonoBehaviour
 
     public void ShowDebug()
     {
-        Debug.Log($"×Ü²Ù×÷Êý: {GetTotalActionCount()} " +
-            $"·ÅÖÃ·½¿é: {GetActionCount("Create")} " +
-            $"É¾³ý·½¿é: {GetActionCount("Delete")} " +
+        Debug.Log($"ï¿½Ü²ï¿½ï¿½ï¿½ï¿½ï¿½: {GetTotalActionCount()} " +
+            $"ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½: {GetActionCount("Create")} " +
+            $"É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: {GetActionCount("Delete")} " +
             $"Undo Õ»: {GetUndoCount()} " +
             $"Redo Õ»: {GetRedoCount()}");
     }
 
-    // µ±Ç° Undo Õ»´óÐ¡
+    // ï¿½ï¿½Ç° Undo Õ»ï¿½ï¿½Ð¡
     public int GetUndoCount() => undoStack.Count;
 
-    // µ±Ç° Redo Õ»´óÐ¡
+    // ï¿½ï¿½Ç° Redo Õ»ï¿½ï¿½Ð¡
     public int GetRedoCount() => redoStack.Count;
 }

@@ -248,7 +248,7 @@ public class PlayManager : MonoBehaviour
     public void AssignBlocksToParentGroups(List<Block> blocks)
     {
         List<List<Block>> groups = BlockGroupManager.GroupBlocks(blocks);
-        GameObject parentPrefab = Resources.Load<GameObject>("Prefabs/BlocksParent");
+        GameObject parentPrefab = Resources.Load<GameObject>("BlocksParent/BlocksParent");
         int groupIndex = 1;
 
         foreach (List<Block> group in groups)

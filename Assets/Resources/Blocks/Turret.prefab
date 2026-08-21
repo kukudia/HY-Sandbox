@@ -129,7 +129,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: eaa571af4749fba4280b5dfbc851117d, type: 3}
+  - {fileID: 2100000, guid: 8ac5ad7e38d00344d82062a2e6e8d60c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -327,6 +327,7 @@ MonoBehaviour:
   fireInterval: 0.45
   turnSpeed: 240
   maxFireAngle: 8
+  targetRefreshInterval: 0.2
   hitLayers:
     serializedVersion: 2
     m_Bits: 4294967295
