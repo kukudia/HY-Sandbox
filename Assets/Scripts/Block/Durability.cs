@@ -34,6 +34,7 @@ public class Durability : MonoBehaviour
     private void OnEnable()
     {
         currentDurability = maxDurability;
+        UpdateDurablility(0);
     }
 
     public void CollisionEnter(Collision collision)
@@ -69,12 +70,17 @@ public class Durability : MonoBehaviour
         if (currentDurability > maxDurability)
         {
             currentDurability = maxDurability;
+            MainUIPanels.instance.UpdateHealthBar(gameObject, currentDurability, maxDurability);
         }
-
-        if (currentDurability <= 0)
+        else if (currentDurability <= 0)
         {
             currentDurability = 0;
+            MainUIPanels.instance.UpdateHealthBar(gameObject, currentDurability, maxDurability);
             DestroyManager.Instance.DestroyGameObject(gameObject);
+        }
+        else
+        {
+            MainUIPanels.instance.UpdateHealthBar(gameObject, currentDurability, maxDurability);
         }
     }
 

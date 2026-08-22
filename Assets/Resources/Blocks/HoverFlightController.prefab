@@ -209,10 +209,10 @@ MonoBehaviour:
   z: 1
   density: 1
   mass: 1
-  maxDurability: 100
-  currentDurability: 0
   collisionSpeedThreshold: 5
   damageMultiplier: 10
+  explosionForce: 500
+  explosionRadius: 5
   resourcePath: 
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
   connectorParent: {fileID: 2695719906485559115}
@@ -268,6 +268,7 @@ MonoBehaviour:
     connector: {fileID: 0}
   neighbors: []
   canRotate: 1
+  canExplode: 1
   showConnectors: 1
   showLabel: 0
   uniqueId: 
@@ -328,11 +329,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f887aec31b46cb74db9436ab89ebf777, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ignoreCollisionLayer:
-    serializedVersion: 2
-    m_Bits: 136
   maxDurability: 100
-  collisionSpeedThreshold: 20
-  damageMultiplier: 0.5
   debugLog: 1
   currentDurability: 0

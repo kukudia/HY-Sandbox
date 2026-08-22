@@ -198,6 +198,7 @@ public static class ProfilerCaptureAnalysis
         }
     }
 
+    [Obsolete]
     private static void WriteCounters(StringBuilder report)
     {
         report.AppendLine();

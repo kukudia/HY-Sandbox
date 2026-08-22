@@ -25,8 +25,6 @@ public class DestroyManager : MonoBehaviour
 
     private float _refreshDelay = 0.2f;
     private float _unitCleanupDelay = 10f;
-    [SerializeField] private float _blockExplosionForce = 900f;
-    [SerializeField] private float _blockExplosionRadius = 8f;
     [SerializeField] private float _blockExplosionUpwardsModifier = 1.2f;
     [SerializeField, Range(0f, 1f)] private float _blockExplosionDisconnectProbability = 0.35f;
     private bool _isRefreshScheduled;
@@ -67,13 +65,13 @@ public class DestroyManager : MonoBehaviour
             return;
         }
 
+        if (block.canExplode)
+        {
+            ExplodeBlock(block);
+        }
+
         if (cockpit != null)
         {
-            if (block != null)
-            {
-                ExplodeBlock(block);
-            }
-
             Destroy(obj);
 
             if (ownerFaction == UnitFaction.Player && PlayManager.instance.playMode)
@@ -123,23 +121,23 @@ public class DestroyManager : MonoBehaviour
             PlayManager.instance.RefreshGroup(unit);
         }
 
-        ApplyExplosionForce(ownerUnitId, ownerFaction, explosionPosition);
+        ApplyExplosionForce(block, ownerUnitId, ownerFaction, explosionPosition);
     }
 
-    private void DisconnectBlocksInExplosionRange(ControlUnit unit, Block sourceBlock, Vector3 explosionPosition)
+    private void DisconnectBlocksInExplosionRange(ControlUnit unit, Block block, Vector3 explosionPosition)
     {
-        if (unit == null || sourceBlock == null || _blockExplosionRadius <= 0f || _blockExplosionDisconnectProbability <= 0f)
+        if (unit == null || block == null || block.explosionRadius <= 0f || _blockExplosionDisconnectProbability <= 0f)
         {
             return;
         }
 
-        float radiusSqr = _blockExplosionRadius * _blockExplosionRadius;
+        float radiusSqr = block.explosionRadius * block.explosionRadius;
         float probability = Mathf.Clamp01(_blockExplosionDisconnectProbability);
         Block[] blocks = unit.GetComponentsInChildren<Block>(true);
         HashSet<Block> neighborsToRefresh = new HashSet<Block>();
         foreach (Block candidate in blocks)
         {
-            if (candidate == null || candidate == sourceBlock)
+            if (candidate == null || candidate == block)
             {
                 continue;
             }
@@ -152,7 +150,7 @@ public class DestroyManager : MonoBehaviour
 
             foreach (Block neighbor in candidate.neighbors)
             {
-                if (neighbor != null && neighbor != sourceBlock)
+                if (neighbor != null && neighbor != block)
                 {
                     neighborsToRefresh.Add(neighbor);
                 }
@@ -170,7 +168,7 @@ public class DestroyManager : MonoBehaviour
         }
     }
 
-    private void ApplyExplosionForce(string ownerUnitId, UnitFaction ownerFaction, Vector3 explosionPosition)
+    private void ApplyExplosionForce(Block block, string ownerUnitId, UnitFaction ownerFaction, Vector3 explosionPosition)
     {
         if (string.IsNullOrEmpty(ownerUnitId))
         {
@@ -199,13 +197,13 @@ public class DestroyManager : MonoBehaviour
             }
         }
 
-        foreach (Rigidbody body in groupBodies)
+        foreach (Rigidbody rb in groupBodies)
         {
-            body.isKinematic = false;
-            body.AddExplosionForce(
-                _blockExplosionForce,
+            rb.isKinematic = false;
+            rb.AddExplosionForce(
+                block.explosionForce,
                 explosionPosition,
-                _blockExplosionRadius,
+                block.explosionRadius,
                 _blockExplosionUpwardsModifier,
                 ForceMode.Impulse);
         }

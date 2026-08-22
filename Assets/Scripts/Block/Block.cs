@@ -21,6 +21,10 @@ public class Block : MonoBehaviour
 
     public float damageMultiplier = 10f; // 伤害系数（速度越大伤害越高）
 
+    public float explosionForce = 500f; // 爆炸力
+
+    public float explosionRadius = 5f; // 爆炸半径
+
     public string resourcePath; // 运行时使用的预制体路径
 
     public GameObject connectorPrefab;
@@ -34,6 +38,7 @@ public class Block : MonoBehaviour
     public List<Block> neighbors = new List<Block>();
 
     public bool canRotate = true;
+    public bool canExplode = false;
     public bool showConnectors = true;
     public bool showLabel = true;
 

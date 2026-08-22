@@ -11,18 +11,17 @@ public class MainUIPanels : MonoBehaviour
     public GameObject deletePanel;
     public GameObject deathPanel;
     public InputField inputName;
+    public InputField inputValue;
+    public Scrollbar healthBar;
+    public Text healthValue;
     public float fadeDuration = 0.3f;
-
+    public Gradient healthBarColor;
     private bool renameMode;
     private string renameTargetName;
 
     private void Awake()
     {
         instance = this;
-        if (playPanel != null && playPanel.GetComponent<PlayerCockpitHealthUI>() == null)
-        {
-            playPanel.AddComponent<PlayerCockpitHealthUI>();
-        }
     }
 
     private IEnumerator Fade(GameObject panel, bool show)
@@ -225,5 +224,15 @@ public class MainUIPanels : MonoBehaviour
     {
         MainUIButtons.instance.playButton.gameObject.SetActive(true);
         SaveUIPanel.instance.RefreshList();
+    }
+
+    public void UpdateHealthBar(GameObject obj, float currentHealth, float maxHealth)
+    {
+        if (obj.GetComponent<Cockpit>()?.faction == UnitFaction.Player)
+        {
+            healthBar.value = currentHealth / maxHealth;
+            healthBar.transform.Find("Sliding Area/Handle").GetComponent<Image>().color = healthBarColor.Evaluate(healthBar.value);
+            healthValue.text = $"{currentHealth} / {maxHealth}";
+        }
     }
 }
