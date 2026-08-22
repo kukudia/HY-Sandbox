@@ -312,7 +312,61 @@ public class SaveManager : MonoBehaviour
 
     public void DuplicateSave(string saveName)
     {
+        saveName = (saveName ?? string.Empty).Trim();
+        if (string.IsNullOrEmpty(saveName))
+        {
+            Debug.LogWarning("Cannot duplicate a save with an empty name.");
+            return;
+        }
 
+        bool isEnemyBlueprint = BuildManager.instance != null
+            && BuildManager.instance.IsEditingEnemyBlueprint;
+        string sourcePath = isEnemyBlueprint
+            ? GetEnemyBlueprintPath(saveName)
+            : GetSavePath(saveName);
+
+        if (!File.Exists(sourcePath))
+        {
+            Debug.LogWarning($"Cannot duplicate missing {(isEnemyBlueprint ? "enemy blueprint" : "save")}: {saveName}");
+            return;
+        }
+
+        string directory = Path.GetDirectoryName(sourcePath);
+        string duplicateName = GetDuplicateName(saveName, directory);
+        string duplicatePath = Path.Combine(directory, duplicateName + ".json");
+
+        try
+        {
+            File.Copy(sourcePath, duplicatePath, false);
+        }
+        catch (IOException exception)
+        {
+            Debug.LogWarning($"Failed to duplicate {saveName}: {exception.Message}");
+            return;
+        }
+        catch (System.UnauthorizedAccessException exception)
+        {
+            Debug.LogWarning($"Failed to duplicate {saveName}: {exception.Message}");
+            return;
+        }
+
+        Debug.Log($"Duplicated {(isEnemyBlueprint ? "enemy blueprint" : "save")}: {saveName} -> {duplicateName}");
+        SaveUIPanel.instance.RefreshList();
+    }
+
+    private string GetDuplicateName(string sourceName, string directory)
+    {
+        string baseName = sourceName + " Copy";
+        string candidate = baseName;
+        int suffix = 2;
+
+        while (File.Exists(Path.Combine(directory, candidate + ".json")))
+        {
+            candidate = $"{baseName} {suffix}";
+            suffix++;
+        }
+
+        return candidate;
     }
 
     private bool CanUseFileName(string fileName, out string reason)

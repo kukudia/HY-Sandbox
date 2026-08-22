@@ -56,7 +56,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 3.3 存档与加载
 
-`SaveManager` 管理两个命名空间：玩家存档 `Saves` 与敌方蓝图 `EnemyBlueprints`，支持创建、读取、删除、重命名和文件名校验。`BlockData` 保存资源路径、尺寸、位置、旋转、质量等重建所需数据。
+`SaveManager` 管理两个命名空间：玩家存档 `Saves` 与敌方蓝图 `EnemyBlueprints`，支持创建、读取、删除、重命名、复制和文件名校验。列表中的 Duplicate 按钮会在当前命名空间生成不覆盖已有文件的 `Copy` 名称，并刷新列表；复制不会切换当前加载目标。`BlockData` 保存资源路径、尺寸、位置、旋转、质量等重建所需数据。
 
 `BuildManager.LoadAllBlocks` 使用协程逐个实例化，支持加载进度、取消旧加载、无法加载数据清理和可选的相机环绕。存档身份依赖文件中的模块数据，不应把运行时 `GetInstanceID()` 当作跨会话稳定 ID。
 
@@ -563,6 +563,8 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `public void DeleteEnemyBlueprint(string blueprintName)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
 - `public bool RenameSave(string oldSaveName, string newSaveName)`： 执行存档/文件的读取、写入、重命名或路径处理。
 - `public bool RenameEnemyBlueprint(string oldBlueprintName, string newBlueprintName)`： 执行存档/文件的读取、写入、重命名或路径处理。
+- `public void DuplicateSave(string saveName)`： 执行存档/文件的读取、写入、重命名或路径处理。
+- `private string GetDuplicateName(string sourceName, string directory)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private bool CanUseFileName(string fileName, out string reason)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `public string GetSavePath(string saveName)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `public string GetEnemyBlueprintPath(string blueprintName)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
@@ -767,6 +769,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private Button CreateRenameButton(Button deleteButton, Transform parent)`： 创建几何、资源、操作记录、UI 项或运行时对象。
 - `private void OnSaveClicked(string saveName)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private void OnEnemyBlueprintClicked(string blueprintName)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void OnDuplicateClicked(string saveName)`： 执行存档/文件的读取、写入、重命名或路径处理。
 
 
 ### 模板/其他
@@ -788,6 +791,11 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 新增、删除、重命名或改变职责的函数，必须在同一提交更新本节；签名变化替换旧条目，行为变化同时修改描述和变更日志。索引以源码为准，自动提取遗漏的多行签名时手工补充。
 
 ## 10. 变更日志
+
+### 2026-08-22
+
+- **完成存档列表 Duplicate 按钮功能**：`SaveManager.DuplicateSave` 现在根据当前编辑模式复制玩家存档或敌方蓝图，自动生成 `Copy`/递增后缀名称，避免覆盖已有文件；成功后刷新 `SaveUIPanel` 列表，失败时记录警告且不改变当前加载目标。
+- **验证**：已通过代码与文件检查；尚未在 Unity 编辑器或 Play Mode 中验证实际按钮点击和文件系统写入。
 
 ### 2026-08-22
 
