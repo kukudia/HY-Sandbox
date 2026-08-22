@@ -113,11 +113,687 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 6. 大蓝图加载、取消加载、切换存档时无重复对象或残留引用。
 7. `git diff --check` 通过，且只提交当前任务相关文件。
 
-## 7. 变更日志
+## 7. 文档目录
+
+- [项目定位](#1-项目定位)
+- [技术栈与目录](#2-技术栈与目录)
+- [运行时架构](#3-运行时架构)
+- [已确认实现的功能](#4-已确认实现的功能)
+- [待改进与风险](#5-待改进与风险)
+- [推荐验证清单](#6-推荐验证清单)
+- [代码函数索引](#8-代码函数索引)
+- [函数索引维护规则](#9-函数索引维护规则)
+- [变更日志](#10-变更日志)
+
+## 8. 代码函数索引
+
+本节按 Git 跟踪的 C# 文件列出函数签名和职责。描述依据当前源码整理；同名重载分别保留。生命周期回调、公共 API、内部计算和协程均列出，便于定位调用链。
+
+### 8.1 索引目录
+
+- Editor 工具
+- Actions 操作
+- Block 方块
+- Camera 相机
+- Data 数据
+- Effect 特效
+- InObject 模块
+- Manager 管理器
+- Player 玩家
+- Thrusters 推进器
+- UI 界面
+- 模板/其他
+
+### Editor 工具
+
+#### `Assets/Editor/AutoBuildTool.cs`
+
+- `public static void BuildWindows()`： 创建几何、资源、操作记录、UI 项或运行时对象。
+- `private static string IncrementVersion(string version)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private static string[] GetEnabledScenes()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+
+#### `Assets/Editor/ProfilerCaptureAnalysis.cs`
+
+- `public static void AnalyzeLatest()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public static void Analyze(string capturePath, string reportPath)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private static string GetLatestCapturePath()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private static MarkerAggregate GetOrCreate(Dictionary<string, MarkerAggregate> map, string name)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private static void WriteFrameStats(StringBuilder report, List<FrameSummary> frames)`： 执行存档/文件的读取、写入、重命名或路径处理。
+- `private static void WriteCounters(StringBuilder report)`： 执行存档/文件的读取、写入、重命名或路径处理。
+- `private static void WriteMarkers(StringBuilder report, string title, IEnumerable<MarkerAggregate> markers, int count)`： 执行存档/文件的读取、写入、重命名或路径处理。
+- `private static void WriteWorstFrames(StringBuilder report, List<FrameSummary> frames, int count)`： 执行存档/文件的读取、写入、重命名或路径处理。
+- `private static void WriteHierarchyDrilldowns(StringBuilder report, IEnumerable<int> frames)`： 执行存档/文件的读取、写入、重命名或路径处理。
+- `private static void WriteHierarchyItem(StringBuilder report, HierarchyFrameDataView view, int id, int depth, int maxDepth)`： 执行存档/文件的读取、写入、重命名或路径处理。
+- `private static float Percentile(float[] sorted, int pct)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private static void WriteReport(string reportPath, StringBuilder report)`： 执行存档/文件的读取、写入、重命名或路径处理。
+- `private static void Finish(string message)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private static string F(float value)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private static string F(double value)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private static string Pad(string value, int width)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public void Add(float ms, int frame)`： 创建几何、资源、操作记录、UI 项或运行时对象。
+
+
+### Actions 操作
+
+#### `Assets/Scripts/Actions/ActionManager.cs`
+
+- `private void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `public void Push(IBlockAction action)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public void Undo()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public void Redo()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public void Clear()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
+- `private void CountAction(IBlockAction action)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public int GetActionCount(string actionName)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public void ShowDebug()`： 触发游玩流程、UI 状态或视觉反馈的更新。
+
+#### `Assets/Scripts/Actions/AddBlockAction.cs`
+
+- `public CreateBlockAction(Block block)`： 创建几何、资源、操作记录、UI 项或运行时对象。
+- `public void Undo()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public void Redo()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+
+#### `Assets/Scripts/Actions/DeleteBlockAction.cs`
+
+- `public DeleteBlockAction(Block deletedBlock)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
+- `public void Undo()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public void Redo()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+
+#### `Assets/Scripts/Actions/GroupAction.cs`
+
+- `public GroupAction(IEnumerable<IBlockAction> actions)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public void Undo()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public void Redo()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+
+#### `Assets/Scripts/Actions/MoveBlockAction.cs`
+
+- `public MoveBlockAction(Block block, Vector3 oldPos, Vector3 newPos)`： 修改模块或方块的旋转/位置，并同步相关运行时数据。
+- `public void Undo()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public void Redo()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+
+#### `Assets/Scripts/Actions/RotateBlockAction.cs`
+
+- `public RotateBlockAction(Block block, Vector3 oldPos, Vector3 newPos, Quaternion oldRot, Quaternion newRot)`： 修改模块或方块的旋转/位置，并同步相关运行时数据。
+- `public void Undo()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public void Redo()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+
+
+### Block 方块
+
+#### `Assets/Scripts/Block/Block.cs`
+
+- `private void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void OnValidate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `void GenerateConnectionPoints()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)`： 创建几何、资源、操作记录、UI 项或运行时对象。
+- `public Vector3 GetConnectorWorldPosition(Connector connector)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public Vector3 GetConnectorWorldNormal(Connector connector)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public void CheckConnection()`： 处理碰撞、连接、耐久、维修或状态检查逻辑。
+- `private Block FindBlockAcrossConnector(Connector connector)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private Connector FindMatchingConnector(Block otherBlock, Connector connector)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private void ConnectTo(Connector connector, Connector otherConnector)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void ClearConnector(Connector connector)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
+- `public List<Block> Neighbors()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public void DisConnectAllConnectors()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public bool IsBlockedGhost()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private void OnDrawGizmos()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+
+#### `Assets/Scripts/Block/Durability.cs`
+
+- `void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void OnEnable()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `public void CollisionEnter(Collision collision)`： 处理碰撞、连接、耐久、维修或状态检查逻辑。
+- `public void Repair(float amount)`： 处理碰撞、连接、耐久、维修或状态检查逻辑。
+- `public void UpdateDurablility(float value)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `void LateUpdate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `void OnGUI()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private bool ShouldShowDebugLabel()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+
+
+### Camera 相机
+
+#### `Assets/Scripts/Camera/CameraController.cs`
+
+- `void Update()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void LateUpdate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `void HandleModeSwitch()`： 处理对应的输入、选择、拖拽、移动、旋转或建造交互。
+- `void HandleLook()`： 处理对应的输入、选择、拖拽、移动、旋转或建造交互。
+- `void HandleMovement()`： 处理对应的输入、选择、拖拽、移动、旋转或建造交互。
+- `public void FocusCameraOnBlock(GameObject obj)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public void SmoothFocusCameraOnBlock(GameObject obj, float duration)`： 计算或执行相机聚焦、平滑移动和环绕控制。
+- `public void SmoothFocusCameraOnBlockFramedBy(GameObject lookObj, GameObject frameObj, float duration)`： 计算或执行相机聚焦、平滑移动和环绕控制。
+- `public void SmoothOrbitCameraAroundBlock(GameObject frameObj, float yawDegrees, float pitchDegrees, float duration)`： 计算或执行相机聚焦、平滑移动和环绕控制。
+- `public void SmoothOrbitCameraAroundBlock(GameObject frameObj, float yawDegrees, float pitchDegrees, float radiusMultiplier, float duration)`： 计算或执行相机聚焦、平滑移动和环绕控制。
+- `public void SmoothOrbitCameraAroundBlock(GameObject frameObj, Vector3 orbitCenter, float yawDegrees, float pitchDegrees, float radiusMultiplier, float duration)`： 计算或执行相机聚焦、平滑移动和环绕控制。
+- `public void StartContinuousOrbitCameraAroundBlock(GameObject frameObj, Vector3 orbitCenter, float startYawDegrees, float orbitDegreesPerSecond, float pitchDegrees, float radiusVariation, float radiusWaveDegrees, float radiusSmoothTime)`： 计算或执行相机聚焦、平滑移动和环绕控制。
+- `public void StopCameraMotion()`： 计算或执行相机聚焦、平滑移动和环绕控制。
+- `private IEnumerator SmoothFocusRoutine(Vector3 targetPosition, Quaternion targetRotation, float duration)`： 计算或执行相机聚焦、平滑移动和环绕控制。
+- `private IEnumerator ContinuousOrbitRoutine(GameObject frameObj, Vector3 orbitCenter, float startYawDegrees, float orbitDegreesPerSecond, float pitchDegrees, float radiusVariation, float radiusWaveDegrees, float radiusSmoothTime)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private float CalculateOrbitRadiusMultiplier(float yawDegrees, float radiusVariation, float radiusWaveDegrees)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private IEnumerator SmoothOrbitRoutine(Vector3 orbitCenter, float targetYaw, float targetPitch, float targetRadius, float duration)`： 计算或执行相机聚焦、平滑移动和环绕控制。
+- `private void SetOrbitPose(Vector3 orbitCenter, float yawDegrees, float pitchDegrees, float radius)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `private bool TryGetFocusPose(GameObject obj, out Vector3 targetPosition, out Quaternion targetRotation)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private bool TryGetFocusPose(Bounds frameBounds, Vector3 lookPoint, out Vector3 targetPosition, out Quaternion targetRotation)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private bool TryGetOrbitPose(Bounds frameBounds, float yawDegrees, float pitchDegrees, float radiusMultiplier, out Vector3 targetPosition, out Quaternion targetRotation)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private float CalculateFramingDistance(Bounds bounds, Vector3 lookPoint)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private bool TryCalculateBlockBounds(GameObject obj, out Bounds bounds)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+
+
+### Data 数据
+
+#### `Assets/Scripts/Data/BlockData.cs`
+
+- `public BlockData(Block block)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+
+#### `Assets/Scripts/Data/BuildTargetContext.cs`
+
+- `public BuildTargetContext(BuildTargetKind kind, string saveName, string enemyBlueprintName)`： 创建几何、资源、操作记录、UI 项或运行时对象。
+- `public string GetSavePath(SaveManager saveManager)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public static BuildTargetContext PlayerSave(string saveName, string enemyBlueprintName)`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `public static BuildTargetContext EnemyBlueprint(string saveName, string enemyBlueprintName)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private static string NormalizeName(string name, string fallback)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+
+
+### Effect 特效
+
+#### `Assets/Scripts/Effect/StylizedBeamEffect.cs`
+
+- `public void Configure(float width, float glowMultiplier, int segments, float noise, float frequency, float speed)`： 配置该组件的几何、推进器、敌人或运行时参数。
+- `public void SetEndpoints(Vector3 start, Vector3 end)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `public void SetColor(Color color)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `public void SetIntensity(float value)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `public void SetVisible(bool value)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `private void LateUpdate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void EnsureInitialized()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `private void CreateLayer(string layerName, int sortingOrder, out Mesh mesh, out MeshRenderer meshRenderer)`： 创建几何、资源、操作记录、UI 项或运行时对象。
+- `private void AllocateGeometry()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void UpdateGeometry()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void UpdateMesh(Mesh mesh, Vector3[] vertices)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void ApplyColors()`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
+- `private static void SetRendererColor(Renderer renderer, MaterialPropertyBlock properties, Color color)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `private void OnDestroy()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+
+#### `Assets/Scripts/Effect/StylizedRingEffect.cs`
+
+- `public void Configure(int segments, float width)`： 配置该组件的几何、推进器、敌人或运行时参数。
+- `public void SetVisual(Color color, float width, float visualIntensity = 1f)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `public void SetIntensity(float visualIntensity)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `public void SetVisible(bool value)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `private void EnsureInitialized()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `private void CreateLayer(string layerName, int sortingOrder, out Mesh mesh, out MeshRenderer meshRenderer)`： 创建几何、资源、操作记录、UI 项或运行时对象。
+- `private void RebuildMeshes()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void BuildRingMesh(Mesh mesh, float width, float heightOffset)`： 创建几何、资源、操作记录、UI 项或运行时对象。
+- `private void ApplyColors()`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
+- `private static void SetRendererColor(Renderer renderer, MaterialPropertyBlock properties, Color color)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `private void OnDestroy()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+
+
+### InObject 模块
+
+#### `Assets/Scripts/InObject/ControlUnit.cs`
+
+- `private void Start()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void Update()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `public void RefreshChildren()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`： 把模块、方块或控制单元分配或注册到对应运行时集合。
+- `public void EnsureRuntimeUnitId()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `public void PlayEnd()`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `public void SetMovementInput(Vector3 worldDirection)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `public void SetTarget(Transform newTarget)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `private Vector3 GetPlayerMovementInput()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private void OnCollisionEnter(Collision collision)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void OnDestroy()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private IEnumerator StartCooldown()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public static RuntimeUnitMember Ensure(GameObject obj, string unitId, UnitFaction faction)`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+
+#### `Assets/Scripts/InObject/EnemyController.cs`
+
+- `private void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void FixedUpdate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private ControlUnit FindNearestPlayer()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private void FaceTarget(Vector3 flatDirection)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private void ConfigureHoverThrusters()`： 配置该组件的几何、推进器、敌人或运行时参数。
+- `private Vector3 GetStrafeDirection(Vector3 flatDirection)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
+- `private Vector3 ProbeObstacle(Vector3 direction, float weight)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public int Compare(RaycastHit a, RaycastHit b)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+
+#### `Assets/Scripts/InObject/EnemySpawner.cs`
+
+- `private void Start()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void Update()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `public void BeginPlayMode(Transform anchor)`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
+- `private void InitializeEnemyBlueprintPool()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `public void SpawnRandomEnemy()`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
+- `public void SpawnEnemy()`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
+- `private bool IsValidBlueprint(BlockDataList dataList, string enemyBlueprint)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private ControlUnit SpawnBlockData(BlockDataList dataList, string enemyBlueprint, Vector3 spawnPosition, Quaternion spawnRotation)`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
+- `private void ApplyBlueprintLocalTransform(Transform blockTransform, Vector3 localPosition, Quaternion localRotation)`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
+- `private Vector3 CleanIntegerPosition(Vector3 position, string blockName)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private Quaternion CleanRightAngleRotation(Quaternion rotation, string blockName)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private float SnapNearInteger(float value)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private float SnapNearRightAngle(float angle)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private bool IsIntegerVector(Vector3 value)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private bool IsRightAngleVector(Vector3 euler)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private bool IsNearlyInteger(float value)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private bool IsNearlyRightAngle(float angle)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private Vector3 GetSpawnPosition()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private void PrepareRuntimeEnemy(ControlUnit enemy)`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
+- `public EnemyBlueprintData(string name, BlockDataList dataList)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+
+#### `Assets/Scripts/InObject/Meteor.cs`
+
+- `void Start()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `void OnCollisionEnter(Collision collision)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+
+#### `Assets/Scripts/InObject/ModularUnitValidator.cs`
+
+- `public static bool TryGetSingleCockpit(Component root, out Cockpit cockpit, out string reason)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public static int CountCockpits(IEnumerable<Block> blocks)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public static int CountLoadedCockpits()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+
+#### `Assets/Scripts/InObject/RepairBot.cs`
+
+- `void Start()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `void InitializeComponents()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `void InitializeTrail()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `void FixedUpdate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `void NavigateToTarget(Transform target)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private AdvancedAvoidanceResult CalculateAdvancedAvoidance(Vector3 targetDirection)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private Vector3 BlendDirections(Vector3 targetDir, Vector3 avoidanceDir, float avoidanceStrength)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `void ReturnHome()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `void LeaveHome()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `void FindDamagedBlock()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private ControlUnit ResolveOwnerUnit()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void SetOwnerUnit(ControlUnit newOwner)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `private bool IsOwnedTarget(Durability target)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `void CheckAndRepair()`： 处理碰撞、连接、耐久、维修或状态检查逻辑。
+- `void UpdateRepairBeam(bool active)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void EnsureRepairBeamGradient()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `public void ClearTarget()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
+- `void OnDrawGizmosSelected()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `void OnDrawGizmos()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+
+#### `Assets/Scripts/InObject/TurretWeapon.cs`
+
+- `private void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void Start()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void FixedUpdate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private UnitFaction GetEffectiveTargetFaction()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private ControlUnit FindNearestTarget(UnitFaction faction, out Durability nearestDurability)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private Durability FindNearestDurability(ControlUnit unit)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private Durability[] GetDurabilities(ControlUnit unit)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private bool ShouldPrioritizeEnemyCockpit()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private Durability FindCockpitDurability(ControlUnit unit)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private void AimAndFire(Durability aimTarget)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void AimAt(Vector3 worldDirection)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private Vector3 GetMuzzlePosition()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private Vector3 GetAimForward()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private static UnitFaction Opposite(UnitFaction faction)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public int Compare(RaycastHit a, RaycastHit b)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+
+
+### Manager 管理器
+
+#### `Assets/Scripts/Manager/BlockGroupManager.cs`
+
+- `public static List<List<Block>> GroupBlocks(List<Block> allBlocks)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public static Vector3 CalculateGroupCenter(List<Block> group)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+
+#### `Assets/Scripts/Manager/BuildManager.cs`
+
+- `private void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void Start()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `void Update()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `void SetBuildMode()`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `public void ToggleEnemyBlueprintBuildMode()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public void EnterEnemyBlueprintBuildMode(string blueprintName)`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
+- `public void ExitEnemyBlueprintBuildMode(bool reloadPlayerSave)`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
+- `public void SetCurrentBlockResource(string resourcePath)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `public void SetCurrentSaveName(string saveName)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `public void SetCurrentEnemyBlueprintName(string blueprintName)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `void AlignAxisToNearestWorldDir()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `void HandleSelection()`： 处理对应的输入、选择、拖拽、移动、旋转或建造交互。
+- `void SelectBlock(Block block)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public void DeselectBlock()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `void HandleMovement()`： 处理对应的输入、选择、拖拽、移动、旋转或建造交互。
+- `void HandleRotation()`： 处理对应的输入、选择、拖拽、移动、旋转或建造交互。
+- `void HandleMoveAxisDrag()`： 处理对应的输入、选择、拖拽、移动、旋转或建造交互。
+- `void HandleRotateAxisDrag()`： 处理对应的输入、选择、拖拽、移动、旋转或建造交互。
+- `void HandleDuplicate(Vector3 newPos, Quaternion newRot)`： 处理对应的输入、选择、拖拽、移动、旋转或建造交互。
+- `void HandleBuildingPreview()`： 处理对应的输入、选择、拖拽、移动、旋转或建造交互。
+- `public void CreateBlock(GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot)`： 创建几何、资源、操作记录、UI 项或运行时对象。
+- `public void DeleteBlock()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
+- `public void SaveBlock(Block block)`： 执行存档/文件的读取、写入、重命名或路径处理。
+- `public void RemoveBlock(Block block)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
+- `public void LoadAllBlocks()`： 执行存档/文件的读取、写入、重命名或路径处理。
+- `private IEnumerator LoadAllBlocksRoutine(int loadVersion, string loadSavePath, Transform loadParent, List<BlockData> blocksToLoad, double time0)`： 执行存档/文件的读取、写入、重命名或路径处理。
+- `public void ClearUnloadableData(string id)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
+- `public bool IsLoadingBuildTarget(BuildTargetKind kind, string saveName, string enemyBlueprintName)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private bool IsLoadingBuildTarget(BuildTargetContext context)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private void ClearUnloadableData(string id, string targetSavePath)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
+- `void InitialBlock()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `public Vector3 SnapCenterByMinCorner(Vector3 targetCenter, Quaternion targetRotation, Block b)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `bool IsBlocked(Vector3 targetCenter, Quaternion targetRotation, Block block)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `float GetMoveStep(Block block, Vector3 moveDir)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private bool CanCreateBlock(GameObject prefab, out string reason)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public void ApplyBlockBuildDefaults(Block block)`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
+- `private int CountCockpitsInCurrentConstruct()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private void ResetBuildState()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
+- `private void SetBuildTarget(BuildTargetContext context)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `private void StopActiveBlockLoad()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private bool IsCurrentBlockLoad(int loadVersion, string loadSavePath, Transform loadParent)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private void AbortBlockLoadIfCurrent(int loadVersion, Transform loadParent)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void ClearLoadingBuildTarget()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
+- `private void StartLoadingCameraOrbit(GameObject frameObject, int blockCount)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private float CalculateLoadingCameraOrbitDegreesPerSecond(int blockCount)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private void StopLoadingCameraOrbit()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private CameraController GetMainCameraController()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private float GetCameraOrbitAngle(Vector3 orbitCenter)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private Vector3 CalculateLoadingCameraOrbitCenter(List<BlockData> blocksToLoad, Vector3 fallbackCenter)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private void ClearCurrentGhost()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
+- `private bool RemoveCachedBlockData(string id)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
+- `private bool RemoveCachedBlockData(string id, string targetSavePath)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
+- `private void WriteCachedData()`： 执行存档/文件的读取、写入、重命名或路径处理。
+- `private void WriteCachedData(string targetSavePath)`： 执行存档/文件的读取、写入、重命名或路径处理。
+- `public static string ConvertToResourcesPath(string fullPath)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+
+#### `Assets/Scripts/Manager/DestroyManager.cs`
+
+- `public void DestroyGameObject(GameObject obj)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
+- `private void ScheduleUnitCleanup(string ownerUnitId, UnitFaction ownerFaction)`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
+- `private IEnumerator CleanupUnitAfterDelay(string ownerUnitId, UnitFaction ownerFaction)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private void PlayDisappearEffect(GameObject obj)`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `public void NotifyObjectDestroyed()`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
+- `private void ScheduleRefresh()`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
+- `private IEnumerator DelayedRefresh()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void ExecuteRefresh()`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
+
+#### `Assets/Scripts/Manager/GameManager.cs`
+
+- `private void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void Start()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `public static void Init()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+
+#### `Assets/Scripts/Manager/MeteorShower.cs`
+
+- `void Start()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `IEnumerator SpawnMeteors()`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
+- `void SpawnMeteor()`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
+- `public void MeteorDestroyed()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+
+#### `Assets/Scripts/Manager/PerformanceMonitor.cs`
+
+- `void Start()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `void Update()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `void UpdateCpuUsage()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `void UpdateGpuFrameTime()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `void OnGUI()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+
+#### `Assets/Scripts/Manager/PlayManager.cs`
+
+- `private void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void FixedUpdate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `public void PlayStart()`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `public bool CanStartPlay(out string reason)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public void RefreshGroup(ControlUnit unit)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void SetPlayMode()`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `private void CalculateVelocity()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private void HandleSelection()`： 处理对应的输入、选择、拖拽、移动、旋转或建造交互。
+- `private void SelectBlock(Block block)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public void DeselectBlock()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public void PlayEnd()`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `public void AssignBlocksToParentGroups(List<Block> blocks)`： 把模块、方块或控制单元分配或注册到对应运行时集合。
+- `public void RegisterControlUnit(ControlUnit unit)`： 把模块、方块或控制单元分配或注册到对应运行时集合。
+- `public void UnregisterControlUnit(ControlUnit unit)`： 把模块、方块或控制单元分配或注册到对应运行时集合。
+- `public IReadOnlyList<ControlUnit> GetControlUnits()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private EnemySpawner EnsureEnemySpawner()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+
+#### `Assets/Scripts/Manager/SaveManager.cs`
+
+- `private void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `public void EnsureSaveDirectories()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `public void GetAllSaveNames()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public void GetAllEnemyBlueprintNames()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public void CreateNewSave(string saveName)`： 创建几何、资源、操作记录、UI 项或运行时对象。
+- `public void CreateNewEnemyBlueprint(string blueprintName)`： 创建几何、资源、操作记录、UI 项或运行时对象。
+- `public void LoadSave(string saveName)`： 执行存档/文件的读取、写入、重命名或路径处理。
+- `public void LoadEnemyBlueprint(string blueprintName)`： 执行存档/文件的读取、写入、重命名或路径处理。
+- `public void DeleteSave(string saveName)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
+- `public void DeleteEnemyBlueprint(string blueprintName)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
+- `public bool RenameSave(string oldSaveName, string newSaveName)`： 执行存档/文件的读取、写入、重命名或路径处理。
+- `public bool RenameEnemyBlueprint(string oldBlueprintName, string newBlueprintName)`： 执行存档/文件的读取、写入、重命名或路径处理。
+- `private bool CanUseFileName(string fileName, out string reason)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public string GetSavePath(string saveName)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public string GetEnemyBlueprintPath(string blueprintName)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public string GetSaveFileSize(string saveName)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+
+#### `Assets/Scripts/Manager/VisualEffectsManager.cs`
+
+- `public static VisualEffectsManager EnsureInstance()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `public static Material GetSharedParticleMaterial()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public static Material GetSharedLineMaterial()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public static void TryPlayBlockPlaced(Block block)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public static void TryPlayBlockRemoved(Block block)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public static void TryPlayObjectDestroyed(GameObject target)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public static void TryPlayBlockMoved(Block block, Vector3 from, Vector3 to)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public static void TryPlayBlockRotated(Block block)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public static void TryShowBlockSelection(Block block)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public static void TryClearBlockSelection(Block block)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public static void TryUpdateGhostPreview(GameObject ghost, bool isBlocked)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public static void TryClearGhostPreview(GameObject ghost)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public static void TryDecorateMeteor(Meteor meteor)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public static void TryPlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void OnEnable()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void Update()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void ApplySceneLook()`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
+- `private void PlayBlockPlaced(Block block)`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `private void PlayBlockRemoved(Block block)`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `private void PlayObjectDestroyed(GameObject target)`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `private void PlayBlockMoved(Block block, Vector3 from, Vector3 to)`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `private void PlayBlockRotated(Block block)`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `private void ShowBlockSelection(Block block)`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `private void ClearBlockSelection(Block block)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
+- `private void UpdateGhostPreview(Transform ghost, bool isBlocked)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void ClearGhostPreview()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
+- `private void DecorateMeteor(Meteor meteor)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void PlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `private void UpdateSelectionRing()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void UpdateGhostRing()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void EnsureSelectionRing()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `private void EnsureGhostRing()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `private static GameObject CreateRingObject(string name, out StylizedRingEffect ringEffect)`： 创建几何、资源、操作记录、UI 项或运行时对象。
+- `private void CreateTransientRing(string name, Vector3 position, Vector3 normal, Color color, float radius, float duration, float width)`： 创建几何、资源、操作记录、UI 项或运行时对象。
+- `private void CreateLineStreak(Vector3 from, Vector3 to, Color color, float duration, float width)`： 创建几何、资源、操作记录、UI 项或运行时对象。
+- `private void CreateLightFlash(Vector3 position, Color color, float intensity, float range, float duration)`： 创建几何、资源、操作记录、UI 项或运行时对象。
+- `private void ShakeCamera(float amplitude, float duration)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private IEnumerator CameraShakeRoutine(float amplitude, float duration)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void ClearCameraOffset()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
+- `private static Bounds GetBounds(GameObject target, Vector3 fallbackCenter, Vector3 fallbackSize)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private static Vector3 GetBlockSize(Block block)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private static Gradient MakeGradient(Color start, Color end)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private static Color WithAlpha(Color color, float alpha)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private static Texture2D GetSoftParticleTexture()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private static void SetMaterialColor(Material material, Color color)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `private static void SetMaterialTexture(Material material, Texture texture)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `public void Initialize(StylizedRingEffect effect, Color lineColor, float radius, float lifetime, float lineWidth)`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `public void Initialize(StylizedBeamEffect effect, Color lineColor, float lifetime)`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `public void Initialize(Light light, float lifetime, float intensity)`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `private void OnDestroy()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+
+
+### Player 玩家
+
+#### `Assets/Scripts/Player/PlayerController.cs`
+
+- `void Start()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `void Update()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+
+#### `Assets/Scripts/Player/PlayerHealth.cs`
+
+- `void Start()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `void Update()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+
+
+### Thrusters 推进器
+
+#### `Assets/Scripts/Thrusters/HoverFlightController.cs`
+
+- `public void Init()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `private void OnEnable()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void OnValidate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void FixedUpdate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private bool EnsureControllerReady()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `private void RefreshCachedPhysicsValues()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void RefreshTiltLimitCache()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void RebuildThrusterCache()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private float CalculateHeightAdjustment(float heightError)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private void UpdateDynamicHeightP(float heightError)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private float CalculateGravityCompensation(float absHeightError)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private void CalculateTiltAdjustment(Vector3 currentUp)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private void DistributeThrust(float heightAdjustment, Vector3 currentUp)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void ApplyRotationCorrection(Vector3 currentUp)`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
+- `private void OnDrawGizmosSelected()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `void OnGUI()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void EnsureGuiStyles()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `private void RefreshUiText()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+
+#### `Assets/Scripts/Thrusters/HoverThruster.cs`
+
+- `private void FixedUpdate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `public virtual void ApplyThrust()`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
+- `public override bool ShouldActivate()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+
+#### `Assets/Scripts/Thrusters/MainThruster.cs`
+
+- `private void FixedUpdate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `public void ApplyThrust()`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
+- `public override bool ShouldActivate()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+
+#### `Assets/Scripts/Thrusters/Thruster.cs`
+
+- `protected virtual void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `protected virtual void Start()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void OnTransformChildrenChanged()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public void SetRuntimeReferences(ControlUnit owner, Rigidbody ownerRigidbody)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `protected bool RefreshRuntimeReferences()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `protected bool TryEnsureRigidbody()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `protected bool IsPlayModeActive()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `protected bool HasValidRuntimeOwner()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `protected void CacheLocalReferences()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public virtual void ApplyThrustChangeRateLimit()`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
+- `public virtual void VisualizeThrust()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public virtual void VisualizeThrust(bool forceUpdate)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public virtual Vector3 GetInputDirection()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private void DisableLegacyLineRenderer()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void EnsureVisualEffect()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `private Vector3 GetNormalizedThrustDirection()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+
+#### `Assets/Scripts/Thrusters/ThrusterAllocator.cs`
+
+- `static float[,] MultiplyAT_A(float[,] A, int rows, int cols)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `static float[] MultiplyAT_b(float[,] A, int rows, int cols, float[] b)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `static void AddDamping(float[,] H, int n, float lambda)`： 创建几何、资源、操作记录、UI 项或运行时对象。
+- `static bool CholeskySolveInPlace(float[,] H, float[] rhs, int n)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+
+#### `Assets/Scripts/Thrusters/ThrusterVisualEffect.cs`
+
+- `public void Initialize(Thruster owner)`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `public void SetThrust(float thrustRatio, Vector3 localThrustDirection)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `private void EnsureVfx()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `private void UpdateParticleModules(float ratio)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void UpdateGlow(float ratio)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private static Vector3 GetStableUp(Vector3 direction)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+
+#### `Assets/Scripts/Thrusters/UniversalThruster.cs`
+
+- `private void FixedUpdate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void RotateThruster(Vector3 worldDir, bool active)`： 修改模块或方块的旋转/位置，并同步相关运行时数据。
+- `public void ApplyThrust()`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
+- `public override bool ShouldActivate()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+
+
+### UI 界面
+
+#### `Assets/Scripts/UI/ActionCounterUI.cs`
+
+- `private void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void FixedUpdate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `public void UpdateUndoText(int count)`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `public void UpdateRedoText(int count)`： 触发游玩流程、UI 状态或视觉反馈的更新。
+
+#### `Assets/Scripts/UI/GlobalTextStyler.cs`
+
+- `private static void CreateInstance()`： 创建几何、资源、操作记录、UI 项或运行时对象。
+- `private IEnumerator Start()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private static void ApplyToSceneTexts()`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
+
+#### `Assets/Scripts/UI/MainUIButtons.cs`
+
+- `private void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void OnValidate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void Start()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void Update()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `public void SetDefault()`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `public void SetMove()`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `public void SetRotate()`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `public void SetCurrentBlock(string fileName)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `private void RegisterDiscoveredBlockButtons()`： 把模块、方块或控制单元分配或注册到对应运行时集合。
+
+#### `Assets/Scripts/UI/MainUIPanels.cs`
+
+- `private void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private IEnumerator Fade(GameObject panel, bool show)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public void ShowCreatePanel()`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `public void ShowRenamePanel(string save)`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `public void HideCreatePanel()`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `private void SetInputPlaceholder(string text)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `public void ShowDeletePanel(string save)`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `public void HideDeletePanel()`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `public void OnConfirmCreate()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void OnConfirmDelete(string save)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public void PlayStart()`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `public void PlayEnd()`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `public void PlayerDeath()`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `public void EnterEnemyBlueprintBuildMode()`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
+- `public void ExitEnemyBlueprintBuildMode()`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
+
+#### `Assets/Scripts/UI/SaveUIPanel.cs`
+
+- `private void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `public void RefreshList()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void ConfigureSaveItem(GameObject obj, string saveName, UnityEngine.Events.UnityAction onOpen)`： 配置该组件的几何、推进器、敌人或运行时参数。
+- `private Button CreateRenameButton(Button deleteButton, Transform parent)`： 创建几何、资源、操作记录、UI 项或运行时对象。
+- `private void OnSaveClicked(string saveName)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void OnEnemyBlueprintClicked(string blueprintName)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+
+
+### 模板/其他
+
+#### `Assets/TutorialInfo/Scripts/Editor/ReadmeEditor.cs`
+
+- `static ReadmeEditor()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `static void RemoveTutorial()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
+- `static void SelectReadmeAutomatically()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `static void LoadLayout()`： 执行存档/文件的读取、写入、重命名或路径处理。
+- `static Readme SelectReadme()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `protected override void OnHeaderGUI()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public override void OnInspectorGUI()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `void Init()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `bool LinkLabel(GUIContent label, params GUILayoutOption[] options)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+
+## 9. 函数索引维护规则
+
+新增、删除、重命名或改变职责的函数，必须在同一提交更新本节；签名变化替换旧条目，行为变化同时修改描述和变更日志。索引以源码为准，自动提取遗漏的多行签名时手工补充。
+
+## 10. 变更日志
 
 ### 2026-08-22
 
 - 新增本开发文档，整理当前 Unity 版本、目录、运行时架构、已实现功能、风险和验证清单。
+- 增加第 7 节文档目录和第 8 节代码函数索引，覆盖当前 Git 跟踪 C# 文件中的函数签名、重载和职责分类。
+- 增加第 9 节函数索引维护规则，要求后续新增、删除、重命名或改变职责时同步更新索引。
 - 新增根目录 `AGENTS.md`，规定以后每次功能、代码、场景、资源或配置修改必须同步更新本文件。
 - 本次仅确认代码与仓库文件，未启动 Unity Play Mode；运行时行为仍需按第 6 节清单验证。
 
@@ -131,4 +807,3 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - 验证：代码检查、Unity 编辑器、Play Mode、构建或测试结果。
 - 未验证/遗留：明确尚未确认的内容。
 ```
-
