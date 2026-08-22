@@ -40,6 +40,8 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 `GameManager` 在启动时初始化全局管理器和方块父节点。`MainUIPanels` 控制创建、删除、建造、游玩、死亡等面板的淡入淡出。`BuildManager` 负责建造上下文；`PlayManager` 负责进入/退出游玩模式及控制单元分组。`CameraController` 提供第一人称和自由飞行两种视角，`B` 切换视角锁定状态，`Tab` 切换相机模式。
 
+`InputManager` 统一处理 `B`/`Tab`/`F`、敌方蓝图开发者快捷键和模式光标状态：建造锁定模式显示并限制鼠标，建造自由飞行模式隐藏并锁定鼠标，游玩模式默认隐藏并锁定鼠标，按住 Alt 时显示并限制鼠标。
+
 进入游玩模式前，`PlayManager.CanStartPlay` 会检查当前构造体是否存在有效驾驶舱；成功后由 `ControlUnit` 刷新子模块并取得运行时所有权。退出游玩模式时恢复建造状态并清理运行时分组。
 
 ### 3.2 建造、连接与碰撞
@@ -554,6 +556,14 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `public IReadOnlyList<ControlUnit> GetControlUnits()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private EnemySpawner EnsureEnemySpawner()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
 
+#### `Assets/Scripts/Manager/InputManager.cs`
+
+- `private void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void Start()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void Update()`： 处理模式快捷键、相机模式和光标状态。
+- `public void EnterBuildMode()`： 将 Play Mode 退出状态恢复为建造锁定模式。
+- `private void ApplyCursorState()`： 应用当前模式对应的鼠标显示与锁定状态。
+
 #### `Assets/Scripts/Manager/SaveManager.cs`
 
 - `private void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
@@ -799,6 +809,10 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 ## 10. 变更日志
 
 ### 2026-08-22
+
+- **集中输入与相机模式管理**：新增场景级 `InputManager`，统一处理建造/游玩模式的快捷键、相机模式和光标状态；补充 Play Mode 退出及玩家死亡后的建造锁定复位，并保护键盘、相机和目标对象为空的输入路径。
+- **审查修复**：修正退出 Play Mode 后 `lockView` 未复位、死亡面板鼠标可见性未同步、F 键无目标时可能空引用等问题。
+- **验证**：`dotnet build HY-Sandbox.sln --no-restore` 通过（0 错误；仅有既存 Profiler API 过时警告）；已核对 `InputManager` 场景引用、脚本调用点和函数签名；尚未在 Unity Play Mode 验证完整快捷键与窗口焦点流程。
 
 - **重写 EnemyController 的运动控制**：移除直接读取/修改 Rigidbody 的 `FaceTarget` 转矩逻辑，敌方只通过 `ControlUnit.SetMovementInput` 提供模拟输入；`MainThruster`/`UniversalThruster` 负责根据该输入施加推力和转向。
 - **验证**：`EnemyController.cs` 已搜索确认不再包含 Rigidbody 或直接物理写入；`git diff --check` 和 `dotnet build HY-Sandbox.sln --no-restore` 已通过（0 错误；仅有既存 Profiler API 过时警告）；尚未在 Unity Play Mode 验证不同推进器配置下的转向手感。

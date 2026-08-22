@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
+    public static CameraController instance;
     public CameraMode currentMode = CameraMode.FirstPerson;
 
     [Header("General Settings")]
@@ -31,56 +32,17 @@ public class CameraController : MonoBehaviour
     public float maxZoom = -10f;
     private Coroutine focusCoroutine;
 
-    void Update()
+    private void Awake()
     {
-        HandleModeSwitch();
-
-        if (Keyboard.current.fKey.wasPressedThisFrame)
-        {
-            if (BuildManager.instance?.selectedBlock !=  null)
-            {
-                FocusCameraOnBlock(BuildManager.instance.selectedBlock.gameObject);
-            }
-            else
-            {
-                FocusCameraOnBlock(PlayManager.instance.blocksParent.gameObject);
-            }
-        }
-
-        if (!BuildManager.instance.lockView && !PlayManager.instance.playMode)
-        {
-            currentMode = CameraMode.FreeFly;
-        }
-        else if (PlayManager.instance.playMode)
-        {
-            currentMode = CameraMode.ThirdPerson;
-        }
-        else
-        {
-            currentMode = CameraMode.Lock;
-        }
+        instance = this;
     }
 
     private void LateUpdate()
     {
         if (currentMode != CameraMode.Lock)
         {
-            HandleLook();
             HandleMovement();
-        }
-    }
-
-    void HandleModeSwitch()
-    {
-        if (Keyboard.current.tabKey.wasPressedThisFrame)
-        {
-            // ������ģʽ֮��ѭ���л�
-            if (currentMode == CameraMode.FirstPerson)
-                currentMode = CameraMode.ThirdPerson;
-            else if (currentMode == CameraMode.ThirdPerson)
-                currentMode = CameraMode.FreeFly;
-            else
-                currentMode = CameraMode.FirstPerson;
+            HandleLook();
         }
     }
 
@@ -104,13 +66,16 @@ public class CameraController : MonoBehaviour
             transform.Rotate(Vector3.up * mouseX, Space.World);
             transform.Rotate(Vector3.right * -mouseY, Space.Self);
         }
-        else if (currentMode == CameraMode.ThirdPerson)
+        else if (currentMode == CameraMode.ThirdPerson || currentMode == CameraMode.ThirdPersonLock)
         {
             if (playerBody == null) return;
 
-            tpYaw += mouseX;
-            tpPitch -= mouseY;
-            tpPitch = Mathf.Clamp(tpPitch, -30f, 60f);
+            if (currentMode == CameraMode.ThirdPerson)
+            {
+                tpYaw += mouseX;
+                tpPitch -= mouseY;
+                tpPitch = Mathf.Clamp(tpPitch, -30f, 60f);
+            }
 
             float scroll = Mouse.current.scroll.ReadValue().y * zoomSpeed * Time.deltaTime;
             thirdPersonOffset.z = Mathf.Clamp(thirdPersonOffset.z + scroll, maxZoom, minZoom);
@@ -122,9 +87,9 @@ public class CameraController : MonoBehaviour
                 transform.position,
                 desiredPos,
                 ref camVelocity,
-                0.05f // ƽ��ʱ�䣬��ֵԽСԽ�����
+                0.05f
             );
-            transform.LookAt(playerBody.position + Vector3.up * 1.5f); // �����ɫͷ��λ��
+            transform.LookAt(playerBody.position + Vector3.up * 1.5f);
         }
     }
 
@@ -499,5 +464,6 @@ public enum CameraMode
     FirstPerson,
     ThirdPerson,
     FreeFly,
-    Lock
+    Lock,
+    ThirdPersonLock
 }

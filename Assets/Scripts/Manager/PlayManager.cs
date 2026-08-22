@@ -26,7 +26,6 @@ public class PlayManager : MonoBehaviour
     public float verticalVelocity;
     public float horizontalVelocity;
 
-    public bool lockView = false;
     public bool showConnectors = true;
     public bool showLabel = true;
 
@@ -48,11 +47,11 @@ public class PlayManager : MonoBehaviour
             return;
         }
 
-        if (Keyboard.current.bKey.wasPressedThisFrame)
-        {
-            lockView = !lockView;
-            SetPlayMode();
-        }
+        //if (Keyboard.current.bKey.wasPressedThisFrame)
+        //{
+        //    lockView = !lockView;
+        //    SetPlayMode();
+        //}
 
         HandleSelection();
         CalculateVelocity();
@@ -140,7 +139,7 @@ public class PlayManager : MonoBehaviour
         Debug.Log($"Find {allControlUnits.Count} controls");
     }
 
-    private void SetPlayMode()
+    public void SetPlayMode(bool lockView)
     {
         Cursor.lockState = lockView ? CursorLockMode.Confined : CursorLockMode.Locked;
 
@@ -241,6 +240,10 @@ public class PlayManager : MonoBehaviour
         }
 
         playMode = false;
+        if (InputManager.instance != null)
+        {
+            InputManager.instance.EnterBuildMode();
+        }
         BuildManager.instance.enabled = true;
         GameManager.Init();
     }
@@ -282,7 +285,7 @@ public class PlayManager : MonoBehaviour
                 block.showLabel = showLabel;
             }
 
-            // Debug.Log($"{groupParent.name} mass: {mass}");
+            Debug.Log($"{groupParent.name} mass: {mass}");
 
             Rigidbody rb = groupParent.GetComponent<Rigidbody>();
             rb.mass = mass;
@@ -294,10 +297,7 @@ public class PlayManager : MonoBehaviour
             groupControl.AssignRuntimeOwnershipToBlocks(false);
         }
 
-        if (blocksParent != null)
-        {
-            Camera.main.GetComponent<CameraController>().playerBody = blocksParent;
-        }
+        Camera.main.GetComponent<CameraController>().playerBody = blocksParent;
     }
 
     public void RegisterControlUnit(ControlUnit unit)

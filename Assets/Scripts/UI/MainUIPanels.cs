@@ -202,6 +202,11 @@ public class MainUIPanels : MonoBehaviour
 
     public void PlayerDeath()
     {
+        PlayManager.instance.playMode = false;
+        if (InputManager.instance != null)
+        {
+            InputManager.instance.EnterBuildMode();
+        }
         StartCoroutine(Fade(playPanel, false));
         StartCoroutine(Fade(deathPanel, true));
     }

@@ -71,20 +71,7 @@ public class BuildManager : MonoBehaviour
     public BuildTargetKind CurrentBuildTarget => CurrentBuildContext.Kind;
     public UnitFaction CurrentBuildFaction => CurrentBuildContext.Faction;
     public string CurrentBuildName => CurrentBuildContext.Name;
-    public bool DeveloperToolsAvailable
-    {
-        get
-        {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            return true;
-#else
-            return false;
-#endif
-        }
-    }
 
-
-    public bool lockView;
     public bool penetrationMode;
 
     public float BlockLoadIntervalSeconds = 0.1f;
@@ -111,32 +98,17 @@ public class BuildManager : MonoBehaviour
 
     private void Start()
     {
-        lockView = true;
-        SetBuildMode();
+        SetBuildMode(true);
     }
 
     void Update()
     {
-        if (Keyboard.current.bKey.wasPressedThisFrame)
-        {
-            lockView = !lockView;
-            SetBuildMode();
-        }
-
-        if (DeveloperToolsAvailable
-            && Keyboard.current.leftCtrlKey.isPressed
-            && Keyboard.current.leftShiftKey.isPressed
-            && Keyboard.current.eKey.wasPressedThisFrame)
-        {
-            ToggleEnemyBlueprintBuildMode();
-        }
-
         if (IsLoadingBlocks)
         {
             return;
         }
 
-        if (lockView)
+        if (InputManager.instance.lockView)
         {
             if (currentBlockResourcePath == string.Empty)
             {
@@ -153,7 +125,7 @@ public class BuildManager : MonoBehaviour
             }
         }
 
-        if (lockView && selectedBlock != null)
+        if (InputManager.instance.lockView && selectedBlock != null)
         {
             AlignAxisToNearestWorldDir();
 
@@ -180,10 +152,8 @@ public class BuildManager : MonoBehaviour
         if (selectedBlock != null && Keyboard.current.deleteKey.wasPressedThisFrame) DeleteBlock();
     }
 
-    void SetBuildMode()
+    public void SetBuildMode(bool lockView)
     {
-        Cursor.lockState = lockView ? CursorLockMode.Confined : CursorLockMode.Locked;
-
         if (!lockView)
         {
             if (selectedBlock != null)
@@ -212,7 +182,7 @@ public class BuildManager : MonoBehaviour
 
     public void EnterEnemyBlueprintBuildMode(string blueprintName)
     {
-        if (!DeveloperToolsAvailable)
+        if (!InputManager.instance.DeveloperToolsAvailable)
         {
             Debug.LogWarning("Enemy blueprint build mode is developer-only.");
             return;
@@ -1167,7 +1137,7 @@ public class BuildManager : MonoBehaviour
     {
         reason = string.Empty;
 
-        if (IsEditingEnemyBlueprint && !DeveloperToolsAvailable)
+        if (IsEditingEnemyBlueprint && !InputManager.instance.DeveloperToolsAvailable)
         {
             reason = "Enemy blueprint build mode is developer-only.";
             return false;
