@@ -19,6 +19,10 @@ public class MainUIPanels : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        if (playPanel != null && playPanel.GetComponent<PlayerCockpitHealthUI>() == null)
+        {
+            playPanel.AddComponent<PlayerCockpitHealthUI>();
+        }
     }
 
     private IEnumerator Fade(GameObject panel, bool show)

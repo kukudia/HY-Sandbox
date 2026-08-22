@@ -40,7 +40,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 `GameManager` 在启动时初始化全局管理器和方块父节点。`MainUIPanels` 控制创建、删除、建造、游玩、死亡等面板的淡入淡出。`BuildManager` 负责建造上下文；`PlayManager` 负责进入/退出游玩模式及控制单元分组。`CameraController` 提供第一人称和自由飞行两种视角，`B` 切换视角锁定状态，`Tab` 切换相机模式。
 
-`InputManager` 统一处理 `B`/`Tab`/`F`、敌方蓝图开发者快捷键和模式光标状态：建造锁定模式显示并限制鼠标，建造自由飞行模式隐藏并锁定鼠标，游玩模式默认隐藏并锁定鼠标，按住 Alt 时显示并限制鼠标。
+`InputManager` 统一处理 `B`/`Tab`/`F`、敌方蓝图开发者快捷键和模式光标状态：建造锁定模式显示并限制鼠标，建造自由飞行模式隐藏并锁定鼠标，游玩模式默认隐藏并锁定鼠标，按住 Alt 时显示并限制鼠标。`PlayerCockpitHealthUI` 在 `PlayPanel` 左下角显示玩家驾驶舱耐久度，血条颜色按比例从红色过渡到绿色。
 
 进入游玩模式前，`PlayManager.CanStartPlay` 会检查当前构造体是否存在有效驾驶舱；成功后由 `ControlUnit` 刷新子模块并取得运行时所有权。退出游玩模式时恢复建造状态并清理运行时分组。
 
@@ -777,6 +777,16 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `public void EnterEnemyBlueprintBuildMode()`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
 - `public void ExitEnemyBlueprintBuildMode()`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
 
+#### `Assets/Scripts/UI/PlayerCockpitHealthUI.cs`
+
+- `private void Awake()`：初始化 PlayPanel 中的驾驶舱血条运行时 UI。
+- `private void Update()`：刷新玩家驾驶舱引用、血量比例、数值文本和变色填充。
+- `private void BuildHud()`：创建左下角驾驶舱血条及其文本、轨道和填充组件。
+- `private void RefreshCockpitReference()`：从玩家运行时方块层级查找驾驶舱耐久组件。
+- `private void UpdateHealthDisplay()`：根据当前耐久度更新填充比例、颜色和数值显示。
+- `private static GameObject CreateRectObject(string objectName, Transform parent)`：创建并挂接 UI 矩形子对象。
+- `private static Text CreateText(string objectName, Transform parent, string text, int fontSize, FontStyle style)`：创建运行时 UI 文本组件。
+
 #### `Assets/Scripts/UI/SaveUIPanel.cs`
 
 - `private void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
@@ -809,6 +819,9 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 ## 10. 变更日志
 
 ### 2026-08-22
+
+- **制作玩家驾驶舱变色血条**：新增 `PlayerCockpitHealthUI`，由 `MainUIPanels.Awake` 自动挂载到 `PlayPanel`，在左下角显示玩家 Cockpit 当前/最大耐久度；填充比例随耐久变化，颜色从红色过渡到绿色，并随游玩面板显示状态更新。
+- **验证**：已通过脚本与场景引用的代码检查，填充组件使用 Unity `Image.Type.Filled`，文本使用 `LegacyRuntime.ttf`，并通过 `git diff --check`；尚未在 Unity 编辑器或 Play Mode 验证实际布局、字体显示和耐久变化效果。
 
 - **集中输入与相机模式管理**：新增场景级 `InputManager`，统一处理建造/游玩模式的快捷键、相机模式和光标状态；补充 Play Mode 退出及玩家死亡后的建造锁定复位，并保护键盘、相机和目标对象为空的输入路径。
 - **审查修复**：修正退出 Play Mode 后 `lockView` 未复位、死亡面板鼠标可见性未同步、F 键无目标时可能空引用等问题。
