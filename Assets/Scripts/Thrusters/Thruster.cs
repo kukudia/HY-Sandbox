@@ -137,35 +137,35 @@ public abstract class Thruster : MonoBehaviour
         visualEffect.SetThrust(thrustRatio, lineDirection);
     }
 
-    public virtual Vector3 GetInputDirection()
-    {
-        Vector3 dir = Vector3.zero;
+    //public virtual Vector3 GetInputDirection()
+    //{
+    //    Vector3 dir = Vector3.zero;
 
-        if (cameraTransform == null)
-        {
-            Camera mainCamera = Camera.main;
-            if (mainCamera == null) return dir;
+    //    if (cameraTransform == null)
+    //    {
+    //        Camera mainCamera = Camera.main;
+    //        if (mainCamera == null) return dir;
 
-            cameraTransform = mainCamera.transform;
-        }
+    //        cameraTransform = mainCamera.transform;
+    //    }
 
-        // 摄像机 forward / right 的水平分量
-        Vector3 camFwd = cameraTransform.forward; camFwd.y = 0f; camFwd.Normalize();
-        Vector3 camRight = cameraTransform.right; camRight.y = 0f; camRight.Normalize();
+    //    // 摄像机 forward / right 的水平分量
+    //    Vector3 camFwd = cameraTransform.forward; camFwd.y = 0f; camFwd.Normalize();
+    //    Vector3 camRight = cameraTransform.right; camRight.y = 0f; camRight.Normalize();
 
-        Keyboard keyboard = Keyboard.current;
-        if (keyboard == null) return dir;
+    //    Keyboard keyboard = Keyboard.current;
+    //    if (keyboard == null) return dir;
 
-        if (keyboard.wKey.isPressed) dir += camFwd;
-        if (keyboard.sKey.isPressed) dir -= camFwd;
-        if (keyboard.aKey.isPressed) dir -= camRight;
-        if (keyboard.dKey.isPressed) dir += camRight;
+    //    if (keyboard.wKey.isPressed) dir += camFwd;
+    //    if (keyboard.sKey.isPressed) dir -= camFwd;
+    //    if (keyboard.aKey.isPressed) dir -= camRight;
+    //    if (keyboard.dKey.isPressed) dir += camRight;
 
-        if (dir.sqrMagnitude > InputEpsilonSqr)
-            dir.Normalize();
+    //    if (dir.sqrMagnitude > InputEpsilonSqr)
+    //        dir.Normalize();
 
-        return dir;
-    }
+    //    return dir;
+    //}
 
     private void DisableLegacyLineRenderer()
     {

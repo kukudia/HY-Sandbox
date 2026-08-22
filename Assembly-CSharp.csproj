@@ -68,7 +68,6 @@
     <Compile Include="Assets\Scripts\Thrusters\ThrusterAllocator.cs" />
     <Compile Include="Assets\Scripts\Thrusters\ThrusterVisualEffect.cs" />
     <Compile Include="Assets\Scripts\UI\MainUIPanels.cs" />
-    <Compile Include="Assets\Scripts\InObject\EnemySpawner.cs" />
     <Compile Include="Assets\Scripts\Data\BuildTargetContext.cs" />
     <Compile Include="Assets\Scripts\Data\BlockData.cs" />
     <Compile Include="Assets\Scripts\Actions\AddBlockAction.cs" />
@@ -83,6 +82,7 @@
     <Compile Include="Assets\Scripts\Manager\VisualEffectsManager.cs" />
     <Compile Include="Assets\Scripts\Actions\ActionManager.cs" />
     <Compile Include="Assets\Scripts\Manager\CoinManager.cs" />
+    <Compile Include="Assets\Scripts\Manager\EnemySpawner.cs" />
     <Compile Include="Assets\Scripts\UI\ActionCounterUI.cs" />
     <Compile Include="Assets\Scripts\InObject\ControlUnit.cs" />
     <Compile Include="Assets\Scripts\InObject\Rack.cs" />
