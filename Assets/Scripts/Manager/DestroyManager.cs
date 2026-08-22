@@ -28,6 +28,7 @@ public class DestroyManager : MonoBehaviour
     [SerializeField] private float _blockExplosionForce = 900f;
     [SerializeField] private float _blockExplosionRadius = 8f;
     [SerializeField] private float _blockExplosionUpwardsModifier = 1.2f;
+    [SerializeField, Range(0f, 1f)] private float _blockExplosionDisconnectProbability = 0.35f;
     private bool _isRefreshScheduled;
     private int _destroyedCount;
     private HashSet<string> _scheduledUnitCleanups = new HashSet<string>();
@@ -113,6 +114,7 @@ public class DestroyManager : MonoBehaviour
 
         VisualEffectsManager.TryPlayBlockExplosion(block);
 
+        DisconnectBlocksInExplosionRange(unit, block, explosionPosition);
         block.DisConnectAllConnectors();
         block.transform.SetParent(null, true);
 
@@ -122,6 +124,33 @@ public class DestroyManager : MonoBehaviour
         }
 
         ApplyExplosionForce(ownerUnitId, ownerFaction, explosionPosition);
+    }
+
+    private void DisconnectBlocksInExplosionRange(ControlUnit unit, Block sourceBlock, Vector3 explosionPosition)
+    {
+        if (unit == null || sourceBlock == null || _blockExplosionRadius <= 0f || _blockExplosionDisconnectProbability <= 0f)
+        {
+            return;
+        }
+
+        float radiusSqr = _blockExplosionRadius * _blockExplosionRadius;
+        float probability = Mathf.Clamp01(_blockExplosionDisconnectProbability);
+        Block[] blocks = unit.GetComponentsInChildren<Block>(true);
+        foreach (Block candidate in blocks)
+        {
+            if (candidate == null || candidate == sourceBlock)
+            {
+                continue;
+            }
+
+            Vector3 offset = candidate.transform.position - explosionPosition;
+            if (offset.sqrMagnitude > radiusSqr || Random.value > probability)
+            {
+                continue;
+            }
+
+            candidate.DisConnectAllConnectors();
+        }
     }
 
     private void ApplyExplosionForce(string ownerUnitId, UnitFaction ownerFaction, Vector3 explosionPosition)
