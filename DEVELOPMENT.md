@@ -68,7 +68,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 3.5 UI、敌人和效果
 
-`MainUIButtons` 负责按钮事件、操作模式和动态方块按钮；`SaveUIPanel` 负责玩家/敌方蓝图列表；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一文字描边样式。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链。`VisualEffectsManager`、`StylizedBeamEffect` 和 `StylizedRingEffect` 负责放置、删除、移动、碰撞和陨石冲击反馈。
+`MainUIButtons` 负责按钮事件、操作模式和动态方块按钮；`SaveUIPanel` 负责玩家/敌方蓝图列表；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链。`VisualEffectsManager`、`StylizedBeamEffect` 和 `StylizedRingEffect` 负责放置、删除、移动、碰撞和陨石冲击反馈。
 
 ## 4. 已确认实现的功能
 
@@ -788,6 +788,10 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 新增、删除、重命名或改变职责的函数，必须在同一提交更新本节；签名变化替换旧条目，行为变化同时修改描述和变更日志。索引以源码为准，自动提取遗漏的多行签名时手工补充。
 
 ## 10. 变更日志
+
+### 2026-08-22
+
+- **UI 字体可读性调整**：将场景和 `SavePrefab` 的 UI 字体由 Rajdhani SemiBold 替换为 Chakra Petch Medium；`GlobalTextStyler` 停用粗描边并改为 1px 深色阴影，降低小字号按钮的笔画拥挤。字体资源、场景引用和脚本已通过文件检查，C# 编译验证通过；尚未在 Unity 编辑器 Play Mode 重新验证视觉效果。
 
 ### 2026-08-22
 

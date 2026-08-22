@@ -9,7 +9,7 @@ using UnityEngine.UI;
 [DefaultExecutionOrder(-1000)]
 public sealed class GlobalTextStyler : MonoBehaviour
 {
-    private static readonly Color OutlineColor = new Color(0.015f, 0.055f, 0.09f, 0.9f);
+    private static readonly Color ShadowColor = new Color(0.015f, 0.035f, 0.055f, 0.68f);
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void CreateInstance()
@@ -38,14 +38,21 @@ public sealed class GlobalTextStyler : MonoBehaviour
             }
 
             var outline = text.GetComponent<Outline>();
-            if (outline == null)
+            if (outline != null)
             {
-                outline = text.gameObject.AddComponent<Outline>();
+                outline.enabled = false;
             }
 
-            outline.effectColor = OutlineColor;
-            outline.effectDistance = new Vector2(1.25f, -1.25f);
-            outline.useGraphicAlpha = true;
+            var shadow = text.GetComponent<Shadow>();
+            if (shadow == null)
+            {
+                shadow = text.gameObject.AddComponent<Shadow>();
+            }
+
+            shadow.enabled = true;
+            shadow.effectColor = ShadowColor;
+            shadow.effectDistance = new Vector2(1f, -1f);
+            shadow.useGraphicAlpha = true;
         }
     }
 }
