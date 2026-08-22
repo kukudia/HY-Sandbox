@@ -94,6 +94,7 @@
     <Compile Include="Assets\Scripts\Actions\MoveBlockAction.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\InObject\MoveAxisHandle.cs" />
+    <Compile Include="Assets\Scripts\UI\GlobalTextStyler.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\Thrusters\HoverThruster.cs" />
     <Compile Include="Assets\Scripts\Thrusters\Thruster.cs" />
