@@ -234,7 +234,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private void ConnectTo(Connector connector, Connector otherConnector)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private void ClearConnector(Connector connector)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
 - `public List<Block> Neighbors()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
-- `public void DisConnectAllConnectors()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public void DisConnectAllConnectors(bool refreshNeighbors = true)`： 断开连接器；可在批量爆炸拆分时延后邻居刷新，避免重复物理查询。
 - `public bool IsBlockedGhost()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private void OnDrawGizmos()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
 
@@ -796,6 +796,11 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 新增、删除、重命名或改变职责的函数，必须在同一提交更新本节；签名变化替换旧条目，行为变化同时修改描述和变更日志。索引以源码为准，自动提取遗漏的多行签名时手工补充。
 
 ## 10. 变更日志
+
+### 2026-08-22
+
+- **修复爆炸后连接器异常与性能回退**：`Block.CheckConnection` 和 `DisConnectAllConnectors` 增加销毁对象/空邻居保护；爆炸范围拆分使用 `DisConnectAllConnectors(false)` 批量断开，并对唯一邻居延后统一刷新，避免重复 `Physics.OverlapSphere`。
+- **验证**：已根据 `ProfilerCaptures/HY-Sandbox_2026-08-22_13-23-48.data` 提供的异常堆栈完成代码修复；`git diff --check`（任务文件）和 `dotnet build HY-Sandbox.sln --no-restore` 已通过（0 错误；仅有既存 Profiler API 过时警告）；尚未在 Unity Play Mode 重现确认帧率。
 
 ### 2026-08-22
 

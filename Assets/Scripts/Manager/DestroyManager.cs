@@ -136,6 +136,7 @@ public class DestroyManager : MonoBehaviour
         float radiusSqr = _blockExplosionRadius * _blockExplosionRadius;
         float probability = Mathf.Clamp01(_blockExplosionDisconnectProbability);
         Block[] blocks = unit.GetComponentsInChildren<Block>(true);
+        HashSet<Block> neighborsToRefresh = new HashSet<Block>();
         foreach (Block candidate in blocks)
         {
             if (candidate == null || candidate == sourceBlock)
@@ -149,7 +150,23 @@ public class DestroyManager : MonoBehaviour
                 continue;
             }
 
-            candidate.DisConnectAllConnectors();
+            foreach (Block neighbor in candidate.neighbors)
+            {
+                if (neighbor != null && neighbor != sourceBlock)
+                {
+                    neighborsToRefresh.Add(neighbor);
+                }
+            }
+
+            candidate.DisConnectAllConnectors(false);
+        }
+
+        foreach (Block neighbor in neighborsToRefresh)
+        {
+            if (neighbor != null)
+            {
+                neighbor.CheckConnection();
+            }
         }
     }
 

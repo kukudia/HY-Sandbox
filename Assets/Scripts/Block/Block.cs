@@ -205,6 +205,11 @@ public class Block : MonoBehaviour
 
     public void CheckConnection()
     {
+        if (this == null)
+        {
+            return;
+        }
+
         foreach (Connector c in connectors)
         {
             c.isConnected = false;
@@ -325,8 +330,13 @@ public class Block : MonoBehaviour
         return neighbors;
     }
 
-    public void DisConnectAllConnectors()
+    public void DisConnectAllConnectors(bool refreshNeighbors = true)
     {
+        if (this == null)
+        {
+            return;
+        }
+
         LayerMask rackLayer = 0;
         Collider[] colliders = GetComponentsInChildren<Collider>();
         foreach (Collider collider in colliders)
@@ -334,9 +344,18 @@ public class Block : MonoBehaviour
             collider.gameObject.layer = rackLayer;
         }
 
+        if (!refreshNeighbors)
+        {
+            neighbors.Clear();
+            return;
+        }
+
         foreach (Block neighbor in neighbors)
         {
-            neighbor.CheckConnection();
+            if (neighbor != null)
+            {
+                neighbor.CheckConnection();
+            }
         }
         neighbors.Clear();
     }
