@@ -236,8 +236,8 @@ public class VisualEffectsManager : MonoBehaviour
         if (!enableRuntimeVfx) return;
 
         Bounds bounds = GetBounds(target, target.transform.position, Vector3.one);
-        CreateParticleBurst("Object Destroyed Sparks", bounds.center, removeColor, Color.white, 36, 0.4f, 1.4f, 4.2f, 0.25f, 0.7f, 0.04f, 0.13f, 0.15f);
-        CreateLightFlash(bounds.center, removeColor, 1.3f, Mathf.Max(bounds.size.magnitude, 1.5f), 0.18f);
+        CreateParticleBurst("Object Destroyed Sparks", bounds.center, removeColor, Color.white, 36, 0.4f, 1.4f, 4.2f, 0.5f, 2.0f, 0.04f, 0.13f, 0.15f);
+        CreateLightFlash(bounds.center, removeColor, 1.3f, Mathf.Max(bounds.size.magnitude, 1.5f), 0.36f);
     }
 
     private void PlayBlockMoved(Block block, Vector3 from, Vector3 to)

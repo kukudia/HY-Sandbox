@@ -24,7 +24,7 @@ public class DestroyManager : MonoBehaviour
     }
 
     private float _refreshDelay = 0.2f;
-    private float _unitCleanupDelay = 5f;
+    private float _unitCleanupDelay = 10f;
     private bool _isRefreshScheduled;
     private int _destroyedCount;
     private HashSet<string> _scheduledUnitCleanups = new HashSet<string>();
@@ -59,7 +59,17 @@ public class DestroyManager : MonoBehaviour
 
         if (cockpit != null)
         {
-            ScheduleUnitCleanup(ownerUnitId, ownerFaction);
+            if (ownerFaction == UnitFaction.Player && PlayManager.instance.playMode)
+            {
+                //MainUIPanels.instance.PlayEnd();
+                MainUIPanels.instance.PlayerDeath();
+                return;
+            }
+
+            ScheduleUnitCleanup(obj, ownerUnitId, ownerFaction);
+
+            //Block explosion fuction
+
             return;
         }
 
@@ -69,7 +79,7 @@ public class DestroyManager : MonoBehaviour
         }
     }
 
-    private void ScheduleUnitCleanup(string ownerUnitId, UnitFaction ownerFaction)
+    private void ScheduleUnitCleanup(GameObject obj, string ownerUnitId, UnitFaction ownerFaction)
     {
         if (string.IsNullOrEmpty(ownerUnitId) || _scheduledUnitCleanups.Contains(ownerUnitId))
         {
@@ -77,6 +87,9 @@ public class DestroyManager : MonoBehaviour
         }
 
         _scheduledUnitCleanups.Add(ownerUnitId);
+
+        Debug.Log($"Scheduling cleanup for unit {obj} after {_unitCleanupDelay} seconds.");
+
         StartCoroutine(CleanupUnitAfterDelay(ownerUnitId, ownerFaction));
     }
 
@@ -94,12 +107,6 @@ public class DestroyManager : MonoBehaviour
         }
 
         _scheduledUnitCleanups.Remove(ownerUnitId);
-
-        if (ownerFaction == UnitFaction.Player && PlayManager.instance != null && PlayManager.instance.playMode)
-        {
-            //MainUIPanels.instance.PlayEnd();
-            MainUIPanels.instance.PlayerDeath();
-        }
     }
 
     private void PlayDisappearEffect(GameObject obj)

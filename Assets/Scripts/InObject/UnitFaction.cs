@@ -1,5 +1,6 @@
 public enum UnitFaction
 {
     Player,
-    Enemy
+    Enemy,
+    Neutral
 }
