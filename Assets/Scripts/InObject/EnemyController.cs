@@ -10,7 +10,6 @@ public class EnemyController : MonoBehaviour
     public float updateInterval = 0.25f;
     [Min(0.05f)] public float movementUpdateInterval = 0.5f;
     [Min(0.1f)] public float movementResponseRate = 2.5f;
-    public float faceTargetTorque = 8f;
     public float retreatDistance = 10f;
     public float obstacleAvoidanceDistance = 12f;
     public float obstacleProbeRadius = 1.5f;
@@ -20,7 +19,6 @@ public class EnemyController : MonoBehaviour
     public LayerMask obstacleLayers = ~0;
 
     private ControlUnit unit;
-    private Rigidbody rb;
     private ControlUnit currentTarget;
     private float nextUpdateTime;
     private float nextMovementUpdateTime;
@@ -30,7 +28,6 @@ public class EnemyController : MonoBehaviour
     private void Awake()
     {
         unit = GetComponent<ControlUnit>();
-        rb = GetComponent<Rigidbody>();
     }
 
     private void FixedUpdate()
@@ -70,7 +67,6 @@ public class EnemyController : MonoBehaviour
             desiredMovementInput,
             Mathf.Max(0.1f, movementResponseRate) * Time.fixedDeltaTime);
         unit.SetMovementInput(smoothedInput);
-        FaceTarget(flatDirection);
     }
 
     private Vector3 CalculateDesiredMovement(Vector3 flatDirection)
@@ -123,18 +119,6 @@ public class EnemyController : MonoBehaviour
         }
 
         return nearest;
-    }
-
-    private void FaceTarget(Vector3 flatDirection)
-    {
-        if (rb == null || flatDirection.sqrMagnitude < 0.01f) return;
-
-        Vector3 desiredForward = flatDirection.normalized;
-        Vector3 currentForward = Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized;
-        if (currentForward.sqrMagnitude < 0.01f) return;
-
-        float turn = Vector3.SignedAngle(currentForward, desiredForward, Vector3.up);
-        rb.AddTorque(Vector3.up * turn * faceTargetTorque, ForceMode.Acceleration);
     }
 
     private void ConfigureHoverThrusters()

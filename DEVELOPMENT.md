@@ -62,7 +62,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 3.4 游玩与推进器
 
-`ControlUnit` 聚合驾驶舱、主推进器和悬浮推进器，读取玩家输入并把世界方向传给推进系统。敌方 `EnemyController` 默认每 0.5 秒采样一次目标/避障方向，并以响应速度渐进更新模拟输入，降低高频方向突变和避障查询开销。`MainThruster` 和 `UniversalThruster` 在 `FixedUpdate` 中应用推力并可对齐视觉模型；`HoverFlightController` 使用高度、重力补偿和姿态 PID 逻辑分配悬浮推力。
+`ControlUnit` 聚合驾驶舱、主推进器和悬浮推进器，读取玩家输入并把世界方向传给推进系统。敌方 `EnemyController` 默认每 0.5 秒采样一次目标/避障方向，并以响应速度渐进更新模拟输入；敌方不再直接修改 Rigidbody 的旋转或力，转向和位移统一交给 `MainThruster`/`UniversalThruster` 根据 `MovementInput` 施加。`HoverFlightController` 使用高度、重力补偿和姿态 PID 逻辑分配悬浮推力。
 
 `ThrusterAllocator.Solve` 将力与力矩目标组成 6 维约束，通过带阻尼的最小二乘和上下界迭代求解各推进器输出。`ThrusterVisualEffect` 使用粒子、光源和渐变颜色表达推力比例，并替代旧的 Line Renderer 视觉。
 
@@ -352,7 +352,6 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
 - `private void FixedUpdate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
 - `private ControlUnit FindNearestPlayer()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
-- `private void FaceTarget(Vector3 flatDirection)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private void ConfigureHoverThrusters()`： 配置该组件的几何、推进器、敌人或运行时参数。
 - `private Vector3 CalculateDesiredMovement(Vector3 flatDirection)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private Vector3 GetStrafeDirection(Vector3 flatDirection)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
@@ -798,6 +797,11 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 新增、删除、重命名或改变职责的函数，必须在同一提交更新本节；签名变化替换旧条目，行为变化同时修改描述和变更日志。索引以源码为准，自动提取遗漏的多行签名时手工补充。
 
 ## 10. 变更日志
+
+### 2026-08-22
+
+- **重写 EnemyController 的运动控制**：移除直接读取/修改 Rigidbody 的 `FaceTarget` 转矩逻辑，敌方只通过 `ControlUnit.SetMovementInput` 提供模拟输入；`MainThruster`/`UniversalThruster` 负责根据该输入施加推力和转向。
+- **验证**：`EnemyController.cs` 已搜索确认不再包含 Rigidbody 或直接物理写入；`git diff --check` 和 `dotnet build HY-Sandbox.sln --no-restore` 已通过（0 错误；仅有既存 Profiler API 过时警告）；尚未在 Unity Play Mode 验证不同推进器配置下的转向手感。
 
 ### 2026-08-22
 
