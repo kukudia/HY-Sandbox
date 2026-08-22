@@ -62,7 +62,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 3.4 游玩与推进器
 
-`ControlUnit` 聚合驾驶舱、主推进器和悬浮推进器，读取玩家输入并把世界方向传给推进系统。`MainThruster` 和 `UniversalThruster` 在 `FixedUpdate` 中应用推力并可对齐视觉模型；`HoverFlightController` 使用高度、重力补偿和姿态 PID 逻辑分配悬浮推力。
+`ControlUnit` 聚合驾驶舱、主推进器和悬浮推进器，读取玩家输入并把世界方向传给推进系统。敌方 `EnemyController` 默认每 0.5 秒采样一次目标/避障方向，并以响应速度渐进更新模拟输入，降低高频方向突变和避障查询开销。`MainThruster` 和 `UniversalThruster` 在 `FixedUpdate` 中应用推力并可对齐视觉模型；`HoverFlightController` 使用高度、重力补偿和姿态 PID 逻辑分配悬浮推力。
 
 `ThrusterAllocator.Solve` 将力与力矩目标组成 6 维约束，通过带阻尼的最小二乘和上下界迭代求解各推进器输出。`ThrusterVisualEffect` 使用粒子、光源和渐变颜色表达推力比例，并替代旧的 Line Renderer 视觉。
 
@@ -96,6 +96,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 | P2 | `Resources.Load` 和逐个 Instantiate 在大蓝图下会造成加载峰值 | 建立 Prefab 注册表或 Addressables，批量/异步加载并复用对象。 |
 | P2 | 方块连接和阻挡检查依赖 Physics 查询 | 建立网格占用索引，旋转/删除时增量更新，减少全场景扫描。 |
 | P2 | 推进器求解器缺少运行时可观测性 | 输出目标力矩、残差、饱和推进器数量和求解耗时，便于调参和性能分析。 |
+| P2 | EnemyController 的 AI 输入平滑参数仍需 Play Mode 调校 | 根据敌我距离、载具规模和目标帧率调节 `movementUpdateInterval` 与 `movementResponseRate`。 |
 | P2 | Block 爆炸当前仅实现范围断开、分组、物理冲量和粒子反馈 | 后续可在爆炸中心加入按距离衰减的伤害，并补充断开概率、冲量和半径的 Play Mode 调参记录。 |
 | P2 | UI 同时存在 uGUI 与 IMGUI | 将诊断面板迁移到统一 UI 系统，避免分辨率、输入焦点和生命周期不一致。 |
 | P2 | 历史日志包含旧版本功能描述 | 每次发布标记版本和验证日期，避免把日志中的“计划/旧实现”当作当前契约。 |
@@ -353,6 +354,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private ControlUnit FindNearestPlayer()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private void FaceTarget(Vector3 flatDirection)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private void ConfigureHoverThrusters()`： 配置该组件的几何、推进器、敌人或运行时参数。
+- `private Vector3 CalculateDesiredMovement(Vector3 flatDirection)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private Vector3 GetStrafeDirection(Vector3 flatDirection)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
 - `private Vector3 ProbeObstacle(Vector3 direction, float weight)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
@@ -796,6 +798,11 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 新增、删除、重命名或改变职责的函数，必须在同一提交更新本节；签名变化替换旧条目，行为变化同时修改描述和变更日志。索引以源码为准，自动提取遗漏的多行签名时手工补充。
 
 ## 10. 变更日志
+
+### 2026-08-22
+
+- **降低 EnemyController 模拟输入变化率**：新增 `movementUpdateInterval`（默认 0.5 秒）和 `movementResponseRate`，目标/避障方向按间隔采样，模拟输入在物理帧中渐进逼近，减少 AI 操控的突变和避障查询开销。
+- **验证**：已通过代码检查和 `git diff --check`；Unity 编辑器/Play Mode 尚未验证 AI 操控手感与实际帧率收益。
 
 ### 2026-08-22
 

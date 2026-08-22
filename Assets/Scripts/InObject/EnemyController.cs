@@ -8,6 +8,8 @@ public class EnemyController : MonoBehaviour
     public float detectionRange = 80f;
     public float desiredDistance = 18f;
     public float updateInterval = 0.25f;
+    [Min(0.05f)] public float movementUpdateInterval = 0.5f;
+    [Min(0.1f)] public float movementResponseRate = 2.5f;
     public float faceTargetTorque = 8f;
     public float retreatDistance = 10f;
     public float obstacleAvoidanceDistance = 12f;
@@ -21,6 +23,8 @@ public class EnemyController : MonoBehaviour
     private Rigidbody rb;
     private ControlUnit currentTarget;
     private float nextUpdateTime;
+    private float nextMovementUpdateTime;
+    private Vector3 desiredMovementInput;
     private readonly RaycastHit[] obstacleHits = new RaycastHit[MaxObstacleHits];
 
     private void Awake()
@@ -45,35 +49,53 @@ public class EnemyController : MonoBehaviour
 
         if (currentTarget == null)
         {
-            unit.SetMovementInput(Vector3.zero);
+            desiredMovementInput = Vector3.zero;
+            unit.SetMovementInput(Vector3.MoveTowards(
+                unit.MovementInput,
+                desiredMovementInput,
+                Mathf.Max(0.1f, movementResponseRate) * Time.fixedDeltaTime));
             return;
         }
 
         Vector3 toTarget = currentTarget.transform.position - transform.position;
         Vector3 flatDirection = new Vector3(toTarget.x, 0f, toTarget.z);
-        float distance = flatDirection.magnitude;
-
-        Vector3 desiredMove = Vector3.zero;
-        if (distance > detectionRange)
+        if (Time.time >= nextMovementUpdateTime)
         {
-            desiredMove = Vector3.zero;
-        }
-        else if (distance > desiredDistance)
-        {
-            desiredMove = flatDirection.normalized;
-        }
-        else if (distance < retreatDistance)
-        {
-            desiredMove = -flatDirection.normalized;
-        }
-        else
-        {
-            desiredMove = GetStrafeDirection(flatDirection);
+            desiredMovementInput = CalculateDesiredMovement(flatDirection);
+            nextMovementUpdateTime = Time.time + Mathf.Max(0.05f, movementUpdateInterval);
         }
 
-        desiredMove = ApplyObstacleAvoidance(desiredMove, flatDirection);
-        unit.SetMovementInput(desiredMove);
+        Vector3 smoothedInput = Vector3.MoveTowards(
+            unit.MovementInput,
+            desiredMovementInput,
+            Mathf.Max(0.1f, movementResponseRate) * Time.fixedDeltaTime);
+        unit.SetMovementInput(smoothedInput);
         FaceTarget(flatDirection);
+    }
+
+    private Vector3 CalculateDesiredMovement(Vector3 flatDirection)
+    {
+        float distance = flatDirection.magnitude;
+        Vector3 desiredMove = Vector3.zero;
+        if (distance <= detectionRange)
+        {
+            if (distance > desiredDistance)
+            {
+                desiredMove = flatDirection.normalized;
+            }
+            else if (distance < retreatDistance)
+            {
+                desiredMove = -flatDirection.normalized;
+            }
+            else
+            {
+                desiredMove = GetStrafeDirection(flatDirection);
+            }
+
+            desiredMove = ApplyObstacleAvoidance(desiredMove, flatDirection);
+        }
+
+        return desiredMove;
     }
 
     private ControlUnit FindNearestPlayer()
