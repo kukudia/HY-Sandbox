@@ -59,14 +59,14 @@ public class SaveUIPanel : MonoBehaviour
         savePrefabButton.GetComponentInChildren<Text>().text = "\t" + saveName;
         savePrefabButton.onClick.AddListener(onOpen);
 
+        Button renameButton = obj.transform.Find("RenameSaveButton").GetComponent<Button>();
+        Button duplicateButton = obj.transform.Find("DuplicateSaveButton").GetComponent<Button>();
         Button deleteButton = obj.transform.Find("DeleteSaveButton").GetComponent<Button>();
-        Transform renameTransform = obj.transform.Find("RenameSaveButton");
-        Button renameButton = renameTransform != null
-            ? renameTransform.GetComponent<Button>()
-            : CreateRenameButton(deleteButton, obj.transform);
 
         renameButton.onClick.RemoveAllListeners();
         renameButton.onClick.AddListener(() => MainUIPanels.instance.ShowRenamePanel(saveName));
+        duplicateButton.onClick.RemoveAllListeners();
+        duplicateButton.onClick.AddListener(() => OnDuplicateClicked(saveName));
         deleteButton.onClick.RemoveAllListeners();
         deleteButton.onClick.AddListener(() => MainUIPanels.instance.ShowDeletePanel(saveName));
 
@@ -107,4 +107,9 @@ public class SaveUIPanel : MonoBehaviour
     //{
     //    SaveManager.instance.DeleteSave(saveName);
     //}
+
+    private void OnDuplicateClicked(string saveName)
+    {
+        SaveManager.instance.DuplicateSave(saveName);
+    }
 }

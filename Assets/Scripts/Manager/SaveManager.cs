@@ -310,6 +310,11 @@ public class SaveManager : MonoBehaviour
         return true;
     }
 
+    public void DuplicateSave(string saveName)
+    {
+
+    }
+
     private bool CanUseFileName(string fileName, out string reason)
     {
         if (string.IsNullOrWhiteSpace(fileName))

@@ -152,7 +152,7 @@ MonoBehaviour:
   speedDampingFactor: 0.51
   pathSmoothness: 0.7
   showTrail: 1
-  trailDuration: 5
+  trailDuration: 1
   showAvoidanceRays: 1
   showDirectionVectors: 1
   showAvoidanceZones: 1
