@@ -25,6 +25,9 @@ public class DestroyManager : MonoBehaviour
 
     private float _refreshDelay = 0.2f;
     private float _unitCleanupDelay = 10f;
+    [SerializeField] private float _blockExplosionForce = 900f;
+    [SerializeField] private float _blockExplosionRadius = 8f;
+    [SerializeField] private float _blockExplosionUpwardsModifier = 1.2f;
     private bool _isRefreshScheduled;
     private int _destroyedCount;
     private HashSet<string> _scheduledUnitCleanups = new HashSet<string>();
@@ -45,7 +48,11 @@ public class DestroyManager : MonoBehaviour
         string ownerUnitId = member != null ? member.ownerUnitId : unit?.runtimeUnitId;
         UnitFaction ownerFaction = member != null ? member.ownerFaction : cockpit != null ? cockpit.faction : unit != null ? unit.faction : UnitFaction.Enemy;
         Block block = obj.GetComponent<Block>();
-        if (block != null)
+        bool shouldExplodeCockpit = cockpit != null
+            && block != null
+            && PlayManager.instance != null
+            && PlayManager.instance.playMode;
+        if (block != null && !shouldExplodeCockpit)
         {
             VisualEffectsManager.TryPlayBlockRemoved(block);
         }
@@ -53,12 +60,21 @@ public class DestroyManager : MonoBehaviour
         {
             VisualEffectsManager.TryPlayObjectDestroyed(obj);
         }
-        Destroy(obj);
-
-        if (!PlayManager.instance.playMode) return;
+        if (PlayManager.instance == null || !PlayManager.instance.playMode)
+        {
+            Destroy(obj);
+            return;
+        }
 
         if (cockpit != null)
         {
+            if (block != null)
+            {
+                ExplodeBlock(block);
+            }
+
+            Destroy(obj);
+
             if (ownerFaction == UnitFaction.Player && PlayManager.instance.playMode)
             {
                 //MainUIPanels.instance.PlayEnd();
@@ -67,15 +83,85 @@ public class DestroyManager : MonoBehaviour
             }
 
             ScheduleUnitCleanup(obj, ownerUnitId, ownerFaction);
-
-            //Block explosion fuction
-
             return;
         }
+
+        Destroy(obj);
 
         if (unit != null)
         {
             PlayManager.instance.RefreshGroup(unit);
+        }
+    }
+
+    public void ExplodeBlock(Block block)
+    {
+        if (block == null || PlayManager.instance == null || !PlayManager.instance.playMode)
+        {
+            return;
+        }
+
+        Vector3 explosionPosition = block.transform.position;
+        ControlUnit unit = block.GetComponentInParent<ControlUnit>();
+        if (unit != null)
+        {
+            unit.EnsureRuntimeUnitId();
+        }
+
+        string ownerUnitId = unit != null ? unit.runtimeUnitId : string.Empty;
+        UnitFaction ownerFaction = unit != null ? unit.faction : UnitFaction.Enemy;
+
+        VisualEffectsManager.TryPlayBlockExplosion(block);
+
+        block.DisConnectAllConnectors();
+        block.transform.SetParent(null, true);
+
+        if (unit != null)
+        {
+            PlayManager.instance.RefreshGroup(unit);
+        }
+
+        ApplyExplosionForce(ownerUnitId, ownerFaction, explosionPosition);
+    }
+
+    private void ApplyExplosionForce(string ownerUnitId, UnitFaction ownerFaction, Vector3 explosionPosition)
+    {
+        if (string.IsNullOrEmpty(ownerUnitId))
+        {
+            return;
+        }
+
+        HashSet<Rigidbody> groupBodies = new HashSet<Rigidbody>();
+        RuntimeUnitMember[] members = Object.FindObjectsByType<RuntimeUnitMember>(FindObjectsSortMode.None);
+        foreach (RuntimeUnitMember member in members)
+        {
+            if (member == null || member.ownerUnitId != ownerUnitId)
+            {
+                continue;
+            }
+
+            ControlUnit group = member.GetComponentInParent<ControlUnit>();
+            Rigidbody body = group != null ? group.GetComponent<Rigidbody>() : null;
+            if (group != null)
+            {
+                group.faction = ownerFaction;
+            }
+
+            if (body != null)
+            {
+                groupBodies.Add(body);
+            }
+        }
+
+        foreach (Rigidbody body in groupBodies)
+        {
+            body.isKinematic = false;
+            body.AddExplosionForce(
+                _blockExplosionForce,
+                explosionPosition,
+                _blockExplosionRadius,
+                _blockExplosionUpwardsModifier,
+                ForceMode.Impulse);
         }
     }
 
