@@ -171,7 +171,7 @@ public static class ThrusterAllocator
         return rhs;
     }
 
-    static void AddDamping(float[,] H, int n, float lambda)
+    private static void AddDamping(float[,] H, int n, float lambda)
     {
         for (int i = 0; i < n; i++)
             H[i, i] += lambda;
@@ -181,7 +181,7 @@ public static class ThrusterAllocator
     /// 用Cholesky分解解对称正定方程 Hx=rhs；H被覆盖为分解结果，rhs被覆盖为解x
     /// 返回false表示未能分解（数值问题）
     /// </summary>
-    static bool CholeskySolveInPlace(float[,] H, float[] rhs, int n)
+    private static bool CholeskySolveInPlace(float[,] H, float[] rhs, int n)
     {
         // 分解：H = L L^T
         for (int i = 0; i < n; i++)

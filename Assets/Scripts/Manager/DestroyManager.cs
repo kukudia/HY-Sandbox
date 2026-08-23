@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DestroyManager : MonoBehaviour
 {
+    // Centralizes destruction side effects so visuals, unit cleanup, and regrouping happen in a known order.
     private static DestroyManager _instance;
     public static DestroyManager Instance
     {
@@ -95,6 +96,7 @@ public class DestroyManager : MonoBehaviour
 
     public void ExplodeBlock(Block block)
     {
+        // Detach the block, selectively break nearby links, regroup the unit, then apply impulse to its groups.
         if (block == null || PlayManager.instance == null || !PlayManager.instance.playMode)
         {
             return;

@@ -25,12 +25,12 @@ public class MeteorShower : MonoBehaviour
 
     private int currentMeteorCount = 0;
 
-    void Start()
+    private void Start()
     {
         StartCoroutine(SpawnMeteors());
     }
 
-    IEnumerator SpawnMeteors()
+    private IEnumerator SpawnMeteors()
     {
         while (true)
         {
@@ -44,7 +44,7 @@ public class MeteorShower : MonoBehaviour
         }
     }
 
-    void SpawnMeteor()
+    private void SpawnMeteor()
     {
         // 随机生成位置
         Vector3 spawnPosition = new Vector3(

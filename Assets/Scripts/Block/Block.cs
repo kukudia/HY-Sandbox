@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 
 public class Block : MonoBehaviour
 {
+    // Block owns grid dimensions and connector state; grouping and physics are handled by managers.
     public bool canSpawnConnector = false;
 
     public bool canBeDeleted = true;
@@ -110,7 +111,7 @@ public class Block : MonoBehaviour
         }
     }
 
-    void GenerateConnectionPoints()
+    private void GenerateConnectionPoints()
     {
         connectors.Clear();
 
@@ -184,7 +185,7 @@ public class Block : MonoBehaviour
     /// <summary>
     /// 创建一个连接点
     /// </summary>
-    void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)
+    private void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)
     {
         Connector connector = new Connector();
         connector.name = $"{connectType} {order}";
@@ -210,6 +211,7 @@ public class Block : MonoBehaviour
 
     public void CheckConnection()
     {
+        // Rebuild connector links from physics probes so edits, loading, and explosions converge on one state.
         if (this == null)
         {
             return;

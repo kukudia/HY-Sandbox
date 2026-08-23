@@ -46,7 +46,7 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    void HandleLook()
+    private void HandleLook()
     {
         if (Mouse.current == null) return;
 
@@ -93,7 +93,7 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    void HandleMovement()
+    private void HandleMovement()
     {
         if (Keyboard.current == null) return;
 

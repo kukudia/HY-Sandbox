@@ -99,7 +99,7 @@ public class RepairBot : MonoBehaviour
         Predictive
     }
 
-    void Start()
+    private void Start()
     {
         InitializeComponents();
         InitializeTrail();
@@ -109,7 +109,7 @@ public class RepairBot : MonoBehaviour
         ResolveOwnerUnit();
     }
 
-    void InitializeComponents()
+    private void InitializeComponents()
     {
         rb = GetComponent<Rigidbody>();
         if (rb == null)
@@ -140,7 +140,7 @@ public class RepairBot : MonoBehaviour
 
     }
 
-    void InitializeTrail()
+    private void InitializeTrail()
     {
         if (showTrail)
         {
@@ -159,7 +159,7 @@ public class RepairBot : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         if (currentTarget == null)
         {
@@ -190,7 +190,7 @@ public class RepairBot : MonoBehaviour
         }
     }
 
-    void NavigateToTarget(Transform target)
+    private void NavigateToTarget(Transform target)
     {
         navigateTarget = target;
 
@@ -486,7 +486,7 @@ public class RepairBot : MonoBehaviour
     }
 
     // ===== 其他方法（保持原有逻辑）=====
-    void ReturnHome()
+    private void ReturnHome()
     {
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
@@ -504,7 +504,7 @@ public class RepairBot : MonoBehaviour
         if (trailRenderer != null) trailRenderer.Clear();
     }
 
-    void LeaveHome()
+    private void LeaveHome()
     {
         transform.parent = outside;
         rb.isKinematic = false;
@@ -512,7 +512,7 @@ public class RepairBot : MonoBehaviour
         smoothedDirection = transform.forward;
     }
 
-    void FindDamagedBlock()
+    private void FindDamagedBlock()
     {
         if (Time.time - lastFindTime < findTargetInterval) return;
 
@@ -579,7 +579,7 @@ public class RepairBot : MonoBehaviour
         return repairOwner != null && target.GetComponentInParent<ControlUnit>() == repairOwner;
     }
 
-    void CheckAndRepair()
+    private void CheckAndRepair()
     {
         if (currentTarget == null)
         {
@@ -617,7 +617,7 @@ public class RepairBot : MonoBehaviour
         }
     }
 
-    void UpdateRepairBeam(bool active)
+    private void UpdateRepairBeam(bool active)
     {
         if (repairBeamEffect == null) return;
 
@@ -663,7 +663,7 @@ public class RepairBot : MonoBehaviour
     }
 
     // ===== 增强版可视化 =====
-    void OnDrawGizmosSelected()
+    private void OnDrawGizmosSelected()
     {
         if (!Application.isPlaying) return;
 
@@ -777,7 +777,7 @@ public class RepairBot : MonoBehaviour
 #endif
     }
 
-    void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
         if (Application.isPlaying) return;
 

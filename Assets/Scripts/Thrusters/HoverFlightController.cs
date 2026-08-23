@@ -484,7 +484,7 @@ public class HoverFlightController : MonoBehaviour
         }
     }
 
-    void OnGUI()
+    private void OnGUI()
     {
         if (!showUI || thrusters == null || !PlayManager.instance.playMode) return;
 

@@ -22,7 +22,7 @@ public class Durability : MonoBehaviour
     private string durabilityText;
     private bool isVisible;
     
-    void Awake()
+    private void Awake()
     {
         objectRenderer = GetComponent<Renderer>();
         if (objectRenderer != null)
@@ -84,7 +84,7 @@ public class Durability : MonoBehaviour
         }
     }
 
-    void LateUpdate()
+    private void LateUpdate()
     {
         if (!ShouldShowDebugLabel() || currentDurability >= maxDurability)
         {
@@ -102,7 +102,7 @@ public class Durability : MonoBehaviour
         durabilityText = $"{currentDurability:F1}/{maxDurability}";
     }
 
-    void OnGUI()
+    private void OnGUI()
     {
         if (!ShouldShowDebugLabel() || !isVisible || currentDurability >= maxDurability) return;
         

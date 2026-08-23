@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public class PlayManager : MonoBehaviour
 {
+    // Owns the build-to-play transition and keeps runtime unit membership synchronized after topology changes.
     public static PlayManager instance;
     public bool playMode = false;
     public Transform blocksParent;
@@ -120,6 +121,7 @@ public class PlayManager : MonoBehaviour
 
     public void RefreshGroup(ControlUnit unit)
     {
+        // Recalculate connected components, then restore each component's Rigidbody and thruster references.
         if (unit == null) return;
 
         List<Block> blocks = unit.GetComponentsInChildren<Block>().ToList();

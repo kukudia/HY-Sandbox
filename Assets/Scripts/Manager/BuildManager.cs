@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 
 public class BuildManager : MonoBehaviour
 {
+    // Coordinates selection, grid-snapped edits, and asynchronous reconstruction of saved blocks.
     public static BuildManager instance;
     public Camera mainCamera;
     public LayerMask axisLayer;
@@ -101,7 +102,7 @@ public class BuildManager : MonoBehaviour
         SetBuildMode(true);
     }
 
-    void Update()
+    private void Update()
     {
         if (IsLoadingBlocks)
         {
@@ -244,7 +245,7 @@ public class BuildManager : MonoBehaviour
         SetBuildTarget(BuildTargetContext.EnemyBlueprint(currentSaveName, blueprintName));
     }
 
-    void AlignAxisToNearestWorldDir()
+    private void AlignAxisToNearestWorldDir()
     {
         Vector3 camForward = mainCamera.transform.forward.normalized;
         Vector3 camUp = mainCamera.transform.up.normalized;
@@ -290,7 +291,7 @@ public class BuildManager : MonoBehaviour
         }
     }
 
-    void HandleSelection()
+    private void HandleSelection()
     {
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
         {
@@ -348,7 +349,7 @@ public class BuildManager : MonoBehaviour
         }
     }
 
-    void SelectBlock(Block block)
+    private void SelectBlock(Block block)
     {
         if (selectedBlock == block) return;
 
@@ -393,7 +394,7 @@ public class BuildManager : MonoBehaviour
         selectedRenderer = null;
     }
 
-    void HandleMovement()
+    private void HandleMovement()
     {
         if (selectedBlock == null) return;
 
@@ -448,7 +449,7 @@ public class BuildManager : MonoBehaviour
         }
     }
 
-    void HandleRotation()
+    private void HandleRotation()
     {
         if (selectedBlock == null) return;
 
@@ -494,7 +495,7 @@ public class BuildManager : MonoBehaviour
         }
     }
 
-    void HandleMoveAxisDrag()
+    private void HandleMoveAxisDrag()
     {
         if (Mouse.current.leftButton.isPressed && activeHandle != null)
         {
@@ -560,7 +561,7 @@ public class BuildManager : MonoBehaviour
         }
     }
 
-    void HandleRotateAxisDrag()
+    private void HandleRotateAxisDrag()
     {
         if (Mouse.current.leftButton.isPressed && activeRotateHandle != null)
         {
@@ -604,7 +605,7 @@ public class BuildManager : MonoBehaviour
         }
     }
 
-    void HandleDuplicate(Vector3 newPos, Quaternion newRot)
+    private void HandleDuplicate(Vector3 newPos, Quaternion newRot)
     {
         string resourcePath = selectedBlock.resourcePath;
         Debug.Log(resourcePath);
@@ -623,7 +624,7 @@ public class BuildManager : MonoBehaviour
     }
 
 
-    void HandleBuildingPreview()
+    private void HandleBuildingPreview()
     {
         // 目标预制体
         GameObject prefab = Resources.Load<GameObject>(currentBlockResourcePath);
@@ -847,6 +848,7 @@ public class BuildManager : MonoBehaviour
 
     public void LoadAllBlocks()
     {
+        // Loading is versioned so a newer save request can invalidate an older coroutine safely.
         double time0 = Time.timeAsDouble;
 
         if (!IsEditingEnemyBlueprint && currentSaveName == String.Empty && SaveManager.instance.saves.Count > 0)
@@ -1030,7 +1032,7 @@ public class BuildManager : MonoBehaviour
         }
     }
 
-    void InitialBlock()
+    private void InitialBlock()
     {
         string cockpitResourcePath = ConvertToResourcesPath("Assets/Resources/Blocks/Cockpit.prefab");
         GameObject prefab = Resources.Load<GameObject>(cockpitResourcePath);
@@ -1082,7 +1084,7 @@ public class BuildManager : MonoBehaviour
     }
 
 
-    bool IsBlocked(Vector3 targetCenter, Quaternion targetRotation, Block block)
+    private bool IsBlocked(Vector3 targetCenter, Quaternion targetRotation, Block block)
     {
         // 方块的半尺寸
         Vector3 halfExtents = new Vector3(block.x, block.y, block.z) * 0.5f;
@@ -1107,7 +1109,7 @@ public class BuildManager : MonoBehaviour
         return false;
     }
 
-    float GetMoveStep(Block block, Vector3 moveDir)
+    private float GetMoveStep(Block block, Vector3 moveDir)
     {
         // 方块的局部半尺寸（不考虑旋转）
         Vector3 halfSize = new Vector3(block.x, block.y, block.z) * gridSize * 0.5f;

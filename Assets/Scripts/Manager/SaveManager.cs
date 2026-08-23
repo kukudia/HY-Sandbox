@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SaveManager : MonoBehaviour
 {
+    // Persists player saves and enemy blueprints as JSON under separate persistent-data directories.
     public static SaveManager instance;
 
     private string saveDirectory => Path.Combine(Application.persistentDataPath, "Saves");
@@ -312,6 +313,7 @@ public class SaveManager : MonoBehaviour
 
     public void DuplicateSave(string saveName)
     {
+        // Copy the source file first; only refresh the UI after a successful, collision-free copy.
         saveName = (saveName ?? string.Empty).Trim();
         if (string.IsNullOrEmpty(saveName))
         {

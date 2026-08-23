@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 
 public class ControlUnit : MonoBehaviour
 {
+    // Runtime aggregate for one construct: owns cockpit validity, movement input, and child component references.
     public string runtimeUnitId;
     public HoverFlightController hoverFlightController;
     public Cockpit cockpit;
@@ -81,6 +82,7 @@ public class ControlUnit : MonoBehaviour
 
     public void RefreshChildren()
     {
+        // Refresh after loading or regrouping because child components and Rigidbody ownership may have changed.
         EnsureRuntimeUnitId();
 
         hoverFlightController = GetComponentInChildren<HoverFlightController>();

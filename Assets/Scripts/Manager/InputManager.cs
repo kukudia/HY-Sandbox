@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
+    // Converts keyboard input into camera/build/play state transitions in one scene-level entry point.
     public static InputManager instance;
     public bool lockView = false;
     public bool DeveloperToolsAvailable
@@ -35,6 +36,7 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
+        // Guard scene dependencies first so startup and teardown frames remain no-op instead of throwing.
         if (BuildManager.instance == null || PlayManager.instance == null || CameraController.instance == null)
         {
             return;

@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 [DisallowMultipleComponent]
 public abstract class Thruster : MonoBehaviour
 {
+    // Shared runtime contract for thrust application, reference caching, and visual feedback.
     protected const float InputEpsilonSqr = 1e-6f;
     private const float DirectionEpsilonSqr = 1e-6f;
 
@@ -122,6 +123,7 @@ public abstract class Thruster : MonoBehaviour
 
     public virtual void VisualizeThrust(bool forceUpdate)
     {
+        // Throttle visual updates independently from physics to avoid rebuilding particle state every tick.
         Vector3 lineDirection = GetNormalizedThrustDirection();
         float currentTime = Time.unscaledTime;
 

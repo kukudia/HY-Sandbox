@@ -12,7 +12,7 @@ public class Meteor : MonoBehaviour
     public float minGlowIntensity = 1f;
     public float maxGlowIntensity = 5f;
 
-    void Start()
+    private void Start()
     {
         VisualEffectsManager.TryDecorateMeteor(this);
 
@@ -30,7 +30,7 @@ public class Meteor : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
         //if (collision.gameObject.CompareTag("Meteor")) return;
 

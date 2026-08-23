@@ -37,7 +37,7 @@ public class PerformanceMonitor : MonoBehaviour
     private string gpuTimeText = "";
     private string gpuUseText = "";
 
-    void Start()
+    private void Start()
     {
         // 初始化 GUI 样式（只创建一次）
         style = new GUIStyle();
@@ -61,7 +61,7 @@ public class PerformanceMonitor : MonoBehaviour
         if (targetFrameRate <= 0) targetFrameRate = 60f;
     }
 
-    void Update()
+    private void Update()
     {
         frameCount++;
         elapsedTime += Time.unscaledDeltaTime;
@@ -86,7 +86,7 @@ public class PerformanceMonitor : MonoBehaviour
         }
     }
 
-    void UpdateCpuUsage()
+    private void UpdateCpuUsage()
     {
         double newCpuTime = currentProcess.TotalProcessorTime.TotalMilliseconds;
         double cpuTimeDelta = newCpuTime - lastCpuTime;
@@ -96,7 +96,7 @@ public class PerformanceMonitor : MonoBehaviour
         lastCpuTime = newCpuTime;
     }
 
-    void UpdateGpuFrameTime()
+    private void UpdateGpuFrameTime()
     {
         FrameTimingManager.CaptureFrameTimings();
         uint framesRetrieved = FrameTimingManager.GetLatestTimings(1, frameTimings);
@@ -111,7 +111,7 @@ public class PerformanceMonitor : MonoBehaviour
         }
     }
 
-    void OnGUI()
+    private void OnGUI()
     {
         GUI.Box(guiBoxRect, "");
         GUI.Label(guiLabelRects[0], fpsText, style);

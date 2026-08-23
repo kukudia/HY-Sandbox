@@ -3,6 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(ControlUnit))]
 public class EnemyController : MonoBehaviour
 {
+    // Produces smoothed movement intent; ControlUnit and thrusters remain the only physics writers.
     private const int MaxObstacleHits = 16;
 
     public float detectionRange = 80f;
@@ -32,6 +33,7 @@ public class EnemyController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Sample targets/obstacles at a bounded rate, while interpolating input every physics tick.
         if (PlayManager.instance == null || !PlayManager.instance.playMode) return;
         if (unit == null || !unit.HasValidCockpit || unit.faction != UnitFaction.Enemy) return;
 
