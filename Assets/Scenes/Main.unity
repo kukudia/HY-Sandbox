@@ -1267,7 +1267,7 @@ MonoBehaviour:
   showConnectors: 1
   showLabel: 0
   showUI: 1
-  maxControlUnitGroups: 32
+  maxUselessControlUnitGroups: 32
   groupCleanupDistance: 200
   groupCleanupCheckInterval: 1
 --- !u!1 &276395679

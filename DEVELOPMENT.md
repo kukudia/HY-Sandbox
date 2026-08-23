@@ -837,7 +837,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 2026-08-23
 
-- **限制运行时 Group 数量**：`PlayManager.maxControlUnitGroups`（默认 32）作为场景 Group 上限；分组刷新或运行时注册后统计所有 `ControlUnit`，超出上限时仅将无 Cockpit 的 Group 交给 `DestroyManager.ScheduleUnitCleanup`。延迟清理前再次确认 Group 仍无 Cockpit，避免误删有效构造体。
+- **限制无用 Group 数量**：`PlayManager.maxUselessControlUnitGroups`（默认 32）只统计没有 Cockpit 的 `ControlUnit`；有效 Group 不占用该上限。超过上限时仅将超出的无 Cockpit Group 交给 `DestroyManager.ScheduleUnitCleanup`，延迟清理前再次确认 Group 仍无 Cockpit。
 - **验证**：已通过代码检查；尚未在 Unity Play Mode 验证大量断开、敌方生成和清理延迟期间重新分组的实际表现。
 
 - **主动清理远距离 Group**：`PlayManager.groupCleanupDistance`（默认 200）以玩家 `blocksParent` 为参考，排除玩家自身 Group，每秒检查一次并对超出距离的其他 Group 调度 `DestroyManager.ScheduleDistantGroupCleanup`；等待现有清理延迟后再次确认仍在范围外才销毁，返回范围内的 Group 会被保留。

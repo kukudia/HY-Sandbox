@@ -32,7 +32,7 @@ public class PlayManager : MonoBehaviour
     public bool showLabel = true;
 
     [Header("运行时分组限制")]
-    [Min(1)] public int maxControlUnitGroups = 32;
+    [Min(1)] public int maxUselessControlUnitGroups = 32;
     [Min(1f)] public float groupCleanupDistance = 200f;
     [Min(0.25f)] public float groupCleanupCheckInterval = 1f;
 
@@ -158,7 +158,7 @@ public class PlayManager : MonoBehaviour
 
     private void EnforceControlUnitGroupLimit()
     {
-        int groupLimit = Mathf.Max(1, maxControlUnitGroups);
+        int groupLimit = Mathf.Max(1, maxUselessControlUnitGroups);
         for (int i = allControlUnits.Count - 1; i >= 0; i--)
         {
             if (allControlUnits[i] == null)
@@ -167,12 +167,21 @@ public class PlayManager : MonoBehaviour
             }
         }
 
-        if (allControlUnits.Count <= groupLimit)
+        int uselessGroupCount = 0;
+        foreach (ControlUnit group in allControlUnits)
+        {
+            if (group != null && !group.HasAnyCockpit)
+            {
+                uselessGroupCount++;
+            }
+        }
+
+        if (uselessGroupCount <= groupLimit)
         {
             return;
         }
 
-        int cleanupCount = allControlUnits.Count - groupLimit;
+        int cleanupCount = uselessGroupCount - groupLimit;
         foreach (ControlUnit group in allControlUnits.ToArray())
         {
             if (cleanupCount <= 0)
