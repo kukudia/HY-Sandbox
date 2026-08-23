@@ -247,11 +247,22 @@ public class VisualEffectsManager : MonoBehaviour
         Color emberColor = new Color(1f, 0.62f, 0.12f, 1f);
         Color smokeColor = new Color(0.18f, 0.22f, 0.28f, 0.75f);
 
-        CreateParticleBurst("Block Explosion Embers", center, removeColor, emberColor, 96, scale * 0.28f, 2.5f, 10f, 0.25f, 1.2f, 0.045f, 0.18f, 0.12f);
-        CreateParticleBurst("Block Explosion Smoke", center, smokeColor, new Color(0.03f, 0.04f, 0.06f, 0f), 34, scale * 0.35f, 0.35f, 2.1f, 0.75f, 1.8f, 0.14f, 0.42f, -0.08f);
-        CreateTransientRing("Block Explosion Ring", center, Vector3.up, removeColor, scale * 1.45f, 0.65f, 0.11f);
-        CreateLightFlash(center, emberColor, 3.6f, scale * 5.2f, 0.3f);
-        ShakeCamera(cameraShakeStrength * 1.25f, 0.24f);
+        CreateParticleBurst("Block Explosion Embers", center, removeColor, emberColor, 96, scale * 0.28f, 2.5f, 10f, 0.3f, 2.1f, 0.045f, 0.18f, 0.12f);
+        CreateParticleBurst("Block Explosion Smoke", center, smokeColor, new Color(0.03f, 0.04f, 0.06f, 0f), 34, scale * 0.35f, 0.35f, 2.1f, 1.0f, 3.4f, 0.14f, 0.42f, -0.08f);
+        CreateTransientRing("Block Explosion Ring", center, Vector3.up, removeColor, scale * 1.65f, 1.15f, 0.12f);
+        CreateTransientRing("Block Explosion Inner Ring", center, Vector3.up, emberColor, scale * 0.9f, 0.72f, 0.075f);
+        CreateLightFlash(center, emberColor, 4.2f, scale * 5.8f, 0.55f);
+        ShakeCamera(cameraShakeStrength * 1.35f, 0.42f);
+        StartCoroutine(PlayExplosionAftershock(center, scale, emberColor, smokeColor));
+    }
+
+    private IEnumerator PlayExplosionAftershock(Vector3 center, float scale, Color emberColor, Color smokeColor)
+    {
+        yield return new WaitForSecondsRealtime(0.22f);
+        if (!enableRuntimeVfx) yield break;
+
+        CreateParticleBurst("Block Explosion Aftershock", center, emberColor, WithAlpha(smokeColor, 0f), 42, scale * 0.5f, 0.8f, 3.8f, 0.4f, 1.35f, 0.035f, 0.12f, 0.02f);
+        CreateTransientRing("Block Explosion Aftershock Ring", center, Vector3.up, WithAlpha(emberColor, 0.7f), scale * 1.25f, 0.85f, 0.055f);
     }
 
     private void PlayObjectDestroyed(GameObject target)

@@ -609,6 +609,8 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private void ApplySceneLook()`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
 - `private void PlayBlockPlaced(Block block)`： 触发游玩流程、UI 状态或视觉反馈的更新。
 - `private void PlayBlockRemoved(Block block)`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `private void PlayBlockExplosion(Block block)`：分阶段播放爆炸火花、烟雾、冲击波、闪光和镜头反馈。
+- `private IEnumerator PlayExplosionAftershock(Vector3 center, float scale, Color emberColor, Color smokeColor)`：延迟播放受控数量的爆炸余震粒子与次级冲击环。
 - `private void PlayObjectDestroyed(GameObject target)`： 触发游玩流程、UI 状态或视觉反馈的更新。
 - `private void PlayBlockMoved(Block block, Vector3 from, Vector3 to)`： 触发游玩流程、UI 状态或视觉反馈的更新。
 - `private void PlayBlockRotated(Block block)`： 触发游玩流程、UI 状态或视觉反馈的更新。
@@ -828,6 +830,9 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 ## 10. 变更日志
 
 ### 2026-08-23
+
+- **增强驾驶舱爆炸表现与持续时间**：延长爆炸火花、烟雾、主冲击环和闪光的生命周期，增加内圈冲击波，并在 0.22 秒后播放受控数量的余震火花与次级冲击环，使爆炸由单次瞬时效果变为分阶段表现。
+- **验证**：已完成代码检查；尚未在 Unity 编辑器或 Play Mode 验证视觉时序、粒子观感与实际帧率。
 
 - **建立 Unity C# 代码规范并完成全局脚本标准化**：新增 `Assets/Scripts/AGENTS.md`，补充根 `AGENTS.md` 的规范入口；为 20 个项目脚本补齐显式私有访问修饰符，统一本次触及脚本的 CRLF 换行，并在连接、建造加载、游玩分组、存档复制、摧毁爆炸、AI 输入、推进器视觉和输入管理关键路径增加职责/顺序/性能注释。
 - **影响范围**：仅改变代码可读性、维护约束和注释，不改变序列化字段、场景/Prefab 引用或运行时算法。
