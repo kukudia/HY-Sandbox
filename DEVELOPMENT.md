@@ -508,7 +508,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `public void DestroyGameObject(GameObject obj)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
 - `public void ExplodeBlock(Block block)`： 处理 Block 爆炸、重新分组和物理冲量，不直接造成伤害。
 - `private void DisconnectBlocksInExplosionRange(ControlUnit unit, Block sourceBlock, Vector3 explosionPosition)`： 按爆炸半径和概率断开范围内 Block 的连接器。
-- `private void ApplyExplosionForce(string ownerUnitId, UnitFaction ownerFaction, Vector3 explosionPosition)`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
+- `private void ApplyExplosionForce(Block block, string ownerUnitId, UnitFaction ownerFaction, Vector3 explosionPosition)`：按爆炸范围内 Collider 和编组子方块收集 Rigidbody，并依据最近受击点施加衰减冲量。
 - `private void ScheduleUnitCleanup(string ownerUnitId, UnitFaction ownerFaction)`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
 - `private IEnumerator CleanupUnitAfterDelay(string ownerUnitId, UnitFaction ownerFaction)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private void PlayDisappearEffect(GameObject obj)`： 触发游玩流程、UI 状态或视觉反馈的更新。
@@ -830,6 +830,9 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 ## 10. 变更日志
 
 ### 2026-08-23
+
+- **修复爆炸物理作用力未命中周围刚体**：原实现仅对同一 `ownerUnitId` 的编组 Rigidbody 调用 `AddExplosionForce`，而重新分组后的 Rigidbody 中心可能位于爆炸半径外，且外部附近刚体完全未被收集。现在通过 `Physics.OverlapSphere` 收集范围内刚体，并结合编组内实际子方块位置；按最近 Collider 受击点计算距离衰减后用 `AddForceAtPosition` 施加冲量。
+- **验证**：`dotnet build HY-Sandbox.sln --no-restore` 与 `git diff --check` 已通过；尚未在 Unity Play Mode 验证不同编组、静态刚体和边界距离下的实际位移表现。
 
 - **增强驾驶舱爆炸表现与持续时间**：延长爆炸火花、烟雾、主冲击环和闪光的生命周期，增加内圈冲击波，并在 0.22 秒后播放受控数量的余震火花与次级冲击环，使爆炸由单次瞬时效果变为分阶段表现。
 - **验证**：已完成代码检查；尚未在 Unity 编辑器或 Play Mode 验证视觉时序、粒子观感与实际帧率。

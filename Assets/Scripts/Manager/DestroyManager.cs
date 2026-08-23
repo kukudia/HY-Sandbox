@@ -172,42 +172,101 @@ public class DestroyManager : MonoBehaviour
 
     private void ApplyExplosionForce(Block block, string ownerUnitId, UnitFaction ownerFaction, Vector3 explosionPosition)
     {
-        if (string.IsNullOrEmpty(ownerUnitId))
+        if (block == null || block.explosionForce <= 0f || block.explosionRadius <= 0f)
         {
             return;
         }
 
-        HashSet<Rigidbody> groupBodies = new HashSet<Rigidbody>();
-        RuntimeUnitMember[] members = Object.FindObjectsByType<RuntimeUnitMember>(FindObjectsSortMode.None);
-        foreach (RuntimeUnitMember member in members)
+        float radius = block.explosionRadius;
+        HashSet<Rigidbody> bodies = new HashSet<Rigidbody>();
+        Collider[] colliders = Physics.OverlapSphere(
+            explosionPosition,
+            radius,
+            Physics.AllLayers,
+            QueryTriggerInteraction.Ignore);
+        foreach (Collider collider in colliders)
         {
-            if (member == null || member.ownerUnitId != ownerUnitId)
+            if (collider == null)
             {
                 continue;
             }
 
-            ControlUnit group = member.GetComponentInParent<ControlUnit>();
-            Rigidbody body = group != null ? group.GetComponent<Rigidbody>() : null;
-            if (group != null)
-            {
-                group.faction = ownerFaction;
-            }
-
+            Rigidbody body = collider.attachedRigidbody;
             if (body != null)
             {
-                groupBodies.Add(body);
+                bodies.Add(body);
             }
         }
 
-        foreach (Rigidbody rb in groupBodies)
+        // A grouped Rigidbody can be centered outside the radius while one of its child blocks is inside it.
+        if (!string.IsNullOrEmpty(ownerUnitId))
         {
-            rb.isKinematic = false;
-            rb.AddExplosionForce(
-                block.explosionForce,
-                explosionPosition,
-                block.explosionRadius,
-                _blockExplosionUpwardsModifier,
-                ForceMode.Impulse);
+            RuntimeUnitMember[] members = Object.FindObjectsByType<RuntimeUnitMember>(FindObjectsSortMode.None);
+            foreach (RuntimeUnitMember member in members)
+            {
+                if (member == null || member.ownerUnitId != ownerUnitId)
+                {
+                    continue;
+                }
+
+                Block memberBlock = member.GetComponent<Block>();
+                ControlUnit group = member.GetComponentInParent<ControlUnit>();
+                if (memberBlock == null || group == null)
+                {
+                    continue;
+                }
+
+                if ((memberBlock.transform.position - explosionPosition).sqrMagnitude <= radius * radius)
+                {
+                    Rigidbody body = group.GetComponent<Rigidbody>();
+                    if (body != null)
+                    {
+                        bodies.Add(body);
+                        group.faction = ownerFaction;
+                    }
+                }
+            }
+        }
+
+        foreach (Rigidbody rb in bodies)
+        {
+            if (rb == null || rb.isKinematic)
+            {
+                continue;
+            }
+
+            Vector3 forcePoint = rb.worldCenterOfMass;
+            float nearestDistance = Vector3.Distance(forcePoint, explosionPosition);
+            Collider[] bodyColliders = rb.GetComponentsInChildren<Collider>();
+            foreach (Collider bodyCollider in bodyColliders)
+            {
+                if (bodyCollider == null) continue;
+
+                Vector3 candidatePoint = bodyCollider.ClosestPoint(explosionPosition);
+                float candidateDistance = Vector3.Distance(candidatePoint, explosionPosition);
+                if (candidateDistance < nearestDistance)
+                {
+                    forcePoint = candidatePoint;
+                    nearestDistance = candidateDistance;
+                }
+            }
+
+            float falloff = 1f - Mathf.Clamp01(nearestDistance / radius);
+            if (falloff <= 0f)
+            {
+                continue;
+            }
+
+            Vector3 direction = forcePoint - explosionPosition;
+            if (direction.sqrMagnitude < 0.0001f)
+            {
+                direction = rb.worldCenterOfMass - explosionPosition;
+            }
+
+            direction = direction.sqrMagnitude > 0.0001f ? direction.normalized : Vector3.up;
+            Vector3 impulse = (direction + Vector3.up * _blockExplosionUpwardsModifier).normalized
+                * (block.explosionForce * falloff);
+            rb.AddForceAtPosition(impulse, forcePoint, ForceMode.Impulse);
         }
     }
 
