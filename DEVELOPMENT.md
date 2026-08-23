@@ -831,6 +831,9 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 2026-08-23
 
+- **修复 RespawnButton 被死亡标题拦截点击**：确认延迟并非 Fade 导致，而是 `DeathPanel/You Died!` Text 位于 RespawnButton 上层，其 RectTransform 下边界与按钮上半部分重叠，且 `raycastTarget` 开启。现已关闭该纯展示文本的射线接收，避免 `GraphicRaycaster` 将点击发送给标题而非按钮。
+- **验证**：已通过场景 YAML 检查确认 DeathPanel、RespawnButton 和标题的层级、矩形范围及 `raycastTarget` 配置；`git diff --check` 与 `dotnet build HY-Sandbox.sln --no-restore` 通过（0 错误、0 警告）；尚未在 Unity Play Mode 验证死亡后按钮全区域点击。
+
 - **审查并完善 RepairBot 离家修复范围**：修复 `InitializeTargetsInRange` 在 `home` 赋值前访问导致的空引用；将一次性分配的 `OverlapBox` 快照改为按 `findTargetInterval` 执行的 `OverlapSphereNonAlloc` 动态扫描，只保留与 home 同属一个 `ControlUnit` 且中心位于 `targetRange` 内的方块。当前目标修满、越界或重组到其他单元后会立即取消。
 - **性能处理**：复用 Collider 缓冲区、List 和 HashSet；缓冲区仅在饱和时扩容且上限 1024；扫描间隔运行时至少为 0.25 秒，目标选择及范围验证使用平方距离，避免重复数组分配、无上限高频查询与距离开方。
 - **验证**：已通过 `git diff --check` 和 `dotnet build HY-Sandbox.sln --no-restore`（0 错误；仅有既存 Profiler API 过时警告）；尚未在 Unity Play Mode 验证加载中生成、运行时重新分组、多个 RepairBot 同时扫描及超大型构造体的目标覆盖情况。
