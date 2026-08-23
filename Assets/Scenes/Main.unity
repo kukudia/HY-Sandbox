@@ -1267,6 +1267,7 @@ MonoBehaviour:
   showConnectors: 1
   showLabel: 0
   showUI: 1
+  maxControlUnitGroups: 32
 --- !u!1 &276395679
 GameObject:
   m_ObjectHideFlags: 0

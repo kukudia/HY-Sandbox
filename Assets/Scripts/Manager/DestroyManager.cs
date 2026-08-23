@@ -283,6 +283,39 @@ public class DestroyManager : MonoBehaviour
         StartCoroutine(CleanupUnitAfterDelay(ownerUnitId, ownerFaction));
     }
 
+    public void ScheduleUnitCleanup(ControlUnit unit)
+    {
+        if (unit == null || unit.HasAnyCockpit)
+        {
+            return;
+        }
+
+        unit.EnsureRuntimeUnitId();
+        string ownerUnitId = unit.runtimeUnitId;
+        if (string.IsNullOrEmpty(ownerUnitId) || _scheduledUnitCleanups.Contains(ownerUnitId))
+        {
+            return;
+        }
+
+        _scheduledUnitCleanups.Add(ownerUnitId);
+        StartCoroutine(CleanupGroupAfterDelay(unit, ownerUnitId));
+    }
+
+    private IEnumerator CleanupGroupAfterDelay(ControlUnit unit, string ownerUnitId)
+    {
+        yield return new WaitForSeconds(_unitCleanupDelay);
+
+        if (unit != null
+            && unit.runtimeUnitId == ownerUnitId
+            && !unit.HasAnyCockpit)
+        {
+            PlayDisappearEffect(unit.gameObject);
+            Destroy(unit.gameObject);
+        }
+
+        _scheduledUnitCleanups.Remove(ownerUnitId);
+    }
+
     private IEnumerator CleanupUnitAfterDelay(string ownerUnitId, UnitFaction ownerFaction)
     {
         yield return new WaitForSeconds(_unitCleanupDelay);

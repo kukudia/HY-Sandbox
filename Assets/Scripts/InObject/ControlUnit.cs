@@ -20,6 +20,9 @@ public class ControlUnit : MonoBehaviour
     private bool _isOnCooldown;
 
     public bool HasValidCockpit => hasValidCockpit && cockpit != null;
+    public bool HasAnyCockpit => cockpits != null && cockpits.Length > 0
+        ? System.Array.Exists(cockpits, candidate => candidate != null)
+        : GetComponentInChildren<Cockpit>(true) != null;
     public bool IsPlayer => faction == UnitFaction.Player;
     public Vector3 MovementInput => movementInput;
 

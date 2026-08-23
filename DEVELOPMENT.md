@@ -316,7 +316,6 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private void ApplyColors()`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
 - `private static void SetRendererColor(Renderer renderer, MaterialPropertyBlock properties, Color color)`： 设置该对象、视觉效果或运行时引用的参数/状态。
 - `private void OnDestroy()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
-
 #### `Assets/Scripts/Effect/StylizedRingEffect.cs`
 
 - `public void Configure(int segments, float width)`： 配置该组件的几何、推进器、敌人或运行时参数。
@@ -337,6 +336,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 #### `Assets/Scripts/InObject/ControlUnit.cs`
 
 - `private void Start()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `public bool HasAnyCockpit`：判断 ControlUnit 当前是否包含至少一个 Cockpit，供分组上限清理保护有效组。
 - `private void Update()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
 - `public void RefreshChildren()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `public void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`： 把模块、方块或控制单元分配或注册到对应运行时集合。
@@ -509,6 +509,8 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private void DisconnectBlocksInExplosionRange(ControlUnit unit, Block sourceBlock, Vector3 explosionPosition)`： 按爆炸半径和概率断开范围内 Block 的连接器。
 - `private void ApplyExplosionForce(Block block, string ownerUnitId, UnitFaction ownerFaction, Vector3 explosionPosition)`：按爆炸范围内 Collider 和编组子方块收集 Rigidbody，并依据最近受击点施加衰减冲量。
 - `private void ScheduleUnitCleanup(string ownerUnitId, UnitFaction ownerFaction)`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
+- `public void ScheduleUnitCleanup(ControlUnit unit)`：延迟调度无 Cockpit ControlUnit 的 Group 清理。
+- `private IEnumerator CleanupGroupAfterDelay(ControlUnit unit, string ownerUnitId)`：延迟确认 Group 仍无 Cockpit 后销毁其根对象。
 - `private IEnumerator CleanupUnitAfterDelay(string ownerUnitId, UnitFaction ownerFaction)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private void PlayDisappearEffect(GameObject obj)`： 触发游玩流程、UI 状态或视觉反馈的更新。
 - `public void NotifyObjectDestroyed()`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
@@ -544,6 +546,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `public void PlayStart()`： 触发游玩流程、UI 状态或视觉反馈的更新。
 - `public bool CanStartPlay(out string reason)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `public void RefreshGroup(ControlUnit unit)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void EnforceControlUnitGroupLimit()`：统计场景 Group 数量，超出上限时调度无 Cockpit Group 清理。
 - `private void SetPlayMode()`： 设置该对象、视觉效果或运行时引用的参数/状态。
 - `private void CalculateVelocity()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private void HandleSelection()`： 处理对应的输入、选择、拖拽、移动、旋转或建造交互。
@@ -830,6 +833,9 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 ## 10. 变更日志
 
 ### 2026-08-23
+
+- **限制运行时 Group 数量**：`PlayManager.maxControlUnitGroups`（默认 32）作为场景 Group 上限；分组刷新或运行时注册后统计所有 `ControlUnit`，超出上限时仅将无 Cockpit 的 Group 交给 `DestroyManager.ScheduleUnitCleanup`。延迟清理前再次确认 Group 仍无 Cockpit，避免误删有效构造体。
+- **验证**：已通过代码检查；尚未在 Unity Play Mode 验证大量断开、敌方生成和清理延迟期间重新分组的实际表现。
 
 - **修复 RespawnButton 被死亡标题拦截点击**：确认延迟并非 Fade 导致，而是 `DeathPanel/You Died!` Text 位于 RespawnButton 上层，其 RectTransform 下边界与按钮上半部分重叠，且 `raycastTarget` 开启。现已关闭该纯展示文本的射线接收，避免 `GraphicRaycaster` 将点击发送给标题而非按钮。
 - **验证**：已通过场景 YAML 检查确认 DeathPanel、RespawnButton 和标题的层级、矩形范围及 `raycastTarget` 配置；`git diff --check` 与 `dotnet build HY-Sandbox.sln --no-restore` 通过（0 错误、0 警告）；尚未在 Unity Play Mode 验证死亡后按钮全区域点击。

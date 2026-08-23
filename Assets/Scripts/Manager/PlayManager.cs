@@ -30,6 +30,9 @@ public class PlayManager : MonoBehaviour
     public bool showConnectors = true;
     public bool showLabel = true;
 
+    [Header("运行时分组限制")]
+    [Min(1)] public int maxControlUnitGroups = 32;
+
     [Tooltip("Show runtime debug UI")]
     public bool showUI = true;
 
@@ -138,7 +141,43 @@ public class PlayManager : MonoBehaviour
             }
         }
 
+        EnforceControlUnitGroupLimit();
+
         Debug.Log($"Find {allControlUnits.Count} controls");
+    }
+
+    private void EnforceControlUnitGroupLimit()
+    {
+        int groupLimit = Mathf.Max(1, maxControlUnitGroups);
+        for (int i = allControlUnits.Count - 1; i >= 0; i--)
+        {
+            if (allControlUnits[i] == null)
+            {
+                allControlUnits.RemoveAt(i);
+            }
+        }
+
+        if (allControlUnits.Count <= groupLimit)
+        {
+            return;
+        }
+
+        int cleanupCount = allControlUnits.Count - groupLimit;
+        foreach (ControlUnit group in allControlUnits.ToArray())
+        {
+            if (cleanupCount <= 0)
+            {
+                break;
+            }
+
+            if (group == null || group.HasAnyCockpit)
+            {
+                continue;
+            }
+
+            DestroyManager.Instance.ScheduleUnitCleanup(group);
+            cleanupCount--;
+        }
     }
 
     public void SetPlayMode(bool lockView)
@@ -307,6 +346,11 @@ public class PlayManager : MonoBehaviour
         if (unit != null && !allControlUnits.Contains(unit))
         {
             allControlUnits.Add(unit);
+        }
+
+        if (playMode)
+        {
+            EnforceControlUnitGroupLimit();
         }
     }
 
