@@ -1268,6 +1268,8 @@ MonoBehaviour:
   showLabel: 0
   showUI: 1
   maxControlUnitGroups: 32
+  groupCleanupDistance: 200
+  groupCleanupCheckInterval: 1
 --- !u!1 &276395679
 GameObject:
   m_ObjectHideFlags: 0

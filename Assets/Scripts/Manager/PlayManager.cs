@@ -21,6 +21,7 @@ public class PlayManager : MonoBehaviour
     public Block selectedBlock;
     public List<ControlUnit> allControlUnits = new List<ControlUnit>();
     private EnemySpawner enemySpawner;
+    private float _lastGroupCleanupCheckTime;
 
     public float lastHeight;
     public float currentHeight;
@@ -32,6 +33,8 @@ public class PlayManager : MonoBehaviour
 
     [Header("运行时分组限制")]
     [Min(1)] public int maxControlUnitGroups = 32;
+    [Min(1f)] public float groupCleanupDistance = 200f;
+    [Min(0.25f)] public float groupCleanupCheckInterval = 1f;
 
     [Tooltip("Show runtime debug UI")]
     public bool showUI = true;
@@ -49,6 +52,12 @@ public class PlayManager : MonoBehaviour
         {
             //MainUIPanels.instance.PlayEnd();
             return;
+        }
+
+        if (Time.time - _lastGroupCleanupCheckTime >= Mathf.Max(0.25f, groupCleanupCheckInterval))
+        {
+            _lastGroupCleanupCheckTime = Time.time;
+            EnforceDistantGroupCleanup();
         }
 
         //if (Keyboard.current.bKey.wasPressedThisFrame)
@@ -142,6 +151,7 @@ public class PlayManager : MonoBehaviour
         }
 
         EnforceControlUnitGroupLimit();
+        EnforceDistantGroupCleanup();
 
         Debug.Log($"Find {allControlUnits.Count} controls");
     }
@@ -177,6 +187,29 @@ public class PlayManager : MonoBehaviour
 
             DestroyManager.Instance.ScheduleUnitCleanup(group);
             cleanupCount--;
+        }
+    }
+
+    private void EnforceDistantGroupCleanup()
+    {
+        if (!playMode || blocksParent == null || groupCleanupDistance <= 0f)
+        {
+            return;
+        }
+
+        ControlUnit playerGroup = blocksParent.GetComponent<ControlUnit>();
+        float distanceSqr = groupCleanupDistance * groupCleanupDistance;
+        foreach (ControlUnit group in allControlUnits.ToArray())
+        {
+            if (group == null || group == playerGroup)
+            {
+                continue;
+            }
+
+            if ((group.transform.position - blocksParent.position).sqrMagnitude > distanceSqr)
+            {
+                DestroyManager.Instance.ScheduleDistantGroupCleanup(group, blocksParent, groupCleanupDistance);
+            }
         }
     }
 
@@ -351,6 +384,7 @@ public class PlayManager : MonoBehaviour
         if (playMode)
         {
             EnforceControlUnitGroupLimit();
+            EnforceDistantGroupCleanup();
         }
     }
 

@@ -301,6 +301,44 @@ public class DestroyManager : MonoBehaviour
         StartCoroutine(CleanupGroupAfterDelay(unit, ownerUnitId));
     }
 
+    public void ScheduleDistantGroupCleanup(ControlUnit unit, Transform reference, float maxDistance)
+    {
+        if (unit == null || reference == null || maxDistance <= 0f)
+        {
+            return;
+        }
+
+        unit.EnsureRuntimeUnitId();
+        string ownerUnitId = unit.runtimeUnitId;
+        if (string.IsNullOrEmpty(ownerUnitId) || _scheduledUnitCleanups.Contains(ownerUnitId))
+        {
+            return;
+        }
+
+        _scheduledUnitCleanups.Add(ownerUnitId);
+        StartCoroutine(CleanupDistantGroupAfterDelay(unit, ownerUnitId, reference, maxDistance * maxDistance));
+    }
+
+    private IEnumerator CleanupDistantGroupAfterDelay(
+        ControlUnit unit,
+        string ownerUnitId,
+        Transform reference,
+        float maxDistanceSqr)
+    {
+        yield return new WaitForSeconds(_unitCleanupDelay);
+
+        if (unit != null
+            && reference != null
+            && unit.runtimeUnitId == ownerUnitId
+            && (unit.transform.position - reference.position).sqrMagnitude > maxDistanceSqr)
+        {
+            PlayDisappearEffect(unit.gameObject);
+            Destroy(unit.gameObject);
+        }
+
+        _scheduledUnitCleanups.Remove(ownerUnitId);
+    }
+
     private IEnumerator CleanupGroupAfterDelay(ControlUnit unit, string ownerUnitId)
     {
         yield return new WaitForSeconds(_unitCleanupDelay);
