@@ -410,6 +410,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private Vector3 BlendDirections(Vector3 targetDir, Vector3 avoidanceDir, float avoidanceStrength)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private void ReturnHome()`：对准 home 姿态后按距离平滑减速，停稳且误差足够小时再恢复父节点和局部坐标。
 - `private void LeaveHome()`：封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void SetDockedState(bool docked)`：统一切换停靠时 Rigidbody 物理模拟/碰撞和 TrailRenderer 的启停状态。
 - `private void FindDamagedBlock()`：按扫描间隔刷新范围缓存，并用平方距离选择最近受损目标。
 - `private bool IsValidRepairTarget(Durability target)`：验证目标仍受损、未离开 home 范围且归属当前 ControlUnit。
 - `private void CheckAndRepair()`：处理碰撞、连接、耐久、维修或状态检查逻辑。
@@ -839,7 +840,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 2026-08-23
 
-- **降低 RepairBot 寻路方向变化率并平滑返航**：新增方向采样间隔与响应速度参数，避障 Raycast/OverlapSphere 结果按间隔缓存，但目标方向每个物理帧使用最新世界坐标计算，以跟随移动中的 home；返航改用 `home.TransformPoint(homeOffset)` 作为动态停靠点，先对准 home 姿态并按距离降低目标速度，停稳且达到位置/角度阈值后才重新挂回 home，取消原先的近距离瞬移归位。
+- **降低 RepairBot 寻路方向变化率并平滑返航**：新增方向采样间隔与响应速度参数，避障 Raycast/OverlapSphere 结果按间隔缓存，但目标方向每个物理帧使用最新世界坐标计算，以跟随移动中的 home；返航改用 `home.TransformPoint(homeOffset)` 作为动态停靠点，先对准 home 姿态并按距离降低目标速度，停稳且达到位置/角度阈值后才重新挂回 home，取消原先的近距离瞬移归位。停靠在 home 时禁用 Rigidbody 和 TrailRenderer，离家时恢复两者。
 - **验证**：已通过代码检查；尚未在 Unity 编辑器或 Play Mode 验证 Inspector 参数、不同停靠偏移和拥挤障碍场景下的实际运动表现。
 
 - **限制无用 Group 数量**：`PlayManager.maxUselessControlUnitGroups`（默认 32）只统计没有 Cockpit 的 `ControlUnit`；有效 Group 不占用该上限。超过上限时仅将超出的无 Cockpit Group 交给 `DestroyManager.ScheduleUnitCleanup`，延迟清理前再次确认 Group 仍无 Cockpit。

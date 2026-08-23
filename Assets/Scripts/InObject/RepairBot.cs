@@ -125,6 +125,7 @@ public class RepairBot : MonoBehaviour
         InitializeComponents();
         InitializeTargetsInRange();
         InitializeTrail();
+        SetDockedState(transform.parent == home);
     }
 
     private void InitializeComponents()
@@ -584,8 +585,14 @@ public class RepairBot : MonoBehaviour
     // ===== 其他方法（保持原有逻辑）=====
     private void ReturnHome()
     {
-        if (home == null || rb == null || transform.parent == home)
+        if (home == null || rb == null)
             return;
+
+        if (transform.parent == home)
+        {
+            SetDockedState(true);
+            return;
+        }
 
         Vector3 dockPosition = home.TransformPoint(homeOffset);
         Vector3 toDock = dockPosition - transform.position;
@@ -617,21 +624,36 @@ public class RepairBot : MonoBehaviour
 
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        rb.isKinematic = true;
-        rb.detectCollisions = false;
         transform.SetParent(home, false);
         transform.localPosition = homeOffset;
         transform.localRotation = Quaternion.identity;
         cachedNavigationTarget = null;
-        if (trailRenderer != null) trailRenderer.Clear();
+        SetDockedState(true);
     }
 
     private void LeaveHome()
     {
         transform.parent = outside;
-        rb.isKinematic = false;
-        rb.detectCollisions = true;
+        SetDockedState(false);
         smoothedDirection = transform.forward;
+    }
+
+    private void SetDockedState(bool docked)
+    {
+        if (rb != null)
+        {
+            rb.isKinematic = docked;
+            rb.detectCollisions = !docked;
+        }
+
+        if (trailRenderer != null)
+        {
+            trailRenderer.enabled = !docked;
+            if (docked)
+            {
+                trailRenderer.Clear();
+            }
+        }
     }
 
     private void FindDamagedBlock()
