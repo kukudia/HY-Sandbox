@@ -55,6 +55,14 @@ public class RepairBot : MonoBehaviour
     [Tooltip("路径平滑系数（0-1，越大越平滑）")]
     public float pathSmoothness = 0.7f;
 
+    [Header("寻路平滑设置")]
+    [Min(0.05f)] public float directionUpdateInterval = 0.25f;
+    [Min(0.1f)] public float directionResponseRate = 3f;
+    [Min(0.1f)] public float returnAlignmentAngle = 8f;
+    [Min(0.1f)] public float returnBrakeDistance = 2f;
+    [Min(0.01f)] public float returnPositionTolerance = 0.08f;
+    [Min(0.01f)] public float returnStopSpeed = 0.15f;
+
     [Header("可视化设置")]
     public bool showTrail = true;
     public float trailDuration = 5f;
@@ -85,6 +93,10 @@ public class RepairBot : MonoBehaviour
     private readonly Collider[] nearbyColliders = new Collider[MaxNearbyColliders];
     private StylizedBeamEffect repairBeamEffect;
     private int blockLayerMask;
+    private Transform cachedNavigationTarget;
+    private Vector3 cachedNavigationDirection;
+    private AdvancedAvoidanceResult cachedAvoidanceResult;
+    private float nextDirectionUpdateTime;
 
     // 调试信息
     private List<AvoidanceDebugInfo> debugAvoidanceInfo = new List<AvoidanceDebugInfo>();
@@ -227,13 +239,7 @@ public class RepairBot : MonoBehaviour
 
             if (currentTarget == null && home != null)
             {
-                NavigateToTarget(home);
-
-                float distanceToHome = Vector3.Distance(transform.position, home.position);
-                if (distanceToHome < 5f)
-                {
-                    ReturnHome();
-                }
+                NavigateHomeSmoothly();
             }
         }
         else
@@ -251,33 +257,67 @@ public class RepairBot : MonoBehaviour
 
     private void NavigateToTarget(Transform target)
     {
-        navigateTarget = target;
-
         if (transform.parent == home)
         {
             LeaveHome();
         }
 
+        NavigateToPosition(target.position, target);
+    }
+
+    private void NavigateHomeSmoothly()
+    {
+        navigateTarget = home;
+        if (transform.parent == home)
+        {
+            ReturnHome();
+            return;
+        }
+
+        Vector3 dockPosition = home.TransformPoint(homeOffset);
+        if ((dockPosition - transform.position).sqrMagnitude <= 25f)
+        {
+            ReturnHome();
+            return;
+        }
+
+        NavigateToPosition(dockPosition, home);
+    }
+
+    private void NavigateToPosition(Vector3 targetPosition, Transform targetReference)
+    {
+        navigateTarget = targetReference;
+
         // 计算目标方向
-        Vector3 targetDirection = (target.position - transform.position).normalized;
+        Vector3 targetDirection = (targetPosition - transform.position).normalized;
 
-        // ===== 优化的避障系统 =====
-        AdvancedAvoidanceResult avoidanceResult = CalculateAdvancedAvoidance(targetDirection);
+        // 避障查询按固定间隔采样，物理帧之间只渐进跟随缓存结果，避免方向高频抖动和重复 Raycast。
+        if (targetReference != cachedNavigationTarget || Time.time >= nextDirectionUpdateTime)
+        {
+            cachedNavigationTarget = targetReference;
+            nextDirectionUpdateTime = Time.time + Mathf.Max(0.05f, directionUpdateInterval);
+            cachedAvoidanceResult = CalculateAdvancedAvoidance(targetDirection);
+            cachedNavigationDirection = BlendDirections(
+                targetDirection,
+                cachedAvoidanceResult.avoidanceDirection,
+                cachedAvoidanceResult.avoidanceStrength);
+        }
 
-        // 融合目标方向和避障方向
-        Vector3 finalDirection = BlendDirections(
-            targetDirection,
-            avoidanceResult.avoidanceDirection,
-            avoidanceResult.avoidanceStrength
-        );
-
-        // 应用路径平滑
-        smoothedDirection = Vector3.Lerp(smoothedDirection, finalDirection, 1f - pathSmoothness);
+        Vector3 finalDirection = cachedNavigationDirection.sqrMagnitude > 0.001f
+            ? cachedNavigationDirection
+            : targetDirection;
+        if (smoothedDirection.sqrMagnitude < 0.001f)
+            smoothedDirection = transform.forward;
+        smoothedDirection = Vector3.RotateTowards(
+            smoothedDirection,
+            finalDirection,
+            Mathf.Max(0.1f, directionResponseRate) * Time.fixedDeltaTime,
+            0f);
 
         // 根据障碍物密度调整速度
         currentSpeedMultiplier = Mathf.Lerp(
             currentSpeedMultiplier,
-            avoidanceResult.speedMultiplier,
+            cachedAvoidanceResult.speedMultiplier,
             Time.fixedDeltaTime * 3f
         );
 
@@ -303,7 +343,7 @@ public class RepairBot : MonoBehaviour
         }
 
         // 保存当前避障方向用于可视化
-        currentAvoidanceDirection = avoidanceResult.avoidanceDirection;
+        currentAvoidanceDirection = cachedAvoidanceResult.avoidanceDirection;
     }
 
     // ===== 优化的避障算法核心 =====
@@ -547,19 +587,45 @@ public class RepairBot : MonoBehaviour
     // ===== 其他方法（保持原有逻辑）=====
     private void ReturnHome()
     {
+        if (home == null || rb == null || transform.parent == home)
+            return;
+
+        Vector3 dockPosition = home.TransformPoint(homeOffset);
+        Vector3 toDock = dockPosition - transform.position;
+        float distance = toDock.magnitude;
+        Vector3 dockDirection = distance > 0.001f ? toDock / distance : home.forward;
+        Quaternion dockRotation = home.rotation;
+        float alignment = Quaternion.Angle(transform.rotation, dockRotation);
+
+        // 返航末段先对准停靠点，并按距离逐渐降低目标速度，避免瞬移和硬刹造成抖动。
+        transform.rotation = Quaternion.RotateTowards(
+            transform.rotation,
+            dockRotation,
+            Mathf.Max(1f, rotationSpeed * 90f) * Time.fixedDeltaTime);
+
+        float brakeRatio = Mathf.Clamp01(distance / Mathf.Max(0.1f, returnBrakeDistance));
+        Vector3 desiredVelocity = dockDirection * (movementSpeed * brakeRatio);
+        rb.linearVelocity = Vector3.MoveTowards(
+            rb.linearVelocity,
+            desiredVelocity,
+            Mathf.Max(0.1f, movementSpeed * 2f) * Time.fixedDeltaTime);
+        rb.angularVelocity = Vector3.MoveTowards(rb.angularVelocity, Vector3.zero, 8f * Time.fixedDeltaTime);
+
+        if (distance > returnPositionTolerance
+            || alignment > returnAlignmentAngle
+            || rb.linearVelocity.magnitude > returnStopSpeed)
+        {
+            return;
+        }
+
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         rb.isKinematic = true;
         rb.detectCollisions = false;
-
-        if (transform.parent != home)
-        {
-            transform.parent = home;
-        }
-
+        transform.SetParent(home, false);
         transform.localPosition = homeOffset;
         transform.localRotation = Quaternion.identity;
-
+        cachedNavigationTarget = null;
         if (trailRenderer != null) trailRenderer.Clear();
     }
 

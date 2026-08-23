@@ -70,7 +70,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 3.5 UI、敌人和效果
 
-`MainUIButtons` 负责按钮事件、操作模式和动态方块按钮；`SaveUIPanel` 负责玩家/敌方蓝图列表；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager`、`StylizedBeamEffect` 和 `StylizedRingEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。
+`MainUIButtons` 负责按钮事件、操作模式和动态方块按钮；`SaveUIPanel` 负责玩家/敌方蓝图列表；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块，寻路避障按间隔采样并渐进转向，返航时对准停靠姿态后平滑减速归位。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager`、`StylizedBeamEffect` 和 `StylizedRingEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。
 
 ## 4. 已确认实现的功能
 
@@ -403,10 +403,12 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private void InitializeTargetsInRange()`：以 home 为中心执行无分配球形查询，缓存同一 ControlUnit 的范围内耐久目标。
 - `private void InitializeTrail()`：创建或补齐该功能所需的对象、引用、缓存和初始状态。
 - `private void FixedUpdate()`：验证当前修复目标并执行导航、修复或返航。
-- `private void NavigateToTarget(Transform target)`：封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void NavigateToTarget(Transform target)`：按固定采样间隔更新避障方向，并以有限响应速度渐进转向目标。
+- `private void NavigateHomeSmoothly()`：使用 homeOffset 对应的停靠点执行返航导航和末段归位检查。
+- `private void NavigateToPosition(Vector3 targetPosition, Transform targetReference)`：缓存避障查询结果并施加平滑方向、速度和刚体移动。
 - `private AdvancedAvoidanceResult CalculateAdvancedAvoidance(Vector3 targetDirection)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private Vector3 BlendDirections(Vector3 targetDir, Vector3 avoidanceDir, float avoidanceStrength)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
-- `private void ReturnHome()`：封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void ReturnHome()`：对准 home 姿态后按距离平滑减速，停稳且误差足够小时再恢复父节点和局部坐标。
 - `private void LeaveHome()`：封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private void FindDamagedBlock()`：按扫描间隔刷新范围缓存，并用平方距离选择最近受损目标。
 - `private bool IsValidRepairTarget(Durability target)`：验证目标仍受损、未离开 home 范围且归属当前 ControlUnit。
@@ -836,6 +838,9 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 ## 10. 变更日志
 
 ### 2026-08-23
+
+- **降低 RepairBot 寻路方向变化率并平滑返航**：新增方向采样间隔与响应速度参数，避障 Raycast/OverlapSphere 结果按间隔缓存，物理帧使用有限角速度渐进转向；返航改用 `home.TransformPoint(homeOffset)` 作为停靠点，先对准 home 姿态并按距离降低目标速度，停稳且达到位置/角度阈值后才重新挂回 home，取消原先的近距离瞬移归位。
+- **验证**：已通过代码检查；尚未在 Unity 编辑器或 Play Mode 验证 Inspector 参数、不同停靠偏移和拥挤障碍场景下的实际运动表现。
 
 - **限制无用 Group 数量**：`PlayManager.maxUselessControlUnitGroups`（默认 32）只统计没有 Cockpit 的 `ControlUnit`；有效 Group 不占用该上限。超过上限时仅将超出的无 Cockpit Group 交给 `DestroyManager.ScheduleUnitCleanup`，延迟清理前再次确认 Group 仍无 Cockpit。
 - **验证**：已通过代码检查；尚未在 Unity Play Mode 验证大量断开、敌方生成和清理延迟期间重新分组的实际表现。
