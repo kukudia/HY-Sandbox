@@ -839,7 +839,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 2026-08-23
 
-- **降低 RepairBot 寻路方向变化率并平滑返航**：新增方向采样间隔与响应速度参数，避障 Raycast/OverlapSphere 结果按间隔缓存，物理帧使用有限角速度渐进转向；返航改用 `home.TransformPoint(homeOffset)` 作为停靠点，先对准 home 姿态并按距离降低目标速度，停稳且达到位置/角度阈值后才重新挂回 home，取消原先的近距离瞬移归位。
+- **降低 RepairBot 寻路方向变化率并平滑返航**：新增方向采样间隔与响应速度参数，避障 Raycast/OverlapSphere 结果按间隔缓存，但目标方向每个物理帧使用最新世界坐标计算，以跟随移动中的 home；返航改用 `home.TransformPoint(homeOffset)` 作为动态停靠点，先对准 home 姿态并按距离降低目标速度，停稳且达到位置/角度阈值后才重新挂回 home，取消原先的近距离瞬移归位。
 - **验证**：已通过代码检查；尚未在 Unity 编辑器或 Play Mode 验证 Inspector 参数、不同停靠偏移和拥挤障碍场景下的实际运动表现。
 
 - **限制无用 Group 数量**：`PlayManager.maxUselessControlUnitGroups`（默认 32）只统计没有 Cockpit 的 `ControlUnit`；有效 Group 不占用该上限。超过上限时仅将超出的无 Cockpit Group 交给 `DestroyManager.ScheduleUnitCleanup`，延迟清理前再次确认 Group 仍无 Cockpit。

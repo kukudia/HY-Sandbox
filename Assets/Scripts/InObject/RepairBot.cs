@@ -94,7 +94,6 @@ public class RepairBot : MonoBehaviour
     private StylizedBeamEffect repairBeamEffect;
     private int blockLayerMask;
     private Transform cachedNavigationTarget;
-    private Vector3 cachedNavigationDirection;
     private AdvancedAvoidanceResult cachedAvoidanceResult;
     private float nextDirectionUpdateTime;
 
@@ -297,15 +296,13 @@ public class RepairBot : MonoBehaviour
             cachedNavigationTarget = targetReference;
             nextDirectionUpdateTime = Time.time + Mathf.Max(0.05f, directionUpdateInterval);
             cachedAvoidanceResult = CalculateAdvancedAvoidance(targetDirection);
-            cachedNavigationDirection = BlendDirections(
-                targetDirection,
-                cachedAvoidanceResult.avoidanceDirection,
-                cachedAvoidanceResult.avoidanceStrength);
         }
 
-        Vector3 finalDirection = cachedNavigationDirection.sqrMagnitude > 0.001f
-            ? cachedNavigationDirection
-            : targetDirection;
+        // 目标方向使用当前世界坐标实时计算；避障查询可以降频，但移动中的 home 不能使用旧位置。
+        Vector3 finalDirection = BlendDirections(
+            targetDirection,
+            cachedAvoidanceResult.avoidanceDirection,
+            cachedAvoidanceResult.avoidanceStrength);
         if (smoothedDirection.sqrMagnitude < 0.001f)
             smoothedDirection = transform.forward;
         smoothedDirection = Vector3.RotateTowards(
