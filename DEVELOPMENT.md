@@ -70,7 +70,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 3.5 UI、敌人和效果
 
-`MainUIButtons` 负责按钮事件、操作模式和动态方块按钮；`SaveUIPanel` 负责玩家/敌方蓝图列表；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager`、`StylizedBeamEffect` 和 `StylizedRingEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。
+`MainUIButtons` 负责按钮事件、操作模式和动态方块按钮；`SaveUIPanel` 负责玩家/敌方蓝图列表；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager`、`StylizedBeamEffect` 和 `StylizedRingEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。
 
 ## 4. 已确认实现的功能
 
@@ -398,25 +398,24 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 #### `Assets/Scripts/InObject/RepairBot.cs`
 
-- `void Start()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
-- `void InitializeComponents()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
-- `void InitializeTrail()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
-- `void FixedUpdate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
-- `void NavigateToTarget(Transform target)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void Start()`：缓存 home、范围查询层和运行时组件，并初始化修复目标。
+- `private void InitializeComponents()`：创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `private void InitializeTargetsInRange()`：以 home 为中心执行无分配球形查询，缓存同一 ControlUnit 的范围内耐久目标。
+- `private void InitializeTrail()`：创建或补齐该功能所需的对象、引用、缓存和初始状态。
+- `private void FixedUpdate()`：验证当前修复目标并执行导航、修复或返航。
+- `private void NavigateToTarget(Transform target)`：封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private AdvancedAvoidanceResult CalculateAdvancedAvoidance(Vector3 targetDirection)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private Vector3 BlendDirections(Vector3 targetDir, Vector3 avoidanceDir, float avoidanceStrength)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
-- `void ReturnHome()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
-- `void LeaveHome()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
-- `void FindDamagedBlock()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
-- `private ControlUnit ResolveOwnerUnit()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
-- `private void SetOwnerUnit(ControlUnit newOwner)`： 设置该对象、视觉效果或运行时引用的参数/状态。
-- `private bool IsOwnedTarget(Durability target)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
-- `void CheckAndRepair()`： 处理碰撞、连接、耐久、维修或状态检查逻辑。
-- `void UpdateRepairBeam(bool active)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void ReturnHome()`：封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void LeaveHome()`：封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void FindDamagedBlock()`：按扫描间隔刷新范围缓存，并用平方距离选择最近受损目标。
+- `private bool IsValidRepairTarget(Durability target)`：验证目标仍受损、未离开 home 范围且归属当前 ControlUnit。
+- `private void CheckAndRepair()`：处理碰撞、连接、耐久、维修或状态检查逻辑。
+- `private void UpdateRepairBeam(bool active)`：封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private void EnsureRepairBeamGradient()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
 - `public void ClearTarget()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
-- `void OnDrawGizmosSelected()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
-- `void OnDrawGizmos()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void OnDrawGizmosSelected()`：Unity 生命周期回调：绘制运行时修复范围、避障和目标调试信息。
+- `private void OnDrawGizmos()`：Unity 生命周期回调：绘制编辑器中的静态范围预览。
 
 #### `Assets/Scripts/InObject/TurretWeapon.cs`
 
@@ -831,6 +830,10 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 ## 10. 变更日志
 
 ### 2026-08-23
+
+- **审查并完善 RepairBot 离家修复范围**：修复 `InitializeTargetsInRange` 在 `home` 赋值前访问导致的空引用；将一次性分配的 `OverlapBox` 快照改为按 `findTargetInterval` 执行的 `OverlapSphereNonAlloc` 动态扫描，只保留与 home 同属一个 `ControlUnit` 且中心位于 `targetRange` 内的方块。当前目标修满、越界或重组到其他单元后会立即取消。
+- **性能处理**：复用 Collider 缓冲区、List 和 HashSet；缓冲区仅在饱和时扩容且上限 1024；扫描间隔运行时至少为 0.25 秒，目标选择及范围验证使用平方距离，避免重复数组分配、无上限高频查询与距离开方。
+- **验证**：已通过 `git diff --check` 和 `dotnet build HY-Sandbox.sln --no-restore`（0 错误；仅有既存 Profiler API 过时警告）；尚未在 Unity Play Mode 验证加载中生成、运行时重新分组、多个 RepairBot 同时扫描及超大型构造体的目标覆盖情况。
 
 - **修复玩家死亡后 Respawn 按钮延迟可交互**：死亡入口现在停止旧的面板淡入淡出协程，立即关闭 PlayPanel、启用 DeathPanel 的 `CanvasGroup` 射线与交互，并显式恢复 `respawnButton.interactable`；避免旧协程或 PlayPanel 的 CanvasGroup 在死亡界面上方继续拦截点击。
 - **验证**：已完成代码检查；尚未在 Unity Play Mode 验证连续死亡、快速重生和鼠标焦点切换流程。

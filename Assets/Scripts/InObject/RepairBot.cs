@@ -1,10 +1,13 @@
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class RepairBot : MonoBehaviour
 {
     private const int MaxNearbyColliders = 32;
+    private const int InitialRepairTargetColliderCapacity = 128;
+    private const int MaxRepairTargetColliderCapacity = 1024;
+    private const float MinimumTargetScanInterval = 0.25f;
 
     public Transform home;
     public Transform outside;
@@ -12,10 +15,10 @@ public class RepairBot : MonoBehaviour
     public Vector3 homeOffset = Vector3.zero;
 
     [Header("修复设置")]
+    [Min(0)] public int targetRange = 5;
     public float repairAmount = 10f;
     public float repairCooldown = 1f;
     public float findTargetInterval = 1f;
-    public float detectionRange = 50f;
     public float movementSpeed = 5f;
     public float rotationSpeed = 2f;
 
@@ -76,9 +79,12 @@ public class RepairBot : MonoBehaviour
     private float currentSpeedMultiplier = 1f;
     private TrailRenderer trailRenderer;
     private ControlUnit ownerUnit;
-    private Durability[] ownedDurabilities;
+    private readonly List<Durability> targetsInRange = new List<Durability>();
+    private readonly HashSet<Durability> uniqueTargetsInRange = new HashSet<Durability>();
+    private Collider[] repairTargetColliders = new Collider[InitialRepairTargetColliderCapacity];
     private readonly Collider[] nearbyColliders = new Collider[MaxNearbyColliders];
     private StylizedBeamEffect repairBeamEffect;
+    private int blockLayerMask;
 
     // 调试信息
     private List<AvoidanceDebugInfo> debugAvoidanceInfo = new List<AvoidanceDebugInfo>();
@@ -101,12 +107,13 @@ public class RepairBot : MonoBehaviour
 
     private void Start()
     {
-        InitializeComponents();
-        InitializeTrail();
-
         home = transform.parent;
         homeOffset = transform.localPosition;
-        ResolveOwnerUnit();
+        blockLayerMask = LayerMask.GetMask("Block");
+
+        InitializeComponents();
+        InitializeTargetsInRange();
+        InitializeTrail();
     }
 
     private void InitializeComponents()
@@ -137,7 +144,59 @@ public class RepairBot : MonoBehaviour
         repairBeamEffect.SetVisible(false);
 
         EnsureRepairBeamGradient();
+    }
 
+    private void InitializeTargetsInRange()
+    {
+        targetsInRange.Clear();
+        uniqueTargetsInRange.Clear();
+        ownerUnit = home != null ? home.GetComponentInParent<ControlUnit>() : null;
+        if (home == null || ownerUnit == null || targetRange <= 0 || blockLayerMask == 0)
+        {
+            return;
+        }
+
+        int colliderCount;
+        while (true)
+        {
+            colliderCount = Physics.OverlapSphereNonAlloc(
+                home.position,
+                targetRange,
+                repairTargetColliders,
+                blockLayerMask,
+                QueryTriggerInteraction.Ignore);
+
+            if (colliderCount < repairTargetColliders.Length
+                || repairTargetColliders.Length >= MaxRepairTargetColliderCapacity)
+            {
+                break;
+            }
+
+            int newCapacity = Mathf.Min(repairTargetColliders.Length * 2, MaxRepairTargetColliderCapacity);
+            repairTargetColliders = new Collider[newCapacity];
+        }
+
+        float rangeSqr = targetRange * targetRange;
+        for (int i = 0; i < colliderCount; i++)
+        {
+            Collider candidateCollider = repairTargetColliders[i];
+            repairTargetColliders[i] = null;
+            if (candidateCollider == null)
+            {
+                continue;
+            }
+
+            Durability durability = candidateCollider.GetComponentInParent<Durability>();
+            if (durability == null
+                || durability.GetComponentInParent<ControlUnit>() != ownerUnit
+                || (durability.transform.position - home.position).sqrMagnitude > rangeSqr
+                || !uniqueTargetsInRange.Add(durability))
+            {
+                continue;
+            }
+
+            targetsInRange.Add(durability);
+        }
     }
 
     private void InitializeTrail()
@@ -179,7 +238,7 @@ public class RepairBot : MonoBehaviour
         }
         else
         {
-            if (!IsOwnedTarget(currentTarget))
+            if (!IsValidRepairTarget(currentTarget))
             {
                 ClearTarget();
                 return;
@@ -514,69 +573,45 @@ public class RepairBot : MonoBehaviour
 
     private void FindDamagedBlock()
     {
-        if (Time.time - lastFindTime < findTargetInterval) return;
+        float scanInterval = Mathf.Max(MinimumTargetScanInterval, findTargetInterval);
+        if (Time.time - lastFindTime < scanInterval) return;
 
-        ControlUnit repairOwner = ResolveOwnerUnit();
-        if (repairOwner == null) return;
+        lastFindTime = Time.time;
+        InitializeTargetsInRange();
 
-        if (ownedDurabilities == null || ownedDurabilities.Length == 0 || ownerUnit != repairOwner)
-        {
-            ownedDurabilities = repairOwner.GetComponentsInChildren<Durability>();
-        }
-
-        float closestDistance = Mathf.Infinity;
+        float closestDistanceSqr = Mathf.Infinity;
         Durability closestBlock = null;
 
-        foreach (Durability block in ownedDurabilities)
+        foreach (Durability block in targetsInRange)
         {
             if (block == null || !block.needToRepair) continue;
 
-            float distance = Vector3.Distance(transform.position, block.transform.position);
-            if (distance < closestDistance && distance <= detectionRange)
+            float distanceSqr = (transform.position - block.transform.position).sqrMagnitude;
+            if (distanceSqr < closestDistanceSqr)
             {
-                closestDistance = distance;
+                closestDistanceSqr = distanceSqr;
                 closestBlock = block;
             }
         }
 
         currentTarget = closestBlock;
-        lastFindTime = Time.time;
     }
 
-    private ControlUnit ResolveOwnerUnit()
+    private bool IsValidRepairTarget(Durability target)
     {
-        ControlUnit homeOwner = home != null ? home.GetComponentInParent<ControlUnit>() : null;
-        if (homeOwner != null)
+        if (target == null || !target.needToRepair || home == null || targetRange <= 0)
         {
-            SetOwnerUnit(homeOwner);
-        }
-        else if (ownerUnit == null)
-        {
-            SetOwnerUnit(GetComponentInParent<ControlUnit>());
+            return false;
         }
 
-        return ownerUnit;
-    }
-
-    private void SetOwnerUnit(ControlUnit newOwner)
-    {
-        if (ownerUnit == newOwner)
+        ControlUnit currentOwner = home.GetComponentInParent<ControlUnit>();
+        if (currentOwner == null || target.GetComponentInParent<ControlUnit>() != currentOwner)
         {
-            return;
+            return false;
         }
 
-        ownerUnit = newOwner;
-        ownedDurabilities = ownerUnit != null
-            ? ownerUnit.GetComponentsInChildren<Durability>()
-            : null;
-    }
-
-    private bool IsOwnedTarget(Durability target)
-    {
-        if (target == null) return false;
-
-        ControlUnit repairOwner = ResolveOwnerUnit();
-        return repairOwner != null && target.GetComponentInParent<ControlUnit>() == repairOwner;
+        float rangeSqr = targetRange * targetRange;
+        return (target.transform.position - home.position).sqrMagnitude <= rangeSqr;
     }
 
     private void CheckAndRepair()
@@ -683,9 +718,12 @@ public class RepairBot : MonoBehaviour
             Gizmos.DrawSphere(transform.position, predictiveAvoidanceRange);
         }
 
-        // 2. 检测范围
-        Gizmos.color = new Color(0f, 0.8f, 1f, 0.3f);
-        Gizmos.DrawWireSphere(transform.position, detectionRange);
+        // 2. 修复目标范围
+        if (home != null)
+        {
+            Gizmos.color = new Color(0f, 0.8f, 1f, 0.3f);
+            Gizmos.DrawWireSphere(home.position, targetRange);
+        }
 
         // 3. 避障信息可视化
         if (showAvoidanceRays && debugAvoidanceInfo.Count > 0)
@@ -792,7 +830,7 @@ public class RepairBot : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, predictiveAvoidanceRange);
 
         Gizmos.color = new Color(0f, 0.8f, 1f, 0.4f);
-        Gizmos.DrawWireSphere(transform.position, detectionRange);
+        Gizmos.DrawWireSphere(transform.position, targetRange);
 
         if (navigateTarget != null)
         {
