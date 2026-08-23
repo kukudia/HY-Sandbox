@@ -53,15 +53,15 @@ public class Durability : MonoBehaviour
         }
     }
 
-    public void Repair(float amount)
-    {
-        currentDurability = Mathf.Min(maxDurability, currentDurability + amount);
+    //public void Repair(float amount)
+    //{
+    //    currentDurability = Mathf.Min(maxDurability, currentDurability + amount);
 
-        if (debugLog)
-        {
-            Debug.Log($"{name} 被修复：+{amount:F1}, 当前耐久度：{currentDurability:F1}/{maxDurability}");
-        }
-    }
+    //    if (debugLog)
+    //    {
+    //        Debug.Log($"{name} 被修复：+{amount:F1}, 当前耐久度：{currentDurability:F1}/{maxDurability}");
+    //    }
+    //}
 
     public void UpdateDurablility(float value)
     {
