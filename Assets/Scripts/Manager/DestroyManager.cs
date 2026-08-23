@@ -27,7 +27,6 @@ public class DestroyManager : MonoBehaviour
     private float _refreshDelay = 0.2f;
     private float _unitCleanupDelay = 10f;
     [SerializeField] private float _blockExplosionUpwardsModifier = 1.2f;
-    [SerializeField, Range(0f, 1f)] private float _blockExplosionDisconnectProbability = 0.35f;
     private bool _isRefreshScheduled;
     private int _destroyedCount;
     private HashSet<string> _scheduledUnitCleanups = new HashSet<string>();
@@ -97,7 +96,7 @@ public class DestroyManager : MonoBehaviour
     public void ExplodeBlock(Block block)
     {
         // Detach the block, selectively break nearby links, regroup the unit, then apply impulse to its groups.
-        if (block == null || PlayManager.instance == null || !PlayManager.instance.playMode)
+        if (block == null || !PlayManager.instance.playMode)
         {
             return;
         }
@@ -128,13 +127,13 @@ public class DestroyManager : MonoBehaviour
 
     private void DisconnectBlocksInExplosionRange(ControlUnit unit, Block block, Vector3 explosionPosition)
     {
-        if (unit == null || block == null || block.explosionRadius <= 0f || _blockExplosionDisconnectProbability <= 0f)
+        if (unit == null || block == null)
         {
             return;
         }
 
         float radiusSqr = block.explosionRadius * block.explosionRadius;
-        float probability = Mathf.Clamp01(_blockExplosionDisconnectProbability);
+        float probability = Mathf.Clamp01(block.explosionDisconnectProbability);
         Block[] blocks = unit.GetComponentsInChildren<Block>(true);
         HashSet<Block> neighborsToRefresh = new HashSet<Block>();
         foreach (Block candidate in blocks)

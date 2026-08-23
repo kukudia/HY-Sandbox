@@ -1,9 +1,6 @@
 using System.Collections.Generic;
-using NUnit.Framework;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class Block : MonoBehaviour
 {
@@ -22,9 +19,14 @@ public class Block : MonoBehaviour
 
     public float damageMultiplier = 10f; // 伤害系数（速度越大伤害越高）
 
+    [Header("Explosion Settings")]
+
     public float explosionForce = 500f; // 爆炸力
 
     public float explosionRadius = 5f; // 爆炸半径
+
+    [Range(0f, 1f)]
+    public float explosionDisconnectProbability = 0.35f;
 
     public string resourcePath; // 运行时使用的预制体路径
 
