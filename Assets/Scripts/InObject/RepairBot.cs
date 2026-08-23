@@ -62,6 +62,9 @@ public class RepairBot : MonoBehaviour
     [Min(0.1f)] public float returnBrakeDistance = 2f;
     [Min(0.01f)] public float returnPositionTolerance = 0.08f;
     [Min(0.01f)] public float returnStopSpeed = 0.15f;
+    [Min(0.1f)] public float dockingApproachHeight = 1f;
+    [Min(0.01f)] public float dockingApproachTolerance = 0.2f;
+    [Min(0.1f)] public float dockingPositionSpeed = 2f;
 
     [Header("可视化设置")]
     public bool showTrail = true;
@@ -96,6 +99,7 @@ public class RepairBot : MonoBehaviour
     private Transform cachedNavigationTarget;
     private AdvancedAvoidanceResult cachedAvoidanceResult;
     private float nextDirectionUpdateTime;
+    private bool isPrecisionDocking;
 
     // 调试信息
     private List<AvoidanceDebugInfo> debugAvoidanceInfo = new List<AvoidanceDebugInfo>();
@@ -257,6 +261,12 @@ public class RepairBot : MonoBehaviour
 
     private void NavigateToTarget(Transform target)
     {
+        if (isPrecisionDocking)
+        {
+            isPrecisionDocking = false;
+            SetDockedState(false);
+        }
+
         if (transform.parent == home)
         {
             LeaveHome();
@@ -274,14 +284,21 @@ public class RepairBot : MonoBehaviour
             return;
         }
 
-        Vector3 dockPosition = home.TransformPoint(homeOffset);
-        if ((dockPosition - transform.position).sqrMagnitude <= 25f)
+        Vector3 approachPosition = home.TransformPoint(homeOffset + Vector3.up * dockingApproachHeight);
+        if (isPrecisionDocking)
         {
             ReturnHome();
             return;
         }
 
-        NavigateToPosition(dockPosition, home);
+        if ((approachPosition - transform.position).sqrMagnitude
+            <= dockingApproachTolerance * dockingApproachTolerance)
+        {
+            ReturnHome();
+            return;
+        }
+
+        NavigateToPosition(approachPosition, home);
     }
 
     private void NavigateToPosition(Vector3 targetPosition, Transform targetReference)
@@ -594,45 +611,43 @@ public class RepairBot : MonoBehaviour
             return;
         }
 
-        Vector3 dockPosition = home.TransformPoint(homeOffset);
-        Vector3 toDock = dockPosition - transform.position;
-        float distance = toDock.magnitude;
-        Vector3 dockDirection = distance > 0.001f ? toDock / distance : home.forward;
-        Quaternion dockRotation = home.rotation;
-        float alignment = Quaternion.Angle(transform.rotation, dockRotation);
+        if (!isPrecisionDocking)
+        {
+            isPrecisionDocking = true;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            SetDockedState(true);
+        }
 
-        // 返航末段先对准停靠点，并按距离逐渐降低目标速度，避免瞬移和硬刹造成抖动。
+        Vector3 dockPosition = home.TransformPoint(homeOffset);
+        Quaternion dockRotation = home.rotation;
+
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            dockPosition,
+            Mathf.Max(0.1f, dockingPositionSpeed) * Time.fixedDeltaTime);
         transform.rotation = Quaternion.RotateTowards(
             transform.rotation,
             dockRotation,
             Mathf.Max(1f, rotationSpeed * 90f) * Time.fixedDeltaTime);
 
-        float brakeRatio = Mathf.Clamp01(distance / Mathf.Max(0.1f, returnBrakeDistance));
-        Vector3 desiredVelocity = dockDirection * (movementSpeed * brakeRatio);
-        rb.linearVelocity = Vector3.MoveTowards(
-            rb.linearVelocity,
-            desiredVelocity,
-            Mathf.Max(0.1f, movementSpeed * 2f) * Time.fixedDeltaTime);
-        rb.angularVelocity = Vector3.MoveTowards(rb.angularVelocity, Vector3.zero, 8f * Time.fixedDeltaTime);
-
-        if (distance > returnPositionTolerance
-            || alignment > returnAlignmentAngle
-            || rb.linearVelocity.magnitude > returnStopSpeed)
+        if ((dockPosition - transform.position).sqrMagnitude > returnPositionTolerance * returnPositionTolerance
+            || Quaternion.Angle(transform.rotation, dockRotation) > returnAlignmentAngle)
         {
             return;
         }
 
-        rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
         transform.SetParent(home, false);
         transform.localPosition = homeOffset;
         transform.localRotation = Quaternion.identity;
         cachedNavigationTarget = null;
         SetDockedState(true);
+        isPrecisionDocking = false;
     }
 
     private void LeaveHome()
     {
+        isPrecisionDocking = false;
         transform.parent = outside;
         SetDockedState(false);
         smoothedDirection = transform.forward;

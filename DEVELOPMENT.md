@@ -404,11 +404,11 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private void InitializeTrail()`：创建或补齐该功能所需的对象、引用、缓存和初始状态。
 - `private void FixedUpdate()`：验证当前修复目标并执行导航、修复或返航。
 - `private void NavigateToTarget(Transform target)`：按固定采样间隔更新避障方向，并以有限响应速度渐进转向目标。
-- `private void NavigateHomeSmoothly()`：使用 homeOffset 对应的停靠点执行返航导航和末段归位检查。
+- `private void NavigateHomeSmoothly()`：先导航到 homeOffset 上方一格的接近点，再进入精确停靠流程。
 - `private void NavigateToPosition(Vector3 targetPosition, Transform targetReference)`：缓存避障查询结果并施加平滑方向、速度和刚体移动。
 - `private AdvancedAvoidanceResult CalculateAdvancedAvoidance(Vector3 targetDirection)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private Vector3 BlendDirections(Vector3 targetDir, Vector3 avoidanceDir, float avoidanceStrength)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
-- `private void ReturnHome()`：对准 home 姿态后按距离平滑减速，停稳且误差足够小时再恢复父节点和局部坐标。
+- `private void ReturnHome()`：到达接近点后切换运动学状态，用代码精确移动到 homeOffset 并恢复父节点和局部坐标。
 - `private void LeaveHome()`：封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private void SetDockedState(bool docked)`：统一切换停靠时 Rigidbody 物理模拟/碰撞和 TrailRenderer 的启停状态。
 - `private void FindDamagedBlock()`：按扫描间隔刷新范围缓存，并用平方距离选择最近受损目标。
@@ -840,7 +840,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 2026-08-23
 
-- **降低 RepairBot 寻路方向变化率并平滑返航**：新增方向采样间隔与响应速度参数，避障 Raycast/OverlapSphere 结果按间隔缓存，但目标方向每个物理帧使用最新世界坐标计算，以跟随移动中的 home；返航改用 `home.TransformPoint(homeOffset)` 作为动态停靠点，先对准 home 姿态并按距离降低目标速度，停稳且达到位置/角度阈值后才重新挂回 home，取消原先的近距离瞬移归位。停靠在 home 时禁用 Rigidbody 和 TrailRenderer，离家时恢复两者。
+- **降低 RepairBot 寻路方向变化率并平滑返航**：新增方向采样间隔与响应速度参数，避障 Raycast/OverlapSphere 结果按间隔缓存，但目标方向每个物理帧使用最新世界坐标计算，以跟随移动中的 home；返航先导航到 `homeOffset` 上方一格的接近点，再切换运动学状态并用代码精确移动到动态停靠点，停靠在 home 时禁用 Rigidbody 物理模拟和 TrailRenderer，离家时恢复两者。
 - **验证**：已通过代码检查；尚未在 Unity 编辑器或 Play Mode 验证 Inspector 参数、不同停靠偏移和拥挤障碍场景下的实际运动表现。
 
 - **限制无用 Group 数量**：`PlayManager.maxUselessControlUnitGroups`（默认 32）只统计没有 Cockpit 的 `ControlUnit`；有效 Group 不占用该上限。超过上限时仅将超出的无 Cockpit Group 交给 `DestroyManager.ScheduleUnitCleanup`，延迟清理前再次确认 Group 仍无 Cockpit。
