@@ -777,6 +777,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `public void PlayStart()`： 触发游玩流程、UI 状态或视觉反馈的更新。
 - `public void PlayEnd()`： 触发游玩流程、UI 状态或视觉反馈的更新。
 - `public void PlayerDeath()`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `private void SetPanelInteraction(GameObject panel, bool interactable)`：立即设置面板 CanvasGroup 的交互和射线拦截状态。
 - `public void EnterEnemyBlueprintBuildMode()`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
 - `public void ExitEnemyBlueprintBuildMode()`： 启动、准备或调度对应的生成、模式切换、刷新或事件流程。
 
@@ -830,6 +831,9 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 ## 10. 变更日志
 
 ### 2026-08-23
+
+- **修复玩家死亡后 Respawn 按钮延迟可交互**：死亡入口现在停止旧的面板淡入淡出协程，立即关闭 PlayPanel、启用 DeathPanel 的 `CanvasGroup` 射线与交互，并显式恢复 `respawnButton.interactable`；避免旧协程或 PlayPanel 的 CanvasGroup 在死亡界面上方继续拦截点击。
+- **验证**：已完成代码检查；尚未在 Unity Play Mode 验证连续死亡、快速重生和鼠标焦点切换流程。
 
 - **修复爆炸物理作用力未命中周围刚体**：原实现仅对同一 `ownerUnitId` 的编组 Rigidbody 调用 `AddExplosionForce`，而重新分组后的 Rigidbody 中心可能位于爆炸半径外，且外部附近刚体完全未被收集。现在通过 `Physics.OverlapSphere` 收集范围内刚体，并结合编组内实际子方块位置；按最近 Collider 受击点计算距离衰减后用 `AddForceAtPosition` 施加冲量。
 - **验证**：`dotnet build HY-Sandbox.sln --no-restore` 与 `git diff --check` 已通过；尚未在 Unity Play Mode 验证不同编组、静态刚体和边界距离下的实际位移表现。

@@ -205,13 +205,44 @@ public class MainUIPanels : MonoBehaviour
 
     public void PlayerDeath()
     {
+        StopAllCoroutines();
         PlayManager.instance.playMode = false;
         if (InputManager.instance != null)
         {
             InputManager.instance.EnterBuildMode();
         }
-        StartCoroutine(Fade(playPanel, false));
-        StartCoroutine(Fade(deathPanel, true));
+
+        // Death UI must accept the respawn click on the same frame as death; do not leave
+        // interaction dependent on competing fade coroutines or a stale CanvasGroup state.
+        SetPanelInteraction(deathPanel, true);
+        if (MainUIButtons.instance != null && MainUIButtons.instance.respawnButton != null)
+        {
+            MainUIButtons.instance.respawnButton.interactable = true;
+        }
+
+        SetPanelInteraction(playPanel, false);
+        if (playPanel != null)
+        {
+            playPanel.SetActive(false);
+        }
+
+        deathPanel.SetActive(true);
+        CanvasGroup deathCanvasGroup = deathPanel.GetComponent<CanvasGroup>();
+        deathCanvasGroup.alpha = 1f;
+    }
+
+    private void SetPanelInteraction(GameObject panel, bool interactable)
+    {
+        if (panel == null) return;
+
+        CanvasGroup canvasGroup = panel.GetComponent<CanvasGroup>();
+        if (canvasGroup == null)
+        {
+            canvasGroup = panel.AddComponent<CanvasGroup>();
+        }
+
+        canvasGroup.interactable = interactable;
+        canvasGroup.blocksRaycasts = interactable;
     }
 
     public void EnterEnemyBlueprintBuildMode()
