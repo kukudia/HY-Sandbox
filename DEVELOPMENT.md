@@ -1,7 +1,7 @@
 # HY-Sandbox 项目开发文档
 
 > 文档状态：持续维护中  
-> 最近核对：2026-08-22  
+> 最近核对：2026-08-24
 > Unity 编辑器：6000.3.11f1（`ProjectSettings/ProjectVersion.txt`）  
 > 当前分支：`main`
 
@@ -72,6 +72,10 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 `MainUIButtons` 负责按钮事件、操作模式和动态方块按钮；`SaveUIPanel` 负责玩家/敌方蓝图列表；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块，寻路避障按间隔采样并渐进转向，返航时对准停靠姿态后平滑减速归位。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager`、`StylizedBeamEffect` 和 `StylizedRingEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。
 
+### 3.6 物理模拟与性能
+
+项目使用 3D PhysX 作为运行时物理后端。为降低物理线程在大型构造体、敌人和爆炸冲量场景下的持续计算压力，当前项目设置为：固定物理步长约 0.02 秒（50 Hz；`ProjectSettings/TimeManager.asset` 使用 Unity 6000 的有理数格式保存）、单帧物理追赶上限 0.1 秒、默认位置求解迭代 4 次、默认速度求解迭代 1 次。碰撞回调复用已启用，Transform 自动同步保持关闭；2D 物理设置未改变。降低步频和迭代次数会减少 CPU 占用，但高速碰撞、堆叠稳定性和推进器控制手感需要在 Play Mode 复核。
+
 ## 4. 已确认实现的功能
 
 - 主场景和 URP 项目配置可被 Unity 项目识别。
@@ -98,6 +102,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 | P2 | `Resources.Load` 和逐个 Instantiate 在大蓝图下会造成加载峰值 | 建立 Prefab 注册表或 Addressables，批量/异步加载并复用对象。 |
 | P2 | 方块连接和阻挡检查依赖 Physics 查询 | 建立网格占用索引，旋转/删除时增量更新，减少全场景扫描。 |
 | P2 | 推进器求解器缺少运行时可观测性 | 输出目标力矩、残差、饱和推进器数量和求解耗时，便于调参和性能分析。 |
+| P2 | 物理预算需要按目标设备调校 | 当前固定步长约 50 Hz、默认位置求解 4 次、追赶上限 0.1 秒；若出现高速穿透、堆叠抖动或重载时模拟变慢，应针对 Rigidbody 的碰撞检测、质量和局部求解迭代单独调参。 |
 | P2 | EnemyController 的 AI 输入平滑参数仍需 Play Mode 调校 | 根据敌我距离、载具规模和目标帧率调节 `movementUpdateInterval` 与 `movementResponseRate`。 |
 | P2 | Block 爆炸当前仅实现范围断开、分组、物理冲量和粒子反馈 | 后续可在爆炸中心加入按距离衰减的伤害，并补充断开概率、冲量和半径的 Play Mode 调参记录。 |
 | P2 | UI 同时存在 uGUI 与 IMGUI | 将诊断面板迁移到统一 UI 系统，避免分辨率、输入焦点和生命周期不一致。 |
@@ -837,6 +842,12 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - **尚未验证**：Unity 编辑器导入、Inspector 序列化、Play Mode 交互、运行时日志和性能表现。
 
 ## 10. 变更日志
+
+### 2026-08-24
+
+- **降低 3D 物理模拟计算压力**：将 `ProjectSettings/TimeManager.asset` 的固定物理步长从约 0.01 秒（100 Hz）调整为约 0.02 秒（50 Hz），把单帧物理追赶上限从 0.333 秒收紧到 0.1 秒；将 `ProjectSettings/DynamicsManager.asset` 的默认位置求解迭代从 6 次降为 4 次，速度求解迭代保持 1 次。2D 物理设置、碰撞层矩阵、重力和碰撞回调复用未改动。
+- **影响**：正常帧下物理步数约减半，单步求解开销降低；极端卡顿时最多追赶 5 个 0.02 秒物理步，避免物理追赶长时间占满主线程。高速碰撞、方块堆叠稳定性和推进器响应仍需按目标设备校准。
+- **验证**：已通过项目设置文件检查，确认 Unity 版本为 6000.3.11f1、固定步长有理数配置对应约 0.02 秒、3D 求解迭代为 4/1，并完成 `git diff --check`；尚未在 Unity 编辑器或 Play Mode 进行实际帧率、物理稳定性和碰撞穿透验证。
 
 ### 2026-08-23
 
