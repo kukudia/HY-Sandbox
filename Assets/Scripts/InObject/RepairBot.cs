@@ -65,6 +65,7 @@ public class RepairBot : MonoBehaviour
     [Min(0.1f)] public float dockingApproachHeight = 1f;
     [Min(0.01f)] public float dockingApproachTolerance = 0.2f;
     [Min(0.1f)] public float dockingPositionSpeed = 2f;
+    [Range(0f, 90f)] public float returnMaxAvoidanceAngle = 65f;
 
     [Header("可视化设置")]
     public bool showTrail = true;
@@ -99,6 +100,7 @@ public class RepairBot : MonoBehaviour
     private Transform cachedNavigationTarget;
     private AdvancedAvoidanceResult cachedAvoidanceResult;
     private float nextDirectionUpdateTime;
+    private float cachedAvoidanceRangeScale = 1f;
     private enum NavigationState
     {
         Idle,
@@ -313,35 +315,46 @@ public class RepairBot : MonoBehaviour
             return;
         }
 
-        NavigateToPosition(approachPosition, home, false);
+        float avoidanceRangeScale = Mathf.InverseLerp(
+            dockingCaptureDistance,
+            Mathf.Max(dockingCaptureDistance + 0.01f, predictiveAvoidanceRange),
+            Vector3.Distance(transform.position, approachPosition));
+        NavigateToPosition(
+            approachPosition,
+            home,
+            avoidanceRangeScale,
+            returnMaxAvoidanceAngle);
     }
 
     private void NavigateToPosition(
         Vector3 targetPosition,
         Transform targetReference,
-        bool useAvoidance = true)
+        float avoidanceRangeScale = 1f,
+        float maxAvoidanceAngle = 120f)
     {
         navigateTarget = targetReference;
+        avoidanceRangeScale = Mathf.Clamp01(avoidanceRangeScale);
 
         // 计算目标方向
         Vector3 targetDirection = (targetPosition - transform.position).normalized;
 
         // 避障查询按固定间隔采样，物理帧之间只渐进跟随缓存结果，避免方向高频抖动和重复 Raycast。
-        if (useAvoidance
-            && (targetReference != cachedNavigationTarget || Time.time >= nextDirectionUpdateTime))
+        if (targetReference != cachedNavigationTarget
+            || Time.time >= nextDirectionUpdateTime
+            || Mathf.Abs(avoidanceRangeScale - cachedAvoidanceRangeScale) >= 0.15f)
         {
             cachedNavigationTarget = targetReference;
+            cachedAvoidanceRangeScale = avoidanceRangeScale;
             nextDirectionUpdateTime = Time.time + Mathf.Max(0.05f, directionUpdateInterval);
-            cachedAvoidanceResult = CalculateAdvancedAvoidance(targetDirection);
+            cachedAvoidanceResult = CalculateAdvancedAvoidance(targetDirection, avoidanceRangeScale);
         }
 
         // 目标方向使用当前世界坐标实时计算；避障查询可以降频，但移动中的 home 不能使用旧位置。
-        Vector3 finalDirection = useAvoidance
-            ? BlendDirections(
-                targetDirection,
-                cachedAvoidanceResult.avoidanceDirection,
-                cachedAvoidanceResult.avoidanceStrength)
-            : targetDirection;
+        Vector3 finalDirection = BlendDirections(
+            targetDirection,
+            cachedAvoidanceResult.avoidanceDirection,
+            cachedAvoidanceResult.avoidanceStrength * avoidanceRangeScale,
+            maxAvoidanceAngle);
         if (smoothedDirection.sqrMagnitude < 0.001f)
             smoothedDirection = transform.forward;
         smoothedDirection = Vector3.RotateTowards(
@@ -351,7 +364,10 @@ public class RepairBot : MonoBehaviour
             0f);
 
         // 根据障碍物密度调整速度
-        float targetSpeedMultiplier = useAvoidance ? cachedAvoidanceResult.speedMultiplier : 1f;
+        float targetSpeedMultiplier = Mathf.Lerp(
+            1f,
+            cachedAvoidanceResult.speedMultiplier,
+            avoidanceRangeScale);
         currentSpeedMultiplier = Mathf.Lerp(
             currentSpeedMultiplier,
             targetSpeedMultiplier,
@@ -380,9 +396,10 @@ public class RepairBot : MonoBehaviour
         }
 
         // 保存当前避障方向用于可视化
-        currentAvoidanceDirection = useAvoidance
-            ? cachedAvoidanceResult.avoidanceDirection
-            : Vector3.zero;
+        currentAvoidanceDirection = Vector3.Lerp(
+            Vector3.zero,
+            cachedAvoidanceResult.avoidanceDirection,
+            avoidanceRangeScale);
     }
 
     // ===== 优化的避障算法核心 =====
@@ -394,9 +411,21 @@ public class RepairBot : MonoBehaviour
         public int obstacleCount;
     }
 
-    private AdvancedAvoidanceResult CalculateAdvancedAvoidance(Vector3 targetDirection)
+    private AdvancedAvoidanceResult CalculateAdvancedAvoidance(
+        Vector3 targetDirection,
+        float rangeScale)
     {
         debugAvoidanceInfo.Clear();
+
+        rangeScale = Mathf.Clamp01(rangeScale);
+        if (rangeScale <= 0.01f)
+        {
+            return new AdvancedAvoidanceResult { speedMultiplier = 1f };
+        }
+
+        float emergencyRange = emergencyAvoidanceRange * rangeScale;
+        float primaryRange = primaryAvoidanceRange * rangeScale;
+        float predictiveRange = predictiveAvoidanceRange * rangeScale;
 
         Vector3 emergencyAvoidance = Vector3.zero;
         Vector3 primaryAvoidance = Vector3.zero;
@@ -413,7 +442,7 @@ public class RepairBot : MonoBehaviour
             Quaternion rotation = Quaternion.AngleAxis(angleStep * i, Vector3.up);
             Vector3 direction = rotation * Vector3.forward;
 
-            if (Physics.Raycast(transform.position, direction, out RaycastHit hit, predictiveAvoidanceRange, obstacleMask))
+            if (Physics.Raycast(transform.position, direction, out RaycastHit hit, predictiveRange, obstacleMask))
             {
                 // 过滤地面
                 if (Vector3.Dot(hit.normal, Vector3.up) >= groundNormalThreshold)
@@ -423,14 +452,15 @@ public class RepairBot : MonoBehaviour
                     continue;
 
                 ProcessRaycastHit(hit, ref emergencyAvoidance, ref primaryAvoidance, ref predictiveAvoidance,
-                    ref emergencyCount, ref primaryCount, ref predictiveCount);
+                    ref emergencyCount, ref primaryCount, ref predictiveCount,
+                    emergencyRange, primaryRange, predictiveRange);
             }
         }
 
         // 2. 球形检测法（补充检测盲区）
         int nearbyColliderCount = Physics.OverlapSphereNonAlloc(
             transform.position,
-            primaryAvoidanceRange,
+            primaryRange,
             nearbyColliders,
             obstacleMask
         );
@@ -450,17 +480,17 @@ public class RepairBot : MonoBehaviour
                 continue;
 
             ProcessSphereCollider(obstaclePos, distance, ref emergencyAvoidance, ref primaryAvoidance,
-                ref emergencyCount, ref primaryCount);
+                ref emergencyCount, ref primaryCount, emergencyRange, primaryRange);
         }
 
         // 3. 前方预测检测（基于当前速度）
         if (rb.linearVelocity.magnitude > 0.5f)
         {
-            Vector3 predictedPosition = transform.position + rb.linearVelocity.normalized * predictiveAvoidanceRange;
+            Vector3 predictedPosition = transform.position + rb.linearVelocity.normalized * predictiveRange;
             Vector3 predictionDirection = (predictedPosition - transform.position).normalized;
 
             if (Physics.Raycast(transform.position, predictionDirection, out RaycastHit predictHit,
-                predictiveAvoidanceRange, obstacleMask))
+                predictiveRange, obstacleMask))
             {
                 if (Vector3.Dot(predictHit.normal, Vector3.up) < groundNormalThreshold &&
                     predictHit.point.y - transform.position.y >= groundHeightThreshold)
@@ -519,7 +549,8 @@ public class RepairBot : MonoBehaviour
 
     private void ProcessRaycastHit(RaycastHit hit,
         ref Vector3 emergency, ref Vector3 primary, ref Vector3 predictive,
-        ref int emergencyCount, ref int primaryCount, ref int predictiveCount)
+        ref int emergencyCount, ref int primaryCount, ref int predictiveCount,
+        float emergencyRange, float primaryRange, float predictiveRange)
     {
         float distance = hit.distance;
         Vector3 avoidDir = (transform.position - hit.point).normalized;
@@ -536,9 +567,9 @@ public class RepairBot : MonoBehaviour
                 avoidDir = Quaternion.Euler(0, -30, 0) * avoidDir;
         }
 
-        if (distance < emergencyAvoidanceRange)
+        if (distance < emergencyRange)
         {
-            float force = 1f - (distance / emergencyAvoidanceRange);
+            float force = 1f - (distance / emergencyRange);
             emergency += avoidDir * force;
             emergencyCount++;
 
@@ -550,9 +581,9 @@ public class RepairBot : MonoBehaviour
                 level = AvoidanceLevel.Emergency
             });
         }
-        else if (distance < primaryAvoidanceRange)
+        else if (distance < primaryRange)
         {
-            float force = 1f - (distance / primaryAvoidanceRange);
+            float force = 1f - (distance / primaryRange);
             primary += avoidDir * force;
             primaryCount++;
 
@@ -566,7 +597,7 @@ public class RepairBot : MonoBehaviour
         }
         else
         {
-            float force = 1f - (distance / predictiveAvoidanceRange);
+            float force = 1f - (distance / predictiveRange);
             predictive += avoidDir * force;
             predictiveCount++;
 
@@ -582,25 +613,30 @@ public class RepairBot : MonoBehaviour
 
     private void ProcessSphereCollider(Vector3 obstaclePos, float distance,
         ref Vector3 emergency, ref Vector3 primary,
-        ref int emergencyCount, ref int primaryCount)
+        ref int emergencyCount, ref int primaryCount,
+        float emergencyRange, float primaryRange)
     {
         Vector3 avoidDir = (transform.position - obstaclePos).normalized;
 
-        if (distance < emergencyAvoidanceRange)
+        if (distance < emergencyRange)
         {
-            float force = 1f - (distance / emergencyAvoidanceRange);
+            float force = 1f - (distance / emergencyRange);
             emergency += avoidDir * force;
             emergencyCount++;
         }
-        else if (distance < primaryAvoidanceRange)
+        else if (distance < primaryRange)
         {
-            float force = 1f - (distance / primaryAvoidanceRange);
+            float force = 1f - (distance / primaryRange);
             primary += avoidDir * force;
             primaryCount++;
         }
     }
 
-    private Vector3 BlendDirections(Vector3 targetDir, Vector3 avoidanceDir, float avoidanceStrength)
+    private Vector3 BlendDirections(
+        Vector3 targetDir,
+        Vector3 avoidanceDir,
+        float avoidanceStrength,
+        float maxAvoidanceAngle)
     {
         if (avoidanceStrength < 0.01f)
             return targetDir;
@@ -612,7 +648,9 @@ public class RepairBot : MonoBehaviour
         Vector3 blended = (targetDir * targetWeight + avoidanceDir * avoidanceWeight).normalized;
 
         // 确保不会完全偏离目标
-        float maxDeviation = Mathf.Lerp(90f, 120f, avoidanceStrength);
+        float maxDeviation = Mathf.Min(
+            Mathf.Lerp(90f, 120f, avoidanceStrength),
+            Mathf.Clamp(maxAvoidanceAngle, 0f, 180f));
         float angle = Vector3.Angle(targetDir, blended);
 
         if (angle > maxDeviation)
