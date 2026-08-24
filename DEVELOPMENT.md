@@ -415,7 +415,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private Vector3 BlendDirections(Vector3 targetDir, Vector3 avoidanceDir, float avoidanceStrength)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private void ReturnHome()`：到达接近点后切换运动学状态，用代码精确移动到 homeOffset 并恢复父节点和局部坐标。
 - `private void LeaveHome()`：封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
-- `private void SetDockedState(bool docked)`：统一切换停靠时 Rigidbody 物理模拟/碰撞和 TrailRenderer 的启停状态。
+- `private void SetNavigationState(NavigationState nextState)`：按导航状态统一切换 Rigidbody 物理模拟/碰撞和 TrailRenderer 的启停状态。
 - `private void FindDamagedBlock()`：按扫描间隔刷新范围缓存，并用平方距离选择最近受损目标。
 - `private bool IsValidRepairTarget(Durability target)`：验证目标仍受损、未离开 home 范围且归属当前 ControlUnit。
 - `private void CheckAndRepair()`：处理碰撞、连接、耐久、维修或状态检查逻辑。
@@ -845,13 +845,16 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 2026-08-24
 
+- **RepairBot 导航状态机**：用 `NavigationState` 替代独立的精确停靠布尔值和 `SetDockedState`，统一管理 Idle、NavigatingToTarget、ReturningHome、Docking 四种状态，以及 Rigidbody 物理模拟、碰撞和 TrailRenderer 的启停。
+- **验证**：已通过代码检查、`dotnet build HY-Sandbox.sln --no-restore`（0 错误；仅有既有 Profiler API 过时警告）和暂存差异检查；尚未在 Unity Play Mode 验证状态切换与离家/返航交互。
+
 - **降低 3D 物理模拟计算压力**：将 `ProjectSettings/TimeManager.asset` 的固定物理步长从约 0.01 秒（100 Hz）调整为约 0.02 秒（50 Hz），把单帧物理追赶上限从 0.333 秒收紧到 0.1 秒；将 `ProjectSettings/DynamicsManager.asset` 的默认位置求解迭代从 6 次降为 4 次，速度求解迭代保持 1 次。2D 物理设置、碰撞层矩阵、重力和碰撞回调复用未改动。
 - **影响**：正常帧下物理步数约减半，单步求解开销降低；极端卡顿时最多追赶 5 个 0.02 秒物理步，避免物理追赶长时间占满主线程。高速碰撞、方块堆叠稳定性和推进器响应仍需按目标设备校准。
 - **验证**：已通过项目设置文件检查，确认 Unity 版本为 6000.3.11f1、固定步长有理数配置对应约 0.02 秒、3D 求解迭代为 4/1，并完成 `git diff --check`；尚未在 Unity 编辑器或 Play Mode 进行实际帧率、物理稳定性和碰撞穿透验证。
 
 ### 2026-08-23
 
-- **降低 RepairBot 寻路方向变化率并平滑返航**：新增方向采样间隔与响应速度参数，避障 Raycast/OverlapSphere 结果按间隔缓存，但目标方向每个物理帧使用最新世界坐标计算，以跟随移动中的 home；返航先导航到 `homeOffset` 上方一格的接近点，再切换运动学状态并用代码精确移动到动态停靠点，停靠在 home 时禁用 Rigidbody 物理模拟和 TrailRenderer，离家时恢复两者。
+- **降低 RepairBot 寻路方向变化率并平滑返航**：新增 `NavigationState`（Idle、NavigatingToTarget、ReturningHome、Docking）管理目标导航、返航和精确停靠状态；避障 Raycast/OverlapSphere 结果按间隔缓存，但目标方向每个物理帧使用最新世界坐标计算，以跟随移动中的 home；返航先导航到 `homeOffset` 上方一格的接近点，再切换运动学状态并用代码精确移动到动态停靠点，停靠在 home 时禁用 Rigidbody 物理模拟和 TrailRenderer，离家时恢复两者。
 - **验证**：已通过代码检查；尚未在 Unity 编辑器或 Play Mode 验证 Inspector 参数、不同停靠偏移和拥挤障碍场景下的实际运动表现。
 
 - **限制无用 Group 数量**：`PlayManager.maxUselessControlUnitGroups`（默认 32）只统计没有 Cockpit 的 `ControlUnit`；有效 Group 不占用该上限。超过上限时仅将超出的无 Cockpit Group 交给 `DestroyManager.ScheduleUnitCleanup`，延迟清理前再次确认 Group 仍无 Cockpit。

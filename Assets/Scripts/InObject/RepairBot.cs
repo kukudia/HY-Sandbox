@@ -99,7 +99,15 @@ public class RepairBot : MonoBehaviour
     private Transform cachedNavigationTarget;
     private AdvancedAvoidanceResult cachedAvoidanceResult;
     private float nextDirectionUpdateTime;
-    private bool isPrecisionDocking;
+    private enum NavigationState
+    {
+        Idle,
+        NavigatingToTarget,
+        ReturningHome,
+        Docking
+    }
+    private NavigationState currentState;
+    private bool navigationStateInitialized;
 
     // 调试信息
     private List<AvoidanceDebugInfo> debugAvoidanceInfo = new List<AvoidanceDebugInfo>();
@@ -125,11 +133,12 @@ public class RepairBot : MonoBehaviour
         home = transform.parent;
         homeOffset = transform.localPosition;
         blockLayerMask = LayerMask.GetMask("Block");
-
         InitializeComponents();
         InitializeTargetsInRange();
         InitializeTrail();
-        SetDockedState(transform.parent == home);
+        SetNavigationState(transform.parent == home
+            ? NavigationState.Idle
+            : NavigationState.ReturningHome);
     }
 
     private void InitializeComponents()
@@ -261,15 +270,13 @@ public class RepairBot : MonoBehaviour
 
     private void NavigateToTarget(Transform target)
     {
-        if (isPrecisionDocking)
-        {
-            isPrecisionDocking = false;
-            SetDockedState(false);
-        }
-
         if (transform.parent == home)
         {
             LeaveHome();
+        }
+        else
+        {
+            SetNavigationState(NavigationState.NavigatingToTarget);
         }
 
         NavigateToPosition(target.position, target);
@@ -284,8 +291,13 @@ public class RepairBot : MonoBehaviour
             return;
         }
 
+        if (currentState != NavigationState.Docking)
+        {
+            SetNavigationState(NavigationState.ReturningHome);
+        }
+
         Vector3 approachPosition = home.TransformPoint(homeOffset + Vector3.up * dockingApproachHeight);
-        if (isPrecisionDocking)
+        if (currentState == NavigationState.Docking)
         {
             ReturnHome();
             return;
