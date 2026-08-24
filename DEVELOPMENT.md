@@ -410,7 +410,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private void FixedUpdate()`：验证当前修复目标并执行导航、修复或返航。
 - `private void NavigateToTarget(Transform target)`：按固定采样间隔更新避障方向，并以有限响应速度渐进转向目标。
 - `private void NavigateHomeSmoothly()`：先导航到 homeOffset 上方一格的接近点，再进入精确停靠流程。
-- `private void NavigateToPosition(Vector3 targetPosition, Transform targetReference)`：缓存避障查询结果并施加平滑方向、速度和刚体移动。
+- `private void NavigateToPosition(Vector3 targetPosition, Transform targetReference, bool useAvoidance = true)`：按状态选择直接导航或缓存避障查询结果，并施加平滑方向、速度和刚体移动。
 - `private AdvancedAvoidanceResult CalculateAdvancedAvoidance(Vector3 targetDirection)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private Vector3 BlendDirections(Vector3 targetDir, Vector3 avoidanceDir, float avoidanceStrength)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private void ReturnHome()`：到达接近点后切换运动学状态，用代码精确移动到 homeOffset 并恢复父节点和局部坐标。
@@ -844,6 +844,9 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 ## 10. 变更日志
 
 ### 2026-08-24
+
+- **修复 RepairBot 返航与避障冲突**：`ReturningHome` 使用动态接近点的直接平滑导航，不再混入会把 RepairBot 从母体推开的普通避障方向；进入 Docking 的捕获距离同时考虑配置容差和当前速度在一个物理步内的位移，避免高速越过接近点而无法切换到精确停靠。
+- **验证**：已通过 `dotnet build HY-Sandbox.sln --no-restore`（0 错误；仅有既有 Profiler API 过时警告）和任务文件差异检查；尚未在 Unity Play Mode 验证移动中的 home、高速返航和复杂载具外形下的停靠表现。
 
 - **RepairBot 导航状态机**：用 `NavigationState` 替代独立的精确停靠布尔值和 `SetDockedState`，统一管理 Idle、NavigatingToTarget、ReturningHome、Docking 四种状态，以及 Rigidbody 物理模拟、碰撞和 TrailRenderer 的启停。
 - **验证**：已通过代码检查、`dotnet build HY-Sandbox.sln --no-restore`（0 错误；仅有既有 Profiler API 过时警告）和暂存差异检查；尚未在 Unity Play Mode 验证状态切换与离家/返航交互。

@@ -303,17 +303,23 @@ public class RepairBot : MonoBehaviour
             return;
         }
 
+        float dockingCaptureDistance = Mathf.Max(
+            dockingApproachTolerance,
+            rb.linearVelocity.magnitude * Time.fixedDeltaTime * 1.5f);
         if ((approachPosition - transform.position).sqrMagnitude
-            <= dockingApproachTolerance * dockingApproachTolerance)
+            <= dockingCaptureDistance * dockingCaptureDistance)
         {
             ReturnHome();
             return;
         }
 
-        NavigateToPosition(approachPosition, home);
+        NavigateToPosition(approachPosition, home, false);
     }
 
-    private void NavigateToPosition(Vector3 targetPosition, Transform targetReference)
+    private void NavigateToPosition(
+        Vector3 targetPosition,
+        Transform targetReference,
+        bool useAvoidance = true)
     {
         navigateTarget = targetReference;
 
@@ -321,7 +327,8 @@ public class RepairBot : MonoBehaviour
         Vector3 targetDirection = (targetPosition - transform.position).normalized;
 
         // 避障查询按固定间隔采样，物理帧之间只渐进跟随缓存结果，避免方向高频抖动和重复 Raycast。
-        if (targetReference != cachedNavigationTarget || Time.time >= nextDirectionUpdateTime)
+        if (useAvoidance
+            && (targetReference != cachedNavigationTarget || Time.time >= nextDirectionUpdateTime))
         {
             cachedNavigationTarget = targetReference;
             nextDirectionUpdateTime = Time.time + Mathf.Max(0.05f, directionUpdateInterval);
@@ -329,10 +336,12 @@ public class RepairBot : MonoBehaviour
         }
 
         // 目标方向使用当前世界坐标实时计算；避障查询可以降频，但移动中的 home 不能使用旧位置。
-        Vector3 finalDirection = BlendDirections(
-            targetDirection,
-            cachedAvoidanceResult.avoidanceDirection,
-            cachedAvoidanceResult.avoidanceStrength);
+        Vector3 finalDirection = useAvoidance
+            ? BlendDirections(
+                targetDirection,
+                cachedAvoidanceResult.avoidanceDirection,
+                cachedAvoidanceResult.avoidanceStrength)
+            : targetDirection;
         if (smoothedDirection.sqrMagnitude < 0.001f)
             smoothedDirection = transform.forward;
         smoothedDirection = Vector3.RotateTowards(
@@ -342,9 +351,10 @@ public class RepairBot : MonoBehaviour
             0f);
 
         // 根据障碍物密度调整速度
+        float targetSpeedMultiplier = useAvoidance ? cachedAvoidanceResult.speedMultiplier : 1f;
         currentSpeedMultiplier = Mathf.Lerp(
             currentSpeedMultiplier,
-            cachedAvoidanceResult.speedMultiplier,
+            targetSpeedMultiplier,
             Time.fixedDeltaTime * 3f
         );
 
@@ -370,7 +380,9 @@ public class RepairBot : MonoBehaviour
         }
 
         // 保存当前避障方向用于可视化
-        currentAvoidanceDirection = cachedAvoidanceResult.avoidanceDirection;
+        currentAvoidanceDirection = useAvoidance
+            ? cachedAvoidanceResult.avoidanceDirection
+            : Vector3.zero;
     }
 
     // ===== 优化的避障算法核心 =====
@@ -619,16 +631,15 @@ public class RepairBot : MonoBehaviour
 
         if (transform.parent == home)
         {
-            SetDockedState(true);
+            SetNavigationState(NavigationState.Idle);
             return;
         }
 
-        if (!isPrecisionDocking)
+        if (currentState != NavigationState.Docking)
         {
-            isPrecisionDocking = true;
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
-            SetDockedState(true);
+            SetNavigationState(NavigationState.Docking);
         }
 
         Vector3 dockPosition = home.TransformPoint(homeOffset);
@@ -653,20 +664,24 @@ public class RepairBot : MonoBehaviour
         transform.localPosition = homeOffset;
         transform.localRotation = Quaternion.identity;
         cachedNavigationTarget = null;
-        SetDockedState(true);
-        isPrecisionDocking = false;
+        SetNavigationState(NavigationState.Idle);
     }
 
     private void LeaveHome()
     {
-        isPrecisionDocking = false;
         transform.parent = outside;
-        SetDockedState(false);
+        SetNavigationState(NavigationState.NavigatingToTarget);
         smoothedDirection = transform.forward;
     }
 
-    private void SetDockedState(bool docked)
+    private void SetNavigationState(NavigationState nextState)
     {
+        if (navigationStateInitialized && currentState == nextState)
+            return;
+
+        currentState = nextState;
+        navigationStateInitialized = true;
+        bool docked = nextState == NavigationState.Idle || nextState == NavigationState.Docking;
         if (rb != null)
         {
             rb.isKinematic = docked;
