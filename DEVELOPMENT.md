@@ -1,7 +1,7 @@
 # HY-Sandbox 项目开发文档
 
 > 文档状态：持续维护中  
-> 最近核对：2026-08-24
+> 最近核对：2026-08-25
 > Unity 编辑器：6000.3.11f1（`ProjectSettings/ProjectVersion.txt`）  
 > 当前分支：`main`
 
@@ -411,6 +411,9 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private void NavigateToTarget(Transform target)`：按固定采样间隔更新避障方向，并以有限响应速度渐进转向目标。
 - `private void NavigateHomeSmoothly()`：先导航到 homeOffset 上方一格的接近点，再进入精确停靠流程。
 - `private void NavigateToPosition(Vector3 targetPosition, Transform targetReference, float avoidanceRangeScale = 1f, float maxAvoidanceAngle = 120f)`：按状态缩放避障查询距离和最大方向偏差，并施加平滑方向、速度和刚体移动。
+- `private void ApplyReturnHomeMovement(Vector3 targetPosition, Vector3 targetDirection, float effectiveSpeed)`：根据剩余距离、朝向和 Home 接近点速度计算允许的相对速度，并施加受限制动力。
+- `private Vector3 GetRelativeHomeVelocity(Vector3 worldPosition)`：计算 RepairBot 相对 Home 指定世界点的速度，用于返航制动和 Docking 捕获范围。
+- `private Vector3 GetHomePointVelocity(Vector3 worldPosition)`：读取 Home Rigidbody 在指定世界点的线速度与旋转切向速度。
 - `private AdvancedAvoidanceResult CalculateHomeNavigationGuidance(Vector3 targetDirection, float rangeScale)`：从动态 Home 停靠点发射少量方向射线，选择开阔且朝向 RepairBot 的接近方向，作为返航引导。
 - `private float GetHomeGuidanceClearFraction(Vector3 origin, Vector3 direction, float range)`：使用复用的 RaycastNonAlloc 缓冲区计算 Home 局部方向的开阔度。
 - `private bool IsIgnoredHomeGuidanceCollider(Collider collider)`：过滤 Home 自身层级和 RepairBot 自身碰撞体，避免引导射线被宿主阻挡。
@@ -845,6 +848,11 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - **尚未验证**：Unity 编辑器导入、Inspector 序列化、Play Mode 交互、运行时日志和性能表现。
 
 ## 10. 变更日志
+
+### 2026-08-25
+
+- **优化 RepairBot ReturningHome 减速**：返航不再持续加速后仅硬截断总速度；改为相对 Home 的速度控制，按 `sqrt(2ad)` 根据剩余距离计算可停车速度，并结合 `returnBrakeDistance`、朝向一致性和 Home Rigidbody 接近点速度平滑施加受限加速度。保留 `returnStopSpeed` 的最低接近速度，避免接近点前悬停锁死；Docking 捕获范围改用相对 Home 接近点的速度，防止移动中的 Home 导致过早停靠。
+- **验证**：已通过 `dotnet build HY-Sandbox.sln --no-restore`（0 错误；仅有既有 Profiler API 过时警告）和 `git diff --check`；尚未在 Unity Play Mode 验证静止/移动 Home、高速返航、急转弯和不同刚体质量下的制动距离。
 
 ### 2026-08-24
 

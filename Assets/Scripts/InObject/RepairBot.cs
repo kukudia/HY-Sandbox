@@ -63,6 +63,7 @@ public class RepairBot : MonoBehaviour
     [Min(0.1f)] public float returnBrakeDistance = 2f;
     [Min(0.01f)] public float returnPositionTolerance = 0.08f;
     [Min(0.01f)] public float returnStopSpeed = 0.15f;
+    [Min(0.1f)] public float returnBrakingAcceleration = 12f;
     [Min(0.1f)] public float dockingApproachHeight = 1f;
     [Min(0.01f)] public float dockingApproachTolerance = 0.2f;
     [Min(0.1f)] public float dockingPositionSpeed = 2f;
@@ -92,6 +93,7 @@ public class RepairBot : MonoBehaviour
 
     // 私有变量
     private Rigidbody rb;
+    private Rigidbody homeRigidbody;
     private Vector3 currentAvoidanceDirection;
     private Vector3 smoothedDirection;
     private float currentSpeedMultiplier = 1f;
@@ -185,6 +187,7 @@ public class RepairBot : MonoBehaviour
         targetsInRange.Clear();
         uniqueTargetsInRange.Clear();
         ownerUnit = home != null ? home.GetComponentInParent<ControlUnit>() : null;
+        homeRigidbody = home != null ? home.GetComponentInParent<Rigidbody>() : null;
         if (home == null || ownerUnit == null || targetRange <= 0 || blockLayerMask == 0)
         {
             return;
@@ -314,7 +317,7 @@ public class RepairBot : MonoBehaviour
 
         float dockingCaptureDistance = Mathf.Max(
             dockingApproachTolerance,
-            rb.linearVelocity.magnitude * Time.fixedDeltaTime * 1.5f);
+            GetRelativeHomeVelocity(approachPosition).magnitude * Time.fixedDeltaTime * 1.5f);
         if ((approachPosition - transform.position).sqrMagnitude
             <= dockingCaptureDistance * dockingCaptureDistance)
         {
@@ -396,12 +399,19 @@ public class RepairBot : MonoBehaviour
 
         // 应用移动力
         float effectiveSpeed = movementSpeed * currentSpeedMultiplier;
-        rb.AddForce(transform.forward * effectiveSpeed, ForceMode.Acceleration);
-
-        // 限制最大速度
-        if (rb.linearVelocity.magnitude > effectiveSpeed * 2f)
+        if (currentState == NavigationState.ReturningHome)
         {
-            rb.linearVelocity = rb.linearVelocity.normalized * effectiveSpeed * 2f;
+            ApplyReturnHomeMovement(targetPosition, targetDirection, effectiveSpeed);
+        }
+        else
+        {
+            rb.AddForce(transform.forward * effectiveSpeed, ForceMode.Acceleration);
+
+            // 限制最大速度
+            if (rb.linearVelocity.magnitude > effectiveSpeed * 2f)
+            {
+                rb.linearVelocity = rb.linearVelocity.normalized * effectiveSpeed * 2f;
+            }
         }
 
         // 保存当前避障方向用于可视化
@@ -409,6 +419,48 @@ public class RepairBot : MonoBehaviour
             Vector3.zero,
             cachedAvoidanceResult.avoidanceDirection,
             avoidanceRangeScale);
+    }
+
+    private void ApplyReturnHomeMovement(
+        Vector3 targetPosition,
+        Vector3 targetDirection,
+        float effectiveSpeed)
+    {
+        float remainingDistance = Mathf.Max(
+            0f,
+            Vector3.Distance(transform.position, targetPosition) - dockingApproachTolerance);
+        float brakingAcceleration = Mathf.Max(0.1f, returnBrakingAcceleration);
+        float maxReturnSpeed = Mathf.Max(returnStopSpeed, effectiveSpeed * 2f);
+        float stoppingLimitedSpeed = Mathf.Sqrt(2f * brakingAcceleration * remainingDistance);
+        float distanceLimitedSpeed = Mathf.Lerp(
+            returnStopSpeed,
+            maxReturnSpeed,
+            Mathf.Clamp01(remainingDistance / Mathf.Max(0.1f, returnBrakeDistance)));
+        float facingAlignment = Mathf.Clamp01(Vector3.Dot(transform.forward, targetDirection));
+        float desiredRelativeSpeed = Mathf.Min(stoppingLimitedSpeed, distanceLimitedSpeed, maxReturnSpeed);
+        desiredRelativeSpeed = Mathf.Max(
+            returnStopSpeed,
+            desiredRelativeSpeed * Mathf.Lerp(0.35f, 1f, facingAlignment));
+
+        Vector3 homeVelocity = GetHomePointVelocity(targetPosition);
+        Vector3 desiredWorldVelocity = homeVelocity + smoothedDirection.normalized * desiredRelativeSpeed;
+        Vector3 velocityDelta = desiredWorldVelocity - rb.linearVelocity;
+        Vector3 acceleration = Vector3.ClampMagnitude(
+            velocityDelta / Mathf.Max(Time.fixedDeltaTime, 0.001f),
+            brakingAcceleration);
+        rb.AddForce(acceleration, ForceMode.Acceleration);
+    }
+
+    private Vector3 GetRelativeHomeVelocity(Vector3 worldPosition)
+    {
+        return rb.linearVelocity - GetHomePointVelocity(worldPosition);
+    }
+
+    private Vector3 GetHomePointVelocity(Vector3 worldPosition)
+    {
+        return homeRigidbody != null
+            ? homeRigidbody.GetPointVelocity(worldPosition)
+            : Vector3.zero;
     }
 
     // ===== 优化的避障算法核心 =====
