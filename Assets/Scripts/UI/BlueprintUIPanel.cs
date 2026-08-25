@@ -80,6 +80,12 @@ public class BlueprintUIPanel : MonoBehaviour
         }
     }
 
+    public void UpdateStatistics(int blockCount, float mass)
+    {
+        UpdateTotalNumber(blockCount);
+        UpdateTotalMass(mass);
+    }
+
     public void UpdateTotalNumber(int newNumber)
     {
         if (totalNumber != null)

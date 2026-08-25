@@ -60,7 +60,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 `SaveManager` 管理两个命名空间：玩家存档 `Saves` 与敌方蓝图 `EnemyBlueprints`，支持创建、读取、删除、重命名、复制和文件名校验。列表中的 Duplicate 按钮会在当前命名空间生成不覆盖已有文件的 `Copy` 名称，并刷新列表；复制不会切换当前加载目标。`BlockData` 保存资源路径、尺寸、位置和旋转等重建所需数据。
 
-`BuildManager.LoadAllBlocks` 使用协程逐个实例化，支持加载进度、取消旧加载、无法加载数据清理和可选的相机环绕。存档身份依赖文件中的模块数据，不应把运行时 `GetInstanceID()` 当作跨会话稳定 ID。
+`BuildManager.LoadAllBlocks` 使用协程逐个实例化，支持加载进度、取消旧加载、无法加载数据清理和可选的相机环绕；方块数和总质量在主加载 `for` 循环中按成功恢复的 Block 增量累计并同步到 `BlueprintUIPanel`，不额外遍历已加载方块。存档身份依赖文件中的模块数据，不应把运行时 `GetInstanceID()` 当作跨会话稳定 ID。
 
 ### 3.4 游玩与推进器
 
@@ -70,7 +70,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 3.5 UI、敌人和效果
 
-`MainUIButtons` 负责按钮事件、操作模式和动态方块按钮；`SaveUIPanel` 负责玩家/敌方蓝图列表；`BlueprintUIPanel` 显示当前建造目标名称、方块数量和总质量，并在搭建、拆除、Undo/Redo 以及存档/敌方蓝图加载完成后刷新；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块，寻路避障按间隔采样并渐进转向，返航时对准停靠姿态后平滑减速归位。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager`、`StylizedBeamEffect` 和 `StylizedRingEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。
+`MainUIButtons` 负责按钮事件、操作模式和动态方块按钮；`SaveUIPanel` 负责玩家/敌方蓝图列表；`BlueprintUIPanel` 显示当前建造目标名称、方块数量和总质量，并在搭建、拆除、Undo/Redo 时刷新，在存档或敌方蓝图异步加载期间逐块更新；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块，寻路避障按间隔采样并渐进转向，返航时对准停靠姿态后平滑减速归位。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager`、`StylizedBeamEffect` 和 `StylizedRingEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。
 
 ### 3.6 物理模拟与性能
 
@@ -764,6 +764,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private void OnDestroy()`：面板销毁时清理静态实例引用。
 - `public void Refresh()`：根据当前建造目标、缓存方块 ID 和已加载 Block 刷新名称、数量与总质量。
 - `public void UpdateCurrentSaveName(string newName)`：更新当前玩家存档或敌方蓝图名称。
+- `public void UpdateStatistics(int blockCount, float mass)`：同时更新方块数量和总质量，用于加载协程的增量进度显示。
 - `public void UpdateTotalNumber(int newNumber)`：更新当前蓝图方块数量。
 - `public void UpdateTotalMass(float newMass)`：更新当前蓝图总质量。
 
@@ -861,6 +862,9 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 ## 10. 变更日志
 
 ### 2026-08-25
+
+- **BlueprintUIPanel 显示逐块加载进度**：`LoadAllBlocksRoutine` 在既有主 `for` 循环中按成功实例化的 Block 累加数量和质量，每恢复一个方块立即更新面板；加载开始先归零，完成后不再调用层级扫描刷新。坏数据清理和连接重建的原有遍历保持不变，不参与 UI 统计。
+- **验证范围**：已通过代码检查、`git diff --check`（任务脚本与文档）和 `dotnet build HY-Sandbox.sln --no-restore`（0 错误；仅有既有 Profiler API 过时警告）；尚未在 Unity Play Mode 验证大蓝图逐项更新、缺失 Prefab、空蓝图初始化和快速切换文件时的显示。
 
 - **接入 BlueprintUIPanel 实时统计**：主场景中新建的蓝图信息面板显示当前玩家存档或敌方蓝图名称、缓存方块数量及已加载方块总质量；`BuildManager` 在搭建、拆除、Undo/Redo、建造目标切换和异步加载完成后刷新显示。统计按缓存 ID 筛选已加载方块，避免 Unity 延迟销毁导致删除当帧仍被计入。
 - **验证范围**：已通过代码与场景序列化引用检查、`git diff --check`（脚本与文档）和 `dotnet build HY-Sandbox.sln --no-restore`（0 错误；仅有既有 Profiler API 过时警告）；尚未在 Unity 编辑器或 Play Mode 验证实际文本刷新、不同质量 Prefab、连续 Undo/Redo 和加载中快速切换文件。

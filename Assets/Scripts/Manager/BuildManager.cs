@@ -909,6 +909,10 @@ public class BuildManager : MonoBehaviour
         loadingCameraOrbitAngle = GetCameraOrbitAngle(loadingCameraOrbitCenter);
         StartLoadingCameraOrbit(gameObj, blocksToLoad.Count);
         IsLoadingBlocks = true;
+        if (BlueprintUIPanel.instance != null)
+        {
+            BlueprintUIPanel.instance.UpdateStatistics(0, 0f);
+        }
         loadAllBlocksCoroutine = StartCoroutine(LoadAllBlocksRoutine(loadVersion, loadSavePath, gameObj.transform, blocksToLoad, time0));
     }
 
@@ -917,6 +921,7 @@ public class BuildManager : MonoBehaviour
         List<string> unloadIds = new List<string>();
         int failCount = 0;
         int sucessCount = 0;
+        float loadedMass = 0f;
         WaitForSeconds blockLoadWait = new WaitForSeconds(BlockLoadIntervalSeconds);
 
         for (int i = 0; i < blocksToLoad.Count; i++)
@@ -951,6 +956,11 @@ public class BuildManager : MonoBehaviour
                     ApplyBlockBuildDefaults(block);
                     SaveManager.instance.blocks.Add(block);
                     sucessCount++;
+                    loadedMass += block.mass;
+                    if (BlueprintUIPanel.instance != null)
+                    {
+                        BlueprintUIPanel.instance.UpdateStatistics(sucessCount, loadedMass);
+                    }
                 }
                 Durability durability = obj.GetComponent<Durability>();
                 if (durability != null)
@@ -1000,7 +1010,6 @@ public class BuildManager : MonoBehaviour
 
         StopLoadingCameraOrbit();
         loadingCameraController = null;
-        RefreshBlueprintUI();
     }
 
     public void ClearUnloadableData(string id)
