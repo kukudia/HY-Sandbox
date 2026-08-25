@@ -102,6 +102,7 @@
     <Compile Include="Assets\Scripts\Thrusters\Thruster.cs" />
     <Compile Include="Assets\Scripts\Actions\GroupAction.cs" />
     <Compile Include="Assets\Scripts\Manager\SaveManager.cs" />
+    <Compile Include="Assets\Scripts\UI\BlueprintUIPanel.cs" />
     <Compile Include="Assets\Scripts\UI\SaveUIPanel.cs" />
     <Compile Include="Assets\Scripts\Actions\IBlockAction.cs" />
     <Compile Include="Assets\Scripts\InObject\Cockpit.cs" />
