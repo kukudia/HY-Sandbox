@@ -820,6 +820,7 @@ public class BuildManager : MonoBehaviour
         //        blockNeighbor.CheckConnection();
         //    }
         //}
+        RefreshBlueprintUI();
     }
 
     public void RemoveBlock(Block block)
@@ -844,6 +845,8 @@ public class BuildManager : MonoBehaviour
                 }
             }
         }
+
+        RefreshBlueprintUI();
     }
 
     public void LoadAllBlocks()
@@ -997,6 +1000,7 @@ public class BuildManager : MonoBehaviour
 
         StopLoadingCameraOrbit();
         loadingCameraController = null;
+        RefreshBlueprintUI();
     }
 
     public void ClearUnloadableData(string id)
@@ -1197,6 +1201,19 @@ public class BuildManager : MonoBehaviour
         enemyBlueprintBuildMode = context.IsEnemyBlueprint;
         currentSaveName = context.SaveName;
         currentEnemyBlueprintName = context.EnemyBlueprintName;
+
+        if (BlueprintUIPanel.instance != null)
+        {
+            BlueprintUIPanel.instance.UpdateCurrentSaveName(CurrentBuildName);
+        }
+    }
+
+    private void RefreshBlueprintUI()
+    {
+        if (BlueprintUIPanel.instance != null)
+        {
+            BlueprintUIPanel.instance.Refresh();
+        }
     }
 
     private void StopActiveBlockLoad()
