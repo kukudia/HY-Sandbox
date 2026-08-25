@@ -213,13 +213,14 @@ MonoBehaviour:
   damageMultiplier: 10
   explosionForce: 500
   explosionRadius: 5
+  explosionDisconnectProbability: 0.35
   resourcePath: 
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
   connectorParent: {fileID: 2695719906485559115}
   raycastCollider: {fileID: 4245157779349812274}
   connectors:
   - name: Up 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 0
     localPos: {x: 0, y: 0.5, z: 0}
@@ -235,7 +236,7 @@ MonoBehaviour:
     order: 1
     connector: {fileID: 0}
   - name: Forward 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 2
     localPos: {x: 0, y: 0, z: 0.5}
@@ -243,7 +244,7 @@ MonoBehaviour:
     order: 1
     connector: {fileID: 0}
   - name: Back 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 3
     localPos: {x: 0, y: 0, z: -0.5}
@@ -251,7 +252,7 @@ MonoBehaviour:
     order: 1
     connector: {fileID: 0}
   - name: Left 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 4
     localPos: {x: -0.5, y: 0, z: 0}
@@ -259,7 +260,7 @@ MonoBehaviour:
     order: 1
     connector: {fileID: 0}
   - name: Right 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 5
     localPos: {x: 0.5, y: 0, z: 0}
@@ -284,7 +285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f887aec31b46cb74db9436ab89ebf777, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxDurability: 100
+  maxDurability: 200
   debugLog: 1
   currentDurability: 0
 --- !u!65 &4245157779349812274

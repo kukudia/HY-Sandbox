@@ -7,6 +7,7 @@ public class RepairBot : MonoBehaviour
     private const int MaxNearbyColliders = 32;
     private const int InitialRepairTargetColliderCapacity = 128;
     private const int MaxRepairTargetColliderCapacity = 1024;
+    private const int MaxHomeGuidanceHits = 16;
     private const float MinimumTargetScanInterval = 0.25f;
 
     public Transform home;
@@ -67,6 +68,11 @@ public class RepairBot : MonoBehaviour
     [Min(0.1f)] public float dockingPositionSpeed = 2f;
     [Range(0f, 90f)] public float returnMaxAvoidanceAngle = 65f;
 
+    [Header("返航 Home 引导")]
+    [Range(4, 16)] public int homeGuidanceRays = 8;
+    [Min(0.5f)] public float homeGuidanceRange = 8f;
+    [Range(0f, 2f)] public float homeGuidanceAlignmentWeight = 0.75f;
+
     [Header("可视化设置")]
     public bool showTrail = true;
     public float trailDuration = 5f;
@@ -95,6 +101,7 @@ public class RepairBot : MonoBehaviour
     private readonly HashSet<Durability> uniqueTargetsInRange = new HashSet<Durability>();
     private Collider[] repairTargetColliders = new Collider[InitialRepairTargetColliderCapacity];
     private readonly Collider[] nearbyColliders = new Collider[MaxNearbyColliders];
+    private readonly RaycastHit[] homeGuidanceHits = new RaycastHit[MaxHomeGuidanceHits];
     private StylizedBeamEffect repairBeamEffect;
     private int blockLayerMask;
     private Transform cachedNavigationTarget;
@@ -346,7 +353,9 @@ public class RepairBot : MonoBehaviour
             cachedNavigationTarget = targetReference;
             cachedAvoidanceRangeScale = avoidanceRangeScale;
             nextDirectionUpdateTime = Time.time + Mathf.Max(0.05f, directionUpdateInterval);
-            cachedAvoidanceResult = CalculateAdvancedAvoidance(targetDirection, avoidanceRangeScale);
+            cachedAvoidanceResult = currentState == NavigationState.ReturningHome
+                ? CalculateHomeNavigationGuidance(targetDirection, avoidanceRangeScale)
+                : CalculateAdvancedAvoidance(targetDirection, avoidanceRangeScale);
         }
 
         // 目标方向使用当前世界坐标实时计算；避障查询可以降频，但移动中的 home 不能使用旧位置。
@@ -409,6 +418,113 @@ public class RepairBot : MonoBehaviour
         public float avoidanceStrength;
         public float speedMultiplier;
         public int obstacleCount;
+    }
+
+    private AdvancedAvoidanceResult CalculateHomeNavigationGuidance(
+        Vector3 targetDirection,
+        float rangeScale)
+    {
+        debugAvoidanceInfo.Clear();
+        if (home == null || rangeScale <= 0.01f)
+        {
+            return new AdvancedAvoidanceResult { speedMultiplier = 1f };
+        }
+
+        Vector3 homeOrigin = home.TransformPoint(homeOffset);
+        Vector3 homeToBot = transform.position - homeOrigin;
+        Vector3 up = home.up.sqrMagnitude > 0.001f ? home.up.normalized : Vector3.up;
+        Vector3 preferredApproach = Vector3.ProjectOnPlane(homeToBot, up);
+        if (preferredApproach.sqrMagnitude < 0.001f)
+        {
+            preferredApproach = homeToBot.sqrMagnitude > 0.001f
+                ? homeToBot.normalized
+                : targetDirection.sqrMagnitude > 0.001f ? -targetDirection : home.forward;
+        }
+
+        preferredApproach.Normalize();
+        float rayRange = Mathf.Max(0.5f, homeGuidanceRange * rangeScale);
+        int rayCount = Mathf.Clamp(homeGuidanceRays, 4, MaxHomeGuidanceHits);
+        float bestScore = float.NegativeInfinity;
+        Vector3 bestApproach = preferredApproach;
+        float bestClearFraction = 0f;
+
+        for (int i = 0; i < rayCount; i++)
+        {
+            float angle = 360f * i / rayCount;
+            Vector3 candidateApproach = Quaternion.AngleAxis(angle, up) * preferredApproach;
+            float clearFraction = GetHomeGuidanceClearFraction(
+                homeOrigin,
+                candidateApproach,
+                rayRange);
+            float alignment = Mathf.Clamp01((Vector3.Dot(candidateApproach, preferredApproach) + 1f) * 0.5f);
+            float score = clearFraction + alignment * homeGuidanceAlignmentWeight;
+
+            if (score > bestScore)
+            {
+                bestScore = score;
+                bestApproach = candidateApproach;
+                bestClearFraction = clearFraction;
+            }
+        }
+
+        // bestApproach 指向从 Home 接近 RepairBot 的安全方向，RepairBot 应沿反方向回家。
+        Vector3 guidedReturnDirection = -bestApproach;
+        float guidanceStrength = Mathf.Clamp01(
+            (1f - Vector3.Dot(targetDirection, guidedReturnDirection)) * 0.5f);
+
+        return new AdvancedAvoidanceResult
+        {
+            avoidanceDirection = guidedReturnDirection,
+            avoidanceStrength = guidanceStrength,
+            speedMultiplier = Mathf.Lerp(0.45f, 1f, bestClearFraction),
+            obstacleCount = bestClearFraction < 0.99f ? 1 : 0
+        };
+    }
+
+    private float GetHomeGuidanceClearFraction(
+        Vector3 origin,
+        Vector3 direction,
+        float range)
+    {
+        int hitCount = Physics.RaycastNonAlloc(
+            origin + direction * 0.05f,
+            direction,
+            homeGuidanceHits,
+            range,
+            obstacleMask,
+            QueryTriggerInteraction.Ignore);
+        float nearestDistance = range;
+
+        for (int i = 0; i < hitCount; i++)
+        {
+            RaycastHit hit = homeGuidanceHits[i];
+            if (IsIgnoredHomeGuidanceCollider(hit.collider))
+            {
+                continue;
+            }
+
+            nearestDistance = Mathf.Min(nearestDistance, hit.distance);
+        }
+
+        return Mathf.Clamp01(nearestDistance / Mathf.Max(range, 0.01f));
+    }
+
+    private bool IsIgnoredHomeGuidanceCollider(Collider collider)
+    {
+        if (collider == null || collider.transform == transform || collider.transform.IsChildOf(transform))
+        {
+            return true;
+        }
+
+        if (home == null)
+        {
+            return false;
+        }
+
+        Transform colliderTransform = collider.transform;
+        return colliderTransform == home
+            || colliderTransform.IsChildOf(home)
+            || home.IsChildOf(colliderTransform);
     }
 
     private AdvancedAvoidanceResult CalculateAdvancedAvoidance(
@@ -872,7 +988,7 @@ public class RepairBot : MonoBehaviour
         {
             // 紧急区域（红色）
             Gizmos.color = new Color(1f, 0f, 0f, 0.2f);
-            Gizmos.DrawSphere(transform.position, emergencyAvoidanceRange);
+            Gizmos.DrawWireSphere(transform.position, emergencyAvoidanceRange);
 
             // 主要区域（黄色）
             Gizmos.color = new Color(1f, 1f, 0f, 0.15f);
@@ -880,7 +996,7 @@ public class RepairBot : MonoBehaviour
 
             // 预测区域（绿色）
             Gizmos.color = new Color(0f, 1f, 0f, 0.1f);
-            Gizmos.DrawSphere(transform.position, predictiveAvoidanceRange);
+            Gizmos.DrawWireSphere(transform.position, predictiveAvoidanceRange);
         }
 
         // 2. 修复目标范围
@@ -975,7 +1091,7 @@ public class RepairBot : MonoBehaviour
 #if UNITY_EDITOR
         UnityEditor.Handles.Label(
             transform.position + Vector3.up * 3f,
-            $"Speed: {currentSpeedMultiplier:F2}x\nObstacles: {debugAvoidanceInfo.Count}"
+            $"State: {currentState}\nSpeed: {currentSpeedMultiplier:F2}x\nObstacles: {debugAvoidanceInfo.Count}"
         );
 #endif
     }

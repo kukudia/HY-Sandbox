@@ -206,6 +206,7 @@ public class ControlUnit : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (!PlayManager.instance.playMode) return;
+        if (collision.gameObject.layer == LayerMask.NameToLayer("IgnoreCollision")) return;
         if (_isOnCooldown) return;
 
         foreach (ContactPoint contact in collision.contacts)

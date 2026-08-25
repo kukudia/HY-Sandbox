@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 62890998115648227}
   - component: {fileID: 7380822992049240430}
   - component: {fileID: 7373213081769946802}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,8 +130,8 @@ MonoBehaviour:
   outside: {fileID: 0}
   navigateTarget: {fileID: 0}
   homeOffset: {x: 0, y: 0, z: 0}
-  targetRange: 5
-  repairAmount: 10
+  targetRange: 10
+  repairAmount: 20
   repairCooldown: 1
   findTargetInterval: 1
   movementSpeed: 12
@@ -161,7 +161,7 @@ MonoBehaviour:
   dockingApproachTolerance: 0.2
   dockingPositionSpeed: 2
   showTrail: 1
-  trailDuration: 1
+  trailDuration: 0.2
   showAvoidanceRays: 1
   showDirectionVectors: 1
   showAvoidanceZones: 1
