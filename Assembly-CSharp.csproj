@@ -68,6 +68,7 @@
     <Compile Include="Assets\Scripts\Thrusters\ThrusterAllocator.cs" />
     <Compile Include="Assets\Scripts\Thrusters\ThrusterVisualEffect.cs" />
     <Compile Include="Assets\Scripts\UI\MainUIPanels.cs" />
+    <Compile Include="Assets\Scripts\Block\Power.cs" />
     <Compile Include="Assets\Scripts\Data\BuildTargetContext.cs" />
     <Compile Include="Assets\Scripts\Data\BlockData.cs" />
     <Compile Include="Assets\Scripts\Actions\AddBlockAction.cs" />

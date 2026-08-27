@@ -145,12 +145,23 @@ public class BuildManager : MonoBehaviour
             }
         }
 
+        // 删除
+        if (selectedBlock != null)
+        {
+            MainUIButtons.instance.deleteButton.gameObject.SetActive(true);
+            if (Keyboard.current.deleteKey.wasPressedThisFrame)
+            {
+                DeleteBlock();
+            }
+        }
+        else
+        {
+            MainUIButtons.instance.deleteButton.gameObject.SetActive(false);
+        }
+
         // 撤销重做
         if (Keyboard.current.leftCtrlKey.isPressed && Keyboard.current.zKey.wasPressedThisFrame) ActionManager.instance.Undo();
         if (Keyboard.current.leftCtrlKey.isPressed && Keyboard.current.yKey.wasPressedThisFrame) ActionManager.instance.Redo();
-
-        // 删除
-        if (selectedBlock != null && Keyboard.current.deleteKey.wasPressedThisFrame) DeleteBlock();
     }
 
     public void SetBuildMode(bool lockView)

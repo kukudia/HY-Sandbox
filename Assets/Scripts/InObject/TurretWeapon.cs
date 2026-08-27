@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent (typeof(Power))]
 public class TurretWeapon : MonoBehaviour
 {
     private const int MaxRaycastHits = 16;

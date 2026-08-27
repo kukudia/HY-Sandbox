@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(Power))]
 public class HoverFlightController : MonoBehaviour
 {
     [Header("悬浮参数")]

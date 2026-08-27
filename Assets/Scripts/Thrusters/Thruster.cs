@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[DisallowMultipleComponent]
+[DisallowMultipleComponent, RequireComponent(typeof(Power))]
 public abstract class Thruster : MonoBehaviour
 {
     // Shared runtime contract for thrust application, reference caching, and visual feedback.
