@@ -19,6 +19,7 @@ public class TurretWeapon : MonoBehaviour
     public LayerMask hitLayers = ~0;
 
     private ControlUnit owner;
+    private Power power;
     private ControlUnit target;
     private Durability targetDurability;
     private StylizedBeamEffect fireBeam;
@@ -30,6 +31,7 @@ public class TurretWeapon : MonoBehaviour
 
     private void Awake()
     {
+        power = GetComponent<Power>();
         Transform model = transform.Find("Model");
         if (aimPivot == null)
         {
@@ -69,6 +71,19 @@ public class TurretWeapon : MonoBehaviour
     private void FixedUpdate()
     {
         if (PlayManager.instance == null || !PlayManager.instance.playMode) return;
+
+        if (power == null)
+        {
+            power = GetComponent<Power>();
+        }
+
+        if (power == null || !power.isWorking)
+        {
+            target = null;
+            targetDurability = null;
+            if (fireBeam != null) fireBeam.SetVisible(false);
+            return;
+        }
 
         if (owner == null)
         {
@@ -229,7 +244,7 @@ public class TurretWeapon : MonoBehaviour
         if (angle <= maxFireAngle && Time.time >= nextFireTime)
         {
             Fire(origin, fireDirection, GetEffectiveTargetFaction());
-            nextFireTime = Time.time + fireInterval;
+            nextFireTime = Time.time + fireInterval / Mathf.Max(power.efficiency, 0.0001f);
         }
     }
 
@@ -278,7 +293,7 @@ public class TurretWeapon : MonoBehaviour
 
             if (hitUnit != null && hitUnit.HasValidCockpit && hitUnit.faction == faction && durability != null)
             {
-                durability.UpdateDurablility(-damage);
+                durability.UpdateDurablility(-damage * power.efficiency);
             }
 
             break;

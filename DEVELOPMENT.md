@@ -62,9 +62,11 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 `BuildManager.LoadAllBlocks` 使用协程逐个实例化，支持加载进度、取消旧加载、无法加载数据清理和可选的相机环绕；方块数和总质量在主加载 `for` 循环中按成功恢复的 Block 增量累计并同步到 `BlueprintUIPanel`，不额外遍历已加载方块。存档身份依赖文件中的模块数据，不应把运行时 `GetInstanceID()` 当作跨会话稳定 ID。
 
-### 3.4 游玩与推进器
+### 3.4 游玩、供电与推进器
 
-`ControlUnit` 聚合驾驶舱、主推进器和悬浮推进器，读取玩家输入并把世界方向传给推进系统。敌方 `EnemyController` 默认每 0.5 秒采样一次目标/避障方向，并以响应速度渐进更新模拟输入；敌方不再直接修改 Rigidbody 的旋转或力，转向和位移统一交给 `MainThruster`/`UniversalThruster` 根据 `MovementInput` 施加。`HoverFlightController` 使用高度、重力补偿和姿态 PID 逻辑分配悬浮推力。
+`PowerGeneratingUnit` 提供 `outputPower`；`PowerTransmissionDevice` 每帧按 `maxConnectionDistance` 重建发电机/输电设备双向连接，通过设备和发电机共同组成的连通网络传递功率，并向任一设备 `powerRange` 球形范围内带 `Power` 的 Block 供电。同一网络汇总所有发电机输出、对去重后的负载均分；不同网络同时覆盖同一负载时功率叠加，断连或禁用后旧功率会被清零。
+
+`ControlUnit` 聚合驾驶舱、主推进器和悬浮推进器，读取玩家输入并把世界方向传给推进系统。敌方 `EnemyController` 默认每 0.5 秒采样一次目标/避障方向，并以响应速度渐进更新模拟输入；敌方不再直接修改 Rigidbody 的旋转或力，转向和位移统一交给 `MainThruster`/`UniversalThruster` 根据 `MovementInput` 施加。`Power.isWorking` 作为悬浮控制器、推进器和炮塔的硬启停条件；`Power.efficiency` 缩放悬浮推力/姿态修正、各推进器有效推力，以及炮塔伤害和射速。`HoverFlightController` 使用高度、重力补偿和姿态 PID 逻辑分配悬浮推力。
 
 `ThrusterAllocator.Solve` 将力与力矩目标组成 6 维约束，通过带阻尼的最小二乘和上下界迭代求解各推进器输出。`ThrusterVisualEffect` 使用粒子、光源和渐变颜色表达推力比例，并替代旧的 Line Renderer 视觉。
 
@@ -103,6 +105,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 | P2 | 方块连接和阻挡检查依赖 Physics 查询 | 建立网格占用索引，旋转/删除时增量更新，减少全场景扫描。 |
 | P2 | 推进器求解器缺少运行时可观测性 | 输出目标力矩、残差、饱和推进器数量和求解耗时，便于调参和性能分析。 |
 | P2 | 物理预算需要按目标设备调校 | 当前固定步长约 50 Hz、默认位置求解 4 次、追赶上限 0.1 秒；若出现高速穿透、堆叠抖动或重载时模拟变慢，应针对 Rigidbody 的碰撞检测、质量和局部求解迭代单独调参。 |
+| P2 | 无线供电网络尚未经过 Play Mode 压力验证 | 需验证移动发电机/中继、跨网覆盖、运行时销毁、零负载与大量 Power Block 下的分配正确性和每帧重建开销。 |
 | P2 | EnemyController 的 AI 输入平滑参数仍需 Play Mode 调校 | 根据敌我距离、载具规模和目标帧率调节 `movementUpdateInterval` 与 `movementResponseRate`。 |
 | P2 | Block 爆炸当前仅实现范围断开、分组、物理冲量和粒子反馈 | 后续可在爆炸中心加入按距离衰减的伤害，并补充断开概率、冲量和半径的 Play Mode 调参记录。 |
 | P2 | UI 同时存在 uGUI 与 IMGUI | 将诊断面板迁移到统一 UI 系统，避免分辨率、输入焦点和生命周期不一致。 |
@@ -119,8 +122,9 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 3. 连接点吸附、阻挡、删除断开、Undo/Redo 各操作至少执行一次。
 4. 有效驾驶舱进入和退出游玩模式；无驾驶舱时确认阻止进入并给出提示。
 5. 主推进、全向推进、悬浮控制及推力视觉在 Play Mode 下工作。
-6. 大蓝图加载、取消加载、切换存档时无重复对象或残留引用。
-7. `git diff --check` 通过，且只提交当前任务相关文件。
+6. 发电机与中继在连接距离内正确组网；移动、断连和销毁后功率及时更新，范围内负载均分且范围外负载归零。
+7. 大蓝图加载、取消加载、切换存档时无重复对象或残留引用。
+8. `git diff --check` 通过，且只提交当前任务相关文件。
 
 ## 7. 文档目录
 
@@ -257,6 +261,13 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `void LateUpdate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
 - `void OnGUI()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
 - `private bool ShouldShowDebugLabel()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+
+#### `Assets/Scripts/Block/Power.cs`
+
+- `private void OnEnable()`：注册当前启用的用电 Block，供无线网络统一发现和分配功率。
+- `private void OnDisable()`：注销用电 Block，并清除停用前残留功率。
+- `public void ResetPower()`：在网络重算前清空当前供电。
+- `public void ReceivePower(float suppliedPower)`：累加一个无线网络提供的非负功率。
 
 
 ### Camera 相机
@@ -400,6 +411,26 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `public static bool TryGetSingleCockpit(Component root, out Cockpit cockpit, out string reason)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `public static int CountCockpits(IEnumerable<Block> blocks)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `public static int CountLoadedCockpits()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+
+#### `Assets/Scripts/InObject/PowerGeneratingUnit.cs`
+
+- `private void OnEnable()`：注册启用的发电单元，供无线网络发现。
+- `private void OnDisable()`：注销发电单元并移除现有设备反向连接。
+
+#### `Assets/Scripts/InObject/PowerTransmissionDevice.cs`
+
+- `private void OnEnable()`：注册启用的输电设备。
+- `private void Update()`：每个渲染帧只触发一次全局无线网络刷新。
+- `private void OnDisable()`：注销并断开设备；最后一个设备停用时清空所有负载功率。
+- `private void Disconnect()`：移除该设备与发电机、其他设备之间的双向连接。
+- `private static void RefreshPowerNetwork()`：依次重建缓存、连接和网络功率分配。
+- `private static void RebuildBuffers()`：收集当前启用的发电机、输电设备和 Power 负载。
+- `private static void ResetConnectionsAndPower()`：清空上一帧连接数据和负载功率。
+- `private static void BuildConnections()`：按最大连接距离建立发电机/设备和设备/设备双向连接。
+- `private static void DistributeNetworkPower()`：遍历包含发电机节点的连通网络，汇总输出并对覆盖负载均分。
+- `private static void CollectDeviceLoads(PowerTransmissionDevice device)`：收集单个设备供电半径内的 Power 负载并去重。
+- `private static void ResetAllPowerBlocks()`：在没有输电设备时清除所有残余供电。
+- `private void OnDrawGizmosSelected()`：显示供电范围和最大连接距离。
 
 #### `Assets/Scripts/InObject/RepairBot.cs`
 
@@ -685,6 +716,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private void OnEnable()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
 - `private void OnValidate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
 - `private void FixedUpdate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void ClearHoverThrust()`：控制器断电时立即清空全部悬浮推进器的当前和历史推力。
 - `private bool EnsureControllerReady()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
 - `private void RefreshCachedPhysicsValues()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private void RefreshTiltLimitCache()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
@@ -694,7 +726,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private float CalculateGravityCompensation(float absHeightError)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private void CalculateTiltAdjustment(Vector3 currentUp)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private void DistributeThrust(float heightAdjustment, Vector3 currentUp)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
-- `private void ApplyRotationCorrection(Vector3 currentUp)`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
+- `private void ApplyRotationCorrection(Vector3 currentUp, float outputEfficiency)`：按控制器供电效率缩放并应用姿态角速度修正。
 - `private void OnDrawGizmosSelected()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
 - `void OnGUI()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
 - `private void EnsureGuiStyles()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
@@ -724,6 +756,8 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `protected bool HasValidRuntimeOwner()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `protected void CacheLocalReferences()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `public virtual void ApplyThrustChangeRateLimit()`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
+- `protected bool CanApplyThrust()`：检查推进器自身 Power 是否达到工作阈值。
+- `private float GetPowerEfficiency()`：读取推进器自身有效供电效率，断电或缺少 Power 时返回零。
 - `public virtual void VisualizeThrust()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `public virtual void VisualizeThrust(bool forceUpdate)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `public virtual Vector3 GetInputDirection()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
@@ -860,6 +894,12 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - **尚未验证**：Unity 编辑器导入、Inspector 序列化、Play Mode 交互、运行时日志和性能表现。
 
 ## 10. 变更日志
+
+### 2026-08-27
+
+- **补全无线输电网络**：`PowerGeneratingUnit` 注册并提供非负 `outputPower`；`PowerTransmissionDevice` 按设备最大连接距离建立发电机/中继双向图，遍历包含共享发电机的连通网络，将同网发电功率汇总后均分给所有供电半径内去重的 `Power` 负载。多个独立网络可对同一负载叠加供电，网络每帧先清空旧状态，因此移动、禁用、销毁或断连不会永久保留旧功率；Scene 视图选中设备时显示供电和连接半径。
+- **接入用电设备状态与效率**：`HoverFlightController` 断电时立即清空悬浮推力，效率同时缩放悬浮输出和姿态修正；`Thruster` 基类统一缓存 Power、按效率缩放推力，并在断电时绕过变化率限制直接清零；`TurretWeapon` 断电时停止索敌/开火并隐藏光束，效率降低时按比例缩放伤害并延长开火间隔。
+- **验证范围**：已通过代码差异检查、`git diff --check` 和 `dotnet build HY-Sandbox.sln --no-restore`（0 错误；仅有既有 `ProfilerCaptureAnalysis.WriteCounters` 过时 API 警告）；尚未在 Unity 6000.3.11f1 Editor/Play Mode 验证移动中继、多网络覆盖、运行时断连、大量负载性能、推力手感和炮塔射速。
 
 ### 2026-08-25
 

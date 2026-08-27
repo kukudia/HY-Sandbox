@@ -43,6 +43,7 @@ public class HoverFlightController : MonoBehaviour
 
     private Rigidbody rb; // 飞行器的刚体组件
     private ControlUnit controlUnit;
+    private Power power;
 
     [Tooltip("飞行器上所有的悬浮推进器数组（会自动从子物体收集）")]
     public HoverThruster[] thrusters;
@@ -91,6 +92,7 @@ public class HoverFlightController : MonoBehaviour
 
     public void Init()
     {
+        power = GetComponent<Power>();
         rb = GetComponentInParent<Rigidbody>();
         controlUnit = GetComponentInParent<ControlUnit>();
         lastUpVector = transform.up;
@@ -118,6 +120,17 @@ public class HoverFlightController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (power == null)
+        {
+            power = GetComponent<Power>();
+        }
+
+        if (power == null || !power.isWorking)
+        {
+            ClearHoverThrust();
+            return;
+        }
+
         if (!EnsureControllerReady()) return;
 
         bool acceptsPlayerInput = controlUnit == null || controlUnit.faction == UnitFaction.Player;
@@ -154,14 +167,28 @@ public class HoverFlightController : MonoBehaviour
         CalculateTiltAdjustment(currentUp);
 
         // 分配推力到各个推进器
-        DistributeThrust(heightAdjustment + gravityCompensation, currentUp);
+        float outputEfficiency = power != null ? power.efficiency : 1f;
+        DistributeThrust((heightAdjustment + gravityCompensation) * outputEfficiency, currentUp);
 
         // 应用旋转修正
-        ApplyRotationCorrection(currentUp);
+        ApplyRotationCorrection(currentUp, outputEfficiency);
 
         // 更新状态
         lastHeightError = heightError;
         lastUpVector = currentUp;
+    }
+
+    private void ClearHoverThrust()
+    {
+        if (thrusters == null) return;
+
+        foreach (HoverThruster thruster in thrusters)
+        {
+            if (thruster == null) continue;
+
+            thruster.thrust = 0f;
+            thruster.lastThrustValue = 0f;
+        }
     }
 
     private bool EnsureControllerReady()
@@ -423,7 +450,7 @@ public class HoverFlightController : MonoBehaviour
         }
     }
 
-    private void ApplyRotationCorrection(Vector3 currentUp)
+    private void ApplyRotationCorrection(Vector3 currentUp, float outputEfficiency)
     {
         if (rotationSmoothing <= 0f || Vector3.Dot(currentUp, targetUpVector) > 0.99995f)
         {
@@ -447,7 +474,7 @@ public class HoverFlightController : MonoBehaviour
         if (angle > 180f) angle -= 360f;
         if (Mathf.Abs(angle) > 0.01f)
         {
-            Vector3 angularVelocity = axis * angle * Mathf.Deg2Rad * inverseFixedDeltaTime;
+            Vector3 angularVelocity = axis * angle * Mathf.Deg2Rad * inverseFixedDeltaTime * outputEfficiency;
             rb.angularVelocity = Vector3.Lerp(rb.angularVelocity, angularVelocity, 0.1f);
         }
     }

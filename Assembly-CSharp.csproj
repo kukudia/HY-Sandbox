@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Thrusters\HoverFlightController.cs" />
+    <Compile Include="Assets\Scripts\InObject\PowerGeneratingUnit.cs" />
     <Compile Include="Assets\Scripts\Manager\BlockGroupManager.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
     <Compile Include="Assets\Layer Lab\Scripts\PanelControl.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Assets\Scripts\UI\ActionCounterUI.cs" />
     <Compile Include="Assets\Scripts\InObject\ControlUnit.cs" />
     <Compile Include="Assets\Scripts\InObject\Rack.cs" />
+    <Compile Include="Assets\Scripts\InObject\PowerTransmissionDevice.cs" />
     <Compile Include="Assets\Scripts\InObject\TurretWeapon.cs" />
     <Compile Include="Assets\Scripts\InObject\EnemyController.cs" />
     <Compile Include="Assets\Scripts\Actions\DeleteBlockAction.cs" />

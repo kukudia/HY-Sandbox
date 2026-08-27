@@ -37,7 +37,7 @@ public class HoverThruster : Thruster
 
     public virtual void ApplyThrust()
     {
-        if (thrust <= 0f || !TryEnsureRigidbody()) return;
+        if (thrust <= 0f || !CanApplyThrust() || !TryEnsureRigidbody()) return;
 
         thrustDirection = Vector3.up;
         rb.AddForceAtPosition(transform.up * thrust, transform.position);
@@ -47,6 +47,7 @@ public class HoverThruster : Thruster
     {
         return isHovered
             && IsPlayModeActive()
+            && CanApplyThrust()
             && HasValidRuntimeOwner();
     }
 }

@@ -37,7 +37,7 @@ public class UniversalThruster : Thruster
 
     public void ApplyThrust()
     {
-        if (thrust <= 0f || !TryEnsureRigidbody()) return;
+        if (thrust <= 0f || !CanApplyThrust() || !TryEnsureRigidbody()) return;
 
         thrustDirection = model != null ? model.forward : transform.forward;
         rb.AddForceAtPosition(thrustDirection * thrust, transform.position);
@@ -47,6 +47,7 @@ public class UniversalThruster : Thruster
     {
         return inputDir.sqrMagnitude > InputEpsilonSqr
             && IsPlayModeActive()
+            && CanApplyThrust()
             && HasValidRuntimeOwner();
     }
 }

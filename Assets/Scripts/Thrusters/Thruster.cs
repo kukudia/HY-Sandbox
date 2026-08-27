@@ -23,6 +23,8 @@ public abstract class Thruster : MonoBehaviour
 
     public Rigidbody rb;
 
+    private Power power;
+
     [Header("推力可视化")]
     [Tooltip("推力可视化刷新间隔（秒），降低粒子系统在物理帧中的更新频率")]
     public float visualizationInterval = 0.05f;
@@ -36,6 +38,7 @@ public abstract class Thruster : MonoBehaviour
 
     protected virtual void Awake()
     {
+        power = GetComponent<Power>();
         CacheLocalReferences();
         DisableLegacyLineRenderer();
     }
@@ -103,6 +106,16 @@ public abstract class Thruster : MonoBehaviour
 
     public virtual void ApplyThrustChangeRateLimit()
     {
+        float powerEfficiency = GetPowerEfficiency();
+        if (powerEfficiency <= 0f)
+        {
+            thrust = 0f;
+            lastThrustValue = 0f;
+            return;
+        }
+
+        thrust *= powerEfficiency;
+
         float maxChange = maxThrustChangeRate * Time.fixedDeltaTime;
 
         // 计算允许的推力变化范围
@@ -114,6 +127,21 @@ public abstract class Thruster : MonoBehaviour
 
         // 记录当前推力供下一帧使用
         lastThrustValue = thrust;
+    }
+
+    protected bool CanApplyThrust()
+    {
+        return GetPowerEfficiency() > 0f;
+    }
+
+    private float GetPowerEfficiency()
+    {
+        if (power == null)
+        {
+            power = GetComponent<Power>();
+        }
+
+        return power != null && power.isWorking ? power.efficiency : 0f;
     }
 
     public virtual void VisualizeThrust()

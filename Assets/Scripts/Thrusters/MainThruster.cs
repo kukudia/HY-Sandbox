@@ -25,7 +25,7 @@ public class MainThruster : Thruster
 
     public void ApplyThrust()
     {
-        if (thrust <= 0f || !TryEnsureRigidbody()) return;
+        if (thrust <= 0f || !CanApplyThrust() || !TryEnsureRigidbody()) return;
 
         thrustDirection = model != null ? model.forward : transform.forward;
         rb.AddForceAtPosition(thrustDirection * thrust, transform.position);
@@ -35,6 +35,7 @@ public class MainThruster : Thruster
     {
         return inputDir.sqrMagnitude > InputEpsilonSqr
             && IsPlayModeActive()
+            && CanApplyThrust()
             && HasValidRuntimeOwner();
     }
 }
