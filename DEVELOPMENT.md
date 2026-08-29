@@ -64,7 +64,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 3.4 游玩、供电与推进器
 
-`PowerGeneratingUnit` 提供 `outputPower`；`PowerTransmissionDevice` 每帧按 `maxConnectionDistance` 重建发电机/输电设备双向连接，通过设备和发电机共同组成的连通网络传递功率，并向任一设备 `powerRange` 球形范围内带 `Power` 的 Block 供电。同一网络汇总所有发电机输出、对去重后的负载均分；不同网络同时覆盖同一负载时功率叠加，断连或禁用后旧功率会被清零。
+`PowerGeneratingUnit` 提供 `outputPower`；`PowerTransmissionDevice` 每帧按 `maxConnectionDistance` 重建发电机/输电设备双向连接，通过设备和发电机共同组成的连通网络传递功率，并向任一设备 `powerRange` 球形范围内带 `Power` 的 Block 供电。同一网络汇总所有发电机输出、对去重后的负载均分；不同网络同时覆盖同一负载时功率叠加，断连或禁用后旧功率会被清零。`DebugManager` 集中控制供电范围和网络连接调试显示；范围使用世界空间直径校正的球体，按孤立/已连接/有功率状态切换颜色，连接关系用运行时复用的虚线 `LineRenderer` 表示。
 
 `ControlUnit` 聚合驾驶舱、主推进器和悬浮推进器，读取玩家输入并把世界方向传给推进系统。敌方 `EnemyController` 默认每 0.5 秒采样一次目标/避障方向，并以响应速度渐进更新模拟输入；敌方不再直接修改 Rigidbody 的旋转或力，转向和位移统一交给 `MainThruster`/`UniversalThruster` 根据 `MovementInput` 施加。`Power.isWorking` 作为悬浮控制器、推进器和炮塔的硬启停条件；`Power.efficiency` 缩放悬浮推力/姿态修正、各推进器有效推力，以及炮塔伤害和射速。`HoverFlightController` 使用高度、重力补偿和姿态 PID 逻辑分配悬浮推力。
 
@@ -87,6 +87,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - 动作系统支持添加、移动、旋转、删除、组合操作的 Undo/Redo，并由 UI 显示计数。
 - 方块连接点、邻居关系、连接/断开和连接器 Gizmos 已实现。
 - 游玩模式会按控制单元聚合模块，并检查驾驶舱有效性。
+- 无线供电调试支持范围球体状态着色和发电机/输电设备间的虚线 LineRenderer 连接，可由 DebugManager 开关控制。
 - 主推进、全向推进、悬浮控制、推力分配及推力粒子/光效代码已存在。
 - 敌人、陨石、炮塔、维修机器人和模块耐久相关脚本已纳入工程。
 - 编辑器包含 Windows 构建入口和 Profiler 捕获分析入口。
@@ -106,6 +107,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 | P2 | 推进器求解器缺少运行时可观测性 | 输出目标力矩、残差、饱和推进器数量和求解耗时，便于调参和性能分析。 |
 | P2 | 物理预算需要按目标设备调校 | 当前固定步长约 50 Hz、默认位置求解 4 次、追赶上限 0.1 秒；若出现高速穿透、堆叠抖动或重载时模拟变慢，应针对 Rigidbody 的碰撞检测、质量和局部求解迭代单独调参。 |
 | P2 | 无线供电网络尚未经过 Play Mode 压力验证 | 需验证移动发电机/中继、跨网覆盖、运行时销毁、零负载与大量 Power Block 下的分配正确性和每帧重建开销。 |
+| P2 | 供电调试线和范围显示依赖运行时动态材质/子对象 | 需在 URP 下验证虚线纹理、透明度、相机缩放和大量连接时的可读性；调试开关关闭时应确认所有运行时 LineRenderer 已禁用。 |
 | P2 | EnemyController 的 AI 输入平滑参数仍需 Play Mode 调校 | 根据敌我距离、载具规模和目标帧率调节 `movementUpdateInterval` 与 `movementResponseRate`。 |
 | P2 | Block 爆炸当前仅实现范围断开、分组、物理冲量和粒子反馈 | 后续可在爆炸中心加入按距离衰减的伤害，并补充断开概率、冲量和半径的 Play Mode 调参记录。 |
 | P2 | UI 同时存在 uGUI 与 IMGUI | 将诊断面板迁移到统一 UI 系统，避免分辨率、输入焦点和生命周期不一致。 |
@@ -430,7 +432,19 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private static void DistributeNetworkPower()`：遍历包含发电机节点的连通网络，汇总输出并对覆盖负载均分。
 - `private static void CollectDeviceLoads(PowerTransmissionDevice device)`：收集单个设备供电半径内的 Power 负载并去重。
 - `private static void ResetAllPowerBlocks()`：在没有输电设备时清除所有残余供电。
-- `private void OnDrawGizmosSelected()`：显示供电范围和最大连接距离。
+- `private void CacheDebugReferences()`：缓存供电范围调试对象和 Renderer，兼容旧 Prefab 未序列化引用的情况。
+- `private void UpdateDebugVisuals()`：同步供电范围可见性、状态颜色和连接虚线。
+- `private void UpdatePowerRangeVisual()`：按 DebugManager 开关和当前网络状态更新范围球体。
+- `private void UpdatePowerRangeScale()`：用世界空间直径校正供电范围球体，避免父级缩放导致显示与实际半径不一致。
+- `private static float DivideByScale(float value, float scale)`：将世界空间尺寸换算为局部缩放并处理零缩放边界。
+- `private void UpdateConnectionLines()`：为当前连通的发电机和相邻输电设备更新去重后的连接线。
+- `private void DrawDashedConnection(int index, Vector3 start, Vector3 end, Color color)`：设置单条连接线端点、颜色、宽度和虚线滚动参数。
+- `private LineRenderer GetOrCreateConnectionLine(int index)`：复用或创建设备拥有的连接线对象。
+- `private static void ConfigureConnectionLine(LineRenderer connectionLine)`：配置世界空间、纹理拉伸、透明材质和阴影设置。
+- `private static Material GetDashedLineMaterial()`：创建并缓存运行时虚线材质。
+- `private static Texture2D CreateDashTexture()`：创建可重复采样的半透明虚线纹理。
+- `private void SetConnectionLinesVisible(bool visible)`：批量切换连接线显示状态。
+- `private void OnDrawGizmosSelected()`：在编辑器中显示供电范围和最大连接距离。
 
 #### `Assets/Scripts/InObject/RepairBot.cs`
 
@@ -483,6 +497,14 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 
 ### Manager 管理器
+
+#### `Assets/Scripts/Manager/DebugManager.cs`
+
+- `private void Awake()`：注册全局调试显示管理器。
+- `private void OnDestroy()`：仅在当前实例销毁时清理静态引用。
+- `public Color GetPowerRangeColor(PowerTransmissionDevice device)`：根据设备网络连接和可用功率返回范围显示颜色。
+- `public void TogglePowerRange()`：切换供电范围调试显示。
+- `public void TogglePowerConnections()`：切换供电连接虚线显示。
 
 #### `Assets/Scripts/Manager/BlockGroupManager.cs`
 
@@ -900,6 +922,12 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - **补全无线输电网络**：`PowerGeneratingUnit` 注册并提供非负 `outputPower`；`PowerTransmissionDevice` 按设备最大连接距离建立发电机/中继双向图，遍历包含共享发电机的连通网络，将同网发电功率汇总后均分给所有供电半径内去重的 `Power` 负载。多个独立网络可对同一负载叠加供电，网络每帧先清空旧状态，因此移动、禁用、销毁或断连不会永久保留旧功率；Scene 视图选中设备时显示供电和连接半径。
 - **接入用电设备状态与效率**：`HoverFlightController` 断电时立即清空悬浮推力，效率同时缩放悬浮输出和姿态修正；`Thruster` 基类统一缓存 Power、按效率缩放推力，并在断电时绕过变化率限制直接清零；`TurretWeapon` 断电时停止索敌/开火并隐藏光束，效率降低时按比例缩放伤害并延长开火间隔。
 - **验证范围**：已通过代码差异检查、`git diff --check` 和 `dotnet build HY-Sandbox.sln --no-restore`（0 错误；仅有既有 `ProfilerCaptureAnalysis.WriteCounters` 过时 API 警告）；尚未在 Unity 6000.3.11f1 Editor/Play Mode 验证移动中继、多网络覆盖、运行时断连、大量负载性能、推力手感和炮塔射速。
+
+### 2026-08-29
+
+- **完善供电调试显示**：新增 `DebugManager` 的范围/连接开关、状态颜色和虚线参数；`PowerTransmissionDevice` 将供电范围调试对象按实际球形半径显示并按孤立、已连接和有功率状态变色，修复全局网络刷新提前返回导致只有首个设备更新视觉的问题。
+- **显示无线网络连接**：输电设备为每条相邻 `PowerGeneratingUnit` 或 `PowerTransmissionDevice` 复用运行时 `LineRenderer`，使用重复半透明纹理形成虚线并按时间滚动；设备/设备连接只绘制一次，断开或关闭调试时隐藏全部连接线。输电 Prefab 的调试网格改为球体，主体网格保持不变。
+- **验证范围**：已通过代码检查、`dotnet build HY-Sandbox.sln --no-restore`（0 错误；仅有既有 `ProfilerCaptureAnalysis.WriteCounters` 过时 API 警告）；尚未在 Unity Editor/Play Mode 验证 URP 透明虚线材质、移动设备连接线刷新、范围颜色在不同功率状态下的视觉效果和大量网络节点性能。
 
 ### 2026-08-25
 

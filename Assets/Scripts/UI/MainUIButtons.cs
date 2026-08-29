@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class MainUIButtons : MonoBehaviour
 {
     public static MainUIButtons instance;
+
+    [Header("Action Buttons")]
     public Button undoButton;
     public Button redoButton;
     public Button actionClearButton;
@@ -13,15 +15,26 @@ public class MainUIButtons : MonoBehaviour
     public Button defaultButton;
     public Button moveButton;
     public Button rotateButton;
+
+    [Header("Debug Buttons")]
+    public Button showPowerRangeButton;
+    public Button showPowerConnectionsButton;
+
+    [Header("Play Buttons")]
     public Button playButton;
     public Button exitButton;
+
+    [Header("Edit Buttons")]
     public Button showCreateButton;
     public Button confirmCreateButton;
     public Button cancelCreateButton;
     public Button confirmDeleteButton;
     public Button cancelDeleteButton;
+
+    [Header ("Death Buttons")]
     public Button backToMenuButton;
     public Button respawnButton;
+
     public List<BlockButton> blockButtons = new List<BlockButton>();
 
     private void Awake()
@@ -51,10 +64,15 @@ public class MainUIButtons : MonoBehaviour
         actionClearButton.onClick.AddListener(ActionManager.instance.Clear);
         deleteButton.onClick.AddListener(BuildManager.instance.DeleteBlock);
         defaultButton.onClick.AddListener(SetDefault);
+
         moveButton.onClick.AddListener(SetDefault);
         rotateButton.onClick.AddListener(SetDefault);
         moveButton.onClick.AddListener(SetMove);
         rotateButton.onClick.AddListener(SetRotate);
+
+        showPowerRangeButton.onClick.AddListener(ShowPowerRange);
+        showPowerConnectionsButton.onClick.AddListener(ShowPowerConnections);
+
         playButton.onClick.AddListener(MainUIPanels.instance.PlayStart);
         exitButton.onClick.AddListener(MainUIPanels.instance.PlayEnd);
         showCreateButton.onClick.AddListener(MainUIPanels.instance.ShowCreatePanel);
@@ -111,6 +129,28 @@ public class MainUIButtons : MonoBehaviour
         string resourcePath = "Blocks/" + fileName;
         BuildManager.instance.SetCurrentBlockResource(resourcePath);
         Debug.Log($"Current build block changed to {resourcePath}");
+    }
+
+    private void ShowPowerRange()
+    {
+        if (DebugManager.instance == null) return;
+
+        DebugManager.instance.TogglePowerRange();
+        if (showPowerRangeButton != null)
+        {
+            showPowerRangeButton.GetComponent<Image>().color = DebugManager.instance.showPowerRange ? Color.green : Color.white;
+        }
+    }
+
+    private void ShowPowerConnections()
+    {
+        if (DebugManager.instance == null) return;
+
+        DebugManager.instance.TogglePowerConnections();
+        if (showPowerConnectionsButton != null)
+        {
+            showPowerConnectionsButton.GetComponent<Image>().color = DebugManager.instance.showPowerConnections ? Color.green : Color.white;
+        }
     }
 
     private void RegisterDiscoveredBlockButtons()

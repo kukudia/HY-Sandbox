@@ -120,6 +120,7 @@
     <Compile Include="Assets\Scripts\InObject\RepairBot.cs" />
     <Compile Include="Assets\Scripts\Manager\PlayManager.cs" />
     <Compile Include="Assets\Scripts\Manager\DestroyManager.cs" />
+    <Compile Include="Assets\Scripts\Manager\DebugManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Logs\v0.1.12.txt" />

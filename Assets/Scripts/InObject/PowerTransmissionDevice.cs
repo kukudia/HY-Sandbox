@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class PowerTransmissionDevice : MonoBehaviour
 {
@@ -10,8 +11,10 @@ public class PowerTransmissionDevice : MonoBehaviour
     private static readonly HashSet<PowerTransmissionDevice> VisitedDevices = new HashSet<PowerTransmissionDevice>();
     private static readonly HashSet<PowerGeneratingUnit> ComponentGenerators = new HashSet<PowerGeneratingUnit>();
     private static readonly HashSet<Power> ComponentLoads = new HashSet<Power>();
+    private static readonly List<PowerTransmissionDevice> ComponentDevices = new List<PowerTransmissionDevice>();
     private static readonly Queue<PowerTransmissionDevice> DeviceQueue = new Queue<PowerTransmissionDevice>();
     private static int lastNetworkUpdateFrame = -1;
+    private static Material dashedLineMaterial;
 
     public List<PowerGeneratingUnit> connectedGenerators = new List<PowerGeneratingUnit>();
     public List<PowerTransmissionDevice> connectedDevices = new List<PowerTransmissionDevice>();
@@ -22,25 +25,51 @@ public class PowerTransmissionDevice : MonoBehaviour
     [Min(0)]
     public int maxConnectionDistance = 10;
 
+    public GameObject debugCube;
+
     public LineRenderer lineRenderer;
+
+    public float availableNetworkPower { get; private set; }
+    public bool showPowerRange => DebugManager.instance != null && DebugManager.instance.showPowerRange;
+    public bool showPowerConnections => DebugManager.instance != null && DebugManager.instance.showPowerConnections;
+
+    private readonly List<LineRenderer> connectionLines = new List<LineRenderer>();
+    private readonly MaterialPropertyBlock debugProperties = new MaterialPropertyBlock();
+    private Renderer debugRenderer;
+
+    private void OnValidate()
+    {
+        UpdatePowerRangeScale();
+    }
 
     private void OnEnable()
     {
         ActiveDevices.Add(this);
+        CacheDebugReferences();
+        UpdateDebugVisuals();
     }
 
     private void Update()
     {
-        if (lastNetworkUpdateFrame == Time.frameCount) return;
+        if (lastNetworkUpdateFrame != Time.frameCount)
+        {
+            lastNetworkUpdateFrame = Time.frameCount;
+            RefreshPowerNetwork();
+        }
 
-        lastNetworkUpdateFrame = Time.frameCount;
-        RefreshPowerNetwork();
+        UpdateDebugVisuals();
     }
 
     private void OnDisable()
     {
         ActiveDevices.Remove(this);
         Disconnect();
+        SetConnectionLinesVisible(false);
+
+        if (debugCube != null)
+        {
+            debugCube.SetActive(false);
+        }
 
         if (ActiveDevices.Count == 0)
         {
@@ -115,6 +144,7 @@ public class PowerTransmissionDevice : MonoBehaviour
         {
             device.connectedGenerators.Clear();
             device.connectedDevices.Clear();
+            device.availableNetworkPower = 0f;
         }
 
         foreach (PowerGeneratingUnit generator in GeneratorBuffer)
@@ -171,12 +201,14 @@ public class PowerTransmissionDevice : MonoBehaviour
 
             ComponentGenerators.Clear();
             ComponentLoads.Clear();
+            ComponentDevices.Clear();
             DeviceQueue.Clear();
             DeviceQueue.Enqueue(rootDevice);
 
             while (DeviceQueue.Count > 0)
             {
                 PowerTransmissionDevice device = DeviceQueue.Dequeue();
+                ComponentDevices.Add(device);
                 CollectDeviceLoads(device);
 
                 foreach (PowerGeneratingUnit generator in device.connectedGenerators)
@@ -201,13 +233,18 @@ public class PowerTransmissionDevice : MonoBehaviour
                 }
             }
 
-            if (ComponentGenerators.Count == 0 || ComponentLoads.Count == 0) continue;
-
             float totalOutputPower = 0f;
             foreach (PowerGeneratingUnit generator in ComponentGenerators)
             {
                 totalOutputPower += Mathf.Max(0f, generator.outputPower);
             }
+
+            foreach (PowerTransmissionDevice device in ComponentDevices)
+            {
+                device.availableNetworkPower = totalOutputPower;
+            }
+
+            if (totalOutputPower <= 0f || ComponentLoads.Count == 0) continue;
 
             float powerPerBlock = totalOutputPower / ComponentLoads.Count;
             foreach (Power powerBlock in ComponentLoads)
@@ -241,9 +278,217 @@ public class PowerTransmissionDevice : MonoBehaviour
         }
     }
 
+    private void CacheDebugReferences()
+    {
+        if (debugCube == null)
+        {
+            Transform debugTransform = transform.Find("Debug/Cube");
+            debugCube = debugTransform != null ? debugTransform.gameObject : null;
+        }
+
+        if (debugRenderer == null && debugCube != null)
+        {
+            debugRenderer = debugCube.GetComponent<Renderer>();
+        }
+    }
+
+    private void UpdateDebugVisuals()
+    {
+        CacheDebugReferences();
+        UpdatePowerRangeVisual();
+        UpdateConnectionLines();
+    }
+
+    private void UpdatePowerRangeVisual()
+    {
+        if (debugCube == null) return;
+
+        UpdatePowerRangeScale();
+        debugCube.SetActive(showPowerRange);
+        if (!showPowerRange || debugRenderer == null) return;
+
+        DebugManager manager = DebugManager.instance;
+        Color rangeColor = manager != null
+            ? manager.GetPowerRangeColor(this)
+            : new Color(1f, 0.2f, 0.12f, 0.12f);
+
+        debugRenderer.GetPropertyBlock(debugProperties);
+        debugProperties.SetColor("_BaseColor", rangeColor);
+        debugProperties.SetColor("_Color", rangeColor);
+        debugRenderer.SetPropertyBlock(debugProperties);
+    }
+
+    private void UpdatePowerRangeScale()
+    {
+        if (debugCube == null) return;
+
+        Transform parent = debugCube.transform.parent;
+        Vector3 parentScale = parent != null ? parent.lossyScale : Vector3.one;
+        float diameter = Mathf.Max(0f, powerRange) * 2f;
+        debugCube.transform.localScale = new Vector3(
+            DivideByScale(diameter, parentScale.x),
+            DivideByScale(diameter, parentScale.y),
+            DivideByScale(diameter, parentScale.z));
+    }
+
+    private static float DivideByScale(float value, float scale)
+    {
+        return Mathf.Abs(scale) > 1e-5f ? value / Mathf.Abs(scale) : value;
+    }
+
+    private void UpdateConnectionLines()
+    {
+        if (!showPowerConnections)
+        {
+            SetConnectionLinesVisible(false);
+            return;
+        }
+
+        int lineIndex = 0;
+        DebugManager manager = DebugManager.instance;
+        Color generatorColor = manager != null ? manager.generatorConnectionColor : Color.green;
+        Color deviceColor = manager != null ? manager.deviceConnectionColor : Color.cyan;
+
+        foreach (PowerGeneratingUnit generator in connectedGenerators)
+        {
+            if (generator == null) continue;
+
+            DrawDashedConnection(lineIndex++, transform.position, generator.transform.position, generatorColor);
+        }
+
+        foreach (PowerTransmissionDevice device in connectedDevices)
+        {
+            if (device == null || GetInstanceID() >= device.GetInstanceID()) continue;
+
+            DrawDashedConnection(lineIndex++, transform.position, device.transform.position, deviceColor);
+        }
+
+        for (int i = lineIndex; i < connectionLines.Count; i++)
+        {
+            if (connectionLines[i] != null)
+            {
+                connectionLines[i].enabled = false;
+            }
+        }
+    }
+
+    private void DrawDashedConnection(int index, Vector3 start, Vector3 end, Color color)
+    {
+        LineRenderer connectionLine = GetOrCreateConnectionLine(index);
+        if (connectionLine == null) return;
+
+        DebugManager manager = DebugManager.instance;
+        float width = manager != null ? manager.connectionLineWidth : 0.055f;
+        float dashLength = manager != null ? manager.connectionDashLength : 0.35f;
+        float scrollSpeed = manager != null ? manager.connectionDashScrollSpeed : 0.45f;
+        float distance = Vector3.Distance(start, end);
+
+        connectionLine.enabled = true;
+        connectionLine.startWidth = width;
+        connectionLine.endWidth = width;
+        connectionLine.startColor = color;
+        connectionLine.endColor = color;
+        connectionLine.SetPosition(0, start);
+        connectionLine.SetPosition(1, end);
+
+        connectionLine.GetPropertyBlock(debugProperties);
+        debugProperties.SetVector("_MainTex_ST", new Vector4(
+            Mathf.Max(1f, distance / Mathf.Max(0.02f, dashLength * 2f)),
+            1f,
+            -Time.unscaledTime * scrollSpeed,
+            0f));
+        connectionLine.SetPropertyBlock(debugProperties);
+    }
+
+    private LineRenderer GetOrCreateConnectionLine(int index)
+    {
+        while (connectionLines.Count <= index)
+        {
+            LineRenderer createdLine;
+            if (connectionLines.Count == 0 && lineRenderer != null)
+            {
+                createdLine = lineRenderer;
+            }
+            else
+            {
+                GameObject lineObject = new GameObject($"Power Connection {connectionLines.Count + 1}");
+                lineObject.transform.SetParent(transform, false);
+                createdLine = lineObject.AddComponent<LineRenderer>();
+            }
+
+            ConfigureConnectionLine(createdLine);
+            connectionLines.Add(createdLine);
+        }
+
+        return connectionLines[index];
+    }
+
+    private static void ConfigureConnectionLine(LineRenderer connectionLine)
+    {
+        if (connectionLine == null) return;
+
+        connectionLine.useWorldSpace = true;
+        connectionLine.positionCount = 2;
+        connectionLine.textureMode = LineTextureMode.Stretch;
+        connectionLine.alignment = LineAlignment.View;
+        connectionLine.numCapVertices = 2;
+        connectionLine.shadowCastingMode = ShadowCastingMode.Off;
+        connectionLine.receiveShadows = false;
+        connectionLine.sharedMaterial = GetDashedLineMaterial();
+    }
+
+    private static Material GetDashedLineMaterial()
+    {
+        if (dashedLineMaterial != null) return dashedLineMaterial;
+
+        Shader shader = Shader.Find("Sprites/Default");
+        if (shader == null)
+        {
+            shader = Shader.Find("Universal Render Pipeline/Unlit");
+        }
+
+        dashedLineMaterial = new Material(shader)
+        {
+            name = "Runtime Power Connection Dashes",
+            hideFlags = HideFlags.HideAndDontSave,
+            mainTexture = CreateDashTexture()
+        };
+        return dashedLineMaterial;
+    }
+
+    private static Texture2D CreateDashTexture()
+    {
+        Texture2D texture = new Texture2D(8, 1, TextureFormat.RGBA32, false)
+        {
+            name = "Runtime Power Dash Pattern",
+            filterMode = FilterMode.Point,
+            wrapMode = TextureWrapMode.Repeat,
+            hideFlags = HideFlags.HideAndDontSave
+        };
+
+        for (int x = 0; x < texture.width; x++)
+        {
+            texture.SetPixel(x, 0, x < texture.width / 2 ? Color.white : Color.clear);
+        }
+
+        texture.Apply(false, true);
+        return texture;
+    }
+
+    private void SetConnectionLinesVisible(bool visible)
+    {
+        foreach (LineRenderer connectionLine in connectionLines)
+        {
+            if (connectionLine != null)
+            {
+                connectionLine.enabled = visible;
+            }
+        }
+    }
+
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.cyan;
+        Gizmos.color = availableNetworkPower > 0f ? Color.green : Color.red;
         Gizmos.DrawWireSphere(transform.position, powerRange);
 
         Gizmos.color = Color.yellow;
