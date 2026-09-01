@@ -33,13 +33,22 @@ public class PowerTransmissionDevice : MonoBehaviour
     public bool showPowerRange => DebugManager.instance != null && DebugManager.instance.showPowerRange;
     public bool showPowerConnections => DebugManager.instance != null && DebugManager.instance.showPowerConnections;
 
+    internal Material DebugRangeMaterial
+    {
+        get
+        {
+            CacheDebugReferences();
+            return debugRenderer != null ? debugRenderer.sharedMaterial : null;
+        }
+    }
+
     private readonly List<LineRenderer> connectionLines = new List<LineRenderer>();
     private readonly MaterialPropertyBlock debugProperties = new MaterialPropertyBlock();
     private Renderer debugRenderer;
 
     private void OnValidate()
     {
-        UpdatePowerRangeScale();
+        CacheDebugReferences();
     }
 
     private void OnEnable()
@@ -74,6 +83,7 @@ public class PowerTransmissionDevice : MonoBehaviour
         if (ActiveDevices.Count == 0)
         {
             ResetAllPowerBlocks();
+            DebugManager.instance?.ClearPowerRangeMesh();
         }
     }
 
@@ -105,6 +115,7 @@ public class PowerTransmissionDevice : MonoBehaviour
         ResetConnectionsAndPower();
         BuildConnections();
         DistributeNetworkPower();
+        DebugManager.instance?.RefreshPowerRangeMesh(DeviceBuffer);
     }
 
     private static void RebuildBuffers()
@@ -163,11 +174,13 @@ public class PowerTransmissionDevice : MonoBehaviour
         for (int i = 0; i < DeviceBuffer.Count; i++)
         {
             PowerTransmissionDevice device = DeviceBuffer[i];
-            float generatorConnectionDistanceSqr = device.maxConnectionDistance * device.maxConnectionDistance;
 
             foreach (PowerGeneratingUnit generator in GeneratorBuffer)
             {
-                if ((generator.transform.position - device.transform.position).sqrMagnitude > generatorConnectionDistanceSqr)
+                if (!IsWithinBoxRange(
+                        generator.transform.position,
+                        device.transform.position,
+                        device.maxConnectionDistance))
                 {
                     continue;
                 }
@@ -180,7 +193,7 @@ public class PowerTransmissionDevice : MonoBehaviour
             {
                 PowerTransmissionDevice other = DeviceBuffer[j];
                 float connectionDistance = Mathf.Min(device.maxConnectionDistance, other.maxConnectionDistance);
-                if ((other.transform.position - device.transform.position).sqrMagnitude > connectionDistance * connectionDistance)
+                if (!IsWithinBoxRange(other.transform.position, device.transform.position, connectionDistance))
                 {
                     continue;
                 }
@@ -256,15 +269,22 @@ public class PowerTransmissionDevice : MonoBehaviour
 
     private static void CollectDeviceLoads(PowerTransmissionDevice device)
     {
-        float powerRangeSqr = device.powerRange * device.powerRange;
-
         foreach (Power powerBlock in PowerBuffer)
         {
-            if ((powerBlock.transform.position - device.transform.position).sqrMagnitude <= powerRangeSqr)
+            if (IsWithinBoxRange(powerBlock.transform.position, device.transform.position, device.powerRange))
             {
                 ComponentLoads.Add(powerBlock);
             }
         }
+    }
+
+    private static bool IsWithinBoxRange(Vector3 firstPosition, Vector3 secondPosition, float range)
+    {
+        Vector3 offset = firstPosition - secondPosition;
+        float clampedRange = Mathf.Max(0f, range);
+        return Mathf.Abs(offset.x) <= clampedRange
+            && Mathf.Abs(offset.y) <= clampedRange
+            && Mathf.Abs(offset.z) <= clampedRange;
     }
 
     private static void ResetAllPowerBlocks()
@@ -302,38 +322,7 @@ public class PowerTransmissionDevice : MonoBehaviour
     private void UpdatePowerRangeVisual()
     {
         if (debugCube == null) return;
-
-        UpdatePowerRangeScale();
-        debugCube.SetActive(showPowerRange);
-        if (!showPowerRange || debugRenderer == null) return;
-
-        DebugManager manager = DebugManager.instance;
-        Color rangeColor = manager != null
-            ? manager.GetPowerRangeColor(this)
-            : new Color(1f, 0.2f, 0.12f, 0.12f);
-
-        debugRenderer.GetPropertyBlock(debugProperties);
-        debugProperties.SetColor("_BaseColor", rangeColor);
-        debugProperties.SetColor("_Color", rangeColor);
-        debugRenderer.SetPropertyBlock(debugProperties);
-    }
-
-    private void UpdatePowerRangeScale()
-    {
-        if (debugCube == null) return;
-
-        Transform parent = debugCube.transform.parent;
-        Vector3 parentScale = parent != null ? parent.lossyScale : Vector3.one;
-        float diameter = Mathf.Max(0f, powerRange);
-        debugCube.transform.localScale = new Vector3(
-            DivideByScale(diameter, parentScale.x),
-            DivideByScale(diameter, parentScale.y),
-            DivideByScale(diameter, parentScale.z));
-    }
-
-    private static float DivideByScale(float value, float scale)
-    {
-        return Mathf.Abs(scale) > 1e-5f ? value / Mathf.Abs(scale) : value;
+        debugCube.SetActive(false);
     }
 
     private void UpdateConnectionLines()
@@ -489,9 +478,9 @@ public class PowerTransmissionDevice : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = availableNetworkPower > 0f ? Color.green : Color.red;
-        Gizmos.DrawWireCube(transform.position, Vector3.one * powerRange);
+        Gizmos.DrawWireCube(transform.position, Vector3.one * (powerRange * 2f));
 
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(transform.position, Vector3.one * maxConnectionDistance);
+        Gizmos.DrawWireCube(transform.position, Vector3.one * (maxConnectionDistance * 2f));
     }
 }
