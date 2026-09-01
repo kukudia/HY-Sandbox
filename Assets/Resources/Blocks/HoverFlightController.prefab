@@ -166,6 +166,7 @@ GameObject:
   - component: {fileID: -6340499038674698693}
   - component: {fileID: 551971835264929317}
   - component: {fileID: -1265573550926785464}
+  - component: {fileID: 1578290364841887270}
   m_Layer: 3
   m_Name: HoverFlightController
   m_TagString: Untagged
@@ -213,6 +214,7 @@ MonoBehaviour:
   damageMultiplier: 10
   explosionForce: 500
   explosionRadius: 5
+  explosionDisconnectProbability: 0.35
   resourcePath: 
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
   connectorParent: {fileID: 2695719906485559115}
@@ -332,3 +334,18 @@ MonoBehaviour:
   maxDurability: 100
   debugLog: 1
   currentDurability: 0
+--- !u!114 &1578290364841887270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004239489873974274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13e8de7fb0f2f044b81805122c216c9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Power
+  currentPower: 0
+  minWorkingPower: 100
+  standardWorkingPower: 100

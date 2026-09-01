@@ -166,12 +166,10 @@ public class HoverFlightController : MonoBehaviour
         // 姿态稳定控制
         CalculateTiltAdjustment(currentUp);
 
-        // 分配推力到各个推进器
-        float outputEfficiency = power != null ? power.efficiency : 1f;
-        DistributeThrust((heightAdjustment + gravityCompensation) * outputEfficiency, currentUp);
+        DistributeThrust(heightAdjustment + gravityCompensation, currentUp);
 
         // 应用旋转修正
-        ApplyRotationCorrection(currentUp, outputEfficiency);
+        ApplyRotationCorrection(currentUp, 1f);
 
         // 更新状态
         lastHeightError = heightError;

@@ -324,7 +324,7 @@ public class PowerTransmissionDevice : MonoBehaviour
 
         Transform parent = debugCube.transform.parent;
         Vector3 parentScale = parent != null ? parent.lossyScale : Vector3.one;
-        float diameter = Mathf.Max(0f, powerRange) * 2f;
+        float diameter = Mathf.Max(0f, powerRange);
         debugCube.transform.localScale = new Vector3(
             DivideByScale(diameter, parentScale.x),
             DivideByScale(diameter, parentScale.y),
@@ -489,9 +489,9 @@ public class PowerTransmissionDevice : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = availableNetworkPower > 0f ? Color.green : Color.red;
-        Gizmos.DrawWireSphere(transform.position, powerRange);
+        Gizmos.DrawWireCube(transform.position, Vector3.one * powerRange);
 
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, maxConnectionDistance);
+        Gizmos.DrawWireCube(transform.position, Vector3.one * maxConnectionDistance);
     }
 }

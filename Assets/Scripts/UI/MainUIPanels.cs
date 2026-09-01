@@ -24,6 +24,30 @@ public class MainUIPanels : MonoBehaviour
         instance = this;
     }
 
+    private void Start()
+    {
+        //if (buildPanel != null)
+        //{
+        //    buildPanel.SetActive(true);
+        //}
+        //if (playPanel != null)
+        //{
+        //    playPanel.SetActive(false);
+        //}
+        //if (createPanel != null)
+        //{
+        //    createPanel.SetActive(false);
+        //}
+        //if (deletePanel != null)
+        //{
+        //    deletePanel.SetActive(false);
+        //}
+        //if (deathPanel != null)
+        //{
+        //    deathPanel.SetActive(false);
+        //}
+    }
+
     private IEnumerator Fade(GameObject panel, bool show)
     {
         if (show)
