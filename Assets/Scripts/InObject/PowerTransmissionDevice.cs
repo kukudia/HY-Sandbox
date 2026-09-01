@@ -43,8 +43,13 @@ public class PowerTransmissionDevice : MonoBehaviour
     }
 
     private readonly List<LineRenderer> connectionLines = new List<LineRenderer>();
-    private readonly MaterialPropertyBlock debugProperties = new MaterialPropertyBlock();
+    private MaterialPropertyBlock debugProperties;
     private Renderer debugRenderer;
+
+    private void Awake()
+    {
+        EnsureDebugProperties();
+    }
 
     private void OnValidate()
     {
@@ -366,6 +371,8 @@ public class PowerTransmissionDevice : MonoBehaviour
         LineRenderer connectionLine = GetOrCreateConnectionLine(index);
         if (connectionLine == null) return;
 
+        EnsureDebugProperties();
+
         DebugManager manager = DebugManager.instance;
         float width = manager != null ? manager.connectionLineWidth : 0.055f;
         float dashLength = manager != null ? manager.connectionDashLength : 0.35f;
@@ -387,6 +394,14 @@ public class PowerTransmissionDevice : MonoBehaviour
             -Time.unscaledTime * scrollSpeed,
             0f));
         connectionLine.SetPropertyBlock(debugProperties);
+    }
+
+    private void EnsureDebugProperties()
+    {
+        if (debugProperties == null)
+        {
+            debugProperties = new MaterialPropertyBlock();
+        }
     }
 
     private LineRenderer GetOrCreateConnectionLine(int index)

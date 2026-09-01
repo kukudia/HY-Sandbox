@@ -421,6 +421,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 #### `Assets/Scripts/InObject/PowerTransmissionDevice.cs`
 
+- `private void Awake()`：在 Unity 生命周期内创建连接线共用的 MaterialPropertyBlock，避免在 MonoBehaviour 构造阶段调用原生渲染 API。
 - `private void OnEnable()`：注册启用的输电设备。
 - `private void Update()`：每个渲染帧只触发一次全局无线网络刷新。
 - `private void OnDisable()`：注销并断开设备；最后一个设备停用时清空所有负载功率。
@@ -439,6 +440,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private void UpdatePowerRangeVisual()`：保持旧单体范围 Cube 隐藏，避免与全局并集网格重复绘制。
 - `private void UpdateConnectionLines()`：为当前连通的发电机和相邻输电设备更新去重后的连接线。
 - `private void DrawDashedConnection(int index, Vector3 start, Vector3 end, Color color)`：设置单条连接线端点、颜色、宽度和虚线滚动参数。
+- `private void EnsureDebugProperties()`：按需创建连接线 MaterialPropertyBlock，兼容脚本热重载或异常初始化状态。
 - `private LineRenderer GetOrCreateConnectionLine(int index)`：复用或创建设备拥有的连接线对象。
 - `private static void ConfigureConnectionLine(LineRenderer connectionLine)`：配置世界空间、纹理拉伸、透明材质和阴影设置。
 - `private static Material GetDashedLineMaterial()`：创建并缓存运行时虚线材质。
@@ -934,6 +936,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 2026-09-01
 
+- **修复连接虚线运行时异常**：`PowerTransmissionDevice` 不再通过 MonoBehaviour 实例字段初始化器创建 `MaterialPropertyBlock`，改由 `Awake` 在 Unity 允许的生命周期阶段初始化，并在绘制虚线前执行空值兜底；解决构造阶段 `CreateImpl` 异常及其后续传入空 PropertyBlock 导致的 `ArgumentNullException`。
 - **无线范围改为轴对齐立方体**：`PowerTransmissionDevice` 对发电机、相邻输电设备和 `Power` 负载统一使用世界坐标逐轴范围判断，`maxConnectionDistance` 与 `powerRange` 均表示半边长；Scene Gizmo 同步显示边长为 `2 * range` 的真实判定范围。
 - **合并供电 DebugCube**：旧单体 DebugCube 在运行时保持隐藏；`DebugManager` 使用所有范围的 X/Y/Z 边界做坐标压缩，重叠单元按有功率、已连接、孤立的优先级归属状态，仅为没有相邻占用单元的一侧生成 Mesh 面。结果是一个含三个颜色子网格的并集外壳，内部重叠面不再参与透明渲染；只有设备位置、范围或网络状态签名变化时才重建。
 - **验证范围**：已通过代码差异检查、`git diff --check` 和 `dotnet build HY-Sandbox.sln --no-restore`（0 错误；仅有既有 `ProfilerCaptureAnalysis.WriteCounters` 过时 API 警告）；Unity CLI 未发现安装 Pipeline 的 Editor 实例，尚未在 Unity 6000.3.11f1 Editor/Play Mode 验证立方体边界连接、并集网格透明效果、三种状态交界和大量移动设备时的构建开销。
