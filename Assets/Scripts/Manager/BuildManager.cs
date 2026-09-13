@@ -18,8 +18,7 @@ public class BuildManager : MonoBehaviour
     public GameObject rotateAxis;
     public GameObject blocksParentPrefab;
 
-    private Material originalMaterial;
-    private Renderer selectedRenderer;
+    private readonly Dictionary<Renderer, Material[]> _selectedMaterials = new Dictionary<Renderer, Material[]>();
 
     private MoveAxisHandle activeHandle = null;
     private Vector3 dragStartPos;
@@ -367,12 +366,25 @@ public class BuildManager : MonoBehaviour
         DeselectBlock();
 
         selectedBlock = block;
-        selectedRenderer = block.GetComponentInChildren<Renderer>();
 
-        if (selectedRenderer != null && highlightMaterial != null)
+        if (highlightMaterial != null)
         {
-            originalMaterial = selectedRenderer.sharedMaterial;
-            selectedRenderer.sharedMaterial = highlightMaterial;
+            Transform modelRoot = block.transform.Find("Model");
+            Renderer[] renderers = modelRoot != null
+                ? modelRoot.GetComponentsInChildren<Renderer>(true)
+                : block.GetComponentsInChildren<Renderer>(true);
+
+            foreach (Renderer renderer in renderers)
+            {
+                Material[] originalMaterials = renderer.sharedMaterials;
+                _selectedMaterials[renderer] = originalMaterials;
+                var highlightedMaterials = new Material[originalMaterials.Length];
+                for (int i = 0; i < highlightedMaterials.Length; i++)
+                {
+                    highlightedMaterials[i] = highlightMaterial;
+                }
+                renderer.sharedMaterials = highlightedMaterials;
+            }
         }
 
         // 生成移动轴 Gizmo
@@ -390,10 +402,14 @@ public class BuildManager : MonoBehaviour
     {
         VisualEffectsManager.TryClearBlockSelection(selectedBlock);
 
-        if (selectedRenderer != null && originalMaterial != null)
+        foreach (KeyValuePair<Renderer, Material[]> entry in _selectedMaterials)
         {
-            selectedRenderer.sharedMaterial = originalMaterial;
+            if (entry.Key != null)
+            {
+                entry.Key.sharedMaterials = entry.Value;
+            }
         }
+        _selectedMaterials.Clear();
 
         if (moveAxis != null)
         {
@@ -402,7 +418,6 @@ public class BuildManager : MonoBehaviour
         }
 
         selectedBlock = null;
-        selectedRenderer = null;
     }
 
     private void HandleMovement()

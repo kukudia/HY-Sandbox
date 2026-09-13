@@ -14,8 +14,7 @@ public class PlayManager : MonoBehaviour
     public Camera mainCamera;
     public LayerMask blockLayer;
 
-    private Material originalMaterial;
-    private Renderer selectedRenderer;
+    private readonly Dictionary<Renderer, Material[]> _selectedMaterials = new Dictionary<Renderer, Material[]>();
     public Material highlightMaterial;
 
     public Block selectedBlock;
@@ -279,12 +278,25 @@ public class PlayManager : MonoBehaviour
         DeselectBlock();
 
         selectedBlock = block;
-        selectedRenderer = block.GetComponentInChildren<Renderer>();
 
-        if (selectedRenderer != null && highlightMaterial != null)
+        if (highlightMaterial != null)
         {
-            originalMaterial = selectedRenderer.sharedMaterial;
-            selectedRenderer.sharedMaterial = highlightMaterial;
+            Transform modelRoot = block.transform.Find("Model");
+            Renderer[] renderers = modelRoot != null
+                ? modelRoot.GetComponentsInChildren<Renderer>(true)
+                : block.GetComponentsInChildren<Renderer>(true);
+
+            foreach (Renderer renderer in renderers)
+            {
+                Material[] originalMaterials = renderer.sharedMaterials;
+                _selectedMaterials[renderer] = originalMaterials;
+                var highlightedMaterials = new Material[originalMaterials.Length];
+                for (int i = 0; i < highlightedMaterials.Length; i++)
+                {
+                    highlightedMaterials[i] = highlightMaterial;
+                }
+                renderer.sharedMaterials = highlightedMaterials;
+            }
         }
 
         VisualEffectsManager.TryShowBlockSelection(selectedBlock);
@@ -302,13 +314,16 @@ public class PlayManager : MonoBehaviour
     {
         VisualEffectsManager.TryClearBlockSelection(selectedBlock);
 
-        if (selectedRenderer != null && originalMaterial != null)
+        foreach (KeyValuePair<Renderer, Material[]> entry in _selectedMaterials)
         {
-            selectedRenderer.sharedMaterial = originalMaterial;
+            if (entry.Key != null)
+            {
+                entry.Key.sharedMaterials = entry.Value;
+            }
         }
+        _selectedMaterials.Clear();
 
         selectedBlock = null;
-        selectedRenderer = null;
     }
 
     public void PlayEnd()

@@ -94,6 +94,7 @@
     <Compile Include="Assets\Scripts\InObject\EnemyController.cs" />
     <Compile Include="Assets\Scripts\Actions\DeleteBlockAction.cs" />
     <Compile Include="Assets\Scripts\Effect\StylizedRingEffect.cs" />
+    <Compile Include="Assets\Scripts\Effect\IndustrialPartMotion.cs" />
     <Compile Include="Assets\Scripts\Manager\PerformanceMonitor.cs" />
     <Compile Include="Assets\Scripts\InObject\RotateAxisHandle.cs" />
     <Compile Include="Assets\Scripts\Actions\MoveBlockAction.cs" />

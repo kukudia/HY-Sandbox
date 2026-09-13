@@ -1,7 +1,7 @@
 # HY-Sandbox 项目开发文档
 
 > 文档状态：持续维护中  
-> 最近核对：2026-09-01
+> 最近核对：2026-09-14
 > Unity 编辑器：6000.3.11f1（`ProjectSettings/ProjectVersion.txt`）  
 > 当前分支：`main`
 
@@ -21,7 +21,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 | UI | uGUI 2.0.0，部分系统仍使用 IMGUI（例如悬浮控制器诊断面板） |
 | 数据 | `Application.persistentDataPath/Saves` 与 `EnemyBlueprints` 下的 JSON |
 | 资源 | `Resources/Blocks` 下按资源路径加载模块 Prefab |
-| 编辑器工具 | Windows 自动构建工具、Profiler 捕获分析工具 |
+| 编辑器工具 | Windows 自动构建工具、Profiler 捕获分析工具、工业美术资源重建工具 |
 
 主要目录：
 
@@ -32,6 +32,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `Assets/Scripts/Thrusters`：悬浮、主推进、全向推进、推力分配和推力视觉效果。
 - `Assets/Scripts/UI`：建造/游玩面板、按钮、存档列表、动作计数和全局文字样式。
 - `Assets/Resources/Blocks`：可动态发现的方块 Prefab；`MainUIButtons` 会从这里注册方块按钮。
+- `Assets/Art/Industrial`：工业玩具/霓虹工程舱风格规范、共享 Mesh、共享材质和独立预览场景。
 - `Assets/Scenes/Main.unity`：当前 Git 跟踪的主场景。
 
 ## 3. 运行时架构
@@ -78,6 +79,12 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 项目使用 3D PhysX 作为运行时物理后端。为降低物理线程在大型构造体、敌人和爆炸冲量场景下的持续计算压力，当前项目设置为：固定物理步长约 0.02 秒（50 Hz；`ProjectSettings/TimeManager.asset` 使用 Unity 6000 的有理数格式保存）、单帧物理追赶上限 0.1 秒、默认位置求解迭代 4 次、默认速度求解迭代 1 次。碰撞回调复用已启用，Transform 自动同步保持关闭；2D 物理设置未改变。降低步频和迭代次数会减少 CPU 占用，但高速碰撞、堆叠稳定性和推进器控制手感需要在 Play Mode 复核。
 
+### 3.7 工业美术与渲染风格
+
+当前模块采用“工业玩具 / 霓虹工程舱”风格：深石墨机械骨架、冷灰装甲、雾银边框，以及按功能区分的青色能源、琥珀推进和红色武器自发光。`IndustrialArtGenerator` 生成圆角盒、低面数环体、锥体、楔体等共享 Mesh，并只替换各 Prefab `Model/IndustrialVisual` 视觉层；根 `Block` 数据、碰撞体、连接点、`Debug` 节点、嵌套 RepairBot 和 Resources 路径保持不变。结构块使用装甲面板与角撑，驾驶舱、发电机、输电中继、陀螺控制器、推进器、炮塔、门、楼梯、机架和维修舱具有独立轮廓。
+
+普通结构块不创建 LODGroup，也不运行逐帧视觉脚本。2x2x2 与功能模块使用两级 LOD，LOD1 仅保留轮廓和功能色标；旋转环、涡轮和 RepairBot 转子由 `IndustrialPartMotion` 更新 Transform，自发光脉冲使用 `MaterialPropertyBlock`，不实例化材质。共享材质开启 GPU Instancing；PC URP 使用 2x MSAA，并在主场景 Volume Profile 中启用 ACES、Bloom、轻量对比度和暗角。建造/游玩选中状态会暂存并替换 `Model` 下所有 Renderer 的材质，取消选择后逐项恢复，适配多 Renderer 模型。
+
 ## 4. 已确认实现的功能
 
 - 主场景和 URP 项目配置可被 Unity 项目识别。
@@ -91,6 +98,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - 主推进、全向推进、悬浮控制、推力分配及推力粒子/光效代码已存在。
 - 敌人、陨石、炮塔、维修机器人和模块耐久相关脚本已纳入工程。
 - 编辑器包含 Windows 构建入口和 Profiler 捕获分析入口。
+- 20 个 `Resources/Blocks` Prefab 已使用共享工业 Mesh/材质替换占位渲染；功能件包含轻量 Transform 动画和按复杂度配置的两级 LOD，并提供独立预览场景与可重复生成菜单。
 
 ## 5. 待改进与风险
 
@@ -112,7 +120,8 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 | P2 | Block 爆炸当前仅实现范围断开、分组、物理冲量和粒子反馈 | 后续可在爆炸中心加入按距离衰减的伤害，并补充断开概率、冲量和半径的 Play Mode 调参记录。 |
 | P2 | UI 同时存在 uGUI 与 IMGUI | 将诊断面板迁移到统一 UI 系统，避免分辨率、输入焦点和生命周期不一致。 |
 | P2 | 历史日志包含旧版本功能描述 | 每次发布标记版本和验证日期，避免把日志中的“计划/旧实现”当作当前契约。 |
-| P3 | 美术资源和材质命名仍有 `New Material` 等默认名称 | 按功能、模块和用途重命名，并建立资源命名约定。 |
+| P2 | 新工业模型尚未在大型蓝图中完成 GPU/CPU 压力验证 | 使用 100、500、1000 模块蓝图分别记录 Batches、SetPass、三角面、`IndustrialPartMotion.Update` 和 LOD 切换；按目标设备再调整 LOD 阈值。 |
+| P3 | 仓库仍保留未被新模块视觉引用的 `New Material` 等历史资源 | 确认场景和旧 Prefab 无引用后再分批清理，避免误删用户资源。 |
 | P3 | 缺少正式构建产物验收记录 | 记录目标平台、构建版本、场景、输入设备、帧率和已知缺陷。 |
 
 ## 6. 推荐验证清单
@@ -187,6 +196,13 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private static string F(double value)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private static string Pad(string value, int width)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `public void Add(float ms, int frame)`： 创建几何、资源、操作记录、UI 项或运行时对象。
+
+#### `Assets/Editor/IndustrialArtGenerator.cs`
+
+- `public static void RebuildAll()`：生成共享工业风格 Mesh、材质、渲染配置、全部模块视觉层和预览场景。
+- `private static bool RebuildPrefab(string prefabPath)`：在 Prefab 隔离阶段替换占位视觉并保持根组件、碰撞体、连接点和嵌套模块。
+- `private static void ConfigureRenderStyle()`：配置 PC URP 的 MSAA、阴影距离和 Volume Profile 的 ACES/Bloom/色彩参数。
+- `private static void CreatePreviewScene(IReadOnlyList<string> prefabPaths)`：创建工业美术展示场景、灯光、相机和截图用资产。
 
 
 ### Actions 操作
@@ -317,6 +333,11 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 
 ### Effect 特效
+
+#### `Assets/Scripts/Effect/IndustrialPartMotion.cs`
+
+- `private void Update()`：低频率更新功能件旋转、浮动和自发光脉冲，不修改物理或存档状态。
+- `public void Configure(Transform[] newSpinTargets, Vector3 newSpinAxis, float newDegreesPerSecond, Transform newBobTarget, float newBobAmplitude, float newBobFrequency, Renderer[] newGlowRenderers, Color newBaseEmission, float newEmissionPulse)`：为生成的视觉层注入动画目标和共享材质参数。
 
 #### `Assets/Scripts/Effect/StylizedBeamEffect.cs`
 
@@ -933,6 +954,12 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - **尚未验证**：Unity 编辑器导入、Inspector 序列化、Play Mode 交互、运行时日志和性能表现。
 
 ## 10. 变更日志
+
+### 2026-09-14
+
+- **建立工业玩具 / 霓虹工程舱渲染风格并替换占位方块**：新增 `Assets/Editor/IndustrialArtGenerator.cs`、`Assets/Scripts/Effect/IndustrialPartMotion.cs` 与 `Assets/Art/Industrial` 资源。生成器在 Prefab 隔离阶段保留根 `Block`、尺寸/质量、碰撞体、`Connectors`、`Debug`、嵌套 RepairBot 和 `Resources` 路径，只重建 `Model/IndustrialVisual` 视觉层；20 个模块 Prefab 已生成圆角装甲、角撑、楔体、低面数环体、发光能源/推进/武器部件。共享材质开启 GPU Instancing；普通结构块不加 LOD，2x2x2 与功能模块使用两级 LOD；发电机环、输电中继信号环、陀螺、涡轮、炮塔轴承和 RepairBot 转子使用轻量 Transform 动画，发光脉冲通过 `MaterialPropertyBlock`。
+- **渲染与预览**：PC URP MSAA 调整为 2x；`SampleSceneProfile` 启用 ACES、Bloom、轻量对比度/暗角和运动模糊。新增 `Assets/Art/Industrial/Preview/IndustrialArtPreview.unity` 及截图，包含暗色展示台、冷白主光、青色轮廓光和 16 类模块展示。选中/取消选中逻辑改为暂存并恢复 `Model` 下所有 Renderer 材质，适配多 Renderer 功能件。
+- **验证范围**：已通过 Unity 6000.3.11f1 Editor 导入、生成器执行（20 个 Prefab）、独立 Camera 截图和 Play Mode 动画探针（发电机环旋转）；本次验证 Console 无新增 Error，脚本重编译 `failed=false`，`dotnet build HY-Sandbox.sln --no-restore` 通过（0 错误；包含既有 Profiler 过时 API 与 Unity 生成项目引用警告）。已确认输电设备用户现有 `Debug/Cube` 缩放 `(5,5,5)` 保留。尚未完成大型蓝图 GPU/CPU 压力、LOD 远近切换、移动设备画质和完整建造/存档/游玩回归；预览截图仅证明渲染资源可见，不替代完整 Play Mode 验收。
 
 ### 2026-09-01
 
