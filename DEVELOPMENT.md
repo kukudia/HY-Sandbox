@@ -1,7 +1,7 @@
 # HY-Sandbox 项目开发文档
 
 > 文档状态：持续维护中  
-> 最近核对：2026-09-14
+> 最近核对：2026-09-15
 > Unity 编辑器：6000.3.11f1（`ProjectSettings/ProjectVersion.txt`）  
 > 当前分支：`main`
 
@@ -81,9 +81,9 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 3.7 工业美术与渲染风格
 
-当前模块采用“工业玩具 / 霓虹工程舱”风格：深石墨机械骨架、冷灰装甲、雾银边框，以及按功能区分的青色能源、琥珀推进和红色武器自发光。`IndustrialArtGenerator` 生成圆角盒、低面数环体、锥体、楔体等共享 Mesh，并只替换各 Prefab `Model/IndustrialVisual` 视觉层；根 `Block` 数据、碰撞体、连接点、`Debug` 节点、嵌套 RepairBot 和 Resources 路径保持不变。结构块使用装甲面板与角撑，驾驶舱、发电机、输电中继、陀螺控制器、推进器、炮塔、门、楼梯、机架和维修舱具有独立轮廓。
+当前模块采用“工业玩具 / 霓虹工程舱”风格：深石墨机械骨架、冷灰装甲、雾银边框，以及按功能区分的青色能源、琥珀推进和红色武器自发光。`IndustrialArtGenerator` 生成圆角盒、低面数环体、锥体、楔体等共享 Mesh，并只替换各 Prefab `Model/IndustrialVisual` 视觉层；根 `Block` 数据、碰撞体、连接点、`Debug` 节点、嵌套 RepairBot 和 Resources 路径保持不变。基础结构块使用单一圆角石墨外壳，六面保持相同轮廓与材质；驾驶舱、发电机、输电中继、陀螺控制器、推进器、炮塔、门、楼梯、机架和维修舱具有独立轮廓。
 
-普通结构块不创建 LODGroup，也不运行逐帧视觉脚本。2x2x2 与功能模块使用两级 LOD，LOD1 仅保留轮廓和功能色标；旋转环、涡轮和 RepairBot 转子由 `IndustrialPartMotion` 更新 Transform，自发光脉冲使用 `MaterialPropertyBlock`，不实例化材质。共享材质开启 GPU Instancing；PC URP 使用 2x MSAA，并在主场景 Volume Profile 中启用 ACES、Bloom、轻量对比度和暗角。建造/游玩选中状态会暂存并替换 `Model` 下所有 Renderer 的材质，取消选择后逐项恢复，适配多 Renderer 模型。
+普通结构块不创建 LODGroup，也不运行逐帧视觉脚本。2x2x2 与功能模块使用两级 LOD，屏幕相对高度阈值为 0.10 / 0.025，并在 0.006 以下剔除，使高细节模型比旧阈值保持到更远距离；LOD1 使用单一轮廓，不添加会造成朝向差异的顶部功能标记。推进器保留 `Model.forward` / 方块 `transform.up` 的推力轴语义，并使用机匣、双侧导轨、同轴喷口环、热核心与燃烧锥组成新轮廓。`Assets/Connector.prefab` 使用同一共享材质/Mesh 重建为轴对称连接接头，信号环和功能件旋转部件由 `IndustrialPartMotion` 更新 Transform；自发光脉冲使用 `MaterialPropertyBlock`，不实例化材质。共享材质开启 GPU Instancing；PC URP 使用 2x MSAA，并在主场景 Volume Profile 中启用 ACES、Bloom、轻量对比度和暗角。建造/游玩选中状态会暂存并替换 `Model` 下所有 Renderer 的材质，取消选择后逐项恢复，适配多 Renderer 模型。
 
 ## 4. 已确认实现的功能
 
@@ -200,6 +200,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 #### `Assets/Editor/IndustrialArtGenerator.cs`
 
 - `public static void RebuildAll()`：生成共享工业风格 Mesh、材质、渲染配置、全部模块视觉层和预览场景。
+- `private static void RebuildConnectorPrefab()`：在保留 Connector Prefab 根对象和 GUID 的前提下重建轴对称工业连接接头及信号环动画。
 - `private static bool RebuildPrefab(string prefabPath)`：在 Prefab 隔离阶段替换占位视觉并保持根组件、碰撞体、连接点和嵌套模块。
 - `private static void ConfigureRenderStyle()`：配置 PC URP 的 MSAA、阴影距离和 Volume Profile 的 ACES/Bloom/色彩参数。
 - `private static void CreatePreviewScene(IReadOnlyList<string> prefabPaths)`：创建工业美术展示场景、灯光、相机和截图用资产。
@@ -954,6 +955,13 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - **尚未验证**：Unity 编辑器导入、Inspector 序列化、Play Mode 交互、运行时日志和性能表现。
 
 ## 10. 变更日志
+
+### 2026-09-15
+
+- **延后工业模型 LOD 切换**：复杂模块的 LOD 屏幕相对高度由 `0.22 / 0.055 / 0.012` 调整为 `0.10 / 0.025 / 0.006`，继续保留两级 LOD 以控制大型蓝图开销，但让高细节轮廓在常用建造距离下保持更久；PC 当前 `lodBias=2` 未改动。
+- **统一基础结构块六面外观**：移除基础方块的顶部装甲、前部装甲、角撑和顶部能源条，详细层改为单一 `Uniform Chassis` 圆角外壳；简化层仅保留同材质轮廓，不再添加顶部功能色标，避免旋转或堆叠后出现方向性装饰。
+- **生成 Connector 工业模型并优化推进器**：`IndustrialArtGenerator` 现在直接重建现有 `Assets/Connector.prefab`，保留 Prefab 根对象/GUID，使用低面数接头、金属套环、青色信号环、接触核心和琥珀触点组成可旋转轴对称视觉。六种推进器改为紧凑机匣、双侧导轨、同轴喷口套环、热核心和燃烧锥；主/全向推进器继续以 `Model.forward` 为推力轴，悬浮推进器喷口保持在局部下方。
+- **验证范围**：已使用 Unity 6000.3.11f1 Batch Mode 在隔离工程完成脚本导入并执行生成器，日志确认 20 个模块 Prefab、Connector、共享材质/Mesh 和预览场景成功保存，退出码为 0；文件检查确认基础方块仅含单一外壳、Connector 不再包含临时 Cube、推进器节点与 LOD 阈值已序列化。尚未在当前已打开的主工程 Play Mode 中验证连接生成/断开、全向推进器旋转、实际镜头下的 LOD 切换距离和大型蓝图性能。
 
 ### 2026-09-14
 

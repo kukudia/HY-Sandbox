@@ -17,6 +17,7 @@ public static class IndustrialArtGenerator
     private const string MeshRoot = ArtRoot + "/Meshes";
     private const string PreviewRoot = ArtRoot + "/Preview";
     private const string BlockRoot = "Assets/Resources/Blocks";
+    private const string ConnectorPrefabPath = "Assets/Connector.prefab";
     private const string GeneratedRootName = "IndustrialVisual";
 
     private static readonly Color CyanEmission = new Color(0.03f, 1.65f, 2.7f, 1f);
@@ -44,6 +45,7 @@ public static class IndustrialArtGenerator
         CreateSharedMeshes();
         CreateSharedMaterials();
         ConfigureRenderStyle();
+        RebuildConnectorPrefab();
 
         string[] prefabPaths = AssetDatabase.FindAssets("t:Prefab", new[] { BlockRoot })
             .Select(AssetDatabase.GUIDToAssetPath)
@@ -481,6 +483,50 @@ public static class IndustrialArtGenerator
         parameter.value = value;
     }
 
+    private static void RebuildConnectorPrefab()
+    {
+        GameObject root = PrefabUtility.LoadPrefabContents(ConnectorPrefabPath);
+        if (root == null)
+        {
+            Debug.LogWarning($"Connector prefab not found at {ConnectorPrefabPath}.");
+            return;
+        }
+
+        try
+        {
+            for (int i = root.transform.childCount - 1; i >= 0; i--)
+            {
+                UnityEngine.Object.DestroyImmediate(root.transform.GetChild(i).gameObject);
+            }
+
+            Transform visual = CreateGroup(root.transform, "IndustrialConnectorVisual");
+            // The connector is spawned directly on a face and has no normal-aware rotation in Block.cs,
+            // so the visual is intentionally rotationally symmetric and reads correctly on every face.
+            AddPart(visual, "Connector Hub", _cylinder, Vector3.zero,
+                new Vector3(0.17f, 0.075f, 0.17f), Quaternion.identity, _graphite);
+            AddPart(visual, "Connector Collar", _cylinder, Vector3.zero,
+                new Vector3(0.14f, 0.035f, 0.14f), Quaternion.identity, _edge);
+
+            Transform signalRing = CreateGroup(visual, "Connector Signal Ring");
+            Renderer ring = AddPart(signalRing, "Signal Ring", _torus, Vector3.zero,
+                Vector3.one * 0.28f, Quaternion.identity, _cyan, false);
+            Renderer contact = AddPart(visual, "Contact Core", _sphere, Vector3.zero,
+                Vector3.one * 0.09f, Quaternion.identity, _cyan, false);
+            AddPart(visual, "Contact Cap", _cylinder, Vector3.zero,
+                new Vector3(0.065f, 0.025f, 0.065f), Quaternion.identity, _amber, false);
+
+            var motion = visual.gameObject.AddComponent<IndustrialPartMotion>();
+            motion.Configure(new[] { signalRing }, Vector3.up, 110f, null, 0f, 1f,
+                new Renderer[] { ring, contact }, CyanEmission, 0.2f);
+            SetLayerRecursively(visual.gameObject, root.layer);
+            PrefabUtility.SaveAsPrefabAsset(root, ConnectorPrefabPath);
+        }
+        finally
+        {
+            PrefabUtility.UnloadPrefabContents(root);
+        }
+    }
+
     private static bool RebuildPrefab(string prefabPath)
     {
         GameObject root = PrefabUtility.LoadPrefabContents(prefabPath);
@@ -554,9 +600,11 @@ public static class IndustrialArtGenerator
             lodGroup.animateCrossFading = false;
             lodGroup.SetLODs(new[]
             {
-                new LOD(0.22f, lod0Renderers.ToArray()) { fadeTransitionWidth = 0.12f },
-                new LOD(0.055f, lod1Renderers.ToArray()) { fadeTransitionWidth = 0.1f },
-                new LOD(0.012f, Array.Empty<Renderer>())
+                // Screen-relative heights are intentionally conservative: keep the detailed silhouette
+                // visible longer so the low-poly swap is not noticeable at normal build distances.
+                new LOD(0.10f, lod0Renderers.ToArray()) { fadeTransitionWidth = 0.08f },
+                new LOD(0.025f, lod1Renderers.ToArray()) { fadeTransitionWidth = 0.06f },
+                new LOD(0.006f, Array.Empty<Renderer>())
             });
             lodGroup.RecalculateBounds();
         }
@@ -653,9 +701,8 @@ public static class IndustrialArtGenerator
         var renderers = new List<Renderer>();
         Vector3 size = new Vector3(block.x, block.y, block.z) * 0.88f;
         renderers.Add(AddPart(parent, "Silhouette", _roundedCube, Vector3.zero, size, Quaternion.identity, _graphite));
-        Material accent = name.Contains("Thruster", StringComparison.Ordinal) ? _amber : _cyan;
-        Vector3 markerScale = new Vector3(Mathf.Max(0.2f, size.x * 0.46f), 0.045f, Mathf.Max(0.2f, size.z * 0.46f));
-        renderers.Add(AddPart(parent, "Function Marker", _roundedCube, new Vector3(0f, size.y * 0.5f + 0.025f, 0f), markerScale, Quaternion.identity, accent, false));
+        // Structural blocks deliberately have one material and one uninterrupted shell on all six faces.
+        // Functional parts keep their detailed LOD in BuildDetailedModel instead of adding a generic marker.
         return renderers;
     }
 
@@ -666,40 +713,10 @@ public static class IndustrialArtGenerator
         ICollection<Renderer> glowRenderers)
     {
         Vector3 size = new Vector3(block.x, block.y, block.z);
-        renderers.Add(AddPart(parent, "Graphite Chassis", _roundedCube, Vector3.zero, size - Vector3.one * 0.12f, Quaternion.identity, _graphite));
-        renderers.Add(AddPart(parent, "Top Armor", _roundedCube,
-            new Vector3(0f, size.y * 0.5f - 0.035f, 0f),
-            new Vector3(size.x * 0.72f, 0.075f, size.z * 0.72f),
-            Quaternion.identity,
-            _armor));
-        renderers.Add(AddPart(parent, "Front Armor", _roundedCube,
-            new Vector3(0f, 0f, size.z * 0.5f - 0.035f),
-            new Vector3(size.x * 0.66f, size.y * 0.56f, 0.075f),
-            Quaternion.identity,
-            _armor));
-
-        float insetX = size.x * 0.5f - 0.08f;
-        float insetZ = size.z * 0.5f - 0.08f;
-        for (int x = -1; x <= 1; x += 2)
-        {
-            for (int z = -1; z <= 1; z += 2)
-            {
-                renderers.Add(AddPart(parent, $"Corner Brace {x} {z}", _roundedCube,
-                    new Vector3(insetX * x, 0f, insetZ * z),
-                    new Vector3(0.095f, size.y * 0.72f, 0.095f),
-                    Quaternion.identity,
-                    _edge));
-            }
-        }
-
-        Renderer glow = AddPart(parent, "Energy Spine", _roundedCube,
-            new Vector3(0f, size.y * 0.5f - 0.002f, 0f),
-            new Vector3(Mathf.Max(0.2f, size.x * 0.38f), 0.035f, 0.055f),
-            Quaternion.identity,
-            _cyan,
-            false);
-        renderers.Add(glow);
-        glowRenderers.Add(glow);
+        // A plain block is a single rounded shell. This keeps every face interchangeable when building
+        // and avoids decorative top/front assumptions that become visually noisy in stacked structures.
+        renderers.Add(AddPart(parent, "Uniform Chassis", _roundedCube,
+            Vector3.zero, size - Vector3.one * 0.12f, Quaternion.identity, _graphite));
     }
 
     private static void BuildDoor(Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)
@@ -899,33 +916,38 @@ public static class IndustrialArtGenerator
         float size = Mathf.Max(block.x, Mathf.Max(block.y, block.z));
         float scale = size >= 2f ? 1.75f : 0.86f;
 
+        // Keep the visual's local forward/up semantics intact: Main/Universal thrust along Model.forward,
+        // while Hover thrusts along the block's up axis. The nozzle is therefore placed on the opposite
+        // side of the force vector and all rings share that axis rotation.
         renderers.Add(AddPart(parent, "Thruster Housing", _roundedCube, Vector3.zero,
-            new Vector3(scale, scale * 0.82f, scale), Quaternion.identity, _graphite));
-        for (int i = 0; i < 4; i++)
+            new Vector3(scale, scale * 0.78f, scale), Quaternion.identity, _graphite));
+        for (int side = -1; side <= 1; side += 2)
         {
-            float angle = i * 90f;
-            Vector3 offset = Quaternion.Euler(0f, angle, 0f) * new Vector3(scale * 0.39f, 0f, scale * 0.39f);
-            renderers.Add(AddPart(parent, "Thruster Armor", _wedge, offset,
-                new Vector3(scale * 0.22f, scale * 0.64f, scale * 0.36f), Quaternion.Euler(0f, angle, 0f), _armor));
+            renderers.Add(AddPart(parent, "Thruster Side Rail", _wedge,
+                new Vector3(side * scale * 0.39f, 0f, 0f),
+                new Vector3(scale * 0.18f, scale * 0.58f, scale * 0.72f),
+                Quaternion.Euler(0f, side * 8f, 0f), _armor));
         }
 
         Quaternion nozzleRotation = isHover ? Quaternion.identity : Quaternion.Euler(90f, 0f, 0f);
-        Vector3 nozzlePosition = isHover
-            ? new Vector3(0f, -scale * 0.37f, 0f)
-            : new Vector3(0f, 0f, -scale * 0.37f);
-        Vector3 nozzleScale = isHover
-            ? new Vector3(scale * 0.62f, scale * 0.22f, scale * 0.62f)
-            : new Vector3(scale * 0.62f, scale * 0.22f, scale * 0.62f);
-        renderers.Add(AddPart(parent, "Nozzle Rim", _cylinder, nozzlePosition, nozzleScale, nozzleRotation, _edge));
+        Vector3 nozzleAxis = isHover ? Vector3.down : Vector3.back;
+        Vector3 nozzlePosition = nozzleAxis * (scale * 0.39f);
+        renderers.Add(AddPart(parent, "Nozzle Collar", _cylinder, nozzlePosition,
+            new Vector3(scale * 0.58f, scale * 0.16f, scale * 0.58f), nozzleRotation, _edge));
+        renderers.Add(AddPart(parent, "Nozzle Ring", _torus, nozzlePosition,
+            Vector3.one * scale * 0.60f, nozzleRotation, _armor));
 
         Transform turbine = CreateGroup(parent, "Turbine");
-        turbine.localPosition = nozzlePosition + (isHover ? Vector3.down : Vector3.back) * (scale * 0.12f);
+        turbine.localPosition = nozzlePosition + nozzleAxis * (scale * 0.10f);
         turbine.localRotation = nozzleRotation;
         spinTargets.Add(turbine);
         Renderer heat = AddPart(turbine, "Heat Core", _cylinder, Vector3.zero,
-            new Vector3(scale * 0.38f, scale * 0.045f, scale * 0.38f), Quaternion.identity, _amber, false);
+            new Vector3(scale * 0.34f, scale * 0.055f, scale * 0.34f), Quaternion.identity, _amber, false);
         renderers.Add(heat);
         glowRenderers.Add(heat);
+        renderers.Add(AddPart(turbine, "Combustion Cone", _cone,
+            Vector3.down * (scale * 0.045f), new Vector3(scale * 0.38f, scale * 0.11f, scale * 0.38f),
+            Quaternion.identity, _graphite, false));
         if (isUniversal)
         {
             Renderer vectorRing = AddPart(parent, "Vector Ring", _torus, Vector3.zero,
