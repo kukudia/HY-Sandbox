@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class MainUIPanels : MonoBehaviour
@@ -9,6 +10,7 @@ public class MainUIPanels : MonoBehaviour
     public GameObject playPanel;
     public GameObject createPanel;
     public GameObject deletePanel;
+    public GameObject debugPanel;
     public GameObject deathPanel;
     public InputField inputName;
     public InputField inputValue;
@@ -214,6 +216,8 @@ public class MainUIPanels : MonoBehaviour
             return;
         }
 
+        debugPanel.transform.SetParent(playPanel.transform);
+
         StartCoroutine(Fade(buildPanel, false));
         StartCoroutine(Fade(playPanel, true));
         PlayManager.instance.PlayStart();
@@ -221,6 +225,8 @@ public class MainUIPanels : MonoBehaviour
 
     public void PlayEnd()
     {
+        debugPanel.transform.SetParent(buildPanel.transform);
+
         PlayManager.instance.PlayEnd();
         StartCoroutine(Fade(deathPanel, false));
         StartCoroutine(Fade(playPanel, false));

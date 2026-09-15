@@ -4253,7 +4253,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &700819258
 Transform:
   m_ObjectHideFlags: 0
@@ -5336,6 +5336,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DebugManager
   showPowerRange: 0
   showPowerConnections: 0
+  poweredRangeColor: {r: 0.15, g: 1, b: 0.45, a: 0.16}
+  connectedRangeColor: {r: 1, g: 0.78, b: 0.12, a: 0.14}
+  isolatedRangeColor: {r: 1, g: 0.2, b: 0.12, a: 0.12}
+  generatorConnectionColor: {r: 0.2, g: 1, b: 0.45, a: 0.95}
+  deviceConnectionColor: {r: 0.15, g: 0.75, b: 1, a: 0.9}
+  connectionLineWidth: 0.055
+  connectionDashLength: 0.35
+  connectionDashScrollSpeed: 0.45
 --- !u!1 &968692279
 GameObject:
   m_ObjectHideFlags: 0
@@ -9623,6 +9631,7 @@ MonoBehaviour:
   playPanel: {fileID: 633202306}
   createPanel: {fileID: 1423540025}
   deletePanel: {fileID: 49607140}
+  debugPanel: {fileID: 1620466845}
   deathPanel: {fileID: 2104107304}
   inputName: {fileID: 2029497389}
   inputValue: {fileID: 0}
