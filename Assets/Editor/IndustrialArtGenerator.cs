@@ -17,8 +17,10 @@ public static class IndustrialArtGenerator
     private const string MeshRoot = ArtRoot + "/Meshes";
     private const string PreviewRoot = ArtRoot + "/Preview";
     private const string BlockRoot = "Assets/Resources/Blocks";
-    private const string ConnectorPrefabPath = "Assets/Connector.prefab";
+    private const string LegacyConnectorPrefabPath = "Assets/Connector.prefab";
+    private const string ResourcesConnectorPrefabPath = BlockRoot + "/Connector.prefab";
     private const string GeneratedRootName = "IndustrialVisual";
+    private const bool EnableLod = false;
 
     private static readonly Color CyanEmission = new Color(0.03f, 1.65f, 2.7f, 1f);
     private static readonly Color AmberEmission = new Color(2.8f, 0.72f, 0.06f, 1f);
@@ -31,6 +33,11 @@ public static class IndustrialArtGenerator
     private static Material _amber;
     private static Material _red;
     private static Material _glass;
+    private static Material _powerPaint;
+    private static Material _thrusterPaint;
+    private static Material _weaponPaint;
+    private static Material _cockpitPaint;
+    private static Material _utilityPaint;
     private static Mesh _roundedCube;
     private static Mesh _cylinder;
     private static Mesh _sphere;
@@ -346,13 +353,21 @@ public static class IndustrialArtGenerator
 
     private static void CreateSharedMaterials()
     {
-        _graphite = CreateOrUpdateMaterial("MAT_Industrial_Graphite", new Color(0.025f, 0.04f, 0.065f), 0.82f, 0.42f, Color.black);
-        _armor = CreateOrUpdateMaterial("MAT_Industrial_Armor", new Color(0.19f, 0.26f, 0.34f), 0.62f, 0.48f, Color.black);
-        _edge = CreateOrUpdateMaterial("MAT_Industrial_Edge", new Color(0.62f, 0.72f, 0.78f), 0.38f, 0.56f, Color.black);
-        _cyan = CreateOrUpdateMaterial("MAT_Industrial_Cyan", new Color(0.015f, 0.28f, 0.38f), 0.3f, 0.68f, CyanEmission);
-        _amber = CreateOrUpdateMaterial("MAT_Industrial_Amber", new Color(0.42f, 0.12f, 0.015f), 0.28f, 0.58f, AmberEmission);
-        _red = CreateOrUpdateMaterial("MAT_Industrial_Red", new Color(0.38f, 0.025f, 0.015f), 0.25f, 0.52f, RedEmission);
-        _glass = CreateOrUpdateMaterial("MAT_Industrial_Glass", new Color(0.015f, 0.2f, 0.28f, 0.42f), 0.05f, 0.92f, new Color(0.01f, 0.32f, 0.5f, 1f), true);
+        // Flat, high-contrast cartoon colors still borrow from real materials: painted steel, safety
+        // yellow, copper, aluminum, glass and warning red. Keeping these as shared materials preserves
+        // batching while allowing each functional category to read at a glance.
+        _graphite = CreateOrUpdateMaterial("MAT_Industrial_Graphite", new Color(0.12f, 0.19f, 0.24f), 0.68f, 0.38f, Color.black);
+        _armor = CreateOrUpdateMaterial("MAT_Industrial_Armor", new Color(0.78f, 0.48f, 0.08f), 0.34f, 0.44f, Color.black);
+        _edge = CreateOrUpdateMaterial("MAT_Industrial_Edge", new Color(0.62f, 0.68f, 0.7f), 0.76f, 0.58f, Color.black);
+        _cyan = CreateOrUpdateMaterial("MAT_Industrial_Cyan", new Color(0.02f, 0.42f, 0.26f), 0.24f, 0.62f, new Color(0.03f, 1.4f, 0.62f, 1f));
+        _amber = CreateOrUpdateMaterial("MAT_Industrial_Amber", new Color(0.68f, 0.24f, 0.035f), 0.28f, 0.5f, new Color(2.7f, 0.46f, 0.04f, 1f));
+        _red = CreateOrUpdateMaterial("MAT_Industrial_Red", new Color(0.58f, 0.045f, 0.025f), 0.25f, 0.46f, new Color(2.5f, 0.1f, 0.03f, 1f));
+        _glass = CreateOrUpdateMaterial("MAT_Industrial_Glass", new Color(0.06f, 0.35f, 0.5f, 0.42f), 0.05f, 0.86f, new Color(0.02f, 0.44f, 0.72f, 1f), true);
+        _powerPaint = CreateOrUpdateMaterial("MAT_Industrial_PowerPaint", new Color(0.1f, 0.42f, 0.25f), 0.36f, 0.44f, Color.black);
+        _thrusterPaint = CreateOrUpdateMaterial("MAT_Industrial_ThrusterPaint", new Color(0.68f, 0.23f, 0.045f), 0.42f, 0.42f, Color.black);
+        _weaponPaint = CreateOrUpdateMaterial("MAT_Industrial_WeaponPaint", new Color(0.5f, 0.06f, 0.045f), 0.38f, 0.4f, Color.black);
+        _cockpitPaint = CreateOrUpdateMaterial("MAT_Industrial_CockpitPaint", new Color(0.07f, 0.24f, 0.48f), 0.46f, 0.48f, Color.black);
+        _utilityPaint = CreateOrUpdateMaterial("MAT_Industrial_UtilityPaint", new Color(0.62f, 0.5f, 0.2f), 0.3f, 0.42f, Color.black);
     }
 
     private static Material CreateOrUpdateMaterial(
@@ -485,10 +500,13 @@ public static class IndustrialArtGenerator
 
     private static void RebuildConnectorPrefab()
     {
-        GameObject root = PrefabUtility.LoadPrefabContents(ConnectorPrefabPath);
+        string prefabPath = File.Exists(LegacyConnectorPrefabPath)
+            ? LegacyConnectorPrefabPath
+            : ResourcesConnectorPrefabPath;
+        GameObject root = PrefabUtility.LoadPrefabContents(prefabPath);
         if (root == null)
         {
-            Debug.LogWarning($"Connector prefab not found at {ConnectorPrefabPath}.");
+            Debug.LogWarning($"Connector prefab not found at {LegacyConnectorPrefabPath} or {ResourcesConnectorPrefabPath}.");
             return;
         }
 
@@ -519,7 +537,7 @@ public static class IndustrialArtGenerator
             motion.Configure(new[] { signalRing }, Vector3.up, 110f, null, 0f, 1f,
                 new Renderer[] { ring, contact }, CyanEmission, 0.2f);
             SetLayerRecursively(visual.gameObject, root.layer);
-            PrefabUtility.SaveAsPrefabAsset(root, ConnectorPrefabPath);
+            PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
         }
         finally
         {
@@ -585,11 +603,14 @@ public static class IndustrialArtGenerator
         visual.transform.SetParent(model, false);
         SetLayerRecursively(visual, model.gameObject.layer);
 
+        // LOD is intentionally disabled while the cartoon palette and silhouettes are being tuned.
+        // Keeping one active visual hierarchy also makes close-range material authoring deterministic.
         bool useLod = ShouldUseLod(name, block);
         Transform lod0 = CreateGroup(visual.transform, "LOD0");
         var spinTargets = new List<Transform>();
         var glowRenderers = new List<Renderer>();
         List<Renderer> lod0Renderers = BuildDetailedModel(name, block, lod0, spinTargets, glowRenderers);
+        ApplyCategoryPalette(name, lod0);
 
         if (useLod)
         {
@@ -631,17 +652,34 @@ public static class IndustrialArtGenerator
 
     private static bool ShouldUseLod(string name, Block block)
     {
-        if (block.x * block.y * block.z >= 8)
-        {
-            return true;
-        }
-
-        return name is "PowerGeneratingUnit"
+        return EnableLod && (block.x * block.y * block.z >= 8
+            || name is "PowerGeneratingUnit"
             or "PowerTransmissionDevice"
             or "HoverFlightController"
             or "Turret"
             or "RepairBotContianer"
-            || name.Contains("Thruster", StringComparison.Ordinal);
+            || name.Contains("Thruster", StringComparison.Ordinal));
+    }
+
+    private static void ApplyCategoryPalette(string name, Transform visualRoot)
+    {
+        Material categoryMaterial = name switch
+        {
+            "Cockpit" => _cockpitPaint,
+            "PowerGeneratingUnit" or "PowerTransmissionDevice" or "HoverFlightController" => _powerPaint,
+            "Turret" => _weaponPaint,
+            "Door" or "Stairs" or "Rack" or "RepairBotContianer" => _utilityPaint,
+            _ when name.Contains("Thruster", StringComparison.Ordinal) => _thrusterPaint,
+            _ => _graphite
+        };
+
+        foreach (MeshRenderer renderer in visualRoot.GetComponentsInChildren<MeshRenderer>(true))
+        {
+            if (renderer.sharedMaterial == _graphite)
+            {
+                renderer.sharedMaterial = categoryMaterial;
+            }
+        }
     }
 
     private static List<Renderer> BuildDetailedModel(

@@ -81,9 +81,9 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 3.7 工业美术与渲染风格
 
-当前模块采用“工业玩具 / 霓虹工程舱”风格：深石墨机械骨架、冷灰装甲、雾银边框，以及按功能区分的青色能源、琥珀推进和红色武器自发光。`IndustrialArtGenerator` 生成圆角盒、低面数环体、锥体、楔体等共享 Mesh，并只替换各 Prefab `Model/IndustrialVisual` 视觉层；根 `Block` 数据、碰撞体、连接点、`Debug` 节点、嵌套 RepairBot 和 Resources 路径保持不变。基础结构块使用单一圆角石墨外壳，六面保持相同轮廓与材质；驾驶舱、发电机、输电中继、陀螺控制器、推进器、炮塔、门、楼梯、机架和维修舱具有独立轮廓。
+当前模块采用“卡通工业玩具”风格：圆润低面数轮廓、清晰色块和适度高光，使用蓝灰喷涂钢、工程黄/黄铜、铝银、设备绿、橙色推进器、信号红武器和海军蓝驾驶舱区分功能，而不是所有方块统一黑色。`IndustrialArtGenerator` 生成圆角盒、低面数环体、锥体、楔体等共享 Mesh，并只替换各 Prefab `Model/IndustrialVisual` 视觉层；根 `Block` 数据、碰撞体、连接点、`Debug` 节点、嵌套 RepairBot 和 Resources 路径保持不变。基础结构块使用单一圆角蓝灰喷涂钢外壳，六面保持相同轮廓与材质；驾驶舱、发电机、输电中继、陀螺控制器、推进器、炮塔、门、楼梯、机架和维修舱按类别使用独立主色。
 
-普通结构块不创建 LODGroup，也不运行逐帧视觉脚本。2x2x2 与功能模块使用两级 LOD，屏幕相对高度阈值为 0.10 / 0.025，并在 0.006 以下剔除，使高细节模型比旧阈值保持到更远距离；LOD1 使用单一轮廓，不添加会造成朝向差异的顶部功能标记。推进器保留 `Model.forward` / 方块 `transform.up` 的推力轴语义，并使用机匣、双侧导轨、同轴喷口环、热核心与燃烧锥组成新轮廓。`Assets/Connector.prefab` 使用同一共享材质/Mesh 重建为轴对称连接接头，信号环和功能件旋转部件由 `IndustrialPartMotion` 更新 Transform；自发光脉冲使用 `MaterialPropertyBlock`，不实例化材质。共享材质开启 GPU Instancing；PC URP 使用 2x MSAA，并在主场景 Volume Profile 中启用 ACES、Bloom、轻量对比度和暗角。建造/游玩选中状态会暂存并替换 `Model` 下所有 Renderer 的材质，取消选择后逐项恢复，适配多 Renderer 模型。
+当前所有模块暂时不创建或保留 `LODGroup`，仅使用一套可见视觉层，避免卡通材质调校时发生远近颜色/轮廓跳变；后续重新启用 LOD 前需在目标镜头下重新测量切换距离。推进器保留 `Model.forward` / 方块 `transform.up` 的推力轴语义，并使用机匣、双侧导轨、同轴喷口环、热核心与燃烧锥组成新轮廓。Connector 资源位于 `Assets/Resources/Blocks/Connector.prefab`，继续沿用既有 GUID 与 `connectorPrefab` 引用，使用轴对称连接接头和信号环动画；自发光脉冲使用 `MaterialPropertyBlock`，不实例化材质。共享材质开启 GPU Instancing；PC URP 使用 2x MSAA，并在主场景 Volume Profile 中启用 ACES、Bloom、轻量对比度和暗角。建造/游玩选中状态会暂存并替换 `Model` 下所有 Renderer 的材质，取消选择后逐项恢复，适配多 Renderer 模型。
 
 ## 4. 已确认实现的功能
 
@@ -98,7 +98,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - 主推进、全向推进、悬浮控制、推力分配及推力粒子/光效代码已存在。
 - 敌人、陨石、炮塔、维修机器人和模块耐久相关脚本已纳入工程。
 - 编辑器包含 Windows 构建入口和 Profiler 捕获分析入口。
-- 20 个 `Resources/Blocks` Prefab 已使用共享工业 Mesh/材质替换占位渲染；功能件包含轻量 Transform 动画和按复杂度配置的两级 LOD，并提供独立预览场景与可重复生成菜单。
+- 20 个 `Resources/Blocks` Prefab 已使用共享工业 Mesh/材质替换占位渲染；功能件包含轻量 Transform 动画，当前全部禁用 LOD，并提供独立预览场景与可重复生成菜单。
 
 ## 5. 待改进与风险
 
@@ -120,7 +120,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 | P2 | Block 爆炸当前仅实现范围断开、分组、物理冲量和粒子反馈 | 后续可在爆炸中心加入按距离衰减的伤害，并补充断开概率、冲量和半径的 Play Mode 调参记录。 |
 | P2 | UI 同时存在 uGUI 与 IMGUI | 将诊断面板迁移到统一 UI 系统，避免分辨率、输入焦点和生命周期不一致。 |
 | P2 | 历史日志包含旧版本功能描述 | 每次发布标记版本和验证日期，避免把日志中的“计划/旧实现”当作当前契约。 |
-| P2 | 新工业模型尚未在大型蓝图中完成 GPU/CPU 压力验证 | 使用 100、500、1000 模块蓝图分别记录 Batches、SetPass、三角面、`IndustrialPartMotion.Update` 和 LOD 切换；按目标设备再调整 LOD 阈值。 |
+| P2 | 新工业模型尚未在大型蓝图中完成 GPU/CPU 压力验证 | 使用 100、500、1000 模块蓝图分别记录 Batches、SetPass、三角面和 `IndustrialPartMotion.Update`；重新启用 LOD 后再补充切换距离验证。 |
 | P3 | 仓库仍保留未被新模块视觉引用的 `New Material` 等历史资源 | 确认场景和旧 Prefab 无引用后再分批清理，避免误删用户资源。 |
 | P3 | 缺少正式构建产物验收记录 | 记录目标平台、构建版本、场景、输入设备、帧率和已知缺陷。 |
 
@@ -958,10 +958,10 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 2026-09-15
 
-- **延后工业模型 LOD 切换**：复杂模块的 LOD 屏幕相对高度由 `0.22 / 0.055 / 0.012` 调整为 `0.10 / 0.025 / 0.006`，继续保留两级 LOD 以控制大型蓝图开销，但让高细节轮廓在常用建造距离下保持更久；PC 当前 `lodBias=2` 未改动。
-- **统一基础结构块六面外观**：移除基础方块的顶部装甲、前部装甲、角撑和顶部能源条，详细层改为单一 `Uniform Chassis` 圆角外壳；简化层仅保留同材质轮廓，不再添加顶部功能色标，避免旋转或堆叠后出现方向性装饰。
-- **生成 Connector 工业模型并优化推进器**：`IndustrialArtGenerator` 现在直接重建现有 `Assets/Connector.prefab`，保留 Prefab 根对象/GUID，使用低面数接头、金属套环、青色信号环、接触核心和琥珀触点组成可旋转轴对称视觉。六种推进器改为紧凑机匣、双侧导轨、同轴喷口套环、热核心和燃烧锥；主/全向推进器继续以 `Model.forward` 为推力轴，悬浮推进器喷口保持在局部下方。
-- **验证范围**：已使用 Unity 6000.3.11f1 Batch Mode 在隔离工程完成脚本导入并执行生成器，日志确认 20 个模块 Prefab、Connector、共享材质/Mesh 和预览场景成功保存，退出码为 0；文件检查确认基础方块仅含单一外壳、Connector 不再包含临时 Cube、推进器节点与 LOD 阈值已序列化。尚未在当前已打开的主工程 Play Mode 中验证连接生成/断开、全向推进器旋转、实际镜头下的 LOD 切换距离和大型蓝图性能。
+- **暂时禁用全部 LOD**：`IndustrialArtGenerator` 不再为模块创建 `LODGroup`，重新生成后 20 个模块只保留一套 `LOD0` 视觉层；这样卡通材质、色块和轮廓在镜头远近变化时不会跳变。
+- **切换为卡通工业材质配色**：共享材质从统一黑色/冷灰方案改为接近真实工业材料的分类色：蓝灰喷涂钢（普通结构）、工程黄/黄铜（装甲与安全件）、铝银（边缘/连接件）、设备绿（供电）、高温橙（推进器）、信号红（武器）、海军蓝（驾驶舱）和沙金（工具/维修）。功能模块的基础外壳通过类别材质替换，青色/琥珀/红色发光件仍保留为状态与工作端提示。
+- **Connector 资源路径兼容**：生成器优先处理当前 `Assets/Resources/Blocks/Connector.prefab`，若旧路径仍存在则兼容 `Assets/Connector.prefab`；不改变既有 Connector GUID 和 Block 的序列化引用。
+- **验证范围**：已通过 `dotnet build HY-Sandbox.sln --no-restore --nologo`（0 错误，仅既有 Profiler 过时 API 警告）；Unity 6000.3.11f1 隔离工程成功导入并执行生成器（20 个模块 Prefab、共享材质/Mesh、预览场景保存成功，退出码 0）；文件检查确认模块无 `LODGroup`、类别材质已写入 Prefab、Connector GUID 引用保持一致。尚未在主工程 Play Mode 复核实际镜头下的卡通观感、选中高亮与大型蓝图性能。
 
 ### 2026-09-14
 
