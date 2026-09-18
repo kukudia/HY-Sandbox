@@ -38,6 +38,7 @@ public static class IndustrialArtGenerator
     private static Material _weaponPaint;
     private static Material _cockpitPaint;
     private static Material _utilityPaint;
+    private static Mesh _box;
     private static Mesh _roundedCube;
     private static Mesh _cylinder;
     private static Mesh _sphere;
@@ -106,6 +107,7 @@ public static class IndustrialArtGenerator
 
     private static void CreateSharedMeshes()
     {
+        _box = SaveOrUpdateMesh(MeshRoot + "/M_Box.asset", ClonePrimitiveMesh(PrimitiveType.Cube));
         _roundedCube = SaveOrUpdateMesh(MeshRoot + "/M_RoundedCube.asset", CreateRoundedCube(4, 0.12f));
         _cylinder = SaveOrUpdateMesh(MeshRoot + "/M_LowCylinder.asset", ClonePrimitiveMesh(PrimitiveType.Cylinder));
         _sphere = SaveOrUpdateMesh(MeshRoot + "/M_LowSphere.asset", ClonePrimitiveMesh(PrimitiveType.Sphere));
@@ -356,18 +358,18 @@ public static class IndustrialArtGenerator
         // Flat, high-contrast cartoon colors still borrow from real materials: painted steel, safety
         // yellow, copper, aluminum, glass and warning red. Keeping these as shared materials preserves
         // batching while allowing each functional category to read at a glance.
-        _graphite = CreateOrUpdateMaterial("MAT_Industrial_Graphite", new Color(0.12f, 0.19f, 0.24f), 0.68f, 0.38f, Color.black);
-        _armor = CreateOrUpdateMaterial("MAT_Industrial_Armor", new Color(0.78f, 0.48f, 0.08f), 0.34f, 0.44f, Color.black);
-        _edge = CreateOrUpdateMaterial("MAT_Industrial_Edge", new Color(0.62f, 0.68f, 0.7f), 0.76f, 0.58f, Color.black);
-        _cyan = CreateOrUpdateMaterial("MAT_Industrial_Cyan", new Color(0.02f, 0.42f, 0.26f), 0.24f, 0.62f, new Color(0.03f, 1.4f, 0.62f, 1f));
-        _amber = CreateOrUpdateMaterial("MAT_Industrial_Amber", new Color(0.68f, 0.24f, 0.035f), 0.28f, 0.5f, new Color(2.7f, 0.46f, 0.04f, 1f));
-        _red = CreateOrUpdateMaterial("MAT_Industrial_Red", new Color(0.58f, 0.045f, 0.025f), 0.25f, 0.46f, new Color(2.5f, 0.1f, 0.03f, 1f));
-        _glass = CreateOrUpdateMaterial("MAT_Industrial_Glass", new Color(0.06f, 0.35f, 0.5f, 0.42f), 0.05f, 0.86f, new Color(0.02f, 0.44f, 0.72f, 1f), true);
-        _powerPaint = CreateOrUpdateMaterial("MAT_Industrial_PowerPaint", new Color(0.1f, 0.42f, 0.25f), 0.36f, 0.44f, Color.black);
-        _thrusterPaint = CreateOrUpdateMaterial("MAT_Industrial_ThrusterPaint", new Color(0.68f, 0.23f, 0.045f), 0.42f, 0.42f, Color.black);
-        _weaponPaint = CreateOrUpdateMaterial("MAT_Industrial_WeaponPaint", new Color(0.5f, 0.06f, 0.045f), 0.38f, 0.4f, Color.black);
-        _cockpitPaint = CreateOrUpdateMaterial("MAT_Industrial_CockpitPaint", new Color(0.07f, 0.24f, 0.48f), 0.46f, 0.48f, Color.black);
-        _utilityPaint = CreateOrUpdateMaterial("MAT_Industrial_UtilityPaint", new Color(0.62f, 0.5f, 0.2f), 0.3f, 0.42f, Color.black);
+        _graphite = CreateOrUpdateMaterial("MAT_Industrial_Graphite", new Color(0.2f, 0.32f, 0.39f), 0.46f, 0.5f, Color.black);
+        _armor = CreateOrUpdateMaterial("MAT_Industrial_Armor", new Color(0.94f, 0.56f, 0.08f), 0.32f, 0.42f, Color.black);
+        _edge = CreateOrUpdateMaterial("MAT_Industrial_Edge", new Color(0.72f, 0.78f, 0.78f), 0.78f, 0.52f, Color.black);
+        _cyan = CreateOrUpdateMaterial("MAT_Industrial_Cyan", new Color(0.02f, 0.42f, 0.36f), 0.22f, 0.58f, new Color(0.02f, 1.2f, 0.92f, 1f));
+        _amber = CreateOrUpdateMaterial("MAT_Industrial_Amber", new Color(0.8f, 0.28f, 0.035f), 0.28f, 0.46f, new Color(2.8f, 0.5f, 0.03f, 1f));
+        _red = CreateOrUpdateMaterial("MAT_Industrial_Red", new Color(0.66f, 0.055f, 0.04f), 0.24f, 0.44f, new Color(2.6f, 0.1f, 0.03f, 1f));
+        _glass = CreateOrUpdateMaterial("MAT_Industrial_Glass", new Color(0.04f, 0.3f, 0.46f, 0.42f), 0.05f, 0.88f, new Color(0.01f, 0.38f, 0.62f, 1f), true);
+        _powerPaint = CreateOrUpdateMaterial("MAT_Industrial_PowerPaint", new Color(0.08f, 0.5f, 0.32f), 0.34f, 0.44f, Color.black);
+        _thrusterPaint = CreateOrUpdateMaterial("MAT_Industrial_ThrusterPaint", new Color(0.92f, 0.3f, 0.045f), 0.38f, 0.42f, Color.black);
+        _weaponPaint = CreateOrUpdateMaterial("MAT_Industrial_WeaponPaint", new Color(0.64f, 0.07f, 0.045f), 0.36f, 0.4f, Color.black);
+        _cockpitPaint = CreateOrUpdateMaterial("MAT_Industrial_CockpitPaint", new Color(0.06f, 0.24f, 0.52f), 0.44f, 0.46f, Color.black);
+        _utilityPaint = CreateOrUpdateMaterial("MAT_Industrial_UtilityPaint", new Color(0.76f, 0.58f, 0.18f), 0.28f, 0.42f, Color.black);
     }
 
     private static Material CreateOrUpdateMaterial(
@@ -738,8 +740,8 @@ public static class IndustrialArtGenerator
     {
         var renderers = new List<Renderer>();
         Vector3 size = new Vector3(block.x, block.y, block.z) * 0.88f;
-        renderers.Add(AddPart(parent, "Silhouette", _roundedCube, Vector3.zero, size, Quaternion.identity, _graphite));
-        // Structural blocks deliberately have one material and one uninterrupted shell on all six faces.
+        renderers.Add(AddPart(parent, "Silhouette", _box, Vector3.zero, size, Quaternion.identity, _graphite));
+        // Structural blocks deliberately have one material and one uninterrupted box on all six faces.
         // Functional parts keep their detailed LOD in BuildDetailedModel instead of adding a generic marker.
         return renderers;
     }
@@ -751,10 +753,10 @@ public static class IndustrialArtGenerator
         ICollection<Renderer> glowRenderers)
     {
         Vector3 size = new Vector3(block.x, block.y, block.z);
-        // A plain block is a single rounded shell. This keeps every face interchangeable when building
-        // and avoids decorative top/front assumptions that become visually noisy in stacked structures.
-        renderers.Add(AddPart(parent, "Uniform Chassis", _roundedCube,
-            Vector3.zero, size - Vector3.one * 0.12f, Quaternion.identity, _graphite));
+        // A plain block is a single sharp-edged box. Every face stays interchangeable for stacking,
+        // while functional modules get their identity from silhouette and category color instead.
+        renderers.Add(AddPart(parent, "Uniform Chassis", _box,
+            Vector3.zero, size - Vector3.one * 0.04f, Quaternion.identity, _graphite));
     }
 
     private static void BuildDoor(Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)
@@ -832,7 +834,7 @@ public static class IndustrialArtGenerator
         ICollection<Renderer> glowRenderers)
     {
         Vector3 size = new Vector3(block.x, block.y, block.z);
-        renderers.Add(AddPart(parent, "Armored Hull", _roundedCube,
+        renderers.Add(AddPart(parent, "Armored Hull", _box,
             new Vector3(0f, -0.48f, 0f), new Vector3(size.x * 0.9f, 0.86f, size.z * 0.9f), Quaternion.identity, _graphite));
         renderers.Add(AddPart(parent, "Canopy", _wedge,
             new Vector3(0f, 0.35f, 0.12f), new Vector3(1.52f, 0.78f, 1.35f), Quaternion.identity, _glass, false));
@@ -857,7 +859,7 @@ public static class IndustrialArtGenerator
         ICollection<Renderer> glowRenderers)
     {
         Vector3 size = new Vector3(block.x, block.y, block.z);
-        renderers.Add(AddPart(parent, "Generator Base", _roundedCube,
+        renderers.Add(AddPart(parent, "Generator Base", _box,
             new Vector3(0f, -0.72f, 0f), new Vector3(1.72f, 0.42f, 1.72f), Quaternion.identity, _graphite));
         for (int x = -1; x <= 1; x += 2)
         {
@@ -893,7 +895,7 @@ public static class IndustrialArtGenerator
         ICollection<Transform> spinTargets,
         ICollection<Renderer> glowRenderers)
     {
-        renderers.Add(AddPart(parent, "Relay Base", _roundedCube,
+        renderers.Add(AddPart(parent, "Relay Base", _box,
             new Vector3(0f, -0.34f, 0f), new Vector3(0.86f, 0.28f, 0.86f), Quaternion.identity, _graphite));
         renderers.Add(AddPart(parent, "Relay Mast", _cylinder,
             new Vector3(0f, 0.02f, 0f), new Vector3(0.2f, 0.42f, 0.2f), Quaternion.identity, _edge));
@@ -924,7 +926,7 @@ public static class IndustrialArtGenerator
         ICollection<Transform> spinTargets,
         ICollection<Renderer> glowRenderers)
     {
-        renderers.Add(AddPart(parent, "Controller Cradle", _roundedCube,
+        renderers.Add(AddPart(parent, "Controller Cradle", _box,
             new Vector3(0f, -0.31f, 0f), new Vector3(0.88f, 0.28f, 0.88f), Quaternion.identity, _graphite));
         Renderer core = AddPart(parent, "Gyro Core", _sphere, Vector3.zero,
             Vector3.one * 0.42f, Quaternion.identity, _cyan, false);
@@ -957,7 +959,7 @@ public static class IndustrialArtGenerator
         // Keep the visual's local forward/up semantics intact: Main/Universal thrust along Model.forward,
         // while Hover thrusts along the block's up axis. The nozzle is therefore placed on the opposite
         // side of the force vector and all rings share that axis rotation.
-        renderers.Add(AddPart(parent, "Thruster Housing", _roundedCube, Vector3.zero,
+        renderers.Add(AddPart(parent, "Thruster Housing", _box, Vector3.zero,
             new Vector3(scale, scale * 0.78f, scale), Quaternion.identity, _graphite));
         for (int side = -1; side <= 1; side += 2)
         {
@@ -1003,7 +1005,7 @@ public static class IndustrialArtGenerator
     {
         renderers.Add(AddPart(parent, "Turret Base", _cylinder,
             new Vector3(0f, -0.34f, 0f), new Vector3(0.78f, 0.16f, 0.78f), Quaternion.identity, _graphite));
-        renderers.Add(AddPart(parent, "Turret Yoke", _roundedCube,
+        renderers.Add(AddPart(parent, "Turret Yoke", _box,
             new Vector3(0f, -0.05f, 0f), new Vector3(0.64f, 0.45f, 0.6f), Quaternion.identity, _armor));
         renderers.Add(AddPart(parent, "Barrel", _cylinder,
             new Vector3(-0.16f, 0.13f, 0.34f), new Vector3(0.1f, 0.42f, 0.1f), Quaternion.Euler(90f, 0f, 0f), _edge));
@@ -1024,7 +1026,7 @@ public static class IndustrialArtGenerator
 
     private static void BuildRepairBay(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)
     {
-        renderers.Add(AddPart(parent, "Repair Bay Chassis", _roundedCube, Vector3.zero,
+        renderers.Add(AddPart(parent, "Repair Bay Chassis", _box, Vector3.zero,
             new Vector3(0.92f, 0.88f, 0.92f), Quaternion.identity, _graphite));
         renderers.Add(AddPart(parent, "Repair Bay Door", _wedge,
             new Vector3(0f, 0f, 0.45f), new Vector3(0.72f, 0.58f, 0.08f), Quaternion.Euler(0f, 0f, 180f), _armor));
@@ -1055,7 +1057,7 @@ public static class IndustrialArtGenerator
 
         Transform visual = CreateGroup(root.transform, GeneratedRootName);
         var glowRenderers = new List<Renderer>();
-        AddPart(visual, "Drone Body", _roundedCube, Vector3.zero, new Vector3(0.7f, 0.32f, 0.6f), Quaternion.identity, _graphite);
+        AddPart(visual, "Drone Body", _box, Vector3.zero, new Vector3(0.7f, 0.32f, 0.6f), Quaternion.identity, _graphite);
         for (int x = -1; x <= 1; x += 2)
         {
             AddPart(visual, "Drone Wing", _wedge, new Vector3(x * 0.46f, 0f, 0f),
