@@ -956,6 +956,12 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ## 10. 变更日志
 
+### 2026-09-19
+
+- **美化驾驶舱、发电机与维修舱**：驾驶舱加入分离式挡风玻璃框、前鼻装甲、侧舱、驾驶台和青/琥珀仪表灯带；发电机加入方形基座、四角硬边立柱、前后左右交叉支撑与顶部护栏；维修舱移除遮挡 RepairBot 的实心外壳，改为低底座、后框、侧导轨、维修夹具和工具梁，保持 +Z 正面开放。RepairBot 主体改用沙金工具色并保留青色视觉传感器。
+- **验证范围**：通过已连接 Unity Editor 的 `Tools/HY Sandbox/Rebuild Industrial Art` 菜单成功重建 20 个模块 Prefab、Connector、共享材质/Mesh 和预览场景；Editor Console 无新增 Error，仅有既存 `ProfilerCaptureAnalysis.WriteCounters` 过时 API 警告。已在 `IndustrialArtPreview` Scene View 对驾驶舱、发电机和维修舱完成近景截图核对；尚未在主工程 Play Mode 验证实际驾驶视角、RepairBot 运行时进出舱和大型蓝图性能。
+- **打包验证**：使用 `AutoBuildTool.BuildWindows` 在 Unity 6000.3.11f1 batch Editor 中完成 Windows x64 构建和 ZIP 压缩，输出 `Builds/HY-Sandbox_v0.1.25_Win64.zip`（约 64.0 MB，版本 0.1.25）；构建日志记录 `Build Finished, Result: Success`。连接编辑器触发的第一次尝试曾在 Shader 变体编译阶段崩溃，随后 batch 重试成功；该异常不影响最终包生成。
+
 ### 2026-09-15
 
 - **暂时禁用全部 LOD**：`IndustrialArtGenerator` 不再为模块创建 `LODGroup`，重新生成后 20 个模块只保留一套 `LOD0` 视觉层；这样卡通材质、色块和轮廓在镜头远近变化时不会跳变。

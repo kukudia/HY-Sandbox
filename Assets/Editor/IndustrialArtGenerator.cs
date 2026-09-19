@@ -835,18 +835,32 @@ public static class IndustrialArtGenerator
     {
         Vector3 size = new Vector3(block.x, block.y, block.z);
         renderers.Add(AddPart(parent, "Armored Hull", _box,
-            new Vector3(0f, -0.48f, 0f), new Vector3(size.x * 0.9f, 0.86f, size.z * 0.9f), Quaternion.identity, _graphite));
+            new Vector3(0f, -0.44f, -0.04f), new Vector3(size.x * 0.94f, 0.72f, size.z * 0.84f), Quaternion.identity, _graphite));
         renderers.Add(AddPart(parent, "Canopy", _wedge,
-            new Vector3(0f, 0.35f, 0.12f), new Vector3(1.52f, 0.78f, 1.35f), Quaternion.identity, _glass, false));
+            new Vector3(0f, 0.34f, 0.08f), new Vector3(1.48f, 0.72f, 1.22f), Quaternion.identity, _glass, false));
         renderers.Add(AddPart(parent, "Nose Armor", _wedge,
-            new Vector3(0f, -0.02f, 0.72f), new Vector3(1.7f, 0.45f, 0.52f), Quaternion.Euler(10f, 0f, 0f), _armor));
+            new Vector3(0f, -0.03f, 0.7f), new Vector3(1.68f, 0.42f, 0.5f), Quaternion.Euler(10f, 0f, 0f), _armor));
         for (int x = -1; x <= 1; x += 2)
         {
             renderers.Add(AddPart(parent, "Side Pod", _roundedCube,
-                new Vector3(x * 0.82f, -0.2f, -0.05f), new Vector3(0.22f, 0.72f, 1.48f), Quaternion.identity, _edge));
+                new Vector3(x * 0.82f, -0.18f, -0.05f), new Vector3(0.2f, 0.64f, 1.38f), Quaternion.identity, _edge));
+            renderers.Add(AddPart(parent, "Canopy Frame", _box,
+                new Vector3(x * 0.58f, 0.35f, 0.1f), new Vector3(0.055f, 0.62f, 0.1f), Quaternion.Euler(0f, x * -8f, 0f), _edge));
         }
+        renderers.Add(AddPart(parent, "Canopy Crown", _box,
+            new Vector3(0f, 0.68f, 0.04f), new Vector3(1.12f, 0.075f, 0.1f), Quaternion.identity, _edge));
+        renderers.Add(AddPart(parent, "Cockpit Console", _box,
+            new Vector3(0f, 0.08f, 0.52f), new Vector3(0.72f, 0.08f, 0.2f), Quaternion.Euler(-12f, 0f, 0f), _edge));
+        Renderer leftInstrument = AddPart(parent, "Instrument Light L", _box,
+            new Vector3(-0.22f, 0.14f, 0.625f), new Vector3(0.18f, 0.025f, 0.025f), Quaternion.identity, _cyan, false);
+        Renderer rightInstrument = AddPart(parent, "Instrument Light R", _box,
+            new Vector3(0.22f, 0.14f, 0.625f), new Vector3(0.18f, 0.025f, 0.025f), Quaternion.identity, _amber, false);
+        renderers.Add(leftInstrument);
+        renderers.Add(rightInstrument);
+        glowRenderers.Add(leftInstrument);
+        glowRenderers.Add(rightInstrument);
         Renderer spine = AddPart(parent, "Cockpit Spine", _roundedCube,
-            new Vector3(0f, 0.77f, -0.02f), new Vector3(0.12f, 0.045f, 0.92f), Quaternion.identity, _cyan, false);
+            new Vector3(0f, 0.76f, -0.02f), new Vector3(0.1f, 0.04f, 0.84f), Quaternion.identity, _cyan, false);
         renderers.Add(spine);
         glowRenderers.Add(spine);
     }
@@ -860,15 +874,24 @@ public static class IndustrialArtGenerator
     {
         Vector3 size = new Vector3(block.x, block.y, block.z);
         renderers.Add(AddPart(parent, "Generator Base", _box,
-            new Vector3(0f, -0.72f, 0f), new Vector3(1.72f, 0.42f, 1.72f), Quaternion.identity, _graphite));
+            new Vector3(0f, -0.72f, 0f), new Vector3(1.76f, 0.34f, 1.76f), Quaternion.identity, _graphite));
         for (int x = -1; x <= 1; x += 2)
         {
             for (int z = -1; z <= 1; z += 2)
             {
-                renderers.Add(AddPart(parent, "Generator Pylon", _roundedCube,
-                    new Vector3(x * 0.68f, 0f, z * 0.68f), new Vector3(0.22f, 1.35f, 0.22f), Quaternion.Euler(x * 5f, 0f, z * -5f), _armor));
+                renderers.Add(AddPart(parent, "Generator Pylon", _box,
+                    new Vector3(x * 0.68f, 0f, z * 0.68f), new Vector3(0.2f, 1.3f, 0.2f), Quaternion.identity, _armor));
             }
         }
+
+        renderers.Add(AddPart(parent, "Generator Front Brace", _box,
+            new Vector3(0f, 0.18f, 0.68f), new Vector3(1.32f, 0.11f, 0.11f), Quaternion.identity, _edge));
+        renderers.Add(AddPart(parent, "Generator Rear Brace", _box,
+            new Vector3(0f, 0.18f, -0.68f), new Vector3(1.32f, 0.11f, 0.11f), Quaternion.identity, _edge));
+        renderers.Add(AddPart(parent, "Generator Left Brace", _box,
+            new Vector3(-0.68f, 0.18f, 0f), new Vector3(0.11f, 0.11f, 1.32f), Quaternion.identity, _edge));
+        renderers.Add(AddPart(parent, "Generator Right Brace", _box,
+            new Vector3(0.68f, 0.18f, 0f), new Vector3(0.11f, 0.11f, 1.32f), Quaternion.identity, _edge));
 
         Renderer core = AddPart(parent, "Energy Core", _sphere, Vector3.zero,
             Vector3.one * 0.78f, Quaternion.identity, _cyan, false);
@@ -1026,17 +1049,23 @@ public static class IndustrialArtGenerator
 
     private static void BuildRepairBay(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)
     {
-        renderers.Add(AddPart(parent, "Repair Bay Chassis", _box, Vector3.zero,
-            new Vector3(0.92f, 0.88f, 0.92f), Quaternion.identity, _graphite));
-        renderers.Add(AddPart(parent, "Repair Bay Door", _wedge,
-            new Vector3(0f, 0f, 0.45f), new Vector3(0.72f, 0.58f, 0.08f), Quaternion.Euler(0f, 0f, 180f), _armor));
+        // The bay stays open toward +Z so the nested RepairBot remains readable in the build grid.
+        // A low deck and rear/side frame provide the silhouette without hiding the bot behind a shell.
+        renderers.Add(AddPart(parent, "Repair Bay Deck", _box,
+            new Vector3(0f, -0.14f, 0f), new Vector3(0.94f, 0.12f, 0.92f), Quaternion.identity, _graphite));
+        renderers.Add(AddPart(parent, "Repair Bay Rear Frame", _box,
+            new Vector3(0f, 0.12f, -0.37f), new Vector3(0.82f, 0.62f, 0.1f), Quaternion.identity, _graphite));
         for (int x = -1; x <= 1; x += 2)
         {
-            renderers.Add(AddPart(parent, "Repair Clamp", _roundedCube,
-                new Vector3(x * 0.38f, 0f, 0.38f), new Vector3(0.1f, 0.62f, 0.22f), Quaternion.identity, _edge));
+            renderers.Add(AddPart(parent, "Repair Bay Side Rail", _box,
+                new Vector3(x * 0.43f, 0.13f, -0.02f), new Vector3(0.1f, 0.64f, 0.72f), Quaternion.identity, _edge));
+            renderers.Add(AddPart(parent, "Repair Clamp", _box,
+                new Vector3(x * 0.3f, -0.02f, 0.2f), new Vector3(0.12f, 0.18f, 0.24f), Quaternion.identity, _armor));
         }
+        renderers.Add(AddPart(parent, "Repair Bay Tool Beam", _box,
+            new Vector3(0f, 0.43f, -0.28f), new Vector3(0.82f, 0.1f, 0.1f), Quaternion.identity, _edge));
         Renderer medical = AddPart(parent, "Repair Status", _roundedCube,
-            new Vector3(0f, 0.33f, 0.465f), new Vector3(0.38f, 0.06f, 0.025f), Quaternion.identity, _cyan, false);
+            new Vector3(0f, 0.34f, 0.465f), new Vector3(0.38f, 0.05f, 0.025f), Quaternion.identity, _cyan, false);
         renderers.Add(medical);
         glowRenderers.Add(medical);
     }
@@ -1057,7 +1086,7 @@ public static class IndustrialArtGenerator
 
         Transform visual = CreateGroup(root.transform, GeneratedRootName);
         var glowRenderers = new List<Renderer>();
-        AddPart(visual, "Drone Body", _box, Vector3.zero, new Vector3(0.7f, 0.32f, 0.6f), Quaternion.identity, _graphite);
+        AddPart(visual, "Drone Body", _box, Vector3.zero, new Vector3(0.7f, 0.32f, 0.6f), Quaternion.identity, _utilityPaint);
         for (int x = -1; x <= 1; x += 2)
         {
             AddPart(visual, "Drone Wing", _wedge, new Vector3(x * 0.46f, 0f, 0f),
