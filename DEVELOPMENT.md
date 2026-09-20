@@ -1,7 +1,7 @@
 # HY-Sandbox 项目开发文档
 
 > 文档状态：持续维护中  
-> 最近核对：2026-09-15
+> 最近核对：2026-09-19
 > Unity 编辑器：6000.3.11f1（`ProjectSettings/ProjectVersion.txt`）  
 > 当前分支：`main`
 
@@ -21,7 +21,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 | UI | uGUI 2.0.0，部分系统仍使用 IMGUI（例如悬浮控制器诊断面板） |
 | 数据 | `Application.persistentDataPath/Saves` 与 `EnemyBlueprints` 下的 JSON |
 | 资源 | `Resources/Blocks` 下按资源路径加载模块 Prefab |
-| 编辑器工具 | Windows 自动构建工具、Profiler 捕获分析工具、工业美术资源重建工具 |
+| 编辑器工具 | Windows 自动构建工具、Profiler 捕获分析工具、工业美术资源重建工具；Unity CLI `1.0.0-beta.8` 与 Pipeline `0.7.0-exp.1` |
 
 主要目录：
 
@@ -1010,6 +1010,8 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 2026-09-19
 
+- **接入 Unity CLI Editor 连接环境**：通过 `unity pipeline install` 为项目添加 `com.unity.pipeline@0.7.0-exp.1`，同步更新 `Packages/packages-lock.json` 和 Unity 生成的 C# 工程引用，使 CLI 可以发现并控制正在运行的 Unity 6000.3.11f1 Editor。
+- **环境验证**：已确认 Unity CLI `1.0.0-beta.8` 在 PATH，Unity 6000.3.11f1 已安装，Unity Personal license active；Codex 使用的 `unity-cli` skill 已刷新并在刷新前备份。重新打开 HY-Sandbox 后，`unity status` 显示 Editor `ready`、端口 `7801`，`unity command --project-path ... --query editor` 和 `unity list --project-path ...` 均成功返回项目命令目录；当前未在 Play Mode 验证运行时行为。账号未登录，但不影响本机 Editor 连接。
 - **美化驾驶舱、发电机与维修舱**：驾驶舱加入分离式挡风玻璃框、前鼻装甲、侧舱、驾驶台和青/琥珀仪表灯带；发电机加入方形基座、四角硬边立柱、前后左右交叉支撑与顶部护栏；维修舱移除遮挡 RepairBot 的实心外壳，改为低底座、后框、侧导轨、维修夹具和工具梁，保持 +Z 正面开放。RepairBot 主体改用沙金工具色并保留青色视觉传感器。
 - **验证范围**：通过已连接 Unity Editor 的 `Tools/HY Sandbox/Rebuild Industrial Art` 菜单成功重建 20 个模块 Prefab、Connector、共享材质/Mesh 和预览场景；Editor Console 无新增 Error，仅有既存 `ProfilerCaptureAnalysis.WriteCounters` 过时 API 警告。已在 `IndustrialArtPreview` Scene View 对驾驶舱、发电机和维修舱完成近景截图核对；尚未在主工程 Play Mode 验证实际驾驶视角、RepairBot 运行时进出舱和大型蓝图性能。
 - **打包验证**：使用 `AutoBuildTool.BuildWindows` 在 Unity 6000.3.11f1 batch Editor 中完成 Windows x64 构建和 ZIP 压缩，输出 `Builds/HY-Sandbox_v0.1.25_Win64.zip`（约 64.0 MB，版本 0.1.25）；构建日志记录 `Build Finished, Result: Success`。连接编辑器触发的第一次尝试曾在 Shader 变体编译阶段崩溃，随后 batch 重试成功；该异常不影响最终包生成。

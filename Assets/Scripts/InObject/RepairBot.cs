@@ -89,9 +89,12 @@ public class RepairBot : MonoBehaviour
 
     // 公共状态
     public Durability currentTarget;
+    public NavigationState currentState;
     public float lastRepairTime;
     public float lastFindTime;
     public bool isRepairing;
+    public bool isCoolDown => coolDownTimer >= 0f && coolDownTimer < 3f;
+    [Min(0f)] public float coolDownTimer = 0f;
 
     // 私有变量
     private Rigidbody rb;
@@ -118,14 +121,14 @@ public class RepairBot : MonoBehaviour
     private AdvancedAvoidanceResult cachedAvoidanceResult;
     private float nextDirectionUpdateTime;
     private float cachedAvoidanceRangeScale = 1f;
-    private enum NavigationState
+    public enum NavigationState
     {
         Idle,
         NavigatingToTarget,
         ReturningHome,
         Docking
     }
-    private NavigationState currentState;
+
     private bool navigationStateInitialized;
 
     // 调试信息
@@ -371,6 +374,8 @@ public class RepairBot : MonoBehaviour
 
     private void FixedUpdate()
     {
+        coolDownTimer += Time.fixedDeltaTime;
+
         if (currentTarget == null)
         {
             FindDamagedBlock();
@@ -1037,9 +1042,14 @@ public class RepairBot : MonoBehaviour
         if (navigationStateInitialized && currentState == nextState)
             return;
 
+        bool docked = nextState == NavigationState.Idle || nextState == NavigationState.Docking;
+        if (isCoolDown && currentState == NavigationState.Idle) return;
+
+        coolDownTimer = 0f;
+
         currentState = nextState;
         navigationStateInitialized = true;
-        bool docked = nextState == NavigationState.Idle || nextState == NavigationState.Docking;
+
         if (rb != null)
         {
             rb.isKinematic = docked;
