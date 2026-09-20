@@ -61,7 +61,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 `SaveManager` 管理两个命名空间：玩家存档 `Saves` 与敌方蓝图 `EnemyBlueprints`，支持创建、读取、删除、重命名、复制和文件名校验。列表中的 Duplicate 按钮会在当前命名空间生成不覆盖已有文件的 `Copy` 名称，并刷新列表；复制不会切换当前加载目标。`BlockData` 保存资源路径、尺寸、位置和旋转等重建所需数据。
 
-`BuildManager.LoadAllBlocks` 使用协程逐个实例化，支持加载进度、取消旧加载、无法加载数据清理和可选的相机环绕；加载环绕只作为临时展示，在正常完成、取消或切换存档时都会停止并恢复开始加载前的相机世界位置与旋转，避免大型蓝图的取景半径残留。方块数和总质量在主加载 `for` 循环中按成功恢复的 Block 增量累计并同步到 `BlueprintUIPanel`，不额外遍历已加载方块。存档身份依赖文件中的模块数据，不应把运行时 `GetInstanceID()` 当作跨会话稳定 ID。
+`BuildManager.LoadAllBlocks` 使用协程逐个实例化，支持加载进度、取消旧加载、无法加载数据清理和可选的相机环绕；加载前会从完整 `BlockData` 计算含旋转尺寸的逻辑包围盒，加载镜头始终围绕该固定范围取景，完成后停留在新构造体的合适观察距离。方块数和总质量在主加载 `for` 循环中按成功恢复的 Block 增量累计并同步到 `BlueprintUIPanel`，不额外遍历已加载方块。存档身份依赖文件中的模块数据，不应把运行时 `GetInstanceID()` 当作跨会话稳定 ID。
 
 ### 3.4 游玩、供电与推进器
 
@@ -311,16 +311,20 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `public void SmoothOrbitCameraAroundBlock(GameObject frameObj, float yawDegrees, float pitchDegrees, float radiusMultiplier, float duration)`： 计算或执行相机聚焦、平滑移动和环绕控制。
 - `public void SmoothOrbitCameraAroundBlock(GameObject frameObj, Vector3 orbitCenter, float yawDegrees, float pitchDegrees, float radiusMultiplier, float duration)`： 计算或执行相机聚焦、平滑移动和环绕控制。
 - `public void StartContinuousOrbitCameraAroundBlock(GameObject frameObj, Vector3 orbitCenter, float startYawDegrees, float orbitDegreesPerSecond, float pitchDegrees, float radiusVariation, float radiusWaveDegrees, float radiusSmoothTime)`： 计算或执行相机聚焦、平滑移动和环绕控制。
+- `public void StartContinuousOrbitCameraAroundBounds(Bounds frameBounds, Vector3 orbitCenter, float startYawDegrees, float orbitDegreesPerSecond, float pitchDegrees, float radiusVariation, float radiusWaveDegrees, float radiusSmoothTime)`：围绕调用方提供的固定逻辑包围盒持续环绕，避免异步实例化过程改变取景范围。
 - `public void StopCameraMotion()`： 计算或执行相机聚焦、平滑移动和环绕控制。
 - `private IEnumerator SmoothFocusRoutine(Vector3 targetPosition, Quaternion targetRotation, float duration)`： 计算或执行相机聚焦、平滑移动和环绕控制。
 - `private IEnumerator ContinuousOrbitRoutine(GameObject frameObj, Vector3 orbitCenter, float startYawDegrees, float orbitDegreesPerSecond, float pitchDegrees, float radiusVariation, float radiusWaveDegrees, float radiusSmoothTime)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private IEnumerator ContinuousOrbitRoutine(Bounds frameBounds, Vector3 orbitCenter, float startYawDegrees, float orbitDegreesPerSecond, float pitchDegrees, float radiusVariation, float radiusWaveDegrees, float radiusSmoothTime)`：使用稳定的存档逻辑范围驱动加载环绕。
 - `private float CalculateOrbitRadiusMultiplier(float yawDegrees, float radiusVariation, float radiusWaveDegrees)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private IEnumerator SmoothOrbitRoutine(Vector3 orbitCenter, float targetYaw, float targetPitch, float targetRadius, float duration)`： 计算或执行相机聚焦、平滑移动和环绕控制。
 - `private void SetOrbitPose(Vector3 orbitCenter, float yawDegrees, float pitchDegrees, float radius)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `private Vector3 GetOrbitCameraDirection(float yawDegrees, float pitchDegrees)`：把环绕角转换为从观察中心指向相机的单位方向。
 - `private bool TryGetFocusPose(GameObject obj, out Vector3 targetPosition, out Quaternion targetRotation)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private bool TryGetFocusPose(Bounds frameBounds, Vector3 lookPoint, out Vector3 targetPosition, out Quaternion targetRotation)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private bool TryGetOrbitPose(Bounds frameBounds, float yawDegrees, float pitchDegrees, float radiusMultiplier, out Vector3 targetPosition, out Quaternion targetRotation)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private float CalculateFramingDistance(Bounds bounds, Vector3 lookPoint)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private float CalculateFramingDistance(Bounds bounds, Vector3 lookPoint, Vector3 cameraDirection)`：按当前视角逐角点计算满足水平、垂直视锥约束的最小取景距离。
 - `private bool TryCalculateBlockBounds(GameObject obj, out Bounds bounds)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 
 
@@ -612,12 +616,13 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private bool IsCurrentBlockLoad(int loadVersion, string loadSavePath, Transform loadParent)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private void AbortBlockLoadIfCurrent(int loadVersion, Transform loadParent)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private void ClearLoadingBuildTarget()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
-- `private void StartLoadingCameraOrbit(GameObject frameObject, int blockCount)`：达到方块阈值时记录当前相机姿态并启动临时加载环绕。
+- `private void StartLoadingCameraOrbit(GameObject frameObject, int blockCount)`：达到方块阈值时使用完整存档逻辑包围盒启动加载环绕。
 - `private float CalculateLoadingCameraOrbitDegreesPerSecond(int blockCount)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
-- `private void StopLoadingCameraOrbit()`：停止加载镜头协程并恢复加载前的相机世界位置与旋转。
+- `private void StopLoadingCameraOrbit()`：停止加载镜头协程，并保留围绕新构造体的最终取景姿态。
 - `private CameraController GetMainCameraController()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private float GetCameraOrbitAngle(Vector3 orbitCenter)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
-- `private Vector3 CalculateLoadingCameraOrbitCenter(List<BlockData> blocksToLoad, Vector3 fallbackCenter)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private bool TryCalculateLoadingCameraOrbitBounds(List<BlockData> blocksToLoad, Vector3 fallbackCenter, out Bounds bounds)`：从存档中全部方块的数据合并加载镜头逻辑包围盒。
+- `private Bounds CalculateBlockDataBounds(BlockData data)`：根据方块尺寸、世界位置和四元数旋转计算单个存档方块的轴对齐包围盒。
 - `private void ClearCurrentGhost()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
 - `private bool RemoveCachedBlockData(string id)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
 - `private bool RemoveCachedBlockData(string id, string targetSavePath)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
@@ -984,12 +989,16 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ## 10. 变更日志
 
+### 2026-09-21
+
+- **重新修复 LoadSave 相机取景**：移除“加载结束后恢复旧相机姿态”的错误方案；`BuildManager` 在实例化前从完整 `BlockData` 计算含旋转尺寸的固定逻辑包围盒，`CameraController` 按当前环绕方向逐角点求满足水平/垂直视锥的最小距离，不再使用逐帧增长的 Renderer 包围盒或包围球半径。加载完成后镜头停留在以新构造体为中心的正确观察位置。
+- **验证范围**：Unity 6000.3.11f1 Editor 重编译通过；主场景 Play Mode 真实加载 `tftftf`（159 个 Block）和 `SpaceShip`（265 个 Block），最终相机到逻辑 Bounds 中心的距离分别为 `19.33`、`31.34`，均低于旧包围球算法的 `23.37`、`35.41`。两组 Bounds 八角点全部位于视口内，`tftftf` 从自定义姿态开始后没有恢复旧位置；Game View 截图确认 `SpaceShip` 完整可见且构图围绕模型中心。Console 为 0 error / 0 warning；`dotnet build HY-Sandbox.sln --no-restore --nologo` 通过（0 错误，4 个既有警告）。
+
 ### 2026-09-20
 
-- **修复 LoadSave 后相机距离过远**：`BuildManager` 只在实际启动加载环绕时捕获相机世界位置和旋转，并在加载完成、取消或切换存档时统一停止镜头协程并恢复该姿态；大型蓝图的动态取景距离不再残留到建造视角。
 - **移除所有平面环形特效**：删除 `StylizedRingEffect` 及其 `.meta`，清理选中、Ghost、放置、旋转、拆除、普通摧毁、爆炸、陨石冲击和 RepairBot 维修命中的全部环形创建与生命周期。选中/Ghost 继续由原有材质反馈负责，其余事件改用粒子爆发、放射能量光痕、短束流和点光。
 - **提高特效亮度与辨识度**：新增共享加法粒子材质，火花、爆炸火球、维修能量和推进器尾焰使用 HDR 色值并驱动 Bloom；烟尘继续使用普通 Alpha Blend。同步提高推进器三层粒子发射量、点光强度/范围，以及放置、拆除、爆炸、维修和陨石冲击的粒子数量、速度与瞬时光照。
-- **验证范围**：Unity 6000.3.11f1 Editor 重编译通过。主场景 Play Mode 真实加载 `tftftf`（159 个 Block），从自定义相机姿态 `(3.25, 4.5, -12.75)` / `(12, 27, 0)` 出发，完成后位置和旋转误差均为 `0`；隔离触发选中、放置、旋转、爆炸、维修脉冲和陨石冲击后，运行时禁用环形对象计数为 `0`，截图确认无平面环，Console 为 `0 error / 0 warning`。仍需在大量同时发生的爆炸、维修和推进器尾焰下用目标硬件验证透明 Overdraw 与 Bloom 峰值。
+- **验证范围**：Unity 6000.3.11f1 Editor 重编译通过；隔离触发选中、放置、旋转、爆炸、维修脉冲和陨石冲击后，运行时禁用环形对象计数为 `0`，截图确认无平面环，Console 为 `0 error / 0 warning`。仍需在大量同时发生的爆炸、维修和推进器尾焰下用目标硬件验证透明 Overdraw 与 Bloom 峰值。
 - **强化运行时特效张力（历史实现，环形层已由本日后续修改移除）**：推进器升级为外层喷流、高温核心、拉伸火花和闪烁点光三层尾焰；RepairBot 增加双层速度驱动尾迹、飞行微粒，以及维修命中反馈和真实维修 tick 闪光。
 - **强化摧毁与断裂反馈（历史实现，冲击环已由本日后续修改替换）**：Block 爆炸增加白热闪光、火球、放射碎片光痕和延迟滚动烟尘；普通物品摧毁补充火花与烟尘。爆炸后无驾驶舱的断裂刚体会自动挂接速度/旋转驱动的烟雾和余烬拖尾，最长 6 秒且全局最多 24 条。
 - **验证范围**：代码已在 Unity 6000.3.11f1 Editor 中成功导入并通过 C# 编译；`dotnet build HY-Sandbox.sln --no-restore --nologo` 通过（0 错误，4 个既有程序集版本冲突/Profiler 过时 API 警告）。已在主场景 Play Mode 使用不保存的隔离探针实际触发三层尾焰、双层维修束/脉冲、分层爆炸、RepairBot 双 Trail 和断裂烟迹；截图确认软粒子透明边缘、束流方向与叠加关系正常，并据此修复 URP 粒子材质不透明及烟迹速度曲线模式不一致。最终烟迹回归 Console 为 0 error/0 warning，退出后 `Main.unity` 保持 `dirty=False`；大型蓝图下多 RepairBot/连续爆炸的透明 Overdraw 与峰值性能仍未验证。

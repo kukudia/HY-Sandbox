@@ -88,9 +88,8 @@ public class BuildManager : MonoBehaviour
     private CameraController loadingCameraController;
     private float loadingCameraOrbitAngle;
     private Vector3 loadingCameraOrbitCenter;
-    private Vector3 loadingCameraStartPosition;
-    private Quaternion loadingCameraStartRotation;
-    private bool hasLoadingCameraStartPose;
+    private Bounds loadingCameraOrbitBounds;
+    private bool hasLoadingCameraOrbitBounds;
 
     public bool IsLoadingBlocks { get; private set; }
 
@@ -934,7 +933,8 @@ public class BuildManager : MonoBehaviour
         loadingBuildTarget = loadTarget;
         loadingBuildSavePath = loadSavePath;
         loadingCameraController = GetMainCameraController();
-        loadingCameraOrbitCenter = CalculateLoadingCameraOrbitCenter(blocksToLoad, gameObj.transform.position);
+        hasLoadingCameraOrbitBounds = TryCalculateLoadingCameraOrbitBounds(blocksToLoad, gameObj.transform.position, out loadingCameraOrbitBounds);
+        loadingCameraOrbitCenter = hasLoadingCameraOrbitBounds ? loadingCameraOrbitBounds.center : gameObj.transform.position;
         loadingCameraOrbitAngle = GetCameraOrbitAngle(loadingCameraOrbitCenter);
         StartLoadingCameraOrbit(gameObj, blocksToLoad.Count);
         IsLoadingBlocks = true;
@@ -1308,6 +1308,8 @@ public class BuildManager : MonoBehaviour
     {
         loadingBuildTarget = default;
         loadingBuildSavePath = string.Empty;
+        hasLoadingCameraOrbitBounds = false;
+        loadingCameraOrbitBounds = default;
     }
 
     private void StartLoadingCameraOrbit(GameObject frameObject, int blockCount)
@@ -1321,23 +1323,35 @@ public class BuildManager : MonoBehaviour
 
         if (cameraController == null) return;
 
-        // The orbit is a temporary loading presentation. Preserve the player's exact view so
-        // framing a large blueprint cannot leave the build camera stranded far from the model.
-        loadingCameraStartPosition = cameraController.transform.position;
-        loadingCameraStartRotation = cameraController.transform.rotation;
-        hasLoadingCameraStartPose = true;
-
         float orbitDegreesPerSecond = CalculateLoadingCameraOrbitDegreesPerSecond(blockCount);
-        cameraController.StartContinuousOrbitCameraAroundBlock(
-            frameObject,
-            loadingCameraOrbitCenter,
-            loadingCameraOrbitAngle,
-            orbitDegreesPerSecond,
-            blockLoadCameraOrbitPitch,
-            blockLoadCameraOrbitRadiusVariation,
-            blockLoadCameraOrbitRadiusWaveDegrees,
-            Mathf.Max(0.01f, blockLoadCameraMoveDuration)
-        );
+        if (hasLoadingCameraOrbitBounds)
+        {
+            // Use the complete saved layout from the first frame so loading progress cannot
+            // continuously expand the renderer bounds and push the camera farther away.
+            cameraController.StartContinuousOrbitCameraAroundBounds(
+                loadingCameraOrbitBounds,
+                loadingCameraOrbitCenter,
+                loadingCameraOrbitAngle,
+                orbitDegreesPerSecond,
+                blockLoadCameraOrbitPitch,
+                blockLoadCameraOrbitRadiusVariation,
+                blockLoadCameraOrbitRadiusWaveDegrees,
+                Mathf.Max(0.01f, blockLoadCameraMoveDuration)
+            );
+        }
+        else
+        {
+            cameraController.StartContinuousOrbitCameraAroundBlock(
+                frameObject,
+                loadingCameraOrbitCenter,
+                loadingCameraOrbitAngle,
+                orbitDegreesPerSecond,
+                blockLoadCameraOrbitPitch,
+                blockLoadCameraOrbitRadiusVariation,
+                blockLoadCameraOrbitRadiusWaveDegrees,
+                Mathf.Max(0.01f, blockLoadCameraMoveDuration)
+            );
+        }
     }
 
     private float CalculateLoadingCameraOrbitDegreesPerSecond(int blockCount)
@@ -1352,19 +1366,9 @@ public class BuildManager : MonoBehaviour
             ? loadingCameraController
             : GetMainCameraController();
 
-        if (cameraController == null)
-        {
-            hasLoadingCameraStartPose = false;
-            return;
-        }
+        if (cameraController == null) return;
 
         cameraController.StopCameraMotion();
-        if (hasLoadingCameraStartPose)
-        {
-            cameraController.transform.SetPositionAndRotation(loadingCameraStartPosition, loadingCameraStartRotation);
-        }
-
-        hasLoadingCameraStartPose = false;
     }
 
     private CameraController GetMainCameraController()
@@ -1384,24 +1388,17 @@ public class BuildManager : MonoBehaviour
         return Mathf.Atan2(cameraOffset.x, cameraOffset.z) * Mathf.Rad2Deg;
     }
 
-    private Vector3 CalculateLoadingCameraOrbitCenter(List<BlockData> blocksToLoad, Vector3 fallbackCenter)
+    private bool TryCalculateLoadingCameraOrbitBounds(List<BlockData> blocksToLoad, Vector3 fallbackCenter, out Bounds bounds)
     {
-        if (blocksToLoad == null || blocksToLoad.Count == 0) return fallbackCenter;
+        bounds = new Bounds(fallbackCenter, Vector3.zero);
+        if (blocksToLoad == null || blocksToLoad.Count == 0) return false;
 
         bool hasBounds = false;
-        Bounds bounds = new Bounds(fallbackCenter, Vector3.zero);
         foreach (BlockData data in blocksToLoad)
         {
             if (data == null) continue;
 
-            Vector3 center = new Vector3(data.posX, data.posY, data.posZ);
-            Vector3 size = new Vector3(
-                Mathf.Max(data.x * gridSize, gridSize),
-                Mathf.Max(data.y * gridSize, gridSize),
-                Mathf.Max(data.z * gridSize, gridSize)
-            );
-
-            Bounds blockBounds = new Bounds(center, size);
+            Bounds blockBounds = CalculateBlockDataBounds(data);
             if (!hasBounds)
             {
                 bounds = blockBounds;
@@ -1413,7 +1410,63 @@ public class BuildManager : MonoBehaviour
             }
         }
 
-        return hasBounds ? bounds.center : fallbackCenter;
+        return hasBounds;
+    }
+
+    private Bounds CalculateBlockDataBounds(BlockData data)
+    {
+        Vector3 center = new Vector3(data.posX, data.posY, data.posZ);
+        Vector3 halfSize = new Vector3(
+            Mathf.Max(data.x * gridSize, gridSize),
+            Mathf.Max(data.y * gridSize, gridSize),
+            Mathf.Max(data.z * gridSize, gridSize)
+        ) * 0.5f;
+
+        Quaternion rotation = new Quaternion(data.rotX, data.rotY, data.rotZ, data.rotW);
+        float rotationMagnitude = Mathf.Sqrt(
+            rotation.x * rotation.x +
+            rotation.y * rotation.y +
+            rotation.z * rotation.z +
+            rotation.w * rotation.w
+        );
+        if (rotationMagnitude > 0.0001f)
+        {
+            rotation = new Quaternion(
+                rotation.x / rotationMagnitude,
+                rotation.y / rotationMagnitude,
+                rotation.z / rotationMagnitude,
+                rotation.w / rotationMagnitude
+            );
+        }
+        else
+        {
+            rotation = Quaternion.identity;
+        }
+
+        Bounds bounds = new Bounds(center, Vector3.zero);
+        bool hasCorner = false;
+        for (int x = -1; x <= 1; x += 2)
+        {
+            for (int y = -1; y <= 1; y += 2)
+            {
+                for (int z = -1; z <= 1; z += 2)
+                {
+                    Vector3 localCorner = Vector3.Scale(halfSize, new Vector3(x, y, z));
+                    Vector3 worldCorner = center + rotation * localCorner;
+                    if (!hasCorner)
+                    {
+                        bounds = new Bounds(worldCorner, Vector3.zero);
+                        hasCorner = true;
+                    }
+                    else
+                    {
+                        bounds.Encapsulate(worldCorner);
+                    }
+                }
+            }
+        }
+
+        return bounds;
     }
 
     private void ClearCurrentGhost()

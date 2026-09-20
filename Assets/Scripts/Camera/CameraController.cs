@@ -207,6 +207,27 @@ public class CameraController : MonoBehaviour
         ));
     }
 
+    public void StartContinuousOrbitCameraAroundBounds(Bounds frameBounds, Vector3 orbitCenter, float startYawDegrees, float orbitDegreesPerSecond, float pitchDegrees, float radiusVariation, float radiusWaveDegrees, float radiusSmoothTime)
+    {
+        if (frameBounds.size.sqrMagnitude <= 0.001f) return;
+
+        if (focusCoroutine != null)
+        {
+            StopCoroutine(focusCoroutine);
+        }
+
+        focusCoroutine = StartCoroutine(ContinuousOrbitRoutine(
+            frameBounds,
+            orbitCenter,
+            startYawDegrees,
+            orbitDegreesPerSecond,
+            Mathf.Clamp(pitchDegrees, -75f, 75f),
+            Mathf.Max(0f, radiusVariation),
+            Mathf.Max(1f, radiusWaveDegrees),
+            Mathf.Max(0.01f, radiusSmoothTime)
+        ));
+    }
+
     public void StopCameraMotion()
     {
         if (focusCoroutine == null) return;
@@ -258,7 +279,8 @@ public class CameraController : MonoBehaviour
             {
                 yaw += orbitDegreesPerSecond * Time.deltaTime;
                 float radiusMultiplier = CalculateOrbitRadiusMultiplier(yaw, radiusVariation, radiusWaveDegrees);
-                float targetRadius = CalculateFramingDistance(frameBounds, orbitCenter) * radiusMultiplier;
+                Vector3 cameraDirection = GetOrbitCameraDirection(yaw, pitchDegrees);
+                float targetRadius = CalculateFramingDistance(frameBounds, orbitCenter, cameraDirection) * radiusMultiplier;
 
                 if (!hasRadius)
                 {
@@ -277,6 +299,35 @@ public class CameraController : MonoBehaviour
         }
 
         focusCoroutine = null;
+    }
+
+    private IEnumerator ContinuousOrbitRoutine(Bounds frameBounds, Vector3 orbitCenter, float startYawDegrees, float orbitDegreesPerSecond, float pitchDegrees, float radiusVariation, float radiusWaveDegrees, float radiusSmoothTime)
+    {
+        float yaw = startYawDegrees;
+        float currentRadius = 0f;
+        float radiusVelocity = 0f;
+        bool hasRadius = false;
+
+        while (true)
+        {
+            yaw += orbitDegreesPerSecond * Time.deltaTime;
+            float radiusMultiplier = CalculateOrbitRadiusMultiplier(yaw, radiusVariation, radiusWaveDegrees);
+            Vector3 cameraDirection = GetOrbitCameraDirection(yaw, pitchDegrees);
+            float targetRadius = CalculateFramingDistance(frameBounds, orbitCenter, cameraDirection) * radiusMultiplier;
+
+            if (!hasRadius)
+            {
+                currentRadius = targetRadius;
+                hasRadius = true;
+            }
+            else
+            {
+                currentRadius = Mathf.SmoothDamp(currentRadius, targetRadius, ref radiusVelocity, radiusSmoothTime);
+            }
+
+            SetOrbitPose(orbitCenter, yaw, pitchDegrees, currentRadius);
+            yield return null;
+        }
     }
 
     private float CalculateOrbitRadiusMultiplier(float yawDegrees, float radiusVariation, float radiusWaveDegrees)
@@ -333,14 +384,7 @@ public class CameraController : MonoBehaviour
 
     private void SetOrbitPose(Vector3 orbitCenter, float yawDegrees, float pitchDegrees, float radius)
     {
-        float yaw = yawDegrees * Mathf.Deg2Rad;
-        float pitch = Mathf.Clamp(pitchDegrees, -75f, 75f) * Mathf.Deg2Rad;
-        float cosPitch = Mathf.Cos(pitch);
-        Vector3 cameraDirection = new Vector3(
-            Mathf.Sin(yaw) * cosPitch,
-            Mathf.Sin(pitch),
-            Mathf.Cos(yaw) * cosPitch
-        ).normalized;
+        Vector3 cameraDirection = GetOrbitCameraDirection(yawDegrees, pitchDegrees);
 
         transform.position = orbitCenter + cameraDirection * Mathf.Max(radius, 0.1f);
         Vector3 lookDirection = orbitCenter - transform.position;
@@ -348,6 +392,18 @@ public class CameraController : MonoBehaviour
         {
             transform.rotation = Quaternion.LookRotation(lookDirection.normalized, Vector3.up);
         }
+    }
+
+    private Vector3 GetOrbitCameraDirection(float yawDegrees, float pitchDegrees)
+    {
+        float yaw = yawDegrees * Mathf.Deg2Rad;
+        float pitch = Mathf.Clamp(pitchDegrees, -75f, 75f) * Mathf.Deg2Rad;
+        float cosPitch = Mathf.Cos(pitch);
+        return new Vector3(
+            Mathf.Sin(yaw) * cosPitch,
+            Mathf.Sin(pitch),
+            Mathf.Cos(yaw) * cosPitch
+        ).normalized;
     }
 
     private bool TryGetFocusPose(GameObject obj, out Vector3 targetPosition, out Quaternion targetRotation)
@@ -371,7 +427,7 @@ public class CameraController : MonoBehaviour
         }
 
         cameraDirection.Normalize();
-        float distance = CalculateFramingDistance(frameBounds, lookPoint);
+        float distance = CalculateFramingDistance(frameBounds, lookPoint, cameraDirection);
         targetPosition = lookPoint + cameraDirection * distance;
 
         Vector3 lookDirection = lookPoint - targetPosition;
@@ -396,7 +452,7 @@ public class CameraController : MonoBehaviour
             Mathf.Cos(yaw) * cosPitch
         ).normalized;
 
-        float distance = CalculateFramingDistance(frameBounds, lookPoint);
+        float distance = CalculateFramingDistance(frameBounds, lookPoint, cameraDirection);
         distance *= Mathf.Max(radiusMultiplier, 0.1f);
         targetPosition = lookPoint + cameraDirection * distance;
 
@@ -409,9 +465,36 @@ public class CameraController : MonoBehaviour
 
     private float CalculateFramingDistance(Bounds bounds, Vector3 lookPoint)
     {
+        return CalculateFramingDistance(bounds, lookPoint, transform.position - lookPoint);
+    }
+
+    private float CalculateFramingDistance(Bounds bounds, Vector3 lookPoint, Vector3 cameraDirection)
+    {
+        if (cameraDirection.sqrMagnitude < 0.001f)
+        {
+            cameraDirection = new Vector3(1f, 0.6f, -1f);
+        }
+
+        cameraDirection.Normalize();
+        Vector3 cameraRight = Vector3.Cross(Vector3.up, cameraDirection);
+        if (cameraRight.sqrMagnitude < 0.001f)
+        {
+            cameraRight = Vector3.Cross(Vector3.forward, cameraDirection);
+        }
+
+        cameraRight.Normalize();
+        Vector3 cameraUp = Vector3.Cross(cameraDirection, cameraRight).normalized;
+
+        Camera cameraComponent = GetComponent<Camera>();
+        float verticalFov = cameraComponent != null ? cameraComponent.fieldOfView : 60f;
+        float aspect = cameraComponent != null ? cameraComponent.aspect : 16f / 9f;
+        float verticalTan = Mathf.Tan(verticalFov * Mathf.Deg2Rad * 0.5f);
+        float horizontalTan = verticalTan * aspect;
+
         Vector3 extents = bounds.extents;
         Vector3 center = bounds.center;
-        float radius = 0f;
+        float requiredDistance = 0f;
+        float nearestDepth = 0f;
 
         for (int x = -1; x <= 1; x += 2)
         {
@@ -420,19 +503,17 @@ public class CameraController : MonoBehaviour
                 for (int z = -1; z <= 1; z += 2)
                 {
                     Vector3 corner = center + Vector3.Scale(extents, new Vector3(x, y, z));
-                    radius = Mathf.Max(radius, Vector3.Distance(lookPoint, corner));
+                    Vector3 relative = corner - lookPoint;
+                    float depthTowardCamera = Vector3.Dot(relative, cameraDirection);
+                    float distanceForWidth = depthTowardCamera + Mathf.Abs(Vector3.Dot(relative, cameraRight)) / Mathf.Max(horizontalTan, 0.01f);
+                    float distanceForHeight = depthTowardCamera + Mathf.Abs(Vector3.Dot(relative, cameraUp)) / Mathf.Max(verticalTan, 0.01f);
+                    requiredDistance = Mathf.Max(requiredDistance, distanceForWidth, distanceForHeight);
+                    nearestDepth = Mathf.Max(nearestDepth, depthTowardCamera);
                 }
             }
         }
 
-        Camera cameraComponent = GetComponent<Camera>();
-        float verticalFov = cameraComponent != null ? cameraComponent.fieldOfView : 60f;
-        float aspect = cameraComponent != null ? cameraComponent.aspect : 16f / 9f;
-        float horizontalFov = Mathf.Rad2Deg * 2f * Mathf.Atan(Mathf.Tan(verticalFov * Mathf.Deg2Rad * 0.5f) * aspect);
-        float fitFov = Mathf.Min(verticalFov, horizontalFov) * Mathf.Deg2Rad;
-        float distance = radius / Mathf.Sin(Mathf.Max(fitFov * 0.5f, 0.01f));
-
-        return Mathf.Max(distance * 1.15f, radius + 1f, 1f);
+        return Mathf.Max(requiredDistance * 1.15f, nearestDepth + 1f, 1f);
     }
 
     private bool TryCalculateBlockBounds(GameObject obj, out Bounds bounds)
