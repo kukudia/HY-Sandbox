@@ -266,6 +266,13 @@ public class DestroyManager : MonoBehaviour
             Vector3 impulse = (direction + Vector3.up * _blockExplosionUpwardsModifier).normalized
                 * (block.explosionForce * falloff);
             rb.AddForceAtPosition(impulse, forcePoint, ForceMode.Impulse);
+
+            ControlUnit detachedGroup = rb.GetComponent<ControlUnit>();
+            if (detachedGroup != null && !detachedGroup.HasAnyCockpit)
+            {
+                // Only disposable fragments receive smoke; intact cockpit groups keep a clean combat silhouette.
+                VisualEffectsManager.TryAttachDetachedPartSmoke(rb, forcePoint, falloff);
+            }
         }
     }
 

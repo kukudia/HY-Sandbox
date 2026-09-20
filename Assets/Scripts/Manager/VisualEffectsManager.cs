@@ -76,6 +76,7 @@ public class VisualEffectsManager : MonoBehaviour
         Texture2D texture = GetSoftParticleTexture();
         SetMaterialTexture(sharedParticleMaterial, texture);
         SetMaterialColor(sharedParticleMaterial, Color.white);
+        ConfigureTransparentMaterial(sharedParticleMaterial);
         return sharedParticleMaterial;
     }
 
@@ -116,6 +117,20 @@ public class VisualEffectsManager : MonoBehaviour
     {
         if (block == null) return;
         EnsureInstance().PlayBlockExplosion(block);
+    }
+
+    public static void TryPlayRepairPulse(Vector3 origin, Vector3 target, Color color, float width)
+    {
+        EnsureInstance().PlayRepairPulse(origin, target, color, width);
+    }
+
+    public static void TryAttachDetachedPartSmoke(Rigidbody body, Vector3 worldAnchor, float intensity)
+    {
+        if (body == null) return;
+        VisualEffectsManager manager = EnsureInstance();
+        if (!manager.enableRuntimeVfx) return;
+
+        DetachedPartSmokeTrail.Attach(body, worldAnchor, intensity);
     }
 
     public static void TryPlayObjectDestroyed(GameObject target)
@@ -247,10 +262,14 @@ public class VisualEffectsManager : MonoBehaviour
         Color emberColor = new Color(1f, 0.62f, 0.12f, 1f);
         Color smokeColor = new Color(0.18f, 0.22f, 0.28f, 0.75f);
 
+        CreateParticleBurst("Block Explosion Flash", center, Color.white, emberColor, 18, scale * 0.12f, 0.15f, 1.2f, 0.06f, 0.22f, scale * 0.16f, scale * 0.42f, -0.04f);
+        CreateParticleBurst("Block Explosion Fireball", center, Color.Lerp(Color.white, emberColor, 0.2f), removeColor, 52, scale * 0.34f, 0.7f, 4.4f, 0.14f, 0.72f, scale * 0.08f, scale * 0.32f, -0.06f);
         CreateParticleBurst("Block Explosion Embers", center, removeColor, emberColor, 96, scale * 0.28f, 2.5f, 10f, 0.3f, 2.1f, 0.045f, 0.18f, 0.12f);
         CreateParticleBurst("Block Explosion Smoke", center, smokeColor, new Color(0.03f, 0.04f, 0.06f, 0f), 34, scale * 0.35f, 0.35f, 2.1f, 1.0f, 3.4f, 0.14f, 0.42f, -0.08f);
         CreateTransientRing("Block Explosion Ring", center, Vector3.up, removeColor, scale * 1.65f, 1.15f, 0.12f);
+        CreateTransientRing("Block Explosion Cross Ring", center, Vector3.right, WithAlpha(emberColor, 0.78f), scale * 1.28f, 0.78f, 0.075f);
         CreateTransientRing("Block Explosion Inner Ring", center, Vector3.up, emberColor, scale * 0.9f, 0.72f, 0.075f);
+        CreateExplosionShrapnel(center, scale, emberColor);
         CreateLightFlash(center, emberColor, 4.2f, scale * 5.8f, 0.55f);
         ShakeCamera(cameraShakeStrength * 1.35f, 0.42f);
         StartCoroutine(PlayExplosionAftershock(center, scale, emberColor, smokeColor));
@@ -262,6 +281,7 @@ public class VisualEffectsManager : MonoBehaviour
         if (!enableRuntimeVfx) yield break;
 
         CreateParticleBurst("Block Explosion Aftershock", center, emberColor, WithAlpha(smokeColor, 0f), 42, scale * 0.5f, 0.8f, 3.8f, 0.4f, 1.35f, 0.035f, 0.12f, 0.02f);
+        CreateParticleBurst("Block Explosion Rolling Smoke", center + Vector3.up * scale * 0.2f, smokeColor, WithAlpha(smokeColor, 0f), 24, scale * 0.38f, 0.2f, 1.15f, 1.4f, 3.8f, scale * 0.1f, scale * 0.28f, -0.16f);
         CreateTransientRing("Block Explosion Aftershock Ring", center, Vector3.up, WithAlpha(emberColor, 0.7f), scale * 1.25f, 0.85f, 0.055f);
     }
 
@@ -271,7 +291,38 @@ public class VisualEffectsManager : MonoBehaviour
 
         Bounds bounds = GetBounds(target, target.transform.position, Vector3.one);
         CreateParticleBurst("Object Destroyed Sparks", bounds.center, removeColor, Color.white, 36, 0.4f, 1.4f, 4.2f, 0.5f, 2.0f, 0.04f, 0.13f, 0.15f);
+        CreateParticleBurst("Object Destroyed Smoke", bounds.center, new Color(0.24f, 0.28f, 0.34f, 0.6f), new Color(0.05f, 0.06f, 0.08f, 0f), 14, 0.32f, 0.15f, 0.9f, 0.65f, 1.8f, 0.1f, 0.3f, -0.08f);
+        CreateTransientRing("Object Destroyed Snap", bounds.center, Vector3.up, WithAlpha(removeColor, 0.72f), Mathf.Max(bounds.extents.magnitude, 0.45f), 0.34f, 0.05f);
         CreateLightFlash(bounds.center, removeColor, 1.3f, Mathf.Max(bounds.size.magnitude, 1.5f), 0.36f);
+    }
+
+    private void PlayRepairPulse(Vector3 origin, Vector3 target, Color color, float width)
+    {
+        if (!enableRuntimeVfx) return;
+
+        Vector3 direction = target - origin;
+        Vector3 normal = direction.sqrMagnitude > 0.001f ? -direction.normalized : Vector3.up;
+        float scale = Mathf.Clamp(width * 2.4f, 0.22f, 0.7f);
+
+        CreateTransientRing("Repair Impact Pulse", target, normal, color, scale, 0.28f, Mathf.Max(0.025f, width * 0.16f));
+        CreateParticleBurst("Repair Impact Sparks", target, Color.white, color, 18, scale * 0.22f, 0.25f, 1.8f, 0.16f, 0.48f, 0.018f, 0.065f, -0.05f);
+        CreateLineStreak(origin, target, WithAlpha(color, 0.85f), 0.13f, Mathf.Max(0.015f, width * 0.12f));
+        CreateLightFlash(target, color, 0.75f, Mathf.Max(0.7f, scale * 2f), 0.12f);
+    }
+
+    private void CreateExplosionShrapnel(Vector3 center, float scale, Color color)
+    {
+        int streakCount = Mathf.Clamp(Mathf.RoundToInt(8f + scale * 2f), 8, 16);
+        for (int i = 0; i < streakCount; i++)
+        {
+            Vector3 direction = Random.onUnitSphere;
+            direction.y = Mathf.Abs(direction.y) * 0.65f + 0.1f;
+            direction.Normalize();
+
+            Vector3 start = center + direction * Random.Range(scale * 0.04f, scale * 0.18f);
+            Vector3 end = start + direction * Random.Range(scale * 0.55f, scale * 1.9f);
+            CreateLineStreak(start, end, Color.Lerp(color, Color.white, Random.Range(0.15f, 0.65f)), Random.Range(0.16f, 0.34f), Random.Range(0.018f, 0.052f));
+        }
     }
 
     private void PlayBlockMoved(Block block, Vector3 from, Vector3 to)
@@ -722,6 +773,21 @@ public class VisualEffectsManager : MonoBehaviour
         {
             material.SetTexture("_MainTex", texture);
         }
+    }
+
+    private static void ConfigureTransparentMaterial(Material material)
+    {
+        if (material == null) return;
+
+        if (material.HasProperty("_Surface")) material.SetFloat("_Surface", 1f);
+        if (material.HasProperty("_Blend")) material.SetFloat("_Blend", 0f);
+        if (material.HasProperty("_SrcBlend")) material.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+        if (material.HasProperty("_DstBlend")) material.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        if (material.HasProperty("_ZWrite")) material.SetFloat("_ZWrite", 0f);
+
+        material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+        material.DisableKeyword("_ALPHATEST_ON");
+        material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
     }
 
     private sealed class RingFade : MonoBehaviour

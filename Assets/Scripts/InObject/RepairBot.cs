@@ -77,6 +77,8 @@ public class RepairBot : MonoBehaviour
     [Header("可视化设置")]
     public bool showTrail = true;
     public float trailDuration = 5f;
+    public Color trailColor = new Color(0.15f, 0.86f, 1f, 0.9f);
+    [Min(0f)] public float trailMoteRate = 22f;
     public bool showAvoidanceRays = true;
     public bool showDirectionVectors = true;
     public bool showAvoidanceZones = true;
@@ -98,6 +100,8 @@ public class RepairBot : MonoBehaviour
     private Vector3 smoothedDirection;
     private float currentSpeedMultiplier = 1f;
     private TrailRenderer trailRenderer;
+    private TrailRenderer trailCoreRenderer;
+    private ParticleSystem trailMotes;
     private ControlUnit ownerUnit;
     private readonly List<Durability> targetsInRange = new List<Durability>();
     private readonly HashSet<Durability> uniqueTargetsInRange = new HashSet<Durability>();
@@ -105,6 +109,10 @@ public class RepairBot : MonoBehaviour
     private readonly Collider[] nearbyColliders = new Collider[MaxNearbyColliders];
     private readonly RaycastHit[] homeGuidanceHits = new RaycastHit[MaxHomeGuidanceHits];
     private StylizedBeamEffect repairBeamEffect;
+    private GameObject repairImpactRoot;
+    private Transform repairImpactRingTransform;
+    private StylizedRingEffect repairImpactRing;
+    private ParticleSystem repairImpactParticles;
     private int blockLayerMask;
     private Transform cachedNavigationTarget;
     private AdvancedAvoidanceResult cachedAvoidanceResult;
@@ -176,10 +184,11 @@ public class RepairBot : MonoBehaviour
         {
             repairBeamEffect = gameObject.AddComponent<StylizedBeamEffect>();
         }
-        repairBeamEffect.Configure(beamWidth * 0.28f, 5.5f, 14, beamWidth * 0.16f, 3.2f, 9f);
+        repairBeamEffect.Configure(beamWidth * 0.24f, 6.8f, 18, beamWidth * 0.18f, 4.4f, 13f);
         repairBeamEffect.SetVisible(false);
 
         EnsureRepairBeamGradient();
+        EnsureRepairImpactVfx();
     }
 
     private void InitializeTargetsInRange()
@@ -238,21 +247,126 @@ public class RepairBot : MonoBehaviour
 
     private void InitializeTrail()
     {
-        if (showTrail)
+        if (!showTrail) return;
+
+        trailRenderer = GetComponent<TrailRenderer>();
+        if (trailRenderer == null)
         {
-            trailRenderer = GetComponent<TrailRenderer>();
-            if (trailRenderer == null)
-            {
-                trailRenderer = gameObject.AddComponent<TrailRenderer>();
-                trailRenderer.material = new Material(Shader.Find("Sprites/Default"));
-                trailRenderer.startColor = new Color(0.2f, 0.8f, 1f, 0.8f);
-                trailRenderer.endColor = new Color(0.2f, 0.8f, 1f, 0.1f);
-                trailRenderer.startWidth = 0.15f;
-                trailRenderer.endWidth = 0.05f;
-                trailRenderer.time = trailDuration;
-                trailRenderer.enabled = true;
-            }
+            trailRenderer = gameObject.AddComponent<TrailRenderer>();
         }
+        ConfigureTrail(trailRenderer, trailDuration, 0.19f, CreateTrailGradient(trailColor, 0.72f));
+
+        Transform existingCore = transform.Find("RepairBot Trail Core VFX");
+        GameObject coreObject = existingCore != null
+            ? existingCore.gameObject
+            : new GameObject("RepairBot Trail Core VFX");
+        coreObject.transform.SetParent(transform, false);
+        trailCoreRenderer = coreObject.GetComponent<TrailRenderer>();
+        if (trailCoreRenderer == null)
+        {
+            trailCoreRenderer = coreObject.AddComponent<TrailRenderer>();
+        }
+        ConfigureTrail(
+            trailCoreRenderer,
+            Mathf.Max(0.2f, trailDuration * 0.58f),
+            0.065f,
+            CreateTrailGradient(Color.Lerp(trailColor, Color.white, 0.72f), 0.92f));
+
+        Transform existingMotes = transform.Find("RepairBot Flight Motes VFX");
+        GameObject moteObject = existingMotes != null
+            ? existingMotes.gameObject
+            : new GameObject("RepairBot Flight Motes VFX");
+        moteObject.transform.SetParent(transform, false);
+        trailMotes = moteObject.GetComponent<ParticleSystem>();
+        if (trailMotes == null)
+        {
+            trailMotes = moteObject.AddComponent<ParticleSystem>();
+        }
+        ConfigureTrailMotes(trailMotes);
+    }
+
+    private static void ConfigureTrail(TrailRenderer trail, float duration, float width, Gradient gradient)
+    {
+        trail.sharedMaterial = VisualEffectsManager.GetSharedLineMaterial();
+        trail.time = Mathf.Max(0.15f, duration);
+        trail.minVertexDistance = 0.045f;
+        trail.widthMultiplier = width;
+        trail.widthCurve = new AnimationCurve(
+            new Keyframe(0f, 1f),
+            new Keyframe(0.28f, 0.78f),
+            new Keyframe(0.72f, 0.24f),
+            new Keyframe(1f, 0f));
+        trail.colorGradient = gradient;
+        trail.numCornerVertices = 4;
+        trail.numCapVertices = 3;
+        trail.textureMode = LineTextureMode.Stretch;
+        trail.alignment = LineAlignment.View;
+        trail.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        trail.receiveShadows = false;
+        trail.emitting = false;
+        trail.enabled = true;
+    }
+
+    private void ConfigureTrailMotes(ParticleSystem particles)
+    {
+        particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+
+        ParticleSystem.MainModule main = particles.main;
+        main.loop = true;
+        main.playOnAwake = false;
+        main.simulationSpace = ParticleSystemSimulationSpace.World;
+        main.startLifetime = new ParticleSystem.MinMaxCurve(0.18f, 0.52f);
+        main.startSpeed = new ParticleSystem.MinMaxCurve(0.05f, 0.45f);
+        main.startSize = new ParticleSystem.MinMaxCurve(0.018f, 0.065f);
+        main.startColor = new ParticleSystem.MinMaxGradient(Color.white, trailColor);
+        main.maxParticles = 72;
+
+        ParticleSystem.EmissionModule emission = particles.emission;
+        emission.rateOverTime = 0f;
+
+        ParticleSystem.ShapeModule shape = particles.shape;
+        shape.enabled = true;
+        shape.shapeType = ParticleSystemShapeType.Sphere;
+        shape.radius = 0.09f;
+
+        ParticleSystem.ColorOverLifetimeModule colorOverLifetime = particles.colorOverLifetime;
+        colorOverLifetime.enabled = true;
+        colorOverLifetime.color = new ParticleSystem.MinMaxGradient(CreateTrailGradient(trailColor, 0.8f));
+
+        ParticleSystem.SizeOverLifetimeModule sizeOverLifetime = particles.sizeOverLifetime;
+        sizeOverLifetime.enabled = true;
+        sizeOverLifetime.size = new ParticleSystem.MinMaxCurve(
+            1f,
+            new AnimationCurve(
+                new Keyframe(0f, 0.5f),
+                new Keyframe(0.22f, 1f),
+                new Keyframe(1f, 0f)));
+
+        ParticleSystemRenderer renderer = particles.GetComponent<ParticleSystemRenderer>();
+        renderer.sharedMaterial = VisualEffectsManager.GetSharedParticleMaterial();
+        renderer.renderMode = ParticleSystemRenderMode.Billboard;
+        renderer.sortingFudge = 2f;
+        renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        renderer.receiveShadows = false;
+    }
+
+    private static Gradient CreateTrailGradient(Color color, float alpha)
+    {
+        Gradient gradient = new Gradient();
+        gradient.SetKeys(
+            new[]
+            {
+                new GradientColorKey(Color.Lerp(color, Color.white, 0.48f), 0f),
+                new GradientColorKey(color, 0.38f),
+                new GradientColorKey(Color.Lerp(color, new Color(0.04f, 0.24f, 0.42f), 0.65f), 1f)
+            },
+            new[]
+            {
+                new GradientAlphaKey(alpha, 0f),
+                new GradientAlphaKey(alpha * 0.72f, 0.42f),
+                new GradientAlphaKey(0f, 1f)
+            });
+        return gradient;
     }
 
     private void FixedUpdate()
@@ -277,6 +391,44 @@ public class RepairBot : MonoBehaviour
 
             NavigateToTarget(currentTarget.transform);
             CheckAndRepair();
+        }
+    }
+
+    private void LateUpdate()
+    {
+        UpdateMotionVfx();
+    }
+
+    private void UpdateMotionVfx()
+    {
+        if (!showTrail || rb == null || trailRenderer == null) return;
+
+        bool flying = currentState == NavigationState.NavigatingToTarget
+            || currentState == NavigationState.ReturningHome;
+        float speed = rb.isKinematic ? 0f : rb.linearVelocity.magnitude;
+        float speedRatio = Mathf.InverseLerp(0.15f, Mathf.Max(0.3f, movementSpeed), speed);
+        bool emitting = flying && speedRatio > 0.015f;
+
+        trailRenderer.emitting = emitting;
+        trailRenderer.widthMultiplier = Mathf.Lerp(0.08f, 0.22f, speedRatio);
+
+        if (trailCoreRenderer != null)
+        {
+            trailCoreRenderer.emitting = emitting;
+            trailCoreRenderer.widthMultiplier = Mathf.Lerp(0.028f, 0.078f, speedRatio);
+        }
+
+        if (trailMotes == null) return;
+
+        ParticleSystem.EmissionModule emission = trailMotes.emission;
+        emission.rateOverTime = emitting ? trailMoteRate * speedRatio : 0f;
+        if (emitting && !trailMotes.isPlaying)
+        {
+            trailMotes.Play();
+        }
+        else if (!emitting && trailMotes.isPlaying)
+        {
+            trailMotes.Stop(false, ParticleSystemStopBehavior.StopEmitting);
         }
     }
 
@@ -897,10 +1049,26 @@ public class RepairBot : MonoBehaviour
         if (trailRenderer != null)
         {
             trailRenderer.enabled = !docked;
+            trailRenderer.emitting = false;
             if (docked)
             {
                 trailRenderer.Clear();
             }
+        }
+
+        if (trailCoreRenderer != null)
+        {
+            trailCoreRenderer.enabled = !docked;
+            trailCoreRenderer.emitting = false;
+            if (docked)
+            {
+                trailCoreRenderer.Clear();
+            }
+        }
+
+        if (docked && trailMotes != null)
+        {
+            trailMotes.Stop(false, ParticleSystemStopBehavior.StopEmitting);
         }
     }
 
@@ -965,6 +1133,14 @@ public class RepairBot : MonoBehaviour
 
             if (Time.time - lastRepairTime >= repairCooldown)
             {
+                float durabilityRatio = Mathf.Clamp01(currentTarget.currentDurability / currentTarget.maxDurability);
+                Color pulseColor = repairBeamGradient.Evaluate(durabilityRatio);
+                VisualEffectsManager.TryPlayRepairPulse(
+                    transform.position,
+                    GetRepairTargetPoint(),
+                    pulseColor,
+                    beamWidth);
+
                 currentTarget.UpdateDurablility(repairAmount);
                 lastRepairTime = Time.time;
 
@@ -993,14 +1169,150 @@ public class RepairBot : MonoBehaviour
 
         if (active && currentTarget != null)
         {
-            repairBeamEffect.SetEndpoints(transform.position, currentTarget.transform.position);
+            Vector3 origin = transform.position;
+            Vector3 targetPoint = GetRepairTargetPoint();
+            repairBeamEffect.SetEndpoints(origin, targetPoint);
 
             float durabilityRatio = Mathf.Clamp01(currentTarget.currentDurability / currentTarget.maxDurability);
             Color beamColor = repairBeamGradient.Evaluate(durabilityRatio);
+            float primaryPulse = 0.84f + Mathf.Sin(Time.unscaledTime * 13f) * 0.12f;
+            float secondaryPulse = Mathf.Sin(Time.unscaledTime * 31f) * 0.04f;
 
-            repairBeamEffect.SetColor(Color.Lerp(beamColor, Color.white, 0.18f));
-            repairBeamEffect.SetIntensity(0.82f + Mathf.Sin(Time.unscaledTime * 11f) * 0.18f);
+            repairBeamEffect.SetColor(Color.Lerp(beamColor, Color.white, 0.28f));
+            repairBeamEffect.SetIntensity(primaryPulse + secondaryPulse);
+            UpdateRepairImpact(origin, targetPoint, beamColor, primaryPulse);
         }
+        else
+        {
+            SetRepairImpactActive(false);
+        }
+    }
+
+    private Vector3 GetRepairTargetPoint()
+    {
+        if (currentTarget == null) return transform.position;
+
+        Collider targetCollider = currentTarget.GetComponentInChildren<Collider>();
+        if (targetCollider != null)
+        {
+            Vector3 closestPoint = targetCollider.ClosestPoint(transform.position);
+            if ((closestPoint - transform.position).sqrMagnitude > 0.0001f)
+            {
+                return closestPoint;
+            }
+        }
+
+        Renderer targetRenderer = currentTarget.GetComponentInChildren<Renderer>();
+        return targetRenderer != null ? targetRenderer.bounds.center : currentTarget.transform.position;
+    }
+
+    private void EnsureRepairImpactVfx()
+    {
+        if (repairImpactRoot != null) return;
+
+        repairImpactRoot = new GameObject("Repair Impact VFX");
+        repairImpactRoot.transform.SetParent(transform, false);
+
+        GameObject ringObject = new GameObject("Repair Impact Ring");
+        ringObject.transform.SetParent(repairImpactRoot.transform, false);
+        repairImpactRingTransform = ringObject.transform;
+        repairImpactRing = ringObject.AddComponent<StylizedRingEffect>();
+        repairImpactRing.Configure(48, Mathf.Max(0.02f, beamWidth * 0.16f));
+        repairImpactRing.SetVisible(false);
+
+        GameObject particlesObject = new GameObject("Repair Impact Sparks");
+        particlesObject.transform.SetParent(repairImpactRoot.transform, false);
+        repairImpactParticles = particlesObject.AddComponent<ParticleSystem>();
+        repairImpactParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        ConfigureRepairImpactParticles(repairImpactParticles);
+
+        repairImpactRoot.SetActive(false);
+    }
+
+    private void ConfigureRepairImpactParticles(ParticleSystem particles)
+    {
+        ParticleSystem.MainModule main = particles.main;
+        main.loop = true;
+        main.playOnAwake = false;
+        main.simulationSpace = ParticleSystemSimulationSpace.World;
+        main.startLifetime = new ParticleSystem.MinMaxCurve(0.12f, 0.36f);
+        main.startSpeed = new ParticleSystem.MinMaxCurve(0.18f, 0.85f);
+        main.startSize = new ParticleSystem.MinMaxCurve(0.018f, 0.07f);
+        main.startColor = new ParticleSystem.MinMaxGradient(Color.white, new Color(0.12f, 1f, 0.7f, 1f));
+        main.maxParticles = 72;
+
+        ParticleSystem.EmissionModule emission = particles.emission;
+        emission.rateOverTime = 28f;
+
+        ParticleSystem.ShapeModule shape = particles.shape;
+        shape.enabled = true;
+        shape.shapeType = ParticleSystemShapeType.Sphere;
+        shape.radius = Mathf.Max(0.04f, beamWidth * 0.28f);
+
+        ParticleSystem.ColorOverLifetimeModule colorOverLifetime = particles.colorOverLifetime;
+        colorOverLifetime.enabled = true;
+        colorOverLifetime.color = new ParticleSystem.MinMaxGradient(CreateTrailGradient(new Color(0.12f, 1f, 0.7f, 1f), 0.9f));
+
+        ParticleSystem.SizeOverLifetimeModule sizeOverLifetime = particles.sizeOverLifetime;
+        sizeOverLifetime.enabled = true;
+        sizeOverLifetime.size = new ParticleSystem.MinMaxCurve(
+            1f,
+            new AnimationCurve(
+                new Keyframe(0f, 0.4f),
+                new Keyframe(0.18f, 1f),
+                new Keyframe(1f, 0f)));
+
+        ParticleSystemRenderer renderer = particles.GetComponent<ParticleSystemRenderer>();
+        renderer.sharedMaterial = VisualEffectsManager.GetSharedParticleMaterial();
+        renderer.renderMode = ParticleSystemRenderMode.Stretch;
+        renderer.lengthScale = 2.4f;
+        renderer.velocityScale = 0.15f;
+        renderer.sortingFudge = 4f;
+        renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        renderer.receiveShadows = false;
+    }
+
+    private void UpdateRepairImpact(Vector3 origin, Vector3 targetPoint, Color color, float pulse)
+    {
+        EnsureRepairImpactVfx();
+        repairImpactRoot.SetActive(true);
+        repairImpactRoot.transform.position = targetPoint;
+
+        Vector3 beamDirection = targetPoint - origin;
+        Vector3 impactNormal = beamDirection.sqrMagnitude > 0.001f ? -beamDirection.normalized : Vector3.up;
+        repairImpactRoot.transform.rotation = Quaternion.FromToRotation(Vector3.up, impactNormal);
+
+        float ringScale = Mathf.Lerp(0.18f, 0.34f, Mathf.Clamp01(pulse));
+        repairImpactRingTransform.localScale = Vector3.one * ringScale;
+        repairImpactRing.SetVisual(Color.Lerp(color, Color.white, 0.22f), Mathf.Max(0.018f, beamWidth * 0.15f));
+        repairImpactRing.SetIntensity(Mathf.Clamp01(pulse));
+        repairImpactRing.SetVisible(true);
+
+        ParticleSystem.MainModule main = repairImpactParticles.main;
+        main.startColor = new ParticleSystem.MinMaxGradient(Color.white, color);
+        if (!repairImpactParticles.isPlaying)
+        {
+            repairImpactParticles.Play();
+        }
+    }
+
+    private void SetRepairImpactActive(bool active)
+    {
+        if (repairImpactRoot == null) return;
+
+        if (!active)
+        {
+            if (repairImpactRing != null)
+            {
+                repairImpactRing.SetVisible(false);
+            }
+            if (repairImpactParticles != null && repairImpactParticles.isPlaying)
+            {
+                repairImpactParticles.Stop(false, ParticleSystemStopBehavior.StopEmitting);
+            }
+        }
+
+        repairImpactRoot.SetActive(active);
     }
 
     private void EnsureRepairBeamGradient()
