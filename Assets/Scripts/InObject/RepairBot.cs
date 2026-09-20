@@ -113,9 +113,8 @@ public class RepairBot : MonoBehaviour
     private readonly RaycastHit[] homeGuidanceHits = new RaycastHit[MaxHomeGuidanceHits];
     private StylizedBeamEffect repairBeamEffect;
     private GameObject repairImpactRoot;
-    private Transform repairImpactRingTransform;
-    private StylizedRingEffect repairImpactRing;
     private ParticleSystem repairImpactParticles;
+    private Light repairImpactLight;
     private int blockLayerMask;
     private Transform cachedNavigationTarget;
     private AdvancedAvoidanceResult cachedAvoidanceResult;
@@ -346,7 +345,7 @@ public class RepairBot : MonoBehaviour
                 new Keyframe(1f, 0f)));
 
         ParticleSystemRenderer renderer = particles.GetComponent<ParticleSystemRenderer>();
-        renderer.sharedMaterial = VisualEffectsManager.GetSharedParticleMaterial();
+        renderer.sharedMaterial = VisualEffectsManager.GetSharedGlowParticleMaterial();
         renderer.renderMode = ParticleSystemRenderMode.Billboard;
         renderer.sortingFudge = 2f;
         renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -1188,9 +1187,11 @@ public class RepairBot : MonoBehaviour
             float primaryPulse = 0.84f + Mathf.Sin(Time.unscaledTime * 13f) * 0.12f;
             float secondaryPulse = Mathf.Sin(Time.unscaledTime * 31f) * 0.04f;
 
-            repairBeamEffect.SetColor(Color.Lerp(beamColor, Color.white, 0.28f));
-            repairBeamEffect.SetIntensity(primaryPulse + secondaryPulse);
-            UpdateRepairImpact(origin, targetPoint, beamColor, primaryPulse);
+            Color brightBeamColor = Color.Lerp(beamColor, Color.white, 0.34f) * 1.85f;
+            brightBeamColor.a = 1f;
+            repairBeamEffect.SetColor(brightBeamColor);
+            repairBeamEffect.SetIntensity((primaryPulse + secondaryPulse) * 1.15f);
+            UpdateRepairImpact(targetPoint, beamColor, primaryPulse);
         }
         else
         {
@@ -1223,18 +1224,20 @@ public class RepairBot : MonoBehaviour
         repairImpactRoot = new GameObject("Repair Impact VFX");
         repairImpactRoot.transform.SetParent(transform, false);
 
-        GameObject ringObject = new GameObject("Repair Impact Ring");
-        ringObject.transform.SetParent(repairImpactRoot.transform, false);
-        repairImpactRingTransform = ringObject.transform;
-        repairImpactRing = ringObject.AddComponent<StylizedRingEffect>();
-        repairImpactRing.Configure(48, Mathf.Max(0.02f, beamWidth * 0.16f));
-        repairImpactRing.SetVisible(false);
-
         GameObject particlesObject = new GameObject("Repair Impact Sparks");
         particlesObject.transform.SetParent(repairImpactRoot.transform, false);
         repairImpactParticles = particlesObject.AddComponent<ParticleSystem>();
         repairImpactParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         ConfigureRepairImpactParticles(repairImpactParticles);
+
+        GameObject lightObject = new GameObject("Repair Impact Glow");
+        lightObject.transform.SetParent(repairImpactRoot.transform, false);
+        repairImpactLight = lightObject.AddComponent<Light>();
+        repairImpactLight.type = LightType.Point;
+        repairImpactLight.color = new Color(0.12f, 1f, 0.7f, 1f);
+        repairImpactLight.range = Mathf.Max(1.1f, beamWidth * 6f);
+        repairImpactLight.intensity = 0f;
+        repairImpactLight.shadows = LightShadows.None;
 
         repairImpactRoot.SetActive(false);
     }
@@ -1245,19 +1248,19 @@ public class RepairBot : MonoBehaviour
         main.loop = true;
         main.playOnAwake = false;
         main.simulationSpace = ParticleSystemSimulationSpace.World;
-        main.startLifetime = new ParticleSystem.MinMaxCurve(0.12f, 0.36f);
-        main.startSpeed = new ParticleSystem.MinMaxCurve(0.18f, 0.85f);
-        main.startSize = new ParticleSystem.MinMaxCurve(0.018f, 0.07f);
-        main.startColor = new ParticleSystem.MinMaxGradient(Color.white, new Color(0.12f, 1f, 0.7f, 1f));
-        main.maxParticles = 72;
+        main.startLifetime = new ParticleSystem.MinMaxCurve(0.14f, 0.44f);
+        main.startSpeed = new ParticleSystem.MinMaxCurve(0.3f, 1.35f);
+        main.startSize = new ParticleSystem.MinMaxCurve(0.022f, 0.095f);
+        main.startColor = new ParticleSystem.MinMaxGradient(new Color(3f, 3f, 3f, 1f), new Color(0.24f, 2.4f, 1.5f, 1f));
+        main.maxParticles = 96;
 
         ParticleSystem.EmissionModule emission = particles.emission;
-        emission.rateOverTime = 28f;
+        emission.rateOverTime = 42f;
 
         ParticleSystem.ShapeModule shape = particles.shape;
         shape.enabled = true;
         shape.shapeType = ParticleSystemShapeType.Sphere;
-        shape.radius = Mathf.Max(0.04f, beamWidth * 0.28f);
+        shape.radius = Mathf.Max(0.05f, beamWidth * 0.34f);
 
         ParticleSystem.ColorOverLifetimeModule colorOverLifetime = particles.colorOverLifetime;
         colorOverLifetime.enabled = true;
@@ -1273,7 +1276,7 @@ public class RepairBot : MonoBehaviour
                 new Keyframe(1f, 0f)));
 
         ParticleSystemRenderer renderer = particles.GetComponent<ParticleSystemRenderer>();
-        renderer.sharedMaterial = VisualEffectsManager.GetSharedParticleMaterial();
+        renderer.sharedMaterial = VisualEffectsManager.GetSharedGlowParticleMaterial();
         renderer.renderMode = ParticleSystemRenderMode.Stretch;
         renderer.lengthScale = 2.4f;
         renderer.velocityScale = 0.15f;
@@ -1282,24 +1285,23 @@ public class RepairBot : MonoBehaviour
         renderer.receiveShadows = false;
     }
 
-    private void UpdateRepairImpact(Vector3 origin, Vector3 targetPoint, Color color, float pulse)
+    private void UpdateRepairImpact(Vector3 targetPoint, Color color, float pulse)
     {
         EnsureRepairImpactVfx();
         repairImpactRoot.SetActive(true);
         repairImpactRoot.transform.position = targetPoint;
 
-        Vector3 beamDirection = targetPoint - origin;
-        Vector3 impactNormal = beamDirection.sqrMagnitude > 0.001f ? -beamDirection.normalized : Vector3.up;
-        repairImpactRoot.transform.rotation = Quaternion.FromToRotation(Vector3.up, impactNormal);
-
-        float ringScale = Mathf.Lerp(0.18f, 0.34f, Mathf.Clamp01(pulse));
-        repairImpactRingTransform.localScale = Vector3.one * ringScale;
-        repairImpactRing.SetVisual(Color.Lerp(color, Color.white, 0.22f), Mathf.Max(0.018f, beamWidth * 0.15f));
-        repairImpactRing.SetIntensity(Mathf.Clamp01(pulse));
-        repairImpactRing.SetVisible(true);
-
+        float intensity = Mathf.Clamp01(pulse);
+        Color brightColor = Color.Lerp(color, Color.white, 0.32f) * 2.2f;
+        brightColor.a = 1f;
         ParticleSystem.MainModule main = repairImpactParticles.main;
-        main.startColor = new ParticleSystem.MinMaxGradient(Color.white, color);
+        main.startColor = new ParticleSystem.MinMaxGradient(new Color(3f, 3f, 3f, 1f), brightColor);
+        ParticleSystem.EmissionModule emission = repairImpactParticles.emission;
+        emission.rateOverTime = Mathf.Lerp(34f, 64f, intensity);
+
+        repairImpactLight.color = Color.Lerp(color, Color.white, 0.24f);
+        repairImpactLight.intensity = Mathf.Lerp(1.2f, 3.2f, intensity);
+        repairImpactLight.range = Mathf.Lerp(1.1f, 2.1f, intensity);
         if (!repairImpactParticles.isPlaying)
         {
             repairImpactParticles.Play();
@@ -1312,13 +1314,13 @@ public class RepairBot : MonoBehaviour
 
         if (!active)
         {
-            if (repairImpactRing != null)
-            {
-                repairImpactRing.SetVisible(false);
-            }
             if (repairImpactParticles != null && repairImpactParticles.isPlaying)
             {
                 repairImpactParticles.Stop(false, ParticleSystemStopBehavior.StopEmitting);
+            }
+            if (repairImpactLight != null)
+            {
+                repairImpactLight.intensity = 0f;
             }
         }
 

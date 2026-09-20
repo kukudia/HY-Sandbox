@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class VisualEffectsManager : MonoBehaviour
 {
-    private const int RingSegments = 64;
     private const int MaxMeteorGlowLights = 24;
 
     private static Material sharedParticleMaterial;
+    private static Material sharedGlowParticleMaterial;
     private static Material sharedLineMaterial;
     private static Texture2D softParticleTexture;
     private static int activeMeteorGlowLights;
@@ -22,15 +22,6 @@ public class VisualEffectsManager : MonoBehaviour
     public Color selectionColor = new Color(0.38f, 0.95f, 1f, 1f);
     public Color blockedGhostColor = new Color(1f, 0.12f, 0.08f, 1f);
     public Color validGhostColor = new Color(0.24f, 1f, 0.58f, 1f);
-
-    private Block selectedBlock;
-    private GameObject selectionRing;
-    private StylizedRingEffect selectionRingEffect;
-
-    private Transform ghostTarget;
-    private bool ghostBlocked;
-    private GameObject ghostRing;
-    private StylizedRingEffect ghostRingEffect;
 
     private Coroutine cameraShakeRoutine;
     private Transform shakenCamera;
@@ -61,23 +52,19 @@ public class VisualEffectsManager : MonoBehaviour
             return sharedParticleMaterial;
         }
 
-        Shader shader = Shader.Find("Universal Render Pipeline/Particles/Unlit");
-        if (shader == null) shader = Shader.Find("Particles/Standard Unlit");
-        if (shader == null) shader = Shader.Find("Sprites/Default");
-        if (shader == null) shader = Shader.Find("Unlit/Transparent");
-        if (shader == null) shader = Shader.Find("Unlit/Color");
-
-        sharedParticleMaterial = new Material(shader)
-        {
-            name = "Shared Soft Particle VFX Material",
-            hideFlags = HideFlags.HideAndDontSave
-        };
-
-        Texture2D texture = GetSoftParticleTexture();
-        SetMaterialTexture(sharedParticleMaterial, texture);
-        SetMaterialColor(sharedParticleMaterial, Color.white);
-        ConfigureTransparentMaterial(sharedParticleMaterial);
+        sharedParticleMaterial = CreateParticleMaterial("Shared Soft Particle VFX Material", false);
         return sharedParticleMaterial;
+    }
+
+    public static Material GetSharedGlowParticleMaterial()
+    {
+        if (sharedGlowParticleMaterial != null)
+        {
+            return sharedGlowParticleMaterial;
+        }
+
+        sharedGlowParticleMaterial = CreateParticleMaterial("Shared Additive Particle VFX Material", true);
+        return sharedGlowParticleMaterial;
     }
 
     public static Material GetSharedLineMaterial()
@@ -172,10 +159,7 @@ public class VisualEffectsManager : MonoBehaviour
     public static void TryClearGhostPreview(GameObject ghost)
     {
         if (instance == null) return;
-        if (ghost == null || instance.ghostTarget == ghost.transform)
-        {
-            instance.ClearGhostPreview();
-        }
+        instance.ClearGhostPreview();
     }
 
     public static void TryDecorateMeteor(Meteor meteor)
@@ -206,12 +190,6 @@ public class VisualEffectsManager : MonoBehaviour
         ApplySceneLook();
     }
 
-    private void Update()
-    {
-        UpdateSelectionRing();
-        UpdateGhostRing();
-    }
-
     private void ApplySceneLook()
     {
         if (!enableSceneLook) return;
@@ -230,11 +208,12 @@ public class VisualEffectsManager : MonoBehaviour
         Bounds bounds = GetBounds(block.gameObject, block.transform.position, GetBlockSize(block));
         float scale = Mathf.Clamp(bounds.size.magnitude * 0.35f, 0.55f, 2.8f);
         Vector3 center = bounds.center;
-        Vector3 basePosition = new Vector3(center.x, bounds.min.y + 0.04f, center.z);
+        Color brightBuild = Brighten(buildColor, 2.2f, 0.18f);
 
-        CreateParticleBurst("Block Place Sparks", center, buildColor, Color.white, 42, scale * 0.2f, 1.3f, 4.8f, 0.2f, 0.7f, 0.035f, 0.12f, -0.15f);
-        CreateTransientRing("Block Place Ring", basePosition, Vector3.up, buildColor, Mathf.Max(bounds.extents.x, bounds.extents.z) + 0.45f, 0.42f, 0.065f);
-        CreateLightFlash(center, buildColor, 1.6f, scale * 3.2f, 0.2f);
+        CreateParticleBurst("Block Place Sparks", center, brightBuild, Brighten(Color.white, 2.8f), 56, scale * 0.24f, 1.8f, 6.2f, 0.2f, 0.78f, 0.04f, 0.15f, -0.12f);
+        CreateParticleBurst("Block Place Core Flash", center, Brighten(Color.white, 3.4f), brightBuild, 18, scale * 0.12f, 0.1f, 1.1f, 0.05f, 0.2f, scale * 0.12f, scale * 0.34f, -0.02f);
+        CreateRadialStreakBurst(center, Vector3.up, brightBuild, 8, scale * 0.9f, 0.2f, 0.035f);
+        CreateLightFlash(center, buildColor, 3.4f, scale * 4.2f, 0.26f);
         ShakeCamera(cameraShakeStrength * 0.45f, 0.12f);
     }
 
@@ -245,10 +224,11 @@ public class VisualEffectsManager : MonoBehaviour
         Bounds bounds = GetBounds(block.gameObject, block.transform.position, GetBlockSize(block));
         float scale = Mathf.Clamp(bounds.size.magnitude * 0.35f, 0.55f, 3.3f);
 
-        CreateParticleBurst("Block Break Sparks", bounds.center, removeColor, Color.yellow, 58, scale * 0.24f, 2.2f, 7.5f, 0.22f, 0.95f, 0.045f, 0.16f, 0.2f);
-        CreateParticleBurst("Block Dust Glow", bounds.center, new Color(0.55f, 0.72f, 1f, 0.45f), new Color(0.08f, 0.12f, 0.17f, 0.25f), 22, scale * 0.42f, 0.3f, 1.4f, 0.8f, 1.6f, 0.16f, 0.38f, -0.05f);
-        CreateTransientRing("Block Break Ring", bounds.center, Vector3.up, removeColor, scale * 1.35f, 0.55f, 0.09f);
-        CreateLightFlash(bounds.center, removeColor, 2.4f, scale * 4.2f, 0.28f);
+        Color brightRemove = Brighten(removeColor, 2.35f, 0.15f);
+        CreateParticleBurst("Block Break Sparks", bounds.center, brightRemove, Brighten(Color.yellow, 2.4f), 72, scale * 0.28f, 2.6f, 9.5f, 0.22f, 1.05f, 0.05f, 0.19f, 0.2f);
+        CreateParticleBurst("Block Dust Glow", bounds.center, new Color(0.55f, 0.72f, 1f, 0.45f), new Color(0.08f, 0.12f, 0.17f, 0.25f), 22, scale * 0.42f, 0.3f, 1.4f, 0.8f, 1.6f, 0.16f, 0.38f, -0.05f, false);
+        CreateRadialStreakBurst(bounds.center, Vector3.zero, brightRemove, 10, scale * 1.1f, 0.28f, 0.045f);
+        CreateLightFlash(bounds.center, removeColor, 4.2f, scale * 4.8f, 0.34f);
         ShakeCamera(cameraShakeStrength, 0.18f);
     }
 
@@ -259,18 +239,16 @@ public class VisualEffectsManager : MonoBehaviour
         Bounds bounds = GetBounds(block.gameObject, block.transform.position, GetBlockSize(block));
         float scale = Mathf.Clamp(bounds.size.magnitude * 0.42f, 0.7f, 4f);
         Vector3 center = bounds.center;
-        Color emberColor = new Color(1f, 0.62f, 0.12f, 1f);
+        Color emberColor = new Color(2.6f, 1.15f, 0.22f, 1f);
         Color smokeColor = new Color(0.18f, 0.22f, 0.28f, 0.75f);
 
-        CreateParticleBurst("Block Explosion Flash", center, Color.white, emberColor, 18, scale * 0.12f, 0.15f, 1.2f, 0.06f, 0.22f, scale * 0.16f, scale * 0.42f, -0.04f);
-        CreateParticleBurst("Block Explosion Fireball", center, Color.Lerp(Color.white, emberColor, 0.2f), removeColor, 52, scale * 0.34f, 0.7f, 4.4f, 0.14f, 0.72f, scale * 0.08f, scale * 0.32f, -0.06f);
-        CreateParticleBurst("Block Explosion Embers", center, removeColor, emberColor, 96, scale * 0.28f, 2.5f, 10f, 0.3f, 2.1f, 0.045f, 0.18f, 0.12f);
-        CreateParticleBurst("Block Explosion Smoke", center, smokeColor, new Color(0.03f, 0.04f, 0.06f, 0f), 34, scale * 0.35f, 0.35f, 2.1f, 1.0f, 3.4f, 0.14f, 0.42f, -0.08f);
-        CreateTransientRing("Block Explosion Ring", center, Vector3.up, removeColor, scale * 1.65f, 1.15f, 0.12f);
-        CreateTransientRing("Block Explosion Cross Ring", center, Vector3.right, WithAlpha(emberColor, 0.78f), scale * 1.28f, 0.78f, 0.075f);
-        CreateTransientRing("Block Explosion Inner Ring", center, Vector3.up, emberColor, scale * 0.9f, 0.72f, 0.075f);
+        CreateParticleBurst("Block Explosion Flash", center, Brighten(Color.white, 4.5f), emberColor, 26, scale * 0.15f, 0.18f, 1.8f, 0.06f, 0.26f, scale * 0.2f, scale * 0.52f, -0.04f);
+        CreateParticleBurst("Block Explosion Fireball", center, Brighten(Color.white, 3.2f), Brighten(removeColor, 2.5f, 0.12f), 68, scale * 0.4f, 0.9f, 5.6f, 0.14f, 0.82f, scale * 0.1f, scale * 0.4f, -0.06f);
+        CreateParticleBurst("Block Explosion Embers", center, Brighten(removeColor, 2.6f, 0.08f), emberColor, 118, scale * 0.32f, 3.2f, 13f, 0.32f, 2.35f, 0.05f, 0.22f, 0.12f);
+        CreateParticleBurst("Block Explosion Smoke", center, smokeColor, new Color(0.03f, 0.04f, 0.06f, 0f), 34, scale * 0.35f, 0.35f, 2.1f, 1.0f, 3.4f, 0.14f, 0.42f, -0.08f, false);
         CreateExplosionShrapnel(center, scale, emberColor);
-        CreateLightFlash(center, emberColor, 4.2f, scale * 5.8f, 0.55f);
+        CreateRadialStreakBurst(center, Vector3.zero, emberColor, 14, scale * 2.1f, 0.34f, 0.055f);
+        CreateLightFlash(center, emberColor, 7.5f, scale * 7f, 0.62f);
         ShakeCamera(cameraShakeStrength * 1.35f, 0.42f);
         StartCoroutine(PlayExplosionAftershock(center, scale, emberColor, smokeColor));
     }
@@ -280,9 +258,10 @@ public class VisualEffectsManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.22f);
         if (!enableRuntimeVfx) yield break;
 
-        CreateParticleBurst("Block Explosion Aftershock", center, emberColor, WithAlpha(smokeColor, 0f), 42, scale * 0.5f, 0.8f, 3.8f, 0.4f, 1.35f, 0.035f, 0.12f, 0.02f);
-        CreateParticleBurst("Block Explosion Rolling Smoke", center + Vector3.up * scale * 0.2f, smokeColor, WithAlpha(smokeColor, 0f), 24, scale * 0.38f, 0.2f, 1.15f, 1.4f, 3.8f, scale * 0.1f, scale * 0.28f, -0.16f);
-        CreateTransientRing("Block Explosion Aftershock Ring", center, Vector3.up, WithAlpha(emberColor, 0.7f), scale * 1.25f, 0.85f, 0.055f);
+        CreateParticleBurst("Block Explosion Aftershock", center, emberColor, WithAlpha(smokeColor, 0f), 58, scale * 0.56f, 1.1f, 5.2f, 0.4f, 1.45f, 0.04f, 0.15f, 0.02f);
+        CreateParticleBurst("Block Explosion Rolling Smoke", center + Vector3.up * scale * 0.2f, smokeColor, WithAlpha(smokeColor, 0f), 24, scale * 0.38f, 0.2f, 1.15f, 1.4f, 3.8f, scale * 0.1f, scale * 0.28f, -0.16f, false);
+        CreateRadialStreakBurst(center, Vector3.zero, WithAlpha(emberColor, 0.8f), 8, scale * 1.45f, 0.28f, 0.035f);
+        CreateLightFlash(center, emberColor, 2.8f, scale * 4.2f, 0.3f);
     }
 
     private void PlayObjectDestroyed(GameObject target)
@@ -290,24 +269,24 @@ public class VisualEffectsManager : MonoBehaviour
         if (!enableRuntimeVfx) return;
 
         Bounds bounds = GetBounds(target, target.transform.position, Vector3.one);
-        CreateParticleBurst("Object Destroyed Sparks", bounds.center, removeColor, Color.white, 36, 0.4f, 1.4f, 4.2f, 0.5f, 2.0f, 0.04f, 0.13f, 0.15f);
-        CreateParticleBurst("Object Destroyed Smoke", bounds.center, new Color(0.24f, 0.28f, 0.34f, 0.6f), new Color(0.05f, 0.06f, 0.08f, 0f), 14, 0.32f, 0.15f, 0.9f, 0.65f, 1.8f, 0.1f, 0.3f, -0.08f);
-        CreateTransientRing("Object Destroyed Snap", bounds.center, Vector3.up, WithAlpha(removeColor, 0.72f), Mathf.Max(bounds.extents.magnitude, 0.45f), 0.34f, 0.05f);
-        CreateLightFlash(bounds.center, removeColor, 1.3f, Mathf.Max(bounds.size.magnitude, 1.5f), 0.36f);
+        Color brightRemove = Brighten(removeColor, 2.2f, 0.12f);
+        CreateParticleBurst("Object Destroyed Sparks", bounds.center, brightRemove, Brighten(Color.white, 2.4f), 48, 0.45f, 1.8f, 5.6f, 0.5f, 2.0f, 0.045f, 0.16f, 0.15f);
+        CreateParticleBurst("Object Destroyed Smoke", bounds.center, new Color(0.24f, 0.28f, 0.34f, 0.6f), new Color(0.05f, 0.06f, 0.08f, 0f), 14, 0.32f, 0.15f, 0.9f, 0.65f, 1.8f, 0.1f, 0.3f, -0.08f, false);
+        CreateRadialStreakBurst(bounds.center, Vector3.zero, brightRemove, 8, Mathf.Max(bounds.extents.magnitude, 0.6f), 0.24f, 0.035f);
+        CreateLightFlash(bounds.center, removeColor, 2.8f, Mathf.Max(bounds.size.magnitude * 1.35f, 2f), 0.4f);
     }
 
     private void PlayRepairPulse(Vector3 origin, Vector3 target, Color color, float width)
     {
         if (!enableRuntimeVfx) return;
 
-        Vector3 direction = target - origin;
-        Vector3 normal = direction.sqrMagnitude > 0.001f ? -direction.normalized : Vector3.up;
         float scale = Mathf.Clamp(width * 2.4f, 0.22f, 0.7f);
+        Color brightRepair = Brighten(color, 2.4f, 0.2f);
 
-        CreateTransientRing("Repair Impact Pulse", target, normal, color, scale, 0.28f, Mathf.Max(0.025f, width * 0.16f));
-        CreateParticleBurst("Repair Impact Sparks", target, Color.white, color, 18, scale * 0.22f, 0.25f, 1.8f, 0.16f, 0.48f, 0.018f, 0.065f, -0.05f);
-        CreateLineStreak(origin, target, WithAlpha(color, 0.85f), 0.13f, Mathf.Max(0.015f, width * 0.12f));
-        CreateLightFlash(target, color, 0.75f, Mathf.Max(0.7f, scale * 2f), 0.12f);
+        CreateParticleBurst("Repair Impact Sparks", target, Brighten(Color.white, 3f), brightRepair, 28, scale * 0.28f, 0.4f, 2.8f, 0.16f, 0.56f, 0.022f, 0.085f, -0.05f);
+        CreateRadialStreakBurst(target, target - origin, brightRepair, 5, scale * 0.75f, 0.16f, Mathf.Max(0.018f, width * 0.12f));
+        CreateLineStreak(origin, target, WithAlpha(brightRepair, 0.95f), 0.16f, Mathf.Max(0.02f, width * 0.15f));
+        CreateLightFlash(target, color, 1.8f, Mathf.Max(1f, scale * 2.8f), 0.16f);
     }
 
     private void CreateExplosionShrapnel(Vector3 center, float scale, Color color)
@@ -340,56 +319,35 @@ public class VisualEffectsManager : MonoBehaviour
         if (!enableRuntimeVfx) return;
 
         Bounds bounds = GetBounds(block.gameObject, block.transform.position, GetBlockSize(block));
-        CreateTransientRing("Block Rotate Ring", bounds.center, block.transform.up, selectionColor, Mathf.Max(bounds.extents.x, bounds.extents.z) + 0.35f, 0.3f, 0.045f);
+        float scale = Mathf.Clamp(bounds.extents.magnitude, 0.45f, 2.5f);
+        Color brightSelection = Brighten(selectionColor, 2.1f, 0.2f);
+        CreateParticleBurst("Block Rotate Motes", bounds.center, brightSelection, Brighten(Color.white, 2.2f), 24, scale * 0.32f, 0.35f, 2.2f, 0.12f, 0.42f, 0.025f, 0.085f, -0.04f);
+        CreateRadialStreakBurst(bounds.center, block.transform.up, brightSelection, 6, scale * 0.8f, 0.18f, 0.025f);
     }
 
     private void ShowBlockSelection(Block block)
     {
         if (!enableRuntimeVfx) return;
 
-        selectedBlock = block;
-        EnsureSelectionRing();
-        selectionRing.SetActive(true);
         Bounds bounds = GetBounds(block.gameObject, block.transform.position, GetBlockSize(block));
-        CreateTransientRing("Block Selection Ping", bounds.center, block.transform.up, selectionColor, Mathf.Max(bounds.extents.x, bounds.extents.z) + 0.5f, 0.32f, 0.045f);
+        float scale = Mathf.Clamp(bounds.extents.magnitude, 0.4f, 2.5f);
+        Color brightSelection = Brighten(selectionColor, 2.25f, 0.2f);
+        CreateParticleBurst("Block Selection Spark", bounds.center, brightSelection, Brighten(Color.white, 2.5f), 18, scale * 0.42f, 0.2f, 1.8f, 0.1f, 0.35f, 0.025f, 0.075f, -0.08f);
+        CreateLightFlash(bounds.center, selectionColor, 1.4f, Mathf.Max(1.2f, scale * 2.2f), 0.16f);
     }
 
     private void ClearBlockSelection(Block block)
     {
-        if (block != null && selectedBlock != block) return;
-
-        selectedBlock = null;
-        if (selectionRing != null)
-        {
-            selectionRing.SetActive(false);
-        }
-        if (selectionRingEffect != null)
-        {
-            selectionRingEffect.SetVisible(false);
-        }
+        // Selection readability is owned by the block material highlight; no planar helper remains.
     }
 
     private void UpdateGhostPreview(Transform ghost, bool isBlocked)
     {
-        if (!enableRuntimeVfx) return;
-
-        ghostTarget = ghost;
-        ghostBlocked = isBlocked;
-        EnsureGhostRing();
-        ghostRing.SetActive(true);
+        // The ghost's valid/blocked material already provides continuous feedback without floor geometry.
     }
 
     private void ClearGhostPreview()
     {
-        ghostTarget = null;
-        if (ghostRing != null)
-        {
-            ghostRing.SetActive(false);
-        }
-        if (ghostRingEffect != null)
-        {
-            ghostRingEffect.SetVisible(false);
-        }
     }
 
     private void DecorateMeteor(Meteor meteor)
@@ -427,8 +385,8 @@ public class VisualEffectsManager : MonoBehaviour
         {
             meteor.glowLight.type = LightType.Point;
             meteor.glowLight.color = new Color(1f, 0.62f, 0.28f, 1f);
-            meteor.glowLight.intensity = Mathf.Clamp(scale * 1.3f, meteor.minGlowIntensity, meteor.maxGlowIntensity);
-            meteor.glowLight.range = Mathf.Clamp(scale * 4f, 2f, 18f);
+            meteor.glowLight.intensity = Mathf.Clamp(scale * 2.1f, meteor.minGlowIntensity, meteor.maxGlowIntensity * 1.45f);
+            meteor.glowLight.range = Mathf.Clamp(scale * 5f, 2.5f, 22f);
             meteor.glowLight.shadows = LightShadows.None;
         }
     }
@@ -440,102 +398,53 @@ public class VisualEffectsManager : MonoBehaviour
         float impactScale = Mathf.Clamp(scale * 0.65f + speed * 0.025f, 0.6f, 5f);
         Vector3 impactNormal = normal.sqrMagnitude > 0.001f ? normal.normalized : Vector3.up;
 
-        CreateParticleBurst("Meteor Impact Sparks", position + impactNormal * 0.08f, new Color(1f, 0.5f, 0.1f, 1f), Color.yellow, 70, impactScale * 0.15f, 3f, 11f, 0.2f, 0.75f, 0.045f, 0.18f, 0.1f);
-        CreateParticleBurst("Meteor Impact Smoke", position + impactNormal * 0.18f, new Color(0.5f, 0.58f, 0.68f, 0.45f), new Color(0.05f, 0.065f, 0.08f, 0.15f), 32, impactScale * 0.32f, 0.4f, 1.8f, 0.8f, 1.8f, 0.28f, 0.75f, -0.08f);
-        CreateTransientRing("Meteor Shockwave", position + impactNormal * 0.04f, impactNormal, new Color(1f, 0.72f, 0.24f, 0.9f), impactScale * 1.5f, 0.65f, 0.1f);
-        CreateLightFlash(position, new Color(1f, 0.5f, 0.14f, 1f), impactScale * 2.2f, impactScale * 4.5f, 0.25f);
+        Color meteorColor = new Color(2.8f, 1.1f, 0.2f, 1f);
+        CreateParticleBurst("Meteor Impact Flash", position + impactNormal * 0.08f, Brighten(Color.white, 4f), meteorColor, 22, impactScale * 0.12f, 0.15f, 1.6f, 0.05f, 0.24f, impactScale * 0.12f, impactScale * 0.34f, -0.02f);
+        CreateParticleBurst("Meteor Impact Sparks", position + impactNormal * 0.08f, meteorColor, Brighten(Color.yellow, 2.8f), 92, impactScale * 0.18f, 3.5f, 14f, 0.2f, 0.85f, 0.05f, 0.22f, 0.1f);
+        CreateParticleBurst("Meteor Impact Smoke", position + impactNormal * 0.18f, new Color(0.5f, 0.58f, 0.68f, 0.45f), new Color(0.05f, 0.065f, 0.08f, 0.15f), 32, impactScale * 0.32f, 0.4f, 1.8f, 0.8f, 1.8f, 0.28f, 0.75f, -0.08f, false);
+        CreateRadialStreakBurst(position + impactNormal * 0.05f, impactNormal, meteorColor, 14, impactScale * 1.8f, 0.3f, 0.05f);
+        CreateLightFlash(position, meteorColor, impactScale * 3.8f, impactScale * 5.5f, 0.32f);
         ShakeCamera(cameraShakeStrength * Mathf.Clamp(impactScale, 1f, 3f), 0.2f);
-    }
-
-    private void UpdateSelectionRing()
-    {
-        if (selectionRing == null || selectionRingEffect == null) return;
-        if (selectedBlock == null)
-        {
-            selectionRing.SetActive(false);
-            return;
-        }
-
-        Bounds bounds = GetBounds(selectedBlock.gameObject, selectedBlock.transform.position, GetBlockSize(selectedBlock));
-        float radius = Mathf.Max(bounds.extents.x, bounds.extents.z) + 0.35f;
-        float pulse = 1f + Mathf.Sin(Time.unscaledTime * 5.3f) * 0.045f;
-        Color color = WithAlpha(selectionColor, 0.58f + Mathf.Sin(Time.unscaledTime * 4.2f) * 0.14f);
-
-        selectionRing.transform.position = new Vector3(bounds.center.x, bounds.min.y + 0.045f, bounds.center.z);
-        selectionRing.transform.rotation = Quaternion.identity;
-        selectionRing.transform.localScale = Vector3.one * radius * pulse;
-        selectionRingEffect.SetVisual(color, 0.05f);
-        selectionRingEffect.SetVisible(true);
-    }
-
-    private void UpdateGhostRing()
-    {
-        if (ghostRing == null || ghostRingEffect == null) return;
-        if (ghostTarget == null)
-        {
-            ghostRing.SetActive(false);
-            return;
-        }
-
-        Block ghostBlock = ghostTarget.GetComponent<Block>();
-        Vector3 fallbackSize = ghostBlock != null ? GetBlockSize(ghostBlock) : Vector3.one;
-        Bounds bounds = GetBounds(ghostTarget.gameObject, ghostTarget.position, fallbackSize);
-        float radius = Mathf.Max(bounds.extents.x, bounds.extents.z) + 0.28f;
-        Color color = ghostBlocked ? blockedGhostColor : validGhostColor;
-        float pulse = 1f + Mathf.Sin(Time.unscaledTime * 7f) * 0.035f;
-
-        ghostRing.transform.position = new Vector3(bounds.center.x, bounds.min.y + 0.055f, bounds.center.z);
-        ghostRing.transform.rotation = Quaternion.identity;
-        ghostRing.transform.localScale = Vector3.one * radius * pulse;
-        ghostRingEffect.SetVisual(color, ghostBlocked ? 0.075f : 0.052f);
-        ghostRingEffect.SetVisible(true);
-    }
-
-    private void EnsureSelectionRing()
-    {
-        if (selectionRing != null) return;
-
-        selectionRing = CreateRingObject("Selection Ring VFX", out selectionRingEffect);
-        selectionRing.SetActive(false);
-    }
-
-    private void EnsureGhostRing()
-    {
-        if (ghostRing != null) return;
-
-        ghostRing = CreateRingObject("Ghost Preview Ring VFX", out ghostRingEffect);
-        ghostRing.SetActive(false);
-    }
-
-    private static GameObject CreateRingObject(string name, out StylizedRingEffect ringEffect)
-    {
-        GameObject ring = new GameObject(name);
-        ringEffect = ring.AddComponent<StylizedRingEffect>();
-        ringEffect.Configure(RingSegments, 0.05f);
-
-        return ring;
-    }
-
-    private void CreateTransientRing(string name, Vector3 position, Vector3 normal, Color color, float radius, float duration, float width)
-    {
-        GameObject ring = CreateRingObject(name, out StylizedRingEffect ringEffect);
-        ring.transform.position = position;
-        ring.transform.rotation = Quaternion.FromToRotation(Vector3.up, normal.sqrMagnitude > 0.001f ? normal.normalized : Vector3.up);
-        ring.transform.localScale = Vector3.one * 0.15f;
-        ringEffect.SetVisual(color, width);
-        ringEffect.SetVisible(true);
-        ring.AddComponent<RingFade>().Initialize(ringEffect, color, Mathf.Max(0.05f, radius), Mathf.Max(0.05f, duration), width);
     }
 
     private void CreateLineStreak(Vector3 from, Vector3 to, Color color, float duration, float width)
     {
-        GameObject streak = new GameObject("Movement Streak VFX");
+        GameObject streak = new GameObject("Energy Streak VFX");
         StylizedBeamEffect beam = streak.AddComponent<StylizedBeamEffect>();
-        beam.Configure(width, 3.8f, 8, 0.015f, 2.4f, 14f);
+        beam.Configure(width, 5.2f, 10, 0.018f, 3.2f, 18f);
         beam.SetEndpoints(from, to);
         beam.SetColor(color);
         beam.SetVisible(true);
         streak.AddComponent<BeamFade>().Initialize(beam, color, Mathf.Max(0.05f, duration));
+    }
+
+    private void CreateRadialStreakBurst(
+        Vector3 center,
+        Vector3 normal,
+        Color color,
+        int count,
+        float length,
+        float duration,
+        float width)
+    {
+        Vector3 hemisphereNormal = normal.sqrMagnitude > 0.001f ? normal.normalized : Vector3.zero;
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 direction = Random.onUnitSphere;
+            if (hemisphereNormal != Vector3.zero && Vector3.Dot(direction, hemisphereNormal) < 0f)
+            {
+                direction = -direction;
+            }
+
+            Vector3 start = center + direction * Random.Range(0.02f, length * 0.12f);
+            Vector3 end = start + direction * Random.Range(length * 0.45f, length);
+            CreateLineStreak(
+                start,
+                end,
+                Color.Lerp(color, Brighten(Color.white, 2.4f), Random.Range(0.05f, 0.35f)),
+                Random.Range(duration * 0.7f, duration * 1.15f),
+                Random.Range(width * 0.65f, width * 1.25f));
+        }
     }
 
     private void CreateParticleBurst(
@@ -551,7 +460,8 @@ public class VisualEffectsManager : MonoBehaviour
         float maxLifetime,
         float minSize,
         float maxSize,
-        float gravity)
+        float gravity,
+        bool additive = true)
     {
         GameObject burstObject = new GameObject(name);
         burstObject.transform.position = position;
@@ -587,10 +497,11 @@ public class VisualEffectsManager : MonoBehaviour
         sizeOverLifetime.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.EaseInOut(0f, 1f, 1f, 0f));
 
         ParticleSystemRenderer renderer = particles.GetComponent<ParticleSystemRenderer>();
-        renderer.sharedMaterial = GetSharedParticleMaterial();
+        renderer.sharedMaterial = additive ? GetSharedGlowParticleMaterial() : GetSharedParticleMaterial();
         renderer.renderMode = ParticleSystemRenderMode.Billboard;
         renderer.sortingFudge = 4f;
         renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        renderer.receiveShadows = false;
 
         particles.Emit(Mathf.Max(1, count));
         Destroy(burstObject, maxLifetime + 0.6f);
@@ -713,6 +624,44 @@ public class VisualEffectsManager : MonoBehaviour
         return color;
     }
 
+    private static Color Brighten(Color color, float intensity, float whiteBlend = 0f)
+    {
+        Color bright = Color.Lerp(color, Color.white, Mathf.Clamp01(whiteBlend));
+        bright.r *= intensity;
+        bright.g *= intensity;
+        bright.b *= intensity;
+        bright.a = color.a;
+        return bright;
+    }
+
+    private static Material CreateParticleMaterial(string materialName, bool additive)
+    {
+        Shader shader = Shader.Find("Universal Render Pipeline/Particles/Unlit");
+        if (shader == null) shader = Shader.Find("Particles/Standard Unlit");
+        if (shader == null) shader = Shader.Find("Sprites/Default");
+        if (shader == null) shader = Shader.Find("Unlit/Transparent");
+        if (shader == null) shader = Shader.Find("Unlit/Color");
+
+        Material material = new Material(shader)
+        {
+            name = materialName,
+            hideFlags = HideFlags.HideAndDontSave
+        };
+
+        SetMaterialTexture(material, GetSoftParticleTexture());
+        SetMaterialColor(material, Color.white);
+        if (additive)
+        {
+            ConfigureAdditiveMaterial(material);
+        }
+        else
+        {
+            ConfigureTransparentMaterial(material);
+        }
+
+        return material;
+    }
+
     private static Texture2D GetSoftParticleTexture()
     {
         if (softParticleTexture != null)
@@ -790,44 +739,19 @@ public class VisualEffectsManager : MonoBehaviour
         material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
     }
 
-    private sealed class RingFade : MonoBehaviour
+    private static void ConfigureAdditiveMaterial(Material material)
     {
-        private StylizedRingEffect ringEffect;
-        private Color color;
-        private float targetRadius;
-        private float duration;
-        private float width;
-        private float elapsed;
+        if (material == null) return;
 
-        public void Initialize(StylizedRingEffect effect, Color lineColor, float radius, float lifetime, float lineWidth)
-        {
-            ringEffect = effect;
-            color = lineColor;
-            targetRadius = radius;
-            duration = lifetime;
-            width = lineWidth;
-        }
+        if (material.HasProperty("_Surface")) material.SetFloat("_Surface", 1f);
+        if (material.HasProperty("_Blend")) material.SetFloat("_Blend", 2f);
+        if (material.HasProperty("_SrcBlend")) material.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+        if (material.HasProperty("_DstBlend")) material.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.One);
+        if (material.HasProperty("_ZWrite")) material.SetFloat("_ZWrite", 0f);
 
-        private void Update()
-        {
-            if (ringEffect == null)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
-            elapsed += Time.unscaledDeltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            float eased = 1f - Mathf.Pow(1f - t, 3f);
-
-            transform.localScale = Vector3.one * Mathf.Lerp(0.15f, targetRadius, eased);
-            ringEffect.SetIntensity((1f - t) * (1f - t));
-
-            if (t >= 1f)
-            {
-                Destroy(gameObject);
-            }
-        }
+        material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+        material.DisableKeyword("_ALPHATEST_ON");
+        material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
     }
 
     private sealed class BeamFade : MonoBehaviour

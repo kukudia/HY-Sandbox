@@ -9,10 +9,10 @@ public class ThrusterVisualEffect : MonoBehaviour
     public Color sparkColor = new Color(1f, 0.82f, 0.34f, 1f);
 
     [Header("Plume Shape")]
-    public float maxEmissionRate = 130f;
-    public float maxCoreEmissionRate = 90f;
-    public float maxSparkEmissionRate = 18f;
-    public float maxLightIntensity = 2.8f;
+    public float maxEmissionRate = 155f;
+    public float maxCoreEmissionRate = 120f;
+    public float maxSparkEmissionRate = 28f;
+    public float maxLightIntensity = 4.8f;
     public float plumeRadius = 0.13f;
     public float plumeLength = 0.62f;
     public float responseSpeed = 8f;
@@ -100,7 +100,7 @@ public class ThrusterVisualEffect : MonoBehaviour
         main.startLifetime = new ParticleSystem.MinMaxCurve(0.12f, 0.32f);
         main.startSpeed = new ParticleSystem.MinMaxCurve(1.2f, 4.6f);
         main.startSize = new ParticleSystem.MinMaxCurve(0.04f, 0.18f);
-        main.startColor = new ParticleSystem.MinMaxGradient(coolPlumeColor, hotPlumeColor);
+        main.startColor = new ParticleSystem.MinMaxGradient(ToHdr(coolPlumeColor, 1.8f), ToHdr(hotPlumeColor, 2.2f));
         main.maxParticles = 180;
 
         ParticleSystem.EmissionModule emission = particles.emission;
@@ -145,7 +145,7 @@ public class ThrusterVisualEffect : MonoBehaviour
         main.startLifetime = new ParticleSystem.MinMaxCurve(0.055f, 0.14f);
         main.startSpeed = new ParticleSystem.MinMaxCurve(3.5f, 8.5f);
         main.startSize = new ParticleSystem.MinMaxCurve(0.025f, 0.075f);
-        main.startColor = new ParticleSystem.MinMaxGradient(Color.white, coolPlumeColor);
+        main.startColor = new ParticleSystem.MinMaxGradient(ToHdr(Color.white, 3.4f), ToHdr(coolPlumeColor, 2.4f));
         main.maxParticles = 120;
 
         ParticleSystem.EmissionModule emission = particles.emission;
@@ -164,9 +164,9 @@ public class ThrusterVisualEffect : MonoBehaviour
         gradient.SetKeys(
             new[]
             {
-                new GradientColorKey(Color.white, 0f),
-                new GradientColorKey(Color.Lerp(coolPlumeColor, Color.white, 0.5f), 0.38f),
-                new GradientColorKey(hotPlumeColor, 1f)
+                new GradientColorKey(ToHdr(Color.white, 3.4f), 0f),
+                new GradientColorKey(ToHdr(Color.Lerp(coolPlumeColor, Color.white, 0.5f), 2.4f), 0.38f),
+                new GradientColorKey(ToHdr(hotPlumeColor, 1.8f), 1f)
             },
             new[]
             {
@@ -197,7 +197,7 @@ public class ThrusterVisualEffect : MonoBehaviour
         main.startLifetime = new ParticleSystem.MinMaxCurve(0.12f, 0.38f);
         main.startSpeed = new ParticleSystem.MinMaxCurve(1.5f, 6.8f);
         main.startSize = new ParticleSystem.MinMaxCurve(0.012f, 0.045f);
-        main.startColor = new ParticleSystem.MinMaxGradient(sparkColor, Color.white);
+        main.startColor = new ParticleSystem.MinMaxGradient(ToHdr(sparkColor, 2.5f), ToHdr(Color.white, 3.2f));
         main.gravityModifier = 0.04f;
         main.maxParticles = 64;
 
@@ -217,9 +217,9 @@ public class ThrusterVisualEffect : MonoBehaviour
         gradient.SetKeys(
             new[]
             {
-                new GradientColorKey(Color.white, 0f),
-                new GradientColorKey(sparkColor, 0.25f),
-                new GradientColorKey(hotPlumeColor, 1f)
+                new GradientColorKey(ToHdr(Color.white, 3.2f), 0f),
+                new GradientColorKey(ToHdr(sparkColor, 2.5f), 0.25f),
+                new GradientColorKey(ToHdr(hotPlumeColor, 1.7f), 1f)
             },
             new[]
             {
@@ -240,7 +240,7 @@ public class ThrusterVisualEffect : MonoBehaviour
         float sortingFudge)
     {
         ParticleSystemRenderer renderer = particles.GetComponent<ParticleSystemRenderer>();
-        renderer.sharedMaterial = VisualEffectsManager.GetSharedParticleMaterial();
+        renderer.sharedMaterial = VisualEffectsManager.GetSharedGlowParticleMaterial();
         renderer.renderMode = renderMode;
         renderer.lengthScale = lengthScale;
         renderer.velocityScale = velocityScale;
@@ -255,9 +255,9 @@ public class ThrusterVisualEffect : MonoBehaviour
         gradient.SetKeys(
             new[]
             {
-                new GradientColorKey(Color.white, 0f),
-                new GradientColorKey(coolPlumeColor, 0.22f),
-                new GradientColorKey(hotPlumeColor, 0.72f),
+                new GradientColorKey(ToHdr(Color.white, 3.2f), 0f),
+                new GradientColorKey(ToHdr(coolPlumeColor, 2.1f), 0.22f),
+                new GradientColorKey(ToHdr(hotPlumeColor, 1.9f), 0.72f),
                 new GradientColorKey(new Color(0.2f, 0.12f, 0.1f), 1f)
             },
             new[]
@@ -286,8 +286,8 @@ public class ThrusterVisualEffect : MonoBehaviour
             Mathf.Lerp(0.025f, 0.07f, drivenRatio),
             Mathf.Lerp(0.08f, 0.23f, drivenRatio));
         plumeMain.startColor = new ParticleSystem.MinMaxGradient(
-            Color.Lerp(coolPlumeColor, Color.white, drivenRatio * 0.25f),
-            Color.Lerp(coolPlumeColor, hotPlumeColor, drivenRatio));
+            ToHdr(Color.Lerp(coolPlumeColor, Color.white, drivenRatio * 0.25f), 1.8f),
+            ToHdr(Color.Lerp(coolPlumeColor, hotPlumeColor, drivenRatio), 2.1f));
 
         ParticleSystem.EmissionModule plumeEmission = plumeParticles.emission;
         plumeEmission.rateOverTime = Mathf.Lerp(0f, maxEmissionRate, drivenRatio);
@@ -330,7 +330,7 @@ public class ThrusterVisualEffect : MonoBehaviour
         float flicker = Mathf.Lerp(0.88f, 1.12f, Mathf.PerlinNoise(flickerSeed + 11f, Time.unscaledTime * 20f));
         plumeLight.color = Color.Lerp(coolPlumeColor, hotPlumeColor, Mathf.Clamp01(ratio * 0.58f));
         plumeLight.intensity = Mathf.Lerp(0f, maxLightIntensity, ratio) * flicker;
-        plumeLight.range = Mathf.Lerp(0.6f, 3.6f, ratio);
+        plumeLight.range = Mathf.Lerp(0.7f, 4.4f, ratio);
     }
 
     private void SetEmissionState(bool active)
@@ -359,5 +359,13 @@ public class ThrusterVisualEffect : MonoBehaviour
         return Mathf.Abs(Vector3.Dot(direction, Vector3.up)) > 0.92f
             ? Vector3.forward
             : Vector3.up;
+    }
+
+    private static Color ToHdr(Color color, float intensity)
+    {
+        color.r *= intensity;
+        color.g *= intensity;
+        color.b *= intensity;
+        return color;
     }
 }

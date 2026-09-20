@@ -61,7 +61,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 `SaveManager` 管理两个命名空间：玩家存档 `Saves` 与敌方蓝图 `EnemyBlueprints`，支持创建、读取、删除、重命名、复制和文件名校验。列表中的 Duplicate 按钮会在当前命名空间生成不覆盖已有文件的 `Copy` 名称，并刷新列表；复制不会切换当前加载目标。`BlockData` 保存资源路径、尺寸、位置和旋转等重建所需数据。
 
-`BuildManager.LoadAllBlocks` 使用协程逐个实例化，支持加载进度、取消旧加载、无法加载数据清理和可选的相机环绕；方块数和总质量在主加载 `for` 循环中按成功恢复的 Block 增量累计并同步到 `BlueprintUIPanel`，不额外遍历已加载方块。存档身份依赖文件中的模块数据，不应把运行时 `GetInstanceID()` 当作跨会话稳定 ID。
+`BuildManager.LoadAllBlocks` 使用协程逐个实例化，支持加载进度、取消旧加载、无法加载数据清理和可选的相机环绕；加载环绕只作为临时展示，在正常完成、取消或切换存档时都会停止并恢复开始加载前的相机世界位置与旋转，避免大型蓝图的取景半径残留。方块数和总质量在主加载 `for` 循环中按成功恢复的 Block 增量累计并同步到 `BlueprintUIPanel`，不额外遍历已加载方块。存档身份依赖文件中的模块数据，不应把运行时 `GetInstanceID()` 当作跨会话稳定 ID。
 
 ### 3.4 游玩、供电与推进器
 
@@ -73,7 +73,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 3.5 UI、敌人和效果
 
-`MainUIButtons` 负责按钮事件、操作模式和动态方块按钮；`SaveUIPanel` 负责玩家/敌方蓝图列表；`BlueprintUIPanel` 显示当前建造目标名称、方块数量和总质量，并在搭建、拆除、Undo/Redo 时刷新，在存档或敌方蓝图异步加载期间逐块更新；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块，寻路避障按间隔采样并渐进转向，返航时对准停靠姿态后平滑减速归位，其飞行反馈由双层青色尾迹和速度驱动微粒组成，维修时使用双层能量束、命中环、持续火花及每次真实耐久恢复触发的脉冲。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager`、`StylizedBeamEffect` 和 `StylizedRingEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。爆炸由白热闪光、火球、正交冲击环、放射碎片光痕和延迟烟尘构成；失去驾驶舱的断裂 Rigidbody 会获得最长 6 秒、按速度衰减的烟雾/余烬拖尾，同时限制全局活动数量为 24。
+`MainUIButtons` 负责按钮事件、操作模式和动态方块按钮；`SaveUIPanel` 负责玩家/敌方蓝图列表；`BlueprintUIPanel` 显示当前建造目标名称、方块数量和总质量，并在搭建、拆除、Undo/Redo 时刷新，在存档或敌方蓝图异步加载期间逐块更新；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块，寻路避障按间隔采样并渐进转向，返航时对准停靠姿态后平滑减速归位，其飞行反馈由双层青色尾迹和速度驱动微粒组成，维修时使用双层能量束、加法火花、命中点光及每次真实耐久恢复触发的脉冲。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager` 和 `StylizedBeamEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。所有选中、Ghost、放置、旋转、维修、摧毁、爆炸和陨石冲击中的平面环形元素均已移除，改用 HDR 加法粒子、放射光痕、短束流和动态点光；烟尘继续使用普通 Alpha Blend 保持暗部层次。失去驾驶舱的断裂 Rigidbody 会获得最长 6 秒、按速度衰减的烟雾/余烬拖尾，同时限制全局活动数量为 24。
 
 ### 3.6 物理模拟与性能
 
@@ -374,20 +374,6 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private void ApplyColors()`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
 - `private static void SetRendererColor(Renderer renderer, MaterialPropertyBlock properties, Color color)`： 设置该对象、视觉效果或运行时引用的参数/状态。
 - `private void OnDestroy()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
-#### `Assets/Scripts/Effect/StylizedRingEffect.cs`
-
-- `public void Configure(int segments, float width)`： 配置该组件的几何、推进器、敌人或运行时参数。
-- `public void SetVisual(Color color, float width, float visualIntensity = 1f)`： 设置该对象、视觉效果或运行时引用的参数/状态。
-- `public void SetIntensity(float visualIntensity)`： 设置该对象、视觉效果或运行时引用的参数/状态。
-- `public void SetVisible(bool value)`： 设置该对象、视觉效果或运行时引用的参数/状态。
-- `private void EnsureInitialized()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
-- `private void CreateLayer(string layerName, int sortingOrder, out Mesh mesh, out MeshRenderer meshRenderer)`： 创建几何、资源、操作记录、UI 项或运行时对象。
-- `private void RebuildMeshes()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
-- `private void BuildRingMesh(Mesh mesh, float width, float heightOffset)`： 创建几何、资源、操作记录、UI 项或运行时对象。
-- `private void ApplyColors()`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
-- `private static void SetRendererColor(Renderer renderer, MaterialPropertyBlock properties, Color color)`： 设置该对象、视觉效果或运行时引用的参数/状态。
-- `private void OnDestroy()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
-
 
 ### InObject 模块
 
@@ -517,12 +503,12 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private void FindDamagedBlock()`：按扫描间隔刷新范围缓存，并用平方距离选择最近受损目标。
 - `private bool IsValidRepairTarget(Durability target)`：验证目标仍受损、未离开 home 范围且归属当前 ControlUnit。
 - `private void CheckAndRepair()`：处理碰撞、连接、耐久、维修或状态检查逻辑。
-- `private void UpdateRepairBeam(bool active)`：刷新双层维修射线颜色、脉冲强度、命中环和持续火花。
+- `private void UpdateRepairBeam(bool active)`：刷新双层维修射线的 HDR 颜色、脉冲强度、命中点光和持续火花。
 - `private Vector3 GetRepairTargetPoint()`：优先使用目标 Collider 最近点，其次使用 Renderer 中心作为射线命中点。
-- `private void EnsureRepairImpactVfx()`：创建可复用的维修命中环与火花粒子。
+- `private void EnsureRepairImpactVfx()`：创建可复用的维修命中加法火花与点光源。
 - `private void ConfigureRepairImpactParticles(ParticleSystem particles)`：配置命中点的拉伸青色能量火花。
-- `private void UpdateRepairImpact(Vector3 origin, Vector3 targetPoint, Color color, float pulse)`：对齐并更新维修命中反馈。
-- `private void SetRepairImpactActive(bool active)`：统一启停命中环和持续粒子，避免状态残留。
+- `private void UpdateRepairImpact(Vector3 targetPoint, Color color, float pulse)`：更新维修命中粒子的 HDR 颜色、发射率和点光强度。
+- `private void SetRepairImpactActive(bool active)`：统一启停命中点光和持续粒子，避免状态残留。
 - `private void EnsureRepairBeamGradient()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
 - `public void ClearTarget()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
 - `private void OnDrawGizmosSelected()`：Unity 生命周期回调：绘制运行时修复范围、避障和目标调试信息。
@@ -626,9 +612,9 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private bool IsCurrentBlockLoad(int loadVersion, string loadSavePath, Transform loadParent)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private void AbortBlockLoadIfCurrent(int loadVersion, Transform loadParent)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private void ClearLoadingBuildTarget()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
-- `private void StartLoadingCameraOrbit(GameObject frameObject, int blockCount)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void StartLoadingCameraOrbit(GameObject frameObject, int blockCount)`：达到方块阈值时记录当前相机姿态并启动临时加载环绕。
 - `private float CalculateLoadingCameraOrbitDegreesPerSecond(int blockCount)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
-- `private void StopLoadingCameraOrbit()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void StopLoadingCameraOrbit()`：停止加载镜头协程并恢复加载前的相机世界位置与旋转。
 - `private CameraController GetMainCameraController()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private float GetCameraOrbitAngle(Vector3 orbitCenter)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private Vector3 CalculateLoadingCameraOrbitCenter(List<BlockData> blocksToLoad, Vector3 fallbackCenter)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
@@ -732,10 +718,11 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 - `public static VisualEffectsManager EnsureInstance()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
 - `public static Material GetSharedParticleMaterial()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public static Material GetSharedGlowParticleMaterial()`：创建并缓存供火花、尾焰与能量命中使用的加法粒子材质。
 - `public static Material GetSharedLineMaterial()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `public static void TryPlayBlockPlaced(Block block)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `public static void TryPlayBlockRemoved(Block block)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
-- `public static void TryPlayBlockExplosion(Block block)`： 触发 Block 爆炸粒子、闪光、环形效果和镜头反馈。
+- `public static void TryPlayBlockExplosion(Block block)`：触发 Block 的 HDR 爆炸粒子、放射光痕、闪光和镜头反馈。
 - `public static void TryPlayRepairPulse(Vector3 origin, Vector3 target, Color color, float width)`：在真实维修 tick 时触发收束线、目标脉冲、火花和小型闪光。
 - `public static void TryAttachDetachedPartSmoke(Rigidbody body, Vector3 worldAnchor, float intensity)`：为爆炸后无驾驶舱的刚体挂接烟雾拖尾。
 - `public static void TryPlayObjectDestroyed(GameObject target)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
@@ -749,14 +736,13 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `public static void TryPlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
 - `private void OnEnable()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
-- `private void Update()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
 - `private void ApplySceneLook()`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
 - `private void PlayBlockPlaced(Block block)`： 触发游玩流程、UI 状态或视觉反馈的更新。
 - `private void PlayBlockRemoved(Block block)`： 触发游玩流程、UI 状态或视觉反馈的更新。
-- `private void PlayBlockExplosion(Block block)`：分阶段播放爆炸火花、烟雾、冲击波、闪光和镜头反馈。
-- `private IEnumerator PlayExplosionAftershock(Vector3 center, float scale, Color emberColor, Color smokeColor)`：延迟播放受控数量的爆炸余震粒子与次级冲击环。
+- `private void PlayBlockExplosion(Block block)`：分阶段播放爆炸火花、火球、放射光痕、烟雾、闪光和镜头反馈。
+- `private IEnumerator PlayExplosionAftershock(Vector3 center, float scale, Color emberColor, Color smokeColor)`：延迟播放受控数量的爆炸余震粒子、次级光痕与闪光。
 - `private void PlayObjectDestroyed(GameObject target)`： 触发游玩流程、UI 状态或视觉反馈的更新。
-- `private void PlayRepairPulse(Vector3 origin, Vector3 target, Color color, float width)`：组合一次维修命中的环、火花、短束流和闪光。
+- `private void PlayRepairPulse(Vector3 origin, Vector3 target, Color color, float width)`：组合一次维修命中的加法火花、放射光痕、短束流和闪光。
 - `private void CreateExplosionShrapnel(Vector3 center, float scale, Color color)`：生成受控数量的放射碎片光痕。
 - `private void PlayBlockMoved(Block block, Vector3 from, Vector3 to)`： 触发游玩流程、UI 状态或视觉反馈的更新。
 - `private void PlayBlockRotated(Block block)`： 触发游玩流程、UI 状态或视觉反馈的更新。
@@ -766,26 +752,24 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private void ClearGhostPreview()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
 - `private void DecorateMeteor(Meteor meteor)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private void PlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`： 触发游玩流程、UI 状态或视觉反馈的更新。
-- `private void UpdateSelectionRing()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
-- `private void UpdateGhostRing()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
-- `private void EnsureSelectionRing()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
-- `private void EnsureGhostRing()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
-- `private static GameObject CreateRingObject(string name, out StylizedRingEffect ringEffect)`： 创建几何、资源、操作记录、UI 项或运行时对象。
-- `private void CreateTransientRing(string name, Vector3 position, Vector3 normal, Color color, float radius, float duration, float width)`： 创建几何、资源、操作记录、UI 项或运行时对象。
 - `private void CreateLineStreak(Vector3 from, Vector3 to, Color color, float duration, float width)`： 创建几何、资源、操作记录、UI 项或运行时对象。
+- `private void CreateRadialStreakBurst(Vector3 center, Vector3 normal, Color color, int count, float length, float duration, float width)`：在球面或指定半球生成受控数量的放射能量光痕。
+- `private void CreateParticleBurst(..., bool additive = true)`：创建一次性粒子爆发，并按用途选择加法发光或普通透明材质。
 - `private void CreateLightFlash(Vector3 position, Color color, float intensity, float range, float duration)`： 创建几何、资源、操作记录、UI 项或运行时对象。
 - `private void ShakeCamera(float amplitude, float duration)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private IEnumerator CameraShakeRoutine(float amplitude, float duration)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private void ClearCameraOffset()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
 - `private static void ConfigureTransparentMaterial(Material material)`：将运行时共享粒子材质设为透明 Alpha Blend 并关闭深度写入，确保软粒子纹理边缘正确显示。
+- `private static void ConfigureAdditiveMaterial(Material material)`：将发光粒子材质设为加法混合，使 HDR 颜色能驱动 Bloom。
 - `private static Bounds GetBounds(GameObject target, Vector3 fallbackCenter, Vector3 fallbackSize)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private static Vector3 GetBlockSize(Block block)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private static Gradient MakeGradient(Color start, Color end)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private static Color WithAlpha(Color color, float alpha)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private static Color Brighten(Color color, float intensity, float whiteBlend = 0f)`：生成保持 Alpha 的 HDR 高亮颜色。
+- `private static Material CreateParticleMaterial(string materialName, bool additive)`：按发光或烟尘用途创建共享运行时粒子材质。
 - `private static Texture2D GetSoftParticleTexture()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private static void SetMaterialColor(Material material, Color color)`： 设置该对象、视觉效果或运行时引用的参数/状态。
 - `private static void SetMaterialTexture(Material material, Texture texture)`： 设置该对象、视觉效果或运行时引用的参数/状态。
-- `public void Initialize(StylizedRingEffect effect, Color lineColor, float radius, float lifetime, float lineWidth)`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
 - `public void Initialize(StylizedBeamEffect effect, Color lineColor, float lifetime)`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
 - `public void Initialize(Light light, float lifetime, float intensity)`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
 - `private void OnDestroy()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
@@ -877,13 +861,14 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private void ConfigureOuterPlume(ParticleSystem particles)`：配置受噪声扰动、渐变消散的外层喷流。
 - `private void ConfigureHotCore(ParticleSystem particles)`：配置高速白蓝高温核心。
 - `private void ConfigureSparks(ParticleSystem particles)`：配置高推力时出现的稀疏拉伸火花。
-- `private static void ConfigureRenderer(ParticleSystem particles, ParticleSystemRenderMode renderMode, float lengthScale, float velocityScale, int sortingOrder)`：统一配置各尾焰层渲染方式与排序。
+- `private static void ConfigureRenderer(ParticleSystem particles, ParticleSystemRenderMode renderMode, float lengthScale, float velocityScale, float sortingFudge)`：统一配置各尾焰层的加法材质、拉伸方式与排序。
 - `private Gradient CreatePlumeGradient()`：创建由热端到冷端的尾焰颜色与透明度渐变。
 - `private void UpdateParticleModules(float ratio)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private void UpdateGlow(float ratio)`：按推力比例和 Perlin 噪声驱动点光源亮度与范围。
 - `private void SetEmissionState(bool active)`：统一启停三层尾焰粒子。
 - `private static void SetParticleState(ParticleSystem particles, bool active)`：平滑启动或停止单层粒子发射。
 - `private static Vector3 GetStableUp(Vector3 direction)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private static Color ToHdr(Color color, float intensity)`：将尾焰颜色转换为保留 Alpha 的 HDR 颜色。
 
 #### `Assets/Scripts/Thrusters/UniversalThruster.cs`
 
@@ -1001,8 +986,12 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 2026-09-20
 
-- **强化运行时特效张力**：推进器升级为外层喷流、高温核心、拉伸火花和闪烁点光三层尾焰；RepairBot 增加双层速度驱动尾迹、飞行微粒，以及带命中环、火花、收束脉冲和真实维修 tick 闪光的维修射线反馈。
-- **强化摧毁与断裂反馈**：Block 爆炸增加白热闪光、火球、正交冲击环、放射碎片光痕和延迟滚动烟尘；普通物品摧毁补充瞬时冲击环与烟尘。爆炸后无驾驶舱的断裂刚体会自动挂接速度/旋转驱动的烟雾和余烬拖尾，最长 6 秒且全局最多 24 条。
+- **修复 LoadSave 后相机距离过远**：`BuildManager` 只在实际启动加载环绕时捕获相机世界位置和旋转，并在加载完成、取消或切换存档时统一停止镜头协程并恢复该姿态；大型蓝图的动态取景距离不再残留到建造视角。
+- **移除所有平面环形特效**：删除 `StylizedRingEffect` 及其 `.meta`，清理选中、Ghost、放置、旋转、拆除、普通摧毁、爆炸、陨石冲击和 RepairBot 维修命中的全部环形创建与生命周期。选中/Ghost 继续由原有材质反馈负责，其余事件改用粒子爆发、放射能量光痕、短束流和点光。
+- **提高特效亮度与辨识度**：新增共享加法粒子材质，火花、爆炸火球、维修能量和推进器尾焰使用 HDR 色值并驱动 Bloom；烟尘继续使用普通 Alpha Blend。同步提高推进器三层粒子发射量、点光强度/范围，以及放置、拆除、爆炸、维修和陨石冲击的粒子数量、速度与瞬时光照。
+- **验证范围**：Unity 6000.3.11f1 Editor 重编译通过。主场景 Play Mode 真实加载 `tftftf`（159 个 Block），从自定义相机姿态 `(3.25, 4.5, -12.75)` / `(12, 27, 0)` 出发，完成后位置和旋转误差均为 `0`；隔离触发选中、放置、旋转、爆炸、维修脉冲和陨石冲击后，运行时禁用环形对象计数为 `0`，截图确认无平面环，Console 为 `0 error / 0 warning`。仍需在大量同时发生的爆炸、维修和推进器尾焰下用目标硬件验证透明 Overdraw 与 Bloom 峰值。
+- **强化运行时特效张力（历史实现，环形层已由本日后续修改移除）**：推进器升级为外层喷流、高温核心、拉伸火花和闪烁点光三层尾焰；RepairBot 增加双层速度驱动尾迹、飞行微粒，以及维修命中反馈和真实维修 tick 闪光。
+- **强化摧毁与断裂反馈（历史实现，冲击环已由本日后续修改替换）**：Block 爆炸增加白热闪光、火球、放射碎片光痕和延迟滚动烟尘；普通物品摧毁补充火花与烟尘。爆炸后无驾驶舱的断裂刚体会自动挂接速度/旋转驱动的烟雾和余烬拖尾，最长 6 秒且全局最多 24 条。
 - **验证范围**：代码已在 Unity 6000.3.11f1 Editor 中成功导入并通过 C# 编译；`dotnet build HY-Sandbox.sln --no-restore --nologo` 通过（0 错误，4 个既有程序集版本冲突/Profiler 过时 API 警告）。已在主场景 Play Mode 使用不保存的隔离探针实际触发三层尾焰、双层维修束/脉冲、分层爆炸、RepairBot 双 Trail 和断裂烟迹；截图确认软粒子透明边缘、束流方向与叠加关系正常，并据此修复 URP 粒子材质不透明及烟迹速度曲线模式不一致。最终烟迹回归 Console 为 0 error/0 warning，退出后 `Main.unity` 保持 `dirty=False`；大型蓝图下多 RepairBot/连续爆炸的透明 Overdraw 与峰值性能仍未验证。
 - **炮塔拆分为水平/垂直轴**：`Turret.prefab` 的视觉层级改为固定底座、`Horizontal` 回转平台、嵌套 `Vertical` 俯仰机匣和 `Muzzle` 发射点；模型重做为带轴承环、双侧支架、配重、双联炮管、枪口制退器和青色瞄准镜的方正卡通工业炮塔。生成器会保存并校验全部轴引用，重复重建不会再把双轴结构覆盖成单层模型。
 - **双轴瞄准代码**：`TurretWeapon` 将旧 `turnSpeed` 序列化值迁移为 `horizontalTurnSpeed`，新增独立 `verticalTurnSpeed` 和 -15 至 65 度俯仰限制；水平轴依据安装面的局部 Up 回转，垂直轴只修改局部 X 角，枪口位置和方向在本帧转动后重新计算。
@@ -1104,7 +1093,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - **修复爆炸物理作用力未命中周围刚体**：原实现仅对同一 `ownerUnitId` 的编组 Rigidbody 调用 `AddExplosionForce`，而重新分组后的 Rigidbody 中心可能位于爆炸半径外，且外部附近刚体完全未被收集。现在通过 `Physics.OverlapSphere` 收集范围内刚体，并结合编组内实际子方块位置；按最近 Collider 受击点计算距离衰减后用 `AddForceAtPosition` 施加冲量。
 - **验证**：`dotnet build HY-Sandbox.sln --no-restore` 与 `git diff --check` 已通过；尚未在 Unity Play Mode 验证不同编组、静态刚体和边界距离下的实际位移表现。
 
-- **增强驾驶舱爆炸表现与持续时间**：延长爆炸火花、烟雾、主冲击环和闪光的生命周期，增加内圈冲击波，并在 0.22 秒后播放受控数量的余震火花与次级冲击环，使爆炸由单次瞬时效果变为分阶段表现。
+- **增强驾驶舱爆炸表现与持续时间（历史实现，平面冲击环已于 2026-09-20 移除）**：延长爆炸火花、烟雾和闪光的生命周期，并在 0.22 秒后播放受控数量的余震火花，使爆炸由单次瞬时效果变为分阶段表现。
 - **验证**：已完成代码检查；尚未在 Unity 编辑器或 Play Mode 验证视觉时序、粒子观感与实际帧率。
 
 - **建立 Unity C# 代码规范并完成全局脚本标准化**：新增 `Assets/Scripts/AGENTS.md`，补充根 `AGENTS.md` 的规范入口；为 20 个项目脚本补齐显式私有访问修饰符，统一本次触及脚本的 CRLF 换行，并在连接、建造加载、游玩分组、存档复制、摧毁爆炸、AI 输入、推进器视觉和输入管理关键路径增加职责/顺序/性能注释。
@@ -1140,7 +1129,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 2026-08-22
 
-- **新增驾驶舱摧毁爆炸试用**：`DestroyManager.ExplodeBlock` 会断开并脱离被摧毁的驾驶舱，调用 `PlayManager.RefreshGroup` 重新生成模块组，对各组 Rigidbody 施加径向冲量；`VisualEffectsManager` 增加火花、烟雾、环形闪光和镜头震动。当前不造成伤害。
+- **新增驾驶舱摧毁爆炸试用（历史实现，平面环形闪光已于 2026-09-20 移除）**：`DestroyManager.ExplodeBlock` 会断开并脱离被摧毁的驾驶舱，调用 `PlayManager.RefreshGroup` 重新生成模块组，对各组 Rigidbody 施加径向冲量；`VisualEffectsManager` 增加火花、烟雾、瞬时点光和镜头震动。当前不造成伤害。
 - **验证**：代码索引、`git diff --check` 和 `dotnet build HY-Sandbox.sln --no-restore` 已通过（0 错误；仅有既存 Profiler API 过时警告）；尚未在 Unity 编辑器或 Play Mode 验证驾驶舱摧毁时序、分组和物理表现。
 
 ### 2026-08-22

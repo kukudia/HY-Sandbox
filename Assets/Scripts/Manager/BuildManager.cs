@@ -88,6 +88,9 @@ public class BuildManager : MonoBehaviour
     private CameraController loadingCameraController;
     private float loadingCameraOrbitAngle;
     private Vector3 loadingCameraOrbitCenter;
+    private Vector3 loadingCameraStartPosition;
+    private Quaternion loadingCameraStartRotation;
+    private bool hasLoadingCameraStartPose;
 
     public bool IsLoadingBlocks { get; private set; }
 
@@ -1318,6 +1321,12 @@ public class BuildManager : MonoBehaviour
 
         if (cameraController == null) return;
 
+        // The orbit is a temporary loading presentation. Preserve the player's exact view so
+        // framing a large blueprint cannot leave the build camera stranded far from the model.
+        loadingCameraStartPosition = cameraController.transform.position;
+        loadingCameraStartRotation = cameraController.transform.rotation;
+        hasLoadingCameraStartPose = true;
+
         float orbitDegreesPerSecond = CalculateLoadingCameraOrbitDegreesPerSecond(blockCount);
         cameraController.StartContinuousOrbitCameraAroundBlock(
             frameObject,
@@ -1343,9 +1352,19 @@ public class BuildManager : MonoBehaviour
             ? loadingCameraController
             : GetMainCameraController();
 
-        if (cameraController == null) return;
+        if (cameraController == null)
+        {
+            hasLoadingCameraStartPose = false;
+            return;
+        }
 
         cameraController.StopCameraMotion();
+        if (hasLoadingCameraStartPose)
+        {
+            cameraController.transform.SetPositionAndRotation(loadingCameraStartPosition, loadingCameraStartRotation);
+        }
+
+        hasLoadingCameraStartPose = false;
     }
 
     private CameraController GetMainCameraController()
