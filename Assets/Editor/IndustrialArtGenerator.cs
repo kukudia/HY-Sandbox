@@ -55,12 +55,7 @@ public static class IndustrialArtGenerator
         ConfigureRenderStyle();
         RebuildConnectorPrefab();
 
-        string[] prefabPaths = AssetDatabase.FindAssets("t:Prefab", new[] { BlockRoot })
-            .Select(AssetDatabase.GUIDToAssetPath)
-            .Where(path => path.EndsWith(".prefab", StringComparison.OrdinalIgnoreCase))
-            .OrderBy(path => Path.GetFileNameWithoutExtension(path) == "Bot" ? 0 : 1)
-            .ThenBy(path => path, StringComparer.Ordinal)
-            .ToArray();
+        string[] prefabPaths = GetBlockPrefabPaths();
 
         int updated = 0;
         try
@@ -85,6 +80,37 @@ public static class IndustrialArtGenerator
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
         Debug.Log($"Industrial art rebuilt: {updated} prefabs, shared materials/meshes, render profile and preview scene.");
+    }
+
+    [MenuItem("Tools/HY Sandbox/Rebuild Turret Art")]
+    public static void RebuildTurret()
+    {
+        EnsureFolders();
+        CreateSharedMeshes();
+        CreateSharedMaterials();
+
+        string turretPath = BlockRoot + "/Turret.prefab";
+        if (!RebuildPrefab(turretPath))
+        {
+            throw new InvalidOperationException($"Unable to rebuild turret prefab at {turretPath}.");
+        }
+
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        CreatePreviewScene(GetBlockPrefabPaths());
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Debug.Log("Turret art rebuilt with Horizontal/Vertical/Muzzle rig and refreshed preview scene.");
+    }
+
+    private static string[] GetBlockPrefabPaths()
+    {
+        return AssetDatabase.FindAssets("t:Prefab", new[] { BlockRoot })
+            .Select(AssetDatabase.GUIDToAssetPath)
+            .Where(path => path.EndsWith(".prefab", StringComparison.OrdinalIgnoreCase))
+            .OrderBy(path => Path.GetFileNameWithoutExtension(path) == "Bot" ? 0 : 1)
+            .ThenBy(path => path, StringComparer.Ordinal)
+            .ToArray();
     }
 
     private static void EnsureFolders()
@@ -613,6 +639,10 @@ public static class IndustrialArtGenerator
         var glowRenderers = new List<Renderer>();
         List<Renderer> lod0Renderers = BuildDetailedModel(name, block, lod0, spinTargets, glowRenderers);
         ApplyCategoryPalette(name, lod0);
+        if (name == "Turret")
+        {
+            ConfigureTurretRig(model, lod0);
+        }
 
         if (useLod)
         {
@@ -716,7 +746,7 @@ public static class IndustrialArtGenerator
                 BuildFlightController(parent, renderers, spinTargets, glowRenderers);
                 break;
             case "Turret":
-                BuildTurret(parent, renderers, spinTargets, glowRenderers);
+                BuildTurret(parent, renderers, glowRenderers);
                 break;
             case "RepairBotContianer":
                 BuildRepairBay(parent, renderers, glowRenderers);
@@ -1023,28 +1053,79 @@ public static class IndustrialArtGenerator
     private static void BuildTurret(
         Transform parent,
         ICollection<Renderer> renderers,
-        ICollection<Transform> spinTargets,
         ICollection<Renderer> glowRenderers)
     {
-        renderers.Add(AddPart(parent, "Turret Base", _cylinder,
-            new Vector3(0f, -0.34f, 0f), new Vector3(0.78f, 0.16f, 0.78f), Quaternion.identity, _graphite));
-        renderers.Add(AddPart(parent, "Turret Yoke", _box,
-            new Vector3(0f, -0.05f, 0f), new Vector3(0.64f, 0.45f, 0.6f), Quaternion.identity, _armor));
-        renderers.Add(AddPart(parent, "Barrel", _cylinder,
-            new Vector3(-0.16f, 0.13f, 0.34f), new Vector3(0.1f, 0.42f, 0.1f), Quaternion.Euler(90f, 0f, 0f), _edge));
-        renderers.Add(AddPart(parent, "Barrel", _cylinder,
-            new Vector3(0.16f, 0.13f, 0.34f), new Vector3(0.1f, 0.42f, 0.1f), Quaternion.Euler(90f, 0f, 0f), _edge));
-        Renderer muzzle = AddPart(parent, "Muzzle Energy", _roundedCube,
-            new Vector3(0f, 0.13f, 0.76f), new Vector3(0.42f, 0.08f, 0.08f), Quaternion.identity, _red, false);
-        renderers.Add(muzzle);
-        glowRenderers.Add(muzzle);
+        // The fixed pedestal never follows targeting. Horizontal owns yaw; its nested Vertical owns pitch.
+        renderers.Add(AddPart(parent, "Fixed Pedestal", _box,
+            new Vector3(0f, -0.4f, 0f), new Vector3(0.9f, 0.14f, 0.9f), Quaternion.identity, _graphite));
+        renderers.Add(AddPart(parent, "Pedestal Bearing", _cylinder,
+            new Vector3(0f, -0.29f, 0f), new Vector3(0.68f, 0.08f, 0.68f), Quaternion.identity, _edge));
+        Renderer bearingIndicator = AddPart(parent, "Bearing Indicator", _torus,
+            new Vector3(0f, -0.2f, 0f), Vector3.one * 0.7f, Quaternion.identity, _cyan, false);
+        renderers.Add(bearingIndicator);
+        glowRenderers.Add(bearingIndicator);
 
-        Transform bearing = CreateGroup(parent, "Turret Bearing");
-        spinTargets.Add(bearing);
-        Renderer bearingRing = AddPart(bearing, "Bearing Ring", _torus,
-            new Vector3(0f, -0.23f, 0f), Vector3.one * 0.68f, Quaternion.identity, _cyan, false);
-        renderers.Add(bearingRing);
-        glowRenderers.Add(bearingRing);
+        Transform horizontal = CreateGroup(parent, "Horizontal");
+        horizontal.localPosition = new Vector3(0f, -0.16f, 0f);
+        renderers.Add(AddPart(horizontal, "Rotating Deck", _box,
+            new Vector3(0f, 0.04f, 0f), new Vector3(0.72f, 0.16f, 0.68f), Quaternion.identity, _graphite));
+        renderers.Add(AddPart(horizontal, "Rear Counterweight", _box,
+            new Vector3(0f, 0.22f, -0.2f), new Vector3(0.56f, 0.34f, 0.3f), Quaternion.identity, _armor));
+        for (int side = -1; side <= 1; side += 2)
+        {
+            renderers.Add(AddPart(horizontal, "Yoke Support", _box,
+                new Vector3(side * 0.31f, 0.27f, 0.04f), new Vector3(0.12f, 0.48f, 0.44f), Quaternion.identity, _graphite));
+            renderers.Add(AddPart(horizontal, "Trunnion", _cylinder,
+                new Vector3(side * 0.37f, 0.34f, 0.04f), new Vector3(0.12f, 0.08f, 0.12f),
+                Quaternion.Euler(0f, 0f, 90f), _edge));
+        }
+
+        Transform vertical = CreateGroup(horizontal, "Vertical");
+        vertical.localPosition = new Vector3(0f, 0.34f, 0.04f);
+        renderers.Add(AddPart(vertical, "Weapon Receiver", _box,
+            new Vector3(0f, 0f, 0.08f), new Vector3(0.46f, 0.3f, 0.56f), Quaternion.identity, _graphite));
+        renderers.Add(AddPart(vertical, "Upper Armor", _wedge,
+            new Vector3(0f, 0.17f, 0.08f), new Vector3(0.4f, 0.14f, 0.48f), Quaternion.identity, _armor));
+        Renderer optic = AddPart(vertical, "Targeting Optic", _roundedCube,
+            new Vector3(0f, 0.19f, 0.31f), new Vector3(0.18f, 0.09f, 0.06f), Quaternion.identity, _cyan, false);
+        renderers.Add(optic);
+        glowRenderers.Add(optic);
+
+        for (int side = -1; side <= 1; side += 2)
+        {
+            renderers.Add(AddPart(vertical, "Barrel Shroud", _box,
+                new Vector3(side * 0.15f, 0f, 0.39f), new Vector3(0.13f, 0.16f, 0.48f), Quaternion.identity, _weaponPaint));
+            renderers.Add(AddPart(vertical, "Barrel", _cylinder,
+                new Vector3(side * 0.15f, 0f, 0.58f), new Vector3(0.065f, 0.36f, 0.065f),
+                Quaternion.Euler(90f, 0f, 0f), _edge));
+            renderers.Add(AddPart(vertical, "Muzzle Brake", _box,
+                new Vector3(side * 0.15f, 0f, 0.91f), new Vector3(0.16f, 0.13f, 0.12f), Quaternion.identity, _edge));
+        }
+
+        Transform muzzle = CreateGroup(vertical, "Muzzle");
+        muzzle.localPosition = new Vector3(0f, 0f, 0.99f);
+        Renderer muzzleEnergy = AddPart(muzzle, "Muzzle Energy", _roundedCube,
+            new Vector3(0f, 0f, -0.04f), new Vector3(0.42f, 0.06f, 0.04f), Quaternion.identity, _red, false);
+        renderers.Add(muzzleEnergy);
+        glowRenderers.Add(muzzleEnergy);
+    }
+
+    private static void ConfigureTurretRig(Transform model, Transform detailedRoot)
+    {
+        TurretWeapon weapon = model.GetComponentInParent<TurretWeapon>();
+        Transform horizontal = detailedRoot.Find("Horizontal");
+        Transform vertical = horizontal != null ? horizontal.Find("Vertical") : null;
+        Transform muzzle = vertical != null ? vertical.Find("Muzzle") : null;
+        if (weapon == null || horizontal == null || vertical == null || muzzle == null)
+        {
+            throw new InvalidOperationException("Generated turret requires TurretWeapon and Horizontal/Vertical/Muzzle transforms.");
+        }
+
+        weapon.horizontalAxis = horizontal;
+        weapon.verticalAxis = vertical;
+        weapon.aimPivot = vertical;
+        weapon.muzzle = muzzle;
+        EditorUtility.SetDirty(weapon);
     }
 
     private static void BuildRepairBay(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)

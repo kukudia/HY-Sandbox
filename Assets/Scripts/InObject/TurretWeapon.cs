@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [RequireComponent (typeof(Power))]
 public class TurretWeapon : MonoBehaviour
@@ -13,7 +14,11 @@ public class TurretWeapon : MonoBehaviour
     public float range = 45f;
     public float damage = 12f;
     public float fireInterval = 0.45f;
-    public float turnSpeed = 240f;
+    [FormerlySerializedAs("turnSpeed")]
+    public float horizontalTurnSpeed = 240f;
+    public float verticalTurnSpeed = 180f;
+    [Range(-89f, 0f)] public float minElevation = -15f;
+    [Range(0f, 89f)] public float maxElevation = 65f;
     public float maxFireAngle = 8f;
     public float targetRefreshInterval = 0.2f;
     public LayerMask hitLayers = ~0;
@@ -32,20 +37,47 @@ public class TurretWeapon : MonoBehaviour
     private void Awake()
     {
         power = GetComponent<Power>();
+        ResolveAimingRig();
+    }
+
+    private void OnValidate()
+    {
+        horizontalTurnSpeed = Mathf.Max(0f, horizontalTurnSpeed);
+        verticalTurnSpeed = Mathf.Max(0f, verticalTurnSpeed);
+        minElevation = Mathf.Clamp(minElevation, -89f, 0f);
+        maxElevation = Mathf.Clamp(maxElevation, 0f, 89f);
+    }
+
+    private void ResolveAimingRig()
+    {
         Transform model = transform.Find("Model");
+        Transform generatedModel = model != null ? model.Find("IndustrialVisual/LOD0") : null;
         if (aimPivot == null)
         {
-            aimPivot = model != null ? model : transform;
+            aimPivot = generatedModel != null ? generatedModel : model != null ? model : transform;
         }
 
         if (horizontalAxis == null)
         {
-            horizontalAxis = aimPivot != null ? aimPivot : model != null ? model : transform;
+            horizontalAxis = generatedModel != null ? generatedModel.Find("Horizontal") : null;
+            if (horizontalAxis == null)
+            {
+                horizontalAxis = aimPivot != null ? aimPivot : model != null ? model : transform;
+            }
         }
 
         if (verticalAxis == null)
         {
-            verticalAxis = horizontalAxis;
+            verticalAxis = horizontalAxis != null ? horizontalAxis.Find("Vertical") : null;
+            if (verticalAxis == null)
+            {
+                verticalAxis = horizontalAxis;
+            }
+        }
+
+        if (muzzle == null && verticalAxis != null && verticalAxis != horizontalAxis)
+        {
+            muzzle = verticalAxis.Find("Muzzle");
         }
     }
 
@@ -231,14 +263,14 @@ public class TurretWeapon : MonoBehaviour
 
     private void AimAndFire(Durability aimTarget)
     {
-        Vector3 origin = GetMuzzlePosition();
         Vector3 aimPoint = aimTarget.transform.position;
-        Vector3 direction = aimPoint - origin;
+        Vector3 direction = aimPoint - GetMuzzlePosition();
         if (direction.sqrMagnitude < 0.01f) return;
 
-        Vector3 aimDirection = direction.normalized;
-        AimAt(aimDirection);
+        AimAt(direction.normalized);
 
+        Vector3 origin = GetMuzzlePosition();
+        Vector3 aimDirection = (aimPoint - origin).normalized;
         Vector3 fireDirection = GetAimForward();
         float angle = Vector3.Angle(fireDirection, aimDirection);
         if (angle <= maxFireAngle && Time.time >= nextFireTime)
@@ -252,11 +284,13 @@ public class TurretWeapon : MonoBehaviour
     {
         if (horizontalAxis == null) return;
 
-        float maxDegreesDelta = turnSpeed * Time.fixedDeltaTime;
         if (verticalAxis == null || verticalAxis == horizontalAxis)
         {
             Quaternion targetRotation = Quaternion.LookRotation(worldDirection, Vector3.up);
-            horizontalAxis.rotation = Quaternion.RotateTowards(horizontalAxis.rotation, targetRotation, maxDegreesDelta);
+            horizontalAxis.rotation = Quaternion.RotateTowards(
+                horizontalAxis.rotation,
+                targetRotation,
+                horizontalTurnSpeed * Time.fixedDeltaTime);
             return;
         }
 
@@ -265,15 +299,25 @@ public class TurretWeapon : MonoBehaviour
         if (flatDirection.sqrMagnitude > 0.001f)
         {
             Quaternion yawRotation = Quaternion.LookRotation(flatDirection.normalized, horizontalUp);
-            horizontalAxis.rotation = Quaternion.RotateTowards(horizontalAxis.rotation, yawRotation, maxDegreesDelta);
+            horizontalAxis.rotation = Quaternion.RotateTowards(
+                horizontalAxis.rotation,
+                yawRotation,
+                horizontalTurnSpeed * Time.fixedDeltaTime);
         }
 
         Vector3 localDirection = horizontalAxis.InverseTransformDirection(worldDirection);
-        if (localDirection.z <= 0.001f) return;
+        float planarMagnitude = new Vector2(localDirection.x, localDirection.z).magnitude;
+        float targetElevation = Mathf.Atan2(localDirection.y, planarMagnitude) * Mathf.Rad2Deg;
+        targetElevation = Mathf.Clamp(targetElevation, minElevation, maxElevation);
 
-        Vector3 pitchDirection = new Vector3(0f, localDirection.y, localDirection.z).normalized;
-        Quaternion pitchRotation = Quaternion.LookRotation(pitchDirection, Vector3.up);
-        verticalAxis.localRotation = Quaternion.RotateTowards(verticalAxis.localRotation, pitchRotation, maxDegreesDelta);
+        // Unity's positive local X rotation points the forward axis downward, so elevation is negated.
+        float currentPitch = Mathf.DeltaAngle(0f, verticalAxis.localEulerAngles.x);
+        float targetPitch = -targetElevation;
+        float nextPitch = Mathf.MoveTowardsAngle(
+            currentPitch,
+            targetPitch,
+            verticalTurnSpeed * Time.fixedDeltaTime);
+        verticalAxis.localRotation = Quaternion.Euler(nextPitch, 0f, 0f);
     }
 
     private void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)

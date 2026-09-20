@@ -85,6 +85,8 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 当前所有模块暂时不创建或保留 `LODGroup`，仅使用一套可见视觉层，避免卡通材质调校时发生远近颜色/轮廓跳变；后续重新启用 LOD 前需在目标镜头下重新测量切换距离。推进器保留 `Model.forward` / 方块 `transform.up` 的推力轴语义，并使用机匣、双侧导轨、同轴喷口环、热核心与燃烧锥组成新轮廓。Connector 资源位于 `Assets/Resources/Blocks/Connector.prefab`，继续沿用既有 GUID 与 `connectorPrefab` 引用，使用轴对称连接接头和信号环动画；自发光脉冲使用 `MaterialPropertyBlock`，不实例化材质。共享材质开启 GPU Instancing；PC URP 使用 2x MSAA，并在主场景 Volume Profile 中启用 ACES、Bloom、轻量对比度和暗角。建造/游玩选中状态会暂存并替换 `Model` 下所有 Renderer 的材质，取消选择后逐项恢复，适配多 Renderer 模型。
 
+炮塔按 1 米模块、Y 轴为回转轴、+Z 为武器前向制作，Prefab 视觉层级固定为 `Fixed Pedestal` 与 `Horizontal/Vertical/Muzzle`：固定底座不参与瞄准，`Horizontal` 带动回转平台、配重和支架绕局部 Y 轴旋转，嵌套的 `Vertical` 带动双联炮管、机匣、瞄准镜和枪口绕局部 X 轴俯仰。默认水平/垂直转速分别为 240/180 度每秒，俯仰范围为向下 15 度至向上 65 度；`IndustrialArtGenerator` 每次重建都会重新绑定三项 Transform 引用，并在任一节点缺失时中止生成，避免退化为整座模型共同旋转。`Tools/HY Sandbox/Rebuild Turret Art` 可单独重建炮塔并刷新预览，不触碰其他模块 Prefab。
+
 ## 4. 已确认实现的功能
 
 - 主场景和 URP 项目配置可被 Unity 项目识别。
@@ -121,6 +123,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 | P2 | UI 同时存在 uGUI 与 IMGUI | 将诊断面板迁移到统一 UI 系统，避免分辨率、输入焦点和生命周期不一致。 |
 | P2 | 历史日志包含旧版本功能描述 | 每次发布标记版本和验证日期，避免把日志中的“计划/旧实现”当作当前契约。 |
 | P2 | 新工业模型尚未在大型蓝图中完成 GPU/CPU 压力验证 | 使用 100、500、1000 模块蓝图分别记录 Batches、SetPass、三角面和 `IndustrialPartMotion.Update`；重新启用 LOD 后再补充切换距离验证。 |
+| P2 | 双轴炮塔尚未完成主场景战斗回归 | 在不同安装朝向、移动载具和高低目标下验证索敌、遮挡、俯仰边界、光束起点、命中判定与断电恢复。 |
 | P3 | 仓库仍保留未被新模块视觉引用的 `New Material` 等历史资源 | 确认场景和旧 Prefab 无引用后再分批清理，避免误删用户资源。 |
 | P3 | 缺少正式构建产物验收记录 | 记录目标平台、构建版本、场景、输入设备、帧率和已知缺陷。 |
 
@@ -200,6 +203,8 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 #### `Assets/Editor/IndustrialArtGenerator.cs`
 
 - `public static void RebuildAll()`：生成共享工业风格 Mesh、材质、渲染配置、全部模块视觉层和预览场景。
+- `public static void RebuildTurret()`：只重建炮塔双轴模型并刷新预览场景，避免改炮塔时重写其他模块 Prefab。
+- `private static string[] GetBlockPrefabPaths()`：按稳定顺序返回预览场景和全量重建使用的模块 Prefab 路径。
 - `private static void RebuildConnectorPrefab()`：在保留 Connector Prefab 根对象和 GUID 的前提下重建轴对称工业连接接头及信号环动画。
 - `private static bool RebuildPrefab(string prefabPath)`：在 Prefab 隔离阶段替换占位视觉并保持根组件、碰撞体、连接点和嵌套模块。
 - `private static void ConfigureRenderStyle()`：配置 PC URP 的 MSAA、阴影距离和 Volume Profile 的 ACES/Bloom/色彩参数。
@@ -503,6 +508,8 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 #### `Assets/Scripts/InObject/TurretWeapon.cs`
 
 - `private void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `private void OnValidate()`：约束水平/垂直转速与俯仰角范围，防止 Inspector 输入无效配置。
+- `private void ResolveAimingRig()`：优先解析生成的 `Horizontal/Vertical/Muzzle` 层级，并为旧 Prefab 保留单轴回退。
 - `private void Start()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
 - `private void FixedUpdate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
 - `private UnitFaction GetEffectiveTargetFaction()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
@@ -955,6 +962,12 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - **尚未验证**：Unity 编辑器导入、Inspector 序列化、Play Mode 交互、运行时日志和性能表现。
 
 ## 10. 变更日志
+
+### 2026-09-20
+
+- **炮塔拆分为水平/垂直轴**：`Turret.prefab` 的视觉层级改为固定底座、`Horizontal` 回转平台、嵌套 `Vertical` 俯仰机匣和 `Muzzle` 发射点；模型重做为带轴承环、双侧支架、配重、双联炮管、枪口制退器和青色瞄准镜的方正卡通工业炮塔。生成器会保存并校验全部轴引用，重复重建不会再把双轴结构覆盖成单层模型。
+- **双轴瞄准代码**：`TurretWeapon` 将旧 `turnSpeed` 序列化值迁移为 `horizontalTurnSpeed`，新增独立 `verticalTurnSpeed` 和 -15 至 65 度俯仰限制；水平轴依据安装面的局部 Up 回转，垂直轴只修改局部 X 角，枪口位置和方向在本帧转动后重新计算。
+- **验证范围**：`dotnet build HY-Sandbox.sln --no-restore --nologo` 通过（0 错误，仅既有程序集版本冲突与 Profiler 过时 API 警告）；Unity 6000.3.11f1 batch Editor 先完成全量生成验证，再通过炮塔专用入口重建 `Turret.prefab` 与预览场景。连接 Editor 确认脚本编译成功、Console 0 error，并完成近景视觉检查；行为探针确认引用为 `Horizontal/Vertical/Muzzle`，上仰/下俯分别钳制到 65/15 度。尚未在主场景 Play Mode 验证自动索敌、开火和移动载具上的实际表现。
 
 ### 2026-09-19
 
