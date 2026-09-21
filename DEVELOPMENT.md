@@ -991,6 +991,9 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 2026-09-21
 
+- **迁移 CUBE Spaceships Pack 材质到 URP**：通过已连接的 Unity 6000.3.11f1 Editor 将 `Assets/CUBE - Spaceships Pack 01/Materials` 下 16 个材质从内置管线 Shader 切换到 URP；`Spaceship colorA-L` 和 `Demo Ground` 使用 `Universal Render Pipeline/Lit`，船体材质重新绑定对应 `Spaceship color*.psd` BaseMap 与 `Spaceship glow*.psd` EmissionMap，`Demo Ground` 保持原深灰色；`FX Blue`、`FX Exhaust` 和 `FX Smoke` 使用 `Universal Render Pipeline/Particles/Unlit`，分别保留加法蓝色/喷焰和透明烟雾语义。Unity 同步补全 `ProjectSettings/URPProjectSettings.asset` 的 URP 默认资源路径字段。
+- **验证范围**：已通过 Unity Editor `AssetDatabase` 读取确认 16 个目标材质的 Shader、贴图绑定、渲染队列和关键颜色；`FX Exhaust`/`FX Smoke` 位于透明队列并绑定原粒子贴图，12 个船体材质均启用对应发光贴图。Console 当前仍有打开素材包旧 Demo Scene 时产生的既存 `GUI Layer` 缺失错误和 2 条相关警告；本次未进入 Play Mode，也未在场景中逐一视觉检查所有飞船 Prefab。
+
 - **重新修复 LoadSave 相机取景**：移除“加载结束后恢复旧相机姿态”的错误方案；`BuildManager` 在实例化前从完整 `BlockData` 计算含旋转尺寸的固定逻辑包围盒，`CameraController` 按当前环绕方向逐角点求满足水平/垂直视锥的最小距离，不再使用逐帧增长的 Renderer 包围盒或包围球半径。加载完成后镜头停留在以新构造体为中心的正确观察位置。
 - **验证范围**：Unity 6000.3.11f1 Editor 重编译通过；主场景 Play Mode 真实加载 `tftftf`（159 个 Block）和 `SpaceShip`（265 个 Block），最终相机到逻辑 Bounds 中心的距离分别为 `19.33`、`31.34`，均低于旧包围球算法的 `23.37`、`35.41`。两组 Bounds 八角点全部位于视口内，`tftftf` 从自定义姿态开始后没有恢复旧位置；Game View 截图确认 `SpaceShip` 完整可见且构图围绕模型中心。Console 为 0 error / 0 warning；`dotnet build HY-Sandbox.sln --no-restore --nologo` 通过（0 错误，4 个既有警告）。
 
