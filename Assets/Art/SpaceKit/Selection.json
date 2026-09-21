@@ -1,0 +1,694 @@
+{
+  "entries": [
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Cockpit_01.prefab",
+      "category": "Modules/Cockpits",
+      "purpose": "驾驶舱外观；保留现有 Cockpit 的玩法根节点",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Cockpits/Polygon/SM_Veh_Part_Cockpit_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Cockpit_02.prefab",
+      "category": "Modules/Cockpits",
+      "purpose": "驾驶舱外观；保留现有 Cockpit 的玩法根节点",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Cockpits/Polygon/SM_Veh_Part_Cockpit_02.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Cockpit_03.prefab",
+      "category": "Modules/Cockpits",
+      "purpose": "驾驶舱外观；保留现有 Cockpit 的玩法根节点",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Cockpits/Polygon/SM_Veh_Part_Cockpit_03.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Cockpit_05.prefab",
+      "category": "Modules/Cockpits",
+      "purpose": "驾驶舱外观；保留现有 Cockpit 的玩法根节点",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Cockpits/Polygon/SM_Veh_Part_Cockpit_05.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_POV_Cockpit_01.prefab",
+      "category": "Modules/Cockpits",
+      "purpose": "驾驶舱外观；保留现有 Cockpit 的玩法根节点",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Cockpits/Polygon/SM_Veh_POV_Cockpit_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Body_01.prefab",
+      "category": "Modules/Hulls",
+      "purpose": "机身、装甲和大型功能模块外壳",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Hulls/Polygon/SM_Veh_Part_Body_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Body_02.prefab",
+      "category": "Modules/Hulls",
+      "purpose": "机身、装甲和大型功能模块外壳",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Hulls/Polygon/SM_Veh_Part_Body_02.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Body_03.prefab",
+      "category": "Modules/Hulls",
+      "purpose": "机身、装甲和大型功能模块外壳",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Hulls/Polygon/SM_Veh_Part_Body_03.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Body_04.prefab",
+      "category": "Modules/Hulls",
+      "purpose": "机身、装甲和大型功能模块外壳",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Hulls/Polygon/SM_Veh_Part_Body_04.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Wing_01.prefab",
+      "category": "Modules/Wings",
+      "purpose": "机翼与侧装甲轮廓备选",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Wings/Polygon/SM_Veh_Part_Wing_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Wing_03.prefab",
+      "category": "Modules/Wings",
+      "purpose": "机翼与侧装甲轮廓备选",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Wings/Polygon/SM_Veh_Part_Wing_03.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Wing_05.prefab",
+      "category": "Modules/Wings",
+      "purpose": "机翼与侧装甲轮廓备选",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Wings/Polygon/SM_Veh_Part_Wing_05.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Wing_07.prefab",
+      "category": "Modules/Wings",
+      "purpose": "机翼与侧装甲轮廓备选",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Wings/Polygon/SM_Veh_Part_Wing_07.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Wing_014.prefab",
+      "category": "Modules/Wings",
+      "purpose": "机翼与侧装甲轮廓备选",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Wings/Polygon/SM_Veh_Part_Wing_014.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Engine_01.prefab",
+      "category": "Modules/Thrusters",
+      "purpose": "主推进、悬浮和全向推进器视觉备选",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Thrusters/Polygon/SM_Veh_Part_Engine_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Engine_02.prefab",
+      "category": "Modules/Thrusters",
+      "purpose": "主推进、悬浮和全向推进器视觉备选",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Thrusters/Polygon/SM_Veh_Part_Engine_02.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Engine_03.prefab",
+      "category": "Modules/Thrusters",
+      "purpose": "主推进、悬浮和全向推进器视觉备选",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Thrusters/Polygon/SM_Veh_Part_Engine_03.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Engine_05.prefab",
+      "category": "Modules/Thrusters",
+      "purpose": "主推进、悬浮和全向推进器视觉备选",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Thrusters/Polygon/SM_Veh_Part_Engine_05.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Engine_07.prefab",
+      "category": "Modules/Thrusters",
+      "purpose": "主推进、悬浮和全向推进器视觉备选",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Thrusters/Polygon/SM_Veh_Part_Engine_07.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Engine_09.prefab",
+      "category": "Modules/Thrusters",
+      "purpose": "主推进、悬浮和全向推进器视觉备选",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Thrusters/Polygon/SM_Veh_Part_Engine_09.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_LandingGear_Flat_01.prefab",
+      "category": "Modules/LandingGear",
+      "purpose": "支撑脚与停靠装置；车轮仅作外观储备",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/LandingGear/Polygon/SM_Veh_Part_LandingGear_Flat_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_LandingGear_Flat_02.prefab",
+      "category": "Modules/LandingGear",
+      "purpose": "支撑脚与停靠装置；车轮仅作外观储备",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/LandingGear/Polygon/SM_Veh_Part_LandingGear_Flat_02.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_LandingGear_Wheel_01.prefab",
+      "category": "Modules/LandingGear",
+      "purpose": "支撑脚与停靠装置；车轮仅作外观储备",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/LandingGear/Polygon/SM_Veh_Part_LandingGear_Wheel_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_LandingGear_Wheel_02.prefab",
+      "category": "Modules/LandingGear",
+      "purpose": "支撑脚与停靠装置；车轮仅作外观储备",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/LandingGear/Polygon/SM_Veh_Part_LandingGear_Wheel_02.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Battery_01.prefab",
+      "category": "Modules/Power",
+      "purpose": "发电机、储能、电力接口外观",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Power/Polygon/SM_Prop_Battery_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Battery_02.prefab",
+      "category": "Modules/Power",
+      "purpose": "发电机、储能、电力接口外观",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Power/Polygon/SM_Prop_Battery_02.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Battery_03.prefab",
+      "category": "Modules/Power",
+      "purpose": "发电机、储能、电力接口外观",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Power/Polygon/SM_Prop_Battery_03.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_EnergyPort_01.prefab",
+      "category": "Modules/Power",
+      "purpose": "发电机、储能、电力接口外观",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Power/Polygon/SM_Prop_EnergyPort_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Engine_Construction_01.prefab",
+      "category": "Modules/Power",
+      "purpose": "发电机、储能、电力接口外观",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Power/Polygon/SM_Prop_Engine_Construction_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Antenna_01.prefab",
+      "category": "Modules/Sensors",
+      "purpose": "输电中继、雷达和导航设备",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Sensors/Polygon/SM_Prop_Antenna_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Radar_Panel_01.prefab",
+      "category": "Modules/Sensors",
+      "purpose": "输电中继、雷达和导航设备",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Sensors/Polygon/SM_Prop_Radar_Panel_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Radar_Panel_02.prefab",
+      "category": "Modules/Sensors",
+      "purpose": "输电中继、雷达和导航设备",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Sensors/Polygon/SM_Prop_Radar_Panel_02.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Beacon_01.prefab",
+      "category": "Modules/Sensors",
+      "purpose": "信标与导航设备",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Sensors/Polygon/SM_Veh_Beacon_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Turret_Large_01.prefab",
+      "category": "Modules/Turrets",
+      "purpose": "炮塔视觉参考；接入时对齐现有双轴炮塔和枪口",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Turrets/Polygon/SM_Prop_Turret_Large_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Turret_Large_02.prefab",
+      "category": "Modules/Turrets",
+      "purpose": "炮塔视觉参考；接入时对齐现有双轴炮塔和枪口",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Turrets/Polygon/SM_Prop_Turret_Large_02.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Turret_Small_Ceiling_01.prefab",
+      "category": "Modules/Turrets",
+      "purpose": "炮塔视觉参考；接入时对齐现有双轴炮塔和枪口",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Turrets/Polygon/SM_Prop_Turret_Small_Ceiling_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Turret_Small_Floor_01.prefab",
+      "category": "Modules/Turrets",
+      "purpose": "炮塔视觉参考；接入时对齐现有双轴炮塔和枪口",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Turrets/Polygon/SM_Prop_Turret_Small_Floor_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Turret_Base_Single_01.prefab",
+      "category": "Modules/Turrets",
+      "purpose": "炮塔视觉参考；接入时对齐现有双轴炮塔和枪口",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Turrets/Polygon/SM_Prop_Turret_Base_Single_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Turret_Base_Double_01.prefab",
+      "category": "Modules/Turrets",
+      "purpose": "炮塔视觉参考；接入时对齐现有双轴炮塔和枪口",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Turrets/Polygon/SM_Prop_Turret_Base_Double_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Missile_01.prefab",
+      "category": "Modules/Projectiles",
+      "purpose": "弹体和发射架储备",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Projectiles/Polygon/SM_Prop_Missile_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Missile_03.prefab",
+      "category": "Modules/Projectiles",
+      "purpose": "弹体和发射架储备",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Projectiles/Polygon/SM_Prop_Missile_03.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Missile_05.prefab",
+      "category": "Modules/Projectiles",
+      "purpose": "弹体和发射架储备",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Projectiles/Polygon/SM_Prop_Missile_05.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_MissleRack_01.prefab",
+      "category": "Modules/Projectiles",
+      "purpose": "导弹发射架外观",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Projectiles/Polygon/SM_Veh_MissleRack_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Drone_Repair_01.prefab",
+      "category": "Modules/RepairDrones",
+      "purpose": "维修机器人、停靠附件与服务机器人储备",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/RepairDrones/Polygon/SM_Veh_Drone_Repair_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Drone_Attach_01.prefab",
+      "category": "Modules/RepairDrones",
+      "purpose": "维修机器人、停靠附件与服务机器人储备",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/RepairDrones/Polygon/SM_Veh_Drone_Attach_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Sweepo_01.prefab",
+      "category": "Modules/RepairDrones",
+      "purpose": "维修机器人、停靠附件与服务机器人储备",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Modules/RepairDrones/Polygon/SM_Veh_Sweepo_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Detail_Struts_01.prefab",
+      "category": "Construction/Structures",
+      "purpose": "支架、管路和楼梯",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Structures/Polygon/SM_Prop_Detail_Struts_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Detail_Struts_02.prefab",
+      "category": "Construction/Structures",
+      "purpose": "支架、管路和楼梯",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Structures/Polygon/SM_Prop_Detail_Struts_02.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Detail_Pipe_Straight_01.prefab",
+      "category": "Construction/Structures",
+      "purpose": "支架、管路和楼梯",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Structures/Polygon/SM_Prop_Detail_Pipe_Straight_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Detail_Pipe_Corner_01.prefab",
+      "category": "Construction/Structures",
+      "purpose": "支架、管路和楼梯",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Structures/Polygon/SM_Prop_Detail_Pipe_Corner_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Stairs_01.prefab",
+      "category": "Construction/Structures",
+      "purpose": "支架、管路和楼梯",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Structures/Polygon/SM_Prop_Stairs_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Stairs_03.prefab",
+      "category": "Construction/Structures",
+      "purpose": "支架、管路和楼梯",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Structures/Polygon/SM_Prop_Stairs_03.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Greeble_Panel_01.prefab",
+      "category": "Construction/Panels",
+      "purpose": "装甲面板、门框与机械墙体",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Panels/Polygon/SM_Prop_Greeble_Panel_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Greeble_Panel_03.prefab",
+      "category": "Construction/Panels",
+      "purpose": "装甲面板、门框与机械墙体",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Panels/Polygon/SM_Prop_Greeble_Panel_03.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Greeble_Panel_05.prefab",
+      "category": "Construction/Panels",
+      "purpose": "装甲面板、门框与机械墙体",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Panels/Polygon/SM_Prop_Greeble_Panel_05.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Buildings/SM_Bld_Wall_Doorframe_01.prefab",
+      "category": "Construction/Panels",
+      "purpose": "门与舱壁视觉储备；门框不含开关逻辑",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Panels/Polygon/SM_Bld_Wall_Doorframe_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Buildings/SM_Bld_Wall_Doorframe_03.prefab",
+      "category": "Construction/Panels",
+      "purpose": "门与舱壁视觉储备；门框不含开关逻辑",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Panels/Polygon/SM_Bld_Wall_Doorframe_03.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Buildings/SM_Bld_Wall_Mechanical_01.prefab",
+      "category": "Construction/Panels",
+      "purpose": "门与舱壁视觉储备；门框不含开关逻辑",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Panels/Polygon/SM_Bld_Wall_Mechanical_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Buildings/SM_Bld_Wall_Mechanical_02.prefab",
+      "category": "Construction/Panels",
+      "purpose": "门与舱壁视觉储备；门框不含开关逻辑",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Panels/Polygon/SM_Bld_Wall_Mechanical_02.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Crate_01.prefab",
+      "category": "Props/Cargo",
+      "purpose": "货箱、维修补给和工业储罐",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Props/Cargo/Polygon/SM_Prop_Crate_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Crate_02.prefab",
+      "category": "Props/Cargo",
+      "purpose": "货箱、维修补给和工业储罐",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Props/Cargo/Polygon/SM_Prop_Crate_02.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Crate_Ammo_01.prefab",
+      "category": "Props/Cargo",
+      "purpose": "货箱、维修补给和工业储罐",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Props/Cargo/Polygon/SM_Prop_Crate_Ammo_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Crate_health_01.prefab",
+      "category": "Props/Cargo",
+      "purpose": "货箱、维修补给和工业储罐",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Props/Cargo/Polygon/SM_Prop_Crate_health_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Oxygen_Tank_Small.prefab",
+      "category": "Props/Cargo",
+      "purpose": "货箱、维修补给和工业储罐",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Props/Cargo/Polygon/SM_Prop_Oxygen_Tank_Small.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Tank_01.prefab",
+      "category": "Props/Cargo",
+      "purpose": "货箱、维修补给和工业储罐",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Props/Cargo/Polygon/SM_Prop_Tank_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_ControlPanel_01.prefab",
+      "category": "Props/Controls",
+      "purpose": "控制器、驾驶舱内饰与状态屏",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Props/Controls/Polygon/SM_Prop_ControlPanel_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_ControlPanel_02.prefab",
+      "category": "Props/Controls",
+      "purpose": "控制器、驾驶舱内饰与状态屏",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Props/Controls/Polygon/SM_Prop_ControlPanel_02.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_ControlPanel_04.prefab",
+      "category": "Props/Controls",
+      "purpose": "控制器、驾驶舱内饰与状态屏",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Props/Controls/Polygon/SM_Prop_ControlPanel_04.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Screen_01.prefab",
+      "category": "Props/Controls",
+      "purpose": "控制器、驾驶舱内饰与状态屏",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Props/Controls/Polygon/SM_Prop_Screen_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Screen_03.prefab",
+      "category": "Props/Controls",
+      "purpose": "控制器、驾驶舱内饰与状态屏",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Props/Controls/Polygon/SM_Prop_Screen_03.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Buttons_01.prefab",
+      "category": "Props/Controls",
+      "purpose": "控制器、驾驶舱内饰与状态屏",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Props/Controls/Polygon/SM_Prop_Buttons_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Light_Small_01.prefab",
+      "category": "Props/Lights",
+      "purpose": "设备状态灯和舱内照明外壳",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Props/Lights/Polygon/SM_Prop_Light_Small_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Light_Small_03.prefab",
+      "category": "Props/Lights",
+      "purpose": "设备状态灯和舱内照明外壳",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Props/Lights/Polygon/SM_Prop_Light_Small_03.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Light_Small_05.prefab",
+      "category": "Props/Lights",
+      "purpose": "设备状态灯和舱内照明外壳",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Props/Lights/Polygon/SM_Prop_Light_Small_05.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Light_Panel_01.prefab",
+      "category": "Props/Lights",
+      "purpose": "设备状态灯和舱内照明外壳",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Props/Lights/Polygon/SM_Prop_Light_Panel_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Light_Panel_03.prefab",
+      "category": "Props/Lights",
+      "purpose": "设备状态灯和舱内照明外壳",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Props/Lights/Polygon/SM_Prop_Light_Panel_03.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Environment/SM_Env_Asteroid_01.prefab",
+      "category": "Environment/Asteroids",
+      "purpose": "陨石与障碍物外观；接入 Meteor 时另配逻辑碰撞",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Environment/Asteroids/Polygon/SM_Env_Asteroid_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Environment/SM_Env_Asteroid_03.prefab",
+      "category": "Environment/Asteroids",
+      "purpose": "陨石与障碍物外观；接入 Meteor 时另配逻辑碰撞",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Environment/Asteroids/Polygon/SM_Env_Asteroid_03.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Environment/SM_Env_Asteroid_05.prefab",
+      "category": "Environment/Asteroids",
+      "purpose": "陨石与障碍物外观；接入 Meteor 时另配逻辑碰撞",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Environment/Asteroids/Polygon/SM_Env_Asteroid_05.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Environment/SM_Env_Asteroid_Rock_01.prefab",
+      "category": "Environment/Asteroids",
+      "purpose": "陨石与障碍物外观；接入 Meteor 时另配逻辑碰撞",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Environment/Asteroids/Polygon/SM_Env_Asteroid_Rock_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Environment/SM_Env_Debris_Shell_01.prefab",
+      "category": "Environment/Debris",
+      "purpose": "战斗残骸与环境碎片",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Environment/Debris/Polygon/SM_Env_Debris_Shell_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Environment/SM_Env_Debris_Shell_03.prefab",
+      "category": "Environment/Debris",
+      "purpose": "战斗残骸与环境碎片",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Environment/Debris/Polygon/SM_Env_Debris_Shell_03.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Environment/SM_Env_Debris_Structure_01.prefab",
+      "category": "Environment/Debris",
+      "purpose": "战斗残骸与环境碎片",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Environment/Debris/Polygon/SM_Env_Debris_Structure_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Environment/SM_Env_Debris_Pipe_01.prefab",
+      "category": "Environment/Debris",
+      "purpose": "战斗残骸与环境碎片",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Environment/Debris/Polygon/SM_Env_Debris_Pipe_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Ship_Fighter_01.prefab",
+      "category": "Vehicles/ShipReferences",
+      "purpose": "整船造型、敌人外观与蓝图搭建参考；不是可建造方块",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Vehicles/ShipReferences/Polygon/SM_Ship_Fighter_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Ship_Fighter_Heavy_01.prefab",
+      "category": "Vehicles/ShipReferences",
+      "purpose": "整船造型、敌人外观与蓝图搭建参考；不是可建造方块",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Vehicles/ShipReferences/Polygon/SM_Ship_Fighter_Heavy_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Ship_Transport_01.prefab",
+      "category": "Vehicles/ShipReferences",
+      "purpose": "整船造型、敌人外观与蓝图搭建参考；不是可建造方块",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Vehicles/ShipReferences/Polygon/SM_Ship_Transport_01.prefab"
+    },
+    {
+      "source": "Assets/CUBE - Spaceships Pack 01/Prefabs/Spaceship 01/Spaceship 01A.prefab",
+      "category": "Vehicles/ShipReferences",
+      "purpose": "整船与可拆分子网格造型参考；不是可建造方块",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Vehicles/ShipReferences/Cube/Spaceship 01A.prefab"
+    },
+    {
+      "source": "Assets/CUBE - Spaceships Pack 01/Prefabs/Spaceship 03/Spaceship 03A.prefab",
+      "category": "Vehicles/ShipReferences",
+      "purpose": "整船与可拆分子网格造型参考；不是可建造方块",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Vehicles/ShipReferences/Cube/Spaceship 03A.prefab"
+    },
+    {
+      "source": "Assets/CUBE - Spaceships Pack 01/Prefabs/Spaceship 05/Spaceship 05A.prefab",
+      "category": "Vehicles/ShipReferences",
+      "purpose": "整船与可拆分子网格造型参考；不是可建造方块",
+      "destination": "Assets/Art/SpaceKit/Prefabs/Vehicles/ShipReferences/Cube/Spaceship 05A.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Flame_Booster_Round.prefab",
+      "category": "VFX/Propulsion",
+      "purpose": "喷焰、尾迹备选",
+      "destination": "Assets/Art/SpaceKit/Prefabs/VFX/Propulsion/Polygon/FX_Flame_Booster_Round.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Flame_Booster_Square.prefab",
+      "category": "VFX/Propulsion",
+      "purpose": "喷焰、尾迹备选",
+      "destination": "Assets/Art/SpaceKit/Prefabs/VFX/Propulsion/Polygon/FX_Flame_Booster_Square.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Exhaust_Trail.prefab",
+      "category": "VFX/Propulsion",
+      "purpose": "喷焰、尾迹备选",
+      "destination": "Assets/Art/SpaceKit/Prefabs/VFX/Propulsion/Polygon/FX_Exhaust_Trail.prefab"
+    },
+    {
+      "source": "Assets/CUBE - Spaceships Pack 01/Prefabs/FX/FX Exhaust.prefab",
+      "category": "VFX/Propulsion",
+      "purpose": "卡通喷焰备选",
+      "destination": "Assets/Art/SpaceKit/Prefabs/VFX/Propulsion/Cube/FX Exhaust.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Explosion.prefab",
+      "category": "VFX/Combat",
+      "purpose": "爆炸、激光与导弹尾迹；不提供伤害逻辑",
+      "destination": "Assets/Art/SpaceKit/Prefabs/VFX/Combat/Polygon/FX_Explosion.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Laser_Bullet.prefab",
+      "category": "VFX/Combat",
+      "purpose": "爆炸、激光与导弹尾迹；不提供伤害逻辑",
+      "destination": "Assets/Art/SpaceKit/Prefabs/VFX/Combat/Polygon/FX_Laser_Bullet.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Laser_Shot.prefab",
+      "category": "VFX/Combat",
+      "purpose": "爆炸、激光与导弹尾迹；不提供伤害逻辑",
+      "destination": "Assets/Art/SpaceKit/Prefabs/VFX/Combat/Polygon/FX_Laser_Shot.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Missiles.prefab",
+      "category": "VFX/Combat",
+      "purpose": "爆炸、激光与导弹尾迹；不提供伤害逻辑",
+      "destination": "Assets/Art/SpaceKit/Prefabs/VFX/Combat/Polygon/FX_Missiles.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Fire_01.prefab",
+      "category": "VFX/DamageSmoke",
+      "purpose": "起火、蒸汽和破坏碎片",
+      "destination": "Assets/Art/SpaceKit/Prefabs/VFX/DamageSmoke/Polygon/FX_Fire_01.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Fire_02.prefab",
+      "category": "VFX/DamageSmoke",
+      "purpose": "起火、蒸汽和破坏碎片",
+      "destination": "Assets/Art/SpaceKit/Prefabs/VFX/DamageSmoke/Polygon/FX_Fire_02.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Steam.prefab",
+      "category": "VFX/DamageSmoke",
+      "purpose": "起火、蒸汽和破坏碎片",
+      "destination": "Assets/Art/SpaceKit/Prefabs/VFX/DamageSmoke/Polygon/FX_Steam.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Pebble_Debris.prefab",
+      "category": "VFX/DamageSmoke",
+      "purpose": "起火、蒸汽和破坏碎片",
+      "destination": "Assets/Art/SpaceKit/Prefabs/VFX/DamageSmoke/Polygon/FX_Pebble_Debris.prefab"
+    },
+    {
+      "source": "Assets/CUBE - Spaceships Pack 01/Prefabs/FX/FX Ground Smoke.prefab",
+      "category": "VFX/DamageSmoke",
+      "purpose": "着陆或破坏烟尘",
+      "destination": "Assets/Art/SpaceKit/Prefabs/VFX/DamageSmoke/Cube/FX Ground Smoke.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Electricity.prefab",
+      "category": "VFX/Energy",
+      "purpose": "供电、维修能量与导航信号效果",
+      "destination": "Assets/Art/SpaceKit/Prefabs/VFX/Energy/Polygon/FX_Electricity.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Beacon.prefab",
+      "category": "VFX/Energy",
+      "purpose": "供电、维修能量与导航信号效果",
+      "destination": "Assets/Art/SpaceKit/Prefabs/VFX/Energy/Polygon/FX_Beacon.prefab"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Materials/PolygonScifiSpace_Material_01_A.mat",
+      "category": "Materials/Palette",
+      "purpose": "共享调色板材质备选；UV 必须匹配对应模型",
+      "destination": "Assets/Art/SpaceKit/Materials/Polygon/Palette/PolygonScifiSpace_Material_01_A.mat"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Materials/PolygonScifiSpace_Material_02_A.mat",
+      "category": "Materials/Palette",
+      "purpose": "共享调色板材质备选；UV 必须匹配对应模型",
+      "destination": "Assets/Art/SpaceKit/Materials/Polygon/Palette/PolygonScifiSpace_Material_02_A.mat"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Materials/Alts/PolygonScifiSpace_Material_01_B.mat",
+      "category": "Materials/Palette",
+      "purpose": "共享调色板材质备选；UV 必须匹配对应模型",
+      "destination": "Assets/Art/SpaceKit/Materials/Polygon/Palette/PolygonScifiSpace_Material_01_B.mat"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Materials/Alts/PolygonScifiSpace_Material_01_C.mat",
+      "category": "Materials/Palette",
+      "purpose": "共享调色板材质备选；UV 必须匹配对应模型",
+      "destination": "Assets/Art/SpaceKit/Materials/Polygon/Palette/PolygonScifiSpace_Material_01_C.mat"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Materials/Alts/PolygonScifiSpace_Material_02_B.mat",
+      "category": "Materials/Palette",
+      "purpose": "共享调色板材质备选；UV 必须匹配对应模型",
+      "destination": "Assets/Art/SpaceKit/Materials/Polygon/Palette/PolygonScifiSpace_Material_02_B.mat"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Materials/Alts/PolygonScifiSpace_Material_02_C.mat",
+      "category": "Materials/Palette",
+      "purpose": "共享调色板材质备选；UV 必须匹配对应模型",
+      "destination": "Assets/Art/SpaceKit/Materials/Polygon/Palette/PolygonScifiSpace_Material_02_C.mat"
+    },
+    {
+      "source": "Assets/CUBE - Spaceships Pack 01/Materials/Spaceship colorA.mat",
+      "category": "Materials/Palette",
+      "purpose": "共享调色板材质备选；UV 必须匹配对应模型",
+      "destination": "Assets/Art/SpaceKit/Materials/Cube/Palette/Spaceship colorA.mat"
+    },
+    {
+      "source": "Assets/CUBE - Spaceships Pack 01/Materials/Spaceship colorB.mat",
+      "category": "Materials/Palette",
+      "purpose": "共享调色板材质备选；UV 必须匹配对应模型",
+      "destination": "Assets/Art/SpaceKit/Materials/Cube/Palette/Spaceship colorB.mat"
+    },
+    {
+      "source": "Assets/CUBE - Spaceships Pack 01/Materials/Spaceship colorC.mat",
+      "category": "Materials/Palette",
+      "purpose": "共享调色板材质备选；UV 必须匹配对应模型",
+      "destination": "Assets/Art/SpaceKit/Materials/Cube/Palette/Spaceship colorC.mat"
+    },
+    {
+      "source": "Assets/CUBE - Spaceships Pack 01/Materials/Spaceship colorD.mat",
+      "category": "Materials/Palette",
+      "purpose": "共享调色板材质备选；UV 必须匹配对应模型",
+      "destination": "Assets/Art/SpaceKit/Materials/Cube/Palette/Spaceship colorD.mat"
+    }
+  ]
+}

@@ -1,0 +1,1586 @@
+{
+    "unityVersion": "6000.3.11f1",
+    "assetCount": 349,
+    "errors": [],
+    "prefabs": [
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/VFX/Propulsion/Cube/FX Exhaust.prefab",
+            "size": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "triangles": 0,
+            "renderers": 1,
+            "materialSlots": 2,
+            "particleSystems": 1,
+            "maxParticles": 20,
+            "colliders": 0,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/VFX/DamageSmoke/Cube/FX Ground Smoke.prefab",
+            "size": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "triangles": 0,
+            "renderers": 1,
+            "materialSlots": 2,
+            "particleSystems": 1,
+            "maxParticles": 5,
+            "colliders": 0,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Vehicles/ShipReferences/Cube/Spaceship 01A.prefab",
+            "size": {
+                "x": 12.229022026062012,
+                "y": 7.347507476806641,
+                "z": 10.049239158630371
+            },
+            "triangles": 2866,
+            "renderers": 8,
+            "materialSlots": 11,
+            "particleSystems": 3,
+            "maxParticles": 50,
+            "colliders": 0,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Vehicles/ShipReferences/Cube/Spaceship 03A.prefab",
+            "size": {
+                "x": 16.471776962280275,
+                "y": 7.1963324546813969,
+                "z": 14.10588264465332
+            },
+            "triangles": 2572,
+            "renderers": 12,
+            "materialSlots": 15,
+            "particleSystems": 3,
+            "maxParticles": 60,
+            "colliders": 0,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Vehicles/ShipReferences/Cube/Spaceship 05A.prefab",
+            "size": {
+                "x": 25.118776321411134,
+                "y": 22.803361892700197,
+                "z": 82.0810775756836
+            },
+            "triangles": 3214,
+            "renderers": 6,
+            "materialSlots": 10,
+            "particleSystems": 4,
+            "maxParticles": 80,
+            "colliders": 0,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Construction/Panels/Polygon/SM_Bld_Wall_Doorframe_01.prefab",
+            "size": {
+                "x": 5.0,
+                "y": 5.0,
+                "z": 0.7282226085662842
+            },
+            "triangles": 2744,
+            "renderers": 2,
+            "materialSlots": 2,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 2,
+            "nonConvexMeshColliders": 2
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Construction/Panels/Polygon/SM_Bld_Wall_Doorframe_03.prefab",
+            "size": {
+                "x": 9.000018119812012,
+                "y": 4.999999523162842,
+                "z": 0.9378082156181336
+            },
+            "triangles": 2214,
+            "renderers": 2,
+            "materialSlots": 2,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 3,
+            "nonConvexMeshColliders": 3
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Construction/Panels/Polygon/SM_Bld_Wall_Mechanical_01.prefab",
+            "size": {
+                "x": 5.000003337860107,
+                "y": 4.995440483093262,
+                "z": 2.769531726837158
+            },
+            "triangles": 1688,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Construction/Panels/Polygon/SM_Bld_Wall_Mechanical_02.prefab",
+            "size": {
+                "x": 5.000004291534424,
+                "y": 4.995440483093262,
+                "z": 2.5576012134552
+            },
+            "triangles": 1134,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 2,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Environment/Asteroids/Polygon/SM_Env_Asteroid_01.prefab",
+            "size": {
+                "x": 249.07012939453126,
+                "y": 248.0325927734375,
+                "z": 247.30133056640626
+            },
+            "triangles": 2000,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 1
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Environment/Asteroids/Polygon/SM_Env_Asteroid_03.prefab",
+            "size": {
+                "x": 253.99224853515626,
+                "y": 252.1868896484375,
+                "z": 249.08541870117188
+            },
+            "triangles": 2000,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 1
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Environment/Asteroids/Polygon/SM_Env_Asteroid_05.prefab",
+            "size": {
+                "x": 262.2005615234375,
+                "y": 261.33154296875,
+                "z": 266.61285400390627
+            },
+            "triangles": 2000,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 1
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Environment/Asteroids/Polygon/SM_Env_Asteroid_Rock_01.prefab",
+            "size": {
+                "x": 3.1108763217926027,
+                "y": 2.968809127807617,
+                "z": 2.8056182861328127
+            },
+            "triangles": 400,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 1
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Environment/Debris/Polygon/SM_Env_Debris_Pipe_01.prefab",
+            "size": {
+                "x": 1.5224746465682984,
+                "y": 1.6091216802597047,
+                "z": 6.206132888793945
+            },
+            "triangles": 220,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Environment/Debris/Polygon/SM_Env_Debris_Shell_01.prefab",
+            "size": {
+                "x": 0.6909301280975342,
+                "y": 1.652449369430542,
+                "z": 0.3829360902309418
+            },
+            "triangles": 44,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Environment/Debris/Polygon/SM_Env_Debris_Shell_03.prefab",
+            "size": {
+                "x": 0.6454078555107117,
+                "y": 0.9148399233818054,
+                "z": 0.41002655029296877
+            },
+            "triangles": 40,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Environment/Debris/Polygon/SM_Env_Debris_Structure_01.prefab",
+            "size": {
+                "x": 1.9923920631408692,
+                "y": 5.796862602233887,
+                "z": 1.7341499328613282
+            },
+            "triangles": 248,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/VFX/Energy/Polygon/FX_Beacon.prefab",
+            "size": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "triangles": 0,
+            "renderers": 1,
+            "materialSlots": 2,
+            "particleSystems": 1,
+            "maxParticles": 4,
+            "colliders": 0,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/VFX/Energy/Polygon/FX_Electricity.prefab",
+            "size": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "triangles": 0,
+            "renderers": 1,
+            "materialSlots": 2,
+            "particleSystems": 1,
+            "maxParticles": 40,
+            "colliders": 0,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/VFX/Propulsion/Polygon/FX_Exhaust_Trail.prefab",
+            "size": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "triangles": 0,
+            "renderers": 1,
+            "materialSlots": 2,
+            "particleSystems": 1,
+            "maxParticles": 100,
+            "colliders": 0,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/VFX/Combat/Polygon/FX_Explosion.prefab",
+            "size": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "triangles": 0,
+            "renderers": 4,
+            "materialSlots": 8,
+            "particleSystems": 4,
+            "maxParticles": 3100,
+            "colliders": 0,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/VFX/DamageSmoke/Polygon/FX_Fire_01.prefab",
+            "size": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "triangles": 0,
+            "renderers": 1,
+            "materialSlots": 2,
+            "particleSystems": 1,
+            "maxParticles": 50,
+            "colliders": 0,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/VFX/DamageSmoke/Polygon/FX_Fire_02.prefab",
+            "size": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "triangles": 0,
+            "renderers": 1,
+            "materialSlots": 2,
+            "particleSystems": 1,
+            "maxParticles": 50,
+            "colliders": 0,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/VFX/Propulsion/Polygon/FX_Flame_Booster_Round.prefab",
+            "size": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "triangles": 0,
+            "renderers": 1,
+            "materialSlots": 2,
+            "particleSystems": 1,
+            "maxParticles": 10,
+            "colliders": 0,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/VFX/Propulsion/Polygon/FX_Flame_Booster_Square.prefab",
+            "size": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "triangles": 0,
+            "renderers": 1,
+            "materialSlots": 2,
+            "particleSystems": 1,
+            "maxParticles": 10,
+            "colliders": 0,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/VFX/Combat/Polygon/FX_Laser_Bullet.prefab",
+            "size": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "triangles": 0,
+            "renderers": 2,
+            "materialSlots": 4,
+            "particleSystems": 2,
+            "maxParticles": 1008,
+            "colliders": 0,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/VFX/Combat/Polygon/FX_Laser_Shot.prefab",
+            "size": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "triangles": 0,
+            "renderers": 3,
+            "materialSlots": 6,
+            "particleSystems": 3,
+            "maxParticles": 1108,
+            "colliders": 0,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/VFX/Combat/Polygon/FX_Missiles.prefab",
+            "size": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "triangles": 0,
+            "renderers": 4,
+            "materialSlots": 8,
+            "particleSystems": 4,
+            "maxParticles": 3100,
+            "colliders": 0,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/VFX/DamageSmoke/Polygon/FX_Pebble_Debris.prefab",
+            "size": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "triangles": 0,
+            "renderers": 1,
+            "materialSlots": 2,
+            "particleSystems": 1,
+            "maxParticles": 150,
+            "colliders": 0,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/VFX/DamageSmoke/Polygon/FX_Steam.prefab",
+            "size": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "triangles": 0,
+            "renderers": 1,
+            "materialSlots": 2,
+            "particleSystems": 1,
+            "maxParticles": 50,
+            "colliders": 0,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Sensors/Polygon/SM_Prop_Antenna_01.prefab",
+            "size": {
+                "x": 0.34994399547576907,
+                "y": 4.690798282623291,
+                "z": 0.23762105405330659
+            },
+            "triangles": 186,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Power/Polygon/SM_Prop_Battery_01.prefab",
+            "size": {
+                "x": 2.1912841796875,
+                "y": 0.8083308935165405,
+                "z": 2.362551212310791
+            },
+            "triangles": 368,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Power/Polygon/SM_Prop_Battery_02.prefab",
+            "size": {
+                "x": 1.0962454080581666,
+                "y": 0.4397389590740204,
+                "z": 1.384623408317566
+            },
+            "triangles": 272,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Power/Polygon/SM_Prop_Battery_03.prefab",
+            "size": {
+                "x": 1.814415693283081,
+                "y": 1.4261901378631592,
+                "z": 2.061464786529541
+            },
+            "triangles": 1000,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Props/Controls/Polygon/SM_Prop_Buttons_01.prefab",
+            "size": {
+                "x": 0.197540283203125,
+                "y": 0.07961471378803253,
+                "z": 0.18326225876808167
+            },
+            "triangles": 84,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Props/Controls/Polygon/SM_Prop_ControlPanel_01.prefab",
+            "size": {
+                "x": 5.315591335296631,
+                "y": 1.2792080640792847,
+                "z": 2.549337863922119
+            },
+            "triangles": 2813,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Props/Controls/Polygon/SM_Prop_ControlPanel_02.prefab",
+            "size": {
+                "x": 9.344446182250977,
+                "y": 1.5862456560134888,
+                "z": 2.5766730308532717
+            },
+            "triangles": 6355,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Props/Controls/Polygon/SM_Prop_ControlPanel_04.prefab",
+            "size": {
+                "x": 3.665707588195801,
+                "y": 1.294303297996521,
+                "z": 2.1229248046875
+            },
+            "triangles": 3162,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Props/Cargo/Polygon/SM_Prop_Crate_01.prefab",
+            "size": {
+                "x": 0.7275105714797974,
+                "y": 0.613193929195404,
+                "z": 0.672726571559906
+            },
+            "triangles": 1188,
+            "renderers": 2,
+            "materialSlots": 2,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Props/Cargo/Polygon/SM_Prop_Crate_02.prefab",
+            "size": {
+                "x": 0.7104450464248657,
+                "y": 0.3885479271411896,
+                "z": 1.3905502557754517
+            },
+            "triangles": 332,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Props/Cargo/Polygon/SM_Prop_Crate_Ammo_01.prefab",
+            "size": {
+                "x": 0.5222453474998474,
+                "y": 0.3985031545162201,
+                "z": 0.3188802897930145
+            },
+            "triangles": 352,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Props/Cargo/Polygon/SM_Prop_Crate_health_01.prefab",
+            "size": {
+                "x": 0.5222453474998474,
+                "y": 0.3985031545162201,
+                "z": 0.3188802897930145
+            },
+            "triangles": 352,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Construction/Structures/Polygon/SM_Prop_Detail_Pipe_Corner_01.prefab",
+            "size": {
+                "x": 0.8831756114959717,
+                "y": 0.27440595626831057,
+                "z": 0.8831756711006165
+            },
+            "triangles": 80,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Construction/Structures/Polygon/SM_Prop_Detail_Pipe_Straight_01.prefab",
+            "size": {
+                "x": 5.000002861022949,
+                "y": 0.3513636589050293,
+                "z": 0.35136568546295168
+            },
+            "triangles": 350,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Construction/Structures/Polygon/SM_Prop_Detail_Struts_01.prefab",
+            "size": {
+                "x": 4.6125078201293949,
+                "y": 3.768960475921631,
+                "z": 1.224886178970337
+            },
+            "triangles": 256,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Construction/Structures/Polygon/SM_Prop_Detail_Struts_02.prefab",
+            "size": {
+                "x": 0.6042861938476563,
+                "y": 3.7117650508880617,
+                "z": 0.5879493951797485
+            },
+            "triangles": 240,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Power/Polygon/SM_Prop_EnergyPort_01.prefab",
+            "size": {
+                "x": 1.65473473072052,
+                "y": 0.7909753918647766,
+                "z": 1.6615800857543946
+            },
+            "triangles": 264,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Power/Polygon/SM_Prop_Engine_Construction_01.prefab",
+            "size": {
+                "x": 1.524862289428711,
+                "y": 1.730509877204895,
+                "z": 2.5546505451202394
+            },
+            "triangles": 3334,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Construction/Panels/Polygon/SM_Prop_Greeble_Panel_01.prefab",
+            "size": {
+                "x": 1.1558268070220948,
+                "y": 0.09999999403953552,
+                "z": 4.70070219039917
+            },
+            "triangles": 92,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Construction/Panels/Polygon/SM_Prop_Greeble_Panel_03.prefab",
+            "size": {
+                "x": 1.0527067184448243,
+                "y": 0.09999999403953552,
+                "z": 1.0527067184448243
+            },
+            "triangles": 92,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Construction/Panels/Polygon/SM_Prop_Greeble_Panel_05.prefab",
+            "size": {
+                "x": 1.0527067184448243,
+                "y": 0.09999999403953552,
+                "z": 1.0527067184448243
+            },
+            "triangles": 92,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Props/Lights/Polygon/SM_Prop_Light_Panel_01.prefab",
+            "size": {
+                "x": 0.5125613212585449,
+                "y": 0.10199734568595886,
+                "z": 1.206323266029358
+            },
+            "triangles": 188,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Props/Lights/Polygon/SM_Prop_Light_Panel_03.prefab",
+            "size": {
+                "x": 0.40708279609680178,
+                "y": 0.13221682608127595,
+                "z": 1.2374694347381592
+            },
+            "triangles": 162,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Props/Lights/Polygon/SM_Prop_Light_Small_01.prefab",
+            "size": {
+                "x": 0.12763671576976777,
+                "y": 0.05687130242586136,
+                "z": 0.342153936624527
+            },
+            "triangles": 44,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Props/Lights/Polygon/SM_Prop_Light_Small_03.prefab",
+            "size": {
+                "x": 0.14303283393383027,
+                "y": 0.08799247443675995,
+                "z": 0.4911956787109375
+            },
+            "triangles": 84,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Props/Lights/Polygon/SM_Prop_Light_Small_05.prefab",
+            "size": {
+                "x": 0.3348632752895355,
+                "y": 0.058085646480321887,
+                "z": 0.3501308262348175
+            },
+            "triangles": 76,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Projectiles/Polygon/SM_Prop_Missile_01.prefab",
+            "size": {
+                "x": 0.3365471363067627,
+                "y": 1.1159454584121705,
+                "z": 0.336546927690506
+            },
+            "triangles": 288,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Projectiles/Polygon/SM_Prop_Missile_03.prefab",
+            "size": {
+                "x": 0.20596590638160706,
+                "y": 1.2539671659469605,
+                "z": 0.19958266615867616
+            },
+            "triangles": 336,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Projectiles/Polygon/SM_Prop_Missile_05.prefab",
+            "size": {
+                "x": 0.34628987312316897,
+                "y": 1.6221435070037842,
+                "z": 0.3462907671928406
+            },
+            "triangles": 736,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Props/Cargo/Polygon/SM_Prop_Oxygen_Tank_Small.prefab",
+            "size": {
+                "x": 0.3374267518520355,
+                "y": 0.7762921452522278,
+                "z": 0.33742430806159975
+            },
+            "triangles": 236,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Sensors/Polygon/SM_Prop_Radar_Panel_01.prefab",
+            "size": {
+                "x": 0.8088192343711853,
+                "y": 0.18688024580478669,
+                "z": 0.8217754364013672
+            },
+            "triangles": 114,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Sensors/Polygon/SM_Prop_Radar_Panel_02.prefab",
+            "size": {
+                "x": 1.27522873878479,
+                "y": 0.23652571439743043,
+                "z": 1.27522873878479
+            },
+            "triangles": 160,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Props/Controls/Polygon/SM_Prop_Screen_01.prefab",
+            "size": {
+                "x": 0.4142104983329773,
+                "y": 0.028365910053253175,
+                "z": 0.39634841680526736
+            },
+            "triangles": 85,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Props/Controls/Polygon/SM_Prop_Screen_03.prefab",
+            "size": {
+                "x": 0.3968872129917145,
+                "y": 0.017659688368439676,
+                "z": 0.23058852553367616
+            },
+            "triangles": 136,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Construction/Structures/Polygon/SM_Prop_Stairs_01.prefab",
+            "size": {
+                "x": 2.268024444580078,
+                "y": 5.80436372756958,
+                "z": 8.042498588562012
+            },
+            "triangles": 3368,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 1
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Construction/Structures/Polygon/SM_Prop_Stairs_03.prefab",
+            "size": {
+                "x": 1.614945411682129,
+                "y": 2.0332436561584474,
+                "z": 1.989403486251831
+            },
+            "triangles": 776,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 1
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Props/Cargo/Polygon/SM_Prop_Tank_01.prefab",
+            "size": {
+                "x": 5.639715671539307,
+                "y": 2.579179286956787,
+                "z": 2.9563446044921877
+            },
+            "triangles": 3986,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Turrets/Polygon/SM_Prop_Turret_Base_Double_01.prefab",
+            "size": {
+                "x": 1.5906479358673096,
+                "y": 1.724810242652893,
+                "z": 3.118098735809326
+            },
+            "triangles": 2021,
+            "renderers": 4,
+            "materialSlots": 4,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 4,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Turrets/Polygon/SM_Prop_Turret_Base_Single_01.prefab",
+            "size": {
+                "x": 1.5906479358673096,
+                "y": 1.7740813493728638,
+                "z": 3.118098735809326
+            },
+            "triangles": 1451,
+            "renderers": 3,
+            "materialSlots": 3,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 3,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Turrets/Polygon/SM_Prop_Turret_Large_01.prefab",
+            "size": {
+                "x": 4.189815521240234,
+                "y": 2.8990135192871095,
+                "z": 6.717105388641357
+            },
+            "triangles": 2300,
+            "renderers": 3,
+            "materialSlots": 3,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 3,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Turrets/Polygon/SM_Prop_Turret_Large_02.prefab",
+            "size": {
+                "x": 4.189815521240234,
+                "y": 2.8990135192871095,
+                "z": 6.717105388641357
+            },
+            "triangles": 2852,
+            "renderers": 3,
+            "materialSlots": 3,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 3,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Turrets/Polygon/SM_Prop_Turret_Small_Ceiling_01.prefab",
+            "size": {
+                "x": 1.601182460784912,
+                "y": 1.30047607421875,
+                "z": 2.10770845413208
+            },
+            "triangles": 1372,
+            "renderers": 3,
+            "materialSlots": 3,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 2,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Turrets/Polygon/SM_Prop_Turret_Small_Floor_01.prefab",
+            "size": {
+                "x": 1.601182460784912,
+                "y": 1.1785271167755128,
+                "z": 2.10770845413208
+            },
+            "triangles": 1372,
+            "renderers": 3,
+            "materialSlots": 3,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 2,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Vehicles/ShipReferences/Polygon/SM_Ship_Fighter_01.prefab",
+            "size": {
+                "x": 13.327896118164063,
+                "y": 3.701904296875,
+                "z": 12.91215705871582
+            },
+            "triangles": 5820,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 1
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Vehicles/ShipReferences/Polygon/SM_Ship_Fighter_Heavy_01.prefab",
+            "size": {
+                "x": 16.130245208740236,
+                "y": 4.388972282409668,
+                "z": 12.017816543579102
+            },
+            "triangles": 4344,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 1
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Vehicles/ShipReferences/Polygon/SM_Ship_Transport_01.prefab",
+            "size": {
+                "x": 48.94087219238281,
+                "y": 45.31983184814453,
+                "z": 137.28428649902345
+            },
+            "triangles": 16602,
+            "renderers": 9,
+            "materialSlots": 9,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 9,
+            "nonConvexMeshColliders": 1
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Sensors/Polygon/SM_Veh_Beacon_01.prefab",
+            "size": {
+                "x": 9.191757202148438,
+                "y": 17.760278701782228,
+                "z": 9.191757202148438
+            },
+            "triangles": 1452,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 1
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/RepairDrones/Polygon/SM_Veh_Drone_Attach_01.prefab",
+            "size": {
+                "x": 2.2995448112487795,
+                "y": 1.3119384050369263,
+                "z": 3.730712890625
+            },
+            "triangles": 2496,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/RepairDrones/Polygon/SM_Veh_Drone_Repair_01.prefab",
+            "size": {
+                "x": 4.330029487609863,
+                "y": 1.644232153892517,
+                "z": 1.9953856468200684
+            },
+            "triangles": 3166,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Projectiles/Polygon/SM_Veh_MissleRack_01.prefab",
+            "size": {
+                "x": 0.6543091535568237,
+                "y": 0.7808181643486023,
+                "z": 1.1159454584121705
+            },
+            "triangles": 2360,
+            "renderers": 9,
+            "materialSlots": 10,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Hulls/Polygon/SM_Veh_Part_Body_01.prefab",
+            "size": {
+                "x": 7.9570770263671879,
+                "y": 2.724841356277466,
+                "z": 8.755956649780274
+            },
+            "triangles": 328,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Hulls/Polygon/SM_Veh_Part_Body_02.prefab",
+            "size": {
+                "x": 1.927067518234253,
+                "y": 1.186071753501892,
+                "z": 4.360205173492432
+            },
+            "triangles": 188,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Hulls/Polygon/SM_Veh_Part_Body_03.prefab",
+            "size": {
+                "x": 4.59196138381958,
+                "y": 3.005474805831909,
+                "z": 7.240087509155273
+            },
+            "triangles": 584,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Hulls/Polygon/SM_Veh_Part_Body_04.prefab",
+            "size": {
+                "x": 6.997890472412109,
+                "y": 9.178210258483887,
+                "z": 49.83576583862305
+            },
+            "triangles": 1292,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Cockpits/Polygon/SM_Veh_Part_Cockpit_01.prefab",
+            "size": {
+                "x": 1.8436708450317383,
+                "y": 2.0483152866363527,
+                "z": 6.837474346160889
+            },
+            "triangles": 474,
+            "renderers": 1,
+            "materialSlots": 2,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Cockpits/Polygon/SM_Veh_Part_Cockpit_02.prefab",
+            "size": {
+                "x": 3.1896724700927736,
+                "y": 2.0964415073394777,
+                "z": 10.004809379577637
+            },
+            "triangles": 784,
+            "renderers": 1,
+            "materialSlots": 2,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Cockpits/Polygon/SM_Veh_Part_Cockpit_03.prefab",
+            "size": {
+                "x": 2.658001661300659,
+                "y": 2.391223192214966,
+                "z": 4.176232814788818
+            },
+            "triangles": 388,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Cockpits/Polygon/SM_Veh_Part_Cockpit_05.prefab",
+            "size": {
+                "x": 7.081167221069336,
+                "y": 3.8664793968200685,
+                "z": 17.3970947265625
+            },
+            "triangles": 816,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Thrusters/Polygon/SM_Veh_Part_Engine_01.prefab",
+            "size": {
+                "x": 1.3660072088241578,
+                "y": 1.4963256120681763,
+                "z": 4.731884479522705
+            },
+            "triangles": 576,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Thrusters/Polygon/SM_Veh_Part_Engine_02.prefab",
+            "size": {
+                "x": 1.92742919921875,
+                "y": 1.8203856945037842,
+                "z": 5.9708251953125
+            },
+            "triangles": 686,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Thrusters/Polygon/SM_Veh_Part_Engine_03.prefab",
+            "size": {
+                "x": 4.169763088226318,
+                "y": 1.8203856945037842,
+                "z": 5.9708251953125
+            },
+            "triangles": 1416,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Thrusters/Polygon/SM_Veh_Part_Engine_05.prefab",
+            "size": {
+                "x": 4.62495756149292,
+                "y": 6.119641304016113,
+                "z": 14.83498477935791
+            },
+            "triangles": 716,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Thrusters/Polygon/SM_Veh_Part_Engine_07.prefab",
+            "size": {
+                "x": 4.996960163116455,
+                "y": 4.874365329742432,
+                "z": 13.061717987060547
+            },
+            "triangles": 858,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Thrusters/Polygon/SM_Veh_Part_Engine_09.prefab",
+            "size": {
+                "x": 5.499037742614746,
+                "y": 3.7589111328125,
+                "z": 11.445384979248047
+            },
+            "triangles": 256,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/LandingGear/Polygon/SM_Veh_Part_LandingGear_Flat_01.prefab",
+            "size": {
+                "x": 0.9536619186401367,
+                "y": 1.4919902086257935,
+                "z": 2.007725715637207
+            },
+            "triangles": 280,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/LandingGear/Polygon/SM_Veh_Part_LandingGear_Flat_02.prefab",
+            "size": {
+                "x": 0.6220597624778748,
+                "y": 1.4919902086257935,
+                "z": 1.8075683116912842
+            },
+            "triangles": 180,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/LandingGear/Polygon/SM_Veh_Part_LandingGear_Wheel_01.prefab",
+            "size": {
+                "x": 1.2281181812286378,
+                "y": 1.7698918581008912,
+                "z": 1.2352814674377442
+            },
+            "triangles": 640,
+            "renderers": 2,
+            "materialSlots": 2,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/LandingGear/Polygon/SM_Veh_Part_LandingGear_Wheel_02.prefab",
+            "size": {
+                "x": 0.6361254453659058,
+                "y": 1.5431063175201417,
+                "z": 0.7828766703605652
+            },
+            "triangles": 412,
+            "renderers": 2,
+            "materialSlots": 2,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Wings/Polygon/SM_Veh_Part_Wing_01.prefab",
+            "size": {
+                "x": 11.786794662475586,
+                "y": 1.1177783012390137,
+                "z": 6.347413063049316
+            },
+            "triangles": 320,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Wings/Polygon/SM_Veh_Part_Wing_014.prefab",
+            "size": {
+                "x": 5.272624492645264,
+                "y": 3.320202589035034,
+                "z": 15.399267196655274
+            },
+            "triangles": 472,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Wings/Polygon/SM_Veh_Part_Wing_03.prefab",
+            "size": {
+                "x": 6.466826915740967,
+                "y": 3.2287840843200685,
+                "z": 6.759667873382568
+            },
+            "triangles": 270,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Wings/Polygon/SM_Veh_Part_Wing_05.prefab",
+            "size": {
+                "x": 4.054766654968262,
+                "y": 1.9748473167419434,
+                "z": 4.386034965515137
+            },
+            "triangles": 132,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Wings/Polygon/SM_Veh_Part_Wing_07.prefab",
+            "size": {
+                "x": 1.036340594291687,
+                "y": 3.727489948272705,
+                "z": 17.825584411621095
+            },
+            "triangles": 348,
+            "renderers": 1,
+            "materialSlots": 1,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/Cockpits/Polygon/SM_Veh_POV_Cockpit_01.prefab",
+            "size": {
+                "x": 1.7231451272964478,
+                "y": 1.778325080871582,
+                "z": 3.2670774459838869
+            },
+            "triangles": 3323,
+            "renderers": 2,
+            "materialSlots": 2,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        },
+        {
+            "path": "Assets/Art/SpaceKit/Prefabs/Modules/RepairDrones/Polygon/SM_Veh_Sweepo_01.prefab",
+            "size": {
+                "x": 0.4548141360282898,
+                "y": 0.643821120262146,
+                "z": 0.7834854125976563
+            },
+            "triangles": 1362,
+            "renderers": 4,
+            "materialSlots": 4,
+            "particleSystems": 0,
+            "maxParticles": 0,
+            "colliders": 1,
+            "nonConvexMeshColliders": 0
+        }
+    ],
+    "materialShaders": [
+        "Universal Render Pipeline/Lit",
+        "Universal Render Pipeline/Particles/Unlit"
+    ]
+}

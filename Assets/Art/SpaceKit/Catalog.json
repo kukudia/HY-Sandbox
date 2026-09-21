@@ -1,0 +1,2796 @@
+{
+    "assets": [
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/FBX/FX Exhaust.FBX",
+            "destination": "Assets/Art/SpaceKit/Models/Cube/FBX/FX Exhaust.FBX",
+            "sourceGuid": "e11cdf61151040f488c5786ffaf1ef68",
+            "guid": "ed36196170a686d4495ce67041d91c13",
+            "sourceSha256": "59f2f1b27a24a3912f4c3ed56fe8f383c0094e1a1ca16296644420f6918488bc",
+            "sourceMetaSha256": "0dbe13f0be89388ecec3f77c66d2c9ace764907c74ccf9445a751eef427b1457"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/FBX/Materials/No Name.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Cube/FBX/Materials/No Name.mat",
+            "sourceGuid": "17f43998dafca1548846bb997599ab8b",
+            "guid": "d310c30136e770740a4c2c8a88c4db6c",
+            "sourceSha256": "04d5caa5a2d1f9cbecdce90943bd621ec50638358646552adddb30db7676104b",
+            "sourceMetaSha256": "da562f0651755e1167143eb7d1c728496cccd1acd0e6888ebff87b562b36f49b"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/FBX/Spaceship 01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Cube/FBX/Spaceship 01.fbx",
+            "sourceGuid": "9f18673b70d7da04885827513307b767",
+            "guid": "11d31f58143412c43976bdf3816829f8",
+            "sourceSha256": "df455d07149c183caa7518c65338d8febb2b047d3f51ba95acc9530592017e91",
+            "sourceMetaSha256": "78cd81df83f28d904d5cb9a14209894b9c67336f3c4805bed2afb376da5fef8b"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/FBX/Spaceship 03.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Cube/FBX/Spaceship 03.fbx",
+            "sourceGuid": "30f27be09d343584587461957e6b18ef",
+            "guid": "0cb78d55b055f2d4081fb691c06a9df0",
+            "sourceSha256": "d917fbc2fd4f4062801f431cec9f14f5f0af9de12feddc3de0651244c201b6f1",
+            "sourceMetaSha256": "73f6cb2453b27249fcc6b23bb57e91a6fd9ed41520d3473b2b9caf6cc21f4c74"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/FBX/Spaceship 05.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Cube/FBX/Spaceship 05.fbx",
+            "sourceGuid": "100c3c56060251b46b91904829acc115",
+            "guid": "ad75fa26add93ee4a822d38cdb990a1f",
+            "sourceSha256": "d21f65d6159428fad3aeec7595a925022bbd8dc97ac31867546acc06b3d9a6ab",
+            "sourceMetaSha256": "ac6ec608019ad7feb21e725fcfd7617dfbcf536cdad87e45a3f85685c5819ab8"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/Materials/FX Exhaust.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Cube/Materials/FX Exhaust.mat",
+            "sourceGuid": "355df55934f3ecc4ca4ccaa2303689e6",
+            "guid": "2d348d4cbafb60c44a335f7b31468899",
+            "sourceSha256": "b892976ef81f2a4bd24df5efc64e81defaa2c29f3cc846204e313c33fa02c0a0",
+            "sourceMetaSha256": "e1acc88f16708b8782994c442bf7cceb6effc467ff9d2216bd335703084e0e41"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/Materials/FX Smoke.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Cube/Materials/FX Smoke.mat",
+            "sourceGuid": "a3f8921e2463e924eb96c6ecdfaac5a9",
+            "guid": "6093a5e71ec197648bbcc88325e937cc",
+            "sourceSha256": "bb3b52357d938f614fe3186af822b2d662f6b80ccb4eadfe0a3484a973c9c288",
+            "sourceMetaSha256": "d35df1a933818f9e62a32c1e8534c539b3d818deb6a75e5ca5547161781471f8"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/Materials/Spaceship colorA.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Cube/Palette/Spaceship colorA.mat",
+            "sourceGuid": "dd70a27cbb93ef44bb65f26a0e66b318",
+            "guid": "de4c8bdc9f70b0d4aaf4b1ada4820997",
+            "sourceSha256": "f9da3c5736d02a4f42c9c651a137444caf4b8a1ef6b28f70d546a82764f66fbc",
+            "sourceMetaSha256": "38bd9e6f5a91bac32dbcaecf7d8f72618b621862223b0c3e4cf2bcd2432be06d"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/Materials/Spaceship colorB.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Cube/Palette/Spaceship colorB.mat",
+            "sourceGuid": "354e1c57a1ad2b04bbeeee1e10f7afbb",
+            "guid": "cd6a990f8db1e23459c110f2e2f6868d",
+            "sourceSha256": "65da55c360e30180ee4f0700a310e997cb51d6090e947955873d113221ce23d1",
+            "sourceMetaSha256": "14c2ab9cd9b09c4e64e0fed81dcf70f13276c4e237b69e1fd97a5ca35cffe7ac"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/Materials/Spaceship colorC.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Cube/Palette/Spaceship colorC.mat",
+            "sourceGuid": "03d66eb3d10dfa546beadcd05d2d27d4",
+            "guid": "ebc7725ff7a40fb499b7c3736139bf93",
+            "sourceSha256": "3a181b8ad00a55bbb505a2ffe33417992d5a62b485548a5792d5d35282f0db9d",
+            "sourceMetaSha256": "602039b9adb91d2d7a732074c2d224ad92e2e4f4e1d4bb658b6e57a4e34ac5bd"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/Materials/Spaceship colorD.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Cube/Palette/Spaceship colorD.mat",
+            "sourceGuid": "414d0779511a2b743a61a882cc6065ee",
+            "guid": "7bf4074531040de49aa74f1ed89a106d",
+            "sourceSha256": "72bf450a132a421b4924eacb43b0d7bdaac9a0ccf4bc86d02ac506b7f42dd9f6",
+            "sourceMetaSha256": "91d357d36a1d07b9e8da0137b89d73a3262e7835fc04de5bb8dbbe47ddb286ca"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/Prefabs/FX/FX Exhaust.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/VFX/Propulsion/Cube/FX Exhaust.prefab",
+            "sourceGuid": "a53e4822ff236a34ba90c5e61c445b77",
+            "guid": "ed35f8916391a17468848a5dd59186a0",
+            "sourceSha256": "7246bfef99b6d7f86ef9f8dd07e107ac44dda636259b059a55d80ca7fb2b7cd9",
+            "sourceMetaSha256": "7bb1e47f9a3a5531f74b1dac3591e1f1353c0016a1250be5c6c4bd1d430f73de"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/Prefabs/FX/FX Ground Smoke.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/VFX/DamageSmoke/Cube/FX Ground Smoke.prefab",
+            "sourceGuid": "8fde52ea7ed2e844da5a15ceb923358d",
+            "guid": "0f405b9949036394192cd2c345242840",
+            "sourceSha256": "5837c497f4c42b2e29bb9f172a36ccfc867064ee19ac4c465009ce28be375f76",
+            "sourceMetaSha256": "9f89dde6324820e7b17c0ded15dcdffa5d59745e9ea88de41ee3e5700a748a5c"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/Prefabs/Spaceship 01/Spaceship 01A.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Vehicles/ShipReferences/Cube/Spaceship 01A.prefab",
+            "sourceGuid": "23e77c73cddda0e41af8777edff4ddab",
+            "guid": "532f4a553c0e3de49857b96465309740",
+            "sourceSha256": "a26c4603b82959b418b665ba8fa11135c9e84cc924ec88dd92269c092b7e42d7",
+            "sourceMetaSha256": "addde23cc37e5a12434cfc6df017faa7184f3948b1767d60ad8a1e695e606997"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/Prefabs/Spaceship 03/Spaceship 03A.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Vehicles/ShipReferences/Cube/Spaceship 03A.prefab",
+            "sourceGuid": "11b2a2ff1cdb5fc42925394ed6a483e1",
+            "guid": "23af1ec14705fa14f9af595849aaa00b",
+            "sourceSha256": "eea8aff6e0e15cb7c26f60b1e91b0331b57459e33ec3927629e44946d425f547",
+            "sourceMetaSha256": "02a304de8cc88e1a9c367e854d26aa9b898e044c3edb23dc6347438761f0040a"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/Prefabs/Spaceship 05/Spaceship 05A.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Vehicles/ShipReferences/Cube/Spaceship 05A.prefab",
+            "sourceGuid": "234cfa1cb806fd644aac68314ff6f46b",
+            "guid": "ab961f166f595cb438d8954e2b328e72",
+            "sourceSha256": "ffd5d5f090acd7bec6a399ff0e53949f14335daa4a36cb5cb0c09e7e5d59e3d9",
+            "sourceMetaSha256": "cf778f3ec84dbab7361a77d6a12f7a6a7fd04d04906c4f7cacc18fe3ee86191e"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/Textures/FX Exhaust.psd",
+            "destination": "Assets/Art/SpaceKit/Textures/Cube/Textures/FX Exhaust.psd",
+            "sourceGuid": "a1471de9a0a95274488f855358330615",
+            "guid": "aa9f4f6d2ef499044a7871eec80a862b",
+            "sourceSha256": "39b7ed90670a88f7240f833960a2c874d621d932b129004c09f05bf997d48d5d",
+            "sourceMetaSha256": "a945bda35a7684168995fe03341e9dcf25d34c8f7e4fdd7afe4f4670b94a1a73"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/Textures/FX Smoke.psd",
+            "destination": "Assets/Art/SpaceKit/Textures/Cube/Textures/FX Smoke.psd",
+            "sourceGuid": "05c7fbfbed9ae034c8391f95d0cb21a0",
+            "guid": "5664921927317da449ead006e930950f",
+            "sourceSha256": "b1ad188a81b1dfff65b97b3533673df69d72ab35570891ed5f5fbcd54864d9a7",
+            "sourceMetaSha256": "f5a2660dbe19685c72e20161c2621682b4ef0f5bed9f934682a16b5e59f4949d"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/Textures/Spaceship colorA.psd",
+            "destination": "Assets/Art/SpaceKit/Textures/Cube/Textures/Spaceship colorA.psd",
+            "sourceGuid": "3525d0d5e8c497f459456107d8d8c08c",
+            "guid": "d6a8d6d18595cd14d97aafe91c66124b",
+            "sourceSha256": "aa628b6476bcb4f08d9bf00be62198c9fa2901001d8ec8590e15b4ed0ecb82cd",
+            "sourceMetaSha256": "8ae74bade4da590ef5ed8db03401c6b6642432bcbb5d9c3dc40a816ba4136046"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/Textures/Spaceship colorB.psd",
+            "destination": "Assets/Art/SpaceKit/Textures/Cube/Textures/Spaceship colorB.psd",
+            "sourceGuid": "d808b50b366d13e4080ed7ed0c2e6006",
+            "guid": "e8a6c0d9ee5a99d498b6c5a32c1a97cf",
+            "sourceSha256": "e78fed2657bf168465d581c47a0faa4b9395605e5ebc356193a78131b33c35de",
+            "sourceMetaSha256": "7179c4176683f08158b7fdff712e8a25369a74eb69bd7abc78cffb608cfcd817"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/Textures/Spaceship colorC.psd",
+            "destination": "Assets/Art/SpaceKit/Textures/Cube/Textures/Spaceship colorC.psd",
+            "sourceGuid": "cd50290d0ef1133499692bdcaa8230fe",
+            "guid": "08972b5dbd5ddd948a013715883ccc97",
+            "sourceSha256": "5bd625feb5944853a78d9435bae67fce7aa5a4ebd10dd17ce68a0eb0f75ca6c2",
+            "sourceMetaSha256": "ad1c3bbec139688081a0c66d50b39d70553b9f64caf2811eeeadd806ccceee63"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/Textures/Spaceship colorD.psd",
+            "destination": "Assets/Art/SpaceKit/Textures/Cube/Textures/Spaceship colorD.psd",
+            "sourceGuid": "4d4a36ce5a4443e4d99d4988362676d8",
+            "guid": "4a8f46c8c9eedcb4f8add3d946af06f4",
+            "sourceSha256": "a70edd26b3dd7902e3bedffc40c37a16983faecdf5b19fb153171948332d7e1b",
+            "sourceMetaSha256": "5c3f270229cee729a6d6f53b27e300f8d53978a824b7745742de6cfaf87f3928"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/Textures/Spaceship glowA.psd",
+            "destination": "Assets/Art/SpaceKit/Textures/Cube/Textures/Spaceship glowA.psd",
+            "sourceGuid": "35ab2db621219dd4db73b00606555d66",
+            "guid": "bfcf949995e181249a309d4bb4150b14",
+            "sourceSha256": "7526cb1e3febf951a50a2df576e19a62150885cd14afddf4658f8f4a321d7103",
+            "sourceMetaSha256": "7c61a99163ffb5c5d794d40bb3c206ab64a9ff0e55f1344aad4499f9c6f1867e"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/Textures/Spaceship glowB.psd",
+            "destination": "Assets/Art/SpaceKit/Textures/Cube/Textures/Spaceship glowB.psd",
+            "sourceGuid": "4ed4eeb2518426744b61f27b3f461c4a",
+            "guid": "0d3667fa63fd88540ace7e9c0f3afdd0",
+            "sourceSha256": "1412dc6488bc6ca548d2e9f75b16ee52432f16ed6a3ea8a22faec708d1229add",
+            "sourceMetaSha256": "a831e0e4e01802182e6df5677c40d773537dddeb78c09ec4ee14c597b8929263"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/Textures/Spaceship glowC.psd",
+            "destination": "Assets/Art/SpaceKit/Textures/Cube/Textures/Spaceship glowC.psd",
+            "sourceGuid": "b3a6d105f7f0674458231009d850c8c4",
+            "guid": "8b511a197ff07494f962f35448b2569d",
+            "sourceSha256": "b3f8a3ff6e3c1517ba3322371c5064e2662df3a581bc2d7f891a97f2ab55a314",
+            "sourceMetaSha256": "8d02003d3df5ebe8abfc5f8255625df8dc225587ada2e438542c8069e4e997ac"
+        },
+        {
+            "source": "Assets/CUBE - Spaceships Pack 01/Textures/Spaceship glowD.psd",
+            "destination": "Assets/Art/SpaceKit/Textures/Cube/Textures/Spaceship glowD.psd",
+            "sourceGuid": "577e335c2e21e4a4b8a739b255736662",
+            "guid": "0eb1a6d0a8732f24391cce323976db7e",
+            "sourceSha256": "aea710e9c5cff91e25223b36451fc147594abf93b22dfe67f9e55257858710b6",
+            "sourceMetaSha256": "fea36cb245181205a4c72d77fee22bee779bcc1370b75edb78c84c88d817b62e"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/Alts/PolygonScifiSpace_Material_01_B.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Palette/PolygonScifiSpace_Material_01_B.mat",
+            "sourceGuid": "d8dfda64987cff5419b3497636a384d6",
+            "guid": "78f7bf4178a40fa4497360d0b05bc4f5",
+            "sourceSha256": "981d9b0b50e1439f5e313083b513c013ec50d10bdf5cab2c99f09e23facde3d9",
+            "sourceMetaSha256": "c1923df70913ce3d08aa3488f2ba42541751ae197b2f6c9351bbd1d86563f974"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/Alts/PolygonScifiSpace_Material_01_C.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Palette/PolygonScifiSpace_Material_01_C.mat",
+            "sourceGuid": "ed3bd972f89e47e42843b13fe786b1bc",
+            "guid": "8b5d50fb7de56ee468a426ce70498af2",
+            "sourceSha256": "9802d4057f4bc0ffd6dca411bb6f5274fd35f5340b2003beebd8cc4cb1e14b41",
+            "sourceMetaSha256": "383cab2e657e880dcaf0120e522517888767e08a6f83d64dbcd28a745ac6e938"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/Alts/PolygonScifiSpace_Material_02_B.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Palette/PolygonScifiSpace_Material_02_B.mat",
+            "sourceGuid": "8a6d64850f424d3419b8d9df49078ff4",
+            "guid": "4f66456ac42eb964a9a9defd2374946c",
+            "sourceSha256": "c5d5be7a3df3a59763ff4adb1ae9897f7d5700dfc13fe89e13ccd1f89b9c65e2",
+            "sourceMetaSha256": "f1ffee5568157a711b39e53bae08046352e601fbb1b049006de8dcc3e5f7030d"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/Alts/PolygonScifiSpace_Material_02_C.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Palette/PolygonScifiSpace_Material_02_C.mat",
+            "sourceGuid": "0c673a34921a40e41a11b1f96f70b371",
+            "guid": "a0109335ea29d4349b267489f5fa65e4",
+            "sourceSha256": "b38e581522f992bcaac42628ad5ab3ae16c250aac2c72ccaef3a01102c11d4de",
+            "sourceMetaSha256": "9fcf571c4ba60daf83c429303bc5369d1fb4d95ff416af669d49e135db3096cd"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/FX/FX_Blank.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Materials/FX/FX_Blank.mat",
+            "sourceGuid": "d167ef288d96bb84ca9743bf908f53cf",
+            "guid": "af947c9f0dcadab4193426c3ee740243",
+            "sourceSha256": "a9d8365a59fca2c9f19e049192a3d32ea1f781882d2597d01287aba461c9679e",
+            "sourceMetaSha256": "750b8f052e869dddcfa8bf6f45921b94b0723c3e82603457f79dc20cb55acf7a"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/FX/FX_Bullets_Laser.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Materials/FX/FX_Bullets_Laser.mat",
+            "sourceGuid": "918cab7a2574d6c4ba7ae6171240559e",
+            "guid": "3ebc42ab66349404790bde6458ec7c15",
+            "sourceSha256": "fafa2e6ea164b4a3f39422f8df2e936ccf3fe06181483c12a9f12e11893adcc3",
+            "sourceMetaSha256": "881491aef7059bcf7eb7eda4bc4dc0de10af6768c2b245d0e0f520b90814706b"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/FX/FX_Explosion.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Materials/FX/FX_Explosion.mat",
+            "sourceGuid": "c44d9100c3587264ead98493219f1fa1",
+            "guid": "5e2f03aad0129964ba5d3cd80cc82824",
+            "sourceSha256": "150eb3094701b7bf995fd5f8f2bed1342f21e52909081596b1026ab8aa6685c4",
+            "sourceMetaSha256": "ace9e55b803e4ba784c9ed8ef09b5355dca40e718c8b91c905bbaf7dd3d1b14a"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/FX/FX_Laser.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Materials/FX/FX_Laser.mat",
+            "sourceGuid": "a37e90a722ff13b4281acd1103c69154",
+            "guid": "6cb3cf39df7330c4ca4abf08759e4599",
+            "sourceSha256": "979ecdcd5358b1a9c196ffb14ae82bec5625a3812dfadf7fb4243626e23a5d5c",
+            "sourceMetaSha256": "875e0f3ccbfcf47655e511691099a86178f7f5d88f058f8930bac60b9d065e35"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/FX/FX_Lighting.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Materials/FX/FX_Lighting.mat",
+            "sourceGuid": "125544cbb97615848a5d285350b798fd",
+            "guid": "403fb29cf1aef3e438729f85ddaca417",
+            "sourceSha256": "d4819fcffbeeb4b301880f052291e4e29025a0b2bab3b3a26f8e6facd3528bc3",
+            "sourceMetaSha256": "777f5acd3c4e9a6befbd75f3b140c671510aaeffcbdfbfddc8b1d3e7c4001460"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/FX/FX_Lines.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Materials/FX/FX_Lines.mat",
+            "sourceGuid": "ccabe2f6d0ff0b34ea4c6ad84a5748de",
+            "guid": "2ac1676420dfd7c44bd3e3d3b0eaf53f",
+            "sourceSha256": "a4e2d4f4b9b92a29c23bbc6ea2bfbb61654da2ef17f8c39fc698b3805a0b429a",
+            "sourceMetaSha256": "97258431355650be1814ffe6649f5fe17422297317619fe5cd33bbf798aa4da0"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/FX/FX_MissileCloud.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Materials/FX/FX_MissileCloud.mat",
+            "sourceGuid": "a024a8c4e754a3d469880ec32ac46bc4",
+            "guid": "0822cc51b6a576a458e4bc62aafe5496",
+            "sourceSha256": "5eddfbbb9f060961094ca098067e7dd909d744bd97a2652d17055d3ecd2a5abd",
+            "sourceMetaSha256": "575d02f4e6576e0103abd78ad9d3a82d85cd2fe9412a6bc6f1c5252f18cae85f"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/FX/FX_MuzzleFlash.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Materials/FX/FX_MuzzleFlash.mat",
+            "sourceGuid": "9e790bbee27d08e45ab96d553ca371c8",
+            "guid": "3d9781f32569d7d41977d7879c972315",
+            "sourceSha256": "e8b0899be2ed0a34a01bb7be2dfb1268eb603cee33d40d819e6cde9b7277faba",
+            "sourceMetaSha256": "111535ccbf633a106458733261b26b8c751738eb5b6f98a569ffe3cac348f58d"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/FX/FX_Pebble_Debris.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Materials/FX/FX_Pebble_Debris.mat",
+            "sourceGuid": "6205a7363db3a834b93abb789a92cb31",
+            "guid": "d7d025d01fbdfa44da857e1cae1bdf07",
+            "sourceSha256": "2801550c7a75ae1abc11e9b95c4f12bd8232c71ccc1dccaf24df3365bd0d5db8",
+            "sourceMetaSha256": "dbf39b1592ef8325aa75671b5d76224196ffdd5fcb8a9704b2e119de71194a94"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/FX/FX_Polygon_Scifi.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Materials/FX/FX_Polygon_Scifi.mat",
+            "sourceGuid": "fa9e67520e3a0c04996a1f31dd165bb9",
+            "guid": "dc1870192c0480846916a9c3c96bcbfa",
+            "sourceSha256": "aabfc6f9c066d0141c6339dd6f60329116f4ba214be12eb4be64bda1a646db3d",
+            "sourceMetaSha256": "7c0dc600eea7242df709f1f77a9dedcaae9f2f5450e779c0a4782dedeb82ad9f"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/FX/FX_Sphere.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Materials/FX/FX_Sphere.mat",
+            "sourceGuid": "41e9749fbfcb2214f8ce3b9b2bdca971",
+            "guid": "8173e8f5c5137ec45b35950e3f10df6d",
+            "sourceSha256": "92a0f9dad792bccd9a2b54e87e77e2163ad48f25c2843db28691e0832a7309e0",
+            "sourceMetaSha256": "8fd749ee69f1bb359699cbde9c6b538269ccd79c626995494a1a2ea9b73e3503"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/FX/FX_SphereGlow.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Materials/FX/FX_SphereGlow.mat",
+            "sourceGuid": "83bf344aa66f8704ab56cddca307d1cd",
+            "guid": "5489e5352c88caa46a23ef336ad894ee",
+            "sourceSha256": "d2b37435dc9e4a371c00eaba7315f9ab2a11cfa9fce10a37ada02fc1e3ae2cf2",
+            "sourceMetaSha256": "90fa2f9951ce491a797aea93ff3deb10882465326ea624747b836bffb5caf4ec"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/FX/FX_Steam_Mat.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Materials/FX/FX_Steam_Mat.mat",
+            "sourceGuid": "47e542428617fb845a4b882c2b0a699a",
+            "guid": "3d90a242662adf847be2a893fe2acfe6",
+            "sourceSha256": "6bdf93b9418e8f98c2c82781d2c80835c579eb40e0252a65f79b9e9286d309fc",
+            "sourceMetaSha256": "f105f0dbcfe3219087f2a3b3bf901781684ea02d06f04cbbe3b856f8ac61ca9c"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/FX/FX_Trail_Streaks.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Materials/FX/FX_Trail_Streaks.mat",
+            "sourceGuid": "a4ba6452393c9934fbda3b88896675cc",
+            "guid": "1e3f1ab12ed8f7a44827bf52d0215845",
+            "sourceSha256": "c6ffefdaba79af40adf458da290c674becd0443fbad87c69d29c80c738ab727d",
+            "sourceMetaSha256": "9668fa35f8cfee0313b4e7ecc0e31dc102d3e328737ffa9bc42cbee6d8f1ccd2"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/Planets/PolygonSpace_Planet_Lines_01_A.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Materials/Planets/PolygonSpace_Planet_Lines_01_A.mat",
+            "sourceGuid": "59ddaf0b08137c746bf06ef7ee5f184a",
+            "guid": "f473806f8855f434ca618c390bd6fc2c",
+            "sourceSha256": "4fd67d17ff1872d6b903d67610cd3474c1c9cedee8e48375f7ee0792210adac1",
+            "sourceMetaSha256": "fc0e6f4e70a02bb91ae47cdb7c60a20b602dd1434788d2401c877c7a302194a5"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/PolygonScifiSpace_Material_01_A.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Palette/PolygonScifiSpace_Material_01_A.mat",
+            "sourceGuid": "4cee7a5983b187943adc589b9cb1f084",
+            "guid": "f1660da84462a2a478224f980a1af98e",
+            "sourceSha256": "d5bad3a1c3c9a3479d030502a02dcf54fb035304efd6ca9dd45e0cbaff5c5088",
+            "sourceMetaSha256": "a034a6d466fcf6d09a78fd13b9e1a9316ec55208c9b062ca8224456b04714bfe"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/PolygonScifiSpace_Material_02_A.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Palette/PolygonScifiSpace_Material_02_A.mat",
+            "sourceGuid": "eaee0f11d6e5b7d4db338fedb688937e",
+            "guid": "7b0c939f6ae7aa647a8120335f2f3f05",
+            "sourceSha256": "d564f3d709b677d240a21dd4dec8948a911585de188548203ff2f769ac8020c6",
+            "sourceMetaSha256": "c9614514d7f2b4f8242e35ec8a36d8b129f40000a426dce62bf6e535e644c9f3"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Materials/PolygonScifiSpace_Ship_01_A.mat",
+            "destination": "Assets/Art/SpaceKit/Materials/Polygon/Materials/PolygonScifiSpace_Ship_01_A.mat",
+            "sourceGuid": "590c03f519d4cd04ebfa3c2dc671f0f0",
+            "guid": "8c7a7fe000ece9441bfa2a200af41ced",
+            "sourceSha256": "7d077b091bd34ec6770b9fd6ebf17007f2452d96ec0dba4bca594e251d1dccc1",
+            "sourceMetaSha256": "1099e7abaede20e8fe0cad110138441c8ab91422bed298a5d34a55f554a65136"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Bld_Wall_Mechanical_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Bld_Wall_Mechanical_01_Convex.asset",
+            "sourceGuid": "73befad33f9fd39489760c4c7739b827",
+            "guid": "95215612d3e314f47ad12d848c13508d",
+            "sourceSha256": "f3cf7da8dbeea66d19acb1f9fafd89c8f29a73019e397e6f3ffc0578f4059e67",
+            "sourceMetaSha256": "57ac1825b9790622dcb0cfc4c0a49bf2814b2f22bd7402f6a535a6a9b8f95302"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Bld_Wall_Mechanical_02_Convex 1.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Bld_Wall_Mechanical_02_Convex 1.asset",
+            "sourceGuid": "e1761f1fc816e0345a3e98e448e4ab30",
+            "guid": "9552e7c7f2782df4195b0b388a72bad1",
+            "sourceSha256": "056c70c4bd0621f46c1e78a0670257b5f7fa26d6a67b71310a49508869762543",
+            "sourceMetaSha256": "cf1807d2ea2206c1f5d9ac781db7a8d526576fb495fbad36290aabcf3bf23674"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Env_Debris_Pipe_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Env_Debris_Pipe_01_Convex.asset",
+            "sourceGuid": "f27255648becb33448e771a323c095f8",
+            "guid": "840a381b6cbc47f4b8db5e5fc595adb6",
+            "sourceSha256": "f39bce68f6256671d8b82d9a563ffa18c4a4999d06d8304de095cb5a3401dc93",
+            "sourceMetaSha256": "06b4b2a79fe326fbcd2c415dbb0066327e4ba7872e652939e8bc33a66610de26"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Env_Debris_Shell_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Env_Debris_Shell_01_Convex.asset",
+            "sourceGuid": "628eef35f4492574a997ff0ecc2bcb11",
+            "guid": "e71f6b66bdaeb0b498e5db07d11ad9f1",
+            "sourceSha256": "8036cec8d245df0cba2c4a125885083b39274e5f195abb184656eb71d6a2888a",
+            "sourceMetaSha256": "0542ea5219e6f6b43a96e010d13dffeb84a100d137617af44e7da9375a76aed5"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Env_Debris_Shell_03_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Env_Debris_Shell_03_Convex.asset",
+            "sourceGuid": "bb5e889dfb800074a9dacbccae0ea0e0",
+            "guid": "a18c4f1a48e3c2a42a522d09d63738c2",
+            "sourceSha256": "d4dd7a37f3a5b2f5bbdb06157ca69ef055b01ff7f5ffee7f3c6893653de30d15",
+            "sourceMetaSha256": "41c58da932f0d2228d247b490d3c8e9d08d9d56d637b3fa1f332eb453b473a58"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Env_Debris_Structure_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Env_Debris_Structure_01_Convex.asset",
+            "sourceGuid": "6cebd302911aec6498f72d7a2eb7a3ee",
+            "guid": "73941ede48bd2404191e0d9136efec48",
+            "sourceSha256": "918cb87934b51bd2c27009915d6e9e742b773847c34474c03e73c90b322537bc",
+            "sourceMetaSha256": "36d9587a0b3522b4ef226cfade2a145a12045129f408cb355fd8ca510f2caf6a"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Antenna_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Antenna_01_Convex.asset",
+            "sourceGuid": "d9abce0d668736f4f834862838bfa483",
+            "guid": "2231dee1854ba5a449fefa1c60b183d3",
+            "sourceSha256": "75c3e7893eaeab61b1ee1f63a634f758f1a7be3a44225cba8f6b7f37f58d42d3",
+            "sourceMetaSha256": "0bbbb0c023d912438177830f17b38c339bfa2d7c98dc51d1acfc63182342c780"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Battery_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Battery_01_Convex.asset",
+            "sourceGuid": "8505e241ce0527049b5eb141bae4c1e8",
+            "guid": "86a7306272a554f45907b58b616cb3ec",
+            "sourceSha256": "3870b6267827f8a9770ecbf3f7a1a8ee4e35e8976f2a2e0eb8f093addb2547b1",
+            "sourceMetaSha256": "e51996c4300346ff261cafa57b5be74439ac88c1ca51e0c35dfbaf41ded34b84"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Battery_02_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Battery_02_Convex.asset",
+            "sourceGuid": "08120df7307664245a9b6624e5c6fe0a",
+            "guid": "d2032b1b455450a488c39e2126338083",
+            "sourceSha256": "805585446abb95d4d042255f09a39e8149a99bceb92b9b44de6d0b9280f6e24c",
+            "sourceMetaSha256": "19eff74144b8c582aa7a2a12bcdcf5ff7beff2721a364018a04d996b51837273"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Battery_03_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Battery_03_Convex.asset",
+            "sourceGuid": "ad5cd1ce3c79f2048aa7311e724b6473",
+            "guid": "aeb47a56bba6c3f4187ddda82e64781a",
+            "sourceSha256": "27374e0a51d098775ea2df36c8424f753b405058601c5fd6e04ead99ecaa5ca7",
+            "sourceMetaSha256": "fddfca17e62270f02042db1336c5ebf00cc4897349c785b4216a540b8d745296"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Buttons_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Buttons_01_Convex.asset",
+            "sourceGuid": "3a7665620e0a7fe4a8f67779eff6b74f",
+            "guid": "8722ab8572cb2d0488916674698d563c",
+            "sourceSha256": "83f906b4ca6248b0a80af99f4cee5a115921cf909b34f43b393b895f5a5f9105",
+            "sourceMetaSha256": "db6fbfb913d41f2e89a6cc38188a07ce20ae25d749d24e31ca92b12e96f22484"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_ControlPanel_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_ControlPanel_01_Convex.asset",
+            "sourceGuid": "a85bf393eb2442e4bb50dc03b2a67d27",
+            "guid": "7819684bf028a374d94e606808202182",
+            "sourceSha256": "7b1feaee3094a40c3b0e02163731ed4cdefa80f638994f26f6bcc9d5f957cbd3",
+            "sourceMetaSha256": "d65628b72949c3a8c9f9361e3f9b38625cc9b259bf8c8bdf2cba3fd7140d5cdf"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_ControlPanel_02_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_ControlPanel_02_Convex.asset",
+            "sourceGuid": "e87fa03b44bcf224f971597139a2dd85",
+            "guid": "6a5b8c2da21cdfb4c9842db2f1ff2301",
+            "sourceSha256": "3618eb5688eab6792b0977ab450ee3e859ada9deed734fe8dffe50572b4c6f08",
+            "sourceMetaSha256": "667681d8a7959900eebd67a6c4216168e7e14b6ca58a8e6634e32c6641f770fc"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_ControlPanel_04_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_ControlPanel_04_Convex.asset",
+            "sourceGuid": "03f79e6cc4f8b8f4c82216c5fec0b2d7",
+            "guid": "55ad9c52e165a194a9980c837ff884dd",
+            "sourceSha256": "fa64870e5d290c99a0d052f64d46cc324c77e379ecd395463e54b97421bb638b",
+            "sourceMetaSha256": "9c1347f8f1a74279887633c27b801b57e3e560ace9f78fb518d2a33a0eb52ccc"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Crate_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Crate_01_Convex.asset",
+            "sourceGuid": "e91820d93c8f5664f84a2a6745ef6f7d",
+            "guid": "cf293d2a0c30b0243a281a1e6882c0fa",
+            "sourceSha256": "c26b3f9c5a6428b0f54dbcd5a9fe82019c9fa4d8c25a630e17c0fa5f8c89c107",
+            "sourceMetaSha256": "160e116c8530e14031cbd7c4a86ccb9877f87e6ba244eb55bdefe8f1740e6898"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Crate_02_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Crate_02_Convex.asset",
+            "sourceGuid": "e58a1adf0c18c7545abf2d5d8d109ea2",
+            "guid": "f9073323f13158442b8674e604400d07",
+            "sourceSha256": "08e4de368b9596427d6b94bdd993758829c4d6e633c5b557906db6d75e03e325",
+            "sourceMetaSha256": "f857dd1bc5ca99602353f7c611d62d47a852e4e2f3ff6b9df2c1ae5fd653e774"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Crate_Ammo_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Crate_Ammo_01_Convex.asset",
+            "sourceGuid": "e2f337948d96f14419395c89de99ae66",
+            "guid": "91df0a1498bc0a2458c54b18bcedfa97",
+            "sourceSha256": "910f2deb78ae370a3d903041021bf3c4e3adf391cca95de07a067bcc27105f72",
+            "sourceMetaSha256": "e5d093b32d42af4140b39f4552dcd502eaf19f778e5db11b2c05504b03611d15"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Detail_Pipe_Corner_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Detail_Pipe_Corner_01_Convex.asset",
+            "sourceGuid": "6f3d5774ceb47944994fb9487e90ede5",
+            "guid": "e9076c5b889124a4c99a2dbb2f8a39eb",
+            "sourceSha256": "bcf314139fc55801bc22fbd46952fcb008efe06c6c6a3bb93522b59cde7660fc",
+            "sourceMetaSha256": "55c194ab308567beb24e522242b7989366068866cbcc286b3c040a8f01b21949"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Detail_Pipe_Straight_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Detail_Pipe_Straight_01_Convex.asset",
+            "sourceGuid": "324d689aa012b7349b3ead8f6a863f4a",
+            "guid": "8887d6b60f066d041bac4805f4aee82d",
+            "sourceSha256": "0f75707f3da19a9945c9e7c7c03e2c01a030b5d5621e759312f67f5540da3004",
+            "sourceMetaSha256": "2c1b4b44ea230e53962f9c0ace7ccc6fb92f3ca85699d12abf23440ff311ac59"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Detail_Struts_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Detail_Struts_01_Convex.asset",
+            "sourceGuid": "df6793779ccff0e4a9ad263b518d2ea6",
+            "guid": "5a9fd6b4b9809634e9e34f125a413c43",
+            "sourceSha256": "7d37a58fc16b9f213f60c1dc8fdddaecdc54cdcf074655f897ac2457515ee010",
+            "sourceMetaSha256": "47ac10641dc1728224809ced07f1e6a6300b99bc206e1bdc5db94327e7fa0630"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Detail_Struts_02_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Detail_Struts_02_Convex.asset",
+            "sourceGuid": "7a0de2d6067988444b0b3ed60aa422c6",
+            "guid": "1937b49ca70436444bb55441a41c0643",
+            "sourceSha256": "314806f10601ba6b65dd8fa8109fa5c06c0da71b1fdb8b680b8056a6df08fd14",
+            "sourceMetaSha256": "191e68bed932d199fe511c81c67dc97c433c676e7b88ec82e98c3bbc72cfbd22"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_EnergyPort_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_EnergyPort_01_Convex.asset",
+            "sourceGuid": "bb37f5c6a2398be44bfbb2c05872b1bb",
+            "guid": "f7ae1268e8c4d9e4cad776f97b17867f",
+            "sourceSha256": "095b9b6b351d3cea96d858a4d7d443d7c0b7417fd628361b09778f3bac3f52a2",
+            "sourceMetaSha256": "adcef2342012d82ee3f679383f7980123d572d57ff8c98250e1fe064ac4137d0"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Engine_Construction_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Engine_Construction_01_Convex.asset",
+            "sourceGuid": "cd31b55f95832664891dcaa9c25bff6c",
+            "guid": "31ac6f32597e2ec46aa796a424c37967",
+            "sourceSha256": "076a89f5f20b4b104e12f9f49a17bce41679266fff90be866283399c9712b757",
+            "sourceMetaSha256": "2d2e003c17700eb3df1b07324abc7276de2a8d1793be6a1ca48d0881053f6223"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Greeble_Panel_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Greeble_Panel_01_Convex.asset",
+            "sourceGuid": "7688643efc2d5554a9176017a41b54ed",
+            "guid": "2dd1306f1134bd5478ed0ce0d7da4637",
+            "sourceSha256": "efd1837c816cc778b4f7ae9b165780fc16cf4f31c5a9c73aebd65937afa149b5",
+            "sourceMetaSha256": "40cd5daf0df4543c952274cb2af7591748e90d33d14ecbf823b6c665ec5abbf1"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Greeble_Panel_04_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Greeble_Panel_04_Convex.asset",
+            "sourceGuid": "175042fd7dcc2c44b88aab7ba636c9dc",
+            "guid": "9f6c358d4c1ef954cbf839deb12b3b31",
+            "sourceSha256": "ca93e210afa6a11dbdd507c2fcd7fa08b2af46d97903a4744fc26d55dc8206b9",
+            "sourceMetaSha256": "34f933798e32cf700009ab1915085bc18d4b737c43b3cf0b591f2faf97927d91"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Light_Panel_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Light_Panel_01_Convex.asset",
+            "sourceGuid": "9b2e832eb43e2d64095c2529a7cb91bf",
+            "guid": "cb73c919b3bfe9949aebf0f3e5d75484",
+            "sourceSha256": "76dace1cbbe16720242fd8bec8bdfd0bf849345a0634452df6c4a083581cf3b5",
+            "sourceMetaSha256": "930fe7002bbb51a4f5c33769afb7b48d141a8ce70ba6f5faabccc9765baf648a"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Light_Panel_03_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Light_Panel_03_Convex.asset",
+            "sourceGuid": "c3513963699c4274da6107fe15b4afee",
+            "guid": "2ab1a52a324722840957eff0fcb42f9f",
+            "sourceSha256": "7c96e8652ce06da23d293458b2331ebfd59bceffe98739d20e72a12bd7ccb994",
+            "sourceMetaSha256": "3437390100542554ccc2187aebe639d21bde5459815e71afb513e4c8519a9d72"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Light_Small_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Light_Small_01_Convex.asset",
+            "sourceGuid": "1a9e6f476e877294fad722bcb10e6352",
+            "guid": "09e6f555d5fc8434b9e2f11a4153666b",
+            "sourceSha256": "b7b711a67d4a39a1ee791b994eec47f242398cc1353d3cd0a3dcee3943191aa9",
+            "sourceMetaSha256": "3020196cf0b9dc11cbad2cf22483597b5df790372a3e327dbbdd5666d7101baa"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Light_Small_03_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Light_Small_03_Convex.asset",
+            "sourceGuid": "7294ed7f6a1942549ae1a07b9521e7d3",
+            "guid": "9e0bf8c8bf527614cb321cecdf7190ec",
+            "sourceSha256": "31aed41d59c3985a186d3f9d3127f32d27e72b6d1cf985ea6a053da186287688",
+            "sourceMetaSha256": "cbd0fe17e5ca0466f44828456309f7ad15c793ca3519d32806f9f3bed6b5aa03"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Light_Small_05_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Light_Small_05_Convex.asset",
+            "sourceGuid": "8b7379f434da14f4a94d76f4aa7fb2e4",
+            "guid": "4116e9a9b4936d9439bfc57be5ee63bb",
+            "sourceSha256": "67bdad496ab0b4f0960a084188be9634215f97fc1b44da8637d547064005f210",
+            "sourceMetaSha256": "8507bd075dbe5d34d3ea26c4a34977db095e46b9a88572d1b8bb9e9e679bc084"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Missile_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Missile_01_Convex.asset",
+            "sourceGuid": "67a57f3fc06b8f449997b00d8d396431",
+            "guid": "b8715a85b3240d54fb3b2b92739bc954",
+            "sourceSha256": "0defecb5b4bab8dce9b1f2e727ce5a7482249ac31f94054d76c55de172cbc1a1",
+            "sourceMetaSha256": "11605522dbf66995fa37a5e499ebee74fd8545a6c53f52fd34ab4d04689e45c7"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Missile_03_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Missile_03_Convex.asset",
+            "sourceGuid": "91663975894a4fc4297684fa09725947",
+            "guid": "2752a968182211a448ed8c832e10b5f1",
+            "sourceSha256": "9d0fd3dd9091a0f3733d1abe974ad2048e365cd57257bde95623441cda985cc0",
+            "sourceMetaSha256": "95cd9068f5256a82964da87ed8f9f71eea79927c9f3f9b23bf777236df8a3364"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Missile_05_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Missile_05_Convex.asset",
+            "sourceGuid": "1e96819e89db9af4ebee9c4e79a36cdd",
+            "guid": "6767344263eba5d44bfbfb1095f124bd",
+            "sourceSha256": "a052f3f5b98d1d88f293634fc71c0ed4263bff80a599129742b8634e24182f4a",
+            "sourceMetaSha256": "6ade56ac58ea9626553318abfe7a0e33b1239568f85e0ff9012a8fb0b92d0a66"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Oxygen_Tank_Small_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Oxygen_Tank_Small_Convex.asset",
+            "sourceGuid": "c5923837e5f33cc40a44b6959d0feefa",
+            "guid": "1e61bc38923a4f64caef601efbab7dbd",
+            "sourceSha256": "0da1340c7f16935f7824f16af69112df85d52fbd3bd5d2a6dfdc1687b9d73522",
+            "sourceMetaSha256": "c08c675edcdf1e6a645085caa2fd1c119c06520b411cb6aa6c900174aafc1586"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Radar_Panel_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Radar_Panel_01_Convex.asset",
+            "sourceGuid": "d6d9111829bb6564384f8a8a596eeb80",
+            "guid": "d29882fefc3359046b2a7ca7b0f4b547",
+            "sourceSha256": "8e994393078560e6a4f301a0256cc4927988a37edf8fcd47f907f246655ca493",
+            "sourceMetaSha256": "fda937ab48a24cfb247e58b505160d641cda9b46731f7025bd0a0edc95da5bda"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Radar_Panel_02_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Radar_Panel_02_Convex.asset",
+            "sourceGuid": "0112a35bf4303234aa09396069e80121",
+            "guid": "9f75b667817dfb949a635607386b2fde",
+            "sourceSha256": "b2352b315714fd484815be7acc08c9bc542b7fdd7602ac73a1e4b6bed1dc86eb",
+            "sourceMetaSha256": "0bd2c104e219b100dcb4665aa5b2e75165d32ef95c094c9a5bf4a23a55409ba3"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Screen_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Screen_01_Convex.asset",
+            "sourceGuid": "94ff961f983c04f44b9139d9f9ae79d9",
+            "guid": "f795172b56279d64f845e052c376a600",
+            "sourceSha256": "7ece3ee87eb2efe0f589af128eb8254b721e4c8f512f13d65876a59dd5484c22",
+            "sourceMetaSha256": "a476286cfb01ec883064f1eaad4cc8ed16bc577a2efab0558933aabf94d3d13f"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Screen_03_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Screen_03_Convex.asset",
+            "sourceGuid": "cb193c7f9aca1d141abc5f62e3c4e717",
+            "guid": "aa394c491f51743459bf6a92a701ea19",
+            "sourceSha256": "15f5ff980d37a4d3db59e135238a17eb8b9e7de86d06862e7d1891d27da4af06",
+            "sourceMetaSha256": "778994e1f45aa66b6d066242ee998436872d5fdc1aec9d577fb745ba156d5539"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Tank_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Tank_01_Convex.asset",
+            "sourceGuid": "23b453ad7a205a34184507d3defdeed0",
+            "guid": "d9435811fd6df024aae2599a18e60f33",
+            "sourceSha256": "e8ce31255bca3813963fbee92a2efd005ea597a836d28f8621a5cf9196895e9a",
+            "sourceMetaSha256": "6993cff244e27311d595224a1c00b585933e384d20cb499249889207eb094841"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Turret_Base_Double_01_Convex 1.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Turret_Base_Double_01_Convex 1.asset",
+            "sourceGuid": "1d6bf23d2e366d24c91e6e3fae4d03d8",
+            "guid": "c77ec3f46fca2cc41817bb206e8a36ff",
+            "sourceSha256": "baa4db2873565aeb1ac6d04f595eb364bdca714f3e927be468e735d8fd88807a",
+            "sourceMetaSha256": "67a7cfd84aee064d3c4239c7365580ede7b3567d1e7c231ae8804ab61a091014"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Turret_Base_Double_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Turret_Base_Double_01_Convex.asset",
+            "sourceGuid": "f655f3a9a6a34774fbdb99d93dc3d657",
+            "guid": "affa1ee4e579fe34fbc6f2db16951ff0",
+            "sourceSha256": "8852c7e11e7988153ee9f623dfd30df101941e108a5cffe00fd7cc828318e99a",
+            "sourceMetaSha256": "229758eb0b48ae58341568080752e5751b62abf898489fef81a110280a8bda91"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Turret_Base_Double_03_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Turret_Base_Double_03_Convex.asset",
+            "sourceGuid": "d1feef808cf088d49a29ae4deab24148",
+            "guid": "a81d59dd51c71064e9d3ef22e0fe4d7b",
+            "sourceSha256": "d552b97f0d9e256ed59e17afe9cd1881777a1478fe6a2db1524bd46b61decfc7",
+            "sourceMetaSha256": "d0f150ccc40b434baa62a027876b90c4cde24d0f151e46811551ffa69fbb2a9d"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Turret_Base_Double_04_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Turret_Base_Double_04_Convex.asset",
+            "sourceGuid": "b9b845662f4ccba49b124cad8d2bbd99",
+            "guid": "6e4fe3389aba96e45a0241c9cafd75e2",
+            "sourceSha256": "088cc0818441552ecbe08de23a84e822cd5fdf58ee4842571a5a6efe5ee5980d",
+            "sourceMetaSha256": "56597a3592f1833377e74ca7bbe905cb18cb26b05f68f46f2c6a7aeb4c92ef98"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Turret_Base_Single_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Turret_Base_Single_01_Convex.asset",
+            "sourceGuid": "9264318a02957fd4b8b8924fdcb33e01",
+            "guid": "ecad086a2f8bf6b4e906b409b2093494",
+            "sourceSha256": "66612de414551d3587718e84ed25d9536c1abbab988869cf621ae1f9d92bd2e2",
+            "sourceMetaSha256": "8706cb61e97e59cda2d669ac03682a32274cc40a1d2093063ad102fba233a82e"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Turret_Base_Single_02_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Turret_Base_Single_02_Convex.asset",
+            "sourceGuid": "f114b8a79efa90942bc15769013d55a4",
+            "guid": "a7826eb51fdcce94da4e22bda3c5cc33",
+            "sourceSha256": "a188486904c21ac3d7f27fcb772dc81cbec9daf41d22c7b1094a38dbcff28c1c",
+            "sourceMetaSha256": "1f5eb6b5b0bb4bb62ee4d4ff14cad8fe55a495e7746ae0b5df5c707a875e3c48"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Turret_Large_01_Convex 1.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Turret_Large_01_Convex 1.asset",
+            "sourceGuid": "c1cb74d542589ea4ca2651fd49669fb6",
+            "guid": "a46872d818055144baaae6c7d7b6aeca",
+            "sourceSha256": "883b04494383da00b36da1be065aeabd1b1b7682faef8b9af9382b15b28128af",
+            "sourceMetaSha256": "d926e4c07bc1f9c142f06dcef0e9a5853d9e1d6c0ac3b651b0bf0a0862fa15b1"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Turret_Large_01_Convex 2.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Turret_Large_01_Convex 2.asset",
+            "sourceGuid": "68381cc577c754c47a6b749dd59ef8fa",
+            "guid": "653831618aef63d4d92e29014504791f",
+            "sourceSha256": "ca8cbf0159138afc5cafeaf9712c1aef1baeaeb62f5403eccf6d65af5da6348c",
+            "sourceMetaSha256": "7b4586f931da0435738aead83c208c738372a2ec4b874517ef835422397897ef"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Turret_Large_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Turret_Large_01_Convex.asset",
+            "sourceGuid": "0278206bf8555d145857bf250f070f4d",
+            "guid": "66ef3cf0b984d1c4689ec7d720fcff27",
+            "sourceSha256": "c806cb00bddf291b2f366f6e30148abf02267ff60f4b8222bb21f217b08eb54a",
+            "sourceMetaSha256": "24707b97dde126f3d75d3b1a7abbc5773cabb8d0281d4302c30ca7974b3d4a24"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Turret_Large_02_Convex 1.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Turret_Large_02_Convex 1.asset",
+            "sourceGuid": "85236408e9ec6c04b86e152b03c083a1",
+            "guid": "11c0eae8d5c81e24ba69f6790cfa19eb",
+            "sourceSha256": "6cf5b5ab183049e7429323f774c8bdff9df13bcad1791bcbd238fad964c06f82",
+            "sourceMetaSha256": "38bc2787918d93129fb766c6dd9c5578a92c17f1e1f4f9a2f76985d9bef6fb1a"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Turret_Large_02_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Turret_Large_02_Convex.asset",
+            "sourceGuid": "8c3470dd5336a8c429f81be215721f21",
+            "guid": "0fbd43b187a3df14e894dbfe3b9384ed",
+            "sourceSha256": "25829b1598c6e317ee025f66e5d6e686ca8e79467943ed2d56442cb8ffc203a9",
+            "sourceMetaSha256": "b649e832b7bcb55f0770c0527d0b462c9dc64b94ae91f89941bab839d98daf3f"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Turret_Small_Ceiling_01_Convex 1.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Turret_Small_Ceiling_01_Convex 1.asset",
+            "sourceGuid": "9e4a25330e8e38d43ae0dcd1180d7c58",
+            "guid": "baaf6bd20199fdd43b86eaf6c14cf87e",
+            "sourceSha256": "c0a11fc1b44dab2decacdfad71caac0fabead3b914d946b48e09cd53fa94cccf",
+            "sourceMetaSha256": "99e54479146feb67a3210e0e6310ea7ee6325a462f53223f9ef86b162b8c101f"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Turret_Small_Ceiling_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Turret_Small_Ceiling_01_Convex.asset",
+            "sourceGuid": "042857f5450820c41ae8e3d7e749ef1b",
+            "guid": "600a1c112b2663047852735551029204",
+            "sourceSha256": "38d7e1cb2e3c345ace5e7e3280585c7a6873b0116e14d4cab4e04b134991f63b",
+            "sourceMetaSha256": "ec3ba41207ed556c96562f37381a66fe97be070367ed20a95c2045878cef6269"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Turret_Small_Floor_01_Convex 1.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Turret_Small_Floor_01_Convex 1.asset",
+            "sourceGuid": "38e029eef364f014f8a5f0ccaf60741d",
+            "guid": "2fae021ff76093b42b6ee735b0ce88a9",
+            "sourceSha256": "698fbd7686c05768dfe5e56010298d85ca0cd8cf218401b681d89654bc52f12a",
+            "sourceMetaSha256": "3f371537a3cedd59f01a5912014df1f3ae8f8e5cc2092334da4635767769bac9"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Turret_Small_Floor_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Prop_Turret_Small_Floor_01_Convex.asset",
+            "sourceGuid": "199357ac67416194a8c88d304cacbe42",
+            "guid": "f50ff73ac98d6a84283dfd17ed6918ab",
+            "sourceSha256": "56cf62b069f9bcb7da5ee601fa7005bf1573d77e9f1809c3ed7220ff869e19b4",
+            "sourceMetaSha256": "39337d1a4c262533b18d7c4e0e08ecf4015f4d55cb02e2d79827c194b36b1348"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Drone_Attach_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Drone_Attach_01_Convex.asset",
+            "sourceGuid": "aa3addb7572f59049b8b3c722567fab9",
+            "guid": "67e4c9656c7b9b349844adffb854a0f9",
+            "sourceSha256": "7612571bf3184c452635ab0b17301d02d5d764a8c840849b87261d04dc9acaa5",
+            "sourceMetaSha256": "1c7a6ddb09a537025b2d8a450e02c8d4848b0d0b1df4f7d1e4ea67bfba58358a"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Drone_Repair_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Drone_Repair_01_Convex.asset",
+            "sourceGuid": "9eaad94394a8eb842b68d1db405ce72c",
+            "guid": "b3e1585ea42b0b444898998ebcf8cde8",
+            "sourceSha256": "4078d5289e4a0b1344ed92cff449cb693e5797ce473943f6ef6a260c726b5753",
+            "sourceMetaSha256": "05fdc2b2c0bc2bfa3ef0cb8a22e68c26cb91b65f4c677153f19e8a99271c2fb5"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_MissleRack_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_MissleRack_01_Convex.asset",
+            "sourceGuid": "343e557994db9d1479f027a073894319",
+            "guid": "d5ec71dcb7269b340958957001b41277",
+            "sourceSha256": "99c0cc892fc4df2f2ac43ef7131bbecd3af85c1fb8b1137b621cd8c14ba67a89",
+            "sourceMetaSha256": "ee87587d3f2a066c281d03080ed9ca7b9147cd3d5d5ac4a89ce2124e3c7a6824"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_Body_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_Body_01_Convex.asset",
+            "sourceGuid": "6c34645e8a2b2824fa46bfa85b783c4b",
+            "guid": "85961482b31e83b48a402feb1f29ea2e",
+            "sourceSha256": "982c893f333a0a64eb8f0889cf67794aaac5359be9c3168f612fc111d5a0057f",
+            "sourceMetaSha256": "ec821e09453080cad2ed3587e7d4fa8bbc3e07eca507128654ab4af8112a3c89"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_Body_02_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_Body_02_Convex.asset",
+            "sourceGuid": "42f3d9fa1409ccf46ad17a1b0789e21a",
+            "guid": "609d7f04780eb0148b0148b8c0541639",
+            "sourceSha256": "dd7377b1d97c59c1a7242e6950c1e4e3fbb665b72e3ad245557bf071b7ec9fd0",
+            "sourceMetaSha256": "3fd81783b3edc60813d5a8d8cc0abc02e2f6789c3441348a667cf54270dd6d3f"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_Body_03_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_Body_03_Convex.asset",
+            "sourceGuid": "e5052d8193075084f8bea324e513868e",
+            "guid": "e9f8feee191e4b84aa4d65474537a325",
+            "sourceSha256": "e920d5050ca8e45ac8ba10f6026f54c8df1036e613342c7aafa201a8ccaf7ad8",
+            "sourceMetaSha256": "eb87d9501e7705758f3dc379d7527e5d4ad34a881db27e01bf63f17e4b8ed19f"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_Body_04_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_Body_04_Convex.asset",
+            "sourceGuid": "a8d17dd24dbd3494b854c5e6aed91b63",
+            "guid": "db1beb76dc4e04f4f8d8e5d082cbfcc8",
+            "sourceSha256": "2760cb5ae7d4a1bd2501ae74d88a277e68f2b422f45d132b84939aed9531c09f",
+            "sourceMetaSha256": "d065106dee28a2cb67fd41a3588913eb22931fb60b527981e3d04d598315d705"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_Cockpit_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_Cockpit_01_Convex.asset",
+            "sourceGuid": "ebcacdeb9be754849b059cee782a0624",
+            "guid": "caed03c6b55ba7f4c9ed3cb523a855a2",
+            "sourceSha256": "29383f75372fc5fe6a57a9ece15a8240267d603871dae5b536483ea3a4274c21",
+            "sourceMetaSha256": "773cbef2a6dd254dc36c4d483c5d11bbdd5e1d1954f3ed682cf1ce205596dfb7"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_Cockpit_02_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_Cockpit_02_Convex.asset",
+            "sourceGuid": "277abfafc326dff449859a74059ebc99",
+            "guid": "70d5af75e3e865d4a8c717a21aa69858",
+            "sourceSha256": "0bfabc103d7561ed2de3d701f60e97364d6a7a012fa22dfe5a7d5215097b5b87",
+            "sourceMetaSha256": "c945ef6fcec1a016d9d370257122ee35e9e734eec44fc091b0579c2b370f343c"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_Cockpit_03_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_Cockpit_03_Convex.asset",
+            "sourceGuid": "37454a0719f20b1448734c7e5a1db83b",
+            "guid": "9d31db592a3fda9408bbd1903e9cad4e",
+            "sourceSha256": "225561caabd9291ebd6f19dea5ff968f257d2d04af88efb3b6a6ad013a26e190",
+            "sourceMetaSha256": "3f2b3be1e782a8d2b8abf751ae839ac4a03f7eeaca8f0904d7c60dc62cbf478e"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_Cockpit_05_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_Cockpit_05_Convex.asset",
+            "sourceGuid": "300cab2473ab9ee439a1d67570a33177",
+            "guid": "e4dac29a75beb3b4f9162fe507bb278a",
+            "sourceSha256": "707a66c1c9046dfa15d79d0e678b3f9e486891016b6e851803cfe0b0266dec7f",
+            "sourceMetaSha256": "31480cd5e5cfa9a05bb3914f3cbfa7188112139f0111314a05b08e1a7840160b"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_Engine_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_Engine_01_Convex.asset",
+            "sourceGuid": "fff38f2daae191947b4b03806a96adef",
+            "guid": "9683c8f6c58f4fc48b30ccbddf0afb20",
+            "sourceSha256": "35ba620b3ef66cde96d02f8eed3a0908417f751de23954d3255c14f504e9692c",
+            "sourceMetaSha256": "9b352c9143567eb2f44225f6396297687517d94e833785c82fbe343a6fbc919c"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_Engine_02_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_Engine_02_Convex.asset",
+            "sourceGuid": "b6e6d7c388b07324b9bc63537a550b3d",
+            "guid": "57e25e3e7212ba94fa3f3277ee250774",
+            "sourceSha256": "d6fe0bd1689a2762649208835e5c7a9d4a8bfd86beb7acd949f49452d22a2bba",
+            "sourceMetaSha256": "3c82d4899348f22e58910d9df8e205636b89f1619fbe429ce5d97ac11201124f"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_Engine_03_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_Engine_03_Convex.asset",
+            "sourceGuid": "e6af07b6ef59bbf4ebee177ce4864dd8",
+            "guid": "be04d5b8be2bb444c951915d76adc507",
+            "sourceSha256": "5a36334b4f713dc9c50de9c715de41840175917d9384c1a5bf3155c0bd358528",
+            "sourceMetaSha256": "ebf1f4303ab12aea0fa0b1c2d70ea041d424a8f72678d0d6cde8dbe70365cea2"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_Engine_05_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_Engine_05_Convex.asset",
+            "sourceGuid": "011dbb99b9f73264bb72201dcb457ca9",
+            "guid": "8351a028e3418114dbeceddee72783f1",
+            "sourceSha256": "93be25b49ffd36d28af43e3dac1e6f4042b48702c33064977e196d902153175d",
+            "sourceMetaSha256": "1786e3421dd58166afda942f75853f2204f54bedf182d418b6c169349382ea60"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_Engine_07_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_Engine_07_Convex.asset",
+            "sourceGuid": "54d57ed7e9d21204badd13a7756caeff",
+            "guid": "efe23cbbb5674544aa9d027b465321ac",
+            "sourceSha256": "dc7baa6ad1afb5348b9a7f8381c11ec4780087fe79bd4039c2cb47381bd544ac",
+            "sourceMetaSha256": "3dcdd222aa754ec8369a02b18c6967678327423316f5b804cf239eed45214531"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_Engine_09_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_Engine_09_Convex.asset",
+            "sourceGuid": "aa380fe40fe78fb489e95cb0d8b33d87",
+            "guid": "6757f8ec4b7d61f45b1e4fb128e0e7ae",
+            "sourceSha256": "9a1ef5e3942cd644d3a718901be2a94b9aa3b2ef6858623d4cd24eec4e2cff58",
+            "sourceMetaSha256": "7d6735de802acffef394058574c1a233cb5a13ca58454f976aea9c4ae3fa0d64"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_LandingGear_Flat_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_LandingGear_Flat_01_Convex.asset",
+            "sourceGuid": "7bc77f740c65698419b6a824fd03674f",
+            "guid": "f952c3795074c064cbd47e25c2567e0a",
+            "sourceSha256": "42329fc6f2b9bf727b98f4e54e8a6ff7db12f8a3c255ba8722e5835e55cb306e",
+            "sourceMetaSha256": "951ad5e986b1bca13489747782c33e6aa94962793b7d70dfc753142bb1123c53"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_LandingGear_Flat_02_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_LandingGear_Flat_02_Convex.asset",
+            "sourceGuid": "3c095c981176db7408622b6d07ce6a24",
+            "guid": "cdb38535af51c2849985371fbab8885f",
+            "sourceSha256": "3b3ed11499a048be25c1a49d7f67fa3852d6de144e96b2bf4734c008a032c2c3",
+            "sourceMetaSha256": "411da70fac42f4d750c7237d5a8bf282b978a1a4857eeb20ca4b8fcea6265346"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_LandingGear_Wheel_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_LandingGear_Wheel_01_Convex.asset",
+            "sourceGuid": "7f2a92b957df28e4ca5b7f017e005e5e",
+            "guid": "ee1718660a4abbf4090876ea21b6320c",
+            "sourceSha256": "8ee806316e76dcc9902c6882ff4db5c0ec34434b63e50b22c4915d076de5f702",
+            "sourceMetaSha256": "71d0f50a530b26b77f188975bab686bff800fe9056789aaa4a87f660bed0c18f"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_LandingGear_Wheel_02_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_LandingGear_Wheel_02_Convex.asset",
+            "sourceGuid": "a21a17924fb14ef46a5f0a63b2ca132b",
+            "guid": "204a41d5eb69fa947a3bb8a56827b448",
+            "sourceSha256": "43c16971d4471fe1d05147fe1d37159d00711a0a148d1d5ffbb876ab79635d71",
+            "sourceMetaSha256": "8a72a267792af58d51826fef07a7b664d35df0e4e7cd520c38bafeb870988dea"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_Wing_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_Wing_01_Convex.asset",
+            "sourceGuid": "261ff6954aa5711429f5a82ce7a5b3a6",
+            "guid": "da509c114ba16ba4dad918a304bdeda2",
+            "sourceSha256": "091171ab5999b5cfcf19412fd880514df14a6eaaa73124a253f45323d66766a8",
+            "sourceMetaSha256": "d3feb6d76d91a7e48894af8b8a680ff4341452c729ad09835bde822b0d402794"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_Wing_014_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_Wing_014_Convex.asset",
+            "sourceGuid": "9ff863f2bce675b419b78c0392d31851",
+            "guid": "4bf4825b59245f44eb1b856aa75d7060",
+            "sourceSha256": "e835f37da9529345abd70047a06f560561e1054a96b6749c3859c012e1383472",
+            "sourceMetaSha256": "beb4903ab5860324a46145a6fd5655f7d7c06e9d0c2eb72fd6231d4d0a21fc41"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_Wing_03_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_Wing_03_Convex.asset",
+            "sourceGuid": "ff5255049ae9c824eb525818d76516ec",
+            "guid": "c74bd77806f12264b962f19ac224a2da",
+            "sourceSha256": "a9a8fceae416d04ff3ac1852ecb1c787a05bf58d84650ae64cfbdfc6d71e9b2b",
+            "sourceMetaSha256": "830423f87f69c1278c432c444b10c95feebdbc2b083af2789ce535d715ec73c4"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_Wing_05_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_Wing_05_Convex.asset",
+            "sourceGuid": "70f0f21b42ec95449b396f4d428f5695",
+            "guid": "4fb45f5e9b3d2584c8a445ba5349720f",
+            "sourceSha256": "9d5d5a745961cc8b1d491e61ebd32d9122783dccf2cb55ed11211444ece6ae7b",
+            "sourceMetaSha256": "49f00fce988e2f3af56c97e457842d370f01e20e208bccd3dd915ef0526b1e05"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Part_Wing_07_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Part_Wing_07_Convex.asset",
+            "sourceGuid": "b97b8a73729de004f83cc2c34f99016b",
+            "guid": "65758d20ce5435a4aa15c6e0b8acee73",
+            "sourceSha256": "2f04dcd4ccca91347b3c7c71f25b61795f61b6d2f40f6f8ce285ab5b88378a96",
+            "sourceMetaSha256": "31b0df7b893870c2683ef06809149970f8c33ebdc5249b792aca44fdc76e6d83"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_POV_Cockpit_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_POV_Cockpit_01_Convex.asset",
+            "sourceGuid": "295b45f86ad7e734bb49249093de9816",
+            "guid": "729ba26c7a0251a4fb11ae28b40acdb7",
+            "sourceSha256": "73b6a335a84197ecc17c65ace5ed5f2e7be9d013e00e9a19cf3a6a6c2f8694e0",
+            "sourceMetaSha256": "9a62fbf1f4b0ea80e25cfabc3304170592456fa00f251c793346024dafee44bc"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Veh_Sweepo_01_Convex.asset",
+            "destination": "Assets/Art/SpaceKit/Collision/Polygon/Models/Collision/Convex/SM_Veh_Sweepo_01_Convex.asset",
+            "sourceGuid": "d67d2742fcaae944f93091148447fe0c",
+            "guid": "0112def35df5f7b4bb18310d7bba7e9d",
+            "sourceSha256": "f4612c2bdd5a7559012c7b1cc92c0abe5b157d6d50cf00c6fb9b288dae0f6571",
+            "sourceMetaSha256": "8693c4ab4f43b3bd8ede3d284d15f805526e03879030895b4a7a34bf74ecc4ab"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/SM_Prop_Stairs_01_Collision.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/Collision/SM_Prop_Stairs_01_Collision.fbx",
+            "sourceGuid": "4c1578abba55519498e93ebfb5caf830",
+            "guid": "2c0835cdbebe8434fa817181b8ace445",
+            "sourceSha256": "f2c3f04dd6f6b552f530a2f72cc3c50f9dcbd94c4394c7c0166888c83380d189",
+            "sourceMetaSha256": "17d8353448da047632c533be8e77aaea9e4d1fd40d3bd8c0559d0374ca4dbc75"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/SM_Prop_Stairs_03_Collision.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/Collision/SM_Prop_Stairs_03_Collision.fbx",
+            "sourceGuid": "8bb4b836791467740ac8c64c961701da",
+            "guid": "f7f1a917b323e3e408ad65a13a067e86",
+            "sourceSha256": "6bddad1160603107b74d36373f237e2babdfdea017e48a0b635c59be2b6da441",
+            "sourceMetaSha256": "b5d117a6af9fdd338e5c32d695326ac6753a86e63d91ed8b271ddfac9ba4e9da"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/SM_Ship_Fighter_01_Collision.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/Collision/SM_Ship_Fighter_01_Collision.fbx",
+            "sourceGuid": "0bcc36066aa526046b4c97f1aea7e2c9",
+            "guid": "6945fadf3e4e97e44a34b4dfee7e8cb1",
+            "sourceSha256": "be89dab876f4750cf9751f4124ad43cfec62897fce9cd5134080c5afed484de4",
+            "sourceMetaSha256": "f48b9cb0c83f37331c35dc2324792da8c7588667749d93856631ffafbcbb1718"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/SM_Ship_Fighter_Heavy_01_Collision.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/Collision/SM_Ship_Fighter_Heavy_01_Collision.fbx",
+            "sourceGuid": "1fe8c2468e4147b4bb40d39333eeb7bc",
+            "guid": "a0480319988ae1b43b2765ce97dcda07",
+            "sourceSha256": "4185cb5e3748df847d063116fc4cca67c7f367f1b6ac810573571c7e54eb6a57",
+            "sourceMetaSha256": "53f1d5f7bf512258caebaa9b7e9e6f1b0bc5e3c684ff7a4070eb7655572dd09d"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/SM_Ship_Transport_01_Collision.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/Collision/SM_Ship_Transport_01_Collision.fbx",
+            "sourceGuid": "3c0e309facdcc2e4dafa374c2f6c09bd",
+            "guid": "41217f305119e674a855b6e99fca9250",
+            "sourceSha256": "1e6a93872a36849a022f8b1d4c9bc91ad0defc3a61c6bb4ab2f2f41bd004e185",
+            "sourceMetaSha256": "9d1fe8cd6cf8f066cc1c8aa75522b6d8e5bcba7584400275f9d6aafed0ec2342"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/Collision/SM_Veh_Beacon_01_Collision.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/Collision/SM_Veh_Beacon_01_Collision.fbx",
+            "sourceGuid": "57ba309d111a36c43a39e9881d139d0b",
+            "guid": "25c7e55b2d897c542b801c2cc44a4c57",
+            "sourceSha256": "65b0a63f64db3f827cfd90dd1578a9b9b61f3fe9cea44659f08c944d3e14cab7",
+            "sourceMetaSha256": "ad2434c9cd21cbf9f858a9453d1eaa7c06b456b665ce1ad213dec9dc7696d928"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/FX_Meshes/SM_Flame_Mesh_New.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/FX_Meshes/SM_Flame_Mesh_New.fbx",
+            "sourceGuid": "d86e85307eb5b9f449c96ab781089166",
+            "guid": "6d90f8eda0d20724ea57943348eef1bf",
+            "sourceSha256": "3a5c0afe65d5d84b304cb70a2e2d275472cd29a4c4f30753c515e38b11fe5874",
+            "sourceMetaSha256": "7051462e675300cbe932fbab5a9137b36b13f20ab91e1ba9926dbabd5b07275f"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/FX_Meshes/SM_Flame_Mesh_Square.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/FX_Meshes/SM_Flame_Mesh_Square.fbx",
+            "sourceGuid": "9a3362ca74104514ba7242f0acaddda3",
+            "guid": "44badd995c6a796458d81db2404b7ddf",
+            "sourceSha256": "28e6a4459988c8b48d1e0e50b0ec5f90a2c7843ffa51772bfcf6432907732b78",
+            "sourceMetaSha256": "798f45126d4c33961c7d0b1e99fff51363975ca5eb54f9cb5216f787364ad06d"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/FX_Meshes/SM_Laser_Trail_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/FX_Meshes/SM_Laser_Trail_01.fbx",
+            "sourceGuid": "fa1cc62529212804ea8de0a970610dcd",
+            "guid": "bd84b3bbebc018a479fc3b04d8c9eabd",
+            "sourceSha256": "e4a0cb5adeb4dc998c4b4b750bffe8d07186577a1fd93103fe3f990de77acb72",
+            "sourceMetaSha256": "8c6309d6cf76cf08d2c0bac0faa4570f62c3ec2b1f674cf45edca937de714b17"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/FX_Meshes/SM_Pebble_Debris_02.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/FX_Meshes/SM_Pebble_Debris_02.fbx",
+            "sourceGuid": "cccc83cf9bba6ad40a468d13091e31d2",
+            "guid": "1e42521a5df8775489f6b91d1d1d1e71",
+            "sourceSha256": "07a885032bd2f0bc6971d00273e9dfaf8b9a625fb83696f86553f926d59ceccf",
+            "sourceMetaSha256": "d5431345413870a827cd72fb64e0cfe3fd2c4e31bcc4bd1c0e6a288f60ea904b"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/FX_Meshes/SM_Pebble_Debris_03.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/FX_Meshes/SM_Pebble_Debris_03.fbx",
+            "sourceGuid": "3a8a86990e835ea48ad72b3669c3e92a",
+            "guid": "5f8fdaac5f184fb4285b121168457369",
+            "sourceSha256": "5c90a24d645597832ba2a15f0c3f1e92b8f7067011e3371fa6ac0939b2ffcd57",
+            "sourceMetaSha256": "aea14b427244dfe0253a67641929f7f61521f5ea37253c41b133fe23a6c4df57"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/FX_Meshes/SM_SphereGeo.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/FX_Meshes/SM_SphereGeo.fbx",
+            "sourceGuid": "b5e2b3d671f50464eaf7b8343c2f2a86",
+            "guid": "48811035c24b5bf4bb4b1e496b4857f9",
+            "sourceSha256": "a2e0d284b56751fa27b3a27d729cf7819efd5c4c59a7e9b6eb03572d22d52d27",
+            "sourceMetaSha256": "8b0cbb3292f048c8aac6371ca30e64b12566435f406b7b47d894547dba2237f3"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Bld_Wall_Doorframe_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Bld_Wall_Doorframe_01.fbx",
+            "sourceGuid": "31d557d4571f9d84c939fd1ce47b5cd8",
+            "guid": "97fae1b03111df94292adc426dbe3fd1",
+            "sourceSha256": "da4b34787ac2cfcf329f63866f11e547ef8c5222dcdbc86f22cd6469703b7669",
+            "sourceMetaSha256": "9e2c14b6ce80ffcc05112d58bef1343565193f6193a6714dbb4b5e664280c5c5"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Bld_Wall_Doorframe_03.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Bld_Wall_Doorframe_03.fbx",
+            "sourceGuid": "3670b37c2bfdfdf44a413bdf812b6521",
+            "guid": "b52f24cb146dca845b5e587b081b4487",
+            "sourceSha256": "4fb74251b3543da88ad4a2639c5a4905e14930a8db38aab11bac1fa072d471ae",
+            "sourceMetaSha256": "dd3b29413d619ee9272ab44da2e85175f29a1f4c369d4849842fed5d7b31f5bf"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Bld_Wall_Mechanical_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Bld_Wall_Mechanical_01.fbx",
+            "sourceGuid": "6b84baeac51f4da40a3e9e296b63805c",
+            "guid": "2641af957a9d17645a2cf2c020f73ec3",
+            "sourceSha256": "9cedb77d87ec2aec318a04031cb4700083f754b3fa67c729d74ffba7c43628a0",
+            "sourceMetaSha256": "ddfec5824613b1bd1f440f358499879cd8174c982e9ae468d1c2e6691aaa33ef"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Bld_Wall_Mechanical_02.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Bld_Wall_Mechanical_02.fbx",
+            "sourceGuid": "f510059860b7c0a43badf35c489b49ec",
+            "guid": "16bb9452f954e8c4c912a3dd4e19aa59",
+            "sourceSha256": "4ffa4c1d5de003794c7da289d2e5ea2b2e874345949923aca3219041969a7c39",
+            "sourceMetaSha256": "09806a7a3aa323327bff19f7f4055d598d227f7efd6369b12087bf2485e87235"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Env_Asteroid_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Env_Asteroid_01.fbx",
+            "sourceGuid": "bec5317061f75c540816821c2ead1926",
+            "guid": "8b9c3308320198641978599ae5a695a3",
+            "sourceSha256": "baf6023e5ebc4dabbc3ad6dcca1f22312a047f69d7f224236cfe203b044f86e8",
+            "sourceMetaSha256": "2af1c74b6685bcbca4ed0b50cf329ad4b9120efb153bfb93a8c21bd30052bc4b"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Env_Asteroid_03.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Env_Asteroid_03.fbx",
+            "sourceGuid": "8d85220cb8fe685489255581912a9894",
+            "guid": "3fef308d208fa52409a4d7f1895ecc78",
+            "sourceSha256": "e4a706cc594c1bd85be64dd4dd49fde3ee011783e8f615607e163304f618f1c3",
+            "sourceMetaSha256": "3a7e3588b2e019ca7983367381b5a86ee58d2a016b1bcc9bb8b60598a51e9e08"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Env_Asteroid_05.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Env_Asteroid_05.fbx",
+            "sourceGuid": "0fd34597db5ca1c4aa3678e16644eeb1",
+            "guid": "9b6dff6c2b702be4cbb1c0cdab578f44",
+            "sourceSha256": "00a10fc41dca2e38ca20f42eba15e9ad6ca72f3ca4be04195684868febbc0ac8",
+            "sourceMetaSha256": "3fc6ea485437bd084d94120d3bb56af000dbaba8beb0dd050f72cffddbc3738e"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Env_Astroid_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Env_Astroid_01.fbx",
+            "sourceGuid": "02abea0108edbf74bb5802eda9200744",
+            "guid": "aafb6da445586234f994fa6f0344b9ef",
+            "sourceSha256": "ce6fbe944b4fa1cc542787653312b3fe1847c0761f3383f7d00c290d46b69127",
+            "sourceMetaSha256": "a5d25a192d4176039d70282e387d732f2c9cd93a387ee5b58ca9824a3f45de62"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Env_Debris_Pipe_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Env_Debris_Pipe_01.fbx",
+            "sourceGuid": "7b23d056539021d499bfa48b41baafc2",
+            "guid": "81a4926e974592f4f9f69df21ccad13d",
+            "sourceSha256": "9a1e1b4998169cd379f8963da4ca0ee5f1369b71d339b95fd0121409b6951984",
+            "sourceMetaSha256": "044c52727287b3b94b80085b81ee1ede9b7c0ac4dc2c3dd0dfbe30a3c1e21e71"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Env_Debris_Shell_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Env_Debris_Shell_01.fbx",
+            "sourceGuid": "f570772f348332d41aa064844678107b",
+            "guid": "9e3bc6245a00cd54c8c5167ab0a56b04",
+            "sourceSha256": "b71f1e58b6508751adb0c7e283d270e8585acfe99ebbc0374fd7bcf7008f3968",
+            "sourceMetaSha256": "3c8552b36856917b2819368f7a94d1debec4498e6a724e5648ddea737e121394"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Env_Debris_Shell_03.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Env_Debris_Shell_03.fbx",
+            "sourceGuid": "b2935fcf99843c64a9e218f86471dd4c",
+            "guid": "248a005cab8277d4691c1720f2bf4d31",
+            "sourceSha256": "76893459ec39e22064e9f2f14e7d2611973c7600869a7c3b19f719d837f8829d",
+            "sourceMetaSha256": "a042eca0fb24ded697033f0a52978481cfeec3aab6225c49b10c7a0f5dfa2be9"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Env_Debris_Structure_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Env_Debris_Structure_01.fbx",
+            "sourceGuid": "6d789cb5d61da424ca5824752a83b50a",
+            "guid": "4b667624acfd6974ca39a266d78e7d19",
+            "sourceSha256": "ced1c819ed8f8707bcf54178a516d1e97625c7947baf593b9233817d46fbf62e",
+            "sourceMetaSha256": "363f2052a12f547df5ad3eca99f978c35354a55571546b99961195e5769550bf"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Antenna_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Antenna_01.fbx",
+            "sourceGuid": "d920b692dc8ef7046a577e56da8f208d",
+            "guid": "e3275573db90f69479dbd6c07d3728d8",
+            "sourceSha256": "a1222ab49f78b8e2368cf72134a351486601ffb3ed076de90ab4b6ae609e8e3e",
+            "sourceMetaSha256": "050741fd7b109aad754f411fa5c9a20fc9964fe508a378fcfa663b0196357483"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Battery_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Battery_01.fbx",
+            "sourceGuid": "c5a94ed5d1d20054aa8eb3001574f156",
+            "guid": "61f16cc9b0240d04182ab3c83c9feee1",
+            "sourceSha256": "0dd3659e261c1177d26478e3116d69ee6f3d4446936cccf5e098e89b013bd40a",
+            "sourceMetaSha256": "1adc9ceb47a43a17dabf93f5968675ecf5624731c2c527bfcdb8b3e164e40dd3"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Battery_02.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Battery_02.fbx",
+            "sourceGuid": "c506d1dbf09c7944c90199b46fd695ea",
+            "guid": "95d3d9afe30da7b44a7b5a836a061c99",
+            "sourceSha256": "13f5f3bab53c9ea5aa691842eea027dabacbfaa013086a2bf1a6bf6d5ff38fb0",
+            "sourceMetaSha256": "e9a051121a2a4f06c8a453ee88cd1989f2fdaefa4829399bebb0348318f04d91"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Battery_03.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Battery_03.fbx",
+            "sourceGuid": "8ea48f36c7a2a2642a39ff36ce2a5918",
+            "guid": "c987322c931403b4bad2a49b89b75eef",
+            "sourceSha256": "d81c7f1fe383c4264590c0fe5c0d18a56c51ec953e6e5a7c563d29ed2ccea846",
+            "sourceMetaSha256": "30c0232b14702567ddb991c9b1d0a0dd122b8e5e5348994c9eaf758b790229a1"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Buttons_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Buttons_01.fbx",
+            "sourceGuid": "7c8c79c6c2b5b3140873e292af38a383",
+            "guid": "bb39dbc5fe2c4eb4b8326e77336d4956",
+            "sourceSha256": "82c1407ceb7fa068cb6641a44c980cbe55ebf71eee569c2ba803403626584af4",
+            "sourceMetaSha256": "038b4a83775ac775b4a3f3efc7603ab0e5cc69bd3a784c79bbb85cf977024174"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_ControlPanel_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_ControlPanel_01.fbx",
+            "sourceGuid": "83d377e38906d8c479b494ef23c9a4a6",
+            "guid": "0406da5b3803d5940a2b4113eaa6b9c5",
+            "sourceSha256": "bc6a147ba64fdaecf458b115e454d303316bc7b43cf51c11350e433c33896875",
+            "sourceMetaSha256": "e60caf9087844e362ca9c9e1a7b27ff778f4245b39cf1d280acd3f054116c96d"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_ControlPanel_02.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_ControlPanel_02.fbx",
+            "sourceGuid": "66c6510f66034144a99c5f673c8612bf",
+            "guid": "48ff870fb1f488446b82b18bbb127bad",
+            "sourceSha256": "e04fdf3975be187f6cbd4df62f4d2fd29974922d9c14f516bde0fc264496cb46",
+            "sourceMetaSha256": "6ae48ba6d10d3d7ce95e734ce443a28a321d32086e910f5ba6b4e50cfc773546"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_ControlPanel_04.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_ControlPanel_04.fbx",
+            "sourceGuid": "a2c115903268a7646bea126cfa500f88",
+            "guid": "aa42327d75a963c438ed6995e51a1d7e",
+            "sourceSha256": "6bfe2b0bf6e72c82b8172e06bea478afd2724e486f32b2540f819e896d85e220",
+            "sourceMetaSha256": "052ad0cc4a6d91418214ab0d55054432a4d01c09826d8c2e1582828a8eba81bf"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Crate_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Crate_01.fbx",
+            "sourceGuid": "f1a7dec1c5be3a64ebdf69f83e8a62ed",
+            "guid": "12f914330ce235a4bae5eaebfc413157",
+            "sourceSha256": "aae840d30cdda45baa5fa80367f754ed7ab92cc6c59c2beb4e8481a044f5f0cb",
+            "sourceMetaSha256": "e3a8015c79b852f0beb1be8c8f2ba9c3c6a658f5bfee302fc544457bee852373"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Crate_02.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Crate_02.fbx",
+            "sourceGuid": "2d51dd8fca8cca4428078d1816d1ad7e",
+            "guid": "0781f3afa293ed04e98c72bce3e268fb",
+            "sourceSha256": "83d3c5686cfba151b4f211888b2395ddb982e50d7c06723d7dc1283f8aa7996c",
+            "sourceMetaSha256": "b80755e3fd56ae24c0d8fc8fb0b2e1467067cf91aedb1147a88accf234febfb5"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Crate_Ammo_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Crate_Ammo_01.fbx",
+            "sourceGuid": "8b45a50f4549b4d4db3d68a8a0841e06",
+            "guid": "ccf44eb8f1315b54d82abd4f68514351",
+            "sourceSha256": "2b8f3091a76df79746dcf411771950e3ba9e0d02b94f7d5237d2839277574987",
+            "sourceMetaSha256": "a1a0bee269aa466212461c49e848c2ac34e6763bbab34902464a119f4c693686"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Crate_health_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Crate_health_01.fbx",
+            "sourceGuid": "682e6c07c05de834186d9d07fc5123c3",
+            "guid": "2963a893525117148b87acc5664d967e",
+            "sourceSha256": "cda5e63ddd1f608c84cbf7c233fdfd34b0e803664de7e698823fec7cb69e1d7d",
+            "sourceMetaSha256": "1c116f9200c0c19b8dfd9eaa41025b187e3a19759aead02cfcdcc84c512c18d4"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Detail_Pipe_Corner_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Detail_Pipe_Corner_01.fbx",
+            "sourceGuid": "b82be18ce178eff44af47b9c6634885c",
+            "guid": "f2d02121cc812f942a61088909aebb1b",
+            "sourceSha256": "dc97c35c0ecc9fd1f21e10b60a9167aa7046e7c224e29e8d036dda4d6125e9ea",
+            "sourceMetaSha256": "c454d24bdedc98349e302024f5e5a41389b036a929cbfd4234b95d0f689398d4"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Detail_Pipe_Straight_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Detail_Pipe_Straight_01.fbx",
+            "sourceGuid": "653b47a03fdd5214a972284801433fe2",
+            "guid": "1134b53abc2b819428104424d0082025",
+            "sourceSha256": "b8cc278cc64fe0ac3e222b1b8275bbf8ba333ef0d08eca09c31f64137e118564",
+            "sourceMetaSha256": "54d0cbc0ea8f390f69bb55d356b94e408f5173a33f8822454a0f4dccf9219627"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Detail_Struts_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Detail_Struts_01.fbx",
+            "sourceGuid": "4a6612d40cf75fd40ac4c48dd5af6f37",
+            "guid": "22eb9ccef83bc944c97946277c769390",
+            "sourceSha256": "6c26e7cf7c9f97f73e14c03bf75ca25f34b273b3ae2c6d9ba4936b70bc8ab212",
+            "sourceMetaSha256": "367aee862de531afce9985dabc4b7b12abcfb2f240b9ffbb59e2c661ce79fa61"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Detail_Struts_02.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Detail_Struts_02.fbx",
+            "sourceGuid": "0d62f1bdd86666d498f51ffa92e41d9c",
+            "guid": "41ee8cb32fae5104ca42ab8d80b214e8",
+            "sourceSha256": "26e5b99f5c83059e51dbfd4670a19b6327e642c0d954b3434cb6fbe0df985cca",
+            "sourceMetaSha256": "4e778c7df6afc0fbd8681c708388cd84da241ce67f54ead53865d3baab32309d"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_EnergyPort_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_EnergyPort_01.fbx",
+            "sourceGuid": "7a5b535ee3aa9a146ba4cefa2c1198dd",
+            "guid": "90e6d3f6a7b70ee4687f8b1a3130933d",
+            "sourceSha256": "10c74fb9155e7f0719539e0741885ead7a6d0dfeb0bbc09244c601dbca22dc36",
+            "sourceMetaSha256": "1f554fab48b26edfdfbb8dabb2fcb1cae4ed874cf01bdfa63ce41a537fec8937"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Engine_Construction_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Engine_Construction_01.fbx",
+            "sourceGuid": "9db39f6fc0199fd4db24bfab80e66f15",
+            "guid": "78e024a217c8b354382a70d5dac07992",
+            "sourceSha256": "48e5bad59ebe1a7629a352f04c1bb17e6de200fd8f731e21c2bd8f426bb8ac53",
+            "sourceMetaSha256": "44110f39799941944f651133c25609401fc964aa12d52008c89feb43fdc1d639"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Greeble_Panel_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Greeble_Panel_01.fbx",
+            "sourceGuid": "4b5b1629a8cd0b24da51bfde9207d6aa",
+            "guid": "ff08efe6b63c44143a67c8250969ec74",
+            "sourceSha256": "cacd7b52ef104e5111da37219d88f902467e1a5e7878264ee143d857e453c289",
+            "sourceMetaSha256": "332b2082d65b0bcfdde458e65ad591b4aae454bc47018d27f501246e0e570500"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Greeble_Panel_03.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Greeble_Panel_03.fbx",
+            "sourceGuid": "b6a2b5c7bc44f0f4388438f6f89beb43",
+            "guid": "d19fafe94a5b02f4fb57fd29c8cb5da9",
+            "sourceSha256": "cead8ab4d8d17fc6aaa4bbc6001234fd619c17292beccdc9a1dbfd66624dcd29",
+            "sourceMetaSha256": "0e949c85aa0b1f10f0736efe9ac1d37728a155a2b8e8118db8f87280407feaba"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Greeble_Panel_05.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Greeble_Panel_05.fbx",
+            "sourceGuid": "3f42b7180ab5b7647bd907375e4a8c1e",
+            "guid": "3251f12bc6e50ac44927d3c2b5479248",
+            "sourceSha256": "41b6c0a005c5c1b44b5ec89d443f6248d9634b0c20184d0a098b7268a044e282",
+            "sourceMetaSha256": "cce3a14dc70a12504288f0a74268b144f13cff50a957dfeb9fe36eda7dcb2ec1"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Light_Panel_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Light_Panel_01.fbx",
+            "sourceGuid": "170064085127c8748ae64c26a823cd8c",
+            "guid": "028d101875c9b254db5a3b512f154322",
+            "sourceSha256": "bd9a50eceb0edb369ed829f1d2c29fad56c47db62f89dd912bd71c5380c26f8d",
+            "sourceMetaSha256": "4a6c0628377154dda4a07e07184c6464b43855d995d24349ef4b2da51ac9d5ff"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Light_Panel_03.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Light_Panel_03.fbx",
+            "sourceGuid": "89a66e962cf5389499c18db5069e9fed",
+            "guid": "69e5a6576fccf4d40a29d7b5d51ccd36",
+            "sourceSha256": "951e661b40b01a76960b8206162c4aacc55c8573bce4a68b308c21ad3b033748",
+            "sourceMetaSha256": "3b3c30f6bc79248408595c23a1217950dfb192d2573bdfc4c1199e42cfbe1e6a"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Light_Small_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Light_Small_01.fbx",
+            "sourceGuid": "064ae03f3ce9c11439f4ff9a4a685e30",
+            "guid": "7b37e9f10a364fd4bbd759eebca4c84e",
+            "sourceSha256": "cb3c49d2a88878363882f5ccbfdfa86ad24a6c8e9027d5de6a6ab19e6f0eef66",
+            "sourceMetaSha256": "7867a50ce5ae8f17e3c37008d9ffb900d16b99a6f5f1bb6ada49d76116fbce78"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Light_Small_03.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Light_Small_03.fbx",
+            "sourceGuid": "3eeb0e988b4bd8848828e2a48b7d070f",
+            "guid": "e95fc80725625284aa6a25abdf1ca085",
+            "sourceSha256": "a39c33642f9fd7cbbfb4aeaff92709557897357f9b811b3756ec127930ddc2ff",
+            "sourceMetaSha256": "470c9a1812192b3a13c918ccd2580b2b2870a85178167f6e239a449379a0bad8"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Light_Small_05.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Light_Small_05.fbx",
+            "sourceGuid": "e4ecc4d3e7dee2d4d9098b4c0fbdf73d",
+            "guid": "71532b151552da44d9cc052da97d7341",
+            "sourceSha256": "5ef6796458d15a56fb01e0373f12a852ffc29656533914607c8945f080a4bc31",
+            "sourceMetaSha256": "41fd1b97af99410090556cc65585195b48847835a66812ee799b73c2b4ee980e"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Missile_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Missile_01.fbx",
+            "sourceGuid": "5225e9efc03e20c4d884f04477d7d59b",
+            "guid": "f1620e20f2015c34abbc5615166248f9",
+            "sourceSha256": "27373e85ff195068887fcbb23b946ffa222a845929b64fba1f0ded4ccb5d3645",
+            "sourceMetaSha256": "f6d882cf7910ede576ee396f3bda089e8500b7c276e2e9994f56128705fcd676"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Missile_03.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Missile_03.fbx",
+            "sourceGuid": "dbbbc358ebbdca64ebf43f8d61cbf01b",
+            "guid": "c705f582e515ba94ea61a4856e35f314",
+            "sourceSha256": "2f63962eff517fd5b361bbf510eb9e5734dfd24d15ddf4f000d3187e653a11cc",
+            "sourceMetaSha256": "319d43929333e4b67270901386341f665c1f52e619e0df52c12c1df2286bb6f6"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Missile_05.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Missile_05.fbx",
+            "sourceGuid": "7579e5516afa243438893c72f13bc4e6",
+            "guid": "e38331819a8fae8438c9b44134fc8d57",
+            "sourceSha256": "f4f0f8b149c62f98a0fb7eefd80e3b777b0e0083fa44d5a18566d1adfad19f2b",
+            "sourceMetaSha256": "046673e839b37c5efce22468ecfefe7a307e25b64044fca2f1531b27275af406"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Oxygen_Tank_Small.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Oxygen_Tank_Small.fbx",
+            "sourceGuid": "0bca0ff4734f6614691dda90c38a762a",
+            "guid": "ab03cdbf5db7c6e4db0aafa6ad6a0d86",
+            "sourceSha256": "7e05492222e7c36475d00274668bf33d75cfe523c5a27a2f122bf5d7c43c9d2f",
+            "sourceMetaSha256": "c942650969f3cd3afa5cfb0bc58342f2f8e58eda27aa42530a2a96bea43d58bf"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Radar_Panel_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Radar_Panel_01.fbx",
+            "sourceGuid": "7fa6460274ed3d041b4e51d279e187c8",
+            "guid": "eae4c807477917f479a3c75c3d4e273a",
+            "sourceSha256": "88119663e06c7ee29ca9548c7d8ca95ee29a420ba4eeaa3e6b78f4284276fa81",
+            "sourceMetaSha256": "8f43e43f5af1528164d6fdc80e1cd62de2181492c971811d48f3672f1466a26f"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Radar_Panel_02.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Radar_Panel_02.fbx",
+            "sourceGuid": "2efa7b43c1a8f964c88748ea1c115cac",
+            "guid": "4d20013a6b41de244bd35e16c9b1349b",
+            "sourceSha256": "fec6c0f296a6245b6c1c715f931ae5de3d25fec8df16dc69dfc6013bf1259e8b",
+            "sourceMetaSha256": "85395502e7345af4de050f42d17bfedf09f4c968f9a576566a5f07171e1e15d8"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Screen_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Screen_01.fbx",
+            "sourceGuid": "c5f9ed8b07cc8414fb4e6f2cd709c3e9",
+            "guid": "9c766ae438912da46beb6827cf716cfd",
+            "sourceSha256": "688c9f9d48c4c9ad61a32bcca10d48ba9aba01fdd73c58c4410fa69802702644",
+            "sourceMetaSha256": "8fb3943326c122b8007ba08d1f2225569912c0e75e1f2da7cce034cf7e5dc1ca"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Screen_03.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Screen_03.fbx",
+            "sourceGuid": "8a44c7c1177e91b4d962627401378ea3",
+            "guid": "adbe19247fd961f4a999cf4735572a9c",
+            "sourceSha256": "3e37d240404d3b8657e986623db9ea953812b382be6016dbc430cfccd1f147c6",
+            "sourceMetaSha256": "5923500e5a7c8e667fdd1bd5b1820db933c40bafc29feb600cbb986b2c2379d6"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Stairs_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Stairs_01.fbx",
+            "sourceGuid": "3a9167268fb73cb48b6f3226667f05f2",
+            "guid": "60cf07b0c7d9f3e4794794eadd5624cf",
+            "sourceSha256": "1bcef929059824a0c9d10dd5ba6a555304e56cb8dcc299ab03f4921fbe6489da",
+            "sourceMetaSha256": "cf8f9b79a2d2e89edd9041d9ef568be22521625066f079ff6439d29cd9251e97"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Stairs_03.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Stairs_03.fbx",
+            "sourceGuid": "60a543c5d0826484b905a00656064e7b",
+            "guid": "d26aa6fee22471d45bf674065b3bab9f",
+            "sourceSha256": "e2fcf1b7e7f3b50aae42ee081a16c9c92e40453d99ba1730e074835cf8c44eab",
+            "sourceMetaSha256": "4c2f560e935dc87e21f3440d903b70d37a2179c140a84c03f4e760d721a0fa53"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Tank_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Tank_01.fbx",
+            "sourceGuid": "2d711c72ac3d8a04cab421ce803ab6ae",
+            "guid": "e5873906d446a24439e630eb2d33145b",
+            "sourceSha256": "f26f1ed1c3cd2396563661d12fdbbc0c9d348a7da91e0b8554c0d2150296025d",
+            "sourceMetaSha256": "4fe29123342e691eb488ca0cafbe4b926b387dc058d6b742382064ac7b6c1af8"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Turret_Base_Double_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Turret_Base_Double_01.fbx",
+            "sourceGuid": "05866dac076594d489fce63513fc3c7d",
+            "guid": "e4ed93acd316b654583acbf026b328e1",
+            "sourceSha256": "b41962cb82c3ef1daa0a07de4f2e7b2bc4dbfaf68b5497b3f1a56199e3b0ed2c",
+            "sourceMetaSha256": "f05e0746d14c26b922c6a21e69eecab6017cae47a201393a8b22ad093cf1f2c8"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Turret_Base_Single_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Turret_Base_Single_01.fbx",
+            "sourceGuid": "44c6175877457e2499e79294f5986d14",
+            "guid": "94684afa59a792b4c9c278fef8ab39b2",
+            "sourceSha256": "a8b46f520854eedce74ce264159aef6cc7c312206460882b3fce65bf89be9967",
+            "sourceMetaSha256": "6158fa7e3d21fe13545a0b96cb06b657c80d4ad36ef8dac71d78a89b80526b99"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Turret_Large_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Turret_Large_01.fbx",
+            "sourceGuid": "88e445e921f0f9e4098ac72a8bdd3eaf",
+            "guid": "142999c92038de24385f964a205d7e6e",
+            "sourceSha256": "5f524a10ff40e3c0b593de065bff11d8e69988c5e73e2b0427823b2080e7d06c",
+            "sourceMetaSha256": "ecead29c8b1008eaae3c5a836a6c397e192d5819a92c9f45a3b61cd825a58aaf"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Turret_Large_02.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Turret_Large_02.fbx",
+            "sourceGuid": "120950bb537cf48439472859df7e61ba",
+            "guid": "0b21d4bcc0c98574a928d53327194315",
+            "sourceSha256": "e7e602ce6504a37aab5085dda3c090d104259b89fa77b1080eaea55e86525d4c",
+            "sourceMetaSha256": "8822d27ae1a98d59ca0f63cbd020c3760075cea23b53c8af45f38dc581b25cb3"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Turret_Small_Ceiling_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Turret_Small_Ceiling_01.fbx",
+            "sourceGuid": "907d70ed8f0fe5742ab7df700400b8f8",
+            "guid": "3573507e0eab20346b910f71c51260b4",
+            "sourceSha256": "a9a1c224a54e4a838f72f6639bdc5f1b426d78763fe1e6551cfe69a151651737",
+            "sourceMetaSha256": "e346dd2b325ef81829e95b30597b94712fb92427e746f4cd79a43883e25f479d"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Turret_Small_Floor_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Prop_Turret_Small_Floor_01.fbx",
+            "sourceGuid": "3393ba5e41d68584ab0802aa906f2736",
+            "guid": "8b79ab669c638ec4bb3a40127f1a8b3c",
+            "sourceSha256": "017f8105d1d4299a0d5999ed45908a29356e515fa7fd72de7cf17d320d9b683e",
+            "sourceMetaSha256": "c0ab6866c3b8da41fbc59cee64a25af8e2840b8339d4713ad32576a65ec7b330"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Ship_Fighter_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Ship_Fighter_01.fbx",
+            "sourceGuid": "df183b756c0d6f542852af3c753d4e80",
+            "guid": "10608d1f3794187428f260cb2e28146f",
+            "sourceSha256": "f8ca5a63abf14f58ab2907f93fe1d953fbc202ffd7738e6bc19596cc0278881e",
+            "sourceMetaSha256": "c62f7f5d02b041cce22dd2db6d15f55199c6bf87a20c224bd2aba67eafa15a29"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Ship_Fighter_Heavy_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Ship_Fighter_Heavy_01.fbx",
+            "sourceGuid": "562087eafc41f8b4b8b6e28118fec3a1",
+            "guid": "108f8a386d0c9f04aab308e1186af660",
+            "sourceSha256": "4e512178a8e4dfe42df28d442d3767ef0cd2ff8738358e0ec057e34322d5a08d",
+            "sourceMetaSha256": "14b7e77790cbdd483e871bf90fffa61b876329446757c18e2103820dde298b94"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Ship_Transport_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Ship_Transport_01.fbx",
+            "sourceGuid": "9d950fef1d73c544981503de4e025823",
+            "guid": "8670f6c58f037cd4281ed28e9ab217e1",
+            "sourceSha256": "cae15bf21144ce47c4ef69956ba271d5e7087e6d7f48cc33ae51459a770d6fcc",
+            "sourceMetaSha256": "9dcee05c65c78266c73e964df77c77eba3cd7de234d7ddea233da222a68ee75b"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Beacon_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Beacon_01.fbx",
+            "sourceGuid": "551ab40cc39f6134e90d9ce7509bab50",
+            "guid": "469be6eedaba3f4489d115fdb5134dad",
+            "sourceSha256": "6e11c372dfd1211e3f39ed7141b9da1391e390eec3c9d5cab732c10b517c8110",
+            "sourceMetaSha256": "78827f61f26a456d0fab54a0cd364668952d8b9b27001f47f70c87768bfa2170"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Drone_Attach_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Drone_Attach_01.fbx",
+            "sourceGuid": "a2b596f04de3c734699bded605c10a5f",
+            "guid": "8bb3e9d7566ce6547a9fa73d8bfe8fee",
+            "sourceSha256": "d65a1b20c73b8fa1483eddbdbda29f1251028612d2f5b50e2ee9f30fcd180645",
+            "sourceMetaSha256": "94a5cd768f125cb81761f49deee569f23223076f5a557c4b1a02ca8bcc51886c"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Drone_Repair_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Drone_Repair_01.fbx",
+            "sourceGuid": "7e155ca4657efa747b54ce81fd79e71c",
+            "guid": "7a4b6c0b39890ee4f867dea319e38946",
+            "sourceSha256": "4e20908716712229f585c788ffb58783b5c1d646551f2bff015b2632c81bc070",
+            "sourceMetaSha256": "7366ce236b8ed83bcb7ff827c435946aeeb78368b72eda225f6b7474161ab42a"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_MissleRack_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_MissleRack_01.fbx",
+            "sourceGuid": "49f622c35fe7b08499f217f77eb343e3",
+            "guid": "2de42bff2d4103e42a6ad1fac9e19c47",
+            "sourceSha256": "6c5ba3239d8e105c5ea4112bf887254533a30a3714169e712d753fc1c246a176",
+            "sourceMetaSha256": "5decc4c2beb0cda20e955bf87aeab9cb6e9927ce7a70c1e22faeec3a91df6d58"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_Body_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_Body_01.fbx",
+            "sourceGuid": "103641c96ca1a3d48848bb805d2a545b",
+            "guid": "edada1985e0744a4f9cfe110c47d9332",
+            "sourceSha256": "58f8eea93bdee342b7e52676d2f544758aea309ca2566ebff77a9b3c85ae234d",
+            "sourceMetaSha256": "1ce5bf67bbaf8b3e7ee27ef608daadb831ed3e1ff19c0c0254ef4abbdfc13b83"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_Body_02.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_Body_02.fbx",
+            "sourceGuid": "31bb5d78f9e323f469850dd1b6d0e050",
+            "guid": "b1c91340f97eea0448a1255c1b089ab6",
+            "sourceSha256": "6baf4532b345718a2390cafff2e188ddf65fde1b038772cf20d6cf080f5c5f25",
+            "sourceMetaSha256": "f4825af9137768abb6043c632fa08f6c13595944556a987902b651222c1b701b"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_Body_03.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_Body_03.fbx",
+            "sourceGuid": "2a422985166b497499f5185aa4b7cd79",
+            "guid": "d56b4e91420453e4ea63164fd901ed90",
+            "sourceSha256": "5403712b9846ed9f70b6ff1aa1f70a0cf571e1da4fc16bb69ea419fe77d2fe2a",
+            "sourceMetaSha256": "1396fd820ea20b4163cbc3bb8bb8546ad2938871f0c161468863342215f3981b"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_Body_04.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_Body_04.fbx",
+            "sourceGuid": "083fb4330dce64b45a26b27c082589af",
+            "guid": "a2a95a2a62d81c9448fb655993ec80ab",
+            "sourceSha256": "472ae38b784bad062dccf0e20a380b7aa3bd254b7178c9eb3da466cebf893775",
+            "sourceMetaSha256": "40a3b4a636803eea13f483876f1fa94d9359901c5b85ac2f5f2ee270aa73f5f8"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_Cockpit_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_Cockpit_01.fbx",
+            "sourceGuid": "47881d4a24473ad4aa560e6c32dd2e0e",
+            "guid": "418e95bc5d048b64c83aee7a1fc60be3",
+            "sourceSha256": "0c1c66115b4d6d79fc30a2f487d464e77e9ca2f8fd9122e0a4074c5514db297b",
+            "sourceMetaSha256": "6b05ed5852539592951d619f982d888a26a84a364b81e37ea7e7b6af2c4acb77"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_Cockpit_02.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_Cockpit_02.fbx",
+            "sourceGuid": "5608196a7bfe7eb45832c214ec1ca0dd",
+            "guid": "b33297d9cee7c7145a42f3263206485a",
+            "sourceSha256": "d6c042882b8181bcab02a5f7a7e7605a3ee545cd9b538b6957b756a9f07b2dfe",
+            "sourceMetaSha256": "b1f0cf23b538195ef8f9897ba76d3da3fa5d8203e054eb568c57083c52b249ed"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_Cockpit_03.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_Cockpit_03.fbx",
+            "sourceGuid": "4310aef2b26ea8a478a1097701aa3373",
+            "guid": "f21f6685fe10c744fa63f1ce90843c3b",
+            "sourceSha256": "93271958c334c1d7f7ab8fe9b615d7c09dab13489e04f8870965f81b5ad2233b",
+            "sourceMetaSha256": "c864beddc2685c6d52cd4f088785eb880253c1ab7abe7ee2f2f832e656f68919"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_Cockpit_05.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_Cockpit_05.fbx",
+            "sourceGuid": "27757b3f30e763248813c58f4fe38d3a",
+            "guid": "aab66d4995046614dac58e87ad2284a0",
+            "sourceSha256": "3e85eda3a5b066f51e355a48e231acd3a3db9a1de9454ab7744c633dc9144818",
+            "sourceMetaSha256": "b126ba65ac3fad58bbf9289dc84348149d62ceb31d7cf832048babcc74216fda"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_Engine_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_Engine_01.fbx",
+            "sourceGuid": "2af54348afb304a4885441cd36d1beae",
+            "guid": "719b2dca70281ac438181cf2105892e5",
+            "sourceSha256": "16ffd2c6d5fab1bfaf45c081e29671c3cd1e086dec984d8857ec5e8416c895ad",
+            "sourceMetaSha256": "4671c5dc22c7cd8e771478c1275498c3539b0b151145237a5db0b09f1c38621c"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_Engine_02.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_Engine_02.fbx",
+            "sourceGuid": "96138a4e3c2d58648b233040570ac6e2",
+            "guid": "f718f38e17b880c489742fa59efa1630",
+            "sourceSha256": "9e02f99ea01bab7d77f803d860af4a25283e4aeb2ccd0289c371a5fe00666255",
+            "sourceMetaSha256": "d43a1e57f47fd10654fed684fd2cc4b7a7d8f793c8f074ca33a69089efe357e8"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_Engine_03.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_Engine_03.fbx",
+            "sourceGuid": "51c8e3f6af55ea74cab4919819d84597",
+            "guid": "0a10acd7d838bed41aacb3d17dab84c5",
+            "sourceSha256": "b4e4ce96903e2b28403b6b11d1e48239fccd62cdafebebe27eb2b0e1111501f0",
+            "sourceMetaSha256": "47a314b3d118973719d815c3a7dedf160d33b521cd3b4bd3a848cef37234ad13"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_Engine_05.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_Engine_05.fbx",
+            "sourceGuid": "6441e525436b8ee4ea012960b80fa290",
+            "guid": "e5082205c12f0534cb0837b3bf02fbce",
+            "sourceSha256": "96d27c871f44e7da03464f69e79b632201a348f8a2993df4b208a6b2d80eff3d",
+            "sourceMetaSha256": "82f5b8d750d92b92563319887dac889b743e3f6ea90752f7c5a4458dd9da8b16"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_Engine_07.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_Engine_07.fbx",
+            "sourceGuid": "2136b74e6fa8f7246ad3c2822a7b2e71",
+            "guid": "b2f75083e05ae20438c10ed7fc7375a5",
+            "sourceSha256": "8edc3ccbeedae4edaf35e64330a1c133c47cbb7141d74115be0dda3361bdf23e",
+            "sourceMetaSha256": "5fb40573a585c1e33e70af5cb9a58d9a0ecf73f7cd6788d94e4783adba1d058a"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_Engine_09.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_Engine_09.fbx",
+            "sourceGuid": "d7768fa2dcda95a43a0cfe9c8555145e",
+            "guid": "b50b0322489bcc94691b09862b024031",
+            "sourceSha256": "3427a63d0baad0473068cb3cab60c63a41741aff663198fb94e26ccb053cff9d",
+            "sourceMetaSha256": "24097e12b5bae4c23ba825ee81baea629c8f195b7219665f95dcc515c5a4adab"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_LandingGear_Flat_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_LandingGear_Flat_01.fbx",
+            "sourceGuid": "979d5f9eee9174a4fb1b9e81a0c646b2",
+            "guid": "7a05c79b99ec6b04788d9d43e649fd05",
+            "sourceSha256": "8d5c3338bb28ea7329889692e07d585921a80705aa94d2bb4815e73f24f4c383",
+            "sourceMetaSha256": "f7b31f7a20e40531d414ff48001a065b453e8d3b180ee97d7c6321a3d45e54cd"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_LandingGear_Flat_02.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_LandingGear_Flat_02.fbx",
+            "sourceGuid": "eeb8d115cf585024b805ace254f06916",
+            "guid": "4104ee6ea4001194c8c81dce75c88757",
+            "sourceSha256": "813e039ad45abf39add66a74c6aaf41b2c9bee8751511b414b108dc32d301275",
+            "sourceMetaSha256": "7665db5f01fcf39dcabc07772c160b3e7a9fe59c03f0f57cbcc06946c6c0c6f1"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_LandingGear_Wheel_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_LandingGear_Wheel_01.fbx",
+            "sourceGuid": "4e866c05bff92524988b3a2ac0e1f7a7",
+            "guid": "922af338a109eea4e89959c6490b4bd3",
+            "sourceSha256": "f88a1e494366942a20f62d43c176a7894098d07b9905cacf71d5092a4b4030b0",
+            "sourceMetaSha256": "700ecb3ce572dc62badcb9459944d86867aef86ef642dd6b15aee4301cd01d71"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_LandingGear_Wheel_02.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_LandingGear_Wheel_02.fbx",
+            "sourceGuid": "5f2e6739b43afb243bee96cd1ebe3f85",
+            "guid": "d0d2cb0c0eb69c34389cf13cca7fd845",
+            "sourceSha256": "01729883c1cdabe3c4418e9202e1d3bf05043cfaf603cc552cfd698332c5509d",
+            "sourceMetaSha256": "10824a0ec2817f0adfb8cffd4a4f9d39f49cc4ab72a720e668e1e749ddc1431e"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_Wing_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_Wing_01.fbx",
+            "sourceGuid": "9fa35995a9c042d4a99e7ddc19fef921",
+            "guid": "36c8e1c73a063154ca60ae50a3579fb0",
+            "sourceSha256": "bea2ec230b385b15e220212d22e67162fd4bdeb16795fa80011ea2ba293878bb",
+            "sourceMetaSha256": "ed846ee53aa472106c1f187e1f94d93487eb6bd027e2dc2dd262b300c7eeaf42"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_Wing_014.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_Wing_014.fbx",
+            "sourceGuid": "51099d27f4608d34196d4c566f1bff08",
+            "guid": "8046127f491c4e649b7f1e785a0055b3",
+            "sourceSha256": "5981f0278eb44696e6de0fbc587f54604686fd9dbc463c610c1fe283a396ac25",
+            "sourceMetaSha256": "2463994bf7e53c1fb468dd906ca580b66693e84983211a5c69ef0176f4aeddf0"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_Wing_03.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_Wing_03.fbx",
+            "sourceGuid": "fce5e50db1e60b24b9ade1cfad4a5f05",
+            "guid": "1bc600a7f73abfa44b392dcd3e341393",
+            "sourceSha256": "6023a2bdab89832e7339d57956976df61fc29cf8c90e762f303e840ada0baf4b",
+            "sourceMetaSha256": "57ddae12b097efc77d0be92e6e388f5f0c23178848d07a10e1a7c13b22d710b4"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_Wing_05.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_Wing_05.fbx",
+            "sourceGuid": "d98639d29b6c9e44ea498e3d99257c4f",
+            "guid": "d24b7580c995faa43abc59d1fa575bd2",
+            "sourceSha256": "eabdd6833c4cfb6faf57b8086482793dd5854f46d2c9f6366ce0aa60e7d57a13",
+            "sourceMetaSha256": "60cf2fbe9e6494b557a6a5503a7c5f5fc52baf213be5aab58ed1028d3a988bc2"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Part_Wing_07.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Part_Wing_07.fbx",
+            "sourceGuid": "29693e2d4b0dfbd4bb48c2b34e3a7707",
+            "guid": "8097aedb71ca3f9449888f31392a86aa",
+            "sourceSha256": "a7d387334bd91ecc644980528a07c4628c920441e2c2b863420c647d935587ef",
+            "sourceMetaSha256": "ba0e38d8fec9de858656df569f99f00eb53d7e94dbadbcb510cd019f3ab3c4a3"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_POV_Cockpit_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_POV_Cockpit_01.fbx",
+            "sourceGuid": "b49455da430a49b4ba9ab727f2ff9e9f",
+            "guid": "a6f2ed065178e1f48bee20252c2d5480",
+            "sourceSha256": "4a965306115989f4d4298450f69e33d72dc97db2cc3f9897c2b1e0a90ed3a8a6",
+            "sourceMetaSha256": "e3e680151a3a5bf9ef904928faa6ee8aff851b2c3a5bbb4fa452d8eef2bfed4d"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Models/SM_Veh_Sweepo_01.fbx",
+            "destination": "Assets/Art/SpaceKit/Models/Polygon/Models/SM_Veh_Sweepo_01.fbx",
+            "sourceGuid": "d306bb9daa743184194ee1fe320ef58b",
+            "guid": "d03cf688ab829264e8461a64a3803972",
+            "sourceSha256": "f3e6f8e229d2d174228c9d9a968ebeca8f659c59728a8b181de42c8d1c016c9c",
+            "sourceMetaSha256": "d1603ab11c5042790f952b96fddb3f6b2507c17c28946542c779f7a681df8ffc"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Buildings/SM_Bld_Wall_Doorframe_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Panels/Polygon/SM_Bld_Wall_Doorframe_01.prefab",
+            "sourceGuid": "228d48af1edab9043b87d3048b297ff9",
+            "guid": "6c5daf14bb741514fb8154e8ebb91fa9",
+            "sourceSha256": "458610c446fb08525ee888033edf82c0a9a0a0b6edb5c3570d38ceef40b6fcf0",
+            "sourceMetaSha256": "b8ef4d063fcd0e0cbcf82b8ac602a2304b8c2e8fad51c27e1682a10f29dad658"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Buildings/SM_Bld_Wall_Doorframe_03.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Panels/Polygon/SM_Bld_Wall_Doorframe_03.prefab",
+            "sourceGuid": "ab94f4534e23ba141a10b1ca23fa05ce",
+            "guid": "cbf348a9e60fd3541bf4f1ff5bcd3c8a",
+            "sourceSha256": "20be3a3799badb1f35ff09661cabbe450fffa0340f8189c0aeb4a5cad6ad549c",
+            "sourceMetaSha256": "c987914762ee70d475340dfdd4f96df81a057029b54bf57417022c986060fdae"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Buildings/SM_Bld_Wall_Mechanical_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Panels/Polygon/SM_Bld_Wall_Mechanical_01.prefab",
+            "sourceGuid": "fdc5679d271780745a81bcd824802cec",
+            "guid": "f61052f8f7c2d604abb4891d908fdd27",
+            "sourceSha256": "f6bdaffe7da67542b4163919fb7cbad4478e08bdc3a7b878aa1d6049c9a15d67",
+            "sourceMetaSha256": "a0230413f5f3b3cabed9d5d5b74e14906a5ed871eb6b68b0e9a51c40fc97b48a"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Buildings/SM_Bld_Wall_Mechanical_02.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Panels/Polygon/SM_Bld_Wall_Mechanical_02.prefab",
+            "sourceGuid": "bb7183613fb04cf4d9756746065ddc35",
+            "guid": "24b02818f8ff3204fa0069f8f3499597",
+            "sourceSha256": "bd6beb198912267958d0782fef9105d752417fe9b20d310337cb1410e04df977",
+            "sourceMetaSha256": "cc5568221a4c94e16b42e1affe4f7283e540ba53ae0e8dac92d945a97307f04c"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Environment/SM_Env_Asteroid_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Environment/Asteroids/Polygon/SM_Env_Asteroid_01.prefab",
+            "sourceGuid": "28548987d12c89f4bb36b9bef96ceebe",
+            "guid": "4461a96ed2389a849bb876313ea26bd2",
+            "sourceSha256": "412c0b2059d4983c292416d7c5f24acbcfdc053b00c2105805177ceae3e3ed18",
+            "sourceMetaSha256": "a8d1bcbb38e78d1db20ae7eda5f7a98e2e96e6de6a6f5481b5b95106b29e21b0"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Environment/SM_Env_Asteroid_03.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Environment/Asteroids/Polygon/SM_Env_Asteroid_03.prefab",
+            "sourceGuid": "52dd948aee398dd43a762ccad8615550",
+            "guid": "f1320a32b5e38224e91b5d332f3758d3",
+            "sourceSha256": "d7c4fe1d87a139f9fea9e7839d5f10b331cb7493a1a8b57bbd9bd15fc749295c",
+            "sourceMetaSha256": "832871824d30656373f607a60dccb46551700d822944d0932190e7a42f47d05c"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Environment/SM_Env_Asteroid_05.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Environment/Asteroids/Polygon/SM_Env_Asteroid_05.prefab",
+            "sourceGuid": "20bc67712a091434d92900911e095610",
+            "guid": "751b17ea0e909884ba910b989c813ef9",
+            "sourceSha256": "530d1c8a618e3537117494523506126e277b95f80ed5f006c6e8e3ed2d217f71",
+            "sourceMetaSha256": "49e556ec3c2404b9f9097d513e2e477880957f3ea983be0223bcc3e73fc9bd00"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Environment/SM_Env_Asteroid_Rock_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Environment/Asteroids/Polygon/SM_Env_Asteroid_Rock_01.prefab",
+            "sourceGuid": "04510a9b75554b4499ab7aa4628e2c4c",
+            "guid": "5ee328df51e2dcc47b466697b702f7fc",
+            "sourceSha256": "4a7b4db66c1b4b01b7e47e2a8ab38026e65162612ba6f5fa3041ae1f480ce5bc",
+            "sourceMetaSha256": "3c41b1d67c6cc87c84bf8e62923592f83842835b7c08b0ad4bdf0461d9ad9ecb"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Environment/SM_Env_Debris_Pipe_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Environment/Debris/Polygon/SM_Env_Debris_Pipe_01.prefab",
+            "sourceGuid": "91f739cfcee797a4cbaabbb8316c23f9",
+            "guid": "d49362daabb39904cbc75490b01cdfef",
+            "sourceSha256": "510fdf22442a1fb7c0e0904d7b93195ca9a7fc3df2cb33d4d2b2b52ebb79a412",
+            "sourceMetaSha256": "29b2f171da36b4d5131d75f4ebf15cf9ae4e1c75dca765bdfe2331a581396f97"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Environment/SM_Env_Debris_Shell_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Environment/Debris/Polygon/SM_Env_Debris_Shell_01.prefab",
+            "sourceGuid": "8c353a098e0d1224b877c52f4e519b54",
+            "guid": "c583750eb3f61154c83519e71260f9c9",
+            "sourceSha256": "9e462152207fe27da5b7232f5aa1e55c9f8df218c2e29929ae730207edae3ac7",
+            "sourceMetaSha256": "f269b9d51466779f4173c5d21b12f3e97a9d02e212f687ebfc356d9115e3aaa8"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Environment/SM_Env_Debris_Shell_03.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Environment/Debris/Polygon/SM_Env_Debris_Shell_03.prefab",
+            "sourceGuid": "838127bc699769f468c9980c3e69a2fb",
+            "guid": "0812f1ab96843bb4cae0252ae294e791",
+            "sourceSha256": "438fa3160b2e8f457cb35039d4bb8689369cc4d39f421defc39613e4ac1a380f",
+            "sourceMetaSha256": "63c7a9793c55f2d10c3afe5c325b6e20eaf14e25086aac901a776ddeb861a10a"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Environment/SM_Env_Debris_Structure_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Environment/Debris/Polygon/SM_Env_Debris_Structure_01.prefab",
+            "sourceGuid": "969d7c72258abd749959a5e293c5db6d",
+            "guid": "6b3906274b7e25e41befe41dad1b5dbe",
+            "sourceSha256": "b98a97842aecfd5bc40a032dbab84d27cdbf3d692594801867e86447891a3268",
+            "sourceMetaSha256": "bcfe732931374b29bf452564ebb6ad8f6b8e114bb772832931d685ccb89744ef"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Beacon.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/VFX/Energy/Polygon/FX_Beacon.prefab",
+            "sourceGuid": "ae5e9d0da5672704e9fd3367770b99cb",
+            "guid": "68e03fd95b0ffd04a853e58da84d496f",
+            "sourceSha256": "9df84191ba288f4142bbbe459ce41e54c71f69b818f577b625e24348fcd07145",
+            "sourceMetaSha256": "c3e117b16c92d7530361e96a4028950003cd768c47e169fbb1a6553b4e63accc"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Electricity.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/VFX/Energy/Polygon/FX_Electricity.prefab",
+            "sourceGuid": "ca1b1da5e83888f49b3a1148500975b9",
+            "guid": "b9252309f05b0634fab7b13d8bc179f7",
+            "sourceSha256": "74119b2504f53e26a55eff62745f9cb434a84759adae63a4faf396d196aec206",
+            "sourceMetaSha256": "d245c45d590a515e0762f56f073e5f34a302d5fe721a8acee23be1fe11a6389c"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Exhaust_Trail.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/VFX/Propulsion/Polygon/FX_Exhaust_Trail.prefab",
+            "sourceGuid": "7eedf4519460a0842af962a850d94e97",
+            "guid": "ce1e9a4602c92024196b1fc09c4aeaf6",
+            "sourceSha256": "fb8642867efd241a4205b09eb6a2452f2d04c1af53c20f49dae5ff18c520636a",
+            "sourceMetaSha256": "cdef8d82bb3c422143fc16277dae077fa338b35f060470e34eca417f0dc8bdda"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Explosion.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/VFX/Combat/Polygon/FX_Explosion.prefab",
+            "sourceGuid": "587eaecaa621be74486f351c78b4f0a8",
+            "guid": "f6f9d6a4cc7ceec40a1a56bcaa4b4e3c",
+            "sourceSha256": "c39eabce16481c9a69708ec4ead3ec796846add191edefca2333f86fd27eb284",
+            "sourceMetaSha256": "662accb1f41b5fbf72d48877d644c7e70a05de71a1d6fe01d0bc2f8dfe503d02"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Fire_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/VFX/DamageSmoke/Polygon/FX_Fire_01.prefab",
+            "sourceGuid": "06d2c182145e6f442b2f802c23bdcc63",
+            "guid": "e80d82873c6e188429bfbe081bc5ed7a",
+            "sourceSha256": "c49394acd52ebcc2fb30670140296e70247408c0de67da9d99ff07b6d4590544",
+            "sourceMetaSha256": "ee906fad5c090b3991000013e1d8884aaea8db38fcd7e58f677613bf3d1ebb89"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Fire_02.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/VFX/DamageSmoke/Polygon/FX_Fire_02.prefab",
+            "sourceGuid": "4157b899cc0f3ae4baf5bb5413504013",
+            "guid": "10a153c0ade869047a5cadecf7e6e009",
+            "sourceSha256": "02178b8b08642f08f769f422233405a9b3a0e3fee7205d2a823de8bc45cd7bce",
+            "sourceMetaSha256": "39a5fe15fd0507455f18b7ffc840bb7ae65ed3e3421bdee33fbaac02e8e030cf"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Flame_Booster_Round.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/VFX/Propulsion/Polygon/FX_Flame_Booster_Round.prefab",
+            "sourceGuid": "41eac07628561874e8fd3c1649c10b47",
+            "guid": "2052d635773c0d44d8e8294640977b7c",
+            "sourceSha256": "f472793bb0a670922154ec046654303ad1cd763df5214f76c40a843ff3485c0e",
+            "sourceMetaSha256": "bb91a6aa537276745e1de60888bb05c26ef2e8c15c584e022ba7c893efe914f9"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Flame_Booster_Square.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/VFX/Propulsion/Polygon/FX_Flame_Booster_Square.prefab",
+            "sourceGuid": "4a298e46d0e7c4c409d88415ebb4d047",
+            "guid": "6f36a1d1cbc3c4149b477cc2c0b4e10c",
+            "sourceSha256": "d8aef5774f50913f9628137c00699fcd87fa2b89676fc5d34fecdaca5d559af8",
+            "sourceMetaSha256": "ca78b414723c6a493960968922f42ccb9d496c0218daca630bb74b914416db83"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Laser_Bullet.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/VFX/Combat/Polygon/FX_Laser_Bullet.prefab",
+            "sourceGuid": "2c0c6b8c780ef4c49bad541f8512530d",
+            "guid": "9a6664700bc93e941861d56f94e3492a",
+            "sourceSha256": "fa0d147d20d73baa12a02e18c12823c8375d141fffe023838a821bfef99302be",
+            "sourceMetaSha256": "894ded91a176cfed3cfa299d27bba7c0fb5eeed5ba192d3df0d9fe9c0d93212d"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Laser_Shot.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/VFX/Combat/Polygon/FX_Laser_Shot.prefab",
+            "sourceGuid": "b510fe24f925ddd4bbf696284d146f51",
+            "guid": "05d10368a161aee448d41519240cec98",
+            "sourceSha256": "637fc967b3cb547de738b704a8ebdb25a356fdcd4e5fb3e13e046f8b13529bf1",
+            "sourceMetaSha256": "f42658aab085487e7315932e0164164bd6b3715fbb5c0d9c501a07055a4f0c65"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Missiles.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/VFX/Combat/Polygon/FX_Missiles.prefab",
+            "sourceGuid": "a765fb16b0a48744e851ca9d06b331b1",
+            "guid": "e200c4a6f3e541e4ca1c5ffc065f812b",
+            "sourceSha256": "b5f21d33c9907a0a13b6e0a3a018614d623d158d9728d1c63ed33ee805117bef",
+            "sourceMetaSha256": "56673f87b837015d0fda2af85df03566ce0098a02d4a807a135985f4ac813adb"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Pebble_Debris.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/VFX/DamageSmoke/Polygon/FX_Pebble_Debris.prefab",
+            "sourceGuid": "f4428f3876530af48a50daf8fe3efdef",
+            "guid": "bd2cd81ef09ae8e4ea21a40be2a07bce",
+            "sourceSha256": "a5435f1743667268b53b397075882eb39ec2db8ea07e939f7de54814de08c1cf",
+            "sourceMetaSha256": "0011c73f07740bcdf9bdf83c0ad8bcf40f69b11b2ca44feed392dbe55e2d8b5f"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/FX/FX_Steam.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/VFX/DamageSmoke/Polygon/FX_Steam.prefab",
+            "sourceGuid": "96decb074303dd644930252238107cd6",
+            "guid": "4d64f3504d3d06c4ca58f7f4e4ec17a0",
+            "sourceSha256": "af4a473437f06d90e4e3cab57d97b6741dccdd859e9666113831ebfe44ad169b",
+            "sourceMetaSha256": "18661147122659b024faf8fa6019e0fbd7d6703daa89740f96267ba78af76b5c"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Antenna_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Sensors/Polygon/SM_Prop_Antenna_01.prefab",
+            "sourceGuid": "b9fcfa0aefec1314da80716a42c55c1f",
+            "guid": "9bd45460b0361fb4c8c07066d51b0126",
+            "sourceSha256": "a38c7baf6631e9178595112dd9135a9614ab9e00bc18d956909d7d3beb1e2412",
+            "sourceMetaSha256": "c69371b42a7594c99ad07e5db2489417d432c64a56ca5ab71e657f115369f3cf"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Battery_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Power/Polygon/SM_Prop_Battery_01.prefab",
+            "sourceGuid": "24e3c7bea17c1724d93d50427efe1c08",
+            "guid": "b15b74c4536b65d4b984228474890cc7",
+            "sourceSha256": "43ae118aa05cc6998f6dfe9376f8fd2ce4fdb1dc54188b71e6a24c845e6d3b9f",
+            "sourceMetaSha256": "bead3ed39786c7b77dc659c0cd270abc28cd5c6b048922b3eab54dabfddfdee3"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Battery_02.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Power/Polygon/SM_Prop_Battery_02.prefab",
+            "sourceGuid": "1715a449b31d6f547b06ea2fd859462a",
+            "guid": "b756f0e70d2f4344bb4c81973a1bb10f",
+            "sourceSha256": "46668edb5307e79cbc440a16218bfb758268fb9e408a41704c103065030580b9",
+            "sourceMetaSha256": "9c3689d1b26e8d719335d16fc736ffcac69602948ecc72565df6c66632c7b686"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Battery_03.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Power/Polygon/SM_Prop_Battery_03.prefab",
+            "sourceGuid": "08bde06c179f5274892999713e6998e9",
+            "guid": "9518591656de439439945fa86303de3f",
+            "sourceSha256": "433c2af3d1ef8c7e31aa919cb1a92ae283ef0153548677919e81d238fa58bcdc",
+            "sourceMetaSha256": "d79d1c44984cda7fa88dffbade65152c1c52dcb0d31176674f898259be5f1bfd"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Buttons_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Props/Controls/Polygon/SM_Prop_Buttons_01.prefab",
+            "sourceGuid": "931935a02ceba66438e93679993aef40",
+            "guid": "9f27797e30d92d54189f81d375b02f1f",
+            "sourceSha256": "b13f834807814cf665ff7c23d496e93332d7fa16f5ecf6d03c7e12a3b0c26022",
+            "sourceMetaSha256": "8f7337922c6342bafe1322fcba70a993e8ff21d7146910c74b899d279706e117"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_ControlPanel_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Props/Controls/Polygon/SM_Prop_ControlPanel_01.prefab",
+            "sourceGuid": "ff5586b927c5dcd47925e8c6788f8b5e",
+            "guid": "d8cd4421f6bee1744a7bffb177979424",
+            "sourceSha256": "8f5e91f74054f9c814b32a7b835b7fffa0196090fcbc35055b81625c4bfd165f",
+            "sourceMetaSha256": "4af7733d8cbd2b3b3311177e524d5496b73253040db07eff95fdfc21f1921316"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_ControlPanel_02.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Props/Controls/Polygon/SM_Prop_ControlPanel_02.prefab",
+            "sourceGuid": "e6bfc29ecf830c64eb95c54d3e9054e1",
+            "guid": "6ace863dc87261847acdfbafb318900e",
+            "sourceSha256": "af3aa2ed98e49f4c7d03cd83fd1f1f9632b99c33fc6e56a02420871e900ff06d",
+            "sourceMetaSha256": "76e50197ccbf28798834d49b49840ac2c376a136c1b261b5eb60f0b273cf6440"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_ControlPanel_04.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Props/Controls/Polygon/SM_Prop_ControlPanel_04.prefab",
+            "sourceGuid": "3987659517e726243a836635155b9441",
+            "guid": "a92ba7498f33a9f4cb2d03e28b191ba0",
+            "sourceSha256": "03625ba66ce7c1500a02118982a54a509b17724591a4c4c5d5f7270d0e3c5296",
+            "sourceMetaSha256": "4dadf498838275ee22760c99ad6d20bd7a07dd885314b2582e1cad2d6a23d1d4"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Crate_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Props/Cargo/Polygon/SM_Prop_Crate_01.prefab",
+            "sourceGuid": "96ec3966e2e9e004086cf5209750e0b2",
+            "guid": "70c024ff0d91fcb4eb690e32c4885f18",
+            "sourceSha256": "10480ec4490734bcb6280686f1710b5bc9d7d353cc5a609ac5bac1f0d624983d",
+            "sourceMetaSha256": "47846a7160ce81124a02cc14415295d4b43c7bdcb5a5586d01e7e9eb8814514a"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Crate_02.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Props/Cargo/Polygon/SM_Prop_Crate_02.prefab",
+            "sourceGuid": "592fdcba71017da4f810f3022a74c558",
+            "guid": "4b87c774c780f374c81512ab3e22cd11",
+            "sourceSha256": "2c884fd4342b6397ffbae3f64cf358f2bbdab2cbbc3b5f8c76be3cacfe59b48d",
+            "sourceMetaSha256": "7e0545375dc83004e1b6fa67b3adcecdef8ee5d65d602afd54c7a6b20377fca8"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Crate_Ammo_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Props/Cargo/Polygon/SM_Prop_Crate_Ammo_01.prefab",
+            "sourceGuid": "6d7f4fb9a58cedf4998b9bac4a0a6bbf",
+            "guid": "040674871b1998a46b646f6d36d5c050",
+            "sourceSha256": "83a87ec61a65793af84e98234b162e7bbf796d02f3a98672ea540b26fd62c0eb",
+            "sourceMetaSha256": "17fe91557c22e756148fc1ef8123474970cc9fb4cde5c968a57d2d0cff97a414"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Crate_health_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Props/Cargo/Polygon/SM_Prop_Crate_health_01.prefab",
+            "sourceGuid": "f1c03e36cea56a94fa6f58010cc58f51",
+            "guid": "c9d4434e9ce587f4c97de41dea9a9dff",
+            "sourceSha256": "bc44e156731c327c7cc957bad17d94a0ab761caec3957e94a283ca4aedd23d3c",
+            "sourceMetaSha256": "5ec3d68adc6e3d8d6c8ca148c7b80cb2fd5badd3cbe6edaf94a74362db87b801"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Detail_Pipe_Corner_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Structures/Polygon/SM_Prop_Detail_Pipe_Corner_01.prefab",
+            "sourceGuid": "315faea84706f7946854c979233d54c5",
+            "guid": "5710becfb9c67554a8d28dcaa2e96e68",
+            "sourceSha256": "6288202b516ecaee237a405ef0dc52634cd4c29771a0269161a670b9f6c1c7d5",
+            "sourceMetaSha256": "1565195c0629eaf0bf268c03f5586813de57e00a0d2ced0c4491e572cc147e46"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Detail_Pipe_Straight_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Structures/Polygon/SM_Prop_Detail_Pipe_Straight_01.prefab",
+            "sourceGuid": "93daf3f4d9daec34898d398d93900507",
+            "guid": "a8bcc81b5691b4a47a2d2bb32a4566eb",
+            "sourceSha256": "868f40d9d1ec40df886dd745693e9829c5c5723ee91d4970458a7aa3ab55f3c9",
+            "sourceMetaSha256": "f47889cf078a3fe400896ba9e763daabd7ec48036cb1f7c76748f322f1c443ea"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Detail_Struts_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Structures/Polygon/SM_Prop_Detail_Struts_01.prefab",
+            "sourceGuid": "793598bf7562cf342af84339fff1c6eb",
+            "guid": "d38ed4987e2a9784d9d9edbcc6fd77b4",
+            "sourceSha256": "ad07e4f0d6bf5f0972322d381a0e6bc37d832af88a16745b533af77eb90e2aa2",
+            "sourceMetaSha256": "e374b299adce9399d9a9f08df89acdb0de3aa49abe5dbbb9ddb416c821632794"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Detail_Struts_02.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Structures/Polygon/SM_Prop_Detail_Struts_02.prefab",
+            "sourceGuid": "9e4605946538e8340a4bba38917faa3c",
+            "guid": "4151b684d4a3ca14c9964abc7d28182b",
+            "sourceSha256": "326a14b312202745ba224227bcaf2c4aab58b7556e40a5cf608051199d362d60",
+            "sourceMetaSha256": "bed0640eb73c9dfaf71d31ee5d7585abbc814f52ccb2f37dd025bafb9bef2394"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_EnergyPort_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Power/Polygon/SM_Prop_EnergyPort_01.prefab",
+            "sourceGuid": "8b71e1b6bcf0cf2468170462ea8b37b2",
+            "guid": "c3372e060a8096948bc4d2625018e399",
+            "sourceSha256": "39e789649853446526e9230d5eb5ca8a8378813d11e2e8aa50881ab8162d70a6",
+            "sourceMetaSha256": "3fbd82c8fe6326e2ca45e7f636eddbb376318438385a06423009df37583b562c"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Engine_Construction_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Power/Polygon/SM_Prop_Engine_Construction_01.prefab",
+            "sourceGuid": "71cc042e82536124e97c26fd10790a95",
+            "guid": "5f4bb422bc86dcd41b96574648aa5c0b",
+            "sourceSha256": "48a18d92f934daeadbddcb76935309f62e2c75f4be042a46149b81dac545da39",
+            "sourceMetaSha256": "3cb6f5f1ef909587148ea562480b31e96e072b8bbf34022276b63230872d775b"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Greeble_Panel_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Panels/Polygon/SM_Prop_Greeble_Panel_01.prefab",
+            "sourceGuid": "438a38d2a91e6614a8192a9004a52c5b",
+            "guid": "a7dd72a426e51e143bb68733150742ab",
+            "sourceSha256": "66e0fa2872d632adda247d817c448d1f68035b0dc28dda399aefe8ee165c6d92",
+            "sourceMetaSha256": "e3a2e3ce983451f5083a2bb5f712c6487fabdfda2c5b758cc101be069065a91a"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Greeble_Panel_03.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Panels/Polygon/SM_Prop_Greeble_Panel_03.prefab",
+            "sourceGuid": "d1db1db9b2446b34eaaabf3c9a010b89",
+            "guid": "3c72f678b43a0454b96bd856bcf06d3e",
+            "sourceSha256": "0cfc2bbb84ace996b6d13a2225ebcf9698fc46ba9bc2c000a75e629f557208a8",
+            "sourceMetaSha256": "98618cc86c52e4bfcbb22870af8dbbf36219af7a38b3a9f05f5205624ccd9aae"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Greeble_Panel_05.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Panels/Polygon/SM_Prop_Greeble_Panel_05.prefab",
+            "sourceGuid": "feb2a41509621674dba686a598481616",
+            "guid": "7532943f4942d0043996c87eec829697",
+            "sourceSha256": "2ba4b70b2e3b2de984a6c891837b62cb6c1082c6f9fdcad41ab3f4b8b6b88495",
+            "sourceMetaSha256": "ae493818b93b7eae34415d8b7df68e346f263702aa253268afeb5511505bb6c7"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Light_Panel_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Props/Lights/Polygon/SM_Prop_Light_Panel_01.prefab",
+            "sourceGuid": "402c5a51619eb754792b87e071f98b16",
+            "guid": "05daf78947be4f14688a1b0aaab07c38",
+            "sourceSha256": "c8dbe46ca5d6524d3d9f4611479ace22b0d28f18b3bc5893d50c5ff3234c6e57",
+            "sourceMetaSha256": "a686ad2df622d63a04d98605d5fd108db59b362af8733b33163a9c1652b5fb87"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Light_Panel_03.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Props/Lights/Polygon/SM_Prop_Light_Panel_03.prefab",
+            "sourceGuid": "b9de133cafbdb6041a397730eacd8a57",
+            "guid": "ef130211049a3fe4dbf91916c0b088cd",
+            "sourceSha256": "c59374166406c2f4fd87443fc77ecdec3bd34fb2f98471a265576bc62e24b2e5",
+            "sourceMetaSha256": "67871a5fc2cb07faf50f75b839a4bdcd076e7865b83ed1237b34e15034db29f9"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Light_Small_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Props/Lights/Polygon/SM_Prop_Light_Small_01.prefab",
+            "sourceGuid": "7cf2eb63fa2d99243b2fa1a263c7081b",
+            "guid": "1f647fdcef40a3e419cac9f8723dfcf2",
+            "sourceSha256": "34883210d4d591f6f08259315c55bed1c49e180634e0bf5c312e60217b872280",
+            "sourceMetaSha256": "8076b2aa26e7aa48863a2bf995190bf079b517a8f4bee3a6d208372b78d66a38"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Light_Small_03.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Props/Lights/Polygon/SM_Prop_Light_Small_03.prefab",
+            "sourceGuid": "3fbfe9b012fb9164eb00169f247fddb7",
+            "guid": "e182de542ae6de849b3a0599998b1e15",
+            "sourceSha256": "da5fdaa08fd168030983482268ec77a22551b4df7b32be5284dfe8b7e050abeb",
+            "sourceMetaSha256": "90d4b46dedf9cc7f9cab1ae29930e756b087e1c47180029562b46298dc191a13"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Light_Small_05.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Props/Lights/Polygon/SM_Prop_Light_Small_05.prefab",
+            "sourceGuid": "600d3605891c8c34a83948482636865d",
+            "guid": "828cd768ad3cd1b459cec91975a51bd4",
+            "sourceSha256": "f6764215f6223e46ebc42c4141b9c3d44c2d78a76a0e25495037f415f474c0fa",
+            "sourceMetaSha256": "d33ad3066d65c140aa2584af5c0c32dba33dfb51e7ec662e60552b923da11768"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Missile_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Projectiles/Polygon/SM_Prop_Missile_01.prefab",
+            "sourceGuid": "e221d3ddf51167c4db44235d8c68ee36",
+            "guid": "973c668385dc8d8479838fab19c54022",
+            "sourceSha256": "b1a5601de4665a99715b2e5515002d67cb085b9f377894fce4c33629389a3436",
+            "sourceMetaSha256": "09312141c301fecd51a56c1f24567bafbd713f1ebeb005e1d389e4e9978ee9a1"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Missile_03.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Projectiles/Polygon/SM_Prop_Missile_03.prefab",
+            "sourceGuid": "1efe32d384ddecf499f4a17ae066b6ba",
+            "guid": "e352291dde2edac43a6cb0acc7608cb5",
+            "sourceSha256": "7ed35b551787e722fa4ad38f7dd6d955f57cb17d2df22af10ff919a92ec0a1c9",
+            "sourceMetaSha256": "c608b0b982cd710b4807e04c7407e80961d831f955f6dff8febb3362fd235052"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Missile_05.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Projectiles/Polygon/SM_Prop_Missile_05.prefab",
+            "sourceGuid": "9d63053234fc75a4ebd0556278c9047d",
+            "guid": "b3d9c2a290443bf47b8a72596d847598",
+            "sourceSha256": "1f8af94395a157d7c62a933f87b9c5595657f4e8cdef495e5f92e509fbeb32e3",
+            "sourceMetaSha256": "63cf5387c621091e3f40f78066a69b5d606ef20e86c48251cca8b665b814a57e"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Oxygen_Tank_Small.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Props/Cargo/Polygon/SM_Prop_Oxygen_Tank_Small.prefab",
+            "sourceGuid": "a9e9dbaabbfda584faa9352174a28635",
+            "guid": "2dbb82d4a0cbe25468700516adfde9a7",
+            "sourceSha256": "6b523bd15150b486bf916ad5a9b1ca699cd83dcb5e9681dbfa69778d65aaaba9",
+            "sourceMetaSha256": "4d81a5a9098e3bb5b2c526a533bd1076c66ce6565dfe37321d8ffe13930bfb26"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Radar_Panel_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Sensors/Polygon/SM_Prop_Radar_Panel_01.prefab",
+            "sourceGuid": "37ae90971c48cad41b75d81aca97b305",
+            "guid": "d785239421f046c40b628c2f9dfcef3e",
+            "sourceSha256": "272f2b650d368c68db729d174c122b8e99fa002470571eca5a95c4adf9fec080",
+            "sourceMetaSha256": "149b62911a8a2519235132721e333d5c05b06137d0548aa8e7c928b3c0e0a83a"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Radar_Panel_02.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Sensors/Polygon/SM_Prop_Radar_Panel_02.prefab",
+            "sourceGuid": "8864b6ce8732cf04ebf28a80a38455d4",
+            "guid": "fa9c5ea9423cf674cae37c643c4d8dd5",
+            "sourceSha256": "22c72b494899652a06f4267b39b9d1d308c8ffe09c99115e0e1399350c69beaa",
+            "sourceMetaSha256": "e4354330678adac44298e42a86a840d04dadba7b97781e9e727af197b084b02b"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Screen_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Props/Controls/Polygon/SM_Prop_Screen_01.prefab",
+            "sourceGuid": "f5e718d4a16af244997a097d461914f1",
+            "guid": "37110c145922fd84e8f1d2b9fb1624d5",
+            "sourceSha256": "31a0b9160feaceb39fa26f1a3b8c222bf93308026b568964106140a99e6a16fc",
+            "sourceMetaSha256": "27a6e2c68fb16c7a861d97fa129ef488454c5d8b06e00738188af06ba9bda706"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Screen_03.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Props/Controls/Polygon/SM_Prop_Screen_03.prefab",
+            "sourceGuid": "3e4bff3c4e59bde469ff3d57a558cd7e",
+            "guid": "2add8fbefea942e46b7c472587051fc6",
+            "sourceSha256": "81638c4f432873f39814ff1b04695f539ce13221f03c67dc95cc4387dc369148",
+            "sourceMetaSha256": "5220734f0df870a463be87cc7bece7869eb16b1805b2a4d1f1296b60045a7c42"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Stairs_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Structures/Polygon/SM_Prop_Stairs_01.prefab",
+            "sourceGuid": "a0fffb9fd33cef644a6dcc5854b8c482",
+            "guid": "c84b1dc746511f5499c9bc1dfb46a8c8",
+            "sourceSha256": "de63303302f1ddbdb8c50182df0615cae9ffe59004843a0cbbfedf6fe7b8b363",
+            "sourceMetaSha256": "e807494e3a9d3287afcc95c4a05544535e9be6624fc99dc86cc110d0bc925b11"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Stairs_03.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Construction/Structures/Polygon/SM_Prop_Stairs_03.prefab",
+            "sourceGuid": "8d20774deb049224b9ff98f025462c75",
+            "guid": "ac4c7ffadd07dcc44a372d92aee49d61",
+            "sourceSha256": "5509f67717bfd804111f2cd663605804a9907cc0c78452cbbe22aa015ee143f4",
+            "sourceMetaSha256": "b3dcc5b8ec6c8ce588bb96dc2734218e60122db22c3a7ceee4c084f695bef72a"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Tank_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Props/Cargo/Polygon/SM_Prop_Tank_01.prefab",
+            "sourceGuid": "4668588a9e17c9f4aa539ee9c8f57a4c",
+            "guid": "aa50ef4048040f648a0a2c3b828814a1",
+            "sourceSha256": "0d7808ed69991b433b5a92f7514d1c23ec0ff4b8e0cc09b3a4480e8ac0902bb8",
+            "sourceMetaSha256": "f92dc69f36e7504a0d48edfa444e2eb9c53d8080fc4288b8a24f84b02cbd752d"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Turret_Base_Double_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Turrets/Polygon/SM_Prop_Turret_Base_Double_01.prefab",
+            "sourceGuid": "5cfb9f4bf98ba5c4d8141b52757cc450",
+            "guid": "1a1a310362ef7bc4fbcfdc16ef48edee",
+            "sourceSha256": "c6094e115eb012eb0bf851799eaf6506cb2f29569938a5c8fa6fc3655e6fde62",
+            "sourceMetaSha256": "51ca45483198ec0bb37972ac839dbdfbba85202fdac4f8791212382305708fb0"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Turret_Base_Single_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Turrets/Polygon/SM_Prop_Turret_Base_Single_01.prefab",
+            "sourceGuid": "d61d59b102c18fa4482acbb105b6a94b",
+            "guid": "4ab678b4dcb1337489157cc2a44832ee",
+            "sourceSha256": "df60347119a188394ad83cad92a52c0448a6d37b1ae7f221dcb54cb92747c595",
+            "sourceMetaSha256": "c8d1424fd848e51745f8cd1969547b664c908f0f1cba175695473434caf7ad1a"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Turret_Large_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Turrets/Polygon/SM_Prop_Turret_Large_01.prefab",
+            "sourceGuid": "5a5c1ae74ed6fa34eb03ca7e65badaf7",
+            "guid": "c57c012aeb3f18f40841ac21bfa4a72a",
+            "sourceSha256": "1ecf471f44395f98906d7a90d2b856137d1a168a25e0f44813967b469ae26eca",
+            "sourceMetaSha256": "ea366cc0ef5e0bce11693159bb6d86653332bbf04e7ef21747f405a7909d2b68"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Turret_Large_02.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Turrets/Polygon/SM_Prop_Turret_Large_02.prefab",
+            "sourceGuid": "df1b9670fccdbb542a725033c82d2f49",
+            "guid": "8b02ff853be5b8d49954528ed36f4f99",
+            "sourceSha256": "5e54ab9a5b49728b36e51d501ba675dcaeb18c42fd83b8b1277bdb693112ee61",
+            "sourceMetaSha256": "c3833208a888186384f446d3efe7face7bf5c78cb9526ef164c9c5e6f1127cf4"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Turret_Small_Ceiling_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Turrets/Polygon/SM_Prop_Turret_Small_Ceiling_01.prefab",
+            "sourceGuid": "9a4c1e6735c82ae4e9692018e49afbca",
+            "guid": "6f5a1fbafe4f2da47a17ebbe10eedbed",
+            "sourceSha256": "29d914de458e545055529e086db08b61b66d4955198a7c395548300e1448c182",
+            "sourceMetaSha256": "df03672afbf051bd2ac78eae2dd7465593d8e1521db14cdbf411e03293e3f495"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Props/SM_Prop_Turret_Small_Floor_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Turrets/Polygon/SM_Prop_Turret_Small_Floor_01.prefab",
+            "sourceGuid": "d82522db9ccce854eba00b1a281d7ec9",
+            "guid": "9055798e16f8e434aa999d126dc07da0",
+            "sourceSha256": "140d2758d0510f5499d632ccca6fafa3a9e9b335c8badbfe868ecc44348eb5ed",
+            "sourceMetaSha256": "9c5ee410e1f71c4421561387a24dc00dab29f0dc15834b58473d2a56a1555a5c"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Ship_Fighter_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Vehicles/ShipReferences/Polygon/SM_Ship_Fighter_01.prefab",
+            "sourceGuid": "01489deeeb7ca1744877c2e3e590d958",
+            "guid": "162e78ffab73165469dbd63400429e8f",
+            "sourceSha256": "db81f0d3d006e65593b6327f7baf0bf1c84754ebd5eb6f43b8197d41141ab59b",
+            "sourceMetaSha256": "1cfc7027a4445aa9f6d5dae861daaf4a70147a75a0cada737eb7ffd0889fb1c4"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Ship_Fighter_Heavy_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Vehicles/ShipReferences/Polygon/SM_Ship_Fighter_Heavy_01.prefab",
+            "sourceGuid": "3a4cdad4b75b5344eb3a3b6d07e0cb85",
+            "guid": "42eb062788cdedc4fa76d3070c19bcb5",
+            "sourceSha256": "cb8adb60d939f2f68fd8cb65d38e00a3a2edbc1084edb0d398af0a03cb020a52",
+            "sourceMetaSha256": "96c98e8739d4952b0fbc31009cf02ceaa5c583dedaff483fb3d181376b38d9e3"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Ship_Transport_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Vehicles/ShipReferences/Polygon/SM_Ship_Transport_01.prefab",
+            "sourceGuid": "909e2c7775ffdbd4992cd487afb004f0",
+            "guid": "b8be9d38131f18445bc8a812de673ab6",
+            "sourceSha256": "830d738eff30cc19d9b160611a08d74e42adedfe57e2391db79c6cf0b47a543f",
+            "sourceMetaSha256": "0518a4d8ab6795de06bdc8024ed68fff88598c5d3a8f145be6b3fbfd456cbd26"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Beacon_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Sensors/Polygon/SM_Veh_Beacon_01.prefab",
+            "sourceGuid": "537d80fe3ea3e444bba8f996c41bb85c",
+            "guid": "7868fc24e8bea4f4a8e55f5d60442d6a",
+            "sourceSha256": "346732e70c0ddd289947d47ee5d56874d0d1a6f9796112ba71699196ecc13a5f",
+            "sourceMetaSha256": "05d46d6120278631081222333ae16c4db8c65ba0887b696002d41c21c3694d2d"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Drone_Attach_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/RepairDrones/Polygon/SM_Veh_Drone_Attach_01.prefab",
+            "sourceGuid": "ad7c52a4ec5f9b948bbfc45336f4fa48",
+            "guid": "eb3e4a16b6319ad4a8cd3d8bdba5bc96",
+            "sourceSha256": "38f304d42873174c305ba7621760fdfe52f9d7afc5af2a594bdc5e3d799c5d91",
+            "sourceMetaSha256": "c9556d99e049d46750217ce81c590be8ada5b307f98d707e84f83b3226eb7804"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Drone_Repair_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/RepairDrones/Polygon/SM_Veh_Drone_Repair_01.prefab",
+            "sourceGuid": "b8462cc0fad2b284cb775e5fb7c2dd19",
+            "guid": "125f9063bc469aa4a93512ceb18e2954",
+            "sourceSha256": "aa26b6dc32314377cd6f1d300b7c9d31d9b277e2f1546f86b75c8c68b1e9f499",
+            "sourceMetaSha256": "f162fde84fd9637da30c5a84f81e96e0dcb71c7faa2542ce90cc02597a8e0c16"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_MissleRack_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Projectiles/Polygon/SM_Veh_MissleRack_01.prefab",
+            "sourceGuid": "d6c57eebb8ce01f458076f109cee95b6",
+            "guid": "e4847d4f2b8731341a817a3910da63ea",
+            "sourceSha256": "3422b04ec415c1635aca0018024a938cb7b654e404474509eb1d4ecdd2e634c7",
+            "sourceMetaSha256": "16effc562a9cc2f530c51adeaf201e1e761a8d8a76888b4310471d62582628e3"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Body_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Hulls/Polygon/SM_Veh_Part_Body_01.prefab",
+            "sourceGuid": "685f1477411e7a7459012651b2b9a113",
+            "guid": "76fc29b9eb02ff54a8898bcea5c7ecba",
+            "sourceSha256": "fa207992e210e044fa46bc837346c5ad32f6093858988ce4055c551954697666",
+            "sourceMetaSha256": "a211da796e0d4e4f43e269cf8a90f94987bb4ec5b2c26abe9ea8afdac906b855"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Body_02.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Hulls/Polygon/SM_Veh_Part_Body_02.prefab",
+            "sourceGuid": "be2642d581f74b3438801d68b029b628",
+            "guid": "14d91c92eb517d546ad1e7b1d83ea928",
+            "sourceSha256": "660295c93e260895975183bcb4334b01221ce113a1cc2de97c37e8465db71c8c",
+            "sourceMetaSha256": "3e8f2c2095711210e2eb12129cd9ac51cce51e4fdffd8a1710099f49c272563e"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Body_03.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Hulls/Polygon/SM_Veh_Part_Body_03.prefab",
+            "sourceGuid": "f015bb414c2fa7047880ea267a67a7aa",
+            "guid": "fe0c8eda0db3a5340b440821636f8e31",
+            "sourceSha256": "f2f890043ee38358ce75c70aecbf9151983b44c512bd0434082ec1abacb0a802",
+            "sourceMetaSha256": "4a9b1e9ea05182eceda8804e08c4a6452b48a11d2105774585906eb6df9bae0d"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Body_04.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Hulls/Polygon/SM_Veh_Part_Body_04.prefab",
+            "sourceGuid": "230f249ceebed69489e66ad5e99521a2",
+            "guid": "6e0433b4dc48bfd4daaa4da7f5778072",
+            "sourceSha256": "6f8673901f092f77b2a145b3f4656b0993fa031a7fafd9ada2f0a5a841747cea",
+            "sourceMetaSha256": "f1e466b1f62d8efa66822c028f6467bd80e3649aabae55c1bef85b92e54330b7"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Cockpit_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Cockpits/Polygon/SM_Veh_Part_Cockpit_01.prefab",
+            "sourceGuid": "5cc306bff0db69046821e832c8331e11",
+            "guid": "04244522ed5a06146ba3bd3e25be72d9",
+            "sourceSha256": "e1283567a138052e4bbe122feef3bd7c3a90325538b1f850e5279aee50770819",
+            "sourceMetaSha256": "767bcdf996efd0cf7ddc6b77dc013234b20d022f78a433aa432c6690f2f343db"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Cockpit_02.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Cockpits/Polygon/SM_Veh_Part_Cockpit_02.prefab",
+            "sourceGuid": "26a3052b856cb7d4290f1fef30ee7290",
+            "guid": "4672cd5feaf9c1b4da9fe9c9dc35f3ff",
+            "sourceSha256": "df173b87ba49d942ee366582aa12743eab00dc130bc22b4060d21d24dff8870b",
+            "sourceMetaSha256": "b7eac33a9e09fc8ff7f35a0a3895b12ca07620e095175ec83af6470c5d7ab847"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Cockpit_03.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Cockpits/Polygon/SM_Veh_Part_Cockpit_03.prefab",
+            "sourceGuid": "3da221c090dea8140a0a2f5fc619596c",
+            "guid": "1d62d74a635d262409e2acbdf723d001",
+            "sourceSha256": "c49a44440e7dab75c0cc8fde2db9646f0bdf29994c64cf2425da783c661714b9",
+            "sourceMetaSha256": "85a1812ebfe294b38f87caf14c497df59a81218b1389838b0da48c3b7e893fdf"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Cockpit_05.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Cockpits/Polygon/SM_Veh_Part_Cockpit_05.prefab",
+            "sourceGuid": "38b3a084e5e88164b9d73d8c493efd43",
+            "guid": "8b3bc164a3ec14f4181b2b016d6b03fa",
+            "sourceSha256": "13158c069c0f009e2100e5373ab9189f37f8beb3e5f575d8039a35feef0e2694",
+            "sourceMetaSha256": "c597c13eace6d04189b15f488b66c03f3492aef3cd52f40962c0f4bfee619374"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Engine_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Thrusters/Polygon/SM_Veh_Part_Engine_01.prefab",
+            "sourceGuid": "b18b9904b4ca7754da3bb057d2303945",
+            "guid": "57df2770b69deea448e2300692e3cd24",
+            "sourceSha256": "4b3dcb4f336f70e440e704c79e14237277b0889a16378a6e2cd742510bc0ad6f",
+            "sourceMetaSha256": "441a5d69fdcc737e424b622f543e627b343387f1b75ba1f5fc1ca03528aa9294"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Engine_02.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Thrusters/Polygon/SM_Veh_Part_Engine_02.prefab",
+            "sourceGuid": "7c14d6def9973d94ebee3af15a5de634",
+            "guid": "b20351610701f454c90e6776cbc78c8b",
+            "sourceSha256": "57dd97885f64210268c444761d2e7fe699c88240c2db7a331f7d37cf8d067d46",
+            "sourceMetaSha256": "6620a63113a22037e41c6611ecfb73b3889059b24ee95924993b4831dcc729fe"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Engine_03.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Thrusters/Polygon/SM_Veh_Part_Engine_03.prefab",
+            "sourceGuid": "6d8608bf30492ea4e9ee2a6990786ef6",
+            "guid": "d1f364a14d2c29745b6ea32f0cbf4b12",
+            "sourceSha256": "c675052767370dcea646cf0978f216371f9fcf5ceb016e5063e343dd12566b42",
+            "sourceMetaSha256": "d6cd841717c0d53042027b301e35920ff85f1eaf1d50bb623d1443a65e53a737"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Engine_05.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Thrusters/Polygon/SM_Veh_Part_Engine_05.prefab",
+            "sourceGuid": "52eeaeba04f1d9c459ccc00c3d254a06",
+            "guid": "49fca39a5ca7ee2428023368704c510a",
+            "sourceSha256": "8fc3cf440a79c40b15240641de9fdb2a2382997833f84bf432954361edf18469",
+            "sourceMetaSha256": "cb3215caf462f219f32dfcb56b2c79dbb8d192ad0d644659bd4fdc4453420d0c"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Engine_07.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Thrusters/Polygon/SM_Veh_Part_Engine_07.prefab",
+            "sourceGuid": "c954344d65ff51e4b997deff824986d3",
+            "guid": "64f1ddbd7a99fc14cb0032c431d673c7",
+            "sourceSha256": "2232ee11cf1c13c3016a3e0dadeecbea3fe9c7ced854fd7a93299064b9f456d1",
+            "sourceMetaSha256": "c80a3dbda06cf96ddca80a836473a15b8cd55d75c280bd8c9a4f42ed5ffc12ed"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Engine_09.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Thrusters/Polygon/SM_Veh_Part_Engine_09.prefab",
+            "sourceGuid": "2e1fab310af4dec418a5541552ec598c",
+            "guid": "a2aa9078381dbbb479212ee6cc834749",
+            "sourceSha256": "33e18ca8ab4a5a30d9d2a9cfe36922f6ab5c2a1b7f03758f1080d2b6000fc99f",
+            "sourceMetaSha256": "41700392a21536a544223e77941184e007f8734dd36ec17a3f2f53e923174b33"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_LandingGear_Flat_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/LandingGear/Polygon/SM_Veh_Part_LandingGear_Flat_01.prefab",
+            "sourceGuid": "e90d2e30b9c52d74394934c5a5d330f2",
+            "guid": "f91241229954a484bafa9c71fb578d45",
+            "sourceSha256": "bdf8954ba94e4e17b0f1d03c1f69d4bed0b77b2cacefaf4c49bc83e63e6e93a5",
+            "sourceMetaSha256": "fae12a443615fd7fb5932db659a9eb9768b1e6fe12aa65ccf8f53c8509738982"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_LandingGear_Flat_02.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/LandingGear/Polygon/SM_Veh_Part_LandingGear_Flat_02.prefab",
+            "sourceGuid": "0baaf7930ead7a14bab8610d1179f5a6",
+            "guid": "ac83b417c268b7c4e83446c42a916df2",
+            "sourceSha256": "3dcfcf8662b038461334eb052195af598714429fa468ecbc59b5756156fb2b1c",
+            "sourceMetaSha256": "04d285ff420f5301196b1b60882a6073344145df46e202cba4946864b2fd4d55"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_LandingGear_Wheel_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/LandingGear/Polygon/SM_Veh_Part_LandingGear_Wheel_01.prefab",
+            "sourceGuid": "f7f7b48791a6bc24caf1b63412448632",
+            "guid": "322d7bd6e4f80fe44a032a3eb5731a0e",
+            "sourceSha256": "74bd25ad0e8b188818b3a27c9108b7b88506d682d341f1cf1d50a14e3c265e40",
+            "sourceMetaSha256": "b5be924fab214d349c86616a339b5a9f686adbe91e2b6c8ad552d41521c016e1"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_LandingGear_Wheel_02.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/LandingGear/Polygon/SM_Veh_Part_LandingGear_Wheel_02.prefab",
+            "sourceGuid": "a6273177782a7dc42a7ed64a709713c8",
+            "guid": "bb0e7e39c2a02164484d2c4fbb93a68d",
+            "sourceSha256": "2cb0be77b6eebfd2210e0f2c689d9ab442c96de570ce13f7930b9d55902ad4f3",
+            "sourceMetaSha256": "3fc5f194cc5955830ada1dddbef9d942671c4c3e091a9d83c9ea28434754f8d5"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Wing_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Wings/Polygon/SM_Veh_Part_Wing_01.prefab",
+            "sourceGuid": "6afacdfa00ed26b418a7a6cd1687f6af",
+            "guid": "7bfe9adcd8dd1fa4fbee03cb50c1b9c8",
+            "sourceSha256": "cdaa1cd2cbce0a7d002718ccc062260e3753809f11775832c294d81f23407794",
+            "sourceMetaSha256": "c353f3538e2c82ddd254bd7b7ae3251b3a66e55d4536093a3d86890529d9dc23"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Wing_014.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Wings/Polygon/SM_Veh_Part_Wing_014.prefab",
+            "sourceGuid": "05f52f6d2ac3b6840a4ac8572837da51",
+            "guid": "e7e9065c76c66b34f9c4ca7293d08534",
+            "sourceSha256": "c72387c50aecd90d8c5b87c9af68b6a01616e355656cfe9a41464371ab380ca4",
+            "sourceMetaSha256": "dab5528b32ab840f617c8256d2b9617648dee922a87ff99b2334a9ede8ca3137"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Wing_03.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Wings/Polygon/SM_Veh_Part_Wing_03.prefab",
+            "sourceGuid": "8b1260bc0729338449f08da0282a099b",
+            "guid": "ee6694d4ee18dc246b13ecc535bc3f61",
+            "sourceSha256": "abadb581e723db609397b6fe017d5d4b5807fe2f8166278c76f7009fe3bfa80b",
+            "sourceMetaSha256": "64eabcb5428a7ccbbbcddb601ad4ea712cbd5391fb287647d6a93d335854b449"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Wing_05.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Wings/Polygon/SM_Veh_Part_Wing_05.prefab",
+            "sourceGuid": "a12f77667c99f7c4999dd9b37e6132b0",
+            "guid": "a563ae71c79d77a4e8700e226c3dd690",
+            "sourceSha256": "8aad37ddcbef0d8cb9b9a2689c7ef2d0a8c501265f3b93b4cc85ec5f1485ba69",
+            "sourceMetaSha256": "88a41296e93d3143b1642cadce1b055dd038a44f8067c5f8fd482992d094bfb0"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Part_Wing_07.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Wings/Polygon/SM_Veh_Part_Wing_07.prefab",
+            "sourceGuid": "194776c5d818f8c499ea2acf44829465",
+            "guid": "66d280b77b4e85b4a9d202108d495d18",
+            "sourceSha256": "bc7a7f4da6ed0c0ed4de0bd0122a1941c6aa271a13c141e50fbb6db20408b42d",
+            "sourceMetaSha256": "fd3f5f88b37b8794b768f9b4ed2a01f905d9d1359f35153a64be6d472b51f0b4"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_POV_Cockpit_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/Cockpits/Polygon/SM_Veh_POV_Cockpit_01.prefab",
+            "sourceGuid": "e2db6f85e0afb114f9e76a0c09ead489",
+            "guid": "0b544339b9b57834ebb40b07e2aaea29",
+            "sourceSha256": "cee2e58755b7494ea201bd7e9ae07522af67fd745869d90ad9a0879f5787e9c4",
+            "sourceMetaSha256": "00d31473c133f61a51d2418b7dbf74ac0d1f6c24a4c0679878e4d201f84fa779"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Prefabs/Vehicles/SM_Veh_Sweepo_01.prefab",
+            "destination": "Assets/Art/SpaceKit/Prefabs/Modules/RepairDrones/Polygon/SM_Veh_Sweepo_01.prefab",
+            "sourceGuid": "477d6888283379c45bc6a1be05e2ab8c",
+            "guid": "f16872527d08fed44ba72263b0fcc8c0",
+            "sourceSha256": "1ac716a7b818d97f3f027a30efe4301881f9871357ce61772969738a67066173",
+            "sourceMetaSha256": "8f797c5de901175278c02ef39b103f34713cb4f54ef2f0a54525428d1524b2b1"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Textures/Alts/PolygonSciFiSpace_Texture_01_B.png",
+            "destination": "Assets/Art/SpaceKit/Textures/Polygon/Textures/Alts/PolygonSciFiSpace_Texture_01_B.png",
+            "sourceGuid": "8563a79620797734bae9f5955f00d497",
+            "guid": "ac7976a57b466a349a582190e6a84dbe",
+            "sourceSha256": "15701f57e732a7f4c6c4c36bc7cd55160df7430320cffc316a8e256f86fd4858",
+            "sourceMetaSha256": "826e0ac5da661f439f3d8ce8385c269608ffbdb38d9a5bf4c78c323f823a193e"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Textures/Alts/PolygonSciFiSpace_Texture_01_C.png",
+            "destination": "Assets/Art/SpaceKit/Textures/Polygon/Textures/Alts/PolygonSciFiSpace_Texture_01_C.png",
+            "sourceGuid": "b743174e38d05ef40bc9bd94391436a9",
+            "guid": "ccdad86c1b947f242817e2570da9a4f6",
+            "sourceSha256": "c406c1828c5b981ffe73d38f1b4bb0972092eb3e6755372f6a32097fb0c698b7",
+            "sourceMetaSha256": "c9e7df5848a35c9ac3d7a7a5a088d94449a8b3467efff5625d8f998b7b18df75"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Textures/Alts/PolygonSciFiSpace_Texture_02_A.png",
+            "destination": "Assets/Art/SpaceKit/Textures/Polygon/Textures/Alts/PolygonSciFiSpace_Texture_02_A.png",
+            "sourceGuid": "d60b08732ff95834089480dde939e379",
+            "guid": "6b3f84fdf194336418dd232e90136084",
+            "sourceSha256": "3c96ae6f863236240f43d2fae30215e91d4f60adc7d580d12831ded944f1797f",
+            "sourceMetaSha256": "0f7dc53f3e1d7179df416b470283448f4c566300ccfbc634e0710feb71e4bfa8"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Textures/Alts/PolygonSciFiSpace_Texture_02_B.png",
+            "destination": "Assets/Art/SpaceKit/Textures/Polygon/Textures/Alts/PolygonSciFiSpace_Texture_02_B.png",
+            "sourceGuid": "fab6ad3e210899f4aa533ac78642c1b0",
+            "guid": "82c33cc25ae34764ebdf6077249817b0",
+            "sourceSha256": "ad95c5adbaf69f713e9f3e71f4cf31dbddaec12c2015b32c30f95af23a73efb1",
+            "sourceMetaSha256": "a6e4a0557fc15a494753087dbc1681c7d2bc90252db374e9cd381f8c666c6b5a"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Textures/Alts/PolygonSciFiSpace_Texture_02_C.png",
+            "destination": "Assets/Art/SpaceKit/Textures/Polygon/Textures/Alts/PolygonSciFiSpace_Texture_02_C.png",
+            "sourceGuid": "57b14e7a98c72aa46b2012e6f74b57ea",
+            "guid": "d4402577d69d93f41be2b6df10134575",
+            "sourceSha256": "071afffa41b61ac16b9713eb27833ab1b6169476ee6119faea28ec03499cdf88",
+            "sourceMetaSha256": "b1ca6d7d7a2996a8908aff119fef0876d7b2394134629045d19c6be4bec7e922"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Textures/FX/Explosion.png",
+            "destination": "Assets/Art/SpaceKit/Textures/Polygon/Textures/FX/Explosion.png",
+            "sourceGuid": "a256bf74230538b46b3de26e640cbecf",
+            "guid": "12857f441e28db44195f07331b6b7482",
+            "sourceSha256": "a5bd4c82d938c5c5ad66d0b948f8f4415f42923bd649db65217ae08e01ea938e",
+            "sourceMetaSha256": "322bf069fa4025eac991e32e92aca6544913eca92d0cd041964cedd873f773ef"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Textures/FX/ExplosionCloud.png",
+            "destination": "Assets/Art/SpaceKit/Textures/Polygon/Textures/FX/ExplosionCloud.png",
+            "sourceGuid": "e6831fbb90816004692bf6ca4ab0f26f",
+            "guid": "38605af34ef4d624e8ca606e3be42031",
+            "sourceSha256": "70ad5fb600a082af1e7405fddabc299221564eb6c0a98c653fc76da0c030183b",
+            "sourceMetaSha256": "e6eba38ceb45cecc42bb1544232e099b2ec2f4c9307dec203b0548c9f3b2aa52"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Textures/FX/Gradient_Boost.png",
+            "destination": "Assets/Art/SpaceKit/Textures/Polygon/Textures/FX/Gradient_Boost.png",
+            "sourceGuid": "558d773a48b1faa4598f4b994d827fad",
+            "guid": "866609575e4b12444a27772cec39b985",
+            "sourceSha256": "80b67c3a67de47b50ef9b3cb396f46204777c5d8660d92418c736439ee00ca7c",
+            "sourceMetaSha256": "4dbfa5af74677f9996ffa1f3985046d629a96ed7a7f8fa668a56ae34cd8b5b75"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Textures/FX/LineTex 2.png",
+            "destination": "Assets/Art/SpaceKit/Textures/Polygon/Textures/FX/LineTex 2.png",
+            "sourceGuid": "03a7d169469c1af41bb03241a7b7e23d",
+            "guid": "ce750b6f86e686941ae20bf5776f4808",
+            "sourceSha256": "8417785f28cf7d02eebe34f79d8f6ce56287e12b432e2409cdc287c9098e9de0",
+            "sourceMetaSha256": "1019633d363ae31c47163c3a91eed1ec10efcd10ab7adf15d53af43b5ce8fbfb"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Textures/FX/LineTex 3.png",
+            "destination": "Assets/Art/SpaceKit/Textures/Polygon/Textures/FX/LineTex 3.png",
+            "sourceGuid": "c3512c25766a40245ac94c6b1722d76e",
+            "guid": "7c760759372346a4fa94e7d2189b37c1",
+            "sourceSha256": "8f5abc2c7aacde7e8e86cc33711e92986b25fa5d650408f2b7b39c8a01761cae",
+            "sourceMetaSha256": "2cd8cf22cf1f13f6f1934bb03c2aac223712031566e767b87357af48771901be"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Textures/FX/LineTex 4.png",
+            "destination": "Assets/Art/SpaceKit/Textures/Polygon/Textures/FX/LineTex 4.png",
+            "sourceGuid": "e0f922c44762291498cc62e0917609be",
+            "guid": "ccc0b39937660e44397632ab2e9de488",
+            "sourceSha256": "d81d74c1d057eb653d2faa0fa443906edcb93cb3e6f644c4524c01062efbd3dd",
+            "sourceMetaSha256": "ca3789b4d2895032e5adeb0cc765c521013074516fca9d5e1f85ac0c83ed2c6c"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Textures/FX/SphereGlow.png",
+            "destination": "Assets/Art/SpaceKit/Textures/Polygon/Textures/FX/SphereGlow.png",
+            "sourceGuid": "516a2a21b5e345f408e5be91be36ebb7",
+            "guid": "939b5831857263f45a0ee70e6dc17e45",
+            "sourceSha256": "9ad8d5294046ea2431c11935a89dbec28606c7a17b1a9de1bb0f237705ece2b5",
+            "sourceMetaSha256": "9b7e92f3c3e7d6445e1569eee6f281eb0948f24836183eb900c4ce2150d25c18"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Textures/FX/Tansparent_Line_Full.png",
+            "destination": "Assets/Art/SpaceKit/Textures/Polygon/Textures/FX/Tansparent_Line_Full.png",
+            "sourceGuid": "32cbeb9527524264d95c3560939d58c4",
+            "guid": "1ab5b5886327f71439ae0543698c24db",
+            "sourceSha256": "c8fa4e6ff172bd9d42511eae9ed0fb814f90b9c6a415a7c07a9b1f10f31ff8da",
+            "sourceMetaSha256": "f8fb3b71f1d23440bb13155a121616ec9ff6a57db99101c206a58a8cc466ef57"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Textures/FX/TrailLines.png",
+            "destination": "Assets/Art/SpaceKit/Textures/Polygon/Textures/FX/TrailLines.png",
+            "sourceGuid": "953e2d1db36d7cd42845f3d42c8b9c47",
+            "guid": "afee471741dbd4a489c150ee35eef9db",
+            "sourceSha256": "5e3138f9b183fa5ad438e9c49dff1b4dfb667bd8df66bc377aca745ff7c79e2c",
+            "sourceMetaSha256": "7bacd6cbd1cdba9953d1da5e6929fc2de28399f6ab38908f416345a6f3aa18fa"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Textures/FX/Transparent_Flash.png",
+            "destination": "Assets/Art/SpaceKit/Textures/Polygon/Textures/FX/Transparent_Flash.png",
+            "sourceGuid": "c7a4569ca909e434e9f9ae16e15f07da",
+            "guid": "c89cfba78b5ee454fbe8f15819944282",
+            "sourceSha256": "65f7a20afc808f4f9b11de0bf54c6f841b73f1b716f87ff88d19082156c43849",
+            "sourceMetaSha256": "072312efb156cc0034e96964fcef96742f7de44a898a8fa9b732729490aef900"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Textures/FX/Transparent_Line.png",
+            "destination": "Assets/Art/SpaceKit/Textures/Polygon/Textures/FX/Transparent_Line.png",
+            "sourceGuid": "67eac3f431dd7c44ebd631a7c015b608",
+            "guid": "8ca4ebcdcb607cb499a47e96b2000bc4",
+            "sourceSha256": "22b4da4e87807ade497b29a8c7be5696a53f43c30715f9b8b8cdc0bac9512713",
+            "sourceMetaSha256": "bfc4c9dcb0835906f7c81bbb2e9ee646d1fac1864e28d0023150e5e597bfd899"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Textures/PolygonSciFiSpace_Emissive_01.png",
+            "destination": "Assets/Art/SpaceKit/Textures/Polygon/Textures/PolygonSciFiSpace_Emissive_01.png",
+            "sourceGuid": "e29a7a5f451453f4f978120a03c0f52b",
+            "guid": "93f609ee0361bfa4da7c3770e176a7af",
+            "sourceSha256": "a71e647a4a75d9022fcb82f95339fae413ee0cbc2e997764d0b005bed89eecba",
+            "sourceMetaSha256": "d537a81727b3b773b6e04a599080b954ff79ae50792383901321f67505120812"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Textures/PolygonSciFiSpace_PlanetLines_01.png",
+            "destination": "Assets/Art/SpaceKit/Textures/Polygon/Textures/PolygonSciFiSpace_PlanetLines_01.png",
+            "sourceGuid": "67c01b19dd0b2354f932b32748d8491d",
+            "guid": "b1f8ee6203f9577429f132dfe5dfa42c",
+            "sourceSha256": "ffc43c4c6a30fa43e8c67a5d8f21ee2b82c1532b7a5342bee32ed00f48337b9f",
+            "sourceMetaSha256": "3b63ca07dd0d5b72e889007fe92d3fd1249eda778c52787a0ce5afd2ddde82d9"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Textures/PolygonSciFiSpace_Ship_Mask_04.png",
+            "destination": "Assets/Art/SpaceKit/Textures/Polygon/Textures/PolygonSciFiSpace_Ship_Mask_04.png",
+            "sourceGuid": "d340de18a860459479dc501ad8a6bec7",
+            "guid": "fdda21b1e3881f845877d3946375179b",
+            "sourceSha256": "8c768e0d176f83f8ddc55662e60e4d60dde00becab8b543983db3f65b2663fdd",
+            "sourceMetaSha256": "feedcfeed04076419eebb5f0d43c12630c60a22ac7b24af0d64b13944e716581"
+        },
+        {
+            "source": "Assets/PolygonSciFiSpace/Textures/PolygonSciFiSpace_Texture_01_A.png",
+            "destination": "Assets/Art/SpaceKit/Textures/Polygon/Textures/PolygonSciFiSpace_Texture_01_A.png",
+            "sourceGuid": "936bffa65ef866a43969ea77c103adb3",
+            "guid": "d9928b7cc8b944b45a76d25b2ac89f19",
+            "sourceSha256": "176eb879fcbc44cdf26e8e3d80e43f7c3e9c243c4f9ce205d598f47b7b008c92",
+            "sourceMetaSha256": "26ee552f3f020eb4eda8d5407ccce357c5e993505da412f00544394094709f0a"
+        }
+    ]
+}

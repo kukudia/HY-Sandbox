@@ -1,7 +1,7 @@
 # HY-Sandbox 项目开发文档
 
 > 文档状态：持续维护中  
-> 最近核对：2026-09-19
+> 最近核对：2026-09-21
 > Unity 编辑器：6000.3.11f1（`ProjectSettings/ProjectVersion.txt`）  
 > 当前分支：`main`
 
@@ -32,6 +32,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `Assets/Scripts/Thrusters`：悬浮、主推进、全向推进、推力分配和推力视觉效果。
 - `Assets/Scripts/UI`：建造/游玩面板、按钮、存档列表、动作计数和全局文字样式。
 - `Assets/Resources/Blocks`：可动态发现的方块 Prefab；`MainUIButtons` 会从这里注册方块按钮。
+- `Assets/Art/SpaceKit`：两套本地科幻包筛选出的独立备用素材库，105 个 Prefab / 22 个用途类别，配套模型、URP 材质、贴图、碰撞和来源/验证清单；入口 `README.md` 与 `CATALOG.md`。
 - `Assets/Art/Industrial`：工业玩具/霓虹工程舱风格规范、共享 Mesh、共享材质和独立预览场景。
 - `Assets/Scenes/Main.unity`：当前 Git 跟踪的主场景。
 
@@ -87,6 +88,14 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 炮塔按 1 米模块、Y 轴为回转轴、+Z 为武器前向制作，Prefab 视觉层级固定为 `Fixed Pedestal` 与 `Horizontal/Vertical/Muzzle`：固定底座不参与瞄准，`Horizontal` 带动回转平台、配重和支架绕局部 Y 轴旋转，嵌套的 `Vertical` 带动双联炮管、机匣、瞄准镜和枪口绕局部 X 轴俯仰。默认水平/垂直转速分别为 240/180 度每秒，俯仰范围为向下 15 度至向上 65 度；`IndustrialArtGenerator` 每次重建都会重新绑定三项 Transform 引用，并在任一节点缺失时中止生成，避免退化为整座模型共同旋转。`Tools/HY Sandbox/Rebuild Turret Art` 可单独重建炮塔并刷新预览，不触碰其他模块 Prefab。
 
+### 3.8 科幻工业备用素材库
+
+`Assets/Art/SpaceKit` 从被 gitignore 忽略的 CUBE Spaceships Pack 01 与 PolygonSciFiSpace 复制筛选素材，包含驾驶舱、机身/机翼、推进器、起落架、能源/传感设备、炮塔/弹体、维修机器人、结构/舱壁、货物/控制台/灯具、陨石/残骸、整船参考及四类粒子效果。22 类 Prefab 每类 2–7 项，共 105 个；另选 10 个配色材质。完整依赖共 349 项（103 FBX、105 Prefab、29 材质、30 贴图、82 碰撞网格），约 19.02 MiB，不含 meta 和预览。
+
+素材使用独立 GUID，所有依赖落在 SpaceKit 或 Unity/URP 内置包内。旧材质通过 Editor API 转换为 URP Lit/Particles Unlit；飞船去除旧 Rim 算法，陨石简化为低光泽岩石基色。原包与现有 Industrial/Resources/Blocks/Main 场景保持原状。备用素材尚未接入建造注册、碰撞/连接点、推进或战斗逻辑；导入尺寸、面数、材质槽和粒子上限见逐项清单。
+
+`SpaceKitCurator` 提供初次创建（拒绝覆盖已存在库）、引用验证与独立场景预览菜单；Selection.json 记录选择与用途，Catalog.json 记录来源/GUID/SHA-256，Validation.json 记录实际 Unity 审核。已完成 Editor 导入、全部 Prefab 重载、粒子采样、105 项 URP 渲染与四张联系表检查；未进行玩法 Play Mode 或并发性能验证。
+
 ## 4. 已确认实现的功能
 
 - 主场景和 URP 项目配置可被 Unity 项目识别。
@@ -125,6 +134,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 | P2 | 历史日志包含旧版本功能描述 | 每次发布标记版本和验证日期，避免把日志中的“计划/旧实现”当作当前契约。 |
 | P2 | 新工业模型尚未在大型蓝图中完成 GPU/CPU 压力验证 | 使用 100、500、1000 模块蓝图分别记录 Batches、SetPass、三角面和 `IndustrialPartMotion.Update`；重新启用 LOD 后再补充切换距离验证。 |
 | P2 | 双轴炮塔尚未完成主场景战斗回归 | 在不同安装朝向、移动载具和高低目标下验证索敌、遮挡、俯仰边界、光束起点、命中判定与断电恢复。 |
+| P2 | SpaceKit 备用素材尚未接入玩法且部分粒子/整船预算偏高 | 集成时适配 Block 尺寸/Pivot 与动态凸碰撞；爆炸/导弹容量 3100、运输船 16602 面仅作储备，按并发数量做池化/裁剪和实机验证；来源许可需按原包购买条款核实。 |
 | P3 | 仓库仍保留未被新模块视觉引用的 `New Material` 等历史资源 | 确认场景和旧 Prefab 无引用后再分批清理，避免误删用户资源。 |
 | P3 | 缺少正式构建产物验收记录 | 记录目标平台、构建版本、场景、输入设备、帧率和已知缺陷。 |
 
@@ -174,6 +184,19 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - 模板/其他
 
 ### Editor 工具
+
+#### `Assets/Editor/SpaceKitCurator.cs`
+
+| 函数 | 职责 |
+| --- | --- |
+| `CreateLibrary()` | 读取 Selection、解析依赖、复制并生成独立 GUID、重映射引用、转换材质、保存 Catalog；拒绝覆盖已存在库。 |
+| `IsSource(string)` / `Destination(string, Dictionary<string, string>)` | 限定两套源包并按用途/类型映射目录。 |
+| `EnsureFolder(string)` / `Hash(string)` | 通过 AssetDatabase 建目录；计算来源 SHA-256。 |
+| `Remap(Object, Dictionary<Object, Object>)` | 通过 SerializedObject 重定向复制资产引用。 |
+| `ConvertMaterial(Material)` | 将审核过的 Standard/旧粒子/飞船/陨石材质转换为 URP。 |
+| `CleanLegacyArtifacts(GameObject)` / `RepairLegacyImportArtifacts()` | 清理副本无用 Animator 与粒子 mesh 残留，并验证。 |
+| `ValidateLibrary()` | 重载资产，检查依赖、GUID、缺失引用、Shader，统计几何/粒子预算并写入 Validation。 |
+| `RenderAllPreviews()` / `RenderPreviews(int, int)` | 在独立临时预览场景用 URP Camera 渲染，不触及当前用户场景。 |
 
 #### `Assets/Editor/AutoBuildTool.cs`
 
@@ -990,6 +1013,9 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 ## 10. 变更日志
 
 ### 2026-09-21
+
+- **筛选并整理科幻备用素材**：新增 `Assets/Art/SpaceKit`、`Assets/Editor/SpaceKitCurator.cs` 及 Editor csproj 编译入口；105 个 Prefab 分为 22 个用途类别，每类 2–7 个，额外 10 个调色板材质，含依赖共 349 项/约 19.02 MiB。全部副本使用独立 GUID，修复静态道具空 Animator 与无效粒子 mesh 字段，旧材质转换 URP。提供来源/用途/尺寸/预算清单、四张实际渲染预览、导入与验证工具；保留两套源包及现有玩法资产。`.gitattributes` 仅对 SpaceKit 的 Unity 原生 `.asset/.mat` 空字段尾空格设例外，避免改写供应商序列化数据。
+- **验证范围**：Unity 6000.3.11f1 导入和 C# 编译通过；349 项依赖检查、105 个 Prefab 重载及粒子编辑器采样通过，无外部 Assets 依赖、缺失引用/mesh/material/script；105 项 URP 预览与四张联系表已检查。源文件及 meta 哈希不变、二进制资产一致、GUID 独立和 meta 完整检查通过；`dotnet build HY-Sandbox.sln --no-restore --nologo` 为 0 错误/4 个既有警告，`git diff --check` 通过。最终 Console 无新增错误，保留既有 ProfilerCaptureAnalysis 弃用警告；Main 场景未弄脏。未做玩法接入、Play Mode 或压力验证。
 
 - **迁移 CUBE Spaceships Pack 材质到 URP**：通过已连接的 Unity 6000.3.11f1 Editor 将 `Assets/CUBE - Spaceships Pack 01/Materials` 下 16 个材质从内置管线 Shader 切换到 URP；`Spaceship colorA-L` 和 `Demo Ground` 使用 `Universal Render Pipeline/Lit`，船体材质重新绑定对应 `Spaceship color*.psd` BaseMap 与 `Spaceship glow*.psd` EmissionMap，`Demo Ground` 保持原深灰色；`FX Blue`、`FX Exhaust` 和 `FX Smoke` 使用 `Universal Render Pipeline/Particles/Unlit`，分别保留加法蓝色/喷焰和透明烟雾语义。Unity 同步补全 `ProjectSettings/URPProjectSettings.asset` 的 URP 默认资源路径字段。
 - **验证范围**：已通过 Unity Editor `AssetDatabase` 读取确认 16 个目标材质的 Shader、贴图绑定、渲染队列和关键颜色；`FX Exhaust`/`FX Smoke` 位于透明队列并绑定原粒子贴图，12 个船体材质均启用对应发光贴图。Console 当前仍有打开素材包旧 Demo Scene 时产生的既存 `GUI Layer` 缺失错误和 2 条相关警告；本次未进入 Play Mode，也未在场景中逐一视觉检查所有飞船 Prefab。
