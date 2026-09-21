@@ -1,0 +1,1099 @@
+{
+  "unity": "6000.3.11f1",
+  "method": "Isolated Unity ParticleSystem simulation; 1 s warm-up + 3 s samples. Alpha includes renderer intensity; variation is stddev/mean, not pixel brightness.",
+  "rows": [
+    {
+      "name": "ThrusterJet",
+      "emitter": "Exhaust stream",
+      "fps": 30,
+      "intensity": 0.02,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.07218300501505534,
+      "alphaVariation": 0.0062313229114807495
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Nozzle core",
+      "fps": 30,
+      "intensity": 0.02,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.0089925921315120328,
+      "alphaVariation": 0.0041445033829541345
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Exhaust stream",
+      "fps": 30,
+      "intensity": 0.05,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.18045751899480819,
+      "alphaVariation": 0.0062313332474151243
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Nozzle core",
+      "fps": 30,
+      "intensity": 0.05,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.022481481482585271,
+      "alphaVariation": 0.0041445021100494535
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Exhaust stream",
+      "fps": 30,
+      "intensity": 0.1,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.36091503798961638,
+      "alphaVariation": 0.0062313332474151243
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Nozzle core",
+      "fps": 30,
+      "intensity": 0.1,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.044962962965170543,
+      "alphaVariation": 0.0041445021100494535
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Exhaust stream",
+      "fps": 30,
+      "intensity": 0.25,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.90228759116596646,
+      "alphaVariation": 0.0062313186403986382
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Nozzle core",
+      "fps": 30,
+      "intensity": 0.25,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.11240740815798442,
+      "alphaVariation": 0.0041444720150110234
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Exhaust stream",
+      "fps": 30,
+      "intensity": 1.0,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 3.6091503646638659,
+      "alphaVariation": 0.0062313186403986382
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Nozzle core",
+      "fps": 30,
+      "intensity": 1.0,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.44962963263193767,
+      "alphaVariation": 0.0041444720150110234
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Exhaust stream",
+      "fps": 60,
+      "intensity": 0.02,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.07226143545574612,
+      "alphaVariation": 0.0060647899497266256
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Nozzle core",
+      "fps": 60,
+      "intensity": 0.02,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.0089930278611265943,
+      "alphaVariation": 0.0041281272422641945
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Exhaust stream",
+      "fps": 60,
+      "intensity": 0.05,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.18065359658665128,
+      "alphaVariation": 0.0060647842702083194
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Nozzle core",
+      "fps": 60,
+      "intensity": 0.05,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.022482570798860655,
+      "alphaVariation": 0.0041281253611345995
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Exhaust stream",
+      "fps": 60,
+      "intensity": 0.1,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.36130719317330257,
+      "alphaVariation": 0.0060647842702083194
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Nozzle core",
+      "fps": 60,
+      "intensity": 0.1,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.04496514159772131,
+      "alphaVariation": 0.0041281253611345995
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Exhaust stream",
+      "fps": 60,
+      "intensity": 0.25,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.90326800280147124,
+      "alphaVariation": 0.0060647838086732428
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Nozzle core",
+      "fps": 60,
+      "intensity": 0.25,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.11241285478075345,
+      "alphaVariation": 0.0041280953341811645
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Exhaust stream",
+      "fps": 60,
+      "intensity": 1.0,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 3.6130720112058849,
+      "alphaVariation": 0.0060647838086732428
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Nozzle core",
+      "fps": 60,
+      "intensity": 1.0,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.44965141912301382,
+      "alphaVariation": 0.0041280953341811645
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Exhaust stream",
+      "fps": 120,
+      "intensity": 0.02,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.072287797720895872,
+      "alphaVariation": 0.0055570560395038718
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Nozzle core",
+      "fps": 120,
+      "intensity": 0.02,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.0089947708623690746,
+      "alphaVariation": 0.0041590133413437888
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Exhaust stream",
+      "fps": 120,
+      "intensity": 0.05,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.18071950007643964,
+      "alphaVariation": 0.0055570354078861963
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Nozzle core",
+      "fps": 120,
+      "intensity": 0.05,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.022486928420969183,
+      "alphaVariation": 0.0041590326083668326
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Exhaust stream",
+      "fps": 120,
+      "intensity": 0.1,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.36143900015287928,
+      "alphaVariation": 0.0055570354078861963
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Nozzle core",
+      "fps": 120,
+      "intensity": 0.1,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.044973856841938366,
+      "alphaVariation": 0.0041590326083668326
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Exhaust stream",
+      "fps": 120,
+      "intensity": 0.25,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.903597524927722,
+      "alphaVariation": 0.00555704468388583
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Nozzle core",
+      "fps": 120,
+      "intensity": 0.25,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.1124346412718296,
+      "alphaVariation": 0.0041590138270701975
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Exhaust stream",
+      "fps": 120,
+      "intensity": 1.0,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 3.6143900997108882,
+      "alphaVariation": 0.00555704468388583
+    },
+    {
+      "name": "ThrusterJet",
+      "emitter": "Nozzle core",
+      "fps": 120,
+      "intensity": 1.0,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.44973856508731841,
+      "alphaVariation": 0.0041590138270701975
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Exhaust stream",
+      "fps": 30,
+      "intensity": 0.02,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.090268406603071422,
+      "alphaVariation": 0.005053450254482816
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Nozzle core",
+      "fps": 30,
+      "intensity": 0.02,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.0089925921315120328,
+      "alphaVariation": 0.0041445033829541345
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Exhaust stream",
+      "fps": 30,
+      "intensity": 0.05,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.22567102279927995,
+      "alphaVariation": 0.0050534646777124735
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Nozzle core",
+      "fps": 30,
+      "intensity": 0.05,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.022481481482585271,
+      "alphaVariation": 0.0041445021100494535
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Exhaust stream",
+      "fps": 30,
+      "intensity": 0.1,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.45134204559855989,
+      "alphaVariation": 0.0050534646777124735
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Nozzle core",
+      "fps": 30,
+      "intensity": 0.1,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.044962962965170543,
+      "alphaVariation": 0.0041445021100494535
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Exhaust stream",
+      "fps": 30,
+      "intensity": 0.25,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 1.12835513220893,
+      "alphaVariation": 0.0050534597411330644
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Nozzle core",
+      "fps": 30,
+      "intensity": 0.25,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.11240740815798442,
+      "alphaVariation": 0.0041444720150110234
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Exhaust stream",
+      "fps": 30,
+      "intensity": 1.0,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 4.51342052883572,
+      "alphaVariation": 0.0050534597411330644
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Nozzle core",
+      "fps": 30,
+      "intensity": 1.0,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.44962963263193767,
+      "alphaVariation": 0.0041444720150110234
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Exhaust stream",
+      "fps": 60,
+      "intensity": 0.02,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.090329411253333089,
+      "alphaVariation": 0.004348068171912565
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Nozzle core",
+      "fps": 60,
+      "intensity": 0.02,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.0089930278611265943,
+      "alphaVariation": 0.0041281272422641945
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Exhaust stream",
+      "fps": 60,
+      "intensity": 0.05,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.2258235290646553,
+      "alphaVariation": 0.0043480693710306016
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Nozzle core",
+      "fps": 60,
+      "intensity": 0.05,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.022482570798860655,
+      "alphaVariation": 0.0041281253611345995
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Exhaust stream",
+      "fps": 60,
+      "intensity": 0.1,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.45164705812931061,
+      "alphaVariation": 0.0043480693710306016
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Nozzle core",
+      "fps": 60,
+      "intensity": 0.1,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.04496514159772131,
+      "alphaVariation": 0.0041281253611345995
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Exhaust stream",
+      "fps": 60,
+      "intensity": 0.25,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 1.1291176928414239,
+      "alphaVariation": 0.0043480697181440525
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Nozzle core",
+      "fps": 60,
+      "intensity": 0.25,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.11241285478075345,
+      "alphaVariation": 0.0041280953341811645
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Exhaust stream",
+      "fps": 60,
+      "intensity": 1.0,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 4.5164707713656957,
+      "alphaVariation": 0.0043480697181440525
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Nozzle core",
+      "fps": 60,
+      "intensity": 1.0,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.44965141912301382,
+      "alphaVariation": 0.0041280953341811645
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Exhaust stream",
+      "fps": 120,
+      "intensity": 0.02,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.090376469368735945,
+      "alphaVariation": 0.0043119706696492
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Nozzle core",
+      "fps": 120,
+      "intensity": 0.02,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.0089947708623690746,
+      "alphaVariation": 0.0041590133413437888
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Exhaust stream",
+      "fps": 120,
+      "intensity": 0.05,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.22594117989970577,
+      "alphaVariation": 0.0043119730734483656
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Nozzle core",
+      "fps": 120,
+      "intensity": 0.05,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.022486928420969183,
+      "alphaVariation": 0.0041590326083668326
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Exhaust stream",
+      "fps": 120,
+      "intensity": 0.1,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.45188235979941155,
+      "alphaVariation": 0.0043119730734483656
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Nozzle core",
+      "fps": 120,
+      "intensity": 0.1,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.044973856841938366,
+      "alphaVariation": 0.0041590326083668326
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Exhaust stream",
+      "fps": 120,
+      "intensity": 0.25,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 1.1297059267759324,
+      "alphaVariation": 0.0043119603397922292
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Nozzle core",
+      "fps": 120,
+      "intensity": 0.25,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.1124346412718296,
+      "alphaVariation": 0.0041590138270701975
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Exhaust stream",
+      "fps": 120,
+      "intensity": 1.0,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 4.51882370710373,
+      "alphaVariation": 0.0043119603397922292
+    },
+    {
+      "name": "HoverJet",
+      "emitter": "Nozzle core",
+      "fps": 120,
+      "intensity": 1.0,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.44973856508731841,
+      "alphaVariation": 0.0041590138270701975
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Exhaust stream",
+      "fps": 30,
+      "intensity": 0.02,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.054222219975458251,
+      "alphaVariation": 0.01890902164132913
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Nozzle core",
+      "fps": 30,
+      "intensity": 0.02,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.0089925921315120328,
+      "alphaVariation": 0.0041445033829541345
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Exhaust stream",
+      "fps": 30,
+      "intensity": 0.05,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.13555555856890147,
+      "alphaVariation": 0.018909043258665967
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Nozzle core",
+      "fps": 30,
+      "intensity": 0.05,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.022481481482585271,
+      "alphaVariation": 0.0041445021100494535
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Exhaust stream",
+      "fps": 30,
+      "intensity": 0.1,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.27111111713780295,
+      "alphaVariation": 0.018909043258665967
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Nozzle core",
+      "fps": 30,
+      "intensity": 0.1,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.044962962965170543,
+      "alphaVariation": 0.0041445021100494535
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Exhaust stream",
+      "fps": 30,
+      "intensity": 0.25,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.67777779897054036,
+      "alphaVariation": 0.018909008697943645
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Nozzle core",
+      "fps": 30,
+      "intensity": 0.25,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.11240740815798442,
+      "alphaVariation": 0.0041444720150110234
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Exhaust stream",
+      "fps": 30,
+      "intensity": 1.0,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 2.7111111958821614,
+      "alphaVariation": 0.018909008697943645
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Nozzle core",
+      "fps": 30,
+      "intensity": 1.0,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.44962963263193767,
+      "alphaVariation": 0.0041444720150110234
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Exhaust stream",
+      "fps": 60,
+      "intensity": 0.02,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.054209147786928549,
+      "alphaVariation": 0.015161030110042351
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Nozzle core",
+      "fps": 60,
+      "intensity": 0.02,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.0089930278611265943,
+      "alphaVariation": 0.0041281272422641945
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Exhaust stream",
+      "fps": 60,
+      "intensity": 0.05,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.13552287916342418,
+      "alphaVariation": 0.015161059387895274
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Nozzle core",
+      "fps": 60,
+      "intensity": 0.05,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.022482570798860655,
+      "alphaVariation": 0.0041281253611345995
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Exhaust stream",
+      "fps": 60,
+      "intensity": 0.1,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.27104575832684835,
+      "alphaVariation": 0.015161059387895274
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Nozzle core",
+      "fps": 60,
+      "intensity": 0.1,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.04496514159772131,
+      "alphaVariation": 0.0041281253611345995
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Exhaust stream",
+      "fps": 60,
+      "intensity": 0.25,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.67761440045303767,
+      "alphaVariation": 0.015161029247329096
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Nozzle core",
+      "fps": 60,
+      "intensity": 0.25,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.11241285478075345,
+      "alphaVariation": 0.0041280953341811645
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Exhaust stream",
+      "fps": 60,
+      "intensity": 1.0,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 2.7104576018121507,
+      "alphaVariation": 0.015161029247329096
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Nozzle core",
+      "fps": 60,
+      "intensity": 1.0,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.44965141912301382,
+      "alphaVariation": 0.0041280953341811645
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Exhaust stream",
+      "fps": 120,
+      "intensity": 0.02,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.054218953247699472,
+      "alphaVariation": 0.014075120434915754
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Nozzle core",
+      "fps": 120,
+      "intensity": 0.02,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.0089947708623690746,
+      "alphaVariation": 0.0041590133413437888
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Exhaust stream",
+      "fps": 120,
+      "intensity": 0.05,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.13554738875892428,
+      "alphaVariation": 0.014075137864151547
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Nozzle core",
+      "fps": 120,
+      "intensity": 0.05,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.022486928420969183,
+      "alphaVariation": 0.0041590326083668326
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Exhaust stream",
+      "fps": 120,
+      "intensity": 0.1,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.27109477751784855,
+      "alphaVariation": 0.014075137864151547
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Nozzle core",
+      "fps": 120,
+      "intensity": 0.1,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.044973856841938366,
+      "alphaVariation": 0.0041590326083668326
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Exhaust stream",
+      "fps": 120,
+      "intensity": 0.25,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.67773694776826432,
+      "alphaVariation": 0.014075121242127604
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Nozzle core",
+      "fps": 120,
+      "intensity": 0.25,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.1124346412718296,
+      "alphaVariation": 0.0041590138270701975
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Exhaust stream",
+      "fps": 120,
+      "intensity": 1.0,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 2.7109477910730573,
+      "alphaVariation": 0.014075121242127604
+    },
+    {
+      "name": "BotFlight",
+      "emitter": "Nozzle core",
+      "fps": 120,
+      "intensity": 1.0,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.44973856508731841,
+      "alphaVariation": 0.0041590138270701975
+    },
+    {
+      "name": "RepairContact",
+      "emitter": "RepairContact(Clone)",
+      "fps": 30,
+      "intensity": 0.02,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.059738561511039734,
+      "alphaVariation": 0.0198351476525673
+    },
+    {
+      "name": "RepairContact",
+      "emitter": "RepairContact(Clone)",
+      "fps": 30,
+      "intensity": 0.05,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.14934640708896849,
+      "alphaVariation": 0.019835145372183779
+    },
+    {
+      "name": "RepairContact",
+      "emitter": "RepairContact(Clone)",
+      "fps": 30,
+      "intensity": 0.1,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.29869281417793697,
+      "alphaVariation": 0.019835145372183779
+    },
+    {
+      "name": "RepairContact",
+      "emitter": "RepairContact(Clone)",
+      "fps": 30,
+      "intensity": 0.25,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 0.74673204090860157,
+      "alphaVariation": 0.019835138343888139
+    },
+    {
+      "name": "RepairContact",
+      "emitter": "RepairContact(Clone)",
+      "fps": 30,
+      "intensity": 1.0,
+      "samples": 90,
+      "emptyFrames": 0,
+      "alphaMean": 2.9869281636344063,
+      "alphaVariation": 0.019835138343888139
+    },
+    {
+      "name": "RepairContact",
+      "emitter": "RepairContact(Clone)",
+      "fps": 60,
+      "intensity": 0.02,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.059738997018171681,
+      "alphaVariation": 0.019825738035017536
+    },
+    {
+      "name": "RepairContact",
+      "emitter": "RepairContact(Clone)",
+      "fps": 60,
+      "intensity": 0.05,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.149347498267889,
+      "alphaVariation": 0.019825735083280449
+    },
+    {
+      "name": "RepairContact",
+      "emitter": "RepairContact(Clone)",
+      "fps": 60,
+      "intensity": 0.1,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.298694996535778,
+      "alphaVariation": 0.019825735083280449
+    },
+    {
+      "name": "RepairContact",
+      "emitter": "RepairContact(Clone)",
+      "fps": 60,
+      "intensity": 0.25,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 0.746737484799491,
+      "alphaVariation": 0.019825746277272953
+    },
+    {
+      "name": "RepairContact",
+      "emitter": "RepairContact(Clone)",
+      "fps": 60,
+      "intensity": 1.0,
+      "samples": 180,
+      "emptyFrames": 0,
+      "alphaMean": 2.9869499391979639,
+      "alphaVariation": 0.019825746277272953
+    },
+    {
+      "name": "RepairContact",
+      "emitter": "RepairContact(Clone)",
+      "fps": 120,
+      "intensity": 0.02,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.059960566295517818,
+      "alphaVariation": 0.017857260070352304
+    },
+    {
+      "name": "RepairContact",
+      "emitter": "RepairContact(Clone)",
+      "fps": 120,
+      "intensity": 0.05,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.1499014187604189,
+      "alphaVariation": 0.017857255866354942
+    },
+    {
+      "name": "RepairContact",
+      "emitter": "RepairContact(Clone)",
+      "fps": 120,
+      "intensity": 0.1,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.29980283752083781,
+      "alphaVariation": 0.017857255866354942
+    },
+    {
+      "name": "RepairContact",
+      "emitter": "RepairContact(Clone)",
+      "fps": 120,
+      "intensity": 0.25,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 0.74950708664125865,
+      "alphaVariation": 0.017857265693237635
+    },
+    {
+      "name": "RepairContact",
+      "emitter": "RepairContact(Clone)",
+      "fps": 120,
+      "intensity": 1.0,
+      "samples": 360,
+      "emptyFrames": 0,
+      "alphaMean": 2.9980283465650346,
+      "alphaVariation": 0.017857265693237635
+    },
+    {
+      "name": "MuzzleFlash",
+      "visible": true,
+      "finished": true,
+      "replay": true
+    },
+    {
+      "name": "ImpactBurst",
+      "visible": true,
+      "finished": true,
+      "replay": true
+    },
+    {
+      "name": "RepairPulse",
+      "visible": true,
+      "finished": true,
+      "replay": true
+    },
+    {
+      "name": "BuildBurst",
+      "visible": true,
+      "finished": true,
+      "replay": true
+    },
+    {
+      "name": "Explosion",
+      "visible": true,
+      "finished": true,
+      "replay": true
+    },
+    {
+      "name": "BreakBurst",
+      "visible": true,
+      "finished": true,
+      "replay": true
+    },
+    {
+      "name": "SmokeBurst",
+      "visible": true,
+      "finished": true,
+      "replay": true
+    }
+  ],
+  "errors": []
+}

@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Editor\AutoBuildTool.cs" />
+    <Compile Include="Assets\Editor\BlockVfxTemporalValidation.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
     <Compile Include="Assets\Editor\BlockVfxBaker.cs" />
     <Compile Include="Assets\Editor\BlockArtIntegrator.cs" />

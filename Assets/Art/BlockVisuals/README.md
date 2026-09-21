@@ -17,6 +17,8 @@
 - `PowerGeneratingUnit`、`RepairBotContianer` 根上的 `BlockStatusLight` 控制状态灯。维修舱在 Bot 工作时切换绿色脉冲。
 - `VFX/` 是保存的独立效果 Prefab，`Assets/Resources/VFX/BlockVfxLibrary.asset` 引用这些资产。调整模板不会自动覆盖已经完全解包到 Block 的粒子；需要同时修改对应实例，这是完全解包后的预期行为。
 - `Tools/HY Sandbox/Block Art` 提供补齐缺失集成、依赖迁移、验证和 Play Mode 探针。已有 `ArtIntegration_SpaceKit_v1` 标记会跳过自动重建，避免覆盖后续手调。旧 Industrial 重建同样跳过已集成模块。
+- 持续喷焰/维修接触的 `AssetParticleEffect.Continuous Emission` 保持发射密度，通过每个 Renderer 的材质属性块调节透明度，不复制共享材质。尾焰核心寿命 0.3 秒、20 粒子/秒，以恒定尺寸交叉淡入淡出；关闭预热，启动自然建立。单喷口容量仍为 72。瞬时闪光和烟迹仍使用原有触发/密度语义。
+- `Repair Particle Continuity` 会将命名喷焰、维修、烟尘曲线和离屏计时设置同步到 VFX 模板及 Blocks 的完全解包副本；重新执行会覆盖这些特效参数，应先提交手动调参。它不改变模型、喷口 Transform 和玩法绑定。所有适配粒子使用 AlwaysSimulate，避免离屏冻结导致回到视野时重播旧闪光。
 
 ## 来源和处理
 
@@ -34,3 +36,6 @@
 `Validation.json`：全部 Blocks、Temp 与适配 VFX 的依赖、解包、引用、Shader、挂点和预算检查。
 `PlayModeValidation.json`：隔离场景中的实际供电、炮塔伤害/枪口闪光、旋转推力/喷口、全向头与底座、Bot 离舱/维修/回家、灯光检查。探针结束自动返回原场景。
 `Preview/`：Unity URP 实际渲染联系表。未覆盖真实玩家长时间操作、复杂移动母舰返航和大规模并发性能。
+
+`TemporalValidation.json`：4 种持续效果、5 档强度（2%–100%）、30/60/120 FPS，共 105 个发射器采样组合，预热 1 秒后采样 3 秒；记录空帧和乘以材质强度后的粒子 Alpha 波动，另检查 7 种瞬时效果结束及重播。该数值不是屏幕像素亮度。
+`BlockVfxTemporalValidation.RenderSequence` 可导出 URP 连续帧；`Preview/ThrusterContinuity.gif` 为 10%/100% 推力对比。对应 60 帧的背景扣除后 RGB 总量变异系数为 2.38% / 3.18%。Play Mode 探针增加低强度连续发射、离屏停止和瞬时效果结束检查，当前 23 项通过。

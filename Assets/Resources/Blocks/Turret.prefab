@@ -647,7 +647,7 @@ ParticleSystem:
   lengthInSec: 0.15
   simulationSpeed: 1
   stopAction: 0
-  cullingMode: 1
+  cullingMode: 3
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
@@ -5472,3 +5472,4 @@ MonoBehaviour:
   - {fileID: 5121814439132647518}
   _lights: []
   _releaseAfter: 6
+  _continuousEmission: 0

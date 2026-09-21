@@ -45,6 +45,7 @@ public static class BlockVfxBaker
             particles.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
             var main = particles.main;
             main.playOnAwake = false;
+            main.cullingMode = ParticleSystemCullingMode.AlwaysSimulate;
             main.stopAction = ParticleSystemStopAction.None;
             main.scalingMode = ParticleSystemScalingMode.Hierarchy;
             main.maxParticles = Mathf.Min(main.maxParticles, 128);
@@ -86,21 +87,28 @@ public static class BlockVfxBaker
     {
         var gradient = new Gradient();
         gradient.SetKeys(new[] { new GradientColorKey(new Color(0.5f, 1.5f, 2f), 0f), new GradientColorKey(new Color(0.04f, 0.45f, 1f), 1f) },
-            new[] { new GradientAlphaKey(0.65f, 0f), new GradientAlphaKey(0.25f, 0.6f), new GradientAlphaKey(0f, 1f) });
+            new[] { new GradientAlphaKey(0f, 0f), new GradientAlphaKey(0.65f, 0.15f), new GradientAlphaKey(0.25f, 0.6f), new GradientAlphaKey(0f, 1f) });
+        var coreGradient = new Gradient();
+        coreGradient.SetKeys(new[] { new GradientColorKey(new Color(0.25f, 0.9f, 1.6f), 0f) },
+            new[] { new GradientAlphaKey(0f, 0f), new GradientAlphaKey(0.15f, 0.5f), new GradientAlphaKey(0f, 1f) });
         foreach (var p in root.GetComponentsInChildren<ParticleSystem>(true))
         {
             p.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
             bool core = p.name == "Nozzle core";
             var main = p.main; main.startSize3D = false; main.startRotation3D = false; main.startRotation = 0f;
+            main.cullingMode = ParticleSystemCullingMode.AlwaysSimulate;
+            main.prewarm = false;
             main.startSize = core ? radius / 0.08f : radius * 0.75f;
-            main.startLifetime = core ? 0.075f : life;
+            main.startLifetime = core ? 0.3f : life;
             main.startSpeed = core ? 0f : speed;
             main.startColor = Color.white;
             var rotation = p.rotationOverLifetime; rotation.enabled = false;
-            var color = p.colorOverLifetime; color.enabled = true; color.color = gradient;
-            var size = p.sizeOverLifetime; size.enabled = true; size.separateAxes = false;
+            // Six overlapping mesh particles cross-fade at a constant size and color. Their
+            // summed alpha stays steady instead of cycling a shrinking bright mesh at 18 Hz.
+            var color = p.colorOverLifetime; color.enabled = true; color.color = core ? coreGradient : gradient;
+            var size = p.sizeOverLifetime; size.enabled = !core; size.separateAxes = false;
             size.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.Linear(0f, 1f, 1f, 0.3f));
-            var emission = p.emission; emission.rateOverTime = core ? 18f : 50f;
+            var emission = p.emission; emission.rateOverTime = core ? 20f : 50f;
             if (core) p.transform.localRotation = Quaternion.Euler(-90f, 0f, 0f);
             else
             {
@@ -187,7 +195,89 @@ public static class BlockVfxBaker
         var controller = root.AddComponent<AssetParticleEffect>();
         SetObjects(controller, "_particles", root.GetComponentsInChildren<ParticleSystem>(true));
         SetObjects(controller, "_lights", root.GetComponentsInChildren<Light>(true));
+        ConfigureContinuity(controller, name == "ThrusterJet" || name == "HoverJet" || name == "BotFlight" || name == "RepairContact");
+        PolishOtherEffects(root, name);
         PrefabUtility.SaveAsPrefabAsset(root, Root + "/" + name + ".prefab");
+    }
+
+    public static void ConfigureContinuity(AssetParticleEffect effect, bool enabled)
+    {
+        using (var data = new SerializedObject(effect))
+        {
+            data.FindProperty("_continuousEmission").boolValue = enabled;
+            data.ApplyModifiedPropertiesWithoutUndo();
+        }
+    }
+
+    private static void PolishOtherEffects(GameObject root, string name)
+    {
+        bool electricity = name == "RepairContact" || name == "RepairPulse" || name == "BuildBurst";
+        bool smoke = name == "DetachedSmoke" || name == "SmokeBurst";
+        bool explosion = name == "Explosion" || name == "BreakBurst";
+        if (!electricity && !smoke && !explosion) return;
+        foreach (var p in root.GetComponentsInChildren<ParticleSystem>(true))
+        {
+            if (explosion && p.name != "FX_Explosion_Smoke") continue;
+            p.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
+            var color = p.colorOverLifetime;
+            var gradient = color.color.gradient;
+            gradient.SetKeys(gradient.colorKeys, new[] { new GradientAlphaKey(0f, 0f),
+                new GradientAlphaKey(1f, electricity ? 0.2f : 0.15f), new GradientAlphaKey(0f, 1f) });
+            color.enabled = true; color.color = gradient;
+            if (electricity)
+            {
+                var trails = p.trails;
+                trails.inheritParticleColor = true;
+                trails.colorOverLifetime = Color.white;
+                if (name == "RepairContact")
+                {
+                    var main = p.main; main.startLifetime = 0.3f;
+                    var emission = p.emission; emission.rateOverTime = 20f;
+                }
+            }
+        }
+    }
+
+    [MenuItem("Tools/HY Sandbox/Block Art/Repair Particle Continuity")]
+    public static void RepairContinuity()
+    {
+        // These copies are fully unpacked, so changing the library alone cannot migrate them.
+        // Only named effect modules/controller settings are touched; sockets and models stay editable.
+        foreach (string guid in AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Resources/Blocks", Root }))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            var root = PrefabUtility.LoadPrefabContents(path);
+            bool changed = false;
+            try
+            {
+                // Pausing offscreen freezes decay and can replay old flashes when the camera
+                // returns. These bounded, short-lived project effects must keep aging.
+                foreach (var p in root.GetComponentsInChildren<ParticleSystem>(true))
+                {
+                    var main = p.main;
+                    if (main.cullingMode == ParticleSystemCullingMode.AlwaysSimulate) continue;
+                    main.cullingMode = ParticleSystemCullingMode.AlwaysSimulate;
+                    changed = true;
+                }
+                foreach (var effect in root.GetComponentsInChildren<AssetParticleEffect>(true))
+                {
+                    string name = effect.name;
+                    if (name == "ThrusterJet") PolishJet(effect.gameObject, 0.09f, 2.8f, 0.24f);
+                    else if (name == "HoverJet") PolishJet(effect.gameObject, 0.22f, 1.5f, 0.3f);
+                    else if (name == "BotFlight") PolishJet(effect.gameObject, 0.035f, 0.8f, 0.18f);
+                    else if (name != "Flight Effects" && name != "RepairContact" && name != "RepairPulse"
+                        && name != "BuildBurst" && name != "DetachedSmoke" && name != "SmokeBurst"
+                        && name != "Explosion" && name != "BreakBurst") continue;
+                    ConfigureContinuity(effect, name == "ThrusterJet" || name == "HoverJet" || name == "BotFlight"
+                        || name == "Flight Effects" || name == "RepairContact");
+                    PolishOtherEffects(effect.gameObject, name);
+                    changed = true;
+                }
+                if (changed) PrefabUtility.SaveAsPrefabAsset(root, path);
+            }
+            finally { PrefabUtility.UnloadPrefabContents(root); }
+        }
+        AssetDatabase.SaveAssets();
     }
 
     public static void SetObjects(Object target, string field, Object[] values)

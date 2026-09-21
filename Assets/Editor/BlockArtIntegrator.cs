@@ -209,6 +209,7 @@ public static class BlockArtIntegrator
         foreach (float x in new[] { -0.8175f, 0.8175f })
             Effect(Socket(flight.transform, x < 0 ? "Exhaust_Left" : "Exhaust_Right", new Vector3(x, 0.149f, 0.985f), Vector3.forward), "BotFlight", 0.65f);
         var controller = flight.AddComponent<AssetParticleEffect>();
+        BlockVfxBaker.ConfigureContinuity(controller, true);
         BlockVfxBaker.SetObjects(controller, "_particles", flight.GetComponentsInChildren<ParticleSystem>(true));
         BlockVfxBaker.SetObject(bot, "_flightEffect", controller);
         var impact = Effect(Socket(root.transform, "RepairTargetEffect", Vector3.zero, Vector3.forward), "RepairContact", 1f);

@@ -35,6 +35,9 @@ public static class BlockArtPlayProbe
     private static bool _sawMuzzleFlash;
     private static bool _sawRepairSocket;
     private static AssetParticleEffect[] _bursts;
+    private static AssetParticleEffect[] _continuous;
+    private static int _continuitySamples;
+    private static int _continuityGaps;
 
     static BlockArtPlayProbe() { EditorApplication.playModeStateChanged += StateChanged; }
 
@@ -103,6 +106,17 @@ public static class BlockArtPlayProbe
         _hover = Spawn("HoverThruster", propulsion.transform, new Vector3(0, -2, 0)).GetComponent<HoverThruster>();
         _hover.isHovered = true; _hover.SetRuntimeReferences(propulsion, _body);
         Supply(propulsion.transform);
+        _continuitySamples = _continuityGaps = 0;
+        var continuousRoot = new GameObject("Continuity samples");
+        _continuous = new[] { "ThrusterJet", "HoverJet", "BotFlight", "RepairContact" }
+            .SelectMany(name => new[] { 0.05f, 0.1f, 1f }.Select(intensity =>
+            {
+                var effect = Object.Instantiate(BlockVfxBaker.Load(name)).GetComponent<AssetParticleEffect>();
+                effect.transform.SetParent(continuousRoot.transform, false);
+                effect.transform.position = new Vector3(100f, 0f, 0f);
+                effect.SetIntensity(intensity);
+                return effect;
+            })).ToArray();
         Physics.SyncTransforms();
     }
 
@@ -139,6 +153,12 @@ public static class BlockArtPlayProbe
             double elapsed = Time.time - _gameStarted;
             if (EditorApplication.timeSinceStartup - _started > 60) throw new TimeoutException("Probe did not receive 24 seconds of game updates.");
             if (_bot == null) throw new InvalidOperationException("Bot was destroyed.");
+            if (elapsed > 0.6 && elapsed < 2)
+            {
+                _continuitySamples++;
+                foreach (var effect in _continuous)
+                    if (effect.GetComponentsInChildren<ParticleSystem>().Any(p => p.particleCount == 0)) _continuityGaps++;
+            }
             _sawFlight |= _bot.transform.parent == _bot.outside && !_bot.GetComponent<Rigidbody>().isKinematic;
             _sawRepair |= _repairTarget.currentDurability > 70f;
             _sawMuzzleFlash |= _turret.muzzle.GetComponentsInChildren<ParticleSystem>().Any(p => p.particleCount > 0);
@@ -159,6 +179,8 @@ public static class BlockArtPlayProbe
             }
             if (_phase == 1 && elapsed > 2)
             {
+                Check("Continuous jets and repair contact have no gaps at 5, 10 and 100 percent", _continuitySamples > 10 && _continuityGaps == 0);
+                foreach (var effect in _continuous) effect.SetIntensity(0f);
                 Check("Turret raycast applies damage", _target.currentDurability < 10000f);
                 Check("Turret muzzle follows active barrel", _turret.muzzle.IsChildOf(_turret.verticalAxis) && _turret.muzzle.gameObject.activeInHierarchy);
                 Check("Authored muzzle flash plays on firing", _sawMuzzleFlash);
@@ -175,14 +197,28 @@ public static class BlockArtPlayProbe
             }
             if (_phase == 2 && elapsed > 3)
             {
+                Check("Continuous effects stop emission and expire", _continuous.All(e => e.GetComponentsInChildren<ParticleSystem>().All(p => !p.isEmitting && p.particleCount == 0)));
+                foreach (var e in _continuous)
+                    foreach (var p in e.GetComponentsInChildren<ParticleSystem>())
+                        if (p.isEmitting || p.particleCount > 0) Errors.Add($"Continuous residual {e.name}/{p.name}: count={p.particleCount}, emitting={p.isEmitting}, culling={p.main.cullingMode}");
+                foreach (var effect in _continuous) Object.Destroy(effect.gameObject);
                 Check("Disabled thruster stops and clears plume", _main.GetComponentsInChildren<ParticleSystem>().All(p => !p.isEmitting && p.particleCount == 0));
                 foreach (BlockVfxLibrary.Effect kind in Enum.GetValues(typeof(BlockVfxLibrary.Effect)))
                     BlockVfxLibrary.Play(kind, new Vector3(50f + (int)kind * 4f, 0f, 0f), Quaternion.identity);
-                _bursts = Object.FindObjectsByType<AssetParticleEffect>(FindObjectsSortMode.None).Where(e => e.transform.parent == null).ToArray();
-                Check("All seven event effects instantiate", _bursts.Length >= 7);
+                _bursts = Object.FindObjectsByType<AssetParticleEffect>(FindObjectsSortMode.None)
+                    .Where(e => e.transform.parent == null && e.transform.position.x >= 50f && e.transform.position.x <= 74f).ToArray();
+                Check("All seven event effects instantiate", _bursts.Length == 7);
                 var debris = new GameObject("Probe debris").AddComponent<Rigidbody>();
                 debris.useGravity = false; debris.position = new Vector3(70, 0, 0); debris.linearVelocity = Vector3.right * 5f;
                 DetachedPartSmokeTrail.Attach(debris, debris.position, 1f);
+                _phase++;
+            }
+            if (_phase == 3 && elapsed > 7)
+            {
+                Check("Event particles finish before release timeout", _bursts.All(e => e != null && e.GetComponentsInChildren<ParticleSystem>().All(p => !p.IsAlive(false))));
+                foreach (var e in _bursts.Where(e => e != null))
+                    foreach (var p in e.GetComponentsInChildren<ParticleSystem>())
+                        if (p.IsAlive(false)) Errors.Add($"Burst residual {e.name}/{p.name}: count={p.particleCount}, emitting={p.isEmitting}, time={p.time}, culling={p.main.cullingMode}");
                 _phase++;
             }
             if (elapsed > 24)

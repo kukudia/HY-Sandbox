@@ -2,6 +2,7 @@
   "unity": "6000.3.11f1",
   "passed": [
     "Bot starts docked, kinematic, collisions off",
+    "Continuous jets and repair contact have no gaps at 5, 10 and 100 percent",
     "Turret raycast applies damage",
     "Turret muzzle follows active barrel",
     "Authored muzzle flash plays on firing",
@@ -12,8 +13,10 @@
     "MainThrusterBig(Clone) nozzle axes oppose force",
     "UniversalThruster(Clone) nozzle axes oppose force",
     "HoverThruster(Clone) nozzle axes oppose force",
+    "Continuous effects stop emission and expire",
     "Disabled thruster stops and clears plume",
     "All seven event effects instantiate",
+    "Event particles finish before release timeout",
     "Bot undocks with dynamic body",
     "Bot repairs same-unit damaged block",
     "Repair beam starts at model tool socket",

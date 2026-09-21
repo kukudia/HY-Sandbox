@@ -70,7 +70,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 `ControlUnit` 聚合驾驶舱、主推进器和悬浮推进器，读取玩家输入并把世界方向传给推进系统。敌方 `EnemyController` 默认每 0.5 秒采样一次目标/避障方向，并以响应速度渐进更新模拟输入；敌方不再直接修改 Rigidbody 的旋转或力，转向和位移统一交给 `MainThruster`/`UniversalThruster` 根据 `MovementInput` 施加。`Power.isWorking` 作为悬浮控制器、推进器和炮塔的硬启停条件；`Power.efficiency` 缩放悬浮推力/姿态修正、各推进器有效推力，以及炮塔伤害和射速。`HoverFlightController` 使用高度、重力补偿和姿态 PID 逻辑分配悬浮推力。
 
-`ThrusterAllocator.Solve` 将力与力矩目标组成 6 维约束，通过带阻尼的最小二乘和上下界迭代求解各推进器输出。`ThrusterVisualEffect` 驱动已保存、完全解包到模型喷口的 SpaceKit 喷焰资产，发射量随真实推力平滑变化；粒子跟随喷头挂点，避免世界/局部方向混用。停机、失电或退出运行模式时停止发射。
+`ThrusterAllocator.Solve` 将力与力矩目标组成 6 维约束，通过带阻尼的最小二乘和上下界迭代求解各推进器输出。`ThrusterVisualEffect` 驱动已保存、完全解包到模型喷口的 SpaceKit 喷焰资产，持续发射密度保持稳定，亮度随真实推力平滑变化；核心使用重叠粒子的淡入淡出保持连续，粒子跟随喷头挂点，避免世界/局部方向混用。停机、失电或退出运行模式时停止发射；离开镜头后仍正常计时并结束。
 
 ### 3.5 UI、敌人和效果
 
@@ -140,6 +140,7 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 | P2 | 双轴炮塔尚未完成主场景战斗回归 | 在不同安装朝向、移动载具和高低目标下验证索敌、遮挡、俯仰边界、光束起点、命中判定与断电恢复。 |
 | P2 | SpaceKit 原始储备的粒子/整船预算偏高 | 已集成的 VFX 已降低容量并限制瞬时实例数；原始 3100 容量效果与 16602 面运输船仍只作储备，来源许可沿用原包条款。 |
 | 已解决 | 手动替换后的炮口引用旧模型、全向模型整体旋转及粒子方向错位 | 2026-09-21：保存新挂点/运动轴，Unity 引用检查与旋转推进、射击 Play Mode 探针验证。 |
+| 已解决 | 尾焰短寿命加密度调强度导致低推力频繁断续；部分素材离屏冻结 | 2026-09-21：核心交叉淡化、持续效果材质透明度调节、AlwaysSimulate；105 组时序采样无空帧，23 项 Play Mode 检查通过。 |
 | P3 | 仓库仍保留未被新模块视觉引用的 `New Material` 等历史资源 | 确认场景和旧 Prefab 无引用后再分批清理，避免误删用户资源。 |
 | P3 | 缺少正式构建产物验收记录 | 记录目标平台、构建版本、场景、输入设备、帧率和已知缺陷。 |
 
@@ -375,11 +376,13 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 - `BlockArtDependencies.Resolve()`：通过 Editor API 复制缺失依赖、重映射 GUID/subasset 引用并完全解包。
 - `BlockVfxBaker.BakeMissing()`：从 SpaceKit 派生并保存缺失的效果 Prefab 与 BlockVfxLibrary；已有资产不覆盖。
+- `BlockVfxBaker.RepairContinuity()` / `ConfigureContinuity()`：同步模板和已解包副本的尾焰、电弧、烟尘曲线及离屏计时；配置持续密度/透明度强度模式。
+- `BlockVfxTemporalValidation.Validate()` / `RenderSequence()`：隔离 PreviewScene 中进行多帧率、多强度采样、启停/重播检查，并导出 URP 连续帧。
 - `BlockArtIntegrator.Integrate()`：保留既有模型选择与 Block 契约，补全视觉、挂点、灯光和组件绑定。
 - `BlockArtValidation.Validate()`：检查来源依赖、嵌套实例、丢失引用、粒子材质、运动链与挂点方向，保存报告。
 - `BlockArtPreview.Render()` / `RenderBlocks()`：在独立 URP PreviewScene 中渲染并导出图片。
 - `BlockArtPlayProbe.Run()`：在隔离 Play Mode 场景检查供电/推进/射击/维修完整链路并返回原场景。
-- `AssetParticleEffect.SetIntensity()` / `PlayOnce()`：驱动序列化粒子；`ReleaseAfterPlayback()` 管理瞬时效果数量与销毁。
+- `AssetParticleEffect.SetIntensity()` / `PlayOnce()`：持续尾焰/接触按材质透明度调强度，烟迹按发射密度调节，瞬时效果显式重播；以 isEmitting 判断快速重新启动，禁用时清空粒子及灯光；`ReleaseAfterPlayback()` 管理瞬时效果数量与销毁。
 - `BlockVfxLibrary.Play()`：按事件实例化 Resources 资产库引用的效果。
 - `BlockStatusLight.Update()`：更新发电机与维修舱状态灯。
 
@@ -1004,6 +1007,13 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 
 ## 10. 变更日志
+
+### 2026-09-21（尾焰连续性及粒子生命周期修复）
+
+- **原因与修改**：原喷焰核心寿命 0.075 秒、18 粒子/秒，强度只乘发射量；10% 推力基线采样 240 帧中 205 帧为空。改为 0.3 秒寿命、20 粒子/秒、恒定尺寸交叉淡化，通过 MaterialPropertyBlock 调节持续尾焰/维修接触亮度；保留原材质和喷口方向，单喷口容量不增加。修复快速停止后仍有存活粒子时的重新发射判断。
+- **其他特效**：维修电弧补充淡出并让轨迹继承粒子颜色，烟尘及爆炸光痕补充透明度包络；项目适配粒子统一离屏继续计时，修复残焰和瞬时闪光离屏冻结、重入视野补播。12 个模板及 9 个涉及粒子的 Block Prefab 已通过 Unity API 保存；生成器同步新参数，完全解包和模型/玩法绑定不变。
+- **文件与 Editor 验证**：Unity 6000.3.11f1 导入/编译、44 个 Prefab 引用/挂点检查通过；105 组连续采样覆盖 2%/5%/10%/25%/100% 强度与 30/60/120 FPS，无空帧，核心 Alpha 变异系数不超过 0.42%；7 种瞬时粒子结束和重播通过。URP 实际连续帧已检查，10%/100% 尾焰屏幕亮度总量变异系数 2.38%/3.18%，GIF 保存在 Preview 中。
+- **运行验证**：隔离 Play Mode 23 项检查通过，包括低推力连续发射、离屏停止/自然结束、炮塔伤害、Bot 维修和返航。返回 Main 场景且无未保存修改。静态 build 为 0 错误/4 个既有警告；git diff --check 通过。未做大型蓝图透明 Overdraw 和 AlwaysSimulate 的并发性能测量。
 
 ### 2026-09-21 Block 模型与素材 VFX 集成
 

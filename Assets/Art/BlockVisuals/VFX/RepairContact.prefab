@@ -117,7 +117,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.18
+      scalar: 0.3
       minScalar: 0.2
       maxCurve:
         serializedVersion: 2
@@ -799,7 +799,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 12
+      scalar: 20
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -1184,7 +1184,7 @@ ParticleSystem:
         m_RotationOrder: 0
     separateAxes: 1
   ColorModule:
-    enabled: 0
+    enabled: 1
     gradient:
       serializedVersion: 2
       minMaxState: 1
@@ -1209,8 +1209,8 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 65535
-        atime2: 0
+        atime1: 13107
+        atime2: 65535
         atime3: 0
         atime4: 0
         atime5: 0
@@ -1219,7 +1219,7 @@ ParticleSystem:
         m_Mode: 0
         m_ColorSpace: -1
         m_NumColorKeys: 2
-        m_NumAlphaKeys: 2
+        m_NumAlphaKeys: 3
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -3841,13 +3841,13 @@ ParticleSystem:
     dieWithParticles: 0
     sizeAffectsWidth: 0
     sizeAffectsLifetime: 0
-    inheritParticleColor: 0
+    inheritParticleColor: 1
     generateLightingData: 0
     splitSubEmitterRibbons: 0
     attachRibbonsToTransform: 0
     colorOverLifetime:
       serializedVersion: 2
-      minMaxState: 1
+      minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
@@ -4713,3 +4713,4 @@ MonoBehaviour:
   - {fileID: 7180145556426947931}
   _lights: []
   _releaseAfter: 6
+  _continuousEmission: 1

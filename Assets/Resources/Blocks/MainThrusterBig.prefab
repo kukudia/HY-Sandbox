@@ -174,7 +174,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
   looping: 1
-  prewarm: 1
+  prewarm: 0
   playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -1307,9 +1307,9 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0.5, g: 1.5, b: 2, a: 0.65}
-        key1: {r: 0.04, g: 0.45, b: 1, a: 0.25}
-        key2: {r: 0, g: 0, b: 0, a: 0}
+        key0: {r: 0.5, g: 1.5, b: 2, a: 0}
+        key1: {r: 0.04, g: 0.45, b: 1, a: 0.65}
+        key2: {r: 0, g: 0, b: 0, a: 0.25}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
@@ -1324,9 +1324,9 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 39321
-        atime2: 65535
-        atime3: 0
+        atime1: 9830
+        atime2: 39321
+        atime3: 65535
         atime4: 0
         atime5: 0
         atime6: 0
@@ -1334,7 +1334,7 @@ ParticleSystem:
         m_Mode: 0
         m_ColorSpace: -1
         m_NumColorKeys: 2
-        m_NumAlphaKeys: 3
+        m_NumAlphaKeys: 4
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -4827,6 +4827,7 @@ MonoBehaviour:
   - {fileID: 6712526501637520822}
   _lights: []
   _releaseAfter: 6
+  _continuousEmission: 1
 --- !u!1 &3031339405002087121
 GameObject:
   m_ObjectHideFlags: 0
@@ -4910,6 +4911,7 @@ MonoBehaviour:
   - {fileID: 5986139471063274644}
   _lights: []
   _releaseAfter: 6
+  _continuousEmission: 1
 --- !u!1 &3560189387717928847
 GameObject:
   m_ObjectHideFlags: 0
@@ -4954,12 +4956,12 @@ ParticleSystem:
   lengthInSec: 5
   simulationSpeed: 1
   stopAction: 0
-  cullingMode: 1
+  cullingMode: 3
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
   looping: 1
-  prewarm: 1
+  prewarm: 0
   playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -5026,7 +5028,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.075
+      scalar: 0.3
       minScalar: 0.5
       maxCurve:
         serializedVersion: 2
@@ -5654,7 +5656,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 18
+      scalar: 20
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -5760,7 +5762,7 @@ ParticleSystem:
     m_BurstCount: 0
     m_Bursts: []
   SizeModule:
-    enabled: 1
+    enabled: 0
     curve:
       serializedVersion: 2
       minMaxState: 1
@@ -6092,8 +6094,8 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0.5, g: 1.5, b: 2, a: 0.65}
-        key1: {r: 0.04, g: 0.45, b: 1, a: 0.25}
+        key0: {r: 0.25, g: 0.9, b: 1.6, a: 0}
+        key1: {r: 0.25, g: 0.9, b: 1.6, a: 0.15}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -6109,7 +6111,7 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 39321
+        atime1: 32768
         atime2: 65535
         atime3: 0
         atime4: 0
@@ -9682,7 +9684,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
   looping: 1
-  prewarm: 1
+  prewarm: 0
   playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -10815,9 +10817,9 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0.5, g: 1.5, b: 2, a: 0.65}
-        key1: {r: 0.04, g: 0.45, b: 1, a: 0.25}
-        key2: {r: 0, g: 0, b: 0, a: 0}
+        key0: {r: 0.5, g: 1.5, b: 2, a: 0}
+        key1: {r: 0.04, g: 0.45, b: 1, a: 0.65}
+        key2: {r: 0, g: 0, b: 0, a: 0.25}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
@@ -10832,9 +10834,9 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 39321
-        atime2: 65535
-        atime3: 0
+        atime1: 9830
+        atime2: 39321
+        atime3: 65535
         atime4: 0
         atime5: 0
         atime6: 0
@@ -10842,7 +10844,7 @@ ParticleSystem:
         m_Mode: 0
         m_ColorSpace: -1
         m_NumColorKeys: 2
-        m_NumAlphaKeys: 3
+        m_NumAlphaKeys: 4
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -14391,12 +14393,12 @@ ParticleSystem:
   lengthInSec: 5
   simulationSpeed: 1
   stopAction: 0
-  cullingMode: 1
+  cullingMode: 3
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
   looping: 1
-  prewarm: 1
+  prewarm: 0
   playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -14463,7 +14465,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.075
+      scalar: 0.3
       minScalar: 0.5
       maxCurve:
         serializedVersion: 2
@@ -15091,7 +15093,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 18
+      scalar: 20
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -15197,7 +15199,7 @@ ParticleSystem:
     m_BurstCount: 0
     m_Bursts: []
   SizeModule:
-    enabled: 1
+    enabled: 0
     curve:
       serializedVersion: 2
       minMaxState: 1
@@ -15529,8 +15531,8 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0.5, g: 1.5, b: 2, a: 0.65}
-        key1: {r: 0.04, g: 0.45, b: 1, a: 0.25}
+        key0: {r: 0.25, g: 0.9, b: 1.6, a: 0}
+        key1: {r: 0.25, g: 0.9, b: 1.6, a: 0.15}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -15546,7 +15548,7 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 39321
+        atime1: 32768
         atime2: 65535
         atime3: 0
         atime4: 0
@@ -19114,12 +19116,12 @@ ParticleSystem:
   lengthInSec: 5
   simulationSpeed: 1
   stopAction: 0
-  cullingMode: 1
+  cullingMode: 3
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
   looping: 1
-  prewarm: 1
+  prewarm: 0
   playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -19186,7 +19188,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.075
+      scalar: 0.3
       minScalar: 0.5
       maxCurve:
         serializedVersion: 2
@@ -19814,7 +19816,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 18
+      scalar: 20
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -19920,7 +19922,7 @@ ParticleSystem:
     m_BurstCount: 0
     m_Bursts: []
   SizeModule:
-    enabled: 1
+    enabled: 0
     curve:
       serializedVersion: 2
       minMaxState: 1
@@ -20252,8 +20254,8 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0.5, g: 1.5, b: 2, a: 0.65}
-        key1: {r: 0.04, g: 0.45, b: 1, a: 0.25}
+        key0: {r: 0.25, g: 0.9, b: 1.6, a: 0}
+        key1: {r: 0.25, g: 0.9, b: 1.6, a: 0.15}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -20269,7 +20271,7 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 39321
+        atime1: 32768
         atime2: 65535
         atime3: 0
         atime4: 0
@@ -24503,6 +24505,7 @@ MonoBehaviour:
   - {fileID: 2373855270610724087}
   _lights: []
   _releaseAfter: 6
+  _continuousEmission: 1
 --- !u!1 &7409523706083920056
 GameObject:
   m_ObjectHideFlags: 0
@@ -24552,7 +24555,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
   looping: 1
-  prewarm: 1
+  prewarm: 0
   playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -25685,9 +25688,9 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0.5, g: 1.5, b: 2, a: 0.65}
-        key1: {r: 0.04, g: 0.45, b: 1, a: 0.25}
-        key2: {r: 0, g: 0, b: 0, a: 0}
+        key0: {r: 0.5, g: 1.5, b: 2, a: 0}
+        key1: {r: 0.04, g: 0.45, b: 1, a: 0.65}
+        key2: {r: 0, g: 0, b: 0, a: 0.25}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
@@ -25702,9 +25705,9 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 39321
-        atime2: 65535
-        atime3: 0
+        atime1: 9830
+        atime2: 39321
+        atime3: 65535
         atime4: 0
         atime5: 0
         atime6: 0
@@ -25712,7 +25715,7 @@ ParticleSystem:
         m_Mode: 0
         m_ColorSpace: -1
         m_NumColorKeys: 2
-        m_NumAlphaKeys: 3
+        m_NumAlphaKeys: 4
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -29203,7 +29206,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
   looping: 1
-  prewarm: 1
+  prewarm: 0
   playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -30336,9 +30339,9 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0.5, g: 1.5, b: 2, a: 0.65}
-        key1: {r: 0.04, g: 0.45, b: 1, a: 0.25}
-        key2: {r: 0, g: 0, b: 0, a: 0}
+        key0: {r: 0.5, g: 1.5, b: 2, a: 0}
+        key1: {r: 0.04, g: 0.45, b: 1, a: 0.65}
+        key2: {r: 0, g: 0, b: 0, a: 0.25}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
@@ -30353,9 +30356,9 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 39321
-        atime2: 65535
-        atime3: 0
+        atime1: 9830
+        atime2: 39321
+        atime3: 65535
         atime4: 0
         atime5: 0
         atime6: 0
@@ -30363,7 +30366,7 @@ ParticleSystem:
         m_Mode: 0
         m_ColorSpace: -1
         m_NumColorKeys: 2
-        m_NumAlphaKeys: 3
+        m_NumAlphaKeys: 4
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -33849,12 +33852,12 @@ ParticleSystem:
   lengthInSec: 5
   simulationSpeed: 1
   stopAction: 0
-  cullingMode: 1
+  cullingMode: 3
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
   looping: 1
-  prewarm: 1
+  prewarm: 0
   playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -33921,7 +33924,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.075
+      scalar: 0.3
       minScalar: 0.5
       maxCurve:
         serializedVersion: 2
@@ -34549,7 +34552,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 18
+      scalar: 20
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -34655,7 +34658,7 @@ ParticleSystem:
     m_BurstCount: 0
     m_Bursts: []
   SizeModule:
-    enabled: 1
+    enabled: 0
     curve:
       serializedVersion: 2
       minMaxState: 1
@@ -34987,8 +34990,8 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0.5, g: 1.5, b: 2, a: 0.65}
-        key1: {r: 0.04, g: 0.45, b: 1, a: 0.25}
+        key0: {r: 0.25, g: 0.9, b: 1.6, a: 0}
+        key1: {r: 0.25, g: 0.9, b: 1.6, a: 0.15}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -35004,7 +35007,7 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 39321
+        atime1: 32768
         atime2: 65535
         atime3: 0
         atime4: 0
@@ -38579,3 +38582,4 @@ MonoBehaviour:
   - {fileID: 673247168678406252}
   _lights: []
   _releaseAfter: 6
+  _continuousEmission: 1
