@@ -578,6 +578,8 @@ public static class IndustrialArtGenerator
         GameObject root = PrefabUtility.LoadPrefabContents(prefabPath);
         try
         {
+            // Imported art and authored sockets are maintained by BlockArtIntegrator / the Inspector.
+            if (root.transform.Find("ArtIntegration_SpaceKit_v1") != null) return false;
             if (root.name == "Bot")
             {
                 RebuildBot(root);

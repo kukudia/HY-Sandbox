@@ -70,31 +70,35 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 `ControlUnit` 聚合驾驶舱、主推进器和悬浮推进器，读取玩家输入并把世界方向传给推进系统。敌方 `EnemyController` 默认每 0.5 秒采样一次目标/避障方向，并以响应速度渐进更新模拟输入；敌方不再直接修改 Rigidbody 的旋转或力，转向和位移统一交给 `MainThruster`/`UniversalThruster` 根据 `MovementInput` 施加。`Power.isWorking` 作为悬浮控制器、推进器和炮塔的硬启停条件；`Power.efficiency` 缩放悬浮推力/姿态修正、各推进器有效推力，以及炮塔伤害和射速。`HoverFlightController` 使用高度、重力补偿和姿态 PID 逻辑分配悬浮推力。
 
-`ThrusterAllocator.Solve` 将力与力矩目标组成 6 维约束，通过带阻尼的最小二乘和上下界迭代求解各推进器输出。`ThrusterVisualEffect` 使用外层扰动喷流、白蓝高温核心、拉伸火花和闪烁点光组成三层尾焰，发射量、寿命、速度、尺寸和锥体范围会随真实推力平滑变化，并替代旧的 Line Renderer 视觉。
+`ThrusterAllocator.Solve` 将力与力矩目标组成 6 维约束，通过带阻尼的最小二乘和上下界迭代求解各推进器输出。`ThrusterVisualEffect` 驱动已保存、完全解包到模型喷口的 SpaceKit 喷焰资产，发射量随真实推力平滑变化；粒子跟随喷头挂点，避免世界/局部方向混用。停机、失电或退出运行模式时停止发射。
 
 ### 3.5 UI、敌人和效果
 
-`MainUIButtons` 负责按钮事件、操作模式和动态方块按钮；`SaveUIPanel` 负责玩家/敌方蓝图列表；`BlueprintUIPanel` 显示当前建造目标名称、方块数量和总质量，并在搭建、拆除、Undo/Redo 时刷新，在存档或敌方蓝图异步加载期间逐块更新；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块，寻路避障按间隔采样并渐进转向，返航时对准停靠姿态后平滑减速归位，其飞行反馈由双层青色尾迹和速度驱动微粒组成，维修时使用双层能量束、加法火花、命中点光及每次真实耐久恢复触发的脉冲。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager` 和 `StylizedBeamEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。所有选中、Ghost、放置、旋转、维修、摧毁、爆炸和陨石冲击中的平面环形元素均已移除，改用 HDR 加法粒子、放射光痕、短束流和动态点光；烟尘继续使用普通 Alpha Blend 保持暗部层次。失去驾驶舱的断裂 Rigidbody 会获得最长 6 秒、按速度衰减的烟雾/余烬拖尾，同时限制全局活动数量为 24。
+`MainUIButtons` 负责按钮事件、操作模式和动态方块按钮；`SaveUIPanel` 负责玩家/敌方蓝图列表；`BlueprintUIPanel` 显示当前建造目标名称、方块数量和总质量，并在搭建、拆除、Undo/Redo 时刷新，在存档或敌方蓝图异步加载期间逐块更新；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块，寻路避障按间隔采样并渐进转向，返航时对准停靠姿态后平滑减速归位，其飞行反馈由保存的双层青色尾迹和速度驱动喷口粒子组成，维修时从模型工具端发射双层能量束，并使用素材电弧与真实耐久恢复脉冲。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager` 和 `StylizedBeamEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。所有选中、Ghost、放置、旋转、维修、摧毁、爆炸和陨石冲击中的平面环形元素均已移除，改用 HDR 加法粒子、放射光痕、短束流和动态点光；烟尘继续使用普通 Alpha Blend 保持暗部层次。失去驾驶舱的断裂 Rigidbody 会获得最长 6 秒、按速度衰减的烟雾/余烬拖尾，同时限制全局活动数量为 24。
 
 ### 3.6 物理模拟与性能
 
 项目使用 3D PhysX 作为运行时物理后端。为降低物理线程在大型构造体、敌人和爆炸冲量场景下的持续计算压力，当前项目设置为：固定物理步长约 0.02 秒（50 Hz；`ProjectSettings/TimeManager.asset` 使用 Unity 6000 的有理数格式保存）、单帧物理追赶上限 0.1 秒、默认位置求解迭代 4 次、默认速度求解迭代 1 次。碰撞回调复用已启用，Transform 自动同步保持关闭；2D 物理设置未改变。降低步频和迭代次数会减少 CPU 占用，但高速碰撞、堆叠稳定性和推进器控制手感需要在 Play Mode 复核。
 
-### 3.7 工业美术与渲染风格
+### 3.7 Block 美术、挂点与渲染风格
 
-当前模块采用“卡通工业玩具”风格：方正盒体轮廓、清晰色块和适度高光，参考 Dyson Sphere Program 的功能色阶与 Trailmakers 的模块化比例，使用蓝灰喷涂钢、工程黄/黄铜、铝银、设备绿、橙色推进器、信号红武器和海军蓝驾驶舱区分功能，而不是所有方块统一黑色。`IndustrialArtGenerator` 生成硬边盒体、少量圆角/楔体、低面数环体和圆柱等共享 Mesh，并只替换各 Prefab `Model/IndustrialVisual` 视觉层；根 `Block` 数据、碰撞体、连接点、`Debug` 节点、嵌套 RepairBot 和 Resources 路径保持不变。基础结构块使用单一长方体/正方体蓝灰喷涂钢外壳，六面保持相同轮廓与材质；驾驶舱、发电机、输电中继、陀螺控制器、推进器、炮塔、门、楼梯、机架和维修舱按类别使用独立主色，主体机匣优先采用硬边盒体。
+当前功能模块使用 `Assets/Art/SpaceKit` 与用户整理的 `Assets/Art/Temp`：保留 Cube1 基础块、Battery 发电机/维修舱、无人机、炮塔、AirVent、主推进器和全向底座的手动选择，补全驾驶舱、门、控制器、机架、楼梯及大小推进器。替换实例全部 Unpack Completely；根 Block、BoxCollider、连接点及启用掩码、密度、耐久和 Resources 名称保持一致，视觉附带碰撞体移除。
 
-当前所有模块暂时不创建或保留 `LODGroup`，仅使用一套可见视觉层，避免卡通材质调校时发生远近颜色/轮廓跳变；后续重新启用 LOD 前需在目标镜头下重新测量切换距离。推进器保留 `Model.forward` / 方块 `transform.up` 的推力轴语义，并使用机匣、双侧导轨、同轴喷口环、热核心与燃烧锥组成新轮廓。Connector 资源位于 `Assets/Resources/Blocks/Connector.prefab`，继续沿用既有 GUID 与 `connectorPrefab` 引用，使用轴对称连接接头和信号环动画；自发光脉冲使用 `MaterialPropertyBlock`，不实例化材质。共享材质开启 GPU Instancing；PC URP 使用 2x MSAA，并在主场景 Volume Profile 中启用 ACES、Bloom、轻量对比度和暗角。建造/游玩选中状态会暂存并替换 `Model` 下所有 Renderer 的材质，取消选择后逐项恢复，适配多 Renderer 模型。
+`Assets/Art/BlockVisuals` 保存适配后的粒子 Prefab、材质、依赖迁移清单、Unity 验证结果与预览。`BlockArtIntegrator` 只处理没有 `ArtIntegration_SpaceKit_v1` 标记的模块；旧 `IndustrialArtGenerator` 跳过已经集成的模块，避免覆盖手动调整。基础块与 Connector 保留既有外观。
 
-炮塔按 1 米模块、Y 轴为回转轴、+Z 为武器前向制作，Prefab 视觉层级固定为 `Fixed Pedestal` 与 `Horizontal/Vertical/Muzzle`：固定底座不参与瞄准，`Horizontal` 带动回转平台、配重和支架绕局部 Y 轴旋转，嵌套的 `Vertical` 带动双联炮管、机匣、瞄准镜和枪口绕局部 X 轴俯仰。默认水平/垂直转速分别为 240/180 度每秒，俯仰范围为向下 15 度至向上 65 度；`IndustrialArtGenerator` 每次重建都会重新绑定三项 Transform 引用，并在任一节点缺失时中止生成，避免退化为整座模型共同旋转。`Tools/HY Sandbox/Rebuild Turret Art` 可单独重建炮塔并刷新预览，不触碰其他模块 Prefab。
+炮塔保留固定底座，水平轴绑定 `SM_Prop_Turret_Large_Top_01`，俯仰轴绑定 `SM_Prop_Turret_Large_Barrel_01`；aimPivot 与 Muzzle 已从停用的旧模型迁移，枪口按网格端环定位，开火闪光与射线共用此挂点。默认转速、俯仰限位、伤害和射速不变。全向推进器只旋转喷头，底座保持固定；主推进器分别覆盖 2/4 个物理喷口，悬浮特效朝风口下方发射。
+
+RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具端发出，容器明确绑定 home/Outside。初始化停靠状态不再被冷却提前返回阻断，冷却结束前保持停靠；飞行和维修粒子均为可编辑资产。发电机与维修舱各增加两盏无阴影状态灯。选中和 Ghost 高亮跳过粒子/尾迹，避免覆写特效材质。
+
+实时反馈通过 `Resources/VFX/BlockVfxLibrary` 读取适配的建造、电弧、爆炸、烟尘、炮口与命中粒子。运行时不再 AddComponent 创建 ParticleSystem；光束仍用实时端点网格，材质保存为资产。瞬时粒子最多同时 64 个实例，断裂烟迹最多 24 个；原始 SpaceKit 储备效果保留，项目实际使用减量版本。完整编辑说明见 `Assets/Art/BlockVisuals/README.md`。
 
 ### 3.8 科幻工业备用素材库
 
 `Assets/Art/SpaceKit` 从被 gitignore 忽略的 CUBE Spaceships Pack 01 与 PolygonSciFiSpace 复制筛选素材，包含驾驶舱、机身/机翼、推进器、起落架、能源/传感设备、炮塔/弹体、维修机器人、结构/舱壁、货物/控制台/灯具、陨石/残骸、整船参考及四类粒子效果。22 类 Prefab 每类 2–7 项，共 105 个；另选 10 个配色材质。完整依赖共 349 项（103 FBX、105 Prefab、29 材质、30 贴图、82 碰撞网格），约 19.02 MiB，不含 meta 和预览。
 
-素材使用独立 GUID，所有依赖落在 SpaceKit 或 Unity/URP 内置包内。旧材质通过 Editor API 转换为 URP Lit/Particles Unlit；飞船去除旧 Rim 算法，陨石简化为低光泽岩石基色。原包与现有 Industrial/Resources/Blocks/Main 场景保持原状。备用素材尚未接入建造注册、碰撞/连接点、推进或战斗逻辑；导入尺寸、面数、材质槽和粒子上限见逐项清单。
+素材使用独立 GUID，所有依赖落在 SpaceKit 或 Unity/URP 内置包内。旧材质通过 Editor API 转换为 URP Lit/Particles Unlit；飞船去除旧 Rim 算法，陨石简化为低光泽岩石基色。原包与 Main 场景保持原状。部分备用素材已经通过 BlockVisuals 适配到 Resources/Blocks 和运行时 VFX；SpaceKit 原始储备的导入尺寸、面数、材质槽和粒子上限仍见逐项清单。
 
-`SpaceKitCurator` 提供初次创建（拒绝覆盖已存在库）、引用验证与独立场景预览菜单；Selection.json 记录选择与用途，Catalog.json 记录来源/GUID/SHA-256，Validation.json 记录实际 Unity 审核。已完成 Editor 导入、全部 Prefab 重载、粒子采样、105 项 URP 渲染与四张联系表检查；未进行玩法 Play Mode 或并发性能验证。
+`SpaceKitCurator` 提供初次创建（拒绝覆盖已存在库）、引用验证与独立场景预览菜单；Selection.json 记录选择与用途，Catalog.json 记录来源/GUID/SHA-256，Validation.json 记录实际 Unity 审核。已完成 Editor 导入、全部 Prefab 重载、粒子采样、105 项 URP 渲染与四张联系表检查；原始储备库不直接进行玩法测试；已集成模块的 Play Mode 结果另见 BlockVisuals/PlayModeValidation.json，并发性能仍未验证。
 
 ## 4. 已确认实现的功能
 
@@ -132,9 +136,10 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 | P2 | 多个 RepairBot、连续大型爆炸和大量高速断裂部件会叠加透明粒子开销 | 已限制单个粒子系统粒子数并将断裂烟迹全局上限设为 24；仍需在大型蓝图战斗中记录透明 Overdraw、Batches 和主线程峰值。 |
 | P2 | UI 同时存在 uGUI 与 IMGUI | 将诊断面板迁移到统一 UI 系统，避免分辨率、输入焦点和生命周期不一致。 |
 | P2 | 历史日志包含旧版本功能描述 | 每次发布标记版本和验证日期，避免把日志中的“计划/旧实现”当作当前契约。 |
-| P2 | 新工业模型尚未在大型蓝图中完成 GPU/CPU 压力验证 | 使用 100、500、1000 模块蓝图分别记录 Batches、SetPass、三角面和 `IndustrialPartMotion.Update`；重新启用 LOD 后再补充切换距离验证。 |
+| P2 | SpaceKit 集成功能模块尚未在大型蓝图中完成 GPU/CPU 压力验证 | 使用 100、500、1000 模块蓝图记录 Batches、SetPass、粒子 Overdraw、动态灯和脚本耗时。 |
 | P2 | 双轴炮塔尚未完成主场景战斗回归 | 在不同安装朝向、移动载具和高低目标下验证索敌、遮挡、俯仰边界、光束起点、命中判定与断电恢复。 |
-| P2 | SpaceKit 备用素材尚未接入玩法且部分粒子/整船预算偏高 | 集成时适配 Block 尺寸/Pivot 与动态凸碰撞；爆炸/导弹容量 3100、运输船 16602 面仅作储备，按并发数量做池化/裁剪和实机验证；来源许可需按原包购买条款核实。 |
+| P2 | SpaceKit 原始储备的粒子/整船预算偏高 | 已集成的 VFX 已降低容量并限制瞬时实例数；原始 3100 容量效果与 16602 面运输船仍只作储备，来源许可沿用原包条款。 |
+| 已解决 | 手动替换后的炮口引用旧模型、全向模型整体旋转及粒子方向错位 | 2026-09-21：保存新挂点/运动轴，Unity 引用检查与旋转推进、射击 Play Mode 探针验证。 |
 | P3 | 仓库仍保留未被新模块视觉引用的 `New Material` 等历史资源 | 确认场景和旧 Prefab 无引用后再分批清理，避免误删用户资源。 |
 | P3 | 缺少正式构建产物验收记录 | 记录目标平台、构建版本、场景、输入设备、帧率和已知缺陷。 |
 
@@ -366,6 +371,18 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private static string NormalizeName(string name, string fallback)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 
 
+### Block Art 集成工具与素材控制器
+
+- `BlockArtDependencies.Resolve()`：通过 Editor API 复制缺失依赖、重映射 GUID/subasset 引用并完全解包。
+- `BlockVfxBaker.BakeMissing()`：从 SpaceKit 派生并保存缺失的效果 Prefab 与 BlockVfxLibrary；已有资产不覆盖。
+- `BlockArtIntegrator.Integrate()`：保留既有模型选择与 Block 契约，补全视觉、挂点、灯光和组件绑定。
+- `BlockArtValidation.Validate()`：检查来源依赖、嵌套实例、丢失引用、粒子材质、运动链与挂点方向，保存报告。
+- `BlockArtPreview.Render()` / `RenderBlocks()`：在独立 URP PreviewScene 中渲染并导出图片。
+- `BlockArtPlayProbe.Run()`：在隔离 Play Mode 场景检查供电/推进/射击/维修完整链路并返回原场景。
+- `AssetParticleEffect.SetIntensity()` / `PlayOnce()`：驱动序列化粒子；`ReleaseAfterPlayback()` 管理瞬时效果数量与销毁。
+- `BlockVfxLibrary.Play()`：按事件实例化 Resources 资产库引用的效果。
+- `BlockStatusLight.Update()`：更新发电机与维修舱状态灯。
+
 ### Effect 特效
 
 #### `Assets/Scripts/Effect/DetachedPartSmokeTrail.cs`
@@ -373,7 +390,6 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `public static void Attach(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`：为无驾驶舱断裂刚体挂接或刷新受全局数量限制的烟雾拖尾。
 - `private void Initialize(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`：创建世界空间烟雾和短余烬 TrailRenderer，并缓存目标刚体。
 - `private void Refresh(Vector3 worldAnchor, float effectIntensity)`：重复受爆时刷新锚点、强度和剩余寿命，不重复创建组件。
-- `private void ConfigureSmoke(ParticleSystem particles)`：配置带上浮、噪声、颜色和尺寸渐变的低密度烟雾。
 - `private static void ConfigureEmberTrail(TrailRenderer trail)`：配置高速碎片的短橙色余烬拖尾。
 - `private void Update()`：按线速度、角速度、爆炸强度和生命周期衰减实时控制发射。
 - `private void StopAndRelease()`：停止发射、分离残留粒子并延迟销毁视觉对象。
@@ -506,10 +522,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private void Start()`：缓存 home、范围查询层和运行时组件，并初始化修复目标。
 - `private void InitializeComponents()`：创建或补齐该功能所需的对象、引用、缓存和初始状态。
 - `private void InitializeTargetsInRange()`：以 home 为中心执行无分配球形查询，缓存同一 ControlUnit 的范围内耐久目标。
-- `private void InitializeTrail()`：创建青色外层、白青核心双层尾迹和世界空间飞行微粒。
-- `private static void ConfigureTrail(TrailRenderer trail, float duration, float width, Gradient gradient)`：统一配置 RepairBot 尾迹的曲线、材质和阴影状态。
-- `private void ConfigureTrailMotes(ParticleSystem particles)`：配置按飞行速度发射的短寿命微粒。
-- `private static Gradient CreateTrailGradient(Color color, float alpha)`：创建尾迹与微粒共用的高亮到深青渐隐颜色。
+- `private void InitializeTrail()`：缓存 Prefab 中的尾迹和素材飞行效果并初始化停发状态。
 - `private void FixedUpdate()`：验证当前修复目标并执行导航、修复或返航。
 - `private void LateUpdate()`：在物理运动完成后刷新尾迹发射状态。
 - `private void UpdateMotionVfx()`：根据导航状态与刚体速度控制双层尾迹宽度和微粒发射量。
@@ -532,9 +545,8 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private void CheckAndRepair()`：处理碰撞、连接、耐久、维修或状态检查逻辑。
 - `private void UpdateRepairBeam(bool active)`：刷新双层维修射线的 HDR 颜色、脉冲强度、命中点光和持续火花。
 - `private Vector3 GetRepairTargetPoint()`：优先使用目标 Collider 最近点，其次使用 Renderer 中心作为射线命中点。
-- `private void EnsureRepairImpactVfx()`：创建可复用的维修命中加法火花与点光源。
-- `private void ConfigureRepairImpactParticles(ParticleSystem particles)`：配置命中点的拉伸青色能量火花。
-- `private void UpdateRepairImpact(Vector3 targetPoint, Color color, float pulse)`：更新维修命中粒子的 HDR 颜色、发射率和点光强度。
+- `private void EnsureRepairImpactVfx()`：初始化 Prefab 中的维修命中素材效果。
+- `private void UpdateRepairImpact(Vector3 targetPoint, Color color, float pulse)`：将维修素材电弧定位到命中点，并按束流强度驱动发射。
 - `private void SetRepairImpactActive(bool active)`：统一启停命中点光和持续粒子，避免状态残留。
 - `private void EnsureRepairBeamGradient()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
 - `public void ClearTarget()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
@@ -745,8 +757,6 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 #### `Assets/Scripts/Manager/VisualEffectsManager.cs`
 
 - `public static VisualEffectsManager EnsureInstance()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
-- `public static Material GetSharedParticleMaterial()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
-- `public static Material GetSharedGlowParticleMaterial()`：创建并缓存供火花、尾焰与能量命中使用的加法粒子材质。
 - `public static Material GetSharedLineMaterial()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `public static void TryPlayBlockPlaced(Block block)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `public static void TryPlayBlockRemoved(Block block)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
@@ -782,22 +792,15 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `private void PlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`： 触发游玩流程、UI 状态或视觉反馈的更新。
 - `private void CreateLineStreak(Vector3 from, Vector3 to, Color color, float duration, float width)`： 创建几何、资源、操作记录、UI 项或运行时对象。
 - `private void CreateRadialStreakBurst(Vector3 center, Vector3 normal, Color color, int count, float length, float duration, float width)`：在球面或指定半球生成受控数量的放射能量光痕。
-- `private void CreateParticleBurst(..., bool additive = true)`：创建一次性粒子爆发，并按用途选择加法发光或普通透明材质。
 - `private void CreateLightFlash(Vector3 position, Color color, float intensity, float range, float duration)`： 创建几何、资源、操作记录、UI 项或运行时对象。
 - `private void ShakeCamera(float amplitude, float duration)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private IEnumerator CameraShakeRoutine(float amplitude, float duration)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private void ClearCameraOffset()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
-- `private static void ConfigureTransparentMaterial(Material material)`：将运行时共享粒子材质设为透明 Alpha Blend 并关闭深度写入，确保软粒子纹理边缘正确显示。
-- `private static void ConfigureAdditiveMaterial(Material material)`：将发光粒子材质设为加法混合，使 HDR 颜色能驱动 Bloom。
 - `private static Bounds GetBounds(GameObject target, Vector3 fallbackCenter, Vector3 fallbackSize)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private static Vector3 GetBlockSize(Block block)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private static Gradient MakeGradient(Color start, Color end)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private static Color WithAlpha(Color color, float alpha)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private static Color Brighten(Color color, float intensity, float whiteBlend = 0f)`：生成保持 Alpha 的 HDR 高亮颜色。
-- `private static Material CreateParticleMaterial(string materialName, bool additive)`：按发光或烟尘用途创建共享运行时粒子材质。
-- `private static Texture2D GetSoftParticleTexture()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
-- `private static void SetMaterialColor(Material material, Color color)`： 设置该对象、视觉效果或运行时引用的参数/状态。
-- `private static void SetMaterialTexture(Material material, Texture texture)`： 设置该对象、视觉效果或运行时引用的参数/状态。
 - `public void Initialize(StylizedBeamEffect effect, Color lineColor, float lifetime)`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
 - `public void Initialize(Light light, float lifetime, float intensity)`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
 - `private void OnDestroy()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
@@ -882,21 +885,10 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 #### `Assets/Scripts/Thrusters/ThrusterVisualEffect.cs`
 
-- `public void Initialize(Thruster owner)`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
-- `public void SetThrust(float thrustRatio, Vector3 localThrustDirection)`： 设置该对象、视觉效果或运行时引用的参数/状态。
-- `private void EnsureVfx()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
-- `private ParticleSystem CreateParticleLayer(string layerName)`：创建尾焰粒子层并使用共享粒子材质。
-- `private void ConfigureOuterPlume(ParticleSystem particles)`：配置受噪声扰动、渐变消散的外层喷流。
-- `private void ConfigureHotCore(ParticleSystem particles)`：配置高速白蓝高温核心。
-- `private void ConfigureSparks(ParticleSystem particles)`：配置高推力时出现的稀疏拉伸火花。
-- `private static void ConfigureRenderer(ParticleSystem particles, ParticleSystemRenderMode renderMode, float lengthScale, float velocityScale, float sortingFudge)`：统一配置各尾焰层的加法材质、拉伸方式与排序。
-- `private Gradient CreatePlumeGradient()`：创建由热端到冷端的尾焰颜色与透明度渐变。
-- `private void UpdateParticleModules(float ratio)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
-- `private void UpdateGlow(float ratio)`：按推力比例和 Perlin 噪声驱动点光源亮度与范围。
-- `private void SetEmissionState(bool active)`：统一启停三层尾焰粒子。
-- `private static void SetParticleState(ParticleSystem particles, bool active)`：平滑启动或停止单层粒子发射。
-- `private static Vector3 GetStableUp(Vector3 direction)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
-- `private static Color ToHdr(Color color, float intensity)`：将尾焰颜色转换为保留 Alpha 的 HDR 颜色。
+- `Initialize(Thruster)`：缓存推进器及 Power。
+- `SetThrust(float, Vector3)`：设置推力目标；喷口方向由模型层级负责。
+- `LateUpdate()` / `OnDisable()`：平滑发射量，并在停机、失电、禁用时停发。
+
 
 #### `Assets/Scripts/Thrusters/UniversalThruster.cs`
 
@@ -1010,7 +1002,16 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - **已通过构建确认**：`dotnet build HY-Sandbox.sln --no-restore` 通过（0 错误；仅有既存 `ProfilerCaptureAnalysis.WriteCounters` 过时 API 警告）。
 - **尚未验证**：Unity 编辑器导入、Inspector 序列化、Play Mode 交互、运行时日志和性能表现。
 
+
 ## 10. 变更日志
+
+### 2026-09-21 Block 模型与素材 VFX 集成
+
+- **范围与结果**：完成 16 个功能 Prefab 的 SpaceKit/Temp 适配，保留 4 个基础块与 Connector；替换内容完全解包，补齐被忽略目录的依赖。修复炮塔 aimPivot/Muzzle、全向喷头轴、Bot home/Outside/工具端、初始停靠冷却问题；发电机/维修舱增加状态灯。
+- **粒子**：12 个可编辑适配效果，替代运行时程序化 ParticleSystem；多喷口按实际模型端环定位，炮口闪光/命中、电弧维修、爆炸烟尘与建造反馈接入资产库；选中/Ghost 保留特效材质。
+- **验证**：Unity 6000.3.11f1 导入编译；全部 44 个 Block/Temp/适配 VFX 重载与引用/Shader/解包检查；19 个 Block 数据与连接掩码前后无差异。独立 Play Mode 探针 20 项通过，覆盖供电、旋转推力、炮塔伤害/闪光、灯光、Bot 工具端/离舱修复归位，以及瞬时效果/烟迹释放，结果见 PlayModeValidation.json。URP 联系表与喷口特写已渲染检查。`dotnet build HY-Sandbox.sln --no-restore --nologo`：0 错误、4 个既存警告；`git diff --check` 通过。
+- **未验证**：复杂移动母舰返航、真实玩家长时间操作及大型蓝图并发性能；未将隔离探针冒充完整实机压力测试。
+
 
 ### 2026-09-21
 

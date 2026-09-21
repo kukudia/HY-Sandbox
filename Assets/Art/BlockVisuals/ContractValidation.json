@@ -1,0 +1,348 @@
+{
+  "baseline": "6f09835",
+  "blocks": [
+    {
+      "prefab": "Assets/Resources/Blocks/1x1x1.prefab",
+      "preservedFields": [
+        "x",
+        "y",
+        "z",
+        "density",
+        "mass",
+        "canSpawnConnector",
+        "canRotate",
+        "canBeDeleted",
+        "canExplode",
+        "connectors",
+        "uniqueId"
+      ],
+      "connectors": 6,
+      "enabledConnectors": 6
+    },
+    {
+      "prefab": "Assets/Resources/Blocks/2x1x1.prefab",
+      "preservedFields": [
+        "x",
+        "y",
+        "z",
+        "density",
+        "mass",
+        "canSpawnConnector",
+        "canRotate",
+        "canBeDeleted",
+        "canExplode",
+        "connectors",
+        "uniqueId"
+      ],
+      "connectors": 10,
+      "enabledConnectors": 10
+    },
+    {
+      "prefab": "Assets/Resources/Blocks/2x2x1.prefab",
+      "preservedFields": [
+        "x",
+        "y",
+        "z",
+        "density",
+        "mass",
+        "canSpawnConnector",
+        "canRotate",
+        "canBeDeleted",
+        "canExplode",
+        "connectors",
+        "uniqueId"
+      ],
+      "connectors": 16,
+      "enabledConnectors": 16
+    },
+    {
+      "prefab": "Assets/Resources/Blocks/2x2x2.prefab",
+      "preservedFields": [
+        "x",
+        "y",
+        "z",
+        "density",
+        "mass",
+        "canSpawnConnector",
+        "canRotate",
+        "canBeDeleted",
+        "canExplode",
+        "connectors",
+        "uniqueId"
+      ],
+      "connectors": 24,
+      "enabledConnectors": 24
+    },
+    {
+      "prefab": "Assets/Resources/Blocks/Cockpit.prefab",
+      "preservedFields": [
+        "x",
+        "y",
+        "z",
+        "density",
+        "mass",
+        "canSpawnConnector",
+        "canRotate",
+        "canBeDeleted",
+        "canExplode",
+        "connectors",
+        "uniqueId"
+      ],
+      "connectors": 24,
+      "enabledConnectors": 24
+    },
+    {
+      "prefab": "Assets/Resources/Blocks/Door.prefab",
+      "preservedFields": [
+        "x",
+        "y",
+        "z",
+        "density",
+        "mass",
+        "canSpawnConnector",
+        "canRotate",
+        "canBeDeleted",
+        "canExplode",
+        "connectors",
+        "uniqueId"
+      ],
+      "connectors": 10,
+      "enabledConnectors": 10
+    },
+    {
+      "prefab": "Assets/Resources/Blocks/HoverFlightController.prefab",
+      "preservedFields": [
+        "x",
+        "y",
+        "z",
+        "density",
+        "mass",
+        "canSpawnConnector",
+        "canRotate",
+        "canBeDeleted",
+        "canExplode",
+        "connectors",
+        "uniqueId"
+      ],
+      "connectors": 6,
+      "enabledConnectors": 6
+    },
+    {
+      "prefab": "Assets/Resources/Blocks/HoverThruster.prefab",
+      "preservedFields": [
+        "x",
+        "y",
+        "z",
+        "density",
+        "mass",
+        "canSpawnConnector",
+        "canRotate",
+        "canBeDeleted",
+        "canExplode",
+        "connectors",
+        "uniqueId"
+      ],
+      "connectors": 6,
+      "enabledConnectors": 1
+    },
+    {
+      "prefab": "Assets/Resources/Blocks/HoverThrusterBig.prefab",
+      "preservedFields": [
+        "x",
+        "y",
+        "z",
+        "density",
+        "mass",
+        "canSpawnConnector",
+        "canRotate",
+        "canBeDeleted",
+        "canExplode",
+        "connectors",
+        "uniqueId"
+      ],
+      "connectors": 24,
+      "enabledConnectors": 24
+    },
+    {
+      "prefab": "Assets/Resources/Blocks/MainThruster.prefab",
+      "preservedFields": [
+        "x",
+        "y",
+        "z",
+        "density",
+        "mass",
+        "canSpawnConnector",
+        "canRotate",
+        "canBeDeleted",
+        "canExplode",
+        "connectors",
+        "uniqueId"
+      ],
+      "connectors": 6,
+      "enabledConnectors": 6
+    },
+    {
+      "prefab": "Assets/Resources/Blocks/MainThrusterBig.prefab",
+      "preservedFields": [
+        "x",
+        "y",
+        "z",
+        "density",
+        "mass",
+        "canSpawnConnector",
+        "canRotate",
+        "canBeDeleted",
+        "canExplode",
+        "connectors",
+        "uniqueId"
+      ],
+      "connectors": 24,
+      "enabledConnectors": 16
+    },
+    {
+      "prefab": "Assets/Resources/Blocks/PowerGeneratingUnit.prefab",
+      "preservedFields": [
+        "x",
+        "y",
+        "z",
+        "density",
+        "mass",
+        "canSpawnConnector",
+        "canRotate",
+        "canBeDeleted",
+        "canExplode",
+        "connectors",
+        "uniqueId"
+      ],
+      "connectors": 24,
+      "enabledConnectors": 24
+    },
+    {
+      "prefab": "Assets/Resources/Blocks/PowerTransmissionDevice.prefab",
+      "preservedFields": [
+        "x",
+        "y",
+        "z",
+        "density",
+        "mass",
+        "canSpawnConnector",
+        "canRotate",
+        "canBeDeleted",
+        "canExplode",
+        "connectors",
+        "uniqueId"
+      ],
+      "connectors": 6,
+      "enabledConnectors": 6
+    },
+    {
+      "prefab": "Assets/Resources/Blocks/Rack.prefab",
+      "preservedFields": [
+        "x",
+        "y",
+        "z",
+        "density",
+        "mass",
+        "canSpawnConnector",
+        "canRotate",
+        "canBeDeleted",
+        "canExplode",
+        "connectors",
+        "uniqueId"
+      ],
+      "connectors": 6,
+      "enabledConnectors": 6
+    },
+    {
+      "prefab": "Assets/Resources/Blocks/RepairBotContianer.prefab",
+      "preservedFields": [
+        "x",
+        "y",
+        "z",
+        "density",
+        "mass",
+        "canSpawnConnector",
+        "canRotate",
+        "canBeDeleted",
+        "canExplode",
+        "connectors",
+        "uniqueId"
+      ],
+      "connectors": 6,
+      "enabledConnectors": 1
+    },
+    {
+      "prefab": "Assets/Resources/Blocks/Stairs.prefab",
+      "preservedFields": [
+        "x",
+        "y",
+        "z",
+        "density",
+        "mass",
+        "canSpawnConnector",
+        "canRotate",
+        "canBeDeleted",
+        "canExplode",
+        "connectors",
+        "uniqueId"
+      ],
+      "connectors": 6,
+      "enabledConnectors": 6
+    },
+    {
+      "prefab": "Assets/Resources/Blocks/Turret.prefab",
+      "preservedFields": [
+        "x",
+        "y",
+        "z",
+        "density",
+        "mass",
+        "canSpawnConnector",
+        "canRotate",
+        "canBeDeleted",
+        "canExplode",
+        "connectors",
+        "uniqueId"
+      ],
+      "connectors": 6,
+      "enabledConnectors": 1
+    },
+    {
+      "prefab": "Assets/Resources/Blocks/UniversalThruster.prefab",
+      "preservedFields": [
+        "x",
+        "y",
+        "z",
+        "density",
+        "mass",
+        "canSpawnConnector",
+        "canRotate",
+        "canBeDeleted",
+        "canExplode",
+        "connectors",
+        "uniqueId"
+      ],
+      "connectors": 6,
+      "enabledConnectors": 2
+    },
+    {
+      "prefab": "Assets/Resources/Blocks/UniversalThrusterBig.prefab",
+      "preservedFields": [
+        "x",
+        "y",
+        "z",
+        "density",
+        "mass",
+        "canSpawnConnector",
+        "canRotate",
+        "canBeDeleted",
+        "canExplode",
+        "connectors",
+        "uniqueId"
+      ],
+      "connectors": 24,
+      "enabledConnectors": 24
+    }
+  ],
+  "errors": []
+}

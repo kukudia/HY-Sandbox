@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -288,6 +288,7 @@ public class PlayManager : MonoBehaviour
 
             foreach (Renderer renderer in renderers)
             {
+                if (!(renderer is MeshRenderer) && !(renderer is SkinnedMeshRenderer)) continue;
                 Material[] originalMaterials = renderer.sharedMaterials;
                 _selectedMaterials[renderer] = originalMaterials;
                 var highlightedMaterials = new Material[originalMaterials.Length];

@@ -1,0 +1,26 @@
+{
+  "unity": "6000.3.11f1",
+  "passed": [
+    "Bot starts docked, kinematic, collisions off",
+    "Turret raycast applies damage",
+    "Turret muzzle follows active barrel",
+    "Authored muzzle flash plays on firing",
+    "Generator and repair bay lights illuminate",
+    "Main thrust moves rotated unit along world X",
+    "Universal head rotates while base stays fixed",
+    "All propulsion outlets emit",
+    "MainThrusterBig(Clone) nozzle axes oppose force",
+    "UniversalThruster(Clone) nozzle axes oppose force",
+    "HoverThruster(Clone) nozzle axes oppose force",
+    "Disabled thruster stops and clears plume",
+    "All seven event effects instantiate",
+    "Bot undocks with dynamic body",
+    "Bot repairs same-unit damaged block",
+    "Repair beam starts at model tool socket",
+    "Bot returns to authored home",
+    "Docked bot stops effects",
+    "Event effects release after playback",
+    "Detached smoke releases its controller"
+  ],
+  "errors": []
+}

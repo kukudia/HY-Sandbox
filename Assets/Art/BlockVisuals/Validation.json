@@ -1,0 +1,402 @@
+{
+  "unity": "6000.3.11f1",
+  "issues": [],
+  "prefabs": [
+    {
+      "path": "Assets/Resources/Blocks/1x1x1.prefab",
+      "connectors": 6,
+      "enabledConnectors": 6,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 12
+    },
+    {
+      "path": "Assets/Resources/Blocks/2x1x1.prefab",
+      "connectors": 10,
+      "enabledConnectors": 10,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 12
+    },
+    {
+      "path": "Assets/Resources/Blocks/2x2x1.prefab",
+      "connectors": 16,
+      "enabledConnectors": 16,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 12
+    },
+    {
+      "path": "Assets/Resources/Blocks/2x2x2.prefab",
+      "connectors": 24,
+      "enabledConnectors": 24,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 12
+    },
+    {
+      "path": "Assets/Resources/Blocks/Bot.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 192,
+      "triangles": 3166
+    },
+    {
+      "path": "Assets/Resources/Blocks/Cockpit.prefab",
+      "connectors": 24,
+      "enabledConnectors": 24,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 388
+    },
+    {
+      "path": "Assets/Resources/Blocks/Connector.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 0,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 1224
+    },
+    {
+      "path": "Assets/Resources/Blocks/Door.prefab",
+      "connectors": 10,
+      "enabledConnectors": 10,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 3096
+    },
+    {
+      "path": "Assets/Resources/Blocks/HoverFlightController.prefab",
+      "connectors": 6,
+      "enabledConnectors": 6,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 160
+    },
+    {
+      "path": "Assets/Resources/Blocks/HoverThruster.prefab",
+      "connectors": 6,
+      "enabledConnectors": 1,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 72,
+      "triangles": 674
+    },
+    {
+      "path": "Assets/Resources/Blocks/HoverThrusterBig.prefab",
+      "connectors": 24,
+      "enabledConnectors": 24,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 72,
+      "triangles": 674
+    },
+    {
+      "path": "Assets/Resources/Blocks/MainThruster.prefab",
+      "connectors": 6,
+      "enabledConnectors": 6,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 144,
+      "triangles": 1416
+    },
+    {
+      "path": "Assets/Resources/Blocks/MainThrusterBig.prefab",
+      "connectors": 24,
+      "enabledConnectors": 16,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 288,
+      "triangles": 2832
+    },
+    {
+      "path": "Assets/Resources/Blocks/PowerGeneratingUnit.prefab",
+      "connectors": 24,
+      "enabledConnectors": 24,
+      "colliders": 1,
+      "lights": 2,
+      "particles": 0,
+      "triangles": 1088
+    },
+    {
+      "path": "Assets/Resources/Blocks/PowerTransmissionDevice.prefab",
+      "connectors": 6,
+      "enabledConnectors": 6,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 276
+    },
+    {
+      "path": "Assets/Resources/Blocks/Rack.prefab",
+      "connectors": 6,
+      "enabledConnectors": 6,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 1700
+    },
+    {
+      "path": "Assets/Resources/Blocks/RepairBotContianer.prefab",
+      "connectors": 6,
+      "enabledConnectors": 1,
+      "colliders": 2,
+      "lights": 2,
+      "particles": 192,
+      "triangles": 3622
+    },
+    {
+      "path": "Assets/Resources/Blocks/Stairs.prefab",
+      "connectors": 6,
+      "enabledConnectors": 6,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 776
+    },
+    {
+      "path": "Assets/Resources/Blocks/Turret.prefab",
+      "connectors": 6,
+      "enabledConnectors": 1,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 48,
+      "triangles": 2300
+    },
+    {
+      "path": "Assets/Resources/Blocks/UniversalThruster.prefab",
+      "connectors": 6,
+      "enabledConnectors": 2,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 144,
+      "triangles": 2417
+    },
+    {
+      "path": "Assets/Resources/Blocks/UniversalThrusterBig.prefab",
+      "connectors": 24,
+      "enabledConnectors": 24,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 144,
+      "triangles": 2417
+    },
+    {
+      "path": "Assets/Art/Temp/SM_Prop_AirVent_Large_01.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 674
+    },
+    {
+      "path": "Assets/Art/Temp/SM_Prop_Crate_02.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 332
+    },
+    {
+      "path": "Assets/Art/Temp/SM_Prop_Crate_Ammo_01.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 352
+    },
+    {
+      "path": "Assets/Art/Temp/SM_Prop_Crate_Ammo_02.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 376
+    },
+    {
+      "path": "Assets/Art/Temp/SM_Prop_Crate_health_01.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 352
+    },
+    {
+      "path": "Assets/Art/Temp/SM_Prop_Crate_health_02.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 376
+    },
+    {
+      "path": "Assets/Art/Temp/SM_Prop_Crate_Shield_01.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 352
+    },
+    {
+      "path": "Assets/Art/Temp/SM_Prop_Crate_Shield_02.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 376
+    },
+    {
+      "path": "Assets/Art/Temp/SM_Prop_Crate_Wide_01.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 1188
+    },
+    {
+      "path": "Assets/Art/Temp/SM_Prop_CryoBed_01.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 1,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 2256
+    },
+    {
+      "path": "Assets/Art/Temp/SM_Prop_Turret_Base_Double_010.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 2,
+      "lights": 0,
+      "particles": 0,
+      "triangles": 2417
+    },
+    {
+      "path": "Assets/Art/BlockVisuals/VFX/BotFlight.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 0,
+      "lights": 0,
+      "particles": 72,
+      "triangles": 0
+    },
+    {
+      "path": "Assets/Art/BlockVisuals/VFX/BreakBurst.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 0,
+      "lights": 0,
+      "particles": 320,
+      "triangles": 0
+    },
+    {
+      "path": "Assets/Art/BlockVisuals/VFX/BuildBurst.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 0,
+      "lights": 0,
+      "particles": 48,
+      "triangles": 0
+    },
+    {
+      "path": "Assets/Art/BlockVisuals/VFX/DetachedSmoke.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 0,
+      "lights": 0,
+      "particles": 80,
+      "triangles": 0
+    },
+    {
+      "path": "Assets/Art/BlockVisuals/VFX/Explosion.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 0,
+      "lights": 0,
+      "particles": 320,
+      "triangles": 0
+    },
+    {
+      "path": "Assets/Art/BlockVisuals/VFX/HoverJet.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 0,
+      "lights": 0,
+      "particles": 72,
+      "triangles": 0
+    },
+    {
+      "path": "Assets/Art/BlockVisuals/VFX/ImpactBurst.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 0,
+      "lights": 0,
+      "particles": 48,
+      "triangles": 0
+    },
+    {
+      "path": "Assets/Art/BlockVisuals/VFX/MuzzleFlash.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 0,
+      "lights": 0,
+      "particles": 48,
+      "triangles": 0
+    },
+    {
+      "path": "Assets/Art/BlockVisuals/VFX/RepairContact.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 0,
+      "lights": 0,
+      "particles": 48,
+      "triangles": 0
+    },
+    {
+      "path": "Assets/Art/BlockVisuals/VFX/RepairPulse.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 0,
+      "lights": 0,
+      "particles": 48,
+      "triangles": 0
+    },
+    {
+      "path": "Assets/Art/BlockVisuals/VFX/SmokeBurst.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 0,
+      "lights": 0,
+      "particles": 80,
+      "triangles": 0
+    },
+    {
+      "path": "Assets/Art/BlockVisuals/VFX/ThrusterJet.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 0,
+      "lights": 0,
+      "particles": 72,
+      "triangles": 0
+    }
+  ]
+}

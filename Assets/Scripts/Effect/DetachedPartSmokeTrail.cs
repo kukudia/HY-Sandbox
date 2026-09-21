@@ -15,7 +15,7 @@ public class DetachedPartSmokeTrail : MonoBehaviour
 
     private Rigidbody targetBody;
     private Transform emissionRoot;
-    private ParticleSystem smokeParticles;
+    private AssetParticleEffect _smokeEffect;
     private TrailRenderer emberTrail;
     private float intensity = 1f;
     private float elapsed;
@@ -51,13 +51,16 @@ public class DetachedPartSmokeTrail : MonoBehaviour
         elapsed = 0f;
         stopping = false;
 
-        emissionRoot = new GameObject("Detached Part Smoke VFX").transform;
-        emissionRoot.SetParent(transform, false);
+        BlockVfxLibrary library = BlockVfxLibrary.Instance;
+        if (library == null || library.DetachedSmoke == null)
+        {
+            Destroy(this);
+            return;
+        }
+        _smokeEffect = Instantiate(library.DetachedSmoke, transform);
+        emissionRoot = _smokeEffect.transform;
         emissionRoot.position = worldAnchor;
-
-        smokeParticles = emissionRoot.gameObject.AddComponent<ParticleSystem>();
-        smokeParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-        ConfigureSmoke(smokeParticles);
+        _smokeEffect.SetIntensity(0f);
 
         GameObject emberObject = new GameObject("Detached Part Ember Trail");
         emberObject.transform.SetParent(emissionRoot, false);
@@ -75,78 +78,6 @@ public class DetachedPartSmokeTrail : MonoBehaviour
         {
             emissionRoot.position = worldAnchor;
         }
-    }
-
-    private void ConfigureSmoke(ParticleSystem particles)
-    {
-        ParticleSystem.MainModule main = particles.main;
-        main.loop = true;
-        main.playOnAwake = false;
-        main.simulationSpace = ParticleSystemSimulationSpace.World;
-        main.startLifetime = new ParticleSystem.MinMaxCurve(0.9f, 2.1f);
-        main.startSpeed = new ParticleSystem.MinMaxCurve(0.04f, 0.32f);
-        main.startSize = new ParticleSystem.MinMaxCurve(0.14f, 0.42f);
-        main.startRotation = new ParticleSystem.MinMaxCurve(-Mathf.PI, Mathf.PI);
-        main.startColor = new ParticleSystem.MinMaxGradient(
-            new Color(0.24f, 0.27f, 0.3f, 0.72f),
-            new Color(0.07f, 0.08f, 0.1f, 0.5f));
-        main.maxParticles = 96;
-
-        ParticleSystem.EmissionModule emission = particles.emission;
-        emission.rateOverTime = 0f;
-
-        ParticleSystem.ShapeModule shape = particles.shape;
-        shape.enabled = true;
-        shape.shapeType = ParticleSystemShapeType.Sphere;
-        shape.radius = 0.08f;
-
-        ParticleSystem.VelocityOverLifetimeModule velocity = particles.velocityOverLifetime;
-        velocity.enabled = true;
-        velocity.space = ParticleSystemSimulationSpace.World;
-        velocity.x = new ParticleSystem.MinMaxCurve(0f, 0f);
-        velocity.y = new ParticleSystem.MinMaxCurve(0.22f, 0.7f);
-        velocity.z = new ParticleSystem.MinMaxCurve(0f, 0f);
-
-        ParticleSystem.NoiseModule noise = particles.noise;
-        noise.enabled = true;
-        noise.strength = new ParticleSystem.MinMaxCurve(0.08f, 0.24f);
-        noise.frequency = 0.65f;
-        noise.scrollSpeed = 0.28f;
-
-        ParticleSystem.ColorOverLifetimeModule colorOverLifetime = particles.colorOverLifetime;
-        colorOverLifetime.enabled = true;
-        Gradient gradient = new Gradient();
-        gradient.SetKeys(
-            new[]
-            {
-                new GradientColorKey(new Color(0.3f, 0.32f, 0.34f), 0f),
-                new GradientColorKey(new Color(0.13f, 0.15f, 0.18f), 0.55f),
-                new GradientColorKey(new Color(0.04f, 0.05f, 0.065f), 1f)
-            },
-            new[]
-            {
-                new GradientAlphaKey(0f, 0f),
-                new GradientAlphaKey(0.62f, 0.12f),
-                new GradientAlphaKey(0.35f, 0.68f),
-                new GradientAlphaKey(0f, 1f)
-            });
-        colorOverLifetime.color = new ParticleSystem.MinMaxGradient(gradient);
-
-        ParticleSystem.SizeOverLifetimeModule sizeOverLifetime = particles.sizeOverLifetime;
-        sizeOverLifetime.enabled = true;
-        sizeOverLifetime.size = new ParticleSystem.MinMaxCurve(
-            1f,
-            new AnimationCurve(
-                new Keyframe(0f, 0.45f),
-                new Keyframe(0.35f, 1f),
-                new Keyframe(1f, 1.55f)));
-
-        ParticleSystemRenderer renderer = particles.GetComponent<ParticleSystemRenderer>();
-        renderer.sharedMaterial = VisualEffectsManager.GetSharedParticleMaterial();
-        renderer.renderMode = ParticleSystemRenderMode.Billboard;
-        renderer.sortingFudge = 1.5f;
-        renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-        renderer.receiveShadows = false;
     }
 
     private static void ConfigureEmberTrail(TrailRenderer trail)
@@ -171,7 +102,7 @@ public class DetachedPartSmokeTrail : MonoBehaviour
 
     private void Update()
     {
-        if (stopping || targetBody == null)
+        if (stopping || targetBody == null || _smokeEffect == null)
         {
             StopAndRelease();
             return;
@@ -183,18 +114,8 @@ public class DetachedPartSmokeTrail : MonoBehaviour
         float lifetimeFade = 1f - Mathf.Clamp01(elapsed / Mathf.Max(0.1f, effectLifetime));
         float emissionRatio = speedRatio * lifetimeFade * intensity;
 
-        ParticleSystem.EmissionModule emission = smokeParticles.emission;
-        emission.rateOverTime = maximumEmissionRate * emissionRatio;
-
         bool shouldEmit = emissionRatio > 0.025f && !targetBody.isKinematic;
-        if (shouldEmit && !smokeParticles.isPlaying)
-        {
-            smokeParticles.Play();
-        }
-        else if (!shouldEmit && smokeParticles.isPlaying)
-        {
-            smokeParticles.Stop(false, ParticleSystemStopBehavior.StopEmitting);
-        }
+        if (_smokeEffect != null) _smokeEffect.SetIntensity(shouldEmit ? emissionRatio * maximumEmissionRate / 26f : 0f);
 
         emberTrail.emitting = shouldEmit && speedRatio > 0.35f;
         emberTrail.widthMultiplier = Mathf.Lerp(0.025f, 0.075f, Mathf.Clamp01(emissionRatio));
@@ -210,10 +131,7 @@ public class DetachedPartSmokeTrail : MonoBehaviour
         if (stopping) return;
 
         stopping = true;
-        if (smokeParticles != null)
-        {
-            smokeParticles.Stop(false, ParticleSystemStopBehavior.StopEmitting);
-        }
+        if (_smokeEffect != null) _smokeEffect.SetIntensity(0f);
         if (emberTrail != null)
         {
             emberTrail.emitting = false;

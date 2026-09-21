@@ -1,0 +1,116 @@
+{
+  "assets": [
+    {
+      "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_AirVent_Large_01_Convex.asset",
+      "destination": "Assets/Art/BlockVisuals/Dependencies/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_AirVent_Large_01_Convex.asset",
+      "sourceSha256": "c1c43bba089df1f880a3dd2e438cac01fa33c5d4394cd47596fddd7e8c754d59",
+      "sha256": "c1c43bba089df1f880a3dd2e438cac01fa33c5d4394cd47596fddd7e8c754d59",
+      "guid": "6cc1e77990b9b2c43921bb31434aea87"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Crate_Wide_01_Convex.asset",
+      "destination": "Assets/Art/BlockVisuals/Dependencies/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Crate_Wide_01_Convex.asset",
+      "sourceSha256": "7044bca490979d57c55b77b0f1ba730f4a636b0fa0715b566183d4248b0d6665",
+      "sha256": "7044bca490979d57c55b77b0f1ba730f4a636b0fa0715b566183d4248b0d6665",
+      "guid": "2220639e96d942d47b75b921de2d0680"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Materials/PolygonScifiSpace_Material_Glass.mat",
+      "destination": "Assets/Art/BlockVisuals/Dependencies/PolygonSciFiSpace/Materials/PolygonScifiSpace_Material_Glass.mat",
+      "sourceSha256": "7f3b0e5b952f41d5120b15c54394da7653a85d4d5129766780ba8b13ac11d3ea",
+      "sha256": "d308401c0b4b67e816cbe557073304b2c25f83c73dc4f4c327c6e97267248489",
+      "guid": "ca1013031ea75e54fa5c5055922b1512"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Crate_Ammo_02_Convex.asset",
+      "destination": "Assets/Art/BlockVisuals/Dependencies/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Crate_Ammo_02_Convex.asset",
+      "sourceSha256": "85b6378006c0961a9cd888ca52059d6452d95e5a79c8fecebf55b95d6a6ded61",
+      "sha256": "85b6378006c0961a9cd888ca52059d6452d95e5a79c8fecebf55b95d6a6ded61",
+      "guid": "79a010fa1503aa149ad1b74790a8e195"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_CryoBed_01.fbx",
+      "destination": "Assets/Art/BlockVisuals/Dependencies/PolygonSciFiSpace/Models/SM_Prop_CryoBed_01.fbx",
+      "sourceSha256": "0b610032a0778f29b8832dc8c7c4db308f07107a8e92c5847579a2531094361e",
+      "sha256": "0b610032a0778f29b8832dc8c7c4db308f07107a8e92c5847579a2531094361e",
+      "guid": "f1651f3a44ce943489248d3394d812ee"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Crate_Ammo_02.fbx",
+      "destination": "Assets/Art/BlockVisuals/Dependencies/PolygonSciFiSpace/Models/SM_Prop_Crate_Ammo_02.fbx",
+      "sourceSha256": "767d4dc3c4103fc753f8ac76b792ba745be05437ae1a05cd88c0cd9ee7df14ee",
+      "sha256": "767d4dc3c4103fc753f8ac76b792ba745be05437ae1a05cd88c0cd9ee7df14ee",
+      "guid": "eb0fc0ea5f77992409f6747fb1bd0e9e"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_CryoBed_01_Convex.asset",
+      "destination": "Assets/Art/BlockVisuals/Dependencies/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_CryoBed_01_Convex.asset",
+      "sourceSha256": "ea4aef2a586fc3435d3087b5a98d84d013dcc8b1d5544479408dd2ac8c649e70",
+      "sha256": "ea4aef2a586fc3435d3087b5a98d84d013dcc8b1d5544479408dd2ac8c649e70",
+      "guid": "d86799379c186b746a07d223d9631ebd"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Turret_Base_Double_010.fbx",
+      "destination": "Assets/Art/BlockVisuals/Dependencies/PolygonSciFiSpace/Models/SM_Prop_Turret_Base_Double_010.fbx",
+      "sourceSha256": "f9d9cefa696cb56e216558a30258d5280f9940e75d8beef09da4cd9441e05031",
+      "sha256": "f9d9cefa696cb56e216558a30258d5280f9940e75d8beef09da4cd9441e05031",
+      "guid": "1417cb65a1313aa4b8445633a75c1e56"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Crate_health_02.fbx",
+      "destination": "Assets/Art/BlockVisuals/Dependencies/PolygonSciFiSpace/Models/SM_Prop_Crate_health_02.fbx",
+      "sourceSha256": "d157ca7202b1ae788f5fea0aa00fd7278d83268139749b2be1daae10e3f068e7",
+      "sha256": "d157ca7202b1ae788f5fea0aa00fd7278d83268139749b2be1daae10e3f068e7",
+      "guid": "308d6a9c57149bf46a4b84ef5049ff7d"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Crate_health_02_Convex.asset",
+      "destination": "Assets/Art/BlockVisuals/Dependencies/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Crate_health_02_Convex.asset",
+      "sourceSha256": "3f0a98f65ff25b5a6fcdaf88a71a03cb9ed91beed47c2a4e5d391d7830081d63",
+      "sha256": "3f0a98f65ff25b5a6fcdaf88a71a03cb9ed91beed47c2a4e5d391d7830081d63",
+      "guid": "0858b8c5cc8433245ac2c136f882fcb8"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_AirVent_Large_01.fbx",
+      "destination": "Assets/Art/BlockVisuals/Dependencies/PolygonSciFiSpace/Models/SM_Prop_AirVent_Large_01.fbx",
+      "sourceSha256": "c6ce0317a9e3d694e28a4e70a636381d296a9f686552ff76ecbea4d0cfdf491b",
+      "sha256": "c6ce0317a9e3d694e28a4e70a636381d296a9f686552ff76ecbea4d0cfdf491b",
+      "guid": "88c1fdc958598b04fbbfdd1875a7f234"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Crate_Wide_01.fbx",
+      "destination": "Assets/Art/BlockVisuals/Dependencies/PolygonSciFiSpace/Models/SM_Prop_Crate_Wide_01.fbx",
+      "sourceSha256": "7819d935580fb807d503d8fd5141f6dcce82991bdb364b04ec1efc2bc4b48bb3",
+      "sha256": "7819d935580fb807d503d8fd5141f6dcce82991bdb364b04ec1efc2bc4b48bb3",
+      "guid": "48e49fb54b04f9b4d90ef0042163ba3c"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Crate_Shield_01.fbx",
+      "destination": "Assets/Art/BlockVisuals/Dependencies/PolygonSciFiSpace/Models/SM_Prop_Crate_Shield_01.fbx",
+      "sourceSha256": "cf15b970532651d2f168af1699996e401217dcca6dcd074bf7e4c0b654d41293",
+      "sha256": "cf15b970532651d2f168af1699996e401217dcca6dcd074bf7e4c0b654d41293",
+      "guid": "edd38bd0003fe354f8012c9407dc1d4f"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Models/SM_Prop_Crate_Shield_02.fbx",
+      "destination": "Assets/Art/BlockVisuals/Dependencies/PolygonSciFiSpace/Models/SM_Prop_Crate_Shield_02.fbx",
+      "sourceSha256": "cdf6d452d6b79d2b7dfec90df2f37a5ef03a5ddef723a46401864958d071a759",
+      "sha256": "cdf6d452d6b79d2b7dfec90df2f37a5ef03a5ddef723a46401864958d071a759",
+      "guid": "9460962ac2660b2428c6528951070b72"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Turret_Base_Double_010_Convex.asset",
+      "destination": "Assets/Art/BlockVisuals/Dependencies/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Turret_Base_Double_010_Convex.asset",
+      "sourceSha256": "cd5d9f675d4db82fb43a03f6847c498e87e103bd5ab70b05210cb1294ce4106a",
+      "sha256": "cd5d9f675d4db82fb43a03f6847c498e87e103bd5ab70b05210cb1294ce4106a",
+      "guid": "5d8cffcdadc8d9045a02dfd083508190"
+    },
+    {
+      "source": "Assets/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Crate_Shield_02_Convex.asset",
+      "destination": "Assets/Art/BlockVisuals/Dependencies/PolygonSciFiSpace/Models/Collision/Convex/SM_Prop_Crate_Shield_02_Convex.asset",
+      "sourceSha256": "632a0974304432bc39ffbbe06370799af3ea79dbeaccf185cc33577e51d2033e",
+      "sha256": "632a0974304432bc39ffbbe06370799af3ea79dbeaccf185cc33577e51d2033e",
+      "guid": "3bb5314c96cc30144aa666fe902a7ee5"
+    }
+  ]
+}

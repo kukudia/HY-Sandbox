@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -378,6 +378,8 @@ public class BuildManager : MonoBehaviour
 
             foreach (Renderer renderer in renderers)
             {
+                // Socket effects keep their authored materials while the solid model is selected.
+                if (!(renderer is MeshRenderer) && !(renderer is SkinnedMeshRenderer)) continue;
                 Material[] originalMaterials = renderer.sharedMaterials;
                 _selectedMaterials[renderer] = originalMaterials;
                 var highlightedMaterials = new Material[originalMaterials.Length];
@@ -738,6 +740,7 @@ public class BuildManager : MonoBehaviour
             Renderer[] renderers = currentGhost.GetComponentsInChildren<Renderer>();
             foreach (Renderer renderer in renderers)
             {
+                if (!(renderer is MeshRenderer) && !(renderer is SkinnedMeshRenderer)) continue;
                 renderer.material = highlightMaterial;
                 if (renderer.material.HasProperty("_Color"))
                     renderer.material.color = isBlocked ? new Color(1, 0, 0, 0.5f) : new Color(0, 1, 0, 0.5f);

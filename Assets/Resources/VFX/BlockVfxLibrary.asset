@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ae0b407f1500714a9b1812195eafec9, type: 3}
+  m_Name: BlockVfxLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::BlockVfxLibrary
+  _bursts:
+  - {fileID: 7761256427141195994, guid: 0081914e662ccfe4d896f5b82450aff0, type: 3}
+  - {fileID: 1495220513006436712, guid: 21836c16fed5fa34aa55fcc0575f50f3, type: 3}
+  - {fileID: 9071623985109174445, guid: 4e96a099ebf741c498a36de4f8908734, type: 3}
+  - {fileID: 2518003313106244750, guid: 47f83c7586fdf394989e62c5e2baa478, type: 3}
+  - {fileID: 8784638916317319554, guid: cfe79660dda36ee4b8b2570ec772ae90, type: 3}
+  - {fileID: 5057437636815087030, guid: 045a9655d99ab8547b48251792657861, type: 3}
+  - {fileID: 86113267810916037, guid: 83d0dee8eb5ead842bcac2445bfc8447, type: 3}
+  _detachedSmoke: {fileID: 4931720626457316845, guid: 198786bf0a0bf644bb1ef7833d5086cd, type: 3}
+  _lineMaterial: {fileID: 2100000, guid: de261f394bd4ffb419dcd63ec6259497, type: 2}

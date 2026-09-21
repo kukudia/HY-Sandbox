@@ -11,6 +11,8 @@ public class TurretWeapon : MonoBehaviour
     public Transform verticalAxis;
     public Transform aimPivot;
     public Transform muzzle;
+    [SerializeField] private AssetParticleEffect _muzzleFlash;
+    private Vector3 _beamEnd;
     public float range = 45f;
     public float damage = 12f;
     public float fireInterval = 0.45f;
@@ -102,7 +104,11 @@ public class TurretWeapon : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (PlayManager.instance == null || !PlayManager.instance.playMode) return;
+        if (PlayManager.instance == null || !PlayManager.instance.playMode)
+        {
+            if (fireBeam != null) fireBeam.SetVisible(false);
+            return;
+        }
 
         if (power == null)
         {
@@ -122,7 +128,11 @@ public class TurretWeapon : MonoBehaviour
             owner = GetComponentInParent<ControlUnit>();
         }
 
-        if (owner == null || !owner.HasValidCockpit) return;
+        if (owner == null || !owner.HasValidCockpit)
+        {
+            if (fireBeam != null) fireBeam.SetVisible(false);
+            return;
+        }
 
         if (Time.time >= nextSearchTime)
         {
@@ -137,12 +147,19 @@ public class TurretWeapon : MonoBehaviour
 
         if (fireBeam != null && Time.time < hideLineTime)
         {
+            fireBeam.SetEndpoints(GetMuzzlePosition(), _beamEnd);
             fireBeam.SetIntensity(Mathf.Clamp01((hideLineTime - Time.time) / 0.085f));
         }
         else if (fireBeam != null)
         {
             fireBeam.SetVisible(false);
         }
+    }
+
+    private void OnDisable()
+    {
+        if (fireBeam != null) fireBeam.SetVisible(false);
+        if (_muzzleFlash != null) _muzzleFlash.SetIntensity(0f);
     }
 
     private UnitFaction GetEffectiveTargetFaction()
@@ -333,6 +350,7 @@ public class TurretWeapon : MonoBehaviour
             if (hitUnit == owner) continue;
 
             end = hit.point;
+            BlockVfxLibrary.Play(BlockVfxLibrary.Effect.Impact, hit.point, Quaternion.LookRotation(hit.normal), 0.6f);
             Durability durability = hit.collider.GetComponentInParent<Durability>();
 
             if (hitUnit != null && hitUnit.HasValidCockpit && hitUnit.faction == faction && durability != null)
@@ -343,6 +361,8 @@ public class TurretWeapon : MonoBehaviour
             break;
         }
 
+        _beamEnd = end;
+        if (_muzzleFlash != null) _muzzleFlash.PlayOnce();
         fireBeam.SetEndpoints(origin, end);
         fireBeam.SetIntensity(1f);
         fireBeam.SetVisible(true);

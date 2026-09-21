@@ -64,9 +64,15 @@
   <ItemGroup>
     <Compile Include="Assets\Editor\AutoBuildTool.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
+    <Compile Include="Assets\Editor\BlockVfxBaker.cs" />
+    <Compile Include="Assets\Editor\BlockArtIntegrator.cs" />
     <Compile Include="Assets\Editor\SpaceKitCurator.cs" />
     <Compile Include="Assets\Editor\ProfilerCaptureAnalysis.cs" />
+    <Compile Include="Assets\Editor\BlockArtPreview.cs" />
+    <Compile Include="Assets\Editor\BlockArtValidation.cs" />
+    <Compile Include="Assets\Editor\BlockArtDependencies.cs" />
     <Compile Include="Assets\Editor\IndustrialArtGenerator.cs" />
+    <Compile Include="Assets\Editor\BlockArtPlayProbe.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

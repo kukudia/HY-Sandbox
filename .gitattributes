@@ -2,3 +2,8 @@
 # Unity emits spaces after empty serialized values; other whitespace checks remain enabled.
 Assets/Art/SpaceKit/**/*.asset whitespace=-blank-at-eol
 Assets/Art/SpaceKit/**/*.mat whitespace=-blank-at-eol
+Assets/Art/BlockVisuals/**/*.prefab whitespace=-blank-at-eol
+Assets/Art/BlockVisuals/**/*.asset whitespace=-blank-at-eol
+Assets/Art/BlockVisuals/**/*.mat whitespace=-blank-at-eol
+Assets/Resources/Blocks/*.prefab whitespace=-blank-at-eol
+Assets/Resources/VFX/*.asset whitespace=-blank-at-eol
