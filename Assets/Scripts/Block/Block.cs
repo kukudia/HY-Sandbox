@@ -11,6 +11,8 @@ public class Block : MonoBehaviour
 
     public int x = 1, y = 1, z = 1;
 
+    public int cost;
+
     public float density = 1;
 
     public float mass;

@@ -8,7 +8,6 @@ public class Info : MonoBehaviour
     [Header("Static")]
     public string blockName;
     public string description;
-    public int cost;
     public List<Status> statuses;
 
     [Header("Dynamic")]
