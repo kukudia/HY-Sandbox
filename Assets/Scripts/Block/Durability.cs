@@ -65,6 +65,7 @@ public class Durability : MonoBehaviour
 
     public void UpdateDurablility(float value)
     {
+        if (!enabled) return;
         currentDurability += value;
 
         if (currentDurability > maxDurability)

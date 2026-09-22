@@ -62,6 +62,7 @@
     <Analyzer Include="D:\git_projects\Unity\HY-Sandbox\Library\PackageCache\com.unity.pipeline@ab05e9cd7f74\Runtime\Analyzers\IlInterpreterAnalyzer.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\InObject\CollectionBot.cs" />
     <Compile Include="Assets\Scripts\Thrusters\HoverFlightController.cs" />
     <Compile Include="Assets\Scripts\InObject\PowerGeneratingUnit.cs" />
     <Compile Include="Assets\Scripts\Manager\BlockGroupManager.cs" />
@@ -80,15 +81,19 @@
     <Compile Include="Assets\Scripts\InObject\Meteor.cs" />
     <Compile Include="Assets\Scripts\Thrusters\MainThruster.cs" />
     <Compile Include="Assets\Scripts\Block\Durability.cs" />
+    <Compile Include="Assets\Scripts\Effect\CargoVisual.cs" />
+    <Compile Include="Assets\Scripts\InObject\Bot.cs" />
     <Compile Include="Assets\Scripts\InObject\ModularUnitValidator.cs" />
     <Compile Include="Assets\Scripts\Effect\AssetParticleEffect.cs" />
     <Compile Include="Assets\Scripts\InObject\UnitFaction.cs" />
     <Compile Include="Assets\Scripts\Manager\VisualEffectsManager.cs" />
     <Compile Include="Assets\Scripts\Actions\ActionManager.cs" />
     <Compile Include="Assets\Scripts\Manager\InputManager.cs" />
+    <Compile Include="Assets\Scripts\InObject\WreckSalvage.cs" />
     <Compile Include="Assets\Scripts\Manager\CoinManager.cs" />
     <Compile Include="Assets\Scripts\Manager\EnemySpawner.cs" />
     <Compile Include="Assets\Scripts\UI\ActionCounterUI.cs" />
+    <Compile Include="Assets\Scripts\Effect\CargoHoldView.cs" />
     <Compile Include="Assets\Scripts\InObject\ControlUnit.cs" />
     <Compile Include="Assets\Scripts\Effect\BlockStatusLight.cs" />
     <Compile Include="Assets\Scripts\InObject\Rack.cs" />
@@ -96,22 +101,26 @@
     <Compile Include="Assets\Scripts\InObject\TurretWeapon.cs" />
     <Compile Include="Assets\Scripts\InObject\EnemyController.cs" />
     <Compile Include="Assets\Scripts\Actions\DeleteBlockAction.cs" />
+    <Compile Include="Assets\Scripts\InObject\CargoHold.cs" />
     <Compile Include="Assets\Scripts\Effect\IndustrialPartMotion.cs" />
     <Compile Include="Assets\Scripts\Manager\PerformanceMonitor.cs" />
     <Compile Include="Assets\Scripts\Effect\BlockVfxLibrary.cs" />
     <Compile Include="Assets\Scripts\Effect\DetachedPartSmokeTrail.cs" />
     <Compile Include="Assets\Scripts\InObject\RotateAxisHandle.cs" />
     <Compile Include="Assets\Scripts\Actions\MoveBlockAction.cs" />
+    <Compile Include="Assets\Scripts\Manager\CargoPersistence.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\InObject\MoveAxisHandle.cs" />
     <Compile Include="Assets\Scripts\UI\GlobalTextStyler.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\Thrusters\HoverThruster.cs" />
+    <Compile Include="Assets\Scripts\Data\SalvageSettings.cs" />
     <Compile Include="Assets\Scripts\Thrusters\Thruster.cs" />
     <Compile Include="Assets\Scripts\Actions\GroupAction.cs" />
     <Compile Include="Assets\Scripts\Manager\SaveManager.cs" />
     <Compile Include="Assets\Scripts\UI\BlueprintUIPanel.cs" />
     <Compile Include="Assets\Scripts\UI\SaveUIPanel.cs" />
+    <Compile Include="Assets\Scripts\InObject\LootDrop.cs" />
     <Compile Include="Assets\Scripts\Block\Status.cs" />
     <Compile Include="Assets\Scripts\Actions\IBlockAction.cs" />
     <Compile Include="Assets\Scripts\InObject\Cockpit.cs" />
@@ -121,6 +130,7 @@
     <Compile Include="Assets\Scripts\Player\PlayerHealth.cs" />
     <Compile Include="Assets\Scripts\Player\Player.cs" />
     <Compile Include="Assets\Layer Lab\Scripts\PanelView.cs" />
+    <Compile Include="Assets\Scripts\Data\CargoItem.cs" />
     <Compile Include="Assets\Scripts\UI\MainUIButtons.cs" />
     <Compile Include="Assets\Scripts\Manager\MeteorShower.cs" />
     <Compile Include="Assets\Scripts\InObject\RepairBot.cs" />

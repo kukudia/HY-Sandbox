@@ -977,6 +977,8 @@ public class BuildManager : MonoBehaviour
             {
                 GameObject obj = Instantiate(prefab, new Vector3(data.posX, data.posY, data.posZ), new Quaternion(data.rotX, data.rotY, data.rotZ, data.rotW));
                 obj.transform.SetParent(loadParent);
+                CargoHold restoredHold = obj.GetComponent<CargoHold>();
+                if (restoredHold != null && data.cargo != null) restoredHold.RestoreContents(data.cargo);
                 Block block = obj.GetComponent<Block>();
                 if (block != null)
                 {

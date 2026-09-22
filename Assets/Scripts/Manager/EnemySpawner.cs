@@ -163,6 +163,8 @@ public class EnemySpawner : MonoBehaviour
             GameObject blockObject = Instantiate(prefab, unitObject.transform);
             ApplyBlueprintLocalTransform(blockObject.transform, localPosition, localRotation);
 
+            CargoHold restoredHold = blockObject.GetComponent<CargoHold>();
+            if (restoredHold != null && data.cargo != null) restoredHold.RestoreContents(data.cargo);
             Block block = blockObject.GetComponent<Block>();
             if (block != null)
             {

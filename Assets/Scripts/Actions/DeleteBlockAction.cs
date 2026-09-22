@@ -9,6 +9,7 @@ public class DeleteBlockAction : IBlockAction
     private Vector3 pos;
     private Quaternion rot;
     private int x, y, z;
+    private System.Collections.Generic.List<CargoItem> _cargo;
 
     public DeleteBlockAction(Block deletedBlock)
     {
@@ -18,6 +19,7 @@ public class DeleteBlockAction : IBlockAction
         x = deletedBlock.x;
         y = deletedBlock.y;
         z = deletedBlock.z;
+        _cargo = deletedBlock.GetComponent<CargoHold>()?.CaptureContents();
 
         resourcePath = BuildManager.ConvertToResourcesPath(deletedBlock.resourcePath);
     }
@@ -36,6 +38,7 @@ public class DeleteBlockAction : IBlockAction
                 deletedBlock.y = y;
                 deletedBlock.z = z;
                 deletedBlock.resourcePath = resourcePath;
+                if (_cargo != null) obj.GetComponent<CargoHold>()?.RestoreContents(_cargo);
                 BuildManager.instance.ApplyBlockBuildDefaults(deletedBlock);
                 BuildManager.instance.SaveBlock(deletedBlock);
                 VisualEffectsManager.TryPlayBlockPlaced(deletedBlock);

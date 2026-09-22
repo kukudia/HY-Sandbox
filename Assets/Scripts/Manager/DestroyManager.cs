@@ -33,8 +33,11 @@ public class DestroyManager : MonoBehaviour
 
     public void DestroyGameObject(GameObject obj)
     {
+        if (obj == null) return;
         Debug.Log($"{obj.name} durability reached 0, destroying object.");
-
+        Durability health = obj.GetComponent<Durability>();
+        if (health != null && !health.enabled) return;
+        if (health != null) health.enabled = false;
         Cockpit cockpit = obj.GetComponent<Cockpit>();
         ControlUnit unit = obj.GetComponentInParent<ControlUnit>();
         if (unit != null)
@@ -65,9 +68,20 @@ public class DestroyManager : MonoBehaviour
             return;
         }
 
-        if (block.canExplode)
+        CargoHold destroyedHold = obj.GetComponent<CargoHold>();
+        foreach (Bot bot in obj.GetComponentsInChildren<Bot>(true)) bot.PrepareForHomeDestruction();
+        if (destroyedHold != null) destroyedHold.ReleaseContents(ownerFaction);
+
+        if (block != null && block.canExplode)
         {
             ExplodeBlock(block);
+        }
+        else if (block != null)
+        {
+            // Deferred Destroy must not leave a destroyed non-explosive hold in the next connectivity graph.
+            block.DisConnectAllConnectors();
+            block.transform.SetParent(null, true);
+            if (unit != null) PlayManager.instance.RefreshGroup(unit);
         }
 
         if (cockpit != null)
@@ -87,10 +101,6 @@ public class DestroyManager : MonoBehaviour
 
         Destroy(obj);
 
-        if (unit != null)
-        {
-            PlayManager.instance.RefreshGroup(unit);
-        }
     }
 
     public void ExplodeBlock(Block block)
@@ -332,14 +342,14 @@ public class DestroyManager : MonoBehaviour
         Transform reference,
         float maxDistanceSqr)
     {
-        yield return new WaitForSeconds(_unitCleanupDelay);
+        yield return new WaitForSeconds(WreckSalvage.Settings != null ? WreckSalvage.Settings.cleanupDelay : _unitCleanupDelay);
 
         if (unit != null
             && reference != null
             && unit.runtimeUnitId == ownerUnitId
             && (unit.transform.position - reference.position).sqrMagnitude > maxDistanceSqr)
         {
-            PlayDisappearEffect(unit.gameObject);
+            WreckSalvage.ConvertGroup(unit);
             Destroy(unit.gameObject);
         }
 
@@ -348,13 +358,13 @@ public class DestroyManager : MonoBehaviour
 
     private IEnumerator CleanupGroupAfterDelay(ControlUnit unit, string ownerUnitId)
     {
-        yield return new WaitForSeconds(_unitCleanupDelay);
+        yield return new WaitForSeconds(WreckSalvage.Settings != null ? WreckSalvage.Settings.cleanupDelay : _unitCleanupDelay);
 
         if (unit != null
             && unit.runtimeUnitId == ownerUnitId
             && !unit.HasAnyCockpit)
         {
-            PlayDisappearEffect(unit.gameObject);
+            WreckSalvage.ConvertGroup(unit);
             Destroy(unit.gameObject);
         }
 
@@ -363,14 +373,14 @@ public class DestroyManager : MonoBehaviour
 
     private IEnumerator CleanupUnitAfterDelay(string ownerUnitId, UnitFaction ownerFaction)
     {
-        yield return new WaitForSeconds(_unitCleanupDelay);
+        yield return new WaitForSeconds(WreckSalvage.Settings != null ? WreckSalvage.Settings.cleanupDelay : _unitCleanupDelay);
 
         RuntimeUnitMember[] members = Object.FindObjectsByType<RuntimeUnitMember>(FindObjectsSortMode.None);
         foreach (RuntimeUnitMember member in members)
         {
             if (member == null || member.ownerUnitId != ownerUnitId) continue;
 
-            PlayDisappearEffect(member.gameObject);
+            WreckSalvage.Convert(member.GetComponent<Block>());
             Destroy(member.gameObject);
         }
 
@@ -380,6 +390,14 @@ public class DestroyManager : MonoBehaviour
     private void PlayDisappearEffect(GameObject obj)
     {
         VisualEffectsManager.TryPlayObjectDestroyed(obj);
+    }
+
+    public void EndSalvageSession()
+    {
+        StopAllCoroutines();
+        _scheduledUnitCleanups.Clear();
+        _isRefreshScheduled = false;
+        _destroyedCount = 0;
     }
 
     public void NotifyObjectDestroyed()

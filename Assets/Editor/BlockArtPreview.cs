@@ -10,7 +10,7 @@ using Object = UnityEngine.Object;
 /// <summary>Isolated URP renders; never changes the user's open scene.</summary>
 public static class BlockArtPreview
 {
-    public static void Render(string path, string output, bool effects = false, bool front = false, Vector3? view = null)
+    public static void Render(string path, string output, bool effects = false, bool front = false, Vector3? view = null, Action<GameObject> configure = null)
     {
         var scene = EditorSceneManager.NewPreviewScene();
         var target = new RenderTexture(640, 520, 24);
@@ -19,6 +19,7 @@ public static class BlockArtPreview
             var root = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(path));
             SceneManager.MoveGameObjectToScene(root, scene);
             root.transform.position = Vector3.zero;
+            configure?.Invoke(root);
             foreach (var lod in root.GetComponentsInChildren<LODGroup>(true)) lod.ForceLOD(0);
             foreach (var particle in root.GetComponentsInChildren<ParticleSystem>(true))
             {

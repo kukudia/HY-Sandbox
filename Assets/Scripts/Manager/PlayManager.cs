@@ -329,6 +329,8 @@ public class PlayManager : MonoBehaviour
 
     public void PlayEnd()
     {
+        DestroyManager.Instance.EndSalvageSession();
+        LootDrop.ClearSession();
         List<ControlUnit> controlUnits = allControlUnits.ToList();
         foreach (ControlUnit controlUnit in controlUnits)
         {

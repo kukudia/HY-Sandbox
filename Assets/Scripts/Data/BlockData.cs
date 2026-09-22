@@ -9,6 +9,7 @@ public class BlockData
     public float posX, posY, posZ;
     public float rotX, rotY, rotZ, rotW;
     public string resourcePath;
+    public List<CargoItem> cargo;
 
     public BlockData(Block block)
     {
@@ -34,6 +35,8 @@ public class BlockData
         rotW = snappedRot.w;
 
         resourcePath = block.resourcePath;
+        CargoHold hold = block.GetComponent<CargoHold>();
+        cargo = hold != null ? hold.CaptureContents() : null;
     }
 }
 

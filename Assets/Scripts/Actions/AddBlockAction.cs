@@ -10,6 +10,7 @@ public class CreateBlockAction : IBlockAction
     private int x, y, z;
 
     private GameObject createdObject;
+    private System.Collections.Generic.List<CargoItem> _cargo;
 
     public CreateBlockAction(Block block)
     {
@@ -28,6 +29,7 @@ public class CreateBlockAction : IBlockAction
         if (createdObject != null)
         {
             Block block = createdObject.GetComponent<Block>();
+            _cargo = createdObject.GetComponent<CargoHold>()?.CaptureContents();
             VisualEffectsManager.TryPlayBlockRemoved(block);
             BuildManager.instance.RemoveBlock(block);
             Object.Destroy(createdObject);
@@ -53,6 +55,7 @@ public class CreateBlockAction : IBlockAction
                 block.y = y;
                 block.z = z;
                 block.resourcePath = resourcePath;
+                if (_cargo != null) createdObject.GetComponent<CargoHold>()?.RestoreContents(_cargo);
                 BuildManager.instance.ApplyBlockBuildDefaults(block);
                 BuildManager.instance.SaveBlock(block);
                 VisualEffectsManager.TryPlayBlockPlaced(block);

@@ -1,0 +1,92 @@
+{
+  "passed": true,
+  "unity": "6000.3.11f1",
+  "checks": [
+    "Authored capacities: 8 parts / 100 coins / 100 technology",
+    "Default explosion policy",
+    "Unpowered hold rejects deposit",
+    "Capacity clamps currency and rejects wrong kind",
+    "Currency arrival fills first hold and routes overflow without loss",
+    "Technology routes only to technology hold",
+    "Resource fill uses capacity ratio",
+    "Collection drone reserves a special item",
+    "Drone flies, carries and docks before crediting cargo",
+    "Stored item display contains no gameplay components",
+    "Two drones cannot reserve beyond last free slot",
+    "Power loss releases claims and keeps dropped cargo",
+    "Drone picked up cargo for bay destruction test",
+    "Destroying collection bay releases carried special part",
+    "Actual explosive destruction emits cargo once",
+    "Non-explosive destroyed hold leaves connectivity graph immediately",
+    "Actual non-explosive destruction spills currency",
+    "Blueprint JSON round-trips cargo",
+    "Old blueprint without cargo remains readable",
+    "Successful return writes cargo atomically",
+    "Return preserves blueprint geometry and two recovered parts",
+    "Death return persists empty cargo",
+    "Cargo destruction spills parts exactly once",
+    "Player currency hold spills exact amount",
+    "Enemy currency spill disabled by prefab default",
+    "Ordinary enemy wreck converts to coins exactly once",
+    "Player self-dismantling cannot farm coins",
+    "Cleanup removes ordinary wreck but preserves independent special loot",
+    "RepairBot still finds and repairs its own unit after extraction",
+    "RepairBot returns to a moving authored socket",
+    "Authored scene changes remain confined to Play Mode"
+  ],
+  "errors": [],
+  "date": "2026-09-22",
+  "staticBuild": {
+    "command": "dotnet build HY-Sandbox.sln --no-restore --nologo",
+    "errors": 0,
+    "warnings": 4,
+    "notes": "Existing Pipeline assembly-version conflicts and Profiler obsolete API warning."
+  },
+  "assets": [
+    {
+      "name": "CargoHold",
+      "size": [
+        2,
+        2,
+        2
+      ],
+      "capacity": 8,
+      "triangles": 216
+    },
+    {
+      "name": "CoinHold",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "capacity": 100,
+      "triangles": 276
+    },
+    {
+      "name": "TechnologyHold",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "capacity": 100,
+      "triangles": 276
+    },
+    {
+      "name": "CollectionBotContainer",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "triangles": 3634
+    }
+  ],
+  "assetChecks": "Four prefabs reloaded: no missing scripts, missing materials or error shaders. Empty and loaded URP images inspected.",
+  "limits": [
+    "No large-blueprint GPU or navigation stress measurement.",
+    "No complete main-scene combat / build-input regression.",
+    "Return uses existing End Play action; no standalone expedition map or external economy."
+  ]
+}

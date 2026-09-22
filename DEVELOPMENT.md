@@ -1,7 +1,7 @@
 # HY-Sandbox 项目开发文档
 
 > 文档状态：持续维护中  
-> 最近核对：2026-09-21
+> 最近核对：2026-09-22
 > Unity 编辑器：6000.3.11f1（`ProjectSettings/ProjectVersion.txt`）  
 > 当前分支：`main`
 
@@ -100,6 +100,18 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 `SpaceKitCurator` 提供初次创建（拒绝覆盖已存在库）、引用验证与独立场景预览菜单；Selection.json 记录选择与用途，Catalog.json 记录来源/GUID/SHA-256，Validation.json 记录实际 Unity 审核。已完成 Editor 导入、全部 Prefab 重载、粒子采样、105 项 URP 渲染与四张联系表检查；原始储备库不直接进行玩法测试；已集成模块的 Play Mode 结果另见 BlockVisuals/PlayModeValidation.json，并发性能仍未验证。
 
+### 3.9 货仓、残骸回收与共享无人机导航
+
+新增 `CargoHold`（2×2×2，8 个特殊零件）、`CoinHold` / `TechnologyHold`（1×1×1，100 单位）和 `CollectionBotContainer`（1×1×1）真实 Prefab。三种仓体的容量、供电要求、双方摧毁掉落策略均在 CargoHold 中编辑；爆炸行为沿用 Block 参数，特殊仓默认爆炸、资源仓默认不爆炸。透明框架、容量液面、货物静态陈列和空/部分装载/满状态灯由独立 CargoHoldView 驱动。
+
+`Bot` 从原 RepairBot 提取飞行、采样避障、移动 Home 制动/停靠与飞行特效，保留旧序列化字段名/类型和 RepairBot GUID；RepairBot 保留维修工作，CollectionBot 负责预约、拾取、携带、返航交付。回收器只为同一有效 ControlUnit 的可用货仓工作，满仓/断电时不出动，失电/货仓被毁/任务超时释放预约，回收舱真实摧毁前会先释放携带物，避免 Unity 递归销毁吞掉货物。
+
+残骸定时清理通过 WreckSalvage 幂等结算：普通敌方模块变金币，Settings 候选功能模块按概率变特殊零件；玩家自拆和仍有驾驶舱的远距离卸载不产币。LootDrop 与 Block/ControlUnit 生命周期分离，特殊零件不被普通清理规则删除。金币/科技值资源包寻找范围内有电且有空位的玩家对应仓，到达后才入账，剩余数量可换仓；默认最多 64 个资源包后合并金额，每包最多 16 粒子，不使用 Compute Shader。
+
+`BlockData.cargo` 保存货仓内容，旧 JSON 兼容；建造删除 Undo / 创建 Redo 保留内容。现有“结束游玩”暂作安全返回入口，CargoPersistence 以临时文件替换方式保存有效玩家单元的货仓内容（保持蓝图几何）；死亡返回清空携带内容，未装载掉落物在会话结束清理。此版尚无独立撤离地图、商店、科技树、战利品限定建造库存。
+
+使用、参数、资产规格及来源见 `Assets/Art/Salvage/README.md`。生成源 `SalvageAssetBaker` 默认仅创建缺失资源，不覆盖用户后续手调；独立渲染预览保存在 `Assets/Art/Salvage/Previews`。
+
 ## 4. 已确认实现的功能
 
 - 主场景和 URP 项目配置可被 Unity 项目识别。
@@ -115,13 +127,17 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - 编辑器包含 Windows 构建入口和 Profiler 捕获分析入口。
 - 20 个 `Resources/Blocks` Prefab 已使用共享工业 Mesh/材质替换占位渲染；功能件包含轻量 Transform 动画，当前全部禁用 LOD，并提供独立预览场景与可重复生成菜单。
 
+- 已加入三种可编辑货仓、回收无人机舱、独立掉落物、金币汇聚、内容保存/返回及共享 Bot 导航；运行验证记录见 2026-09-22 变更日志。
+
 ## 5. 待改进与风险
 
 优先级含义：P0 阻断主流程，P1 影响核心体验或数据安全，P2 可维护性/性能，P3 体验增强。
 
 | 优先级 | 问题或改进方向 | 建议 |
 | --- | --- | --- |
-| P1 | 缺少自动化测试和稳定的 Play Mode 回归清单 | 为存档往返、连接匹配、阻挡、Undo/Redo、推进器和模式切换增加 EditMode/PlayMode 测试。 |
+| P1 | 自动化回归覆盖仍不完整 | 已新增 SalvagePlayProbe，覆盖货仓、掉落、真实回收/摧毁与维修回归；完整主场景战斗、建造输入与正式构建仍需覆盖。 |
+| P2 | 大量透明货仓、并发无人机和长期特殊掉落的性能未测量 | 普通资源包有合并上限；仍需对 100+ 仓体、多人机拥挤绕障、移动母舰急转和大量特殊零件做压力验证。 |
+| P2 | 回收首版使用原有结束游玩按钮结算 | 后续远征模式需加入撤离条件、局外仓库/经济和消耗规则；当前保留无限制沙盒建造。 |
 | P1 | 输入逻辑分散在直接读取设备与 Input Actions 两种方式 | 统一 Input Action，集中处理设备缺失、重绑定和 UI 输入焦点。 |
 | P1 | 存档写入仍需关注中断、损坏和版本升级 | 使用临时文件+替换、JSON schema/version 字段、损坏存档备份和迁移策略。 |
 | P1 | 运行时大量依赖单例和 Inspector 引用 | 增加启动依赖检查、缺失引用的用户提示，并逐步将纯逻辑从 MonoBehaviour 解耦。 |
@@ -522,39 +538,23 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 #### `Assets/Scripts/InObject/RepairBot.cs`
 
-- `private void Start()`：缓存 home、范围查询层和运行时组件，并初始化修复目标。
-- `private void InitializeComponents()`：创建或补齐该功能所需的对象、引用、缓存和初始状态。
-- `private void InitializeTargetsInRange()`：以 home 为中心执行无分配球形查询，缓存同一 ControlUnit 的范围内耐久目标。
-- `private void InitializeTrail()`：缓存 Prefab 中的尾迹和素材飞行效果并初始化停发状态。
-- `private void FixedUpdate()`：验证当前修复目标并执行导航、修复或返航。
-- `private void LateUpdate()`：在物理运动完成后刷新尾迹发射状态。
-- `private void UpdateMotionVfx()`：根据导航状态与刚体速度控制双层尾迹宽度和微粒发射量。
-- `private void NavigateToTarget(Transform target)`：按固定采样间隔更新避障方向，并以有限响应速度渐进转向目标。
-- `private void NavigateHomeSmoothly()`：先导航到 homeOffset 上方一格的接近点，再进入精确停靠流程。
-- `private void NavigateToPosition(Vector3 targetPosition, Transform targetReference, float avoidanceRangeScale = 1f, float maxAvoidanceAngle = 120f)`：按状态缩放避障查询距离和最大方向偏差，并施加平滑方向、速度和刚体移动。
-- `private void ApplyReturnHomeMovement(Vector3 targetPosition, Vector3 targetDirection, float effectiveSpeed)`：根据剩余距离、朝向和 Home 接近点速度计算允许的相对速度，并施加受限制动力。
-- `private Vector3 GetRelativeHomeVelocity(Vector3 worldPosition)`：计算 RepairBot 相对 Home 指定世界点的速度，用于返航制动和 Docking 捕获范围。
-- `private Vector3 GetHomePointVelocity(Vector3 worldPosition)`：读取 Home Rigidbody 在指定世界点的线速度与旋转切向速度。
-- `private AdvancedAvoidanceResult CalculateHomeNavigationGuidance(Vector3 targetDirection, float rangeScale)`：从动态 Home 停靠点发射少量方向射线，选择开阔且朝向 RepairBot 的接近方向，作为返航引导。
-- `private float GetHomeGuidanceClearFraction(Vector3 origin, Vector3 direction, float range)`：使用复用的 RaycastNonAlloc 缓冲区计算 Home 局部方向的开阔度。
-- `private bool IsIgnoredHomeGuidanceCollider(Collider collider)`：过滤 Home 自身层级和 RepairBot 自身碰撞体，避免引导射线被宿主阻挡。
-- `private AdvancedAvoidanceResult CalculateAdvancedAvoidance(Vector3 targetDirection, float rangeScale)`：按距离比例缩放紧急、主要和预测避障范围并返回方向与速度倍率。
-- `private Vector3 BlendDirections(Vector3 targetDir, Vector3 avoidanceDir, float avoidanceStrength, float maxAvoidanceAngle)`：融合目标与避障方向，并限制避障导致的最大偏航角。
-- `private void ReturnHome()`：到达接近点后切换运动学状态，用代码精确移动到 homeOffset 并恢复父节点和局部坐标。
-- `private void LeaveHome()`：封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
-- `private void SetNavigationState(NavigationState nextState)`：按导航状态统一切换 Rigidbody 物理模拟/碰撞和 TrailRenderer 的启停状态。
-- `private void FindDamagedBlock()`：按扫描间隔刷新范围缓存，并用平方距离选择最近受损目标。
-- `private bool IsValidRepairTarget(Durability target)`：验证目标仍受损、未离开 home 范围且归属当前 ControlUnit。
-- `private void CheckAndRepair()`：处理碰撞、连接、耐久、维修或状态检查逻辑。
-- `private void UpdateRepairBeam(bool active)`：刷新双层维修射线的 HDR 颜色、脉冲强度、命中点光和持续火花。
-- `private Vector3 GetRepairTargetPoint()`：优先使用目标 Collider 最近点，其次使用 Renderer 中心作为射线命中点。
-- `private void EnsureRepairImpactVfx()`：初始化 Prefab 中的维修命中素材效果。
-- `private void UpdateRepairImpact(Vector3 targetPoint, Color color, float pulse)`：将维修素材电弧定位到命中点，并按束流强度驱动发射。
-- `private void SetRepairImpactActive(bool active)`：统一启停命中点光和持续粒子，避免状态残留。
-- `private void EnsureRepairBeamGradient()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
-- `public void ClearTarget()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
-- `private void OnDrawGizmosSelected()`：Unity 生命周期回调：绘制运行时修复范围、避障和目标调试信息。
-- `private void OnDrawGizmos()`：Unity 生命周期回调：绘制编辑器中的静态范围预览。
+维修目标选择、有效性与范围校验、维修效果；移动委托 Bot。
+
+- `protected override void Start()`
+- `private void InitializeComponents()`
+- `private void FixedUpdate()`
+- `protected override void OnDisable()`
+- `private void InitializeTargetsInRange()`
+- `private void FindDamagedBlock()`
+- `private bool IsValidRepairTarget(Durability target)`
+- `private void CheckAndRepair()`
+- `private void UpdateRepairBeam(bool active)`
+- `private Vector3 GetRepairTargetPoint()`
+- `private void EnsureRepairImpactVfx()`
+- `private void UpdateRepairImpact(Vector3 targetPoint, Color color, float pulse)`
+- `private void SetRepairImpactActive(bool active)`
+- `private void EnsureRepairBeamGradient()`
+- `public void ClearTarget()`
 
 #### `Assets/Scripts/InObject/TurretWeapon.cs`
 
@@ -669,6 +669,8 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `public static string ConvertToResourcesPath(string fullPath)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 
 #### `Assets/Scripts/Manager/DestroyManager.cs`
+
+- `public void EndSalvageSession()`：取消延迟清理任务并清空会话标记，防止跨次游玩结算。
 
 - `public void DestroyGameObject(GameObject obj)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
 - `public void ExplodeBlock(Block block)`： 处理 Block 爆炸、重新分组和物理冲量，不直接造成伤害。
@@ -993,6 +995,146 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `void Init()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
 - `bool LinkLabel(GUIContent label, params GUILayoutOption[] options)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 
+### 货仓与残骸回收（2026-09-22）
+
+#### `Assets/Scripts/InObject/Bot.cs`
+
+共享导航、采样避障、Home 点速度补偿、停靠与飞行特效。
+
+- `protected virtual void Start()`
+- `protected bool TickNavigation()`
+- `protected virtual void OnDisable()`
+- `protected virtual void OnDestroy()`
+- `public virtual void PrepareForHomeDestruction()`
+- `private void InitializeTrail()`
+- `private void LateUpdate()`
+- `private void UpdateMotionVfx()`
+- `protected void NavigateToTarget(Transform target)`
+- `protected void NavigateHomeSmoothly()`
+- `private void NavigateToPosition( Vector3 targetPosition, Transform targetReference, float avoidanceRangeScale = 1f, float maxAvoidanceAngle = 120f)`
+- `private void ApplyReturnHomeMovement( Vector3 targetPosition, Vector3 targetDirection, float effectiveSpeed)`
+- `private Vector3 GetRelativeHomeVelocity(Vector3 worldPosition)`
+- `private Vector3 GetHomePointVelocity(Vector3 worldPosition)`
+- `private AdvancedAvoidanceResult CalculateHomeNavigationGuidance( Vector3 targetDirection, float rangeScale)`
+- `private float GetHomeGuidanceClearFraction( Vector3 origin, Vector3 direction, float range)`
+- `private bool IsIgnoredHomeGuidanceCollider(Collider collider)`
+- `private AdvancedAvoidanceResult CalculateAdvancedAvoidance( Vector3 targetDirection, float rangeScale)`
+- `private void ProcessRaycastHit(RaycastHit hit, ref Vector3 emergency, ref Vector3 primary, ref Vector3 predictive, ref int emergencyCount, ref int primaryCount, ref int predictiveCount, float emergencyRange, float primaryRange, float predictiveRange)`
+- `private void ProcessSphereCollider(Vector3 obstaclePos, float distance, ref Vector3 emergency, ref Vector3 primary, ref int emergencyCount, ref int primaryCount, float emergencyRange, float primaryRange)`
+- `private Vector3 BlendDirections( Vector3 targetDir, Vector3 avoidanceDir, float avoidanceStrength, float maxAvoidanceAngle)`
+- `private void ReturnHome()`
+- `private void LeaveHome()`
+- `private void SetNavigationState(NavigationState nextState)`
+- `private void OnDrawGizmosSelected()`
+- `private void OnDrawGizmos()`
+
+#### `Assets/Scripts/InObject/CargoHold.cs`
+
+容量/类型/供电验证、货位预约、入仓、序列化快照与幂等释放。
+
+- `private void Awake()`
+- `private void OnValidate()`
+- `private void OnEnable()`
+- `private void OnDisable()`
+- `public bool CanReceive(CargoItem item, LootDrop reservation = null)`
+- `public bool Reserve(LootDrop drop)`
+- `public void ReleaseReservation(LootDrop drop)`
+- `public int Store(CargoItem item, LootDrop reservation = null)`
+- `public List<CargoItem> CaptureContents()`
+- `public void RestoreContents(List<CargoItem> items)`
+- `public void ReleaseContents(UnitFaction faction)`
+- `public static CargoHold FindReceiver(CargoItem item, Vector3 position, ControlUnit owner = null, LootDrop reservation = null)`
+
+#### `Assets/Scripts/InObject/CollectionBot.cs`
+
+回收任务选择、预约、携带、返航交付与中断恢复。
+
+- `protected override void Start()`
+- `private void FixedUpdate()`
+- `private void FindTarget(ControlUnit owner)`
+- `private void Abandon()`
+- `protected override void OnDisable()`
+- `protected override void OnDestroy()`
+- `public override void PrepareForHomeDestruction()`
+
+#### `Assets/Scripts/InObject/LootDrop.cs`
+
+独立掉落物生成、显示、声明/释放、货币汇聚与会话清理。
+
+- `private void OnEnable()`
+- `private void OnDisable()`
+- `private void Start()`
+- `public static LootDrop Spawn(CargoItem item, Vector3 position)`
+- `public void Initialize(CargoItem item)`
+- `private void RefreshLabel()`
+- `public bool Claim(CollectionBot bot, CargoHold destination)`
+- `public void Carry(Transform socket)`
+- `public void Release()`
+- `public bool Deliver(CargoHold hold)`
+- `private void Update()`
+- `public static void ClearSession()`
+
+#### `Assets/Scripts/InObject/WreckSalvage.cs`
+
+将普通敌方残骸结算为金币或候选特殊零件，防止重复结算。
+
+- `public static void Convert(Block block)`
+- `public static void ConvertGroup(ControlUnit unit)`
+
+#### `Assets/Scripts/Effect/CargoHoldView.cs`
+
+货物陈列、资源液位和仓体状态灯。
+
+- `private void Awake()`
+- `private void LateUpdate()`
+
+#### `Assets/Scripts/Effect/CargoVisual.cs`
+
+仅复制静态渲染几何，按包围盒归一化展示，避免运行被储存模块行为。
+
+- `public static GameObject Create(string resourcePath, Transform parent, float size)`
+
+#### `Assets/Scripts/Manager/CargoPersistence.cs`
+
+返回时仅更新蓝图货仓内容，使用临时文件和备份进行原子替换。
+
+- `public static bool SaveReturnCargo(bool survived)`
+
+#### `Assets/Scripts/Data/CargoItem.cs`
+
+货物类型、资源路径和数量的可序列化数据。
+
+- `public CargoItem Copy(int count = -1)`
+
+#### `Assets/Editor/SalvageAssetBaker.cs`
+
+保存新 Prefab/材质/参数资产和独立渲染预览，保留已有手调。
+
+- `public static void Bake()`
+- `private static Material Material(string name, Color color, bool transparent, bool emissive)`
+- `private static void Hold(string name, CargoKind kind, int size, int capacity, bool explosive, bool enemyDrops)`
+- `private static void CollectionBay()`
+- `private static void DropPrefab()`
+- `private static GameObject Cube(string name, Transform parent, Vector3 position, Vector3 scale, Material material)`
+- `public static void Set(Object target, string property, Object value)`
+- `public static void Preview()`
+
+#### `Assets/Editor/SalvagePlayProbe.cs`
+
+在 Play Mode 副本中执行隔离回归并写入验证报告。
+
+- `public static void Run()`
+- `private static void StateChanged(PlayModeStateChange state)`
+- `private static void Capture(string condition, string stack, LogType type)`
+- `private static void Tick()`
+- `private static void Finish()`
+- `private static void Check(string name, bool result)`
+- `private static ControlUnit Unit(string name, Vector3 position, UnitFaction faction, bool cockpit = true)`
+- `private static GameObject Spawn(string name, ControlUnit unit, Vector3 local)`
+- `private static CargoItem Coins(int count)`
+- `private static CargoItem Part()`
+- `private static IEnumerator Scenario()`
+
 ## 9. 函数索引维护规则
 
 新增、删除、重命名或改变职责的函数，必须在同一提交更新本节；签名变化替换旧条目，行为变化同时修改描述和变更日志。索引以源码为准，自动提取遗漏的多行签名时手工补充。
@@ -1007,6 +1149,15 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 
 ## 10. 变更日志
+
+### 2026-09-22 货仓与残骸回收首版
+
+- **范围与实现**：新增 CargoHold、CoinHold、TechnologyHold、CollectionBotContainer 四个方块，透明仓体、容量液面、8 格零件陈列和三态状态灯；新增货物数据/掉落物、供电容量约束、特殊零件预约与回收、金币爆散/汇聚及资源包数量控制。普通敌方残骸清理产币，特殊零件独立保留；真实摧毁释放货仓和无人机携带内容；非爆炸模块在延迟 Destroy 前先从连接图移除，避免被再次编组。
+- **架构与兼容**：RepairBot 的飞行/避障/返航提取到 Bot 基类，序列化字段及旧脚本 GUID 保留，BlockStatusLight 改为接收 Bot；新 CollectionBot 独立负责回收工作。BlockData 扩展 cargo，加载、敌方蓝图、Undo/Redo、返回结算同步接入；存档原子替换保留备份。未改已有用户场景、素材摆放或项目设置。
+- **保护**：修改前创建 `codex/salvage-backup-20260922`；当前未保存的素材预览场景另外保存在 `Temp/SalvageWork/BeforeSalvage.unity`，回归只操作 Play Mode 副本。收尾将原未保存预览内容恢复到独立 `Assets/Art/Temp/Overview-Recovered-20260922.unity`，并另留带哈希清单的 `.codex-backups` 副本；这些恢复文件不提交，原场景文件未覆盖。新增资产均由 Unity API 保存并生成 .meta。
+- **验证状态**：Unity 6000.3.11f1 已导入/编译，容量、断电、溢出分流、两机预约、真实无人机往返、特殊掉落不被清理、仓体/回收舱真实摧毁、旧 JSON 和维修机器人回归已执行；最终报告见 `Assets/Art/Salvage/Validation.json`。31 项隔离 Play Mode 检查通过，包含默认避障配置下回收和实际文件返回/死亡保存；没有捕获到新增 Error/Exception。四个 Prefab 重载无缺失脚本/材质，已检查空仓/装载仓 URP 渲染；`dotnet build HY-Sandbox.sln --no-restore --nologo` 0 错误、4 个既有警告。`git diff --cached --check` 通过；生成元数据仅规范化行尾空白，未改变 GUID。
+- **边界**：沿用沙盒结束游玩入口返回，尚无独立撤离任务、局外库存消耗、商店或科技树。未完成大型蓝图战斗、并发透明渲染/导航压力和目标设备帧率验证。
+
 
 ### 2026-09-21（尾焰连续性及粒子生命周期修复）
 

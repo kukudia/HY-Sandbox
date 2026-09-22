@@ -225,6 +225,7 @@ public class MainUIPanels : MonoBehaviour
 
     public void PlayEnd()
     {
+        if (!CargoPersistence.SaveReturnCargo(PlayManager.instance.playMode)) return;
         debugPanel.transform.SetParent(buildPanel.transform);
 
         PlayManager.instance.PlayEnd();
