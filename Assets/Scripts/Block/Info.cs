@@ -9,9 +9,6 @@ public class Info : MonoBehaviour
     public string blockName;
     public string description;
     public int cost;
-    public int realMass;
-    public int realRequiredPower;
-    public int realOutputPower;
     public List<Status> statuses;
 
     [Header("Dynamic")]
