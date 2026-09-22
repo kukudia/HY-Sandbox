@@ -10,7 +10,7 @@ using Object = UnityEngine.Object;
 /// <summary>Isolated URP renders; never changes the user's open scene.</summary>
 public static class BlockArtPreview
 {
-    public static void Render(string path, string output, bool effects = false, bool front = false, Vector3? view = null, Action<GameObject> configure = null)
+    public static void Render(string path, string output, bool effects = false, bool front = false, Vector3? view = null, Action<GameObject> configure = null, bool transparent = false)
     {
         var scene = EditorSceneManager.NewPreviewScene();
         var target = new RenderTexture(640, 520, 24);
@@ -43,7 +43,7 @@ public static class BlockArtPreview
             camera.farClipPlane = radius * 12f + 100f;
             camera.fieldOfView = 38f;
             camera.clearFlags = CameraClearFlags.SolidColor;
-            camera.backgroundColor = new Color(0.065f, 0.08f, 0.11f);
+            camera.backgroundColor = transparent ? Color.clear : new Color(0.065f, 0.08f, 0.11f);
             for (int i = 0; i < 2; i++)
             {
                 var lightObject = new GameObject("Preview Light");
@@ -55,7 +55,7 @@ public static class BlockArtPreview
             }
             camera.Render();
             var old = RenderTexture.active;
-            var texture = new Texture2D(640, 520, TextureFormat.RGB24, false);
+            var texture = new Texture2D(640, 520, transparent ? TextureFormat.RGBA32 : TextureFormat.RGB24, false);
             try
             {
                 RenderTexture.active = target;

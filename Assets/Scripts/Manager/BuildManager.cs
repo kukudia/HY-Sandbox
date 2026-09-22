@@ -33,6 +33,7 @@ public class BuildManager : MonoBehaviour
     public float gridSize = 1f;
     private Vector3 gridOrigin = Vector3.zero;
 
+    [SerializeField] private ConnectorPlacementHints _connectorHints;
     public Material highlightMaterial;
     private float moveStep = 1f;    // 移动步长
 
@@ -97,6 +98,8 @@ public class BuildManager : MonoBehaviour
     {
         instance = this;
     }
+
+    private void OnDisable() { ClearCurrentGhost(); }
 
     private void Start()
     {
@@ -169,15 +172,12 @@ public class BuildManager : MonoBehaviour
     {
         if (!lockView)
         {
+            ClearCurrentGhost();
             if (selectedBlock != null)
             {
                 DeselectBlock();
             }
 
-            if (currentGhost != null)
-            {
-                ClearCurrentGhost();
-            }
         }
     }
 
@@ -656,9 +656,17 @@ public class BuildManager : MonoBehaviour
 
     private void HandleBuildingPreview()
     {
+        // Palette and category clicks must never reach world placement.
+        if (Mouse.current == null || (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()))
+        {
+            ClearCurrentGhost();
+            return;
+        }
+        hoveredConnector = null;
         // 目标预制体
         GameObject prefab = Resources.Load<GameObject>(currentBlockResourcePath);
-        Block prefabBlock = prefab.GetComponent<Block>();
+        Block prefabBlock = prefab != null ? prefab.GetComponent<Block>() : null;
+        if (prefabBlock == null) { ClearCurrentGhost(); return; }
 
         Vector3 rawPos = Vector3.zero;
         Vector3 snappedPos = Vector3.zero;
@@ -673,6 +681,7 @@ public class BuildManager : MonoBehaviour
             Block block = hit.collider.GetComponentInParent<Block>();
             if (block != null)
             {
+                if (_connectorHints != null) _connectorHints.Show(block);
                 // 找最近的 connector
                 float minDist = float.MaxValue;
                 Connector nearest = null;
@@ -724,13 +733,16 @@ public class BuildManager : MonoBehaviour
             }
         }
 
+        if (hoveredConnector == null) { ClearCurrentGhost(); return; }
+
         if (currentGhost != null)
         {
             bool isBlocked = currentGhost.GetComponent<Block>().IsBlockedGhost();
 
             if (penetrationMode)
             {
-                while (isBlocked)
+                // Bound the search when a target is enclosed or its normal is invalid.
+                for (int step = 0; isBlocked && step < 64 && nearestNormal.sqrMagnitude > 0.5f; step++)
                 {
                     currentGhost.transform.position += nearestNormal;
                     isBlocked = currentGhost.GetComponent<Block>().IsBlockedGhost();
@@ -1476,6 +1488,8 @@ public class BuildManager : MonoBehaviour
 
     private void ClearCurrentGhost()
     {
+        if (_connectorHints != null) _connectorHints.Hide();
+        hoveredConnector = null;
         if (currentGhost == null) return;
 
         VisualEffectsManager.TryClearGhostPreview(currentGhost);

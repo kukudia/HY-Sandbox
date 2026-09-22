@@ -20,7 +20,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 | 输入 | Input System 1.19.0；代码同时直接读取 `Keyboard.current` / `Mouse.current` |
 | UI | uGUI 2.0.0，部分系统仍使用 IMGUI（例如悬浮控制器诊断面板） |
 | 数据 | `Application.persistentDataPath/Saves` 与 `EnemyBlueprints` 下的 JSON |
-| 资源 | `Resources/Blocks` 下按资源路径加载模块 Prefab |
+| 资源 | `Resources/Blocks` 下按资源路径加载模块 Prefab；建造目录在 Editor 中烘焙保存 |
 | 编辑器工具 | Windows 自动构建工具、Profiler 捕获分析工具、工业美术资源重建工具；Unity CLI `1.0.0-beta.8` 与 Pipeline `0.7.0-exp.1` |
 
 主要目录：
@@ -31,7 +31,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 - `Assets/Scripts/InObject`：驾驶舱、控制单元、机架、炮塔、敌人、维修机器人等模块行为。
 - `Assets/Scripts/Thrusters`：悬浮、主推进、全向推进、推力分配和推力视觉效果。
 - `Assets/Scripts/UI`：建造/游玩面板、按钮、存档列表、动作计数和全局文字样式。
-- `Assets/Resources/Blocks`：可动态发现的方块 Prefab；`MainUIButtons` 会从这里注册方块按钮。
+- `Assets/Resources/Blocks`：方块 Prefab 来源；`BuildPaletteBaker` 在 Editor 中发现可建造 Block 并保存分类按钮，运行时不再克隆文字按钮。
 - `Assets/Art/SpaceKit`：两套本地科幻包筛选出的独立备用素材库，105 个 Prefab / 22 个用途类别，配套模型、URP 材质、贴图、碰撞和来源/验证清单；入口 `README.md` 与 `CATALOG.md`。
 - `Assets/Art/Industrial`：工业玩具/霓虹工程舱风格规范、共享 Mesh、共享材质和独立预览场景。
 - `Assets/Scenes/Main.unity`：当前 Git 跟踪的主场景。
@@ -51,7 +51,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 `BuildManager` 的主要流程：
 
 1. 从 `Resources/Blocks` 选择资源并创建 Ghost 预览。
-2. 射线检测方块或连接点，按网格和目标旋转计算吸附位置。
+2. UI 上的指针输入先被拦截；射线检测方块并在可连接且未占用的 Connector 上显示 0.9×0.9 白色圆角线框，按连接面的世界法线向外偏移 0.015。按网格和目标旋转计算吸附位置；没有可用连接点、移出目标或退出模式时清除 Ghost 与提示。
 3. `Block.IsBlockedGhost` 和 `BuildManager.IsBlocked` 检查重叠，阻挡时禁止放置。
 4. `CreateBlock` 实例化 Prefab，应用默认值并写入当前存档。
 5. 选中方块后支持键盘移动、15 度旋转、移动/旋转轴拖拽、复制和删除。
@@ -74,7 +74,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 3.5 UI、敌人和效果
 
-`MainUIButtons` 负责按钮事件、操作模式和动态方块按钮；`SaveUIPanel` 负责玩家/敌方蓝图列表；`BlueprintUIPanel` 显示当前建造目标名称、方块数量和总质量，并在搭建、拆除、Undo/Redo 时刷新，在存档或敌方蓝图异步加载期间逐块更新；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块，寻路避障按间隔采样并渐进转向，返航时对准停靠姿态后平滑减速归位，其飞行反馈由保存的双层青色尾迹和速度驱动喷口粒子组成，维修时从模型工具端发射双层能量束，并使用素材电弧与真实耐久恢复脉冲。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager` 和 `StylizedBeamEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。所有选中、Ghost、放置、旋转、维修、摧毁、爆炸和陨石冲击中的平面环形元素均已移除，改用 HDR 加法粒子、放射光痕、短束流和动态点光；烟尘继续使用普通 Alpha Blend 保持暗部层次。失去驾驶舱的断裂 Rigidbody 会获得最长 6 秒、按速度衰减的烟雾/余烬拖尾，同时限制全局活动数量为 24。
+`MainUIButtons` 负责按钮事件和操作模式；`BuildPalette` / `BuildPaletteItem` 管理已保存的 23 个图标按钮、六类导航、滚动、悬停名称和选中颜色；`SaveUIPanel` 负责玩家/敌方蓝图列表；`BlueprintUIPanel` 显示当前建造目标名称、方块数量和总质量，并在搭建、拆除、Undo/Redo 时刷新，在存档或敌方蓝图异步加载期间逐块更新；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块，寻路避障按间隔采样并渐进转向，返航时对准停靠姿态后平滑减速归位，其飞行反馈由保存的双层青色尾迹和速度驱动喷口粒子组成，维修时从模型工具端发射双层能量束，并使用素材电弧与真实耐久恢复脉冲。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager` 和 `StylizedBeamEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。所有选中、Ghost、放置、旋转、维修、摧毁、爆炸和陨石冲击中的平面环形元素均已移除，改用 HDR 加法粒子、放射光痕、短束流和动态点光；烟尘继续使用普通 Alpha Blend 保持暗部层次。失去驾驶舱的断裂 Rigidbody 会获得最长 6 秒、按速度衰减的烟雾/余烬拖尾，同时限制全局活动数量为 24。
 
 ### 3.6 物理模拟与性能
 
@@ -130,6 +130,8 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - 已加入三种可编辑货仓、回收无人机舱、独立掉落物、金币汇聚、内容保存/返回及共享 Bot 导航；运行验证记录见 2026-09-22 变更日志。
 
 ## 5. 待改进与风险
+
+- **建造目录**：新增 Prefab 后需要执行 Build Palette Bake，将分类与图标保存入场景；不会在运行时自动复制按钮。尚未做超大目录性能或所有分辨率的手工操作测试。
 
 优先级含义：P0 阻断主流程，P1 影响核心体验或数据安全，P2 可维护性/性能，P3 体验增强。
 
@@ -396,7 +398,7 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `BlockVfxTemporalValidation.Validate()` / `RenderSequence()`：隔离 PreviewScene 中进行多帧率、多强度采样、启停/重播检查，并导出 URP 连续帧。
 - `BlockArtIntegrator.Integrate()`：保留既有模型选择与 Block 契约，补全视觉、挂点、灯光和组件绑定。
 - `BlockArtValidation.Validate()`：检查来源依赖、嵌套实例、丢失引用、粒子材质、运动链与挂点方向，保存报告。
-- `BlockArtPreview.Render()` / `RenderBlocks()`：在独立 URP PreviewScene 中渲染并导出图片。
+- `BlockArtPreview.Render()` / `RenderBlocks()`：在独立 URP PreviewScene 中渲染并导出图片；可选 transparent 参数输出 RGBA 透明背景。
 - `BlockArtPlayProbe.Run()`：在隔离 Play Mode 场景检查供电/推进/射击/维修完整链路并返回原场景。
 - `AssetParticleEffect.SetIntensity()` / `PlayOnce()`：持续尾焰/接触按材质透明度调强度，烟迹按发射密度调节，瞬时效果显式重播；以 isEmitting 判断快速重新启动，禁用时清空粒子及灯光；`ReleaseAfterPlayback()` 管理瞬时效果数量与销毁。
 - `BlockVfxLibrary.Play()`：按事件实例化 Resources 资产库引用的效果。
@@ -629,7 +631,7 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `void HandleMoveAxisDrag()`： 处理对应的输入、选择、拖拽、移动、旋转或建造交互。
 - `void HandleRotateAxisDrag()`： 处理对应的输入、选择、拖拽、移动、旋转或建造交互。
 - `void HandleDuplicate(Vector3 newPos, Quaternion newRot)`： 处理对应的输入、选择、拖拽、移动、旋转或建造交互。
-- `void HandleBuildingPreview()`： 处理对应的输入、选择、拖拽、移动、旋转或建造交互。
+- `private void HandleBuildingPreview()`：拦截 UI 输入、筛选可用连接点、刷新线框与 Ghost；无连接点时清理，穿透搜索最多 64 步避免无限循环。
 - `public void CreateBlock(GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot)`： 创建几何、资源、操作记录、UI 项或运行时对象。
 - `public void DeleteBlock()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
 - `public void SaveBlock(Block block)`： 执行存档/文件的读取、写入、重命名或路径处理。
@@ -661,7 +663,8 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `private float GetCameraOrbitAngle(Vector3 orbitCenter)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private bool TryCalculateLoadingCameraOrbitBounds(List<BlockData> blocksToLoad, Vector3 fallbackCenter, out Bounds bounds)`：从存档中全部方块的数据合并加载镜头逻辑包围盒。
 - `private Bounds CalculateBlockDataBounds(BlockData data)`：根据方块尺寸、世界位置和四元数旋转计算单个存档方块的轴对齐包围盒。
-- `private void ClearCurrentGhost()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
+- `private void ClearCurrentGhost()`：无论 Ghost 是否存在，都清理连接提示及 hoveredConnector，再销毁预览。
+- `private void OnDisable()`：禁用 BuildManager 时清理 Ghost 和连接提示。
 - `private bool RemoveCachedBlockData(string id)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
 - `private bool RemoveCachedBlockData(string id, string targetSavePath)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
 - `private void WriteCachedData()`： 执行存档/文件的读取、写入、重命名或路径处理。
@@ -929,6 +932,23 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `private IEnumerator Start()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
 - `private static void ApplyToSceneTexts()`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
 
+#### 建造目录与连接提示（2026-09-22）
+
+- `BuildPalette.Awake()` / `OnEnable()` / `OnDisable()`：缓存已保存的条目、显示初始分类、隐藏名称提示。
+- `BuildPalette.SelectCategory(int)`：切换条目可见性、导航颜色并将内容滚动回顶部。
+- `BuildPalette.LateUpdate()`：资源选择变化时更新选中边框。
+- `BuildPalette.ShowTooltip(BuildPaletteItem)` / `HideTooltip(BuildPaletteItem)`：共享名称栏显示与归属控制。
+- `BuildPaletteItem.SetSelected(bool, Color)`：更新边框颜色。
+- `BuildPaletteItem.OnPointerEnter/Exit` / `OnSelect/Deselect` / `OnDisable`：鼠标、键盘焦点及禁用时的名称提示生命周期。
+- `ConnectorPlacementHints.Show(Block)` / `Hide()` / `OnDisable()`：设置或清理当前目标。
+- `ConnectorPlacementHints.LateUpdate()`：过滤禁用/占用点，以共享 Mesh/Material 按世界坐标和法线提交线框。
+- `BuildPaletteBaker.Bake()`：通过 Unity API 刷新 Main 的保存目录、透明图标、Mesh/Material 与组件引用。
+- `BuildPaletteBaker.ConfigureThumbnail(GameObject)`：只给渲染克隆填充金币/科技资源，保持真实初始库存。
+- `BuildPaletteBaker.Category(string)` / `Child(...)` / `Rect(...)` / `Label(...)` / `Set(...)`：默认分类和可编辑 uGUI 资产布局/绑定。
+- `BuildPaletteBaker.ImportSprite(string)` / `CreateBorder()` / `CreateHintAssets(...)`：Sprite 导入、九宫格边框和世界线框资产制作。
+- `BuildPalettePlayProbe.Run()` / `StateChanged(...)` / `Scenario()` / `Tick()` / `Finish()`：运行实际 Main UI 与连接提示回归，报告与截图保存到 Temp/BuildPalette。
+- `BuildPalettePlayProbe.Capture(...)` / `Check(...)` / `Invoke(...)` / `MovePointer(...)`：收集错误、断言及调用非公开建造入口验证。
+
 #### `Assets/Scripts/UI/MainUIButtons.cs`
 
 - `private void Awake()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
@@ -939,7 +959,6 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `public void SetMove()`： 设置该对象、视觉效果或运行时引用的参数/状态。
 - `public void SetRotate()`： 设置该对象、视觉效果或运行时引用的参数/状态。
 - `public void SetCurrentBlock(string fileName)`： 设置该对象、视觉效果或运行时引用的参数/状态。
-- `private void RegisterDiscoveredBlockButtons()`： 把模块、方块或控制单元分配或注册到对应运行时集合。
 
 #### `Assets/Scripts/UI/MainUIPanels.cs`
 
@@ -1149,6 +1168,15 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 
 ## 10. 变更日志
+
+### 2026-09-22（建造分类目录与连接点放置提示）
+
+- **实现**：Main/BuildPanel/ButtonContent 保存 23 个建造块，包括货仓、金币仓、科技仓、回收及维修无人机舱和炮塔。六类导航、四列滚动目录、透明底模型图标与圆角线框，悬停显示名称，选中边框高亮；移除运行时克隆文字按钮的旧注册路径。新增 Editor Bake 工具和来源/编辑说明。
+- **连接交互**：BuildManager 的预览流程显示当前指向方块所有可用 Connector 的 0.9×0.9 白色圆角线框；遵循世界法线、深度遮挡和 0.015 外偏移，不显示禁用或占用点。补齐 UI 防穿透、无有效连接点/资源时清理、禁用/退出清理，并将穿透搜索限制为最多 64 步。
+- **验证**：Unity 6000.3.11f1 导入编译、实际 Play Mode 25 项检查通过，无 Error/Exception；包含六类筛选、真实指针事件与资源选择、滚动复位、尺寸/过滤、旋转面视觉、销毁/退出清理、InputSystem 虚拟鼠标驱动的世界→UI 阻断和失效连接点恢复。透明 PNG Alpha 已检查，界面与世界线框截图见 Assets/Art/BuildPalette/Interaction-preview.png，报告为同目录 Validation.json。
+- **静态与重载**：`dotnet build HY-Sandbox.sln --no-restore --nologo` 0 错误、4 个既有警告；场景重载后 23 个按钮引用完整、缺失脚本为 0、Main 无未保存修改，`git diff --check` 通过。重载过程中的 CLI 超时由 Unity 外部文件更改对话框造成，已通过 Reload 解除并重新查询确认。
+- **边界**：验证为主场景探针和 1833×966 Game View 实际截图；未做所有分辨率、长时间手工搭建或超大目录压力测试。新增模块后需执行 Tools/Build Palette/Bake thumbnails and refresh Main；分类和图片均为真实可编辑场景/资产。
+
 
 ### 2026-09-22 货仓与残骸回收首版
 

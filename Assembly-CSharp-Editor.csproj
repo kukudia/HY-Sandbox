@@ -62,6 +62,7 @@
     <Analyzer Include="D:\git_projects\Unity\HY-Sandbox\Library\PackageCache\com.unity.pipeline@ab05e9cd7f74\Runtime\Analyzers\IlInterpreterAnalyzer.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Editor\BuildPalettePlayProbe.cs" />
     <Compile Include="Assets\Editor\AutoBuildTool.cs" />
     <Compile Include="Assets\Editor\BlockVfxTemporalValidation.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Assets\Editor\SalvageAssetBaker.cs" />
     <Compile Include="Assets\Editor\SpaceKitCurator.cs" />
     <Compile Include="Assets\Editor\ProfilerCaptureAnalysis.cs" />
+    <Compile Include="Assets\Editor\BuildPaletteBaker.cs" />
     <Compile Include="Assets\Editor\BlockArtPreview.cs" />
     <Compile Include="Assets\Editor\BlockArtValidation.cs" />
     <Compile Include="Assets\Editor\BlockArtDependencies.cs" />

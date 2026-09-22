@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "unity": "6000.3.11f1",
+  "checks": [
+    "Saved catalog contains all 23 buildable Prefabs, no Bot/Connector",
+    "New salvage blocks have saved icon buttons",
+    "Every preview has a sprite and no persistent text label",
+    "Tooltip hidden by default",
+    "Category 0 filters exact set",
+    "Category 1 filters exact set",
+    "Category 2 filters exact set",
+    "Category 3 filters exact set",
+    "Category 4 filters exact set",
+    "Category 5 filters exact set",
+    "Pointer hover displays name",
+    "Pointer exit clears name",
+    "Icon click selects correct resource",
+    "Overflow content scrolls within viewport",
+    "Category resets scroll to top",
+    "Hints exclude disabled and occupied connectors",
+    "Outline measures 0.9 by 0.9 world units",
+    "Leaving build mode clears hints even without ghost",
+    "World hover creates ghost and connector hints (ghost=True, hints=22, mouse=(916.50, 483.00), screen=1833x966, UI=False, hit=Connector probe)",
+    "No eligible connector clears stale ghost and hints",
+    "Preview recovers when connector becomes available",
+    "EventSystem detects palette hover",
+    "UI hover blocks world preview and placement path",
+    "Destroyed target clears hints",
+    "Invalid resource safely clears preview"
+  ],
+  "errors": []
+}

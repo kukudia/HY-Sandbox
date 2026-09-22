@@ -50,7 +50,6 @@ public class MainUIButtons : MonoBehaviour
             if (blockButton != null && blockButton.block != null && blockButton.button != null)
             {
                 blockButton.name = blockButton.block.name;
-                blockButton.button.GetComponentInChildren<Text>().text = blockButton.block.name;
                 blockButton.button.name = blockButton.block.name + "Button";
             }
         }
@@ -91,7 +90,6 @@ public class MainUIButtons : MonoBehaviour
             }
         }
 
-        RegisterDiscoveredBlockButtons();
     }
 
     private void Update()
@@ -153,50 +151,7 @@ public class MainUIButtons : MonoBehaviour
         }
     }
 
-    private void RegisterDiscoveredBlockButtons()
-    {
-        if (blockButtons.Count == 0 || blockButtons[0].button == null) return;
 
-        Button template = blockButtons[0].button;
-        Transform parent = template.transform.parent;
-        HashSet<string> existingNames = new HashSet<string>();
-
-        foreach (BlockButton blockButton in blockButtons)
-        {
-            if (blockButton != null && !string.IsNullOrEmpty(blockButton.name))
-            {
-                existingNames.Add(blockButton.name);
-            }
-        }
-
-        GameObject[] prefabs = Resources.LoadAll<GameObject>("Blocks");
-        foreach (GameObject prefab in prefabs)
-        {
-            if (prefab == null || existingNames.Contains(prefab.name)) continue;
-
-            Button button = Instantiate(template, parent);
-            button.name = prefab.name + "Button";
-
-            Text text = button.GetComponentInChildren<Text>();
-            if (text != null)
-            {
-                text.text = prefab.name;
-            }
-
-            string blockName = prefab.name;
-            button.onClick.RemoveAllListeners();
-            button.onClick.AddListener(() => SetCurrentBlock(blockName));
-
-            blockButtons.Add(new BlockButton
-            {
-                name = blockName,
-                button = button,
-                block = prefab
-            });
-
-            existingNames.Add(blockName);
-        }
-    }
 }
 
 [System.Serializable]
