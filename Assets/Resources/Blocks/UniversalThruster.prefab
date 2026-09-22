@@ -19181,7 +19181,7 @@ MonoBehaviour:
   raycastCollider: {fileID: 2425991073629260223}
   connectors:
   - name: Up 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 0
     localPos: {x: 0, y: 0.5, z: 0}

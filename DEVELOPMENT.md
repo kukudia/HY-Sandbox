@@ -51,12 +51,12 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 `BuildManager` 的主要流程：
 
 1. 从 `Resources/Blocks` 选择资源并创建 Ghost 预览。
-2. UI 上的指针输入先被拦截；射线检测方块并在可连接且未占用的 Connector 上显示 0.9×0.9 白色圆角线框，按连接面的世界法线向外偏移 0.015。按网格和目标旋转计算吸附位置；没有可用连接点、移出目标或退出模式时清除 Ghost 与提示。
+2. UI 上的指针输入先被拦截；射线检测方块并在自身 `canConnect`、未占用且对面没有实体方块的 Connector 上显示 0.9×0.9 白色圆角线框，按连接面的世界法线向外偏移 0.015。按网格和目标旋转计算吸附位置；没有可用连接点、移出目标或退出模式时清除 Ghost 与提示。
 3. `Block.IsBlockedGhost` 和 `BuildManager.IsBlocked` 检查重叠，阻挡时禁止放置。
 4. `CreateBlock` 实例化 Prefab，应用默认值并写入当前存档。
 5. 选中方块后支持键盘移动、15 度旋转、移动/旋转轴拖拽、复制和删除。
 
-`Block` 根据尺寸在六个方向生成连接点，通过位置和相反法线匹配相邻模块，维护 `neighbors`。连接成功后创建连接视觉对象；`DisConnectAllConnectors` 用于删除、拆分和游玩结束清理。
+`Block` 根据尺寸在六个方向生成连接点，通过位置和相反法线匹配相邻模块，维护 `neighbors`。`IsConnectorAvailableForPlacement` 会同时检查本方 `canConnect`、占用状态和对面方块是否存在，避免对着 `canConnect=false` 的邻接面显示提示或放置。连接成功后创建连接视觉对象；`DisConnectAllConnectors` 用于删除、拆分和游玩结束清理。
 
 ### 3.3 存档与加载
 
@@ -313,6 +313,7 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)`： 创建几何、资源、操作记录、UI 项或运行时对象。
 - `public Vector3 GetConnectorWorldPosition(Connector connector)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `public Vector3 GetConnectorWorldNormal(Connector connector)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `public bool IsConnectorAvailableForPlacement(Connector connector)`：检查连接点自身状态及对面是否已有实体方块，统一建造预览和放置的可用性判定。
 - `public void CheckConnection()`： 处理碰撞、连接、耐久、维修或状态检查逻辑。
 - `private Block FindBlockAcrossConnector(Connector connector)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private Connector FindMatchingConnector(Block otherBlock, Connector connector)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
@@ -527,7 +528,7 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `private void CacheDebugReferences()`：缓存旧调试 Cube 的 Renderer，供全局并集网格复制透明材质。
 - `internal Material DebugRangeMaterial`：向 DebugManager 提供旧调试 Cube 的共享材质作为并集透明材质模板。
 - `private void UpdateDebugVisuals()`：隐藏旧单体范围 Cube，并同步连接虚线。
-- `private void UpdatePowerRangeVisual()`：保持旧单体范围 Cube 隐藏，避免与全局并集网格重复绘制。
+- `private void UpdatePowerRangeVisual()`：先将旧单体范围 Cube 的世界旋转同步到输电设备，再保持其隐藏，避免与全局并集网格重复绘制。
 - `private void UpdateConnectionLines()`：为当前连通的发电机和相邻输电设备更新去重后的连接线。
 - `private void DrawDashedConnection(int index, Vector3 start, Vector3 end, Color color)`：设置单条连接线端点、颜色、宽度和虚线滚动参数。
 - `private void EnsureDebugProperties()`：按需创建连接线 MaterialPropertyBlock，兼容脚本热重载或异常初始化状态。
@@ -940,7 +941,8 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `BuildPalette.ShowTooltip(BuildPaletteItem)` / `HideTooltip(BuildPaletteItem)`：共享名称栏显示与归属控制。
 - `BuildPaletteItem.SetSelected(bool, Color)`：更新边框颜色。
 - `BuildPaletteItem.OnPointerEnter/Exit` / `OnSelect/Deselect` / `OnDisable`：鼠标、键盘焦点及禁用时的名称提示生命周期。
-- `ConnectorPlacementHints.Show(Block)` / `Hide()` / `OnDisable()`：设置或清理当前目标。
+- `ConnectorPlacementHints.Show(Camera, float, LayerMask, GameObject)` / `Hide()` / `OnDisable()`：设置范围扫描上下文或清理提示状态。
+- `ConnectorPlacementHints.ScanNearbyBlocks()` / `CanDisplay(Block, Connector)`：扫描相机附近方块，并复用 Block 的可放置连接点判定。
 - `ConnectorPlacementHints.LateUpdate()`：过滤禁用/占用点，以共享 Mesh/Material 按世界坐标和法线提交线框。
 - `BuildPaletteBaker.Bake()`：通过 Unity API 刷新 Main 的保存目录、透明图标、Mesh/Material 与组件引用。
 - `BuildPaletteBaker.ConfigureThumbnail(GameObject)`：只给渲染克隆填充金币/科技资源，保持真实初始库存。
@@ -1186,6 +1188,12 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - **验证状态**：Unity 6000.3.11f1 已导入/编译，容量、断电、溢出分流、两机预约、真实无人机往返、特殊掉落不被清理、仓体/回收舱真实摧毁、旧 JSON 和维修机器人回归已执行；最终报告见 `Assets/Art/Salvage/Validation.json`。31 项隔离 Play Mode 检查通过，包含默认避障配置下回收和实际文件返回/死亡保存；没有捕获到新增 Error/Exception。四个 Prefab 重载无缺失脚本/材质，已检查空仓/装载仓 URP 渲染；`dotnet build HY-Sandbox.sln --no-restore --nologo` 0 错误、4 个既有警告。`git diff --cached --check` 通过；生成元数据仅规范化行尾空白，未改变 GUID。
 - **边界**：沿用沙盒结束游玩入口返回，尚无独立撤离任务、局外库存消耗、商店或科技树。未完成大型蓝图战斗、并发透明渲染/导航压力和目标设备帧率验证。
 
+
+### 2026-09-22（连接点放置判定与供电调试旋转修复）
+
+- **修复连接点可放置判定**：新增 `Block.IsConnectorAvailableForPlacement`，同时检查本方 `canConnect`、占用状态和连接面外侧是否已有实体方块；`BuildManager` 的 Ghost 预览与 `ConnectorPlacementHints` 白色线框统一使用该判定，因此对着 `canConnect=false` 的邻接连接点不会显示提示，也不能放置。
+- **修复供电调试立方体旋转**：`PowerTransmissionDevice` 更新旧 `DebugCube` 时显式同步宿主对象的世界 `Transform.rotation`，即使该单体调试对象保持隐藏，也不会保留错误的局部/世界朝向。
+- **验证范围**：已通过代码检查、`dotnet build HY-Sandbox.sln --no-restore`（0 错误；4 个既有程序集版本/过时 API 警告）和任务文件 `git diff --check`。Unity Editor 已连接且版本为 6000.3.11f1，待完成本轮建造 Play Mode 探针验证。
 
 ### 2026-09-21（尾焰连续性及粒子生命周期修复）
 

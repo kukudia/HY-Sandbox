@@ -14,7 +14,7 @@ public class MainUIPanels : MonoBehaviour
     public GameObject deathPanel;
     public InputField inputName;
     public InputField inputValue;
-    public Scrollbar healthBar;
+    [SerializeField] private Image _healthFill;
     public Text healthValue;
     public float fadeDuration = 0.3f;
     public Gradient healthBarColor;
@@ -290,11 +290,13 @@ public class MainUIPanels : MonoBehaviour
 
     public void UpdateHealthBar(GameObject obj, float currentHealth, float maxHealth)
     {
-        if (obj.GetComponent<Cockpit>()?.faction == UnitFaction.Player)
+        if (obj == null || obj.GetComponent<Cockpit>()?.faction != UnitFaction.Player) return;
+        float ratio = maxHealth > 0f ? Mathf.Clamp01(currentHealth / maxHealth) : 0f;
+        if (_healthFill != null)
         {
-            healthBar.value = currentHealth / maxHealth;
-            healthBar.transform.Find("Sliding Area/Handle").GetComponent<Image>().color = healthBarColor.Evaluate(healthBar.value);
-            healthValue.text = $"{currentHealth} / {maxHealth}";
+            _healthFill.fillAmount = ratio;
+            _healthFill.color = healthBarColor.Evaluate(ratio);
         }
+        if (healthValue != null) healthValue.text = $"{Mathf.Max(0f, currentHealth):0} / {Mathf.Max(0f, maxHealth):0}";
     }
 }

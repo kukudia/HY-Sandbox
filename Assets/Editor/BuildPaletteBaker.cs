@@ -179,6 +179,23 @@ public static class BuildPaletteBaker
         mesh.Clear(); mesh.vertices = vertices; mesh.triangles = triangles; mesh.RecalculateNormals(); mesh.RecalculateBounds(); EditorUtility.SetDirty(mesh);
         string materialPath = Folder + "/ConnectorOutline.mat"; material = AssetDatabase.LoadAssetAtPath<Material>(materialPath);
         if (material == null) { material = new Material(Shader.Find("Universal Render Pipeline/Unlit")); AssetDatabase.CreateAsset(material, materialPath); }
-        material.SetColor("_BaseColor", Color.white); material.SetFloat("_Cull", 0); EditorUtility.SetDirty(material);
+        ConfigureHintMaterial(material);
     }
+    public static void ConfigureHintMaterial(Material material)
+    {
+        material.SetColor("_BaseColor", Color.white);
+        material.SetFloat("_Cull", 0);
+        material.SetFloat("_Surface", 1);
+        material.SetFloat("_Blend", 0);
+        material.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+        material.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        material.SetFloat("_SrcBlendAlpha", (float)UnityEngine.Rendering.BlendMode.One);
+        material.SetFloat("_DstBlendAlpha", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        material.SetFloat("_ZWrite", 0);
+        material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+        material.SetOverrideTag("RenderType", "Transparent");
+        material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+        EditorUtility.SetDirty(material);
+    }
+
 }

@@ -34,6 +34,8 @@ public class BuildManager : MonoBehaviour
     private Vector3 gridOrigin = Vector3.zero;
 
     [SerializeField] private ConnectorPlacementHints _connectorHints;
+    [SerializeField, Min(0.1f)] private float _buildRange = 15f;
+    public float BuildRange => Mathf.Max(0.1f, _buildRange);
     public Material highlightMaterial;
     private float moveStep = 1f;    // 移动步长
 
@@ -656,17 +658,17 @@ public class BuildManager : MonoBehaviour
 
     private void HandleBuildingPreview()
     {
-        // Palette and category clicks must never reach world placement.
+        GameObject prefab = Resources.Load<GameObject>(currentBlockResourcePath);
+        Block prefabBlock = prefab != null ? prefab.GetComponent<Block>() : null;
+        if (mainCamera == null || prefabBlock == null) { ClearCurrentGhost(); return; }
+        if (_connectorHints != null) _connectorHints.Show(mainCamera, BuildRange, blockLayer, currentGhost);
+        // Keep the range visible while aiming at empty space or browsing UI, but never place through UI.
         if (Mouse.current == null || (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()))
         {
-            ClearCurrentGhost();
+            ClearCurrentGhost(false);
             return;
         }
         hoveredConnector = null;
-        // 目标预制体
-        GameObject prefab = Resources.Load<GameObject>(currentBlockResourcePath);
-        Block prefabBlock = prefab != null ? prefab.GetComponent<Block>() : null;
-        if (prefabBlock == null) { ClearCurrentGhost(); return; }
 
         Vector3 rawPos = Vector3.zero;
         Vector3 snappedPos = Vector3.zero;
@@ -676,21 +678,21 @@ public class BuildManager : MonoBehaviour
         Vector2 mousePos = Mouse.current.position.ReadValue();
         Ray ray = mainCamera.ScreenPointToRay(mousePos);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 100f, blockLayer))
+        if (Physics.Raycast(ray, out RaycastHit hit, BuildRange + Vector3.Distance(ray.origin, mainCamera.transform.position), blockLayer))
         {
             Block block = hit.collider.GetComponentInParent<Block>();
             if (block != null)
             {
-                if (_connectorHints != null) _connectorHints.Show(block);
                 // 找最近的 connector
                 float minDist = float.MaxValue;
                 Connector nearest = null;
 
                 foreach (var c in block.connectors)
                 {
-                    if (!c.canConnect || c.isConnected) continue;
+                    if (!block.IsConnectorAvailableForPlacement(c)) continue;
 
                     Vector3 worldPos = block.GetConnectorWorldPosition(c);
+                    if (!IsWithinBuildRange(worldPos)) continue;
                     float dist = Vector3.Distance(hit.point, worldPos);
                     if (dist < minDist)
                     {
@@ -729,11 +731,11 @@ public class BuildManager : MonoBehaviour
         {
             if (currentGhost != null)
             {
-                ClearCurrentGhost();
+                ClearCurrentGhost(false);
             }
         }
 
-        if (hoveredConnector == null) { ClearCurrentGhost(); return; }
+        if (hoveredConnector == null) { ClearCurrentGhost(false); return; }
 
         if (currentGhost != null)
         {
@@ -744,10 +746,14 @@ public class BuildManager : MonoBehaviour
                 // Bound the search when a target is enclosed or its normal is invalid.
                 for (int step = 0; isBlocked && step < 64 && nearestNormal.sqrMagnitude > 0.5f; step++)
                 {
-                    currentGhost.transform.position += nearestNormal;
+                    Vector3 nextPosition = currentGhost.transform.position + nearestNormal;
+                    if (!IsWithinBuildRange(nextPosition)) break;
+                    currentGhost.transform.position = nextPosition;
                     isBlocked = currentGhost.GetComponent<Block>().IsBlockedGhost();
                 }
             }
+
+            isBlocked |= !IsWithinBuildRange(currentGhost.transform.position);
 
             Renderer[] renderers = currentGhost.GetComponentsInChildren<Renderer>();
             foreach (Renderer renderer in renderers)
@@ -765,6 +771,12 @@ public class BuildManager : MonoBehaviour
                 CreateBlock(prefab, currentBlockResourcePath, currentGhost.transform.position, currentGhost.transform.rotation);
             }
         }
+    }
+
+
+    public bool IsWithinBuildRange(Vector3 position)
+    {
+        return mainCamera != null && (position - mainCamera.transform.position).sqrMagnitude <= BuildRange * BuildRange;
     }
 
 
@@ -1486,9 +1498,9 @@ public class BuildManager : MonoBehaviour
         return bounds;
     }
 
-    private void ClearCurrentGhost()
+    private void ClearCurrentGhost(bool hideHints = true)
     {
-        if (_connectorHints != null) _connectorHints.Hide();
+        if (hideHints && _connectorHints != null) _connectorHints.Hide();
         hoveredConnector = null;
         if (currentGhost == null) return;
 

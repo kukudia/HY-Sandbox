@@ -19049,7 +19049,7 @@ MonoBehaviour:
   raycastCollider: {fileID: 6531628311628903173}
   connectors:
   - name: Up 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 0
     localPos: {x: -0.5, y: 1, z: -0.5}
@@ -19057,7 +19057,7 @@ MonoBehaviour:
     order: 1
     connector: {fileID: 0}
   - name: Up 2
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 0
     localPos: {x: -0.5, y: 1, z: 0.5}
@@ -19065,7 +19065,7 @@ MonoBehaviour:
     order: 2
     connector: {fileID: 0}
   - name: Up 3
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 0
     localPos: {x: 0.5, y: 1, z: -0.5}
@@ -19073,7 +19073,7 @@ MonoBehaviour:
     order: 3
     connector: {fileID: 0}
   - name: Up 4
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 0
     localPos: {x: 0.5, y: 1, z: 0.5}
@@ -19113,7 +19113,7 @@ MonoBehaviour:
     order: 4
     connector: {fileID: 0}
   - name: Forward 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 2
     localPos: {x: -0.5, y: -0.5, z: 1}
@@ -19121,7 +19121,7 @@ MonoBehaviour:
     order: 1
     connector: {fileID: 0}
   - name: Forward 2
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 2
     localPos: {x: -0.5, y: 0.5, z: 1}
@@ -19129,7 +19129,7 @@ MonoBehaviour:
     order: 2
     connector: {fileID: 0}
   - name: Forward 3
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 2
     localPos: {x: 0.5, y: -0.5, z: 1}
@@ -19137,7 +19137,7 @@ MonoBehaviour:
     order: 3
     connector: {fileID: 0}
   - name: Forward 4
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 2
     localPos: {x: 0.5, y: 0.5, z: 1}
@@ -19145,7 +19145,7 @@ MonoBehaviour:
     order: 4
     connector: {fileID: 0}
   - name: Back 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 3
     localPos: {x: -0.5, y: -0.5, z: -1}
@@ -19153,7 +19153,7 @@ MonoBehaviour:
     order: 1
     connector: {fileID: 0}
   - name: Back 2
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 3
     localPos: {x: -0.5, y: 0.5, z: -1}
@@ -19161,7 +19161,7 @@ MonoBehaviour:
     order: 2
     connector: {fileID: 0}
   - name: Back 3
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 3
     localPos: {x: 0.5, y: -0.5, z: -1}
@@ -19169,7 +19169,7 @@ MonoBehaviour:
     order: 3
     connector: {fileID: 0}
   - name: Back 4
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 3
     localPos: {x: 0.5, y: 0.5, z: -1}
@@ -19177,7 +19177,7 @@ MonoBehaviour:
     order: 4
     connector: {fileID: 0}
   - name: Left 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 4
     localPos: {x: -1, y: -0.5, z: -0.5}
@@ -19185,7 +19185,7 @@ MonoBehaviour:
     order: 1
     connector: {fileID: 0}
   - name: Left 2
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 4
     localPos: {x: -1, y: -0.5, z: 0.5}
@@ -19193,7 +19193,7 @@ MonoBehaviour:
     order: 2
     connector: {fileID: 0}
   - name: Left 3
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 4
     localPos: {x: -1, y: 0.5, z: -0.5}
@@ -19201,7 +19201,7 @@ MonoBehaviour:
     order: 3
     connector: {fileID: 0}
   - name: Left 4
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 4
     localPos: {x: -1, y: 0.5, z: 0.5}
@@ -19209,7 +19209,7 @@ MonoBehaviour:
     order: 4
     connector: {fileID: 0}
   - name: Right 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 5
     localPos: {x: 1, y: -0.5, z: -0.5}
@@ -19217,7 +19217,7 @@ MonoBehaviour:
     order: 1
     connector: {fileID: 0}
   - name: Right 2
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 5
     localPos: {x: 1, y: -0.5, z: 0.5}
@@ -19225,7 +19225,7 @@ MonoBehaviour:
     order: 2
     connector: {fileID: 0}
   - name: Right 3
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 5
     localPos: {x: 1, y: 0.5, z: -0.5}
@@ -19233,7 +19233,7 @@ MonoBehaviour:
     order: 3
     connector: {fileID: 0}
   - name: Right 4
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 5
     localPos: {x: 1, y: 0.5, z: 0.5}

@@ -327,6 +327,7 @@ public class PowerTransmissionDevice : MonoBehaviour
     private void UpdatePowerRangeVisual()
     {
         if (debugCube == null) return;
+        debugCube.transform.rotation = transform.rotation;
         debugCube.SetActive(false);
     }
 

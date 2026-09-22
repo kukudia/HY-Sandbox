@@ -285,7 +285,7 @@ MonoBehaviour:
   raycastCollider: {fileID: 4245157779349812274}
   connectors:
   - name: Up 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 0
     localPos: {x: 0, y: 0.5, z: 0}
@@ -301,7 +301,7 @@ MonoBehaviour:
     order: 1
     connector: {fileID: 0}
   - name: Forward 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 2
     localPos: {x: 0, y: 0, z: 0.5}
@@ -309,7 +309,7 @@ MonoBehaviour:
     order: 1
     connector: {fileID: 0}
   - name: Back 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 3
     localPos: {x: 0, y: 0, z: -0.5}
@@ -317,7 +317,7 @@ MonoBehaviour:
     order: 1
     connector: {fileID: 0}
   - name: Left 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 4
     localPos: {x: -0.5, y: 0, z: 0}
@@ -325,7 +325,7 @@ MonoBehaviour:
     order: 1
     connector: {fileID: 0}
   - name: Right 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 5
     localPos: {x: 0.5, y: 0, z: 0}

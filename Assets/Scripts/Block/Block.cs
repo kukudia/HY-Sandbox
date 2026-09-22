@@ -211,6 +211,18 @@ public class Block : MonoBehaviour
         return ConnectorRoot.TransformDirection(connector.normal).normalized;
     }
 
+    public bool IsConnectorAvailableForPlacement(Connector connector)
+    {
+        if (connector == null || !connector.canConnect || connector.isConnected)
+        {
+            return false;
+        }
+
+        // A disabled connector on the opposite block still occupies this face.
+        // Keep preview and placement from treating that blocked face as available.
+        return FindBlockAcrossConnector(connector) == null;
+    }
+
     public void CheckConnection()
     {
         // Rebuild connector links from physics probes so edits, loading, and explosions converge on one state.
