@@ -124,9 +124,9 @@
     <Compile Include="Assets\Scripts\UI\BlueprintUIPanel.cs" />
     <Compile Include="Assets\Scripts\UI\SaveUIPanel.cs" />
     <Compile Include="Assets\Scripts\InObject\LootDrop.cs" />
-    <Compile Include="Assets\Scripts\Block\Status.cs" />
     <Compile Include="Assets\Scripts\Actions\IBlockAction.cs" />
     <Compile Include="Assets\Scripts\InObject\Cockpit.cs" />
+    <Compile Include="Assets\Scripts\Block\Info.cs" />
     <Compile Include="Assets\Scripts\Thrusters\UniversalThruster.cs" />
     <Compile Include="Assets\Scripts\Effect\StylizedBeamEffect.cs" />
     <Compile Include="Assets\Scripts\Actions\RotateBlockAction.cs" />
