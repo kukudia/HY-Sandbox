@@ -120,6 +120,7 @@ public class PowerTransmissionDevice : MonoBehaviour
         ResetConnectionsAndPower();
         BuildConnections();
         DistributeNetworkPower();
+        CommitPowerStatuses();
         DebugManager.instance?.RefreshPowerRangeMesh(DeviceBuffer);
     }
 
@@ -272,6 +273,14 @@ public class PowerTransmissionDevice : MonoBehaviour
         }
     }
 
+    private static void CommitPowerStatuses()
+    {
+        foreach (Power powerBlock in PowerBuffer)
+        {
+            powerBlock.CommitPowerStatus();
+        }
+    }
+
     private static void CollectDeviceLoads(PowerTransmissionDevice device)
     {
         foreach (Power powerBlock in PowerBuffer)
@@ -299,6 +308,7 @@ public class PowerTransmissionDevice : MonoBehaviour
             if (powerBlock != null)
             {
                 powerBlock.ResetPower();
+                powerBlock.CommitPowerStatus();
             }
         }
     }

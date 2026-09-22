@@ -5,6 +5,10 @@
 > Unity 编辑器：6000.3.11f1（`ProjectSettings/ProjectVersion.txt`）  
 > 当前分支：`main`
 
+### 2026-09-22
+- **消除 `PlayManager.RefreshGroup` 重组后的物理停顿**：重组前记录原 `ControlUnit` 的 Rigidbody，创建新分组后按新刚体质心迁移原刚体的点速度和角速度，并显式唤醒新刚体。断开方块或爆炸触发重新分组时，分离组不再因新 Rigidbody 默认速度为零而停顿一个物理步。
+- **验证范围**：已通过代码差异检查、`git diff --check` 和 `dotnet build HY-Sandbox.sln --no-restore`；尚未在 Unity 6000.3.11f1 Play Mode 验证断开、爆炸、多分组和旋转运动下的连续性。
+
 本文档以仓库当前 Git 跟踪的 `Assets/`、`Packages/`、`ProjectSettings/` 和历史日志为依据。历史日志中的功能描述可能来自旧版本，若没有当前脚本、场景或运行时证据，不视为已实现。
 
 ## 1. 项目定位
@@ -62,11 +66,11 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 `SaveManager` 管理两个命名空间：玩家存档 `Saves` 与敌方蓝图 `EnemyBlueprints`，支持创建、读取、删除、重命名、复制和文件名校验。列表中的 Duplicate 按钮会在当前命名空间生成不覆盖已有文件的 `Copy` 名称，并刷新列表；复制不会切换当前加载目标。`BlockData` 保存资源路径、尺寸、位置和旋转等重建所需数据。
 
-`BuildManager.LoadAllBlocks` 使用协程逐个实例化，支持加载进度、取消旧加载、无法加载数据清理和可选的相机环绕；加载前会从完整 `BlockData` 计算含旋转尺寸的逻辑包围盒，加载镜头始终围绕该固定范围取景，完成后停留在新构造体的合适观察距离。方块数和总质量在主加载 `for` 循环中按成功恢复的 Block 增量累计并同步到 `BlueprintUIPanel`，不额外遍历已加载方块。存档身份依赖文件中的模块数据，不应把运行时 `GetInstanceID()` 当作跨会话稳定 ID。
+`BuildManager.LoadAllBlocks` 使用协程逐个实例化，支持加载进度、取消旧加载、无法加载数据清理和可选的相机环绕；加载前会从完整 `BlockData` 计算含旋转尺寸的逻辑包围盒，加载镜头始终围绕该固定范围取景，完成后停留在新构造体的合适观察距离。方块数、总质量、用电模块 `standardWorkingPower` 总需求和发电机 `outputPower` 总输出在主加载 `for` 循环中按成功恢复的 Block 增量累计并同步到 `BlueprintUIPanel`，不额外遍历已加载方块。存档身份依赖文件中的模块数据，不应把运行时 `GetInstanceID()` 当作跨会话稳定 ID。
 
 ### 3.4 游玩、供电与推进器
 
-`PowerGeneratingUnit` 提供 `outputPower`；`PowerTransmissionDevice` 每帧按 `maxConnectionDistance` 的世界坐标轴对齐立方体范围重建发电机/输电设备双向连接，通过设备和发电机共同组成的连通网络传递功率，并向任一设备 `powerRange` 立方体范围内带 `Power` 的 Block 供电。两种范围值均表示半边长，边界使用逐轴 `<= range` 判定。同一网络汇总所有发电机输出、对去重后的负载均分；不同网络同时覆盖同一负载时功率叠加，断连或禁用后旧功率会被清零。`DebugManager` 集中控制供电范围和网络连接调试显示；多个范围通过坐标压缩生成只含并集外表面的单个 Mesh，按孤立/已连接/有功率状态切换子网格颜色，内部重叠面不渲染，连接关系继续使用运行时复用的虚线 `LineRenderer` 表示。
+`PowerGeneratingUnit` 提供 `outputPower`；`PowerTransmissionDevice` 每帧按 `maxConnectionDistance` 的世界坐标轴对齐立方体范围重建发电机/输电设备双向连接，通过设备和发电机共同组成的连通网络传递功率，并向任一设备 `powerRange` 立方体范围内带 `Power` 的 Block 供电。两种范围值均表示半边长，边界使用逐轴 `<= range` 判定。同一网络汇总所有发电机输出、对去重后的负载均分；不同网络同时覆盖同一负载时功率叠加，断连或禁用后旧功率会被清零。`DebugManager` 集中控制供电范围、网络连接以及 Block 连接/耐久/供电状态图标；`Info` 在连接、耐久或供电数据变化时由对应组件主动刷新状态，Normal 状态不显示，其余状态使用 `Assets/Art/Icons/Status` 中的 Sprite。状态图标投影到独立 Screen Space Overlay Canvas，排序固定为普通 UI（0）高于图标（-1），图标仍覆盖 3D。多个供电范围通过坐标压缩生成只含并集外表面的单个 Mesh，按孤立/已连接/有功率状态切换子网格颜色，内部重叠面不渲染，连接关系继续使用运行时复用的虚线 `LineRenderer` 表示。
 
 `ControlUnit` 聚合驾驶舱、主推进器和悬浮推进器，读取玩家输入并把世界方向传给推进系统。敌方 `EnemyController` 默认每 0.5 秒采样一次目标/避障方向，并以响应速度渐进更新模拟输入；敌方不再直接修改 Rigidbody 的旋转或力，转向和位移统一交给 `MainThruster`/`UniversalThruster` 根据 `MovementInput` 施加。`Power.isWorking` 作为悬浮控制器、推进器和炮塔的硬启停条件；`Power.efficiency` 缩放悬浮推力/姿态修正、各推进器有效推力，以及炮塔伤害和射速。`HoverFlightController` 使用高度、重力补偿和姿态 PID 逻辑分配悬浮推力。
 
@@ -74,7 +78,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 3.5 UI、敌人和效果
 
-`MainUIButtons` 负责按钮事件和操作模式；`BuildPalette` / `BuildPaletteItem` 管理已保存的 23 个图标按钮、六类导航、滚动、悬停名称和选中颜色；`SaveUIPanel` 负责玩家/敌方蓝图列表；`BlueprintUIPanel` 显示当前建造目标名称、方块数量和总质量，并在搭建、拆除、Undo/Redo 时刷新，在存档或敌方蓝图异步加载期间逐块更新；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块，寻路避障按间隔采样并渐进转向，返航时对准停靠姿态后平滑减速归位，其飞行反馈由保存的双层青色尾迹和速度驱动喷口粒子组成，维修时从模型工具端发射双层能量束，并使用素材电弧与真实耐久恢复脉冲。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager` 和 `StylizedBeamEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。所有选中、Ghost、放置、旋转、维修、摧毁、爆炸和陨石冲击中的平面环形元素均已移除，改用 HDR 加法粒子、放射光痕、短束流和动态点光；烟尘继续使用普通 Alpha Blend 保持暗部层次。失去驾驶舱的断裂 Rigidbody 会获得最长 6 秒、按速度衰减的烟雾/余烬拖尾，同时限制全局活动数量为 24。
+`MainUIButtons` 负责按钮事件和操作模式，DebugSettingsPanel 提供供电范围、连接线、Block 连接状态、耐久状态和供电状态五个独立开关；`BuildPalette` / `BuildPaletteItem` 管理已保存的 23 个图标按钮、六类导航、滚动、悬停名称和选中颜色；`SaveUIPanel` 负责玩家/敌方蓝图列表；`BlueprintUIPanel` 显示当前建造目标名称、方块数量、总质量、需求功率和发电机总输出，并在搭建、拆除、Undo/Redo 时刷新，在存档或敌方蓝图异步加载期间逐块更新；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块，寻路避障按间隔采样并渐进转向，返航时对准停靠姿态后平滑减速归位，其飞行反馈由保存的双层青色尾迹和速度驱动喷口粒子组成，维修时从模型工具端发射双层能量束，并使用素材电弧与真实耐久恢复脉冲。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager` 和 `StylizedBeamEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。所有选中、Ghost、放置、旋转、维修、摧毁、爆炸和陨石冲击中的平面环形元素均已移除，改用 HDR 加法粒子、放射光痕、短束流和动态点光；烟尘继续使用普通 Alpha Blend 保持暗部层次。失去驾驶舱的断裂 Rigidbody 会获得最长 6 秒、按速度衰减的烟雾/余烬拖尾，同时限制全局活动数量为 24。
 
 ### 3.6 物理模拟与性能
 
@@ -149,6 +153,7 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 | P2 | 物理预算需要按目标设备调校 | 当前固定步长约 50 Hz、默认位置求解 4 次、追赶上限 0.1 秒；若出现高速穿透、堆叠抖动或重载时模拟变慢，应针对 Rigidbody 的碰撞检测、质量和局部求解迭代单独调参。 |
 | P2 | 无线供电网络尚未经过 Play Mode 压力验证 | 需验证移动发电机/中继、跨网覆盖、运行时销毁、零负载与大量 Power Block 下的分配正确性和每帧重建开销。 |
 | P2 | 供电调试线和范围显示依赖运行时动态材质/网格/子对象 | 需在 URP 下验证虚线纹理、并集透明度、不同状态交界和大量连接时的可读性；坐标压缩网格的单次构建规模随不同范围边界数量增长，需压力验证大量移动输电设备；调试开关关闭时应确认所有运行时 Renderer 已禁用。 |
+| P2 | Block 状态图标在大型蓝图中会产生每个异常 Block 一组运行时 uGUI Image | 当前状态检查降频到 0.1 秒且 Normal 不创建视觉对象；仍需用 500/1000 Block、多个异常状态和不同分辨率验证 CPU、Canvas rebuild、图标重叠和可读性。 |
 | P2 | EnemyController 的 AI 输入平滑参数仍需 Play Mode 调校 | 根据敌我距离、载具规模和目标帧率调节 `movementUpdateInterval` 与 `movementResponseRate`。 |
 | P2 | Block 爆炸当前仅实现范围断开、分组、物理冲量和粒子反馈 | 后续可在爆炸中心加入按距离衰减的伤害，并补充断开概率、冲量和半径的 Play Mode 调参记录。 |
 | P2 | 多个 RepairBot、连续大型爆炸和大量高速断裂部件会叠加透明粒子开销 | 已限制单个粒子系统粒子数并将断裂烟迹全局上限设为 24；仍需在大型蓝图战斗中记录透明 Overdraw、Batches 和主线程峰值。 |
@@ -334,6 +339,17 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `void LateUpdate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
 - `void OnGUI()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
 - `private bool ShouldShowDebugLabel()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+
+#### `Assets/Scripts/Block/Info.cs`
+
+- `private void Awake()`：缓存当前 Block 的连接、耐久和用电组件。
+- `private void LateUpdate()`：仅在调试管理器变化时刷新图标显示，并每帧把可见图标投影到屏幕位置；状态值由对应组件主动通知更新。
+- `public void CheckConnectionStatus()`：首次启用或重新启用时保持 Normal，完成首次连接刷新后只要存在一个已连接 Connector 即为 Normal，否则为 NoConnection；无连接点的对象保持 Normal。
+- `public void CheckDurabilityStatus()`：按满耐久、受损和归零更新 Normal、Damaged、Broken。
+- `public void CheckPowerStatus()`：无 Power 时为 Normal；低于最小工作功率为 NoPower，达到工作门槛但效率不足为 UnderPower。
+- `private void RefreshIcons(DebugManager manager)`：按三项 DebugManager 开关组合非 Normal 图标。
+- `private void EnsureIconVisuals(DebugManager manager)` / `CreateIcon(string)`：按需创建屏幕空间图标容器与三个 Image，不修改 Prefab 层级。
+- `private void UpdateIconScreenPosition(DebugManager manager)`：将 Block 顶部世界坐标投影到共享 Overlay Canvas，并按相机距离缩放图标，隐藏相机后方或屏幕外对象。
 
 #### `Assets/Scripts/Block/Power.cs`
 
@@ -590,6 +606,8 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `public Color GetPowerRangeColor(PowerTransmissionDevice device)`：根据设备网络连接和可用功率返回范围显示颜色。
 - `public void TogglePowerRange()`：切换供电范围调试显示。
 - `public void TogglePowerConnections()`：切换供电连接虚线显示。
+- `public void ToggleConnectionStatus()` / `ToggleDurabilityStatus()` / `TogglePowerStatus()`：分别切换 Block 连接、耐久和供电异常图标。
+- `private void EnsureStatusIconCanvas()`：创建 sortingOrder=-1 的屏幕空间图标层，保证普通 UI > 状态图标 > 3D。
 - `internal void RefreshPowerRangeMesh(IList<PowerTransmissionDevice> devices)`：在范围调试开启时按设备快照签名决定是否重建并集网格。
 - `internal void ClearPowerRangeMesh()`：最后一个输电设备停用时清空并隐藏并集网格。
 - `private void EnsurePowerRangeObject()`：创建运行时 MeshFilter、MeshRenderer 和支持 32 位索引的动态 Mesh。
@@ -914,11 +932,13 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `private void Awake()`：注册场景中的蓝图信息面板实例。
 - `private void Start()`：场景启动后按当前建造目标初始化显示。
 - `private void OnDestroy()`：面板销毁时清理静态实例引用。
-- `public void Refresh()`：根据当前建造目标、缓存方块 ID 和已加载 Block 刷新名称、数量与总质量。
+- `public void Refresh()`：根据当前建造目标、缓存方块 ID 和已加载 Block 刷新名称、数量、总质量、需求功率和发电机输出。
 - `public void UpdateCurrentSaveName(string newName)`：更新当前玩家存档或敌方蓝图名称。
-- `public void UpdateStatistics(int blockCount, float mass)`：同时更新方块数量和总质量，用于加载协程的增量进度显示。
+- `public void UpdateStatistics(int blockCount, float mass, float requiredPower, float generatorOutput)`：同时更新四项数值，用于加载协程的增量进度显示。
 - `public void UpdateTotalNumber(int newNumber)`：更新当前蓝图方块数量。
 - `public void UpdateTotalMass(float newMass)`：更新当前蓝图总质量。
+- `public void UpdateTotalRequiredPower(float newRequiredPower)`：更新所有用电 Block 的标准功率总需求。
+- `public void UpdateTotalGeneratorOutput(float newGeneratorOutput)`：更新所有发电机的非负输出总和。
 
 #### `Assets/Scripts/UI/ActionCounterUI.cs`
 
@@ -961,6 +981,8 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `public void SetMove()`： 设置该对象、视觉效果或运行时引用的参数/状态。
 - `public void SetRotate()`： 设置该对象、视觉效果或运行时引用的参数/状态。
 - `public void SetCurrentBlock(string fileName)`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `private void ShowConnectionStatus()` / `ShowDurabilityStatus()` / `ShowPowerStatus()`：切换对应状态图标并同步按钮选中色。
+- `private static void SetDebugButtonState(Button button, bool enabled)`：统一写入 Debug 按钮启用颜色。
 
 #### `Assets/Scripts/UI/MainUIPanels.cs`
 
@@ -1170,6 +1192,20 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 
 ## 10. 变更日志
+
+- 2026-09-22：移除 `Info.LateUpdate` 中每 0.1 秒轮询更新 Status 的逻辑。`Block.CheckConnection`、`Durability.UpdateDurablility` 与 `Power` 的供电写入点分别主动通知 `Info` 更新状态，Debug 状态开关变化时集中刷新图标；`LateUpdate` 仅保留屏幕位置投影。已通过 C# 静态构建，Unity Play Mode 尚需验证事件触发覆盖范围。
+- 2026-09-22：状态图标增加基于相机距离的缩放，近距离保持 42px 基准，远距离按 `iconReferenceDistance` 比例缩小并受 `iconMinimumScale` 限制，降低大型蓝图远景下图标过密问题；已完成代码静态确认，Unity 运行时视觉密度尚需验证。
+
+- 2026-09-22：修正 `Info.CheckConnectionStatus` 的初始化时序。Block 首次启用或重新启用时先保持 `ConnectionStatus.Normal`，待连接探针完成后再判断 `NoConnection`，避免连接状态尚未刷新时误显示断连图标；已完成代码静态确认，Unity 运行时需重新验证首次启用与实际断连场景。
+
+### 2026-09-22（Block 状态图标与蓝图功率统计）
+
+- **状态系统**：为 `Assets/Resources/Blocks` 内全部 23 个带 `Block` 根组件的 Prefab 添加 `Info`，绑定 broken-link、shield、mark、warning、energy 五个非 Normal 状态图标；连接、耐久、供电状态分别由 Connector、Durability、Power 实时判定。Normal 不显示，无对应数据组件时不误报。
+- **显示与调试 UI**：`DebugManager` 和 DebugSettingsPanel 新增连接状态、耐久状态、供电状态三个独立开关。异常图标组合显示在 Block 顶部的屏幕投影位置；共享 Overlay Canvas 使用 sortingOrder=-1，保持普通 UI > icon > 3D。新增 `BlockStatusSetup` 可重复迁移工具，负责 Prefab 图标绑定和 Main 场景 UI 引用。
+- **蓝图统计**：BlueprintInfoPanel 新增 Required power 与 Generator output 两行；`Refresh` 与异步恢复主循环均累计 `Power.standardWorkingPower` 和 `PowerGeneratingUnit.outputPower`，更新时机与既有数量/质量一致。
+- **已通过代码/文件确认**：Unity API 检查为 `Blocks=23; Infos=23; BadStatusLists=0; BlueprintRefs=True; DebugRefs=True`；Bot 与 Connector 因根对象没有 Block 组件未添加 Info。`dotnet build HY-Sandbox.sln --no-restore --nologo` 0 错误、4 个既有警告。
+- **已在 Unity 编辑器/运行时验证**：Unity 6000.3.11f1 导入编译 `failed=false`、Console 0 Error；Play Mode 探针得到 `NoConnection / Damaged / UnderPower`，三按钮点击后开关均为 True，创建 3 个有效 Sprite Image，图标 Canvas 排序为 -1。1280×720 Game View 检查后上移 DebugSettingsPanel、BlueprintInfoPanel，避免新增行侵入工具栏或屏幕下缘。
+- **尚未验证**：大型蓝图同时显示大量异常图标的 Canvas rebuild/重叠可读性、所有分辨率、遮挡关系和正式构建；已记录到待改进与风险。
 
 ### 2026-09-22（建造分类目录与连接点放置提示）
 

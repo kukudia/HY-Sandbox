@@ -72,6 +72,7 @@
     <Compile Include="Assets\Editor\SpaceKitCurator.cs" />
     <Compile Include="Assets\Editor\BuildInteractionSetup.cs" />
     <Compile Include="Assets\Editor\ProfilerCaptureAnalysis.cs" />
+    <Compile Include="Assets\Editor\BlockStatusSetup.cs" />
     <Compile Include="Assets\Editor\BuildPaletteBaker.cs" />
     <Compile Include="Assets\Editor\BlockArtPreview.cs" />
     <Compile Include="Assets\Editor\BlockArtValidation.cs" />

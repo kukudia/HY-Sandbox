@@ -541,7 +541,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66b52b53860fb564e9fb774c164b608e, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AssetParticleEffect
   _particles:
   - {fileID: 7768485739960521016}
@@ -754,7 +754,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66b52b53860fb564e9fb774c164b608e, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AssetParticleEffect
   _particles:
   - {fileID: 5175181659413913180}
@@ -807,6 +807,7 @@ GameObject:
   - component: {fileID: 194133884390072230}
   - component: {fileID: 7961907993403278621}
   - component: {fileID: 6775147631446052438}
+  - component: {fileID: 5636322347793022589}
   m_Layer: 3
   m_Name: CollectionBotContainer
   m_TagString: Untagged
@@ -843,13 +844,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7d183966293cfd84899367bf876635ec, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   canSpawnConnector: 0
   canBeDeleted: 1
   x: 1
   y: 1
   z: 1
+  cost: 0
   density: 1
   mass: 1
   collisionSpeedThreshold: 5
@@ -915,7 +917,7 @@ MonoBehaviour:
   canExplode: 0
   showConnectors: 1
   showLabel: 0
-  uniqueId:
+  uniqueId: 
 --- !u!65 &8339400636307940669
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -947,8 +949,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f887aec31b46cb74db9436ab89ebf777, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   maxDurability: 100
   debugLog: 1
   currentDurability: 0
@@ -962,7 +964,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 29a5772865e47b54495fc44376cbfc39, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BlockStatusLight
   _lights:
   - {fileID: 1739429583756080862}
@@ -982,11 +984,40 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13e8de7fb0f2f044b81805122c216c9d, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Power
   currentPower: 0
   minWorkingPower: 10
   standardWorkingPower: 20
+--- !u!114 &5636322347793022589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3887942468326477542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d918074d82ae8274ab6fa09613242220, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Info
+  blockName: CollectionBotContainer
+  description: 
+  statuses:
+  - name: NoConnection
+    icon: {fileID: 21300000, guid: 7da2c92e699bfa9488188457723863ea, type: 3}
+  - name: Damaged
+    icon: {fileID: 21300000, guid: 9360b62f09b3e8049b06b4718107ba22, type: 3}
+  - name: Broken
+    icon: {fileID: 21300000, guid: e78dec838fd5dc04b93a6eb73becc2e4, type: 3}
+  - name: UnderPower
+    icon: {fileID: 21300000, guid: 1a80744393b349343891ada992a47297, type: 3}
+  - name: NoPower
+    icon: {fileID: 21300000, guid: ea78db092f3021a40805b0ca6d146232, type: 3}
+  connectionStatus: 0
+  durabilityStatus: 0
+  powerStatus: 0
+  iconHeightOffset: 0.25
 --- !u!1 &4703979863204234994
 GameObject:
   m_ObjectHideFlags: 0
@@ -5764,7 +5795,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d9cd226f6bc8ffb4fb2888f63a7c02aa, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CollectionBot
   _flightEffect: {fileID: 2330941639270846601}
   _flightTrail: {fileID: 8293301502959306017}
@@ -20447,7 +20478,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66b52b53860fb564e9fb774c164b608e, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AssetParticleEffect
   _particles:
   - {fileID: 7768485739960521016}

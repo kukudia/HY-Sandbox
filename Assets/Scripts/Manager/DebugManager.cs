@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 public class DebugManager : MonoBehaviour
 {
@@ -13,6 +14,11 @@ public class DebugManager : MonoBehaviour
     [Header("Power Debug Visibility")]
     public bool showPowerRange = false;
     public bool showPowerConnections = false;
+
+    [Header("Block Status Visibility")]
+    public bool showConnectionStatus = false;
+    public bool showDurabilityStatus = false;
+    public bool showPowerStatus = false;
 
     [Header("Power Range Colors")]
     public Color poweredRangeColor = new Color(0.15f, 1f, 0.45f, 0.16f);
@@ -42,10 +48,21 @@ public class DebugManager : MonoBehaviour
     private MeshRenderer powerRangeRenderer;
     private Mesh powerRangeMesh;
     private int lastPowerRangeSignature = int.MinValue;
+    private RectTransform statusIconRoot;
+
+    public RectTransform StatusIconRoot
+    {
+        get
+        {
+            EnsureStatusIconCanvas();
+            return statusIconRoot;
+        }
+    }
 
     private void Awake()
     {
         instance = this;
+        EnsureStatusIconCanvas();
         EnsurePowerRangeObject();
         SetPowerRangeMeshVisible(false);
     }
@@ -102,6 +119,46 @@ public class DebugManager : MonoBehaviour
     public void TogglePowerConnections()
     {
         showPowerConnections = !showPowerConnections;
+    }
+
+    public void ToggleConnectionStatus()
+    {
+        showConnectionStatus = !showConnectionStatus;
+        Info.RefreshAllStatusIcons();
+    }
+
+    public void ToggleDurabilityStatus()
+    {
+        showDurabilityStatus = !showDurabilityStatus;
+        Info.RefreshAllStatusIcons();
+    }
+
+    public void TogglePowerStatus()
+    {
+        showPowerStatus = !showPowerStatus;
+        Info.RefreshAllStatusIcons();
+    }
+
+    private void EnsureStatusIconCanvas()
+    {
+        if (statusIconRoot != null) return;
+
+        GameObject canvasObject = new GameObject("Block Status Overlay", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
+        canvasObject.transform.SetParent(transform, false);
+        int uiLayer = LayerMask.NameToLayer("UI");
+        canvasObject.layer = uiLayer >= 0 ? uiLayer : gameObject.layer;
+
+        Canvas canvas = canvasObject.GetComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.overrideSorting = true;
+        canvas.sortingOrder = -1;
+
+        CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1920f, 1080f);
+        scaler.matchWidthOrHeight = 0.5f;
+
+        statusIconRoot = canvasObject.GetComponent<RectTransform>();
     }
 
     internal void RefreshPowerRangeMesh(IList<PowerTransmissionDevice> devices)

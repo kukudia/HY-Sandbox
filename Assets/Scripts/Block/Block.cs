@@ -53,10 +53,12 @@ public class Block : MonoBehaviour
     private const float connectionProbeRadius = 0.08f;
     private const float connectorMatchDistance = 0.25f;
     private const float oppositeNormalDotThreshold = 0.75f;
+    private Info _info;
     
 
     private void Awake()
     {
+        _info = GetComponent<Info>();
         if (string.IsNullOrEmpty(uniqueId))
         {
             uniqueId = System.Guid.NewGuid().ToString();
@@ -255,6 +257,11 @@ public class Block : MonoBehaviour
             {
                 ClearConnector(c);
             }
+        }
+
+        if (_info != null)
+        {
+            _info.CheckConnectionStatus();
         }
     }
 

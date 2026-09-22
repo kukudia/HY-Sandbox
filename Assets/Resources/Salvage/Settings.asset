@@ -20,5 +20,5 @@ MonoBehaviour:
   - Blocks/UniversalThruster
   - Blocks/HoverThruster
   - Blocks/RepairBotContianer
-  cleanupDelay: 3
+  cleanupDelay: 5
   maxCurrencyPackets: 64

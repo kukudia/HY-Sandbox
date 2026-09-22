@@ -9753,6 +9753,7 @@ GameObject:
   - component: {fileID: -5236499378836057712}
   - component: {fileID: 1578290364841887270}
   - component: {fileID: 7972893520162855960}
+  - component: {fileID: 9046826425678125857}
   m_Layer: 3
   m_Name: MainThruster
   m_TagString: Untagged
@@ -9795,6 +9796,7 @@ MonoBehaviour:
   x: 1
   y: 1
   z: 1
+  cost: 0
   density: 1
   mass: 1
   collisionSpeedThreshold: 5
@@ -10063,6 +10065,35 @@ MonoBehaviour:
   - {fileID: 6250632883420983544}
   - {fileID: 8452166807233193712}
   _responseSpeed: 8
+--- !u!114 &9046826425678125857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004239489873974274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d918074d82ae8274ab6fa09613242220, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Info
+  blockName: MainThruster
+  description: 
+  statuses:
+  - name: NoConnection
+    icon: {fileID: 21300000, guid: 7da2c92e699bfa9488188457723863ea, type: 3}
+  - name: Damaged
+    icon: {fileID: 21300000, guid: 9360b62f09b3e8049b06b4718107ba22, type: 3}
+  - name: Broken
+    icon: {fileID: 21300000, guid: e78dec838fd5dc04b93a6eb73becc2e4, type: 3}
+  - name: UnderPower
+    icon: {fileID: 21300000, guid: 1a80744393b349343891ada992a47297, type: 3}
+  - name: NoPower
+    icon: {fileID: 21300000, guid: ea78db092f3021a40805b0ca6d146232, type: 3}
+  connectionStatus: 0
+  durabilityStatus: 0
+  powerStatus: 0
+  iconHeightOffset: 0.25
 --- !u!1 &6414972485448477015
 GameObject:
   m_ObjectHideFlags: 0

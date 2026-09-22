@@ -5309,9 +5309,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f60bfef218079e044a227a007c43da2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _repairOrigin: {fileID: 6203895981224589863}
   _flightEffect: {fileID: 355002869428198886}
-  _repairImpact: {fileID: 7648809629995044805}
   _flightTrail: {fileID: 5820959558772153582}
   _flightCoreTrail: {fileID: 916619126827037657}
   home: {fileID: 2664907610342847789}
@@ -5319,8 +5317,6 @@ MonoBehaviour:
   navigateTarget: {fileID: 0}
   homeOffset: {x: 0, y: 0.1, z: 0}
   targetRange: 10
-  repairAmount: 20
-  repairCooldown: 1
   findTargetInterval: 1
   movementSpeed: 12
   rotationSpeed: 5
@@ -5357,6 +5353,13 @@ MonoBehaviour:
   showAvoidanceRays: 1
   showDirectionVectors: 1
   showAvoidanceZones: 1
+  currentState: 0
+  lastFindTime: 0
+  coolDownTimer: 0
+  _repairOrigin: {fileID: 6203895981224589863}
+  _repairImpact: {fileID: 7648809629995044805}
+  repairAmount: 20
+  repairCooldown: 1
   repairBeamGradient:
     serializedVersion: 2
     key0: {r: 0, g: 1, b: 0, a: 1}
@@ -5389,11 +5392,8 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   beamWidth: 0.2
   currentTarget: {fileID: 0}
-  currentState: 0
   lastRepairTime: 0
-  lastFindTime: 0
   isRepairing: 0
-  coolDownTimer: 0
 --- !u!54 &9216598194669526529
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -15186,6 +15186,7 @@ GameObject:
   - component: {fileID: 4245157779349812274}
   - component: {fileID: -4279398651480766575}
   - component: {fileID: 7799056987306700829}
+  - component: {fileID: 2284113129267153661}
   m_Layer: 3
   m_Name: RepairBotContianer
   m_TagString: Untagged
@@ -15229,6 +15230,7 @@ MonoBehaviour:
   x: 1
   y: 1
   z: 1
+  cost: 0
   density: 1
   mass: 1
   collisionSpeedThreshold: 5
@@ -15351,6 +15353,35 @@ MonoBehaviour:
   _readyColor: {r: 0.12, g: 0.8, b: 1, a: 1}
   _activeColor: {r: 0.18, g: 1, b: 0.52, a: 1}
   _intensity: 1.4
+--- !u!114 &2284113129267153661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004239489873974274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d918074d82ae8274ab6fa09613242220, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Info
+  blockName: RepairBotContianer
+  description: 
+  statuses:
+  - name: NoConnection
+    icon: {fileID: 21300000, guid: 7da2c92e699bfa9488188457723863ea, type: 3}
+  - name: Damaged
+    icon: {fileID: 21300000, guid: 9360b62f09b3e8049b06b4718107ba22, type: 3}
+  - name: Broken
+    icon: {fileID: 21300000, guid: e78dec838fd5dc04b93a6eb73becc2e4, type: 3}
+  - name: UnderPower
+    icon: {fileID: 21300000, guid: 1a80744393b349343891ada992a47297, type: 3}
+  - name: NoPower
+    icon: {fileID: 21300000, guid: ea78db092f3021a40805b0ca6d146232, type: 3}
+  connectionStatus: 0
+  durabilityStatus: 0
+  powerStatus: 0
+  iconHeightOffset: 0.25
 --- !u!1 &6248121365020521580
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,6 +14,7 @@ public class Durability : MonoBehaviour
     // 缓存组件引用，避免重复查找
     private Renderer objectRenderer;
     private MaterialPropertyBlock materialPropertyBlock;
+    private Info info;
     private static readonly int HealthColorId = Shader.PropertyToID("_HealthColor");
     
     // GUI 相关缓存
@@ -24,6 +25,7 @@ public class Durability : MonoBehaviour
     
     private void Awake()
     {
+        info = GetComponent<Info>();
         objectRenderer = GetComponent<Renderer>();
         if (objectRenderer != null)
         {
@@ -82,6 +84,11 @@ public class Durability : MonoBehaviour
         else
         {
             MainUIPanels.instance.UpdateHealthBar(gameObject, currentDurability, maxDurability);
+        }
+
+        if (info != null)
+        {
+            info.CheckDurabilityStatus();
         }
     }
 

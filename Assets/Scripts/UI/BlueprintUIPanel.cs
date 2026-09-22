@@ -9,6 +9,8 @@ public class BlueprintUIPanel : MonoBehaviour
     public Text currentSaveName;
     public Text totalNumber;
     public Text totalMass;
+    public Text totalRequiredPower;
+    public Text totalGeneratorOutput;
 
     private void Awake()
     {
@@ -42,6 +44,8 @@ public class BlueprintUIPanel : MonoBehaviour
         {
             UpdateTotalNumber(0);
             UpdateTotalMass(0f);
+            UpdateTotalRequiredPower(0f);
+            UpdateTotalGeneratorOutput(0f);
             return;
         }
 
@@ -55,6 +59,8 @@ public class BlueprintUIPanel : MonoBehaviour
         }
 
         float mass = 0f;
+        float requiredPower = 0f;
+        float generatorOutput = 0f;
         Transform blocksParent = GameManager.instance != null ? GameManager.instance.blocksParent : null;
         if (blocksParent != null)
         {
@@ -64,12 +70,26 @@ public class BlueprintUIPanel : MonoBehaviour
                 if (block != null && cachedBlockIds.Contains(block.uniqueId))
                 {
                     mass += block.mass;
+
+                    Power power = block.GetComponent<Power>();
+                    if (power != null)
+                    {
+                        requiredPower += Mathf.Max(0f, power.standardWorkingPower);
+                    }
+
+                    PowerGeneratingUnit generator = block.GetComponent<PowerGeneratingUnit>();
+                    if (generator != null)
+                    {
+                        generatorOutput += Mathf.Max(0f, generator.outputPower);
+                    }
                 }
             }
         }
 
         UpdateTotalNumber(cachedBlocks.Count);
         UpdateTotalMass(mass);
+        UpdateTotalRequiredPower(requiredPower);
+        UpdateTotalGeneratorOutput(generatorOutput);
     }
 
     public void UpdateCurrentSaveName(string newName)
@@ -80,10 +100,12 @@ public class BlueprintUIPanel : MonoBehaviour
         }
     }
 
-    public void UpdateStatistics(int blockCount, float mass)
+    public void UpdateStatistics(int blockCount, float mass, float requiredPower, float generatorOutput)
     {
         UpdateTotalNumber(blockCount);
         UpdateTotalMass(mass);
+        UpdateTotalRequiredPower(requiredPower);
+        UpdateTotalGeneratorOutput(generatorOutput);
     }
 
     public void UpdateTotalNumber(int newNumber)
@@ -99,6 +121,22 @@ public class BlueprintUIPanel : MonoBehaviour
         if (totalMass != null)
         {
             totalMass.text = $"Total mass: {newMass:0.##} kg";
+        }
+    }
+
+    public void UpdateTotalRequiredPower(float newRequiredPower)
+    {
+        if (totalRequiredPower != null)
+        {
+            totalRequiredPower.text = $"Required power: {newRequiredPower:0.##}";
+        }
+    }
+
+    public void UpdateTotalGeneratorOutput(float newGeneratorOutput)
+    {
+        if (totalGeneratorOutput != null)
+        {
+            totalGeneratorOutput.text = $"Generator output: {newGeneratorOutput:0.##}";
         }
     }
 }

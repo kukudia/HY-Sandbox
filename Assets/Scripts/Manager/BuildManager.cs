@@ -967,7 +967,7 @@ public class BuildManager : MonoBehaviour
         IsLoadingBlocks = true;
         if (BlueprintUIPanel.instance != null)
         {
-            BlueprintUIPanel.instance.UpdateStatistics(0, 0f);
+            BlueprintUIPanel.instance.UpdateStatistics(0, 0f, 0f, 0f);
         }
         loadAllBlocksCoroutine = StartCoroutine(LoadAllBlocksRoutine(loadVersion, loadSavePath, gameObj.transform, blocksToLoad, time0));
     }
@@ -978,6 +978,8 @@ public class BuildManager : MonoBehaviour
         int failCount = 0;
         int sucessCount = 0;
         float loadedMass = 0f;
+        float loadedRequiredPower = 0f;
+        float loadedGeneratorOutput = 0f;
         WaitForSeconds blockLoadWait = new WaitForSeconds(BlockLoadIntervalSeconds);
 
         for (int i = 0; i < blocksToLoad.Count; i++)
@@ -1015,9 +1017,26 @@ public class BuildManager : MonoBehaviour
                     SaveManager.instance.blocks.Add(block);
                     sucessCount++;
                     loadedMass += block.mass;
+
+                    Power power = block.GetComponent<Power>();
+                    if (power != null)
+                    {
+                        loadedRequiredPower += Mathf.Max(0f, power.standardWorkingPower);
+                    }
+
+                    PowerGeneratingUnit generator = block.GetComponent<PowerGeneratingUnit>();
+                    if (generator != null)
+                    {
+                        loadedGeneratorOutput += Mathf.Max(0f, generator.outputPower);
+                    }
+
                     if (BlueprintUIPanel.instance != null)
                     {
-                        BlueprintUIPanel.instance.UpdateStatistics(sucessCount, loadedMass);
+                        BlueprintUIPanel.instance.UpdateStatistics(
+                            sucessCount,
+                            loadedMass,
+                            loadedRequiredPower,
+                            loadedGeneratorOutput);
                     }
                 }
                 Durability durability = obj.GetComponent<Durability>();

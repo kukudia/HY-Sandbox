@@ -351,6 +351,7 @@ public class PlayManager : MonoBehaviour
 
     public void AssignBlocksToParentGroups(List<Block> blocks)
     {
+        Dictionary<Block, Rigidbody> sourceBodies = CaptureSourceBodies(blocks);
         List<List<Block>> groups = BlockGroupManager.GroupBlocks(blocks);
         GameObject parentPrefab = Resources.Load<GameObject>("BlocksParent/BlocksParent");
         int groupIndex = 1;
@@ -393,12 +394,57 @@ public class PlayManager : MonoBehaviour
             rb.linearDamping = 0.5f;
             rb.angularDamping = 2f;
             rb.isKinematic = false;
+            RestoreGroupPhysics(rb, group, sourceBodies);
 
             groupControl.RefreshChildren();
             groupControl.AssignRuntimeOwnershipToBlocks(false);
         }
 
         Camera.main.GetComponent<CameraController>().playerBody = blocksParent;
+    }
+
+    private Dictionary<Block, Rigidbody> CaptureSourceBodies(List<Block> blocks)
+    {
+        Dictionary<Block, Rigidbody> sourceBodies = new Dictionary<Block, Rigidbody>();
+        foreach (Block block in blocks)
+        {
+            if (block == null) continue;
+
+            ControlUnit sourceUnit = block.GetComponentInParent<ControlUnit>();
+            if (sourceUnit != null && !sourceBodies.ContainsKey(block))
+            {
+                sourceBodies[block] = sourceUnit.GetComponent<Rigidbody>();
+            }
+        }
+
+        return sourceBodies;
+    }
+
+    private void RestoreGroupPhysics(
+        Rigidbody targetBody,
+        List<Block> group,
+        Dictionary<Block, Rigidbody> sourceBodies)
+    {
+        if (targetBody == null || group == null || group.Count == 0) return;
+
+        // A regroup creates a new Rigidbody. Carry the old body's point velocity across
+        // so a detached fragment keeps moving instead of stopping for one physics step.
+        Rigidbody sourceBody = null;
+        foreach (Block block in group)
+        {
+            if (block == null) continue;
+
+            if (sourceBodies.TryGetValue(block, out sourceBody))
+            {
+                break;
+            }
+        }
+
+        if (sourceBody == null) return;
+
+        targetBody.linearVelocity = sourceBody.GetPointVelocity(targetBody.worldCenterOfMass);
+        targetBody.angularVelocity = sourceBody.angularVelocity;
+        targetBody.WakeUp();
     }
 
     public void RegisterControlUnit(ControlUnit unit)

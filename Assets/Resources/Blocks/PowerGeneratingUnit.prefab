@@ -329,6 +329,7 @@ GameObject:
   - component: {fileID: 7347779500678055298}
   - component: {fileID: -1621624530480126460}
   - component: {fileID: 8663989922556544006}
+  - component: {fileID: 4923927288198650868}
   m_Layer: 3
   m_Name: PowerGeneratingUnit
   m_TagString: Untagged
@@ -371,6 +372,7 @@ MonoBehaviour:
   x: 2
   y: 2
   z: 2
+  cost: 0
   density: 1
   mass: 8
   collisionSpeedThreshold: 5
@@ -651,6 +653,35 @@ MonoBehaviour:
   _readyColor: {r: 0.12, g: 0.8, b: 1, a: 1}
   _activeColor: {r: 0.18, g: 1, b: 0.52, a: 1}
   _intensity: 1.4
+--- !u!114 &4923927288198650868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004239489873974274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d918074d82ae8274ab6fa09613242220, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Info
+  blockName: PowerGeneratingUnit
+  description: 
+  statuses:
+  - name: NoConnection
+    icon: {fileID: 21300000, guid: 7da2c92e699bfa9488188457723863ea, type: 3}
+  - name: Damaged
+    icon: {fileID: 21300000, guid: 9360b62f09b3e8049b06b4718107ba22, type: 3}
+  - name: Broken
+    icon: {fileID: 21300000, guid: e78dec838fd5dc04b93a6eb73becc2e4, type: 3}
+  - name: UnderPower
+    icon: {fileID: 21300000, guid: 1a80744393b349343891ada992a47297, type: 3}
+  - name: NoPower
+    icon: {fileID: 21300000, guid: ea78db092f3021a40805b0ca6d146232, type: 3}
+  connectionStatus: 0
+  durabilityStatus: 0
+  powerStatus: 0
+  iconHeightOffset: 0.25
 --- !u!1 &6445829096791305864
 GameObject:
   m_ObjectHideFlags: 0

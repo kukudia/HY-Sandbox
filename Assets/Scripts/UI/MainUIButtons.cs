@@ -19,6 +19,9 @@ public class MainUIButtons : MonoBehaviour
     [Header("Debug Buttons")]
     public Button showPowerRangeButton;
     public Button showPowerConnectionsButton;
+    public Button showConnectionStatusButton;
+    public Button showDurabilityStatusButton;
+    public Button showPowerStatusButton;
 
     [Header("Play Buttons")]
     public Button playButton;
@@ -71,6 +74,9 @@ public class MainUIButtons : MonoBehaviour
 
         showPowerRangeButton.onClick.AddListener(ShowPowerRange);
         showPowerConnectionsButton.onClick.AddListener(ShowPowerConnections);
+        showConnectionStatusButton.onClick.AddListener(ShowConnectionStatus);
+        showDurabilityStatusButton.onClick.AddListener(ShowDurabilityStatus);
+        showPowerStatusButton.onClick.AddListener(ShowPowerStatus);
 
         playButton.onClick.AddListener(MainUIPanels.instance.PlayStart);
         exitButton.onClick.AddListener(MainUIPanels.instance.PlayEnd);
@@ -148,6 +154,38 @@ public class MainUIButtons : MonoBehaviour
         if (showPowerConnectionsButton != null)
         {
             showPowerConnectionsButton.GetComponent<Image>().color = DebugManager.instance.showPowerConnections ? Color.green : Color.white;
+        }
+    }
+
+    private void ShowConnectionStatus()
+    {
+        if (DebugManager.instance == null) return;
+
+        DebugManager.instance.ToggleConnectionStatus();
+        SetDebugButtonState(showConnectionStatusButton, DebugManager.instance.showConnectionStatus);
+    }
+
+    private void ShowDurabilityStatus()
+    {
+        if (DebugManager.instance == null) return;
+
+        DebugManager.instance.ToggleDurabilityStatus();
+        SetDebugButtonState(showDurabilityStatusButton, DebugManager.instance.showDurabilityStatus);
+    }
+
+    private void ShowPowerStatus()
+    {
+        if (DebugManager.instance == null) return;
+
+        DebugManager.instance.TogglePowerStatus();
+        SetDebugButtonState(showPowerStatusButton, DebugManager.instance.showPowerStatus);
+    }
+
+    private static void SetDebugButtonState(Button button, bool enabled)
+    {
+        if (button != null && button.TryGetComponent(out Image image))
+        {
+            image.color = enabled ? Color.green : Color.white;
         }
     }
 
