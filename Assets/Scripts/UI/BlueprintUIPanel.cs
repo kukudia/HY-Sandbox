@@ -112,31 +112,34 @@ public class BlueprintUIPanel : MonoBehaviour
     {
         if (totalNumber != null)
         {
-            totalNumber.text = $"Total number: {newNumber} blocks";
+            totalNumber.text = $"Total number:/t/t{newNumber} blocks";
         }
     }
 
     public void UpdateTotalMass(float newMass)
     {
+        float realMass = newMass / 10;
         if (totalMass != null)
         {
-            totalMass.text = $"Total mass: {newMass:0.##} kg";
+            totalMass.text = $"Total mass: {realMass:0.##} t";
         }
     }
 
     public void UpdateTotalRequiredPower(float newRequiredPower)
     {
+        float realPower = newRequiredPower / 10;
         if (totalRequiredPower != null)
         {
-            totalRequiredPower.text = $"Required power: {newRequiredPower:0.##}";
+            totalRequiredPower.text = $"Required power: {realPower:0.##} MJ";
         }
     }
 
     public void UpdateTotalGeneratorOutput(float newGeneratorOutput)
     {
+        float realPower = newGeneratorOutput / 10;
         if (totalGeneratorOutput != null)
         {
-            totalGeneratorOutput.text = $"Generator output: {newGeneratorOutput:0.##}";
+            totalGeneratorOutput.text = $"Output power: {realPower:0.##} MJ";
         }
     }
 }

@@ -1116,6 +1116,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 6486933973143962725}
   - {fileID: 7297744207001793934}
   - {fileID: 4739340208486872252}
   m_Father: {fileID: 0}
@@ -1307,21 +1308,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Info
   blockName: TechnologyHold
   description: 
-  statuses:
-  - name: NoConnection
-    icon: {fileID: 21300000, guid: 7da2c92e699bfa9488188457723863ea, type: 3}
-  - name: Damaged
-    icon: {fileID: 21300000, guid: 9360b62f09b3e8049b06b4718107ba22, type: 3}
-  - name: Broken
-    icon: {fileID: 21300000, guid: e78dec838fd5dc04b93a6eb73becc2e4, type: 3}
-  - name: UnderPower
-    icon: {fileID: 21300000, guid: 1a80744393b349343891ada992a47297, type: 3}
-  - name: NoPower
-    icon: {fileID: 21300000, guid: ea78db092f3021a40805b0ca6d146232, type: 3}
   connectionStatus: 0
   durabilityStatus: 0
   powerStatus: 0
   iconHeightOffset: 0.25
+  iconReferenceDistance: 12
+  iconMinimumScale: 0.45
 --- !u!1 &3299894292082583528
 GameObject:
   m_ObjectHideFlags: 0
@@ -2163,6 +2155,37 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &7120011934844828064
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6486933973143962725}
+  m_Layer: 0
+  m_Name: Center
+  m_TagString: Untagged
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6486933973143962725
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7120011934844828064}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 72713367043557802}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7842926553016608185
 GameObject:
   m_ObjectHideFlags: 0

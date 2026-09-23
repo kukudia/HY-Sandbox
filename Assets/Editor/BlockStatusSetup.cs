@@ -13,11 +13,11 @@ public static class BlockStatusSetup
 
     private static readonly (string statusName, string iconPath)[] StatusIcons =
     {
-        (nameof(ConnectionStatus.NoConnection), "Assets/Art/Icons/Status/broken-link.png"),
-        (nameof(DurabilityStatus.Damaged), "Assets/Art/Icons/Status/shield.png"),
-        (nameof(DurabilityStatus.Broken), "Assets/Art/Icons/Status/mark.png"),
-        (nameof(PowerStatus.UnderPower), "Assets/Art/Icons/Status/warning.png"),
-        (nameof(PowerStatus.NoPower), "Assets/Art/Icons/Status/energy.png"),
+        (nameof(ConnectionStatus.NoConnection), "Assets/Art/Icons/Status/NoConnection.png"),
+        (nameof(DurabilityStatus.Damaged), "Assets/Art/Icons/Status/Damaged.png"),
+        (nameof(DurabilityStatus.Broken), "Assets/Art/Icons/Status/Broken.png"),
+        (nameof(PowerStatus.UnderPower), "Assets/Art/Icons/Status/UnderPower.png"),
+        (nameof(PowerStatus.NoPower), "Assets/Art/Icons/Status/NoPower.png"),
     };
 
     [MenuItem("Tools/HY-Sandbox/Setup Block Status UI")]
@@ -50,7 +50,6 @@ public static class BlockStatusSetup
                 }
 
                 info.blockName = root.name;
-                info.statuses = BuildStatusList();
                 EditorUtility.SetDirty(info);
                 PrefabUtility.SaveAsPrefabAsset(root, path);
                 configuredCount++;
@@ -99,11 +98,14 @@ public static class BlockStatusSetup
         {
             BlueprintUIPanel blueprintPanel = FindComponentInScene<BlueprintUIPanel>(scene);
             MainUIButtons mainButtons = FindComponentInScene<MainUIButtons>(scene);
-            if (blueprintPanel == null || mainButtons == null)
+            IconManager iconManager = FindComponentInScene<IconManager>(scene);
+            if (blueprintPanel == null || mainButtons == null || iconManager == null)
             {
-                throw new MissingReferenceException("Main scene is missing BlueprintUIPanel or MainUIButtons.");
+                throw new MissingReferenceException("Main scene is missing BlueprintUIPanel, MainUIButtons or IconManager.");
             }
 
+            iconManager.statuses = BuildStatusList();
+            EditorUtility.SetDirty(iconManager);
             ConfigureBlueprintPanel(blueprintPanel);
             ConfigureDebugPanel(mainButtons);
             EditorSceneManager.MarkSceneDirty(scene);

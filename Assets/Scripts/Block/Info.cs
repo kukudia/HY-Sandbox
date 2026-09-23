@@ -13,7 +13,6 @@ public class Info : MonoBehaviour
     [Header("Static")]
     public string blockName;
     public string description;
-    public List<Status> statuses = new List<Status>();
 
     [Header("Dynamic")]
     public ConnectionStatus connectionStatus = ConnectionStatus.Normal;
@@ -22,13 +21,13 @@ public class Info : MonoBehaviour
 
     [Header("Display")]
     [Min(0f)] public float iconHeightOffset = 0.25f;
-    [Min(0.01f)] public float iconReferenceDistance = 12f;
-    [Range(0.2f, 1f)] public float iconMinimumScale = 0.45f;
 
     private Block _block;
     private Durability _durability;
     private Power _power;
     private RectTransform _iconRoot;
+    private CanvasGroup _iconGroup;
+    private Transform _center;
     private Image _connectionIcon;
     private Image _durabilityIcon;
     private Image _powerIcon;
@@ -40,6 +39,7 @@ public class Info : MonoBehaviour
         _block = GetComponent<Block>();
         _durability = GetComponent<Durability>();
         _power = GetComponent<Power>();
+        _center = transform.Find("Center");
     }
 
     private void OnEnable()
@@ -77,6 +77,10 @@ public class Info : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (_iconGroup != null && IconManager.instance != null)
+        {
+            IconManager.instance.Unregister(_iconGroup);
+        }
         if (_iconRoot != null)
         {
             Destroy(_iconRoot.gameObject);
@@ -220,9 +224,12 @@ public class Info : MonoBehaviour
         RectTransform overlayRoot = manager.StatusIconRoot;
         if (overlayRoot == null) return;
 
-        GameObject rootObject = new GameObject($"{name} Status Icons", typeof(RectTransform));
+        GameObject rootObject = new GameObject($"{name} Status Icons", typeof(RectTransform), typeof(CanvasGroup));
         _iconRoot = rootObject.GetComponent<RectTransform>();
         _iconRoot.SetParent(overlayRoot, false);
+        _iconGroup = rootObject.GetComponent<CanvasGroup>();
+        IconManager.instance?.Register(_iconGroup);
+        _iconRoot.localScale = Vector3.one;
         _iconRoot.anchorMin = new Vector2(0.5f, 0.5f);
         _iconRoot.anchorMax = new Vector2(0.5f, 0.5f);
         _iconRoot.pivot = new Vector2(0.5f, 0.5f);
@@ -256,9 +263,11 @@ public class Info : MonoBehaviour
 
     private Sprite FindStatusIcon(string statusName)
     {
-        for (int i = 0; i < statuses.Count; i++)
+        if (IconManager.instance == null) return null;
+
+        for (int i = 0; i < IconManager.instance.statuses.Count; i++)
         {
-            Status status = statuses[i];
+            Status status = IconManager.instance.statuses[i];
             if (status != null && status.name == statusName)
             {
                 return status.icon;
@@ -299,11 +308,8 @@ public class Info : MonoBehaviour
             return;
         }
 
-        float blockHeight = _block != null ? _block.y * 0.5f : 0f;
-        float distance = Vector3.Distance(camera.transform.position, transform.position);
-        float scale = Mathf.Clamp(iconReferenceDistance / Mathf.Max(distance, 0.01f), iconMinimumScale, 1f);
-        _iconRoot.localScale = Vector3.one * scale;
-        Vector3 screenPosition = camera.WorldToScreenPoint(transform.position + Vector3.up * (blockHeight + iconHeightOffset));
+        Vector3 centerPosition = _center != null ? _center.position : transform.position;
+        Vector3 screenPosition = camera.WorldToScreenPoint(centerPosition);
         bool isVisible = screenPosition.z > 0f
             && screenPosition.x >= 0f && screenPosition.x <= Screen.width
             && screenPosition.y >= 0f && screenPosition.y <= Screen.height;
@@ -335,13 +341,6 @@ public class Info : MonoBehaviour
             _iconRoot.gameObject.SetActive(false);
         }
     }
-}
-
-[Serializable]
-public class Status
-{
-    public string name;
-    public Sprite icon;
 }
 
 public enum ConnectionStatus

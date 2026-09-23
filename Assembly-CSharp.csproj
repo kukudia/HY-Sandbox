@@ -82,6 +82,7 @@
     <Compile Include="Assets\Scripts\InObject\Meteor.cs" />
     <Compile Include="Assets\Scripts\Thrusters\MainThruster.cs" />
     <Compile Include="Assets\Scripts\Block\Durability.cs" />
+    <Compile Include="Assets\Scripts\Manager\IconManager.cs" />
     <Compile Include="Assets\Scripts\Effect\CargoVisual.cs" />
     <Compile Include="Assets\Scripts\InObject\Bot.cs" />
     <Compile Include="Assets\Scripts\InObject\ModularUnitValidator.cs" />

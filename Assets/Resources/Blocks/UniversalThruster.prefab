@@ -19147,6 +19147,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4024843395817412494}
   - {fileID: 2695719906485559115}
   - {fileID: 2664907610342847789}
   - {fileID: 5632085051743268808}
@@ -19452,21 +19453,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Info
   blockName: UniversalThruster
   description: 
-  statuses:
-  - name: NoConnection
-    icon: {fileID: 21300000, guid: 7da2c92e699bfa9488188457723863ea, type: 3}
-  - name: Damaged
-    icon: {fileID: 21300000, guid: 9360b62f09b3e8049b06b4718107ba22, type: 3}
-  - name: Broken
-    icon: {fileID: 21300000, guid: e78dec838fd5dc04b93a6eb73becc2e4, type: 3}
-  - name: UnderPower
-    icon: {fileID: 21300000, guid: 1a80744393b349343891ada992a47297, type: 3}
-  - name: NoPower
-    icon: {fileID: 21300000, guid: ea78db092f3021a40805b0ca6d146232, type: 3}
   connectionStatus: 0
   durabilityStatus: 0
   powerStatus: 0
   iconHeightOffset: 0.25
+  iconReferenceDistance: 12
+  iconMinimumScale: 0.45
 --- !u!1 &6061651154850415736
 GameObject:
   m_ObjectHideFlags: 0
@@ -19544,6 +19536,37 @@ Transform:
   m_GameObject: {fileID: 7825868308876540989}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 199097415977098526}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8084247176143944765
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4024843395817412494}
+  m_Layer: 0
+  m_Name: Center
+  m_TagString: Untagged
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4024843395817412494
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8084247176143944765}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

@@ -70,7 +70,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 3.4 游玩、供电与推进器
 
-`PowerGeneratingUnit` 提供 `outputPower`；`PowerTransmissionDevice` 每帧按 `maxConnectionDistance` 的世界坐标轴对齐立方体范围重建发电机/输电设备双向连接，通过设备和发电机共同组成的连通网络传递功率，并向任一设备 `powerRange` 立方体范围内带 `Power` 的 Block 供电。两种范围值均表示半边长，边界使用逐轴 `<= range` 判定。同一网络汇总所有发电机输出、对去重后的负载均分；不同网络同时覆盖同一负载时功率叠加，断连或禁用后旧功率会被清零。`DebugManager` 集中控制供电范围、网络连接以及 Block 连接/耐久/供电状态图标；`Info` 在连接、耐久或供电数据变化时由对应组件主动刷新状态，Normal 状态不显示，其余状态使用 `Assets/Art/Icons/Status` 中的 Sprite。状态图标投影到独立 Screen Space Overlay Canvas，排序固定为普通 UI（0）高于图标（-1），图标仍覆盖 3D。多个供电范围通过坐标压缩生成只含并集外表面的单个 Mesh，按孤立/已连接/有功率状态切换子网格颜色，内部重叠面不渲染，连接关系继续使用运行时复用的虚线 `LineRenderer` 表示。
+`PowerGeneratingUnit` 提供 `outputPower`；`PowerTransmissionDevice` 每帧按 `maxConnectionDistance` 的世界坐标轴对齐立方体范围重建发电机/输电设备双向连接，通过设备和发电机共同组成的连通网络传递功率，并向任一设备 `powerRange` 立方体范围内带 `Power` 的 Block 供电。两种范围值均表示半边长，边界使用逐轴 `<= range` 判定。同一网络汇总所有发电机输出、对去重后的负载均分；不同网络同时覆盖同一负载时功率叠加，断连或禁用后旧功率会被清零。`DebugManager` 集中控制供电范围、网络连接以及 Block 连接/耐久/供电状态图标；`Info` 在连接、耐久或供电数据变化时由对应组件主动刷新状态，Normal 状态不显示，其余状态由场景中的 `IconManager` 统一提供。状态图标投影自 Block 的 `Center` 到独立 Screen Space Overlay Canvas，排序固定为普通 UI（0）高于图标（-1），并由 `IconManager` 用 `sin(Time.unscaledTime)` 统一驱动透明度。多个供电范围通过坐标压缩生成只含并集外表面的单个 Mesh，按孤立/已连接/有功率状态切换子网格颜色，内部重叠面不渲染，连接关系继续使用运行时复用的虚线 `LineRenderer` 表示。
 
 `ControlUnit` 聚合驾驶舱、主推进器和悬浮推进器，读取玩家输入并把世界方向传给推进系统。敌方 `EnemyController` 默认每 0.5 秒采样一次目标/避障方向，并以响应速度渐进更新模拟输入；敌方不再直接修改 Rigidbody 的旋转或力，转向和位移统一交给 `MainThruster`/`UniversalThruster` 根据 `MovementInput` 施加。`Power.isWorking` 作为悬浮控制器、推进器和炮塔的硬启停条件；`Power.efficiency` 缩放悬浮推力/姿态修正、各推进器有效推力，以及炮塔伤害和射速。`HoverFlightController` 使用高度、重力补偿和姿态 PID 逻辑分配悬浮推力。
 
@@ -349,7 +349,7 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `public void CheckPowerStatus()`：无 Power 时为 Normal；低于最小工作功率为 NoPower，达到工作门槛但效率不足为 UnderPower。
 - `private void RefreshIcons(DebugManager manager)`：按三项 DebugManager 开关组合非 Normal 图标。
 - `private void EnsureIconVisuals(DebugManager manager)` / `CreateIcon(string)`：按需创建屏幕空间图标容器与三个 Image，不修改 Prefab 层级。
-- `private void UpdateIconScreenPosition(DebugManager manager)`：将 Block 顶部世界坐标投影到共享 Overlay Canvas，并按相机距离缩放图标，隐藏相机后方或屏幕外对象。
+- `private void UpdateIconScreenPosition(DebugManager manager)`：将图标定位到 Block 的 `Center`、朝向相机并执行视口可见性检查。
 
 #### `Assets/Scripts/Block/Power.cs`
 
@@ -607,7 +607,7 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `public void TogglePowerRange()`：切换供电范围调试显示。
 - `public void TogglePowerConnections()`：切换供电连接虚线显示。
 - `public void ToggleConnectionStatus()` / `ToggleDurabilityStatus()` / `TogglePowerStatus()`：分别切换 Block 连接、耐久和供电异常图标。
-- `private void EnsureStatusIconCanvas()`：创建 sortingOrder=-1 的屏幕空间图标层，保证普通 UI > 状态图标 > 3D。
+- `IconManager.Register/Unregister`：注册和注销运行时状态图标，并统一驱动 `sin(Time.unscaledTime)` 透明度。
 - `internal void RefreshPowerRangeMesh(IList<PowerTransmissionDevice> devices)`：在范围调试开启时按设备快照签名决定是否重建并集网格。
 - `internal void ClearPowerRangeMesh()`：最后一个输电设备停用时清空并隐藏并集网格。
 - `private void EnsurePowerRangeObject()`：创建运行时 MeshFilter、MeshRenderer 和支持 32 位索引的动态 Mesh。
@@ -1193,6 +1193,8 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 ## 10. 变更日志
 
+- 2026-09-23：状态图标资源按状态名重命名并统一为白色，Prefab 不再各自保存 Status 列表，改由场景 `IconManager` 集中管理；按要求回退 World Space Canvas 深度遮挡策略，恢复独立 Screen Space Overlay 图标层，图标继续投影自 Block 的 `Center`，`IconManager` 统一使用 `sin(Time.unscaledTime)` 控制透明度。已通过 C# 静态构建，Unity 视觉效果尚需运行时验证。
+
 - 2026-09-22：移除 `Info.LateUpdate` 中每 0.1 秒轮询更新 Status 的逻辑。`Block.CheckConnection`、`Durability.UpdateDurablility` 与 `Power` 的供电写入点分别主动通知 `Info` 更新状态，Debug 状态开关变化时集中刷新图标；`LateUpdate` 仅保留屏幕位置投影。已通过 C# 静态构建，Unity Play Mode 尚需验证事件触发覆盖范围。
 - 2026-09-22：状态图标增加基于相机距离的缩放，近距离保持 42px 基准，远距离按 `iconReferenceDistance` 比例缩小并受 `iconMinimumScale` 限制，降低大型蓝图远景下图标过密问题；已完成代码静态确认，Unity 运行时视觉密度尚需验证。
 
@@ -1200,8 +1202,8 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 ### 2026-09-22（Block 状态图标与蓝图功率统计）
 
-- **状态系统**：为 `Assets/Resources/Blocks` 内全部 23 个带 `Block` 根组件的 Prefab 添加 `Info`，绑定 broken-link、shield、mark、warning、energy 五个非 Normal 状态图标；连接、耐久、供电状态分别由 Connector、Durability、Power 实时判定。Normal 不显示，无对应数据组件时不误报。
-- **显示与调试 UI**：`DebugManager` 和 DebugSettingsPanel 新增连接状态、耐久状态、供电状态三个独立开关。异常图标组合显示在 Block 顶部的屏幕投影位置；共享 Overlay Canvas 使用 sortingOrder=-1，保持普通 UI > icon > 3D。新增 `BlockStatusSetup` 可重复迁移工具，负责 Prefab 图标绑定和 Main 场景 UI 引用。
+- **状态系统**：为 `Assets/Resources/Blocks` 内全部 23 个带 `Block` 根组件的 Prefab 添加 `Info`，由 `IconManager` 统一管理 `NoConnection`、`Damaged`、`Broken`、`UnderPower`、`NoPower` 五个非 Normal 状态图标；连接、耐久、供电状态分别由 Connector、Durability、Power 实时判定。Normal 不显示，无对应数据组件时不误报。
+- **显示与调试 UI**：`DebugManager` 和 DebugSettingsPanel 新增连接状态、耐久状态、供电状态三个独立开关。异常图标由场景 `IconManager` 统一管理，使用 Block `Center` 的屏幕投影和独立 Overlay Canvas，并由 `sin(Time.unscaledTime)` 控制透明度。新增 `BlockStatusSetup` 可重复迁移工具，负责 Prefab 配置和 Main 场景 UI 引用。
 - **蓝图统计**：BlueprintInfoPanel 新增 Required power 与 Generator output 两行；`Refresh` 与异步恢复主循环均累计 `Power.standardWorkingPower` 和 `PowerGeneratingUnit.outputPower`，更新时机与既有数量/质量一致。
 - **已通过代码/文件确认**：Unity API 检查为 `Blocks=23; Infos=23; BadStatusLists=0; BlueprintRefs=True; DebugRefs=True`；Bot 与 Connector 因根对象没有 Block 组件未添加 Info。`dotnet build HY-Sandbox.sln --no-restore --nologo` 0 错误、4 个既有警告。
 - **已在 Unity 编辑器/运行时验证**：Unity 6000.3.11f1 导入编译 `failed=false`、Console 0 Error；Play Mode 探针得到 `NoConnection / Damaged / UnderPower`，三按钮点击后开关均为 True，创建 3 个有效 Sprite Image，图标 Canvas 排序为 -1。1280×720 Game View 检查后上移 DebugSettingsPanel、BlueprintInfoPanel，避免新增行侵入工具栏或屏幕下缘。
