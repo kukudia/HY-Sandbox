@@ -135,15 +135,9 @@ public class PlayManager : MonoBehaviour
         // Recalculate connected components, then restore each component's Rigidbody and thruster references.
         if (unit == null) return;
 
-        Physics.SyncTransforms();
         List<Block> blocks = unit.GetComponentsInChildren<Block>(true)
             .Where(block => block != null && block.isActiveAndEnabled)
             .ToList();
-        foreach (Block block in blocks)
-        {
-            block.CheckConnection();
-        }
-
         if (blocks.Count > 1)
         {
             AssignBlocksToParentGroups(blocks);

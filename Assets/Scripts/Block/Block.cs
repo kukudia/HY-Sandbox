@@ -54,6 +54,7 @@ public class Block : MonoBehaviour
     private const float connectorMatchDistance = 0.25f;
     private const float oppositeNormalDotThreshold = 0.75f;
     private Info _info;
+    private Collider[] _connectionHits = new Collider[8];
     
 
     private void Awake()
@@ -345,17 +346,26 @@ public class Block : MonoBehaviour
         Vector3 worldNormal = GetConnectorWorldNormal(connector);
         Vector3 probeCenter = worldPos + worldNormal * connectionProbeOffset;
 
-        Collider[] hits = Physics.OverlapSphere(probeCenter, connectionProbeRadius, BuildManager.instance.blockLayer);
-        foreach (Collider hit in hits)
+        int hitCount;
+        // Retry full buffers so dense collider arrangements cannot truncate the query.
+        while ((hitCount = Physics.OverlapSphereNonAlloc(probeCenter, connectionProbeRadius,
+            _connectionHits, BuildManager.instance.blockLayer)) == _connectionHits.Length)
         {
-            Block otherBlock = hit.GetComponentInParent<Block>();
+            System.Array.Resize(ref _connectionHits, _connectionHits.Length * 2);
+        }
+        Block result = null;
+        for (int i = 0; i < hitCount; i++)
+        {
+            Block otherBlock = _connectionHits[i].GetComponentInParent<Block>();
             if (otherBlock != null && otherBlock != this)
             {
-                return otherBlock;
+                result = otherBlock;
+                break;
             }
         }
 
-        return null;
+        System.Array.Clear(_connectionHits, 0, hitCount);
+        return result;
     }
 
     private Connector FindMatchingConnector(Block otherBlock, Connector connector, bool requireAvailable = true)
@@ -365,12 +375,12 @@ public class Block : MonoBehaviour
 
         foreach (Connector otherConnector in otherBlock.connectors)
         {
-            if (!otherConnector.canConnect || (requireAvailable && otherConnector.isConnected)) continue;
+            if (otherConnector == null || !otherConnector.canConnect || (requireAvailable && otherConnector.isConnected)) continue;
 
             Vector3 otherWorldPos = otherBlock.GetConnectorWorldPosition(otherConnector);
             Vector3 otherWorldNormal = otherBlock.GetConnectorWorldNormal(otherConnector);
 
-            if (Vector3.Distance(otherWorldPos, worldPos) < connectorMatchDistance
+            if ((otherWorldPos - worldPos).sqrMagnitude < connectorMatchDistance * connectorMatchDistance
                 && Vector3.Dot(otherWorldNormal, -worldNormal) > oppositeNormalDotThreshold)
             {
                 return otherConnector;
@@ -424,65 +434,25 @@ public class Block : MonoBehaviour
 
     public List<Block> Neighbors()
     {
-        List<Block> neighbors = new List<Block>();
-        if (this == null || connectors == null || BuildManager.instance == null)
-        {
-            return neighbors;
-        }
-
         Physics.SyncTransforms();
-        for (int i = 0; i < connectors.Count; i++)
-        {
-            Connector c = connectors[i];
-            if (c == null || !c.canConnect) continue;
-
-            Block otherBlock = FindBlockAcrossConnector(c);
-            if (otherBlock == null) continue;
-
-            Connector otherConnector = FindMatchingConnectorForNeighbor(otherBlock, c);
-            if (otherConnector != null)
-            {
-                if (!neighbors.Contains(otherBlock))
-                {
-                    neighbors.Add(otherBlock);
-                }
-            }
-        }
-        neighbors.RemoveAll(item => item == null);
-        //Debug.Log($"{name} find {neighbors.Count} neighbors.");
-        return neighbors;
+        List<Block> result = new List<Block>();
+        CollectNeighbors(result);
+        return result;
     }
 
-    private Connector FindMatchingConnectorForNeighbor(Block otherBlock, Connector connector)
+    // Batch callers synchronize once and reuse their result buffer.
+    // Topology depends on enabled matching faces, not optional visuals or stale flags.
+    internal void CollectNeighbors(List<Block> result)
     {
-        if (otherBlock == null || connector == null || !connector.canConnect)
+        result.Clear();
+        if (connectors == null || BuildManager.instance == null) return;
+        foreach (Connector connector in connectors)
         {
-            return null;
+            if (connector == null || !connector.canConnect) continue;
+            Block otherBlock = FindBlockAcrossConnector(connector);
+            if (otherBlock == null || !otherBlock.isActiveAndEnabled || result.Contains(otherBlock)) continue;
+            if (FindMatchingConnector(otherBlock, connector, false) != null) result.Add(otherBlock);
         }
-
-        Vector3 worldPos = GetConnectorWorldPosition(connector);
-        Vector3 worldNormal = GetConnectorWorldNormal(connector);
-        foreach (Connector otherConnector in otherBlock.connectors)
-        {
-            if (otherConnector == null || !otherConnector.canConnect) continue;
-
-            Vector3 otherWorldPos = otherBlock.GetConnectorWorldPosition(otherConnector);
-            Vector3 otherWorldNormal = otherBlock.GetConnectorWorldNormal(otherConnector);
-            if (Vector3.Distance(otherWorldPos, worldPos) >= connectorMatchDistance
-                || Vector3.Dot(otherWorldNormal, -worldNormal) <= oppositeNormalDotThreshold)
-            {
-                continue;
-            }
-
-            bool sameConnection = connector.isConnected
-                && otherConnector.isConnected
-                && connector.connector != null
-                && connector.connector == otherConnector.connector;
-            bool bothAvailable = !connector.isConnected && !otherConnector.isConnected;
-            return sameConnection || bothAvailable ? otherConnector : null;
-        }
-
-        return null;
     }
 
     public void DisConnectAllConnectors(bool refreshNeighbors = true)

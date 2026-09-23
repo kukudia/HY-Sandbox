@@ -3,70 +3,39 @@ using UnityEngine;
 
 public class BlockGroupManager : MonoBehaviour
 {
-    // 优化的分组算法：使用更高效的邻接表构建和 BFS 遍历
+    // Synchronize once per traversal; reuse queue and neighbor storage across groups.
     public static List<List<Block>> GroupBlocks(List<Block> allBlocks)
     {
-        if (allBlocks == null || allBlocks.Count == 0) return new List<List<Block>>();
-
-        List<Block> validBlocks = new List<Block>(allBlocks.Count);
+        List<List<Block>> groups = new List<List<Block>>();
+        if (allBlocks == null || allBlocks.Count == 0) return groups;
+        HashSet<Block> remaining = new HashSet<Block>();
         foreach (Block block in allBlocks)
         {
-            if (block != null && block.isActiveAndEnabled && !validBlocks.Contains(block))
-            {
-                validBlocks.Add(block);
-            }
+            if (block != null && block.isActiveAndEnabled) remaining.Add(block);
         }
-        if (validBlocks.Count == 0) return new List<List<Block>>();
-        HashSet<Block> validBlockSet = new HashSet<Block>(validBlocks);
+        if (remaining.Count == 0) return groups;
 
-        // 预先分配容量，减少扩容开销
-        int blockCount = validBlocks.Count;
-        Dictionary<Block, List<Block>> adjacencyList = new Dictionary<Block, List<Block>>(blockCount);
-        
-        // 构建邻接表 - 避免重复计算
-        foreach (Block block in validBlocks)
+        Physics.SyncTransforms();
+        Queue<Block> queue = new Queue<Block>();
+        List<Block> neighbors = new List<Block>();
+        foreach (Block block in allBlocks)
         {
-            List<Block> neighbors = block.Neighbors();
-            neighbors.RemoveAll(neighbor => neighbor == null || !validBlockSet.Contains(neighbor));
-            adjacencyList[block] = neighbors;
-        }
-
-        // BFS 遍历分组 - 使用预分配的 HashSet
-        List<List<Block>> groups = new List<List<Block>>();
-        HashSet<Block> visited = new HashSet<Block>(blockCount);
-
-        foreach (Block block in validBlocks)
-        {
-            if (block == null || visited.Contains(block)) continue;
-
-            List<Block> currentGroup = new List<Block>();
-            Queue<Block> queue = new Queue<Block>(blockCount);
+            if (block == null || !remaining.Remove(block)) continue;
+            List<Block> group = new List<Block>();
             queue.Enqueue(block);
-            visited.Add(block);
-
             while (queue.Count > 0)
             {
                 Block current = queue.Dequeue();
-
-                if (current == null) continue;
-
-                if (!adjacencyList.TryGetValue(current, out List<Block> neighbors) || neighbors == null) continue;
-
-                currentGroup.Add(current);
-
+                group.Add(current);
+                current.CollectNeighbors(neighbors);
                 foreach (Block neighbor in neighbors)
                 {
-                    if (neighbor != null && !visited.Contains(neighbor))
-                    {
-                        visited.Add(neighbor);
-                        queue.Enqueue(neighbor);
-                    }
+                    // Removal both bounds traversal to the input and marks visited.
+                    if (remaining.Remove(neighbor)) queue.Enqueue(neighbor);
                 }
             }
-
-            groups.Add(currentGroup);
+            groups.Add(group);
         }
-
         return groups;
     }
 

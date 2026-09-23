@@ -15,7 +15,8 @@
 - **验证范围**：已通过 `dotnet build HY-Sandbox.sln --no-restore`（0 错误，保留既有依赖版本和过时 API 警告）及 `git diff --check`；Unity 6000.3.11f1 `BuildPalettePlayProbe` 运行通过 47 项检查，包含 2x2x2 Ghost 连接点三轴重合、X/Z 整格坐标、绿色可放置预览，以及连接→移动断开→移回重连的双方状态刷新；大型蓝图压力仍未验证。
 
 - **连接点双侧能力校验**：`Block.IsConnectorAvailableForPlacement` 和 `CheckConnection` 现在都要求当前 Connector 与对面匹配 Connector 同时 `canConnect=true`、未占用，并满足位置与相反法线条件；射线/OverlapSphere 只负责发现候选 Block，不再直接决定连接。已通过代码构建、差异检查和 Unity 6000.3.11f1 Play Mode 探针；48 项检查全部通过，包含“禁用对面 Connector 后双方保持断开”。
-- **分组连接判定修复**：`Block.Neighbors` 现在只返回通过双侧 Connector 能力、位置、法线及占用状态校验的邻居，不再把单纯射线命中的方块加入连通图；`BlockGroupManager` 过滤空对象、禁用对象和输入集合外的邻居，`PlayManager.RefreshGroup` 在分组前同步物理并刷新每个 Block 的连接状态。新增 Play Mode 回归检查覆盖正常连接、禁用对面 Connector、禁用当前 Connector 三种分组结果。代码和探针已更新，Unity Play Mode 结果待本次运行确认。
+- **分组连接判定修复**：`Block.Neighbors` 现在只返回通过双侧 Connector 能力、位置、法线校验的邻居，不再把单纯射线命中的方块加入连通图；`BlockGroupManager` 过滤空对象、禁用对象和输入集合外的邻居。新增 Play Mode 回归检查覆盖正常连接、禁用对面 Connector、禁用当前 Connector 三种分组结果。Unity Play Mode 回归已通过；后续优化移除了分组前逐块重建连接的开销。
+- **分组计算开销优化**：分组遍历只同步一次物理，复用 BFS 队列和邻居缓冲；`OverlapSphere` 改用可复用的 `OverlapSphereNonAlloc` 缓冲，匹配比较使用平方距离，避免每个 Block 重复分配数组和执行 `CheckConnection`/连接视觉重建。分组只读取当前有效 Connector 几何关系，因此同帧移动、禁用 Connector 和缺少连接视觉 Prefab 都能得到正确结果。Unity 6000.3.11f1 Play Mode 探针通过 54 项检查，新增覆盖“无视觉连接仍可分组”“同帧移动”“禁用面且连接标志过期”等场景；代码构建与 `git diff --check` 通过。
 
 本文档以仓库当前 Git 跟踪的 `Assets/`、`Packages/`、`ProjectSettings/` 和历史日志为依据。历史日志中的功能描述可能来自旧版本，若没有当前脚本、场景或运行时证据，不视为已实现。
 
@@ -68,7 +69,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 4. `CreateBlock` 实例化 Prefab，应用默认值并写入当前存档。
 5. 选中方块后支持键盘移动、15 度旋转、移动/旋转轴拖拽、复制和删除。
 
-`Block` 根据尺寸在六个方向生成连接点，通过位置和相反法线匹配相邻模块，维护 `neighbors`。`CheckConnection` 会先同步物理变换并双向清理旧连接器，再建立未占用的匹配，连接/断开时同步双方 `Info` 状态；`Neighbors` 和 `BlockGroupManager.GroupBlocks` 使用同一套双侧连接规则，避免射线命中、禁用 Connector 或输入集合外对象造成错误合组。`PlayManager.RefreshGroup` 在重组前刷新物理与连接状态。`IsConnectorAvailableForPlacement` 会同时检查本方 `canConnect`、占用状态和对面方块是否存在，避免对着 `canConnect=false` 的邻接面显示提示或放置。连接成功后创建连接视觉对象（缺少视觉 Prefab 时仍保留逻辑连接）；`DisConnectAllConnectors` 用于删除、拆分和游玩结束清理。
+`Block` 根据尺寸在六个方向生成连接点，通过位置和相反法线匹配相邻模块，维护 `neighbors`。`CheckConnection` 会先同步物理变换并双向清理旧连接器，再建立未占用的匹配，连接/断开时同步双方 `Info` 状态；`Neighbors` 和 `BlockGroupManager.GroupBlocks` 使用同一套双侧连接规则，分组遍历复用物理查询缓冲和 BFS 工作区，避免射线命中、禁用 Connector、输入集合外对象或可选连接视觉造成错误合组和额外分配。`PlayManager.RefreshGroup` 将连接状态刷新留给实际连接变更路径，分组前只做一次物理同步。`IsConnectorAvailableForPlacement` 会同时检查本方 `canConnect`、占用状态和对面方块是否存在，避免对着 `canConnect=false` 的邻接面显示提示或放置。连接成功后创建连接视觉对象（缺少视觉 Prefab 时仍保留逻辑连接）；`DisConnectAllConnectors` 用于删除、拆分和游玩结束清理。
 
 ### 3.3 存档与加载
 
@@ -142,6 +143,8 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - 已加入三种可编辑货仓、回收无人机舱、独立掉落物、金币汇聚、内容保存/返回及共享 Bot 导航；运行验证记录见 2026-09-22 变更日志。
 
 ## 5. 待改进与风险
+
+- **已解决（2026-09-23）**：禁用 Connector 被物理命中后错误合组，以及无视觉连接误拆组；54 项 Play Mode 探针通过。大型蓝图分组耗时和 GC 峰值尚未采样，不能据此量化帧率收益。
 
 - **建造目录**：新增 Prefab 后需要执行 Build Palette Bake，将分类与图标保存入场景；不会在运行时自动复制按钮。尚未做超大目录性能或所有分辨率的手工操作测试。
 

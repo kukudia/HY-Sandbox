@@ -256,7 +256,25 @@ public static class BuildPalettePlayProbe
 
         List<List<Block>> connectedGroups = BlockGroupManager.GroupBlocks(new List<Block> { connectionA, connectionB });
         bool groupedWhenConnected = connectedGroups.Count == 1;
+        Check("Grouping preserves connection visuals", connectionA.connectors.Any(c => c.connector != null));
+        GameObject visualPrefabA = connectionA.connectorPrefab;
+        GameObject visualPrefabB = connectionB.connectorPrefab;
+        connectionA.connectorPrefab = null;
+        connectionB.connectorPrefab = null;
+        connectionA.CheckConnection();
+        Check("Grouping accepts logical connections without visuals",
+            BlockGroupManager.GroupBlocks(new List<Block> { connectionA, connectionB }).Count == 1);
+        connectionA.connectorPrefab = visualPrefabA;
+        connectionB.connectorPrefab = visualPrefabB;
+        Check("Grouping excludes external blocks and duplicate inputs",
+            BlockGroupManager.GroupBlocks(new List<Block> { connectionA, null, connectionA })[0].Count == 1);
+        connectionB.transform.position += Vector3.right * 2;
+        Check("Grouping observes same-frame moves without rebuilding connections",
+            BlockGroupManager.GroupBlocks(new List<Block> { connectionA, connectionB }).Count == 2);
+        connectionB.transform.position -= Vector3.right * 2;
         foreach (Connector connector in connectionB.connectors) connector.canConnect = false;
+        Check("Grouping rejects disabled faces even with stale connection flags",
+            BlockGroupManager.GroupBlocks(new List<Block> { connectionA, connectionB }).Count == 2);
         Physics.SyncTransforms();
         connectionA.CheckConnection();
         List<List<Block>> disabledOppositeGroups = BlockGroupManager.GroupBlocks(new List<Block> { connectionA, connectionB });
