@@ -1,0 +1,52 @@
+[
+  {
+    "name": "CODEX_01_Bastion",
+    "result": "completed",
+    "seconds": "24.02",
+    "minHP": 500.0,
+    "maxSpeed": 6.87,
+    "maxUnpowered": 0.0,
+    "maxEnemies": 3.0,
+    "lastBlocks": "737"
+  },
+  {
+    "name": "CODEX_02_Manta",
+    "result": "completed",
+    "seconds": "24.04",
+    "minHP": 500.0,
+    "maxSpeed": 6.82,
+    "maxUnpowered": 0.0,
+    "maxEnemies": 5.0,
+    "lastBlocks": "825"
+  },
+  {
+    "name": "CODEX_03_Catamaran",
+    "result": "completed",
+    "seconds": "24.05",
+    "minHP": 500.0,
+    "maxSpeed": 6.39,
+    "maxUnpowered": 0.0,
+    "maxEnemies": 5.0,
+    "lastBlocks": "1081"
+  },
+  {
+    "name": "CODEX_04_Crossguard",
+    "result": "completed",
+    "seconds": "24.02",
+    "minHP": 500.0,
+    "maxSpeed": 6.43,
+    "maxUnpowered": 0.0,
+    "maxEnemies": 5.0,
+    "lastBlocks": "981"
+  },
+  {
+    "name": "CODEX_05_Lance",
+    "result": "completed",
+    "seconds": "24.03",
+    "minHP": 500.0,
+    "maxSpeed": 6.61,
+    "maxUnpowered": 0.0,
+    "maxEnemies": 5.0,
+    "lastBlocks": "1017"
+  }
+]

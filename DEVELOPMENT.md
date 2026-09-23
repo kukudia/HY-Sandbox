@@ -10,6 +10,9 @@
 - **验证范围**：已通过代码差异检查、`git diff --check` 和 `dotnet build HY-Sandbox.sln --no-restore`；尚未在 Unity 6000.3.11f1 Play Mode 验证断开、爆炸、多分组和旋转运动下的连续性。
 
 ### 2026-09-23
+- **CODEX 生存蓝图组**：新增 `Blueprints/CODEX/Generate.cs`，通过连接 Editor 的 `eval_file` 直接读取原装 Prefab 生成堡垒、蝠鲼、双体、十字卫士、长矛五份玩家 JSON 蓝图，文件名均带 `CODEX_`。仓库保存副本，本机安装至 `Application.persistentDataPath/Saves`；不修改生产代码、场景或部件数值。生成器拒绝占用格重叠，对不同内容的同名文件先备份。
+- **蓝图文件验证**：737/825/1081/981/1017 个部件均通过真实可用连接点几何连通、资源与尺寸、唯一 ID、供电覆盖及存档副本一致性检查；完整结构理论升重比 1.61～2.11。运行验证方法与局限见 `Blueprints/CODEX/README.md`，原始采样见 `Runtime.tsv`；短时自动游玩不等同于长时间密集火力生存排名。
+- **蓝图 Play Mode 验证**：Unity 6000.3.11f1 / Main 中五艘逐一完成真实加载、单连通组检查和约 24 秒自动起飞/四向移动观察，驾驶舱最低 500，未供电部件 0，采样峰值速度 6.39～6.87。采用公开移动接口模拟输入，未覆盖键盘端到端和持续命中 DPS。未观察到 Console Error；维修无人机 ClosestPoint Warning 已记录至风险。退出后 Main 场景保持未修改状态。
 - **BuildManager 连接刷新**：`SaveBlock` 在保存后先调用 `Physics.SyncTransforms`，按方块尺寸和 0.35 单位邻域收集受影响 Block，再去重重建连接；`Block.CheckConnection` 清理共享连接器在两侧的引用、刷新双方 `Info`，拒绝已占用对端 Connector，并兼容缺少连接器视觉 Prefab 的连接状态，解决移动/删除后状态图标和连接关系滞后一帧或残留的问题。
 - **大型方块预览**：Ghost 的放置偏移改为按预览方块旋转后的方向半尺寸计算，网格吸附改用半网格边界以保持奇数尺寸方块的中心坐标；阻挡检测统一乘 `gridSize` 并同时检查实体 AABB 与连接点射线，2x1x1、2x2x1、2x2x2 等尺寸不会再固定按 1x1x1 处理。
 - **验证范围**：已通过 `dotnet build HY-Sandbox.sln --no-restore`（0 错误，保留既有依赖版本和过时 API 警告）及 `git diff --check`；Unity 6000.3.11f1 `BuildPalettePlayProbe` 运行通过 47 项检查，包含 2x2x2 Ghost 连接点三轴重合、X/Z 整格坐标、绿色可放置预览，以及连接→移动断开→移回重连的双方状态刷新；大型蓝图压力仍未验证。
@@ -72,6 +75,8 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 `Block` 根据尺寸在六个方向生成连接点，通过位置和相反法线匹配相邻模块，维护 `neighbors`。`CheckConnection` 会先同步物理变换并双向清理旧连接器，再建立未占用的匹配，连接/断开时同步双方 `Info` 状态；`Neighbors` 和 `BlockGroupManager.GroupBlocks` 使用同一套双侧连接规则，分组遍历复用物理查询缓冲和 BFS 工作区，避免射线命中、禁用 Connector、输入集合外对象或可选连接视觉造成错误合组和额外分配。`PlayManager.RefreshGroup` 将连接状态刷新留给实际连接变更路径，分组前只做一次物理同步。`IsConnectorAvailableForPlacement` 会同时检查本方 `canConnect`、占用状态和对面方块是否存在，避免对着 `canConnect=false` 的邻接面显示提示或放置。连接成功后创建连接视觉对象（缺少视觉 Prefab 时仍保留逻辑连接）；`DisConnectAllConnectors` 用于删除、拆分和游玩结束清理。
 
 ### 3.3 存档与加载
+
+- 玩家可加载 `CODEX_01_Bastion`、`CODEX_02_Manta`、`CODEX_03_Catamaran`、`CODEX_04_Crossguard`、`CODEX_05_Lance`。`Blueprints/CODEX` 提供 JSON、可重复生成/校验脚本和操作说明；该目录位于 Assets 外，不被打包，也不自动安装到其他机器。开始游玩后按一次 Space 启动悬浮，WASD 移动，Q/E 调高。
 
 `SaveManager` 管理两个命名空间：玩家存档 `Saves` 与敌方蓝图 `EnemyBlueprints`，支持创建、读取、删除、重命名、复制和文件名校验。列表中的 Duplicate 按钮会在当前命名空间生成不覆盖已有文件的 `Copy` 名称，并刷新列表；复制不会切换当前加载目标。`BlockData` 保存资源路径、尺寸、位置和旋转等重建所需数据。
 
@@ -143,6 +148,9 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - 已加入三种可编辑货仓、回收无人机舱、独立掉落物、金币汇聚、内容保存/返回及共享 Bot 导航；运行验证记录见 2026-09-22 变更日志。
 
 ## 5. 待改进与风险
+
+- **2026-09-23 Play Mode 已复现**：`Bot.CalculateAdvancedAvoidance` 在 Bot.cs:551 对不支持的 Collider 调用 `ClosestPoint`，维修无人机导航持续产生警告。需正确处理非凸 MeshCollider 等类型，不能只屏蔽日志。本次蓝图任务记录问题，未改动导航系统。
+- **2026-09-23 蓝图设计观察**：默认每部件 0.1 秒的加载等待导致千部件蓝图至少约百秒加载；不同体积装甲同为 100 耐久使小块密铺具有耐久优势且增加 CPU 负担；建造面板缺少失效后的升力/覆盖提示；自动生存对比需要固定种子、标准火力和实际受击/维修统计。按优先级的建议见 `Blueprints/CODEX/README.md`。本次只交付蓝图，没有实施这些平衡或性能改造。
 
 - **已解决（2026-09-23）**：禁用 Connector 被物理命中后错误合组，以及无视觉连接误拆组；54 项 Play Mode 探针通过。大型蓝图分组耗时和 GC 峰值尚未采样，不能据此量化帧率收益。
 

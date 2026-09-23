@@ -1,0 +1,75 @@
+{
+  "success": true,
+  "command": "command eval_file",
+  "data": {
+    "command": "eval_file",
+    "parameters": {
+      "file": "Blueprints/CODEX/Validate.cs"
+    },
+    "result": {
+      "output": null,
+      "diagnostics": [],
+      "success": true,
+      "result": [
+        {
+          "name": "CODEX_01_Bastion",
+          "passed": true,
+          "blocks": 737,
+          "connected": 737,
+          "uncovered": 0,
+          "liveRelays": 16,
+          "unique": true,
+          "identical": true
+        },
+        {
+          "name": "CODEX_02_Manta",
+          "passed": true,
+          "blocks": 825,
+          "connected": 825,
+          "uncovered": 0,
+          "liveRelays": 20,
+          "unique": true,
+          "identical": true
+        },
+        {
+          "name": "CODEX_03_Catamaran",
+          "passed": true,
+          "blocks": 1081,
+          "connected": 1081,
+          "uncovered": 0,
+          "liveRelays": 16,
+          "unique": true,
+          "identical": true
+        },
+        {
+          "name": "CODEX_04_Crossguard",
+          "passed": true,
+          "blocks": 981,
+          "connected": 981,
+          "uncovered": 0,
+          "liveRelays": 20,
+          "unique": true,
+          "identical": true
+        },
+        {
+          "name": "CODEX_05_Lance",
+          "passed": true,
+          "blocks": 1017,
+          "connected": 1017,
+          "uncovered": 0,
+          "liveRelays": 20,
+          "unique": true,
+          "identical": true
+        }
+      ]
+    },
+    "target": {
+      "host": "127.0.0.1",
+      "port": 7800,
+      "projectPath": "D:\\git_projects\\Unity\\HY-Sandbox"
+    },
+    "success": true
+  },
+  "errors": [],
+  "warnings": []
+}
