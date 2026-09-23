@@ -478,8 +478,6 @@ MonoBehaviour:
   durabilityStatus: 0
   powerStatus: 0
   iconHeightOffset: 0.25
-  iconReferenceDistance: 12
-  iconMinimumScale: 0.45
 --- !u!1 &8425137956209950207
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,7 +544,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6c02dcf2f203fa94bb438ca2e88a85f5, type: 2}
+  - {fileID: 2100000, guid: 0636ed19daf2302418fdf6fab1e1d2d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

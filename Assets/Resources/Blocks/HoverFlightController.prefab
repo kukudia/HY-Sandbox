@@ -59,7 +59,7 @@ Transform:
   m_GameObject: {fileID: 743693206504963641}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.07882777, z: -0.00000007945861}
+  m_LocalPosition: {x: 0, y: -0.428, z: -0.00000007945861}
   m_LocalScale: {x: 0.6665471, y: 0.6665471, z: 0.6665471}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -209,7 +209,7 @@ Transform:
   m_GameObject: {fileID: 4866909446676133900}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -287,7 +287,7 @@ MonoBehaviour:
   raycastCollider: {fileID: 551971835264929317}
   connectors:
   - name: Up 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 0
     localPos: {x: 0, y: 0.5, z: 0}
@@ -303,7 +303,7 @@ MonoBehaviour:
     order: 1
     connector: {fileID: 0}
   - name: Forward 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 2
     localPos: {x: 0, y: 0, z: 0.5}
@@ -311,7 +311,7 @@ MonoBehaviour:
     order: 1
     connector: {fileID: 0}
   - name: Back 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 3
     localPos: {x: 0, y: 0, z: -0.5}
@@ -319,7 +319,7 @@ MonoBehaviour:
     order: 1
     connector: {fileID: 0}
   - name: Left 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 4
     localPos: {x: -0.5, y: 0, z: 0}
@@ -327,7 +327,7 @@ MonoBehaviour:
     order: 1
     connector: {fileID: 0}
   - name: Right 1
-    canConnect: 1
+    canConnect: 0
     isConnected: 0
     connectType: 5
     localPos: {x: 0.5, y: 0, z: 0}
@@ -384,7 +384,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.9, y: 0.9, z: 0.9}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: -0.3, z: 0}
 --- !u!114 &-1265573550926785464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -433,5 +433,3 @@ MonoBehaviour:
   durabilityStatus: 0
   powerStatus: 0
   iconHeightOffset: 0.25
-  iconReferenceDistance: 12
-  iconMinimumScale: 0.45
