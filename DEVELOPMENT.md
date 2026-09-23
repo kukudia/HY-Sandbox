@@ -10,6 +10,8 @@
 - **验证范围**：已通过代码差异检查、`git diff --check` 和 `dotnet build HY-Sandbox.sln --no-restore`；尚未在 Unity 6000.3.11f1 Play Mode 验证断开、爆炸、多分组和旋转运动下的连续性。
 
 ### 2026-09-23
+- **蓝图加载间隔指数衰减**：`LoadAllBlocksRoutine` 每次加载重置计时，以 `max(0.005, 0.25 × 0.5^(elapsed / 2))` 秒逐步缩短块间等待；初始间隔、下限、半衰期可在 Inspector 调整。主场景初始间隔从 0.05 改为 0.25 秒；镜头独立保留原 0.05 秒/块参考时长，原有各蓝图环绕角速度不变，不再随加载节奏调整。零间隔仍每块让出一帧，保留加载切换与 UI 更新。
+- **衰减加载验证**：`dotnet build HY-Sandbox.sln --no-restore` 通过（0 错误、4 个既有依赖/过时 API 警告）；Unity 6000.3.11f1 Main Play Mode 验证 0/2/4/8/12 秒的间隔为 0.25/0.125/0.0625/0.015625/0.005 秒，737 块实际恢复完成耗时约 14.92 秒，镜头速度始终为原值 9.782609°/秒；`git diff --check` 通过。尚未系统测试不同帧率、Time.timeScale 与全部蓝图尺寸组合。
 - **CODEX 生存蓝图组**：新增 `Blueprints/CODEX/Generate.cs`，通过连接 Editor 的 `eval_file` 直接读取原装 Prefab 生成堡垒、蝠鲼、双体、十字卫士、长矛五份玩家 JSON 蓝图，文件名均带 `CODEX_`。仓库保存副本，本机安装至 `Application.persistentDataPath/Saves`；不修改生产代码、场景或部件数值。生成器拒绝占用格重叠，对不同内容的同名文件先备份。
 - **蓝图文件验证**：737/825/1081/981/1017 个部件均通过真实可用连接点几何连通、资源与尺寸、唯一 ID、供电覆盖及存档副本一致性检查；完整结构理论升重比 1.61～2.11。运行验证方法与局限见 `Blueprints/CODEX/README.md`，原始采样见 `Runtime.tsv`；短时自动游玩不等同于长时间密集火力生存排名。
 - **蓝图 Play Mode 验证**：Unity 6000.3.11f1 / Main 中五艘逐一完成真实加载、单连通组检查和约 24 秒自动起飞/四向移动观察，驾驶舱最低 500，未供电部件 0，采样峰值速度 6.39～6.87。采用公开移动接口模拟输入，未覆盖键盘端到端和持续命中 DPS。未观察到 Console Error；维修无人机 ClosestPoint Warning 已记录至风险。退出后 Main 场景保持未修改状态。
@@ -75,6 +77,8 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 `Block` 根据尺寸在六个方向生成连接点，通过位置和相反法线匹配相邻模块，维护 `neighbors`。`CheckConnection` 会先同步物理变换并双向清理旧连接器，再建立未占用的匹配，连接/断开时同步双方 `Info` 状态；`Neighbors` 和 `BlockGroupManager.GroupBlocks` 使用同一套双侧连接规则，分组遍历复用物理查询缓冲和 BFS 工作区，避免射线命中、禁用 Connector、输入集合外对象或可选连接视觉造成错误合组和额外分配。`PlayManager.RefreshGroup` 将连接状态刷新留给实际连接变更路径，分组前只做一次物理同步。`IsConnectorAvailableForPlacement` 会同时检查本方 `canConnect`、占用状态和对面方块是否存在，避免对着 `canConnect=false` 的邻接面显示提示或放置。连接成功后创建连接视觉对象（缺少视觉 Prefab 时仍保留逻辑连接）；`DisConnectAllConnectors` 用于删除、拆分和游玩结束清理。
 
 ### 3.3 存档与加载
+
+- 加载节奏从 0.25 秒开始，每经过 2 秒加载时间减半，最低 0.005 秒；实际间隔受帧率与实例化耗时限制。镜头继续使用独立固定角速度，加载变快后不保证恰好环绕一周。`_loadCameraReferenceSecondsPerBlock` 在 Main 场景保留为原 0.05，`_blockLoadIntervalHalfLifeSeconds` 与 `_minimumBlockLoadIntervalSeconds` 可调。
 
 - 玩家可加载 `CODEX_01_Bastion`、`CODEX_02_Manta`、`CODEX_03_Catamaran`、`CODEX_04_Crossguard`、`CODEX_05_Lance`。`Blueprints/CODEX` 提供 JSON、可重复生成/校验脚本和操作说明；该目录位于 Assets 外，不被打包，也不自动安装到其他机器。开始游玩后按一次 Space 启动悬浮，WASD 移动，Q/E 调高。
 
@@ -150,7 +154,7 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 ## 5. 待改进与风险
 
 - **2026-09-23 Play Mode 已复现**：`Bot.CalculateAdvancedAvoidance` 在 Bot.cs:551 对不支持的 Collider 调用 `ClosestPoint`，维修无人机导航持续产生警告。需正确处理非凸 MeshCollider 等类型，不能只屏蔽日志。本次蓝图任务记录问题，未改动导航系统。
-- **2026-09-23 蓝图设计观察**：默认每部件 0.1 秒的加载等待导致千部件蓝图至少约百秒加载；不同体积装甲同为 100 耐久使小块密铺具有耐久优势且增加 CPU 负担；建造面板缺少失效后的升力/覆盖提示；自动生存对比需要固定种子、标准火力和实际受击/维修统计。按优先级的建议见 `Blueprints/CODEX/README.md`。本次只交付蓝图，没有实施这些平衡或性能改造。
+- **2026-09-23 蓝图设计观察**：固定逐块等待问题已由同日指数衰减加载改善（737 块约 14.92 秒）；旧蓝图报告中的 0.1 秒是原代码默认值，主场景原实际配置为 0.05 秒。连接重建与实例化开销仍待专项优化。不同体积装甲同为 100 耐久使小块密铺具有耐久优势且增加 CPU 负担；建造面板缺少失效后的升力/覆盖提示；自动生存对比需要固定种子、标准火力和实际受击/维修统计。其余建议见 `Blueprints/CODEX/README.md`，尚未实施平衡改造。
 
 - **已解决（2026-09-23）**：禁用 Connector 被物理命中后错误合组，以及无视觉连接误拆组；54 项 Play Mode 探针通过。大型蓝图分组耗时和 GC 峰值尚未采样，不能据此量化帧率收益。
 

@@ -77,7 +77,15 @@ public class BuildManager : MonoBehaviour
 
     public bool penetrationMode;
 
-    public float BlockLoadIntervalSeconds = 0.1f;
+    [Header("Blueprint Loading")]
+    [Min(0f), Tooltip("Initial delay between blocks. The delay decreases as this load progresses.")]
+    public float BlockLoadIntervalSeconds = 0.25f;
+    [SerializeField, Min(0f), Tooltip("Lower limit for the delay between blocks, in seconds.")]
+    private float _minimumBlockLoadIntervalSeconds = 0.005f;
+    [SerializeField, Min(0.01f), Tooltip("Seconds of loading time required to halve the initial delay.")]
+    private float _blockLoadIntervalHalfLifeSeconds = 2f;
+    [SerializeField, Min(0.001f), Tooltip("Camera orbit reference duration per block, independent of the accelerating load delay.")]
+    private float _loadCameraReferenceSecondsPerBlock = 0.1f;
     public bool moveCameraDuringBlockLoad = true;
     public int minBlocksForLoadCameraOrbit = 5;
     public float blockLoadCameraMoveDuration = 0.35f;
@@ -1016,7 +1024,8 @@ public class BuildManager : MonoBehaviour
         float loadedMass = 0f;
         float loadedRequiredPower = 0f;
         float loadedGeneratorOutput = 0f;
-        WaitForSeconds blockLoadWait = new WaitForSeconds(BlockLoadIntervalSeconds);
+        // A new load starts its own decay clock; camera motion retains its independent speed.
+        double intervalStartTime = Time.timeAsDouble;
 
         for (int i = 0; i < blocksToLoad.Count; i++)
         {
@@ -1084,7 +1093,9 @@ public class BuildManager : MonoBehaviour
 
             if (i < blocksToLoad.Count - 1)
             {
-                yield return blockLoadWait;
+                float interval = CalculateBlockLoadInterval(Time.timeAsDouble - intervalStartTime);
+                // Even a zero-delay load yields a frame so progress and cancellation remain responsive.
+                yield return interval > 0f ? new WaitForSeconds(interval) : null;
             }
         }
 
@@ -1499,9 +1510,18 @@ public class BuildManager : MonoBehaviour
         }
     }
 
+    private float CalculateBlockLoadInterval(double elapsedSeconds)
+    {
+        float initialInterval = Mathf.Max(0f, BlockLoadIntervalSeconds);
+        float minimumInterval = Mathf.Clamp(_minimumBlockLoadIntervalSeconds, 0f, initialInterval);
+        float halfLife = Mathf.Max(0.01f, _blockLoadIntervalHalfLifeSeconds);
+        float decay = Mathf.Pow(0.5f, (float)Math.Max(0d, elapsedSeconds) / halfLife);
+        return Mathf.Max(minimumInterval, initialInterval * decay);
+    }
+
     private float CalculateLoadingCameraOrbitDegreesPerSecond(int blockCount)
     {
-        float expectedLoadDuration = Mathf.Max(BlockLoadIntervalSeconds * Mathf.Max(blockCount - 1, 1), 0.01f);
+        float expectedLoadDuration = Mathf.Max(_loadCameraReferenceSecondsPerBlock * Mathf.Max(blockCount - 1, 1), 0.01f);
         return 360f / expectedLoadDuration;
     }
 

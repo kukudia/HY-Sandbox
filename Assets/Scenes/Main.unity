@@ -1463,7 +1463,10 @@ MonoBehaviour:
     order: 0
     connector: {fileID: 0}
   penetrationMode: 0
-  BlockLoadIntervalSeconds: 0.05
+  BlockLoadIntervalSeconds: 0.25
+  _minimumBlockLoadIntervalSeconds: 0.005
+  _blockLoadIntervalHalfLifeSeconds: 2
+  _loadCameraReferenceSecondsPerBlock: 0.05
   moveCameraDuringBlockLoad: 1
   minBlocksForLoadCameraOrbit: 5
   blockLoadCameraMoveDuration: 0.35
