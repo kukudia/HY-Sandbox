@@ -1,13 +1,18 @@
 # HY-Sandbox 项目开发文档
 
 > 文档状态：持续维护中  
-> 最近核对：2026-09-22
+> 最近核对：2026-09-23
 > Unity 编辑器：6000.3.11f1（`ProjectSettings/ProjectVersion.txt`）  
 > 当前分支：`main`
 
 ### 2026-09-22
 - **消除 `PlayManager.RefreshGroup` 重组后的物理停顿**：重组前记录原 `ControlUnit` 的 Rigidbody，创建新分组后按新刚体质心迁移原刚体的点速度和角速度，并显式唤醒新刚体。断开方块或爆炸触发重新分组时，分离组不再因新 Rigidbody 默认速度为零而停顿一个物理步。
 - **验证范围**：已通过代码差异检查、`git diff --check` 和 `dotnet build HY-Sandbox.sln --no-restore`；尚未在 Unity 6000.3.11f1 Play Mode 验证断开、爆炸、多分组和旋转运动下的连续性。
+
+### 2026-09-23
+- **BuildManager 连接刷新**：`SaveBlock` 在保存后先调用 `Physics.SyncTransforms`，按方块尺寸和 0.35 单位邻域收集受影响 Block，再去重重建连接；`Block.CheckConnection` 清理共享连接器在两侧的引用、刷新双方 `Info`，拒绝已占用对端 Connector，并兼容缺少连接器视觉 Prefab 的连接状态，解决移动/删除后状态图标和连接关系滞后一帧或残留的问题。
+- **大型方块预览**：Ghost 的放置偏移改为按预览方块旋转后的方向半尺寸计算，网格吸附改用半网格边界以保持奇数尺寸方块的中心坐标；阻挡检测统一乘 `gridSize` 并同时检查实体 AABB 与连接点射线，2x1x1、2x2x1、2x2x2 等尺寸不会再固定按 1x1x1 处理。
+- **验证范围**：已通过 `dotnet build HY-Sandbox.sln --no-restore`（0 错误，保留既有依赖版本和过时 API 警告）及 `git diff --check`；Unity 6000.3.11f1 `BuildPalettePlayProbe` 运行通过 47 项检查，包含 2x2x2 Ghost 连接点三轴重合、X/Z 整格坐标、绿色可放置预览，以及连接→移动断开→移回重连的双方状态刷新；大型蓝图压力仍未验证。
 
 本文档以仓库当前 Git 跟踪的 `Assets/`、`Packages/`、`ProjectSettings/` 和历史日志为依据。历史日志中的功能描述可能来自旧版本，若没有当前脚本、场景或运行时证据，不视为已实现。
 
@@ -55,12 +60,12 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 `BuildManager` 的主要流程：
 
 1. 从 `Resources/Blocks` 选择资源并创建 Ghost 预览。
-2. UI 上的指针输入先被拦截；射线检测方块并在自身 `canConnect`、未占用且对面没有实体方块的 Connector 上显示 0.9×0.9 白色圆角线框，按连接面的世界法线向外偏移 0.015。按网格和目标旋转计算吸附位置；没有可用连接点、移出目标或退出模式时清除 Ghost 与提示。
-3. `Block.IsBlockedGhost` 和 `BuildManager.IsBlocked` 检查重叠，阻挡时禁止放置。
+2. UI 上的指针输入先被拦截；射线检测方块并在自身 `canConnect`、未占用且对面没有实体方块的 Connector 上显示 0.9×0.9 白色圆角线框，按连接面的世界法线和预览方块旋转后的方向半尺寸计算放置偏移，再按半网格边界吸附；没有可用连接点、移出目标或退出模式时清除 Ghost 与提示。
+3. `Block.IsBlockedGhost` 和 `BuildManager.IsBlocked` 同时检查连接点射线和按 `gridSize` 缩放的实体包围盒，阻挡时禁止放置。
 4. `CreateBlock` 实例化 Prefab，应用默认值并写入当前存档。
 5. 选中方块后支持键盘移动、15 度旋转、移动/旋转轴拖拽、复制和删除。
 
-`Block` 根据尺寸在六个方向生成连接点，通过位置和相反法线匹配相邻模块，维护 `neighbors`。`IsConnectorAvailableForPlacement` 会同时检查本方 `canConnect`、占用状态和对面方块是否存在，避免对着 `canConnect=false` 的邻接面显示提示或放置。连接成功后创建连接视觉对象；`DisConnectAllConnectors` 用于删除、拆分和游玩结束清理。
+`Block` 根据尺寸在六个方向生成连接点，通过位置和相反法线匹配相邻模块，维护 `neighbors`。`CheckConnection` 会先同步物理变换并双向清理旧连接器，再建立未占用的匹配，连接/断开时同步双方 `Info` 状态；`IsConnectorAvailableForPlacement` 会同时检查本方 `canConnect`、占用状态和对面方块是否存在，避免对着 `canConnect=false` 的邻接面显示提示或放置。连接成功后创建连接视觉对象（缺少视觉 Prefab 时仍保留逻辑连接）；`DisConnectAllConnectors` 用于删除、拆分和游玩结束清理。
 
 ### 3.3 存档与加载
 
@@ -319,10 +324,13 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `public Vector3 GetConnectorWorldPosition(Connector connector)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `public Vector3 GetConnectorWorldNormal(Connector connector)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `public bool IsConnectorAvailableForPlacement(Connector connector)`：检查连接点自身状态及对面是否已有实体方块，统一建造预览和放置的可用性判定。
-- `public void CheckConnection()`： 处理碰撞、连接、耐久、维修或状态检查逻辑。
+- `public void CheckConnection()`：同步物理变换，双向清理旧连接引用并重建未占用的连接点，同时刷新双方状态图标。
+- `private void ReleaseExistingConnections()`：清理当前 Block 持有的共享连接器，并移除场景中两侧的引用。
+- `private void ReleaseConnectionPairWithoutVisual(Connector connector)`：没有连接器视觉对象时，按位置清理对端逻辑连接。
+- `private void ReleaseConnectionReferences(GameObject connectorObject)`：清理指定共享连接器在所有 Block 上的引用并刷新状态。
 - `private Block FindBlockAcrossConnector(Connector connector)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
-- `private Connector FindMatchingConnector(Block otherBlock, Connector connector)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
-- `private void ConnectTo(Connector connector, Connector otherConnector)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private Connector FindMatchingConnector(Block otherBlock, Connector connector, bool requireAvailable = true)`：查询位置、法线和占用状态，返回匹配连接点。
+- `private void ConnectTo(Connector connector, Block otherBlock, Connector otherConnector)`：建立双侧连接状态和可选的连接器视觉对象，并刷新双方状态。
 - `private void ClearConnector(Connector connector)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
 - `public List<Block> Neighbors()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `public void DisConnectAllConnectors(bool refreshNeighbors = true)`： 断开连接器；可在批量爆炸拆分时延后邻居刷新，避免重复物理查询。
@@ -654,6 +662,7 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `public void CreateBlock(GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot)`： 创建几何、资源、操作记录、UI 项或运行时对象。
 - `public void DeleteBlock()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
 - `public void SaveBlock(Block block)`： 执行存档/文件的读取、写入、重命名或路径处理。
+- `private void RefreshConnectionsAround(Block block)`：同步物理变换，收集尺寸包围盒附近的 Block 并去重重建连接和邻居。
 - `public void RemoveBlock(Block block)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
 - `public void LoadAllBlocks()`： 执行存档/文件的读取、写入、重命名或路径处理。
 - `private IEnumerator LoadAllBlocksRoutine(int loadVersion, string loadSavePath, Transform loadParent, List<BlockData> blocksToLoad, double time0)`： 执行存档/文件的读取、写入、重命名或路径处理。
@@ -663,7 +672,9 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `private void ClearUnloadableData(string id, string targetSavePath)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
 - `void InitialBlock()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
 - `public Vector3 SnapCenterByMinCorner(Vector3 targetCenter, Quaternion targetRotation, Block b)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
-- `bool IsBlocked(Vector3 targetCenter, Quaternion targetRotation, Block block)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
+- `private Vector3 GetBlockHalfExtents(Block block)`：按 Block 尺寸和 gridSize 返回局部半尺寸。
+- `private float GetHalfExtentAlongDirection(Block block, Quaternion rotation, Vector3 worldDirection)`：计算旋转方块沿世界方向的支撑半尺寸。
+- `private bool IsBlocked(Vector3 targetCenter, Quaternion targetRotation, Block block)`：按缩放后的方块包围盒查询实体阻挡。
 - `float GetMoveStep(Block block, Vector3 moveDir)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `private bool CanCreateBlock(GameObject prefab, out string reason)`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `public void ApplyBlockBuildDefaults(Block block)`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。

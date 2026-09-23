@@ -177,6 +177,7 @@ public static class BuildPalettePlayProbe
         var buttonRect = items.First(i => i.gameObject.activeInHierarchy).GetComponent<RectTransform>();
         Vector2 buttonPosition = RectTransformUtility.WorldToScreenPoint(null, buttonRect.position);
         MovePointer(buttonPosition);
+        yield return 0.05f;
         Check("EventSystem detects palette hover", EventSystem.current.IsPointerOverGameObject());
         Invoke(BuildManager.instance, "HandleBuildingPreview"); yield return 0.2f;
         Check("UI hover blocks placement while retaining nearby hints", BuildManager.instance.currentGhost == null && hints.AvailableCount > 0);
@@ -188,6 +189,66 @@ public static class BuildPalettePlayProbe
         MovePointer(new Vector2(Screen.width * 0.5f, Screen.height * 0.5f));
         Invoke(BuildManager.instance, "HandleBuildingPreview");
         Check("Invalid resource safely clears preview", BuildManager.instance.currentGhost == null && BuildManager.instance.hoveredConnector == null);
+
+        target = Object.Instantiate(Resources.Load<GameObject>("Blocks/2x2x2"));
+        target.transform.SetPositionAndRotation(new Vector3(0, 3, 0), Quaternion.identity);
+        block = target.GetComponent<Block>();
+        camera.transform.position = new Vector3(0, 9, 0);
+        camera.transform.LookAt(target.transform.position, Vector3.forward);
+        BuildManager.instance.SetCurrentBlockResource("Blocks/2x2x2");
+        yield return 0.1f;
+        MovePointer(new Vector2(Screen.width * 0.5f, Screen.height * 0.5f));
+        Physics.SyncTransforms();
+        Invoke(BuildManager.instance, "HandleBuildingPreview"); yield return 0.2f;
+        Block largeGhost = BuildManager.instance.currentGhost != null
+            ? BuildManager.instance.currentGhost.GetComponent<Block>() : null;
+        Connector largeTarget = BuildManager.instance.hoveredConnector;
+        Vector3 largeTargetNormal = largeTarget != null ? block.GetConnectorWorldNormal(largeTarget) : Vector3.zero;
+        float expectedHalfExtent = largeGhost != null && largeTarget != null
+            ? Mathf.Abs(Vector3.Dot(largeTargetNormal, largeGhost.transform.rotation * Vector3.right)) * largeGhost.x * 0.5f
+                + Mathf.Abs(Vector3.Dot(largeTargetNormal, largeGhost.transform.rotation * Vector3.up)) * largeGhost.y * 0.5f
+                + Mathf.Abs(Vector3.Dot(largeTargetNormal, largeGhost.transform.rotation * Vector3.forward)) * largeGhost.z * 0.5f
+            : -1f;
+        float actualOffset = largeGhost != null && largeTarget != null
+            ? Vector3.Dot(largeGhost.transform.position - block.GetConnectorWorldPosition(largeTarget), largeTargetNormal)
+            : -1f;
+        Color largePreviewColor = largeGhost != null && largeGhost.GetComponentInChildren<MeshRenderer>() != null
+            ? largeGhost.GetComponentInChildren<MeshRenderer>().material.color : Color.red;
+        int availableTargetCount = block.connectors.Count(block.IsConnectorAvailableForPlacement);
+        Ray largeRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        bool largeRayHit = Physics.Raycast(largeRay, out RaycastHit largeHit, BuildManager.instance.BuildRange + Vector3.Distance(largeRay.origin, camera.transform.position), BuildManager.instance.blockLayer);
+        Check("2x2x2 preview uses rotated half extent and remains placeable (ghost=" + (largeGhost != null)
+            + ", target=" + (largeTarget != null) + ", expected=" + expectedHalfExtent.ToString("F3")
+            + ", actual=" + actualOffset.ToString("F3") + ", color=" + largePreviewColor
+            + ", available=" + availableTargetCount + ", ray=" + largeRayHit + ", hit=" + (largeRayHit ? largeHit.collider.name : "none")
+            + ", resource=" + BuildManager.instance.currentBlockResourcePath + ")", largeGhost != null && largeTarget != null
+            && largeGhost.x == 2 && largeGhost.y == 2 && largeGhost.z == 2
+            && Mathf.Abs(actualOffset - expectedHalfExtent) < 0.001f
+            && largePreviewColor.g > largePreviewColor.r);
+        Vector3 targetPoint = block.GetConnectorWorldPosition(largeTarget);
+        Check("2x2x2 connectors coincide on all axes without half-cell drift", largeGhost.connectors.Any(c => c.canConnect
+            && Vector3.Distance(largeGhost.GetConnectorWorldPosition(c), targetPoint) < 0.001f
+            && Vector3.Dot(largeGhost.GetConnectorWorldNormal(c), -largeTargetNormal) > 0.999f));
+        Check("2x2x2 top preview X/Z stay on integer offsets", Mathf.Abs(largeGhost.transform.position.x - Mathf.Round(largeGhost.transform.position.x)) < 0.001f
+            && Mathf.Abs(largeGhost.transform.position.z - Mathf.Round(largeGhost.transform.position.z)) < 0.001f);
+        BuildManager.instance.SetBuildMode(false);
+        Object.Destroy(target);
+        yield return 0.1f;
+
+        Block connectionA = RangeBlock(new Vector3(30, 0, 0));
+        Block connectionB = RangeBlock(new Vector3(31, 0, 0));
+        Physics.SyncTransforms();
+        connectionA.CheckConnection();
+        bool initiallyConnected = connectionA.connectors.Any(c => c.isConnected) && connectionB.connectors.Any(c => c.isConnected);
+        connectionB.transform.position = new Vector3(33, 0, 0);
+        connectionA.CheckConnection();
+        bool disconnectedOnMove = !connectionA.connectors.Any(c => c.isConnected) && !connectionB.connectors.Any(c => c.isConnected);
+        connectionB.transform.position = new Vector3(31, 0, 0);
+        Physics.SyncTransforms();
+        connectionB.CheckConnection();
+        bool reconnected = connectionA.connectors.Any(c => c.isConnected) && connectionB.connectors.Any(c => c.isConnected);
+        Check("CheckConnection refreshes both sides after move and reconnection", initiallyConnected && disconnectedOnMove && reconnected);
+        Object.Destroy(connectionA.gameObject); Object.Destroy(connectionB.gameObject);
 
         // Three separate blocks prove discovery is independent of the hovered block and camera ray.
         camera.transform.SetPositionAndRotation(new Vector3(0, 10, 0), Quaternion.identity);

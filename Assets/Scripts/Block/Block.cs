@@ -235,8 +235,23 @@ public class Block : MonoBehaviour
             return;
         }
 
+        if (BuildManager.instance == null)
+        {
+            return;
+        }
+
+        // Transform changes made by the build UI are not guaranteed to be visible to physics immediately.
+        // Sync before probing so a move and its connection refresh observe the same frame.
+        Physics.SyncTransforms();
+        ReleaseExistingConnections();
+
         foreach (Connector c in connectors)
         {
+            if (c.isConnected && c.connector == null)
+            {
+                ReleaseConnectionPairWithoutVisual(c);
+            }
+
             c.isConnected = false;
 
             if (!c.canConnect)
@@ -250,7 +265,7 @@ public class Block : MonoBehaviour
 
             if (otherConnector != null)
             {
-                ConnectTo(c, otherConnector);
+                ConnectTo(c, otherBlock, otherConnector);
             }
 
             if (c.connector != null && !c.isConnected)
@@ -262,6 +277,60 @@ public class Block : MonoBehaviour
         if (_info != null)
         {
             _info.CheckConnectionStatus();
+        }
+    }
+
+    private void ReleaseExistingConnections()
+    {
+        HashSet<GameObject> releasedObjects = new HashSet<GameObject>();
+        for (int i = 0; i < connectors.Count; i++)
+        {
+            GameObject connectorObject = connectors[i].connector;
+            if (connectorObject == null || !releasedObjects.Add(connectorObject))
+            {
+                continue;
+            }
+
+            ReleaseConnectionReferences(connectorObject);
+            Destroy(connectorObject);
+        }
+    }
+
+    private void ReleaseConnectionPairWithoutVisual(Connector connector)
+    {
+        Block otherBlock = FindBlockAcrossConnector(connector);
+        Connector otherConnector = otherBlock != null ? FindMatchingConnector(otherBlock, connector, false) : null;
+        if (otherConnector == null) return;
+
+        otherConnector.connector = null;
+        otherConnector.isConnected = false;
+        if (otherBlock._info != null)
+        {
+            otherBlock._info.CheckConnectionStatus();
+        }
+    }
+
+    private void ReleaseConnectionReferences(GameObject connectorObject)
+    {
+        Block[] blocks = FindObjectsByType<Block>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (Block block in blocks)
+        {
+            if (block == null || block.connectors == null) continue;
+
+            bool statusChanged = false;
+            foreach (Connector connector in block.connectors)
+            {
+                if (connector == null || connector.connector != connectorObject) continue;
+
+                connector.connector = null;
+                connector.isConnected = false;
+                statusChanged = true;
+            }
+
+            if (statusChanged && block._info != null)
+            {
+                block._info.CheckConnectionStatus();
+            }
         }
     }
 
@@ -284,14 +353,14 @@ public class Block : MonoBehaviour
         return null;
     }
 
-    private Connector FindMatchingConnector(Block otherBlock, Connector connector)
+    private Connector FindMatchingConnector(Block otherBlock, Connector connector, bool requireAvailable = true)
     {
         Vector3 worldPos = GetConnectorWorldPosition(connector);
         Vector3 worldNormal = GetConnectorWorldNormal(connector);
 
         foreach (Connector otherConnector in otherBlock.connectors)
         {
-            if (!otherConnector.canConnect) continue;
+            if (!otherConnector.canConnect || (requireAvailable && otherConnector.isConnected)) continue;
 
             Vector3 otherWorldPos = otherBlock.GetConnectorWorldPosition(otherConnector);
             Vector3 otherWorldNormal = otherBlock.GetConnectorWorldNormal(otherConnector);
@@ -306,14 +375,14 @@ public class Block : MonoBehaviour
         return null;
     }
 
-    private void ConnectTo(Connector connector, Connector otherConnector)
+    private void ConnectTo(Connector connector, Block otherBlock, Connector otherConnector)
     {
         connector.isConnected = true;
         otherConnector.isConnected = true;
 
         GameObject connectorObject = connector.connector != null ? connector.connector : otherConnector.connector;
 
-        if (connectorObject == null)
+        if (connectorObject == null && connectorPrefab != null)
         {
             connectorObject = Instantiate(connectorPrefab, ConnectorRoot);
             connectorObject.transform.localPosition = connector.localPos;
@@ -322,14 +391,29 @@ public class Block : MonoBehaviour
 
         connector.connector = connectorObject;
         otherConnector.connector = connectorObject;
+
+        if (_info != null)
+        {
+            _info.CheckConnectionStatus();
+        }
+
+        if (otherBlock != null && otherBlock._info != null)
+        {
+            otherBlock._info.CheckConnectionStatus();
+        }
     }
 
     private void ClearConnector(Connector connector)
     {
-        if (connector.connector != null)
+        if (connector == null) return;
+
+        GameObject connectorObject = connector.connector;
+        connector.connector = null;
+        connector.isConnected = false;
+        if (connectorObject != null)
         {
-            Destroy(connector.connector);
-            connector.connector = null;
+            ReleaseConnectionReferences(connectorObject);
+            Destroy(connectorObject);
         }
     }
 
@@ -372,6 +456,13 @@ public class Block : MonoBehaviour
         foreach (Collider collider in colliders)
         {
             collider.gameObject.layer = rackLayer;
+        }
+
+        ReleaseExistingConnections();
+        foreach (Connector connector in connectors)
+        {
+            connector.isConnected = false;
+            connector.connector = null;
         }
 
         if (!refreshNeighbors)

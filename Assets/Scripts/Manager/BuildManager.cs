@@ -718,12 +718,25 @@ public class BuildManager : MonoBehaviour
                         }
                     }
 
-                    // 计算 Snap 后的位置
-                    rawPos = nearestWorldPos + nearestNormal * 0.5f;
-                    snappedPos = SnapCenterByMinCorner(rawPos, block.transform.rotation, prefabBlock);
+                    // Put the preview's nearest face on the target connector. The old fixed 0.5 offset
+                    // only worked for 1x1x1 blocks and left larger prefabs floating or intersecting.
+                    // Match the target's quarter-turn orientation so connector faces stay coplanar
+                    // when the target has been rotated in the build grid.
+                    currentGhost.transform.rotation = block.transform.rotation;
+                    Quaternion previewRotation = currentGhost.transform.rotation;
+                    if (!TryCalculateConnectorAlignedPosition(
+                        prefabBlock,
+                        previewRotation,
+                        nearestWorldPos,
+                        nearestNormal,
+                        out snappedPos))
+                    {
+                        float previewHalfExtent = GetHalfExtentAlongDirection(prefabBlock, previewRotation, nearestNormal);
+                        rawPos = nearestWorldPos + nearestNormal * previewHalfExtent;
+                        snappedPos = SnapCenterByMinCorner(rawPos, previewRotation, prefabBlock);
+                    }
 
                     currentGhost.transform.position = snappedPos;
-                    //currentGhost.transform.rotation = Quaternion.LookRotation(nearestNormal);
                 }
             }
         }
@@ -739,7 +752,10 @@ public class BuildManager : MonoBehaviour
 
         if (currentGhost != null)
         {
-            bool isBlocked = currentGhost.GetComponent<Block>().IsBlockedGhost();
+            Block ghostBlock = currentGhost.GetComponent<Block>();
+            bool isBlocked = ghostBlock == null
+                || IsBlocked(currentGhost.transform.position, currentGhost.transform.rotation, prefabBlock)
+                || (ghostBlock != null && ghostBlock.IsBlockedGhost());
 
             if (penetrationMode)
             {
@@ -749,7 +765,8 @@ public class BuildManager : MonoBehaviour
                     Vector3 nextPosition = currentGhost.transform.position + nearestNormal;
                     if (!IsWithinBuildRange(nextPosition)) break;
                     currentGhost.transform.position = nextPosition;
-                    isBlocked = currentGhost.GetComponent<Block>().IsBlockedGhost();
+                    isBlocked = IsBlocked(currentGhost.transform.position, currentGhost.transform.rotation, prefabBlock)
+                        || (ghostBlock != null && ghostBlock.IsBlockedGhost());
                 }
             }
 
@@ -829,6 +846,11 @@ public class BuildManager : MonoBehaviour
 
     public void SaveBlock(Block block)
     {
+        if (block == null || SaveManager.instance == null)
+        {
+            return;
+        }
+
         lastSaveBlock = block;
         ApplyBlockBuildDefaults(block);
         BlockData data = new BlockData(block);
@@ -846,36 +868,50 @@ public class BuildManager : MonoBehaviour
         WriteCachedData();
         Debug.Log($"Saved block {block.name} at {block.transform.position}, {block.transform.rotation.eulerAngles}");
 
-        block.CheckConnection();
+        RefreshConnectionsAround(block);
+        RefreshBlueprintUI();
+    }
+
+    private void RefreshConnectionsAround(Block block)
+    {
+        if (block == null || BuildManager.instance == null) return;
+
+        Physics.SyncTransforms();
+        HashSet<Block> affectedBlocks = new HashSet<Block> { block };
+        Vector3 halfExtents = GetBlockHalfExtents(block) + Vector3.one * 0.35f;
         Collider[] hits = Physics.OverlapBox(
             block.transform.position,
-            new Vector3(block.x, block.y, block.z) * gridSize,
+            halfExtents,
             block.transform.rotation,
-            blockLayer              // 只检测方块层
-        );
+            blockLayer,
+            QueryTriggerInteraction.Ignore);
 
-        foreach (var hit in hits)
+        foreach (Collider hit in hits)
         {
             Block hitBlock = hit.GetComponentInParent<Block>();
-            if (hitBlock != null)
+            if (hitBlock != null && hitBlock != block)
             {
-                hitBlock.CheckConnection();
-            }
-            else
-            {
-                Debug.LogWarning($"Hit object [{hit.name}] is not a Block");
+                affectedBlocks.Add(hitBlock);
             }
         }
 
-        block.neighbors = block.Neighbors();
-        //if (block.neighbors.Count > 0)
-        //{
-        //    foreach (Block blockNeighbor in block.neighbors)
-        //    {
-        //        blockNeighbor.CheckConnection();
-        //    }
-        //}
-        RefreshBlueprintUI();
+        // Rebuild every nearby block after transforms are synced. This also updates the
+        // opposite Info component when a connector is moved, removed, or replaced.
+        foreach (Block affectedBlock in affectedBlocks)
+        {
+            if (affectedBlock != null && affectedBlock.isActiveAndEnabled)
+            {
+                affectedBlock.CheckConnection();
+            }
+        }
+
+        foreach (Block affectedBlock in affectedBlocks)
+        {
+            if (affectedBlock != null && affectedBlock.isActiveAndEnabled)
+            {
+                affectedBlock.neighbors = affectedBlock.Neighbors();
+            }
+        }
     }
 
     public void RemoveBlock(Block block)
@@ -1129,11 +1165,70 @@ public class BuildManager : MonoBehaviour
         CreateBlock(prefab, cockpitResourcePath, Vector3.zero, Quaternion.identity);
     }
 
+    private Vector3 GetBlockHalfExtents(Block block)
+    {
+        if (block == null) return Vector3.zero;
+        float safeGridSize = Mathf.Max(0.0001f, gridSize);
+        return new Vector3(block.x, block.y, block.z) * safeGridSize * 0.5f;
+    }
+
+    private float GetHalfExtentAlongDirection(Block block, Quaternion rotation, Vector3 worldDirection)
+    {
+        Vector3 direction = worldDirection.normalized;
+        Vector3 halfExtents = GetBlockHalfExtents(block);
+        Vector3 right = rotation * Vector3.right;
+        Vector3 up = rotation * Vector3.up;
+        Vector3 forward = rotation * Vector3.forward;
+        return Mathf.Abs(Vector3.Dot(direction, right)) * halfExtents.x
+            + Mathf.Abs(Vector3.Dot(direction, up)) * halfExtents.y
+            + Mathf.Abs(Vector3.Dot(direction, forward)) * halfExtents.z;
+    }
+
+    private bool TryCalculateConnectorAlignedPosition(
+        Block prefabBlock,
+        Quaternion previewRotation,
+        Vector3 targetConnectorPosition,
+        Vector3 targetConnectorNormal,
+        out Vector3 position)
+    {
+        position = Vector3.zero;
+        if (prefabBlock == null || prefabBlock.connectors == null) return false;
+
+        Transform connectorRoot = prefabBlock.connectorParent != null ? prefabBlock.connectorParent : prefabBlock.transform;
+        Connector bestConnector = null;
+        float bestNormalMatch = 0.95f;
+        for (int i = 0; i < prefabBlock.connectors.Count; i++)
+        {
+            Connector connector = prefabBlock.connectors[i];
+            if (connector == null || !connector.canConnect) continue;
+
+            Vector3 localNormal = prefabBlock.transform.InverseTransformDirection(connectorRoot.TransformDirection(connector.normal));
+            Vector3 connectorNormal = previewRotation * localNormal;
+            float normalMatch = Vector3.Dot(connectorNormal.normalized, -targetConnectorNormal.normalized);
+            if (normalMatch > bestNormalMatch)
+            {
+                bestNormalMatch = normalMatch;
+                bestConnector = connector;
+            }
+        }
+
+        if (bestConnector == null) return false;
+
+        Vector3 connectorLocalPosition = prefabBlock.transform.InverseTransformPoint(connectorRoot.TransformPoint(bestConnector.localPos));
+        connectorLocalPosition = Vector3.Scale(connectorLocalPosition, prefabBlock.transform.localScale);
+        position = targetConnectorPosition - previewRotation * connectorLocalPosition;
+        return true;
+    }
+
     // 轴对齐方块的精确吸附：先对齐最小角，再还原中心
     public Vector3 SnapCenterByMinCorner(Vector3 targetCenter, Quaternion targetRotation, Block b)
     {
+        if (b == null) return targetCenter;
+
         // 方块的局部半尺寸（不含旋转）
-        Vector3 halfSize = new Vector3(b.x * gridSize, b.y * gridSize, b.z * gridSize) * 0.5f;
+        Vector3 halfSize = GetBlockHalfExtents(b);
+        float safeGridSize = Mathf.Max(0.0001f, gridSize);
+        float snapStep = safeGridSize * 0.5f;
 
         // 计算旋转后的 8 个顶点
         Vector3[] corners = new Vector3[8];
@@ -1159,15 +1254,14 @@ public class BuildManager : MonoBehaviour
             max = Vector3.Max(max, c);
         }
 
-        // 将 min 对齐到网格
+        // Block centers are allowed on half-grid coordinates (Block.Awake preserves 0.5 steps),
+        // so align bounds to half-grid steps instead of moving odd-sized blocks by half a cell.
         Vector3 snappedMin = new Vector3(
-            Mathf.Round((min.x - gridOrigin.x) / gridSize) * gridSize + gridOrigin.x,
-            Mathf.Round((min.y - gridOrigin.y) / gridSize) * gridSize + gridOrigin.y,
-            Mathf.Round((min.z - gridOrigin.z) / gridSize) * gridSize + gridOrigin.z
+            Mathf.Round((min.x - gridOrigin.x) / snapStep) * snapStep + gridOrigin.x,
+            Mathf.Round((min.y - gridOrigin.y) / snapStep) * snapStep + gridOrigin.y,
+            Mathf.Round((min.z - gridOrigin.z) / snapStep) * snapStep + gridOrigin.z
         );
 
-        // 新中心 = snappedMin + 半尺寸 (要在旋转空间里算)
-        Vector3 offset = targetRotation * halfSize; // 半尺寸在旋转后的偏移
         Vector3 snappedCenter = snappedMin + (max - min) * 0.5f;
 
         return snappedCenter;
@@ -1176,10 +1270,13 @@ public class BuildManager : MonoBehaviour
 
     private bool IsBlocked(Vector3 targetCenter, Quaternion targetRotation, Block block)
     {
+        if (block == null) return true;
+
         // 方块的半尺寸
-        Vector3 halfExtents = new Vector3(block.x, block.y, block.z) * 0.5f;
+        Vector3 halfExtents = GetBlockHalfExtents(block);
 
         // 检测范围（目标位置 + 半尺寸）
+        Physics.SyncTransforms();
         Collider[] hits = Physics.OverlapBox(
             targetCenter,
             halfExtents,    // 稍微缩小，避免边界浮点误差
