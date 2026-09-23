@@ -7,16 +7,27 @@ public class BlockGroupManager : MonoBehaviour
     public static List<List<Block>> GroupBlocks(List<Block> allBlocks)
     {
         if (allBlocks == null || allBlocks.Count == 0) return new List<List<Block>>();
-        
+
+        List<Block> validBlocks = new List<Block>(allBlocks.Count);
+        foreach (Block block in allBlocks)
+        {
+            if (block != null && block.isActiveAndEnabled && !validBlocks.Contains(block))
+            {
+                validBlocks.Add(block);
+            }
+        }
+        if (validBlocks.Count == 0) return new List<List<Block>>();
+        HashSet<Block> validBlockSet = new HashSet<Block>(validBlocks);
+
         // 预先分配容量，减少扩容开销
-        int blockCount = allBlocks.Count;
+        int blockCount = validBlocks.Count;
         Dictionary<Block, List<Block>> adjacencyList = new Dictionary<Block, List<Block>>(blockCount);
         
         // 构建邻接表 - 避免重复计算
-        foreach (Block block in allBlocks)
+        foreach (Block block in validBlocks)
         {
-            if (block == null) continue;
             List<Block> neighbors = block.Neighbors();
+            neighbors.RemoveAll(neighbor => neighbor == null || !validBlockSet.Contains(neighbor));
             adjacencyList[block] = neighbors;
         }
 
@@ -24,7 +35,7 @@ public class BlockGroupManager : MonoBehaviour
         List<List<Block>> groups = new List<List<Block>>();
         HashSet<Block> visited = new HashSet<Block>(blockCount);
 
-        foreach (Block block in allBlocks)
+        foreach (Block block in validBlocks)
         {
             if (block == null || visited.Contains(block)) continue;
 

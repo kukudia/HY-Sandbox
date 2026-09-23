@@ -222,9 +222,11 @@ public class Block : MonoBehaviour
             return false;
         }
 
-        // A disabled connector on the opposite block still occupies this face.
-        // Keep preview and placement from treating that blocked face as available.
-        return FindBlockAcrossConnector(connector) == null;
+        // An occupied face is unavailable even when the opposite Block exists but its
+        // matching Connector is disabled. Placement and connection probing must share
+        // the same two-sided validation rules.
+        Block otherBlock = FindBlockAcrossConnector(connector);
+        return otherBlock == null || FindMatchingConnector(otherBlock, connector) == null;
     }
 
     public void CheckConnection()
@@ -263,7 +265,10 @@ public class Block : MonoBehaviour
             Block otherBlock = FindBlockAcrossConnector(c);
             Connector otherConnector = otherBlock != null ? FindMatchingConnector(otherBlock, c) : null;
 
-            if (otherConnector != null)
+            // A ray hit alone is never enough to connect. Both sides must explicitly
+            // allow connections, be free, and match by position and opposite normal.
+            if (c.canConnect && otherBlock != null && otherConnector != null
+                && otherConnector.canConnect && !c.isConnected && !otherConnector.isConnected)
             {
                 ConnectTo(c, otherBlock, otherConnector);
             }
@@ -420,28 +425,64 @@ public class Block : MonoBehaviour
     public List<Block> Neighbors()
     {
         List<Block> neighbors = new List<Block>();
+        if (this == null || connectors == null || BuildManager.instance == null)
+        {
+            return neighbors;
+        }
+
+        Physics.SyncTransforms();
         for (int i = 0; i < connectors.Count; i++)
         {
             Connector c = connectors[i];
-            if (!c.canConnect) continue;
+            if (c == null || !c.canConnect) continue;
 
             Block otherBlock = FindBlockAcrossConnector(c);
-            if (otherBlock != null)
+            if (otherBlock == null) continue;
+
+            Connector otherConnector = FindMatchingConnectorForNeighbor(otherBlock, c);
+            if (otherConnector != null)
             {
                 if (!neighbors.Contains(otherBlock))
                 {
                     neighbors.Add(otherBlock);
-                }
-
-                if (!otherBlock.neighbors.Contains(this))
-                {
-                    otherBlock.neighbors.Add(this);
                 }
             }
         }
         neighbors.RemoveAll(item => item == null);
         //Debug.Log($"{name} find {neighbors.Count} neighbors.");
         return neighbors;
+    }
+
+    private Connector FindMatchingConnectorForNeighbor(Block otherBlock, Connector connector)
+    {
+        if (otherBlock == null || connector == null || !connector.canConnect)
+        {
+            return null;
+        }
+
+        Vector3 worldPos = GetConnectorWorldPosition(connector);
+        Vector3 worldNormal = GetConnectorWorldNormal(connector);
+        foreach (Connector otherConnector in otherBlock.connectors)
+        {
+            if (otherConnector == null || !otherConnector.canConnect) continue;
+
+            Vector3 otherWorldPos = otherBlock.GetConnectorWorldPosition(otherConnector);
+            Vector3 otherWorldNormal = otherBlock.GetConnectorWorldNormal(otherConnector);
+            if (Vector3.Distance(otherWorldPos, worldPos) >= connectorMatchDistance
+                || Vector3.Dot(otherWorldNormal, -worldNormal) <= oppositeNormalDotThreshold)
+            {
+                continue;
+            }
+
+            bool sameConnection = connector.isConnected
+                && otherConnector.isConnected
+                && connector.connector != null
+                && connector.connector == otherConnector.connector;
+            bool bothAvailable = !connector.isConnected && !otherConnector.isConnected;
+            return sameConnection || bothAvailable ? otherConnector : null;
+        }
+
+        return null;
     }
 
     public void DisConnectAllConnectors(bool refreshNeighbors = true)

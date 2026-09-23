@@ -240,6 +240,10 @@ public static class BuildPalettePlayProbe
         Physics.SyncTransforms();
         connectionA.CheckConnection();
         bool initiallyConnected = connectionA.connectors.Any(c => c.isConnected) && connectionB.connectors.Any(c => c.isConnected);
+        foreach (Connector connector in connectionB.connectors) connector.canConnect = false;
+        connectionA.CheckConnection();
+        bool disabledOppositeRejected = !connectionA.connectors.Any(c => c.isConnected) && !connectionB.connectors.Any(c => c.isConnected);
+        foreach (Connector connector in connectionB.connectors) connector.canConnect = true;
         connectionB.transform.position = new Vector3(33, 0, 0);
         connectionA.CheckConnection();
         bool disconnectedOnMove = !connectionA.connectors.Any(c => c.isConnected) && !connectionB.connectors.Any(c => c.isConnected);
@@ -247,7 +251,24 @@ public static class BuildPalettePlayProbe
         Physics.SyncTransforms();
         connectionB.CheckConnection();
         bool reconnected = connectionA.connectors.Any(c => c.isConnected) && connectionB.connectors.Any(c => c.isConnected);
-        Check("CheckConnection refreshes both sides after move and reconnection", initiallyConnected && disconnectedOnMove && reconnected);
+        Check("CheckConnection rejects disabled Connector on either side", initiallyConnected && disabledOppositeRejected);
+        Check("CheckConnection refreshes both sides after move and reconnection", disconnectedOnMove && reconnected);
+
+        List<List<Block>> connectedGroups = BlockGroupManager.GroupBlocks(new List<Block> { connectionA, connectionB });
+        bool groupedWhenConnected = connectedGroups.Count == 1;
+        foreach (Connector connector in connectionB.connectors) connector.canConnect = false;
+        Physics.SyncTransforms();
+        connectionA.CheckConnection();
+        List<List<Block>> disabledOppositeGroups = BlockGroupManager.GroupBlocks(new List<Block> { connectionA, connectionB });
+        bool splitWhenOppositeDisabled = disabledOppositeGroups.Count == 2;
+        foreach (Connector connector in connectionB.connectors) connector.canConnect = true;
+        foreach (Connector connector in connectionA.connectors) connector.canConnect = false;
+        Physics.SyncTransforms();
+        connectionB.CheckConnection();
+        List<List<Block>> disabledCurrentGroups = BlockGroupManager.GroupBlocks(new List<Block> { connectionA, connectionB });
+        bool splitWhenCurrentDisabled = disabledCurrentGroups.Count == 2;
+        Check("GroupBlocks follows valid two-sided Connector connections", groupedWhenConnected
+            && splitWhenOppositeDisabled && splitWhenCurrentDisabled);
         Object.Destroy(connectionA.gameObject); Object.Destroy(connectionB.gameObject);
 
         // Three separate blocks prove discovery is independent of the hovered block and camera ray.

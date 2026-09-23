@@ -14,6 +14,9 @@
 - **大型方块预览**：Ghost 的放置偏移改为按预览方块旋转后的方向半尺寸计算，网格吸附改用半网格边界以保持奇数尺寸方块的中心坐标；阻挡检测统一乘 `gridSize` 并同时检查实体 AABB 与连接点射线，2x1x1、2x2x1、2x2x2 等尺寸不会再固定按 1x1x1 处理。
 - **验证范围**：已通过 `dotnet build HY-Sandbox.sln --no-restore`（0 错误，保留既有依赖版本和过时 API 警告）及 `git diff --check`；Unity 6000.3.11f1 `BuildPalettePlayProbe` 运行通过 47 项检查，包含 2x2x2 Ghost 连接点三轴重合、X/Z 整格坐标、绿色可放置预览，以及连接→移动断开→移回重连的双方状态刷新；大型蓝图压力仍未验证。
 
+- **连接点双侧能力校验**：`Block.IsConnectorAvailableForPlacement` 和 `CheckConnection` 现在都要求当前 Connector 与对面匹配 Connector 同时 `canConnect=true`、未占用，并满足位置与相反法线条件；射线/OverlapSphere 只负责发现候选 Block，不再直接决定连接。已通过代码构建、差异检查和 Unity 6000.3.11f1 Play Mode 探针；48 项检查全部通过，包含“禁用对面 Connector 后双方保持断开”。
+- **分组连接判定修复**：`Block.Neighbors` 现在只返回通过双侧 Connector 能力、位置、法线及占用状态校验的邻居，不再把单纯射线命中的方块加入连通图；`BlockGroupManager` 过滤空对象、禁用对象和输入集合外的邻居，`PlayManager.RefreshGroup` 在分组前同步物理并刷新每个 Block 的连接状态。新增 Play Mode 回归检查覆盖正常连接、禁用对面 Connector、禁用当前 Connector 三种分组结果。代码和探针已更新，Unity Play Mode 结果待本次运行确认。
+
 本文档以仓库当前 Git 跟踪的 `Assets/`、`Packages/`、`ProjectSettings/` 和历史日志为依据。历史日志中的功能描述可能来自旧版本，若没有当前脚本、场景或运行时证据，不视为已实现。
 
 ## 1. 项目定位
@@ -65,7 +68,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 4. `CreateBlock` 实例化 Prefab，应用默认值并写入当前存档。
 5. 选中方块后支持键盘移动、15 度旋转、移动/旋转轴拖拽、复制和删除。
 
-`Block` 根据尺寸在六个方向生成连接点，通过位置和相反法线匹配相邻模块，维护 `neighbors`。`CheckConnection` 会先同步物理变换并双向清理旧连接器，再建立未占用的匹配，连接/断开时同步双方 `Info` 状态；`IsConnectorAvailableForPlacement` 会同时检查本方 `canConnect`、占用状态和对面方块是否存在，避免对着 `canConnect=false` 的邻接面显示提示或放置。连接成功后创建连接视觉对象（缺少视觉 Prefab 时仍保留逻辑连接）；`DisConnectAllConnectors` 用于删除、拆分和游玩结束清理。
+`Block` 根据尺寸在六个方向生成连接点，通过位置和相反法线匹配相邻模块，维护 `neighbors`。`CheckConnection` 会先同步物理变换并双向清理旧连接器，再建立未占用的匹配，连接/断开时同步双方 `Info` 状态；`Neighbors` 和 `BlockGroupManager.GroupBlocks` 使用同一套双侧连接规则，避免射线命中、禁用 Connector 或输入集合外对象造成错误合组。`PlayManager.RefreshGroup` 在重组前刷新物理与连接状态。`IsConnectorAvailableForPlacement` 会同时检查本方 `canConnect`、占用状态和对面方块是否存在，避免对着 `canConnect=false` 的邻接面显示提示或放置。连接成功后创建连接视觉对象（缺少视觉 Prefab 时仍保留逻辑连接）；`DisConnectAllConnectors` 用于删除、拆分和游玩结束清理。
 
 ### 3.3 存档与加载
 

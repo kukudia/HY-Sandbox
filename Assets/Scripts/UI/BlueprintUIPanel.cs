@@ -112,7 +112,7 @@ public class BlueprintUIPanel : MonoBehaviour
     {
         if (totalNumber != null)
         {
-            totalNumber.text = $"Total number:/t/t{newNumber} blocks";
+            totalNumber.text = $"Total number: {newNumber} blocks";
         }
     }
 
