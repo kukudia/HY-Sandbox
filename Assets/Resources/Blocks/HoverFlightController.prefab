@@ -270,6 +270,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canSpawnConnector: 0
   canBeDeleted: 1
+  canEditInfo: 0
   x: 1
   y: 1
   z: 1
@@ -282,6 +283,14 @@ MonoBehaviour:
   explosionRadius: 5
   explosionDisconnectProbability: 0.35
   resourcePath: 
+  info: 'Size: 1x1x1
+
+    Mass: 1 kg
+
+    Durability: 100
+
+    Power: 100 min
+    / 100 standard'
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
   connectorParent: {fileID: 2695719906485559115}
   raycastCollider: {fileID: 551971835264929317}
