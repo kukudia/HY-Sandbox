@@ -1,0 +1,86 @@
+[
+  {
+    "elapsed": 0.1251624,
+    "frame": 4,
+    "effects": [
+      {
+        "name": "Graph - UNI_Aerial_Explosion",
+        "aliveParticleCount": -10,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.4001534,
+    "frame": 85,
+    "effects": [
+      {
+        "name": "Graph - UNI_Aerial_Explosion",
+        "aliveParticleCount": 123,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.9008227,
+    "frame": 202,
+    "effects": [
+      {
+        "name": "Graph - UNI_Aerial_Explosion",
+        "aliveParticleCount": 66,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 1.80108881,
+    "frame": 500,
+    "effects": [
+      {
+        "name": "Graph - UNI_Aerial_Explosion",
+        "aliveParticleCount": 9,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 3.20213485,
+    "frame": 972,
+    "effects": [
+      {
+        "name": "Graph - UNI_Aerial_Explosion",
+        "aliveParticleCount": 0,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.00138426,
+    "frame": 1581,
+    "effects": [
+      {
+        "name": "Graph - UNI_Aerial_Explosion",
+        "aliveParticleCount": -10,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.80150557,
+    "frame": 1842,
+    "effects": [
+      {
+        "name": "Graph - UNI_Aerial_Explosion",
+        "aliveParticleCount": 71,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  }
+]

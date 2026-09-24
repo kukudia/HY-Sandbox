@@ -1,0 +1,86 @@
+[
+  {
+    "elapsed": 0.22,
+    "frame": 4,
+    "effects": [
+      {
+        "name": "Graph - UNI_Device_Fire",
+        "aliveParticleCount": -6,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.70, 0.00), Extents: (0.70, 1.05, 0.70)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.42,
+    "frame": 6,
+    "effects": [
+      {
+        "name": "Graph - UNI_Device_Fire",
+        "aliveParticleCount": -1,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.70, 0.00), Extents: (0.70, 1.05, 0.70)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.9008332,
+    "frame": 88,
+    "effects": [
+      {
+        "name": "Graph - UNI_Device_Fire",
+        "aliveParticleCount": 43,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.70, 0.00), Extents: (0.70, 1.05, 0.70)"
+      }
+    ]
+  },
+  {
+    "elapsed": 1.82754958,
+    "frame": 352,
+    "effects": [
+      {
+        "name": "Graph - UNI_Device_Fire",
+        "aliveParticleCount": 54,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.70, 0.00), Extents: (0.70, 1.05, 0.70)"
+      }
+    ]
+  },
+  {
+    "elapsed": 3.20026231,
+    "frame": 815,
+    "effects": [
+      {
+        "name": "Graph - UNI_Device_Fire",
+        "aliveParticleCount": 4,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.70, 0.00), Extents: (0.70, 1.05, 0.70)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.00260735,
+    "frame": 1428,
+    "effects": [
+      {
+        "name": "Graph - UNI_Device_Fire",
+        "aliveParticleCount": -6,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.70, 0.00), Extents: (0.70, 1.05, 0.70)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.80212927,
+    "frame": 1693,
+    "effects": [
+      {
+        "name": "Graph - UNI_Device_Fire",
+        "aliveParticleCount": 51,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.70, 0.00), Extents: (0.70, 1.05, 0.70)"
+      }
+    ]
+  }
+]

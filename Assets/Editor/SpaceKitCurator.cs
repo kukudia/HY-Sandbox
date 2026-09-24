@@ -49,8 +49,8 @@ public static class SpaceKitCurator
         public long triangles;
         public int renderers;
         public int materialSlots;
-        public int particleSystems;
-        public int maxParticles;
+        public int graphs;
+        public int legacyParticleSystems;
         public int colliders;
         public int nonConvexMeshColliders;
     }
@@ -204,9 +204,7 @@ public static class SpaceKitCurator
             if (animator.runtimeAnimatorController == null && animator.avatar == null &&
                 animator.GetComponentsInChildren<SkinnedMeshRenderer>(true).Length == 0)
                 Object.DestroyImmediate(animator);
-        foreach (var renderer in instance.GetComponentsInChildren<ParticleSystemRenderer>(true))
-            if (renderer.renderMode != ParticleSystemRenderMode.Mesh)
-                renderer.mesh = null; // Old mesh references are unused by billboard/stretch renderers.
+        NativeVfxMigration.Convert(instance);
     }
 
     public static void RepairLegacyImportArtifacts()
@@ -310,7 +308,7 @@ public static class SpaceKitCurator
             if (item.guid == item.sourceGuid) errors.Add("Duplicated source GUID: " + path);
             if (AssetDatabase.LoadMainAssetAtPath(path) == null) errors.Add("Cannot load: " + path);
             foreach (string dependency in AssetDatabase.GetDependencies(path, true))
-                if (dependency.StartsWith("Assets/", StringComparison.Ordinal) && !dependency.StartsWith(Root + "/", StringComparison.Ordinal))
+                if (dependency.StartsWith("Assets/", StringComparison.Ordinal) && !dependency.StartsWith("Assets/Art/", StringComparison.Ordinal) && dependency != "Assets/Scripts/Effect/VfxEffect.cs")
                     errors.Add("External dependency: " + path + " -> " + dependency);
             var material = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (material != null)
@@ -342,38 +340,25 @@ public static class SpaceKitCurator
                 if (meshes.Any(m => m == null)) errors.Add("Missing mesh: " + path);
                 foreach (var renderer in renderers)
                 {
-                    if (renderer is ParticleSystemRenderer particleRenderer)
-                    {
-                        // A null optional trail material is valid while trails are disabled.
-                        var system = particleRenderer.GetComponent<ParticleSystem>();
-                        if (particleRenderer.sharedMaterial == null || (system.trails.enabled && particleRenderer.trailMaterial == null))
-                            errors.Add("Missing particle material: " + path);
-                    }
-                    else if (renderer.sharedMaterials.Any(m => m == null)) errors.Add("Missing material: " + path);
+                    if (!(renderer is UnityEngine.VFX.VFXRenderer) && renderer.sharedMaterials.Any(m => m == null)) errors.Add("Missing material: " + path);
                 }
                 Bounds bounds = new Bounds(instance.transform.position, Vector3.zero);
                 bool first = true;
-                foreach (var renderer in renderers.Where(r => !(r is ParticleSystemRenderer)))
+                foreach (var renderer in renderers.Where(r => !(r is UnityEngine.VFX.VFXRenderer)))
                 {
                     if (first) { bounds = renderer.bounds; first = false; }
                     else bounds.Encapsulate(renderer.bounds);
                 }
-                var particles = instance.GetComponentsInChildren<ParticleSystem>(true);
+                var graphs = instance.GetComponentsInChildren<UnityEngine.VFX.VisualEffect>(true);
                 samples.Add(new Sample
                 {
                     path = path, size = bounds.size, renderers = renderers.Length,
                     triangles = meshes.Where(m => m != null).Sum(m => Enumerable.Range(0, m.subMeshCount).Sum(i => (long)m.GetIndexCount(i) / 3)),
-                    materialSlots = renderers.Sum(r => r.sharedMaterials.Length), particleSystems = particles.Length,
-                    maxParticles = particles.Sum(p => p.main.maxParticles), colliders = instance.GetComponentsInChildren<Collider>(true).Length,
+                    materialSlots = renderers.Sum(r => r.sharedMaterials.Length), graphs = graphs.Length,
+                    legacyParticleSystems = instance.GetComponentsInChildren<ParticleSystem>(true).Length, colliders = instance.GetComponentsInChildren<Collider>(true).Length,
                     nonConvexMeshColliders = instance.GetComponentsInChildren<MeshCollider>(true).Count(c => !c.convex)
                 });
-                foreach (var particle in particles)
-                {
-                    particle.useAutoRandomSeed = false;
-                    particle.randomSeed = 12345;
-                }
-                foreach (var particle in particles.Where(p => p.transform.parent == null || p.transform.parent.GetComponentInParent<ParticleSystem>() == null))
-                    particle.Simulate(1.0f, true, true, true);
+
             }
             finally { PrefabUtility.UnloadPrefabContents(instance); }
         }
@@ -408,42 +393,12 @@ public static class SpaceKitCurator
                 camera.targetTexture = target;
                 foreach (var light in instance.GetComponentsInChildren<Light>(true)) light.enabled = false;
                 foreach (var lod in instance.GetComponentsInChildren<LODGroup>(true)) lod.ForceLOD(0);
-                var particles = instance.GetComponentsInChildren<ParticleSystem>(true);
-                foreach (var particle in particles) { particle.useAutoRandomSeed = false; particle.randomSeed = 12345; }
-                float sampleTime = entries[index].destination.Contains("FX_Explosion") ? 0.18f :
-                    entries[index].destination.Contains("FX_Laser") ? 0.15f :
-                    entries[index].destination.Contains("FX Ground Smoke") ? 1.5f : 0.65f;
-                foreach (var particle in particles.Where(p => p.transform.parent == null || p.transform.parent.GetComponentInParent<ParticleSystem>() == null))
-                    particle.Simulate(sampleTime, true, true, true);
+                foreach (var graph in instance.GetComponentsInChildren<UnityEngine.VFX.VisualEffect>(true)) graph.enabled = false;
                 var renderers = instance.GetComponentsInChildren<Renderer>(true).Where(r => r.enabled && r.gameObject.activeInHierarchy).ToArray();
-                var solid = renderers.Where(r => !(r is ParticleSystemRenderer)).ToArray();
+                var solid = renderers.Where(r => !(r is UnityEngine.VFX.VFXRenderer)).ToArray();
                 var visible = solid.Length > 0 ? solid : renderers;
                 Bounds bounds = visible.Length > 0 ? visible[0].bounds : new Bounds(Vector3.zero, Vector3.one * 3);
                 foreach (var renderer in visible.Skip(1)) bounds.Encapsulate(renderer.bounds);
-                // Particle renderer bounds can contain the full lifetime trajectory, making short bursts tiny.
-                if (solid.Length == 0)
-                {
-                    bool firstParticle = true;
-                    foreach (var system in particles)
-                    {
-                        var live = new ParticleSystem.Particle[system.particleCount];
-                        int liveCount = system.GetParticles(live);
-                        for (int particleIndex = 0; particleIndex < liveCount; particleIndex++)
-                        {
-                            Vector3 position = live[particleIndex].position;
-                            var main = system.main;
-                            if (main.simulationSpace != ParticleSystemSimulationSpace.World)
-                            {
-                                var space = main.simulationSpace == ParticleSystemSimulationSpace.Custom ? main.customSimulationSpace : system.transform;
-                                if (space != null) position = space.TransformPoint(position);
-                            }
-                            float size = Mathf.Max(live[particleIndex].GetCurrentSize(system), 0.05f);
-                            var particleBounds = new Bounds(position, Vector3.one * size);
-                            if (firstParticle) { bounds = particleBounds; firstParticle = false; }
-                            else bounds.Encapsulate(particleBounds);
-                        }
-                    }
-                }
                 float radius = Mathf.Max(bounds.extents.magnitude, 0.2f);
                 camera.transform.position = bounds.center + new Vector3(1, 0.7f, -1).normalized * radius * 3.5f;
                 camera.transform.LookAt(bounds.center);

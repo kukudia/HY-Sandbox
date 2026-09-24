@@ -1,0 +1,86 @@
+[
+  {
+    "elapsed": 0.123316996,
+    "frame": 4,
+    "effects": [
+      {
+        "name": "Graph - UNI_Small_Smoke_Impact",
+        "aliveParticleCount": -3,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (2.00, 2.00, 2.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.4044255,
+    "frame": 27,
+    "effects": [
+      {
+        "name": "Graph - UNI_Small_Smoke_Impact",
+        "aliveParticleCount": 15,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (2.00, 2.00, 2.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.9017959,
+    "frame": 179,
+    "effects": [
+      {
+        "name": "Graph - UNI_Small_Smoke_Impact",
+        "aliveParticleCount": 7,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (2.00, 2.00, 2.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 1.80001664,
+    "frame": 435,
+    "effects": [
+      {
+        "name": "Graph - UNI_Small_Smoke_Impact",
+        "aliveParticleCount": 0,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (2.00, 2.00, 2.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 3.200102,
+    "frame": 908,
+    "effects": [
+      {
+        "name": "Graph - UNI_Small_Smoke_Impact",
+        "aliveParticleCount": 0,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (2.00, 2.00, 2.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.000937,
+    "frame": 1520,
+    "effects": [
+      {
+        "name": "Graph - UNI_Small_Smoke_Impact",
+        "aliveParticleCount": -3,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (2.00, 2.00, 2.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.80147266,
+    "frame": 1785,
+    "effects": [
+      {
+        "name": "Graph - UNI_Small_Smoke_Impact",
+        "aliveParticleCount": 7,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (2.00, 2.00, 2.00)"
+      }
+    ]
+  }
+]

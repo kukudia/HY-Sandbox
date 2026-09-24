@@ -7,7 +7,7 @@ public class RepairBot : Bot
     private const int MaxRepairTargetColliderCapacity = 1024;
     private const float MinimumTargetScanInterval = 0.25f;
     [SerializeField] private Transform _repairOrigin;
-    [SerializeField] private AssetParticleEffect _repairImpact;
+    [SerializeField] private VfxEffect _repairImpact;
     private Vector3 RepairOrigin => _repairOrigin != null ? _repairOrigin.position : transform.position;
     public float repairAmount = 10f;
     public float repairCooldown = 1f;
@@ -43,7 +43,7 @@ public class RepairBot : Bot
         {
             repairBeamEffect = gameObject.AddComponent<StylizedBeamEffect>();
         }
-        repairBeamEffect.Configure(beamWidth * 0.24f, 6.8f, 18, beamWidth * 0.18f, 4.4f, 13f);
+        repairBeamEffect.Configure(beamWidth * 0.24f);
         repairBeamEffect.SetVisible(false);
 
         EnsureRepairBeamGradient();

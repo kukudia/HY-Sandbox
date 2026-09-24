@@ -7,7 +7,7 @@ public class Meteor : MonoBehaviour
     public float destroyDelay = 5f;
 
     [Header("视觉效果")]
-    public TrailRenderer trailRenderer; // 拖尾效果
+    public VfxEffect trailEffect; // 拖尾效果
     public Light glowLight; // 发光效果
     public float minGlowIntensity = 1f;
     public float maxGlowIntensity = 5f;
@@ -17,11 +17,7 @@ public class Meteor : MonoBehaviour
         VisualEffectsManager.TryDecorateMeteor(this);
 
         // 随机化视觉效果
-        if (trailRenderer != null)
-        {
-            trailRenderer.startWidth = transform.localScale.x * 0.2f;
-            trailRenderer.time = transform.localScale.x * 0.5f;
-        }
+
 
         if (glowLight != null)
         {
@@ -53,7 +49,7 @@ public class Meteor : MonoBehaviour
         //Destroy(GetComponent<Collider>());
 
         // 禁用视觉效果
-        if (trailRenderer != null) trailRenderer.enabled = false;
+        if (trailEffect != null) { trailEffect.StopAndRelease(); trailEffect = null; }
         if (glowLight != null) glowLight.enabled = false;
 
         if (meteorShower != null)

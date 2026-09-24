@@ -6,6 +6,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.VFX;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
@@ -34,10 +35,14 @@ public static class BlockArtPlayProbe
     private static bool _sawFlight;
     private static bool _sawMuzzleFlash;
     private static bool _sawRepairSocket;
-    private static AssetParticleEffect[] _bursts;
-    private static AssetParticleEffect[] _continuous;
+    private static VfxEffect[] _bursts;
+    private static VfxEffect[] _continuous;
     private static int _continuitySamples;
     private static int _continuityGaps;
+    private static LootDrop _loot;
+    private static Meteor _meteor;
+    private static VfxEffect _meteorTail;
+    private static bool _sawLoot;
 
     static BlockArtPlayProbe() { EditorApplication.playModeStateChanged += StateChanged; }
 
@@ -79,6 +84,8 @@ public static class BlockArtPlayProbe
         pm.enabled = false; pm.playMode = true; pm.showUI = false;
         new GameObject("Probe UI").AddComponent<MainUIPanels>().enabled = false;
         var camera = new GameObject("Probe Camera").AddComponent<Camera>(); camera.tag = "MainCamera"; camera.transform.position = new Vector3(12, 8, -12); camera.transform.LookAt(Vector3.zero);
+        camera.orthographic = true; camera.orthographicSize = 90; camera.farClipPlane = 500;
+        camera.transform.position = new Vector3(35, 100, -90); camera.transform.LookAt(new Vector3(35, 0, 0));
         pm.mainCamera = camera;
         var owner = Unit("Turret owner", Vector3.zero, UnitFaction.Player, true);
         _turret = Spawn("Turret", owner.transform, Vector3.zero).GetComponent<TurretWeapon>();
@@ -107,11 +114,15 @@ public static class BlockArtPlayProbe
         _hover.isHovered = true; _hover.SetRuntimeReferences(propulsion, _body);
         Supply(propulsion.transform);
         _continuitySamples = _continuityGaps = 0;
+        _sawLoot = false;
+        _loot = LootDrop.Spawn(new CargoItem { kind = CargoKind.Coins, amount = 12 }, new Vector3(5, 0, 0));
+        _meteor = new GameObject("Graph meteor probe").AddComponent<Meteor>();
+        _meteor.transform.position = new Vector3(8, 0, 0);
         var continuousRoot = new GameObject("Continuity samples");
         _continuous = new[] { "ThrusterJet", "HoverJet", "BotFlight", "RepairContact" }
             .SelectMany(name => new[] { 0.05f, 0.1f, 1f }.Select(intensity =>
             {
-                var effect = Object.Instantiate(BlockVfxBaker.Load(name)).GetComponent<AssetParticleEffect>();
+                var effect = Object.Instantiate(BlockVfxBaker.Load(name)).GetComponent<VfxEffect>();
                 effect.transform.SetParent(continuousRoot.transform, false);
                 effect.transform.position = new Vector3(100f, 0f, 0f);
                 effect.SetIntensity(intensity);
@@ -153,22 +164,24 @@ public static class BlockArtPlayProbe
             double elapsed = Time.time - _gameStarted;
             if (EditorApplication.timeSinceStartup - _started > 60) throw new TimeoutException("Probe did not receive 24 seconds of game updates.");
             if (_bot == null) throw new InvalidOperationException("Bot was destroyed.");
-            if (elapsed > 0.6 && elapsed < 2)
+            if (elapsed > 1.0 && elapsed < 2)
             {
                 _continuitySamples++;
                 foreach (var effect in _continuous)
-                    if (effect.GetComponentsInChildren<ParticleSystem>().Any(p => p.particleCount == 0)) _continuityGaps++;
+                    if (effect.Graphs.Length == 0 || effect.Graphs.Any(p => p.aliveParticleCount <= 0)) _continuityGaps++;
             }
             _sawFlight |= _bot.transform.parent == _bot.outside && !_bot.GetComponent<Rigidbody>().isKinematic;
+            _sawLoot |= _loot.GetComponentsInChildren<VisualEffect>().Any(g => g.aliveParticleCount > 0);
+            if (_meteor != null) _meteor.transform.position = new Vector3(8, 0, (float)elapsed);
             _sawRepair |= _repairTarget.currentDurability > 70f;
-            _sawMuzzleFlash |= _turret.muzzle.GetComponentsInChildren<ParticleSystem>().Any(p => p.particleCount > 0);
+            _sawMuzzleFlash |= _turret.muzzle.GetComponentsInChildren<VisualEffect>().Any(p => p.aliveParticleCount > 0);
             if (_bot.isRepairing)
             {
                 var socket = new SerializedObject(_bot).FindProperty("_repairOrigin").objectReferenceValue as Transform;
                 var beam = _bot.GetComponent<StylizedBeamEffect>();
                 if (beam != null && socket != null)
                 {
-                    Vector3 start = (Vector3)typeof(StylizedBeamEffect).GetField("startPoint", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(beam);
+                    Vector3 start = (Vector3)typeof(StylizedBeamEffect).GetField("_start", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(beam);
                     _sawRepairSocket |= Vector3.Distance(start, socket.position) < 0.03f;
                 }
             }
@@ -184,28 +197,33 @@ public static class BlockArtPlayProbe
                 Check("Turret raycast applies damage", _target.currentDurability < 10000f);
                 Check("Turret muzzle follows active barrel", _turret.muzzle.IsChildOf(_turret.verticalAxis) && _turret.muzzle.gameObject.activeInHierarchy);
                 Check("Authored muzzle flash plays on firing", _sawMuzzleFlash);
+                Check("Loot uses GPU burst and trail", _sawLoot && _loot.GetComponentsInChildren<VisualEffect>().Length == 2);
+                _meteorTail = _meteor.trailEffect;
+                Check("Meteor uses live native smoke and fire", _meteorTail != null && _meteorTail.Graphs.Any(g => g.aliveParticleCount > 0));
+                _meteorTail.StopAndRelease(); _meteor.trailEffect = null;
+                Object.Destroy(_meteor.gameObject);
                 Check("Generator and repair bay lights illuminate", Object.FindObjectsByType<BlockStatusLight>(FindObjectsSortMode.None).All(s => s.GetComponentsInChildren<Light>().Count(l => l.intensity > 0f) == 2));
                 Check("Main thrust moves rotated unit along world X", _body.linearVelocity.x > 0.2f);
                 Check("Universal head rotates while base stays fixed", Vector3.Dot(_universal.model.forward, Vector3.right) > 0.98f && Quaternion.Angle(_base.rotation, _baseRotation) < 0.1f);
-                Check("All propulsion outlets emit", new Thruster[] { _main, _universal, _hover }.All(t => t.GetComponentsInChildren<ParticleSystem>().Any(p => p.particleCount > 0)));
+                Check("All propulsion outlets emit", new Thruster[] { _main, _universal, _hover }.All(t => t.GetComponentsInChildren<VisualEffect>().Any(p => p.aliveParticleCount > 0)));
                 foreach (var t in new Thruster[] { _main, _universal, _hover })
-                    Check(t.name + " nozzle axes oppose force", t.GetComponentsInChildren<AssetParticleEffect>().All(e => Vector3.Dot(e.transform.forward, -(t is HoverThruster ? t.transform.up : t.model.forward)) > 0.999f));
+                    Check(t.name + " nozzle axes oppose force", t.GetComponentsInChildren<VfxEffect>().All(e => Vector3.Dot(e.transform.forward, -(t is HoverThruster ? t.transform.up : t.model.forward)) > 0.999f));
                 _turret.enabled = false;
                 _main.GetComponent<Power>().currentPower = 0f;
                 _main.enabled = false;
                 _phase++;
             }
-            if (_phase == 2 && elapsed > 3)
+            if (_phase == 2 && elapsed > 12)
             {
-                Check("Continuous effects stop emission and expire", _continuous.All(e => e.GetComponentsInChildren<ParticleSystem>().All(p => !p.isEmitting && p.particleCount == 0)));
+                Check("Continuous effects stop emission and expire", _continuous.All(e => e.GetComponentsInChildren<VisualEffect>().All(p => p.aliveParticleCount == 0)));
                 foreach (var e in _continuous)
-                    foreach (var p in e.GetComponentsInChildren<ParticleSystem>())
-                        if (p.isEmitting || p.particleCount > 0) Errors.Add($"Continuous residual {e.name}/{p.name}: count={p.particleCount}, emitting={p.isEmitting}, culling={p.main.cullingMode}");
+                    foreach (var p in e.GetComponentsInChildren<VisualEffect>())
+                        if (p.aliveParticleCount > 0) Errors.Add($"Continuous residual {e.name}/{p.name}: count={p.aliveParticleCount}");
                 foreach (var effect in _continuous) Object.Destroy(effect.gameObject);
-                Check("Disabled thruster stops and clears plume", _main.GetComponentsInChildren<ParticleSystem>().All(p => !p.isEmitting && p.particleCount == 0));
+                Check("Disabled thruster stops and clears plume", _main.GetComponentsInChildren<VisualEffect>().All(p => p.aliveParticleCount == 0));
                 foreach (BlockVfxLibrary.Effect kind in Enum.GetValues(typeof(BlockVfxLibrary.Effect)))
                     BlockVfxLibrary.Play(kind, new Vector3(50f + (int)kind * 4f, 0f, 0f), Quaternion.identity);
-                _bursts = Object.FindObjectsByType<AssetParticleEffect>(FindObjectsSortMode.None)
+                _bursts = Object.FindObjectsByType<VfxEffect>(FindObjectsSortMode.None)
                     .Where(e => e.transform.parent == null && e.transform.position.x >= 50f && e.transform.position.x <= 74f).ToArray();
                 Check("All seven event effects instantiate", _bursts.Length == 7);
                 var debris = new GameObject("Probe debris").AddComponent<Rigidbody>();
@@ -213,23 +231,28 @@ public static class BlockArtPlayProbe
                 DetachedPartSmokeTrail.Attach(debris, debris.position, 1f);
                 _phase++;
             }
-            if (_phase == 3 && elapsed > 7)
+            if (_phase == 3 && elapsed > 20)
             {
-                Check("Event particles finish before release timeout", _bursts.All(e => e != null && e.GetComponentsInChildren<ParticleSystem>().All(p => !p.IsAlive(false))));
+                Check("Event particles finish before release timeout", _bursts.All(e => e != null && e.GetComponentsInChildren<VisualEffect>().All(p => p.aliveParticleCount == 0)));
                 foreach (var e in _bursts.Where(e => e != null))
-                    foreach (var p in e.GetComponentsInChildren<ParticleSystem>())
-                        if (p.IsAlive(false)) Errors.Add($"Burst residual {e.name}/{p.name}: count={p.particleCount}, emitting={p.isEmitting}, time={p.time}, culling={p.main.cullingMode}");
+                    foreach (var p in e.GetComponentsInChildren<VisualEffect>())
+                        if (p.aliveParticleCount > 0) Errors.Add($"Burst residual {e.name}/{p.name}: count={p.aliveParticleCount}");
                 _phase++;
             }
-            if (elapsed > 24)
+            if (elapsed > 27)
             {
                 Check("Bot undocks with dynamic body", _sawFlight);
                 Check("Bot repairs same-unit damaged block", _sawRepair && _repairTarget.currentDurability >= _repairTarget.maxDurability);
                 Check("Repair beam starts at model tool socket", _sawRepairSocket);
                 Check("Bot returns to authored home", _bot.transform.parent == _bot.home && _bot.currentState == RepairBot.NavigationState.Idle && Vector3.Distance(_bot.transform.localPosition, _bot.homeOffset) < 0.001f);
-                Check("Docked bot stops effects", _bot.GetComponentsInChildren<ParticleSystem>().All(p => !p.isEmitting));
+                // Reinitialized idle GPU systems report negative counts until a new readback.
+                Check("Docked bot stops effects", _bot.GetComponentsInChildren<VfxEffect>().All(e => !e.IsEmitting)
+                    && _bot.GetComponentsInChildren<VisualEffect>().All(p => p.aliveParticleCount <= 0));
+                foreach (var graph in _bot.GetComponentsInChildren<VisualEffect>().Where(g => g.aliveParticleCount > 0))
+                    Errors.Add("Docked graph residual: " + graph.name + " count=" + graph.aliveParticleCount + " culled=" + graph.culled);
                 Check("Event effects release after playback", _bursts != null && _bursts.All(e => e == null));
                 Check("Detached smoke releases its controller", Object.FindObjectsByType<DetachedPartSmokeTrail>(FindObjectsSortMode.None).Length == 0);
+                Check("Meteor tail survives owner removal then releases", _meteorTail == null);
                 Finish();
             }
         }

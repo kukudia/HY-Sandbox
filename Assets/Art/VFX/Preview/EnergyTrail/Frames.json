@@ -1,0 +1,86 @@
+[
+  {
+    "elapsed": 0.1276484,
+    "frame": 4,
+    "effects": [
+      {
+        "name": "Graph - EnergyTrail",
+        "aliveParticleCount": -1,
+        "culled": false,
+        "bounds": "Center: (0.22, 0.00, 0.00), Extents: (15.00, 15.00, 15.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.4018768,
+    "frame": 44,
+    "effects": [
+      {
+        "name": "Graph - EnergyTrail",
+        "aliveParticleCount": 5,
+        "culled": false,
+        "bounds": "Center: (0.56, 0.00, 0.00), Extents: (15.00, 15.00, 15.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.900866,
+    "frame": 183,
+    "effects": [
+      {
+        "name": "Graph - EnergyTrail",
+        "aliveParticleCount": 27,
+        "culled": false,
+        "bounds": "Center: (0.26, 0.00, 0.00), Extents: (15.00, 15.00, 15.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 1.80096352,
+    "frame": 477,
+    "effects": [
+      {
+        "name": "Graph - EnergyTrail",
+        "aliveParticleCount": 27,
+        "culled": false,
+        "bounds": "Center: (-0.46, 0.00, 0.00), Extents: (15.00, 15.00, 15.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 3.200344,
+    "frame": 950,
+    "effects": [
+      {
+        "name": "Graph - EnergyTrail",
+        "aliveParticleCount": 0,
+        "culled": false,
+        "bounds": "Center: (-0.11, 0.00, 0.00), Extents: (15.00, 15.00, 15.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.00057268,
+    "frame": 1562,
+    "effects": [
+      {
+        "name": "Graph - EnergyTrail",
+        "aliveParticleCount": -1,
+        "culled": false,
+        "bounds": "Center: (0.39, 0.00, 0.00), Extents: (15.00, 15.00, 15.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.201908,
+    "frame": 1619,
+    "effects": [
+      {
+        "name": "Graph - EnergyTrail",
+        "aliveParticleCount": 4,
+        "culled": false,
+        "bounds": "Center: (0.06, 0.00, 0.00), Extents: (15.00, 15.00, 15.00)"
+      }
+    ]
+  }
+]

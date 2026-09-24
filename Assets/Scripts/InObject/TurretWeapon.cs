@@ -11,7 +11,7 @@ public class TurretWeapon : MonoBehaviour
     public Transform verticalAxis;
     public Transform aimPivot;
     public Transform muzzle;
-    [SerializeField] private AssetParticleEffect _muzzleFlash;
+    [SerializeField] private VfxEffect _muzzleFlash;
     private Vector3 _beamEnd;
     public float range = 45f;
     public float damage = 12f;
@@ -97,7 +97,7 @@ public class TurretWeapon : MonoBehaviour
         {
             fireBeam = gameObject.AddComponent<StylizedBeamEffect>();
         }
-        fireBeam.Configure(0.035f, 6f, 7, 0.008f, 2.2f, 18f);
+        fireBeam.Configure(0.035f);
         fireBeam.SetColor(new Color(1f, 0.46f, 0.08f, 1f));
         fireBeam.SetVisible(false);
     }

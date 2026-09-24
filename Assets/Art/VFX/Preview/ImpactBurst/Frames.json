@@ -1,0 +1,86 @@
+[
+  {
+    "elapsed": 0.124380887,
+    "frame": 4,
+    "effects": [
+      {
+        "name": "Graph - UNI_Impact_Explosion",
+        "aliveParticleCount": -8,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.30, 0.00), Extents: (1.20, 1.20, 1.20)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.4051281,
+    "frame": 27,
+    "effects": [
+      {
+        "name": "Graph - UNI_Impact_Explosion",
+        "aliveParticleCount": 174,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.30, 0.00), Extents: (1.20, 1.20, 1.20)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.900976062,
+    "frame": 184,
+    "effects": [
+      {
+        "name": "Graph - UNI_Impact_Explosion",
+        "aliveParticleCount": 107,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.30, 0.00), Extents: (1.20, 1.20, 1.20)"
+      }
+    ]
+  },
+  {
+    "elapsed": 1.80111527,
+    "frame": 483,
+    "effects": [
+      {
+        "name": "Graph - UNI_Impact_Explosion",
+        "aliveParticleCount": 16,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.30, 0.00), Extents: (1.20, 1.20, 1.20)"
+      }
+    ]
+  },
+  {
+    "elapsed": 3.20002437,
+    "frame": 934,
+    "effects": [
+      {
+        "name": "Graph - UNI_Impact_Explosion",
+        "aliveParticleCount": 0,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.30, 0.00), Extents: (1.20, 1.20, 1.20)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.002456,
+    "frame": 1547,
+    "effects": [
+      {
+        "name": "Graph - UNI_Impact_Explosion",
+        "aliveParticleCount": -8,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.30, 0.00), Extents: (1.20, 1.20, 1.20)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.800705,
+    "frame": 1810,
+    "effects": [
+      {
+        "name": "Graph - UNI_Impact_Explosion",
+        "aliveParticleCount": 102,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.30, 0.00), Extents: (1.20, 1.20, 1.20)"
+      }
+    ]
+  }
+]

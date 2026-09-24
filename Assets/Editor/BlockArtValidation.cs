@@ -10,10 +10,13 @@ public static class BlockArtValidation
 {
     [MenuItem("Tools/HY Sandbox/Block Art/Validate Assets")]
     public static void Validate()
+        => ValidateAssets(new[] { "Assets/Resources/Blocks", "Assets/Art/Temp", BlockVfxBaker.Root });
+
+    public static void ValidateAssets(string[] roots)
     {
         var issues = new List<string>();
         var rows = new List<object>();
-        foreach (string guid in AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Resources/Blocks", "Assets/Art/Temp", "Assets/Art/BlockVisuals/VFX" }))
+        foreach (string guid in AssetDatabase.FindAssets("t:Prefab", roots))
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
             var root = PrefabUtility.LoadPrefabContents(path);
@@ -38,19 +41,16 @@ public static class BlockArtValidation
                 }
                 foreach (var renderer in root.GetComponentsInChildren<Renderer>(true))
                 {
-                    // Unity serializes an optional second trail slot even with particle trails disabled.
-                    var materials = renderer is ParticleSystemRenderer ? new[] { renderer.sharedMaterial } : renderer.sharedMaterials;
-                    foreach (var material in materials)
+                    if (renderer is UnityEngine.VFX.VFXRenderer) continue;
+                    foreach (var material in renderer.sharedMaterials)
                         if (material == null || material.shader == null || !material.shader.isSupported) issues.Add(path + ": invalid material " + renderer.name);
-                    if (renderer is ParticleSystemRenderer particleRenderer && particleRenderer.GetComponent<ParticleSystem>().trails.enabled && particleRenderer.trailMaterial == null)
-                        issues.Add(path + ": missing active particle trail material " + renderer.name);
                 }
                 var weapon = root.GetComponent<TurretWeapon>();
                 if (weapon != null && (weapon.muzzle == null || !weapon.muzzle.IsChildOf(weapon.verticalAxis) || !weapon.verticalAxis.IsChildOf(weapon.horizontalAxis))) issues.Add(path + ": invalid aiming chain");
                 var thruster = root.GetComponent<Thruster>();
                 if (thruster != null)
                 {
-                    var nozzles = thruster.model.GetComponentsInChildren<AssetParticleEffect>();
+                    var nozzles = thruster.model.GetComponentsInChildren<VfxEffect>();
                     if (nozzles.Length == 0) issues.Add(path + ": no nozzle effects");
                     foreach (var nozzle in nozzles)
                     {
@@ -70,12 +70,12 @@ public static class BlockArtValidation
                     enabledConnectors = block != null ? block.connectors.Count(c => c.canConnect) : 0,
                     colliders = root.GetComponentsInChildren<Collider>(true).Length,
                     lights = root.GetComponentsInChildren<Light>(true).Length,
-                    particles = root.GetComponentsInChildren<ParticleSystem>(true).Sum(p => p.main.maxParticles),
+                    graphs = root.GetComponentsInChildren<UnityEngine.VFX.VisualEffect>(true).Length,
                     triangles = root.GetComponentsInChildren<MeshFilter>(true).Where(m => m.sharedMesh != null).Sum(m => (long)m.sharedMesh.triangles.Length / 3) });
             }
             finally { PrefabUtility.UnloadPrefabContents(root); }
         }
-        File.WriteAllText("Assets/Art/BlockVisuals/Validation.json", Newtonsoft.Json.JsonConvert.SerializeObject(new { unity = Application.unityVersion, issues, prefabs = rows }, Newtonsoft.Json.Formatting.Indented));
+        File.WriteAllText("Assets/Art/BlockVisuals/Validation.json", Newtonsoft.Json.JsonConvert.SerializeObject(new { unity = Application.unityVersion, roots, issues, prefabs = rows }, Newtonsoft.Json.Formatting.Indented));
         AssetDatabase.Refresh();
         if (issues.Count > 0) throw new InvalidOperationException(string.Join("\n", issues));
         Debug.Log("Block art validation passed: " + rows.Count + " prefabs.");

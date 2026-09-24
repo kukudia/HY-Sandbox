@@ -8,9 +8,9 @@ public abstract class Bot : MonoBehaviour
     private const int MaxHomeGuidanceHits = 16;
 
     [Header("Authored model sockets and effects")]
-    [SerializeField] private AssetParticleEffect _flightEffect;
-    [SerializeField] private TrailRenderer _flightTrail;
-    [SerializeField] private TrailRenderer _flightCoreTrail;
+    [SerializeField] private VfxEffect _flightEffect;
+    [SerializeField] private VfxEffect _flightTrail;
+    [SerializeField] private VfxEffect _flightCoreTrail;
 
     public Transform home;
     public Transform outside;
@@ -93,8 +93,8 @@ public abstract class Bot : MonoBehaviour
     private Vector3 currentAvoidanceDirection;
     private Vector3 smoothedDirection;
     private float currentSpeedMultiplier = 1f;
-    protected TrailRenderer trailRenderer;
-    protected TrailRenderer trailCoreRenderer;
+    protected VfxEffect trailRenderer;
+    protected VfxEffect trailCoreRenderer;
     private readonly Collider[] nearbyColliders = new Collider[MaxNearbyColliders];
     private readonly RaycastHit[] homeGuidanceHits = new RaycastHit[MaxHomeGuidanceHits];
     private Transform cachedNavigationTarget;
@@ -163,8 +163,8 @@ public abstract class Bot : MonoBehaviour
     protected virtual void OnDisable()
     {
         if (_flightEffect != null) _flightEffect.SetIntensity(0f);
-        if (trailRenderer != null) trailRenderer.emitting = false;
-        if (trailCoreRenderer != null) trailCoreRenderer.emitting = false;
+        if (trailRenderer != null) trailRenderer.SetIntensity(0f);
+        if (trailCoreRenderer != null) trailCoreRenderer.SetIntensity(0f);
     }
 
     protected virtual void OnDestroy() { }
@@ -173,8 +173,8 @@ public abstract class Bot : MonoBehaviour
     {
         trailRenderer = _flightTrail;
         trailCoreRenderer = _flightCoreTrail;
-        if (trailRenderer != null) trailRenderer.emitting = false;
-        if (trailCoreRenderer != null) trailCoreRenderer.emitting = false;
+        if (trailRenderer != null) trailRenderer.SetIntensity(0f);
+        if (trailCoreRenderer != null) trailCoreRenderer.SetIntensity(0f);
         if (_flightEffect != null) _flightEffect.SetIntensity(0f);
     }
 
@@ -190,8 +190,8 @@ public abstract class Bot : MonoBehaviour
             || currentState == NavigationState.ReturningHome;
         float speed = rb.isKinematic ? 0f : rb.linearVelocity.magnitude;
         float ratio = showTrail && flying ? Mathf.InverseLerp(0.15f, Mathf.Max(0.3f, movementSpeed), speed) : 0f;
-        if (trailRenderer != null) trailRenderer.emitting = ratio > 0.015f;
-        if (trailCoreRenderer != null) trailCoreRenderer.emitting = ratio > 0.015f;
+        if (trailRenderer != null) trailRenderer.SetIntensity(ratio);
+        if (trailCoreRenderer != null) trailCoreRenderer.SetIntensity(ratio);
         if (_flightEffect != null) _flightEffect.SetIntensity(ratio);
     }
 
@@ -808,7 +808,7 @@ public abstract class Bot : MonoBehaviour
         if (trailRenderer != null)
         {
             trailRenderer.enabled = !docked;
-            trailRenderer.emitting = false;
+            trailRenderer.SetIntensity(0f);
             if (docked)
             {
                 trailRenderer.Clear();
@@ -818,7 +818,7 @@ public abstract class Bot : MonoBehaviour
         if (trailCoreRenderer != null)
         {
             trailCoreRenderer.enabled = !docked;
-            trailCoreRenderer.emitting = false;
+            trailCoreRenderer.SetIntensity(0f);
             if (docked)
             {
                 trailCoreRenderer.Clear();
@@ -827,7 +827,7 @@ public abstract class Bot : MonoBehaviour
 
         if (docked && _flightEffect != null)
         {
-            _flightEffect.SetIntensity(0f);
+            _flightEffect.Clear();
         }
     }
     private void OnDrawGizmosSelected()

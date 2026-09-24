@@ -6,6 +6,8 @@
     "Turret raycast applies damage",
     "Turret muzzle follows active barrel",
     "Authored muzzle flash plays on firing",
+    "Loot uses GPU burst and trail",
+    "Meteor uses live native smoke and fire",
     "Generator and repair bay lights illuminate",
     "Main thrust moves rotated unit along world X",
     "Universal head rotates while base stays fixed",
@@ -23,7 +25,8 @@
     "Bot returns to authored home",
     "Docked bot stops effects",
     "Event effects release after playback",
-    "Detached smoke releases its controller"
+    "Detached smoke releases its controller",
+    "Meteor tail survives owner removal then releases"
   ],
   "errors": []
 }

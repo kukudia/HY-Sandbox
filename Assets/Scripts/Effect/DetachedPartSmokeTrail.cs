@@ -15,8 +15,7 @@ public class DetachedPartSmokeTrail : MonoBehaviour
 
     private Rigidbody targetBody;
     private Transform emissionRoot;
-    private AssetParticleEffect _smokeEffect;
-    private TrailRenderer emberTrail;
+    private VfxEffect _smokeEffect;
     private float intensity = 1f;
     private float elapsed;
     private bool registered;
@@ -62,10 +61,7 @@ public class DetachedPartSmokeTrail : MonoBehaviour
         emissionRoot.position = worldAnchor;
         _smokeEffect.SetIntensity(0f);
 
-        GameObject emberObject = new GameObject("Detached Part Ember Trail");
-        emberObject.transform.SetParent(emissionRoot, false);
-        emberTrail = emberObject.AddComponent<TrailRenderer>();
-        ConfigureEmberTrail(emberTrail);
+
     }
 
     private void Refresh(Vector3 worldAnchor, float effectIntensity)
@@ -78,26 +74,6 @@ public class DetachedPartSmokeTrail : MonoBehaviour
         {
             emissionRoot.position = worldAnchor;
         }
-    }
-
-    private static void ConfigureEmberTrail(TrailRenderer trail)
-    {
-        trail.sharedMaterial = VisualEffectsManager.GetSharedLineMaterial();
-        trail.time = 0.48f;
-        trail.minVertexDistance = 0.08f;
-        trail.widthMultiplier = 0.055f;
-        trail.widthCurve = new AnimationCurve(
-            new Keyframe(0f, 1f),
-            new Keyframe(0.35f, 0.42f),
-            new Keyframe(1f, 0f));
-        trail.colorGradient = CreateEmberGradient();
-        trail.numCornerVertices = 2;
-        trail.numCapVertices = 2;
-        trail.textureMode = LineTextureMode.Stretch;
-        trail.alignment = LineAlignment.View;
-        trail.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-        trail.receiveShadows = false;
-        trail.emitting = false;
     }
 
     private void Update()
@@ -117,8 +93,7 @@ public class DetachedPartSmokeTrail : MonoBehaviour
         bool shouldEmit = emissionRatio > 0.025f && !targetBody.isKinematic;
         if (_smokeEffect != null) _smokeEffect.SetIntensity(shouldEmit ? emissionRatio * maximumEmissionRate / 26f : 0f);
 
-        emberTrail.emitting = shouldEmit && speedRatio > 0.35f;
-        emberTrail.widthMultiplier = Mathf.Lerp(0.025f, 0.075f, Mathf.Clamp01(emissionRatio));
+
 
         if (elapsed >= effectLifetime)
         {
@@ -132,14 +107,11 @@ public class DetachedPartSmokeTrail : MonoBehaviour
 
         stopping = true;
         if (_smokeEffect != null) _smokeEffect.SetIntensity(0f);
-        if (emberTrail != null)
-        {
-            emberTrail.emitting = false;
-        }
+
         if (emissionRoot != null)
         {
             emissionRoot.SetParent(null, true);
-            Destroy(emissionRoot.gameObject, 2.4f);
+            _smokeEffect.ReleaseAfterPlayback();
         }
 
         Destroy(this);
@@ -153,22 +125,4 @@ public class DetachedPartSmokeTrail : MonoBehaviour
         activeTrailCount = Mathf.Max(0, activeTrailCount - 1);
     }
 
-    private static Gradient CreateEmberGradient()
-    {
-        Gradient gradient = new Gradient();
-        gradient.SetKeys(
-            new[]
-            {
-                new GradientColorKey(Color.white, 0f),
-                new GradientColorKey(new Color(1f, 0.58f, 0.12f), 0.28f),
-                new GradientColorKey(new Color(0.35f, 0.08f, 0.025f), 1f)
-            },
-            new[]
-            {
-                new GradientAlphaKey(0.92f, 0f),
-                new GradientAlphaKey(0.68f, 0.45f),
-                new GradientAlphaKey(0f, 1f)
-            });
-        return gradient;
-    }
 }

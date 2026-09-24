@@ -1,5 +1,10 @@
 {
   "unity": "6000.3.11f1",
+  "roots": [
+    "Assets/Resources/Blocks",
+    "Assets/Art/BlockVisuals/VFX",
+    "Assets/Resources/Salvage"
+  ],
   "issues": [],
   "prefabs": [
     {
@@ -8,7 +13,7 @@
       "enabledConnectors": 6,
       "colliders": 1,
       "lights": 0,
-      "particles": 0,
+      "graphs": 0,
       "triangles": 12
     },
     {
@@ -17,7 +22,7 @@
       "enabledConnectors": 10,
       "colliders": 1,
       "lights": 0,
-      "particles": 0,
+      "graphs": 0,
       "triangles": 12
     },
     {
@@ -26,7 +31,7 @@
       "enabledConnectors": 16,
       "colliders": 1,
       "lights": 0,
-      "particles": 0,
+      "graphs": 0,
       "triangles": 12
     },
     {
@@ -35,7 +40,7 @@
       "enabledConnectors": 24,
       "colliders": 1,
       "lights": 0,
-      "particles": 0,
+      "graphs": 0,
       "triangles": 12
     },
     {
@@ -44,8 +49,17 @@
       "enabledConnectors": 0,
       "colliders": 1,
       "lights": 0,
-      "particles": 192,
+      "graphs": 5,
       "triangles": 3166
+    },
+    {
+      "path": "Assets/Resources/Blocks/CargoHold.prefab",
+      "connectors": 24,
+      "enabledConnectors": 24,
+      "colliders": 1,
+      "lights": 0,
+      "graphs": 0,
+      "triangles": 216
     },
     {
       "path": "Assets/Resources/Blocks/Cockpit.prefab",
@@ -53,8 +67,26 @@
       "enabledConnectors": 24,
       "colliders": 1,
       "lights": 0,
-      "particles": 0,
+      "graphs": 0,
       "triangles": 388
+    },
+    {
+      "path": "Assets/Resources/Blocks/CoinHold.prefab",
+      "connectors": 6,
+      "enabledConnectors": 6,
+      "colliders": 1,
+      "lights": 0,
+      "graphs": 0,
+      "triangles": 276
+    },
+    {
+      "path": "Assets/Resources/Blocks/CollectionBotContainer.prefab",
+      "connectors": 6,
+      "enabledConnectors": 1,
+      "colliders": 2,
+      "lights": 2,
+      "graphs": 4,
+      "triangles": 3634
     },
     {
       "path": "Assets/Resources/Blocks/Connector.prefab",
@@ -62,7 +94,7 @@
       "enabledConnectors": 0,
       "colliders": 0,
       "lights": 0,
-      "particles": 0,
+      "graphs": 0,
       "triangles": 1224
     },
     {
@@ -71,16 +103,16 @@
       "enabledConnectors": 10,
       "colliders": 1,
       "lights": 0,
-      "particles": 0,
+      "graphs": 0,
       "triangles": 3096
     },
     {
       "path": "Assets/Resources/Blocks/HoverFlightController.prefab",
       "connectors": 6,
-      "enabledConnectors": 6,
+      "enabledConnectors": 1,
       "colliders": 1,
       "lights": 0,
-      "particles": 0,
+      "graphs": 0,
       "triangles": 160
     },
     {
@@ -89,16 +121,16 @@
       "enabledConnectors": 1,
       "colliders": 1,
       "lights": 0,
-      "particles": 72,
+      "graphs": 1,
       "triangles": 674
     },
     {
       "path": "Assets/Resources/Blocks/HoverThrusterBig.prefab",
       "connectors": 24,
-      "enabledConnectors": 24,
+      "enabledConnectors": 4,
       "colliders": 1,
       "lights": 0,
-      "particles": 72,
+      "graphs": 1,
       "triangles": 674
     },
     {
@@ -107,7 +139,7 @@
       "enabledConnectors": 6,
       "colliders": 1,
       "lights": 0,
-      "particles": 144,
+      "graphs": 2,
       "triangles": 1416
     },
     {
@@ -116,25 +148,25 @@
       "enabledConnectors": 16,
       "colliders": 1,
       "lights": 0,
-      "particles": 288,
+      "graphs": 4,
       "triangles": 2832
     },
     {
       "path": "Assets/Resources/Blocks/PowerGeneratingUnit.prefab",
       "connectors": 24,
-      "enabledConnectors": 24,
+      "enabledConnectors": 4,
       "colliders": 1,
       "lights": 2,
-      "particles": 0,
+      "graphs": 0,
       "triangles": 1088
     },
     {
       "path": "Assets/Resources/Blocks/PowerTransmissionDevice.prefab",
       "connectors": 6,
-      "enabledConnectors": 6,
+      "enabledConnectors": 1,
       "colliders": 1,
       "lights": 0,
-      "particles": 0,
+      "graphs": 0,
       "triangles": 276
     },
     {
@@ -143,7 +175,7 @@
       "enabledConnectors": 6,
       "colliders": 1,
       "lights": 0,
-      "particles": 0,
+      "graphs": 0,
       "triangles": 1700
     },
     {
@@ -152,17 +184,26 @@
       "enabledConnectors": 1,
       "colliders": 2,
       "lights": 2,
-      "particles": 192,
+      "graphs": 5,
       "triangles": 3622
     },
     {
       "path": "Assets/Resources/Blocks/Stairs.prefab",
       "connectors": 6,
+      "enabledConnectors": 4,
+      "colliders": 1,
+      "lights": 0,
+      "graphs": 0,
+      "triangles": 776
+    },
+    {
+      "path": "Assets/Resources/Blocks/TechnologyHold.prefab",
+      "connectors": 6,
       "enabledConnectors": 6,
       "colliders": 1,
       "lights": 0,
-      "particles": 0,
-      "triangles": 776
+      "graphs": 0,
+      "triangles": 276
     },
     {
       "path": "Assets/Resources/Blocks/Turret.prefab",
@@ -170,124 +211,25 @@
       "enabledConnectors": 1,
       "colliders": 1,
       "lights": 0,
-      "particles": 48,
+      "graphs": 1,
       "triangles": 2300
     },
     {
       "path": "Assets/Resources/Blocks/UniversalThruster.prefab",
       "connectors": 6,
-      "enabledConnectors": 2,
+      "enabledConnectors": 1,
       "colliders": 1,
       "lights": 0,
-      "particles": 144,
+      "graphs": 2,
       "triangles": 2417
     },
     {
       "path": "Assets/Resources/Blocks/UniversalThrusterBig.prefab",
       "connectors": 24,
-      "enabledConnectors": 24,
+      "enabledConnectors": 4,
       "colliders": 1,
       "lights": 0,
-      "particles": 144,
-      "triangles": 2417
-    },
-    {
-      "path": "Assets/Art/Temp/SM_Prop_AirVent_Large_01.prefab",
-      "connectors": 0,
-      "enabledConnectors": 0,
-      "colliders": 1,
-      "lights": 0,
-      "particles": 0,
-      "triangles": 674
-    },
-    {
-      "path": "Assets/Art/Temp/SM_Prop_Crate_02.prefab",
-      "connectors": 0,
-      "enabledConnectors": 0,
-      "colliders": 1,
-      "lights": 0,
-      "particles": 0,
-      "triangles": 332
-    },
-    {
-      "path": "Assets/Art/Temp/SM_Prop_Crate_Ammo_01.prefab",
-      "connectors": 0,
-      "enabledConnectors": 0,
-      "colliders": 1,
-      "lights": 0,
-      "particles": 0,
-      "triangles": 352
-    },
-    {
-      "path": "Assets/Art/Temp/SM_Prop_Crate_Ammo_02.prefab",
-      "connectors": 0,
-      "enabledConnectors": 0,
-      "colliders": 1,
-      "lights": 0,
-      "particles": 0,
-      "triangles": 376
-    },
-    {
-      "path": "Assets/Art/Temp/SM_Prop_Crate_health_01.prefab",
-      "connectors": 0,
-      "enabledConnectors": 0,
-      "colliders": 1,
-      "lights": 0,
-      "particles": 0,
-      "triangles": 352
-    },
-    {
-      "path": "Assets/Art/Temp/SM_Prop_Crate_health_02.prefab",
-      "connectors": 0,
-      "enabledConnectors": 0,
-      "colliders": 1,
-      "lights": 0,
-      "particles": 0,
-      "triangles": 376
-    },
-    {
-      "path": "Assets/Art/Temp/SM_Prop_Crate_Shield_01.prefab",
-      "connectors": 0,
-      "enabledConnectors": 0,
-      "colliders": 1,
-      "lights": 0,
-      "particles": 0,
-      "triangles": 352
-    },
-    {
-      "path": "Assets/Art/Temp/SM_Prop_Crate_Shield_02.prefab",
-      "connectors": 0,
-      "enabledConnectors": 0,
-      "colliders": 1,
-      "lights": 0,
-      "particles": 0,
-      "triangles": 376
-    },
-    {
-      "path": "Assets/Art/Temp/SM_Prop_Crate_Wide_01.prefab",
-      "connectors": 0,
-      "enabledConnectors": 0,
-      "colliders": 1,
-      "lights": 0,
-      "particles": 0,
-      "triangles": 1188
-    },
-    {
-      "path": "Assets/Art/Temp/SM_Prop_CryoBed_01.prefab",
-      "connectors": 0,
-      "enabledConnectors": 0,
-      "colliders": 1,
-      "lights": 0,
-      "particles": 0,
-      "triangles": 2256
-    },
-    {
-      "path": "Assets/Art/Temp/SM_Prop_Turret_Base_Double_010.prefab",
-      "connectors": 0,
-      "enabledConnectors": 0,
-      "colliders": 2,
-      "lights": 0,
-      "particles": 0,
+      "graphs": 2,
       "triangles": 2417
     },
     {
@@ -296,7 +238,7 @@
       "enabledConnectors": 0,
       "colliders": 0,
       "lights": 0,
-      "particles": 72,
+      "graphs": 1,
       "triangles": 0
     },
     {
@@ -305,7 +247,7 @@
       "enabledConnectors": 0,
       "colliders": 0,
       "lights": 0,
-      "particles": 320,
+      "graphs": 1,
       "triangles": 0
     },
     {
@@ -314,7 +256,7 @@
       "enabledConnectors": 0,
       "colliders": 0,
       "lights": 0,
-      "particles": 48,
+      "graphs": 1,
       "triangles": 0
     },
     {
@@ -323,7 +265,25 @@
       "enabledConnectors": 0,
       "colliders": 0,
       "lights": 0,
-      "particles": 80,
+      "graphs": 1,
+      "triangles": 0
+    },
+    {
+      "path": "Assets/Art/BlockVisuals/VFX/EnergyBeam.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 0,
+      "lights": 0,
+      "graphs": 1,
+      "triangles": 0
+    },
+    {
+      "path": "Assets/Art/BlockVisuals/VFX/EnergyTrail.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 0,
+      "lights": 0,
+      "graphs": 1,
       "triangles": 0
     },
     {
@@ -332,7 +292,7 @@
       "enabledConnectors": 0,
       "colliders": 0,
       "lights": 0,
-      "particles": 320,
+      "graphs": 1,
       "triangles": 0
     },
     {
@@ -341,7 +301,7 @@
       "enabledConnectors": 0,
       "colliders": 0,
       "lights": 0,
-      "particles": 72,
+      "graphs": 1,
       "triangles": 0
     },
     {
@@ -350,7 +310,7 @@
       "enabledConnectors": 0,
       "colliders": 0,
       "lights": 0,
-      "particles": 48,
+      "graphs": 1,
       "triangles": 0
     },
     {
@@ -359,7 +319,7 @@
       "enabledConnectors": 0,
       "colliders": 0,
       "lights": 0,
-      "particles": 48,
+      "graphs": 1,
       "triangles": 0
     },
     {
@@ -368,7 +328,7 @@
       "enabledConnectors": 0,
       "colliders": 0,
       "lights": 0,
-      "particles": 48,
+      "graphs": 1,
       "triangles": 0
     },
     {
@@ -377,7 +337,7 @@
       "enabledConnectors": 0,
       "colliders": 0,
       "lights": 0,
-      "particles": 48,
+      "graphs": 1,
       "triangles": 0
     },
     {
@@ -386,7 +346,7 @@
       "enabledConnectors": 0,
       "colliders": 0,
       "lights": 0,
-      "particles": 80,
+      "graphs": 1,
       "triangles": 0
     },
     {
@@ -395,8 +355,17 @@
       "enabledConnectors": 0,
       "colliders": 0,
       "lights": 0,
-      "particles": 72,
+      "graphs": 1,
       "triangles": 0
+    },
+    {
+      "path": "Assets/Resources/Salvage/LootDrop.prefab",
+      "connectors": 0,
+      "enabledConnectors": 0,
+      "colliders": 0,
+      "lights": 0,
+      "graphs": 2,
+      "triangles": 12
     }
   ]
 }

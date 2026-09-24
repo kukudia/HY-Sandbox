@@ -1,3 +1,5 @@
+> 2026-09-24：全部旧粒子与飞船内嵌粒子已迁移为原生 UNI VFX Graph，共享 Assets/Art/VFX 依赖及 VfxEffect 控制器。旧粒子预算、缩略图和来源哈希是初次导入的历史记录，当前检查见 Assets/Art/VFX/Validation.json。
+
 # SpaceKit 科幻工业备用素材库
 
 2026-09-21 从本机 `CUBE - Spaceships Pack 01` 与 `PolygonSciFiSpace` 筛选；Unity 6000.3.11f1 / URP 17.3.0。

@@ -1,0 +1,76 @@
+{
+  "method": "Actual Play Mode GPU frames; pixel comparison against cleared frame",
+  "effects": [
+    {
+      "effect": "Explosion",
+      "rendered": true,
+      "clearedToBackground": true,
+      "replayed": true,
+      "frames": 7
+    },
+    {
+      "effect": "BreakBurst",
+      "rendered": true,
+      "clearedToBackground": true,
+      "replayed": true,
+      "frames": 7
+    },
+    {
+      "effect": "ImpactBurst",
+      "rendered": true,
+      "clearedToBackground": true,
+      "replayed": true,
+      "frames": 7
+    },
+    {
+      "effect": "SmokeBurst",
+      "rendered": true,
+      "clearedToBackground": true,
+      "replayed": true,
+      "frames": 7
+    },
+    {
+      "effect": "DetachedSmoke",
+      "rendered": true,
+      "clearedToBackground": true,
+      "replayed": true,
+      "frames": 7
+    },
+    {
+      "effect": "ThrusterJet",
+      "rendered": true,
+      "clearedToBackground": true,
+      "replayed": true,
+      "frames": 7
+    },
+    {
+      "effect": "RepairContact",
+      "rendered": true,
+      "clearedToBackground": true,
+      "replayed": true,
+      "frames": 7
+    },
+    {
+      "effect": "EnergyBeam",
+      "rendered": true,
+      "clearedToBackground": true,
+      "replayed": true,
+      "frames": 7
+    },
+    {
+      "effect": "EnergyTrail",
+      "rendered": true,
+      "clearedToBackground": true,
+      "replayed": true,
+      "frames": 7
+    },
+    {
+      "effect": "BuildBurst",
+      "rendered": true,
+      "clearedToBackground": true,
+      "replayed": true,
+      "frames": 7
+    }
+  ],
+  "errors": []
+}

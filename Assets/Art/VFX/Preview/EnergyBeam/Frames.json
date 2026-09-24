@@ -1,0 +1,86 @@
+[
+  {
+    "elapsed": 0.1237864,
+    "frame": 4,
+    "effects": [
+      {
+        "name": "Graph - EnergyBeam",
+        "aliveParticleCount": -1,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (0.16, 0.16, 8.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.4040081,
+    "frame": 27,
+    "effects": [
+      {
+        "name": "Graph - EnergyBeam",
+        "aliveParticleCount": 1,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (0.16, 0.16, 8.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.9006861,
+    "frame": 129,
+    "effects": [
+      {
+        "name": "Graph - EnergyBeam",
+        "aliveParticleCount": 1,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (0.16, 0.16, 8.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 1.80218291,
+    "frame": 428,
+    "effects": [
+      {
+        "name": "Graph - EnergyBeam",
+        "aliveParticleCount": 1,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (0.16, 0.16, 8.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 3.20189118,
+    "frame": 898,
+    "effects": [
+      {
+        "name": "Graph - EnergyBeam",
+        "aliveParticleCount": 1,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (0.16, 0.16, 8.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.002097,
+    "frame": 1453,
+    "effects": [
+      {
+        "name": "Graph - EnergyBeam",
+        "aliveParticleCount": -1,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (0.16, 0.16, 8.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.201321,
+    "frame": 1509,
+    "effects": [
+      {
+        "name": "Graph - EnergyBeam",
+        "aliveParticleCount": 1,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (0.16, 0.16, 8.00)"
+      }
+    ]
+  }
+]

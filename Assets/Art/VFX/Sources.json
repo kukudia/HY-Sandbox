@@ -1,0 +1,233 @@
+[
+  {
+    "source": "Assets/UNI VFX/Common/Shaders/UNI-Masked.shadergraph",
+    "destination": "Assets/Art/VFX/UNI/Common/Shaders/UNI-Masked.shadergraph",
+    "sourceSha256": "5f2361759e06fa2170c28d2aafbea05c94537d2e1ff01e3dcd3e15e170e787b2",
+    "destinationSha256": "5f2361759e06fa2170c28d2aafbea05c94537d2e1ff01e3dcd3e15e170e787b2",
+    "guid": "5d6aea6e125f3474383c0c14e1e562b5"
+  },
+  {
+    "source": "Assets/UNI VFX/Common/Textures/uni_glow.png",
+    "destination": "Assets/Art/VFX/UNI/Common/Textures/uni_glow.png",
+    "sourceSha256": "9938b32db6b12fe53eec47ebace2d218be35c069fbe0d6e6083a42d5b729644c",
+    "destinationSha256": "9938b32db6b12fe53eec47ebace2d218be35c069fbe0d6e6083a42d5b729644c",
+    "guid": "3d2862ee8ed429140817dbaf90a83a94"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Models/uni_firestreak.fbx",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Models/uni_firestreak.fbx",
+    "sourceSha256": "26f33bf2bdbc39d0c9aa6506df62667e78040af274a3969fd357236dfd0747b4",
+    "destinationSha256": "26f33bf2bdbc39d0c9aa6506df62667e78040af274a3969fd357236dfd0747b4",
+    "guid": "4f09af6d58b224545925f97190f06345"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Models/uni_shockwave_ground.fbx",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Models/uni_shockwave_ground.fbx",
+    "sourceSha256": "13f918346811b7f550936dd0f38ac20ace8bfa750f984b060e18d4ad935c0040",
+    "destinationSha256": "13f918346811b7f550936dd0f38ac20ace8bfa750f984b060e18d4ad935c0040",
+    "guid": "b4f7e83aaac5bab44bd0ca6cbce4f4c5"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Models/uni_third.fbx",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Models/uni_third.fbx",
+    "sourceSha256": "1bd1fdc8996ab4ed502bb47b1b47b92e7c1caad327ba5be97a1355ccf11d0fc9",
+    "destinationSha256": "1bd1fdc8996ab4ed502bb47b1b47b92e7c1caad327ba5be97a1355ccf11d0fc9",
+    "guid": "8bf0f4e97ffbc4a4eae2a68e40ab8f87"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_aerial_explosion.tga",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_aerial_explosion.png",
+    "sourceSha256": "ffe69446a50d43eb063fbdb68d282aa8bc2c1f4249423f708f2b9ce333feaab5",
+    "destinationSha256": "c009a4eeeb4801da9d3af330e8e19d1f58650d309e85676d4cfd028e23a78fd3",
+    "guid": "7688178f80cf9334784c8ac4e1f512d6"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_debris.png",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_debris.png",
+    "sourceSha256": "e3d8f4dd439524cdaacebb8263084f084a2b40d32cf3fb91ef7b1769d3bfa244",
+    "destinationSha256": "e3d8f4dd439524cdaacebb8263084f084a2b40d32cf3fb91ef7b1769d3bfa244",
+    "guid": "9731577bde9570f48a2ad5d31080a640"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_ember_blast.tga",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_ember_blast.png",
+    "sourceSha256": "2d3ea4de84c62105e84c01d18d7a97044b7d1de7498f18f988f3f7539249b41d",
+    "destinationSha256": "8fde13fad563904221017fba44399f38cc98a29b46baba267aad926405dde583",
+    "guid": "5d38417693a4d0f44b206afe727e6da9"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_fire.tga",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_fire.png",
+    "sourceSha256": "0ae0149cb7c893cda626bbdc40a831788aa4062e868bbbb2876b7df0d9a665a6",
+    "destinationSha256": "7747232ce0e4b7056039808d260456b44c5699576a3026ab2e2e8977d39f6721",
+    "guid": "8908ce3cec5f37f43b7331803f976a9a"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_fire_mv.tga",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_fire_mv.png",
+    "sourceSha256": "397243af53cb7142a7b4c6898b5684edeb61dc79b252a96c05fd2c930f5c2cae",
+    "destinationSha256": "d8fc9cd6efbbba44958fd975c3e15cfbba34af070edb7dd3dd49b910bfec00c8",
+    "guid": "27887878f05fd62438458f9a781e84c0"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_fire_streak.tga",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_fire_streak.png",
+    "sourceSha256": "37c762bb2b9a32fda1ea9d4968498f09bc40ee4f4f8ac4fe81ae5122ae826246",
+    "destinationSha256": "84671993dddea88f07f389b65cb056c04925285c707e6ad7a4a053ec5639b0e8",
+    "guid": "f4b060ad709c7f0438497e7c78332bf0"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_high_explosion.tga",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_high_explosion.png",
+    "sourceSha256": "48c27a9c4cfa75673747beddce5951e864a5de428c3d262d906ea61c8e08f3a3",
+    "destinationSha256": "75d997e43f8e831d11e76e26744d2d8bd69fd719138c81a3b5fd39ba181a60fd",
+    "guid": "a568d03d8453d864a8eed083b374a76f"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_mask_explosion.png",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_mask_explosion.png",
+    "sourceSha256": "76df5781e14cd9b1e65cc9aee929dfa79982101567f45c54f9e104d568bb732e",
+    "destinationSha256": "76df5781e14cd9b1e65cc9aee929dfa79982101567f45c54f9e104d568bb732e",
+    "guid": "5954ccb7c45682e4eb97e66b3b4a467d"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_puff.tga",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_puff.png",
+    "sourceSha256": "159542f7eb2bf883be79c1c312ddca5b4d063bb9d6147ac0ae8486be5b80e619",
+    "destinationSha256": "2ccd74268059c6cfd703e0d96d025b1a081514b39dcc3ab88bd95030420eca3f",
+    "guid": "b9e1e92c4c0b45345a57ab44a2d3f315"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_puff_mv.tga",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_puff_mv.png",
+    "sourceSha256": "b1e4b544574865b520f8c5949a942000743810a8ec8eab67f022e812907513ca",
+    "destinationSha256": "59502636ae3a515987a775ded752f1c69bb7d1a87a65a23f035c4c9b64448a78",
+    "guid": "013a4d91d392ea34ca236587031341c3"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_smallfireballs.tga",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_smallfireballs.png",
+    "sourceSha256": "952a1f086cdadf63a9973b910fb363052fcff4c27a3e6fb4d9985f57658e45d6",
+    "destinationSha256": "5a616df7d3d90a57101c5c7f57fd4cbcf81bb24269722dd886ee99d76d4aa6cf",
+    "guid": "267de26b820e7504f9f61cb5868bdfe2"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_big.tga",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_big.png",
+    "sourceSha256": "d327f6b3b997037591facb28443d47835e26ddd0ba8fb4c25064363c56c3caf0",
+    "destinationSha256": "40f4ff347856a2e235ac956980c09c6e894933d32edda60c3e52cc624f209235",
+    "guid": "99de354e9444a5b408e4164c114b5f1c"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_big_mv.tga",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_big_mv.png",
+    "sourceSha256": "ea22f79952bf8be731c0fa41da85547daa5c1fa804fc00529b739dae53dabd07",
+    "destinationSha256": "28a58bfee2e80215b26a298c812fb46ff0984addbea509c05f9ae0e297fce0f8",
+    "guid": "c5086423565292c4f8389c26c079bbb9"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_circle.tga",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_circle.png",
+    "sourceSha256": "34c461f473cc49e88f2ebc72177da45f48e81960935d7c36bb66b8a2e418f0be",
+    "destinationSha256": "8028933ff66bfe2cee13707a6cb7ce3d5d3084c18be84cb473241a4dbe085507",
+    "guid": "8706625790d2e7d4fb95a3bb8259a5c8"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_cloud.tga",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_cloud.png",
+    "sourceSha256": "968ff9efdf77e0b82d2caec8839baef46a16ed1220effa6d8cb82f283946f54a",
+    "destinationSha256": "1f3ab2dfe6063cf38423a862f5e0e85f0c7229bee72ce72f78550c8a787018fa",
+    "guid": "cb003ea369adc01498226ddace3a41a1"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_misty.tga",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_misty.png",
+    "sourceSha256": "3224d598c16af18e7e0eb8c4218555524305e5f7b63d038a1930fc89a8255221",
+    "destinationSha256": "db9503e7164b2a55aa6b5891389451f75cff97599b264129a5408fb8e72d1e08",
+    "guid": "569c5a5e83d6134409d77789c4642a78"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_misty_mv.tga",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_misty_mv.png",
+    "sourceSha256": "0fe23a6f1728cc249285c83d493b11f7808c2f580e223a51c01743c08d4c25a2",
+    "destinationSha256": "c781b0578fcdd8139be40d0fe8df8ac721c782020d667aa9e4d855c546348e53",
+    "guid": "e071731c642cddf4f9b05454c22da938"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_spiky.tga",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_spiky.png",
+    "sourceSha256": "e8b03745bc0bf73c3286eccb355dd9c485a8cfc0c6ca3443f70adb9ff376b3ed",
+    "destinationSha256": "8b8dda3fc589489ae2c4f55a69860f0a9e28adc3ce2008360b709ff4cf25d383",
+    "guid": "6b001e4603a33f246a3eac93665d5abd"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_streak.tga",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_streak.png",
+    "sourceSha256": "f0a06f232fc7b6ab539c96cc02e43d10f1cadaa5e9f02757119c3d9a506982b7",
+    "destinationSha256": "38af335554ccea627c590067a34efb8cbd9295ca4cd56957cff0cf1947426744",
+    "guid": "9f7f9248acc682e41afc6747bb18b338"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_streak_mv.tga",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_streak_mv.png",
+    "sourceSha256": "c97b9307df9933f9d772fda4198efd9b9f16e2b3ea28bf092d3dee406c73d29d",
+    "destinationSha256": "99e53d5e2e59422d5db1d1ff1dfe09ae611a7c4ff8e4cfde1eebd6adb3d4987b",
+    "guid": "4d390dc3baf6e8043a7d04983c24b768"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_tile_explosion.png",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_tile_explosion.png",
+    "sourceSha256": "8472b8a3ae01e552b9922923dcbf504d5ca44ee966201d02327a9d495bd8b657",
+    "destinationSha256": "8472b8a3ae01e552b9922923dcbf504d5ca44ee966201d02327a9d495bd8b657",
+    "guid": "5b9d46cc978740e438dde3b44fb2a7e9"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Aerial_Explosion.vfx",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Aerial_Explosion.vfx",
+    "sourceSha256": "d87239e2932247f2cb6aeb2d46049803041eb6cd7eb7bc81b17c46326ca67e10",
+    "destinationSha256": "e7866fd05d6bb495acfaf0fb5eb4373224328e973d505863a56b1fecb219f4cf",
+    "guid": "60ca11e72e1fa07478dcab35fd1158e4"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Device_Fire.vfx",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Device_Fire.vfx",
+    "sourceSha256": "d8780b08f33b88fe9f07cfc650fb4d11f8b42d6de9eff1bb206a13bdac604593",
+    "destinationSha256": "04fc1066c422ea84d5c18b9b6216a4bd1164de1a6e82d7a78165ea8a6cadd7c1",
+    "guid": "d9113c69fc1d542428729faf133cbfa5"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Gas_Fire.vfx",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Gas_Fire.vfx",
+    "sourceSha256": "2080742b943d75202684f64b5aaa0c8dee35653f5ad5e3f0e98248b040780eb8",
+    "destinationSha256": "c9dd9edf85cbe17f32cd2f5b9e5e5491dd3779722861232135e83dcfefd13371",
+    "guid": "00fd949940063b04ea82567ddd13ba7d"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Impact_Explosion.vfx",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Impact_Explosion.vfx",
+    "sourceSha256": "7d1fadd0fe9bb1475f743c3664a53f6e4f166966e0d17e2046a13055e2af551a",
+    "destinationSha256": "2483e966d61f6daf1dbb1df9d789efdfd26267379d87ba375a2073e173dcb570",
+    "guid": "0fb599a246dd7804090797aa9731bf5b"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Small_Explosion.vfx",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Small_Explosion.vfx",
+    "sourceSha256": "96a4775211084977ff3181f9a4be6a86cacb4e6f4f8f0bbee588689324e94b92",
+    "destinationSha256": "4c517f0f8221783e1916930ce620e6796d1a1d15658d964abf3747fdcae20098",
+    "guid": "b6575bb4225b1b544ac06fd2f1a6c868"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Small_Smoke_Impact.vfx",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Small_Smoke_Impact.vfx",
+    "sourceSha256": "70435ec437071304061e8b353c8baa21d342df73a41c4e10d02916e83b65b104",
+    "destinationSha256": "76a222e01e2c220b02fec579a5ec4cfe941a7cfc9b76c7d68569eb826f4468c4",
+    "guid": "22a9fa9cad6ddda4a87b3d8d1a0d85bf"
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Steam_Leak.vfx",
+    "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Steam_Leak.vfx",
+    "sourceSha256": "37ec452d71578d449574fcd7816f4bfc4270b0a91ab58e5ebd23d78eeedc5dc1",
+    "destinationSha256": "3fdad00e98509b882d5249c0dde6faf84a8d7d49ae2e9ad4fa6cb86f34572e22",
+    "guid": "64ab11b3df9afda41aca4b4aa5e1f093"
+  }
+]

@@ -87,7 +87,6 @@
     <Compile Include="Assets\Scripts\InObject\Bot.cs" />
     <Compile Include="Assets\Scripts\InObject\ModularUnitValidator.cs" />
     <Compile Include="Assets\Scripts\UI\BuildPaletteItem.cs" />
-    <Compile Include="Assets\Scripts\Effect\AssetParticleEffect.cs" />
     <Compile Include="Assets\Scripts\InObject\UnitFaction.cs" />
     <Compile Include="Assets\Scripts\Manager\VisualEffectsManager.cs" />
     <Compile Include="Assets\Scripts\Actions\ActionManager.cs" />
@@ -125,6 +124,7 @@
     <Compile Include="Assets\Scripts\UI\BlueprintUIPanel.cs" />
     <Compile Include="Assets\Scripts\UI\SaveUIPanel.cs" />
     <Compile Include="Assets\Scripts\InObject\LootDrop.cs" />
+    <Compile Include="Assets\Scripts\Effect\VfxEffect.cs" />
     <Compile Include="Assets\Scripts\Actions\IBlockAction.cs" />
     <Compile Include="Assets\Scripts\InObject\Cockpit.cs" />
     <Compile Include="Assets\Scripts\Block\Info.cs" />
@@ -1261,6 +1261,10 @@
       <HintPath>D:\Unity\Editors\6000.3.11f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Xml.Serialization.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.VisualEffectGraph.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.VisualEffectGraph.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.RenderPipelines.Core.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.Editor.dll</HintPath>
       <Private>False</Private>
@@ -1411,6 +1415,10 @@
     </Reference>
     <Reference Include="Unity.Mathematics">
       <HintPath>Library\ScriptAssemblies\Unity.Mathematics.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VisualEffectGraph.Runtime">
+      <HintPath>Library\ScriptAssemblies\Unity.VisualEffectGraph.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.Shaders">

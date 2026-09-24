@@ -1,0 +1,86 @@
+[
+  {
+    "elapsed": 0.125417888,
+    "frame": 4,
+    "effects": [
+      {
+        "name": "Graph - EnergyBurst",
+        "aliveParticleCount": -1,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.4003237,
+    "frame": 27,
+    "effects": [
+      {
+        "name": "Graph - EnergyBurst",
+        "aliveParticleCount": 16,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.9012956,
+    "frame": 137,
+    "effects": [
+      {
+        "name": "Graph - EnergyBurst",
+        "aliveParticleCount": 0,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 1.80270624,
+    "frame": 437,
+    "effects": [
+      {
+        "name": "Graph - EnergyBurst",
+        "aliveParticleCount": 0,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 3.20045567,
+    "frame": 909,
+    "effects": [
+      {
+        "name": "Graph - EnergyBurst",
+        "aliveParticleCount": 0,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.00060749,
+    "frame": 1521,
+    "effects": [
+      {
+        "name": "Graph - EnergyBurst",
+        "aliveParticleCount": -1,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.20244932,
+    "frame": 1579,
+    "effects": [
+      {
+        "name": "Graph - EnergyBurst",
+        "aliveParticleCount": 16,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  }
+]

@@ -306,22 +306,10 @@ public class VisualEffectsManager : MonoBehaviour
         if (!enableRuntimeVfx || meteor == null) return;
 
         float scale = Mathf.Max(0.35f, meteor.transform.lossyScale.magnitude / 1.732f);
-        if (meteor.trailRenderer == null)
-        {
-            GameObject trailObject = new GameObject("Meteor Trail VFX");
-            trailObject.transform.SetParent(meteor.transform, false);
-            meteor.trailRenderer = trailObject.AddComponent<TrailRenderer>();
-        }
-
-        meteor.trailRenderer.sharedMaterial = GetSharedLineMaterial();
-        meteor.trailRenderer.time = Mathf.Clamp(scale * 0.5f, 0.35f, 2.4f);
-        meteor.trailRenderer.startWidth = Mathf.Clamp(scale * 0.18f, 0.08f, 0.85f);
-        meteor.trailRenderer.endWidth = 0f;
-        meteor.trailRenderer.minVertexDistance = 0.12f;
-        meteor.trailRenderer.numCornerVertices = 3;
-        meteor.trailRenderer.colorGradient = MakeGradient(new Color(1f, 0.88f, 0.46f, 0.95f), new Color(0.2f, 0.55f, 1f, 0f));
-        meteor.trailRenderer.emitting = true;
-        meteor.trailRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        var library = BlockVfxLibrary.Instance;
+        if (meteor.trailEffect == null && library != null && library.DetachedSmoke != null)
+            meteor.trailEffect = Instantiate(library.DetachedSmoke, meteor.transform);
+        if (meteor.trailEffect != null) meteor.trailEffect.SetIntensity(1f);
 
         if (meteor.glowLight == null && activeMeteorGlowLights < MaxMeteorGlowLights)
         {
@@ -360,7 +348,7 @@ public class VisualEffectsManager : MonoBehaviour
     {
         GameObject streak = new GameObject("Energy Streak VFX");
         StylizedBeamEffect beam = streak.AddComponent<StylizedBeamEffect>();
-        beam.Configure(width, 5.2f, 10, 0.018f, 3.2f, 18f);
+        beam.Configure(width);
         beam.SetEndpoints(from, to);
         beam.SetColor(color);
         beam.SetVisible(true);

@@ -7,7 +7,7 @@ public class LootDrop : MonoBehaviour
     [SerializeField] private CargoItem _item = new CargoItem();
     [SerializeField] private Transform _displayRoot;
     [SerializeField] private Renderer _beacon;
-    [SerializeField] private ParticleSystem _burst;
+    [SerializeField] private VfxEffect _burst;
     [SerializeField] private TextMesh _label;
     [SerializeField, Min(0.1f)] private float _attractionSpeed = 12f;
     [SerializeField, Min(1f)] private float _attractionRange = 100f;
@@ -76,9 +76,9 @@ public class LootDrop : MonoBehaviour
             CargoVisual.Create(item.resourcePath, _displayRoot, _displaySize);
         if (_burst != null)
         {
-            var main = _burst.main;
-            main.startColor = color;
-            _burst.Emit(Mathf.Clamp(item.amount, 4, 16));
+            _burst.SetColor(color);
+            _burst.SetSpawnCount(Mathf.Clamp(item.amount, 4, 16));
+            _burst.PlayOnce();
         }
         RefreshLabel();
     }

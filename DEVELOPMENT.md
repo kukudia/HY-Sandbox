@@ -110,15 +110,15 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 炮塔保留固定底座，水平轴绑定 `SM_Prop_Turret_Large_Top_01`，俯仰轴绑定 `SM_Prop_Turret_Large_Barrel_01`；aimPivot 与 Muzzle 已从停用的旧模型迁移，枪口按网格端环定位，开火闪光与射线共用此挂点。默认转速、俯仰限位、伤害和射速不变。全向推进器只旋转喷头，底座保持固定；主推进器分别覆盖 2/4 个物理喷口，悬浮特效朝风口下方发射。
 
-RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具端发出，容器明确绑定 home/Outside。初始化停靠状态不再被冷却提前返回阻断，冷却结束前保持停靠；飞行和维修粒子均为可编辑资产。发电机与维修舱各增加两盏无阴影状态灯。选中和 Ghost 高亮跳过粒子/尾迹，避免覆写特效材质。
+RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具端发出，容器明确绑定 home/Outside。初始化停靠状态不再被冷却提前返回阻断，冷却结束前保持停靠；飞行和维修效果均为可编辑 VFX Graph 资产。发电机与维修舱各增加两盏无阴影状态灯。选中和 Ghost 高亮跳过粒子/尾迹，避免覆写特效材质。
 
-实时反馈通过 `Resources/VFX/BlockVfxLibrary` 读取适配的建造、电弧、爆炸、烟尘、炮口与命中粒子。运行时不再 AddComponent 创建 ParticleSystem；光束仍用实时端点网格，材质保存为资产。瞬时粒子最多同时 64 个实例，断裂烟迹最多 24 个。爆炸、破碎爆燃、命中、余烟和残骸烟火已改用 UNI 序列贴图合成的 URP Particle System，Prefab 保存在 `Assets/Art/BlockVisuals/VFX`，贴图/材质位于 `Assets/Art/BlockVisuals/UNI`，不依赖被忽略的原包。单实例容量分别为 45/29/29/8/49；推进、维修、建造保留现有适配效果。完整编辑说明见 `Assets/Art/BlockVisuals/README.md` 和 `UNI/README.md`。
+实时反馈通过 `Resources/VFX/BlockVfxLibrary` 读取原生 VFX Graph。UNI Aerial/Small/Impact Explosion、Small Smoke Impact、Device Fire、Gas Fire 覆盖爆炸、破碎、命中、烟火和推进；能量光束、维修、建造、机器人与掉落拖尾也统一使用 GPU Graph。可编辑 Prefab 保留在 `Assets/Art/BlockVisuals/VFX`，Graph 及完整依赖位于 `Assets/Art/VFX`，不依赖被忽略的 UNI 原包。VfxEffect 保留低强度持续密度、停止后的尾烟及显式清空；瞬时上限 64、断裂烟迹上限 24、12 秒回收。推进挂点 +Z 不变，适配原包 -X 轴与世界烟流。41 个旧粒子 Prefab 已迁移，新增 2 个能量模板；运行时代码无 ParticleSystem/TrailRenderer。目标平台需支持 Compute，编辑入口见 `Assets/Art/VFX/README.md`。
 
 ### 3.8 科幻工业备用素材库
 
 `Assets/Art/SpaceKit` 从被 gitignore 忽略的 CUBE Spaceships Pack 01 与 PolygonSciFiSpace 复制筛选素材，包含驾驶舱、机身/机翼、推进器、起落架、能源/传感设备、炮塔/弹体、维修机器人、结构/舱壁、货物/控制台/灯具、陨石/残骸、整船参考及四类粒子效果。22 类 Prefab 每类 2–7 项，共 105 个；另选 10 个配色材质。完整依赖共 349 项（103 FBX、105 Prefab、29 材质、30 贴图、82 碰撞网格），约 19.02 MiB，不含 meta 和预览。
 
-素材使用独立 GUID，所有依赖落在 SpaceKit 或 Unity/URP 内置包内。旧材质通过 Editor API 转换为 URP Lit/Particles Unlit；飞船去除旧 Rim 算法，陨石简化为低光泽岩石基色。原包与 Main 场景保持原状。部分备用素材已经通过 BlockVisuals 适配到 Resources/Blocks 和运行时 VFX；SpaceKit 原始储备的导入尺寸、面数、材质槽和粒子上限仍见逐项清单。
+素材使用独立 GUID；备用 Graph 特效共享 Assets/Art/VFX 和 VfxEffect 控制器，其余依赖落在 SpaceKit 或 Unity 内置包内。旧材质通过 Editor API 转换为 URP Lit/Particles Unlit；飞船去除旧 Rim 算法，陨石简化为低光泽岩石基色。原包与 Main 场景保持原状。部分备用素材已经通过 BlockVisuals 适配到 Resources/Blocks 和运行时 VFX；逐项清单中的模型数据仍有效，旧粒子上限和效果缩略图只作历史记录。
 
 `SpaceKitCurator` 提供初次创建（拒绝覆盖已存在库）、引用验证与独立场景预览菜单；Selection.json 记录选择与用途，Catalog.json 记录来源/GUID/SHA-256，Validation.json 记录实际 Unity 审核。已完成 Editor 导入、全部 Prefab 重载、粒子采样、105 项 URP 渲染与四张联系表检查；原始储备库不直接进行玩法测试；已集成模块的 Play Mode 结果另见 BlockVisuals/PlayModeValidation.json，并发性能仍未验证。
 
@@ -184,7 +184,7 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 | P2 | 历史日志包含旧版本功能描述 | 每次发布标记版本和验证日期，避免把日志中的“计划/旧实现”当作当前契约。 |
 | P2 | SpaceKit 集成功能模块尚未在大型蓝图中完成 GPU/CPU 压力验证 | 使用 100、500、1000 模块蓝图记录 Batches、SetPass、粒子 Overdraw、动态灯和脚本耗时。 |
 | P2 | 双轴炮塔尚未完成主场景战斗回归 | 在不同安装朝向、移动载具和高低目标下验证索敌、遮挡、俯仰边界、光束起点、命中判定与断电恢复。 |
-| P2 | SpaceKit 原始储备的粒子/整船预算偏高 | 已集成的 VFX 已降低容量并限制瞬时实例数；原始 3100 容量效果与 16602 面运输船仍只作储备，来源许可沿用原包条款。 |
+| P2 | 原生 Graph 高并发 GPU/Overdraw 预算 | 已替换全部备用 Shuriken；保留原生 UNI 品质及并发实例限制。复杂战斗性能和正式构建尚未验证。 |
 | 已解决 | 手动替换后的炮口引用旧模型、全向模型整体旋转及粒子方向错位 | 2026-09-21：保存新挂点/运动轴，Unity 引用检查与旋转推进、射击 Play Mode 探针验证。 |
 | 已解决 | 尾焰短寿命加密度调强度导致低推力频繁断续；部分素材离屏冻结 | 2026-09-21：核心交叉淡化、持续效果材质透明度调节、AlwaysSimulate；105 组时序采样无空帧，23 项 Play Mode 检查通过。 |
 | P3 | 仓库仍保留未被新模块视觉引用的 `New Material` 等历史资源 | 确认场景和旧 Prefab 无引用后再分批清理，避免误删用户资源。 |
@@ -436,18 +436,18 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 ### Block Art 集成工具与素材控制器
 
 - `BlockArtDependencies.Resolve()`：通过 Editor API 复制缺失依赖、重映射 GUID/subasset 引用并完全解包。
-- `BlockVfxBaker.BakeMissing()`：从 SpaceKit 派生并保存缺失的效果 Prefab 与 BlockVfxLibrary；已有资产不覆盖。
-- `BlockVfxBaker.RepairContinuity()` / `ConfigureContinuity()`：同步模板和已解包副本的尾焰、电弧、烟尘曲线及离屏计时；配置持续密度/透明度强度模式。
-- `BlockVfxTemporalValidation.Validate()` / `RenderSequence()`：隔离 PreviewScene 中进行多帧率、多强度采样、启停/重播检查，并导出 URP 连续帧。
-- `BlockArtIntegrator.Integrate()`：保留既有模型选择与 Block 契约，补全视觉、挂点、灯光和组件绑定。
-- `BlockArtValidation.Validate()`：检查来源依赖、嵌套实例、丢失引用、粒子材质、运动链与挂点方向，保存报告。
-- `BlockArtPreview.Render()` / `RenderBlocks()`：在独立 URP PreviewScene 中渲染并导出图片；可选 transparent 参数输出 RGBA 透明背景。
-- `BlockArtPlayProbe.Run()`：在隔离 Play Mode 场景检查供电/推进/射击/维修完整链路并返回原场景。
-- `AssetParticleEffect.SetIntensity()` / `PlayOnce()`：持续尾焰/接触按材质透明度调强度，烟迹按发射密度调节，瞬时效果显式重播；以 isEmitting 判断快速重新启动，禁用时清空粒子及灯光；`ReleaseAfterPlayback()` 管理瞬时效果数量与销毁。
-- `UniVfxIntegration.Integrate()` / `Validate()`：生成五个可编辑 UNI/URP Prefab，并验证贴图、材质及依赖闭包；显式 Bake 会覆盖这五个模板的手动调参。
-- `UniVfxPreview.Validate()`：隔离场景内进行 25 个时间采样、URP 渲染、停止/重播/禁用清理检查。
-- `UniVfxPlayProbe.Run()`：Play Mode 验证资源库和分离残骸烟迹的发射、停止、重启、回收，并返回原场景。
-- `BlockVfxLibrary.Play()`：按事件实例化 Resources 资产库引用的效果。
+- `BlockVfxBaker.BakeMissing()` / `Populate()`：从原生和补充 Graph 生成缺失模板，已有模板不覆盖。
+- `NativeVfxLibraryBuilder.PrepareSources()` / `ImportSources()` / `CreateUtilityGraphs()`：来源清单、导入及依赖重映射、能量图生成。
+- `VfxGraphAuthoring`：隔离 Unity 6000.3 内部 Graph Editor API，产物为正常可编辑 .vfx 资产，运行时无反射。
+- `NativeVfxMigration.Run()` / `Validate()`：Editor API 迁移、绑定调用者，验证遗留组件和依赖。
+- `NativeVfxPlaybackProbe.Run()` / `RunSuite()`：实际 Play Mode 自动渲染 GPU 生命周期采样，结束恢复原场景。
+- `BlockArtIntegrator.Integrate()`：保留模型与玩法契约，补齐挂点、灯光和 Graph 绑定。
+- `BlockArtValidation.Validate()`：检查引用、Shader、运动链与挂点；`BlockArtPreview.Render()` 只渲染静态模型。
+- `BlockArtPlayProbe.Run()`：隔离 Play Mode 检查供电/推进/射击/维修与回收。
+- `VfxEffect.Awake()` / `SetIntensity()`：缓存世界烟流输入，统一强度、缩放、转向和启停。
+- `VfxEffect.PlayOnce()` / `Clear()` / `ReleaseAfterPlayback()` / `StopAndRelease()`：重播、清空、实例上限及延迟回收。
+- `VfxEffect.SetColor()` / `SetSpawnCount()`：设置能量反馈颜色与掉落数量。
+- `BlockVfxLibrary.Play()`：实例化事件效果，Beam 和 DetachedSmoke 提供持续模板。
 - `BlockStatusLight.Update()`：更新发电机与维修舱状态灯。
 
 ### Effect 特效
@@ -455,13 +455,11 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 #### `Assets/Scripts/Effect/DetachedPartSmokeTrail.cs`
 
 - `public static void Attach(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`：为无驾驶舱断裂刚体挂接或刷新受全局数量限制的烟雾拖尾。
-- `private void Initialize(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`：创建世界空间烟雾和短余烬 TrailRenderer，并缓存目标刚体。
+- `private void Initialize(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`：实例化 UNI Device Fire 世界空间烟火 Graph，并缓存目标刚体。
 - `private void Refresh(Vector3 worldAnchor, float effectIntensity)`：重复受爆时刷新锚点、强度和剩余寿命，不重复创建组件。
-- `private static void ConfigureEmberTrail(TrailRenderer trail)`：配置高速碎片的短橙色余烬拖尾。
 - `private void Update()`：按线速度、角速度、爆炸强度和生命周期衰减实时控制发射。
 - `private void StopAndRelease()`：停止发射、分离残留粒子并延迟销毁视觉对象。
 - `private void OnDestroy()`：释放全局活动拖尾计数。
-- `private static Gradient CreateEmberGradient()`：创建白热到暗红的余烬透明渐变。
 
 #### `Assets/Scripts/Effect/IndustrialPartMotion.cs`
 
@@ -470,20 +468,9 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 #### `Assets/Scripts/Effect/StylizedBeamEffect.cs`
 
-- `public void Configure(float width, float glowMultiplier, int segments, float noise, float frequency, float speed)`： 配置该组件的几何、推进器、敌人或运行时参数。
-- `public void SetEndpoints(Vector3 start, Vector3 end)`： 设置该对象、视觉效果或运行时引用的参数/状态。
-- `public void SetColor(Color color)`： 设置该对象、视觉效果或运行时引用的参数/状态。
-- `public void SetIntensity(float value)`： 设置该对象、视觉效果或运行时引用的参数/状态。
-- `public void SetVisible(bool value)`： 设置该对象、视觉效果或运行时引用的参数/状态。
-- `private void LateUpdate()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
-- `private void EnsureInitialized()`： 创建或补齐该功能所需的对象、引用、缓存和初始状态。
-- `private void CreateLayer(string layerName, int sortingOrder, out Mesh mesh, out MeshRenderer meshRenderer)`： 创建几何、资源、操作记录、UI 项或运行时对象。
-- `private void AllocateGeometry()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
-- `private void UpdateGeometry()`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
-- `private void UpdateMesh(Mesh mesh, Vector3[] vertices)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
-- `private void ApplyColors()`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
-- `private static void SetRendererColor(Renderer renderer, MaterialPropertyBlock properties, Color color)`： 设置该对象、视觉效果或运行时引用的参数/状态。
-- `private void OnDestroy()`： Unity 生命周期回调：初始化、每帧/物理帧更新、编辑器校验、绘制调试信息或销毁清理。
+- `Configure()` / `SetEndpoints()`：将玩法宽度和世界端点映射到 GPU 网格粒子的 Transform。
+- `SetColor()` / `SetIntensity()` / `SetVisible()`：驱动 Graph 颜色、强度和启停。
+- `UpdateBeam()` / `OnDisable()`：同步位置/方向/长度，在禁用时清空 Graph。
 
 ### InObject 模块
 
@@ -1225,7 +1212,16 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 ## 10. 变更日志
 
-### 2026-09-24（UNI 爆炸与燃烧烟迹）
+### 2026-09-24（全量原生 VFX Graph 迁移）
+
+- **范围与实现**：重新引入 VFX Graph 17.3.0；直接复制并闭合 UNI 原生爆炸、烟火、气焰和蒸汽图依赖到 Assets/Art/VFX。41 个含旧粒子的项目 Prefab（含备用飞船）全部迁移，新增能量拖尾/光束模板；共 43 个 Prefab、68 个 Graph 实例。删除上一版翻页 Particle System 合成资产和工具。
+- **程序与编辑**：AssetParticleEffect 保留脚本 GUID 改名为 VfxEffect；所有调用者、机器人/掉落/陨石拖尾及实时能量光束统一接入 Graph。迁移保持原有挂点和 Prefab GUID，修正 Gas Fire -X 轴、世界空间烟流和 GPU 位置参数；原生节点/运动向量/纹理保留。附可复现转换、生成、迁移和实际 GPU 采样工具。
+- **Unity 验证**：原生与补充效果 10 类、70 张实际 Play Mode 自动渲染帧，覆盖发射、停止、清空及重播；清空截图为纯背景。26 项玩法集成检查通过（低推力、炮塔伤害、维修回舱、掉落、陨石尾烟与回收），无运行时错误。项目 Graph 引用/遗留组件检查、Blocks/Salvage/效果模板以及 105 个 SpaceKit Prefab 的引用和依赖检查通过。GPU 清空后的负计数作为未读回处理，并以实际像素验证清空。
+- **静态验证**：dotnet build HY-Sandbox.sln --no-restore --nologo：0 错误，4 个既存警告；verify_assets.py 检查跟踪的 Prefab/场景和运行时代码无 ParticleSystem/TrailRenderer、来源哈希及 Git 可见性。git diff --check 通过。
+- **边界**：全量旧 BlockArtValidation 默认范围额外发现 Art/Temp 两个已有 CenterTube 直接引用原包，本次保留未修改；交付检查明确列出受影响目录。正式构建、大规模战斗 GPU/Overdraw 与低端硬件性能尚未验证。测试过程中 Windows 提交内存一度不足，释放闲置资源后恢复并完成验证。
+
+
+### 2026-09-24（UNI 爆炸与燃烧烟迹，已由后续原生 Graph 迁移取代）
 
 - **范围**：替换 Art/BlockVisuals/VFX 中 Explosion、BreakBurst、ImpactBurst、SmokeBurst、DetachedSmoke；保持 Prefab GUID、AssetParticleEffect 根组件和资源库引用。使用 UNI 火球、火焰、两张烟雾序列及 glow，组合七层爆炸和三层烟火拖尾；新增柔边冲击环。
 - **实现**：原生 URP Particle System，保持现有触发、烟迹强度和全局实例限制；瞬时效果 3.2 秒回收。五张贴图无损转 PNG 并逐像素核对，保存复现脚本和 SHA-256 清单，Unity 导入上限 2048。新增 Bake/依赖验证/渲染/Play Mode 探针菜单；旧连续性修复跳过新 UNI 材质。

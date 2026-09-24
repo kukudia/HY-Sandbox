@@ -22,3 +22,4 @@ MonoBehaviour:
   - {fileID: 86113267810916037, guid: 83d0dee8eb5ead842bcac2445bfc8447, type: 3}
   _detachedSmoke: {fileID: 4931720626457316845, guid: 198786bf0a0bf644bb1ef7833d5086cd, type: 3}
   _lineMaterial: {fileID: 2100000, guid: de261f394bd4ffb419dcd63ec6259497, type: 2}
+  _beam: {fileID: 7531690552696130364, guid: 9d8d0b2b535acc443a08ae6db14ca241, type: 3}

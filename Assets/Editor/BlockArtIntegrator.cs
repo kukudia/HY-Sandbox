@@ -140,14 +140,14 @@ public static class BlockArtIntegrator
         return t;
     }
 
-    private static AssetParticleEffect Effect(Transform socket, string name, float scale)
+    private static VfxEffect Effect(Transform socket, string name, float scale)
     {
         var go = (GameObject)PrefabUtility.InstantiatePrefab(BlockVfxBaker.Load(name), socket);
         BlockArtDependencies.Unpack(go);
         go.transform.localPosition = Vector3.zero; go.transform.localRotation = Quaternion.identity;
         Vector3 inherited = socket.lossyScale;
         go.transform.localScale = new Vector3(scale / Mathf.Abs(inherited.x), scale / Mathf.Abs(inherited.y), scale / Mathf.Abs(inherited.z));
-        return go.GetComponent<AssetParticleEffect>();
+        return go.GetComponent<VfxEffect>();
     }
 
     private static void BindThruster(GameObject root, Transform movingModel)
@@ -155,7 +155,7 @@ public static class BlockArtIntegrator
         root.GetComponent<Thruster>().model = movingModel;
         var controller = root.GetComponent<ThrusterVisualEffect>();
         if (controller == null) controller = root.AddComponent<ThrusterVisualEffect>();
-        BlockVfxBaker.SetObjects(controller, "_nozzles", movingModel.GetComponentsInChildren<AssetParticleEffect>(true));
+        BlockVfxBaker.SetObjects(controller, "_nozzles", movingModel.GetComponentsInChildren<VfxEffect>(true));
     }
 
     private static void ConfigureMain(GameObject root, Transform model)
@@ -208,21 +208,16 @@ public static class BlockArtIntegrator
         var flight = new GameObject("Flight Effects"); flight.transform.SetParent(drone, false);
         foreach (float x in new[] { -0.8175f, 0.8175f })
             Effect(Socket(flight.transform, x < 0 ? "Exhaust_Left" : "Exhaust_Right", new Vector3(x, 0.149f, 0.985f), Vector3.forward), "BotFlight", 0.65f);
-        var controller = flight.AddComponent<AssetParticleEffect>();
-        BlockVfxBaker.ConfigureContinuity(controller, true);
-        BlockVfxBaker.SetObjects(controller, "_particles", flight.GetComponentsInChildren<ParticleSystem>(true));
+        var controller = flight.AddComponent<VfxEffect>();
+
+        BlockVfxBaker.SetObjects(controller, "_graphs", flight.GetComponentsInChildren<UnityEngine.VFX.VisualEffect>(true));
         BlockVfxBaker.SetObject(bot, "_flightEffect", controller);
         var impact = Effect(Socket(root.transform, "RepairTargetEffect", Vector3.zero, Vector3.forward), "RepairContact", 1f);
         BlockVfxBaker.SetObject(bot, "_repairImpact", impact);
         for (int i = 0; i < 2; i++)
         {
             var t = Socket(drone, i == 0 ? "FlightTrail" : "FlightTrailCore", new Vector3(0f, 0f, 0.8f), Vector3.forward);
-            var trail = t.gameObject.AddComponent<TrailRenderer>();
-            trail.sharedMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/Art/BlockVisuals/Materials/Beam and Trail.mat");
-            trail.time = i == 0 ? 0.5f : 0.3f; trail.widthMultiplier = i == 0 ? 0.065f : 0.025f;
-            trail.widthCurve = AnimationCurve.Linear(0f, 1f, 1f, 0f);
-            trail.startColor = new Color(0.1f, 0.8f, 1f, 0.6f); trail.endColor = new Color(0.1f, 0.4f, 1f, 0f);
-            trail.minVertexDistance = 0.04f; trail.emitting = false;
+            var trail = BlockVfxBaker.Populate(t.gameObject, "EnergyTrail");
             BlockVfxBaker.SetObject(bot, i == 0 ? "_flightTrail" : "_flightCoreTrail", trail);
         }
     }

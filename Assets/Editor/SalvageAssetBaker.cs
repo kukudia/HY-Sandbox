@@ -179,16 +179,10 @@ public static class SalvageAssetBaker
             label.anchor = TextAnchor.MiddleCenter; label.characterSize = 0.055f; label.fontSize = 48; label.color = Color.white;
             Set(drop, "_label", label);
             var burstObject = new GameObject("Coin burst"); burstObject.transform.SetParent(root.transform, false);
-            var burst = burstObject.AddComponent<ParticleSystem>(); burst.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-            var main = burst.main; main.playOnAwake = false; main.loop = false; main.duration = 0.5f;
-            main.startLifetime = new ParticleSystem.MinMaxCurve(0.4f, 0.8f); main.startSpeed = new ParticleSystem.MinMaxCurve(1.5f, 3f);
-            main.startSize = 0.1f; main.maxParticles = 16; main.simulationSpace = ParticleSystemSimulationSpace.World;
-            var emission = burst.emission; emission.enabled = false;
-            var shape = burst.shape; shape.shapeType = ParticleSystemShapeType.Sphere; shape.radius = 0.15f;
-            burst.GetComponent<ParticleSystemRenderer>().sharedMaterial = _gold;
+            var burst = BlockVfxBaker.Populate(burstObject, "BuildBurst");
             Set(drop, "_burst", burst);
-            var trail = root.AddComponent<TrailRenderer>(); trail.sharedMaterial = _gold; trail.time = 0.22f;
-            trail.startWidth = 0.09f; trail.endWidth = 0f; trail.minVertexDistance = 0.1f;
+            var trailObject = new GameObject("Loot trail"); trailObject.transform.SetParent(root.transform, false);
+            BlockVfxBaker.Populate(trailObject, "EnergyTrail", true);
             PrefabUtility.SaveAsPrefabAsset(root, path);
         }
         finally { Object.DestroyImmediate(root); }

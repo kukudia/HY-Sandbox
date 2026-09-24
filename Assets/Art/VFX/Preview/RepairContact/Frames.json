@@ -1,0 +1,86 @@
+[
+  {
+    "elapsed": 0.123422489,
+    "frame": 4,
+    "effects": [
+      {
+        "name": "Graph - EnergyContact",
+        "aliveParticleCount": -1,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.402064383,
+    "frame": 50,
+    "effects": [
+      {
+        "name": "Graph - EnergyContact",
+        "aliveParticleCount": 5,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.902130067,
+    "frame": 167,
+    "effects": [
+      {
+        "name": "Graph - EnergyContact",
+        "aliveParticleCount": 23,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 1.802269,
+    "frame": 467,
+    "effects": [
+      {
+        "name": "Graph - EnergyContact",
+        "aliveParticleCount": 23,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 3.200728,
+    "frame": 936,
+    "effects": [
+      {
+        "name": "Graph - EnergyContact",
+        "aliveParticleCount": 0,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.00212574,
+    "frame": 1547,
+    "effects": [
+      {
+        "name": "Graph - EnergyContact",
+        "aliveParticleCount": -1,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.201605,
+    "frame": 1603,
+    "effects": [
+      {
+        "name": "Graph - EnergyContact",
+        "aliveParticleCount": 4,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  }
+]

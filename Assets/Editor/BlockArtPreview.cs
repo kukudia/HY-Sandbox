@@ -21,14 +21,9 @@ public static class BlockArtPreview
             root.transform.position = Vector3.zero;
             configure?.Invoke(root);
             foreach (var lod in root.GetComponentsInChildren<LODGroup>(true)) lod.ForceLOD(0);
-            foreach (var particle in root.GetComponentsInChildren<ParticleSystem>(true))
-            {
-                particle.useAutoRandomSeed = false;
-                particle.randomSeed = 12345;
-                if (effects) particle.Simulate(path.Contains("Explosion") ? 0.16f : path.Contains("Turret") || path.Contains("Muzzle") ? 0.03f : 0.4f, false, true, true);
-                else particle.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
-            }
-            var solid = root.GetComponentsInChildren<Renderer>().Where(r => r.enabled && !(r is ParticleSystemRenderer) && !(r is LineRenderer) && !(r is TrailRenderer)).ToArray();
+            // GPU graphs need the actual player loop; this renderer is for static models only.
+            foreach (var graph in root.GetComponentsInChildren<UnityEngine.VFX.VisualEffect>(true)) graph.enabled = false;
+            var solid = root.GetComponentsInChildren<Renderer>().Where(r => r.enabled && !(r is UnityEngine.VFX.VFXRenderer) && !(r is LineRenderer)).ToArray();
             Bounds bounds = solid.Length > 0 ? solid[0].bounds : new Bounds(Vector3.zero, Vector3.one * 2f);
             foreach (var renderer in solid.Skip(1)) bounds.Encapsulate(renderer.bounds);
             var cameraObject = new GameObject("Block Preview Camera");

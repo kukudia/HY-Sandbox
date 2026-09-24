@@ -1,0 +1,86 @@
+[
+  {
+    "elapsed": 0.123408288,
+    "frame": 4,
+    "effects": [
+      {
+        "name": "Graph - UNI_Small_Explosion",
+        "aliveParticleCount": -5,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (2.00, 2.00, 2.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.4022398,
+    "frame": 87,
+    "effects": [
+      {
+        "name": "Graph - UNI_Small_Explosion",
+        "aliveParticleCount": 14,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (2.00, 2.00, 2.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.90029186,
+    "frame": 246,
+    "effects": [
+      {
+        "name": "Graph - UNI_Small_Explosion",
+        "aliveParticleCount": 8,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (2.00, 2.00, 2.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 1.80162251,
+    "frame": 502,
+    "effects": [
+      {
+        "name": "Graph - UNI_Small_Explosion",
+        "aliveParticleCount": 0,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (2.00, 2.00, 2.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 3.20029354,
+    "frame": 975,
+    "effects": [
+      {
+        "name": "Graph - UNI_Small_Explosion",
+        "aliveParticleCount": 0,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (2.00, 2.00, 2.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.001653,
+    "frame": 1587,
+    "effects": [
+      {
+        "name": "Graph - UNI_Small_Explosion",
+        "aliveParticleCount": -5,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (2.00, 2.00, 2.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.80099773,
+    "frame": 1851,
+    "effects": [
+      {
+        "name": "Graph - UNI_Small_Explosion",
+        "aliveParticleCount": 9,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.00, 0.00), Extents: (2.00, 2.00, 2.00)"
+      }
+    ]
+  }
+]

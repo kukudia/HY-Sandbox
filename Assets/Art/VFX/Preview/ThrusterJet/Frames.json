@@ -1,0 +1,86 @@
+[
+  {
+    "elapsed": 0.1256654,
+    "frame": 4,
+    "effects": [
+      {
+        "name": "Graph - UNI_Gas_Fire",
+        "aliveParticleCount": -4,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.45, 0.68), Extents: (0.90, 0.90, 1.35)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.4027535,
+    "frame": 42,
+    "effects": [
+      {
+        "name": "Graph - UNI_Gas_Fire",
+        "aliveParticleCount": 5,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.45, 0.68), Extents: (0.90, 0.90, 1.35)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.9004311,
+    "frame": 201,
+    "effects": [
+      {
+        "name": "Graph - UNI_Gas_Fire",
+        "aliveParticleCount": 23,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.45, 0.68), Extents: (0.90, 0.90, 1.35)"
+      }
+    ]
+  },
+  {
+    "elapsed": 1.80275118,
+    "frame": 500,
+    "effects": [
+      {
+        "name": "Graph - UNI_Gas_Fire",
+        "aliveParticleCount": 25,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.45, 0.68), Extents: (0.90, 0.90, 1.35)"
+      }
+    ]
+  },
+  {
+    "elapsed": 3.20009041,
+    "frame": 929,
+    "effects": [
+      {
+        "name": "Graph - UNI_Gas_Fire",
+        "aliveParticleCount": 0,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.45, 0.68), Extents: (0.90, 0.90, 1.35)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.001664,
+    "frame": 1542,
+    "effects": [
+      {
+        "name": "Graph - UNI_Gas_Fire",
+        "aliveParticleCount": -4,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.45, 0.68), Extents: (0.90, 0.90, 1.35)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.801535,
+    "frame": 1807,
+    "effects": [
+      {
+        "name": "Graph - UNI_Gas_Fire",
+        "aliveParticleCount": 24,
+        "culled": false,
+        "bounds": "Center: (0.00, 0.45, 0.68), Extents: (0.90, 0.90, 1.35)"
+      }
+    ]
+  }
+]
