@@ -7,7 +7,7 @@
 - Unity 6000.3.11f1 / URP 17.3，1 单位 = 1 米；保留 Block 格子尺寸、根 BoxCollider、密度、耐久、连接点及启用掩码、Prefab GUID 和 Resources 名称。`RepairBotContianer` 保留原拼写以兼容加载。
 - 保留用户选定的基础块 Cube1 材质、发电机 Battery03、维修舱 Battery01、无人机、炮塔、AirVent、四喷口大推进器和双喷口全向底座；完成其他功能块的 SpaceKit 外观。
 - 视觉模型的附带 MeshCollider 已移除。Bot 独立 Rigidbody / BoxCollider 和 Block 根碰撞体保留；炮塔射线仍只结算一次伤害。
-- 性能初稿：喷口每组 72 粒子容量；普通瞬时效果 48；爆炸四层共 320；最多同时 64 个瞬时实例，断裂烟迹最多 24 个。无阴影状态灯每个发电机/维修舱 2 盏。大型构造体的性能仍需 Profiler 验证。
+- 性能初稿：喷口每组 72 粒子容量；UNI 爆炸七层共 45，破碎/命中各 29，余烟 8，残骸烟火 49；最多同时 64 个瞬时实例，断裂烟迹最多 24 个。无阴影状态灯每个发电机/维修舱 2 盏。大型构造体的性能仍需 Profiler 验证。
 
 ## 编辑入口
 
@@ -22,13 +22,13 @@
 
 ## 来源和处理
 
-来源仍为用户本地 CUBE Spaceships Pack 01 与 PolygonSciFiSpace；许可沿用原包条款，工具不授予额外授权。SpaceKit 来源/GUID/哈希见其 Catalog.json。`Dependencies.json` 记录 Temp 新增模型/碰撞依赖的源路径与 Art 副本；复用现有 SpaceKit 材质与贴图，不依赖被 gitignore 忽略的目录。
+来源为用户本地 CUBE Spaceships Pack 01、PolygonSciFiSpace 以及 UNI VFX；许可沿用各原包条款，工具不授予额外授权。SpaceKit 来源/GUID/哈希见其 Catalog.json，UNI 来源与像素一致性见 `UNI/Sources.json`。`Dependencies.json` 记录 Temp 新增模型/碰撞依赖的源路径与 Art 副本；资源均不依赖被 gitignore 忽略的目录。
 
 - ThrusterJet / HoverJet / BotFlight：Polygon `FX_Exhaust_Trail` 与 `FX_Flame_Booster_Round`，校正 mesh 轴向、统一尺寸曲线、蓝青渐隐和发射预算，流束使用已有 `FX_SphereGlow` 材质。
 - BuildBurst / RepairPulse / RepairContact：`FX_Electricity`，缩短寿命、减少发射数，区分瞬时与持续效果。
-- MuzzleFlash / ImpactBurst：`FX_Laser_Shot` 的闪光层，移除演示弹体和碰撞子发射器；真实命中由原有 hitscan 逻辑负责。
-- Explosion / BreakBurst：`FX_Explosion`，四层容量限制，原始爆炸贴图、网格和材质保留。
-- DetachedSmoke / SmokeBurst：`FX_Steam`，世界空间烟尘、短寿命与灰色 Alpha Blend。
+- MuzzleFlash：`FX_Laser_Shot` 的闪光层，移除演示弹体和碰撞子发射器；真实命中由原有 hitscan 逻辑负责。
+- Explosion / BreakBurst / ImpactBurst：UNI 序列贴图合成的七层 URP 爆燃，包含火球、碎片、闪光、冲击环和余烟。
+- DetachedSmoke / SmokeBurst：UNI 火焰与烟雾序列组成世界空间烟火拖尾和压力余烟。来源、参数与重新 Bake 入口见 `UNI/README.md`；旧连续性修复跳过这些新效果。
 - Beam and Trail：保存为材质资产，供实时端点光束和 TrailRenderer 使用。光束网格仍按端点动态更新，运行时不再创建 ParticleSystem。
 
 ## 验证

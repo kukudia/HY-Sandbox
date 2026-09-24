@@ -1,0 +1,57 @@
+[
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_aerial_explosion.tga",
+    "destination": "Assets/Art/BlockVisuals/UNI/Textures/uni_aerial_explosion.png",
+    "source_sha256": "ffe69446a50d43eb063fbdb68d282aa8bc2c1f4249423f708f2b9ce333feaab5",
+    "output_sha256": "992024680dab6a10a266f1d1f4f8e02d516e2da9679ab9509e34b848c637827e",
+    "size": [
+      4096,
+      4096
+    ],
+    "pixel_identical": true
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_fire.tga",
+    "destination": "Assets/Art/BlockVisuals/UNI/Textures/uni_fire.png",
+    "source_sha256": "0ae0149cb7c893cda626bbdc40a831788aa4062e868bbbb2876b7df0d9a665a6",
+    "output_sha256": "67351b635da2498266d676b7405bd9e73e42fcc37c2aea030b56fe4f5a06afe2",
+    "size": [
+      4096,
+      4096
+    ],
+    "pixel_identical": true
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_misty.tga",
+    "destination": "Assets/Art/BlockVisuals/UNI/Textures/uni_smoke_misty.png",
+    "source_sha256": "3224d598c16af18e7e0eb8c4218555524305e5f7b63d038a1930fc89a8255221",
+    "output_sha256": "063cb63f753a5464cc45d264d7fa9172255ec6df4f47bef0df588592bfac2684",
+    "size": [
+      4096,
+      4096
+    ],
+    "pixel_identical": true
+  },
+  {
+    "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_spiky.tga",
+    "destination": "Assets/Art/BlockVisuals/UNI/Textures/uni_smoke_spiky.png",
+    "source_sha256": "e8b03745bc0bf73c3286eccb355dd9c485a8cfc0c6ca3443f70adb9ff376b3ed",
+    "output_sha256": "0d9ffbcf32f07fe519220df4a513030ba479fba340e50b8327ecf995ef087c9e",
+    "size": [
+      4096,
+      4096
+    ],
+    "pixel_identical": true
+  },
+  {
+    "source": "Assets/UNI VFX/Common/Textures/uni_glow.png",
+    "destination": "Assets/Art/BlockVisuals/UNI/Textures/uni_glow.png",
+    "source_sha256": "9938b32db6b12fe53eec47ebace2d218be35c069fbe0d6e6083a42d5b729644c",
+    "output_sha256": "646de0df6036c738af4cddb0857bbad27c14341c1cea80c06306d14f4b4ecf90",
+    "size": [
+      512,
+      512
+    ],
+    "pixel_identical": true
+  }
+]

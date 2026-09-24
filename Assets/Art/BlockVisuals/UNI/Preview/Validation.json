@@ -1,0 +1,156 @@
+{
+  "unity": "6000.3.11f1",
+  "rows": [
+    {
+      "name": "Explosion",
+      "time": 0.12,
+      "alive": 37,
+      "capacity": 45
+    },
+    {
+      "name": "Explosion",
+      "time": 0.4,
+      "alive": 41,
+      "capacity": 45
+    },
+    {
+      "name": "Explosion",
+      "time": 0.9,
+      "alive": 9,
+      "capacity": 45
+    },
+    {
+      "name": "Explosion",
+      "time": 1.8,
+      "alive": 5,
+      "capacity": 45
+    },
+    {
+      "name": "Explosion",
+      "time": 3.2,
+      "alive": 0,
+      "capacity": 45
+    },
+    {
+      "name": "BreakBurst",
+      "time": 0.12,
+      "alive": 21,
+      "capacity": 29
+    },
+    {
+      "name": "BreakBurst",
+      "time": 0.4,
+      "alive": 25,
+      "capacity": 29
+    },
+    {
+      "name": "BreakBurst",
+      "time": 0.9,
+      "alive": 9,
+      "capacity": 29
+    },
+    {
+      "name": "BreakBurst",
+      "time": 1.8,
+      "alive": 5,
+      "capacity": 29
+    },
+    {
+      "name": "BreakBurst",
+      "time": 3.2,
+      "alive": 0,
+      "capacity": 29
+    },
+    {
+      "name": "ImpactBurst",
+      "time": 0.12,
+      "alive": 21,
+      "capacity": 29
+    },
+    {
+      "name": "ImpactBurst",
+      "time": 0.4,
+      "alive": 25,
+      "capacity": 29
+    },
+    {
+      "name": "ImpactBurst",
+      "time": 0.9,
+      "alive": 9,
+      "capacity": 29
+    },
+    {
+      "name": "ImpactBurst",
+      "time": 1.8,
+      "alive": 5,
+      "capacity": 29
+    },
+    {
+      "name": "ImpactBurst",
+      "time": 3.2,
+      "alive": 0,
+      "capacity": 29
+    },
+    {
+      "name": "SmokeBurst",
+      "time": 0.12,
+      "alive": 8,
+      "capacity": 8
+    },
+    {
+      "name": "SmokeBurst",
+      "time": 0.4,
+      "alive": 8,
+      "capacity": 8
+    },
+    {
+      "name": "SmokeBurst",
+      "time": 0.9,
+      "alive": 8,
+      "capacity": 8
+    },
+    {
+      "name": "SmokeBurst",
+      "time": 1.8,
+      "alive": 5,
+      "capacity": 8
+    },
+    {
+      "name": "SmokeBurst",
+      "time": 3.2,
+      "alive": 0,
+      "capacity": 8
+    },
+    {
+      "name": "DetachedSmoke",
+      "time": 0.12,
+      "alive": 3,
+      "capacity": 49
+    },
+    {
+      "name": "DetachedSmoke",
+      "time": 0.4,
+      "alive": 15,
+      "capacity": 49
+    },
+    {
+      "name": "DetachedSmoke",
+      "time": 0.9,
+      "alive": 26,
+      "capacity": 49
+    },
+    {
+      "name": "DetachedSmoke",
+      "time": 1.8,
+      "alive": 31,
+      "capacity": 49
+    },
+    {
+      "name": "DetachedSmoke",
+      "time": 3.2,
+      "alive": 0,
+      "capacity": 49
+    }
+  ],
+  "errors": []
+}

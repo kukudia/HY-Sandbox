@@ -112,7 +112,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具端发出，容器明确绑定 home/Outside。初始化停靠状态不再被冷却提前返回阻断，冷却结束前保持停靠；飞行和维修粒子均为可编辑资产。发电机与维修舱各增加两盏无阴影状态灯。选中和 Ghost 高亮跳过粒子/尾迹，避免覆写特效材质。
 
-实时反馈通过 `Resources/VFX/BlockVfxLibrary` 读取适配的建造、电弧、爆炸、烟尘、炮口与命中粒子。运行时不再 AddComponent 创建 ParticleSystem；光束仍用实时端点网格，材质保存为资产。瞬时粒子最多同时 64 个实例，断裂烟迹最多 24 个；原始 SpaceKit 储备效果保留，项目实际使用减量版本。完整编辑说明见 `Assets/Art/BlockVisuals/README.md`。
+实时反馈通过 `Resources/VFX/BlockVfxLibrary` 读取适配的建造、电弧、爆炸、烟尘、炮口与命中粒子。运行时不再 AddComponent 创建 ParticleSystem；光束仍用实时端点网格，材质保存为资产。瞬时粒子最多同时 64 个实例，断裂烟迹最多 24 个。爆炸、破碎爆燃、命中、余烟和残骸烟火已改用 UNI 序列贴图合成的 URP Particle System，Prefab 保存在 `Assets/Art/BlockVisuals/VFX`，贴图/材质位于 `Assets/Art/BlockVisuals/UNI`，不依赖被忽略的原包。单实例容量分别为 45/29/29/8/49；推进、维修、建造保留现有适配效果。完整编辑说明见 `Assets/Art/BlockVisuals/README.md` 和 `UNI/README.md`。
 
 ### 3.8 科幻工业备用素材库
 
@@ -444,6 +444,9 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `BlockArtPreview.Render()` / `RenderBlocks()`：在独立 URP PreviewScene 中渲染并导出图片；可选 transparent 参数输出 RGBA 透明背景。
 - `BlockArtPlayProbe.Run()`：在隔离 Play Mode 场景检查供电/推进/射击/维修完整链路并返回原场景。
 - `AssetParticleEffect.SetIntensity()` / `PlayOnce()`：持续尾焰/接触按材质透明度调强度，烟迹按发射密度调节，瞬时效果显式重播；以 isEmitting 判断快速重新启动，禁用时清空粒子及灯光；`ReleaseAfterPlayback()` 管理瞬时效果数量与销毁。
+- `UniVfxIntegration.Integrate()` / `Validate()`：生成五个可编辑 UNI/URP Prefab，并验证贴图、材质及依赖闭包；显式 Bake 会覆盖这五个模板的手动调参。
+- `UniVfxPreview.Validate()`：隔离场景内进行 25 个时间采样、URP 渲染、停止/重播/禁用清理检查。
+- `UniVfxPlayProbe.Run()`：Play Mode 验证资源库和分离残骸烟迹的发射、停止、重启、回收，并返回原场景。
 - `BlockVfxLibrary.Play()`：按事件实例化 Resources 资产库引用的效果。
 - `BlockStatusLight.Update()`：更新发电机与维修舱状态灯。
 
@@ -1221,6 +1224,14 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 
 ## 10. 变更日志
+
+### 2026-09-24（UNI 爆炸与燃烧烟迹）
+
+- **范围**：替换 Art/BlockVisuals/VFX 中 Explosion、BreakBurst、ImpactBurst、SmokeBurst、DetachedSmoke；保持 Prefab GUID、AssetParticleEffect 根组件和资源库引用。使用 UNI 火球、火焰、两张烟雾序列及 glow，组合七层爆炸和三层烟火拖尾；新增柔边冲击环。
+- **实现**：原生 URP Particle System，保持现有触发、烟迹强度和全局实例限制；瞬时效果 3.2 秒回收。五张贴图无损转 PNG 并逐像素核对，保存复现脚本和 SHA-256 清单，Unity 导入上限 2048。新增 Bake/依赖验证/渲染/Play Mode 探针菜单；旧连续性修复跳过新 UNI 材质。
+- **Editor 与画面**：Unity 6000.3.11f1 保存重载、URP Shader/贴图及依赖闭包检查通过；25 张实际 URP 分时预览已检查；发射、消散、重播和禁用清理通过。Play Mode 七项检查通过：工厂触发、全部发射、自动销毁、停止消散、25% 强度重启、残骸烟迹回收和容量归还。
+- **静态验证**：`dotnet build HY-Sandbox.sln --no-restore --nologo` 通过，0 错误、4 个既有警告；`git diff --check` 通过。
+- **尚未验证**：复杂战斗镜头、大量同时爆炸的 GPU/Overdraw 性能和正式构建；现有压力测试风险继续保留。证据见 `Assets/Art/BlockVisuals/UNI/Preview/Validation.json` 与 `PlayModeValidation.json`。
 
 - 2026-09-23：状态图标资源按状态名重命名并统一为白色，Prefab 不再各自保存 Status 列表，改由场景 `IconManager` 集中管理；按要求回退 World Space Canvas 深度遮挡策略，恢复独立 Screen Space Overlay 图标层，图标继续投影自 Block 的 `Center`，`IconManager` 统一使用 `sin(Time.unscaledTime)` 控制透明度。已通过 C# 静态构建，Unity 视觉效果尚需运行时验证。
 

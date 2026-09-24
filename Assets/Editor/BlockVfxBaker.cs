@@ -261,6 +261,11 @@ public static class BlockVfxBaker
                 }
                 foreach (var effect in root.GetComponentsInChildren<AssetParticleEffect>(true))
                 {
+                    // UNI flipbooks have authored timing/envelopes; the legacy continuity
+                    // repair must not replace them with the old SpaceKit smoke curves.
+                    if (effect.GetComponentsInChildren<ParticleSystemRenderer>(true).Any(r =>
+                        r.sharedMaterial != null && AssetDatabase.GetAssetPath(r.sharedMaterial)
+                            .StartsWith(UniVfxIntegration.Root + "/Materials/", StringComparison.Ordinal))) continue;
                     string name = effect.name;
                     if (name == "ThrusterJet") PolishJet(effect.gameObject, 0.09f, 2.8f, 0.24f);
                     else if (name == "HoverJet") PolishJet(effect.gameObject, 0.22f, 1.5f, 0.3f);

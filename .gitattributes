@@ -7,3 +7,5 @@ Assets/Art/BlockVisuals/**/*.asset whitespace=-blank-at-eol
 Assets/Art/BlockVisuals/**/*.mat whitespace=-blank-at-eol
 Assets/Resources/Blocks/*.prefab whitespace=-blank-at-eol
 Assets/Resources/VFX/*.asset whitespace=-blank-at-eol
+Assets/Art/BlockVisuals/UNI.meta whitespace=-blank-at-eol
+Assets/Art/BlockVisuals/UNI/**/*.meta whitespace=-blank-at-eol
