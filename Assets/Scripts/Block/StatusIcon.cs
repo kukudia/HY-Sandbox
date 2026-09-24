@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Info : MonoBehaviour
+public class StatusIcon : MonoBehaviour
 {
     private const float IconSize = 42f;
     private const float IconSpacing = 4f;
-    private static readonly HashSet<Info> ActiveInfos = new HashSet<Info>();
+    private static readonly HashSet<StatusIcon> ActiveInfos = new HashSet<StatusIcon>();
 
     [Header("Static")]
     public string blockName;
@@ -184,7 +184,7 @@ public class Info : MonoBehaviour
 
     public static void RefreshAllStatusIcons()
     {
-        foreach (Info info in ActiveInfos)
+        foreach (StatusIcon info in ActiveInfos)
         {
             if (info != null)
             {

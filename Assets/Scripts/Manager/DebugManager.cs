@@ -123,19 +123,19 @@ public class DebugManager : MonoBehaviour
     public void ToggleConnectionStatus()
     {
         showConnectionStatus = !showConnectionStatus;
-        Info.RefreshAllStatusIcons();
+        StatusIcon.RefreshAllStatusIcons();
     }
 
     public void ToggleDurabilityStatus()
     {
         showDurabilityStatus = !showDurabilityStatus;
-        Info.RefreshAllStatusIcons();
+        StatusIcon.RefreshAllStatusIcons();
     }
 
     public void TogglePowerStatus()
     {
         showPowerStatus = !showPowerStatus;
-        Info.RefreshAllStatusIcons();
+        StatusIcon.RefreshAllStatusIcons();
     }
 
     private void EnsureStatusIconCanvas()

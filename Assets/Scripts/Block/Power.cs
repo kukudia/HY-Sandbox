@@ -8,7 +8,7 @@ public class Power : MonoBehaviour
     public float currentPower = 0f;
     public float minWorkingPower = 50f;
     public float standardWorkingPower = 100f;
-    private Info info;
+    private StatusIcon _icon;
     public bool isWorking => currentPower >= minWorkingPower;
     public float efficiency => standardWorkingPower > 0f
         ? Mathf.Clamp01(currentPower / standardWorkingPower)
@@ -18,16 +18,16 @@ public class Power : MonoBehaviour
 
     private void OnEnable()
     {
-        info = GetComponent<Info>();
+        _icon = GetComponent<StatusIcon>();
         ActivePowerBlocks.Add(this);
-        info?.CheckPowerStatus();
+        _icon?.CheckPowerStatus();
     }
 
     private void OnDisable()
     {
         ActivePowerBlocks.Remove(this);
         currentPower = 0f;
-        info?.CheckPowerStatus();
+        _icon?.CheckPowerStatus();
     }
 
     public void ResetPower()
@@ -42,6 +42,6 @@ public class Power : MonoBehaviour
 
     public void CommitPowerStatus()
     {
-        info?.CheckPowerStatus();
+        _icon?.CheckPowerStatus();
     }
 }

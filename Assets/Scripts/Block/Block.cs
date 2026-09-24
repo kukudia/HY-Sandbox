@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,13 +10,15 @@ public class Block : MonoBehaviour
 
     public bool canBeDeleted = true;
 
+    public bool canEditInfo = false;
+
     public int x = 1, y = 1, z = 1;
 
     public int cost;
 
     public float density = 1;
 
-    public float mass;
+    public float mass = 0;
 
     public float collisionSpeedThreshold = 1f; // 触发耐久减少的最小速度
 
@@ -31,6 +34,8 @@ public class Block : MonoBehaviour
     public float explosionDisconnectProbability = 0.35f;
 
     public string resourcePath; // 运行时使用的预制体路径
+
+    [TextArea] public string info;
 
     public GameObject connectorPrefab;
 
@@ -53,13 +58,13 @@ public class Block : MonoBehaviour
     private const float connectionProbeRadius = 0.08f;
     private const float connectorMatchDistance = 0.25f;
     private const float oppositeNormalDotThreshold = 0.75f;
-    private Info _info;
+    private StatusIcon _icon;
     private Collider[] _connectionHits = new Collider[8];
     
 
     private void Awake()
     {
-        _info = GetComponent<Info>();
+        _icon = GetComponent<StatusIcon>();
         if (string.IsNullOrEmpty(uniqueId))
         {
             uniqueId = System.Guid.NewGuid().ToString();
@@ -115,6 +120,16 @@ public class Block : MonoBehaviour
         if (canSpawnConnector)
         {
             GenerateConnectionPoints();
+        }
+
+        if (!canEditInfo || string.IsNullOrEmpty(info))
+        {
+            info = GenerateInfo();
+        }
+
+        if (mass == 0)
+        {
+            mass = x * y * z;
         }
     }
 
@@ -187,6 +202,37 @@ public class Block : MonoBehaviour
                 k++;
             }
         }
+    }
+
+    public string GetDisplayInfo()
+    {
+        return canEditInfo && !string.IsNullOrWhiteSpace(info) ? info : GenerateInfo();
+    }
+
+    private string GenerateInfo()
+    {
+        var builder = new StringBuilder();
+        builder.AppendLine($"Size: {x}x{y}x{z}");
+        builder.AppendLine($"Mass: {x * y * z * density:0.##} kg");
+        if (cost > 0) builder.AppendLine($"Cost: {cost}");
+
+        Durability durability = GetComponent<Durability>();
+        if (durability != null) builder.AppendLine($"Durability: {durability.maxDurability:0.##}");
+
+        Power power = GetComponent<Power>();
+        if (power != null && power.standardWorkingPower > 0f)
+            builder.AppendLine($"Power: {power.minWorkingPower:0.##} min / {power.standardWorkingPower:0.##} standard");
+
+        PowerGeneratingUnit generator = GetComponent<PowerGeneratingUnit>();
+        if (generator != null) builder.AppendLine($"Output: {generator.outputPower:0.##}");
+
+        Thruster thruster = GetComponent<Thruster>();
+        if (thruster != null) builder.AppendLine($"Max thrust: {thruster.maxThrust:0.##} N");
+
+        CargoHold cargo = GetComponent<CargoHold>();
+        if (cargo != null) builder.AppendLine($"Capacity: {cargo.Capacity}");
+
+        return builder.ToString().TrimEnd();
     }
 
     /// <summary>
@@ -280,9 +326,9 @@ public class Block : MonoBehaviour
             }
         }
 
-        if (_info != null)
+        if (_icon != null)
         {
-            _info.CheckConnectionStatus();
+            _icon.CheckConnectionStatus();
         }
     }
 
@@ -310,9 +356,9 @@ public class Block : MonoBehaviour
 
         otherConnector.connector = null;
         otherConnector.isConnected = false;
-        if (otherBlock._info != null)
+        if (otherBlock._icon != null)
         {
-            otherBlock._info.CheckConnectionStatus();
+            otherBlock._icon.CheckConnectionStatus();
         }
     }
 
@@ -333,9 +379,9 @@ public class Block : MonoBehaviour
                 statusChanged = true;
             }
 
-            if (statusChanged && block._info != null)
+            if (statusChanged && block._icon != null)
             {
-                block._info.CheckConnectionStatus();
+                block._icon.CheckConnectionStatus();
             }
         }
     }
@@ -407,14 +453,14 @@ public class Block : MonoBehaviour
         connector.connector = connectorObject;
         otherConnector.connector = connectorObject;
 
-        if (_info != null)
+        if (_icon != null)
         {
-            _info.CheckConnectionStatus();
+            _icon.CheckConnectionStatus();
         }
 
-        if (otherBlock != null && otherBlock._info != null)
+        if (otherBlock != null && otherBlock._icon != null)
         {
-            otherBlock._info.CheckConnectionStatus();
+            otherBlock._icon.CheckConnectionStatus();
         }
     }
 

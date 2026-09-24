@@ -74,9 +74,12 @@ public static class BuildPaletteBaker
         Image handleImage = handle.GetComponent<Image>() ?? handle.gameObject.AddComponent<Image>(); handleImage.color = new Color(0.35f, 0.85f, 1f, 0.7f);
         Scrollbar scrollbar = rail.GetComponent<Scrollbar>() ?? rail.gameObject.AddComponent<Scrollbar>(); scrollbar.handleRect = handle; scrollbar.targetGraphic = handleImage; scrollbar.direction = Scrollbar.Direction.BottomToTop;
         scroll.verticalScrollbar = scrollbar;
-        Text tooltip = Label(root, "HoveredBlockName", font, 17); Rect(tooltip.rectTransform, Vector2.zero, new Vector2(1, 0), Vector2.zero, new Vector2(0, 34)); tooltip.gameObject.SetActive(false);
+        Text tooltip = root.Find("HoveredBlockName")?.GetComponent<Text>() ?? Label(root, "HoveredBlockName", font, 17);
+        Text info = root.Find("HoveredBlockInfo")?.GetComponent<Text>() ?? Label(root, "HoveredBlockInfo", font, 15);
+        tooltip.gameObject.SetActive(false);
+        info.gameObject.SetActive(false);
 
-        Set(palette, "_tooltip", tooltip); Set(palette, "_scroll", scroll);
+        Set(palette, "_hoveredName", tooltip); Set(palette, "_hoveredInfo", info); Set(palette, "_scroll", scroll);
         var serialized = new SerializedObject(palette); var tabProperty = serialized.FindProperty("_tabs"); tabProperty.arraySize = tabs.Length;
         for (int i = 0; i < tabs.Length; i++) tabProperty.GetArrayElementAtIndex(i).objectReferenceValue = tabs[i]; serialized.ApplyModifiedPropertiesWithoutUndo();
         foreach (GameObject prefab in prefabs)
@@ -98,7 +101,7 @@ public static class BuildPaletteBaker
             Image image = icon.GetComponent<Image>() ?? icon.gameObject.AddComponent<Image>(); image.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(Folder + "/Icons/" + prefab.name + ".png"); image.preserveAspect = true; image.raycastTarget = false;
             BuildPaletteItem item = button.GetComponent<BuildPaletteItem>() ?? button.gameObject.AddComponent<BuildPaletteItem>();
             Set(item, "_palette", palette); Set(item, "_outline", outline);
-            serialized = new SerializedObject(item); serialized.FindProperty("_blockName").stringValue = prefab.name; serialized.FindProperty("_category").intValue = Category(prefab.name); serialized.ApplyModifiedPropertiesWithoutUndo();
+            serialized = new SerializedObject(item); serialized.FindProperty("_blockName").stringValue = prefab.name; serialized.FindProperty("_info").stringValue = prefab.GetComponent<Block>().GetDisplayInfo(); serialized.FindProperty("_category").intValue = Category(prefab.name); serialized.ApplyModifiedPropertiesWithoutUndo();
             button.gameObject.SetActive(true);
         }
         ui.blockButtons.RemoveAll(b => b.block == null || !prefabs.Contains(b.block));
@@ -109,6 +112,42 @@ public static class BuildPaletteBaker
         EditorUtility.SetDirty(ui); EditorSceneManager.MarkSceneDirty(scene); EditorSceneManager.SaveScene(scene); AssetDatabase.SaveAssetIfDirty(mesh); AssetDatabase.SaveAssetIfDirty(material);
         Debug.Log("Build palette baked: " + prefabs.Length + " blocks, 6 tabs, saved to Main.");
     }
+
+    [MenuItem("Tools/Build Palette/Refresh hovered block info")]
+    public static void RefreshHoveredBlockInfo()
+    {
+        if (EditorApplication.isPlaying) throw new InvalidOperationException("Exit Play Mode before refreshing the palette.");
+        var scene = UnityEngine.SceneManagement.SceneManager.GetSceneByPath("Assets/Scenes/Main.unity");
+        if (!scene.isLoaded) scene = EditorSceneManager.OpenScene("Assets/Scenes/Main.unity", OpenSceneMode.Additive);
+        if (scene.isDirty)
+            Debug.Log("Refreshing the loaded Main scene with its existing unsaved layout edits.");
+
+        var ui = scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<MainUIButtons>(true)).Single();
+        RectTransform root = (RectTransform)ui.transform.Find("BuildPanel/ButtonContent");
+        BuildPalette palette = root.GetComponent<BuildPalette>();
+        Font font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Fonts/ChakraPetch-Medium.ttf");
+        Text name = root.Find("HoveredBlockName").GetComponent<Text>();
+        Set(palette, "_hoveredName", name);
+        Text info = root.Find("HoveredBlockInfo")?.GetComponent<Text>() ?? Label(root, "HoveredBlockInfo", font, 15);
+        Set(palette, "_hoveredInfo", info);
+
+        int count = 0;
+        foreach (BuildPaletteItem item in root.GetComponentsInChildren<BuildPaletteItem>(true))
+        {
+            GameObject prefab = Resources.Load<GameObject>("Blocks/" + item.BlockName);
+            Block block = prefab != null ? prefab.GetComponent<Block>() : null;
+            if (block == null) throw new MissingReferenceException("Missing Block Prefab: " + item.BlockName);
+            var serialized = new SerializedObject(item);
+            serialized.FindProperty("_info").stringValue = block.GetDisplayInfo();
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            count++;
+        }
+
+        EditorSceneManager.MarkSceneDirty(scene);
+        EditorSceneManager.SaveScene(scene);
+        Debug.Log("Hovered block info refreshed for " + count + " palette entries.");
+    }
+
 
     private static void ConfigureThumbnail(GameObject root)
     {

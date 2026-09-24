@@ -43,14 +43,14 @@ public static class BlockStatusSetup
                 Block block = root.GetComponent<Block>();
                 if (block == null) continue;
 
-                Info info = root.GetComponent<Info>();
-                if (info == null)
+                StatusIcon icon = root.GetComponent<StatusIcon>();
+                if (icon == null)
                 {
-                    info = root.AddComponent<Info>();
+                    icon = root.AddComponent<StatusIcon>();
                 }
 
-                info.blockName = root.name;
-                EditorUtility.SetDirty(info);
+                icon.blockName = root.name;
+                EditorUtility.SetDirty(icon);
                 PrefabUtility.SaveAsPrefabAsset(root, path);
                 configuredCount++;
             }

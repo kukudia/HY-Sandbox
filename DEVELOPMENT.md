@@ -98,6 +98,8 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 `MainUIButtons` 负责按钮事件和操作模式，DebugSettingsPanel 提供供电范围、连接线、Block 连接状态、耐久状态和供电状态五个独立开关；`BuildPalette` / `BuildPaletteItem` 管理已保存的 23 个图标按钮、六类导航、滚动、悬停名称和选中颜色；`SaveUIPanel` 负责玩家/敌方蓝图列表；`BlueprintUIPanel` 显示当前建造目标名称、方块数量、总质量、需求功率和发电机总输出，并在搭建、拆除、Undo/Redo 时刷新，在存档或敌方蓝图异步加载期间逐块更新；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块，寻路避障按间隔采样并渐进转向，返航时对准停靠姿态后平滑减速归位，其飞行反馈由保存的双层青色尾迹和速度驱动喷口 Graph 组成，维修时从模型工具端发射双层能量束，并使用素材电弧与真实耐久恢复脉冲。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager` 和 `StylizedBeamEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。Block 爆炸与普通物体销毁均播放 UNI Aerial Explosion Graph；前者放大最低尺寸并保留瞬时点光和镜头震动，可爆炸方块不再叠加拆除爆发。两条销毁路径均可通过 VisualEffectsManager 的 Destruction VFX 调试开关查看目标、边界、缩放和实际生成结果。陨石尾迹独立跟随位置并按速度定向，不继承陨石自转。失去驾驶舱的断裂 Rigidbody 会获得最长 6 秒、按速度衰减的烟雾/余烬拖尾，同时限制全局活动数量为 24。
 
+`BuildPalette` 的 `HoveredBlockName` / `HoveredBlockInfo` 使用 Main 场景中现有的文字布局；23 个目录按钮烘焙 Block Prefab 的静态参数信息，包括尺寸、质量、成本、耐久、功率需求/输出、推进力与货仓容量（按组件存在情况显示）。默认 `Block.info` 根据当前参数生成；启用 `canEditInfo` 并填写文本后保留手写内容。编辑器菜单 `Tools/Build Palette/Refresh hovered block info` 只刷新文字引用和条目参数。
+
 ### 3.6 物理模拟与性能
 
 项目使用 3D PhysX 作为运行时物理后端。为降低物理线程在大型构造体、敌人和爆炸冲量场景下的持续计算压力，当前项目设置为：固定物理步长约 0.02 秒（50 Hz；`ProjectSettings/TimeManager.asset` 使用 Unity 6000 的有理数格式保存）、单帧物理追赶上限 0.1 秒、默认位置求解迭代 4 次、默认速度求解迭代 1 次。碰撞回调复用已启用，Transform 自动同步保持关闭；2D 物理设置未改变。降低步频和迭代次数会减少 CPU 占用，但高速碰撞、堆叠稳定性和推进器控制手感需要在 Play Mode 复核。
@@ -976,13 +978,16 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `BuildPalette.Awake()` / `OnEnable()` / `OnDisable()`：缓存已保存的条目、显示初始分类、隐藏名称提示。
 - `BuildPalette.SelectCategory(int)`：切换条目可见性、导航颜色并将内容滚动回顶部。
 - `BuildPalette.LateUpdate()`：资源选择变化时更新选中边框。
-- `BuildPalette.ShowTooltip(BuildPaletteItem)` / `HideTooltip(BuildPaletteItem)`：共享名称栏显示与归属控制。
+- `BuildPalette.ShowTooltip(BuildPaletteItem)` / `HideTooltip(BuildPaletteItem)`：同步显示/隐藏悬停名称与参数信息。
+- `BuildPalette.GetSelectedItem()`：返回当前选中目录条目，供指针离开时恢复显示。
+- `Block.GetDisplayInfo()` / `GenerateInfo()`：生成可烘焙的静态参数文字，并保留显式手写信息。
 - `BuildPaletteItem.SetSelected(bool, Color)`：更新边框颜色。
 - `BuildPaletteItem.OnPointerEnter/Exit` / `OnSelect/Deselect` / `OnDisable`：鼠标、键盘焦点及禁用时的名称提示生命周期。
 - `ConnectorPlacementHints.Show(Camera, float, LayerMask, GameObject)` / `Hide()` / `OnDisable()`：设置范围扫描上下文或清理提示状态。
 - `ConnectorPlacementHints.ScanNearbyBlocks()` / `CanDisplay(Block, Connector)`：扫描相机附近方块，并复用 Block 的可放置连接点判定。
 - `ConnectorPlacementHints.LateUpdate()`：过滤禁用/占用点，以共享 Mesh/Material 按世界坐标和法线提交线框。
 - `BuildPaletteBaker.Bake()`：通过 Unity API 刷新 Main 的保存目录、透明图标、Mesh/Material 与组件引用。
+- `BuildPaletteBaker.RefreshHoveredBlockInfo()`：只刷新 Main 场景悬停文字引用和 23 个条目参数，保留现有文字布局。
 - `BuildPaletteBaker.ConfigureThumbnail(GameObject)`：只给渲染克隆填充金币/科技资源，保持真实初始库存。
 - `BuildPaletteBaker.Category(string)` / `Child(...)` / `Rect(...)` / `Label(...)` / `Set(...)`：默认分类和可编辑 uGUI 资产布局/绑定。
 - `BuildPaletteBaker.ImportSprite(string)` / `CreateBorder()` / `CreateHintAssets(...)`：Sprite 导入、九宫格边框和世界线框资产制作。
@@ -1210,6 +1215,12 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 
 ## 10. 变更日志
+
+### 2026-09-24（建造目录悬停参数）
+
+- **范围与实现**：补齐 `HoveredBlockInfo` 场景引用和 23 个已保存按钮的参数信息；保留编辑器内现有的名称/信息文字位置与列表布局。Block 默认按当前 Prefab 参数生成 `info`，修正旧质量字符串多拼接 `00` 的问题；显式开启 `canEditInfo` 后可保留手写内容。`BuildPaletteBaker` 增加定向刷新菜单，并同步完整烘焙路径。
+- **已通过代码/文件确认**：Main 场景 23 个条目均已写入信息；抽查基础块、发电机、货仓、推进器的尺寸、质量及对应组件参数。`dotnet build HY-Sandbox.sln --no-restore --nologo` 0 错误、4 个现有警告；Unity 6000.3.11f1 脚本重新编译成功，定向刷新菜单执行成功。
+- **Play Mode 验证**：`BuildPalettePlayProbe` 完整复跑通过，新增断言确认货仓悬停显示容量信息、指针离开时隐藏信息，原有目录、分类、EventSystem 悬停及连接提示检查也通过；结果位于 `Temp/BuildPalette/Validation.json`。第一次运行中途重启测试造成的失败结果已被完整复跑覆盖。信息文本在不同分辨率下的可读性及正式构建尚未验证。
 
 ### 2026-09-24（销毁爆炸可见度与调试）
 

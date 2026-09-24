@@ -65,6 +65,7 @@
     <Compile Include="Assets\Scripts\InObject\CollectionBot.cs" />
     <Compile Include="Assets\Scripts\Thrusters\HoverFlightController.cs" />
     <Compile Include="Assets\Scripts\InObject\PowerGeneratingUnit.cs" />
+    <Compile Include="Assets\Scripts\Block\StatusIcon.cs" />
     <Compile Include="Assets\Scripts\Manager\BlockGroupManager.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
     <Compile Include="Assets\Layer Lab\Scripts\PanelControl.cs" />
@@ -127,7 +128,6 @@
     <Compile Include="Assets\Scripts\Effect\VfxEffect.cs" />
     <Compile Include="Assets\Scripts\Actions\IBlockAction.cs" />
     <Compile Include="Assets\Scripts\InObject\Cockpit.cs" />
-    <Compile Include="Assets\Scripts\Block\Info.cs" />
     <Compile Include="Assets\Scripts\Thrusters\UniversalThruster.cs" />
     <Compile Include="Assets\Scripts\Effect\StylizedBeamEffect.cs" />
     <Compile Include="Assets\Scripts\Actions\RotateBlockAction.cs" />
@@ -1413,12 +1413,12 @@
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.State.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.Mathematics">
-      <HintPath>Library\ScriptAssemblies\Unity.Mathematics.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.VisualEffectGraph.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.VisualEffectGraph.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Mathematics">
+      <HintPath>Library\ScriptAssemblies\Unity.Mathematics.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.Shaders">

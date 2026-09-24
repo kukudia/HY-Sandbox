@@ -126,9 +126,12 @@ public static class BuildPalettePlayProbe
         var pointer = new PointerEventData(EventSystem.current);
         ExecuteEvents.Execute(cargo.gameObject, pointer, ExecuteEvents.pointerEnterHandler);
         Check("Pointer hover displays name", tooltip.gameObject.activeSelf && tooltip.text == "CargoHold");
+        Text hoveredInfo = palette.transform.Find("HoveredBlockInfo").GetComponent<Text>();
+        Check("Pointer hover displays block parameters", hoveredInfo.gameObject.activeSelf && hoveredInfo.text.Contains("Capacity: 8"));
         ScreenCapture.CaptureScreenshot("Temp/BuildPalette/Salvage-hover.png"); yield return 0.5f;
         ExecuteEvents.Execute(cargo.gameObject, pointer, ExecuteEvents.pointerExitHandler);
         Check("Pointer exit clears name", !tooltip.gameObject.activeSelf);
+        Check("Pointer exit clears block parameters", !hoveredInfo.gameObject.activeSelf);
         cargo.GetComponent<Button>().onClick.Invoke();
         Check("Icon click selects correct resource", BuildManager.instance.currentBlockResourcePath == "Blocks/CargoHold");
         palette.SelectCategory(0); yield return 0.2f;
