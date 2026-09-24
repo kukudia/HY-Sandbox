@@ -18,7 +18,7 @@
 - `VFX/` 是保存的独立效果 Prefab，`Assets/Resources/VFX/BlockVfxLibrary.asset` 引用这些资产。调整模板不会自动覆盖已经完全解包到 Block 的效果实例；需要同时修改对应实例，这是完全解包后的预期行为。
 - `Tools/HY Sandbox/Block Art` 提供补齐缺失集成、依赖迁移、验证和 Play Mode 探针。已有 `ArtIntegration_SpaceKit_v1` 标记会跳过自动重建，避免覆盖后续手调。旧 Industrial 重建同样跳过已集成模块。
 - `VfxEffect` 绑定 VisualEffect 数组，Intensity 在 Graph 输出层统一调节透明度，保持低推力下的连续密度。Stop 保留尾烟，Clear 清空 GPU 模拟，瞬时效果 12 秒回收。
-- 推进喷口保留 +Z 挂点，内部将 UNI Gas Fire 的 -X 轴旋转到 +Z，并同步世界空间烟流方向。ScaleWSP 跟随实际缩放。
+- 推进喷口保留 +Z 挂点，内部将 UNI Gas Fire 的 -X 轴旋转到 +Z；无烟火焰 Graph 使用 Local 模拟空间，随喷口平移和转向。ScaleWSP 跟随实际缩放。
 - 所有游戏特效均使用 VFX Graph，包括能量光束、机器人/掉落拖尾、陨石和残骸烟火。电力网络诊断 LineRenderer 保留。
 
 ## 来源和处理

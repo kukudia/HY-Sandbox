@@ -52,6 +52,18 @@ public static class NativeVfxPlaybackProbe
 
     public static void Run(string prefab, string output)
     {
+        SessionState.SetBool(Key + "PositionTest", false);
+        StartCapture(prefab, output);
+    }
+
+    public static void RunPositionTest(string prefab, string output)
+    {
+        SessionState.SetBool(Key + "PositionTest", true);
+        StartCapture(prefab, output);
+    }
+
+    private static void StartCapture(string prefab, string output)
+    {
         if (EditorApplication.isPlaying || SceneManager.GetActiveScene().isDirty) throw new InvalidOperationException("Save and exit Play Mode first.");
         SessionState.SetString(Key + "Scene", SceneManager.GetActiveScene().path);
         SessionState.SetString(Key + "Prefab", prefab);
@@ -85,6 +97,12 @@ public static class NativeVfxPlaybackProbe
         _camera.targetTexture = _target;
         _image = new Texture2D(800, 600, TextureFormat.RGB24, false);
         _effect = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(SessionState.GetString(Key + "Prefab", "")));
+        if (SessionState.GetBool(Key + "PositionTest", false))
+        {
+            _effect.transform.position = new Vector3(1000f, 0f, 1000f);
+            _camera.transform.position += new Vector3(1000f, 0f, 1000f);
+            _camera.transform.LookAt(new Vector3(1000f, 0.5f, 1000f));
+        }
         foreach (var graph in _effect.GetComponentsInChildren<VisualEffect>(true))
         {
             graph.GetComponent<VFXRenderer>().enabled = true;
@@ -106,7 +124,9 @@ public static class NativeVfxPlaybackProbe
     {
         if (EditorApplication.timeSinceStartup - _wallStart > 30) { Finish(); return; }
         float elapsed = Time.time - _start;
-        if (_effect != null && _effect.name.Contains("EnergyTrail")) _effect.transform.position = new Vector3(Mathf.Sin(elapsed * 3f) * 0.6f, 0, 0);
+        if (_effect != null && (_effect.name.Contains("EnergyTrail") || SessionState.GetBool(Key + "PositionTest", false)))
+            _effect.transform.position = new Vector3((SessionState.GetBool(Key + "PositionTest", false) ? 1000f : 0f) + Mathf.Sin(elapsed * 3f) * 0.6f,
+                0f, SessionState.GetBool(Key + "PositionTest", false) ? 1000f : 0f);
         if (_sample >= Samples.Length || elapsed < Samples[_sample]) return;
         // Read the previous automatically completed camera frame, never Camera.Render inside an SRP render pass.
         var previous = RenderTexture.active;
@@ -117,7 +137,7 @@ public static class NativeVfxPlaybackProbe
         _image.SetPixels(pixels); _image.Apply();
         RenderTexture.active = previous;
         File.WriteAllBytes(_output + "/" + _sample + ".png", _image.EncodeToPNG());
-        Rows.Add(new { elapsed, frame = Time.frameCount, effects = _effect.GetComponentsInChildren<VisualEffect>().Select(g =>
+        Rows.Add(new { elapsed, frame = Time.frameCount, position = _effect.transform.position.ToString("F3"), effects = _effect.GetComponentsInChildren<VisualEffect>().Select(g =>
             new { g.name, g.aliveParticleCount, g.culled, bounds = g.GetComponent<VFXRenderer>().bounds.ToString() }).ToArray() });
         _sample++;
         var controller = _effect.GetComponent<VfxEffect>();

@@ -1,0 +1,93 @@
+[
+  {
+    "elapsed": 0.131247,
+    "frame": 4,
+    "position": "(1000.230, 0.000, 1000.000)",
+    "effects": [
+      {
+        "name": "Graph - UNI_Aerial_Explosion",
+        "aliveParticleCount": -10,
+        "culled": false,
+        "bounds": "Center: (1000.23, 0.00, 1000.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.4068223,
+    "frame": 27,
+    "position": "(1000.564, 0.000, 1000.000)",
+    "effects": [
+      {
+        "name": "Graph - UNI_Aerial_Explosion",
+        "aliveParticleCount": 112,
+        "culled": false,
+        "bounds": "Center: (1000.56, 0.00, 1000.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.9001512,
+    "frame": 138,
+    "position": "(1000.256, 0.000, 1000.000)",
+    "effects": [
+      {
+        "name": "Graph - UNI_Aerial_Explosion",
+        "aliveParticleCount": 66,
+        "culled": false,
+        "bounds": "Center: (1000.26, 0.00, 1000.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 1.801825,
+    "frame": 437,
+    "position": "(999.539, 0.000, 1000.000)",
+    "effects": [
+      {
+        "name": "Graph - UNI_Aerial_Explosion",
+        "aliveParticleCount": 9,
+        "culled": false,
+        "bounds": "Center: (999.54, 0.00, 1000.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 3.20069,
+    "frame": 909,
+    "position": "(999.894, 0.000, 1000.000)",
+    "effects": [
+      {
+        "name": "Graph - UNI_Aerial_Explosion",
+        "aliveParticleCount": 0,
+        "culled": false,
+        "bounds": "Center: (999.89, 0.00, 1000.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.001535,
+    "frame": 1521,
+    "position": "(1000.388, 0.000, 1000.000)",
+    "effects": [
+      {
+        "name": "Graph - UNI_Aerial_Explosion",
+        "aliveParticleCount": -10,
+        "culled": false,
+        "bounds": "Center: (1000.39, 0.00, 1000.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.200585,
+    "frame": 1577,
+    "position": "(1000.064, 0.000, 1000.000)",
+    "effects": [
+      {
+        "name": "Graph - UNI_Aerial_Explosion",
+        "aliveParticleCount": 112,
+        "culled": false,
+        "bounds": "Center: (1000.06, 0.00, 1000.00), Extents: (4.00, 4.00, 4.00)"
+      }
+    ]
+  }
+]

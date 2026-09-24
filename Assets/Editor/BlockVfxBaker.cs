@@ -19,7 +19,7 @@ public static class BlockVfxBaker
             case "SmokeBurst": return "UNI_Small_Smoke_Impact";
             case "DetachedSmoke": return "UNI_Device_Fire";
             case "SteamLeak": return "UNI_Steam_Leak";
-            case "ThrusterJet": case "HoverJet": case "BotFlight": return "UNI_Gas_Fire";
+            case "ThrusterJet": case "HoverJet": case "BotFlight": return "UNI_Gas_Fire_Thruster";
             case "RepairContact": return "EnergyContact";
             case "EnergyTrail": case "EnergyBeam": return name;
             default: return "EnergyBurst";
@@ -37,7 +37,7 @@ public static class BlockVfxBaker
         graph.initialEventName = "ControlledStart";
         graph.GetComponent<VFXRenderer>().enabled = true;
         // UNI Gas Fire's jet flows along -X; project sockets point along +Z.
-        if (GraphName(name) == "UNI_Gas_Fire")
+        if (GraphName(name) == "UNI_Gas_Fire_Thruster")
         {
             child.transform.localRotation = Quaternion.FromToRotation(Vector3.left, Vector3.forward);
             child.transform.localScale = Vector3.one * (name == "BotFlight" ? 0.2f : name == "HoverJet" ? 0.6f : 0.45f);

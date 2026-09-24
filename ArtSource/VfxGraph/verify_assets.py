@@ -43,3 +43,17 @@ for name in ("Explosion", "BreakBurst", "ImpactBurst", "SmokeBurst", "DetachedSm
     results.append({"effect": name, "rendered": True, "clearedToBackground": True, "replayed": True, "frames": 7})
 (preview / "Validation.json").write_text(json.dumps({"method": "Actual Play Mode GPU frames; pixel comparison against cleared frame", "effects": results, "errors": []}, indent=2) + "\n", encoding="utf-8")
 print("Passed: 10 effects / 70 GPU frames, visible playback and replay, clear leaves pure background.")
+
+for name in ("ThrusterJet", "EnergyTrail", "DetachedSmoke", "Explosion"):
+    folder = preview / f"Position_{name}"
+    frames = json.loads((folder / "Frames.json").read_text(encoding="utf-8-sig"))
+    assert len(frames) == 7, name
+    assert all("1000." in frame["position"] or "999." in frame["position"] for frame in frames), name
+    with Image.open(folder / "5.png") as cleared:
+        assert all(low == high for low, high in cleared.getextrema()), name
+        visible = []
+        for index in (0, 1, 2, 3):
+            with Image.open(folder / f"{index}.png") as frame:
+                visible.append(ImageChops.difference(frame, cleared).getbbox() is not None)
+        assert any(visible), f"Missing large-coordinate render: {name}"
+print("Passed: 4 moving effects at world position (1000, 0, 1000), visible GPU frames and clear.")

@@ -390,7 +390,7 @@ VisualEffect:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 638827535058217491}
   m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: 00fd949940063b04ea82567ddd13ba7d, type: 3}
+  m_Asset: {fileID: 8926484042661614526, guid: b0cf4f84f81a77d4cb4251a20c8e9488, type: 3}
   m_InitialEventName: ControlledStart
   m_InitialEventNameOverriden: 1
   m_StartSeed: 0
@@ -1475,7 +1475,7 @@ VisualEffect:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5204214801222473023}
   m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: 00fd949940063b04ea82567ddd13ba7d, type: 3}
+  m_Asset: {fileID: 8926484042661614526, guid: b0cf4f84f81a77d4cb4251a20c8e9488, type: 3}
   m_InitialEventName: ControlledStart
   m_InitialEventNameOverriden: 1
   m_StartSeed: 0

@@ -1,0 +1,93 @@
+[
+  {
+    "elapsed": 0.1244149,
+    "frame": 4,
+    "position": "(1000.219, 0.000, 1000.000)",
+    "effects": [
+      {
+        "name": "Graph - EnergyTrail",
+        "aliveParticleCount": -1,
+        "culled": false,
+        "bounds": "Center: (1000.22, 0.00, 1000.00), Extents: (15.00, 15.00, 15.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.4019517,
+    "frame": 50,
+    "position": "(1000.560, 0.000, 1000.000)",
+    "effects": [
+      {
+        "name": "Graph - EnergyTrail",
+        "aliveParticleCount": 5,
+        "culled": false,
+        "bounds": "Center: (1000.56, 0.00, 1000.00), Extents: (15.00, 15.00, 15.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.901152,
+    "frame": 168,
+    "position": "(1000.255, 0.000, 1000.000)",
+    "effects": [
+      {
+        "name": "Graph - EnergyTrail",
+        "aliveParticleCount": 26,
+        "culled": false,
+        "bounds": "Center: (1000.26, 0.00, 1000.00), Extents: (15.00, 15.00, 15.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 1.80145216,
+    "frame": 468,
+    "position": "(999.538, 0.000, 1000.000)",
+    "effects": [
+      {
+        "name": "Graph - EnergyTrail",
+        "aliveParticleCount": 27,
+        "culled": false,
+        "bounds": "Center: (999.54, 0.00, 1000.00), Extents: (15.00, 15.00, 15.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 3.20119238,
+    "frame": 942,
+    "position": "(999.893, 0.000, 1000.000)",
+    "effects": [
+      {
+        "name": "Graph - EnergyTrail",
+        "aliveParticleCount": 0,
+        "culled": false,
+        "bounds": "Center: (999.89, 0.00, 1000.00), Extents: (15.00, 15.00, 15.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.000163,
+    "frame": 1554,
+    "position": "(1000.390, 0.000, 1000.000)",
+    "effects": [
+      {
+        "name": "Graph - EnergyTrail",
+        "aliveParticleCount": -1,
+        "culled": false,
+        "bounds": "Center: (1000.39, 0.00, 1000.00), Extents: (15.00, 15.00, 15.00)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.202252,
+    "frame": 1612,
+    "position": "(1000.061, 0.000, 1000.000)",
+    "effects": [
+      {
+        "name": "Graph - EnergyTrail",
+        "aliveParticleCount": 4,
+        "culled": false,
+        "bounds": "Center: (1000.06, 0.00, 1000.00), Extents: (15.00, 15.00, 15.00)"
+      }
+    ]
+  }
+]

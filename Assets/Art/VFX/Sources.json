@@ -192,7 +192,7 @@
     "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Device_Fire.vfx",
     "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Device_Fire.vfx",
     "sourceSha256": "d8780b08f33b88fe9f07cfc650fb4d11f8b42d6de9eff1bb206a13bdac604593",
-    "destinationSha256": "04fc1066c422ea84d5c18b9b6216a4bd1164de1a6e82d7a78165ea8a6cadd7c1",
+    "destinationSha256": "2f53dfce54d727c715b7807be2cbf358358f43c625da6be24c1e024a96e48890",
     "guid": "d9113c69fc1d542428729faf133cbfa5"
   },
   {
@@ -227,7 +227,7 @@
     "source": "Assets/UNI VFX/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Steam_Leak.vfx",
     "destination": "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Steam_Leak.vfx",
     "sourceSha256": "37ec452d71578d449574fcd7816f4bfc4270b0a91ab58e5ebd23d78eeedc5dc1",
-    "destinationSha256": "3fdad00e98509b882d5249c0dde6faf84a8d7d49ae2e9ad4fa6cb86f34572e22",
+    "destinationSha256": "cf2397947f5bf3a6ed87bf8e543c12d95fc13157787fa307b17011e45747cbf1",
     "guid": "64ab11b3df9afda41aca4b4aa5e1f093"
   }
 ]

@@ -1,0 +1,93 @@
+[
+  {
+    "elapsed": 0.22,
+    "frame": 4,
+    "position": "(1000.368, 0.000, 1000.000)",
+    "effects": [
+      {
+        "name": "Graph - UNI_Device_Fire",
+        "aliveParticleCount": -6,
+        "culled": false,
+        "bounds": "Center: (1000.37, 0.70, 1000.00), Extents: (0.70, 1.05, 0.70)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.42,
+    "frame": 6,
+    "position": "(1000.571, 0.000, 1000.000)",
+    "effects": [
+      {
+        "name": "Graph - UNI_Device_Fire",
+        "aliveParticleCount": -1,
+        "culled": false,
+        "bounds": "Center: (1000.57, 0.70, 1000.00), Extents: (0.70, 1.05, 0.70)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.9008978,
+    "frame": 106,
+    "position": "(1000.255, 0.000, 1000.000)",
+    "effects": [
+      {
+        "name": "Graph - UNI_Device_Fire",
+        "aliveParticleCount": 43,
+        "culled": false,
+        "bounds": "Center: (1000.26, 0.70, 1000.00), Extents: (0.70, 1.05, 0.70)"
+      }
+    ]
+  },
+  {
+    "elapsed": 1.80070233,
+    "frame": 384,
+    "position": "(999.537, 0.000, 1000.000)",
+    "effects": [
+      {
+        "name": "Graph - UNI_Device_Fire",
+        "aliveParticleCount": 62,
+        "culled": false,
+        "bounds": "Center: (999.54, 0.70, 1000.00), Extents: (0.70, 1.05, 0.70)"
+      }
+    ]
+  },
+  {
+    "elapsed": 3.20162463,
+    "frame": 856,
+    "position": "(999.893, 0.000, 1000.000)",
+    "effects": [
+      {
+        "name": "Graph - UNI_Device_Fire",
+        "aliveParticleCount": 3,
+        "culled": false,
+        "bounds": "Center: (999.89, 0.70, 1000.00), Extents: (0.70, 1.05, 0.70)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.002765,
+    "frame": 1469,
+    "position": "(1000.386, 0.000, 1000.000)",
+    "effects": [
+      {
+        "name": "Graph - UNI_Device_Fire",
+        "aliveParticleCount": -6,
+        "culled": false,
+        "bounds": "Center: (1000.39, 0.70, 1000.00), Extents: (0.70, 1.05, 0.70)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.20226765,
+    "frame": 1526,
+    "position": "(1000.061, 0.000, 1000.000)",
+    "effects": [
+      {
+        "name": "Graph - UNI_Device_Fire",
+        "aliveParticleCount": 6,
+        "culled": false,
+        "bounds": "Center: (1000.06, 0.70, 1000.00), Extents: (0.70, 1.05, 0.70)"
+      }
+    ]
+  }
+]

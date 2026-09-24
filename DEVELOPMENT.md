@@ -112,7 +112,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具端发出，容器明确绑定 home/Outside。初始化停靠状态不再被冷却提前返回阻断，冷却结束前保持停靠；飞行和维修效果均为可编辑 VFX Graph 资产。发电机与维修舱各增加两盏无阴影状态灯。选中和 Ghost 高亮跳过粒子/尾迹，避免覆写特效材质。
 
-实时反馈通过 `Resources/VFX/BlockVfxLibrary` 读取原生 VFX Graph。UNI Aerial/Small/Impact Explosion、Small Smoke Impact、Device Fire、Gas Fire 覆盖爆炸、破碎、命中、烟火和推进；能量光束、维修、建造、机器人与掉落拖尾也统一使用 GPU Graph。可编辑 Prefab 保留在 `Assets/Art/BlockVisuals/VFX`，Graph 及完整依赖位于 `Assets/Art/VFX`，不依赖被忽略的 UNI 原包。VfxEffect 保留低强度持续密度、停止后的尾烟及显式清空；瞬时上限 64、断裂烟迹上限 24、12 秒回收。推进挂点 +Z 不变，适配原包 -X 轴与世界烟流。41 个旧粒子 Prefab 已迁移，新增 2 个能量模板；运行时代码无 ParticleSystem/TrailRenderer。目标平台需支持 Compute，编辑入口见 `Assets/Art/VFX/README.md`。
+实时反馈通过 `Resources/VFX/BlockVfxLibrary` 读取原生 VFX Graph。UNI Aerial/Small/Impact Explosion、Small Smoke Impact、Device Fire、无烟 Gas Fire Thruster 覆盖爆炸、破碎、命中、烟火和推进；能量光束、维修、建造、机器人与掉落拖尾也统一使用 GPU Graph。可编辑 Prefab 保留在 `Assets/Art/BlockVisuals/VFX`，Graph 及完整依赖位于 `Assets/Art/VFX`，不依赖被忽略的 UNI 原包。VfxEffect 保留低强度持续密度、停止后的尾烟及显式清空；瞬时上限 64、断裂烟迹上限 24、12 秒回收。推进挂点 +Z 不变，适配原包 -X 轴；喷焰、烟火等使用 Local 模拟空间，能量拖尾以 World 模拟空间保留运动历史并从局部挂点发射。41 个旧粒子 Prefab 已迁移，新增 2 个能量模板；运行时代码无 ParticleSystem/TrailRenderer。目标平台需支持 Compute，编辑入口见 `Assets/Art/VFX/README.md`。
 
 ### 3.8 科幻工业备用素材库
 
@@ -437,14 +437,14 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 - `BlockArtDependencies.Resolve()`：通过 Editor API 复制缺失依赖、重映射 GUID/subasset 引用并完全解包。
 - `BlockVfxBaker.BakeMissing()` / `Populate()`：从原生和补充 Graph 生成缺失模板，已有模板不覆盖。
-- `NativeVfxLibraryBuilder.PrepareSources()` / `ImportSources()` / `CreateUtilityGraphs()`：来源清单、导入及依赖重映射、能量图生成。
+- `NativeVfxLibraryBuilder.PrepareSources()` / `ImportSources()` / `CreateUtilityGraphs()` / `RebuildPositionSafeEffects()`：来源清单、依赖重映射、能量图生成及无烟/局部空间 Graph 重建。
 - `VfxGraphAuthoring`：隔离 Unity 6000.3 内部 Graph Editor API，产物为正常可编辑 .vfx 资产，运行时无反射。
 - `NativeVfxMigration.Run()` / `Validate()`：Editor API 迁移、绑定调用者，验证遗留组件和依赖。
-- `NativeVfxPlaybackProbe.Run()` / `RunSuite()`：实际 Play Mode 自动渲染 GPU 生命周期采样，结束恢复原场景。
+- `NativeVfxPlaybackProbe.Run()` / `RunSuite()` / `RunPositionTest()`：实际 Play Mode 自动渲染 GPU 生命周期及大坐标移动采样，结束恢复原场景。
 - `BlockArtIntegrator.Integrate()`：保留模型与玩法契约，补齐挂点、灯光和 Graph 绑定。
 - `BlockArtValidation.Validate()`：检查引用、Shader、运动链与挂点；`BlockArtPreview.Render()` 只渲染静态模型。
 - `BlockArtPlayProbe.Run()`：隔离 Play Mode 检查供电/推进/射击/维修与回收。
-- `VfxEffect.Awake()` / `SetIntensity()`：缓存世界烟流输入，统一强度、缩放、转向和启停。
+- `VfxEffect.SetIntensity()`：统一 Graph 强度、实例缩放和启停；空间变换由各 Graph 模拟空间处理。
 - `VfxEffect.PlayOnce()` / `Clear()` / `ReleaseAfterPlayback()` / `StopAndRelease()`：重播、清空、实例上限及延迟回收。
 - `VfxEffect.SetColor()` / `SetSpawnCount()`：设置能量反馈颜色与掉落数量。
 - `BlockVfxLibrary.Play()`：实例化事件效果，Beam 和 DetachedSmoke 提供持续模板。
@@ -455,7 +455,7 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 #### `Assets/Scripts/Effect/DetachedPartSmokeTrail.cs`
 
 - `public static void Attach(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`：为无驾驶舱断裂刚体挂接或刷新受全局数量限制的烟雾拖尾。
-- `private void Initialize(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`：实例化 UNI Device Fire 世界空间烟火 Graph，并缓存目标刚体。
+- `private void Initialize(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`：实例化 UNI Device Fire 局部空间烟火 Graph，并缓存目标刚体。
 - `private void Refresh(Vector3 worldAnchor, float effectIntensity)`：重复受爆时刷新锚点、强度和剩余寿命，不重复创建组件。
 - `private void Update()`：按线速度、角速度、爆炸强度和生命周期衰减实时控制发射。
 - `private void StopAndRelease()`：停止发射、分离残留粒子并延迟销毁视觉对象。
@@ -1211,6 +1211,13 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 
 ## 10. 变更日志
+
+### 2026-09-24（特效位置稳定与无烟推进尾焰）
+
+- **范围与实现**：从 UNI Gas Fire 建立可编辑的无烟推进器 Graph，删除完整烟雾 Spawn/Initialize/Update/Output 链，仅保留三套原生火焰；35 个项目推进 VFX 实例改为引用此变体。推进、Device Fire 和 Steam Leak 改用 Local 模拟空间，移除运行时旧世界烟流旋转补偿。EnergyTrail 保留 World 模拟空间的运动历史，发射位置仍从局部挂点转换。保持喷口层级、Prefab GUID 和原生素材依赖。
+- **Unity 验证**：编辑器重建并重载 Graph 后，确认无烟图各有 3 个 Spawn/Initialize/Update/Output、无烟雾贴图输出，35 个推进实例全部引用新图；43 个效果 Prefab、68 个 Graph 实例的缺失脚本、旧组件、引用与依赖检查无错误。实际 Play Mode 在约 `(1000, 0, 1000)` 移动目标并自动渲染推进尾焰、能量拖尾、燃烧烟迹和爆炸，28 张采样帧通过可见/清空像素检查；目视确认效果出现在目标附近，Main 场景已恢复且退出 Play Mode。
+- **静态验证**：`verify_assets.py` 通过（170 个跟踪 Prefab/场景、来源哈希、10 类原有生命周期和 4 类大坐标采样）；`dotnet build HY-Sandbox.sln --no-restore --nologo` 为 0 错误、4 个既有警告；`git diff --check` 通过。
+- **尚未验证**：正式构建、极远坐标精度及大规模并发 GPU/Overdraw 性能。原始含烟 UNI Gas Fire 仅保留为来源资产，项目 Prefab 不再引用。
 
 ### 2026-09-24（全量原生 VFX Graph 迁移）
 

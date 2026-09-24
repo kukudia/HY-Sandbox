@@ -25,6 +25,90 @@ public static class NativeVfxLibraryBuilder
     public static string GraphPath(string name) => NativeNames.Contains(name)
         ? Destination(Pack + "Visual Effects/" + name + ".vfx") : Root + "/Graphs/" + name + ".vfx";
 
+    public static string ThrusterGraphPath => GraphPath("UNI_Gas_Fire_Thruster");
+
+    [MenuItem("Tools/HY Sandbox/VFX Graph/6 Rebuild Position-Safe Effects")]
+    public static void RebuildPositionSafeEffects()
+    {
+        string source = GraphPath("UNI_Gas_Fire");
+        BlockArtDependencies.EnsureFolder(Root + "/Graphs");
+        if (!File.Exists(ThrusterGraphPath) && !AssetDatabase.CopyAsset(source, ThrusterGraphPath))
+            throw new IOException("Could not copy native UNI Gas Fire graph.");
+
+        object jet = VfxGraphAuthoring.Graph(ThrusterGraphPath);
+        object smoke = VfxGraphAuthoring.Items(jet, "children")
+            .FirstOrDefault(c => c.GetType().Name.Contains("Output") &&
+                VfxGraphAuthoring.Items(c, "inputSlots").Any(s =>
+                    (string)VfxGraphAuthoring.Get(s, "name") == "mainTexture" &&
+                    (VfxGraphAuthoring.Get(s, "value") as Object)?.name == "uni_smoke_big"));
+        if (smoke != null)
+        {
+            var chain = new List<object>();
+            void Collect(object context)
+            {
+                if (chain.Contains(context)) return;
+                chain.Add(context);
+                foreach (object input in VfxGraphAuthoring.Items(context, "inputContexts")) Collect(input);
+            }
+            Collect(smoke);
+            foreach (object context in chain)
+                VfxGraphAuthoring.Call(jet, "RemoveChild", context, true);
+        }
+        // Also repairs a graph from an interrupted earlier migration.
+        foreach (object orphan in VfxGraphAuthoring.Items(jet, "children")
+            .Where(c => c.GetType().Name == "VFXBasicSpawner" &&
+                VfxGraphAuthoring.Items(c, "outputContexts").Length == 0).ToArray())
+            VfxGraphAuthoring.Call(jet, "RemoveChild", orphan, true);
+        SetSimulationSpace(jet, "Local");
+        VfxGraphAuthoring.Save(ThrusterGraphPath);
+        object[] jetContexts = VfxGraphAuthoring.Items(VfxGraphAuthoring.Graph(ThrusterGraphPath), "children");
+        foreach (string type in new[] { "VFXBasicSpawner", "VFXBasicInitialize", "VFXBasicUpdate", "VFXPlanarPrimitiveOutput" })
+            if (jetContexts.Count(c => c.GetType().Name == type) != 3)
+                throw new InvalidOperationException("Thruster graph must have three complete flame systems: " + type);
+        if (jetContexts.Where(c => c.GetType().Name.Contains("Output"))
+            .SelectMany(c => VfxGraphAuthoring.Items(c, "inputSlots"))
+            .Any(s => (VfxGraphAuthoring.Get(s, "value") as Object)?.name == "uni_smoke_big"))
+            throw new InvalidOperationException("Thruster graph still contains the smoke output.");
+
+        foreach (string name in new[] { "UNI_Device_Fire", "UNI_Steam_Leak" })
+        {
+            string path = GraphPath(name);
+            SetSimulationSpace(VfxGraphAuthoring.Graph(path), "Local");
+            VfxGraphAuthoring.Save(path);
+        }
+
+        foreach (string guid in AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Art", "Assets/Resources" }))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            GameObject asset = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            if (asset == null || !asset.GetComponentsInChildren<VisualEffect>(true).Any(v =>
+                    v.visualEffectAsset != null && v.visualEffectAsset.name == "UNI_Gas_Fire")) continue;
+            GameObject root = PrefabUtility.LoadPrefabContents(path);
+            try
+            {
+                foreach (VisualEffect graph in root.GetComponentsInChildren<VisualEffect>(true).Where(v =>
+                    v.visualEffectAsset != null && v.visualEffectAsset.name == "UNI_Gas_Fire"))
+                {
+                    graph.visualEffectAsset = AssetDatabase.LoadAssetAtPath<VisualEffectAsset>(ThrusterGraphPath);
+                    graph.gameObject.name = "Graph - UNI Gas Fire (no smoke)";
+                }
+                PrefabUtility.SaveAsPrefabAsset(root, path);
+            }
+            finally { PrefabUtility.UnloadPrefabContents(root); }
+        }
+        AssetDatabase.SaveAssets();
+    }
+
+    private static void SetSimulationSpace(object graph, string space)
+    {
+        foreach (object initialize in VfxGraphAuthoring.Items(graph, "children")
+            .Where(c => c.GetType().Name == "VFXBasicInitialize"))
+        {
+            object data = VfxGraphAuthoring.Call(initialize, "GetData");
+            VfxGraphAuthoring.Set(data, "space", Enum.Parse(VfxGraphAuthoring.Get(data, "space").GetType(), space));
+        }
+    }
+
     [MenuItem("Tools/HY Sandbox/VFX Graph/1 Prepare UNI Dependency Manifest")]
     public static void PrepareSources()
     {
