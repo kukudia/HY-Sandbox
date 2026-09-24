@@ -96,7 +96,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 3.5 UI、敌人和效果
 
-`MainUIButtons` 负责按钮事件和操作模式，DebugSettingsPanel 提供供电范围、连接线、Block 连接状态、耐久状态和供电状态五个独立开关；`BuildPalette` / `BuildPaletteItem` 管理已保存的 23 个图标按钮、六类导航、滚动、悬停名称和选中颜色；`SaveUIPanel` 负责玩家/敌方蓝图列表；`BlueprintUIPanel` 显示当前建造目标名称、方块数量、总质量、需求功率和发电机总输出，并在搭建、拆除、Undo/Redo 时刷新，在存档或敌方蓝图异步加载期间逐块更新；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块，寻路避障按间隔采样并渐进转向，返航时对准停靠姿态后平滑减速归位，其飞行反馈由保存的双层青色尾迹和速度驱动喷口 Graph 组成，维修时从模型工具端发射双层能量束，并使用素材电弧与真实耐久恢复脉冲。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager` 和 `StylizedBeamEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。Block 爆炸直接播放 UNI Aerial Explosion Graph，保留瞬时点光和镜头震动；陨石尾迹独立跟随位置并按速度定向，不继承陨石自转。失去驾驶舱的断裂 Rigidbody 会获得最长 6 秒、按速度衰减的烟雾/余烬拖尾，同时限制全局活动数量为 24。
+`MainUIButtons` 负责按钮事件和操作模式，DebugSettingsPanel 提供供电范围、连接线、Block 连接状态、耐久状态和供电状态五个独立开关；`BuildPalette` / `BuildPaletteItem` 管理已保存的 23 个图标按钮、六类导航、滚动、悬停名称和选中颜色；`SaveUIPanel` 负责玩家/敌方蓝图列表；`BlueprintUIPanel` 显示当前建造目标名称、方块数量、总质量、需求功率和发电机总输出，并在搭建、拆除、Undo/Redo 时刷新，在存档或敌方蓝图异步加载期间逐块更新；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块，寻路避障按间隔采样并渐进转向，返航时对准停靠姿态后平滑减速归位，其飞行反馈由保存的双层青色尾迹和速度驱动喷口 Graph 组成，维修时从模型工具端发射双层能量束，并使用素材电弧与真实耐久恢复脉冲。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager` 和 `StylizedBeamEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。Block 爆炸与普通物体销毁均播放 UNI Aerial Explosion Graph；前者放大最低尺寸并保留瞬时点光和镜头震动，可爆炸方块不再叠加拆除爆发。两条销毁路径均可通过 VisualEffectsManager 的 Destruction VFX 调试开关查看目标、边界、缩放和实际生成结果。陨石尾迹独立跟随位置并按速度定向，不继承陨石自转。失去驾驶舱的断裂 Rigidbody 会获得最长 6 秒、按速度衰减的烟雾/余烬拖尾，同时限制全局活动数量为 24。
 
 ### 3.6 物理模拟与性能
 
@@ -447,7 +447,7 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `VfxEffect.SetIntensity()`：统一 Graph 强度、实例缩放和启停；空间变换由各 Graph 模拟空间处理。
 - `VfxEffect.PlayOnce()` / `Clear()` / `ReleaseAfterPlayback()` / `StopAndRelease()`：重播、清空、实例上限及延迟回收。
 - `VfxEffect.SetColor()` / `SetSpawnCount()`：设置能量反馈颜色与掉落数量。
-- `BlockVfxLibrary.Play()`：实例化事件效果，Beam 和 DetachedSmoke 提供持续模板。
+- `BlockVfxLibrary.Play()`：实例化事件效果并返回生成或跳过原因，Beam 和 DetachedSmoke 提供持续模板。
 - `BlockStatusLight.Update()`：更新发电机与维修舱状态灯。
 
 ### Effect 特效
@@ -806,10 +806,10 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `public static Material GetSharedLineMaterial()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `public static void TryPlayBlockPlaced(Block block)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `public static void TryPlayBlockRemoved(Block block)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
-- `public static void TryPlayBlockExplosion(Block block)`：触发 UNI Aerial Explosion Graph、瞬时灯光和镜头反馈。
+- `public static void TryPlayBlockExplosion(Block block)`：触发放大的 UNI Aerial Explosion Graph、瞬时灯光和镜头反馈。
 - `public static void TryPlayRepairPulse(Vector3 origin, Vector3 target, Color color, float width)`：在真实维修 tick 时触发收束线、目标脉冲、火花和小型闪光。
 - `public static void TryAttachDetachedPartSmoke(Rigidbody body, Vector3 worldAnchor, float intensity)`：为爆炸后无驾驶舱的刚体挂接烟雾拖尾。
-- `public static void TryPlayObjectDestroyed(GameObject target)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `public static void TryPlayObjectDestroyed(GameObject target)`：触发普通物体销毁的 UNI Aerial Explosion Graph 和短闪光。
 - `public static void TryPlayBlockMoved(Block block, Vector3 from, Vector3 to)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `public static void TryPlayBlockRotated(Block block)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `public static void TryShowBlockSelection(Block block)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
@@ -823,8 +823,8 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `private void ApplySceneLook()`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
 - `private void PlayBlockPlaced(Block block)`： 触发游玩流程、UI 状态或视觉反馈的更新。
 - `private void PlayBlockRemoved(Block block)`： 触发游玩流程、UI 状态或视觉反馈的更新。
-- `private void PlayBlockExplosion(Block block)`：在 Block 渲染边界中心播放 UNI 原生爆炸，并附加瞬时点光与镜头震动。
-- `private void PlayObjectDestroyed(GameObject target)`： 触发游玩流程、UI 状态或视觉反馈的更新。
+- `private void PlayBlockExplosion(Block block)`：在 Block 渲染边界中心播放放大的 UNI 原生爆炸，记录生成状态，并附加瞬时点光与镜头震动。
+- `private void PlayObjectDestroyed(GameObject target)`：在目标边界中心播放 UNI 原生爆炸，记录生成状态，并附加短闪光。
 - `private void PlayRepairPulse(Vector3 origin, Vector3 target, Color color, float width)`：组合一次维修命中的加法火花、放射光痕、短束流和闪光。
 - `private void PlayBlockMoved(Block block, Vector3 from, Vector3 to)`： 触发游玩流程、UI 状态或视觉反馈的更新。
 - `private void PlayBlockRotated(Block block)`： 触发游玩流程、UI 状态或视觉反馈的更新。
@@ -1210,6 +1210,12 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 
 ## 10. 变更日志
+
+### 2026-09-24（销毁爆炸可见度与调试）
+
+- **范围与实现**：Block 爆炸的最小缩放由 0.7 提升至 1.6，按边界尺寸放大比例提高；普通物体销毁从 Small Explosion/程序化光痕改为 UNI Aerial Explosion Graph。可爆炸方块只播放爆炸，不再先叠加拆除效果。资源库返回生成状态，两个销毁函数通过默认开启的 Inspector 调试开关输出目标、中心、边界、缩放和结果（包含缺失资源与并发上限）。
+- **Unity 验证**：6000.3.11f1 编辑器重编译无错误；Main 场景 Play Mode 分别触发两条路径，生成两个 Explosion Graph 实例，调试日志均报告 `Spawned`。延时截图错过瞬时火球，视觉醒目程度尚未由有效帧确认。退出 Play Mode 后确认 Main 场景原有参数调整仍在，未纳入本次提交。
+- **静态验证**：`dotnet build HY-Sandbox.sln --no-restore --nologo` 为 0 错误、4 个既有警告；`git diff --check` 通过。
 
 ### 2026-09-24（推进尾焰、陨石尾迹与 Block 爆炸）
 

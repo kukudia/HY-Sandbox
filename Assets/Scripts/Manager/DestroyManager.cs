@@ -54,13 +54,15 @@ public class DestroyManager : MonoBehaviour
             && block != null
             && PlayManager.instance != null
             && PlayManager.instance.playMode;
-        if (block != null && !shouldExplodeCockpit)
+        bool willExplode = block != null && block.canExplode
+            && PlayManager.instance != null && PlayManager.instance.playMode;
+        // ExplodeBlock owns the single destruction burst for explosive blocks.
+        if (!willExplode)
         {
-            VisualEffectsManager.TryPlayBlockRemoved(block);
-        }
-        else
-        {
-            VisualEffectsManager.TryPlayObjectDestroyed(obj);
+            if (block != null && !shouldExplodeCockpit)
+                VisualEffectsManager.TryPlayBlockRemoved(block);
+            else
+                VisualEffectsManager.TryPlayObjectDestroyed(obj);
         }
         if (PlayManager.instance == null || !PlayManager.instance.playMode)
         {

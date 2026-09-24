@@ -12,6 +12,8 @@ public class VisualEffectsManager : MonoBehaviour
     [Header("Runtime VFX")]
     public bool enableRuntimeVfx = true;
     public bool enableSceneLook = true;
+    [SerializeField, Tooltip("Log each destruction VFX request and its spawn result.")]
+    private bool _debugDestructionVfx = true;
     public float cameraShakeStrength = 0.055f;
     public Color buildColor = new Color(0.2f, 0.95f, 1f, 1f);
     public Color removeColor = new Color(1f, 0.34f, 0.08f, 1f);
@@ -190,28 +192,39 @@ public class VisualEffectsManager : MonoBehaviour
 
     private void PlayBlockExplosion(Block block)
     {
-        if (!enableRuntimeVfx) return;
+        if (!enableRuntimeVfx)
+        {
+            if (_debugDestructionVfx) Debug.Log($"[Destruction VFX] PlayBlockExplosion skipped: runtime VFX disabled; target={block.name}", block);
+            return;
+        }
 
         Bounds bounds = GetBounds(block.gameObject, block.transform.position, GetBlockSize(block));
-        float scale = Mathf.Clamp(bounds.size.magnitude * 0.42f, 0.7f, 4f);
+        float scale = Mathf.Clamp(bounds.size.magnitude * 0.85f, 1.6f, 4f);
         Vector3 center = bounds.center;
         Color emberColor = new Color(2.6f, 1.15f, 0.22f, 1f);
 
         // The library's Explosion prefab is the native UNI Aerial Explosion graph.
-        BlockVfxLibrary.Play(BlockVfxLibrary.Effect.Explosion, center, Quaternion.identity, scale);
+        BlockVfxLibrary.SpawnResult result = BlockVfxLibrary.Play(BlockVfxLibrary.Effect.Explosion, center, Quaternion.identity, scale);
+        if (_debugDestructionVfx)
+            Debug.Log($"[Destruction VFX] PlayBlockExplosion target={block.name}, center={center}, bounds={bounds.size}, scale={scale:F2}, graph={result}", block);
         CreateLightFlash(center, emberColor, 7.5f, scale * 7f, 0.62f);
         ShakeCamera(cameraShakeStrength * 1.35f, 0.42f);
     }
 
     private void PlayObjectDestroyed(GameObject target)
     {
-        if (!enableRuntimeVfx) return;
+        if (!enableRuntimeVfx)
+        {
+            if (_debugDestructionVfx) Debug.Log($"[Destruction VFX] PlayObjectDestroyed skipped: runtime VFX disabled; target={target.name}", target);
+            return;
+        }
 
         Bounds bounds = GetBounds(target, target.transform.position, Vector3.one);
-        Color brightRemove = Brighten(removeColor, 2.2f, 0.12f);
-        BlockVfxLibrary.Play(BlockVfxLibrary.Effect.Break, bounds.center, Quaternion.identity, 1f);
-        CreateRadialStreakBurst(bounds.center, Vector3.zero, brightRemove, 8, Mathf.Max(bounds.extents.magnitude, 0.6f), 0.24f, 0.035f);
-        CreateLightFlash(bounds.center, removeColor, 2.8f, Mathf.Max(bounds.size.magnitude * 1.35f, 2f), 0.4f);
+        float scale = Mathf.Clamp(bounds.size.magnitude * 0.7f, 1.3f, 4f);
+        BlockVfxLibrary.SpawnResult result = BlockVfxLibrary.Play(BlockVfxLibrary.Effect.Explosion, bounds.center, Quaternion.identity, scale);
+        if (_debugDestructionVfx)
+            Debug.Log($"[Destruction VFX] PlayObjectDestroyed target={target.name}, center={bounds.center}, bounds={bounds.size}, scale={scale:F2}, graph={result}", target);
+        CreateLightFlash(bounds.center, removeColor, 5f, scale * 5f, 0.45f);
     }
 
     private void PlayRepairPulse(Vector3 origin, Vector3 target, Color color, float width)

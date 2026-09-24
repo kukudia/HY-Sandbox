@@ -4,6 +4,7 @@ using UnityEngine;
 public sealed class BlockVfxLibrary : ScriptableObject
 {
     public enum Effect { Build, Break, Explosion, Smoke, Repair, Muzzle, Impact }
+    public enum SpawnResult { Spawned, MissingLibrary, BurstLimit, MissingPrefab }
     [SerializeField] private VfxEffect[] _bursts = new VfxEffect[7];
     [SerializeField] private VfxEffect _detachedSmoke;
     [SerializeField] private Material _lineMaterial;
@@ -23,15 +24,17 @@ public sealed class BlockVfxLibrary : ScriptableObject
     public Material LineMaterial => _lineMaterial;
     public VfxEffect DetachedSmoke => _detachedSmoke;
 
-    public static void Play(Effect kind, Vector3 position, Quaternion rotation, float scale = 1f)
+    public static SpawnResult Play(Effect kind, Vector3 position, Quaternion rotation, float scale = 1f)
     {
         BlockVfxLibrary library = Instance;
-        if (library == null || !VfxEffect.CanSpawnBurst) return;
+        if (library == null) return SpawnResult.MissingLibrary;
+        if (!VfxEffect.CanSpawnBurst) return SpawnResult.BurstLimit;
         int index = (int)kind;
-        if (index >= library._bursts.Length || library._bursts[index] == null) return;
+        if (index >= library._bursts.Length || library._bursts[index] == null) return SpawnResult.MissingPrefab;
         VfxEffect effect = Instantiate(library._bursts[index], position, rotation);
         effect.transform.localScale *= Mathf.Clamp(scale, 0.05f, 4f);
         effect.PlayOnce();
         effect.ReleaseAfterPlayback();
+        return SpawnResult.Spawned;
     }
 }
