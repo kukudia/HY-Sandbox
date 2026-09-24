@@ -18,8 +18,12 @@ public class MainUIPanels : MonoBehaviour
     public Text healthValue;
     public float fadeDuration = 0.3f;
     public Gradient healthBarColor;
+    [SerializeField] private CombatHud _combatHud;
+    public CombatHud CombatHud => _combatHud;
     private bool renameMode;
     private string renameTargetName;
+    private UnityEngine.Events.UnityAction _deleteAction;
+    private readonly System.Collections.Generic.Dictionary<GameObject, Coroutine> _transitions = new System.Collections.Generic.Dictionary<GameObject, Coroutine>();
 
     private void Awake()
     {
@@ -50,6 +54,13 @@ public class MainUIPanels : MonoBehaviour
         //}
     }
 
+    private void Transition(GameObject panel, bool show)
+    {
+        if (panel == null) return;
+        if (_transitions.TryGetValue(panel, out Coroutine running)) StopCoroutine(running);
+        _transitions[panel] = StartCoroutine(Fade(panel, show));
+    }
+
     private IEnumerator Fade(GameObject panel, bool show)
     {
         if (show)
@@ -70,10 +81,11 @@ public class MainUIPanels : MonoBehaviour
         cg.interactable = show;
         cg.blocksRaycasts = show;
 
-        while (t < fadeDuration)
+        float duration = Mathf.Max(0f, fadeDuration);
+        while (t < duration)
         {
             t += Time.unscaledDeltaTime;
-            cg.alpha = Mathf.Lerp(start, end, t / fadeDuration);
+            cg.alpha = Mathf.Lerp(start, end, t / duration);
             yield return null;
         }
 
@@ -83,6 +95,7 @@ public class MainUIPanels : MonoBehaviour
         {
             panel.SetActive(false);
         }
+        _transitions.Remove(panel);
     }
 
     public void ShowCreatePanel()
@@ -90,8 +103,8 @@ public class MainUIPanels : MonoBehaviour
         renameMode = false;
         renameTargetName = string.Empty;
         Cursor.lockState = CursorLockMode.Confined;
-        StartCoroutine(Fade(buildPanel, false));
-        StartCoroutine(Fade(createPanel, true));
+        Transition(buildPanel, false);
+        Transition(createPanel, true);
         BuildManager.instance.enabled = false;
         SetInputPlaceholder(BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint
             ? "Create new blueprint..."
@@ -106,8 +119,8 @@ public class MainUIPanels : MonoBehaviour
         renameMode = true;
         renameTargetName = save;
         Cursor.lockState = CursorLockMode.Confined;
-        StartCoroutine(Fade(buildPanel, false));
-        StartCoroutine(Fade(createPanel, true));
+        Transition(buildPanel, false);
+        Transition(createPanel, true);
         BuildManager.instance.enabled = false;
         SetInputPlaceholder(BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint
             ? "Rename blueprint..."
@@ -121,8 +134,8 @@ public class MainUIPanels : MonoBehaviour
     {
         renameMode = false;
         renameTargetName = string.Empty;
-        StartCoroutine(Fade(createPanel, false));
-        StartCoroutine(Fade(buildPanel, true));
+        Transition(createPanel, false);
+        Transition(buildPanel, true);
         BuildManager.instance.enabled = true;
     }
 
@@ -137,19 +150,26 @@ public class MainUIPanels : MonoBehaviour
 
     public void ShowDeletePanel(string save)
     {
-        MainUIButtons.instance.confirmDeleteButton.onClick.AddListener(() => OnConfirmDelete(save));
+        if (_deleteAction != null) MainUIButtons.instance.confirmDeleteButton.onClick.RemoveListener(_deleteAction);
+        _deleteAction = () => OnConfirmDelete(save);
+        MainUIButtons.instance.confirmDeleteButton.onClick.AddListener(_deleteAction);
         Cursor.lockState = CursorLockMode.Confined;
         deletePanel.transform.Find("DeleteTextPanel").GetComponentInChildren<Text>().text = $"Are you sure you want to delete {save}?";
-        StartCoroutine(Fade(buildPanel, false));
-        StartCoroutine(Fade(deletePanel, true));
+        Transition(buildPanel, false);
+        Transition(deletePanel, true);
         BuildManager.instance.enabled = false;
     }
 
     public void HideDeletePanel()
     {
-        StartCoroutine(Fade(deletePanel, false));
-        StartCoroutine(Fade(buildPanel, true));
+        Transition(deletePanel, false);
+        Transition(buildPanel, true);
         BuildManager.instance.enabled = true;
+        if (_deleteAction != null)
+        {
+            MainUIButtons.instance.confirmDeleteButton.onClick.RemoveListener(_deleteAction);
+            _deleteAction = null;
+        }
     }
 
     public void OnConfirmCreate()
@@ -218,8 +238,9 @@ public class MainUIPanels : MonoBehaviour
 
         debugPanel.transform.SetParent(playPanel.transform);
 
-        StartCoroutine(Fade(buildPanel, false));
-        StartCoroutine(Fade(playPanel, true));
+        _combatHud?.ResetHud();
+        Transition(buildPanel, false);
+        Transition(playPanel, true);
         PlayManager.instance.PlayStart();
     }
 
@@ -229,14 +250,15 @@ public class MainUIPanels : MonoBehaviour
         debugPanel.transform.SetParent(buildPanel.transform);
 
         PlayManager.instance.PlayEnd();
-        StartCoroutine(Fade(deathPanel, false));
-        StartCoroutine(Fade(playPanel, false));
-        StartCoroutine(Fade(buildPanel, true));
+        Transition(deathPanel, false);
+        Transition(playPanel, false);
+        Transition(buildPanel, true);
     }
 
     public void PlayerDeath()
     {
         StopAllCoroutines();
+        _transitions.Clear();
         PlayManager.instance.playMode = false;
         if (InputManager.instance != null)
         {

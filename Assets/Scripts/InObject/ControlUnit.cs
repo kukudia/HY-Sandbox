@@ -124,7 +124,6 @@ public class ControlUnit : MonoBehaviour
         {
             hoverFlightController.thrusters = hoverThrusters;
             hoverFlightController.enabled = true;
-            hoverFlightController.showUI = true;
             hoverFlightController.Init();
         }
 

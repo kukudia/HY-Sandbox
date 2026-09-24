@@ -88,6 +88,12 @@ public class DestroyManager : MonoBehaviour
 
         if (cockpit != null)
         {
+            if (ownerFaction == UnitFaction.Enemy && health != null && health.LastAttacker != null
+                && health.LastAttacker.faction == UnitFaction.Player && unit != null)
+            {
+                EnemyIdentity identity = cockpit.GetComponent<EnemyIdentity>();
+                MainUIPanels.instance?.CombatHud?.ShowPlayerKill(identity != null ? identity.DisplayName : unit.name);
+            }
             Destroy(obj);
 
             if (ownerFaction == UnitFaction.Player && PlayManager.instance.playMode)

@@ -10,6 +10,7 @@ public class Durability : MonoBehaviour
     
     public float currentDurability;
     public bool needToRepair => currentDurability < maxDurability;
+    public ControlUnit LastAttacker { get; private set; }
     
     // 缓存组件引用，避免重复查找
     private Renderer objectRenderer;
@@ -35,8 +36,16 @@ public class Durability : MonoBehaviour
 
     private void OnEnable()
     {
+        LastAttacker = null;
         currentDurability = maxDurability;
         UpdateDurablility(0);
+    }
+
+    public void ApplyDamage(float amount, ControlUnit attacker)
+    {
+        if (amount <= 0f || !enabled) return;
+        LastAttacker = attacker;
+        ChangeDurability(-amount);
     }
 
     public void CollisionEnter(Collision collision)
@@ -66,6 +75,12 @@ public class Durability : MonoBehaviour
     //}
 
     public void UpdateDurablility(float value)
+    {
+        if (value < 0f) LastAttacker = null;
+        ChangeDurability(value);
+    }
+
+    private void ChangeDurability(float value)
     {
         if (!enabled) return;
         currentDurability += value;

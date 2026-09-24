@@ -180,6 +180,9 @@ public class EnemySpawner : MonoBehaviour
             if (cockpit != null)
             {
                 cockpit.faction = UnitFaction.Enemy;
+                EnemyIdentity identity = cockpit.GetComponent<EnemyIdentity>();
+                if (identity == null) identity = cockpit.gameObject.AddComponent<EnemyIdentity>();
+                identity.SetDisplayName(unitObject.name);
             }
         }
 

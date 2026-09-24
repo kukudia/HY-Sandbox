@@ -1,7 +1,7 @@
 # HY-Sandbox 项目开发文档
 
 > 文档状态：持续维护中  
-> 最近核对：2026-09-23
+> 最近核对：2026-09-25
 > Unity 编辑器：6000.3.11f1（`ProjectSettings/ProjectVersion.txt`）  
 > 当前分支：`main`
 
@@ -100,6 +100,8 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 `BuildPalette` 的 `HoveredBlockName` / `HoveredBlockInfo` 使用 Main 场景中现有的文字布局；23 个目录按钮烘焙 Block Prefab 的静态参数信息，包括尺寸、质量、成本、耐久、功率需求/输出、推进力与货仓容量（按组件存在情况显示）。默认 `Block.info` 根据当前参数生成；启用 `canEditInfo` 并填写文本后保留手写内容。编辑器菜单 `Tools/Build Palette/Refresh hovered block info` 只刷新文字引用和条目参数。
 
+`MainUIPanels` 为每个面板只保留一条淡入淡出协程，并在删除确认关闭时移除临时按钮回调。`PlayPanel/CombatHud` 是保存于 Main 场景的 uGUI：复用敌方名牌实例，每 0.2 秒汇总敌方单元所有已启用 Block 的当前/最大耐久；按镜头视野和距离隐藏离屏目标。击杀提示位于画面居中偏下，以不透光深色背景、较大文字和短暂淡入淡出显示敌方蓝图名称及本轮击杀数；仅玩家攻击导致敌方驾驶舱摧毁时计数。按钮的悬停、按下和焦点缩放由 `UIInteractionFeedback` 处理。`Tools/HY-Sandbox/Setup Combat HUD` 可重复配置场景和悬浮控制器 Prefab；后者的 IMGUI 诊断窗默认关闭，仍可在 Prefab Inspector 中开启 `showUI` 调试。架构参考 [deVoid UI Framework](https://github.com/yankooliveira/uiframework) 与 [Unity-UI-Framework](https://github.com/MrNerverDie/Unity-UI-Framework) 的界面职责拆分及过渡管理，当前实现继续使用项目已有 uGUI。
+
 ### 3.6 物理模拟与性能
 
 项目使用 3D PhysX 作为运行时物理后端。为降低物理线程在大型构造体、敌人和爆炸冲量场景下的持续计算压力，当前项目设置为：固定物理步长约 0.02 秒（50 Hz；`ProjectSettings/TimeManager.asset` 使用 Unity 6000 的有理数格式保存）、单帧物理追赶上限 0.1 秒、默认位置求解迭代 4 次、默认速度求解迭代 1 次。碰撞回调复用已启用，Transform 自动同步保持关闭；2D 物理设置未改变。降低步频和迭代次数会减少 CPU 占用，但高速碰撞、堆叠稳定性和推进器控制手感需要在 Play Mode 复核。
@@ -161,6 +163,8 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - **已解决（2026-09-23）**：禁用 Connector 被物理命中后错误合组，以及无视觉连接误拆组；54 项 Play Mode 探针通过。大型蓝图分组耗时和 GC 峰值尚未采样，不能据此量化帧率收益。
 
 - **建造目录**：新增 Prefab 后需要执行 Build Palette Bake，将分类与图标保存入场景；不会在运行时自动复制按钮。尚未做超大目录性能或所有分辨率的手工操作测试。
+
+- **战斗 HUD（2026-09-25）**：隔离 Play Mode 的九项逻辑检查通过，`Temp/CombatHud/EnemyNameplate.png` 与 `KillNotice.png` 已在探针结束后落盘并目视核对；真实大型蓝图战斗中的多名牌遮挡、各种分辨率和长名称排版仍需实机检查。
 
 优先级含义：P0 阻断主流程，P1 影响核心体验或数据安全，P2 可维护性/性能，P3 体验增强。
 
@@ -1201,6 +1205,18 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `private static CargoItem Part()`
 - `private static IEnumerator Scenario()`
 
+### 战斗 HUD 与 UI 过渡（2026-09-25）
+
+- `MainUIPanels.Transition(GameObject panel, bool show)`：取消同一面板的旧过渡并启动新过渡；`Fade` 完成后移除记录。`ShowDeletePanel` / `HideDeletePanel` 管理单个删除确认回调；`PlayStart` 重置本轮击杀提示。
+- `Durability.ApplyDamage(float amount, ControlUnit attacker)`：记录本次伤害来源并更新耐久；`UpdateDurablility` 收到环境伤害时清除来源。
+- `DestroyManager.DestroyGameObject(GameObject obj)`：仅玩家造成的敌方驾驶舱摧毁通知 HUD。
+- `EnemyIdentity.SetDisplayName(string displayName)`：保存敌方蓝图名；`EnemySpawner.SpawnBlockData` 在运行时驾驶舱上设置身份。
+- `ControlUnit.RefreshChildren()`：重组后重新绑定悬浮控制器，但不强制开启诊断窗；`HoverFlightController.OnGUI()` 仅在显式调试开关和有效 PlayManager 下绘制。
+- `CombatHud.OnEnable()` / `OnDisable()` / `ResetHud()`：初始化或清理本轮名牌及提示；`ShowPlayerKill(string enemyName)` 更新击杀提示；`LateUpdate()` 投影名牌并驱动提示透明度；`RefreshEnemies()` 汇总耐久；`CreateView()` / `Recycle(EnemyView view)` 复用名牌实例。
+- `UIInteractionFeedback.Awake()` / `OnDisable()`：记录和恢复按钮原始缩放；`OnPointerEnter` / `OnPointerExit` / `OnPointerDown` / `OnPointerUp` / `OnSelect` / `OnDeselect` 更新输入状态；`Animate()` / `AnimateScale()` 平滑改变按钮缩放。
+- `CombatHudSetup.Apply()`：重建 Main 场景中的可编辑 HUD，并关闭悬浮控制器 Prefab 的默认诊断窗；`Child()` / `Stretch()` / `Position()` / `Image()` / `Text()` / `Set()` 为编辑器搭建辅助函数。
+- `CombatHudPlayProbe.Run()` / `OnPlayModeChanged()` / `Tick()` / `Scenario()` / `CreateEnemy()` / `Check()` / `Finish()`：在隔离 Play Mode 中验证 HUD 绑定、名牌、耐久、击杀归因和环境伤害边界。
+
 ## 9. 函数索引维护规则
 
 新增、删除、重命名或改变职责的函数，必须在同一提交更新本节；签名变化替换旧条目，行为变化同时修改描述和变更日志。索引以源码为准，自动提取遗漏的多行签名时手工补充。
@@ -1215,6 +1231,13 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 
 ## 10. 变更日志
+
+### 2026-09-25（战斗 HUD 与 UI 交互）
+
+- **范围与实现**：PlayPanel 新增可编辑的敌方名牌、聚合耐久条和居中偏下击杀提示；敌方蓝图身份随驾驶舱保存，伤害来源决定击杀归因。面板过渡取消重复协程，删除确认回调不再累积，现有按钮获得轻量输入缩放。根据实机截图加深并放大击杀提示；悬浮控制器 Prefab 默认关闭遮挡画面的 IMGUI 诊断窗，Inspector 开关仍可启用。
+- **已通过代码/文件确认**：Main 场景保存 HUD 及脚本引用，Prefab `showUI: 0`，Unity 6000.3.11f1 重新编译成功。
+- **Unity Play Mode 验证**：隔离探针 9 项检查通过，涵盖名牌、聚合耐久、蓝图名称、玩家驾驶舱击杀一次计数和环境伤害不计数。Play Mode 两张截图已目视核对，击杀提示文字与背景可读，悬浮诊断窗默认未出现；大蓝图实机排版和正式构建尚未验证。
+- **静态验证**：`dotnet build HY-Sandbox.sln --no-restore --nologo` 为 0 错误、4 个既有警告；`git diff --check` 通过，新增脚本的 `.meta` 齐全。
 
 ### 2026-09-24（建造目录悬停参数）
 

@@ -512,7 +512,7 @@ public class HoverFlightController : MonoBehaviour
 
     private void OnGUI()
     {
-        if (!showUI || thrusters == null || !PlayManager.instance.playMode) return;
+        if (!showUI || thrusters == null || PlayManager.instance == null || !PlayManager.instance.playMode) return;
 
         EnsureGuiStyles();
         RefreshUiText();

@@ -355,7 +355,7 @@ public class TurretWeapon : MonoBehaviour
 
             if (hitUnit != null && hitUnit.HasValidCockpit && hitUnit.faction == faction && durability != null)
             {
-                durability.UpdateDurablility(-damage * power.efficiency);
+                durability.ApplyDamage(damage * power.efficiency, owner);
             }
 
             break;

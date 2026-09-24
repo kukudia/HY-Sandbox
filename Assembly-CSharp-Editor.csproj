@@ -65,6 +65,7 @@
     <Compile Include="Assets\Editor\BuildPalettePlayProbe.cs" />
     <Compile Include="Assets\Editor\VfxGraphAuthoring.cs" />
     <Compile Include="Assets\Editor\AutoBuildTool.cs" />
+    <Compile Include="Assets\Editor\CombatHudSetup.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
     <Compile Include="Assets\Editor\NativeVfxMigration.cs" />
     <Compile Include="Assets\Editor\BlockVfxBaker.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Assets\Editor\BlockArtPreview.cs" />
     <Compile Include="Assets\Editor\BlockArtValidation.cs" />
     <Compile Include="Assets\Editor\BlockArtDependencies.cs" />
+    <Compile Include="Assets\Editor\CombatHudPlayProbe.cs" />
     <Compile Include="Assets\Editor\IndustrialArtGenerator.cs" />
     <Compile Include="Assets\Editor\HealthHudPreview.cs" />
     <Compile Include="Assets\Editor\SalvagePlayProbe.cs" />

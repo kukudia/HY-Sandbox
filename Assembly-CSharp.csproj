@@ -74,6 +74,8 @@
     <Compile Include="Assets\Scripts\UI\MainUIPanels.cs" />
     <Compile Include="Assets\Scripts\Block\Power.cs" />
     <Compile Include="Assets\Scripts\UI\BuildPalette.cs" />
+    <Compile Include="Assets\Scripts\UI\UIInteractionFeedback.cs" />
+    <Compile Include="Assets\Scripts\UI\CombatHud.cs" />
     <Compile Include="Assets\Scripts\Data\BuildTargetContext.cs" />
     <Compile Include="Assets\Scripts\Data\BlockData.cs" />
     <Compile Include="Assets\Scripts\Actions\AddBlockAction.cs" />
@@ -139,6 +141,7 @@
     <Compile Include="Assets\Scripts\Manager\MeteorShower.cs" />
     <Compile Include="Assets\Scripts\InObject\RepairBot.cs" />
     <Compile Include="Assets\Scripts\Manager\PlayManager.cs" />
+    <Compile Include="Assets\Scripts\InObject\EnemyIdentity.cs" />
     <Compile Include="Assets\Scripts\Manager\DestroyManager.cs" />
     <Compile Include="Assets\UNI VFX\Common\Scripts\UNI_SimpleCameraController.cs" />
     <Compile Include="Assets\Scripts\Manager\DebugManager.cs" />

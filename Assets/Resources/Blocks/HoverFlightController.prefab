@@ -362,7 +362,7 @@ MonoBehaviour:
   heightD: 2
   gravityCompensationFactor: 1
   thrusters: []
-  showUI: 1
+  showUI: 0
   setHeight: 0
 --- !u!65 &551971835264929317
 BoxCollider:
