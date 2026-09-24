@@ -199,7 +199,7 @@ public class VisualEffectsManager : MonoBehaviour
         }
 
         Bounds bounds = GetBounds(block.gameObject, block.transform.position, GetBlockSize(block));
-        float scale = Mathf.Clamp(bounds.size.magnitude * 0.85f, 1.6f, 4f);
+        float scale = Mathf.Clamp(bounds.size.magnitude * 20f, 20f, 80f);
         Vector3 center = bounds.center;
         Color emberColor = new Color(2.6f, 1.15f, 0.22f, 1f);
 
@@ -220,7 +220,7 @@ public class VisualEffectsManager : MonoBehaviour
         }
 
         Bounds bounds = GetBounds(target, target.transform.position, Vector3.one);
-        float scale = Mathf.Clamp(bounds.size.magnitude * 0.7f, 1.3f, 4f);
+        float scale = Mathf.Clamp(bounds.size.magnitude * 10f, 10f, 40f);
         BlockVfxLibrary.SpawnResult result = BlockVfxLibrary.Play(BlockVfxLibrary.Effect.Explosion, bounds.center, Quaternion.identity, scale);
         if (_debugDestructionVfx)
             Debug.Log($"[Destruction VFX] PlayObjectDestroyed target={target.name}, center={bounds.center}, bounds={bounds.size}, scale={scale:F2}, graph={result}", target);

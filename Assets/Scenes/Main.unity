@@ -1577,8 +1577,8 @@ MonoBehaviour:
     connector: {fileID: 0}
   penetrationMode: 0
   BlockLoadIntervalSeconds: 0.25
-  _minimumBlockLoadIntervalSeconds: 0.005
-  _blockLoadIntervalHalfLifeSeconds: 2
+  _minimumBlockLoadIntervalSeconds: 0.002
+  _blockLoadIntervalHalfLifeSeconds: 1
   _loadCameraReferenceSecondsPerBlock: 0.05
   moveCameraDuringBlockLoad: 1
   minBlocksForLoadCameraOrbit: 5
@@ -8245,7 +8245,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &991723915
 Transform:
   m_ObjectHideFlags: 0
@@ -14812,6 +14812,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::VisualEffectsManager
   enableRuntimeVfx: 1
   enableSceneLook: 1
+  _debugDestructionVfx: 1
   cameraShakeStrength: 0.055
   buildColor: {r: 0.2, g: 0.95, b: 1, a: 1}
   removeColor: {r: 1, g: 0.34, b: 0.08, a: 1}
@@ -17172,7 +17173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81f2df6c35da4d33894981decc21c30b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  spawnInterval: 20
+  spawnInterval: 10
   spawnOnPlayStart: 0
   spawnDistance: 45
   spawnHeightOffset: 6

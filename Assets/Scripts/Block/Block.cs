@@ -23,7 +23,7 @@ public class Block : MonoBehaviour
 
     [Header("Explosion Settings")]
 
-    public float explosionForce = 500f; // 爆炸力
+    public float explosionForce = 100f; // 爆炸力
 
     public float explosionRadius = 5f; // 爆炸半径
 
