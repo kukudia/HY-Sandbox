@@ -53,12 +53,21 @@ public static class NativeVfxPlaybackProbe
     public static void Run(string prefab, string output)
     {
         SessionState.SetBool(Key + "PositionTest", false);
+        SessionState.SetBool(Key + "BlockTest", false);
         StartCapture(prefab, output);
     }
 
     public static void RunPositionTest(string prefab, string output)
     {
         SessionState.SetBool(Key + "PositionTest", true);
+        SessionState.SetBool(Key + "BlockTest", false);
+        StartCapture(prefab, output);
+    }
+
+    public static void RunBlockTest(string prefab, string output)
+    {
+        SessionState.SetBool(Key + "PositionTest", false);
+        SessionState.SetBool(Key + "BlockTest", true);
         StartCapture(prefab, output);
     }
 
@@ -96,7 +105,11 @@ public static class NativeVfxPlaybackProbe
         _target = new RenderTexture(800, 600, 24, RenderTextureFormat.ARGBHalf);
         _camera.targetTexture = _target;
         _image = new Texture2D(800, 600, TextureFormat.RGB24, false);
+        if (SessionState.GetBool(Key + "BlockTest", false))
+            new GameObject("VFX probe UI").AddComponent<MainUIPanels>().enabled = false;
         _effect = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(SessionState.GetString(Key + "Prefab", "")));
+        if (SessionState.GetBool(Key + "BlockTest", false))
+            foreach (var driver in _effect.GetComponentsInChildren<ThrusterVisualEffect>(true)) driver.enabled = false;
         if (SessionState.GetBool(Key + "PositionTest", false))
         {
             _effect.transform.position = new Vector3(1000f, 0f, 1000f);
@@ -112,9 +125,12 @@ public static class NativeVfxPlaybackProbe
         }
         var controller = _effect.GetComponent<VfxEffect>();
         if (controller != null) controller.PlayOnce();
+        else if (SessionState.GetBool(Key + "BlockTest", false))
+            foreach (var effect in _effect.GetComponentsInChildren<VfxEffect>()) effect.SetIntensity(1f);
         else foreach (var graph in _effect.GetComponentsInChildren<VisualEffect>()) graph.Play();
         if (_effect.name.Contains("Jet") || _effect.name.Contains("Flight")) _camera.orthographicSize = 1f;
         if (_effect.name.Contains("Energy") || _effect.name.Contains("Repair")) _camera.orthographicSize = 1.5f;
+        if (SessionState.GetBool(Key + "BlockTest", false)) _camera.orthographicSize = 4f;
         if (_effect.name.Contains("EnergyBeam")) _effect.transform.localScale = new Vector3(0.04f, 0.04f, 2f);
         Rows.Clear(); _sample = 0; _start = Time.time; _wallStart = EditorApplication.timeSinceStartup;
         EditorApplication.update += Tick;
@@ -147,6 +163,13 @@ public static class NativeVfxPlaybackProbe
             if (_sample == 5) controller.Clear();
             if (_sample == 6) controller.PlayOnce();
         }
+        else if (SessionState.GetBool(Key + "BlockTest", false))
+            foreach (var effect in _effect.GetComponentsInChildren<VfxEffect>())
+            {
+                if (_sample == 4) effect.SetIntensity(0f);
+                if (_sample == 5) effect.Clear();
+                if (_sample == 6) effect.PlayOnce();
+            }
         if (_sample == Samples.Length) Finish();
     }
 

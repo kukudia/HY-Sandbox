@@ -92,11 +92,11 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 `ControlUnit` 聚合驾驶舱、主推进器和悬浮推进器，读取玩家输入并把世界方向传给推进系统。敌方 `EnemyController` 默认每 0.5 秒采样一次目标/避障方向，并以响应速度渐进更新模拟输入；敌方不再直接修改 Rigidbody 的旋转或力，转向和位移统一交给 `MainThruster`/`UniversalThruster` 根据 `MovementInput` 施加。`Power.isWorking` 作为悬浮控制器、推进器和炮塔的硬启停条件；`Power.efficiency` 缩放悬浮推力/姿态修正、各推进器有效推力，以及炮塔伤害和射速。`HoverFlightController` 使用高度、重力补偿和姿态 PID 逻辑分配悬浮推力。
 
-`ThrusterAllocator.Solve` 将力与力矩目标组成 6 维约束，通过带阻尼的最小二乘和上下界迭代求解各推进器输出。`ThrusterVisualEffect` 驱动已保存、完全解包到模型喷口的 SpaceKit 喷焰资产，持续发射密度保持稳定，亮度随真实推力平滑变化；核心使用重叠粒子的淡入淡出保持连续，粒子跟随喷头挂点，避免世界/局部方向混用。停机、失电或退出运行模式时停止发射；离开镜头后仍正常计时并结束。
+`ThrusterAllocator.Solve` 将力与力矩目标组成 6 维约束，通过带阻尼的最小二乘和上下界迭代求解各推进器输出。`ThrusterVisualEffect` 驱动已保存、完全解包到模型喷口的 UNI VFX Graph，持续发射密度保持稳定，亮度随真实推力平滑变化。主、全向和悬浮推进器使用同一无烟 `HoverJet` 模板，普通/大型喷口分别以 1.35/2.7 世界尺寸保存；局部模拟跟随喷头挂点，避免世界/局部方向混用。停机、失电或退出运行模式时停止发射；离开镜头后仍正常计时并结束。
 
 ### 3.5 UI、敌人和效果
 
-`MainUIButtons` 负责按钮事件和操作模式，DebugSettingsPanel 提供供电范围、连接线、Block 连接状态、耐久状态和供电状态五个独立开关；`BuildPalette` / `BuildPaletteItem` 管理已保存的 23 个图标按钮、六类导航、滚动、悬停名称和选中颜色；`SaveUIPanel` 负责玩家/敌方蓝图列表；`BlueprintUIPanel` 显示当前建造目标名称、方块数量、总质量、需求功率和发电机总输出，并在搭建、拆除、Undo/Redo 时刷新，在存档或敌方蓝图异步加载期间逐块更新；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块，寻路避障按间隔采样并渐进转向，返航时对准停靠姿态后平滑减速归位，其飞行反馈由保存的双层青色尾迹和速度驱动喷口粒子组成，维修时从模型工具端发射双层能量束，并使用素材电弧与真实耐久恢复脉冲。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager` 和 `StylizedBeamEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。所有选中、Ghost、放置、旋转、维修、摧毁、爆炸和陨石冲击中的平面环形元素均已移除，改用 HDR 加法粒子、放射光痕、短束流和动态点光；烟尘继续使用普通 Alpha Blend 保持暗部层次。失去驾驶舱的断裂 Rigidbody 会获得最长 6 秒、按速度衰减的烟雾/余烬拖尾，同时限制全局活动数量为 24。
+`MainUIButtons` 负责按钮事件和操作模式，DebugSettingsPanel 提供供电范围、连接线、Block 连接状态、耐久状态和供电状态五个独立开关；`BuildPalette` / `BuildPaletteItem` 管理已保存的 23 个图标按钮、六类导航、滚动、悬停名称和选中颜色；`SaveUIPanel` 负责玩家/敌方蓝图列表；`BlueprintUIPanel` 显示当前建造目标名称、方块数量、总质量、需求功率和发电机总输出，并在搭建、拆除、Undo/Redo 时刷新，在存档或敌方蓝图异步加载期间逐块更新；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块，寻路避障按间隔采样并渐进转向，返航时对准停靠姿态后平滑减速归位，其飞行反馈由保存的双层青色尾迹和速度驱动喷口 Graph 组成，维修时从模型工具端发射双层能量束，并使用素材电弧与真实耐久恢复脉冲。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager` 和 `StylizedBeamEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。Block 爆炸直接播放 UNI Aerial Explosion Graph，保留瞬时点光和镜头震动；陨石尾迹独立跟随位置并按速度定向，不继承陨石自转。失去驾驶舱的断裂 Rigidbody 会获得最长 6 秒、按速度衰减的烟雾/余烬拖尾，同时限制全局活动数量为 24。
 
 ### 3.6 物理模拟与性能
 
@@ -179,7 +179,7 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 | P2 | Block 状态图标在大型蓝图中会产生每个异常 Block 一组运行时 uGUI Image | 当前状态检查降频到 0.1 秒且 Normal 不创建视觉对象；仍需用 500/1000 Block、多个异常状态和不同分辨率验证 CPU、Canvas rebuild、图标重叠和可读性。 |
 | P2 | EnemyController 的 AI 输入平滑参数仍需 Play Mode 调校 | 根据敌我距离、载具规模和目标帧率调节 `movementUpdateInterval` 与 `movementResponseRate`。 |
 | P2 | Block 爆炸当前仅实现范围断开、分组、物理冲量和粒子反馈 | 后续可在爆炸中心加入按距离衰减的伤害，并补充断开概率、冲量和半径的 Play Mode 调参记录。 |
-| P2 | 多个 RepairBot、连续大型爆炸和大量高速断裂部件会叠加透明粒子开销 | 已限制单个粒子系统粒子数并将断裂烟迹全局上限设为 24；仍需在大型蓝图战斗中记录透明 Overdraw、Batches 和主线程峰值。 |
+| P2 | 多个 RepairBot、放大的多喷口尾焰、连续大型爆炸和高速断裂部件会叠加透明 VFX 开销 | 瞬时效果上限 64、断裂烟迹上限 24；仍需在大型蓝图战斗中记录 GPU Overdraw、Batches 和主线程峰值。 |
 | P2 | UI 同时存在 uGUI 与 IMGUI | 将诊断面板迁移到统一 UI 系统，避免分辨率、输入焦点和生命周期不一致。 |
 | P2 | 历史日志包含旧版本功能描述 | 每次发布标记版本和验证日期，避免把日志中的“计划/旧实现”当作当前契约。 |
 | P2 | SpaceKit 集成功能模块尚未在大型蓝图中完成 GPU/CPU 压力验证 | 使用 100、500、1000 模块蓝图记录 Batches、SetPass、粒子 Overdraw、动态灯和脚本耗时。 |
@@ -440,8 +440,8 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `NativeVfxLibraryBuilder.PrepareSources()` / `ImportSources()` / `CreateUtilityGraphs()` / `RebuildPositionSafeEffects()`：来源清单、依赖重映射、能量图生成及无烟/局部空间 Graph 重建。
 - `VfxGraphAuthoring`：隔离 Unity 6000.3 内部 Graph Editor API，产物为正常可编辑 .vfx 资产，运行时无反射。
 - `NativeVfxMigration.Run()` / `Validate()`：Editor API 迁移、绑定调用者，验证遗留组件和依赖。
-- `NativeVfxPlaybackProbe.Run()` / `RunSuite()` / `RunPositionTest()`：实际 Play Mode 自动渲染 GPU 生命周期及大坐标移动采样，结束恢复原场景。
-- `BlockArtIntegrator.Integrate()`：保留模型与玩法契约，补齐挂点、灯光和 Graph 绑定。
+- `NativeVfxPlaybackProbe.Run()` / `RunSuite()` / `RunPositionTest()` / `RunBlockTest()`：实际 Play Mode 自动渲染 GPU 生命周期、大坐标移动和 Block 喷口采样，结束恢复原场景。
+- `BlockArtIntegrator.Integrate()` / `MatchThrusterFlamesToHover()`：保留模型与玩法契约，补齐挂点、灯光和 Graph 绑定，并迁移四种推进器喷口模板。
 - `BlockArtValidation.Validate()`：检查引用、Shader、运动链与挂点；`BlockArtPreview.Render()` 只渲染静态模型。
 - `BlockArtPlayProbe.Run()`：隔离 Play Mode 检查供电/推进/射击/维修与回收。
 - `VfxEffect.SetIntensity()`：统一 Graph 强度、实例缩放和启停；空间变换由各 Graph 模拟空间处理。
@@ -806,7 +806,7 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `public static Material GetSharedLineMaterial()`： 查询或计算辅助函数：读取运行时状态，执行校验、几何或数值计算，并返回结果。
 - `public static void TryPlayBlockPlaced(Block block)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `public static void TryPlayBlockRemoved(Block block)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
-- `public static void TryPlayBlockExplosion(Block block)`：触发 Block 的 HDR 爆炸粒子、放射光痕、闪光和镜头反馈。
+- `public static void TryPlayBlockExplosion(Block block)`：触发 UNI Aerial Explosion Graph、瞬时灯光和镜头反馈。
 - `public static void TryPlayRepairPulse(Vector3 origin, Vector3 target, Color color, float width)`：在真实维修 tick 时触发收束线、目标脉冲、火花和小型闪光。
 - `public static void TryAttachDetachedPartSmoke(Rigidbody body, Vector3 worldAnchor, float intensity)`：为爆炸后无驾驶舱的刚体挂接烟雾拖尾。
 - `public static void TryPlayObjectDestroyed(GameObject target)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
@@ -823,18 +823,17 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `private void ApplySceneLook()`： 将计算结果或配置应用到 Unity 组件、材质、物理对象或模块。
 - `private void PlayBlockPlaced(Block block)`： 触发游玩流程、UI 状态或视觉反馈的更新。
 - `private void PlayBlockRemoved(Block block)`： 触发游玩流程、UI 状态或视觉反馈的更新。
-- `private void PlayBlockExplosion(Block block)`：分阶段播放爆炸火花、火球、放射光痕、烟雾、闪光和镜头反馈。
-- `private IEnumerator PlayExplosionAftershock(Vector3 center, float scale, Color emberColor, Color smokeColor)`：延迟播放受控数量的爆炸余震粒子、次级光痕与闪光。
+- `private void PlayBlockExplosion(Block block)`：在 Block 渲染边界中心播放 UNI 原生爆炸，并附加瞬时点光与镜头震动。
 - `private void PlayObjectDestroyed(GameObject target)`： 触发游玩流程、UI 状态或视觉反馈的更新。
 - `private void PlayRepairPulse(Vector3 origin, Vector3 target, Color color, float width)`：组合一次维修命中的加法火花、放射光痕、短束流和闪光。
-- `private void CreateExplosionShrapnel(Vector3 center, float scale, Color color)`：生成受控数量的放射碎片光痕。
 - `private void PlayBlockMoved(Block block, Vector3 from, Vector3 to)`： 触发游玩流程、UI 状态或视觉反馈的更新。
 - `private void PlayBlockRotated(Block block)`： 触发游玩流程、UI 状态或视觉反馈的更新。
 - `private void ShowBlockSelection(Block block)`： 触发游玩流程、UI 状态或视觉反馈的更新。
 - `private void ClearBlockSelection(Block block)`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
 - `private void UpdateGhostPreview(Transform ghost, bool isBlocked)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
 - `private void ClearGhostPreview()`： 删除、清理或重置对象、缓存、连接、存档或运行时状态。
-- `private void DecorateMeteor(Meteor meteor)`： 封装该类型的内部流程，连接调用方与 Unity 组件或数据状态。
+- `private void DecorateMeteor(Meteor meteor)`：建立不继承陨石自转的独立烟火尾迹和随陨石移动的点光。
+- `MeteorTrailFollower.Initialize()` / `LateUpdate()` / `Follow()`：尾迹根对象只跟随陨石位置，按刚体速度定向，并在来源消失时停止释放。
 - `private void PlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`： 触发游玩流程、UI 状态或视觉反馈的更新。
 - `private void CreateLineStreak(Vector3 from, Vector3 to, Color color, float duration, float width)`： 创建几何、资源、操作记录、UI 项或运行时对象。
 - `private void CreateRadialStreakBurst(Vector3 center, Vector3 normal, Color color, int count, float length, float duration, float width)`：在球面或指定半球生成受控数量的放射能量光痕。
@@ -1211,6 +1210,13 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 
 ## 10. 变更日志
+
+### 2026-09-24（推进尾焰、陨石尾迹与 Block 爆炸）
+
+- **范围与实现**：MainThruster、MainThrusterBig、UniversalThruster、UniversalThrusterBig 的 10 个已解包喷口换为无烟 `HoverJet` 实例，普通/大型世界尺寸对齐对应悬浮推进器，保留挂点、方向、Prefab GUID 与推进控制数组；集成器默认值和显式迁移菜单同步更新。陨石烟火尾迹脱离旋转的陨石层级，仅跟随位置并按速度反向定向，碰撞或来源消失后停止释放。`PlayBlockExplosion` 直接使用资源库中的 UNI Aerial Explosion Graph，移除程序化碎光与二次烟爆，保留短闪光和震屏。
+- **Unity 验证**：四种推进器 Prefab 重载后喷口数量/控制器引用完整，普通/大型 Graph 有效尺寸分别为 0.81/1.62，喷射轴仍反向于推力。28 项隔离 Play Mode 检查通过，包括陨石旋转时尾迹独立、原生 Block 爆炸、推进输出与回收；43 个效果 Prefab、68 个 Graph 实例资产检查无错误。实际 Play Mode 采样并目视检查大型主推进器与大型悬浮推进器的喷焰；Main 场景恢复。
+- **静态验证**：`dotnet build HY-Sandbox.sln --no-restore --nologo` 为 0 错误、4 个既有警告；资产与截图检查、`git diff --check` 通过。
+- **尚未验证**：正式构建和大量同时运行的放大尾焰的 GPU/Overdraw 性能。
 
 ### 2026-09-24（特效位置稳定与无烟推进尾焰）
 

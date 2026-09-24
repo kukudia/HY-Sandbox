@@ -19,6 +19,8 @@
 - `Tools/HY Sandbox/Block Art` 提供补齐缺失集成、依赖迁移、验证和 Play Mode 探针。已有 `ArtIntegration_SpaceKit_v1` 标记会跳过自动重建，避免覆盖后续手调。旧 Industrial 重建同样跳过已集成模块。
 - `VfxEffect` 绑定 VisualEffect 数组，Intensity 在 Graph 输出层统一调节透明度，保持低推力下的连续密度。Stop 保留尾烟，Clear 清空 GPU 模拟，瞬时效果 12 秒回收。
 - 推进喷口保留 +Z 挂点，内部将 UNI Gas Fire 的 -X 轴旋转到 +Z；无烟火焰 Graph 使用 Local 模拟空间，随喷口平移和转向。ScaleWSP 跟随实际缩放。
+- MainThruster、MainThrusterBig、UniversalThruster、UniversalThrusterBig 的每个喷口使用与 HoverThruster 相同的 `HoverJet` 模板；普通/大型效果的世界缩放分别为 1.35/2.7。`Match Thruster Flames To Hover` 菜单可对现有 Block Prefab 重绑并保存喷口数组。
+- 陨石烟火尾迹在世界层级跟随陨石位置，朝向由刚体速度决定，不继承陨石自转；Block 爆炸只播放 UNI Aerial Explosion Graph，保留瞬时灯光与镜头震动。
 - 所有游戏特效均使用 VFX Graph，包括能量光束、机器人/掉落拖尾、陨石和残骸烟火。电力网络诊断 LineRenderer 保留。
 
 ## 来源和处理
@@ -30,7 +32,7 @@
 ## 验证
 
 `Validation.json`：全部 Blocks、Temp 与适配 VFX 的依赖、解包、引用、Shader、挂点和预算检查。
-`PlayModeValidation.json`：隔离场景中的实际供电、炮塔伤害/枪口闪光、旋转推力/喷口、全向头与底座、Bot 离舱/维修/回家、灯光检查。探针结束自动返回原场景。
+`PlayModeValidation.json`：隔离场景中的实际供电、炮塔伤害/枪口闪光、旋转推力/喷口、陨石自转与独立尾迹、UNI Block 爆炸、Bot 离舱/维修/回家及灯光检查。探针结束自动返回原场景。
 `Preview/`：Unity URP 实际渲染联系表。未覆盖真实玩家长时间操作、复杂移动母舰返航和大规模并发性能。
 
 `Assets/Art/VFX/Preview`：实际 Play Mode 自动相机渲染下的发射、停止、清空、重播采样。旧 Block Preview 联系表仅作模型/挂点历史参考，不代表当前特效。

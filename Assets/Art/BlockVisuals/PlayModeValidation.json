@@ -8,6 +8,8 @@
     "Authored muzzle flash plays on firing",
     "Loot uses GPU burst and trail",
     "Meteor uses live native smoke and fire",
+    "Meteor trail follows position without inheriting spin",
+    "Block explosion plays only native UNI Aerial Explosion",
     "Generator and repair bay lights illuminate",
     "Main thrust moves rotated unit along world X",
     "Universal head rotates while base stays fixed",

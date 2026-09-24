@@ -118,6 +118,9 @@ public static class BlockArtPlayProbe
         _loot = LootDrop.Spawn(new CargoItem { kind = CargoKind.Coins, amount = 12 }, new Vector3(5, 0, 0));
         _meteor = new GameObject("Graph meteor probe").AddComponent<Meteor>();
         _meteor.transform.position = new Vector3(8, 0, 0);
+        var meteorBody = _meteor.gameObject.AddComponent<Rigidbody>();
+        meteorBody.useGravity = false;
+        meteorBody.linearVelocity = Vector3.forward * 3f;
         var continuousRoot = new GameObject("Continuity samples");
         _continuous = new[] { "ThrusterJet", "HoverJet", "BotFlight", "RepairContact" }
             .SelectMany(name => new[] { 0.05f, 0.1f, 1f }.Select(intensity =>
@@ -172,7 +175,11 @@ public static class BlockArtPlayProbe
             }
             _sawFlight |= _bot.transform.parent == _bot.outside && !_bot.GetComponent<Rigidbody>().isKinematic;
             _sawLoot |= _loot.GetComponentsInChildren<VisualEffect>().Any(g => g.aliveParticleCount > 0);
-            if (_meteor != null) _meteor.transform.position = new Vector3(8, 0, (float)elapsed);
+            if (_meteor != null)
+            {
+                _meteor.transform.position = new Vector3(8, 0, (float)elapsed);
+                _meteor.transform.rotation = Quaternion.Euler(0f, (float)elapsed * 150f, (float)elapsed * 90f);
+            }
             _sawRepair |= _repairTarget.currentDurability > 70f;
             _sawMuzzleFlash |= _turret.muzzle.GetComponentsInChildren<VisualEffect>().Any(p => p.aliveParticleCount > 0);
             if (_bot.isRepairing)
@@ -200,8 +207,21 @@ public static class BlockArtPlayProbe
                 Check("Loot uses GPU burst and trail", _sawLoot && _loot.GetComponentsInChildren<VisualEffect>().Length == 2);
                 _meteorTail = _meteor.trailEffect;
                 Check("Meteor uses live native smoke and fire", _meteorTail != null && _meteorTail.Graphs.Any(g => g.aliveParticleCount > 0));
+                Check("Meteor trail follows position without inheriting spin", _meteorTail != null
+                    && _meteorTail.transform.parent == null
+                    && Vector3.Distance(_meteorTail.transform.position, _meteor.transform.position) < 0.1f
+                    && Vector3.Dot(_meteorTail.transform.up, -_meteor.GetComponent<Rigidbody>().linearVelocity.normalized) > 0.99f
+                    && Quaternion.Angle(_meteorTail.transform.rotation, _meteor.transform.rotation) > 10f);
                 _meteorTail.StopAndRelease(); _meteor.trailEffect = null;
                 Object.Destroy(_meteor.gameObject);
+                int streaksBeforeExplosion = Object.FindObjectsByType<StylizedBeamEffect>(FindObjectsSortMode.None).Length;
+                VisualEffectsManager.TryPlayBlockExplosion(_main.GetComponent<Block>());
+                VfxEffect blockExplosion = Object.FindObjectsByType<VfxEffect>(FindObjectsSortMode.None)
+                    .FirstOrDefault(effect => effect.name.StartsWith("Explosion") && effect.transform.parent == null);
+                Check("Block explosion plays only native UNI Aerial Explosion", blockExplosion != null
+                    && blockExplosion.Graphs.Length == 1
+                    && blockExplosion.Graphs[0].visualEffectAsset.name == "UNI_Aerial_Explosion"
+                    && Object.FindObjectsByType<StylizedBeamEffect>(FindObjectsSortMode.None).Length == streaksBeforeExplosion);
                 Check("Generator and repair bay lights illuminate", Object.FindObjectsByType<BlockStatusLight>(FindObjectsSortMode.None).All(s => s.GetComponentsInChildren<Light>().Count(l => l.intensity > 0f) == 2));
                 Check("Main thrust moves rotated unit along world X", _body.linearVelocity.x > 0.2f);
                 Check("Universal head rotates while base stays fixed", Vector3.Dot(_universal.model.forward, Vector3.right) > 0.98f && Quaternion.Angle(_base.rotation, _baseRotation) < 0.1f);

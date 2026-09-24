@@ -196,24 +196,11 @@ public class VisualEffectsManager : MonoBehaviour
         float scale = Mathf.Clamp(bounds.size.magnitude * 0.42f, 0.7f, 4f);
         Vector3 center = bounds.center;
         Color emberColor = new Color(2.6f, 1.15f, 0.22f, 1f);
-        Color smokeColor = new Color(0.18f, 0.22f, 0.28f, 0.75f);
 
+        // The library's Explosion prefab is the native UNI Aerial Explosion graph.
         BlockVfxLibrary.Play(BlockVfxLibrary.Effect.Explosion, center, Quaternion.identity, scale);
-        CreateExplosionShrapnel(center, scale, emberColor);
-        CreateRadialStreakBurst(center, Vector3.zero, emberColor, 14, scale * 2.1f, 0.34f, 0.055f);
         CreateLightFlash(center, emberColor, 7.5f, scale * 7f, 0.62f);
         ShakeCamera(cameraShakeStrength * 1.35f, 0.42f);
-        StartCoroutine(PlayExplosionAftershock(center, scale, emberColor, smokeColor));
-    }
-
-    private IEnumerator PlayExplosionAftershock(Vector3 center, float scale, Color emberColor, Color smokeColor)
-    {
-        yield return new WaitForSecondsRealtime(0.22f);
-        if (!enableRuntimeVfx) yield break;
-
-        BlockVfxLibrary.Play(BlockVfxLibrary.Effect.Smoke, center + Vector3.up * scale * 0.2f, Quaternion.identity, scale);
-        CreateRadialStreakBurst(center, Vector3.zero, WithAlpha(emberColor, 0.8f), 8, scale * 1.45f, 0.28f, 0.035f);
-        CreateLightFlash(center, emberColor, 2.8f, scale * 4.2f, 0.3f);
     }
 
     private void PlayObjectDestroyed(GameObject target)
@@ -238,21 +225,6 @@ public class VisualEffectsManager : MonoBehaviour
         CreateRadialStreakBurst(target, target - origin, brightRepair, 5, scale * 0.75f, 0.16f, Mathf.Max(0.018f, width * 0.12f));
         CreateLineStreak(origin, target, WithAlpha(brightRepair, 0.95f), 0.16f, Mathf.Max(0.02f, width * 0.15f));
         CreateLightFlash(target, color, 1.8f, Mathf.Max(1f, scale * 2.8f), 0.16f);
-    }
-
-    private void CreateExplosionShrapnel(Vector3 center, float scale, Color color)
-    {
-        int streakCount = Mathf.Clamp(Mathf.RoundToInt(8f + scale * 2f), 8, 16);
-        for (int i = 0; i < streakCount; i++)
-        {
-            Vector3 direction = Random.onUnitSphere;
-            direction.y = Mathf.Abs(direction.y) * 0.65f + 0.1f;
-            direction.Normalize();
-
-            Vector3 start = center + direction * Random.Range(scale * 0.04f, scale * 0.18f);
-            Vector3 end = start + direction * Random.Range(scale * 0.55f, scale * 1.9f);
-            CreateLineStreak(start, end, Color.Lerp(color, Color.white, Random.Range(0.15f, 0.65f)), Random.Range(0.16f, 0.34f), Random.Range(0.018f, 0.052f));
-        }
     }
 
     private void PlayBlockMoved(Block block, Vector3 from, Vector3 to)
@@ -308,8 +280,19 @@ public class VisualEffectsManager : MonoBehaviour
         float scale = Mathf.Max(0.35f, meteor.transform.lossyScale.magnitude / 1.732f);
         var library = BlockVfxLibrary.Instance;
         if (meteor.trailEffect == null && library != null && library.DetachedSmoke != null)
-            meteor.trailEffect = Instantiate(library.DetachedSmoke, meteor.transform);
-        if (meteor.trailEffect != null) meteor.trailEffect.SetIntensity(1f);
+        {
+            meteor.trailEffect = Instantiate(library.DetachedSmoke, meteor.transform.position, Quaternion.identity);
+            meteor.trailEffect.transform.localScale = Vector3.Scale(
+                meteor.trailEffect.transform.localScale, meteor.transform.lossyScale);
+        }
+        if (meteor.trailEffect != null)
+        {
+            meteor.trailEffect.transform.SetParent(null, true);
+            meteor.trailEffect.SetIntensity(1f);
+            var follower = meteor.trailEffect.GetComponent<MeteorTrailFollower>() ??
+                meteor.trailEffect.gameObject.AddComponent<MeteorTrailFollower>();
+            follower.Initialize(meteor.transform, meteor.trailEffect);
+        }
 
         if (meteor.glowLight == null && activeMeteorGlowLights < MaxMeteorGlowLights)
         {
@@ -583,6 +566,41 @@ public class VisualEffectsManager : MonoBehaviour
         private void OnDestroy()
         {
             activeMeteorGlowLights = Mathf.Max(0, activeMeteorGlowLights - 1);
+        }
+    }
+
+    private sealed class MeteorTrailFollower : MonoBehaviour
+    {
+        private Transform _meteor;
+        private Rigidbody _body;
+        private VfxEffect _effect;
+
+        public void Initialize(Transform meteor, VfxEffect effect)
+        {
+            _meteor = meteor;
+            _body = meteor.GetComponent<Rigidbody>();
+            _effect = effect;
+            Follow();
+        }
+
+        private void LateUpdate()
+        {
+            if (_effect == null || !_effect.IsEmitting) { enabled = false; return; }
+            if (_meteor == null)
+            {
+                _effect.StopAndRelease();
+                enabled = false;
+                return;
+            }
+            Follow();
+        }
+
+        private void Follow()
+        {
+            transform.position = _meteor.position;
+            transform.rotation = _body != null && _body.linearVelocity.sqrMagnitude > 0.01f
+                ? Quaternion.FromToRotation(Vector3.up, -_body.linearVelocity.normalized)
+                : Quaternion.identity;
         }
     }
 }

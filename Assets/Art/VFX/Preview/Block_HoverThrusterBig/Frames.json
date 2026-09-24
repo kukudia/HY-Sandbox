@@ -1,0 +1,93 @@
+[
+  {
+    "elapsed": 0.125558391,
+    "frame": 4,
+    "position": "(0.000, 0.000, 0.000)",
+    "effects": [
+      {
+        "name": "Graph - UNI_Gas_Fire",
+        "aliveParticleCount": -3,
+        "culled": false,
+        "bounds": "Center: (0.00, -2.35, 1.62), Extents: (3.24, 4.86, 3.24)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.406722,
+    "frame": 27,
+    "position": "(0.000, 0.000, 0.000)",
+    "effects": [
+      {
+        "name": "Graph - UNI_Gas_Fire",
+        "aliveParticleCount": 4,
+        "culled": false,
+        "bounds": "Center: (0.00, -2.35, 1.62), Extents: (3.24, 4.86, 3.24)"
+      }
+    ]
+  },
+  {
+    "elapsed": 0.902078569,
+    "frame": 133,
+    "position": "(0.000, 0.000, 0.000)",
+    "effects": [
+      {
+        "name": "Graph - UNI_Gas_Fire",
+        "aliveParticleCount": 17,
+        "culled": false,
+        "bounds": "Center: (0.00, -2.35, 1.62), Extents: (3.24, 4.86, 3.24)"
+      }
+    ]
+  },
+  {
+    "elapsed": 1.80178761,
+    "frame": 429,
+    "position": "(0.000, 0.000, 0.000)",
+    "effects": [
+      {
+        "name": "Graph - UNI_Gas_Fire",
+        "aliveParticleCount": 18,
+        "culled": false,
+        "bounds": "Center: (0.00, -2.35, 1.62), Extents: (3.24, 4.86, 3.24)"
+      }
+    ]
+  },
+  {
+    "elapsed": 3.20255923,
+    "frame": 897,
+    "position": "(0.000, 0.000, 0.000)",
+    "effects": [
+      {
+        "name": "Graph - UNI_Gas_Fire",
+        "aliveParticleCount": 0,
+        "culled": false,
+        "bounds": "Center: (0.00, -2.35, 1.62), Extents: (3.24, 4.86, 3.24)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.00176764,
+    "frame": 1503,
+    "position": "(0.000, 0.000, 0.000)",
+    "effects": [
+      {
+        "name": "Graph - UNI_Gas_Fire",
+        "aliveParticleCount": -3,
+        "culled": false,
+        "bounds": "Center: (0.00, -2.35, 1.62), Extents: (3.24, 4.86, 3.24)"
+      }
+    ]
+  },
+  {
+    "elapsed": 5.2006135,
+    "frame": 1559,
+    "position": "(0.000, 0.000, 0.000)",
+    "effects": [
+      {
+        "name": "Graph - UNI_Gas_Fire",
+        "aliveParticleCount": 1,
+        "culled": false,
+        "bounds": "Center: (0.00, -2.35, 1.62), Extents: (3.24, 4.86, 3.24)"
+      }
+    ]
+  }
+]

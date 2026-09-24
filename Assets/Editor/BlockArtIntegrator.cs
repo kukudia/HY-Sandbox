@@ -27,6 +27,46 @@ public static class BlockArtIntegrator
         AssetDatabase.SaveAssets();
     }
 
+    [MenuItem("Tools/HY Sandbox/Block Art/Match Thruster Flames To Hover")]
+    public static void MatchThrusterFlamesToHover()
+    {
+        if (EditorApplication.isPlaying) throw new InvalidOperationException("Exit Play Mode first.");
+        foreach (string name in new[] { "MainThruster", "MainThrusterBig", "UniversalThruster", "UniversalThrusterBig" })
+        {
+            string path = Blocks + name + ".prefab";
+            GameObject root = PrefabUtility.LoadPrefabContents(path);
+            try
+            {
+                var outlets = root.GetComponentsInChildren<VfxEffect>(true)
+                    .Where(effect => effect.transform.parent != null && effect.transform.parent.name.StartsWith("Nozzle_"))
+                    .ToArray();
+                int expected = name == "MainThrusterBig" ? 4 : 2;
+                if (outlets.Length != expected)
+                    throw new InvalidOperationException(path + " has " + outlets.Length + " outlets; expected " + expected);
+
+                bool changed = false;
+                foreach (VfxEffect oldEffect in outlets)
+                {
+                    if (oldEffect.name == "HoverJet") continue;
+                    if (oldEffect.name != "ThrusterJet")
+                        throw new InvalidOperationException(path + " has an unexpected nozzle effect: " + oldEffect.name);
+                    Transform socket = oldEffect.transform.parent;
+                    Object.DestroyImmediate(oldEffect.gameObject);
+                    Effect(socket, "HoverJet", name.EndsWith("Big") ? 2.7f : 1.35f);
+                    changed = true;
+                }
+
+                if (!changed) continue;
+                Transform model = root.GetComponent<Thruster>().model;
+                BlockVfxBaker.SetObjects(root.GetComponent<ThrusterVisualEffect>(), "_nozzles",
+                    model.GetComponentsInChildren<VfxEffect>(true));
+                PrefabUtility.SaveAsPrefabAsset(root, path);
+            }
+            finally { PrefabUtility.UnloadPrefabContents(root); }
+        }
+        AssetDatabase.SaveAssets();
+    }
+
     private static void IntegratePrefab(string path)
     {
         var root = PrefabUtility.LoadPrefabContents(path);
@@ -162,7 +202,7 @@ public static class BlockArtIntegrator
     {
         foreach (var engine in model.GetComponentsInChildren<MeshFilter>(true).Where(m => m.name.StartsWith("SM_Veh_Part_Engine_03")))
             foreach (float x in new[] { -1.0675f, 1.0675f })
-                Effect(Socket(engine.transform, x < 0 ? "Nozzle_Left" : "Nozzle_Right", new Vector3(x, 0f, -2.9854f), Vector3.back), "ThrusterJet", root.name.EndsWith("Big") ? 1.5f : 0.78f);
+                Effect(Socket(engine.transform, x < 0 ? "Nozzle_Left" : "Nozzle_Right", new Vector3(x, 0f, -2.9854f), Vector3.back), "HoverJet", root.name.EndsWith("Big") ? 2.7f : 1.35f);
         BindThruster(root, model);
     }
 
@@ -178,7 +218,7 @@ public static class BlockArtIntegrator
     {
         var head = model.GetComponentsInChildren<Transform>(true).First(t => t.name == "SM_Prop_Turret_MissileLarge_Base_Double_01");
         foreach (float x in new[] { -0.588f, 0.588f })
-            Effect(Socket(head, x < 0 ? "Nozzle_Left" : "Nozzle_Right", new Vector3(x, -0.019f, -0.787f), Vector3.back), "ThrusterJet", root.name.EndsWith("Big") ? 1.6f : 0.8f);
+            Effect(Socket(head, x < 0 ? "Nozzle_Left" : "Nozzle_Right", new Vector3(x, -0.019f, -0.787f), Vector3.back), "HoverJet", root.name.EndsWith("Big") ? 2.7f : 1.35f);
         BindThruster(root, head);
     }
 

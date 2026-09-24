@@ -57,3 +57,11 @@ for name in ("ThrusterJet", "EnergyTrail", "DetachedSmoke", "Explosion"):
                 visible.append(ImageChops.difference(frame, cleared).getbbox() is not None)
         assert any(visible), f"Missing large-coordinate render: {name}"
 print("Passed: 4 moving effects at world position (1000, 0, 1000), visible GPU frames and clear.")
+
+for name, count in (("MainThrusterBig", 4), ("HoverThrusterBig", 1)):
+    folder = preview / f"Block_{name}"
+    frames = json.loads((folder / "Frames.json").read_text(encoding="utf-8-sig"))
+    assert len(frames) == 7 and all(len(frame["effects"]) == count for frame in frames), name
+    with Image.open(folder / "2.png") as emitting, Image.open(folder / "5.png") as cleared:
+        assert ImageChops.difference(emitting, cleared).getbbox() is not None, name
+print("Passed: large main and hover thruster Play Mode frames show the expected outlet counts and visible flames.")
