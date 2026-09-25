@@ -131,15 +131,17 @@ public sealed class CombatHud : MonoBehaviour
                 _views.Add(unit, view);
                 EnemyIdentity identity = unit.cockpit.GetComponent<EnemyIdentity>();
                 view.name.text = identity != null ? identity.DisplayName : unit.name;
+                view.maximum = identity != null && identity.SpawnMaxHealth > 0f
+                    ? identity.SpawnMaxHealth : 0f;
             }
 
             unit.TryGetTotalDurability(out float health, out float maximum);
 
             view.health = health;
-            view.maximum = maximum;
-            float ratio = maximum > 0f ? Mathf.Clamp01(health / maximum) : 0f;
+            if (view.maximum <= 0f) view.maximum = maximum;
+            float ratio = view.maximum > 0f ? Mathf.Clamp01(health / view.maximum) : 0f;
             view.fill.anchorMax = new Vector2(ratio, 1f);
-            view.value.text = $"{health:0} / {maximum:0}";
+            view.value.text = $"{health:0} / {view.maximum:0}";
         }
 
         _remove.Clear();

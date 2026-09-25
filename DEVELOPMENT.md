@@ -100,9 +100,9 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 `BuildPalette` 的 `HoveredBlockName` / `HoveredBlockInfo` 使用 Main 场景中现有的文字布局；23 个目录按钮烘焙 Block Prefab 的静态参数信息，包括尺寸、质量、成本、耐久、功率需求/输出、推进力与货仓容量（按组件存在情况显示）。默认 `Block.info` 根据当前参数生成；启用 `canEditInfo` 并填写文本后保留手写内容。编辑器菜单 `Tools/Build Palette/Refresh hovered block info` 只刷新文字引用和条目参数。
 
-`MainUIPanels` 为每个面板只保留一条淡入淡出协程，并在删除确认关闭时移除临时按钮回调。`PlayPanel/CombatHud` 是保存于 Main 场景的 uGUI：复用敌方名牌实例，每 0.2 秒汇总敌方单元所有已启用 Block 的当前/最大耐久；按镜头视野和距离隐藏离屏目标。击杀提示位于画面居中偏下，以不透光深色背景、较大文字和短暂淡入淡出显示敌方蓝图名称及本轮击杀数；仅玩家攻击导致敌方驾驶舱摧毁时计数。按钮的悬停、按下和焦点缩放由 `UIInteractionFeedback` 处理。`Tools/HY-Sandbox/Setup Combat HUD` 可重复配置场景和悬浮控制器 Prefab；后者的 IMGUI 诊断窗默认关闭，仍可在 Prefab Inspector 中开启 `showUI` 调试。架构参考 [deVoid UI Framework](https://github.com/yankooliveira/uiframework) 与 [Unity-UI-Framework](https://github.com/MrNerverDie/Unity-UI-Framework) 的界面职责拆分及过渡管理，当前实现继续使用项目已有 uGUI。
+`MainUIPanels` 为每个面板只保留一条淡入淡出协程，并在删除确认关闭时移除临时按钮回调。`PlayPanel/CombatHud` 是保存于 Main 场景的 uGUI：复用敌方名牌实例，每 0.2 秒汇总敌方单元当前耐久，以生成时记录的最大耐久作为固定分母；按镜头视野和距离隐藏离屏目标。击杀提示位于画面居中偏下，以不透光深色背景、较大文字和短暂淡入淡出显示敌方蓝图名称及本轮击杀数；仅玩家攻击导致敌方驾驶舱摧毁时计数。按钮的悬停、按下和焦点缩放由 `UIInteractionFeedback` 处理。`Tools/HY-Sandbox/Setup Combat HUD` 可重复配置场景和悬浮控制器 Prefab；后者的 IMGUI 诊断窗默认关闭，仍可在 Prefab Inspector 中开启 `showUI` 调试。架构参考 [deVoid UI Framework](https://github.com/yankooliveira/uiframework) 与 [Unity-UI-Framework](https://github.com/MrNerverDie/Unity-UI-Framework) 的界面职责拆分及过渡管理，当前实现继续使用项目已有 uGUI。
 
-玩家和敌人的血条统一按含 Cockpit 的 `ControlUnit` 汇总其所有已启用 `Durability`。敌人名牌保留 Screen Space Overlay 的清晰度，但以相机到名牌锚点的 3D 射线过滤遮挡，命中其它模型时隐藏。`HoverFlightController` 的旧 IMGUI 已迁移到 PlayPanel Canvas：左下角显示目标高度、当前高度、高度 P、垂直速度和水平速度；F1 打开右上角 `ThrusterInfoPanel`，按 Main/Universal/Hover 分类显示拥有有效运行时归属的推进器、推力进度和供电状态颜色。Hover 控制器 Prefab 的状态灯为绿色表示被有效 ControlUnit 使用，红色表示未使用。
+玩家和敌人的当前血量按含 Cockpit 的 `ControlUnit` 汇总已启用 `Durability`；敌人的最大血量由生成器在实例化方块时累计并保存在 Cockpit 的 `EnemyIdentity`，后续分组和损毁不改变分母。敌人名牌保留 Screen Space Overlay 的清晰度，但以相机到名牌锚点的 3D 射线过滤遮挡，命中其它模型时隐藏。`HoverFlightController` 的旧 IMGUI 已迁移到 PlayPanel Canvas：左下角显示目标高度、当前高度、高度 P、垂直速度和水平速度；F1 打开右上角 `ThrusterInfoPanel`，按 Main/Universal/Hover 分类显示拥有有效运行时归属的推进器、推力进度和供电状态颜色。Hover 控制器 Prefab 的状态灯为绿色表示被有效 ControlUnit 使用，红色表示未使用。
 
 ### 3.6 物理模拟与性能
 
@@ -1214,9 +1214,9 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `MainUIPanels.Transition(GameObject panel, bool show)`：取消同一面板的旧过渡并启动新过渡；`Fade` 完成后移除记录。`ShowDeletePanel` / `HideDeletePanel` 管理单个删除确认回调；`PlayStart` 重置本轮击杀提示。
 - `Durability.ApplyDamage(float amount, ControlUnit attacker)`：记录本次伤害来源并更新耐久；`UpdateDurablility` 收到环境伤害时清除来源。
 - `DestroyManager.DestroyGameObject(GameObject obj)`：仅玩家造成的敌方驾驶舱摧毁通知 HUD。
-- `EnemyIdentity.SetDisplayName(string displayName)`：保存敌方蓝图名；`EnemySpawner.SpawnBlockData` 在运行时驾驶舱上设置身份。
+- `EnemyIdentity.SetDisplayName(string displayName)` / `SetSpawnMaxHealth(float maximum)`：保存敌方蓝图名及只初始化一次的出生最大血量；`EnemySpawner.SpawnBlockData` 在运行时驾驶舱上设置身份与血量快照。
 - `ControlUnit.RefreshChildren()`：重组后重新绑定悬浮控制器，但不强制开启诊断窗；`HoverFlightController.OnGUI()` 仅在显式调试开关和有效 PlayManager 下绘制。
-- `CombatHud.OnEnable()` / `OnDisable()` / `ResetHud()`：初始化或清理本轮名牌及提示；`ShowPlayerKill(string enemyName)` 更新击杀提示；`LateUpdate()` 投影名牌并驱动提示透明度；`RefreshEnemies()` 汇总耐久；`CreateView()` / `Recycle(EnemyView view)` 复用名牌实例。
+- `CombatHud.OnEnable()` / `OnDisable()` / `ResetHud()`：初始化或清理本轮名牌及提示；`ShowPlayerKill(string enemyName)` 更新击杀提示；`LateUpdate()` 投影名牌并驱动提示透明度；`RefreshEnemies()` 汇总当前耐久并使用固定出生分母；`CreateView()` / `Recycle(EnemyView view)` 复用名牌实例。
 - `UIInteractionFeedback.Awake()` / `OnDisable()`：记录和恢复按钮原始缩放；`OnPointerEnter` / `OnPointerExit` / `OnPointerDown` / `OnPointerUp` / `OnSelect` / `OnDeselect` 更新输入状态；`Animate()` / `AnimateScale()` 平滑改变按钮缩放。
 - `CombatHudSetup.Apply()`：重建 Main 场景中的可编辑 HUD，并关闭悬浮控制器 Prefab 的默认诊断窗；`Child()` / `Stretch()` / `Position()` / `Image()` / `Text()` / `Set()` 为编辑器搭建辅助函数。
 - `CombatHudPlayProbe.Run()` / `OnPlayModeChanged()` / `Tick()` / `Scenario()` / `CreateEnemy()` / `Check()` / `Finish()`：在隔离 Play Mode 中验证 HUD 绑定、名牌、耐久、击杀归因和环境伤害边界。
@@ -1235,6 +1235,13 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 
 ## 10. 变更日志
+
+### 2026-09-25（敌方血条出生血量快照）
+
+- **范围与实现**：敌人生成时累计已实例化方块的最大耐久，保存到 Cockpit 的 `EnemyIdentity`；敌方名牌继续实时汇总当前血量，分母在方块损毁或重新分组后保持出生值。
+- **已通过代码/文件确认**：`dotnet build HY-Sandbox.sln --no-restore --nologo -m:1 -p:UseSharedCompilation=false` 为 0 错误、4 个既有警告；本次文件的 `git diff --check` 通过。整个工作区的差异检查仍报告用户现有 `PlayManager.cs` 的一处行尾空格。
+- **Unity 编辑器与 Play Mode 验证**：Unity 6000.3.11f1 重新编译成功；隔离 Combat HUD 探针 24 项检查通过，确认方块脱离后血量由 `120 / 150` 变为 `80 / 150`，并保留遮挡、击杀、玩家 HUD 和推进器面板检查。
+- **尚未验证**：大型蓝图实战与正式构建。
 
 ### 2026-09-25（战斗 HUD 与 UI 交互）
 

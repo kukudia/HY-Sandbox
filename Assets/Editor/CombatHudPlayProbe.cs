@@ -80,6 +80,8 @@ public static class CombatHudPlayProbe
 
         ControlUnit enemy = CreateEnemy("Probe Raider", camera.transform.position + camera.transform.forward * 20f);
         yield return 0.4f;
+        hud.SendMessage("RefreshEnemies");
+        hud.SendMessage("LateUpdate");
         RectTransform plate = hud.transform.Find("Enemy Nameplate") as RectTransform;
         Check("Enemy nameplate is created", plate != null);
         Vector3 labelPoint = enemy.cockpit.transform.position + Vector3.up * 2.5f;
@@ -87,7 +89,14 @@ public static class CombatHudPlayProbe
         Check($"Enemy nameplate is visible ({projected.x:0},{projected.y:0},{projected.z:0}; {Screen.width}x{Screen.height})",
             plate.gameObject.activeInHierarchy);
         Check("Enemy identity survives runtime grouping", plate.Find("Name").GetComponent<Text>().text == "Probe Raider");
-        Check("Aggregate health is displayed", plate.Find("Value").GetComponent<Text>().text == "80 / 100");
+        Check("Aggregate health is displayed", plate.Find("Value").GetComponent<Text>().text == "120 / 150");
+        Transform detachedBlock = enemy.transform.Find("Probe Armor");
+        detachedBlock.SetParent(null);
+        enemy.TryGetTotalDurability(out float detachedCurrent, out float detachedMaximum);
+        Check("Detached block leaves current unit health", detachedCurrent == 80f && detachedMaximum == 100f);
+        hud.SendMessage("RefreshEnemies");
+        string detachedHealth = plate.Find("Value").GetComponent<Text>().text;
+        Check($"Spawn maximum survives block detachment ({detachedHealth})", detachedHealth == "80 / 150");
         ScreenCapture.CaptureScreenshot("Temp/CombatHud/EnemyNameplate.png");
         yield return 0.6f;
 
@@ -143,6 +152,7 @@ public static class CombatHudPlayProbe
 
         ControlUnit player = CreatePlayer(camera.transform.position + camera.transform.forward * 12f);
         PlayManager.instance.blocksParent = player.transform;
+        typeof(PlayManager).GetField("maxHealth")?.SetValue(PlayManager.instance, 150f);
         yield return 0.4f;
         typeof(MainUIPanels).GetField("_nextHealthRefresh", System.Reflection.BindingFlags.Instance
             | System.Reflection.BindingFlags.NonPublic).SetValue(panels, 0f);
@@ -221,12 +231,23 @@ public static class CombatHudPlayProbe
         cockpitObject.transform.SetParent(root.transform, false);
         Cockpit cockpit = cockpitObject.AddComponent<Cockpit>();
         cockpit.faction = UnitFaction.Enemy;
-        cockpitObject.AddComponent<EnemyIdentity>().SetDisplayName(name);
+        EnemyIdentity identity = cockpitObject.AddComponent<EnemyIdentity>();
+        identity.SetDisplayName(name);
         Durability durability = cockpitObject.AddComponent<Durability>();
         durability.enabled = false;
         durability.currentDurability = 80f;
         durability.enabled = true;
         durability.currentDurability = 80f;
+        if (name == "Probe Raider")
+        {
+            GameObject armor = new GameObject("Probe Armor");
+            armor.transform.SetParent(root.transform, false);
+            Durability armorHealth = armor.AddComponent<Durability>();
+            armorHealth.maxDurability = 50f;
+            armorHealth.currentDurability = 40f;
+            identity.SetSpawnMaxHealth(150f);
+        }
+        else identity.SetSpawnMaxHealth(100f);
         unit.cockpit = cockpit;
         unit.cockpits = new[] { cockpit };
         unit.hasValidCockpit = true;

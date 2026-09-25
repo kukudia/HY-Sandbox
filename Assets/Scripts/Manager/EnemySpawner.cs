@@ -147,6 +147,8 @@ public class EnemySpawner : MonoBehaviour
         unitObject.name = string.IsNullOrWhiteSpace(enemyBlueprint) ? "ModularEnemy" : enemyBlueprint;
 
         float mass = 0f;
+        float spawnMaxHealth = 0f;
+        EnemyIdentity enemyIdentity = null;
         List<Block> spawnedBlocks = new List<Block>();
 
         foreach (BlockData data in dataList.blocks)
@@ -174,6 +176,12 @@ public class EnemySpawner : MonoBehaviour
                 block.resourcePath = data.resourcePath;
                 mass += block.mass;
                 spawnedBlocks.Add(block);
+
+                foreach (Durability durability in blockObject.GetComponentsInChildren<Durability>())
+                {
+                    if (durability.enabled)
+                        spawnMaxHealth += Mathf.Max(0f, durability.maxDurability);
+                }
             }
 
             Cockpit cockpit = blockObject.GetComponent<Cockpit>();
@@ -183,6 +191,7 @@ public class EnemySpawner : MonoBehaviour
                 EnemyIdentity identity = cockpit.GetComponent<EnemyIdentity>();
                 if (identity == null) identity = cockpit.gameObject.AddComponent<EnemyIdentity>();
                 identity.SetDisplayName(unitObject.name);
+                enemyIdentity = identity;
             }
         }
 
@@ -192,6 +201,8 @@ public class EnemySpawner : MonoBehaviour
             Destroy(unitObject);
             return null;
         }
+
+        enemyIdentity.SetSpawnMaxHealth(spawnMaxHealth);
 
         Rigidbody rb = unitObject.GetComponent<Rigidbody>();
         if (rb != null)
