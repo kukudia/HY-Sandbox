@@ -77,18 +77,14 @@ public class HoverFlightController : MonoBehaviour
     private bool hasTiltCorrection;
     private Vector3 tiltCorrectionDirection;
 
-    public bool showUI = false;
     public bool setHeight = false;
 
-    private GUIStyle headerStyle; // GUI标题样式
-    private GUIStyle labelStyle;  // GUI标签样式
-    private string targetHeightText;
-    private string currentHeightText;
-    private string heightPText;
-    private string verticalVelocityText;
-    private string horizontalVelocityText;
-    private readonly string[] thrusterTexts = new string[64];
-    private float nextUiRefreshTime;
+    public float TargetHeight => targetHoverHeight;
+    public float CurrentHeight => transform.position.y;
+    public float HeightPValue => currentHeightP;
+    public bool IsUsedByControlUnit => isActiveAndEnabled && controlUnit != null
+        && controlUnit.HasValidCockpit && controlUnit.hoverFlightController == this
+        && thrusters != null && thrusters.Length > 0;
 
     public void Init()
     {
@@ -510,104 +506,4 @@ public class HoverFlightController : MonoBehaviour
         }
     }
 
-    private void OnGUI()
-    {
-        if (!showUI || thrusters == null || PlayManager.instance == null || !PlayManager.instance.playMode) return;
-
-        EnsureGuiStyles();
-        RefreshUiText();
-
-        GUILayout.BeginArea(new Rect(20, 20, 320, 600), GUI.skin.window);
-
-        GUILayout.Label("Hover Flight Controll System", headerStyle);
-
-        GUILayout.Space(8);
-        GUILayout.Label(targetHeightText, labelStyle);
-        GUILayout.Label(currentHeightText, labelStyle);
-        GUILayout.Label(heightPText, labelStyle);
-        GUILayout.Label(verticalVelocityText, labelStyle);
-        GUILayout.Label(horizontalVelocityText, labelStyle);
-
-        GUILayout.Space(10);
-        GUILayout.Label("Hover Thrusters:", headerStyle);
-
-        for (int i = 0; i < thrusters.Length; i++)
-        {
-            if (thrusters[i] == null) continue;
-
-            float norm = thrusters[i].maxThrust > 1e-5f ? thrusters[i].thrust / thrusters[i].maxThrust : 0f;
-            Color barColor = Color.Lerp(Color.red, Color.green, norm);
-
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(i < thrusterTexts.Length ? thrusterTexts[i] : string.Empty, labelStyle);
-
-            if (thrusters[i].thrust > 0)
-            {
-                // 画进度条背景
-                Rect r = GUILayoutUtility.GetRect(100, 18);
-                GUI.color = Color.gray;
-                GUI.Box(r, GUIContent.none);
-
-                // 画推力值条
-                Rect filled = new Rect(r.x, r.y, r.width * norm, r.height);
-                GUI.color = barColor;
-                GUI.Box(filled, GUIContent.none);
-            }
-
-            // 恢复颜色
-            GUI.color = Color.white;
-
-            GUILayout.EndHorizontal();
-        }
-
-        GUILayout.EndArea();
-    }
-
-    private void EnsureGuiStyles()
-    {
-        if (headerStyle != null && labelStyle != null)
-        {
-            return;
-        }
-
-        headerStyle = new GUIStyle(GUI.skin.label)
-        {
-            fontSize = 16,
-            fontStyle = FontStyle.Bold
-        };
-        headerStyle.normal.textColor = Color.cyan;
-
-        labelStyle = new GUIStyle(GUI.skin.label)
-        {
-            fontSize = 13
-        };
-        labelStyle.normal.textColor = Color.white;
-    }
-
-    private void RefreshUiText()
-    {
-        if (Time.unscaledTime < nextUiRefreshTime)
-        {
-            return;
-        }
-
-        nextUiRefreshTime = Time.unscaledTime + 0.2f;
-        targetHeightText = $"Target Height: {targetHoverHeight:F2}";
-        currentHeightText = $"Current Height: {transform.position.y:F2}";
-        heightPText = $"Height P: {currentHeightP:F2}";
-        verticalVelocityText = $"Vertical Velocity: {PlayManager.instance.verticalVelocity:F2} m/s";
-        horizontalVelocityText = $"Horizontal Velocity: {PlayManager.instance.horizontalVelocity:F2} m/s";
-
-        int count = Mathf.Min(thrusters.Length, thrusterTexts.Length);
-        for (int i = 0; i < count; i++)
-        {
-            if (thrusters[i] == null)
-            {
-                thrusterTexts[i] = string.Empty;
-                continue;
-            }
-
-            thrusterTexts[i] = $"#{i} {thrusters[i].thrust:F1}/{thrusters[i].maxThrust}";
-        }
-    }
 }

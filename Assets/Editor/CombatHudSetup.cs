@@ -9,7 +9,6 @@ using UnityEngine.UI;
 public static class CombatHudSetup
 {
     private const string ScenePath = "Assets/Scenes/Main.unity";
-    private const string HoverPrefabPath = "Assets/Resources/Blocks/HoverFlightController.prefab";
     private static readonly Color Ink = new Color(0.025f, 0.055f, 0.07f, 0.88f);
     private static readonly Color Coral = new Color(1f, 0.32f, 0.28f);
     private static readonly Color Cyan = new Color(0.31f, 0.88f, 0.95f);
@@ -86,18 +85,6 @@ public static class CombatHudSetup
         foreach (Button button in panels.GetComponentsInChildren<Button>(true))
             if (button.GetComponent<UIInteractionFeedback>() == null)
                 button.gameObject.AddComponent<UIInteractionFeedback>();
-        GameObject hoverPrefab = PrefabUtility.LoadPrefabContents(HoverPrefabPath);
-        try
-        {
-            HoverFlightController controller = hoverPrefab.GetComponent<HoverFlightController>();
-            if (controller == null) throw new MissingReferenceException("HoverFlightController prefab has no controller.");
-            controller.showUI = false;
-            PrefabUtility.SaveAsPrefabAsset(hoverPrefab, HoverPrefabPath);
-        }
-        finally
-        {
-            PrefabUtility.UnloadPrefabContents(hoverPrefab);
-        }
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
         Debug.Log("Combat HUD saved to Main/PlayPanel.");

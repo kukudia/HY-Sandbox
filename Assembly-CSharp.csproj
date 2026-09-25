@@ -90,6 +90,7 @@
     <Compile Include="Assets\Scripts\InObject\Bot.cs" />
     <Compile Include="Assets\Scripts\InObject\ModularUnitValidator.cs" />
     <Compile Include="Assets\Scripts\UI\BuildPaletteItem.cs" />
+    <Compile Include="Assets\Scripts\Effect\HoverControllerStatusLight.cs" />
     <Compile Include="Assets\Scripts\InObject\UnitFaction.cs" />
     <Compile Include="Assets\Scripts\Manager\VisualEffectsManager.cs" />
     <Compile Include="Assets\Scripts\Actions\ActionManager.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Assets\Scripts\Effect\DetachedPartSmokeTrail.cs" />
     <Compile Include="Assets\Scripts\InObject\RotateAxisHandle.cs" />
     <Compile Include="Assets\Scripts\Actions\MoveBlockAction.cs" />
+    <Compile Include="Assets\Scripts\UI\ThrusterInfoPanel.cs" />
     <Compile Include="Assets\Scripts\Manager\CargoPersistence.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\InObject\MoveAxisHandle.cs" />

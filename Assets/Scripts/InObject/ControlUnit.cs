@@ -26,6 +26,21 @@ public class ControlUnit : MonoBehaviour
     public bool IsPlayer => faction == UnitFaction.Player;
     public Vector3 MovementInput => movementInput;
 
+    public bool TryGetTotalDurability(out float current, out float maximum)
+    {
+        current = 0f;
+        maximum = 0f;
+        if (!HasValidCockpit) return false;
+        foreach (Durability durability in GetComponentsInChildren<Durability>())
+        {
+            if (durability == null || !durability.enabled
+                || durability.GetComponentInParent<ControlUnit>() != this) continue;
+            current += Mathf.Max(0f, durability.currentDurability);
+            maximum += Mathf.Max(0f, durability.maxDurability);
+        }
+        return maximum > 0f;
+    }
+
     private void Start()
     {
         EnsureRuntimeUnitId();

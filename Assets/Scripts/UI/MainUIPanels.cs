@@ -19,11 +19,15 @@ public class MainUIPanels : MonoBehaviour
     public float fadeDuration = 0.3f;
     public Gradient healthBarColor;
     [SerializeField] private CombatHud _combatHud;
+    [SerializeField] private ThrusterInfoPanel _thrusterInfoPanel;
+    [SerializeField] private Text _flightTelemetry;
     public CombatHud CombatHud => _combatHud;
+    public ThrusterInfoPanel ThrusterInfoPanel => _thrusterInfoPanel;
     private bool renameMode;
     private string renameTargetName;
     private UnityEngine.Events.UnityAction _deleteAction;
     private readonly System.Collections.Generic.Dictionary<GameObject, Coroutine> _transitions = new System.Collections.Generic.Dictionary<GameObject, Coroutine>();
+    private float _nextHealthRefresh;
 
     private void Awake()
     {
@@ -52,6 +56,24 @@ public class MainUIPanels : MonoBehaviour
         //{
         //    deathPanel.SetActive(false);
         //}
+    }
+
+    private void Update()
+    {
+        if (PlayManager.instance == null || !PlayManager.instance.playMode || Time.unscaledTime < _nextHealthRefresh) return;
+        _nextHealthRefresh = Time.unscaledTime + 0.2f;
+        ControlUnit player = PlayManager.instance.blocksParent != null
+            ? PlayManager.instance.blocksParent.GetComponent<ControlUnit>() : null;
+        if (player != null && player.faction == UnitFaction.Player
+            && player.TryGetTotalDurability(out float current, out float maximum))
+            SetHealthBar(current, maximum);
+        if (_flightTelemetry != null)
+        {
+            HoverFlightController controller = player != null ? player.hoverFlightController : null;
+            _flightTelemetry.text = controller != null && controller.IsUsedByControlUnit
+                ? $"TARGET HEIGHT   {controller.TargetHeight:0.00} m\nCURRENT HEIGHT  {controller.CurrentHeight:0.00} m\nHEIGHT P        {controller.HeightPValue:0.00}\nVERTICAL SPEED  {PlayManager.instance.verticalVelocity:0.00} m/s\nHORIZONTAL      {PlayManager.instance.horizontalVelocity:0.00} m/s"
+                : "HOVER CONTROL   OFFLINE";
+        }
     }
 
     private void Transition(GameObject panel, bool show)
@@ -313,6 +335,13 @@ public class MainUIPanels : MonoBehaviour
     public void UpdateHealthBar(GameObject obj, float currentHealth, float maxHealth)
     {
         if (obj == null || obj.GetComponent<Cockpit>()?.faction != UnitFaction.Player) return;
+        ControlUnit player = obj.GetComponentInParent<ControlUnit>();
+        if (player != null && player.TryGetTotalDurability(out float current, out float maximum))
+            SetHealthBar(current, maximum);
+    }
+
+    private void SetHealthBar(float currentHealth, float maxHealth)
+    {
         float ratio = maxHealth > 0f ? Mathf.Clamp01(currentHealth / maxHealth) : 0f;
         if (_healthFill != null)
         {

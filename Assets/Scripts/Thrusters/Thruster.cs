@@ -95,6 +95,18 @@ public abstract class Thruster : MonoBehaviour
         return controlUnit != null && controlUnit.HasValidCockpit;
     }
 
+    public bool IsPlayerControllable => isActiveAndEnabled && HasValidRuntimeOwner()
+        && controlUnit.faction == UnitFaction.Player;
+
+    public float PowerEfficiency
+    {
+        get
+        {
+            if (power == null) power = GetComponent<Power>();
+            return power != null && power.isWorking ? power.efficiency : 0f;
+        }
+    }
+
     protected void CacheLocalReferences()
     {
         if (model == null && !modelLookupComplete)

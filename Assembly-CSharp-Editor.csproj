@@ -70,6 +70,7 @@
     <Compile Include="Assets\Editor\NativeVfxMigration.cs" />
     <Compile Include="Assets\Editor\BlockVfxBaker.cs" />
     <Compile Include="Assets\Editor\BlockArtIntegrator.cs" />
+    <Compile Include="Assets\Editor\ThrusterHudSetup.cs" />
     <Compile Include="Assets\Editor\SalvageAssetBaker.cs" />
     <Compile Include="Assets\Editor\SpaceKitCurator.cs" />
     <Compile Include="Assets\Editor\BuildInteractionSetup.cs" />

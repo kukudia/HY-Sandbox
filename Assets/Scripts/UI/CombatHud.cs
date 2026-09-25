@@ -18,6 +18,7 @@ public sealed class CombatHud : MonoBehaviour
     private readonly Stack<EnemyView> _pool = new Stack<EnemyView>();
     private readonly List<ControlUnit> _remove = new List<ControlUnit>();
     private readonly HashSet<ControlUnit> _seen = new HashSet<ControlUnit>();
+    private readonly RaycastHit[] _occlusionHits = new RaycastHit[64];
     private Camera _camera;
     private float _nextRefresh;
     private float _killUntil;
@@ -86,7 +87,8 @@ public sealed class CombatHud : MonoBehaviour
             Vector3 screen = _camera.WorldToScreenPoint(world);
             bool visible = screen.z > 0f && screen.x > 0f && screen.x < Screen.width
                 && screen.y > 0f && screen.y < Screen.height
-                && (world - _camera.transform.position).sqrMagnitude < _maxLabelDistance * _maxLabelDistance;
+                && (world - _camera.transform.position).sqrMagnitude < _maxLabelDistance * _maxLabelDistance
+                && !IsOccluded(world, unit);
             view.root.gameObject.SetActive(visible);
             if (visible && RectTransformUtility.ScreenPointToLocalPointInRectangle(_overlay, screen, null, out Vector2 local))
                 view.root.anchoredPosition = local;
@@ -98,6 +100,22 @@ public sealed class CombatHud : MonoBehaviour
             if (remaining <= 0f) _killGroup.gameObject.SetActive(false);
             else _killGroup.alpha = Mathf.Min(1f, (_killDuration - remaining) * 5f, remaining * 2f);
         }
+    }
+
+    private bool IsOccluded(Vector3 target, ControlUnit unit)
+    {
+        Vector3 origin = _camera.transform.position;
+        Vector3 delta = target - origin;
+        float distance = delta.magnitude;
+        if (distance < 0.01f) return false;
+        int count = Physics.RaycastNonAlloc(origin, delta / distance, _occlusionHits, distance - 0.01f,
+            ~((1 << 2) | (1 << 5)), QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < count; i++)
+        {
+            Collider collider = _occlusionHits[i].collider;
+            if (collider != null && !collider.transform.IsChildOf(unit.transform)) return true;
+        }
+        return false;
     }
 
     private void RefreshEnemies()
@@ -115,14 +133,7 @@ public sealed class CombatHud : MonoBehaviour
                 view.name.text = identity != null ? identity.DisplayName : unit.name;
             }
 
-            float health = 0f;
-            float maximum = 0f;
-            foreach (Durability durability in unit.GetComponentsInChildren<Durability>())
-            {
-                if (durability == null || !durability.enabled) continue;
-                health += Mathf.Max(0f, durability.currentDurability);
-                maximum += Mathf.Max(0f, durability.maxDurability);
-            }
+            unit.TryGetTotalDurability(out float health, out float maximum);
 
             view.health = health;
             view.maximum = maximum;

@@ -48,6 +48,11 @@ public class InputManager : MonoBehaviour
             return;
         }
 
+        ThrusterInfoPanel thrusterPanel = MainUIPanels.instance != null
+            ? MainUIPanels.instance.ThrusterInfoPanel : null;
+        if (PlayManager.instance.playMode && keyboard.f1Key.wasPressedThisFrame)
+            thrusterPanel?.Toggle();
+
         if (BuildManager.instance.IsLoadingBlocks)
         {
             return;
@@ -102,7 +107,7 @@ public class InputManager : MonoBehaviour
         }
         else
         {
-            lockView = keyboard.altKey.isPressed;
+            lockView = keyboard.altKey.isPressed || (thrusterPanel != null && thrusterPanel.IsOpen);
             CameraController.instance.currentMode = lockView ? CameraMode.ThirdPersonLock : CameraMode.ThirdPerson;
             PlayManager.instance.SetPlayMode(lockView);
             ApplyCursorState();

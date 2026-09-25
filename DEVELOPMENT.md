@@ -102,6 +102,8 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 `MainUIPanels` 为每个面板只保留一条淡入淡出协程，并在删除确认关闭时移除临时按钮回调。`PlayPanel/CombatHud` 是保存于 Main 场景的 uGUI：复用敌方名牌实例，每 0.2 秒汇总敌方单元所有已启用 Block 的当前/最大耐久；按镜头视野和距离隐藏离屏目标。击杀提示位于画面居中偏下，以不透光深色背景、较大文字和短暂淡入淡出显示敌方蓝图名称及本轮击杀数；仅玩家攻击导致敌方驾驶舱摧毁时计数。按钮的悬停、按下和焦点缩放由 `UIInteractionFeedback` 处理。`Tools/HY-Sandbox/Setup Combat HUD` 可重复配置场景和悬浮控制器 Prefab；后者的 IMGUI 诊断窗默认关闭，仍可在 Prefab Inspector 中开启 `showUI` 调试。架构参考 [deVoid UI Framework](https://github.com/yankooliveira/uiframework) 与 [Unity-UI-Framework](https://github.com/MrNerverDie/Unity-UI-Framework) 的界面职责拆分及过渡管理，当前实现继续使用项目已有 uGUI。
 
+玩家和敌人的血条统一按含 Cockpit 的 `ControlUnit` 汇总其所有已启用 `Durability`。敌人名牌保留 Screen Space Overlay 的清晰度，但以相机到名牌锚点的 3D 射线过滤遮挡，命中其它模型时隐藏。`HoverFlightController` 的旧 IMGUI 已迁移到 PlayPanel Canvas：左下角显示目标高度、当前高度、高度 P、垂直速度和水平速度；F1 打开右上角 `ThrusterInfoPanel`，按 Main/Universal/Hover 分类显示拥有有效运行时归属的推进器、推力进度和供电状态颜色。Hover 控制器 Prefab 的状态灯为绿色表示被有效 ControlUnit 使用，红色表示未使用。
+
 ### 3.6 物理模拟与性能
 
 项目使用 3D PhysX 作为运行时物理后端。为降低物理线程在大型构造体、敌人和爆炸冲量场景下的持续计算压力，当前项目设置为：固定物理步长约 0.02 秒（50 Hz；`ProjectSettings/TimeManager.asset` 使用 Unity 6000 的有理数格式保存）、单帧物理追赶上限 0.1 秒、默认位置求解迭代 4 次、默认速度求解迭代 1 次。碰撞回调复用已启用，Transform 自动同步保持关闭；2D 物理设置未改变。降低步频和迭代次数会减少 CPU 占用，但高速碰撞、堆叠稳定性和推进器控制手感需要在 Play Mode 复核。
@@ -165,6 +167,8 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - **建造目录**：新增 Prefab 后需要执行 Build Palette Bake，将分类与图标保存入场景；不会在运行时自动复制按钮。尚未做超大目录性能或所有分辨率的手工操作测试。
 
 - **战斗 HUD（2026-09-25）**：隔离 Play Mode 的九项逻辑检查通过，`Temp/CombatHud/EnemyNameplate.png` 与 `KillNotice.png` 已在探针结束后落盘并目视核对；真实大型蓝图战斗中的多名牌遮挡、各种分辨率和长名称排版仍需实机检查。
+
+- **推进器 HUD（2026-09-25）**：隔离 Play Mode 探针扩展至 19 项并通过，覆盖 3D 遮挡隐藏/恢复、ControlUnit 总耐久、Canvas 飞行数据、F1 面板归属筛选和分类导航；`ThrusterInfoPanel.png` 已目视核对。正式构建和不同分辨率下的长列表滚动仍待验证。
 
 优先级含义：P0 阻断主流程，P1 影响核心体验或数据安全，P2 可维护性/性能，P3 体验增强。
 
@@ -1238,6 +1242,11 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - **已通过代码/文件确认**：Main 场景保存 HUD 及脚本引用，Prefab `showUI: 0`，Unity 6000.3.11f1 重新编译成功。
 - **Unity Play Mode 验证**：隔离探针 9 项检查通过，涵盖名牌、聚合耐久、蓝图名称、玩家驾驶舱击杀一次计数和环境伤害不计数。Play Mode 两张截图已目视核对，击杀提示文字与背景可读，悬浮诊断窗默认未出现；大蓝图实机排版和正式构建尚未验证。
 - **静态验证**：`dotnet build HY-Sandbox.sln --no-restore --nologo` 为 0 错误、4 个既有警告；`git diff --check` 通过，新增脚本的 `.meta` 齐全。
+
+### 2026-09-25（推进器 Canvas HUD 与遮挡）
+
+- **范围与实现**：敌人名牌增加 3D 射线遮挡判断；玩家/敌人血条统一显示含 Cockpit 的 ControlUnit 总耐久。HoverFlightController 的飞行信息迁移到左下角 Canvas，新增 F1 推进器状态面板、三类导航、推力进度和供电颜色，Prefab 增加 ControlUnit 使用状态灯。
+- **验证**：Unity 6000.3.11f1 隔离 Play Mode 19 项检查通过；静态 `dotnet build HY-Sandbox.sln --no-restore --nologo -m:1 -p:UseSharedCompilation=false` 为 0 错误、3 个既有警告。正式构建与多分辨率视觉回归尚未执行。
 
 ### 2026-09-24（建造目录悬停参数）
 
