@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
@@ -15,7 +15,9 @@ public class MainUIPanels : MonoBehaviour
     public InputField inputName;
     public InputField inputValue;
     [SerializeField] private Image _healthFill;
+    [SerializeField] private Image _cockpitHealthFill;
     public Text healthValue;
+    [SerializeField] private Text _cockpitHealthValue;
     public float fadeDuration = 0.3f;
     public Gradient healthBarColor;
     [SerializeField] private CombatHud _combatHud;
@@ -64,9 +66,12 @@ public class MainUIPanels : MonoBehaviour
         _nextHealthRefresh = Time.unscaledTime + 0.2f;
         ControlUnit player = PlayManager.instance.blocksParent != null
             ? PlayManager.instance.blocksParent.GetComponent<ControlUnit>() : null;
-        if (player != null && player.faction == UnitFaction.Player
-            && player.TryGetTotalDurability(out float current, out float maximum))
+        if (player != null && player.faction == UnitFaction.Player)
+        {
+            player.TryGetTotalDurability(out float current, out float maximum);
             SetHealthBar(current, maximum);
+            SetCockpitHealth(player.cockpit);
+        }
         if (_flightTelemetry != null)
         {
             HoverFlightController controller = player != null ? player.hoverFlightController : null;
@@ -337,17 +342,32 @@ public class MainUIPanels : MonoBehaviour
         if (obj == null || obj.GetComponent<Cockpit>()?.faction != UnitFaction.Player) return;
         ControlUnit player = obj.GetComponentInParent<ControlUnit>();
         if (player != null && player.TryGetTotalDurability(out float current, out float maximum))
-            SetHealthBar(current, maxHealth);
+        {
+            SetHealthBar(current, maximum);
+            SetCockpitHealth(player.cockpit);
+        }
     }
 
     private void SetHealthBar(float currentHealth, float maxHealth)
     {
-        float ratio = maxHealth > 0f ? Mathf.Clamp01(currentHealth / PlayManager.instance.maxHealth) : 0f;
+        float maximum = PlayManager.instance != null ? PlayManager.instance.maxHealth : maxHealth;
+        float ratio = maximum > 0f ? Mathf.Clamp01(currentHealth / maximum) : 0f;
         if (_healthFill != null)
         {
             _healthFill.fillAmount = ratio;
-            _healthFill.color = healthBarColor.Evaluate(ratio);
+            _healthFill.color = Color.white;
         }
-        if (healthValue != null) healthValue.text = $"{Mathf.Max(0f, currentHealth):0} / {Mathf.Max(0f, PlayManager.instance.maxHealth):0}";
+        if (healthValue != null) healthValue.text = $"{Mathf.Max(0f, currentHealth):0} / {Mathf.Max(0f, maximum):0}";
+    }
+
+    private void SetCockpitHealth(Cockpit cockpit)
+    {
+        Durability durability = cockpit != null ? cockpit.GetComponent<Durability>() : null;
+        float current = durability != null ? Mathf.Max(0f, durability.currentDurability) : 0f;
+        float maximum = durability != null ? Mathf.Max(0f, durability.maxDurability) : 0f;
+        if (_cockpitHealthFill != null)
+            _cockpitHealthFill.fillAmount = maximum > 0f ? Mathf.Clamp01(current / maximum) : 0f;
+        if (_cockpitHealthValue != null)
+            _cockpitHealthValue.text = $"{current:0} / {maximum:0}";
     }
 }

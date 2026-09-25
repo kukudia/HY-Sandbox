@@ -9,6 +9,8 @@ public class IconManager : MonoBehaviour
     [Min(0f)] public float pulseSpeed = 5f;
     [Range(0f, 1f)] public float minimumAlpha = 0.35f;
     private readonly List<CanvasGroup> activeIcons = new List<CanvasGroup>();
+    public float PulseAlpha => minimumAlpha + (1f - minimumAlpha) *
+        (0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * pulseSpeed));
 
     private void Awake()
     {
@@ -17,7 +19,7 @@ public class IconManager : MonoBehaviour
 
     private void Update()
     {
-        float pulse = minimumAlpha + (1f - minimumAlpha) * (0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * pulseSpeed));
+        float pulse = PulseAlpha;
         for (int i = activeIcons.Count - 1; i >= 0; i--)
         {
             CanvasGroup icon = activeIcons[i];

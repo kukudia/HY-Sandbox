@@ -13,6 +13,86 @@ public static class CombatHudSetup
     private static readonly Color Coral = new Color(1f, 0.32f, 0.28f);
     private static readonly Color Cyan = new Color(0.31f, 0.88f, 0.95f);
 
+    [MenuItem("Tools/HY-Sandbox/Upgrade Dual Health HUD")]
+    public static void UpgradeDualHealthHud()
+    {
+        if (EditorApplication.isPlaying) throw new InvalidOperationException("Exit Play Mode before editing Main.");
+        Scene scene = SceneManager.GetSceneByPath(ScenePath);
+        if (!scene.isLoaded) scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Additive);
+        if (scene.isDirty) throw new InvalidOperationException("Save the Main scene before upgrading the health HUD.");
+        MainUIPanels panels = scene.GetRootGameObjects()
+            .SelectMany(root => root.GetComponentsInChildren<MainUIPanels>(true)).Single();
+        Font font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Fonts/ChakraPetch-Medium.ttf");
+        if (font == null) throw new MissingReferenceException("Chakra Petch font is missing.");
+
+        RectTransform player = panels.healthValue.transform.parent as RectTransform;
+        player.sizeDelta = new Vector2(320f, 226f);
+        RectTransform playerBar = player.Find("HealthBar") as RectTransform;
+        BottomBox(playerBar, 10f, 49f, 310f, 57f);
+        Image playerFill = playerBar.Find("Fill").GetComponent<Image>();
+        playerFill.color = Color.white;
+        Text unitLabel = Text(player, "UnitLabel", font, 11, Color.white, TextAnchor.MiddleLeft);
+        unitLabel.text = "UNIT";
+        BottomBox(unitLabel.rectTransform, 10f, 59f, 125f, 76f);
+        Text unitValue = panels.healthValue;
+        BottomBox(unitValue.rectTransform, 130f, 59f, 310f, 76f);
+        unitValue.alignment = TextAnchor.MiddleRight;
+        RectTransform cockpitBar = Child(player, "CockpitBar");
+        BottomBox(cockpitBar, 10f, 12f, 310f, 20f);
+        Image(cockpitBar, new Color(0.15f, 0.23f, 0.24f, 1f));
+        RectTransform cockpitFill = Child(cockpitBar, "Fill");
+        Stretch(cockpitFill);
+        Image cockpitFillImage = Image(cockpitFill, new Color(0.25f, 0.9f, 0.48f));
+        cockpitFillImage.type = UnityEngine.UI.Image.Type.Filled;
+        cockpitFillImage.fillMethod = UnityEngine.UI.Image.FillMethod.Horizontal;
+        cockpitFillImage.fillOrigin = 0;
+        Text cockpitLabel = Text(player, "CockpitBarLabel", font, 11, new Color(0.5f, 1f, 0.68f), TextAnchor.MiddleLeft);
+        cockpitLabel.text = "COCKPIT";
+        BottomBox(cockpitLabel.rectTransform, 10f, 22f, 125f, 40f);
+        Text cockpitValue = Text(player, "CockpitBarValue", font, 11, Color.white, TextAnchor.MiddleRight);
+        BottomBox(cockpitValue.rectTransform, 130f, 22f, 310f, 40f);
+        Text telemetry = player.Find("FlightTelemetry")?.GetComponent<Text>();
+        if (telemetry != null)
+        {
+            telemetry.rectTransform.offsetMin = new Vector2(10f, 80f);
+            telemetry.rectTransform.offsetMax = new Vector2(-10f, -31f);
+        }
+        Set(panels, "_cockpitHealthFill", cockpitFillImage);
+        Set(panels, "_cockpitHealthValue", cockpitValue);
+
+        CombatHud hud = panels.CombatHud;
+        RectTransform template = hud.transform.Find("EnemyNameplateTemplate") as RectTransform;
+        template.sizeDelta = new Vector2(210f, 74f);
+        CanvasGroup fade = template.GetComponent<CanvasGroup>();
+        if (fade == null) fade = template.gameObject.AddComponent<CanvasGroup>();
+        fade.interactable = false;
+        fade.blocksRaycasts = false;
+        Text name = template.Find("Name").GetComponent<Text>();
+        BottomBox(name.rectTransform, 12f, 53f, 135f, 70f);
+        name.resizeTextForBestFit = true;
+        name.resizeTextMinSize = 10;
+        name.resizeTextMaxSize = 13;
+        Text value = template.Find("Value").GetComponent<Text>();
+        BottomBox(value.rectTransform, 138f, 53f, 200f, 70f);
+        BottomBox(template.Find("Bar") as RectTransform, 12f, 42f, 198f, 48f);
+        Image(template.Find("Bar/Fill") as RectTransform, Color.white);
+        RectTransform enemyCockpitBar = Child(template, "CockpitBar");
+        BottomBox(enemyCockpitBar, 12f, 9f, 198f, 15f);
+        Image(enemyCockpitBar, new Color(0.25f, 0.18f, 0.19f, 1f));
+        RectTransform enemyCockpitFill = Child(enemyCockpitBar, "Fill");
+        Stretch(enemyCockpitFill);
+        Image(enemyCockpitFill, Coral);
+        Text enemyCockpitLabel = Text(template, "CockpitLabel", font, 10, Coral, TextAnchor.MiddleLeft);
+        enemyCockpitLabel.text = "COCKPIT";
+        BottomBox(enemyCockpitLabel.rectTransform, 12f, 19f, 110f, 37f);
+        Text enemyCockpitValue = Text(template, "CockpitValue", font, 10, Color.white, TextAnchor.MiddleRight);
+        BottomBox(enemyCockpitValue.rectTransform, 112f, 19f, 198f, 37f);
+        foreach (Graphic graphic in player.GetComponentsInChildren<Graphic>(true)) graphic.raycastTarget = false;
+        foreach (Graphic graphic in template.GetComponentsInChildren<Graphic>(true)) graphic.raycastTarget = false;
+        EditorSceneManager.MarkSceneDirty(scene);
+        EditorSceneManager.SaveScene(scene);
+    }
+
     [MenuItem("Tools/HY-Sandbox/Setup Combat HUD")]
     public static void Apply()
     {
@@ -87,6 +167,7 @@ public static class CombatHudSetup
                 button.gameObject.AddComponent<UIInteractionFeedback>();
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
+        UpgradeDualHealthHud();
         Debug.Log("Combat HUD saved to Main/PlayPanel.");
     }
 
@@ -112,6 +193,15 @@ public static class CombatHudSetup
         Stretch(rect);
         rect.offsetMin = new Vector2(left, bottom);
         rect.offsetMax = new Vector2(right, top);
+    }
+
+    private static void BottomBox(RectTransform rect, float left, float bottom, float right, float top)
+    {
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.zero;
+        rect.pivot = Vector2.zero;
+        rect.anchoredPosition = new Vector2(left, bottom);
+        rect.sizeDelta = new Vector2(right - left, top - bottom);
     }
 
     private static Image Image(RectTransform rect, Color color)

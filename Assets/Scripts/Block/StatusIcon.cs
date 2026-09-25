@@ -21,6 +21,7 @@ public class StatusIcon : MonoBehaviour
 
     [Header("Display")]
     [Min(0f)] public float iconHeightOffset = 0.25f;
+    [SerializeField, Min(0f)] private float _fadeSpeed = 7f;
 
     private Block _block;
     private Durability _durability;
@@ -33,6 +34,9 @@ public class StatusIcon : MonoBehaviour
     private Image _powerIcon;
     private DebugManager _lastDebugManager;
     private bool _isOutsideViewport;
+    private bool _hasVisibleIcons;
+    private float _visibility;
+    private readonly RaycastHit[] _occlusionHits = new RaycastHit[64];
 
     private void Awake()
     {
@@ -77,10 +81,6 @@ public class StatusIcon : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (_iconGroup != null && IconManager.instance != null)
-        {
-            IconManager.instance.Unregister(_iconGroup);
-        }
         if (_iconRoot != null)
         {
             Destroy(_iconRoot.gameObject);
@@ -201,7 +201,7 @@ public class StatusIcon : MonoBehaviour
 
         if (!showConnection && !showDurability && !showPower)
         {
-            HideIcons();
+            _hasVisibleIcons = false;
             return;
         }
 
@@ -213,7 +213,8 @@ public class StatusIcon : MonoBehaviour
         visibleCount += SetIcon(_durabilityIcon, showDurability ? durabilityStatus.ToString() : null) ? 1 : 0;
         visibleCount += SetIcon(_powerIcon, showPower ? powerStatus.ToString() : null) ? 1 : 0;
 
-        _iconRoot.gameObject.SetActive(visibleCount > 0);
+        _hasVisibleIcons = visibleCount > 0;
+        _iconRoot.gameObject.SetActive(_hasVisibleIcons || _visibility > 0f);
         PositionVisibleIcons(visibleCount);
     }
 
@@ -228,7 +229,9 @@ public class StatusIcon : MonoBehaviour
         _iconRoot = rootObject.GetComponent<RectTransform>();
         _iconRoot.SetParent(overlayRoot, false);
         _iconGroup = rootObject.GetComponent<CanvasGroup>();
-        IconManager.instance?.Register(_iconGroup);
+        _iconGroup.alpha = 0f;
+        _iconGroup.interactable = false;
+        _iconGroup.blocksRaycasts = false;
         _iconRoot.localScale = Vector3.one;
         _iconRoot.anchorMin = new Vector2(0.5f, 0.5f);
         _iconRoot.anchorMax = new Vector2(0.5f, 0.5f);
@@ -297,7 +300,7 @@ public class StatusIcon : MonoBehaviour
 
     private void UpdateIconScreenPosition(DebugManager manager)
     {
-        if (_iconRoot == null || (!_iconRoot.gameObject.activeSelf && !_isOutsideViewport)) return;
+        if (_iconRoot == null) return;
 
         Camera camera = PlayManager.instance != null && PlayManager.instance.mainCamera != null
             ? PlayManager.instance.mainCamera
@@ -310,13 +313,17 @@ public class StatusIcon : MonoBehaviour
 
         Vector3 centerPosition = _center != null ? _center.position : transform.position;
         Vector3 screenPosition = camera.WorldToScreenPoint(centerPosition);
-        bool isVisible = screenPosition.z > 0f
+        bool isVisible = _hasVisibleIcons && screenPosition.z > 0f
             && screenPosition.x >= 0f && screenPosition.x <= Screen.width
-            && screenPosition.y >= 0f && screenPosition.y <= Screen.height;
+            && screenPosition.y >= 0f && screenPosition.y <= Screen.height
+            && !CombatHud.IsWorldPointOccluded(camera, centerPosition, transform.root, _occlusionHits);
+        _visibility = Mathf.MoveTowards(_visibility, isVisible ? 1f : 0f,
+            Time.unscaledDeltaTime * _fadeSpeed);
+        _iconGroup.alpha = _visibility * (IconManager.instance != null ? IconManager.instance.PulseAlpha : 1f);
+        _iconRoot.gameObject.SetActive(_visibility > 0f || isVisible);
         if (!isVisible)
         {
             _isOutsideViewport = true;
-            _iconRoot.gameObject.SetActive(false);
             return;
         }
 
@@ -325,7 +332,6 @@ public class StatusIcon : MonoBehaviour
         {
             _isOutsideViewport = false;
             RefreshIcons(manager);
-            if (!_iconRoot.gameObject.activeSelf) return;
         }
 
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(manager.StatusIconRoot, screenPosition, null, out Vector2 localPoint))
@@ -340,6 +346,8 @@ public class StatusIcon : MonoBehaviour
         {
             _iconRoot.gameObject.SetActive(false);
         }
+        _hasVisibleIcons = false;
+        _visibility = 0f;
     }
 }
 

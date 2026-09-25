@@ -16,7 +16,7 @@ public static class HealthHudPreview
     {
         if (EditorApplication.isPlaying) throw new InvalidOperationException("Exit Play Mode before rendering HUD previews.");
         var main = SceneManager.GetSceneByPath("Assets/Scenes/Main.unity");
-        var source = main.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<MainUIPanels>(true)).Single().playPanel.transform.Find("CockpitHealthBar");
+        var source = main.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<MainUIPanels>(true)).Single().healthValue.transform.parent;
         Directory.CreateDirectory("Temp/BuildRange");
         foreach (Vector2Int size in new[] { new Vector2Int(1280, 720), new Vector2Int(1920, 1080), new Vector2Int(2560, 1440), new Vector2Int(3440, 1440) })
             RenderOne(source, size);
@@ -39,8 +39,10 @@ public static class HealthHudPreview
             Canvas canvas = canvasObject.GetComponent<Canvas>(); canvas.renderMode = RenderMode.ScreenSpaceCamera; canvas.worldCamera = camera; canvas.planeDistance = 1;
             RectTransform health = (RectTransform)Object.Instantiate(source, canvas.transform, false); health.gameObject.SetActive(true);
             Image fill = health.Find("HealthBar/Fill").GetComponent<Image>(); fill.fillAmount = 0.5f;
-            fill.color = source.GetComponentInParent<MainUIPanels>().healthBarColor.Evaluate(0.5f);
+            fill.color = Color.white;
             health.Find("CockpitHealthValue").GetComponent<Text>().text = "50 / 100";
+            health.Find("CockpitBar/Fill").GetComponent<Image>().fillAmount = 0.75f;
+            health.Find("CockpitBarValue").GetComponent<Text>().text = "75 / 100";
             Canvas.ForceUpdateCanvases(); camera.Render(); Canvas.ForceUpdateCanvases();
             Vector3[] corners = new Vector3[4]; health.GetWorldCorners(corners);
             Vector3 lower = camera.WorldToScreenPoint(corners[0]); Vector3 upper = camera.WorldToScreenPoint(corners[2]);

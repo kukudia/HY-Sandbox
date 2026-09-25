@@ -13,6 +13,7 @@ public sealed class CombatHud : MonoBehaviour
     [SerializeField, Min(1f)] private float _maxLabelDistance = 140f;
     [SerializeField, Min(0f)] private float _labelHeight = 2.5f;
     [SerializeField, Min(0.1f)] private float _killDuration = 2.8f;
+    [SerializeField, Min(0f)] private float _labelFadeSpeed = 7f;
 
     private readonly Dictionary<ControlUnit, EnemyView> _views = new Dictionary<ControlUnit, EnemyView>();
     private readonly Stack<EnemyView> _pool = new Stack<EnemyView>();
@@ -29,7 +30,10 @@ public sealed class CombatHud : MonoBehaviour
         public RectTransform root;
         public Text name;
         public RectTransform fill;
+        public RectTransform cockpitFill;
         public Text value;
+        public Text cockpitValue;
+        public CanvasGroup group;
         public float health;
         public float maximum;
     }
@@ -89,7 +93,9 @@ public sealed class CombatHud : MonoBehaviour
                 && screen.y > 0f && screen.y < Screen.height
                 && (world - _camera.transform.position).sqrMagnitude < _maxLabelDistance * _maxLabelDistance
                 && !IsOccluded(world, unit);
-            view.root.gameObject.SetActive(visible);
+            view.group.alpha = Mathf.MoveTowards(view.group.alpha, visible ? 1f : 0f,
+                Time.unscaledDeltaTime * _labelFadeSpeed);
+            view.root.gameObject.SetActive(view.group.alpha > 0f);
             if (visible && RectTransformUtility.ScreenPointToLocalPointInRectangle(_overlay, screen, null, out Vector2 local))
                 view.root.anchoredPosition = local;
         }
@@ -104,16 +110,21 @@ public sealed class CombatHud : MonoBehaviour
 
     private bool IsOccluded(Vector3 target, ControlUnit unit)
     {
-        Vector3 origin = _camera.transform.position;
+        return IsWorldPointOccluded(_camera, target, unit.transform, _occlusionHits);
+    }
+
+    public static bool IsWorldPointOccluded(Camera camera, Vector3 target, Transform owner, RaycastHit[] hits)
+    {
+        Vector3 origin = camera.transform.position;
         Vector3 delta = target - origin;
         float distance = delta.magnitude;
         if (distance < 0.01f) return false;
-        int count = Physics.RaycastNonAlloc(origin, delta / distance, _occlusionHits, distance - 0.01f,
+        int count = Physics.RaycastNonAlloc(origin, delta / distance, hits, distance - 0.01f,
             ~((1 << 2) | (1 << 5)), QueryTriggerInteraction.Ignore);
         for (int i = 0; i < count; i++)
         {
-            Collider collider = _occlusionHits[i].collider;
-            if (collider != null && !collider.transform.IsChildOf(unit.transform)) return true;
+            Collider collider = hits[i].collider;
+            if (collider != null && (owner == null || !collider.transform.IsChildOf(owner))) return true;
         }
         return false;
     }
@@ -131,6 +142,7 @@ public sealed class CombatHud : MonoBehaviour
                 _views.Add(unit, view);
                 EnemyIdentity identity = unit.cockpit.GetComponent<EnemyIdentity>();
                 view.name.text = identity != null ? identity.DisplayName : unit.name;
+                view.group.alpha = 0f;
                 view.maximum = identity != null && identity.SpawnMaxHealth > 0f
                     ? identity.SpawnMaxHealth : 0f;
             }
@@ -142,6 +154,12 @@ public sealed class CombatHud : MonoBehaviour
             float ratio = view.maximum > 0f ? Mathf.Clamp01(health / view.maximum) : 0f;
             view.fill.anchorMax = new Vector2(ratio, 1f);
             view.value.text = $"{health:0} / {view.maximum:0}";
+            Durability cockpitHealth = unit.cockpit.GetComponent<Durability>();
+            float cockpitCurrent = cockpitHealth != null ? Mathf.Max(0f, cockpitHealth.currentDurability) : 0f;
+            float cockpitMaximum = cockpitHealth != null ? Mathf.Max(0f, cockpitHealth.maxDurability) : 0f;
+            view.cockpitFill.anchorMax = new Vector2(cockpitMaximum > 0f
+                ? Mathf.Clamp01(cockpitCurrent / cockpitMaximum) : 0f, 1f);
+            view.cockpitValue.text = $"{cockpitCurrent:0} / {cockpitMaximum:0}";
         }
 
         _remove.Clear();
@@ -164,7 +182,10 @@ public sealed class CombatHud : MonoBehaviour
             root = root,
             name = root.Find("Name").GetComponent<Text>(),
             fill = (RectTransform)root.Find("Bar/Fill"),
-            value = root.Find("Value").GetComponent<Text>()
+            cockpitFill = (RectTransform)root.Find("CockpitBar/Fill"),
+            value = root.Find("Value").GetComponent<Text>(),
+            cockpitValue = root.Find("CockpitValue").GetComponent<Text>(),
+            group = root.GetComponent<CanvasGroup>()
         };
     }
 

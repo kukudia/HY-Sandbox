@@ -343,19 +343,23 @@ public static class BuildPalettePlayProbe
 
         var panels = ui.GetComponent<MainUIPanels>();
         panels.playPanel.SetActive(true); panels.buildPanel.SetActive(false);
-        var health = (RectTransform)panels.playPanel.transform.Find("CockpitHealthBar");
+        var health = (RectTransform)panels.healthValue.transform.parent;
         var healthFill = health.Find("HealthBar/Fill").GetComponent<Image>();
         var cockpit = new GameObject("Health value probe").AddComponent<Cockpit>();
+        var setHealth = typeof(MainUIPanels).GetMethod("SetHealthBar", System.Reflection.BindingFlags.Instance
+            | System.Reflection.BindingFlags.NonPublic);
+        PlayManager.instance.maxHealth = 100f;
         foreach (float value in new[] { 0f, 50f, 100f })
         {
-            panels.UpdateHealthBar(cockpit.gameObject, value, 100f);
+            setHealth.Invoke(panels, new object[] { value, 100f });
             Check("Health fill " + value + "% uses normalized amount", Mathf.Abs(healthFill.fillAmount - value / 100f) < 0.001f);
-            if (value == 100f) Check("Full health is green", healthFill.color.g > healthFill.color.r);
-            if (value == 0f) Check("Empty health is red", healthFill.color.r > healthFill.color.g);
+            if (value == 100f) Check("Unit health fill is white", healthFill.color == Color.white);
         }
-        panels.UpdateHealthBar(cockpit.gameObject, 1f, 0f);
+        PlayManager.instance.maxHealth = 0f;
+        setHealth.Invoke(panels, new object[] { 1f, 0f });
         Check("Zero maximum health never yields NaN", healthFill.fillAmount == 0f);
-        panels.UpdateHealthBar(cockpit.gameObject, 50f, 100f);
+        PlayManager.instance.maxHealth = 100f;
+        setHealth.Invoke(panels, new object[] { 50f, 100f });
         cockpit.faction = UnitFaction.Enemy;
         panels.UpdateHealthBar(cockpit.gameObject, 10f, 100f);
         Check("Enemy damage cannot overwrite player health", Mathf.Abs(healthFill.fillAmount - 0.5f) < 0.001f);

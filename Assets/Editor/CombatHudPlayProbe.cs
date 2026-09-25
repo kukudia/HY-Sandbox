@@ -90,6 +90,10 @@ public static class CombatHudPlayProbe
             plate.gameObject.activeInHierarchy);
         Check("Enemy identity survives runtime grouping", plate.Find("Name").GetComponent<Text>().text == "Probe Raider");
         Check("Aggregate health is displayed", plate.Find("Value").GetComponent<Text>().text == "120 / 150");
+        Check("Enemy dual bars show unit and cockpit health",
+            plate.Find("CockpitValue").GetComponent<Text>().text == "80 / 100"
+            && Mathf.Abs(((RectTransform)plate.Find("Bar/Fill")).anchorMax.x - 0.8f) < 0.01f
+            && Mathf.Abs(((RectTransform)plate.Find("CockpitBar/Fill")).anchorMax.x - 0.8f) < 0.01f);
         Transform detachedBlock = enemy.transform.Find("Probe Armor");
         detachedBlock.SetParent(null);
         enemy.TryGetTotalDurability(out float detachedCurrent, out float detachedMaximum);
@@ -97,6 +101,14 @@ public static class CombatHudPlayProbe
         hud.SendMessage("RefreshEnemies");
         string detachedHealth = plate.Find("Value").GetComponent<Text>().text;
         Check($"Spawn maximum survives block detachment ({detachedHealth})", detachedHealth == "80 / 150");
+        StatusIcon statusIcon = enemy.cockpit.gameObject.AddComponent<StatusIcon>();
+        DebugManager.instance.showDurabilityStatus = true;
+        statusIcon.durabilityStatus = DurabilityStatus.Damaged;
+        statusIcon.RefreshStatusIcons();
+        yield return 0.1f;
+        statusIcon.SendMessage("LateUpdate");
+        CanvasGroup iconGroup = DebugManager.instance.StatusIconRoot.Find("Cockpit Status Icons")?.GetComponent<CanvasGroup>();
+        Check("Status icon appears with visibility fade", iconGroup != null && iconGroup.alpha > 0f);
         ScreenCapture.CaptureScreenshot("Temp/CombatHud/EnemyNameplate.png");
         yield return 0.6f;
 
@@ -126,13 +138,23 @@ public static class CombatHudPlayProbe
         bool blocked = (bool)typeof(CombatHud).GetMethod("IsOccluded", System.Reflection.BindingFlags.Instance
             | System.Reflection.BindingFlags.NonPublic).Invoke(hud, new object[] { target, enemy });
         Check("HUD occlusion query sees geometry", blocked);
+        float iconAlpha = iconGroup.alpha;
+        statusIcon.SendMessage("LateUpdate");
+        Check("3D geometry fades status icon", iconGroup.alpha < iconAlpha);
+        float visibleAlpha = plate.GetComponent<CanvasGroup>().alpha;
         hud.SendMessage("LateUpdate");
-        Check("3D geometry occludes nameplate", !plate.gameObject.activeSelf);
+        Check("3D geometry fades nameplate", plate.GetComponent<CanvasGroup>().alpha < visibleAlpha);
+        yield return 0.3f;
+        hud.SendMessage("LateUpdate");
+        Check("Occluded nameplate disappears", plate.GetComponent<CanvasGroup>().alpha <= 0.01f);
         blocker.SetActive(false);
         Physics.SyncTransforms();
         yield return 0.1f;
         hud.SendMessage("LateUpdate");
-        Check("Nameplate returns when geometry clears", plate.gameObject.activeSelf);
+        Check("Nameplate fades back when geometry clears", plate.gameObject.activeSelf
+            && plate.GetComponent<CanvasGroup>().alpha > 0f);
+        statusIcon.SendMessage("LateUpdate");
+        Check("Status icon returns when geometry clears", iconGroup.gameObject.activeSelf);
 
         SerializedObject hudSettings = new SerializedObject(hud);
         hudSettings.FindProperty("_killDuration").floatValue = 8f;
@@ -159,6 +181,8 @@ public static class CombatHudPlayProbe
         panels.SendMessage("Update");
         Check($"Player HUD totals all unit durability ({panels.healthValue.text})",
             panels.healthValue.text == "120 / 150");
+        Check("Player cockpit bar shows its own durability",
+            panels.healthValue.transform.parent.Find("CockpitBarValue").GetComponent<Text>().text == "80 / 100");
         Text telemetry = panels.healthValue.transform.parent.Find("FlightTelemetry")?.GetComponent<Text>();
         Check("Flight telemetry uses Canvas", player.hoverFlightController.IsUsedByControlUnit
             && telemetry != null && telemetry.text.Contains("TARGET HEIGHT"));

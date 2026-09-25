@@ -60,7 +60,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 `GameManager` 在启动时初始化全局管理器和方块父节点。`MainUIPanels` 控制创建、删除、建造、游玩、死亡等面板的淡入淡出。`BuildManager` 负责建造上下文；`PlayManager` 负责进入/退出游玩模式及控制单元分组。`CameraController` 提供第一人称和自由飞行两种视角，`B` 切换视角锁定状态，`Tab` 切换相机模式。
 
-`InputManager` 统一处理 `B`/`Tab`/`F`、敌方蓝图开发者快捷键和模式光标状态：建造锁定模式显示并限制鼠标，建造自由飞行模式隐藏并锁定鼠标，游玩模式默认隐藏并锁定鼠标，按住 Alt 时显示并限制鼠标。`PlayerCockpitHealthUI` 在 `PlayPanel` 左下角显示玩家驾驶舱耐久度，血条颜色按比例从红色过渡到绿色。
+`InputManager` 统一处理 `B`/`Tab`/`F`、敌方蓝图开发者快捷键和模式光标状态：建造锁定模式显示并限制鼠标，建造自由飞行模式隐藏并锁定鼠标，游玩模式默认隐藏并锁定鼠标，按住 Alt 时显示并限制鼠标。`PlayPanel` 左下角由 `MainUIPanels` 显示白色单元总血条和绿色驾驶舱血条。
 
 进入游玩模式前，`PlayManager.CanStartPlay` 会检查当前构造体是否存在有效驾驶舱；成功后由 `ControlUnit` 刷新子模块并取得运行时所有权。退出游玩模式时恢复建造状态并清理运行时分组。
 
@@ -102,7 +102,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 `MainUIPanels` 为每个面板只保留一条淡入淡出协程，并在删除确认关闭时移除临时按钮回调。`PlayPanel/CombatHud` 是保存于 Main 场景的 uGUI：复用敌方名牌实例，每 0.2 秒汇总敌方单元当前耐久，以生成时记录的最大耐久作为固定分母；按镜头视野和距离隐藏离屏目标。击杀提示位于画面居中偏下，以不透光深色背景、较大文字和短暂淡入淡出显示敌方蓝图名称及本轮击杀数；仅玩家攻击导致敌方驾驶舱摧毁时计数。按钮的悬停、按下和焦点缩放由 `UIInteractionFeedback` 处理。`Tools/HY-Sandbox/Setup Combat HUD` 可重复配置场景和悬浮控制器 Prefab；后者的 IMGUI 诊断窗默认关闭，仍可在 Prefab Inspector 中开启 `showUI` 调试。架构参考 [deVoid UI Framework](https://github.com/yankooliveira/uiframework) 与 [Unity-UI-Framework](https://github.com/MrNerverDie/Unity-UI-Framework) 的界面职责拆分及过渡管理，当前实现继续使用项目已有 uGUI。
 
-玩家和敌人的当前血量按含 Cockpit 的 `ControlUnit` 汇总已启用 `Durability`；敌人的最大血量由生成器在实例化方块时累计并保存在 Cockpit 的 `EnemyIdentity`，后续分组和损毁不改变分母。敌人名牌保留 Screen Space Overlay 的清晰度，但以相机到名牌锚点的 3D 射线过滤遮挡，命中其它模型时隐藏。`HoverFlightController` 的旧 IMGUI 已迁移到 PlayPanel Canvas：左下角显示目标高度、当前高度、高度 P、垂直速度和水平速度；F1 打开右上角 `ThrusterInfoPanel`，按 Main/Universal/Hover 分类显示拥有有效运行时归属的推进器、推力进度和供电状态颜色。Hover 控制器 Prefab 的状态灯为绿色表示被有效 ControlUnit 使用，红色表示未使用。
+玩家和敌人使用双血条：白色为含 Cockpit 的 `ControlUnit` 当前/出生总耐久，下方彩色条为驾驶舱当前/最大耐久（玩家绿色、敌人红色）。敌人的总耐久上限由生成器在实例化方块时累计并保存在 Cockpit 的 `EnemyIdentity`，后续分组和损毁不改变分母；玩家总耐久上限在 `PlayStart` 固定。敌人名牌保留 Screen Space Overlay 的清晰度，以相机到名牌锚点的 3D 射线过滤其它模型遮挡，并用 CanvasGroup 淡入淡出。`StatusIcon` 复用相同遮挡判定，淡入淡出透明度与原有脉冲相乘。`HoverFlightController` 的旧 IMGUI 已迁移到 PlayPanel Canvas：左下角显示目标高度、当前高度、高度 P、垂直速度和水平速度；F1 打开右上角 `ThrusterInfoPanel`，按 Main/Universal/Hover 分类显示拥有有效运行时归属的推进器、推力进度和供电状态颜色。Hover 控制器 Prefab 的状态灯为绿色表示被有效 ControlUnit 使用，红色表示未使用。
 
 ### 3.6 物理模拟与性能
 
@@ -1216,9 +1216,9 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `DestroyManager.DestroyGameObject(GameObject obj)`：仅玩家造成的敌方驾驶舱摧毁通知 HUD。
 - `EnemyIdentity.SetDisplayName(string displayName)` / `SetSpawnMaxHealth(float maximum)`：保存敌方蓝图名及只初始化一次的出生最大血量；`EnemySpawner.SpawnBlockData` 在运行时驾驶舱上设置身份与血量快照。
 - `ControlUnit.RefreshChildren()`：重组后重新绑定悬浮控制器，但不强制开启诊断窗；`HoverFlightController.OnGUI()` 仅在显式调试开关和有效 PlayManager 下绘制。
-- `CombatHud.OnEnable()` / `OnDisable()` / `ResetHud()`：初始化或清理本轮名牌及提示；`ShowPlayerKill(string enemyName)` 更新击杀提示；`LateUpdate()` 投影名牌并驱动提示透明度；`RefreshEnemies()` 汇总当前耐久并使用固定出生分母；`CreateView()` / `Recycle(EnemyView view)` 复用名牌实例。
+- `CombatHud.OnEnable()` / `OnDisable()` / `ResetHud()`：初始化或清理本轮名牌及提示；`ShowPlayerKill(string enemyName)` 更新击杀提示；`LateUpdate()` 投影名牌并驱动淡入淡出；`IsWorldPointOccluded()` 供名牌和状态图标共用 3D 遮挡判定；`RefreshEnemies()` 更新总耐久及驾驶舱双血条；`CreateView()` / `Recycle(EnemyView view)` 复用名牌实例。
 - `UIInteractionFeedback.Awake()` / `OnDisable()`：记录和恢复按钮原始缩放；`OnPointerEnter` / `OnPointerExit` / `OnPointerDown` / `OnPointerUp` / `OnSelect` / `OnDeselect` 更新输入状态；`Animate()` / `AnimateScale()` 平滑改变按钮缩放。
-- `CombatHudSetup.Apply()`：重建 Main 场景中的可编辑 HUD，并关闭悬浮控制器 Prefab 的默认诊断窗；`Child()` / `Stretch()` / `Position()` / `Image()` / `Text()` / `Set()` 为编辑器搭建辅助函数。
+- `CombatHudSetup.Apply()` / `UpgradeDualHealthHud()`：重建 Main 场景可编辑 HUD 与双血条布局；`Child()` / `Stretch()` / `Position()` / `BottomBox()` / `Image()` / `Text()` / `Set()` 为编辑器搭建辅助函数。
 - `CombatHudPlayProbe.Run()` / `OnPlayModeChanged()` / `Tick()` / `Scenario()` / `CreateEnemy()` / `Check()` / `Finish()`：在隔离 Play Mode 中验证 HUD 绑定、名牌、耐久、击杀归因和环境伤害边界。
 
 ## 9. 函数索引维护规则
@@ -1235,6 +1235,13 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 
 ## 10. 变更日志
+
+### 2026-09-25（双血条与遮挡过渡）
+
+- **范围与实现**：Main 场景的玩家 HUD 增加绿色驾驶舱血条，敌方名牌增加红色驾驶舱血条；总血条统一为白色。敌方名牌遮挡与进入视野时渐隐渐显，状态图标沿用同一射线遮挡判断，并将可见度过渡与原有脉冲叠加。`Upgrade Dual Health HUD` 可重建双血条布局，常规 Combat HUD 搭建也会应用该布局。
+- **文件/静态确认**：场景引用、代码编译、差异检查见本次交付。
+- **Unity Editor/Play Mode 验证**：Unity 6000.3.11f1 隔离 Combat HUD 探针通过 30 项检查，含状态图标遮挡与恢复；Build Palette 回归 55 项通过。玩家 HUD 的 1280×720、1920×1080、2560×1440、3440×1440 四档布局预览已生成，1280×720 已目视检查。大型实战场景中的多图标视觉效果尚未实测。
+- **尚未验证**：大型敌方蓝图、多图标重叠与正式构建。
 
 ### 2026-09-25（敌方血条出生血量快照）
 
