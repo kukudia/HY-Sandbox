@@ -337,17 +337,17 @@ public class MainUIPanels : MonoBehaviour
         if (obj == null || obj.GetComponent<Cockpit>()?.faction != UnitFaction.Player) return;
         ControlUnit player = obj.GetComponentInParent<ControlUnit>();
         if (player != null && player.TryGetTotalDurability(out float current, out float maximum))
-            SetHealthBar(current, maximum);
+            SetHealthBar(current, maxHealth);
     }
 
     private void SetHealthBar(float currentHealth, float maxHealth)
     {
-        float ratio = maxHealth > 0f ? Mathf.Clamp01(currentHealth / maxHealth) : 0f;
+        float ratio = maxHealth > 0f ? Mathf.Clamp01(currentHealth / PlayManager.instance.maxHealth) : 0f;
         if (_healthFill != null)
         {
             _healthFill.fillAmount = ratio;
             _healthFill.color = healthBarColor.Evaluate(ratio);
         }
-        if (healthValue != null) healthValue.text = $"{Mathf.Max(0f, currentHealth):0} / {Mathf.Max(0f, maxHealth):0}";
+        if (healthValue != null) healthValue.text = $"{Mathf.Max(0f, currentHealth):0} / {Mathf.Max(0f, PlayManager.instance.maxHealth):0}";
     }
 }

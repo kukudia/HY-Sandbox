@@ -13,15 +13,12 @@ public class PlayManager : MonoBehaviour
 
     public Camera mainCamera;
     public LayerMask blockLayer;
-
-    private readonly Dictionary<Renderer, Material[]> _selectedMaterials = new Dictionary<Renderer, Material[]>();
+    
     public Material highlightMaterial;
 
     public Block selectedBlock;
     public List<ControlUnit> allControlUnits = new List<ControlUnit>();
-    private EnemySpawner enemySpawner;
-    private float _lastGroupCleanupCheckTime;
-
+    public float maxHealth = 0;
     public float lastHeight;
     public float currentHeight;
     public float verticalVelocity;
@@ -29,6 +26,10 @@ public class PlayManager : MonoBehaviour
 
     public bool showConnectors = true;
     public bool showLabel = true;
+
+    private EnemySpawner enemySpawner;
+    private float _lastGroupCleanupCheckTime;
+    private readonly Dictionary<Renderer, Material[]> _selectedMaterials = new Dictionary<Renderer, Material[]>();
 
     [Header("运行时分组限制")]
     [Min(1)] public int maxUselessControlUnitGroups = 32;
@@ -81,6 +82,13 @@ public class PlayManager : MonoBehaviour
         if (controlUnit != null)
         {
             controlUnit.AssignRuntimeOwnershipToBlocks(true);
+        }
+
+        maxHealth = 0;
+        Durability[] durabilities = blocksParent.GetComponentsInChildren<Durability>();
+        foreach (Durability durability in durabilities)
+        {
+            maxHealth += durability.maxDurability;
         }
 
         RefreshGroup(controlUnit);
@@ -331,6 +339,7 @@ public class PlayManager : MonoBehaviour
 
     public void PlayEnd()
     {
+        maxHealth = 0;
         DestroyManager.Instance.EndSalvageSession();
         LootDrop.ClearSession();
         List<ControlUnit> controlUnits = allControlUnits.ToList();

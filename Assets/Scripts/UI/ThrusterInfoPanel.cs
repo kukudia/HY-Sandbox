@@ -11,6 +11,7 @@ public sealed class ThrusterInfoPanel : MonoBehaviour
     [SerializeField] private RectTransform _rowTemplate;
     [SerializeField] private Text _emptyState;
     [SerializeField] private Image _tabIndicator;
+    [SerializeField] private float _updateInterval = 0.1f;
 
     private readonly List<Row> _rows = new List<Row>();
     private readonly List<Thruster> _thrusters = new List<Thruster>();
@@ -83,7 +84,7 @@ public sealed class ThrusterInfoPanel : MonoBehaviour
     {
         if (!IsOpen || PlayManager.instance == null || !PlayManager.instance.playMode) return;
         if (Time.unscaledTime < _nextRefresh) return;
-        _nextRefresh = Time.unscaledTime + 0.2f;
+        _nextRefresh = Time.unscaledTime + _updateInterval;
         ControlUnit owner = PlayManager.instance.blocksParent != null
             ? PlayManager.instance.blocksParent.GetComponent<ControlUnit>() : null;
         if (owner != _owner)
