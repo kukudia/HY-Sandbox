@@ -1,7 +1,7 @@
 # HY-Sandbox 项目开发文档
 
 > 文档状态：持续维护中  
-> 最近核对：2026-09-25
+> 最近核对：2026-09-26
 > Unity 编辑器：6000.3.11f1（`ProjectSettings/ProjectVersion.txt`）  
 > 当前分支：`main`
 
@@ -106,6 +106,8 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 3.6 物理模拟与性能
 
+`ControlUnit.OnCollisionEnter` 以法向速度和 PhysX 实际冲量分摊复合碰撞体能量，`Durability.ApplyCollisionEnergy` 以伤害/焦耳系数乘 0.1 倍映射至耐久，单次上限为最大耐久的 8%，同模块伤害间隔 0.35 秒。`DestroyManager` 保持爆炸零直接伤害；基础冲量缩放至 0.15，单次附加平移速度上限 3 m/s，受影响模块及对方碰撞均受 3 秒保护，碰撞损毁不触发物理爆炸。上述参数可在 Inspector 调整。`ImpactPhysics.ClosestPoint` 为非凸碰撞体提供 bounds 回退。`PhysicsTelemetryHud` 的真实场景节点显示速度、质量、动能、旋转速率及撞击数据；`InterfaceBaker` 烘焙 Main 与动态存档 Prefab，面板底色 alpha 0.62，保留文字图标不透明。
+
 项目使用 3D PhysX 作为运行时物理后端。为降低物理线程在大型构造体、敌人和爆炸冲量场景下的持续计算压力，当前项目设置为：固定物理步长约 0.02 秒（50 Hz；`ProjectSettings/TimeManager.asset` 使用 Unity 6000 的有理数格式保存）、单帧物理追赶上限 0.1 秒、默认位置求解迭代 4 次、默认速度求解迭代 1 次。碰撞回调复用已启用，Transform 自动同步保持关闭；2D 物理设置未改变。降低步频和迭代次数会减少 CPU 占用，但高速碰撞、堆叠稳定性和推进器控制手感需要在 Play Mode 复核。
 
 ### 3.7 Block 美术、挂点与渲染风格
@@ -159,7 +161,7 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 ## 5. 待改进与风险
 
-- **2026-09-23 Play Mode 已复现**：`Bot.CalculateAdvancedAvoidance` 在 Bot.cs:551 对不支持的 Collider 调用 `ClosestPoint`，维修无人机导航持续产生警告。需正确处理非凸 MeshCollider 等类型，不能只屏蔽日志。本次蓝图任务记录问题，未改动导航系统。
+- **已修复（2026-09-26）**：Bot 与爆炸最近点统一走 ImpactPhysics，非凸 MeshCollider/地形使用 bounds 回退；非凸探针通过。复杂凹模型回退为包围盒近似，精细避障效果仍需实机观察。
 - **2026-09-23 蓝图设计观察**：固定逐块等待问题已由同日指数衰减加载改善（737 块约 14.92 秒）；旧蓝图报告中的 0.1 秒是原代码默认值，主场景原实际配置为 0.05 秒。连接重建与实例化开销仍待专项优化。不同体积装甲同为 100 耐久使小块密铺具有耐久优势且增加 CPU 负担；建造面板缺少失效后的升力/覆盖提示；自动生存对比需要固定种子、标准火力和实际受击/维修统计。其余建议见 `Blueprints/CODEX/README.md`，尚未实施平衡改造。
 
 - **已解决（2026-09-23）**：禁用 Connector 被物理命中后错误合组，以及无视觉连接误拆组；54 项 Play Mode 探针通过。大型蓝图分组耗时和 GC 峰值尚未采样，不能据此量化帧率收益。
@@ -1221,6 +1223,14 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `CombatHudSetup.Apply()` / `UpgradeDualHealthHud()`：重建 Main 场景可编辑 HUD 与双血条布局；`Child()` / `Stretch()` / `Position()` / `BottomBox()` / `Image()` / `Text()` / `Set()` 为编辑器搭建辅助函数。
 - `CombatHudPlayProbe.Run()` / `OnPlayModeChanged()` / `Tick()` / `Scenario()` / `CreateEnemy()` / `Check()` / `Finish()`：在隔离 Play Mode 中验证 HUD 绑定、名牌、耐久、击杀归因和环境伤害边界。
 
+### 2026-09-26 物理与界面索引补充
+
+- `ImpactPhysics.ReducedMass / DamageEnergy / ClosestPoint / ReportPlayerImpact / ResetEvents`：质量、能量、支持的最近点、撞击遥测与静态事件重置。
+- `Durability.ApplyCollisionEnergy / ProtectFromExplosionCollisions`：碰撞能量映射、限幅冷却与短时保护，替代旧 CollisionEnter；`ControlUnit.ProtectExplosionContacts / OnCollisionEnter`：双侧保护、实际冲量分摊。
+- `PhysicsTelemetryHud.OnEnable / OnDisable / OnImpact / Update`：订阅和解除撞击事件，维护本轮遥测与低频 UI 刷新。
+- `InterfaceBaker.Apply / Style / Primary / Label / Child / AddRule / BakeTelemetry / TextAt`：统一场景和动态模板，持久化 HUD 绑定并保存。
+- `PhysicsSandboxProbe.Run / Collide / Body / Check / Save`：独立物理场景的 17 项验证、清理与报告，Main Play Mode 下通过 eval 调用 Run。
+
 ## 9. 函数索引维护规则
 
 新增、删除、重命名或改变职责的函数，必须在同一提交更新本节；签名变化替换旧条目，行为变化同时修改描述和变更日志。索引以源码为准，自动提取遗漏的多行签名时手工补充。
@@ -1235,6 +1245,13 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 
 ## 10. 变更日志
+
+### 2026-09-26（半透明统一界面与温和物理反馈）
+
+- **UI**：统一 Main 面板、57 个按钮、动态 SavePrefab、模态弹窗、血条和推进器窗；面板 alpha 0.62，按钮半透明，文字图标保留清晰度。新增可编辑 PhysicsTelemetry 节点；返回按钮移至右上避免遮挡。修复 GlobalTextStyler 把 Outline 当成 Shadow 重新启用的错误。编辑入口 `Tools/HY-Sandbox/Polish Interface and Physics HUD`；原 Main 未保存状态备份于本地 `Temp/UIArcade/Main-before.unity`，恢复分支 `codex/pre-ui-arcade-20260926`。
+- **物理**：碰撞能量使用 PhysX 冲量约束有效质量，避免复合 Collider 回调重复计能。伤害为本轮初始能量伤害的 10%，单次最多 8% 最大耐久，0.35 秒冷却；炮击命中点施加可调 45 N s 冲量。爆炸冲量为原值 15%，单次附加速度最高 3 m/s；保持无直接伤害，3 秒碰撞双侧保护，碰撞摧毁不触发物理爆炸。没有连击、过载或射速增益。
+- **验证**：Unity 6000.3.11f1 Main Play Mode 的隔离 PhysX 探针 17 项通过，涵盖能量预算、质量/速度关系、偏心旋转、伤害限幅/冷却、爆炸速度上限/零直接伤害/碰撞保护；主场景按钮事件进入模拟成功，动态存档列表、建造/HUD/删除弹窗截图已目视检查。静态 build 0 错误（4 项既有依赖/过时 API 警告）；最终 diff 检查见交付。旧探针期间暴露的 Durability.OnEnable 对未初始化 MainUIPanels 的空引用已加保护。
+- **限制**：长时间密集爆炸/敌人压力与正式构建未测，不能宣称完全消除卡顿；多分辨率完整鼠标输入回归仍待后续。
 
 ### 2026-09-25（双血条与遮挡过渡）
 

@@ -116,6 +116,7 @@
     <Compile Include="Assets\Scripts\Actions\MoveBlockAction.cs" />
     <Compile Include="Assets\Scripts\UI\ThrusterInfoPanel.cs" />
     <Compile Include="Assets\Scripts\Manager\CargoPersistence.cs" />
+    <Compile Include="Assets\Scripts\UI\PhysicsTelemetryHud.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\InObject\MoveAxisHandle.cs" />
     <Compile Include="Assets\Scripts\UI\GlobalTextStyler.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="Assets\Scripts\Block\ConnectorPlacementHints.cs" />
     <Compile Include="Assets\Scripts\Thrusters\Thruster.cs" />
     <Compile Include="Assets\Scripts\Actions\GroupAction.cs" />
+    <Compile Include="Assets\Scripts\InObject\ImpactPhysics.cs" />
     <Compile Include="Assets\Scripts\Manager\SaveManager.cs" />
     <Compile Include="Assets\Scripts\UI\BlueprintUIPanel.cs" />
     <Compile Include="Assets\Scripts\UI\SaveUIPanel.cs" />

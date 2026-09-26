@@ -4,8 +4,14 @@ public class Durability : MonoBehaviour
 {
     [Header("耐久值设置")]
     public float maxDurability = 100f;
-    private float collisionSpeedThreshold = 5f;
-    private float damageMultiplier = 0.5f;
+    [SerializeField, Min(0f)] private float collisionSpeedThreshold = 5f;
+    [SerializeField, Min(0f), Tooltip("Durability lost per joule of impact energy.")] private float damageMultiplier = 0.001f;
+    [SerializeField, Range(0f, 1f)] private float _collisionDamageScale = 0.1f;
+    [SerializeField, Range(0f, 1f)] private float _maximumCollisionHealthFraction = 0.08f;
+    [SerializeField, Min(0f)] private float _collisionDamageCooldown = 0.35f;
+    private float _nextCollisionDamage;
+    private float _explosionProtectionUntil;
+    public bool DestroyedByCollision { get; private set; }
     public bool debugLog = true;
     
     public float currentDurability;
@@ -37,6 +43,8 @@ public class Durability : MonoBehaviour
     private void OnEnable()
     {
         LastAttacker = null;
+        DestroyedByCollision = false;
+        _nextCollisionDamage = _explosionProtectionUntil = 0f;
         currentDurability = maxDurability;
         UpdateDurablility(0);
     }
@@ -48,22 +56,23 @@ public class Durability : MonoBehaviour
         ChangeDurability(-amount);
     }
 
-    public void CollisionEnter(Collision collision)
+    public void ApplyCollisionEnergy(float reducedMass, float normalSpeed, float share)
     {
-        float collisionSpeed = collision.relativeVelocity.magnitude;
-
-        if (collisionSpeed > collisionSpeedThreshold)
-        {
-            float damage = Mathf.Min(40, (collisionSpeed - collisionSpeedThreshold) * damageMultiplier);
-            UpdateDurablility(-damage);
-
-            if (debugLog)
-            {
-                // Debug.Log($"{name} 碰撞速度：{collisionSpeed:F1}, 碰撞源：{collision.transform.name}, 伤害：{damage:F1}, 剩余耐久：{currentDurability:F1}");
-            }
-        }
+        if (!enabled || currentDurability <= 0f || Time.time < _nextCollisionDamage || Time.time < _explosionProtectionUntil) return;
+        float energy = ImpactPhysics.DamageEnergy(reducedMass, normalSpeed, collisionSpeedThreshold);
+        if (energy <= 0f) return;
+        float damage = Mathf.Min(energy * Mathf.Clamp01(share) * damageMultiplier * _collisionDamageScale,
+            maxDurability * _maximumCollisionHealthFraction);
+        if (damage <= 0f) return;
+        _nextCollisionDamage = Time.time + _collisionDamageCooldown;
+        DestroyedByCollision = damage >= currentDurability;
+        UpdateDurablility(-damage);
     }
 
+    public void ProtectFromExplosionCollisions(float duration)
+    {
+        _explosionProtectionUntil = Mathf.Max(_explosionProtectionUntil, Time.time + Mathf.Max(0f, duration));
+    }
     //public void Repair(float amount)
     //{
     //    currentDurability = Mathf.Min(maxDurability, currentDurability + amount);
@@ -88,17 +97,17 @@ public class Durability : MonoBehaviour
         if (currentDurability > maxDurability)
         {
             currentDurability = maxDurability;
-            MainUIPanels.instance.UpdateHealthBar(gameObject, currentDurability, maxDurability);
+            MainUIPanels.instance?.UpdateHealthBar(gameObject, currentDurability, maxDurability);
         }
         else if (currentDurability <= 0)
         {
             currentDurability = 0;
-            MainUIPanels.instance.UpdateHealthBar(gameObject, currentDurability, maxDurability);
+            MainUIPanels.instance?.UpdateHealthBar(gameObject, currentDurability, maxDurability);
             DestroyManager.Instance.DestroyGameObject(gameObject);
         }
         else
         {
-            MainUIPanels.instance.UpdateHealthBar(gameObject, currentDurability, maxDurability);
+            MainUIPanels.instance?.UpdateHealthBar(gameObject, currentDurability, maxDurability);
         }
 
         if (_icon != null)

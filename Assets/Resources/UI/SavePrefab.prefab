@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6224077881672084489}
   - component: {fileID: 156613041550766254}
   - component: {fileID: 1191680847328168726}
+  - component: {fileID: 2302875513362505170}
   m_Layer: 5
   m_Name: SavePrefabButton
   m_TagString: Untagged
@@ -98,13 +99,13 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_NormalColor: {r: 0.07, g: 0.12, b: 0.16, a: 0.78}
+    m_HighlightedColor: {r: 0.14, g: 0.34, b: 0.37, a: 1}
+    m_PressedColor: {r: 0.27, g: 0.91, b: 0.85, a: 1}
+    m_SelectedColor: {r: 0.14, g: 0.34, b: 0.37, a: 1}
+    m_DisabledColor: {r: 0.18, g: 0.22, b: 0.25, a: 0.55}
     m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
+    m_FadeDuration: 0.08
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
@@ -121,6 +122,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2302875513362505170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1757959263124731130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0684d39083059514d9eab159edf060ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIInteractionFeedback
+  _hoverScale: 1.035
+  _pressedScale: 0.97
+  _response: 18
 --- !u!1 &3012307838649276284
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,6 +149,7 @@ GameObject:
   - component: {fileID: 6728257200567129574}
   - component: {fileID: 4439941093355643183}
   - component: {fileID: 3238967089176855733}
+  - component: {fileID: 819603428546824753}
   m_Layer: 5
   m_Name: DeleteSaveButton
   m_TagString: Untagged
@@ -218,13 +235,13 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_NormalColor: {r: 0.53, g: 0.65, b: 0.73, a: 1}
+    m_HighlightedColor: {r: 0.27, g: 0.91, b: 0.85, a: 1}
+    m_PressedColor: {r: 0.27, g: 0.91, b: 0.85, a: 1}
+    m_SelectedColor: {r: 0.27, g: 0.91, b: 0.85, a: 1}
+    m_DisabledColor: {r: 0.18, g: 0.22, b: 0.25, a: 0.55}
     m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
+    m_FadeDuration: 0.08
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
@@ -241,6 +258,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &819603428546824753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3012307838649276284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0684d39083059514d9eab159edf060ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIInteractionFeedback
+  _hoverScale: 1.035
+  _pressedScale: 0.97
+  _response: 18
 --- !u!1 &6290014903098322802
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,6 +284,7 @@ GameObject:
   - component: {fileID: 4408837623539653267}
   - component: {fileID: 2613690910128923853}
   - component: {fileID: 3295961038814576124}
+  - component: {fileID: 6133094034633190641}
   m_Layer: 5
   m_Name: Size
   m_TagString: Untagged
@@ -299,8 +332,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_Color: {r: 0.53, g: 0.65, b: 0.73, a: 1}
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -320,6 +353,21 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 2kb
+--- !u!114 &6133094034633190641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6290014903098322802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Shadow
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.45}
+  m_EffectDistance: {x: 0, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!1 &6294196951740507714
 GameObject:
   m_ObjectHideFlags: 0
@@ -331,6 +379,7 @@ GameObject:
   - component: {fileID: 5987823853598445087}
   - component: {fileID: 8596068704265323180}
   - component: {fileID: 6135289047693895724}
+  - component: {fileID: 8270612015377951205}
   m_Layer: 5
   m_Name: FileName
   m_TagString: Untagged
@@ -378,8 +427,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  m_RaycastTarget: 1
+  m_Color: {r: 0.9, g: 0.95, b: 0.98, a: 1}
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -399,6 +448,21 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\tButton"
+--- !u!114 &8270612015377951205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6294196951740507714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Shadow
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.45}
+  m_EffectDistance: {x: 0, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!1 &6537656787005538939
 GameObject:
   m_ObjectHideFlags: 0
@@ -451,6 +515,7 @@ GameObject:
   - component: {fileID: 7000000000000000003}
   - component: {fileID: 7000000000000000004}
   - component: {fileID: 7000000000000000005}
+  - component: {fileID: 6263305910717409562}
   m_Layer: 5
   m_Name: RenameSaveButton
   m_TagString: Untagged
@@ -536,13 +601,13 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_NormalColor: {r: 0.53, g: 0.65, b: 0.73, a: 1}
+    m_HighlightedColor: {r: 0.27, g: 0.91, b: 0.85, a: 1}
+    m_PressedColor: {r: 0.27, g: 0.91, b: 0.85, a: 1}
+    m_SelectedColor: {r: 0.27, g: 0.91, b: 0.85, a: 1}
+    m_DisabledColor: {r: 0.18, g: 0.22, b: 0.25, a: 0.55}
     m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
+    m_FadeDuration: 0.08
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
@@ -559,6 +624,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6263305910717409562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7000000000000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0684d39083059514d9eab159edf060ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIInteractionFeedback
+  _hoverScale: 1.035
+  _pressedScale: 0.97
+  _response: 18
 --- !u!1 &8545452360216926939
 GameObject:
   m_ObjectHideFlags: 0
@@ -571,6 +651,7 @@ GameObject:
   - component: {fileID: 6509414554539202975}
   - component: {fileID: 5514405946678988944}
   - component: {fileID: 402752249673609669}
+  - component: {fileID: 3156876519631162516}
   m_Layer: 5
   m_Name: DuplicateSaveButton
   m_TagString: Untagged
@@ -656,13 +737,13 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_NormalColor: {r: 0.53, g: 0.65, b: 0.73, a: 1}
+    m_HighlightedColor: {r: 0.27, g: 0.91, b: 0.85, a: 1}
+    m_PressedColor: {r: 0.27, g: 0.91, b: 0.85, a: 1}
+    m_SelectedColor: {r: 0.27, g: 0.91, b: 0.85, a: 1}
+    m_DisabledColor: {r: 0.18, g: 0.22, b: 0.25, a: 0.55}
     m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
+    m_FadeDuration: 0.08
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
@@ -679,3 +760,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3156876519631162516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8545452360216926939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0684d39083059514d9eab159edf060ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIInteractionFeedback
+  _hoverScale: 1.035
+  _pressedScale: 0.97
+  _response: 18

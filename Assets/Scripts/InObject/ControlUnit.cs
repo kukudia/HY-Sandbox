@@ -1,4 +1,4 @@
-﻿using System.Collections;
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,9 +15,15 @@ public class ControlUnit : MonoBehaviour
     public bool hasValidCockpit;
     public Vector3 movementInput;
     public Transform target;
+    public float ExplosionCollisionProtectedUntil { get; private set; }
 
-    private float cooldownTime = 0.2f;
-    private bool _isOnCooldown;
+    public void ProtectExplosionContacts(float duration)
+    {
+        ExplosionCollisionProtectedUntil = Mathf.Max(ExplosionCollisionProtectedUntil, Time.time + Mathf.Max(0f, duration));
+    }
+
+    private readonly System.Collections.Generic.Dictionary<Durability, int> _impactTargets = new System.Collections.Generic.Dictionary<Durability, int>();
+
 
     public bool HasValidCockpit => hasValidCockpit && cockpit != null;
     public bool HasAnyCockpit => cockpits != null && cockpits.Length > 0
@@ -219,23 +225,44 @@ public class ControlUnit : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!PlayManager.instance.playMode) return;
+        if (PlayManager.instance == null || !PlayManager.instance.playMode || collision.contactCount == 0) return;
         if (collision.gameObject.layer == LayerMask.NameToLayer("IgnoreCollision")) return;
-        if (_isOnCooldown) return;
-
-        foreach (ContactPoint contact in collision.contacts)
+        Rigidbody body = GetComponent<Rigidbody>();
+        if (body == null || body.isKinematic) return;
+        Rigidbody otherBody = collision.rigidbody;
+        ControlUnit otherUnit = otherBody != null ? otherBody.GetComponent<ControlUnit>() : null;
+        // Suppress both sides: a blast-driven fragment must not damage an unprotected neighbour either.
+        if (Time.time < ExplosionCollisionProtectedUntil
+            || (otherUnit != null && Time.time < otherUnit.ExplosionCollisionProtectedUntil)) return;
+        float reducedMass = ImpactPhysics.ReducedMass(body.mass, otherBody != null ? otherBody.mass : 0f,
+            otherBody == null || otherBody.isKinematic);
+        float normalSpeed = 0f;
+        float normalImpulse = 0f;
+        int contacts = 0;
+        _impactTargets.Clear();
+        for (int i = 0; i < collision.contactCount; i++)
         {
-            Collider thisCollider = contact.thisCollider;
-            var childHandler = thisCollider.GetComponent<Durability>();
-            if (childHandler != null)
-            {
-                childHandler.CollisionEnter(collision);
-            }
+            ContactPoint contact = collision.GetContact(i);
+            normalSpeed = Mathf.Max(normalSpeed, Mathf.Abs(Vector3.Dot(collision.relativeVelocity, contact.normal)));
+            normalImpulse = Mathf.Max(normalImpulse, Mathf.Abs(Vector3.Dot(collision.impulse, contact.normal)));
+            Durability target = contact.thisCollider.GetComponentInParent<Durability>();
+            if (target == null || !target.enabled || target.GetComponentInParent<ControlUnit>() != this) continue;
+            _impactTargets.TryGetValue(target, out int count);
+            _impactTargets[target] = count + 1;
+            contacts++;
         }
-
-        StartCoroutine(StartCooldown());
+        // PhysX reports separate compound-collider pairs. Their solver impulses partition the contact
+        // response; using full construct mass per callback would count the same kinetic energy repeatedly.
+        float effectiveMass = normalSpeed > 0.001f ? Mathf.Min(reducedMass, normalImpulse / normalSpeed) : 0f;
+        // Capture the event before damage can detach or destroy the player's cockpit.
+        if (faction == UnitFaction.Player && normalSpeed > 1f)
+            ImpactPhysics.ReportPlayerImpact(0.5f * effectiveMass * normalSpeed * normalSpeed, normalImpulse);
+        // Share a fixed energy budget across contacted modules. Extra manifold points do not create energy.
+        // Dynamic pairs split this budget equally; a static/kinematic surface absorbs no module damage.
+        float sideShare = otherBody == null || otherBody.isKinematic ? 1f : 0.5f;
+        foreach (var target in _impactTargets)
+            if (target.Key != null) target.Key.ApplyCollisionEnergy(effectiveMass, normalSpeed, sideShare * target.Value / Mathf.Max(1, contacts));
     }
-
     private void OnDestroy()
     {
         if (PlayManager.instance != null)
@@ -244,12 +271,7 @@ public class ControlUnit : MonoBehaviour
         }
     }
 
-    private IEnumerator StartCooldown()
-    {
-        _isOnCooldown = true;
-        yield return new WaitForSeconds(cooldownTime);
-        _isOnCooldown = false;
-    }
+
 }
 
 public class RuntimeUnitMember : MonoBehaviour

@@ -1,5 +1,6 @@
 # Preserve Unity/vendor YAML serialization in the curated reserve library.
 # Unity emits spaces after empty serialized values; other whitespace checks remain enabled.
+Assets/Scenes/Main.unity whitespace=-blank-at-eol
 Assets/Art/SpaceKit/**/*.asset whitespace=-blank-at-eol
 Assets/Art/SpaceKit/**/*.mat whitespace=-blank-at-eol
 Assets/Art/BlockVisuals/**/*.prefab whitespace=-blank-at-eol
@@ -14,3 +15,4 @@ Assets/Art/VFX.meta whitespace=-blank-at-eol
 Assets/Art/VFX/**/*.meta whitespace=-blank-at-eol
 Assets/Art/VFX/**/*.vfx whitespace=-blank-at-eol
 Assets/Art/VFX/**/*.shadergraph whitespace=-blank-at-eof
+Assets/Resources/UI/SavePrefab.prefab whitespace=-blank-at-eol

@@ -16,6 +16,8 @@ public class TurretWeapon : MonoBehaviour
     public float range = 45f;
     public float damage = 12f;
     public float fireInterval = 0.45f;
+    [SerializeField, Min(0f), Tooltip("Momentum delivered at the hit point in N s. Heavy constructs respond less; off-centre hits generate torque.")]
+    private float _impactImpulse = 45f;
     [FormerlySerializedAs("turnSpeed")]
     public float horizontalTurnSpeed = 240f;
     public float verticalTurnSpeed = 180f;
@@ -350,6 +352,10 @@ public class TurretWeapon : MonoBehaviour
             if (hitUnit == owner) continue;
 
             end = hit.point;
+            // Apply before damage regroups the target; RefreshGroup carries the resulting velocity to fragments.
+            Rigidbody hitBody = hit.rigidbody;
+            if (hitBody != null && !hitBody.isKinematic)
+                hitBody.AddForceAtPosition(direction * (_impactImpulse * power.efficiency), hit.point, ForceMode.Impulse);
             BlockVfxLibrary.Play(BlockVfxLibrary.Effect.Impact, hit.point, Quaternion.LookRotation(hit.normal), 0.6f);
             Durability durability = hit.collider.GetComponentInParent<Durability>();
 

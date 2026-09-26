@@ -548,7 +548,7 @@ public abstract class Bot : MonoBehaviour
                 (navigateTarget != null && collider.transform.IsChildOf(navigateTarget)))
                 continue;
 
-            Vector3 obstaclePos = collider.ClosestPoint(transform.position);
+            Vector3 obstaclePos = ImpactPhysics.ClosestPoint(collider, transform.position);
             float distance = Vector3.Distance(transform.position, obstaclePos);
 
             // 过滤地面

@@ -43,7 +43,11 @@ public sealed class GlobalTextStyler : MonoBehaviour
                 outline.enabled = false;
             }
 
-            var shadow = text.GetComponent<Shadow>();
+            // Outline derives from Shadow: GetComponent<Shadow>() can re-enable the very outline
+            // disabled above, causing heavy text strokes and inconsistent typography.
+            Shadow shadow = null;
+            foreach (Shadow candidate in text.GetComponents<Shadow>())
+                if (!(candidate is Outline)) { shadow = candidate; break; }
             if (shadow == null)
             {
                 shadow = text.gameObject.AddComponent<Shadow>();

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,6 +27,9 @@ public class DestroyManager : MonoBehaviour
     private float _refreshDelay = 0.2f;
     private float _unitCleanupDelay = 10f;
     [SerializeField] private float _blockExplosionUpwardsModifier = 1.2f;
+    [SerializeField, Range(0f, 1f)] private float _explosionImpulseScale = 0.15f;
+    [SerializeField, Min(0f)] private float _maximumExplosionSpeedChange = 3f;
+    [SerializeField, Min(0f)] private float _explosionCollisionProtection = 3f;
     private bool _isRefreshScheduled;
     private int _destroyedCount;
     private HashSet<string> _scheduledUnitCleanups = new HashSet<string>();
@@ -54,7 +57,7 @@ public class DestroyManager : MonoBehaviour
             && block != null
             && PlayManager.instance != null
             && PlayManager.instance.playMode;
-        bool willExplode = block != null && block.canExplode
+        bool willExplode = block != null && block.canExplode && (health == null || !health.DestroyedByCollision)
             && PlayManager.instance != null && PlayManager.instance.playMode;
         // ExplodeBlock owns the single destruction burst for explosive blocks.
         if (!willExplode)
@@ -74,7 +77,7 @@ public class DestroyManager : MonoBehaviour
         foreach (Bot bot in obj.GetComponentsInChildren<Bot>(true)) bot.PrepareForHomeDestruction();
         if (destroyedHold != null) destroyedHold.ReleaseContents(ownerFaction);
 
-        if (block != null && block.canExplode)
+        if (willExplode)
         {
             ExplodeBlock(block);
         }
@@ -259,7 +262,7 @@ public class DestroyManager : MonoBehaviour
             {
                 if (bodyCollider == null) continue;
 
-                Vector3 candidatePoint = bodyCollider.ClosestPoint(explosionPosition);
+                Vector3 candidatePoint = ImpactPhysics.ClosestPoint(bodyCollider, explosionPosition);
                 float candidateDistance = Vector3.Distance(candidatePoint, explosionPosition);
                 if (candidateDistance < nearestDistance)
                 {
@@ -282,7 +285,11 @@ public class DestroyManager : MonoBehaviour
 
             direction = direction.sqrMagnitude > 0.0001f ? direction.normalized : Vector3.up;
             Vector3 impulse = (direction + Vector3.up * _blockExplosionUpwardsModifier).normalized
-                * (block.explosionForce * falloff);
+                * Mathf.Min(block.explosionForce * falloff * _explosionImpulseScale, rb.mass * _maximumExplosionSpeedChange);
+            // Keep explosion impulse purely physical. Its immediate collisions cannot cascade into destruction.
+            foreach (Durability durability in rb.GetComponentsInChildren<Durability>())
+                durability.ProtectFromExplosionCollisions(_explosionCollisionProtection);
+            rb.GetComponent<ControlUnit>()?.ProtectExplosionContacts(_explosionCollisionProtection);
             rb.AddForceAtPosition(impulse, forcePoint, ForceMode.Impulse);
 
             ControlUnit detachedGroup = rb.GetComponent<ControlUnit>();
