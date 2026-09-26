@@ -60,7 +60,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 `GameManager` 在启动时初始化全局管理器和方块父节点。`MainUIPanels` 控制创建、删除、建造、游玩、死亡等面板的淡入淡出。`BuildManager` 负责建造上下文；`PlayManager` 负责进入/退出游玩模式及控制单元分组。`CameraController` 提供第一人称和自由飞行两种视角，`B` 切换视角锁定状态，`Tab` 切换相机模式。
 
-`InputManager` 统一处理 `B`/`Tab`/`F`、敌方蓝图开发者快捷键和模式光标状态：建造锁定模式显示并限制鼠标，建造自由飞行模式隐藏并锁定鼠标，游玩模式默认隐藏并锁定鼠标，按住 Alt 时显示并限制鼠标。`PlayPanel` 左下角由 `MainUIPanels` 显示白色单元总血条和绿色驾驶舱血条。
+`InputManager` 统一处理 `B`/`Tab`/`F`、敌方蓝图开发者快捷键和模式光标状态：建造锁定模式显示并限制鼠标，建造自由飞行模式隐藏并锁定鼠标；游玩模式仅按住 Alt 时显示并限制鼠标，F1 推进器信息面板打开时只锁定镜头，不显示鼠标。`PlayPanel` 左下角由 `MainUIPanels` 显示白色单元总血条和绿色驾驶舱血条。
 
 进入游玩模式前，`PlayManager.CanStartPlay` 会检查当前构造体是否存在有效驾驶舱；成功后由 `ControlUnit` 刷新子模块并取得运行时所有权。退出游玩模式时恢复建造状态并清理运行时分组。
 
@@ -107,6 +107,8 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 ### 3.6 物理模拟与性能
 
 `ControlUnit.OnCollisionEnter` 以法向速度和 PhysX 实际冲量分摊复合碰撞体能量，`Durability.ApplyCollisionEnergy` 以伤害/焦耳系数乘 0.1 倍映射至耐久，单次上限为最大耐久的 8%，同模块伤害间隔 0.35 秒。`DestroyManager` 保持爆炸零直接伤害；基础冲量缩放至 0.15，单次附加平移速度上限 3 m/s，受影响模块及对方碰撞均受 3 秒保护，碰撞损毁不触发物理爆炸。上述参数可在 Inspector 调整。`ImpactPhysics.ClosestPoint` 为非凸碰撞体提供 bounds 回退。`PhysicsTelemetryHud` 的真实场景节点显示速度、质量、动能、旋转速率及撞击数据；`InterfaceBaker` 烘焙 Main 与动态存档 Prefab，面板底色 alpha 0.62，保留文字图标不透明。
+
+`PlayManager.AssignBlocksToParentGroups` 为每个运行时控制单元（包括重组后的分离组）设置 Rigidbody 阻尼；线性阻尼默认 1.5（原 0.5），角阻尼默认 2，均由 PlayManager Inspector 调整。维修机器人与陨石保留各自独立物理参数。
 
 项目使用 3D PhysX 作为运行时物理后端。为降低物理线程在大型构造体、敌人和爆炸冲量场景下的持续计算压力，当前项目设置为：固定物理步长约 0.02 秒（50 Hz；`ProjectSettings/TimeManager.asset` 使用 Unity 6000 的有理数格式保存）、单帧物理追赶上限 0.1 秒、默认位置求解迭代 4 次、默认速度求解迭代 1 次。碰撞回调复用已启用，Transform 自动同步保持关闭；2D 物理设置未改变。降低步频和迭代次数会减少 CPU 占用，但高速碰撞、堆叠稳定性和推进器控制手感需要在 Play Mode 复核。
 
@@ -1245,6 +1247,13 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 
 ## 10. 变更日志
+
+### 2026-09-26（刚体阻尼与推进器面板光标）
+
+- **实现**：运行时控制单元 Rigidbody 线性阻尼默认提高至 1.5，并新增 PlayManager Inspector 可调的线性/角阻尼；F1 打开 ThrusterInfoPanel 时保持光标隐藏与锁定镜头，只有长按 Alt 才显示光标，松开后立即隐藏。PlayManager 不再与 InputManager 争用光标锁定状态。
+- **已通过代码/文件确认**：所有运行时控制单元重新分组都经同一个阻尼赋值路径；建造模式仍沿用原有光标逻辑。
+- **Unity 编辑器或 Play Mode 验证**：Unity 6000.3.11f1 重新编译通过。Main 场景 Play Mode 实际开始游玩后，玩家刚体 `linearDamping=1.5`；打开推进器面板时光标隐藏且 Locked，镜头为 ThirdPersonLock。临时 Input System 键盘模拟 Alt 按下/松开，分别验证光标显示且 Confined、隐藏且 Locked；测试设备已移除。Play Mode 结束前 Console 为 0 error / 0 warning，编辑器未保存已有的场景脏状态。
+- **尚未验证**：正式构建和长时间飞行手感。
 
 ### 2026-09-26（半透明统一界面与温和物理反馈）
 

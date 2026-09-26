@@ -36,6 +36,12 @@ public class PlayManager : MonoBehaviour
     [Min(1f)] public float groupCleanupDistance = 200f;
     [Min(0.25f)] public float groupCleanupCheckInterval = 1f;
 
+    [Header("运行时刚体阻尼")]
+    [SerializeField, Min(0f), Tooltip("所有重组后的控制单元刚体的线性阻尼；提高可减缓惯性漂移。")]
+    private float _groupLinearDamping = 1.5f;
+    [SerializeField, Min(0f), Tooltip("所有重组后的控制单元刚体的角阻尼。")]
+    private float _groupAngularDamping = 2f;
+
     [Tooltip("Show runtime debug UI")]
     public bool showUI = true;
 
@@ -233,8 +239,6 @@ public class PlayManager : MonoBehaviour
 
     public void SetPlayMode(bool lockView)
     {
-        Cursor.lockState = lockView ? CursorLockMode.Confined : CursorLockMode.Locked;
-
         if (!lockView && selectedBlock != null)
         {
             DeselectBlock();
@@ -402,8 +406,8 @@ public class PlayManager : MonoBehaviour
 
             Rigidbody rb = groupParent.GetComponent<Rigidbody>();
             rb.mass = mass;
-            rb.linearDamping = 0.5f;
-            rb.angularDamping = 2f;
+            rb.linearDamping = Mathf.Max(0f, _groupLinearDamping);
+            rb.angularDamping = Mathf.Max(0f, _groupAngularDamping);
             rb.isKinematic = false;
             RestoreGroupPhysics(rb, group, sourceBodies);
 

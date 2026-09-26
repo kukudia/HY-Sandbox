@@ -31,7 +31,7 @@ public class InputManager : MonoBehaviour
             CameraController.instance.currentMode = CameraMode.Lock;
         }
 
-        ApplyCursorState();
+        ApplyCursorState(lockView);
     }
 
     private void Update()
@@ -94,7 +94,7 @@ public class InputManager : MonoBehaviour
 
                 CameraController.instance.currentMode = lockView ? CameraMode.Lock : CameraMode.FreeFly;
                 BuildManager.instance.SetBuildMode(lockView);
-                ApplyCursorState();
+                ApplyCursorState(lockView);
             }
 
             if (DeveloperToolsAvailable
@@ -107,10 +107,12 @@ public class InputManager : MonoBehaviour
         }
         else
         {
-            lockView = keyboard.altKey.isPressed || (thrusterPanel != null && thrusterPanel.IsOpen);
+            bool altHeld = keyboard.altKey.isPressed;
+            lockView = altHeld || (thrusterPanel != null && thrusterPanel.IsOpen);
             CameraController.instance.currentMode = lockView ? CameraMode.ThirdPersonLock : CameraMode.ThirdPerson;
             PlayManager.instance.SetPlayMode(lockView);
-            ApplyCursorState();
+            // The thruster window freezes the camera, but only Alt releases the pointer.
+            ApplyCursorState(altHeld);
         }
     }
 
@@ -127,12 +129,12 @@ public class InputManager : MonoBehaviour
             BuildManager.instance.SetBuildMode(true);
         }
 
-        ApplyCursorState();
+        ApplyCursorState(lockView);
     }
 
-    private void ApplyCursorState()
+    private void ApplyCursorState(bool showCursor)
     {
-        Cursor.visible = lockView;
-        Cursor.lockState = lockView ? CursorLockMode.Confined : CursorLockMode.Locked;
+        Cursor.visible = showCursor;
+        Cursor.lockState = showCursor ? CursorLockMode.Confined : CursorLockMode.Locked;
     }
 }
