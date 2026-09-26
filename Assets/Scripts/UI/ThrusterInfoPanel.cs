@@ -36,7 +36,7 @@ public sealed class ThrusterInfoPanel : MonoBehaviour
             int category = i;
             _tabs[i].onClick.AddListener(() => SelectCategory(category));
         }
-        if (_window != null) _window.SetActive(false);
+        //if (_window != null) _window.SetActive(false);
     }
 
     private void OnDisable()

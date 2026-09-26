@@ -108,7 +108,7 @@ public class InputManager : MonoBehaviour
         else
         {
             bool altHeld = keyboard.altKey.isPressed;
-            lockView = altHeld || (thrusterPanel != null && thrusterPanel.IsOpen);
+            lockView = altHeld;
             CameraController.instance.currentMode = lockView ? CameraMode.ThirdPersonLock : CameraMode.ThirdPerson;
             PlayManager.instance.SetPlayMode(lockView);
             // The thruster window freezes the camera, but only Alt releases the pointer.

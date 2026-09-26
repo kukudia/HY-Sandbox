@@ -2718,6 +2718,8 @@ MonoBehaviour:
   maxUselessControlUnitGroups: 32
   groupCleanupDistance: 200
   groupCleanupCheckInterval: 1
+  _groupLinearDamping: 1.5
+  _groupAngularDamping: 2
   showUI: 1
 --- !u!1 &270053596
 GameObject:
