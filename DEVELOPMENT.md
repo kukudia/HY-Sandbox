@@ -74,13 +74,13 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 2. UI 上的指针输入先被拦截；射线检测方块并在自身 `canConnect`、未占用且对面没有实体方块的 Connector 上显示 0.9×0.9 白色圆角线框，按连接面的世界法线和预览方块旋转后的方向半尺寸计算放置偏移，再按半网格边界吸附；没有可用连接点、移出目标或退出模式时清除 Ghost 与提示。
 3. `Block.IsBlockedGhost` 和 `BuildManager.IsBlocked` 同时检查连接点射线和按 `gridSize` 缩放的实体包围盒，阻挡时禁止放置。
 4. `CreateBlock` 实例化 Prefab，应用默认值并写入当前存档。
-5. 选中方块后支持键盘移动、15 度旋转、移动/旋转轴拖拽、复制和删除。
+5. 选中方块后支持键盘移动、45 度旋转、移动/旋转轴拖拽、复制和删除。
 
 `Block` 根据尺寸在六个方向生成连接点，通过位置和相反法线匹配相邻模块，维护 `neighbors`。`CheckConnection` 会先同步物理变换并双向清理旧连接器，再建立未占用的匹配，连接/断开时同步双方 `Info` 状态；`Neighbors` 和 `BlockGroupManager.GroupBlocks` 使用同一套双侧连接规则，分组遍历复用物理查询缓冲和 BFS 工作区，避免射线命中、禁用 Connector、输入集合外对象或可选连接视觉造成错误合组和额外分配。`PlayManager.RefreshGroup` 将连接状态刷新留给实际连接变更路径，分组前只做一次物理同步。`IsConnectorAvailableForPlacement` 会同时检查本方 `canConnect`、占用状态和对面方块是否存在，避免对着 `canConnect=false` 的邻接面显示提示或放置。连接成功后创建连接视觉对象（缺少视觉 Prefab 时仍保留逻辑连接）；`DisConnectAllConnectors` 用于删除、拆分和游玩结束清理。
 
 ### 3.3 存档与加载
 
-- 加载节奏从 0.25 秒开始，每经过 2 秒加载时间减半，最低 0.005 秒；实际间隔受帧率与实例化耗时限制。镜头继续使用独立固定角速度，加载变快后不保证恰好环绕一周。`_loadCameraReferenceSecondsPerBlock` 在 Main 场景保留为原 0.05，`_blockLoadIntervalHalfLifeSeconds` 与 `_minimumBlockLoadIntervalSeconds` 可调。
+- 加载节奏从 0.25 秒开始，每经过 1 秒加载时间减半，最低 0.005 秒；实际间隔受帧率与实例化耗时限制。镜头继续使用独立固定角速度，加载变快后不保证恰好环绕一周。`_loadCameraReferenceSecondsPerBlock` 在 Main 场景保留为原 0.05，`_blockLoadIntervalHalfLifeSeconds` 与 `_minimumBlockLoadIntervalSeconds` 可调。
 
 - 玩家可加载 `CODEX_01_Bastion`、`CODEX_02_Manta`、`CODEX_03_Catamaran`、`CODEX_04_Crossguard`、`CODEX_05_Lance`。`Blueprints/CODEX` 提供 JSON、可重复生成/校验脚本和操作说明；该目录位于 Assets 外，不被打包，也不自动安装到其他机器。开始游玩后按一次 Space 启动悬浮，WASD 移动，Q/E 调高。
 
