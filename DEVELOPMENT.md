@@ -1,7 +1,7 @@
 # HY-Sandbox 项目开发文档
 
 > 文档状态：持续维护中  
-> 最近核对：2026-09-26
+> 最近核对：2026-09-27
 > Unity 编辑器：6000.3.11f1（`ProjectSettings/ProjectVersion.txt`）  
 > 当前分支：`main`
 
@@ -61,6 +61,8 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 `GameManager` 在启动时初始化全局管理器和方块父节点。`MainUIPanels` 控制创建、删除、建造、游玩、死亡等面板的淡入淡出。`BuildManager` 负责建造上下文；`PlayManager` 负责进入/退出游玩模式及控制单元分组。`CameraController` 提供第一人称和自由飞行两种视角，`B` 切换视角锁定状态，`Tab` 切换相机模式。
 
 `InputManager` 统一处理 `B`/`Tab`/`F`、敌方蓝图开发者快捷键和模式光标状态：建造锁定模式显示并限制鼠标，建造自由飞行模式隐藏并锁定鼠标；游玩模式仅按住 Alt 时显示并限制鼠标，F1 推进器信息面板打开时只锁定镜头，不显示鼠标。`PlayPanel` 左下角由 `MainUIPanels` 显示白色单元总血条和绿色驾驶舱血条。
+
+编辑器菜单 `Tools/HY-Sandbox/Scene View/Follow Main Camera` 可切换 Scene 视角跟随当前场景的 MainCamera；开启时同步位置、朝向及透视视场角/正交尺寸，关闭后 Scene 视角恢复独立控制。开关状态按项目保存在本机 EditorPrefs，不写入场景或构建。
 
 进入游玩模式前，`PlayManager.CanStartPlay` 会检查当前构造体是否存在有效驾驶舱；成功后由 `ControlUnit` 刷新子模块并取得运行时所有权。退出游玩模式时恢复建造状态并清理运行时分组。
 
@@ -162,6 +164,8 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - 已加入三种可编辑货仓、回收无人机舱、独立掉落物、金币汇聚、内容保存/返回及共享 Bot 导航；运行验证记录见 2026-09-22 变更日志。
 
 ## 5. 待改进与风险
+
+- **已修复（2026-09-27）**：玩家 Cockpit 血条原 Filled Image 缺少 Sprite，导致数值变化但画面不裁切；已补资源引用并通过 uGUI 顶点宽度检查。大型战斗中血条可读性仍需实机观察。
 
 - **已修复（2026-09-26）**：Bot 与爆炸最近点统一走 ImpactPhysics，非凸 MeshCollider/地形使用 bounds 回退；非凸探针通过。复杂凹模型回退为包围盒近似，精细避障效果仍需实机观察。
 - **2026-09-23 蓝图设计观察**：固定逐块等待问题已由同日指数衰减加载改善（737 块约 14.92 秒）；旧蓝图报告中的 0.1 秒是原代码默认值，主场景原实际配置为 0.05 秒。连接重建与实例化开销仍待专项优化。不同体积装甲同为 100 耐久使小块密铺具有耐久优势且增加 CPU 负担；建造面板缺少失效后的升力/覆盖提示；自动生存对比需要固定种子、标准火力和实际受击/维修统计。其余建议见 `Blueprints/CODEX/README.md`，尚未实施平衡改造。
@@ -1247,6 +1251,13 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 
 ## 10. 变更日志
+
+### 2026-09-27（玩家 Cockpit 血条与 Scene 摄像机预览）
+
+- **实现**：Main 场景玩家 Cockpit 血条的 Filled Image 补上 UI Sprite，使 `fillAmount` 真正裁切填充图像；数值绑定和 0.2 秒刷新周期保持不变。新增编辑器菜单 `Tools/HY-Sandbox/Scene View/Follow Main Camera`，按项目记住开关状态，开启时 Scene 视角跟随 MainCamera，关闭时不再接管视角。
+- **代码/文件确认**：Main 场景 Cockpit Fill 引用保留原 Image 组件与绑定，仅为 Filled Image 指定与主血条相同的 UISprite；场景差异只涉及该资源引用。`SceneCameraPreviewSync` 仅位于 Editor 目录，开关不修改摄像机或场景资产。
+- **Unity 编辑器/Play Mode 验证**：Unity 6000.3.11f1 中，受伤后玩家 Cockpit 数值从 `500 / 500` 更新为 `375 / 500`，`fillAmount` 从 1 更新为 0.75；修复后使用该场景 Image 的副本生成 uGUI 顶点，填充 1→0.5 时右边界由 149.75 缩至 0，确认可视宽度会变化。Scene 跟随开关开启时与 MainCamera 位置/旋转误差为 0、FOV 均为 60；关闭后移动 Scene 视角 3 米未被拉回。Unity 脚本编译通过。
+- **尚未验证**：正式构建和不同编辑器布局下所有 Scene View 实例的同步效果。
 
 ### 2026-09-26（刚体阻尼与推进器面板光标）
 

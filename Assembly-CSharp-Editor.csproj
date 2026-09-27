@@ -76,6 +76,7 @@
     <Compile Include="Assets\Editor\SalvageAssetBaker.cs" />
     <Compile Include="Assets\Editor\SpaceKitCurator.cs" />
     <Compile Include="Assets\Editor\BuildInteractionSetup.cs" />
+    <Compile Include="Assets\Editor\SceneCameraPreviewSync.cs" />
     <Compile Include="Assets\Editor\NativeVfxLibraryBuilder.cs" />
     <Compile Include="Assets\Editor\ProfilerCaptureAnalysis.cs" />
     <Compile Include="Assets\Editor\BlockStatusSetup.cs" />
