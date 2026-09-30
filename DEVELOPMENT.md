@@ -110,7 +110,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 `MainUIPanels` 为每个面板只保留一条淡入淡出协程，并在删除确认关闭时移除临时按钮回调。`PlayPanel/CombatHud` 是保存于 Main 场景的 uGUI：复用敌方名牌实例，每 0.2 秒汇总敌方单元当前耐久，以生成时记录的最大耐久作为固定分母；按镜头视野和距离隐藏离屏目标。击杀提示位于画面居中偏下，以不透光深色背景、较大文字和短暂淡入淡出显示敌方蓝图名称及本轮击杀数；仅玩家攻击导致敌方驾驶舱摧毁时计数。按钮的悬停、按下和焦点缩放由 `UIInteractionFeedback` 处理。`Tools/HY-Sandbox/Setup Combat HUD` 可重复配置场景和悬浮控制器 Prefab；后者的 IMGUI 诊断窗默认关闭，仍可在 Prefab Inspector 中开启 `showUI` 调试。架构参考 [deVoid UI Framework](https://github.com/yankooliveira/uiframework) 与 [Unity-UI-Framework](https://github.com/MrNerverDie/Unity-UI-Framework) 的界面职责拆分及过渡管理，当前实现继续使用项目已有 uGUI。
 
-玩家和敌人使用双血条：白色为含 Cockpit 的 `ControlUnit` 当前/出生总耐久，下方彩色条为驾驶舱当前/最大耐久（玩家绿色、敌人红色）。敌人的总耐久上限由生成器在实例化方块时累计并保存在 Cockpit 的 `EnemyIdentity`，后续分组和损毁不改变分母；玩家总耐久上限在 `PlayStart` 固定。敌人名牌保留 Screen Space Overlay 的清晰度，以相机到名牌锚点的 3D 射线过滤其它模型遮挡，并用 CanvasGroup 淡入淡出。`StatusIcon` 复用相同遮挡判定，淡入淡出透明度与原有脉冲相乘。`HoverFlightController` 的旧 IMGUI 已迁移到 PlayPanel Canvas：左下角显示目标高度、当前高度、高度 P、垂直速度和水平速度；F1 打开右上角 `ThrusterInfoPanel`，按 Main/Universal/Hover 分类显示拥有有效运行时归属的推进器、推力进度和供电状态颜色。Hover 控制器 Prefab 的状态灯为绿色表示被有效 ControlUnit 使用，红色表示未使用。
+玩家和敌人使用双血条：白色为含 Cockpit 的 `ControlUnit` 当前/出生总耐久，下方彩色条为驾驶舱当前/最大耐久（玩家绿色、敌人红色）。敌人的总耐久上限由生成器在实例化方块时累计并保存在 Cockpit 的 `EnemyIdentity`，后续分组和损毁不改变分母；玩家总耐久上限在 `PlayStart` 固定。敌人名牌保留 Screen Space Overlay 的清晰度，以相机到名牌锚点的 3D 射线过滤其它模型遮挡，并用 CanvasGroup 淡入淡出。`StatusIcon` 复用相同遮挡判定，淡入淡出透明度与原有脉冲相乘。`HoverFlightController` 的旧 IMGUI 已迁移到 PlayPanel Canvas：左下角显示目标高度、当前高度、高度 P、垂直速度和水平速度；F1 打开右上角 `ThrusterInfoPanel`，按 Main/Universal/Hover 分类显示拥有有效运行时归属的推进器、推力进度和供电状态颜色。Hover 控制器 Prefab 的状态灯为绿色表示被有效 ControlUnit 使用，红色表示未使用。推进器分类选中线在 Main 场景中默认保存为标签底部 3px 青色横线，面板初始化时同步当前分类，避免首次显示 Universal 标签附近出现 100×100 的深色方块。
 
 ### 3.6 物理模拟与性能
 
@@ -190,7 +190,7 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 - **战斗 HUD（2026-09-25）**：隔离 Play Mode 的九项逻辑检查通过，`Temp/CombatHud/EnemyNameplate.png` 与 `KillNotice.png` 已在探针结束后落盘并目视核对；真实大型蓝图战斗中的多名牌遮挡、各种分辨率和长名称排版仍需实机检查。
 
-- **推进器 HUD（2026-09-25）**：隔离 Play Mode 探针扩展至 19 项并通过，覆盖 3D 遮挡隐藏/恢复、ControlUnit 总耐久、Canvas 飞行数据、F1 面板归属筛选和分类导航；`ThrusterInfoPanel.png` 已目视核对。正式构建和不同分辨率下的长列表滚动仍待验证。
+- **推进器 HUD（2026-09-25）**：隔离 Play Mode 探针扩展至 19 项并通过，覆盖 3D 遮挡隐藏/恢复、ControlUnit 总耐久、Canvas 飞行数据、F1 面板归属筛选和分类导航；`ThrusterInfoPanel.png` 已目视核对。正式构建和不同分辨率下的长列表滚动仍待验证；2026-09-30 已修复选中线初始尺寸异常，首次打开的视觉效果仍待 Play Mode 回归。
 
 优先级含义：P0 阻断主流程，P1 影响核心体验或数据安全，P2 可维护性/性能，P3 体验增强。
 
@@ -1267,6 +1267,12 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 
 ## 10. 变更日志
+
+### 2026-09-30（推进器分类初始黑色方块）
+
+- **原因与修复**：Main 场景 ThrusterInfoPanel/Window/Tabs/SelectionLine 的 RectTransform 保存为居中的 100×100 占位 Image；首次显示时遮挡 Universal 标签。将场景初始值和 ThrusterHudSetup 重建逻辑统一为首个标签底部 3px 青色选中线，并在 ThrusterInfoPanel.Awake 初始化当前分类。
+- **代码/文件确认**：已核对 SelectionLine 的场景 fileID、Image 颜色、RectTransform 几何及生成脚本；未改变标签尺寸、按钮绑定或其他场景节点。
+- **验证范围**：git diff --check 通过；dotnet build HY-Sandbox.sln --no-restore --nologo 为 0 错误、4 个既有警告。Unity CLI 当前未发现已连接的目标 Editor，首次打开面板的实际 Play Mode 视觉回归尚未完成。
 
 ### 2026-09-30（编辑器异常冲量记录器）
 

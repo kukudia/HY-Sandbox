@@ -79,6 +79,10 @@ public static class ThrusterHudSetup
             labels[i] = label;
         }
         RectTransform indicator = Child(tabs, "SelectionLine");
+        indicator.anchorMin = Vector2.zero;
+        indicator.anchorMax = new Vector2(1f / 3f, 0f);
+        indicator.offsetMin = Vector2.zero;
+        indicator.offsetMax = new Vector2(0f, 3f);
         Paint(indicator, Cyan, false);
         indicator.SetAsLastSibling();
 

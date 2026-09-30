@@ -36,6 +36,9 @@ public sealed class ThrusterInfoPanel : MonoBehaviour
             int category = i;
             _tabs[i].onClick.AddListener(() => SelectCategory(category));
         }
+        // Apply the serialized default immediately so the indicator cannot render
+        // with its editor placeholder size during the first frame.
+        SelectCategory(_category);
         //if (_window != null) _window.SetActive(false);
     }
 
