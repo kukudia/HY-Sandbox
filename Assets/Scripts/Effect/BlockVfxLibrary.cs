@@ -28,13 +28,14 @@ public sealed class BlockVfxLibrary : ScriptableObject
     {
         BlockVfxLibrary library = Instance;
         if (library == null) return SpawnResult.MissingLibrary;
-        if (!VfxEffect.CanSpawnBurst) return SpawnResult.BurstLimit;
         int index = (int)kind;
         if (index >= library._bursts.Length || library._bursts[index] == null) return SpawnResult.MissingPrefab;
+        bool priority = kind == Effect.Explosion;
+        if (!VfxEffect.MakeRoomForBurst(priority)) return SpawnResult.BurstLimit;
         VfxEffect effect = Instantiate(library._bursts[index], position, rotation);
         effect.transform.localScale *= Mathf.Clamp(scale, 0.05f, 4f);
         effect.PlayOnce();
-        effect.ReleaseAfterPlayback();
+        effect.ReleaseAfterPlayback(priority);
         return SpawnResult.Spawned;
     }
 }

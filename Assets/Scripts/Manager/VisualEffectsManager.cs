@@ -207,6 +207,7 @@ public class VisualEffectsManager : MonoBehaviour
         BlockVfxLibrary.SpawnResult result = BlockVfxLibrary.Play(BlockVfxLibrary.Effect.Explosion, center, Quaternion.identity, scale);
         if (_debugDestructionVfx)
             Debug.Log($"[Destruction VFX] PlayBlockExplosion target={block.name}, center={center}, bounds={bounds.size}, scale={scale:F2}, graph={result}", block);
+        if (result != BlockVfxLibrary.SpawnResult.Spawned) return;
         CreateLightFlash(center, emberColor, 7.5f, scale * 7f, 0.62f);
         ShakeCamera(cameraShakeStrength * 1.35f, 0.42f);
     }
@@ -224,6 +225,7 @@ public class VisualEffectsManager : MonoBehaviour
         BlockVfxLibrary.SpawnResult result = BlockVfxLibrary.Play(BlockVfxLibrary.Effect.Explosion, bounds.center, Quaternion.identity, scale);
         if (_debugDestructionVfx)
             Debug.Log($"[Destruction VFX] PlayObjectDestroyed target={target.name}, center={bounds.center}, bounds={bounds.size}, scale={scale:F2}, graph={result}", target);
+        if (result != BlockVfxLibrary.SpawnResult.Spawned) return;
         CreateLightFlash(bounds.center, removeColor, 5f, scale * 5f, 0.45f);
     }
 
@@ -334,9 +336,11 @@ public class VisualEffectsManager : MonoBehaviour
         Vector3 impactNormal = normal.sqrMagnitude > 0.001f ? normal.normalized : Vector3.up;
 
         Color meteorColor = new Color(2.8f, 1.1f, 0.2f, 1f);
-        BlockVfxLibrary.Play(BlockVfxLibrary.Effect.Explosion, position + impactNormal * 0.08f, Quaternion.identity, impactScale);
+        BlockVfxLibrary.SpawnResult result = BlockVfxLibrary.Play(BlockVfxLibrary.Effect.Explosion,
+            position + impactNormal * 0.08f, Quaternion.identity, impactScale);
         CreateRadialStreakBurst(position + impactNormal * 0.05f, impactNormal, meteorColor, 14, impactScale * 1.8f, 0.3f, 0.05f);
-        CreateLightFlash(position, meteorColor, impactScale * 3.8f, impactScale * 5.5f, 0.32f);
+        if (result == BlockVfxLibrary.SpawnResult.Spawned)
+            CreateLightFlash(position, meteorColor, impactScale * 3.8f, impactScale * 5.5f, 0.32f);
         ShakeCamera(cameraShakeStrength * Mathf.Clamp(impactScale, 1f, 3f), 0.2f);
     }
 

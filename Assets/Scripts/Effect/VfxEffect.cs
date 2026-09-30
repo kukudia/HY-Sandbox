@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -10,8 +11,10 @@ public sealed class VfxEffect : MonoBehaviour
     [SerializeField] private bool _playOnEnable;
     private bool _emitting;
     private bool _oneShot;
-    private static int _activeBursts;
-    public static bool CanSpawnBurst => _activeBursts < 64;
+    private const int MaxActiveBursts = 64;
+    private static readonly List<VfxEffect> ActiveBursts = new List<VfxEffect>(MaxActiveBursts);
+    private bool _priorityBurst;
+    public static bool CanSpawnBurst => ActiveBursts.Count < MaxActiveBursts;
     public VisualEffect[] Graphs => _graphs;
     public bool IsEmitting => _emitting;
     private void OnEnable() { if (_playOnEnable) SetIntensity(1f); }
@@ -48,13 +51,35 @@ public sealed class VfxEffect : MonoBehaviour
         _emitting = false;
     }
     public void PlayOnce() { Clear(); SetIntensity(1f); }
-    public void ReleaseAfterPlayback()
+    public static bool MakeRoomForBurst(bool priority)
+    {
+        for (int i = ActiveBursts.Count - 1; i >= 0; i--)
+            if (ActiveBursts[i] == null) ActiveBursts.RemoveAt(i);
+        if (CanSpawnBurst) return true;
+        if (!priority) return false;
+
+        // Evict only lower-priority bursts; an explosion's light may still be active.
+        for (int i = 0; i < ActiveBursts.Count; i++)
+        {
+            VfxEffect oldest = ActiveBursts[i];
+            if (oldest._priorityBurst) continue;
+            ActiveBursts.RemoveAt(i);
+            oldest.gameObject.SetActive(false);
+            Destroy(oldest.gameObject);
+            return true;
+        }
+        return false;
+    }
+
+    public void ReleaseAfterPlayback(bool priority = false)
     {
         if (_oneShot) return;
-        _oneShot = true; _activeBursts++;
+        _oneShot = true;
+        _priorityBurst = priority;
+        ActiveBursts.Add(this);
         Destroy(gameObject, _releaseAfter);
     }
     public void StopAndRelease() { SetIntensity(0f); transform.SetParent(null, true); ReleaseAfterPlayback(); }
     private void OnDisable() => Clear();
-    private void OnDestroy() { if (_oneShot) _activeBursts = Mathf.Max(0, _activeBursts - 1); }
+    private void OnDestroy() { if (_oneShot) ActiveBursts.Remove(this); }
 }

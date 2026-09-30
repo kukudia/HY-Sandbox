@@ -1,7 +1,7 @@
 # HY-Sandbox 项目开发文档
 
 > 文档状态：持续维护中  
-> 最近核对：2026-09-27
+> 最近核对：2026-09-30
 > Unity 编辑器：6000.3.11f1（`ProjectSettings/ProjectVersion.txt`）  
 > 当前分支：`main`
 
@@ -124,7 +124,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具端发出，容器明确绑定 home/Outside。初始化停靠状态不再被冷却提前返回阻断，冷却结束前保持停靠；飞行和维修效果均为可编辑 VFX Graph 资产。发电机与维修舱各增加两盏无阴影状态灯。选中和 Ghost 高亮跳过粒子/尾迹，避免覆写特效材质。
 
-实时反馈通过 `Resources/VFX/BlockVfxLibrary` 读取原生 VFX Graph。UNI Aerial/Small/Impact Explosion、Small Smoke Impact、Device Fire、无烟 Gas Fire Thruster 覆盖爆炸、破碎、命中、烟火和推进；能量光束、维修、建造、机器人与掉落拖尾也统一使用 GPU Graph。可编辑 Prefab 保留在 `Assets/Art/BlockVisuals/VFX`，Graph 及完整依赖位于 `Assets/Art/VFX`，不依赖被忽略的 UNI 原包。VfxEffect 保留低强度持续密度、停止后的尾烟及显式清空；瞬时上限 64、断裂烟迹上限 24、12 秒回收。推进挂点 +Z 不变，适配原包 -X 轴；喷焰、烟火等使用 Local 模拟空间，能量拖尾以 World 模拟空间保留运动历史并从局部挂点发射。41 个旧粒子 Prefab 已迁移，新增 2 个能量模板；运行时代码无 ParticleSystem/TrailRenderer。目标平台需支持 Compute，编辑入口见 `Assets/Art/VFX/README.md`。
+实时反馈通过 `Resources/VFX/BlockVfxLibrary` 读取原生 VFX Graph。UNI Aerial/Small/Impact Explosion、Small Smoke Impact、Device Fire、无烟 Gas Fire Thruster 覆盖爆炸、破碎、命中、烟火和推进；能量光束、维修、建造、机器人与掉落拖尾也统一使用 GPU Graph。可编辑 Prefab 保留在 `Assets/Art/BlockVisuals/VFX`，Graph 及完整依赖位于 `Assets/Art/VFX`，不依赖被忽略的 UNI 原包。VfxEffect 保留低强度持续密度、停止后的尾烟及显式清空；瞬时上限 64、断裂烟迹上限 24、12 秒回收。爆炸优先占用非爆炸效果的槽位；若 64 槽全是爆炸，则跳过新爆炸及对应点光，避免只剩灯光。推进挂点 +Z 不变，适配原包 -X 轴；喷焰、烟火等使用 Local 模拟空间，能量拖尾以 World 模拟空间保留运动历史并从局部挂点发射。41 个旧粒子 Prefab 已迁移，新增 2 个能量模板；运行时代码无 ParticleSystem/TrailRenderer。目标平台需支持 Compute，编辑入口见 `Assets/Art/VFX/README.md`。
 
 ### 3.8 科幻工业备用素材库
 
@@ -164,6 +164,8 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - 已加入三种可编辑货仓、回收无人机舱、独立掉落物、金币汇聚、内容保存/返回及共享 Bot 导航；运行验证记录见 2026-09-22 变更日志。
 
 ## 5. 待改进与风险
+
+- **已修复（2026-09-30）**：瞬时 VFX 满 64 槽时，爆炸 Graph 曾被拒绝生成而点光仍闪烁；现优先清理旧非爆炸效果，全为爆炸时跳过新爆炸和点光。极端同帧超过 64 次爆炸时后续事件无爆炸视觉反馈；目标硬件上的并发 GPU/Overdraw 性能仍需专项测量。
 
 - **已修复（2026-09-27）**：玩家 Cockpit 血条原 Filled Image 缺少 Sprite，导致数值变化但画面不裁切；已补资源引用并通过 uGUI 顶点宽度检查。大型战斗中血条可读性仍需实机观察。
 
@@ -1251,6 +1253,13 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 
 ## 10. 变更日志
+
+### 2026-09-30（爆炸特效槽位与灯光同步）
+
+- **实现**：将瞬时 VFX 上限由单纯计数改为活动实例管理。爆炸在 64 槽满时优先停用并销毁最早的非爆炸效果；若全是爆炸，则拒绝新效果。方块、普通物体和陨石爆炸仅在 Graph 成功生成时播放对应点光，避免只闪灯而没有爆炸图形。
+- **代码/文件确认**：Explosion 资源引用有效；命中、建造和爆炸共用 64 槽、12 秒回收，是密集事件触发拒绝生成的原因。未改 Prefab、场景或 `.meta`。
+- **Unity 编辑器/Play Mode 验证**：Unity 6000.3.11f1 重新编译通过。64 个命中特效占满时新爆炸替换旧命中，活动数保持 64；64 个爆炸占满时新爆炸与普通命中都返回 `BurstLimit`，旧爆炸保持激活。普通物体销毁路径在饱和时新增点光为 0，未饱和时为 1。独立镜头下 Explosion Graph 在 0.4 秒有 116 个活粒子，截图已目视核对；测试后 Main 场景未变脏。`dotnet build HY-Sandbox.sln --no-restore --nologo` 为 0 错误、4 个既有警告，`git diff --check` 通过。
+- **尚未验证**：正式构建和目标硬件上的高并发爆炸表现与 GPU/Overdraw 性能。
 
 ### 2026-09-27（玩家 Cockpit 血条与 Scene 摄像机预览）
 
