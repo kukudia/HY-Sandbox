@@ -86,11 +86,12 @@ public class MeteorShower : MonoBehaviour
 
         // 添加随机旋转
         float rotationSpeed = Random.Range(minRotationSpeed, maxRotationSpeed);
+        // Rigidbody.angularVelocity is expressed in radians per second.
         rb.angularVelocity = new Vector3(
             Random.Range(-1f, 1f),
             Random.Range(-1f, 1f),
             Random.Range(-1f, 1f)
-        ).normalized * rotationSpeed;
+        ).normalized * rotationSpeed * Mathf.Deg2Rad;
 
         // 添加碰撞检测
         //SphereCollider collider = meteor.GetComponent<SphereCollider>();

@@ -1278,6 +1278,7 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 - **原因**：`20260930-154936.csv` 中的 `PhysX collision` 行来自碰撞求解器的原始冲量；例如 `Group_1` 与 `Plane` 的 `17071.9 N·s` 是整组刚体碰撞回调的求解结果，不能直接等同于碰撞伤害，也不能仅凭此数值判定爆炸施力异常。项目实际伤害仍使用 `ImpactPhysics` 的约化质量、法向速度和能量阈值计算。
 - **修复**：修复 `AbnormalImpulseRecorder.FixedUpdate` 遍历 `_previousVelocities` 时的集合修改异常，避免长时间 Play Mode 中重复 `InvalidOperationException`。
+- **物理调整**：刚体重组时保留原有质心平动速度，但限制从旧角速度传递到新碎片质心的额外切向速度为 6 m/s、继承角速度为 2 rad/s，并将重组刚体的最大解穿透速度设为 4 m/s；这些值可在 `PlayManager` Inspector 调整，减少远离原质心的碎片被甩出以及重叠接触的速度尖峰。陨石随机角速度从度/秒转换为 Unity 刚体要求的弧度/秒，避免接触点切向速度被放大约 57 倍。
 - **验证状态**：CSV 数据已完成静态复核；Unity 6000.3.11f1 重编译成功，Play Mode 中临时刚体自动挂载探针，持续运行约 2 秒后 Console 新增错误为 0，测试对象已销毁并退出 Play Mode；`dotnet build HY-Sandbox.sln --no-restore --nologo` 为 0 错误、4 个既有警告。高冲量场景的视觉效果和真实碰撞伤害仍待人工复测。
 
 ### 2026-09-30（DetachedSmoke 残骸烟迹）

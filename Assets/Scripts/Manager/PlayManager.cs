@@ -41,6 +41,12 @@ public class PlayManager : MonoBehaviour
     private float _groupLinearDamping = 1.5f;
     [SerializeField, Min(0f), Tooltip("所有重组后的控制单元刚体的角阻尼。")]
     private float _groupAngularDamping = 2f;
+    [SerializeField, Min(0f), Tooltip("重组时由旋转传给新刚体质心的最大附加速度（m/s）。")]
+    private float _maximumInheritedTangentialSpeed = 6f;
+    [SerializeField, Min(0f), Tooltip("重组后刚体继承的最大角速度（rad/s）。")]
+    private float _maximumInheritedAngularSpeed = 2f;
+    [SerializeField, Min(0f), Tooltip("重组后复合碰撞体重叠时的最大解穿透速度（m/s）。")]
+    private float _groupMaxDepenetrationVelocity = 4f;
 
     [Tooltip("Show runtime debug UI")]
     public bool showUI = true;
@@ -408,6 +414,7 @@ public class PlayManager : MonoBehaviour
             rb.mass = mass;
             rb.linearDamping = Mathf.Max(0f, _groupLinearDamping);
             rb.angularDamping = Mathf.Max(0f, _groupAngularDamping);
+            rb.maxDepenetrationVelocity = Mathf.Max(0f, _groupMaxDepenetrationVelocity);
             rb.isKinematic = false;
             RestoreGroupPhysics(rb, group, sourceBodies);
 
@@ -442,8 +449,8 @@ public class PlayManager : MonoBehaviour
     {
         if (targetBody == null || group == null || group.Count == 0) return;
 
-        // A regroup creates a new Rigidbody. Carry the old body's point velocity across
-        // so a detached fragment keeps moving instead of stopping for one physics step.
+        // Carry the source motion into each new group, but limit the rotational
+        // contribution that can fling distant fragments across the scene.
         Rigidbody sourceBody = null;
         foreach (Block block in group)
         {
@@ -457,8 +464,11 @@ public class PlayManager : MonoBehaviour
 
         if (sourceBody == null) return;
 
-        targetBody.linearVelocity = sourceBody.GetPointVelocity(targetBody.worldCenterOfMass);
-        targetBody.angularVelocity = sourceBody.angularVelocity;
+        Vector3 sourceVelocity = sourceBody.linearVelocity;
+        Vector3 tangentialVelocity = sourceBody.GetPointVelocity(targetBody.worldCenterOfMass) - sourceVelocity;
+        targetBody.linearVelocity = sourceVelocity
+            + Vector3.ClampMagnitude(tangentialVelocity, _maximumInheritedTangentialSpeed);
+        targetBody.angularVelocity = Vector3.ClampMagnitude(sourceBody.angularVelocity, _maximumInheritedAngularSpeed);
         targetBody.WakeUp();
     }
 
