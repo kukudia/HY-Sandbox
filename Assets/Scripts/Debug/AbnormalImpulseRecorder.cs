@@ -18,6 +18,7 @@ public sealed class AbnormalImpulseRecorder : MonoBehaviour
     private readonly Dictionary<Rigidbody, Vector3> _previousVelocities = new Dictionary<Rigidbody, Vector3>();
     private readonly Dictionary<Rigidbody, float> _lastWarningTimes = new Dictionary<Rigidbody, float>();
     private readonly List<Rigidbody> _missingBodies = new List<Rigidbody>();
+    private readonly List<Rigidbody> _sampledBodies = new List<Rigidbody>();
     private float _nextDiscovery;
     private string _logPath;
 
@@ -71,7 +72,11 @@ public sealed class AbnormalImpulseRecorder : MonoBehaviour
             }
         }
 
-        foreach (Rigidbody body in _previousVelocities.Keys)
+        // Updating a Dictionary value invalidates its key enumerator in Unity's runtime.
+        // Reuse a snapshot so the sampler cannot throw every physics step.
+        _sampledBodies.Clear();
+        _sampledBodies.AddRange(_previousVelocities.Keys);
+        foreach (Rigidbody body in _sampledBodies)
         {
             if (body == null || body.isKinematic) continue;
             Vector3 velocity = body.linearVelocity;

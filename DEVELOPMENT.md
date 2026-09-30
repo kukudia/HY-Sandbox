@@ -25,6 +25,12 @@
 
 本文档以仓库当前 Git 跟踪的 `Assets/`、`Packages/`、`ProjectSettings/` 和历史日志为依据。历史日志中的功能描述可能来自旧版本，若没有当前脚本、场景或运行时证据，不视为已实现。
 
+### 2026-09-30
+- **重构 BuildManager 建造状态与轴操作**：建造交互统一为互斥的 `Select`、`Move`、`Rotate` 三态。按钮通过 `SetSelectType` 切换并以颜色标识当前状态；切换时清除拖拽句柄，只显示对应的 MoveAxis 或 RotateAxis，避免两套 Gizmo 共存。选择资源、退出建造和切换目标会回到 Select 状态。
+- **修复箭头拖拽和复制无响应**：MoveAxis/RotateAxis 通过 `GetComponentInParent` 接收箭头碰撞体，轴向优先读取句柄序列化轴并对旧的零值配置按箭头位置/名称回退；主场景六个轴句柄已写入明确的 X/Y/Z 值。移动和复制保持当前模式，不再依赖句柄名称猜方向。
+- **完善旋转操作**：RotateAxis 支持按轴拖拽、网格化角度和占用检测；旋转拖拽结束后统一写入存档、Undo 动作与视觉反馈。`RotateBlockAction` 的 Undo/Redo 现在同时恢复旋转和因尺寸吸附产生的位置变化。
+- **验证范围**：已通过 `dotnet build HY-Sandbox.sln --no-restore --nologo`（0 错误；4 个既有依赖版本/过时 API 警告）、Unity 6000.3.11f1 Editor 重编译（`compilationFailed=false`、Console Error 0）、Unity CLI 场景轴向量写入与保存，以及 `git diff --check`（当前工作区既有 `UserSettings/Layouts/default-6000.dwlt` 生成布局改动包含空字段尾随空白，未纳入本次代码修改）。尚未在 Play Mode 完成鼠标拖拽、复制、旋转碰撞和按钮颜色的人工交互回归。
+
 ## 1. 项目定位
 
 HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环是：创建或加载蓝图存档，在网格中放置和编辑模块，使用连接点组成可控制单元，进入游玩模式后由驾驶舱和推进器驱动载具，并通过敌方蓝图、陨石、炮塔、维修机器人等系统扩展玩法。
@@ -164,6 +170,8 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - 已加入三种可编辑货仓、回收无人机舱、独立掉落物、金币汇聚、内容保存/返回及共享 Bot 导航；运行验证记录见 2026-09-22 变更日志。
 
 ## 5. 待改进与风险
+
+- **已修复（2026-09-30）**：异常冲量记录器原先在遍历速度采样字典时更新字典值，Unity 会抛出 `InvalidOperationException` 并在每个物理步重复报错，造成日志刷屏和额外卡顿。现改用刚体快照遍历后再写回采样值；CSV 中的 PhysX 碰撞冲量仍保留为原始求解器数据，不能直接视为伤害值。
 
 - **新增（2026-09-30）**：Editor Play Mode 自动启用 `AbnormalImpulseRecorder`，按刚体记录 PhysX 碰撞冲量和未归因速度突变；默认 `delta-v >= 8 m/s` 且等效冲量 `>= 250 N s` 时使用 `LogWarning` 提示，并写入 `Temp/AbnormalImpulseLogs/*.csv`。阈值与限频可在组件 Inspector 调整；仅用于编辑器测试，尚未替代目标硬件性能分析。
 
@@ -689,6 +697,7 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `void HandleRotation()`： 处理对应的输入、选择、拖拽、移动、旋转或建造交互。
 - `void HandleMoveAxisDrag()`： 处理对应的输入、选择、拖拽、移动、旋转或建造交互。
 - `void HandleRotateAxisDrag()`： 处理对应的输入、选择、拖拽、移动、旋转或建造交互。
+- `public void SetSelectType(SelectType)` / `RefreshBuildGizmos()` / `HideBuildGizmos()`：互斥切换 Select、Move、Rotate 状态并同步当前 Gizmo 可见性。
 - `void HandleDuplicate(Vector3 newPos, Quaternion newRot)`： 处理对应的输入、选择、拖拽、移动、旋转或建造交互。
 - `private void HandleBuildingPreview()`：拦截 UI 输入、筛选可用连接点、刷新线框与 Ghost；无连接点时清理，穿透搜索最多 64 步避免无限循环。
 - `public void CreateBlock(GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot)`： 创建几何、资源、操作记录、UI 项或运行时对象。
@@ -1025,6 +1034,7 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - `public void SetDefault()`： 设置该对象、视觉效果或运行时引用的参数/状态。
 - `public void SetMove()`： 设置该对象、视觉效果或运行时引用的参数/状态。
 - `public void SetRotate()`： 设置该对象、视觉效果或运行时引用的参数/状态。
+- `public void RefreshBuildModeButtons(SelectType)` / `SetBuildButtonColor(Button, bool)`：同步三个建造状态按钮的选中色。
 - `public void SetCurrentBlock(string fileName)`： 设置该对象、视觉效果或运行时引用的参数/状态。
 - `private void ShowConnectionStatus()` / `ShowDurabilityStatus()` / `ShowPowerStatus()`：切换对应状态图标并同步按钮选中色。
 - `private static void SetDebugButtonState(Button button, bool enabled)`：统一写入 Debug 按钮启用颜色。
@@ -1263,6 +1273,12 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - **实现**：新增 `Assets/Scripts/Debug/AbnormalImpulseRecorder.cs` 和 `AbnormalImpulseBodyProbe.cs`，用 `UNITY_EDITOR` 限定仅在编辑器编译。进入 Play Mode 后自动创建隐藏诊断对象，发现 Rigidbody 并监听碰撞；同时采样相邻物理步的速度变化，以捕获没有直接来源回调的异常冲量。达到阈值时调用 `LogWarning`，并追加时间、帧号、来源、刚体层级、质量、冲量、速度变化、受击点和速度到 CSV。销毁刚体时清理其速度采样与告警限频状态，避免长时间测试积累无效条目。
 - **文件确认**：记录文件输出到项目 `Temp/AbnormalImpulseLogs`，不修改场景、Prefab 或正式运行时逻辑；诊断对象使用 `DontSave`，退出 Play Mode 后不保留。
 - **验证范围**：Unity 6000.3.11f1 Play Mode 中确认记录器自动创建；临时 100 kg 刚体产生 20 m/s 速度突变后，Editor.log 出现 `LogWarning`，CSV 写出一条 2000 N·s、20 m/s 的完整记录，测试对象已销毁并退出 Play Mode。真实战斗碰撞样本与长时间运行开销尚未验证。
+
+### 2026-09-30（异常冲量 CSV 复核）
+
+- **原因**：`20260930-154936.csv` 中的 `PhysX collision` 行来自碰撞求解器的原始冲量；例如 `Group_1` 与 `Plane` 的 `17071.9 N·s` 反映整组刚体和多接触点的求解结果，不能直接等同于碰撞伤害。项目实际伤害仍使用 `ImpactPhysics` 的约化质量、法向速度和能量阈值计算。
+- **修复**：修复 `AbnormalImpulseRecorder.FixedUpdate` 遍历 `_previousVelocities` 时的集合修改异常，避免长时间 Play Mode 中重复 `InvalidOperationException`。
+- **验证状态**：CSV 数据已完成静态复核；修复后的 Unity 重编译和 Play Mode 无异常冲量记录器集合异常仍需本次运行确认。
 
 ### 2026-09-30（DetachedSmoke 残骸烟迹）
 
