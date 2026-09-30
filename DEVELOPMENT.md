@@ -1276,9 +1276,9 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 ### 2026-09-30（异常冲量 CSV 复核）
 
-- **原因**：`20260930-154936.csv` 中的 `PhysX collision` 行来自碰撞求解器的原始冲量；例如 `Group_1` 与 `Plane` 的 `17071.9 N·s` 反映整组刚体和多接触点的求解结果，不能直接等同于碰撞伤害。项目实际伤害仍使用 `ImpactPhysics` 的约化质量、法向速度和能量阈值计算。
+- **原因**：`20260930-154936.csv` 中的 `PhysX collision` 行来自碰撞求解器的原始冲量；例如 `Group_1` 与 `Plane` 的 `17071.9 N·s` 是整组刚体碰撞回调的求解结果，不能直接等同于碰撞伤害，也不能仅凭此数值判定爆炸施力异常。项目实际伤害仍使用 `ImpactPhysics` 的约化质量、法向速度和能量阈值计算。
 - **修复**：修复 `AbnormalImpulseRecorder.FixedUpdate` 遍历 `_previousVelocities` 时的集合修改异常，避免长时间 Play Mode 中重复 `InvalidOperationException`。
-- **验证状态**：CSV 数据已完成静态复核；修复后的 Unity 重编译和 Play Mode 无异常冲量记录器集合异常仍需本次运行确认。
+- **验证状态**：CSV 数据已完成静态复核；Unity 6000.3.11f1 重编译成功，Play Mode 中临时刚体自动挂载探针，持续运行约 2 秒后 Console 新增错误为 0，测试对象已销毁并退出 Play Mode；`dotnet build HY-Sandbox.sln --no-restore --nologo` 为 0 错误、4 个既有警告。高冲量场景的视觉效果和真实碰撞伤害仍待人工复测。
 
 ### 2026-09-30（DetachedSmoke 残骸烟迹）
 
