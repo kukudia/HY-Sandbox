@@ -23,6 +23,7 @@ public class RotateBlockAction : IBlockAction
     {
         if (block != null)
         {
+            block.transform.position = oldPos;
             block.transform.rotation = oldRot;
             BuildManager.instance.SaveBlock(block);
             VisualEffectsManager.TryPlayBlockRotated(block);
@@ -33,6 +34,7 @@ public class RotateBlockAction : IBlockAction
     {
         if (block != null)
         {
+            block.transform.position = newPos;
             block.transform.rotation = newRot;
             BuildManager.instance.SaveBlock(block);
             VisualEffectsManager.TryPlayBlockRotated(block);

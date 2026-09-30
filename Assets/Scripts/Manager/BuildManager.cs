@@ -27,6 +27,9 @@ public class BuildManager : MonoBehaviour
     private RotateAxisHandle activeRotateHandle = null;
     private Vector3 rotateDragStart;
     private Quaternion blockStartRot;
+    private Vector3 blockStartRotatePos;
+    private Vector3 rotateLastPos;
+    private Quaternion rotateLastRot;
 
 
     // 网格参数
@@ -114,6 +117,7 @@ public class BuildManager : MonoBehaviour
     private void Start()
     {
         SetBuildMode(true);
+        SetSelectType(SelectType.Select);
     }
 
     private void Update()
@@ -182,6 +186,7 @@ public class BuildManager : MonoBehaviour
     {
         if (!lockView)
         {
+            SetSelectType(SelectType.Select);
             ClearCurrentGhost();
             if (selectedBlock != null)
             {
@@ -254,6 +259,10 @@ public class BuildManager : MonoBehaviour
     public void SetCurrentBlockResource(string resourcePath)
     {
         currentBlockResourcePath = resourcePath;
+        if (!string.IsNullOrEmpty(resourcePath) && currentSelectType != SelectType.Select)
+        {
+            SetSelectType(SelectType.Select);
+        }
         ClearCurrentGhost();
     }
 
@@ -327,22 +336,31 @@ public class BuildManager : MonoBehaviour
 
             if (Physics.Raycast(ray, out RaycastHit hit, 100f, axisLayer))
             {
-                MoveAxisHandle moveHandle = hit.collider.GetComponent<MoveAxisHandle>();
-                if (moveHandle != null)
+                if (currentSelectType == SelectType.Move && selectedBlock != null)
                 {
-                    activeHandle = moveHandle;
-                    dragStartPos = hit.point;
-                    blockStartPos = selectedBlock.transform.position;
-                    return;
+                    MoveAxisHandle moveHandle = hit.collider.GetComponentInParent<MoveAxisHandle>();
+                    if (moveHandle != null)
+                    {
+                        activeHandle = moveHandle;
+                        dragStartPos = hit.point;
+                        blockStartPos = selectedBlock.transform.position;
+                        return;
+                    }
                 }
 
-                RotateAxisHandle rotateHandle = hit.collider.GetComponent<RotateAxisHandle>();
-                if (rotateHandle != null)
+                if (currentSelectType == SelectType.Rotate && selectedBlock != null && selectedBlock.canRotate)
                 {
-                    activeRotateHandle = rotateHandle;
-                    rotateDragStart = hit.point;
-                    blockStartRot = selectedBlock.transform.rotation;
-                    return;
+                    RotateAxisHandle rotateHandle = hit.collider.GetComponentInParent<RotateAxisHandle>();
+                    if (rotateHandle != null)
+                    {
+                        activeRotateHandle = rotateHandle;
+                        rotateDragStart = hit.point;
+                        blockStartRot = selectedBlock.transform.rotation;
+                        blockStartRotatePos = selectedBlock.transform.position;
+                        rotateLastRot = blockStartRot;
+                        rotateLastPos = blockStartRotatePos;
+                        return;
+                    }
                 }
             }
 
@@ -401,19 +419,15 @@ public class BuildManager : MonoBehaviour
             }
         }
 
-        // 生成移动轴 Gizmo
-        if (moveAxis != null)
-        {
-            moveAxis.SetActive(true);
-            moveAxis.transform.position = selectedBlock.transform.position;
-            moveAxis.transform.SetParent(selectedBlock.transform); // 绑定在方块上
-        }
+        RefreshBuildGizmos();
 
         VisualEffectsManager.TryShowBlockSelection(selectedBlock);
     }
 
     public void DeselectBlock()
     {
+        activeHandle = null;
+        activeRotateHandle = null;
         VisualEffectsManager.TryClearBlockSelection(selectedBlock);
 
         foreach (KeyValuePair<Renderer, Material[]> entry in _selectedMaterials)
@@ -425,11 +439,7 @@ public class BuildManager : MonoBehaviour
         }
         _selectedMaterials.Clear();
 
-        if (moveAxis != null)
-        {
-            moveAxis.SetActive(false);
-            moveAxis.transform.SetParent(null);
-        }
+        HideBuildGizmos();
 
         selectedBlock = null;
     }
@@ -539,11 +549,8 @@ public class BuildManager : MonoBehaviour
     {
         if (Mouse.current.leftButton.isPressed && activeHandle != null)
         {
-            // 根据 handle 名称选择方向
-            Vector3 dir = Vector3.zero;
-            if (activeHandle.name.Contains("Forward")) dir = axisForward;
-            if (activeHandle.name.Contains("Right")) dir = axisRight;
-            if (activeHandle.name.Contains("Up")) dir = axisUp;
+            Vector3 dir = activeHandle.WorldAxis;
+            if (dir.sqrMagnitude < 0.001f) return;
 
             // 构建一个拖拽平面：法线 = 相机方向 × 拖拽方向
             Vector3 planeNormal = Vector3.Cross(dir, mainCamera.transform.up);
@@ -606,7 +613,8 @@ public class BuildManager : MonoBehaviour
         if (Mouse.current.leftButton.isPressed && activeRotateHandle != null)
         {
             // 旋转轴（世界空间）
-            Vector3 axis = activeRotateHandle.axis;
+            Vector3 axis = activeRotateHandle.WorldAxis;
+            if (axis.sqrMagnitude < 0.001f) return;
 
             // 从相机发射射线，与一个垂直于旋转轴的平面相交
             Plane dragPlane = new Plane(axis, selectedBlock.transform.position);
@@ -630,18 +638,66 @@ public class BuildManager : MonoBehaviour
                 Quaternion newRot = blockStartRot * Quaternion.AngleAxis(snappedAngle, axis);
 
                 // 检查是否阻挡
-                if (!IsBlocked(selectedBlock.transform.position, newRot, selectedBlock))
+                Vector3 newPos = SnapCenterByMinCorner(blockStartRotatePos, newRot, selectedBlock);
+                if (!IsBlocked(newPos, newRot, selectedBlock))
                 {
+                    selectedBlock.transform.position = newPos;
                     selectedBlock.transform.rotation = newRot;
-                    rotateAxis.transform.rotation = newRot; // gizmo 跟随
+                    rotateLastPos = newPos;
+                    rotateLastRot = newRot;
                 }
             }
         }
 
         if (Mouse.current.leftButton.wasReleasedThisFrame && activeRotateHandle != null)
         {
-            SaveBlock(selectedBlock);
+            if (selectedBlock != null && (rotateLastRot != blockStartRot || rotateLastPos != blockStartRotatePos))
+            {
+                SaveBlock(selectedBlock);
+                ActionManager.instance.Push(new RotateBlockAction(
+                    selectedBlock, blockStartRotatePos, rotateLastPos, blockStartRot, rotateLastRot));
+                VisualEffectsManager.TryPlayBlockRotated(selectedBlock);
+            }
             activeRotateHandle = null;
+        }
+    }
+
+    public void SetSelectType(SelectType selectType)
+    {
+        currentSelectType = selectType;
+        activeHandle = null;
+        activeRotateHandle = null;
+        RefreshBuildGizmos();
+        if (MainUIButtons.instance != null)
+        {
+            MainUIButtons.instance.RefreshBuildModeButtons(selectType);
+        }
+    }
+
+    private void RefreshBuildGizmos()
+    {
+        HideBuildGizmos();
+        if (selectedBlock == null || currentSelectType == SelectType.Select) return;
+
+        GameObject gizmo = currentSelectType == SelectType.Move ? moveAxis : rotateAxis;
+        if (gizmo == null) return;
+        gizmo.SetActive(true);
+        gizmo.transform.SetParent(selectedBlock.transform, true);
+        gizmo.transform.position = selectedBlock.transform.position;
+        gizmo.transform.rotation = Quaternion.LookRotation(axisForward, axisUp);
+    }
+
+    private void HideBuildGizmos()
+    {
+        if (moveAxis != null)
+        {
+            moveAxis.SetActive(false);
+            moveAxis.transform.SetParent(null, true);
+        }
+        if (rotateAxis != null)
+        {
+            rotateAxis.SetActive(false);
+            rotateAxis.transform.SetParent(null, true);
         }
     }
 
@@ -1690,6 +1746,7 @@ public class BuildManager : MonoBehaviour
 
 public enum SelectType
 {
+    Select,
     Move,
     Rotate
 }

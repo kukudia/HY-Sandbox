@@ -136,6 +136,7 @@
     <Compile Include="Assets\Scripts\InObject\Cockpit.cs" />
     <Compile Include="Assets\Scripts\Thrusters\UniversalThruster.cs" />
     <Compile Include="Assets\Scripts\Effect\StylizedBeamEffect.cs" />
+    <Compile Include="Assets\Scripts\Debug\AbnormalImpulseBodyProbe.cs" />
     <Compile Include="Assets\Scripts\Actions\RotateBlockAction.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerHealth.cs" />
     <Compile Include="Assets\Scripts\Player\Player.cs" />
@@ -144,6 +145,7 @@
     <Compile Include="Assets\Scripts\UI\MainUIButtons.cs" />
     <Compile Include="Assets\Scripts\Manager\MeteorShower.cs" />
     <Compile Include="Assets\Scripts\InObject\RepairBot.cs" />
+    <Compile Include="Assets\Scripts\Debug\AbnormalImpulseRecorder.cs" />
     <Compile Include="Assets\Scripts\Manager\PlayManager.cs" />
     <Compile Include="Assets\Scripts\InObject\EnemyIdentity.cs" />
     <Compile Include="Assets\Scripts\Manager\DestroyManager.cs" />

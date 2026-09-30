@@ -2357,7 +2357,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7561b3fa4c21ce34b9d81c366c48203a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  axis: {x: 0, y: 0, z: 0}
+  axis: {x: 0, y: 0, z: 1}
 --- !u!1 &231424592
 GameObject:
   m_ObjectHideFlags: 0
@@ -3114,7 +3114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ef1772c456fc7846a220aa23de526d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  axis: {x: 0, y: 0, z: 0}
+  axis: {x: 1, y: 0, z: 0}
 --- !u!1 &298492085
 GameObject:
   m_ObjectHideFlags: 0
@@ -5988,8 +5988,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2090465813}
   m_HandleRect: {fileID: 2090465812}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.7389706
+  m_Value: 0.99999964
+  m_Size: 0.6831902
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -10138,7 +10138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7561b3fa4c21ce34b9d81c366c48203a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  axis: {x: 0, y: 0, z: 0}
+  axis: {x: 1, y: 0, z: 0}
 --- !u!1 &919258365
 GameObject:
   m_ObjectHideFlags: 0
@@ -10718,7 +10718,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ef1772c456fc7846a220aa23de526d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  axis: {x: 0, y: 0, z: 0}
+  axis: {x: 0, y: 0, z: 1}
 --- !u!1 &973930641
 GameObject:
   m_ObjectHideFlags: 0
@@ -14135,7 +14135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7561b3fa4c21ce34b9d81c366c48203a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  axis: {x: 0, y: 0, z: 0}
+  axis: {x: 0, y: 1, z: 0}
 --- !u!1 &1345854171
 GameObject:
   m_ObjectHideFlags: 0
@@ -18933,6 +18933,8 @@ MonoBehaviour:
   defaultButton: {fileID: 491055023}
   moveButton: {fileID: 1643337842}
   rotateButton: {fileID: 1898549146}
+  _inactiveBuildModeColor: {r: 1, g: 1, b: 1, a: 1}
+  _activeBuildModeColor: {r: 0.25, g: 0.85, b: 1, a: 1}
   showPowerRangeButton: {fileID: 992595106}
   showPowerConnectionsButton: {fileID: 842945486}
   showConnectionStatusButton: {fileID: 1935214617}
@@ -20458,7 +20460,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.3301887, g: 0.28969386, b: 0.28969386, a: 0.047058824}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -22074,7 +22076,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ef1772c456fc7846a220aa23de526d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  axis: {x: 0, y: 0, z: 0}
+  axis: {x: 0, y: 1, z: 0}
 --- !u!1 &1948249519
 GameObject:
   m_ObjectHideFlags: 0

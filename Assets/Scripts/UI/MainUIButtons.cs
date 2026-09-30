@@ -16,6 +16,10 @@ public class MainUIButtons : MonoBehaviour
     public Button moveButton;
     public Button rotateButton;
 
+    [Header("Build Mode Colors")]
+    [SerializeField] private Color _inactiveBuildModeColor = Color.white;
+    [SerializeField] private Color _activeBuildModeColor = new Color(0.25f, 0.85f, 1f, 1f);
+
     [Header("Debug Buttons")]
     public Button showPowerRangeButton;
     public Button showPowerConnectionsButton;
@@ -67,8 +71,6 @@ public class MainUIButtons : MonoBehaviour
         deleteButton.onClick.AddListener(BuildManager.instance.DeleteBlock);
         defaultButton.onClick.AddListener(SetDefault);
 
-        moveButton.onClick.AddListener(SetDefault);
-        rotateButton.onClick.AddListener(SetDefault);
         moveButton.onClick.AddListener(SetMove);
         rotateButton.onClick.AddListener(SetRotate);
 
@@ -116,16 +118,34 @@ public class MainUIButtons : MonoBehaviour
     public void SetDefault()
     {
         BuildManager.instance.SetCurrentBlockResource(string.Empty);
+        BuildManager.instance.SetSelectType(SelectType.Select);
     }
 
     public void SetMove()
     {
-        BuildManager.instance.currentSelectType = SelectType.Move;
+        BuildManager.instance.SetCurrentBlockResource(string.Empty);
+        BuildManager.instance.SetSelectType(SelectType.Move);
     }
 
     public void SetRotate()
     {
-        BuildManager.instance.currentSelectType = SelectType.Rotate;
+        BuildManager.instance.SetCurrentBlockResource(string.Empty);
+        BuildManager.instance.SetSelectType(SelectType.Rotate);
+    }
+
+    public void RefreshBuildModeButtons(SelectType selectType)
+    {
+        SetBuildButtonColor(defaultButton, selectType == SelectType.Select);
+        SetBuildButtonColor(moveButton, selectType == SelectType.Move);
+        SetBuildButtonColor(rotateButton, selectType == SelectType.Rotate);
+    }
+
+    private void SetBuildButtonColor(Button button, bool selected)
+    {
+        if (button != null && button.TryGetComponent(out Image image))
+        {
+            image.color = selected ? _activeBuildModeColor : _inactiveBuildModeColor;
+        }
     }
 
     public void SetCurrentBlock(string fileName)
