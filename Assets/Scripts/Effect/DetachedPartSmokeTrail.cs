@@ -10,6 +10,8 @@ public class DetachedPartSmokeTrail : MonoBehaviour
     [Min(0f)] public float minimumSpeed = 0.7f;
     [Min(0f)] public float fullEmissionSpeed = 8f;
     [Min(0f)] public float maximumEmissionRate = 26f;
+    [SerializeField, Min(0.1f)] private float _initialSmokeDuration = 1.5f;
+    [SerializeField, Range(0f, 1f)] private float _initialSmokeIntensity = 0.4f;
 
     private static int activeTrailCount;
 
@@ -67,7 +69,7 @@ public class DetachedPartSmokeTrail : MonoBehaviour
     private void Refresh(Vector3 worldAnchor, float effectIntensity)
     {
         intensity = Mathf.Max(intensity, Mathf.Clamp(effectIntensity, 0.25f, 1.5f));
-        elapsed = Mathf.Min(elapsed, effectLifetime * 0.35f);
+        elapsed = 0f;
         stopping = false;
 
         if (emissionRoot != null)
@@ -85,10 +87,18 @@ public class DetachedPartSmokeTrail : MonoBehaviour
         }
 
         elapsed += Time.deltaTime;
-        float speed = targetBody.linearVelocity.magnitude + targetBody.angularVelocity.magnitude * 0.08f;
+        Vector3 velocity = targetBody.linearVelocity;
+        float speed = velocity.magnitude + targetBody.angularVelocity.magnitude * 0.08f;
+        if (emissionRoot != null)
+        {
+            Vector3 smokeDirection = velocity.sqrMagnitude > 0.04f ? -velocity.normalized : Vector3.up;
+            emissionRoot.rotation = Quaternion.FromToRotation(Vector3.left, smokeDirection);
+        }
         float speedRatio = Mathf.InverseLerp(minimumSpeed, Mathf.Max(minimumSpeed + 0.01f, fullEmissionSpeed), speed);
         float lifetimeFade = 1f - Mathf.Clamp01(elapsed / Mathf.Max(0.1f, effectLifetime));
-        float emissionRatio = speedRatio * lifetimeFade * intensity;
+        // Explosion impulses can be too small to cross the speed gate; show a brief residual plume.
+        float initialSmoke = _initialSmokeIntensity * (1f - Mathf.Clamp01(elapsed / _initialSmokeDuration));
+        float emissionRatio = Mathf.Max(speedRatio * intensity, initialSmoke) * lifetimeFade;
 
         bool shouldEmit = emissionRatio > 0.025f && !targetBody.isKinematic;
         if (_smokeEffect != null) _smokeEffect.SetIntensity(shouldEmit ? emissionRatio * maximumEmissionRate / 26f : 0f);

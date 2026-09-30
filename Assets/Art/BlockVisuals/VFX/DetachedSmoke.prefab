@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 8436819523021017150}
   - component: {fileID: 1347034980203772806}
   m_Layer: 0
-  m_Name: Graph - UNI_Device_Fire
+  m_Name: Graph - UNI_Steam_Leak
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59,7 +59,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3156892559415286134}
@@ -72,7 +72,7 @@ VisualEffect:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4203555364258466831}
   m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: d9113c69fc1d542428729faf133cbfa5, type: 3}
+  m_Asset: {fileID: 8926484042661614526, guid: 64ab11b3df9afda41aca4b4aa5e1f093, type: 3}
   m_InitialEventName: ControlledStart
   m_InitialEventNameOverriden: 1
   m_StartSeed: 0

@@ -165,6 +165,8 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 ## 5. 待改进与风险
 
+- **已修复（2026-09-30）**：DetachedSmoke 原先使用 `UNI_Device_Fire`，在小于 1 倍缩放时主要呈细火焰，低速断裂刚体还可能完全不越过速度门槛。现改用更厚的 `UNI_Steam_Leak` 烟团，Prefab Graph 缩放从 0.35 提高到 1.5，并加入 1.5 秒最低残烟与速度方向对齐；高并发断裂烟迹的透明 Overdraw 仍需目标硬件测量。
+
 - **已修复（2026-09-30）**：瞬时 VFX 满 64 槽时，爆炸 Graph 曾被拒绝生成而点光仍闪烁；现优先清理旧非爆炸效果，全为爆炸时跳过新爆炸和点光。极端同帧超过 64 次爆炸时后续事件无爆炸视觉反馈；目标硬件上的并发 GPU/Overdraw 性能仍需专项测量。
 
 - **已修复（2026-09-27）**：玩家 Cockpit 血条原 Filled Image 缺少 Sprite，导致数值变化但画面不裁切；已补资源引用并通过 uGUI 顶点宽度检查。大型战斗中血条可读性仍需实机观察。
@@ -1253,6 +1255,13 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 
 ## 10. 变更日志
+
+### 2026-09-30（DetachedSmoke 残骸烟迹）
+
+- **原因**：断裂烟迹原来绑定 `UNI_Device_Fire`，Prefab Graph 缩放为 0.35，视觉上偏细且偏火焰；爆炸冲量降低后，低速残骸的速度比例可能为零，导致 `SetIntensity(0)` 不发射。
+- **实现**：DetachedSmoke 改用 `UNI_Steam_Leak`，Graph 缩放为 1.5；`DetachedPartSmokeTrail` 增加可编辑的初始烟雾持续时间/强度，低速时仍先产生短暂烟团，再按速度和生命周期衰减；烟迹朝向与残骸线速度相反。
+- **验证**：Unity 6000.3.11f1 重新编译通过；独立 VFX 预览确认原 Graph 为细火焰，Steam Leak 为明显厚烟团，Prefab 当前绑定 `UNI_Steam_Leak`，Main 场景保持未保存。`dotnet build HY-Sandbox.sln --no-restore --nologo` 0 错误、4 个既有警告。
+- **尚未验证**：主场景中真实断裂组在不同摄像机距离、速度和大量并发下的最终表现。
 
 ### 2026-09-30（爆炸特效槽位与灯光同步）
 

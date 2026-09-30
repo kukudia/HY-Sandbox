@@ -17,7 +17,7 @@ public static class BlockVfxBaker
             case "BreakBurst": return "UNI_Small_Explosion";
             case "ImpactBurst": case "MuzzleFlash": return "UNI_Impact_Explosion";
             case "SmokeBurst": return "UNI_Small_Smoke_Impact";
-            case "DetachedSmoke": return "UNI_Device_Fire";
+            case "DetachedSmoke": return "UNI_Steam_Leak";
             case "SteamLeak": return "UNI_Steam_Leak";
             case "ThrusterJet": case "HoverJet": case "BotFlight": return "UNI_Gas_Fire_Thruster";
             case "RepairContact": return "EnergyContact";
@@ -45,7 +45,7 @@ public static class BlockVfxBaker
         }
         else if (name == "MuzzleFlash") child.transform.localScale = Vector3.one * 0.15f;
         else if (name == "ImpactBurst") child.transform.localScale = Vector3.one * 0.3f;
-        else if (name == "DetachedSmoke") child.transform.localScale = Vector3.one * 0.35f;
+        else if (name == "DetachedSmoke") child.transform.localScale = Vector3.one * 1.5f;
         SetObjects(controller, "_graphs", new Object[] { graph });
         using (var data = new SerializedObject(controller))
         {
