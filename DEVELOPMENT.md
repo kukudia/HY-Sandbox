@@ -165,6 +165,8 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 ## 5. 待改进与风险
 
+- **新增（2026-09-30）**：Editor Play Mode 自动启用 `AbnormalImpulseRecorder`，按刚体记录 PhysX 碰撞冲量和未归因速度突变；默认 `delta-v >= 8 m/s` 且等效冲量 `>= 250 N s` 时使用 `LogWarning` 提示，并写入 `Temp/AbnormalImpulseLogs/*.csv`。阈值与限频可在组件 Inspector 调整；仅用于编辑器测试，尚未替代目标硬件性能分析。
+
 - **已修复（2026-09-30）**：DetachedSmoke 原先使用 `UNI_Device_Fire`，在小于 1 倍缩放时主要呈细火焰，低速断裂刚体还可能完全不越过速度门槛。现改用更厚的 `UNI_Steam_Leak` 烟团，Prefab Graph 缩放从 0.35 提高到 1.5，并加入 1.5 秒最低残烟与速度方向对齐；高并发断裂烟迹的透明 Overdraw 仍需目标硬件测量。
 
 - **已修复（2026-09-30）**：瞬时 VFX 满 64 槽时，爆炸 Graph 曾被拒绝生成而点光仍闪烁；现优先清理旧非爆炸效果，全为爆炸时跳过新爆炸和点光。极端同帧超过 64 次爆炸时后续事件无爆炸视觉反馈；目标硬件上的并发 GPU/Overdraw 性能仍需专项测量。
@@ -1255,6 +1257,12 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 
 ## 10. 变更日志
+
+### 2026-09-30（编辑器异常冲量记录器）
+
+- **实现**：新增 `Assets/Scripts/Debug/AbnormalImpulseRecorder.cs` 和 `AbnormalImpulseBodyProbe.cs`，用 `UNITY_EDITOR` 限定仅在编辑器编译。进入 Play Mode 后自动创建隐藏诊断对象，发现 Rigidbody 并监听碰撞；同时采样相邻物理步的速度变化，以捕获没有直接来源回调的异常冲量。达到阈值时调用 `LogWarning`，并追加时间、帧号、来源、刚体层级、质量、冲量、速度变化、受击点和速度到 CSV。销毁刚体时清理其速度采样与告警限频状态，避免长时间测试积累无效条目。
+- **文件确认**：记录文件输出到项目 `Temp/AbnormalImpulseLogs`，不修改场景、Prefab 或正式运行时逻辑；诊断对象使用 `DontSave`，退出 Play Mode 后不保留。
+- **验证范围**：Unity 6000.3.11f1 Play Mode 中确认记录器自动创建；临时 100 kg 刚体产生 20 m/s 速度突变后，Editor.log 出现 `LogWarning`，CSV 写出一条 2000 N·s、20 m/s 的完整记录，测试对象已销毁并退出 Play Mode。真实战斗碰撞样本与长时间运行开销尚未验证。
 
 ### 2026-09-30（DetachedSmoke 残骸烟迹）
 
