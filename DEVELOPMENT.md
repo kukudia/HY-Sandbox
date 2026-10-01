@@ -5,6 +5,10 @@
 > Unity 编辑器：6000.3.11f1（`ProjectSettings/ProjectVersion.txt`）  
 > 当前分支：`main`
 
+### 2026-10-01
+- **简单稳定敌机蓝图**：新增 `Blueprints/CODEX_Enemies` 的脚本、JSON、截图与验证记录，安装 `CODEX_E01_Finch`（27 部件双炮）、`CODEX_E02_Pike`（35 部件纵长四炮）、`CODEX_E03_Manta`（35 部件宽翼四炮）至本机 EnemyBlueprints。使用原装部件，水平重心居中，4/6 个对称大型悬浮推进器，升重比 2.47/2.50；不修改 Prefab、场景或部件数值。配套修复 EnemyController 无目标时的高度设定点，每次失去目标锁定飞控高度，避免设定点跟随机体下降。
+- **验证**：三份资源/尺寸/无重叠/唯一 ID/连接几何/供电/安装一致性检查通过。Unity 6000.3.11f1 实际 EnemySpawner 生成后均为单连通组；90 秒测试覆盖无目标悬停、15 秒获取目标、45 秒目标换向及75秒失去目标。追踪收敛段最大倾角 2.45/1.70/1.82°，高度误差 0.25/0.19/0.14m，无目标收敛段最大垂直速度均小于 0.055m/s，无失电或掉块。`dotnet build HY-Sandbox.sln --no-restore` 通过（0 错误、4 个既有警告），本轮运行无新增 Console Error，差异检查通过。为隔离飞行关闭测试炮塔、远距离回收和自动刷怪，未覆盖实战受损及大量敌机拥挤场景；完整数据见目录内 Flight.csv/Flight-summary.json。
+
 ### 2026-09-22
 - **消除 `PlayManager.RefreshGroup` 重组后的物理停顿**：重组前记录原 `ControlUnit` 的 Rigidbody，创建新分组后按新刚体质心迁移原刚体的点速度和角速度，并显式唤醒新刚体。断开方块或爆炸触发重新分组时，分离组不再因新 Rigidbody 默认速度为零而停顿一个物理步。
 - **验证范围**：已通过代码差异检查、`git diff --check` 和 `dotnet build HY-Sandbox.sln --no-restore`；尚未在 Unity 6000.3.11f1 Play Mode 验证断开、爆炸、多分组和旋转运动下的连续性。
@@ -104,6 +108,8 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 3.5 UI、敌人和效果
 
+- `Blueprints/CODEX_Enemies` 提供三种 27～35 部件的简单敌机和可重复生成/校验脚本；本机 EnemyBlueprints 已安装，重新进入 Play Mode 后进入敌人池。已验证完整机体的无目标悬停、追踪、换向及失去目标后高度保持，不保证动力受损后稳定。
+
 `MainUIButtons` 负责按钮事件和操作模式，DebugSettingsPanel 提供供电范围、连接线、Block 连接状态、耐久状态和供电状态五个独立开关；`BuildPalette` / `BuildPaletteItem` 管理已保存的 23 个图标按钮、六类导航、滚动、悬停名称和选中颜色；`SaveUIPanel` 负责玩家/敌方蓝图列表；`BlueprintUIPanel` 显示当前建造目标名称、方块数量、总质量、需求功率和发电机总输出，并在搭建、拆除、Undo/Redo 时刷新，在存档或敌方蓝图异步加载期间逐块更新；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块，寻路避障按间隔采样并渐进转向，返航时对准停靠姿态后平滑减速归位，其飞行反馈由保存的双层青色尾迹和速度驱动喷口 Graph 组成，维修时从模型工具端发射双层能量束，并使用素材电弧与真实耐久恢复脉冲。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager` 和 `StylizedBeamEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。Block 爆炸与普通物体销毁均播放 UNI Aerial Explosion Graph；前者放大最低尺寸并保留瞬时点光和镜头震动，可爆炸方块不再叠加拆除爆发。两条销毁路径均可通过 VisualEffectsManager 的 Destruction VFX 调试开关查看目标、边界、缩放和实际生成结果。陨石尾迹独立跟随位置并按速度定向，不继承陨石自转。失去驾驶舱的断裂 Rigidbody 会获得最长 6 秒、按速度衰减的烟雾/余烬拖尾，同时限制全局活动数量为 24。
 
 `BuildPalette` 的 `HoveredBlockName` / `HoveredBlockInfo` 使用 Main 场景中现有的文字布局；23 个目录按钮烘焙 Block Prefab 的静态参数信息，包括尺寸、质量、成本、耐久、功率需求/输出、推进力与货仓容量（按组件存在情况显示）。默认 `Block.info` 根据当前参数生成；启用 `canEditInfo` 并填写文本后保留手写内容。编辑器菜单 `Tools/Build Palette/Refresh hovered block info` 只刷新文字引用和条目参数。
@@ -170,6 +176,8 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 - 已加入三种可编辑货仓、回收无人机舱、独立掉落物、金币汇聚、内容保存/返回及共享 Bot 导航；运行验证记录见 2026-09-22 变更日志。
 
 ## 5. 待改进与风险
+
+- **2026-10-01 无目标悬浮下沉已修复**：EnemyController 无目标时原先每帧使用机体位置更新 targetHoverHeight，飞控无法追赶持续移动的高度设定点；即使把蓝图飞控放在根高度仍会下降。现改为在无目标状态开始时锁定飞控当前高度，再次获得目标时退出高度保持；由三种敌机的无目标及失去目标阶段回归检查验证，详见 Flight-summary.json。
 
 - **已修复（2026-09-30）**：异常冲量记录器原先在遍历速度采样字典时更新字典值，Unity 会抛出 `InvalidOperationException` 并在每个物理步重复报错，造成日志刷屏和额外卡顿。现改用刚体快照遍历后再写回采样值；CSV 中的 PhysX 碰撞冲量仍保留为原始求解器数据，不能直接视为伤害值。
 

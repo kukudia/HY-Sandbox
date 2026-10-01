@@ -1,0 +1,55 @@
+{
+  "success": true,
+  "command": "command eval_file",
+  "data": {
+    "command": "eval_file",
+    "parameters": {
+      "file": "Blueprints/CODEX_Enemies/Validate.cs"
+    },
+    "result": {
+      "output": null,
+      "diagnostics": [],
+      "success": true,
+      "result": [
+        {
+          "name": "CODEX_E01_Finch",
+          "passed": true,
+          "blocks": 27,
+          "connected": 27,
+          "uncovered": 0,
+          "liveRelays": 2,
+          "unique": true,
+          "identical": true
+        },
+        {
+          "name": "CODEX_E02_Pike",
+          "passed": true,
+          "blocks": 35,
+          "connected": 35,
+          "uncovered": 0,
+          "liveRelays": 2,
+          "unique": true,
+          "identical": true
+        },
+        {
+          "name": "CODEX_E03_Manta",
+          "passed": true,
+          "blocks": 35,
+          "connected": 35,
+          "uncovered": 0,
+          "liveRelays": 2,
+          "unique": true,
+          "identical": true
+        }
+      ]
+    },
+    "target": {
+      "host": "127.0.0.1",
+      "port": 7801,
+      "projectPath": "D:\\git_projects\\Unity\\HY-Sandbox"
+    },
+    "success": true
+  },
+  "errors": [],
+  "warnings": []
+}

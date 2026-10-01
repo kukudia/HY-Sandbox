@@ -24,6 +24,8 @@ public class EnemyController : MonoBehaviour
     private float nextUpdateTime;
     private float nextMovementUpdateTime;
     private Vector3 desiredMovementInput;
+    private bool _hasIdleHoverHeight;
+    private float _idleHoverHeight;
     private readonly RaycastHit[] obstacleHits = new RaycastHit[MaxObstacleHits];
 
     private void Awake()
@@ -139,9 +141,23 @@ public class EnemyController : MonoBehaviour
         if (unit.hoverFlightController != null)
         {
             unit.hoverFlightController.setHeight = true;
-            float targetHeight = currentTarget != null
-                ? currentTarget.transform.position.y + targetHoverHeightOffset
-                : transform.position.y;
+            float targetHeight;
+            if (currentTarget != null)
+            {
+                _hasIdleHoverHeight = false;
+                targetHeight = currentTarget.transform.position.y + targetHoverHeightOffset;
+            }
+            else
+            {
+                // Hold a fixed altitude when the target is lost. Following the falling root
+                // would move the setpoint every tick, preventing the controller from recovering.
+                if (!_hasIdleHoverHeight)
+                {
+                    _idleHoverHeight = unit.hoverFlightController.CurrentHeight;
+                    _hasIdleHoverHeight = true;
+                }
+                targetHeight = _idleHoverHeight;
+            }
             unit.hoverFlightController.targetHoverHeight = Mathf.Max(2f, targetHeight);
         }
     }
