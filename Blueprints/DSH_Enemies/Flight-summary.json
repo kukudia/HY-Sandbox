@@ -1,0 +1,12 @@
+{
+  "blueprints": [
+    { "name": "DSH_E01_Skimmer", "peakHorizontalSpeed": 2.76, "peakTiltDegrees": 1.36, "peakHeightError": 2.093, "minWorkingPowerBlocks": 0, "blocksAtEnd": 66 },
+    { "name": "DSH_E02_Halberd", "peakHorizontalSpeed": 2.84, "peakTiltDegrees": 1.75, "peakHeightError": 3.354, "minWorkingPowerBlocks": 1, "blocksAtEnd": 129 },
+    { "name": "DSH_E03_Talos", "peakHorizontalSpeed": 3.12, "peakTiltDegrees": 2.01, "peakHeightError": 2.148, "minWorkingPowerBlocks": 0, "blocksAtEnd": 73 }
+  ],
+  "durationSeconds": 90,
+  "targetAcquiredAt": 15,
+  "targetRelocatedAt": 45,
+  "targetLostAt": 75,
+  "note": "peak values are taken from t=20s onward; turrets disabled to isolate flight; stock mass, thrust, power and PID unchanged"
+}

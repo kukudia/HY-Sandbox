@@ -88,3 +88,7 @@ UserSettings/Layouts/default-6000.dwlt
 UserSettings/Layouts/default-6000.dwlt
 /Assets/UNI VFX
 Assets/UNI VFX.meta
+
+# Python bytecode from the blueprint tooling under Blueprints/
+__pycache__/
+*.pyc

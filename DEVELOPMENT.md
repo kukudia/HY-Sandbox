@@ -5,6 +5,14 @@
 > Unity 编辑器：6000.3.11f1（`ProjectSettings/ProjectVersion.txt`）  
 > 当前分支：`main`
 
+### 2026-10-04
+- **DSH 敌机蓝图组**：新增 `Blueprints/DSH_Enemies`（`design_model.py` 布局模型、`write_generator.py` 生成器、`Generate.cs`/`Validate.cs`/`FlightProbe.cs`/`summarize.py`、三份 JSON 与验证记录），生成并安装 **`DSH_E01_Skimmer`**（66 部件宽体截击机）、**`DSH_E02_Halberd`**（129 部件双体炮舰）、**`DSH_E03_Talos`**（73 部件圆盘炮台）至本机 EnemyBlueprints；仓库保存同名副本。全部使用原装部件与数值，**不修改 Prefab、生产 C#、AI、PID、场景或部件数值**。三份设计的重心横向偏移 ≤0.007，升重比 3.85/3.05/3.78，水平推力 2000/4000/2300 N，供电余量 3.0/1.7/2.6 倍。文件名带 `DSH_` 前缀以标明来源，重新进入 Play Mode 后进入敌人池。
+- **构造规则**：悬浮环吊装在甲板下方（`HoverThrusterBig` 中心 y=-2，其 Up 连接点 y=-1 正对甲板块 Down 连接点）；驾驶舱与发电机抬高一级至 (x, 2, z)，Down 连接点对上甲板块 Up 连接点；1×1×1 设备翻转 180° 吊在甲板下（甲板顶面被驾驶舱/发电机占据 y∈[1,3]）；`HoverFlightController` **必须正立**，因为它把自己的 `transform.up` 当作机体上方向；`UniversalThruster` 可倒装，因其每帧用 `LookRotation` 把模型转向世界空间移动方向。继电器按 5 m/10 m 方块距离先行布置，因为落在所有继电器 5 m 盒外的部件永远不工作。规则由原装连接点几何推导，并在 `Validate.cs` 中对真实 Prefab 复核。
+- **校验**：`Validate.cs` 用游戏自身规则检查资源路径、尺寸、唯一 ID、恰好一个驾驶舱、启用连接点几何（含“接合但体积不相接”检测）、单连通分量、体积重叠、供电覆盖与均分、升重余量和控制器朝向。三份蓝图均通过：接合连接点 236/512/243，可达部件 66/66、129/129、73/73，每负载功率 300/169/255（下限 50，推力效率需要 100）。
+- **Unity Play Mode 实飞**：Unity 6000.3.11f1 / Main，真实 `EnemySpawner.SpawnBlockData` + 真实 `EnemyController`，炮塔关闭以隔离飞行，质量/推力/功率/PID 未改动。90 秒覆盖无目标悬停、15 秒获取目标、45 秒换向、75 秒失去目标，每秒采样 5 次。三艘均生成单连通组、无掉块；最大倾角 1.36/1.75/2.01°，悬停高度误差 0.476/0.742/1.202 m，悬停垂直速度 0.113/0.021/0.099 m/s，峰值水平速度 2.76/2.84/3.12 m/s。原始采样 `Flight.csv`，汇总见 `summarize.py` 与 `Flight-summary.json`。
+- **已记录的两点局限**：① `HoverFlightController` 的高度积分增益为固定 0.1、**不随质量缩放**（只有比例项按 `mass * 0.5` 缩放），因此 696 kg 的 E02 收敛明显慢于 360 kg 的 E01（17.8 s 对 3.4 s），这是原装 PID 的性质而非机体缺陷，最终仍稳定在 0.74 m 内；② 探针从 `EditorApplication.update` 采样，而 `PowerTransmissionDevice.Update` 在同一帧内先清零再分配，二者不同步会偶发读到瞬时 0，实测被标记采样点的倾角与高度误差与未标记点相同或更好，`summarize.py` 因此把该列作为参考而非判据。
+- **尚未验证**：受损结构与密集交火下的表现、与其他敌机的拥挤交互、正式构建性能。本轮未改动 `Assets/`，未重跑 `dotnet build`。
+
 ### 2026-10-01
 - **简单稳定敌机蓝图**：新增 `Blueprints/CODEX_Enemies` 的脚本、JSON、截图与验证记录，安装 `CODEX_E01_Finch`（27 部件双炮）、`CODEX_E02_Pike`（35 部件纵长四炮）、`CODEX_E03_Manta`（35 部件宽翼四炮）至本机 EnemyBlueprints。使用原装部件，水平重心居中，4/6 个对称大型悬浮推进器，升重比 2.47/2.50；不修改 Prefab、场景或部件数值。配套修复 EnemyController 无目标时的高度设定点，每次失去目标锁定飞控高度，避免设定点跟随机体下降。
 - **验证**：三份资源/尺寸/无重叠/唯一 ID/连接几何/供电/安装一致性检查通过。Unity 6000.3.11f1 实际 EnemySpawner 生成后均为单连通组；90 秒测试覆盖无目标悬停、15 秒获取目标、45 秒目标换向及75秒失去目标。追踪收敛段最大倾角 2.45/1.70/1.82°，高度误差 0.25/0.19/0.14m，无目标收敛段最大垂直速度均小于 0.055m/s，无失电或掉块。`dotnet build HY-Sandbox.sln --no-restore` 通过（0 错误、4 个既有警告），本轮运行无新增 Console Error，差异检查通过。为隔离飞行关闭测试炮塔、远距离回收和自动刷怪，未覆盖实战受损及大量敌机拥挤场景；完整数据见目录内 Flight.csv/Flight-summary.json。
@@ -108,7 +116,11 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 3.5 UI、敌人和效果
 
+**蓝图设计要点（悬挂面与朝向）**：`HoverThrusterBig` 只有启用的 Up 连接点，中心在 y = -2 时其连接点位于 y = -1，正好接上甲板块的 Down 连接点，所以悬浮环应吊装在甲板下方；驾驶舱与发电机只有 Down 连接点，需要抬高到甲板上一级 (x, 2, z) 才能与甲板块的 Up 连接点重合；1×1×1 设备若吊在甲板下必须翻转 180° 才能让 Down 连接点朝上。两处朝向敏感：`HoverFlightController` 把自己的 `transform.up` 当作机体上方向（`CalculateTiltAdjustment` / `ApplyRotationCorrection`），翻转安装会把机体压成倒扣；`UniversalThruster` 与 `HoverThruster` 则与自身旋转无关（前者每帧 `LookRotation` 转向世界空间移动方向，后者沿世界 up 施力），可以倒装。供电方面，落在所有 `PowerTransmissionDevice` 的 `powerRange`（5 m 盒）之外的带 `Power` 部件永远不工作，因此继电器需要按距离先行布置，而不是事后补齐。
+
 - `Blueprints/CODEX_Enemies` 提供三种 95～120 部件的多层敌机和可重复生成/校验脚本；本机 EnemyBlueprints 已安装，重新进入 Play Mode 后进入敌人池。已验证完整机体的无目标悬停、追踪、换向及失去目标后高度保持，不保证动力受损后稳定。增重后峰值速度低于上一版，数值见最新变更日志。
+
+- `Blueprints/DSH_Enemies` 提供三种带 `DSH_` 前缀的敌机蓝图（66/129/73 部件）及其布局模型、生成器、校验器与 90 秒实飞记录，本机 EnemyBlueprints 已安装同名副本，重新进入 Play Mode 后进入敌人池。三份共用一套由原装连接点几何推导的构造规则：悬浮环吊装在甲板下方、驾驶舱与发电机抬高一级、1×1×1 设备翻转后吊在甲板下、`HoverFlightController` 保持正立、`UniversalThruster` 可倒装、继电器先行布置以满足 5 m/10 m 供电距离。升重比 3.85/3.05/3.78，横向重心偏移 ≤0.007；实测最大倾角 ≤2.01°、悬停垂直速度 ≤0.113 m/s。设计方法与两点已知局限（原装高度积分增益不随质量缩放、探针供电采样的相位假象）见 `Blueprints/DSH_Enemies/README.md`。
 
 `MainUIButtons` 负责按钮事件和操作模式，DebugSettingsPanel 提供供电范围、连接线、Block 连接状态、耐久状态和供电状态五个独立开关；`BuildPalette` / `BuildPaletteItem` 管理已保存的 23 个图标按钮、六类导航、滚动、悬停名称和选中颜色；`SaveUIPanel` 负责玩家/敌方蓝图列表；`BlueprintUIPanel` 显示当前建造目标名称、方块数量、总质量、需求功率和发电机总输出，并在搭建、拆除、Undo/Redo 时刷新，在存档或敌方蓝图异步加载期间逐块更新；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块，寻路避障按间隔采样并渐进转向，返航时对准停靠姿态后平滑减速归位，其飞行反馈由保存的双层青色尾迹和速度驱动喷口 Graph 组成，维修时从模型工具端发射双层能量束，并使用素材电弧与真实耐久恢复脉冲。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager` 和 `StylizedBeamEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。Block 爆炸与普通物体销毁均播放 UNI Aerial Explosion Graph；前者放大最低尺寸并保留瞬时点光和镜头震动，可爆炸方块不再叠加拆除爆发。两条销毁路径均可通过 VisualEffectsManager 的 Destruction VFX 调试开关查看目标、边界、缩放和实际生成结果。陨石尾迹独立跟随位置并按速度定向，不继承陨石自转。失去驾驶舱的断裂 Rigidbody 会获得最长 6 秒、按速度衰减的烟雾/余烬拖尾，同时限制全局活动数量为 24。
 
