@@ -215,7 +215,7 @@ public class PlayManager : MonoBehaviour
                 continue;
             }
 
-            DestroyManager.Instance.ScheduleUnitCleanup(group);
+            DestroyManager.instance.ScheduleUnitCleanup(group);
             cleanupCount--;
         }
     }
@@ -238,7 +238,7 @@ public class PlayManager : MonoBehaviour
 
             if ((group.transform.position - blocksParent.position).sqrMagnitude > distanceSqr)
             {
-                DestroyManager.Instance.ScheduleDistantGroupCleanup(group, blocksParent, groupCleanupDistance);
+                DestroyManager.instance.ScheduleDistantGroupCleanup(group, blocksParent, groupCleanupDistance);
             }
         }
     }
@@ -350,7 +350,7 @@ public class PlayManager : MonoBehaviour
     public void PlayEnd()
     {
         maxHealth = 0;
-        DestroyManager.Instance.EndSalvageSession();
+        DestroyManager.instance.EndSalvageSession();
         LootDrop.ClearSession();
         List<ControlUnit> controlUnits = allControlUnits.ToList();
         foreach (ControlUnit controlUnit in controlUnits)

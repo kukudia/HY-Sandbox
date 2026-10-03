@@ -174,7 +174,7 @@ public static class SalvagePlayProbe
         Check("Drone picked up cargo for bay destruction test", doomedBot.HasCargo);
         // Isolate destruction from unrelated player's group reconstruction in this probe.
         doomedBay.transform.SetParent(null, true);
-        DestroyManager.Instance.DestroyGameObject(doomedBay);
+        DestroyManager.instance.DestroyGameObject(doomedBay);
         yield return 0.2f;
         Check("Destroying collection bay releases carried special part", carriedDrop != null && carriedDrop.Available && carriedDrop.transform.parent == null);
         LootDrop.ClearSession();
@@ -182,14 +182,14 @@ public static class SalvagePlayProbe
         var doomedOwner = Unit("Explosive hold owner", new Vector3(70, 0, 0), UnitFaction.Player, false);
         var doomedHold = Spawn("CargoHold", doomedOwner, Vector3.zero).GetComponent<CargoHold>();
         doomedHold.RestoreContents(new List<CargoItem> { Part(), Part() });
-        DestroyManager.Instance.DestroyGameObject(doomedHold.gameObject);
+        DestroyManager.instance.DestroyGameObject(doomedHold.gameObject);
         yield return 0.3f;
         Check("Actual explosive destruction emits cargo once", doomedHold == null && LootDrop.Active.Count(d => d.Item.kind == CargoKind.SpecialPart) == 2);
         LootDrop.ClearSession();
         var coinWreck = Unit("Non-explosive hold owner", new Vector3(80, 0, 0), UnitFaction.Player, false);
         var destroyedCoins = Spawn("CoinHold", coinWreck, Vector3.zero).GetComponent<CargoHold>();
         destroyedCoins.Store(Coins(12));
-        DestroyManager.Instance.DestroyGameObject(destroyedCoins.gameObject);
+        DestroyManager.instance.DestroyGameObject(destroyedCoins.gameObject);
         Check("Non-explosive destroyed hold leaves connectivity graph immediately", destroyedCoins.transform.parent == null);
         yield return 0.2f;
         Check("Actual non-explosive destruction spills currency", destroyedCoins == null && LootDrop.Active.Sum(d => d.Item.amount) == 12);
@@ -244,7 +244,7 @@ public static class SalvagePlayProbe
         WreckSalvage.Convert(Spawn("1x1x1", playerWreck, Vector3.zero).GetComponent<Block>());
         Check("Player self-dismantling cannot farm coins", LootDrop.Active.Count() == 0);
         var special = LootDrop.Spawn(Part(), new Vector3(40, 0, 3));
-        DestroyManager.Instance.ScheduleUnitCleanup(wreck);
+        DestroyManager.instance.ScheduleUnitCleanup(wreck);
         yield return WreckSalvage.Settings.cleanupDelay + 0.4f;
         Check("Cleanup removes ordinary wreck but preserves independent special loot", wreck == null && special != null);
         LootDrop.ClearSession();

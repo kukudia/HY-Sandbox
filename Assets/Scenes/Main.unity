@@ -5991,8 +5991,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2090465813}
   m_HandleRect: {fileID: 2090465812}
   m_Direction: 2
-  m_Value: 0.9999996
-  m_Size: 0.73958915
+  m_Value: 1
+  m_Size: 0.9014191
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -18370,17 +18370,17 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1269690419}
-  - {fileID: 1586910737}
   - {fileID: 1660287433}
-  - {fileID: 1580786762}
   - {fileID: 186965333}
-  - {fileID: 2013624195}
-  - {fileID: 247660642}
-  - {fileID: 2089701011}
-  - {fileID: 700819258}
   - {fileID: 921664911}
+  - {fileID: 1703938698}
+  - {fileID: 2089701011}
+  - {fileID: 1269690419}
   - {fileID: 508249629}
+  - {fileID: 1586910737}
+  - {fileID: 700819258}
+  - {fileID: 247660642}
+  - {fileID: 1580786762}
   - {fileID: 1787325084}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -18736,7 +18736,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2013624195}
   m_Father: {fileID: 1636278286}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1660287434
@@ -19151,6 +19152,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1690708616}
   m_CullTransparentMesh: 1
+--- !u!1 &1703938697
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1703938698}
+  - component: {fileID: 1703938699}
+  m_Layer: 0
+  m_Name: DestroyManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1703938698
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1703938697}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1636278286}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1703938699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1703938697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4a7f159411361e45a143ec09140b413, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DestroyManager
+  _blockExplosionUpwardsModifier: 1.2
+  _explosionImpulseScale: 0.5
+  _maximumExplosionSpeedChange: 50
+  _explosionCollisionProtection: 1
 --- !u!1 &1713439440
 GameObject:
   m_ObjectHideFlags: 0
@@ -22778,12 +22827,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2013624194}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1636278286}
+  m_Father: {fileID: 1660287433}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2013624196
 MonoBehaviour:

@@ -103,7 +103,7 @@ public class Durability : MonoBehaviour
         {
             currentDurability = 0;
             MainUIPanels.instance?.UpdateHealthBar(gameObject, currentDurability, maxDurability);
-            DestroyManager.Instance.DestroyGameObject(gameObject);
+            DestroyManager.instance.DestroyGameObject(gameObject);
         }
         else
         {

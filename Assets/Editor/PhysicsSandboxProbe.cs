@@ -62,7 +62,7 @@ public static class PhysicsSandboxProbe
             RuntimeUnitMember.Ensure(armorObject, fragmentUnit.runtimeUnitId, UnitFaction.Enemy);
             Physics.SyncTransforms();
             typeof(DestroyManager).GetMethod("ApplyExplosionForce", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                .Invoke(DestroyManager.Instance, new object[] { source, fragmentUnit.runtimeUnitId, UnitFaction.Enemy, Vector3.zero });
+                .Invoke(DestroyManager.instance, new object[] { source, fragmentUnit.runtimeUnitId, UnitFaction.Enemy, Vector3.zero });
             scene.GetPhysicsScene().Simulate(0.02f);
             Check(checks, "Explosion speed change capped at 3 m/s", fragment.linearVelocity.magnitude > 0.01f && fragment.linearVelocity.magnitude <= 3.01f);
             Check(checks, "Explosion does not directly damage armor", Mathf.Approximately(armor.currentDurability, 100f));

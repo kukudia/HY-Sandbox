@@ -5,24 +5,7 @@ using UnityEngine;
 public class DestroyManager : MonoBehaviour
 {
     // Centralizes destruction side effects so visuals, unit cleanup, and regrouping happen in a known order.
-    private static DestroyManager _instance;
-    public static DestroyManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = Object.FindFirstObjectByType<DestroyManager>();
-                if (_instance == null)
-                {
-                    GameObject go = new GameObject("DestroyManager");
-                    _instance = go.AddComponent<DestroyManager>();
-                    DontDestroyOnLoad(go);
-                }
-            }
-            return _instance;
-        }
-    }
+    public static DestroyManager instance;
 
     private float _refreshDelay = 0.2f;
     private float _unitCleanupDelay = 10f;
@@ -33,6 +16,11 @@ public class DestroyManager : MonoBehaviour
     private bool _isRefreshScheduled;
     private int _destroyedCount;
     private HashSet<string> _scheduledUnitCleanups = new HashSet<string>();
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     public void DestroyGameObject(GameObject obj)
     {
