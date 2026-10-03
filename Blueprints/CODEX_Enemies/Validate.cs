@@ -46,6 +46,6 @@ foreach (var file in System.IO.Directory.GetFiles("Blueprints/CODEX_Enemies", "C
     bool identical=System.IO.File.ReadAllText(file)==System.IO.File.ReadAllText(System.IO.Path.Combine(UnityEngine.Application.persistentDataPath,"EnemyBlueprints",System.IO.Path.GetFileName(file)));
     bool passed=cockpitCount==1 && visited.Count==data.blocks.Count && uncovered==0 && unique && identical;
     results.Add(new { name=System.IO.Path.GetFileNameWithoutExtension(file), passed, blocks=data.blocks.Count, connected=visited.Count, uncovered, liveRelays=liveRelays.Count, unique, identical });
-    if (!passed) throw new System.Exception("Validation failed: " + file + "; connected=" + visited.Count + "/" + data.blocks.Count + "; uncovered=" + uncovered);
+    if (!passed) throw new System.Exception("Validation failed: " + file + "; connected=" + visited.Count + "/" + data.blocks.Count + "; uncovered=" + uncovered + "; isolated=" + string.Join(",", Enumerable.Range(0,data.blocks.Count).Where(i=>!visited.Contains(i)).Select(i=>data.blocks[i].resourcePath.Split('/').Last()+"@"+data.blocks[i].posX+":"+data.blocks[i].posY+":"+data.blocks[i].posZ)));
 }
 return results;

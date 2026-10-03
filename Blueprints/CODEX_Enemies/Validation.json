@@ -2,30 +2,30 @@
   {
     "name": "CODEX_E01_Finch",
     "passed": true,
-    "blocks": 41,
-    "connected": 41,
+    "blocks": 103,
+    "connected": 103,
     "uncovered": 0,
-    "liveRelays": 4,
+    "liveRelays": 8,
     "unique": true,
     "identical": true
   },
   {
     "name": "CODEX_E02_Pike",
     "passed": true,
-    "blocks": 53,
-    "connected": 53,
+    "blocks": 132,
+    "connected": 132,
     "uncovered": 0,
-    "liveRelays": 6,
+    "liveRelays": 12,
     "unique": true,
     "identical": true
   },
   {
     "name": "CODEX_E03_Manta",
     "passed": true,
-    "blocks": 53,
-    "connected": 53,
+    "blocks": 128,
+    "connected": 128,
     "uncovered": 0,
-    "liveRelays": 6,
+    "liveRelays": 10,
     "unique": true,
     "identical": true
   }

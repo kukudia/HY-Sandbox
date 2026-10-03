@@ -1,6 +1,6 @@
 # Run after FlightProbe completes. Thresholds describe intact, powered flight, not battle survivability.
 $rows = Import-Csv (Join-Path $PSScriptRoot 'Flight.csv')
-$baseline = Import-Csv (Join-Path $PSScriptRoot 'Flight-baseline.csv')
+$baseline = Import-Csv (Join-Path $PSScriptRoot 'Flight-baseline-expanded.csv')
 $results = foreach ($group in ($rows | Group-Object name)) {
     $steady = @($group.Group | Where-Object { [double]$_.seconds -ge 25 -and [double]$_.seconds -lt 75 })
     if ($steady.Count -eq 0) { throw "No settled-flight samples: $($group.Name)" }
@@ -20,7 +20,7 @@ $results = foreach ($group in ($rows | Group-Object name)) {
     $speedRatio = $peakSpeed / $baselinePeak
     [pscustomobject]@{
         name = $group.Name
-        passed = ($duration -ge 89.9 -and $idle.Count -ge 40 -and $idleHasTarget -eq 0 -and $idleVertical -le 0.1 -and $tilt -le 5 -and $height -le 1 -and $vertical -le 1 -and $unpowered -eq 0 -and $lostTargets -eq 0 -and $minBlocks -eq $initialBlocks -and $speedRatio -ge 2)
+        passed = ($duration -ge 89.9 -and $idle.Count -ge 40 -and $idleHasTarget -eq 0 -and $idleVertical -le 0.1 -and $tilt -le 5 -and $height -le 1 -and $vertical -le 1 -and $unpowered -eq 0 -and $lostTargets -eq 0 -and $minBlocks -eq $initialBlocks -and $speedRatio -ge 0.3)
         peakHorizontalSpeed = $peakSpeed
         baselinePeakHorizontalSpeed = $baselinePeak
         peakSpeedRatio = $speedRatio

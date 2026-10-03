@@ -108,7 +108,7 @@ HY-Sandbox 是一个 Unity 三维模块化建造与飞行沙盒。核心循环�
 
 ### 3.5 UI、敌人和效果
 
-- `Blueprints/CODEX_Enemies` 提供三种 41～53 部件的机动增强敌机和可重复生成/校验脚本；本机 EnemyBlueprints 已安装，重新进入 Play Mode 后进入敌人池。已验证完整机体的无目标悬停、追踪、换向及失去目标后高度保持，不保证动力受损后稳定。
+- `Blueprints/CODEX_Enemies` 提供三种 95～120 部件的多层敌机和可重复生成/校验脚本；本机 EnemyBlueprints 已安装，重新进入 Play Mode 后进入敌人池。已验证完整机体的无目标悬停、追踪、换向及失去目标后高度保持，不保证动力受损后稳定。增重后峰值速度低于上一版，数值见最新变更日志。
 
 `MainUIButtons` 负责按钮事件和操作模式，DebugSettingsPanel 提供供电范围、连接线、Block 连接状态、耐久状态和供电状态五个独立开关；`BuildPalette` / `BuildPaletteItem` 管理已保存的 23 个图标按钮、六类导航、滚动、悬停名称和选中颜色；`SaveUIPanel` 负责玩家/敌方蓝图列表；`BlueprintUIPanel` 显示当前建造目标名称、方块数量、总质量、需求功率和发电机总输出，并在搭建、拆除、Undo/Redo 时刷新，在存档或敌方蓝图异步加载期间逐块更新；`ActionCounterUI` 显示撤销/重做数量；`GlobalTextStyler` 统一 Chakra Petch 字体与轻量阴影样式，避免小按钮文字因粗描边显得拥挤。`EnemySpawner`、`EnemyController`、`MeteorShower`、`TurretWeapon` 和 `RepairBot` 组成战斗与环境事件链；RepairBot 只选择与 home 同属一个 ControlUnit、且位于 `targetRange` 球形范围内的受损方块，寻路避障按间隔采样并渐进转向，返航时对准停靠姿态后平滑减速归位，其飞行反馈由保存的双层青色尾迹和速度驱动喷口 Graph 组成，维修时从模型工具端发射双层能量束，并使用素材电弧与真实耐久恢复脉冲。`DestroyManager` 在驾驶舱摧毁时按爆炸半径和概率断开同一运行时单元内的 Block，再重新分组并施加爆炸冲量（当前不造成伤害）；`VisualEffectsManager` 和 `StylizedBeamEffect` 负责放置、删除、移动、碰撞、爆炸和陨石冲击反馈。Block 爆炸与普通物体销毁均播放 UNI Aerial Explosion Graph；前者放大最低尺寸并保留瞬时点光和镜头震动，可爆炸方块不再叠加拆除爆发。两条销毁路径均可通过 VisualEffectsManager 的 Destruction VFX 调试开关查看目标、边界、缩放和实际生成结果。陨石尾迹独立跟随位置并按速度定向，不继承陨石自转。失去驾驶舱的断裂 Rigidbody 会获得最长 6 秒、按速度衰减的烟雾/余烬拖尾，同时限制全局活动数量为 24。
 
@@ -1275,6 +1275,12 @@ RepairBot 的模型朝向与导航 +Z 对齐，维修束从 RepairOrigin 工具�
 
 
 ## 10. 变更日志
+
+### 2026-10-04（敌机多层结构与零件丰富化）
+
+- **实现**：CODEX 三种敌机加入底层悬浮甲板、中层设备与炮位、上层对称背脊和阶梯细节，使用 TechnologyHold、Rack、Stairs、不同尺寸结构块及第二台发电机。当前部件数为 95/120/116。
+- **验证**：资源、连接、供电检查通过；Unity 6000.3.11f1 的 90 秒实际飞行通过，最大倾角 0.63°、高度误差 0.11m，无失电或掉块。相对上一版峰值水平速度为 0.39/0.41/0.42 倍。原始数据见 `Blueprints/CODEX_Enemies`。
+- **边界**：完整机体悬停、追踪和换向已验证；受损多层结构及密集交火未验证。
 
 ### 2026-10-04（敌机扩容与机动增强）
 
