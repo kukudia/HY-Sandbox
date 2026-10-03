@@ -8,8 +8,10 @@ var reports = new System.Collections.Generic.List<object>();
 for (int variant = 0; variant < 3; variant++)
 {
     string name = new[] { "CODEX_E01_Finch", "CODEX_E02_Pike", "CODEX_E03_Manta" }[variant];
-    int width = variant == 2 ? 4 : 2;
-    int length = variant == 1 ? 4 : 2;
+    // Expanded silhouettes: roughly 50% more blocks while preserving each role.
+    // Finch and Pike grow fore/aft; Manta grows wing span.
+    int width = variant == 2 ? 6 : 2;
+    int length = variant == 1 ? 6 : (variant == 0 ? 4 : 2);
     var data = new BlockDataList();
     var occupied = new System.Collections.Generic.HashSet<UnityEngine.Vector3Int>();
     float mass = 0, lift = 0, demand = 0;
@@ -36,18 +38,28 @@ for (int variant = 0; variant < 3; variant++)
     add("Cockpit",0,2,1); add("PowerGeneratingUnit",0,2,-1);
     add("HoverFlightController",-1.5f,1.5f,.5f); add("1x1x1",1.5f,1.5f,-.5f);
     add("PowerTransmissionDevice",1.5f,1.5f,.5f); add("PowerTransmissionDevice",-1.5f,1.5f,-.5f);
-    if(variant==2)
+    if(variant==0)
     {
-        foreach(int x in new[]{-4,0,4}) foreach(int z in new[]{-2,2}) add("HoverThrusterBig",x,-2,z);
+        foreach(int x in new[]{-2,2}) foreach(int z in new[]{-4,0,4}) add("HoverThrusterBig",x,-2,z);
+        add("PowerTransmissionDevice",-2.5f,1.5f,-.5f); add("PowerTransmissionDevice",2.5f,1.5f,.5f);
     }
     else
     {
-        foreach(int x in new[]{-2,2}) foreach(int z in (variant==1?new[]{-4,0,4}:new[]{-2,2})) add("HoverThrusterBig",x,-2,z);
+        foreach(int a in new[]{-6,-4,0,4,6}) foreach(int b in new[]{-2,2}) add("HoverThrusterBig",variant==1?b:a,-2,variant==1?a:b);
+        foreach(float a in new[]{-4.5f,4.5f}) foreach(float b in new[]{-1.5f,1.5f}) add("PowerTransmissionDevice",variant==1?b:a,1.5f,variant==1?a:b);
     }
-    foreach(float x in new[]{-width-.5f,width+.5f}) foreach(float z in new[]{-length+.5f,length-.5f}) add("UniversalThruster",x,1.5f,z);
-    foreach(float x in new[]{-1.5f,1.5f}) add("Turret",x,1.5f,length+.5f);
-    // Rear pair balances weapon mass and provides rear coverage on the larger variants.
-    foreach(float x in new[]{-1.5f,1.5f}) add(variant==0?"1x1x1":"Turret",x,1.5f,-length-.5f);
+    // Large vector thrusters provide the main acceleration; small pairs retain symmetry.
+    foreach(float side in new[]{-1f,1f}) foreach(float z in new[]{-length,length})
+    {
+        add("UniversalThrusterBig",side*(width+2),0,z);
+        // Side mounting puts the force near the mass centre and connects the down socket inward.
+        var rotation=UnityEngine.Quaternion.Euler(0,0,-side*90);
+        var block=data.blocks[data.blocks.Count-1];
+        block.rotX=rotation.x; block.rotY=rotation.y; block.rotZ=rotation.z; block.rotW=rotation.w;
+    }
+    foreach(float a in new[]{-(variant==2?width:length)+.5f,(variant==2?width:length)-.5f}) foreach(float b in new[]{-.5f,.5f}) add("UniversalThruster",variant==2?a:b,1.5f,variant==2?b:a);
+    foreach(float x in new[]{-1.5f,1.5f}) add("Turret",x,1.5f,2.5f);
+    foreach(float x in new[]{-1.5f,1.5f}) add(variant==0?"1x1x1":"Turret",x,1.5f,-2.5f);
     string json=UnityEngine.JsonUtility.ToJson(data,true);
     foreach(string target in new[]{folder,destination})
     {
