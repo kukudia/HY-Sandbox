@@ -830,32 +830,32 @@ public abstract class Bot : MonoBehaviour
             _flightEffect.Clear();
         }
     }
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
         if (!Application.isPlaying) return;
-
+        if (currentState == NavigationState.Idle) return;
         // 1. 避障区域可视化
-        if (showAvoidanceZones)
-        {
-            // 紧急区域（红色）
-            Gizmos.color = new Color(1f, 0f, 0f, 0.2f);
-            Gizmos.DrawWireSphere(transform.position, emergencyAvoidanceRange);
+        //if (showAvoidanceZones)
+        //{
+        //    // 紧急区域（红色）
+        //    Gizmos.color = new Color(1f, 0f, 0f, 0.2f);
+        //    Gizmos.DrawWireSphere(transform.position, emergencyAvoidanceRange);
 
-            // 主要区域（黄色）
-            Gizmos.color = new Color(1f, 1f, 0f, 0.15f);
-            Gizmos.DrawSphere(transform.position, primaryAvoidanceRange);
+        //    // 主要区域（黄色）
+        //    Gizmos.color = new Color(1f, 1f, 0f, 0.15f);
+        //    Gizmos.DrawSphere(transform.position, primaryAvoidanceRange);
 
-            // 预测区域（绿色）
-            Gizmos.color = new Color(0f, 1f, 0f, 0.1f);
-            Gizmos.DrawWireSphere(transform.position, predictiveAvoidanceRange);
-        }
+        //    // 预测区域（绿色）
+        //    Gizmos.color = new Color(0f, 1f, 0f, 0.1f);
+        //    Gizmos.DrawWireSphere(transform.position, predictiveAvoidanceRange);
+        //}
 
         // 2. 修复目标范围
-        if (home != null)
-        {
-            Gizmos.color = new Color(0f, 0.8f, 1f, 0.3f);
-            Gizmos.DrawWireSphere(home.position, targetRange);
-        }
+        //if (home != null)
+        //{
+        //    Gizmos.color = new Color(0f, 0.8f, 1f, 0.3f);
+        //    Gizmos.DrawWireSphere(home.position, targetRange);
+        //}
 
         // 3. 避障信息可视化
         if (showAvoidanceRays && debugAvoidanceInfo.Count > 0)
@@ -919,41 +919,68 @@ public abstract class Bot : MonoBehaviour
         }
 
         // 6. 基地标记
-        if (home != null)
-        {
-            Gizmos.color = new Color(0.3f, 0.3f, 1f, 0.5f);
-            Gizmos.DrawSphere(home.position, 1.5f);
-        }
+        //if (home != null)
+        //{
+        //    Gizmos.color = new Color(0.3f, 0.3f, 1f, 0.5f);
+        //    Gizmos.DrawSphere(home.position, 1.5f);
+        //}
 
         // 7. 速度信息文本（需要Handles）
 #if UNITY_EDITOR
-        UnityEditor.Handles.Label(
-            transform.position + Vector3.up * 3f,
-            $"State: {currentState}\nSpeed: {currentSpeedMultiplier:F2}x\nObstacles: {debugAvoidanceInfo.Count}"
-        );
+        
+        {
+            Color labelColor = Color.white;
+            switch (currentState)
+            {
+                case NavigationState.NavigatingToTarget:
+                    labelColor = Color.cyan;
+                    break;
+                case NavigationState.ReturningHome:
+                    labelColor = Color.green;
+                    break;
+                case NavigationState.Docking:
+                    labelColor = Color.yellow;
+                    break;
+            }
+            UnityEditor.Handles.Label
+            (
+                transform.position + Vector3.up * 3f,
+                $"{currentState}",
+                new GUIStyle
+                {
+                    fontSize = 14,
+                    normal = new GUIStyleState { textColor = labelColor }
+                }
+            );
+        }
+        
+        //UnityEditor.Handles.Label(
+        //    transform.position + Vector3.up * 3f,
+        //    $"State: {currentState}\nSpeed: {currentSpeedMultiplier:F2}x\nObstacles: {debugAvoidanceInfo.Count}"
+        //);
 #endif
     }
-    private void OnDrawGizmos()
-    {
-        if (Application.isPlaying) return;
+    //private void OnDrawGizmos()
+    //{
+    //    if (Application.isPlaying) return;
 
-        // 编辑器下的静态预览
-        Gizmos.color = new Color(1f, 0f, 0f, 0.3f);
-        Gizmos.DrawWireSphere(transform.position, emergencyAvoidanceRange);
+    //    // 编辑器下的静态预览
+    //    Gizmos.color = new Color(1f, 0f, 0f, 0.3f);
+    //    Gizmos.DrawWireSphere(transform.position, emergencyAvoidanceRange);
 
-        Gizmos.color = new Color(1f, 1f, 0f, 0.3f);
-        Gizmos.DrawWireSphere(transform.position, primaryAvoidanceRange);
+    //    Gizmos.color = new Color(1f, 1f, 0f, 0.3f);
+    //    Gizmos.DrawWireSphere(transform.position, primaryAvoidanceRange);
 
-        Gizmos.color = new Color(0f, 1f, 0f, 0.3f);
-        Gizmos.DrawWireSphere(transform.position, predictiveAvoidanceRange);
+    //    Gizmos.color = new Color(0f, 1f, 0f, 0.3f);
+    //    Gizmos.DrawWireSphere(transform.position, predictiveAvoidanceRange);
 
-        Gizmos.color = new Color(0f, 0.8f, 1f, 0.4f);
-        Gizmos.DrawWireSphere(transform.position, targetRange);
+    //    Gizmos.color = new Color(0f, 0.8f, 1f, 0.4f);
+    //    Gizmos.DrawWireSphere(transform.position, targetRange);
 
-        if (navigateTarget != null)
-        {
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawLine(transform.position, navigateTarget.position);
-        }
-    }
+    //    if (navigateTarget != null)
+    //    {
+    //        Gizmos.color = Color.cyan;
+    //        Gizmos.DrawLine(transform.position, navigateTarget.position);
+    //    }
+    //}
 }

@@ -100,21 +100,6 @@ public class MainUIButtons : MonoBehaviour
 
     }
 
-    private void Update()
-    {
-        if (Keyboard.current.pKey.wasPressedThisFrame)
-        {
-            if (!PlayManager.instance.playMode)
-            {
-                MainUIPanels.instance.PlayStart();
-            }
-            else
-            {
-                MainUIPanels.instance.PlayEnd();
-            }
-        }
-    }
-
     public void SetDefault()
     {
         BuildManager.instance.SetCurrentBlockResource(string.Empty);

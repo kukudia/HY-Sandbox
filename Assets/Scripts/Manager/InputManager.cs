@@ -5,6 +5,7 @@ public class InputManager : MonoBehaviour
 {
     // Converts keyboard input into camera/build/play state transitions in one scene-level entry point.
     public static InputManager instance;
+    public bool keyInput = true;
     public bool lockView = false;
     public bool DeveloperToolsAvailable
     {
@@ -36,11 +37,13 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
+        if (!keyInput) return;
+
         // Guard scene dependencies first so startup and teardown frames remain no-op instead of throwing.
-        if (BuildManager.instance == null || PlayManager.instance == null || CameraController.instance == null)
-        {
-            return;
-        }
+        //if (BuildManager.instance == null || PlayManager.instance == null || CameraController.instance == null)
+        //{
+        //    return;
+        //}
 
         Keyboard keyboard = Keyboard.current;
         if (keyboard == null)
@@ -83,6 +86,18 @@ public class InputManager : MonoBehaviour
             else if (PlayManager.instance.blocksParent != null)
             {
                 CameraController.instance.FocusCameraOnBlock(PlayManager.instance.blocksParent.gameObject);
+            }
+        }
+
+        if (keyboard.pKey.wasPressedThisFrame)
+        {
+            if (!PlayManager.instance.playMode)
+            {
+                MainUIPanels.instance.PlayStart();
+            }
+            else
+            {
+                MainUIPanels.instance.PlayEnd();
             }
         }
 

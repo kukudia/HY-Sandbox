@@ -132,6 +132,7 @@ public class MainUIPanels : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
         Transition(buildPanel, false);
         Transition(createPanel, true);
+        InputManager.instance.keyInput = false;
         BuildManager.instance.enabled = false;
         SetInputPlaceholder(BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint
             ? "Create new blueprint..."
@@ -148,6 +149,7 @@ public class MainUIPanels : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
         Transition(buildPanel, false);
         Transition(createPanel, true);
+        InputManager.instance.keyInput = false;
         BuildManager.instance.enabled = false;
         SetInputPlaceholder(BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint
             ? "Rename blueprint..."
@@ -163,6 +165,7 @@ public class MainUIPanels : MonoBehaviour
         renameTargetName = string.Empty;
         Transition(createPanel, false);
         Transition(buildPanel, true);
+        InputManager.instance.keyInput = true;
         BuildManager.instance.enabled = true;
     }
 
