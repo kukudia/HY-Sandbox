@@ -56,7 +56,7 @@ foreach (var file in System.IO.Directory.GetFiles(folder, "DSH_E*.json").OrderBy
     var loads = new System.Collections.Generic.List<UnityEngine.Vector3>();
     var gens = new System.Collections.Generic.List<UnityEngine.Vector3>();
     var relays = new System.Collections.Generic.List<UnityEngine.Vector3>();
-    int cockpit = -1, cockpits = 0;
+    int cockpit = -1, cockpits = 0, turretsOnDeck = 0, repairBays = 0;
     float mass = 0f, lift = 0f, horizontal = 0f, demand = 0f, supply = 0f, minPower = 0f;
 
     for (int i = 0; i < data.blocks.Count; i++)
@@ -89,6 +89,12 @@ foreach (var file in System.IO.Directory.GetFiles(folder, "DSH_E*.json").OrderBy
         var vector = prefab.GetComponent<UniversalThruster>();
         if (vector != null) horizontal += vector.maxThrust;
         if (prefab.GetComponent<Cockpit>() != null) { cockpit = i; cockpits++; }
+        // Armament and damage control are required infrastructure for these hulls, not optional
+        // dressing: without a repair bay the design has no way to recover from damage, and
+        // without turrets it cannot fight.  RepairBot lives on the bay's Bot child, so the
+        // container is detected by its Bot/RepairBot descendants.
+        if (prefab.GetComponent<TurretWeapon>() != null) turretsOnDeck++;
+        if (prefab.GetComponentInChildren<RepairBot>(true) != null) repairBays++;
 
         var q = new UnityEngine.Quaternion(d.rotX, d.rotY, d.rotZ, d.rotW);
         // HoverFlightController reads its own transform.up as the craft's up-vector
@@ -111,6 +117,8 @@ foreach (var file in System.IO.Directory.GetFiles(folder, "DSH_E*.json").OrderBy
         }
     }
     if (cockpits != 1) problems.Add("cockpit count " + cockpits);
+    if (turretsOnDeck < 4) problems.Add("only " + turretsOnDeck + " turrets (want at least 4)");
+    if (repairBays < 2) problems.Add("only " + repairBays + " repair bays (want at least 2)");
     if (data.blocks.Select(b => b.id).Distinct().Count() != data.blocks.Count)
         problems.Add("duplicate block ids");
 
@@ -261,6 +269,8 @@ foreach (var file in System.IO.Directory.GetFiles(folder, "DSH_E*.json").OrderBy
         horizontalThrust = horizontal,
         matingPairs = mating,
         reachable = visited.Count,
+        turrets = turretsOnDeck,
+        repairBays,
         powerPerLoad = perLoad,
         problems,
     });

@@ -1,12 +1,10 @@
 {
   "blueprints": [
-    { "name": "DSH_E01_Skimmer", "peakHorizontalSpeed": 2.76, "peakTiltDegrees": 1.36, "peakHeightError": 2.093, "minWorkingPowerBlocks": 0, "blocksAtEnd": 66 },
-    { "name": "DSH_E02_Halberd", "peakHorizontalSpeed": 2.84, "peakTiltDegrees": 1.75, "peakHeightError": 3.354, "minWorkingPowerBlocks": 1, "blocksAtEnd": 129 },
-    { "name": "DSH_E03_Talos", "peakHorizontalSpeed": 3.12, "peakTiltDegrees": 2.01, "peakHeightError": 2.148, "minWorkingPowerBlocks": 0, "blocksAtEnd": 73 }
+    { "name": "DSH_E01_Skimmer", "peakHorizontalSpeed": 3.77, "peakTiltDegrees": 1.26, "idleHoverError": 3.093, "chaseHoverError": 0.116, "recoveryHoverError": 0.100, "minWorkingPowerBlocks": 0, "blocksAtEnd": 70, "connectedGroups": 1, "turrets": 4, "turretsThatEngaged": 0, "repairBays": 2, "repairDronesAway": 0 },
+    { "name": "DSH_E02_Halberd", "peakHorizontalSpeed": 2.80, "peakTiltDegrees": 1.69, "idleHoverError": 3.559, "chaseHoverError": 2.696, "recoveryHoverError": 1.116, "minWorkingPowerBlocks": 1, "blocksAtEnd": 136, "connectedGroups": 1, "turrets": 8, "turretsThatEngaged": 0, "repairBays": 3, "repairDronesAway": 0 },
+    { "name": "DSH_E03_Talos", "peakHorizontalSpeed": 5.50, "peakTiltDegrees": 1.30, "idleHoverError": 3.009, "chaseHoverError": 0.160, "recoveryHoverError": 0.100, "minWorkingPowerBlocks": 0, "blocksAtEnd": 80, "connectedGroups": 1, "turrets": 8, "turretsThatEngaged": 0, "repairBays": 2, "repairDronesAway": 0 }
   ],
-  "durationSeconds": 90,
-  "targetAcquiredAt": 15,
-  "targetRelocatedAt": 45,
-  "targetLostAt": 75,
-  "note": "peak values are taken from t=20s onward; turrets disabled to isolate flight; stock mass, thrust, power and PID unchanged"
+  "perCraftSeconds": 80,
+  "phases": "idle 40 s, chase 20 s, impulse then recover 20 s",
+  "note": "one craft active at a time, all weapons disabled so the three designs' numbers are comparable; stock mass, thrust, power and PID unchanged; the Editor window must stay focused or the player loop is throttled and every reading is meaningless"
 }

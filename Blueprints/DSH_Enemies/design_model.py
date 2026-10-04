@@ -83,6 +83,10 @@ CATALOG = {
                             sockets=box_sockets(2, 2, 2)),
     "Turret": dict(size=(1, 1, 1), mass=1, std_power=100, min_power=50,
                    sockets=[("Down", (0, -0.5, 0), (0, -1, 0))]),
+    # The asset name really is misspelled this way ("Contianer"); match it exactly or the
+    # Resources.Load in Generate.cs silently skips the block.
+    "RepairBotContianer": dict(size=(1, 1, 1), mass=1, durability=100,
+                               sockets=[("Down", (0, -0.5, 0), (0, -1, 0))]),
     "HoverFlightController": dict(size=(1, 1, 1), mass=1, std_power=100, min_power=100,
                                   sockets=[("Down", (0, -0.5, 0), (0, -1, 0))]),
     "PowerTransmissionDevice": dict(size=(1, 1, 1), mass=1,
@@ -586,6 +590,21 @@ class Design:
             return None
         return self.add(type_name, best[1][0], best[1][1], best[1][2])
 
+    def place_on_deck_list(self, type_name, targets):
+        """Bolt several parts of one type onto the deck's top face, upright.
+
+        Uses place_upright_on_deck per requested (x, z); the deck's top face is free wherever
+        a station block does not already occupy y in [1, 3], so turrets and repair bays go
+        here (they are not orientation-sensitive, but upright keeps their models the right way
+        up for aiming and for the repair drone's dock).
+        """
+        placed = []
+        for (px, pz) in targets:
+            index = self.place_upright_on_deck(type_name, (px, 1.5, pz))
+            if index is not None:
+                placed.append(self.blocks[index]["pos"])
+        return placed
+
     def report(self, verbose=False):
         mass = sum(b["spec"]["mass"] for b in self.blocks)
         moment = [sum(b["spec"]["mass"] * b["pos"][k] for b in self.blocks) for k in range(3)]
@@ -822,12 +841,15 @@ def build_e01():
     _plate(d, xs, zs, chamfer, station, ring)
     # The flight controller must NOT be flipped: it uses transform.up as the craft's up.
     d.place_upright_on_deck("HoverFlightController", (2.5, 1.5, -0.5))
-    for target in ((1.5, 1.5), (-1.5, 1.5)):
-        d.place_under_deck("Turret", (target[0], -1.5, target[1]))
+    # Armament and self-repair on the deck's top face, upright: a RepairBotContianer carries
+    # the RepairBot child, whose targetRange is 10 m and repairAmount 20, so each bay covers a
+    # 10 m sphere of this hull and flies out to patch it.
+    d.place_on_deck_list("Turret", ((1.5, 1.5), (-1.5, 1.5), (1.5, -1.5), (-1.5, -1.5)))
+    d.place_on_deck_list("RepairBotContianer", ((0.5, 3.5), (-0.5, 3.5)))
     # Relay coverage has to be settled before anything else claims the under-deck sockets: a
     # Power block outside every relay's 5 m box simply never runs, and the hover ring reaches
     # to the plate corners, which is well outside one central relay's reach.
-    relays = d.place_relays(9, note="interceptor")
+    relays = d.place_relays(10, note="interceptor")
     # Lateral thrust then comes from omni thrusters hung in the sockets that are left: a
     # UniversalThruster re-aims its model in world space every FixedUpdate, so it needs no
     # authored facing and can hang upside down exactly like a relay.  The 2x2x2 outboard
@@ -864,11 +886,14 @@ def build_e02():
     _plate(d, xs, zs, chamfer, station, ring)
     # Relays first: a Power block outside every relay's 5 m box simply never runs, and this
     # hull's ring reaches to both bow and stern.
-    relays = d.place_relays(14, note="gunship")
+    relays = d.place_relays(16, note="gunship")
     # The flight controller must NOT be flipped: it uses transform.up as the craft's up.
     d.place_upright_on_deck("HoverFlightController", (2.5, 1.5, -0.5))
-    for target in ((2.5, 3.5), (-2.5, 3.5), (2.5, -3.5), (-2.5, -3.5)):
-        d.place_under_deck("Turret", (target[0], -1.5, target[1]))
+    # Firepower and damage control along the whole spine: four turrets forward, four aft, and
+    # three repair bays so a 10 m repair sphere covers bow, midships and stern.
+    d.place_on_deck_list("Turret", ((2.5, 3.5), (-2.5, 3.5), (2.5, -3.5), (-2.5, -3.5),
+                                    (2.5, 7.5), (-2.5, 7.5), (2.5, -7.5), (-2.5, -7.5)))
+    d.place_on_deck_list("RepairBotContianer", ((0.5, 8.5), (-0.5, -8.5), (0.5, 0.5)))
     # Lateral thrust from omni thrusters in the remaining under-deck and deck-top sockets.
     # The 2x2x2 outboard pods are deliberately not used: they bolt onto the plate edge, but
     # every side deck cell of a ring column is already a hover-ring anchor, so no relay could
@@ -903,11 +928,13 @@ def build_e03():
     _plate(d, xs, zs, chamfer, station, ring)
     # The flight controller must NOT be flipped: it uses transform.up as the craft's up.
     d.place_upright_on_deck("HoverFlightController", (2.5, 1.5, -0.5))
-    for target in ((1.5, 3.5), (-1.5, 3.5), (2.5, 1.5), (-2.5, 1.5), (2.5, -1.5), (-2.5, -1.5)):
-        d.place_under_deck("Turret", (target[0], -1.5, target[1]))
+    # Heaviest battery of the three, plus two repair bays for self-repair coverage.
+    d.place_on_deck_list("Turret", ((1.5, 3.5), (-1.5, 3.5), (2.5, 1.5), (-2.5, 1.5),
+                                    (2.5, -1.5), (-2.5, -1.5), (1.5, -3.5), (-1.5, -3.5)))
+    d.place_on_deck_list("RepairBotContianer", ((0.5, 3.5), (-0.5, -3.5)))
     # Relays first (see the E01 note), then omni thrusters in the leftover sockets, plus two
     # that sit on free top-face sockets near the bow.
-    relays = d.place_relays(12, note="disc")
+    relays = d.place_relays(14, note="disc")
     d.place_under_deck_set("UniversalThruster", 12,
                            prefer=((0.5, 0.5), (-0.5, -0.5), (2.5, -0.5), (-2.5, 0.5),
                                    (0.5, -2.5), (-0.5, 2.5)),
