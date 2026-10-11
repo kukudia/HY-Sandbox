@@ -501,7 +501,7 @@ flowchart TD
     P["LaserTurret.Fire()"]
     click P "../Assets/Scripts/Features/Combat/LaserTurret.cs#L33" "打开源码"
     Q["ProjectileTurret.Fire()"]
-    click Q "../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L20" "打开源码"
+    click Q "../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L113" "打开源码"
     R["TurretProjectile.Launch()"]
     click R "../Assets/Scripts/Features/Combat/TurretProjectile.cs#L33" "打开源码"
     S["TurretProjectile.FixedUpdate()"]
@@ -510,12 +510,24 @@ flowchart TD
     click T "../Assets/Scripts/Features/Combat/TurretHitResolver.cs#L7" "打开源码"
     U["Power.SetWorkRequested()"]
     click U "../Assets/Scripts/Features/Power/Power.cs#L59" "打开源码"
+    V["ProjectileTurret.LateUpdate()"]
+    click V "../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L57" "打开源码"
+    W["ProjectileTurret.UpdateRecoil()"]
+    click W "../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L66" "打开源码"
+    X["ProjectileTurret.ApplyRecoilPose()"]
+    click X "../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L84" "打开源码"
+    Y["ProjectileTurret.OnDisable()"]
+    click Y "../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L105" "打开源码"
     A --> B
     A --> U
     A -->|供电、瞄准且冷却满足| P
     P --> C
     A -->|供电、瞄准且冷却满足| Q
     Q -->|每炮口一发| R
+    Q -.->|发射触发后座| V
+    V --> W
+    W --> X
+    Y -->|禁用恢复初始炮管位置| X
     R -.->|后续物理步| S
     S -->|首次实体命中| T
     C -->|零冲量| T
@@ -565,7 +577,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Salvage/CargoHold.cs|ReleaseContents -->
 - [LaserTurret.Fire](../Assets/Scripts/Features/Combat/LaserTurret.cs#L33)
 <!-- source: Assets/Scripts/Features/Combat/LaserTurret.cs|Fire -->
-- [ProjectileTurret.Fire](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L20)
+- [ProjectileTurret.Fire](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L113)
 <!-- source: Assets/Scripts/Features/Combat/ProjectileTurret.cs|Fire -->
 - [TurretProjectile.Launch](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L33)
 <!-- source: Assets/Scripts/Features/Combat/TurretProjectile.cs|Launch -->
@@ -575,6 +587,14 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/TurretHitResolver.cs|Apply -->
 - [Power.SetWorkRequested](../Assets/Scripts/Features/Power/Power.cs#L59)
 <!-- source: Assets/Scripts/Features/Power/Power.cs|SetWorkRequested -->
+- [ProjectileTurret.LateUpdate](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L57)
+<!-- source: Assets/Scripts/Features/Combat/ProjectileTurret.cs|LateUpdate -->
+- [ProjectileTurret.UpdateRecoil](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L66)
+<!-- source: Assets/Scripts/Features/Combat/ProjectileTurret.cs|UpdateRecoil -->
+- [ProjectileTurret.ApplyRecoilPose](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L84)
+<!-- source: Assets/Scripts/Features/Combat/ProjectileTurret.cs|ApplyRecoilPose -->
+- [ProjectileTurret.OnDisable](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L105)
+<!-- source: Assets/Scripts/Features/Combat/ProjectileTurret.cs|OnDisable -->
 
 ## 维修、回收和移动 Home 返航
 

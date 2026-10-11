@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e34702adac5a85347a4948d7194dfdee, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -216,8 +216,8 @@ MonoBehaviour:
 
     Durability: 200
 
-    Power: 50 min
-    / 100 standard'
+    Power: 50 min / 100
+    standard'
   _description: 
   _category: 4
   _outline: {fileID: 7551362668729977350}

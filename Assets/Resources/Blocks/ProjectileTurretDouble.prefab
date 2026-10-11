@@ -708,6 +708,12 @@ MonoBehaviour:
   _projectileSpeed: 42
   _projectileLifetime: 2
   _impactImpulse: 10
+  _recoilBarrels:
+  - {fileID: 2202824898497508548}
+  - {fileID: 390231842717226721}
+  _recoilDistance: 0.12
+  _recoilKickDuration: 0.04
+  _recoilReturnDuration: 0.22
 --- !u!1 &7791276913125729715
 GameObject:
   m_ObjectHideFlags: 0

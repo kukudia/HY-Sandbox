@@ -31,6 +31,8 @@ public static class TurretFlightPlayProbe
     private static int _phase;
     private static bool _sawMovement;
     private static bool _captured;
+    private static Vector3[] _barrelRest;
+    private static bool _sawRecoil;
     private static Camera _camera;
     private static Report _report;
     public static void Run()
@@ -54,11 +56,13 @@ public static class TurretFlightPlayProbe
         _phase = 0;
         _sawMovement = false;
         _captured = false;
+        _sawRecoil = false;
         _root = new GameObject("Turret actual flight probe");
         _root.transform.position = new Vector3(4000f, 4000f, 4000f);
         ControlUnit owner = Unit("Owner", Vector3.zero, UnitFaction.Player);
         _turret = Object.Instantiate(Resources.Load<GameObject>("Blocks/ProjectileTurretDouble"), owner.transform).GetComponent<ProjectileTurret>();
         _turret.fireInterval = 3f;
+        _barrelRest = _turret.Muzzles.Select(m => m.parent.localPosition).ToArray();
         GameObject relayObject = new GameObject("Relay");
         relayObject.transform.SetParent(owner.transform, false);
         relayObject.AddComponent<PowerTransmissionDevice>().powerRange = 20;
@@ -129,6 +133,7 @@ public static class TurretFlightPlayProbe
             }
 
             TurretProjectile[] shots = Object.FindObjectsByType<TurretProjectile>(FindObjectsSortMode.None);
+            _sawRecoil |= _turret.Muzzles.Select((m, i) => Vector3.Distance(m.parent.localPosition, _barrelRest[i])).All(d => d > 0.1f);
             if (_phase == 1 && shots.Length > 0)
             {
                 Check("Natural FixedUpdate launches exactly two physical shells", shots.Length == 2);
@@ -160,6 +165,15 @@ public static class TurretFlightPlayProbe
                 Check(
                     "Stopping automatic turret immediately releases demand and supply",
                     !_turret.GetComponent<Power>().IsWorkRequested && _turret.GetComponent<Power>().currentPower == 0f);
+                Check("Both barrels visibly recoil in natural LateUpdate", _sawRecoil);
+                _phase = 3;
+            }
+
+            if (_phase == 3 && Time.time - _launchTime > 0.4f)
+            {
+                Check(
+                    "Stopped turret completes recoil recovery without power",
+                    _turret.Muzzles.Select((m, i) => Vector3.Distance(m.parent.localPosition, _barrelRest[i])).All(d => d < 0.00001f));
                 Finish();
             }
         }

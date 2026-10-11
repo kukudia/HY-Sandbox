@@ -95,6 +95,9 @@ public static class TurretRuntimeChecks
                     cannon.ProjectilePrefab != null && cannon.ProjectilePrefab.GetComponent<Rigidbody>() != null && cannon.ProjectilePrefab.GetComponent<Collider>() != null,
                     barrelCount + " barrel physical projectile prefab");
                 HashSet<TurretProjectile> before = new HashSet<TurretProjectile>(Object.FindObjectsByType<TurretProjectile>(FindObjectsSortMode.None));
+                Transform[] barrels = cannon.Muzzles.Select(m => m.parent).ToArray();
+                Vector3[] rest = barrels.Select(b => b.localPosition).ToArray();
+                Vector3[] muzzleRest = cannon.Muzzles.Select(m => m.position).ToArray();
                 CallFire(cannon, cannon.Muzzles[0].position, cannon.Muzzles[0].forward);
                 TurretProjectile[] spawned = Object.FindObjectsByType<TurretProjectile>(FindObjectsSortMode.None).Where(p => !before.Contains(p)).ToArray();
                 shots.AddRange(spawned);
@@ -111,7 +114,29 @@ public static class TurretRuntimeChecks
                     Object.DestroyImmediate(shot.gameObject);
                 }
 
+                MethodInfo stepRecoil = typeof(ProjectileTurret).GetMethod("UpdateRecoil", PrivateInstance);
+                stepRecoil.Invoke(cannon, new object[] { 0.04f });
+                Check(
+                    report,
+                    cannon.Muzzles.Select((m, i) => Vector3.Distance(m.position, muzzleRest[i])).All(d => Mathf.Abs(d - 0.12f) < 0.001f),
+                    barrelCount + " barrels recoil 0.12 world meters together");
+                Check(
+                    report,
+                    cannon.Muzzles.Select((m, i) => Vector3.Dot(m.position - muzzleRest[i], m.forward)).All(d => d < -0.119f),
+                    barrelCount + " barrels recoil opposite firing direction");
+                stepRecoil.Invoke(cannon, new object[] { 0.3f });
+                Check(
+                    report,
+                    barrels.Select((b, i) => Vector3.Distance(b.localPosition, rest[i])).All(d => d < 0.00001f),
+                    barrelCount + " barrels recover exact authored positions without drift");
+                CallFire(cannon, cannon.Muzzles[0].position, cannon.Muzzles[0].forward);
+                stepRecoil.Invoke(cannon, new object[] { 0.04f });
+                shots.AddRange(Object.FindObjectsByType<TurretProjectile>(FindObjectsSortMode.None).Where(p => !before.Contains(p)));
                 cannon.gameObject.SetActive(false);
+                Check(
+                    report,
+                    barrels.Select((b, i) => Vector3.Distance(b.localPosition, rest[i])).All(d => d < 0.00001f),
+                    barrelCount + " disabled turret immediately restores barrel pose");
             }
 
             TurretProjectile template = cannonPrefabs[0].ProjectilePrefab;

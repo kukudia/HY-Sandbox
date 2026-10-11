@@ -316,11 +316,14 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| TurretAssetBaker | [`void Bake()`](../Assets/Editor/Combat/TurretAssetBaker.cs#L16) | public static |
-| TurretAssetBaker | [`TurretProjectile BakeProjectile()`](../Assets/Editor/Combat/TurretAssetBaker.cs#L37) | private static |
-| TurretAssetBaker | [`void ConfigureLaser()`](../Assets/Editor/Combat/TurretAssetBaker.cs#L81) | private static |
-| TurretAssetBaker | [`void BakeTurret(string name, string variant, float demand, TurretProjectile projectile)`](../Assets/Editor/Combat/TurretAssetBaker.cs#L104) | private static |
-| TurretAssetBaker | [`void BakeEntry(string name)`](../Assets/Editor/Combat/TurretAssetBaker.cs#L195) | private static |
+| TurretAssetBaker | [`void RefreshTurretIcons()`](../Assets/Editor/Combat/TurretAssetBaker.cs#L16) | public static |
+| TurretAssetBaker | [`void ConfigureRecoil()`](../Assets/Editor/Combat/TurretAssetBaker.cs#L47) | public static |
+| TurretAssetBaker | [`void Bake()`](../Assets/Editor/Combat/TurretAssetBaker.cs#L90) | public static |
+| TurretAssetBaker | [`TurretProjectile BakeProjectile()`](../Assets/Editor/Combat/TurretAssetBaker.cs#L111) | private static |
+| TurretAssetBaker | [`void ConfigureLaser()`](../Assets/Editor/Combat/TurretAssetBaker.cs#L155) | private static |
+| TurretAssetBaker | [`void BakeTurret(string name, string variant, float demand, TurretProjectile projectile)`](../Assets/Editor/Combat/TurretAssetBaker.cs#L178) | private static |
+| TurretAssetBaker | [`Sprite RenderIcon(string name)`](../Assets/Editor/Combat/TurretAssetBaker.cs#L272) | private static |
+| TurretAssetBaker | [`void BakeEntry(string name)`](../Assets/Editor/Combat/TurretAssetBaker.cs#L285) | private static |
 
 ## Assets/Editor/Combat/TurretFlightPlayProbe.cs
 
@@ -328,12 +331,12 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| TurretFlightPlayProbe | [`void Run()`](../Assets/Editor/Combat/TurretFlightPlayProbe.cs#L36) | public static |
-| TurretFlightPlayProbe | [`ControlUnit Unit(string name, Vector3 position, UnitFaction faction)`](../Assets/Editor/Combat/TurretFlightPlayProbe.cs#L85) | private static |
-| TurretFlightPlayProbe | [`void Tick()`](../Assets/Editor/Combat/TurretFlightPlayProbe.cs#L105) | private static |
-| TurretFlightPlayProbe | [`void Check(string label, bool passed)`](../Assets/Editor/Combat/TurretFlightPlayProbe.cs#L173) | private static |
-| TurretFlightPlayProbe | [`void Capture()`](../Assets/Editor/Combat/TurretFlightPlayProbe.cs#L178) | private static |
-| TurretFlightPlayProbe | [`void Finish()`](../Assets/Editor/Combat/TurretFlightPlayProbe.cs#L202) | private static |
+| TurretFlightPlayProbe | [`void Run()`](../Assets/Editor/Combat/TurretFlightPlayProbe.cs#L38) | public static |
+| TurretFlightPlayProbe | [`ControlUnit Unit(string name, Vector3 position, UnitFaction faction)`](../Assets/Editor/Combat/TurretFlightPlayProbe.cs#L89) | private static |
+| TurretFlightPlayProbe | [`void Tick()`](../Assets/Editor/Combat/TurretFlightPlayProbe.cs#L109) | private static |
+| TurretFlightPlayProbe | [`void Check(string label, bool passed)`](../Assets/Editor/Combat/TurretFlightPlayProbe.cs#L187) | private static |
+| TurretFlightPlayProbe | [`void Capture()`](../Assets/Editor/Combat/TurretFlightPlayProbe.cs#L192) | private static |
+| TurretFlightPlayProbe | [`void Finish()`](../Assets/Editor/Combat/TurretFlightPlayProbe.cs#L216) | private static |
 
 ## Assets/Editor/Combat/TurretRuntimeChecks.cs
 
@@ -342,10 +345,10 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | TurretRuntimeChecks | [`string RunInCurrentPlayMode()`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L23) | public static |
-| TurretRuntimeChecks | [`void PrepareWeapon(Turret turret, ControlUnit owner)`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L205) | private static |
-| TurretRuntimeChecks | [`void CallFire(Turret turret, Vector3 origin, Vector3 direction)`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L213) | private static |
-| TurretRuntimeChecks | [`ControlUnit Unit(Transform parent, string name, UnitFaction faction, Vector3 localPosition)`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L218) | private static |
-| TurretRuntimeChecks | [`void Check(Report report, bool passed, string name)`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L235) | private static |
+| TurretRuntimeChecks | [`void PrepareWeapon(Turret turret, ControlUnit owner)`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L230) | private static |
+| TurretRuntimeChecks | [`void CallFire(Turret turret, Vector3 origin, Vector3 direction)`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L238) | private static |
+| TurretRuntimeChecks | [`ControlUnit Unit(Transform parent, string name, UnitFaction faction, Vector3 localPosition)`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L243) | private static |
+| TurretRuntimeChecks | [`void Check(Report report, bool passed, string name)`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L260) | private static |
 
 ## Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs
 
@@ -1289,11 +1292,16 @@
 
 ## Assets/Scripts/Features/Combat/ProjectileTurret.cs
 
-// 职责：每轮从每个炮管分别发射一个真实刚体炮弹；炮弹负责飞行和命中。 // 入口：Turret.Fire()；炮管、速度、寿命和冲量可在 Prefab Inspector 配置。
+// 职责：每炮管发射真实炮弹并播放后退/复位动画；炮弹负责飞行和命中。 // 入口：Turret.Fire()；炮管、速度、寿命和冲量可在 Prefab Inspector 配置。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| ProjectileTurret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L20) | protected override |
+| ProjectileTurret | [`void Awake()`](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L34) | protected override |
+| ProjectileTurret | [`void LateUpdate()`](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L57) | private |
+| ProjectileTurret | [`void UpdateRecoil(float deltaTime)`](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L66) | private |
+| ProjectileTurret | [`void ApplyRecoilPose()`](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L84) | private |
+| ProjectileTurret | [`void OnDisable()`](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L105) | protected override |
+| ProjectileTurret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L113) | protected override |
 
 ## Assets/Scripts/Features/Combat/SalvageCleanupSession.cs
 

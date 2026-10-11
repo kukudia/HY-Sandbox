@@ -13,6 +13,80 @@ public static class TurretAssetBaker
     private const string Blocks = "Assets/Resources/Blocks/";
     private const string Art = "Assets/Art/Combat";
     private const string Entries = "Assets/Resources/BuildPaletteEntries";
+    [MenuItem("Tools/HY Sandbox/Combat/Refresh turret thumbnails")]
+    public static void RefreshTurretIcons()
+    {
+        if (EditorApplication.isPlaying)
+        {
+            throw new InvalidOperationException("Exit Play Mode before rendering thumbnails.");
+        }
+
+        foreach (string name in new[]
+        {
+            "ProjectileTurretSingle",
+            "ProjectileTurretDouble"
+        }
+
+        )
+        {
+            Sprite icon = RenderIcon(name);
+            string path = Entries + "/" + name + ".prefab";
+            GameObject entry = PrefabUtility.LoadPrefabContents(path);
+            try
+            {
+                entry.transform.Find("Preview").GetComponent<Image>().sprite = icon;
+                PrefabUtility.SaveAsPrefabAsset(entry, path);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(entry);
+            }
+        }
+    }
+
+    [MenuItem("Tools/HY Sandbox/Combat/Configure barrel recoil")]
+    public static void ConfigureRecoil()
+    {
+        if (EditorApplication.isPlaying)
+        {
+            throw new InvalidOperationException("Exit Play Mode before configuring recoil.");
+        }
+
+        foreach (string name in new[]
+        {
+            "ProjectileTurretSingle",
+            "ProjectileTurretDouble"
+        }
+
+        )
+        {
+            string path = Blocks + name + ".prefab";
+            GameObject root = PrefabUtility.LoadPrefabContents(path);
+            try
+            {
+                ProjectileTurret turret = root.GetComponent<ProjectileTurret>();
+                SerializedObject serialized = new SerializedObject(turret);
+                SerializedProperty barrels = serialized.FindProperty("_recoilBarrels");
+                if (barrels.arraySize == 0)
+                {
+                    barrels.arraySize = turret.Muzzles.Length;
+                    for (int i = 0; i < turret.Muzzles.Length; i++)
+                    {
+                        barrels.GetArrayElementAtIndex(i).objectReferenceValue = turret.Muzzles[i].parent;
+                    }
+
+                    serialized.ApplyModifiedPropertiesWithoutUndo();
+                }
+
+                PrefabUtility.SaveAsPrefabAsset(root, path);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(root);
+            }
+        }
+    }
+
     [MenuItem("Tools/HY Sandbox/Combat/Bake projectile turrets")]
     public static void Bake()
     {
@@ -166,10 +240,13 @@ public static class TurretAssetBaker
             turret.range = 45f;
             SerializedObject serialized = new SerializedObject(turret);
             SerializedProperty sockets = serialized.FindProperty("_muzzles");
+            SerializedProperty recoil = serialized.FindProperty("_recoilBarrels");
+            recoil.arraySize = barrels.Length;
             sockets.arraySize = muzzles.Length;
             for (int i = 0; i < muzzles.Length; i++)
             {
                 sockets.GetArrayElementAtIndex(i).objectReferenceValue = muzzles[i];
+                recoil.GetArrayElementAtIndex(i).objectReferenceValue = barrels[i];
             }
 
             serialized.FindProperty("_projectilePrefab").objectReferenceValue = projectile;
@@ -192,15 +269,22 @@ public static class TurretAssetBaker
         }
     }
 
-    private static void BakeEntry(string name)
+    private static Sprite RenderIcon(string name)
     {
         string iconPath = "Assets/Art/BuildPalette/Icons/" + name + ".png";
         BlockArtPreview.Render(Blocks + name + ".prefab", iconPath, front: true, transparent: true);
         AssetDatabase.ImportAsset(iconPath);
         TextureImporter importer = (TextureImporter)AssetImporter.GetAtPath(iconPath);
         importer.textureType = TextureImporterType.Sprite;
+        importer.spriteImportMode = SpriteImportMode.Single;
         importer.alphaIsTransparency = true;
         importer.SaveAndReimport();
+        return AssetDatabase.LoadAssetAtPath<Sprite>(iconPath);
+    }
+
+    private static void BakeEntry(string name)
+    {
+        Sprite iconSprite = RenderIcon(name);
         GameObject entry = new GameObject(name + "Button", typeof(RectTransform), typeof(Image), typeof(Button), typeof(BuildPaletteItem));
         try
         {
@@ -227,7 +311,7 @@ public static class TurretAssetBaker
             preview.offsetMin = new Vector2(3f, 3f);
             preview.offsetMax = new Vector2(-3f, -3f);
             Image image = preview.GetComponent<Image>();
-            image.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(iconPath);
+            image.sprite = iconSprite;
             image.preserveAspect = true;
             image.raycastTarget = false;
             entry.SetActive(true);

@@ -141,3 +141,9 @@ ArtSource/VfxGraph和Blueprints下全部16份自有工具已明确职责/入口�
 - 新建造条目与图标保存为Resources/BuildPaletteEntries UI Prefab，启动时只补缺失条目，遵守COMBAT分类与BuildType高亮。原场景手工条目优先；条目提示从真实方块配置刷新。资产制作菜单不会保存Main场景。制作源与调参说明见 [炮塔规格](ArtSource/Turrets.md)。
 - Unity 6000.3.11f1导入/重编译和6个Prefab重载检查通过，无Missing Script/断引用。32条供电/推进/Bot/货仓检查、20条炮塔命中检查、8条真实帧自动双管飞行检查、3条目录点击/高亮/去重检查及6条悬浮控制检查通过。静态模型和真实双弹飞行截图已检查。证据见 [本轮记录](Docs/Validation/2026-10-11-active-power-turrets.json)。
 - 166份自有脚本职责/格式/函数图检查通过；dotnet build 0错误、4个既有警告；git diff --check通过。Main原有未保存修改保留。未验证长期密集交火、大量实体弹性能、所有旋转载具组合或正式Player构建；同步扫掠检查与真实帧自动发射检查分别记录。
+
+### 炮管后座与二维图标
+
+ProjectileTurret发射后仅炮管模型沿炮口反向后退0.12m，0.04s快速后退、0.22s平滑恢复；参数和炮管引用在Inspector可编辑。LateUpdate独立于索敌与供电门控，停火继续复位，禁用立即恢复初始位置。单管/双管Prefab已通过Editor只补充引用，原其他参数保留，资产制作源同步。
+
+两个新炮塔的透明二维图重新渲染，并修正Single Sprite导入及真实建造条目Preview引用；Play实例确认两个图标都非空。菜单Refresh turret thumbnails只更新图标，不重新搭建炮塔。28条炮塔/后座检查、10条真实帧飞行/同步后座/停机复位检查通过；Unity编译、166脚本格式/函数图、dotnet build和diff检查通过（4个既有构建警告）。Main及炮弹材质的期间外部改动保留并排除本次提交。见 [验证记录](Docs/Validation/2026-10-11-turret-recoil-icons.json)。

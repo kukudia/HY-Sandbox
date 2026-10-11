@@ -26,6 +26,8 @@
 
 所有工作参数在各 Block Prefab 的 Turret/Power Inspector 可编辑。炮弹外观、刚体与半径在 TurretShell 编辑。短缺时伤害/射速按效率下降，实体弹速度保持稳定并继承载具炮口点速度。
 
+实体炮塔的 Barrel Recoil 配置控制炮管模型后座：世界距离0.12m、后退0.04s、复位0.22s。每轮齐射同步后座，停止后继续复位，禁用立即恢复；按初始局部位置计算，重复发射不积累漂移。Configure barrel recoil菜单只补缺失的炮管引用，保留已有参数。Refresh turret thumbnails菜单只重新渲染透明二维图和更新目录图标；PNG使用Single Sprite导入，避免Multiple无切片时图片为空。
+
 旧 `Blocks/Turret` 资源路径和脚本GUID保留，组件迁移为 LaserTurret，公用字段由 Turret 基类接收。旧蓝图无需改资源名；旧炮塔的冲量字段移除。无人目标时自动炮塔不申报功率，SetStarted(false)立即关闭并释放功率。
 
 制作工具再次Bake会重建自己拥有的上述炮塔、炮弹、目录和图标，覆盖这些资产的手工参数；普通游玩不运行Bake。编辑后可以直接保存Prefab，无需重新制作。
