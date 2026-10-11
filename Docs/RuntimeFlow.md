@@ -8,16 +8,16 @@
 
     ## CSV 方块配置与质量
 
-源码推导：CSV 是数值源；Editor 导入后延迟校验、备份并同步 Prefab。OnValidate 只排队，不在导入线程写资产；Awake 提前应用配置，随后各组件初始化。空 mass 为体积质量，存档恢复保留实例尺寸再刷新派生数据。
+源码推导：CSV 是数值源；Editor 导入后延迟校验、备份并同步 Prefab。OnValidate 只排队，不在导入线程写资产；Awake 提前应用配置，随后各组件初始化。空 mass 为体积质量，存档恢复保留实例尺寸再刷新派生数据；运行时不执行制作期组件创建和连接重建，尺寸变化时才重建连接。
 
 ```mermaid
 flowchart TD
     A["BlockCsvPostprocessor.OnPostprocessAllAssets()"]
     click A "../Assets/Editor/Building/BlockCsvPostprocessor.cs#L8" "打开源码"
     B["BlockCsvAuthoring.QueueBake()"]
-    click B "../Assets/Editor/Building/BlockCsvAuthoring.cs#L238" "打开源码"
+    click B "../Assets/Editor/Building/BlockCsvAuthoring.cs#L239" "打开源码"
     C["BlockCsvAuthoring.Update()"]
-    click C "../Assets/Editor/Building/BlockCsvAuthoring.cs#L252" "打开源码"
+    click C "../Assets/Editor/Building/BlockCsvAuthoring.cs#L287" "打开源码"
     D["BlockCsvAuthoring.Bake()"]
     click D "../Assets/Editor/Building/BlockCsvAuthoring.cs#L128" "打开源码"
     E["BlockCsvDocument.Parse()"]
@@ -33,13 +33,17 @@ flowchart TD
     J["BlockCsvBinding.Apply()"]
     click J "../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs#L41" "打开源码"
     K["Block.SetMassSettings()"]
-    click K "../Assets/Scripts/Features/Simulation/Block.cs#L138" "打开源码"
+    click K "../Assets/Scripts/Features/Simulation/Block.cs#L158" "打开源码"
     L["Block.RefreshMass()"]
-    click L "../Assets/Scripts/Features/Simulation/Block.cs#L125" "打开源码"
+    click L "../Assets/Scripts/Features/Simulation/Block.cs#L145" "打开源码"
     M["Block.RefreshAuthoringData()"]
-    click M "../Assets/Scripts/Features/Simulation/Block.cs#L82" "打开源码"
+    click M "../Assets/Scripts/Features/Simulation/Block.cs#L88" "打开源码"
     N["BlueprintBlockFactory.TryRestore()"]
     click N "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7" "打开源码"
+    O["Block.RefreshRuntimeData()"]
+    click O "../Assets/Scripts/Features/Simulation/Block.cs#L117" "打开源码"
+    P["BlockCsvAuthoring.ValidatePowerDependencies()"]
+    click P "../Assets/Editor/Building/BlockCsvAuthoring.cs#L246" "打开源码"
     A --> B
     B -.->|Editor update| C
     C -->|有待同步请求| D
@@ -53,16 +57,19 @@ flowchart TD
     J --> F
     F --> K
     K --> L
-    F --> M
-    M --> L
-    N -->|存档尺寸恢复后| M
+    F -->|制作期| M
+    F -->|运行时| O
+    M --> O
+    O --> L
+    N -->|存档尺寸恢复后| O
+    D -->|保存前检查供电依赖| P
 ```
 
 - [BlockCsvPostprocessor.OnPostprocessAllAssets](../Assets/Editor/Building/BlockCsvPostprocessor.cs#L8)
 <!-- source: Assets/Editor/Building/BlockCsvPostprocessor.cs|OnPostprocessAllAssets -->
-- [BlockCsvAuthoring.QueueBake](../Assets/Editor/Building/BlockCsvAuthoring.cs#L238)
+- [BlockCsvAuthoring.QueueBake](../Assets/Editor/Building/BlockCsvAuthoring.cs#L239)
 <!-- source: Assets/Editor/Building/BlockCsvAuthoring.cs|QueueBake -->
-- [BlockCsvAuthoring.Update](../Assets/Editor/Building/BlockCsvAuthoring.cs#L252)
+- [BlockCsvAuthoring.Update](../Assets/Editor/Building/BlockCsvAuthoring.cs#L287)
 <!-- source: Assets/Editor/Building/BlockCsvAuthoring.cs|Update -->
 - [BlockCsvAuthoring.Bake](../Assets/Editor/Building/BlockCsvAuthoring.cs#L128)
 <!-- source: Assets/Editor/Building/BlockCsvAuthoring.cs|Bake -->
@@ -78,14 +85,18 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs|Awake -->
 - [BlockCsvBinding.Apply](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs#L41)
 <!-- source: Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs|Apply -->
-- [Block.SetMassSettings](../Assets/Scripts/Features/Simulation/Block.cs#L138)
+- [Block.SetMassSettings](../Assets/Scripts/Features/Simulation/Block.cs#L158)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|SetMassSettings -->
-- [Block.RefreshMass](../Assets/Scripts/Features/Simulation/Block.cs#L125)
+- [Block.RefreshMass](../Assets/Scripts/Features/Simulation/Block.cs#L145)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|RefreshMass -->
-- [Block.RefreshAuthoringData](../Assets/Scripts/Features/Simulation/Block.cs#L82)
+- [Block.RefreshAuthoringData](../Assets/Scripts/Features/Simulation/Block.cs#L88)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|RefreshAuthoringData -->
 - [BlueprintBlockFactory.TryRestore](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs|TryRestore -->
+- [Block.RefreshRuntimeData](../Assets/Scripts/Features/Simulation/Block.cs#L117)
+<!-- source: Assets/Scripts/Features/Simulation/Block.cs|RefreshRuntimeData -->
+- [BlockCsvAuthoring.ValidatePowerDependencies](../Assets/Editor/Building/BlockCsvAuthoring.cs#L246)
+<!-- source: Assets/Editor/Building/BlockCsvAuthoring.cs|ValidatePowerDependencies -->
 
 ## 启动与建造/游玩会话
 
@@ -284,7 +295,7 @@ flowchart TD
     O["ActionManager.Redo()"]
     click O "../Assets/Scripts/Features/Building/ActionManager.cs#L50" "打开源码"
     P["Block.CheckConnection()"]
-    click P "../Assets/Scripts/Features/Simulation/Block.cs#L301" "打开源码"
+    click P "../Assets/Scripts/Features/Simulation/Block.cs#L321" "打开源码"
     Q["BuildPalette.Awake()"]
     click Q "../Assets/Scripts/Features/Building/BuildPalette.cs#L27" "打开源码"
     R["BuildPaletteItem.ApplyButtonStyle()"]
@@ -345,7 +356,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/ActionManager.cs|Undo -->
 - [ActionManager.Redo](../Assets/Scripts/Features/Building/ActionManager.cs#L50)
 <!-- source: Assets/Scripts/Features/Building/ActionManager.cs|Redo -->
-- [Block.CheckConnection](../Assets/Scripts/Features/Simulation/Block.cs#L301)
+- [Block.CheckConnection](../Assets/Scripts/Features/Simulation/Block.cs#L321)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|CheckConnection -->
 - [BuildPalette.Awake](../Assets/Scripts/Features/Building/BuildPalette.cs#L27)
 <!-- source: Assets/Scripts/Features/Building/BuildPalette.cs|Awake -->
@@ -723,7 +734,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["RepairBot.FixedUpdate()"]
-    click A "../Assets/Scripts/Features/Bots/RepairBot.cs#L34" "打开源码"
+    click A "../Assets/Scripts/Features/Bots/RepairBot.cs#L36" "打开源码"
     B["Bot.TickNavigation()"]
     click B "../Assets/Scripts/Features/Bots/Bot.cs#L158" "打开源码"
     C["RepairTargetSearch.Scan()"]
@@ -735,7 +746,7 @@ flowchart TD
     F["BotObstacleAvoidance.Evaluate()"]
     click F "../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L63" "打开源码"
     G["RepairBot.CheckAndRepair()"]
-    click G "../Assets/Scripts/Features/Bots/RepairBot.cs#L106" "打开源码"
+    click G "../Assets/Scripts/Features/Bots/RepairBot.cs#L108" "打开源码"
     H["RepairBeamView.Update()"]
     click H "../Assets/Scripts/Features/Bots/RepairBeamView.cs#L49" "打开源码"
     I["CollectionBot.FixedUpdate()"]
@@ -786,7 +797,7 @@ flowchart TD
     N --> T
 ```
 
-- [RepairBot.FixedUpdate](../Assets/Scripts/Features/Bots/RepairBot.cs#L34)
+- [RepairBot.FixedUpdate](../Assets/Scripts/Features/Bots/RepairBot.cs#L36)
 <!-- source: Assets/Scripts/Features/Bots/RepairBot.cs|FixedUpdate -->
 - [Bot.TickNavigation](../Assets/Scripts/Features/Bots/Bot.cs#L158)
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|TickNavigation -->
@@ -798,7 +809,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Bots/BotFlightMotion.cs|NavigateToTarget -->
 - [BotObstacleAvoidance.Evaluate](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L63)
 <!-- source: Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs|Evaluate -->
-- [RepairBot.CheckAndRepair](../Assets/Scripts/Features/Bots/RepairBot.cs#L106)
+- [RepairBot.CheckAndRepair](../Assets/Scripts/Features/Bots/RepairBot.cs#L108)
 <!-- source: Assets/Scripts/Features/Bots/RepairBot.cs|CheckAndRepair -->
 - [RepairBeamView.Update](../Assets/Scripts/Features/Bots/RepairBeamView.cs#L49)
 <!-- source: Assets/Scripts/Features/Bots/RepairBeamView.cs|Update -->

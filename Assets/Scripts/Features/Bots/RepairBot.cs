@@ -6,6 +6,8 @@ using UnityEngine;
 public class RepairBot : Bot
 {
     private const float MinimumTargetScanInterval = 0.25f;
+    [SerializeField, Tooltip("需要供电时，所属维修仓必须配置 Power 并接入电网。")]
+    private bool _requiresPower = true;
     [SerializeField]
     private Transform _repairOrigin;
     [SerializeField]
@@ -58,8 +60,8 @@ public class RepairBot : Bot
         }
 
         bool requested = currentTarget != null || transform.parent != home;
-        Power power = SetHomePowerRequested(requested);
-        if (requested && (power == null || !power.isWorking))
+        Power power = SetHomePowerRequested(_requiresPower && requested);
+        if (_requiresPower && requested && (power == null || !power.isWorking))
         {
             isRepairing = false;
             UpdateRepairBeam(false);
@@ -166,7 +168,7 @@ public class RepairBot : Bot
     {
         currentTarget = null;
         isRepairing = false;
-        SetHomePowerRequested(PlayManager.instance != null && PlayManager.instance.playMode && home != null && transform.parent != home);
+        SetHomePowerRequested(_requiresPower && PlayManager.instance != null && PlayManager.instance.playMode && home != null && transform.parent != home);
         UpdateRepairBeam(false);
         if (trailRenderer != null)
         {

@@ -2,7 +2,7 @@
 
 最近整理：2026-10-11；Unity 6000.3.11f1；URP；Input System；运行时类型保持全局命名空间。
 
-2026-10-11 CSV 方块数值：直接编辑 `Assets/Resources/BlockData/Blocks.csv`（25 行、80 参数列及4个只读身份列）。Editor 导入后自动校验、备份并同步 Prefab；Block/绑定组件 OnValidate 延迟请求校验，绑定 Awake 在其他组件之前应用 Resources 中的 CSV。mass 留空使用 x × y × z，填写正数使用手动质量；density 仅保留旧数据。requiresPower 合并应用货仓和收集机器人；Bot/Connector 辅助资源、悬浮控制和指定表现参数不纳入表。使用与生命周期详见 [CSV说明](Docs/BlockCsv.md)，函数图见 [RuntimeFlow](Docs/RuntimeFlow.md)，验证见 `Docs/Validation/2026-10-11-block-csv.json`。
+2026-10-11 CSV 方块数值：直接编辑 `Assets/Resources/BlockData/Blocks.csv`（25 行、80 参数列及4个只读身份列）。Editor 导入后自动校验、备份并同步 Prefab；Block/绑定组件 OnValidate 延迟请求校验，绑定 Awake 在其他组件之前应用 Resources 中的 CSV。mass 留空使用 x × y × z，填写正数使用手动质量；density 仅保留旧数据。requiresPower 合并应用货仓、收集机器人和维修机器人；Bot/Connector 辅助资源、悬浮控制和指定表现参数不纳入表。维修仓已补充 Power（50/100），CSV/蓝图运行时刷新保留连接状态与实例引用，Bake 拒绝缺失供电依赖。18 项 Edit Mode、4 项 Awake 和 8 项跨帧维修回归已通过，详见 `Docs/Validation/2026-10-11-block-csv-regression.json`。使用与生命周期详见 [CSV说明](Docs/BlockCsv.md)，函数图见 [RuntimeFlow](Docs/RuntimeFlow.md)，验证见 `Docs/Validation/2026-10-11-block-csv.json`。
 
 2026-10-11 推进器字体状态修正：ThrusterInfoPanel 读取 Power.CommitPowerStatus 确认的 SupplyEfficiency，不再读取物理帧中暂时清零的即时供电值。撤销工作请求立即恢复正常显示，重新申请后等待电网确认缺电；残余推力及关机衰减不参与字体颜色判断。实际施力仍使用即时供电效率。验证见 `Docs/Validation/2026-10-11-thruster-power-colors.json`。
 

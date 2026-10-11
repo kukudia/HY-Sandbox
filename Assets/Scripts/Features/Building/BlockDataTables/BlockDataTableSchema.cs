@@ -31,7 +31,7 @@ public static class BlockDataTableSchema
         public Component[] FindTargets(GameObject root)
         {
             Component[] targets = root.GetComponentsInChildren(ComponentType, true);
-            return Id == "requiresPower" ? targets.Concat(root.GetComponentsInChildren<CollectionBot>(true)).ToArray() : targets;
+            return Id == "requiresPower" ? targets.Concat(root.GetComponentsInChildren<CollectionBot>(true)).Concat(root.GetComponentsInChildren<RepairBot>(true)).ToArray() : targets;
         }
 
         public Column(

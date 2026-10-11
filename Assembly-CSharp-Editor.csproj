@@ -76,6 +76,7 @@
     <Compile Include="Assets\Editor\Diagnostics\PhysicsSandboxProbe.cs" />
     <Compile Include="Assets\Editor\Power\ActivePowerPlayChecks.cs" />
     <Compile Include="Assets\Editor\Combat\TurretFlightPlayProbe.cs" />
+    <Compile Include="Assets\Editor\Building\BlockCsvRegressionChecks.cs" />
     <Compile Include="Assets\Editor\Combat\TurretAssetBaker.cs" />
     <Compile Include="Assets\Editor\Combat\CombatHudPlayProbe.cs" />
     <Compile Include="Assets\Editor\Bots\BotNavigationPlayProbe.cs" />

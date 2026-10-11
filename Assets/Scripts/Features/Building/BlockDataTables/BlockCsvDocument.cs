@@ -116,16 +116,26 @@ public sealed class BlockCsvDocument
             }
         }
 
+        Block block = root.GetComponent<Block>();
+        Vector3Int previousSize = block != null ? new Vector3Int(block.x, block.y, block.z) : Vector3Int.zero;
+        bool previouslyHadConnectors = block != null && block.canSpawnConnector;
         foreach (var pair in componentJson)
         {
             JsonUtility.FromJsonOverwrite("{" + string.Join(",", pair.Value) + "}", pair.Key);
         }
 
-        Block block = root.GetComponent<Block>();
         if (block != null)
         {
             block.SetMassSettings(customMass, mass);
-            block.RefreshAuthoringData();
+            if (Application.isPlaying)
+            {
+                bool shapeChanged = previousSize != new Vector3Int(block.x, block.y, block.z) || (!previouslyHadConnectors && block.canSpawnConnector);
+                block.RefreshRuntimeData(shapeChanged);
+            }
+            else
+            {
+                block.RefreshAuthoringData();
+            }
         }
 
         return true;

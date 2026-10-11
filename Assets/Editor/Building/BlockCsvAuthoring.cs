@@ -175,6 +175,7 @@ public static class BlockCsvAuthoring
 
                     binding.SetPrefabGuid(AssetDatabase.AssetPathToGUID(path));
                     document.Apply(root, binding.PrefabGuid);
+                    ValidatePowerDependencies(root);
                     if (Snapshot(root) == before)
                     {
                         continue;
@@ -239,6 +240,40 @@ public static class BlockCsvAuthoring
     {
         _queued = true;
         BlockCsvBinding.ResetCache();
+    }
+
+    /// <summary>拒绝需要供电却无法向 Power 请求工作的配置，避免数值合法但玩法无法启动。</summary>
+    public static void ValidatePowerDependencies(GameObject root)
+    {
+        foreach (MonoBehaviour component in root.GetComponentsInChildren<MonoBehaviour>(true))
+        {
+            if (!(component is CargoHold) && !(component is CollectionBot) && !(component is RepairBot))
+            {
+                continue;
+            }
+
+            using var serialized = new SerializedObject(component);
+            if (!serialized.FindProperty("_requiresPower").boolValue)
+            {
+                continue;
+            }
+
+            Power power;
+            if (component is Bot bot)
+            {
+                Transform home = bot.home != null ? bot.home : bot.transform.parent;
+                power = home != null ? home.GetComponentInParent<Power>() : null;
+            }
+            else
+            {
+                power = component.GetComponent<Power>();
+            }
+
+            if (power == null)
+            {
+                throw new InvalidDataException(root.name + " / " + component.GetType().Name + "：requiresPower=true，但所属仓没有 Power 组件。");
+            }
+        }
     }
 
     private static void RequestValidation(BlockCsvBinding binding)

@@ -56,7 +56,7 @@ def main():
 
     graph(
         "CSV 方块配置与质量",
-        "源码推导：CSV 是数值源；Editor 导入后延迟校验、备份并同步 Prefab。OnValidate 只排队，不在导入线程写资产；Awake 提前应用配置，随后各组件初始化。空 mass 为体积质量，存档恢复保留实例尺寸再刷新派生数据。",
+        "源码推导：CSV 是数值源；Editor 导入后延迟校验、备份并同步 Prefab。OnValidate 只排队，不在导入线程写资产；Awake 提前应用配置，随后各组件初始化。空 mass 为体积质量，存档恢复保留实例尺寸再刷新派生数据；运行时不执行制作期组件创建和连接重建，尺寸变化时才重建连接。",
         {
             "A": "BlockCsvPostprocessor.OnPostprocessAllAssets",
             "B": "BlockCsvAuthoring.QueueBake",
@@ -72,6 +72,8 @@ def main():
             "L": "Block.RefreshMass",
             "M": "Block.RefreshAuthoringData",
             "N": "BlueprintBlockFactory.TryRestore",
+            "O": "Block.RefreshRuntimeData",
+            "P": "BlockCsvAuthoring.ValidatePowerDependencies",
         },
         [
             "A --> B",
@@ -87,9 +89,12 @@ def main():
             "J --> F",
             "F --> K",
             "K --> L",
-            "F --> M",
-            "M --> L",
-            "N -->|存档尺寸恢复后| M",
+            "F -->|制作期| M",
+            "F -->|运行时| O",
+            "M --> O",
+            "O --> L",
+            "N -->|存档尺寸恢复后| O",
+            "D -->|保存前检查供电依赖| P",
         ],
     )
     graph(

@@ -978,6 +978,7 @@ MonoBehaviour:
   currentState: 0
   lastFindTime: 0
   coolDownTimer: 0
+  _requiresPower: 1
   _repairOrigin: {fileID: 6203895981224589863}
   _repairImpact: {fileID: 7648809629995044805}
   repairAmount: 20
@@ -1692,6 +1693,7 @@ GameObject:
   - component: {fileID: 7799056987306700829}
   - component: {fileID: 2284113129267153661}
   - component: {fileID: 351857966155108748}
+  - component: {fileID: 4514004345529433331}
   m_Layer: 3
   m_Name: RepairBotContianer
   m_TagString: Untagged
@@ -1752,7 +1754,10 @@ MonoBehaviour:
 
     Mass: 1 kg
 
-    Durability: 100'
+    Durability: 100
+
+    Power: 50 min /
+    100 standard'
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
   connectorParent: {fileID: 2695719906485559115}
   raycastCollider: {fileID: 4245157779349812274}
@@ -1904,6 +1909,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BlockCsvBinding
   _prefabGuid: 8874a998f663cb5489cc7df61a95430e
+--- !u!114 &4514004345529433331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004239489873974274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13e8de7fb0f2f044b81805122c216c9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Power
+  currentPower: 0
+  minWorkingPower: 50
+  standardWorkingPower: 100
 --- !u!1 &6248121365020521580
 GameObject:
   m_ObjectHideFlags: 0

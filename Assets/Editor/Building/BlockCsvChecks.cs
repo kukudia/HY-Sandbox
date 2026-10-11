@@ -48,6 +48,7 @@ public static class BlockCsvChecks
             Set(records, "CargoHold", "CargoHold._kind", "Coins");
             Set(records, "CargoHold", "requiresPower", "false");
             Set(records, "CollectionBotContainer", "requiresPower", "false");
+            Set(records, "RepairBotContianer", "requiresPower", "false");
             Set(records, "RepairBotContianer", "RepairBot.repairAmount", "17");
             Set(records, "Turret", "Turret.targetFaction", "Neutral");
             Set(records, "1x1x1", "Block.canEditInfo", "true");
@@ -79,7 +80,8 @@ public static class BlockCsvChecks
             foreach (Component component in new Component[]
             {
                 Load("CargoHold").GetComponent<CargoHold>(),
-                Load("CollectionBotContainer").GetComponentInChildren<CollectionBot>(true)
+                Load("CollectionBotContainer").GetComponentInChildren<CollectionBot>(true),
+                Load("RepairBotContianer").GetComponentInChildren<RepairBot>(true)
             }
 
             )
@@ -106,6 +108,32 @@ public static class BlockCsvChecks
             finally
             {
                 PrefabUtility.UnloadPrefabContents(combined);
+            }
+
+            GameObject repairBay = PrefabUtility.LoadPrefabContents("Assets/Resources/Blocks/RepairBotContianer.prefab");
+            try
+            {
+                Object.DestroyImmediate(repairBay.GetComponent<Power>());
+                var repairBot = repairBay.GetComponentInChildren<RepairBot>(true);
+                JsonUtility.FromJsonOverwrite("{\"_requiresPower\":true}", repairBot);
+                bool missingPowerRejected = false;
+                try
+                {
+                    BlockCsvAuthoring.ValidatePowerDependencies(repairBay);
+                }
+                catch (InvalidDataException)
+                {
+                    missingPowerRejected = true;
+                }
+
+                Check(report, missingPowerRejected, "Required power rejects a repair bay without Power");
+                JsonUtility.FromJsonOverwrite("{\"_requiresPower\":false}", repairBot);
+                BlockCsvAuthoring.ValidatePowerDependencies(repairBay);
+                Check(report, true, "Optional power permits a repair bay without Power");
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(repairBay);
             }
 
             Check(

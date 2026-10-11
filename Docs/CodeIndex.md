@@ -234,14 +234,15 @@
 | BlockCsvAuthoring | [`void OpenCsv()`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L34) | public static |
 | BlockCsvAuthoring | [`void CreateCsv()`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L45) | public static |
 | BlockCsvAuthoring | [`void Bake()`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L128) | public static |
-| BlockCsvAuthoring | [`void QueueBake()`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L238) | public static |
-| BlockCsvAuthoring | [`void RequestValidation(BlockCsvBinding binding)`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L244) | private static |
-| BlockCsvAuthoring | [`void Update()`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L252) | private static |
-| BlockCsvAuthoring | [`void OnPlayModeChanged(PlayModeStateChange state)`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L286) | private static |
-| BlockCsvAuthoring | [`string ReadValue(SerializedProperty property)`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L294) | private static |
-| BlockCsvAuthoring | [`string Snapshot(GameObject root)`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L313) | private static |
-| BlockCsvAuthoring | [`string Hash(byte[] bytes)`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L320) | private static |
-| BlockCsvAuthoring | [`void SaveBackup(string backup, Dictionary<string, byte[]> originals, Dictionary<string, string> hashes, string csv)`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L326) | private static |
+| BlockCsvAuthoring | [`void QueueBake()`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L239) | public static |
+| BlockCsvAuthoring | [`void ValidatePowerDependencies(GameObject root)`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L246) | public static |
+| BlockCsvAuthoring | [`void RequestValidation(BlockCsvBinding binding)`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L279) | private static |
+| BlockCsvAuthoring | [`void Update()`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L287) | private static |
+| BlockCsvAuthoring | [`void OnPlayModeChanged(PlayModeStateChange state)`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L321) | private static |
+| BlockCsvAuthoring | [`string ReadValue(SerializedProperty property)`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L329) | private static |
+| BlockCsvAuthoring | [`string Snapshot(GameObject root)`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L348) | private static |
+| BlockCsvAuthoring | [`string Hash(byte[] bytes)`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L355) | private static |
+| BlockCsvAuthoring | [`void SaveBackup(string backup, Dictionary<string, byte[]> originals, Dictionary<string, string> hashes, string csv)`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L361) | private static |
 
 ## Assets/Editor/Building/BlockCsvChecks.cs
 
@@ -250,12 +251,12 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BlockCsvChecks | [`string RunEditMode()`](../Assets/Editor/Building/BlockCsvChecks.cs#L21) | public static |
-| BlockCsvChecks | [`string RunPlayMode()`](../Assets/Editor/Building/BlockCsvChecks.cs#L179) | public static |
-| BlockCsvChecks | [`GameObject Load(string name)`](../Assets/Editor/Building/BlockCsvChecks.cs#L229) | private static |
-| BlockCsvChecks | [`void Set(List<List<string>> records, string name, string field, string value)`](../Assets/Editor/Building/BlockCsvChecks.cs#L234) | private static |
-| BlockCsvChecks | [`void Write(List<List<string>> records)`](../Assets/Editor/Building/BlockCsvChecks.cs#L240) | private static |
-| BlockCsvChecks | [`void Check(Report report, bool condition, string description)`](../Assets/Editor/Building/BlockCsvChecks.cs#L246) | private static |
-| BlockCsvChecks | [`string SaveReport(Report report, string name)`](../Assets/Editor/Building/BlockCsvChecks.cs#L256) | private static |
+| BlockCsvChecks | [`string RunPlayMode()`](../Assets/Editor/Building/BlockCsvChecks.cs#L207) | public static |
+| BlockCsvChecks | [`GameObject Load(string name)`](../Assets/Editor/Building/BlockCsvChecks.cs#L257) | private static |
+| BlockCsvChecks | [`void Set(List<List<string>> records, string name, string field, string value)`](../Assets/Editor/Building/BlockCsvChecks.cs#L262) | private static |
+| BlockCsvChecks | [`void Write(List<List<string>> records)`](../Assets/Editor/Building/BlockCsvChecks.cs#L268) | private static |
+| BlockCsvChecks | [`void Check(Report report, bool condition, string description)`](../Assets/Editor/Building/BlockCsvChecks.cs#L274) | private static |
+| BlockCsvChecks | [`string SaveReport(Report report, string name)`](../Assets/Editor/Building/BlockCsvChecks.cs#L284) | private static |
 
 ## Assets/Editor/Building/BlockCsvPostprocessor.cs
 
@@ -264,6 +265,19 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BlockCsvPostprocessor | [`void OnPostprocessAllAssets(string[] imported, string[] deleted, string[] moved, string[] movedFrom)`](../Assets/Editor/Building/BlockCsvPostprocessor.cs#L8) | private static |
+
+## Assets/Editor/Building/BlockCsvRegressionChecks.cs
+
+// 职责：用真实维修仓跨物理帧验证 CSV、供电、离仓、维修和断电恢复，隔离创建并清理测试对象。 // 入口：Begin()（Play Mode）；结果写入 Temp/BlockCsvChecks/regression-play.json，不修改制作资产或场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlockCsvRegressionChecks | [`string Begin()`](../Assets/Editor/Building/BlockCsvRegressionChecks.cs#L31) | public static |
+| BlockCsvRegressionChecks | [`void Tick()`](../Assets/Editor/Building/BlockCsvRegressionChecks.cs#L76) | private static |
+| BlockCsvRegressionChecks | [`void CheckRuntimeState()`](../Assets/Editor/Building/BlockCsvRegressionChecks.cs#L141) | private static |
+| BlockCsvRegressionChecks | [`void Check(bool condition, string description)`](../Assets/Editor/Building/BlockCsvRegressionChecks.cs#L167) | private static |
+| BlockCsvRegressionChecks | [`void Finish()`](../Assets/Editor/Building/BlockCsvRegressionChecks.cs#L177) | private static |
+| BlockCsvRegressionChecks | [`void WriteReport()`](../Assets/Editor/Building/BlockCsvRegressionChecks.cs#L195) | private static |
 
 ## Assets/Editor/Building/BuildInteractionSetup.cs
 
@@ -755,14 +769,14 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| RepairBot | [`void Start()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L24) | protected override |
-| RepairBot | [`void FixedUpdate()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L34) | private |
-| RepairBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L87) | protected override |
-| RepairBot | [`void FindDamagedBlock()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L93) | private |
-| RepairBot | [`void CheckAndRepair()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L106) | private |
-| RepairBot | [`void UpdateRepairBeam(bool active)`](../Assets/Scripts/Features/Bots/RepairBot.cs#L147) | private |
-| RepairBot | [`void EnsureRepairBeamGradient()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L152) | private |
-| RepairBot | [`void ClearTarget()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L165) | public |
+| RepairBot | [`void Start()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L26) | protected override |
+| RepairBot | [`void FixedUpdate()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L36) | private |
+| RepairBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L89) | protected override |
+| RepairBot | [`void FindDamagedBlock()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L95) | private |
+| RepairBot | [`void CheckAndRepair()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L108) | private |
+| RepairBot | [`void UpdateRepairBeam(bool active)`](../Assets/Scripts/Features/Bots/RepairBot.cs#L149) | private |
+| RepairBot | [`void EnsureRepairBeamGradient()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L154) | private |
+| RepairBot | [`void ClearTarget()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L167) | public |
 
 ## Assets/Scripts/Features/Bots/RepairTargetSearch.cs
 
@@ -839,12 +853,12 @@
 | --- | --- | --- |
 | BlockCsvDocument | [`BlockCsvDocument Parse(string text)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L33) | public static |
 | BlockCsvDocument | [`bool Apply(GameObject root, string guid)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L73) | public |
-| BlockCsvDocument | [`string PathFor(string guid)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L134) | public |
-| BlockCsvDocument | [`void ValidateRow(List<string> values)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L141) | private |
-| BlockCsvDocument | [`string Normalize(BlockDataTableSchema.Column column, string value, string name)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L161) | private static |
-| BlockCsvDocument | [`string Quote(string text)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L206) | private static |
-| BlockCsvDocument | [`string WriteRecords(IEnumerable<IEnumerable<string>> records)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L212) | public static |
-| BlockCsvDocument | [`List<List<string>> ParseRecords(string text)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L224) | public static |
+| BlockCsvDocument | [`string PathFor(string guid)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L144) | public |
+| BlockCsvDocument | [`void ValidateRow(List<string> values)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L151) | private |
+| BlockCsvDocument | [`string Normalize(BlockDataTableSchema.Column column, string value, string name)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L171) | private static |
+| BlockCsvDocument | [`string Quote(string text)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L216) | private static |
+| BlockCsvDocument | [`string WriteRecords(IEnumerable<IEnumerable<string>> records)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L222) | public static |
+| BlockCsvDocument | [`List<List<string>> ParseRecords(string text)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L234) | public static |
 
 ## Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs
 
@@ -867,8 +881,8 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BlueprintBlockFactory | [`bool TryRestore(BlockData data, Transform parent, UnitFaction faction, out Block block)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7) | public static |
-| BlueprintBlockFactory | [`void ApplyFaction(Block block, UnitFaction faction)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L54) | public static |
-| BlueprintBlockFactory | [`string ToResourcePath(string fullPath)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L62) | public static |
+| BlueprintBlockFactory | [`void ApplyFaction(Block block, UnitFaction faction)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L55) | public static |
+| BlueprintBlockFactory | [`string ToResourcePath(string fullPath)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L63) | public static |
 
 ## Assets/Scripts/Features/Building/BlueprintLoading/BlueprintFileStore.cs
 
@@ -2276,24 +2290,25 @@
 | --- | --- | --- |
 | Block | [`void Awake()`](../Assets/Scripts/Features/Simulation/Block.cs#L50) | private |
 | Block | [`void OnValidate()`](../Assets/Scripts/Features/Simulation/Block.cs#L71) | private |
-| Block | [`void RefreshAuthoringData()`](../Assets/Scripts/Features/Simulation/Block.cs#L82) | public |
-| Block | [`void RefreshMass()`](../Assets/Scripts/Features/Simulation/Block.cs#L125) | public |
-| Block | [`void SetMassSettings(bool useCustomMass, float value)`](../Assets/Scripts/Features/Simulation/Block.cs#L138) | public |
-| Block | [`void Reset()`](../Assets/Scripts/Features/Simulation/Block.cs#L146) | private |
-| Block | [`void GenerateConnectionPoints()`](../Assets/Scripts/Features/Simulation/Block.cs#L151) | private |
-| Block | [`string GetDisplayInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L221) | public |
-| Block | [`string GenerateInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L226) | private |
-| Block | [`void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)`](../Assets/Scripts/Features/Simulation/Block.cs#L272) | private |
-| Block | [`Vector3 GetConnectorWorldPosition(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L286) | public |
-| Block | [`Vector3 GetConnectorWorldNormal(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L291) | public |
-| Block | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L296) | public |
-| Block | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/Block.cs#L301) | public |
-| Block | [`List<Block> Neighbors()`](../Assets/Scripts/Features/Simulation/Block.cs#L306) | public |
-| Block | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L314) | internal |
-| Block | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Block.cs#L319) | public |
-| Block | [`void RefreshConnectionStatus()`](../Assets/Scripts/Features/Simulation/Block.cs#L324) | internal |
-| Block | [`bool IsBlockedGhost()`](../Assets/Scripts/Features/Simulation/Block.cs#L332) | public |
-| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L356) | private |
+| Block | [`void RefreshAuthoringData()`](../Assets/Scripts/Features/Simulation/Block.cs#L88) | public |
+| Block | [`void RefreshRuntimeData(bool rebuildConnectors = false)`](../Assets/Scripts/Features/Simulation/Block.cs#L117) | public |
+| Block | [`void RefreshMass()`](../Assets/Scripts/Features/Simulation/Block.cs#L145) | public |
+| Block | [`void SetMassSettings(bool useCustomMass, float value)`](../Assets/Scripts/Features/Simulation/Block.cs#L158) | public |
+| Block | [`void Reset()`](../Assets/Scripts/Features/Simulation/Block.cs#L166) | private |
+| Block | [`void GenerateConnectionPoints()`](../Assets/Scripts/Features/Simulation/Block.cs#L171) | private |
+| Block | [`string GetDisplayInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L241) | public |
+| Block | [`string GenerateInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L246) | private |
+| Block | [`void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)`](../Assets/Scripts/Features/Simulation/Block.cs#L292) | private |
+| Block | [`Vector3 GetConnectorWorldPosition(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L306) | public |
+| Block | [`Vector3 GetConnectorWorldNormal(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L311) | public |
+| Block | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L316) | public |
+| Block | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/Block.cs#L321) | public |
+| Block | [`List<Block> Neighbors()`](../Assets/Scripts/Features/Simulation/Block.cs#L326) | public |
+| Block | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L334) | internal |
+| Block | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Block.cs#L339) | public |
+| Block | [`void RefreshConnectionStatus()`](../Assets/Scripts/Features/Simulation/Block.cs#L344) | internal |
+| Block | [`bool IsBlockedGhost()`](../Assets/Scripts/Features/Simulation/Block.cs#L352) | public |
+| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L376) | private |
 
 ## Assets/Scripts/Features/Simulation/BlockConnections.cs
 

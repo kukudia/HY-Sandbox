@@ -70,6 +70,12 @@ public class Block : MonoBehaviour
 
     private void OnValidate()
     {
+        // 运行时反序列化也可能触发 OnValidate；制作期刷新会清除已有连接状态。
+        if (Application.isPlaying)
+        {
+            return;
+        }
+
         RefreshAuthoringData();
         var csv = GetComponent<BlockCsvBinding>();
         if (csv != null)
@@ -89,11 +95,6 @@ public class Block : MonoBehaviour
         }
 
 #endif
-        // 防止负数
-        x = Mathf.Max(1, x);
-        y = Mathf.Max(1, y);
-        z = Mathf.Max(1, z);
-        RefreshMass();
         if (GetComponent<BoxCollider>() == null)
         {
             raycastCollider = gameObject.AddComponent<BoxCollider>();
@@ -109,8 +110,27 @@ public class Block : MonoBehaviour
         }
 
         raycastCollider.isTrigger = false;
-        raycastCollider.size = new Vector3(x - 0.1f, y - 0.1f, z - 0.1f);
-        if (canSpawnConnector)
+        RefreshRuntimeData(true);
+    }
+
+    /// <summary>刷新实例派生数值；尺寸未变化时保留连接对象与状态，不创建组件或修改资源路径。</summary>
+    public void RefreshRuntimeData(bool rebuildConnectors = false)
+    {
+        x = Mathf.Max(1, x);
+        y = Mathf.Max(1, y);
+        z = Mathf.Max(1, z);
+        RefreshMass();
+        if (raycastCollider == null)
+        {
+            raycastCollider = GetComponent<BoxCollider>();
+        }
+
+        if (raycastCollider != null)
+        {
+            raycastCollider.size = new Vector3(x - 0.1f, y - 0.1f, z - 0.1f);
+        }
+
+        if (rebuildConnectors && canSpawnConnector)
         {
             GenerateConnectionPoints();
         }

@@ -1,0 +1,73 @@
+{
+  "date": "2026-10-11",
+  "unity": "6000.3.11f1",
+  "rootCause": "RepairBotContianer had no Power while RepairBot required power; valid damaged target was selected but robot stayed docked. CSV inherited the missing dependency.",
+  "fixes": [
+    "Add bay Power with CSV minimum/standard 50/100",
+    "Share requiresPower with RepairBot and reject missing required supply dependencies in Bake",
+    "Separate runtime refresh from authoring refresh; preserve unchanged connector identities, saved path, collider trigger semantics and current health"
+  ],
+  "reports": {
+    "edit-mode": {
+      "status": "passed",
+      "checks": [
+        "CSV has 25 Block rows, 80 parameter columns and 4 identity columns",
+        "Direct CSV edit persists manual mass and cost",
+        "Multiple components and inherited fields persisted",
+        "Private serialized damage field persisted",
+        "Private cargo fields and enum name persisted",
+        "Shared requiresPower column applied to CargoHold",
+        "Shared requiresPower column applied to CollectionBot",
+        "Shared requiresPower column applied to RepairBot",
+        "Shared requiresPower applies to both matching components on one Prefab",
+        "Required power rejects a repair bay without Power",
+        "Optional power permits a repair bay without Power",
+        "Nested bot configuration persisted",
+        "Inherited turret enum persisted",
+        "Chinese, comma, quotes and multiline description roundtrip",
+        "Repeat synchronization produces zero file changes",
+        "Blank mass recomputes volume and collider from changed dimensions",
+        "Invalid CSV rejects whole batch without writing any Prefab",
+        "Scene bytes and Editor scene dirty state unchanged"
+      ]
+    },
+    "play-mode": {
+      "status": "passed",
+      "checks": [
+        "Real binding Awake overrides corrupt instance values from Resources CSV",
+        "CSV max durability applied before Durability.OnEnable initializes current health",
+        "Runtime Awake applies private serialized cargo field",
+        "Prefab GUID binding preserved on runtime instance"
+      ]
+    },
+    "regression-play": {
+      "status": "passed",
+      "error": "",
+      "checks": [
+        "CSV Awake restores repair amount and required power before Start",
+        "Repeat runtime CSV application preserves connector identity and connection state",
+        "Runtime CSV application preserves saved path, trigger semantics and current health",
+        "Runtime nested robot application preserves Home and Outside references",
+        "Damaged target selected but unpowered robot stays docked",
+        "Real generator and relay supply power, robot leaves bay and repairs target",
+        "Loss of supply pauses repair without losing Home",
+        "requiresPower=false allows repair without requesting power"
+      ]
+    }
+  },
+  "staticValidation": {
+    "unityImportAndCompilation": "passed",
+    "readability": "173 scripts, zero differences and errors",
+    "dotnetBuild": "passed serially (-m:1, UseSharedCompilation=false, DOTNET_PROCESSOR_COUNT=2); 4 warnings, 0 errors",
+    "diffCheck": "passed"
+  },
+  "limitations": [
+    "Isolated real-prefab Play Mode fixture verified supply and repair; user blueprint was not supplied.",
+    "Initial parallel static checks and fetch hit system memory/commit exhaustion; serial reduced-worker build and checks were used.",
+    "CLI eval timed out at 5000ms for Edit checks and probe startup, but timestamped completed reports confirm test completion."
+  ],
+  "preservedUnrelatedFiles": [
+    "Assets/Scenes/Main.unity",
+    "Assets/Art/Combat/TurretShell.mat"
+  ]
+}
