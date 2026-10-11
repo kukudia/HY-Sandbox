@@ -2268,7 +2268,7 @@ MonoBehaviour:
   _connectorHints: {fileID: 186965334}
   _buildRange: 15
   highlightMaterial: {fileID: 2100000, guid: 79befef2596e13740b829440b3317d67, type: 2}
-  currentSelectType: 0
+  currentBuildType: 0
   selectedBlock: {fileID: 0}
   lastSaveBlock: {fileID: 0}
   currentGhost: {fileID: 0}
@@ -2819,7 +2819,7 @@ MonoBehaviour:
   groupCleanupDistance: 200
   groupCleanupCheckInterval: 1
   _groupLinearDamping: 1
-  _groupAngularDamping: 1
+  _groupAngularDamping: 2
   _maximumInheritedTangentialSpeed: 20
   _maximumInheritedAngularSpeed: 1
   _groupMaxDepenetrationVelocity: 4
@@ -6091,8 +6091,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2090465813}
   m_HandleRect: {fileID: 2090465812}
   m_Direction: 2
-  m_Value: 1.0000002
-  m_Size: 0.7174375
+  m_Value: 1
+  m_Size: 0.8388257
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -16310,7 +16310,7 @@ GameObject:
   - component: {fileID: 1479005151}
   - component: {fileID: 1479005155}
   m_Layer: 0
-  m_Name: ProjectileTurretSingle
+  m_Name: ProjectileTurretSingleButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19431,7 +19431,7 @@ GameObject:
   - component: {fileID: 1691090658}
   - component: {fileID: 1691090663}
   m_Layer: 0
-  m_Name: ProjectileTurretDouble
+  m_Name: ProjectileTurretDoubleButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

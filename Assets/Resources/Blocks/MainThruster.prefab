@@ -782,7 +782,7 @@ MonoBehaviour:
   thrust: 0
   lastThrustValue: 0
   maxThrust: 250
-  maxThrustChangeRate: 50
+  maxThrustChangeRate: 200
   thrustDirection: {x: 0, y: 0, z: 1}
   cameraTransform: {fileID: 0}
   rb: {fileID: 0}
@@ -935,10 +935,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxDurability: 100
   collisionSpeedThreshold: 5
-  damageMultiplier: 0.001
-  _collisionDamageScale: 0.1
-  _maximumCollisionHealthFraction: 0.08
-  _collisionDamageCooldown: 0.35
+  damageMultiplier: 0.1
+  _collisionDamageScale: 0.5
+  _maximumCollisionHealthFraction: 0.5
+  _collisionDamageCooldown: 0.5
   debugLog: 1
   currentDurability: 0
 --- !u!114 &1578290364841887270
