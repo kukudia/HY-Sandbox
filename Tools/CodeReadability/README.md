@@ -1,6 +1,6 @@
 # 可读性与导航工具
 
-需要 .NET SDK 9（项目工具直接引用该SDK自带Roslyn，不新增NuGet依赖）；导航生成需要Python 3。Unity工程仍使用自身的C#9编译规则。
+需要 .NET SDK 9.0.318（global.json固定本地/CI一致的版本，项目工具直接引用该SDK自带Roslyn，不新增NuGet依赖）；导航生成需要Python 3。Unity工程仍使用自身的C#9编译规则。升级SDK时同步global.json并重新核对格式基线，避免Runner选中.NET10造成Roslyn运行时冲突。
 
 从仓库根目录执行：
 

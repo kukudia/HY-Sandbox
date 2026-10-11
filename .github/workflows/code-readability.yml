@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x'
+          global-json-file: global.json
       - run: dotnet run --project Tools/CodeReadability -- --check .
       - run: dotnet run --project Tools/CodeReadability -- --check-tools .
       - uses: actions/setup-python@v5
