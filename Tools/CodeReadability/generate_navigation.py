@@ -175,7 +175,7 @@ def main():
     )
     graph(
         "供电网络与可视范围",
-        "消费者先申报工作意图，空闲不分配；每帧仅一个中继重建共享网络，按剩余额定需求比例分配并封顶。",
+        "消费者先申报工作意图，空闲不分配；每帧仅一个中继重建共享网络，按剩余额定需求比例分配并封顶。CommitPowerStatus确认SupplyEfficiency供推进器字体读取，瞬时清零不提交缺电；无中继时LateUpdate补充确认。",
         {
             "A": "PowerTransmissionDevice.Update",
             "B": "PowerNetwork.Rebuild",
@@ -197,6 +197,7 @@ def main():
             "R": "PowerRangeUnionView.Dispose",
             "S": "Power.SetWorkRequested",
             "T": "Power.ReceivePower",
+            "U": "Power.LateUpdate",
         },
         [
             "A -->|首个本帧中继| B",
@@ -209,6 +210,7 @@ def main():
             "G --> T",
             "B --> H",
             "H --> I",
+            "U -->|本帧尚未提交| I",
             "A --> J",
             "K -->|最后中继| L",
             "A -->|完成网络后| M",

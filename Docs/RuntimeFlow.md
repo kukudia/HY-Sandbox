@@ -277,7 +277,7 @@ flowchart TD
 
 ## 供电网络与可视范围
 
-消费者先申报工作意图，空闲不分配；每帧仅一个中继重建共享网络，按剩余额定需求比例分配并封顶。
+消费者先申报工作意图，空闲不分配；每帧仅一个中继重建共享网络，按剩余额定需求比例分配并封顶。CommitPowerStatus确认SupplyEfficiency供推进器字体读取，瞬时清零不提交缺电；无中继时LateUpdate补充确认。
 
 ```mermaid
 flowchart TD
@@ -298,7 +298,7 @@ flowchart TD
     H["PowerNetwork.CommitPowerStatuses()"]
     click H "../Assets/Scripts/Features/Power/PowerNetwork.cs#L237" "打开源码"
     I["Power.CommitPowerStatus()"]
-    click I "../Assets/Scripts/Features/Power/Power.cs#L95" "打开源码"
+    click I "../Assets/Scripts/Features/Power/Power.cs#L111" "打开源码"
     J["PowerConnectionVisuals.Refresh()"]
     click J "../Assets/Scripts/Features/Power/PowerConnectionVisuals.cs#L19" "打开源码"
     K["PowerTransmissionDevice.OnDisable()"]
@@ -318,9 +318,11 @@ flowchart TD
     R["PowerRangeUnionView.Dispose()"]
     click R "../Assets/Scripts/Features/Power/PowerRangeUnionView.cs#L79" "打开源码"
     S["Power.SetWorkRequested()"]
-    click S "../Assets/Scripts/Features/Power/Power.cs#L59" "打开源码"
+    click S "../Assets/Scripts/Features/Power/Power.cs#L74" "打开源码"
     T["Power.ReceivePower()"]
-    click T "../Assets/Scripts/Features/Power/Power.cs#L90" "打开源码"
+    click T "../Assets/Scripts/Features/Power/Power.cs#L106" "打开源码"
+    U["Power.LateUpdate()"]
+    click U "../Assets/Scripts/Features/Power/Power.cs#L64" "打开源码"
     A -->|首个本帧中继| B
     B --> C
     B --> D
@@ -331,6 +333,7 @@ flowchart TD
     G --> T
     B --> H
     H --> I
+    U -->|本帧尚未提交| I
     A --> J
     K -->|最后中继| L
     A -->|完成网络后| M
@@ -355,7 +358,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|SupplyConnectedComponent -->
 - [PowerNetwork.CommitPowerStatuses](../Assets/Scripts/Features/Power/PowerNetwork.cs#L237)
 <!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|CommitPowerStatuses -->
-- [Power.CommitPowerStatus](../Assets/Scripts/Features/Power/Power.cs#L95)
+- [Power.CommitPowerStatus](../Assets/Scripts/Features/Power/Power.cs#L111)
 <!-- source: Assets/Scripts/Features/Power/Power.cs|CommitPowerStatus -->
 - [PowerConnectionVisuals.Refresh](../Assets/Scripts/Features/Power/PowerConnectionVisuals.cs#L19)
 <!-- source: Assets/Scripts/Features/Power/PowerConnectionVisuals.cs|Refresh -->
@@ -375,10 +378,12 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Diagnostics/DebugManager.cs|OnDestroy -->
 - [PowerRangeUnionView.Dispose](../Assets/Scripts/Features/Power/PowerRangeUnionView.cs#L79)
 <!-- source: Assets/Scripts/Features/Power/PowerRangeUnionView.cs|Dispose -->
-- [Power.SetWorkRequested](../Assets/Scripts/Features/Power/Power.cs#L59)
+- [Power.SetWorkRequested](../Assets/Scripts/Features/Power/Power.cs#L74)
 <!-- source: Assets/Scripts/Features/Power/Power.cs|SetWorkRequested -->
-- [Power.ReceivePower](../Assets/Scripts/Features/Power/Power.cs#L90)
+- [Power.ReceivePower](../Assets/Scripts/Features/Power/Power.cs#L106)
 <!-- source: Assets/Scripts/Features/Power/Power.cs|ReceivePower -->
+- [Power.LateUpdate](../Assets/Scripts/Features/Power/Power.cs#L64)
+<!-- source: Assets/Scripts/Features/Power/Power.cs|LateUpdate -->
 
 ## 物理分组、连接与推进
 
@@ -543,7 +548,7 @@ flowchart TD
     T["TurretHitResolver.Apply()"]
     click T "../Assets/Scripts/Features/Combat/TurretHitResolver.cs#L7" "打开源码"
     U["Power.SetWorkRequested()"]
-    click U "../Assets/Scripts/Features/Power/Power.cs#L59" "打开源码"
+    click U "../Assets/Scripts/Features/Power/Power.cs#L74" "打开源码"
     V["ProjectileTurret.LateUpdate()"]
     click V "../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L57" "打开源码"
     W["ProjectileTurret.UpdateRecoil()"]
@@ -619,7 +624,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/TurretProjectile.cs|FixedUpdate -->
 - [TurretHitResolver.Apply](../Assets/Scripts/Features/Combat/TurretHitResolver.cs#L7)
 <!-- source: Assets/Scripts/Features/Combat/TurretHitResolver.cs|Apply -->
-- [Power.SetWorkRequested](../Assets/Scripts/Features/Power/Power.cs#L59)
+- [Power.SetWorkRequested](../Assets/Scripts/Features/Power/Power.cs#L74)
 <!-- source: Assets/Scripts/Features/Power/Power.cs|SetWorkRequested -->
 - [ProjectileTurret.LateUpdate](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L57)
 <!-- source: Assets/Scripts/Features/Combat/ProjectileTurret.cs|LateUpdate -->

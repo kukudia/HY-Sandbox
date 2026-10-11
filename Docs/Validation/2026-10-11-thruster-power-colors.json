@@ -1,0 +1,16 @@
+{
+  "unity": "6000.3.11f1",
+  "scene": "Assets/Scenes/Main.unity",
+  "compilation": "passed",
+  "playModePanelChecks": {
+    "fullSupplyWhite": true,
+    "networkResetDoesNotFlashRed": true,
+    "shutdownWithResidualThrustWhite": true,
+    "newRequestBeforeAllocationWhite": true,
+    "confirmedNoSupplyRed": true,
+    "confirmedPartialSupplyAmber": true,
+    "shutdownAfterShortageWhite": true
+  },
+  "static": {"readability": "166 scripts, 0 errors", "build": "0 errors, 4 existing warnings", "diff": "passed"},
+  "limits": ["Panel fields verified via runtime API; no manual visual inspection"]
+}

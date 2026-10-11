@@ -88,7 +88,7 @@ public abstract class Thruster : MonoBehaviour
 
     public bool IsPlayerControllable => isActiveAndEnabled && HasValidRuntimeOwner() && controlUnit.faction == UnitFaction.Player;
 
-    public bool IsPowerRequested
+    public float PowerSupplyEfficiency
     {
         get
         {
@@ -97,7 +97,7 @@ public abstract class Thruster : MonoBehaviour
                 power = GetComponent<Power>();
             }
 
-            return power != null && power.IsWorkRequested;
+            return power != null ? power.SupplyEfficiency : 0f;
         }
     }
 

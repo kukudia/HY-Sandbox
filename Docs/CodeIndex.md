@@ -1639,13 +1639,14 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Power | [`void OnEnable()`](../Assets/Scripts/Features/Power/Power.cs#L43) | private |
-| Power | [`void OnDisable()`](../Assets/Scripts/Features/Power/Power.cs#L50) | private |
-| Power | [`void SetWorkRequested(Object requester, bool requested)`](../Assets/Scripts/Features/Power/Power.cs#L59) | public |
-| Power | [`void ResetPower()`](../Assets/Scripts/Features/Power/Power.cs#L84) | public |
-| Power | [`void ReceivePower(float suppliedPower)`](../Assets/Scripts/Features/Power/Power.cs#L90) | public |
-| Power | [`void CommitPowerStatus()`](../Assets/Scripts/Features/Power/Power.cs#L95) | public |
-| Power | [`bool IsDestroyedRequester(Object requester)`](../Assets/Scripts/Features/Power/Power.cs#L101) | private static |
+| Power | [`void OnEnable()`](../Assets/Scripts/Features/Power/Power.cs#L48) | private |
+| Power | [`void OnDisable()`](../Assets/Scripts/Features/Power/Power.cs#L55) | private |
+| Power | [`void LateUpdate()`](../Assets/Scripts/Features/Power/Power.cs#L64) | private |
+| Power | [`void SetWorkRequested(Object requester, bool requested)`](../Assets/Scripts/Features/Power/Power.cs#L74) | public |
+| Power | [`void ResetPower()`](../Assets/Scripts/Features/Power/Power.cs#L100) | public |
+| Power | [`void ReceivePower(float suppliedPower)`](../Assets/Scripts/Features/Power/Power.cs#L106) | public |
+| Power | [`void CommitPowerStatus()`](../Assets/Scripts/Features/Power/Power.cs#L111) | public |
+| Power | [`bool IsDestroyedRequester(Object requester)`](../Assets/Scripts/Features/Power/Power.cs#L119) | private static |
 
 ## Assets/Scripts/Features/Power/PowerConnectionVisuals.cs
 

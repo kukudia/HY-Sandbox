@@ -14,6 +14,11 @@ public class Power : MonoBehaviour
     public float standardWorkingPower = 100f;
     private StatusIcon _icon;
     private readonly HashSet<Object> _workRequesters = new HashSet<Object>();
+    private float _supplyEfficiency = 1f;
+    private int _lastStatusCommitFrame = -1;
+    /// <summary>电网完成分配后确认的供电状态，供UI读取；空闲或尚未分配不等同于缺电。</summary>
+    public float SupplyEfficiency => _supplyEfficiency;
+
     public bool IsWorkRequested
     {
         get
@@ -52,7 +57,17 @@ public class Power : MonoBehaviour
         ActivePowerBlocks.Remove(this);
         _workRequesters.Clear();
         currentPower = 0f;
+        _supplyEfficiency = 1f;
         _icon?.CheckPowerStatus();
+    }
+
+    private void LateUpdate()
+    {
+        // 没有中继时也要确认真实缺电；等待Update阶段结束，避免把分配中的零值提交给UI。
+        if (_lastStatusCommitFrame != Time.frameCount)
+        {
+            CommitPowerStatus();
+        }
     }
 
     /// <summary>先提交工作意图再读取供电，避免断电后无法再次启动；同一负载允许多个使用者独立请求。</summary>
@@ -75,6 +90,7 @@ public class Power : MonoBehaviour
         if (!IsWorkRequested)
         {
             currentPower = 0f;
+            _supplyEfficiency = 1f;
         }
 
         _icon?.CheckPowerStatus();
@@ -94,7 +110,9 @@ public class Power : MonoBehaviour
 
     public void CommitPowerStatus()
     {
+        _lastStatusCommitFrame = Time.frameCount;
         _workRequesters.RemoveWhere(IsDestroyedRequester);
+        _supplyEfficiency = IsWorkRequested && standardWorkingPower > 0f ? isWorking ? efficiency : 0f : 1f;
         _icon?.CheckPowerStatus();
     }
 
