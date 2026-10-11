@@ -537,22 +537,22 @@ flowchart TD
 
 ## 维修、回收和移动 Home 返航
 
-机器人使用 Home 实时停靠点与刚体点速度。维修目标扫描、导航施力、障碍规则和光束呈现分离。取消任务释放认领。
+机器人使用 Home 实时停靠点与刚体点速度；任务与返航均从机体做净空检测，持续绕障并在停滞后脱困。取消任务释放认领。
 
 ```mermaid
 flowchart TD
     A["RepairBot.FixedUpdate()"]
     click A "../Assets/Scripts/Features/Bots/RepairBot.cs#L34" "打开源码"
     B["Bot.TickNavigation()"]
-    click B "../Assets/Scripts/Features/Bots/Bot.cs#L138" "打开源码"
+    click B "../Assets/Scripts/Features/Bots/Bot.cs#L157" "打开源码"
     C["RepairTargetSearch.Scan()"]
     click C "../Assets/Scripts/Features/Bots/RepairTargetSearch.cs#L15" "打开源码"
     D["Bot.NavigateToTarget()"]
-    click D "../Assets/Scripts/Features/Bots/Bot.cs#L210" "打开源码"
+    click D "../Assets/Scripts/Features/Bots/Bot.cs#L229" "打开源码"
     E["BotFlightMotion.NavigateToTarget()"]
     click E "../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L58" "打开源码"
     F["BotObstacleAvoidance.Evaluate()"]
-    click F "../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L55" "打开源码"
+    click F "../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L63" "打开源码"
     G["RepairBot.CheckAndRepair()"]
     click G "../Assets/Scripts/Features/Bots/RepairBot.cs#L85" "打开源码"
     H["RepairBeamView.Update()"]
@@ -562,23 +562,23 @@ flowchart TD
     J["CollectionBot.FindTarget()"]
     click J "../Assets/Scripts/Features/Bots/CollectionBot.cs#L94" "打开源码"
     K["LootDrop.Claim()"]
-    click K "../Assets/Scripts/Features/Salvage/LootDrop.cs#L154" "打开源码"
+    click K "../Assets/Scripts/Features/Salvage/LootDrop.cs#L188" "打开源码"
     L["CollectionBot.CollectTarget()"]
     click L "../Assets/Scripts/Features/Bots/CollectionBot.cs#L73" "打开源码"
     M["LootDrop.Carry()"]
-    click M "../Assets/Scripts/Features/Salvage/LootDrop.cs#L166" "打开源码"
+    click M "../Assets/Scripts/Features/Salvage/LootDrop.cs#L200" "打开源码"
     N["CollectionBot.ReturnCargo()"]
     click N "../Assets/Scripts/Features/Bots/CollectionBot.cs#L82" "打开源码"
     O["Bot.NavigateHomeSmoothly()"]
-    click O "../Assets/Scripts/Features/Bots/Bot.cs#L230" "打开源码"
+    click O "../Assets/Scripts/Features/Bots/Bot.cs#L249" "打开源码"
     P["BotFlightMotion.NavigateHome()"]
-    click P "../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L71" "打开源码"
-    Q["BotHomeGuidance.Evaluate()"]
-    click Q "../Assets/Scripts/Features/Bots/BotHomeGuidance.cs#L27" "打开源码"
+    click P "../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L69" "打开源码"
+    Q["BotObstacleAvoidance.ConstrainVelocity()"]
+    click Q "../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L223" "打开源码"
     R["Bot.ReturnHome()"]
-    click R "../Assets/Scripts/Features/Bots/Bot.cs#L280" "打开源码"
+    click R "../Assets/Scripts/Features/Bots/Bot.cs#L292" "打开源码"
     S["LootDrop.Deliver()"]
-    click S "../Assets/Scripts/Features/Salvage/LootDrop.cs#L195" "打开源码"
+    click S "../Assets/Scripts/Features/Salvage/LootDrop.cs#L231" "打开源码"
     T["CollectionBot.Abandon()"]
     click T "../Assets/Scripts/Features/Bots/CollectionBot.cs#L131" "打开源码"
     A --> B
@@ -586,6 +586,7 @@ flowchart TD
     A --> D
     D --> E
     E -->|经 SampleGuidance| F
+    E -->|每物理帧经 ApplyMovement| Q
     A --> G
     A --> H
     I --> B
@@ -597,7 +598,8 @@ flowchart TD
     I --> N
     N --> O
     O --> P
-    P -->|经 SampleGuidance| Q
+    P -->|每物理帧经 ApplyReturnHomeMovement| Q
+    P -->|机体净空与脱困| F
     O -->|可停靠| R
     N -->|完成停靠| S
     N --> T
@@ -605,15 +607,15 @@ flowchart TD
 
 - [RepairBot.FixedUpdate](../Assets/Scripts/Features/Bots/RepairBot.cs#L34)
 <!-- source: Assets/Scripts/Features/Bots/RepairBot.cs|FixedUpdate -->
-- [Bot.TickNavigation](../Assets/Scripts/Features/Bots/Bot.cs#L138)
+- [Bot.TickNavigation](../Assets/Scripts/Features/Bots/Bot.cs#L157)
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|TickNavigation -->
 - [RepairTargetSearch.Scan](../Assets/Scripts/Features/Bots/RepairTargetSearch.cs#L15)
 <!-- source: Assets/Scripts/Features/Bots/RepairTargetSearch.cs|Scan -->
-- [Bot.NavigateToTarget](../Assets/Scripts/Features/Bots/Bot.cs#L210)
+- [Bot.NavigateToTarget](../Assets/Scripts/Features/Bots/Bot.cs#L229)
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|NavigateToTarget -->
 - [BotFlightMotion.NavigateToTarget](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L58)
 <!-- source: Assets/Scripts/Features/Bots/BotFlightMotion.cs|NavigateToTarget -->
-- [BotObstacleAvoidance.Evaluate](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L55)
+- [BotObstacleAvoidance.Evaluate](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L63)
 <!-- source: Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs|Evaluate -->
 - [RepairBot.CheckAndRepair](../Assets/Scripts/Features/Bots/RepairBot.cs#L85)
 <!-- source: Assets/Scripts/Features/Bots/RepairBot.cs|CheckAndRepair -->
@@ -623,26 +625,82 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|FixedUpdate -->
 - [CollectionBot.FindTarget](../Assets/Scripts/Features/Bots/CollectionBot.cs#L94)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|FindTarget -->
-- [LootDrop.Claim](../Assets/Scripts/Features/Salvage/LootDrop.cs#L154)
+- [LootDrop.Claim](../Assets/Scripts/Features/Salvage/LootDrop.cs#L188)
 <!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Claim -->
 - [CollectionBot.CollectTarget](../Assets/Scripts/Features/Bots/CollectionBot.cs#L73)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|CollectTarget -->
-- [LootDrop.Carry](../Assets/Scripts/Features/Salvage/LootDrop.cs#L166)
+- [LootDrop.Carry](../Assets/Scripts/Features/Salvage/LootDrop.cs#L200)
 <!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Carry -->
 - [CollectionBot.ReturnCargo](../Assets/Scripts/Features/Bots/CollectionBot.cs#L82)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|ReturnCargo -->
-- [Bot.NavigateHomeSmoothly](../Assets/Scripts/Features/Bots/Bot.cs#L230)
+- [Bot.NavigateHomeSmoothly](../Assets/Scripts/Features/Bots/Bot.cs#L249)
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|NavigateHomeSmoothly -->
-- [BotFlightMotion.NavigateHome](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L71)
+- [BotFlightMotion.NavigateHome](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L69)
 <!-- source: Assets/Scripts/Features/Bots/BotFlightMotion.cs|NavigateHome -->
-- [BotHomeGuidance.Evaluate](../Assets/Scripts/Features/Bots/BotHomeGuidance.cs#L27)
-<!-- source: Assets/Scripts/Features/Bots/BotHomeGuidance.cs|Evaluate -->
-- [Bot.ReturnHome](../Assets/Scripts/Features/Bots/Bot.cs#L280)
+- [BotObstacleAvoidance.ConstrainVelocity](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L223)
+<!-- source: Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs|ConstrainVelocity -->
+- [Bot.ReturnHome](../Assets/Scripts/Features/Bots/Bot.cs#L292)
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|ReturnHome -->
-- [LootDrop.Deliver](../Assets/Scripts/Features/Salvage/LootDrop.cs#L195)
+- [LootDrop.Deliver](../Assets/Scripts/Features/Salvage/LootDrop.cs#L231)
 <!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Deliver -->
 - [CollectionBot.Abandon](../Assets/Scripts/Features/Bots/CollectionBot.cs#L131)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|Abandon -->
+
+## 掉落概率、表现与文字遮挡
+
+敌方残骸先抽稀有部件，再抽金币；货仓存量不受爆率影响。Update散落/吸附，LateUpdate更新表现和与Icon共用的遮挡查询；Carry停止散落并还原显示姿态。
+
+```mermaid
+flowchart TD
+    A["WreckSalvage.Convert()"]
+    click A "../Assets/Scripts/Features/Salvage/WreckSalvage.cs#L10" "打开源码"
+    B["LootDrop.Spawn()"]
+    click B "../Assets/Scripts/Features/Salvage/LootDrop.cs#L83" "打开源码"
+    C["LootDrop.Initialize()"]
+    click C "../Assets/Scripts/Features/Salvage/LootDrop.cs#L132" "打开源码"
+    D["LootDrop.Update()"]
+    click D "../Assets/Scripts/Features/Salvage/LootDrop.cs#L261" "打开源码"
+    E["LootDrop.LateUpdate()"]
+    click E "../Assets/Scripts/Features/Salvage/LootDrop.cs#L320" "打开源码"
+    F["CombatHud.IsWorldPointOccluded()"]
+    click F "../Assets/Scripts/Features/Combat/CombatHud.cs#L154" "打开源码"
+    G["LootDrop.Carry()"]
+    click G "../Assets/Scripts/Features/Salvage/LootDrop.cs#L200" "打开源码"
+    H["LootDrop.ResetDisplayPose()"]
+    click H "../Assets/Scripts/Features/Salvage/LootDrop.cs#L364" "打开源码"
+    I["LootDrop.Deliver()"]
+    click I "../Assets/Scripts/Features/Salvage/LootDrop.cs#L231" "打开源码"
+    J["LootDrop.Release()"]
+    click J "../Assets/Scripts/Features/Salvage/LootDrop.cs#L214" "打开源码"
+    A -->|通过掉落抽签| B
+    B -->|新建时| C
+    D -->|货币吸附到达| I
+    E -->|屏幕内文字| F
+    E -->|携带或非游玩| H
+    G --> H
+    I --> J
+```
+
+- [WreckSalvage.Convert](../Assets/Scripts/Features/Salvage/WreckSalvage.cs#L10)
+<!-- source: Assets/Scripts/Features/Salvage/WreckSalvage.cs|Convert -->
+- [LootDrop.Spawn](../Assets/Scripts/Features/Salvage/LootDrop.cs#L83)
+<!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Spawn -->
+- [LootDrop.Initialize](../Assets/Scripts/Features/Salvage/LootDrop.cs#L132)
+<!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Initialize -->
+- [LootDrop.Update](../Assets/Scripts/Features/Salvage/LootDrop.cs#L261)
+<!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Update -->
+- [LootDrop.LateUpdate](../Assets/Scripts/Features/Salvage/LootDrop.cs#L320)
+<!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|LateUpdate -->
+- [CombatHud.IsWorldPointOccluded](../Assets/Scripts/Features/Combat/CombatHud.cs#L154)
+<!-- source: Assets/Scripts/Features/Combat/CombatHud.cs|IsWorldPointOccluded -->
+- [LootDrop.Carry](../Assets/Scripts/Features/Salvage/LootDrop.cs#L200)
+<!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Carry -->
+- [LootDrop.ResetDisplayPose](../Assets/Scripts/Features/Salvage/LootDrop.cs#L364)
+<!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|ResetDisplayPose -->
+- [LootDrop.Deliver](../Assets/Scripts/Features/Salvage/LootDrop.cs#L231)
+<!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Deliver -->
+- [LootDrop.Release](../Assets/Scripts/Features/Salvage/LootDrop.cs#L214)
+<!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Release -->
 
 ## 表现、镜头与 UI 生命周期
 

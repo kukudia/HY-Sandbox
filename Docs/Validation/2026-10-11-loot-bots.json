@@ -1,0 +1,113 @@
+{
+  "date": "2026-10-11",
+  "project": "HY-Sandbox",
+  "unity": "6000.3.11f1",
+  "scope": "loot occlusion/drop chance/presentation and shared bot obstacle navigation",
+  "static": {
+    "readability": {
+      "scripts": 158,
+      "differences": 0,
+      "errors": 0
+    },
+    "dotnetBuild": {
+      "errors": 0,
+      "warnings": 4,
+      "warningDetails": [
+        "3 existing MSB3277 dependency version conflicts",
+        "existing ProfilerCaptureAnalysis obsolete API"
+      ]
+    },
+    "diffCheck": "passed",
+    "toolPythonSyntax": "9 passed; generator templates synchronized"
+  },
+  "editor": {
+    "importAndCompile": "passed",
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "scene": "Assets/Scenes/Main.unity",
+    "sceneDirty": false,
+    "playMode": "stopped",
+    "changedPrefabsMissingScripts": 0,
+    "persistedCoinDropChance": 0.3,
+    "persistedSpecialPartChance": 0.08
+  },
+  "salvagePlayProbe": {
+    "passed": true,
+    "unity": "6000.3.11f1",
+    "checks": [
+      "Coins label visible without obstacle",
+      "Coins scatters and rotates",
+      "Coins label shares icon occlusion",
+      "Coins label reappears after obstacle removal",
+      "Coins label hidden behind camera",
+      "Technology label visible without obstacle",
+      "Technology scatters and rotates",
+      "Technology label shares icon occlusion",
+      "Technology label reappears after obstacle removal",
+      "Technology label hidden behind camera",
+      "SpecialPart label visible without obstacle",
+      "SpecialPart scatters and rotates",
+      "SpecialPart label shares icon occlusion",
+      "SpecialPart label reappears after obstacle removal",
+      "SpecialPart label hidden behind camera",
+      "Authored capacities: 8 parts / 100 coins / 100 technology",
+      "Default explosion policy",
+      "Unpowered hold rejects deposit",
+      "Capacity clamps currency and rejects wrong kind",
+      "Currency arrival fills first hold and routes overflow without loss",
+      "Technology routes only to technology hold",
+      "Resource fill uses capacity ratio",
+      "Collection drone reserves a special item",
+      "Drone flies, carries and docks before crediting cargo",
+      "Stored item display contains no gameplay components",
+      "Two drones cannot reserve beyond last free slot",
+      "Power loss releases claims and keeps dropped cargo",
+      "Drone picked up cargo for bay destruction test",
+      "Carried display restores socket pose",
+      "Destroying collection bay releases carried special part",
+      "Actual explosive destruction emits cargo once",
+      "Non-explosive destroyed hold leaves connectivity graph immediately",
+      "Actual non-explosive destruction spills currency",
+      "Blueprint JSON round-trips cargo",
+      "Old blueprint without cargo remains readable",
+      "Successful return writes cargo atomically",
+      "Return preserves blueprint geometry and two recovered parts",
+      "Death return persists empty cargo",
+      "Cargo destruction spills parts exactly once",
+      "Player currency hold spills exact amount",
+      "Enemy currency spill disabled by prefab default",
+      "Reduced authored drop rates",
+      "Guaranteed coin drop converts exactly once",
+      "Zero coin chance stays empty on repeat conversion",
+      "Player self-dismantling cannot farm coins",
+      "Cleanup removes ordinary wreck but preserves independent special loot",
+      "RepairBot still finds and repairs its own unit after extraction",
+      "RepairBot returns to a moving authored socket",
+      "Authored scene changes remain confined to Play Mode"
+    ],
+    "errors": []
+  },
+  "botNavigationPlayProbe": {
+    "passed": true,
+    "checks": [
+      "RepairBot wall crossing reached target through real Rigidbody physics",
+      "RepairBot wall crossing did not collide with walls",
+      "CollectionBot U enclosure reached target through real Rigidbody physics",
+      "CollectionBot U enclosure did not collide with walls",
+      "CollectionBot U enclosure escaped vertically",
+      "RepairBot inertia braking reached target through real Rigidbody physics",
+      "RepairBot inertia braking did not collide with walls",
+      "RepairBot moving Home behind wall reached target through real Rigidbody physics",
+      "RepairBot moving Home behind wall did not collide with walls",
+      "RepairBot initial overlap escape reached target through real Rigidbody physics",
+      "RepairBot initial overlap escape did not collide with walls"
+    ],
+    "errors": []
+  },
+  "limits": [
+    "Navigation probe drives production BotFlightMotion and real Rigidbody with authored bot settings; full task behavior is tested by SalvagePlayProbe.",
+    "Initial overlap scenario tolerates initial contact during first 0.5 seconds; checks no subsequent wall contacts.",
+    "No arbitrary closed maze, all moving/rotating Home combinations, many-bot performance or Player build acceptance.",
+    "Presentation movement and visibility were checked in Play Mode; no broad visual art acceptance."
+  ]
+}

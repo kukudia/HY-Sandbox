@@ -1,4 +1,4 @@
-// 职责：维护掉落物品身份、携带/认领状态及可拾取表现。
+// 职责：维护掉落物品身份、携带/认领、吸附入库，以及散落悬浮和文字遮挡表现。
 // 入口：Spawn() / Initialize() / Claim()。
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +24,24 @@ public class LootDrop : MonoBehaviour
     private float _displaySize = 0.8f;
     [SerializeField]
     private bool _showDropState = true;
+    [SerializeField, Min(0f), Tooltip("Initial scatter speed in world units per second.")]
+    private float _scatterSpeed = 2.5f;
+    [SerializeField, Min(0.01f)]
+    private float _scatterDuration = 0.6f;
+    [SerializeField, Min(0f)]
+    private float _hoverAmplitude = 0.12f;
+    [SerializeField, Min(0f)]
+    private float _hoverFrequency = 0.8f;
+    [SerializeField]
+    private float _spinSpeed = 65f;
+    private readonly RaycastHit[] _occlusionHits = new RaycastHit[64];
+    private Vector3 _scatterVelocity;
+    private float _scatterRemaining;
+    private float _visualPhase;
+    private Vector3 _displayPosition;
+    private Quaternion _displayRotation;
+    private Vector3 _beaconPosition;
+    private Quaternion _beaconRotation;
     private float _nextSearch;
     private bool _consumed;
     private bool _initialized;
@@ -115,6 +133,22 @@ public class LootDrop : MonoBehaviour
     {
         _item = item.Copy();
         _initialized = true;
+        _visualPhase = Random.value * Mathf.PI * 2f;
+        Vector2 scatter = Random.insideUnitCircle;
+        _scatterVelocity = new Vector3(scatter.x, Random.Range(0.2f, 0.5f), scatter.y) * _scatterSpeed;
+        _scatterRemaining = Mathf.Max(0.01f, _scatterDuration);
+        if (_displayRoot != null)
+        {
+            _displayPosition = _displayRoot.localPosition;
+            _displayRotation = _displayRoot.localRotation;
+        }
+
+        if (_beacon != null)
+        {
+            _beaconPosition = _beacon.transform.localPosition;
+            _beaconRotation = _beacon.transform.localRotation;
+        }
+
         Color color = item.kind == CargoKind.Coins ? new Color(1f, 0.65f, 0.05f) : item.kind == CargoKind.Technology ? new Color(0.1f, 0.5f, 1f) : new Color(0.15f, 1f, 0.7f);
         if (_beacon != null)
         {
@@ -170,6 +204,8 @@ public class LootDrop : MonoBehaviour
             return;
         }
 
+        ResetDisplayPose();
+        _scatterRemaining = 0f;
         IsCarried = true;
         transform.SetParent(socket, true);
         transform.position = socket.position + socket.rotation * (Vector3.down * 0.65f);
@@ -229,9 +265,24 @@ public class LootDrop : MonoBehaviour
             return;
         }
 
-        if (_label != null && Camera.main != null)
+        if (!IsCarried && ClaimedBy == null && Destination == null && _scatterRemaining > 0f)
         {
-            _label.transform.rotation = Camera.main.transform.rotation;
+            float step = Mathf.Min(Time.deltaTime, _scatterRemaining);
+            Vector3 movement = _scatterVelocity * (_scatterRemaining / Mathf.Max(0.01f, _scatterDuration)) * step;
+            // 散落只持续短时间；路径遇到实体障碍就停止，避免穿进墙内。
+            if (movement.sqrMagnitude > 0f && !Physics.SphereCast(
+                transform.position,
+                0.15f,
+                movement.normalized,
+                out _,
+                movement.magnitude,
+                ~((1 << 2) | (1 << 5)),
+                QueryTriggerInteraction.Ignore))
+            {
+                transform.position += movement;
+            }
+
+            _scatterRemaining -= step;
         }
 
         if (IsCarried || ClaimedBy != null || _item.kind == CargoKind.SpecialPart)
@@ -263,6 +314,65 @@ public class LootDrop : MonoBehaviour
         if ((transform.position - Destination.transform.position).sqrMagnitude < 0.09f)
         {
             Deliver(Destination);
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (!_initialized || _consumed)
+        {
+            return;
+        }
+
+        bool playing = PlayManager.instance != null && PlayManager.instance.playMode;
+        Camera camera = PlayManager.instance != null && PlayManager.instance.mainCamera != null ? PlayManager.instance.mainCamera : Camera.main;
+        if (_label != null)
+        {
+            bool visible = false;
+            if (playing && _showDropState && camera != null)
+            {
+                _label.transform.rotation = camera.transform.rotation;
+                Vector3 screen = camera.WorldToScreenPoint(transform.position);
+                visible = screen.z > 0f && screen.x >= 0f && screen.x <= Screen.width && screen.y >= 0f && screen.y <= Screen.height && !CombatHud.IsWorldPointOccluded(camera, transform.position, transform.root, _occlusionHits);
+            }
+
+            _label.gameObject.SetActive(visible);
+        }
+
+        if (!playing || IsCarried)
+        {
+            ResetDisplayPose();
+            return;
+        }
+
+        // 只动画显示子节点，拾取/认领使用的根位置不会随悬浮来回跳动。
+        Vector3 hover = Vector3.up * (Mathf.Sin(Time.time * _hoverFrequency * Mathf.PI * 2f + _visualPhase) * _hoverAmplitude);
+        Quaternion spin = Quaternion.Euler(0f, Time.time * _spinSpeed, 0f);
+        if (_displayRoot != null)
+        {
+            _displayRoot.localPosition = _displayPosition + hover;
+            _displayRoot.localRotation = _displayRotation * spin;
+        }
+
+        if (_beacon != null)
+        {
+            _beacon.transform.localPosition = _beaconPosition + hover;
+            _beacon.transform.localRotation = _beaconRotation * spin;
+        }
+    }
+
+    private void ResetDisplayPose()
+    {
+        if (_displayRoot != null)
+        {
+            _displayRoot.localPosition = _displayPosition;
+            _displayRoot.localRotation = _displayRotation;
+        }
+
+        if (_beacon != null)
+        {
+            _beacon.transform.localPosition = _beaconPosition;
+            _beacon.transform.localRotation = _beaconRotation;
         }
     }
 

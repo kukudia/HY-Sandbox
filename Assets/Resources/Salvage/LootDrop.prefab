@@ -620,3 +620,8 @@ MonoBehaviour:
   _attractionRange: 100
   _displaySize: 0.8
   _showDropState: 1
+  _scatterSpeed: 2.5
+  _scatterDuration: 0.6
+  _hoverAmplitude: 0.12
+  _hoverFrequency: 0.8
+  _spinSpeed: 65

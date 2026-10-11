@@ -198,6 +198,23 @@
 | SpaceKitCurator | [`void RenderAllPreviews()`](../Assets/Editor/Art/SpaceKitCurator.cs#L546) | public static |
 | SpaceKitCurator | [`void RenderPreviews(int start, int count)`](../Assets/Editor/Art/SpaceKitCurator.cs#L548) | public static |
 
+## Assets/Editor/Bots/BotNavigationPlayProbe.cs
+
+// 职责：隔离 Play 场景执行机器人墙面、U 形围挡、惯性制动和移动 Home 回归验证。 // 入口：Run()；结果保存在 Temp/BotNavigation/PlayValidation.json；不修改作者场景或资产。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BotNavigationPlayProbe | [`void Run()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L30) | public static |
+| BotNavigationPlayProbe | [`void StateChanged(PlayModeStateChange state)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L49) | private static |
+| BotNavigationPlayProbe | [`void Capture(string condition, string stack, LogType type)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L97) | private static |
+| BotNavigationPlayProbe | [`void Tick()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L105) | private static |
+| BotNavigationPlayProbe | [`void TickCase()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L118) | private static |
+| BotNavigationPlayProbe | [`void StartCase()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L169) | private static |
+| BotNavigationPlayProbe | [`void Wall(Vector3 position, Vector3 scale)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L215) | private static |
+| BotNavigationPlayProbe | [`void Finish()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L224) | private static |
+| BotNavigationPlayProbe | [`void Restore()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L231) | private static |
+| BotNavigationPlayProbe | [`void WriteReport()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L240) | private static |
+
 ## Assets/Editor/Build/AutoBuildTool.cs
 
 // 职责：提供 Windows 玩家构建入口并设置输出参数。 // 入口：BuildWindows()。 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
@@ -517,25 +534,25 @@
 
 ## Assets/Scripts/Features/Bots/Bot.cs
 
-// 职责：保存无人机 Inspector 配置并组织任务飞行、返航、离家和精确停靠状态。 // 入口：派生机器人的 FixedUpdate → TickNavigation() → NavigateToTarget()/NavigateHomeSmoothly()。 // 依赖：BotFlightMotion 处理飞行/制动；BotObstacleAvoidance 与 BotHomeGuidance 负责探测。 // 不变量：homeOffset 保持 Home 局部坐标；停靠切为运动学刚体，完成后恢复准确局部姿态。
+// 职责：保存无人机 Inspector 配置并组织任务飞行、返航、离家和精确停靠状态。 // 入口：派生机器人的 FixedUpdate → TickNavigation() → NavigateToTarget()/NavigateHomeSmoothly()。 // 依赖：BotFlightMotion 处理飞行/制动；BotObstacleAvoidance 负责三维净空与脱困。 // 不变量：homeOffset 保持 Home 局部坐标；停靠切为运动学刚体，完成后恢复准确局部姿态。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Bot | [`void Start()`](../Assets/Scripts/Features/Bots/Bot.cs#L110) | protected virtual |
-| Bot | [`bool TickNavigation()`](../Assets/Scripts/Features/Bots/Bot.cs#L138) | protected |
-| Bot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Bot.cs#L151) | protected virtual |
-| Bot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/Bot.cs#L169) | protected virtual |
-| Bot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/Bot.cs#L173) | public virtual |
-| Bot | [`void InitializeTrail()`](../Assets/Scripts/Features/Bots/Bot.cs#L177) | private |
-| Bot | [`void LateUpdate()`](../Assets/Scripts/Features/Bots/Bot.cs#L197) | private |
-| Bot | [`void NavigateToTarget(Transform target)`](../Assets/Scripts/Features/Bots/Bot.cs#L210) | protected |
-| Bot | [`void NavigateHomeSmoothly()`](../Assets/Scripts/Features/Bots/Bot.cs#L230) | protected |
-| Bot | [`Vector3 GetRelativeHomeVelocity(Vector3 worldPosition)`](../Assets/Scripts/Features/Bots/Bot.cs#L274) | private |
-| Bot | [`void ReturnHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L280) | private |
-| Bot | [`void LeaveHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L316) | private |
-| Bot | [`void SetNavigationState(NavigationState nextState)`](../Assets/Scripts/Features/Bots/Bot.cs#L328) | private |
-| Bot | [`BotFlightMotion.Settings CreateFlightSettings()`](../Assets/Scripts/Features/Bots/Bot.cs#L348) | private |
-| Bot | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Bots/Bot.cs#L385) | private |
+| Bot | [`void Start()`](../Assets/Scripts/Features/Bots/Bot.cs#L129) | protected virtual |
+| Bot | [`bool TickNavigation()`](../Assets/Scripts/Features/Bots/Bot.cs#L157) | protected |
+| Bot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Bot.cs#L170) | protected virtual |
+| Bot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/Bot.cs#L188) | protected virtual |
+| Bot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/Bot.cs#L192) | public virtual |
+| Bot | [`void InitializeTrail()`](../Assets/Scripts/Features/Bots/Bot.cs#L196) | private |
+| Bot | [`void LateUpdate()`](../Assets/Scripts/Features/Bots/Bot.cs#L216) | private |
+| Bot | [`void NavigateToTarget(Transform target)`](../Assets/Scripts/Features/Bots/Bot.cs#L229) | protected |
+| Bot | [`void NavigateHomeSmoothly()`](../Assets/Scripts/Features/Bots/Bot.cs#L249) | protected |
+| Bot | [`Vector3 GetRelativeHomeVelocity(Vector3 worldPosition)`](../Assets/Scripts/Features/Bots/Bot.cs#L286) | private |
+| Bot | [`void ReturnHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L292) | private |
+| Bot | [`void LeaveHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L328) | private |
+| Bot | [`void SetNavigationState(NavigationState nextState)`](../Assets/Scripts/Features/Bots/Bot.cs#L340) | private |
+| Bot | [`BotFlightMotion.Settings CreateFlightSettings()`](../Assets/Scripts/Features/Bots/Bot.cs#L360) | private |
+| Bot | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Bots/Bot.cs#L387) | private |
 
 ## Assets/Scripts/Features/Bots/BotAvoidanceResult.cs
 
@@ -545,7 +562,7 @@
 
 ## Assets/Scripts/Features/Bots/BotAvoidanceSettings.cs
 
-// 职责：携带单次障碍采样的距离、权重、过滤条件；值来自 Bot Inspector。 // 单位：Range/Height 为世界单位，Force 为原有方向混合权重。
+// 职责：携带单次障碍采样的距离、权重、过滤条件；值来自 Bot Inspector。 // 单位：Range/Radius/ProgressDistance 为米，Timeout/HoldTime 为秒，BrakingAcceleration 为米/秒²。
 
 数据/配置/接口定义，无方法体。
 
@@ -564,26 +581,15 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BotFlightMotion | [`void ResetDirection()`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L48) | public |
-| BotFlightMotion | [`void ClearTarget()`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L53) | public |
+| BotFlightMotion | [`void ResetDirection()`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L44) | public |
+| BotFlightMotion | [`void ClearTarget()`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L49) | public |
 | BotFlightMotion | [`void NavigateToTarget(Transform target, Settings settings)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L58) | public |
-| BotFlightMotion | [`void NavigateHome( Transform home, Vector3 homeOffset, Vector3 approachPosition, Rigidbody homeRigidbody, float rangeScale, float maxAvoidanceAngle, Settings settings)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L71) | public |
-| BotFlightMotion | [`void NavigateToPosition( Vector3 targetPosition, Transform targetReference, Vector3 homeOffset, Rigidbody homeRigidbody, bool returningHome, float avoidanceRangeScale, float maxAvoidanceAngle, Settings settings)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L91) | private |
-| BotFlightMotion | [`void SampleGuidance( Transform targetReference, Vector3 homeOffset, Vector3 targetDirection, bool returningHome, float avoidanceRangeScale)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L111) | private |
-| BotFlightMotion | [`void UpdateDirectionAndSpeed(Vector3 targetDirection, float avoidanceRangeScale, float maxAvoidanceAngle)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L138) | private |
-| BotFlightMotion | [`void ApplyMovement(Vector3 targetPosition, Vector3 targetDirection, Rigidbody homeRigidbody, bool returningHome)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L167) | private |
-| BotFlightMotion | [`void ApplyReturnHomeMovement(Vector3 targetPosition, Vector3 targetDirection, float effectiveSpeed, Rigidbody homeRigidbody)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L186) | private |
-| BotFlightMotion | [`Vector3 BlendDirections(Vector3 targetDir, Vector3 avoidanceDir, float avoidanceStrength, float maxAvoidanceAngle)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L206) | private |
-
-## Assets/Scripts/Features/Bots/BotHomeGuidance.cs
-
-// 职责：从 Home 的实时停靠点向外探测净空，选取兼顾净空和机器人方位的返航方向。 // 入口：Evaluate()；返回世界方向与速度建议，不执行飞行或停靠。 // 不变量：忽略机器人与 Home 层级碰撞体；射线缓冲属于当前机器人。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| BotHomeGuidance | [`BotAvoidanceResult Evaluate(Transform home, Vector3 homeOffset, Vector3 targetDirection, float rangeScale, Settings settings)`](../Assets/Scripts/Features/Bots/BotHomeGuidance.cs#L27) | public |
-| BotHomeGuidance | [`float GetHomeGuidanceClearFraction(Vector3 origin, Vector3 direction, float range)`](../Assets/Scripts/Features/Bots/BotHomeGuidance.cs#L82) | private |
-| BotHomeGuidance | [`bool IsIgnoredHomeGuidanceCollider(Collider collider)`](../Assets/Scripts/Features/Bots/BotHomeGuidance.cs#L106) | private |
+| BotFlightMotion | [`void NavigateHome( Transform home, Vector3 approachPosition, Rigidbody homeRigidbody, float rangeScale, Settings settings)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L69) | public |
+| BotFlightMotion | [`void NavigateToPosition( Vector3 targetPosition, Transform targetReference, Rigidbody homeRigidbody, bool returningHome, float avoidanceRangeScale, Settings settings)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L85) | private |
+| BotFlightMotion | [`void SampleGuidance( Transform targetReference, Vector3 targetDirection, float targetDistance, float avoidanceRangeScale)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L107) | private |
+| BotFlightMotion | [`void UpdateDirectionAndSpeed(Vector3 targetDirection, float avoidanceRangeScale)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L129) | private |
+| BotFlightMotion | [`void ApplyMovement(Vector3 targetPosition, Vector3 targetDirection, Rigidbody homeRigidbody, bool returningHome)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L154) | private |
+| BotFlightMotion | [`void ApplyReturnHomeMovement(Vector3 targetPosition, Vector3 targetDirection, float effectiveSpeed, Rigidbody homeRigidbody)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L178) | private |
 
 ## Assets/Scripts/Features/Bots/BotNavigationGizmos.cs
 
@@ -595,17 +601,22 @@
 
 ## Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs
 
-// 职责：采样环形射线、近邻碰撞体和速度前方障碍，并合成原有三档避障结果。 // 入口：Evaluate()；BotFlightMotion 按固定间隔调用，不修改刚体或导航状态。 // 生命周期：每台机器人拥有自己的非分配缓冲；DebugHits 只描述最近一次障碍采样。
+// 职责：用机器人半径探测三维净空，保持绕障方向，并在没有目标进展时选择脱困路线。 // 入口：Evaluate() 采样导航，ConstrainVelocity() 在每个物理帧阻止继续朝近处障碍加速。 // 生命周期：每台机器人拥有独立缓冲和绕障记忆；切换目标时 Reset() 清理旧路线。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BotObstacleAvoidance | [`void ClearDebugHits()`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L49) | public |
-| BotObstacleAvoidance | [`BotAvoidanceResult Evaluate( Transform target, Vector3 velocity, Vector3 targetDirection, float rangeScale, BotAvoidanceSettings settings)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L55) | public |
-| BotObstacleAvoidance | [`void SampleRadialRays(ref Forces forces)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L84) | private |
-| BotObstacleAvoidance | [`void SampleNearbyColliders(ref Forces forces)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L105) | private |
-| BotObstacleAvoidance | [`void SampleForwardPrediction(Vector3 velocity, Vector3 targetDirection, ref Forces forces)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L137) | private |
-| BotObstacleAvoidance | [`void AccumulateRayHit(RaycastHit hit, ref Forces forces)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L166) | private |
-| BotObstacleAvoidance | [`BotAvoidanceResult CombineForces(Forces forces)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L204) | private |
+| BotObstacleAvoidance | [`void Reset()`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L46) | public |
+| BotObstacleAvoidance | [`void ClearDebugHits()`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L57) | public |
+| BotObstacleAvoidance | [`BotAvoidanceResult Evaluate( Transform target, Vector3 velocity, Vector3 targetDirection, float rangeScale, BotAvoidanceSettings settings, float targetDistance = float.PositiveInfinity)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L63) | public |
+| BotObstacleAvoidance | [`bool CheckProgress(float targetDistance)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L147) | private |
+| BotObstacleAvoidance | [`Vector3 ChooseClearDirection(Vector3 targetDirection, float range, bool stalled)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L158) | private |
+| BotObstacleAvoidance | [`void ConsiderDirection( Vector3 candidate, Vector3 targetDirection, float range, bool stalled, ref float bestScore, ref Vector3 bestDirection)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L202) | private |
+| BotObstacleAvoidance | [`Vector3 ConstrainVelocity(Vector3 desiredVelocity, float deltaTime, Vector3 currentVelocity, float brakingAcceleration)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L223) | public |
+| BotObstacleAvoidance | [`Vector3 LimitApproachSpeed(Vector3 desiredVelocity, Vector3 corridor, float lookAhead, float margin, float acceleration)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L249) | private |
+| BotObstacleAvoidance | [`float GetClearDistance(Vector3 direction, float range)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L266) | private |
+| BotObstacleAvoidance | [`bool Cast(Vector3 direction, float range, out RaycastHit nearest)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L271) | private |
+| BotObstacleAvoidance | [`bool TryGetOverlapEscape(out Vector3 escape)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L304) | private |
+| BotObstacleAvoidance | [`bool IsIgnored(Collider collider)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L359) | private |
 
 ## Assets/Scripts/Features/Bots/CollectionBot.cs
 
@@ -1286,6 +1297,16 @@
 | AbnormalImpulseRecorder | [`void OnDestroy()`](../Assets/Scripts/Features/Diagnostics/AbnormalImpulseRecorder.cs#L203) | private |
 | AbnormalImpulseRecorderBootstrap | [`void OnPlayModeChanged(PlayModeStateChange state)`](../Assets/Scripts/Features/Diagnostics/AbnormalImpulseRecorder.cs#L221) | private static |
 | AbnormalImpulseRecorderBootstrap | [`void EnsureSession()`](../Assets/Scripts/Features/Diagnostics/AbnormalImpulseRecorder.cs#L229) | private static |
+
+## Assets/Scripts/Features/Diagnostics/BotNavigationProbeDriver.cs
+
+// 职责：在探针物理帧调用生产导航并记录到达、碰撞和爬升，不影响真实机器人任务。 // 入口：BotNavigationPlayProbe.Initialize() 创建一次性驱动；只在 Editor Play 验证使用。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BotNavigationProbeDriver | [`void Initialize(string caseName, Transform target, Rigidbody body, Rigidbody home, Bot authored)`](../Assets/Scripts/Features/Diagnostics/BotNavigationProbeDriver.cs#L36) | public |
+| BotNavigationProbeDriver | [`void FixedUpdate()`](../Assets/Scripts/Features/Diagnostics/BotNavigationProbeDriver.cs#L70) | private |
+| BotNavigationProbeDriver | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Diagnostics/BotNavigationProbeDriver.cs#L97) | private |
 
 ## Assets/Scripts/Features/Diagnostics/DebugManager.cs
 
@@ -2004,22 +2025,24 @@
 
 ## Assets/Scripts/Features/Salvage/LootDrop.cs
 
-// 职责：维护掉落物品身份、携带/认领状态及可拾取表现。 // 入口：Spawn() / Initialize() / Claim()。
+// 职责：维护掉落物品身份、携带/认领、吸附入库，以及散落悬浮和文字遮挡表现。 // 入口：Spawn() / Initialize() / Claim()。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| LootDrop | [`void OnEnable()`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L46) | private |
-| LootDrop | [`void OnDisable()`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L51) | private |
-| LootDrop | [`void Start()`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L57) | private |
-| LootDrop | [`LootDrop Spawn(CargoItem item, Vector3 position)`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L65) | public static |
-| LootDrop | [`void Initialize(CargoItem item)`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L114) | public |
-| LootDrop | [`void RefreshLabel()`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L143) | private |
-| LootDrop | [`bool Claim(CollectionBot bot, CargoHold destination)`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L154) | public |
-| LootDrop | [`void Carry(Transform socket)`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L166) | public |
-| LootDrop | [`void Release()`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L178) | public |
-| LootDrop | [`bool Deliver(CargoHold hold)`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L195) | public |
-| LootDrop | [`void Update()`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L225) | private |
-| LootDrop | [`void ClearSession()`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L269) | public static |
+| LootDrop | [`void OnEnable()`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L64) | private |
+| LootDrop | [`void OnDisable()`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L69) | private |
+| LootDrop | [`void Start()`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L75) | private |
+| LootDrop | [`LootDrop Spawn(CargoItem item, Vector3 position)`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L83) | public static |
+| LootDrop | [`void Initialize(CargoItem item)`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L132) | public |
+| LootDrop | [`void RefreshLabel()`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L177) | private |
+| LootDrop | [`bool Claim(CollectionBot bot, CargoHold destination)`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L188) | public |
+| LootDrop | [`void Carry(Transform socket)`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L200) | public |
+| LootDrop | [`void Release()`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L214) | public |
+| LootDrop | [`bool Deliver(CargoHold hold)`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L231) | public |
+| LootDrop | [`void Update()`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L261) | private |
+| LootDrop | [`void LateUpdate()`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L320) | private |
+| LootDrop | [`void ResetDisplayPose()`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L364) | private |
+| LootDrop | [`void ClearSession()`](../Assets/Scripts/Features/Salvage/LootDrop.cs#L379) | public static |
 
 ## Assets/Scripts/Features/Salvage/SalvageSettings.cs
 
@@ -2034,7 +2057,7 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | WreckSalvage | [`void Convert(Block block)`](../Assets/Scripts/Features/Salvage/WreckSalvage.cs#L10) | public static |
-| WreckSalvage | [`void ConvertGroup(ControlUnit unit)`](../Assets/Scripts/Features/Salvage/WreckSalvage.cs#L56) | public static |
+| WreckSalvage | [`void ConvertGroup(ControlUnit unit)`](../Assets/Scripts/Features/Salvage/WreckSalvage.cs#L62) | public static |
 
 ## Assets/Scripts/Features/Simulation/Block.cs
 

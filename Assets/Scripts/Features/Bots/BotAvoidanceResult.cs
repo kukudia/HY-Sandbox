@@ -5,6 +5,7 @@ using UnityEngine;
 public struct BotAvoidanceResult
 {
     public Vector3 Direction;
+    public bool OverrideDirection;
     public float Strength;
     public float SpeedMultiplier;
     public int ObstacleCount;

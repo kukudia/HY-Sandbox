@@ -48,6 +48,12 @@ public class WreckSalvage : MonoBehaviour
         SalvageSettings settings = Settings;
         string path = string.IsNullOrEmpty(block.resourcePath) ? string.Empty : BuildManager.ConvertToResourcesPath(block.resourcePath);
         bool special = settings != null && settings.specialPartResources != null && System.Array.Exists(settings.specialPartResources, p => BuildManager.ConvertToResourcesPath(p) == path) && Random.value < settings.specialPartChance;
+        // 先判定部件存活，再判定金币；认领和货仓内已有物品不参与爆率抽签。
+        if (!special && Random.value >= (settings != null ? settings.coinDropChance : 0.3f))
+        {
+            return;
+        }
+
         LootDrop.Spawn(
             new CargoItem { kind = special ? CargoKind.SpecialPart : CargoKind.Coins, resourcePath = special ? path : string.Empty, amount = special ? 1 : settings != null ? Mathf.Max(1, settings.coinsPerBlock) : 2 },
             block.transform.position);

@@ -72,6 +72,7 @@
     <Compile Include="Assets\Editor\Presentation\InterfaceBaker.cs" />
     <Compile Include="Assets\Editor\Diagnostics\PhysicsSandboxProbe.cs" />
     <Compile Include="Assets\Editor\Combat\CombatHudPlayProbe.cs" />
+    <Compile Include="Assets\Editor\Bots\BotNavigationPlayProbe.cs" />
     <Compile Include="Assets\Editor\Art\BlockArtPreview.cs" />
     <Compile Include="Assets\Editor\Presentation\SceneCameraPreviewSync.cs" />
     <Compile Include="Assets\Editor\Building\BuildInteractionSetup.cs" />

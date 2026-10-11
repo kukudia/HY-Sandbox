@@ -85,9 +85,9 @@ public static class BotNavigationGizmos
         }
 
         UnityEditor.Handles.Label(
-            transform.position + Vector3.up * 3f,
-            $"{currentState}",
-            new GUIStyle { fontSize = 14, normal = new GUIStyleState { textColor = labelColor } });
+transform.position + Vector3.up * 3f,
+$"{currentState}",
+new GUIStyle { fontSize = 14, normal = new GUIStyleState { textColor = labelColor } });
 #endif
     }
 }

@@ -1,18 +1,16 @@
 // 职责：携带单次障碍采样的距离、权重、过滤条件；值来自 Bot Inspector。
-// 单位：Range/Height 为世界单位，Force 为原有方向混合权重。
+// 单位：Range/Radius/ProgressDistance 为米，Timeout/HoldTime 为秒，BrakingAcceleration 为米/秒²。
 using UnityEngine;
 
 public struct BotAvoidanceSettings
 {
     public LayerMask ObstacleMask;
+    public float ClearanceRadius;
+    public float StuckTimeout;
+    public float ProgressDistance;
+    public float DetourHoldTime;
     public float EmergencyRange;
-    public float PrimaryRange;
     public float PredictiveRange;
-    public float EmergencyForce;
-    public float PrimaryForce;
-    public float PredictiveForce;
+    public float BrakingAcceleration;
     public int RayCount;
-    public float GroundNormalThreshold;
-    public float GroundHeightThreshold;
-    public float SpeedDampingFactor;
 }

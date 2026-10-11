@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Settings
   m_EditorClassIdentifier: Assembly-CSharp::SalvageSettings
   coinsPerBlock: 2
-  specialPartChance: 0.2
+  specialPartChance: 0.08
+  coinDropChance: 0.3
   specialPartResources:
   - Blocks/PowerGeneratingUnit
   - Blocks/Turret

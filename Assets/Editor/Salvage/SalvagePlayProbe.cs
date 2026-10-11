@@ -232,6 +232,49 @@ public static class SalvagePlayProbe
         var build = new GameObject("Salvage test build").AddComponent<BuildManager>();
         build.enabled = false;
         build.blockLayer = LayerMask.GetMask("Block");
+        camera.transform.position = new Vector3(0f, 50f, 0f);
+        foreach (CargoItem item in new[]
+        {
+            Coins(2),
+            new CargoItem
+            {
+                kind = CargoKind.Technology,
+                amount = 2
+            },
+            Part()
+        }
+
+        )
+        {
+            var visualDrop = LootDrop.Spawn(item, new Vector3(0f, 50f, 10f));
+            Vector3 startPosition = visualDrop.transform.position;
+            Transform display = visualDrop.transform.Find("Item display");
+            Quaternion startRotation = display.localRotation;
+            yield return 0.35f;
+            TextMesh label = visualDrop.GetComponentInChildren<TextMesh>(true);
+            Check(item.kind + " label visible without obstacle", label.gameObject.activeSelf);
+            Check(
+                item.kind + " scatters and rotates",
+                (visualDrop.transform.position - startPosition).sqrMagnitude > 0.001f && Quaternion.Angle(startRotation, display.localRotation) > 1f);
+            var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            wall.transform.position = new Vector3(0f, 50f, 5f);
+            wall.transform.localScale = new Vector3(10f, 10f, 0.5f);
+            Physics.SyncTransforms();
+            yield return 0.1f;
+            Check(item.kind + " label shares icon occlusion", !label.gameObject.activeSelf);
+            wall.SetActive(false);
+            yield return 0.1f;
+            Check(item.kind + " label reappears after obstacle removal", label.gameObject.activeSelf);
+            Vector3 behind = camera.transform.position - Vector3.forward * 10f;
+            visualDrop.transform.position = behind;
+            yield return 0.1f;
+            Check(item.kind + " label hidden behind camera", !label.gameObject.activeSelf);
+            Object.Destroy(wall);
+            LootDrop.ClearSession();
+            yield return 0.1f;
+        }
+
+        camera.transform.position = Vector3.zero;
         var owner = Unit("Salvage owner", Vector3.zero, UnitFaction.Player);
         var hold = Spawn("CargoHold", owner, new Vector3(3, 0, 0)).GetComponent<CargoHold>();
         var coins = Spawn("CoinHold", owner, new Vector3(0, 0, -3)).GetComponent<CargoHold>();
@@ -315,6 +358,10 @@ public static class SalvagePlayProbe
         }
 
         Check("Drone picked up cargo for bay destruction test", doomedBot.HasCargo);
+        Transform carriedDisplay = carriedDrop.transform.Find("Item display");
+        Check(
+            "Carried display restores socket pose",
+            carriedDisplay.localPosition.sqrMagnitude < 0.0001f && Quaternion.Angle(carriedDisplay.localRotation, Quaternion.identity) < 0.01f);
         // Isolate destruction from unrelated player's group reconstruction in this probe.
         doomedBay.transform.SetParent(null, true);
         DestroyManager.instance.DestroyGameObject(doomedBay);
@@ -409,11 +456,32 @@ public static class SalvagePlayProbe
         Check("Enemy currency spill disabled by prefab default", LootDrop.Active.Count() == 0);
         var wreck = Unit("Enemy wreck", new Vector3(40, 0, 0), UnitFaction.Enemy, false);
         var ordinary = Spawn("1x1x1", wreck, Vector3.zero).GetComponent<Block>();
-        WreckSalvage.Convert(ordinary);
-        WreckSalvage.Convert(ordinary);
+        SalvageSettings settings = WreckSalvage.Settings;
         Check(
-            "Ordinary enemy wreck converts to coins exactly once",
-            LootDrop.Active.Count() == 1 && LootDrop.Active.First().Item.kind == CargoKind.Coins);
+            "Reduced authored drop rates",
+            settings.coinDropChance == 0.3f && settings.specialPartChance == 0.08f);
+        float coinChance = settings.coinDropChance;
+        try
+        {
+            settings.coinDropChance = 1f;
+            WreckSalvage.Convert(ordinary);
+            WreckSalvage.Convert(ordinary);
+            Check(
+                "Guaranteed coin drop converts exactly once",
+                LootDrop.Active.Count() == 1 && LootDrop.Active.First().Item.kind == CargoKind.Coins);
+            LootDrop.ClearSession();
+            settings.coinDropChance = 0f;
+            var empty = Spawn("1x1x1", wreck, Vector3.right * 2f).GetComponent<Block>();
+            WreckSalvage.Convert(empty);
+            settings.coinDropChance = 1f;
+            WreckSalvage.Convert(empty);
+            Check("Zero coin chance stays empty on repeat conversion", !LootDrop.Active.Any());
+        }
+        finally
+        {
+            settings.coinDropChance = coinChance;
+        }
+
         LootDrop.ClearSession();
         var playerWreck = Unit("Player wreck", new Vector3(45, 0, 0), UnitFaction.Player, false);
         WreckSalvage.Convert(Spawn("1x1x1", playerWreck, Vector3.zero).GetComponent<Block>());

@@ -121,7 +121,6 @@
     <Compile Include="Assets\Scripts\Features\Combat\DestroyManager.cs" />
     <Compile Include="Assets\Scripts\Features\Salvage\SalvageSettings.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\EnemyController.cs" />
-    <Compile Include="Assets\Scripts\Features\Bots\BotHomeGuidance.cs" />
     <Compile Include="Assets\Scripts\Features\Salvage\CargoItem.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\ControlUnit.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\MainUIButtons.cs" />
@@ -181,6 +180,7 @@
     <Compile Include="Assets\Scripts\Features\Simulation\RuntimeGroupCleanup.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Meteor.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BlueprintLoadSettings.cs" />
+    <Compile Include="Assets\Scripts\Features\Diagnostics\BotNavigationProbeDriver.cs" />
     <Compile Include="Assets\Scripts\Features\Building\SaveUIPanel.cs" />
     <Compile Include="Assets\Layer Lab\Scripts\PanelView.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\CargoHoldView.cs" />

@@ -288,7 +288,7 @@ def main():
     )
     graph(
         "维修、回收和移动 Home 返航",
-        "机器人使用 Home 实时停靠点与刚体点速度。维修目标扫描、导航施力、障碍规则和光束呈现分离。取消任务释放认领。",
+        "机器人使用 Home 实时停靠点与刚体点速度；任务与返航均从机体做净空检测，持续绕障并在停滞后脱困。取消任务释放认领。",
         {
             "A": "RepairBot.FixedUpdate",
             "B": "Bot.TickNavigation",
@@ -306,7 +306,7 @@ def main():
             "N": "CollectionBot.ReturnCargo",
             "O": "Bot.NavigateHomeSmoothly",
             "P": "BotFlightMotion.NavigateHome",
-            "Q": "BotHomeGuidance.Evaluate",
+            "Q": "BotObstacleAvoidance.ConstrainVelocity",
             "R": "Bot.ReturnHome",
             "S": "LootDrop.Deliver",
             "T": "CollectionBot.Abandon",
@@ -317,6 +317,7 @@ def main():
             "A --> D",
             "D --> E",
             "E -->|经 SampleGuidance| F",
+            "E -->|每物理帧经 ApplyMovement| Q",
             "A --> G",
             "A --> H",
             "I --> B",
@@ -328,10 +329,36 @@ def main():
             "I --> N",
             "N --> O",
             "O --> P",
-            "P -->|经 SampleGuidance| Q",
+            "P -->|每物理帧经 ApplyReturnHomeMovement| Q",
+            "P -->|机体净空与脱困| F",
             "O -->|可停靠| R",
             "N -->|完成停靠| S",
             "N --> T",
+        ],
+    )
+    graph(
+        "掉落概率、表现与文字遮挡",
+        "敌方残骸先抽稀有部件，再抽金币；货仓存量不受爆率影响。Update散落/吸附，LateUpdate更新表现和与Icon共用的遮挡查询；Carry停止散落并还原显示姿态。",
+        {
+            "A": "WreckSalvage.Convert",
+            "B": "LootDrop.Spawn",
+            "C": "LootDrop.Initialize",
+            "D": "LootDrop.Update",
+            "E": "LootDrop.LateUpdate",
+            "F": "CombatHud.IsWorldPointOccluded",
+            "G": "LootDrop.Carry",
+            "H": "LootDrop.ResetDisplayPose",
+            "I": "LootDrop.Deliver",
+            "J": "LootDrop.Release",
+        },
+        [
+            "A -->|通过掉落抽签| B",
+            "B -->|新建时| C",
+            "D -->|货币吸附到达| I",
+            "E -->|屏幕内文字| F",
+            "E -->|携带或非游玩| H",
+            "G --> H",
+            "I --> J",
         ],
     )
     graph(
