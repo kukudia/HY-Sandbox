@@ -92,3 +92,6 @@ Assets/UNI VFX.meta
 # Python bytecode from the blueprint tooling under Blueprints/
 __pycache__/
 *.pyc
+/Unity面试准备
+jianying_ui_tree.json
+@AutomationLog.txt
