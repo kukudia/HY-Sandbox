@@ -2,6 +2,8 @@
 
 最近整理：2026-10-11；Unity 6000.3.11f1；URP；Input System；运行时类型保持全局命名空间。
 
+2026-10-11 推进器关机：主/通用/悬浮推进器撤销功率请求后，目标输出为零，实际推力按 `maxThrustChangeRate × fixedDeltaTime` 衰减并继续施加尾段力；喷焰跟随实际推力。悬浮控制器只提交目标，限速统一在 HoverThruster.FixedUpdate 执行，避免直接清零或重复限速。退出游玩、组件禁用或悬浮归属失效仍清零。ThrusterInfoPanel 仅对请求工作的推进器判定缺电，空闲文字为白色。验证记录见 `Docs/Validation/2026-10-11-thruster-shutdown.json`。
+
 2026-10-11 炮塔目录与敌机：单/双管按钮名称移除 `(Clone)`，目录 Prefab 和 Main 已保存条目采用原 TurretButton 的暗色描边、按钮状态颜色与缩放反馈；Awake 按 BlockName 复用场景条目并绑定一次点击，避免重复生成/监听。CODEX 三艘敌机前方保持双激光、后方改为单管与双管实体炮塔；仓库及 EnemyBlueprints 同步迁移，安装文件已有哈希备份。验证见 `Docs/Validation/2026-10-11-turret-palette-enemies.json`；历史飞行数据不代表本次布局实飞结果。
 
 先按功能找入口，再沿函数图进入规则实现。全部自有运行时脚本位于 `Assets/Scripts/Features`，Editor 制作/验证工具按功能分目录。第三方素材和 Package 源码不属于本轮重构。

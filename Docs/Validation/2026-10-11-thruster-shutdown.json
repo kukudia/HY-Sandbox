@@ -1,0 +1,109 @@
+{
+  "unity": "6000.3.11f1",
+  "scene": "Assets/Scenes/Main.unity",
+  "scriptCompilation": "passed",
+  "playMode": {
+    "prefabCallbacks": {
+      "prefabs": [
+        "MainThruster",
+        "MainThrusterBig",
+        "UniversalThruster",
+        "UniversalThrusterBig",
+        "HoverThruster",
+        "HoverThrusterBig"
+      ],
+      "initialThrust": 10,
+      "rate": 10,
+      "fixedDeltaTime": 0.02,
+      "firstShutdownThrust": 9.8,
+      "settledToZero": true,
+      "controllerStopPreservesHistory": true,
+      "idlePower": 0,
+      "textColors": {
+        "idle": "white",
+        "zeroSupplyRequested": "red",
+        "halfSupplyRequested": "amber",
+        "fullSupplyRequested": "white"
+      }
+    },
+    "realFrames": {
+      "passed": true,
+      "totalSamples": 168,
+      "types": [
+        {
+          "type": "MainThruster",
+          "samples": 56,
+          "maxThrustError": 3.815000000040314e-05,
+          "maxSpeed": 4.900003,
+          "maxRequestedPower": 0.0,
+          "first": {
+            "type": "MainThruster",
+            "elapsed": 0.0999984741,
+            "thrust": 9.000001,
+            "expected": 9.000015,
+            "speed": 0.93999964,
+            "idlePower": 0.0
+          },
+          "last": {
+            "type": "MainThruster",
+            "elapsed": 1.22000122,
+            "thrust": 0.0,
+            "expected": 0.0,
+            "speed": 4.900003,
+            "idlePower": 0.0
+          }
+        },
+        {
+          "type": "UniversalThruster",
+          "samples": 56,
+          "maxThrustError": 3.815000000040314e-05,
+          "maxSpeed": 4.900003,
+          "maxRequestedPower": 0.0,
+          "first": {
+            "type": "UniversalThruster",
+            "elapsed": 0.0999984741,
+            "thrust": 9.000001,
+            "expected": 9.000015,
+            "speed": 0.93999964,
+            "idlePower": 0.0
+          },
+          "last": {
+            "type": "UniversalThruster",
+            "elapsed": 1.22000122,
+            "thrust": 0.0,
+            "expected": 0.0,
+            "speed": 4.900003,
+            "idlePower": 0.0
+          }
+        },
+        {
+          "type": "HoverThruster",
+          "samples": 56,
+          "maxThrustError": 3.815000000040314e-05,
+          "maxSpeed": 2.78034782,
+          "maxRequestedPower": 0.0,
+          "first": {
+            "type": "HoverThruster",
+            "elapsed": 0.0999984741,
+            "thrust": 9.000001,
+            "expected": 9.000015,
+            "speed": 0.934697151,
+            "idlePower": 0.0
+          },
+          "last": {
+            "type": "HoverThruster",
+            "elapsed": 1.22000122,
+            "thrust": 0.0,
+            "expected": 0.0,
+            "speed": 2.042635,
+            "idlePower": 0.0
+          }
+        }
+      ]
+    }
+  },
+  "limits": [
+    "No full vehicle long-duration flight test",
+    "No manual visual inspection of nozzle fade or panel colors"
+  ]
+}

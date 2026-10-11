@@ -1491,13 +1491,13 @@
 | HoverFlightController | [`bool HasActiveHoverThruster()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L157) | private |
 | HoverFlightController | [`void StopControlOutput()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L170) | private |
 | HoverFlightController | [`void ClearHoverThrust()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L177) | private |
-| HoverFlightController | [`bool EnsureControllerReady()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L203) | private |
-| HoverFlightController | [`void RefreshCachedPhysicsValues()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L244) | private |
-| HoverFlightController | [`void RefreshTiltLimitCache()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L271) | private |
-| HoverFlightController | [`void RebuildThrusterCache()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L277) | private |
-| HoverFlightController | [`void DistributeThrust(float heightAdjustment, Vector3 currentUp)`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L349) | private |
-| HoverFlightController | [`void ApplyRotationCorrection(Vector3 currentUp, float outputEfficiency)`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L391) | private |
-| HoverFlightController | [`void OnDrawGizmosSelected()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L406) | private |
+| HoverFlightController | [`bool EnsureControllerReady()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L202) | private |
+| HoverFlightController | [`void RefreshCachedPhysicsValues()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L243) | private |
+| HoverFlightController | [`void RefreshTiltLimitCache()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L270) | private |
+| HoverFlightController | [`void RebuildThrusterCache()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L276) | private |
+| HoverFlightController | [`void DistributeThrust(float heightAdjustment, Vector3 currentUp)`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L348) | private |
+| HoverFlightController | [`void ApplyRotationCorrection(Vector3 currentUp, float outputEfficiency)`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L389) | private |
+| HoverFlightController | [`void OnDrawGizmosSelected()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L404) | private |
 
 ## Assets/Scripts/Features/Flight/HoverThruster.cs
 
@@ -1505,7 +1505,8 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| HoverThruster | [`void FixedUpdate()`](../Assets/Scripts/Features/Flight/HoverThruster.cs#L10) | private |
+| HoverThruster | [`void SetControlledThrust(float desiredThrust)`](../Assets/Scripts/Features/Flight/HoverThruster.cs#L11) | public |
+| HoverThruster | [`void FixedUpdate()`](../Assets/Scripts/Features/Flight/HoverThruster.cs#L16) | private |
 | HoverThruster | [`void ApplyThrust()`](../Assets/Scripts/Features/Flight/HoverThruster.cs#L46) | public virtual |
 | HoverThruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/HoverThruster.cs#L57) | public override |
 
@@ -1534,17 +1535,17 @@
 | Thruster | [`bool TryEnsureRigidbody()`](../Assets/Scripts/Features/Flight/Thruster.cs#L69) | protected |
 | Thruster | [`bool IsPlayModeActive()`](../Assets/Scripts/Features/Flight/Thruster.cs#L79) | protected |
 | Thruster | [`bool HasValidRuntimeOwner()`](../Assets/Scripts/Features/Flight/Thruster.cs#L84) | protected |
-| Thruster | [`void CacheLocalReferences()`](../Assets/Scripts/Features/Flight/Thruster.cs#L104) | protected |
-| Thruster | [`void ApplyThrustChangeRateLimit()`](../Assets/Scripts/Features/Flight/Thruster.cs#L113) | public virtual |
-| Thruster | [`void SetPowerRequested(bool requested)`](../Assets/Scripts/Features/Flight/Thruster.cs#L134) | protected |
-| Thruster | [`void OnDisable()`](../Assets/Scripts/Features/Flight/Thruster.cs#L144) | protected virtual |
-| Thruster | [`bool CanApplyThrust()`](../Assets/Scripts/Features/Flight/Thruster.cs#L151) | protected |
-| Thruster | [`float GetPowerEfficiency()`](../Assets/Scripts/Features/Flight/Thruster.cs#L156) | private |
-| Thruster | [`void VisualizeThrust()`](../Assets/Scripts/Features/Flight/Thruster.cs#L166) | public virtual |
-| Thruster | [`void VisualizeThrust(bool forceUpdate)`](../Assets/Scripts/Features/Flight/Thruster.cs#L171) | public virtual |
-| Thruster | [`void DisableLegacyLineRenderer()`](../Assets/Scripts/Features/Flight/Thruster.cs#L209) | private |
-| Thruster | [`void EnsureVisualEffect()`](../Assets/Scripts/Features/Flight/Thruster.cs#L218) | private |
-| Thruster | [`Vector3 GetNormalizedThrustDirection()`](../Assets/Scripts/Features/Flight/Thruster.cs#L233) | private |
+| Thruster | [`void CacheLocalReferences()`](../Assets/Scripts/Features/Flight/Thruster.cs#L117) | protected |
+| Thruster | [`void ApplyThrustChangeRateLimit()`](../Assets/Scripts/Features/Flight/Thruster.cs#L126) | public virtual |
+| Thruster | [`void SetPowerRequested(bool requested)`](../Assets/Scripts/Features/Flight/Thruster.cs#L136) | protected |
+| Thruster | [`void OnDisable()`](../Assets/Scripts/Features/Flight/Thruster.cs#L146) | protected virtual |
+| Thruster | [`bool CanApplyThrust()`](../Assets/Scripts/Features/Flight/Thruster.cs#L153) | protected |
+| Thruster | [`float GetPowerEfficiency()`](../Assets/Scripts/Features/Flight/Thruster.cs#L159) | private |
+| Thruster | [`void VisualizeThrust()`](../Assets/Scripts/Features/Flight/Thruster.cs#L169) | public virtual |
+| Thruster | [`void VisualizeThrust(bool forceUpdate)`](../Assets/Scripts/Features/Flight/Thruster.cs#L174) | public virtual |
+| Thruster | [`void DisableLegacyLineRenderer()`](../Assets/Scripts/Features/Flight/Thruster.cs#L212) | private |
+| Thruster | [`void EnsureVisualEffect()`](../Assets/Scripts/Features/Flight/Thruster.cs#L221) | private |
+| Thruster | [`Vector3 GetNormalizedThrustDirection()`](../Assets/Scripts/Features/Flight/Thruster.cs#L236) | private |
 
 ## Assets/Scripts/Features/Flight/ThrusterAllocator.cs
 
@@ -1580,10 +1581,10 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| ThrusterVisualEffect | [`void Initialize(Thruster owner)`](../Assets/Scripts/Features/Flight/ThrusterVisualEffect.cs#L17) | public |
-| ThrusterVisualEffect | [`void SetThrust(float thrustRatio, Vector3 thrustDirection)`](../Assets/Scripts/Features/Flight/ThrusterVisualEffect.cs#L26) | public |
-| ThrusterVisualEffect | [`void LateUpdate()`](../Assets/Scripts/Features/Flight/ThrusterVisualEffect.cs#L32) | private |
-| ThrusterVisualEffect | [`void OnDisable()`](../Assets/Scripts/Features/Flight/ThrusterVisualEffect.cs#L49) | private |
+| ThrusterVisualEffect | [`void Initialize(Thruster owner)`](../Assets/Scripts/Features/Flight/ThrusterVisualEffect.cs#L16) | public |
+| ThrusterVisualEffect | [`void SetThrust(float thrustRatio, Vector3 thrustDirection)`](../Assets/Scripts/Features/Flight/ThrusterVisualEffect.cs#L21) | public |
+| ThrusterVisualEffect | [`void LateUpdate()`](../Assets/Scripts/Features/Flight/ThrusterVisualEffect.cs#L27) | private |
+| ThrusterVisualEffect | [`void OnDisable()`](../Assets/Scripts/Features/Flight/ThrusterVisualEffect.cs#L44) | private |
 
 ## Assets/Scripts/Features/Flight/UniversalThruster.cs
 

@@ -7,6 +7,12 @@ public class HoverThruster : Thruster
     public float rotationSpeed = 5f;
     public float heightP;
     public bool isHovered;
+    private float _controlledThrust;
+    public void SetControlledThrust(float desiredThrust)
+    {
+        _controlledThrust = Mathf.Max(0f, desiredThrust);
+    }
+
     private void FixedUpdate()
     {
         if (!IsPlayModeActive())
@@ -28,18 +34,12 @@ public class HoverThruster : Thruster
             return;
         }
 
-        SetPowerRequested(ShouldActivate());
-        if (controlUnit.hoverFlightController != null)
-        {
-            ApplyThrust();
-        }
-        else
-        {
-            thrust = ShouldActivate() ? maxThrust * 0.75f : 0;
-            ApplyThrustChangeRateLimit();
-            ApplyThrust();
-        }
-
+        bool active = ShouldActivate();
+        SetPowerRequested(active);
+        thrust = active ? controlUnit.hoverFlightController != null ? _controlledThrust : maxThrust * 0.75f : 0f;
+        // 控制器只提交目标；由推进器每个物理帧限速一次，避免关机被重复衰减或覆盖。
+        ApplyThrustChangeRateLimit();
+        ApplyThrust();
         VisualizeThrust();
     }
 

@@ -177,7 +177,8 @@ public sealed class ThrusterInfoPanel : MonoBehaviour
     {
         row.root.gameObject.SetActive(true);
         row.root.anchoredPosition = new Vector2(0f, -index * 62f);
-        float efficiency = thruster.PowerEfficiency;
+        // 空闲负载不申请电力，零分配不能作为缺电；仅对正在请求工作的推进器报警。
+        float efficiency = thruster.IsPowerRequested ? thruster.PowerEfficiency : 1f;
         Color state = efficiency <= 0f ? new Color(1f, 0.36f, 0.33f) : efficiency < 0.999f ? new Color(1f, 0.81f, 0.34f) : Color.white;
         row.name.text = thruster.name;
         row.name.color = state;

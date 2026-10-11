@@ -13,14 +13,9 @@ public class ThrusterVisualEffect : MonoBehaviour
     private float _target;
     private float _value;
     private Thruster _owner;
-    private Power _power;
     public void Initialize(Thruster owner)
     {
         _owner = owner;
-        if (_power == null && owner != null)
-        {
-            _power = owner.GetComponent<Power>();
-        }
     }
 
     public void SetThrust(float thrustRatio, Vector3 thrustDirection)
@@ -31,7 +26,7 @@ public class ThrusterVisualEffect : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (_owner == null || !_owner.isActiveAndEnabled || _power == null || !_power.isWorking || PlayManager.instance == null || !PlayManager.instance.playMode)
+        if (_owner == null || !_owner.isActiveAndEnabled || PlayManager.instance == null || !PlayManager.instance.playMode)
         {
             _target = 0f;
         }

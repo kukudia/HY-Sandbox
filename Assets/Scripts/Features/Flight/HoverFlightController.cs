@@ -195,8 +195,7 @@ public class HoverFlightController : MonoBehaviour
                 continue;
             }
 
-            thruster.thrust = 0f;
-            thruster.lastThrustValue = 0f;
+            thruster.SetControlledThrust(0f);
         }
     }
 
@@ -383,8 +382,7 @@ public class HoverFlightController : MonoBehaviour
 
             // 合并推力并限制范围
             float finalThrust = Mathf.Clamp(baseThrust + tiltThrust, 0, thruster.maxThrust);
-            thruster.thrust = thruster.ShouldActivate() ? finalThrust : 0;
-            thruster.ApplyThrustChangeRateLimit();
+            thruster.SetControlledThrust(thruster.ShouldActivate() ? finalThrust : 0f);
         }
     }
 

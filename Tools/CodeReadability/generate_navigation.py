@@ -219,7 +219,7 @@ def main():
     )
     graph(
         "物理分组、连接与推进",
-        "连接图是组重建输入；重组先捕获刚体速度，再转移方块与运行归属。三个 FixedUpdate 由引擎调度，图中无先后承诺。",
+        "连接图是组重建输入；重组先捕获刚体速度，再转移方块与运行归属。FixedUpdate由引擎调度；悬浮控制器只提交目标，推进器每个物理帧限速一次。关机撤销功率请求但残余推力按maxThrustChangeRate衰减；退出游玩或组件禁用清零。",
         {
             "A": "PlayManager.RefreshGroup",
             "B": "PlayManager.AssignBlocksToParentGroups",
@@ -240,6 +240,9 @@ def main():
             "Q": "HoverControlSolver.Reset",
             "R": "HoverFlightController.ClearHoverThrust",
             "S": "HoverFlightController.OnDisable",
+            "T": "HoverThruster.SetControlledThrust",
+            "U": "HoverThruster.FixedUpdate",
+            "V": "UniversalThruster.FixedUpdate",
         },
         [
             "A --> B",
@@ -252,7 +255,10 @@ def main():
             "J -->|有效游玩/供电/归属| N",
             "J --> O",
             "J --> K",
-            "K --> M",
+            "K --> T",
+            "R --> T",
+            "U --> M",
+            "V --> M",
             "L --> M",
             "J -->|停止或失效| P",
             "S --> P",

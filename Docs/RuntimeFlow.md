@@ -382,7 +382,7 @@ flowchart TD
 
 ## 物理分组、连接与推进
 
-连接图是组重建输入；重组先捕获刚体速度，再转移方块与运行归属。三个 FixedUpdate 由引擎调度，图中无先后承诺。
+连接图是组重建输入；重组先捕获刚体速度，再转移方块与运行归属。FixedUpdate由引擎调度；悬浮控制器只提交目标，推进器每个物理帧限速一次。关机撤销功率请求但残余推力按maxThrustChangeRate衰减；退出游玩或组件禁用清零。
 
 ```mermaid
 flowchart TD
@@ -407,11 +407,11 @@ flowchart TD
     J["HoverFlightController.FixedUpdate()"]
     click J "../Assets/Scripts/Features/Flight/HoverFlightController.cs#L103" "打开源码"
     K["HoverFlightController.DistributeThrust()"]
-    click K "../Assets/Scripts/Features/Flight/HoverFlightController.cs#L349" "打开源码"
+    click K "../Assets/Scripts/Features/Flight/HoverFlightController.cs#L348" "打开源码"
     L["MainThruster.FixedUpdate()"]
     click L "../Assets/Scripts/Features/Flight/MainThruster.cs#L10" "打开源码"
     M["Thruster.ApplyThrustChangeRateLimit()"]
-    click M "../Assets/Scripts/Features/Flight/Thruster.cs#L113" "打开源码"
+    click M "../Assets/Scripts/Features/Flight/Thruster.cs#L126" "打开源码"
     N["HoverControlSolver.StepHeight()"]
     click N "../Assets/Scripts/Features/Flight/HoverControlSolver.cs#L29" "打开源码"
     O["HoverControlSolver.CalculateTilt()"]
@@ -424,6 +424,12 @@ flowchart TD
     click R "../Assets/Scripts/Features/Flight/HoverFlightController.cs#L177" "打开源码"
     S["HoverFlightController.OnDisable()"]
     click S "../Assets/Scripts/Features/Flight/HoverFlightController.cs#L91" "打开源码"
+    T["HoverThruster.SetControlledThrust()"]
+    click T "../Assets/Scripts/Features/Flight/HoverThruster.cs#L11" "打开源码"
+    U["HoverThruster.FixedUpdate()"]
+    click U "../Assets/Scripts/Features/Flight/HoverThruster.cs#L16" "打开源码"
+    V["UniversalThruster.FixedUpdate()"]
+    click V "../Assets/Scripts/Features/Flight/UniversalThruster.cs#L10" "打开源码"
     A --> B
     B --> C
     C --> D
@@ -434,7 +440,10 @@ flowchart TD
     J -->|有效游玩/供电/归属| N
     J --> O
     J --> K
-    K --> M
+    K --> T
+    R --> T
+    U --> M
+    V --> M
     L --> M
     J -->|停止或失效| P
     S --> P
@@ -462,11 +471,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/RuntimeGroupCleanup.cs|EnforceDistance -->
 - [HoverFlightController.FixedUpdate](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L103)
 <!-- source: Assets/Scripts/Features/Flight/HoverFlightController.cs|FixedUpdate -->
-- [HoverFlightController.DistributeThrust](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L349)
+- [HoverFlightController.DistributeThrust](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L348)
 <!-- source: Assets/Scripts/Features/Flight/HoverFlightController.cs|DistributeThrust -->
 - [MainThruster.FixedUpdate](../Assets/Scripts/Features/Flight/MainThruster.cs#L10)
 <!-- source: Assets/Scripts/Features/Flight/MainThruster.cs|FixedUpdate -->
-- [Thruster.ApplyThrustChangeRateLimit](../Assets/Scripts/Features/Flight/Thruster.cs#L113)
+- [Thruster.ApplyThrustChangeRateLimit](../Assets/Scripts/Features/Flight/Thruster.cs#L126)
 <!-- source: Assets/Scripts/Features/Flight/Thruster.cs|ApplyThrustChangeRateLimit -->
 - [HoverControlSolver.StepHeight](../Assets/Scripts/Features/Flight/HoverControlSolver.cs#L29)
 <!-- source: Assets/Scripts/Features/Flight/HoverControlSolver.cs|StepHeight -->
@@ -480,6 +489,12 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Flight/HoverFlightController.cs|ClearHoverThrust -->
 - [HoverFlightController.OnDisable](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L91)
 <!-- source: Assets/Scripts/Features/Flight/HoverFlightController.cs|OnDisable -->
+- [HoverThruster.SetControlledThrust](../Assets/Scripts/Features/Flight/HoverThruster.cs#L11)
+<!-- source: Assets/Scripts/Features/Flight/HoverThruster.cs|SetControlledThrust -->
+- [HoverThruster.FixedUpdate](../Assets/Scripts/Features/Flight/HoverThruster.cs#L16)
+<!-- source: Assets/Scripts/Features/Flight/HoverThruster.cs|FixedUpdate -->
+- [UniversalThruster.FixedUpdate](../Assets/Scripts/Features/Flight/UniversalThruster.cs#L10)
+<!-- source: Assets/Scripts/Features/Flight/UniversalThruster.cs|FixedUpdate -->
 
 ## 战斗、损伤、爆炸与残骸清理
 

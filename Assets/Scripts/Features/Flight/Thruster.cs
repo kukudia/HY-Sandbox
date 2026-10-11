@@ -88,6 +88,19 @@ public abstract class Thruster : MonoBehaviour
 
     public bool IsPlayerControllable => isActiveAndEnabled && HasValidRuntimeOwner() && controlUnit.faction == UnitFaction.Player;
 
+    public bool IsPowerRequested
+    {
+        get
+        {
+            if (power == null)
+            {
+                power = GetComponent<Power>();
+            }
+
+            return power != null && power.IsWorkRequested;
+        }
+    }
+
     public float PowerEfficiency
     {
         get
@@ -113,21 +126,10 @@ public abstract class Thruster : MonoBehaviour
     public virtual void ApplyThrustChangeRateLimit()
     {
         float powerEfficiency = GetPowerEfficiency();
-        if (powerEfficiency <= 0f)
-        {
-            thrust = 0f;
-            lastThrustValue = 0f;
-            return;
-        }
-
-        thrust *= powerEfficiency;
-        float maxChange = maxThrustChangeRate * Time.fixedDeltaTime;
-        // 计算允许的推力变化范围
-        float minT = Mathf.Max(0, lastThrustValue - maxChange);
-        float maxT = Mathf.Min(maxThrust, lastThrustValue + maxChange);
-        // 应用限制
-        thrust = Mathf.Clamp(thrust, minT, maxT);
-        // 记录当前推力供下一帧使用
+        // 供电只限制目标输出；撤销工作请求后的残余推力仍按变化率衰减。
+        float targetThrust = Mathf.Clamp(thrust * powerEfficiency, 0f, Mathf.Max(0f, maxThrust));
+        float maxChange = Mathf.Max(0f, maxThrustChangeRate) * Time.fixedDeltaTime;
+        thrust = Mathf.MoveTowards(lastThrustValue, targetThrust, maxChange);
         lastThrustValue = thrust;
     }
 
@@ -150,7 +152,8 @@ public abstract class Thruster : MonoBehaviour
 
     protected bool CanApplyThrust()
     {
-        return GetPowerEfficiency() > 0f;
+        // 实际输出已在限速步骤受供电影响，关机后的衰减尾段仍需要施力。
+        return IsPlayModeActive() && HasValidRuntimeOwner();
     }
 
     private float GetPowerEfficiency()
