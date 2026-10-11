@@ -410,7 +410,7 @@ for (int variant = 0; variant < 3; variant++)
 
     )
     {
-        add(variant == 0 ? "1x1x1" : "Turret", x, 1.5f, -weaponZ);
+        add(x < 0 ? "ProjectileTurretSingle" : "ProjectileTurretDouble", x, 1.5f, -weaponZ);
     }
 
     string json = UnityEngine.JsonUtility.ToJson(data, true);

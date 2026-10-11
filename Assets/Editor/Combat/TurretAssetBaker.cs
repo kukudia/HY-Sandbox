@@ -35,6 +35,7 @@ public static class TurretAssetBaker
             try
             {
                 entry.transform.Find("Preview").GetComponent<Image>().sprite = icon;
+                ApplyExistingButtonStyle(entry);
                 PrefabUtility.SaveAsPrefabAsset(entry, path);
             }
             finally
@@ -42,6 +43,20 @@ public static class TurretAssetBaker
                 PrefabUtility.UnloadPrefabContents(entry);
             }
         }
+    }
+
+    private static void ApplyExistingButtonStyle(GameObject entry)
+    {
+        BuildPaletteItem template = Resources.FindObjectsOfTypeAll<BuildPaletteItem>().First(item => item.gameObject.scene.IsValid() && item.BlockName == "Turret");
+        Image image = entry.GetComponent<Image>();
+        EditorUtility.CopySerialized(template.GetComponent<Image>(), image);
+        Button button = entry.GetComponent<Button>();
+        EditorUtility.CopySerialized(template.GetComponent<Button>(), button);
+        button.targetGraphic = image;
+        button.onClick = new Button.ButtonClickedEvent();
+        UIInteractionFeedback feedback = entry.GetComponent<UIInteractionFeedback>() ?? entry.AddComponent<UIInteractionFeedback>();
+        EditorUtility.CopySerialized(template.GetComponent<UIInteractionFeedback>(), feedback);
+        entry.name = entry.GetComponent<BuildPaletteItem>().BlockName + "Button";
     }
 
     [MenuItem("Tools/HY Sandbox/Combat/Configure barrel recoil")]
@@ -315,6 +330,7 @@ public static class TurretAssetBaker
             image.preserveAspect = true;
             image.raycastTarget = false;
             entry.SetActive(true);
+            ApplyExistingButtonStyle(entry);
             PrefabUtility.SaveAsPrefabAsset(entry, Entries + "/" + name + ".prefab");
         }
         finally

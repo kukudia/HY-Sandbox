@@ -88,6 +88,7 @@ GameObject:
   - component: {fileID: 7551362668729977350}
   - component: {fileID: 6727566196538252349}
   - component: {fileID: 3602476254223970762}
+  - component: {fileID: 1778540422554713221}
   m_Layer: 0
   m_Name: ProjectileTurretSingle
   m_TagString: Untagged
@@ -174,13 +175,13 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.4, g: 0.9, b: 1, a: 1}
-    m_PressedColor: {r: 0.2, g: 0.65, b: 0.85, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_NormalColor: {r: 0.07, g: 0.12, b: 0.16, a: 0.78}
+    m_HighlightedColor: {r: 0.14, g: 0.34, b: 0.37, a: 1}
+    m_PressedColor: {r: 0.27, g: 0.91, b: 0.85, a: 1}
+    m_SelectedColor: {r: 0.14, g: 0.34, b: 0.37, a: 1}
+    m_DisabledColor: {r: 0.18, g: 0.22, b: 0.25, a: 0.55}
     m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
+    m_FadeDuration: 0.08
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
@@ -222,3 +223,18 @@ MonoBehaviour:
   _category: 4
   _outline: {fileID: 7551362668729977350}
   _palette: {fileID: 0}
+--- !u!114 &1778540422554713221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8188484657871716118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0684d39083059514d9eab159edf060ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIInteractionFeedback
+  _hoverScale: 1.035
+  _pressedScale: 0.97
+  _response: 18

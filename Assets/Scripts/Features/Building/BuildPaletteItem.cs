@@ -18,6 +18,7 @@ public sealed class BuildPaletteItem : MonoBehaviour, IPointerEnterHandler, IPoi
     private Image _outline;
     [SerializeField]
     private BuildPalette _palette;
+    private bool _clickBound;
     public string BlockName => _blockName;
     public string BlockInfo => _info;
     public int Category => _category;
@@ -34,7 +35,29 @@ public sealed class BuildPaletteItem : MonoBehaviour, IPointerEnterHandler, IPoi
     public void BindPalette(BuildPalette palette)
     {
         _palette = palette;
-        GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => BuildManager.instance.SetCurrentBlockResource("Blocks/" + _blockName));
+        if (!_clickBound)
+        {
+            GetComponent<Button>().onClick.AddListener(() => BuildManager.instance.SetCurrentBlockResource("Blocks/" + _blockName));
+            _clickBound = true;
+        }
+    }
+
+    public void ApplyButtonStyle(BuildPaletteItem template)
+    {
+        Button button = GetComponent<Button>();
+        Button source = template.GetComponent<Button>();
+        button.colors = source.colors;
+        button.transition = source.transition;
+        button.targetGraphic = _outline;
+        _outline.sprite = template._outline.sprite;
+        _outline.type = template._outline.type;
+        _outline.color = Color.white;
+        Image preview = transform.Find("Preview").GetComponent<Image>();
+        preview.sprite = template.transform.Find("Preview").GetComponent<Image>().sprite;
+        if (GetComponent<UIInteractionFeedback>() == null)
+        {
+            gameObject.AddComponent<UIInteractionFeedback>();
+        }
     }
 
     public void SetSelected(bool selected, Color color)

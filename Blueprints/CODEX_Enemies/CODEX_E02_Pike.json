@@ -1782,7 +1782,7 @@
             "rotY": 0.0,
             "rotZ": 0.0,
             "rotW": 1.0,
-            "resourcePath": "Assets/Resources/Blocks/Turret.prefab",
+            "resourcePath": "Assets/Resources/Blocks/ProjectileTurretSingle.prefab",
             "cargo": []
         },
         {
@@ -1797,7 +1797,7 @@
             "rotY": 0.0,
             "rotZ": 0.0,
             "rotW": 1.0,
-            "resourcePath": "Assets/Resources/Blocks/Turret.prefab",
+            "resourcePath": "Assets/Resources/Blocks/ProjectileTurretDouble.prefab",
             "cargo": []
         }
     ]

@@ -317,13 +317,14 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | TurretAssetBaker | [`void RefreshTurretIcons()`](../Assets/Editor/Combat/TurretAssetBaker.cs#L16) | public static |
-| TurretAssetBaker | [`void ConfigureRecoil()`](../Assets/Editor/Combat/TurretAssetBaker.cs#L47) | public static |
-| TurretAssetBaker | [`void Bake()`](../Assets/Editor/Combat/TurretAssetBaker.cs#L90) | public static |
-| TurretAssetBaker | [`TurretProjectile BakeProjectile()`](../Assets/Editor/Combat/TurretAssetBaker.cs#L111) | private static |
-| TurretAssetBaker | [`void ConfigureLaser()`](../Assets/Editor/Combat/TurretAssetBaker.cs#L155) | private static |
-| TurretAssetBaker | [`void BakeTurret(string name, string variant, float demand, TurretProjectile projectile)`](../Assets/Editor/Combat/TurretAssetBaker.cs#L178) | private static |
-| TurretAssetBaker | [`Sprite RenderIcon(string name)`](../Assets/Editor/Combat/TurretAssetBaker.cs#L272) | private static |
-| TurretAssetBaker | [`void BakeEntry(string name)`](../Assets/Editor/Combat/TurretAssetBaker.cs#L285) | private static |
+| TurretAssetBaker | [`void ApplyExistingButtonStyle(GameObject entry)`](../Assets/Editor/Combat/TurretAssetBaker.cs#L48) | private static |
+| TurretAssetBaker | [`void ConfigureRecoil()`](../Assets/Editor/Combat/TurretAssetBaker.cs#L62) | public static |
+| TurretAssetBaker | [`void Bake()`](../Assets/Editor/Combat/TurretAssetBaker.cs#L105) | public static |
+| TurretAssetBaker | [`TurretProjectile BakeProjectile()`](../Assets/Editor/Combat/TurretAssetBaker.cs#L126) | private static |
+| TurretAssetBaker | [`void ConfigureLaser()`](../Assets/Editor/Combat/TurretAssetBaker.cs#L170) | private static |
+| TurretAssetBaker | [`void BakeTurret(string name, string variant, float demand, TurretProjectile projectile)`](../Assets/Editor/Combat/TurretAssetBaker.cs#L193) | private static |
+| TurretAssetBaker | [`Sprite RenderIcon(string name)`](../Assets/Editor/Combat/TurretAssetBaker.cs#L287) | private static |
+| TurretAssetBaker | [`void BakeEntry(string name)`](../Assets/Editor/Combat/TurretAssetBaker.cs#L300) | private static |
 
 ## Assets/Editor/Combat/TurretFlightPlayProbe.cs
 
@@ -924,13 +925,14 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BuildPalette | [`void Awake()`](../Assets/Scripts/Features/Building/BuildPalette.cs#L27) | private |
-| BuildPalette | [`void OnEnable()`](../Assets/Scripts/Features/Building/BuildPalette.cs#L45) | private |
-| BuildPalette | [`void OnDisable()`](../Assets/Scripts/Features/Building/BuildPalette.cs#L50) | private |
-| BuildPalette | [`void LateUpdate()`](../Assets/Scripts/Features/Building/BuildPalette.cs#L55) | private |
-| BuildPalette | [`void SelectCategory(int category)`](../Assets/Scripts/Features/Building/BuildPalette.cs#L76) | public |
-| BuildPalette | [`void ShowTooltip(BuildPaletteItem item)`](../Assets/Scripts/Features/Building/BuildPalette.cs#L102) | public |
-| BuildPalette | [`void HideTooltip(BuildPaletteItem item)`](../Assets/Scripts/Features/Building/BuildPalette.cs#L111) | public |
-| BuildPalette | [`BuildPaletteItem GetSelectedItem()`](../Assets/Scripts/Features/Building/BuildPalette.cs#L123) | public |
+| BuildPalette | [`void OnValidate()`](../Assets/Scripts/Features/Building/BuildPalette.cs#L53) | private |
+| BuildPalette | [`void OnEnable()`](../Assets/Scripts/Features/Building/BuildPalette.cs#L67) | private |
+| BuildPalette | [`void OnDisable()`](../Assets/Scripts/Features/Building/BuildPalette.cs#L72) | private |
+| BuildPalette | [`void LateUpdate()`](../Assets/Scripts/Features/Building/BuildPalette.cs#L77) | private |
+| BuildPalette | [`void SelectCategory(int category)`](../Assets/Scripts/Features/Building/BuildPalette.cs#L98) | public |
+| BuildPalette | [`void ShowTooltip(BuildPaletteItem item)`](../Assets/Scripts/Features/Building/BuildPalette.cs#L124) | public |
+| BuildPalette | [`void HideTooltip(BuildPaletteItem item)`](../Assets/Scripts/Features/Building/BuildPalette.cs#L133) | public |
+| BuildPalette | [`BuildPaletteItem GetSelectedItem()`](../Assets/Scripts/Features/Building/BuildPalette.cs#L145) | public |
 
 ## Assets/Scripts/Features/Building/BuildPaletteItem.cs
 
@@ -938,14 +940,15 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BuildPaletteItem | [`void Awake()`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L25) | private |
-| BuildPaletteItem | [`void BindPalette(BuildPalette palette)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L34) | public |
-| BuildPaletteItem | [`void SetSelected(bool selected, Color color)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L40) | public |
-| BuildPaletteItem | [`void OnPointerEnter(PointerEventData eventData)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L45) | public |
-| BuildPaletteItem | [`void OnPointerExit(PointerEventData eventData)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L50) | public |
-| BuildPaletteItem | [`void OnSelect(BaseEventData eventData)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L63) | public |
-| BuildPaletteItem | [`void OnDeselect(BaseEventData eventData)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L68) | public |
-| BuildPaletteItem | [`void OnDisable()`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L73) | private |
+| BuildPaletteItem | [`void Awake()`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L26) | private |
+| BuildPaletteItem | [`void BindPalette(BuildPalette palette)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L35) | public |
+| BuildPaletteItem | [`void ApplyButtonStyle(BuildPaletteItem template)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L45) | public |
+| BuildPaletteItem | [`void SetSelected(bool selected, Color color)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L63) | public |
+| BuildPaletteItem | [`void OnPointerEnter(PointerEventData eventData)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L68) | public |
+| BuildPaletteItem | [`void OnPointerExit(PointerEventData eventData)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L73) | public |
+| BuildPaletteItem | [`void OnSelect(BaseEventData eventData)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L86) | public |
+| BuildPaletteItem | [`void OnDeselect(BaseEventData eventData)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L91) | public |
+| BuildPaletteItem | [`void OnDisable()`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L96) | private |
 
 ## Assets/Scripts/Features/Building/BuildTargetContext.cs
 

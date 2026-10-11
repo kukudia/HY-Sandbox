@@ -3,7 +3,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>Saved scene catalog; asset discovery and thumbnail rendering happen only in the Editor.</summary>
+/// <summary>Saved scene catalog with supplemental prefab entries; thumbnail rendering stays in the Editor.</summary>
 public sealed class BuildPalette : MonoBehaviour
 {
     [SerializeField]
@@ -26,17 +26,39 @@ public sealed class BuildPalette : MonoBehaviour
     private BuildPaletteItem _hovered;
     private void Awake()
     {
-        // 新功能目录使用真实 UI Prefab，避免为了增加条目覆盖正在编辑的场景布局。
         foreach (GameObject entry in Resources.LoadAll<GameObject>("BuildPaletteEntries"))
         {
             BuildPaletteItem template = entry.GetComponent<BuildPaletteItem>();
-            if (template == null || System.Array.Exists(GetComponentsInChildren<BuildPaletteItem>(true), item => item.BlockName == template.BlockName))
+            if (template == null)
             {
                 continue;
             }
 
-            BuildPaletteItem item = Instantiate(entry, _scroll.content).GetComponent<BuildPaletteItem>();
+            BuildPaletteItem item = System.Array.Find(
+                GetComponentsInChildren<BuildPaletteItem>(true),
+                candidate => candidate.BlockName == template.BlockName);
+            if (item == null)
+            {
+                item = Instantiate(entry, _scroll.content).GetComponent<BuildPaletteItem>();
+            }
+
+            item.name = entry.name;
+            item.ApplyButtonStyle(template);
             item.BindPalette(this);
+        }
+
+        _items = GetComponentsInChildren<BuildPaletteItem>(true);
+    }
+
+    private void OnValidate()
+    {
+        // 保留编辑器中的已保存条目；OnValidate不能实例化层级或添加组件。
+        foreach (BuildPaletteItem item in GetComponentsInChildren<BuildPaletteItem>(true))
+        {
+            if (item.name.EndsWith("(Clone)"))
+            {
+                item.name = item.BlockName + "Button";
+            }
         }
 
         _items = GetComponentsInChildren<BuildPaletteItem>(true);

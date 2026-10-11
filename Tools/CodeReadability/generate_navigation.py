@@ -145,6 +145,10 @@ def main():
             "N": "ActionManager.Undo",
             "O": "ActionManager.Redo",
             "P": "Block.CheckConnection",
+            "Q": "BuildPalette.Awake",
+            "R": "BuildPaletteItem.ApplyButtonStyle",
+            "S": "BuildPaletteItem.BindPalette",
+            "T": "BuildManager.SetCurrentBlockResource",
         },
         [
             "A --> B",
@@ -164,6 +168,9 @@ def main():
             "L --> M",
             "A --> N",
             "A --> O",
+            "Q --> R",
+            "Q --> S",
+            "S -.->|按钮点击| T",
         ],
     )
     graph(

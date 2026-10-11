@@ -1,0 +1,23 @@
+{
+  "editor": "Unity 6000.3.11f1",
+  "scene": "Assets/Scenes/Main.unity",
+  "static": {"codeReadability": "166 scripts, 0 errors", "dotnetBuild": "0 errors, 4 existing warnings", "diffCheck": "passed"},
+  "editMode": {
+    "scriptCompilation": "passed",
+    "paletteAssetsSaved": true,
+    "reloadedPrefabColorsAndOutlineMatchExistingTurret": true,
+    "sceneEntriesSaved": true,
+    "blueprintValidation": [
+      {"name": "CODEX_E01_Finch", "blocks": 95, "connected": 95, "uncovered": 0, "unique": true, "installedIdentical": true},
+      {"name": "CODEX_E02_Pike", "blocks": 120, "connected": 120, "uncovered": 0, "unique": true, "installedIdentical": true},
+      {"name": "CODEX_E03_Manta", "blocks": 116, "connected": 116, "uncovered": 0, "unique": true, "installedIdentical": true}
+    ]
+  },
+  "playMode": {
+    "probe": "Blueprints/CODEX_Enemies/TurretProbe.cs",
+    "palette": {"entries": 2, "cloneSuffixAbsent": true, "colorsMatchPrefab": true, "targetGraphicLocal": true, "interactionFeedbackPresent": true, "clickSelectsResourceAndBuildMode": true},
+    "enemySpawner": {"installedBlueprintsSpawned": 3, "eachProjectileTurrets": 2, "eachProjectileBarrels": 3, "eachLaserTurrets": 2, "eachConnectedGroups": 1, "enemyFaction": true}
+  },
+  "installedBackup": "C:/Users/12046/AppData/Local/CodexBackups/HY-Sandbox/turrets-20261011-215912",
+  "limits": ["No new 90-second flight or sustained combat test for this blueprint loadout", "No manual hover/press visual inspection in this run"]
+}

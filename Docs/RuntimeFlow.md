@@ -204,6 +204,14 @@ flowchart TD
     click O "../Assets/Scripts/Features/Building/ActionManager.cs#L50" "打开源码"
     P["Block.CheckConnection()"]
     click P "../Assets/Scripts/Features/Simulation/Block.cs#L261" "打开源码"
+    Q["BuildPalette.Awake()"]
+    click Q "../Assets/Scripts/Features/Building/BuildPalette.cs#L27" "打开源码"
+    R["BuildPaletteItem.ApplyButtonStyle()"]
+    click R "../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L45" "打开源码"
+    S["BuildPaletteItem.BindPalette()"]
+    click S "../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L35" "打开源码"
+    T["BuildManager.SetCurrentBlockResource()"]
+    click T "../Assets/Scripts/Features/Building/BuildManager.cs#L227" "打开源码"
     A --> B
     B --> C
     C --> D
@@ -221,6 +229,9 @@ flowchart TD
     L --> M
     A --> N
     A --> O
+    Q --> R
+    Q --> S
+    S -.->|按钮点击| T
 ```
 
 - [BuildManager.Update](../Assets/Scripts/Features/Building/BuildManager.cs#L96)
@@ -255,6 +266,14 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/ActionManager.cs|Redo -->
 - [Block.CheckConnection](../Assets/Scripts/Features/Simulation/Block.cs#L261)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|CheckConnection -->
+- [BuildPalette.Awake](../Assets/Scripts/Features/Building/BuildPalette.cs#L27)
+<!-- source: Assets/Scripts/Features/Building/BuildPalette.cs|Awake -->
+- [BuildPaletteItem.ApplyButtonStyle](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L45)
+<!-- source: Assets/Scripts/Features/Building/BuildPaletteItem.cs|ApplyButtonStyle -->
+- [BuildPaletteItem.BindPalette](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L35)
+<!-- source: Assets/Scripts/Features/Building/BuildPaletteItem.cs|BindPalette -->
+- [BuildManager.SetCurrentBlockResource](../Assets/Scripts/Features/Building/BuildManager.cs#L227)
+<!-- source: Assets/Scripts/Features/Building/BuildManager.cs|SetCurrentBlockResource -->
 
 ## 供电网络与可视范围
 
