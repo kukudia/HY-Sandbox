@@ -2715,13 +2715,13 @@ MonoBehaviour:
   horizontalVelocity: 0
   showConnectors: 1
   showLabel: 0
-  maxUselessControlUnitGroups: 32
+  maxUselessControlUnitGroups: 64
   groupCleanupDistance: 200
   groupCleanupCheckInterval: 1
   _groupLinearDamping: 1
   _groupAngularDamping: 1
   _maximumInheritedTangentialSpeed: 20
-  _maximumInheritedAngularSpeed: 2
+  _maximumInheritedAngularSpeed: 1
   _groupMaxDepenetrationVelocity: 4
   showUI: 1
 --- !u!1 &270053596

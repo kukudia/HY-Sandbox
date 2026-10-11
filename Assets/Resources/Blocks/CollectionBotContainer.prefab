@@ -939,7 +939,7 @@ MonoBehaviour:
     connector: {fileID: 0}
   neighbors: []
   canRotate: 1
-  canExplode: 0
+  canExplode: 1
   showConnectors: 1
   showLabel: 0
   uniqueId: 
