@@ -4,6 +4,7 @@
 #
 .utmp/
 /[Ll]ibrary/
+/Archive/LegacyPrototype/HY-Sandbox/[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
 /[Bb]uild/
@@ -35,6 +36,9 @@
 ExportedObj/
 .consulo/
 *.csproj
+!Tools/CodeReadability/CodeReadability.csproj
+/Tools/CodeReadability/bin/
+/Tools/CodeReadability/obj/
 *.unityproj
 *.sln
 *.suo

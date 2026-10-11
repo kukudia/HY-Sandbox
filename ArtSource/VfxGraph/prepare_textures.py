@@ -1,17 +1,34 @@
-"""Losslessly convert native UNI TGA dependencies to tracked PNG assets."""
+"""Convert manifest-listed UNI TGA sources to PNG and verify unchanged pixels.
+
+Entry: python ArtSource/VfxGraph/prepare_textures.py from any directory.
+Writes the destinations declared in Assets/Art/VFX/Sources.json.
+"""
+
 import json
 from pathlib import Path
 from PIL import Image
 
-root = Path(__file__).resolve().parents[2]
-records = json.loads((root / "Assets/Art/VFX/Sources.json").read_text(encoding="utf-8-sig"))
-for record in records:
-    source, target = root / record["source"], root / record["destination"]
-    if source.suffix.lower() != ".tga":
-        continue
-    target.parent.mkdir(parents=True, exist_ok=True)
-    with Image.open(source) as original:
-        original.save(target)
-        with Image.open(target) as converted:
-            assert original.size == converted.size and original.tobytes() == converted.tobytes(), source
-    print(target.relative_to(root))
+
+def main():
+    """Convert and verify only the TGA entries in the source manifest."""
+    root = Path(__file__).resolve().parents[2]
+    records = json.loads(
+        (root / "Assets/Art/VFX/Sources.json").read_text(encoding="utf-8-sig")
+    )
+    for record in records:
+        source, target = root / record["source"], root / record["destination"]
+        if source.suffix.lower() != ".tga":
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with Image.open(source) as original:
+            original.save(target)
+            with Image.open(target) as converted:
+                assert (
+                    original.size == converted.size
+                    and original.tobytes() == converted.tobytes()
+                ), source
+        print(target.relative_to(root))
+
+
+if __name__ == "__main__":
+    main()

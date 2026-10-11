@@ -1,30 +1,9 @@
-# HY-Sandbox Agent 工作约定
+# HY-Sandbox 项目规则
 
-## C# 规范入口
-
-- `Assets/Scripts/AGENTS.md` 是 Unity C# 脚本的具体规范，覆盖命名、可见性、生命周期、物理边界、注释、日志和验证要求。
-- 修改 `Assets/Scripts/**/*.cs` 前先读取该文件；用户当前任务和平台/用户级规则优先，本文件保存仓库约束，嵌套文件进一步细化其目录内的 C# 规则。
-
-## 每次修改必须同步文档
-
-本仓库的持续开发文档是根目录 [`DEVELOPMENT.md`](./DEVELOPMENT.md)。任何会改变运行行为、场景层级、Prefab、输入、资源、包版本、构建流程或性能表现的修改，都必须在同一次变更中更新该文档：
-
-1. 在“变更日志”追加日期、修改范围、实现结果和验证结果。
-2. 在受影响的功能章节更新现状；过期描述不能继续保留为“已实现”。
-3. 新增问题写入“待改进与风险”，已解决问题标记为已解决并注明依据。
-4. 明确区分“已通过代码/文件确认”“已在 Unity 编辑器或运行时验证”“尚未验证”。
-
-## Unity 修改规则
-
-- 修改前先检查 `git status`，保留与当前任务无关的用户改动。
-- 优先使用 Unity 6000.3.11f1（见 `ProjectSettings/ProjectVersion.txt`）打开并验证。
-- 编辑现有 C# 时保持项目原有换行和编码；不要因普通脚本修改重建 `.meta` 文件。
-- 新增或移动 `Assets/` 文件时同步处理对应 `.meta`，除非由 Unity 自动生成。
-- 场景和 Prefab 修改后检查引用、运行时日志、核心交互，并在文档中记录验证范围。
-- 不把 `Library/`、`Temp/`、`Logs/` 等生成目录的内容当作源代码依据。
-
-## Git 交付
-
-- 只提交当前任务涉及的文件，不要带入已有的布局或用户设置修改。
-- 提交前后都检查状态；提交信息应包含清晰的 Summary 和验证结果。
-- 仓库存在 `main` 且远程可用时，完成验证后推送 `main`；认证、保护规则或冲突导致失败时保留本地提交并报告准确原因。
+- Unity版本：6000.3.11f1；URP和Input System以Packages及ProjectSettings实际配置为准。
+- 运行时自有源码：Assets/Scripts/Features；制作/验证工具：Assets/Editor按功能分目录；不整理第三方源码。
+- 同时读取用户 game-code-readability、unity-editable-workflow skill和 Assets/Scripts/AGENTS.md。共用流程保存在skill，本文件只规定项目映射。
+- DEVELOPMENT.md 是当前功能入口与验证状态；Docs/RuntimeFlow.md 是源码关联函数图；Docs/CodeIndex.md 是自动生成真实方法导航；Docs/DevelopmentHistory.md仅历史。
+- 修改功能同步更新 DEVELOPMENT 和受影响函数图；整理格式后刷新导航行号。
+- 检查：dotnet run --project Tools/CodeReadability -- --check .；dotnet build HY-Sandbox.sln --no-restore；git diff --check。新增或移动 Assets 后用连接Editor导入，不能以静态编译代替Play验证。
+- 已有脚本GUID与序列化契约随迁移保留。只提交本任务文件；完成验证后检查远程差异再推main，不强推、不夹带无关提交。

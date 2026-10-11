@@ -1,0 +1,26 @@
+name: Owned code readability
+on:
+  push:
+    paths: ['Assets/Scripts/**', 'Assets/Editor/**', 'Blueprints/**', 'ArtSource/VfxGraph/**', 'Docs/**', 'Tools/CodeReadability/**', '.editorconfig', '.github/workflows/code-readability.yml']
+  pull_request:
+    paths: ['Assets/Scripts/**', 'Assets/Editor/**', 'Blueprints/**', 'ArtSource/VfxGraph/**', 'Docs/**', 'Tools/CodeReadability/**', '.editorconfig', '.github/workflows/code-readability.yml']
+jobs:
+  readability:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      - run: dotnet run --project Tools/CodeReadability -- --check .
+      - run: dotnet run --project Tools/CodeReadability -- --check-tools .
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python Tools/CodeReadability/check_tool_sources.py
+      - shell: pwsh
+        run: |
+          $parseErrors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path Blueprints/CODEX_Enemies/Summarize.ps1), [ref]$null, [ref]$parseErrors) | Out-Null
+          if ($parseErrors.Count) { throw ($parseErrors | Out-String) }
+      - run: git diff --check

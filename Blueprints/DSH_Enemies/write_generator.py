@@ -1,14 +1,20 @@
-"""Write Blueprints/DSH_Enemies/Generate.cs from the validated Python model.
+"""Write Generate.cs from the DSH design model; importing does not generate files.
+
+Entry: python Blueprints/DSH_Enemies/write_generator.py. Only Generate.cs is written;
+execute that C# file separately through Unity eval_file to emit live blueprints.
 
 The C# file is the artefact that actually runs in the Editor; the Python model is the
 source of truth for what it emits.  Generating the former from the latter keeps the two in
 lockstep, so a change to a hull cannot silently diverge from what gets written to disk.
 """
-import sys, os
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from pathlib import Path
+
 import design_model as M
 
-HEADER = '''// DSH enemy blueprint generator.
+HEADER = """// 职责：使用离线模型生成的布局写入仓库和 EnemyBlueprints，拒绝覆盖不同内容。
+// 入口：unity command eval_file --file Blueprints/DSH_Enemies/Generate.cs --json；在连接的 Editor 中执行。
+// DSH enemy blueprint generator.
 //
 //   unity command eval_file --file Blueprints/DSH_Enemies/Generate.cs --json
 //
@@ -39,50 +45,63 @@ string folder = System.IO.Path.GetFullPath("Blueprints/DSH_Enemies");
 string destination = System.IO.Path.Combine(UnityEngine.Application.persistentDataPath, "EnemyBlueprints");
 System.IO.Directory.CreateDirectory(folder);
 System.IO.Directory.CreateDirectory(destination);
-
 UnityEngine.Quaternion identity = UnityEngine.Quaternion.identity;
 UnityEngine.Quaternion roll180x = UnityEngine.Quaternion.Euler(180f, 0f, 0f);
 UnityEngine.Quaternion rollNeg90z = UnityEngine.Quaternion.Euler(0f, 0f, -90f);
 UnityEngine.Quaternion rollPos90z = UnityEngine.Quaternion.Euler(0f, 0f, 90f);
 UnityEngine.Quaternion roll180z = UnityEngine.Quaternion.Euler(0f, 0f, 180f);
 var reports = new System.Collections.Generic.List<object>();
-
 // One blueprint's worth of blocks.  Positions and rotations are the validated layout; the
 // generator only re-checks them against the real prefabs before writing.
 System.Action<string, string, System.Action<BlockDataList>> emit = (name, note, build) =>
 {
     var data = new BlockDataList();
     build(data);
-    if (data.blocks.Count == 0) throw new System.Exception(name + " is empty");
+    if (data.blocks.Count == 0)
+    {
+        throw new System.Exception(name + " is empty");
+    }
+
     reports.Add(Write(data, name, note, folder, destination));
 };
-
-System.Action<BlockDataList, string, float, float, float, UnityEngine.Quaternion> add =
-    (data, type, x, y, z, rot) =>
+System.Action<BlockDataList, string, float, float, float, UnityEngine.Quaternion> add = (data, type, x, y, z, rot) =>
 {
     var prefab = UnityEngine.Resources.Load<UnityEngine.GameObject>("Blocks/" + type);
-    if (prefab == null) throw new System.Exception("missing prefab Blocks/" + type);
-    var block = prefab.GetComponent<Block>();
-    if (block == null) throw new System.Exception("no Block component on " + type);
-    if ((block.x == 2 && System.Math.Abs(x % 2) > 0.001f)
-        || (block.z == 2 && System.Math.Abs(z % 2) > 0.001f))
+    if (prefab == null)
     {
-        throw new System.Exception(System.String.Format(
-            "{0} at ({1},{2},{3}) breaks the 2 m lattice parity", type, x, y, z));
+        throw new System.Exception("missing prefab Blocks/" + type);
     }
+
+    var block = prefab.GetComponent<Block>();
+    if (block == null)
+    {
+        throw new System.Exception("no Block component on " + type);
+    }
+
+    if ((block.x == 2 && System.Math.Abs(x % 2) > 0.001f) || (block.z == 2 && System.Math.Abs(z % 2) > 0.001f))
+    {
+        throw new System.Exception(System.String.Format("{0} at ({1},{2},{3}) breaks the 2 m lattice parity", type, x, y, z));
+    }
+
     var d = UnityEngine.JsonUtility.FromJson<BlockData>("{}");
     d.id = data.blocks.Count.ToString("D3") + "_" + type;
-    d.x = block.x; d.y = block.y; d.z = block.z;
-    d.posX = x; d.posY = y; d.posZ = z;
-    d.rotX = rot.x; d.rotY = rot.y; d.rotZ = rot.z; d.rotW = rot.w;
+    d.x = block.x;
+    d.y = block.y;
+    d.z = block.z;
+    d.posX = x;
+    d.posY = y;
+    d.posZ = z;
+    d.rotX = rot.x;
+    d.rotY = rot.y;
+    d.rotZ = rot.z;
+    d.rotW = rot.w;
     d.resourcePath = "Assets/Resources/Blocks/" + type + ".prefab";
     d.cargo = new System.Collections.Generic.List<CargoItem>();
     data.blocks.Add(d);
 };
-'''
+"""
 
-FOOTER = '''
-// ---------------------------------------------------------------------------------------
+FOOTER = """// ---------------------------------------------------------------------------------------
 object Write(BlockDataList data, string name, string note, string repoFolder, string liveFolder)
 {
     float mass = 0f, lift = 0f, demand = 0f, supply = 0f, horizontal = 0f;
@@ -90,32 +109,68 @@ object Write(BlockDataList data, string name, string note, string repoFolder, st
     int cockpits = 0;
     foreach (var d in data.blocks)
     {
-        var prefab = UnityEngine.Resources.Load<UnityEngine.GameObject>(
-            BuildManager.ConvertToResourcesPath(d.resourcePath));
-        if (prefab == null) throw new System.Exception("missing " + d.resourcePath);
+        var prefab = UnityEngine.Resources.Load<UnityEngine.GameObject>(BuildManager.ConvertToResourcesPath(d.resourcePath));
+        if (prefab == null)
+        {
+            throw new System.Exception("missing " + d.resourcePath);
+        }
+
         var block = prefab.GetComponent<Block>();
         mass += block.mass;
         moment += block.mass * new UnityEngine.Vector3(d.posX, d.posY, d.posZ);
         var power = prefab.GetComponent<Power>();
-        if (power != null) demand += power.standardWorkingPower;
+        if (power != null)
+        {
+            demand += power.standardWorkingPower;
+        }
+
         var generator = prefab.GetComponent<PowerGeneratingUnit>();
-        if (generator != null) supply += generator.outputPower;
+        if (generator != null)
+        {
+            supply += generator.outputPower;
+        }
+
         var hover = prefab.GetComponent<HoverThruster>();
-        if (hover != null) lift += hover.maxThrust;
+        if (hover != null)
+        {
+            lift += hover.maxThrust;
+        }
+
         var vector = prefab.GetComponent<UniversalThruster>();
-        if (vector != null) horizontal += vector.maxThrust;
-        if (prefab.GetComponent<Cockpit>() != null) cockpits++;
+        if (vector != null)
+        {
+            horizontal += vector.maxThrust;
+        }
+
+        if (prefab.GetComponent<Cockpit>() != null)
+        {
+            cockpits++;
+        }
     }
-    if (cockpits != 1) throw new System.Exception(name + " has " + cockpits + " cockpits");
+
+    if (cockpits != 1)
+    {
+        throw new System.Exception(name + " has " + cockpits + " cockpits");
+    }
 
     string json = UnityEngine.JsonUtility.ToJson(data, true);
-    foreach (string target in new[] { repoFolder, liveFolder })
+    foreach (string target in new[]
+    {
+        repoFolder,
+        liveFolder
+    }
+
+    )
     {
         string path = System.IO.Path.Combine(target, name + ".json");
         if (System.IO.File.Exists(path) && System.IO.File.ReadAllText(path) != json)
+        {
             throw new System.Exception("refusing to overwrite a different file: " + path);
+        }
+
         System.IO.File.WriteAllText(path, json, new System.Text.UTF8Encoding(false));
     }
+
     return new
     {
         name,
@@ -131,8 +186,12 @@ object Write(BlockDataList data, string name, string note, string repoFolder, st
     };
 }
 
-return new { destination, reports };
-'''
+return new
+{
+    destination,
+    reports
+};
+"""
 
 NOTES = {
     "DSH_E01_Skimmer": "wide light interceptor",
@@ -143,8 +202,12 @@ NOTES = {
 
 def rot_name(rot):
     """Name the handful of quaternions the model actually uses, as C# expressions."""
-    for name, angle in (("roll180x", (180, "x")), ("rollNeg90z", (-90, "z")),
-                        ("rollPos90z", (90, "z")), ("roll180z", (180, "z"))):
+    for name, angle in (
+        ("roll180x", (180, "x")),
+        ("rollNeg90z", (-90, "z")),
+        ("rollPos90z", (90, "z")),
+        ("roll180z", (180, "z")),
+    ):
         if all(abs(rot[k] - M._q(angle[0], angle[1])[k]) < 1e-9 for k in range(4)):
             return name
     if all(abs(rot[k] - M.IDENTITY[k]) < 1e-9 for k in range(4)):
@@ -154,34 +217,58 @@ def rot_name(rot):
 
 def fmt(v):
     """Format a coordinate as a C# float literal, e.g. -0.5f or 4f."""
-    text = ("%g" % v)
+    text = "%g" % v
     if text.endswith("."):
         text = text[:-1]
     return text + "f"
 
 
-parts = [HEADER]
-for builder in (M.build_e01, M.build_e02, M.build_e03):
-    d = builder()
-    r = d.report()
-    parts.append('\n// %s - %s: %d blocks, mass %.0f, lift/weight %.2f, horizontal %d N.\n'
-                 'emit("%s", "%s", data =>\n{\n'
-                 % (d.name, NOTES[d.name], r["blocks"], r["mass"], r["lift_ratio"],
-                    r["horizontal_thrust"], d.name, NOTES[d.name]))
-    by_type = {}
-    for b in d.blocks:
-        by_type.setdefault(b["type"], []).append(b)
-    for type_name in sorted(by_type):
-        parts.append("    // %s x%d\n" % (type_name, len(by_type[type_name])))
-        for b in sorted(by_type[type_name], key=lambda x: x["pos"]):
-            p = b["pos"]
-            parts.append('    add(data, "%s", %s, %s, %s, %s);\n'
-                         % (type_name, fmt(p[0]), fmt(p[1]), fmt(p[2]), rot_name(b["rot"])))
-    parts.append("});\n")
+def build_source():
+    """Return C# source from fresh in-memory designs, without writing it."""
+    parts = [HEADER]
+    for builder in (M.build_e01, M.build_e02, M.build_e03):
+        d = builder()
+        r = d.report()
+        parts.append(
+            "// %s - %s: %d blocks, mass %.0f, lift/weight %.2f, horizontal %d N.\n"
+            'emit("%s", "%s", data =>\n{\n'
+            % (
+                d.name,
+                NOTES[d.name],
+                r["blocks"],
+                r["mass"],
+                r["lift_ratio"],
+                r["horizontal_thrust"],
+                d.name,
+                NOTES[d.name],
+            )
+        )
+        by_type = {}
+        for b in d.blocks:
+            by_type.setdefault(b["type"], []).append(b)
+        for type_name in sorted(by_type):
+            parts.append("    // %s x%d\n" % (type_name, len(by_type[type_name])))
+            for b in sorted(by_type[type_name], key=lambda x: x["pos"]):
+                p = b["pos"]
+                parts.append(
+                    '    add(data, "%s", %s, %s, %s, %s);\n'
+                    % (type_name, fmt(p[0]), fmt(p[1]), fmt(p[2]), rot_name(b["rot"]))
+                )
+        parts.append("});\n")
 
-parts.append(FOOTER)
+    parts.append(FOOTER)
 
-path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Generate.cs")
-with open(path, "w", encoding="utf-8", newline="\n") as f:
-    f.write("".join(parts))
-print("wrote", path, len("".join(parts)), "bytes")
+    return "".join(parts)
+
+
+def main():
+    """Write the eval_file source beside this script; never install live JSON."""
+    source = build_source()
+    path = Path(__file__).resolve().with_name("Generate.cs")
+    with path.open("w", encoding="utf-8", newline="\r\n") as f:
+        f.write(source)
+    print("wrote", path, len(source.encode("utf-8")), "bytes")
+
+
+if __name__ == "__main__":
+    main()

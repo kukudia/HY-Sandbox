@@ -1,3 +1,5 @@
+// 职责：使用离线模型生成的布局写入仓库和 EnemyBlueprints，拒绝覆盖不同内容。
+// 入口：unity command eval_file --file Blueprints/DSH_Enemies/Generate.cs --json；在连接的 Editor 中执行。
 // DSH enemy blueprint generator.
 //
 //   unity command eval_file --file Blueprints/DSH_Enemies/Generate.cs --json
@@ -29,47 +31,60 @@ string folder = System.IO.Path.GetFullPath("Blueprints/DSH_Enemies");
 string destination = System.IO.Path.Combine(UnityEngine.Application.persistentDataPath, "EnemyBlueprints");
 System.IO.Directory.CreateDirectory(folder);
 System.IO.Directory.CreateDirectory(destination);
-
 UnityEngine.Quaternion identity = UnityEngine.Quaternion.identity;
 UnityEngine.Quaternion roll180x = UnityEngine.Quaternion.Euler(180f, 0f, 0f);
 UnityEngine.Quaternion rollNeg90z = UnityEngine.Quaternion.Euler(0f, 0f, -90f);
 UnityEngine.Quaternion rollPos90z = UnityEngine.Quaternion.Euler(0f, 0f, 90f);
 UnityEngine.Quaternion roll180z = UnityEngine.Quaternion.Euler(0f, 0f, 180f);
 var reports = new System.Collections.Generic.List<object>();
-
 // One blueprint's worth of blocks.  Positions and rotations are the validated layout; the
 // generator only re-checks them against the real prefabs before writing.
 System.Action<string, string, System.Action<BlockDataList>> emit = (name, note, build) =>
 {
     var data = new BlockDataList();
     build(data);
-    if (data.blocks.Count == 0) throw new System.Exception(name + " is empty");
+    if (data.blocks.Count == 0)
+    {
+        throw new System.Exception(name + " is empty");
+    }
+
     reports.Add(Write(data, name, note, folder, destination));
 };
-
-System.Action<BlockDataList, string, float, float, float, UnityEngine.Quaternion> add =
-    (data, type, x, y, z, rot) =>
+System.Action<BlockDataList, string, float, float, float, UnityEngine.Quaternion> add = (data, type, x, y, z, rot) =>
 {
     var prefab = UnityEngine.Resources.Load<UnityEngine.GameObject>("Blocks/" + type);
-    if (prefab == null) throw new System.Exception("missing prefab Blocks/" + type);
-    var block = prefab.GetComponent<Block>();
-    if (block == null) throw new System.Exception("no Block component on " + type);
-    if ((block.x == 2 && System.Math.Abs(x % 2) > 0.001f)
-        || (block.z == 2 && System.Math.Abs(z % 2) > 0.001f))
+    if (prefab == null)
     {
-        throw new System.Exception(System.String.Format(
-            "{0} at ({1},{2},{3}) breaks the 2 m lattice parity", type, x, y, z));
+        throw new System.Exception("missing prefab Blocks/" + type);
     }
+
+    var block = prefab.GetComponent<Block>();
+    if (block == null)
+    {
+        throw new System.Exception("no Block component on " + type);
+    }
+
+    if ((block.x == 2 && System.Math.Abs(x % 2) > 0.001f) || (block.z == 2 && System.Math.Abs(z % 2) > 0.001f))
+    {
+        throw new System.Exception(System.String.Format("{0} at ({1},{2},{3}) breaks the 2 m lattice parity", type, x, y, z));
+    }
+
     var d = UnityEngine.JsonUtility.FromJson<BlockData>("{}");
     d.id = data.blocks.Count.ToString("D3") + "_" + type;
-    d.x = block.x; d.y = block.y; d.z = block.z;
-    d.posX = x; d.posY = y; d.posZ = z;
-    d.rotX = rot.x; d.rotY = rot.y; d.rotZ = rot.z; d.rotW = rot.w;
+    d.x = block.x;
+    d.y = block.y;
+    d.z = block.z;
+    d.posX = x;
+    d.posY = y;
+    d.posZ = z;
+    d.rotX = rot.x;
+    d.rotY = rot.y;
+    d.rotZ = rot.z;
+    d.rotW = rot.w;
     d.resourcePath = "Assets/Resources/Blocks/" + type + ".prefab";
     d.cargo = new System.Collections.Generic.List<CargoItem>();
     data.blocks.Add(d);
 };
-
 // DSH_E01_Skimmer - wide light interceptor: 70 blocks, mass 364, lift/weight 3.81, horizontal 2000 N.
 emit("DSH_E01_Skimmer", "wide light interceptor", data =>
 {
@@ -153,7 +168,6 @@ emit("DSH_E01_Skimmer", "wide light interceptor", data =>
     add(data, "UniversalThruster", 1.5f, 1.5f, 0.5f, identity);
     add(data, "UniversalThruster", 2.5f, -1.5f, 3.5f, roll180x);
 });
-
 // DSH_E02_Halberd - heavy long catamaran gunship: 136 blocks, mass 703, lift/weight 3.02, horizontal 4000 N.
 emit("DSH_E02_Halberd", "heavy long catamaran gunship", data =>
 {
@@ -303,7 +317,6 @@ emit("DSH_E02_Halberd", "heavy long catamaran gunship", data =>
     add(data, "UniversalThruster", 2.5f, -1.5f, 4.5f, roll180x);
     add(data, "UniversalThruster", 2.5f, 1.5f, 0.5f, identity);
 });
-
 // DSH_E03_Talos - disc gunship: 80 blocks, mass 374, lift/weight 3.71, horizontal 2600 N.
 emit("DSH_E03_Talos", "disc gunship", data =>
 {
@@ -397,7 +410,6 @@ emit("DSH_E03_Talos", "disc gunship", data =>
     add(data, "UniversalThruster", 1.5f, 1.5f, 1.5f, identity);
     add(data, "UniversalThruster", 2.5f, -1.5f, 3.5f, roll180x);
 });
-
 // ---------------------------------------------------------------------------------------
 object Write(BlockDataList data, string name, string note, string repoFolder, string liveFolder)
 {
@@ -406,32 +418,68 @@ object Write(BlockDataList data, string name, string note, string repoFolder, st
     int cockpits = 0;
     foreach (var d in data.blocks)
     {
-        var prefab = UnityEngine.Resources.Load<UnityEngine.GameObject>(
-            BuildManager.ConvertToResourcesPath(d.resourcePath));
-        if (prefab == null) throw new System.Exception("missing " + d.resourcePath);
+        var prefab = UnityEngine.Resources.Load<UnityEngine.GameObject>(BuildManager.ConvertToResourcesPath(d.resourcePath));
+        if (prefab == null)
+        {
+            throw new System.Exception("missing " + d.resourcePath);
+        }
+
         var block = prefab.GetComponent<Block>();
         mass += block.mass;
         moment += block.mass * new UnityEngine.Vector3(d.posX, d.posY, d.posZ);
         var power = prefab.GetComponent<Power>();
-        if (power != null) demand += power.standardWorkingPower;
+        if (power != null)
+        {
+            demand += power.standardWorkingPower;
+        }
+
         var generator = prefab.GetComponent<PowerGeneratingUnit>();
-        if (generator != null) supply += generator.outputPower;
+        if (generator != null)
+        {
+            supply += generator.outputPower;
+        }
+
         var hover = prefab.GetComponent<HoverThruster>();
-        if (hover != null) lift += hover.maxThrust;
+        if (hover != null)
+        {
+            lift += hover.maxThrust;
+        }
+
         var vector = prefab.GetComponent<UniversalThruster>();
-        if (vector != null) horizontal += vector.maxThrust;
-        if (prefab.GetComponent<Cockpit>() != null) cockpits++;
+        if (vector != null)
+        {
+            horizontal += vector.maxThrust;
+        }
+
+        if (prefab.GetComponent<Cockpit>() != null)
+        {
+            cockpits++;
+        }
     }
-    if (cockpits != 1) throw new System.Exception(name + " has " + cockpits + " cockpits");
+
+    if (cockpits != 1)
+    {
+        throw new System.Exception(name + " has " + cockpits + " cockpits");
+    }
 
     string json = UnityEngine.JsonUtility.ToJson(data, true);
-    foreach (string target in new[] { repoFolder, liveFolder })
+    foreach (string target in new[]
+    {
+        repoFolder,
+        liveFolder
+    }
+
+    )
     {
         string path = System.IO.Path.Combine(target, name + ".json");
         if (System.IO.File.Exists(path) && System.IO.File.ReadAllText(path) != json)
+        {
             throw new System.Exception("refusing to overwrite a different file: " + path);
+        }
+
         System.IO.File.WriteAllText(path, json, new System.Text.UTF8Encoding(false));
     }
+
     return new
     {
         name,
@@ -447,4 +495,8 @@ object Write(BlockDataList data, string name, string note, string repoFolder, st
     };
 }
 
-return new { destination, reports };
+return new
+{
+    destination,
+    reports
+};

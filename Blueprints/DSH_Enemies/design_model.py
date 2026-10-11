@@ -1,4 +1,7 @@
-"""Offline geometry / mass / power model for the DSH enemy blueprints.
+"""Offline geometry, mass and power model; importing it never writes assets.
+
+Entry: python Blueprints/DSH_Enemies/design_model.py prints design checks.
+build_e01/build_e02/build_e03 supply layouts to write_generator.py.
 
 Mirrors the rules actually enforced by the runtime:
 
@@ -59,41 +62,113 @@ CATALOG = {
     "2x2x1": dict(size=(2, 2, 1), mass=4, sockets=box_sockets(2, 2, 1)),
     "2x2x2": dict(size=(2, 2, 2), mass=8, sockets=box_sockets(2, 2, 2)),
     "Cockpit": dict(size=(2, 2, 2), mass=8, sockets=box_sockets(2, 2, 2)),
-    "CargoHold": dict(size=(2, 2, 2), mass=8, std_power=20, mass_ok=True,
-                      sockets=box_sockets(2, 2, 2)),
-    "TechnologyHold": dict(size=(1, 1, 1), mass=1, std_power=20, sockets=box_sockets(1, 1, 1)),
+    "CargoHold": dict(
+        size=(2, 2, 2), mass=8, std_power=20, mass_ok=True, sockets=box_sockets(2, 2, 2)
+    ),
+    "TechnologyHold": dict(
+        size=(1, 1, 1), mass=1, std_power=20, sockets=box_sockets(1, 1, 1)
+    ),
     "Rack": dict(size=(1, 1, 1), mass=1, sockets=box_sockets(1, 1, 1)),
-    "Stairs": dict(size=(1, 1, 1), mass=1, sockets=[
-        ("Down", (0, -0.5, 0), (0, -1, 0)), ("Back", (0, 0, -0.5), (0, 0, -1)),
-        ("Left", (-0.5, 0, 0), (-1, 0, 0)), ("Right", (0.5, 0, 0), (1, 0, 0))]),
+    "Stairs": dict(
+        size=(1, 1, 1),
+        mass=1,
+        sockets=[
+            ("Down", (0, -0.5, 0), (0, -1, 0)),
+            ("Back", (0, 0, -0.5), (0, 0, -1)),
+            ("Left", (-0.5, 0, 0), (-1, 0, 0)),
+            ("Right", (0.5, 0, 0), (1, 0, 0)),
+        ],
+    ),
     "Door": dict(size=(1, 2, 1), mass=2, sockets=box_sockets(1, 2, 1)),
-    "HoverThruster": dict(size=(1, 1, 1), mass=1, thrust=100, std_power=100, min_power=50,
-                          sockets=[("Up", (0, 0.5, 0), (0, 1, 0))]),
-    "HoverThrusterBig": dict(size=(2, 2, 2), mass=8, thrust=800, std_power=100, min_power=50,
-                             sockets=[("Up", (sx - 0.5, 1, sz - 0.5), (0, 1, 0))
-                                      for sx in (0, 1) for sz in (0, 1)]),
-    "UniversalThruster": dict(size=(1, 1, 1), mass=1, thrust=100, std_power=100, min_power=50,
-                              sockets=[("Down", (0, -0.5, 0), (0, -1, 0))]),
-    "UniversalThrusterBig": dict(size=(2, 2, 2), mass=8, thrust=800, std_power=100, min_power=50,
-                                 sockets=[("Down", (sx - 0.5, -1, sz - 0.5), (0, -1, 0))
-                                          for sx in (0, 1) for sz in (0, 1)]),
-    "MainThruster": dict(size=(1, 1, 1), mass=1, thrust=250, std_power=100, min_power=50,
-                         sockets=box_sockets(1, 1, 1)),
-    "MainThrusterBig": dict(size=(2, 2, 2), mass=8, thrust=2000, std_power=100, min_power=50,
-                            sockets=box_sockets(2, 2, 2)),
-    "Turret": dict(size=(1, 1, 1), mass=1, std_power=100, min_power=50,
-                   sockets=[("Down", (0, -0.5, 0), (0, -1, 0))]),
+    "HoverThruster": dict(
+        size=(1, 1, 1),
+        mass=1,
+        thrust=100,
+        std_power=100,
+        min_power=50,
+        sockets=[("Up", (0, 0.5, 0), (0, 1, 0))],
+    ),
+    "HoverThrusterBig": dict(
+        size=(2, 2, 2),
+        mass=8,
+        thrust=800,
+        std_power=100,
+        min_power=50,
+        sockets=[
+            ("Up", (sx - 0.5, 1, sz - 0.5), (0, 1, 0)) for sx in (0, 1) for sz in (0, 1)
+        ],
+    ),
+    "UniversalThruster": dict(
+        size=(1, 1, 1),
+        mass=1,
+        thrust=100,
+        std_power=100,
+        min_power=50,
+        sockets=[("Down", (0, -0.5, 0), (0, -1, 0))],
+    ),
+    "UniversalThrusterBig": dict(
+        size=(2, 2, 2),
+        mass=8,
+        thrust=800,
+        std_power=100,
+        min_power=50,
+        sockets=[
+            ("Down", (sx - 0.5, -1, sz - 0.5), (0, -1, 0))
+            for sx in (0, 1)
+            for sz in (0, 1)
+        ],
+    ),
+    "MainThruster": dict(
+        size=(1, 1, 1),
+        mass=1,
+        thrust=250,
+        std_power=100,
+        min_power=50,
+        sockets=box_sockets(1, 1, 1),
+    ),
+    "MainThrusterBig": dict(
+        size=(2, 2, 2),
+        mass=8,
+        thrust=2000,
+        std_power=100,
+        min_power=50,
+        sockets=box_sockets(2, 2, 2),
+    ),
+    "Turret": dict(
+        size=(1, 1, 1),
+        mass=1,
+        std_power=100,
+        min_power=50,
+        sockets=[("Down", (0, -0.5, 0), (0, -1, 0))],
+    ),
     # The asset name really is misspelled this way ("Contianer"); match it exactly or the
     # Resources.Load in Generate.cs silently skips the block.
-    "RepairBotContianer": dict(size=(1, 1, 1), mass=1, durability=100,
-                               sockets=[("Down", (0, -0.5, 0), (0, -1, 0))]),
-    "HoverFlightController": dict(size=(1, 1, 1), mass=1, std_power=100, min_power=100,
-                                  sockets=[("Down", (0, -0.5, 0), (0, -1, 0))]),
-    "PowerTransmissionDevice": dict(size=(1, 1, 1), mass=1,
-                                    sockets=[("Down", (0, -0.5, 0), (0, -1, 0))]),
-    "PowerGeneratingUnit": dict(size=(2, 2, 2), mass=8, output=4000,
-                                sockets=[("Down", (sx - 0.5, -1, sz - 0.5), (0, -1, 0))
-                                         for sx in (0, 1) for sz in (0, 1)]),
+    "RepairBotContianer": dict(
+        size=(1, 1, 1),
+        mass=1,
+        durability=100,
+        sockets=[("Down", (0, -0.5, 0), (0, -1, 0))],
+    ),
+    "HoverFlightController": dict(
+        size=(1, 1, 1),
+        mass=1,
+        std_power=100,
+        min_power=100,
+        sockets=[("Down", (0, -0.5, 0), (0, -1, 0))],
+    ),
+    "PowerTransmissionDevice": dict(
+        size=(1, 1, 1), mass=1, sockets=[("Down", (0, -0.5, 0), (0, -1, 0))]
+    ),
+    "PowerGeneratingUnit": dict(
+        size=(2, 2, 2),
+        mass=8,
+        output=4000,
+        sockets=[
+            ("Down", (sx - 0.5, -1, sz - 0.5), (0, -1, 0))
+            for sx in (0, 1)
+            for sz in (0, 1)
+        ],
+    ),
 }
 
 
@@ -110,9 +185,15 @@ def qrot(q, v):
     x, y, z, w = q
     vx, vy, vz = v
     return (
-        (1 - 2 * (y * y + z * z)) * vx + 2 * (x * y - w * z) * vy + 2 * (x * z + w * y) * vz,
-        2 * (x * y + w * z) * vx + (1 - 2 * (x * x + z * z)) * vy + 2 * (y * z - w * x) * vz,
-        2 * (x * z - w * y) * vx + 2 * (y * z + w * x) * vy + (1 - 2 * (x * x + y * y)) * vz,
+        (1 - 2 * (y * y + z * z)) * vx
+        + 2 * (x * y - w * z) * vy
+        + 2 * (x * z + w * y) * vz,
+        2 * (x * y + w * z) * vx
+        + (1 - 2 * (x * x + z * z)) * vy
+        + 2 * (y * z - w * x) * vz,
+        2 * (x * z - w * y) * vx
+        + 2 * (y * z + w * x) * vy
+        + (1 - 2 * (x * x + y * y)) * vz,
     )
 
 
@@ -125,36 +206,61 @@ def cells(px, py, pz, size):
     for ix in range(size[0]):
         for iy in range(size[1]):
             for iz in range(size[2]):
-                out.append((round(px - size[0] / 2) + ix,
-                            round(py - size[1] / 2) + iy,
-                            round(pz - size[2] / 2) + iz))
+                out.append(
+                    (
+                        round(px - size[0] / 2) + ix,
+                        round(py - size[1] / 2) + iy,
+                        round(pz - size[2] / 2) + iz,
+                    )
+                )
     return out
 
 
 class Design:
     #: blocks that are safe to embed in the deck grid; their own sockets may stay unmated
     #: because the neighbours that carry the matching face belong to the same call site.
-    STRUCTURAL = ("2x2x2", "2x2x1", "2x1x1", "1x1x1", "Door", "Rack", "Stairs",
-                  "TechnologyHold", "CargoHold")
+    STRUCTURAL = (
+        "2x2x2",
+        "2x2x1",
+        "2x1x1",
+        "1x1x1",
+        "Door",
+        "Rack",
+        "Stairs",
+        "TechnologyHold",
+        "CargoHold",
+    )
     #: blocks whose enabled sockets must all be mated to a neighbour
-    MOUNTED = ("HoverThruster", "HoverThrusterBig", "UniversalThruster", "UniversalThrusterBig",
-               "Turret", "HoverFlightController", "PowerTransmissionDevice")
+    MOUNTED = (
+        "HoverThruster",
+        "HoverThrusterBig",
+        "UniversalThruster",
+        "UniversalThrusterBig",
+        "Turret",
+        "HoverFlightController",
+        "PowerTransmissionDevice",
+    )
 
     def __init__(self, name):
         self.name = name
         self.blocks = []
-        self.spans = []               # (x_lo, x_hi, y_lo, y_hi, z_lo, z_hi) per block
+        self.spans = []  # (x_lo, x_hi, y_lo, y_hi, z_lo, z_hi) per block
         self.by_pos = {}
         self.rejected = []
-        self._socket_buckets = {}     # world socket point -> [[block index, normal], ...]
+        self._socket_buckets = {}  # world socket point -> [[block index, normal], ...]
         self._cache_dirty = False
 
     # -- true volume overlap on the 0.5 m lattice ----------------------------------------
     @staticmethod
     def _span(pos, size):
-        return (pos[0] - size[0] / 2, pos[0] + size[0] / 2,
-                pos[1] - size[1] / 2, pos[1] + size[1] / 2,
-                pos[2] - size[2] / 2, pos[2] + size[2] / 2)
+        return (
+            pos[0] - size[0] / 2,
+            pos[0] + size[0] / 2,
+            pos[1] - size[1] / 2,
+            pos[1] + size[1] / 2,
+            pos[2] - size[2] / 2,
+            pos[2] + size[2] / 2,
+        )
 
     def _conflict(self, span):
         """Index of a block whose volume overlaps `span`, else None.
@@ -164,9 +270,14 @@ class Design:
         nestled under a 2x2x2 deck block are therefore legal.
         """
         for i, s in enumerate(self.spans):
-            if (span[0] < s[1] - 1e-6 and s[0] < span[1] - 1e-6
-                    and span[2] < s[3] - 1e-6 and s[2] < span[3] - 1e-6
-                    and span[4] < s[5] - 1e-6 and s[4] < span[5] - 1e-6):
+            if (
+                span[0] < s[1] - 1e-6
+                and s[0] < span[1] - 1e-6
+                and span[2] < s[3] - 1e-6
+                and s[2] < span[3] - 1e-6
+                and span[4] < s[5] - 1e-6
+                and s[4] < span[5] - 1e-6
+            ):
                 return i
         return None
 
@@ -187,8 +298,16 @@ class Design:
         return self._socket_buckets
 
     # -- placing a part that must physically bolt onto an existing socket -----------------
-    def place(self, type_name, target, rot=IDENTITY, radius=14, note="", require_all=True,
-              lattice_exempt=False):
+    def place(
+        self,
+        type_name,
+        target,
+        rot=IDENTITY,
+        radius=14,
+        note="",
+        require_all=True,
+        lattice_exempt=False,
+    ):
         """Find the free lattice slot nearest `target` whose sockets mate.
 
         A mounted part is legal when every enabled socket of the new block coincides with
@@ -201,9 +320,11 @@ class Design:
         buckets = self._buckets()
         spec = CATALOG[type_name]
         size = spec["size"]
-        off = (0.5 if size[0] % 2 else 0.0,
-               0.5 if size[1] % 2 else 0.0,
-               0.5 if size[2] % 2 else 0.0)
+        off = (
+            0.5 if size[0] % 2 else 0.0,
+            0.5 if size[1] % 2 else 0.0,
+            0.5 if size[2] % 2 else 0.0,
+        )
         best = None
         rng = range(-radius, radius + 1)
         for dx in rng:
@@ -212,9 +333,11 @@ class Design:
                     dist = dx * dx + dy * dy + dz * dz
                     if best is not None and dist >= best[0]:
                         continue
-                    key = (round((target[0] + dx + off[0]) * 2) / 2,
-                           round((target[1] + dy + off[1]) * 2) / 2,
-                           round((target[2] + dz + off[2]) * 2) / 2)
+                    key = (
+                        round((target[0] + dx + off[0]) * 2) / 2,
+                        round((target[1] + dy + off[1]) * 2) / 2,
+                        round((target[2] + dz + off[2]) * 2) / 2,
+                    )
                     if key in self.by_pos:
                         continue
                     if self._conflict(self._span(key, size)) is not None:
@@ -225,8 +348,14 @@ class Design:
         if best is None:
             self.rejected.append((type_name, target, "no mated slot found " + note))
             return None
-        return self.add(type_name, best[1][0], best[1][1], best[1][2], rot=rot,
-                        lattice_exempt=lattice_exempt)
+        return self.add(
+            type_name,
+            best[1][0],
+            best[1][1],
+            best[1][2],
+            rot=rot,
+            lattice_exempt=lattice_exempt,
+        )
 
     def _sockets_mate(self, spec, key, rot, buckets, require_all=True):
         """True when the candidate's sockets pair up with existing sockets.
@@ -267,16 +396,26 @@ class Design:
         # half-cell offset.
         for axis in (0, 2):
             if size[axis] == 2 and not lattice_exempt and abs(key[axis] % 2) != 0:
-                self.rejected.append((type_name, key,
-                                      "axis %d centre %.1f breaks the 2 m lattice parity"
-                                      % (axis, key[axis])))
+                self.rejected.append(
+                    (
+                        type_name,
+                        key,
+                        "axis %d centre %.1f breaks the 2 m lattice parity"
+                        % (axis, key[axis]),
+                    )
+                )
                 return None
         span = self._span(key, size)
         conflict = self._conflict(span)
         if conflict is not None:
-            self.rejected.append((type_name, key,
-                                  "overlaps %s at %s"
-                                  % (self.blocks[conflict]["type"], self.blocks[conflict]["pos"])))
+            self.rejected.append(
+                (
+                    type_name,
+                    key,
+                    "overlaps %s at %s"
+                    % (self.blocks[conflict]["type"], self.blocks[conflict]["pos"]),
+                )
+            )
             return None
         index = len(self.blocks)
         self.blocks.append(dict(type=type_name, pos=key, rot=rot, spec=spec))
@@ -318,7 +457,9 @@ class Design:
         Embedded 2x2x2 parts sit where a deck block would sit: integer centre, own Up
         sockets therefore absent.  Only one mating face is required to stay connected.
         """
-        return self.place(type_name, target, radius=radius, note=note, require_all=False)
+        return self.place(
+            type_name, target, radius=radius, note=note, require_all=False
+        )
 
     def place_on_deck(self, type_name, target, radius=12, note=""):
         """Bolt a part onto a deck block's top face.
@@ -336,7 +477,7 @@ class Design:
         offsets = [(sx * off[0], sz * off[1]) for sx in (-1, 1) for sz in (-1, 1)]
         buckets = self._buckets()
         best = None
-        for (bx, by, bz) in list(self.by_pos):
+        for bx, by, bz in list(self.by_pos):
             if by != 0:
                 continue
             for dx, dz in offsets:
@@ -347,10 +488,15 @@ class Design:
                     continue
                 if self._conflict(self._span(key, size)) is not None:
                     continue
-                if not self._sockets_mate(CATALOG[type_name], key, IDENTITY, buckets, True):
+                if not self._sockets_mate(
+                    CATALOG[type_name], key, IDENTITY, buckets, True
+                ):
                     continue
-                dist = (key[0] - target[0]) ** 2 + (key[1] - target[1]) ** 2 \
+                dist = (
+                    (key[0] - target[0]) ** 2
+                    + (key[1] - target[1]) ** 2
                     + (key[2] - target[2]) ** 2
+                )
                 if best is None or dist < best[0]:
                     best = (dist, key)
         if best is None:
@@ -364,7 +510,7 @@ class Design:
         """Lattice slots where a 1x1x1 part at height y would mate the hull below it."""
         buckets = self._buckets()
         out = []
-        for (bx, by, bz) in list(self.by_pos):
+        for bx, by, bz in list(self.by_pos):
             if by != y - 1.5:
                 continue
             for dx in (-0.5, 0.5):
@@ -400,10 +546,15 @@ class Design:
                         continue
                     if self._conflict(self._span(key, (1, 1, 1))) is not None:
                         continue
-                    if not self._sockets_mate(CATALOG[type_name], key, IDENTITY, buckets, True):
+                    if not self._sockets_mate(
+                        CATALOG[type_name], key, IDENTITY, buckets, True
+                    ):
                         continue
-                    dist = (key[0] - target[0]) ** 2 + (key[1] - target[1]) ** 2 \
+                    dist = (
+                        (key[0] - target[0]) ** 2
+                        + (key[1] - target[1]) ** 2
                         + (key[2] - target[2]) ** 2
+                    )
                     if best is None or dist < best[0]:
                         best = (dist, key)
         if best is None:
@@ -432,10 +583,15 @@ class Design:
                         continue
                     if self._conflict(self._span(key, (1, 1, 1))) is not None:
                         continue
-                    if not self._sockets_mate(CATALOG[type_name], key, rot, buckets, True):
+                    if not self._sockets_mate(
+                        CATALOG[type_name], key, rot, buckets, True
+                    ):
                         continue
-                    dist = (key[0] - target[0]) ** 2 + (key[1] - target[1]) ** 2 \
+                    dist = (
+                        (key[0] - target[0]) ** 2
+                        + (key[1] - target[1]) ** 2
                         + (key[2] - target[2]) ** 2
+                    )
                     if best is None or dist < best[0]:
                         best = (dist, key)
         if best is None:
@@ -478,13 +634,19 @@ class Design:
             return all(abs(a[k] - b[k]) <= r for k in range(3))
 
         while True:
-            relay_pos = [b["pos"] for b in self.blocks
-                         if b["type"] == "PowerTransmissionDevice"]
+            relay_pos = [
+                b["pos"] for b in self.blocks if b["type"] == "PowerTransmissionDevice"
+            ]
             if len(relay_pos) >= count or not slots:
                 break
-            loads = [b["pos"] for b in self.blocks
-                     if "std_power" in b["spec"] and b["type"] != "PowerTransmissionDevice"]
-            missing = [p for p in loads if not any(inside(p, q, 5.0) for q in relay_pos)]
+            loads = [
+                b["pos"]
+                for b in self.blocks
+                if "std_power" in b["spec"] and b["type"] != "PowerTransmissionDevice"
+            ]
+            missing = [
+                p for p in loads if not any(inside(p, q, 5.0) for q in relay_pos)
+            ]
             if not missing:
                 break
             best = None
@@ -494,8 +656,13 @@ class Design:
                     best = (gained, slot)
             if best is None or best[0] == 0:
                 break
-            self.add("PowerTransmissionDevice", best[1][0], best[1][1], best[1][2],
-                     rot=_q(180, "x"))
+            self.add(
+                "PowerTransmissionDevice",
+                best[1][0],
+                best[1][1],
+                best[1][2],
+                rot=_q(180, "x"),
+            )
             slots = [s for s in slots if s != best[1]]
         return [b["pos"] for b in self.blocks if b["type"] == "PowerTransmissionDevice"]
 
@@ -511,7 +678,7 @@ class Design:
         every relay's 5 m box is simply dead.
         """
         avoid = set(avoid)
-        for (px, pz) in prefer:
+        for px, pz in prefer:
             if count <= 0:
                 break
             if self.place_under_deck(type_name, (px, -1.5, pz)) is not None:
@@ -546,8 +713,9 @@ class Design:
                             continue
                         if self._conflict(self._span(key, (1, 1, 1))) is not None:
                             continue
-                        if not self._sockets_mate(CATALOG[type_name], key, IDENTITY,
-                                                  self._buckets(), True):
+                        if not self._sockets_mate(
+                            CATALOG[type_name], key, IDENTITY, self._buckets(), True
+                        ):
                             continue
                         slots.append(key)
             if not slots:
@@ -579,10 +747,15 @@ class Design:
                         continue
                     if self._conflict(self._span(key, (1, 1, 1))) is not None:
                         continue
-                    if not self._sockets_mate(CATALOG[type_name], key, IDENTITY, buckets, True):
+                    if not self._sockets_mate(
+                        CATALOG[type_name], key, IDENTITY, buckets, True
+                    ):
                         continue
-                    dist = (key[0] - target[0]) ** 2 + (key[1] - target[1]) ** 2 \
+                    dist = (
+                        (key[0] - target[0]) ** 2
+                        + (key[1] - target[1]) ** 2
                         + (key[2] - target[2]) ** 2
+                    )
                     if best is None or dist < best[0]:
                         best = (dist, key)
         if best is None:
@@ -599,7 +772,7 @@ class Design:
         up for aiming and for the repair drone's dock).
         """
         placed = []
-        for (px, pz) in targets:
+        for px, pz in targets:
             index = self.place_upright_on_deck(type_name, (px, 1.5, pz))
             if index is not None:
                 placed.append(self.blocks[index]["pos"])
@@ -607,27 +780,45 @@ class Design:
 
     def report(self, verbose=False):
         mass = sum(b["spec"]["mass"] for b in self.blocks)
-        moment = [sum(b["spec"]["mass"] * b["pos"][k] for b in self.blocks) for k in range(3)]
+        moment = [
+            sum(b["spec"]["mass"] * b["pos"][k] for b in self.blocks) for k in range(3)
+        ]
         com = tuple(moment[k] / mass for k in range(3))
 
-        ring = [b for b in self.blocks if b["type"] in ("HoverThruster", "HoverThrusterBig")]
+        ring = [
+            b for b in self.blocks if b["type"] in ("HoverThruster", "HoverThrusterBig")
+        ]
         ring_thrust = sum(b["spec"]["thrust"] for b in ring)
         ring_mass = sum(b["spec"]["mass"] for b in ring)
-        ring_c = tuple(sum(b["spec"]["mass"] * b["pos"][k] for b in ring) / ring_mass
-                       for k in range(3)) if ring else (0.0, 0.0, 0.0)
-        horiz = sum(b["spec"].get("thrust", 0.0) for b in self.blocks
-                    if b["type"] in ("UniversalThruster", "UniversalThrusterBig"))
+        ring_c = (
+            tuple(
+                sum(b["spec"]["mass"] * b["pos"][k] for b in ring) / ring_mass
+                for k in range(3)
+            )
+            if ring
+            else (0.0, 0.0, 0.0)
+        )
+        horiz = sum(
+            b["spec"].get("thrust", 0.0)
+            for b in self.blocks
+            if b["type"] in ("UniversalThruster", "UniversalThrusterBig")
+        )
 
         loads = [b for b in self.blocks if "std_power" in b["spec"]]
         demand = sum(b["spec"]["std_power"] for b in loads)
         supply = sum(b["spec"].get("output", 0.0) for b in self.blocks)
         gens = [b["pos"] for b in self.blocks if b["spec"].get("output")]
-        relays = [b["pos"] for b in self.blocks if b["type"] == "PowerTransmissionDevice"]
+        relays = [
+            b["pos"] for b in self.blocks if b["type"] == "PowerTransmissionDevice"
+        ]
         per_load = supply / len(loads) if loads else 0.0
-        min_req = max((b["spec"].get("min_power", MIN_WORKING_POWER) for b in loads), default=0)
+        min_req = max(
+            (b["spec"].get("min_power", MIN_WORKING_POWER) for b in loads), default=0
+        )
 
         def inside(a, b, r):
             return all(abs(a[k] - b[k]) <= r for k in range(3))
+
         # PowerTransmissionDevice splits the relays into components (generator->relay and
         # relay<->relay within maxConnectionDistance = 10 m) and hands each component's total
         # generator output *equally* to the Power blocks inside powerRange = 5 m of it.  A
@@ -663,21 +854,31 @@ class Design:
         starved = []
         for comp in components:
             members = [relays[i] for i in comp]
-            output = sum(g["spec"].get("output", 0.0) for g in self.blocks
-                         if g["spec"].get("output")
-                         and any(inside(g["pos"], r, CONNECT_RANGE) for r in members))
-            comp_loads = [b for b in loads
-                          if any(inside(b["pos"], r, POWER_RANGE) for r in members)]
+            output = sum(
+                g["spec"].get("output", 0.0)
+                for g in self.blocks
+                if g["spec"].get("output")
+                and any(inside(g["pos"], r, CONNECT_RANGE) for r in members)
+            )
+            comp_loads = [
+                b
+                for b in loads
+                if any(inside(b["pos"], r, POWER_RANGE) for r in members)
+            ]
             if not comp_loads:
                 continue
             share = output / len(comp_loads)
             for b in comp_loads:
                 need = b["spec"].get("min_power", MIN_WORKING_POWER)
                 if share < need:
-                    starved.append("%s%s share=%.0f need=%.0f" % (b["type"], b["pos"], share, need))
+                    starved.append(
+                        "%s%s share=%.0f need=%.0f" % (b["type"], b["pos"], share, need)
+                    )
         for b in loads:
-            if not any(any(inside(b["pos"], relays[i], POWER_RANGE) for i in comp)
-                       for comp in components):
+            if not any(
+                any(inside(b["pos"], relays[i], POWER_RANGE) for i in comp)
+                for comp in components
+            ):
                 uncovered.append(b["type"] + str(b["pos"]))
 
         adj, pairs = self.graph()
@@ -694,38 +895,68 @@ class Design:
             stack.extend(adj[n] - seen)
 
         cockpits = [i for i, b in enumerate(self.blocks) if b["type"] == "Cockpit"]
-        unmated = [self.blocks[i]["type"] + str(self.blocks[i]["pos"])
-                   for i in range(len(self.blocks))
-                   if i not in mated and self.blocks[i]["type"] in self.MOUNTED]
+        unmated = [
+            self.blocks[i]["type"] + str(self.blocks[i]["pos"])
+            for i in range(len(self.blocks))
+            if i not in mated and self.blocks[i]["type"] in self.MOUNTED
+        ]
 
         return dict(
-            name=self.name, blocks=len(self.blocks), mass=round(mass, 1),
+            name=self.name,
+            blocks=len(self.blocks),
+            mass=round(mass, 1),
             com=tuple(round(c, 3) for c in com),
             ring_centroid=tuple(round(c, 3) for c in ring_c),
             ring_offset_from_com=round(math.dist(com, ring_c), 3),
-            ring_thrust=ring_thrust, lift_ratio=round(ring_thrust / (mass * G), 3),
+            ring_thrust=ring_thrust,
+            lift_ratio=round(ring_thrust / (mass * G), 3),
             hover_utilisation=round(mass * G / ring_thrust, 3),
-            horizontal_thrust=horiz, horizontal_accel=round(horiz / mass, 2),
-            demand=demand, supply=supply, loads=len(loads), generators=len(gens),
-            relays=len(relays), live_relays=len(components), per_load=round(per_load, 1),
-            min_required=min_req, powered=per_load >= min_req,
-            uncovered=len(uncovered), uncovered_list=uncovered[:6],
-            starved=len(starved), starved_list=starved[:6],
-            cockpit_count=len(cockpits), connected=len(seen),
+            horizontal_thrust=horiz,
+            horizontal_accel=round(horiz / mass, 2),
+            demand=demand,
+            supply=supply,
+            loads=len(loads),
+            generators=len(gens),
+            relays=len(relays),
+            live_relays=len(components),
+            per_load=round(per_load, 1),
+            min_required=min_req,
+            powered=per_load >= min_req,
+            uncovered=len(uncovered),
+            uncovered_list=uncovered[:6],
+            starved=len(starved),
+            starved_list=starved[:6],
+            cockpit_count=len(cockpits),
+            connected=len(seen),
             connected_ok=len(seen) == len(self.blocks),
-            socket_pairs=len(pairs), unmated=unmated,
+            socket_pairs=len(pairs),
+            unmated=unmated,
             rejected=self.rejected,
         )
 
     def summary_line(self):
         r = self.report()
-        return ("%-18s blocks=%-4d mass=%-6.1f  L/W=%.2f  hover=%.0f%%  hor=%4dN (%.1f m/s2)  "
-                "P=%d/%d -> %d/load  conn=%d/%d  sockets=%d  unmated=%d  rejected=%d"
-                % (r["name"], r["blocks"], r["mass"], r["lift_ratio"],
-                   100 * r["hover_utilisation"], r["horizontal_thrust"], r["horizontal_accel"],
-                   r["supply"], r["demand"], r["per_load"],
-                   r["connected"], r["blocks"], r["socket_pairs"], len(r["unmated"]),
-                   len(r["rejected"])))
+        return (
+            "%-18s blocks=%-4d mass=%-6.1f  L/W=%.2f  hover=%.0f%%  hor=%4dN (%.1f m/s2)  "
+            "P=%d/%d -> %d/load  conn=%d/%d  sockets=%d  unmated=%d  rejected=%d"
+            % (
+                r["name"],
+                r["blocks"],
+                r["mass"],
+                r["lift_ratio"],
+                100 * r["hover_utilisation"],
+                r["horizontal_thrust"],
+                r["horizontal_accel"],
+                r["supply"],
+                r["demand"],
+                r["per_load"],
+                r["connected"],
+                r["blocks"],
+                r["socket_pairs"],
+                len(r["unmated"]),
+                len(r["rejected"]),
+            )
+        )
 
 
 # ======================================================================================
@@ -790,6 +1021,7 @@ def _ring_cells(xs, zs, station, upper=False):
 # lift, armament and control authority.
 # ======================================================================================
 
+
 def _plate(d, xs, zs, chamfer, station, ring):
     for z in zs:
         for x in xs:
@@ -804,7 +1036,9 @@ def _plate(d, xs, zs, chamfer, station, ring):
 
 def _pods(d, pods):
     for sx, z in pods:
-        d.add("UniversalThrusterBig", sx, 0, z, rot=_q(-90 * (1 if sx > 0 else -1), "z"))
+        d.add(
+            "UniversalThrusterBig", sx, 0, z, rot=_q(-90 * (1 if sx > 0 else -1), "z")
+        )
 
 
 def _fit(d, slots):
@@ -829,15 +1063,31 @@ def build_e01():
     xs = (-4, -2, 0, 2, 4)
     zs = (-4, -2, 0, 2, 4)
     chamfer = {(4, 4), (4, -4), (-4, 4), (-4, -4)}
-    station = {(0, 2, 0): "Cockpit",
-               (0, 2, -4): "PowerGeneratingUnit",
-               (2, 2, 4): "PowerGeneratingUnit",
-               (-2, 2, 4): "PowerGeneratingUnit"}
-    ring = [(-2, -4), (2, -4),
-            (-4, -2), (-2, -2), (0, -2), (2, -2), (4, -2),
-            (-4, 0), (-2, 0), (2, 0), (4, 0),
-            (-4, 2), (-2, 2), (0, 2), (2, 2), (4, 2),
-            (0, 4)]
+    station = {
+        (0, 2, 0): "Cockpit",
+        (0, 2, -4): "PowerGeneratingUnit",
+        (2, 2, 4): "PowerGeneratingUnit",
+        (-2, 2, 4): "PowerGeneratingUnit",
+    }
+    ring = [
+        (-2, -4),
+        (2, -4),
+        (-4, -2),
+        (-2, -2),
+        (0, -2),
+        (2, -2),
+        (4, -2),
+        (-4, 0),
+        (-2, 0),
+        (2, 0),
+        (4, 0),
+        (-4, 2),
+        (-2, 2),
+        (0, 2),
+        (2, 2),
+        (4, 2),
+        (0, 4),
+    ]
     _plate(d, xs, zs, chamfer, station, ring)
     # The flight controller must NOT be flipped: it uses transform.up as the craft's up.
     d.place_upright_on_deck("HoverFlightController", (2.5, 1.5, -0.5))
@@ -856,10 +1106,19 @@ def build_e01():
     # vector pods are not used: a pod does bolt onto the plate edge, but every side deck cell
     # of a ring column is already a hover-ring anchor, so no relay could then be placed within
     # 5 m of a pod mounted 2 m outside the plate.
-    d.place_under_deck_set("UniversalThruster", 10,
-                           prefer=((2.5, 2.5), (-2.5, -2.5), (2.5, 0.5), (-2.5, -0.5),
-                                   (0.5, 2.5), (-0.5, -2.5)),
-                           avoid=relays)
+    d.place_under_deck_set(
+        "UniversalThruster",
+        10,
+        prefer=(
+            (2.5, 2.5),
+            (-2.5, -2.5),
+            (2.5, 0.5),
+            (-2.5, -0.5),
+            (0.5, 2.5),
+            (-0.5, -2.5),
+        ),
+        avoid=relays,
+    )
     d.place_deck_top_set("UniversalThruster", 10)
     return d
 
@@ -874,13 +1133,18 @@ def build_e02():
     xs = (-4, -2, 0, 2, 4)
     zs = (-10, -8, -6, -4, -2, 0, 2, 4, 6, 8, 10)
     chamfer = {(4, 10), (4, -10), (-4, 10), (-4, -10)}
-    station = {(0, 2, 0): "Cockpit",
-               (4, 2, -8): "PowerGeneratingUnit",
-               (-4, 2, 8): "PowerGeneratingUnit",
-               (0, 2, -10): "PowerGeneratingUnit"}
-    ring = [(x, z) for x in (-4, 4) for z in zs
-            if (x, z) not in chamfer
-            and (x, z) not in {(sx, sz) for sx, _, sz in station}]
+    station = {
+        (0, 2, 0): "Cockpit",
+        (4, 2, -8): "PowerGeneratingUnit",
+        (-4, 2, 8): "PowerGeneratingUnit",
+        (0, 2, -10): "PowerGeneratingUnit",
+    }
+    ring = [
+        (x, z)
+        for x in (-4, 4)
+        for z in zs
+        if (x, z) not in chamfer and (x, z) not in {(sx, sz) for sx, _, sz in station}
+    ]
     ring += [(x, z) for x in (-2, 0, 2) for z in (-10, 10) if (x, z) not in chamfer]
     ring += [(x, z) for x in (-2, 2) for z in (-8, 8) if (x, z) not in chamfer]
     _plate(d, xs, zs, chamfer, station, ring)
@@ -891,17 +1155,39 @@ def build_e02():
     d.place_upright_on_deck("HoverFlightController", (2.5, 1.5, -0.5))
     # Firepower and damage control along the whole spine: four turrets forward, four aft, and
     # three repair bays so a 10 m repair sphere covers bow, midships and stern.
-    d.place_on_deck_list("Turret", ((2.5, 3.5), (-2.5, 3.5), (2.5, -3.5), (-2.5, -3.5),
-                                    (2.5, 7.5), (-2.5, 7.5), (2.5, -7.5), (-2.5, -7.5)))
+    d.place_on_deck_list(
+        "Turret",
+        (
+            (2.5, 3.5),
+            (-2.5, 3.5),
+            (2.5, -3.5),
+            (-2.5, -3.5),
+            (2.5, 7.5),
+            (-2.5, 7.5),
+            (2.5, -7.5),
+            (-2.5, -7.5),
+        ),
+    )
     d.place_on_deck_list("RepairBotContianer", ((0.5, 8.5), (-0.5, -8.5), (0.5, 0.5)))
     # Lateral thrust from omni thrusters in the remaining under-deck and deck-top sockets.
     # The 2x2x2 outboard pods are deliberately not used: they bolt onto the plate edge, but
     # every side deck cell of a ring column is already a hover-ring anchor, so no relay could
     # be placed within the 5 m needed to reach a pod mounted outside the plate.
-    d.place_under_deck_set("UniversalThruster", 24,
-                           prefer=((0.5, 0.5), (-0.5, -0.5), (2.5, 0.5), (-2.5, -0.5),
-                                   (2.5, 4.5), (-2.5, -4.5), (2.5, -4.5), (-2.5, 4.5)),
-                           avoid=relays)
+    d.place_under_deck_set(
+        "UniversalThruster",
+        24,
+        prefer=(
+            (0.5, 0.5),
+            (-0.5, -0.5),
+            (2.5, 0.5),
+            (-2.5, -0.5),
+            (2.5, 4.5),
+            (-2.5, -4.5),
+            (2.5, -4.5),
+            (-2.5, 4.5),
+        ),
+        avoid=relays,
+    )
     d.place_deck_top_set("UniversalThruster", 16)
     return d
 
@@ -916,29 +1202,65 @@ def build_e03():
     xs = (-4, -2, 0, 2, 4)
     zs = (-4, -2, 0, 2, 4)
     chamfer = {(4, 4), (4, -4), (-4, 4), (-4, -4)}
-    station = {(0, 2, 0): "Cockpit",
-               (0, 2, -4): "PowerGeneratingUnit",
-               (4, 2, 2): "PowerGeneratingUnit",
-               (-4, 2, -2): "PowerGeneratingUnit"}
-    ring = [(-2, -4), (2, -4),
-            (-4, -2), (-2, -2), (0, -2), (2, -2), (4, -2),
-            (-4, 0), (-2, 0), (2, 0), (4, 0),
-            (-4, 2), (-2, 2), (0, 2), (2, 2), (4, 2),
-            (0, 4)]
+    station = {
+        (0, 2, 0): "Cockpit",
+        (0, 2, -4): "PowerGeneratingUnit",
+        (4, 2, 2): "PowerGeneratingUnit",
+        (-4, 2, -2): "PowerGeneratingUnit",
+    }
+    ring = [
+        (-2, -4),
+        (2, -4),
+        (-4, -2),
+        (-2, -2),
+        (0, -2),
+        (2, -2),
+        (4, -2),
+        (-4, 0),
+        (-2, 0),
+        (2, 0),
+        (4, 0),
+        (-4, 2),
+        (-2, 2),
+        (0, 2),
+        (2, 2),
+        (4, 2),
+        (0, 4),
+    ]
     _plate(d, xs, zs, chamfer, station, ring)
     # The flight controller must NOT be flipped: it uses transform.up as the craft's up.
     d.place_upright_on_deck("HoverFlightController", (2.5, 1.5, -0.5))
     # Heaviest battery of the three, plus two repair bays for self-repair coverage.
-    d.place_on_deck_list("Turret", ((1.5, 3.5), (-1.5, 3.5), (2.5, 1.5), (-2.5, 1.5),
-                                    (2.5, -1.5), (-2.5, -1.5), (1.5, -3.5), (-1.5, -3.5)))
+    d.place_on_deck_list(
+        "Turret",
+        (
+            (1.5, 3.5),
+            (-1.5, 3.5),
+            (2.5, 1.5),
+            (-2.5, 1.5),
+            (2.5, -1.5),
+            (-2.5, -1.5),
+            (1.5, -3.5),
+            (-1.5, -3.5),
+        ),
+    )
     d.place_on_deck_list("RepairBotContianer", ((0.5, 3.5), (-0.5, -3.5)))
     # Relays first (see the E01 note), then omni thrusters in the leftover sockets, plus two
     # that sit on free top-face sockets near the bow.
     relays = d.place_relays(14, note="disc")
-    d.place_under_deck_set("UniversalThruster", 12,
-                           prefer=((0.5, 0.5), (-0.5, -0.5), (2.5, -0.5), (-2.5, 0.5),
-                                   (0.5, -2.5), (-0.5, 2.5)),
-                           avoid=relays)
+    d.place_under_deck_set(
+        "UniversalThruster",
+        12,
+        prefer=(
+            (0.5, 0.5),
+            (-0.5, -0.5),
+            (2.5, -0.5),
+            (-2.5, 0.5),
+            (0.5, -2.5),
+            (-0.5, 2.5),
+        ),
+        avoid=relays,
+    )
     d.place_on_deck("UniversalThruster", (0.5, 1.5, 3.5))
     d.place_on_deck("UniversalThruster", (-0.5, 1.5, 3.5))
     d.place_deck_top_set("UniversalThruster", 12)
@@ -947,7 +1269,9 @@ def build_e03():
 
 BUILDERS = (build_e01, build_e02, build_e03)
 
-if __name__ == "__main__":
+
+def main():
+    """Build the three in-memory designs and print their offline acceptance checks."""
     ok = True
     for builder in BUILDERS:
         d = builder()
@@ -955,8 +1279,10 @@ if __name__ == "__main__":
         print(d.summary_line())
         problems = []
         if not r["connected_ok"]:
-            problems.append("connector graph is not one component (%d/%d)"
-                            % (r["connected"], r["blocks"]))
+            problems.append(
+                "connector graph is not one component (%d/%d)"
+                % (r["connected"], r["blocks"])
+            )
         if r["cockpit_count"] != 1:
             problems.append("cockpit count %d" % r["cockpit_count"])
         if r["unmated"]:
@@ -966,16 +1292,24 @@ if __name__ == "__main__":
         if r["uncovered"]:
             problems.append("unpowered loads: %s" % r["uncovered_list"])
         if not r["powered"]:
-            problems.append("power per load %.1f < min %d" % (r["per_load"], r["min_required"]))
+            problems.append(
+                "power per load %.1f < min %d" % (r["per_load"], r["min_required"])
+            )
         if r["lift_ratio"] < 1.6:
             problems.append("lift ratio %.2f below 1.6" % r["lift_ratio"])
         if abs(r["com"][0]) > 0.35:
             problems.append("lateral CoM offset %.3f" % r["com"][0])
         if r["ring_offset_from_com"] > 2.0:
-            problems.append("hover ring centroid %.2f m from CoM" % r["ring_offset_from_com"])
+            problems.append(
+                "hover ring centroid %.2f m from CoM" % r["ring_offset_from_com"]
+            )
         if problems:
             ok = False
             for p in problems:
                 print("     !! " + p)
     print()
     print("ALL DESIGNS PASS" if ok else "PROBLEMS REMAIN")
+
+
+if __name__ == "__main__":
+    main()
