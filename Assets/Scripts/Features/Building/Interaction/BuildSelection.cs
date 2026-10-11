@@ -15,6 +15,7 @@ internal sealed class BuildSelection
     private Material highlightMaterial;
     private GameObject moveAxis;
     private GameObject rotateAxis;
+    private bool _gizmosEnabled = true;
     public Block selectedBlock;
     public BuildType currentBuildType;
     public BuildSelection(BuildManipulation manipulation)
@@ -136,10 +137,16 @@ internal sealed class BuildSelection
         selectedBlock = null;
     }
 
+    public void SetGizmosEnabled(bool enabled)
+    {
+        _gizmosEnabled = enabled;
+        RefreshBuildGizmos();
+    }
+
     public void RefreshBuildGizmos()
     {
         HideBuildGizmos();
-        if (selectedBlock == null || (currentBuildType != BuildType.Move && currentBuildType != BuildType.Rotate))
+        if (!_gizmosEnabled || selectedBlock == null || (currentBuildType != BuildType.Move && currentBuildType != BuildType.Rotate))
         {
             return;
         }

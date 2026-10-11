@@ -153,15 +153,13 @@ public class BuildManager : MonoBehaviour
 
     public void SetBuildMode(bool lockView)
     {
+        EnsureBuildInteraction();
+        _selection.SetGizmosEnabled(lockView);
         if (!lockView)
         {
-            // 视角切换只结束交互，保留类型及待搭建资源。
-            _manipulation?.CancelDrag();
+            // 切换视角只取消拖拽/预览，保留选中方块、类型和待搭建资源。
+            _manipulation.CancelDrag();
             ClearCurrentGhost();
-            if (selectedBlock != null)
-            {
-                DeselectBlock();
-            }
         }
     }
 

@@ -302,6 +302,36 @@ public static class BuildPalettePlayProbe
                 manager.currentBuildType == type && manager.currentBlockResourcePath == resource);
         }
 
+        var selectionTarget = Object.Instantiate(Resources.Load<GameObject>("Blocks/1x1x1")).GetComponent<Block>();
+        var selection = typeof(BuildManager).GetField("_selection", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(manager);
+        foreach (BuildType type in new[]
+        {
+            BuildType.Select,
+            BuildType.Move,
+            BuildType.Rotate
+        }
+
+        )
+        {
+            manager.SetBuildType(type);
+            selection.GetType().GetMethod("SelectBlock").Invoke(selection, new object[] { selectionTarget });
+            manager.selectedBlock = selectionTarget;
+            Material[] selectedMaterials = selectionTarget.GetComponentInChildren<MeshRenderer>().sharedMaterials;
+            manager.SetBuildMode(false);
+            Check(
+                type + " unlock preserves selected block and hides axes",
+                manager.selectedBlock == selectionTarget && (Block)selection.GetType().GetField("selectedBlock").GetValue(selection) == selectionTarget && !manager.moveAxis.activeSelf && !manager.rotateAxis.activeSelf);
+            manager.SetBuildMode(true);
+            Check(
+                type + " relock preserves selection and restores matching axes",
+                manager.selectedBlock == selectionTarget && manager.moveAxis.activeSelf == (type == BuildType.Move) && manager.rotateAxis.activeSelf == (type == BuildType.Rotate));
+            Check(
+                type + " view switching preserves selection highlight",
+                selectionTarget.GetComponentInChildren<MeshRenderer>().sharedMaterials.SequenceEqual(selectedMaterials));
+        }
+
+        manager.DeselectBlock();
+        Object.Destroy(selectionTarget.gameObject);
         ui.SetMove();
         Check(
             "Move exits placement and clears resource",

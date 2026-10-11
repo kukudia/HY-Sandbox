@@ -56,7 +56,7 @@ def main():
 
     graph(
         "启动与建造/游玩会话",
-        "引擎自动调用入口独立；按按钮进入业务主链。返回建造前先保存货仓。选择方块资源进入 BuildType.Build；InputManager 切换 lockView 仅取消交互并保留当前 BuildType 与资源。",
+        "引擎自动调用入口独立；按按钮进入业务主链。返回建造前先保存货仓。选择方块资源进入 BuildType.Build；InputManager 切换 lockView 仅取消拖拽/预览并隐藏操作轴，保留选中方块、高亮、BuildType 与资源，重锁恢复操作轴。",
         {
             "A": "GameManager.Start",
             "B": "GameManager.Init",
