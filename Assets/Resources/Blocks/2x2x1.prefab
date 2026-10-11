@@ -261,6 +261,7 @@ GameObject:
   - component: {fileID: -7967804577805710729}
   - component: {fileID: 1168058490241114898}
   - component: {fileID: 2707772126108255598}
+  - component: {fileID: 6560519151457650488}
   m_Layer: 3
   m_Name: 2x2x1
   m_TagString: Untagged
@@ -300,18 +301,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canSpawnConnector: 0
   canBeDeleted: 1
+  canEditInfo: 0
   x: 2
   y: 2
   z: 1
   cost: 0
   density: 1
   mass: 4
+  _useCustomMass: 0
+  _massSettingsInitialized: 1
   collisionSpeedThreshold: 5
   damageMultiplier: 10
   explosionForce: 500
   explosionRadius: 5
   explosionDisconnectProbability: 0.35
   resourcePath: 
+  info: 'Size: 2x2x1
+
+    Mass: 4 kg
+
+    Durability: 100'
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
   connectorParent: {fileID: 2695719906485559115}
   raycastCollider: {fileID: 1168058490241114898}
@@ -463,6 +472,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxDurability: 100
+  collisionSpeedThreshold: 5
+  damageMultiplier: 0.001
+  _collisionDamageScale: 0.1
+  _maximumCollisionHealthFraction: 0.08
+  _collisionDamageCooldown: 0.35
   debugLog: 1
   currentDurability: 0
 --- !u!65 &1168058490241114898
@@ -504,3 +518,17 @@ MonoBehaviour:
   durabilityStatus: 0
   powerStatus: 0
   iconHeightOffset: 0.25
+  _fadeSpeed: 7
+--- !u!114 &6560519151457650488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004239489873974274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da66ba1efe360b41b61c63a9df8cb48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BlockCsvBinding
+  _prefabGuid: 8adb48362f432f445899a8b2d69440bb

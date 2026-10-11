@@ -225,6 +225,46 @@
 | AutoBuildTool | [`string IncrementVersion(string version)`](../Assets/Editor/Build/AutoBuildTool.cs#L56) | private static |
 | AutoBuildTool | [`string[] GetEnabledScenes()`](../Assets/Editor/Build/AutoBuildTool.cs#L76) | private static |
 
+## Assets/Editor/Building/BlockCsvAuthoring.cs
+
+// 职责：初始化 CSV 与 Prefab 绑定，CSV 导入后自动备份/同步真实资产；校验失败不写入。 // 入口：CreateCsv() / Bake() / QueueBake()；只处理 Resources/Blocks，不保存当前场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlockCsvAuthoring | [`void OpenCsv()`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L34) | public static |
+| BlockCsvAuthoring | [`void CreateCsv()`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L45) | public static |
+| BlockCsvAuthoring | [`void Bake()`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L128) | public static |
+| BlockCsvAuthoring | [`void QueueBake()`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L238) | public static |
+| BlockCsvAuthoring | [`void RequestValidation(BlockCsvBinding binding)`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L244) | private static |
+| BlockCsvAuthoring | [`void Update()`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L252) | private static |
+| BlockCsvAuthoring | [`void OnPlayModeChanged(PlayModeStateChange state)`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L286) | private static |
+| BlockCsvAuthoring | [`string ReadValue(SerializedProperty property)`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L294) | private static |
+| BlockCsvAuthoring | [`string Snapshot(GameObject root)`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L313) | private static |
+| BlockCsvAuthoring | [`string Hash(byte[] bytes)`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L320) | private static |
+| BlockCsvAuthoring | [`void SaveBackup(string backup, Dictionary<string, byte[]> originals, Dictionary<string, string> hashes, string csv)`](../Assets/Editor/Building/BlockCsvAuthoring.cs#L326) | private static |
+
+## Assets/Editor/Building/BlockCsvChecks.cs
+
+// 职责：隔离验证实际 CSV→Prefab 同步、幂等/错误拒绝及真实 Awake/OnEnable 顺序。 // 入口：RunEditMode() / RunPlayMode()；Edit Mode 最终恢复 CSV 与 Prefab 原始字节，不保存场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlockCsvChecks | [`string RunEditMode()`](../Assets/Editor/Building/BlockCsvChecks.cs#L21) | public static |
+| BlockCsvChecks | [`string RunPlayMode()`](../Assets/Editor/Building/BlockCsvChecks.cs#L179) | public static |
+| BlockCsvChecks | [`GameObject Load(string name)`](../Assets/Editor/Building/BlockCsvChecks.cs#L229) | private static |
+| BlockCsvChecks | [`void Set(List<List<string>> records, string name, string field, string value)`](../Assets/Editor/Building/BlockCsvChecks.cs#L234) | private static |
+| BlockCsvChecks | [`void Write(List<List<string>> records)`](../Assets/Editor/Building/BlockCsvChecks.cs#L240) | private static |
+| BlockCsvChecks | [`void Check(Report report, bool condition, string description)`](../Assets/Editor/Building/BlockCsvChecks.cs#L246) | private static |
+| BlockCsvChecks | [`string SaveReport(Report report, string name)`](../Assets/Editor/Building/BlockCsvChecks.cs#L256) | private static |
+
+## Assets/Editor/Building/BlockCsvPostprocessor.cs
+
+// 职责：CSV 文件被 Unity 导入后请求延迟同步，避免在 AssetPostprocessor 内递归写资产。 // 入口：OnPostprocessAllAssets()；Prefab 自身重导入不会触发 CSV 同步循环。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlockCsvPostprocessor | [`void OnPostprocessAllAssets(string[] imported, string[] deleted, string[] moved, string[] movedFrom)`](../Assets/Editor/Building/BlockCsvPostprocessor.cs#L8) | private static |
+
 ## Assets/Editor/Building/BuildInteractionSetup.cs
 
 // 职责：配置主场景建造交互、范围与连接点提示。 // 入口：Apply()。 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
@@ -778,6 +818,48 @@
 
 数据/配置/接口定义，无方法体。
 
+## Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs
+
+// 职责：在其他组件 Awake 前应用 CSV 配置；OnValidate 仅请求 Editor 延迟校验。 // 入口：Awake() / OnValidate()；相同 CSV 共用已校验快照，错误保留 Prefab 原参数。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlockCsvBinding | [`void SetPrefabGuid(string guid)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs#L18) | public |
+| BlockCsvBinding | [`void Awake()`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs#L23) | private |
+| BlockCsvBinding | [`void OnValidate()`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs#L28) | private |
+| BlockCsvBinding | [`void RequestValidation()`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs#L33) | public |
+| BlockCsvBinding | [`bool Apply()`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs#L41) | public |
+| BlockCsvBinding | [`void ResetCache()`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs#L74) | public static |
+
+## Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs
+
+// 职责：严格解析 CSV、校验完整配置，并按白名单字段构造组件 JSON；不修改资源文件。 // 入口：Parse() / Apply()；支持逗号、引号、多行说明与 UTF-8 BOM。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlockCsvDocument | [`BlockCsvDocument Parse(string text)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L33) | public static |
+| BlockCsvDocument | [`bool Apply(GameObject root, string guid)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L73) | public |
+| BlockCsvDocument | [`string PathFor(string guid)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L134) | public |
+| BlockCsvDocument | [`void ValidateRow(List<string> values)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L141) | private |
+| BlockCsvDocument | [`string Normalize(BlockDataTableSchema.Column column, string value, string name)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L161) | private static |
+| BlockCsvDocument | [`string Quote(string text)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L206) | private static |
+| BlockCsvDocument | [`string WriteRecords(IEnumerable<IEnumerable<string>> records)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L212) | public static |
+| BlockCsvDocument | [`List<List<string>> ParseRecords(string text)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L224) | public static |
+
+## Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs
+
+// 职责：定义 CSV 支持的配置字段、类型、枚举和有效范围，Editor 与运行时共享同一契约。 // 入口：CreateColumns()；不包含运行时状态或资源引用。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| Column | [`Component[] FindTargets(GameObject root)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L31) | public |
+| BlockDataTableSchema | [`List<Column> CreateColumns()`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L69) | public static |
+| BlockDataTableSchema | [`void AddFloat( List<Column> columns, string group, string property, string label, double minimum = 0, double maximum = double.PositiveInfinity)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L221) | private static |
+| BlockDataTableSchema | [`void AddInteger( List<Column> columns, string group, string property, string label, double minimum = 0, double maximum = double.PositiveInfinity)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L240) | private static |
+| BlockDataTableSchema | [`void AddBoolean(List<Column> columns, string group, string property, string label)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L259) | private static |
+| BlockDataTableSchema | [`void AddString(List<Column> columns, string group, string property, string label)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L272) | private static |
+| BlockDataTableSchema | [`void AddEnum(List<Column> columns, string group, string property, string label, string[] names)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L285) | private static |
+
 ## Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs
 
 // 职责：从存档恢复一个方块的身份、尺寸、阵营、货仓和耐久。 // 入口：TryRestore()；只创建实体，不负责加载会话、统计、UI 或 JSON 写入。
@@ -785,8 +867,8 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BlueprintBlockFactory | [`bool TryRestore(BlockData data, Transform parent, UnitFaction faction, out Block block)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7) | public static |
-| BlueprintBlockFactory | [`void ApplyFaction(Block block, UnitFaction faction)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L52) | public static |
-| BlueprintBlockFactory | [`string ToResourcePath(string fullPath)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L60) | public static |
+| BlueprintBlockFactory | [`void ApplyFaction(Block block, UnitFaction faction)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L54) | public static |
+| BlueprintBlockFactory | [`string ToResourcePath(string fullPath)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L62) | public static |
 
 ## Assets/Scripts/Features/Building/BlueprintLoading/BlueprintFileStore.cs
 
@@ -2192,22 +2274,26 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Block | [`void Awake()`](../Assets/Scripts/Features/Simulation/Block.cs#L44) | private |
-| Block | [`void OnValidate()`](../Assets/Scripts/Features/Simulation/Block.cs#L64) | private |
-| Block | [`void GenerateConnectionPoints()`](../Assets/Scripts/Features/Simulation/Block.cs#L111) | private |
-| Block | [`string GetDisplayInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L181) | public |
-| Block | [`string GenerateInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L186) | private |
-| Block | [`void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)`](../Assets/Scripts/Features/Simulation/Block.cs#L232) | private |
-| Block | [`Vector3 GetConnectorWorldPosition(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L246) | public |
-| Block | [`Vector3 GetConnectorWorldNormal(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L251) | public |
-| Block | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L256) | public |
-| Block | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/Block.cs#L261) | public |
-| Block | [`List<Block> Neighbors()`](../Assets/Scripts/Features/Simulation/Block.cs#L266) | public |
-| Block | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L274) | internal |
-| Block | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Block.cs#L279) | public |
-| Block | [`void RefreshConnectionStatus()`](../Assets/Scripts/Features/Simulation/Block.cs#L284) | internal |
-| Block | [`bool IsBlockedGhost()`](../Assets/Scripts/Features/Simulation/Block.cs#L292) | public |
-| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L316) | private |
+| Block | [`void Awake()`](../Assets/Scripts/Features/Simulation/Block.cs#L50) | private |
+| Block | [`void OnValidate()`](../Assets/Scripts/Features/Simulation/Block.cs#L71) | private |
+| Block | [`void RefreshAuthoringData()`](../Assets/Scripts/Features/Simulation/Block.cs#L82) | public |
+| Block | [`void RefreshMass()`](../Assets/Scripts/Features/Simulation/Block.cs#L125) | public |
+| Block | [`void SetMassSettings(bool useCustomMass, float value)`](../Assets/Scripts/Features/Simulation/Block.cs#L138) | public |
+| Block | [`void Reset()`](../Assets/Scripts/Features/Simulation/Block.cs#L146) | private |
+| Block | [`void GenerateConnectionPoints()`](../Assets/Scripts/Features/Simulation/Block.cs#L151) | private |
+| Block | [`string GetDisplayInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L221) | public |
+| Block | [`string GenerateInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L226) | private |
+| Block | [`void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)`](../Assets/Scripts/Features/Simulation/Block.cs#L272) | private |
+| Block | [`Vector3 GetConnectorWorldPosition(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L286) | public |
+| Block | [`Vector3 GetConnectorWorldNormal(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L291) | public |
+| Block | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L296) | public |
+| Block | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/Block.cs#L301) | public |
+| Block | [`List<Block> Neighbors()`](../Assets/Scripts/Features/Simulation/Block.cs#L306) | public |
+| Block | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L314) | internal |
+| Block | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Block.cs#L319) | public |
+| Block | [`void RefreshConnectionStatus()`](../Assets/Scripts/Features/Simulation/Block.cs#L324) | internal |
+| Block | [`bool IsBlockedGhost()`](../Assets/Scripts/Features/Simulation/Block.cs#L332) | public |
+| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L356) | private |
 
 ## Assets/Scripts/Features/Simulation/BlockConnections.cs
 

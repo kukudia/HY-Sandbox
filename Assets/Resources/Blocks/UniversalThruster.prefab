@@ -541,6 +541,7 @@ GameObject:
   - component: {fileID: 1578290364841887270}
   - component: {fileID: 6482355876414126549}
   - component: {fileID: 2863399384887051095}
+  - component: {fileID: 1698486793498716213}
   m_Layer: 3
   m_Name: UniversalThruster
   m_TagString: Untagged
@@ -588,6 +589,8 @@ MonoBehaviour:
   cost: 0
   density: 1
   mass: 1
+  _useCustomMass: 0
+  _massSettingsInitialized: 1
   collisionSpeedThreshold: 5
   damageMultiplier: 10
   explosionForce: 500
@@ -888,6 +891,19 @@ MonoBehaviour:
   powerStatus: 0
   iconHeightOffset: 0.25
   _fadeSpeed: 7
+--- !u!114 &1698486793498716213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004239489873974274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da66ba1efe360b41b61c63a9df8cb48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BlockCsvBinding
+  _prefabGuid: c31272dc7c2d6144dbe0a77eba36772c
 --- !u!1 &6155422148283665490
 GameObject:
   m_ObjectHideFlags: 0

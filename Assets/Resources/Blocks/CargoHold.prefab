@@ -938,6 +938,7 @@ GameObject:
   - component: {fileID: 2410204605040926724}
   - component: {fileID: 107413481633993239}
   - component: {fileID: 7627456332902263064}
+  - component: {fileID: 3127231572633853567}
   m_Layer: 3
   m_Name: CargoHold
   m_TagString: Untagged
@@ -984,6 +985,8 @@ MonoBehaviour:
   cost: 0
   density: 1
   mass: 8
+  _useCustomMass: 0
+  _massSettingsInitialized: 1
   collisionSpeedThreshold: 5
   damageMultiplier: 10
   explosionForce: 800
@@ -1315,6 +1318,19 @@ MonoBehaviour:
   powerStatus: 0
   iconHeightOffset: 0.25
   _fadeSpeed: 7
+--- !u!114 &3127231572633853567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5343366712215336920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da66ba1efe360b41b61c63a9df8cb48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BlockCsvBinding
+  _prefabGuid: 58afb0241e52da849970fc43b3be86cb
 --- !u!1 &5603188545123549794
 GameObject:
   m_ObjectHideFlags: 0

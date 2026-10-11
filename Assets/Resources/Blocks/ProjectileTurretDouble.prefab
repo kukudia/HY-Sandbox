@@ -477,6 +477,7 @@ GameObject:
   - component: {fileID: 3124192274964441344}
   - component: {fileID: 897094469248047018}
   - component: {fileID: 4663253232767552356}
+  - component: {fileID: 247215162008009059}
   m_Layer: 3
   m_Name: ProjectileTurretDouble
   m_TagString: Untagged
@@ -524,6 +525,8 @@ MonoBehaviour:
   cost: 0
   density: 1
   mass: 1
+  _useCustomMass: 0
+  _massSettingsInitialized: 1
   collisionSpeedThreshold: 5
   damageMultiplier: 10
   explosionForce: 500
@@ -714,6 +717,19 @@ MonoBehaviour:
   _recoilDistance: 0.12
   _recoilKickDuration: 0.04
   _recoilReturnDuration: 0.22
+--- !u!114 &247215162008009059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7113379929175768676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da66ba1efe360b41b61c63a9df8cb48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BlockCsvBinding
+  _prefabGuid: ec24d4ecb7632b74a98d19e187650b5b
 --- !u!1 &7791276913125729715
 GameObject:
   m_ObjectHideFlags: 0

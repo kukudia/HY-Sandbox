@@ -110,6 +110,7 @@
     <Compile Include="Assets\Scripts\Features\Presentation\UIInteractionFeedback.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\CollectionBot.cs" />
     <Compile Include="Assets\Scripts\Features\Salvage\WreckSalvage.cs" />
+    <Compile Include="Assets\Scripts\Features\Building\BlockDataTables\BlockDataTableSchema.cs" />
     <Compile Include="Assets\Scripts\Features\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Features\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\BotObstacleAvoidance.cs" />
@@ -165,6 +166,7 @@
     <Compile Include="Assets\Scripts\Features\Presentation\PanelTransitions.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interaction\BuildManipulation.cs" />
     <Compile Include="Assets\Scripts\Features\Player\PlayerHealth.cs" />
+    <Compile Include="Assets\Scripts\Features\Building\BlockDataTables\BlockCsvDocument.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Rack.cs" />
     <Compile Include="Assets\Scripts\Features\Building\RotateAxisHandle.cs" />
     <Compile Include="Assets\Scripts\Features\Power\Power.cs" />
@@ -190,6 +192,7 @@
     <Compile Include="Assets\Scripts\Features\Flight\HoverControlSolver.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\ImpactPhysics.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\TurretProjectile.cs" />
+    <Compile Include="Assets\Scripts\Features\Building\BlockDataTables\BlockCsvBinding.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\ModularUnitValidator.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\BlockVfxLibrary.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interaction\BuildSelection.cs" />

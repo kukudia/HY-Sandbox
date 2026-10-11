@@ -1096,6 +1096,7 @@ GameObject:
   - component: {fileID: 4851417719189446648}
   - component: {fileID: 1532577100150014118}
   - component: {fileID: 6917474578039044999}
+  - component: {fileID: 6113723255432547375}
   m_Layer: 3
   m_Name: TechnologyHold
   m_TagString: Untagged
@@ -1135,18 +1136,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canSpawnConnector: 0
   canBeDeleted: 1
+  canEditInfo: 0
   x: 1
   y: 1
   z: 1
   cost: 0
   density: 1
   mass: 1
+  _useCustomMass: 0
+  _massSettingsInitialized: 1
   collisionSpeedThreshold: 5
   damageMultiplier: 10
   explosionForce: 500
   explosionRadius: 5
   explosionDisconnectProbability: 0.35
   resourcePath: Blocks/TechnologyHold
+  info: 'Size: 1x1x1
+
+    Mass: 1 kg
+
+    Durability: 100
+
+    Power: 10 min /
+    20 standard
+
+    Capacity: 100'
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
   connectorParent: {fileID: 7297744207001793934}
   raycastCollider: {fileID: 7914200543092852338}
@@ -1218,6 +1232,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxDurability: 100
+  collisionSpeedThreshold: 5
+  damageMultiplier: 0.001
+  _collisionDamageScale: 0.1
+  _maximumCollisionHealthFraction: 0.08
+  _collisionDamageCooldown: 0.35
   debugLog: 1
   currentDurability: 0
 --- !u!65 &7914200543092852338
@@ -1312,8 +1331,20 @@ MonoBehaviour:
   durabilityStatus: 0
   powerStatus: 0
   iconHeightOffset: 0.25
-  iconReferenceDistance: 12
-  iconMinimumScale: 0.45
+  _fadeSpeed: 7
+--- !u!114 &6113723255432547375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3131291356714213994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da66ba1efe360b41b61c63a9df8cb48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BlockCsvBinding
+  _prefabGuid: 3f19ab9bc623c97439beb755aa71a2d8
 --- !u!1 &3299894292082583528
 GameObject:
   m_ObjectHideFlags: 0

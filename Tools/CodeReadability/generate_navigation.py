@@ -55,6 +55,44 @@ def main():
         )
 
     graph(
+        "CSV 方块配置与质量",
+        "源码推导：CSV 是数值源；Editor 导入后延迟校验、备份并同步 Prefab。OnValidate 只排队，不在导入线程写资产；Awake 提前应用配置，随后各组件初始化。空 mass 为体积质量，存档恢复保留实例尺寸再刷新派生数据。",
+        {
+            "A": "BlockCsvPostprocessor.OnPostprocessAllAssets",
+            "B": "BlockCsvAuthoring.QueueBake",
+            "C": "BlockCsvAuthoring.Update",
+            "D": "BlockCsvAuthoring.Bake",
+            "E": "BlockCsvDocument.Parse",
+            "F": "BlockCsvDocument.Apply",
+            "G": "Block.OnValidate",
+            "H": "BlockCsvBinding.RequestValidation",
+            "I": "BlockCsvBinding.Awake",
+            "J": "BlockCsvBinding.Apply",
+            "K": "Block.SetMassSettings",
+            "L": "Block.RefreshMass",
+            "M": "Block.RefreshAuthoringData",
+            "N": "BlueprintBlockFactory.TryRestore",
+        },
+        [
+            "A --> B",
+            "B -.->|Editor update| C",
+            "C -->|有待同步请求| D",
+            "D -->|先完整校验| E",
+            "D -->|逐资源应用并保存，失败恢复| F",
+            "G --> H",
+            "H -.->|编辑器校验队列| C",
+            "C -->|非持久实例| J",
+            "I --> J",
+            "J -->|首次读取缓存| E",
+            "J --> F",
+            "F --> K",
+            "K --> L",
+            "F --> M",
+            "M --> L",
+            "N -->|存档尺寸恢复后| M",
+        ],
+    )
+    graph(
         "启动与建造/游玩会话",
         "引擎自动调用入口独立；按按钮进入业务主链。返回建造前先保存货仓。选择方块资源进入 BuildType.Build；InputManager 切换 lockView 仅取消拖拽/预览并隐藏操作轴，保留选中方块、高亮、BuildType 与资源，重锁恢复操作轴。工具按钮按BuildType着色，Build高亮当前资源条目；焦点不改变模式色。",
         {

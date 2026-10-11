@@ -17,6 +17,12 @@ public class Block : MonoBehaviour
     public int cost;
     public float density = 1;
     public float mass = 0;
+    [SerializeField, Tooltip("关闭时质量等于 x × y × z；开启后使用手动填写的 mass。density 保留作旧数据兼容。")]
+    private bool _useCustomMass;
+    [SerializeField, HideInInspector]
+    private bool _massSettingsInitialized;
+    public bool UseCustomMass => _useCustomMass;
+
     public float collisionSpeedThreshold = 1f; // 触发耐久减少的最小速度
     public float damageMultiplier = 10f; // 伤害系数（速度越大伤害越高）
     [Header("Explosion Settings")]
@@ -43,6 +49,7 @@ public class Block : MonoBehaviour
 
     private void Awake()
     {
+        RefreshMass();
         _icon = GetComponent<StatusIcon>();
         if (string.IsNullOrEmpty(uniqueId))
         {
@@ -63,6 +70,17 @@ public class Block : MonoBehaviour
 
     private void OnValidate()
     {
+        RefreshAuthoringData();
+        var csv = GetComponent<BlockCsvBinding>();
+        if (csv != null)
+        {
+            csv.RequestValidation();
+        }
+    }
+
+    /// <summary>更新制作期的质量、碰撞体、连接点和自动说明；批量工具在提交参数后调用。</summary>
+    public void RefreshAuthoringData()
+    {
 #if UNITY_EDITOR
         var prefab = PrefabUtility.GetCorrespondingObjectFromSource(gameObject);
         if (prefab != null)
@@ -75,7 +93,7 @@ public class Block : MonoBehaviour
         x = Mathf.Max(1, x);
         y = Mathf.Max(1, y);
         z = Mathf.Max(1, z);
-        mass = x * y * z * density;
+        RefreshMass();
         if (GetComponent<BoxCollider>() == null)
         {
             raycastCollider = gameObject.AddComponent<BoxCollider>();
@@ -101,11 +119,33 @@ public class Block : MonoBehaviour
         {
             info = GenerateInfo();
         }
+    }
 
-        if (mass == 0)
+    /// <summary>旧资源首次加载时保留有效的非体积质量，之后显式区分自动和手动模式。</summary>
+    public void RefreshMass()
+    {
+        float volume = (float)Mathf.Max(1, x) * Mathf.Max(1, y) * Mathf.Max(1, z);
+        if (!_massSettingsInitialized)
         {
-            mass = x * y * z;
+            _useCustomMass = mass > 0f && !float.IsNaN(mass) && !float.IsInfinity(mass) && !Mathf.Approximately(mass, volume);
+            _massSettingsInitialized = true;
         }
+
+        mass = _useCustomMass && mass > 0f && !float.IsNaN(mass) && !float.IsInfinity(mass) ? mass : volume;
+    }
+
+    /// <summary>Editor 表格与制作工具显式设置质量，避免 OnValidate 覆盖手动值。</summary>
+    public void SetMassSettings(bool useCustomMass, float value)
+    {
+        _massSettingsInitialized = true;
+        _useCustomMass = useCustomMass;
+        mass = value;
+        RefreshMass();
+    }
+
+    private void Reset()
+    {
+        SetMassSettings(false, 0f);
     }
 
     private void GenerateConnectionPoints()
@@ -187,7 +227,7 @@ public class Block : MonoBehaviour
     {
         var builder = new StringBuilder();
         builder.AppendLine($"Size: {x}x{y}x{z}");
-        builder.AppendLine($"Mass: {x * y * z * density:0.##} kg");
+        builder.AppendLine($"Mass: {mass:0.##} kg");
         if (cost > 0)
         {
             builder.AppendLine($"Cost: {cost}");

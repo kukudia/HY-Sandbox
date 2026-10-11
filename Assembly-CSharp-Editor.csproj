@@ -64,8 +64,10 @@
   <ItemGroup>
     <Compile Include="Assets\Editor\Architecture\HoverControlPlayChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\NativeVfxPlaybackProbe.cs" />
+    <Compile Include="Assets\Editor\Building\BlockCsvPostprocessor.cs" />
     <Compile Include="Assets\Editor\Art\BlockArtValidation.cs" />
     <Compile Include="Assets\Editor\Combat\CombatHudSetup.cs" />
+    <Compile Include="Assets\Editor\Building\BlockCsvChecks.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
     <Compile Include="Assets\Editor\Combat\TurretRuntimeChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\BlockStatusSetup.cs" />
@@ -87,6 +89,7 @@
     <Compile Include="Assets\Editor\Architecture\PresentationPlayChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\BlockVfxBaker.cs" />
     <Compile Include="Assets\Editor\Art\BlockArtDependencies.cs" />
+    <Compile Include="Assets\Editor\Building\BlockCsvAuthoring.cs" />
     <Compile Include="Assets\Editor\Building\BuildPalettePlayProbe.cs" />
     <Compile Include="Assets\Editor\Architecture\ArchitecturePlayProbe.cs" />
     <Compile Include="Assets\Editor\Presentation\NativeVfxLibraryBuilder.cs" />

@@ -6,7 +6,88 @@
 
     维护：业务变化更新受影响图和 DEVELOPMENT；纯格式变化重新生成行号。`dotnet run --project Tools/CodeReadability -- --check .` 会拒绝失效符号。
 
-    ## 启动与建造/游玩会话
+    ## CSV 方块配置与质量
+
+源码推导：CSV 是数值源；Editor 导入后延迟校验、备份并同步 Prefab。OnValidate 只排队，不在导入线程写资产；Awake 提前应用配置，随后各组件初始化。空 mass 为体积质量，存档恢复保留实例尺寸再刷新派生数据。
+
+```mermaid
+flowchart TD
+    A["BlockCsvPostprocessor.OnPostprocessAllAssets()"]
+    click A "../Assets/Editor/Building/BlockCsvPostprocessor.cs#L8" "打开源码"
+    B["BlockCsvAuthoring.QueueBake()"]
+    click B "../Assets/Editor/Building/BlockCsvAuthoring.cs#L238" "打开源码"
+    C["BlockCsvAuthoring.Update()"]
+    click C "../Assets/Editor/Building/BlockCsvAuthoring.cs#L252" "打开源码"
+    D["BlockCsvAuthoring.Bake()"]
+    click D "../Assets/Editor/Building/BlockCsvAuthoring.cs#L128" "打开源码"
+    E["BlockCsvDocument.Parse()"]
+    click E "../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L33" "打开源码"
+    F["BlockCsvDocument.Apply()"]
+    click F "../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L73" "打开源码"
+    G["Block.OnValidate()"]
+    click G "../Assets/Scripts/Features/Simulation/Block.cs#L71" "打开源码"
+    H["BlockCsvBinding.RequestValidation()"]
+    click H "../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs#L33" "打开源码"
+    I["BlockCsvBinding.Awake()"]
+    click I "../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs#L23" "打开源码"
+    J["BlockCsvBinding.Apply()"]
+    click J "../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs#L41" "打开源码"
+    K["Block.SetMassSettings()"]
+    click K "../Assets/Scripts/Features/Simulation/Block.cs#L138" "打开源码"
+    L["Block.RefreshMass()"]
+    click L "../Assets/Scripts/Features/Simulation/Block.cs#L125" "打开源码"
+    M["Block.RefreshAuthoringData()"]
+    click M "../Assets/Scripts/Features/Simulation/Block.cs#L82" "打开源码"
+    N["BlueprintBlockFactory.TryRestore()"]
+    click N "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7" "打开源码"
+    A --> B
+    B -.->|Editor update| C
+    C -->|有待同步请求| D
+    D -->|先完整校验| E
+    D -->|逐资源应用并保存，失败恢复| F
+    G --> H
+    H -.->|编辑器校验队列| C
+    C -->|非持久实例| J
+    I --> J
+    J -->|首次读取缓存| E
+    J --> F
+    F --> K
+    K --> L
+    F --> M
+    M --> L
+    N -->|存档尺寸恢复后| M
+```
+
+- [BlockCsvPostprocessor.OnPostprocessAllAssets](../Assets/Editor/Building/BlockCsvPostprocessor.cs#L8)
+<!-- source: Assets/Editor/Building/BlockCsvPostprocessor.cs|OnPostprocessAllAssets -->
+- [BlockCsvAuthoring.QueueBake](../Assets/Editor/Building/BlockCsvAuthoring.cs#L238)
+<!-- source: Assets/Editor/Building/BlockCsvAuthoring.cs|QueueBake -->
+- [BlockCsvAuthoring.Update](../Assets/Editor/Building/BlockCsvAuthoring.cs#L252)
+<!-- source: Assets/Editor/Building/BlockCsvAuthoring.cs|Update -->
+- [BlockCsvAuthoring.Bake](../Assets/Editor/Building/BlockCsvAuthoring.cs#L128)
+<!-- source: Assets/Editor/Building/BlockCsvAuthoring.cs|Bake -->
+- [BlockCsvDocument.Parse](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L33)
+<!-- source: Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs|Parse -->
+- [BlockCsvDocument.Apply](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L73)
+<!-- source: Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs|Apply -->
+- [Block.OnValidate](../Assets/Scripts/Features/Simulation/Block.cs#L71)
+<!-- source: Assets/Scripts/Features/Simulation/Block.cs|OnValidate -->
+- [BlockCsvBinding.RequestValidation](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs#L33)
+<!-- source: Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs|RequestValidation -->
+- [BlockCsvBinding.Awake](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs#L23)
+<!-- source: Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs|Awake -->
+- [BlockCsvBinding.Apply](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs#L41)
+<!-- source: Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs|Apply -->
+- [Block.SetMassSettings](../Assets/Scripts/Features/Simulation/Block.cs#L138)
+<!-- source: Assets/Scripts/Features/Simulation/Block.cs|SetMassSettings -->
+- [Block.RefreshMass](../Assets/Scripts/Features/Simulation/Block.cs#L125)
+<!-- source: Assets/Scripts/Features/Simulation/Block.cs|RefreshMass -->
+- [Block.RefreshAuthoringData](../Assets/Scripts/Features/Simulation/Block.cs#L82)
+<!-- source: Assets/Scripts/Features/Simulation/Block.cs|RefreshAuthoringData -->
+- [BlueprintBlockFactory.TryRestore](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7)
+<!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs|TryRestore -->
+
+## 启动与建造/游玩会话
 
 引擎自动调用入口独立；按按钮进入业务主链。返回建造前先保存货仓。选择方块资源进入 BuildType.Build；InputManager 切换 lockView 仅取消拖拽/预览并隐藏操作轴，保留选中方块、高亮、BuildType 与资源，重锁恢复操作轴。工具按钮按BuildType着色，Build高亮当前资源条目；焦点不改变模式色。
 
@@ -203,7 +284,7 @@ flowchart TD
     O["ActionManager.Redo()"]
     click O "../Assets/Scripts/Features/Building/ActionManager.cs#L50" "打开源码"
     P["Block.CheckConnection()"]
-    click P "../Assets/Scripts/Features/Simulation/Block.cs#L261" "打开源码"
+    click P "../Assets/Scripts/Features/Simulation/Block.cs#L301" "打开源码"
     Q["BuildPalette.Awake()"]
     click Q "../Assets/Scripts/Features/Building/BuildPalette.cs#L27" "打开源码"
     R["BuildPaletteItem.ApplyButtonStyle()"]
@@ -264,7 +345,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/ActionManager.cs|Undo -->
 - [ActionManager.Redo](../Assets/Scripts/Features/Building/ActionManager.cs#L50)
 <!-- source: Assets/Scripts/Features/Building/ActionManager.cs|Redo -->
-- [Block.CheckConnection](../Assets/Scripts/Features/Simulation/Block.cs#L261)
+- [Block.CheckConnection](../Assets/Scripts/Features/Simulation/Block.cs#L301)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|CheckConnection -->
 - [BuildPalette.Awake](../Assets/Scripts/Features/Building/BuildPalette.cs#L27)
 <!-- source: Assets/Scripts/Features/Building/BuildPalette.cs|Awake -->

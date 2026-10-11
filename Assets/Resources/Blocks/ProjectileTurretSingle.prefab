@@ -322,6 +322,7 @@ GameObject:
   - component: {fileID: 723267999300526322}
   - component: {fileID: 8778718198067362935}
   - component: {fileID: 5027071236547913309}
+  - component: {fileID: 94280902767321553}
   m_Layer: 3
   m_Name: ProjectileTurretSingle
   m_TagString: Untagged
@@ -369,6 +370,8 @@ MonoBehaviour:
   cost: 0
   density: 1
   mass: 1
+  _useCustomMass: 0
+  _massSettingsInitialized: 1
   collisionSpeedThreshold: 5
   damageMultiplier: 10
   explosionForce: 500
@@ -557,6 +560,19 @@ MonoBehaviour:
   _recoilDistance: 0.12
   _recoilKickDuration: 0.04
   _recoilReturnDuration: 0.22
+--- !u!114 &94280902767321553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6266194202016827484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da66ba1efe360b41b61c63a9df8cb48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BlockCsvBinding
+  _prefabGuid: 9277fb1063c97aa49963a7762c65b422
 --- !u!1 &7045249827043845126
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-11T23:16:52.0566102+08:00",
+  "unityVersion": "6000.3.11f1",
+  "csv": "Assets/Resources/BlockData/Blocks.csv",
+  "rows": 25,
+  "columns": 84,
+  "parameterColumns": 80,
+  "editMode": {
+    "status": "passed",
+    "checks": [
+      "CSV has 25 Block rows, 80 parameter columns and 4 identity columns",
+      "Direct CSV edit persists manual mass and cost",
+      "Multiple components and inherited fields persisted",
+      "Private serialized damage field persisted",
+      "Private cargo fields and enum name persisted",
+      "Shared requiresPower column applied to CargoHold",
+      "Shared requiresPower column applied to CollectionBot",
+      "Shared requiresPower applies to both matching components on one Prefab",
+      "Nested bot configuration persisted",
+      "Inherited turret enum persisted",
+      "Chinese, comma, quotes and multiline description roundtrip",
+      "Repeat synchronization produces zero file changes",
+      "Blank mass recomputes volume and collider from changed dimensions",
+      "Invalid CSV rejects whole batch without writing any Prefab",
+      "Scene bytes and Editor scene dirty state unchanged"
+    ]
+  },
+  "playMode": {
+    "status": "passed",
+    "checks": [
+      "Real binding Awake overrides corrupt instance values from Resources CSV",
+      "CSV max durability applied before Durability.OnEnable initializes current health",
+      "Runtime Awake applies private serialized cargo field",
+      "Prefab GUID binding preserved on runtime instance"
+    ]
+  },
+  "automaticImport": {
+    "status": "passed",
+    "cost": 543,
+    "explicitBakeCalled": false
+  },
+  "staticChecks": {
+    "readability": "passed: 172 scripts, 0 differences, 0 errors",
+    "dotnetBuild": "passed: 0 errors, 4 existing warnings",
+    "gitDiffCheck": "passed"
+  },
+  "limitations": [
+    "No standalone player build or visual physics acceptance test performed."
+  ],
+  "preserved": [
+    "Existing Assets/Scenes/Main.unity changes excluded from commit.",
+    "Bot and Connector Prefab assets unchanged; removed only from CSV."
+  ]
+}

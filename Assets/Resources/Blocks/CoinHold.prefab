@@ -1753,6 +1753,7 @@ GameObject:
   - component: {fileID: 1022816008975162074}
   - component: {fileID: 5788947902764421239}
   - component: {fileID: 6581800746009951508}
+  - component: {fileID: 9155215506581764318}
   m_Layer: 3
   m_Name: CoinHold
   m_TagString: Untagged
@@ -1792,18 +1793,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canSpawnConnector: 0
   canBeDeleted: 1
+  canEditInfo: 0
   x: 1
   y: 1
   z: 1
   cost: 0
   density: 1
   mass: 1
+  _useCustomMass: 0
+  _massSettingsInitialized: 1
   collisionSpeedThreshold: 5
   damageMultiplier: 10
   explosionForce: 500
   explosionRadius: 5
   explosionDisconnectProbability: 0.35
   resourcePath: Blocks/CoinHold
+  info: 'Size: 1x1x1
+
+    Mass: 1 kg
+
+    Durability: 100
+
+    Power: 10 min /
+    20 standard
+
+    Capacity: 100'
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
   connectorParent: {fileID: 8208328386658526927}
   raycastCollider: {fileID: 4832264080641294569}
@@ -1875,6 +1889,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxDurability: 100
+  collisionSpeedThreshold: 5
+  damageMultiplier: 0.001
+  _collisionDamageScale: 0.1
+  _maximumCollisionHealthFraction: 0.08
+  _collisionDamageCooldown: 0.35
   debugLog: 1
   currentDurability: 0
 --- !u!65 &4832264080641294569
@@ -1969,8 +1988,20 @@ MonoBehaviour:
   durabilityStatus: 0
   powerStatus: 0
   iconHeightOffset: 0.25
-  iconReferenceDistance: 12
-  iconMinimumScale: 0.45
+  _fadeSpeed: 7
+--- !u!114 &9155215506581764318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7389974292843837613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da66ba1efe360b41b61c63a9df8cb48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BlockCsvBinding
+  _prefabGuid: 59951d3b805e77e4a840c70e678cecea
 --- !u!1 &7623508415234483570
 GameObject:
   m_ObjectHideFlags: 0

@@ -1691,6 +1691,7 @@ GameObject:
   - component: {fileID: -4279398651480766575}
   - component: {fileID: 7799056987306700829}
   - component: {fileID: 2284113129267153661}
+  - component: {fileID: 351857966155108748}
   m_Layer: 3
   m_Name: RepairBotContianer
   m_TagString: Untagged
@@ -1739,6 +1740,8 @@ MonoBehaviour:
   cost: 0
   density: 1
   mass: 1
+  _useCustomMass: 0
+  _massSettingsInitialized: 1
   collisionSpeedThreshold: 5
   damageMultiplier: 10
   explosionForce: 500
@@ -1888,6 +1891,19 @@ MonoBehaviour:
   powerStatus: 0
   iconHeightOffset: 0.25
   _fadeSpeed: 7
+--- !u!114 &351857966155108748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004239489873974274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da66ba1efe360b41b61c63a9df8cb48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BlockCsvBinding
+  _prefabGuid: 8874a998f663cb5489cc7df61a95430e
 --- !u!1 &6248121365020521580
 GameObject:
   m_ObjectHideFlags: 0

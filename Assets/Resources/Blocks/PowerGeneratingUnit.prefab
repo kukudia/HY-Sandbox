@@ -361,6 +361,7 @@ GameObject:
   - component: {fileID: -1621624530480126460}
   - component: {fileID: 8663989922556544006}
   - component: {fileID: 4923927288198650868}
+  - component: {fileID: 6942043447276480622}
   m_Layer: 3
   m_Name: PowerGeneratingUnit
   m_TagString: Untagged
@@ -408,6 +409,8 @@ MonoBehaviour:
   cost: 0
   density: 1
   mass: 8
+  _useCustomMass: 0
+  _massSettingsInitialized: 1
   collisionSpeedThreshold: 5
   damageMultiplier: 10
   explosionForce: 800
@@ -717,6 +720,19 @@ MonoBehaviour:
   powerStatus: 0
   iconHeightOffset: 0.25
   _fadeSpeed: 7
+--- !u!114 &6942043447276480622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004239489873974274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da66ba1efe360b41b61c63a9df8cb48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BlockCsvBinding
+  _prefabGuid: 45c0a8b70539ec64585401dfecbe1a37
 --- !u!1 &6445829096791305864
 GameObject:
   m_ObjectHideFlags: 0

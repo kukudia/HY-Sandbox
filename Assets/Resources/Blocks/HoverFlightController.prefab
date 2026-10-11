@@ -232,6 +232,7 @@ GameObject:
   - component: {fileID: 1578290364841887270}
   - component: {fileID: 2116716443451509132}
   - component: {fileID: 5063752402070040966}
+  - component: {fileID: 4735527622253169754}
   m_Layer: 3
   m_Name: HoverFlightController
   m_TagString: Untagged
@@ -279,6 +280,8 @@ MonoBehaviour:
   cost: 0
   density: 1
   mass: 1
+  _useCustomMass: 0
+  _massSettingsInitialized: 1
   collisionSpeedThreshold: 5
   damageMultiplier: 10
   explosionForce: 500
@@ -408,6 +411,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxDurability: 100
+  collisionSpeedThreshold: 5
+  damageMultiplier: 0.001
+  _collisionDamageScale: 0.1
+  _maximumCollisionHealthFraction: 0.08
+  _collisionDamageCooldown: 0.35
   debugLog: 1
   currentDurability: 0
 --- !u!114 &1578290364841887270
@@ -443,6 +451,7 @@ MonoBehaviour:
   durabilityStatus: 0
   powerStatus: 0
   iconHeightOffset: 0.25
+  _fadeSpeed: 7
 --- !u!114 &5063752402070040966
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -460,6 +469,19 @@ MonoBehaviour:
   _glow: {fileID: 7848743567527357836}
   _idleColor: {r: 1, g: 0.34, b: 0.28, a: 1}
   _usedColor: {r: 0.23, g: 1, b: 0.55, a: 1}
+--- !u!114 &4735527622253169754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004239489873974274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da66ba1efe360b41b61c63a9df8cb48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BlockCsvBinding
+  _prefabGuid: f8831fc55e9a0ac468a5f06fbe42b7ce
 --- !u!1 &6927160853850144166
 GameObject:
   m_ObjectHideFlags: 0

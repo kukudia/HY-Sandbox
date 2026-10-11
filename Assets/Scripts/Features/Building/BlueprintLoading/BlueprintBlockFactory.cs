@@ -33,6 +33,8 @@ internal static class BlueprintBlockFactory
         block.x = data.x;
         block.y = data.y;
         block.z = data.z;
+        // 存档保留实例尺寸；自动质量/碰撞体需按恢复后的尺寸重算，手动质量保持 CSV 值。
+        block.RefreshAuthoringData();
         block.resourcePath = data.resourcePath;
         block.uniqueId = data.id;
         ApplyFaction(block, faction);
