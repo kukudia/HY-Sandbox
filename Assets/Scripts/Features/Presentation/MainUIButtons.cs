@@ -40,6 +40,21 @@ public class MainUIButtons : MonoBehaviour
     public Button backToMenuButton;
     public Button respawnButton;
     public List<BlockButton> blockButtons = new List<BlockButton>();
+    private BuildType _displayedBuildType;
+    private bool _hasDisplayedBuildType;
+    private void OnEnable()
+    {
+        _hasDisplayedBuildType = false;
+    }
+
+    private void LateUpdate()
+    {
+        if (BuildManager.instance != null && (!_hasDisplayedBuildType || _displayedBuildType != BuildManager.instance.currentBuildType))
+        {
+            RefreshBuildModeButtons(BuildManager.instance.currentBuildType);
+        }
+    }
+
     private void Awake()
     {
         instance = this;
@@ -111,6 +126,8 @@ public class MainUIButtons : MonoBehaviour
 
     public void RefreshBuildModeButtons(BuildType buildType)
     {
+        _displayedBuildType = buildType;
+        _hasDisplayedBuildType = true;
         SetBuildButtonColor(defaultButton, buildType == BuildType.Select);
         SetBuildButtonColor(moveButton, buildType == BuildType.Move);
         SetBuildButtonColor(rotateButton, buildType == BuildType.Rotate);
@@ -118,9 +135,27 @@ public class MainUIButtons : MonoBehaviour
 
     private void SetBuildButtonColor(Button button, bool selected)
     {
-        if (button != null && button.TryGetComponent(out Image image))
+        if (button == null)
         {
-            image.color = selected ? _activeBuildModeColor : _inactiveBuildModeColor;
+            return;
+        }
+
+        Color color = selected ? _activeBuildModeColor : _inactiveBuildModeColor;
+        // Selectable 的焦点/悬停状态不能把模式色换成另一个模式的反馈。
+        // 模式色交给 ColorTint，底图保持白色以避免两次相乘导致颜色变暗。
+        if (button.transition == Selectable.Transition.ColorTint && button.targetGraphic != null)
+        {
+            button.targetGraphic.color = Color.white;
+            ColorBlock colors = button.colors;
+            colors.normalColor = color;
+            colors.highlightedColor = color;
+            colors.selectedColor = color;
+            colors.pressedColor = new Color(color.r * 0.85f, color.g * 0.85f, color.b * 0.85f, color.a);
+            button.colors = colors;
+        }
+        else if (button.targetGraphic != null)
+        {
+            button.targetGraphic.color = color;
         }
     }
 

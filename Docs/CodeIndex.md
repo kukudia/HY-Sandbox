@@ -1776,21 +1776,23 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| MainUIButtons | [`void Awake()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L43) | private |
-| MainUIButtons | [`void OnValidate()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L48) | private |
-| MainUIButtons | [`void Start()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L62) | private |
-| MainUIButtons | [`void SetDefault()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L94) | public |
-| MainUIButtons | [`void SetMove()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L100) | public |
-| MainUIButtons | [`void SetRotate()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L106) | public |
-| MainUIButtons | [`void RefreshBuildModeButtons(BuildType buildType)`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L112) | public |
-| MainUIButtons | [`void SetBuildButtonColor(Button button, bool selected)`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L119) | private |
-| MainUIButtons | [`void SetCurrentBlock(string fileName)`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L127) | public |
-| MainUIButtons | [`void ShowPowerRange()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L134) | private |
-| MainUIButtons | [`void ShowPowerConnections()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L148) | private |
-| MainUIButtons | [`void ShowConnectionStatus()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L162) | private |
-| MainUIButtons | [`void ShowDurabilityStatus()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L173) | private |
-| MainUIButtons | [`void ShowPowerStatus()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L184) | private |
-| MainUIButtons | [`void SetDebugButtonState(Button button, bool enabled)`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L195) | private static |
+| MainUIButtons | [`void OnEnable()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L45) | private |
+| MainUIButtons | [`void LateUpdate()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L50) | private |
+| MainUIButtons | [`void Awake()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L58) | private |
+| MainUIButtons | [`void OnValidate()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L63) | private |
+| MainUIButtons | [`void Start()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L77) | private |
+| MainUIButtons | [`void SetDefault()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L109) | public |
+| MainUIButtons | [`void SetMove()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L115) | public |
+| MainUIButtons | [`void SetRotate()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L121) | public |
+| MainUIButtons | [`void RefreshBuildModeButtons(BuildType buildType)`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L127) | public |
+| MainUIButtons | [`void SetBuildButtonColor(Button button, bool selected)`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L136) | private |
+| MainUIButtons | [`void SetCurrentBlock(string fileName)`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L162) | public |
+| MainUIButtons | [`void ShowPowerRange()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L169) | private |
+| MainUIButtons | [`void ShowPowerConnections()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L183) | private |
+| MainUIButtons | [`void ShowConnectionStatus()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L197) | private |
+| MainUIButtons | [`void ShowDurabilityStatus()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L208) | private |
+| MainUIButtons | [`void ShowPowerStatus()`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L219) | private |
+| MainUIButtons | [`void SetDebugButtonState(Button button, bool enabled)`](../Assets/Scripts/Features/Presentation/MainUIButtons.cs#L230) | private static |
 
 ## Assets/Scripts/Features/Presentation/MainUIPanels.cs
 

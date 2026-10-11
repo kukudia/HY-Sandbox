@@ -41,7 +41,7 @@ public sealed class BuildPalette : MonoBehaviour
 
     private void LateUpdate()
     {
-        string selection = BuildManager.instance != null ? BuildManager.instance.currentBlockResourcePath : null;
+        string selection = BuildManager.instance != null && BuildManager.instance.currentBuildType == BuildType.Build ? BuildManager.instance.currentBlockResourcePath : null;
         if (_selection == selection)
         {
             return;

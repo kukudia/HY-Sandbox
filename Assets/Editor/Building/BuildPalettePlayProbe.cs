@@ -291,12 +291,41 @@ public static class BuildPalettePlayProbe
                 manager.SetBuildType(type);
             }
 
+            Color activeColor = (Color)typeof(MainUIButtons).GetField("_activeBuildModeColor", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(ui);
+            Color inactiveColor = (Color)typeof(MainUIButtons).GetField("_inactiveBuildModeColor", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(ui);
+            foreach (var entry in new[]
+            {
+                (ui.defaultButton, BuildType.Select),
+                (ui.moveButton, BuildType.Move),
+                (ui.rotateButton, BuildType.Rotate)
+            }
+
+            )
+            {
+                Color expected = type == entry.Item2 ? activeColor : inactiveColor;
+                Check(
+                    type + " button colors follow type for " + entry.Item2,
+                    entry.Item1.colors.normalColor == expected && entry.Item1.colors.highlightedColor == expected && entry.Item1.colors.selectedColor == expected && entry.Item1.targetGraphic.color == Color.white);
+            }
+
+            Invoke(palette, "LateUpdate");
+            Check(
+                type + " palette highlight follows Build type",
+                (palette.GetSelectedItem() == cargo) == (type == BuildType.Build));
+            EventSystem.current.SetSelectedGameObject(ui.rotateButton.gameObject);
+            yield return 0.2f;
+            Check(
+                type + " focus does not replace mode color",
+                ui.rotateButton.targetGraphic.canvasRenderer.GetColor() == ui.rotateButton.colors.normalColor * ui.rotateButton.colors.colorMultiplier);
             string resource = manager.currentBlockResourcePath;
             manager.SetBuildMode(false);
             Check(
                 type + " survives view unlock",
                 manager.currentBuildType == type && manager.currentBlockResourcePath == resource);
             manager.SetBuildMode(true);
+            Check(
+                type + " view toggle preserves button color",
+                ui.defaultButton.colors.normalColor == (type == BuildType.Select ? activeColor : inactiveColor) && ui.moveButton.colors.normalColor == (type == BuildType.Move ? activeColor : inactiveColor) && ui.rotateButton.colors.normalColor == (type == BuildType.Rotate ? activeColor : inactiveColor));
             Check(
                 type + " survives view relock",
                 manager.currentBuildType == type && manager.currentBlockResourcePath == resource);
