@@ -16,7 +16,7 @@ internal sealed class BuildSelection
     private GameObject moveAxis;
     private GameObject rotateAxis;
     public Block selectedBlock;
-    public SelectType currentSelectType;
+    public BuildType currentBuildType;
     public BuildSelection(BuildManipulation manipulation)
     {
         _manipulation = manipulation;
@@ -49,7 +49,7 @@ internal sealed class BuildSelection
         {
             Vector2 mousePos = Mouse.current.position.ReadValue();
             Ray ray = mainCamera.ScreenPointToRay(mousePos);
-            if (Physics.Raycast(ray, out RaycastHit hit, 100f, axisLayer) && _manipulation.TryBeginDrag(hit, selectedBlock, currentSelectType))
+            if (Physics.Raycast(ray, out RaycastHit hit, 100f, axisLayer) && _manipulation.TryBeginDrag(hit, selectedBlock, currentBuildType))
             {
                 return;
             }
@@ -139,12 +139,12 @@ internal sealed class BuildSelection
     public void RefreshBuildGizmos()
     {
         HideBuildGizmos();
-        if (selectedBlock == null || currentSelectType == SelectType.Select)
+        if (selectedBlock == null || (currentBuildType != BuildType.Move && currentBuildType != BuildType.Rotate))
         {
             return;
         }
 
-        GameObject gizmo = currentSelectType == SelectType.Move ? moveAxis : rotateAxis;
+        GameObject gizmo = currentBuildType == BuildType.Move ? moveAxis : rotateAxis;
         if (gizmo == null)
         {
             return;

@@ -8,7 +8,7 @@
 
     ## 启动与建造/游玩会话
 
-引擎自动调用入口独立；按按钮进入业务主链。返回建造前先保存货仓。
+引擎自动调用入口独立；按按钮进入业务主链。返回建造前先保存货仓。选择方块资源进入 BuildType.Build；InputManager 切换 lockView 仅取消交互并保留当前 BuildType 与资源。
 
 ```mermaid
 flowchart TD
@@ -21,7 +21,7 @@ flowchart TD
     D["SaveManager.LoadSave()"]
     click D "../Assets/Scripts/Features/Building/SaveManager.cs#L111" "打开源码"
     E["BuildManager.LoadAllBlocks()"]
-    click E "../Assets/Scripts/Features/Building/BuildManager.cs#L411" "打开源码"
+    click E "../Assets/Scripts/Features/Building/BuildManager.cs#L427" "打开源码"
     F["MainUIPanels.PlayStart()"]
     click F "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L216" "打开源码"
     G["PlayManager.CanStartPlay()"]
@@ -62,7 +62,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/SaveUIPanel.cs|RefreshList -->
 - [SaveManager.LoadSave](../Assets/Scripts/Features/Building/SaveManager.cs#L111)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|LoadSave -->
-- [BuildManager.LoadAllBlocks](../Assets/Scripts/Features/Building/BuildManager.cs#L411)
+- [BuildManager.LoadAllBlocks](../Assets/Scripts/Features/Building/BuildManager.cs#L427)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|LoadAllBlocks -->
 - [MainUIPanels.PlayStart](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L216)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayStart -->
@@ -90,7 +90,7 @@ Load 先验证文件，再替换父对象；协程按请求版本检查所有权
 ```mermaid
 flowchart TD
     A["BuildManager.LoadAllBlocks()"]
-    click A "../Assets/Scripts/Features/Building/BuildManager.cs#L411" "打开源码"
+    click A "../Assets/Scripts/Features/Building/BuildManager.cs#L427" "打开源码"
     B["BlueprintLoader.Load()"]
     click B "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L39" "打开源码"
     C["BlueprintLoader.TryRead()"]
@@ -135,7 +135,7 @@ flowchart TD
     M --> O
 ```
 
-- [BuildManager.LoadAllBlocks](../Assets/Scripts/Features/Building/BuildManager.cs#L411)
+- [BuildManager.LoadAllBlocks](../Assets/Scripts/Features/Building/BuildManager.cs#L427)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|LoadAllBlocks -->
 - [BlueprintLoader.Load](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L39)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|Load -->
@@ -173,9 +173,9 @@ Update 按输入模式调用预览或选择；预览确认放置调用显式注�
 ```mermaid
 flowchart TD
     A["BuildManager.Update()"]
-    click A "../Assets/Scripts/Features/Building/BuildManager.cs#L95" "打开源码"
+    click A "../Assets/Scripts/Features/Building/BuildManager.cs#L96" "打开源码"
     B["BuildManager.HandleBuildingPreview()"]
-    click B "../Assets/Scripts/Features/Building/BuildManager.cs#L292" "打开源码"
+    click B "../Assets/Scripts/Features/Building/BuildManager.cs#L308" "打开源码"
     C["BuildPreview.Poll()"]
     click C "../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L41" "打开源码"
     D["BuildPlacementGeometry.TryCalculateConnectorAlignedPosition()"]
@@ -183,9 +183,9 @@ flowchart TD
     E["BuildPlacementGeometry.IsBlocked()"]
     click E "../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L121" "打开源码"
     F["BuildManager.CreateBlock()"]
-    click F "../Assets/Scripts/Features/Building/BuildManager.cs#L326" "打开源码"
+    click F "../Assets/Scripts/Features/Building/BuildManager.cs#L342" "打开源码"
     G["BuildManager.SaveBlock()"]
-    click G "../Assets/Scripts/Features/Building/BuildManager.cs#L390" "打开源码"
+    click G "../Assets/Scripts/Features/Building/BuildManager.cs#L406" "打开源码"
     H["BuildBlueprintEditor.Save()"]
     click H "../Assets/Scripts/Features/Building/Interaction/BuildBlueprintEditor.cs#L17" "打开源码"
     I["BuildBlueprintEditor.RefreshConnectionsAround()"]
@@ -223,9 +223,9 @@ flowchart TD
     A --> O
 ```
 
-- [BuildManager.Update](../Assets/Scripts/Features/Building/BuildManager.cs#L95)
+- [BuildManager.Update](../Assets/Scripts/Features/Building/BuildManager.cs#L96)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|Update -->
-- [BuildManager.HandleBuildingPreview](../Assets/Scripts/Features/Building/BuildManager.cs#L292)
+- [BuildManager.HandleBuildingPreview](../Assets/Scripts/Features/Building/BuildManager.cs#L308)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|HandleBuildingPreview -->
 - [BuildPreview.Poll](../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L41)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPreview.cs|Poll -->
@@ -233,9 +233,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs|TryCalculateConnectorAlignedPosition -->
 - [BuildPlacementGeometry.IsBlocked](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L121)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs|IsBlocked -->
-- [BuildManager.CreateBlock](../Assets/Scripts/Features/Building/BuildManager.cs#L326)
+- [BuildManager.CreateBlock](../Assets/Scripts/Features/Building/BuildManager.cs#L342)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|CreateBlock -->
-- [BuildManager.SaveBlock](../Assets/Scripts/Features/Building/BuildManager.cs#L390)
+- [BuildManager.SaveBlock](../Assets/Scripts/Features/Building/BuildManager.cs#L406)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|SaveBlock -->
 - [BuildBlueprintEditor.Save](../Assets/Scripts/Features/Building/Interaction/BuildBlueprintEditor.cs#L17)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildBlueprintEditor.cs|Save -->

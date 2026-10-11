@@ -267,6 +267,51 @@ public static class BuildPalettePlayProbe
         Check(
             "Icon click selects correct resource",
             BuildManager.instance.currentBlockResourcePath == "Blocks/CargoHold");
+        BuildManager manager = BuildManager.instance;
+        Check("Palette enters explicit Build type", manager.currentBuildType == BuildType.Build);
+        Check(
+            "Existing enum values remain stable",
+            (int)BuildType.Select == 0 && (int)BuildType.Move == 1 && (int)BuildType.Rotate == 2 && (int)BuildType.Build == 3);
+        foreach (BuildType type in new[]
+        {
+            BuildType.Select,
+            BuildType.Move,
+            BuildType.Rotate,
+            BuildType.Build
+        }
+
+        )
+        {
+            if (type == BuildType.Build)
+            {
+                manager.SetCurrentBlockResource("Blocks/CargoHold");
+            }
+            else
+            {
+                manager.SetBuildType(type);
+            }
+
+            string resource = manager.currentBlockResourcePath;
+            manager.SetBuildMode(false);
+            Check(
+                type + " survives view unlock",
+                manager.currentBuildType == type && manager.currentBlockResourcePath == resource);
+            manager.SetBuildMode(true);
+            Check(
+                type + " survives view relock",
+                manager.currentBuildType == type && manager.currentBlockResourcePath == resource);
+        }
+
+        ui.SetMove();
+        Check(
+            "Move exits placement and clears resource",
+            manager.currentBuildType == BuildType.Move && string.IsNullOrEmpty(manager.currentBlockResourcePath));
+        ui.SetRotate();
+        Check("Rotate button selects Rotate", manager.currentBuildType == BuildType.Rotate);
+        cargo.GetComponent<Button>().onClick.Invoke();
+        Check(
+            "Palette switches Rotate to Build with no gizmos",
+            manager.currentBuildType == BuildType.Build && !manager.moveAxis.activeSelf && !manager.rotateAxis.activeSelf);
         palette.SelectCategory(0);
         yield return 0.2f;
         ScreenCapture.CaptureScreenshot("Temp/BuildPalette/All-blocks.png");

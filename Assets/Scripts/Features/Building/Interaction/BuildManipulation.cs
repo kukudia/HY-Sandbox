@@ -56,7 +56,7 @@ internal sealed class BuildManipulation
         rotateAxis = rotate;
     }
 
-    public void Poll(Block block, SelectType type)
+    public void Poll(Block block, BuildType type)
     {
         selectedBlock = block;
         if (block == null || mainCamera == null)
@@ -65,19 +65,19 @@ internal sealed class BuildManipulation
         }
 
         AlignAxisToNearestWorldDir();
-        if (type == SelectType.Move)
+        if (type == BuildType.Move)
         {
             HandleMovement();
             HandleMoveAxisDrag();
         }
-        else if (type == SelectType.Rotate && block.canRotate)
+        else if (type == BuildType.Rotate && block.canRotate)
         {
             HandleRotation();
             HandleRotateAxisDrag();
         }
     }
 
-    public bool TryBeginDrag(RaycastHit hit, Block block, SelectType type)
+    public bool TryBeginDrag(RaycastHit hit, Block block, BuildType type)
     {
         selectedBlock = block;
         if (block == null)
@@ -85,7 +85,7 @@ internal sealed class BuildManipulation
             return false;
         }
 
-        if (type == SelectType.Move)
+        if (type == BuildType.Move)
         {
             MoveAxisHandle handle = hit.collider.GetComponentInParent<MoveAxisHandle>();
             if (handle != null)
@@ -97,7 +97,7 @@ internal sealed class BuildManipulation
             }
         }
 
-        if (type == SelectType.Rotate && block.canRotate)
+        if (type == BuildType.Rotate && block.canRotate)
         {
             RotateAxisHandle handle = hit.collider.GetComponentInParent<RotateAxisHandle>();
             if (handle != null)

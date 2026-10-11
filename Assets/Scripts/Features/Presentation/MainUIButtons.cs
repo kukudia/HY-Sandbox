@@ -94,26 +94,26 @@ public class MainUIButtons : MonoBehaviour
     public void SetDefault()
     {
         BuildManager.instance.SetCurrentBlockResource(string.Empty);
-        BuildManager.instance.SetSelectType(SelectType.Select);
+        BuildManager.instance.SetBuildType(BuildType.Select);
     }
 
     public void SetMove()
     {
         BuildManager.instance.SetCurrentBlockResource(string.Empty);
-        BuildManager.instance.SetSelectType(SelectType.Move);
+        BuildManager.instance.SetBuildType(BuildType.Move);
     }
 
     public void SetRotate()
     {
         BuildManager.instance.SetCurrentBlockResource(string.Empty);
-        BuildManager.instance.SetSelectType(SelectType.Rotate);
+        BuildManager.instance.SetBuildType(BuildType.Rotate);
     }
 
-    public void RefreshBuildModeButtons(SelectType selectType)
+    public void RefreshBuildModeButtons(BuildType buildType)
     {
-        SetBuildButtonColor(defaultButton, selectType == SelectType.Select);
-        SetBuildButtonColor(moveButton, selectType == SelectType.Move);
-        SetBuildButtonColor(rotateButton, selectType == SelectType.Rotate);
+        SetBuildButtonColor(defaultButton, buildType == BuildType.Select);
+        SetBuildButtonColor(moveButton, buildType == BuildType.Move);
+        SetBuildButtonColor(rotateButton, buildType == BuildType.Rotate);
     }
 
     private void SetBuildButtonColor(Button button, bool selected)

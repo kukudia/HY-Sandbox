@@ -24,7 +24,8 @@ public class BuildManager : MonoBehaviour
 
     public Material highlightMaterial;
     [Header("Current")]
-    public SelectType currentSelectType;
+    [UnityEngine.Serialization.FormerlySerializedAs("currentSelectType")]
+    public BuildType currentBuildType;
     public Block selectedBlock;
     public Block lastSaveBlock;
     public GameObject currentGhost; // 当前的 ghost 实例
@@ -89,7 +90,7 @@ public class BuildManager : MonoBehaviour
     private void Start()
     {
         SetBuildMode(true);
-        SetSelectType(SelectType.Select);
+        SetBuildType(BuildType.Select);
     }
 
     private void Update()
@@ -102,7 +103,7 @@ public class BuildManager : MonoBehaviour
 
         if (InputManager.instance.lockView)
         {
-            if (currentBlockResourcePath == string.Empty)
+            if (currentBuildType != BuildType.Build)
             {
                 if (currentGhost != null)
                 {
@@ -120,7 +121,7 @@ public class BuildManager : MonoBehaviour
 
         if (InputManager.instance.lockView && selectedBlock != null)
         {
-            _manipulation.Poll(selectedBlock, currentSelectType);
+            _manipulation.Poll(selectedBlock, currentBuildType);
             selectedBlock = _selection.selectedBlock;
         }
 
@@ -154,7 +155,8 @@ public class BuildManager : MonoBehaviour
     {
         if (!lockView)
         {
-            SetSelectType(SelectType.Select);
+            // 视角切换只结束交互，保留类型及待搭建资源。
+            _manipulation?.CancelDrag();
             ClearCurrentGhost();
             if (selectedBlock != null)
             {
@@ -226,10 +228,14 @@ public class BuildManager : MonoBehaviour
 
     public void SetCurrentBlockResource(string resourcePath)
     {
-        currentBlockResourcePath = resourcePath;
-        if (!string.IsNullOrEmpty(resourcePath) && currentSelectType != SelectType.Select)
+        currentBlockResourcePath = resourcePath ?? string.Empty;
+        if (!string.IsNullOrEmpty(currentBlockResourcePath))
         {
-            SetSelectType(SelectType.Select);
+            SetBuildType(BuildType.Build);
+        }
+        else if (currentBuildType == BuildType.Build)
+        {
+            SetBuildType(BuildType.Select);
         }
 
         ClearCurrentGhost();
@@ -245,16 +251,26 @@ public class BuildManager : MonoBehaviour
         SetBuildTarget(BuildTargetContext.EnemyBlueprint(currentSaveName, blueprintName));
     }
 
-    public void SetSelectType(SelectType selectType)
+    public void SetBuildType(BuildType buildType)
     {
-        currentSelectType = selectType;
+        currentBuildType = buildType;
+        if (buildType != BuildType.Build)
+        {
+            currentBlockResourcePath = string.Empty;
+            ClearCurrentGhost();
+        }
+        else
+        {
+            DeselectBlock();
+        }
+
         EnsureBuildInteraction();
         _manipulation.CancelDrag();
-        _selection.currentSelectType = selectType;
+        _selection.currentBuildType = buildType;
         _selection.RefreshBuildGizmos();
         if (MainUIButtons.instance != null)
         {
-            MainUIButtons.instance.RefreshBuildModeButtons(selectType);
+            MainUIButtons.instance.RefreshBuildModeButtons(buildType);
         }
     }
 
@@ -286,7 +302,7 @@ public class BuildManager : MonoBehaviour
             highlightMaterial,
             moveAxis,
             rotateAxis);
-        _selection.currentSelectType = currentSelectType;
+        _selection.currentBuildType = currentBuildType;
     }
 
     private void HandleBuildingPreview()
@@ -581,9 +597,10 @@ public class BuildManager : MonoBehaviour
     }
 }
 
-public enum SelectType
+public enum BuildType
 {
-    Select,
-    Move,
-    Rotate
+    Select = 0,
+    Move = 1,
+    Rotate = 2,
+    Build = 3
 }
