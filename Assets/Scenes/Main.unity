@@ -2718,9 +2718,9 @@ MonoBehaviour:
   maxUselessControlUnitGroups: 32
   groupCleanupDistance: 200
   groupCleanupCheckInterval: 1
-  _groupLinearDamping: 1.5
-  _groupAngularDamping: 2
-  _maximumInheritedTangentialSpeed: 6
+  _groupLinearDamping: 1
+  _groupAngularDamping: 1
+  _maximumInheritedTangentialSpeed: 20
   _maximumInheritedAngularSpeed: 2
   _groupMaxDepenetrationVelocity: 4
   showUI: 1
@@ -5991,8 +5991,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2090465813}
   m_HandleRect: {fileID: 2090465812}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.9014191
+  m_Value: 1.0000002
+  m_Size: 0.7174375
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -17512,6 +17512,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adedae8b8686f934a89e71f0afd9ca30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputManager
+  keyInput: 1
   lockView: 1
 --- !u!1 &1587429969
 GameObject:
@@ -19197,7 +19198,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DestroyManager
   _blockExplosionUpwardsModifier: 1.2
-  _explosionImpulseScale: 0.5
+  _explosionImpulseScale: 0.75
   _maximumExplosionSpeedChange: 50
   _explosionCollisionProtection: 1
 --- !u!1 &1713439440

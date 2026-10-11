@@ -36,7 +36,7 @@ public static class BotNavigationGizmos
                 Gizmos.DrawLine(transform.position, info.HitPoint);
                 // 绘制避障向量
                 Gizmos.color = Color.magenta;
-                Gizmos.DrawRay(info.HitPoint, info.AvoidanceVector * 3f);
+                Gizmos.DrawRay(info.HitPoint, info.AvoidanceVector * 0.9f);
                 // 绘制命中点
                 Gizmos.DrawSphere(info.HitPoint, 0.3f);
             }
@@ -48,23 +48,23 @@ public static class BotNavigationGizmos
             Vector3 targetDir = (navigateTarget.position - transform.position).normalized;
             // 目标方向（青色）
             Gizmos.color = Color.cyan;
-            Gizmos.DrawRay(transform.position, targetDir * 10f);
+            Gizmos.DrawRay(transform.position, targetDir * 3f);
             // 避障方向（红色）
             if (motion.AvoidanceDirection.magnitude > 0.1f)
             {
                 Gizmos.color = Color.red;
-                Gizmos.DrawRay(transform.position, motion.AvoidanceDirection * 7f);
+                Gizmos.DrawRay(transform.position, motion.AvoidanceDirection * 2.1f);
             }
 
             // 平滑后的实际方向（白色，粗线）
             Gizmos.color = Color.white;
-            Gizmos.DrawRay(transform.position, motion.Direction * 8f);
-            Gizmos.DrawSphere(transform.position + motion.Direction * 8f, 0.4f);
+            Gizmos.DrawRay(transform.position, motion.Direction * 2.4f);
+            Gizmos.DrawSphere(transform.position + motion.Direction * 2.4f, 0.4f);
             // 当前速度方向（黄色）
             if (rb != null && rb.linearVelocity.magnitude > 0.1f)
             {
                 Gizmos.color = Color.yellow;
-                float velocityLength = Mathf.Min(rb.linearVelocity.magnitude, 10f);
+                float velocityLength = Mathf.Min(rb.linearVelocity.magnitude, 3f);
                 Gizmos.DrawRay(transform.position, rb.linearVelocity.normalized * velocityLength);
             }
         }
@@ -85,9 +85,9 @@ public static class BotNavigationGizmos
         }
 
         UnityEditor.Handles.Label(
-transform.position + Vector3.up * 3f,
-$"{currentState}",
-new GUIStyle { fontSize = 14, normal = new GUIStyleState { textColor = labelColor } });
+            transform.position + Vector3.up * 3f,
+            $"{currentState}",
+            new GUIStyle { fontSize = 14, normal = new GUIStyleState { textColor = labelColor } });
 #endif
     }
 }
