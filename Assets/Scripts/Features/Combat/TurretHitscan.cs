@@ -1,5 +1,5 @@
-// 职责：按射线命中距离跳过本单位，先施加冲量，再结算有效敌方模块伤害。
-// 入口：Fire()；由 TurretWeapon 的固定步射击流程调用并返回光束终点。
+// 职责：激光沿射线瞬时命中最近的非自身障碍，结算伤害但不施加冲量。
+// 入口：Fire()；由 LaserTurret 调用并返回光束终点。
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,36 +14,39 @@ internal sealed class TurretHitscan
         UnitFaction targetFaction,
         float range,
         LayerMask hitLayers,
-        float damage,
-        float impactImpulse)
+        float damage)
     {
         Vector3 end = origin + direction * range;
-        int hitCount = Physics.RaycastNonAlloc(origin, direction, _hits, range, hitLayers);
-        System.Array.Sort(_hits, 0, hitCount, RaycastHitDistanceComparer.Instance);
+        int hitCount = Physics.RaycastNonAlloc(
+            origin,
+            direction,
+            _hits,
+            range,
+            hitLayers,
+            QueryTriggerInteraction.Ignore);
+        // A saturated NonAlloc query is unordered and may omit the nearest obstacle.
+        RaycastHit[] hits = hitCount == _hits.Length ? Physics.RaycastAll(origin, direction, range, hitLayers, QueryTriggerInteraction.Ignore) : _hits;
+        hitCount = hits == _hits ? hitCount : hits.Length;
+        System.Array.Sort(hits, 0, hitCount, RaycastHitDistanceComparer.Instance);
         for (int i = 0; i < hitCount; i++)
         {
-            RaycastHit hit = _hits[i];
+            RaycastHit hit = hits[i];
             ControlUnit hitUnit = hit.collider.GetComponentInParent<ControlUnit>();
-            if (hitUnit == owner)
+            if (owner != null && hitUnit == owner)
             {
                 continue;
             }
 
             end = hit.point;
-            // RefreshGroup must inherit the shot impulse if damage detaches target blocks.
-            Rigidbody hitBody = hit.rigidbody;
-            if (hitBody != null && !hitBody.isKinematic)
-            {
-                hitBody.AddForceAtPosition(direction * impactImpulse, hit.point, ForceMode.Impulse);
-            }
-
-            BlockVfxLibrary.Play(BlockVfxLibrary.Effect.Impact, hit.point, Quaternion.LookRotation(hit.normal), 0.6f);
-            Durability durability = hit.collider.GetComponentInParent<Durability>();
-            if (hitUnit != null && hitUnit.HasValidCockpit && hitUnit.faction == targetFaction && durability != null)
-            {
-                durability.ApplyDamage(damage, owner);
-            }
-
+            TurretHitResolver.Apply(
+                hit.collider,
+                hit.point,
+                hit.normal,
+                direction,
+                owner,
+                targetFaction,
+                damage,
+                0f);
             break;
         }
 

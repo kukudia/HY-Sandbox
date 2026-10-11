@@ -299,13 +299,13 @@ public class LootDrop : MonoBehaviour
         {
             _nextSearch = Time.time + 0.5f;
             CargoHold receiver = CargoHold.FindReceiver(_item, transform.position);
-            if (receiver != null && (receiver.transform.position - transform.position).sqrMagnitude <= _attractionRange * _attractionRange)
+            if (receiver != null && (receiver.transform.position - transform.position).sqrMagnitude <= _attractionRange * _attractionRange && receiver.Reserve(this))
             {
                 Destination = receiver;
             }
         }
 
-        if (Destination == null)
+        if (Destination == null || !Destination.IsOperational)
         {
             return;
         }

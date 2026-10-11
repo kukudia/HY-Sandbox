@@ -1,5 +1,5 @@
 // 职责：从有效敌对组中选择范围内最近的伤害目标，支持玩家优先攻击敌方驾驶舱。
-// 入口：FindNearestTarget()；由 TurretWeapon 按既有索敌周期调用。
+// 入口：FindNearestTarget()；由 Turret 按索敌周期调用，不依赖当前供电。
 // 生命周期：每炮塔独立缓存模块引用；销毁引用在距离计算时跳过。
 using System.Collections.Generic;
 using UnityEngine;

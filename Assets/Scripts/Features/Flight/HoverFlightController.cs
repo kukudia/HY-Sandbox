@@ -90,6 +90,7 @@ public class HoverFlightController : MonoBehaviour
 
     private void OnDisable()
     {
+        power?.SetWorkRequested(this, false);
         StopControlOutput();
     }
 
@@ -103,6 +104,7 @@ public class HoverFlightController : MonoBehaviour
     {
         if (PlayManager.instance == null || !PlayManager.instance.playMode)
         {
+            power?.SetWorkRequested(this, false);
             StopControlOutput();
             return;
         }
@@ -112,15 +114,10 @@ public class HoverFlightController : MonoBehaviour
             power = GetComponent<Power>();
         }
 
-        if (power == null || !power.isWorking)
+        bool requested = EnsureControllerReady() && HasActiveHoverThruster();
+        power?.SetWorkRequested(this, requested);
+        if (!requested || power == null || !power.isWorking)
         {
-            StopControlOutput();
-            return;
-        }
-
-        if (!EnsureControllerReady())
-        {
-            // A powered fragment may retain this component after regrouping. It must not steer debris.
             StopControlOutput();
             return;
         }
@@ -155,6 +152,19 @@ public class HoverFlightController : MonoBehaviour
         DistributeThrust(heightAdjustment + gravityCompensation, currentUp);
         // 应用旋转修正
         ApplyRotationCorrection(currentUp, 1f);
+    }
+
+    private bool HasActiveHoverThruster()
+    {
+        foreach (HoverThruster thruster in cachedThrusters)
+        {
+            if (thruster != null && thruster.isActiveAndEnabled && thruster.isHovered)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void StopControlOutput()

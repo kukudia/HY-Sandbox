@@ -168,7 +168,7 @@ def main():
     )
     graph(
         "供电网络与可视范围",
-        "每帧仅一个中继重建共享网络；先清零再提交本帧汇总。DebugManager 的范围表现与网络规则分开。",
+        "消费者先申报工作意图，空闲不分配；每帧仅一个中继重建共享网络，按剩余额定需求比例分配并封顶。",
         {
             "A": "PowerTransmissionDevice.Update",
             "B": "PowerNetwork.Rebuild",
@@ -188,6 +188,8 @@ def main():
             "P": "PowerRangeUnionView.Hide",
             "Q": "DebugManager.OnDestroy",
             "R": "PowerRangeUnionView.Dispose",
+            "S": "Power.SetWorkRequested",
+            "T": "Power.ReceivePower",
         },
         [
             "A -->|首个本帧中继| B",
@@ -196,6 +198,8 @@ def main():
             "B --> E",
             "E --> F",
             "E --> G",
+            "S -.->|下轮网络读取需求| G",
+            "G --> T",
             "B --> H",
             "H --> I",
             "A --> J",
@@ -251,9 +255,9 @@ def main():
     )
     graph(
         "战斗、损伤、爆炸与残骸清理",
-        "射击冲量先于伤害；爆炸断链后重组再施加受限冲量。延迟清理在真正删除前再次检查身份与驾驶舱。",
+        "Turret独立索敌后申报功率；激光即时命中且无冲量，实体炮塔每炮口生成一发并由物理扫掠命中。爆炸与延迟清理保留原生命周期。",
         {
-            "A": "TurretWeapon.FixedUpdate",
+            "A": "Turret.FixedUpdate",
             "B": "TurretTargetSelector.FindNearestTarget",
             "C": "TurretHitscan.Fire",
             "D": "Durability.ApplyDamage",
@@ -268,11 +272,24 @@ def main():
             "M": "SalvageCleanupSession.ScheduleUnit",
             "N": "SalvageCleanupSession.CleanupUnitAfterDelay",
             "O": "CargoHold.ReleaseContents",
+            "P": "LaserTurret.Fire",
+            "Q": "ProjectileTurret.Fire",
+            "R": "TurretProjectile.Launch",
+            "S": "TurretProjectile.FixedUpdate",
+            "T": "TurretHitResolver.Apply",
+            "U": "Power.SetWorkRequested",
         },
         [
             "A --> B",
-            "A -->|瞄准且冷却满足| C",
-            "C --> D",
+            "A --> U",
+            "A -->|供电、瞄准且冷却满足| P",
+            "P --> C",
+            "A -->|供电、瞄准且冷却满足| Q",
+            "Q -->|每炮口一发| R",
+            "R -.->|后续物理步| S",
+            "S -->|首次实体命中| T",
+            "C -->|零冲量| T",
+            "T --> D",
             "E --> F",
             "F --> G",
             "D -->|耐久为0| H",

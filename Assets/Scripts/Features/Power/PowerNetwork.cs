@@ -1,4 +1,4 @@
-// 职责：重建无线供电图，按连通分量将发电量均分给范围内的唯一负载。
+// 职责：重建无线供电图，按连通分量为启动的唯一负载分配所需功率。
 // 入口：Rebuild()；由 PowerTransmissionDevice 每帧装配已启用的中继、发电机和负载。
 // 边界：不调度 Unity 帧或绘制调试图；复用实例缓冲，在一次分配结束后提交负载状态。
 using System.Collections.Generic;
@@ -190,7 +190,7 @@ public sealed class PowerNetwork
     {
         foreach (Power load in _loads)
         {
-            if (IsWithinBoxRange(load.transform.position, device.transform.position, device.powerRange))
+            if (load.IsWorkRequested && IsWithinBoxRange(load.transform.position, device.transform.position, device.powerRange))
             {
                 _componentLoads.Add(load);
             }
@@ -215,11 +215,22 @@ public sealed class PowerNetwork
             return;
         }
 
-        // 组件内部重叠覆盖只供一次；多个独立组件仍能向同一个负载叠加供电。
-        float powerPerLoad = totalOutputPower / _componentLoads.Count;
+        // 重叠中继只收集一次；独立网络补足剩余需求，已经满足的负载不继续占用输出。
+        float remainingDemand = 0f;
         foreach (Power load in _componentLoads)
         {
-            load.ReceivePower(powerPerLoad);
+            remainingDemand += Mathf.Max(0f, load.RequestedPower - load.currentPower);
+        }
+
+        if (remainingDemand <= 0f)
+        {
+            return;
+        }
+
+        float supplyRatio = Mathf.Min(1f, totalOutputPower / remainingDemand);
+        foreach (Power load in _componentLoads)
+        {
+            load.ReceivePower(Mathf.Max(0f, load.RequestedPower - load.currentPower) * supplyRatio);
         }
     }
 

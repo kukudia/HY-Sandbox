@@ -75,7 +75,7 @@ public static class BlockArtValidation
                     }
                 }
 
-                var weapon = root.GetComponent<TurretWeapon>();
+                var weapon = root.GetComponent<Turret>();
                 if (weapon != null && (weapon.muzzle == null || !weapon.muzzle.IsChildOf(weapon.verticalAxis) || !weapon.verticalAxis.IsChildOf(weapon.horizontalAxis)))
                 {
                     issues.Add(path + ": invalid aiming chain");

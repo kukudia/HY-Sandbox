@@ -1595,13 +1595,13 @@ public static class IndustrialArtGenerator
 
     private static void ConfigureTurretRig(Transform model, Transform detailedRoot)
     {
-        TurretWeapon weapon = model.GetComponentInParent<TurretWeapon>();
+        LaserTurret weapon = model.GetComponentInParent<LaserTurret>();
         Transform horizontal = detailedRoot.Find("Horizontal");
         Transform vertical = horizontal != null ? horizontal.Find("Vertical") : null;
         Transform muzzle = vertical != null ? vertical.Find("Muzzle") : null;
         if (weapon == null || horizontal == null || vertical == null || muzzle == null)
         {
-            throw new InvalidOperationException("Generated turret requires TurretWeapon and Horizontal/Vertical/Muzzle transforms.");
+            throw new InvalidOperationException("Generated turret requires LaserTurret and Horizontal/Vertical/Muzzle transforms.");
         }
 
         weapon.horizontalAxis = horizontal;

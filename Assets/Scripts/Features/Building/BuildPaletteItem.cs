@@ -22,6 +22,21 @@ public sealed class BuildPaletteItem : MonoBehaviour, IPointerEnterHandler, IPoi
     public string BlockInfo => _info;
     public int Category => _category;
 
+    private void Awake()
+    {
+        GameObject prefab = Resources.Load<GameObject>("Blocks/" + _blockName);
+        if (prefab != null && prefab.TryGetComponent(out Block block))
+        {
+            _info = block.GetDisplayInfo();
+        }
+    }
+
+    public void BindPalette(BuildPalette palette)
+    {
+        _palette = palette;
+        GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => BuildManager.instance.SetCurrentBlockResource("Blocks/" + _blockName));
+    }
+
     public void SetSelected(bool selected, Color color)
     {
         _outline.color = selected ? color : Color.white;

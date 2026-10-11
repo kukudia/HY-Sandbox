@@ -36,8 +36,8 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | HoverControlPlayChecks | [`string[] Run()`](../Assets/Editor/Architecture/HoverControlPlayChecks.cs#L11) | internal static |
-| HoverControlPlayChecks | [`void Tick(HoverFlightController controller)`](../Assets/Editor/Architecture/HoverControlPlayChecks.cs#L118) | private static |
-| HoverControlPlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Architecture/HoverControlPlayChecks.cs#L123) | private static |
+| HoverControlPlayChecks | [`void Tick(HoverFlightController controller)`](../Assets/Editor/Architecture/HoverControlPlayChecks.cs#L122) | private static |
+| HoverControlPlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Architecture/HoverControlPlayChecks.cs#L127) | private static |
 
 ## Assets/Editor/Architecture/PresentationPlayChecks.cs
 
@@ -310,6 +310,43 @@
 | HealthHudPreview | [`string Render()`](../Assets/Editor/Combat/HealthHudPreview.cs#L17) | public static |
 | HealthHudPreview | [`void RenderOne(Transform source, Vector2Int size)`](../Assets/Editor/Combat/HealthHudPreview.cs#L44) | private static |
 
+## Assets/Editor/Combat/TurretAssetBaker.cs
+
+// 职责：从指定 SpaceKit 源制作单管/双管炮塔、真实炮弹及独立建造目录资产。 // 入口：Bake()；只保存拥有的 Prefab/材质/图标，不保存当前场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| TurretAssetBaker | [`void Bake()`](../Assets/Editor/Combat/TurretAssetBaker.cs#L16) | public static |
+| TurretAssetBaker | [`TurretProjectile BakeProjectile()`](../Assets/Editor/Combat/TurretAssetBaker.cs#L37) | private static |
+| TurretAssetBaker | [`void ConfigureLaser()`](../Assets/Editor/Combat/TurretAssetBaker.cs#L81) | private static |
+| TurretAssetBaker | [`void BakeTurret(string name, string variant, float demand, TurretProjectile projectile)`](../Assets/Editor/Combat/TurretAssetBaker.cs#L104) | private static |
+| TurretAssetBaker | [`void BakeEntry(string name)`](../Assets/Editor/Combat/TurretAssetBaker.cs#L195) | private static |
+
+## Assets/Editor/Combat/TurretFlightPlayProbe.cs
+
+// 职责：验证真实引擎帧中的无目标空闲、自动申请供电、双管发射及有限飞行时间。 // 入口：Run()；在已进入的Play Mode隔离执行，输出JSON与飞行截图，不保存场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| TurretFlightPlayProbe | [`void Run()`](../Assets/Editor/Combat/TurretFlightPlayProbe.cs#L36) | public static |
+| TurretFlightPlayProbe | [`ControlUnit Unit(string name, Vector3 position, UnitFaction faction)`](../Assets/Editor/Combat/TurretFlightPlayProbe.cs#L85) | private static |
+| TurretFlightPlayProbe | [`void Tick()`](../Assets/Editor/Combat/TurretFlightPlayProbe.cs#L105) | private static |
+| TurretFlightPlayProbe | [`void Check(string label, bool passed)`](../Assets/Editor/Combat/TurretFlightPlayProbe.cs#L173) | private static |
+| TurretFlightPlayProbe | [`void Capture()`](../Assets/Editor/Combat/TurretFlightPlayProbe.cs#L178) | private static |
+| TurretFlightPlayProbe | [`void Finish()`](../Assets/Editor/Combat/TurretFlightPlayProbe.cs#L202) | private static |
+
+## Assets/Editor/Combat/TurretRuntimeChecks.cs
+
+// 职责：在当前 Play Mode 隔离检查真实炮塔资产、瞬时激光、炮管数量及炮弹物理扫掠。 // 入口：RunInCurrentPlayMode()；不保存场景、不切换模式，清理本次创建的检查对象。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| TurretRuntimeChecks | [`string RunInCurrentPlayMode()`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L23) | public static |
+| TurretRuntimeChecks | [`void PrepareWeapon(Turret turret, ControlUnit owner)`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L205) | private static |
+| TurretRuntimeChecks | [`void CallFire(Turret turret, Vector3 origin, Vector3 direction)`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L213) | private static |
+| TurretRuntimeChecks | [`ControlUnit Unit(Transform parent, string name, UnitFaction faction, Vector3 localPosition)`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L218) | private static |
+| TurretRuntimeChecks | [`void Check(Report report, bool passed, string name)`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L235) | private static |
+
 ## Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs
 
 // 职责：在 Play Mode 检查沙盒物理、控制和损伤相关场景。 // 入口：Run()。 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
@@ -362,6 +399,25 @@
 | ThrusterHudSetup | [`Text Label( Transform parent, string name, Font font, int size, Color color, TextAnchor alignment)`](../Assets/Editor/Flight/ThrusterHudSetup.cs#L332) | private static |
 | ThrusterHudSetup | [`void Set(UnityEngine.Object target, string name, UnityEngine.Object value)`](../Assets/Editor/Flight/ThrusterHudSetup.cs#L356) | private static |
 | ThrusterHudSetup | [`void SetArray(UnityEngine.Object target, string name, T[] values)`](../Assets/Editor/Flight/ThrusterHudSetup.cs#L363) | private static |
+
+## Assets/Editor/Power/ActivePowerPlayChecks.cs
+
+// 职责：在临时运行对象上验证按工作需求分配、停机释放、断电恢复和真实推进/入库启动。 // 入口：Run()；需要已连接 Editor 的 Play Mode，由武器回归 probe 调用并汇总结果。 // 生命周期：仅创建临时对象，退出销毁全部对象并恢复原模拟开关，不保存场景或资产。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| ActivePowerPlayChecks | [`string[] Run()`](../Assets/Editor/Power/ActivePowerPlayChecks.cs#L12) | public static |
+| ActivePowerPlayChecks | [`void CheckNetwork(Transform parent, List<string> checks)`](../Assets/Editor/Power/ActivePowerPlayChecks.cs#L40) | private static |
+| ActivePowerPlayChecks | [`void CheckCurrencyAttraction(Transform parent, List<string> checks)`](../Assets/Editor/Power/ActivePowerPlayChecks.cs#L140) | private static |
+| ActivePowerPlayChecks | [`void CheckThruster(Transform parent, List<string> checks)`](../Assets/Editor/Power/ActivePowerPlayChecks.cs#L179) | private static |
+| ActivePowerPlayChecks | [`void CheckCargo(Transform parent, List<string> checks)`](../Assets/Editor/Power/ActivePowerPlayChecks.cs#L217) | private static |
+| ActivePowerPlayChecks | [`ControlUnit CreateOwner(Transform parent, string name)`](../Assets/Editor/Power/ActivePowerPlayChecks.cs#L253) | private static |
+| ActivePowerPlayChecks | [`void CheckBots(Transform parent, List<string> checks)`](../Assets/Editor/Power/ActivePowerPlayChecks.cs#L264) | private static |
+| ActivePowerPlayChecks | [`void TickBot(Bot bot, string method)`](../Assets/Editor/Power/ActivePowerPlayChecks.cs#L317) | private static |
+| ActivePowerPlayChecks | [`T Child(Transform parent, string name)`](../Assets/Editor/Power/ActivePowerPlayChecks.cs#L322) | private static |
+| ActivePowerPlayChecks | [`void Tick(MainThruster thruster)`](../Assets/Editor/Power/ActivePowerPlayChecks.cs#L330) | private static |
+| ActivePowerPlayChecks | [`bool Near(float first, float second)`](../Assets/Editor/Power/ActivePowerPlayChecks.cs#L335) | private static |
+| ActivePowerPlayChecks | [`void Check(List<string> checks, string description, bool passed)`](../Assets/Editor/Power/ActivePowerPlayChecks.cs#L340) | private static |
 
 ## Assets/Editor/Presentation/BlockStatusSetup.cs
 
@@ -518,9 +574,9 @@
 | SalvagePlayProbe | [`void Check(string name, bool result)`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L157) | private static |
 | SalvagePlayProbe | [`ControlUnit Unit(string name, Vector3 position, UnitFaction faction, bool cockpit = true)`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L169) | private static |
 | SalvagePlayProbe | [`GameObject Spawn(string name, ControlUnit unit, Vector3 local)`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L196) | private static |
-| SalvagePlayProbe | [`CargoItem Coins(int count)`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L210) | private static |
-| SalvagePlayProbe | [`CargoItem Part()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L215) | private static |
-| SalvagePlayProbe | [`IEnumerator Scenario()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L221) | private static |
+| SalvagePlayProbe | [`CargoItem Coins(int count)`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L211) | private static |
+| SalvagePlayProbe | [`CargoItem Part()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L216) | private static |
+| SalvagePlayProbe | [`IEnumerator Scenario()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L222) | private static |
 
 ## Assets/Scripts/Features/Bootstrap/GameManager.cs
 
@@ -538,21 +594,22 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Bot | [`void Start()`](../Assets/Scripts/Features/Bots/Bot.cs#L129) | protected virtual |
-| Bot | [`bool TickNavigation()`](../Assets/Scripts/Features/Bots/Bot.cs#L157) | protected |
-| Bot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Bot.cs#L170) | protected virtual |
-| Bot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/Bot.cs#L188) | protected virtual |
-| Bot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/Bot.cs#L192) | public virtual |
-| Bot | [`void InitializeTrail()`](../Assets/Scripts/Features/Bots/Bot.cs#L196) | private |
-| Bot | [`void LateUpdate()`](../Assets/Scripts/Features/Bots/Bot.cs#L216) | private |
-| Bot | [`void NavigateToTarget(Transform target)`](../Assets/Scripts/Features/Bots/Bot.cs#L229) | protected |
-| Bot | [`void NavigateHomeSmoothly()`](../Assets/Scripts/Features/Bots/Bot.cs#L249) | protected |
-| Bot | [`Vector3 GetRelativeHomeVelocity(Vector3 worldPosition)`](../Assets/Scripts/Features/Bots/Bot.cs#L286) | private |
-| Bot | [`void ReturnHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L292) | private |
-| Bot | [`void LeaveHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L328) | private |
-| Bot | [`void SetNavigationState(NavigationState nextState)`](../Assets/Scripts/Features/Bots/Bot.cs#L340) | private |
-| Bot | [`BotFlightMotion.Settings CreateFlightSettings()`](../Assets/Scripts/Features/Bots/Bot.cs#L360) | private |
-| Bot | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Bots/Bot.cs#L387) | private |
+| Bot | [`void Start()`](../Assets/Scripts/Features/Bots/Bot.cs#L130) | protected virtual |
+| Bot | [`bool TickNavigation()`](../Assets/Scripts/Features/Bots/Bot.cs#L158) | protected |
+| Bot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Bot.cs#L171) | protected virtual |
+| Bot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/Bot.cs#L190) | protected virtual |
+| Bot | [`Power SetHomePowerRequested(bool requested)`](../Assets/Scripts/Features/Bots/Bot.cs#L196) | protected |
+| Bot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/Bot.cs#L209) | public virtual |
+| Bot | [`void InitializeTrail()`](../Assets/Scripts/Features/Bots/Bot.cs#L213) | private |
+| Bot | [`void LateUpdate()`](../Assets/Scripts/Features/Bots/Bot.cs#L233) | private |
+| Bot | [`void NavigateToTarget(Transform target)`](../Assets/Scripts/Features/Bots/Bot.cs#L246) | protected |
+| Bot | [`void NavigateHomeSmoothly()`](../Assets/Scripts/Features/Bots/Bot.cs#L266) | protected |
+| Bot | [`Vector3 GetRelativeHomeVelocity(Vector3 worldPosition)`](../Assets/Scripts/Features/Bots/Bot.cs#L303) | private |
+| Bot | [`void ReturnHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L309) | private |
+| Bot | [`void LeaveHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L345) | private |
+| Bot | [`void SetNavigationState(NavigationState nextState)`](../Assets/Scripts/Features/Bots/Bot.cs#L357) | private |
+| Bot | [`BotFlightMotion.Settings CreateFlightSettings()`](../Assets/Scripts/Features/Bots/Bot.cs#L377) | private |
+| Bot | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Bots/Bot.cs#L404) | private |
 
 ## Assets/Scripts/Features/Bots/BotAvoidanceResult.cs
 
@@ -626,14 +683,14 @@
 | --- | --- | --- |
 | CollectionBot | [`void Start()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L22) | protected override |
 | CollectionBot | [`void FixedUpdate()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L31) | private |
-| CollectionBot | [`bool IsMissionInvalid(ControlUnit owner, bool canWork)`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L68) | private |
-| CollectionBot | [`void CollectTarget()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L73) | private |
-| CollectionBot | [`void ReturnCargo()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L82) | private |
-| CollectionBot | [`void FindTarget(ControlUnit owner)`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L94) | private |
-| CollectionBot | [`void Abandon()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L131) | private |
-| CollectionBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L142) | protected override |
-| CollectionBot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L148) | protected override |
-| CollectionBot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L154) | public override |
+| CollectionBot | [`bool IsMissionInvalid(ControlUnit owner, bool canWork)`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L75) | private |
+| CollectionBot | [`void CollectTarget()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L80) | private |
+| CollectionBot | [`void ReturnCargo()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L89) | private |
+| CollectionBot | [`void FindTarget(ControlUnit owner)`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L104) | private |
+| CollectionBot | [`void Abandon()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L141) | private |
+| CollectionBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L152) | protected override |
+| CollectionBot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L158) | protected override |
+| CollectionBot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L164) | public override |
 
 ## Assets/Scripts/Features/Bots/RepairBeamView.cs
 
@@ -656,12 +713,12 @@
 | --- | --- | --- |
 | RepairBot | [`void Start()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L24) | protected override |
 | RepairBot | [`void FixedUpdate()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L34) | private |
-| RepairBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L66) | protected override |
-| RepairBot | [`void FindDamagedBlock()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L72) | private |
-| RepairBot | [`void CheckAndRepair()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L85) | private |
-| RepairBot | [`void UpdateRepairBeam(bool active)`](../Assets/Scripts/Features/Bots/RepairBot.cs#L126) | private |
-| RepairBot | [`void EnsureRepairBeamGradient()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L131) | private |
-| RepairBot | [`void ClearTarget()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L144) | public |
+| RepairBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L87) | protected override |
+| RepairBot | [`void FindDamagedBlock()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L93) | private |
+| RepairBot | [`void CheckAndRepair()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L106) | private |
+| RepairBot | [`void UpdateRepairBeam(bool active)`](../Assets/Scripts/Features/Bots/RepairBot.cs#L147) | private |
+| RepairBot | [`void EnsureRepairBeamGradient()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L152) | private |
+| RepairBot | [`void ClearTarget()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L165) | public |
 
 ## Assets/Scripts/Features/Bots/RepairTargetSearch.cs
 
@@ -864,13 +921,13 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BuildPalette | [`void Awake()`](../Assets/Scripts/Features/Building/BuildPalette.cs#L27) | private |
-| BuildPalette | [`void OnEnable()`](../Assets/Scripts/Features/Building/BuildPalette.cs#L32) | private |
-| BuildPalette | [`void OnDisable()`](../Assets/Scripts/Features/Building/BuildPalette.cs#L37) | private |
-| BuildPalette | [`void LateUpdate()`](../Assets/Scripts/Features/Building/BuildPalette.cs#L42) | private |
-| BuildPalette | [`void SelectCategory(int category)`](../Assets/Scripts/Features/Building/BuildPalette.cs#L63) | public |
-| BuildPalette | [`void ShowTooltip(BuildPaletteItem item)`](../Assets/Scripts/Features/Building/BuildPalette.cs#L89) | public |
-| BuildPalette | [`void HideTooltip(BuildPaletteItem item)`](../Assets/Scripts/Features/Building/BuildPalette.cs#L98) | public |
-| BuildPalette | [`BuildPaletteItem GetSelectedItem()`](../Assets/Scripts/Features/Building/BuildPalette.cs#L110) | public |
+| BuildPalette | [`void OnEnable()`](../Assets/Scripts/Features/Building/BuildPalette.cs#L45) | private |
+| BuildPalette | [`void OnDisable()`](../Assets/Scripts/Features/Building/BuildPalette.cs#L50) | private |
+| BuildPalette | [`void LateUpdate()`](../Assets/Scripts/Features/Building/BuildPalette.cs#L55) | private |
+| BuildPalette | [`void SelectCategory(int category)`](../Assets/Scripts/Features/Building/BuildPalette.cs#L76) | public |
+| BuildPalette | [`void ShowTooltip(BuildPaletteItem item)`](../Assets/Scripts/Features/Building/BuildPalette.cs#L102) | public |
+| BuildPalette | [`void HideTooltip(BuildPaletteItem item)`](../Assets/Scripts/Features/Building/BuildPalette.cs#L111) | public |
+| BuildPalette | [`BuildPaletteItem GetSelectedItem()`](../Assets/Scripts/Features/Building/BuildPalette.cs#L123) | public |
 
 ## Assets/Scripts/Features/Building/BuildPaletteItem.cs
 
@@ -878,12 +935,14 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BuildPaletteItem | [`void SetSelected(bool selected, Color color)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L25) | public |
-| BuildPaletteItem | [`void OnPointerEnter(PointerEventData eventData)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L30) | public |
-| BuildPaletteItem | [`void OnPointerExit(PointerEventData eventData)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L35) | public |
-| BuildPaletteItem | [`void OnSelect(BaseEventData eventData)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L48) | public |
-| BuildPaletteItem | [`void OnDeselect(BaseEventData eventData)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L53) | public |
-| BuildPaletteItem | [`void OnDisable()`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L58) | private |
+| BuildPaletteItem | [`void Awake()`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L25) | private |
+| BuildPaletteItem | [`void BindPalette(BuildPalette palette)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L34) | public |
+| BuildPaletteItem | [`void SetSelected(bool selected, Color color)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L40) | public |
+| BuildPaletteItem | [`void OnPointerEnter(PointerEventData eventData)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L45) | public |
+| BuildPaletteItem | [`void OnPointerExit(PointerEventData eventData)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L50) | public |
+| BuildPaletteItem | [`void OnSelect(BaseEventData eventData)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L63) | public |
+| BuildPaletteItem | [`void OnDeselect(BaseEventData eventData)`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L68) | public |
+| BuildPaletteItem | [`void OnDisable()`](../Assets/Scripts/Features/Building/BuildPaletteItem.cs#L73) | private |
 
 ## Assets/Scripts/Features/Building/BuildTargetContext.cs
 
@@ -1197,6 +1256,17 @@
 | ExplosionPropagation | [`void DisconnectBlocksInExplosionRange(ControlUnit unit, Block block, Vector3 explosionPosition)`](../Assets/Scripts/Features/Combat/ExplosionPropagation.cs#L9) | internal static |
 | ExplosionPropagation | [`void ApplyExplosionForce( Block block, string ownerUnitId, UnitFaction ownerFaction, Vector3 explosionPosition, float upwardsModifier, float impulseScale, float maximumSpeedChange, float collisionProtection)`](../Assets/Scripts/Features/Combat/ExplosionPropagation.cs#L53) | internal static |
 
+## Assets/Scripts/Features/Combat/LaserTurret.cs
+
+// 职责：瞬时激光命中与短时光束表现；不对目标施加冲量。 // 入口：Turret 固定步调用 Fire()；公用配置通过基类保持原序列化字段。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| LaserTurret | [`void Awake()`](../Assets/Scripts/Features/Combat/LaserTurret.cs#L13) | protected override |
+| LaserTurret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/LaserTurret.cs#L33) | protected override |
+| LaserTurret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/LaserTurret.cs#L50) | protected override |
+| LaserTurret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/LaserTurret.cs#L56) | protected override |
+
 ## Assets/Scripts/Features/Combat/Meteor.cs
 
 // 职责：维护陨石刚体、飞行和碰撞相关行为。 // 入口：Start() / OnCollisionEnter()。
@@ -1217,6 +1287,14 @@
 | MeteorShower | [`void SpawnMeteor()`](../Assets/Scripts/Features/Combat/MeteorShower.cs#L45) | private |
 | MeteorShower | [`void MeteorDestroyed()`](../Assets/Scripts/Features/Combat/MeteorShower.cs#L94) | public |
 
+## Assets/Scripts/Features/Combat/ProjectileTurret.cs
+
+// 职责：每轮从每个炮管分别发射一个真实刚体炮弹；炮弹负责飞行和命中。 // 入口：Turret.Fire()；炮管、速度、寿命和冲量可在 Prefab Inspector 配置。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| ProjectileTurret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L20) | protected override |
+
 ## Assets/Scripts/Features/Combat/SalvageCleanupSession.cs
 
 // 职责：按原始单位 ID 去重延迟清理；分别校验整单位、无驾驶舱组和远离组。 // 入口：ScheduleUnit() / ScheduleGroup() / ScheduleDistantGroup()。 // 生命周期：协程由 DestroyManager 承载；结束会话先停止协程再 Clear()。
@@ -1233,18 +1311,64 @@
 | SalvageCleanupSession | [`IEnumerator CleanupGroupAfterDelay(ControlUnit unit, string ownerUnitId, float fallbackDelay)`](../Assets/Scripts/Features/Combat/SalvageCleanupSession.cs#L94) | private |
 | SalvageCleanupSession | [`IEnumerator CleanupUnitAfterDelay(string ownerUnitId, float fallbackDelay)`](../Assets/Scripts/Features/Combat/SalvageCleanupSession.cs#L106) | private |
 
-## Assets/Scripts/Features/Combat/TurretHitscan.cs
+## Assets/Scripts/Features/Combat/Turret.cs
 
-// 职责：按射线命中距离跳过本单位，先施加冲量，再结算有效敌方模块伤害。 // 入口：Fire()；由 TurretWeapon 的固定步射击流程调用并返回光束终点。
+// 职责：共享炮塔启动、独立索敌、功率请求和双轴瞄准；武器种类只实现发射与表现。 // 入口：SetStarted() / FixedUpdate()；禁用和退出运行时撤销功率需求。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| TurretHitscan | [`Vector3 Fire( Vector3 origin, Vector3 direction, ControlUnit owner, UnitFaction targetFaction, float range, LayerMask hitLayers, float damage, float impactImpulse)`](../Assets/Scripts/Features/Combat/TurretHitscan.cs#L10) | internal |
-| RaycastHitDistanceComparer | [`int Compare(RaycastHit a, RaycastHit b)`](../Assets/Scripts/Features/Combat/TurretHitscan.cs#L56) | public |
+| Turret | [`void Awake()`](../Assets/Scripts/Features/Combat/Turret.cs#L44) | protected virtual |
+| Turret | [`void OnValidate()`](../Assets/Scripts/Features/Combat/Turret.cs#L51) | protected virtual |
+| Turret | [`void SetStarted(bool started)`](../Assets/Scripts/Features/Combat/Turret.cs#L62) | public |
+| Turret | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Turret.cs#L71) | protected virtual |
+| Turret | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turret.cs#L93) | protected virtual |
+| Turret | [`void StopWorking()`](../Assets/Scripts/Features/Combat/Turret.cs#L98) | private |
+| Turret | [`void RefreshTarget()`](../Assets/Scripts/Features/Combat/Turret.cs#L107) | private |
+| Turret | [`void AimAndFire(Durability aimTarget)`](../Assets/Scripts/Features/Combat/Turret.cs#L132) | private |
+| Turret | [`void AimAt(Vector3 worldDirection)`](../Assets/Scripts/Features/Combat/Turret.cs#L151) | private |
+| Turret | [`void ResolveAimingRig()`](../Assets/Scripts/Features/Combat/Turret.cs#L181) | private |
+| Turret | [`Vector3 GetMuzzlePosition()`](../Assets/Scripts/Features/Combat/Turret.cs#L215) | protected |
+| Turret | [`Vector3 GetAimForward()`](../Assets/Scripts/Features/Combat/Turret.cs#L226) | protected |
+| Turret | [`UnitFaction GetEffectiveTargetFaction()`](../Assets/Scripts/Features/Combat/Turret.cs#L232) | protected |
+| Turret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turret.cs#L237) | protected abstract |
+| Turret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turret.cs#L238) | protected virtual |
+| Turret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turret.cs#L242) | protected virtual |
+
+## Assets/Scripts/Features/Combat/TurretHitResolver.cs
+
+// 职责：共享激光与实体炮弹的命中反馈、敌对伤害和可选炮弹冲量。 // 入口：Apply()；先施加炮弹冲量，确保拆组后的刚体继承命中速度。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| TurretHitResolver | [`void Apply( Collider collider, Vector3 point, Vector3 normal, Vector3 direction, ControlUnit owner, UnitFaction faction, float damage, float impulse)`](../Assets/Scripts/Features/Combat/TurretHitResolver.cs#L7) | internal static |
+
+## Assets/Scripts/Features/Combat/TurretHitscan.cs
+
+// 职责：激光沿射线瞬时命中最近的非自身障碍，结算伤害但不施加冲量。 // 入口：Fire()；由 LaserTurret 调用并返回光束终点。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| TurretHitscan | [`Vector3 Fire( Vector3 origin, Vector3 direction, ControlUnit owner, UnitFaction targetFaction, float range, LayerMask hitLayers, float damage)`](../Assets/Scripts/Features/Combat/TurretHitscan.cs#L10) | internal |
+| RaycastHitDistanceComparer | [`int Compare(RaycastHit a, RaycastHit b)`](../Assets/Scripts/Features/Combat/TurretHitscan.cs#L59) | public |
+
+## Assets/Scripts/Features/Combat/TurretProjectile.cs
+
+// 职责：真实刚体炮弹飞行、每步扫掠防穿透、敌对伤害和寿命清理。 // 入口：Launch()；触发器避免物理引擎额外施加冲量，自身构造始终过滤。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| TurretProjectile | [`void Awake()`](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L21) | private |
+| TurretProjectile | [`void Launch( ControlUnit owner, UnitFaction faction, float damage, float impulse, Vector3 velocity, float lifetime, float maxDistance, LayerMask hitLayers)`](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L33) | public |
+| TurretProjectile | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L62) | private |
+| TurretProjectile | [`bool ResolveOverlaps(Vector3 origin, float radius)`](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L124) | private |
+| TurretProjectile | [`void OnTriggerEnter(Collider other)`](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L141) | private |
+| TurretProjectile | [`bool CanHit(Collider collider)`](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L150) | private |
+| TurretProjectile | [`void ResolveHit(Collider collider, Vector3 point, Vector3 normal)`](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L155) | private |
+| TurretProjectile | [`void Retire()`](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L176) | private |
 
 ## Assets/Scripts/Features/Combat/TurretTargetSelector.cs
 
-// 职责：从有效敌对组中选择范围内最近的伤害目标，支持玩家优先攻击敌方驾驶舱。 // 入口：FindNearestTarget()；由 TurretWeapon 按既有索敌周期调用。 // 生命周期：每炮塔独立缓存模块引用；销毁引用在距离计算时跳过。
+// 职责：从有效敌对组中选择范围内最近的伤害目标，支持玩家优先攻击敌方驾驶舱。 // 入口：FindNearestTarget()；由 Turret 按索敌周期调用，不依赖当前供电。 // 生命周期：每炮塔独立缓存模块引用；销毁引用在距离计算时跳过。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
@@ -1252,26 +1376,6 @@
 | TurretTargetSelector | [`Durability FindNearestDurability(ControlUnit unit)`](../Assets/Scripts/Features/Combat/TurretTargetSelector.cs#L97) | private |
 | TurretTargetSelector | [`Durability[] GetDurabilities(ControlUnit unit)`](../Assets/Scripts/Features/Combat/TurretTargetSelector.cs#L120) | private |
 | TurretTargetSelector | [`Durability FindCockpitDurability(ControlUnit unit)`](../Assets/Scripts/Features/Combat/TurretTargetSelector.cs#L136) | private |
-
-## Assets/Scripts/Features/Combat/TurretWeapon.cs
-
-// 职责：执行炮塔索敌、转向、俯仰约束及射击反馈。 // 入口：FixedUpdate() 的 AimAndFire()；索敌和命中结算由独立战斗规则执行。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| TurretWeapon | [`void Awake()`](../Assets/Scripts/Features/Combat/TurretWeapon.cs#L42) | private |
-| TurretWeapon | [`void OnValidate()`](../Assets/Scripts/Features/Combat/TurretWeapon.cs#L49) | private |
-| TurretWeapon | [`void ResolveAimingRig()`](../Assets/Scripts/Features/Combat/TurretWeapon.cs#L57) | private |
-| TurretWeapon | [`void Start()`](../Assets/Scripts/Features/Combat/TurretWeapon.cs#L90) | private |
-| TurretWeapon | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/TurretWeapon.cs#L110) | private |
-| TurretWeapon | [`void OnDisable()`](../Assets/Scripts/Features/Combat/TurretWeapon.cs#L183) | private |
-| TurretWeapon | [`UnitFaction GetEffectiveTargetFaction()`](../Assets/Scripts/Features/Combat/TurretWeapon.cs#L196) | private |
-| TurretWeapon | [`void AimAndFire(Durability aimTarget)`](../Assets/Scripts/Features/Combat/TurretWeapon.cs#L201) | private |
-| TurretWeapon | [`void AimAt(Vector3 worldDirection)`](../Assets/Scripts/Features/Combat/TurretWeapon.cs#L222) | private |
-| TurretWeapon | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/TurretWeapon.cs#L255) | private |
-| TurretWeapon | [`Vector3 GetMuzzlePosition()`](../Assets/Scripts/Features/Combat/TurretWeapon.cs#L278) | private |
-| TurretWeapon | [`Vector3 GetAimForward()`](../Assets/Scripts/Features/Combat/TurretWeapon.cs#L289) | private |
-| TurretWeapon | [`UnitFaction Opposite(UnitFaction faction)`](../Assets/Scripts/Features/Combat/TurretWeapon.cs#L309) | private static |
 
 ## Assets/Scripts/Features/Diagnostics/AbnormalImpulseBodyProbe.cs
 
@@ -1371,17 +1475,18 @@
 | HoverFlightController | [`void Init()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L64) | public |
 | HoverFlightController | [`void OnEnable()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L85) | private |
 | HoverFlightController | [`void OnDisable()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L91) | private |
-| HoverFlightController | [`void OnValidate()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L96) | private |
-| HoverFlightController | [`void FixedUpdate()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L102) | private |
-| HoverFlightController | [`void StopControlOutput()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L160) | private |
-| HoverFlightController | [`void ClearHoverThrust()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L167) | private |
-| HoverFlightController | [`bool EnsureControllerReady()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L193) | private |
-| HoverFlightController | [`void RefreshCachedPhysicsValues()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L234) | private |
-| HoverFlightController | [`void RefreshTiltLimitCache()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L261) | private |
-| HoverFlightController | [`void RebuildThrusterCache()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L267) | private |
-| HoverFlightController | [`void DistributeThrust(float heightAdjustment, Vector3 currentUp)`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L339) | private |
-| HoverFlightController | [`void ApplyRotationCorrection(Vector3 currentUp, float outputEfficiency)`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L381) | private |
-| HoverFlightController | [`void OnDrawGizmosSelected()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L396) | private |
+| HoverFlightController | [`void OnValidate()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L97) | private |
+| HoverFlightController | [`void FixedUpdate()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L103) | private |
+| HoverFlightController | [`bool HasActiveHoverThruster()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L157) | private |
+| HoverFlightController | [`void StopControlOutput()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L170) | private |
+| HoverFlightController | [`void ClearHoverThrust()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L177) | private |
+| HoverFlightController | [`bool EnsureControllerReady()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L203) | private |
+| HoverFlightController | [`void RefreshCachedPhysicsValues()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L244) | private |
+| HoverFlightController | [`void RefreshTiltLimitCache()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L271) | private |
+| HoverFlightController | [`void RebuildThrusterCache()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L277) | private |
+| HoverFlightController | [`void DistributeThrust(float heightAdjustment, Vector3 currentUp)`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L349) | private |
+| HoverFlightController | [`void ApplyRotationCorrection(Vector3 currentUp, float outputEfficiency)`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L391) | private |
+| HoverFlightController | [`void OnDrawGizmosSelected()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L406) | private |
 
 ## Assets/Scripts/Features/Flight/HoverThruster.cs
 
@@ -1390,8 +1495,8 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | HoverThruster | [`void FixedUpdate()`](../Assets/Scripts/Features/Flight/HoverThruster.cs#L10) | private |
-| HoverThruster | [`void ApplyThrust()`](../Assets/Scripts/Features/Flight/HoverThruster.cs#L41) | public virtual |
-| HoverThruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/HoverThruster.cs#L52) | public override |
+| HoverThruster | [`void ApplyThrust()`](../Assets/Scripts/Features/Flight/HoverThruster.cs#L46) | public virtual |
+| HoverThruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/HoverThruster.cs#L57) | public override |
 
 ## Assets/Scripts/Features/Flight/MainThruster.cs
 
@@ -1400,8 +1505,8 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | MainThruster | [`void FixedUpdate()`](../Assets/Scripts/Features/Flight/MainThruster.cs#L10) | private |
-| MainThruster | [`void ApplyThrust()`](../Assets/Scripts/Features/Flight/MainThruster.cs#L28) | public |
-| MainThruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/MainThruster.cs#L39) | public override |
+| MainThruster | [`void ApplyThrust()`](../Assets/Scripts/Features/Flight/MainThruster.cs#L32) | public |
+| MainThruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/MainThruster.cs#L43) | public override |
 
 ## Assets/Scripts/Features/Flight/Thruster.cs
 
@@ -1420,13 +1525,15 @@
 | Thruster | [`bool HasValidRuntimeOwner()`](../Assets/Scripts/Features/Flight/Thruster.cs#L84) | protected |
 | Thruster | [`void CacheLocalReferences()`](../Assets/Scripts/Features/Flight/Thruster.cs#L104) | protected |
 | Thruster | [`void ApplyThrustChangeRateLimit()`](../Assets/Scripts/Features/Flight/Thruster.cs#L113) | public virtual |
-| Thruster | [`bool CanApplyThrust()`](../Assets/Scripts/Features/Flight/Thruster.cs#L134) | protected |
-| Thruster | [`float GetPowerEfficiency()`](../Assets/Scripts/Features/Flight/Thruster.cs#L139) | private |
-| Thruster | [`void VisualizeThrust()`](../Assets/Scripts/Features/Flight/Thruster.cs#L149) | public virtual |
-| Thruster | [`void VisualizeThrust(bool forceUpdate)`](../Assets/Scripts/Features/Flight/Thruster.cs#L154) | public virtual |
-| Thruster | [`void DisableLegacyLineRenderer()`](../Assets/Scripts/Features/Flight/Thruster.cs#L192) | private |
-| Thruster | [`void EnsureVisualEffect()`](../Assets/Scripts/Features/Flight/Thruster.cs#L201) | private |
-| Thruster | [`Vector3 GetNormalizedThrustDirection()`](../Assets/Scripts/Features/Flight/Thruster.cs#L216) | private |
+| Thruster | [`void SetPowerRequested(bool requested)`](../Assets/Scripts/Features/Flight/Thruster.cs#L134) | protected |
+| Thruster | [`void OnDisable()`](../Assets/Scripts/Features/Flight/Thruster.cs#L144) | protected virtual |
+| Thruster | [`bool CanApplyThrust()`](../Assets/Scripts/Features/Flight/Thruster.cs#L151) | protected |
+| Thruster | [`float GetPowerEfficiency()`](../Assets/Scripts/Features/Flight/Thruster.cs#L156) | private |
+| Thruster | [`void VisualizeThrust()`](../Assets/Scripts/Features/Flight/Thruster.cs#L166) | public virtual |
+| Thruster | [`void VisualizeThrust(bool forceUpdate)`](../Assets/Scripts/Features/Flight/Thruster.cs#L171) | public virtual |
+| Thruster | [`void DisableLegacyLineRenderer()`](../Assets/Scripts/Features/Flight/Thruster.cs#L209) | private |
+| Thruster | [`void EnsureVisualEffect()`](../Assets/Scripts/Features/Flight/Thruster.cs#L218) | private |
+| Thruster | [`Vector3 GetNormalizedThrustDirection()`](../Assets/Scripts/Features/Flight/Thruster.cs#L233) | private |
 
 ## Assets/Scripts/Features/Flight/ThrusterAllocator.cs
 
@@ -1474,9 +1581,9 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | UniversalThruster | [`void FixedUpdate()`](../Assets/Scripts/Features/Flight/UniversalThruster.cs#L10) | private |
-| UniversalThruster | [`void RotateThruster(Vector3 worldDir, bool active)`](../Assets/Scripts/Features/Flight/UniversalThruster.cs#L28) | private |
-| UniversalThruster | [`void ApplyThrust()`](../Assets/Scripts/Features/Flight/UniversalThruster.cs#L39) | public |
-| UniversalThruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/UniversalThruster.cs#L50) | public override |
+| UniversalThruster | [`void RotateThruster(Vector3 worldDir, bool active)`](../Assets/Scripts/Features/Flight/UniversalThruster.cs#L32) | private |
+| UniversalThruster | [`void ApplyThrust()`](../Assets/Scripts/Features/Flight/UniversalThruster.cs#L43) | public |
+| UniversalThruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/UniversalThruster.cs#L54) | public override |
 
 ## Assets/Scripts/Features/Player/InputManager.cs
 
@@ -1516,15 +1623,17 @@
 
 ## Assets/Scripts/Features/Power/Power.cs
 
-// 职责：保存负载需求及当前供电，向推进器、武器等提供工作状态与效率。 // 入口：PowerNetwork.Rebuild() 顺序调用 ResetPower() / ReceivePower() / CommitPowerStatus()。 // 生命周期：启用时登记负载；退出立即清零。独立电网的供电可在同一轮累计。
+// 职责：记录各使用者的工作意图及当前供电，空闲负载不占功率，供电短缺提供效率。 // 入口：使用者先 SetWorkRequested()；PowerNetwork.Rebuild() 顺序调用 ResetPower() / ReceivePower() / CommitPowerStatus()。 // 生命周期：启用时登记负载；最后请求撤销或退出立即清零；独立电网累加供电但不超出需求。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Power | [`void OnEnable()`](../Assets/Scripts/Features/Power/Power.cs#L20) | private |
-| Power | [`void OnDisable()`](../Assets/Scripts/Features/Power/Power.cs#L27) | private |
-| Power | [`void ResetPower()`](../Assets/Scripts/Features/Power/Power.cs#L35) | public |
-| Power | [`void ReceivePower(float suppliedPower)`](../Assets/Scripts/Features/Power/Power.cs#L41) | public |
-| Power | [`void CommitPowerStatus()`](../Assets/Scripts/Features/Power/Power.cs#L46) | public |
+| Power | [`void OnEnable()`](../Assets/Scripts/Features/Power/Power.cs#L43) | private |
+| Power | [`void OnDisable()`](../Assets/Scripts/Features/Power/Power.cs#L50) | private |
+| Power | [`void SetWorkRequested(Object requester, bool requested)`](../Assets/Scripts/Features/Power/Power.cs#L59) | public |
+| Power | [`void ResetPower()`](../Assets/Scripts/Features/Power/Power.cs#L84) | public |
+| Power | [`void ReceivePower(float suppliedPower)`](../Assets/Scripts/Features/Power/Power.cs#L90) | public |
+| Power | [`void CommitPowerStatus()`](../Assets/Scripts/Features/Power/Power.cs#L95) | public |
+| Power | [`bool IsDestroyedRequester(Object requester)`](../Assets/Scripts/Features/Power/Power.cs#L101) | private static |
 
 ## Assets/Scripts/Features/Power/PowerConnectionVisuals.cs
 
@@ -1552,7 +1661,7 @@
 
 ## Assets/Scripts/Features/Power/PowerNetwork.cs
 
-// 职责：重建无线供电图，按连通分量将发电量均分给范围内的唯一负载。 // 入口：Rebuild()；由 PowerTransmissionDevice 每帧装配已启用的中继、发电机和负载。 // 边界：不调度 Unity 帧或绘制调试图；复用实例缓冲，在一次分配结束后提交负载状态。
+// 职责：重建无线供电图，按连通分量为启动的唯一负载分配所需功率。 // 入口：Rebuild()；由 PowerTransmissionDevice 每帧装配已启用的中继、发电机和负载。 // 边界：不调度 Unity 帧或绘制调试图；复用实例缓冲，在一次分配结束后提交负载状态。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
@@ -1567,8 +1676,8 @@
 | PowerNetwork | [`void VisitDevices(List<PowerTransmissionDevice> devices)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L178) | private |
 | PowerNetwork | [`void CollectDeviceLoads(PowerTransmissionDevice device)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L189) | private |
 | PowerNetwork | [`void SupplyConnectedComponent()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L200) | private |
-| PowerNetwork | [`void CommitPowerStatuses()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L226) | private |
-| PowerNetwork | [`bool IsWithinBoxRange(Vector3 firstPosition, Vector3 secondPosition, float range)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L234) | private static |
+| PowerNetwork | [`void CommitPowerStatuses()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L237) | private |
+| PowerNetwork | [`bool IsWithinBoxRange(Vector3 firstPosition, Vector3 secondPosition, float range)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L245) | private static |
 
 ## Assets/Scripts/Features/Power/PowerRangeUnionView.cs
 
@@ -1992,14 +2101,16 @@
 | CargoHold | [`void OnValidate()`](../Assets/Scripts/Features/Salvage/CargoHold.cs#L62) | private |
 | CargoHold | [`void OnEnable()`](../Assets/Scripts/Features/Salvage/CargoHold.cs#L68) | private |
 | CargoHold | [`void OnDisable()`](../Assets/Scripts/Features/Salvage/CargoHold.cs#L73) | private |
-| CargoHold | [`bool CanReceive(CargoItem item, LootDrop reservation = null)`](../Assets/Scripts/Features/Salvage/CargoHold.cs#L79) | public |
-| CargoHold | [`bool Reserve(LootDrop drop)`](../Assets/Scripts/Features/Salvage/CargoHold.cs#L94) | public |
-| CargoHold | [`void ReleaseReservation(LootDrop drop)`](../Assets/Scripts/Features/Salvage/CargoHold.cs#L105) | public |
-| CargoHold | [`int Store(CargoItem item, LootDrop reservation = null)`](../Assets/Scripts/Features/Salvage/CargoHold.cs#L110) | public |
-| CargoHold | [`List<CargoItem> CaptureContents()`](../Assets/Scripts/Features/Salvage/CargoHold.cs#L138) | public |
-| CargoHold | [`void RestoreContents(List<CargoItem> items)`](../Assets/Scripts/Features/Salvage/CargoHold.cs#L152) | public |
-| CargoHold | [`void ReleaseContents(UnitFaction faction)`](../Assets/Scripts/Features/Salvage/CargoHold.cs#L188) | public |
-| CargoHold | [`CargoHold FindReceiver(CargoItem item, Vector3 position, ControlUnit owner = null, LootDrop reservation = null)`](../Assets/Scripts/Features/Salvage/CargoHold.cs#L210) | public static |
+| CargoHold | [`void Update()`](../Assets/Scripts/Features/Salvage/CargoHold.cs#L80) | private |
+| CargoHold | [`void RefreshPowerRequest()`](../Assets/Scripts/Features/Salvage/CargoHold.cs#L85) | private |
+| CargoHold | [`bool CanReceive(CargoItem item, LootDrop reservation = null)`](../Assets/Scripts/Features/Salvage/CargoHold.cs#L93) | public |
+| CargoHold | [`bool Reserve(LootDrop drop)`](../Assets/Scripts/Features/Salvage/CargoHold.cs#L109) | public |
+| CargoHold | [`void ReleaseReservation(LootDrop drop)`](../Assets/Scripts/Features/Salvage/CargoHold.cs#L122) | public |
+| CargoHold | [`int Store(CargoItem item, LootDrop reservation = null)`](../Assets/Scripts/Features/Salvage/CargoHold.cs#L128) | public |
+| CargoHold | [`List<CargoItem> CaptureContents()`](../Assets/Scripts/Features/Salvage/CargoHold.cs#L156) | public |
+| CargoHold | [`void RestoreContents(List<CargoItem> items)`](../Assets/Scripts/Features/Salvage/CargoHold.cs#L170) | public |
+| CargoHold | [`void ReleaseContents(UnitFaction faction)`](../Assets/Scripts/Features/Salvage/CargoHold.cs#L206) | public |
+| CargoHold | [`CargoHold FindReceiver(CargoItem item, Vector3 position, ControlUnit owner = null, LootDrop reservation = null)`](../Assets/Scripts/Features/Salvage/CargoHold.cs#L229) | public static |
 
 ## Assets/Scripts/Features/Salvage/CargoItem.cs
 

@@ -200,6 +200,7 @@ public static class SalvagePlayProbe
         Power power = root.GetComponent<Power>();
         if (power != null)
         {
+            power.SetWorkRequested(root, true);
             power.currentPower = 1000f;
         }
 
@@ -327,7 +328,7 @@ public static class SalvagePlayProbe
         Check(
             "Stored item display contains no gameplay components",
             hold.transform.Find("Model/Contents display").GetComponentsInChildren<Block>().Length == 0);
-        // Reservation competition on the last slot and recovery when a bay loses power.
+        // 断电时保留任务等待恢复；显式禁用才撤销认领。
         hold.RestoreContents(Enumerable.Range(0, 7).Select(_ => Part()).ToList());
         var bay2 = Spawn("CollectionBotContainer", owner, new Vector3(-3, 0, 0));
         var bot2 = bay2.GetComponentInChildren<CollectionBot>();
@@ -341,7 +342,9 @@ public static class SalvagePlayProbe
         bay.GetComponent<Power>().currentPower = 0;
         bay2.GetComponent<Power>().currentPower = 0;
         yield return 0.2f;
-        Check("Power loss releases claims and keeps dropped cargo", drop2.Available && drop3.Available);
+        Check(
+            "Power loss preserves task claim and keeps cargo",
+            new[] { drop2, drop3 }.Count(d => d.ClaimedBy != null) == 1);
         Object.Destroy(bay);
         Object.Destroy(bay2);
         yield return 0.2f;

@@ -138,7 +138,7 @@ public class StatusIcon : MonoBehaviour
     public void CheckPowerStatus()
     {
         PowerStatus nextStatus;
-        if (_power == null || _power.standardWorkingPower <= 0f)
+        if (_power == null || !_power.IsWorkRequested || _power.standardWorkingPower <= 0f)
         {
             nextStatus = PowerStatus.Normal;
         }

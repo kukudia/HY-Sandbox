@@ -35,12 +35,39 @@ public class RepairBot : Bot
     {
         if (!TickNavigation())
         {
+            SetHomePowerRequested(false);
             return;
+        }
+
+        ControlUnit owner = home.GetComponentInParent<ControlUnit>();
+        if (owner == null || !owner.HasValidCockpit)
+        {
+            ClearTarget();
+            SetHomePowerRequested(false);
+            return;
+        }
+
+        if (currentTarget != null && !RepairTargetSearch.IsValidTarget(currentTarget, home, targetRange))
+        {
+            ClearTarget();
         }
 
         if (currentTarget == null)
         {
             FindDamagedBlock();
+        }
+
+        bool requested = currentTarget != null || transform.parent != home;
+        Power power = SetHomePowerRequested(requested);
+        if (requested && (power == null || !power.isWorking))
+        {
+            isRepairing = false;
+            UpdateRepairBeam(false);
+            return;
+        }
+
+        if (currentTarget == null)
+        {
             UpdateRepairBeam(false);
             if (currentTarget == null && home != null)
             {
@@ -49,12 +76,6 @@ public class RepairBot : Bot
         }
         else
         {
-            if (!RepairTargetSearch.IsValidTarget(currentTarget, home, targetRange))
-            {
-                ClearTarget();
-                return;
-            }
-
             NavigateToTarget(currentTarget.transform);
             if (transform.parent != home)
             {
@@ -145,6 +166,7 @@ public class RepairBot : Bot
     {
         currentTarget = null;
         isRepairing = false;
+        SetHomePowerRequested(PlayManager.instance != null && PlayManager.instance.playMode && home != null && transform.parent != home);
         UpdateRepairBeam(false);
         if (trailRenderer != null)
         {

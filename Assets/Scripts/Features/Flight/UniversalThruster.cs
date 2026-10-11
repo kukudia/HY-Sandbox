@@ -11,6 +11,9 @@ public class UniversalThruster : Thruster
     {
         if (!IsPlayModeActive())
         {
+            SetPowerRequested(false);
+            thrust = 0f;
+            lastThrustValue = 0f;
             return;
         }
 
@@ -20,6 +23,7 @@ public class UniversalThruster : Thruster
         bool active = hasValidOwner && inputDir.sqrMagnitude > InputEpsilonSqr;
         RotateThruster(inputDir, active);
         thrust = active ? maxThrust : 0f;
+        SetPowerRequested(thrust > 0f);
         ApplyThrustChangeRateLimit();
         ApplyThrust();
         VisualizeThrust();
@@ -49,6 +53,6 @@ public class UniversalThruster : Thruster
 
     public override bool ShouldActivate()
     {
-        return inputDir.sqrMagnitude > InputEpsilonSqr && IsPlayModeActive() && CanApplyThrust() && HasValidRuntimeOwner();
+        return inputDir.sqrMagnitude > InputEpsilonSqr && IsPlayModeActive() && HasValidRuntimeOwner();
     }
 }

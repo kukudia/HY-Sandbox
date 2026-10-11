@@ -118,6 +118,7 @@ public abstract class Bot : MonoBehaviour
     protected VfxEffect trailCoreRenderer;
     private BotFlightMotion _flightMotion;
     private bool _navigationStateInitialized;
+    private Power _homePower;
     public enum NavigationState
     {
         Idle,
@@ -169,6 +170,7 @@ public abstract class Bot : MonoBehaviour
 
     protected virtual void OnDisable()
     {
+        SetHomePowerRequested(false);
         if (_flightEffect != null)
         {
             _flightEffect.SetIntensity(0f);
@@ -187,6 +189,21 @@ public abstract class Bot : MonoBehaviour
 
     protected virtual void OnDestroy()
     {
+        SetHomePowerRequested(false);
+    }
+
+    /// <summary>任务意图独立于供电结果；脱离 Home 后仍向原机器人仓请求功率。</summary>
+    protected Power SetHomePowerRequested(bool requested)
+    {
+        Power actualPower = home != null ? home.GetComponentInParent<Power>() : null;
+        if (_homePower != actualPower)
+        {
+            _homePower?.SetWorkRequested(this, false);
+            _homePower = actualPower;
+        }
+
+        _homePower?.SetWorkRequested(this, requested);
+        return _homePower;
     }
 
     public virtual void PrepareForHomeDestruction()

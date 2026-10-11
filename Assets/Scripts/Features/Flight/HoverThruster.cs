@@ -11,12 +11,16 @@ public class HoverThruster : Thruster
     {
         if (!IsPlayModeActive())
         {
+            SetPowerRequested(false);
+            thrust = 0f;
+            lastThrustValue = 0f;
             return;
         }
 
         RefreshRuntimeReferences();
         if (!HasValidRuntimeOwner())
         {
+            SetPowerRequested(false);
             bool hadThrust = thrust > 0f || lastThrustValue > 0f;
             thrust = 0f;
             lastThrustValue = 0f;
@@ -24,6 +28,7 @@ public class HoverThruster : Thruster
             return;
         }
 
+        SetPowerRequested(ShouldActivate());
         if (controlUnit.hoverFlightController != null)
         {
             ApplyThrust();
@@ -51,6 +56,6 @@ public class HoverThruster : Thruster
 
     public override bool ShouldActivate()
     {
-        return isHovered && IsPlayModeActive() && CanApplyThrust() && HasValidRuntimeOwner();
+        return isHovered && IsPlayModeActive() && HasValidRuntimeOwner() && (controlUnit.hoverFlightController == null || controlUnit.hoverFlightController.isActiveAndEnabled);
     }
 }

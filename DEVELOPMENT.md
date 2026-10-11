@@ -17,7 +17,7 @@
 | 供电 | `Power/PowerTransmissionDevice.Update` | `PowerNetwork.Rebuild`；`PowerConnectionVisuals` 连接线 |
 | 飞行 | `Flight/HoverFlightController.FixedUpdate` | `HoverControlSolver` PID与姿态计算；`ThrusterAllocator` 分配求解；各推进器施力 |
 | 维修/回收无人机 | `Bots/RepairBot.FixedUpdate` / `CollectionBot.FixedUpdate` | `BotFlightMotion` / `BotObstacleAvoidance` / `RepairTargetSearch` |
-| 战斗/损伤 | `Combat/TurretWeapon.FixedUpdate` / `Durability.ApplyDamage` | `TurretTargetSelector` / `TurretHitscan` / `CollisionDamageResolver` |
+| 战斗/损伤 | `Combat/Turret.FixedUpdate` / `Durability.ApplyDamage` | `LaserTurret` / `ProjectileTurret` / `TurretProjectile` / `TurretHitResolver` / `CollisionDamageResolver` |
 | 销毁/爆炸 | `Combat/DestroyManager.DestroyGameObject` | `ExplosionPropagation` / `SalvageCleanupSession` |
 | 回收与持久化 | `Salvage/LootDrop.Deliver` / `CargoPersistence.SaveReturnCargo` | `CargoHold` 数据与约束；表现位于 Presentation |
 | 镜头/特效/UI | `Presentation/CameraController` / `VisualEffectsManager` / `MainUIPanels` | `CameraFraming` / `CameraShake` / `TransientEffects` / `PanelTransitions` |
@@ -132,3 +132,12 @@ ArtSource/VfxGraph和Blueprints下全部16份自有工具已明确职责/入口�
 ### BuildType 按钮颜色
 
 选择/移动/旋转工具按钮按BuildType显示Inspector配置的活动/非活动色；Build类型高亮当前资源条目。模式颜色同步Button的Normal/Highlighted/Selected状态，按下稍微压暗，避免鼠标悬停或键盘焦点遮掉真实模式色；按钮面板重新启用时从BuildManager同步。切换lockView不改变模式颜色。Unity重编译及BuildPalettePlayProbe 102条检查通过，包含四种类型对应按钮的Normal/Highlighted/Selected颜色、实际焦点渲染颜色、Build资源条目高亮及lockView颜色保持。158份格式/函数图检查、git diff --check和dotnet build通过（4个既有警告）。
+
+## 2026-10-11 按需供电与炮塔分类
+
+- Power.SetWorkRequested记录独立工作意图；空闲/关闭/禁用不占功率。电网按启动负载的额定剩余需求分配，功率不足时按比例分配，独立电网叠加但不超过额定需求。输入推进、悬浮开启、Bot任务/返航、货仓预订/吸附分别提交请求，断电不阻止第一次请求或恢复启动。空闲状态不显示缺电图标。
+- Turret基类共用启停、索敌、双轴瞄准和供电门控。LaserTurret保留原Turret脚本GUID及Blocks/Turret资源身份，瞬时命中且不施加冲量；额定功率300。公用序列化字段迁入基类，旧冲量字段移除。
+- 指定SpaceKit Single/Double源保存为ProjectileTurretSingle/Double，可编辑Prefab；按实际1/2个炮口每轮发射1/2发真实刚体炮弹。单管/双管额定功率100/150，速度42m/s、寿命2s、射程45m、单发冲量10Ns；支持载具点速度继承、自身过滤、球形扫掠防穿透及单次命中。
+- 新建造条目与图标保存为Resources/BuildPaletteEntries UI Prefab，启动时只补缺失条目，遵守COMBAT分类与BuildType高亮。原场景手工条目优先；条目提示从真实方块配置刷新。资产制作菜单不会保存Main场景。制作源与调参说明见 [炮塔规格](ArtSource/Turrets.md)。
+- Unity 6000.3.11f1导入/重编译和6个Prefab重载检查通过，无Missing Script/断引用。32条供电/推进/Bot/货仓检查、20条炮塔命中检查、8条真实帧自动双管飞行检查、3条目录点击/高亮/去重检查及6条悬浮控制检查通过。静态模型和真实双弹飞行截图已检查。证据见 [本轮记录](Docs/Validation/2026-10-11-active-power-turrets.json)。
+- 166份自有脚本职责/格式/函数图检查通过；dotnet build 0错误、4个既有警告；git diff --check通过。Main原有未保存修改保留。未验证长期密集交火、大量实体弹性能、所有旋转载具组合或正式Player构建；同步扫掠检查与真实帧自动发射检查分别记录。

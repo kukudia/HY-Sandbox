@@ -32,21 +32,28 @@ public class CollectionBot : Bot
     {
         if (!TickNavigation())
         {
+            SetHomePowerRequested(false);
             return;
         }
 
         ControlUnit owner = home.GetComponentInParent<ControlUnit>();
-        Power power = home.GetComponentInParent<Power>();
-        bool canWork = owner != null && owner.HasValidCockpit && (!_requiresPower || power != null && power.isWorking);
-        if (IsMissionInvalid(owner, canWork))
+        bool canStart = owner != null && owner.HasValidCockpit;
+        if (IsMissionInvalid(owner, canStart))
         {
             Abandon();
         }
 
-        if (_target == null && canWork && Time.time >= _nextScan)
+        if (_target == null && canStart && Time.time >= _nextScan)
         {
             _nextScan = Time.time + Mathf.Max(0.25f, findTargetInterval);
             FindTarget(owner);
+        }
+
+        bool requested = canStart && (_target != null || transform.parent != home);
+        Power power = SetHomePowerRequested(_requiresPower && requested);
+        if (_requiresPower && requested && (power == null || !power.isWorking))
+        {
+            return;
         }
 
         if (_target == null)
@@ -85,9 +92,12 @@ public class CollectionBot : Bot
         NavigateHomeSmoothly();
         if (transform.parent == home)
         {
-            _target.Deliver(_destination);
-            Abandon();
-            _nextScan = Time.time + Mathf.Max(0.25f, findTargetInterval);
+            if (_target.Deliver(_destination))
+            {
+                Abandon();
+                SetHomePowerRequested(false);
+                _nextScan = Time.time + Mathf.Max(0.25f, findTargetInterval);
+            }
         }
     }
 

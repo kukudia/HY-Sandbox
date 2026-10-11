@@ -131,6 +131,23 @@ public abstract class Thruster : MonoBehaviour
         lastThrustValue = thrust;
     }
 
+    protected void SetPowerRequested(bool requested)
+    {
+        if (power == null)
+        {
+            power = GetComponent<Power>();
+        }
+
+        power?.SetWorkRequested(this, requested);
+    }
+
+    protected virtual void OnDisable()
+    {
+        SetPowerRequested(false);
+        thrust = 0f;
+        lastThrustValue = 0f;
+    }
+
     protected bool CanApplyThrust()
     {
         return GetPowerEfficiency() > 0f;

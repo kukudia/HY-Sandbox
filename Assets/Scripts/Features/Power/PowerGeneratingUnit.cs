@@ -8,7 +8,7 @@ public class PowerGeneratingUnit : MonoBehaviour
 {
     private static readonly HashSet<PowerGeneratingUnit> ActiveGenerators = new HashSet<PowerGeneratingUnit>();
     [Min(0f)]
-    [Tooltip("加入所连电网的总输出功率，按该电网覆盖的唯一负载数量均分。")]
+    [Tooltip("加入所连电网的总输出功率，按该电网中已启动负载的需求分配。")]
     public float outputPower = 1000f;
     public List<PowerTransmissionDevice> connectedDevices = new List<PowerTransmissionDevice>();
     public static IEnumerable<PowerGeneratingUnit> ActiveUnits => ActiveGenerators;

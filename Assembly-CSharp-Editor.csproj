@@ -67,10 +67,14 @@
     <Compile Include="Assets\Editor\Art\BlockArtValidation.cs" />
     <Compile Include="Assets\Editor\Combat\CombatHudSetup.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
+    <Compile Include="Assets\Editor\Combat\TurretRuntimeChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\BlockStatusSetup.cs" />
     <Compile Include="Assets\Editor\Presentation\NativeVfxMigration.cs" />
     <Compile Include="Assets\Editor\Presentation\InterfaceBaker.cs" />
     <Compile Include="Assets\Editor\Diagnostics\PhysicsSandboxProbe.cs" />
+    <Compile Include="Assets\Editor\Power\ActivePowerPlayChecks.cs" />
+    <Compile Include="Assets\Editor\Combat\TurretFlightPlayProbe.cs" />
+    <Compile Include="Assets\Editor\Combat\TurretAssetBaker.cs" />
     <Compile Include="Assets\Editor\Combat\CombatHudPlayProbe.cs" />
     <Compile Include="Assets\Editor\Bots\BotNavigationPlayProbe.cs" />
     <Compile Include="Assets\Editor\Art\BlockArtPreview.cs" />

@@ -11,6 +11,9 @@ public class MainThruster : Thruster
     {
         if (!IsPlayModeActive())
         {
+            SetPowerRequested(false);
+            thrust = 0f;
+            lastThrustValue = 0f;
             return;
         }
 
@@ -20,6 +23,7 @@ public class MainThruster : Thruster
         thrustDirection = transform.forward;
         bool active = hasValidOwner && inputDir.sqrMagnitude > InputEpsilonSqr;
         thrust = active ? maxThrust * Mathf.Max(0f, Vector3.Dot(inputDir, thrustDirection)) : 0f;
+        SetPowerRequested(thrust > 0f);
         ApplyThrustChangeRateLimit();
         ApplyThrust();
         VisualizeThrust();
@@ -38,6 +42,6 @@ public class MainThruster : Thruster
 
     public override bool ShouldActivate()
     {
-        return inputDir.sqrMagnitude > InputEpsilonSqr && IsPlayModeActive() && CanApplyThrust() && HasValidRuntimeOwner();
+        return inputDir.sqrMagnitude > InputEpsilonSqr && IsPlayModeActive() && HasValidRuntimeOwner();
     }
 }

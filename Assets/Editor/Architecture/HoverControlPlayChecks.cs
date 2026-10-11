@@ -63,6 +63,10 @@ internal static class HoverControlPlayChecks
             {
                 owner.cockpit
             };
+            controller.GetComponent<Power>().SetWorkRequested(controller, true);
+            controller.GetComponent<Power>().ReceivePower(1000f);
+            thruster.GetComponent<Power>().SetWorkRequested(thruster, true);
+            thruster.GetComponent<Power>().ReceivePower(1000f);
             Tick(controller);
             Check(
                 checks,

@@ -74,6 +74,20 @@ public class CargoHold : MonoBehaviour
     {
         ActiveHolds.Remove(this);
         _reservations.Clear();
+        _power?.SetWorkRequested(this, false);
+    }
+
+    private void Update()
+    {
+        RefreshPowerRequest();
+    }
+
+    private void RefreshPowerRequest()
+    {
+        _reservations.RemoveWhere(drop => drop == null || drop.Destination != this);
+        ControlUnit owner = Owner;
+        bool requested = _requiresPower && !_released && _reservations.Count > 0 && owner != null && owner.HasValidCockpit && PlayManager.instance != null && PlayManager.instance.playMode;
+        _power?.SetWorkRequested(this, requested);
     }
 
     public bool CanReceive(CargoItem item, LootDrop reservation = null)
@@ -88,7 +102,8 @@ public class CargoHold : MonoBehaviour
             }
         }
 
-        return item != null && item.IsValid && item.kind == _kind && IsOperational && Free > reserved;
+        // 预订先于供电：空闲货仓必须能被发现，实际入库仍由 Store 检查供电。
+        return item != null && item.IsValid && item.kind == _kind && isActiveAndEnabled && !_released && Free > reserved;
     }
 
     public bool Reserve(LootDrop drop)
@@ -99,17 +114,20 @@ public class CargoHold : MonoBehaviour
         }
 
         _reservations.Add(drop);
+        // Claim/吸附会在 Reserve 返回后才填 Destination，这里不提前清理刚建立的预订。
+        _power?.SetWorkRequested(this, _requiresPower);
         return true;
     }
 
     public void ReleaseReservation(LootDrop drop)
     {
         _reservations.Remove(drop);
+        RefreshPowerRequest();
     }
 
     public int Store(CargoItem item, LootDrop reservation = null)
     {
-        if (!CanReceive(item, reservation))
+        if (!CanReceive(item, reservation) || !IsOperational)
         {
             return 0;
         }
@@ -204,6 +222,7 @@ public class CargoHold : MonoBehaviour
 
         _contents.Clear();
         _reservations.Clear();
+        _power?.SetWorkRequested(this, false);
         Revision++;
     }
 

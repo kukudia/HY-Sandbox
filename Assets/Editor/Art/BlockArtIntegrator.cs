@@ -434,7 +434,7 @@ public static class BlockArtIntegrator
 
     private static void ConfigureTurret(GameObject root)
     {
-        var weapon = root.GetComponent<TurretWeapon>();
+        var weapon = root.GetComponent<LaserTurret>();
         weapon.horizontalAxis = root.GetComponentsInChildren<Transform>(true).First(t => t.name == "SM_Prop_Turret_Large_Top_01");
         weapon.verticalAxis = root.GetComponentsInChildren<Transform>(true).First(t => t.name == "SM_Prop_Turret_Large_Barrel_01");
         weapon.aimPivot = weapon.verticalAxis;

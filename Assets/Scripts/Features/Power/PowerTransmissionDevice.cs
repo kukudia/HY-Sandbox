@@ -12,7 +12,7 @@ public class PowerTransmissionDevice : MonoBehaviour
     public List<PowerGeneratingUnit> connectedGenerators = new List<PowerGeneratingUnit>();
     public List<PowerTransmissionDevice> connectedDevices = new List<PowerTransmissionDevice>();
     [Min(0)]
-    [Tooltip("供电盒的世界坐标半边长；范围内负载参与电网均分。")]
+    [Tooltip("供电盒的世界坐标半边长；范围内已启动负载按需求参与功率分配。")]
     public int powerRange = 5;
     [Min(0)]
     [Tooltip("连接盒的世界坐标半边长；中继互连采用两端较小值。")]

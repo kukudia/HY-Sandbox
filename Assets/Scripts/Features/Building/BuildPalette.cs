@@ -26,6 +26,19 @@ public sealed class BuildPalette : MonoBehaviour
     private BuildPaletteItem _hovered;
     private void Awake()
     {
+        // 新功能目录使用真实 UI Prefab，避免为了增加条目覆盖正在编辑的场景布局。
+        foreach (GameObject entry in Resources.LoadAll<GameObject>("BuildPaletteEntries"))
+        {
+            BuildPaletteItem template = entry.GetComponent<BuildPaletteItem>();
+            if (template == null || System.Array.Exists(GetComponentsInChildren<BuildPaletteItem>(true), item => item.BlockName == template.BlockName))
+            {
+                continue;
+            }
+
+            BuildPaletteItem item = Instantiate(entry, _scroll.content).GetComponent<BuildPaletteItem>();
+            item.BindPalette(this);
+        }
+
         _items = GetComponentsInChildren<BuildPaletteItem>(true);
     }
 

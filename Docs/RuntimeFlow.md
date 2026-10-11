@@ -258,7 +258,7 @@ flowchart TD
 
 ## 供电网络与可视范围
 
-每帧仅一个中继重建共享网络；先清零再提交本帧汇总。DebugManager 的范围表现与网络规则分开。
+消费者先申报工作意图，空闲不分配；每帧仅一个中继重建共享网络，按剩余额定需求比例分配并封顶。
 
 ```mermaid
 flowchart TD
@@ -277,9 +277,9 @@ flowchart TD
     G["PowerNetwork.SupplyConnectedComponent()"]
     click G "../Assets/Scripts/Features/Power/PowerNetwork.cs#L200" "打开源码"
     H["PowerNetwork.CommitPowerStatuses()"]
-    click H "../Assets/Scripts/Features/Power/PowerNetwork.cs#L226" "打开源码"
+    click H "../Assets/Scripts/Features/Power/PowerNetwork.cs#L237" "打开源码"
     I["Power.CommitPowerStatus()"]
-    click I "../Assets/Scripts/Features/Power/Power.cs#L46" "打开源码"
+    click I "../Assets/Scripts/Features/Power/Power.cs#L95" "打开源码"
     J["PowerConnectionVisuals.Refresh()"]
     click J "../Assets/Scripts/Features/Power/PowerConnectionVisuals.cs#L19" "打开源码"
     K["PowerTransmissionDevice.OnDisable()"]
@@ -298,12 +298,18 @@ flowchart TD
     click Q "../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L50" "打开源码"
     R["PowerRangeUnionView.Dispose()"]
     click R "../Assets/Scripts/Features/Power/PowerRangeUnionView.cs#L79" "打开源码"
+    S["Power.SetWorkRequested()"]
+    click S "../Assets/Scripts/Features/Power/Power.cs#L59" "打开源码"
+    T["Power.ReceivePower()"]
+    click T "../Assets/Scripts/Features/Power/Power.cs#L90" "打开源码"
     A -->|首个本帧中继| B
     B --> C
     B --> D
     B --> E
     E --> F
     E --> G
+    S -.->|下轮网络读取需求| G
+    G --> T
     B --> H
     H --> I
     A --> J
@@ -328,9 +334,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|CollectConnectedComponent -->
 - [PowerNetwork.SupplyConnectedComponent](../Assets/Scripts/Features/Power/PowerNetwork.cs#L200)
 <!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|SupplyConnectedComponent -->
-- [PowerNetwork.CommitPowerStatuses](../Assets/Scripts/Features/Power/PowerNetwork.cs#L226)
+- [PowerNetwork.CommitPowerStatuses](../Assets/Scripts/Features/Power/PowerNetwork.cs#L237)
 <!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|CommitPowerStatuses -->
-- [Power.CommitPowerStatus](../Assets/Scripts/Features/Power/Power.cs#L46)
+- [Power.CommitPowerStatus](../Assets/Scripts/Features/Power/Power.cs#L95)
 <!-- source: Assets/Scripts/Features/Power/Power.cs|CommitPowerStatus -->
 - [PowerConnectionVisuals.Refresh](../Assets/Scripts/Features/Power/PowerConnectionVisuals.cs#L19)
 <!-- source: Assets/Scripts/Features/Power/PowerConnectionVisuals.cs|Refresh -->
@@ -350,6 +356,10 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Diagnostics/DebugManager.cs|OnDestroy -->
 - [PowerRangeUnionView.Dispose](../Assets/Scripts/Features/Power/PowerRangeUnionView.cs#L79)
 <!-- source: Assets/Scripts/Features/Power/PowerRangeUnionView.cs|Dispose -->
+- [Power.SetWorkRequested](../Assets/Scripts/Features/Power/Power.cs#L59)
+<!-- source: Assets/Scripts/Features/Power/Power.cs|SetWorkRequested -->
+- [Power.ReceivePower](../Assets/Scripts/Features/Power/Power.cs#L90)
+<!-- source: Assets/Scripts/Features/Power/Power.cs|ReceivePower -->
 
 ## 物理分组、连接与推进
 
@@ -376,9 +386,9 @@ flowchart TD
     I["RuntimeGroupCleanup.EnforceDistance()"]
     click I "../Assets/Scripts/Features/Simulation/RuntimeGroupCleanup.cs#L51" "打开源码"
     J["HoverFlightController.FixedUpdate()"]
-    click J "../Assets/Scripts/Features/Flight/HoverFlightController.cs#L102" "打开源码"
+    click J "../Assets/Scripts/Features/Flight/HoverFlightController.cs#L103" "打开源码"
     K["HoverFlightController.DistributeThrust()"]
-    click K "../Assets/Scripts/Features/Flight/HoverFlightController.cs#L339" "打开源码"
+    click K "../Assets/Scripts/Features/Flight/HoverFlightController.cs#L349" "打开源码"
     L["MainThruster.FixedUpdate()"]
     click L "../Assets/Scripts/Features/Flight/MainThruster.cs#L10" "打开源码"
     M["Thruster.ApplyThrustChangeRateLimit()"]
@@ -388,11 +398,11 @@ flowchart TD
     O["HoverControlSolver.CalculateTilt()"]
     click O "../Assets/Scripts/Features/Flight/HoverControlSolver.cs#L55" "打开源码"
     P["HoverFlightController.StopControlOutput()"]
-    click P "../Assets/Scripts/Features/Flight/HoverFlightController.cs#L160" "打开源码"
+    click P "../Assets/Scripts/Features/Flight/HoverFlightController.cs#L170" "打开源码"
     Q["HoverControlSolver.Reset()"]
     click Q "../Assets/Scripts/Features/Flight/HoverControlSolver.cs#L23" "打开源码"
     R["HoverFlightController.ClearHoverThrust()"]
-    click R "../Assets/Scripts/Features/Flight/HoverFlightController.cs#L167" "打开源码"
+    click R "../Assets/Scripts/Features/Flight/HoverFlightController.cs#L177" "打开源码"
     S["HoverFlightController.OnDisable()"]
     click S "../Assets/Scripts/Features/Flight/HoverFlightController.cs#L91" "打开源码"
     A --> B
@@ -431,9 +441,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|FixedUpdate -->
 - [RuntimeGroupCleanup.EnforceDistance](../Assets/Scripts/Features/Simulation/RuntimeGroupCleanup.cs#L51)
 <!-- source: Assets/Scripts/Features/Simulation/RuntimeGroupCleanup.cs|EnforceDistance -->
-- [HoverFlightController.FixedUpdate](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L102)
+- [HoverFlightController.FixedUpdate](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L103)
 <!-- source: Assets/Scripts/Features/Flight/HoverFlightController.cs|FixedUpdate -->
-- [HoverFlightController.DistributeThrust](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L339)
+- [HoverFlightController.DistributeThrust](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L349)
 <!-- source: Assets/Scripts/Features/Flight/HoverFlightController.cs|DistributeThrust -->
 - [MainThruster.FixedUpdate](../Assets/Scripts/Features/Flight/MainThruster.cs#L10)
 <!-- source: Assets/Scripts/Features/Flight/MainThruster.cs|FixedUpdate -->
@@ -443,23 +453,23 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Flight/HoverControlSolver.cs|StepHeight -->
 - [HoverControlSolver.CalculateTilt](../Assets/Scripts/Features/Flight/HoverControlSolver.cs#L55)
 <!-- source: Assets/Scripts/Features/Flight/HoverControlSolver.cs|CalculateTilt -->
-- [HoverFlightController.StopControlOutput](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L160)
+- [HoverFlightController.StopControlOutput](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L170)
 <!-- source: Assets/Scripts/Features/Flight/HoverFlightController.cs|StopControlOutput -->
 - [HoverControlSolver.Reset](../Assets/Scripts/Features/Flight/HoverControlSolver.cs#L23)
 <!-- source: Assets/Scripts/Features/Flight/HoverControlSolver.cs|Reset -->
-- [HoverFlightController.ClearHoverThrust](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L167)
+- [HoverFlightController.ClearHoverThrust](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L177)
 <!-- source: Assets/Scripts/Features/Flight/HoverFlightController.cs|ClearHoverThrust -->
 - [HoverFlightController.OnDisable](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L91)
 <!-- source: Assets/Scripts/Features/Flight/HoverFlightController.cs|OnDisable -->
 
 ## 战斗、损伤、爆炸与残骸清理
 
-射击冲量先于伤害；爆炸断链后重组再施加受限冲量。延迟清理在真正删除前再次检查身份与驾驶舱。
+Turret独立索敌后申报功率；激光即时命中且无冲量，实体炮塔每炮口生成一发并由物理扫掠命中。爆炸与延迟清理保留原生命周期。
 
 ```mermaid
 flowchart TD
-    A["TurretWeapon.FixedUpdate()"]
-    click A "../Assets/Scripts/Features/Combat/TurretWeapon.cs#L110" "打开源码"
+    A["Turret.FixedUpdate()"]
+    click A "../Assets/Scripts/Features/Combat/Turret.cs#L71" "打开源码"
     B["TurretTargetSelector.FindNearestTarget()"]
     click B "../Assets/Scripts/Features/Combat/TurretTargetSelector.cs#L16" "打开源码"
     C["TurretHitscan.Fire()"]
@@ -487,10 +497,29 @@ flowchart TD
     N["SalvageCleanupSession.CleanupUnitAfterDelay()"]
     click N "../Assets/Scripts/Features/Combat/SalvageCleanupSession.cs#L106" "打开源码"
     O["CargoHold.ReleaseContents()"]
-    click O "../Assets/Scripts/Features/Salvage/CargoHold.cs#L188" "打开源码"
+    click O "../Assets/Scripts/Features/Salvage/CargoHold.cs#L206" "打开源码"
+    P["LaserTurret.Fire()"]
+    click P "../Assets/Scripts/Features/Combat/LaserTurret.cs#L33" "打开源码"
+    Q["ProjectileTurret.Fire()"]
+    click Q "../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L20" "打开源码"
+    R["TurretProjectile.Launch()"]
+    click R "../Assets/Scripts/Features/Combat/TurretProjectile.cs#L33" "打开源码"
+    S["TurretProjectile.FixedUpdate()"]
+    click S "../Assets/Scripts/Features/Combat/TurretProjectile.cs#L62" "打开源码"
+    T["TurretHitResolver.Apply()"]
+    click T "../Assets/Scripts/Features/Combat/TurretHitResolver.cs#L7" "打开源码"
+    U["Power.SetWorkRequested()"]
+    click U "../Assets/Scripts/Features/Power/Power.cs#L59" "打开源码"
     A --> B
-    A -->|瞄准且冷却满足| C
-    C --> D
+    A --> U
+    A -->|供电、瞄准且冷却满足| P
+    P --> C
+    A -->|供电、瞄准且冷却满足| Q
+    Q -->|每炮口一发| R
+    R -.->|后续物理步| S
+    S -->|首次实体命中| T
+    C -->|零冲量| T
+    T --> D
     E --> F
     F --> G
     D -->|耐久为0| H
@@ -504,8 +533,8 @@ flowchart TD
     M -.->|协程等待并复核| N
 ```
 
-- [TurretWeapon.FixedUpdate](../Assets/Scripts/Features/Combat/TurretWeapon.cs#L110)
-<!-- source: Assets/Scripts/Features/Combat/TurretWeapon.cs|FixedUpdate -->
+- [Turret.FixedUpdate](../Assets/Scripts/Features/Combat/Turret.cs#L71)
+<!-- source: Assets/Scripts/Features/Combat/Turret.cs|FixedUpdate -->
 - [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/TurretTargetSelector.cs#L16)
 <!-- source: Assets/Scripts/Features/Combat/TurretTargetSelector.cs|FindNearestTarget -->
 - [TurretHitscan.Fire](../Assets/Scripts/Features/Combat/TurretHitscan.cs#L10)
@@ -532,8 +561,20 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/SalvageCleanupSession.cs|ScheduleUnit -->
 - [SalvageCleanupSession.CleanupUnitAfterDelay](../Assets/Scripts/Features/Combat/SalvageCleanupSession.cs#L106)
 <!-- source: Assets/Scripts/Features/Combat/SalvageCleanupSession.cs|CleanupUnitAfterDelay -->
-- [CargoHold.ReleaseContents](../Assets/Scripts/Features/Salvage/CargoHold.cs#L188)
+- [CargoHold.ReleaseContents](../Assets/Scripts/Features/Salvage/CargoHold.cs#L206)
 <!-- source: Assets/Scripts/Features/Salvage/CargoHold.cs|ReleaseContents -->
+- [LaserTurret.Fire](../Assets/Scripts/Features/Combat/LaserTurret.cs#L33)
+<!-- source: Assets/Scripts/Features/Combat/LaserTurret.cs|Fire -->
+- [ProjectileTurret.Fire](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L20)
+<!-- source: Assets/Scripts/Features/Combat/ProjectileTurret.cs|Fire -->
+- [TurretProjectile.Launch](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L33)
+<!-- source: Assets/Scripts/Features/Combat/TurretProjectile.cs|Launch -->
+- [TurretProjectile.FixedUpdate](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L62)
+<!-- source: Assets/Scripts/Features/Combat/TurretProjectile.cs|FixedUpdate -->
+- [TurretHitResolver.Apply](../Assets/Scripts/Features/Combat/TurretHitResolver.cs#L7)
+<!-- source: Assets/Scripts/Features/Combat/TurretHitResolver.cs|Apply -->
+- [Power.SetWorkRequested](../Assets/Scripts/Features/Power/Power.cs#L59)
+<!-- source: Assets/Scripts/Features/Power/Power.cs|SetWorkRequested -->
 
 ## 维修、回收和移动 Home 返航
 
@@ -544,43 +585,43 @@ flowchart TD
     A["RepairBot.FixedUpdate()"]
     click A "../Assets/Scripts/Features/Bots/RepairBot.cs#L34" "打开源码"
     B["Bot.TickNavigation()"]
-    click B "../Assets/Scripts/Features/Bots/Bot.cs#L157" "打开源码"
+    click B "../Assets/Scripts/Features/Bots/Bot.cs#L158" "打开源码"
     C["RepairTargetSearch.Scan()"]
     click C "../Assets/Scripts/Features/Bots/RepairTargetSearch.cs#L15" "打开源码"
     D["Bot.NavigateToTarget()"]
-    click D "../Assets/Scripts/Features/Bots/Bot.cs#L229" "打开源码"
+    click D "../Assets/Scripts/Features/Bots/Bot.cs#L246" "打开源码"
     E["BotFlightMotion.NavigateToTarget()"]
     click E "../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L58" "打开源码"
     F["BotObstacleAvoidance.Evaluate()"]
     click F "../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L63" "打开源码"
     G["RepairBot.CheckAndRepair()"]
-    click G "../Assets/Scripts/Features/Bots/RepairBot.cs#L85" "打开源码"
+    click G "../Assets/Scripts/Features/Bots/RepairBot.cs#L106" "打开源码"
     H["RepairBeamView.Update()"]
     click H "../Assets/Scripts/Features/Bots/RepairBeamView.cs#L49" "打开源码"
     I["CollectionBot.FixedUpdate()"]
     click I "../Assets/Scripts/Features/Bots/CollectionBot.cs#L31" "打开源码"
     J["CollectionBot.FindTarget()"]
-    click J "../Assets/Scripts/Features/Bots/CollectionBot.cs#L94" "打开源码"
+    click J "../Assets/Scripts/Features/Bots/CollectionBot.cs#L104" "打开源码"
     K["LootDrop.Claim()"]
     click K "../Assets/Scripts/Features/Salvage/LootDrop.cs#L188" "打开源码"
     L["CollectionBot.CollectTarget()"]
-    click L "../Assets/Scripts/Features/Bots/CollectionBot.cs#L73" "打开源码"
+    click L "../Assets/Scripts/Features/Bots/CollectionBot.cs#L80" "打开源码"
     M["LootDrop.Carry()"]
     click M "../Assets/Scripts/Features/Salvage/LootDrop.cs#L200" "打开源码"
     N["CollectionBot.ReturnCargo()"]
-    click N "../Assets/Scripts/Features/Bots/CollectionBot.cs#L82" "打开源码"
+    click N "../Assets/Scripts/Features/Bots/CollectionBot.cs#L89" "打开源码"
     O["Bot.NavigateHomeSmoothly()"]
-    click O "../Assets/Scripts/Features/Bots/Bot.cs#L249" "打开源码"
+    click O "../Assets/Scripts/Features/Bots/Bot.cs#L266" "打开源码"
     P["BotFlightMotion.NavigateHome()"]
     click P "../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L69" "打开源码"
     Q["BotObstacleAvoidance.ConstrainVelocity()"]
     click Q "../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L223" "打开源码"
     R["Bot.ReturnHome()"]
-    click R "../Assets/Scripts/Features/Bots/Bot.cs#L292" "打开源码"
+    click R "../Assets/Scripts/Features/Bots/Bot.cs#L309" "打开源码"
     S["LootDrop.Deliver()"]
     click S "../Assets/Scripts/Features/Salvage/LootDrop.cs#L231" "打开源码"
     T["CollectionBot.Abandon()"]
-    click T "../Assets/Scripts/Features/Bots/CollectionBot.cs#L131" "打开源码"
+    click T "../Assets/Scripts/Features/Bots/CollectionBot.cs#L141" "打开源码"
     A --> B
     A -->|扫描目标时| C
     A --> D
@@ -607,43 +648,43 @@ flowchart TD
 
 - [RepairBot.FixedUpdate](../Assets/Scripts/Features/Bots/RepairBot.cs#L34)
 <!-- source: Assets/Scripts/Features/Bots/RepairBot.cs|FixedUpdate -->
-- [Bot.TickNavigation](../Assets/Scripts/Features/Bots/Bot.cs#L157)
+- [Bot.TickNavigation](../Assets/Scripts/Features/Bots/Bot.cs#L158)
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|TickNavigation -->
 - [RepairTargetSearch.Scan](../Assets/Scripts/Features/Bots/RepairTargetSearch.cs#L15)
 <!-- source: Assets/Scripts/Features/Bots/RepairTargetSearch.cs|Scan -->
-- [Bot.NavigateToTarget](../Assets/Scripts/Features/Bots/Bot.cs#L229)
+- [Bot.NavigateToTarget](../Assets/Scripts/Features/Bots/Bot.cs#L246)
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|NavigateToTarget -->
 - [BotFlightMotion.NavigateToTarget](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L58)
 <!-- source: Assets/Scripts/Features/Bots/BotFlightMotion.cs|NavigateToTarget -->
 - [BotObstacleAvoidance.Evaluate](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L63)
 <!-- source: Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs|Evaluate -->
-- [RepairBot.CheckAndRepair](../Assets/Scripts/Features/Bots/RepairBot.cs#L85)
+- [RepairBot.CheckAndRepair](../Assets/Scripts/Features/Bots/RepairBot.cs#L106)
 <!-- source: Assets/Scripts/Features/Bots/RepairBot.cs|CheckAndRepair -->
 - [RepairBeamView.Update](../Assets/Scripts/Features/Bots/RepairBeamView.cs#L49)
 <!-- source: Assets/Scripts/Features/Bots/RepairBeamView.cs|Update -->
 - [CollectionBot.FixedUpdate](../Assets/Scripts/Features/Bots/CollectionBot.cs#L31)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|FixedUpdate -->
-- [CollectionBot.FindTarget](../Assets/Scripts/Features/Bots/CollectionBot.cs#L94)
+- [CollectionBot.FindTarget](../Assets/Scripts/Features/Bots/CollectionBot.cs#L104)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|FindTarget -->
 - [LootDrop.Claim](../Assets/Scripts/Features/Salvage/LootDrop.cs#L188)
 <!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Claim -->
-- [CollectionBot.CollectTarget](../Assets/Scripts/Features/Bots/CollectionBot.cs#L73)
+- [CollectionBot.CollectTarget](../Assets/Scripts/Features/Bots/CollectionBot.cs#L80)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|CollectTarget -->
 - [LootDrop.Carry](../Assets/Scripts/Features/Salvage/LootDrop.cs#L200)
 <!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Carry -->
-- [CollectionBot.ReturnCargo](../Assets/Scripts/Features/Bots/CollectionBot.cs#L82)
+- [CollectionBot.ReturnCargo](../Assets/Scripts/Features/Bots/CollectionBot.cs#L89)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|ReturnCargo -->
-- [Bot.NavigateHomeSmoothly](../Assets/Scripts/Features/Bots/Bot.cs#L249)
+- [Bot.NavigateHomeSmoothly](../Assets/Scripts/Features/Bots/Bot.cs#L266)
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|NavigateHomeSmoothly -->
 - [BotFlightMotion.NavigateHome](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L69)
 <!-- source: Assets/Scripts/Features/Bots/BotFlightMotion.cs|NavigateHome -->
 - [BotObstacleAvoidance.ConstrainVelocity](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L223)
 <!-- source: Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs|ConstrainVelocity -->
-- [Bot.ReturnHome](../Assets/Scripts/Features/Bots/Bot.cs#L292)
+- [Bot.ReturnHome](../Assets/Scripts/Features/Bots/Bot.cs#L309)
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|ReturnHome -->
 - [LootDrop.Deliver](../Assets/Scripts/Features/Salvage/LootDrop.cs#L231)
 <!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Deliver -->
-- [CollectionBot.Abandon](../Assets/Scripts/Features/Bots/CollectionBot.cs#L131)
+- [CollectionBot.Abandon](../Assets/Scripts/Features/Bots/CollectionBot.cs#L141)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|Abandon -->
 
 ## 掉落概率、表现与文字遮挡

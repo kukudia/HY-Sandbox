@@ -349,8 +349,8 @@ MonoBehaviour:
 
     Durability: 200
 
-    Power: 50 min /
-    100 standard'
+    Power: 150 min
+    / 300 standard'
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
   connectorParent: {fileID: 2695719906485559115}
   raycastCollider: {fileID: 4245157779349812274}
@@ -467,11 +467,9 @@ MonoBehaviour:
   verticalAxis: {fileID: 8026227496658597050}
   aimPivot: {fileID: 8026227496658597050}
   muzzle: {fileID: 7902179120400646452}
-  _muzzleFlash: {fileID: 2632665826765620390}
   range: 45
   damage: 12
   fireInterval: 0.45
-  _impactImpulse: 10
   horizontalTurnSpeed: 240
   verticalTurnSpeed: 180
   minElevation: -15
@@ -481,6 +479,8 @@ MonoBehaviour:
   hitLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+  _isStarted: 1
+  _muzzleFlash: {fileID: 2632665826765620390}
 --- !u!114 &1578290364841887270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -494,8 +494,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Power
   currentPower: 0
-  minWorkingPower: 50
-  standardWorkingPower: 100
+  minWorkingPower: 150
+  standardWorkingPower: 300
 --- !u!114 &3991567616662546392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -509,7 +509,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Info
   blockName: Turret
-  description: 
+  description: 'Laser turret: instant hit, no impulse; active power 300.'
   connectionStatus: 0
   durabilityStatus: 0
   powerStatus: 0

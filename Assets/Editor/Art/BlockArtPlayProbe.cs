@@ -24,7 +24,7 @@ public static class BlockArtPlayProbe
     private static double _started;
     private static float _gameStarted;
     private static int _phase;
-    private static TurretWeapon _turret;
+    private static LaserTurret _turret;
     private static Durability _target;
     private static RepairBot _bot;
     private static Durability _repairTarget;
@@ -126,7 +126,7 @@ public static class BlockArtPlayProbe
         camera.transform.LookAt(new Vector3(35, 0, 0));
         pm.mainCamera = camera;
         var owner = Unit("Turret owner", Vector3.zero, UnitFaction.Player, true);
-        _turret = Spawn("Turret", owner.transform, Vector3.zero).GetComponent<TurretWeapon>();
+        _turret = Spawn("Turret", owner.transform, Vector3.zero).GetComponent<LaserTurret>();
         Supply(owner.transform);
         var enemy = Unit("Enemy", new Vector3(0, 0, 10), UnitFaction.Enemy, true);
         _target = Spawn("1x1x1", enemy.transform, Vector3.zero).GetComponent<Durability>();

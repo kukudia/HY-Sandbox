@@ -1,0 +1,126 @@
+{
+  "date": "2026-10-11",
+  "unity": "6000.3.11f1",
+  "power": [
+    "Idle loads consume zero power and cannot run",
+    "Shortage allocates in demand ratio (50 / 150)",
+    "Stopping clears allocated power immediately",
+    "Remaining active load is capped at its 100 demand",
+    "Power loss preserves work intent but clears supply",
+    "Restored output restarts requesting load without power gate deadlock",
+    "One requester stopping preserves another request",
+    "Last requester stopping releases load",
+    "Independent networks add supply and cap at remaining demand",
+    "Overlapping relays sharing generator never duplicate output",
+    "Network clear removes residual power",
+    "Main thruster idle input requests no power",
+    "Main thruster input requests power before receiving any",
+    "Powered main thruster starts after requested supply arrives",
+    "Opposite input leaves directional thruster idle",
+    "Disabling main thruster releases power and output",
+    "Idle cargo hold can accept reservations without consuming power",
+    "Cargo reservation starts work request without initial power",
+    "Cargo cannot store before supply arrives",
+    "Cargo stores once requested supply arrives",
+    "Releasing final cargo reservation releases power",
+    "Currency attraction reserves idle hold and requests supply",
+    "Unpowered currency attraction waits without moving",
+    "Currency delivery succeeds after requested supply and releases demand",
+    "Docked repair bot without target requests no power",
+    "Repair mission requests power without initial supply",
+    "Cancelling docked repair mission releases demand",
+    "Disabling repair bot releases bay supply",
+    "Docked collection bot without cargo requests no power",
+    "Collection task can be claimed while bay is idle",
+    "Collection mission requests power before supply and preserves claim",
+    "Disabling collection bot releases both bay and cargo reservations"
+  ],
+  "combat": {
+    "checks": [
+      "Existing Turret resource migrated to LaserTurret",
+      "Legacy turret script GUID preserved",
+      "Single and double barrel editable assets exist",
+      "Laser damage occurs synchronously on fire",
+      "Laser applies zero linear impulse",
+      "Laser applies zero angular impulse",
+      "Laser queues no deferred physics impulse or torque",
+      "Stopped turret releases power immediately",
+      "1 barrel physical projectile prefab",
+      "1 barrel fires exactly 1 entities",
+      "1 barrel shells have finite physical velocity",
+      "2 barrel physical projectile prefab",
+      "2 barrel fires exactly 2 entities",
+      "2 barrel shells have finite physical velocity",
+      "High speed physical shell sweeps thin wall and applies damage exactly once",
+      "Physical shell queues configured impact impulse",
+      "Resolved shell disables collision immediately",
+      "Resolved shell cannot damage twice",
+      "Lifetime expiration retires physical shell",
+      "Own construction ignored by physics and sweep filter"
+    ],
+    "errors": []
+  },
+  "flight": {
+    "checks": [
+      "Automatic turret without target requests and consumes zero",
+      "Natural FixedUpdate launches exactly two physical shells",
+      "Target remains undamaged at launch",
+      "Automatic target acquisition starts 150 rated power",
+      "PhysX advances visible shells before damage",
+      "Shell damage arrives after finite flight",
+      "Both barrels hit in first volley",
+      "Stopping automatic turret immediately releases demand and supply"
+    ],
+    "errors": []
+  },
+  "palette": [
+    "ProjectileTurretDouble click enters Build and highlights matching item",
+    "ProjectileTurretSingle click enters Build and highlights matching item",
+    "Supplement catalog is idempotent"
+  ],
+  "assets": [
+    {
+      "path": "Assets/Resources/Blocks/Turret.prefab",
+      "missing": 0,
+      "broken": 0
+    },
+    {
+      "path": "Assets/Resources/Blocks/ProjectileTurretSingle.prefab",
+      "missing": 0,
+      "broken": 0
+    },
+    {
+      "path": "Assets/Resources/Blocks/ProjectileTurretDouble.prefab",
+      "missing": 0,
+      "broken": 0
+    },
+    {
+      "path": "Assets/Art/Combat/TurretShell.prefab",
+      "missing": 0,
+      "broken": 0
+    },
+    {
+      "path": "Assets/Resources/BuildPaletteEntries/ProjectileTurretSingle.prefab",
+      "missing": 0,
+      "broken": 0
+    },
+    {
+      "path": "Assets/Resources/BuildPaletteEntries/ProjectileTurretDouble.prefab",
+      "missing": 0,
+      "broken": 0
+    }
+  ],
+  "hoverChecks": 6,
+  "static": {
+    "scripts": 166,
+    "buildErrors": 0,
+    "existingBuildWarnings": 4
+  },
+  "scene": "Main unsaved edits preserved",
+  "limitations": [
+    "No sustained projectile stress or Player build",
+    "Synchronous sweep checks and actual frame flight probe are separate",
+    "Pipeline requests occasionally timed out; completed outputs checked and subsequent commands passed",
+    "Probe construction warnings fixed by preadding required components"
+  ]
+}
