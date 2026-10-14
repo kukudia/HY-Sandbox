@@ -1,12 +1,16 @@
 // 职责：真实刚体炮弹飞行、每步扫掠防穿透、敌对伤害和寿命清理。
 // 入口：Launch()；触发器避免物理引擎额外施加冲量，自身构造始终过滤。
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(SphereCollider))]
 public sealed class TurretProjectile : MonoBehaviour
 {
-    private readonly RaycastHit[] _hits = new RaycastHit[32];
-    private readonly Collider[] _overlaps = new Collider[32];
+    private RaycastHit[] _hits = new RaycastHit[32];
+    private Collider[] _overlaps = new Collider[32];
+    private readonly List<Collider> _ignoredColliders = new List<Collider>();
+    private TurretProjectilePool _pool;
+    private TurretProjectile _prefab;
     private Rigidbody _body;
     private SphereCollider _collider;
     private ControlUnit _owner;
@@ -18,6 +22,32 @@ public sealed class TurretProjectile : MonoBehaviour
     private LayerMask _hitLayers;
     private bool _launched;
     private bool _resolved;
+    internal void SetPool(TurretProjectilePool pool, TurretProjectile prefab)
+    {
+        _pool = pool;
+        _prefab = prefab;
+    }
+
+    private void OnDisable()
+    {
+        ClearIgnoredCollisions();
+        _launched = false;
+        _owner = null;
+    }
+
+    private void ClearIgnoredCollisions()
+    {
+        foreach (Collider ownCollider in _ignoredColliders)
+        {
+            if (ownCollider != null && _collider != null)
+            {
+                Physics.IgnoreCollision(_collider, ownCollider, false);
+            }
+        }
+
+        _ignoredColliders.Clear();
+    }
+
     private void Awake()
     {
         _body = GetComponent<Rigidbody>();
@@ -40,6 +70,9 @@ public sealed class TurretProjectile : MonoBehaviour
         float maxDistance,
         LayerMask hitLayers)
     {
+        ClearIgnoredCollisions();
+        _collider.enabled = true;
+        _body.angularVelocity = Vector3.zero;
         _owner = owner;
         _faction = faction;
         _damage = Mathf.Max(0f, damage);
@@ -52,7 +85,8 @@ public sealed class TurretProjectile : MonoBehaviour
         _resolved = false;
         if (owner != null)
         {
-            foreach (Collider ownCollider in owner.GetComponentsInChildren<Collider>())
+            owner.GetComponentsInChildren<Collider>(_ignoredColliders);
+            foreach (Collider ownCollider in _ignoredColliders)
             {
                 Physics.IgnoreCollision(_collider, ownCollider, true);
             }
@@ -92,14 +126,21 @@ public sealed class TurretProjectile : MonoBehaviour
             distance,
             _hitLayers,
             QueryTriggerInteraction.Ignore);
-        RaycastHit[] hits = count == _hits.Length ? Physics.SphereCastAll(
-            origin,
-            radius,
-            direction,
-            distance,
-            _hitLayers,
-            QueryTriggerInteraction.Ignore) : _hits;
-        count = hits == _hits ? count : hits.Length;
+        // NonAlloc 满载时结果无序且可能漏掉最近障碍；扩容重查并保留容量供后续帧复用。
+        while (count == _hits.Length)
+        {
+            System.Array.Resize(ref _hits, _hits.Length * 2);
+            count = Physics.SphereCastNonAlloc(
+                origin,
+                radius,
+                direction,
+                _hits,
+                distance,
+                _hitLayers,
+                QueryTriggerInteraction.Ignore);
+        }
+
+        RaycastHit[] hits = _hits;
         int nearest = -1;
         float nearestDistance = float.MaxValue;
         for (int i = 0; i < count; i++)
@@ -124,8 +165,13 @@ public sealed class TurretProjectile : MonoBehaviour
     private bool ResolveOverlaps(Vector3 origin, float radius)
     {
         int count = Physics.OverlapSphereNonAlloc(origin, radius, _overlaps, _hitLayers, QueryTriggerInteraction.Ignore);
-        Collider[] overlaps = count == _overlaps.Length ? Physics.OverlapSphere(origin, radius, _hitLayers, QueryTriggerInteraction.Ignore) : _overlaps;
-        count = overlaps == _overlaps ? count : overlaps.Length;
+        while (count == _overlaps.Length)
+        {
+            System.Array.Resize(ref _overlaps, _overlaps.Length * 2);
+            count = Physics.OverlapSphereNonAlloc(origin, radius, _overlaps, _hitLayers, QueryTriggerInteraction.Ignore);
+        }
+
+        Collider[] overlaps = _overlaps;
         for (int i = 0; i < count; i++)
         {
             if (CanHit(overlaps[i]))
@@ -178,6 +224,13 @@ public sealed class TurretProjectile : MonoBehaviour
         _resolved = true;
         _collider.enabled = false;
         _body.linearVelocity = Vector3.zero;
-        Destroy(gameObject);
+        if (_pool != null)
+        {
+            _pool.Return(this, _prefab);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 }

@@ -77,6 +77,7 @@
     <Compile Include="Assets\Scripts\Features\Diagnostics\PerformanceMonitor.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\MeteorShower.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\BotFlightEffects.cs" />
+    <Compile Include="Assets\Scripts\Features\Combat\TurretProjectilePool.cs" />
     <Compile Include="Assets\Scripts\Features\Flight\HoverThruster.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BuildManager.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\TurretTargetSelector.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Assets\Scripts\Features\Simulation\PlayManager.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BlueprintStatistics.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\IconManager.cs" />
+    <Compile Include="Assets\Scripts\Features\Power\PowerNetworkBaseline.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\RepairTargetSearch.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\EnemyIdentity.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\CombatHud.cs" />
@@ -188,6 +190,7 @@
     <Compile Include="Assets\Scripts\Features\Diagnostics\BotNavigationProbeDriver.cs" />
     <Compile Include="Assets\Scripts\Features\Building\SaveUIPanel.cs" />
     <Compile Include="Assets\Layer Lab\Scripts\PanelView.cs" />
+    <Compile Include="Assets\Scripts\Features\Power\PowerPositionIndex.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\CargoHoldView.cs" />
     <Compile Include="Assets\Scripts\Features\Flight\HoverControlSolver.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\ImpactPhysics.cs" />

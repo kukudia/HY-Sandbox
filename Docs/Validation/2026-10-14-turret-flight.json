@@ -1,0 +1,15 @@
+{
+    "checks": [
+        "Automatic turret without target requests and consumes zero",
+        "Natural FixedUpdate launches exactly two physical shells",
+        "Target remains undamaged at launch",
+        "Automatic target acquisition starts 150 rated power",
+        "PhysX advances visible shells before damage",
+        "Shell damage arrives after finite flight",
+        "Both barrels hit in first volley",
+        "Stopping automatic turret immediately releases demand and supply",
+        "Both barrels visibly recoil in natural LateUpdate",
+        "Stopped turret completes recoil recovery without power"
+    ],
+    "errors": []
+}

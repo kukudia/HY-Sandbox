@@ -369,26 +369,26 @@ flowchart TD
 
 ## 供电网络与可视范围
 
-消费者先申报工作意图，空闲不分配；每帧仅一个中继重建共享网络，按剩余额定需求比例分配并封顶。CommitPowerStatus确认SupplyEfficiency供推进器字体读取，瞬时清零不提交缺电；无中继时LateUpdate补充确认。
+消费者先申报工作意图，空闲不分配；每帧仅一个中继刷新功率，拓扑仅在设备或发电机位置/连接参数变化时重建。CommitPowerStatus确认SupplyEfficiency供推进器字体读取，瞬时清零不提交缺电；无中继时LateUpdate补充确认。
 
 ```mermaid
 flowchart TD
     A["PowerTransmissionDevice.Update()"]
     click A "../Assets/Scripts/Features/Power/PowerTransmissionDevice.cs#L61" "打开源码"
     B["PowerNetwork.Rebuild()"]
-    click B "../Assets/Scripts/Features/Power/PowerNetwork.cs#L21" "打开源码"
-    C["PowerNetwork.ResetConnectionsAndPower()"]
-    click C "../Assets/Scripts/Features/Power/PowerNetwork.cs#L88" "打开源码"
+    click B "../Assets/Scripts/Features/Power/PowerNetwork.cs#L50" "打开源码"
+    C["PowerNetwork.ResetConnections()"]
+    click C "../Assets/Scripts/Features/Power/PowerNetwork.cs#L134" "打开源码"
     D["PowerNetwork.BuildConnections()"]
-    click D "../Assets/Scripts/Features/Power/PowerNetwork.cs#L108" "打开源码"
+    click D "../Assets/Scripts/Features/Power/PowerNetwork.cs#L206" "打开源码"
     E["PowerNetwork.DistributeNetworkPower()"]
-    click E "../Assets/Scripts/Features/Power/PowerNetwork.cs#L140" "打开源码"
+    click E "../Assets/Scripts/Features/Power/PowerNetwork.cs#L308" "打开源码"
     F["PowerNetwork.CollectConnectedComponent()"]
-    click F "../Assets/Scripts/Features/Power/PowerNetwork.cs#L153" "打开源码"
+    click F "../Assets/Scripts/Features/Power/PowerNetwork.cs#L331" "打开源码"
     G["PowerNetwork.SupplyConnectedComponent()"]
-    click G "../Assets/Scripts/Features/Power/PowerNetwork.cs#L200" "打开源码"
+    click G "../Assets/Scripts/Features/Power/PowerNetwork.cs#L382" "打开源码"
     H["PowerNetwork.CommitPowerStatuses()"]
-    click H "../Assets/Scripts/Features/Power/PowerNetwork.cs#L237" "打开源码"
+    click H "../Assets/Scripts/Features/Power/PowerNetwork.cs#L419" "打开源码"
     I["Power.CommitPowerStatus()"]
     click I "../Assets/Scripts/Features/Power/Power.cs#L111" "打开源码"
     J["PowerConnectionVisuals.Refresh()"]
@@ -396,7 +396,7 @@ flowchart TD
     K["PowerTransmissionDevice.OnDisable()"]
     click K "../Assets/Scripts/Features/Power/PowerTransmissionDevice.cs#L74" "打开源码"
     L["PowerNetwork.Clear()"]
-    click L "../Assets/Scripts/Features/Power/PowerNetwork.cs#L34" "打开源码"
+    click L "../Assets/Scripts/Features/Power/PowerNetwork.cs#L71" "打开源码"
     M["DebugManager.RefreshPowerRangeMesh()"]
     click M "../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L132" "打开源码"
     N["PowerRangeUnionView.Refresh()"]
@@ -415,11 +415,27 @@ flowchart TD
     click T "../Assets/Scripts/Features/Power/Power.cs#L106" "打开源码"
     U["Power.LateUpdate()"]
     click U "../Assets/Scripts/Features/Power/Power.cs#L64" "打开源码"
+    V["PowerNetwork.CaptureTopology()"]
+    click V "../Assets/Scripts/Features/Power/PowerNetwork.cs#L149" "打开源码"
+    W["PowerNetwork.CacheConnectedComponents()"]
+    click W "../Assets/Scripts/Features/Power/PowerNetwork.cs#L261" "打开源码"
+    X["PowerNetwork.PrepareLoads()"]
+    click X "../Assets/Scripts/Features/Power/PowerNetwork.cs#L291" "打开源码"
+    Y["PowerNetwork.CollectDeviceLoads()"]
+    click Y "../Assets/Scripts/Features/Power/PowerNetwork.cs#L366" "打开源码"
+    Z["PowerPositionIndex.Query()"]
+    click Z "../Assets/Scripts/Features/Power/PowerPositionIndex.cs#L37" "打开源码"
     A -->|首个本帧中继| B
-    B --> C
-    B --> D
+    B --> V
+    V -.->|身份、位置或连接范围变化| C
+    B -->|拓扑变化| D
+    B -->|拓扑变化| W
+    D --> Z
+    W --> F
+    B -->|每帧| X
     B --> E
-    E --> F
+    E --> Y
+    Y --> Z
     E --> G
     S -.->|下轮网络读取需求| G
     G --> T
@@ -436,19 +452,19 @@ flowchart TD
 
 - [PowerTransmissionDevice.Update](../Assets/Scripts/Features/Power/PowerTransmissionDevice.cs#L61)
 <!-- source: Assets/Scripts/Features/Power/PowerTransmissionDevice.cs|Update -->
-- [PowerNetwork.Rebuild](../Assets/Scripts/Features/Power/PowerNetwork.cs#L21)
+- [PowerNetwork.Rebuild](../Assets/Scripts/Features/Power/PowerNetwork.cs#L50)
 <!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|Rebuild -->
-- [PowerNetwork.ResetConnectionsAndPower](../Assets/Scripts/Features/Power/PowerNetwork.cs#L88)
-<!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|ResetConnectionsAndPower -->
-- [PowerNetwork.BuildConnections](../Assets/Scripts/Features/Power/PowerNetwork.cs#L108)
+- [PowerNetwork.ResetConnections](../Assets/Scripts/Features/Power/PowerNetwork.cs#L134)
+<!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|ResetConnections -->
+- [PowerNetwork.BuildConnections](../Assets/Scripts/Features/Power/PowerNetwork.cs#L206)
 <!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|BuildConnections -->
-- [PowerNetwork.DistributeNetworkPower](../Assets/Scripts/Features/Power/PowerNetwork.cs#L140)
+- [PowerNetwork.DistributeNetworkPower](../Assets/Scripts/Features/Power/PowerNetwork.cs#L308)
 <!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|DistributeNetworkPower -->
-- [PowerNetwork.CollectConnectedComponent](../Assets/Scripts/Features/Power/PowerNetwork.cs#L153)
+- [PowerNetwork.CollectConnectedComponent](../Assets/Scripts/Features/Power/PowerNetwork.cs#L331)
 <!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|CollectConnectedComponent -->
-- [PowerNetwork.SupplyConnectedComponent](../Assets/Scripts/Features/Power/PowerNetwork.cs#L200)
+- [PowerNetwork.SupplyConnectedComponent](../Assets/Scripts/Features/Power/PowerNetwork.cs#L382)
 <!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|SupplyConnectedComponent -->
-- [PowerNetwork.CommitPowerStatuses](../Assets/Scripts/Features/Power/PowerNetwork.cs#L237)
+- [PowerNetwork.CommitPowerStatuses](../Assets/Scripts/Features/Power/PowerNetwork.cs#L419)
 <!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|CommitPowerStatuses -->
 - [Power.CommitPowerStatus](../Assets/Scripts/Features/Power/Power.cs#L111)
 <!-- source: Assets/Scripts/Features/Power/Power.cs|CommitPowerStatus -->
@@ -456,7 +472,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Power/PowerConnectionVisuals.cs|Refresh -->
 - [PowerTransmissionDevice.OnDisable](../Assets/Scripts/Features/Power/PowerTransmissionDevice.cs#L74)
 <!-- source: Assets/Scripts/Features/Power/PowerTransmissionDevice.cs|OnDisable -->
-- [PowerNetwork.Clear](../Assets/Scripts/Features/Power/PowerNetwork.cs#L34)
+- [PowerNetwork.Clear](../Assets/Scripts/Features/Power/PowerNetwork.cs#L71)
 <!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|Clear -->
 - [DebugManager.RefreshPowerRangeMesh](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L132)
 <!-- source: Assets/Scripts/Features/Diagnostics/DebugManager.cs|RefreshPowerRangeMesh -->
@@ -476,6 +492,16 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Power/Power.cs|ReceivePower -->
 - [Power.LateUpdate](../Assets/Scripts/Features/Power/Power.cs#L64)
 <!-- source: Assets/Scripts/Features/Power/Power.cs|LateUpdate -->
+- [PowerNetwork.CaptureTopology](../Assets/Scripts/Features/Power/PowerNetwork.cs#L149)
+<!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|CaptureTopology -->
+- [PowerNetwork.CacheConnectedComponents](../Assets/Scripts/Features/Power/PowerNetwork.cs#L261)
+<!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|CacheConnectedComponents -->
+- [PowerNetwork.PrepareLoads](../Assets/Scripts/Features/Power/PowerNetwork.cs#L291)
+<!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|PrepareLoads -->
+- [PowerNetwork.CollectDeviceLoads](../Assets/Scripts/Features/Power/PowerNetwork.cs#L366)
+<!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|CollectDeviceLoads -->
+- [PowerPositionIndex.Query](../Assets/Scripts/Features/Power/PowerPositionIndex.cs#L37)
+<!-- source: Assets/Scripts/Features/Power/PowerPositionIndex.cs|Query -->
 
 ## 物理分组、连接与推进
 
@@ -634,9 +660,9 @@ flowchart TD
     Q["ProjectileTurret.Fire()"]
     click Q "../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L113" "打开源码"
     R["TurretProjectile.Launch()"]
-    click R "../Assets/Scripts/Features/Combat/TurretProjectile.cs#L33" "打开源码"
+    click R "../Assets/Scripts/Features/Combat/TurretProjectile.cs#L63" "打开源码"
     S["TurretProjectile.FixedUpdate()"]
-    click S "../Assets/Scripts/Features/Combat/TurretProjectile.cs#L62" "打开源码"
+    click S "../Assets/Scripts/Features/Combat/TurretProjectile.cs#L96" "打开源码"
     T["TurretHitResolver.Apply()"]
     click T "../Assets/Scripts/Features/Combat/TurretHitResolver.cs#L7" "打开源码"
     U["Power.SetWorkRequested()"]
@@ -649,12 +675,29 @@ flowchart TD
     click X "../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L84" "打开源码"
     Y["ProjectileTurret.OnDisable()"]
     click Y "../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L105" "打开源码"
+    Z["TurretProjectilePool.Rent()"]
+    click Z "../Assets/Scripts/Features/Combat/TurretProjectilePool.cs#L11" "打开源码"
+    AA["TurretProjectile.Retire()"]
+    click AA "../Assets/Scripts/Features/Combat/TurretProjectile.cs#L222" "打开源码"
+    AB["TurretProjectilePool.Return()"]
+    click AB "../Assets/Scripts/Features/Combat/TurretProjectilePool.cs#L44" "打开源码"
+    AC["TurretProjectile.OnDisable()"]
+    click AC "../Assets/Scripts/Features/Combat/TurretProjectile.cs#L31" "打开源码"
+    AD["TurretProjectilePool.Update()"]
+    click AD "../Assets/Scripts/Features/Combat/TurretProjectilePool.cs#L57" "打开源码"
+    AE["TurretProjectilePool.OnDestroy()"]
+    click AE "../Assets/Scripts/Features/Combat/TurretProjectilePool.cs#L65" "打开源码"
     A --> B
     A --> U
     A -->|供电、瞄准且冷却满足| P
     P --> C
     A -->|供电、瞄准且冷却满足| Q
     Q -->|每炮口一发| R
+    Q --> Z
+    S -->|命中或到期| AA
+    AA -->|池实例| AB
+    AB -.->|SetActive false| AC
+    AD -.->|模拟结束销毁池根| AE
     Q -.->|发射触发后座| V
     V --> W
     W --> X
@@ -710,9 +753,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/LaserTurret.cs|Fire -->
 - [ProjectileTurret.Fire](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L113)
 <!-- source: Assets/Scripts/Features/Combat/ProjectileTurret.cs|Fire -->
-- [TurretProjectile.Launch](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L33)
+- [TurretProjectile.Launch](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L63)
 <!-- source: Assets/Scripts/Features/Combat/TurretProjectile.cs|Launch -->
-- [TurretProjectile.FixedUpdate](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L62)
+- [TurretProjectile.FixedUpdate](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L96)
 <!-- source: Assets/Scripts/Features/Combat/TurretProjectile.cs|FixedUpdate -->
 - [TurretHitResolver.Apply](../Assets/Scripts/Features/Combat/TurretHitResolver.cs#L7)
 <!-- source: Assets/Scripts/Features/Combat/TurretHitResolver.cs|Apply -->
@@ -726,6 +769,18 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/ProjectileTurret.cs|ApplyRecoilPose -->
 - [ProjectileTurret.OnDisable](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L105)
 <!-- source: Assets/Scripts/Features/Combat/ProjectileTurret.cs|OnDisable -->
+- [TurretProjectilePool.Rent](../Assets/Scripts/Features/Combat/TurretProjectilePool.cs#L11)
+<!-- source: Assets/Scripts/Features/Combat/TurretProjectilePool.cs|Rent -->
+- [TurretProjectile.Retire](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L222)
+<!-- source: Assets/Scripts/Features/Combat/TurretProjectile.cs|Retire -->
+- [TurretProjectilePool.Return](../Assets/Scripts/Features/Combat/TurretProjectilePool.cs#L44)
+<!-- source: Assets/Scripts/Features/Combat/TurretProjectilePool.cs|Return -->
+- [TurretProjectile.OnDisable](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L31)
+<!-- source: Assets/Scripts/Features/Combat/TurretProjectile.cs|OnDisable -->
+- [TurretProjectilePool.Update](../Assets/Scripts/Features/Combat/TurretProjectilePool.cs#L57)
+<!-- source: Assets/Scripts/Features/Combat/TurretProjectilePool.cs|Update -->
+- [TurretProjectilePool.OnDestroy](../Assets/Scripts/Features/Combat/TurretProjectilePool.cs#L65)
+<!-- source: Assets/Scripts/Features/Combat/TurretProjectilePool.cs|OnDestroy -->
 
 ## 维修、回收和移动 Home 返航
 
@@ -919,11 +974,11 @@ flowchart TD
     I["CameraShake.Cancel()"]
     click I "../Assets/Scripts/Features/Presentation/CameraShake.cs#L17" "打开源码"
     J["CameraController.SmoothFocusCameraOnBlock()"]
-    click J "../Assets/Scripts/Features/Presentation/CameraController.cs#L152" "打开源码"
+    click J "../Assets/Scripts/Features/Presentation/CameraController.cs#L225" "打开源码"
     K["CameraFraming.TryGetFocusPose()"]
     click K "../Assets/Scripts/Features/Presentation/CameraFraming.cs#L26" "打开源码"
     L["CameraController.SmoothFocusRoutine()"]
-    click L "../Assets/Scripts/Features/Presentation/CameraController.cs#L329" "打开源码"
+    click L "../Assets/Scripts/Features/Presentation/CameraController.cs#L402" "打开源码"
     M["MainUIPanels.ShowCreatePanel()"]
     click M "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L85" "打开源码"
     N["PanelTransitions.Show()"]
@@ -934,6 +989,12 @@ flowchart TD
     click P "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L71" "打开源码"
     Q["PanelTransitions.CancelAll()"]
     click Q "../Assets/Scripts/Features/Presentation/PanelTransitions.cs#L16" "打开源码"
+    R["CameraController.LateUpdate()"]
+    click R "../Assets/Scripts/Features/Presentation/CameraController.cs#L63" "打开源码"
+    S["CameraController.ResolveThirdPersonCollision()"]
+    click S "../Assets/Scripts/Features/Presentation/CameraController.cs#L126" "打开源码"
+    T["StatusIcon.UpdateIconScreenPosition()"]
+    click T "../Assets/Scripts/Features/Presentation/StatusIcon.cs#L313" "打开源码"
     A --> B
     B --> C
     B -->|成功生成| D
@@ -946,6 +1007,7 @@ flowchart TD
     M --> N
     N -.->|协程| O
     P --> Q
+    R -->|第三人称期望与平滑位置| S
 ```
 
 - [VisualEffectsManager.TryPlayBlockExplosion](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L66)
@@ -966,11 +1028,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/VisualEffectsManager.cs|OnDisable -->
 - [CameraShake.Cancel](../Assets/Scripts/Features/Presentation/CameraShake.cs#L17)
 <!-- source: Assets/Scripts/Features/Presentation/CameraShake.cs|Cancel -->
-- [CameraController.SmoothFocusCameraOnBlock](../Assets/Scripts/Features/Presentation/CameraController.cs#L152)
+- [CameraController.SmoothFocusCameraOnBlock](../Assets/Scripts/Features/Presentation/CameraController.cs#L225)
 <!-- source: Assets/Scripts/Features/Presentation/CameraController.cs|SmoothFocusCameraOnBlock -->
 - [CameraFraming.TryGetFocusPose](../Assets/Scripts/Features/Presentation/CameraFraming.cs#L26)
 <!-- source: Assets/Scripts/Features/Presentation/CameraFraming.cs|TryGetFocusPose -->
-- [CameraController.SmoothFocusRoutine](../Assets/Scripts/Features/Presentation/CameraController.cs#L329)
+- [CameraController.SmoothFocusRoutine](../Assets/Scripts/Features/Presentation/CameraController.cs#L402)
 <!-- source: Assets/Scripts/Features/Presentation/CameraController.cs|SmoothFocusRoutine -->
 - [MainUIPanels.ShowCreatePanel](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L85)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|ShowCreatePanel -->
@@ -982,3 +1044,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|OnDisable -->
 - [PanelTransitions.CancelAll](../Assets/Scripts/Features/Presentation/PanelTransitions.cs#L16)
 <!-- source: Assets/Scripts/Features/Presentation/PanelTransitions.cs|CancelAll -->
+- [CameraController.LateUpdate](../Assets/Scripts/Features/Presentation/CameraController.cs#L63)
+<!-- source: Assets/Scripts/Features/Presentation/CameraController.cs|LateUpdate -->
+- [CameraController.ResolveThirdPersonCollision](../Assets/Scripts/Features/Presentation/CameraController.cs#L126)
+<!-- source: Assets/Scripts/Features/Presentation/CameraController.cs|ResolveThirdPersonCollision -->
+- [StatusIcon.UpdateIconScreenPosition](../Assets/Scripts/Features/Presentation/StatusIcon.cs#L313)
+<!-- source: Assets/Scripts/Features/Presentation/StatusIcon.cs|UpdateIconScreenPosition -->

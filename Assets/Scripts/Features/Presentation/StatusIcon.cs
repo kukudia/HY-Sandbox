@@ -317,6 +317,17 @@ public class StatusIcon : MonoBehaviour
             return;
         }
 
+        // 正常方块不再投影；已经显示的异常图标仍按原速度完成淡出。
+        if (!_hasVisibleIcons && _visibility <= 0f)
+        {
+            if (_iconRoot.gameObject.activeSelf)
+            {
+                _iconRoot.gameObject.SetActive(false);
+            }
+
+            return;
+        }
+
         Camera camera = PlayManager.instance != null && PlayManager.instance.mainCamera != null ? PlayManager.instance.mainCamera : Camera.main;
         if (camera == null)
         {

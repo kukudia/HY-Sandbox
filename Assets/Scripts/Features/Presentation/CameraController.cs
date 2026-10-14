@@ -20,9 +20,16 @@ public class CameraController : MonoBehaviour
     [Header("Third Person Settings")]
     public Vector3 thirdPersonOffset = new Vector3(0f, 2f, -5f);
     public float thirdPersonSmooth = 10f;
+    [SerializeField]
+    private LayerMask thirdPersonCollisionMask = ~0;
+    [SerializeField, Min(0f)]
+    private float thirdPersonCollisionRadius = 0.2f;
+    [SerializeField, Min(0f)]
+    private float thirdPersonCollisionSkin = 0.05f;
     private float tpYaw = 0f;
     private float tpPitch = 15f;
     private Vector3 camVelocity = Vector3.zero;
+    private RaycastHit[] thirdPersonCollisionHits = new RaycastHit[16];
     [Header("Third Person Zoom")]
     public float zoomSpeed = 2f;
     public float minZoom = -2f;
@@ -101,9 +108,75 @@ public class CameraController : MonoBehaviour
             thirdPersonOffset.z = Mathf.Clamp(thirdPersonOffset.z + scroll, maxZoom, minZoom);
             Quaternion rotation = Quaternion.Euler(tpPitch, tpYaw, 0f);
             Vector3 desiredPos = playerBody.position + rotation * thirdPersonOffset;
-            transform.position = Vector3.SmoothDamp(transform.position, desiredPos, ref camVelocity, 0.05f);
-            transform.LookAt(playerBody.position + Vector3.up * 1.5f);
+            Vector3 lookTarget = playerBody.position + Vector3.up * 1.5f;
+            desiredPos = ResolveThirdPersonCollision(lookTarget, desiredPos);
+            Vector3 smoothedPosition = Vector3.SmoothDamp(transform.position, desiredPos, ref camVelocity, 0.05f);
+            // 平滑只负责恢复手感；最终位置重新检查，避免收回途中仍停在墙后。
+            Vector3 safePosition = ResolveThirdPersonCollision(lookTarget, smoothedPosition);
+            if ((safePosition - smoothedPosition).sqrMagnitude > 0.000001f)
+            {
+                camVelocity = Vector3.zero;
+            }
+
+            transform.position = safePosition;
+            transform.LookAt(lookTarget);
         }
+    }
+
+    private Vector3 ResolveThirdPersonCollision(Vector3 lookTarget, Vector3 desiredPosition)
+    {
+        Vector3 offset = desiredPosition - lookTarget;
+        float distance = offset.magnitude;
+        if (distance <= 0.001f || thirdPersonCollisionMask.value == 0)
+        {
+            return desiredPosition;
+        }
+
+        Vector3 direction = offset / distance;
+        int hitCount;
+        do
+        {
+            hitCount = Physics.SphereCastNonAlloc(
+                lookTarget,
+                Mathf.Max(0.001f, thirdPersonCollisionRadius),
+                direction,
+                thirdPersonCollisionHits,
+                distance,
+                thirdPersonCollisionMask,
+                QueryTriggerInteraction.Ignore);
+            if (hitCount < thirdPersonCollisionHits.Length)
+            {
+                break;
+            }
+
+            // NonAlloc结果无序且可能截断；仅首次遇到更密集环境时扩容复用。
+            System.Array.Resize(ref thirdPersonCollisionHits, thirdPersonCollisionHits.Length * 2);
+        }
+        while (true);
+        float nearestDistance = distance;
+        for (int i = 0; i < hitCount; i++)
+        {
+            RaycastHit hit = thirdPersonCollisionHits[i];
+            if (hit.collider == null || IsPlayerCollider(hit.collider))
+            {
+                continue;
+            }
+
+            nearestDistance = Mathf.Min(nearestDistance, hit.distance);
+        }
+
+        if (nearestDistance >= distance)
+        {
+            return desiredPosition;
+        }
+
+        float safeDistance = Mathf.Clamp(nearestDistance - Mathf.Max(0f, thirdPersonCollisionSkin), 0f, distance);
+        return lookTarget + direction * safeDistance;
+    }
+
+    private bool IsPlayerCollider(Collider collider)
+    {
+        return playerBody != null && collider.transform.IsChildOf(playerBody);
     }
 
     private void HandleMovement()

@@ -1,0 +1,5 @@
+Wall correction/self filtering
+Unobstructed desired distance restored
+Idle icon root deactivated
+Previously visible icon still fades
+New status resumes projection and visibility

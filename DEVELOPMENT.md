@@ -2,6 +2,10 @@
 
 最近整理：2026-10-11；Unity 6000.3.11f1；URP；Input System；运行时类型保持全局命名空间。
 
+2026-10-14 第三人称镜头环境碰撞：`CameraController` 在第三人称目标点到期望相机位置之间使用可复用的 `SphereCastNonAlloc`，忽略玩家自身碰撞体，在墙体/方块前收回相机并保留碰撞间隙；平滑恢复阶段再次校正，避免相机穿过障碍。碰撞层、半径和间隙均可在 Inspector 调整。墙体收回、自身过滤和障碍移除后恢复已通过隔离Play检查；未完成玩家手动视觉/手感验收。
+
+2026-10-14 供电网络性能优化：`PowerNetwork.Rebuild` 保留每帧功率清零、分配和状态提交，但缓存由中继/发电机位置及连接距离决定的拓扑；拓扑未变化时跳过连接清空、发电机连接和中继两两检测。拓扑变化仍自动重建，供电行为契约不变。新增空间索引候选筛选和连通分量缓存；300轮新旧等价对照、32项玩法回归通过。100中继/500负载静态更新10.73→0.56ms，持续移动11.02→0.99ms。新增炮弹池、可增长查询缓冲及正常图标跳过投影；28项炮塔检查、10项真实飞行、4项复用及5项表现检查通过。完整条件、原始样本和限制见 Docs/Validation/2026-10-14-performance.md。
+
 2026-10-11 CSV 方块数值：直接编辑 `Assets/Resources/BlockData/Blocks.csv`（25 行、80 参数列及4个只读身份列）。Editor 导入后自动校验、备份并同步 Prefab；Block/绑定组件 OnValidate 延迟请求校验，绑定 Awake 在其他组件之前应用 Resources 中的 CSV。mass 留空使用 x × y × z，填写正数使用手动质量；density 仅保留旧数据。requiresPower 合并应用货仓、收集机器人和维修机器人；Bot/Connector 辅助资源、悬浮控制和指定表现参数不纳入表。维修仓已补充 Power（50/100），CSV/蓝图运行时刷新保留连接状态与实例引用，Bake 拒绝缺失供电依赖。18 项 Edit Mode、4 项 Awake 和 8 项跨帧维修回归已通过，详见 `Docs/Validation/2026-10-11-block-csv-regression.json`。使用与生命周期详见 [CSV说明](Docs/BlockCsv.md)，函数图见 [RuntimeFlow](Docs/RuntimeFlow.md)，验证见 `Docs/Validation/2026-10-11-block-csv.json`。
 
 2026-10-11 推进器字体状态修正：ThrusterInfoPanel 读取 Power.CommitPowerStatus 确认的 SupplyEfficiency，不再读取物理帧中暂时清零的即时供电值。撤销工作请求立即恢复正常显示，重新申请后等待电网确认缺电；残余推力及关机衰减不参与字体颜色判断。实际施力仍使用即时供电效率。验证见 `Docs/Validation/2026-10-11-thruster-power-colors.json`。
@@ -109,6 +113,15 @@ ArtSource/VfxGraph和Blueprints下全部16份自有工具已明确职责/入口�
 - 飞行PID保留现有增益及质量语义；大型敌机积分收敛/稳态高度误差仍需实飞调参。
 - 供电范围并集网格、状态图标Canvas和大量透明VFX仍需CPU/GPU压力测量；本轮以职责和资源生命周期改善，不宣称性能提升。
 - 同时存在uGUI和诊断IMGUI；尚无正式构建验收记录。
+
+## 性能评估与后续优化顺序
+
+以下结论来自当前源码、场景和 URP 配置的静态审查，不能替代 Unity Profiler、GPU Profiler 或 Play Mode 压力测试。
+
+- 已确认的高风险：`StatusIcon` 和 `CombatHud` 为每个图标/敌方视图执行屏幕转换与遮挡射线；`TurretProjectile` 每个物理帧执行球形范围/扫掠查询，查询缓冲满时扩容重查并复用；炮弹池首次扩容、临时灯光和 VFX 仍可能产生 Instantiate/Destroy 峰值；蓝图逐块实例化和 `RuntimeGroupBuilder.Rebuild` 在大结构变更时会形成 CPU/物理尖峰；`PowerRangeUnionView` 的三维 cell 网格在范围和设备数增长时有内存与网格重建风险。供电拓扑重建已改为 dirty 条件触发，但功率分配和负载范围扫描仍需压力测量。
+- 需要 Profiler 确认的渲染项：PC URP 启用 HDR、2x MSAA、2048 阴影贴图、55m 阴影距离、四级级联、软阴影和 SSAO；透明 VFX、状态 Canvas、附加阴影灯可能造成 overdraw、阴影和 Canvas rebuild 开销。`DefaultVolumeProfile` 含测试组件及多个后处理组件，需核对实际 active/override 状态后再判断成本。
+- 替代写法：供电采用 topology dirty + 功率状态分离，并用空间分桶减少中继两两检查；UI 按距离/可见性裁剪、缓存遮挡结果并分帧更新；投射物/VFX 使用对象池和固定容量 NonAlloc 查询；蓝图采用分批实例化、加载期延迟连接重建、保存时异步/原子替换；Bot/Turret 将目标扫描、避障和施力分频并复用空间查询；渲染按质量档位下调阴影距离/分辨率、后处理和透明层。
+- 分阶段方案：第一阶段建立空场景、100/500块建造、机器人、炮塔和密集特效压力档位，记录 CPU main thread、Physics、GC、Render thread、GPU frame time 和内存；第二阶段优先修复供电重建、UI 遮挡频率和对象创建峰值；第三阶段处理对象池、透明 overdraw、阴影/后处理质量分级；第四阶段验收大蓝图加载、断连重组、长期交火和多机器人场景，并以目标硬件帧时间而非单次平均 FPS 判定。
 
 ## 2026-10-11 变更记录
 

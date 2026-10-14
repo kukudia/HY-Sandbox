@@ -1,5 +1,5 @@
-// 职责：重建无线供电图，按连通分量为启动的唯一负载分配所需功率。
-// 入口：Rebuild()；由 PowerTransmissionDevice 每帧装配已启用的中继、发电机和负载。
+// 职责：缓存无线供电拓扑，以空间索引收集负载并逐帧分配所需功率。
+// 入口：Rebuild()；由 PowerTransmissionDevice 每帧装配参与者，精确位置/身份变化才重建拓扑。
 // 边界：不调度 Unity 帧或绘制调试图；复用实例缓冲，在一次分配结束后提交负载状态。
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +14,35 @@ public sealed class PowerNetwork
     private readonly HashSet<PowerGeneratingUnit> _componentGenerators = new HashSet<PowerGeneratingUnit>();
     private readonly HashSet<Power> _componentLoads = new HashSet<Power>();
     private readonly Queue<PowerTransmissionDevice> _deviceQueue = new Queue<PowerTransmissionDevice>();
+    private readonly List<DeviceSnapshot> _deviceSnapshots = new List<DeviceSnapshot>();
+    private readonly List<GeneratorSnapshot> _generatorSnapshots = new List<GeneratorSnapshot>();
+    private readonly List<Vector3> _loadPositions = new List<Vector3>();
+    private readonly PowerPositionIndex _deviceIndex = new PowerPositionIndex();
+    private readonly PowerPositionIndex _generatorIndex = new PowerPositionIndex();
+    private readonly PowerPositionIndex _loadIndex = new PowerPositionIndex();
+    private readonly List<int> _candidates = new List<int>();
+    private readonly List<ConnectedComponent> _components = new List<ConnectedComponent>();
+    private int _componentCount;
+    private bool _hasTopology;
+    private struct DeviceSnapshot
+    {
+        public PowerTransmissionDevice device;
+        public Vector3 position;
+        public int connectionRange;
+    }
+
+    private struct GeneratorSnapshot
+    {
+        public PowerGeneratingUnit generator;
+        public Vector3 position;
+    }
+
+    private sealed class ConnectedComponent
+    {
+        public readonly List<PowerTransmissionDevice> devices = new List<PowerTransmissionDevice>();
+        public readonly List<PowerGeneratingUnit> generators = new List<PowerGeneratingUnit>();
+    }
+
     /// <summary>最近一次重建使用的中继快照，供外部调试视图读取。</summary>
     public IList<PowerTransmissionDevice> Devices => _devices;
 
@@ -24,8 +53,16 @@ public sealed class PowerNetwork
         IEnumerable<Power> loads)
     {
         CollectActiveParticipants(devices, generators, loads);
-        ResetConnectionsAndPower();
-        BuildConnections();
+        bool topologyChanged = CaptureTopology();
+        if (!_hasTopology || topologyChanged)
+        {
+            ResetConnections();
+            BuildConnections();
+            CacheConnectedComponents();
+            _hasTopology = true;
+        }
+
+        PrepareLoads();
         DistributeNetworkPower();
         CommitPowerStatuses();
     }
@@ -50,6 +87,15 @@ public sealed class PowerNetwork
         _componentGenerators.Clear();
         _componentLoads.Clear();
         _deviceQueue.Clear();
+        _deviceSnapshots.Clear();
+        _generatorSnapshots.Clear();
+        _loadPositions.Clear();
+        _deviceIndex.Clear();
+        _generatorIndex.Clear();
+        _loadIndex.Clear();
+        _components.Clear();
+        _componentCount = 0;
+        _hasTopology = false;
     }
 
     private void CollectActiveParticipants(
@@ -85,7 +131,7 @@ public sealed class PowerNetwork
         }
     }
 
-    private void ResetConnectionsAndPower()
+    private void ResetConnections()
     {
         foreach (PowerTransmissionDevice device in _devices)
         {
@@ -98,25 +144,97 @@ public sealed class PowerNetwork
         {
             generator.connectedDevices.Clear();
         }
+    }
 
-        foreach (Power load in _loads)
+    private bool CaptureTopology()
+    {
+        bool changed = _deviceSnapshots.Count != _devices.Count || _generatorSnapshots.Count != _generators.Count;
+        for (int i = 0; i < _devices.Count; i++)
         {
-            load.ResetPower();
+            PowerTransmissionDevice device = _devices[i];
+            DeviceSnapshot next = new DeviceSnapshot
+            {
+                device = device,
+                position = device.transform.position,
+                connectionRange = device.maxConnectionDistance
+            };
+            if (i < _deviceSnapshots.Count)
+            {
+                DeviceSnapshot old = _deviceSnapshots[i];
+                changed |= old.device != device || !old.position.Equals(next.position) || old.connectionRange != next.connectionRange;
+                _deviceSnapshots[i] = next;
+            }
+            else
+            {
+                _deviceSnapshots.Add(next);
+            }
         }
+
+        if (_deviceSnapshots.Count > _devices.Count)
+        {
+            _deviceSnapshots.RemoveRange(_devices.Count, _deviceSnapshots.Count - _devices.Count);
+        }
+
+        for (int i = 0; i < _generators.Count; i++)
+        {
+            PowerGeneratingUnit generator = _generators[i];
+            GeneratorSnapshot next = new GeneratorSnapshot
+            {
+                generator = generator,
+                position = generator.transform.position
+            };
+            if (i < _generatorSnapshots.Count)
+            {
+                GeneratorSnapshot old = _generatorSnapshots[i];
+                changed |= old.generator != generator || !old.position.Equals(next.position);
+                _generatorSnapshots[i] = next;
+            }
+            else
+            {
+                _generatorSnapshots.Add(next);
+            }
+        }
+
+        if (_generatorSnapshots.Count > _generators.Count)
+        {
+            _generatorSnapshots.RemoveRange(_generators.Count, _generatorSnapshots.Count - _generators.Count);
+        }
+
+        return changed;
     }
 
     private void BuildConnections()
     {
+        _deviceIndex.Clear();
+        _generatorIndex.Clear();
+        for (int i = 0; i < _devices.Count; i++)
+        {
+            _deviceIndex.Add(_deviceSnapshots[i].position, i);
+        }
+
+        for (int i = 0; i < _generators.Count; i++)
+        {
+            _generatorIndex.Add(_generatorSnapshots[i].position, i);
+        }
+
         for (int i = 0; i < _devices.Count; i++)
         {
             PowerTransmissionDevice device = _devices[i];
-            ConnectGenerators(device);
+            Vector3 position = _deviceSnapshots[i].position;
+            ConnectGenerators(device, position);
+            _deviceIndex.Query(position, device.maxConnectionDistance, _candidates);
+            _candidates.Sort();
             // 中继的双向连接必须同时满足两端范围，且每一对只检查一次。
-            for (int j = i + 1; j < _devices.Count; j++)
+            foreach (int j in _candidates)
             {
+                if (j <= i)
+                {
+                    continue;
+                }
+
                 PowerTransmissionDevice other = _devices[j];
                 float connectionDistance = Mathf.Min(device.maxConnectionDistance, other.maxConnectionDistance);
-                if (IsWithinBoxRange(other.transform.position, device.transform.position, connectionDistance))
+                if (IsWithinBoxRange(_deviceSnapshots[j].position, position, connectionDistance))
                 {
                     device.connectedDevices.Add(other);
                     other.connectedDevices.Add(device);
@@ -125,11 +243,14 @@ public sealed class PowerNetwork
         }
     }
 
-    private void ConnectGenerators(PowerTransmissionDevice device)
+    private void ConnectGenerators(PowerTransmissionDevice device, Vector3 position)
     {
-        foreach (PowerGeneratingUnit generator in _generators)
+        _generatorIndex.Query(position, device.maxConnectionDistance, _candidates);
+        _candidates.Sort();
+        foreach (int index in _candidates)
         {
-            if (IsWithinBoxRange(generator.transform.position, device.transform.position, device.maxConnectionDistance))
+            PowerGeneratingUnit generator = _generators[index];
+            if (IsWithinBoxRange(_generatorSnapshots[index].position, position, device.maxConnectionDistance))
             {
                 device.connectedGenerators.Add(generator);
                 generator.connectedDevices.Add(device);
@@ -137,16 +258,73 @@ public sealed class PowerNetwork
         }
     }
 
-    private void DistributeNetworkPower()
+    private void CacheConnectedComponents()
     {
         _visitedDevices.Clear();
+        _componentCount = 0;
         foreach (PowerTransmissionDevice rootDevice in _devices)
         {
             if (_visitedDevices.Add(rootDevice))
             {
                 CollectConnectedComponent(rootDevice);
-                SupplyConnectedComponent();
+                if (_componentCount == _components.Count)
+                {
+                    _components.Add(new ConnectedComponent());
+                }
+
+                ConnectedComponent component = _components[_componentCount++];
+                component.devices.Clear();
+                component.generators.Clear();
+                component.devices.AddRange(_componentDevices);
+                component.generators.AddRange(_componentGenerators);
             }
+        }
+
+        // 较小网络不再持有旧组件的已销毁对象；保留容器容量便于复用。
+        for (int i = _componentCount; i < _components.Count; i++)
+        {
+            _components[i].devices.Clear();
+            _components[i].generators.Clear();
+        }
+    }
+
+    private void PrepareLoads()
+    {
+        _loadIndex.Clear();
+        _loadPositions.Clear();
+        for (int i = 0; i < _loads.Count; i++)
+        {
+            Power load = _loads[i];
+            load.ResetPower();
+            Vector3 position = load.transform.position;
+            _loadPositions.Add(position);
+            if (load.IsWorkRequested)
+            {
+                _loadIndex.Add(position, i);
+            }
+        }
+    }
+
+    private void DistributeNetworkPower()
+    {
+        for (int i = 0; i < _componentCount; i++)
+        {
+            ConnectedComponent component = _components[i];
+            _componentDevices.Clear();
+            _componentGenerators.Clear();
+            _componentLoads.Clear();
+            _componentDevices.AddRange(component.devices);
+            foreach (PowerGeneratingUnit generator in component.generators)
+            {
+                _componentGenerators.Add(generator);
+            }
+
+            foreach (PowerTransmissionDevice device in component.devices)
+            {
+                CollectDeviceLoads(device);
+            }
+
+            SupplyConnectedComponent();
         }
     }
 
@@ -161,7 +339,6 @@ public sealed class PowerNetwork
         {
             PowerTransmissionDevice device = _deviceQueue.Dequeue();
             _componentDevices.Add(device);
-            CollectDeviceLoads(device);
             // 同一个发电机覆盖的中继属于同一电网，不能重复分配该发电机的输出。
             foreach (PowerGeneratingUnit generator in device.connectedGenerators)
             {
@@ -188,9 +365,14 @@ public sealed class PowerNetwork
 
     private void CollectDeviceLoads(PowerTransmissionDevice device)
     {
-        foreach (Power load in _loads)
+        Vector3 position = device.transform.position;
+        _loadIndex.Query(position, device.powerRange, _candidates);
+        // 原负载登记顺序影响独立电网叠加的小数舍入，候选按登记索引排序。
+        _candidates.Sort();
+        foreach (int index in _candidates)
         {
-            if (load.IsWorkRequested && IsWithinBoxRange(load.transform.position, device.transform.position, device.powerRange))
+            Power load = _loads[index];
+            if (IsWithinBoxRange(_loadPositions[index], position, device.powerRange))
             {
                 _componentLoads.Add(load);
             }

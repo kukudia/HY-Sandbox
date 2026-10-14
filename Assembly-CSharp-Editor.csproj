@@ -75,9 +75,11 @@
     <Compile Include="Assets\Editor\Presentation\InterfaceBaker.cs" />
     <Compile Include="Assets\Editor\Diagnostics\PhysicsSandboxProbe.cs" />
     <Compile Include="Assets\Editor\Power\ActivePowerPlayChecks.cs" />
+    <Compile Include="Assets\Editor\Diagnostics\Benchmarks\ProjectilePoolChecks.cs" />
     <Compile Include="Assets\Editor\Combat\TurretFlightPlayProbe.cs" />
     <Compile Include="Assets\Editor\Building\BlockCsvRegressionChecks.cs" />
     <Compile Include="Assets\Editor\Combat\TurretAssetBaker.cs" />
+    <Compile Include="Assets\Editor\Diagnostics\Benchmarks\PowerPerformanceChecks.cs" />
     <Compile Include="Assets\Editor\Combat\CombatHudPlayProbe.cs" />
     <Compile Include="Assets\Editor\Bots\BotNavigationPlayProbe.cs" />
     <Compile Include="Assets\Editor\Art\BlockArtPreview.cs" />
@@ -86,6 +88,7 @@
     <Compile Include="Assets\Editor\Diagnostics\ProfilerCaptureAnalysis.cs" />
     <Compile Include="Assets\Editor\Combat\HealthHudPreview.cs" />
     <Compile Include="Assets\Editor\Art\IndustrialArtGenerator.cs" />
+    <Compile Include="Assets\Editor\Diagnostics\Benchmarks\PresentationPerformanceChecks.cs" />
     <Compile Include="Assets\Editor\Salvage\SalvagePlayProbe.cs" />
     <Compile Include="Assets\Editor\Architecture\PresentationPlayChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\BlockVfxBaker.cs" />
