@@ -1,0 +1,79 @@
+PASS: Abandoned Storehouse restores every authored block
+PASS: Abandoned Storehouse structure visual matches dimensions: 0f1e603f674149efac37b540b5446f26:part-0
+PASS: Abandoned Storehouse structure exposes full connection grid: 0f1e603f674149efac37b540b5446f26:part-0
+PASS: Abandoned Storehouse structure visual matches dimensions: 0f1e603f674149efac37b540b5446f26:part-1
+PASS: Abandoned Storehouse structure exposes full connection grid: 0f1e603f674149efac37b540b5446f26:part-1
+PASS: Abandoned Storehouse structure visual matches dimensions: 0f1e603f674149efac37b540b5446f26:part-2
+PASS: Abandoned Storehouse structure exposes full connection grid: 0f1e603f674149efac37b540b5446f26:part-2
+PASS: Abandoned Storehouse structure visual matches dimensions: 0f1e603f674149efac37b540b5446f26:part-3
+PASS: Abandoned Storehouse structure exposes full connection grid: 0f1e603f674149efac37b540b5446f26:part-3
+PASS: Abandoned Storehouse structure visual matches dimensions: 0f1e603f674149efac37b540b5446f26:part-4
+PASS: Abandoned Storehouse structure exposes full connection grid: 0f1e603f674149efac37b540b5446f26:part-4
+PASS: Abandoned Storehouse all modules connect to foundation:
+PASS: Abandoned Storehouse every defensive turret receives power
+PASS: Abandoned Storehouse capture retains outpost identity
+PASS: Field Workshop restores every authored block
+PASS: Field Workshop structure visual matches dimensions: 30c4f603de7f48f4baff3dc222af0f67:part-0
+PASS: Field Workshop structure exposes full connection grid: 30c4f603de7f48f4baff3dc222af0f67:part-0
+PASS: Field Workshop structure visual matches dimensions: 30c4f603de7f48f4baff3dc222af0f67:part-1
+PASS: Field Workshop structure exposes full connection grid: 30c4f603de7f48f4baff3dc222af0f67:part-1
+PASS: Field Workshop structure visual matches dimensions: 30c4f603de7f48f4baff3dc222af0f67:part-2
+PASS: Field Workshop structure exposes full connection grid: 30c4f603de7f48f4baff3dc222af0f67:part-2
+PASS: Field Workshop structure visual matches dimensions: 30c4f603de7f48f4baff3dc222af0f67:part-3
+PASS: Field Workshop structure exposes full connection grid: 30c4f603de7f48f4baff3dc222af0f67:part-3
+PASS: Field Workshop structure visual matches dimensions: 30c4f603de7f48f4baff3dc222af0f67:part-4
+PASS: Field Workshop structure exposes full connection grid: 30c4f603de7f48f4baff3dc222af0f67:part-4
+PASS: Field Workshop all modules connect to foundation:
+PASS: Field Workshop every defensive turret receives power
+PASS: Field Workshop capture retains outpost identity
+PASS: Relay Ruins restores every authored block
+PASS: Relay Ruins structure visual matches dimensions: 97db62efd929415b9dda71d09f689d4b:part-0
+PASS: Relay Ruins structure exposes full connection grid: 97db62efd929415b9dda71d09f689d4b:part-0
+PASS: Relay Ruins structure visual matches dimensions: 97db62efd929415b9dda71d09f689d4b:part-1
+PASS: Relay Ruins structure exposes full connection grid: 97db62efd929415b9dda71d09f689d4b:part-1
+PASS: Relay Ruins structure visual matches dimensions: 97db62efd929415b9dda71d09f689d4b:part-2
+PASS: Relay Ruins structure exposes full connection grid: 97db62efd929415b9dda71d09f689d4b:part-2
+PASS: Relay Ruins structure visual matches dimensions: 97db62efd929415b9dda71d09f689d4b:part-3
+PASS: Relay Ruins structure exposes full connection grid: 97db62efd929415b9dda71d09f689d4b:part-3
+PASS: Relay Ruins all modules connect to foundation:
+PASS: Relay Ruins every defensive turret receives power
+PASS: Relay Ruins capture retains outpost identity
+PASS: Relay Station Outpost restores every authored block
+PASS: Relay Station Outpost structure visual matches dimensions: 024bfb9a2ed047f2a6201e4e1c19d68d:part-0
+PASS: Relay Station Outpost structure exposes full connection grid: 024bfb9a2ed047f2a6201e4e1c19d68d:part-0
+PASS: Relay Station Outpost structure visual matches dimensions: 024bfb9a2ed047f2a6201e4e1c19d68d:part-1
+PASS: Relay Station Outpost structure exposes full connection grid: 024bfb9a2ed047f2a6201e4e1c19d68d:part-1
+PASS: Relay Station Outpost structure visual matches dimensions: 024bfb9a2ed047f2a6201e4e1c19d68d:part-3
+PASS: Relay Station Outpost structure exposes full connection grid: 024bfb9a2ed047f2a6201e4e1c19d68d:part-3
+PASS: Relay Station Outpost structure visual matches dimensions: 024bfb9a2ed047f2a6201e4e1c19d68d:part-8
+PASS: Relay Station Outpost structure exposes full connection grid: 024bfb9a2ed047f2a6201e4e1c19d68d:part-8
+PASS: Relay Station Outpost all modules connect to foundation:
+PASS: Relay Station Outpost every defensive turret receives power
+PASS: Relay Station Outpost capture retains outpost identity
+PASS: Road Watch Outpost restores every authored block
+PASS: Road Watch Outpost structure visual matches dimensions: 99474e208de942f8a94c5ea440387e71:part-0
+PASS: Road Watch Outpost structure exposes full connection grid: 99474e208de942f8a94c5ea440387e71:part-0
+PASS: Road Watch Outpost structure visual matches dimensions: 99474e208de942f8a94c5ea440387e71:part-1
+PASS: Road Watch Outpost structure exposes full connection grid: 99474e208de942f8a94c5ea440387e71:part-1
+PASS: Road Watch Outpost structure visual matches dimensions: 99474e208de942f8a94c5ea440387e71:part-5
+PASS: Road Watch Outpost structure exposes full connection grid: 99474e208de942f8a94c5ea440387e71:part-5
+PASS: Road Watch Outpost all modules connect to foundation:
+PASS: Road Watch Outpost every defensive turret receives power
+PASS: Road Watch Outpost capture retains outpost identity
+PASS: Supply Stronghold Outpost restores every authored block
+PASS: Supply Stronghold Outpost structure visual matches dimensions: f527a51d55664c328f63e4602d5f09d2:part-0
+PASS: Supply Stronghold Outpost structure exposes full connection grid: f527a51d55664c328f63e4602d5f09d2:part-0
+PASS: Supply Stronghold Outpost structure visual matches dimensions: f527a51d55664c328f63e4602d5f09d2:part-1
+PASS: Supply Stronghold Outpost structure exposes full connection grid: f527a51d55664c328f63e4602d5f09d2:part-1
+PASS: Supply Stronghold Outpost structure visual matches dimensions: f527a51d55664c328f63e4602d5f09d2:part-2
+PASS: Supply Stronghold Outpost structure exposes full connection grid: f527a51d55664c328f63e4602d5f09d2:part-2
+PASS: Supply Stronghold Outpost structure visual matches dimensions: f527a51d55664c328f63e4602d5f09d2:part-3
+PASS: Supply Stronghold Outpost structure exposes full connection grid: f527a51d55664c328f63e4602d5f09d2:part-3
+PASS: Supply Stronghold Outpost structure visual matches dimensions: f527a51d55664c328f63e4602d5f09d2:part-4
+PASS: Supply Stronghold Outpost structure exposes full connection grid: f527a51d55664c328f63e4602d5f09d2:part-4
+PASS: Supply Stronghold Outpost structure visual matches dimensions: f527a51d55664c328f63e4602d5f09d2:part-6
+PASS: Supply Stronghold Outpost structure exposes full connection grid: f527a51d55664c328f63e4602d5f09d2:part-6
+PASS: Supply Stronghold Outpost all modules connect to foundation:
+PASS: Supply Stronghold Outpost every defensive turret receives power
+PASS: Supply Stronghold Outpost capture retains outpost identity
+ALL PASSED

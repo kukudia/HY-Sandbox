@@ -16,6 +16,10 @@ public sealed class BuildingRuntime : MonoBehaviour
     private readonly List<Block> neighbors = new List<Block>();
     private BuildingFoundationData foundationData;
     private WorldBuildingState pendingState;
+    private EnemyOutpostData outpost;
+    public EnemyOutpostData Outpost => outpost;
+    public string BlueprintName => blueprintName;
+
     private Rigidbody body;
     public Vector2Int FootprintSize => new Vector2Int(foundationData.width, foundationData.length);
     public bool Anchored => body != null && body.isKinematic;
@@ -38,6 +42,7 @@ public sealed class BuildingRuntime : MonoBehaviour
     {
         manager = owner;
         pendingState = state;
+        outpost = state.blueprint.IsOutpost ? state.blueprint.outpost : null;
         instanceId = state.instanceId;
         blueprintName = state.blueprintName;
         foundationData = new BuildingFoundationData
@@ -149,6 +154,7 @@ public sealed class BuildingRuntime : MonoBehaviour
 
         var blueprint = new BlockDataList
         {
+            outpost = outpost,
             foundation = new BuildingFoundationData
             {
                 width = foundationData.width,

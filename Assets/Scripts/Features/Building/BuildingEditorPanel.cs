@@ -19,6 +19,7 @@ public sealed class BuildingEditorPanel : MonoBehaviour
         _width.text = (data?.width ?? BuildingFoundationData.DefaultSize).ToString();
         _length.text = (data?.length ?? BuildingFoundationData.DefaultSize).ToString();
         _status.text = "1-64 cells per side. Changes are saved automatically.";
+        GetComponent<BuildingOutpostEditor>()?.Refresh();
     }
 
     public void ApplySize()

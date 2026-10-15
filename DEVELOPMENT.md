@@ -1,5 +1,12 @@
 # HY-Sandbox 开发与审查入口
 
+## 2026-10-16 夜间：建筑编辑器敌人据点与会话内有限驻军
+
+- 建筑编辑器新增 Enemy outpost：可从三套既有敌机蓝图选择驻军、添加/移除槽位、保存本地部署位置与朝向，并把模块快照嵌入建筑蓝图；Copy template 会生成独立用户文件。普通建筑与据点继续使用原建筑候选概率10%。
+- 生产运行停用 EnemySpawner 自动计时刷新，由 OutpostEncounterDirector 按距离、地形列和部署包围盒逐台生成，最多16台。远离区块时保存活敌机模块、耐久、货物和驾驶舱身份，重访恢复原对象身份；驾驶舱死亡才消耗该槽位。击败记录只存在当前探索会话，返航/死亡后重新出发可重新生成，不写永久击败文件。
+- 新增 Field Workshop、Abandoned Storehouse、Relay Ruins 三套普通建筑，以及 Road Watch、Relay Station、Supply Stronghold 三套据点，使用结构尺寸Prefab、既有模块和三套敌机快照。六套模板真实恢复后全模块连接、结构模型尺寸/连接网格、炮塔供电和据点标记均通过；预览见 `Temp/OutpostContent`，详细说明见 [据点制作](Docs/OutpostAuthoring.md)。
+- BuildingEditorPlayProbe 45项通过；OutpostContentChecks 六套真实Play结构/供电检查通过；D3D11非Development Player seed14721 据点路线通过32项，组合战斗回收/返航/死亡重生路线57项通过。Windows构建0错误/1警告；249源码/27函数图、静态编译0错误/4个既有警告及diff通过，28份用户JSON未变。详见 [验证证据](Docs/Validation/2026-10-16-outpost.md)。
+
 ## 2026-10-15 用户调整：法向耗散碰撞伤害
 
 - CollisionDamageResolver按法向相对速度及求解器冲量计算有限能量，读取双方PhysicsMaterial及bounceCombine，扣除弹性反弹保留的能量；动态双方按质心能量份额分摊，轻物体受到更大速度变化。接触点和复合碰撞回调不重复使用整机质量；擦碰的切向速度不计入撞击伤害。

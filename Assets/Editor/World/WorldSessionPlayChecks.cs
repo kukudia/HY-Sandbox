@@ -162,11 +162,11 @@ public static class WorldSessionPlayChecks
         string blueprintDirectory = Path.Combine(Application.persistentDataPath, "BuildingBlueprints");
         string[] userBlueprints = Directory.GetFiles(blueprintDirectory, "*.json").Select(Path.GetFileNameWithoutExtension).OrderBy(name => name, StringComparer.OrdinalIgnoreCase).ToArray();
         Check(
-            session.BuildingTemplates.SequenceEqual(userBlueprints),
-            "the generation pool includes every blueprint in the real user BuildingBlueprints directory");
+            userBlueprints.All(name => session.BuildingTemplates.Contains(name)) && Resources.LoadAll<TextAsset>("WorldBlueprints/Buildings").All(asset => session.BuildingTemplates.Contains(asset.name)),
+            "generation pool includes user blueprints and authored bundled buildings/outposts");
         Check(
-            buildings.Buildings.All(building => userBlueprints.Contains(building.Capture().blueprintName)),
-            "spawned buildings use user templates rather than the bundled Outpost catalog");
+            buildings.Buildings.All(building => session.BuildingTemplates.Contains(building.Capture().blueprintName)),
+            "spawned buildings use the merged validated blueprint library");
         Transform horizon = world.transform.Find("Distant terrain - visual only");
         Mesh horizonMesh = horizon.GetComponent<MeshFilter>().sharedMesh;
         Check(

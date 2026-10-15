@@ -42,4 +42,6 @@ public class BlockDataList
     public List<BlockData> blocks = new List<BlockData>();
     // 建筑底座独立于可删除的方块；旧玩家/敌人蓝图缺少此字段仍可读取。
     public BuildingFoundationData foundation;
+    public EnemyOutpostData outpost;
+    public bool IsOutpost => outpost != null && outpost.enabled;
 }

@@ -47,6 +47,11 @@ public class DestroyManager : MonoBehaviour
         }
 
         Cockpit cockpit = obj.GetComponent<Cockpit>();
+        if (cockpit != null && cockpit.faction == UnitFaction.Enemy && PlayManager.instance != null && PlayManager.instance.playMode)
+        {
+            cockpit.GetComponent<EnemyIdentity>()?.ReportDefeated();
+        }
+
         ControlUnit unit = obj.GetComponentInParent<ControlUnit>();
         if (unit != null)
         {

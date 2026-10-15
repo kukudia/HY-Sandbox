@@ -4,6 +4,19 @@ using UnityEngine;
 
 public sealed class EnemyIdentity : MonoBehaviour
 {
+    public event System.Action Defeated;
+    private bool _defeated;
+    public void ReportDefeated()
+    {
+        if (_defeated)
+        {
+            return;
+        }
+
+        _defeated = true;
+        Defeated?.Invoke();
+    }
+
     [SerializeField]
     private string _displayName;
     private float _spawnMaxHealth;

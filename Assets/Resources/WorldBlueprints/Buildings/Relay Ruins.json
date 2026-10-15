@@ -1,0 +1,109 @@
+{
+    "blocks": [
+        {
+            "id": "part-0",
+            "x": 8,
+            "y": 1,
+            "z": 8,
+            "posX": 2.0,
+            "posY": 0.5,
+            "posZ": 2.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "WorldBlueprints/Parts/Structure_8x1x8",
+            "cargo": []
+        },
+        {
+            "id": "part-1",
+            "x": 2,
+            "y": 3,
+            "z": 5,
+            "posX": -1.0,
+            "posY": 2.5,
+            "posZ": 2.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "WorldBlueprints/Parts/Structure_2x3x5",
+            "cargo": []
+        },
+        {
+            "id": "part-2",
+            "x": 4,
+            "y": 1,
+            "z": 2,
+            "posX": 3.0,
+            "posY": 1.5,
+            "posZ": 5.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "WorldBlueprints/Parts/Structure_4x1x2",
+            "cargo": []
+        },
+        {
+            "id": "part-3",
+            "x": 2,
+            "y": 8,
+            "z": 2,
+            "posX": 2.0,
+            "posY": 5.0,
+            "posZ": 2.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "WorldBlueprints/Parts/Structure_2x8x2",
+            "cargo": []
+        },
+        {
+            "id": "part-4",
+            "x": 1,
+            "y": 1,
+            "z": 1,
+            "posX": 2.5,
+            "posY": 9.5,
+            "posZ": 2.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Blocks/PowerTransmissionDevice",
+            "cargo": []
+        },
+        {
+            "id": "part-5",
+            "x": 1,
+            "y": 1,
+            "z": 1,
+            "posX": 4.5,
+            "posY": 1.5,
+            "posZ": 0.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Blocks/TechnologyHold",
+            "cargo": [
+                {
+                    "kind": 2,
+                    "resourcePath": "",
+                    "amount": 12
+                }
+            ]
+        }
+    ],
+    "foundation": {
+        "width": 8,
+        "length": 8
+    },
+    "outpost": {
+        "enabled": false,
+        "garrison": [],
+        "activationDistance": 120.0
+    }
+}

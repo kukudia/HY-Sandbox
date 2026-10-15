@@ -54,6 +54,7 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
     private bool finished;
     private bool captureImages;
     private bool validateEnemies;
+    private bool validateOutposts;
     private bool validateCombat;
     private bool validateReturn;
     private string flightBlueprint;
@@ -75,6 +76,7 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
         checks.reportPath = args[index + 1];
         checks.captureImages = Array.IndexOf(args, "-world-smoke-capture") >= 0;
         checks.validateEnemies = Array.IndexOf(args, "-world-smoke-enemies") >= 0;
+        checks.validateOutposts = Array.IndexOf(args, "-world-smoke-outposts") >= 0;
         checks.validateCombat = Array.IndexOf(args, "-world-smoke-combat") >= 0;
         checks.validateReturn = Array.IndexOf(args, "-world-smoke-return") >= 0;
         try
@@ -249,6 +251,23 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
             Check(
                 Physics.Raycast(player.transform.position + Vector3.up * 2f, Vector3.down, 100f),
                 "spawn has real terrain collision");
+            if (validateOutposts)
+            {
+                Next("outpost-encounter");
+                IEnumerator outpost = OutpostPlayerChecks.Run(session, player.GetComponent<ControlUnit>(), Check);
+                try
+                {
+                    while (outpost.MoveNext())
+                    {
+                        yield return outpost.Current;
+                    }
+                }
+                finally
+                {
+                    (outpost as IDisposable)?.Dispose();
+                }
+            }
+
             if (validateEnemies)
             {
                 Next("enemy-blueprint");

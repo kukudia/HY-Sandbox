@@ -1,0 +1,133 @@
+{
+    "status": "passed",
+    "graphics": "Direct3D11",
+    "seed": 14721,
+    "buildings": 2,
+    "blocks": 82,
+    "travelStart": {
+        "x": 16.0,
+        "y": 11.0,
+        "z": 16.0
+    },
+    "travelEnd": {
+        "x": 216.0,
+        "y": 11.0,
+        "z": 16.0
+    },
+    "memoryBytes": 201127754,
+    "requestedCycles": 1,
+    "completedCycles": 1,
+    "cycleMemoryBytes": [
+        201127754
+    ],
+    "cycleSeeds": [
+        14721
+    ],
+    "checks": [
+        "Main starts with world session",
+        "startup mask stays opaque during construct restoration",
+        "construct load exposes bounded progress",
+        "world generation remains valid",
+        "opaque loading mask renders while waiting or enabling",
+        "loading reaches completion",
+        "initial 81 terrain columns loaded",
+        "Player creates buildings from blueprint library",
+        "Player loads external blueprint library",
+        "spawn has real terrain collision",
+        "Legacy EnemySpawner is disabled during play",
+        "Generated world contains authored enemy outposts",
+        "Authored finite garrison deploys through production director",
+        "Live defender retains stable site and slot identity",
+        "Outpost defender survives natural AI physics interval",
+        "Outpost defender uses actual moving AI rather than a static decoration",
+        "Damaged defender remains tracked after block regroup",
+        "Far live defender hibernates without being marked defeated",
+        "Unloading is not a kill",
+        "Live defender returns when revisiting streamed terrain",
+        "Revisit preserves defender module identity and damage",
+        "Cockpit defeat permanently consumes slot for this expedition: guard-0",
+        "Cockpit defeat permanently consumes slot for this expedition: guard-1",
+        "Revisit never refreshes defeated garrison",
+        "Defeated slots have no replacement enemy",
+        "Outpost HUD can show cleared encounter state",
+        "session stays playing",
+        "Player crosses multiple chunk boundaries",
+        "travel retains terrain under player",
+        "loaded terrain remains bounded",
+        "exit discards world and prepares fresh session",
+        "second preparation completes"
+    ],
+    "errors": [],
+    "phases": [
+        {
+            "name": "startup",
+            "frames": 1042,
+            "medianMs": 8.335590362548829,
+            "p95Ms": 8.649826049804688,
+            "p99Ms": 8.769035339355469,
+            "over50Ms": 1,
+            "maxMs": 123.14677429199219,
+            "totalMs": 8834.1513671875
+        },
+        {
+            "name": "loading-and-entry",
+            "frames": 6,
+            "medianMs": 10.448455810546875,
+            "p95Ms": 13.063430786132813,
+            "p99Ms": 13.063430786132813,
+            "over50Ms": 0,
+            "maxMs": 29.603958129882814,
+            "totalMs": 78.0782699584961
+        },
+        {
+            "name": "outpost-encounter",
+            "frames": 2008,
+            "medianMs": 8.327484130859375,
+            "p95Ms": 9.22393798828125,
+            "p99Ms": 13.322830200195313,
+            "over50Ms": 2,
+            "maxMs": 73.57215881347656,
+            "totalMs": 16990.763671875
+        },
+        {
+            "name": "idle",
+            "frames": 360,
+            "medianMs": 8.331298828125,
+            "p95Ms": 8.724212646484375,
+            "p99Ms": 8.794784545898438,
+            "over50Ms": 0,
+            "maxMs": 8.939743041992188,
+            "totalMs": 3000.6064453125
+        },
+        {
+            "name": "travel",
+            "frames": 420,
+            "medianMs": 8.331298828125,
+            "p95Ms": 8.81195068359375,
+            "p99Ms": 8.914947509765625,
+            "over50Ms": 0,
+            "maxMs": 22.07183837890625,
+            "totalMs": 3508.939697265625
+        },
+        {
+            "name": "exit",
+            "frames": 1,
+            "medianMs": 46.817779541015628,
+            "p95Ms": 46.817779541015628,
+            "p99Ms": 46.817779541015628,
+            "over50Ms": 0,
+            "maxMs": 46.817779541015628,
+            "totalMs": 46.817779541015628
+        },
+        {
+            "name": "reprepare",
+            "frames": 1044,
+            "medianMs": 8.331298828125,
+            "p95Ms": 8.6822509765625,
+            "p99Ms": 8.81195068359375,
+            "over50Ms": 0,
+            "maxMs": 18.16558837890625,
+            "totalMs": 8713.2529296875
+        }
+    ]
+}

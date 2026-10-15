@@ -1,0 +1,145 @@
+{
+    "blocks": [
+        {
+            "id": "part-0",
+            "x": 12,
+            "y": 1,
+            "z": 10,
+            "posX": 4.0,
+            "posY": 0.5,
+            "posZ": 3.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "WorldBlueprints/Parts/Structure_12x1x10",
+            "cargo": []
+        },
+        {
+            "id": "part-1",
+            "x": 1,
+            "y": 4,
+            "z": 9,
+            "posX": -1.5,
+            "posY": 3.0,
+            "posZ": 2.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "WorldBlueprints/Parts/Structure_1x4x9",
+            "cargo": []
+        },
+        {
+            "id": "part-2",
+            "x": 1,
+            "y": 4,
+            "z": 9,
+            "posX": 3.5,
+            "posY": 3.0,
+            "posZ": 2.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "WorldBlueprints/Parts/Structure_1x4x9",
+            "cargo": []
+        },
+        {
+            "id": "part-3",
+            "x": 1,
+            "y": 4,
+            "z": 9,
+            "posX": 8.5,
+            "posY": 3.0,
+            "posZ": 2.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "WorldBlueprints/Parts/Structure_1x4x9",
+            "cargo": []
+        },
+        {
+            "id": "part-4",
+            "x": 12,
+            "y": 1,
+            "z": 10,
+            "posX": 4.0,
+            "posY": 5.5,
+            "posZ": 2.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "WorldBlueprints/Parts/Structure_12x1x10",
+            "cargo": []
+        },
+        {
+            "id": "part-5",
+            "x": 1,
+            "y": 1,
+            "z": 1,
+            "posX": 0.5,
+            "posY": 1.5,
+            "posZ": 4.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Blocks/CoinHold",
+            "cargo": [
+                {
+                    "kind": 1,
+                    "resourcePath": "",
+                    "amount": 75
+                }
+            ]
+        },
+        {
+            "id": "part-6",
+            "x": 2,
+            "y": 2,
+            "z": 2,
+            "posX": 5.0,
+            "posY": 2.0,
+            "posZ": 5.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Blocks/CargoHold",
+            "cargo": [
+                {
+                    "kind": 0,
+                    "resourcePath": "Blocks/1x1x1",
+                    "amount": 8
+                }
+            ]
+        },
+        {
+            "id": "part-7",
+            "x": 1,
+            "y": 2,
+            "z": 1,
+            "posX": 4.5,
+            "posY": 2.0,
+            "posZ": -1.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Blocks/Door",
+            "cargo": []
+        }
+    ],
+    "foundation": {
+        "width": 12,
+        "length": 10
+    },
+    "outpost": {
+        "enabled": false,
+        "garrison": [],
+        "activationDistance": 120.0
+    }
+}

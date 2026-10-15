@@ -125,7 +125,8 @@ public class SaveManager : MonoBehaviour
         var data = new BlockDataList
         {
             blocks = cachedData.blocks,
-            foundation = foundation
+            foundation = foundation,
+            outpost = cachedData.outpost
         };
         File.WriteAllText(
             GetBuildingBlueprintPath(BuildManager.instance.CurrentBuildingBlueprintName),
@@ -141,6 +142,64 @@ public class SaveManager : MonoBehaviour
         {
             MainUIPanels.instance.ShowCreatePanel();
         }
+    }
+
+    public void SaveBuildingOutpost(EnemyOutpostData outpost)
+    {
+        if (BuildManager.instance == null || !BuildManager.instance.IsEditingBuildingBlueprint || BuildManager.instance.IsLoadingBlocks)
+        {
+            throw new System.InvalidOperationException("Wait until the building editor is ready.");
+        }
+
+        outpost?.Validate();
+        BlockDataList copy = JsonUtility.FromJson<BlockDataList>(JsonUtility.ToJson(cachedData));
+        copy.outpost = outpost;
+        string path = GetBuildingBlueprintPath(BuildManager.instance.CurrentBuildingBlueprintName);
+        string pending = path + ".pending";
+        File.WriteAllText(pending, JsonUtility.ToJson(copy, true));
+        if (File.Exists(path))
+        {
+            File.Replace(pending, path, null);
+        }
+        else
+        {
+            File.Move(pending, path);
+        }
+
+        cachedData.outpost = outpost;
+    }
+
+    public string CopyBundledBuilding(string template)
+    {
+        if (BuildManager.instance == null || !BuildManager.instance.IsEditingBuildingBlueprint || BuildManager.instance.IsLoadingBlocks)
+        {
+            throw new System.InvalidOperationException("Wait until the building editor is ready.");
+        }
+
+        TextAsset asset = Resources.Load<TextAsset>("WorldBlueprints/Buildings/" + template);
+        if (asset == null || template.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+        {
+            throw new System.InvalidOperationException("Building template not found.");
+        }
+
+        BlockDataList data = JsonUtility.FromJson<BlockDataList>(asset.text);
+        WorldBuildingValidation.ValidateBlueprint(data);
+        string name = template;
+        for (int i = 1; File.Exists(GetBuildingBlueprintPath(name)); i++)
+        {
+            name = template + " (" + i + ")";
+        }
+
+        using (var stream = new FileStream(GetBuildingBlueprintPath(name), FileMode.CreateNew, FileAccess.Write))
+        {
+            using (var writer = new StreamWriter(stream))
+            {
+                writer.Write(JsonUtility.ToJson(data, true));
+            }
+        }
+
+        GetAllBuildingBlueprintNames();
+        return name;
     }
 
     public void GetAllEnemyBlueprintNames()

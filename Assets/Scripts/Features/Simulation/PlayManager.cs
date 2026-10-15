@@ -28,7 +28,6 @@ public class PlayManager : MonoBehaviour
     public float horizontalVelocity;
     public bool showConnectors = true;
     public bool showLabel = true;
-    private EnemySpawner enemySpawner;
     private float _lastGroupCleanupCheckTime;
     private RuntimeGroupBuilder _groupBuilder;
     private readonly PlayBlockSelection _selection = new PlayBlockSelection();
@@ -127,7 +126,7 @@ public class PlayManager : MonoBehaviour
         BuildManager.instance.DeselectBlock();
         BuildManager.instance.enabled = false;
         playMode = true;
-        EnsureEnemySpawner().BeginPlayMode(blocksParent);
+        // World outposts own finite garrisons; the legacy timer spawner is disabled.
     }
 
     public bool CanStartPlay(out string reason)
@@ -342,23 +341,5 @@ public class PlayManager : MonoBehaviour
         }
 
         return allControlUnits;
-    }
-
-    private EnemySpawner EnsureEnemySpawner()
-    {
-        if (enemySpawner != null)
-        {
-            return enemySpawner;
-        }
-
-        enemySpawner = Object.FindFirstObjectByType<EnemySpawner>();
-        if (enemySpawner != null)
-        {
-            return enemySpawner;
-        }
-
-        GameObject spawnerObject = new GameObject("EnemySpawner");
-        enemySpawner = spawnerObject.AddComponent<EnemySpawner>();
-        return enemySpawner;
     }
 }

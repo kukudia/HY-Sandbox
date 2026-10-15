@@ -1,0 +1,888 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1886461495187055361
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1373122294872793168}
+  m_Layer: 0
+  m_Name: Center
+  m_TagString: Untagged
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1373122294872793168
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886461495187055361}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4409537285921158749}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2530410917990478508
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4409537285921158749}
+  - component: {fileID: 3666349737296046987}
+  - component: {fileID: 212998258510753684}
+  - component: {fileID: 1835852373087624790}
+  - component: {fileID: 785818560844735702}
+  m_Layer: 3
+  m_Name: Structure_2x3x5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4409537285921158749
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2530410917990478508}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1373122294872793168}
+  - {fileID: 728271676987550536}
+  - {fileID: 2986655055574555903}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3666349737296046987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2530410917990478508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d183966293cfd84899367bf876635ec, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  canSpawnConnector: 1
+  canBeDeleted: 1
+  canEditInfo: 0
+  x: 2
+  y: 3
+  z: 5
+  cost: 0
+  density: 1
+  mass: 30
+  _useCustomMass: 0
+  _massSettingsInitialized: 1
+  collisionSpeedThreshold: 5
+  damageMultiplier: 10
+  explosionForce: 500
+  explosionRadius: 5
+  explosionDisconnectProbability: 0.35
+  resourcePath: WorldBlueprints/Parts/Structure_2x3x5
+  info: 'Size: 2x3x5
+
+    Mass: 30 kg
+
+    Durability: 912.28'
+  connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
+  connectorParent: {fileID: 728271676987550536}
+  raycastCollider: {fileID: 1835852373087624790}
+  connectors:
+  - name: Up 1
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 1.5, z: -2}
+    normal: {x: 0, y: 1, z: 0}
+    order: 1
+    connector: {fileID: 0}
+  - name: Up 2
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 1.5, z: -1}
+    normal: {x: 0, y: 1, z: 0}
+    order: 2
+    connector: {fileID: 0}
+  - name: Up 3
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 1.5, z: 0}
+    normal: {x: 0, y: 1, z: 0}
+    order: 3
+    connector: {fileID: 0}
+  - name: Up 4
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 1.5, z: 1}
+    normal: {x: 0, y: 1, z: 0}
+    order: 4
+    connector: {fileID: 0}
+  - name: Up 5
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 1.5, z: 2}
+    normal: {x: 0, y: 1, z: 0}
+    order: 5
+    connector: {fileID: 0}
+  - name: Up 6
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 1.5, z: -2}
+    normal: {x: 0, y: 1, z: 0}
+    order: 6
+    connector: {fileID: 0}
+  - name: Up 7
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 1.5, z: -1}
+    normal: {x: 0, y: 1, z: 0}
+    order: 7
+    connector: {fileID: 0}
+  - name: Up 8
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 1.5, z: 0}
+    normal: {x: 0, y: 1, z: 0}
+    order: 8
+    connector: {fileID: 0}
+  - name: Up 9
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 1.5, z: 1}
+    normal: {x: 0, y: 1, z: 0}
+    order: 9
+    connector: {fileID: 0}
+  - name: Up 10
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 1.5, z: 2}
+    normal: {x: 0, y: 1, z: 0}
+    order: 10
+    connector: {fileID: 0}
+  - name: Down 1
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -1.5, z: -2}
+    normal: {x: 0, y: -1, z: 0}
+    order: 1
+    connector: {fileID: 0}
+  - name: Down 2
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -1.5, z: -1}
+    normal: {x: 0, y: -1, z: 0}
+    order: 2
+    connector: {fileID: 0}
+  - name: Down 3
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -1.5, z: 0}
+    normal: {x: 0, y: -1, z: 0}
+    order: 3
+    connector: {fileID: 0}
+  - name: Down 4
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -1.5, z: 1}
+    normal: {x: 0, y: -1, z: 0}
+    order: 4
+    connector: {fileID: 0}
+  - name: Down 5
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -1.5, z: 2}
+    normal: {x: 0, y: -1, z: 0}
+    order: 5
+    connector: {fileID: 0}
+  - name: Down 6
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -1.5, z: -2}
+    normal: {x: 0, y: -1, z: 0}
+    order: 6
+    connector: {fileID: 0}
+  - name: Down 7
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -1.5, z: -1}
+    normal: {x: 0, y: -1, z: 0}
+    order: 7
+    connector: {fileID: 0}
+  - name: Down 8
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -1.5, z: 0}
+    normal: {x: 0, y: -1, z: 0}
+    order: 8
+    connector: {fileID: 0}
+  - name: Down 9
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -1.5, z: 1}
+    normal: {x: 0, y: -1, z: 0}
+    order: 9
+    connector: {fileID: 0}
+  - name: Down 10
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -1.5, z: 2}
+    normal: {x: 0, y: -1, z: 0}
+    order: 10
+    connector: {fileID: 0}
+  - name: Forward 1
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: -0.5, y: -1, z: 2.5}
+    normal: {x: 0, y: 0, z: 1}
+    order: 1
+    connector: {fileID: 0}
+  - name: Forward 2
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: -0.5, y: 0, z: 2.5}
+    normal: {x: 0, y: 0, z: 1}
+    order: 2
+    connector: {fileID: 0}
+  - name: Forward 3
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: -0.5, y: 1, z: 2.5}
+    normal: {x: 0, y: 0, z: 1}
+    order: 3
+    connector: {fileID: 0}
+  - name: Forward 4
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: 0.5, y: -1, z: 2.5}
+    normal: {x: 0, y: 0, z: 1}
+    order: 4
+    connector: {fileID: 0}
+  - name: Forward 5
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: 0.5, y: 0, z: 2.5}
+    normal: {x: 0, y: 0, z: 1}
+    order: 5
+    connector: {fileID: 0}
+  - name: Forward 6
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: 0.5, y: 1, z: 2.5}
+    normal: {x: 0, y: 0, z: 1}
+    order: 6
+    connector: {fileID: 0}
+  - name: Back 1
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: -0.5, y: -1, z: -2.5}
+    normal: {x: 0, y: 0, z: -1}
+    order: 1
+    connector: {fileID: 0}
+  - name: Back 2
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: -0.5, y: 0, z: -2.5}
+    normal: {x: 0, y: 0, z: -1}
+    order: 2
+    connector: {fileID: 0}
+  - name: Back 3
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: -0.5, y: 1, z: -2.5}
+    normal: {x: 0, y: 0, z: -1}
+    order: 3
+    connector: {fileID: 0}
+  - name: Back 4
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: 0.5, y: -1, z: -2.5}
+    normal: {x: 0, y: 0, z: -1}
+    order: 4
+    connector: {fileID: 0}
+  - name: Back 5
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: 0.5, y: 0, z: -2.5}
+    normal: {x: 0, y: 0, z: -1}
+    order: 5
+    connector: {fileID: 0}
+  - name: Back 6
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: 0.5, y: 1, z: -2.5}
+    normal: {x: 0, y: 0, z: -1}
+    order: 6
+    connector: {fileID: 0}
+  - name: Left 1
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -1, y: -1, z: -2}
+    normal: {x: -1, y: 0, z: 0}
+    order: 1
+    connector: {fileID: 0}
+  - name: Left 2
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -1, y: -1, z: -1}
+    normal: {x: -1, y: 0, z: 0}
+    order: 2
+    connector: {fileID: 0}
+  - name: Left 3
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -1, y: -1, z: 0}
+    normal: {x: -1, y: 0, z: 0}
+    order: 3
+    connector: {fileID: 0}
+  - name: Left 4
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -1, y: -1, z: 1}
+    normal: {x: -1, y: 0, z: 0}
+    order: 4
+    connector: {fileID: 0}
+  - name: Left 5
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -1, y: -1, z: 2}
+    normal: {x: -1, y: 0, z: 0}
+    order: 5
+    connector: {fileID: 0}
+  - name: Left 6
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -1, y: 0, z: -2}
+    normal: {x: -1, y: 0, z: 0}
+    order: 6
+    connector: {fileID: 0}
+  - name: Left 7
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -1, y: 0, z: -1}
+    normal: {x: -1, y: 0, z: 0}
+    order: 7
+    connector: {fileID: 0}
+  - name: Left 8
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -1, y: 0, z: 0}
+    normal: {x: -1, y: 0, z: 0}
+    order: 8
+    connector: {fileID: 0}
+  - name: Left 9
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -1, y: 0, z: 1}
+    normal: {x: -1, y: 0, z: 0}
+    order: 9
+    connector: {fileID: 0}
+  - name: Left 10
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -1, y: 0, z: 2}
+    normal: {x: -1, y: 0, z: 0}
+    order: 10
+    connector: {fileID: 0}
+  - name: Left 11
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -1, y: 1, z: -2}
+    normal: {x: -1, y: 0, z: 0}
+    order: 11
+    connector: {fileID: 0}
+  - name: Left 12
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -1, y: 1, z: -1}
+    normal: {x: -1, y: 0, z: 0}
+    order: 12
+    connector: {fileID: 0}
+  - name: Left 13
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -1, y: 1, z: 0}
+    normal: {x: -1, y: 0, z: 0}
+    order: 13
+    connector: {fileID: 0}
+  - name: Left 14
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -1, y: 1, z: 1}
+    normal: {x: -1, y: 0, z: 0}
+    order: 14
+    connector: {fileID: 0}
+  - name: Left 15
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -1, y: 1, z: 2}
+    normal: {x: -1, y: 0, z: 0}
+    order: 15
+    connector: {fileID: 0}
+  - name: Right 1
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 1, y: -1, z: -2}
+    normal: {x: 1, y: 0, z: 0}
+    order: 1
+    connector: {fileID: 0}
+  - name: Right 2
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 1, y: -1, z: -1}
+    normal: {x: 1, y: 0, z: 0}
+    order: 2
+    connector: {fileID: 0}
+  - name: Right 3
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 1, y: -1, z: 0}
+    normal: {x: 1, y: 0, z: 0}
+    order: 3
+    connector: {fileID: 0}
+  - name: Right 4
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 1, y: -1, z: 1}
+    normal: {x: 1, y: 0, z: 0}
+    order: 4
+    connector: {fileID: 0}
+  - name: Right 5
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 1, y: -1, z: 2}
+    normal: {x: 1, y: 0, z: 0}
+    order: 5
+    connector: {fileID: 0}
+  - name: Right 6
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 1, y: 0, z: -2}
+    normal: {x: 1, y: 0, z: 0}
+    order: 6
+    connector: {fileID: 0}
+  - name: Right 7
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 1, y: 0, z: -1}
+    normal: {x: 1, y: 0, z: 0}
+    order: 7
+    connector: {fileID: 0}
+  - name: Right 8
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 1, y: 0, z: 0}
+    normal: {x: 1, y: 0, z: 0}
+    order: 8
+    connector: {fileID: 0}
+  - name: Right 9
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 1, y: 0, z: 1}
+    normal: {x: 1, y: 0, z: 0}
+    order: 9
+    connector: {fileID: 0}
+  - name: Right 10
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 1, y: 0, z: 2}
+    normal: {x: 1, y: 0, z: 0}
+    order: 10
+    connector: {fileID: 0}
+  - name: Right 11
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 1, y: 1, z: -2}
+    normal: {x: 1, y: 0, z: 0}
+    order: 11
+    connector: {fileID: 0}
+  - name: Right 12
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 1, y: 1, z: -1}
+    normal: {x: 1, y: 0, z: 0}
+    order: 12
+    connector: {fileID: 0}
+  - name: Right 13
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 1, y: 1, z: 0}
+    normal: {x: 1, y: 0, z: 0}
+    order: 13
+    connector: {fileID: 0}
+  - name: Right 14
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 1, y: 1, z: 1}
+    normal: {x: 1, y: 0, z: 0}
+    order: 14
+    connector: {fileID: 0}
+  - name: Right 15
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 1, y: 1, z: 2}
+    normal: {x: 1, y: 0, z: 0}
+    order: 15
+    connector: {fileID: 0}
+  neighbors: []
+  canRotate: 1
+  canExplode: 0
+  showConnectors: 1
+  showLabel: 0
+  uniqueId:
+--- !u!114 &212998258510753684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2530410917990478508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f887aec31b46cb74db9436ab89ebf777, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  maxDurability: 912.2813
+  collisionSpeedThreshold: 2
+  damageMultiplier: 0.1
+  _collisionDamageScale: 1
+  _maximumCollisionHealthFraction: 1
+  _collisionDamageCooldown: 0
+  debugLog: 1
+  currentDurability: 0
+--- !u!65 &1835852373087624790
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2530410917990478508}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.9, y: 2.9, z: 4.9}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &785818560844735702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2530410917990478508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d918074d82ae8274ab6fa09613242220, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Info
+  blockName: 1x1x1
+  description:
+  connectionStatus: 0
+  durabilityStatus: 0
+  powerStatus: 0
+  iconHeightOffset: 0.25
+  _fadeSpeed: 7
+--- !u!1 &4930686433279205824
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3782627896188350228}
+  m_Layer: 0
+  m_Name: LOD0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3782627896188350228
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4930686433279205824}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5648770188548653785}
+  m_Father: {fileID: 4106391965378192632}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5854189560402016494
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 728271676987550536}
+  m_Layer: 3
+  m_Name: Connectors
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &728271676987550536
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5854189560402016494}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4409537285921158749}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7746466971668605434
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5648770188548653785}
+  - component: {fileID: 3925923469844534292}
+  - component: {fileID: 490346944947999096}
+  m_Layer: 0
+  m_Name: Uniform Chassis
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5648770188548653785
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7746466971668605434}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.96, y: 0.96, z: 0.96}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3782627896188350228}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &3925923469844534292
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7746466971668605434}
+  m_Mesh: {fileID: 4300000, guid: 7d08694de0f5d8a4c9cae4818feb0530, type: 2}
+--- !u!23 &490346944947999096
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7746466971668605434}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 0636ed19daf2302418fdf6fab1e1d2d1, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &7916296439976728694
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2986655055574555903}
+  m_Layer: 0
+  m_Name: Model
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2986655055574555903
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7916296439976728694}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2, y: 3, z: 5}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4106391965378192632}
+  m_Father: {fileID: 4409537285921158749}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8780680742601841400
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4106391965378192632}
+  m_Layer: 0
+  m_Name: IndustrialVisual
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4106391965378192632
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8780680742601841400}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3782627896188350228}
+  m_Father: {fileID: 2986655055574555903}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

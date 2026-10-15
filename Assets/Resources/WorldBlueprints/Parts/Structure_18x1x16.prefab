@@ -1,0 +1,5544 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &171087218502703501
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7038557463148667212}
+  m_Layer: 0
+  m_Name: Center
+  m_TagString: Untagged
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7038557463148667212
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 171087218502703501}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4859380875920600749}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2371367224221272928
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7563765611656771966}
+  - component: {fileID: 3016539636737676545}
+  - component: {fileID: 7901386286321212981}
+  m_Layer: 0
+  m_Name: Uniform Chassis
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7563765611656771966
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2371367224221272928}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.96, y: 0.96, z: 0.96}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8008531864251878786}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &3016539636737676545
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2371367224221272928}
+  m_Mesh: {fileID: 4300000, guid: 7d08694de0f5d8a4c9cae4818feb0530, type: 2}
+--- !u!23 &7901386286321212981
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2371367224221272928}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 0636ed19daf2302418fdf6fab1e1d2d1, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &2787070919439853489
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1875130130451358484}
+  m_Layer: 0
+  m_Name: Model
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1875130130451358484
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2787070919439853489}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 18, y: 1, z: 16}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1921688121931645608}
+  m_Father: {fileID: 4859380875920600749}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7812660265105057679
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8008531864251878786}
+  m_Layer: 0
+  m_Name: LOD0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8008531864251878786
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7812660265105057679}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7563765611656771966}
+  m_Father: {fileID: 1921688121931645608}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8544157977851504583
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8673628937274595606}
+  m_Layer: 3
+  m_Name: Connectors
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8673628937274595606
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8544157977851504583}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4859380875920600749}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &9093036129323786169
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4859380875920600749}
+  - component: {fileID: 6952141884445621588}
+  - component: {fileID: 451725038772402276}
+  - component: {fileID: 4548989685497105641}
+  - component: {fileID: 5931499990908901222}
+  m_Layer: 3
+  m_Name: Structure_18x1x16
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4859380875920600749
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9093036129323786169}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7038557463148667212}
+  - {fileID: 8673628937274595606}
+  - {fileID: 1875130130451358484}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6952141884445621588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9093036129323786169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d183966293cfd84899367bf876635ec, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  canSpawnConnector: 1
+  canBeDeleted: 1
+  canEditInfo: 0
+  x: 18
+  y: 1
+  z: 16
+  cost: 0
+  density: 1
+  mass: 288
+  _useCustomMass: 0
+  _massSettingsInitialized: 1
+  collisionSpeedThreshold: 5
+  damageMultiplier: 10
+  explosionForce: 500
+  explosionRadius: 5
+  explosionDisconnectProbability: 0.35
+  resourcePath: WorldBlueprints/Parts/Structure_18x1x16
+  info: 'Size: 18x1x16
+
+    Mass: 288 kg
+
+    Durability: 3968.31'
+  connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
+  connectorParent: {fileID: 8673628937274595606}
+  raycastCollider: {fileID: 4548989685497105641}
+  connectors:
+  - name: Up 1
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -8.5, y: 0.5, z: -7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 1
+    connector: {fileID: 0}
+  - name: Up 2
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -8.5, y: 0.5, z: -6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 2
+    connector: {fileID: 0}
+  - name: Up 3
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -8.5, y: 0.5, z: -5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 3
+    connector: {fileID: 0}
+  - name: Up 4
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -8.5, y: 0.5, z: -4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 4
+    connector: {fileID: 0}
+  - name: Up 5
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -8.5, y: 0.5, z: -3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 5
+    connector: {fileID: 0}
+  - name: Up 6
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -8.5, y: 0.5, z: -2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 6
+    connector: {fileID: 0}
+  - name: Up 7
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -8.5, y: 0.5, z: -1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 7
+    connector: {fileID: 0}
+  - name: Up 8
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -8.5, y: 0.5, z: -0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 8
+    connector: {fileID: 0}
+  - name: Up 9
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -8.5, y: 0.5, z: 0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 9
+    connector: {fileID: 0}
+  - name: Up 10
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -8.5, y: 0.5, z: 1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 10
+    connector: {fileID: 0}
+  - name: Up 11
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -8.5, y: 0.5, z: 2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 11
+    connector: {fileID: 0}
+  - name: Up 12
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -8.5, y: 0.5, z: 3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 12
+    connector: {fileID: 0}
+  - name: Up 13
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -8.5, y: 0.5, z: 4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 13
+    connector: {fileID: 0}
+  - name: Up 14
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -8.5, y: 0.5, z: 5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 14
+    connector: {fileID: 0}
+  - name: Up 15
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -8.5, y: 0.5, z: 6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 15
+    connector: {fileID: 0}
+  - name: Up 16
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -8.5, y: 0.5, z: 7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 16
+    connector: {fileID: 0}
+  - name: Up 17
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -7.5, y: 0.5, z: -7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 17
+    connector: {fileID: 0}
+  - name: Up 18
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -7.5, y: 0.5, z: -6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 18
+    connector: {fileID: 0}
+  - name: Up 19
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -7.5, y: 0.5, z: -5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 19
+    connector: {fileID: 0}
+  - name: Up 20
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -7.5, y: 0.5, z: -4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 20
+    connector: {fileID: 0}
+  - name: Up 21
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -7.5, y: 0.5, z: -3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 21
+    connector: {fileID: 0}
+  - name: Up 22
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -7.5, y: 0.5, z: -2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 22
+    connector: {fileID: 0}
+  - name: Up 23
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -7.5, y: 0.5, z: -1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 23
+    connector: {fileID: 0}
+  - name: Up 24
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -7.5, y: 0.5, z: -0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 24
+    connector: {fileID: 0}
+  - name: Up 25
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -7.5, y: 0.5, z: 0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 25
+    connector: {fileID: 0}
+  - name: Up 26
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -7.5, y: 0.5, z: 1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 26
+    connector: {fileID: 0}
+  - name: Up 27
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -7.5, y: 0.5, z: 2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 27
+    connector: {fileID: 0}
+  - name: Up 28
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -7.5, y: 0.5, z: 3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 28
+    connector: {fileID: 0}
+  - name: Up 29
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -7.5, y: 0.5, z: 4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 29
+    connector: {fileID: 0}
+  - name: Up 30
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -7.5, y: 0.5, z: 5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 30
+    connector: {fileID: 0}
+  - name: Up 31
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -7.5, y: 0.5, z: 6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 31
+    connector: {fileID: 0}
+  - name: Up 32
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -7.5, y: 0.5, z: 7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 32
+    connector: {fileID: 0}
+  - name: Up 33
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -6.5, y: 0.5, z: -7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 33
+    connector: {fileID: 0}
+  - name: Up 34
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -6.5, y: 0.5, z: -6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 34
+    connector: {fileID: 0}
+  - name: Up 35
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -6.5, y: 0.5, z: -5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 35
+    connector: {fileID: 0}
+  - name: Up 36
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -6.5, y: 0.5, z: -4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 36
+    connector: {fileID: 0}
+  - name: Up 37
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -6.5, y: 0.5, z: -3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 37
+    connector: {fileID: 0}
+  - name: Up 38
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -6.5, y: 0.5, z: -2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 38
+    connector: {fileID: 0}
+  - name: Up 39
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -6.5, y: 0.5, z: -1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 39
+    connector: {fileID: 0}
+  - name: Up 40
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -6.5, y: 0.5, z: -0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 40
+    connector: {fileID: 0}
+  - name: Up 41
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -6.5, y: 0.5, z: 0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 41
+    connector: {fileID: 0}
+  - name: Up 42
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -6.5, y: 0.5, z: 1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 42
+    connector: {fileID: 0}
+  - name: Up 43
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -6.5, y: 0.5, z: 2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 43
+    connector: {fileID: 0}
+  - name: Up 44
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -6.5, y: 0.5, z: 3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 44
+    connector: {fileID: 0}
+  - name: Up 45
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -6.5, y: 0.5, z: 4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 45
+    connector: {fileID: 0}
+  - name: Up 46
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -6.5, y: 0.5, z: 5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 46
+    connector: {fileID: 0}
+  - name: Up 47
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -6.5, y: 0.5, z: 6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 47
+    connector: {fileID: 0}
+  - name: Up 48
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -6.5, y: 0.5, z: 7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 48
+    connector: {fileID: 0}
+  - name: Up 49
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -5.5, y: 0.5, z: -7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 49
+    connector: {fileID: 0}
+  - name: Up 50
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -5.5, y: 0.5, z: -6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 50
+    connector: {fileID: 0}
+  - name: Up 51
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -5.5, y: 0.5, z: -5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 51
+    connector: {fileID: 0}
+  - name: Up 52
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -5.5, y: 0.5, z: -4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 52
+    connector: {fileID: 0}
+  - name: Up 53
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -5.5, y: 0.5, z: -3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 53
+    connector: {fileID: 0}
+  - name: Up 54
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -5.5, y: 0.5, z: -2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 54
+    connector: {fileID: 0}
+  - name: Up 55
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -5.5, y: 0.5, z: -1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 55
+    connector: {fileID: 0}
+  - name: Up 56
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -5.5, y: 0.5, z: -0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 56
+    connector: {fileID: 0}
+  - name: Up 57
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -5.5, y: 0.5, z: 0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 57
+    connector: {fileID: 0}
+  - name: Up 58
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -5.5, y: 0.5, z: 1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 58
+    connector: {fileID: 0}
+  - name: Up 59
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -5.5, y: 0.5, z: 2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 59
+    connector: {fileID: 0}
+  - name: Up 60
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -5.5, y: 0.5, z: 3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 60
+    connector: {fileID: 0}
+  - name: Up 61
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -5.5, y: 0.5, z: 4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 61
+    connector: {fileID: 0}
+  - name: Up 62
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -5.5, y: 0.5, z: 5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 62
+    connector: {fileID: 0}
+  - name: Up 63
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -5.5, y: 0.5, z: 6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 63
+    connector: {fileID: 0}
+  - name: Up 64
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -5.5, y: 0.5, z: 7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 64
+    connector: {fileID: 0}
+  - name: Up 65
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -4.5, y: 0.5, z: -7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 65
+    connector: {fileID: 0}
+  - name: Up 66
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -4.5, y: 0.5, z: -6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 66
+    connector: {fileID: 0}
+  - name: Up 67
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -4.5, y: 0.5, z: -5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 67
+    connector: {fileID: 0}
+  - name: Up 68
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -4.5, y: 0.5, z: -4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 68
+    connector: {fileID: 0}
+  - name: Up 69
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -4.5, y: 0.5, z: -3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 69
+    connector: {fileID: 0}
+  - name: Up 70
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -4.5, y: 0.5, z: -2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 70
+    connector: {fileID: 0}
+  - name: Up 71
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -4.5, y: 0.5, z: -1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 71
+    connector: {fileID: 0}
+  - name: Up 72
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -4.5, y: 0.5, z: -0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 72
+    connector: {fileID: 0}
+  - name: Up 73
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -4.5, y: 0.5, z: 0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 73
+    connector: {fileID: 0}
+  - name: Up 74
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -4.5, y: 0.5, z: 1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 74
+    connector: {fileID: 0}
+  - name: Up 75
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -4.5, y: 0.5, z: 2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 75
+    connector: {fileID: 0}
+  - name: Up 76
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -4.5, y: 0.5, z: 3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 76
+    connector: {fileID: 0}
+  - name: Up 77
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -4.5, y: 0.5, z: 4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 77
+    connector: {fileID: 0}
+  - name: Up 78
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -4.5, y: 0.5, z: 5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 78
+    connector: {fileID: 0}
+  - name: Up 79
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -4.5, y: 0.5, z: 6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 79
+    connector: {fileID: 0}
+  - name: Up 80
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -4.5, y: 0.5, z: 7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 80
+    connector: {fileID: 0}
+  - name: Up 81
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -3.5, y: 0.5, z: -7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 81
+    connector: {fileID: 0}
+  - name: Up 82
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -3.5, y: 0.5, z: -6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 82
+    connector: {fileID: 0}
+  - name: Up 83
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -3.5, y: 0.5, z: -5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 83
+    connector: {fileID: 0}
+  - name: Up 84
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -3.5, y: 0.5, z: -4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 84
+    connector: {fileID: 0}
+  - name: Up 85
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -3.5, y: 0.5, z: -3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 85
+    connector: {fileID: 0}
+  - name: Up 86
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -3.5, y: 0.5, z: -2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 86
+    connector: {fileID: 0}
+  - name: Up 87
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -3.5, y: 0.5, z: -1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 87
+    connector: {fileID: 0}
+  - name: Up 88
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -3.5, y: 0.5, z: -0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 88
+    connector: {fileID: 0}
+  - name: Up 89
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -3.5, y: 0.5, z: 0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 89
+    connector: {fileID: 0}
+  - name: Up 90
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -3.5, y: 0.5, z: 1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 90
+    connector: {fileID: 0}
+  - name: Up 91
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -3.5, y: 0.5, z: 2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 91
+    connector: {fileID: 0}
+  - name: Up 92
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -3.5, y: 0.5, z: 3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 92
+    connector: {fileID: 0}
+  - name: Up 93
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -3.5, y: 0.5, z: 4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 93
+    connector: {fileID: 0}
+  - name: Up 94
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -3.5, y: 0.5, z: 5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 94
+    connector: {fileID: 0}
+  - name: Up 95
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -3.5, y: 0.5, z: 6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 95
+    connector: {fileID: 0}
+  - name: Up 96
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -3.5, y: 0.5, z: 7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 96
+    connector: {fileID: 0}
+  - name: Up 97
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -2.5, y: 0.5, z: -7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 97
+    connector: {fileID: 0}
+  - name: Up 98
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -2.5, y: 0.5, z: -6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 98
+    connector: {fileID: 0}
+  - name: Up 99
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -2.5, y: 0.5, z: -5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 99
+    connector: {fileID: 0}
+  - name: Up 100
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -2.5, y: 0.5, z: -4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 100
+    connector: {fileID: 0}
+  - name: Up 101
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -2.5, y: 0.5, z: -3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 101
+    connector: {fileID: 0}
+  - name: Up 102
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -2.5, y: 0.5, z: -2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 102
+    connector: {fileID: 0}
+  - name: Up 103
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -2.5, y: 0.5, z: -1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 103
+    connector: {fileID: 0}
+  - name: Up 104
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -2.5, y: 0.5, z: -0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 104
+    connector: {fileID: 0}
+  - name: Up 105
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -2.5, y: 0.5, z: 0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 105
+    connector: {fileID: 0}
+  - name: Up 106
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -2.5, y: 0.5, z: 1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 106
+    connector: {fileID: 0}
+  - name: Up 107
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -2.5, y: 0.5, z: 2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 107
+    connector: {fileID: 0}
+  - name: Up 108
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -2.5, y: 0.5, z: 3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 108
+    connector: {fileID: 0}
+  - name: Up 109
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -2.5, y: 0.5, z: 4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 109
+    connector: {fileID: 0}
+  - name: Up 110
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -2.5, y: 0.5, z: 5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 110
+    connector: {fileID: 0}
+  - name: Up 111
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -2.5, y: 0.5, z: 6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 111
+    connector: {fileID: 0}
+  - name: Up 112
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -2.5, y: 0.5, z: 7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 112
+    connector: {fileID: 0}
+  - name: Up 113
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -1.5, y: 0.5, z: -7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 113
+    connector: {fileID: 0}
+  - name: Up 114
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -1.5, y: 0.5, z: -6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 114
+    connector: {fileID: 0}
+  - name: Up 115
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -1.5, y: 0.5, z: -5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 115
+    connector: {fileID: 0}
+  - name: Up 116
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -1.5, y: 0.5, z: -4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 116
+    connector: {fileID: 0}
+  - name: Up 117
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -1.5, y: 0.5, z: -3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 117
+    connector: {fileID: 0}
+  - name: Up 118
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -1.5, y: 0.5, z: -2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 118
+    connector: {fileID: 0}
+  - name: Up 119
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -1.5, y: 0.5, z: -1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 119
+    connector: {fileID: 0}
+  - name: Up 120
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -1.5, y: 0.5, z: -0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 120
+    connector: {fileID: 0}
+  - name: Up 121
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -1.5, y: 0.5, z: 0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 121
+    connector: {fileID: 0}
+  - name: Up 122
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -1.5, y: 0.5, z: 1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 122
+    connector: {fileID: 0}
+  - name: Up 123
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -1.5, y: 0.5, z: 2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 123
+    connector: {fileID: 0}
+  - name: Up 124
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -1.5, y: 0.5, z: 3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 124
+    connector: {fileID: 0}
+  - name: Up 125
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -1.5, y: 0.5, z: 4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 125
+    connector: {fileID: 0}
+  - name: Up 126
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -1.5, y: 0.5, z: 5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 126
+    connector: {fileID: 0}
+  - name: Up 127
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -1.5, y: 0.5, z: 6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 127
+    connector: {fileID: 0}
+  - name: Up 128
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -1.5, y: 0.5, z: 7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 128
+    connector: {fileID: 0}
+  - name: Up 129
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 0.5, z: -7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 129
+    connector: {fileID: 0}
+  - name: Up 130
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 0.5, z: -6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 130
+    connector: {fileID: 0}
+  - name: Up 131
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 0.5, z: -5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 131
+    connector: {fileID: 0}
+  - name: Up 132
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 0.5, z: -4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 132
+    connector: {fileID: 0}
+  - name: Up 133
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 0.5, z: -3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 133
+    connector: {fileID: 0}
+  - name: Up 134
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 0.5, z: -2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 134
+    connector: {fileID: 0}
+  - name: Up 135
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 0.5, z: -1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 135
+    connector: {fileID: 0}
+  - name: Up 136
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 0.5, z: -0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 136
+    connector: {fileID: 0}
+  - name: Up 137
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 0.5, z: 0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 137
+    connector: {fileID: 0}
+  - name: Up 138
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 0.5, z: 1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 138
+    connector: {fileID: 0}
+  - name: Up 139
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 0.5, z: 2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 139
+    connector: {fileID: 0}
+  - name: Up 140
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 0.5, z: 3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 140
+    connector: {fileID: 0}
+  - name: Up 141
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 0.5, z: 4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 141
+    connector: {fileID: 0}
+  - name: Up 142
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 0.5, z: 5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 142
+    connector: {fileID: 0}
+  - name: Up 143
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 0.5, z: 6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 143
+    connector: {fileID: 0}
+  - name: Up 144
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: -0.5, y: 0.5, z: 7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 144
+    connector: {fileID: 0}
+  - name: Up 145
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 0.5, z: -7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 145
+    connector: {fileID: 0}
+  - name: Up 146
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 0.5, z: -6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 146
+    connector: {fileID: 0}
+  - name: Up 147
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 0.5, z: -5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 147
+    connector: {fileID: 0}
+  - name: Up 148
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 0.5, z: -4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 148
+    connector: {fileID: 0}
+  - name: Up 149
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 0.5, z: -3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 149
+    connector: {fileID: 0}
+  - name: Up 150
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 0.5, z: -2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 150
+    connector: {fileID: 0}
+  - name: Up 151
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 0.5, z: -1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 151
+    connector: {fileID: 0}
+  - name: Up 152
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 0.5, z: -0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 152
+    connector: {fileID: 0}
+  - name: Up 153
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 0.5, z: 0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 153
+    connector: {fileID: 0}
+  - name: Up 154
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 0.5, z: 1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 154
+    connector: {fileID: 0}
+  - name: Up 155
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 0.5, z: 2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 155
+    connector: {fileID: 0}
+  - name: Up 156
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 0.5, z: 3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 156
+    connector: {fileID: 0}
+  - name: Up 157
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 0.5, z: 4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 157
+    connector: {fileID: 0}
+  - name: Up 158
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 0.5, z: 5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 158
+    connector: {fileID: 0}
+  - name: Up 159
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 0.5, z: 6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 159
+    connector: {fileID: 0}
+  - name: Up 160
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 0.5, y: 0.5, z: 7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 160
+    connector: {fileID: 0}
+  - name: Up 161
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 1.5, y: 0.5, z: -7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 161
+    connector: {fileID: 0}
+  - name: Up 162
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 1.5, y: 0.5, z: -6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 162
+    connector: {fileID: 0}
+  - name: Up 163
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 1.5, y: 0.5, z: -5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 163
+    connector: {fileID: 0}
+  - name: Up 164
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 1.5, y: 0.5, z: -4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 164
+    connector: {fileID: 0}
+  - name: Up 165
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 1.5, y: 0.5, z: -3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 165
+    connector: {fileID: 0}
+  - name: Up 166
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 1.5, y: 0.5, z: -2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 166
+    connector: {fileID: 0}
+  - name: Up 167
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 1.5, y: 0.5, z: -1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 167
+    connector: {fileID: 0}
+  - name: Up 168
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 1.5, y: 0.5, z: -0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 168
+    connector: {fileID: 0}
+  - name: Up 169
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 1.5, y: 0.5, z: 0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 169
+    connector: {fileID: 0}
+  - name: Up 170
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 1.5, y: 0.5, z: 1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 170
+    connector: {fileID: 0}
+  - name: Up 171
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 1.5, y: 0.5, z: 2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 171
+    connector: {fileID: 0}
+  - name: Up 172
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 1.5, y: 0.5, z: 3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 172
+    connector: {fileID: 0}
+  - name: Up 173
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 1.5, y: 0.5, z: 4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 173
+    connector: {fileID: 0}
+  - name: Up 174
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 1.5, y: 0.5, z: 5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 174
+    connector: {fileID: 0}
+  - name: Up 175
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 1.5, y: 0.5, z: 6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 175
+    connector: {fileID: 0}
+  - name: Up 176
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 1.5, y: 0.5, z: 7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 176
+    connector: {fileID: 0}
+  - name: Up 177
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 2.5, y: 0.5, z: -7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 177
+    connector: {fileID: 0}
+  - name: Up 178
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 2.5, y: 0.5, z: -6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 178
+    connector: {fileID: 0}
+  - name: Up 179
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 2.5, y: 0.5, z: -5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 179
+    connector: {fileID: 0}
+  - name: Up 180
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 2.5, y: 0.5, z: -4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 180
+    connector: {fileID: 0}
+  - name: Up 181
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 2.5, y: 0.5, z: -3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 181
+    connector: {fileID: 0}
+  - name: Up 182
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 2.5, y: 0.5, z: -2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 182
+    connector: {fileID: 0}
+  - name: Up 183
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 2.5, y: 0.5, z: -1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 183
+    connector: {fileID: 0}
+  - name: Up 184
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 2.5, y: 0.5, z: -0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 184
+    connector: {fileID: 0}
+  - name: Up 185
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 2.5, y: 0.5, z: 0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 185
+    connector: {fileID: 0}
+  - name: Up 186
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 2.5, y: 0.5, z: 1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 186
+    connector: {fileID: 0}
+  - name: Up 187
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 2.5, y: 0.5, z: 2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 187
+    connector: {fileID: 0}
+  - name: Up 188
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 2.5, y: 0.5, z: 3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 188
+    connector: {fileID: 0}
+  - name: Up 189
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 2.5, y: 0.5, z: 4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 189
+    connector: {fileID: 0}
+  - name: Up 190
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 2.5, y: 0.5, z: 5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 190
+    connector: {fileID: 0}
+  - name: Up 191
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 2.5, y: 0.5, z: 6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 191
+    connector: {fileID: 0}
+  - name: Up 192
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 2.5, y: 0.5, z: 7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 192
+    connector: {fileID: 0}
+  - name: Up 193
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 3.5, y: 0.5, z: -7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 193
+    connector: {fileID: 0}
+  - name: Up 194
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 3.5, y: 0.5, z: -6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 194
+    connector: {fileID: 0}
+  - name: Up 195
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 3.5, y: 0.5, z: -5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 195
+    connector: {fileID: 0}
+  - name: Up 196
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 3.5, y: 0.5, z: -4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 196
+    connector: {fileID: 0}
+  - name: Up 197
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 3.5, y: 0.5, z: -3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 197
+    connector: {fileID: 0}
+  - name: Up 198
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 3.5, y: 0.5, z: -2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 198
+    connector: {fileID: 0}
+  - name: Up 199
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 3.5, y: 0.5, z: -1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 199
+    connector: {fileID: 0}
+  - name: Up 200
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 3.5, y: 0.5, z: -0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 200
+    connector: {fileID: 0}
+  - name: Up 201
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 3.5, y: 0.5, z: 0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 201
+    connector: {fileID: 0}
+  - name: Up 202
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 3.5, y: 0.5, z: 1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 202
+    connector: {fileID: 0}
+  - name: Up 203
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 3.5, y: 0.5, z: 2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 203
+    connector: {fileID: 0}
+  - name: Up 204
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 3.5, y: 0.5, z: 3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 204
+    connector: {fileID: 0}
+  - name: Up 205
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 3.5, y: 0.5, z: 4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 205
+    connector: {fileID: 0}
+  - name: Up 206
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 3.5, y: 0.5, z: 5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 206
+    connector: {fileID: 0}
+  - name: Up 207
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 3.5, y: 0.5, z: 6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 207
+    connector: {fileID: 0}
+  - name: Up 208
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 3.5, y: 0.5, z: 7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 208
+    connector: {fileID: 0}
+  - name: Up 209
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 4.5, y: 0.5, z: -7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 209
+    connector: {fileID: 0}
+  - name: Up 210
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 4.5, y: 0.5, z: -6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 210
+    connector: {fileID: 0}
+  - name: Up 211
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 4.5, y: 0.5, z: -5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 211
+    connector: {fileID: 0}
+  - name: Up 212
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 4.5, y: 0.5, z: -4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 212
+    connector: {fileID: 0}
+  - name: Up 213
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 4.5, y: 0.5, z: -3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 213
+    connector: {fileID: 0}
+  - name: Up 214
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 4.5, y: 0.5, z: -2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 214
+    connector: {fileID: 0}
+  - name: Up 215
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 4.5, y: 0.5, z: -1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 215
+    connector: {fileID: 0}
+  - name: Up 216
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 4.5, y: 0.5, z: -0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 216
+    connector: {fileID: 0}
+  - name: Up 217
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 4.5, y: 0.5, z: 0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 217
+    connector: {fileID: 0}
+  - name: Up 218
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 4.5, y: 0.5, z: 1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 218
+    connector: {fileID: 0}
+  - name: Up 219
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 4.5, y: 0.5, z: 2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 219
+    connector: {fileID: 0}
+  - name: Up 220
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 4.5, y: 0.5, z: 3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 220
+    connector: {fileID: 0}
+  - name: Up 221
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 4.5, y: 0.5, z: 4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 221
+    connector: {fileID: 0}
+  - name: Up 222
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 4.5, y: 0.5, z: 5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 222
+    connector: {fileID: 0}
+  - name: Up 223
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 4.5, y: 0.5, z: 6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 223
+    connector: {fileID: 0}
+  - name: Up 224
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 4.5, y: 0.5, z: 7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 224
+    connector: {fileID: 0}
+  - name: Up 225
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 5.5, y: 0.5, z: -7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 225
+    connector: {fileID: 0}
+  - name: Up 226
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 5.5, y: 0.5, z: -6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 226
+    connector: {fileID: 0}
+  - name: Up 227
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 5.5, y: 0.5, z: -5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 227
+    connector: {fileID: 0}
+  - name: Up 228
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 5.5, y: 0.5, z: -4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 228
+    connector: {fileID: 0}
+  - name: Up 229
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 5.5, y: 0.5, z: -3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 229
+    connector: {fileID: 0}
+  - name: Up 230
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 5.5, y: 0.5, z: -2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 230
+    connector: {fileID: 0}
+  - name: Up 231
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 5.5, y: 0.5, z: -1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 231
+    connector: {fileID: 0}
+  - name: Up 232
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 5.5, y: 0.5, z: -0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 232
+    connector: {fileID: 0}
+  - name: Up 233
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 5.5, y: 0.5, z: 0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 233
+    connector: {fileID: 0}
+  - name: Up 234
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 5.5, y: 0.5, z: 1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 234
+    connector: {fileID: 0}
+  - name: Up 235
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 5.5, y: 0.5, z: 2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 235
+    connector: {fileID: 0}
+  - name: Up 236
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 5.5, y: 0.5, z: 3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 236
+    connector: {fileID: 0}
+  - name: Up 237
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 5.5, y: 0.5, z: 4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 237
+    connector: {fileID: 0}
+  - name: Up 238
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 5.5, y: 0.5, z: 5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 238
+    connector: {fileID: 0}
+  - name: Up 239
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 5.5, y: 0.5, z: 6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 239
+    connector: {fileID: 0}
+  - name: Up 240
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 5.5, y: 0.5, z: 7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 240
+    connector: {fileID: 0}
+  - name: Up 241
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 6.5, y: 0.5, z: -7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 241
+    connector: {fileID: 0}
+  - name: Up 242
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 6.5, y: 0.5, z: -6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 242
+    connector: {fileID: 0}
+  - name: Up 243
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 6.5, y: 0.5, z: -5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 243
+    connector: {fileID: 0}
+  - name: Up 244
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 6.5, y: 0.5, z: -4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 244
+    connector: {fileID: 0}
+  - name: Up 245
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 6.5, y: 0.5, z: -3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 245
+    connector: {fileID: 0}
+  - name: Up 246
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 6.5, y: 0.5, z: -2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 246
+    connector: {fileID: 0}
+  - name: Up 247
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 6.5, y: 0.5, z: -1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 247
+    connector: {fileID: 0}
+  - name: Up 248
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 6.5, y: 0.5, z: -0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 248
+    connector: {fileID: 0}
+  - name: Up 249
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 6.5, y: 0.5, z: 0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 249
+    connector: {fileID: 0}
+  - name: Up 250
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 6.5, y: 0.5, z: 1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 250
+    connector: {fileID: 0}
+  - name: Up 251
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 6.5, y: 0.5, z: 2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 251
+    connector: {fileID: 0}
+  - name: Up 252
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 6.5, y: 0.5, z: 3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 252
+    connector: {fileID: 0}
+  - name: Up 253
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 6.5, y: 0.5, z: 4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 253
+    connector: {fileID: 0}
+  - name: Up 254
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 6.5, y: 0.5, z: 5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 254
+    connector: {fileID: 0}
+  - name: Up 255
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 6.5, y: 0.5, z: 6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 255
+    connector: {fileID: 0}
+  - name: Up 256
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 6.5, y: 0.5, z: 7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 256
+    connector: {fileID: 0}
+  - name: Up 257
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 7.5, y: 0.5, z: -7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 257
+    connector: {fileID: 0}
+  - name: Up 258
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 7.5, y: 0.5, z: -6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 258
+    connector: {fileID: 0}
+  - name: Up 259
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 7.5, y: 0.5, z: -5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 259
+    connector: {fileID: 0}
+  - name: Up 260
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 7.5, y: 0.5, z: -4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 260
+    connector: {fileID: 0}
+  - name: Up 261
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 7.5, y: 0.5, z: -3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 261
+    connector: {fileID: 0}
+  - name: Up 262
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 7.5, y: 0.5, z: -2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 262
+    connector: {fileID: 0}
+  - name: Up 263
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 7.5, y: 0.5, z: -1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 263
+    connector: {fileID: 0}
+  - name: Up 264
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 7.5, y: 0.5, z: -0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 264
+    connector: {fileID: 0}
+  - name: Up 265
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 7.5, y: 0.5, z: 0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 265
+    connector: {fileID: 0}
+  - name: Up 266
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 7.5, y: 0.5, z: 1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 266
+    connector: {fileID: 0}
+  - name: Up 267
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 7.5, y: 0.5, z: 2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 267
+    connector: {fileID: 0}
+  - name: Up 268
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 7.5, y: 0.5, z: 3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 268
+    connector: {fileID: 0}
+  - name: Up 269
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 7.5, y: 0.5, z: 4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 269
+    connector: {fileID: 0}
+  - name: Up 270
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 7.5, y: 0.5, z: 5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 270
+    connector: {fileID: 0}
+  - name: Up 271
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 7.5, y: 0.5, z: 6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 271
+    connector: {fileID: 0}
+  - name: Up 272
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 7.5, y: 0.5, z: 7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 272
+    connector: {fileID: 0}
+  - name: Up 273
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 8.5, y: 0.5, z: -7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 273
+    connector: {fileID: 0}
+  - name: Up 274
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 8.5, y: 0.5, z: -6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 274
+    connector: {fileID: 0}
+  - name: Up 275
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 8.5, y: 0.5, z: -5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 275
+    connector: {fileID: 0}
+  - name: Up 276
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 8.5, y: 0.5, z: -4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 276
+    connector: {fileID: 0}
+  - name: Up 277
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 8.5, y: 0.5, z: -3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 277
+    connector: {fileID: 0}
+  - name: Up 278
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 8.5, y: 0.5, z: -2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 278
+    connector: {fileID: 0}
+  - name: Up 279
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 8.5, y: 0.5, z: -1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 279
+    connector: {fileID: 0}
+  - name: Up 280
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 8.5, y: 0.5, z: -0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 280
+    connector: {fileID: 0}
+  - name: Up 281
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 8.5, y: 0.5, z: 0.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 281
+    connector: {fileID: 0}
+  - name: Up 282
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 8.5, y: 0.5, z: 1.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 282
+    connector: {fileID: 0}
+  - name: Up 283
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 8.5, y: 0.5, z: 2.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 283
+    connector: {fileID: 0}
+  - name: Up 284
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 8.5, y: 0.5, z: 3.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 284
+    connector: {fileID: 0}
+  - name: Up 285
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 8.5, y: 0.5, z: 4.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 285
+    connector: {fileID: 0}
+  - name: Up 286
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 8.5, y: 0.5, z: 5.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 286
+    connector: {fileID: 0}
+  - name: Up 287
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 8.5, y: 0.5, z: 6.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 287
+    connector: {fileID: 0}
+  - name: Up 288
+    canConnect: 1
+    isConnected: 0
+    connectType: 0
+    localPos: {x: 8.5, y: 0.5, z: 7.5}
+    normal: {x: 0, y: 1, z: 0}
+    order: 288
+    connector: {fileID: 0}
+  - name: Down 1
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -8.5, y: -0.5, z: -7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 1
+    connector: {fileID: 0}
+  - name: Down 2
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -8.5, y: -0.5, z: -6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 2
+    connector: {fileID: 0}
+  - name: Down 3
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -8.5, y: -0.5, z: -5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 3
+    connector: {fileID: 0}
+  - name: Down 4
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -8.5, y: -0.5, z: -4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 4
+    connector: {fileID: 0}
+  - name: Down 5
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -8.5, y: -0.5, z: -3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 5
+    connector: {fileID: 0}
+  - name: Down 6
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -8.5, y: -0.5, z: -2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 6
+    connector: {fileID: 0}
+  - name: Down 7
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -8.5, y: -0.5, z: -1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 7
+    connector: {fileID: 0}
+  - name: Down 8
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -8.5, y: -0.5, z: -0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 8
+    connector: {fileID: 0}
+  - name: Down 9
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -8.5, y: -0.5, z: 0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 9
+    connector: {fileID: 0}
+  - name: Down 10
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -8.5, y: -0.5, z: 1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 10
+    connector: {fileID: 0}
+  - name: Down 11
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -8.5, y: -0.5, z: 2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 11
+    connector: {fileID: 0}
+  - name: Down 12
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -8.5, y: -0.5, z: 3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 12
+    connector: {fileID: 0}
+  - name: Down 13
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -8.5, y: -0.5, z: 4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 13
+    connector: {fileID: 0}
+  - name: Down 14
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -8.5, y: -0.5, z: 5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 14
+    connector: {fileID: 0}
+  - name: Down 15
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -8.5, y: -0.5, z: 6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 15
+    connector: {fileID: 0}
+  - name: Down 16
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -8.5, y: -0.5, z: 7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 16
+    connector: {fileID: 0}
+  - name: Down 17
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -7.5, y: -0.5, z: -7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 17
+    connector: {fileID: 0}
+  - name: Down 18
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -7.5, y: -0.5, z: -6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 18
+    connector: {fileID: 0}
+  - name: Down 19
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -7.5, y: -0.5, z: -5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 19
+    connector: {fileID: 0}
+  - name: Down 20
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -7.5, y: -0.5, z: -4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 20
+    connector: {fileID: 0}
+  - name: Down 21
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -7.5, y: -0.5, z: -3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 21
+    connector: {fileID: 0}
+  - name: Down 22
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -7.5, y: -0.5, z: -2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 22
+    connector: {fileID: 0}
+  - name: Down 23
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -7.5, y: -0.5, z: -1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 23
+    connector: {fileID: 0}
+  - name: Down 24
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -7.5, y: -0.5, z: -0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 24
+    connector: {fileID: 0}
+  - name: Down 25
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -7.5, y: -0.5, z: 0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 25
+    connector: {fileID: 0}
+  - name: Down 26
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -7.5, y: -0.5, z: 1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 26
+    connector: {fileID: 0}
+  - name: Down 27
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -7.5, y: -0.5, z: 2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 27
+    connector: {fileID: 0}
+  - name: Down 28
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -7.5, y: -0.5, z: 3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 28
+    connector: {fileID: 0}
+  - name: Down 29
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -7.5, y: -0.5, z: 4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 29
+    connector: {fileID: 0}
+  - name: Down 30
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -7.5, y: -0.5, z: 5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 30
+    connector: {fileID: 0}
+  - name: Down 31
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -7.5, y: -0.5, z: 6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 31
+    connector: {fileID: 0}
+  - name: Down 32
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -7.5, y: -0.5, z: 7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 32
+    connector: {fileID: 0}
+  - name: Down 33
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -6.5, y: -0.5, z: -7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 33
+    connector: {fileID: 0}
+  - name: Down 34
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -6.5, y: -0.5, z: -6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 34
+    connector: {fileID: 0}
+  - name: Down 35
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -6.5, y: -0.5, z: -5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 35
+    connector: {fileID: 0}
+  - name: Down 36
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -6.5, y: -0.5, z: -4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 36
+    connector: {fileID: 0}
+  - name: Down 37
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -6.5, y: -0.5, z: -3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 37
+    connector: {fileID: 0}
+  - name: Down 38
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -6.5, y: -0.5, z: -2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 38
+    connector: {fileID: 0}
+  - name: Down 39
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -6.5, y: -0.5, z: -1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 39
+    connector: {fileID: 0}
+  - name: Down 40
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -6.5, y: -0.5, z: -0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 40
+    connector: {fileID: 0}
+  - name: Down 41
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -6.5, y: -0.5, z: 0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 41
+    connector: {fileID: 0}
+  - name: Down 42
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -6.5, y: -0.5, z: 1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 42
+    connector: {fileID: 0}
+  - name: Down 43
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -6.5, y: -0.5, z: 2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 43
+    connector: {fileID: 0}
+  - name: Down 44
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -6.5, y: -0.5, z: 3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 44
+    connector: {fileID: 0}
+  - name: Down 45
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -6.5, y: -0.5, z: 4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 45
+    connector: {fileID: 0}
+  - name: Down 46
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -6.5, y: -0.5, z: 5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 46
+    connector: {fileID: 0}
+  - name: Down 47
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -6.5, y: -0.5, z: 6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 47
+    connector: {fileID: 0}
+  - name: Down 48
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -6.5, y: -0.5, z: 7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 48
+    connector: {fileID: 0}
+  - name: Down 49
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -5.5, y: -0.5, z: -7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 49
+    connector: {fileID: 0}
+  - name: Down 50
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -5.5, y: -0.5, z: -6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 50
+    connector: {fileID: 0}
+  - name: Down 51
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -5.5, y: -0.5, z: -5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 51
+    connector: {fileID: 0}
+  - name: Down 52
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -5.5, y: -0.5, z: -4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 52
+    connector: {fileID: 0}
+  - name: Down 53
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -5.5, y: -0.5, z: -3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 53
+    connector: {fileID: 0}
+  - name: Down 54
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -5.5, y: -0.5, z: -2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 54
+    connector: {fileID: 0}
+  - name: Down 55
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -5.5, y: -0.5, z: -1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 55
+    connector: {fileID: 0}
+  - name: Down 56
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -5.5, y: -0.5, z: -0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 56
+    connector: {fileID: 0}
+  - name: Down 57
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -5.5, y: -0.5, z: 0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 57
+    connector: {fileID: 0}
+  - name: Down 58
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -5.5, y: -0.5, z: 1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 58
+    connector: {fileID: 0}
+  - name: Down 59
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -5.5, y: -0.5, z: 2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 59
+    connector: {fileID: 0}
+  - name: Down 60
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -5.5, y: -0.5, z: 3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 60
+    connector: {fileID: 0}
+  - name: Down 61
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -5.5, y: -0.5, z: 4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 61
+    connector: {fileID: 0}
+  - name: Down 62
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -5.5, y: -0.5, z: 5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 62
+    connector: {fileID: 0}
+  - name: Down 63
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -5.5, y: -0.5, z: 6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 63
+    connector: {fileID: 0}
+  - name: Down 64
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -5.5, y: -0.5, z: 7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 64
+    connector: {fileID: 0}
+  - name: Down 65
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -4.5, y: -0.5, z: -7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 65
+    connector: {fileID: 0}
+  - name: Down 66
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -4.5, y: -0.5, z: -6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 66
+    connector: {fileID: 0}
+  - name: Down 67
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -4.5, y: -0.5, z: -5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 67
+    connector: {fileID: 0}
+  - name: Down 68
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -4.5, y: -0.5, z: -4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 68
+    connector: {fileID: 0}
+  - name: Down 69
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -4.5, y: -0.5, z: -3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 69
+    connector: {fileID: 0}
+  - name: Down 70
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -4.5, y: -0.5, z: -2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 70
+    connector: {fileID: 0}
+  - name: Down 71
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -4.5, y: -0.5, z: -1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 71
+    connector: {fileID: 0}
+  - name: Down 72
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -4.5, y: -0.5, z: -0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 72
+    connector: {fileID: 0}
+  - name: Down 73
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -4.5, y: -0.5, z: 0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 73
+    connector: {fileID: 0}
+  - name: Down 74
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -4.5, y: -0.5, z: 1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 74
+    connector: {fileID: 0}
+  - name: Down 75
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -4.5, y: -0.5, z: 2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 75
+    connector: {fileID: 0}
+  - name: Down 76
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -4.5, y: -0.5, z: 3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 76
+    connector: {fileID: 0}
+  - name: Down 77
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -4.5, y: -0.5, z: 4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 77
+    connector: {fileID: 0}
+  - name: Down 78
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -4.5, y: -0.5, z: 5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 78
+    connector: {fileID: 0}
+  - name: Down 79
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -4.5, y: -0.5, z: 6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 79
+    connector: {fileID: 0}
+  - name: Down 80
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -4.5, y: -0.5, z: 7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 80
+    connector: {fileID: 0}
+  - name: Down 81
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -3.5, y: -0.5, z: -7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 81
+    connector: {fileID: 0}
+  - name: Down 82
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -3.5, y: -0.5, z: -6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 82
+    connector: {fileID: 0}
+  - name: Down 83
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -3.5, y: -0.5, z: -5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 83
+    connector: {fileID: 0}
+  - name: Down 84
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -3.5, y: -0.5, z: -4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 84
+    connector: {fileID: 0}
+  - name: Down 85
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -3.5, y: -0.5, z: -3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 85
+    connector: {fileID: 0}
+  - name: Down 86
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -3.5, y: -0.5, z: -2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 86
+    connector: {fileID: 0}
+  - name: Down 87
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -3.5, y: -0.5, z: -1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 87
+    connector: {fileID: 0}
+  - name: Down 88
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -3.5, y: -0.5, z: -0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 88
+    connector: {fileID: 0}
+  - name: Down 89
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -3.5, y: -0.5, z: 0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 89
+    connector: {fileID: 0}
+  - name: Down 90
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -3.5, y: -0.5, z: 1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 90
+    connector: {fileID: 0}
+  - name: Down 91
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -3.5, y: -0.5, z: 2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 91
+    connector: {fileID: 0}
+  - name: Down 92
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -3.5, y: -0.5, z: 3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 92
+    connector: {fileID: 0}
+  - name: Down 93
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -3.5, y: -0.5, z: 4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 93
+    connector: {fileID: 0}
+  - name: Down 94
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -3.5, y: -0.5, z: 5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 94
+    connector: {fileID: 0}
+  - name: Down 95
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -3.5, y: -0.5, z: 6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 95
+    connector: {fileID: 0}
+  - name: Down 96
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -3.5, y: -0.5, z: 7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 96
+    connector: {fileID: 0}
+  - name: Down 97
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -2.5, y: -0.5, z: -7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 97
+    connector: {fileID: 0}
+  - name: Down 98
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -2.5, y: -0.5, z: -6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 98
+    connector: {fileID: 0}
+  - name: Down 99
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -2.5, y: -0.5, z: -5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 99
+    connector: {fileID: 0}
+  - name: Down 100
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -2.5, y: -0.5, z: -4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 100
+    connector: {fileID: 0}
+  - name: Down 101
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -2.5, y: -0.5, z: -3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 101
+    connector: {fileID: 0}
+  - name: Down 102
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -2.5, y: -0.5, z: -2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 102
+    connector: {fileID: 0}
+  - name: Down 103
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -2.5, y: -0.5, z: -1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 103
+    connector: {fileID: 0}
+  - name: Down 104
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -2.5, y: -0.5, z: -0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 104
+    connector: {fileID: 0}
+  - name: Down 105
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -2.5, y: -0.5, z: 0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 105
+    connector: {fileID: 0}
+  - name: Down 106
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -2.5, y: -0.5, z: 1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 106
+    connector: {fileID: 0}
+  - name: Down 107
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -2.5, y: -0.5, z: 2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 107
+    connector: {fileID: 0}
+  - name: Down 108
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -2.5, y: -0.5, z: 3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 108
+    connector: {fileID: 0}
+  - name: Down 109
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -2.5, y: -0.5, z: 4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 109
+    connector: {fileID: 0}
+  - name: Down 110
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -2.5, y: -0.5, z: 5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 110
+    connector: {fileID: 0}
+  - name: Down 111
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -2.5, y: -0.5, z: 6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 111
+    connector: {fileID: 0}
+  - name: Down 112
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -2.5, y: -0.5, z: 7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 112
+    connector: {fileID: 0}
+  - name: Down 113
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -1.5, y: -0.5, z: -7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 113
+    connector: {fileID: 0}
+  - name: Down 114
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -1.5, y: -0.5, z: -6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 114
+    connector: {fileID: 0}
+  - name: Down 115
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -1.5, y: -0.5, z: -5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 115
+    connector: {fileID: 0}
+  - name: Down 116
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -1.5, y: -0.5, z: -4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 116
+    connector: {fileID: 0}
+  - name: Down 117
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -1.5, y: -0.5, z: -3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 117
+    connector: {fileID: 0}
+  - name: Down 118
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -1.5, y: -0.5, z: -2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 118
+    connector: {fileID: 0}
+  - name: Down 119
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -1.5, y: -0.5, z: -1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 119
+    connector: {fileID: 0}
+  - name: Down 120
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -1.5, y: -0.5, z: -0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 120
+    connector: {fileID: 0}
+  - name: Down 121
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -1.5, y: -0.5, z: 0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 121
+    connector: {fileID: 0}
+  - name: Down 122
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -1.5, y: -0.5, z: 1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 122
+    connector: {fileID: 0}
+  - name: Down 123
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -1.5, y: -0.5, z: 2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 123
+    connector: {fileID: 0}
+  - name: Down 124
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -1.5, y: -0.5, z: 3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 124
+    connector: {fileID: 0}
+  - name: Down 125
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -1.5, y: -0.5, z: 4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 125
+    connector: {fileID: 0}
+  - name: Down 126
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -1.5, y: -0.5, z: 5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 126
+    connector: {fileID: 0}
+  - name: Down 127
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -1.5, y: -0.5, z: 6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 127
+    connector: {fileID: 0}
+  - name: Down 128
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -1.5, y: -0.5, z: 7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 128
+    connector: {fileID: 0}
+  - name: Down 129
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -0.5, z: -7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 129
+    connector: {fileID: 0}
+  - name: Down 130
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -0.5, z: -6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 130
+    connector: {fileID: 0}
+  - name: Down 131
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -0.5, z: -5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 131
+    connector: {fileID: 0}
+  - name: Down 132
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -0.5, z: -4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 132
+    connector: {fileID: 0}
+  - name: Down 133
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -0.5, z: -3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 133
+    connector: {fileID: 0}
+  - name: Down 134
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -0.5, z: -2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 134
+    connector: {fileID: 0}
+  - name: Down 135
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -0.5, z: -1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 135
+    connector: {fileID: 0}
+  - name: Down 136
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -0.5, z: -0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 136
+    connector: {fileID: 0}
+  - name: Down 137
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -0.5, z: 0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 137
+    connector: {fileID: 0}
+  - name: Down 138
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -0.5, z: 1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 138
+    connector: {fileID: 0}
+  - name: Down 139
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -0.5, z: 2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 139
+    connector: {fileID: 0}
+  - name: Down 140
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -0.5, z: 3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 140
+    connector: {fileID: 0}
+  - name: Down 141
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -0.5, z: 4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 141
+    connector: {fileID: 0}
+  - name: Down 142
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -0.5, z: 5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 142
+    connector: {fileID: 0}
+  - name: Down 143
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -0.5, z: 6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 143
+    connector: {fileID: 0}
+  - name: Down 144
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: -0.5, y: -0.5, z: 7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 144
+    connector: {fileID: 0}
+  - name: Down 145
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -0.5, z: -7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 145
+    connector: {fileID: 0}
+  - name: Down 146
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -0.5, z: -6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 146
+    connector: {fileID: 0}
+  - name: Down 147
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -0.5, z: -5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 147
+    connector: {fileID: 0}
+  - name: Down 148
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -0.5, z: -4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 148
+    connector: {fileID: 0}
+  - name: Down 149
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -0.5, z: -3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 149
+    connector: {fileID: 0}
+  - name: Down 150
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -0.5, z: -2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 150
+    connector: {fileID: 0}
+  - name: Down 151
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -0.5, z: -1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 151
+    connector: {fileID: 0}
+  - name: Down 152
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -0.5, z: -0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 152
+    connector: {fileID: 0}
+  - name: Down 153
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -0.5, z: 0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 153
+    connector: {fileID: 0}
+  - name: Down 154
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -0.5, z: 1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 154
+    connector: {fileID: 0}
+  - name: Down 155
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -0.5, z: 2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 155
+    connector: {fileID: 0}
+  - name: Down 156
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -0.5, z: 3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 156
+    connector: {fileID: 0}
+  - name: Down 157
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -0.5, z: 4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 157
+    connector: {fileID: 0}
+  - name: Down 158
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -0.5, z: 5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 158
+    connector: {fileID: 0}
+  - name: Down 159
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -0.5, z: 6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 159
+    connector: {fileID: 0}
+  - name: Down 160
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 0.5, y: -0.5, z: 7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 160
+    connector: {fileID: 0}
+  - name: Down 161
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 1.5, y: -0.5, z: -7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 161
+    connector: {fileID: 0}
+  - name: Down 162
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 1.5, y: -0.5, z: -6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 162
+    connector: {fileID: 0}
+  - name: Down 163
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 1.5, y: -0.5, z: -5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 163
+    connector: {fileID: 0}
+  - name: Down 164
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 1.5, y: -0.5, z: -4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 164
+    connector: {fileID: 0}
+  - name: Down 165
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 1.5, y: -0.5, z: -3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 165
+    connector: {fileID: 0}
+  - name: Down 166
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 1.5, y: -0.5, z: -2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 166
+    connector: {fileID: 0}
+  - name: Down 167
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 1.5, y: -0.5, z: -1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 167
+    connector: {fileID: 0}
+  - name: Down 168
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 1.5, y: -0.5, z: -0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 168
+    connector: {fileID: 0}
+  - name: Down 169
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 1.5, y: -0.5, z: 0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 169
+    connector: {fileID: 0}
+  - name: Down 170
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 1.5, y: -0.5, z: 1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 170
+    connector: {fileID: 0}
+  - name: Down 171
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 1.5, y: -0.5, z: 2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 171
+    connector: {fileID: 0}
+  - name: Down 172
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 1.5, y: -0.5, z: 3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 172
+    connector: {fileID: 0}
+  - name: Down 173
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 1.5, y: -0.5, z: 4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 173
+    connector: {fileID: 0}
+  - name: Down 174
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 1.5, y: -0.5, z: 5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 174
+    connector: {fileID: 0}
+  - name: Down 175
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 1.5, y: -0.5, z: 6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 175
+    connector: {fileID: 0}
+  - name: Down 176
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 1.5, y: -0.5, z: 7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 176
+    connector: {fileID: 0}
+  - name: Down 177
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 2.5, y: -0.5, z: -7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 177
+    connector: {fileID: 0}
+  - name: Down 178
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 2.5, y: -0.5, z: -6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 178
+    connector: {fileID: 0}
+  - name: Down 179
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 2.5, y: -0.5, z: -5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 179
+    connector: {fileID: 0}
+  - name: Down 180
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 2.5, y: -0.5, z: -4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 180
+    connector: {fileID: 0}
+  - name: Down 181
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 2.5, y: -0.5, z: -3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 181
+    connector: {fileID: 0}
+  - name: Down 182
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 2.5, y: -0.5, z: -2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 182
+    connector: {fileID: 0}
+  - name: Down 183
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 2.5, y: -0.5, z: -1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 183
+    connector: {fileID: 0}
+  - name: Down 184
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 2.5, y: -0.5, z: -0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 184
+    connector: {fileID: 0}
+  - name: Down 185
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 2.5, y: -0.5, z: 0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 185
+    connector: {fileID: 0}
+  - name: Down 186
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 2.5, y: -0.5, z: 1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 186
+    connector: {fileID: 0}
+  - name: Down 187
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 2.5, y: -0.5, z: 2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 187
+    connector: {fileID: 0}
+  - name: Down 188
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 2.5, y: -0.5, z: 3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 188
+    connector: {fileID: 0}
+  - name: Down 189
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 2.5, y: -0.5, z: 4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 189
+    connector: {fileID: 0}
+  - name: Down 190
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 2.5, y: -0.5, z: 5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 190
+    connector: {fileID: 0}
+  - name: Down 191
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 2.5, y: -0.5, z: 6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 191
+    connector: {fileID: 0}
+  - name: Down 192
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 2.5, y: -0.5, z: 7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 192
+    connector: {fileID: 0}
+  - name: Down 193
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 3.5, y: -0.5, z: -7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 193
+    connector: {fileID: 0}
+  - name: Down 194
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 3.5, y: -0.5, z: -6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 194
+    connector: {fileID: 0}
+  - name: Down 195
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 3.5, y: -0.5, z: -5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 195
+    connector: {fileID: 0}
+  - name: Down 196
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 3.5, y: -0.5, z: -4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 196
+    connector: {fileID: 0}
+  - name: Down 197
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 3.5, y: -0.5, z: -3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 197
+    connector: {fileID: 0}
+  - name: Down 198
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 3.5, y: -0.5, z: -2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 198
+    connector: {fileID: 0}
+  - name: Down 199
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 3.5, y: -0.5, z: -1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 199
+    connector: {fileID: 0}
+  - name: Down 200
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 3.5, y: -0.5, z: -0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 200
+    connector: {fileID: 0}
+  - name: Down 201
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 3.5, y: -0.5, z: 0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 201
+    connector: {fileID: 0}
+  - name: Down 202
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 3.5, y: -0.5, z: 1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 202
+    connector: {fileID: 0}
+  - name: Down 203
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 3.5, y: -0.5, z: 2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 203
+    connector: {fileID: 0}
+  - name: Down 204
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 3.5, y: -0.5, z: 3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 204
+    connector: {fileID: 0}
+  - name: Down 205
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 3.5, y: -0.5, z: 4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 205
+    connector: {fileID: 0}
+  - name: Down 206
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 3.5, y: -0.5, z: 5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 206
+    connector: {fileID: 0}
+  - name: Down 207
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 3.5, y: -0.5, z: 6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 207
+    connector: {fileID: 0}
+  - name: Down 208
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 3.5, y: -0.5, z: 7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 208
+    connector: {fileID: 0}
+  - name: Down 209
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 4.5, y: -0.5, z: -7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 209
+    connector: {fileID: 0}
+  - name: Down 210
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 4.5, y: -0.5, z: -6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 210
+    connector: {fileID: 0}
+  - name: Down 211
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 4.5, y: -0.5, z: -5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 211
+    connector: {fileID: 0}
+  - name: Down 212
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 4.5, y: -0.5, z: -4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 212
+    connector: {fileID: 0}
+  - name: Down 213
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 4.5, y: -0.5, z: -3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 213
+    connector: {fileID: 0}
+  - name: Down 214
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 4.5, y: -0.5, z: -2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 214
+    connector: {fileID: 0}
+  - name: Down 215
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 4.5, y: -0.5, z: -1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 215
+    connector: {fileID: 0}
+  - name: Down 216
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 4.5, y: -0.5, z: -0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 216
+    connector: {fileID: 0}
+  - name: Down 217
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 4.5, y: -0.5, z: 0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 217
+    connector: {fileID: 0}
+  - name: Down 218
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 4.5, y: -0.5, z: 1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 218
+    connector: {fileID: 0}
+  - name: Down 219
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 4.5, y: -0.5, z: 2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 219
+    connector: {fileID: 0}
+  - name: Down 220
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 4.5, y: -0.5, z: 3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 220
+    connector: {fileID: 0}
+  - name: Down 221
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 4.5, y: -0.5, z: 4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 221
+    connector: {fileID: 0}
+  - name: Down 222
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 4.5, y: -0.5, z: 5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 222
+    connector: {fileID: 0}
+  - name: Down 223
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 4.5, y: -0.5, z: 6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 223
+    connector: {fileID: 0}
+  - name: Down 224
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 4.5, y: -0.5, z: 7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 224
+    connector: {fileID: 0}
+  - name: Down 225
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 5.5, y: -0.5, z: -7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 225
+    connector: {fileID: 0}
+  - name: Down 226
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 5.5, y: -0.5, z: -6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 226
+    connector: {fileID: 0}
+  - name: Down 227
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 5.5, y: -0.5, z: -5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 227
+    connector: {fileID: 0}
+  - name: Down 228
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 5.5, y: -0.5, z: -4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 228
+    connector: {fileID: 0}
+  - name: Down 229
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 5.5, y: -0.5, z: -3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 229
+    connector: {fileID: 0}
+  - name: Down 230
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 5.5, y: -0.5, z: -2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 230
+    connector: {fileID: 0}
+  - name: Down 231
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 5.5, y: -0.5, z: -1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 231
+    connector: {fileID: 0}
+  - name: Down 232
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 5.5, y: -0.5, z: -0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 232
+    connector: {fileID: 0}
+  - name: Down 233
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 5.5, y: -0.5, z: 0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 233
+    connector: {fileID: 0}
+  - name: Down 234
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 5.5, y: -0.5, z: 1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 234
+    connector: {fileID: 0}
+  - name: Down 235
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 5.5, y: -0.5, z: 2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 235
+    connector: {fileID: 0}
+  - name: Down 236
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 5.5, y: -0.5, z: 3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 236
+    connector: {fileID: 0}
+  - name: Down 237
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 5.5, y: -0.5, z: 4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 237
+    connector: {fileID: 0}
+  - name: Down 238
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 5.5, y: -0.5, z: 5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 238
+    connector: {fileID: 0}
+  - name: Down 239
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 5.5, y: -0.5, z: 6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 239
+    connector: {fileID: 0}
+  - name: Down 240
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 5.5, y: -0.5, z: 7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 240
+    connector: {fileID: 0}
+  - name: Down 241
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 6.5, y: -0.5, z: -7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 241
+    connector: {fileID: 0}
+  - name: Down 242
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 6.5, y: -0.5, z: -6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 242
+    connector: {fileID: 0}
+  - name: Down 243
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 6.5, y: -0.5, z: -5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 243
+    connector: {fileID: 0}
+  - name: Down 244
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 6.5, y: -0.5, z: -4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 244
+    connector: {fileID: 0}
+  - name: Down 245
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 6.5, y: -0.5, z: -3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 245
+    connector: {fileID: 0}
+  - name: Down 246
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 6.5, y: -0.5, z: -2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 246
+    connector: {fileID: 0}
+  - name: Down 247
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 6.5, y: -0.5, z: -1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 247
+    connector: {fileID: 0}
+  - name: Down 248
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 6.5, y: -0.5, z: -0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 248
+    connector: {fileID: 0}
+  - name: Down 249
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 6.5, y: -0.5, z: 0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 249
+    connector: {fileID: 0}
+  - name: Down 250
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 6.5, y: -0.5, z: 1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 250
+    connector: {fileID: 0}
+  - name: Down 251
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 6.5, y: -0.5, z: 2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 251
+    connector: {fileID: 0}
+  - name: Down 252
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 6.5, y: -0.5, z: 3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 252
+    connector: {fileID: 0}
+  - name: Down 253
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 6.5, y: -0.5, z: 4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 253
+    connector: {fileID: 0}
+  - name: Down 254
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 6.5, y: -0.5, z: 5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 254
+    connector: {fileID: 0}
+  - name: Down 255
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 6.5, y: -0.5, z: 6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 255
+    connector: {fileID: 0}
+  - name: Down 256
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 6.5, y: -0.5, z: 7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 256
+    connector: {fileID: 0}
+  - name: Down 257
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 7.5, y: -0.5, z: -7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 257
+    connector: {fileID: 0}
+  - name: Down 258
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 7.5, y: -0.5, z: -6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 258
+    connector: {fileID: 0}
+  - name: Down 259
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 7.5, y: -0.5, z: -5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 259
+    connector: {fileID: 0}
+  - name: Down 260
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 7.5, y: -0.5, z: -4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 260
+    connector: {fileID: 0}
+  - name: Down 261
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 7.5, y: -0.5, z: -3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 261
+    connector: {fileID: 0}
+  - name: Down 262
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 7.5, y: -0.5, z: -2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 262
+    connector: {fileID: 0}
+  - name: Down 263
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 7.5, y: -0.5, z: -1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 263
+    connector: {fileID: 0}
+  - name: Down 264
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 7.5, y: -0.5, z: -0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 264
+    connector: {fileID: 0}
+  - name: Down 265
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 7.5, y: -0.5, z: 0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 265
+    connector: {fileID: 0}
+  - name: Down 266
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 7.5, y: -0.5, z: 1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 266
+    connector: {fileID: 0}
+  - name: Down 267
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 7.5, y: -0.5, z: 2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 267
+    connector: {fileID: 0}
+  - name: Down 268
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 7.5, y: -0.5, z: 3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 268
+    connector: {fileID: 0}
+  - name: Down 269
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 7.5, y: -0.5, z: 4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 269
+    connector: {fileID: 0}
+  - name: Down 270
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 7.5, y: -0.5, z: 5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 270
+    connector: {fileID: 0}
+  - name: Down 271
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 7.5, y: -0.5, z: 6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 271
+    connector: {fileID: 0}
+  - name: Down 272
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 7.5, y: -0.5, z: 7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 272
+    connector: {fileID: 0}
+  - name: Down 273
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 8.5, y: -0.5, z: -7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 273
+    connector: {fileID: 0}
+  - name: Down 274
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 8.5, y: -0.5, z: -6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 274
+    connector: {fileID: 0}
+  - name: Down 275
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 8.5, y: -0.5, z: -5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 275
+    connector: {fileID: 0}
+  - name: Down 276
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 8.5, y: -0.5, z: -4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 276
+    connector: {fileID: 0}
+  - name: Down 277
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 8.5, y: -0.5, z: -3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 277
+    connector: {fileID: 0}
+  - name: Down 278
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 8.5, y: -0.5, z: -2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 278
+    connector: {fileID: 0}
+  - name: Down 279
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 8.5, y: -0.5, z: -1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 279
+    connector: {fileID: 0}
+  - name: Down 280
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 8.5, y: -0.5, z: -0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 280
+    connector: {fileID: 0}
+  - name: Down 281
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 8.5, y: -0.5, z: 0.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 281
+    connector: {fileID: 0}
+  - name: Down 282
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 8.5, y: -0.5, z: 1.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 282
+    connector: {fileID: 0}
+  - name: Down 283
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 8.5, y: -0.5, z: 2.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 283
+    connector: {fileID: 0}
+  - name: Down 284
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 8.5, y: -0.5, z: 3.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 284
+    connector: {fileID: 0}
+  - name: Down 285
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 8.5, y: -0.5, z: 4.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 285
+    connector: {fileID: 0}
+  - name: Down 286
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 8.5, y: -0.5, z: 5.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 286
+    connector: {fileID: 0}
+  - name: Down 287
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 8.5, y: -0.5, z: 6.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 287
+    connector: {fileID: 0}
+  - name: Down 288
+    canConnect: 1
+    isConnected: 0
+    connectType: 1
+    localPos: {x: 8.5, y: -0.5, z: 7.5}
+    normal: {x: 0, y: -1, z: 0}
+    order: 288
+    connector: {fileID: 0}
+  - name: Forward 1
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: -8.5, y: 0, z: 8}
+    normal: {x: 0, y: 0, z: 1}
+    order: 1
+    connector: {fileID: 0}
+  - name: Forward 2
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: -7.5, y: 0, z: 8}
+    normal: {x: 0, y: 0, z: 1}
+    order: 2
+    connector: {fileID: 0}
+  - name: Forward 3
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: -6.5, y: 0, z: 8}
+    normal: {x: 0, y: 0, z: 1}
+    order: 3
+    connector: {fileID: 0}
+  - name: Forward 4
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: -5.5, y: 0, z: 8}
+    normal: {x: 0, y: 0, z: 1}
+    order: 4
+    connector: {fileID: 0}
+  - name: Forward 5
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: -4.5, y: 0, z: 8}
+    normal: {x: 0, y: 0, z: 1}
+    order: 5
+    connector: {fileID: 0}
+  - name: Forward 6
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: -3.5, y: 0, z: 8}
+    normal: {x: 0, y: 0, z: 1}
+    order: 6
+    connector: {fileID: 0}
+  - name: Forward 7
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: -2.5, y: 0, z: 8}
+    normal: {x: 0, y: 0, z: 1}
+    order: 7
+    connector: {fileID: 0}
+  - name: Forward 8
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: -1.5, y: 0, z: 8}
+    normal: {x: 0, y: 0, z: 1}
+    order: 8
+    connector: {fileID: 0}
+  - name: Forward 9
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: -0.5, y: 0, z: 8}
+    normal: {x: 0, y: 0, z: 1}
+    order: 9
+    connector: {fileID: 0}
+  - name: Forward 10
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: 0.5, y: 0, z: 8}
+    normal: {x: 0, y: 0, z: 1}
+    order: 10
+    connector: {fileID: 0}
+  - name: Forward 11
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: 1.5, y: 0, z: 8}
+    normal: {x: 0, y: 0, z: 1}
+    order: 11
+    connector: {fileID: 0}
+  - name: Forward 12
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: 2.5, y: 0, z: 8}
+    normal: {x: 0, y: 0, z: 1}
+    order: 12
+    connector: {fileID: 0}
+  - name: Forward 13
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: 3.5, y: 0, z: 8}
+    normal: {x: 0, y: 0, z: 1}
+    order: 13
+    connector: {fileID: 0}
+  - name: Forward 14
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: 4.5, y: 0, z: 8}
+    normal: {x: 0, y: 0, z: 1}
+    order: 14
+    connector: {fileID: 0}
+  - name: Forward 15
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: 5.5, y: 0, z: 8}
+    normal: {x: 0, y: 0, z: 1}
+    order: 15
+    connector: {fileID: 0}
+  - name: Forward 16
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: 6.5, y: 0, z: 8}
+    normal: {x: 0, y: 0, z: 1}
+    order: 16
+    connector: {fileID: 0}
+  - name: Forward 17
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: 7.5, y: 0, z: 8}
+    normal: {x: 0, y: 0, z: 1}
+    order: 17
+    connector: {fileID: 0}
+  - name: Forward 18
+    canConnect: 1
+    isConnected: 0
+    connectType: 2
+    localPos: {x: 8.5, y: 0, z: 8}
+    normal: {x: 0, y: 0, z: 1}
+    order: 18
+    connector: {fileID: 0}
+  - name: Back 1
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: -8.5, y: 0, z: -8}
+    normal: {x: 0, y: 0, z: -1}
+    order: 1
+    connector: {fileID: 0}
+  - name: Back 2
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: -7.5, y: 0, z: -8}
+    normal: {x: 0, y: 0, z: -1}
+    order: 2
+    connector: {fileID: 0}
+  - name: Back 3
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: -6.5, y: 0, z: -8}
+    normal: {x: 0, y: 0, z: -1}
+    order: 3
+    connector: {fileID: 0}
+  - name: Back 4
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: -5.5, y: 0, z: -8}
+    normal: {x: 0, y: 0, z: -1}
+    order: 4
+    connector: {fileID: 0}
+  - name: Back 5
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: -4.5, y: 0, z: -8}
+    normal: {x: 0, y: 0, z: -1}
+    order: 5
+    connector: {fileID: 0}
+  - name: Back 6
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: -3.5, y: 0, z: -8}
+    normal: {x: 0, y: 0, z: -1}
+    order: 6
+    connector: {fileID: 0}
+  - name: Back 7
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: -2.5, y: 0, z: -8}
+    normal: {x: 0, y: 0, z: -1}
+    order: 7
+    connector: {fileID: 0}
+  - name: Back 8
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: -1.5, y: 0, z: -8}
+    normal: {x: 0, y: 0, z: -1}
+    order: 8
+    connector: {fileID: 0}
+  - name: Back 9
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: -0.5, y: 0, z: -8}
+    normal: {x: 0, y: 0, z: -1}
+    order: 9
+    connector: {fileID: 0}
+  - name: Back 10
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: 0.5, y: 0, z: -8}
+    normal: {x: 0, y: 0, z: -1}
+    order: 10
+    connector: {fileID: 0}
+  - name: Back 11
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: 1.5, y: 0, z: -8}
+    normal: {x: 0, y: 0, z: -1}
+    order: 11
+    connector: {fileID: 0}
+  - name: Back 12
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: 2.5, y: 0, z: -8}
+    normal: {x: 0, y: 0, z: -1}
+    order: 12
+    connector: {fileID: 0}
+  - name: Back 13
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: 3.5, y: 0, z: -8}
+    normal: {x: 0, y: 0, z: -1}
+    order: 13
+    connector: {fileID: 0}
+  - name: Back 14
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: 4.5, y: 0, z: -8}
+    normal: {x: 0, y: 0, z: -1}
+    order: 14
+    connector: {fileID: 0}
+  - name: Back 15
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: 5.5, y: 0, z: -8}
+    normal: {x: 0, y: 0, z: -1}
+    order: 15
+    connector: {fileID: 0}
+  - name: Back 16
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: 6.5, y: 0, z: -8}
+    normal: {x: 0, y: 0, z: -1}
+    order: 16
+    connector: {fileID: 0}
+  - name: Back 17
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: 7.5, y: 0, z: -8}
+    normal: {x: 0, y: 0, z: -1}
+    order: 17
+    connector: {fileID: 0}
+  - name: Back 18
+    canConnect: 1
+    isConnected: 0
+    connectType: 3
+    localPos: {x: 8.5, y: 0, z: -8}
+    normal: {x: 0, y: 0, z: -1}
+    order: 18
+    connector: {fileID: 0}
+  - name: Left 1
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -9, y: 0, z: -7.5}
+    normal: {x: -1, y: 0, z: 0}
+    order: 1
+    connector: {fileID: 0}
+  - name: Left 2
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -9, y: 0, z: -6.5}
+    normal: {x: -1, y: 0, z: 0}
+    order: 2
+    connector: {fileID: 0}
+  - name: Left 3
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -9, y: 0, z: -5.5}
+    normal: {x: -1, y: 0, z: 0}
+    order: 3
+    connector: {fileID: 0}
+  - name: Left 4
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -9, y: 0, z: -4.5}
+    normal: {x: -1, y: 0, z: 0}
+    order: 4
+    connector: {fileID: 0}
+  - name: Left 5
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -9, y: 0, z: -3.5}
+    normal: {x: -1, y: 0, z: 0}
+    order: 5
+    connector: {fileID: 0}
+  - name: Left 6
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -9, y: 0, z: -2.5}
+    normal: {x: -1, y: 0, z: 0}
+    order: 6
+    connector: {fileID: 0}
+  - name: Left 7
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -9, y: 0, z: -1.5}
+    normal: {x: -1, y: 0, z: 0}
+    order: 7
+    connector: {fileID: 0}
+  - name: Left 8
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -9, y: 0, z: -0.5}
+    normal: {x: -1, y: 0, z: 0}
+    order: 8
+    connector: {fileID: 0}
+  - name: Left 9
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -9, y: 0, z: 0.5}
+    normal: {x: -1, y: 0, z: 0}
+    order: 9
+    connector: {fileID: 0}
+  - name: Left 10
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -9, y: 0, z: 1.5}
+    normal: {x: -1, y: 0, z: 0}
+    order: 10
+    connector: {fileID: 0}
+  - name: Left 11
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -9, y: 0, z: 2.5}
+    normal: {x: -1, y: 0, z: 0}
+    order: 11
+    connector: {fileID: 0}
+  - name: Left 12
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -9, y: 0, z: 3.5}
+    normal: {x: -1, y: 0, z: 0}
+    order: 12
+    connector: {fileID: 0}
+  - name: Left 13
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -9, y: 0, z: 4.5}
+    normal: {x: -1, y: 0, z: 0}
+    order: 13
+    connector: {fileID: 0}
+  - name: Left 14
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -9, y: 0, z: 5.5}
+    normal: {x: -1, y: 0, z: 0}
+    order: 14
+    connector: {fileID: 0}
+  - name: Left 15
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -9, y: 0, z: 6.5}
+    normal: {x: -1, y: 0, z: 0}
+    order: 15
+    connector: {fileID: 0}
+  - name: Left 16
+    canConnect: 1
+    isConnected: 0
+    connectType: 4
+    localPos: {x: -9, y: 0, z: 7.5}
+    normal: {x: -1, y: 0, z: 0}
+    order: 16
+    connector: {fileID: 0}
+  - name: Right 1
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 9, y: 0, z: -7.5}
+    normal: {x: 1, y: 0, z: 0}
+    order: 1
+    connector: {fileID: 0}
+  - name: Right 2
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 9, y: 0, z: -6.5}
+    normal: {x: 1, y: 0, z: 0}
+    order: 2
+    connector: {fileID: 0}
+  - name: Right 3
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 9, y: 0, z: -5.5}
+    normal: {x: 1, y: 0, z: 0}
+    order: 3
+    connector: {fileID: 0}
+  - name: Right 4
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 9, y: 0, z: -4.5}
+    normal: {x: 1, y: 0, z: 0}
+    order: 4
+    connector: {fileID: 0}
+  - name: Right 5
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 9, y: 0, z: -3.5}
+    normal: {x: 1, y: 0, z: 0}
+    order: 5
+    connector: {fileID: 0}
+  - name: Right 6
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 9, y: 0, z: -2.5}
+    normal: {x: 1, y: 0, z: 0}
+    order: 6
+    connector: {fileID: 0}
+  - name: Right 7
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 9, y: 0, z: -1.5}
+    normal: {x: 1, y: 0, z: 0}
+    order: 7
+    connector: {fileID: 0}
+  - name: Right 8
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 9, y: 0, z: -0.5}
+    normal: {x: 1, y: 0, z: 0}
+    order: 8
+    connector: {fileID: 0}
+  - name: Right 9
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 9, y: 0, z: 0.5}
+    normal: {x: 1, y: 0, z: 0}
+    order: 9
+    connector: {fileID: 0}
+  - name: Right 10
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 9, y: 0, z: 1.5}
+    normal: {x: 1, y: 0, z: 0}
+    order: 10
+    connector: {fileID: 0}
+  - name: Right 11
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 9, y: 0, z: 2.5}
+    normal: {x: 1, y: 0, z: 0}
+    order: 11
+    connector: {fileID: 0}
+  - name: Right 12
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 9, y: 0, z: 3.5}
+    normal: {x: 1, y: 0, z: 0}
+    order: 12
+    connector: {fileID: 0}
+  - name: Right 13
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 9, y: 0, z: 4.5}
+    normal: {x: 1, y: 0, z: 0}
+    order: 13
+    connector: {fileID: 0}
+  - name: Right 14
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 9, y: 0, z: 5.5}
+    normal: {x: 1, y: 0, z: 0}
+    order: 14
+    connector: {fileID: 0}
+  - name: Right 15
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 9, y: 0, z: 6.5}
+    normal: {x: 1, y: 0, z: 0}
+    order: 15
+    connector: {fileID: 0}
+  - name: Right 16
+    canConnect: 1
+    isConnected: 0
+    connectType: 5
+    localPos: {x: 9, y: 0, z: 7.5}
+    normal: {x: 1, y: 0, z: 0}
+    order: 16
+    connector: {fileID: 0}
+  neighbors: []
+  canRotate: 1
+  canExplode: 0
+  showConnectors: 1
+  showLabel: 0
+  uniqueId:
+--- !u!114 &451725038772402276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9093036129323786169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f887aec31b46cb74db9436ab89ebf777, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  maxDurability: 3968.3052
+  collisionSpeedThreshold: 2
+  damageMultiplier: 0.1
+  _collisionDamageScale: 1
+  _maximumCollisionHealthFraction: 1
+  _collisionDamageCooldown: 0
+  debugLog: 1
+  currentDurability: 0
+--- !u!65 &4548989685497105641
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9093036129323786169}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 17.9, y: 0.9, z: 15.9}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5931499990908901222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9093036129323786169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d918074d82ae8274ab6fa09613242220, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Info
+  blockName: 1x1x1
+  description:
+  connectionStatus: 0
+  durabilityStatus: 0
+  powerStatus: 0
+  iconHeightOffset: 0.25
+  _fadeSpeed: 7
+--- !u!1 &9122273897679275658
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1921688121931645608}
+  m_Layer: 0
+  m_Name: IndustrialVisual
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1921688121931645608
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9122273897679275658}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8008531864251878786}
+  m_Father: {fileID: 1875130130451358484}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

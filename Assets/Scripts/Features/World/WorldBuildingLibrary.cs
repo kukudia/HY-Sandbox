@@ -34,6 +34,12 @@ internal sealed class WorldBuildingLibrary
             }
         }
 
+        foreach (TextAsset asset in Resources.LoadAll<TextAsset>("WorldBlueprints/Buildings"))
+        {
+            CollectBlueprintResources(JsonUtility.FromJson<BlockDataList>(asset.text), resources);
+            yield return null;
+        }
+
         int complete = 0;
         foreach (string resource in resources)
         {
@@ -68,17 +74,45 @@ internal sealed class WorldBuildingLibrary
                 return;
             }
 
-            foreach (BlockData block in blueprint.blocks)
-            {
-                if (!string.IsNullOrWhiteSpace(block?.resourcePath))
-                {
-                    resources.Add(BlueprintBlockFactory.ToResourcePath(block.resourcePath));
-                }
-            }
+            CollectBlueprintResources(blueprint, resources);
         }
         catch (Exception error) when (error is ArgumentException || error is IOException || error is UnauthorizedAccessException)
         {
             // Load()统一报告非法文件；预热阶段跳过它，避免一份损坏JSON阻断其他蓝图。
+        }
+    }
+
+    private static void CollectBlueprintResources(BlockDataList blueprint, HashSet<string> resources)
+    {
+        if (blueprint?.blocks == null)
+        {
+            return;
+        }
+
+        foreach (BlockData block in blueprint.blocks)
+        {
+            if (!string.IsNullOrWhiteSpace(block?.resourcePath))
+            {
+                resources.Add(BlueprintBlockFactory.ToResourcePath(block.resourcePath));
+            }
+        }
+
+        if (blueprint.outpost?.garrison != null)
+        {
+            foreach (OutpostGarrisonData guard in blueprint.outpost.garrison)
+            {
+                if (guard?.blueprint?.blocks != null)
+                {
+                    // Only one embedded level is supported; validation rejects nested outposts.
+                    foreach (BlockData block in guard.blueprint.blocks)
+                    {
+                        if (!string.IsNullOrWhiteSpace(block?.resourcePath))
+                        {
+                            resources.Add(BlueprintBlockFactory.ToResourcePath(block.resourcePath));
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -88,23 +122,30 @@ internal sealed class WorldBuildingLibrary
         Names.Clear();
         Errors.Clear();
         PlatformRadius = 0f;
-        if (!Directory.Exists(directory))
+        string[] files = Directory.Exists(directory) ? Directory.GetFiles(directory, "*.json") : Array.Empty<string>();
+        Array.Sort(files, StringComparer.OrdinalIgnoreCase);
+        var sources = new List<KeyValuePair<string, string>>();
+        foreach (TextAsset asset in Resources.LoadAll<TextAsset>("WorldBlueprints/Buildings"))
         {
-            return;
+            sources.Add(new KeyValuePair<string, string>(asset.name, asset.text));
         }
 
-        string[] files = Directory.GetFiles(directory, "*.json");
-        Array.Sort(files, StringComparer.OrdinalIgnoreCase);
         foreach (string path in files)
         {
+            sources.Add(new KeyValuePair<string, string>(Path.GetFileNameWithoutExtension(path), null));
+        }
+
+        foreach (KeyValuePair<string, string> source in sources)
+        {
+            string path = Path.Combine(directory, source.Key + ".json");
             try
             {
-                if (new FileInfo(path).Length > 4 * 1024 * 1024)
+                if (source.Value == null && new FileInfo(path).Length > 4 * 1024 * 1024)
                 {
                     throw new InvalidOperationException("Blueprint exceeds 4 MB.");
                 }
 
-                BlockDataList blueprint = JsonUtility.FromJson<BlockDataList>(File.ReadAllText(path));
+                BlockDataList blueprint = JsonUtility.FromJson<BlockDataList>(source.Value ?? File.ReadAllText(path));
                 WorldBuildingValidation.ValidateBlueprint(blueprint);
                 if (blueprint.blocks.Count == 0)
                 {
@@ -131,8 +172,17 @@ internal sealed class WorldBuildingLibrary
                     }
                 }
 
-                Templates.Add(blueprint);
-                Names.Add(Path.GetFileNameWithoutExtension(path));
+                int existing = Names.IndexOf(source.Key);
+                if (existing >= 0)
+                {
+                    Templates[existing] = blueprint;
+                }
+                else
+                {
+                    Templates.Add(blueprint);
+                    Names.Add(source.Key);
+                }
+
                 PlatformRadius = Mathf.Max(PlatformRadius, radius);
             }
             catch (Exception error) when (error is ArgumentException || error is InvalidOperationException || error is IOException || error is UnauthorizedAccessException)

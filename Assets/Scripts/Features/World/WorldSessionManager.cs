@@ -29,6 +29,9 @@ public sealed class WorldSessionManager : MonoBehaviour
     private WorldLoadingPanel loadingPanel;
     private readonly Dictionary<GameObject, bool> environmentStates = new Dictionary<GameObject, bool>();
     private WorldBuildingStreaming buildingStreaming;
+    private OutpostEncounterDirector outposts;
+    public OutpostEncounterDirector Outposts => outposts;
+
     private WorldRegionStreaming regionStreaming;
     private WorldGenerationSettings sessionSettings;
     private Coroutine routine;
@@ -82,6 +85,8 @@ public sealed class WorldSessionManager : MonoBehaviour
     public void BeginPreparation()
     {
         StopPreparation();
+        outposts?.Clear();
+        outposts = null;
         SetBuildEnvironmentVisible(true);
         buildings?.PrepareForUnload();
         worldRoot?.SetActive(false);
@@ -147,6 +152,7 @@ public sealed class WorldSessionManager : MonoBehaviour
         buildings.LoadingFrameBudgetMilliseconds = Settings.LoadingFrameBudgetMilliseconds;
         world.InitializeStreaming(Settings, SessionSeed);
         buildingStreaming = new WorldBuildingStreaming(world, buildings, Settings, library);
+        outposts = new OutpostEncounterDirector(buildings);
         regionStreaming = new WorldRegionStreaming(world, buildingStreaming, Settings);
         streamingFocus = world.SpawnPosition;
         distanceView = new WorldDistanceView(world, Settings);
@@ -409,6 +415,11 @@ public sealed class WorldSessionManager : MonoBehaviour
 
     private void Update()
     {
+        if (State == WorldSessionState.Playing && !entering && player != null)
+        {
+            outposts?.Tick(player.position);
+        }
+
         if (failureNeedsExit)
         {
             // 不在正在迭代的生成协程中重入StopCoroutine；下一帧走与正常退出相同的清理/UI链。
@@ -507,6 +518,8 @@ public sealed class WorldSessionManager : MonoBehaviour
     private void Fail(Exception error)
     {
         FinishEntering();
+        outposts?.Clear();
+        outposts = null;
         failureNeedsExit = State == WorldSessionState.Playing;
         playerGuard?.Release();
         State = WorldSessionState.Failed;
@@ -520,6 +533,8 @@ public sealed class WorldSessionManager : MonoBehaviour
     private void OnDisable()
     {
         StopPreparation();
+        outposts?.Clear();
+        outposts = null;
         playRequested = false;
         loadingPanel?.Show(false);
         buildings?.PrepareForUnload();

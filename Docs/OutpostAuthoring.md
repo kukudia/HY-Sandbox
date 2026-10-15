@@ -1,0 +1,28 @@
+# 建筑与敌人据点
+
+建筑编辑器Ctrl+Alt+F。选择内置模板后“Copy template”创建独立用户蓝图，不覆盖已有作品。启用“Enemy outpost”选择敌机，添加有限驻军，再逐个保存本地X/Height/Z和Yaw；移除最后一名驻军恢复普通建筑。敌机以模块快照嵌入，原敌机文件后续修改不会悄悄改变已设计据点。部署标记显示编号、方向和名称。
+
+生产游玩停用EnemySpawner自动刷新，据点只在近距离及地形碰撞就绪后部署有限驻军，每帧最多新建一台、同时最多16台。远处活敌休眠保留模块、耐久和货物；死亡通过驾驶舱明确通知，区块重载不会清除本次探索击败状态。消灭驻军并清除建筑炮台后显示CLEARED。状态不写永久文件，正常返航或死亡后新探索可以重新生成。普通建筑与据点一起参与原有10%建筑候选概率，不提高总体建筑密度。
+
+## 内容规格和可编辑源
+
+Unity6000.3.11f1 / URP / Windows D3D11，米、Y-up。假设典型观察距离20-120m；建筑8×8至18×16m，驻军采用项目既有模块化低多边形风格。建筑各不超过20模块，敌机95/120/116模块；新内容不引入贴图、材质、骨骼或声音预算。继承现有方块简单碰撞、材质和可破坏组件；按载具/世界流式预算限制同时活动数量。Pivot是建筑底座原点，部署点相对该原点，模型不生成实体底座。
+
+源码：Assets/Editor/World/OutpostContentAuthoring.cs；可编辑结果Assets/Resources/WorldBlueprints/Buildings/*.json。工具“Create missing authored content”只补缺失文件，保留编辑过的结果。三套敌机源Blueprints/CODEX_Enemies，与项目既有资源相同；打包快照在Resources/WorldBlueprints/Enemies。没有使用外部AI生成或引入新第三方素材，沿用项目既有素材许可，未重新审计其原始许可证。
+
+结构件保存为Resources/WorldBlueprints/Parts的真实尺寸Prefab，包含匹配模型、碰撞和完整连接网格，不依赖运行时缩放伪装外观。生成器提供“Rebuild six bundled templates”明确重建这六个内置JSON；会覆盖这六份项目模板，用户目录不受影响，先把自定义作品复制为用户蓝图。中继遵守原模块底面连接规则，布置在地面或塔顶；炮塔由真实发电机与中继供电，可通过破坏供电网络削弱防御。
+
+| 名称 | 角色与布局 | 驻军 | 资源配置 |
+| --- | --- | --- | --- |
+| Field Workshop | 开放入口、工位和屋顶 | 无 | 模块货仓 |
+| Abandoned Storehouse | 三跨库房和货架 | 无 | 金币、模块 |
+| Relay Ruins | 破损墙段与高通信塔 | 无 | 科技 |
+| Road Watch Outpost | 低矮路障与单炮塔 | Finch×1 | 金币 |
+| Relay Station Outpost | 双高塔、中部发电与科技仓 | Finch×1、Pike×1 | 科技 |
+| Supply Stronghold Outpost | U形围墙、双炮塔、分散资源仓 | Pike×1、Manta×1、Finch×1 | 金币、科技、模块 |
+
+资源在真实货仓内，遵循既有击毁掉落与机器人回收，不凭清剿额外凭空发奖。序列化驻军使用独立非递归OutpostEnemyBlueprint，避免Unity十层序列化上限；显式enabled兼容缺失字段的旧JSON。
+
+## 验收边界
+
+运行证据和已知限制记入本轮Docs/Validation报告。程序化布局和模块组合属于本项目可玩内容，不称为新增独立高精美术资产；最终视觉、支撑、炮塔供电/射界和部署净空需用引擎验证。

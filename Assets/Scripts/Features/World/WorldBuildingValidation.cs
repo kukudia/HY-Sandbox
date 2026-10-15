@@ -16,6 +16,11 @@ public static class WorldBuildingValidation
         }
 
         var ids = new HashSet<string>();
+        if (blueprint.IsOutpost)
+        {
+            blueprint.outpost.Validate();
+        }
+
         foreach (BlockData block in blueprint.blocks)
         {
             if (block == null || string.IsNullOrWhiteSpace(block.id) || !ids.Add(block.id) || block.x < 1 || block.y < 1 || block.z < 1 || block.x > 64 || block.y > 64 || block.z > 64)
@@ -95,7 +100,7 @@ public static class WorldBuildingValidation
         return Finite(value.x) && Finite(value.y) && Finite(value.z);
     }
 
-    private static bool ValidRotation(Quaternion value)
+    public static bool ValidRotation(Quaternion value)
     {
         float norm = value.x * value.x + value.y * value.y + value.z * value.z + value.w * value.w;
         return Finite(norm) && Mathf.Abs(norm - 1f) < 0.01f;

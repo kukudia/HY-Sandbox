@@ -161,6 +161,11 @@ public static class BuildingEditorPlayProbe
         target.GetType().GetField(name, BindingFlags.NonPublic | BindingFlags.Instance).SetValue(target, value);
     }
 
+    private static object Field(object target, string name)
+    {
+        return target.GetType().GetField(name, BindingFlags.NonPublic | BindingFlags.Instance).GetValue(target);
+    }
+
     private static object CreateFileStore(string directory)
     {
         Type type = typeof(SaveManager).Assembly.GetType("BlueprintFileStore");
@@ -226,6 +231,45 @@ public static class BuildingEditorPlayProbe
         Check(
             "Editable size panel is visible and Play button hidden",
             panel != null && !MainUIButtons.instance.playButton.gameObject.activeSelf);
+        BuildingOutpostEditor outpost = panel.GetComponent<BuildingOutpostEditor>();
+        Check("Building editor exposes authored outpost controls", outpost != null);
+        string bundledCopy = saves.CopyBundledBuilding("Road Watch Outpost");
+        byte[] firstCopyBytes = File.ReadAllBytes(saves.GetBuildingBlueprintPath(bundledCopy));
+        string secondBundledCopy = saves.CopyBundledBuilding("Road Watch Outpost");
+        Check(
+            "Bundled content copies to distinct editable files without overwriting",
+            bundledCopy != secondBundledCopy && firstCopyBytes.SequenceEqual(File.ReadAllBytes(saves.GetBuildingBlueprintPath(bundledCopy))));
+        Check(
+            "Copied template retains building and finite garrison",
+            JsonUtility.FromJson<BlockDataList>(File.ReadAllText(saves.GetBuildingBlueprintPath(bundledCopy))).IsOutpost);
+        Toggle outpostToggle = (Toggle)Field(outpost, "_isOutpost");
+        outpostToggle.isOn = true;
+        Check(
+            "Toggle creates embedded defender snapshot",
+            saves.cachedData.IsOutpost && saves.cachedData.outpost.garrison.Count == 1 && saves.cachedData.outpost.garrison[0].blueprint.blocks.Count > 0);
+        outpost.AddDefender();
+        Check(
+            "Add creates independent stable garrison identities",
+            saves.cachedData.outpost.garrison.Count == 2 && saves.cachedData.outpost.garrison[0].id != saves.cachedData.outpost.garrison[1].id);
+        ((InputField)Field(outpost, "_x")).text = "-36.5";
+        ((InputField)Field(outpost, "_y")).text = "15";
+        ((InputField)Field(outpost, "_z")).text = "0";
+        ((InputField)Field(outpost, "_yaw")).text = "90";
+        outpost.SavePose();
+        Check(
+            "Deployment pose saves numeric local position and yaw",
+            saves.cachedData.outpost.garrison[1].position.x == -36.5f && saves.cachedData.outpost.garrison[1].yaw == 90f);
+        string outpostBytes = File.ReadAllText(saves.GetBuildingBlueprintPath(build.CurrentBuildName));
+        ((InputField)Field(outpost, "_y")).text = "-5";
+        outpost.SavePose();
+        Check(
+            "Invalid deployment preserves saved blueprint",
+            outpostBytes == File.ReadAllText(saves.GetBuildingBlueprintPath(build.CurrentBuildName)));
+        outpost.RemoveDefender();
+        Check("Remove preserves remaining defender", saves.cachedData.outpost.garrison.Count == 1);
+        Check(
+            "Defender snapshot does not recursively become an outpost",
+            saves.cachedData.outpost.garrison[0].blueprint.GetType() == typeof(OutpostEnemyBlueprint));
         build.selectedBlock = foundation;
         build.DeleteBlock();
         Check("Foundation cannot be deleted", foundation != null && saves.cachedData.blocks.Count == 0);
@@ -276,6 +320,9 @@ public static class BuildingEditorPlayProbe
         Check(
             "Dimensions survive in JSON with only the ordinary block",
             JsonUtility.FromJson<BlockDataList>(File.ReadAllText(saves.GetBuildingBlueprintPath(build.CurrentBuildName))).foundation.width == 5 && saves.cachedData.blocks.Count == 1);
+        Check(
+            "Foundation resize preserves outpost and embedded defenders",
+            JsonUtility.FromJson<BlockDataList>(File.ReadAllText(saves.GetBuildingBlueprintPath(build.CurrentBuildName))).IsOutpost);
         string beforeInvalid = File.ReadAllText(saves.GetBuildingBlueprintPath(build.CurrentBuildName));
         Check(
             "Zero and oversized dimensions are rejected",

@@ -353,9 +353,23 @@
 | BuildingEditorPlayProbe | [`void Finish()`](../Assets/Editor/Building/BuildingEditorPlayProbe.cs#L122) | private static |
 | BuildingEditorPlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Building/BuildingEditorPlayProbe.cs#L149) | private static |
 | BuildingEditorPlayProbe | [`void Field(object target, string name, object value)`](../Assets/Editor/Building/BuildingEditorPlayProbe.cs#L159) | private static |
-| BuildingEditorPlayProbe | [`object CreateFileStore(string directory)`](../Assets/Editor/Building/BuildingEditorPlayProbe.cs#L164) | private static |
-| BuildingEditorPlayProbe | [`void Shortcut(params Key[] keys)`](../Assets/Editor/Building/BuildingEditorPlayProbe.cs#L170) | private static |
-| BuildingEditorPlayProbe | [`IEnumerator Scenario()`](../Assets/Editor/Building/BuildingEditorPlayProbe.cs#L181) | private static |
+| BuildingEditorPlayProbe | [`object Field(object target, string name)`](../Assets/Editor/Building/BuildingEditorPlayProbe.cs#L164) | private static |
+| BuildingEditorPlayProbe | [`object CreateFileStore(string directory)`](../Assets/Editor/Building/BuildingEditorPlayProbe.cs#L169) | private static |
+| BuildingEditorPlayProbe | [`void Shortcut(params Key[] keys)`](../Assets/Editor/Building/BuildingEditorPlayProbe.cs#L175) | private static |
+| BuildingEditorPlayProbe | [`IEnumerator Scenario()`](../Assets/Editor/Building/BuildingEditorPlayProbe.cs#L186) | private static |
+
+## Assets/Editor/Building/OutpostEditorAuthoring.cs
+
+// 职责：为现有建筑编辑Prefab添加可编辑据点表单，保留底座尺寸控件与既有GUID。 // 入口：Upgrade()；通过PrefabUtility保存真实资产，重复执行不重复添加。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| OutpostEditorAuthoring | [`void Upgrade()`](../Assets/Editor/Building/OutpostEditorAuthoring.cs#L12) | public static |
+| OutpostEditorAuthoring | [`void AddTemplateCopy(GameObject root, BuildingOutpostEditor editor)`](../Assets/Editor/Building/OutpostEditorAuthoring.cs#L104) | private static |
+| OutpostEditorAuthoring | [`Dropdown Dropdown(Transform parent, string name, string caption, float y)`](../Assets/Editor/Building/OutpostEditorAuthoring.cs#L137) | private static |
+| OutpostEditorAuthoring | [`Button Button(Transform parent, string name, string caption, float x)`](../Assets/Editor/Building/OutpostEditorAuthoring.cs#L145) | private static |
+| OutpostEditorAuthoring | [`Text Label(Transform parent, string name, string caption, Vector2 size, Vector2 position)`](../Assets/Editor/Building/OutpostEditorAuthoring.cs#L153) | private static |
+| OutpostEditorAuthoring | [`void Place(GameObject obj, Transform parent, string name, Vector2 size, Vector2 position)`](../Assets/Editor/Building/OutpostEditorAuthoring.cs#L166) | private static |
 
 ## Assets/Editor/Combat/CombatHudPlayProbe.cs
 
@@ -744,6 +758,48 @@
 | SalvagePlayProbe | [`BuildingRuntime SalvageBuilding(WorldBuildingManager manager, UnitFaction faction, bool withBot = false)`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L234) | private static |
 | SalvagePlayProbe | [`IEnumerator BuildingSalvage()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L278) | private static |
 | SalvagePlayProbe | [`IEnumerator Scenario()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L430) | private static |
+
+## Assets/Editor/World/OutpostContentAuthoring.cs
+
+// 职责：以明确布局生成六套可编辑建筑/据点JSON，打包既有三套敌机蓝图供驻军选择。 // 入口：Bake()；只写项目Resources，不修改用户蓝图或存档；已有JSON保留，编辑后可单独删除重建。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| OutpostContentAuthoring | [`void Bake()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L12) | public static |
+| OutpostContentAuthoring | [`void Rebuild()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L18) | public static |
+| OutpostContentAuthoring | [`void Bake(bool overwrite)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L24) | private static |
+| OutpostContentAuthoring | [`BlockDataList Base(int width, int length)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L66) | private static |
+| OutpostContentAuthoring | [`BlockDataList Workshop()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L86) | private static |
+| OutpostContentAuthoring | [`BlockDataList Storehouse()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L123) | private static |
+| OutpostContentAuthoring | [`BlockDataList Ruins()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L150) | private static |
+| OutpostContentAuthoring | [`BlockDataList Watch()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L179) | private static |
+| OutpostContentAuthoring | [`BlockDataList Relay()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L203) | private static |
+| OutpostContentAuthoring | [`BlockDataList Stronghold()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L238) | private static |
+| OutpostContentAuthoring | [`void Loot(BlockDataList data, string resource, Vector3 position, CargoKind kind, int amount)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L292) | private static |
+| OutpostContentAuthoring | [`void Add( BlockDataList data, string resource, Vector3 position, int x = 0, int y = 0, int z = 0)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L307) | private static |
+| OutpostContentAuthoring | [`Vector3 SnapPosition(Vector3 position, int x, int y, int z)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L324) | private static |
+| OutpostContentAuthoring | [`void UpgradeGeometry()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L333) | public static |
+| OutpostContentAuthoring | [`string CreateStructuralPart(int x, int y, int z)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L379) | private static |
+| OutpostContentAuthoring | [`void Defend(BlockDataList data, string enemy, Vector3 position, float yaw)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L419) | private static |
+| OutpostContentAuthoring | [`void Write(string name, BlockDataList data, bool overwrite)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L432) | private static |
+
+## Assets/Editor/World/OutpostContentChecks.cs
+
+// 职责：在Main Play隔离物理场景逐套验证建筑模型/连接/供电/驻军数据并渲染预览。 // 入口：Run()；仅写Temp，不保存场景或用户数据。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| OutpostContentChecks | [`string Run()`](../Assets/Editor/World/OutpostContentChecks.cs#L14) | public static |
+| OutpostContentChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/World/OutpostContentChecks.cs#L128) | private static |
+| OutpostContentChecks | [`void Render(BuildingRuntime building, string path)`](../Assets/Editor/World/OutpostContentChecks.cs#L138) | private static |
+
+## Assets/Editor/World/OutpostHudAuthoring.cs
+
+// 职责：为Main保存据点状态HUD，并在场景中禁用旧EnemySpawner。 // 入口：Apply()；只新增所属HUD，保留既有界面布局。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| OutpostHudAuthoring | [`void Apply()`](../Assets/Editor/World/OutpostHudAuthoring.cs#L13) | public static |
 
 ## Assets/Editor/World/ProceduralVoxelWorldEditor.cs
 
@@ -1363,7 +1419,7 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BuildingEditorPanel | [`void Refresh()`](../Assets/Scripts/Features/Building/BuildingEditorPanel.cs#L16) | public |
-| BuildingEditorPanel | [`void ApplySize()`](../Assets/Scripts/Features/Building/BuildingEditorPanel.cs#L24) | public |
+| BuildingEditorPanel | [`void ApplySize()`](../Assets/Scripts/Features/Building/BuildingEditorPanel.cs#L25) | public |
 
 ## Assets/Scripts/Features/Building/BuildingFoundation.cs
 
@@ -1380,6 +1436,28 @@
 // 职责：保存建筑底座的网格尺寸；缺省为 4×4，不改变原有方块存档坐标。
 
 数据/配置/接口定义，无方法体。
+
+## Assets/Scripts/Features/Building/BuildingOutpostEditor.cs
+
+// 职责：在建筑编辑面板配置据点类型、敌机蓝图快照和逐名驻军本地部署姿态。 // 入口：Refresh() / AddDefender() / SavePose() / RemoveDefender() / SetOutpost()。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BuildingOutpostEditor | [`void Refresh()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L34) | public |
+| BuildingOutpostEditor | [`void AddTemplate(string name, string json)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L75) | private |
+| BuildingOutpostEditor | [`void CopyBuildingTemplate()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L87) | public |
+| BuildingOutpostEditor | [`void RefreshSlots(EnemyOutpostData data)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L105) | private |
+| BuildingOutpostEditor | [`EnemyOutpostData Copy()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L122) | private |
+| BuildingOutpostEditor | [`void SetOutpost()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L133) | public |
+| BuildingOutpostEditor | [`void AddDefender()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L150) | public |
+| BuildingOutpostEditor | [`void SelectDefender()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L174) | public |
+| BuildingOutpostEditor | [`void SavePose()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L196) | public |
+| BuildingOutpostEditor | [`bool Parse(InputField field, out float value)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L216) | private static |
+| BuildingOutpostEditor | [`void RemoveDefender()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L221) | public |
+| BuildingOutpostEditor | [`bool Save(EnemyOutpostData data)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L231) | private |
+| BuildingOutpostEditor | [`void ShowPreview(EnemyOutpostData data)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L253) | private |
+| BuildingOutpostEditor | [`void ClearPreview()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L276) | private |
+| BuildingOutpostEditor | [`void OnDisable()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L286) | private |
 
 ## Assets/Scripts/Features/Building/ConnectorPlacementHints.cs
 
@@ -1541,21 +1619,23 @@
 | SaveManager | [`bool RenameBuildingBlueprint(string oldName, string newName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L112) | public |
 | SaveManager | [`string GetBuildingBlueprintPath(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L117) | public |
 | SaveManager | [`void SaveBuildingFoundation(BuildingFoundationData foundation)`](../Assets/Scripts/Features/Building/SaveManager.cs#L122) | public |
-| SaveManager | [`void GetAllSaveNames()`](../Assets/Scripts/Features/Building/SaveManager.cs#L136) | public |
-| SaveManager | [`void GetAllEnemyBlueprintNames()`](../Assets/Scripts/Features/Building/SaveManager.cs#L146) | public |
-| SaveManager | [`void CreateNewSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L156) | public |
-| SaveManager | [`void CreateNewEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L174) | public |
-| SaveManager | [`void LoadSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L187) | public |
-| SaveManager | [`void LoadEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L211) | public |
-| SaveManager | [`void DeleteSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L233) | public |
-| SaveManager | [`void DeleteEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L245) | public |
-| SaveManager | [`bool RenameSave(string oldSaveName, string newSaveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L257) | public |
-| SaveManager | [`bool RenameEnemyBlueprint(string oldBlueprintName, string newBlueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L262) | public |
-| SaveManager | [`bool RenameBlueprint(string oldName, string newName, BuildTargetKind kind)`](../Assets/Scripts/Features/Building/SaveManager.cs#L267) | private |
-| SaveManager | [`void DuplicateSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L333) | public |
-| SaveManager | [`string GetSavePath(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L346) | public |
-| SaveManager | [`string GetEnemyBlueprintPath(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L351) | public |
-| SaveManager | [`string GetSaveFileSize(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L356) | public |
+| SaveManager | [`void GetAllSaveNames()`](../Assets/Scripts/Features/Building/SaveManager.cs#L137) | public |
+| SaveManager | [`void SaveBuildingOutpost(EnemyOutpostData outpost)`](../Assets/Scripts/Features/Building/SaveManager.cs#L147) | public |
+| SaveManager | [`string CopyBundledBuilding(string template)`](../Assets/Scripts/Features/Building/SaveManager.cs#L172) | public |
+| SaveManager | [`void GetAllEnemyBlueprintNames()`](../Assets/Scripts/Features/Building/SaveManager.cs#L205) | public |
+| SaveManager | [`void CreateNewSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L215) | public |
+| SaveManager | [`void CreateNewEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L233) | public |
+| SaveManager | [`void LoadSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L246) | public |
+| SaveManager | [`void LoadEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L270) | public |
+| SaveManager | [`void DeleteSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L292) | public |
+| SaveManager | [`void DeleteEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L304) | public |
+| SaveManager | [`bool RenameSave(string oldSaveName, string newSaveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L316) | public |
+| SaveManager | [`bool RenameEnemyBlueprint(string oldBlueprintName, string newBlueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L321) | public |
+| SaveManager | [`bool RenameBlueprint(string oldName, string newName, BuildTargetKind kind)`](../Assets/Scripts/Features/Building/SaveManager.cs#L326) | private |
+| SaveManager | [`void DuplicateSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L392) | public |
+| SaveManager | [`string GetSavePath(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L405) | public |
+| SaveManager | [`string GetEnemyBlueprintPath(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L410) | public |
+| SaveManager | [`string GetSaveFileSize(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L415) | public |
 
 ## Assets/Scripts/Features/Building/SaveUIPanel.cs
 
@@ -1604,14 +1684,14 @@
 | --- | --- | --- |
 | DestroyManager | [`void Awake()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L25) | private |
 | DestroyManager | [`void DestroyGameObject(GameObject obj)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L30) | public |
-| DestroyManager | [`void ExplodeBlock(Block block)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L131) | public |
-| DestroyManager | [`void ScheduleUnitCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L168) | public |
-| DestroyManager | [`void ScheduleDistantGroupCleanup(ControlUnit unit, Transform reference, float maxDistance)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L173) | public |
-| DestroyManager | [`void EndSalvageSession()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L178) | public |
-| DestroyManager | [`void NotifyObjectDestroyed()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L186) | public |
-| DestroyManager | [`void ScheduleRefresh()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L192) | private |
-| DestroyManager | [`IEnumerator DelayedRefresh()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L203) | private |
-| DestroyManager | [`void ExecuteRefresh()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L210) | private |
+| DestroyManager | [`void ExplodeBlock(Block block)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L136) | public |
+| DestroyManager | [`void ScheduleUnitCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L173) | public |
+| DestroyManager | [`void ScheduleDistantGroupCleanup(ControlUnit unit, Transform reference, float maxDistance)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L178) | public |
+| DestroyManager | [`void EndSalvageSession()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L183) | public |
+| DestroyManager | [`void NotifyObjectDestroyed()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L191) | public |
+| DestroyManager | [`void ScheduleRefresh()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L197) | private |
+| DestroyManager | [`IEnumerator DelayedRefresh()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L208) | private |
+| DestroyManager | [`void ExecuteRefresh()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L215) | private |
 
 ## Assets/Scripts/Features/Combat/Durability.cs
 
@@ -1627,6 +1707,25 @@
 | Durability | [`void ProtectFromExplosionCollisions(float duration)`](../Assets/Scripts/Features/Combat/Durability.cs#L105) | public |
 | Durability | [`void UpdateDurablility(float value)`](../Assets/Scripts/Features/Combat/Durability.cs#L118) | public |
 | Durability | [`void ChangeDurability(float value)`](../Assets/Scripts/Features/Combat/Durability.cs#L128) | private |
+
+## Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs
+
+// 职责：由已校验的模块蓝图恢复一台敌机，供据点驻军和显式诊断共用。 // 入口：Spawn()；不负责计时、随机刷怪或持久化。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyBlueprintFactory | [`bool IsValidBlueprint(BlockDataList dataList, string enemyBlueprint)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L8) | public static |
+| EnemyBlueprintFactory | [`ControlUnit Spawn(BlockDataList dataList, string enemyBlueprint, Vector3 spawnPosition, Quaternion spawnRotation)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L41) | public static |
+| EnemyBlueprintFactory | [`void ApplyBlueprintLocalTransform(Transform blockTransform, Vector3 localPosition, Quaternion localRotation)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L148) | private static |
+| EnemyBlueprintFactory | [`Vector3 CleanIntegerPosition(Vector3 position, string blockName)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L154) | private static |
+| EnemyBlueprintFactory | [`Quaternion CleanRightAngleRotation(Quaternion rotation, string blockName)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L165) | private static |
+| EnemyBlueprintFactory | [`float SnapNearInteger(float value)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L177) | private static |
+| EnemyBlueprintFactory | [`float SnapNearRightAngle(float angle)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L183) | private static |
+| EnemyBlueprintFactory | [`bool IsIntegerVector(Vector3 value)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L189) | private static |
+| EnemyBlueprintFactory | [`bool IsRightAngleVector(Vector3 euler)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L194) | private static |
+| EnemyBlueprintFactory | [`bool IsNearlyInteger(float value)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L199) | private static |
+| EnemyBlueprintFactory | [`bool IsNearlyRightAngle(float angle)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L204) | private static |
+| EnemyBlueprintFactory | [`void PrepareRuntimeEnemy(ControlUnit enemy)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L210) | private static |
 
 ## Assets/Scripts/Features/Combat/EnemyController.cs
 
@@ -1650,34 +1749,23 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| EnemyIdentity | [`void SetDisplayName(string displayName)`](../Assets/Scripts/Features/Combat/EnemyIdentity.cs#L13) | public |
-| EnemyIdentity | [`void SetSpawnMaxHealth(float maximum)`](../Assets/Scripts/Features/Combat/EnemyIdentity.cs#L18) | public |
+| EnemyIdentity | [`void ReportDefeated()`](../Assets/Scripts/Features/Combat/EnemyIdentity.cs#L9) | public |
+| EnemyIdentity | [`void SetDisplayName(string displayName)`](../Assets/Scripts/Features/Combat/EnemyIdentity.cs#L26) | public |
+| EnemyIdentity | [`void SetSpawnMaxHealth(float maximum)`](../Assets/Scripts/Features/Combat/EnemyIdentity.cs#L31) | public |
 
 ## Assets/Scripts/Features/Combat/EnemySpawner.cs
 
-// 职责：选择敌方蓝图并恢复敌方控制单元及出生状态。 // 入口：BeginPlayMode() / SpawnRandomEnemy() / SpawnEnemy()。
+// 职责：保留旧蓝图池与显式诊断兼容入口；自动计时刷怪已停用，据点使用EnemyBlueprintFactory。 // 入口：BeginPlayMode() / SpawnRandomEnemy() / SpawnEnemy()。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| EnemySpawner | [`void Start()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L21) | private |
-| EnemySpawner | [`void Update()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L26) | private |
-| EnemySpawner | [`void BeginPlayMode(Transform anchor)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L43) | public |
-| EnemySpawner | [`void InitializeEnemyBlueprintPool()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L54) | private |
-| EnemySpawner | [`void SpawnRandomEnemy()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L99) | public |
-| EnemySpawner | [`void SpawnEnemy()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L122) | public |
-| EnemySpawner | [`bool IsValidBlueprint(BlockDataList dataList, string enemyBlueprint)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L133) | private |
-| EnemySpawner | [`ControlUnit SpawnBlockData(BlockDataList dataList, string enemyBlueprint, Vector3 spawnPosition, Quaternion spawnRotation)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L166) | internal |
-| EnemySpawner | [`void ApplyBlueprintLocalTransform(Transform blockTransform, Vector3 localPosition, Quaternion localRotation)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L268) | private |
-| EnemySpawner | [`Vector3 CleanIntegerPosition(Vector3 position, string blockName)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L274) | private |
-| EnemySpawner | [`Quaternion CleanRightAngleRotation(Quaternion rotation, string blockName)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L285) | private |
-| EnemySpawner | [`float SnapNearInteger(float value)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L297) | private |
-| EnemySpawner | [`float SnapNearRightAngle(float angle)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L303) | private |
-| EnemySpawner | [`bool IsIntegerVector(Vector3 value)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L309) | private |
-| EnemySpawner | [`bool IsRightAngleVector(Vector3 euler)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L314) | private |
-| EnemySpawner | [`bool IsNearlyInteger(float value)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L319) | private |
-| EnemySpawner | [`bool IsNearlyRightAngle(float angle)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L324) | private |
-| EnemySpawner | [`Vector3 GetSpawnPosition()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L330) | private |
-| EnemySpawner | [`void PrepareRuntimeEnemy(ControlUnit enemy)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L348) | private |
+| EnemySpawner | [`void Awake()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L20) | private |
+| EnemySpawner | [`void BeginPlayMode(Transform anchor)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L25) | public |
+| EnemySpawner | [`void InitializeEnemyBlueprintPool()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L31) | private |
+| EnemySpawner | [`void SpawnRandomEnemy()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L76) | public |
+| EnemySpawner | [`void SpawnEnemy()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L99) | public |
+| EnemySpawner | [`ControlUnit SpawnBlockData(BlockDataList dataList, string enemyBlueprint, Vector3 spawnPosition, Quaternion spawnRotation)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L110) | internal |
+| EnemySpawner | [`Vector3 GetSpawnPosition()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L115) | private |
 
 ## Assets/Scripts/Features/Combat/ExplosionPropagation.cs
 
@@ -2820,22 +2908,21 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| PlayManager | [`void Awake()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L55) | private |
-| PlayManager | [`void FixedUpdate()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L60) | private |
-| PlayManager | [`void PlayStart()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L88) | public |
-| PlayManager | [`bool CanStartPlay(out string reason)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L133) | public |
-| PlayManager | [`void RefreshGroup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L168) | public |
-| PlayManager | [`void SetPlayMode(bool lockView)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L195) | public |
-| PlayManager | [`void CalculateVelocity()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L203) | private |
-| PlayManager | [`void HandleSelection()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L212) | private |
-| PlayManager | [`void SelectBlock(Block block)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L241) | private |
-| PlayManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L260) | public |
-| PlayManager | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L266) | public |
-| PlayManager | [`void AssignBlocksToParentGroups(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L296) | public |
-| PlayManager | [`void RegisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L312) | public |
-| PlayManager | [`void UnregisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L326) | public |
-| PlayManager | [`IReadOnlyList<ControlUnit> GetControlUnits()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L334) | public |
-| PlayManager | [`EnemySpawner EnsureEnemySpawner()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L347) | private |
+| PlayManager | [`void Awake()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L54) | private |
+| PlayManager | [`void FixedUpdate()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L59) | private |
+| PlayManager | [`void PlayStart()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L87) | public |
+| PlayManager | [`bool CanStartPlay(out string reason)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L132) | public |
+| PlayManager | [`void RefreshGroup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L167) | public |
+| PlayManager | [`void SetPlayMode(bool lockView)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L194) | public |
+| PlayManager | [`void CalculateVelocity()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L202) | private |
+| PlayManager | [`void HandleSelection()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L211) | private |
+| PlayManager | [`void SelectBlock(Block block)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L240) | private |
+| PlayManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L259) | public |
+| PlayManager | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L265) | public |
+| PlayManager | [`void AssignBlocksToParentGroups(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L295) | public |
+| PlayManager | [`void RegisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L311) | public |
+| PlayManager | [`void UnregisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L325) | public |
+| PlayManager | [`IReadOnlyList<ControlUnit> GetControlUnits()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L333) | public |
 
 ## Assets/Scripts/Features/Simulation/Rack.cs
 
@@ -2874,17 +2961,17 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BuildingRuntime | [`void Initialize(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L29) | public |
-| BuildingRuntime | [`IEnumerator InitializeRoutine(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L37) | internal |
-| BuildingRuntime | [`void Activate()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L84) | public |
-| BuildingRuntime | [`IEnumerator ActivateRoutine()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L92) | internal |
-| BuildingRuntime | [`void PrepareForUnload()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L135) | public |
-| BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L143) | public |
-| BuildingRuntime | [`void DestroyBlock(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L195) | public |
-| BuildingRuntime | [`void SplitDisconnected()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L233) | private |
-| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L303) | private |
-| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L324) | public |
-| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L335) | private |
+| BuildingRuntime | [`void Initialize(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L33) | public |
+| BuildingRuntime | [`IEnumerator InitializeRoutine(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L41) | internal |
+| BuildingRuntime | [`void Activate()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L89) | public |
+| BuildingRuntime | [`IEnumerator ActivateRoutine()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L97) | internal |
+| BuildingRuntime | [`void PrepareForUnload()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L140) | public |
+| BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L148) | public |
+| BuildingRuntime | [`void DestroyBlock(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L201) | public |
+| BuildingRuntime | [`void SplitDisconnected()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L239) | private |
+| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L309) | private |
+| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L330) | public |
+| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L341) | private |
 
 ## Assets/Scripts/Features/World/EnemyFlightPlayerChecks.cs
 
@@ -2894,6 +2981,49 @@
 | --- | --- | --- |
 | EnemyFlightPlayerChecks | [`IEnumerator Run(ControlUnit player, EnemySpawner spawner, string blueprintName, Action<bool, string> check)`](../Assets/Scripts/Features/World/EnemyFlightPlayerChecks.cs#L12) | internal static |
 | EnemyFlightPlayerChecks | [`bool IsFinite(Vector3 value)`](../Assets/Scripts/Features/World/EnemyFlightPlayerChecks.cs#L76) | private static |
+
+## Assets/Scripts/Features/World/EnemyOutpostData.cs
+
+// 职责：保存建筑附带的有限驻军蓝图与本地部署点，独立于用户敌机文件后续改动。 // 入口：Validate()；建筑蓝图缺少outpost字段时仍是普通建筑。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyOutpostData | [`void Validate()`](../Assets/Scripts/Features/World/EnemyOutpostData.cs#L13) | public |
+| OutpostGarrisonData | [`BlockDataList CreateBlueprint()`](../Assets/Scripts/Features/World/EnemyOutpostData.cs#L70) | public |
+
+## Assets/Scripts/Features/World/OutpostEncounterDirector.cs
+
+// 职责：会话内管理据点有限驻军、击败记录及远距离休眠；退出探索即丢弃，不写永久存档。 // 入口：Tick() / Clear()；击败只由驾驶舱显式死亡通知，卸载不计击败。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| OutpostEncounterDirector | [`bool IsDefeated(string site, string guard)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L26) | public |
+| OutpostEncounterDirector | [`bool TryGetDefender(string site, string guardId, out ControlUnit unit)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L31) | public |
+| OutpostEncounterDirector | [`void Tick(Vector3 player)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L48) | public |
+| OutpostEncounterDirector | [`bool Spawn(Encounter encounter, Guard guard, Vector3 position)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L149) | private |
+| OutpostEncounterDirector | [`Bounds DeploymentBounds(BlockDataList blueprint, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L218) | private static |
+| OutpostEncounterDirector | [`void Hibernate(Guard guard)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L238) | private static |
+| OutpostEncounterDirector | [`void RefreshOwner(Guard guard)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L275) | private static |
+| OutpostEncounterDirector | [`void Clear()`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L284) | public |
+
+## Assets/Scripts/Features/World/OutpostHud.cs
+
+// 职责：在游玩HUD显示最近据点剩余驻军及本次探索清剿数量。 // 入口：Update()；引用由OutpostHudAuthoring保存，不在运行时生成界面。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| OutpostHud | [`void Update()`](../Assets/Scripts/Features/World/OutpostHud.cs#L13) | private |
+
+## Assets/Scripts/Features/World/OutpostPlayerChecks.cs
+
+// 职责：显式Player烟测中验证真实据点部署、受损休眠恢复、驾驶舱击败与不重刷。 // 入口：Run()；只由-world-smoke-outposts启用，不写用户蓝图或永久进度。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| OutpostPlayerChecks | [`IEnumerator Run(WorldSessionManager session, ControlUnit player, Action<bool, string> check)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L12) | public static |
+| OutpostPlayerChecks | [`IEnumerator Flatten(IEnumerator root)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L17) | private static |
+| OutpostPlayerChecks | [`IEnumerator Scenario(WorldSessionManager session, ControlUnit player, Action<bool, string> check)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L49) | private static |
+| OutpostPlayerChecks | [`IEnumerator TravelTo(Transform player, Vector3 destination)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L183) | private static |
 
 ## Assets/Scripts/Features/World/ProceduralVoxelWorld.cs
 
@@ -3055,8 +3185,9 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | WorldBuildingLibrary | [`IEnumerator LoadRoutine(string directory)`](../Assets/Scripts/Features/World/WorldBuildingLibrary.cs#L24) | internal |
-| WorldBuildingLibrary | [`void CollectResources(string path, HashSet<string> resources)`](../Assets/Scripts/Features/World/WorldBuildingLibrary.cs#L56) | private static |
-| WorldBuildingLibrary | [`void Load(string directory)`](../Assets/Scripts/Features/World/WorldBuildingLibrary.cs#L85) | internal |
+| WorldBuildingLibrary | [`void CollectResources(string path, HashSet<string> resources)`](../Assets/Scripts/Features/World/WorldBuildingLibrary.cs#L62) | private static |
+| WorldBuildingLibrary | [`void CollectBlueprintResources(BlockDataList blueprint, HashSet<string> resources)`](../Assets/Scripts/Features/World/WorldBuildingLibrary.cs#L85) | private static |
+| WorldBuildingLibrary | [`void Load(string directory)`](../Assets/Scripts/Features/World/WorldBuildingLibrary.cs#L119) | internal |
 
 ## Assets/Scripts/Features/World/WorldBuildingManager.cs
 
@@ -3154,10 +3285,10 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | WorldBuildingValidation | [`void ValidateBlueprint(BlockDataList blueprint)`](../Assets/Scripts/Features/World/WorldBuildingValidation.cs#L11) | public static |
-| WorldBuildingValidation | [`void ValidateState(WorldBuildingState state)`](../Assets/Scripts/Features/World/WorldBuildingValidation.cs#L66) | public static |
-| WorldBuildingValidation | [`bool Finite(float value)`](../Assets/Scripts/Features/World/WorldBuildingValidation.cs#L88) | public static |
-| WorldBuildingValidation | [`bool Finite(Vector3 value)`](../Assets/Scripts/Features/World/WorldBuildingValidation.cs#L93) | public static |
-| WorldBuildingValidation | [`bool ValidRotation(Quaternion value)`](../Assets/Scripts/Features/World/WorldBuildingValidation.cs#L98) | private static |
+| WorldBuildingValidation | [`void ValidateState(WorldBuildingState state)`](../Assets/Scripts/Features/World/WorldBuildingValidation.cs#L71) | public static |
+| WorldBuildingValidation | [`bool Finite(float value)`](../Assets/Scripts/Features/World/WorldBuildingValidation.cs#L93) | public static |
+| WorldBuildingValidation | [`bool Finite(Vector3 value)`](../Assets/Scripts/Features/World/WorldBuildingValidation.cs#L98) | public static |
+| WorldBuildingValidation | [`bool ValidRotation(Quaternion value)`](../Assets/Scripts/Features/World/WorldBuildingValidation.cs#L103) | public static |
 
 ## Assets/Scripts/Features/World/WorldCombatPlayerChecks.cs
 
@@ -3257,18 +3388,18 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldPlayerSmokeChecks | [`void Initialize()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L62) | private static |
-| WorldPlayerSmokeChecks | [`int ReadInteger(string[] args, int index, string name, int minimum, int maximum)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L121) | private static |
-| WorldPlayerSmokeChecks | [`void Start()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L131) | private |
-| WorldPlayerSmokeChecks | [`void Update()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L148) | private |
-| WorldPlayerSmokeChecks | [`IEnumerator Scenario()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L177) | private |
-| WorldPlayerSmokeChecks | [`BlockDataList EnemyFixture()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L373) | private static |
-| WorldPlayerSmokeChecks | [`IEnumerator ValidateEnemyBlueprints(EnemySpawner spawner, Vector3 origin)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L409) | private |
-| WorldPlayerSmokeChecks | [`void Check(bool valid, string name)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L469) | private |
-| WorldPlayerSmokeChecks | [`void Next(string name)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L482) | private |
-| WorldPlayerSmokeChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L495) | private |
-| WorldPlayerSmokeChecks | [`void Save()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L503) | private |
-| WorldPlayerSmokeChecks | [`void Finish()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L508) | private |
+| WorldPlayerSmokeChecks | [`void Initialize()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L63) | private static |
+| WorldPlayerSmokeChecks | [`int ReadInteger(string[] args, int index, string name, int minimum, int maximum)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L123) | private static |
+| WorldPlayerSmokeChecks | [`void Start()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L133) | private |
+| WorldPlayerSmokeChecks | [`void Update()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L150) | private |
+| WorldPlayerSmokeChecks | [`IEnumerator Scenario()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L179) | private |
+| WorldPlayerSmokeChecks | [`BlockDataList EnemyFixture()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L392) | private static |
+| WorldPlayerSmokeChecks | [`IEnumerator ValidateEnemyBlueprints(EnemySpawner spawner, Vector3 origin)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L428) | private |
+| WorldPlayerSmokeChecks | [`void Check(bool valid, string name)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L488) | private |
+| WorldPlayerSmokeChecks | [`void Next(string name)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L501) | private |
+| WorldPlayerSmokeChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L514) | private |
+| WorldPlayerSmokeChecks | [`void Save()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L522) | private |
+| WorldPlayerSmokeChecks | [`void Finish()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L527) | private |
 
 ## Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs
 
@@ -3305,24 +3436,24 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldSessionManager | [`void Start()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L65) | private |
-| WorldSessionManager | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L73) | private |
-| WorldSessionManager | [`void BeginPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L82) | public |
-| WorldSessionManager | [`IEnumerator PrepareWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L120) | private |
-| WorldSessionManager | [`void RequestPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L169) | public |
-| WorldSessionManager | [`void CancelPlayRequest()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L186) | public |
-| WorldSessionManager | [`void CompletePendingPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L192) | private |
-| WorldSessionManager | [`bool CanEnterPlay(Transform construct, out string reason)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L204) | public |
-| WorldSessionManager | [`void EnterPlay(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L226) | public |
-| WorldSessionManager | [`IEnumerator EnableWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L258) | private |
-| WorldSessionManager | [`void FinishEntering()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L292) | private |
-| WorldSessionManager | [`void EndSession()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L301) | public |
-| WorldSessionManager | [`IEnumerator RunGuarded(int version, IEnumerator work)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L306) | private |
-| WorldSessionManager | [`IEnumerator StreamWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L337) | private |
-| WorldSessionManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L385) | private |
-| WorldSessionManager | [`void Update()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L410) | private |
-| WorldSessionManager | [`Bounds ConstructBounds(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L420) | private static |
-| WorldSessionManager | [`void SetBuildEnvironmentVisible(bool visible)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L445) | private |
-| WorldSessionManager | [`void StopPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L475) | private |
-| WorldSessionManager | [`void Fail(Exception error)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L507) | private |
-| WorldSessionManager | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L520) | private |
+| WorldSessionManager | [`void Start()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L68) | private |
+| WorldSessionManager | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L76) | private |
+| WorldSessionManager | [`void BeginPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L85) | public |
+| WorldSessionManager | [`IEnumerator PrepareWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L125) | private |
+| WorldSessionManager | [`void RequestPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L175) | public |
+| WorldSessionManager | [`void CancelPlayRequest()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L192) | public |
+| WorldSessionManager | [`void CompletePendingPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L198) | private |
+| WorldSessionManager | [`bool CanEnterPlay(Transform construct, out string reason)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L210) | public |
+| WorldSessionManager | [`void EnterPlay(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L232) | public |
+| WorldSessionManager | [`IEnumerator EnableWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L264) | private |
+| WorldSessionManager | [`void FinishEntering()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L298) | private |
+| WorldSessionManager | [`void EndSession()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L307) | public |
+| WorldSessionManager | [`IEnumerator RunGuarded(int version, IEnumerator work)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L312) | private |
+| WorldSessionManager | [`IEnumerator StreamWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L343) | private |
+| WorldSessionManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L391) | private |
+| WorldSessionManager | [`void Update()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L416) | private |
+| WorldSessionManager | [`Bounds ConstructBounds(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L431) | private static |
+| WorldSessionManager | [`void SetBuildEnvironmentVisible(bool visible)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L456) | private |
+| WorldSessionManager | [`void StopPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L486) | private |
+| WorldSessionManager | [`void Fail(Exception error)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L518) | private |
+| WorldSessionManager | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L533) | private |
