@@ -14,9 +14,16 @@ public static class OutpostPlayerChecks
         ControlUnit player,
         Action<bool, string> check,
         Action<string> capture = null,
-        bool salvage = false)
+        bool salvage = false,
+        bool recoverAllParts = false)
     {
-        return Flatten(Scenario(session, player, check, capture, salvage));
+        return Flatten(Scenario(
+            session,
+            player,
+            check,
+            capture,
+            salvage,
+            recoverAllParts));
     }
 
     private static IEnumerator Flatten(IEnumerator root)
@@ -56,7 +63,8 @@ public static class OutpostPlayerChecks
         ControlUnit player,
         Action<bool, string> check,
         Action<string> capture,
-        bool salvage)
+        bool salvage,
+        bool recoverAllParts)
     {
         check(
             Object.FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None).All(item => !item.enabled),
@@ -305,7 +313,7 @@ public static class OutpostPlayerChecks
         capture?.Invoke("outpost-cleared");
         if (salvage)
         {
-            yield return OutpostSalvagePlayerChecks.Run(revisited, player, check);
+            yield return OutpostSalvagePlayerChecks.Run(revisited, player, check, recoverAllParts);
         }
 
         yield return TravelTo(player.transform, previous);
@@ -327,6 +335,9 @@ public static class OutpostPlayerChecks
 
     private static void Freeze(ControlUnit unit)
     {
+        // Start schedules a delayed refresh that would re-enable hover on this controlled body.
+        // Cancel only that fixture's pending refresh; natural combat above keeps normal lifecycle.
+        unit.CancelInvoke(nameof(ControlUnit.RefreshChildren));
         unit.GetComponent<EnemyController>().enabled = false;
         if (unit.hoverFlightController != null)
         {

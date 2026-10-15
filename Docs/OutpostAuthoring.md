@@ -34,3 +34,5 @@ Unity6000.3.11f1 / URP / Windows D3D11，米、Y-up。假设典型观察距离20
 运行证据和已知限制记入本轮Docs/Validation报告。程序化布局和模块组合属于本项目可玩内容，不称为新增独立高精美术资产；最终视觉、支撑、炮塔供电/射界和部署净空需用引擎验证。
 
 制作快捷键仅在Unity Editor或Development Build开放，普通发布包保持禁用。菜单“Tools/HY-Sandbox/Outposts/Build Development authoring validation Player”生成独立Builds/OutpostAuthoringValidation，不替换普通WorldPerformanceValidation。该包使用`-world-smoke-report <报告绝对路径> -world-smoke-outpost-editor`可自动验证真实快捷键、Copy template/Save pose按钮、重载与模式清理；全部编辑通过测试专用缓存文件仓隔离，不写用户蓝图。此Development包不用于正式性能比较。
+
+普通验证包可用`-world-smoke-report <报告绝对路径> -world-smoke-seed 14741 -world-smoke-outpost-salvage-all`运行整批回收验收：每个原始模块都需观察到实际携带并全部送入货仓，运输最多等待300秒；原`-world-smoke-outpost-salvage`仍是至少一个模块的短回归。添加`-world-smoke-cycles 3`重复出征；报告逐轮记录出征末尾与重新Ready后的引擎分配内存、Ready对象数量，并检查退出后没有活动或隐藏敌机/掉落实体。此路线仍使用固定平台及受控击败，不等同人工驾驶全过程。

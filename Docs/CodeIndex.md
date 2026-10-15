@@ -3049,14 +3049,14 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| OutpostPlayerChecks | [`IEnumerator Run( WorldSessionManager session, ControlUnit player, Action<bool, string> check, Action<string> capture = null, bool salvage = false)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L12) | public static |
-| OutpostPlayerChecks | [`IEnumerator Flatten(IEnumerator root)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L22) | private static |
-| OutpostPlayerChecks | [`IEnumerator Scenario( WorldSessionManager session, ControlUnit player, Action<bool, string> check, Action<string> capture, bool salvage)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L54) | private static |
-| OutpostPlayerChecks | [`IEnumerator TravelTo(Transform player, Vector3 destination)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L314) | private static |
-| OutpostPlayerChecks | [`void Freeze(ControlUnit unit)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L328) | private static |
-| GuardObservation | [`void Sample(ControlUnit player, Durability health, float initialHealth)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L357) | internal |
-| GuardObservation | [`string Describe()`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L370) | internal |
-| OutpostPlayerChecks | [`IEnumerator TravelWithDefender(Transform player, ControlUnit unit, Vector3 destination)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L376) | private static |
+| OutpostPlayerChecks | [`IEnumerator Run( WorldSessionManager session, ControlUnit player, Action<bool, string> check, Action<string> capture = null, bool salvage = false, bool recoverAllParts = false)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L12) | public static |
+| OutpostPlayerChecks | [`IEnumerator Flatten(IEnumerator root)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L29) | private static |
+| OutpostPlayerChecks | [`IEnumerator Scenario( WorldSessionManager session, ControlUnit player, Action<bool, string> check, Action<string> capture, bool salvage, bool recoverAllParts)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L61) | private static |
+| OutpostPlayerChecks | [`IEnumerator TravelTo(Transform player, Vector3 destination)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L322) | private static |
+| OutpostPlayerChecks | [`void Freeze(ControlUnit unit)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L336) | private static |
+| GuardObservation | [`void Sample(ControlUnit player, Durability health, float initialHealth)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L368) | internal |
+| GuardObservation | [`string Describe()`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L381) | internal |
+| OutpostPlayerChecks | [`IEnumerator TravelWithDefender(Transform player, ControlUnit unit, Vector3 destination)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L387) | private static |
 
 ## Assets/Scripts/Features/World/OutpostSalvagePlayerChecks.cs
 
@@ -3064,8 +3064,8 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| OutpostSalvagePlayerChecks | [`IEnumerator Run(BuildingRuntime building, ControlUnit player, Action<bool, string> check)`](../Assets/Scripts/Features/World/OutpostSalvagePlayerChecks.cs#L12) | internal static |
-| OutpostSalvagePlayerChecks | [`GameObject Spawn(string resource, ControlUnit owner, Vector3 local, List<GameObject> fixtures)`](../Assets/Scripts/Features/World/OutpostSalvagePlayerChecks.cs#L124) | private static |
+| OutpostSalvagePlayerChecks | [`IEnumerator Run( BuildingRuntime building, ControlUnit player, Action<bool, string> check, bool recoverAllParts = false)`](../Assets/Scripts/Features/World/OutpostSalvagePlayerChecks.cs#L12) | internal static |
+| OutpostSalvagePlayerChecks | [`GameObject Spawn(string resource, ControlUnit owner, Vector3 local, List<GameObject> fixtures)`](../Assets/Scripts/Features/World/OutpostSalvagePlayerChecks.cs#L170) | private static |
 
 ## Assets/Scripts/Features/World/ProceduralVoxelWorld.cs
 
@@ -3430,18 +3430,18 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldPlayerSmokeChecks | [`void Initialize()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L65) | private static |
-| WorldPlayerSmokeChecks | [`int ReadInteger(string[] args, int index, string name, int minimum, int maximum)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L128) | private static |
-| WorldPlayerSmokeChecks | [`void Start()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L138) | private |
-| WorldPlayerSmokeChecks | [`void Update()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L155) | private |
-| WorldPlayerSmokeChecks | [`IEnumerator Scenario()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L184) | private |
-| WorldPlayerSmokeChecks | [`BlockDataList EnemyFixture()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L427) | private static |
-| WorldPlayerSmokeChecks | [`IEnumerator ValidateEnemyBlueprints(EnemySpawner spawner, Vector3 origin)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L463) | private |
-| WorldPlayerSmokeChecks | [`void Check(bool valid, string name)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L523) | private |
-| WorldPlayerSmokeChecks | [`void Next(string name)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L536) | private |
-| WorldPlayerSmokeChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L549) | private |
-| WorldPlayerSmokeChecks | [`void Save()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L557) | private |
-| WorldPlayerSmokeChecks | [`void Finish()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L562) | private |
+| WorldPlayerSmokeChecks | [`void Initialize()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L68) | private static |
+| WorldPlayerSmokeChecks | [`int ReadInteger(string[] args, int index, string name, int minimum, int maximum)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L133) | private static |
+| WorldPlayerSmokeChecks | [`void Start()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L143) | private |
+| WorldPlayerSmokeChecks | [`void Update()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L160) | private |
+| WorldPlayerSmokeChecks | [`IEnumerator Scenario()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L189) | private |
+| WorldPlayerSmokeChecks | [`BlockDataList EnemyFixture()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L446) | private static |
+| WorldPlayerSmokeChecks | [`IEnumerator ValidateEnemyBlueprints(EnemySpawner spawner, Vector3 origin)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L482) | private |
+| WorldPlayerSmokeChecks | [`void Check(bool valid, string name)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L542) | private |
+| WorldPlayerSmokeChecks | [`void Next(string name)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L555) | private |
+| WorldPlayerSmokeChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L568) | private |
+| WorldPlayerSmokeChecks | [`void Save()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L576) | private |
+| WorldPlayerSmokeChecks | [`void Finish()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L581) | private |
 
 ## Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs
 

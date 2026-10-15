@@ -38,6 +38,8 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
         public int requestedCycles = 1;
         public int completedCycles;
         public List<long> cycleMemoryBytes = new List<long>();
+        public List<long> cycleReadyMemoryBytes = new List<long>();
+        public List<int> cycleReadyObjectCounts = new List<int>();
         public List<int> cycleSeeds = new List<int>();
         public List<string> checks = new List<string>();
         public List<string> errors = new List<string>();
@@ -56,6 +58,7 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
     private bool validateEnemies;
     private bool validateOutposts;
     private bool validateOutpostSalvage;
+    private bool recoverAllOutpostParts;
     private bool validateOutpostEditor;
     private bool validateCombat;
     private bool validateReturn;
@@ -80,6 +83,8 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
         checks.validateEnemies = Array.IndexOf(args, "-world-smoke-enemies") >= 0;
         checks.validateOutposts = Array.IndexOf(args, "-world-smoke-outposts") >= 0;
         checks.validateOutpostSalvage = Array.IndexOf(args, "-world-smoke-outpost-salvage") >= 0;
+        checks.recoverAllOutpostParts = Array.IndexOf(args, "-world-smoke-outpost-salvage-all") >= 0;
+        checks.validateOutpostSalvage |= checks.recoverAllOutpostParts;
         checks.validateOutposts |= checks.validateOutpostSalvage;
         checks.validateOutpostEditor = Array.IndexOf(args, "-world-smoke-outpost-editor") >= 0;
         checks.validateCombat = Array.IndexOf(args, "-world-smoke-combat") >= 0;
@@ -142,7 +147,7 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
         Application.targetFrameRate = 120;
         report.graphics = SystemInfo.graphicsDeviceType.ToString();
         previous = Time.realtimeSinceStartup;
-        deadline = previous + 240f * cycleCount;
+        deadline = previous + (recoverAllOutpostParts ? 600f : 240f) * cycleCount;
         Application.logMessageReceived += CaptureError;
         scenario = Scenario();
         Save();
@@ -282,7 +287,13 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
                     capture = suffix => ScreenCapture.CaptureScreenshot(Path.ChangeExtension(reportPath, suffix + ".png"));
                 }
 
-                IEnumerator outpost = OutpostPlayerChecks.Run(session, player.GetComponent<ControlUnit>(), Check, capture, validateOutpostSalvage);
+                IEnumerator outpost = OutpostPlayerChecks.Run(
+                    session,
+                    player.GetComponent<ControlUnit>(),
+                    Check,
+                    capture,
+                    validateOutpostSalvage,
+                    recoverAllOutpostParts);
                 try
                 {
                     while (outpost.MoveNext())
@@ -399,8 +410,16 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
                 Check(
                     session.Outposts != null && session.Outposts.ActiveCount == 0 && session.Outposts.ClearedCount == 0,
                     "New expedition discards outpost defeat history and active defenders");
+                Check(
+                    Object.FindObjectsByType<EnemyIdentity>(FindObjectsInactive.Include, FindObjectsSortMode.None).Length == 0,
+                    "Expedition cleanup leaves no inactive or active enemy identity objects");
+                Check(
+                    !LootDrop.Active.Any() && Object.FindObjectsByType<LootDrop>(FindObjectsInactive.Include, FindObjectsSortMode.None).Length == 0,
+                    "Expedition cleanup removes all active and inactive loot objects");
             }
 
+            report.cycleReadyMemoryBytes.Add(UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong());
+            report.cycleReadyObjectCounts.Add(Object.FindObjectsByType<GameObject>(FindObjectsInactive.Include, FindObjectsSortMode.None).Length);
             report.completedCycles++;
         }
 

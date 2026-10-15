@@ -9,7 +9,11 @@ using Object = UnityEngine.Object;
 
 internal static class OutpostSalvagePlayerChecks
 {
-    internal static IEnumerator Run(BuildingRuntime building, ControlUnit player, Action<bool, string> check)
+    internal static IEnumerator Run(
+        BuildingRuntime building,
+        ControlUnit player,
+        Action<bool, string> check,
+        bool recoverAllParts = false)
     {
         check(building != null, "Cleared outpost remains present for authored cargo recovery");
         CargoHold[] source = building.GetComponentsInChildren<CargoHold>().Where(hold => hold.Used > 0).ToArray();
@@ -37,6 +41,26 @@ internal static class OutpostSalvagePlayerChecks
                 Spawn("PowerTransmissionDevice", player, new Vector3(4f + i * 3f, 0f, 3f), fixtures);
             }
 
+            if (recoverAllParts)
+            {
+                // Natural combat already dropped other modules. Give the fixture real room for
+                // those opportunistic pickups as well, without changing targeting or item ownership.
+                expected.TryGetValue(CargoKind.SpecialPart, out int authoredParts);
+                int required = authoredParts + LootDrop.Active.Where(drop => drop != null && drop.Item.kind == CargoKind.SpecialPart).Sum(drop => drop.Item.amount);
+                int free = receivers.Where(hold => hold.Kind == CargoKind.SpecialPart).Sum(hold => hold.Free);
+                for (int slot = source.Length; free < required; slot++)
+                {
+                    Vector3 local = new Vector3(4f + slot * 3f, 0f, 0f);
+                    CargoHold receiver = Spawn("CargoHold", player, local, fixtures).GetComponent<CargoHold>();
+                    receiver.RestoreContents(new List<CargoItem>());
+                    receivers.Add(receiver);
+                    Spawn("PowerTransmissionDevice", player, local + Vector3.forward * 3f, fixtures);
+                    free += receiver.Free;
+                }
+
+                Debug.Log($"Outpost full recovery capacity: required={required}, available={free}");
+            }
+
             player.RefreshChildren();
             player.AssignRuntimeOwnershipToBlocks(true);
             yield return null;
@@ -61,14 +85,20 @@ internal static class OutpostSalvagePlayerChecks
 
             LootDrop[] parts = authoredDrops.Where(drop => drop.Item.kind == CargoKind.SpecialPart).ToArray();
             bool sawOriginalCarry = false;
+            var carriedParts = new bool[parts.Length];
             bool sawDockedDelivery = parts.Length == 0;
-            float until = Time.time + 100f;
+            float until = Time.time + (recoverAllParts ? 300f : 100f);
             while (Time.time < until)
             {
                 sawOriginalCarry |= parts.Any(drop => drop != null && drop.IsCarried && drop.ClaimedBy == bot);
-                bool partDelivered = parts.Length == 0 || parts.Any(drop => drop == null);
+                for (int i = 0; i < parts.Length; i++)
+                {
+                    carriedParts[i] |= parts[i] != null && parts[i].IsCarried && parts[i].ClaimedBy == bot;
+                }
+
+                bool partDelivered = parts.Length == 0 || (recoverAllParts ? parts.All(drop => drop == null) : parts.Any(drop => drop == null));
                 bool allCurrency = expected.Where(item => item.Key != CargoKind.SpecialPart).All(item => receivers.Where(hold => hold.Kind == item.Key).Sum(hold => hold.Used) >= item.Value);
-                sawDockedDelivery |= partDelivered && bot.transform.parent == bot.home;
+                sawDockedDelivery |= (parts.Length == 0 || parts.Any(drop => drop == null)) && bot.transform.parent == bot.home;
                 if (allCurrency && partDelivered && sawDockedDelivery)
                 {
                     break;
@@ -81,6 +111,15 @@ internal static class OutpostSalvagePlayerChecks
             foreach (CargoHold receiver in receivers)
             {
                 Debug.Log($"Outpost receiver [{receiver.Kind}]: used={receiver.Used}, power={receiver.GetComponent<Power>().isWorking}, position={receiver.transform.position}");
+            }
+
+            if (recoverAllParts)
+            {
+                Debug.Log($"Outpost complete recovery: authored={parts.Length}, observedCarried={carriedParts.Count(value => value)}, remaining={parts.Count(drop => drop != null)}");
+                foreach (LootDrop drop in parts.Where(drop => drop != null))
+                {
+                    Debug.Log($"Outpost unrecovered module: {drop.Item.resourcePath}, position={drop.transform.position}, claimed={drop.ClaimedBy != null}, carried={drop.IsCarried}");
+                }
             }
 
             foreach (KeyValuePair<CargoKind, int> item in expected.Where(item => item.Key != CargoKind.SpecialPart))
@@ -99,6 +138,13 @@ internal static class OutpostSalvagePlayerChecks
                 check(
                     receivers.Any(hold => hold.Kind == CargoKind.SpecialPart && hold.Used > 0),
                     "Player cargo contains recovered outpost module");
+                if (recoverAllParts)
+                {
+                    int delivered = receivers.Where(hold => hold.Kind == CargoKind.SpecialPart).Sum(hold => hold.Used);
+                    check(
+                        carriedParts.All(value => value) && parts.All(drop => drop == null) && delivered >= expected[CargoKind.SpecialPart],
+                        "Every authored outpost module is physically carried and delivered into player cargo");
+                }
             }
         }
         finally
