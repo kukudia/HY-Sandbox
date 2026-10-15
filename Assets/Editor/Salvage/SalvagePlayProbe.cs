@@ -384,6 +384,13 @@ public static class SalvagePlayProbe
             yield break;
         }
 
+        // LootDrop.Update 以场景内已启用的 ControlUnit 为模拟门槛；隔离所有 Main 根后必须提供真实宿主。
+        // 中立单位不读取玩家输入、不创建敌方AI；其他受测单位仍由探针控制，避免自动重分组。
+        var simulationOwner = Unit("Salvage simulation host", new Vector3(500, 0, 0), UnitFaction.Neutral);
+        simulationOwner.enabled = true;
+        Check(
+            "Scene simulation requires an enabled runtime unit",
+            ControlUnit.IsSceneSimulationActive(camera.gameObject.scene));
         camera.transform.position = new Vector3(0f, 50f, 0f);
         foreach (CargoItem item in new[]
         {
@@ -668,6 +675,10 @@ public static class SalvagePlayProbe
         Check(
             "RepairBot returns to a moving authored socket",
             repair.transform.parent == repair.home && repair.currentState == Bot.NavigationState.Idle);
+        simulationOwner.enabled = false;
+        Check(
+            "Disabling the last runtime unit suspends scene simulation",
+            !ControlUnit.IsSceneSimulationActive(camera.gameObject.scene));
         Check("Authored scene changes remain confined to Play Mode", EditorApplication.isPlaying);
     }
 }
