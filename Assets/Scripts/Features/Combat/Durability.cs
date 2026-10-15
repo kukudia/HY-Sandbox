@@ -11,15 +11,15 @@ public class Durability : MonoBehaviour
     [Header("耐久值设置")]
     public float maxDurability = 100f;
     [SerializeField, Min(0f)]
-    private float collisionSpeedThreshold = 5f;
+    private float collisionSpeedThreshold = 2f;
     [SerializeField, Min(0f), Tooltip("Durability lost per joule of impact energy.")]
-    private float damageMultiplier = 0.001f;
+    private float damageMultiplier = 0.1f;
     [SerializeField, Range(0f, 1f)]
-    private float _collisionDamageScale = 0.1f;
+    private float _collisionDamageScale = 1f;
     [SerializeField, Range(0f, 1f)]
-    private float _maximumCollisionHealthFraction = 0.08f;
+    private float _maximumCollisionHealthFraction = 1f;
     [SerializeField, Min(0f)]
-    private float _collisionDamageCooldown = 0.35f;
+    private float _collisionDamageCooldown = 0f;
     private float _nextCollisionDamage;
     private float _explosionProtectionUntil;
     public bool DestroyedByCollision

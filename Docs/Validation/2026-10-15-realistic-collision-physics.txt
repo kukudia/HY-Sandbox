@@ -1,0 +1,26 @@
+PASS: Reduced mass: equal dynamic pair
+PASS: Static target uses full moving mass
+PASS: Safe-speed threshold rejects gentle contact
+PASS: Gentle real contact causes no damage
+PASS: Only load-bearing contact modules receive damage
+PASS: Real collision damage matches energy (48)
+PASS: Tangential speed adds no crash damage
+PASS: Elastic real rebound causes no permanent damage
+PASS: Half restitution dissipates three quarters energy
+PASS: Lighter body receives larger share
+PASS: Dynamic pair shares conserve energy
+PASS: Double mass doubles damage
+PASS: Squared speed and threshold energy
+PASS: Real unequal pair gives light body three times damage
+PASS: Real unequal pair conserves normal damage budget
+PASS: Impulse respects inverse mass
+PASS: Off-centre impulse produces rotation
+PASS: Non-convex collider has finite closest point
+PASS: Physics HUD is persisted under PlayPanel
+PASS: Extreme impact can destroy in one hit
+PASS: Separate impacts are not discarded by cooldown
+PASS: Blast protection prevents collision damage
+PASS: Explosion speed change capped at 3 m/s
+PASS: Explosion does not directly damage armor
+PASS: Explosion marks outgoing contacts as protected
+ALL PASSED

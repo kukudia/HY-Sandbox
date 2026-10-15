@@ -639,11 +639,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxDurability: 500
-  collisionSpeedThreshold: 5
+  collisionSpeedThreshold: 2
   damageMultiplier: 0.1
-  _collisionDamageScale: 0.5
-  _maximumCollisionHealthFraction: 0.5
-  _collisionDamageCooldown: 0.5
+  _collisionDamageScale: 1
+  _maximumCollisionHealthFraction: 1
+  _collisionDamageCooldown: 0
   debugLog: 1
   currentDurability: 0
 --- !u!65 &7347779500678055298

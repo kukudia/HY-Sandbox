@@ -497,10 +497,11 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | PhysicsSandboxProbe | [`string Run()`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L13) | public static |
-| PhysicsSandboxProbe | [`float Collide(Scene scene, float mass, float speed, List<string> checks, bool checkContacts)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L144) | private static |
-| PhysicsSandboxProbe | [`Rigidbody Body(Scene scene, string name, float mass, Vector3 position)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L200) | private static |
-| PhysicsSandboxProbe | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L213) | private static |
-| PhysicsSandboxProbe | [`string Save(List<string> checks, string error)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L223) | private static |
+| PhysicsSandboxProbe | [`float Collide( Scene scene, float mass, float speed, List<string> checks, bool checkContacts, float restitution = 0f, float tangentSpeed = 0f)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L188) | private static |
+| PhysicsSandboxProbe | [`void CollideDynamicPair(Scene scene, List<string> checks)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L262) | private static |
+| PhysicsSandboxProbe | [`Rigidbody Body(Scene scene, string name, float mass, Vector3 position)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L304) | private static |
+| PhysicsSandboxProbe | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L317) | private static |
+| PhysicsSandboxProbe | [`string Save(List<string> checks, string error)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L327) | private static |
 
 ## Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs
 
@@ -2788,8 +2789,11 @@
 | ImpactPhysics | [`void ResetEvents()`](../Assets/Scripts/Features/Simulation/ImpactPhysics.cs#L10) | private static |
 | ImpactPhysics | [`float ReducedMass(float mass, float otherMass, bool otherIsStatic)`](../Assets/Scripts/Features/Simulation/ImpactPhysics.cs#L16) | public static |
 | ImpactPhysics | [`float DamageEnergy(float reducedMass, float normalSpeed, float safeSpeed)`](../Assets/Scripts/Features/Simulation/ImpactPhysics.cs#L23) | public static |
-| ImpactPhysics | [`Vector3 ClosestPoint(Collider collider, Vector3 position)`](../Assets/Scripts/Features/Simulation/ImpactPhysics.cs#L28) | public static |
-| ImpactPhysics | [`void ReportPlayerImpact(float energy, float impulse)`](../Assets/Scripts/Features/Simulation/ImpactPhysics.cs#L39) | public static |
+| ImpactPhysics | [`float BodyEnergyShare(float mass, float otherMass, bool otherIsStatic)`](../Assets/Scripts/Features/Simulation/ImpactPhysics.cs#L28) | public static |
+| ImpactPhysics | [`float Restitution(Collider first, Collider second, float normalSpeed)`](../Assets/Scripts/Features/Simulation/ImpactPhysics.cs#L34) | public static |
+| ImpactPhysics | [`int CombinePriority(PhysicsMaterialCombine mode)`](../Assets/Scripts/Features/Simulation/ImpactPhysics.cs#L62) | private static |
+| ImpactPhysics | [`Vector3 ClosestPoint(Collider collider, Vector3 position)`](../Assets/Scripts/Features/Simulation/ImpactPhysics.cs#L77) | public static |
+| ImpactPhysics | [`void ReportPlayerImpact(float energy, float impulse)`](../Assets/Scripts/Features/Simulation/ImpactPhysics.cs#L88) | public static |
 
 ## Assets/Scripts/Features/Simulation/ModularUnitValidator.cs
 

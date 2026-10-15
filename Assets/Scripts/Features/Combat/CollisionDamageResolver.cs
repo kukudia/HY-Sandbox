@@ -31,12 +31,19 @@ internal sealed class CollisionDamageResolver
         float reducedMass = ImpactPhysics.ReducedMass(body.mass, otherBody != null ? otherBody.mass : 0f, otherBody == null || otherBody.isKinematic);
         float normalSpeed = 0f;
         float normalImpulse = 0f;
+        float restitution = 0f;
         int contacts = 0;
         _impactTargets.Clear();
         for (int i = 0; i < collision.contactCount; i++)
         {
             ContactPoint contact = collision.GetContact(i);
-            normalSpeed = Mathf.Max(normalSpeed, Mathf.Abs(Vector3.Dot(collision.relativeVelocity, contact.normal)));
+            float speed = Mathf.Abs(Vector3.Dot(collision.relativeVelocity, contact.normal));
+            if (speed >= normalSpeed)
+            {
+                normalSpeed = speed;
+                restitution = ImpactPhysics.Restitution(contact.thisCollider, contact.otherCollider, speed);
+            }
+
             normalImpulse = Mathf.Max(normalImpulse, Mathf.Abs(Vector3.Dot(collision.impulse, contact.normal)));
             Durability target = contact.thisCollider.GetComponentInParent<Durability>();
             if (target == null || !target.enabled || target.GetComponentInParent<ControlUnit>() != unit)
@@ -51,14 +58,15 @@ internal sealed class CollisionDamageResolver
 
         // Compound-collider callbacks partition solver impulses; using full construct mass
         // per callback would repeatedly count the same kinetic energy.
-        float effectiveMass = normalSpeed > 0.001f ? Mathf.Min(reducedMass, normalImpulse / normalSpeed) : 0f;
+        float effectiveMass = normalSpeed > 0.001f ? Mathf.Min(reducedMass, normalImpulse / (normalSpeed * (1f + restitution))) : 0f;
         if (unit.faction == UnitFaction.Player && normalSpeed > 1f)
         {
             ImpactPhysics.ReportPlayerImpact(0.5f * effectiveMass * normalSpeed * normalSpeed, normalImpulse);
         }
 
-        // Extra manifold points do not create energy. Dynamic pairs split the fixed budget equally.
-        float sideShare = otherBody == null || otherBody.isKinematic ? 1f : 0.5f;
+        // Only dissipated normal energy damages modules; tangential sliding is not crash damage.
+        float sideShare = ImpactPhysics.BodyEnergyShare(body.mass, otherBody != null ? otherBody.mass : 0f, otherBody == null || otherBody.isKinematic);
+        sideShare *= 1f - restitution * restitution;
         foreach (KeyValuePair<Durability, int> target in _impactTargets)
         {
             if (target.Key != null)

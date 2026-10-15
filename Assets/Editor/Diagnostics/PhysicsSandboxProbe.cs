@@ -35,11 +35,49 @@ public static class PhysicsSandboxProbe
                 checks,
                 "Safe-speed threshold rejects gentle contact",
                 ImpactPhysics.DamageEnergy(10f, 3f, 5f) == 0f);
+            Check(checks, "Gentle real contact causes no damage", Collide(scene, 10f, 1f, checks, false) == 0f);
             float basic = Collide(scene, 10f, 10f, checks, true);
+            float glancing = Collide(
+                scene,
+                10f,
+                10f,
+                checks,
+                false,
+                0f,
+                10f);
+            Check(checks, "Tangential speed adds no crash damage", Mathf.Abs(glancing - basic) < 0.05f);
+            float elastic = Collide(
+                scene,
+                10f,
+                10f,
+                checks,
+                false,
+                1f);
+            Check(checks, "Elastic real rebound causes no permanent damage", elastic < 0.001f);
+            float partial = Collide(
+                scene,
+                10f,
+                10f,
+                checks,
+                false,
+                0.5f);
+            Check(
+                checks,
+                "Half restitution dissipates three quarters energy",
+                Mathf.Abs(partial / basic - 0.75f) < 0.03f);
+            Check(
+                checks,
+                "Lighter body receives larger share",
+                Mathf.Abs(ImpactPhysics.BodyEnergyShare(10f, 30f, false) - 0.75f) < 0.001f);
+            Check(
+                checks,
+                "Dynamic pair shares conserve energy",
+                Mathf.Abs(ImpactPhysics.BodyEnergyShare(10f, 30f, false) + ImpactPhysics.BodyEnergyShare(30f, 10f, false) - 1f) < 0.001f);
             float heavy = Collide(scene, 20f, 10f, checks, false);
             float fast = Collide(scene, 10f, 20f, checks, false);
             Check(checks, "Double mass doubles damage", Mathf.Abs(heavy / basic - 2f) < 0.03f);
-            Check(checks, "Squared speed and threshold energy", Mathf.Abs(fast / basic - 5f) < 0.04f);
+            Check(checks, "Squared speed and threshold energy", Mathf.Abs(fast / basic - 4.125f) < 0.04f);
+            CollideDynamicPair(scene, checks);
             Rigidbody light = Body(scene, "Light impulse", 10f, Vector3.zero);
             Rigidbody heavyBody = Body(scene, "Heavy impulse", 20f, Vector3.right * 5f);
             light.AddForceAtPosition(Vector3.forward * 10f, light.position + Vector3.right * 0.4f, ForceMode.Impulse);
@@ -74,10 +112,16 @@ public static class PhysicsSandboxProbe
             safety.ApplyCollisionEnergy(10000000f, 1000f, 1f);
             Check(
                 checks,
-                "Extreme impact capped at eight percent",
-                Mathf.Abs(safety.currentDurability - 92f) < 0.001f);
-            safety.ApplyCollisionEnergy(10000000f, 1000f, 1f);
-            Check(checks, "Repeated collision cooldown", Mathf.Abs(safety.currentDurability - 92f) < 0.001f);
+                "Extreme impact can destroy in one hit",
+                safety.currentDurability == 0f && safety.DestroyedByCollision);
+            safety.enabled = false;
+            safety.enabled = true;
+            safety.ApplyCollisionEnergy(1f, 10f, 1f);
+            safety.ApplyCollisionEnergy(1f, 10f, 1f);
+            Check(
+                checks,
+                "Separate impacts are not discarded by cooldown",
+                Mathf.Abs(safety.currentDurability - 90.4f) < 0.001f);
             safety.enabled = false;
             safety.enabled = true;
             safety.ProtectFromExplosionCollisions(3f);
@@ -141,7 +185,14 @@ public static class PhysicsSandboxProbe
         }
     }
 
-    private static float Collide(Scene scene, float mass, float speed, List<string> checks, bool checkContacts)
+    private static float Collide(
+        Scene scene,
+        float mass,
+        float speed,
+        List<string> checks,
+        bool checkContacts,
+        float restitution = 0f,
+        float tangentSpeed = 0f)
     {
         var host = new GameObject("Impact construct");
         SceneManager.MoveGameObjectToScene(host, scene);
@@ -172,7 +223,20 @@ public static class PhysicsSandboxProbe
         SceneManager.MoveGameObjectToScene(wall, scene);
         wall.transform.position = new Vector3(0, 0, 2f);
         wall.AddComponent<BoxCollider>().size = new Vector3(10, 10, 1);
-        body.linearVelocity = Vector3.forward * speed;
+        var material = new PhysicsMaterial("Probe restitution")
+        {
+            bounciness = restitution,
+            bounceCombine = PhysicsMaterialCombine.Maximum,
+            dynamicFriction = 0f,
+            staticFriction = 0f
+        };
+        wall.GetComponent<Collider>().sharedMaterial = material;
+        foreach (Durability part in parts)
+        {
+            part.GetComponent<Collider>().sharedMaterial = material;
+        }
+
+        body.linearVelocity = Vector3.forward * speed + Vector3.right * tangentSpeed;
         Physics.SyncTransforms();
         for (int i = 0; i < 20; i++)
         {
@@ -186,15 +250,55 @@ public static class PhysicsSandboxProbe
                 checks,
                 "Only load-bearing contact modules receive damage",
                 parts[0].currentDurability < 1000f || parts[1].currentDurability < 1000f);
-            Check(
-                checks,
-                "Real collision damage matches energy (" + damage + ")",
-                Mathf.Abs(damage - 0.0375f) < 0.001f);
+            Check(checks, "Real collision damage matches energy (" + damage + ")", Mathf.Abs(damage - 48f) < 0.05f);
         }
 
         UnityEngine.Object.DestroyImmediate(host);
         UnityEngine.Object.DestroyImmediate(wall);
+        UnityEngine.Object.DestroyImmediate(material);
         return damage;
+    }
+
+    private static void CollideDynamicPair(Scene scene, List<string> checks)
+    {
+        Rigidbody first = Body(scene, "Light collision body", 10f, Vector3.zero);
+        Rigidbody second = Body(scene, "Heavy collision body", 30f, Vector3.forward * 2f);
+        foreach (Rigidbody body in new[]
+        {
+            first,
+            second
+        }
+
+        )
+        {
+            body.constraints = RigidbodyConstraints.FreezeRotation;
+            ControlUnit unit = body.gameObject.AddComponent<ControlUnit>();
+            unit.enabled = false;
+            unit.faction = UnitFaction.Enemy;
+            Durability health = body.gameObject.AddComponent<Durability>();
+            health.debugLog = false;
+            health.maxDurability = health.currentDurability = 1000f;
+        }
+
+        first.linearVelocity = Vector3.forward * 10f;
+        Physics.SyncTransforms();
+        for (int i = 0; i < 20; i++)
+        {
+            scene.GetPhysicsScene().Simulate(0.02f);
+        }
+
+        float lightDamage = 1000f - first.GetComponent<Durability>().currentDurability;
+        float heavyDamage = 1000f - second.GetComponent<Durability>().currentDurability;
+        Check(
+            checks,
+            "Real unequal pair gives light body three times damage",
+            Mathf.Abs(lightDamage / heavyDamage - 3f) < 0.03f);
+        Check(
+            checks,
+            "Real unequal pair conserves normal damage budget",
+            Mathf.Abs(lightDamage + heavyDamage - 36f) < 0.05f);
+        UnityEngine.Object.DestroyImmediate(first.gameObject);
+        UnityEngine.Object.DestroyImmediate(second.gameObject);
     }
 
     private static Rigidbody Body(Scene scene, string name, float mass, Vector3 position)
