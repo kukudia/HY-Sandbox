@@ -1,0 +1,32 @@
+{
+    "status": "passed",
+    "checks": [
+        "Main contains the production world session",
+        "maximum load radius and full building density reach Ready without a budget exception",
+        "load radius four prepares exactly 81 terrain columns",
+        "prepared building instances respect the 64-building active budget",
+        "excess generated buildings remain deferred rather than lost or fatal",
+        "budgeted preparation keeps world simulation hidden",
+        "a separate clear radius-two session prepares for the high-speed probe",
+        "4000 m/s movement freezes before crossing into an unprepared predicted column",
+        "the high-speed fixture actually targets terrain outside the prepared radius",
+        "a second production guard tick keeps waiting while the saved velocity still reaches missing terrain",
+        "high-speed release occurs only after the predicted terrain column is loaded",
+        "the resumed real physics step ends above a prepared terrain column",
+        "the real resumed physics step travels beyond one terrain column rather than being silently clamped",
+        "the resumed vehicle retains a real terrain collider below and does not fall into an unloaded gap",
+        "the dynamic-building probe starts in an independent fresh session",
+        "the dynamic-building destination is within unload radius but has no generated ground",
+        "a released building with missing ground sleeps even inside the distance-based unload radius",
+        "the unsupported building stops its live physics simulation while dormant",
+        "restoring the dynamic building preserves its sleep position without unsupported free fall",
+        "restoring the building preserves its released anchor state",
+        "the unsupported-building sleep and restore path preserves damage",
+        "restoring the dormant building waits for actual destination terrain",
+        "all edge probes complete without unexpected Unity errors or exceptions"
+    ],
+    "skipped": [
+        "Failure injection is excluded: it intentionally emits an Error log and runs the full player-group/load UI recovery; this isolated probe does not depend on the user's current saved construct."
+    ],
+    "errors": []
+}

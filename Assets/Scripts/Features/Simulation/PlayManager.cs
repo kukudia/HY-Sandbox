@@ -10,6 +10,10 @@ public class PlayManager : MonoBehaviour
 {
     // Owns the build-to-play transition and keeps runtime unit membership synchronized after topology changes.
     public static PlayManager instance;
+    [SerializeField]
+    private WorldSessionManager worldSession;
+    public WorldSessionManager WorldSession => worldSession;
+
     public bool playMode = false;
     public Transform blocksParent;
     public Camera mainCamera;
@@ -83,6 +87,11 @@ public class PlayManager : MonoBehaviour
 
     public void PlayStart()
     {
+        if (playMode)
+        {
+            return;
+        }
+
         if (!CanStartPlay(out string reason))
         {
             Debug.LogWarning(reason);
@@ -90,6 +99,17 @@ public class PlayManager : MonoBehaviour
         }
 
         ControlUnit controlUnit = GameManager.instance.blocksParent.GetComponent<ControlUnit>();
+        if (worldSession != null)
+        {
+            if (!worldSession.CanEnterPlay(GameManager.instance.blocksParent, out reason))
+            {
+                Debug.LogWarning(reason);
+                return;
+            }
+
+            worldSession.EnterPlay(GameManager.instance.blocksParent);
+        }
+
         if (controlUnit != null)
         {
             controlUnit.AssignRuntimeOwnershipToBlocks(true);
@@ -254,10 +274,16 @@ public class PlayManager : MonoBehaviour
             if (controlUnit != null)
             {
                 controlUnit.PlayEnd();
+                controlUnit.gameObject.SetActive(false);
+                Destroy(controlUnit.gameObject);
             }
         }
 
+        allControlUnits.Clear();
+        blocksParent = null;
+        GameManager.instance.blocksParent = null;
         playMode = false;
+        worldSession?.EndSession();
         if (InputManager.instance != null)
         {
             InputManager.instance.EnterBuildMode();

@@ -806,6 +806,58 @@
 | WorldLabSoakChecks | [`void Finish(bool complete)`](../Assets/Editor/World/WorldLabSoakChecks.cs#L147) | private static |
 | WorldLabSoakChecks | [`void WriteCheckpoint()`](../Assets/Editor/World/WorldLabSoakChecks.cs#L162) | private static |
 
+## Assets/Editor/World/WorldSessionAuthoring.cs
+
+// 职责：创建可编辑世界配置与会话 Prefab，并将后台预热及加载界面接入 Main。 // 入口：Install()；重复执行保留配置、Prefab 参数及已存在的界面布局。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldSessionAuthoring | [`void Install()`](../Assets/Editor/World/WorldSessionAuthoring.cs#L17) | public static |
+| WorldSessionAuthoring | [`bool IsInEnvironment(Transform item)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L99) | private static |
+| WorldSessionAuthoring | [`GameObject CreatePrefab(WorldGenerationSettings configuration)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L112) | private static |
+| WorldSessionAuthoring | [`WorldLoadingPanel CreateLoadingPanel(Scene scene)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L169) | private static |
+| WorldSessionAuthoring | [`RectTransform Rect( string name, Transform parent, Vector2 minimum, Vector2 maximum, Vector2 position, Vector2 size)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L277) | private static |
+| WorldSessionAuthoring | [`Text Label( string name, Transform parent, string value, Font font, Vector2 position, Vector2 size, float fontSize, Color color)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L294) | private static |
+| WorldSessionAuthoring | [`T FindInScene(Scene scene)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L321) | private static |
+| WorldSessionAuthoring | [`void SelectConfiguration()`](../Assets/Editor/World/WorldSessionAuthoring.cs#L327) | public static |
+| WorldSessionAuthoring | [`void RegeneratePreview()`](../Assets/Editor/World/WorldSessionAuthoring.cs#L333) | public static |
+
+## Assets/Editor/World/WorldSessionEdgeChecks.cs
+
+// 职责：用运行时配置副本验证建筑预算延期、高速区块等待及脱锚建筑休眠恢复。 // 入口：Run()；只写Temp报告，不保存场景、配置资产或玩家存档，结束后退出Play Mode。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldSessionEdgeChecks | [`void Run()`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L45) | public static |
+| WorldSessionEdgeChecks | [`void StateChanged(PlayModeStateChange state)`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L59) | private static |
+| WorldSessionEdgeChecks | [`void Tick()`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L81) | private static |
+| WorldSessionEdgeChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L107) | private static |
+| WorldSessionEdgeChecks | [`void Check(bool condition, string description)`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L115) | private static |
+| WorldSessionEdgeChecks | [`IEnumerator Scenario()`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L125) | private static |
+| WorldSessionEdgeChecks | [`void BindProfile(WorldGenerationSettings value)`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L296) | private static |
+| WorldSessionEdgeChecks | [`void ConfigureProfile(int loadRadius, int unloadRadius, float buildingChance)`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L303) | private static |
+| WorldSessionEdgeChecks | [`void CreatePlayer()`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L317) | private static |
+| WorldSessionEdgeChecks | [`Vector3 ReadGuardVector(object guard, string field)`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L349) | private static |
+| WorldSessionEdgeChecks | [`void InvokeSessionPhysics()`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L354) | private static |
+| WorldSessionEdgeChecks | [`void CheckSessionHealthy(double timeout, string operation)`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L359) | private static |
+| WorldSessionEdgeChecks | [`void Finish(bool exitPlayMode)`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L367) | private static |
+
+## Assets/Editor/World/WorldSessionPlayChecks.cs
+
+// 职责：在真实 Main Play Mode 验证后台预热、流式卸载、会话内修改及退出清空。 // 入口：Run()；只操作运行时测试对象，报告写 Temp/WorldSession，不保存玩家数据或场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldSessionPlayChecks | [`void Run()`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L36) | public static |
+| WorldSessionPlayChecks | [`void StateChanged(PlayModeStateChange state)`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L50) | private static |
+| WorldSessionPlayChecks | [`void Tick()`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L70) | private static |
+| WorldSessionPlayChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L96) | private static |
+| WorldSessionPlayChecks | [`void Check(bool condition, string description)`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L104) | private static |
+| WorldSessionPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L114) | private static |
+| WorldSessionPlayChecks | [`IEnumerator StreamingChecks(WorldGenerationSettings settings)`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L344) | private static |
+| WorldSessionPlayChecks | [`bool NeighborhoodReady(ProceduralVoxelWorld world, Vector2Int center)`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L436) | private static |
+| WorldSessionPlayChecks | [`void Finish(bool exitPlayMode)`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L452) | private static |
+
 ## Assets/Scripts/Features/Bootstrap/GameManager.cs
 
 // 职责：保存当前方块父对象，启动时初始化界面与默认存档加载。 // 入口：Init()。
@@ -1926,8 +1978,8 @@
 | InputManager | [`void Awake()`](../Assets/Scripts/Features/Player/InputManager.cs#L24) | private |
 | InputManager | [`void Start()`](../Assets/Scripts/Features/Player/InputManager.cs#L29) | private |
 | InputManager | [`void Update()`](../Assets/Scripts/Features/Player/InputManager.cs#L40) | private |
-| InputManager | [`void EnterBuildMode()`](../Assets/Scripts/Features/Player/InputManager.cs#L145) | public |
-| InputManager | [`void ApplyCursorState(bool showCursor)`](../Assets/Scripts/Features/Player/InputManager.cs#L161) | private |
+| InputManager | [`void EnterBuildMode()`](../Assets/Scripts/Features/Player/InputManager.cs#L156) | public |
+| InputManager | [`void ApplyCursorState(bool showCursor)`](../Assets/Scripts/Features/Player/InputManager.cs#L172) | private |
 
 ## Assets/Scripts/Features/Player/Player.cs
 
@@ -2291,15 +2343,17 @@
 | MainUIPanels | [`void OnConfirmCreate()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L163) | public |
 | MainUIPanels | [`void OnConfirmDelete(string save)`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L203) | private |
 | MainUIPanels | [`void PlayStart()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L226) | public |
-| MainUIPanels | [`void PlayEnd()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L241) | public |
-| MainUIPanels | [`void PlayerDeath()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L255) | public |
-| MainUIPanels | [`void EnterEnemyBlueprintBuildMode()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L283) | public |
-| MainUIPanels | [`void ExitEnemyBlueprintBuildMode()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L288) | public |
-| MainUIPanels | [`void RefreshBlueprintEditorMode()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L293) | public |
-| MainUIPanels | [`void RefreshBuildingEditorPanel()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L312) | public |
-| MainUIPanels | [`void UpdateHealthBar(GameObject obj, float currentHealth, float maxHealth)`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L317) | public |
-| MainUIPanels | [`void SetHealthBar(float currentHealth, float maxHealth)`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L332) | private |
-| MainUIPanels | [`void SetCockpitHealth(Cockpit cockpit)`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L348) | private |
+| MainUIPanels | [`void CompletePlayStart()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L243) | public |
+| MainUIPanels | [`void PlayEnd()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L263) | public |
+| MainUIPanels | [`void CompletePlayEnd()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L273) | public |
+| MainUIPanels | [`void PlayerDeath()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L282) | public |
+| MainUIPanels | [`void EnterEnemyBlueprintBuildMode()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L311) | public |
+| MainUIPanels | [`void ExitEnemyBlueprintBuildMode()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L316) | public |
+| MainUIPanels | [`void RefreshBlueprintEditorMode()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L321) | public |
+| MainUIPanels | [`void RefreshBuildingEditorPanel()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L340) | public |
+| MainUIPanels | [`void UpdateHealthBar(GameObject obj, float currentHealth, float maxHealth)`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L345) | public |
+| MainUIPanels | [`void SetHealthBar(float currentHealth, float maxHealth)`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L360) | private |
+| MainUIPanels | [`void SetCockpitHealth(Cockpit cockpit)`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L376) | private |
 
 ## Assets/Scripts/Features/Presentation/MeteorLightToken.cs
 
@@ -2674,22 +2728,22 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| PlayManager | [`void Awake()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L51) | private |
-| PlayManager | [`void FixedUpdate()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L56) | private |
-| PlayManager | [`void PlayStart()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L84) | public |
-| PlayManager | [`bool CanStartPlay(out string reason)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L113) | public |
-| PlayManager | [`void RefreshGroup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L148) | public |
-| PlayManager | [`void SetPlayMode(bool lockView)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L175) | public |
-| PlayManager | [`void CalculateVelocity()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L183) | private |
-| PlayManager | [`void HandleSelection()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L192) | private |
-| PlayManager | [`void SelectBlock(Block block)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L221) | private |
-| PlayManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L240) | public |
-| PlayManager | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L246) | public |
-| PlayManager | [`void AssignBlocksToParentGroups(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L270) | public |
-| PlayManager | [`void RegisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L286) | public |
-| PlayManager | [`void UnregisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L300) | public |
-| PlayManager | [`IReadOnlyList<ControlUnit> GetControlUnits()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L308) | public |
-| PlayManager | [`EnemySpawner EnsureEnemySpawner()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L321) | private |
+| PlayManager | [`void Awake()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L55) | private |
+| PlayManager | [`void FixedUpdate()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L60) | private |
+| PlayManager | [`void PlayStart()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L88) | public |
+| PlayManager | [`bool CanStartPlay(out string reason)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L133) | public |
+| PlayManager | [`void RefreshGroup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L168) | public |
+| PlayManager | [`void SetPlayMode(bool lockView)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L195) | public |
+| PlayManager | [`void CalculateVelocity()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L203) | private |
+| PlayManager | [`void HandleSelection()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L212) | private |
+| PlayManager | [`void SelectBlock(Block block)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L241) | private |
+| PlayManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L260) | public |
+| PlayManager | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L266) | public |
+| PlayManager | [`void AssignBlocksToParentGroups(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L296) | public |
+| PlayManager | [`void RegisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L312) | public |
+| PlayManager | [`void UnregisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L326) | public |
+| PlayManager | [`IReadOnlyList<ControlUnit> GetControlUnits()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L334) | public |
+| PlayManager | [`EnemySpawner EnsureEnemySpawner()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L347) | private |
 
 ## Assets/Scripts/Features/Simulation/Rack.cs
 
@@ -2728,34 +2782,57 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BuildingRuntime | [`void Initialize(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L27) | public |
-| BuildingRuntime | [`void Activate()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L66) | public |
-| BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L93) | public |
-| BuildingRuntime | [`void DestroyBlock(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L140) | public |
-| BuildingRuntime | [`void SplitDisconnected()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L178) | private |
-| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L248) | private |
-| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L269) | public |
-| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L280) | private |
+| BuildingRuntime | [`void Initialize(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L28) | public |
+| BuildingRuntime | [`void Activate()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L67) | public |
+| BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L99) | public |
+| BuildingRuntime | [`void DestroyBlock(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L151) | public |
+| BuildingRuntime | [`void SplitDisconnected()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L189) | private |
+| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L259) | private |
+| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L280) | public |
+| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L291) | private |
 
 ## Assets/Scripts/Features/World/ProceduralVoxelWorld.cs
 
-// 职责：拥有可编辑体素数据、分块网格与受影响块的重建队列。 // 入口：Generate() / DamageSphere() / SetCell()；LateUpdate分预算刷新碰撞和显示。 // 约束：根Transform保持单位缩放；运行修改属于本次会话，不写玩家蓝图存档。
+// 职责：拥有有限或流式体素数据、分块网格与受影响块的重建队列。 // 入口：Generate()保留WorldLab；InitializeStreaming/LoadColumn供游玩会话逐帧准备地形。 // 约束：根Transform保持单位缩放；运行修改属于本次会话，不写玩家蓝图存档。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| ProceduralVoxelWorld | [`void Awake()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L42) | private |
-| ProceduralVoxelWorld | [`void Generate(System.Action<GameObject> registerCreated = null, System.Action<GameObject> destroyObsolete = null)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L56) | public |
-| ProceduralVoxelWorld | [`void CacheChunks()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L129) | private |
-| ProceduralVoxelWorld | [`Vector3Int WorldToCell(Vector3 position)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L141) | public |
-| ProceduralVoxelWorld | [`Vector3 CellCenter(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L146) | public |
-| ProceduralVoxelWorld | [`bool SetCell(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L151) | public |
-| ProceduralVoxelWorld | [`VoxelWorldEdits CaptureEdits()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L164) | public |
-| ProceduralVoxelWorld | [`void RestoreEdits(VoxelWorldEdits edits)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L169) | public |
-| ProceduralVoxelWorld | [`int DamageSphere(Vector3 center, float radius, float energy)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L192) | public |
-| ProceduralVoxelWorld | [`void QueueCell(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L251) | private |
-| ProceduralVoxelWorld | [`void QueueChunk(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L262) | private |
-| ProceduralVoxelWorld | [`void LateUpdate()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L273) | private |
-| ProceduralVoxelWorld | [`void FlushDirty(int budget = int.MaxValue)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L278) | public |
+| ProceduralVoxelWorld | [`void Awake()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L53) | private |
+| ProceduralVoxelWorld | [`void Generate(System.Action<GameObject> registerCreated = null, System.Action<GameObject> destroyObsolete = null)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L72) | public |
+| ProceduralVoxelWorld | [`void InitializeStreaming(WorldGenerationSettings settings, int sessionSeed)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L151) | public |
+| ProceduralVoxelWorld | [`bool HasColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L173) | public |
+| ProceduralVoxelWorld | [`bool IsColumnInBounds(Vector2Int coordinate)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L178) | public |
+| ProceduralVoxelWorld | [`Vector2Int ColumnAt(Vector3 worldPosition)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L183) | public |
+| ProceduralVoxelWorld | [`bool TryGetBuildingSite(Vector2Int coordinate, out Vector3 worldPosition, out Quaternion rotation)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L189) | public |
+| ProceduralVoxelWorld | [`IEnumerator LoadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L204) | public |
+| ProceduralVoxelWorld | [`void UnloadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L264) | public |
+| ProceduralVoxelWorld | [`void ClearStreaming()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L280) | public |
+| ProceduralVoxelWorld | [`void DestroyChunk(VoxelWorldChunk chunk)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L298) | private |
+| ProceduralVoxelWorld | [`void CacheChunks()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L317) | private |
+| ProceduralVoxelWorld | [`Vector3Int WorldToCell(Vector3 position)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L329) | public |
+| ProceduralVoxelWorld | [`Vector3 CellCenter(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L334) | public |
+| ProceduralVoxelWorld | [`bool SetCell(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L339) | public |
+| ProceduralVoxelWorld | [`VoxelWorldEdits CaptureEdits()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L352) | public |
+| ProceduralVoxelWorld | [`void RestoreEdits(VoxelWorldEdits edits)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L362) | public |
+| ProceduralVoxelWorld | [`int DamageSphere(Vector3 center, float radius, float energy)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L390) | public |
+| ProceduralVoxelWorld | [`void QueueCell(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L449) | private |
+| ProceduralVoxelWorld | [`void QueueChunk(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L460) | private |
+| ProceduralVoxelWorld | [`void LateUpdate()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L477) | private |
+| ProceduralVoxelWorld | [`void FlushDirty(int budget = int.MaxValue)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L482) | public |
+
+## Assets/Scripts/Features/World/StreamingWorldTerrain.cs
+
+// 职责：按全局单元坐标确定性采样大世界地形、出生平台和建筑平台，无场景对象或全图数组。 // 入口：Sample() / TryGetBuildingSite()；高度缓存有界，区块卸载不改变同一种子的基线。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| StreamingWorldTerrain | [`bool IsColumnInBounds(Vector2Int coordinate)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L38) | public |
+| StreamingWorldTerrain | [`byte Sample(Vector3Int cell)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L44) | public |
+| StreamingWorldTerrain | [`bool TryGetBuildingSite(Vector2Int coordinate, out Vector3 localPosition, out Quaternion rotation)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L55) | public |
+| StreamingWorldTerrain | [`bool HasBuilding(Vector2Int coordinate)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L71) | private |
+| StreamingWorldTerrain | [`int Height(int x, int z)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L81) | private |
+| StreamingWorldTerrain | [`float RawHeight(int x, int z)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L117) | private |
+| StreamingWorldTerrain | [`uint Hash(Vector2Int coordinate)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L124) | private |
 
 ## Assets/Scripts/Features/World/VoxelDebrisPiece.cs
 
@@ -2806,21 +2883,23 @@
 | VoxelWorldChunk | [`void Rebuild(VoxelWorldData data, int chunkSize, float cellSize, Material[] materials)`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L18) | public |
 | VoxelWorldChunk | [`void AdoptBakedMesh(Mesh asset)`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L34) | public |
 | VoxelWorldChunk | [`void OnDestroy()`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L41) | private |
-| VoxelWorldChunk | [`void ReleaseMesh()`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L46) | private |
+| VoxelWorldChunk | [`void ClearOwnedMesh()`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L46) | public |
+| VoxelWorldChunk | [`void ReleaseMesh()`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L61) | private |
 
 ## Assets/Scripts/Features/World/VoxelWorldData.cs
 
-// 职责：固定种子生成体素地形与遗迹，保存单元材质和采掘修改。 // 入口：Generate() / Set()；无场景或存档副作用，0为空气、1土、2岩、3金属。
+// 职责：有限世界保存体素数组，大世界按需采样并仅保存本次会话的稀疏单元修改。 // 入口：Generate() / Set()；无场景或存档副作用，0为空气、1土、2岩、3金属。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| VoxelWorldData | [`byte Get(Vector3Int cell)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L20) | public |
-| VoxelWorldData | [`bool Contains(Vector3Int cell)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L30) | public |
-| VoxelWorldData | [`bool Set(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L35) | public |
-| VoxelWorldData | [`void Recount()`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L54) | public |
-| VoxelWorldData | [`void InitializeEmpty(Vector3Int dimensions)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L66) | public |
-| VoxelWorldData | [`void Generate(Vector3Int dimensions, int seed)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L78) | public |
-| VoxelWorldData | [`uint Fingerprint()`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L134) | public |
+| VoxelWorldData | [`byte Get(Vector3Int cell)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L28) | public |
+| VoxelWorldData | [`bool Contains(Vector3Int cell)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L43) | public |
+| VoxelWorldData | [`bool Set(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L50) | public |
+| VoxelWorldData | [`void Recount()`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L83) | public |
+| VoxelWorldData | [`void InitializeEmpty(Vector3Int dimensions)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L100) | public |
+| VoxelWorldData | [`void Generate(Vector3Int dimensions, int seed)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L114) | public |
+| VoxelWorldData | [`void InitializeStreaming(StreamingWorldTerrain terrain)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L172) | public |
+| VoxelWorldData | [`uint Fingerprint()`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L182) | public |
 
 ## Assets/Scripts/Features/World/VoxelWorldEdits.cs
 
@@ -2851,21 +2930,25 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldBuildingManager | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L34) | private |
-| WorldBuildingManager | [`void Start()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L43) | private |
-| WorldBuildingManager | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L48) | private |
-| WorldBuildingManager | [`bool CanPlace(BlockDataList blueprint, Vector3 position, Quaternion rotation, out string reason)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L59) | public |
-| WorldBuildingManager | [`BuildingRuntime Place(BlockDataList blueprint, string name, Vector3 position, Quaternion rotation, UnitFaction faction)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L79) | public |
-| WorldBuildingManager | [`BuildingRuntime Stage(WorldBuildingState state, Transform parent)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L111) | private |
-| WorldBuildingManager | [`WorldLabSnapshot Capture()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L129) | public |
-| WorldBuildingManager | [`void Restore(WorldLabSnapshot snapshot)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L149) | public |
-| WorldBuildingManager | [`void ResetBuildings()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L202) | public |
-| WorldBuildingManager | [`void ClearBuildings()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L236) | private |
-| WorldBuildingManager | [`void TerrainChanged(Bounds changed)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L251) | private |
-| WorldBuildingManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L262) | private |
-| WorldBuildingManager | [`void DamageSphere(Vector3 center, float radius, float damage)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L279) | public |
-| WorldBuildingManager | [`void CreateDebris(List<Block> group, Rigidbody source)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L284) | internal |
-| WorldBuildingManager | [`void ClearDebris()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L320) | private |
+| WorldBuildingManager | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L36) | private |
+| WorldBuildingManager | [`void Start()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L53) | private |
+| WorldBuildingManager | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L61) | private |
+| WorldBuildingManager | [`bool CanPlace(BlockDataList blueprint, Vector3 position, Quaternion rotation, out string reason)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L72) | public |
+| WorldBuildingManager | [`BuildingRuntime Place(BlockDataList blueprint, string name, Vector3 position, Quaternion rotation, UnitFaction faction)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L92) | public |
+| WorldBuildingManager | [`BuildingRuntime RestoreBuilding(WorldBuildingState state)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L122) | public |
+| WorldBuildingManager | [`bool HasCapacity(int additionalBlocks)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L140) | public |
+| WorldBuildingManager | [`void RemoveBuilding(BuildingRuntime building)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L151) | public |
+| WorldBuildingManager | [`void ClearSession()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L163) | public |
+| WorldBuildingManager | [`BuildingRuntime Stage(WorldBuildingState state, Transform parent)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L169) | private |
+| WorldBuildingManager | [`WorldLabSnapshot Capture()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L187) | public |
+| WorldBuildingManager | [`void Restore(WorldLabSnapshot snapshot)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L207) | public |
+| WorldBuildingManager | [`void ResetBuildings()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L260) | public |
+| WorldBuildingManager | [`void ClearBuildings()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L294) | private |
+| WorldBuildingManager | [`void TerrainChanged(Bounds changed)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L309) | private |
+| WorldBuildingManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L320) | private |
+| WorldBuildingManager | [`void DamageSphere(Vector3 center, float radius, float damage)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L337) | public |
+| WorldBuildingManager | [`void CreateDebris(List<Block> group, Rigidbody source)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L342) | internal |
+| WorldBuildingManager | [`void ClearDebris()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L378) | private |
 
 ## Assets/Scripts/Features/World/WorldBuildingPalette.cs
 
@@ -2902,6 +2985,19 @@
 
 数据/配置/接口定义，无方法体。
 
+## Assets/Scripts/Features/World/WorldBuildingStreaming.cs
+
+// 职责：按世界区块生成建筑，将远处建筑休眠为快照，并保留本次探索中的损坏和货仓。 // 入口：LoadColumn() / UnloadDistant()；实例归WorldBuildingManager，缓存随WorldSessionManager退出丢弃。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldBuildingStreaming | [`void LoadTemplates()`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L31) | private |
+| WorldBuildingStreaming | [`void LoadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L78) | internal |
+| WorldBuildingStreaming | [`void RestoreAvailable()`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L108) | internal |
+| WorldBuildingStreaming | [`void UnloadDistant(Vector2Int center)`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L137) | internal |
+| WorldBuildingStreaming | [`int Distance(Vector2Int a, Vector2Int b)`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L166) | internal static |
+| WorldBuildingStreaming | [`bool HasLoadedGround(Vector3 position, Quaternion rotation, Vector2Int size)`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L171) | private |
+
 ## Assets/Scripts/Features/World/WorldBuildingValidation.cs
 
 // 职责：创建前校验建筑模板、实例状态和资源，拒绝部分加载与非法尺寸/坐标。 // 入口：ValidateBlueprint() / ValidateState()；不会修改资源或活动世界。
@@ -2913,6 +3009,12 @@
 | WorldBuildingValidation | [`bool Finite(float value)`](../Assets/Scripts/Features/World/WorldBuildingValidation.cs#L88) | public static |
 | WorldBuildingValidation | [`bool Finite(Vector3 value)`](../Assets/Scripts/Features/World/WorldBuildingValidation.cs#L93) | public static |
 | WorldBuildingValidation | [`bool ValidRotation(Quaternion value)`](../Assets/Scripts/Features/World/WorldBuildingValidation.cs#L98) | private static |
+
+## Assets/Scripts/Features/World/WorldGenerationSettings.cs
+
+// 职责：保存大世界种子、区块预算、建筑平台及安全出生区的可编辑生成参数。 // 入口：WorldSessionManager.BeginPreparation()读取；不会写入玩家或WorldLab存档。
+
+数据/配置/接口定义，无方法体。
 
 ## Assets/Scripts/Features/World/WorldLabController.cs
 
@@ -2961,3 +3063,61 @@
 | WorldLabPhysicsProbe | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldLabPhysicsProbe.cs#L17) | private |
 | WorldLabPhysicsProbe | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/World/WorldLabPhysicsProbe.cs#L26) | private |
 | WorldLabPhysicsProbe | [`void Save(bool contact)`](../Assets/Scripts/Features/World/WorldLabPhysicsProbe.cs#L34) | private |
+
+## Assets/Scripts/Features/World/WorldLoadingPanel.cs
+
+// 职责：呈现世界准备进度及取消入口；实际准备与模式切换由WorldSessionManager持有。 // 入口：Bind() / Show()；组件留在活动Canvas，隐藏仅改变CanvasGroup。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLoadingPanel | [`void Bind(WorldSessionManager owner)`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L17) | public |
+| WorldLoadingPanel | [`void Show(bool visible)`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L29) | public |
+| WorldLoadingPanel | [`void Update()`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L50) | private |
+| WorldLoadingPanel | [`void Cancel()`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L68) | private |
+| WorldLoadingPanel | [`void OnDestroy()`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L73) | private |
+
+## Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs
+
+// 职责：在地形碰撞尚未就绪时暂存载具姿态/速度，限制世界边界并在区块完成后恢复。 // 入口：Tick() / Release()；WorldSessionManager在FixedUpdate调用，退出或销毁必须释放。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldPlayerStreamingGuard | [`void Tick(Transform player)`](../Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs#L30) | internal |
+| WorldPlayerStreamingGuard | [`bool HasTerrainForBounds(Transform player, Vector3 target, Vector3 prediction)`](../Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs#L98) | private |
+| WorldPlayerStreamingGuard | [`Bounds CaptureLocalBounds(Transform construct)`](../Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs#L129) | internal static |
+| WorldPlayerStreamingGuard | [`void Release()`](../Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs#L154) | internal |
+
+## Assets/Scripts/Features/World/WorldRegionStreaming.cs
+
+// 职责：按距离选择下一个地形列，先休眠建筑再卸载远处网格，并在列完成后装入建筑。 // 入口：LoadNext()；由WorldSessionManager的可取消协程逐帧驱动，无模式/UI副作用。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldRegionStreaming | [`IEnumerator LoadNext(Vector2Int center)`](../Assets/Scripts/Features/World/WorldRegionStreaming.cs#L29) | internal |
+| WorldRegionStreaming | [`bool FindNextColumn(Vector2Int center, out Vector2Int coordinate)`](../Assets/Scripts/Features/World/WorldRegionStreaming.cs#L55) | private |
+| WorldRegionStreaming | [`void RetireDistant(Vector2Int center)`](../Assets/Scripts/Features/World/WorldRegionStreaming.cs#L81) | private |
+
+## Assets/Scripts/Features/World/WorldSessionManager.cs
+
+// 职责：在Main建造期间分帧预热世界，进入游玩后启用并跟踪区块，退出即丢弃整个探索会话。 // 入口：BeginPreparation() / RequestPlay() / EnterPlay() / EndSession()；不读写玩家或WorldLab世界存档。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldSessionManager | [`void Start()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L58) | private |
+| WorldSessionManager | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L65) | private |
+| WorldSessionManager | [`void BeginPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L74) | public |
+| WorldSessionManager | [`void RequestPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L111) | public |
+| WorldSessionManager | [`void CancelPlayRequest()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L128) | public |
+| WorldSessionManager | [`void CompletePendingPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L134) | private |
+| WorldSessionManager | [`bool CanEnterPlay(Transform construct, out string reason)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L146) | public |
+| WorldSessionManager | [`void EnterPlay(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L168) | public |
+| WorldSessionManager | [`void EndSession()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L195) | public |
+| WorldSessionManager | [`IEnumerator RunGuarded(int version)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L200) | private |
+| WorldSessionManager | [`IEnumerator StreamWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L232) | private |
+| WorldSessionManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L268) | private |
+| WorldSessionManager | [`void Update()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L291) | private |
+| WorldSessionManager | [`Bounds ConstructBounds(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L301) | private static |
+| WorldSessionManager | [`void SetBuildEnvironmentVisible(bool visible)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L326) | private |
+| WorldSessionManager | [`void StopPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L356) | private |
+| WorldSessionManager | [`void Fail(Exception error)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L373) | private |
+| WorldSessionManager | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L384) | private |

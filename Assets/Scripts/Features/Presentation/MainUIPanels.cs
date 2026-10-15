@@ -231,11 +231,33 @@ public class MainUIPanels : MonoBehaviour
             return;
         }
 
+        if (PlayManager.instance.WorldSession != null)
+        {
+            PlayManager.instance.WorldSession.RequestPlay();
+            return;
+        }
+
+        CompletePlayStart();
+    }
+
+    public void CompletePlayStart()
+    {
+        if (!PlayManager.instance.CanStartPlay(out string reason))
+        {
+            Debug.LogWarning(reason);
+            return;
+        }
+
+        PlayManager.instance.PlayStart();
+        if (!PlayManager.instance.playMode)
+        {
+            return;
+        }
+
         debugPanel.transform.SetParent(playPanel.transform);
         _combatHud?.ResetHud();
         _transitions.Show(buildPanel, false, fadeDuration);
         _transitions.Show(playPanel, true, fadeDuration);
-        PlayManager.instance.PlayStart();
     }
 
     public void PlayEnd()
@@ -245,6 +267,11 @@ public class MainUIPanels : MonoBehaviour
             return;
         }
 
+        CompletePlayEnd();
+    }
+
+    public void CompletePlayEnd()
+    {
         debugPanel.transform.SetParent(buildPanel.transform);
         PlayManager.instance.PlayEnd();
         _transitions.Show(deathPanel, false, fadeDuration);
@@ -256,6 +283,7 @@ public class MainUIPanels : MonoBehaviour
     {
         _transitions.CancelAll();
         PlayManager.instance.playMode = false;
+        PlayManager.instance.WorldSession?.EndSession();
         if (InputManager.instance != null)
         {
             InputManager.instance.EnterBuildMode();
