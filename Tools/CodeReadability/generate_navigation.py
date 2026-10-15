@@ -593,6 +593,30 @@ def main():
         ],
     )
     graph(
+        "用户建筑库、自然出生和远景",
+        "源码推导：每次会话读取persistentDataPath/BuildingBlueprints全部有效JSON，单独报告坏文件并按模块/底座范围扩大平台。自然出生地不再压低；进入时按载具覆盖范围最高地面加净空抬升。远景是独立无碰撞网格，分帧采样并避开已加载列，外边缘由距离雾过渡到同色背景；退出恢复原相机/雾并销毁自有网格。",
+        {
+            "A": "WorldSessionManager.BeginPreparation",
+            "B": "WorldBuildingLibrary.Load",
+            "C": "WorldBuildingValidation.ValidateBlueprint",
+            "D": "WorldGenerationSettings.FitBuildingPlatforms",
+            "E": "ProceduralVoxelWorld.InitializeStreaming",
+            "F": "WorldDistanceView.Refresh",
+            "G": "WorldDistanceView.Rebuild",
+            "H": "StreamingWorldTerrain.SurfaceHeight",
+            "I": "WorldSessionManager.EnterPlay",
+            "J": "ProceduralVoxelWorld.FindSpawnSurface",
+            "K": "WorldDistanceView.Enter",
+            "L": "WorldSessionManager.StopPreparation",
+            "M": "WorldDistanceView.Dispose",
+        },
+        [
+            "A --> B", "B -->|逐文件校验，坏文件记录原因| C", "A --> D", "A --> E",
+            "A -.->|受保护协程| F", "F -->|列版本或关注区变化| G", "G --> H",
+            "I --> J", "J --> H", "I --> K", "L -->|先停止远景协程| M",
+        ],
+    )
+    graph(
         "区块流式与建筑休眠",
         "源码推导：纯种子采样和稀疏体素差量不分配全图。加载按列、每个立方区块让出一帧，完整列才发布；先休眠建筑再卸载远处地形。建筑实例受预算限制，超限快照延期；当前地基覆盖列完整后恢复。物理帧按载具尺寸与预测路径冻结等待，保留速度直到完整路径有地形碰撞。",
         {

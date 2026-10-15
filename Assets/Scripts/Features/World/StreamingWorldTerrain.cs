@@ -20,6 +20,7 @@ public sealed class StreamingWorldTerrain
     public Vector3Int Maximum => new Vector3Int((worldRadiusInChunks + 1) * chunkSize, worldHeight, (worldRadiusInChunks + 1) * chunkSize);
     public Vector3 SpawnLocalPosition => new Vector3(chunkSize * 0.5f, Height(chunkSize / 2, chunkSize / 2) + 1f, chunkSize * 0.5f) * cellSize;
 
+    public float SurfaceHeight(int x, int z) => (Height(x, z) + 1) * cellSize;
     public StreamingWorldTerrain(WorldGenerationSettings configuration, int sessionSeed)
     {
         // Keep a session's baseline stable when its authoring asset is edited in Play Mode.
@@ -70,6 +71,12 @@ public sealed class StreamingWorldTerrain
 
     private bool HasBuilding(Vector2Int coordinate)
     {
+        int spacing = Mathf.Max(1, Mathf.CeilToInt((buildingPadHalfSize * 2f + 4f) / chunkSize));
+        if (coordinate.x % spacing != 0 || coordinate.y % spacing != 0)
+        {
+            return false;
+        }
+
         if (!IsColumnInBounds(coordinate) || Mathf.Max(Mathf.Abs(coordinate.x), Mathf.Abs(coordinate.y)) <= spawnClearRadius)
         {
             return false;
@@ -87,13 +94,11 @@ public sealed class StreamingWorldTerrain
         }
 
         float value = RawHeight(x, z);
-        var column = new Vector2Int(Mathf.FloorToInt((float)x / chunkSize), Mathf.FloorToInt((float)z / chunkSize));
-        bool isSpawn = Mathf.Max(Mathf.Abs(column.x), Mathf.Abs(column.y)) <= spawnClearRadius;
-        if (isSpawn)
-        {
-            value = 6f;
-        }
-        else if (HasBuilding(column))
+        int spacing = Mathf.Max(1, Mathf.CeilToInt((buildingPadHalfSize * 2f + 4f) / chunkSize));
+        var column = new Vector2Int(
+            Mathf.RoundToInt(((x + 0.5f) / chunkSize - 0.5f) / spacing) * spacing,
+            Mathf.RoundToInt(((z + 0.5f) / chunkSize - 0.5f) / spacing) * spacing);
+        if (HasBuilding(column))
         {
             int centerX = column.x * chunkSize + chunkSize / 2;
             int centerZ = column.y * chunkSize + chunkSize / 2;

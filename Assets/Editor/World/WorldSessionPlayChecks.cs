@@ -159,6 +159,19 @@ public static class WorldSessionPlayChecks
         Check(
             session.State == WorldSessionState.Ready && session.Progress >= 1f,
             "background preparation reaches Ready with full progress");
+        string blueprintDirectory = Path.Combine(Application.persistentDataPath, "BuildingBlueprints");
+        string[] userBlueprints = Directory.GetFiles(blueprintDirectory, "*.json").Select(Path.GetFileNameWithoutExtension).OrderBy(name => name, StringComparer.OrdinalIgnoreCase).ToArray();
+        Check(
+            session.BuildingTemplates.SequenceEqual(userBlueprints),
+            "the generation pool includes every blueprint in the real user BuildingBlueprints directory");
+        Check(
+            buildings.Buildings.All(building => userBlueprints.Contains(building.Capture().blueprintName)),
+            "spawned buildings use user templates rather than the bundled Outpost catalog");
+        Transform horizon = world.transform.Find("Distant terrain - visual only");
+        Mesh horizonMesh = horizon.GetComponent<MeshFilter>().sharedMesh;
+        Check(
+            horizonMesh != null && horizonMesh.bounds.size.x > session.Settings.ViewDistance * 2f && horizon.GetComponent<Collider>() == null,
+            "the prepared visual horizon extends beyond the fog range without adding distant physics");
         Check(
             world.LoadedColumns.Count == (session.Settings.LoadRadius * 2 + 1) * (session.Settings.LoadRadius * 2 + 1),
             "only the initial load radius is generated");
@@ -195,6 +208,10 @@ public static class WorldSessionPlayChecks
         playerUnit.RefreshChildren();
         GameManager.instance.blocksParent = testPlayer.transform;
         PlayManager.instance.blocksParent = testPlayer.transform;
+        FogMode previousFogMode = RenderSettings.fogMode;
+        float previousFogEnd = RenderSettings.fogEndDistance;
+        Color previousFogColor = RenderSettings.fogColor;
+        CameraClearFlags previousClearFlags = Camera.main.clearFlags;
         session.EnterPlay(testPlayer.transform);
         yield return null;
         Check(
@@ -207,6 +224,14 @@ public static class WorldSessionPlayChecks
         Check(
             Physics.RaycastAll(testPlayer.transform.position + Vector3.up * 4f, Vector3.down, 30f).Any(hit => hit.collider.transform.IsChildOf(world.transform)),
             "spawn has a loaded terrain collider underneath");
+        Block cockpitBlock = cockpitObject.GetComponent<Block>();
+        Bounds spawnBounds = new Bounds(cockpitObject.transform.position, new Vector3(cockpitBlock.x, cockpitBlock.y, cockpitBlock.z));
+        Check(
+            spawnBounds.min.y >= world.FindSpawnSurface(spawnBounds).y + session.Settings.SpawnClearance - 0.01f,
+            "the player bottom is raised above the highest natural terrain under its entire footprint");
+        Check(
+            RenderSettings.fog && RenderSettings.fogMode == FogMode.Linear && Mathf.Approximately(RenderSettings.fogEndDistance, session.Settings.ViewDistance) && Camera.main.backgroundColor == RenderSettings.fogColor,
+            "the extended view fades into a matching fog background before the distant mesh boundary");
         Vector3Int spawnCell = world.WorldToCell(world.SpawnPosition) - Vector3Int.up;
         Check(world.SetCell(spawnCell, 0), "terrain at the prepared spawn can be modified");
         world.FlushDirty();
@@ -270,6 +295,9 @@ public static class WorldSessionPlayChecks
             grounds.Select((item, index) => item.activeSelf == groundStates[index]).All(value => value),
             "exit restores each build ground's authored activation state");
         Check(
+            RenderSettings.fogMode == previousFogMode && Mathf.Approximately(RenderSettings.fogEndDistance, previousFogEnd) && RenderSettings.fogColor == previousFogColor && Camera.main.clearFlags == previousClearFlags,
+            "exit restores the authored build fog and camera background mode");
+        Check(
             session.DormantBuildingCount == 0 && buildings.Buildings.Count == 0 && world.LoadedColumns.Count == 0,
             "exit clears terrain, buildings and dormant state immediately");
         while (session.State == WorldSessionState.Preparing)
@@ -278,7 +306,7 @@ public static class WorldSessionPlayChecks
         }
 
         Check(
-            session.State == WorldSessionState.Ready && world.Data.Get(spawnCell) != 0,
+            session.State == WorldSessionState.Ready && world.Data.Get(spawnCell) == new StreamingWorldTerrain(session.Settings, session.SessionSeed).Sample(spawnCell),
             "a fresh session restores baseline terrain instead of retaining changes");
         Check(
             buildings.Buildings.SelectMany(building => building.GetComponentsInChildren<CargoHold>(true)).All(item => item.Used != 3),
@@ -346,6 +374,15 @@ public static class WorldSessionPlayChecks
         var baseline = new StreamingWorldTerrain(settings, 14721);
         var repeated = new StreamingWorldTerrain(settings, 14721);
         var different = new StreamingWorldTerrain(settings, 14722);
+        var spawnHeights = new HashSet<float>();
+        for (int seed = 14721; seed < 14741; seed++)
+        {
+            spawnHeights.Add(new StreamingWorldTerrain(settings, seed).SpawnLocalPosition.y);
+        }
+
+        Check(
+            spawnHeights.Count > 1,
+            "spawn ground follows seeded natural terrain instead of a fixed depressed platform");
         bool positiveMatches = true;
         bool negativeMatches = true;
         bool seedChangesTerrain = false;

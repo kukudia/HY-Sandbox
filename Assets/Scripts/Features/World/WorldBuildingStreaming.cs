@@ -20,64 +20,19 @@ internal sealed class WorldBuildingStreaming
     internal WorldBuildingStreaming(
         ProceduralVoxelWorld terrain,
         WorldBuildingManager buildings,
-        WorldGenerationSettings configuration)
+        WorldGenerationSettings configuration,
+        WorldBuildingLibrary library)
     {
         world = terrain;
         manager = buildings;
         settings = configuration;
-        LoadTemplates();
-    }
-
-    private void LoadTemplates()
-    {
-        if (manager.Catalog == null || manager.Catalog.blueprints == null)
-        {
-            throw new InvalidOperationException("World building catalog is missing.");
-        }
-
-        float padRadius = settings.BuildingPadHalfSize * settings.CellSize - settings.CellSize;
-        foreach (TextAsset asset in manager.Catalog.blueprints)
-        {
-            if (asset == null)
-            {
-                throw new InvalidOperationException("World building catalog contains a missing blueprint.");
-            }
-
-            BlockDataList blueprint = JsonUtility.FromJson<BlockDataList>(asset.text);
-            WorldBuildingValidation.ValidateBlueprint(blueprint);
-            if (blueprint.blocks.Count == 0 || blueprint.foundation.width > padRadius || blueprint.foundation.length > padRadius)
-            {
-                throw new InvalidOperationException("Building does not fit its generated platform: " + asset.name);
-            }
-
-            foreach (BlockData block in blueprint.blocks)
-            {
-                Vector3 half = new Vector3(block.x, block.y, block.z) * 0.5f;
-                Quaternion rotation = new Quaternion(block.rotX, block.rotY, block.rotZ, block.rotW);
-                for (int i = 0; i < 8; i++)
-                {
-                    Vector3 corner = rotation * Vector3.Scale(half, new Vector3((i & 1) == 0 ? -1f : 1f, (i & 2) == 0 ? -1f : 1f, (i & 4) == 0 ? -1f : 1f));
-                    corner += new Vector3(block.posX, block.posY, block.posZ);
-                    if (Mathf.Abs(corner.x) > padRadius || Mathf.Abs(corner.z) > padRadius || corner.y < -0.01f)
-                    {
-                        throw new InvalidOperationException("Building extends outside its generated platform: " + asset.name);
-                    }
-                }
-            }
-
-            templates.Add(blueprint);
-            names.Add(asset.name);
-        }
-
-        if (templates.Count == 0)
-        {
-            throw new InvalidOperationException("World generation needs at least one building blueprint.");
-        }
+        templates.AddRange(library.Templates);
+        names.AddRange(library.Names);
     }
 
     internal void LoadColumn(Vector2Int coordinate)
     {
-        if (generated.Add(coordinate) && world.TryGetBuildingSite(coordinate, out Vector3 position, out Quaternion rotation))
+        if (templates.Count > 0 && generated.Add(coordinate) && world.TryGetBuildingSite(coordinate, out Vector3 position, out Quaternion rotation))
         {
             uint hash = unchecked((uint)(world.Seed * 73856093) ^ (uint)(coordinate.x * 19349663) ^ (uint)(coordinate.y * 83492791));
             int index = (int)(hash % (uint)templates.Count);
