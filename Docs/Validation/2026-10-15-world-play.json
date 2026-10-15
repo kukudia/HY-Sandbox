@@ -1,0 +1,19 @@
+{
+    "phase": "play",
+    "passed": 13,
+    "checks": [
+        "baked world loads in Play",
+        "seam edit queues only affected neighbors",
+        "per-frame rebuild budget enforced",
+        "placed cell has real PhysX surface",
+        "zero radius ignored",
+        "sub-threshold hit retains rock",
+        "damage accumulates to remove rock",
+        "removed rock no longer collides",
+        "fill restores collision",
+        "production turret hit damages terrain",
+        "sphere blast changes data and queues chunks",
+        "all chunk mesh references valid after edits",
+        "regenerate restores seed content and counters"
+    ]
+}

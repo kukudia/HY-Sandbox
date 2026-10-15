@@ -678,6 +678,45 @@
 | SalvagePlayProbe | [`CargoItem Part()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L216) | private static |
 | SalvagePlayProbe | [`IEnumerator Scenario()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L222) | private static |
 
+## Assets/Editor/World/ProceduralVoxelWorldEditor.cs
+
+// 职责：为选中的程序化世界提供Undo预览、重生成与真实网格Bake入口。 // 入口：ProceduralVoxelWorld Inspector；只写所选世界及WorldLab网格目录。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| ProceduralVoxelWorldEditor | [`void OnInspectorGUI()`](../Assets/Editor/World/ProceduralVoxelWorldEditor.cs#L9) | public override |
+
+## Assets/Editor/World/WorldLabAuthoring.cs
+
+// 职责：创建独立WorldLab场景并将生成网格保存为真实资产；Inspector支持种子与分块参数。 // 入口：Tools/HY-Sandbox/World/Create or open World Lab；不保存或改写Main。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabAuthoring | [`void CreateOrOpen()`](../Assets/Editor/World/WorldLabAuthoring.cs#L13) | public static |
+| WorldLabAuthoring | [`Material MaterialAt(string name, Color color, float metallic)`](../Assets/Editor/World/WorldLabAuthoring.cs#L78) | private static |
+| WorldLabAuthoring | [`void BakeMeshes(ProceduralVoxelWorld world)`](../Assets/Editor/World/WorldLabAuthoring.cs#L98) | public static |
+
+## Assets/Editor/World/WorldLabChecks.cs
+
+// 职责：检查种子、网格边界与真实PhysX破坏/填补/炮弹命中，并将结果写入验证文件。 // 入口：RunDataChecks() / RunPlayChecks()；只在独立WorldLab执行运行检查，不操作玩家存档。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabChecks | [`void Check(bool result, string name)`](../Assets/Editor/World/WorldLabChecks.cs#L12) | private static |
+| WorldLabChecks | [`string RunDataChecks()`](../Assets/Editor/World/WorldLabChecks.cs#L22) | public static |
+| WorldLabChecks | [`void Clear(VoxelWorldData data)`](../Assets/Editor/World/WorldLabChecks.cs#L66) | private static |
+| WorldLabChecks | [`string RunPlayChecks()`](../Assets/Editor/World/WorldLabChecks.cs#L81) | public static |
+| WorldLabChecks | [`string Save(string phase)`](../Assets/Editor/World/WorldLabChecks.cs#L147) | private static |
+
+## Assets/Editor/World/WorldLabPerformanceChecks.cs
+
+// 职责：在WorldLab测量真实生成、球形破坏和脏块网格/碰撞重建的同步CPU成本。 // 入口：Run()；固定种子/爆点和样本记录，不把微基准当作帧率或GPU性能。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabPerformanceChecks | [`string Run()`](../Assets/Editor/World/WorldLabPerformanceChecks.cs#L13) | public static |
+| WorldLabPerformanceChecks | [`double Median(double[] values)`](../Assets/Editor/World/WorldLabPerformanceChecks.cs#L80) | private static |
+
 ## Assets/Scripts/Features/Bootstrap/GameManager.cs
 
 // 职责：保存当前方块父对象，启动时初始化界面与默认存档加载。 // 入口：Init()。
@@ -2546,3 +2585,79 @@
 // 职责：定义阵营和运行单元归属，支持友敌判断与残骸追踪。
 
 数据/配置/接口定义，无方法体。
+
+## Assets/Scripts/Features/World/ProceduralVoxelWorld.cs
+
+// 职责：拥有可编辑体素数据、分块网格与受影响块的重建队列。 // 入口：Generate() / DamageSphere() / SetCell()；LateUpdate分预算刷新碰撞和显示。 // 约束：根Transform保持单位缩放；运行修改属于本次会话，不写玩家蓝图存档。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| ProceduralVoxelWorld | [`void Awake()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L39) | private |
+| ProceduralVoxelWorld | [`void Generate()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L53) | public |
+| ProceduralVoxelWorld | [`void CacheChunks()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L111) | private |
+| ProceduralVoxelWorld | [`Vector3Int WorldToCell(Vector3 position)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L123) | public |
+| ProceduralVoxelWorld | [`Vector3 CellCenter(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L128) | public |
+| ProceduralVoxelWorld | [`bool SetCell(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L133) | public |
+| ProceduralVoxelWorld | [`int DamageSphere(Vector3 center, float radius, float energy)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L146) | public |
+| ProceduralVoxelWorld | [`void QueueCell(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L200) | private |
+| ProceduralVoxelWorld | [`void QueueChunk(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L211) | private |
+| ProceduralVoxelWorld | [`void LateUpdate()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L222) | private |
+| ProceduralVoxelWorld | [`void FlushDirty(int budget = int.MaxValue)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L227) | public |
+
+## Assets/Scripts/Features/World/VoxelSurfaceMesher.cs
+
+// 职责：仅为暴露的体素面生成三材质分块网格，边界查询邻块以避免内部重复面。 // 入口：Build()；调用者拥有返回Mesh并负责销毁，不修改源数据。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VoxelSurfaceMesher | [`Mesh Build(VoxelWorldData data, Vector3Int start, int chunkSize, float cellSize)`](../Assets/Scripts/Features/World/VoxelSurfaceMesher.cs#L63) | public static |
+
+## Assets/Scripts/Features/World/VoxelWorldChunk.cs
+
+// 职责：持有一个分块的渲染/碰撞网格，替换时只清理本组件创建的临时Mesh。 // 入口：Rebuild()；烘焙资产引用不销毁，碰撞更新与渲染共用同一表面。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VoxelWorldChunk | [`void Configure(Vector3Int cellStart)`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L13) | public |
+| VoxelWorldChunk | [`void Rebuild(VoxelWorldData data, int chunkSize, float cellSize, Material[] materials)`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L18) | public |
+| VoxelWorldChunk | [`void AdoptBakedMesh(Mesh asset)`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L34) | public |
+| VoxelWorldChunk | [`void OnDestroy()`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L41) | private |
+| VoxelWorldChunk | [`void ReleaseMesh()`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L46) | private |
+
+## Assets/Scripts/Features/World/VoxelWorldData.cs
+
+// 职责：固定种子生成体素地形与遗迹，保存单元材质和采掘修改。 // 入口：Generate() / Set()；无场景或存档副作用，0为空气、1土、2岩、3金属。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VoxelWorldData | [`byte Get(Vector3Int cell)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L20) | public |
+| VoxelWorldData | [`bool Contains(Vector3Int cell)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L30) | public |
+| VoxelWorldData | [`bool Set(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L35) | public |
+| VoxelWorldData | [`void Recount()`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L54) | public |
+| VoxelWorldData | [`void Generate(Vector3Int dimensions, int seed)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L66) | public |
+| VoxelWorldData | [`uint Fingerprint()`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L122) | public |
+
+## Assets/Scripts/Features/World/WorldLabController.cs
+
+// 职责：独立世界实验场的自由镜头、采掘/爆破/填补输入及性能读数。 // 入口：Update()读取Input System；不接管Main场景的玩家、蓝图与存档。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabController | [`void Awake()`](../Assets/Scripts/Features/World/WorldLabController.cs#L27) | private |
+| WorldLabController | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldLabController.cs#L35) | private |
+| WorldLabController | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldLabController.cs#L43) | private |
+| WorldLabController | [`void Update()`](../Assets/Scripts/Features/World/WorldLabController.cs#L51) | private |
+| WorldLabController | [`void MoveView(Keyboard keyboard, Mouse mouse)`](../Assets/Scripts/Features/World/WorldLabController.cs#L117) | private |
+| WorldLabController | [`void ResetView()`](../Assets/Scripts/Features/World/WorldLabController.cs#L138) | private |
+| WorldLabController | [`void OnGUI()`](../Assets/Scripts/Features/World/WorldLabController.cs#L149) | private |
+
+## Assets/Scripts/Features/World/WorldLabPhysicsProbe.cs
+
+// 职责：实验场真实帧落体与体素地面接触探针，输出接触证据而不驱动Physics.Simulate。 // 入口：Begin()由WorldLabChecks调用；10秒超时失败，结束移除探针对象。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabPhysicsProbe | [`void Begin(string path)`](../Assets/Scripts/Features/World/WorldLabPhysicsProbe.cs#L11) | public |
+| WorldLabPhysicsProbe | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldLabPhysicsProbe.cs#L17) | private |
+| WorldLabPhysicsProbe | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/World/WorldLabPhysicsProbe.cs#L26) | private |
+| WorldLabPhysicsProbe | [`void Save(bool contact)`](../Assets/Scripts/Features/World/WorldLabPhysicsProbe.cs#L34) | private |

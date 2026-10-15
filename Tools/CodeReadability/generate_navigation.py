@@ -507,6 +507,33 @@ def main():
             "R -->|第三人称期望与平滑位置| S",
         ],
     )
+    graph(
+        "WorldLab 程序化世界与破坏",
+        "源码推导：独立场景不初始化Main存档；固定种子和序列化单元是数据源。采掘/炮塔命中积累伤害，破坏只标记相邻受影响分块；LateUpdate按预算更新渲染和真实MeshCollider。Inspector预览后显式Bake保存网格资产。无结构倒塌或无限流式加载。",
+        {
+            "A": "WorldLabAuthoring.CreateOrOpen",
+            "B": "ProceduralVoxelWorld.Generate",
+            "C": "VoxelWorldData.Generate",
+            "D": "VoxelWorldChunk.Rebuild",
+            "E": "VoxelSurfaceMesher.Build",
+            "F": "WorldLabAuthoring.BakeMeshes",
+            "G": "WorldLabController.Update",
+            "H": "ProceduralVoxelWorld.DamageSphere",
+            "I": "ProceduralVoxelWorld.SetCell",
+            "J": "ProceduralVoxelWorld.QueueCell",
+            "K": "ProceduralVoxelWorld.LateUpdate",
+            "L": "ProceduralVoxelWorld.FlushDirty",
+            "M": "TurretHitResolver.Apply",
+            "N": "VoxelWorldChunk.OnDestroy",
+            "O": "VoxelWorldChunk.ReleaseMesh",
+        },
+        [
+            "A --> B", "B --> C", "B --> D", "D --> E", "A --> F",
+            "G -->|采掘与爆破| H", "G -->|填补| I", "M -->|命中WorldChunk| H",
+            "H -->|达到材质硬度| I", "I --> J", "J -.->|排队，不立即烘焙碰撞| K",
+            "K --> L", "L -->|仅脏块，预算2块每帧| D", "N --> O",
+        ],
+    )
     doc = """# HY-Sandbox 运行时函数图
 
     这些图根据当前源码和调用者整理，用于寻找功能入口，不是采样得到的实际执行轨迹。实线表示直接调用（标注“经”时包含明确中间函数）；虚线标出协程、事件或注入动作。Unity Update/FixedUpdate 的独立入口不代表脚本执行顺序。

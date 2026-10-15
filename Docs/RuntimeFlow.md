@@ -1050,3 +1050,86 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/CameraController.cs|ResolveThirdPersonCollision -->
 - [StatusIcon.UpdateIconScreenPosition](../Assets/Scripts/Features/Presentation/StatusIcon.cs#L313)
 <!-- source: Assets/Scripts/Features/Presentation/StatusIcon.cs|UpdateIconScreenPosition -->
+
+## WorldLab 程序化世界与破坏
+
+源码推导：独立场景不初始化Main存档；固定种子和序列化单元是数据源。采掘/炮塔命中积累伤害，破坏只标记相邻受影响分块；LateUpdate按预算更新渲染和真实MeshCollider。Inspector预览后显式Bake保存网格资产。无结构倒塌或无限流式加载。
+
+```mermaid
+flowchart TD
+    A["WorldLabAuthoring.CreateOrOpen()"]
+    click A "../Assets/Editor/World/WorldLabAuthoring.cs#L13" "打开源码"
+    B["ProceduralVoxelWorld.Generate()"]
+    click B "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L53" "打开源码"
+    C["VoxelWorldData.Generate()"]
+    click C "../Assets/Scripts/Features/World/VoxelWorldData.cs#L66" "打开源码"
+    D["VoxelWorldChunk.Rebuild()"]
+    click D "../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L18" "打开源码"
+    E["VoxelSurfaceMesher.Build()"]
+    click E "../Assets/Scripts/Features/World/VoxelSurfaceMesher.cs#L63" "打开源码"
+    F["WorldLabAuthoring.BakeMeshes()"]
+    click F "../Assets/Editor/World/WorldLabAuthoring.cs#L98" "打开源码"
+    G["WorldLabController.Update()"]
+    click G "../Assets/Scripts/Features/World/WorldLabController.cs#L51" "打开源码"
+    H["ProceduralVoxelWorld.DamageSphere()"]
+    click H "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L146" "打开源码"
+    I["ProceduralVoxelWorld.SetCell()"]
+    click I "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L133" "打开源码"
+    J["ProceduralVoxelWorld.QueueCell()"]
+    click J "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L200" "打开源码"
+    K["ProceduralVoxelWorld.LateUpdate()"]
+    click K "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L222" "打开源码"
+    L["ProceduralVoxelWorld.FlushDirty()"]
+    click L "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L227" "打开源码"
+    M["TurretHitResolver.Apply()"]
+    click M "../Assets/Scripts/Features/Combat/TurretHitResolver.cs#L7" "打开源码"
+    N["VoxelWorldChunk.OnDestroy()"]
+    click N "../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L41" "打开源码"
+    O["VoxelWorldChunk.ReleaseMesh()"]
+    click O "../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L46" "打开源码"
+    A --> B
+    B --> C
+    B --> D
+    D --> E
+    A --> F
+    G -->|采掘与爆破| H
+    G -->|填补| I
+    M -->|命中WorldChunk| H
+    H -->|达到材质硬度| I
+    I --> J
+    J -.->|排队，不立即烘焙碰撞| K
+    K --> L
+    L -->|仅脏块，预算2块每帧| D
+    N --> O
+```
+
+- [WorldLabAuthoring.CreateOrOpen](../Assets/Editor/World/WorldLabAuthoring.cs#L13)
+<!-- source: Assets/Editor/World/WorldLabAuthoring.cs|CreateOrOpen -->
+- [ProceduralVoxelWorld.Generate](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L53)
+<!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|Generate -->
+- [VoxelWorldData.Generate](../Assets/Scripts/Features/World/VoxelWorldData.cs#L66)
+<!-- source: Assets/Scripts/Features/World/VoxelWorldData.cs|Generate -->
+- [VoxelWorldChunk.Rebuild](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L18)
+<!-- source: Assets/Scripts/Features/World/VoxelWorldChunk.cs|Rebuild -->
+- [VoxelSurfaceMesher.Build](../Assets/Scripts/Features/World/VoxelSurfaceMesher.cs#L63)
+<!-- source: Assets/Scripts/Features/World/VoxelSurfaceMesher.cs|Build -->
+- [WorldLabAuthoring.BakeMeshes](../Assets/Editor/World/WorldLabAuthoring.cs#L98)
+<!-- source: Assets/Editor/World/WorldLabAuthoring.cs|BakeMeshes -->
+- [WorldLabController.Update](../Assets/Scripts/Features/World/WorldLabController.cs#L51)
+<!-- source: Assets/Scripts/Features/World/WorldLabController.cs|Update -->
+- [ProceduralVoxelWorld.DamageSphere](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L146)
+<!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|DamageSphere -->
+- [ProceduralVoxelWorld.SetCell](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L133)
+<!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|SetCell -->
+- [ProceduralVoxelWorld.QueueCell](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L200)
+<!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|QueueCell -->
+- [ProceduralVoxelWorld.LateUpdate](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L222)
+<!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|LateUpdate -->
+- [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L227)
+<!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|FlushDirty -->
+- [TurretHitResolver.Apply](../Assets/Scripts/Features/Combat/TurretHitResolver.cs#L7)
+<!-- source: Assets/Scripts/Features/Combat/TurretHitResolver.cs|Apply -->
+- [VoxelWorldChunk.OnDestroy](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L41)
+<!-- source: Assets/Scripts/Features/World/VoxelWorldChunk.cs|OnDestroy -->
+- [VoxelWorldChunk.ReleaseMesh](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L46)
+<!-- source: Assets/Scripts/Features/World/VoxelWorldChunk.cs|ReleaseMesh -->

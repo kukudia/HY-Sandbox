@@ -1,0 +1,18 @@
+{
+    "phase": "data",
+    "passed": 12,
+    "checks": [
+        "same seed gives same voxel content",
+        "different seed changes content",
+        "bounded generated density",
+        "out of bounds reads air",
+        "out of bounds write rejected",
+        "invalid material rejected",
+        "serialized bake retains cells and count",
+        "cross-chunk internal faces culled",
+        "material submeshes retain faces",
+        "unit outward face normals",
+        "removed neighbor exposes seam face",
+        "cell counter tracks removal"
+    ]
+}

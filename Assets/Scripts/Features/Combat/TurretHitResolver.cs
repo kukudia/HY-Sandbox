@@ -22,6 +22,16 @@ internal static class TurretHitResolver
 
         Vector3 impactNormal = normal.sqrMagnitude > 0.001f ? normal : -direction;
         BlockVfxLibrary.Play(BlockVfxLibrary.Effect.Impact, point, Quaternion.LookRotation(impactNormal), 0.6f);
+        VoxelWorldChunk terrainChunk = collider.GetComponent<VoxelWorldChunk>();
+        if (terrainChunk != null)
+        {
+            ProceduralVoxelWorld terrain = terrainChunk.GetComponentInParent<ProceduralVoxelWorld>();
+            if (terrain != null)
+            {
+                terrain.DamageSphere(point - impactNormal * terrain.CellSize * 0.1f, terrain.CellSize * 0.85f, damage);
+            }
+        }
+
         ControlUnit unit = collider.GetComponentInParent<ControlUnit>();
         Durability durability = collider.GetComponentInParent<Durability>();
         if (unit != null && unit.HasValidCockpit && unit.faction == faction && durability != null)
