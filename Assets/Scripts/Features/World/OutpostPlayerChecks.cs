@@ -96,7 +96,16 @@ public static class OutpostPlayerChecks
         check(
             session.Outposts.TryGetDefender(siteId, first.id, out ControlUnit defender),
             "Live defender retains stable site and slot identity");
-        // The natural AI runs before the controlled lifecycle assertions below.
+        // Observe every authored type before the controlled lifecycle assertions below.
+        var observations = new List<GuardObservation>();
+        foreach (OutpostGarrisonData guard in data.garrison)
+        {
+            if (session.Outposts.TryGetDefender(siteId, guard.id, out ControlUnit unit))
+            {
+                observations.Add(new GuardObservation(unit, guard.name));
+            }
+        }
+
         Vector3 initial = defender.transform.position;
         for (int i = 0; i < 180; i++)
         {
@@ -116,12 +125,40 @@ public static class OutpostPlayerChecks
         while (Time.time < combatUntil && defender != null && defender.HasValidCockpit && !sawGarrisonDamage)
         {
             sawGarrisonDamage = targetHealth.currentDurability < initialTargetHealth && targetHealth.LastAttacker == defender;
+            foreach (GuardObservation observation in observations)
+            {
+                observation.Sample(player, targetHealth, initialTargetHealth);
+            }
+
             yield return null;
         }
 
         check(
             sawGarrisonDamage,
             "Natural outpost garrison weapons damage player with the correct attacker identity");
+        float groupUntil = Time.time + 30f;
+        while (Time.time < groupUntil && observations.Any(item => !item.Complete))
+        {
+            foreach (GuardObservation observation in observations)
+            {
+                observation.Sample(player, targetHealth, initialTargetHealth);
+            }
+
+            yield return null;
+        }
+
+        foreach (GuardObservation observation in observations)
+        {
+            Debug.Log(observation.Describe());
+            check(
+                observation.Unit != null && observation.Unit.HasValidCockpit,
+                "Authored guard survives natural group combat: " + observation.Name);
+            check(
+                observation.Moved && observation.Targeted && observation.Powered,
+                "Authored guard acquires target and flies with powered hover: " + observation.Name);
+            check(observation.DamagedPlayer, "Authored guard weapons naturally damage player: " + observation.Name);
+        }
+
         OutpostHud hud = Object.FindFirstObjectByType<OutpostHud>();
         UnityEngine.UI.Text hudLabel = hud.GetComponent<UnityEngine.UI.Text>();
         check(hudLabel.text.Contains("m\nDefenders"), "Live outpost HUD separates distance and defender counts");
@@ -146,8 +183,7 @@ public static class OutpostPlayerChecks
         {
             if (session.Outposts.TryGetDefender(siteId, guard.id, out ControlUnit unit))
             {
-                unit.GetComponent<Rigidbody>().isKinematic = true;
-                unit.GetComponent<EnemyController>().enabled = false;
+                Freeze(unit);
             }
         }
 
@@ -284,8 +320,50 @@ public static class OutpostPlayerChecks
 
     private static void Freeze(ControlUnit unit)
     {
-        unit.GetComponent<Rigidbody>().isKinematic = true;
         unit.GetComponent<EnemyController>().enabled = false;
+        if (unit.hoverFlightController != null)
+        {
+            unit.hoverFlightController.enabled = false;
+        }
+
+        unit.GetComponent<Rigidbody>().isKinematic = true;
+    }
+
+    private sealed class GuardObservation
+    {
+        internal readonly ControlUnit Unit;
+        internal readonly string Name;
+        private readonly Vector3 initial;
+        internal bool Moved;
+        internal bool Targeted;
+        internal bool Powered;
+        internal bool DamagedPlayer;
+        internal bool Complete => Moved && Targeted && Powered && DamagedPlayer;
+
+        internal GuardObservation(ControlUnit unit, string name)
+        {
+            Unit = unit;
+            Name = name;
+            initial = unit.transform.position;
+        }
+
+        internal void Sample(ControlUnit player, Durability health, float initialHealth)
+        {
+            if (Unit == null || !Unit.HasValidCockpit)
+            {
+                return;
+            }
+
+            Moved |= Vector3.Distance(initial, Unit.transform.position) > 1f;
+            Targeted |= Unit.target == player.transform && Unit.MovementInput.sqrMagnitude > 0.01f;
+            Powered |= Unit.hoverThrusters.Any(item => item != null && item.thrust > 1f);
+            DamagedPlayer |= health.currentDurability < initialHealth && health.LastAttacker == Unit;
+        }
+
+        internal string Describe()
+        {
+            return $"Outpost group combat [{Name}]: moved={Moved}, target={Targeted}, hover={Powered}, damage={DamagedPlayer}";
+        }
     }
 
     private static IEnumerator TravelWithDefender(Transform player, ControlUnit unit, Vector3 destination)

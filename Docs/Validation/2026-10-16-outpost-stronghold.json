@@ -1,0 +1,152 @@
+{
+    "status": "passed",
+    "graphics": "Direct3D11",
+    "seed": 14741,
+    "buildings": 2,
+    "blocks": 89,
+    "travelStart": {
+        "x": 16.0,
+        "y": 15.0,
+        "z": 16.0
+    },
+    "travelEnd": {
+        "x": 216.0,
+        "y": 15.0,
+        "z": 16.0
+    },
+    "memoryBytes": 123869806,
+    "requestedCycles": 1,
+    "completedCycles": 1,
+    "cycleMemoryBytes": [
+        123869806
+    ],
+    "cycleSeeds": [
+        14741
+    ],
+    "checks": [
+        "Main starts with world session",
+        "startup mask stays opaque during construct restoration",
+        "construct load exposes bounded progress",
+        "world generation remains valid",
+        "opaque loading mask renders while waiting or enabling",
+        "loading reaches completion",
+        "initial 81 terrain columns loaded",
+        "Player creates buildings from blueprint library",
+        "Player loads external blueprint library",
+        "spawn has real terrain collision",
+        "Legacy EnemySpawner is disabled during play",
+        "Generated world contains authored enemy outposts",
+        "Authored finite garrison deploys through production director",
+        "Live defender retains stable site and slot identity",
+        "Outpost defender survives natural AI physics interval",
+        "Outpost defender uses actual moving AI rather than a static decoration",
+        "Natural outpost garrison weapons damage player with the correct attacker identity",
+        "Authored guard survives natural group combat: CODEX_E02_Pike",
+        "Authored guard acquires target and flies with powered hover: CODEX_E02_Pike",
+        "Authored guard weapons naturally damage player: CODEX_E02_Pike",
+        "Authored guard survives natural group combat: CODEX_E03_Manta",
+        "Authored guard acquires target and flies with powered hover: CODEX_E03_Manta",
+        "Authored guard weapons naturally damage player: CODEX_E03_Manta",
+        "Authored guard survives natural group combat: CODEX_E01_Finch",
+        "Authored guard acquires target and flies with powered hover: CODEX_E01_Finch",
+        "Authored guard weapons naturally damage player: CODEX_E01_Finch",
+        "Live outpost HUD separates distance and defender counts",
+        "Long outpost names and all threat counts fit the saved HUD bounds",
+        "Outpost names render literally with authored contrast shadow",
+        "Damaged defender remains tracked after block regroup",
+        "Interpolated regroup preserves cockpit world pose across the next rendered frame",
+        "Far live defender hibernates without being marked defeated",
+        "Unloading is not a kill",
+        "Live defender returns when revisiting streamed terrain",
+        "Revisit preserves defender module identity and damage",
+        "Pursuing guard hibernates at its distant last position",
+        "Distant pursuit is not a defeat",
+        "Pursuing guard resumes near its last position outside original site activation range",
+        "Cockpit defeat permanently consumes slot for this expedition: guard-0",
+        "Cockpit defeat permanently consumes slot for this expedition: guard-1",
+        "Cockpit defeat permanently consumes slot for this expedition: guard-2",
+        "Revisit never refreshes defeated garrison",
+        "Defeated slots have no replacement enemy",
+        "Outpost HUD can show cleared encounter state",
+        "Cleared outpost status and expedition summary remain visible",
+        "session stays playing",
+        "Player crosses multiple chunk boundaries",
+        "travel retains terrain under player",
+        "loaded terrain remains bounded",
+        "exit discards world and prepares fresh session",
+        "second preparation completes"
+    ],
+    "errors": [],
+    "phases": [
+        {
+            "name": "startup",
+            "frames": 1045,
+            "medianMs": 8.337020874023438,
+            "p95Ms": 8.6517333984375,
+            "p99Ms": 8.860588073730469,
+            "over50Ms": 1,
+            "maxMs": 117.47407531738281,
+            "totalMs": 8858.4697265625
+        },
+        {
+            "name": "loading-and-entry",
+            "frames": 6,
+            "medianMs": 12.002944946289063,
+            "p95Ms": 31.629562377929689,
+            "p99Ms": 31.629562377929689,
+            "over50Ms": 0,
+            "maxMs": 36.113739013671878,
+            "totalMs": 104.65812683105469
+        },
+        {
+            "name": "outpost-encounter",
+            "frames": 2891,
+            "medianMs": 8.330345153808594,
+            "p95Ms": 9.168624877929688,
+            "p99Ms": 12.844085693359375,
+            "over50Ms": 1,
+            "maxMs": 83.44268798828125,
+            "totalMs": 24467.947265625
+        },
+        {
+            "name": "idle",
+            "frames": 360,
+            "medianMs": 8.32366943359375,
+            "p95Ms": 8.73565673828125,
+            "p99Ms": 8.823394775390625,
+            "over50Ms": 0,
+            "maxMs": 8.88824462890625,
+            "totalMs": 3000.30517578125
+        },
+        {
+            "name": "travel",
+            "frames": 420,
+            "medianMs": 8.32366943359375,
+            "p95Ms": 8.8043212890625,
+            "p99Ms": 9.021759033203125,
+            "over50Ms": 0,
+            "maxMs": 24.227142333984376,
+            "totalMs": 3530.29248046875
+        },
+        {
+            "name": "exit",
+            "frames": 1,
+            "medianMs": 39.997100830078128,
+            "p95Ms": 39.997100830078128,
+            "p99Ms": 39.997100830078128,
+            "over50Ms": 0,
+            "maxMs": 39.997100830078128,
+            "totalMs": 39.997100830078128
+        },
+        {
+            "name": "reprepare",
+            "frames": 1054,
+            "medianMs": 8.331298828125,
+            "p95Ms": 8.70513916015625,
+            "p99Ms": 8.808135986328125,
+            "over50Ms": 0,
+            "maxMs": 18.772125244140626,
+            "totalMs": 8797.775390625
+        }
+    ]
+}
