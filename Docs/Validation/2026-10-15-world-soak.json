@@ -1,0 +1,15 @@
+{
+    "methodology": "Real Unity frames,15-minute background stress, radius8m/energy1000 blast every0.5 wall seconds, regenerate every120 blasts. Check ownership/references and checkpoint every30s. Mesh peak includes pending deferred-destroy meshes and loaded baked assets; not proof of zero allocations or GPU FPS. No input injected.",
+    "startedUtc": "2026-10-15T05:40:09.1690163+00:00",
+    "updatedUtc": "2026-10-15T05:55:09.1908076+00:00",
+    "status": "completed",
+    "failure": "",
+    "observedFrames": 53955,
+    "blasts": 1794,
+    "regenerations": 14,
+    "removedCells": 228040,
+    "maximumPendingChunks": 7,
+    "maximumLiveVoxelMeshes": 64,
+    "longestFrameStallSeconds": 0.0828936,
+    "seedRestored": true
+}

@@ -196,7 +196,7 @@ public sealed class WorldLabController : MonoBehaviour
         GUI.Box(new Rect(18, 18, 590, 210), GUIContent.none);
         GUI.Label(
             new Rect(34, 28, 560, 195),
-            "<b>WORLD LAB / PROCEDURAL DESTRUCTION</b>\n" + "RMB look · WASD fly · Space/Ctrl up/down · Shift sprint\n" + "LMB mine · E blast · MMB place metal · R regenerate · F home\n" + $"Seed {world.Seed}  |  solids {world.Data.SolidCount:N0}  |  removed {world.RemovedCells}\n" + $"Dirty chunks {world.PendingChunks}  |  edit {lastActionMilliseconds:0.00} ms (mesh rebuild excluded)\n" + fileMessage + "\nNo structural collapse / infinite streaming yet",
+            "<b>WORLD LAB / PROCEDURAL DESTRUCTION</b>\n" + "RMB look · WASD fly · Space/Ctrl up/down · Shift sprint\n" + "LMB mine · E blast · MMB place metal · R regenerate · F home\n" + $"Seed {world.Seed}  |  solids {world.Data.SolidCount:N0}  |  removed {world.RemovedCells}\n" + $"Dirty chunks {world.PendingChunks}  |  edit {lastActionMilliseconds:0.00} ms (mesh rebuild excluded)\n" + fileMessage + "\nSmall metal debris only · F5 save / F9 load · No streaming",
             textStyle);
         GUI.Label(new Rect(Screen.width * 0.5f - 8, Screen.height * 0.5f - 12, 24, 24), "+", textStyle);
     }
