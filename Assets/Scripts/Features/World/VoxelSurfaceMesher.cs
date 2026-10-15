@@ -72,7 +72,7 @@ public static class VoxelSurfaceMesher
             new List<int>(),
             new List<int>()
         };
-        Vector3Int end = Vector3Int.Min(start + Vector3Int.one * chunkSize, data.Size);
+        Vector3Int end = Vector3Int.Min(start + Vector3Int.one * chunkSize, data.Maximum);
         for (int z = start.z; z < end.z; z++)
         {
             for (int y = start.y; y < end.y; y++)
@@ -94,7 +94,8 @@ public static class VoxelSurfaceMesher
                         }
 
                         int index = vertices.Count;
-                        float shade = 0.9f + ((x * 17 + y * 7 + z * 13) % 11) * 0.01f;
+                        int shadeIndex = ((x * 17 + y * 7 + z * 13) % 11 + 11) % 11;
+                        float shade = 0.9f + shadeIndex * 0.01f;
                         for (int corner = 0; corner < 4; corner++)
                         {
                             vertices.Add(((Vector3)(cell - start) + Corners[face][corner]) * cellSize);

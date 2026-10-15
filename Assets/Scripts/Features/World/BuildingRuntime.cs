@@ -23,6 +23,7 @@ public sealed class BuildingRuntime : MonoBehaviour
     public float SupportRatio { get; internal set; } = 1f;
     public IReadOnlyList<Block> Blocks => blocks;
     public string InstanceId => instanceId;
+    public bool NeedsActivation => pendingState != null;
 
     public void Initialize(WorldBuildingManager owner, WorldBuildingState state)
     {
@@ -65,6 +66,11 @@ public sealed class BuildingRuntime : MonoBehaviour
 
     public void Activate()
     {
+        if (pendingState == null || !transform.parent.gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         gameObject.SetActive(true);
         // 所有子块 OnEnable 会重置耐久；必须在整个层级启用完成后恢复状态。
         for (int i = 0; i < blocks.Count; i++)
@@ -92,6 +98,11 @@ public sealed class BuildingRuntime : MonoBehaviour
 
     public WorldBuildingState Capture()
     {
+        if (pendingState != null)
+        {
+            return pendingState;
+        }
+
         var blueprint = new BlockDataList
         {
             foundation = new BuildingFoundationData

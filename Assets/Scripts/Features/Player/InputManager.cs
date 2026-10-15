@@ -55,6 +55,17 @@ public class InputManager : MonoBehaviour
             return;
         }
 
+        WorldSessionManager worldSession = PlayManager.instance != null ? PlayManager.instance.WorldSession : null;
+        if (worldSession != null && worldSession.IsPlayRequested)
+        {
+            if (keyboard.escapeKey.wasPressedThisFrame)
+            {
+                worldSession.CancelPlayRequest();
+            }
+
+            return;
+        }
+
         ThrusterInfoPanel thrusterPanel = MainUIPanels.instance != null ? MainUIPanels.instance.ThrusterInfoPanel : null;
         if (PlayManager.instance.playMode && keyboard.f1Key.wasPressedThisFrame)
         {

@@ -43,6 +43,21 @@ public sealed class VoxelWorldChunk : MonoBehaviour
         ReleaseMesh();
     }
 
+    public void ClearOwnedMesh()
+    {
+        if (ownedMesh == null)
+        {
+            return;
+        }
+
+        GetComponent<MeshFilter>().sharedMesh = null;
+        MeshCollider collider = GetComponent<MeshCollider>();
+        collider.enabled = false;
+        // 禁用层级的MeshCollider可能延迟清除原生Mesh引用；先撤销碰撞资格，销毁在帧末完成。
+        collider.sharedMesh = null;
+        ReleaseMesh();
+    }
+
     private void ReleaseMesh()
     {
         if (ownedMesh == null)

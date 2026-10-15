@@ -1,5 +1,12 @@
 # HY-Sandbox 开发与审查入口
 
+## 2026-10-15 Main 大世界与建筑会话
+
+- Main建造时隐藏分帧预热地形和真实Buildings，Play等待Ready后显示世界、启用模拟并安全放置玩家；等待面板可取消。默认约4.1km有限大世界，25列预热，附近按列流式加载/卸载，不分配全图体素数组；生成Unity对象仍在主线程协程执行。
+- 同次探索内地形差量、建筑损坏、剩余模块与货仓随区块休眠恢复；活动建筑预算满时延期实例化。玩家缺地形时暂存速度冻结、前方就绪再恢复。退出与死亡丢弃全部世界状态并重新准备，正常返回保留原有货仓转存流程。
+- 真实可编辑入口为 `Assets/World/WorldGeneration.asset`、`WorldSession.prefab`、Main加载面板及现有WorldLab建筑目录；菜单可重建缺少资产而保留已有参数和布局。使用与限制见 [WorldStreaming](Docs/WorldStreaming.md)。WorldLab仍保留独立有限地图与快照流程。
+- 已验证：Unity导入/编译；Main真实Play专项42项、边界23项通过，包括正负区块、退出/死亡清空、取消、损坏/货仓休眠恢复、81列预算和4000m/s真实物理步保护。WorldLab数据12项、建筑43项回归通过；223份脚本格式/函数图检查、dotnet build（0错误、4个既有警告）、diff检查通过。已观察地形和建筑总览；后续细节截图期间Editor发生D3D12 GPU等待超时并退出，不将完整视觉稳定性列为通过。正式Player构建及长时大地图性能未验收。
+
 ## 2026-10-15 WorldLab 建筑融合
 
 - WorldLab新增真实建筑目录、Outpost模板和初始据点；读取BuildingBlueprints，B进入放置、Q/T旋转、左键确认、Esc取消。预览只复制Mesh且屏蔽采掘。按用户要求，WorldLab实例和预览不生成地基模型、碰撞体或底座方块，保留编辑器底座及尺寸元数据。建筑保留1m模块，地形保留2m体素；支撑、穿插和重叠校验失败拒绝放置。
@@ -43,6 +50,7 @@
 | 建造交互 | `Building/BuildManager.Update` | `Interaction/BuildPreview` / `BuildSelection` / `BuildManipulation` |
 | 存档编辑 | `Building/SaveManager` / `BuildManager.SaveBlock` | `BlueprintFileStore` 文件规则；`BuildBlueprintEditor` JSON与邻近连接 |
 | 进入/退出游玩 | `Simulation/PlayManager.PlayStart` / `PlayEnd` | `RuntimeGroupBuilder` / `RuntimeGroupCleanup` / `PlayBlockSelection` |
+| 大世界与建筑 | `World/WorldSessionManager` / `WorldGenerationSettings` | `WorldRegionStreaming` / `WorldBuildingStreaming` / `WorldPlayerStreamingGuard`；`ProceduralVoxelWorld`支持有限WorldLab与Main流式数据 |
 | 连接 | `Simulation/Block.CheckConnection` | `BlockConnections` 双边连接几何和状态 |
 | 供电 | `Power/PowerTransmissionDevice.Update` | `PowerNetwork.Rebuild`；`PowerConnectionVisuals` 连接线 |
 | 飞行 | `Flight/HoverFlightController.FixedUpdate` | `HoverControlSolver` PID与姿态计算；`ThrusterAllocator` 分配求解；各推进器施力 |

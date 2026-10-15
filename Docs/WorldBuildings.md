@@ -1,5 +1,7 @@
 # WorldLab 建筑
 
+Main 已通过独立世界会话接入大世界生成和真实建筑：建造期间隐藏预热，进入后显示并模拟，退出丢弃世界。配置、生命周期和流式休眠边界见 [Main大世界](WorldStreaming.md)。本文的F5/F9、目录选择和手工放置入口仅指WorldLab。
+
 打开 `Assets/Scenes/WorldLab.unity` 并进入 Play。右侧建筑库包含项目内 Outpost 示例，以及 `Application.persistentDataPath/BuildingBlueprints` 中由 Main 开发者建筑编辑器制作的 JSON。文件修改后点击 Refresh；坏文件跳过并显示原因，不自动修复或改写模板。
 
 - 点击蓝图或按 B 进入放置；Q/T 左右旋转90°，鼠标左键放置，Esc取消。放置期间左键不会同时采掘。

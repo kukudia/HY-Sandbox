@@ -10,6 +10,8 @@ public sealed class WorldBuildingManager : MonoBehaviour
     private ProceduralVoxelWorld world;
     [SerializeField]
     private WorldBuildingCatalog catalog;
+    [SerializeField, Tooltip("WorldLab启动时恢复初始布局；流式世界由会话管理器控制。")]
+    private bool initializeOnStart = true;
     [SerializeField, Range(0f, 1f)]
     private float minimumSupportRatio = 0.5f;
     [SerializeField]
@@ -33,6 +35,14 @@ public sealed class WorldBuildingManager : MonoBehaviour
 
     private void OnEnable()
     {
+        foreach (BuildingRuntime building in buildings)
+        {
+            if (building != null && building.NeedsActivation)
+            {
+                building.Activate();
+            }
+        }
+
         if (world != null)
         {
             world.TerrainChanged += TerrainChanged;
@@ -42,7 +52,10 @@ public sealed class WorldBuildingManager : MonoBehaviour
 
     private void Start()
     {
-        ResetBuildings();
+        if (initializeOnStart)
+        {
+            ResetBuildings();
+        }
     }
 
     private void OnDisable()
@@ -100,12 +113,57 @@ public sealed class WorldBuildingManager : MonoBehaviour
             blueprint = blueprint,
             durability = health
         };
-        WorldBuildingValidation.ValidateState(state);
-        BuildingRuntime building = Stage(state, transform);
-        buildings.Add(building);
-        building.Activate();
+        BuildingRuntime building = RestoreBuilding(state);
         LastMessage = "Placed " + name;
         return building;
+    }
+
+    /// <summary>恢复一个已校验快照；禁用世界中仅准备层级，启用世界后才执行激活和耐久恢复。</summary>
+    public BuildingRuntime RestoreBuilding(WorldBuildingState state)
+    {
+        WorldBuildingValidation.ValidateState(state);
+        if (!HasCapacity(state.blueprint.blocks.Count))
+        {
+            throw new InvalidOperationException("Active world building budget exceeded.");
+        }
+
+        BuildingRuntime building = Stage(state, transform);
+        buildings.Add(building);
+        if (isActiveAndEnabled)
+        {
+            building.Activate();
+        }
+
+        return building;
+    }
+
+    public bool HasCapacity(int additionalBlocks)
+    {
+        int count = additionalBlocks;
+        foreach (BuildingRuntime current in buildings)
+        {
+            count += current != null ? current.Blocks.Count : 0;
+        }
+
+        return buildings.Count < maximumBuildings && count <= WorldBuildingValidation.MaximumWorldBlocks;
+    }
+
+    public void RemoveBuilding(BuildingRuntime building)
+    {
+        if (building == null || !buildings.Remove(building))
+        {
+            return;
+        }
+
+        pendingSupport.Remove(building);
+        building.gameObject.SetActive(false);
+        Destroy(building.gameObject);
+    }
+
+    public void ClearSession()
+    {
+        ClearBuildings();
+        ClearDebris();
     }
 
     private BuildingRuntime Stage(WorldBuildingState state, Transform parent)
