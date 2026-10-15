@@ -1,5 +1,11 @@
 # HY-Sandbox 开发与审查入口
 
+## 2026-10-15 Main 大世界卡顿与加载遮罩
+
+- 定位并移除数千个Durability独立OnGUI的隐含GUI开销，改为DebugManager装配单个标签绘制器；炮塔空目标遵守搜索间隔。固定种子33栋/2271模块，D3D11 Editor Profiler静止帧中位约30ms降至8ms，末尾100帧主线程均值30.57ms降至8.54ms；测量条件及局限见[性能报告](Docs/Validation/2026-10-15-world-performance.md)，不等同于正式Player性能。
+- 建筑资源异步预热，创建/启用按WorldGeneration.asset的默认2ms预算分批；进入先显示不透明进度遮罩并暂停物理，完成/退出/死亡/失败恢复时间。途中缺地形按预测路径真实完成比例显示进度。远景复用网格/高度缓存，同父刚性装饰合并共享网格，保留炮塔及机械运动；大载具末尾连接重建也按预算跨帧。
+- 已验证Main 53项、边界23项、WorldLab建筑43项/数据12项及炮塔回归；实际查看遮罩与建筑近景；Unity导入编译、228脚本格式/函数图导航、dotnet build（0错误/4个既有警告）、diff检查通过。正式Player、高分辨率、长时战斗和D3D12稳定性未验收。
+
 ## 2026-10-15 Main 大世界与建筑会话
 
 - 本次修正：Main生成池改为读取persistentDataPath/BuildingBlueprints全部有效JSON（当前base1/base2/default_building），平台自动适配尺寸；出生区保留自然地形，按载具范围内最高地面抬升6m；近处加载4列半径/卸载5列半径，加入无碰撞低密度远景和默认270–600m距离雾，退出恢复建造环境。参数保存在WorldGeneration.asset，远景网格按列版本分帧更新。D3D11实际检查远景连续且渐隐；Main检查49项、边界23项回归通过；225份脚本格式/导航、dotnet build（0错误/4个既有警告）、diff检查通过。见[本次报告](Docs/Validation/2026-10-15-world-session-followup.json)与[视距画面](Docs/Validation/2026-10-15-world-session-distance.png)。Player/长时性能与D3D12稳定性仍未验收。

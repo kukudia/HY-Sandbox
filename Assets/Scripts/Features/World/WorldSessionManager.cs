@@ -33,6 +33,9 @@ public sealed class WorldSessionManager : MonoBehaviour
     private WorldGenerationSettings sessionSettings;
     private Coroutine routine;
     private Coroutine distanceRoutine;
+    private Coroutine activationRoutine;
+    private bool entering;
+    private float previousTimeScale;
     private WorldDistanceView distanceView;
     private Transform player;
     private Vector3 streamingFocus;
@@ -52,6 +55,7 @@ public sealed class WorldSessionManager : MonoBehaviour
         get; private set;
     }
     public bool IsPlayRequested => playRequested;
+    public bool IsEntering => entering;
     public int DormantBuildingCount => buildingStreaming?.DormantCount ?? 0;
     public ProceduralVoxelWorld World => world;
     public WorldBuildingManager Buildings => buildings;
@@ -79,6 +83,11 @@ public sealed class WorldSessionManager : MonoBehaviour
         StopPreparation();
         SetBuildEnvironmentVisible(true);
         worldRoot?.SetActive(false);
+        if (buildings != null)
+        {
+            buildings.SimulationEnabled = false;
+        }
+
         buildings?.ClearSession();
         world?.ClearStreaming();
         buildingStreaming = null;
@@ -98,26 +107,59 @@ public sealed class WorldSessionManager : MonoBehaviour
 
             SessionSeed = Settings.RandomizeSeed ? unchecked((int)DateTime.UtcNow.Ticks ^ Guid.NewGuid().GetHashCode()) : Settings.Seed;
             sessionSettings = Instantiate(settings);
-            var library = new WorldBuildingLibrary();
-            library.Load(WorldBuildingLibrary.DirectoryPath);
-            BuildingTemplates = library.Names.AsReadOnly();
-            foreach (string error in library.Errors)
-            {
-                Debug.LogWarning("Skipping building blueprint: " + error);
-            }
-
-            sessionSettings.FitBuildingPlatforms(library.PlatformRadius);
-            world.InitializeStreaming(Settings, SessionSeed);
-            buildingStreaming = new WorldBuildingStreaming(world, buildings, Settings, library);
-            regionStreaming = new WorldRegionStreaming(world, buildingStreaming, Settings);
-            streamingFocus = world.SpawnPosition;
-            distanceView = new WorldDistanceView(world, Settings);
-            distanceRoutine = StartCoroutine(RunGuarded(generation, distanceView.Refresh()));
-            routine = StartCoroutine(RunGuarded(generation, StreamWorld()));
+            routine = StartCoroutine(RunGuarded(generation, PrepareWorld()));
         }
         catch (Exception error)
         {
             Fail(error);
+        }
+    }
+
+    private IEnumerator PrepareWorld()
+    {
+        // 先让UI呈现一帧，再读取和预加载资源；Resources异步请求避免首次同步加载整套模型。
+        yield return null;
+        var library = new WorldBuildingLibrary();
+        IEnumerator load = library.LoadRoutine(WorldBuildingLibrary.DirectoryPath);
+        try
+        {
+            while (load.MoveNext())
+            {
+                Progress = library.Progress * 0.1f;
+                Status = $"Loading building blueprints... {Progress:P0}";
+                yield return load.Current;
+            }
+        }
+        finally
+        {
+            (load as IDisposable)?.Dispose();
+        }
+
+        BuildingTemplates = library.Names.AsReadOnly();
+        foreach (string error in library.Errors)
+        {
+            Debug.LogWarning("Skipping building blueprint: " + error);
+        }
+
+        sessionSettings.FitBuildingPlatforms(library.PlatformRadius);
+        buildings.LoadingFrameBudgetMilliseconds = Settings.LoadingFrameBudgetMilliseconds;
+        world.InitializeStreaming(Settings, SessionSeed);
+        buildingStreaming = new WorldBuildingStreaming(world, buildings, Settings, library);
+        regionStreaming = new WorldRegionStreaming(world, buildingStreaming, Settings);
+        streamingFocus = world.SpawnPosition;
+        distanceView = new WorldDistanceView(world, Settings);
+        distanceRoutine = StartCoroutine(RunGuarded(generation, distanceView.Refresh()));
+        IEnumerator stream = StreamWorld();
+        try
+        {
+            while (stream.MoveNext())
+            {
+                yield return stream.Current;
+            }
+        }
+        finally
+        {
+            (stream as IDisposable)?.Dispose();
         }
     }
 
@@ -199,12 +241,59 @@ public sealed class WorldSessionManager : MonoBehaviour
 
         SetBuildEnvironmentVisible(false);
         State = WorldSessionState.Playing;
-        worldRoot.SetActive(true);
         distanceView.Enter(Camera.main);
-        Physics.SyncTransforms();
         streamingFocus = construct.position;
         playerGuard = new WorldPlayerStreamingGuard(world, Settings);
+        entering = true;
+        previousTimeScale = Time.timeScale;
+        Time.timeScale = 0f;
+        Progress = 0f;
+        Status = "Enabling world... 0%";
+        loadingPanel?.Show(true);
+        activationRoutine = StartCoroutine(RunGuarded(generation, EnableWorld()));
+    }
+
+    private IEnumerator EnableWorld()
+    {
+        yield return null;
+        worldRoot.SetActive(true);
+        int total = buildings.Buildings.Count;
+        for (int i = 0; i < total; i++)
+        {
+            IEnumerator activate = buildings.Buildings[i].ActivateRoutine();
+            try
+            {
+                while (activate.MoveNext())
+                {
+                    yield return activate.Current;
+                }
+            }
+            finally
+            {
+                (activate as IDisposable)?.Dispose();
+            }
+
+            Progress = (i + 1f) / Mathf.Max(1, total);
+            Status = $"Enabling buildings... {i + 1} / {total} ({Progress:P0})";
+            yield return null;
+        }
+
+        Physics.SyncTransforms();
+        buildings.SimulationEnabled = true;
+        FinishEntering();
+        Progress = 1f;
         Status = "Exploring";
+        loadingPanel?.Show(false);
+        activationRoutine = null;
+    }
+
+    private void FinishEntering()
+    {
+        if (entering)
+        {
+            Time.timeScale = previousTimeScale;
+            entering = false;
+        }
     }
 
     public void EndSession()
@@ -247,6 +336,12 @@ public sealed class WorldSessionManager : MonoBehaviour
     {
         while (true)
         {
+            if (entering)
+            {
+                yield return null;
+                continue;
+            }
+
             Vector2Int center = State == WorldSessionState.Playing ? world.ColumnAt(streamingFocus) : Vector2Int.zero;
             IEnumerator region = regionStreaming.LoadNext(center);
             try
@@ -264,8 +359,14 @@ public sealed class WorldSessionManager : MonoBehaviour
             if (State == WorldSessionState.Preparing)
             {
                 int total = (Settings.LoadRadius * 2 + 1) * (Settings.LoadRadius * 2 + 1);
-                Progress = Mathf.Clamp01((float)world.LoadedColumns.Count / total);
+                Progress = 0.1f + Mathf.Clamp01((float)world.LoadedColumns.Count / total) * 0.85f;
                 Status = $"Preparing terrain and buildings... {world.LoadedColumns.Count} / {total}";
+                distanceView.AllowRefresh = !regionStreaming.LoadedWork;
+                if (!regionStreaming.LoadedWork)
+                {
+                    Status = "Preparing distant terrain... 95%";
+                }
+
                 if (!regionStreaming.LoadedWork && distanceView.IsReady)
                 {
                     Progress = 1f;
@@ -281,7 +382,7 @@ public sealed class WorldSessionManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (State != WorldSessionState.Playing)
+        if (State != WorldSessionState.Playing || entering)
         {
             return;
         }
@@ -300,6 +401,7 @@ public sealed class WorldSessionManager : MonoBehaviour
         streamingFocus = playerGuard.Focus;
         distanceView.Focus = streamingFocus;
         Status = playerGuard.IsWaiting ? "Loading nearby terrain..." : "Exploring";
+        Progress = playerGuard.Progress;
         loadingPanel?.Show(playerGuard.IsWaiting);
     }
 
@@ -371,6 +473,13 @@ public sealed class WorldSessionManager : MonoBehaviour
     private void StopPreparation()
     {
         generation++;
+        if (activationRoutine != null)
+        {
+            StopCoroutine(activationRoutine);
+            activationRoutine = null;
+        }
+
+        FinishEntering();
         if (distanceRoutine != null)
         {
             StopCoroutine(distanceRoutine);
@@ -395,6 +504,7 @@ public sealed class WorldSessionManager : MonoBehaviour
 
     private void Fail(Exception error)
     {
+        FinishEntering();
         failureNeedsExit = State == WorldSessionState.Playing;
         playerGuard?.Release();
         State = WorldSessionState.Failed;

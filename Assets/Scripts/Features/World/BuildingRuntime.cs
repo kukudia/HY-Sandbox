@@ -2,6 +2,7 @@
 // 入口：Initialize() / Activate() / DestroyBlock() / ReleaseAnchor() / Capture()。
 // 生命周期：世界存档只捕获主体；断裂残骸由 WorldBuildingManager 限量管理。
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,14 +19,22 @@ public sealed class BuildingRuntime : MonoBehaviour
     private Rigidbody body;
     public Vector2Int FootprintSize => new Vector2Int(foundationData.width, foundationData.length);
     public bool Anchored => body != null && body.isKinematic;
-    public bool IsOperational => isActiveAndEnabled && blocks.Count > 0;
-    public bool IsSimulationActive => manager != null && manager.isActiveAndEnabled && isActiveAndEnabled;
+    public bool IsOperational => isActiveAndEnabled && pendingState == null && blocks.Count > 0;
+    public bool IsSimulationActive => manager != null && manager.SimulationEnabled && manager.isActiveAndEnabled && IsOperational;
     public float SupportRatio { get; internal set; } = 1f;
     public IReadOnlyList<Block> Blocks => blocks;
     public string InstanceId => instanceId;
     public bool NeedsActivation => pendingState != null;
 
     public void Initialize(WorldBuildingManager owner, WorldBuildingState state)
+    {
+        IEnumerator work = InitializeRoutine(owner, state);
+        while (work.MoveNext())
+        {
+        }
+    }
+
+    internal IEnumerator InitializeRoutine(WorldBuildingManager owner, WorldBuildingState state)
     {
         manager = owner;
         pendingState = state;
@@ -44,6 +53,7 @@ public sealed class BuildingRuntime : MonoBehaviour
         unit.runtimeUnitId = instanceId;
         unit.faction = state.faction;
         transform.SetPositionAndRotation(state.position, state.rotation);
+        var budget = System.Diagnostics.Stopwatch.StartNew();
         foreach (BlockData data in state.blueprint.blocks)
         {
             if (!BlueprintBlockFactory.TryRestore(data, transform, state.faction, out Block block))
@@ -57,26 +67,44 @@ public sealed class BuildingRuntime : MonoBehaviour
             block.uniqueId = instanceId + ":" + data.id;
             block.showConnectors = false;
             block.showLabel = false;
+            block.gameObject.SetActive(false);
             blocks.Add(block);
+            RuntimeUnitMember.Ensure(block.gameObject, instanceId, state.faction);
+            owner.OptimizeVisuals(block);
+            if (budget.Elapsed.TotalMilliseconds >= owner.LoadingFrameBudgetMilliseconds)
+            {
+                yield return null;
+                budget.Restart();
+            }
         }
 
-        unit.AssignRuntimeOwnershipToBlocks(true);
         body.mass = TotalMass();
     }
 
     public void Activate()
     {
+        IEnumerator work = ActivateRoutine();
+        while (work.MoveNext())
+        {
+        }
+    }
+
+    internal IEnumerator ActivateRoutine()
+    {
         if (pendingState == null || !transform.parent.gameObject.activeInHierarchy)
         {
-            return;
+            yield break;
         }
 
+        body.isKinematic = true;
         gameObject.SetActive(true);
+        var budget = System.Diagnostics.Stopwatch.StartNew();
         // 所有子块 OnEnable 会重置耐久；必须在整个层级启用完成后恢复状态。
         for (int i = 0; i < blocks.Count; i++)
         {
             BlockData data = pendingState.blueprint.blocks[i];
             Block block = blocks[i];
+            block.gameObject.SetActive(true);
             // 禁用层级的 CSV Awake 延后到此时；实例尺寸必须在其应用模板参数后重建。
             bool changed = block.x != data.x || block.y != data.y || block.z != data.z;
             block.x = data.x;
@@ -88,8 +116,15 @@ public sealed class BuildingRuntime : MonoBehaviour
             {
                 health.currentDurability = Mathf.Min(health.maxDurability, pendingState.durability[i]);
             }
+
+            if (budget.Elapsed.TotalMilliseconds >= manager.LoadingFrameBudgetMilliseconds)
+            {
+                yield return null;
+                budget.Restart();
+            }
         }
 
+        body.isKinematic = pendingState.anchored;
         pendingState = null;
         body.mass = TotalMass();
         GetComponent<ControlUnit>().RefreshChildren();

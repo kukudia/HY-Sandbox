@@ -86,7 +86,7 @@ internal sealed class TurretTargetSelector
                 continue;
             }
 
-            if (!candidate.IsOperational || !candidate.IsSimulationActive || (owner != null && candidate.gameObject.scene != owner.gameObject.scene) || candidate.faction != faction)
+            if (candidate.faction != faction || !candidate.IsSimulationActive || !candidate.IsOperational || (owner != null && candidate.gameObject.scene != owner.gameObject.scene))
             {
                 continue;
             }

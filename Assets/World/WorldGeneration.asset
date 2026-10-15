@@ -26,3 +26,4 @@ MonoBehaviour:
   spawnClearance: 6
   viewDistance: 600
   distanceFogColor: {r: 0.48, g: 0.57, b: 0.64, a: 1}
+  loadingFrameBudgetMilliseconds: 2

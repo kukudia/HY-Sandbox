@@ -69,6 +69,11 @@ public static class WorldSessionAuthoring
             panel = CreateLoadingPanel(scene);
         }
 
+        Image backdrop = panel.GetComponent<Image>();
+        Color backdropColor = backdrop.color;
+        backdropColor.a = 1f;
+        backdrop.color = backdropColor;
+        EditorUtility.SetDirty(backdrop);
         var sessionData = new SerializedObject(session);
         sessionData.FindProperty("loadingPanel").objectReferenceValue = panel;
         SerializedProperty environment = sessionData.FindProperty("buildEnvironment");
@@ -191,7 +196,7 @@ public static class WorldSessionAuthoring
         panelRoot.GetComponent<Canvas>().sortingOrder = 100;
         panelRoot.gameObject.AddComponent<GraphicRaycaster>();
         Image backdrop = panelRoot.gameObject.AddComponent<Image>();
-        backdrop.color = new Color(0.015f, 0.025f, 0.035f, 0.93f);
+        backdrop.color = new Color(0.015f, 0.025f, 0.035f, 1f);
         CanvasGroup group = panelRoot.gameObject.AddComponent<CanvasGroup>();
         group.alpha = 0f;
         group.interactable = false;

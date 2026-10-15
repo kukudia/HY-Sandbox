@@ -168,6 +168,11 @@ public static class WorldSessionEdgeChecks
         Rigidbody body = testPlayer.GetComponent<Rigidbody>();
         body.maxLinearVelocity = 10000f;
         session.EnterPlay(testPlayer.transform);
+        while (session.IsEntering)
+        {
+            yield return null;
+        }
+
         float span = session.Settings.ChunkSize * session.Settings.CellSize;
         // Offset from the exact 16+80=96 boundary: the project's rational timestep is slightly below 0.02.
         testPlayer.transform.position = session.World.SpawnPosition + Vector3.right * (span * 0.25f) + Vector3.up * 90f;
@@ -235,6 +240,11 @@ public static class WorldSessionEdgeChecks
             session.State == WorldSessionState.Ready,
             "the dynamic-building probe starts in an independent fresh session");
         session.EnterPlay(testPlayer.transform);
+        while (session.IsEntering)
+        {
+            yield return null;
+        }
+
         Time.timeScale = 0f;
         InvokeSessionPhysics();
         Vector2Int missingColumn = new Vector2Int(3, 0);

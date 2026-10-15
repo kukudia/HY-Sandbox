@@ -106,7 +106,7 @@ public abstract class Turret : MonoBehaviour
 
     private void RefreshTarget()
     {
-        if (_target == null || !_target.IsOperational || !_target.IsSimulationActive || _targetDurability == null || !_targetDurability.isActiveAndEnabled || _targetDurability.currentDurability <= 0f || (_targetDurability.transform.position - transform.position).sqrMagnitude > range * range)
+        if (_target != null && (!_target.IsOperational || !_target.IsSimulationActive || _targetDurability == null || !_targetDurability.isActiveAndEnabled || _targetDurability.currentDurability <= 0f || (_targetDurability.transform.position - transform.position).sqrMagnitude > range * range))
         {
             _target = null;
             _targetDurability = null;

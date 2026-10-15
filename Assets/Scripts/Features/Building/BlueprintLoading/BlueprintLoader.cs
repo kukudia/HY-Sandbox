@@ -148,7 +148,19 @@ internal sealed class BlueprintLoader
             }
 
             RemoveMissingData(missingIds);
-            RebuildConnections();
+            IEnumerator connections = RebuildConnections(version);
+            try
+            {
+                while (connections.MoveNext())
+                {
+                    yield return connections.Current;
+                }
+            }
+            finally
+            {
+                (connections as IDisposable)?.Dispose();
+            }
+
             Debug.Log($"加载{_path}完成，耗时{Time.timeAsDouble - start}s，共{blocks.Count}个方块，恢复成功{statistics.BlockCount}个。");
         }
         finally
@@ -239,14 +251,28 @@ internal sealed class BlueprintLoader
         File.WriteAllText(_path, JsonUtility.ToJson(_saves.cachedData, true));
     }
 
-    private void RebuildConnections()
+    private IEnumerator RebuildConnections(int version)
     {
-        foreach (Block block in _saves.blocks)
+        var budget = System.Diagnostics.Stopwatch.StartNew();
+        for (int index = 0; index < _saves.blocks.Count; index++)
         {
+            if (!OwnsParent(version))
+            {
+                yield break;
+            }
+
+            Block block = _saves.blocks[index];
             if (block != null)
             {
                 block.neighbors = block.Neighbors();
                 block.CheckConnection();
+            }
+
+            // 大载具的末尾连接重建同样需要分帧，不能在模块逐帧恢复后再集中阻塞数秒。
+            if (budget.Elapsed.TotalMilliseconds >= 2d)
+            {
+                yield return null;
+                budget.Restart();
             }
         }
     }

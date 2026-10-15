@@ -431,10 +431,10 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | TurretRuntimeChecks | [`string RunInCurrentPlayMode()`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L23) | public static |
-| TurretRuntimeChecks | [`void PrepareWeapon(Turret turret, ControlUnit owner)`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L230) | private static |
-| TurretRuntimeChecks | [`void CallFire(Turret turret, Vector3 origin, Vector3 direction)`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L238) | private static |
-| TurretRuntimeChecks | [`ControlUnit Unit(Transform parent, string name, UnitFaction faction, Vector3 localPosition)`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L243) | private static |
-| TurretRuntimeChecks | [`void Check(Report report, bool passed, string name)`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L260) | private static |
+| TurretRuntimeChecks | [`void PrepareWeapon(Turret turret, ControlUnit owner)`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L263) | private static |
+| TurretRuntimeChecks | [`void CallFire(Turret turret, Vector3 origin, Vector3 direction)`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L271) | private static |
+| TurretRuntimeChecks | [`ControlUnit Unit(Transform parent, string name, UnitFaction faction, Vector3 localPosition)`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L276) | private static |
+| TurretRuntimeChecks | [`void Check(Report report, bool passed, string name)`](../Assets/Editor/Combat/TurretRuntimeChecks.cs#L293) | private static |
 
 ## Assets/Editor/Diagnostics/Benchmarks/PowerPerformanceChecks.cs
 
@@ -813,14 +813,14 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | WorldSessionAuthoring | [`void Install()`](../Assets/Editor/World/WorldSessionAuthoring.cs#L17) | public static |
-| WorldSessionAuthoring | [`bool IsInEnvironment(Transform item)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L99) | private static |
-| WorldSessionAuthoring | [`GameObject CreatePrefab(WorldGenerationSettings configuration)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L112) | private static |
-| WorldSessionAuthoring | [`WorldLoadingPanel CreateLoadingPanel(Scene scene)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L169) | private static |
-| WorldSessionAuthoring | [`RectTransform Rect( string name, Transform parent, Vector2 minimum, Vector2 maximum, Vector2 position, Vector2 size)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L277) | private static |
-| WorldSessionAuthoring | [`Text Label( string name, Transform parent, string value, Font font, Vector2 position, Vector2 size, float fontSize, Color color)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L294) | private static |
-| WorldSessionAuthoring | [`T FindInScene(Scene scene)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L321) | private static |
-| WorldSessionAuthoring | [`void SelectConfiguration()`](../Assets/Editor/World/WorldSessionAuthoring.cs#L327) | public static |
-| WorldSessionAuthoring | [`void RegeneratePreview()`](../Assets/Editor/World/WorldSessionAuthoring.cs#L333) | public static |
+| WorldSessionAuthoring | [`bool IsInEnvironment(Transform item)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L104) | private static |
+| WorldSessionAuthoring | [`GameObject CreatePrefab(WorldGenerationSettings configuration)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L117) | private static |
+| WorldSessionAuthoring | [`WorldLoadingPanel CreateLoadingPanel(Scene scene)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L174) | private static |
+| WorldSessionAuthoring | [`RectTransform Rect( string name, Transform parent, Vector2 minimum, Vector2 maximum, Vector2 position, Vector2 size)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L282) | private static |
+| WorldSessionAuthoring | [`Text Label( string name, Transform parent, string value, Font font, Vector2 position, Vector2 size, float fontSize, Color color)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L299) | private static |
+| WorldSessionAuthoring | [`T FindInScene(Scene scene)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L326) | private static |
+| WorldSessionAuthoring | [`void SelectConfiguration()`](../Assets/Editor/World/WorldSessionAuthoring.cs#L332) | public static |
+| WorldSessionAuthoring | [`void RegeneratePreview()`](../Assets/Editor/World/WorldSessionAuthoring.cs#L338) | public static |
 
 ## Assets/Editor/World/WorldSessionEdgeChecks.cs
 
@@ -834,13 +834,26 @@
 | WorldSessionEdgeChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L107) | private static |
 | WorldSessionEdgeChecks | [`void Check(bool condition, string description)`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L115) | private static |
 | WorldSessionEdgeChecks | [`IEnumerator Scenario()`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L125) | private static |
-| WorldSessionEdgeChecks | [`void BindProfile(WorldGenerationSettings value)`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L296) | private static |
-| WorldSessionEdgeChecks | [`void ConfigureProfile(int loadRadius, int unloadRadius, float buildingChance)`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L303) | private static |
-| WorldSessionEdgeChecks | [`void CreatePlayer()`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L317) | private static |
-| WorldSessionEdgeChecks | [`Vector3 ReadGuardVector(object guard, string field)`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L349) | private static |
-| WorldSessionEdgeChecks | [`void InvokeSessionPhysics()`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L354) | private static |
-| WorldSessionEdgeChecks | [`void CheckSessionHealthy(double timeout, string operation)`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L359) | private static |
-| WorldSessionEdgeChecks | [`void Finish(bool exitPlayMode)`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L367) | private static |
+| WorldSessionEdgeChecks | [`void BindProfile(WorldGenerationSettings value)`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L306) | private static |
+| WorldSessionEdgeChecks | [`void ConfigureProfile(int loadRadius, int unloadRadius, float buildingChance)`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L313) | private static |
+| WorldSessionEdgeChecks | [`void CreatePlayer()`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L327) | private static |
+| WorldSessionEdgeChecks | [`Vector3 ReadGuardVector(object guard, string field)`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L359) | private static |
+| WorldSessionEdgeChecks | [`void InvokeSessionPhysics()`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L364) | private static |
+| WorldSessionEdgeChecks | [`void CheckSessionHealthy(double timeout, string operation)`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L369) | private static |
+| WorldSessionEdgeChecks | [`void Finish(bool exitPlayMode)`](../Assets/Editor/World/WorldSessionEdgeChecks.cs#L377) | private static |
+
+## Assets/Editor/World/WorldSessionPerformanceChecks.cs
+
+// 职责：在真实 Main Play Mode 采样固定种子的准备、切换、静止和跨区块帧耗时。 // 入口：Run(label)；只使用运行时配置副本和测试载具，不保存玩家数据。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldSessionPerformanceChecks | [`void Run(string label)`](../Assets/Editor/World/WorldSessionPerformanceChecks.cs#L30) | public static |
+| WorldSessionPerformanceChecks | [`void OnState(PlayModeStateChange state)`](../Assets/Editor/World/WorldSessionPerformanceChecks.cs#L41) | private static |
+| WorldSessionPerformanceChecks | [`void Tick()`](../Assets/Editor/World/WorldSessionPerformanceChecks.cs#L67) | private static |
+| WorldSessionPerformanceChecks | [`void Next(string name)`](../Assets/Editor/World/WorldSessionPerformanceChecks.cs#L109) | private static |
+| WorldSessionPerformanceChecks | [`void WriteCpuSamples()`](../Assets/Editor/World/WorldSessionPerformanceChecks.cs#L127) | private static |
+| WorldSessionPerformanceChecks | [`IEnumerator Scenario()`](../Assets/Editor/World/WorldSessionPerformanceChecks.cs#L154) | private static |
 
 ## Assets/Editor/World/WorldSessionPlayChecks.cs
 
@@ -854,9 +867,9 @@
 | WorldSessionPlayChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L96) | private static |
 | WorldSessionPlayChecks | [`void Check(bool condition, string description)`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L104) | private static |
 | WorldSessionPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L114) | private static |
-| WorldSessionPlayChecks | [`IEnumerator StreamingChecks(WorldGenerationSettings settings)`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L372) | private static |
-| WorldSessionPlayChecks | [`bool NeighborhoodReady(ProceduralVoxelWorld world, Vector2Int center)`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L473) | private static |
-| WorldSessionPlayChecks | [`void Finish(bool exitPlayMode)`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L489) | private static |
+| WorldSessionPlayChecks | [`IEnumerator StreamingChecks(WorldGenerationSettings settings)`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L409) | private static |
+| WorldSessionPlayChecks | [`bool NeighborhoodReady(ProceduralVoxelWorld world, Vector2Int center)`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L510) | private static |
+| WorldSessionPlayChecks | [`void Finish(bool exitPlayMode)`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L526) | private static |
 
 ## Assets/Scripts/Features/Bootstrap/GameManager.cs
 
@@ -1151,13 +1164,13 @@
 | BlueprintLoader | [`bool IsLoadingTarget(BuildTargetContext target)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L83) | public |
 | BlueprintLoader | [`void Cancel()`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L89) | public |
 | BlueprintLoader | [`IEnumerator LoadRoutine(int version, List<BlockData> blocks, BlueprintLoadSettings settings, Action createInitialBlock)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L102) | private |
-| BlueprintLoader | [`bool TryRead(string path, out BlockDataList data)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L169) | private |
-| BlueprintLoader | [`void ReplaceParent(GameObject prefab, string name)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L208) | private |
-| BlueprintLoader | [`bool OwnsParent(int version)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L226) | private |
-| BlueprintLoader | [`void RemoveMissingData(HashSet<string> ids)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L231) | private |
-| BlueprintLoader | [`void RebuildConnections()`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L242) | private |
-| BlueprintLoader | [`void ReleaseInvalidParent()`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L254) | private |
-| BlueprintLoader | [`void FinishSession()`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L274) | private |
+| BlueprintLoader | [`bool TryRead(string path, out BlockDataList data)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L181) | private |
+| BlueprintLoader | [`void ReplaceParent(GameObject prefab, string name)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L220) | private |
+| BlueprintLoader | [`bool OwnsParent(int version)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L238) | private |
+| BlueprintLoader | [`void RemoveMissingData(HashSet<string> ids)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L243) | private |
+| BlueprintLoader | [`IEnumerator RebuildConnections(int version)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L254) | private |
+| BlueprintLoader | [`void ReleaseInvalidParent()`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L280) | private |
+| BlueprintLoader | [`void FinishSession()`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L300) | private |
 
 ## Assets/Scripts/Features/Building/BlueprintLoading/BlueprintStatistics.cs
 
@@ -1549,16 +1562,14 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Durability | [`void Awake()`](../Assets/Scripts/Features/Combat/Durability.cs#L44) | private |
-| Durability | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Durability.cs#L54) | private |
-| Durability | [`void ApplyDamage(float amount, ControlUnit attacker)`](../Assets/Scripts/Features/Combat/Durability.cs#L63) | public |
-| Durability | [`void ApplyCollisionEnergy(float reducedMass, float normalSpeed, float share)`](../Assets/Scripts/Features/Combat/Durability.cs#L74) | public |
-| Durability | [`void ProtectFromExplosionCollisions(float duration)`](../Assets/Scripts/Features/Combat/Durability.cs#L100) | public |
-| Durability | [`void UpdateDurablility(float value)`](../Assets/Scripts/Features/Combat/Durability.cs#L113) | public |
-| Durability | [`void ChangeDurability(float value)`](../Assets/Scripts/Features/Combat/Durability.cs#L123) | private |
-| Durability | [`void LateUpdate()`](../Assets/Scripts/Features/Combat/Durability.cs#L161) | private |
-| Durability | [`void OnGUI()`](../Assets/Scripts/Features/Combat/Durability.cs#L180) | private |
-| Durability | [`bool ShouldShowDebugLabel()`](../Assets/Scripts/Features/Combat/Durability.cs#L198) | private |
+| Durability | [`void Awake()`](../Assets/Scripts/Features/Combat/Durability.cs#L43) | private |
+| Durability | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Durability.cs#L53) | private |
+| Durability | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Durability.cs#L63) | private |
+| Durability | [`void ApplyDamage(float amount, ControlUnit attacker)`](../Assets/Scripts/Features/Combat/Durability.cs#L68) | public |
+| Durability | [`void ApplyCollisionEnergy(float reducedMass, float normalSpeed, float share)`](../Assets/Scripts/Features/Combat/Durability.cs#L79) | public |
+| Durability | [`void ProtectFromExplosionCollisions(float duration)`](../Assets/Scripts/Features/Combat/Durability.cs#L105) | public |
+| Durability | [`void UpdateDurablility(float value)`](../Assets/Scripts/Features/Combat/Durability.cs#L118) | public |
+| Durability | [`void ChangeDurability(float value)`](../Assets/Scripts/Features/Combat/Durability.cs#L128) | private |
 
 ## Assets/Scripts/Features/Combat/EnemyController.cs
 
@@ -1657,12 +1668,13 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| ProjectileTurret | [`void Awake()`](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L34) | protected override |
-| ProjectileTurret | [`void LateUpdate()`](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L57) | private |
-| ProjectileTurret | [`void UpdateRecoil(float deltaTime)`](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L66) | private |
-| ProjectileTurret | [`void ApplyRecoilPose()`](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L84) | private |
-| ProjectileTurret | [`void OnDisable()`](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L105) | protected override |
-| ProjectileTurret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L113) | protected override |
+| ProjectileTurret | [`bool MovesVisual(Transform part)`](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L34) | internal |
+| ProjectileTurret | [`void Awake()`](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L52) | protected override |
+| ProjectileTurret | [`void LateUpdate()`](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L75) | private |
+| ProjectileTurret | [`void UpdateRecoil(float deltaTime)`](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L84) | private |
+| ProjectileTurret | [`void ApplyRecoilPose()`](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L102) | private |
+| ProjectileTurret | [`void OnDisable()`](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L123) | protected override |
+| ProjectileTurret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/ProjectileTurret.cs#L131) | protected override |
 
 ## Assets/Scripts/Features/Combat/SalvageCleanupSession.cs
 
@@ -1803,16 +1815,24 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | DebugManager | [`void Awake()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L43) | private |
-| DebugManager | [`void OnDestroy()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L50) | private |
-| DebugManager | [`Color GetPowerRangeColor(PowerTransmissionDevice device)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L59) | public |
-| DebugManager | [`void TogglePowerRange()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L74) | public |
-| DebugManager | [`void TogglePowerConnections()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L87) | public |
-| DebugManager | [`void ToggleConnectionStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L92) | public |
-| DebugManager | [`void ToggleDurabilityStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L98) | public |
-| DebugManager | [`void TogglePowerStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L104) | public |
-| DebugManager | [`void EnsureStatusIconCanvas()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L110) | private |
-| DebugManager | [`void RefreshPowerRangeMesh(IList<PowerTransmissionDevice> devices)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L132) | internal |
-| DebugManager | [`void ClearPowerRangeMesh()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L137) | internal |
+| DebugManager | [`void OnDestroy()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L55) | private |
+| DebugManager | [`Color GetPowerRangeColor(PowerTransmissionDevice device)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L64) | public |
+| DebugManager | [`void TogglePowerRange()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L79) | public |
+| DebugManager | [`void TogglePowerConnections()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L92) | public |
+| DebugManager | [`void ToggleConnectionStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L97) | public |
+| DebugManager | [`void ToggleDurabilityStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L103) | public |
+| DebugManager | [`void TogglePowerStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L109) | public |
+| DebugManager | [`void EnsureStatusIconCanvas()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L115) | private |
+| DebugManager | [`void RefreshPowerRangeMesh(IList<PowerTransmissionDevice> devices)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L137) | internal |
+| DebugManager | [`void ClearPowerRangeMesh()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L142) | internal |
+
+## Assets/Scripts/Features/Diagnostics/DurabilityDebugLabels.cs
+
+// 职责：集中绘制已受损模块的可选耐久标签，避免每个模块注册IMGUI回调。 // 入口：DebugManager装配；标签关闭时不遍历模块，不更改伤害或耐久状态。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| DurabilityDebugLabels | [`void OnGUI()`](../Assets/Scripts/Features/Diagnostics/DurabilityDebugLabels.cs#L9) | private |
 
 ## Assets/Scripts/Features/Diagnostics/PerformanceMonitor.cs
 
@@ -2285,11 +2305,12 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| IndustrialPartMotion | [`void Awake()`](../Assets/Scripts/Features/Presentation/IndustrialPartMotion.cs#L30) | private |
-| IndustrialPartMotion | [`void OnEnable()`](../Assets/Scripts/Features/Presentation/IndustrialPartMotion.cs#L35) | private |
-| IndustrialPartMotion | [`void Update()`](../Assets/Scripts/Features/Presentation/IndustrialPartMotion.cs#L40) | private |
-| IndustrialPartMotion | [`void Configure( Transform[] newSpinTargets, Vector3 newSpinAxis, float newDegreesPerSecond, Transform newBobTarget, float newBobAmplitude, float newBobFrequency, Renderer[] newGlowRenderers, Color newBaseEmission, float newEmissionPulse)`](../Assets/Scripts/Features/Presentation/IndustrialPartMotion.cs#L79) | public |
-| IndustrialPartMotion | [`void CacheRuntimeState()`](../Assets/Scripts/Features/Presentation/IndustrialPartMotion.cs#L102) | private |
+| IndustrialPartMotion | [`bool ControlsVisual(Transform part, Renderer renderer)`](../Assets/Scripts/Features/Presentation/IndustrialPartMotion.cs#L30) | internal |
+| IndustrialPartMotion | [`void Awake()`](../Assets/Scripts/Features/Presentation/IndustrialPartMotion.cs#L35) | private |
+| IndustrialPartMotion | [`void OnEnable()`](../Assets/Scripts/Features/Presentation/IndustrialPartMotion.cs#L40) | private |
+| IndustrialPartMotion | [`void Update()`](../Assets/Scripts/Features/Presentation/IndustrialPartMotion.cs#L45) | private |
+| IndustrialPartMotion | [`void Configure( Transform[] newSpinTargets, Vector3 newSpinAxis, float newDegreesPerSecond, Transform newBobTarget, float newBobAmplitude, float newBobFrequency, Renderer[] newGlowRenderers, Color newBaseEmission, float newEmissionPulse)`](../Assets/Scripts/Features/Presentation/IndustrialPartMotion.cs#L84) | public |
+| IndustrialPartMotion | [`void CacheRuntimeState()`](../Assets/Scripts/Features/Presentation/IndustrialPartMotion.cs#L107) | private |
 
 ## Assets/Scripts/Features/Presentation/LightFade.cs
 
@@ -2782,14 +2803,16 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BuildingRuntime | [`void Initialize(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L28) | public |
-| BuildingRuntime | [`void Activate()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L67) | public |
-| BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L99) | public |
-| BuildingRuntime | [`void DestroyBlock(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L151) | public |
-| BuildingRuntime | [`void SplitDisconnected()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L189) | private |
-| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L259) | private |
-| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L280) | public |
-| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L291) | private |
+| BuildingRuntime | [`void Initialize(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L29) | public |
+| BuildingRuntime | [`IEnumerator InitializeRoutine(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L37) | internal |
+| BuildingRuntime | [`void Activate()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L84) | public |
+| BuildingRuntime | [`IEnumerator ActivateRoutine()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L92) | internal |
+| BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L134) | public |
+| BuildingRuntime | [`void DestroyBlock(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L186) | public |
+| BuildingRuntime | [`void SplitDisconnected()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L224) | private |
+| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L294) | private |
+| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L315) | public |
+| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L326) | private |
 
 ## Assets/Scripts/Features/World/ProceduralVoxelWorld.cs
 
@@ -2828,14 +2851,14 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| StreamingWorldTerrain | [`float SurfaceHeight(int x, int z)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L23) | public |
-| StreamingWorldTerrain | [`bool IsColumnInBounds(Vector2Int coordinate)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L39) | public |
-| StreamingWorldTerrain | [`byte Sample(Vector3Int cell)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L45) | public |
-| StreamingWorldTerrain | [`bool TryGetBuildingSite(Vector2Int coordinate, out Vector3 localPosition, out Quaternion rotation)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L56) | public |
-| StreamingWorldTerrain | [`bool HasBuilding(Vector2Int coordinate)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L72) | private |
-| StreamingWorldTerrain | [`int Height(int x, int z)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L88) | private |
-| StreamingWorldTerrain | [`float RawHeight(int x, int z)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L122) | private |
-| StreamingWorldTerrain | [`uint Hash(Vector2Int coordinate)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L129) | private |
+| StreamingWorldTerrain | [`float SurfaceHeight(int x, int z)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L24) | public |
+| StreamingWorldTerrain | [`bool IsColumnInBounds(Vector2Int coordinate)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L40) | public |
+| StreamingWorldTerrain | [`byte Sample(Vector3Int cell)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L46) | public |
+| StreamingWorldTerrain | [`bool TryGetBuildingSite(Vector2Int coordinate, out Vector3 localPosition, out Quaternion rotation)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L57) | public |
+| StreamingWorldTerrain | [`bool HasBuilding(Vector2Int coordinate)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L73) | private |
+| StreamingWorldTerrain | [`int Height(int x, int z)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L89) | private |
+| StreamingWorldTerrain | [`float RawHeight(int x, int z)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L124) | private |
+| StreamingWorldTerrain | [`uint Hash(Vector2Int coordinate)`](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L131) | private |
 
 ## Assets/Scripts/Features/World/VoxelDebrisPiece.cs
 
@@ -2933,7 +2956,9 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldBuildingLibrary | [`void Load(string directory)`](../Assets/Scripts/Features/World/WorldBuildingLibrary.cs#L19) | internal |
+| WorldBuildingLibrary | [`IEnumerator LoadRoutine(string directory)`](../Assets/Scripts/Features/World/WorldBuildingLibrary.cs#L24) | internal |
+| WorldBuildingLibrary | [`void CollectResources(string path, HashSet<string> resources)`](../Assets/Scripts/Features/World/WorldBuildingLibrary.cs#L56) | private static |
+| WorldBuildingLibrary | [`void Load(string directory)`](../Assets/Scripts/Features/World/WorldBuildingLibrary.cs#L85) | internal |
 
 ## Assets/Scripts/Features/World/WorldBuildingManager.cs
 
@@ -2941,25 +2966,28 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldBuildingManager | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L36) | private |
-| WorldBuildingManager | [`void Start()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L53) | private |
-| WorldBuildingManager | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L61) | private |
-| WorldBuildingManager | [`bool CanPlace(BlockDataList blueprint, Vector3 position, Quaternion rotation, out string reason)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L72) | public |
-| WorldBuildingManager | [`BuildingRuntime Place(BlockDataList blueprint, string name, Vector3 position, Quaternion rotation, UnitFaction faction)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L92) | public |
-| WorldBuildingManager | [`BuildingRuntime RestoreBuilding(WorldBuildingState state)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L122) | public |
-| WorldBuildingManager | [`bool HasCapacity(int additionalBlocks)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L140) | public |
-| WorldBuildingManager | [`void RemoveBuilding(BuildingRuntime building)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L151) | public |
-| WorldBuildingManager | [`void ClearSession()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L163) | public |
-| WorldBuildingManager | [`BuildingRuntime Stage(WorldBuildingState state, Transform parent)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L169) | private |
-| WorldBuildingManager | [`WorldLabSnapshot Capture()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L187) | public |
-| WorldBuildingManager | [`void Restore(WorldLabSnapshot snapshot)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L207) | public |
-| WorldBuildingManager | [`void ResetBuildings()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L260) | public |
-| WorldBuildingManager | [`void ClearBuildings()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L294) | private |
-| WorldBuildingManager | [`void TerrainChanged(Bounds changed)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L309) | private |
-| WorldBuildingManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L320) | private |
-| WorldBuildingManager | [`void DamageSphere(Vector3 center, float radius, float damage)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L337) | public |
-| WorldBuildingManager | [`void CreateDebris(List<Block> group, Rigidbody source)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L342) | internal |
-| WorldBuildingManager | [`void ClearDebris()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L378) | private |
+| WorldBuildingManager | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L40) | private |
+| WorldBuildingManager | [`void Start()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L57) | private |
+| WorldBuildingManager | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L65) | private |
+| WorldBuildingManager | [`bool CanPlace(BlockDataList blueprint, Vector3 position, Quaternion rotation, out string reason)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L76) | public |
+| WorldBuildingManager | [`BuildingRuntime Place(BlockDataList blueprint, string name, Vector3 position, Quaternion rotation, UnitFaction faction)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L96) | public |
+| WorldBuildingManager | [`BuildingRuntime RestoreBuilding(WorldBuildingState state)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L126) | public |
+| WorldBuildingManager | [`IEnumerator RestoreBuildingRoutine(WorldBuildingState state, Action<BuildingRuntime> restored)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L145) | internal |
+| WorldBuildingManager | [`void OptimizeVisuals(Block block)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L192) | internal |
+| WorldBuildingManager | [`bool HasCapacity(int additionalBlocks)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L200) | public |
+| WorldBuildingManager | [`void RemoveBuilding(BuildingRuntime building)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L211) | public |
+| WorldBuildingManager | [`void ClearSession()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L223) | public |
+| WorldBuildingManager | [`void OnDestroy()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L230) | private |
+| WorldBuildingManager | [`BuildingRuntime Stage(WorldBuildingState state, Transform parent)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L235) | private |
+| WorldBuildingManager | [`WorldLabSnapshot Capture()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L253) | public |
+| WorldBuildingManager | [`void Restore(WorldLabSnapshot snapshot)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L273) | public |
+| WorldBuildingManager | [`void ResetBuildings()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L326) | public |
+| WorldBuildingManager | [`void ClearBuildings()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L360) | private |
+| WorldBuildingManager | [`void TerrainChanged(Bounds changed)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L375) | private |
+| WorldBuildingManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L386) | private |
+| WorldBuildingManager | [`void DamageSphere(Vector3 center, float radius, float damage)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L403) | public |
+| WorldBuildingManager | [`void CreateDebris(List<Block> group, Rigidbody source)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L408) | internal |
+| WorldBuildingManager | [`void ClearDebris()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L444) | private |
 
 ## Assets/Scripts/Features/World/WorldBuildingPalette.cs
 
@@ -2990,6 +3018,18 @@
 | WorldBuildingPlacement | [`float Support(ProceduralVoxelWorld world, Vector2Int size, Transform pose)`](../Assets/Scripts/Features/World/WorldBuildingPlacement.cs#L111) | public static |
 | WorldBuildingPlacement | [`Bounds Footprint(BuildingRuntime building)`](../Assets/Scripts/Features/World/WorldBuildingPlacement.cs#L129) | public static |
 
+## Assets/Scripts/Features/World/WorldBuildingRenderCache.cs
+
+// 职责：将世界建筑同父刚性装饰网格按材质合并，并在本会话的同类模块间共享。 // 入口：Apply()/Clear()；只替换表现，保留方块、碰撞、损坏及可移动炮塔/机械层级。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldBuildingRenderCache | [`void Apply(Block block)`](../Assets/Scripts/Features/World/WorldBuildingRenderCache.cs#L10) | internal |
+| WorldBuildingRenderCache | [`bool IsVisible(Transform part, Transform model)`](../Assets/Scripts/Features/World/WorldBuildingRenderCache.cs#L85) | private static |
+| WorldBuildingRenderCache | [`string RelativePath(Transform parent, Transform model)`](../Assets/Scripts/Features/World/WorldBuildingRenderCache.cs#L98) | private static |
+| WorldBuildingRenderCache | [`Visual Build(Transform model, MeshRenderer[] renderers)`](../Assets/Scripts/Features/World/WorldBuildingRenderCache.cs#L109) | private static |
+| WorldBuildingRenderCache | [`void Clear()`](../Assets/Scripts/Features/World/WorldBuildingRenderCache.cs#L189) | internal |
+
 ## Assets/Scripts/Features/World/WorldBuildingState.cs
 
 // 职责：保存世界建筑独立身份、根姿态、蓝图快照与逐块耐久；坐标相对建筑底座。
@@ -3002,11 +3042,11 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldBuildingStreaming | [`void LoadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L33) | internal |
-| WorldBuildingStreaming | [`void RestoreAvailable()`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L63) | internal |
-| WorldBuildingStreaming | [`void UnloadDistant(Vector2Int center)`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L92) | internal |
-| WorldBuildingStreaming | [`int Distance(Vector2Int a, Vector2Int b)`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L121) | internal static |
-| WorldBuildingStreaming | [`bool HasLoadedGround(Vector3 position, Quaternion rotation, Vector2Int size)`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L126) | private |
+| WorldBuildingStreaming | [`void LoadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L34) | internal |
+| WorldBuildingStreaming | [`IEnumerator RestoreAvailable()`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L62) | internal |
+| WorldBuildingStreaming | [`void UnloadDistant(Vector2Int center)`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L107) | internal |
+| WorldBuildingStreaming | [`int Distance(Vector2Int a, Vector2Int b)`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L136) | internal static |
+| WorldBuildingStreaming | [`bool HasLoadedGround(Vector3 position, Quaternion rotation, Vector2Int size)`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L141) | private |
 
 ## Assets/Scripts/Features/World/WorldBuildingValidation.cs
 
@@ -3026,11 +3066,12 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldDistanceView | [`IEnumerator Refresh()`](../Assets/Scripts/Features/World/WorldDistanceView.cs#L49) | internal |
-| WorldDistanceView | [`IEnumerator Rebuild(Vector2Int center)`](../Assets/Scripts/Features/World/WorldDistanceView.cs#L73) | private |
-| WorldDistanceView | [`void AddSkirt(List<Vector3> vertices, List<int> triangles, int a, int b)`](../Assets/Scripts/Features/World/WorldDistanceView.cs#L167) | private |
-| WorldDistanceView | [`void Enter(Camera view)`](../Assets/Scripts/Features/World/WorldDistanceView.cs#L180) | internal |
-| WorldDistanceView | [`void Dispose()`](../Assets/Scripts/Features/World/WorldDistanceView.cs#L207) | public |
+| WorldDistanceView | [`Vector2Int CenterAtFocus()`](../Assets/Scripts/Features/World/WorldDistanceView.cs#L43) | private |
+| WorldDistanceView | [`IEnumerator Refresh()`](../Assets/Scripts/Features/World/WorldDistanceView.cs#L63) | internal |
+| WorldDistanceView | [`IEnumerator Rebuild(Vector2Int center)`](../Assets/Scripts/Features/World/WorldDistanceView.cs#L87) | private |
+| WorldDistanceView | [`void AddSkirt(List<Vector3> vertices, List<int> triangles, int a, int b)`](../Assets/Scripts/Features/World/WorldDistanceView.cs#L192) | private |
+| WorldDistanceView | [`void Enter(Camera view)`](../Assets/Scripts/Features/World/WorldDistanceView.cs#L205) | internal |
+| WorldDistanceView | [`void Dispose()`](../Assets/Scripts/Features/World/WorldDistanceView.cs#L232) | public |
 
 ## Assets/Scripts/Features/World/WorldGenerationSettings.cs
 
@@ -3038,7 +3079,7 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldGenerationSettings | [`void FitBuildingPlatforms(float requiredRadius)`](../Assets/Scripts/Features/World/WorldGenerationSettings.cs#L51) | internal |
+| WorldGenerationSettings | [`void FitBuildingPlatforms(float requiredRadius)`](../Assets/Scripts/Features/World/WorldGenerationSettings.cs#L54) | internal |
 
 ## Assets/Scripts/Features/World/WorldLabController.cs
 
@@ -3094,11 +3135,11 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldLoadingPanel | [`void Bind(WorldSessionManager owner)`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L17) | public |
-| WorldLoadingPanel | [`void Show(bool visible)`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L29) | public |
-| WorldLoadingPanel | [`void Update()`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L50) | private |
-| WorldLoadingPanel | [`void Cancel()`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L68) | private |
-| WorldLoadingPanel | [`void OnDestroy()`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L73) | private |
+| WorldLoadingPanel | [`void Bind(WorldSessionManager owner)`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L18) | public |
+| WorldLoadingPanel | [`void Show(bool visible)`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L38) | public |
+| WorldLoadingPanel | [`void Update()`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L61) | private |
+| WorldLoadingPanel | [`void Cancel()`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L79) | private |
+| WorldLoadingPanel | [`void OnDestroy()`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L84) | private |
 
 ## Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs
 
@@ -3106,10 +3147,10 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldPlayerStreamingGuard | [`void Tick(Transform player)`](../Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs#L30) | internal |
-| WorldPlayerStreamingGuard | [`bool HasTerrainForBounds(Transform player, Vector3 target, Vector3 prediction)`](../Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs#L98) | private |
-| WorldPlayerStreamingGuard | [`Bounds CaptureLocalBounds(Transform construct)`](../Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs#L129) | internal static |
-| WorldPlayerStreamingGuard | [`void Release()`](../Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs#L154) | internal |
+| WorldPlayerStreamingGuard | [`void Tick(Transform player)`](../Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs#L31) | internal |
+| WorldPlayerStreamingGuard | [`bool HasTerrainForBounds(Transform player, Vector3 target, Vector3 prediction)`](../Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs#L99) | private |
+| WorldPlayerStreamingGuard | [`Bounds CaptureLocalBounds(Transform construct)`](../Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs#L133) | internal static |
+| WorldPlayerStreamingGuard | [`void Release()`](../Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs#L158) | internal |
 
 ## Assets/Scripts/Features/World/WorldRegionStreaming.cs
 
@@ -3118,8 +3159,8 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | WorldRegionStreaming | [`IEnumerator LoadNext(Vector2Int center)`](../Assets/Scripts/Features/World/WorldRegionStreaming.cs#L29) | internal |
-| WorldRegionStreaming | [`bool FindNextColumn(Vector2Int center, out Vector2Int coordinate)`](../Assets/Scripts/Features/World/WorldRegionStreaming.cs#L55) | private |
-| WorldRegionStreaming | [`void RetireDistant(Vector2Int center)`](../Assets/Scripts/Features/World/WorldRegionStreaming.cs#L81) | private |
+| WorldRegionStreaming | [`bool FindNextColumn(Vector2Int center, out Vector2Int coordinate)`](../Assets/Scripts/Features/World/WorldRegionStreaming.cs#L65) | private |
+| WorldRegionStreaming | [`void RetireDistant(Vector2Int center)`](../Assets/Scripts/Features/World/WorldRegionStreaming.cs#L91) | private |
 
 ## Assets/Scripts/Features/World/WorldSessionManager.cs
 
@@ -3127,21 +3168,24 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldSessionManager | [`void Start()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L61) | private |
-| WorldSessionManager | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L68) | private |
-| WorldSessionManager | [`void BeginPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L77) | public |
-| WorldSessionManager | [`void RequestPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L125) | public |
-| WorldSessionManager | [`void CancelPlayRequest()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L142) | public |
-| WorldSessionManager | [`void CompletePendingPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L148) | private |
-| WorldSessionManager | [`bool CanEnterPlay(Transform construct, out string reason)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L160) | public |
-| WorldSessionManager | [`void EnterPlay(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L182) | public |
-| WorldSessionManager | [`void EndSession()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L210) | public |
-| WorldSessionManager | [`IEnumerator RunGuarded(int version, IEnumerator work)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L215) | private |
-| WorldSessionManager | [`IEnumerator StreamWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L246) | private |
-| WorldSessionManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L282) | private |
-| WorldSessionManager | [`void Update()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L306) | private |
-| WorldSessionManager | [`Bounds ConstructBounds(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L316) | private static |
-| WorldSessionManager | [`void SetBuildEnvironmentVisible(bool visible)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L341) | private |
-| WorldSessionManager | [`void StopPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L371) | private |
-| WorldSessionManager | [`void Fail(Exception error)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L396) | private |
-| WorldSessionManager | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L407) | private |
+| WorldSessionManager | [`void Start()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L65) | private |
+| WorldSessionManager | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L72) | private |
+| WorldSessionManager | [`void BeginPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L81) | public |
+| WorldSessionManager | [`IEnumerator PrepareWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L118) | private |
+| WorldSessionManager | [`void RequestPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L167) | public |
+| WorldSessionManager | [`void CancelPlayRequest()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L184) | public |
+| WorldSessionManager | [`void CompletePendingPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L190) | private |
+| WorldSessionManager | [`bool CanEnterPlay(Transform construct, out string reason)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L202) | public |
+| WorldSessionManager | [`void EnterPlay(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L224) | public |
+| WorldSessionManager | [`IEnumerator EnableWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L256) | private |
+| WorldSessionManager | [`void FinishEntering()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L290) | private |
+| WorldSessionManager | [`void EndSession()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L299) | public |
+| WorldSessionManager | [`IEnumerator RunGuarded(int version, IEnumerator work)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L304) | private |
+| WorldSessionManager | [`IEnumerator StreamWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L335) | private |
+| WorldSessionManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L383) | private |
+| WorldSessionManager | [`void Update()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L408) | private |
+| WorldSessionManager | [`Bounds ConstructBounds(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L418) | private static |
+| WorldSessionManager | [`void SetBuildEnvironmentVisible(bool visible)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L443) | private |
+| WorldSessionManager | [`void StopPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L473) | private |
+| WorldSessionManager | [`void Fail(Exception error)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L505) | private |
+| WorldSessionManager | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L517) | private |

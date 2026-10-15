@@ -33,6 +33,8 @@ public sealed class WorldGenerationSettings : ScriptableObject
     private float viewDistance = 600f;
     [SerializeField, Tooltip("游玩时远处地形与背景共同渐隐到此颜色；退出恢复建造环境颜色。")]
     private Color distanceFogColor = new Color(0.48f, 0.57f, 0.64f, 1f);
+    [SerializeField, Range(0.5f, 8f), Tooltip("建筑创建/启用每批的主线程时间预算（毫秒）；单模块操作仍不可中断。")]
+    private float loadingFrameBudgetMilliseconds = 2f;
     public int Seed => seed;
     public bool RandomizeSeed => randomizeSeed;
     public float CellSize => Mathf.Clamp(cellSize, 1f, 4f);
@@ -47,6 +49,7 @@ public sealed class WorldGenerationSettings : ScriptableObject
     public float SpawnClearance => Mathf.Max(1f, spawnClearance);
     public float ViewDistance => Mathf.Clamp(viewDistance, 300f, 1000f);
     public Color DistanceFogColor => distanceFogColor;
+    public float LoadingFrameBudgetMilliseconds => Mathf.Clamp(loadingFrameBudgetMilliseconds, 0.5f, 8f);
 
     internal void FitBuildingPlatforms(float requiredRadius)
     {

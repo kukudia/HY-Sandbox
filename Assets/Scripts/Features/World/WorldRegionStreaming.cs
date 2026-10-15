@@ -29,27 +29,37 @@ internal sealed class WorldRegionStreaming
     internal IEnumerator LoadNext(Vector2Int center)
     {
         RetireDistant(center);
-        buildings.RestoreAvailable();
         LoadedWork = FindNextColumn(center, out Vector2Int coordinate);
-        if (!LoadedWork)
+        if (LoadedWork)
         {
-            yield break;
+            IEnumerator column = world.LoadColumn(coordinate);
+            try
+            {
+                while (column.MoveNext())
+                {
+                    yield return column.Current;
+                }
+            }
+            finally
+            {
+                (column as IDisposable)?.Dispose();
+            }
+
+            buildings.LoadColumn(coordinate);
         }
 
-        IEnumerator column = world.LoadColumn(coordinate);
+        IEnumerator structures = buildings.RestoreAvailable();
         try
         {
-            while (column.MoveNext())
+            while (structures.MoveNext())
             {
-                yield return column.Current;
+                yield return structures.Current;
             }
         }
         finally
         {
-            (column as IDisposable)?.Dispose();
+            (structures as IDisposable)?.Dispose();
         }
-
-        buildings.LoadColumn(coordinate);
     }
 
     private bool FindNextColumn(Vector2Int center, out Vector2Int coordinate)
