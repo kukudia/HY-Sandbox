@@ -1,0 +1,141 @@
+{
+    "status": "passed",
+    "graphics": "Direct3D11",
+    "seed": 14722,
+    "buildings": 1,
+    "blocks": 23,
+    "travelStart": {
+        "x": 16.0,
+        "y": 15.0,
+        "z": 16.0
+    },
+    "travelEnd": {
+        "x": 216.0,
+        "y": 15.0,
+        "z": 16.0
+    },
+    "memoryBytes": 111084991,
+    "requestedCycles": 1,
+    "completedCycles": 1,
+    "cycleMemoryBytes": [
+        111084991
+    ],
+    "cycleSeeds": [
+        14722
+    ],
+    "checks": [
+        "Main starts with world session",
+        "startup mask stays opaque during construct restoration",
+        "construct load exposes bounded progress",
+        "world generation remains valid",
+        "opaque loading mask renders while waiting or enabling",
+        "loading reaches completion",
+        "initial 81 terrain columns loaded",
+        "Player creates buildings from blueprint library",
+        "Player loads external blueprint library",
+        "spawn has real terrain collision",
+        "Legacy EnemySpawner is disabled during play",
+        "Generated world contains authored enemy outposts",
+        "Authored finite garrison deploys through production director",
+        "Live defender retains stable site and slot identity",
+        "Outpost defender survives natural AI physics interval",
+        "Outpost defender uses actual moving AI rather than a static decoration",
+        "Natural outpost garrison weapons damage player with the correct attacker identity",
+        "Live outpost HUD separates distance and defender counts",
+        "Long outpost names and all threat counts fit the saved HUD bounds",
+        "Outpost names render literally with authored contrast shadow",
+        "Damaged defender remains tracked after block regroup",
+        "Interpolated regroup preserves cockpit world pose across the next rendered frame",
+        "Far live defender hibernates without being marked defeated",
+        "Unloading is not a kill",
+        "Live defender returns when revisiting streamed terrain",
+        "Revisit preserves defender module identity and damage",
+        "Pursuing guard hibernates at its distant last position",
+        "Distant pursuit is not a defeat",
+        "Pursuing guard resumes near its last position outside original site activation range",
+        "Cockpit defeat permanently consumes slot for this expedition: guard-0",
+        "Revisit never refreshes defeated garrison",
+        "Defeated slots have no replacement enemy",
+        "Outpost HUD can show cleared encounter state",
+        "Cleared outpost status and expedition summary remain visible",
+        "session stays playing",
+        "Player crosses multiple chunk boundaries",
+        "travel retains terrain under player",
+        "loaded terrain remains bounded",
+        "exit discards world and prepares fresh session",
+        "second preparation completes"
+    ],
+    "errors": [],
+    "phases": [
+        {
+            "name": "startup",
+            "frames": 1027,
+            "medianMs": 8.335113525390625,
+            "p95Ms": 8.647918701171875,
+            "p99Ms": 8.776664733886719,
+            "over50Ms": 1,
+            "maxMs": 115.72193908691406,
+            "totalMs": 8705.1689453125
+        },
+        {
+            "name": "loading-and-entry",
+            "frames": 3,
+            "medianMs": 12.461662292480469,
+            "p95Ms": 12.461662292480469,
+            "p99Ms": 12.461662292480469,
+            "over50Ms": 1,
+            "maxMs": 54.345130920410159,
+            "totalMs": 78.23657989501953
+        },
+        {
+            "name": "outpost-encounter",
+            "frames": 4267,
+            "medianMs": 8.331298828125,
+            "p95Ms": 8.638381958007813,
+            "p99Ms": 8.85772705078125,
+            "over50Ms": 1,
+            "maxMs": 68.58253479003906,
+            "totalMs": 35674.94921875
+        },
+        {
+            "name": "idle",
+            "frames": 360,
+            "medianMs": 8.342742919921875,
+            "p95Ms": 8.53729248046875,
+            "p99Ms": 8.61358642578125,
+            "over50Ms": 0,
+            "maxMs": 8.892059326171875,
+            "totalMs": 3000.48828125
+        },
+        {
+            "name": "travel",
+            "frames": 420,
+            "medianMs": 8.3465576171875,
+            "p95Ms": 8.5296630859375,
+            "p99Ms": 8.60595703125,
+            "over50Ms": 0,
+            "maxMs": 13.057708740234375,
+            "totalMs": 3504.966796875
+        },
+        {
+            "name": "exit",
+            "frames": 1,
+            "medianMs": 29.23583984375,
+            "p95Ms": 29.23583984375,
+            "p99Ms": 29.23583984375,
+            "over50Ms": 0,
+            "maxMs": 29.23583984375,
+            "totalMs": 29.23583984375
+        },
+        {
+            "name": "reprepare",
+            "frames": 1040,
+            "medianMs": 8.331298828125,
+            "p95Ms": 8.655548095703125,
+            "p99Ms": 8.76617431640625,
+            "over50Ms": 0,
+            "maxMs": 17.749786376953126,
+            "totalMs": 8677.4677734375
+        }
+    ]
+}

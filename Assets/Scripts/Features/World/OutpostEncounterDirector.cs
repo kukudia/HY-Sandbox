@@ -10,7 +10,10 @@ public sealed class OutpostEncounterDirector
     private readonly WorldBuildingManager buildings;
     private readonly ProceduralVoxelWorld world;
     private int activeCount;
-    public string Status { get; private set; } = "";
+    public OutpostEncounterStatus? Nearest
+    {
+        get; private set;
+    }
     public int ClearedCount
     {
         get; private set;
@@ -91,7 +94,7 @@ public sealed class OutpostEncounterDirector
         }
 
         float nearest = 225f * 225f;
-        Status = "";
+        Nearest = null;
         ClearedCount = 0;
         bool spawned = false;
         foreach (Encounter encounter in encounters.Values)
@@ -144,7 +147,13 @@ public sealed class OutpostEncounterDirector
             if (distance < nearest)
             {
                 nearest = distance;
-                Status = cleared ? encounter.Name + " | CLEARED" : encounter.Name + " | Defenders " + remaining + " / " + encounter.Guards.Count + " | Emplacements " + encounter.Emplacements;
+                Nearest = new OutpostEncounterStatus(
+                    encounter.Name,
+                    Mathf.Sqrt(distance),
+                    remaining,
+                    encounter.Guards.Count,
+                    encounter.Emplacements,
+                    cleared);
             }
         }
     }
@@ -198,7 +207,8 @@ public sealed class OutpostEncounterDirector
         float rise = highest + 2f - bounds.min.y;
         if (rise > 0f)
         {
-            guard.Unit.transform.position += Vector3.up * rise;
+            Rigidbody body = guard.Unit.GetComponent<Rigidbody>();
+            body.position += Vector3.up * rise;
         }
 
         if (guard.Health != null)
@@ -306,7 +316,7 @@ public sealed class OutpostEncounterDirector
 
         encounters.Clear();
         activeCount = ClearedCount = 0;
-        Status = "";
+        Nearest = null;
     }
 
     private sealed class Encounter
@@ -331,5 +341,31 @@ public sealed class OutpostEncounterDirector
         internal Dictionary<string, float> Health;
         internal Vector3 Position;
         internal Quaternion Rotation;
+    }
+}
+
+// Display data only; formatting and available text width belong to the HUD.
+public readonly struct OutpostEncounterStatus
+{
+    public readonly string Name;
+    public readonly float Distance;
+    public readonly int Remaining;
+    public readonly int Total;
+    public readonly int Emplacements;
+    public readonly bool Cleared;
+    public OutpostEncounterStatus(
+        string name,
+        float distance,
+        int remaining,
+        int total,
+        int emplacements,
+        bool cleared)
+    {
+        Name = name;
+        Distance = distance;
+        Remaining = remaining;
+        Total = total;
+        Emplacements = emplacements;
+        Cleared = cleared;
     }
 }

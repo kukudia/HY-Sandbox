@@ -1,0 +1,81 @@
+{
+    "status": "failed",
+    "graphics": "Direct3D11",
+    "seed": 14722,
+    "buildings": 1,
+    "blocks": 23,
+    "travelStart": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "travelEnd": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "memoryBytes": 0,
+    "requestedCycles": 1,
+    "completedCycles": 0,
+    "cycleMemoryBytes": [],
+    "cycleSeeds": [
+        14722
+    ],
+    "checks": [
+        "Main starts with world session",
+        "startup mask stays opaque during construct restoration",
+        "construct load exposes bounded progress",
+        "world generation remains valid",
+        "opaque loading mask renders while waiting or enabling",
+        "loading reaches completion",
+        "initial 81 terrain columns loaded",
+        "Player creates buildings from blueprint library",
+        "Player loads external blueprint library",
+        "spawn has real terrain collision",
+        "Legacy EnemySpawner is disabled during play",
+        "Generated world contains authored enemy outposts",
+        "Authored finite garrison deploys through production director",
+        "Live defender retains stable site and slot identity",
+        "Outpost defender survives natural AI physics interval",
+        "Outpost defender uses actual moving AI rather than a static decoration",
+        "Natural outpost garrison weapons damage player with the correct attacker identity",
+        "Live outpost HUD separates distance and defender counts",
+        "Long outpost names and all threat counts fit the saved HUD bounds",
+        "Outpost names render literally with authored contrast shadow"
+    ],
+    "errors": [
+        "System.InvalidOperationException: Damaged defender remains tracked after block regroup\r\n  at WorldPlayerSmokeChecks.Check (System.Boolean valid, System.String name) [0x00003] in <e4b2a761c88240299990e0041ada10ec>:0 \r\n  at OutpostPlayerChecks+<Scenario>d__2.MoveNext () [0x009b9] in <e4b2a761c88240299990e0041ada10ec>:0 \r\n  at OutpostPlayerChecks+<Flatten>d__1.MoveNext () [0x00051] in <e4b2a761c88240299990e0041ada10ec>:0 \r\n  at WorldPlayerSmokeChecks+<Scenario>d__22.MoveNext () [0x0050f] in <e4b2a761c88240299990e0041ada10ec>:0 \r\n  at WorldPlayerSmokeChecks.Update () [0x0004e] in <e4b2a761c88240299990e0041ada10ec>:0 "
+    ],
+    "phases": [
+        {
+            "name": "startup",
+            "frames": 1026,
+            "medianMs": 8.336067199707032,
+            "p95Ms": 8.671760559082032,
+            "p99Ms": 8.901119232177735,
+            "over50Ms": 1,
+            "maxMs": 114.27378845214844,
+            "totalMs": 8700.140625
+        },
+        {
+            "name": "loading-and-entry",
+            "frames": 3,
+            "medianMs": 11.594772338867188,
+            "p95Ms": 11.594772338867188,
+            "p99Ms": 11.594772338867188,
+            "over50Ms": 1,
+            "maxMs": 54.17156219482422,
+            "totalMs": 75.10089874267578
+        },
+        {
+            "name": "outpost-encounter",
+            "frames": 1525,
+            "medianMs": 8.329391479492188,
+            "p95Ms": 8.609771728515625,
+            "p99Ms": 9.1400146484375,
+            "over50Ms": 1,
+            "maxMs": 72.21031188964844,
+            "totalMs": 12784.4306640625
+        }
+    ]
+}

@@ -9,9 +9,13 @@ using Object = UnityEngine.Object;
 
 public static class OutpostPlayerChecks
 {
-    public static IEnumerator Run(WorldSessionManager session, ControlUnit player, Action<bool, string> check)
+    public static IEnumerator Run(
+        WorldSessionManager session,
+        ControlUnit player,
+        Action<bool, string> check,
+        Action<string> capture = null)
     {
-        return Flatten(Scenario(session, player, check));
+        return Flatten(Scenario(session, player, check, capture));
     }
 
     private static IEnumerator Flatten(IEnumerator root)
@@ -46,18 +50,34 @@ public static class OutpostPlayerChecks
         }
     }
 
-    private static IEnumerator Scenario(WorldSessionManager session, ControlUnit player, Action<bool, string> check)
+    private static IEnumerator Scenario(
+        WorldSessionManager session,
+        ControlUnit player,
+        Action<bool, string> check,
+        Action<string> capture)
     {
         check(
             Object.FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None).All(item => !item.enabled),
             "Legacy EnemySpawner is disabled during play");
+        Vector3 previous = player.transform.position;
         BuildingRuntime site = session.Buildings.Buildings.FirstOrDefault(item => item != null && item.Outpost != null);
+        for (int waypoint = 0; waypoint < 8 && site == null; waypoint++)
+        {
+            Vector3 offset = Quaternion.Euler(0f, waypoint * 45f, 0f) * Vector3.right * 240f;
+            yield return TravelTo(player.transform, previous + offset + Vector3.up * 25f);
+            for (int frame = 0; frame < 120 && site == null; frame++)
+            {
+                site = session.Buildings.Buildings.FirstOrDefault(item => item != null && item.Outpost != null);
+                yield return null;
+            }
+        }
+
         check(site != null, "Generated world contains authored enemy outposts");
+        Debug.Log("Outpost smoke selected " + site.BlueprintName + " at " + site.transform.position);
         string siteId = site.InstanceId;
         string name = site.BlueprintName;
         EnemyOutpostData data = site.Outpost;
         Vector3 origin = site.transform.position;
-        Vector3 previous = player.transform.position;
         yield return TravelTo(player.transform, origin + Vector3.up * 25f);
         int count = 0;
         for (int frame = 0; frame < 600; frame++)
@@ -102,6 +122,26 @@ public static class OutpostPlayerChecks
         check(
             sawGarrisonDamage,
             "Natural outpost garrison weapons damage player with the correct attacker identity");
+        OutpostHud hud = Object.FindFirstObjectByType<OutpostHud>();
+        UnityEngine.UI.Text hudLabel = hud.GetComponent<UnityEngine.UI.Text>();
+        check(hudLabel.text.Contains("m\nDefenders"), "Live outpost HUD separates distance and defender counts");
+        string currentLabel = hudLabel.text;
+        hudLabel.text = hud.Format(new OutpostEncounterStatus(
+            new string('W', 120),
+            225f,
+            8,
+            8,
+            2048,
+            false), 12);
+        Canvas.ForceUpdateCanvases();
+        check(
+            hudLabel.preferredHeight <= hudLabel.rectTransform.rect.height && hudLabel.preferredWidth <= hudLabel.rectTransform.rect.width,
+            "Long outpost names and all threat counts fit the saved HUD bounds");
+        check(
+            !hudLabel.supportRichText && hudLabel.GetComponent<UnityEngine.UI.Shadow>() != null,
+            "Outpost names render literally with authored contrast shadow");
+        hudLabel.text = currentLabel;
+        capture?.Invoke("outpost");
         foreach (OutpostGarrisonData guard in data.garrison)
         {
             if (session.Outposts.TryGetDefender(siteId, guard.id, out ControlUnit unit))
@@ -116,12 +156,20 @@ public static class OutpostPlayerChecks
         Durability health = armor.GetComponent<Durability>();
         health.ApplyDamage(5f, player);
         float damaged = health.currentDurability;
-        int regroupIdentity = defender.cockpit.GetComponent<EnemyIdentity>().GetInstanceID();
+        EnemyIdentity survivingIdentity = defender.cockpit.GetComponent<EnemyIdentity>();
+        int regroupIdentity = survivingIdentity.GetInstanceID();
+        Vector3 cockpitBeforeRegroup = survivingIdentity.transform.position;
         PlayManager.instance.RefreshGroup(defender);
         yield return null;
+        bool trackedAfterRegroup = session.Outposts.TryGetDefender(siteId, first.id, out ControlUnit regrouped);
+        Debug.Log("Outpost regroup: tracked=" + trackedAfterRegroup + ", expected=" + regroupIdentity + ", actual=" + (regrouped != null && regrouped.cockpit != null ? regrouped.cockpit.GetComponent<EnemyIdentity>().GetInstanceID() : 0) + ", identityAlive=" + (survivingIdentity != null) + ", identityPosition=" + (survivingIdentity != null ? survivingIdentity.transform.position.ToString() : "destroyed") + ", player=" + player.transform.position);
         check(
-            session.Outposts.TryGetDefender(siteId, first.id, out ControlUnit regrouped) && regrouped != null && regrouped.cockpit.GetComponent<EnemyIdentity>().GetInstanceID() == regroupIdentity,
+            trackedAfterRegroup && regrouped != null && regrouped.cockpit.GetComponent<EnemyIdentity>().GetInstanceID() == regroupIdentity,
             "Damaged defender remains tracked after block regroup");
+        check(
+            Vector3.Distance(survivingIdentity.transform.position, cockpitBeforeRegroup) < 2f,
+            "Interpolated regroup preserves cockpit world pose across the next rendered frame");
+        Freeze(regrouped);
         yield return TravelTo(player.transform, origin + Vector3.right * 250f + Vector3.up * 25f);
         for (int i = 0; i < 10; i++)
         {
@@ -208,6 +256,15 @@ public static class OutpostPlayerChecks
 
         yield return null;
         check(session.Outposts.ClearedCount > 0, "Outpost HUD can show cleared encounter state");
+        for (int frame = 0; frame < 30; frame++)
+        {
+            yield return null;
+        }
+
+        check(
+            hudLabel.text.Contains("CLEARED") && hudLabel.preferredHeight <= hudLabel.rectTransform.rect.height,
+            "Cleared outpost status and expedition summary remain visible");
+        capture?.Invoke("outpost-cleared");
         yield return TravelTo(player.transform, previous);
     }
 

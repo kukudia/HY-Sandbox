@@ -20,9 +20,10 @@ internal sealed class RuntimeGroupBuilder
         int groupIndex = 1;
         foreach (List<Block> group in groups)
         {
-            GameObject groupParent = Object.Instantiate(parentPrefab);
+            // Initialize the interpolated Rigidbody at its final pose. Moving only Transform
+            // after Instantiate leaves the prefab pose in the interpolation history until a physics step.
+            GameObject groupParent = Object.Instantiate(parentPrefab, BlockGroupManager.CalculateGroupCenter(group), Quaternion.identity);
             groupParent.name = $"Group_{groupIndex++}";
-            groupParent.transform.position = BlockGroupManager.CalculateGroupCenter(group);
             float mass = 0f;
             ControlUnit groupControl = groupParent.GetComponent<ControlUnit>();
             foreach (Block block in group)

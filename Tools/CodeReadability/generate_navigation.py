@@ -903,12 +903,14 @@ def main():
             "M": "OutpostEncounterDirector.Hibernate", "N": "DestroyManager.DestroyGameObject",
             "O": "EnemyIdentity.ReportDefeated", "P": "OutpostEncounterDirector.Clear",
             "Q": "WorldSessionManager.BeginPreparation", "R": "OutpostHud.Update",
+            "S": "OutpostHud.Format", "T": "OutpostHud.FitName",
         },
         [
             "A --> B", "B --> D", "C --> D", "D --> E", "F --> E",
             "G -.->|分帧建筑恢复| H", "I --> J", "J -->|未击败且近距离| K", "K --> L",
             "J -->|远离或地形卸载| M", "N -->|敌方驾驶舱死亡| O",
             "O -.->|Defeated事件修改该驻军记录| J", "Q --> P", "R -.->|只读状态| J",
+            "R --> S", "S -->|按字形宽度缩短名称| T",
         ],
     )
     graph(

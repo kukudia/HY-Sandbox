@@ -254,7 +254,13 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
             if (validateOutposts)
             {
                 Next("outpost-encounter");
-                IEnumerator outpost = OutpostPlayerChecks.Run(session, player.GetComponent<ControlUnit>(), Check);
+                Action<string> capture = null;
+                if (captureImages)
+                {
+                    capture = suffix => ScreenCapture.CaptureScreenshot(Path.ChangeExtension(reportPath, suffix + ".png"));
+                }
+
+                IEnumerator outpost = OutpostPlayerChecks.Run(session, player.GetComponent<ControlUnit>(), Check, capture);
                 try
                 {
                     while (outpost.MoveNext())

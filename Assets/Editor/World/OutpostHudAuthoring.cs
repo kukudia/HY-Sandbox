@@ -44,6 +44,20 @@ public static class OutpostHudAuthoring
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
+        Transform statusRoot = parent.Find("OutpostStatus");
+        Undo.RecordObject(statusRoot, "Fit outpost status");
+        ((RectTransform)statusRoot).sizeDelta = new Vector2(520f, 72f);
+        Text statusText = statusRoot.GetComponent<Text>();
+        Undo.RecordObject(statusText, "Use literal outpost names");
+        statusText.supportRichText = false;
+        Shadow shadow = statusRoot.GetComponent<Shadow>();
+        if (shadow == null)
+        {
+            shadow = Undo.AddComponent<Shadow>(statusRoot.gameObject);
+        }
+
+        shadow.effectColor = new Color(0f, 0f, 0f, 0.9f);
+        shadow.effectDistance = new Vector2(1f, -1f);
         foreach (EnemySpawner spawner in scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<EnemySpawner>(true)))
         {
             Undo.RecordObject(spawner, "Disable legacy enemy spawner");
