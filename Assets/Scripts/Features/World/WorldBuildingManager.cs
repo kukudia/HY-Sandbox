@@ -1,6 +1,7 @@
 // 职责：拥有 WorldLab 建筑实例、初始布局、地形支撑通知和有界残骸。
 // 入口：Place() / Capture() / Restore() / ResetBuildings()；不调用玩家 SaveManager。
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,6 +29,9 @@ public sealed class WorldBuildingManager : MonoBehaviour
     private readonly List<GameObject> debris = new List<GameObject>();
     private readonly HashSet<BuildingRuntime> pendingSupport = new HashSet<BuildingRuntime>();
     private readonly WorldBuildingDamage damage = new WorldBuildingDamage();
+    private readonly WorldBuildingRenderCache renderCache = new WorldBuildingRenderCache();
+    public bool SimulationEnabled { get; internal set; } = true;
+    internal float LoadingFrameBudgetMilliseconds { get; set; } = 2f;
     public ProceduralVoxelWorld World => world;
     public WorldBuildingCatalog Catalog => catalog;
     public IReadOnlyList<BuildingRuntime> Buildings => buildings;
@@ -37,7 +41,7 @@ public sealed class WorldBuildingManager : MonoBehaviour
     {
         foreach (BuildingRuntime building in buildings)
         {
-            if (building != null && building.NeedsActivation)
+            if (initializeOnStart && building != null && building.NeedsActivation)
             {
                 building.Activate();
             }
@@ -137,6 +141,62 @@ public sealed class WorldBuildingManager : MonoBehaviour
         return building;
     }
 
+    /// <summary>流式恢复逐批创建/启用模块；取消时回滚未完成实例，不发布半栋建筑。</summary>
+    internal IEnumerator RestoreBuildingRoutine(WorldBuildingState state, Action<BuildingRuntime> restored)
+    {
+        WorldBuildingValidation.ValidateState(state);
+        if (!HasCapacity(state.blueprint.blocks.Count))
+        {
+            throw new InvalidOperationException("Active world building budget exceeded.");
+        }
+
+        var root = new GameObject("Building " + state.blueprintName);
+        root.SetActive(false);
+        root.transform.SetParent(transform, false);
+        BuildingRuntime building = root.AddComponent<BuildingRuntime>();
+        bool complete = false;
+        IEnumerator work = building.InitializeRoutine(this, state);
+        try
+        {
+            while (work.MoveNext())
+            {
+                yield return work.Current;
+            }
+
+            (work as IDisposable)?.Dispose();
+            if (isActiveAndEnabled)
+            {
+                work = building.ActivateRoutine();
+                while (work.MoveNext())
+                {
+                    yield return work.Current;
+                }
+            }
+
+            buildings.Add(building);
+            restored(building);
+            complete = true;
+        }
+        finally
+        {
+            (work as IDisposable)?.Dispose();
+            if (!complete && root != null)
+            {
+                buildings.Remove(building);
+                root.SetActive(false);
+                Destroy(root);
+            }
+        }
+    }
+
+    internal void OptimizeVisuals(Block block)
+    {
+        if (!initializeOnStart)
+        {
+            renderCache.Apply(block);
+        }
+    }
+
     public bool HasCapacity(int additionalBlocks)
     {
         int count = additionalBlocks;
@@ -164,6 +224,12 @@ public sealed class WorldBuildingManager : MonoBehaviour
     {
         ClearBuildings();
         ClearDebris();
+        renderCache.Clear();
+    }
+
+    private void OnDestroy()
+    {
+        renderCache.Clear();
     }
 
     private BuildingRuntime Stage(WorldBuildingState state, Transform parent)

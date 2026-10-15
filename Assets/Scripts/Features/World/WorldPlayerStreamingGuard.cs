@@ -19,6 +19,7 @@ internal sealed class WorldPlayerStreamingGuard
         get; private set;
     }
     public bool IsWaiting => heldBody != null;
+    public float Progress { get; private set; } = 1f;
 
     internal WorldPlayerStreamingGuard(ProceduralVoxelWorld terrain, WorldGenerationSettings configuration)
     {
@@ -112,18 +113,21 @@ internal sealed class WorldPlayerStreamingGuard
         bounds.Expand(world.CellSize * 2f);
         Vector2Int minimum = world.ColumnAt(bounds.min);
         Vector2Int maximum = world.ColumnAt(bounds.max);
+        int total = (maximum.x - minimum.x + 1) * (maximum.y - minimum.y + 1);
+        int loaded = 0;
         for (int z = minimum.y; z <= maximum.y; z++)
         {
             for (int x = minimum.x; x <= maximum.x; x++)
             {
-                if (!world.HasColumn(new Vector2Int(x, z)))
+                if (world.HasColumn(new Vector2Int(x, z)))
                 {
-                    return false;
+                    loaded++;
                 }
             }
         }
 
-        return true;
+        Progress = (float)loaded / Mathf.Max(1, total);
+        return loaded == total;
     }
 
     internal static Bounds CaptureLocalBounds(Transform construct)

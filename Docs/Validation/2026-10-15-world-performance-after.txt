@@ -1,0 +1,46 @@
+startup: frames=2, totalMs=133.0, medianMs=69.98, p95Ms=63.06, maxMs=69.98, over50ms=2
+ready: state=Ready, buildings=33, blocks=2271
+prepare: frames=1802, totalMs=17640.2, medianMs=5.40, p95Ms=27.06, maxMs=74.99, over50ms=14
+Play entry synchronousMs=27.06
+rendering: batches=2669, triangles=870850, shadowCasters=109, screen=725x488
+settled rendering: batches=2669, triangles=870850, shadowCasters=109, screen=725x488
+entry: frames=285, totalMs=2437.3, medianMs=7.98, p95Ms=10.58, maxMs=93.12, over50ms=1
+idle: frames=366, totalMs=3010.3, medianMs=7.97, p95Ms=9.52, maxMs=26.25, over50ms=0
+Idle CPU inclusive marker average, last 100 frames:
+Main Thread: 8.536ms
+PlayerLoop: 6.800ms
+UpdateScene: 4.731ms
+RenderPlayModeViewCameras: 2.068ms
+UnityEngine.CoreModule.dll!UnityEngine.Rendering::RenderPipelineManager.DoRenderLoop_Internal() [Invoke]: 1.997ms
+Inl_UniversalRenderTotal: 1.970ms
+Inl_RenderCameraStack: 1.952ms
+EditorLoop: 1.445ms
+Update.ScriptRunBehaviourUpdate: 1.439ms
+BehaviourUpdate: 1.438ms
+PreLateUpdate.ScriptRunBehaviourLateUpdate: 1.324ms
+LateBehaviourUpdate: 1.323ms
+Inl_UniversalRenderPipeline.RenderSingleCameraInternal: Main Camera: 1.010ms
+Assembly-CSharp.dll!::PowerTransmissionDevice.Update() [Invoke]: 0.999ms
+RenderLoop.ScheduleDraw: 0.869ms
+Inl_ScriptableRenderContext.Submit: 0.841ms
+UniversalRenderPipeline.RenderSingleCameraInternal: Main Camera: 0.770ms
+ExecuteRenderGraph: 0.753ms
+TimeUpdate.WaitForLastPresentationAndUpdateTime: 0.448ms
+GarbageCollector.CollectIncremental: 0.443ms
+EarlyUpdate.UpdateTextureStreamingManager: 0.442ms
+TextureStreamingManager.Update: 0.441ms
+TextureStreamingManager.UpdateRenderers: 0.439ms
+CullScriptable: 0.342ms
+RenderLoop.DrawSRPBatcher: 0.338ms
+WaitForJobGroupID: 0.320ms
+FixedUpdate.ScriptRunBehaviourFixedUpdate: 0.308ms
+FixedBehaviourUpdate: 0.308ms
+Inl_ExecuteRenderGraph: 0.271ms
+Inl_RecordRenderGraph: 0.239ms
+Profiler.FlushCounters: 0.236ms
+Inl_On Record Render Graph: 0.233ms
+Assembly-CSharp.dll!::Turret.FixedUpdate() [Invoke]: 0.227ms
+EndRenderQueueExtraction: 0.221ms
+DrawOpaqueObjects: 0.218ms
+travel: frames=300, totalMs=3388.5, medianMs=10.95, p95Ms=15.86, maxMs=54.06, over50ms=1
+exit: frames=1, totalMs=75.4, medianMs=75.45, p95Ms=75.45, maxMs=75.45, over50ms=1

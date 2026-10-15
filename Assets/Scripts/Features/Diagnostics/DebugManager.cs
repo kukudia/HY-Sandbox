@@ -43,6 +43,11 @@ public class DebugManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        if (GetComponent<DurabilityDebugLabels>() == null)
+        {
+            gameObject.AddComponent<DurabilityDebugLabels>();
+        }
+
         EnsureStatusIconCanvas();
         PowerRanges.Hide();
     }

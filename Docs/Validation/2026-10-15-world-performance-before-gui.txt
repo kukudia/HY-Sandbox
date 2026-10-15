@@ -1,0 +1,46 @@
+startup: frames=2, totalMs=132.3, medianMs=70.18, p95Ms=62.16, maxMs=70.18, over50ms=2
+ready: state=Ready, buildings=33, blocks=2271
+prepare: frames=1713, totalMs=20886.3, medianMs=6.06, p95Ms=31.26, maxMs=912.27, over50ms=19
+Play entry synchronousMs=26.43
+rendering: batches=2459, triangles=819232, shadowCasters=91, screen=725x488
+settled rendering: batches=2461, triangles=819260, shadowCasters=91, screen=725x488
+entry: frames=300, totalMs=7118.6, medianMs=26.42, p95Ms=35.24, maxMs=87.30, over50ms=2
+idle: frames=240, totalMs=7307.0, medianMs=30.43, p95Ms=34.82, maxMs=63.05, over50ms=1
+Idle CPU inclusive marker average, last 100 frames:
+Main Thread: 30.570ms
+PlayerLoop: 28.293ms
+RenderPlayModeViewCameras: 19.812ms
+UnityEngine.CoreModule.dll!UnityEngine.Rendering::RenderPipelineManager.DoRenderLoop_Internal() [Invoke]: 19.713ms
+Inl_UniversalRenderTotal: 19.686ms
+Inl_RenderCameraStack: 19.663ms
+Inl_ScriptableRenderContext.Submit: 18.572ms
+UniversalRenderPipeline.RenderSingleCameraInternal: Main Camera: 18.485ms
+ExecuteRenderGraph: 18.462ms
+DrawScreenSpaceUI: 17.836ms
+GUI.Repaint: 17.787ms
+UnityEngine.IMGUIModule.dll!UnityEngine::GUIUtility.BeginGUI() [Invoke]: 12.114ms
+UpdateScene: 8.480ms
+EditorResources.Load: 6.992ms
+AssetDatabase.GetGUIDFromAssetPathV2: 4.257ms
+FixedUpdate.ScriptRunBehaviourFixedUpdate: 3.632ms
+FixedBehaviourUpdate: 3.631ms
+Assembly-CSharp.dll!::Turret.FixedUpdate() [Invoke]: 3.354ms
+EditorLoop: 1.984ms
+PreLateUpdate.ScriptRunBehaviourLateUpdate: 1.937ms
+LateBehaviourUpdate: 1.937ms
+Update.ScriptRunBehaviourUpdate: 1.216ms
+BehaviourUpdate: 1.215ms
+UnityEngine.IMGUIModule.dll!UnityEngine::GUIUtility.EndGUI() [Invoke]: 1.212ms
+Inl_UniversalRenderPipeline.RenderSingleCameraInternal: Main Camera: 0.980ms
+RenderLoop.ScheduleDraw: 0.846ms
+Assembly-CSharp.dll!::PowerTransmissionDevice.Update() [Invoke]: 0.826ms
+EarlyUpdate.UpdateTextureStreamingManager: 0.388ms
+TextureStreamingManager.Update: 0.387ms
+TextureStreamingManager.UpdateRenderers: 0.385ms
+GC.Alloc: 0.372ms
+Assembly-CSharp.dll!::Durability.OnGUI() [Invoke]: 0.347ms
+CoroutinesDelayedCalls: 0.324ms
+Update.ScriptRunDelayedDynamicFrameRate: 0.320ms
+RenderLoop.DrawSRPBatcher: 0.317ms
+travel: frames=300, totalMs=4219.5, medianMs=5.90, p95Ms=39.36, maxMs=96.27, over50ms=3
+exit: frames=1, totalMs=31.2, medianMs=31.20, p95Ms=31.20, maxMs=31.20, over50ms=0

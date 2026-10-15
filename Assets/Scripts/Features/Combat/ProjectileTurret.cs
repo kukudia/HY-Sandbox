@@ -31,6 +31,24 @@ public sealed class ProjectileTurret : Turret
     public Transform[] Muzzles => _muzzles;
     public TurretProjectile ProjectilePrefab => _projectilePrefab;
 
+    internal bool MovesVisual(Transform part)
+    {
+        if (System.Array.IndexOf(_recoilBarrels, part) >= 0)
+        {
+            return true;
+        }
+
+        foreach (Transform barrelMuzzle in _muzzles)
+        {
+            if (barrelMuzzle != null && barrelMuzzle.parent == part)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     protected override void Awake()
     {
         base.Awake();

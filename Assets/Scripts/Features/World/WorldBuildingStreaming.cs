@@ -1,6 +1,7 @@
 // 职责：按世界区块生成建筑，将远处建筑休眠为快照，并保留本次探索中的损坏和货仓。
 // 入口：LoadColumn() / UnloadDistant()；实例归WorldBuildingManager，缓存随WorldSessionManager退出丢弃。
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -56,11 +57,9 @@ internal sealed class WorldBuildingStreaming
             };
             dormant.Add(state.instanceId, new DormantBuilding { State = state });
         }
-
-        RestoreAvailable();
     }
 
-    internal void RestoreAvailable()
+    internal IEnumerator RestoreAvailable()
     {
         restored.Clear();
         foreach (KeyValuePair<string, DormantBuilding> entry in dormant)
@@ -72,12 +71,28 @@ internal sealed class WorldBuildingStreaming
                 continue;
             }
 
-            BuildingRuntime building = manager.RestoreBuilding(entry.Value.State);
-            Rigidbody body = building.GetComponent<Rigidbody>();
-            if (!body.isKinematic)
+            DormantBuilding snapshot = entry.Value;
+            IEnumerator work = manager.RestoreBuildingRoutine(
+                snapshot.State,
+                building =>
             {
-                body.linearVelocity = entry.Value.Velocity;
-                body.angularVelocity = entry.Value.AngularVelocity;
+                Rigidbody body = building.GetComponent<Rigidbody>();
+                if (!body.isKinematic)
+                {
+                    body.linearVelocity = snapshot.Velocity;
+                    body.angularVelocity = snapshot.AngularVelocity;
+                }
+            });
+            try
+            {
+                while (work.MoveNext())
+                {
+                    yield return work.Current;
+                }
+            }
+            finally
+            {
+                (work as IDisposable)?.Dispose();
             }
 
             restored.Add(entry.Key);

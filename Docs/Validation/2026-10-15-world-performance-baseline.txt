@@ -1,0 +1,8 @@
+startup: frames=2, totalMs=152.2, medianMs=93.88, p95Ms=58.30, maxMs=93.88, over50ms=2
+ready: state=Ready, buildings=33, blocks=2271
+prepare: frames=1440, totalMs=12834.3, medianMs=4.41, p95Ms=11.88, maxMs=4970.82, over50ms=1
+EnterPlay synchronousMs=498.34
+entry: frames=120, totalMs=3659.2, medianMs=25.13, p95Ms=29.71, maxMs=607.20, over50ms=1
+idle: frames=240, totalMs=6135.0, medianMs=24.77, p95Ms=29.75, maxMs=57.94, over50ms=1
+travel: frames=300, totalMs=8817.3, medianMs=27.97, p95Ms=41.87, maxMs=72.27, over50ms=4
+exit: frames=1, totalMs=60.9, medianMs=60.87, p95Ms=60.87, maxMs=60.87, over50ms=1

@@ -559,7 +559,7 @@ def main():
     )
     graph(
         "Main 大世界会话",
-        "源码推导：Main启动后在隐藏根下分帧预热；请求游玩可取消，Ready后才完成UI和物理切换。进入时启用真实地形/建筑并隐藏旧建造地面。退出和死亡丢弃地形差量、建筑与休眠状态，重新预热；失败下一Update回到统一退出链，避免在生成枚举中重入取消。",
+        "源码推导：Main隐藏预热，资源异步读取、建筑按毫秒预算创建。请求游玩可取消；Ready后暂停物理并显示不透明遮罩，下一帧启用根并按预算激活建筑，完成后恢复原timeScale。退出、死亡或激活中断均释放暂停状态并丢弃会话；失败下一Update回到统一退出链。",
         {
             "A": "WorldSessionManager.Start",
             "B": "WorldSessionManager.BeginPreparation",
@@ -572,8 +572,8 @@ def main():
             "I": "MainUIPanels.CompletePlayStart",
             "J": "PlayManager.PlayStart",
             "K": "WorldSessionManager.EnterPlay",
-            "L": "WorldBuildingManager.OnEnable",
-            "M": "BuildingRuntime.Activate",
+            "L": "WorldSessionManager.EnableWorld",
+            "M": "BuildingRuntime.ActivateRoutine",
             "N": "WorldSessionManager.EndSession",
             "O": "WorldSessionManager.Fail",
             "P": "WorldSessionManager.Update",
@@ -581,13 +581,16 @@ def main():
             "R": "WorldSessionManager.OnDisable",
             "S": "WorldBuildingManager.ClearSession",
             "T": "ProceduralVoxelWorld.ClearStreaming",
+            "U": "WorldSessionManager.PrepareWorld",
+            "V": "WorldSessionManager.FinishEntering",
+            "W": "WorldLoadingPanel.Show",
         },
         [
             "A --> B", "B --> C", "B --> S", "B --> T",
-            "B -.->|StartCoroutine| D", "D --> E", "D -->|捕获异常| O",
+            "B -.->|StartCoroutine| D", "D --> U", "U --> E", "D -->|捕获异常| O",
             "E -->|全部初始列完成后Ready| F", "G -->|已Ready| F", "H -.->|清除请求，阻止后续切换| F",
             "F -->|存在有效请求| I", "I --> J", "J --> K",
-            "K -.->|启用世界根| L", "L --> M", "N --> B",
+            "K -->|暂停物理，先呈现遮罩| W", "K -.->|下一帧| L", "L -.->|逐批激活| M", "L --> V", "L -->|完成隐藏遮罩| W", "C --> V", "N --> B",
             "O -.->|游玩中故障，下一Update| P", "P --> Q",
             "Q -->|经PlayManager.PlayEnd| N", "R --> C", "R --> S", "R --> T",
         ],
@@ -596,8 +599,8 @@ def main():
         "用户建筑库、自然出生和远景",
         "源码推导：每次会话读取persistentDataPath/BuildingBlueprints全部有效JSON，单独报告坏文件并按模块/底座范围扩大平台。自然出生地不再压低；进入时按载具覆盖范围最高地面加净空抬升。远景是独立无碰撞网格，分帧采样并避开已加载列，外边缘由距离雾过渡到同色背景；退出恢复原相机/雾并销毁自有网格。",
         {
-            "A": "WorldSessionManager.BeginPreparation",
-            "B": "WorldBuildingLibrary.Load",
+            "A": "WorldSessionManager.PrepareWorld",
+            "B": "WorldBuildingLibrary.LoadRoutine",
             "C": "WorldBuildingValidation.ValidateBlueprint",
             "D": "WorldGenerationSettings.FitBuildingPlatforms",
             "E": "ProceduralVoxelWorld.InitializeStreaming",
@@ -611,8 +614,8 @@ def main():
             "M": "WorldDistanceView.Dispose",
         },
         [
-            "A --> B", "B -->|逐文件校验，坏文件记录原因| C", "A --> D", "A --> E",
-            "A -.->|受保护协程| F", "F -->|列版本或关注区变化| G", "G --> H",
+            "A --> B", "B -->|异步预热后经Load校验| C", "A --> D", "A --> E",
+            "A -.->|初始列完成才刷新| F", "F -->|列版本更新索引，跨四列才重采样| G", "G --> H",
             "I --> J", "J --> H", "I --> K", "L -->|先停止远景协程| M",
         ],
     )
@@ -631,7 +634,7 @@ def main():
             "I": "StreamingWorldTerrain.Sample",
             "J": "WorldBuildingStreaming.LoadColumn",
             "K": "WorldBuildingStreaming.RestoreAvailable",
-            "L": "WorldBuildingManager.RestoreBuilding",
+            "L": "WorldBuildingManager.RestoreBuildingRoutine",
             "M": "WorldSessionManager.FixedUpdate",
             "N": "WorldPlayerStreamingGuard.Tick",
             "O": "WorldPlayerStreamingGuard.HasTerrainForBounds",
@@ -640,9 +643,49 @@ def main():
         [
             "A --> B", "B --> C", "C --> D", "C --> E", "B --> F",
             "B -->|最近未加载列| G", "G -->|经网格构建采样| H", "H -->|无本次编辑差量| I",
-            "B -->|完整列加载后| J", "J --> K", "B --> K", "K -->|有地形且有活动预算| L",
+            "B -->|完整列加载后登记快照| J", "B --> K", "K -.->|有地形且有活动预算，分帧恢复| L",
             "M --> N", "N --> O", "N -->|就绪后恢复刚体| P",
             "N -.->|预测路径中点Focus，下一渲染帧| A",
+        ],
+    )
+    graph(
+        "世界建筑加载与共享渲染",
+        "源码推导：流式建筑以可取消枚举分帧建立，完成才发布；部分实例取消即回滚。模块按毫秒预算创建和启用。同父刚性装饰网格按材质合并，同资源/尺寸/层级共享Mesh；炮塔轴、后坐炮管、机械动画与发光Renderer保持身份，方块碰撞/耐久仍独立。会话退出释放缓存。载具蓝图末尾连接重建也按2ms批次让出帧。",
+        {
+            "A": "WorldBuildingManager.RestoreBuildingRoutine",
+            "B": "BuildingRuntime.InitializeRoutine",
+            "C": "BlueprintBlockFactory.TryRestore",
+            "D": "WorldBuildingManager.OptimizeVisuals",
+            "E": "WorldBuildingRenderCache.Apply",
+            "F": "WorldBuildingRenderCache.Build",
+            "G": "BuildingRuntime.ActivateRoutine",
+            "H": "IndustrialPartMotion.ControlsVisual",
+            "I": "ProjectileTurret.MovesVisual",
+            "J": "WorldBuildingManager.ClearSession",
+            "K": "WorldBuildingRenderCache.Clear",
+            "L": "BlueprintLoader.LoadRoutine",
+            "M": "BlueprintLoader.RebuildConnections",
+        },
+        [
+            "A -.->|创建预算| B", "B --> C", "B --> D", "D --> E", "E --> H", "E --> I",
+            "E -->|缓存缺失| F", "A -.->|活动世界分批激活| G", "J --> K", "L -.->|连接重建跨帧| M",
+        ],
+    )
+    graph(
+        "耐久调试标签与炮塔搜索预算",
+        "源码推导：DebugManager只装配一个耐久标签绘制器；各Durability的启用/禁用只维护活动注册，关闭标签时不扫描模块，不再为每个方块注册OnGUI/LateUpdate。炮塔目标失效时立即重搜，空目标沿用targetRefreshInterval，先按阵营排除不相关单位。",
+        {
+            "A": "DebugManager.Awake",
+            "B": "Durability.OnEnable",
+            "C": "Durability.OnDisable",
+            "D": "DurabilityDebugLabels.OnGUI",
+            "E": "Turret.FixedUpdate",
+            "F": "Turret.RefreshTarget",
+            "G": "TurretTargetSelector.FindNearestTarget",
+        },
+        [
+            "A -.->|装配单个标签组件，UnityGUI回调| D", "B -.->|活动注册| D", "C -.->|移除注册| D",
+            "E --> F", "F -->|到达搜索间隔或已有目标失效| G",
         ],
     )
     graph(

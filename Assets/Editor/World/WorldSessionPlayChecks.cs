@@ -213,7 +213,30 @@ public static class WorldSessionPlayChecks
         Color previousFogColor = RenderSettings.fogColor;
         CameraClearFlags previousClearFlags = Camera.main.clearFlags;
         session.EnterPlay(testPlayer.transform);
-        yield return null;
+        WorldLoadingPanel entryPanel = Object.FindFirstObjectByType<WorldLoadingPanel>();
+        Check(
+            session.IsEntering && Time.timeScale == 0f,
+            "world activation pauses physics until all building batches finish");
+        Check(
+            entryPanel.GetComponent<CanvasGroup>().blocksRaycasts && entryPanel.GetComponent<Image>().color.a == 1f,
+            "activation uses an opaque input-blocking progress overlay");
+        bool partialProgress = false;
+        bool capturedLoading = false;
+        while (session.IsEntering)
+        {
+            partialProgress |= session.Progress > 0f && session.Progress < 1f;
+            if (!capturedLoading && session.Progress > 0.25f)
+            {
+                ScreenCapture.CaptureScreenshot("Temp/WorldSession/performance-loading.png");
+                capturedLoading = true;
+            }
+
+            yield return null;
+        }
+
+        Check(
+            partialProgress && Time.timeScale == 1f && entryPanel.GetComponent<CanvasGroup>().alpha == 0f,
+            "activation updates intermediate progress and restores physics and view when complete");
         Check(
             session.State == WorldSessionState.Playing && worldRoot.activeInHierarchy,
             "EnterPlay displays and enables the prepared world");
@@ -221,6 +244,20 @@ public static class WorldSessionPlayChecks
         Check(
             buildings.Buildings.All(building => building.IsSimulationActive),
             "entering play activates building simulation");
+        MeshFilter[] combinedVisuals = buildings.GetComponentsInChildren<MeshFilter>().Where(filter => filter.name == "World combined visual").ToArray();
+        Check(
+            combinedVisuals.Length > 0 && combinedVisuals.GroupBy(filter => filter.sharedMesh).Any(group => group.Count() > 1),
+            "world modules share combined visual meshes while retaining separate block entities");
+        Transform view = Camera.main.transform;
+        Vector3 originalCameraPosition = view.position;
+        Quaternion originalCameraRotation = view.rotation;
+        Vector3 buildingView = buildings.Buildings.First().transform.position + Vector3.up * 3f;
+        view.position = buildingView + new Vector3(-17f, 12f, -17f);
+        view.LookAt(buildingView);
+        yield return null;
+        ScreenCapture.CaptureScreenshot("Temp/WorldSession/performance-building.png");
+        yield return null;
+        view.SetPositionAndRotation(originalCameraPosition, originalCameraRotation);
         Check(
             Physics.RaycastAll(testPlayer.transform.position + Vector3.up * 4f, Vector3.down, 30f).Any(hit => hit.collider.transform.IsChildOf(world.transform)),
             "spawn has a loaded terrain collider underneath");
@@ -350,7 +387,7 @@ public static class WorldSessionPlayChecks
             "the production Main Play button enables the prepared world and player simulation");
         MainUIPanels.instance.PlayerDeath();
         Check(
-            !PlayManager.instance.playMode && session.State == WorldSessionState.Preparing && !worldRoot.activeInHierarchy && session.DormantBuildingCount == 0,
+            !PlayManager.instance.playMode && session.State == WorldSessionState.Preparing && !worldRoot.activeInHierarchy && session.DormantBuildingCount == 0 && Time.timeScale == 1f,
             "the production death path discards the exploration world and restores build preparation");
         while (session.State == WorldSessionState.Preparing)
         {

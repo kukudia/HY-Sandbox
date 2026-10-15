@@ -75,6 +75,39 @@ public static class TurretRuntimeChecks
                 report,
                 targetBody.GetAccumulatedForce() == initialForce && targetBody.GetAccumulatedTorque() == initialTorque,
                 "Laser queues no deferred physics impulse or torque");
+            MethodInfo refreshTarget = typeof(Turret).GetMethod("RefreshTarget", PrivateInstance);
+            owner.enabled = true;
+            enemy.enabled = true;
+            FieldInfo nextSearch = typeof(Turret).GetField("_nextSearchTime", PrivateInstance);
+            FieldInfo selectedTarget = typeof(Turret).GetField("_target", PrivateInstance);
+            laser.range = 0f;
+            refreshTarget.Invoke(laser, null);
+            float deadline = (float)nextSearch.GetValue(laser);
+            Check(
+                report,
+                deadline > Time.time && selectedTarget.GetValue(laser) == null,
+                "an empty turret search schedules the next scan instead of retrying every physics step");
+            laser.range = 45f;
+            refreshTarget.Invoke(laser, null);
+            Check(
+                report,
+                selectedTarget.GetValue(laser) == null && (float)nextSearch.GetValue(laser) == deadline,
+                "a newly reachable target waits until the configured empty-search interval");
+            nextSearch.SetValue(laser, Time.time - 1f);
+            refreshTarget.Invoke(laser, null);
+            Check(
+                report,
+                (ControlUnit)selectedTarget.GetValue(laser) == enemy,
+                "an expired search interval acquires the reachable enemy");
+            health.enabled = false;
+            refreshTarget.Invoke(laser, null);
+            Check(
+                report,
+                selectedTarget.GetValue(laser) == null,
+                "a disabled current damage target is invalidated immediately");
+            health.enabled = true;
+            owner.enabled = false;
+            enemy.enabled = false;
             laser.SetStarted(false);
             Check(report, !laser.GetComponent<Power>().IsWorkRequested, "Stopped turret releases power immediately");
             laser.gameObject.SetActive(false);

@@ -16,6 +16,14 @@ internal sealed class WorldDistanceView : IDisposable
     private Mesh ownedMesh;
     private int builtVersion = -1;
     private Vector2Int builtCenter;
+    private readonly List<Vector3> vertices = new List<Vector3>();
+    private readonly List<int> triangles = new List<int>();
+    private int baseVertexCount;
+    internal bool AllowRefresh
+    {
+        get; set;
+    }
+
     private Camera camera;
     private bool entered;
     private bool previousFog;
@@ -30,7 +38,13 @@ internal sealed class WorldDistanceView : IDisposable
     {
         get; set;
     }
-    public bool IsReady => ownedMesh != null && builtVersion == world.ColumnVersion && builtCenter == world.ColumnAt(Focus);
+    public bool IsReady => ownedMesh != null && builtVersion == world.ColumnVersion && builtCenter == CenterAtFocus();
+
+    private Vector2Int CenterAtFocus()
+    {
+        Vector2Int column = world.ColumnAt(Focus);
+        return new Vector2Int(Mathf.FloorToInt(column.x / 4f) * 4, Mathf.FloorToInt(column.y / 4f) * 4);
+    }
 
     internal WorldDistanceView(ProceduralVoxelWorld terrain, WorldGenerationSettings configuration)
     {
@@ -50,9 +64,9 @@ internal sealed class WorldDistanceView : IDisposable
     {
         while (true)
         {
-            if (!IsReady)
+            if (AllowRefresh && !IsReady)
             {
-                IEnumerator build = Rebuild(world.ColumnAt(Focus));
+                IEnumerator build = Rebuild(CenterAtFocus());
                 try
                 {
                     while (build.MoveNext())
@@ -76,28 +90,39 @@ internal sealed class WorldDistanceView : IDisposable
         var detailed = new HashSet<Vector2Int>(world.LoadedColumns);
         float span = settings.ChunkSize * settings.CellSize;
         // One extra band remains beyond full fog, including the camera's follow offset.
-        int radius = Mathf.CeilToInt(settings.ViewDistance / span) + 3;
-        int subdivisions = Mathf.Clamp(256 / (radius * 2 + 1), 1, 4);
+        int radius = Mathf.CeilToInt(settings.ViewDistance / span) + 6;
+        int subdivisions = 2;
         int width = (radius * 2 + 1) * subdivisions;
         float step = span / subdivisions;
         Vector3 origin = new Vector3((center.x - radius) * span, 0f, (center.y - radius) * span);
-        var vertices = new List<Vector3>((width + 1) * (width + 1));
-        var triangles = new List<int>(width * width * 6);
-        for (int z = 0; z <= width; z++)
+        // 地形采样只在关注点跨过四列时更新；近景变化只更新空洞索引，复用顶点与Mesh。
+        bool resample = ownedMesh == null || builtCenter != center;
+        if (resample)
         {
-            for (int x = 0; x <= width; x++)
+            vertices.Clear();
+            for (int z = 0; z <= width; z++)
             {
-                Vector3 point = origin + new Vector3(x * step, 0f, z * step);
-                point.y = world.SurfaceHeight(Mathf.FloorToInt(point.x / world.CellSize), Mathf.FloorToInt(point.z / world.CellSize));
-                vertices.Add(point);
+                for (int x = 0; x <= width; x++)
+                {
+                    Vector3 point = origin + new Vector3(x * step, 0f, z * step);
+                    point.y = world.SurfaceHeight(Mathf.FloorToInt(point.x / world.CellSize), Mathf.FloorToInt(point.z / world.CellSize));
+                    vertices.Add(point);
+                }
+
+                if (z % 8 == 0)
+                {
+                    yield return null;
+                }
             }
 
-            if (z % 12 == 0)
-            {
-                yield return null;
-            }
+            baseVertexCount = vertices.Count;
+        }
+        else if (vertices.Count > baseVertexCount)
+        {
+            vertices.RemoveRange(baseVertexCount, vertices.Count - baseVertexCount);
         }
 
+        triangles.Clear();
         for (int z = 0; z < width; z++)
         {
             for (int x = 0; x < width; x++)
@@ -144,22 +169,22 @@ internal sealed class WorldDistanceView : IDisposable
             }
         }
 
-        var mesh = new Mesh
+        if (ownedMesh == null)
         {
-            name = "World distant terrain",
-            indexFormat = IndexFormat.UInt32
-        };
-        mesh.SetVertices(vertices);
-        mesh.SetTriangles(triangles, 0);
-        mesh.RecalculateNormals();
-        mesh.RecalculateBounds();
-        filter.sharedMesh = mesh;
-        if (ownedMesh != null)
-        {
-            Object.Destroy(ownedMesh);
+            ownedMesh = new Mesh
+            {
+                name = "World distant terrain",
+                indexFormat = IndexFormat.UInt32
+            };
+            ownedMesh.MarkDynamic();
+            filter.sharedMesh = ownedMesh;
         }
 
-        ownedMesh = mesh;
+        ownedMesh.Clear();
+        ownedMesh.SetVertices(vertices);
+        ownedMesh.SetTriangles(triangles, 0);
+        ownedMesh.RecalculateNormals();
+        ownedMesh.RecalculateBounds();
         builtVersion = version;
         builtCenter = center;
     }

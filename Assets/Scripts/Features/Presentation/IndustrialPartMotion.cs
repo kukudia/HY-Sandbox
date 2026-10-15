@@ -27,6 +27,11 @@ public sealed class IndustrialPartMotion : MonoBehaviour
     private float emissionPulse = 0.18f;
     private MaterialPropertyBlock _propertyBlock;
     private Vector3 _bobOrigin;
+    internal bool ControlsVisual(Transform part, Renderer renderer)
+    {
+        return part == bobTarget || Array.IndexOf(spinTargets, part) >= 0 || Array.IndexOf(glowRenderers, renderer) >= 0;
+    }
+
     private void Awake()
     {
         CacheRuntimeState();

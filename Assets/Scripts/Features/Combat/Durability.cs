@@ -1,9 +1,13 @@
 // 职责：管理当前/最大耐久、损伤反馈及销毁通知。
 // 入口：ApplyDamage() / ApplyCollisionEnergy() / ProtectFromExplosionCollisions()。
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Durability : MonoBehaviour
 {
+    private static readonly HashSet<Durability> active = new HashSet<Durability>();
+    internal static IEnumerable<Durability> Active => active;
+
     [Header("耐久值设置")]
     public float maxDurability = 100f;
     [SerializeField, Min(0f)]
@@ -36,11 +40,6 @@ public class Durability : MonoBehaviour
     private MaterialPropertyBlock materialPropertyBlock;
     private StatusIcon _icon;
     private static readonly int HealthColorId = Shader.PropertyToID("_HealthColor");
-    // GUI 相关缓存
-    private GUIStyle labelStyle;
-    private Vector3 lastScreenPos;
-    private string durabilityText;
-    private bool isVisible;
     private void Awake()
     {
         _icon = GetComponent<StatusIcon>();
@@ -53,11 +52,17 @@ public class Durability : MonoBehaviour
 
     private void OnEnable()
     {
+        active.Add(this);
         LastAttacker = null;
         DestroyedByCollision = false;
         _nextCollisionDamage = _explosionProtectionUntil = 0f;
         currentDurability = maxDurability;
         UpdateDurablility(0);
+    }
+
+    private void OnDisable()
+    {
+        active.Remove(this);
     }
 
     public void ApplyDamage(float amount, ControlUnit attacker)
@@ -156,47 +161,5 @@ public class Durability : MonoBehaviour
         {
             _icon.CheckDurabilityStatus();
         }
-    }
-
-    private void LateUpdate()
-    {
-        if (!ShouldShowDebugLabel() || currentDurability >= maxDurability)
-        {
-            isVisible = false;
-            return;
-        }
-
-        Camera camera = PlayManager.instance != null && PlayManager.instance.mainCamera != null ? PlayManager.instance.mainCamera : Camera.main;
-        if (camera == null)
-        {
-            return;
-        }
-
-        lastScreenPos = camera.WorldToScreenPoint(transform.position);
-        isVisible = lastScreenPos.z > 0;
-        durabilityText = $"{currentDurability:F1}/{maxDurability}";
-    }
-
-    private void OnGUI()
-    {
-        if (!ShouldShowDebugLabel() || !isVisible || currentDurability >= maxDurability)
-        {
-            return;
-        }
-
-        if (labelStyle == null)
-        {
-            labelStyle = new GUIStyle(GUI.skin.label);
-        }
-
-        float healthRatio = currentDurability / maxDurability;
-        labelStyle.normal.textColor = Color.Lerp(Color.red, Color.green, healthRatio);
-        Rect labelRect = new Rect(lastScreenPos.x - 50, Screen.height - lastScreenPos.y - 10, 100, 20);
-        GUI.Label(labelRect, durabilityText, labelStyle);
-    }
-
-    private bool ShouldShowDebugLabel()
-    {
-        return debugLog && PlayManager.instance != null && PlayManager.instance.showLabel;
     }
 }

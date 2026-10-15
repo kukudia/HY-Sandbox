@@ -14,6 +14,7 @@ public sealed class WorldLoadingPanel : MonoBehaviour
     [SerializeField]
     private Button cancelButton;
     private WorldSessionManager session;
+    private bool shown;
     public void Bind(WorldSessionManager owner)
     {
         if (cancelButton != null)
@@ -23,6 +24,14 @@ public sealed class WorldLoadingPanel : MonoBehaviour
         }
 
         session = owner;
+        Image backdrop = GetComponent<Image>();
+        if (backdrop != null)
+        {
+            Color color = backdrop.color;
+            color.a = 1f;
+            backdrop.color = color;
+        }
+
         Show(false);
     }
 
@@ -41,10 +50,12 @@ public sealed class WorldLoadingPanel : MonoBehaviour
             cancelButton.interactable = session != null && session.State != WorldSessionState.Playing;
         }
 
-        if (visible)
+        if (visible && !shown)
         {
             transform.SetAsLastSibling();
         }
+
+        shown = visible;
     }
 
     private void Update()

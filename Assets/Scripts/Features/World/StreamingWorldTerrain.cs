@@ -5,7 +5,7 @@ using UnityEngine;
 
 public sealed class StreamingWorldTerrain
 {
-    private const int MaximumCachedHeights = 8192;
+    private const int MaximumCachedHeights = 32768;
     private readonly int chunkSize;
     private readonly float cellSize;
     private readonly int worldHeight;
@@ -16,6 +16,7 @@ public sealed class StreamingWorldTerrain
     private readonly int seed;
     private readonly Vector2 noiseOffset;
     private readonly Dictionary<Vector2Int, int> heights = new Dictionary<Vector2Int, int>();
+    private readonly Queue<Vector2Int> heightOrder = new Queue<Vector2Int>();
     public Vector3Int Minimum => new Vector3Int(-worldRadiusInChunks * chunkSize, 0, -worldRadiusInChunks * chunkSize);
     public Vector3Int Maximum => new Vector3Int((worldRadiusInChunks + 1) * chunkSize, worldHeight, (worldRadiusInChunks + 1) * chunkSize);
     public Vector3 SpawnLocalPosition => new Vector3(chunkSize * 0.5f, Height(chunkSize / 2, chunkSize / 2) + 1f, chunkSize * 0.5f) * cellSize;
@@ -112,10 +113,11 @@ public sealed class StreamingWorldTerrain
         height = Mathf.Clamp(Mathf.RoundToInt(value), 2, worldHeight - 5);
         if (heights.Count >= MaximumCachedHeights)
         {
-            heights.Clear();
+            heights.Remove(heightOrder.Dequeue());
         }
 
         heights.Add(key, height);
+        heightOrder.Enqueue(key);
         return height;
     }
 
