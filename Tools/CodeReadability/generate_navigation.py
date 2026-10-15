@@ -132,6 +132,41 @@ def main():
         ],
     )
     graph(
+        "开发者建筑蓝图编辑",
+        "源码推导：Ctrl+Alt+F 进入/退出建筑，Ctrl+Alt+E 切换敌人。建筑使用独立目录，加载父对象后由注入回调创建底座；底座不参与方块存档和操作栈。尺寸 UI 先保存元数据，再生成向上连接点并刷新已有连接，块坐标不变。",
+        {
+            "A": "InputManager.Update",
+            "B": "BuildManager.ToggleBuildingBlueprintBuildMode",
+            "C": "BuildManager.EnterBuildingBlueprintBuildMode",
+            "D": "SaveManager.CreateNewBuildingBlueprint",
+            "E": "BuildManager.LoadAllBlocks",
+            "F": "BlueprintLoader.Load",
+            "G": "BuildManager.PrepareBuildingFoundation",
+            "H": "BuildingFoundation.Configure",
+            "I": "BuildingEditorPanel.ApplySize",
+            "J": "BuildManager.ResizeBuildingFoundation",
+            "K": "SaveManager.SaveBuildingFoundation",
+            "L": "Block.CheckConnection",
+            "M": "BuildManager.ExitDeveloperBlueprintBuildMode",
+            "N": "SaveManager.LoadSave",
+        },
+        [
+            "A -->|Ctrl+Alt+F| B",
+            "B -->|进入| C",
+            "C --> D",
+            "C --> E",
+            "E --> F",
+            "F -.->|prepareParent 回调| G",
+            "G --> H",
+            "I --> J",
+            "J -->|先写入| K",
+            "J -->|写入成功| H",
+            "J -->|刷新所有块| L",
+            "B -->|再次按下退出| M",
+            "M --> N",
+        ],
+    )
+    graph(
         "蓝图恢复、统计和取消",
         "Load 先验证文件，再替换父对象；协程按请求版本检查所有权。统计事件指向显示。取消使旧版本失效；缺资源移出缓存和JSON。",
         {

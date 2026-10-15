@@ -1,5 +1,14 @@
 # HY-Sandbox 开发与审查入口
 
+## 2026-10-15 开发者建筑蓝图编辑
+
+- 开发者模式（Unity Editor / Development Build）下，`Ctrl+Alt+E` 进入/退出敌人编辑；`Ctrl+Alt+F` 进入/退出建筑编辑，支持左右 Ctrl/Alt。两种蓝图模式可直接互切；相同快捷键再次按下返回玩家存档。普通 F 聚焦不会同时触发。
+- 建筑蓝图保存到 `Application.persistentDataPath/BuildingBlueprints`，列表、新建、复制、重命名、删除与文件大小均使用独立目录。底座尺寸以 `foundation.width/length` 跟随 JSON 保存；旧存档缺少该字段仍可读取。建筑不生成/允许放置驾驶舱，编辑时隐藏玩家 Play 入口。
+- 底座源为 `Assets/Resources/BuildingEditor/Foundation.prefab`，默认 4×4、每格 1m，薄平面顶部为世界 y=0，每格中心一个向上 Connector。固定网格左下角为 (-2, 0, -2)，右下角尺寸面板支持 1–64 的整数长宽，点击 Apply size 自动保存。尺寸变化保留所有现有方块及坐标；缩小可使边缘方块失去底座支撑，扩大后重新检测连接，不删除方块。尺寸调整会清空当前撤销历史。
+- 底座不加入普通块存档或撤销栈，禁止选择、删除、移动和旋转；现有放置预览、连接提示及连接检测可直接使用。薄底座碰撞采用与普通块相同的面内缩间隙；实例恢复使用世界坐标，不继承父 Prefab 的已有偏移。加载替换时先停用旧父对象，再延迟销毁，避免同步恢复误连旧碰撞体。
+- 尺寸面板源为 `Assets/Resources/BuildingEditor/EditorPanel.prefab`，与底座、网格材质/贴图均为真实可编辑资产。`Tools > Building Editor > Create missing editable assets` 只生成缺少的资产，保留手动调整；`Run isolated Play Mode validation` 使用随机 Temp 目录回归，不改用户蓝图。函数图见 [开发者建筑蓝图编辑](Docs/RuntimeFlow.md)。
+- 验证：Unity 6000.3.11f1 导入/编译通过；建筑专项 35 项及既有 BuildPalette 102 项 Play Mode 检查通过，实际画面已检查。203 份自有脚本格式/函数图、dotnet build（0错误、4个既有警告）、diff 检查通过。完整架构探针完成 39 项加载检查后停在既有悬浮控制时序断言：该探针仍要求控制器回调立即清零实际推力，而当前 HoverThruster.FixedUpdate 才执行输出更新；本任务未改动飞行生产代码，不将此完整探针列为通过。证据见 [建筑验证](Docs/Validation/2026-10-15-building-editor.json)。未覆盖正式 Player 构建、64×64 大底座性能和建筑运行时生成/战斗。 发布隔离工作区基于远程 main，184 份脚本检查通过；临时 csproj 引用本机现有 Library/被忽略第三方源码后静态编译同样 0 错误、4 警告，不提交这些依赖或临时配置。
+
 最近整理：2026-10-11；Unity 6000.3.11f1；URP；Input System；运行时类型保持全局命名空间。
 
 2026-10-14 第三人称镜头环境碰撞：`CameraController` 在第三人称目标点到期望相机位置之间使用可复用的 `SphereCastNonAlloc`，忽略玩家自身碰撞体，在墙体/方块前收回相机并保留碰撞间隙；平滑恢复阶段再次校正，避免相机穿过障碍。碰撞层、半径和间隙均可在 Inspector 调整。墙体收回、自身过滤和障碍移除后恢复已通过隔离Play检查；未完成玩家手动视觉/手感验收。

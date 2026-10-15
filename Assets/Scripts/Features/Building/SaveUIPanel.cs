@@ -1,4 +1,4 @@
-// 职责：展示玩家/敌方蓝图存档列表并绑定选择动作。
+// 职责：展示玩家/敌方/建筑蓝图存档列表并绑定选择动作。
 // 入口：RefreshList()。
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,7 +22,16 @@ public class SaveUIPanel : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        if (BuildManager.instance.IsEditingEnemyBlueprint)
+        if (BuildManager.instance.IsEditingBuildingBlueprint)
+        {
+            SaveManager.instance.GetAllBuildingBlueprintNames();
+            foreach (string blueprint in SaveManager.instance.buildingBlueprints)
+            {
+                GameObject obj = Instantiate(savePrefab, listParent);
+                ConfigureSaveItem(obj, blueprint, () => SaveManager.instance.LoadBuildingBlueprint(blueprint));
+            }
+        }
+        else if (BuildManager.instance.IsEditingEnemyBlueprint)
         {
             Debug.Log("Refreshing enemy blueprint list...");
             SaveManager.instance.GetAllEnemyBlueprintNames();

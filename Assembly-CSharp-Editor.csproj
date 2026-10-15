@@ -62,6 +62,8 @@
     <Analyzer Include="D:\git_projects\Unity\HY-Sandbox\Library\PackageCache\com.unity.pipeline@ab05e9cd7f74\Runtime\Analyzers\IlInterpreterAnalyzer.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Editor\Building\BuildingEditorAssets.cs" />
+    <Compile Include="Assets\Editor\Building\BuildingEditorPlayProbe.cs" />
     <Compile Include="Assets\Editor\Architecture\HoverControlPlayChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\NativeVfxPlaybackProbe.cs" />
     <Compile Include="Assets\Editor\Building\BlockCsvPostprocessor.cs" />

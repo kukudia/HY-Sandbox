@@ -59,7 +59,7 @@ internal sealed class BuildManipulation
     public void Poll(Block block, BuildType type)
     {
         selectedBlock = block;
-        if (block == null || mainCamera == null)
+        if (block == null || mainCamera == null || block.TryGetComponent(out BuildingFoundation _))
         {
             return;
         }
@@ -80,7 +80,7 @@ internal sealed class BuildManipulation
     public bool TryBeginDrag(RaycastHit hit, Block block, BuildType type)
     {
         selectedBlock = block;
-        if (block == null)
+        if (block == null || block.TryGetComponent(out BuildingFoundation _))
         {
             return false;
         }
