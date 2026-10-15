@@ -100,7 +100,7 @@ flowchart TD
 
 ## 启动与建造/游玩会话
 
-引擎自动调用入口独立；按按钮进入业务主链。返回建造前先保存货仓；命名存档丢失、路径解析/读取/替换失败均拒绝退出并保留当前会话，成功后才清理。选择方块资源进入 BuildType.Build；InputManager 切换 lockView 仅取消拖拽/预览并隐藏操作轴，保留选中方块、高亮、BuildType 与资源，重锁恢复操作轴。工具按钮按BuildType着色，Build高亮当前资源条目；焦点不改变模式色。
+引擎自动调用入口独立；按按钮进入业务主链。返回建造前先保存货仓；命名存档丢失、路径解析/读取/替换失败均拒绝退出并保留当前会话，失败原因由可编辑ReturnStatusPanel持续显示，不挡操作；成功后清除提示再清理。选择方块资源进入 BuildType.Build；InputManager 切换 lockView 仅取消拖拽/预览并隐藏操作轴，保留选中方块、高亮、BuildType 与资源，重锁恢复操作轴。工具按钮按BuildType着色，Build高亮当前资源条目；焦点不改变模式色。
 
 ```mermaid
 flowchart TD
@@ -115,7 +115,7 @@ flowchart TD
     E["BuildManager.LoadAllBlocks()"]
     click E "../Assets/Scripts/Features/Building/BuildManager.cs#L563" "打开源码"
     F["MainUIPanels.PlayStart()"]
-    click F "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L226" "打开源码"
+    click F "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L230" "打开源码"
     G["PlayManager.CanStartPlay()"]
     click G "../Assets/Scripts/Features/Simulation/PlayManager.cs#L133" "打开源码"
     H["PlayManager.PlayStart()"]
@@ -125,21 +125,21 @@ flowchart TD
     J["EnemySpawner.BeginPlayMode()"]
     click J "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L43" "打开源码"
     K["MainUIPanels.PlayEnd()"]
-    click K "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L263" "打开源码"
+    click K "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L267" "打开源码"
     L["CargoPersistence.SaveReturnCargo()"]
     click L "../Assets/Scripts/Features/Salvage/CargoPersistence.cs#L11" "打开源码"
     M["PlayManager.PlayEnd()"]
     click M "../Assets/Scripts/Features/Simulation/PlayManager.cs#L266" "打开源码"
     N["MainUIPanels.PlayerDeath()"]
-    click N "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L282" "打开源码"
+    click N "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L288" "打开源码"
     O["WorldSessionManager.RequestPlay()"]
     click O "../Assets/Scripts/Features/World/WorldSessionManager.cs#L169" "打开源码"
     P["WorldSessionManager.CompletePendingPlay()"]
     click P "../Assets/Scripts/Features/World/WorldSessionManager.cs#L192" "打开源码"
     Q["MainUIPanels.CompletePlayStart()"]
-    click Q "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L243" "打开源码"
+    click Q "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L247" "打开源码"
     R["MainUIPanels.CompletePlayEnd()"]
-    click R "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L273" "打开源码"
+    click R "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L278" "打开源码"
     S["WorldSessionManager.EndSession()"]
     click S "../Assets/Scripts/Features/World/WorldSessionManager.cs#L301" "打开源码"
     A --> B
@@ -173,7 +173,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|LoadSave -->
 - [BuildManager.LoadAllBlocks](../Assets/Scripts/Features/Building/BuildManager.cs#L563)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|LoadAllBlocks -->
-- [MainUIPanels.PlayStart](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L226)
+- [MainUIPanels.PlayStart](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L230)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayStart -->
 - [PlayManager.CanStartPlay](../Assets/Scripts/Features/Simulation/PlayManager.cs#L133)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|CanStartPlay -->
@@ -183,21 +183,21 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
 - [EnemySpawner.BeginPlayMode](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L43)
 <!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|BeginPlayMode -->
-- [MainUIPanels.PlayEnd](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L263)
+- [MainUIPanels.PlayEnd](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L267)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayEnd -->
 - [CargoPersistence.SaveReturnCargo](../Assets/Scripts/Features/Salvage/CargoPersistence.cs#L11)
 <!-- source: Assets/Scripts/Features/Salvage/CargoPersistence.cs|SaveReturnCargo -->
 - [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L266)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
-- [MainUIPanels.PlayerDeath](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L282)
+- [MainUIPanels.PlayerDeath](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L288)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayerDeath -->
 - [WorldSessionManager.RequestPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L169)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|RequestPlay -->
 - [WorldSessionManager.CompletePendingPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L192)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|CompletePendingPlay -->
-- [MainUIPanels.CompletePlayStart](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L243)
+- [MainUIPanels.CompletePlayStart](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L247)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|CompletePlayStart -->
-- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L273)
+- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L278)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|CompletePlayEnd -->
 - [WorldSessionManager.EndSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L301)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EndSession -->
@@ -893,6 +893,49 @@ flowchart TD
 - [BuildingRuntime.DestroyBlock](../Assets/Scripts/Features/World/BuildingRuntime.cs#L195)
 <!-- source: Assets/Scripts/Features/World/BuildingRuntime.cs|DestroyBlock -->
 
+## 返航持久化与失败提示
+
+源码推导：UI通过带failureReason的SaveReturnCargo重载保存货仓；原bool重载仍供已有调用者使用。失败保留会话并持续显示可操作原因，CanvasGroup和图形不阻挡输入；成功才清除提示并退出/重载。状态栏由Editor工具保存为Main可编辑对象，不在运行时动态生成。
+
+```mermaid
+flowchart TD
+    A["MainUIPanels.PlayEnd()"]
+    click A "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L267" "打开源码"
+    B["CargoPersistence.SaveReturnCargo()"]
+    click B "../Assets/Scripts/Features/Salvage/CargoPersistence.cs#L11" "打开源码"
+    C["ReturnStatusPanel.ShowFailure()"]
+    click C "../Assets/Scripts/Features/Presentation/ReturnStatusPanel.cs#L20" "打开源码"
+    D["MainUIPanels.CompletePlayEnd()"]
+    click D "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L278" "打开源码"
+    E["ReturnStatusPanel.Clear()"]
+    click E "../Assets/Scripts/Features/Presentation/ReturnStatusPanel.cs#L37" "打开源码"
+    F["PlayManager.PlayEnd()"]
+    click F "../Assets/Scripts/Features/Simulation/PlayManager.cs#L266" "打开源码"
+    G["GameManager.Init()"]
+    click G "../Assets/Scripts/Features/Bootstrap/GameManager.cs#L20" "打开源码"
+    A --> B
+    A -->|失败：保持会话| C
+    A -->|成功| D
+    D --> E
+    D --> F
+    F -->|清理后| G
+```
+
+- [MainUIPanels.PlayEnd](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L267)
+<!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayEnd -->
+- [CargoPersistence.SaveReturnCargo](../Assets/Scripts/Features/Salvage/CargoPersistence.cs#L11)
+<!-- source: Assets/Scripts/Features/Salvage/CargoPersistence.cs|SaveReturnCargo -->
+- [ReturnStatusPanel.ShowFailure](../Assets/Scripts/Features/Presentation/ReturnStatusPanel.cs#L20)
+<!-- source: Assets/Scripts/Features/Presentation/ReturnStatusPanel.cs|ShowFailure -->
+- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L278)
+<!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|CompletePlayEnd -->
+- [ReturnStatusPanel.Clear](../Assets/Scripts/Features/Presentation/ReturnStatusPanel.cs#L37)
+<!-- source: Assets/Scripts/Features/Presentation/ReturnStatusPanel.cs|Clear -->
+- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L266)
+<!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
+- [GameManager.Init](../Assets/Scripts/Features/Bootstrap/GameManager.cs#L20)
+<!-- source: Assets/Scripts/Features/Bootstrap/GameManager.cs|Init -->
+
 ## 维修、回收和移动 Home 返航
 
 机器人使用 Home 实时停靠点与刚体点速度；任务与返航均从机体做净空检测，持续绕障并在停滞后脱困。取消任务释放认领。
@@ -1091,13 +1134,13 @@ flowchart TD
     L["CameraController.SmoothFocusRoutine()"]
     click L "../Assets/Scripts/Features/Presentation/CameraController.cs#L402" "打开源码"
     M["MainUIPanels.ShowCreatePanel()"]
-    click M "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L86" "打开源码"
+    click M "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L90" "打开源码"
     N["PanelTransitions.Show()"]
     click N "../Assets/Scripts/Features/Presentation/PanelTransitions.cs#L29" "打开源码"
     O["PanelTransitions.Fade()"]
     click O "../Assets/Scripts/Features/Presentation/PanelTransitions.cs#L53" "打开源码"
     P["MainUIPanels.OnDisable()"]
-    click P "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L72" "打开源码"
+    click P "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L76" "打开源码"
     Q["PanelTransitions.CancelAll()"]
     click Q "../Assets/Scripts/Features/Presentation/PanelTransitions.cs#L16" "打开源码"
     R["CameraController.LateUpdate()"]
@@ -1145,13 +1188,13 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/CameraFraming.cs|TryGetFocusPose -->
 - [CameraController.SmoothFocusRoutine](../Assets/Scripts/Features/Presentation/CameraController.cs#L402)
 <!-- source: Assets/Scripts/Features/Presentation/CameraController.cs|SmoothFocusRoutine -->
-- [MainUIPanels.ShowCreatePanel](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L86)
+- [MainUIPanels.ShowCreatePanel](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L90)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|ShowCreatePanel -->
 - [PanelTransitions.Show](../Assets/Scripts/Features/Presentation/PanelTransitions.cs#L29)
 <!-- source: Assets/Scripts/Features/Presentation/PanelTransitions.cs|Show -->
 - [PanelTransitions.Fade](../Assets/Scripts/Features/Presentation/PanelTransitions.cs#L53)
 <!-- source: Assets/Scripts/Features/Presentation/PanelTransitions.cs|Fade -->
-- [MainUIPanels.OnDisable](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L72)
+- [MainUIPanels.OnDisable](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L76)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|OnDisable -->
 - [PanelTransitions.CancelAll](../Assets/Scripts/Features/Presentation/PanelTransitions.cs#L16)
 <!-- source: Assets/Scripts/Features/Presentation/PanelTransitions.cs|CancelAll -->
@@ -1185,7 +1228,7 @@ flowchart TD
     H["WorldSessionManager.CancelPlayRequest()"]
     click H "../Assets/Scripts/Features/World/WorldSessionManager.cs#L186" "打开源码"
     I["MainUIPanels.CompletePlayStart()"]
-    click I "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L243" "打开源码"
+    click I "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L247" "打开源码"
     J["PlayManager.PlayStart()"]
     click J "../Assets/Scripts/Features/Simulation/PlayManager.cs#L88" "打开源码"
     K["WorldSessionManager.EnterPlay()"]
@@ -1201,7 +1244,7 @@ flowchart TD
     P["WorldSessionManager.Update()"]
     click P "../Assets/Scripts/Features/World/WorldSessionManager.cs#L410" "打开源码"
     Q["MainUIPanels.CompletePlayEnd()"]
-    click Q "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L273" "打开源码"
+    click Q "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L278" "打开源码"
     R["WorldSessionManager.OnDisable()"]
     click R "../Assets/Scripts/Features/World/WorldSessionManager.cs#L520" "打开源码"
     S["WorldBuildingManager.ClearSession()"]
@@ -1273,7 +1316,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|RequestPlay -->
 - [WorldSessionManager.CancelPlayRequest](../Assets/Scripts/Features/World/WorldSessionManager.cs#L186)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|CancelPlayRequest -->
-- [MainUIPanels.CompletePlayStart](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L243)
+- [MainUIPanels.CompletePlayStart](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L247)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|CompletePlayStart -->
 - [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L88)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayStart -->
@@ -1289,7 +1332,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Fail -->
 - [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L410)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Update -->
-- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L273)
+- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L278)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|CompletePlayEnd -->
 - [WorldSessionManager.OnDisable](../Assets/Scripts/Features/World/WorldSessionManager.cs#L520)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|OnDisable -->
@@ -2219,9 +2262,9 @@ flowchart TD
     E["WorldPlayerSmokeChecks.Scenario()"]
     click E "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L177" "打开源码"
     F["MainUIPanels.PlayStart()"]
-    click F "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L226" "打开源码"
+    click F "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L230" "打开源码"
     G["MainUIPanels.CompletePlayEnd()"]
-    click G "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L273" "打开源码"
+    click G "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L278" "打开源码"
     H["WorldPlayerSmokeChecks.Next()"]
     click H "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L482" "打开源码"
     I["WorldPlayerSmokeChecks.Save()"]
@@ -2273,9 +2316,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Update -->
 - [WorldPlayerSmokeChecks.Scenario](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L177)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Scenario -->
-- [MainUIPanels.PlayStart](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L226)
+- [MainUIPanels.PlayStart](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L230)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayStart -->
-- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L273)
+- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L278)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|CompletePlayEnd -->
 - [WorldPlayerSmokeChecks.Next](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L482)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Next -->

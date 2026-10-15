@@ -1,0 +1,21 @@
+{
+    "checks": [
+        "missing named blueprint refuses return and retains real session displays retry guidance",
+        "missing named blueprint refuses return and retains real session",
+        "malformed blueprint refuses return without overwriting source displays retry guidance",
+        "malformed blueprint refuses return without overwriting source",
+        "malformed file remains unchanged",
+        "locked blueprint refuses return and retains real session displays retry guidance",
+        "locked blueprint refuses return and retains real session",
+        "locked file remains unchanged",
+        "file-path resolution failure is contained by return boundary displays retry guidance",
+        "file-path resolution failure is contained by return boundary",
+        "valid isolated return writes successfully",
+        "atomic backup preserves original isolated blueprint",
+        "return preserves every original module and geometry",
+        "return does not leave temporary write file",
+        "failure status is visible without blocking player controls",
+        "status can clear without altering current session"
+    ],
+    "errors": []
+}

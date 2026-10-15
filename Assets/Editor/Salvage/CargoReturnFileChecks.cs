@@ -71,6 +71,16 @@ public static class CargoReturnFileChecks
             BlockDataList original = JsonUtility.FromJson<BlockDataList>(source);
             Check(report, "return preserves every original module and geometry", SameGeometry(original, returned));
             Check(report, "return does not leave temporary write file", !File.Exists(path + ".cargo.tmp"));
+            ReturnStatusPanel status = MainUIPanels.instance.ReturnStatus;
+            Check(
+                report,
+                "failure status is visible without blocking player controls",
+                status != null && status.IsVisible && !status.GetComponent<CanvasGroup>().blocksRaycasts);
+            status.Clear();
+            Check(
+                report,
+                "status can clear without altering current session",
+                !status.IsVisible && PlayManager.instance.playMode);
         }
         catch (Exception exception)
         {
@@ -102,6 +112,11 @@ public static class CargoReturnFileChecks
         try
         {
             MainUIPanels.instance.PlayEnd();
+            ReturnStatusPanel status = MainUIPanels.instance.ReturnStatus;
+            Check(
+                report,
+                label + " displays retry guidance",
+                status != null && status.IsVisible && status.Message.Contains("retry Return") && status.Message.Contains("session is still open"));
             Check(
                 report,
                 label,

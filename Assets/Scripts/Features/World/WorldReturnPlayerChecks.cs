@@ -75,7 +75,11 @@ internal static class WorldReturnPlayerChecks
                 hold != null && hold.Owner == player && player.HasValidCockpit,
                 "return fixture loads connected cockpit and cargo hold through production loader");
             hold.RestoreContents(new List<CargoItem> { new CargoItem { kind = CargoKind.SpecialPart, resourcePath = "Blocks/UniversalThruster", amount = 1 } });
+            MainUIPanels.instance.ReturnStatus.ShowFailure("Temporary validation notice.");
             MainUIPanels.instance.PlayEnd();
+            check(
+                !MainUIPanels.instance.ReturnStatus.IsVisible,
+                "successful UI return clears previous failure notice");
             yield return null;
             check(
                 !PlayManager.instance.playMode && world.State == WorldSessionState.Preparing,

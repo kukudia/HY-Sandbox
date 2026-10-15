@@ -10,6 +10,12 @@ public static class CargoPersistence
     // Preserve blueprint geometry; only surviving player holds bring contents back to build mode.
     public static bool SaveReturnCargo(bool survived)
     {
+        return SaveReturnCargo(survived, out _);
+    }
+
+    public static bool SaveReturnCargo(bool survived, out string failureReason)
+    {
+        failureReason = string.Empty;
         if (SaveManager.instance == null || string.IsNullOrWhiteSpace(SaveManager.instance.currentSaveName))
         {
             return true;
@@ -62,6 +68,7 @@ public static class CargoPersistence
         }
         catch (Exception exception)
         {
+            failureReason = exception is FileNotFoundException ? "The selected save is missing. Restore it, then retry Return." : exception is ArgumentException || exception is InvalidDataException ? "The selected save is damaged. Restore a valid copy, then retry Return." : "The save could not be written. Check available space, file access or locks, then retry Return.";
             Debug.LogError("Cargo return could not be saved; current session kept: " + exception.Message);
             return false;
         }

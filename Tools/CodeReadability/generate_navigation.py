@@ -99,7 +99,7 @@ def main():
     )
     graph(
         "启动与建造/游玩会话",
-        "引擎自动调用入口独立；按按钮进入业务主链。返回建造前先保存货仓；命名存档丢失、路径解析/读取/替换失败均拒绝退出并保留当前会话，成功后才清理。选择方块资源进入 BuildType.Build；InputManager 切换 lockView 仅取消拖拽/预览并隐藏操作轴，保留选中方块、高亮、BuildType 与资源，重锁恢复操作轴。工具按钮按BuildType着色，Build高亮当前资源条目；焦点不改变模式色。",
+        "引擎自动调用入口独立；按按钮进入业务主链。返回建造前先保存货仓；命名存档丢失、路径解析/读取/替换失败均拒绝退出并保留当前会话，失败原因由可编辑ReturnStatusPanel持续显示，不挡操作；成功后清除提示再清理。选择方块资源进入 BuildType.Build；InputManager 切换 lockView 仅取消拖拽/预览并隐藏操作轴，保留选中方块、高亮、BuildType 与资源，重锁恢复操作轴。工具按钮按BuildType着色，Build高亮当前资源条目；焦点不改变模式色。",
         {
             "A": "GameManager.Start",
             "B": "GameManager.Init",
@@ -439,6 +439,27 @@ def main():
             "H --> O",
             "H -->|敌方驾驶舱| M",
             "M -.->|协程等待并复核| N",
+        ],
+    )
+    graph(
+        "返航持久化与失败提示",
+        "源码推导：UI通过带failureReason的SaveReturnCargo重载保存货仓；原bool重载仍供已有调用者使用。失败保留会话并持续显示可操作原因，CanvasGroup和图形不阻挡输入；成功才清除提示并退出/重载。状态栏由Editor工具保存为Main可编辑对象，不在运行时动态生成。",
+        {
+            "A": "MainUIPanels.PlayEnd",
+            "B": "CargoPersistence.SaveReturnCargo",
+            "C": "ReturnStatusPanel.ShowFailure",
+            "D": "MainUIPanels.CompletePlayEnd",
+            "E": "ReturnStatusPanel.Clear",
+            "F": "PlayManager.PlayEnd",
+            "G": "GameManager.Init",
+        },
+        [
+            "A --> B",
+            "A -->|失败：保持会话| C",
+            "A -->|成功| D",
+            "D --> E",
+            "D --> F",
+            "F -->|清理后| G",
         ],
     )
     graph(

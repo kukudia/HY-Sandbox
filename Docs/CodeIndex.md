@@ -650,6 +650,14 @@
 | NativeVfxPlaybackProbe | [`void Tick()`](../Assets/Editor/Presentation/NativeVfxPlaybackProbe.cs#L225) | private static |
 | NativeVfxPlaybackProbe | [`void Finish()`](../Assets/Editor/Presentation/NativeVfxPlaybackProbe.cs#L315) | private static |
 
+## Assets/Editor/Presentation/ReturnStatusSetup.cs
+
+// 职责：只在Main创建/绑定可编辑返航失败状态栏，不重排既有面板。 // 入口：Apply()；保存真实场景，保留已有状态栏的布局与样式。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| ReturnStatusSetup | [`void Apply()`](../Assets/Editor/Presentation/ReturnStatusSetup.cs#L11) | public static |
+
 ## Assets/Editor/Presentation/SceneCameraPreviewSync.cs
 
 // 职责：同步 Scene 视图与游戏镜头预览，供编辑器检查。 // 入口：Toggle() / SyncNow()。 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
@@ -695,9 +703,9 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | CargoReturnFileChecks | [`string Run()`](../Assets/Editor/Salvage/CargoReturnFileChecks.cs#L19) | public static |
-| CargoReturnFileChecks | [`void ExpectRetained(Report report, string label, Transform player, WorldSessionManager session)`](../Assets/Editor/Salvage/CargoReturnFileChecks.cs#L91) | private static |
-| CargoReturnFileChecks | [`bool SameGeometry(BlockDataList before, BlockDataList after)`](../Assets/Editor/Salvage/CargoReturnFileChecks.cs#L116) | private static |
-| CargoReturnFileChecks | [`void Check(Report report, string label, bool passed)`](../Assets/Editor/Salvage/CargoReturnFileChecks.cs#L131) | private static |
+| CargoReturnFileChecks | [`void ExpectRetained(Report report, string label, Transform player, WorldSessionManager session)`](../Assets/Editor/Salvage/CargoReturnFileChecks.cs#L101) | private static |
+| CargoReturnFileChecks | [`bool SameGeometry(BlockDataList before, BlockDataList after)`](../Assets/Editor/Salvage/CargoReturnFileChecks.cs#L131) | private static |
+| CargoReturnFileChecks | [`void Check(Report report, string label, bool passed)`](../Assets/Editor/Salvage/CargoReturnFileChecks.cs#L146) | private static |
 
 ## Assets/Editor/Salvage/SalvageAssetBaker.cs
 
@@ -2399,30 +2407,30 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| MainUIPanels | [`void Awake()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L43) | private |
-| MainUIPanels | [`void Update()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L49) | private |
-| MainUIPanels | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L72) | private |
-| MainUIPanels | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L77) | private |
-| MainUIPanels | [`void ShowCreatePanel()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L86) | public |
-| MainUIPanels | [`void ShowRenamePanel(string save)`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L101) | public |
-| MainUIPanels | [`void HideCreatePanel()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L116) | public |
-| MainUIPanels | [`void SetInputPlaceholder(string text)`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L126) | private |
-| MainUIPanels | [`void ShowDeletePanel(string save)`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L135) | public |
-| MainUIPanels | [`void HideDeletePanel()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L151) | public |
-| MainUIPanels | [`void OnConfirmCreate()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L163) | public |
-| MainUIPanels | [`void OnConfirmDelete(string save)`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L203) | private |
-| MainUIPanels | [`void PlayStart()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L226) | public |
-| MainUIPanels | [`void CompletePlayStart()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L243) | public |
-| MainUIPanels | [`void PlayEnd()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L263) | public |
-| MainUIPanels | [`void CompletePlayEnd()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L273) | public |
-| MainUIPanels | [`void PlayerDeath()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L282) | public |
-| MainUIPanels | [`void EnterEnemyBlueprintBuildMode()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L311) | public |
-| MainUIPanels | [`void ExitEnemyBlueprintBuildMode()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L316) | public |
-| MainUIPanels | [`void RefreshBlueprintEditorMode()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L321) | public |
-| MainUIPanels | [`void RefreshBuildingEditorPanel()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L340) | public |
-| MainUIPanels | [`void UpdateHealthBar(GameObject obj, float currentHealth, float maxHealth)`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L345) | public |
-| MainUIPanels | [`void SetHealthBar(float currentHealth, float maxHealth)`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L360) | private |
-| MainUIPanels | [`void SetCockpitHealth(Cockpit cockpit)`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L376) | private |
+| MainUIPanels | [`void Awake()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L47) | private |
+| MainUIPanels | [`void Update()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L53) | private |
+| MainUIPanels | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L76) | private |
+| MainUIPanels | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L81) | private |
+| MainUIPanels | [`void ShowCreatePanel()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L90) | public |
+| MainUIPanels | [`void ShowRenamePanel(string save)`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L105) | public |
+| MainUIPanels | [`void HideCreatePanel()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L120) | public |
+| MainUIPanels | [`void SetInputPlaceholder(string text)`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L130) | private |
+| MainUIPanels | [`void ShowDeletePanel(string save)`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L139) | public |
+| MainUIPanels | [`void HideDeletePanel()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L155) | public |
+| MainUIPanels | [`void OnConfirmCreate()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L167) | public |
+| MainUIPanels | [`void OnConfirmDelete(string save)`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L207) | private |
+| MainUIPanels | [`void PlayStart()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L230) | public |
+| MainUIPanels | [`void CompletePlayStart()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L247) | public |
+| MainUIPanels | [`void PlayEnd()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L267) | public |
+| MainUIPanels | [`void CompletePlayEnd()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L278) | public |
+| MainUIPanels | [`void PlayerDeath()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L288) | public |
+| MainUIPanels | [`void EnterEnemyBlueprintBuildMode()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L317) | public |
+| MainUIPanels | [`void ExitEnemyBlueprintBuildMode()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L322) | public |
+| MainUIPanels | [`void RefreshBlueprintEditorMode()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L327) | public |
+| MainUIPanels | [`void RefreshBuildingEditorPanel()`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L346) | public |
+| MainUIPanels | [`void UpdateHealthBar(GameObject obj, float currentHealth, float maxHealth)`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L351) | public |
+| MainUIPanels | [`void SetHealthBar(float currentHealth, float maxHealth)`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L366) | private |
+| MainUIPanels | [`void SetCockpitHealth(Cockpit cockpit)`](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L382) | private |
 
 ## Assets/Scripts/Features/Presentation/MeteorLightToken.cs
 
@@ -2453,6 +2461,16 @@
 | PanelTransitions | [`void Show(GameObject panel, bool show, float duration)`](../Assets/Scripts/Features/Presentation/PanelTransitions.cs#L29) | public |
 | PanelTransitions | [`IEnumerator Fade(GameObject panel, bool show, float duration)`](../Assets/Scripts/Features/Presentation/PanelTransitions.cs#L53) | private |
 | PanelTransitions | [`void SetInteraction(GameObject panel, bool interactable)`](../Assets/Scripts/Features/Presentation/PanelTransitions.cs#L93) | public static |
+
+## Assets/Scripts/Features/Presentation/ReturnStatusPanel.cs
+
+// 职责：显示持续的返航保存失败原因与重试提示，不抢焦点或阻挡操作。 // 入口：ShowFailure() / Clear()；MainUIPanels在返航失败/成功时调用。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| ReturnStatusPanel | [`void Awake()`](../Assets/Scripts/Features/Presentation/ReturnStatusPanel.cs#L15) | private |
+| ReturnStatusPanel | [`void ShowFailure(string reason)`](../Assets/Scripts/Features/Presentation/ReturnStatusPanel.cs#L20) | public |
+| ReturnStatusPanel | [`void Clear()`](../Assets/Scripts/Features/Presentation/ReturnStatusPanel.cs#L37) | public |
 
 ## Assets/Scripts/Features/Presentation/StatusIcon.cs
 
@@ -2621,6 +2639,7 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | CargoPersistence | [`bool SaveReturnCargo(bool survived)`](../Assets/Scripts/Features/Salvage/CargoPersistence.cs#L11) | public static |
+| CargoPersistence | [`bool SaveReturnCargo(bool survived, out string failureReason)`](../Assets/Scripts/Features/Salvage/CargoPersistence.cs#L16) | public static |
 
 ## Assets/Scripts/Features/Salvage/CoinManager.cs
 

@@ -34,6 +34,10 @@ public class MainUIPanels : MonoBehaviour
     public CombatHud CombatHud => _combatHud;
     public ThrusterInfoPanel ThrusterInfoPanel => _thrusterInfoPanel;
 
+    [SerializeField]
+    private ReturnStatusPanel _returnStatus;
+    public ReturnStatusPanel ReturnStatus => _returnStatus;
+
     private BuildingEditorPanel _buildingEditorPanel;
     private bool renameMode;
     private string renameTargetName;
@@ -262,8 +266,9 @@ public class MainUIPanels : MonoBehaviour
 
     public void PlayEnd()
     {
-        if (!CargoPersistence.SaveReturnCargo(PlayManager.instance.playMode))
+        if (!CargoPersistence.SaveReturnCargo(PlayManager.instance.playMode, out string failureReason))
         {
+            _returnStatus?.ShowFailure(failureReason);
             return;
         }
 
@@ -272,6 +277,7 @@ public class MainUIPanels : MonoBehaviour
 
     public void CompletePlayEnd()
     {
+        _returnStatus?.Clear();
         debugPanel.transform.SetParent(buildPanel.transform);
         PlayManager.instance.PlayEnd();
         _transitions.Show(deathPanel, false, fadeDuration);
