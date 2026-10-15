@@ -894,7 +894,7 @@ def main():
     )
     graph(
         "显式 Player 世界验证",
-        "源码推导：仅-world-smoke-report显式启用；可指定固定种子和1–10次会话。临时单驾驶舱载具沿200m脚本路线跨区块，通过正式退出链清空会话并等待世界与原载具恢复后重复；不经过返航货仓保存入口。可选-world-smoke-enemies只在临时运行对象中验证敌机尺寸/质量和非法模块拒绝，不保存蓝图。仅测试进程内改变配置，阶段报告包含P99、尖峰及每轮内存采样，不代表真实驾驶或长期战斗。",
+        "源码推导：仅-world-smoke-report显式启用；可指定固定种子和1–10次会话。临时单驾驶舱载具沿200m脚本路线跨区块，通过正式退出链清空会话并等待世界与原载具恢复后重复；不经过返航货仓保存入口。可选-world-smoke-enemies只在临时运行对象中验证敌机尺寸/质量和非法模块拒绝，不保存蓝图。可选-world-smoke-combat注入Input System键盘、验证真实推进后固定战斗平台，等待炮弹击毁和机器人回收入仓；不包含人工驾驶或返航文件保存。仅测试进程内改变配置，阶段报告包含P99、尖峰及每轮内存采样，不代表真实驾驶或长期战斗。",
         {
             "A": "WorldPlayerSmokeChecks.Initialize",
             "B": "WorldPlayerSmokeChecks.ReadInteger",
@@ -910,6 +910,7 @@ def main():
             "L": "WorldPlayerSmokeChecks.ValidateEnemyBlueprints",
             "M": "WorldPlayerSmokeChecks.EnemyFixture",
             "N": "EnemySpawner.SpawnBlockData",
+            "O": "WorldCombatPlayerChecks.Run",
         },
         [
             "A -->|显式参数校验| B",
@@ -918,6 +919,7 @@ def main():
             "D -->|推进枚举器| E",
             "E --> F",
             "E -->|显式-world-smoke-enemies| L", "L --> M", "L -->|实例尺寸与拒绝非法模块| N",
+            "E -->|显式-world-smoke-combat| O",
             "E -->|跨区块后正式退出| G",
             "E -->|阶段结束| H",
             "H --> I",
@@ -926,6 +928,35 @@ def main():
             "D -->|完成或超时异常| J",
             "J --> H",
             "J -->|最终状态及正常退出| I",
+        ],
+    )
+    graph(
+        "Player 输入交战回收入仓验证",
+        "源码推导：显式测试专用临时模块与内存蓝图；W键设备事件经过生产ControlUnit.Update与推进器/电网/PhysX后产生位移。随后固定平台，炮塔自然索敌、发射、击毁敌舱，等待生产残骸转换与CollectionBot真实拾取返航入仓；不手动提供功率，不保存玩家蓝图。敌方AI关闭、固定平台不代表完整驾驶交战巡航。",
+        {
+            "A": "WorldCombatPlayerChecks.Run",
+            "B": "WorldCombatPlayerChecks.Spawn",
+            "C": "ControlUnit.Update",
+            "D": "MainThruster.FixedUpdate",
+            "E": "PowerTransmissionDevice.Update",
+            "F": "WorldCombatPlayerChecks.EnemyCargoFixture",
+            "G": "EnemySpawner.SpawnBlockData",
+            "H": "Turret.FixedUpdate",
+            "I": "ProjectileTurret.Fire",
+            "J": "TurretHitResolver.Apply",
+            "K": "Durability.ApplyDamage",
+            "L": "DestroyManager.DestroyGameObject",
+            "M": "WreckSalvage.Convert",
+            "N": "CollectionBot.FixedUpdate",
+            "O": "CollectionBot.ReturnCargo",
+            "P": "CargoHold.Store",
+        },
+        [
+            "A --> B", "A -.->|键盘事件由引擎消费| C", "C -.->|输入意图| D",
+            "E -.->|每帧真实分配供电| D", "A --> F", "A --> G",
+            "A -.->|自然物理帧| H", "H --> I", "I -.->|实体炮弹跨帧命中| J",
+            "J --> K", "K --> L", "L -.->|清理会话延迟转换| M",
+            "M -.->|释放货物后机器人扫描| N", "N --> O", "O -.->|Deliver入库| P",
         ],
     )
     doc = """# HY-Sandbox 运行时函数图

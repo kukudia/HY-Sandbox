@@ -1,0 +1,129 @@
+{
+    "status": "passed",
+    "graphics": "Direct3D11",
+    "seed": 14721,
+    "buildings": 28,
+    "blocks": 1967,
+    "travelStart": {
+        "x": 15.999998092651368,
+        "y": 11.0,
+        "z": 25.020692825317384
+    },
+    "travelEnd": {
+        "x": 216.0,
+        "y": 11.0,
+        "z": 25.020692825317384
+    },
+    "memoryBytes": 154410103,
+    "requestedCycles": 1,
+    "completedCycles": 1,
+    "cycleMemoryBytes": [
+        154410103
+    ],
+    "cycleSeeds": [
+        14721
+    ],
+    "checks": [
+        "Main starts with world session",
+        "startup mask stays opaque during construct restoration",
+        "construct load exposes bounded progress",
+        "world generation remains valid",
+        "opaque loading mask renders while waiting or enabling",
+        "loading reaches completion",
+        "initial 81 terrain columns loaded",
+        "Player creates buildings from blueprint library",
+        "Player loads external blueprint library",
+        "spawn has real terrain collision",
+        "Input System W reaches the enabled player ControlUnit",
+        "real powered thruster advances dynamic Player through PhysX",
+        "released keyboard clears player movement intent",
+        "production spawner restores a cargo-bearing hostile unit",
+        "hostile cargo originates in blueprint contents",
+        "automatic powered turret launches shells and damages hostile cockpit across frames",
+        "projectile damage destroys hostile cockpit through production destruction",
+        "hostile destruction releases authored special cargo into real world",
+        "collection robot physically picks up wreck cargo",
+        "robot returns and deposits wreck cargo in powered player hold",
+        "delivery completes only after actual home docking",
+        "stopped combat turret releases power demand",
+        "session stays playing",
+        "Player crosses multiple chunk boundaries",
+        "travel retains terrain under player",
+        "loaded terrain remains bounded",
+        "exit discards world and prepares fresh session",
+        "second preparation completes"
+    ],
+    "errors": [],
+    "phases": [
+        {
+            "name": "startup",
+            "frames": 1301,
+            "medianMs": 8.376598358154297,
+            "p95Ms": 10.859489440917969,
+            "p99Ms": 22.011280059814454,
+            "over50Ms": 1,
+            "maxMs": 560.1334838867188,
+            "totalMs": 11948.703125
+        },
+        {
+            "name": "loading-and-entry",
+            "frames": 80,
+            "medianMs": 8.334159851074219,
+            "p95Ms": 8.393287658691407,
+            "p99Ms": 16.057968139648439,
+            "over50Ms": 0,
+            "maxMs": 37.380218505859378,
+            "totalMs": 704.8206176757813
+        },
+        {
+            "name": "combat-recovery",
+            "frames": 5061,
+            "medianMs": 8.32366943359375,
+            "p95Ms": 9.021759033203125,
+            "p99Ms": 9.45281982421875,
+            "over50Ms": 1,
+            "maxMs": 100.74806213378906,
+            "totalMs": 42312.18359375
+        },
+        {
+            "name": "idle",
+            "frames": 360,
+            "medianMs": 8.331298828125,
+            "p95Ms": 8.892059326171875,
+            "p99Ms": 9.021759033203125,
+            "over50Ms": 0,
+            "maxMs": 9.368896484375,
+            "totalMs": 3001.7890625
+        },
+        {
+            "name": "travel",
+            "frames": 420,
+            "medianMs": 8.331298828125,
+            "p95Ms": 9.426116943359375,
+            "p99Ms": 9.967803955078125,
+            "over50Ms": 0,
+            "maxMs": 11.58905029296875,
+            "totalMs": 3501.625
+        },
+        {
+            "name": "exit",
+            "frames": 1,
+            "medianMs": 61.50054931640625,
+            "p95Ms": 61.50054931640625,
+            "p99Ms": 61.50054931640625,
+            "over50Ms": 1,
+            "maxMs": 61.50054931640625,
+            "totalMs": 61.50054931640625
+        },
+        {
+            "name": "reprepare",
+            "frames": 1295,
+            "medianMs": 8.3465576171875,
+            "p95Ms": 8.8958740234375,
+            "p99Ms": 16.01409912109375,
+            "over50Ms": 0,
+            "maxMs": 26.3824462890625,
+            "totalMs": 11112.0380859375
+        }
+    ]
+}

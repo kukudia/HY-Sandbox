@@ -54,6 +54,7 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
     private bool finished;
     private bool captureImages;
     private bool validateEnemies;
+    private bool validateCombat;
     private int cycleCount = 1;
     private int cycle;
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -72,6 +73,7 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
         checks.reportPath = args[index + 1];
         checks.captureImages = Array.IndexOf(args, "-world-smoke-capture") >= 0;
         checks.validateEnemies = Array.IndexOf(args, "-world-smoke-enemies") >= 0;
+        checks.validateCombat = Array.IndexOf(args, "-world-smoke-combat") >= 0;
         try
         {
             int seedIndex = Array.IndexOf(args, "-world-smoke-seed");
@@ -248,6 +250,26 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
                 {
                     (enemies as IDisposable)?.Dispose();
                 }
+            }
+
+            if (validateCombat)
+            {
+                Next("combat-recovery");
+                IEnumerator combat = WorldCombatPlayerChecks.Run(player.GetComponent<ControlUnit>(), spawner, Check);
+                try
+                {
+                    while (combat.MoveNext())
+                    {
+                        yield return combat.Current;
+                    }
+                }
+                finally
+                {
+                    (combat as IDisposable)?.Dispose();
+                }
+
+                // The general streaming route below uses a kinematic host again.
+                body.isKinematic = true;
             }
 
             Next("idle");
