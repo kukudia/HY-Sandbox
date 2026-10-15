@@ -389,6 +389,7 @@ GameObject:
   - component: {fileID: 188129559}
   - component: {fileID: 188129558}
   - component: {fileID: 188129557}
+  - component: {fileID: 188129561}
   m_Layer: 0
   m_Name: WorldLab Camera
   m_TagString: MainCamera
@@ -409,6 +410,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldLabController
   world: {fileID: 1703162050}
+  buildings: {fileID: 916239920}
   flySpeed: 18
   interactionDistance: 180
   blastRadius: 6
@@ -486,6 +488,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &188129561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 188129556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcf7d53a1b46b8842acfb4e7e4997f39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldBuildingPalette
+  manager: {fileID: 916239920}
+  placementDistance: 180
 --- !u!1 &259227276
 GameObject:
   m_ObjectHideFlags: 0
@@ -1776,6 +1792,58 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 752376619}
   m_Mesh: {fileID: 4300000, guid: 2bdac2d7625e95f418798bab6e3b6afb, type: 2}
+--- !u!1 &916239919
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 916239921}
+  - component: {fileID: 916239920}
+  m_Layer: 0
+  m_Name: WorldLab Buildings
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &916239920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 916239919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0c76dc90ada29a42823329a16472909, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldBuildingManager
+  world: {fileID: 1703162050}
+  catalog: {fileID: 11400000, guid: 1129955a528af3d4790209f6c09d2d93, type: 2}
+  minimumSupportRatio: 0.5
+  collapseUnsupported: 1
+  maximumBuildings: 64
+  maximumDebrisPieces: 12
+  maximumBlocksPerDebris: 32
+  debrisLifetime: 12
+--- !u!4 &916239921
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 916239919}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1054857954
 GameObject:
   m_ObjectHideFlags: 0
@@ -4595,3 +4663,4 @@ SceneRoots:
   - {fileID: 1703162051}
   - {fileID: 188129560}
   - {fileID: 1650833248}
+  - {fileID: 916239921}

@@ -2,9 +2,51 @@
 // 入口：ProtectExplosionContacts() / TryGetTotalDurability() / RefreshChildren()。
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class ControlUnit : MonoBehaviour
 {
+    private static readonly List<ControlUnit> ActiveUnits = new List<ControlUnit>();
+    public static IReadOnlyList<ControlUnit> RuntimeUnits => ActiveUnits;
+
+    public static bool IsSceneSimulationActive(UnityEngine.SceneManagement.Scene scene)
+    {
+        foreach (ControlUnit unit in ActiveUnits)
+        {
+            if (unit != null && unit.gameObject.scene == scene && unit.IsSimulationActive)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public BuildingRuntime Building
+    {
+        get; private set;
+    }
+    public bool IsOperational => HasValidCockpit || (Building != null && Building.IsOperational);
+    public bool IsSimulationActive => Building != null ? Building.IsSimulationActive : PlayManager.instance != null && PlayManager.instance.playMode;
+
+    public void BindBuilding(BuildingRuntime building)
+    {
+        Building = building;
+    }
+
+    private void OnEnable()
+    {
+        if (!ActiveUnits.Contains(this))
+        {
+            ActiveUnits.Add(this);
+        }
+    }
+
+    private void OnDisable()
+    {
+        ActiveUnits.Remove(this);
+    }
+
     // Runtime aggregate for one construct: owns cockpit validity, movement input, and child component references.
     public string runtimeUnitId;
     public HoverFlightController hoverFlightController;
@@ -36,7 +78,7 @@ public class ControlUnit : MonoBehaviour
     {
         current = 0f;
         maximum = 0f;
-        if (!HasValidCockpit)
+        if (!IsOperational)
         {
             return false;
         }
@@ -59,7 +101,7 @@ public class ControlUnit : MonoBehaviour
     {
         EnsureRuntimeUnitId();
         AssignRuntimeOwnershipToBlocks(false);
-        if (PlayManager.instance != null)
+        if (PlayManager.instance != null && Building == null)
         {
             PlayManager.instance.RegisterControlUnit(this);
         }
@@ -69,7 +111,7 @@ public class ControlUnit : MonoBehaviour
 
     private void Update()
     {
-        if (!PlayManager.instance.playMode)
+        if (!IsSimulationActive)
         {
             return;
         }
@@ -253,7 +295,7 @@ public class ControlUnit : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (PlayManager.instance == null || !PlayManager.instance.playMode || collision.contactCount == 0)
+        if (!IsSimulationActive || collision.contactCount == 0)
         {
             return;
         }

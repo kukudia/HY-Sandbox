@@ -39,11 +39,6 @@ internal sealed class BlockConnections
             return;
         }
 
-        if (BuildManager.instance == null)
-        {
-            return;
-        }
-
         // Transform changes made by the build UI are not guaranteed to be visible to physics immediately.
         // Sync before probing so a move and its connection refresh observe the same frame.
         Physics.SyncTransforms();
@@ -147,7 +142,8 @@ internal sealed class BlockConnections
         Vector3 probeCenter = worldPos + worldNormal * connectionProbeOffset;
         int hitCount;
         // Retry full buffers so dense collider arrangements cannot truncate the query.
-        while ((hitCount = Physics.OverlapSphereNonAlloc(probeCenter, connectionProbeRadius, _connectionHits, BuildManager.instance.blockLayer)) == _connectionHits.Length)
+        int blockLayer = BuildManager.instance != null ? BuildManager.instance.blockLayer.value : LayerMask.GetMask("Block");
+        while ((hitCount = Physics.OverlapSphereNonAlloc(probeCenter, connectionProbeRadius, _connectionHits, blockLayer)) == _connectionHits.Length)
         {
             System.Array.Resize(ref _connectionHits, _connectionHits.Length * 2);
         }
@@ -156,7 +152,7 @@ internal sealed class BlockConnections
         for (int i = 0; i < hitCount; i++)
         {
             Block otherBlock = _connectionHits[i].GetComponentInParent<Block>();
-            if (otherBlock != null && otherBlock != _block)
+            if (otherBlock != null && otherBlock != _block && SharesBuildingScope(otherBlock))
             {
                 result = otherBlock;
                 break;
@@ -165,6 +161,13 @@ internal sealed class BlockConnections
 
         System.Array.Clear(_connectionHits, 0, hitCount);
         return result;
+    }
+
+    private bool SharesBuildingScope(Block other)
+    {
+        BuildingRuntime building = _block.GetComponentInParent<BuildingRuntime>();
+        BuildingRuntime otherBuilding = other.GetComponentInParent<BuildingRuntime>();
+        return building == otherBuilding;
     }
 
     private Connector FindMatchingConnector(Block otherBlock, Connector connector, bool requireAvailable = true)
@@ -232,7 +235,7 @@ internal sealed class BlockConnections
     internal void CollectNeighbors(List<Block> result)
     {
         result.Clear();
-        if (_block.connectors == null || BuildManager.instance == null)
+        if (_block.connectors == null)
         {
             return;
         }

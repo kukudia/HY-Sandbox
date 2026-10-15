@@ -4,13 +4,16 @@
 
 研究结论、后续载具玩法切片和扩展地图的测量门槛见 [WorldResearch](WorldResearch.md)。
 
+建筑融合已加入本实验场，操作、目录配置和边界见 [WorldBuildings](WorldBuildings.md)。默认生成Outpost据点，支持放置用户建筑、供电战斗、方块破坏、断裂残骸和地形失稳脱锚。WorldLab实例和放置预览不生成实体地基，编辑器底座仅保留为制作网格及支撑范围元数据。
+
 ## 使用
 
 打开 `Assets/Scenes/WorldLab.unity` 或 Tools → HY-Sandbox → World → Create or open World Lab，然后 Play。
 
 - 右键拖动观察，WASD飞行、Space/Ctrl升降、Shift加速，F回到初始视角。
 - 鼠标指向地表：左键持续采掘，E范围爆破，中键填补金属单元，R恢复当前种子世界。
-- F5保存种子与体素差量，F9校验后恢复；路径为 `Application.persistentDataPath/WorldLab/seed-14721.json`，替换前保留 `.previous`。版本、种子、尺寸、生成器指纹、材质、边界和重复单元全部校验后才替换活动世界。只保存完整单元变化，不保存尚未达到硬度的局部伤害。
+- B选择建筑放置，Q/T旋转90°，左键确认，Esc取消；右侧面板可选模板和阵营。放置模式下暂停采掘。R同时恢复种子地形与配置的初始建筑。
+- F5保存种子、体素差量与建筑快照，F9校验后恢复；路径为 `Application.persistentDataPath/WorldLab/seed-14721.json`，替换前保留 `.previous`。版本、种子、尺寸、生成器指纹、材质、边界、重复单元，以及建筑资源/身份/耐久全部校验后才替换活动世界。地形只保存完整单元变化，不保存尚未达到硬度的局部伤害；旧纯体素差量迁移为空建筑列表。
 - 选中 ProceduralWorld，在Inspector调 seed、dimensions、cellSize、chunkSize、rebuildsPerFrame；Preview重生成，再Bake保存真实Mesh资产与场景。烘焙操作写 `Assets/WorldLab/Meshes`，只适用于这个实验场，不能让多个独立世界共用此目录。
 - 实验场运行时保持后台更新并限制60FPS；禁用时恢复原后台/帧率设置。这样软件黑屏遮罩持有焦点时仍可做真实帧物理验证。
 

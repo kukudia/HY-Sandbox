@@ -6,6 +6,8 @@ using UnityEngine;
 
 public sealed class ProceduralVoxelWorld : MonoBehaviour
 {
+    public event System.Action<Bounds> TerrainChanged;
+    public event System.Action Regenerated;
     [SerializeField]
     private int seed = 14721;
     [SerializeField]
@@ -117,6 +119,11 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
                 chunks.Remove(entry.Key);
             }
         }
+
+        if (Application.isPlaying)
+        {
+            Regenerated?.Invoke();
+        }
     }
 
     private void CacheChunks()
@@ -150,6 +157,7 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
 
         damage.Remove(cell);
         QueueCell(cell);
+        TerrainChanged?.Invoke(new Bounds(CellCenter(cell), Vector3.one * (cellSize * transform.lossyScale.magnitude)));
         return true;
     }
 
@@ -174,6 +182,10 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
         {
             dirty.Add(start);
         }
+
+        TerrainChanged?.Invoke(new Bounds(
+            transform.TransformPoint((Vector3)data.Size * cellSize * 0.5f),
+            Vector3.one * ((Vector3)data.Size * cellSize).magnitude));
     }
 
     /// <summary>半径内按距离衰减积累伤害，土/岩/金属分别需要20/60/100；不会创建刚体碎片。</summary>

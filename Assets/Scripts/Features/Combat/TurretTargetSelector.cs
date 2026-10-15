@@ -8,6 +8,7 @@ internal sealed class TurretTargetSelector
 {
     private readonly Transform _weapon;
     private readonly Dictionary<ControlUnit, Durability[]> _durabilityCache = new Dictionary<ControlUnit, Durability[]>();
+    private readonly List<ControlUnit> _expired = new List<ControlUnit>();
     internal TurretTargetSelector(Transform weapon)
     {
         _weapon = weapon;
@@ -24,6 +25,20 @@ internal sealed class TurretTargetSelector
         ControlUnit nearest = null;
         nearestDurability = null;
         float nearestSqrDistance = range * range;
+        _expired.Clear();
+        foreach (ControlUnit cached in _durabilityCache.Keys)
+        {
+            if (cached == null || !cached.gameObject.activeInHierarchy)
+            {
+                _expired.Add(cached);
+            }
+        }
+
+        foreach (ControlUnit cached in _expired)
+        {
+            _durabilityCache.Remove(cached);
+        }
+
         if (units == null)
         {
             return null;
@@ -38,7 +53,7 @@ internal sealed class TurretTargetSelector
                     continue;
                 }
 
-                if (!candidate.HasValidCockpit || candidate.faction != faction)
+                if (!candidate.HasValidCockpit || !candidate.IsSimulationActive || (owner != null && candidate.gameObject.scene != owner.gameObject.scene) || candidate.faction != faction)
                 {
                     continue;
                 }
@@ -71,7 +86,7 @@ internal sealed class TurretTargetSelector
                 continue;
             }
 
-            if (!candidate.HasValidCockpit || candidate.faction != faction)
+            if (!candidate.IsOperational || !candidate.IsSimulationActive || (owner != null && candidate.gameObject.scene != owner.gameObject.scene) || candidate.faction != faction)
             {
                 continue;
             }
@@ -101,7 +116,7 @@ internal sealed class TurretTargetSelector
         float nearestSqrDistance = float.MaxValue;
         foreach (Durability durability in durabilities)
         {
-            if (durability == null)
+            if (durability == null || !durability.isActiveAndEnabled || durability.currentDurability <= 0f || durability.GetComponentInParent<ControlUnit>() != unit)
             {
                 continue;
             }

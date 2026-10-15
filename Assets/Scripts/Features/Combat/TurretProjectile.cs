@@ -100,7 +100,8 @@ public sealed class TurretProjectile : MonoBehaviour
             return;
         }
 
-        if (Time.time >= _expiresAt || _remainingDistance <= 0f || PlayManager.instance == null || !PlayManager.instance.playMode)
+        bool simulationActive = _owner != null ? _owner.IsSimulationActive : ControlUnit.IsSceneSimulationActive(gameObject.scene);
+        if (Time.time >= _expiresAt || _remainingDistance <= 0f || !simulationActive)
         {
             Retire();
             return;

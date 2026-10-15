@@ -71,7 +71,7 @@ public abstract class Turret : MonoBehaviour
     protected virtual void FixedUpdate()
     {
         Owner = GetComponentInParent<ControlUnit>();
-        if (!_isStarted || PlayManager.instance == null || !PlayManager.instance.playMode || Owner == null || !Owner.HasValidCockpit)
+        if (!_isStarted || Owner == null || !Owner.IsSimulationActive || !Owner.IsOperational)
         {
             StopWorking();
             return;
@@ -106,7 +106,7 @@ public abstract class Turret : MonoBehaviour
 
     private void RefreshTarget()
     {
-        if (_target == null || !_target.HasValidCockpit || _targetDurability == null || !_targetDurability.isActiveAndEnabled || _targetDurability.currentDurability <= 0f || (_targetDurability.transform.position - transform.position).sqrMagnitude > range * range)
+        if (_target == null || !_target.IsOperational || !_target.IsSimulationActive || _targetDurability == null || !_targetDurability.isActiveAndEnabled || _targetDurability.currentDurability <= 0f || (_targetDurability.transform.position - transform.position).sqrMagnitude > range * range)
         {
             _target = null;
             _targetDurability = null;
@@ -120,7 +120,7 @@ public abstract class Turret : MonoBehaviour
 
         UnitFaction faction = GetEffectiveTargetFaction();
         _target = _targetSelector.FindNearestTarget(
-            PlayManager.instance.GetControlUnits(),
+            ControlUnit.RuntimeUnits,
             Owner,
             faction,
             range,

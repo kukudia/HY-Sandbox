@@ -37,7 +37,7 @@ public class CollectionBot : Bot
         }
 
         ControlUnit owner = home.GetComponentInParent<ControlUnit>();
-        bool canStart = owner != null && owner.HasValidCockpit;
+        bool canStart = owner != null && owner.IsOperational;
         if (IsMissionInvalid(owner, canStart))
         {
             Abandon();

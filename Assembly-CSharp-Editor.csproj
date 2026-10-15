@@ -62,6 +62,15 @@
     <Analyzer Include="D:\git_projects\Unity\HY-Sandbox\Library\PackageCache\com.unity.pipeline@ab05e9cd7f74\Runtime\Analyzers\IlInterpreterAnalyzer.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Editor\World\ProceduralVoxelWorldEditor.cs" />
+    <Compile Include="Assets\Editor\World\WorldBuildingAuthoring.cs" />
+    <Compile Include="Assets\Editor\World\WorldBuildingPlayProbe.cs" />
+    <Compile Include="Assets\Editor\World\WorldLabAuthoring.cs" />
+    <Compile Include="Assets\Editor\World\WorldLabChecks.cs" />
+    <Compile Include="Assets\Editor\World\WorldLabCollapseChecks.cs" />
+    <Compile Include="Assets\Editor\World\WorldLabPerformanceChecks.cs" />
+    <Compile Include="Assets\Editor\World\WorldLabPersistenceChecks.cs" />
+    <Compile Include="Assets\Editor\World\WorldLabSoakChecks.cs" />
     <Compile Include="Assets\Editor\Building\BuildingEditorAssets.cs" />
     <Compile Include="Assets\Editor\Building\BuildingEditorPlayProbe.cs" />
     <Compile Include="Assets\Editor\Architecture\HoverControlPlayChecks.cs" />

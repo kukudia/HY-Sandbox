@@ -34,7 +34,7 @@ internal static class TurretHitResolver
 
         ControlUnit unit = collider.GetComponentInParent<ControlUnit>();
         Durability durability = collider.GetComponentInParent<Durability>();
-        if (unit != null && unit.HasValidCockpit && unit.faction == faction && durability != null)
+        if (unit != null && unit.IsOperational && unit.faction == faction && durability != null)
         {
             durability.ApplyDamage(damage, owner);
         }
