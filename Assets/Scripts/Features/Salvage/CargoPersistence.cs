@@ -15,12 +15,13 @@ public static class CargoPersistence
             return true;
         }
 
-        string path = SaveManager.instance.GetSavePath(SaveManager.instance.currentSaveName);
         try
         {
+            string path = SaveManager.instance.GetSavePath(SaveManager.instance.currentSaveName);
             if (!File.Exists(path))
             {
-                return true;
+                // A named save disappearing must not turn a failed return into destructive session cleanup.
+                throw new FileNotFoundException("Player blueprint is missing; restore the save before returning.", path);
             }
 
             BlockDataList data = JsonUtility.FromJson<BlockDataList>(File.ReadAllText(path));

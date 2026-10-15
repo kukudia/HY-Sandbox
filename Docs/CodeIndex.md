@@ -688,6 +688,17 @@
 | VfxGraphAuthoring | [`void AddIntensity(string path)`](../Assets/Editor/Presentation/VfxGraphAuthoring.cs#L131) | public static |
 | VfxGraphAuthoring | [`object Describe(string path)`](../Assets/Editor/Presentation/VfxGraphAuthoring.cs#L149) | public static |
 
+## Assets/Editor/Salvage/CargoReturnFileChecks.cs
+
+// 职责：在真实Main游玩中隔离蓝图文件仓，验证返航写盘失败保留会话、成功保留几何和备份。 // 入口：Run()；同步操作仅限唯一Temp目录，finally恢复文件仓/名称/缓存，不覆盖用户存档。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| CargoReturnFileChecks | [`string Run()`](../Assets/Editor/Salvage/CargoReturnFileChecks.cs#L19) | public static |
+| CargoReturnFileChecks | [`void ExpectRetained(Report report, string label, Transform player, WorldSessionManager session)`](../Assets/Editor/Salvage/CargoReturnFileChecks.cs#L91) | private static |
+| CargoReturnFileChecks | [`bool SameGeometry(BlockDataList before, BlockDataList after)`](../Assets/Editor/Salvage/CargoReturnFileChecks.cs#L116) | private static |
+| CargoReturnFileChecks | [`void Check(Report report, string label, bool passed)`](../Assets/Editor/Salvage/CargoReturnFileChecks.cs#L131) | private static |
+
 ## Assets/Editor/Salvage/SalvageAssetBaker.cs
 
 // 职责：生成并保存货仓、回收、掉落物和相关配置资产。 // 入口：Bake() / Set() / Preview()。 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
