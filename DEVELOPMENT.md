@@ -1,5 +1,11 @@
 # HY-Sandbox 开发与审查入口
 
+## 2026-10-15 用户调整：相机无碰撞、建筑10%
+
+- Main相机第三人称碰撞层设为None（0），新CameraController默认值同样为0；碰撞解析直接返回期望位置，不再做SphereCast或墙前收回。保留原缩放/跟随/镜头参数，Inspector仍可配置碰撞层。源码调用链没有改变，函数图仍适用；旧墙体回收断言已同步为关闭后的行为。
+- 世界生成资产与新配置默认建筑候选概率从35%降为10%；这是每个候选位置概率，不保证任意视野恰好10%覆盖。用户已有建筑蓝图不变，新会话生效。
+- Unity Main真实Play检查：collisionDisabled=true、wallDoesNotRetractCamera=true、会话BuildingChance=0.1；Main保存后退出Play。静态构建0错误、4个既有警告，源码格式及diff检查通过。此为配置/同步方法检查，不声称已完成镜头人工手感或10%新种子的大规模Player性能验收。NightDesk按本轮原截止重新启动，已核验黑屏与system+display请求；保留Esc接管。
+
 ## 2026-10-15 夜间：损坏敌机文件不再中断蓝图库
 
 - 在真实InitializeEnemyBlueprintPool复现：一份截断JSON抛ArgumentException，中断后续敌机初始化。现在逐文件隔离JSON解析与IO/访问异常，警告后继续有效条目；不修改、删除或覆盖原文件，不吞掉其他编程异常。

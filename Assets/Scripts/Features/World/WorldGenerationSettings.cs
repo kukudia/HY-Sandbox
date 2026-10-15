@@ -22,7 +22,7 @@ public sealed class WorldGenerationSettings : ScriptableObject
     [SerializeField, Range(3, 5), Tooltip("比加载范围多一圈，减少来回穿越边界时重复创建。")]
     private int unloadRadius = 5;
     [SerializeField, Range(0f, 1f)]
-    private float buildingChance = 0.35f;
+    private float buildingChance = 0.1f;
     [SerializeField, Range(2, 64), Tooltip("建筑平台最小半边长（体素格）；会按本次蓝图自动扩大。")]
     private int buildingPadHalfSize = 4;
     [SerializeField, Range(1, 2), Tooltip("出生区周围不生成敌方建筑的区块半径；不修改自然地形。")]

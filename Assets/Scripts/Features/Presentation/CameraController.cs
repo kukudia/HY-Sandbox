@@ -21,7 +21,7 @@ public class CameraController : MonoBehaviour
     public Vector3 thirdPersonOffset = new Vector3(0f, 2f, -5f);
     public float thirdPersonSmooth = 10f;
     [SerializeField]
-    private LayerMask thirdPersonCollisionMask = ~0;
+    private LayerMask thirdPersonCollisionMask = 0;
     [SerializeField, Min(0f)]
     private float thirdPersonCollisionRadius = 0.2f;
     [SerializeField, Min(0f)]

@@ -1,4 +1,4 @@
-// 职责：隔离验证镜头墙体收回、自身过滤和图标空闲/淡出/恢复分支。
+// 职责：隔离验证默认关闭镜头碰撞后的墙体行为和图标空闲/淡出/恢复分支。
 // 入口：Run()；Play Mode 调用真实方法，不替代视觉手感验收。
 using System;
 using System.Collections.Generic;
@@ -33,10 +33,7 @@ public static class PresentationPerformanceChecks
             MethodInfo resolve = typeof(CameraController).GetMethod("ResolveThirdPersonCollision", PrivateInstance);
             Vector3 desired = pivot + Vector3.back * 6;
             Vector3 safe = (Vector3)resolve.Invoke(controller, new object[] { pivot, desired });
-            Check(
-                safe.z > wall.transform.position.z + 0.25f && safe.z < pivot.z - 2,
-                "Wall correction/self filtering",
-                checks);
+            Check(safe == desired, "Disabled camera collision preserves desired distance through walls", checks);
             wall.SetActive(false);
             Physics.SyncTransforms();
             Check(

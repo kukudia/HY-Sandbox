@@ -3785,7 +3785,7 @@ MonoBehaviour:
   thirdPersonSmooth: 100
   thirdPersonCollisionMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 0
   thirdPersonCollisionRadius: 0.2
   thirdPersonCollisionSkin: 0.05
   zoomSpeed: 20

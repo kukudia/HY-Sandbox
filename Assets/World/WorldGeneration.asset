@@ -20,7 +20,7 @@ MonoBehaviour:
   worldRadiusInChunks: 64
   loadRadius: 4
   unloadRadius: 5
-  buildingChance: 0.35
+  buildingChance: 0.1
   buildingPadHalfSize: 4
   spawnClearRadius: 1
   spawnClearance: 6
