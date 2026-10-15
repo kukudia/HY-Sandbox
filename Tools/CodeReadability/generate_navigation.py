@@ -862,7 +862,7 @@ def main():
             "C -->|支撑低于阈值| E", "E --> F", "G -->|建筑耐久为0| H",
             "H --> I", "I -->|虚拟地面连接点| R", "I -->|BFS连接几何| J", "I -->|断裂组| K",
             "H -->|爆炸方块| L", "L --> M", "M -->|顺序结算，连锁入队| G",
-            "K -->|禁用/重挂接及预算判断前| S", "S --> U", "S --> T", "S -->|敌方残骸概率| V", "T -->|按货仓阵营配置| V",
+            "K -->|禁用/重挂接及预算判断前| S", "S --> U", "S --> T", "S -->|敌方残骸概率| V", "T -->|建筑既有存量或载具阵营配置| V",
             "N -.->|Regenerated事件| O", "O --> P", "O -->|有效初始布局| Q",
         ],
     )
@@ -957,6 +957,7 @@ def main():
             "O": "WorldCombatPlayerChecks.Run",
             "P": "EnemyFlightPlayerChecks.Run",
             "Q": "WorldReturnPlayerChecks.Run",
+            "R": "OutpostPlayerChecks.Run",
         },
         [
             "A -->|显式参数校验| B",
@@ -968,6 +969,7 @@ def main():
             "E -->|显式-world-smoke-combat| O",
             "E -->|显式-world-smoke-enemy-flight指定既有蓝图| P",
             "E -->|循环完成后显式-world-smoke-return| Q",
+            "E -->|显式据点参数| R",
             "E -->|跨区块后正式退出| G",
             "E -->|阶段结束| H",
             "H --> I",
@@ -1005,6 +1007,29 @@ def main():
             "A -.->|自然物理帧| H", "H --> I", "I -.->|实体炮弹跨帧命中| J",
             "J --> K", "K --> L", "L -.->|清理会话延迟转换| M",
             "M -.->|释放货物后机器人扫描| N", "N --> O", "O -.->|Deliver入库| P",
+        ],
+    )
+    graph(
+        "Player 正式据点资源回收验证",
+        "源码推导：仅-world-smoke-outpost-salvage启用。正式生成据点完成驻军/炮塔生命周期验证后，临时玩家平台提供真实电网、分类货仓和机器人；直接施加伤害击毁实际据点货仓，按释放前后物品总量验证包含合并包的掉落，再观察自然吸附/携带/停靠。不是玩家输入自然攻破据点的完整路线，不写永久进度。",
+        {
+            "A": "OutpostPlayerChecks.Scenario",
+            "B": "OutpostSalvagePlayerChecks.Run",
+            "C": "Durability.ApplyDamage",
+            "D": "BuildingRuntime.DestroyBlock",
+            "E": "CargoHold.ReleaseContents",
+            "F": "LootDrop.Spawn",
+            "G": "LootDrop.Update",
+            "H": "CollectionBot.FixedUpdate",
+            "I": "CollectionBot.ReturnCargo",
+            "J": "LootDrop.Deliver",
+            "K": "CargoHold.Store",
+        },
+        [
+            "A -->|显式回收验证| B", "B --> C", "C --> D", "D --> E", "E --> F",
+            "F -.->|货币逐帧吸附| G", "G -->|到达货仓| J",
+            "F -.->|模块由机器人扫描和拾取| H", "H --> I",
+            "I -->|实际停靠后| J", "J --> K",
         ],
     )
     doc = """# HY-Sandbox 运行时函数图

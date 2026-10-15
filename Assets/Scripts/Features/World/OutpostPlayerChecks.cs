@@ -13,9 +13,10 @@ public static class OutpostPlayerChecks
         WorldSessionManager session,
         ControlUnit player,
         Action<bool, string> check,
-        Action<string> capture = null)
+        Action<string> capture = null,
+        bool salvage = false)
     {
-        return Flatten(Scenario(session, player, check, capture));
+        return Flatten(Scenario(session, player, check, capture, salvage));
     }
 
     private static IEnumerator Flatten(IEnumerator root)
@@ -54,7 +55,8 @@ public static class OutpostPlayerChecks
         WorldSessionManager session,
         ControlUnit player,
         Action<bool, string> check,
-        Action<string> capture)
+        Action<string> capture,
+        bool salvage)
     {
         check(
             Object.FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None).All(item => !item.enabled),
@@ -301,6 +303,11 @@ public static class OutpostPlayerChecks
             hudLabel.text.Contains("CLEARED") && hudLabel.preferredHeight <= hudLabel.rectTransform.rect.height,
             "Cleared outpost status and expedition summary remain visible");
         capture?.Invoke("outpost-cleared");
+        if (salvage)
+        {
+            yield return OutpostSalvagePlayerChecks.Run(revisited, player, check);
+        }
+
         yield return TravelTo(player.transform, previous);
     }
 

@@ -211,7 +211,10 @@ public class CargoHold : MonoBehaviour
         }
 
         _released = true;
-        bool drop = faction == UnitFaction.Player ? _dropPlayerContents : _dropEnemyContents;
+        // Authored world containers are finite site rewards. Vehicle faction policies must not
+        // silently discard their blueprint contents, including when a building section breaks off.
+        bool drop = Owner != null && Owner.Building != null;
+        drop |= faction == UnitFaction.Player ? _dropPlayerContents : _dropEnemyContents;
         if (drop)
         {
             foreach (CargoItem item in _contents)

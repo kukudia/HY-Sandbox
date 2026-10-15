@@ -55,6 +55,7 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
     private bool captureImages;
     private bool validateEnemies;
     private bool validateOutposts;
+    private bool validateOutpostSalvage;
     private bool validateCombat;
     private bool validateReturn;
     private string flightBlueprint;
@@ -77,6 +78,8 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
         checks.captureImages = Array.IndexOf(args, "-world-smoke-capture") >= 0;
         checks.validateEnemies = Array.IndexOf(args, "-world-smoke-enemies") >= 0;
         checks.validateOutposts = Array.IndexOf(args, "-world-smoke-outposts") >= 0;
+        checks.validateOutpostSalvage = Array.IndexOf(args, "-world-smoke-outpost-salvage") >= 0;
+        checks.validateOutposts |= checks.validateOutpostSalvage;
         checks.validateCombat = Array.IndexOf(args, "-world-smoke-combat") >= 0;
         checks.validateReturn = Array.IndexOf(args, "-world-smoke-return") >= 0;
         try
@@ -260,7 +263,7 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
                     capture = suffix => ScreenCapture.CaptureScreenshot(Path.ChangeExtension(reportPath, suffix + ".png"));
                 }
 
-                IEnumerator outpost = OutpostPlayerChecks.Run(session, player.GetComponent<ControlUnit>(), Check, capture);
+                IEnumerator outpost = OutpostPlayerChecks.Run(session, player.GetComponent<ControlUnit>(), Check, capture, validateOutpostSalvage);
                 try
                 {
                     while (outpost.MoveNext())
@@ -372,6 +375,13 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
             }
 
             Check(session.State == WorldSessionState.Ready, "second preparation completes");
+            if (validateOutposts)
+            {
+                Check(
+                    session.Outposts != null && session.Outposts.ActiveCount == 0 && session.Outposts.ClearedCount == 0,
+                    "New expedition discards outpost defeat history and active defenders");
+            }
+
             report.completedCycles++;
         }
 

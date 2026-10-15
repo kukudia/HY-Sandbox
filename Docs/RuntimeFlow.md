@@ -2054,7 +2054,7 @@ flowchart TD
     S --> U
     S --> T
     S -->|敌方残骸概率| V
-    T -->|按货仓阵营配置| V
+    T -->|建筑既有存量或载具阵营配置| V
     N -.->|Regenerated事件| O
     O --> P
     O -->|有效初始布局| Q
@@ -2356,31 +2356,31 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["WorldPlayerSmokeChecks.Initialize()"]
-    click A "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L63" "打开源码"
+    click A "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L64" "打开源码"
     B["WorldPlayerSmokeChecks.ReadInteger()"]
-    click B "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L123" "打开源码"
+    click B "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L126" "打开源码"
     C["WorldPlayerSmokeChecks.Start()"]
-    click C "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L133" "打开源码"
+    click C "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L136" "打开源码"
     D["WorldPlayerSmokeChecks.Update()"]
-    click D "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L150" "打开源码"
+    click D "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L153" "打开源码"
     E["WorldPlayerSmokeChecks.Scenario()"]
-    click E "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L179" "打开源码"
+    click E "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L182" "打开源码"
     F["MainUIPanels.PlayStart()"]
     click F "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L230" "打开源码"
     G["MainUIPanels.CompletePlayEnd()"]
     click G "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L278" "打开源码"
     H["WorldPlayerSmokeChecks.Next()"]
-    click H "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L507" "打开源码"
+    click H "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L517" "打开源码"
     I["WorldPlayerSmokeChecks.Save()"]
-    click I "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L528" "打开源码"
+    click I "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L538" "打开源码"
     J["WorldPlayerSmokeChecks.Finish()"]
-    click J "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L533" "打开源码"
+    click J "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L543" "打开源码"
     K["WorldPlayerSmokeChecks.CaptureError()"]
-    click K "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L520" "打开源码"
+    click K "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L530" "打开源码"
     L["WorldPlayerSmokeChecks.ValidateEnemyBlueprints()"]
-    click L "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L434" "打开源码"
+    click L "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L444" "打开源码"
     M["WorldPlayerSmokeChecks.EnemyFixture()"]
-    click M "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L398" "打开源码"
+    click M "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L408" "打开源码"
     N["EnemySpawner.SpawnBlockData()"]
     click N "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L110" "打开源码"
     O["WorldCombatPlayerChecks.Run()"]
@@ -2389,6 +2389,8 @@ flowchart TD
     click P "../Assets/Scripts/Features/World/EnemyFlightPlayerChecks.cs#L12" "打开源码"
     Q["WorldReturnPlayerChecks.Run()"]
     click Q "../Assets/Scripts/Features/World/WorldReturnPlayerChecks.cs#L13" "打开源码"
+    R["OutpostPlayerChecks.Run()"]
+    click R "../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L12" "打开源码"
     A -->|显式参数校验| B
     A -.->|创建组件后引擎Start| C
     C -.->|后续引擎Update| D
@@ -2400,6 +2402,7 @@ flowchart TD
     E -->|显式-world-smoke-combat| O
     E -->|显式-world-smoke-enemy-flight指定既有蓝图| P
     E -->|循环完成后显式-world-smoke-return| Q
+    E -->|显式据点参数| R
     E -->|跨区块后正式退出| G
     E -->|阶段结束| H
     H --> I
@@ -2410,31 +2413,31 @@ flowchart TD
     J -->|最终状态及正常退出| I
 ```
 
-- [WorldPlayerSmokeChecks.Initialize](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L63)
+- [WorldPlayerSmokeChecks.Initialize](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L64)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Initialize -->
-- [WorldPlayerSmokeChecks.ReadInteger](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L123)
+- [WorldPlayerSmokeChecks.ReadInteger](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L126)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|ReadInteger -->
-- [WorldPlayerSmokeChecks.Start](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L133)
+- [WorldPlayerSmokeChecks.Start](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L136)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Start -->
-- [WorldPlayerSmokeChecks.Update](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L150)
+- [WorldPlayerSmokeChecks.Update](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L153)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Update -->
-- [WorldPlayerSmokeChecks.Scenario](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L179)
+- [WorldPlayerSmokeChecks.Scenario](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L182)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Scenario -->
 - [MainUIPanels.PlayStart](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L230)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayStart -->
 - [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L278)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|CompletePlayEnd -->
-- [WorldPlayerSmokeChecks.Next](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L507)
+- [WorldPlayerSmokeChecks.Next](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L517)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Next -->
-- [WorldPlayerSmokeChecks.Save](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L528)
+- [WorldPlayerSmokeChecks.Save](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L538)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Save -->
-- [WorldPlayerSmokeChecks.Finish](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L533)
+- [WorldPlayerSmokeChecks.Finish](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L543)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Finish -->
-- [WorldPlayerSmokeChecks.CaptureError](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L520)
+- [WorldPlayerSmokeChecks.CaptureError](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L530)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|CaptureError -->
-- [WorldPlayerSmokeChecks.ValidateEnemyBlueprints](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L434)
+- [WorldPlayerSmokeChecks.ValidateEnemyBlueprints](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L444)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|ValidateEnemyBlueprints -->
-- [WorldPlayerSmokeChecks.EnemyFixture](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L398)
+- [WorldPlayerSmokeChecks.EnemyFixture](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L408)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|EnemyFixture -->
 - [EnemySpawner.SpawnBlockData](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L110)
 <!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|SpawnBlockData -->
@@ -2444,6 +2447,8 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/EnemyFlightPlayerChecks.cs|Run -->
 - [WorldReturnPlayerChecks.Run](../Assets/Scripts/Features/World/WorldReturnPlayerChecks.cs#L13)
 <!-- source: Assets/Scripts/Features/World/WorldReturnPlayerChecks.cs|Run -->
+- [OutpostPlayerChecks.Run](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L12)
+<!-- source: Assets/Scripts/Features/World/OutpostPlayerChecks.cs|Run -->
 
 ## Player 输入交战回收入仓验证
 
@@ -2530,5 +2535,69 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|FixedUpdate -->
 - [CollectionBot.ReturnCargo](../Assets/Scripts/Features/Bots/CollectionBot.cs#L89)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|ReturnCargo -->
+- [CargoHold.Store](../Assets/Scripts/Features/Salvage/CargoHold.cs#L128)
+<!-- source: Assets/Scripts/Features/Salvage/CargoHold.cs|Store -->
+
+## Player 正式据点资源回收验证
+
+源码推导：仅-world-smoke-outpost-salvage启用。正式生成据点完成驻军/炮塔生命周期验证后，临时玩家平台提供真实电网、分类货仓和机器人；直接施加伤害击毁实际据点货仓，按释放前后物品总量验证包含合并包的掉落，再观察自然吸附/携带/停靠。不是玩家输入自然攻破据点的完整路线，不写永久进度。
+
+```mermaid
+flowchart TD
+    A["OutpostPlayerChecks.Scenario()"]
+    click A "../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L54" "打开源码"
+    B["OutpostSalvagePlayerChecks.Run()"]
+    click B "../Assets/Scripts/Features/World/OutpostSalvagePlayerChecks.cs#L12" "打开源码"
+    C["Durability.ApplyDamage()"]
+    click C "../Assets/Scripts/Features/Combat/Durability.cs#L68" "打开源码"
+    D["BuildingRuntime.DestroyBlock()"]
+    click D "../Assets/Scripts/Features/World/BuildingRuntime.cs#L201" "打开源码"
+    E["CargoHold.ReleaseContents()"]
+    click E "../Assets/Scripts/Features/Salvage/CargoHold.cs#L206" "打开源码"
+    F["LootDrop.Spawn()"]
+    click F "../Assets/Scripts/Features/Salvage/LootDrop.cs#L83" "打开源码"
+    G["LootDrop.Update()"]
+    click G "../Assets/Scripts/Features/Salvage/LootDrop.cs#L261" "打开源码"
+    H["CollectionBot.FixedUpdate()"]
+    click H "../Assets/Scripts/Features/Bots/CollectionBot.cs#L31" "打开源码"
+    I["CollectionBot.ReturnCargo()"]
+    click I "../Assets/Scripts/Features/Bots/CollectionBot.cs#L89" "打开源码"
+    J["LootDrop.Deliver()"]
+    click J "../Assets/Scripts/Features/Salvage/LootDrop.cs#L231" "打开源码"
+    K["CargoHold.Store()"]
+    click K "../Assets/Scripts/Features/Salvage/CargoHold.cs#L128" "打开源码"
+    A -->|显式回收验证| B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F -.->|货币逐帧吸附| G
+    G -->|到达货仓| J
+    F -.->|模块由机器人扫描和拾取| H
+    H --> I
+    I -->|实际停靠后| J
+    J --> K
+```
+
+- [OutpostPlayerChecks.Scenario](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L54)
+<!-- source: Assets/Scripts/Features/World/OutpostPlayerChecks.cs|Scenario -->
+- [OutpostSalvagePlayerChecks.Run](../Assets/Scripts/Features/World/OutpostSalvagePlayerChecks.cs#L12)
+<!-- source: Assets/Scripts/Features/World/OutpostSalvagePlayerChecks.cs|Run -->
+- [Durability.ApplyDamage](../Assets/Scripts/Features/Combat/Durability.cs#L68)
+<!-- source: Assets/Scripts/Features/Combat/Durability.cs|ApplyDamage -->
+- [BuildingRuntime.DestroyBlock](../Assets/Scripts/Features/World/BuildingRuntime.cs#L201)
+<!-- source: Assets/Scripts/Features/World/BuildingRuntime.cs|DestroyBlock -->
+- [CargoHold.ReleaseContents](../Assets/Scripts/Features/Salvage/CargoHold.cs#L206)
+<!-- source: Assets/Scripts/Features/Salvage/CargoHold.cs|ReleaseContents -->
+- [LootDrop.Spawn](../Assets/Scripts/Features/Salvage/LootDrop.cs#L83)
+<!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Spawn -->
+- [LootDrop.Update](../Assets/Scripts/Features/Salvage/LootDrop.cs#L261)
+<!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Update -->
+- [CollectionBot.FixedUpdate](../Assets/Scripts/Features/Bots/CollectionBot.cs#L31)
+<!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|FixedUpdate -->
+- [CollectionBot.ReturnCargo](../Assets/Scripts/Features/Bots/CollectionBot.cs#L89)
+<!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|ReturnCargo -->
+- [LootDrop.Deliver](../Assets/Scripts/Features/Salvage/LootDrop.cs#L231)
+<!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Deliver -->
 - [CargoHold.Store](../Assets/Scripts/Features/Salvage/CargoHold.cs#L128)
 <!-- source: Assets/Scripts/Features/Salvage/CargoHold.cs|Store -->

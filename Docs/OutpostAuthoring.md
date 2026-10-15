@@ -25,7 +25,7 @@ Unity6000.3.11f1 / URP / Windows D3D11，米、Y-up。假设典型观察距离20
 | Relay Station Outpost | 双高塔、中部发电与科技仓 | Finch×1、Pike×1 | 科技 |
 | Supply Stronghold Outpost | U形围墙、双炮塔、分散资源仓 | Pike×1、Manta×1、Finch×1 | 金币、科技、模块 |
 
-资源在真实货仓内，遵循既有击毁掉落与机器人回收，不凭清剿额外凭空发奖。序列化驻军使用独立非递归OutpostEnemyBlueprint，避免Unity十层序列化上限；显式enabled兼容缺失字段的旧JSON。
+资源在真实货仓内，击毁或断裂时释放蓝图中实际存量，金币/科技自然吸附到对应供电货仓，模块由回收机器人送回；不凭清剿额外凭空发奖。世界建筑存量不受载具Prefab的敌方货物开关吞掉，普通敌机仍遵循原阵营配置。普通流式卸载和会话退出不产生掉落。序列化驻军使用独立非递归OutpostEnemyBlueprint，避免Unity十层序列化上限；显式enabled兼容缺失字段的旧JSON。
 
 ## 验收边界
 
