@@ -137,7 +137,15 @@ public class Durability : MonoBehaviour
         {
             currentDurability = 0;
             MainUIPanels.instance?.UpdateHealthBar(gameObject, currentDurability, maxDurability);
-            DestroyManager.instance.DestroyGameObject(gameObject);
+            BuildingRuntime building = GetComponentInParent<BuildingRuntime>();
+            if (building != null)
+            {
+                building.DestroyBlock(GetComponent<Block>());
+            }
+            else if (DestroyManager.instance != null)
+            {
+                DestroyManager.instance.DestroyGameObject(gameObject);
+            }
         }
         else
         {

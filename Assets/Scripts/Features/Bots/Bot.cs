@@ -165,7 +165,8 @@ public abstract class Bot : MonoBehaviour
         }
 
         homeRigidbody = home.GetComponentInParent<Rigidbody>();
-        return rb != null && PlayManager.instance != null && PlayManager.instance.playMode;
+        ControlUnit owner = home.GetComponentInParent<ControlUnit>();
+        return rb != null && owner != null && owner.IsSimulationActive;
     }
 
     protected virtual void OnDisable()

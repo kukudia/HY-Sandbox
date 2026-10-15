@@ -62,6 +62,26 @@
     <Analyzer Include="D:\git_projects\Unity\HY-Sandbox\Library\PackageCache\com.unity.pipeline@ab05e9cd7f74\Runtime\Analyzers\IlInterpreterAnalyzer.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Features\World\BuildingRuntime.cs" />
+    <Compile Include="Assets\Scripts\Features\World\ProceduralVoxelWorld.cs" />
+    <Compile Include="Assets\Scripts\Features\World\VoxelDebrisPiece.cs" />
+    <Compile Include="Assets\Scripts\Features\World\VoxelStructureCollapse.cs" />
+    <Compile Include="Assets\Scripts\Features\World\VoxelStructureSupport.cs" />
+    <Compile Include="Assets\Scripts\Features\World\VoxelSurfaceMesher.cs" />
+    <Compile Include="Assets\Scripts\Features\World\VoxelWorldChunk.cs" />
+    <Compile Include="Assets\Scripts\Features\World\VoxelWorldData.cs" />
+    <Compile Include="Assets\Scripts\Features\World\VoxelWorldEdits.cs" />
+    <Compile Include="Assets\Scripts\Features\World\WorldBuildingCatalog.cs" />
+    <Compile Include="Assets\Scripts\Features\World\WorldBuildingDamage.cs" />
+    <Compile Include="Assets\Scripts\Features\World\WorldBuildingManager.cs" />
+    <Compile Include="Assets\Scripts\Features\World\WorldBuildingPalette.cs" />
+    <Compile Include="Assets\Scripts\Features\World\WorldBuildingPlacement.cs" />
+    <Compile Include="Assets\Scripts\Features\World\WorldBuildingState.cs" />
+    <Compile Include="Assets\Scripts\Features\World\WorldBuildingValidation.cs" />
+    <Compile Include="Assets\Scripts\Features\World\WorldLabController.cs" />
+    <Compile Include="Assets\Scripts\Features\World\WorldLabDebrisProbe.cs" />
+    <Compile Include="Assets\Scripts\Features\World\WorldLabPersistence.cs" />
+    <Compile Include="Assets\Scripts\Features\World\WorldLabPhysicsProbe.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BuildingEditorPanel.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BuildingFoundation.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BuildingFoundationData.cs" />

@@ -1,5 +1,13 @@
 # HY-Sandbox 开发与审查入口
 
+## 2026-10-15 WorldLab 建筑融合
+
+- WorldLab新增真实建筑目录、Outpost模板和初始据点；读取BuildingBlueprints，B进入放置、Q/T旋转、左键确认、Esc取消。预览只复制Mesh且屏蔽采掘。按用户要求，WorldLab实例和预览不生成地基模型、碰撞体或底座方块，保留编辑器底座及尺寸元数据。建筑保留1m模块，地形保留2m体素；支撑、穿插和重叠校验失败拒绝放置。
+- ControlUnit共用运行身份与战斗注册，建筑无需驾驶舱，也不加入Main载具清理。供电、激光与实体炮弹、货仓及机器人运行门槛已适配；方块死亡从虚拟地面连接点检查Connector连通，断裂组生成有界残骸；虚拟范围低于默认50%地形支撑时整栋脱锚。
+- F5/F9保存/校验体素差量与建筑完整快照，包含尺寸、货仓、耐久和剩余模块；缺失资源或坏数据保留当前世界，兼容旧纯体素差量。动态主体恢复姿态但速度归零，残骸和飞行运输任务不持久化。使用、Inspector参数和边界见 [WorldBuildings](Docs/WorldBuildings.md)，源码图见 [RuntimeFlow](Docs/RuntimeFlow.md)。
+- 已验证：Unity6000.3.11f1导入/编译；融合专项43项通过，覆盖生产Input System输入、三实例旋转、尺寸与耐久/货仓JSON恢复、异常保护、供电战斗、独立场景炮弹跨帧飞行、无实体地基、断裂、地形挖空真实帧下落、旧存档与重置。建筑编辑35项、建造目录102项、炮塔28项、供电/货仓/机器人工作请求32项、机器人真实物理导航11项回归通过；结果见 [专项报告](Docs/Validation/2026-10-15-world-buildings.json) 与 [回归报告](Docs/Validation/2026-10-15-world-buildings-regressions.json)。213份自有脚本格式/源码导航检查通过；dotnet build 0错误、4个既有警告。实际画面已检查。正式Player构建、大规模性能、机器人跨帧任务及玩家载具进入WorldLab尚未验收。
+
+
 ## 2026-10-15 开发者建筑蓝图编辑
 
 - 开发者模式（Unity Editor / Development Build）下，`Ctrl+Alt+E` 进入/退出敌人编辑；`Ctrl+Alt+F` 进入/退出建筑编辑，支持左右 Ctrl/Alt。两种蓝图模式可直接互切；相同快捷键再次按下返回玩家存档。普通 F 聚焦不会同时触发。

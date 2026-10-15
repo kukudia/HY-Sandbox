@@ -260,7 +260,7 @@ public class LootDrop : MonoBehaviour
 
     private void Update()
     {
-        if (_consumed || PlayManager.instance == null || !PlayManager.instance.playMode)
+        if (_consumed || !ControlUnit.IsSceneSimulationActive(gameObject.scene))
         {
             return;
         }

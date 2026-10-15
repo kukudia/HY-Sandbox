@@ -56,7 +56,7 @@ public sealed class TurretProjectilePool : MonoBehaviour
 
     private void Update()
     {
-        if (PlayManager.instance == null || !PlayManager.instance.playMode)
+        if (!ControlUnit.IsSceneSimulationActive(gameObject.scene) && (PlayManager.instance == null || !PlayManager.instance.playMode))
         {
             Destroy(gameObject);
         }

@@ -86,7 +86,7 @@ public class CargoHold : MonoBehaviour
     {
         _reservations.RemoveWhere(drop => drop == null || drop.Destination != this);
         ControlUnit owner = Owner;
-        bool requested = _requiresPower && !_released && _reservations.Count > 0 && owner != null && owner.HasValidCockpit && PlayManager.instance != null && PlayManager.instance.playMode;
+        bool requested = _requiresPower && !_released && _reservations.Count > 0 && owner != null && owner.IsOperational && owner.IsSimulationActive;
         _power?.SetWorkRequested(this, requested);
     }
 
@@ -233,7 +233,7 @@ public class CargoHold : MonoBehaviour
         foreach (CargoHold hold in ActiveHolds)
         {
             ControlUnit unit = hold.Owner;
-            if (unit == null || !unit.HasValidCockpit || (owner != null ? unit != owner : !unit.IsPlayer) || !hold.CanReceive(item, reservation))
+            if (unit == null || !unit.IsOperational || !unit.IsSimulationActive || (owner != null ? unit != owner : !unit.IsPlayer) || !hold.CanReceive(item, reservation))
             {
                 continue;
             }

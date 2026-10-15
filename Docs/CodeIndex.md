@@ -709,6 +709,103 @@
 | SalvagePlayProbe | [`CargoItem Part()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L216) | private static |
 | SalvagePlayProbe | [`IEnumerator Scenario()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L222) | private static |
 
+## Assets/Editor/World/ProceduralVoxelWorldEditor.cs
+
+// 职责：为选中的程序化世界提供Undo预览、重生成与真实网格Bake入口。 // 入口：ProceduralVoxelWorld Inspector；只写所选世界及WorldLab网格目录。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| ProceduralVoxelWorldEditor | [`void OnInspectorGUI()`](../Assets/Editor/World/ProceduralVoxelWorldEditor.cs#L9) | public override |
+
+## Assets/Editor/World/WorldBuildingAuthoring.cs
+
+// 职责：为独立 WorldLab 安装建筑库、示例模板和场景组合；已有模板与布局不覆盖。 // 入口：Tools/HY-Sandbox/World/Install building integration；只保存 WorldLab 与 Assets/WorldLab/Buildings。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldBuildingAuthoring | [`void Install()`](../Assets/Editor/World/WorldBuildingAuthoring.cs#L12) | public static |
+| WorldBuildingAuthoring | [`BlockDataList CreateSample()`](../Assets/Editor/World/WorldBuildingAuthoring.cs#L93) | public static |
+| WorldBuildingAuthoring | [`void Add(BlockDataList blueprint, string resource, Vector3 position)`](../Assets/Editor/World/WorldBuildingAuthoring.cs#L107) | private static |
+| WorldBuildingAuthoring | [`Vector3 FindFlatPosition(ProceduralVoxelWorld world, BlockDataList blueprint)`](../Assets/Editor/World/WorldBuildingAuthoring.cs#L113) | private static |
+
+## Assets/Editor/World/WorldBuildingPlayProbe.cs
+
+// 职责：在 WorldLab 真实物理帧验证建筑放置、战斗、事务恢复、支撑坍塌和输入预览。 // 入口：Run()；存档只写 Temp/WorldBuildings，结束恢复种子和初始建筑，不保存运行场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldBuildingPlayProbe | [`void Run()`](../Assets/Editor/World/WorldBuildingPlayProbe.cs#L39) | public static |
+| WorldBuildingPlayProbe | [`void StateChanged(PlayModeStateChange state)`](../Assets/Editor/World/WorldBuildingPlayProbe.cs#L51) | private static |
+| WorldBuildingPlayProbe | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Editor/World/WorldBuildingPlayProbe.cs#L69) | private static |
+| WorldBuildingPlayProbe | [`void Tick()`](../Assets/Editor/World/WorldBuildingPlayProbe.cs#L77) | private static |
+| WorldBuildingPlayProbe | [`void Check(bool result, string description)`](../Assets/Editor/World/WorldBuildingPlayProbe.cs#L106) | private static |
+| WorldBuildingPlayProbe | [`IEnumerator Scenario()`](../Assets/Editor/World/WorldBuildingPlayProbe.cs#L116) | private static |
+| WorldBuildingPlayProbe | [`void InvokeUpdate(MonoBehaviour behaviour)`](../Assets/Editor/World/WorldBuildingPlayProbe.cs#L417) | private static |
+| WorldBuildingPlayProbe | [`void ExpectRejected(WorldBuildingManager manager, WorldLabSnapshot snapshot, string name)`](../Assets/Editor/World/WorldBuildingPlayProbe.cs#L422) | private static |
+| WorldBuildingPlayProbe | [`void Finish()`](../Assets/Editor/World/WorldBuildingPlayProbe.cs#L437) | private static |
+
+## Assets/Editor/World/WorldLabAuthoring.cs
+
+// 职责：创建独立WorldLab场景并将生成网格保存为真实资产；Inspector支持种子与分块参数。 // 入口：Tools/HY-Sandbox/World/Create or open World Lab；不保存或改写Main。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabAuthoring | [`void CreateOrOpen()`](../Assets/Editor/World/WorldLabAuthoring.cs#L13) | public static |
+| WorldLabAuthoring | [`Material MaterialAt(string name, Color color, float metallic)`](../Assets/Editor/World/WorldLabAuthoring.cs#L79) | private static |
+| WorldLabAuthoring | [`void BakeMeshes(ProceduralVoxelWorld world)`](../Assets/Editor/World/WorldLabAuthoring.cs#L99) | public static |
+
+## Assets/Editor/World/WorldLabChecks.cs
+
+// 职责：检查种子、网格边界与真实PhysX破坏/填补/炮弹命中，并将结果写入验证文件。 // 入口：RunDataChecks() / RunPlayChecks()；只在独立WorldLab执行运行检查，不操作玩家存档。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabChecks | [`void Check(bool result, string name)`](../Assets/Editor/World/WorldLabChecks.cs#L12) | private static |
+| WorldLabChecks | [`string RunDataChecks()`](../Assets/Editor/World/WorldLabChecks.cs#L22) | public static |
+| WorldLabChecks | [`void Clear(VoxelWorldData data)`](../Assets/Editor/World/WorldLabChecks.cs#L66) | private static |
+| WorldLabChecks | [`string RunPlayChecks()`](../Assets/Editor/World/WorldLabChecks.cs#L81) | public static |
+| WorldLabChecks | [`string Save(string phase)`](../Assets/Editor/World/WorldLabChecks.cs#L176) | private static |
+
+## Assets/Editor/World/WorldLabCollapseChecks.cs
+
+// 职责：验证六邻接支撑、尺寸/数量上限及真实世界片段转刚体、再生清理。 // 入口：RunData() / RunPlay()；动态检查仅在WorldLab，真实下落由配套跨帧探针记录。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabCollapseChecks | [`void Check(bool value, string name)`](../Assets/Editor/World/WorldLabCollapseChecks.cs#L13) | private static |
+| WorldLabCollapseChecks | [`string RunData()`](../Assets/Editor/World/WorldLabCollapseChecks.cs#L23) | public static |
+| WorldLabCollapseChecks | [`string RunPlay()`](../Assets/Editor/World/WorldLabCollapseChecks.cs#L54) | public static |
+| WorldLabCollapseChecks | [`string Save(string phase)`](../Assets/Editor/World/WorldLabCollapseChecks.cs#L102) | private static |
+
+## Assets/Editor/World/WorldLabPerformanceChecks.cs
+
+// 职责：在WorldLab测量真实生成、球形破坏和脏块网格/碰撞重建的同步CPU成本。 // 入口：Run()；固定种子/爆点和样本记录，不把微基准当作帧率或GPU性能。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabPerformanceChecks | [`string Run()`](../Assets/Editor/World/WorldLabPerformanceChecks.cs#L13) | public static |
+| WorldLabPerformanceChecks | [`double Median(double[] values)`](../Assets/Editor/World/WorldLabPerformanceChecks.cs#L80) | private static |
+
+## Assets/Editor/World/WorldLabPersistenceChecks.cs
+
+// 职责：验证差量保存/读取、原子替换备份与损坏文件拒绝，使用独立临时路径。 // 入口：Run()；不读写玩家或WorldLab真实存档；结束删除本次测试文件。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabPersistenceChecks | [`string Run()`](../Assets/Editor/World/WorldLabPersistenceChecks.cs#L9) | public static |
+
+## Assets/Editor/World/WorldLabSoakChecks.cs
+
+// 职责：在真实帧后台持续爆破/重生成，周期落盘并检查分块/网格有界及输入遮罩下帧推进。 // 入口：Begin(minutes)；最多15分钟，Stop()或离开Play安全结束，不接触真实玩家存档。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabSoakChecks | [`string Begin(int minutes = 15)`](../Assets/Editor/World/WorldLabSoakChecks.cs#L28) | public static |
+| WorldLabSoakChecks | [`void Tick()`](../Assets/Editor/World/WorldLabSoakChecks.cs#L55) | private static |
+| WorldLabSoakChecks | [`void Stop()`](../Assets/Editor/World/WorldLabSoakChecks.cs#L138) | public static |
+| WorldLabSoakChecks | [`void Finish(bool complete)`](../Assets/Editor/World/WorldLabSoakChecks.cs#L147) | private static |
+| WorldLabSoakChecks | [`void WriteCheckpoint()`](../Assets/Editor/World/WorldLabSoakChecks.cs#L162) | private static |
+
 ## Assets/Scripts/Features/Bootstrap/GameManager.cs
 
 // 职责：保存当前方块父对象，启动时初始化界面与默认存档加载。 // 入口：Init()。
@@ -727,20 +824,20 @@
 | --- | --- | --- |
 | Bot | [`void Start()`](../Assets/Scripts/Features/Bots/Bot.cs#L130) | protected virtual |
 | Bot | [`bool TickNavigation()`](../Assets/Scripts/Features/Bots/Bot.cs#L158) | protected |
-| Bot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Bot.cs#L171) | protected virtual |
-| Bot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/Bot.cs#L190) | protected virtual |
-| Bot | [`Power SetHomePowerRequested(bool requested)`](../Assets/Scripts/Features/Bots/Bot.cs#L196) | protected |
-| Bot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/Bot.cs#L209) | public virtual |
-| Bot | [`void InitializeTrail()`](../Assets/Scripts/Features/Bots/Bot.cs#L213) | private |
-| Bot | [`void LateUpdate()`](../Assets/Scripts/Features/Bots/Bot.cs#L233) | private |
-| Bot | [`void NavigateToTarget(Transform target)`](../Assets/Scripts/Features/Bots/Bot.cs#L246) | protected |
-| Bot | [`void NavigateHomeSmoothly()`](../Assets/Scripts/Features/Bots/Bot.cs#L266) | protected |
-| Bot | [`Vector3 GetRelativeHomeVelocity(Vector3 worldPosition)`](../Assets/Scripts/Features/Bots/Bot.cs#L303) | private |
-| Bot | [`void ReturnHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L309) | private |
-| Bot | [`void LeaveHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L345) | private |
-| Bot | [`void SetNavigationState(NavigationState nextState)`](../Assets/Scripts/Features/Bots/Bot.cs#L357) | private |
-| Bot | [`BotFlightMotion.Settings CreateFlightSettings()`](../Assets/Scripts/Features/Bots/Bot.cs#L377) | private |
-| Bot | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Bots/Bot.cs#L404) | private |
+| Bot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Bot.cs#L172) | protected virtual |
+| Bot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/Bot.cs#L191) | protected virtual |
+| Bot | [`Power SetHomePowerRequested(bool requested)`](../Assets/Scripts/Features/Bots/Bot.cs#L197) | protected |
+| Bot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/Bot.cs#L210) | public virtual |
+| Bot | [`void InitializeTrail()`](../Assets/Scripts/Features/Bots/Bot.cs#L214) | private |
+| Bot | [`void LateUpdate()`](../Assets/Scripts/Features/Bots/Bot.cs#L234) | private |
+| Bot | [`void NavigateToTarget(Transform target)`](../Assets/Scripts/Features/Bots/Bot.cs#L247) | protected |
+| Bot | [`void NavigateHomeSmoothly()`](../Assets/Scripts/Features/Bots/Bot.cs#L267) | protected |
+| Bot | [`Vector3 GetRelativeHomeVelocity(Vector3 worldPosition)`](../Assets/Scripts/Features/Bots/Bot.cs#L304) | private |
+| Bot | [`void ReturnHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L310) | private |
+| Bot | [`void LeaveHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L346) | private |
+| Bot | [`void SetNavigationState(NavigationState nextState)`](../Assets/Scripts/Features/Bots/Bot.cs#L358) | private |
+| Bot | [`BotFlightMotion.Settings CreateFlightSettings()`](../Assets/Scripts/Features/Bots/Bot.cs#L378) | private |
+| Bot | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Bots/Bot.cs#L405) | private |
 
 ## Assets/Scripts/Features/Bots/BotAvoidanceResult.cs
 
@@ -1407,9 +1504,9 @@
 | Durability | [`void ProtectFromExplosionCollisions(float duration)`](../Assets/Scripts/Features/Combat/Durability.cs#L100) | public |
 | Durability | [`void UpdateDurablility(float value)`](../Assets/Scripts/Features/Combat/Durability.cs#L113) | public |
 | Durability | [`void ChangeDurability(float value)`](../Assets/Scripts/Features/Combat/Durability.cs#L123) | private |
-| Durability | [`void LateUpdate()`](../Assets/Scripts/Features/Combat/Durability.cs#L153) | private |
-| Durability | [`void OnGUI()`](../Assets/Scripts/Features/Combat/Durability.cs#L172) | private |
-| Durability | [`bool ShouldShowDebugLabel()`](../Assets/Scripts/Features/Combat/Durability.cs#L190) | private |
+| Durability | [`void LateUpdate()`](../Assets/Scripts/Features/Combat/Durability.cs#L161) | private |
+| Durability | [`void OnGUI()`](../Assets/Scripts/Features/Combat/Durability.cs#L180) | private |
+| Durability | [`bool ShouldShowDebugLabel()`](../Assets/Scripts/Features/Combat/Durability.cs#L198) | private |
 
 ## Assets/Scripts/Features/Combat/EnemyController.cs
 
@@ -1583,11 +1680,11 @@
 | TurretProjectile | [`void Awake()`](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L51) | private |
 | TurretProjectile | [`void Launch( ControlUnit owner, UnitFaction faction, float damage, float impulse, Vector3 velocity, float lifetime, float maxDistance, LayerMask hitLayers)`](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L63) | public |
 | TurretProjectile | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L96) | private |
-| TurretProjectile | [`bool ResolveOverlaps(Vector3 origin, float radius)`](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L165) | private |
-| TurretProjectile | [`void OnTriggerEnter(Collider other)`](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L187) | private |
-| TurretProjectile | [`bool CanHit(Collider collider)`](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L196) | private |
-| TurretProjectile | [`void ResolveHit(Collider collider, Vector3 point, Vector3 normal)`](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L201) | private |
-| TurretProjectile | [`void Retire()`](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L222) | private |
+| TurretProjectile | [`bool ResolveOverlaps(Vector3 origin, float radius)`](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L166) | private |
+| TurretProjectile | [`void OnTriggerEnter(Collider other)`](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L188) | private |
+| TurretProjectile | [`bool CanHit(Collider collider)`](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L197) | private |
+| TurretProjectile | [`void ResolveHit(Collider collider, Vector3 point, Vector3 normal)`](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L202) | private |
+| TurretProjectile | [`void Retire()`](../Assets/Scripts/Features/Combat/TurretProjectile.cs#L223) | private |
 
 ## Assets/Scripts/Features/Combat/TurretProjectilePool.cs
 
@@ -1606,10 +1703,10 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| TurretTargetSelector | [`ControlUnit FindNearestTarget( IReadOnlyList<ControlUnit> units, ControlUnit owner, UnitFaction faction, float range, bool prioritizeCockpit, out Durability nearestDurability)`](../Assets/Scripts/Features/Combat/TurretTargetSelector.cs#L16) | internal |
-| TurretTargetSelector | [`Durability FindNearestDurability(ControlUnit unit)`](../Assets/Scripts/Features/Combat/TurretTargetSelector.cs#L97) | private |
-| TurretTargetSelector | [`Durability[] GetDurabilities(ControlUnit unit)`](../Assets/Scripts/Features/Combat/TurretTargetSelector.cs#L120) | private |
-| TurretTargetSelector | [`Durability FindCockpitDurability(ControlUnit unit)`](../Assets/Scripts/Features/Combat/TurretTargetSelector.cs#L136) | private |
+| TurretTargetSelector | [`ControlUnit FindNearestTarget( IReadOnlyList<ControlUnit> units, ControlUnit owner, UnitFaction faction, float range, bool prioritizeCockpit, out Durability nearestDurability)`](../Assets/Scripts/Features/Combat/TurretTargetSelector.cs#L17) | internal |
+| TurretTargetSelector | [`Durability FindNearestDurability(ControlUnit unit)`](../Assets/Scripts/Features/Combat/TurretTargetSelector.cs#L112) | private |
+| TurretTargetSelector | [`Durability[] GetDurabilities(ControlUnit unit)`](../Assets/Scripts/Features/Combat/TurretTargetSelector.cs#L135) | private |
+| TurretTargetSelector | [`Durability FindCockpitDurability(ControlUnit unit)`](../Assets/Scripts/Features/Combat/TurretTargetSelector.cs#L151) | private |
 
 ## Assets/Scripts/Features/Diagnostics/AbnormalImpulseBodyProbe.cs
 
@@ -2454,26 +2551,26 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | Block | [`void Awake()`](../Assets/Scripts/Features/Simulation/Block.cs#L50) | private |
-| Block | [`void OnValidate()`](../Assets/Scripts/Features/Simulation/Block.cs#L71) | private |
-| Block | [`void RefreshAuthoringData()`](../Assets/Scripts/Features/Simulation/Block.cs#L88) | public |
-| Block | [`void RefreshRuntimeData(bool rebuildConnectors = false)`](../Assets/Scripts/Features/Simulation/Block.cs#L117) | public |
-| Block | [`void RefreshMass()`](../Assets/Scripts/Features/Simulation/Block.cs#L151) | public |
-| Block | [`void SetMassSettings(bool useCustomMass, float value)`](../Assets/Scripts/Features/Simulation/Block.cs#L164) | public |
-| Block | [`void Reset()`](../Assets/Scripts/Features/Simulation/Block.cs#L172) | private |
-| Block | [`void GenerateConnectionPoints()`](../Assets/Scripts/Features/Simulation/Block.cs#L177) | private |
-| Block | [`string GetDisplayInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L247) | public |
-| Block | [`string GenerateInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L252) | private |
-| Block | [`void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)`](../Assets/Scripts/Features/Simulation/Block.cs#L298) | private |
-| Block | [`Vector3 GetConnectorWorldPosition(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L312) | public |
-| Block | [`Vector3 GetConnectorWorldNormal(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L317) | public |
-| Block | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L322) | public |
-| Block | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/Block.cs#L327) | public |
-| Block | [`List<Block> Neighbors()`](../Assets/Scripts/Features/Simulation/Block.cs#L332) | public |
-| Block | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L340) | internal |
-| Block | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Block.cs#L345) | public |
-| Block | [`void RefreshConnectionStatus()`](../Assets/Scripts/Features/Simulation/Block.cs#L350) | internal |
-| Block | [`bool IsBlockedGhost()`](../Assets/Scripts/Features/Simulation/Block.cs#L358) | public |
-| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L382) | private |
+| Block | [`void OnValidate()`](../Assets/Scripts/Features/Simulation/Block.cs#L77) | private |
+| Block | [`void RefreshAuthoringData()`](../Assets/Scripts/Features/Simulation/Block.cs#L94) | public |
+| Block | [`void RefreshRuntimeData(bool rebuildConnectors = false)`](../Assets/Scripts/Features/Simulation/Block.cs#L123) | public |
+| Block | [`void RefreshMass()`](../Assets/Scripts/Features/Simulation/Block.cs#L157) | public |
+| Block | [`void SetMassSettings(bool useCustomMass, float value)`](../Assets/Scripts/Features/Simulation/Block.cs#L170) | public |
+| Block | [`void Reset()`](../Assets/Scripts/Features/Simulation/Block.cs#L178) | private |
+| Block | [`void GenerateConnectionPoints()`](../Assets/Scripts/Features/Simulation/Block.cs#L183) | private |
+| Block | [`string GetDisplayInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L253) | public |
+| Block | [`string GenerateInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L258) | private |
+| Block | [`void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)`](../Assets/Scripts/Features/Simulation/Block.cs#L304) | private |
+| Block | [`Vector3 GetConnectorWorldPosition(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L318) | public |
+| Block | [`Vector3 GetConnectorWorldNormal(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L323) | public |
+| Block | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L328) | public |
+| Block | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/Block.cs#L333) | public |
+| Block | [`List<Block> Neighbors()`](../Assets/Scripts/Features/Simulation/Block.cs#L338) | public |
+| Block | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L346) | internal |
+| Block | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Block.cs#L351) | public |
+| Block | [`void RefreshConnectionStatus()`](../Assets/Scripts/Features/Simulation/Block.cs#L356) | internal |
+| Block | [`bool IsBlockedGhost()`](../Assets/Scripts/Features/Simulation/Block.cs#L364) | public |
+| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L388) | private |
 
 ## Assets/Scripts/Features/Simulation/BlockConnections.cs
 
@@ -2483,15 +2580,16 @@
 | --- | --- | --- |
 | BlockConnections | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L20) | internal |
 | BlockConnections | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L34) | internal |
-| BlockConnections | [`void ReleaseExistingConnections()`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L83) | private |
-| BlockConnections | [`void ReleaseConnectionPairWithoutVisual(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L99) | private |
-| BlockConnections | [`void ReleaseConnectionReferences(GameObject connectorObject)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L113) | private |
-| BlockConnections | [`Block FindBlockAcrossConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L143) | private |
-| BlockConnections | [`Connector FindMatchingConnector(Block otherBlock, Connector connector, bool requireAvailable = true)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L170) | private |
-| BlockConnections | [`void ConnectTo(Connector connector, Block otherBlock, Connector otherConnector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L192) | private |
-| BlockConnections | [`void ClearConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L213) | private |
-| BlockConnections | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L232) | internal |
-| BlockConnections | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L260) | internal |
+| BlockConnections | [`void ReleaseExistingConnections()`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L78) | private |
+| BlockConnections | [`void ReleaseConnectionPairWithoutVisual(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L94) | private |
+| BlockConnections | [`void ReleaseConnectionReferences(GameObject connectorObject)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L108) | private |
+| BlockConnections | [`Block FindBlockAcrossConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L138) | private |
+| BlockConnections | [`bool SharesBuildingScope(Block other)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L166) | private |
+| BlockConnections | [`Connector FindMatchingConnector(Block otherBlock, Connector connector, bool requireAvailable = true)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L173) | private |
+| BlockConnections | [`void ConnectTo(Connector connector, Block otherBlock, Connector otherConnector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L195) | private |
+| BlockConnections | [`void ClearConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L216) | private |
+| BlockConnections | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L235) | internal |
+| BlockConnections | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L263) | internal |
 
 ## Assets/Scripts/Features/Simulation/BlockGroupManager.cs
 
@@ -2514,20 +2612,24 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L24) | public |
-| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L35) | public |
-| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L58) | private |
-| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L70) | private |
-| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L117) | public |
-| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L167) | public |
-| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L188) | public |
-| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L196) | public |
-| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L206) | public |
-| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L211) | public |
-| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L216) | private |
-| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L254) | private |
-| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L264) | private |
-| RuntimeUnitMember | [`RuntimeUnitMember Ensure(GameObject obj, string unitId, UnitFaction faction)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L277) | public static |
+| ControlUnit | [`bool IsSceneSimulationActive(UnityEngine.SceneManagement.Scene scene)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L12) | public static |
+| ControlUnit | [`void BindBuilding(BuildingRuntime building)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L32) | public |
+| ControlUnit | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L37) | private |
+| ControlUnit | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L45) | private |
+| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L66) | public |
+| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L77) | public |
+| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L100) | private |
+| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L112) | private |
+| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L159) | public |
+| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L209) | public |
+| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L230) | public |
+| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L238) | public |
+| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L248) | public |
+| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L253) | public |
+| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L258) | private |
+| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L296) | private |
+| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L306) | private |
+| RuntimeUnitMember | [`RuntimeUnitMember Ensure(GameObject obj, string unitId, UnitFaction faction)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L319) | public static |
 
 ## Assets/Scripts/Features/Simulation/GroupPhysicsSettings.cs
 
@@ -2619,3 +2721,243 @@
 // 职责：定义阵营和运行单元归属，支持友敌判断与残骸追踪。
 
 数据/配置/接口定义，无方法体。
+
+## Assets/Scripts/Features/World/BuildingRuntime.cs
+
+// 职责：拥有一栋世界建筑的方块、虚拟支撑范围与刚体；处理损坏、断裂和脱锚。 // 入口：Initialize() / Activate() / DestroyBlock() / ReleaseAnchor() / Capture()。 // 生命周期：世界存档只捕获主体；断裂残骸由 WorldBuildingManager 限量管理。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BuildingRuntime | [`void Initialize(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L27) | public |
+| BuildingRuntime | [`void Activate()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L66) | public |
+| BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L93) | public |
+| BuildingRuntime | [`void DestroyBlock(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L140) | public |
+| BuildingRuntime | [`void SplitDisconnected()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L178) | private |
+| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L248) | private |
+| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L269) | public |
+| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L280) | private |
+
+## Assets/Scripts/Features/World/ProceduralVoxelWorld.cs
+
+// 职责：拥有可编辑体素数据、分块网格与受影响块的重建队列。 // 入口：Generate() / DamageSphere() / SetCell()；LateUpdate分预算刷新碰撞和显示。 // 约束：根Transform保持单位缩放；运行修改属于本次会话，不写玩家蓝图存档。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| ProceduralVoxelWorld | [`void Awake()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L42) | private |
+| ProceduralVoxelWorld | [`void Generate(System.Action<GameObject> registerCreated = null, System.Action<GameObject> destroyObsolete = null)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L56) | public |
+| ProceduralVoxelWorld | [`void CacheChunks()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L129) | private |
+| ProceduralVoxelWorld | [`Vector3Int WorldToCell(Vector3 position)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L141) | public |
+| ProceduralVoxelWorld | [`Vector3 CellCenter(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L146) | public |
+| ProceduralVoxelWorld | [`bool SetCell(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L151) | public |
+| ProceduralVoxelWorld | [`VoxelWorldEdits CaptureEdits()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L164) | public |
+| ProceduralVoxelWorld | [`void RestoreEdits(VoxelWorldEdits edits)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L169) | public |
+| ProceduralVoxelWorld | [`int DamageSphere(Vector3 center, float radius, float energy)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L192) | public |
+| ProceduralVoxelWorld | [`void QueueCell(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L251) | private |
+| ProceduralVoxelWorld | [`void QueueChunk(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L262) | private |
+| ProceduralVoxelWorld | [`void LateUpdate()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L273) | private |
+| ProceduralVoxelWorld | [`void FlushDirty(int budget = int.MaxValue)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L278) | public |
+
+## Assets/Scripts/Features/World/VoxelDebrisPiece.cs
+
+// 职责：拥有有限寿命的金属碎片刚体及单元BoxCollider，清理自身网格。 // 入口：Initialize()；碎片不是可建造Block，不进入玩家分组/供电/存档。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VoxelDebrisPiece | [`void Initialize(List<Vector3Int> cells, float cellSize, Material[] materials, float lifetime)`](../Assets/Scripts/Features/World/VoxelDebrisPiece.cs#L11) | public |
+| VoxelDebrisPiece | [`void Update()`](../Assets/Scripts/Features/World/VoxelDebrisPiece.cs#L49) | private |
+| VoxelDebrisPiece | [`void OnDestroy()`](../Assets/Scripts/Features/World/VoxelDebrisPiece.cs#L57) | private |
+
+## Assets/Scripts/Features/World/VoxelStructureCollapse.cs
+
+// 职责：破坏后按预算判定金属支撑，将少量孤立结构转为有界物理碎片。 // 入口：RequestCheck()由世界成功破坏调用，LateUpdate避开未刷新的静态碰撞。 // 约束：仅土/岩邻接支撑，小片段研究模型，不等于全地形结构力学求解。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VoxelStructureCollapse | [`void Awake()`](../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L28) | private |
+| VoxelStructureCollapse | [`void RequestCheck()`](../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L33) | public |
+| VoxelStructureCollapse | [`void LateUpdate()`](../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L38) | private |
+| VoxelStructureCollapse | [`void ResolveDetached()`](../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L51) | public |
+| VoxelStructureCollapse | [`void ClearDebris()`](../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L85) | public |
+| VoxelStructureCollapse | [`void OnDisable()`](../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L101) | private |
+
+## Assets/Scripts/Features/World/VoxelStructureSupport.cs
+
+// 职责：按六邻接找金属连通结构，接触土/岩视为有支撑；只返回有限尺寸的无支撑片段。 // 入口：FindDetached()；只读取体素，不将土/岩地形转成动态刚体。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VoxelStructureSupport | [`List<List<Vector3Int>> FindDetached(VoxelWorldData data, int maximumCells, int maximumGroups)`](../Assets/Scripts/Features/World/VoxelStructureSupport.cs#L17) | public static |
+
+## Assets/Scripts/Features/World/VoxelSurfaceMesher.cs
+
+// 职责：仅为暴露的体素面生成三材质分块网格，边界查询邻块以避免内部重复面。 // 入口：Build()；调用者拥有返回Mesh并负责销毁，不修改源数据。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VoxelSurfaceMesher | [`Mesh Build(VoxelWorldData data, Vector3Int start, int chunkSize, float cellSize)`](../Assets/Scripts/Features/World/VoxelSurfaceMesher.cs#L63) | public static |
+
+## Assets/Scripts/Features/World/VoxelWorldChunk.cs
+
+// 职责：持有一个分块的渲染/碰撞网格，替换时只清理本组件创建的临时Mesh。 // 入口：Rebuild()；烘焙资产引用不销毁，碰撞更新与渲染共用同一表面。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VoxelWorldChunk | [`void Configure(Vector3Int cellStart)`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L13) | public |
+| VoxelWorldChunk | [`void Rebuild(VoxelWorldData data, int chunkSize, float cellSize, Material[] materials)`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L18) | public |
+| VoxelWorldChunk | [`void AdoptBakedMesh(Mesh asset)`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L34) | public |
+| VoxelWorldChunk | [`void OnDestroy()`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L41) | private |
+| VoxelWorldChunk | [`void ReleaseMesh()`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L46) | private |
+
+## Assets/Scripts/Features/World/VoxelWorldData.cs
+
+// 职责：固定种子生成体素地形与遗迹，保存单元材质和采掘修改。 // 入口：Generate() / Set()；无场景或存档副作用，0为空气、1土、2岩、3金属。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VoxelWorldData | [`byte Get(Vector3Int cell)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L20) | public |
+| VoxelWorldData | [`bool Contains(Vector3Int cell)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L30) | public |
+| VoxelWorldData | [`bool Set(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L35) | public |
+| VoxelWorldData | [`void Recount()`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L54) | public |
+| VoxelWorldData | [`void InitializeEmpty(Vector3Int dimensions)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L66) | public |
+| VoxelWorldData | [`void Generate(Vector3Int dimensions, int seed)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L78) | public |
+| VoxelWorldData | [`uint Fingerprint()`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L134) | public |
+
+## Assets/Scripts/Features/World/VoxelWorldEdits.cs
+
+// 职责：将体素修改保存为有版本/种子/基线指纹的差量；校验全部通过才返回新数据。 // 入口：Capture() / Restore()；不读写磁盘、不修改传入世界，拒绝不兼容或重复单元。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VoxelWorldEdits | [`VoxelWorldEdits Capture(VoxelWorldData current, int worldSeed)`](../Assets/Scripts/Features/World/VoxelWorldEdits.cs#L22) | public static |
+| VoxelWorldEdits | [`VoxelWorldData Restore(int expectedSeed, Vector3Int expectedSize)`](../Assets/Scripts/Features/World/VoxelWorldEdits.cs#L52) | public |
+
+## Assets/Scripts/Features/World/WorldBuildingCatalog.cs
+
+// 职责：可编辑的随项目建筑模板与初始布局；用户建筑文件由运行时面板另行读取。
+
+数据/配置/接口定义，无方法体。
+
+## Assets/Scripts/Features/World/WorldBuildingDamage.cs
+
+// 职责：顺序结算建筑范围伤害；爆炸连锁排队，避免递归销毁耗尽调用栈。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldBuildingDamage | [`void Apply(IReadOnlyList<BuildingRuntime> buildings, Vector3 center, float radius, float damage)`](../Assets/Scripts/Features/World/WorldBuildingDamage.cs#L17) | public |
+
+## Assets/Scripts/Features/World/WorldBuildingManager.cs
+
+// 职责：拥有 WorldLab 建筑实例、初始布局、地形支撑通知和有界残骸。 // 入口：Place() / Capture() / Restore() / ResetBuildings()；不调用玩家 SaveManager。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldBuildingManager | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L34) | private |
+| WorldBuildingManager | [`void Start()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L43) | private |
+| WorldBuildingManager | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L48) | private |
+| WorldBuildingManager | [`bool CanPlace(BlockDataList blueprint, Vector3 position, Quaternion rotation, out string reason)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L59) | public |
+| WorldBuildingManager | [`BuildingRuntime Place(BlockDataList blueprint, string name, Vector3 position, Quaternion rotation, UnitFaction faction)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L79) | public |
+| WorldBuildingManager | [`BuildingRuntime Stage(WorldBuildingState state, Transform parent)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L111) | private |
+| WorldBuildingManager | [`WorldLabSnapshot Capture()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L129) | public |
+| WorldBuildingManager | [`void Restore(WorldLabSnapshot snapshot)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L149) | public |
+| WorldBuildingManager | [`void ResetBuildings()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L202) | public |
+| WorldBuildingManager | [`void ClearBuildings()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L236) | private |
+| WorldBuildingManager | [`void TerrainChanged(Bounds changed)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L251) | private |
+| WorldBuildingManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L262) | private |
+| WorldBuildingManager | [`void DamageSphere(Vector3 center, float radius, float damage)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L279) | public |
+| WorldBuildingManager | [`void CreateDebris(List<Block> group, Rigidbody source)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L284) | internal |
+| WorldBuildingManager | [`void ClearDebris()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L320) | private |
+
+## Assets/Scripts/Features/World/WorldBuildingPalette.cs
+
+// 职责：WorldLab 建筑库面板、只含网格的放置预览与输入；模板读取失败不影响世界。 // 入口：Update() / OnGUI()；B开关建筑模式，Q/T旋转，左键放置，Esc取消。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldBuildingPalette | [`void Start()`](../Assets/Scripts/Features/World/WorldBuildingPalette.cs#L38) | private |
+| WorldBuildingPalette | [`void RefreshCatalog()`](../Assets/Scripts/Features/World/WorldBuildingPalette.cs#L43) | public |
+| WorldBuildingPalette | [`void AddTemplate(string name, string json)`](../Assets/Scripts/Features/World/WorldBuildingPalette.cs#L84) | private |
+| WorldBuildingPalette | [`void Update()`](../Assets/Scripts/Features/World/WorldBuildingPalette.cs#L99) | private |
+| WorldBuildingPalette | [`void BeginPlacement()`](../Assets/Scripts/Features/World/WorldBuildingPalette.cs#L174) | public |
+| WorldBuildingPalette | [`void AddPreviewMeshes(GameObject prefab, Vector3 localPosition, Quaternion localRotation, Vector3? size = null)`](../Assets/Scripts/Features/World/WorldBuildingPalette.cs#L204) | private |
+| WorldBuildingPalette | [`void Cancel()`](../Assets/Scripts/Features/World/WorldBuildingPalette.cs#L244) | public |
+| WorldBuildingPalette | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldBuildingPalette.cs#L259) | private |
+| WorldBuildingPalette | [`void OnGUI()`](../Assets/Scripts/Features/World/WorldBuildingPalette.cs#L264) | private |
+
+## Assets/Scripts/Features/World/WorldBuildingPlacement.cs
+
+// 职责：在1m建筑网格与体素地形间转换位置，检测支撑、体素穿插和其他碰撞体。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldBuildingPlacement | [`Vector3 Snap(ProceduralVoxelWorld world, Vector3 hit)`](../Assets/Scripts/Features/World/WorldBuildingPlacement.cs#L6) | public static |
+| WorldBuildingPlacement | [`bool Check( ProceduralVoxelWorld world, BlockDataList blueprint, Vector3 position, Quaternion rotation, out string reason)`](../Assets/Scripts/Features/World/WorldBuildingPlacement.cs#L15) | public static |
+| WorldBuildingPlacement | [`bool IntersectsTerrain(ProceduralVoxelWorld world, Vector3 center, Vector3 half, Quaternion rotation)`](../Assets/Scripts/Features/World/WorldBuildingPlacement.cs#L77) | private static |
+| WorldBuildingPlacement | [`Vector3 LocalAnchor(int x, int z)`](../Assets/Scripts/Features/World/WorldBuildingPlacement.cs#L106) | public static |
+| WorldBuildingPlacement | [`float Support(ProceduralVoxelWorld world, Vector2Int size, Transform pose)`](../Assets/Scripts/Features/World/WorldBuildingPlacement.cs#L111) | public static |
+| WorldBuildingPlacement | [`Bounds Footprint(BuildingRuntime building)`](../Assets/Scripts/Features/World/WorldBuildingPlacement.cs#L129) | public static |
+
+## Assets/Scripts/Features/World/WorldBuildingState.cs
+
+// 职责：保存世界建筑独立身份、根姿态、蓝图快照与逐块耐久；坐标相对建筑底座。
+
+数据/配置/接口定义，无方法体。
+
+## Assets/Scripts/Features/World/WorldBuildingValidation.cs
+
+// 职责：创建前校验建筑模板、实例状态和资源，拒绝部分加载与非法尺寸/坐标。 // 入口：ValidateBlueprint() / ValidateState()；不会修改资源或活动世界。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldBuildingValidation | [`void ValidateBlueprint(BlockDataList blueprint)`](../Assets/Scripts/Features/World/WorldBuildingValidation.cs#L11) | public static |
+| WorldBuildingValidation | [`void ValidateState(WorldBuildingState state)`](../Assets/Scripts/Features/World/WorldBuildingValidation.cs#L66) | public static |
+| WorldBuildingValidation | [`bool Finite(float value)`](../Assets/Scripts/Features/World/WorldBuildingValidation.cs#L88) | public static |
+| WorldBuildingValidation | [`bool Finite(Vector3 value)`](../Assets/Scripts/Features/World/WorldBuildingValidation.cs#L93) | public static |
+| WorldBuildingValidation | [`bool ValidRotation(Quaternion value)`](../Assets/Scripts/Features/World/WorldBuildingValidation.cs#L98) | private static |
+
+## Assets/Scripts/Features/World/WorldLabController.cs
+
+// 职责：独立世界实验场的自由镜头、采掘/爆破/填补输入及性能读数。 // 入口：Update()读取Input System；不接管Main场景的玩家、蓝图与存档。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabController | [`void Awake()`](../Assets/Scripts/Features/World/WorldLabController.cs#L32) | private |
+| WorldLabController | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldLabController.cs#L41) | private |
+| WorldLabController | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldLabController.cs#L49) | private |
+| WorldLabController | [`void Update()`](../Assets/Scripts/Features/World/WorldLabController.cs#L57) | private |
+| WorldLabController | [`void MoveView(Keyboard keyboard, Mouse mouse)`](../Assets/Scripts/Features/World/WorldLabController.cs#L151) | private |
+| WorldLabController | [`void ResetView()`](../Assets/Scripts/Features/World/WorldLabController.cs#L172) | private |
+| WorldLabController | [`void TransferEdits(bool save)`](../Assets/Scripts/Features/World/WorldLabController.cs#L183) | private |
+| WorldLabController | [`void OnGUI()`](../Assets/Scripts/Features/World/WorldLabController.cs#L223) | private |
+
+## Assets/Scripts/Features/World/WorldLabDebrisProbe.cs
+
+// 职责：记录真实帧物理碎片下落，并在完成后重生成清理测试碎片。 // 入口：Begin()；2秒后比较真实位置，非手动Physics.Simulate。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabDebrisProbe | [`void Begin(VoxelStructureCollapse owner, ProceduralVoxelWorld source)`](../Assets/Scripts/Features/World/WorldLabDebrisProbe.cs#L13) | public |
+| WorldLabDebrisProbe | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldLabDebrisProbe.cs#L21) | private |
+
+## Assets/Scripts/Features/World/WorldLabPersistence.cs
+
+// 职责：独立WorldLab差量JSON的原子保存、上一份备份与有大小限制的读取。 // 入口：Save() / Load()；仅写调用者传入路径，不接触玩家载具蓝图和货仓。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabPersistence | [`void Save(string path, VoxelWorldEdits edits)`](../Assets/Scripts/Features/World/WorldLabPersistence.cs#L10) | public static |
+| WorldLabPersistence | [`void SaveSnapshot(string path, WorldLabSnapshot snapshot)`](../Assets/Scripts/Features/World/WorldLabPersistence.cs#L15) | public static |
+| WorldLabPersistence | [`void WriteJson(string path, string json)`](../Assets/Scripts/Features/World/WorldLabPersistence.cs#L20) | private static |
+| WorldLabPersistence | [`VoxelWorldEdits Load(string path)`](../Assets/Scripts/Features/World/WorldLabPersistence.cs#L57) | public static |
+| WorldLabPersistence | [`WorldLabSnapshot LoadSnapshot(string path, float legacyCellSize)`](../Assets/Scripts/Features/World/WorldLabPersistence.cs#L68) | public static |
+| WorldLabPersistence | [`string ReadJson(string path)`](../Assets/Scripts/Features/World/WorldLabPersistence.cs#L90) | private static |
+
+## Assets/Scripts/Features/World/WorldLabPhysicsProbe.cs
+
+// 职责：实验场真实帧落体与体素地面接触探针，输出接触证据而不驱动Physics.Simulate。 // 入口：Begin()由WorldLabChecks调用；10秒超时失败，结束移除探针对象。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabPhysicsProbe | [`void Begin(string path)`](../Assets/Scripts/Features/World/WorldLabPhysicsProbe.cs#L11) | public |
+| WorldLabPhysicsProbe | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldLabPhysicsProbe.cs#L17) | private |
+| WorldLabPhysicsProbe | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/World/WorldLabPhysicsProbe.cs#L26) | private |
+| WorldLabPhysicsProbe | [`void Save(bool contact)`](../Assets/Scripts/Features/World/WorldLabPhysicsProbe.cs#L34) | private |

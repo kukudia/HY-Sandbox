@@ -56,6 +56,12 @@ public class Block : MonoBehaviour
             uniqueId = System.Guid.NewGuid().ToString();
         }
 
+        // 世界建筑恢复可能带有坍塌姿态；编辑器整格吸附不能改变其持久化位置。
+        if (GetComponentInParent<BuildingRuntime>() != null)
+        {
+            return;
+        }
+
         Vector3 pos = Vector3.zero;
         pos.x = Mathf.Round(transform.position.x * 2) / 2f;
         pos.y = Mathf.Round(transform.position.y * 2) / 2f;

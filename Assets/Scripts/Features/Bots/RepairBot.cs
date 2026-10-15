@@ -42,7 +42,7 @@ public class RepairBot : Bot
         }
 
         ControlUnit owner = home.GetComponentInParent<ControlUnit>();
-        if (owner == null || !owner.HasValidCockpit)
+        if (owner == null || !owner.IsOperational)
         {
             ClearTarget();
             SetHomePowerRequested(false);
@@ -168,7 +168,8 @@ public class RepairBot : Bot
     {
         currentTarget = null;
         isRepairing = false;
-        SetHomePowerRequested(_requiresPower && PlayManager.instance != null && PlayManager.instance.playMode && home != null && transform.parent != home);
+        ControlUnit owner = home != null ? home.GetComponentInParent<ControlUnit>() : null;
+        SetHomePowerRequested(_requiresPower && owner != null && owner.IsSimulationActive && transform.parent != home);
         UpdateRepairBeam(false);
         if (trailRenderer != null)
         {
