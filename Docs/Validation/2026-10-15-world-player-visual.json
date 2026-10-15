@@ -1,0 +1,87 @@
+{
+    "status": "passed",
+    "graphics": "Direct3D11",
+    "seed": 1137490121,
+    "buildings": 26,
+    "blocks": 1634,
+    "travelStart": {
+        "x": 16.0,
+        "y": 21.0,
+        "z": 16.0
+    },
+    "travelEnd": {
+        "x": 216.0,
+        "y": 21.0,
+        "z": 16.0
+    },
+    "memoryBytes": 184277262,
+    "checks": [
+        "Main starts with world session",
+        "startup mask stays opaque during construct restoration",
+        "construct load exposes bounded progress",
+        "world generation remains valid",
+        "opaque loading mask renders while waiting or enabling",
+        "loading reaches completion",
+        "initial 81 terrain columns loaded",
+        "Player creates buildings from blueprint library",
+        "Player loads external blueprint library",
+        "spawn has real terrain collision",
+        "session stays playing",
+        "Player crosses multiple chunk boundaries",
+        "travel retains terrain under player",
+        "loaded terrain remains bounded",
+        "exit discards world and prepares fresh session",
+        "second preparation completes"
+    ],
+    "errors": [],
+    "phases": [
+        {
+            "name": "startup",
+            "frames": 1300,
+            "medianMs": 8.477449417114258,
+            "p95Ms": 13.125419616699219,
+            "maxMs": 300.3680725097656,
+            "totalMs": 12379.6015625
+        },
+        {
+            "name": "loading-and-entry",
+            "frames": 69,
+            "medianMs": 8.334159851074219,
+            "p95Ms": 8.39996337890625,
+            "maxMs": 40.3594970703125,
+            "totalMs": 614.92822265625
+        },
+        {
+            "name": "idle",
+            "frames": 360,
+            "medianMs": 8.329391479492188,
+            "p95Ms": 8.821487426757813,
+            "maxMs": 12.6190185546875,
+            "totalMs": 3000.4091796875
+        },
+        {
+            "name": "travel",
+            "frames": 420,
+            "medianMs": 8.340835571289063,
+            "p95Ms": 9.809494018554688,
+            "maxMs": 70.26290893554688,
+            "totalMs": 3588.2548828125
+        },
+        {
+            "name": "exit",
+            "frames": 1,
+            "medianMs": 66.192626953125,
+            "p95Ms": 66.192626953125,
+            "maxMs": 66.192626953125,
+            "totalMs": 66.192626953125
+        },
+        {
+            "name": "reprepare",
+            "frames": 478,
+            "medianMs": 8.333206176757813,
+            "p95Ms": 8.525848388671875,
+            "maxMs": 8.646011352539063,
+            "totalMs": 3982.9541015625
+        }
+    ]
+}

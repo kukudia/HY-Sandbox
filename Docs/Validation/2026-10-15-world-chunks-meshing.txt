@@ -1,0 +1,1 @@
+Passed 20267 assertions: slab merging, exact visible face coverage, three materials, normals/winding, UV tiling, negative coordinates, chunk halo and worker snapshot isolation.

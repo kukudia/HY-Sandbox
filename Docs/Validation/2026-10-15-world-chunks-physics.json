@@ -1,0 +1,10 @@
+{
+    "terrainContact": true,
+    "fixedFrames": 180,
+    "position": {
+        "x": 64.0,
+        "y": 16.5,
+        "z": 64.0
+    },
+    "elapsed": 4.555324554443359
+}

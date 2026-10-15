@@ -1,8 +1,6 @@
-// 职责：仅为暴露的体素面生成三材质分块网格，边界查询邻块以避免内部重复面。
-// 入口：Build()；调用者拥有返回Mesh并负责销毁，不修改源数据。
-using System.Collections.Generic;
+// 职责：从一格邻域快照合并同材质的暴露面，生成三材质贪心网格。
+// 入口：Build()用于同步编辑；Generate()只计算数组，可在工作线程运行，Unity提交留在主线程。
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public static class VoxelSurfaceMesher
 {
@@ -62,76 +60,154 @@ public static class VoxelSurfaceMesher
     };
     public static Mesh Build(VoxelWorldData data, Vector3Int start, int chunkSize, float cellSize)
     {
-        var vertices = new List<Vector3>();
-        var normals = new List<Vector3>();
-        var uvs = new List<Vector2>();
-        var colors = new List<Color>();
-        var triangles = new[]
+        return Generate(VoxelChunkSnapshot.Capture(data, start, chunkSize), cellSize).Upload(start);
+    }
+
+    /// <summary>无Unity对象、噪声或共享世界读取。每次调用独享mask与结果，允许后台计算。</summary>
+    public static VoxelMeshData Generate(VoxelChunkSnapshot snapshot, float cellSize)
+    {
+        int size = snapshot.Size;
+        var result = new VoxelMeshData();
+        var mask = new byte[size * size];
+        for (int face = 0; face < 6; face++)
         {
-            new List<int>(),
-            new List<int>(),
-            new List<int>()
-        };
-        Vector3Int end = Vector3Int.Min(start + Vector3Int.one * chunkSize, data.Maximum);
-        for (int z = start.z; z < end.z; z++)
-        {
-            for (int y = start.y; y < end.y; y++)
+            Vector3Int normal = Directions[face];
+            Vector3Int axis = new Vector3Int(System.Math.Abs(normal.x), System.Math.Abs(normal.y), System.Math.Abs(normal.z));
+            Vector3Int u = Vector3Int.RoundToInt(Corners[face][1] - Corners[face][0]);
+            Vector3Int v = Vector3Int.RoundToInt(Corners[face][3] - Corners[face][0]);
+            Vector3Int offset = new Vector3Int(u.x + v.x < 0 ? size - 1 : 0, u.y + v.y < 0 ? size - 1 : 0, u.z + v.z < 0 ? size - 1 : 0);
+            int stepU = snapshot.Step(u);
+            int stepV = snapshot.Step(v);
+            int stepNormal = snapshot.Step(normal);
+            for (int slice = 0; slice < size; slice++)
             {
-                for (int x = start.x; x < end.x; x++)
+                Vector3Int origin = offset + axis * slice;
+                int first = snapshot.Index(origin);
+                for (int row = 0; row < size; row++)
                 {
-                    var cell = new Vector3Int(x, y, z);
-                    byte material = data.Get(cell);
-                    if (material == 0)
+                    int index = first + stepV * row;
+                    int maskIndex = row * size;
+                    for (int column = 0; column < size; column++)
                     {
-                        continue;
+                        byte material = snapshot.Get(index);
+                        mask[maskIndex + column] = material != 0 && snapshot.Get(index + stepNormal) == 0 ? material : (byte)0;
+                        index += stepU;
+                    }
+                }
+
+                MergeSlice(
+                    result,
+                    mask,
+                    size,
+                    face,
+                    origin,
+                    u,
+                    v,
+                    cellSize);
+            }
+        }
+
+        return result;
+    }
+
+    private static void MergeSlice(
+        VoxelMeshData result,
+        byte[] mask,
+        int size,
+        int face,
+        Vector3Int origin,
+        Vector3Int u,
+        Vector3Int v,
+        float scale)
+    {
+        for (int row = 0; row < size; row++)
+        {
+            for (int column = 0; column < size; column++)
+            {
+                byte material = mask[row * size + column];
+                if (material == 0)
+                {
+                    continue;
+                }
+
+                int width = 1;
+                while (column + width < size && mask[row * size + column + width] == material)
+                {
+                    width++;
+                }
+
+                int height = 1;
+                bool matches = true;
+                while (row + height < size && matches)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        if (mask[(row + height) * size + column + x] != material)
+                        {
+                            matches = false;
+                            break;
+                        }
                     }
 
-                    for (int face = 0; face < 6; face++)
+                    if (matches)
                     {
-                        if (data.Get(cell + Directions[face]) != 0)
-                        {
-                            continue;
-                        }
+                        height++;
+                    }
+                }
 
-                        int index = vertices.Count;
-                        int shadeIndex = ((x * 17 + y * 7 + z * 13) % 11 + 11) % 11;
-                        float shade = 0.9f + shadeIndex * 0.01f;
-                        for (int corner = 0; corner < 4; corner++)
-                        {
-                            vertices.Add(((Vector3)(cell - start) + Corners[face][corner]) * cellSize);
-                            normals.Add(Directions[face]);
-                            uvs.Add(new Vector2(corner == 1 || corner == 2 ? 1 : 0, corner >= 2 ? 1 : 0));
-                            colors.Add(new Color(shade, shade, shade, 1));
-                        }
-
-                        List<int> indices = triangles[material - 1];
-                        indices.Add(index);
-                        indices.Add(index + 1);
-                        indices.Add(index + 2);
-                        indices.Add(index);
-                        indices.Add(index + 2);
-                        indices.Add(index + 3);
+                Vector3 corner = (Vector3)(origin + u * column + v * row) + Corners[face][0];
+                AddQuad(
+                    result,
+                    material,
+                    corner,
+                    u * width,
+                    v * height,
+                    Directions[face],
+                    width,
+                    height,
+                    scale);
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        mask[(row + y) * size + column + x] = 0;
                     }
                 }
             }
         }
+    }
 
-        var mesh = new Mesh
+    private static void AddQuad(
+        VoxelMeshData mesh,
+        byte material,
+        Vector3 corner,
+        Vector3 u,
+        Vector3 v,
+        Vector3 normal,
+        int width,
+        int height,
+        float scale)
+    {
+        int index = mesh.Vertices.Count;
+        mesh.Vertices.Add(corner * scale);
+        mesh.Vertices.Add((corner + u) * scale);
+        mesh.Vertices.Add((corner + u + v) * scale);
+        mesh.Vertices.Add((corner + v) * scale);
+        mesh.UVs.Add(Vector2.zero);
+        mesh.UVs.Add(new Vector2(width, 0));
+        mesh.UVs.Add(new Vector2(width, height));
+        mesh.UVs.Add(new Vector2(0, height));
+        for (int i = 0; i < 4; i++)
         {
-            name = "VoxelChunk_" + start,
-            indexFormat = IndexFormat.UInt32
-        };
-        mesh.SetVertices(vertices);
-        mesh.SetNormals(normals);
-        mesh.SetUVs(0, uvs);
-        mesh.SetColors(colors);
-        mesh.subMeshCount = 3;
-        for (int i = 0; i < 3; i++)
-        {
-            mesh.SetTriangles(triangles[i], i);
+            mesh.Normals.Add(normal);
         }
 
-        mesh.RecalculateBounds();
-        return mesh;
+        var indices = mesh.Triangles[material - 1];
+        indices.Add(index);
+        indices.Add(index + 1);
+        indices.Add(index + 2);
+        indices.Add(index);
+        indices.Add(index + 2);
+        indices.Add(index + 3);
     }
 }

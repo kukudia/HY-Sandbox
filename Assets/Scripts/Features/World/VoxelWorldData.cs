@@ -19,6 +19,10 @@ public sealed class VoxelWorldData
     public Vector3Int Minimum => streamingTerrain != null ? streamingTerrain.Minimum : Vector3Int.zero;
     public Vector3Int Maximum => streamingTerrain != null ? streamingTerrain.Maximum : size;
     public bool IsStreaming => streamingTerrain != null;
+    public int Revision
+    {
+        get; private set;
+    }
     public int SolidCount
     {
         get; private set;
@@ -60,6 +64,7 @@ public sealed class VoxelWorldData
             return false;
         }
 
+        Revision++;
         if (IsStreaming)
         {
             if (material == streamingTerrain.Sample(cell))

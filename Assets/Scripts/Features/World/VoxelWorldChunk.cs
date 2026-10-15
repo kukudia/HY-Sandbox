@@ -17,8 +17,13 @@ public sealed class VoxelWorldChunk : MonoBehaviour
 
     public void Rebuild(VoxelWorldData data, int chunkSize, float cellSize, Material[] materials)
     {
-        Mesh mesh = VoxelSurfaceMesher.Build(data, start, chunkSize, cellSize);
+        ApplyMesh(VoxelSurfaceMesher.Build(data, start, chunkSize, cellSize), materials);
+    }
+
+    public void ApplyMesh(Mesh mesh, Material[] materials)
+    {
         MeshCollider collider = GetComponent<MeshCollider>();
+        collider.enabled = true;
         collider.sharedMesh = null;
         GetComponent<MeshFilter>().sharedMesh = mesh;
         GetComponent<MeshRenderer>().sharedMaterials = materials;

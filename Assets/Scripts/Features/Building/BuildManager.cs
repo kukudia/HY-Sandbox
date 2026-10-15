@@ -70,6 +70,7 @@ public class BuildManager : MonoBehaviour
     public float blockLoadCameraOrbitRadiusWaveDegrees = 120f;
     private BlueprintLoader _blueprintLoader;
     public bool IsLoadingBlocks => _blueprintLoader != null && _blueprintLoader.IsLoading;
+    public float BlueprintLoadProgress => _blueprintLoader?.Progress ?? 0f;
 
     private void Awake()
     {
