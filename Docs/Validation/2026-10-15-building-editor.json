@@ -226,5 +226,18 @@
     "No formal Player build",
     "No maximum-size foundation performance test",
     "No building runtime spawning or combat implemented by this feature"
-  ]
+  ],
+  "publicationValidation": {
+    "base": "c04e227c3a9ff2c873b8e5a54dc7a4c3ce93b783",
+    "excludedLocalCommits": 7,
+    "readabilityScripts": 184,
+    "readabilityErrors": 0,
+    "directBuild": "Fresh worktree lacked ignored vendor source and Library cache; three missing source errors and missing-reference warnings.",
+    "adaptedBuild": {
+      "errors": 0,
+      "warnings": 4,
+      "method": "Temporary project copies use publication-worktree source and existing local Library/vendor dependencies. No dependency assets or temporary configuration committed."
+    },
+    "unityValidation": "Play tests ran in the original connected project. Task production sources match the publication worktree."
+  }
 }
