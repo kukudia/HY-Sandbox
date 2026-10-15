@@ -1,6 +1,6 @@
 {
     "phase": "play",
-    "passed": 13,
+    "passed": 16,
     "checks": [
         "baked world loads in Play",
         "seam edit queues only affected neighbors",
@@ -14,6 +14,9 @@
         "production turret hit damages terrain",
         "sphere blast changes data and queues chunks",
         "all chunk mesh references valid after edits",
-        "regenerate restores seed content and counters"
+        "regenerate restores seed content and counters",
+        "delta restore replaces live world and queues collision refresh",
+        "failed delta restore leaves live world intact",
+        "restored delta rebuilds physical surface"
     ]
 }

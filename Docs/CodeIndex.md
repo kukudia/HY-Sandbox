@@ -706,7 +706,7 @@
 | WorldLabChecks | [`string RunDataChecks()`](../Assets/Editor/World/WorldLabChecks.cs#L22) | public static |
 | WorldLabChecks | [`void Clear(VoxelWorldData data)`](../Assets/Editor/World/WorldLabChecks.cs#L66) | private static |
 | WorldLabChecks | [`string RunPlayChecks()`](../Assets/Editor/World/WorldLabChecks.cs#L81) | public static |
-| WorldLabChecks | [`string Save(string phase)`](../Assets/Editor/World/WorldLabChecks.cs#L147) | private static |
+| WorldLabChecks | [`string Save(string phase)`](../Assets/Editor/World/WorldLabChecks.cs#L176) | private static |
 
 ## Assets/Editor/World/WorldLabPerformanceChecks.cs
 
@@ -716,6 +716,14 @@
 | --- | --- | --- |
 | WorldLabPerformanceChecks | [`string Run()`](../Assets/Editor/World/WorldLabPerformanceChecks.cs#L13) | public static |
 | WorldLabPerformanceChecks | [`double Median(double[] values)`](../Assets/Editor/World/WorldLabPerformanceChecks.cs#L80) | private static |
+
+## Assets/Editor/World/WorldLabPersistenceChecks.cs
+
+// 职责：验证差量保存/读取、原子替换备份与损坏文件拒绝，使用独立临时路径。 // 入口：Run()；不读写玩家或WorldLab真实存档；结束删除本次测试文件。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabPersistenceChecks | [`string Run()`](../Assets/Editor/World/WorldLabPersistenceChecks.cs#L9) | public static |
 
 ## Assets/Scripts/Features/Bootstrap/GameManager.cs
 
@@ -2593,16 +2601,18 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | ProceduralVoxelWorld | [`void Awake()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L39) | private |
-| ProceduralVoxelWorld | [`void Generate()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L53) | public |
-| ProceduralVoxelWorld | [`void CacheChunks()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L111) | private |
-| ProceduralVoxelWorld | [`Vector3Int WorldToCell(Vector3 position)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L123) | public |
-| ProceduralVoxelWorld | [`Vector3 CellCenter(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L128) | public |
-| ProceduralVoxelWorld | [`bool SetCell(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L133) | public |
-| ProceduralVoxelWorld | [`int DamageSphere(Vector3 center, float radius, float energy)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L146) | public |
-| ProceduralVoxelWorld | [`void QueueCell(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L200) | private |
-| ProceduralVoxelWorld | [`void QueueChunk(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L211) | private |
-| ProceduralVoxelWorld | [`void LateUpdate()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L222) | private |
-| ProceduralVoxelWorld | [`void FlushDirty(int budget = int.MaxValue)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L227) | public |
+| ProceduralVoxelWorld | [`void Generate(System.Action<GameObject> registerCreated = null, System.Action<GameObject> destroyObsolete = null)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L53) | public |
+| ProceduralVoxelWorld | [`void CacheChunks()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L116) | private |
+| ProceduralVoxelWorld | [`Vector3Int WorldToCell(Vector3 position)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L128) | public |
+| ProceduralVoxelWorld | [`Vector3 CellCenter(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L133) | public |
+| ProceduralVoxelWorld | [`bool SetCell(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L138) | public |
+| ProceduralVoxelWorld | [`VoxelWorldEdits CaptureEdits()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L150) | public |
+| ProceduralVoxelWorld | [`void RestoreEdits(VoxelWorldEdits edits)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L155) | public |
+| ProceduralVoxelWorld | [`int DamageSphere(Vector3 center, float radius, float energy)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L169) | public |
+| ProceduralVoxelWorld | [`void QueueCell(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L223) | private |
+| ProceduralVoxelWorld | [`void QueueChunk(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L234) | private |
+| ProceduralVoxelWorld | [`void LateUpdate()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L245) | private |
+| ProceduralVoxelWorld | [`void FlushDirty(int budget = int.MaxValue)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L250) | public |
 
 ## Assets/Scripts/Features/World/VoxelSurfaceMesher.cs
 
@@ -2637,19 +2647,38 @@
 | VoxelWorldData | [`void Generate(Vector3Int dimensions, int seed)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L66) | public |
 | VoxelWorldData | [`uint Fingerprint()`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L122) | public |
 
+## Assets/Scripts/Features/World/VoxelWorldEdits.cs
+
+// 职责：将体素修改保存为有版本/种子/基线指纹的差量；校验全部通过才返回新数据。 // 入口：Capture() / Restore()；不读写磁盘、不修改传入世界，拒绝不兼容或重复单元。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VoxelWorldEdits | [`VoxelWorldEdits Capture(VoxelWorldData current, int worldSeed)`](../Assets/Scripts/Features/World/VoxelWorldEdits.cs#L22) | public static |
+| VoxelWorldEdits | [`VoxelWorldData Restore(int expectedSeed, Vector3Int expectedSize)`](../Assets/Scripts/Features/World/VoxelWorldEdits.cs#L52) | public |
+
 ## Assets/Scripts/Features/World/WorldLabController.cs
 
 // 职责：独立世界实验场的自由镜头、采掘/爆破/填补输入及性能读数。 // 入口：Update()读取Input System；不接管Main场景的玩家、蓝图与存档。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldLabController | [`void Awake()`](../Assets/Scripts/Features/World/WorldLabController.cs#L27) | private |
-| WorldLabController | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldLabController.cs#L35) | private |
-| WorldLabController | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldLabController.cs#L43) | private |
-| WorldLabController | [`void Update()`](../Assets/Scripts/Features/World/WorldLabController.cs#L51) | private |
-| WorldLabController | [`void MoveView(Keyboard keyboard, Mouse mouse)`](../Assets/Scripts/Features/World/WorldLabController.cs#L117) | private |
-| WorldLabController | [`void ResetView()`](../Assets/Scripts/Features/World/WorldLabController.cs#L138) | private |
-| WorldLabController | [`void OnGUI()`](../Assets/Scripts/Features/World/WorldLabController.cs#L149) | private |
+| WorldLabController | [`void Awake()`](../Assets/Scripts/Features/World/WorldLabController.cs#L29) | private |
+| WorldLabController | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldLabController.cs#L37) | private |
+| WorldLabController | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldLabController.cs#L45) | private |
+| WorldLabController | [`void Update()`](../Assets/Scripts/Features/World/WorldLabController.cs#L53) | private |
+| WorldLabController | [`void MoveView(Keyboard keyboard, Mouse mouse)`](../Assets/Scripts/Features/World/WorldLabController.cs#L124) | private |
+| WorldLabController | [`void ResetView()`](../Assets/Scripts/Features/World/WorldLabController.cs#L145) | private |
+| WorldLabController | [`void TransferEdits(bool save)`](../Assets/Scripts/Features/World/WorldLabController.cs#L156) | private |
+| WorldLabController | [`void OnGUI()`](../Assets/Scripts/Features/World/WorldLabController.cs#L179) | private |
+
+## Assets/Scripts/Features/World/WorldLabPersistence.cs
+
+// 职责：独立WorldLab差量JSON的原子保存、上一份备份与有大小限制的读取。 // 入口：Save() / Load()；仅写调用者传入路径，不接触玩家载具蓝图和货仓。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabPersistence | [`void Save(string path, VoxelWorldEdits edits)`](../Assets/Scripts/Features/World/WorldLabPersistence.cs#L10) | public static |
+| WorldLabPersistence | [`VoxelWorldEdits Load(string path)`](../Assets/Scripts/Features/World/WorldLabPersistence.cs#L42) | public static |
 
 ## Assets/Scripts/Features/World/WorldLabPhysicsProbe.cs
 

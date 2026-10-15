@@ -2,6 +2,7 @@
 // 入口：Update()读取Input System；不接管Main场景的玩家、蓝图与存档。
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.IO;
 
 [RequireComponent(typeof(Camera))]
 public sealed class WorldLabController : MonoBehaviour
@@ -24,6 +25,7 @@ public sealed class WorldLabController : MonoBehaviour
     private GUIStyle textStyle;
     private bool previousBackground;
     private int previousFrameRate;
+    private string fileMessage = "F5 save edits / F9 load edits";
     private void Awake()
     {
         view = GetComponent<Camera>();
@@ -64,6 +66,11 @@ public sealed class WorldLabController : MonoBehaviour
         }
 
         MoveView(keyboard, mouse);
+        if (keyboard.f5Key.wasPressedThisFrame || keyboard.f9Key.wasPressedThisFrame)
+        {
+            TransferEdits(keyboard.f5Key.wasPressedThisFrame);
+        }
+
         if (keyboard.fKey.wasPressedThisFrame)
         {
             ResetView();
@@ -146,6 +153,29 @@ public sealed class WorldLabController : MonoBehaviour
         }
     }
 
+    private void TransferEdits(bool save)
+    {
+        string path = Path.Combine(Application.persistentDataPath, "WorldLab", "seed-" + world.Seed + ".json");
+        try
+        {
+            if (save)
+            {
+                VoxelWorldEdits edits = world.CaptureEdits();
+                WorldLabPersistence.Save(path, edits);
+                fileMessage = "Saved " + edits.edits.Length + " edits · " + Path.GetFileName(path);
+            }
+            else
+            {
+                world.RestoreEdits(WorldLabPersistence.Load(path));
+                fileMessage = "Loaded edits · chunks rebuilding";
+            }
+        }
+        catch (System.Exception error) when (error is IOException || error is System.ArgumentException || error is System.InvalidOperationException || error is System.UnauthorizedAccessException)
+        {
+            fileMessage = "Save/load failed: " + error.Message;
+        }
+    }
+
     private void OnGUI()
     {
         if (world == null)
@@ -163,10 +193,10 @@ public sealed class WorldLabController : MonoBehaviour
             textStyle.normal.textColor = new Color(0.8f, 0.95f, 1f);
         }
 
-        GUI.Box(new Rect(18, 18, 590, 190), GUIContent.none);
+        GUI.Box(new Rect(18, 18, 590, 210), GUIContent.none);
         GUI.Label(
-            new Rect(34, 28, 560, 175),
-            "<b>WORLD LAB / PROCEDURAL DESTRUCTION</b>\n" + "RMB look · WASD fly · Space/Ctrl up/down · Shift sprint\n" + "LMB mine · E blast · MMB place metal · R regenerate · F home\n" + $"Seed {world.Seed}  |  solids {world.Data.SolidCount:N0}  |  removed {world.RemovedCells}\n" + $"Dirty chunks {world.PendingChunks}  |  edit {lastActionMilliseconds:0.00} ms (mesh rebuild excluded)\n" + "Session edits only · no structural collapse / infinite streaming yet",
+            new Rect(34, 28, 560, 195),
+            "<b>WORLD LAB / PROCEDURAL DESTRUCTION</b>\n" + "RMB look · WASD fly · Space/Ctrl up/down · Shift sprint\n" + "LMB mine · E blast · MMB place metal · R regenerate · F home\n" + $"Seed {world.Seed}  |  solids {world.Data.SolidCount:N0}  |  removed {world.RemovedCells}\n" + $"Dirty chunks {world.PendingChunks}  |  edit {lastActionMilliseconds:0.00} ms (mesh rebuild excluded)\n" + fileMessage + "\nNo structural collapse / infinite streaming yet",
             textStyle);
         GUI.Label(new Rect(Screen.width * 0.5f - 8, Screen.height * 0.5f - 12, 24, 24), "+", textStyle);
     }

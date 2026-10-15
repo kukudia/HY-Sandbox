@@ -133,6 +133,35 @@ public static class WorldLabChecks
         Check(
             world.Data.Fingerprint() == original && world.RemovedCells == 0,
             "regenerate restores seed content and counters");
+        world.SetCell(a, 3);
+        VoxelWorldEdits saved = world.CaptureEdits();
+        uint editedFingerprint = world.Data.Fingerprint();
+        world.Generate();
+        world.RestoreEdits(saved);
+        Check(
+            world.Data.Fingerprint() == editedFingerprint && world.PendingChunks > 0,
+            "delta restore replaces live world and queues collision refresh");
+        uint beforeRejectedRestore = world.Data.Fingerprint();
+        saved.version = 999;
+        bool rejected = false;
+        try
+        {
+            world.RestoreEdits(saved);
+        }
+        catch (System.InvalidOperationException)
+        {
+            rejected = true;
+        }
+
+        Check(
+            rejected && world.Data.Fingerprint() == beforeRejectedRestore,
+            "failed delta restore leaves live world intact");
+        world.FlushDirty();
+        Physics.SyncTransforms();
+        Check(
+            Physics.Raycast(center + Vector3.up * 10, Vector3.down, 12),
+            "restored delta rebuilds physical surface");
+        world.Generate();
         var bodyObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         bodyObject.name = "WorldLab physics probe";
         bodyObject.transform.position = new Vector3(64, 80, 64);

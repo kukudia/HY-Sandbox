@@ -50,7 +50,7 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
     }
 
     /// <summary>固定种子重建本组件直属的生成分块，保留其他子对象和用户资源。</summary>
-    public void Generate()
+    public void Generate(System.Action<GameObject> registerCreated = null, System.Action<GameObject> destroyObsolete = null)
     {
         dimensions = new Vector3Int(
             Mathf.Clamp(dimensions.x, 16, 128),
@@ -75,6 +75,7 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
                     if (!chunks.TryGetValue(start, out VoxelWorldChunk chunk))
                     {
                         var obj = new GameObject("Chunk_" + start);
+                        registerCreated?.Invoke(obj);
                         obj.transform.SetParent(transform, false);
                         chunk = obj.AddComponent<VoxelWorldChunk>();
                         chunk.Configure(start);
@@ -94,7 +95,11 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
             if (!required.Contains(entry.Key))
             {
                 entry.Value.gameObject.SetActive(false);
-                if (Application.isPlaying)
+                if (destroyObsolete != null)
+                {
+                    destroyObsolete(entry.Value.gameObject);
+                }
+                else if (Application.isPlaying)
                 {
                     Destroy(entry.Value.gameObject);
                 }
@@ -140,6 +145,24 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
         damage.Remove(cell);
         QueueCell(cell);
         return true;
+    }
+
+    public VoxelWorldEdits CaptureEdits()
+    {
+        return VoxelWorldEdits.Capture(data, seed);
+    }
+
+    public void RestoreEdits(VoxelWorldEdits edits)
+    {
+        // Restore validates all cells into a new buffer before replacing live data.
+        VoxelWorldData restored = edits.Restore(seed, data.Size);
+        data = restored;
+        damage.Clear();
+        RemovedCells = 0;
+        foreach (Vector3Int start in chunks.Keys)
+        {
+            dirty.Add(start);
+        }
     }
 
     /// <summary>半径内按距离衰减积累伤害，土/岩/金属分别需要20/60/100；不会创建刚体碎片。</summary>

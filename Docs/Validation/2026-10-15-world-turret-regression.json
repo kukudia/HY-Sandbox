@@ -1,0 +1,33 @@
+{
+    "checks": [
+        "Existing Turret resource migrated to LaserTurret",
+        "Legacy turret script GUID preserved",
+        "Single and double barrel editable assets exist",
+        "Laser damage occurs synchronously on fire",
+        "Laser applies zero linear impulse",
+        "Laser applies zero angular impulse",
+        "Laser queues no deferred physics impulse or torque",
+        "Stopped turret releases power immediately",
+        "1 barrel physical projectile prefab",
+        "1 barrel fires exactly 1 entities",
+        "1 barrel shells have finite physical velocity",
+        "1 barrels recoil 0.12 world meters together",
+        "1 barrels recoil opposite firing direction",
+        "1 barrels recover exact authored positions without drift",
+        "1 disabled turret immediately restores barrel pose",
+        "2 barrel physical projectile prefab",
+        "2 barrel fires exactly 2 entities",
+        "2 barrel shells have finite physical velocity",
+        "2 barrels recoil 0.12 world meters together",
+        "2 barrels recoil opposite firing direction",
+        "2 barrels recover exact authored positions without drift",
+        "2 disabled turret immediately restores barrel pose",
+        "High speed physical shell sweeps thin wall and applies damage exactly once",
+        "Physical shell queues configured impact impulse",
+        "Resolved shell disables collision immediately",
+        "Resolved shell cannot damage twice",
+        "Lifetime expiration retires physical shell",
+        "Own construction ignored by physics and sweep filter"
+    ],
+    "errors": []
+}

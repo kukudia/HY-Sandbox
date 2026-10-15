@@ -97,6 +97,11 @@ public static class WorldLabAuthoring
 
     public static void BakeMeshes(ProceduralVoxelWorld world)
     {
+        if (world.gameObject.scene.path != ScenePath && !string.IsNullOrEmpty(world.gameObject.scene.path))
+        {
+            throw new System.InvalidOperationException("WorldLab Bake only owns its WorldLab scene. Duplicate worlds need a separate asset directory.");
+        }
+
         Directory.CreateDirectory(AssetRoot + "/Meshes");
         AssetDatabase.Refresh();
         foreach (VoxelWorldChunk chunk in world.GetComponentsInChildren<VoxelWorldChunk>())

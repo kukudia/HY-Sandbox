@@ -509,7 +509,7 @@ def main():
     )
     graph(
         "WorldLab 程序化世界与破坏",
-        "源码推导：独立场景不初始化Main存档；固定种子和序列化单元是数据源。采掘/炮塔命中积累伤害，破坏只标记相邻受影响分块；LateUpdate按预算更新渲染和真实MeshCollider。Inspector预览后显式Bake保存网格资产。无结构倒塌或无限流式加载。",
+        "源码推导：独立场景不初始化Main存档；固定种子和序列化单元是数据源。采掘/炮塔命中积累伤害，破坏只标记相邻受影响分块；LateUpdate按预算更新渲染和真实MeshCollider。F5原子保存差量，F9先完整校验再替换数据、排队重建碰撞；Inspector显式Bake保存网格资产。无结构倒塌或无限流式加载。",
         {
             "A": "WorldLabAuthoring.CreateOrOpen",
             "B": "ProceduralVoxelWorld.Generate",
@@ -526,12 +526,19 @@ def main():
             "M": "TurretHitResolver.Apply",
             "N": "VoxelWorldChunk.OnDestroy",
             "O": "VoxelWorldChunk.ReleaseMesh",
+            "P": "WorldLabController.TransferEdits",
+            "Q": "WorldLabPersistence.Save",
+            "R": "WorldLabPersistence.Load",
+            "S": "ProceduralVoxelWorld.RestoreEdits",
+            "T": "VoxelWorldEdits.Restore",
         },
         [
             "A --> B", "B --> C", "B --> D", "D --> E", "A --> F",
             "G -->|采掘与爆破| H", "G -->|填补| I", "M -->|命中WorldChunk| H",
             "H -->|达到材质硬度| I", "I --> J", "J -.->|排队，不立即烘焙碰撞| K",
             "K --> L", "L -->|仅脏块，预算2块每帧| D", "N --> O",
+            "G -->|F5或F9| P", "P -->|F5| Q", "P -->|F9| R", "P -->|加载后| S",
+            "S -->|先校验独立数据| T", "S -.->|提交数据后排队全部分块| K",
         ],
     )
     doc = """# HY-Sandbox 运行时函数图

@@ -1,0 +1,23 @@
+{
+    "passed": 18,
+    "checks": [
+        "empty delta reproduces baseline",
+        "only changed cells stored",
+        "mixed removal and fill roundtrip",
+        "disk UTF8 roundtrip",
+        "atomic replace writes new delta",
+        "previous save retained",
+        "repeated backup replacement",
+        "successful saves leave no temporary files",
+        "wrong seed rejected",
+        "wrong dimensions rejected",
+        "future version rejected",
+        "changed generator rejected",
+        "duplicate cells rejected",
+        "illegal material rejected",
+        "out of range rejected",
+        "failed restore never mutates original data",
+        "malformed JSON rejected",
+        "corrupt current file leaves backup readable"
+    ]
+}

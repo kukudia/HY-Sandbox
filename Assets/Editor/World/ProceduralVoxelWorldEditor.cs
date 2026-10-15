@@ -14,7 +14,7 @@ public sealed class ProceduralVoxelWorldEditor : Editor
         if (GUILayout.Button("Preview / regenerate from seed"))
         {
             Undo.RegisterFullObjectHierarchyUndo(world.gameObject, "Regenerate voxel world");
-            world.Generate();
+            world.Generate(obj => Undo.RegisterCreatedObjectUndo(obj, "Create world chunk"), Undo.DestroyObjectImmediate);
             EditorUtility.SetDirty(world);
         }
 
