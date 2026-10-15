@@ -29,6 +29,6 @@ WorldLab 保留原来的有限数组、Bake 和 F5/F9 快照工作流。Main 流
 
 真实 Main Play Mode：42项通过，覆盖隐藏预热、Ready、真实建筑启用、安全出生碰撞、正负坐标流式有界加载、会话内修改恢复、退出/死亡清空、取消和重复请求，以及半完成列取消后的网格释放。另23项边界检查通过，覆盖81列高密度预算延期、4000m/s预测冻结和恢复后真实物理步、动态建筑无地形休眠恢复。报告见 `Validation/2026-10-15-world-session.json` 与 `Validation/2026-10-15-world-session-edges.json`。
 
-WorldLab数据12项、建筑43项回归通过。已观察Main地形和建筑总览；继续细节截图期间Editor发生D3D12 GPU等待超时并退出，不将完整视觉稳定性列为通过。
+WorldLab数据12项、建筑43项回归通过。已观察Main地形和建筑总览；继续细节截图期间Editor发生D3D12 GPU等待超时并退出。临时以D3D11重启后完成[加载面板](Validation/2026-10-15-world-session-loading.png)与[建筑近景](Validation/2026-10-15-world-session-building.png)检查，未修改项目图形API设置；D3D12稳定性仍未验收。
 
 专项检查未执行故障注入；正式 Player 构建、长时大地图性能、最大尺寸载具及完整运输战斗压力尚未验收。验证菜单分别为 `Validate Main world session` 和 `Validate world session edges`，只操作运行时测试对象，报告写 Temp，不写玩家存档。
