@@ -693,8 +693,8 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | WorldLabAuthoring | [`void CreateOrOpen()`](../Assets/Editor/World/WorldLabAuthoring.cs#L13) | public static |
-| WorldLabAuthoring | [`Material MaterialAt(string name, Color color, float metallic)`](../Assets/Editor/World/WorldLabAuthoring.cs#L78) | private static |
-| WorldLabAuthoring | [`void BakeMeshes(ProceduralVoxelWorld world)`](../Assets/Editor/World/WorldLabAuthoring.cs#L98) | public static |
+| WorldLabAuthoring | [`Material MaterialAt(string name, Color color, float metallic)`](../Assets/Editor/World/WorldLabAuthoring.cs#L79) | private static |
+| WorldLabAuthoring | [`void BakeMeshes(ProceduralVoxelWorld world)`](../Assets/Editor/World/WorldLabAuthoring.cs#L99) | public static |
 
 ## Assets/Editor/World/WorldLabChecks.cs
 
@@ -707,6 +707,17 @@
 | WorldLabChecks | [`void Clear(VoxelWorldData data)`](../Assets/Editor/World/WorldLabChecks.cs#L66) | private static |
 | WorldLabChecks | [`string RunPlayChecks()`](../Assets/Editor/World/WorldLabChecks.cs#L81) | public static |
 | WorldLabChecks | [`string Save(string phase)`](../Assets/Editor/World/WorldLabChecks.cs#L176) | private static |
+
+## Assets/Editor/World/WorldLabCollapseChecks.cs
+
+// 职责：验证六邻接支撑、尺寸/数量上限及真实世界片段转刚体、再生清理。 // 入口：RunData() / RunPlay()；动态检查仅在WorldLab，真实下落由配套跨帧探针记录。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabCollapseChecks | [`void Check(bool value, string name)`](../Assets/Editor/World/WorldLabCollapseChecks.cs#L13) | private static |
+| WorldLabCollapseChecks | [`string RunData()`](../Assets/Editor/World/WorldLabCollapseChecks.cs#L23) | public static |
+| WorldLabCollapseChecks | [`string RunPlay()`](../Assets/Editor/World/WorldLabCollapseChecks.cs#L54) | public static |
+| WorldLabCollapseChecks | [`string Save(string phase)`](../Assets/Editor/World/WorldLabCollapseChecks.cs#L102) | private static |
 
 ## Assets/Editor/World/WorldLabPerformanceChecks.cs
 
@@ -2612,19 +2623,50 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| ProceduralVoxelWorld | [`void Awake()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L39) | private |
-| ProceduralVoxelWorld | [`void Generate(System.Action<GameObject> registerCreated = null, System.Action<GameObject> destroyObsolete = null)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L53) | public |
-| ProceduralVoxelWorld | [`void CacheChunks()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L116) | private |
-| ProceduralVoxelWorld | [`Vector3Int WorldToCell(Vector3 position)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L128) | public |
-| ProceduralVoxelWorld | [`Vector3 CellCenter(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L133) | public |
-| ProceduralVoxelWorld | [`bool SetCell(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L138) | public |
-| ProceduralVoxelWorld | [`VoxelWorldEdits CaptureEdits()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L150) | public |
-| ProceduralVoxelWorld | [`void RestoreEdits(VoxelWorldEdits edits)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L155) | public |
-| ProceduralVoxelWorld | [`int DamageSphere(Vector3 center, float radius, float energy)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L169) | public |
-| ProceduralVoxelWorld | [`void QueueCell(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L223) | private |
-| ProceduralVoxelWorld | [`void QueueChunk(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L234) | private |
-| ProceduralVoxelWorld | [`void LateUpdate()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L245) | private |
-| ProceduralVoxelWorld | [`void FlushDirty(int budget = int.MaxValue)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L250) | public |
+| ProceduralVoxelWorld | [`void Awake()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L40) | private |
+| ProceduralVoxelWorld | [`void Generate(System.Action<GameObject> registerCreated = null, System.Action<GameObject> destroyObsolete = null)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L54) | public |
+| ProceduralVoxelWorld | [`void CacheChunks()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L122) | private |
+| ProceduralVoxelWorld | [`Vector3Int WorldToCell(Vector3 position)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L134) | public |
+| ProceduralVoxelWorld | [`Vector3 CellCenter(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L139) | public |
+| ProceduralVoxelWorld | [`bool SetCell(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L144) | public |
+| ProceduralVoxelWorld | [`VoxelWorldEdits CaptureEdits()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L156) | public |
+| ProceduralVoxelWorld | [`void RestoreEdits(VoxelWorldEdits edits)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L161) | public |
+| ProceduralVoxelWorld | [`int DamageSphere(Vector3 center, float radius, float energy)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L180) | public |
+| ProceduralVoxelWorld | [`void QueueCell(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L239) | private |
+| ProceduralVoxelWorld | [`void QueueChunk(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L250) | private |
+| ProceduralVoxelWorld | [`void LateUpdate()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L261) | private |
+| ProceduralVoxelWorld | [`void FlushDirty(int budget = int.MaxValue)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L266) | public |
+
+## Assets/Scripts/Features/World/VoxelDebrisPiece.cs
+
+// 职责：拥有有限寿命的金属碎片刚体及单元BoxCollider，清理自身网格。 // 入口：Initialize()；碎片不是可建造Block，不进入玩家分组/供电/存档。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VoxelDebrisPiece | [`void Initialize(List<Vector3Int> cells, float cellSize, Material[] materials, float lifetime)`](../Assets/Scripts/Features/World/VoxelDebrisPiece.cs#L11) | public |
+| VoxelDebrisPiece | [`void Update()`](../Assets/Scripts/Features/World/VoxelDebrisPiece.cs#L49) | private |
+| VoxelDebrisPiece | [`void OnDestroy()`](../Assets/Scripts/Features/World/VoxelDebrisPiece.cs#L57) | private |
+
+## Assets/Scripts/Features/World/VoxelStructureCollapse.cs
+
+// 职责：破坏后按预算判定金属支撑，将少量孤立结构转为有界物理碎片。 // 入口：RequestCheck()由世界成功破坏调用，LateUpdate避开未刷新的静态碰撞。 // 约束：仅土/岩邻接支撑，小片段研究模型，不等于全地形结构力学求解。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VoxelStructureCollapse | [`void Awake()`](../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L28) | private |
+| VoxelStructureCollapse | [`void RequestCheck()`](../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L33) | public |
+| VoxelStructureCollapse | [`void LateUpdate()`](../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L38) | private |
+| VoxelStructureCollapse | [`void ResolveDetached()`](../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L51) | public |
+| VoxelStructureCollapse | [`void ClearDebris()`](../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L85) | public |
+| VoxelStructureCollapse | [`void OnDisable()`](../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L101) | private |
+
+## Assets/Scripts/Features/World/VoxelStructureSupport.cs
+
+// 职责：按六邻接找金属连通结构，接触土/岩视为有支撑；只返回有限尺寸的无支撑片段。 // 入口：FindDetached()；只读取体素，不将土/岩地形转成动态刚体。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VoxelStructureSupport | [`List<List<Vector3Int>> FindDetached(VoxelWorldData data, int maximumCells, int maximumGroups)`](../Assets/Scripts/Features/World/VoxelStructureSupport.cs#L17) | public static |
 
 ## Assets/Scripts/Features/World/VoxelSurfaceMesher.cs
 
@@ -2656,8 +2698,9 @@
 | VoxelWorldData | [`bool Contains(Vector3Int cell)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L30) | public |
 | VoxelWorldData | [`bool Set(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L35) | public |
 | VoxelWorldData | [`void Recount()`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L54) | public |
-| VoxelWorldData | [`void Generate(Vector3Int dimensions, int seed)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L66) | public |
-| VoxelWorldData | [`uint Fingerprint()`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L122) | public |
+| VoxelWorldData | [`void InitializeEmpty(Vector3Int dimensions)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L66) | public |
+| VoxelWorldData | [`void Generate(Vector3Int dimensions, int seed)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L78) | public |
+| VoxelWorldData | [`uint Fingerprint()`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L134) | public |
 
 ## Assets/Scripts/Features/World/VoxelWorldEdits.cs
 
@@ -2682,6 +2725,15 @@
 | WorldLabController | [`void ResetView()`](../Assets/Scripts/Features/World/WorldLabController.cs#L145) | private |
 | WorldLabController | [`void TransferEdits(bool save)`](../Assets/Scripts/Features/World/WorldLabController.cs#L156) | private |
 | WorldLabController | [`void OnGUI()`](../Assets/Scripts/Features/World/WorldLabController.cs#L179) | private |
+
+## Assets/Scripts/Features/World/WorldLabDebrisProbe.cs
+
+// 职责：记录真实帧物理碎片下落，并在完成后重生成清理测试碎片。 // 入口：Begin()；2秒后比较真实位置，非手动Physics.Simulate。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabDebrisProbe | [`void Begin(VoxelStructureCollapse owner, ProceduralVoxelWorld source)`](../Assets/Scripts/Features/World/WorldLabDebrisProbe.cs#L13) | public |
+| WorldLabDebrisProbe | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldLabDebrisProbe.cs#L21) | private |
 
 ## Assets/Scripts/Features/World/WorldLabPersistence.cs
 

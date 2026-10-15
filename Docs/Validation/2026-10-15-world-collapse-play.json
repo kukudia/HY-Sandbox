@@ -1,0 +1,12 @@
+{
+    "passed": 7,
+    "checks": [
+        "detached metal removed from static data",
+        "fragment count bounded",
+        "two-cell fragment created at source minimum",
+        "compound collider matches both cells",
+        "fragment internal face culled",
+        "fragment uses real dynamic gravity",
+        "source collision removed before next physics step"
+    ]
+}

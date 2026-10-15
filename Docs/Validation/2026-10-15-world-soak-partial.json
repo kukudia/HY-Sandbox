@@ -1,0 +1,14 @@
+{
+  "startedUtc": "2026-10-15T05:23:34.2980896+00:00",
+  "updatedUtc": "2026-10-15T05:36:46.4061493+00:00",
+  "status": "incomplete",
+  "failure": "Assembly reload ended first run before full 15-minute duration; reconstructed from observed checkpoint output.",
+  "observedFrames": 47448,
+  "blasts": 1578,
+  "regenerations": 13,
+  "removedCells": 201361,
+  "maximumPendingChunks": 7,
+  "maximumLiveVoxelMeshes": 32,
+  "longestFrameStallSeconds": 0.1213555,
+  "seedRestored": true
+}

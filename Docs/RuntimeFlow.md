@@ -1053,34 +1053,34 @@ flowchart TD
 
 ## WorldLab 程序化世界与破坏
 
-源码推导：独立场景不初始化Main存档；固定种子和序列化单元是数据源。采掘/炮塔命中积累伤害，破坏只标记相邻受影响分块；LateUpdate按预算更新渲染和真实MeshCollider。F5原子保存差量，F9先完整校验再替换数据、排队重建碰撞；Inspector显式Bake保存网格资产。无结构倒塌或无限流式加载。
+源码推导：独立场景不初始化Main存档；固定种子和序列化单元是数据源。采掘/炮塔命中积累伤害，破坏只标记相邻受影响分块；LateUpdate按预算更新渲染和真实MeshCollider。F5原子保存差量，F9先完整校验再替换数据、排队重建碰撞；Inspector显式Bake保存网格资产。有限金属倒塌见下一图，无无限流式加载。
 
 ```mermaid
 flowchart TD
     A["WorldLabAuthoring.CreateOrOpen()"]
     click A "../Assets/Editor/World/WorldLabAuthoring.cs#L13" "打开源码"
     B["ProceduralVoxelWorld.Generate()"]
-    click B "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L53" "打开源码"
+    click B "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L54" "打开源码"
     C["VoxelWorldData.Generate()"]
-    click C "../Assets/Scripts/Features/World/VoxelWorldData.cs#L66" "打开源码"
+    click C "../Assets/Scripts/Features/World/VoxelWorldData.cs#L78" "打开源码"
     D["VoxelWorldChunk.Rebuild()"]
     click D "../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L18" "打开源码"
     E["VoxelSurfaceMesher.Build()"]
     click E "../Assets/Scripts/Features/World/VoxelSurfaceMesher.cs#L63" "打开源码"
     F["WorldLabAuthoring.BakeMeshes()"]
-    click F "../Assets/Editor/World/WorldLabAuthoring.cs#L98" "打开源码"
+    click F "../Assets/Editor/World/WorldLabAuthoring.cs#L99" "打开源码"
     G["WorldLabController.Update()"]
     click G "../Assets/Scripts/Features/World/WorldLabController.cs#L53" "打开源码"
     H["ProceduralVoxelWorld.DamageSphere()"]
-    click H "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L169" "打开源码"
+    click H "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L180" "打开源码"
     I["ProceduralVoxelWorld.SetCell()"]
-    click I "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L138" "打开源码"
+    click I "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L144" "打开源码"
     J["ProceduralVoxelWorld.QueueCell()"]
-    click J "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L223" "打开源码"
+    click J "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L239" "打开源码"
     K["ProceduralVoxelWorld.LateUpdate()"]
-    click K "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L245" "打开源码"
+    click K "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L261" "打开源码"
     L["ProceduralVoxelWorld.FlushDirty()"]
-    click L "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L250" "打开源码"
+    click L "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L266" "打开源码"
     M["TurretHitResolver.Apply()"]
     click M "../Assets/Scripts/Features/Combat/TurretHitResolver.cs#L7" "打开源码"
     N["VoxelWorldChunk.OnDestroy()"]
@@ -1094,7 +1094,7 @@ flowchart TD
     R["WorldLabPersistence.Load()"]
     click R "../Assets/Scripts/Features/World/WorldLabPersistence.cs#L42" "打开源码"
     S["ProceduralVoxelWorld.RestoreEdits()"]
-    click S "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L155" "打开源码"
+    click S "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L161" "打开源码"
     T["VoxelWorldEdits.Restore()"]
     click T "../Assets/Scripts/Features/World/VoxelWorldEdits.cs#L52" "打开源码"
     A --> B
@@ -1121,27 +1121,27 @@ flowchart TD
 
 - [WorldLabAuthoring.CreateOrOpen](../Assets/Editor/World/WorldLabAuthoring.cs#L13)
 <!-- source: Assets/Editor/World/WorldLabAuthoring.cs|CreateOrOpen -->
-- [ProceduralVoxelWorld.Generate](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L53)
+- [ProceduralVoxelWorld.Generate](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L54)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|Generate -->
-- [VoxelWorldData.Generate](../Assets/Scripts/Features/World/VoxelWorldData.cs#L66)
+- [VoxelWorldData.Generate](../Assets/Scripts/Features/World/VoxelWorldData.cs#L78)
 <!-- source: Assets/Scripts/Features/World/VoxelWorldData.cs|Generate -->
 - [VoxelWorldChunk.Rebuild](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L18)
 <!-- source: Assets/Scripts/Features/World/VoxelWorldChunk.cs|Rebuild -->
 - [VoxelSurfaceMesher.Build](../Assets/Scripts/Features/World/VoxelSurfaceMesher.cs#L63)
 <!-- source: Assets/Scripts/Features/World/VoxelSurfaceMesher.cs|Build -->
-- [WorldLabAuthoring.BakeMeshes](../Assets/Editor/World/WorldLabAuthoring.cs#L98)
+- [WorldLabAuthoring.BakeMeshes](../Assets/Editor/World/WorldLabAuthoring.cs#L99)
 <!-- source: Assets/Editor/World/WorldLabAuthoring.cs|BakeMeshes -->
 - [WorldLabController.Update](../Assets/Scripts/Features/World/WorldLabController.cs#L53)
 <!-- source: Assets/Scripts/Features/World/WorldLabController.cs|Update -->
-- [ProceduralVoxelWorld.DamageSphere](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L169)
+- [ProceduralVoxelWorld.DamageSphere](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L180)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|DamageSphere -->
-- [ProceduralVoxelWorld.SetCell](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L138)
+- [ProceduralVoxelWorld.SetCell](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L144)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|SetCell -->
-- [ProceduralVoxelWorld.QueueCell](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L223)
+- [ProceduralVoxelWorld.QueueCell](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L239)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|QueueCell -->
-- [ProceduralVoxelWorld.LateUpdate](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L245)
+- [ProceduralVoxelWorld.LateUpdate](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L261)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|LateUpdate -->
-- [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L250)
+- [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L266)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|FlushDirty -->
 - [TurretHitResolver.Apply](../Assets/Scripts/Features/Combat/TurretHitResolver.cs#L7)
 <!-- source: Assets/Scripts/Features/Combat/TurretHitResolver.cs|Apply -->
@@ -1155,7 +1155,78 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldLabPersistence.cs|Save -->
 - [WorldLabPersistence.Load](../Assets/Scripts/Features/World/WorldLabPersistence.cs#L42)
 <!-- source: Assets/Scripts/Features/World/WorldLabPersistence.cs|Load -->
-- [ProceduralVoxelWorld.RestoreEdits](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L155)
+- [ProceduralVoxelWorld.RestoreEdits](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L161)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|RestoreEdits -->
 - [VoxelWorldEdits.Restore](../Assets/Scripts/Features/World/VoxelWorldEdits.cs#L52)
 <!-- source: Assets/Scripts/Features/World/VoxelWorldEdits.cs|Restore -->
+
+## WorldLab 金属支撑与碎片
+
+源码推导：成功破坏后请求六邻接支撑检查，等待脏块刷新。土/岩邻接或世界底层视为支撑；仅32格以内金属孤岛变为刚体，最多12个、12秒寿命。大结构保留静态。分离后立即刷新源碰撞；重生成/恢复清除碎片。不是全地形结构力学。
+
+```mermaid
+flowchart TD
+    A["ProceduralVoxelWorld.DamageSphere()"]
+    click A "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L180" "打开源码"
+    B["VoxelStructureCollapse.RequestCheck()"]
+    click B "../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L33" "打开源码"
+    C["VoxelStructureCollapse.LateUpdate()"]
+    click C "../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L38" "打开源码"
+    D["VoxelStructureCollapse.ResolveDetached()"]
+    click D "../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L51" "打开源码"
+    E["VoxelStructureSupport.FindDetached()"]
+    click E "../Assets/Scripts/Features/World/VoxelStructureSupport.cs#L17" "打开源码"
+    F["VoxelDebrisPiece.Initialize()"]
+    click F "../Assets/Scripts/Features/World/VoxelDebrisPiece.cs#L11" "打开源码"
+    G["ProceduralVoxelWorld.SetCell()"]
+    click G "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L144" "打开源码"
+    H["ProceduralVoxelWorld.FlushDirty()"]
+    click H "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L266" "打开源码"
+    I["VoxelDebrisPiece.Update()"]
+    click I "../Assets/Scripts/Features/World/VoxelDebrisPiece.cs#L49" "打开源码"
+    J["VoxelDebrisPiece.OnDestroy()"]
+    click J "../Assets/Scripts/Features/World/VoxelDebrisPiece.cs#L57" "打开源码"
+    K["ProceduralVoxelWorld.Generate()"]
+    click K "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L54" "打开源码"
+    L["VoxelStructureCollapse.ClearDebris()"]
+    click L "../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L85" "打开源码"
+    M["ProceduralVoxelWorld.RestoreEdits()"]
+    click M "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L161" "打开源码"
+    A -->|移除单元后| B
+    B -.->|请求标记| C
+    C -->|队列空且到间隔| D
+    D --> E
+    D -->|每片| F
+    D -->|清除源单元| G
+    D --> H
+    I -.->|寿命到销毁| J
+    K --> L
+    M -->|校验成功后| L
+```
+
+- [ProceduralVoxelWorld.DamageSphere](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L180)
+<!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|DamageSphere -->
+- [VoxelStructureCollapse.RequestCheck](../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L33)
+<!-- source: Assets/Scripts/Features/World/VoxelStructureCollapse.cs|RequestCheck -->
+- [VoxelStructureCollapse.LateUpdate](../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L38)
+<!-- source: Assets/Scripts/Features/World/VoxelStructureCollapse.cs|LateUpdate -->
+- [VoxelStructureCollapse.ResolveDetached](../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L51)
+<!-- source: Assets/Scripts/Features/World/VoxelStructureCollapse.cs|ResolveDetached -->
+- [VoxelStructureSupport.FindDetached](../Assets/Scripts/Features/World/VoxelStructureSupport.cs#L17)
+<!-- source: Assets/Scripts/Features/World/VoxelStructureSupport.cs|FindDetached -->
+- [VoxelDebrisPiece.Initialize](../Assets/Scripts/Features/World/VoxelDebrisPiece.cs#L11)
+<!-- source: Assets/Scripts/Features/World/VoxelDebrisPiece.cs|Initialize -->
+- [ProceduralVoxelWorld.SetCell](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L144)
+<!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|SetCell -->
+- [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L266)
+<!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|FlushDirty -->
+- [VoxelDebrisPiece.Update](../Assets/Scripts/Features/World/VoxelDebrisPiece.cs#L49)
+<!-- source: Assets/Scripts/Features/World/VoxelDebrisPiece.cs|Update -->
+- [VoxelDebrisPiece.OnDestroy](../Assets/Scripts/Features/World/VoxelDebrisPiece.cs#L57)
+<!-- source: Assets/Scripts/Features/World/VoxelDebrisPiece.cs|OnDestroy -->
+- [ProceduralVoxelWorld.Generate](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L54)
+<!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|Generate -->
+- [VoxelStructureCollapse.ClearDebris](../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L85)
+<!-- source: Assets/Scripts/Features/World/VoxelStructureCollapse.cs|ClearDebris -->
+- [ProceduralVoxelWorld.RestoreEdits](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L161)
+<!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|RestoreEdits -->

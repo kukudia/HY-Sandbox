@@ -1,0 +1,13 @@
+{
+    "passed": 8,
+    "checks": [
+        "rock-supported metal remains static",
+        "removed support detaches one connected component",
+        "oversized component retained as static",
+        "zero group budget produces no fragments",
+        "group count capped",
+        "diagonal contact does not support metal",
+        "soil neighbor supports component",
+        "world floor anchors metal"
+    ]
+}

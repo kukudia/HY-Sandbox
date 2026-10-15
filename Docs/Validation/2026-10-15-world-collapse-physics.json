@@ -1,0 +1,15 @@
+{
+    "fixedFrames": 101,
+    "initial": {
+        "x": 8.0,
+        "y": 44.0,
+        "z": 8.0
+    },
+    "final": {
+        "x": 7.999999046325684,
+        "y": 26.631629943847658,
+        "z": 7.999999046325684
+    },
+    "fell": true,
+    "fragmentsClearedByRegenerate": true
+}

@@ -509,7 +509,7 @@ def main():
     )
     graph(
         "WorldLab 程序化世界与破坏",
-        "源码推导：独立场景不初始化Main存档；固定种子和序列化单元是数据源。采掘/炮塔命中积累伤害，破坏只标记相邻受影响分块；LateUpdate按预算更新渲染和真实MeshCollider。F5原子保存差量，F9先完整校验再替换数据、排队重建碰撞；Inspector显式Bake保存网格资产。无结构倒塌或无限流式加载。",
+        "源码推导：独立场景不初始化Main存档；固定种子和序列化单元是数据源。采掘/炮塔命中积累伤害，破坏只标记相邻受影响分块；LateUpdate按预算更新渲染和真实MeshCollider。F5原子保存差量，F9先完整校验再替换数据、排队重建碰撞；Inspector显式Bake保存网格资产。有限金属倒塌见下一图，无无限流式加载。",
         {
             "A": "WorldLabAuthoring.CreateOrOpen",
             "B": "ProceduralVoxelWorld.Generate",
@@ -539,6 +539,30 @@ def main():
             "K --> L", "L -->|仅脏块，预算2块每帧| D", "N --> O",
             "G -->|F5或F9| P", "P -->|F5| Q", "P -->|F9| R", "P -->|加载后| S",
             "S -->|先校验独立数据| T", "S -.->|提交数据后排队全部分块| K",
+        ],
+    )
+    graph(
+        "WorldLab 金属支撑与碎片",
+        "源码推导：成功破坏后请求六邻接支撑检查，等待脏块刷新。土/岩邻接或世界底层视为支撑；仅32格以内金属孤岛变为刚体，最多12个、12秒寿命。大结构保留静态。分离后立即刷新源碰撞；重生成/恢复清除碎片。不是全地形结构力学。",
+        {
+            "A": "ProceduralVoxelWorld.DamageSphere",
+            "B": "VoxelStructureCollapse.RequestCheck",
+            "C": "VoxelStructureCollapse.LateUpdate",
+            "D": "VoxelStructureCollapse.ResolveDetached",
+            "E": "VoxelStructureSupport.FindDetached",
+            "F": "VoxelDebrisPiece.Initialize",
+            "G": "ProceduralVoxelWorld.SetCell",
+            "H": "ProceduralVoxelWorld.FlushDirty",
+            "I": "VoxelDebrisPiece.Update",
+            "J": "VoxelDebrisPiece.OnDestroy",
+            "K": "ProceduralVoxelWorld.Generate",
+            "L": "VoxelStructureCollapse.ClearDebris",
+            "M": "ProceduralVoxelWorld.RestoreEdits",
+        },
+        [
+            "A -->|移除单元后| B", "B -.->|请求标记| C", "C -->|队列空且到间隔| D",
+            "D --> E", "D -->|每片| F", "D -->|清除源单元| G", "D --> H",
+            "I -.->|寿命到销毁| J", "K --> L", "M -->|校验成功后| L",
         ],
     )
     doc = """# HY-Sandbox 运行时函数图

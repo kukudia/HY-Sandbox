@@ -34,6 +34,7 @@ public static class WorldLabAuthoring
         Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
         var root = new GameObject("ProceduralWorld");
         var world = root.AddComponent<ProceduralVoxelWorld>();
+        root.AddComponent<VoxelStructureCollapse>();
         var serialized = new SerializedObject(world);
         SerializedProperty materials = serialized.FindProperty("materials");
         materials.arraySize = 3;

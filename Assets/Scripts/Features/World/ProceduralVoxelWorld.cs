@@ -26,6 +26,7 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
     public VoxelWorldData Data => data;
     public int Seed => seed;
     public float CellSize => cellSize;
+    public Material[] Materials => materials;
     public int PendingChunks => dirty.Count;
     public int LastRebuiltChunks
     {
@@ -52,6 +53,11 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
     /// <summary>固定种子重建本组件直属的生成分块，保留其他子对象和用户资源。</summary>
     public void Generate(System.Action<GameObject> registerCreated = null, System.Action<GameObject> destroyObsolete = null)
     {
+        if (Application.isPlaying && TryGetComponent(out VoxelStructureCollapse collapse))
+        {
+            collapse.ClearDebris();
+        }
+
         dimensions = new Vector3Int(
             Mathf.Clamp(dimensions.x, 16, 128),
             Mathf.Clamp(dimensions.y, 16, 64),
@@ -156,6 +162,11 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
     {
         // Restore validates all cells into a new buffer before replacing live data.
         VoxelWorldData restored = edits.Restore(seed, data.Size);
+        if (TryGetComponent(out VoxelStructureCollapse collapse))
+        {
+            collapse.ClearDebris();
+        }
+
         data = restored;
         damage.Clear();
         RemovedCells = 0;
@@ -217,6 +228,11 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
         }
 
         RemovedCells += removed;
+        if (removed > 0 && TryGetComponent(out VoxelStructureCollapse collapse))
+        {
+            collapse.RequestCheck();
+        }
+
         return removed;
     }
 

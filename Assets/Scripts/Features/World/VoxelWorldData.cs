@@ -63,6 +63,18 @@ public sealed class VoxelWorldData
         }
     }
 
+    public void InitializeEmpty(Vector3Int dimensions)
+    {
+        if (dimensions.x < 1 || dimensions.y < 1 || dimensions.z < 1 || dimensions.x > 128 || dimensions.y > 64 || dimensions.z > 128)
+        {
+            throw new ArgumentOutOfRangeException(nameof(dimensions));
+        }
+
+        size = dimensions;
+        cells = new byte[size.x * size.y * size.z];
+        SolidCount = 0;
+    }
+
     public void Generate(Vector3Int dimensions, int seed)
     {
         if (dimensions.x < 16 || dimensions.z < 16 || dimensions.y < 16 || dimensions.x > 128 || dimensions.z > 128 || dimensions.y > 64)
