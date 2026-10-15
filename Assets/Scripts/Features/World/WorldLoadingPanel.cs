@@ -15,6 +15,7 @@ public sealed class WorldLoadingPanel : MonoBehaviour
     private Button cancelButton;
     private WorldSessionManager session;
     private bool shown;
+    private bool startup;
     public void Bind(WorldSessionManager owner)
     {
         if (cancelButton != null)
@@ -37,6 +38,7 @@ public sealed class WorldLoadingPanel : MonoBehaviour
 
     public void Show(bool visible)
     {
+        startup = false;
         if (group == null)
         {
             return;
@@ -58,6 +60,12 @@ public sealed class WorldLoadingPanel : MonoBehaviour
         shown = visible;
     }
 
+    public void ShowStartup()
+    {
+        Show(true);
+        startup = true;
+    }
+
     private void Update()
     {
         if (session == null || group == null || group.alpha <= 0f)
@@ -65,14 +73,23 @@ public sealed class WorldLoadingPanel : MonoBehaviour
             return;
         }
 
+        bool loadingConstruct = startup && BuildManager.instance != null && BuildManager.instance.IsLoadingBlocks;
+        if (startup && !loadingConstruct && session.State == WorldSessionState.Ready)
+        {
+            Show(false);
+            return;
+        }
+
+        float constructProgress = loadingConstruct ? BuildManager.instance.BlueprintLoadProgress : 1f;
+        float displayedProgress = startup ? (session.Progress + constructProgress) * .5f : session.Progress;
         if (message != null)
         {
-            message.text = session.Status;
+            message.text = startup ? $"Loading... {displayedProgress:P0} (construct {constructProgress:P0}, world {session.Progress:P0})" : session.Status;
         }
 
         if (progress != null)
         {
-            progress.fillAmount = session.Progress;
+            progress.fillAmount = displayedProgress;
         }
     }
 

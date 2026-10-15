@@ -717,6 +717,17 @@
 | --- | --- | --- |
 | ProceduralVoxelWorldEditor | [`void OnInspectorGUI()`](../Assets/Editor/World/ProceduralVoxelWorldEditor.cs#L9) | public override |
 
+## Assets/Editor/World/VoxelMeshingChecks.cs
+
+// 职责：以逐体素暴露面为独立基准，验证贪心网格覆盖、材质、法线、接缝与快照隔离。 // 入口：Run()；只创建临时数据/Mesh，报告保存到Temp，不修改场景和玩家数据。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VoxelMeshingChecks | [`string Run()`](../Assets/Editor/World/VoxelMeshingChecks.cs#L12) | public static |
+| VoxelMeshingChecks | [`void Verify(VoxelWorldData data, Vector3Int start, int size)`](../Assets/Editor/World/VoxelMeshingChecks.cs#L61) | private static |
+| VoxelMeshingChecks | [`string Key(Vector3Int cell, Vector3Int normal, int material)`](../Assets/Editor/World/VoxelMeshingChecks.cs#L136) | private static |
+| VoxelMeshingChecks | [`void Check(bool valid, string message)`](../Assets/Editor/World/VoxelMeshingChecks.cs#L141) | private static |
+
 ## Assets/Editor/World/WorldBuildingAuthoring.cs
 
 // 职责：为独立 WorldLab 安装建筑库、示例模板和场景组合；已有模板与布局不覆盖。 // 入口：Tools/HY-Sandbox/World/Install building integration；只保存 WorldLab 与 Assets/WorldLab/Buildings。
@@ -806,6 +817,15 @@
 | WorldLabSoakChecks | [`void Finish(bool complete)`](../Assets/Editor/World/WorldLabSoakChecks.cs#L147) | private static |
 | WorldLabSoakChecks | [`void WriteCheckpoint()`](../Assets/Editor/World/WorldLabSoakChecks.cs#L162) | private static |
 
+## Assets/Editor/World/WorldPlayerBuildChecks.cs
+
+// 职责：构建与发布配置相同的Windows验证包，结果写Temp；不递增版本或覆盖已有发布包。 // 入口：Build()从已保存Main的Edit Mode调用；生成Builds/WorldPerformanceValidation。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldPlayerBuildChecks | [`void Build()`](../Assets/Editor/World/WorldPlayerBuildChecks.cs#L13) | public static |
+| WorldPlayerBuildChecks | [`void BuildNow()`](../Assets/Editor/World/WorldPlayerBuildChecks.cs#L25) | private static |
+
 ## Assets/Editor/World/WorldSessionAuthoring.cs
 
 // 职责：创建可编辑世界配置与会话 Prefab，并将后台预热及加载界面接入 Main。 // 入口：Install()；重复执行保留配置、Prefab 参数及已存在的界面布局。
@@ -868,8 +888,8 @@
 | WorldSessionPlayChecks | [`void Check(bool condition, string description)`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L104) | private static |
 | WorldSessionPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L114) | private static |
 | WorldSessionPlayChecks | [`IEnumerator StreamingChecks(WorldGenerationSettings settings)`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L409) | private static |
-| WorldSessionPlayChecks | [`bool NeighborhoodReady(ProceduralVoxelWorld world, Vector2Int center)`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L510) | private static |
-| WorldSessionPlayChecks | [`void Finish(bool exitPlayMode)`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L526) | private static |
+| WorldSessionPlayChecks | [`bool NeighborhoodReady(ProceduralVoxelWorld world, Vector2Int center)`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L517) | private static |
+| WorldSessionPlayChecks | [`void Finish(bool exitPlayMode)`](../Assets/Editor/World/WorldSessionPlayChecks.cs#L533) | private static |
 
 ## Assets/Scripts/Features/Bootstrap/GameManager.cs
 
@@ -1160,17 +1180,17 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BlueprintLoader | [`void Load( BuildTargetContext target, GameObject parentPrefab, BlueprintLoadSettings settings, Camera camera, Action createInitialBlock, Action<Transform, BlockDataList> prepareParent = null)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L39) | public |
-| BlueprintLoader | [`bool IsLoadingTarget(BuildTargetContext target)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L83) | public |
-| BlueprintLoader | [`void Cancel()`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L89) | public |
-| BlueprintLoader | [`IEnumerator LoadRoutine(int version, List<BlockData> blocks, BlueprintLoadSettings settings, Action createInitialBlock)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L102) | private |
-| BlueprintLoader | [`bool TryRead(string path, out BlockDataList data)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L181) | private |
-| BlueprintLoader | [`void ReplaceParent(GameObject prefab, string name)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L220) | private |
-| BlueprintLoader | [`bool OwnsParent(int version)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L238) | private |
-| BlueprintLoader | [`void RemoveMissingData(HashSet<string> ids)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L243) | private |
-| BlueprintLoader | [`IEnumerator RebuildConnections(int version)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L254) | private |
-| BlueprintLoader | [`void ReleaseInvalidParent()`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L280) | private |
-| BlueprintLoader | [`void FinishSession()`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L300) | private |
+| BlueprintLoader | [`void Load( BuildTargetContext target, GameObject parentPrefab, BlueprintLoadSettings settings, Camera camera, Action createInitialBlock, Action<Transform, BlockDataList> prepareParent = null)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L43) | public |
+| BlueprintLoader | [`bool IsLoadingTarget(BuildTargetContext target)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L88) | public |
+| BlueprintLoader | [`void Cancel()`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L94) | public |
+| BlueprintLoader | [`IEnumerator LoadRoutine(int version, List<BlockData> blocks, BlueprintLoadSettings settings, Action createInitialBlock)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L107) | private |
+| BlueprintLoader | [`bool TryRead(string path, out BlockDataList data)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L189) | private |
+| BlueprintLoader | [`void ReplaceParent(GameObject prefab, string name)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L228) | private |
+| BlueprintLoader | [`bool OwnsParent(int version)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L246) | private |
+| BlueprintLoader | [`void RemoveMissingData(HashSet<string> ids)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L251) | private |
+| BlueprintLoader | [`IEnumerator RebuildConnections(int version)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L262) | private |
+| BlueprintLoader | [`void ReleaseInvalidParent()`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L288) | private |
+| BlueprintLoader | [`void FinishSession()`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L308) | private |
 
 ## Assets/Scripts/Features/Building/BlueprintLoading/BlueprintStatistics.cs
 
@@ -1205,55 +1225,55 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BuildManager | [`void Awake()`](../Assets/Scripts/Features/Building/BuildManager.cs#L74) | private |
-| BuildManager | [`void OnDisable()`](../Assets/Scripts/Features/Building/BuildManager.cs#L79) | private |
-| BuildManager | [`void OnDestroy()`](../Assets/Scripts/Features/Building/BuildManager.cs#L84) | private |
-| BuildManager | [`void Start()`](../Assets/Scripts/Features/Building/BuildManager.cs#L101) | private |
-| BuildManager | [`void Update()`](../Assets/Scripts/Features/Building/BuildManager.cs#L107) | private |
-| BuildManager | [`void SetBuildMode(bool lockView)`](../Assets/Scripts/Features/Building/BuildManager.cs#L165) | public |
-| BuildManager | [`void ToggleEnemyBlueprintBuildMode()`](../Assets/Scripts/Features/Building/BuildManager.cs#L177) | public |
-| BuildManager | [`void EnterEnemyBlueprintBuildMode(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L189) | public |
-| BuildManager | [`void ExitEnemyBlueprintBuildMode(bool reloadPlayerSave)`](../Assets/Scripts/Features/Building/BuildManager.cs#L219) | public |
-| BuildManager | [`void ExitDeveloperBlueprintBuildMode(bool reloadPlayerSave)`](../Assets/Scripts/Features/Building/BuildManager.cs#L227) | public |
-| BuildManager | [`void ToggleBuildingBlueprintBuildMode()`](../Assets/Scripts/Features/Building/BuildManager.cs#L246) | public |
-| BuildManager | [`void EnterBuildingBlueprintBuildMode(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L258) | public |
-| BuildManager | [`void PrepareBuildingFoundation(Transform parent, BlockDataList data)`](../Assets/Scripts/Features/Building/BuildManager.cs#L279) | private |
-| BuildManager | [`bool ResizeBuildingFoundation(int width, int length, out string reason)`](../Assets/Scripts/Features/Building/BuildManager.cs#L302) | public |
-| BuildManager | [`void SetCurrentBuildingBlueprintName(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L350) | public |
-| BuildManager | [`void SetCurrentBlockResource(string resourcePath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L359) | public |
-| BuildManager | [`void SetCurrentSaveName(string saveName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L374) | public |
-| BuildManager | [`void SetCurrentEnemyBlueprintName(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L379) | public |
-| BuildManager | [`void SetBuildType(BuildType buildType)`](../Assets/Scripts/Features/Building/BuildManager.cs#L384) | public |
-| BuildManager | [`void EnsureBuildInteraction()`](../Assets/Scripts/Features/Building/BuildManager.cs#L411) | private |
-| BuildManager | [`void HandleBuildingPreview()`](../Assets/Scripts/Features/Building/BuildManager.cs#L438) | private |
-| BuildManager | [`void ClearCurrentGhost(bool hideHints = true)`](../Assets/Scripts/Features/Building/BuildManager.cs#L446) | private |
-| BuildManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L454) | public |
-| BuildManager | [`Vector3 SnapCenterByMinCorner(Vector3 targetCenter, Quaternion targetRotation, Block b)`](../Assets/Scripts/Features/Building/BuildManager.cs#L461) | public |
-| BuildManager | [`bool IsWithinBuildRange(Vector3 position)`](../Assets/Scripts/Features/Building/BuildManager.cs#L467) | public |
-| BuildManager | [`void CreateBlock(GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot)`](../Assets/Scripts/Features/Building/BuildManager.cs#L472) | public |
-| BuildManager | [`void DeleteBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L499) | public |
-| BuildManager | [`void EnsureBlueprintEditor()`](../Assets/Scripts/Features/Building/BuildManager.cs#L520) | private |
-| BuildManager | [`Block CreateDuplicateBlock(GameObject prefab, string path, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Building/BuildManager.cs#L529) | private |
-| BuildManager | [`void SaveBlock(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L536) | public |
-| BuildManager | [`void RemoveBlock(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L554) | public |
-| BuildManager | [`void LoadAllBlocks()`](../Assets/Scripts/Features/Building/BuildManager.cs#L562) | public |
-| BuildManager | [`BlueprintStatistics GetBlueprintStatistics()`](../Assets/Scripts/Features/Building/BuildManager.cs#L586) | public |
-| BuildManager | [`void EnsureBlueprintLoader()`](../Assets/Scripts/Features/Building/BuildManager.cs#L593) | private |
-| BuildManager | [`void DisplayBlueprintStatistics(BlueprintStatistics statistics)`](../Assets/Scripts/Features/Building/BuildManager.cs#L602) | private |
-| BuildManager | [`BlueprintLoadSettings CreateLoadSettings()`](../Assets/Scripts/Features/Building/BuildManager.cs#L610) | private |
-| BuildManager | [`void ClearUnloadableData(string id)`](../Assets/Scripts/Features/Building/BuildManager.cs#L628) | public |
-| BuildManager | [`bool IsLoadingBuildTarget( BuildTargetKind kind, string saveName, string enemyBlueprintName, string buildingBlueprintName = null)`](../Assets/Scripts/Features/Building/BuildManager.cs#L633) | public |
-| BuildManager | [`bool IsLoadingBuildTarget(BuildTargetContext context)`](../Assets/Scripts/Features/Building/BuildManager.cs#L643) | private |
-| BuildManager | [`void ClearUnloadableData(string id, string targetSavePath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L648) | private |
-| BuildManager | [`void InitialBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L657) | private |
-| BuildManager | [`bool CanCreateBlock(GameObject prefab, out string reason)`](../Assets/Scripts/Features/Building/BuildManager.cs#L665) | private |
-| BuildManager | [`void ApplyBlockBuildDefaults(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L695) | public |
-| BuildManager | [`int CountCockpitsInCurrentConstruct()`](../Assets/Scripts/Features/Building/BuildManager.cs#L700) | private |
-| BuildManager | [`void ResetBuildState()`](../Assets/Scripts/Features/Building/BuildManager.cs#L710) | private |
-| BuildManager | [`void SetBuildTarget(BuildTargetContext context)`](../Assets/Scripts/Features/Building/BuildManager.cs#L720) | private |
-| BuildManager | [`void RefreshBlueprintUI()`](../Assets/Scripts/Features/Building/BuildManager.cs#L738) | private |
-| BuildManager | [`void StopActiveBlockLoad()`](../Assets/Scripts/Features/Building/BuildManager.cs#L746) | private |
-| BuildManager | [`string ConvertToResourcesPath(string fullPath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L751) | public static |
+| BuildManager | [`void Awake()`](../Assets/Scripts/Features/Building/BuildManager.cs#L75) | private |
+| BuildManager | [`void OnDisable()`](../Assets/Scripts/Features/Building/BuildManager.cs#L80) | private |
+| BuildManager | [`void OnDestroy()`](../Assets/Scripts/Features/Building/BuildManager.cs#L85) | private |
+| BuildManager | [`void Start()`](../Assets/Scripts/Features/Building/BuildManager.cs#L102) | private |
+| BuildManager | [`void Update()`](../Assets/Scripts/Features/Building/BuildManager.cs#L108) | private |
+| BuildManager | [`void SetBuildMode(bool lockView)`](../Assets/Scripts/Features/Building/BuildManager.cs#L166) | public |
+| BuildManager | [`void ToggleEnemyBlueprintBuildMode()`](../Assets/Scripts/Features/Building/BuildManager.cs#L178) | public |
+| BuildManager | [`void EnterEnemyBlueprintBuildMode(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L190) | public |
+| BuildManager | [`void ExitEnemyBlueprintBuildMode(bool reloadPlayerSave)`](../Assets/Scripts/Features/Building/BuildManager.cs#L220) | public |
+| BuildManager | [`void ExitDeveloperBlueprintBuildMode(bool reloadPlayerSave)`](../Assets/Scripts/Features/Building/BuildManager.cs#L228) | public |
+| BuildManager | [`void ToggleBuildingBlueprintBuildMode()`](../Assets/Scripts/Features/Building/BuildManager.cs#L247) | public |
+| BuildManager | [`void EnterBuildingBlueprintBuildMode(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L259) | public |
+| BuildManager | [`void PrepareBuildingFoundation(Transform parent, BlockDataList data)`](../Assets/Scripts/Features/Building/BuildManager.cs#L280) | private |
+| BuildManager | [`bool ResizeBuildingFoundation(int width, int length, out string reason)`](../Assets/Scripts/Features/Building/BuildManager.cs#L303) | public |
+| BuildManager | [`void SetCurrentBuildingBlueprintName(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L351) | public |
+| BuildManager | [`void SetCurrentBlockResource(string resourcePath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L360) | public |
+| BuildManager | [`void SetCurrentSaveName(string saveName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L375) | public |
+| BuildManager | [`void SetCurrentEnemyBlueprintName(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L380) | public |
+| BuildManager | [`void SetBuildType(BuildType buildType)`](../Assets/Scripts/Features/Building/BuildManager.cs#L385) | public |
+| BuildManager | [`void EnsureBuildInteraction()`](../Assets/Scripts/Features/Building/BuildManager.cs#L412) | private |
+| BuildManager | [`void HandleBuildingPreview()`](../Assets/Scripts/Features/Building/BuildManager.cs#L439) | private |
+| BuildManager | [`void ClearCurrentGhost(bool hideHints = true)`](../Assets/Scripts/Features/Building/BuildManager.cs#L447) | private |
+| BuildManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L455) | public |
+| BuildManager | [`Vector3 SnapCenterByMinCorner(Vector3 targetCenter, Quaternion targetRotation, Block b)`](../Assets/Scripts/Features/Building/BuildManager.cs#L462) | public |
+| BuildManager | [`bool IsWithinBuildRange(Vector3 position)`](../Assets/Scripts/Features/Building/BuildManager.cs#L468) | public |
+| BuildManager | [`void CreateBlock(GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot)`](../Assets/Scripts/Features/Building/BuildManager.cs#L473) | public |
+| BuildManager | [`void DeleteBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L500) | public |
+| BuildManager | [`void EnsureBlueprintEditor()`](../Assets/Scripts/Features/Building/BuildManager.cs#L521) | private |
+| BuildManager | [`Block CreateDuplicateBlock(GameObject prefab, string path, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Building/BuildManager.cs#L530) | private |
+| BuildManager | [`void SaveBlock(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L537) | public |
+| BuildManager | [`void RemoveBlock(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L555) | public |
+| BuildManager | [`void LoadAllBlocks()`](../Assets/Scripts/Features/Building/BuildManager.cs#L563) | public |
+| BuildManager | [`BlueprintStatistics GetBlueprintStatistics()`](../Assets/Scripts/Features/Building/BuildManager.cs#L587) | public |
+| BuildManager | [`void EnsureBlueprintLoader()`](../Assets/Scripts/Features/Building/BuildManager.cs#L594) | private |
+| BuildManager | [`void DisplayBlueprintStatistics(BlueprintStatistics statistics)`](../Assets/Scripts/Features/Building/BuildManager.cs#L603) | private |
+| BuildManager | [`BlueprintLoadSettings CreateLoadSettings()`](../Assets/Scripts/Features/Building/BuildManager.cs#L611) | private |
+| BuildManager | [`void ClearUnloadableData(string id)`](../Assets/Scripts/Features/Building/BuildManager.cs#L629) | public |
+| BuildManager | [`bool IsLoadingBuildTarget( BuildTargetKind kind, string saveName, string enemyBlueprintName, string buildingBlueprintName = null)`](../Assets/Scripts/Features/Building/BuildManager.cs#L634) | public |
+| BuildManager | [`bool IsLoadingBuildTarget(BuildTargetContext context)`](../Assets/Scripts/Features/Building/BuildManager.cs#L644) | private |
+| BuildManager | [`void ClearUnloadableData(string id, string targetSavePath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L649) | private |
+| BuildManager | [`void InitialBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L658) | private |
+| BuildManager | [`bool CanCreateBlock(GameObject prefab, out string reason)`](../Assets/Scripts/Features/Building/BuildManager.cs#L666) | private |
+| BuildManager | [`void ApplyBlockBuildDefaults(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L696) | public |
+| BuildManager | [`int CountCockpitsInCurrentConstruct()`](../Assets/Scripts/Features/Building/BuildManager.cs#L701) | private |
+| BuildManager | [`void ResetBuildState()`](../Assets/Scripts/Features/Building/BuildManager.cs#L711) | private |
+| BuildManager | [`void SetBuildTarget(BuildTargetContext context)`](../Assets/Scripts/Features/Building/BuildManager.cs#L721) | private |
+| BuildManager | [`void RefreshBlueprintUI()`](../Assets/Scripts/Features/Building/BuildManager.cs#L739) | private |
+| BuildManager | [`void StopActiveBlockLoad()`](../Assets/Scripts/Features/Building/BuildManager.cs#L747) | private |
+| BuildManager | [`string ConvertToResourcesPath(string fullPath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L752) | public static |
 
 ## Assets/Scripts/Features/Building/BuildPalette.cs
 
@@ -2820,30 +2840,30 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| ProceduralVoxelWorld | [`float SurfaceHeight(int x, int z)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L48) | public |
-| ProceduralVoxelWorld | [`Vector3 FindSpawnSurface(Bounds construct)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L49) | public |
-| ProceduralVoxelWorld | [`void Awake()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L77) | private |
-| ProceduralVoxelWorld | [`void Generate(System.Action<GameObject> registerCreated = null, System.Action<GameObject> destroyObsolete = null)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L96) | public |
-| ProceduralVoxelWorld | [`void InitializeStreaming(WorldGenerationSettings settings, int sessionSeed)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L175) | public |
-| ProceduralVoxelWorld | [`bool HasColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L197) | public |
-| ProceduralVoxelWorld | [`bool IsColumnInBounds(Vector2Int coordinate)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L202) | public |
-| ProceduralVoxelWorld | [`Vector2Int ColumnAt(Vector3 worldPosition)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L207) | public |
-| ProceduralVoxelWorld | [`bool TryGetBuildingSite(Vector2Int coordinate, out Vector3 worldPosition, out Quaternion rotation)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L213) | public |
-| ProceduralVoxelWorld | [`IEnumerator LoadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L228) | public |
-| ProceduralVoxelWorld | [`void UnloadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L289) | public |
-| ProceduralVoxelWorld | [`void ClearStreaming()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L309) | public |
-| ProceduralVoxelWorld | [`void DestroyChunk(VoxelWorldChunk chunk)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L328) | private |
-| ProceduralVoxelWorld | [`void CacheChunks()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L347) | private |
-| ProceduralVoxelWorld | [`Vector3Int WorldToCell(Vector3 position)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L359) | public |
-| ProceduralVoxelWorld | [`Vector3 CellCenter(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L364) | public |
-| ProceduralVoxelWorld | [`bool SetCell(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L369) | public |
-| ProceduralVoxelWorld | [`VoxelWorldEdits CaptureEdits()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L382) | public |
-| ProceduralVoxelWorld | [`void RestoreEdits(VoxelWorldEdits edits)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L392) | public |
-| ProceduralVoxelWorld | [`int DamageSphere(Vector3 center, float radius, float energy)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L420) | public |
-| ProceduralVoxelWorld | [`void QueueCell(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L479) | private |
-| ProceduralVoxelWorld | [`void QueueChunk(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L490) | private |
-| ProceduralVoxelWorld | [`void LateUpdate()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L507) | private |
-| ProceduralVoxelWorld | [`void FlushDirty(int budget = int.MaxValue)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L512) | public |
+| ProceduralVoxelWorld | [`float SurfaceHeight(int x, int z)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L51) | public |
+| ProceduralVoxelWorld | [`Vector3 FindSpawnSurface(Bounds construct)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L52) | public |
+| ProceduralVoxelWorld | [`void Awake()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L80) | private |
+| ProceduralVoxelWorld | [`void Generate(System.Action<GameObject> registerCreated = null, System.Action<GameObject> destroyObsolete = null)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L99) | public |
+| ProceduralVoxelWorld | [`void InitializeStreaming(WorldGenerationSettings settings, int sessionSeed)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L178) | public |
+| ProceduralVoxelWorld | [`bool HasColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L200) | public |
+| ProceduralVoxelWorld | [`bool IsColumnInBounds(Vector2Int coordinate)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L205) | public |
+| ProceduralVoxelWorld | [`Vector2Int ColumnAt(Vector3 worldPosition)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L210) | public |
+| ProceduralVoxelWorld | [`bool TryGetBuildingSite(Vector2Int coordinate, out Vector3 worldPosition, out Quaternion rotation)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L216) | public |
+| ProceduralVoxelWorld | [`IEnumerator LoadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L231) | public |
+| ProceduralVoxelWorld | [`void UnloadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L312) | public |
+| ProceduralVoxelWorld | [`void ClearStreaming()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L332) | public |
+| ProceduralVoxelWorld | [`void DestroyChunk(VoxelWorldChunk chunk)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L351) | private |
+| ProceduralVoxelWorld | [`void CacheChunks()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L370) | private |
+| ProceduralVoxelWorld | [`Vector3Int WorldToCell(Vector3 position)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L382) | public |
+| ProceduralVoxelWorld | [`Vector3 CellCenter(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L387) | public |
+| ProceduralVoxelWorld | [`bool SetCell(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L392) | public |
+| ProceduralVoxelWorld | [`VoxelWorldEdits CaptureEdits()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L405) | public |
+| ProceduralVoxelWorld | [`void RestoreEdits(VoxelWorldEdits edits)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L415) | public |
+| ProceduralVoxelWorld | [`int DamageSphere(Vector3 center, float radius, float energy)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L443) | public |
+| ProceduralVoxelWorld | [`void QueueCell(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L502) | private |
+| ProceduralVoxelWorld | [`void QueueChunk(Vector3Int cell)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L513) | private |
+| ProceduralVoxelWorld | [`void LateUpdate()`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L530) | private |
+| ProceduralVoxelWorld | [`void FlushDirty(int budget = int.MaxValue, float milliseconds = float.PositiveInfinity)`](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L535) | public |
 
 ## Assets/Scripts/Features/World/StreamingWorldTerrain.cs
 
@@ -2870,6 +2890,19 @@
 | VoxelDebrisPiece | [`void Update()`](../Assets/Scripts/Features/World/VoxelDebrisPiece.cs#L49) | private |
 | VoxelDebrisPiece | [`void OnDestroy()`](../Assets/Scripts/Features/World/VoxelDebrisPiece.cs#L57) | private |
 
+## Assets/Scripts/Features/World/VoxelMeshData.cs
+
+// 职责：保存不可变邻域快照和纯CPU网格结果，将工作线程计算与Unity对象写入分开。 // 入口：Capture()在主线程读取体素；Upload()在主线程创建Mesh，快照不引用可变世界。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VoxelMeshData | [`Mesh Upload(Vector3Int start)`](../Assets/Scripts/Features/World/VoxelMeshData.cs#L18) | public |
+| VoxelChunkSnapshot | [`VoxelChunkSnapshot Capture(VoxelWorldData data, Vector3Int start, int size)`](../Assets/Scripts/Features/World/VoxelMeshData.cs#L56) | public static |
+| VoxelChunkSnapshot | [`byte Get(Vector3Int cell)`](../Assets/Scripts/Features/World/VoxelMeshData.cs#L73) | internal |
+| VoxelChunkSnapshot | [`int Index(Vector3Int cell)`](../Assets/Scripts/Features/World/VoxelMeshData.cs#L78) | internal |
+| VoxelChunkSnapshot | [`int Step(Vector3Int direction)`](../Assets/Scripts/Features/World/VoxelMeshData.cs#L83) | internal |
+| VoxelChunkSnapshot | [`byte Get(int index)`](../Assets/Scripts/Features/World/VoxelMeshData.cs#L88) | internal |
+
 ## Assets/Scripts/Features/World/VoxelStructureCollapse.cs
 
 // 职责：破坏后按预算判定金属支撑，将少量孤立结构转为有界物理碎片。 // 入口：RequestCheck()由世界成功破坏调用，LateUpdate避开未刷新的静态碰撞。 // 约束：仅土/岩邻接支撑，小片段研究模型，不等于全地形结构力学求解。
@@ -2893,11 +2926,14 @@
 
 ## Assets/Scripts/Features/World/VoxelSurfaceMesher.cs
 
-// 职责：仅为暴露的体素面生成三材质分块网格，边界查询邻块以避免内部重复面。 // 入口：Build()；调用者拥有返回Mesh并负责销毁，不修改源数据。
+// 职责：从一格邻域快照合并同材质的暴露面，生成三材质贪心网格。 // 入口：Build()用于同步编辑；Generate()只计算数组，可在工作线程运行，Unity提交留在主线程。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| VoxelSurfaceMesher | [`Mesh Build(VoxelWorldData data, Vector3Int start, int chunkSize, float cellSize)`](../Assets/Scripts/Features/World/VoxelSurfaceMesher.cs#L63) | public static |
+| VoxelSurfaceMesher | [`Mesh Build(VoxelWorldData data, Vector3Int start, int chunkSize, float cellSize)`](../Assets/Scripts/Features/World/VoxelSurfaceMesher.cs#L61) | public static |
+| VoxelSurfaceMesher | [`VoxelMeshData Generate(VoxelChunkSnapshot snapshot, float cellSize)`](../Assets/Scripts/Features/World/VoxelSurfaceMesher.cs#L67) | public static |
+| VoxelSurfaceMesher | [`void MergeSlice( VoxelMeshData result, byte[] mask, int size, int face, Vector3Int origin, Vector3Int u, Vector3Int v, float scale)`](../Assets/Scripts/Features/World/VoxelSurfaceMesher.cs#L113) | private static |
+| VoxelSurfaceMesher | [`void AddQuad( VoxelMeshData mesh, byte material, Vector3 corner, Vector3 u, Vector3 v, Vector3 normal, int width, int height, float scale)`](../Assets/Scripts/Features/World/VoxelSurfaceMesher.cs#L180) | private static |
 
 ## Assets/Scripts/Features/World/VoxelWorldChunk.cs
 
@@ -2907,10 +2943,11 @@
 | --- | --- | --- |
 | VoxelWorldChunk | [`void Configure(Vector3Int cellStart)`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L13) | public |
 | VoxelWorldChunk | [`void Rebuild(VoxelWorldData data, int chunkSize, float cellSize, Material[] materials)`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L18) | public |
-| VoxelWorldChunk | [`void AdoptBakedMesh(Mesh asset)`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L34) | public |
-| VoxelWorldChunk | [`void OnDestroy()`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L41) | private |
-| VoxelWorldChunk | [`void ClearOwnedMesh()`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L46) | public |
-| VoxelWorldChunk | [`void ReleaseMesh()`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L61) | private |
+| VoxelWorldChunk | [`void ApplyMesh(Mesh mesh, Material[] materials)`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L23) | public |
+| VoxelWorldChunk | [`void AdoptBakedMesh(Mesh asset)`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L39) | public |
+| VoxelWorldChunk | [`void OnDestroy()`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L46) | private |
+| VoxelWorldChunk | [`void ClearOwnedMesh()`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L51) | public |
+| VoxelWorldChunk | [`void ReleaseMesh()`](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L66) | private |
 
 ## Assets/Scripts/Features/World/VoxelWorldData.cs
 
@@ -2918,14 +2955,14 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| VoxelWorldData | [`byte Get(Vector3Int cell)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L28) | public |
-| VoxelWorldData | [`bool Contains(Vector3Int cell)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L43) | public |
-| VoxelWorldData | [`bool Set(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L50) | public |
-| VoxelWorldData | [`void Recount()`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L83) | public |
-| VoxelWorldData | [`void InitializeEmpty(Vector3Int dimensions)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L100) | public |
-| VoxelWorldData | [`void Generate(Vector3Int dimensions, int seed)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L114) | public |
-| VoxelWorldData | [`void InitializeStreaming(StreamingWorldTerrain terrain)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L172) | public |
-| VoxelWorldData | [`uint Fingerprint()`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L182) | public |
+| VoxelWorldData | [`byte Get(Vector3Int cell)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L32) | public |
+| VoxelWorldData | [`bool Contains(Vector3Int cell)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L47) | public |
+| VoxelWorldData | [`bool Set(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L54) | public |
+| VoxelWorldData | [`void Recount()`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L88) | public |
+| VoxelWorldData | [`void InitializeEmpty(Vector3Int dimensions)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L105) | public |
+| VoxelWorldData | [`void Generate(Vector3Int dimensions, int seed)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L119) | public |
+| VoxelWorldData | [`void InitializeStreaming(StreamingWorldTerrain terrain)`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L177) | public |
+| VoxelWorldData | [`uint Fingerprint()`](../Assets/Scripts/Features/World/VoxelWorldData.cs#L187) | public |
 
 ## Assets/Scripts/Features/World/VoxelWorldEdits.cs
 
@@ -3038,15 +3075,15 @@
 
 ## Assets/Scripts/Features/World/WorldBuildingStreaming.cs
 
-// 职责：按世界区块生成建筑，将远处建筑休眠为快照，并保留本次探索中的损坏和货仓。 // 入口：LoadColumn() / UnloadDistant()；实例归WorldBuildingManager，缓存随WorldSessionManager退出丢弃。
+// 职责：按世界区块生成建筑，将远处建筑休眠为快照，并保留本次探索中的损坏和货仓。 // 入口：LoadColumn() / UnloadDistantRoutine()；实例归WorldBuildingManager，缓存随会话退出丢弃。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | WorldBuildingStreaming | [`void LoadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L34) | internal |
 | WorldBuildingStreaming | [`IEnumerator RestoreAvailable()`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L62) | internal |
-| WorldBuildingStreaming | [`void UnloadDistant(Vector2Int center)`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L107) | internal |
-| WorldBuildingStreaming | [`int Distance(Vector2Int a, Vector2Int b)`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L136) | internal static |
-| WorldBuildingStreaming | [`bool HasLoadedGround(Vector3 position, Quaternion rotation, Vector2Int size)`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L141) | private |
+| WorldBuildingStreaming | [`IEnumerator UnloadDistantRoutine(Vector2Int center)`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L107) | internal |
+| WorldBuildingStreaming | [`int Distance(Vector2Int a, Vector2Int b)`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L148) | internal static |
+| WorldBuildingStreaming | [`bool HasLoadedGround(Vector3 position, Quaternion rotation, Vector2Int size)`](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L153) | private |
 
 ## Assets/Scripts/Features/World/WorldBuildingValidation.cs
 
@@ -3135,11 +3172,28 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldLoadingPanel | [`void Bind(WorldSessionManager owner)`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L18) | public |
-| WorldLoadingPanel | [`void Show(bool visible)`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L38) | public |
-| WorldLoadingPanel | [`void Update()`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L61) | private |
-| WorldLoadingPanel | [`void Cancel()`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L79) | private |
-| WorldLoadingPanel | [`void OnDestroy()`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L84) | private |
+| WorldLoadingPanel | [`void Bind(WorldSessionManager owner)`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L19) | public |
+| WorldLoadingPanel | [`void Show(bool visible)`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L39) | public |
+| WorldLoadingPanel | [`void ShowStartup()`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L63) | public |
+| WorldLoadingPanel | [`void Update()`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L69) | private |
+| WorldLoadingPanel | [`void Cancel()`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L96) | private |
+| WorldLoadingPanel | [`void OnDestroy()`](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L101) | private |
+
+## Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs
+
+// 职责：仅在显式-world-smoke-report参数下自动验证真实Player的加载、游玩、区块移动和退出。 // 入口：命令行初始化；只替换临时运行时载具，不保存游戏数据，报告后正常退出进程。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldPlayerSmokeChecks | [`void Initialize()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L50) | private static |
+| WorldPlayerSmokeChecks | [`void Start()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L67) | private |
+| WorldPlayerSmokeChecks | [`void Update()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L80) | private |
+| WorldPlayerSmokeChecks | [`IEnumerator Scenario()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L109) | private |
+| WorldPlayerSmokeChecks | [`void Check(bool valid, string name)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L227) | private |
+| WorldPlayerSmokeChecks | [`void Next(string name)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L240) | private |
+| WorldPlayerSmokeChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L253) | private |
+| WorldPlayerSmokeChecks | [`void Save()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L261) | private |
+| WorldPlayerSmokeChecks | [`void Finish()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L266) | private |
 
 ## Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs
 
@@ -3158,9 +3212,9 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldRegionStreaming | [`IEnumerator LoadNext(Vector2Int center)`](../Assets/Scripts/Features/World/WorldRegionStreaming.cs#L29) | internal |
-| WorldRegionStreaming | [`bool FindNextColumn(Vector2Int center, out Vector2Int coordinate)`](../Assets/Scripts/Features/World/WorldRegionStreaming.cs#L65) | private |
-| WorldRegionStreaming | [`void RetireDistant(Vector2Int center)`](../Assets/Scripts/Features/World/WorldRegionStreaming.cs#L91) | private |
+| WorldRegionStreaming | [`IEnumerator LoadNext(Vector2Int center)`](../Assets/Scripts/Features/World/WorldRegionStreaming.cs#L32) | internal |
+| WorldRegionStreaming | [`bool FindNextColumn(Vector2Int center, out Vector2Int coordinate)`](../Assets/Scripts/Features/World/WorldRegionStreaming.cs#L91) | private |
+| WorldRegionStreaming | [`IEnumerator RetireDistant(Vector2Int center)`](../Assets/Scripts/Features/World/WorldRegionStreaming.cs#L117) | private |
 
 ## Assets/Scripts/Features/World/WorldSessionManager.cs
 
@@ -3169,23 +3223,23 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | WorldSessionManager | [`void Start()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L65) | private |
-| WorldSessionManager | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L72) | private |
-| WorldSessionManager | [`void BeginPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L81) | public |
-| WorldSessionManager | [`IEnumerator PrepareWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L118) | private |
-| WorldSessionManager | [`void RequestPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L167) | public |
-| WorldSessionManager | [`void CancelPlayRequest()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L184) | public |
-| WorldSessionManager | [`void CompletePendingPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L190) | private |
-| WorldSessionManager | [`bool CanEnterPlay(Transform construct, out string reason)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L202) | public |
-| WorldSessionManager | [`void EnterPlay(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L224) | public |
-| WorldSessionManager | [`IEnumerator EnableWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L256) | private |
-| WorldSessionManager | [`void FinishEntering()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L290) | private |
-| WorldSessionManager | [`void EndSession()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L299) | public |
-| WorldSessionManager | [`IEnumerator RunGuarded(int version, IEnumerator work)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L304) | private |
-| WorldSessionManager | [`IEnumerator StreamWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L335) | private |
-| WorldSessionManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L383) | private |
-| WorldSessionManager | [`void Update()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L408) | private |
-| WorldSessionManager | [`Bounds ConstructBounds(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L418) | private static |
-| WorldSessionManager | [`void SetBuildEnvironmentVisible(bool visible)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L443) | private |
-| WorldSessionManager | [`void StopPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L473) | private |
-| WorldSessionManager | [`void Fail(Exception error)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L505) | private |
-| WorldSessionManager | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L517) | private |
+| WorldSessionManager | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L73) | private |
+| WorldSessionManager | [`void BeginPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L82) | public |
+| WorldSessionManager | [`IEnumerator PrepareWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L119) | private |
+| WorldSessionManager | [`void RequestPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L168) | public |
+| WorldSessionManager | [`void CancelPlayRequest()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L185) | public |
+| WorldSessionManager | [`void CompletePendingPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L191) | private |
+| WorldSessionManager | [`bool CanEnterPlay(Transform construct, out string reason)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L203) | public |
+| WorldSessionManager | [`void EnterPlay(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L225) | public |
+| WorldSessionManager | [`IEnumerator EnableWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L257) | private |
+| WorldSessionManager | [`void FinishEntering()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L291) | private |
+| WorldSessionManager | [`void EndSession()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L300) | public |
+| WorldSessionManager | [`IEnumerator RunGuarded(int version, IEnumerator work)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L305) | private |
+| WorldSessionManager | [`IEnumerator StreamWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L336) | private |
+| WorldSessionManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L384) | private |
+| WorldSessionManager | [`void Update()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L409) | private |
+| WorldSessionManager | [`Bounds ConstructBounds(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L419) | private static |
+| WorldSessionManager | [`void SetBuildEnvironmentVisible(bool visible)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L444) | private |
+| WorldSessionManager | [`void StopPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L474) | private |
+| WorldSessionManager | [`void Fail(Exception error)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L506) | private |
+| WorldSessionManager | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L518) | private |

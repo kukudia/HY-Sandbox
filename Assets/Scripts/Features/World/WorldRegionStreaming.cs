@@ -11,6 +11,9 @@ internal sealed class WorldRegionStreaming
     private readonly WorldBuildingStreaming buildings;
     private readonly WorldGenerationSettings settings;
     private readonly List<Vector2Int> retiring = new List<Vector2Int>();
+    private Vector2Int lastCenter;
+    private int observedVersion = -1;
+    private float nextMaintenanceTime;
     internal bool LoadedWork
     {
         get; private set;
@@ -28,7 +31,27 @@ internal sealed class WorldRegionStreaming
 
     internal IEnumerator LoadNext(Vector2Int center)
     {
-        RetireDistant(center);
+        LoadedWork = false;
+        // 静止且已满载时不每帧扫描全部建筑/休眠快照；跨列、地形加载变化立即唤醒。
+        if (center == lastCenter && observedVersion == world.ColumnVersion && Time.realtimeSinceStartup < nextMaintenanceTime)
+        {
+            yield break;
+        }
+
+        lastCenter = center;
+        IEnumerator retirement = RetireDistant(center);
+        try
+        {
+            while (retirement.MoveNext())
+            {
+                yield return retirement.Current;
+            }
+        }
+        finally
+        {
+            (retirement as IDisposable)?.Dispose();
+        }
+
         LoadedWork = FindNextColumn(center, out Vector2Int coordinate);
         if (LoadedWork)
         {
@@ -60,6 +83,9 @@ internal sealed class WorldRegionStreaming
         {
             (structures as IDisposable)?.Dispose();
         }
+
+        observedVersion = world.ColumnVersion;
+        nextMaintenanceTime = LoadedWork ? 0f : Time.realtimeSinceStartup + .2f;
     }
 
     private bool FindNextColumn(Vector2Int center, out Vector2Int coordinate)
@@ -88,9 +114,21 @@ internal sealed class WorldRegionStreaming
         return false;
     }
 
-    private void RetireDistant(Vector2Int center)
+    private IEnumerator RetireDistant(Vector2Int center)
     {
-        buildings.UnloadDistant(center);
+        IEnumerator structures = buildings.UnloadDistantRoutine(center);
+        try
+        {
+            while (structures.MoveNext())
+            {
+                yield return structures.Current;
+            }
+        }
+        finally
+        {
+            (structures as IDisposable)?.Dispose();
+        }
+
         retiring.Clear();
         foreach (Vector2Int column in world.LoadedColumns)
         {
@@ -103,6 +141,7 @@ internal sealed class WorldRegionStreaming
         foreach (Vector2Int column in retiring)
         {
             world.UnloadColumn(column);
+            yield return null;
         }
     }
 }

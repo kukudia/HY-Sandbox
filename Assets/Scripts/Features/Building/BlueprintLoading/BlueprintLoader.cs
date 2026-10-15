@@ -25,6 +25,10 @@ internal sealed class BlueprintLoader
     {
         get; private set;
     }
+    public float Progress
+    {
+        get; private set;
+    }
 
     public event Action<BlueprintStatistics> StatisticsChanged;
     public BlueprintLoader(MonoBehaviour runner, SaveManager saves, GameManager game, PlayManager play)
@@ -70,6 +74,7 @@ internal sealed class BlueprintLoader
         var blocks = new List<BlockData>(data.blocks);
         _camera.Begin(_parent.gameObject, blocks, settings, camera);
         IsLoading = true;
+        Progress = 0f;
         StatisticsChanged?.Invoke(default);
         int version = _version;
         Coroutine routine = _runner.StartCoroutine(LoadRoutine(version, blocks, settings, createInitialBlock));
@@ -132,11 +137,13 @@ internal sealed class BlueprintLoader
 
                 if (index < blocks.Count - 1)
                 {
+                    Progress = blocks.Count == 0 ? 0.95f : (index + 1f) / blocks.Count * 0.95f;
                     float interval = settings.GetInterval(Time.timeAsDouble - start);
                     yield return interval > 0f ? new WaitForSeconds(interval) : null;
                 }
             }
 
+            Progress = 0.95f;
             if (!OwnsParent(version))
             {
                 yield break;
@@ -162,6 +169,7 @@ internal sealed class BlueprintLoader
             }
 
             Debug.Log($"加载{_path}完成，耗时{Time.timeAsDouble - start}s，共{blocks.Count}个方块，恢复成功{statistics.BlockCount}个。");
+            Progress = 1f;
         }
         finally
         {

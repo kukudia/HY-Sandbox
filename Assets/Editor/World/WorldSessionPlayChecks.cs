@@ -478,6 +478,13 @@ public static class WorldSessionPlayChecks
                     load.MoveNext() && !world.HasColumn(coordinate),
                     "a raw column loader yields before publishing a completed column");
                 MeshFilter filter = temporary.GetComponentInChildren<MeshFilter>(true);
+                while (filter == null)
+                {
+                    yield return null;
+                    Check(load.MoveNext(), "asynchronous column continues before its first mesh upload");
+                    filter = temporary.GetComponentInChildren<MeshFilter>(true);
+                }
+
                 ownedMesh = filter.sharedMesh;
                 Check(ownedMesh != null, "the interrupted column owns a generated mesh before cancellation");
                 world.UnloadColumn(coordinate);

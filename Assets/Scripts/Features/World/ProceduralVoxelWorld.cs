@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public sealed class ProceduralVoxelWorld : MonoBehaviour
@@ -22,6 +23,8 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
     private int chunkSize = 16;
     [SerializeField, Range(1, 16)]
     private int rebuildsPerFrame = 2;
+    [SerializeField, Range(0.5f, 8f), Tooltip("实时破坏网格的每帧CPU预算（毫秒）；至少处理一块。")]
+    private float rebuildFrameBudgetMilliseconds = 2f;
     [SerializeField]
     private Material[] materials = new Material[3];
     [SerializeField]
@@ -224,7 +227,7 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
         return true;
     }
 
-    /// <summary>每个立方网格后让出一帧；中断、卸载或新会话都移除未完成列的拥有网格。</summary>
+    /// <summary>主线程采样快照，单个后台任务合并面，主线程提交碰撞；取消后丢弃未完成列。</summary>
     public IEnumerator LoadColumn(Vector2Int coordinate)
     {
         if (!IsColumnInBounds(coordinate) || HasColumn(coordinate) || loadingColumns.ContainsKey(coordinate))
@@ -246,6 +249,26 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
                 }
 
                 var start = new Vector3Int(coordinate.x * chunkSize, y, coordinate.y * chunkSize);
+                int capturedRevision;
+                VoxelMeshData meshData;
+                do
+                {
+                    capturedRevision = data.Revision;
+                    VoxelChunkSnapshot snapshot = VoxelChunkSnapshot.Capture(data, start, chunkSize);
+                    float scale = cellSize;
+                    Task<VoxelMeshData> task = Task.Run(() => VoxelSurfaceMesher.Generate(snapshot, scale));
+                    while (!task.IsCompleted)
+                    {
+                        yield return null;
+                    }
+
+                    meshData = task.GetAwaiter().GetResult();
+                    if (!loadingColumns.TryGetValue(coordinate, out current) || current != revision)
+                    {
+                        yield break;
+                    }
+                }
+                while (capturedRevision != data.Revision);
                 var obj = new GameObject("StreamingChunk_" + start);
                 obj.transform.SetParent(transform, false);
                 obj.transform.localPosition = (Vector3)start * cellSize;
@@ -253,7 +276,7 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
                 created.Add(chunk);
                 chunk.Configure(start);
                 chunks.Add(start, chunk);
-                chunk.Rebuild(data, chunkSize, cellSize, materials);
+                chunk.ApplyMesh(meshData.Upload(start), materials);
                 yield return null;
             }
 
@@ -506,12 +529,13 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
 
     private void LateUpdate()
     {
-        FlushDirty(rebuildsPerFrame);
+        FlushDirty(rebuildsPerFrame, rebuildFrameBudgetMilliseconds);
     }
 
-    public void FlushDirty(int budget = int.MaxValue)
+    public void FlushDirty(int budget = int.MaxValue, float milliseconds = float.PositiveInfinity)
     {
         LastRebuiltChunks = 0;
+        long started = System.Diagnostics.Stopwatch.GetTimestamp();
         while (dirty.Count > 0 && LastRebuiltChunks < budget)
         {
             var iterator = dirty.GetEnumerator();
@@ -523,6 +547,11 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
             {
                 chunk.Rebuild(data, chunkSize, cellSize, materials);
                 LastRebuiltChunks++;
+            }
+
+            if ((System.Diagnostics.Stopwatch.GetTimestamp() - started) * 1000.0 / System.Diagnostics.Stopwatch.Frequency >= milliseconds)
+            {
+                break;
             }
         }
     }

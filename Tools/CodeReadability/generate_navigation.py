@@ -596,6 +596,24 @@ def main():
         ],
     )
     graph(
+        "启动载具与世界加载遮罩",
+        "源码推导：Start开始后台世界准备后显示启动遮罩；BlueprintLoader按恢复数量报告0..95%，连接重建完成才到100%。面板Update等权合成载具/世界进度，两者完成才隐藏。用户请求游玩、取消或新会话显式Show会结束启动遮罩所有权，之后使用原来的世界进入遮罩；不改变蓝图加载间隔和动画镜头。",
+        {
+            "A": "WorldSessionManager.Start",
+            "B": "WorldSessionManager.BeginPreparation",
+            "C": "WorldLoadingPanel.ShowStartup",
+            "D": "WorldLoadingPanel.Update",
+            "E": "WorldLoadingPanel.Show",
+            "F": "BlueprintLoader.LoadRoutine",
+            "G": "BlueprintLoader.RebuildConnections",
+        },
+        [
+            "A --> B", "A --> C", "C --> E", "C -.->|后续UI帧| D",
+            "F -.->|已恢复数量进度| D", "F -.->|95%后连接重建| G", "G -.->|完成后100%| D",
+            "D -->|载具与世界就绪，隐藏| E",
+        ],
+    )
+    graph(
         "用户建筑库、自然出生和远景",
         "源码推导：每次会话读取persistentDataPath/BuildingBlueprints全部有效JSON，单独报告坏文件并按模块/底座范围扩大平台。自然出生地不再压低；进入时按载具覆盖范围最高地面加净空抬升。远景是独立无碰撞网格，分帧采样并避开已加载列，外边缘由距离雾过渡到同色背景；退出恢复原相机/雾并销毁自有网格。",
         {
@@ -621,11 +639,11 @@ def main():
     )
     graph(
         "区块流式与建筑休眠",
-        "源码推导：纯种子采样和稀疏体素差量不分配全图。加载按列、每个立方区块让出一帧，完整列才发布；先休眠建筑再卸载远处地形。建筑实例受预算限制，超限快照延期；当前地基覆盖列完整后恢复。物理帧按载具尺寸与预测路径冻结等待，保留速度直到完整路径有地形碰撞。",
+        "源码推导：纯种子采样和稀疏体素差量不分配全图。加载按列，一格邻域快照交单个后台任务合并面，主线程提交碰撞，完整列才发布；先休眠建筑再卸载远处地形。静止满载时每0.2秒维护，跨列和列版本变化立即唤醒。建筑实例受预算限制，超限快照延期；物理帧按载具尺寸与预测路径冻结等待，完整路径有碰撞后恢复。",
         {
             "A": "WorldSessionManager.StreamWorld",
             "B": "WorldRegionStreaming.LoadNext",
-            "C": "WorldBuildingStreaming.UnloadDistant",
+            "C": "WorldBuildingStreaming.UnloadDistantRoutine",
             "D": "BuildingRuntime.Capture",
             "E": "WorldBuildingManager.RemoveBuilding",
             "F": "ProceduralVoxelWorld.UnloadColumn",
@@ -641,11 +659,36 @@ def main():
             "P": "WorldPlayerStreamingGuard.Release",
         },
         [
-            "A --> B", "B --> C", "C --> D", "C --> E", "B --> F",
+            "A --> B", "B -.->|按毫秒预算休眠，跨帧| C", "C --> D", "C --> E", "B -.->|每列让出帧| F",
             "B -->|最近未加载列| G", "G -->|经网格构建采样| H", "H -->|无本次编辑差量| I",
             "B -->|完整列加载后登记快照| J", "B --> K", "K -.->|有地形且有活动预算，分帧恢复| L",
             "M --> N", "N --> O", "N -->|就绪后恢复刚体| P",
             "N -.->|预测路径中点Focus，下一渲染帧| A",
+        ],
+    )
+    graph(
+        "体素快照与贪心网格",
+        "源码推导：仅主线程读取可变体素/稀疏修改及调用Unity Mesh和PhysX；一格halo消除跨块内部面。后台任务只拥有byte快照和独立结果，合并同方向同材质矩形并保留平铺UV。提交前检查列请求及数据版本，取消结果丢弃，实时编辑变化重新采样。每个列加载器仅一个在途任务；WorldLab和显式FlushDirty保留同步路径，LateUpdate同时受块数/毫秒预算限制。",
+        {
+            "A": "ProceduralVoxelWorld.LoadColumn",
+            "B": "VoxelChunkSnapshot.Capture",
+            "C": "VoxelWorldData.Get",
+            "D": "VoxelSurfaceMesher.Generate",
+            "E": "VoxelSurfaceMesher.MergeSlice",
+            "F": "VoxelSurfaceMesher.AddQuad",
+            "G": "VoxelMeshData.Upload",
+            "H": "VoxelWorldChunk.ApplyMesh",
+            "I": "ProceduralVoxelWorld.UnloadColumn",
+            "J": "ProceduralVoxelWorld.ClearStreaming",
+            "K": "VoxelSurfaceMesher.Build",
+            "L": "VoxelWorldChunk.Rebuild",
+            "M": "ProceduralVoxelWorld.FlushDirty",
+        },
+        [
+            "A --> B", "B --> C", "A -.->|Task.Run，独立不可变快照| D", "D --> E", "E --> F",
+            "D -.->|完成后恢复主线程，验证请求/数据版本| A", "A --> G", "A --> H",
+            "I -.->|撤销列请求，结果丢弃| A", "J -.->|清空会话，结果丢弃| A",
+            "M --> L", "L --> K", "K --> B", "K --> D", "K --> G", "L --> H",
         ],
     )
     graph(

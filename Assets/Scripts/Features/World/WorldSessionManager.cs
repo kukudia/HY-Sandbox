@@ -67,6 +67,7 @@ public sealed class WorldSessionManager : MonoBehaviour
         started = true;
         loadingPanel?.Bind(this);
         BeginPreparation();
+        loadingPanel?.ShowStartup();
     }
 
     private void OnEnable()

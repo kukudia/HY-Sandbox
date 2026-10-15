@@ -1,0 +1,13 @@
+{
+  "before": {
+    "milliseconds": 135.0984,
+    "vertices": 197372,
+    "triangles": 98686
+  },
+  "after": {
+    "milliseconds": 83.7416,
+    "vertices": 32324,
+    "triangles": 16162
+  },
+  "conditions": "Editor Mono, seed14721, buildingChance0.45, padHalfSize4, 81 columns x 2 chunks of16, cell2m. Single synchronous run including sampling, Mesh upload and DestroyImmediate. No PhysX cook in this microbenchmark. Density0.35 was NOT used in the matched after sample."
+}

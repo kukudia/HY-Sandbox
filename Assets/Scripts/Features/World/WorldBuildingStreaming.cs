@@ -1,5 +1,5 @@
 // 职责：按世界区块生成建筑，将远处建筑休眠为快照，并保留本次探索中的损坏和货仓。
-// 入口：LoadColumn() / UnloadDistant()；实例归WorldBuildingManager，缓存随WorldSessionManager退出丢弃。
+// 入口：LoadColumn() / UnloadDistantRoutine()；实例归WorldBuildingManager，缓存随会话退出丢弃。
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -104,7 +104,7 @@ internal sealed class WorldBuildingStreaming
         }
     }
 
-    internal void UnloadDistant(Vector2Int center)
+    internal IEnumerator UnloadDistantRoutine(Vector2Int center)
     {
         retiring.Clear();
         foreach (BuildingRuntime building in manager.Buildings)
@@ -115,8 +115,15 @@ internal sealed class WorldBuildingStreaming
             }
         }
 
+        var timer = System.Diagnostics.Stopwatch.StartNew();
         foreach (BuildingRuntime building in retiring)
         {
+            // 跨帧期间战斗可能已经摧毁候选；会话取消则由拥有该协程的管理器整体释放。
+            if (building == null)
+            {
+                continue;
+            }
+
             WorldBuildingState state = building.Capture();
             if (state.blueprint.blocks.Count > 0)
             {
@@ -130,6 +137,11 @@ internal sealed class WorldBuildingStreaming
             }
 
             manager.RemoveBuilding(building);
+            if (timer.Elapsed.TotalMilliseconds >= settings.LoadingFrameBudgetMilliseconds)
+            {
+                yield return null;
+                timer.Restart();
+            }
         }
     }
 
