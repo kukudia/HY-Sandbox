@@ -32,6 +32,17 @@ public static class SalvagePlayProbe
     [MenuItem("Tools/Salvage/Run Play Mode validation")]
     public static void Run()
     {
+        Start(false);
+    }
+
+    [MenuItem("Tools/Salvage/Validate building debris in Play Mode")]
+    public static void RunBuildings()
+    {
+        Start(true);
+    }
+
+    private static void Start(bool buildingsOnly)
+    {
         if (EditorApplication.isPlaying)
         {
             throw new InvalidOperationException("Exit Play Mode before running the probe.");
@@ -42,6 +53,7 @@ public static class SalvagePlayProbe
             File.Delete("Temp/SalvageWork/PlayValidation.json");
         }
 
+        SessionState.SetBool("HY.SalvageProbe.BuildingsOnly", buildingsOnly);
         SessionState.SetBool(Pending, true);
         EditorApplication.isPlaying = true;
     }
@@ -219,6 +231,127 @@ public static class SalvagePlayProbe
         resourcePath = "Blocks/UniversalThruster",
         amount = 1
     };
+    private static BuildingRuntime SalvageBuilding(WorldBuildingManager manager, UnitFaction faction)
+    {
+        var blueprint = new BlockDataList
+        {
+            foundation = new BuildingFoundationData()
+        };
+        foreach (string name in new[]
+        {
+            "1x1x1",
+            "CargoHold"
+        }
+
+        )
+        {
+            Block prefab = Resources.Load<GameObject>("Blocks/" + name).GetComponent<Block>();
+            var data = new BlockData(prefab)
+            {
+                id = name,
+                resourcePath = "Blocks/" + name,
+                posX = -0.5f,
+                posY = name == "1x1x1" ? 0.5f : 4f,
+                posZ = 0.5f,
+                rotW = 1f
+            };
+            data.cargo = name == "CargoHold" ? new List<CargoItem>
+            {
+                Part(),
+                Part()
+            }
+
+            : null;
+            blueprint.blocks.Add(data);
+        }
+
+        return manager.RestoreBuilding(new WorldBuildingState { instanceId = Guid.NewGuid().ToString("N"), blueprintName = "Salvage probe", faction = faction, position = new Vector3(200, 100, 200), blueprint = blueprint, durability = new[] { 100f, 100f } });
+    }
+
+    private static IEnumerator BuildingSalvage()
+    {
+        var root = new GameObject("Building salvage probe");
+        root.SetActive(false);
+        var manager = root.AddComponent<WorldBuildingManager>();
+        var serialized = new SerializedObject(manager);
+        serialized.FindProperty("initializeOnStart").boolValue = false;
+        serialized.ApplyModifiedPropertiesWithoutUndo();
+        root.SetActive(true);
+        SalvageSettings settings = WreckSalvage.Settings;
+        float chance = settings.coinDropChance;
+        float specialChance = settings.specialPartChance;
+        try
+        {
+            settings.coinDropChance = 1f;
+            settings.specialPartChance = 0f;
+            foreach (bool exhausted in new[]
+            {
+                false,
+                true
+            }
+
+            )
+            {
+                LootDrop.ClearSession();
+                serialized.Update();
+                serialized.FindProperty("maximumDebrisPieces").intValue = exhausted ? 0 : 12;
+                serialized.ApplyModifiedPropertiesWithoutUndo();
+                BuildingRuntime building = SalvageBuilding(manager, UnitFaction.Enemy);
+                Block target = building.Blocks[0];
+                target.canExplode = false;
+                Block detached = building.Blocks[1];
+                target.GetComponent<Durability>().ApplyDamage(10000f, null);
+                Check(
+                    "Building damage removes detached cargo from snapshot " + exhausted,
+                    building.Capture().blueprint.blocks.Count == 0);
+                Check(
+                    "Detached enemy building preserves cargo and rolls salvage before debris budget " + exhausted,
+                    LootDrop.Active.Count(d => d.Item.kind == CargoKind.SpecialPart) == 2 && LootDrop.Active.Where(d => d.Item.kind == CargoKind.Coins).Sum(d => d.Item.amount) == settings.coinsPerBlock);
+                WreckSalvage.Convert(detached);
+                Check("Detached building salvage cannot convert twice " + exhausted, LootDrop.Active.Count() == 3);
+                WorldBuildingState captured = building.Capture();
+                manager.RemoveBuilding(building);
+                yield return 0.15f;
+                BuildingRuntime restored = manager.RestoreBuilding(captured);
+                Check(
+                    "Reloading destroyed building cannot respawn salvaged modules " + exhausted,
+                    restored.Blocks.Count == 0 && LootDrop.Active.Count() == 3);
+                manager.RemoveBuilding(restored);
+                yield return 0.15f;
+            }
+
+            LootDrop.ClearSession();
+            BuildingRuntime player = SalvageBuilding(manager, UnitFaction.Player);
+            player.Blocks[0].canExplode = false;
+            player.Blocks[0].GetComponent<Durability>().ApplyDamage(10000f, null);
+            Check(
+                "Player building debris spills stored cargo without farming coins",
+                LootDrop.Active.Count() == 2 && LootDrop.Active.All(d => d.Item.kind == CargoKind.SpecialPart));
+            manager.RemoveBuilding(player);
+            yield return 0.15f;
+            LootDrop.ClearSession();
+            BuildingRuntime sleeper = SalvageBuilding(manager, UnitFaction.Enemy);
+            WorldBuildingState sleeping = sleeper.Capture();
+            manager.RemoveBuilding(sleeper);
+            yield return 0.15f;
+            BuildingRuntime waking = manager.RestoreBuilding(sleeping);
+            Check(
+                "Streaming unload/reload preserves cargo without emitting salvage",
+                !LootDrop.Active.Any() && waking.Blocks[1].GetComponent<CargoHold>().Used == 2);
+            manager.ClearSession();
+            yield return 0.15f;
+            Check("Session teardown never rolls building salvage", !LootDrop.Active.Any());
+        }
+        finally
+        {
+            settings.coinDropChance = chance;
+            settings.specialPartChance = specialChance;
+            manager.ClearSession();
+            Object.Destroy(root);
+            LootDrop.ClearSession();
+        }
+    }
+
     private static IEnumerator Scenario()
     {
         var pm = new GameObject("Salvage test manager").AddComponent<PlayManager>();
@@ -233,6 +366,24 @@ public static class SalvagePlayProbe
         var build = new GameObject("Salvage test build").AddComponent<BuildManager>();
         build.enabled = false;
         build.blockLayer = LayerMask.GetMask("Block");
+        IEnumerator buildings = BuildingSalvage();
+        try
+        {
+            while (buildings.MoveNext())
+            {
+                yield return buildings.Current;
+            }
+        }
+        finally
+        {
+            (buildings as IDisposable)?.Dispose();
+        }
+
+        if (SessionState.GetBool("HY.SalvageProbe.BuildingsOnly", false))
+        {
+            yield break;
+        }
+
         camera.transform.position = new Vector3(0f, 50f, 0f);
         foreach (CargoItem item in new[]
         {

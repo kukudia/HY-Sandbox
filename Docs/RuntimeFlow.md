@@ -1909,7 +1909,7 @@ flowchart TD
 
 ## WorldLab 建筑支撑与损坏
 
-源码推导：地形修改通知只标记附近固定建筑，FixedUpdate读取体素数据计算虚拟范围的地形支撑比例（不生成地基实体）；默认低于50%脱锚，先刷新源碰撞再启用刚体。方块死亡从虚拟地面连接点开始，用Connector真实几何检查模块连通；断裂组最多32块、12片、12秒寿命，超预算移除。爆炸连锁排队结算，残骸不写快照，R重生成恢复初始布局。
+源码推导：地形修改通知只标记附近固定建筑，FixedUpdate读取体素数据计算虚拟范围的地形支撑比例（不生成地基实体）；默认低于50%脱锚，先刷新源碰撞再启用刚体。方块死亡从虚拟地面连接点开始，用Connector真实几何检查模块连通；断裂组最多32块、12片、12秒寿命，超预算移除；Main游玩态先按原阵营释放货仓/运输物并转换掉落，再判定残骸预算。普通卸载/会话清理不转换。爆炸连锁排队结算，残骸不写快照，R重生成恢复初始布局。
 
 ```mermaid
 flowchart TD
@@ -1944,11 +1944,19 @@ flowchart TD
     O["WorldBuildingManager.ResetBuildings()"]
     click O "../Assets/Scripts/Features/World/WorldBuildingManager.cs#L326" "打开源码"
     P["WorldBuildingManager.ClearDebris()"]
-    click P "../Assets/Scripts/Features/World/WorldBuildingManager.cs#L444" "打开源码"
+    click P "../Assets/Scripts/Features/World/WorldBuildingManager.cs#L451" "打开源码"
     Q["WorldBuildingManager.Place()"]
     click Q "../Assets/Scripts/Features/World/WorldBuildingManager.cs#L96" "打开源码"
     R["BuildingRuntime.HasGroundConnector()"]
     click R "../Assets/Scripts/Features/World/BuildingRuntime.cs#L294" "打开源码"
+    S["WreckSalvage.Convert()"]
+    click S "../Assets/Scripts/Features/Salvage/WreckSalvage.cs#L10" "打开源码"
+    T["CargoHold.ReleaseContents()"]
+    click T "../Assets/Scripts/Features/Salvage/CargoHold.cs#L206" "打开源码"
+    U["Bot.PrepareForHomeDestruction()"]
+    click U "../Assets/Scripts/Features/Bots/Bot.cs#L210" "打开源码"
+    V["LootDrop.Spawn()"]
+    click V "../Assets/Scripts/Features/Salvage/LootDrop.cs#L83" "打开源码"
     A -.->|TerrainChanged事件| B
     B -.->|待检查集合| C
     C --> D
@@ -1962,6 +1970,11 @@ flowchart TD
     H -->|爆炸方块| L
     L --> M
     M -->|顺序结算，连锁入队| G
+    K -->|禁用/重挂接及预算判断前| S
+    S --> U
+    S --> T
+    S -->|敌方残骸概率| V
+    T -->|按货仓阵营配置| V
     N -.->|Regenerated事件| O
     O --> P
     O -->|有效初始布局| Q
@@ -1997,12 +2010,20 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|Generate -->
 - [WorldBuildingManager.ResetBuildings](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L326)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|ResetBuildings -->
-- [WorldBuildingManager.ClearDebris](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L444)
+- [WorldBuildingManager.ClearDebris](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L451)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|ClearDebris -->
 - [WorldBuildingManager.Place](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L96)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|Place -->
 - [BuildingRuntime.HasGroundConnector](../Assets/Scripts/Features/World/BuildingRuntime.cs#L294)
 <!-- source: Assets/Scripts/Features/World/BuildingRuntime.cs|HasGroundConnector -->
+- [WreckSalvage.Convert](../Assets/Scripts/Features/Salvage/WreckSalvage.cs#L10)
+<!-- source: Assets/Scripts/Features/Salvage/WreckSalvage.cs|Convert -->
+- [CargoHold.ReleaseContents](../Assets/Scripts/Features/Salvage/CargoHold.cs#L206)
+<!-- source: Assets/Scripts/Features/Salvage/CargoHold.cs|ReleaseContents -->
+- [Bot.PrepareForHomeDestruction](../Assets/Scripts/Features/Bots/Bot.cs#L210)
+<!-- source: Assets/Scripts/Features/Bots/Bot.cs|PrepareForHomeDestruction -->
+- [LootDrop.Spawn](../Assets/Scripts/Features/Salvage/LootDrop.cs#L83)
+<!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Spawn -->
 
 ## WorldLab 金属支撑与碎片
 

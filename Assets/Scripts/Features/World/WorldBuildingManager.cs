@@ -407,6 +407,13 @@ public sealed class WorldBuildingManager : MonoBehaviour
 
     internal void CreateDebris(List<Block> group, Rigidbody source)
     {
+        // 断裂组已经离开主体快照；先释放运输/货仓并按原阵营转换，再决定物理残骸预算。
+        // 不放在 OnDestroy：流式休眠、恢复和退出会话不能凭空产生掉落。
+        foreach (Block block in group)
+        {
+            WreckSalvage.Convert(block);
+        }
+
         debris.RemoveAll(piece => piece == null);
         if (debris.Count >= maximumDebrisPieces || group.Count > maximumBlocksPerDebris)
         {

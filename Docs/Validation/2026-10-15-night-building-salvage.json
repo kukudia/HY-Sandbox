@@ -1,0 +1,18 @@
+{
+    "passed": true,
+    "unity": "6000.3.11f1",
+    "checks": [
+        "Building damage removes detached cargo from snapshot False",
+        "Detached enemy building preserves cargo and rolls salvage before debris budget False",
+        "Detached building salvage cannot convert twice False",
+        "Reloading destroyed building cannot respawn salvaged modules False",
+        "Building damage removes detached cargo from snapshot True",
+        "Detached enemy building preserves cargo and rolls salvage before debris budget True",
+        "Detached building salvage cannot convert twice True",
+        "Reloading destroyed building cannot respawn salvaged modules True",
+        "Player building debris spills stored cargo without farming coins",
+        "Streaming unload/reload preserves cargo without emitting salvage",
+        "Session teardown never rolls building salvage"
+    ],
+    "errors": []
+}
