@@ -15,7 +15,8 @@ public static class OutpostPlayerChecks
         Action<bool, string> check,
         Action<string> capture = null,
         bool salvage = false,
-        bool recoverAllParts = false)
+        bool recoverAllParts = false,
+        bool movingTarget = false)
     {
         return Flatten(Scenario(
             session,
@@ -23,7 +24,8 @@ public static class OutpostPlayerChecks
             check,
             capture,
             salvage,
-            recoverAllParts));
+            recoverAllParts,
+            movingTarget));
     }
 
     private static IEnumerator Flatten(IEnumerator root)
@@ -64,7 +66,8 @@ public static class OutpostPlayerChecks
         Action<bool, string> check,
         Action<string> capture,
         bool salvage,
-        bool recoverAllParts)
+        bool recoverAllParts,
+        bool movingTarget)
     {
         check(
             Object.FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None).All(item => !item.enabled),
@@ -167,6 +170,11 @@ public static class OutpostPlayerChecks
                 observation.Moved && observation.Targeted && observation.Powered,
                 "Authored guard acquires target and flies with powered hover: " + observation.Name);
             check(observation.DamagedPlayer, "Authored guard weapons naturally damage player: " + observation.Name);
+        }
+
+        if (movingTarget)
+        {
+            yield return OutpostPursuitPlayerChecks.Run(player, observations.Select(item => item.Unit).ToArray(), check);
         }
 
         OutpostHud hud = Object.FindFirstObjectByType<OutpostHud>();

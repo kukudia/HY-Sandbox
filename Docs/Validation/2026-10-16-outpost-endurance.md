@@ -21,3 +21,9 @@ Unity6000.3.11f1普通非Development Windows Player，D3D11，请求1920×1080�
 [整批报告](2026-10-16-outpost-full-recovery.json)。首次容量不足的失败报告保留为[夹具前置证据](2026-10-16-outpost-full-recovery-capacity-before.json)，它帮助区分平台容量阻塞与生产回收逻辑。
 
 新普通Windows D3D11构建0错误/1警告，整批Player日志中的运动学刚体警告0条；252脚本可读性、29图/导航、9项Python工具检查通过，dotnet build 0错误/4个既有警告，git diff --check通过。运行后28份用户JSON哈希未变，Main保留Edit状态且场景不脏；起始六份工程/配置/布局差异保留。
+
+## 移动目标追击
+
+新增显式参数`-world-smoke-outpost-pursuit`，在正式据点驻军自然交战后让玩家以2m/s移动20秒，随后把玩家移到120m外观察目标释放，再返回观察重新索敌。D3D11 Player通过67类检查、errors为空，Pike/Manta/Finch均保持活动、追击位移、自然武器伤害；驻军没有被重新生成。测试临时提升玩家耐久以免自然战斗过早结束，finally恢复原值；这条路线仍不替代真实人工驾驶。
+
+[移动目标报告](2026-10-16-outpost-pursuit.json)。

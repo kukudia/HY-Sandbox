@@ -59,6 +59,7 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
     private bool validateOutposts;
     private bool validateOutpostSalvage;
     private bool recoverAllOutpostParts;
+    private bool validateOutpostPursuit;
     private bool validateOutpostEditor;
     private bool validateCombat;
     private bool validateReturn;
@@ -85,7 +86,8 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
         checks.validateOutpostSalvage = Array.IndexOf(args, "-world-smoke-outpost-salvage") >= 0;
         checks.recoverAllOutpostParts = Array.IndexOf(args, "-world-smoke-outpost-salvage-all") >= 0;
         checks.validateOutpostSalvage |= checks.recoverAllOutpostParts;
-        checks.validateOutposts |= checks.validateOutpostSalvage;
+        checks.validateOutpostPursuit = Array.IndexOf(args, "-world-smoke-outpost-pursuit") >= 0;
+        checks.validateOutposts |= checks.validateOutpostSalvage || checks.validateOutpostPursuit;
         checks.validateOutpostEditor = Array.IndexOf(args, "-world-smoke-outpost-editor") >= 0;
         checks.validateCombat = Array.IndexOf(args, "-world-smoke-combat") >= 0;
         checks.validateReturn = Array.IndexOf(args, "-world-smoke-return") >= 0;
@@ -293,7 +295,8 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
                     Check,
                     capture,
                     validateOutpostSalvage,
-                    recoverAllOutpostParts);
+                    recoverAllOutpostParts,
+                    validateOutpostPursuit);
                 try
                 {
                     while (outpost.MoveNext())

@@ -980,6 +980,7 @@ def main():
             "Q": "WorldReturnPlayerChecks.Run",
             "R": "OutpostPlayerChecks.Run",
             "S": "OutpostEditorPlayerChecks.Run",
+            "T": "OutpostPursuitPlayerChecks.Run",
         },
         [
             "A -->|显式参数校验| B",
@@ -993,6 +994,7 @@ def main():
             "E -->|循环完成后显式-world-smoke-return| Q",
             "E -->|显式据点参数| R",
             "E -->|仅Development制作验证参数| S",
+            "E -->|显式据点移动目标参数| T",
             "E -->|跨区块后正式退出| G",
             "E -->|阶段结束| H",
             "H --> I",
