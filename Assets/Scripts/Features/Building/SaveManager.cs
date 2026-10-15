@@ -1,4 +1,4 @@
-﻿// 职责：管理玩家/敌方蓝图目录、名称和缓存，提供加载/复制/重命名入口。
+﻿// 职责：管理玩家/敌方/建筑蓝图目录、名称和缓存，提供加载/复制/重命名入口。
 // 入口：EnsureSaveDirectories() / GetAllSaveNames() / GetAllEnemyBlueprintNames()。
 using System.Collections.Generic;
 using System.IO;
@@ -10,6 +10,19 @@ public class SaveManager : MonoBehaviour
     public static SaveManager instance;
     private string saveDirectory => Path.Combine(Application.persistentDataPath, "Saves");
     private string enemyBlueprintDirectory => Path.Combine(Application.persistentDataPath, "EnemyBlueprints");
+    private string buildingBlueprintDirectory => Path.Combine(Application.persistentDataPath, "BuildingBlueprints");
+
+    private BlueprintFileStore _buildingFiles;
+    private BlueprintFileStore BuildingFiles => _buildingFiles ?? (_buildingFiles = new BlueprintFileStore(buildingBlueprintDirectory));
+
+    public string currentBuildingBlueprintName;
+    public List<string> buildingBlueprints = new List<string>();
+    private BlueprintFileStore FilesFor(BuildTargetKind kind)
+    {
+        return kind == BuildTargetKind.BuildingBlueprint ? BuildingFiles : kind == BuildTargetKind.EnemyBlueprint ? EnemyFiles : PlayerFiles;
+    }
+
+    private BlueprintFileStore CurrentFiles => FilesFor(BuildManager.instance != null ? BuildManager.instance.CurrentBuildTarget : BuildTargetKind.PlayerSave);
 
     private BlueprintFileStore _playerFiles;
     private BlueprintFileStore _enemyFiles;
@@ -46,6 +59,7 @@ public class SaveManager : MonoBehaviour
 
     public void EnsureSaveDirectories()
     {
+        Directory.CreateDirectory(buildingBlueprintDirectory);
         if (!Directory.Exists(saveDirectory))
         {
             Directory.CreateDirectory(saveDirectory);
@@ -55,6 +69,68 @@ public class SaveManager : MonoBehaviour
         {
             Directory.CreateDirectory(enemyBlueprintDirectory);
         }
+    }
+
+    public void GetAllBuildingBlueprintNames()
+    {
+        buildingBlueprints.Clear();
+        buildingBlueprints.AddRange(BuildingFiles.GetNames());
+    }
+
+    public void CreateNewBuildingBlueprint(string blueprintName)
+    {
+        currentBuildingBlueprintName = blueprintName;
+        string path = GetBuildingBlueprintPath(blueprintName);
+        if (!File.Exists(path))
+        {
+            var data = new BlockDataList
+            {
+                foundation = new BuildingFoundationData()
+            };
+            File.WriteAllText(path, JsonUtility.ToJson(data, true));
+        }
+
+        GetAllBuildingBlueprintNames();
+    }
+
+    public void LoadBuildingBlueprint(string blueprintName)
+    {
+        BuildManager.instance.EnterBuildingBlueprintBuildMode(blueprintName);
+    }
+
+    public void DeleteBuildingBlueprint(string blueprintName)
+    {
+        string path = GetBuildingBlueprintPath(blueprintName);
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+
+        SaveUIPanel.instance.RefreshList();
+    }
+
+    public bool RenameBuildingBlueprint(string oldName, string newName)
+    {
+        return RenameBlueprint(oldName, newName, BuildTargetKind.BuildingBlueprint);
+    }
+
+    public string GetBuildingBlueprintPath(string blueprintName)
+    {
+        return BuildingFiles.GetPath(blueprintName);
+    }
+
+    public void SaveBuildingFoundation(BuildingFoundationData foundation)
+    {
+        // 新包装对象共享只读方块列表，写入成功后才更新缓存元数据。
+        var data = new BlockDataList
+        {
+            blocks = cachedData.blocks,
+            foundation = foundation
+        };
+        File.WriteAllText(
+            GetBuildingBlueprintPath(BuildManager.instance.CurrentBuildingBlueprintName),
+            JsonUtility.ToJson(data, true));
+        cachedData.foundation = foundation;
     }
 
     public void GetAllSaveNames()
@@ -126,8 +202,8 @@ public class SaveManager : MonoBehaviour
             }
         }
 
+        BuildManager.instance.ExitDeveloperBlueprintBuildMode(false);
         BuildManager.instance.SetCurrentSaveName(saveName);
-        BuildManager.instance.ExitEnemyBlueprintBuildMode(false);
         BuildManager.instance.LoadAllBlocks();
         Debug.Log($"Loaded save: {saveName}");
     }
@@ -180,37 +256,52 @@ public class SaveManager : MonoBehaviour
 
     public bool RenameSave(string oldSaveName, string newSaveName)
     {
-        return RenameBlueprint(oldSaveName, newSaveName, false);
+        return RenameBlueprint(oldSaveName, newSaveName, BuildTargetKind.PlayerSave);
     }
 
     public bool RenameEnemyBlueprint(string oldBlueprintName, string newBlueprintName)
     {
-        return RenameBlueprint(oldBlueprintName, newBlueprintName, true);
+        return RenameBlueprint(oldBlueprintName, newBlueprintName, BuildTargetKind.EnemyBlueprint);
     }
 
-    private bool RenameBlueprint(string oldName, string newName, bool enemy)
+    private bool RenameBlueprint(string oldName, string newName, BuildTargetKind kind)
     {
         oldName = (oldName ?? string.Empty).Trim();
         newName = (newName ?? string.Empty).Trim();
-        BlueprintFileStore files = enemy ? EnemyFiles : PlayerFiles;
-        if (!files.TryRename(oldName, newName, out string reason))
+        if (!FilesFor(kind).TryRename(oldName, newName, out string reason))
         {
             Debug.LogWarning(reason);
             return false;
         }
 
         BuildManager build = BuildManager.instance;
-        bool active = enemy ? currentEnemyBlueprintName == oldName || (build != null && build.currentEnemyBlueprintName == oldName) : currentSaveName == oldName || (build != null && build.currentSaveName == oldName);
-        if (enemy)
+        bool active = build != null && build.CurrentBuildTarget == kind && build.CurrentBuildName == oldName;
+        if (kind == BuildTargetKind.BuildingBlueprint)
+        {
+            if (currentBuildingBlueprintName == oldName)
+            {
+                currentBuildingBlueprintName = newName;
+            }
+
+            if (build != null && build.CurrentBuildingBlueprintName == oldName)
+            {
+                build.SetCurrentBuildingBlueprintName(newName);
+            }
+        }
+        else if (kind == BuildTargetKind.EnemyBlueprint)
         {
             if (currentEnemyBlueprintName == oldName)
             {
                 currentEnemyBlueprintName = newName;
             }
 
-            if (build != null && build.currentEnemyBlueprintName == oldName)
+            if (active)
             {
                 build.SetCurrentEnemyBlueprintName(newName);
+            }
+            else if (build != null && build.currentEnemyBlueprintName == oldName)
+            {
+                build.currentEnemyBlueprintName = newName;
             }
         }
         else
@@ -220,9 +311,13 @@ public class SaveManager : MonoBehaviour
                 currentSaveName = newName;
             }
 
-            if (build != null && build.currentSaveName == oldName)
+            if (active)
             {
                 build.SetCurrentSaveName(newName);
+            }
+            else if (build != null && build.currentSaveName == oldName)
+            {
+                build.currentSaveName = newName;
             }
         }
 
@@ -237,8 +332,7 @@ public class SaveManager : MonoBehaviour
 
     public void DuplicateSave(string saveName)
     {
-        bool enemy = BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint;
-        BlueprintFileStore files = enemy ? EnemyFiles : PlayerFiles;
+        BlueprintFileStore files = CurrentFiles;
         if (!files.TryDuplicate((saveName ?? string.Empty).Trim(), out string copyName, out string reason))
         {
             Debug.LogWarning(reason);
@@ -261,16 +355,7 @@ public class SaveManager : MonoBehaviour
 
     public string GetSaveFileSize(string saveName)
     {
-        string path;
-        if (BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint)
-        {
-            path = GetEnemyBlueprintPath(saveName);
-        }
-        else
-        {
-            path = GetSavePath(saveName);
-        }
-
+        string path = CurrentFiles.GetPath(saveName);
         if (File.Exists(path))
         {
             long bytes = new FileInfo(path).Length;

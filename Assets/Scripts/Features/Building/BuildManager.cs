@@ -1,5 +1,5 @@
 // 职责：协调建造输入、选择与放置；蓝图加载委托 Building 功能，保留现有 Inspector 契约。
-// 入口：SetBuildMode() / ToggleEnemyBlueprintBuildMode() / EnterEnemyBlueprintBuildMode()。
+// 入口：SetBuildMode() / ToggleEnemyBlueprintBuildMode() / ToggleBuildingBlueprintBuildMode()。
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -34,9 +34,20 @@ public class BuildManager : MonoBehaviour
     public string currentEnemyBlueprintName = "default_enemy";
     public bool enemyBlueprintBuildMode;
     public Connector hoveredConnector; // 鼠标当前指向的连接点
-    private BuildTargetContext CurrentBuildContext => enemyBlueprintBuildMode ? BuildTargetContext.EnemyBlueprint(currentSaveName, currentEnemyBlueprintName) : BuildTargetContext.PlayerSave(currentSaveName, currentEnemyBlueprintName);
+    [SerializeField]
+    private bool _buildingBlueprintBuildMode;
+    [SerializeField]
+    private string _currentBuildingBlueprintName = "default_building";
+    public string CurrentBuildingBlueprintName => _currentBuildingBlueprintName;
+    public BuildingFoundation Foundation
+    {
+        get; private set;
+    }
+    private BuildTargetContext CurrentBuildContext => _buildingBlueprintBuildMode ? BuildTargetContext.BuildingBlueprint(currentSaveName, currentEnemyBlueprintName, _currentBuildingBlueprintName) : enemyBlueprintBuildMode ? BuildTargetContext.EnemyBlueprint(currentSaveName, currentEnemyBlueprintName) : BuildTargetContext.PlayerSave(currentSaveName, currentEnemyBlueprintName);
     private string savePath => CurrentBuildContext.GetSavePath(SaveManager.instance);
     public bool IsEditingEnemyBlueprint => CurrentBuildContext.IsEnemyBlueprint;
+    public bool IsEditingBuildingBlueprint => CurrentBuildContext.IsBuildingBlueprint;
+    public bool IsEditingDeveloperBlueprint => CurrentBuildContext.IsDeveloperBlueprint;
     public BuildTargetKind CurrentBuildTarget => CurrentBuildContext.Kind;
     public UnitFaction CurrentBuildFaction => CurrentBuildContext.Faction;
     public string CurrentBuildName => CurrentBuildContext.Name;
@@ -167,7 +178,7 @@ public class BuildManager : MonoBehaviour
     {
         if (IsEditingEnemyBlueprint)
         {
-            ExitEnemyBlueprintBuildMode(true);
+            ExitDeveloperBlueprintBuildMode(true);
         }
         else
         {
@@ -199,15 +210,23 @@ public class BuildManager : MonoBehaviour
         SetBuildTarget(targetContext);
         currentBlockResourcePath = string.Empty;
         ResetBuildState();
-        MainUIPanels.instance.EnterEnemyBlueprintBuildMode();
         SaveManager.instance.CreateNewEnemyBlueprint(currentEnemyBlueprintName);
+        MainUIPanels.instance.RefreshBlueprintEditorMode();
         LoadAllBlocks();
         Debug.Log($"Entered enemy blueprint build mode: {currentEnemyBlueprintName}");
     }
 
     public void ExitEnemyBlueprintBuildMode(bool reloadPlayerSave)
     {
-        if (!IsEditingEnemyBlueprint)
+        if (IsEditingEnemyBlueprint)
+        {
+            ExitDeveloperBlueprintBuildMode(reloadPlayerSave);
+        }
+    }
+
+    public void ExitDeveloperBlueprintBuildMode(bool reloadPlayerSave)
+    {
+        if (!IsEditingDeveloperBlueprint)
         {
             return;
         }
@@ -220,8 +239,121 @@ public class BuildManager : MonoBehaviour
             SaveManager.instance.LoadSave(currentSaveName);
         }
 
-        MainUIPanels.instance.ExitEnemyBlueprintBuildMode();
-        Debug.Log("Exited enemy blueprint build mode.");
+        MainUIPanels.instance.RefreshBlueprintEditorMode();
+        Debug.Log("Exited developer blueprint build mode.");
+    }
+
+    public void ToggleBuildingBlueprintBuildMode()
+    {
+        if (IsEditingBuildingBlueprint)
+        {
+            ExitDeveloperBlueprintBuildMode(true);
+        }
+        else
+        {
+            EnterBuildingBlueprintBuildMode(_currentBuildingBlueprintName);
+        }
+    }
+
+    public void EnterBuildingBlueprintBuildMode(string blueprintName)
+    {
+        if (!InputManager.instance.DeveloperToolsAvailable || (PlayManager.instance != null && PlayManager.instance.playMode))
+        {
+            return;
+        }
+
+        BuildTargetContext target = BuildTargetContext.BuildingBlueprint(currentSaveName, currentEnemyBlueprintName, blueprintName);
+        if (IsLoadingBuildTarget(target))
+        {
+            return;
+        }
+
+        SetBuildTarget(target);
+        currentBlockResourcePath = string.Empty;
+        ResetBuildState();
+        SaveManager.instance.CreateNewBuildingBlueprint(CurrentBuildingBlueprintName);
+        MainUIPanels.instance.RefreshBlueprintEditorMode();
+        LoadAllBlocks();
+    }
+
+    private void PrepareBuildingFoundation(Transform parent, BlockDataList data)
+    {
+        Foundation = null;
+        if (!IsEditingBuildingBlueprint)
+        {
+            return;
+        }
+
+        if (data.foundation == null || !data.foundation.IsValid)
+        {
+            data.foundation = new BuildingFoundationData();
+        }
+
+        GameObject prefab = Resources.Load<GameObject>("BuildingEditor/Foundation");
+        GameObject obj = Instantiate(prefab, parent);
+        // 既有存档/建造吸附使用世界坐标；父 Prefab 自带位移，底座不能继承它。
+        obj.transform.position = Vector3.zero;
+        obj.transform.rotation = Quaternion.identity;
+        Foundation = obj.GetComponent<BuildingFoundation>();
+        Foundation.Configure(data.foundation);
+        MainUIPanels.instance.RefreshBuildingEditorPanel();
+    }
+
+    public bool ResizeBuildingFoundation(int width, int length, out string reason)
+    {
+        reason = string.Empty;
+        if (!IsEditingBuildingBlueprint || IsLoadingBlocks || Foundation == null || !InputManager.instance.DeveloperToolsAvailable)
+        {
+            reason = "Building editor is not ready.";
+            return false;
+        }
+
+        var data = new BuildingFoundationData
+        {
+            width = width,
+            length = length
+        };
+        if (!data.IsValid)
+        {
+            reason = $"Use whole numbers from 1 to {BuildingFoundationData.MaximumSize}.";
+            return false;
+        }
+
+        // 先提交磁盘，再替换底座连接；写入失败不改变场景和缓存。
+        SaveManager.instance.SaveBuildingFoundation(data);
+        DeselectBlock();
+        ClearCurrentGhost();
+        Foundation.Configure(data);
+        Block[] blocks = GameManager.instance.blocksParent.GetComponentsInChildren<Block>();
+        foreach (Block block in blocks)
+        {
+            if (block != null)
+            {
+                block.CheckConnection();
+            }
+        }
+
+        foreach (Block block in blocks)
+        {
+            if (block != null)
+            {
+                block.neighbors = block.Neighbors();
+            }
+        }
+
+        // 尺寸变化使旧连接假设失效；保留所有方块，清空本目标的撤销历史。
+        ActionManager.instance?.Clear();
+        RefreshBlueprintUI();
+        return true;
+    }
+
+    public void SetCurrentBuildingBlueprintName(string blueprintName)
+    {
+        _currentBuildingBlueprintName = blueprintName;
+        if (IsEditingBuildingBlueprint)
+        {
+            SetBuildTarget(BuildTargetContext.BuildingBlueprint(currentSaveName, currentEnemyBlueprintName, blueprintName));
+        }
     }
 
     public void SetCurrentBlockResource(string resourcePath)
@@ -366,7 +498,7 @@ public class BuildManager : MonoBehaviour
 
     public void DeleteBlock()
     {
-        if (selectedBlock == null)
+        if (selectedBlock == null || !selectedBlock.canBeDeleted || selectedBlock.TryGetComponent(out BuildingFoundation _))
         {
             return;
         }
@@ -410,6 +542,11 @@ public class BuildManager : MonoBehaviour
 
         EnsureBlueprintEditor();
         lastSaveBlock = block;
+        if (block.TryGetComponent(out BuildingFoundation _))
+        {
+            return;
+        }
+
         _editor.Save(block, savePath, CurrentBuildFaction);
         RefreshBlueprintUI();
     }
@@ -424,7 +561,7 @@ public class BuildManager : MonoBehaviour
     /// <summary>蓝图加载入口；文件、逐帧恢复和统计在 BlueprintLoader 中审查。</summary>
     public void LoadAllBlocks()
     {
-        if (!IsEditingEnemyBlueprint && currentSaveName == String.Empty && SaveManager.instance.saves.Count > 0)
+        if (!IsEditingDeveloperBlueprint && currentSaveName == String.Empty && SaveManager.instance.saves.Count > 0)
         {
             currentSaveName = SaveManager.instance.saves[0];
         }
@@ -437,7 +574,13 @@ public class BuildManager : MonoBehaviour
 
         DeselectBlock();
         ClearCurrentGhost();
-        _blueprintLoader.Load(CurrentBuildContext, blocksParentPrefab, CreateLoadSettings(), mainCamera, InitialBlock);
+        _blueprintLoader.Load(
+            CurrentBuildContext,
+            blocksParentPrefab,
+            CreateLoadSettings(),
+            mainCamera,
+            InitialBlock,
+            PrepareBuildingFoundation);
     }
 
     public BlueprintStatistics GetBlueprintStatistics()
@@ -487,9 +630,13 @@ public class BuildManager : MonoBehaviour
         ClearUnloadableData(id, savePath);
     }
 
-    public bool IsLoadingBuildTarget(BuildTargetKind kind, string saveName, string enemyBlueprintName)
+    public bool IsLoadingBuildTarget(
+        BuildTargetKind kind,
+        string saveName,
+        string enemyBlueprintName,
+        string buildingBlueprintName = null)
     {
-        BuildTargetContext context = kind == BuildTargetKind.EnemyBlueprint ? BuildTargetContext.EnemyBlueprint(saveName, enemyBlueprintName) : BuildTargetContext.PlayerSave(saveName, enemyBlueprintName);
+        BuildTargetContext context = new BuildTargetContext(kind, saveName, enemyBlueprintName, buildingBlueprintName);
         return IsLoadingBuildTarget(context);
     }
 
@@ -518,7 +665,7 @@ public class BuildManager : MonoBehaviour
     private bool CanCreateBlock(GameObject prefab, out string reason)
     {
         reason = string.Empty;
-        if (IsEditingEnemyBlueprint && !InputManager.instance.DeveloperToolsAvailable)
+        if (IsEditingDeveloperBlueprint && !InputManager.instance.DeveloperToolsAvailable)
         {
             reason = "Enemy blueprint build mode is developer-only.";
             return false;
@@ -527,6 +674,12 @@ public class BuildManager : MonoBehaviour
         if (prefab == null)
         {
             reason = "Prefab is missing.";
+            return false;
+        }
+
+        if (prefab.TryGetComponent(out BuildingFoundation _) || (IsEditingBuildingBlueprint && prefab.GetComponent<Cockpit>() != null))
+        {
+            reason = "Buildings use a fixed foundation and cannot contain a Cockpit.";
             return false;
         }
 
@@ -568,6 +721,12 @@ public class BuildManager : MonoBehaviour
     {
         StopActiveBlockLoad();
         enemyBlueprintBuildMode = context.IsEnemyBlueprint;
+        _buildingBlueprintBuildMode = context.IsBuildingBlueprint;
+        if (context.IsBuildingBlueprint)
+        {
+            _currentBuildingBlueprintName = context.BuildingBlueprintName;
+        }
+
         currentSaveName = context.SaveName;
         currentEnemyBlueprintName = context.EnemyBlueprintName;
         if (BlueprintUIPanel.instance != null)

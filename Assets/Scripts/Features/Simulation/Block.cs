@@ -130,6 +130,12 @@ public class Block : MonoBehaviour
             raycastCollider.size = new Vector3(x - 0.1f, y - 0.1f, z - 0.1f);
         }
 
+        // 底座是薄平面；制作期重载也必须使用它自己的几何，不能按整格厚度覆盖。
+        if (TryGetComponent(out BuildingFoundation foundation))
+        {
+            foundation.RefreshGeometry(this);
+        }
+
         if (rebuildConnectors && canSpawnConnector)
         {
             GenerateConnectionPoints();

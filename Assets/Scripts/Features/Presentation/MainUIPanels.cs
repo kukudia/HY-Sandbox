@@ -34,6 +34,7 @@ public class MainUIPanels : MonoBehaviour
     public CombatHud CombatHud => _combatHud;
     public ThrusterInfoPanel ThrusterInfoPanel => _thrusterInfoPanel;
 
+    private BuildingEditorPanel _buildingEditorPanel;
     private bool renameMode;
     private string renameTargetName;
     private UnityEngine.Events.UnityAction _deleteAction;
@@ -91,7 +92,7 @@ public class MainUIPanels : MonoBehaviour
         _transitions.Show(createPanel, true, fadeDuration);
         InputManager.instance.keyInput = false;
         BuildManager.instance.enabled = false;
-        SetInputPlaceholder(BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint ? "Create new blueprint..." : "Create new save...");
+        SetInputPlaceholder(BuildManager.instance != null && BuildManager.instance.IsEditingDeveloperBlueprint ? "Create new blueprint..." : "Create new save...");
         inputName.text = "";
         inputName.Select();
         inputName.ActivateInputField();
@@ -106,7 +107,7 @@ public class MainUIPanels : MonoBehaviour
         _transitions.Show(createPanel, true, fadeDuration);
         InputManager.instance.keyInput = false;
         BuildManager.instance.enabled = false;
-        SetInputPlaceholder(BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint ? "Rename blueprint..." : "Rename save...");
+        SetInputPlaceholder(BuildManager.instance != null && BuildManager.instance.IsEditingDeveloperBlueprint ? "Rename blueprint..." : "Rename save...");
         inputName.text = save;
         inputName.Select();
         inputName.ActivateInputField();
@@ -164,7 +165,7 @@ public class MainUIPanels : MonoBehaviour
         string saveName = inputName.text.Trim();
         if (renameMode)
         {
-            bool renamed = BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint ? SaveManager.instance.RenameEnemyBlueprint(renameTargetName, saveName) : SaveManager.instance.RenameSave(renameTargetName, saveName);
+            bool renamed = BuildManager.instance != null && BuildManager.instance.IsEditingBuildingBlueprint ? SaveManager.instance.RenameBuildingBlueprint(renameTargetName, saveName) : BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint ? SaveManager.instance.RenameEnemyBlueprint(renameTargetName, saveName) : SaveManager.instance.RenameSave(renameTargetName, saveName);
             if (renamed)
             {
                 HideCreatePanel();
@@ -175,7 +176,12 @@ public class MainUIPanels : MonoBehaviour
 
         if (!string.IsNullOrEmpty(saveName))
         {
-            if (BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint)
+            if (BuildManager.instance != null && BuildManager.instance.IsEditingBuildingBlueprint)
+            {
+                SaveManager.instance.CreateNewBuildingBlueprint(saveName);
+                SaveManager.instance.LoadBuildingBlueprint(saveName);
+            }
+            else if (BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint)
             {
                 SaveManager.instance.CreateNewEnemyBlueprint(saveName);
                 SaveManager.instance.LoadEnemyBlueprint(saveName);
@@ -196,7 +202,11 @@ public class MainUIPanels : MonoBehaviour
 
     private void OnConfirmDelete(string save)
     {
-        if (BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint)
+        if (BuildManager.instance != null && BuildManager.instance.IsEditingBuildingBlueprint)
+        {
+            SaveManager.instance.DeleteBuildingBlueprint(save);
+        }
+        else if (BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint)
         {
             SaveManager.instance.DeleteEnemyBlueprint(save);
         }
@@ -272,14 +282,36 @@ public class MainUIPanels : MonoBehaviour
 
     public void EnterEnemyBlueprintBuildMode()
     {
-        MainUIButtons.instance.playButton.gameObject.SetActive(false);
-        SaveUIPanel.instance.RefreshList();
+        RefreshBlueprintEditorMode();
     }
 
     public void ExitEnemyBlueprintBuildMode()
     {
-        MainUIButtons.instance.playButton.gameObject.SetActive(true);
+        RefreshBlueprintEditorMode();
+    }
+
+    public void RefreshBlueprintEditorMode()
+    {
+        bool building = BuildManager.instance.IsEditingBuildingBlueprint;
+        if (building && _buildingEditorPanel == null)
+        {
+            GameObject prefab = Resources.Load<GameObject>("BuildingEditor/EditorPanel");
+            _buildingEditorPanel = Instantiate(prefab, buildPanel.transform).GetComponent<BuildingEditorPanel>();
+        }
+
+        if (_buildingEditorPanel != null)
+        {
+            _buildingEditorPanel.gameObject.SetActive(building);
+            _buildingEditorPanel.Refresh();
+        }
+
+        MainUIButtons.instance.playButton.gameObject.SetActive(!BuildManager.instance.IsEditingDeveloperBlueprint);
         SaveUIPanel.instance.RefreshList();
+    }
+
+    public void RefreshBuildingEditorPanel()
+    {
+        _buildingEditorPanel?.Refresh();
     }
 
     public void UpdateHealthBar(GameObject obj, float currentHealth, float maxHealth)

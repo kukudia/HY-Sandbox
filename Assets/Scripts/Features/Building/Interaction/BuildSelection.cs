@@ -79,7 +79,7 @@ internal sealed class BuildSelection
 
     public void SelectBlock(Block block)
     {
-        if (block == null)
+        if (block == null || block.TryGetComponent(out BuildingFoundation _))
         {
             DeselectBlock();
             return;

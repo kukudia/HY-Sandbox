@@ -27,6 +27,9 @@ Assets/Resources/BuildPaletteEntries/**/*.prefab whitespace=-blank-at-eol
 Assets/Resources/BuildPaletteEntries/**/*.meta whitespace=-blank-at-eol
 Assets/Resources/Blocks/ProjectileTurret*.prefab.meta whitespace=-blank-at-eol
 Assets/Art/BuildPalette/Icons/*.png.meta whitespace=-blank-at-eol
+# Building editor assets keep Unity-authored empty serialized values.
+Assets/Resources/BuildingEditor.meta whitespace=-blank-at-eol
+Assets/Resources/BuildingEditor/** whitespace=-blank-at-eol
 # WorldLab assets are saved by Unity with spaces after empty serialized values.
 Assets/Scenes/WorldLab.unity whitespace=-blank-at-eol
 Assets/Scenes/WorldLab.unity.meta whitespace=-blank-at-eol

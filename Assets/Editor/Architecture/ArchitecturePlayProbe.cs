@@ -296,6 +296,7 @@ public static class ArchitecturePlayProbe
                     null,
                     _settings,
                     _build.mainCamera,
+                    null,
                     null);
             }
             finally
@@ -572,7 +573,8 @@ public static class ArchitecturePlayProbe
             _build.blocksParentPrefab,
             _settings,
             _build.mainCamera,
-            initialBlock);
+            initialBlock,
+            null);
     }
 
     private static bool IsLoading => _loader != null && (bool)_loader.GetType().GetProperty("IsLoading").GetValue(_loader);

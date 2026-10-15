@@ -66,6 +66,21 @@ public class InputManager : MonoBehaviour
             return;
         }
 
+        if (!PlayManager.instance.playMode && DeveloperToolsAvailable && keyboard.ctrlKey.isPressed && keyboard.altKey.isPressed)
+        {
+            if (keyboard.eKey.wasPressedThisFrame)
+            {
+                BuildManager.instance.ToggleEnemyBlueprintBuildMode();
+                return;
+            }
+
+            if (keyboard.fKey.wasPressedThisFrame)
+            {
+                BuildManager.instance.ToggleBuildingBlueprintBuildMode();
+                return;
+            }
+        }
+
         if (keyboard.tabKey.wasPressedThisFrame)
         {
             if (CameraController.instance.currentMode == CameraMode.FirstPerson)
@@ -114,11 +129,6 @@ public class InputManager : MonoBehaviour
                 CameraController.instance.currentMode = lockView ? CameraMode.Lock : CameraMode.FreeFly;
                 BuildManager.instance.SetBuildMode(lockView);
                 ApplyCursorState(lockView);
-            }
-
-            if (DeveloperToolsAvailable && keyboard.leftCtrlKey.isPressed && keyboard.leftShiftKey.isPressed && keyboard.eKey.wasPressedThisFrame)
-            {
-                BuildManager.instance.ToggleEnemyBlueprintBuildMode();
             }
         }
         else

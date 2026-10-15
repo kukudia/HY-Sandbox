@@ -41,7 +41,8 @@ internal sealed class BlueprintLoader
         GameObject parentPrefab,
         BlueprintLoadSettings settings,
         Camera camera,
-        Action createInitialBlock)
+        Action createInitialBlock,
+        Action<Transform, BlockDataList> prepareParent = null)
     {
         if (IsLoadingTarget(target))
         {
@@ -63,6 +64,7 @@ internal sealed class BlueprintLoader
 
         ReplaceParent(parentPrefab, target.Name);
         _saves.cachedData = data;
+        prepareParent?.Invoke(_parent, data);
         _target = target;
         _path = path;
         var blocks = new List<BlockData>(data.blocks);
@@ -140,7 +142,7 @@ internal sealed class BlueprintLoader
                 yield break;
             }
 
-            if (blocks.Count == 0)
+            if (blocks.Count == 0 && !_target.IsBuildingBlueprint)
             {
                 createInitialBlock?.Invoke();
             }
@@ -207,6 +209,8 @@ internal sealed class BlueprintLoader
     {
         if (_game.blocksParent != null)
         {
+            // Destroy 延迟到帧末；先退出物理查询，避免新蓝图连接到即将销毁的旧对象。
+            _game.blocksParent.gameObject.SetActive(false);
             UnityEngine.Object.Destroy(_game.blocksParent.gameObject);
         }
 
