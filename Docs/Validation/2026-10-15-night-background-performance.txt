@@ -1,0 +1,48 @@
+Unity=6000.3.11f1, graphics=Direct3D12, scene=Assets/Scenes/Main.unity, seed=14721; Editor frame intervals, no Deep Profile.
+startup: frames=2, totalMs=155.2, medianMs=97.68, p95Ms=57.57, maxMs=97.68, over50ms=2
+ready: state=Ready, buildings=28, blocks=1967
+prepare: frames=1020, totalMs=19129.6, medianMs=18.24, p95Ms=28.70, maxMs=72.37, over50ms=12
+Play entry synchronousMs=25.91
+rendering: batches=2240, triangles=672048, shadowCasters=101, screen=1450x975
+settled rendering: batches=2250, triangles=670961, shadowCasters=101, screen=1450x975
+entry: frames=267, totalMs=4503.5, medianMs=16.24, p95Ms=26.30, maxMs=75.38, over50ms=1
+idle: frames=240, totalMs=3997.0, medianMs=17.00, p95Ms=27.97, maxMs=33.31, over50ms=0
+Idle CPU inclusive marker average, last 100 frames:
+Main Thread: 16.693ms
+EditorLoop: 9.580ms
+PlayerLoop: 6.805ms
+UpdateScene: 5.125ms
+RenderPlayModeViewCameras: 1.680ms
+UnityEngine.CoreModule.dll!UnityEngine.Rendering::RenderPipelineManager.DoRenderLoop_Internal() [Invoke]: 1.608ms
+Inl_UniversalRenderTotal: 1.580ms
+Inl_RenderCameraStack: 1.559ms
+Update.ScriptRunBehaviourUpdate: 1.350ms
+BehaviourUpdate: 1.349ms
+PreLateUpdate.ScriptRunBehaviourLateUpdate: 1.170ms
+LateBehaviourUpdate: 1.169ms
+Inl_UniversalRenderPipeline.RenderSingleCameraInternal: Main Camera: 0.990ms
+Assembly-CSharp.dll!::PowerTransmissionDevice.Update() [Invoke]: 0.939ms
+Semaphore.WaitForSignal: 0.638ms
+FixedUpdate.ScriptRunBehaviourFixedUpdate: 0.598ms
+FixedBehaviourUpdate: 0.597ms
+EarlyUpdate.UpdateTextureStreamingManager: 0.498ms
+TextureStreamingManager.Update: 0.498ms
+TextureStreamingManager.UpdateRenderers: 0.496ms
+Inl_ScriptableRenderContext.Submit: 0.462ms
+Assembly-CSharp.dll!::Turret.FixedUpdate() [Invoke]: 0.436ms
+UniversalRenderPipeline.RenderSingleCameraInternal: Main Camera: 0.393ms
+ExecuteRenderGraph: 0.373ms
+CullScriptable: 0.301ms
+Inl_ExecuteRenderGraph: 0.272ms
+Inl_RecordRenderGraph: 0.250ms
+Profiler.FlushCounters: 0.245ms
+Inl_On Record Render Graph: 0.244ms
+WaitForJobGroupID: 0.243ms
+Profiler.FlushMemoryCounters: 0.225ms
+PostLateUpdate.VFXUpdate: 0.179ms
+VFX.Update: 0.177ms
+EndRenderQueueExtraction: 0.174ms
+CullResults.CreateSharedRendererScene: 0.165ms
+travel: frames=300, totalMs=5064.7, medianMs=16.79, p95Ms=27.69, maxMs=81.31, over50ms=1
+exit: frames=1, totalMs=55.6, medianMs=55.64, p95Ms=55.64, maxMs=55.64, over50ms=1
+status=completed; finalFrame=1830

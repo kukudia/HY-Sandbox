@@ -8,6 +8,10 @@
 
 完整 ArchitecturePlayProbe 的旧断言只调用控制器 FixedUpdate 就要求实际推力立即改变，与现行推进器独立限速契约不符。HoverControlPlayChecks 现分别驱动控制器和推进器回调，验证无驾驶舱时不转向、推进器失效归属清零、供电后目标提交、缺电/控制器禁用后的单步衰减与最终归零、退出游玩及推进器禁用清零、归属转移保护；生产飞行代码未改。完整探针本轮 completed/passed，73 条检查，0 错误；报告见 [夜间悬浮回归](Docs/Validation/2026-10-15-night-hover.json)。悬浮部分为 Play 内显式驱动生产回调，不代表真实驾驶或自动物理顺序验收。dotnet build 0错误、4个既有警告。
 
+### 2026-10-15 夜间基线：后台性能采样
+
+WorldSessionPerformanceChecks 修复遮罩持焦点后第2帧停滞和无新帧时超时无效的问题：临时后台真实运行，完成/中止/超时均恢复原后台及Profiler设置，启动校验场景与报告名。完整路线在NightDesk下推进1830真实帧，主动退出和停帧超时路径均已验证恢复；Main不脏，用户数据保持。固定种子14721、28栋/1967模块的D3D12 Editor移动P95 27.69ms、最大81.31ms，退出单帧55.64ms；这是工具基线，不是生产优化或D3D11 Player性能结论。见 [报告与限制](Docs/Validation/2026-10-15-night-background-performance.md)。
+
 ## 2026-10-15 Windows启动修复与区块深度优化
 
 - 两份旧Player日志记录D3D12原生资源处理崩溃；同一旧包D3D11对照可响应。Windows发布配置显式使用D3D11，新Release包已实际启动、加载外部建筑蓝图库、进入游玩、跨区块移动200m、退出清空并再次准备，未出现C#错误或原生崩溃。

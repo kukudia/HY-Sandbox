@@ -1,5 +1,6 @@
 // 职责：在真实 Main Play Mode 采样固定种子的准备、切换、静止和跨区块帧耗时。
 // 入口：Run(label)；只使用运行时配置副本和测试载具，不保存玩家数据。
+// 生命周期：临时启用后台帧推进；完成、中止和超时均恢复后台运行与原Profiler配置。
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,6 +23,10 @@ public static class WorldSessionPerformanceChecks
     private static double previous;
     private static double deadline;
     private static string phase;
+    private static bool originalBackground;
+    private static bool originalProfiler;
+    private static bool originalProfileEditor;
+    private static bool originalCpuProfiling;
     static WorldSessionPerformanceChecks()
     {
         EditorApplication.playModeStateChanged += OnState;
@@ -29,9 +34,15 @@ public static class WorldSessionPerformanceChecks
 
     public static void Run(string label)
     {
-        if (EditorApplication.isPlaying || UnityEngine.SceneManagement.SceneManager.GetActiveScene().isDirty)
+        var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+        if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling || scene.isDirty || scene.path != "Assets/Scenes/Main.unity")
         {
             throw new InvalidOperationException("Run from saved Main in Edit Mode.");
+        }
+
+        if (string.IsNullOrWhiteSpace(label) || label.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+        {
+            throw new ArgumentException("Use a non-empty filename-safe report label.", nameof(label));
         }
 
         SessionState.SetString(Pending, label);
@@ -40,12 +51,25 @@ public static class WorldSessionPerformanceChecks
 
     private static void OnState(PlayModeStateChange state)
     {
+        if (state == PlayModeStateChange.ExitingPlayMode && scenario != null)
+        {
+            results.Add("Aborted: Play Mode exited before the performance route completed.");
+            Finish(false, false);
+            return;
+        }
+
         if (state != PlayModeStateChange.EnteredPlayMode || string.IsNullOrEmpty(SessionState.GetString(Pending, "")))
         {
             return;
         }
 
         results.Clear();
+        originalBackground = Application.runInBackground;
+        originalProfiler = UnityEditorInternal.ProfilerDriver.enabled;
+        originalProfileEditor = UnityEditorInternal.ProfilerDriver.profileEditor;
+        originalCpuProfiling = UnityEditorInternal.ProfilerDriver.IsAreaEnabled(UnityEngine.Profiling.ProfilerArea.CPU);
+        // QueuePlayerLoopUpdate alone does not advance Play physics while NightDesk owns foreground focus.
+        Application.runInBackground = true;
         results.Add($"Unity={Application.unityVersion}, graphics={SystemInfo.graphicsDeviceType}, scene={UnityEngine.SceneManagement.SceneManager.GetActiveScene().path}, seed=14721; Editor frame intervals, no Deep Profile.");
         if (SessionState.GetString(Pending, "").Contains("profile"))
         {
@@ -67,22 +91,23 @@ public static class WorldSessionPerformanceChecks
     private static void Tick()
     {
         EditorApplication.QueuePlayerLoopUpdate();
-        if (frame == Time.frameCount || !EditorApplication.isPlaying)
-        {
-            return;
-        }
-
-        frame = Time.frameCount;
-        double now = clock.Elapsed.TotalMilliseconds;
-        samples.Add(now - previous);
-        previous = now;
         try
         {
+            // Check wall-clock timeout even if no new game frame arrives.
             if (EditorApplication.timeSinceStartup > deadline)
             {
                 throw new TimeoutException("Performance probe timed out in " + phase);
             }
 
+            if (frame == Time.frameCount || !EditorApplication.isPlaying)
+            {
+                return;
+            }
+
+            frame = Time.frameCount;
+            double now = clock.Elapsed.TotalMilliseconds;
+            samples.Add(now - previous);
+            previous = now;
             if (scenario.MoveNext())
             {
                 return;
@@ -91,19 +116,37 @@ public static class WorldSessionPerformanceChecks
         catch (Exception error)
         {
             results.Add(error.ToString());
+            Finish(true, false);
+            return;
         }
 
+        Finish(true, true);
+    }
+
+    private static void Finish(bool exitPlayMode, bool completed)
+    {
         EditorApplication.update -= Tick;
-        if (SessionState.GetString(Pending, "").Contains("profile"))
+        string label = SessionState.GetString(Pending, "run");
+        try
         {
-            UnityEditorInternal.ProfilerDriver.enabled = false;
+            (scenario as IDisposable)?.Dispose();
+            results.Add("status=" + (completed ? "completed" : "failed") + "; finalFrame=" + Time.frameCount);
+            Directory.CreateDirectory("Temp/WorldSession");
+            File.WriteAllLines("Temp/WorldSession/performance-" + label + ".txt", results);
         }
-
-        Directory.CreateDirectory("Temp/WorldSession");
-        File.WriteAllLines("Temp/WorldSession/performance-" + SessionState.GetString(Pending, "run") + ".txt", results);
-        SessionState.EraseString(Pending);
-        scenario = null;
-        EditorApplication.isPlaying = false;
+        finally
+        {
+            scenario = null;
+            SessionState.EraseString(Pending);
+            Application.runInBackground = originalBackground;
+            UnityEditorInternal.ProfilerDriver.enabled = originalProfiler;
+            UnityEditorInternal.ProfilerDriver.profileEditor = originalProfileEditor;
+            UnityEditorInternal.ProfilerDriver.SetAreaEnabled(UnityEngine.Profiling.ProfilerArea.CPU, originalCpuProfiling);
+            if (exitPlayMode)
+            {
+                EditorApplication.isPlaying = false;
+            }
+        }
     }
 
     private static void Next(string name)

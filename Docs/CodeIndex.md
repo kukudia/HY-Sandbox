@@ -866,16 +866,17 @@
 
 ## Assets/Editor/World/WorldSessionPerformanceChecks.cs
 
-// 职责：在真实 Main Play Mode 采样固定种子的准备、切换、静止和跨区块帧耗时。 // 入口：Run(label)；只使用运行时配置副本和测试载具，不保存玩家数据。
+// 职责：在真实 Main Play Mode 采样固定种子的准备、切换、静止和跨区块帧耗时。 // 入口：Run(label)；只使用运行时配置副本和测试载具，不保存玩家数据。 // 生命周期：临时启用后台帧推进；完成、中止和超时均恢复后台运行与原Profiler配置。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldSessionPerformanceChecks | [`void Run(string label)`](../Assets/Editor/World/WorldSessionPerformanceChecks.cs#L30) | public static |
-| WorldSessionPerformanceChecks | [`void OnState(PlayModeStateChange state)`](../Assets/Editor/World/WorldSessionPerformanceChecks.cs#L41) | private static |
-| WorldSessionPerformanceChecks | [`void Tick()`](../Assets/Editor/World/WorldSessionPerformanceChecks.cs#L67) | private static |
-| WorldSessionPerformanceChecks | [`void Next(string name)`](../Assets/Editor/World/WorldSessionPerformanceChecks.cs#L109) | private static |
-| WorldSessionPerformanceChecks | [`void WriteCpuSamples()`](../Assets/Editor/World/WorldSessionPerformanceChecks.cs#L127) | private static |
-| WorldSessionPerformanceChecks | [`IEnumerator Scenario()`](../Assets/Editor/World/WorldSessionPerformanceChecks.cs#L154) | private static |
+| WorldSessionPerformanceChecks | [`void Run(string label)`](../Assets/Editor/World/WorldSessionPerformanceChecks.cs#L35) | public static |
+| WorldSessionPerformanceChecks | [`void OnState(PlayModeStateChange state)`](../Assets/Editor/World/WorldSessionPerformanceChecks.cs#L52) | private static |
+| WorldSessionPerformanceChecks | [`void Tick()`](../Assets/Editor/World/WorldSessionPerformanceChecks.cs#L91) | private static |
+| WorldSessionPerformanceChecks | [`void Finish(bool exitPlayMode, bool completed)`](../Assets/Editor/World/WorldSessionPerformanceChecks.cs#L126) | private static |
+| WorldSessionPerformanceChecks | [`void Next(string name)`](../Assets/Editor/World/WorldSessionPerformanceChecks.cs#L152) | private static |
+| WorldSessionPerformanceChecks | [`void WriteCpuSamples()`](../Assets/Editor/World/WorldSessionPerformanceChecks.cs#L170) | private static |
+| WorldSessionPerformanceChecks | [`IEnumerator Scenario()`](../Assets/Editor/World/WorldSessionPerformanceChecks.cs#L197) | private static |
 
 ## Assets/Editor/World/WorldSessionPlayChecks.cs
 
