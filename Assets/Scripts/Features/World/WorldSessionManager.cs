@@ -32,6 +32,8 @@ public sealed class WorldSessionManager : MonoBehaviour
     private WorldRegionStreaming regionStreaming;
     private WorldGenerationSettings sessionSettings;
     private Coroutine routine;
+    private Coroutine distanceRoutine;
+    private WorldDistanceView distanceView;
     private Transform player;
     private Vector3 streamingFocus;
     private bool playRequested;
@@ -54,6 +56,7 @@ public sealed class WorldSessionManager : MonoBehaviour
     public ProceduralVoxelWorld World => world;
     public WorldBuildingManager Buildings => buildings;
     public WorldGenerationSettings Settings => sessionSettings != null ? sessionSettings : settings;
+    public IReadOnlyList<string> BuildingTemplates { get; private set; } = Array.Empty<string>();
 
     private void Start()
     {
@@ -95,11 +98,22 @@ public sealed class WorldSessionManager : MonoBehaviour
 
             SessionSeed = Settings.RandomizeSeed ? unchecked((int)DateTime.UtcNow.Ticks ^ Guid.NewGuid().GetHashCode()) : Settings.Seed;
             sessionSettings = Instantiate(settings);
+            var library = new WorldBuildingLibrary();
+            library.Load(WorldBuildingLibrary.DirectoryPath);
+            BuildingTemplates = library.Names.AsReadOnly();
+            foreach (string error in library.Errors)
+            {
+                Debug.LogWarning("Skipping building blueprint: " + error);
+            }
+
+            sessionSettings.FitBuildingPlatforms(library.PlatformRadius);
             world.InitializeStreaming(Settings, SessionSeed);
-            buildingStreaming = new WorldBuildingStreaming(world, buildings, Settings);
+            buildingStreaming = new WorldBuildingStreaming(world, buildings, Settings, library);
             regionStreaming = new WorldRegionStreaming(world, buildingStreaming, Settings);
             streamingFocus = world.SpawnPosition;
-            routine = StartCoroutine(RunGuarded(generation));
+            distanceView = new WorldDistanceView(world, Settings);
+            distanceRoutine = StartCoroutine(RunGuarded(generation, distanceView.Refresh()));
+            routine = StartCoroutine(RunGuarded(generation, StreamWorld()));
         }
         catch (Exception error)
         {
@@ -175,7 +189,7 @@ public sealed class WorldSessionManager : MonoBehaviour
         player = construct;
         Bounds bounds = ConstructBounds(construct);
         Vector3 bottom = new Vector3(bounds.center.x, bounds.min.y, bounds.center.z);
-        Vector3 delta = world.SpawnPosition + Vector3.up * 0.5f - bottom;
+        Vector3 delta = world.FindSpawnSurface(bounds) + Vector3.up * Settings.SpawnClearance - bottom;
         construct.position += delta;
         if (CameraController.instance != null)
         {
@@ -186,6 +200,7 @@ public sealed class WorldSessionManager : MonoBehaviour
         SetBuildEnvironmentVisible(false);
         State = WorldSessionState.Playing;
         worldRoot.SetActive(true);
+        distanceView.Enter(Camera.main);
         Physics.SyncTransforms();
         streamingFocus = construct.position;
         playerGuard = new WorldPlayerStreamingGuard(world, Settings);
@@ -197,12 +212,11 @@ public sealed class WorldSessionManager : MonoBehaviour
         BeginPreparation();
     }
 
-    private IEnumerator RunGuarded(int version)
+    private IEnumerator RunGuarded(int version, IEnumerator work)
     {
-        IEnumerator work = StreamWorld();
         try
         {
-            while (version == generation)
+            while (version == generation && State != WorldSessionState.Failed)
             {
                 object current;
                 try
@@ -252,7 +266,7 @@ public sealed class WorldSessionManager : MonoBehaviour
                 int total = (Settings.LoadRadius * 2 + 1) * (Settings.LoadRadius * 2 + 1);
                 Progress = Mathf.Clamp01((float)world.LoadedColumns.Count / total);
                 Status = $"Preparing terrain and buildings... {world.LoadedColumns.Count} / {total}";
-                if (!regionStreaming.LoadedWork)
+                if (!regionStreaming.LoadedWork && distanceView.IsReady)
                 {
                     Progress = 1f;
                     State = WorldSessionState.Ready;
@@ -284,6 +298,7 @@ public sealed class WorldSessionManager : MonoBehaviour
 
         playerGuard.Tick(player);
         streamingFocus = playerGuard.Focus;
+        distanceView.Focus = streamingFocus;
         Status = playerGuard.IsWaiting ? "Loading nearby terrain..." : "Exploring";
         loadingPanel?.Show(playerGuard.IsWaiting);
     }
@@ -356,6 +371,14 @@ public sealed class WorldSessionManager : MonoBehaviour
     private void StopPreparation()
     {
         generation++;
+        if (distanceRoutine != null)
+        {
+            StopCoroutine(distanceRoutine);
+            distanceRoutine = null;
+        }
+
+        distanceView?.Dispose();
+        distanceView = null;
         if (routine != null)
         {
             StopCoroutine(routine);

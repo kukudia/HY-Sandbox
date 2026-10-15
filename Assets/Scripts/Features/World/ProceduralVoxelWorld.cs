@@ -34,12 +34,36 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
     private StreamingWorldTerrain streamingTerrain;
     private int loadRevision;
     public IReadOnlyCollection<Vector2Int> LoadedColumns => loadedColumns;
+    public int ColumnVersion
+    {
+        get; private set;
+    }
     public bool IsStreaming => streaming;
     public Vector3 SpawnPosition => streamingTerrain == null ? transform.position : transform.TransformPoint(streamingTerrain.SpawnLocalPosition);
     public VoxelWorldData Data => data;
     public int Seed => seed;
     public float CellSize => cellSize;
     public Material[] Materials => materials;
+
+    public float SurfaceHeight(int x, int z) => streamingTerrain.SurfaceHeight(x, z);
+    public Vector3 FindSpawnSurface(Bounds construct)
+    {
+        Vector3 spawn = SpawnPosition;
+        Vector3 offset = new Vector3(spawn.x - construct.center.x, 0f, spawn.z - construct.center.z);
+        Vector3Int minimum = WorldToCell(construct.min + offset);
+        Vector3Int maximum = WorldToCell(construct.max + offset);
+        float highest = spawn.y;
+        for (int z = minimum.z; z <= maximum.z; z++)
+        {
+            for (int x = minimum.x; x <= maximum.x; x++)
+            {
+                highest = Mathf.Max(highest, transform.TransformPoint(new Vector3(x * cellSize, SurfaceHeight(x, z), z * cellSize)).y);
+            }
+        }
+
+        return new Vector3(spawn.x, highest, spawn.z);
+    }
+
     public int PendingChunks => dirty.Count;
     public int LastRebuiltChunks
     {
@@ -236,6 +260,7 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
             if (loadingColumns.TryGetValue(coordinate, out int active) && active == revision)
             {
                 loadedColumns.Add(coordinate);
+                ColumnVersion++;
                 complete = true;
             }
         }
@@ -264,7 +289,11 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
     public void UnloadColumn(Vector2Int coordinate)
     {
         loadingColumns.Remove(coordinate);
-        loadedColumns.Remove(coordinate);
+        if (loadedColumns.Remove(coordinate))
+        {
+            ColumnVersion++;
+        }
+
         for (int y = 0; y < data.Maximum.y; y += chunkSize)
         {
             var start = new Vector3Int(coordinate.x * chunkSize, y, coordinate.y * chunkSize);
@@ -281,6 +310,7 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
     {
         loadingColumns.Clear();
         loadedColumns.Clear();
+        ColumnVersion++;
         foreach (VoxelWorldChunk chunk in chunks.Values)
         {
             DestroyChunk(chunk);

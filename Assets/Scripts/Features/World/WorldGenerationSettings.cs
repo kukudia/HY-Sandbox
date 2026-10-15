@@ -18,15 +18,21 @@ public sealed class WorldGenerationSettings : ScriptableObject
     [SerializeField, Range(8, 128), Tooltip("从出生区向各方向延伸的区块数；默认世界宽约4.1km。")]
     private int worldRadiusInChunks = 64;
     [SerializeField, Range(2, 4)]
-    private int loadRadius = 2;
+    private int loadRadius = 4;
     [SerializeField, Range(3, 5), Tooltip("比加载范围多一圈，减少来回穿越边界时重复创建。")]
-    private int unloadRadius = 3;
+    private int unloadRadius = 5;
     [SerializeField, Range(0f, 1f)]
     private float buildingChance = 0.45f;
-    [SerializeField, Range(2, 6), Tooltip("每个建筑预留平台的半边长，单位为体素格。")]
+    [SerializeField, Range(2, 64), Tooltip("建筑平台最小半边长（体素格）；会按本次蓝图自动扩大。")]
     private int buildingPadHalfSize = 4;
-    [SerializeField, Range(1, 2), Tooltip("出生区周围保持平坦且不生成敌方建筑的区块半径。")]
+    [SerializeField, Range(1, 2), Tooltip("出生区周围不生成敌方建筑的区块半径；不修改自然地形。")]
     private int spawnClearRadius = 1;
+    [SerializeField, Min(1f), Tooltip("载具底部高于其整个水平范围内最高地面的距离（米）。")]
+    private float spawnClearance = 6f;
+    [SerializeField, Range(300f, 1000f), Tooltip("远景可见距离（米）；外侧距离雾遮住流式边缘。")]
+    private float viewDistance = 600f;
+    [SerializeField, Tooltip("游玩时远处地形与背景共同渐隐到此颜色；退出恢复建造环境颜色。")]
+    private Color distanceFogColor = new Color(0.48f, 0.57f, 0.64f, 1f);
     public int Seed => seed;
     public bool RandomizeSeed => randomizeSeed;
     public float CellSize => Mathf.Clamp(cellSize, 1f, 4f);
@@ -36,6 +42,14 @@ public sealed class WorldGenerationSettings : ScriptableObject
     public int LoadRadius => Mathf.Clamp(loadRadius, 2, 4);
     public int UnloadRadius => Mathf.Clamp(unloadRadius, LoadRadius + 1, 5);
     public float BuildingChance => Mathf.Clamp01(buildingChance);
-    public int BuildingPadHalfSize => Mathf.Clamp(buildingPadHalfSize, 2, ChunkSize / 2 - 1);
+    public int BuildingPadHalfSize => Mathf.Clamp(buildingPadHalfSize, 2, 132);
     public int SpawnClearRadius => Mathf.Clamp(spawnClearRadius, 1, LoadRadius - 1);
+    public float SpawnClearance => Mathf.Max(1f, spawnClearance);
+    public float ViewDistance => Mathf.Clamp(viewDistance, 300f, 1000f);
+    public Color DistanceFogColor => distanceFogColor;
+
+    internal void FitBuildingPlatforms(float requiredRadius)
+    {
+        buildingPadHalfSize = Mathf.Max(BuildingPadHalfSize, Mathf.CeilToInt(requiredRadius / CellSize) + 1);
+    }
 }

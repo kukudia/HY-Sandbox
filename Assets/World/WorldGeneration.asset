@@ -18,8 +18,11 @@ MonoBehaviour:
   chunkSize: 16
   worldHeight: 32
   worldRadiusInChunks: 64
-  loadRadius: 2
-  unloadRadius: 3
+  loadRadius: 4
+  unloadRadius: 5
   buildingChance: 0.45
   buildingPadHalfSize: 4
   spawnClearRadius: 1
+  spawnClearance: 6
+  viewDistance: 600
+  distanceFogColor: {r: 0.48, g: 0.57, b: 0.64, a: 1}
