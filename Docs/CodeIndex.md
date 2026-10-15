@@ -725,6 +725,18 @@
 | --- | --- | --- |
 | WorldLabPersistenceChecks | [`string Run()`](../Assets/Editor/World/WorldLabPersistenceChecks.cs#L9) | public static |
 
+## Assets/Editor/World/WorldLabSoakChecks.cs
+
+// 职责：在真实帧后台持续爆破/重生成，周期落盘并检查分块/网格有界及输入遮罩下帧推进。 // 入口：Begin(minutes)；最多15分钟，Stop()或离开Play安全结束，不接触真实玩家存档。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabSoakChecks | [`string Begin(int minutes = 15)`](../Assets/Editor/World/WorldLabSoakChecks.cs#L28) | public static |
+| WorldLabSoakChecks | [`void Tick()`](../Assets/Editor/World/WorldLabSoakChecks.cs#L55) | private static |
+| WorldLabSoakChecks | [`void Stop()`](../Assets/Editor/World/WorldLabSoakChecks.cs#L138) | public static |
+| WorldLabSoakChecks | [`void Finish(bool complete)`](../Assets/Editor/World/WorldLabSoakChecks.cs#L147) | private static |
+| WorldLabSoakChecks | [`void WriteCheckpoint()`](../Assets/Editor/World/WorldLabSoakChecks.cs#L162) | private static |
+
 ## Assets/Scripts/Features/Bootstrap/GameManager.cs
 
 // 职责：保存当前方块父对象，启动时初始化界面与默认存档加载。 // 入口：Init()。
