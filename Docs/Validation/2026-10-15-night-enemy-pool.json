@@ -1,0 +1,11 @@
+{
+    "checks": [
+        "malformed JSON and locked file do not abort initialization",
+        "both valid siblings survive corrupt and unreadable entries",
+        "pool reaches initialized state after skipped entries",
+        "repeated initialization does not duplicate valid enemies",
+        "invalid files are preserved byte-for-byte for manual repair",
+        "original SaveManager storage and list restored"
+    ],
+    "errors": []
+}

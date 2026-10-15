@@ -1,0 +1,8 @@
+{
+    "checks": [
+        "original SaveManager storage and list restored"
+    ],
+    "errors": [
+        "System.ArgumentException: JSON parse error: Invalid value.\r\n  at (wrapper managed-to-native) UnityEngine.JsonUtility.FromJsonInternal_Injected(UnityEngine.Bindings.ManagedSpanWrapper&,object,System.Type)\r\n  at UnityEngine.JsonUtility.FromJsonInternal (System.String json, System.Object objectToOverwrite, System.Type type) [0x0002a] in <732e2d1da48d4e5eb33667420c7e6b61>:0 \r\n  at UnityEngine.JsonUtility.FromJson (System.String json, System.Type type) [0x0005f] in <732e2d1da48d4e5eb33667420c7e6b61>:0 \r\n  at UnityEngine.JsonUtility.FromJson[T] (System.String json) [0x00001] in <732e2d1da48d4e5eb33667420c7e6b61>:0 \r\n  at EnemySpawner.InitializeEnemyBlueprintPool () [0x00064] in D:\\git_projects\\Unity\\HY-Sandbox\\Assets\\Scripts\\Features\\Combat\\EnemySpawner.cs:74 \r\n  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)\r\n  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <41d29b352f6a475ab1bf7c6628b82790>:0 "
+    ]
+}

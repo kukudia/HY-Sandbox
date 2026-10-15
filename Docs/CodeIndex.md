@@ -388,6 +388,16 @@
 | CombatHudSetup | [`Text Text( Transform parent, string name, Font font, int size, Color color, TextAnchor alignment)`](../Assets/Editor/Combat/CombatHudSetup.cs#L340) | private static |
 | CombatHudSetup | [`void Set(UnityEngine.Object target, string name, UnityEngine.Object value)`](../Assets/Editor/Combat/CombatHudSetup.cs#L364) | private static |
 
+## Assets/Editor/Combat/EnemyBlueprintPoolChecks.cs
+
+// 职责：隔离临时蓝图库，验证真实敌机池初始化遇损坏文件仍保留有效蓝图。 // 入口：Run()；同步检查后恢复SaveManager私有文件存储和名称列表，不写用户目录。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyBlueprintPoolChecks | [`string Run()`](../Assets/Editor/Combat/EnemyBlueprintPoolChecks.cs#L23) | public static |
+| EnemyBlueprintPoolChecks | [`string ValidBlueprint()`](../Assets/Editor/Combat/EnemyBlueprintPoolChecks.cs#L131) | private static |
+| EnemyBlueprintPoolChecks | [`void Check(Report report, string label, bool passed)`](../Assets/Editor/Combat/EnemyBlueprintPoolChecks.cs#L139) | private static |
+
 ## Assets/Editor/Combat/HealthHudPreview.cs
 
 // 职责：创建耐久/血条布局的可编辑预览。 // 入口：Render()。 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
@@ -1633,21 +1643,21 @@
 | EnemySpawner | [`void Update()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L26) | private |
 | EnemySpawner | [`void BeginPlayMode(Transform anchor)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L43) | public |
 | EnemySpawner | [`void InitializeEnemyBlueprintPool()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L54) | private |
-| EnemySpawner | [`void SpawnRandomEnemy()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L89) | public |
-| EnemySpawner | [`void SpawnEnemy()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L112) | public |
-| EnemySpawner | [`bool IsValidBlueprint(BlockDataList dataList, string enemyBlueprint)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L123) | private |
-| EnemySpawner | [`ControlUnit SpawnBlockData(BlockDataList dataList, string enemyBlueprint, Vector3 spawnPosition, Quaternion spawnRotation)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L156) | internal |
-| EnemySpawner | [`void ApplyBlueprintLocalTransform(Transform blockTransform, Vector3 localPosition, Quaternion localRotation)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L258) | private |
-| EnemySpawner | [`Vector3 CleanIntegerPosition(Vector3 position, string blockName)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L264) | private |
-| EnemySpawner | [`Quaternion CleanRightAngleRotation(Quaternion rotation, string blockName)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L275) | private |
-| EnemySpawner | [`float SnapNearInteger(float value)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L287) | private |
-| EnemySpawner | [`float SnapNearRightAngle(float angle)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L293) | private |
-| EnemySpawner | [`bool IsIntegerVector(Vector3 value)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L299) | private |
-| EnemySpawner | [`bool IsRightAngleVector(Vector3 euler)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L304) | private |
-| EnemySpawner | [`bool IsNearlyInteger(float value)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L309) | private |
-| EnemySpawner | [`bool IsNearlyRightAngle(float angle)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L314) | private |
-| EnemySpawner | [`Vector3 GetSpawnPosition()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L320) | private |
-| EnemySpawner | [`void PrepareRuntimeEnemy(ControlUnit enemy)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L338) | private |
+| EnemySpawner | [`void SpawnRandomEnemy()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L99) | public |
+| EnemySpawner | [`void SpawnEnemy()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L122) | public |
+| EnemySpawner | [`bool IsValidBlueprint(BlockDataList dataList, string enemyBlueprint)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L133) | private |
+| EnemySpawner | [`ControlUnit SpawnBlockData(BlockDataList dataList, string enemyBlueprint, Vector3 spawnPosition, Quaternion spawnRotation)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L166) | internal |
+| EnemySpawner | [`void ApplyBlueprintLocalTransform(Transform blockTransform, Vector3 localPosition, Quaternion localRotation)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L268) | private |
+| EnemySpawner | [`Vector3 CleanIntegerPosition(Vector3 position, string blockName)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L274) | private |
+| EnemySpawner | [`Quaternion CleanRightAngleRotation(Quaternion rotation, string blockName)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L285) | private |
+| EnemySpawner | [`float SnapNearInteger(float value)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L297) | private |
+| EnemySpawner | [`float SnapNearRightAngle(float angle)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L303) | private |
+| EnemySpawner | [`bool IsIntegerVector(Vector3 value)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L309) | private |
+| EnemySpawner | [`bool IsRightAngleVector(Vector3 euler)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L314) | private |
+| EnemySpawner | [`bool IsNearlyInteger(float value)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L319) | private |
+| EnemySpawner | [`bool IsNearlyRightAngle(float angle)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L324) | private |
+| EnemySpawner | [`Vector3 GetSpawnPosition()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L330) | private |
+| EnemySpawner | [`void PrepareRuntimeEnemy(ControlUnit enemy)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L348) | private |
 
 ## Assets/Scripts/Features/Combat/ExplosionPropagation.cs
 

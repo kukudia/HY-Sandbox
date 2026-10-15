@@ -1,5 +1,10 @@
 # HY-Sandbox 开发与审查入口
 
+## 2026-10-15 夜间：损坏敌机文件不再中断蓝图库
+
+- 在真实InitializeEnemyBlueprintPool复现：一份截断JSON抛ArgumentException，中断后续敌机初始化。现在逐文件隔离JSON解析与IO/访问异常，警告后继续有效条目；不修改、删除或覆盖原文件，不吞掉其他编程异常。
+- Main隔离Play回归6项通过：截断JSON、被独占锁定文件、空/空模块蓝图被跳过，有效同级文件均保留，初始化完成且再次调用不重复加入，文件内容与SaveManager状态保持。见 [证据](Docs/Validation/2026-10-15-night-enemy-pool.md)。这是同步真实生产入口验证，本单元未另跑Windows Player或目录权限故障。
+
 ## 2026-10-15 夜间：Player 输入、炮弹击毁与机器人入仓
 
 - 新增显式 `-world-smoke-combat` 受控Player路线：Input System W键经启用的ControlUnit、真实电网和MainThruster推进动态刚体，松键清空意图；随后固定平台，以现有实体炮塔自然索敌/发射击毁携货敌舱，经过生产残骸转换、机器人拾取、真实返航停靠和供电货仓入库。没有直接调用伤害、手动供电或直接Store伪造结果。

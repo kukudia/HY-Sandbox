@@ -2144,17 +2144,17 @@ flowchart TD
     B["EnemySpawner.InitializeEnemyBlueprintPool()"]
     click B "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L54" "打开源码"
     C["EnemySpawner.IsValidBlueprint()"]
-    click C "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L123" "打开源码"
+    click C "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L133" "打开源码"
     D["EnemySpawner.SpawnRandomEnemy()"]
-    click D "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L89" "打开源码"
+    click D "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L99" "打开源码"
     E["EnemySpawner.SpawnBlockData()"]
-    click E "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L156" "打开源码"
+    click E "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L166" "打开源码"
     F["EnemySpawner.ApplyBlueprintLocalTransform()"]
-    click F "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L258" "打开源码"
+    click F "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L268" "打开源码"
     G["Block.RefreshRuntimeData()"]
     click G "../Assets/Scripts/Features/Simulation/Block.cs#L123" "打开源码"
     H["EnemySpawner.PrepareRuntimeEnemy()"]
-    click H "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L338" "打开源码"
+    click H "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L348" "打开源码"
     I["ControlUnit.RefreshChildren()"]
     click I "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L159" "打开源码"
     J["ControlUnit.AssignRuntimeOwnershipToBlocks()"]
@@ -2164,7 +2164,7 @@ flowchart TD
     L["EnemySpawner.Update()"]
     click L "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L26" "打开源码"
     A --> B
-    B -->|加入缓存前| C
+    B -->|逐文件读取，解析或IO失败警告并跳过| C
     A -->|允许首次出生| D
     L -->|刷新间隔| D
     D --> E
@@ -2181,17 +2181,17 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|BeginPlayMode -->
 - [EnemySpawner.InitializeEnemyBlueprintPool](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L54)
 <!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|InitializeEnemyBlueprintPool -->
-- [EnemySpawner.IsValidBlueprint](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L123)
+- [EnemySpawner.IsValidBlueprint](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L133)
 <!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|IsValidBlueprint -->
-- [EnemySpawner.SpawnRandomEnemy](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L89)
+- [EnemySpawner.SpawnRandomEnemy](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L99)
 <!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|SpawnRandomEnemy -->
-- [EnemySpawner.SpawnBlockData](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L156)
+- [EnemySpawner.SpawnBlockData](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L166)
 <!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|SpawnBlockData -->
-- [EnemySpawner.ApplyBlueprintLocalTransform](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L258)
+- [EnemySpawner.ApplyBlueprintLocalTransform](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L268)
 <!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|ApplyBlueprintLocalTransform -->
 - [Block.RefreshRuntimeData](../Assets/Scripts/Features/Simulation/Block.cs#L123)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|RefreshRuntimeData -->
-- [EnemySpawner.PrepareRuntimeEnemy](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L338)
+- [EnemySpawner.PrepareRuntimeEnemy](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L348)
 <!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|PrepareRuntimeEnemy -->
 - [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L159)
 <!-- source: Assets/Scripts/Features/Simulation/ControlUnit.cs|RefreshChildren -->
@@ -2235,7 +2235,7 @@ flowchart TD
     M["WorldPlayerSmokeChecks.EnemyFixture()"]
     click M "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L325" "打开源码"
     N["EnemySpawner.SpawnBlockData()"]
-    click N "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L156" "打开源码"
+    click N "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L166" "打开源码"
     O["WorldCombatPlayerChecks.Run()"]
     click O "../Assets/Scripts/Features/World/WorldCombatPlayerChecks.cs#L14" "打开源码"
     A -->|显式参数校验| B
@@ -2283,7 +2283,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|ValidateEnemyBlueprints -->
 - [WorldPlayerSmokeChecks.EnemyFixture](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L325)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|EnemyFixture -->
-- [EnemySpawner.SpawnBlockData](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L156)
+- [EnemySpawner.SpawnBlockData](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L166)
 <!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|SpawnBlockData -->
 - [WorldCombatPlayerChecks.Run](../Assets/Scripts/Features/World/WorldCombatPlayerChecks.cs#L14)
 <!-- source: Assets/Scripts/Features/World/WorldCombatPlayerChecks.cs|Run -->
@@ -2307,7 +2307,7 @@ flowchart TD
     F["WorldCombatPlayerChecks.EnemyCargoFixture()"]
     click F "../Assets/Scripts/Features/World/WorldCombatPlayerChecks.cs#L144" "打开源码"
     G["EnemySpawner.SpawnBlockData()"]
-    click G "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L156" "打开源码"
+    click G "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L166" "打开源码"
     H["Turret.FixedUpdate()"]
     click H "../Assets/Scripts/Features/Combat/Turret.cs#L71" "打开源码"
     I["ProjectileTurret.Fire()"]
@@ -2355,7 +2355,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Power/PowerTransmissionDevice.cs|Update -->
 - [WorldCombatPlayerChecks.EnemyCargoFixture](../Assets/Scripts/Features/World/WorldCombatPlayerChecks.cs#L144)
 <!-- source: Assets/Scripts/Features/World/WorldCombatPlayerChecks.cs|EnemyCargoFixture -->
-- [EnemySpawner.SpawnBlockData](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L156)
+- [EnemySpawner.SpawnBlockData](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L166)
 <!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|SpawnBlockData -->
 - [Turret.FixedUpdate](../Assets/Scripts/Features/Combat/Turret.cs#L71)
 <!-- source: Assets/Scripts/Features/Combat/Turret.cs|FixedUpdate -->

@@ -69,13 +69,23 @@ public class EnemySpawner : MonoBehaviour
         foreach (string enemyBlueprint in SaveManager.instance.enemyBlueprints)
         {
             string path = SaveManager.instance.GetEnemyBlueprintPath(enemyBlueprint);
-            if (File.Exists(path))
+            try
             {
+                if (!File.Exists(path))
+                {
+                    continue;
+                }
+
                 BlockDataList dataList = JsonUtility.FromJson<BlockDataList>(File.ReadAllText(path));
                 if (IsValidBlueprint(dataList, enemyBlueprint))
                 {
                     enemyBlueprintPool.Add(new EnemyBlueprintData(enemyBlueprint, dataList));
                 }
+            }
+            catch (System.Exception exception) when (exception is IOException || exception is System.UnauthorizedAccessException || exception is System.ArgumentException)
+            {
+                // 单个外部文件损坏或暂被占用不能中断其他敌机，也不修改玩家原文件。
+                Debug.LogWarning($"Enemy blueprint {enemyBlueprint} could not be loaded; skipped: {exception.Message}");
             }
         }
 
