@@ -1,0 +1,27 @@
+{
+    "status": "failed",
+    "graphics": "Direct3D11",
+    "seed": 0,
+    "buildings": 0,
+    "blocks": 0,
+    "travelStart": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "travelEnd": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "memoryBytes": 0,
+    "requestedCycles": 1,
+    "completedCycles": 0,
+    "cycleMemoryBytes": [],
+    "cycleSeeds": [],
+    "checks": [],
+    "errors": [
+        "Invalid world smoke cycles argument."
+    ],
+    "phases": []
+}

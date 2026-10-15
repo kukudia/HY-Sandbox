@@ -18,6 +18,8 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
         public int frames;
         public float medianMs;
         public float p95Ms;
+        public float p99Ms;
+        public int over50Ms;
         public float maxMs;
         public float totalMs;
     }
@@ -33,6 +35,10 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
         public Vector3 travelStart;
         public Vector3 travelEnd;
         public long memoryBytes;
+        public int requestedCycles = 1;
+        public int completedCycles;
+        public List<long> cycleMemoryBytes = new List<long>();
+        public List<int> cycleSeeds = new List<int>();
         public List<string> checks = new List<string>();
         public List<string> errors = new List<string>();
         public List<Phase> phases = new List<Phase>();
@@ -47,6 +53,8 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
     private float deadline;
     private bool finished;
     private bool captureImages;
+    private int cycleCount = 1;
+    private int cycle;
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Initialize()
     {
@@ -62,6 +70,44 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
         WorldPlayerSmokeChecks checks = root.AddComponent<WorldPlayerSmokeChecks>();
         checks.reportPath = args[index + 1];
         checks.captureImages = Array.IndexOf(args, "-world-smoke-capture") >= 0;
+        try
+        {
+            int seedIndex = Array.IndexOf(args, "-world-smoke-seed");
+            if (seedIndex >= 0)
+            {
+                int seed = ReadInteger(args, seedIndex, "seed", int.MinValue, int.MaxValue);
+                WorldSessionManager session = Object.FindFirstObjectByType<WorldSessionManager>();
+                if (session == null)
+                {
+                    throw new InvalidOperationException("Fixed-seed validation requires Main world session.");
+                }
+
+                // AfterSceneLoad runs before scene Start; only this opt-in Player process mutates the loaded settings.
+                JsonUtility.FromJsonOverwrite("{\"randomizeSeed\":false,\"seed\":" + seed + "}", session.Settings);
+            }
+
+            int cyclesIndex = Array.IndexOf(args, "-world-smoke-cycles");
+            if (cyclesIndex >= 0)
+            {
+                checks.cycleCount = ReadInteger(args, cyclesIndex, "cycles", 1, 10);
+            }
+        }
+        catch (Exception error)
+        {
+            checks.report.errors.Add(error.Message);
+        }
+
+        checks.report.requestedCycles = checks.cycleCount;
+    }
+
+    private static int ReadInteger(string[] args, int index, string name, int minimum, int maximum)
+    {
+        if (index + 1 >= args.Length || !int.TryParse(args[index + 1], out int value) || value < minimum || value > maximum)
+        {
+            throw new ArgumentException("Invalid world smoke " + name + " argument.");
+        }
+
+        return value;
     }
 
     private void Start()
@@ -71,10 +117,14 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
         Application.targetFrameRate = 120;
         report.graphics = SystemInfo.graphicsDeviceType.ToString();
         previous = Time.realtimeSinceStartup;
-        deadline = previous + 240f;
+        deadline = previous + 240f * cycleCount;
         Application.logMessageReceived += CaptureError;
         scenario = Scenario();
         Save();
+        if (report.errors.Count > 0)
+        {
+            Finish();
+        }
     }
 
     private void Update()
@@ -130,97 +180,104 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
             yield return null;
         }
 
-        report.seed = session.SessionSeed;
-        GameManager.instance.blocksParent.gameObject.SetActive(false);
-        var player = new GameObject("Player smoke construct");
-        Rigidbody body = player.AddComponent<Rigidbody>();
-        body.isKinematic = true;
-        player.AddComponent<ControlUnit>();
-        Object.Instantiate(Resources.Load<GameObject>("Blocks/Cockpit"), player.transform);
-        foreach (Durability health in player.GetComponentsInChildren<Durability>())
+        for (cycle = 0; cycle < cycleCount; cycle++)
         {
-            health.maxDurability = health.currentDurability = 100000000f;
-        }
-
-        GameManager.instance.blocksParent = player.transform;
-        PlayManager.instance.blocksParent = player.transform;
-        EnemySpawner spawner = Object.FindFirstObjectByType<EnemySpawner>();
-        spawner.spawnOnPlayStart = false;
-        spawner.spawnInterval = float.MaxValue;
-        Next("loading-and-entry");
-        MainUIPanels.instance.PlayStart();
-        bool sawMask = false;
-        float minimumProgress = session.Progress;
-        while (session.State != WorldSessionState.Playing || session.IsEntering)
-        {
-            Check(session.State != WorldSessionState.Failed, "world generation remains valid");
-            WorldLoadingPanel panel = Object.FindFirstObjectByType<WorldLoadingPanel>();
-            if (!sawMask && panel.GetComponent<CanvasGroup>().alpha >= .99f)
+            report.seed = session.SessionSeed;
+            report.cycleSeeds.Add(session.SessionSeed);
+            GameManager.instance.blocksParent.gameObject.SetActive(false);
+            var player = new GameObject("Player smoke construct");
+            Rigidbody body = player.AddComponent<Rigidbody>();
+            body.isKinematic = true;
+            player.AddComponent<ControlUnit>();
+            Object.Instantiate(Resources.Load<GameObject>("Blocks/Cockpit"), player.transform);
+            foreach (Durability health in player.GetComponentsInChildren<Durability>())
             {
-                sawMask = true;
-                if (captureImages)
-                {
-                    ScreenCapture.CaptureScreenshot(Path.ChangeExtension(reportPath, "loading.png"));
-                }
+                health.maxDurability = health.currentDurability = 100000000f;
             }
 
+            GameManager.instance.blocksParent = player.transform;
+            PlayManager.instance.blocksParent = player.transform;
+            EnemySpawner spawner = Object.FindFirstObjectByType<EnemySpawner>();
+            spawner.spawnOnPlayStart = false;
+            spawner.spawnInterval = float.MaxValue;
+            Next("loading-and-entry");
+            MainUIPanels.instance.PlayStart();
+            bool sawMask = false;
+            float minimumProgress = session.Progress;
+            while (session.State != WorldSessionState.Playing || session.IsEntering)
+            {
+                Check(session.State != WorldSessionState.Failed, "world generation remains valid");
+                WorldLoadingPanel panel = Object.FindFirstObjectByType<WorldLoadingPanel>();
+                if (!sawMask && panel.GetComponent<CanvasGroup>().alpha >= .99f)
+                {
+                    sawMask = true;
+                    if (captureImages)
+                    {
+                        ScreenCapture.CaptureScreenshot(Path.ChangeExtension(reportPath, "loading.png"));
+                    }
+                }
+
+                yield return null;
+            }
+
+            body.isKinematic = true;
+            Check(sawMask, "opaque loading mask renders while waiting or enabling");
+            Check(session.Progress >= minimumProgress, "loading reaches completion");
+            Check(session.World.LoadedColumns.Count >= 81, "initial 81 terrain columns loaded");
+            Check(session.Buildings.Buildings.Count > 0, "Player creates buildings from blueprint library");
+            Check(session.BuildingTemplates.Count > 0, "Player loads external blueprint library");
+            report.buildings = session.Buildings.Buildings.Count;
+            report.blocks = session.Buildings.Buildings.Sum(building => building.Blocks.Count);
+            Check(
+                Physics.Raycast(player.transform.position + Vector3.up * 2f, Vector3.down, 100f),
+                "spawn has real terrain collision");
+            Next("idle");
+            for (int i = 0; i < 360; i++)
+            {
+                Check(session.State == WorldSessionState.Playing, "session stays playing");
+                yield return null;
+            }
+
+            Next("travel");
+            if (captureImages)
+            {
+                ScreenCapture.CaptureScreenshot(Path.ChangeExtension(reportPath, "world.png"));
+            }
+
+            report.travelStart = player.transform.position;
+            Vector3 destination = player.transform.position + Vector3.right * 200f;
+            for (int i = 0; i < 420; i++)
+            {
+                Vector3 position = player.transform.position;
+                player.transform.position = new Vector3(Mathf.Min(destination.x, position.x + .6f), position.y, position.z);
+                yield return null;
+            }
+
+            report.travelEnd = player.transform.position;
+            Check(
+                session.World.ColumnAt(player.transform.position).x >= 4,
+                "Player crosses multiple chunk boundaries");
+            Check(
+                session.World.HasColumn(session.World.ColumnAt(player.transform.position)),
+                "travel retains terrain under player");
+            Check(session.World.LoadedColumns.Count <= 121, "loaded terrain remains bounded");
+            report.memoryBytes = UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong();
+            report.cycleMemoryBytes.Add(report.memoryBytes);
+            Next("exit");
+            // 使用正式模式退出，跳过返航货仓保存入口，避免测试写入玩家存档。
+            MainUIPanels.instance.CompletePlayEnd();
             yield return null;
+            Check(session.State == WorldSessionState.Preparing, "exit discards world and prepares fresh session");
+            Next("reprepare");
+            while (session.State == WorldSessionState.Preparing || BuildManager.instance.IsLoadingBlocks)
+            {
+                yield return null;
+            }
+
+            Check(session.State == WorldSessionState.Ready, "second preparation completes");
+            report.completedCycles++;
         }
 
-        body.isKinematic = true;
-        Check(sawMask, "opaque loading mask renders while waiting or enabling");
-        Check(session.Progress >= minimumProgress, "loading reaches completion");
-        Check(session.World.LoadedColumns.Count >= 81, "initial 81 terrain columns loaded");
-        Check(session.Buildings.Buildings.Count > 0, "Player creates buildings from blueprint library");
-        Check(session.BuildingTemplates.Count > 0, "Player loads external blueprint library");
-        report.buildings = session.Buildings.Buildings.Count;
-        report.blocks = session.Buildings.Buildings.Sum(building => building.Blocks.Count);
-        Check(
-            Physics.Raycast(player.transform.position + Vector3.up * 2f, Vector3.down, 100f),
-            "spawn has real terrain collision");
-        Next("idle");
-        for (int i = 0; i < 360; i++)
-        {
-            Check(session.State == WorldSessionState.Playing, "session stays playing");
-            yield return null;
-        }
-
-        Next("travel");
-        if (captureImages)
-        {
-            ScreenCapture.CaptureScreenshot(Path.ChangeExtension(reportPath, "world.png"));
-        }
-
-        report.travelStart = player.transform.position;
-        Vector3 destination = player.transform.position + Vector3.right * 200f;
-        for (int i = 0; i < 420; i++)
-        {
-            Vector3 position = player.transform.position;
-            player.transform.position = new Vector3(Mathf.Min(destination.x, position.x + .6f), position.y, position.z);
-            yield return null;
-        }
-
-        report.travelEnd = player.transform.position;
-        Check(
-            session.World.ColumnAt(player.transform.position).x >= 4,
-            "Player crosses multiple chunk boundaries");
-        Check(
-            session.World.HasColumn(session.World.ColumnAt(player.transform.position)),
-            "travel retains terrain under player");
-        Check(session.World.LoadedColumns.Count <= 121, "loaded terrain remains bounded");
-        report.memoryBytes = UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong();
-        Next("exit");
-        // 使用正式模式退出，跳过返航货仓保存入口，避免测试写入玩家存档。
-        MainUIPanels.instance.CompletePlayEnd();
-        yield return null;
-        Check(session.State == WorldSessionState.Preparing, "exit discards world and prepares fresh session");
-        Next("reprepare");
-        while (session.State == WorldSessionState.Preparing)
-        {
-            yield return null;
-        }
-
-        Check(session.State == WorldSessionState.Ready, "second preparation completes");
         Next("done");
     }
 
@@ -242,11 +299,11 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
         if (samples.Count > 0)
         {
             float[] sorted = samples.OrderBy(value => value).ToArray();
-            report.phases.Add(new Phase { name = phase, frames = sorted.Length, medianMs = sorted[sorted.Length / 2], p95Ms = sorted[(int)((sorted.Length - 1) * .95f)], maxMs = sorted[sorted.Length - 1], totalMs = samples.Sum() });
+            report.phases.Add(new Phase { name = phase, frames = sorted.Length, medianMs = sorted[sorted.Length / 2], p95Ms = sorted[(int)((sorted.Length - 1) * .95f)], p99Ms = sorted[(int)((sorted.Length - 1) * .99f)], over50Ms = samples.Count(value => value > 50f), maxMs = sorted[sorted.Length - 1], totalMs = samples.Sum() });
         }
 
         samples.Clear();
-        phase = name;
+        phase = cycleCount > 1 ? "cycle-" + (cycle + 1) + "/" + name : name;
         Save();
     }
 

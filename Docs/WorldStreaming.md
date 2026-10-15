@@ -40,6 +40,8 @@ WorldLab 保留原来的有限数组、Bake 和 F5/F9 快照工作流。Main 流
 
 ## 验证
 
+显式Player验证支持 `-world-smoke-seed <int>` 与 `-world-smoke-cycles <1..10>`，配合 `-world-smoke-report <现有目录下绝对JSON路径>` 使用。每轮等世界和原载具恢复完成才重进，记录P99/超过50ms次数及每轮内存；无report参数时不运行。固定种子三轮D3D11验证与限制见 [重复Player报告](Validation/2026-10-15-night-player-repeat.md)。
+
 Windows启动修复、组合进度及贪心区块优化见[Player验证报告](Validation/2026-10-15-world-player-performance.md)。Release包默认D3D11两次16项检查通过；相同网格配置三角形减少83.6%，无截图Player移动P95 9.42ms、峰值64.16ms（1280×720，上限120FPS）。28份用户JSON哈希不变；首次加载和退出峰值仍存在。下方历史报告只反映各自当时版本。
 
 卡顿修正见[性能与验证报告](Validation/2026-10-15-world-performance.md)：集中耐久标签、修正炮塔空目标搜索间隔；固定种子33栋/2271模块的Editor静止帧中位约30ms降至8ms。Main 53项、边界23项、WorldLab建筑43项/数据12项和炮塔回归通过。测试条件、加载残余单帧耗时和Player验证缺口以报告为准。

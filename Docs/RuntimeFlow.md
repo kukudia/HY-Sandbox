@@ -2074,3 +2074,69 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/VoxelStructureCollapse.cs|ClearDebris -->
 - [ProceduralVoxelWorld.RestoreEdits](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L415)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|RestoreEdits -->
+
+## 显式 Player 世界验证
+
+源码推导：仅-world-smoke-report显式启用；可指定固定种子和1–10次会话。临时单驾驶舱载具沿200m脚本路线跨区块，通过正式退出链清空会话并等待世界与原载具恢复后重复；不经过返航货仓保存入口。仅测试进程内改变配置，阶段报告包含P99、尖峰及每轮内存采样，不代表真实驾驶或长期战斗。
+
+```mermaid
+flowchart TD
+    A["WorldPlayerSmokeChecks.Initialize()"]
+    click A "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L58" "打开源码"
+    B["WorldPlayerSmokeChecks.ReadInteger()"]
+    click B "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L103" "打开源码"
+    C["WorldPlayerSmokeChecks.Start()"]
+    click C "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L113" "打开源码"
+    D["WorldPlayerSmokeChecks.Update()"]
+    click D "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L130" "打开源码"
+    E["WorldPlayerSmokeChecks.Scenario()"]
+    click E "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L159" "打开源码"
+    F["MainUIPanels.PlayStart()"]
+    click F "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L226" "打开源码"
+    G["MainUIPanels.CompletePlayEnd()"]
+    click G "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L273" "打开源码"
+    H["WorldPlayerSmokeChecks.Next()"]
+    click H "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L297" "打开源码"
+    I["WorldPlayerSmokeChecks.Save()"]
+    click I "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L318" "打开源码"
+    J["WorldPlayerSmokeChecks.Finish()"]
+    click J "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L323" "打开源码"
+    K["WorldPlayerSmokeChecks.CaptureError()"]
+    click K "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L310" "打开源码"
+    A -->|显式参数校验| B
+    A -.->|创建组件后引擎Start| C
+    C -.->|后续引擎Update| D
+    D -->|推进枚举器| E
+    E --> F
+    E -->|跨区块后正式退出| G
+    E -->|阶段结束| H
+    H --> I
+    E -.->|等待Ready与载具恢复后重复| D
+    K -.->|记录错误| J
+    D -->|完成或超时异常| J
+    J --> H
+    J -->|最终状态及正常退出| I
+```
+
+- [WorldPlayerSmokeChecks.Initialize](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L58)
+<!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Initialize -->
+- [WorldPlayerSmokeChecks.ReadInteger](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L103)
+<!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|ReadInteger -->
+- [WorldPlayerSmokeChecks.Start](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L113)
+<!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Start -->
+- [WorldPlayerSmokeChecks.Update](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L130)
+<!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Update -->
+- [WorldPlayerSmokeChecks.Scenario](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L159)
+<!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Scenario -->
+- [MainUIPanels.PlayStart](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L226)
+<!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayStart -->
+- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L273)
+<!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|CompletePlayEnd -->
+- [WorldPlayerSmokeChecks.Next](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L297)
+<!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Next -->
+- [WorldPlayerSmokeChecks.Save](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L318)
+<!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Save -->
+- [WorldPlayerSmokeChecks.Finish](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L323)
+<!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Finish -->
+- [WorldPlayerSmokeChecks.CaptureError](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L310)
+<!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|CaptureError -->
