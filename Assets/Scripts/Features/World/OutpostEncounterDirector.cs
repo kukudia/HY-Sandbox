@@ -123,7 +123,10 @@ public sealed class OutpostEncounterDirector
                 }
 
                 Vector3 position = guard.Snapshot != null ? guard.Position : encounter.Position + encounter.Rotation * guard.Data.position;
-                bool near = (encounter.Position - player).sqrMagnitude <= encounter.Data.activationDistance * encounter.Data.activationDistance;
+                // A pursuing guard can leave its original site. Resume near its last position,
+                // with a gap below the 180m hibernation threshold to avoid boundary churn.
+                bool deploymentNear = (position - player).sqrMagnitude <= 160f * 160f;
+                bool near = deploymentNear && (guard.Snapshot != null || (encounter.Position - player).sqrMagnitude <= encounter.Data.activationDistance * encounter.Data.activationDistance);
                 if (!spawned && activeCount < 16 && !guard.Defeated && guard.Unit == null && near && world.HasColumn(world.ColumnAt(position)))
                 {
                     spawned = Spawn(encounter, guard, position);
@@ -287,6 +290,7 @@ public sealed class OutpostEncounterDirector
         {
             foreach (Guard guard in encounter.Guards)
             {
+                RefreshOwner(guard);
                 if (guard.Unit != null)
                 {
                     foreach (Bot bot in guard.Unit.GetComponentsInChildren<Bot>(true))

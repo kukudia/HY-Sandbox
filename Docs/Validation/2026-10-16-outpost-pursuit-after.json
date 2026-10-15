@@ -1,0 +1,137 @@
+{
+    "status": "passed",
+    "graphics": "Direct3D11",
+    "seed": 14721,
+    "buildings": 2,
+    "blocks": 82,
+    "travelStart": {
+        "x": 16.0,
+        "y": 11.0,
+        "z": 16.0
+    },
+    "travelEnd": {
+        "x": 216.0,
+        "y": 11.0,
+        "z": 16.0
+    },
+    "memoryBytes": 205340967,
+    "requestedCycles": 1,
+    "completedCycles": 1,
+    "cycleMemoryBytes": [
+        205340967
+    ],
+    "cycleSeeds": [
+        14721
+    ],
+    "checks": [
+        "Main starts with world session",
+        "startup mask stays opaque during construct restoration",
+        "construct load exposes bounded progress",
+        "world generation remains valid",
+        "opaque loading mask renders while waiting or enabling",
+        "loading reaches completion",
+        "initial 81 terrain columns loaded",
+        "Player creates buildings from blueprint library",
+        "Player loads external blueprint library",
+        "spawn has real terrain collision",
+        "Legacy EnemySpawner is disabled during play",
+        "Generated world contains authored enemy outposts",
+        "Authored finite garrison deploys through production director",
+        "Live defender retains stable site and slot identity",
+        "Outpost defender survives natural AI physics interval",
+        "Outpost defender uses actual moving AI rather than a static decoration",
+        "Natural outpost garrison weapons damage player with the correct attacker identity",
+        "Damaged defender remains tracked after block regroup",
+        "Far live defender hibernates without being marked defeated",
+        "Unloading is not a kill",
+        "Live defender returns when revisiting streamed terrain",
+        "Revisit preserves defender module identity and damage",
+        "Pursuing guard hibernates at its distant last position",
+        "Distant pursuit is not a defeat",
+        "Pursuing guard resumes near its last position outside original site activation range",
+        "Cockpit defeat permanently consumes slot for this expedition: guard-0",
+        "Cockpit defeat permanently consumes slot for this expedition: guard-1",
+        "Revisit never refreshes defeated garrison",
+        "Defeated slots have no replacement enemy",
+        "Outpost HUD can show cleared encounter state",
+        "session stays playing",
+        "Player crosses multiple chunk boundaries",
+        "travel retains terrain under player",
+        "loaded terrain remains bounded",
+        "exit discards world and prepares fresh session",
+        "second preparation completes"
+    ],
+    "errors": [],
+    "phases": [
+        {
+            "name": "startup",
+            "frames": 1058,
+            "medianMs": 8.333206176757813,
+            "p95Ms": 8.647918701171875,
+            "p99Ms": 9.253501892089844,
+            "over50Ms": 1,
+            "maxMs": 117.38729858398438,
+            "totalMs": 8973.4951171875
+        },
+        {
+            "name": "loading-and-entry",
+            "frames": 6,
+            "medianMs": 9.817123413085938,
+            "p95Ms": 10.494232177734375,
+            "p99Ms": 10.494232177734375,
+            "over50Ms": 0,
+            "maxMs": 28.50055694580078,
+            "totalMs": 73.75240325927735
+        },
+        {
+            "name": "outpost-encounter",
+            "frames": 3038,
+            "medianMs": 8.327484130859375,
+            "p95Ms": 8.989334106445313,
+            "p99Ms": 12.175559997558594,
+            "over50Ms": 3,
+            "maxMs": 96.22573852539063,
+            "totalMs": 25706.201171875
+        },
+        {
+            "name": "idle",
+            "frames": 360,
+            "medianMs": 8.327484130859375,
+            "p95Ms": 8.724212646484375,
+            "p99Ms": 8.78143310546875,
+            "over50Ms": 0,
+            "maxMs": 8.937835693359375,
+            "totalMs": 3000.743896484375
+        },
+        {
+            "name": "travel",
+            "frames": 420,
+            "medianMs": 8.319854736328125,
+            "p95Ms": 8.808135986328125,
+            "p99Ms": 8.90350341796875,
+            "over50Ms": 0,
+            "maxMs": 22.01080322265625,
+            "totalMs": 3508.876708984375
+        },
+        {
+            "name": "exit",
+            "frames": 1,
+            "medianMs": 47.14202880859375,
+            "p95Ms": 47.14202880859375,
+            "p99Ms": 47.14202880859375,
+            "over50Ms": 0,
+            "maxMs": 47.14202880859375,
+            "totalMs": 47.14202880859375
+        },
+        {
+            "name": "reprepare",
+            "frames": 1086,
+            "medianMs": 8.335113525390625,
+            "p95Ms": 8.731842041015625,
+            "p99Ms": 8.960723876953125,
+            "over50Ms": 0,
+            "maxMs": 18.33343505859375,
+            "totalMs": 9077.9609375
+        }
+    ]
+}

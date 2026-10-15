@@ -1,0 +1,84 @@
+{
+    "status": "failed",
+    "graphics": "Direct3D11",
+    "seed": 14721,
+    "buildings": 2,
+    "blocks": 82,
+    "travelStart": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "travelEnd": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "memoryBytes": 0,
+    "requestedCycles": 1,
+    "completedCycles": 0,
+    "cycleMemoryBytes": [],
+    "cycleSeeds": [
+        14721
+    ],
+    "checks": [
+        "Main starts with world session",
+        "startup mask stays opaque during construct restoration",
+        "construct load exposes bounded progress",
+        "world generation remains valid",
+        "opaque loading mask renders while waiting or enabling",
+        "loading reaches completion",
+        "initial 81 terrain columns loaded",
+        "Player creates buildings from blueprint library",
+        "Player loads external blueprint library",
+        "spawn has real terrain collision",
+        "Legacy EnemySpawner is disabled during play",
+        "Generated world contains authored enemy outposts",
+        "Authored finite garrison deploys through production director",
+        "Live defender retains stable site and slot identity",
+        "Outpost defender survives natural AI physics interval",
+        "Outpost defender uses actual moving AI rather than a static decoration",
+        "Damaged defender remains tracked after block regroup",
+        "Far live defender hibernates without being marked defeated",
+        "Unloading is not a kill",
+        "Live defender returns when revisiting streamed terrain",
+        "Revisit preserves defender module identity and damage",
+        "Pursuing guard hibernates at its distant last position",
+        "Distant pursuit is not a defeat"
+    ],
+    "errors": [
+        "System.InvalidOperationException: Pursuing guard resumes near its last position outside original site activation range\r\n  at WorldPlayerSmokeChecks.Check (System.Boolean valid, System.String name) [0x00003] in <b07285bdae2f4332b07353a39f245268>:0 \r\n  at OutpostPlayerChecks+<Scenario>d__2.MoveNext () [0x009ae] in <b07285bdae2f4332b07353a39f245268>:0 \r\n  at OutpostPlayerChecks+<Flatten>d__1.MoveNext () [0x00051] in <b07285bdae2f4332b07353a39f245268>:0 \r\n  at WorldPlayerSmokeChecks+<Scenario>d__22.MoveNext () [0x0050f] in <b07285bdae2f4332b07353a39f245268>:0 \r\n  at WorldPlayerSmokeChecks.Update () [0x0004e] in <b07285bdae2f4332b07353a39f245268>:0 "
+    ],
+    "phases": [
+        {
+            "name": "startup",
+            "frames": 1043,
+            "medianMs": 8.335113525390625,
+            "p95Ms": 8.647918701171875,
+            "p99Ms": 8.875846862792969,
+            "over50Ms": 1,
+            "maxMs": 118.48616790771485,
+            "totalMs": 8837.6298828125
+        },
+        {
+            "name": "loading-and-entry",
+            "frames": 6,
+            "medianMs": 9.855270385742188,
+            "p95Ms": 10.3607177734375,
+            "p99Ms": 10.3607177734375,
+            "over50Ms": 0,
+            "maxMs": 29.42657470703125,
+            "totalMs": 74.55062866210938
+        },
+        {
+            "name": "outpost-encounter",
+            "frames": 2660,
+            "medianMs": 8.327484130859375,
+            "p95Ms": 8.779525756835938,
+            "p99Ms": 9.359359741210938,
+            "over50Ms": 1,
+            "maxMs": 95.54290771484375,
+            "totalMs": 22348.900390625
+        }
+    ]
+}

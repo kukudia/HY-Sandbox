@@ -3000,11 +3000,11 @@
 | OutpostEncounterDirector | [`bool IsDefeated(string site, string guard)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L26) | public |
 | OutpostEncounterDirector | [`bool TryGetDefender(string site, string guardId, out ControlUnit unit)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L31) | public |
 | OutpostEncounterDirector | [`void Tick(Vector3 player)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L48) | public |
-| OutpostEncounterDirector | [`bool Spawn(Encounter encounter, Guard guard, Vector3 position)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L149) | private |
-| OutpostEncounterDirector | [`Bounds DeploymentBounds(BlockDataList blueprint, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L218) | private static |
-| OutpostEncounterDirector | [`void Hibernate(Guard guard)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L238) | private static |
-| OutpostEncounterDirector | [`void RefreshOwner(Guard guard)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L275) | private static |
-| OutpostEncounterDirector | [`void Clear()`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L284) | public |
+| OutpostEncounterDirector | [`bool Spawn(Encounter encounter, Guard guard, Vector3 position)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L152) | private |
+| OutpostEncounterDirector | [`Bounds DeploymentBounds(BlockDataList blueprint, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L221) | private static |
+| OutpostEncounterDirector | [`void Hibernate(Guard guard)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L241) | private static |
+| OutpostEncounterDirector | [`void RefreshOwner(Guard guard)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L278) | private static |
+| OutpostEncounterDirector | [`void Clear()`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L287) | public |
 
 ## Assets/Scripts/Features/World/OutpostHud.cs
 
@@ -3023,7 +3023,9 @@
 | OutpostPlayerChecks | [`IEnumerator Run(WorldSessionManager session, ControlUnit player, Action<bool, string> check)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L12) | public static |
 | OutpostPlayerChecks | [`IEnumerator Flatten(IEnumerator root)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L17) | private static |
 | OutpostPlayerChecks | [`IEnumerator Scenario(WorldSessionManager session, ControlUnit player, Action<bool, string> check)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L49) | private static |
-| OutpostPlayerChecks | [`IEnumerator TravelTo(Transform player, Vector3 destination)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L183) | private static |
+| OutpostPlayerChecks | [`IEnumerator TravelTo(Transform player, Vector3 destination)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L214) | private static |
+| OutpostPlayerChecks | [`void Freeze(ControlUnit unit)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L228) | private static |
+| OutpostPlayerChecks | [`IEnumerator TravelWithDefender(Transform player, ControlUnit unit, Vector3 destination)`](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L234) | private static |
 
 ## Assets/Scripts/Features/World/ProceduralVoxelWorld.cs
 

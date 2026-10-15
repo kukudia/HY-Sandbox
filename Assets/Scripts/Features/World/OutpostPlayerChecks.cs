@@ -89,6 +89,19 @@ public static class OutpostPlayerChecks
         check(
             (defender.transform.position - initial).sqrMagnitude > 0.01f,
             "Outpost defender uses actual moving AI rather than a static decoration");
+        Durability targetHealth = player.cockpit.GetComponent<Durability>();
+        float initialTargetHealth = targetHealth.currentDurability;
+        bool sawGarrisonDamage = false;
+        float combatUntil = Time.time + 30f;
+        while (Time.time < combatUntil && defender != null && defender.HasValidCockpit && !sawGarrisonDamage)
+        {
+            sawGarrisonDamage = targetHealth.currentDurability < initialTargetHealth && targetHealth.LastAttacker == defender;
+            yield return null;
+        }
+
+        check(
+            sawGarrisonDamage,
+            "Natural outpost garrison weapons damage player with the correct attacker identity");
         foreach (OutpostGarrisonData guard in data.garrison)
         {
             if (session.Outposts.TryGetDefender(siteId, guard.id, out ControlUnit unit))
@@ -130,6 +143,24 @@ public static class OutpostPlayerChecks
         check(
             restoredArmor != null && Mathf.Abs(restoredArmor.GetComponent<Durability>().currentDurability - damaged) < 0.001f,
             "Revisit preserves defender module identity and damage");
+        Freeze(defender);
+        yield return TravelWithDefender(player.transform, defender, origin + Vector3.right * 280f + Vector3.up * 25f);
+        yield return TravelTo(player.transform, origin + Vector3.up * 25f);
+        check(
+            !session.Outposts.TryGetDefender(siteId, first.id, out _),
+            "Pursuing guard hibernates at its distant last position");
+        check(!session.Outposts.IsDefeated(siteId, first.id), "Distant pursuit is not a defeat");
+        yield return TravelTo(player.transform, origin + Vector3.right * 200f + Vector3.up * 25f);
+        for (int i = 0; i < 900 && !session.Outposts.TryGetDefender(siteId, first.id, out defender); i++)
+        {
+            yield return null;
+        }
+
+        check(
+            defender != null,
+            "Pursuing guard resumes near its last position outside original site activation range");
+        Freeze(defender);
+        yield return TravelWithDefender(player.transform, defender, origin + Vector3.up * 25f);
         foreach (OutpostGarrisonData guard in data.garrison)
         {
             for (int i = 0; i < 600 && !session.Outposts.TryGetDefender(siteId, guard.id, out _) && !session.Outposts.IsDefeated(siteId, guard.id); i++)
@@ -191,6 +222,25 @@ public static class OutpostPlayerChecks
         if (Vector3.Distance(player.position, destination) > 1f)
         {
             throw new InvalidOperationException("Outpost route did not finish streaming the destination.");
+        }
+    }
+
+    private static void Freeze(ControlUnit unit)
+    {
+        unit.GetComponent<Rigidbody>().isKinematic = true;
+        unit.GetComponent<EnemyController>().enabled = false;
+    }
+
+    private static IEnumerator TravelWithDefender(Transform player, ControlUnit unit, Vector3 destination)
+    {
+        // Controlled transport isolates streaming state from AI navigation. Both move through loaded terrain.
+        Freeze(unit);
+        Vector3 offset = Vector3.up * 20f;
+        for (int frame = 0; frame < 6000 && Vector3.Distance(player.position, destination) > 0.2f; frame++)
+        {
+            player.position = Vector3.MoveTowards(player.position, destination, 1f);
+            unit.transform.position = player.position + offset;
+            yield return null;
         }
     }
 }
