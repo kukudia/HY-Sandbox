@@ -232,6 +232,7 @@ public static class BuildingEditorPlayProbe
             "Editable size panel is visible and Play button hidden",
             panel != null && !MainUIButtons.instance.playButton.gameObject.activeSelf);
         BuildingOutpostEditor outpost = panel.GetComponent<BuildingOutpostEditor>();
+        outpost.enabled = true;
         Check("Building editor exposes authored outpost controls", outpost != null);
         string bundledCopy = saves.CopyBundledBuilding("Road Watch Outpost");
         byte[] firstCopyBytes = File.ReadAllBytes(saves.GetBuildingBlueprintPath(bundledCopy));
@@ -259,6 +260,33 @@ public static class BuildingEditorPlayProbe
         Check(
             "Deployment pose saves numeric local position and yaw",
             saves.cachedData.outpost.garrison[1].position.x == -36.5f && saves.cachedData.outpost.garrison[1].yaw == 90f);
+        Transform deployment = GameManager.instance.blocksParent.Cast<Transform>().Last(child => child.name == "Outpost deployment preview" && child.gameObject.activeSelf);
+        Check(
+            "Deployment preview follows blueprint root without gameplay or physics components",
+            deployment.localPosition == Vector3.zero && deployment.GetComponentsInChildren<Component>(true).All(component => component is Transform || component is MeshFilter || component is MeshRenderer || component is TextMesh));
+        MeshFilter[] outlines = deployment.GetComponentsInChildren<MeshFilter>();
+        Check(
+            "Selected defender shows real module outlines and other guards show bounded geometry",
+            outlines.Length == 2 && outlines[1].sharedMesh.vertexCount > 100 && outlines[0].sharedMesh.vertexCount == 14 && outlines.All(item => item.sharedMesh.GetTopology(0) == MeshTopology.Lines));
+        Check(
+            "Deployment labels use a visible font and render names literally",
+            deployment.GetComponentsInChildren<TextMesh>().All(text => text.font != null && !text.richText));
+        Text deploymentStatus = (Text)Field(outpost, "_status");
+        Canvas.ForceUpdateCanvases();
+        Check(
+            "Overlapping defender bounds warn without blocking save and fit status area",
+            deploymentStatus.text.Contains("bounds overlap another guard") && deploymentStatus.font != null && deploymentStatus.preferredHeight <= deploymentStatus.rectTransform.rect.height);
+        Vector3 cameraPosition = build.mainCamera.transform.position;
+        Quaternion cameraRotation = build.mainCamera.transform.rotation;
+        build.mainCamera.transform.position = new Vector3(-65f, 35f, -75f);
+        build.mainCamera.transform.LookAt(new Vector3(-65f, 14f, 0f));
+        yield return null;
+        Check(
+            "Deployment labels face the actual editing camera",
+            deployment.GetComponentsInChildren<TextMesh>().All(text => Quaternion.Angle(text.transform.rotation, build.mainCamera.transform.rotation) < 0.1f));
+        ScreenCapture.CaptureScreenshot("Temp/BuildingEditor/OutpostDeployment.png");
+        yield return null;
+        build.mainCamera.transform.SetPositionAndRotation(cameraPosition, cameraRotation);
         string outpostBytes = File.ReadAllText(saves.GetBuildingBlueprintPath(build.CurrentBuildName));
         ((InputField)Field(outpost, "_y")).text = "-5";
         outpost.SavePose();
@@ -372,6 +400,9 @@ public static class BuildingEditorPlayProbe
         Check(
             "Enemy mode keeps its one Cockpit and hides size panel",
             GameManager.instance.blocksParent.GetComponentsInChildren<Cockpit>().Length == 1 && !panel.gameObject.activeSelf);
+        Check(
+            "Leaving building editor removes active deployment previews",
+            !Object.FindObjectsByType<MeshFilter>(FindObjectsSortMode.None).Any(filter => filter.sharedMesh != null && filter.sharedMesh.name == "Defender deployment bounds"));
         byte[] enemy = File.ReadAllBytes(saves.GetEnemyBlueprintPath(build.currentEnemyBlueprintName));
         Shortcut(Key.LeftCtrl, Key.LeftAlt, Key.F);
         while (build.IsLoadingBlocks)

@@ -2183,11 +2183,11 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["BuildingOutpostEditor.SetOutpost()"]
-    click A "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L133" "打开源码"
+    click A "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L134" "打开源码"
     B["BuildingOutpostEditor.AddDefender()"]
-    click B "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L150" "打开源码"
+    click B "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L151" "打开源码"
     C["BuildingOutpostEditor.SavePose()"]
-    click C "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L196" "打开源码"
+    click C "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L198" "打开源码"
     D["SaveManager.SaveBuildingOutpost()"]
     click D "../Assets/Scripts/Features/Building/SaveManager.cs#L147" "打开源码"
     E["EnemyOutpostData.Validate()"]
@@ -2240,11 +2240,11 @@ flowchart TD
     S -->|按字形宽度缩短名称| T
 ```
 
-- [BuildingOutpostEditor.SetOutpost](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L133)
+- [BuildingOutpostEditor.SetOutpost](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L134)
 <!-- source: Assets/Scripts/Features/Building/BuildingOutpostEditor.cs|SetOutpost -->
-- [BuildingOutpostEditor.AddDefender](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L150)
+- [BuildingOutpostEditor.AddDefender](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L151)
 <!-- source: Assets/Scripts/Features/Building/BuildingOutpostEditor.cs|AddDefender -->
-- [BuildingOutpostEditor.SavePose](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L196)
+- [BuildingOutpostEditor.SavePose](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L198)
 <!-- source: Assets/Scripts/Features/Building/BuildingOutpostEditor.cs|SavePose -->
 - [SaveManager.SaveBuildingOutpost](../Assets/Scripts/Features/Building/SaveManager.cs#L147)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|SaveBuildingOutpost -->
@@ -2280,6 +2280,63 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/OutpostHud.cs|Format -->
 - [OutpostHud.FitName](../Assets/Scripts/Features/World/OutpostHud.cs#L41)
 <!-- source: Assets/Scripts/Features/World/OutpostHud.cs|FitName -->
+
+## 据点驻军部署范围预览
+
+源码推导：保存位置或切换驻军后，在蓝图根局部坐标绘制实际模块盒、合计范围和朝向。选中驻军显示模块细节，其他驻军仅显示范围；与建筑/其他驻军AABB重叠只给保守警告，不阻止保存。预览只有显示组件，独立拥有并释放运行时Mesh/Material；LateUpdate让标签朝向编辑镜头，退出面板清理。线框不是敌机实体或精确碰撞检测。
+
+```mermaid
+flowchart TD
+    A["BuildingOutpostEditor.SelectDefender()"]
+    click A "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L175" "打开源码"
+    B["BuildingOutpostEditor.ShowPreview()"]
+    click B "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L255" "打开源码"
+    C["OutpostDeploymentPreview.CalculateBounds()"]
+    click C "../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L146" "打开源码"
+    D["OutpostDeploymentPreview.DrawGuard()"]
+    click D "../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L85" "打开源码"
+    E["BuildingOutpostEditor.SavePose()"]
+    click E "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L198" "打开源码"
+    F["BuildingOutpostEditor.LateUpdate()"]
+    click F "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L279" "打开源码"
+    G["OutpostDeploymentPreview.FaceLabels()"]
+    click G "../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L138" "打开源码"
+    H["BuildingOutpostEditor.OnDisable()"]
+    click H "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L274" "打开源码"
+    I["BuildingOutpostEditor.ClearPreview()"]
+    click I "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L265" "打开源码"
+    J["OutpostDeploymentPreview.Dispose()"]
+    click J "../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L206" "打开源码"
+    A --> B
+    E -->|经Save与SelectDefender| B
+    B --> I
+    B -->|经预览构造器| C
+    B -->|经预览构造器| D
+    F --> G
+    H --> I
+    I --> J
+```
+
+- [BuildingOutpostEditor.SelectDefender](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L175)
+<!-- source: Assets/Scripts/Features/Building/BuildingOutpostEditor.cs|SelectDefender -->
+- [BuildingOutpostEditor.ShowPreview](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L255)
+<!-- source: Assets/Scripts/Features/Building/BuildingOutpostEditor.cs|ShowPreview -->
+- [OutpostDeploymentPreview.CalculateBounds](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L146)
+<!-- source: Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs|CalculateBounds -->
+- [OutpostDeploymentPreview.DrawGuard](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L85)
+<!-- source: Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs|DrawGuard -->
+- [BuildingOutpostEditor.SavePose](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L198)
+<!-- source: Assets/Scripts/Features/Building/BuildingOutpostEditor.cs|SavePose -->
+- [BuildingOutpostEditor.LateUpdate](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L279)
+<!-- source: Assets/Scripts/Features/Building/BuildingOutpostEditor.cs|LateUpdate -->
+- [OutpostDeploymentPreview.FaceLabels](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L138)
+<!-- source: Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs|FaceLabels -->
+- [BuildingOutpostEditor.OnDisable](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L274)
+<!-- source: Assets/Scripts/Features/Building/BuildingOutpostEditor.cs|OnDisable -->
+- [BuildingOutpostEditor.ClearPreview](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L265)
+<!-- source: Assets/Scripts/Features/Building/BuildingOutpostEditor.cs|ClearPreview -->
+- [OutpostDeploymentPreview.Dispose](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L206)
+<!-- source: Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs|Dispose -->
 
 ## 敌方蓝图完整恢复
 

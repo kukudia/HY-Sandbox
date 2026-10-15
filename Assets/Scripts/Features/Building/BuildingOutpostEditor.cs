@@ -30,7 +30,8 @@ public sealed class BuildingOutpostEditor : MonoBehaviour
     private readonly List<BlockDataList> templates = new List<BlockDataList>();
     private readonly List<string> names = new List<string>();
     private bool refreshing;
-    private GameObject preview;
+    private OutpostDeploymentPreview preview;
+    private Camera previewCamera;
     public void Refresh()
     {
         refreshing = true;
@@ -191,6 +192,7 @@ public sealed class BuildingOutpostEditor : MonoBehaviour
         _z.text = guard.position.z.ToString(CultureInfo.InvariantCulture);
         _yaw.text = guard.yaw.ToString(CultureInfo.InvariantCulture);
         ShowPreview(data);
+        _status.text = preview.Hint;
     }
 
     public void SavePose()
@@ -238,7 +240,7 @@ public sealed class BuildingOutpostEditor : MonoBehaviour
             RefreshSlots(data);
             refreshing = false;
             SelectDefender();
-            _status.text = data != null ? "Saved outpost: " + data.garrison.Count + " defenders. Blueprint snapshots are embedded." : "Saved as ordinary building.";
+            _status.text = data != null ? "Saved " + data.garrison.Count + " defenders. " + preview.Hint : "Saved as ordinary building.";
             return true;
         }
         catch (Exception error) when (error is InvalidOperationException || error is IOException || error is UnauthorizedAccessException)
@@ -253,32 +255,18 @@ public sealed class BuildingOutpostEditor : MonoBehaviour
     private void ShowPreview(EnemyOutpostData data)
     {
         ClearPreview();
-        preview = new GameObject("Outpost deployment preview");
-        for (int i = 0; i < data.garrison.Count; i++)
-        {
-            OutpostGarrisonData guard = data.garrison[i];
-            GameObject marker = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            marker.name = "Defender " + (i + 1) + " " + guard.name;
-            Destroy(marker.GetComponent<Collider>());
-            marker.transform.SetParent(preview.transform, false);
-            marker.transform.SetPositionAndRotation(guard.position, Quaternion.Euler(0f, guard.yaw, 0f));
-            marker.transform.localScale = new Vector3(0.5f, 0.5f, 2f);
-            var label = new GameObject("Label");
-            label.transform.SetParent(preview.transform, false);
-            label.transform.position = guard.position + Vector3.up;
-            TextMesh text = label.AddComponent<TextMesh>();
-            text.text = (i + 1) + " " + guard.name;
-            text.characterSize = 0.25f;
-            text.fontSize = 32;
-        }
+        preview = new OutpostDeploymentPreview(
+            GameManager.instance.blocksParent,
+            SaveManager.instance.cachedData,
+            Mathf.Clamp(_defender.value, 0, data.garrison.Count - 1));
+        previewCamera = Camera.main;
     }
 
     private void ClearPreview()
     {
         if (preview != null)
         {
-            preview.SetActive(false);
-            Destroy(preview);
+            preview.Dispose();
             preview = null;
         }
     }
@@ -286,5 +274,13 @@ public sealed class BuildingOutpostEditor : MonoBehaviour
     private void OnDisable()
     {
         ClearPreview();
+    }
+
+    private void LateUpdate()
+    {
+        if (preview != null && previewCamera != null)
+        {
+            preview.FaceLabels(previewCamera.transform.rotation);
+        }
     }
 }

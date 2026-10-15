@@ -914,6 +914,27 @@ def main():
         ],
     )
     graph(
+        "据点驻军部署范围预览",
+        "源码推导：保存位置或切换驻军后，在蓝图根局部坐标绘制实际模块盒、合计范围和朝向。选中驻军显示模块细节，其他驻军仅显示范围；与建筑/其他驻军AABB重叠只给保守警告，不阻止保存。预览只有显示组件，独立拥有并释放运行时Mesh/Material；LateUpdate让标签朝向编辑镜头，退出面板清理。线框不是敌机实体或精确碰撞检测。",
+        {
+            "A": "BuildingOutpostEditor.SelectDefender",
+            "B": "BuildingOutpostEditor.ShowPreview",
+            "C": "OutpostDeploymentPreview.CalculateBounds",
+            "D": "OutpostDeploymentPreview.DrawGuard",
+            "E": "BuildingOutpostEditor.SavePose",
+            "F": "BuildingOutpostEditor.LateUpdate",
+            "G": "OutpostDeploymentPreview.FaceLabels",
+            "H": "BuildingOutpostEditor.OnDisable",
+            "I": "BuildingOutpostEditor.ClearPreview",
+            "J": "OutpostDeploymentPreview.Dispose",
+        },
+        [
+            "A --> B", "E -->|经Save与SelectDefender| B", "B --> I",
+            "B -->|经预览构造器| C", "B -->|经预览构造器| D",
+            "F --> G", "H --> I", "I --> J",
+        ],
+    )
+    graph(
         "敌方蓝图完整恢复",
         "源码推导：生产入口已改为据点有限驻军，EnemySpawner自动计时已禁用，仅保留显式诊断包装；据点调用EnemyBlueprintFactory生成。生成前检查每个模块资源和恰好一个驾驶舱，缺失或空模块整份拒绝。模块Awake应用CSV后恢复实例尺寸并刷新真实碰撞/连接点/质量，再累加刚体质量、设置敌方身份和运行归属；不以跳过模块生成残缺敌机。",
         {

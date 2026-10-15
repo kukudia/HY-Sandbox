@@ -1443,21 +1443,22 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BuildingOutpostEditor | [`void Refresh()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L34) | public |
-| BuildingOutpostEditor | [`void AddTemplate(string name, string json)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L75) | private |
-| BuildingOutpostEditor | [`void CopyBuildingTemplate()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L87) | public |
-| BuildingOutpostEditor | [`void RefreshSlots(EnemyOutpostData data)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L105) | private |
-| BuildingOutpostEditor | [`EnemyOutpostData Copy()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L122) | private |
-| BuildingOutpostEditor | [`void SetOutpost()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L133) | public |
-| BuildingOutpostEditor | [`void AddDefender()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L150) | public |
-| BuildingOutpostEditor | [`void SelectDefender()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L174) | public |
-| BuildingOutpostEditor | [`void SavePose()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L196) | public |
-| BuildingOutpostEditor | [`bool Parse(InputField field, out float value)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L216) | private static |
-| BuildingOutpostEditor | [`void RemoveDefender()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L221) | public |
-| BuildingOutpostEditor | [`bool Save(EnemyOutpostData data)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L231) | private |
-| BuildingOutpostEditor | [`void ShowPreview(EnemyOutpostData data)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L253) | private |
-| BuildingOutpostEditor | [`void ClearPreview()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L276) | private |
-| BuildingOutpostEditor | [`void OnDisable()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L286) | private |
+| BuildingOutpostEditor | [`void Refresh()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L35) | public |
+| BuildingOutpostEditor | [`void AddTemplate(string name, string json)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L76) | private |
+| BuildingOutpostEditor | [`void CopyBuildingTemplate()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L88) | public |
+| BuildingOutpostEditor | [`void RefreshSlots(EnemyOutpostData data)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L106) | private |
+| BuildingOutpostEditor | [`EnemyOutpostData Copy()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L123) | private |
+| BuildingOutpostEditor | [`void SetOutpost()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L134) | public |
+| BuildingOutpostEditor | [`void AddDefender()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L151) | public |
+| BuildingOutpostEditor | [`void SelectDefender()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L175) | public |
+| BuildingOutpostEditor | [`void SavePose()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L198) | public |
+| BuildingOutpostEditor | [`bool Parse(InputField field, out float value)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L218) | private static |
+| BuildingOutpostEditor | [`void RemoveDefender()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L223) | public |
+| BuildingOutpostEditor | [`bool Save(EnemyOutpostData data)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L233) | private |
+| BuildingOutpostEditor | [`void ShowPreview(EnemyOutpostData data)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L255) | private |
+| BuildingOutpostEditor | [`void ClearPreview()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L265) | private |
+| BuildingOutpostEditor | [`void OnDisable()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L274) | private |
+| BuildingOutpostEditor | [`void LateUpdate()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L279) | private |
 
 ## Assets/Scripts/Features/Building/ConnectorPlacementHints.cs
 
@@ -1583,6 +1584,21 @@
 | --- | --- | --- |
 | MoveBlockAction | [`void Undo()`](../Assets/Scripts/Features/Building/MoveBlockAction.cs#L19) | public |
 | MoveBlockAction | [`void Redo()`](../Assets/Scripts/Features/Building/MoveBlockAction.cs#L29) | public |
+
+## Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs
+
+// 职责：以蓝图实际模块尺寸绘制驻军部署线框、朝向和保守包围盒重叠提示。 // 入口：构造后读取Hint；Dispose释放运行时网格/材质，不创建敌机、碰撞或玩法组件。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| OutpostDeploymentPreview | [`void DrawGuard(OutpostGarrisonData guard, Bounds bounds, int index, bool selected, Color color)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L85) | private |
+| OutpostDeploymentPreview | [`void FaceLabels(Quaternion rotation)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L138) | internal |
+| OutpostDeploymentPreview | [`Bounds CalculateBounds(List<BlockData> blocks, Matrix4x4 deployment)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L146) | private static |
+| OutpostDeploymentPreview | [`Matrix4x4 BlockTransform(BlockData block)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L171) | private static |
+| OutpostDeploymentPreview | [`Vector3 Corner(int index)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L179) | private static |
+| OutpostDeploymentPreview | [`void AddBox(List<Vector3> vertices, List<int> indices, Matrix4x4 transform)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L184) | private static |
+| OutpostDeploymentPreview | [`void AddLine(List<Vector3> vertices, List<int> indices, Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L198) | private static |
+| OutpostDeploymentPreview | [`void Dispose()`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L206) | public |
 
 ## Assets/Scripts/Features/Building/RotateAxisHandle.cs
 
