@@ -55,6 +55,7 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
     private bool captureImages;
     private bool validateEnemies;
     private bool validateCombat;
+    private string flightBlueprint;
     private int cycleCount = 1;
     private int cycle;
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -88,6 +89,17 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
 
                 // AfterSceneLoad runs before scene Start; only this opt-in Player process mutates the loaded settings.
                 JsonUtility.FromJsonOverwrite("{\"randomizeSeed\":false,\"seed\":" + seed + "}", session.Settings);
+            }
+
+            int flightIndex = Array.IndexOf(args, "-world-smoke-enemy-flight");
+            if (flightIndex >= 0)
+            {
+                if (flightIndex + 1 >= args.Length || string.IsNullOrWhiteSpace(args[flightIndex + 1]) || args[flightIndex + 1].StartsWith("-"))
+                {
+                    throw new ArgumentException("Enemy flight requires an existing blueprint name.");
+                }
+
+                checks.flightBlueprint = args[flightIndex + 1];
             }
 
             int cyclesIndex = Array.IndexOf(args, "-world-smoke-cycles");
@@ -270,6 +282,23 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
 
                 // The general streaming route below uses a kinematic host again.
                 body.isKinematic = true;
+            }
+
+            if (flightBlueprint != null)
+            {
+                Next("natural-enemy-flight");
+                IEnumerator flight = EnemyFlightPlayerChecks.Run(player.GetComponent<ControlUnit>(), spawner, flightBlueprint, Check);
+                try
+                {
+                    while (flight.MoveNext())
+                    {
+                        yield return flight.Current;
+                    }
+                }
+                finally
+                {
+                    (flight as IDisposable)?.Dispose();
+                }
             }
 
             Next("idle");

@@ -1,0 +1,127 @@
+{
+    "status": "passed",
+    "graphics": "Direct3D11",
+    "seed": 14721,
+    "buildings": 9,
+    "blocks": 494,
+    "travelStart": {
+        "x": 16.0,
+        "y": 11.0,
+        "z": 16.0
+    },
+    "travelEnd": {
+        "x": 216.0,
+        "y": 11.0,
+        "z": 16.0
+    },
+    "memoryBytes": 139107071,
+    "requestedCycles": 1,
+    "completedCycles": 1,
+    "cycleMemoryBytes": [
+        139107071
+    ],
+    "cycleSeeds": [
+        14721
+    ],
+    "checks": [
+        "Main starts with world session",
+        "startup mask stays opaque during construct restoration",
+        "construct load exposes bounded progress",
+        "world generation remains valid",
+        "opaque loading mask renders while waiting or enabling",
+        "loading reaches completion",
+        "initial 81 terrain columns loaded",
+        "Player creates buildings from blueprint library",
+        "Player loads external blueprint library",
+        "spawn has real terrain collision",
+        "smoke target completes real ControlUnit startup before enemy flight",
+        "requested natural-flight enemy exists in current blueprint library",
+        "existing blueprint restores through production spawner for natural flight",
+        "enemy uses dynamic Rigidbody enabled AI and authored hover modules",
+        "natural enemy flight remains finite",
+        "natural EnemyController acquires player and produces movement intent",
+        "authored enemy power network supplies real hover output",
+        "enemy dynamic body moves in actual physics frames",
+        "existing enemy retains operational cockpit throughout 30 seconds",
+        "natural enemy weapons damage player with hostile attacker attribution",
+        "session stays playing",
+        "Player crosses multiple chunk boundaries",
+        "travel retains terrain under player",
+        "loaded terrain remains bounded",
+        "exit discards world and prepares fresh session",
+        "second preparation completes"
+    ],
+    "errors": [],
+    "phases": [
+        {
+            "name": "startup",
+            "frames": 1089,
+            "medianMs": 8.337020874023438,
+            "p95Ms": 8.649826049804688,
+            "p99Ms": 10.916709899902344,
+            "over50Ms": 1,
+            "maxMs": 116.24574279785156,
+            "totalMs": 9236.2275390625
+        },
+        {
+            "name": "loading-and-entry",
+            "frames": 23,
+            "medianMs": 8.334159851074219,
+            "p95Ms": 8.4228515625,
+            "p99Ms": 12.68768310546875,
+            "over50Ms": 0,
+            "maxMs": 29.592514038085939,
+            "totalMs": 217.16595458984376
+        },
+        {
+            "name": "natural-enemy-flight",
+            "frames": 3825,
+            "medianMs": 8.333206176757813,
+            "p95Ms": 8.907318115234375,
+            "p99Ms": 9.2010498046875,
+            "over50Ms": 1,
+            "maxMs": 100.37803649902344,
+            "totalMs": 32006.505859375
+        },
+        {
+            "name": "idle",
+            "frames": 360,
+            "medianMs": 8.33892822265625,
+            "p95Ms": 8.64410400390625,
+            "p99Ms": 8.70513916015625,
+            "over50Ms": 0,
+            "maxMs": 8.716583251953125,
+            "totalMs": 2999.99609375
+        },
+        {
+            "name": "travel",
+            "frames": 420,
+            "medianMs": 8.319854736328125,
+            "p95Ms": 8.82720947265625,
+            "p99Ms": 8.922576904296875,
+            "over50Ms": 0,
+            "maxMs": 9.586334228515625,
+            "totalMs": 3500.663818359375
+        },
+        {
+            "name": "exit",
+            "frames": 1,
+            "medianMs": 48.69842529296875,
+            "p95Ms": 48.69842529296875,
+            "p99Ms": 48.69842529296875,
+            "over50Ms": 0,
+            "maxMs": 48.69842529296875,
+            "totalMs": 48.69842529296875
+        },
+        {
+            "name": "reprepare",
+            "frames": 1117,
+            "medianMs": 8.33892822265625,
+            "p95Ms": 8.678436279296875,
+            "p99Ms": 8.96453857421875,
+            "over50Ms": 0,
+            "maxMs": 11.688232421875,
+            "totalMs": 9335.689453125
+        }
+    ]
+}
