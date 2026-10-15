@@ -870,8 +870,31 @@ def main():
         ],
     )
     graph(
+        "敌方蓝图完整恢复",
+        "源码推导：会话开始缓存有效蓝图，定时刷新随机选择；生成前检查每个模块资源和恰好一个驾驶舱，缺失或空模块整份拒绝。模块Awake应用CSV后恢复实例尺寸并刷新真实碰撞/连接点/质量，再累加刚体质量、设置敌方身份和运行归属；不以跳过模块生成残缺敌机。",
+        {
+            "A": "EnemySpawner.BeginPlayMode",
+            "B": "EnemySpawner.InitializeEnemyBlueprintPool",
+            "C": "EnemySpawner.IsValidBlueprint",
+            "D": "EnemySpawner.SpawnRandomEnemy",
+            "E": "EnemySpawner.SpawnBlockData",
+            "F": "EnemySpawner.ApplyBlueprintLocalTransform",
+            "G": "Block.RefreshRuntimeData",
+            "H": "EnemySpawner.PrepareRuntimeEnemy",
+            "I": "ControlUnit.RefreshChildren",
+            "J": "ControlUnit.AssignRuntimeOwnershipToBlocks",
+            "K": "EnemyIdentity.SetSpawnMaxHealth",
+            "L": "EnemySpawner.Update",
+        },
+        [
+            "A --> B", "B -->|加入缓存前| C", "A -->|允许首次出生| D", "L -->|刷新间隔| D",
+            "D --> E", "E -->|生成任何实体前| C", "E --> F", "E -->|恢复尺寸后| G",
+            "E -->|完整构造后| K", "E --> H", "E --> I", "E --> J",
+        ],
+    )
+    graph(
         "显式 Player 世界验证",
-        "源码推导：仅-world-smoke-report显式启用；可指定固定种子和1–10次会话。临时单驾驶舱载具沿200m脚本路线跨区块，通过正式退出链清空会话并等待世界与原载具恢复后重复；不经过返航货仓保存入口。仅测试进程内改变配置，阶段报告包含P99、尖峰及每轮内存采样，不代表真实驾驶或长期战斗。",
+        "源码推导：仅-world-smoke-report显式启用；可指定固定种子和1–10次会话。临时单驾驶舱载具沿200m脚本路线跨区块，通过正式退出链清空会话并等待世界与原载具恢复后重复；不经过返航货仓保存入口。可选-world-smoke-enemies只在临时运行对象中验证敌机尺寸/质量和非法模块拒绝，不保存蓝图。仅测试进程内改变配置，阶段报告包含P99、尖峰及每轮内存采样，不代表真实驾驶或长期战斗。",
         {
             "A": "WorldPlayerSmokeChecks.Initialize",
             "B": "WorldPlayerSmokeChecks.ReadInteger",
@@ -884,6 +907,9 @@ def main():
             "I": "WorldPlayerSmokeChecks.Save",
             "J": "WorldPlayerSmokeChecks.Finish",
             "K": "WorldPlayerSmokeChecks.CaptureError",
+            "L": "WorldPlayerSmokeChecks.ValidateEnemyBlueprints",
+            "M": "WorldPlayerSmokeChecks.EnemyFixture",
+            "N": "EnemySpawner.SpawnBlockData",
         },
         [
             "A -->|显式参数校验| B",
@@ -891,6 +917,7 @@ def main():
             "C -.->|后续引擎Update| D",
             "D -->|推进枚举器| E",
             "E --> F",
+            "E -->|显式-world-smoke-enemies| L", "L --> M", "L -->|实例尺寸与拒绝非法模块| N",
             "E -->|跨区块后正式退出| G",
             "E -->|阶段结束| H",
             "H --> I",

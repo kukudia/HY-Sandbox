@@ -1636,18 +1636,18 @@
 | EnemySpawner | [`void SpawnRandomEnemy()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L89) | public |
 | EnemySpawner | [`void SpawnEnemy()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L112) | public |
 | EnemySpawner | [`bool IsValidBlueprint(BlockDataList dataList, string enemyBlueprint)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L123) | private |
-| EnemySpawner | [`ControlUnit SpawnBlockData(BlockDataList dataList, string enemyBlueprint, Vector3 spawnPosition, Quaternion spawnRotation)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L134) | private |
-| EnemySpawner | [`void ApplyBlueprintLocalTransform(Transform blockTransform, Vector3 localPosition, Quaternion localRotation)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L232) | private |
-| EnemySpawner | [`Vector3 CleanIntegerPosition(Vector3 position, string blockName)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L238) | private |
-| EnemySpawner | [`Quaternion CleanRightAngleRotation(Quaternion rotation, string blockName)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L249) | private |
-| EnemySpawner | [`float SnapNearInteger(float value)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L261) | private |
-| EnemySpawner | [`float SnapNearRightAngle(float angle)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L267) | private |
-| EnemySpawner | [`bool IsIntegerVector(Vector3 value)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L273) | private |
-| EnemySpawner | [`bool IsRightAngleVector(Vector3 euler)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L278) | private |
-| EnemySpawner | [`bool IsNearlyInteger(float value)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L283) | private |
-| EnemySpawner | [`bool IsNearlyRightAngle(float angle)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L288) | private |
-| EnemySpawner | [`Vector3 GetSpawnPosition()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L294) | private |
-| EnemySpawner | [`void PrepareRuntimeEnemy(ControlUnit enemy)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L312) | private |
+| EnemySpawner | [`ControlUnit SpawnBlockData(BlockDataList dataList, string enemyBlueprint, Vector3 spawnPosition, Quaternion spawnRotation)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L156) | internal |
+| EnemySpawner | [`void ApplyBlueprintLocalTransform(Transform blockTransform, Vector3 localPosition, Quaternion localRotation)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L258) | private |
+| EnemySpawner | [`Vector3 CleanIntegerPosition(Vector3 position, string blockName)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L264) | private |
+| EnemySpawner | [`Quaternion CleanRightAngleRotation(Quaternion rotation, string blockName)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L275) | private |
+| EnemySpawner | [`float SnapNearInteger(float value)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L287) | private |
+| EnemySpawner | [`float SnapNearRightAngle(float angle)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L293) | private |
+| EnemySpawner | [`bool IsIntegerVector(Vector3 value)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L299) | private |
+| EnemySpawner | [`bool IsRightAngleVector(Vector3 euler)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L304) | private |
+| EnemySpawner | [`bool IsNearlyInteger(float value)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L309) | private |
+| EnemySpawner | [`bool IsNearlyRightAngle(float angle)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L314) | private |
+| EnemySpawner | [`Vector3 GetSpawnPosition()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L320) | private |
+| EnemySpawner | [`void PrepareRuntimeEnemy(ControlUnit enemy)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L338) | private |
 
 ## Assets/Scripts/Features/Combat/ExplosionPropagation.cs
 
@@ -3194,16 +3194,18 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldPlayerSmokeChecks | [`void Initialize()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L58) | private static |
-| WorldPlayerSmokeChecks | [`int ReadInteger(string[] args, int index, string name, int minimum, int maximum)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L103) | private static |
-| WorldPlayerSmokeChecks | [`void Start()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L113) | private |
-| WorldPlayerSmokeChecks | [`void Update()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L130) | private |
-| WorldPlayerSmokeChecks | [`IEnumerator Scenario()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L159) | private |
-| WorldPlayerSmokeChecks | [`void Check(bool valid, string name)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L284) | private |
-| WorldPlayerSmokeChecks | [`void Next(string name)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L297) | private |
-| WorldPlayerSmokeChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L310) | private |
-| WorldPlayerSmokeChecks | [`void Save()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L318) | private |
-| WorldPlayerSmokeChecks | [`void Finish()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L323) | private |
+| WorldPlayerSmokeChecks | [`void Initialize()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L59) | private static |
+| WorldPlayerSmokeChecks | [`int ReadInteger(string[] args, int index, string name, int minimum, int maximum)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L105) | private static |
+| WorldPlayerSmokeChecks | [`void Start()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L115) | private |
+| WorldPlayerSmokeChecks | [`void Update()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L132) | private |
+| WorldPlayerSmokeChecks | [`IEnumerator Scenario()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L161) | private |
+| WorldPlayerSmokeChecks | [`BlockDataList EnemyFixture()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L303) | private static |
+| WorldPlayerSmokeChecks | [`IEnumerator ValidateEnemyBlueprints(EnemySpawner spawner, Vector3 origin)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L339) | private |
+| WorldPlayerSmokeChecks | [`void Check(bool valid, string name)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L399) | private |
+| WorldPlayerSmokeChecks | [`void Next(string name)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L412) | private |
+| WorldPlayerSmokeChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L425) | private |
+| WorldPlayerSmokeChecks | [`void Save()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L433) | private |
+| WorldPlayerSmokeChecks | [`void Finish()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L438) | private |
 
 ## Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs
 

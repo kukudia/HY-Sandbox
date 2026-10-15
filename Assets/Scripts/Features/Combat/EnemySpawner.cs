@@ -128,10 +128,32 @@ public class EnemySpawner : MonoBehaviour
             return false;
         }
 
+        int cockpits = 0;
+        foreach (BlockData data in dataList.blocks)
+        {
+            GameObject prefab = data != null && !string.IsNullOrWhiteSpace(data.resourcePath) ? Resources.Load<GameObject>(BuildManager.ConvertToResourcesPath(data.resourcePath)) : null;
+            if (prefab == null || prefab.GetComponent<Block>() == null)
+            {
+                Debug.LogWarning($"Enemy blueprint {enemyBlueprint} contains a missing or invalid module; spawn skipped.");
+                return false;
+            }
+
+            if (prefab.GetComponent<Cockpit>() != null)
+            {
+                cockpits++;
+            }
+        }
+
+        if (cockpits != 1)
+        {
+            Debug.LogWarning($"Enemy blueprint {enemyBlueprint} must contain exactly one Cockpit.");
+            return false;
+        }
+
         return true;
     }
 
-    private ControlUnit SpawnBlockData(BlockDataList dataList, string enemyBlueprint, Vector3 spawnPosition, Quaternion spawnRotation)
+    internal ControlUnit SpawnBlockData(BlockDataList dataList, string enemyBlueprint, Vector3 spawnPosition, Quaternion spawnRotation)
     {
         if (!IsValidBlueprint(dataList, enemyBlueprint))
         {
@@ -151,7 +173,8 @@ public class EnemySpawner : MonoBehaviour
             if (prefab == null)
             {
                 Debug.LogWarning($"Cannot spawn enemy block at Resources/{data.resourcePath}.");
-                continue;
+                Destroy(unitObject);
+                return null;
             }
 
             Vector3 localPosition = new Vector3(data.posX, data.posY, data.posZ);
@@ -167,9 +190,12 @@ public class EnemySpawner : MonoBehaviour
             Block block = blockObject.GetComponent<Block>();
             if (block != null)
             {
+                bool shapeChanged = block.x != data.x || block.y != data.y || block.z != data.z;
                 block.x = data.x;
                 block.y = data.y;
                 block.z = data.z;
+                // CSV Awake 先应用模板；随后必须像玩家/建筑恢复一样重建实例几何和质量。
+                block.RefreshRuntimeData(shapeChanged);
                 block.resourcePath = data.resourcePath;
                 mass += block.mass;
                 spawnedBlocks.Add(block);

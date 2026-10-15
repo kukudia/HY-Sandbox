@@ -53,6 +53,7 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
     private float deadline;
     private bool finished;
     private bool captureImages;
+    private bool validateEnemies;
     private int cycleCount = 1;
     private int cycle;
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -70,6 +71,7 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
         WorldPlayerSmokeChecks checks = root.AddComponent<WorldPlayerSmokeChecks>();
         checks.reportPath = args[index + 1];
         checks.captureImages = Array.IndexOf(args, "-world-smoke-capture") >= 0;
+        checks.validateEnemies = Array.IndexOf(args, "-world-smoke-enemies") >= 0;
         try
         {
             int seedIndex = Array.IndexOf(args, "-world-smoke-seed");
@@ -231,6 +233,23 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
             Check(
                 Physics.Raycast(player.transform.position + Vector3.up * 2f, Vector3.down, 100f),
                 "spawn has real terrain collision");
+            if (validateEnemies)
+            {
+                Next("enemy-blueprint");
+                IEnumerator enemies = ValidateEnemyBlueprints(spawner, player.transform.position);
+                try
+                {
+                    while (enemies.MoveNext())
+                    {
+                        yield return enemies.Current;
+                    }
+                }
+                finally
+                {
+                    (enemies as IDisposable)?.Dispose();
+                }
+            }
+
             Next("idle");
             for (int i = 0; i < 360; i++)
             {
@@ -279,6 +298,102 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
         }
 
         Next("done");
+    }
+
+    private static BlockDataList EnemyFixture()
+    {
+        var data = new BlockDataList();
+        foreach (string resource in new[]
+        {
+            "Cockpit",
+            "1x1x1"
+        }
+
+        )
+        {
+            var block = new BlockData(Resources.Load<GameObject>("Blocks/" + resource).GetComponent<Block>())
+            {
+                id = "enemy-probe-" + resource,
+                resourcePath = "Blocks/" + resource,
+                posX = resource == "Cockpit" ? 0f : 3.5f,
+                posY = 0f,
+                posZ = 0f,
+                rotX = 0f,
+                rotY = 0f,
+                rotZ = 0f,
+                rotW = 1f
+            };
+            if (resource != "Cockpit")
+            {
+                block.x = 3;
+                block.y = 2;
+                block.z = 1;
+            }
+
+            data.blocks.Add(block);
+        }
+
+        return data;
+    }
+
+    private IEnumerator ValidateEnemyBlueprints(EnemySpawner spawner, Vector3 origin)
+    {
+        BlockDataList fixture = EnemyFixture();
+        ControlUnit enemy = spawner.SpawnBlockData(
+            fixture,
+            "Explicit enemy validation",
+            origin + new Vector3(25f, 15f, 0f),
+            Quaternion.Euler(0f, 90f, 0f));
+        Check(enemy != null, "valid enemy blueprint spawns a complete unit");
+        try
+        {
+            enemy.GetComponent<Rigidbody>().isKinematic = true;
+            yield return null;
+            Block resized = enemy.GetComponentsInChildren<Block>().First(block => block.resourcePath == "Blocks/1x1x1");
+            Check(
+                resized.x == 3 && resized.y == 2 && resized.z == 1 && Vector3.Distance(resized.GetComponent<BoxCollider>().size, new Vector3(2.9f, 1.9f, 0.9f)) < .001f,
+                "enemy instance dimensions rebuild its real collider after Awake");
+            Check(
+                Mathf.Approximately(resized.mass, 6f) && Mathf.Approximately(
+                    enemy.GetComponent<Rigidbody>().mass,
+                    enemy.GetComponentsInChildren<Block>().Sum(block => block.mass)),
+                "enemy instance volume updates block and aggregate rigidbody mass");
+            Check(
+                Vector3.Distance(resized.transform.localPosition, new Vector3(3.5f, 0f, 0f)) < .001f && enemy.faction == UnitFaction.Enemy && enemy.cockpit.faction == UnitFaction.Enemy,
+                "enemy restore preserves local pose and enemy ownership");
+        }
+        finally
+        {
+            Object.Destroy(enemy.gameObject);
+        }
+
+        yield return null;
+        int activeUnits = ControlUnit.RuntimeUnits.Count;
+        fixture.blocks[1].resourcePath = "Blocks/MissingExplicitValidationModule";
+        ControlUnit incomplete = spawner.SpawnBlockData(fixture, "Missing module validation", origin + Vector3.up * 15f, Quaternion.identity);
+        if (incomplete != null)
+        {
+            Object.Destroy(incomplete.gameObject);
+        }
+
+        Check(
+            incomplete == null && ControlUnit.RuntimeUnits.Count == activeUnits,
+            "missing enemy resource rejects the entire blueprint without publishing a partial unit");
+        fixture = EnemyFixture();
+        fixture.blocks[1] = null;
+        Check(
+            spawner.SpawnBlockData(fixture, "Null module validation", origin, Quaternion.identity) == null,
+            "null enemy module rejects blueprint without throwing");
+        fixture = EnemyFixture();
+        fixture.blocks.RemoveAt(0);
+        Check(
+            spawner.SpawnBlockData(fixture, "No cockpit validation", origin, Quaternion.identity) == null,
+            "enemy blueprint without a cockpit rejects before instantiation");
+        fixture = EnemyFixture();
+        fixture.blocks.Add(fixture.blocks[0]);
+        Check(
+            spawner.SpawnBlockData(fixture, "Duplicate cockpit validation", origin, Quaternion.identity) == null && ControlUnit.RuntimeUnits.Count == activeUnits,
+            "enemy blueprint with duplicate cockpits cannot publish a partial unit");
     }
 
     private void Check(bool valid, string name)

@@ -2133,39 +2133,117 @@ flowchart TD
 - [ProceduralVoxelWorld.RestoreEdits](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L415)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|RestoreEdits -->
 
+## 敌方蓝图完整恢复
+
+源码推导：会话开始缓存有效蓝图，定时刷新随机选择；生成前检查每个模块资源和恰好一个驾驶舱，缺失或空模块整份拒绝。模块Awake应用CSV后恢复实例尺寸并刷新真实碰撞/连接点/质量，再累加刚体质量、设置敌方身份和运行归属；不以跳过模块生成残缺敌机。
+
+```mermaid
+flowchart TD
+    A["EnemySpawner.BeginPlayMode()"]
+    click A "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L43" "打开源码"
+    B["EnemySpawner.InitializeEnemyBlueprintPool()"]
+    click B "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L54" "打开源码"
+    C["EnemySpawner.IsValidBlueprint()"]
+    click C "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L123" "打开源码"
+    D["EnemySpawner.SpawnRandomEnemy()"]
+    click D "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L89" "打开源码"
+    E["EnemySpawner.SpawnBlockData()"]
+    click E "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L156" "打开源码"
+    F["EnemySpawner.ApplyBlueprintLocalTransform()"]
+    click F "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L258" "打开源码"
+    G["Block.RefreshRuntimeData()"]
+    click G "../Assets/Scripts/Features/Simulation/Block.cs#L123" "打开源码"
+    H["EnemySpawner.PrepareRuntimeEnemy()"]
+    click H "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L338" "打开源码"
+    I["ControlUnit.RefreshChildren()"]
+    click I "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L159" "打开源码"
+    J["ControlUnit.AssignRuntimeOwnershipToBlocks()"]
+    click J "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L209" "打开源码"
+    K["EnemyIdentity.SetSpawnMaxHealth()"]
+    click K "../Assets/Scripts/Features/Combat/EnemyIdentity.cs#L18" "打开源码"
+    L["EnemySpawner.Update()"]
+    click L "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L26" "打开源码"
+    A --> B
+    B -->|加入缓存前| C
+    A -->|允许首次出生| D
+    L -->|刷新间隔| D
+    D --> E
+    E -->|生成任何实体前| C
+    E --> F
+    E -->|恢复尺寸后| G
+    E -->|完整构造后| K
+    E --> H
+    E --> I
+    E --> J
+```
+
+- [EnemySpawner.BeginPlayMode](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L43)
+<!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|BeginPlayMode -->
+- [EnemySpawner.InitializeEnemyBlueprintPool](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L54)
+<!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|InitializeEnemyBlueprintPool -->
+- [EnemySpawner.IsValidBlueprint](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L123)
+<!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|IsValidBlueprint -->
+- [EnemySpawner.SpawnRandomEnemy](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L89)
+<!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|SpawnRandomEnemy -->
+- [EnemySpawner.SpawnBlockData](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L156)
+<!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|SpawnBlockData -->
+- [EnemySpawner.ApplyBlueprintLocalTransform](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L258)
+<!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|ApplyBlueprintLocalTransform -->
+- [Block.RefreshRuntimeData](../Assets/Scripts/Features/Simulation/Block.cs#L123)
+<!-- source: Assets/Scripts/Features/Simulation/Block.cs|RefreshRuntimeData -->
+- [EnemySpawner.PrepareRuntimeEnemy](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L338)
+<!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|PrepareRuntimeEnemy -->
+- [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L159)
+<!-- source: Assets/Scripts/Features/Simulation/ControlUnit.cs|RefreshChildren -->
+- [ControlUnit.AssignRuntimeOwnershipToBlocks](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L209)
+<!-- source: Assets/Scripts/Features/Simulation/ControlUnit.cs|AssignRuntimeOwnershipToBlocks -->
+- [EnemyIdentity.SetSpawnMaxHealth](../Assets/Scripts/Features/Combat/EnemyIdentity.cs#L18)
+<!-- source: Assets/Scripts/Features/Combat/EnemyIdentity.cs|SetSpawnMaxHealth -->
+- [EnemySpawner.Update](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L26)
+<!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|Update -->
+
 ## 显式 Player 世界验证
 
-源码推导：仅-world-smoke-report显式启用；可指定固定种子和1–10次会话。临时单驾驶舱载具沿200m脚本路线跨区块，通过正式退出链清空会话并等待世界与原载具恢复后重复；不经过返航货仓保存入口。仅测试进程内改变配置，阶段报告包含P99、尖峰及每轮内存采样，不代表真实驾驶或长期战斗。
+源码推导：仅-world-smoke-report显式启用；可指定固定种子和1–10次会话。临时单驾驶舱载具沿200m脚本路线跨区块，通过正式退出链清空会话并等待世界与原载具恢复后重复；不经过返航货仓保存入口。可选-world-smoke-enemies只在临时运行对象中验证敌机尺寸/质量和非法模块拒绝，不保存蓝图。仅测试进程内改变配置，阶段报告包含P99、尖峰及每轮内存采样，不代表真实驾驶或长期战斗。
 
 ```mermaid
 flowchart TD
     A["WorldPlayerSmokeChecks.Initialize()"]
-    click A "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L58" "打开源码"
+    click A "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L59" "打开源码"
     B["WorldPlayerSmokeChecks.ReadInteger()"]
-    click B "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L103" "打开源码"
+    click B "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L105" "打开源码"
     C["WorldPlayerSmokeChecks.Start()"]
-    click C "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L113" "打开源码"
+    click C "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L115" "打开源码"
     D["WorldPlayerSmokeChecks.Update()"]
-    click D "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L130" "打开源码"
+    click D "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L132" "打开源码"
     E["WorldPlayerSmokeChecks.Scenario()"]
-    click E "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L159" "打开源码"
+    click E "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L161" "打开源码"
     F["MainUIPanels.PlayStart()"]
     click F "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L226" "打开源码"
     G["MainUIPanels.CompletePlayEnd()"]
     click G "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L273" "打开源码"
     H["WorldPlayerSmokeChecks.Next()"]
-    click H "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L297" "打开源码"
+    click H "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L412" "打开源码"
     I["WorldPlayerSmokeChecks.Save()"]
-    click I "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L318" "打开源码"
+    click I "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L433" "打开源码"
     J["WorldPlayerSmokeChecks.Finish()"]
-    click J "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L323" "打开源码"
+    click J "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L438" "打开源码"
     K["WorldPlayerSmokeChecks.CaptureError()"]
-    click K "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L310" "打开源码"
+    click K "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L425" "打开源码"
+    L["WorldPlayerSmokeChecks.ValidateEnemyBlueprints()"]
+    click L "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L339" "打开源码"
+    M["WorldPlayerSmokeChecks.EnemyFixture()"]
+    click M "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L303" "打开源码"
+    N["EnemySpawner.SpawnBlockData()"]
+    click N "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L156" "打开源码"
     A -->|显式参数校验| B
     A -.->|创建组件后引擎Start| C
     C -.->|后续引擎Update| D
     D -->|推进枚举器| E
     E --> F
+    E -->|显式-world-smoke-enemies| L
+    L --> M
+    L -->|实例尺寸与拒绝非法模块| N
     E -->|跨区块后正式退出| G
     E -->|阶段结束| H
     H --> I
@@ -2176,25 +2254,31 @@ flowchart TD
     J -->|最终状态及正常退出| I
 ```
 
-- [WorldPlayerSmokeChecks.Initialize](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L58)
+- [WorldPlayerSmokeChecks.Initialize](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L59)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Initialize -->
-- [WorldPlayerSmokeChecks.ReadInteger](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L103)
+- [WorldPlayerSmokeChecks.ReadInteger](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L105)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|ReadInteger -->
-- [WorldPlayerSmokeChecks.Start](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L113)
+- [WorldPlayerSmokeChecks.Start](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L115)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Start -->
-- [WorldPlayerSmokeChecks.Update](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L130)
+- [WorldPlayerSmokeChecks.Update](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L132)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Update -->
-- [WorldPlayerSmokeChecks.Scenario](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L159)
+- [WorldPlayerSmokeChecks.Scenario](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L161)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Scenario -->
 - [MainUIPanels.PlayStart](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L226)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayStart -->
 - [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L273)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|CompletePlayEnd -->
-- [WorldPlayerSmokeChecks.Next](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L297)
+- [WorldPlayerSmokeChecks.Next](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L412)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Next -->
-- [WorldPlayerSmokeChecks.Save](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L318)
+- [WorldPlayerSmokeChecks.Save](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L433)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Save -->
-- [WorldPlayerSmokeChecks.Finish](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L323)
+- [WorldPlayerSmokeChecks.Finish](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L438)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Finish -->
-- [WorldPlayerSmokeChecks.CaptureError](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L310)
+- [WorldPlayerSmokeChecks.CaptureError](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L425)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|CaptureError -->
+- [WorldPlayerSmokeChecks.ValidateEnemyBlueprints](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L339)
+<!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|ValidateEnemyBlueprints -->
+- [WorldPlayerSmokeChecks.EnemyFixture](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L303)
+<!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|EnemyFixture -->
+- [EnemySpawner.SpawnBlockData](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L156)
+<!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|SpawnBlockData -->
