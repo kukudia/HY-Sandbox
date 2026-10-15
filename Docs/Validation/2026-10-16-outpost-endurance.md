@@ -19,3 +19,5 @@ Unity6000.3.11f1普通非Development Windows Player，D3D11，请求1920×1080�
 退出后每轮Ready阶段引擎分配内存为133700223、133914359、134000127字节，对象总数为13957、13909、13957；隐藏敌机/掉落实体清理检查通过。该路线也不等同人工驾驶全过程或长期压力上限。
 
 [整批报告](2026-10-16-outpost-full-recovery.json)。首次容量不足的失败报告保留为[夹具前置证据](2026-10-16-outpost-full-recovery-capacity-before.json)，它帮助区分平台容量阻塞与生产回收逻辑。
+
+新普通Windows D3D11构建0错误/1警告，整批Player日志中的运动学刚体警告0条；252脚本可读性、29图/导航、9项Python工具检查通过，dotnet build 0错误/4个既有警告，git diff --check通过。运行后28份用户JSON哈希未变，Main保留Edit状态且场景不脏；起始六份工程/配置/布局差异保留。
