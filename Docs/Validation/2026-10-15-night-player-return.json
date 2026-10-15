@@ -1,0 +1,129 @@
+{
+    "status": "passed",
+    "graphics": "Direct3D11",
+    "seed": 14721,
+    "buildings": 9,
+    "blocks": 494,
+    "travelStart": {
+        "x": 16.0,
+        "y": 11.0,
+        "z": 16.0
+    },
+    "travelEnd": {
+        "x": 216.0,
+        "y": 11.0,
+        "z": 16.0
+    },
+    "memoryBytes": 138055591,
+    "requestedCycles": 1,
+    "completedCycles": 1,
+    "cycleMemoryBytes": [
+        138055591
+    ],
+    "cycleSeeds": [
+        14721
+    ],
+    "checks": [
+        "Main starts with world session",
+        "startup mask stays opaque during construct restoration",
+        "construct load exposes bounded progress",
+        "world generation remains valid",
+        "opaque loading mask renders while waiting or enabling",
+        "loading reaches completion",
+        "initial 81 terrain columns loaded",
+        "Player creates buildings from blueprint library",
+        "Player loads external blueprint library",
+        "spawn has real terrain collision",
+        "session stays playing",
+        "Player crosses multiple chunk boundaries",
+        "travel retains terrain under player",
+        "loaded terrain remains bounded",
+        "exit discards world and prepares fresh session",
+        "second preparation completes",
+        "return fixture loads connected cockpit and cargo hold through production loader",
+        "normal UI return saves before ending actual world session",
+        "normal return persists cargo into isolated player blueprint",
+        "normal return completes atomic replace and backup in Player",
+        "build reload restores returned cargo before next departure",
+        "second departure retains exactly one returned part",
+        "real cockpit destruction opens usable death respawn action",
+        "death respawn clears saved cargo while preserving original modules",
+        "death reload restores empty cargo in ready build session",
+        "third departure starts after death and respawn",
+        "post-death departure returns safely to ready build session",
+        "isolated return route restores original read-only save and ready world"
+    ],
+    "errors": [],
+    "phases": [
+        {
+            "name": "startup",
+            "frames": 1089,
+            "medianMs": 8.336067199707032,
+            "p95Ms": 8.626937866210938,
+            "p99Ms": 10.84136962890625,
+            "over50Ms": 1,
+            "maxMs": 127.67744445800781,
+            "totalMs": 9252.6650390625
+        },
+        {
+            "name": "loading-and-entry",
+            "frames": 23,
+            "medianMs": 8.327484130859375,
+            "p95Ms": 8.378028869628907,
+            "p99Ms": 12.50457763671875,
+            "over50Ms": 0,
+            "maxMs": 29.198646545410158,
+            "totalMs": 216.57086181640626
+        },
+        {
+            "name": "idle",
+            "frames": 360,
+            "medianMs": 8.339881896972657,
+            "p95Ms": 8.562088012695313,
+            "p99Ms": 8.6822509765625,
+            "over50Ms": 0,
+            "maxMs": 11.851310729980469,
+            "totalMs": 3000.7333984375
+        },
+        {
+            "name": "travel",
+            "frames": 420,
+            "medianMs": 8.33892822265625,
+            "p95Ms": 9.033203125,
+            "p99Ms": 10.517120361328125,
+            "over50Ms": 1,
+            "maxMs": 91.51840209960938,
+            "totalMs": 3591.990478515625
+        },
+        {
+            "name": "exit",
+            "frames": 1,
+            "medianMs": 49.51667785644531,
+            "p95Ms": 49.51667785644531,
+            "p99Ms": 49.51667785644531,
+            "over50Ms": 0,
+            "maxMs": 49.51667785644531,
+            "totalMs": 49.51667785644531
+        },
+        {
+            "name": "reprepare",
+            "frames": 1106,
+            "medianMs": 8.340835571289063,
+            "p95Ms": 8.640289306640625,
+            "p99Ms": 9.119033813476563,
+            "over50Ms": 0,
+            "maxMs": 11.522293090820313,
+            "totalMs": 9241.6513671875
+        },
+        {
+            "name": "return-death-redeparture",
+            "frames": 2564,
+            "medianMs": 8.335113525390625,
+            "p95Ms": 8.5601806640625,
+            "p99Ms": 8.7127685546875,
+            "over50Ms": 0,
+            "maxMs": 25.3448486328125,
+            "totalMs": 21426.12109375
+        }
+    ]
+}

@@ -55,6 +55,7 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
     private bool captureImages;
     private bool validateEnemies;
     private bool validateCombat;
+    private bool validateReturn;
     private string flightBlueprint;
     private int cycleCount = 1;
     private int cycle;
@@ -75,6 +76,7 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
         checks.captureImages = Array.IndexOf(args, "-world-smoke-capture") >= 0;
         checks.validateEnemies = Array.IndexOf(args, "-world-smoke-enemies") >= 0;
         checks.validateCombat = Array.IndexOf(args, "-world-smoke-combat") >= 0;
+        checks.validateReturn = Array.IndexOf(args, "-world-smoke-return") >= 0;
         try
         {
             int seedIndex = Array.IndexOf(args, "-world-smoke-seed");
@@ -346,6 +348,23 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
 
             Check(session.State == WorldSessionState.Ready, "second preparation completes");
             report.completedCycles++;
+        }
+
+        if (validateReturn)
+        {
+            Next("return-death-redeparture");
+            IEnumerator returns = WorldReturnPlayerChecks.Run(Check);
+            try
+            {
+                while (returns.MoveNext())
+                {
+                    yield return returns.Current;
+                }
+            }
+            finally
+            {
+                (returns as IDisposable)?.Dispose();
+            }
         }
 
         Next("done");

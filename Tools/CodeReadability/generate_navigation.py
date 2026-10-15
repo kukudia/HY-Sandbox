@@ -894,7 +894,7 @@ def main():
     )
     graph(
         "显式 Player 世界验证",
-        "源码推导：仅-world-smoke-report显式启用；可指定固定种子和1–10次会话。临时单驾驶舱载具沿200m脚本路线跨区块，通过正式退出链清空会话并等待世界与原载具恢复后重复；不经过返航货仓保存入口。可选-world-smoke-enemies只在临时运行对象中验证敌机尺寸/质量和非法模块拒绝，不保存蓝图。可选-world-smoke-combat注入Input System键盘、验证真实推进后固定战斗平台，等待炮弹击毁和机器人回收入仓；不包含人工驾驶或返航文件保存。可选-world-smoke-enemy-flight保留指定既有敌机的动态刚体、AI和全部参数，等待自然追踪/悬浮/武器伤害；玩家仍为固定烟测目标。仅测试进程内改变配置，阶段报告包含P99、尖峰及每轮内存采样，不代表真实驾驶或长期战斗。",
+        "源码推导：仅-world-smoke-report显式启用；可指定固定种子和1–10次会话。临时单驾驶舱载具沿200m脚本路线跨区块，通过正式退出链清空会话并等待世界与原载具恢复后重复；一般循环不经过返航货仓保存入口。可选-world-smoke-enemies只在临时运行对象中验证敌机尺寸/质量和非法模块拒绝，不保存蓝图。可选-world-smoke-combat注入Input System键盘、验证真实推进后固定战斗平台，等待炮弹击毁和机器人回收入仓；不包含人工驾驶或返航文件保存。可选-world-smoke-enemy-flight保留指定既有敌机的动态刚体、AI和全部参数，等待自然追踪/悬浮/武器伤害；玩家仍为固定烟测目标。可选-world-smoke-return在一般循环结束后隔离缓存目录文件仓，真实UI返航写盘/重载、驾驶舱销毁/重生清货与再次出发；最后只读恢复原载具。仅测试进程内改变配置，阶段报告包含P99、尖峰及每轮内存采样，不代表真实驾驶或长期战斗。",
         {
             "A": "WorldPlayerSmokeChecks.Initialize",
             "B": "WorldPlayerSmokeChecks.ReadInteger",
@@ -912,6 +912,7 @@ def main():
             "N": "EnemySpawner.SpawnBlockData",
             "O": "WorldCombatPlayerChecks.Run",
             "P": "EnemyFlightPlayerChecks.Run",
+            "Q": "WorldReturnPlayerChecks.Run",
         },
         [
             "A -->|显式参数校验| B",
@@ -922,6 +923,7 @@ def main():
             "E -->|显式-world-smoke-enemies| L", "L --> M", "L -->|实例尺寸与拒绝非法模块| N",
             "E -->|显式-world-smoke-combat| O",
             "E -->|显式-world-smoke-enemy-flight指定既有蓝图| P",
+            "E -->|循环完成后显式-world-smoke-return| Q",
             "E -->|跨区块后正式退出| G",
             "E -->|阶段结束| H",
             "H --> I",
