@@ -1,0 +1,159 @@
+{
+    "status": "passed",
+    "graphics": "Direct3D11",
+    "seed": 14721,
+    "buildings": 28,
+    "blocks": 1967,
+    "travelStart": {
+        "x": 16.0,
+        "y": 11.0,
+        "z": 16.0
+    },
+    "travelEnd": {
+        "x": 216.0,
+        "y": 11.0,
+        "z": 16.0
+    },
+    "memoryBytes": 153956495,
+    "requestedCycles": 2,
+    "completedCycles": 2,
+    "cycleMemoryBytes": [
+        153752175,
+        153956495
+    ],
+    "cycleSeeds": [
+        14721,
+        14721
+    ],
+    "checks": [
+        "Main starts with world session",
+        "startup mask stays opaque during construct restoration",
+        "construct load exposes bounded progress",
+        "world generation remains valid",
+        "opaque loading mask renders while waiting or enabling",
+        "loading reaches completion",
+        "initial 81 terrain columns loaded",
+        "Player creates buildings from blueprint library",
+        "Player loads external blueprint library",
+        "spawn has real terrain collision",
+        "session stays playing",
+        "Player crosses multiple chunk boundaries",
+        "travel retains terrain under player",
+        "loaded terrain remains bounded",
+        "exit discards world and prepares fresh session",
+        "second preparation completes"
+    ],
+    "errors": [],
+    "phases": [
+        {
+            "name": "startup",
+            "frames": 1301,
+            "medianMs": 8.425712585449219,
+            "p95Ms": 14.316558837890625,
+            "p99Ms": 32.03010559082031,
+            "over50Ms": 3,
+            "maxMs": 649.8529663085938,
+            "totalMs": 12979.07421875
+        },
+        {
+            "name": "cycle-1/loading-and-entry",
+            "frames": 86,
+            "medianMs": 8.337020874023438,
+            "p95Ms": 8.440017700195313,
+            "p99Ms": 15.985488891601563,
+            "over50Ms": 0,
+            "maxMs": 46.845436096191409,
+            "totalMs": 763.0472412109375
+        },
+        {
+            "name": "cycle-1/idle",
+            "frames": 360,
+            "medianMs": 8.356094360351563,
+            "p95Ms": 9.01031494140625,
+            "p99Ms": 9.294509887695313,
+            "over50Ms": 0,
+            "maxMs": 12.844085693359375,
+            "totalMs": 3004.17138671875
+        },
+        {
+            "name": "cycle-1/travel",
+            "frames": 420,
+            "medianMs": 8.344650268554688,
+            "p95Ms": 9.717941284179688,
+            "p99Ms": 11.137008666992188,
+            "over50Ms": 1,
+            "maxMs": 122.35641479492188,
+            "totalMs": 3623.460693359375
+        },
+        {
+            "name": "cycle-1/exit",
+            "frames": 1,
+            "medianMs": 66.16973876953125,
+            "p95Ms": 66.16973876953125,
+            "p99Ms": 66.16973876953125,
+            "over50Ms": 1,
+            "maxMs": 66.16973876953125,
+            "totalMs": 66.16973876953125
+        },
+        {
+            "name": "cycle-1/reprepare",
+            "frames": 1295,
+            "medianMs": 8.363723754882813,
+            "p95Ms": 9.355545043945313,
+            "p99Ms": 19.458770751953126,
+            "over50Ms": 0,
+            "maxMs": 28.31268310546875,
+            "totalMs": 11222.0234375
+        },
+        {
+            "name": "cycle-2/loading-and-entry",
+            "frames": 87,
+            "medianMs": 8.3465576171875,
+            "p95Ms": 8.457183837890625,
+            "p99Ms": 11.501312255859375,
+            "over50Ms": 0,
+            "maxMs": 25.50506591796875,
+            "totalMs": 749.927490234375
+        },
+        {
+            "name": "cycle-2/idle",
+            "frames": 360,
+            "medianMs": 8.350372314453125,
+            "p95Ms": 8.93402099609375,
+            "p99Ms": 9.098052978515625,
+            "over50Ms": 0,
+            "maxMs": 9.246826171875,
+            "totalMs": 2999.45458984375
+        },
+        {
+            "name": "cycle-2/travel",
+            "frames": 420,
+            "medianMs": 8.36181640625,
+            "p95Ms": 9.555816650390625,
+            "p99Ms": 9.899139404296875,
+            "over50Ms": 0,
+            "maxMs": 20.542144775390626,
+            "totalMs": 3518.073974609375
+        },
+        {
+            "name": "cycle-2/exit",
+            "frames": 1,
+            "medianMs": 62.534332275390628,
+            "p95Ms": 62.534332275390628,
+            "p99Ms": 62.534332275390628,
+            "over50Ms": 1,
+            "maxMs": 62.534332275390628,
+            "totalMs": 62.534332275390628
+        },
+        {
+            "name": "cycle-2/reprepare",
+            "frames": 1295,
+            "medianMs": 8.36181640625,
+            "p95Ms": 9.494781494140625,
+            "p99Ms": 17.2271728515625,
+            "over50Ms": 0,
+            "maxMs": 28.0303955078125,
+            "totalMs": 11199.9970703125
+        }
+    ]
+}

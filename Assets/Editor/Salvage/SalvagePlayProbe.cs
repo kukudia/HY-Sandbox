@@ -231,13 +231,20 @@ public static class SalvagePlayProbe
         resourcePath = "Blocks/UniversalThruster",
         amount = 1
     };
-    private static BuildingRuntime SalvageBuilding(WorldBuildingManager manager, UnitFaction faction)
+    private static BuildingRuntime SalvageBuilding(WorldBuildingManager manager, UnitFaction faction, bool withBot = false)
     {
         var blueprint = new BlockDataList
         {
             foundation = new BuildingFoundationData()
         };
-        foreach (string name in new[]
+        foreach (string name in withBot ? new[]
+        {
+            "1x1x1",
+            "CargoHold",
+            "CollectionBotContainer"
+        }
+
+        : new[]
         {
             "1x1x1",
             "CargoHold"
@@ -250,7 +257,7 @@ public static class SalvagePlayProbe
             {
                 id = name,
                 resourcePath = "Blocks/" + name,
-                posX = -0.5f,
+                posX = name == "CollectionBotContainer" ? 4f : -0.5f,
                 posY = name == "1x1x1" ? 0.5f : 4f,
                 posZ = 0.5f,
                 rotW = 1f
@@ -265,7 +272,7 @@ public static class SalvagePlayProbe
             blueprint.blocks.Add(data);
         }
 
-        return manager.RestoreBuilding(new WorldBuildingState { instanceId = Guid.NewGuid().ToString("N"), blueprintName = "Salvage probe", faction = faction, position = new Vector3(200, 100, 200), blueprint = blueprint, durability = new[] { 100f, 100f } });
+        return manager.RestoreBuilding(new WorldBuildingState { instanceId = Guid.NewGuid().ToString("N"), blueprintName = "Salvage probe", faction = faction, position = new Vector3(200, 100, 200), blueprint = blueprint, durability = Enumerable.Repeat(100f, blueprint.blocks.Count).ToArray() });
     }
 
     private static IEnumerator BuildingSalvage()
@@ -321,6 +328,74 @@ public static class SalvagePlayProbe
             }
 
             LootDrop.ClearSession();
+            for (int unloadMode = 0; unloadMode < 3; unloadMode++)
+            {
+                bool exhausted = unloadMode > 0;
+                serialized.Update();
+                serialized.FindProperty("maximumDebrisPieces").intValue = exhausted ? 0 : 12;
+                serialized.ApplyModifiedPropertiesWithoutUndo();
+                BuildingRuntime carrier = SalvageBuilding(manager, UnitFaction.Player, true);
+                CollectionBot flying = carrier.GetComponentInChildren<CollectionBot>();
+                flying.obstacleMask = 0;
+                flying.targetRange = 30;
+                flying.movementSpeed = 10f;
+                foreach (Power power in carrier.GetComponentsInChildren<Power>())
+                {
+                    power.SetWorkRequested(carrier, true);
+                    power.currentPower = 1000f;
+                }
+
+                LootDrop transported = LootDrop.Spawn(Part(), flying.transform.position + Vector3.forward * 5f);
+                float limit = Time.time + 20f;
+                while (!flying.HasCargo && Time.time < limit)
+                {
+                    yield return 0.05f;
+                }
+
+                Check(
+                    "Building drone really leaves home and carries cargo " + exhausted,
+                    flying.HasCargo && flying.transform.parent != flying.home);
+                if (exhausted)
+                {
+                    WorldBuildingState sleep = carrier.Capture();
+                    if (unloadMode == 2)
+                    {
+                        manager.PrepareForUnload();
+                        root.SetActive(false);
+                        manager.ClearSession();
+                        root.SetActive(true);
+                    }
+                    else
+                    {
+                        manager.RemoveBuilding(carrier);
+                    }
+
+                    Check(
+                        "Unload mode " + unloadMode + " releases carried cargo before hierarchy deactivation",
+                        transported != null && transported.Available && transported.transform.parent == null);
+                    BuildingRuntime wake = manager.RestoreBuilding(sleep);
+                    Check(
+                        "Waking building keeps only stored cargo, without duplicating in-flight delivery",
+                        wake.Blocks[1].GetComponent<CargoHold>().Used == 2);
+                    manager.RemoveBuilding(wake);
+                }
+                else
+                {
+                    carrier.Blocks[0].canExplode = false;
+                    carrier.Blocks[0].GetComponent<Durability>().ApplyDamage(10000f, null);
+                    Check(
+                        "Building bay detachment immediately releases deployed drone cargo",
+                        transported != null && transported.Available && transported.transform.parent == null);
+                    Check(
+                        "Detached building drone releases destination reservation",
+                        transported.ClaimedBy == null && transported.Destination == null);
+                    manager.RemoveBuilding(carrier);
+                }
+
+                yield return 0.15f;
+                LootDrop.ClearSession();
+            }
+
             BuildingRuntime player = SalvageBuilding(manager, UnitFaction.Player);
             player.Blocks[0].canExplode = false;
             player.Blocks[0].GetComponent<Durability>().ApplyDamage(10000f, null);

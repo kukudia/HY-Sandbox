@@ -53,3 +53,5 @@ Windows启动修复、组合进度及贪心区块优化见[Player验证报告](V
 WorldLab数据12项、建筑43项回归通过。已观察Main地形和建筑总览；继续细节截图期间Editor发生D3D12 GPU等待超时并退出。临时以D3D11重启后完成[加载面板](Validation/2026-10-15-world-session-loading.png)与[建筑近景](Validation/2026-10-15-world-session-building.png)检查，未修改项目图形API设置；D3D12稳定性仍未验收。
 
 专项检查未执行故障注入；正式 Player 构建、长时大地图性能、最大尺寸载具及完整运输战斗压力尚未验收。验证菜单分别为 `Validate Main world session` 和 `Validate world session edges`，只操作运行时测试对象，报告写 Temp，不写玩家存档。
+
+建筑休眠/世界停用前，先取消机器人运输并释放携货与目的仓预订，再停用层级，避免在 Unity OnDisable 父层级变更中重挂接。已入仓货物照常由快照保存；飞行货物不写快照、不产生额外奖励。见 [携货卸载回归](Validation/2026-10-15-night-carried-unload.md)。

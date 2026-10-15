@@ -584,9 +584,14 @@ def main():
             "U": "WorldSessionManager.PrepareWorld",
             "V": "WorldSessionManager.FinishEntering",
             "W": "WorldLoadingPanel.Show",
+            "X": "WorldBuildingManager.PrepareForUnload",
+            "Y": "BuildingRuntime.PrepareForUnload",
+            "Z": "CollectionBot.PrepareForHomeDestruction",
+            "AA": "LootDrop.Release",
         },
         [
             "A --> B", "B --> C", "B --> S", "B --> T",
+            "B -->|世界根停用前| X", "O -->|故障停用前| X", "R -->|世界根停用前| X", "X --> Y", "Y --> Z", "Z -->|经Abandon| AA",
             "B -.->|StartCoroutine| D", "D --> U", "U --> E", "D -->|捕获异常| O",
             "E -->|全部初始列完成后Ready| F", "G -->|已Ready| F", "H -.->|清除请求，阻止后续切换| F",
             "F -->|存在有效请求| I", "I --> J", "J --> K",
@@ -639,7 +644,7 @@ def main():
     )
     graph(
         "区块流式与建筑休眠",
-        "源码推导：纯种子采样和稀疏体素差量不分配全图。加载按列，一格邻域快照交单个后台任务合并面，主线程提交碰撞，完整列才发布；先休眠建筑再卸载远处地形。静止满载时每0.2秒维护，跨列和列版本变化立即唤醒。建筑实例受预算限制，超限快照延期；物理帧按载具尺寸与预测路径冻结等待，完整路径有碰撞后恢复。",
+        "源码推导：纯种子采样和稀疏体素差量不分配全图。加载按列，一格邻域快照交单个后台任务合并面，主线程提交碰撞，完整列才发布；先快照仓内货物、释放机器人携货/认领，再停用休眠建筑并卸载远处地形；不转换残骸奖励。静止满载时每0.2秒维护，跨列和列版本变化立即唤醒。建筑实例受预算限制，超限快照延期；物理帧按载具尺寸与预测路径冻结等待，完整路径有碰撞后恢复。",
         {
             "A": "WorldSessionManager.StreamWorld",
             "B": "WorldRegionStreaming.LoadNext",
@@ -657,9 +662,13 @@ def main():
             "N": "WorldPlayerStreamingGuard.Tick",
             "O": "WorldPlayerStreamingGuard.HasTerrainForBounds",
             "P": "WorldPlayerStreamingGuard.Release",
+            "Q": "BuildingRuntime.PrepareForUnload",
+            "R": "CollectionBot.PrepareForHomeDestruction",
+            "S": "LootDrop.Release",
         },
         [
             "A --> B", "B -.->|按毫秒预算休眠，跨帧| C", "C --> D", "C --> E", "B -.->|每列让出帧| F",
+            "E -->|停用层级前| Q", "Q --> R", "R -->|经Abandon| S",
             "B -->|最近未加载列| G", "G -->|经网格构建采样| H", "H -->|无本次编辑差量| I",
             "B -->|完整列加载后登记快照| J", "B --> K", "K -.->|有地形且有活动预算，分帧恢复| L",
             "M --> N", "N --> O", "N -->|就绪后恢复刚体| P",

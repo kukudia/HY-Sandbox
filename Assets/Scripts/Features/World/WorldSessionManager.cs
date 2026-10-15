@@ -83,6 +83,7 @@ public sealed class WorldSessionManager : MonoBehaviour
     {
         StopPreparation();
         SetBuildEnvironmentVisible(true);
+        buildings?.PrepareForUnload();
         worldRoot?.SetActive(false);
         if (buildings != null)
         {
@@ -510,6 +511,7 @@ public sealed class WorldSessionManager : MonoBehaviour
         playerGuard?.Release();
         State = WorldSessionState.Failed;
         Status = "World preparation failed: " + error.Message;
+        buildings?.PrepareForUnload();
         worldRoot?.SetActive(false);
         SetBuildEnvironmentVisible(true);
         Debug.LogError(Status + "\n" + error);
@@ -520,6 +522,7 @@ public sealed class WorldSessionManager : MonoBehaviour
         StopPreparation();
         playRequested = false;
         loadingPanel?.Show(false);
+        buildings?.PrepareForUnload();
         worldRoot?.SetActive(false);
         buildings?.ClearSession();
         world?.ClearStreaming();

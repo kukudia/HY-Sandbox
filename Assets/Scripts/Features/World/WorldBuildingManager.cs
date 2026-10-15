@@ -216,8 +216,20 @@ public sealed class WorldBuildingManager : MonoBehaviour
         }
 
         pendingSupport.Remove(building);
+        building.PrepareForUnload();
         building.gameObject.SetActive(false);
         Destroy(building.gameObject);
+    }
+
+    public void PrepareForUnload()
+    {
+        foreach (BuildingRuntime building in buildings)
+        {
+            if (building != null)
+            {
+                building.PrepareForUnload();
+            }
+        }
     }
 
     public void ClearSession()
@@ -364,6 +376,7 @@ public sealed class WorldBuildingManager : MonoBehaviour
         {
             if (building != null)
             {
+                building.PrepareForUnload();
                 building.gameObject.SetActive(false);
                 Destroy(building.gameObject);
             }

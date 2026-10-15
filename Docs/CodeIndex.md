@@ -711,9 +711,9 @@
 | SalvagePlayProbe | [`GameObject Spawn(string name, ControlUnit unit, Vector3 local)`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L208) | private static |
 | SalvagePlayProbe | [`CargoItem Coins(int count)`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L223) | private static |
 | SalvagePlayProbe | [`CargoItem Part()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L228) | private static |
-| SalvagePlayProbe | [`BuildingRuntime SalvageBuilding(WorldBuildingManager manager, UnitFaction faction)`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L234) | private static |
-| SalvagePlayProbe | [`IEnumerator BuildingSalvage()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L271) | private static |
-| SalvagePlayProbe | [`IEnumerator Scenario()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L355) | private static |
+| SalvagePlayProbe | [`BuildingRuntime SalvageBuilding(WorldBuildingManager manager, UnitFaction faction, bool withBot = false)`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L234) | private static |
+| SalvagePlayProbe | [`IEnumerator BuildingSalvage()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L278) | private static |
+| SalvagePlayProbe | [`IEnumerator Scenario()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L430) | private static |
 
 ## Assets/Editor/World/ProceduralVoxelWorldEditor.cs
 
@@ -2834,12 +2834,13 @@
 | BuildingRuntime | [`IEnumerator InitializeRoutine(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L37) | internal |
 | BuildingRuntime | [`void Activate()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L84) | public |
 | BuildingRuntime | [`IEnumerator ActivateRoutine()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L92) | internal |
-| BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L134) | public |
-| BuildingRuntime | [`void DestroyBlock(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L186) | public |
-| BuildingRuntime | [`void SplitDisconnected()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L224) | private |
-| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L294) | private |
-| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L315) | public |
-| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L326) | private |
+| BuildingRuntime | [`void PrepareForUnload()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L135) | public |
+| BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L143) | public |
+| BuildingRuntime | [`void DestroyBlock(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L195) | public |
+| BuildingRuntime | [`void SplitDisconnected()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L233) | private |
+| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L303) | private |
+| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L324) | public |
+| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L335) | private |
 
 ## Assets/Scripts/Features/World/ProceduralVoxelWorld.cs
 
@@ -3020,18 +3021,19 @@
 | WorldBuildingManager | [`void OptimizeVisuals(Block block)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L192) | internal |
 | WorldBuildingManager | [`bool HasCapacity(int additionalBlocks)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L200) | public |
 | WorldBuildingManager | [`void RemoveBuilding(BuildingRuntime building)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L211) | public |
-| WorldBuildingManager | [`void ClearSession()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L223) | public |
-| WorldBuildingManager | [`void OnDestroy()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L230) | private |
-| WorldBuildingManager | [`BuildingRuntime Stage(WorldBuildingState state, Transform parent)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L235) | private |
-| WorldBuildingManager | [`WorldLabSnapshot Capture()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L253) | public |
-| WorldBuildingManager | [`void Restore(WorldLabSnapshot snapshot)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L273) | public |
-| WorldBuildingManager | [`void ResetBuildings()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L326) | public |
-| WorldBuildingManager | [`void ClearBuildings()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L360) | private |
-| WorldBuildingManager | [`void TerrainChanged(Bounds changed)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L375) | private |
-| WorldBuildingManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L386) | private |
-| WorldBuildingManager | [`void DamageSphere(Vector3 center, float radius, float damage)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L403) | public |
-| WorldBuildingManager | [`void CreateDebris(List<Block> group, Rigidbody source)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L408) | internal |
-| WorldBuildingManager | [`void ClearDebris()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L451) | private |
+| WorldBuildingManager | [`void PrepareForUnload()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L224) | public |
+| WorldBuildingManager | [`void ClearSession()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L235) | public |
+| WorldBuildingManager | [`void OnDestroy()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L242) | private |
+| WorldBuildingManager | [`BuildingRuntime Stage(WorldBuildingState state, Transform parent)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L247) | private |
+| WorldBuildingManager | [`WorldLabSnapshot Capture()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L265) | public |
+| WorldBuildingManager | [`void Restore(WorldLabSnapshot snapshot)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L285) | public |
+| WorldBuildingManager | [`void ResetBuildings()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L338) | public |
+| WorldBuildingManager | [`void ClearBuildings()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L372) | private |
+| WorldBuildingManager | [`void TerrainChanged(Bounds changed)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L388) | private |
+| WorldBuildingManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L399) | private |
+| WorldBuildingManager | [`void DamageSphere(Vector3 center, float radius, float damage)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L416) | public |
+| WorldBuildingManager | [`void CreateDebris(List<Block> group, Rigidbody source)`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L421) | internal |
+| WorldBuildingManager | [`void ClearDebris()`](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L464) | private |
 
 ## Assets/Scripts/Features/World/WorldBuildingPalette.cs
 
@@ -3233,21 +3235,21 @@
 | WorldSessionManager | [`void Start()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L65) | private |
 | WorldSessionManager | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L73) | private |
 | WorldSessionManager | [`void BeginPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L82) | public |
-| WorldSessionManager | [`IEnumerator PrepareWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L119) | private |
-| WorldSessionManager | [`void RequestPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L168) | public |
-| WorldSessionManager | [`void CancelPlayRequest()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L185) | public |
-| WorldSessionManager | [`void CompletePendingPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L191) | private |
-| WorldSessionManager | [`bool CanEnterPlay(Transform construct, out string reason)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L203) | public |
-| WorldSessionManager | [`void EnterPlay(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L225) | public |
-| WorldSessionManager | [`IEnumerator EnableWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L257) | private |
-| WorldSessionManager | [`void FinishEntering()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L291) | private |
-| WorldSessionManager | [`void EndSession()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L300) | public |
-| WorldSessionManager | [`IEnumerator RunGuarded(int version, IEnumerator work)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L305) | private |
-| WorldSessionManager | [`IEnumerator StreamWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L336) | private |
-| WorldSessionManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L384) | private |
-| WorldSessionManager | [`void Update()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L409) | private |
-| WorldSessionManager | [`Bounds ConstructBounds(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L419) | private static |
-| WorldSessionManager | [`void SetBuildEnvironmentVisible(bool visible)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L444) | private |
-| WorldSessionManager | [`void StopPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L474) | private |
-| WorldSessionManager | [`void Fail(Exception error)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L506) | private |
-| WorldSessionManager | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L518) | private |
+| WorldSessionManager | [`IEnumerator PrepareWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L120) | private |
+| WorldSessionManager | [`void RequestPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L169) | public |
+| WorldSessionManager | [`void CancelPlayRequest()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L186) | public |
+| WorldSessionManager | [`void CompletePendingPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L192) | private |
+| WorldSessionManager | [`bool CanEnterPlay(Transform construct, out string reason)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L204) | public |
+| WorldSessionManager | [`void EnterPlay(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L226) | public |
+| WorldSessionManager | [`IEnumerator EnableWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L258) | private |
+| WorldSessionManager | [`void FinishEntering()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L292) | private |
+| WorldSessionManager | [`void EndSession()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L301) | public |
+| WorldSessionManager | [`IEnumerator RunGuarded(int version, IEnumerator work)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L306) | private |
+| WorldSessionManager | [`IEnumerator StreamWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L337) | private |
+| WorldSessionManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L385) | private |
+| WorldSessionManager | [`void Update()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L410) | private |
+| WorldSessionManager | [`Bounds ConstructBounds(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L420) | private static |
+| WorldSessionManager | [`void SetBuildEnvironmentVisible(bool visible)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L445) | private |
+| WorldSessionManager | [`void StopPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L475) | private |
+| WorldSessionManager | [`void Fail(Exception error)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L507) | private |
+| WorldSessionManager | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L520) | private |

@@ -131,6 +131,15 @@ public sealed class BuildingRuntime : MonoBehaviour
         Physics.SyncTransforms();
     }
 
+    /// <summary>停用层级前取消运输，允许携带物在正常活动层级中安全脱离；不转换残骸或释放仓内货物。</summary>
+    public void PrepareForUnload()
+    {
+        foreach (Bot bot in GetComponentsInChildren<Bot>(true))
+        {
+            bot.PrepareForHomeDestruction();
+        }
+    }
+
     public WorldBuildingState Capture()
     {
         if (pendingState != null)
