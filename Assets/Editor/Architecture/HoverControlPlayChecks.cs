@@ -52,8 +52,13 @@ internal static class HoverControlPlayChecks
             Tick(controller);
             Check(
                 checks,
-                "Powered cockpit-less fragment never writes angular velocity and clears thrust",
-                body.angularVelocity == originalVelocity && thruster.thrust == 0f && thruster.lastThrustValue == 0f);
+                "Cockpit-less controller never steers or writes the thruster's physical output",
+                body.angularVelocity == originalVelocity && thruster.thrust == 30f && thruster.lastThrustValue == 20f);
+            TickThruster(thruster);
+            Check(
+                checks,
+                "Thruster clears invalid-owner output on its own physics callback",
+                thruster.thrust == 0f && thruster.lastThrustValue == 0f);
             GameObject cockpitObject = new GameObject("Cockpit");
             cockpitObject.transform.SetParent(root.transform, false);
             owner.cockpit = cockpitObject.AddComponent<Cockpit>();
@@ -70,20 +75,29 @@ internal static class HoverControlPlayChecks
             Tick(controller);
             Check(
                 checks,
+                "Controller submits powered target without advancing thrust history",
+                thruster.thrust == 0f && thruster.lastThrustValue == 0f);
+            TickThruster(thruster);
+            Check(
+                checks,
                 $"Valid powered owner produces thrust and angular correction (thrust={thruster.thrust}, angular={body.angularVelocity}, up={controller.transform.up}, valid={owner.HasValidCockpit})",
                 thruster.thrust > 0f && body.angularVelocity != originalVelocity);
             controller.GetComponent<Power>().currentPower = 0f;
             body.angularVelocity = originalVelocity;
+            thruster.thrust = 30f;
+            thruster.lastThrustValue = 30f;
             Tick(controller);
             Check(
                 checks,
-                "Controller power loss clears command history without steering",
-                thruster.thrust == 0f && thruster.lastThrustValue == 0f && body.angularVelocity == originalVelocity);
+                "Controller power loss stops steering without bypassing thruster rate limits",
+                thruster.thrust == 30f && thruster.lastThrustValue == 30f && body.angularVelocity == originalVelocity);
+            CheckRampDown(checks, thruster, "Controller power loss");
             controller.GetComponent<Power>().currentPower = 1000f;
             thruster.thrust = 30f;
             thruster.lastThrustValue = 20f;
             PlayManager.instance.playMode = false;
             Tick(controller);
+            TickThruster(thruster);
             Check(
                 checks,
                 "Leaving play mode clears hover output",
@@ -94,7 +108,13 @@ internal static class HoverControlPlayChecks
             controller.enabled = false;
             Check(
                 checks,
-                "Disabling controller clears hover output",
+                "Disabling controller preserves physical history until the thruster callback",
+                thruster.thrust == 30f && thruster.lastThrustValue == 20f);
+            CheckRampDown(checks, thruster, "Controller disable");
+            thruster.enabled = false;
+            Check(
+                checks,
+                "Disabling the thruster itself clears physical output immediately",
                 thruster.thrust == 0f && thruster.lastThrustValue == 0f);
             ControlUnit replacementOwner = other.AddComponent<ControlUnit>();
             replacementOwner.enabled = false;
@@ -122,6 +142,34 @@ internal static class HoverControlPlayChecks
     private static void Tick(HoverFlightController controller)
     {
         typeof(HoverFlightController).GetMethod("FixedUpdate", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(controller, null);
+    }
+
+    private static void TickThruster(HoverThruster thruster)
+    {
+        typeof(HoverThruster).GetMethod("FixedUpdate", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(thruster, null);
+    }
+
+    private static void CheckRampDown(List<string> checks, HoverThruster thruster, string reason)
+    {
+        // The controller owns the target; only the thruster may advance its output once per physics step.
+        float previous = thruster.lastThrustValue;
+        float maximumChange = thruster.maxThrustChangeRate * Time.fixedDeltaTime;
+        TickThruster(thruster);
+        float expected = Mathf.Max(0f, previous - maximumChange);
+        Check(
+            checks,
+            reason + " decays by exactly one physics-step rate limit",
+            Mathf.Approximately(thruster.thrust, expected) && Mathf.Approximately(thruster.lastThrustValue, expected));
+        int remainingSteps = Mathf.CeilToInt(previous / maximumChange) + 1;
+        for (int i = 0; i < remainingSteps; i++)
+        {
+            TickThruster(thruster);
+        }
+
+        Check(
+            checks,
+            reason + " reaches zero without stale target restarting output",
+            thruster.thrust == 0f && thruster.lastThrustValue == 0f);
     }
 
     private static void Check(List<string> checks, string name, bool passed)

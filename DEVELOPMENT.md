@@ -2,7 +2,11 @@
 
 ## 夜间自主开发规划
 
-每日 08:00（Asia/Kuala_Lumpur，UTC+8）收尾的候选路线、阶段验收和首晚工作顺序见 [夜间开发大纲](Docs/NightDevelopmentPlan.md)。当前仅完成规划，尚未启动开发、NightDesk 或每日调度；阶段中的内容不代表已实现。
+每日 08:00（Asia/Kuala_Lumpur，UTC+8）收尾的路线、阶段验收和首晚工作顺序见 [夜间开发大纲](Docs/NightDevelopmentPlan.md)。本轮已启动 NightDesk 与当前聊天续跑，截止 2026-10-16 08:00，07:30 收尾；用户明确授权主要功能验证完成后推送 main。后续阶段内容仍为待开发，不代表已实现。
+
+### 2026-10-15 夜间基线：悬浮物理时序回归
+
+完整 ArchitecturePlayProbe 的旧断言只调用控制器 FixedUpdate 就要求实际推力立即改变，与现行推进器独立限速契约不符。HoverControlPlayChecks 现分别驱动控制器和推进器回调，验证无驾驶舱时不转向、推进器失效归属清零、供电后目标提交、缺电/控制器禁用后的单步衰减与最终归零、退出游玩及推进器禁用清零、归属转移保护；生产飞行代码未改。完整探针本轮 completed/passed，73 条检查，0 错误；报告见 [夜间悬浮回归](Docs/Validation/2026-10-15-night-hover.json)。悬浮部分为 Play 内显式驱动生产回调，不代表真实驾驶或自动物理顺序验收。dotnet build 0错误、4个既有警告。
 
 ## 2026-10-15 Windows启动修复与区块深度优化
 
