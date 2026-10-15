@@ -32,3 +32,5 @@ Unity6000.3.11f1 / URP / Windows D3D11，米、Y-up。假设典型观察距离20
 ## 验收边界
 
 运行证据和已知限制记入本轮Docs/Validation报告。程序化布局和模块组合属于本项目可玩内容，不称为新增独立高精美术资产；最终视觉、支撑、炮塔供电/射界和部署净空需用引擎验证。
+
+制作快捷键仅在Unity Editor或Development Build开放，普通发布包保持禁用。菜单“Tools/HY-Sandbox/Outposts/Build Development authoring validation Player”生成独立Builds/OutpostAuthoringValidation，不替换普通WorldPerformanceValidation。该包使用`-world-smoke-report <报告绝对路径> -world-smoke-outpost-editor`可自动验证真实快捷键、Copy template/Save pose按钮、重载与模式清理；全部编辑通过测试专用缓存文件仓隔离，不写用户蓝图。此Development包不用于正式性能比较。

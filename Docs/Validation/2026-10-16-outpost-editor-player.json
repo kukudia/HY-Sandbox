@@ -1,0 +1,131 @@
+{
+    "status": "passed",
+    "graphics": "Direct3D11",
+    "seed": 14741,
+    "buildings": 2,
+    "blocks": 89,
+    "travelStart": {
+        "x": 16.0,
+        "y": 15.0,
+        "z": 16.0
+    },
+    "travelEnd": {
+        "x": 216.0,
+        "y": 15.0,
+        "z": 16.0
+    },
+    "memoryBytes": 145365910,
+    "requestedCycles": 1,
+    "completedCycles": 1,
+    "cycleMemoryBytes": [
+        145365910
+    ],
+    "cycleSeeds": [
+        14741
+    ],
+    "checks": [
+        "Main starts with world session",
+        "startup mask stays opaque during construct restoration",
+        "construct load exposes bounded progress",
+        "Authoring smoke requires an actual Development Player",
+        "Actual Player keyboard shortcut opens building authoring",
+        "Saved Main exposes the active outpost authoring panel in Player",
+        "Development Player includes bundled stronghold template",
+        "Player Copy template restores real building and three embedded defenders",
+        "Player authoring writes only inside its unique cache directory",
+        "Stripped Development Player retains a supported deployment line Shader",
+        "Player previews all defender bounds without creating collision bodies",
+        "Actual Player pose button saves numeric position and rotation atomically",
+        "Player authoring leaves no partial pending file",
+        "Development Player reload preserves edited defender deployment",
+        "Player shortcut exits authoring into normal build mode",
+        "Player mode exit removes active deployment geometry",
+        "Authoring smoke restores the original read-only player construct",
+        "world generation remains valid",
+        "opaque loading mask renders while waiting or enabling",
+        "loading reaches completion",
+        "initial 81 terrain columns loaded",
+        "Player creates buildings from blueprint library",
+        "Player loads external blueprint library",
+        "spawn has real terrain collision",
+        "session stays playing",
+        "Player crosses multiple chunk boundaries",
+        "travel retains terrain under player",
+        "loaded terrain remains bounded",
+        "exit discards world and prepares fresh session",
+        "second preparation completes"
+    ],
+    "errors": [],
+    "phases": [
+        {
+            "name": "startup",
+            "frames": 1051,
+            "medianMs": 8.335590362548829,
+            "p95Ms": 8.722305297851563,
+            "p99Ms": 9.053230285644532,
+            "over50Ms": 1,
+            "maxMs": 126.60956573486328,
+            "totalMs": 8932.3603515625
+        },
+        {
+            "name": "outpost-authoring",
+            "frames": 1557,
+            "medianMs": 8.335113525390625,
+            "p95Ms": 8.678436279296875,
+            "p99Ms": 8.859634399414063,
+            "over50Ms": 3,
+            "maxMs": 112.8225326538086,
+            "totalMs": 13270.123046875
+        },
+        {
+            "name": "loading-and-entry",
+            "frames": 6,
+            "medianMs": 11.308670043945313,
+            "p95Ms": 32.154083251953128,
+            "p99Ms": 32.154083251953128,
+            "over50Ms": 0,
+            "maxMs": 38.24806213378906,
+            "totalMs": 106.60934448242188
+        },
+        {
+            "name": "idle",
+            "frames": 360,
+            "medianMs": 8.35418701171875,
+            "p95Ms": 8.970260620117188,
+            "p99Ms": 10.715484619140625,
+            "over50Ms": 0,
+            "maxMs": 24.087905883789064,
+            "totalMs": 3024.854736328125
+        },
+        {
+            "name": "travel",
+            "frames": 420,
+            "medianMs": 8.327484130859375,
+            "p95Ms": 9.143829345703125,
+            "p99Ms": 10.6964111328125,
+            "over50Ms": 0,
+            "maxMs": 22.380828857421876,
+            "totalMs": 3525.9150390625
+        },
+        {
+            "name": "exit",
+            "frames": 1,
+            "medianMs": 55.8929443359375,
+            "p95Ms": 55.8929443359375,
+            "p99Ms": 55.8929443359375,
+            "over50Ms": 1,
+            "maxMs": 55.8929443359375,
+            "totalMs": 55.8929443359375
+        },
+        {
+            "name": "reprepare",
+            "frames": 1064,
+            "medianMs": 8.33892822265625,
+            "p95Ms": 8.72039794921875,
+            "p99Ms": 8.8653564453125,
+            "over50Ms": 0,
+            "maxMs": 17.803192138671876,
+            "totalMs": 8885.017578125
+        }
+    ]
+}

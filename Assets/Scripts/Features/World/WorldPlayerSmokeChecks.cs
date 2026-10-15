@@ -56,6 +56,7 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
     private bool validateEnemies;
     private bool validateOutposts;
     private bool validateOutpostSalvage;
+    private bool validateOutpostEditor;
     private bool validateCombat;
     private bool validateReturn;
     private string flightBlueprint;
@@ -80,6 +81,7 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
         checks.validateOutposts = Array.IndexOf(args, "-world-smoke-outposts") >= 0;
         checks.validateOutpostSalvage = Array.IndexOf(args, "-world-smoke-outpost-salvage") >= 0;
         checks.validateOutposts |= checks.validateOutpostSalvage;
+        checks.validateOutpostEditor = Array.IndexOf(args, "-world-smoke-outpost-editor") >= 0;
         checks.validateCombat = Array.IndexOf(args, "-world-smoke-combat") >= 0;
         checks.validateReturn = Array.IndexOf(args, "-world-smoke-return") >= 0;
         try
@@ -201,6 +203,23 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
             }
 
             yield return null;
+        }
+
+        if (validateOutpostEditor)
+        {
+            Next("outpost-authoring");
+            IEnumerator authoring = OutpostEditorPlayerChecks.Run(Check);
+            try
+            {
+                while (authoring.MoveNext())
+                {
+                    yield return authoring.Current;
+                }
+            }
+            finally
+            {
+                (authoring as IDisposable)?.Dispose();
+            }
         }
 
         for (cycle = 0; cycle < cycleCount; cycle++)

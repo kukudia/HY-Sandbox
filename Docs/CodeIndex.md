@@ -911,12 +911,15 @@
 
 ## Assets/Editor/World/WorldPlayerBuildChecks.cs
 
-// 职责：构建与发布配置相同的Windows验证包，结果写Temp；不递增版本或覆盖已有发布包。 // 入口：Build()从已保存Main的Edit Mode调用；生成Builds/WorldPerformanceValidation。
+// 职责：构建D3D11发布验证包或独立Development制作工具验证包，结果写Temp，不覆盖用户发布包。 // 入口：Build()/BuildAuthoring()从已保存Main的Edit Mode调用，分别写Builds下两个验证目录。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | WorldPlayerBuildChecks | [`void Build()`](../Assets/Editor/World/WorldPlayerBuildChecks.cs#L13) | public static |
 | WorldPlayerBuildChecks | [`void BuildNow()`](../Assets/Editor/World/WorldPlayerBuildChecks.cs#L25) | private static |
+| WorldPlayerBuildChecks | [`void BuildAuthoring()`](../Assets/Editor/World/WorldPlayerBuildChecks.cs#L33) | public static |
+| WorldPlayerBuildChecks | [`void BuildAuthoringNow()`](../Assets/Editor/World/WorldPlayerBuildChecks.cs#L44) | private static |
+| WorldPlayerBuildChecks | [`void BuildPlayer(string output, string reportPath, BuildOptions options)`](../Assets/Editor/World/WorldPlayerBuildChecks.cs#L52) | private static |
 
 ## Assets/Editor/World/WorldSessionAuthoring.cs
 
@@ -3007,6 +3010,14 @@
 | EnemyOutpostData | [`void Validate()`](../Assets/Scripts/Features/World/EnemyOutpostData.cs#L13) | public |
 | OutpostGarrisonData | [`BlockDataList CreateBlueprint()`](../Assets/Scripts/Features/World/EnemyOutpostData.cs#L70) | public |
 
+## Assets/Scripts/Features/World/OutpostEditorPlayerChecks.cs
+
+// 职责：显式Development Player路线用隔离文件仓验证建筑编辑器快捷键、据点保存和线框Shader。 // 入口：Run()；三个文件仓仅在测试期间反射替换，finally恢复，随后只读重载原玩家蓝图。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| OutpostEditorPlayerChecks | [`IEnumerator Run(Action<bool, string> check)`](../Assets/Scripts/Features/World/OutpostEditorPlayerChecks.cs#L17) | internal static |
+
 ## Assets/Scripts/Features/World/OutpostEncounterDirector.cs
 
 // 职责：会话内管理据点有限驻军、击败记录及远距离休眠；退出探索即丢弃，不写永久存档。 // 入口：Tick() / Clear()；击败只由驾驶舱显式死亡通知，卸载不计击败。
@@ -3419,18 +3430,18 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldPlayerSmokeChecks | [`void Initialize()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L64) | private static |
-| WorldPlayerSmokeChecks | [`int ReadInteger(string[] args, int index, string name, int minimum, int maximum)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L126) | private static |
-| WorldPlayerSmokeChecks | [`void Start()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L136) | private |
-| WorldPlayerSmokeChecks | [`void Update()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L153) | private |
-| WorldPlayerSmokeChecks | [`IEnumerator Scenario()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L182) | private |
-| WorldPlayerSmokeChecks | [`BlockDataList EnemyFixture()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L408) | private static |
-| WorldPlayerSmokeChecks | [`IEnumerator ValidateEnemyBlueprints(EnemySpawner spawner, Vector3 origin)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L444) | private |
-| WorldPlayerSmokeChecks | [`void Check(bool valid, string name)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L504) | private |
-| WorldPlayerSmokeChecks | [`void Next(string name)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L517) | private |
-| WorldPlayerSmokeChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L530) | private |
-| WorldPlayerSmokeChecks | [`void Save()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L538) | private |
-| WorldPlayerSmokeChecks | [`void Finish()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L543) | private |
+| WorldPlayerSmokeChecks | [`void Initialize()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L65) | private static |
+| WorldPlayerSmokeChecks | [`int ReadInteger(string[] args, int index, string name, int minimum, int maximum)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L128) | private static |
+| WorldPlayerSmokeChecks | [`void Start()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L138) | private |
+| WorldPlayerSmokeChecks | [`void Update()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L155) | private |
+| WorldPlayerSmokeChecks | [`IEnumerator Scenario()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L184) | private |
+| WorldPlayerSmokeChecks | [`BlockDataList EnemyFixture()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L427) | private static |
+| WorldPlayerSmokeChecks | [`IEnumerator ValidateEnemyBlueprints(EnemySpawner spawner, Vector3 origin)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L463) | private |
+| WorldPlayerSmokeChecks | [`void Check(bool valid, string name)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L523) | private |
+| WorldPlayerSmokeChecks | [`void Next(string name)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L536) | private |
+| WorldPlayerSmokeChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L549) | private |
+| WorldPlayerSmokeChecks | [`void Save()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L557) | private |
+| WorldPlayerSmokeChecks | [`void Finish()`](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L562) | private |
 
 ## Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs
 

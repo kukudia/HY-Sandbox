@@ -2413,31 +2413,31 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["WorldPlayerSmokeChecks.Initialize()"]
-    click A "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L64" "打开源码"
+    click A "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L65" "打开源码"
     B["WorldPlayerSmokeChecks.ReadInteger()"]
-    click B "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L126" "打开源码"
+    click B "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L128" "打开源码"
     C["WorldPlayerSmokeChecks.Start()"]
-    click C "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L136" "打开源码"
+    click C "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L138" "打开源码"
     D["WorldPlayerSmokeChecks.Update()"]
-    click D "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L153" "打开源码"
+    click D "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L155" "打开源码"
     E["WorldPlayerSmokeChecks.Scenario()"]
-    click E "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L182" "打开源码"
+    click E "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L184" "打开源码"
     F["MainUIPanels.PlayStart()"]
     click F "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L230" "打开源码"
     G["MainUIPanels.CompletePlayEnd()"]
     click G "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L278" "打开源码"
     H["WorldPlayerSmokeChecks.Next()"]
-    click H "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L517" "打开源码"
+    click H "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L536" "打开源码"
     I["WorldPlayerSmokeChecks.Save()"]
-    click I "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L538" "打开源码"
+    click I "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L557" "打开源码"
     J["WorldPlayerSmokeChecks.Finish()"]
-    click J "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L543" "打开源码"
+    click J "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L562" "打开源码"
     K["WorldPlayerSmokeChecks.CaptureError()"]
-    click K "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L530" "打开源码"
+    click K "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L549" "打开源码"
     L["WorldPlayerSmokeChecks.ValidateEnemyBlueprints()"]
-    click L "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L444" "打开源码"
+    click L "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L463" "打开源码"
     M["WorldPlayerSmokeChecks.EnemyFixture()"]
-    click M "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L408" "打开源码"
+    click M "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L427" "打开源码"
     N["EnemySpawner.SpawnBlockData()"]
     click N "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L110" "打开源码"
     O["WorldCombatPlayerChecks.Run()"]
@@ -2448,6 +2448,8 @@ flowchart TD
     click Q "../Assets/Scripts/Features/World/WorldReturnPlayerChecks.cs#L13" "打开源码"
     R["OutpostPlayerChecks.Run()"]
     click R "../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L12" "打开源码"
+    S["OutpostEditorPlayerChecks.Run()"]
+    click S "../Assets/Scripts/Features/World/OutpostEditorPlayerChecks.cs#L17" "打开源码"
     A -->|显式参数校验| B
     A -.->|创建组件后引擎Start| C
     C -.->|后续引擎Update| D
@@ -2460,6 +2462,7 @@ flowchart TD
     E -->|显式-world-smoke-enemy-flight指定既有蓝图| P
     E -->|循环完成后显式-world-smoke-return| Q
     E -->|显式据点参数| R
+    E -->|仅Development制作验证参数| S
     E -->|跨区块后正式退出| G
     E -->|阶段结束| H
     H --> I
@@ -2470,31 +2473,31 @@ flowchart TD
     J -->|最终状态及正常退出| I
 ```
 
-- [WorldPlayerSmokeChecks.Initialize](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L64)
+- [WorldPlayerSmokeChecks.Initialize](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L65)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Initialize -->
-- [WorldPlayerSmokeChecks.ReadInteger](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L126)
+- [WorldPlayerSmokeChecks.ReadInteger](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L128)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|ReadInteger -->
-- [WorldPlayerSmokeChecks.Start](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L136)
+- [WorldPlayerSmokeChecks.Start](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L138)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Start -->
-- [WorldPlayerSmokeChecks.Update](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L153)
+- [WorldPlayerSmokeChecks.Update](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L155)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Update -->
-- [WorldPlayerSmokeChecks.Scenario](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L182)
+- [WorldPlayerSmokeChecks.Scenario](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L184)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Scenario -->
 - [MainUIPanels.PlayStart](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L230)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayStart -->
 - [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L278)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|CompletePlayEnd -->
-- [WorldPlayerSmokeChecks.Next](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L517)
+- [WorldPlayerSmokeChecks.Next](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L536)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Next -->
-- [WorldPlayerSmokeChecks.Save](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L538)
+- [WorldPlayerSmokeChecks.Save](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L557)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Save -->
-- [WorldPlayerSmokeChecks.Finish](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L543)
+- [WorldPlayerSmokeChecks.Finish](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L562)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Finish -->
-- [WorldPlayerSmokeChecks.CaptureError](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L530)
+- [WorldPlayerSmokeChecks.CaptureError](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L549)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|CaptureError -->
-- [WorldPlayerSmokeChecks.ValidateEnemyBlueprints](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L444)
+- [WorldPlayerSmokeChecks.ValidateEnemyBlueprints](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L463)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|ValidateEnemyBlueprints -->
-- [WorldPlayerSmokeChecks.EnemyFixture](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L408)
+- [WorldPlayerSmokeChecks.EnemyFixture](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L427)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|EnemyFixture -->
 - [EnemySpawner.SpawnBlockData](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L110)
 <!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|SpawnBlockData -->
@@ -2506,6 +2509,8 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldReturnPlayerChecks.cs|Run -->
 - [OutpostPlayerChecks.Run](../Assets/Scripts/Features/World/OutpostPlayerChecks.cs#L12)
 <!-- source: Assets/Scripts/Features/World/OutpostPlayerChecks.cs|Run -->
+- [OutpostEditorPlayerChecks.Run](../Assets/Scripts/Features/World/OutpostEditorPlayerChecks.cs#L17)
+<!-- source: Assets/Scripts/Features/World/OutpostEditorPlayerChecks.cs|Run -->
 
 ## Player 输入交战回收入仓验证
 
