@@ -641,12 +641,12 @@ def main():
     )
     graph(
         "用户建筑库、自然出生和远景",
-        "源码推导：每次会话读取persistentDataPath/BuildingBlueprints全部有效JSON，单独报告坏文件并按模块/底座范围扩大平台。自然出生地不再压低；进入时按载具覆盖范围最高地面加净空抬升。远景是独立无碰撞网格，分帧采样并避开已加载列，外边缘由距离雾过渡到同色背景；退出恢复原相机/雾并销毁自有网格。",
+        "源码推导：每次会话读取persistentDataPath/BuildingBlueprints全部有效JSON，单独报告坏文件并快照每套蓝图实际占地；落点按同一模板索引居中，半格支撑边距外6m接回自然坡面。进入时按载具覆盖范围最高地面加净空抬升。详细地形外分帧缓存无碰撞体素列，保持同样阶梯及草土材质，按列版本隐藏已加载列代理；默认12圈后衔接8m采样远景，空洞与外环原子切换，裙边遮缝、距离雾过渡背景。跨四列重采样，淘汰外环缓存并释放网格；退出恢复相机/雾并销毁自有网格。",
         {
             "A": "WorldSessionManager.PrepareWorld",
             "B": "WorldBuildingLibrary.LoadRoutine",
             "C": "WorldBuildingValidation.ValidateBlueprint",
-            "D": "WorldGenerationSettings.FitBuildingPlatforms",
+            "D": "WorldBuildingFootprints.Get",
             "E": "ProceduralVoxelWorld.InitializeStreaming",
             "F": "WorldDistanceView.Refresh",
             "G": "WorldDistanceView.Rebuild",
@@ -656,16 +656,22 @@ def main():
             "K": "WorldDistanceView.Enter",
             "L": "WorldSessionManager.StopPreparation",
             "M": "WorldDistanceView.Dispose",
+            "N": "WorldDistanceView.BuildRingColumn",
+            "O": "WorldTerrainTransitionMesh.Build",
+            "P": "WorldDistanceView.UpdateRingVisibility",
+            "Q": "WorldDistanceView.ReleaseExpiredRing",
         },
         [
-            "A --> B", "B -->|异步预热后经Load校验| C", "A --> D", "A --> E",
+            "A --> B", "B -->|异步预热后经Load校验| C", "A --> E", "H -->|经Height按所选蓝图取范围| D",
             "A -.->|初始列完成才刷新| F", "F -->|列版本更新索引，跨四列才重采样| G", "G --> H",
             "I --> J", "J --> H", "I --> K", "L -->|先停止远景协程| M",
+            "G -.->|预算内逐列缓存| N", "N --> O", "O -->|同近景2m阶梯轮廓| H",
+            "F -->|列版本变化隐藏详细列代理| P", "G -->|孔洞和外环同帧切换| P", "G --> Q",
         ],
     )
     graph(
         "区块流式与建筑休眠",
-        "源码推导：纯种子采样和稀疏体素差量不分配全图。加载按列，一格邻域快照交单个后台任务合并面，主线程提交碰撞，完整列才发布；先快照仓内货物、释放机器人携货/认领，再停用休眠建筑并卸载远处地形；不转换残骸奖励。静止满载时每0.2秒维护，跨列和列版本变化立即唤醒。建筑实例受预算限制，超限快照延期；物理帧按载具尺寸与预测路径冻结等待，完整路径有碰撞后恢复。",
+        "源码推导：纯种子采样和稀疏体素差量不分配全图。加载按列，一格邻域快照交单个后台任务合并面，主线程提交碰撞，完整列才发布；先快照仓内货物、释放机器人携货/认领，再停用休眠建筑并卸载远处地形；不转换残骸奖励。静止满载时每0.2秒维护，跨列和列版本变化立即唤醒；两圈内先补近身地形再恢复建筑，详细加载6圈、卸载8圈。建筑实例受预算限制，超限快照延期；物理帧按载具尺寸与预测路径冻结等待，完整路径有碰撞后恢复。",
         {
             "A": "WorldSessionManager.StreamWorld",
             "B": "WorldRegionStreaming.LoadNext",
@@ -955,7 +961,7 @@ def main():
             "L": "OutpostEncounterDirector.Clear",
         },
         [
-            "A --> B", "B --> C", "A --> D", "A --> E", "F --> B",
+            "A --> B", "B --> C", "A --> E", "H -->|经Height按所选蓝图取范围| D", "F --> B",
             "G --> H", "H --> I", "G -->|有底座且近距离| J",
             "H -->|活动或击败或卸载| K", "L --> K",
         ],

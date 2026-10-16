@@ -71,6 +71,15 @@ internal sealed class WorldRegionStreaming
             buildings.LoadColumn(coordinate);
         }
 
+        // Terrain nearest the player wins over restoring far structures in the same ring.
+        // Otherwise a large blueprint can delay collision-ready columns during travel.
+        if (LoadedWork && WorldBuildingStreaming.Distance(coordinate, center) <= 2)
+        {
+            observedVersion = world.ColumnVersion;
+            nextMaintenanceTime = 0f;
+            yield break;
+        }
+
         IEnumerator structures = buildings.RestoreAvailable();
         try
         {

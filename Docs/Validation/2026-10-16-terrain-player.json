@@ -1,0 +1,160 @@
+{
+    "status": "passed",
+    "graphics": "Direct3D11",
+    "seed": 14723,
+    "buildings": 6,
+    "blocks": 343,
+    "travelStart": {
+        "x": 16.0,
+        "y": 15.0,
+        "z": 16.0
+    },
+    "travelEnd": {
+        "x": 216.0,
+        "y": 15.0,
+        "z": 16.0
+    },
+    "memoryBytes": 134722431,
+    "requestedCycles": 1,
+    "completedCycles": 1,
+    "cycleMemoryBytes": [
+        134722431
+    ],
+    "cycleReadyMemoryBytes": [
+        137321039
+    ],
+    "cycleReadyObjectCounts": [
+        15995
+    ],
+    "cycleSeeds": [
+        14723
+    ],
+    "checks": [
+        "Main starts with world session",
+        "startup mask stays opaque during construct restoration",
+        "construct load exposes bounded progress",
+        "world generation remains valid",
+        "opaque loading mask renders while waiting or enabling",
+        "loading reaches completion",
+        "configured initial terrain columns loaded",
+        "Player creates buildings from blueprint library",
+        "Player loads external blueprint library",
+        "spawn has real terrain collision",
+        "Legacy EnemySpawner is disabled during play",
+        "Generated world contains authored enemy outposts",
+        "Authored finite garrison deploys through production director",
+        "Live defender retains stable site and slot identity",
+        "Outpost defender survives natural AI physics interval",
+        "Outpost defender uses actual moving AI rather than a static decoration",
+        "Natural outpost garrison weapons damage player with the correct attacker identity",
+        "Authored guard survives natural group combat: default_enemy",
+        "Authored guard acquires target and flies with powered hover: default_enemy",
+        "Authored guard weapons naturally damage player: default_enemy",
+        "Moving-target route starts with authored live defenders",
+        "Moving-target combat preserves operational guard: default_enemy",
+        "Authored guard physically pursues moving target: default_enemy",
+        "Authored guard hits moving player through natural weapon simulation: default_enemy",
+        "Disengaged guard remains alive within streaming range",
+        "Outpost guard releases target outside authored detection radius",
+        "Returning player is naturally reacquired without spawning replacement guard",
+        "Live outpost HUD separates distance and defender counts",
+        "Long outpost names and all threat counts fit the saved HUD bounds",
+        "Outpost names render literally with authored contrast shadow",
+        "Damaged defender remains tracked after block regroup",
+        "Interpolated regroup preserves cockpit world pose across the next rendered frame",
+        "Far live defender hibernates without being marked defeated",
+        "Unloading is not a kill",
+        "Live defender returns when revisiting streamed terrain",
+        "Revisit preserves defender module identity and damage",
+        "Pursuing guard hibernates at its distant last position",
+        "Distant pursuit is not a defeat",
+        "Pursuing guard resumes near its last position outside original site activation range",
+        "Cockpit defeat permanently consumes slot for this expedition: resident-0",
+        "Revisit never refreshes defeated garrison",
+        "Defeated slots have no replacement enemy",
+        "Outpost HUD can show cleared encounter state",
+        "Cleared outpost status and expedition summary remain visible",
+        "session stays playing",
+        "Player crosses multiple chunk boundaries",
+        "travel retains terrain under player",
+        "loaded terrain remains bounded",
+        "exit discards world and prepares fresh session",
+        "second preparation completes",
+        "New expedition discards outpost defeat history and active defenders",
+        "Expedition cleanup leaves no inactive or active enemy identity objects",
+        "Expedition cleanup removes all active and inactive loot objects"
+    ],
+    "errors": [],
+    "phases": [
+        {
+            "name": "startup",
+            "frames": 1081,
+            "medianMs": 8.3465576171875,
+            "p95Ms": 8.725166320800782,
+            "p99Ms": 10.809898376464844,
+            "over50Ms": 2,
+            "maxMs": 122.01380920410156,
+            "totalMs": 9233.2177734375
+        },
+        {
+            "name": "loading-and-entry",
+            "frames": 10,
+            "medianMs": 8.410453796386719,
+            "p95Ms": 33.392906188964847,
+            "p99Ms": 33.392906188964847,
+            "over50Ms": 0,
+            "maxMs": 38.532257080078128,
+            "totalMs": 147.06993103027345
+        },
+        {
+            "name": "outpost-encounter",
+            "frames": 5443,
+            "medianMs": 8.3465576171875,
+            "p95Ms": 9.431838989257813,
+            "p99Ms": 14.13726806640625,
+            "over50Ms": 1,
+            "maxMs": 90.27481079101563,
+            "totalMs": 46283.28515625
+        },
+        {
+            "name": "idle",
+            "frames": 360,
+            "medianMs": 8.35418701171875,
+            "p95Ms": 9.502410888671875,
+            "p99Ms": 9.735107421875,
+            "over50Ms": 0,
+            "maxMs": 13.889312744140625,
+            "totalMs": 3002.25439453125
+        },
+        {
+            "name": "travel",
+            "frames": 420,
+            "medianMs": 8.35418701171875,
+            "p95Ms": 9.464263916015625,
+            "p99Ms": 13.5345458984375,
+            "over50Ms": 0,
+            "maxMs": 32.077789306640628,
+            "totalMs": 3565.265625
+        },
+        {
+            "name": "exit",
+            "frames": 1,
+            "medianMs": 52.1087646484375,
+            "p95Ms": 52.1087646484375,
+            "p99Ms": 52.1087646484375,
+            "over50Ms": 1,
+            "maxMs": 52.1087646484375,
+            "totalMs": 52.1087646484375
+        },
+        {
+            "name": "reprepare",
+            "frames": 1118,
+            "medianMs": 8.33892822265625,
+            "p95Ms": 8.72802734375,
+            "p99Ms": 9.8876953125,
+            "over50Ms": 0,
+            "maxMs": 43.92242431640625,
+            "totalMs": 9384.337890625
+        }
+    ]
+}

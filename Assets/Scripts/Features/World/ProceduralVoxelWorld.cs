@@ -175,7 +175,10 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
     }
 
     /// <summary>开始全新会话；不生成全图，不保留上个会话的修改或未完成网格。</summary>
-    public void InitializeStreaming(WorldGenerationSettings settings, int sessionSeed)
+    public void InitializeStreaming(
+        WorldGenerationSettings settings,
+        int sessionSeed,
+        IReadOnlyList<BlockDataList> buildingTemplates = null)
     {
         if (settings == null)
         {
@@ -187,7 +190,7 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
         seed = sessionSeed;
         chunkSize = settings.ChunkSize;
         cellSize = settings.CellSize;
-        streamingTerrain = new StreamingWorldTerrain(settings, seed);
+        streamingTerrain = new StreamingWorldTerrain(settings, seed, buildingTemplates);
         data.InitializeStreaming(streamingTerrain);
         if (TryGetComponent(out VoxelStructureCollapse collapse))
         {

@@ -11,7 +11,9 @@ public sealed class StreamingWorldTerrain
     private readonly int worldHeight;
     private readonly int worldRadiusInChunks;
     private readonly float buildingChance;
-    private readonly int buildingPadHalfSize;
+    private readonly WorldBuildingFootprints footprints;
+    private readonly float blendWidth;
+    private readonly int siteSpacing;
     private readonly int spawnClearRadius;
     private readonly int seed;
     private readonly Vector2 noiseOffset;
@@ -22,7 +24,10 @@ public sealed class StreamingWorldTerrain
     public Vector3 SpawnLocalPosition => new Vector3(chunkSize * 0.5f, Height(chunkSize / 2, chunkSize / 2) + 1f, chunkSize * 0.5f) * cellSize;
 
     public float SurfaceHeight(int x, int z) => (Height(x, z) + 1) * cellSize;
-    public StreamingWorldTerrain(WorldGenerationSettings configuration, int sessionSeed)
+    public StreamingWorldTerrain(
+        WorldGenerationSettings configuration,
+        int sessionSeed,
+        IReadOnlyList<BlockDataList> buildingTemplates = null)
     {
         // Keep a session's baseline stable when its authoring asset is edited in Play Mode.
         chunkSize = configuration.ChunkSize;
@@ -30,7 +35,11 @@ public sealed class StreamingWorldTerrain
         worldHeight = configuration.WorldHeight;
         worldRadiusInChunks = configuration.WorldRadiusInChunks;
         buildingChance = configuration.BuildingChance;
-        buildingPadHalfSize = configuration.BuildingPadHalfSize;
+        footprints = new WorldBuildingFootprints(buildingTemplates);
+        blendWidth = configuration.BuildingBlendWidth;
+        siteSpacing = Mathf.Max(
+            1,
+            Mathf.CeilToInt((footprints.MaximumWidth + blendWidth * 2f + cellSize * 2f) / (chunkSize * cellSize)));
         spawnClearRadius = configuration.SpawnClearRadius;
         seed = sessionSeed;
         var random = new System.Random(seed);
@@ -65,15 +74,17 @@ public sealed class StreamingWorldTerrain
 
         int x = coordinate.x * chunkSize + chunkSize / 2;
         int z = coordinate.y * chunkSize + chunkSize / 2;
-        localPosition = new Vector3(x, Height(x, z) + 1f, z) * cellSize;
         rotation = Quaternion.Euler(0f, (Hash(coordinate) % 4u) * 90f, 0f);
+        Bounds footprint = footprints.Get(seed, coordinate);
+        Vector3 centerOffset = rotation * new Vector3(footprint.center.x, 0f, footprint.center.z);
+        // Candidate coordinates denote the footprint centre, not the blueprint's lower-left origin.
+        localPosition = new Vector3(x * cellSize, (PlateauHeight(x, z) + 1f) * cellSize, z * cellSize) - centerOffset;
         return true;
     }
 
     private bool HasBuilding(Vector2Int coordinate)
     {
-        int spacing = Mathf.Max(1, Mathf.CeilToInt((buildingPadHalfSize * 2f + 4f) / chunkSize));
-        if (coordinate.x % spacing != 0 || coordinate.y % spacing != 0)
+        if (footprints.Count == 0 || coordinate.x % siteSpacing != 0 || coordinate.y % siteSpacing != 0)
         {
             return false;
         }
@@ -95,19 +106,23 @@ public sealed class StreamingWorldTerrain
         }
 
         float value = RawHeight(x, z);
-        int spacing = Mathf.Max(1, Mathf.CeilToInt((buildingPadHalfSize * 2f + 4f) / chunkSize));
         var column = new Vector2Int(
-            Mathf.RoundToInt(((x + 0.5f) / chunkSize - 0.5f) / spacing) * spacing,
-            Mathf.RoundToInt(((z + 0.5f) / chunkSize - 0.5f) / spacing) * spacing);
+            Mathf.RoundToInt(((x + .5f) / chunkSize - .5f) / siteSpacing) * siteSpacing,
+            Mathf.RoundToInt(((z + .5f) / chunkSize - .5f) / siteSpacing) * siteSpacing);
         if (HasBuilding(column))
         {
             int centerX = column.x * chunkSize + chunkSize / 2;
             int centerZ = column.y * chunkSize + chunkSize / 2;
-            // Distances use cell centers, keeping either side of a platform edge symmetric.
-            float distance = Mathf.Max(Mathf.Abs(x + 0.5f - centerX), Mathf.Abs(z + 0.5f - centerZ));
-            int halfSize = buildingPadHalfSize;
-            float blend = Mathf.Clamp01((distance - halfSize) / 2f);
-            value = Mathf.Lerp(Mathf.RoundToInt(RawHeight(centerX, centerZ)), value, blend);
+            Bounds footprint = footprints.Get(seed, column);
+            bool quarterTurn = (Hash(column) % 2u) != 0;
+            float halfX = (quarterTurn ? footprint.size.z : footprint.size.x) * .5f;
+            float halfZ = (quarterTurn ? footprint.size.x : footprint.size.z) * .5f;
+            // One half-cell covers every voxel touched by the footprint; no global square pad.
+            float dx = Mathf.Max(0f, Mathf.Abs((x + .5f - centerX) * cellSize) - halfX - cellSize * .5f);
+            float dz = Mathf.Max(0f, Mathf.Abs((z + .5f - centerZ) * cellSize) - halfZ - cellSize * .5f);
+            float distance = Mathf.Sqrt(dx * dx + dz * dz);
+            float blend = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(distance / blendWidth));
+            value = Mathf.Lerp(PlateauHeight(centerX, centerZ), value, blend);
         }
 
         height = Mathf.Clamp(Mathf.RoundToInt(value), 2, worldHeight - 5);
@@ -119,6 +134,11 @@ public sealed class StreamingWorldTerrain
         heights.Add(key, height);
         heightOrder.Enqueue(key);
         return height;
+    }
+
+    private int PlateauHeight(int x, int z)
+    {
+        return Mathf.Clamp(Mathf.RoundToInt(RawHeight(x, z)), 2, worldHeight - 5);
     }
 
     private float RawHeight(int x, int z)

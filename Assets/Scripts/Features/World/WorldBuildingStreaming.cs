@@ -35,8 +35,7 @@ internal sealed class WorldBuildingStreaming
     {
         if (templates.Count > 0 && generated.Add(coordinate) && world.TryGetBuildingSite(coordinate, out Vector3 position, out Quaternion rotation))
         {
-            uint hash = unchecked((uint)(world.Seed * 73856093) ^ (uint)(coordinate.x * 19349663) ^ (uint)(coordinate.y * 83492791));
-            int index = (int)(hash % (uint)templates.Count);
+            int index = WorldBuildingFootprints.SelectTemplate(world.Seed, coordinate, templates.Count);
             BlockDataList blueprint = templates[index];
             var health = new float[blueprint.blocks.Count];
             for (int i = 0; i < health.Length; i++)

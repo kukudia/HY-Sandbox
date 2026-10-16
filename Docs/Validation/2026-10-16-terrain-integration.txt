@@ -1,0 +1,3 @@
+PASS: 78 sites; 6 templates; 4 rotations; every foundation cell supported; outside blend exactly natural; repeat sampling deterministic.
+PASS: seed14723 full map sites: 10%=431; 20%=875.
+PASS: no-template sampler creates no artificial building pads.

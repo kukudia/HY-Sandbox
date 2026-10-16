@@ -1,4 +1,4 @@
-// 职责：用无碰撞的低密度地形延伸视野，并在游玩期间用距离雾隐藏最远边界。
+// 职责：按列缓存无碰撞体素过渡环，再衔接低密度远景与距离雾。
 // 入口：Refresh()分帧重建远景，Enter()/Dispose()成对应用和恢复相机/环境设置。
 using System;
 using System.Collections;
@@ -14,6 +14,10 @@ internal sealed class WorldDistanceView : IDisposable
     private readonly GameObject root;
     private readonly MeshFilter filter;
     private Mesh ownedMesh;
+    private readonly Dictionary<Vector2Int, MeshFilter> voxelRing = new Dictionary<Vector2Int, MeshFilter>();
+    private readonly HashSet<Vector2Int> visibleRing = new HashSet<Vector2Int>();
+    private readonly List<Vector2Int> expiredRing = new List<Vector2Int>();
+    private int ringVisibilityVersion = -1;
     private int builtVersion = -1;
     private Vector2Int builtCenter;
     private readonly List<Vector3> vertices = new List<Vector3>();
@@ -57,13 +61,14 @@ internal sealed class WorldDistanceView : IDisposable
         MeshRenderer renderer = root.AddComponent<MeshRenderer>();
         renderer.sharedMaterial = world.Materials[0];
         renderer.shadowCastingMode = ShadowCastingMode.Off;
-        renderer.receiveShadows = false;
+        renderer.receiveShadows = true;
     }
 
     internal IEnumerator Refresh()
     {
         while (true)
         {
+            UpdateRingVisibility();
             if (AllowRefresh && !IsReady)
             {
                 IEnumerator build = Rebuild(CenterAtFocus());
@@ -71,6 +76,7 @@ internal sealed class WorldDistanceView : IDisposable
                 {
                     while (build.MoveNext())
                     {
+                        UpdateRingVisibility();
                         yield return build.Current;
                     }
                 }
@@ -86,12 +92,10 @@ internal sealed class WorldDistanceView : IDisposable
 
     private IEnumerator Rebuild(Vector2Int center)
     {
-        int version = world.ColumnVersion;
-        var detailed = new HashSet<Vector2Int>(world.LoadedColumns);
         float span = settings.ChunkSize * settings.CellSize;
         // One extra band remains beyond full fog, including the camera's follow offset.
         int radius = Mathf.CeilToInt(settings.ViewDistance / span) + 6;
-        int subdivisions = 2;
+        int subdivisions = 4;
         int width = (radius * 2 + 1) * subdivisions;
         float step = span / subdivisions;
         Vector3 origin = new Vector3((center.x - radius) * span, 0f, (center.y - radius) * span);
@@ -100,6 +104,7 @@ internal sealed class WorldDistanceView : IDisposable
         if (resample)
         {
             vertices.Clear();
+            float sliceStarted = Time.realtimeSinceStartup;
             for (int z = 0; z <= width; z++)
             {
                 for (int x = 0; x <= width; x++)
@@ -109,9 +114,10 @@ internal sealed class WorldDistanceView : IDisposable
                     vertices.Add(point);
                 }
 
-                if (z % 8 == 0)
+                if ((Time.realtimeSinceStartup - sliceStarted) * 1000f >= settings.LoadingFrameBudgetMilliseconds)
                 {
                     yield return null;
+                    sliceStarted = Time.realtimeSinceStartup;
                 }
             }
 
@@ -120,6 +126,42 @@ internal sealed class WorldDistanceView : IDisposable
         else if (vertices.Count > baseVertexCount)
         {
             vertices.RemoveRange(baseVertexCount, vertices.Count - baseVertexCount);
+        }
+
+        int ringRadius = Mathf.Max(settings.UnloadRadius + 4, Mathf.CeilToInt(settings.ViewDistance * 0.45f / span) + 3);
+        // Cached visual columns have no collision or gameplay state. Build at most one column
+        // past the time budget; only the final mask/visibility swap is atomic.
+        float ringStarted = Time.realtimeSinceStartup;
+        for (int z = -ringRadius; z <= ringRadius; z++)
+        {
+            for (int x = -ringRadius; x <= ringRadius; x++)
+            {
+                Vector2Int coordinate = center + new Vector2Int(x, z);
+                if (!voxelRing.ContainsKey(coordinate))
+                {
+                    voxelRing.Add(coordinate, BuildRingColumn(coordinate));
+                }
+
+                if ((Time.realtimeSinceStartup - ringStarted) * 1000f >= settings.LoadingFrameBudgetMilliseconds)
+                {
+                    yield return null;
+                    ringStarted = Time.realtimeSinceStartup;
+                }
+            }
+        }
+
+        // Capture topology only after sampling. No yield between this snapshot and upload:
+        // a loading/unloading column cannot leave a stale hole or cover an excavated near column.
+        int version = world.ColumnVersion;
+        var detailed = new HashSet<Vector2Int>(world.LoadedColumns);
+        visibleRing.Clear();
+        foreach (Vector2Int coordinate in voxelRing.Keys)
+        {
+            if (Mathf.Max(Mathf.Abs(coordinate.x - center.x), Mathf.Abs(coordinate.y - center.y)) <= ringRadius)
+            {
+                visibleRing.Add(coordinate);
+                detailed.Add(coordinate);
+            }
         }
 
         triangles.Clear();
@@ -162,11 +204,6 @@ internal sealed class WorldDistanceView : IDisposable
                     AddSkirt(vertices, triangles, b, b + 1);
                 }
             }
-
-            if (z % 16 == 0)
-            {
-                yield return null;
-            }
         }
 
         if (ownedMesh == null)
@@ -187,19 +224,100 @@ internal sealed class WorldDistanceView : IDisposable
         ownedMesh.RecalculateBounds();
         builtVersion = version;
         builtCenter = center;
+        ringVisibilityVersion = -1;
+        UpdateRingVisibility();
+        ReleaseExpiredRing(center, ringRadius + 2);
+    }
+
+    private void UpdateRingVisibility()
+    {
+        if (ringVisibilityVersion == world.ColumnVersion)
+        {
+            return;
+        }
+
+        ringVisibilityVersion = world.ColumnVersion;
+        foreach (KeyValuePair<Vector2Int, MeshFilter> column in voxelRing)
+        {
+            bool active = visibleRing.Contains(column.Key) && !world.HasColumn(column.Key);
+            if (column.Value.gameObject.activeSelf != active)
+            {
+                column.Value.gameObject.SetActive(active);
+            }
+        }
+    }
+
+    private void ReleaseExpiredRing(Vector2Int center, int radius)
+    {
+        expiredRing.Clear();
+        foreach (Vector2Int coordinate in voxelRing.Keys)
+        {
+            if (Mathf.Max(Mathf.Abs(coordinate.x - center.x), Mathf.Abs(coordinate.y - center.y)) > radius)
+            {
+                expiredRing.Add(coordinate);
+            }
+        }
+
+        foreach (Vector2Int coordinate in expiredRing)
+        {
+            MeshFilter column = voxelRing[coordinate];
+            Object.Destroy(column.sharedMesh);
+            Object.Destroy(column.gameObject);
+            voxelRing.Remove(coordinate);
+        }
+    }
+
+    private MeshFilter BuildRingColumn(Vector2Int coordinate)
+    {
+        int size = settings.ChunkSize;
+        float cell = world.CellSize;
+        Mesh mesh = WorldTerrainTransitionMesh.Build(world, settings, coordinate);
+        var column = new GameObject(mesh.name);
+        column.SetActive(false);
+        column.transform.SetParent(root.transform, false);
+        column.transform.localPosition = new Vector3(coordinate.x * size * cell, 0f, coordinate.y * size * cell);
+        MeshFilter result = column.AddComponent<MeshFilter>();
+        result.sharedMesh = mesh;
+        MeshRenderer renderer = column.AddComponent<MeshRenderer>();
+        renderer.sharedMaterials = new[]
+        {
+            world.Materials[0],
+            world.Materials[1]
+        };
+        renderer.shadowCastingMode = ShadowCastingMode.On;
+        renderer.receiveShadows = true;
+        return result;
     }
 
     private void AddSkirt(List<Vector3> vertices, List<int> triangles, int a, int b)
     {
-        int start = vertices.Count;
-        vertices.Add(vertices[a] - Vector3.up * settings.CellSize * 4f);
-        vertices.Add(vertices[b] - Vector3.up * settings.CellSize * 4f);
-        triangles.Add(a);
-        triangles.Add(start);
-        triangles.Add(b);
-        triangles.Add(b);
-        triangles.Add(start);
-        triangles.Add(start + 1);
+        Vector3 first = vertices[a];
+        Vector3 last = vertices[b];
+        // Follow the detailed boundary at cell resolution. A fixed-depth skirt can end
+        // above a steep neighbouring cell and expose the background through the LOD seam.
+        Vector3 inward = Vector3.Cross(last - first, Vector3.up).normalized;
+        int segments = Mathf.Max(
+            1,
+            Mathf.RoundToInt(Mathf.Max(Mathf.Abs(last.x - first.x), Mathf.Abs(last.z - first.z)) / world.CellSize));
+        for (int i = 0; i < segments; i++)
+        {
+            Vector3 from = Vector3.Lerp(first, last, i / (float)segments);
+            Vector3 to = Vector3.Lerp(first, last, (i + 1) / (float)segments);
+            Vector3 sample = (from + to) * 0.5f + inward * world.CellSize * 0.5f;
+            float detailedHeight = world.SurfaceHeight(Mathf.FloorToInt(sample.x / world.CellSize), Mathf.FloorToInt(sample.z / world.CellSize));
+            float bottom = Mathf.Min(Mathf.Min(from.y, to.y), detailedHeight) - world.CellSize * 2f;
+            int start = vertices.Count;
+            vertices.Add(from);
+            vertices.Add(new Vector3(from.x, bottom, from.z));
+            vertices.Add(to);
+            vertices.Add(new Vector3(to.x, bottom, to.z));
+            triangles.Add(start);
+            triangles.Add(start + 1);
+            triangles.Add(start + 2);
+            triangles.Add(start + 2);
+            triangles.Add(start + 1);
+            triangles.Add(start + 3);
+        }
     }
 
     internal void Enter(Camera view)
@@ -248,6 +366,13 @@ internal sealed class WorldDistanceView : IDisposable
             entered = false;
         }
 
+        foreach (MeshFilter column in voxelRing.Values)
+        {
+            Object.Destroy(column.sharedMesh);
+        }
+
+        voxelRing.Clear();
+        visibleRing.Clear();
         if (root != null)
         {
             root.SetActive(false);

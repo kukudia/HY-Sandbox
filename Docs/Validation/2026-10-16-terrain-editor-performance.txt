@@ -1,0 +1,12 @@
+Unity=6000.3.11f1, graphics=Direct3D11, scene=Assets/Scenes/Main.unity, seed=14721; Editor frame intervals, no Deep Profile.
+startup: frames=2, totalMs=144.4, medianMs=86.83, p95Ms=57.56, maxMs=86.83, over50ms=2
+ready: state=Ready, buildings=14, blocks=909
+prepare: frames=1886, totalMs=15638.9, medianMs=4.59, p95Ms=20.12, maxMs=951.32, over50ms=5
+Play entry synchronousMs=20.93
+rendering: batches=1501, triangles=228876, shadowCasters=132, screen=1901x975
+settled rendering: batches=2607, triangles=692628, shadowCasters=132, screen=1901x975
+entry: frames=151, totalMs=1158.6, medianMs=6.48, p95Ms=8.00, maxMs=100.49, over50ms=2
+idle: frames=462, totalMs=3002.6, medianMs=6.24, p95Ms=7.10, maxMs=28.73, over50ms=0
+travel: frames=300, totalMs=2534.5, medianMs=7.14, p95Ms=12.48, maxMs=28.18, over50ms=0
+exit: frames=1, totalMs=27.0, medianMs=26.97, p95Ms=26.97, maxMs=26.97, over50ms=0
+status=completed; finalFrame=2802

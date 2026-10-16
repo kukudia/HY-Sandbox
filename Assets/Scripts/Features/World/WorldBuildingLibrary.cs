@@ -1,4 +1,4 @@
-// 职责：读取用户建筑目录的全部有效JSON，计算生成平台所需范围，坏文件单独报告而不阻断世界。
+// 职责：读取用户建筑目录的全部有效JSON，校验范围并覆盖同名模板；坏文件单独报告而不阻断世界。
 // 入口：Load()；每次新会话重新读取，不修改用户蓝图文件。
 using System;
 using System.Collections;
@@ -11,10 +11,6 @@ internal sealed class WorldBuildingLibrary
     internal readonly List<BlockDataList> Templates = new List<BlockDataList>();
     internal readonly List<string> Names = new List<string>();
     internal readonly List<string> Errors = new List<string>();
-    internal float PlatformRadius
-    {
-        get; private set;
-    }
     internal static string DirectoryPath => Path.Combine(Application.persistentDataPath, "BuildingBlueprints");
     internal float Progress
     {
@@ -121,7 +117,6 @@ internal sealed class WorldBuildingLibrary
         Templates.Clear();
         Names.Clear();
         Errors.Clear();
-        PlatformRadius = 0f;
         string[] files = Directory.Exists(directory) ? Directory.GetFiles(directory, "*.json") : Array.Empty<string>();
         Array.Sort(files, StringComparer.OrdinalIgnoreCase);
         var sources = new List<KeyValuePair<string, string>>();
@@ -152,7 +147,6 @@ internal sealed class WorldBuildingLibrary
                     throw new InvalidOperationException("Blueprint has no blocks.");
                 }
 
-                float radius = Mathf.Max(2f, blueprint.foundation.width - 2f, blueprint.foundation.length - 2f);
                 foreach (BlockData block in blueprint.blocks)
                 {
                     Vector3 half = new Vector3(block.x, block.y, block.z) * 0.5f;
@@ -167,8 +161,6 @@ internal sealed class WorldBuildingLibrary
                         {
                             throw new InvalidOperationException("Building extends below its foundation or beyond the 128 m platform radius.");
                         }
-
-                        radius = Mathf.Max(radius, Mathf.Abs(point.x), Mathf.Abs(point.z));
                     }
                 }
 
@@ -182,8 +174,6 @@ internal sealed class WorldBuildingLibrary
                     Templates.Add(blueprint);
                     Names.Add(source.Key);
                 }
-
-                PlatformRadius = Mathf.Max(PlatformRadius, radius);
             }
             catch (Exception error) when (error is ArgumentException || error is InvalidOperationException || error is IOException || error is UnauthorizedAccessException)
             {

@@ -148,9 +148,8 @@ public sealed class WorldSessionManager : MonoBehaviour
             Debug.LogWarning("Skipping building blueprint: " + error);
         }
 
-        sessionSettings.FitBuildingPlatforms(library.PlatformRadius);
         buildings.LoadingFrameBudgetMilliseconds = Settings.LoadingFrameBudgetMilliseconds;
-        world.InitializeStreaming(Settings, SessionSeed);
+        world.InitializeStreaming(Settings, SessionSeed, library.Templates);
         buildingStreaming = new WorldBuildingStreaming(world, buildings, Settings, library);
         outposts = new OutpostEncounterDirector(buildings);
         regionStreaming = new WorldRegionStreaming(world, buildingStreaming, Settings);

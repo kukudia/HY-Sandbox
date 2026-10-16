@@ -272,7 +272,9 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
             body.isKinematic = true;
             Check(sawMask, "opaque loading mask renders while waiting or enabling");
             Check(session.Progress >= minimumProgress, "loading reaches completion");
-            Check(session.World.LoadedColumns.Count >= 81, "initial 81 terrain columns loaded");
+            Check(
+                session.World.LoadedColumns.Count >= (session.Settings.LoadRadius * 2 + 1) * (session.Settings.LoadRadius * 2 + 1),
+                "configured initial terrain columns loaded");
             Check(session.Buildings.Buildings.Count > 0, "Player creates buildings from blueprint library");
             Check(session.BuildingTemplates.Count > 0, "Player loads external blueprint library");
             report.buildings = session.Buildings.Buildings.Count;
@@ -393,9 +395,20 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
             Check(
                 session.World.HasColumn(session.World.ColumnAt(player.transform.position)),
                 "travel retains terrain under player");
-            Check(session.World.LoadedColumns.Count <= 121, "loaded terrain remains bounded");
+            Check(
+                session.World.LoadedColumns.Count <= (session.Settings.UnloadRadius * 2 + 1) * (session.Settings.UnloadRadius * 2 + 1),
+                "loaded terrain remains bounded");
             report.memoryBytes = UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong();
             report.cycleMemoryBytes.Add(report.memoryBytes);
+            MeshFilter[] visualColumns = session.World.GetComponentsInChildren<MeshFilter>(true).Where(item => item.name.StartsWith("Visual voxel ring ")).ToArray();
+            Check(visualColumns.Length > 0, "voxel transition ring exists");
+            Check(
+                visualColumns.All(item => item.GetComponent<Collider>() == null),
+                "visual transition adds no physics colliders");
+            Check(
+                visualColumns.All(item => !item.gameObject.activeSelf || !session.World.HasColumn(session.World.ColumnAt(item.transform.position))),
+                "visual ring never overlays loaded editable terrain");
+            Mesh[] previousVisualMeshes = visualColumns.Select(item => item.sharedMesh).ToArray();
             Next("exit");
             // 使用正式模式退出，跳过返航货仓保存入口，避免测试写入玩家存档。
             MainUIPanels.instance.CompletePlayEnd();
@@ -408,6 +421,7 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
             }
 
             Check(session.State == WorldSessionState.Ready, "second preparation completes");
+            Check(previousVisualMeshes.All(item => item == null), "previous expedition transition meshes released");
             if (validateOutposts)
             {
                 Check(

@@ -17,14 +17,14 @@ public sealed class WorldGenerationSettings : ScriptableObject
     private int worldHeight = 32;
     [SerializeField, Range(8, 128), Tooltip("从出生区向各方向延伸的区块数；默认世界宽约4.1km。")]
     private int worldRadiusInChunks = 64;
-    [SerializeField, Range(2, 4)]
-    private int loadRadius = 4;
-    [SerializeField, Range(3, 5), Tooltip("比加载范围多一圈，减少来回穿越边界时重复创建。")]
-    private int unloadRadius = 5;
+    [SerializeField, Range(2, 8)]
+    private int loadRadius = 6;
+    [SerializeField, Range(3, 10), Tooltip("比加载范围多两圈，减少来回穿越边界时重复创建。")]
+    private int unloadRadius = 8;
     [SerializeField, Range(0f, 1f)]
-    private float buildingChance = 0.1f;
-    [SerializeField, Range(2, 64), Tooltip("建筑平台最小半边长（体素格）；会按本次蓝图自动扩大。")]
-    private int buildingPadHalfSize = 4;
+    private float buildingChance = 0.2f;
+    [SerializeField, Range(2f, 16f), Tooltip("建筑实际占地之外接回自然地形的过渡宽度（米）；不增加平坦底座面积。")]
+    private float buildingBlendWidth = 6f;
     [SerializeField, Range(1, 2), Tooltip("出生区周围不生成敌方建筑的区块半径；不修改自然地形。")]
     private int spawnClearRadius = 1;
     [SerializeField, Min(1f), Tooltip("载具底部高于其整个水平范围内最高地面的距离（米）。")]
@@ -41,18 +41,13 @@ public sealed class WorldGenerationSettings : ScriptableObject
     public int ChunkSize => Mathf.Clamp(chunkSize, 8, 32);
     public int WorldHeight => Mathf.Clamp(worldHeight, 16, 64);
     public int WorldRadiusInChunks => Mathf.Clamp(worldRadiusInChunks, 8, 128);
-    public int LoadRadius => Mathf.Clamp(loadRadius, 2, 4);
-    public int UnloadRadius => Mathf.Clamp(unloadRadius, LoadRadius + 1, 5);
+    public int LoadRadius => Mathf.Clamp(loadRadius, 2, 8);
+    public int UnloadRadius => Mathf.Clamp(unloadRadius, LoadRadius + 1, 10);
     public float BuildingChance => Mathf.Clamp01(buildingChance);
-    public int BuildingPadHalfSize => Mathf.Clamp(buildingPadHalfSize, 2, 132);
+    public float BuildingBlendWidth => Mathf.Clamp(buildingBlendWidth, 2f, 16f);
     public int SpawnClearRadius => Mathf.Clamp(spawnClearRadius, 1, LoadRadius - 1);
     public float SpawnClearance => Mathf.Max(1f, spawnClearance);
     public float ViewDistance => Mathf.Clamp(viewDistance, 300f, 1000f);
     public Color DistanceFogColor => distanceFogColor;
     public float LoadingFrameBudgetMilliseconds => Mathf.Clamp(loadingFrameBudgetMilliseconds, 0.5f, 8f);
-
-    internal void FitBuildingPlatforms(float requiredRadius)
-    {
-        buildingPadHalfSize = Mathf.Max(BuildingPadHalfSize, Mathf.CeilToInt(requiredRadius / CellSize) + 1);
-    }
 }

@@ -133,15 +133,15 @@ flowchart TD
     N["MainUIPanels.PlayerDeath()"]
     click N "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L288" "打开源码"
     O["WorldSessionManager.RequestPlay()"]
-    click O "../Assets/Scripts/Features/World/WorldSessionManager.cs#L175" "打开源码"
+    click O "../Assets/Scripts/Features/World/WorldSessionManager.cs#L174" "打开源码"
     P["WorldSessionManager.CompletePendingPlay()"]
-    click P "../Assets/Scripts/Features/World/WorldSessionManager.cs#L198" "打开源码"
+    click P "../Assets/Scripts/Features/World/WorldSessionManager.cs#L197" "打开源码"
     Q["MainUIPanels.CompletePlayStart()"]
     click Q "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L247" "打开源码"
     R["MainUIPanels.CompletePlayEnd()"]
     click R "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L278" "打开源码"
     S["WorldSessionManager.EndSession()"]
-    click S "../Assets/Scripts/Features/World/WorldSessionManager.cs#L307" "打开源码"
+    click S "../Assets/Scripts/Features/World/WorldSessionManager.cs#L306" "打开源码"
     A --> B
     B --> C
     B --> D
@@ -191,15 +191,15 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
 - [MainUIPanels.PlayerDeath](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L288)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayerDeath -->
-- [WorldSessionManager.RequestPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L175)
+- [WorldSessionManager.RequestPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L174)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|RequestPlay -->
-- [WorldSessionManager.CompletePendingPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L198)
+- [WorldSessionManager.CompletePendingPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L197)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|CompletePendingPlay -->
 - [MainUIPanels.CompletePlayStart](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L247)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|CompletePlayStart -->
 - [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L278)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|CompletePlayEnd -->
-- [WorldSessionManager.EndSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L307)
+- [WorldSessionManager.EndSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L306)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EndSession -->
 
 ## 开发者建筑蓝图编辑
@@ -1216,45 +1216,45 @@ flowchart TD
     B["WorldSessionManager.BeginPreparation()"]
     click B "../Assets/Scripts/Features/World/WorldSessionManager.cs#L85" "打开源码"
     C["WorldSessionManager.StopPreparation()"]
-    click C "../Assets/Scripts/Features/World/WorldSessionManager.cs#L486" "打开源码"
+    click C "../Assets/Scripts/Features/World/WorldSessionManager.cs#L485" "打开源码"
     D["WorldSessionManager.RunGuarded()"]
-    click D "../Assets/Scripts/Features/World/WorldSessionManager.cs#L312" "打开源码"
+    click D "../Assets/Scripts/Features/World/WorldSessionManager.cs#L311" "打开源码"
     E["WorldSessionManager.StreamWorld()"]
-    click E "../Assets/Scripts/Features/World/WorldSessionManager.cs#L343" "打开源码"
+    click E "../Assets/Scripts/Features/World/WorldSessionManager.cs#L342" "打开源码"
     F["WorldSessionManager.CompletePendingPlay()"]
-    click F "../Assets/Scripts/Features/World/WorldSessionManager.cs#L198" "打开源码"
+    click F "../Assets/Scripts/Features/World/WorldSessionManager.cs#L197" "打开源码"
     G["WorldSessionManager.RequestPlay()"]
-    click G "../Assets/Scripts/Features/World/WorldSessionManager.cs#L175" "打开源码"
+    click G "../Assets/Scripts/Features/World/WorldSessionManager.cs#L174" "打开源码"
     H["WorldSessionManager.CancelPlayRequest()"]
-    click H "../Assets/Scripts/Features/World/WorldSessionManager.cs#L192" "打开源码"
+    click H "../Assets/Scripts/Features/World/WorldSessionManager.cs#L191" "打开源码"
     I["MainUIPanels.CompletePlayStart()"]
     click I "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L247" "打开源码"
     J["PlayManager.PlayStart()"]
     click J "../Assets/Scripts/Features/Simulation/PlayManager.cs#L87" "打开源码"
     K["WorldSessionManager.EnterPlay()"]
-    click K "../Assets/Scripts/Features/World/WorldSessionManager.cs#L232" "打开源码"
+    click K "../Assets/Scripts/Features/World/WorldSessionManager.cs#L231" "打开源码"
     L["WorldSessionManager.EnableWorld()"]
-    click L "../Assets/Scripts/Features/World/WorldSessionManager.cs#L264" "打开源码"
+    click L "../Assets/Scripts/Features/World/WorldSessionManager.cs#L263" "打开源码"
     M["BuildingRuntime.ActivateRoutine()"]
     click M "../Assets/Scripts/Features/World/BuildingRuntime.cs#L97" "打开源码"
     N["WorldSessionManager.EndSession()"]
-    click N "../Assets/Scripts/Features/World/WorldSessionManager.cs#L307" "打开源码"
+    click N "../Assets/Scripts/Features/World/WorldSessionManager.cs#L306" "打开源码"
     O["WorldSessionManager.Fail()"]
-    click O "../Assets/Scripts/Features/World/WorldSessionManager.cs#L518" "打开源码"
+    click O "../Assets/Scripts/Features/World/WorldSessionManager.cs#L517" "打开源码"
     P["WorldSessionManager.Update()"]
-    click P "../Assets/Scripts/Features/World/WorldSessionManager.cs#L416" "打开源码"
+    click P "../Assets/Scripts/Features/World/WorldSessionManager.cs#L415" "打开源码"
     Q["MainUIPanels.CompletePlayEnd()"]
     click Q "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L278" "打开源码"
     R["WorldSessionManager.OnDisable()"]
-    click R "../Assets/Scripts/Features/World/WorldSessionManager.cs#L533" "打开源码"
+    click R "../Assets/Scripts/Features/World/WorldSessionManager.cs#L532" "打开源码"
     S["WorldBuildingManager.ClearSession()"]
     click S "../Assets/Scripts/Features/World/WorldBuildingManager.cs#L235" "打开源码"
     T["ProceduralVoxelWorld.ClearStreaming()"]
-    click T "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L332" "打开源码"
+    click T "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L335" "打开源码"
     U["WorldSessionManager.PrepareWorld()"]
     click U "../Assets/Scripts/Features/World/WorldSessionManager.cs#L125" "打开源码"
     V["WorldSessionManager.FinishEntering()"]
-    click V "../Assets/Scripts/Features/World/WorldSessionManager.cs#L298" "打开源码"
+    click V "../Assets/Scripts/Features/World/WorldSessionManager.cs#L297" "打开源码"
     W["WorldLoadingPanel.Show()"]
     click W "../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L39" "打开源码"
     X["WorldBuildingManager.PrepareForUnload()"]
@@ -1304,45 +1304,45 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Start -->
 - [WorldSessionManager.BeginPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L85)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|BeginPreparation -->
-- [WorldSessionManager.StopPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L486)
+- [WorldSessionManager.StopPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L485)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|StopPreparation -->
-- [WorldSessionManager.RunGuarded](../Assets/Scripts/Features/World/WorldSessionManager.cs#L312)
+- [WorldSessionManager.RunGuarded](../Assets/Scripts/Features/World/WorldSessionManager.cs#L311)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|RunGuarded -->
-- [WorldSessionManager.StreamWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L343)
+- [WorldSessionManager.StreamWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L342)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|StreamWorld -->
-- [WorldSessionManager.CompletePendingPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L198)
+- [WorldSessionManager.CompletePendingPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L197)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|CompletePendingPlay -->
-- [WorldSessionManager.RequestPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L175)
+- [WorldSessionManager.RequestPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L174)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|RequestPlay -->
-- [WorldSessionManager.CancelPlayRequest](../Assets/Scripts/Features/World/WorldSessionManager.cs#L192)
+- [WorldSessionManager.CancelPlayRequest](../Assets/Scripts/Features/World/WorldSessionManager.cs#L191)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|CancelPlayRequest -->
 - [MainUIPanels.CompletePlayStart](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L247)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|CompletePlayStart -->
 - [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L87)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayStart -->
-- [WorldSessionManager.EnterPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L232)
+- [WorldSessionManager.EnterPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L231)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EnterPlay -->
-- [WorldSessionManager.EnableWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L264)
+- [WorldSessionManager.EnableWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L263)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EnableWorld -->
 - [BuildingRuntime.ActivateRoutine](../Assets/Scripts/Features/World/BuildingRuntime.cs#L97)
 <!-- source: Assets/Scripts/Features/World/BuildingRuntime.cs|ActivateRoutine -->
-- [WorldSessionManager.EndSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L307)
+- [WorldSessionManager.EndSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L306)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EndSession -->
-- [WorldSessionManager.Fail](../Assets/Scripts/Features/World/WorldSessionManager.cs#L518)
+- [WorldSessionManager.Fail](../Assets/Scripts/Features/World/WorldSessionManager.cs#L517)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Fail -->
-- [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L416)
+- [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L415)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Update -->
 - [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L278)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|CompletePlayEnd -->
-- [WorldSessionManager.OnDisable](../Assets/Scripts/Features/World/WorldSessionManager.cs#L533)
+- [WorldSessionManager.OnDisable](../Assets/Scripts/Features/World/WorldSessionManager.cs#L532)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|OnDisable -->
 - [WorldBuildingManager.ClearSession](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L235)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|ClearSession -->
-- [ProceduralVoxelWorld.ClearStreaming](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L332)
+- [ProceduralVoxelWorld.ClearStreaming](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L335)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|ClearStreaming -->
 - [WorldSessionManager.PrepareWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L125)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|PrepareWorld -->
-- [WorldSessionManager.FinishEntering](../Assets/Scripts/Features/World/WorldSessionManager.cs#L298)
+- [WorldSessionManager.FinishEntering](../Assets/Scripts/Features/World/WorldSessionManager.cs#L297)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|FinishEntering -->
 - [WorldLoadingPanel.Show](../Assets/Scripts/Features/World/WorldLoadingPanel.cs#L39)
 <!-- source: Assets/Scripts/Features/World/WorldLoadingPanel.cs|Show -->
@@ -1402,40 +1402,48 @@ flowchart TD
 
 ## 用户建筑库、自然出生和远景
 
-源码推导：每次会话读取persistentDataPath/BuildingBlueprints全部有效JSON，单独报告坏文件并按模块/底座范围扩大平台。自然出生地不再压低；进入时按载具覆盖范围最高地面加净空抬升。远景是独立无碰撞网格，分帧采样并避开已加载列，外边缘由距离雾过渡到同色背景；退出恢复原相机/雾并销毁自有网格。
+源码推导：每次会话读取persistentDataPath/BuildingBlueprints全部有效JSON，单独报告坏文件并快照每套蓝图实际占地；落点按同一模板索引居中，半格支撑边距外6m接回自然坡面。进入时按载具覆盖范围最高地面加净空抬升。详细地形外分帧缓存无碰撞体素列，保持同样阶梯及草土材质，按列版本隐藏已加载列代理；默认12圈后衔接8m采样远景，空洞与外环原子切换，裙边遮缝、距离雾过渡背景。跨四列重采样，淘汰外环缓存并释放网格；退出恢复相机/雾并销毁自有网格。
 
 ```mermaid
 flowchart TD
     A["WorldSessionManager.PrepareWorld()"]
     click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L125" "打开源码"
     B["WorldBuildingLibrary.LoadRoutine()"]
-    click B "../Assets/Scripts/Features/World/WorldBuildingLibrary.cs#L24" "打开源码"
+    click B "../Assets/Scripts/Features/World/WorldBuildingLibrary.cs#L20" "打开源码"
     C["WorldBuildingValidation.ValidateBlueprint()"]
     click C "../Assets/Scripts/Features/World/WorldBuildingValidation.cs#L11" "打开源码"
-    D["WorldGenerationSettings.FitBuildingPlatforms()"]
-    click D "../Assets/Scripts/Features/World/WorldGenerationSettings.cs#L54" "打开源码"
+    D["WorldBuildingFootprints.Get()"]
+    click D "../Assets/Scripts/Features/World/WorldBuildingFootprints.cs#L34" "打开源码"
     E["ProceduralVoxelWorld.InitializeStreaming()"]
     click E "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L178" "打开源码"
     F["WorldDistanceView.Refresh()"]
-    click F "../Assets/Scripts/Features/World/WorldDistanceView.cs#L63" "打开源码"
+    click F "../Assets/Scripts/Features/World/WorldDistanceView.cs#L67" "打开源码"
     G["WorldDistanceView.Rebuild()"]
-    click G "../Assets/Scripts/Features/World/WorldDistanceView.cs#L87" "打开源码"
+    click G "../Assets/Scripts/Features/World/WorldDistanceView.cs#L93" "打开源码"
     H["StreamingWorldTerrain.SurfaceHeight()"]
-    click H "../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L24" "打开源码"
+    click H "../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L26" "打开源码"
     I["WorldSessionManager.EnterPlay()"]
-    click I "../Assets/Scripts/Features/World/WorldSessionManager.cs#L232" "打开源码"
+    click I "../Assets/Scripts/Features/World/WorldSessionManager.cs#L231" "打开源码"
     J["ProceduralVoxelWorld.FindSpawnSurface()"]
     click J "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L52" "打开源码"
     K["WorldDistanceView.Enter()"]
-    click K "../Assets/Scripts/Features/World/WorldDistanceView.cs#L205" "打开源码"
+    click K "../Assets/Scripts/Features/World/WorldDistanceView.cs#L323" "打开源码"
     L["WorldSessionManager.StopPreparation()"]
-    click L "../Assets/Scripts/Features/World/WorldSessionManager.cs#L486" "打开源码"
+    click L "../Assets/Scripts/Features/World/WorldSessionManager.cs#L485" "打开源码"
     M["WorldDistanceView.Dispose()"]
-    click M "../Assets/Scripts/Features/World/WorldDistanceView.cs#L232" "打开源码"
+    click M "../Assets/Scripts/Features/World/WorldDistanceView.cs#L350" "打开源码"
+    N["WorldDistanceView.BuildRingColumn()"]
+    click N "../Assets/Scripts/Features/World/WorldDistanceView.cs#L270" "打开源码"
+    O["WorldTerrainTransitionMesh.Build()"]
+    click O "../Assets/Scripts/Features/World/WorldTerrainTransitionMesh.cs#L9" "打开源码"
+    P["WorldDistanceView.UpdateRingVisibility()"]
+    click P "../Assets/Scripts/Features/World/WorldDistanceView.cs#L232" "打开源码"
+    Q["WorldDistanceView.ReleaseExpiredRing()"]
+    click Q "../Assets/Scripts/Features/World/WorldDistanceView.cs#L250" "打开源码"
     A --> B
     B -->|异步预热后经Load校验| C
-    A --> D
     A --> E
+    H -->|经Height按所选蓝图取范围| D
     A -.->|初始列完成才刷新| F
     F -->|列版本更新索引，跨四列才重采样| G
     G --> H
@@ -1443,67 +1451,81 @@ flowchart TD
     J --> H
     I --> K
     L -->|先停止远景协程| M
+    G -.->|预算内逐列缓存| N
+    N --> O
+    O -->|同近景2m阶梯轮廓| H
+    F -->|列版本变化隐藏详细列代理| P
+    G -->|孔洞和外环同帧切换| P
+    G --> Q
 ```
 
 - [WorldSessionManager.PrepareWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L125)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|PrepareWorld -->
-- [WorldBuildingLibrary.LoadRoutine](../Assets/Scripts/Features/World/WorldBuildingLibrary.cs#L24)
+- [WorldBuildingLibrary.LoadRoutine](../Assets/Scripts/Features/World/WorldBuildingLibrary.cs#L20)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingLibrary.cs|LoadRoutine -->
 - [WorldBuildingValidation.ValidateBlueprint](../Assets/Scripts/Features/World/WorldBuildingValidation.cs#L11)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingValidation.cs|ValidateBlueprint -->
-- [WorldGenerationSettings.FitBuildingPlatforms](../Assets/Scripts/Features/World/WorldGenerationSettings.cs#L54)
-<!-- source: Assets/Scripts/Features/World/WorldGenerationSettings.cs|FitBuildingPlatforms -->
+- [WorldBuildingFootprints.Get](../Assets/Scripts/Features/World/WorldBuildingFootprints.cs#L34)
+<!-- source: Assets/Scripts/Features/World/WorldBuildingFootprints.cs|Get -->
 - [ProceduralVoxelWorld.InitializeStreaming](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L178)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|InitializeStreaming -->
-- [WorldDistanceView.Refresh](../Assets/Scripts/Features/World/WorldDistanceView.cs#L63)
+- [WorldDistanceView.Refresh](../Assets/Scripts/Features/World/WorldDistanceView.cs#L67)
 <!-- source: Assets/Scripts/Features/World/WorldDistanceView.cs|Refresh -->
-- [WorldDistanceView.Rebuild](../Assets/Scripts/Features/World/WorldDistanceView.cs#L87)
+- [WorldDistanceView.Rebuild](../Assets/Scripts/Features/World/WorldDistanceView.cs#L93)
 <!-- source: Assets/Scripts/Features/World/WorldDistanceView.cs|Rebuild -->
-- [StreamingWorldTerrain.SurfaceHeight](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L24)
+- [StreamingWorldTerrain.SurfaceHeight](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L26)
 <!-- source: Assets/Scripts/Features/World/StreamingWorldTerrain.cs|SurfaceHeight -->
-- [WorldSessionManager.EnterPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L232)
+- [WorldSessionManager.EnterPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L231)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EnterPlay -->
 - [ProceduralVoxelWorld.FindSpawnSurface](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L52)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|FindSpawnSurface -->
-- [WorldDistanceView.Enter](../Assets/Scripts/Features/World/WorldDistanceView.cs#L205)
+- [WorldDistanceView.Enter](../Assets/Scripts/Features/World/WorldDistanceView.cs#L323)
 <!-- source: Assets/Scripts/Features/World/WorldDistanceView.cs|Enter -->
-- [WorldSessionManager.StopPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L486)
+- [WorldSessionManager.StopPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L485)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|StopPreparation -->
-- [WorldDistanceView.Dispose](../Assets/Scripts/Features/World/WorldDistanceView.cs#L232)
+- [WorldDistanceView.Dispose](../Assets/Scripts/Features/World/WorldDistanceView.cs#L350)
 <!-- source: Assets/Scripts/Features/World/WorldDistanceView.cs|Dispose -->
+- [WorldDistanceView.BuildRingColumn](../Assets/Scripts/Features/World/WorldDistanceView.cs#L270)
+<!-- source: Assets/Scripts/Features/World/WorldDistanceView.cs|BuildRingColumn -->
+- [WorldTerrainTransitionMesh.Build](../Assets/Scripts/Features/World/WorldTerrainTransitionMesh.cs#L9)
+<!-- source: Assets/Scripts/Features/World/WorldTerrainTransitionMesh.cs|Build -->
+- [WorldDistanceView.UpdateRingVisibility](../Assets/Scripts/Features/World/WorldDistanceView.cs#L232)
+<!-- source: Assets/Scripts/Features/World/WorldDistanceView.cs|UpdateRingVisibility -->
+- [WorldDistanceView.ReleaseExpiredRing](../Assets/Scripts/Features/World/WorldDistanceView.cs#L250)
+<!-- source: Assets/Scripts/Features/World/WorldDistanceView.cs|ReleaseExpiredRing -->
 
 ## 区块流式与建筑休眠
 
-源码推导：纯种子采样和稀疏体素差量不分配全图。加载按列，一格邻域快照交单个后台任务合并面，主线程提交碰撞，完整列才发布；先快照仓内货物、释放机器人携货/认领，再停用休眠建筑并卸载远处地形；不转换残骸奖励。静止满载时每0.2秒维护，跨列和列版本变化立即唤醒。建筑实例受预算限制，超限快照延期；物理帧按载具尺寸与预测路径冻结等待，完整路径有碰撞后恢复。
+源码推导：纯种子采样和稀疏体素差量不分配全图。加载按列，一格邻域快照交单个后台任务合并面，主线程提交碰撞，完整列才发布；先快照仓内货物、释放机器人携货/认领，再停用休眠建筑并卸载远处地形；不转换残骸奖励。静止满载时每0.2秒维护，跨列和列版本变化立即唤醒；两圈内先补近身地形再恢复建筑，详细加载6圈、卸载8圈。建筑实例受预算限制，超限快照延期；物理帧按载具尺寸与预测路径冻结等待，完整路径有碰撞后恢复。
 
 ```mermaid
 flowchart TD
     A["WorldSessionManager.StreamWorld()"]
-    click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L343" "打开源码"
+    click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L342" "打开源码"
     B["WorldRegionStreaming.LoadNext()"]
     click B "../Assets/Scripts/Features/World/WorldRegionStreaming.cs#L32" "打开源码"
     C["WorldBuildingStreaming.UnloadDistantRoutine()"]
-    click C "../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L107" "打开源码"
+    click C "../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L106" "打开源码"
     D["BuildingRuntime.Capture()"]
     click D "../Assets/Scripts/Features/World/BuildingRuntime.cs#L148" "打开源码"
     E["WorldBuildingManager.RemoveBuilding()"]
     click E "../Assets/Scripts/Features/World/WorldBuildingManager.cs#L211" "打开源码"
     F["ProceduralVoxelWorld.UnloadColumn()"]
-    click F "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L312" "打开源码"
+    click F "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L315" "打开源码"
     G["ProceduralVoxelWorld.LoadColumn()"]
-    click G "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L231" "打开源码"
+    click G "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L234" "打开源码"
     H["VoxelWorldData.Get()"]
     click H "../Assets/Scripts/Features/World/VoxelWorldData.cs#L32" "打开源码"
     I["StreamingWorldTerrain.Sample()"]
-    click I "../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L46" "打开源码"
+    click I "../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L55" "打开源码"
     J["WorldBuildingStreaming.LoadColumn()"]
     click J "../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L34" "打开源码"
     K["WorldBuildingStreaming.RestoreAvailable()"]
-    click K "../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L62" "打开源码"
+    click K "../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L61" "打开源码"
     L["WorldBuildingManager.RestoreBuildingRoutine()"]
     click L "../Assets/Scripts/Features/World/WorldBuildingManager.cs#L145" "打开源码"
     M["WorldSessionManager.FixedUpdate()"]
-    click M "../Assets/Scripts/Features/World/WorldSessionManager.cs#L391" "打开源码"
+    click M "../Assets/Scripts/Features/World/WorldSessionManager.cs#L390" "打开源码"
     N["WorldPlayerStreamingGuard.Tick()"]
     click N "../Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs#L31" "打开源码"
     O["WorldPlayerStreamingGuard.HasTerrainForBounds()"]
@@ -1536,31 +1558,31 @@ flowchart TD
     N -.->|预测路径中点Focus，下一渲染帧| A
 ```
 
-- [WorldSessionManager.StreamWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L343)
+- [WorldSessionManager.StreamWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L342)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|StreamWorld -->
 - [WorldRegionStreaming.LoadNext](../Assets/Scripts/Features/World/WorldRegionStreaming.cs#L32)
 <!-- source: Assets/Scripts/Features/World/WorldRegionStreaming.cs|LoadNext -->
-- [WorldBuildingStreaming.UnloadDistantRoutine](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L107)
+- [WorldBuildingStreaming.UnloadDistantRoutine](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L106)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingStreaming.cs|UnloadDistantRoutine -->
 - [BuildingRuntime.Capture](../Assets/Scripts/Features/World/BuildingRuntime.cs#L148)
 <!-- source: Assets/Scripts/Features/World/BuildingRuntime.cs|Capture -->
 - [WorldBuildingManager.RemoveBuilding](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L211)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|RemoveBuilding -->
-- [ProceduralVoxelWorld.UnloadColumn](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L312)
+- [ProceduralVoxelWorld.UnloadColumn](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L315)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|UnloadColumn -->
-- [ProceduralVoxelWorld.LoadColumn](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L231)
+- [ProceduralVoxelWorld.LoadColumn](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L234)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|LoadColumn -->
 - [VoxelWorldData.Get](../Assets/Scripts/Features/World/VoxelWorldData.cs#L32)
 <!-- source: Assets/Scripts/Features/World/VoxelWorldData.cs|Get -->
-- [StreamingWorldTerrain.Sample](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L46)
+- [StreamingWorldTerrain.Sample](../Assets/Scripts/Features/World/StreamingWorldTerrain.cs#L55)
 <!-- source: Assets/Scripts/Features/World/StreamingWorldTerrain.cs|Sample -->
 - [WorldBuildingStreaming.LoadColumn](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L34)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingStreaming.cs|LoadColumn -->
-- [WorldBuildingStreaming.RestoreAvailable](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L62)
+- [WorldBuildingStreaming.RestoreAvailable](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L61)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingStreaming.cs|RestoreAvailable -->
 - [WorldBuildingManager.RestoreBuildingRoutine](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L145)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|RestoreBuildingRoutine -->
-- [WorldSessionManager.FixedUpdate](../Assets/Scripts/Features/World/WorldSessionManager.cs#L391)
+- [WorldSessionManager.FixedUpdate](../Assets/Scripts/Features/World/WorldSessionManager.cs#L390)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|FixedUpdate -->
 - [WorldPlayerStreamingGuard.Tick](../Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs#L31)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs|Tick -->
@@ -1582,7 +1604,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["ProceduralVoxelWorld.LoadColumn()"]
-    click A "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L231" "打开源码"
+    click A "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L234" "打开源码"
     B["VoxelChunkSnapshot.Capture()"]
     click B "../Assets/Scripts/Features/World/VoxelMeshData.cs#L56" "打开源码"
     C["VoxelWorldData.Get()"]
@@ -1598,15 +1620,15 @@ flowchart TD
     H["VoxelWorldChunk.ApplyMesh()"]
     click H "../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L23" "打开源码"
     I["ProceduralVoxelWorld.UnloadColumn()"]
-    click I "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L312" "打开源码"
+    click I "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L315" "打开源码"
     J["ProceduralVoxelWorld.ClearStreaming()"]
-    click J "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L332" "打开源码"
+    click J "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L335" "打开源码"
     K["VoxelSurfaceMesher.Build()"]
     click K "../Assets/Scripts/Features/World/VoxelSurfaceMesher.cs#L61" "打开源码"
     L["VoxelWorldChunk.Rebuild()"]
     click L "../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L18" "打开源码"
     M["ProceduralVoxelWorld.FlushDirty()"]
-    click M "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L535" "打开源码"
+    click M "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L538" "打开源码"
     A --> B
     B --> C
     A -.->|Task.Run，独立不可变快照| D
@@ -1625,7 +1647,7 @@ flowchart TD
     L --> H
 ```
 
-- [ProceduralVoxelWorld.LoadColumn](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L231)
+- [ProceduralVoxelWorld.LoadColumn](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L234)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|LoadColumn -->
 - [VoxelChunkSnapshot.Capture](../Assets/Scripts/Features/World/VoxelMeshData.cs#L56)
 <!-- source: Assets/Scripts/Features/World/VoxelMeshData.cs|Capture -->
@@ -1641,15 +1663,15 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/VoxelMeshData.cs|Upload -->
 - [VoxelWorldChunk.ApplyMesh](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L23)
 <!-- source: Assets/Scripts/Features/World/VoxelWorldChunk.cs|ApplyMesh -->
-- [ProceduralVoxelWorld.UnloadColumn](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L312)
+- [ProceduralVoxelWorld.UnloadColumn](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L315)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|UnloadColumn -->
-- [ProceduralVoxelWorld.ClearStreaming](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L332)
+- [ProceduralVoxelWorld.ClearStreaming](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L335)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|ClearStreaming -->
 - [VoxelSurfaceMesher.Build](../Assets/Scripts/Features/World/VoxelSurfaceMesher.cs#L61)
 <!-- source: Assets/Scripts/Features/World/VoxelSurfaceMesher.cs|Build -->
 - [VoxelWorldChunk.Rebuild](../Assets/Scripts/Features/World/VoxelWorldChunk.cs#L18)
 <!-- source: Assets/Scripts/Features/World/VoxelWorldChunk.cs|Rebuild -->
-- [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L535)
+- [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L538)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|FlushDirty -->
 
 ## 世界建筑加载与共享渲染
@@ -1786,15 +1808,15 @@ flowchart TD
     G["WorldLabController.Update()"]
     click G "../Assets/Scripts/Features/World/WorldLabController.cs#L57" "打开源码"
     H["ProceduralVoxelWorld.DamageSphere()"]
-    click H "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L443" "打开源码"
+    click H "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L446" "打开源码"
     I["ProceduralVoxelWorld.SetCell()"]
-    click I "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L392" "打开源码"
+    click I "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L395" "打开源码"
     J["ProceduralVoxelWorld.QueueCell()"]
-    click J "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L502" "打开源码"
+    click J "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L505" "打开源码"
     K["ProceduralVoxelWorld.LateUpdate()"]
-    click K "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L530" "打开源码"
+    click K "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L533" "打开源码"
     L["ProceduralVoxelWorld.FlushDirty()"]
-    click L "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L535" "打开源码"
+    click L "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L538" "打开源码"
     M["TurretHitResolver.Apply()"]
     click M "../Assets/Scripts/Features/Combat/TurretHitResolver.cs#L7" "打开源码"
     N["VoxelWorldChunk.OnDestroy()"]
@@ -1808,7 +1830,7 @@ flowchart TD
     R["WorldLabPersistence.Load()"]
     click R "../Assets/Scripts/Features/World/WorldLabPersistence.cs#L57" "打开源码"
     S["ProceduralVoxelWorld.RestoreEdits()"]
-    click S "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L415" "打开源码"
+    click S "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L418" "打开源码"
     T["VoxelWorldEdits.Restore()"]
     click T "../Assets/Scripts/Features/World/VoxelWorldEdits.cs#L52" "打开源码"
     A --> B
@@ -1847,15 +1869,15 @@ flowchart TD
 <!-- source: Assets/Editor/World/WorldLabAuthoring.cs|BakeMeshes -->
 - [WorldLabController.Update](../Assets/Scripts/Features/World/WorldLabController.cs#L57)
 <!-- source: Assets/Scripts/Features/World/WorldLabController.cs|Update -->
-- [ProceduralVoxelWorld.DamageSphere](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L443)
+- [ProceduralVoxelWorld.DamageSphere](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L446)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|DamageSphere -->
-- [ProceduralVoxelWorld.SetCell](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L392)
+- [ProceduralVoxelWorld.SetCell](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L395)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|SetCell -->
-- [ProceduralVoxelWorld.QueueCell](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L502)
+- [ProceduralVoxelWorld.QueueCell](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L505)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|QueueCell -->
-- [ProceduralVoxelWorld.LateUpdate](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L530)
+- [ProceduralVoxelWorld.LateUpdate](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L533)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|LateUpdate -->
-- [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L535)
+- [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L538)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|FlushDirty -->
 - [TurretHitResolver.Apply](../Assets/Scripts/Features/Combat/TurretHitResolver.cs#L7)
 <!-- source: Assets/Scripts/Features/Combat/TurretHitResolver.cs|Apply -->
@@ -1869,7 +1891,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldLabPersistence.cs|Save -->
 - [WorldLabPersistence.Load](../Assets/Scripts/Features/World/WorldLabPersistence.cs#L57)
 <!-- source: Assets/Scripts/Features/World/WorldLabPersistence.cs|Load -->
-- [ProceduralVoxelWorld.RestoreEdits](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L415)
+- [ProceduralVoxelWorld.RestoreEdits](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L418)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|RestoreEdits -->
 - [VoxelWorldEdits.Restore](../Assets/Scripts/Features/World/VoxelWorldEdits.cs#L52)
 <!-- source: Assets/Scripts/Features/World/VoxelWorldEdits.cs|Restore -->
@@ -1917,7 +1939,7 @@ flowchart TD
     R["VoxelWorldEdits.Restore()"]
     click R "../Assets/Scripts/Features/World/VoxelWorldEdits.cs#L52" "打开源码"
     S["ProceduralVoxelWorld.RestoreEdits()"]
-    click S "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L415" "打开源码"
+    click S "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L418" "打开源码"
     T["WorldBuildingManager.ClearBuildings()"]
     click T "../Assets/Scripts/Features/World/WorldBuildingManager.cs#L372" "打开源码"
     U["WorldBuildingManager.RestoreBuilding()"]
@@ -1980,7 +2002,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldBuildingValidation.cs|ValidateState -->
 - [VoxelWorldEdits.Restore](../Assets/Scripts/Features/World/VoxelWorldEdits.cs#L52)
 <!-- source: Assets/Scripts/Features/World/VoxelWorldEdits.cs|Restore -->
-- [ProceduralVoxelWorld.RestoreEdits](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L415)
+- [ProceduralVoxelWorld.RestoreEdits](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L418)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|RestoreEdits -->
 - [WorldBuildingManager.ClearBuildings](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L372)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|ClearBuildings -->
@@ -1994,7 +2016,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["ProceduralVoxelWorld.SetCell()"]
-    click A "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L392" "打开源码"
+    click A "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L395" "打开源码"
     B["WorldBuildingManager.TerrainChanged()"]
     click B "../Assets/Scripts/Features/World/WorldBuildingManager.cs#L388" "打开源码"
     C["WorldBuildingManager.FixedUpdate()"]
@@ -2004,7 +2026,7 @@ flowchart TD
     E["BuildingRuntime.ReleaseAnchor()"]
     click E "../Assets/Scripts/Features/World/BuildingRuntime.cs#L330" "打开源码"
     F["ProceduralVoxelWorld.FlushDirty()"]
-    click F "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L535" "打开源码"
+    click F "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L538" "打开源码"
     G["Durability.ApplyDamage()"]
     click G "../Assets/Scripts/Features/Combat/Durability.cs#L68" "打开源码"
     H["BuildingRuntime.DestroyBlock()"]
@@ -2060,7 +2082,7 @@ flowchart TD
     O -->|有效初始布局| Q
 ```
 
-- [ProceduralVoxelWorld.SetCell](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L392)
+- [ProceduralVoxelWorld.SetCell](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L395)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|SetCell -->
 - [WorldBuildingManager.TerrainChanged](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L388)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|TerrainChanged -->
@@ -2070,7 +2092,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldBuildingPlacement.cs|Support -->
 - [BuildingRuntime.ReleaseAnchor](../Assets/Scripts/Features/World/BuildingRuntime.cs#L330)
 <!-- source: Assets/Scripts/Features/World/BuildingRuntime.cs|ReleaseAnchor -->
-- [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L535)
+- [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L538)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|FlushDirty -->
 - [Durability.ApplyDamage](../Assets/Scripts/Features/Combat/Durability.cs#L68)
 <!-- source: Assets/Scripts/Features/Combat/Durability.cs|ApplyDamage -->
@@ -2112,7 +2134,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["ProceduralVoxelWorld.DamageSphere()"]
-    click A "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L443" "打开源码"
+    click A "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L446" "打开源码"
     B["VoxelStructureCollapse.RequestCheck()"]
     click B "../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L33" "打开源码"
     C["VoxelStructureCollapse.LateUpdate()"]
@@ -2124,9 +2146,9 @@ flowchart TD
     F["VoxelDebrisPiece.Initialize()"]
     click F "../Assets/Scripts/Features/World/VoxelDebrisPiece.cs#L11" "打开源码"
     G["ProceduralVoxelWorld.SetCell()"]
-    click G "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L392" "打开源码"
+    click G "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L395" "打开源码"
     H["ProceduralVoxelWorld.FlushDirty()"]
-    click H "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L535" "打开源码"
+    click H "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L538" "打开源码"
     I["VoxelDebrisPiece.Update()"]
     click I "../Assets/Scripts/Features/World/VoxelDebrisPiece.cs#L49" "打开源码"
     J["VoxelDebrisPiece.OnDestroy()"]
@@ -2136,7 +2158,7 @@ flowchart TD
     L["VoxelStructureCollapse.ClearDebris()"]
     click L "../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L85" "打开源码"
     M["ProceduralVoxelWorld.RestoreEdits()"]
-    click M "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L415" "打开源码"
+    click M "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L418" "打开源码"
     A -->|移除单元后| B
     B -.->|请求标记| C
     C -->|队列空且到间隔| D
@@ -2149,7 +2171,7 @@ flowchart TD
     M -->|校验成功后| L
 ```
 
-- [ProceduralVoxelWorld.DamageSphere](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L443)
+- [ProceduralVoxelWorld.DamageSphere](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L446)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|DamageSphere -->
 - [VoxelStructureCollapse.RequestCheck](../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L33)
 <!-- source: Assets/Scripts/Features/World/VoxelStructureCollapse.cs|RequestCheck -->
@@ -2161,9 +2183,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/VoxelStructureSupport.cs|FindDetached -->
 - [VoxelDebrisPiece.Initialize](../Assets/Scripts/Features/World/VoxelDebrisPiece.cs#L11)
 <!-- source: Assets/Scripts/Features/World/VoxelDebrisPiece.cs|Initialize -->
-- [ProceduralVoxelWorld.SetCell](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L392)
+- [ProceduralVoxelWorld.SetCell](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L395)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|SetCell -->
-- [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L535)
+- [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L538)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|FlushDirty -->
 - [VoxelDebrisPiece.Update](../Assets/Scripts/Features/World/VoxelDebrisPiece.cs#L49)
 <!-- source: Assets/Scripts/Features/World/VoxelDebrisPiece.cs|Update -->
@@ -2173,7 +2195,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|Generate -->
 - [VoxelStructureCollapse.ClearDebris](../Assets/Scripts/Features/World/VoxelStructureCollapse.cs#L85)
 <!-- source: Assets/Scripts/Features/World/VoxelStructureCollapse.cs|ClearDebris -->
-- [ProceduralVoxelWorld.RestoreEdits](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L415)
+- [ProceduralVoxelWorld.RestoreEdits](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L418)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|RestoreEdits -->
 
 ## 据点编辑与有限驻军会话
@@ -2193,13 +2215,13 @@ flowchart TD
     E["EnemyOutpostData.Validate()"]
     click E "../Assets/Scripts/Features/World/EnemyOutpostData.cs#L13" "打开源码"
     F["WorldBuildingLibrary.Load()"]
-    click F "../Assets/Scripts/Features/World/WorldBuildingLibrary.cs#L119" "打开源码"
+    click F "../Assets/Scripts/Features/World/WorldBuildingLibrary.cs#L115" "打开源码"
     G["WorldBuildingStreaming.LoadColumn()"]
     click G "../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L34" "打开源码"
     H["BuildingRuntime.InitializeRoutine()"]
     click H "../Assets/Scripts/Features/World/BuildingRuntime.cs#L41" "打开源码"
     I["WorldSessionManager.Update()"]
-    click I "../Assets/Scripts/Features/World/WorldSessionManager.cs#L416" "打开源码"
+    click I "../Assets/Scripts/Features/World/WorldSessionManager.cs#L415" "打开源码"
     J["OutpostEncounterDirector.Tick()"]
     click J "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L51" "打开源码"
     K["OutpostEncounterDirector.Spawn()"]
@@ -2250,13 +2272,13 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|SaveBuildingOutpost -->
 - [EnemyOutpostData.Validate](../Assets/Scripts/Features/World/EnemyOutpostData.cs#L13)
 <!-- source: Assets/Scripts/Features/World/EnemyOutpostData.cs|Validate -->
-- [WorldBuildingLibrary.Load](../Assets/Scripts/Features/World/WorldBuildingLibrary.cs#L119)
+- [WorldBuildingLibrary.Load](../Assets/Scripts/Features/World/WorldBuildingLibrary.cs#L115)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingLibrary.cs|Load -->
 - [WorldBuildingStreaming.LoadColumn](../Assets/Scripts/Features/World/WorldBuildingStreaming.cs#L34)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingStreaming.cs|LoadColumn -->
 - [BuildingRuntime.InitializeRoutine](../Assets/Scripts/Features/World/BuildingRuntime.cs#L41)
 <!-- source: Assets/Scripts/Features/World/BuildingRuntime.cs|InitializeRoutine -->
-- [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L416)
+- [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L415)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Update -->
 - [OutpostEncounterDirector.Tick](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L51)
 <!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Tick -->
@@ -2380,8 +2402,8 @@ flowchart TD
     click L "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L339" "打开源码"
     A --> B
     B --> C
-    A --> D
     A --> E
+    H -->|经Height按所选蓝图取范围| D
     F --> B
     G --> H
     H --> I
@@ -2504,17 +2526,17 @@ flowchart TD
     G["MainUIPanels.CompletePlayEnd()"]
     click G "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L278" "打开源码"
     H["WorldPlayerSmokeChecks.Next()"]
-    click H "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L558" "打开源码"
+    click H "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L572" "打开源码"
     I["WorldPlayerSmokeChecks.Save()"]
-    click I "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L579" "打开源码"
+    click I "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L593" "打开源码"
     J["WorldPlayerSmokeChecks.Finish()"]
-    click J "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L584" "打开源码"
+    click J "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L598" "打开源码"
     K["WorldPlayerSmokeChecks.CaptureError()"]
-    click K "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L571" "打开源码"
+    click K "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L585" "打开源码"
     L["WorldPlayerSmokeChecks.ValidateEnemyBlueprints()"]
-    click L "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L485" "打开源码"
+    click L "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L499" "打开源码"
     M["WorldPlayerSmokeChecks.EnemyFixture()"]
-    click M "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L449" "打开源码"
+    click M "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L463" "打开源码"
     N["EnemySpawner.SpawnBlockData()"]
     click N "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L110" "打开源码"
     O["WorldCombatPlayerChecks.Run()"]
@@ -2567,17 +2589,17 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayStart -->
 - [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L278)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|CompletePlayEnd -->
-- [WorldPlayerSmokeChecks.Next](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L558)
+- [WorldPlayerSmokeChecks.Next](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L572)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Next -->
-- [WorldPlayerSmokeChecks.Save](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L579)
+- [WorldPlayerSmokeChecks.Save](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L593)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Save -->
-- [WorldPlayerSmokeChecks.Finish](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L584)
+- [WorldPlayerSmokeChecks.Finish](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L598)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|Finish -->
-- [WorldPlayerSmokeChecks.CaptureError](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L571)
+- [WorldPlayerSmokeChecks.CaptureError](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L585)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|CaptureError -->
-- [WorldPlayerSmokeChecks.ValidateEnemyBlueprints](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L485)
+- [WorldPlayerSmokeChecks.ValidateEnemyBlueprints](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L499)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|ValidateEnemyBlueprints -->
-- [WorldPlayerSmokeChecks.EnemyFixture](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L449)
+- [WorldPlayerSmokeChecks.EnemyFixture](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L463)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|EnemyFixture -->
 - [EnemySpawner.SpawnBlockData](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L110)
 <!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|SpawnBlockData -->
