@@ -39,4 +39,4 @@ Block/绑定的 OnValidate 请求延迟应用；CSV 是已填写数值的权威�
 
 维修仓原先缺少 Power，导致已选中损坏目标但无法离仓；现已补充 Power。BotContainer 的最低工作功率必须等于额定工作功率，供电只决定是否从仓内起飞；已经离仓的机器人会继续完成任务或返航。保持 requiresPower=true 时需接入发电机与中继供电网络；false 可免供电工作。Bake 会拒绝不满足功率门槛或缺少 Power 的货仓/机器人所属仓。
 
-`BlockCsvRegressionChecks.Begin()` 在 Play Mode 用真实 Prefab 验证无电留仓、供电离仓维修、断电停止及免供电恢复，并检查重复 CSV 应用保留运行状态。后台验证时需临时启用 Application.runInBackground 并在结束后恢复；报告见 [回归记录](Validation/2026-10-11-block-csv-regression.json)。
+`BlockCsvRegressionChecks.Begin()` 在 Play Mode 用真实 Prefab 验证无电留仓、供电离仓维修、离仓断电继续运行及免供电恢复，并检查重复 CSV 应用保留运行状态。后台验证时需临时启用 Application.runInBackground 并在结束后恢复；报告见 [回归记录](Validation/2026-10-11-block-csv-regression.json)。
