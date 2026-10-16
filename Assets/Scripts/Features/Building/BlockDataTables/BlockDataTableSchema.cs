@@ -70,7 +70,6 @@ public static class BlockDataTableSchema
     {
         var columns = new List<Column>();
         AddInteger<Block>(columns, "基础", "cost", "建造成本");
-        AddFloat<Block>(columns, "基础", "density", "旧密度（不影响质量）");
         AddFloat<Block>(columns, "基础", "mass", "质量 kg", 0.000001);
         AddFloat<Durability>(columns, "基础", "maxDurability", "最大耐久", 0.000001);
         AddFloat<Power>(columns, "基础", "minWorkingPower", "最低工作功率");

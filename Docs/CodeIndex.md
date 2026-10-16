@@ -276,10 +276,10 @@
 | --- | --- | --- |
 | BlockCsvRegressionChecks | [`string Begin()`](../Assets/Editor/Building/BlockCsvRegressionChecks.cs#L31) | public static |
 | BlockCsvRegressionChecks | [`void Tick()`](../Assets/Editor/Building/BlockCsvRegressionChecks.cs#L76) | private static |
-| BlockCsvRegressionChecks | [`void CheckRuntimeState()`](../Assets/Editor/Building/BlockCsvRegressionChecks.cs#L141) | private static |
-| BlockCsvRegressionChecks | [`void Check(bool condition, string description)`](../Assets/Editor/Building/BlockCsvRegressionChecks.cs#L167) | private static |
-| BlockCsvRegressionChecks | [`void Finish()`](../Assets/Editor/Building/BlockCsvRegressionChecks.cs#L177) | private static |
-| BlockCsvRegressionChecks | [`void WriteReport()`](../Assets/Editor/Building/BlockCsvRegressionChecks.cs#L195) | private static |
+| BlockCsvRegressionChecks | [`void CheckRuntimeState()`](../Assets/Editor/Building/BlockCsvRegressionChecks.cs#L143) | private static |
+| BlockCsvRegressionChecks | [`void Check(bool condition, string description)`](../Assets/Editor/Building/BlockCsvRegressionChecks.cs#L169) | private static |
+| BlockCsvRegressionChecks | [`void Finish()`](../Assets/Editor/Building/BlockCsvRegressionChecks.cs#L179) | private static |
+| BlockCsvRegressionChecks | [`void WriteReport()`](../Assets/Editor/Building/BlockCsvRegressionChecks.cs#L197) | private static |
 
 ## Assets/Editor/Building/BuildInteractionSetup.cs
 
@@ -1108,14 +1108,14 @@
 | --- | --- | --- |
 | CollectionBot | [`void Start()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L22) | protected override |
 | CollectionBot | [`void FixedUpdate()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L31) | private |
-| CollectionBot | [`bool IsMissionInvalid(ControlUnit owner, bool canWork)`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L75) | private |
-| CollectionBot | [`void CollectTarget()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L80) | private |
-| CollectionBot | [`void ReturnCargo()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L89) | private |
-| CollectionBot | [`void FindTarget(ControlUnit owner)`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L104) | private |
-| CollectionBot | [`void Abandon()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L141) | private |
-| CollectionBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L152) | protected override |
-| CollectionBot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L158) | protected override |
-| CollectionBot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L164) | public override |
+| CollectionBot | [`bool IsMissionInvalid(ControlUnit owner, bool canWork)`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L77) | private |
+| CollectionBot | [`void CollectTarget()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L82) | private |
+| CollectionBot | [`void ReturnCargo()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L91) | private |
+| CollectionBot | [`void FindTarget(ControlUnit owner)`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L106) | private |
+| CollectionBot | [`void Abandon()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L143) | private |
+| CollectionBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L154) | protected override |
+| CollectionBot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L160) | protected override |
+| CollectionBot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/CollectionBot.cs#L166) | public override |
 
 ## Assets/Scripts/Features/Bots/RepairBeamView.cs
 
@@ -1138,12 +1138,12 @@
 | --- | --- | --- |
 | RepairBot | [`void Start()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L26) | protected override |
 | RepairBot | [`void FixedUpdate()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L36) | private |
-| RepairBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L89) | protected override |
-| RepairBot | [`void FindDamagedBlock()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L95) | private |
-| RepairBot | [`void CheckAndRepair()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L108) | private |
-| RepairBot | [`void UpdateRepairBeam(bool active)`](../Assets/Scripts/Features/Bots/RepairBot.cs#L149) | private |
-| RepairBot | [`void EnsureRepairBeamGradient()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L154) | private |
-| RepairBot | [`void ClearTarget()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L167) | public |
+| RepairBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L91) | protected override |
+| RepairBot | [`void FindDamagedBlock()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L97) | private |
+| RepairBot | [`void CheckAndRepair()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L110) | private |
+| RepairBot | [`void UpdateRepairBeam(bool active)`](../Assets/Scripts/Features/Bots/RepairBot.cs#L151) | private |
+| RepairBot | [`void EnsureRepairBeamGradient()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L156) | private |
+| RepairBot | [`void ClearTarget()`](../Assets/Scripts/Features/Bots/RepairBot.cs#L169) | public |
 
 ## Assets/Scripts/Features/Bots/RepairTargetSearch.cs
 
@@ -1222,10 +1222,10 @@
 | BlockCsvDocument | [`bool Apply(GameObject root, string guid)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L73) | public |
 | BlockCsvDocument | [`string PathFor(string guid)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L144) | public |
 | BlockCsvDocument | [`void ValidateRow(List<string> values)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L151) | private |
-| BlockCsvDocument | [`string Normalize(BlockDataTableSchema.Column column, string value, string name)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L171) | private static |
-| BlockCsvDocument | [`string Quote(string text)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L216) | private static |
-| BlockCsvDocument | [`string WriteRecords(IEnumerable<IEnumerable<string>> records)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L222) | public static |
-| BlockCsvDocument | [`List<List<string>> ParseRecords(string text)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L234) | public static |
+| BlockCsvDocument | [`string Normalize(BlockDataTableSchema.Column column, string value, string name)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L179) | private static |
+| BlockCsvDocument | [`string Quote(string text)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L224) | private static |
+| BlockCsvDocument | [`string WriteRecords(IEnumerable<IEnumerable<string>> records)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L230) | public static |
+| BlockCsvDocument | [`List<List<string>> ParseRecords(string text)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L242) | public static |
 
 ## Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs
 
@@ -1235,11 +1235,11 @@
 | --- | --- | --- |
 | Column | [`Component[] FindTargets(GameObject root)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L31) | public |
 | BlockDataTableSchema | [`List<Column> CreateColumns()`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L69) | public static |
-| BlockDataTableSchema | [`void AddFloat( List<Column> columns, string group, string property, string label, double minimum = 0, double maximum = double.PositiveInfinity)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L221) | private static |
-| BlockDataTableSchema | [`void AddInteger( List<Column> columns, string group, string property, string label, double minimum = 0, double maximum = double.PositiveInfinity)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L240) | private static |
-| BlockDataTableSchema | [`void AddBoolean(List<Column> columns, string group, string property, string label)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L259) | private static |
-| BlockDataTableSchema | [`void AddString(List<Column> columns, string group, string property, string label)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L272) | private static |
-| BlockDataTableSchema | [`void AddEnum(List<Column> columns, string group, string property, string label, string[] names)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L285) | private static |
+| BlockDataTableSchema | [`void AddFloat( List<Column> columns, string group, string property, string label, double minimum = 0, double maximum = double.PositiveInfinity)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L220) | private static |
+| BlockDataTableSchema | [`void AddInteger( List<Column> columns, string group, string property, string label, double minimum = 0, double maximum = double.PositiveInfinity)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L239) | private static |
+| BlockDataTableSchema | [`void AddBoolean(List<Column> columns, string group, string property, string label)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L258) | private static |
+| BlockDataTableSchema | [`void AddString(List<Column> columns, string group, string property, string label)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L271) | private static |
+| BlockDataTableSchema | [`void AddEnum(List<Column> columns, string group, string property, string label, string[] names)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L284) | private static |
 
 ## Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs
 

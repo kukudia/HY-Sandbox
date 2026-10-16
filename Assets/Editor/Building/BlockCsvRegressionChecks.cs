@@ -85,7 +85,7 @@ public static class BlockCsvRegressionChecks
             if (_phase == 0)
             {
                 Check(
-                    _bot.repairAmount > 0f && _power.minWorkingPower == 50f,
+                    _bot.repairAmount > 0f && _power.minWorkingPower == _power.standardWorkingPower,
                     "CSV Awake restores repair amount and required power before Start");
                 _target.currentDurability = _target.maxDurability * 0.5f;
                 CheckRuntimeState();
@@ -112,7 +112,9 @@ public static class BlockCsvRegressionChecks
             }
             else if (_phase == 3 && Time.time - _phaseStarted >= 0.5f)
             {
-                Check(!_power.isWorking && !_bot.isRepairing, "Loss of supply pauses repair without losing Home");
+                Check(
+                    !_power.isWorking && (_bot.transform.parent != _bot.home || _target.currentDurability > _target.maxDurability * 0.5f),
+                    "Loss of supply does not pull an already departed robot out of the air");
                 _target.currentDurability = _target.maxDurability * 0.25f;
                 JsonUtility.FromJsonOverwrite("{\"_requiresPower\":false}", _bot);
                 _phase = 4;

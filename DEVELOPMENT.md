@@ -185,7 +185,7 @@ WorldSessionPerformanceChecks 修复遮罩持焦点后第2帧停滞和无新帧�
 
 2026-10-14 供电网络性能优化：`PowerNetwork.Rebuild` 保留每帧功率清零、分配和状态提交，但缓存由中继/发电机位置及连接距离决定的拓扑；拓扑未变化时跳过连接清空、发电机连接和中继两两检测。拓扑变化仍自动重建，供电行为契约不变。新增空间索引候选筛选和连通分量缓存；300轮新旧等价对照、32项玩法回归通过。100中继/500负载静态更新10.73→0.56ms，持续移动11.02→0.99ms。新增炮弹池、可增长查询缓冲及正常图标跳过投影；28项炮塔检查、10项真实飞行、4项复用及5项表现检查通过。完整条件、原始样本和限制见 Docs/Validation/2026-10-14-performance.md。
 
-2026-10-11 CSV 方块数值：直接编辑 `Assets/Resources/BlockData/Blocks.csv`（25 行、80 参数列及4个只读身份列）。Editor 导入后自动校验、备份并同步 Prefab；Block/绑定组件 OnValidate 延迟请求校验，绑定 Awake 在其他组件之前应用 Resources 中的 CSV。mass 留空使用 x × y × z，填写正数使用手动质量；density 仅保留旧数据。requiresPower 合并应用货仓、收集机器人和维修机器人；Bot/Connector 辅助资源、悬浮控制和指定表现参数不纳入表。维修仓已补充 Power（50/100），CSV/蓝图运行时刷新保留连接状态与实例引用，Bake 拒绝缺失供电依赖。18 项 Edit Mode、4 项 Awake 和 8 项跨帧维修回归已通过，详见 `Docs/Validation/2026-10-11-block-csv-regression.json`。使用与生命周期详见 [CSV说明](Docs/BlockCsv.md)，函数图见 [RuntimeFlow](Docs/RuntimeFlow.md)，验证见 `Docs/Validation/2026-10-11-block-csv.json`。
+2026-10-11 CSV 方块数值：直接编辑 `Assets/Resources/BlockData/Blocks.csv`（25 行、79 参数列及4个只读身份列）。Editor 导入后自动校验、备份并同步 Prefab；Block/绑定组件 OnValidate 延迟请求校验，绑定 Awake 在其他组件之前应用 Resources 中的 CSV。mass 留空使用 x × y × z，填写正数使用手动质量；不参与质量计算的 density 已从 CSV 移除，组件字段保留兼容。requiresPower 合并应用货仓、收集机器人和维修机器人；BotContainer 的最低/额定功率相等，断电只阻止起飞，已离仓 Bot 继续任务或返航；Bot/Connector 辅助资源、悬浮控制和指定表现参数不纳入表。CSV/蓝图运行时刷新保留连接状态与实例引用，Bake 拒绝缺失供电依赖。使用与生命周期详见 [CSV说明](Docs/BlockCsv.md)，函数图见 [RuntimeFlow](Docs/RuntimeFlow.md)。
 
 2026-10-11 推进器字体状态修正：ThrusterInfoPanel 读取 Power.CommitPowerStatus 确认的 SupplyEfficiency，不再读取物理帧中暂时清零的即时供电值。撤销工作请求立即恢复正常显示，重新申请后等待电网确认缺电；残余推力及关机衰减不参与字体颜色判断。实际施力仍使用即时供电效率。验证见 `Docs/Validation/2026-10-11-thruster-power-colors.json`。
 

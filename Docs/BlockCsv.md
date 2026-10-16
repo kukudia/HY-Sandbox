@@ -2,7 +2,7 @@
 
 直接编辑 [Blocks.csv](../Assets/Resources/BlockData/Blocks.csv) 并保存。Unity 导入 CSV 后自动更新对应 Prefab；无需逐格操作 Inspector 或手动导入。菜单 `Tools/HY-Sandbox/CSV/打开方块 CSV` 可用系统默认应用打开；关闭 Prefab 编辑模式后可用“立即校验并同步 Prefab”重试同步。
 
-当前 CSV 有 25 个 Block Prefab、80 个参数列及4个只读身份列。所有高级列直接显示；独立 Bot/Connector 资源不在表中，维修/收集机器人仍通过所属容器行配置。悬浮控制参数、万能推进模型对齐/响应、维修光束宽度及机器人显示开关由 Inspector 管理。
+当前 CSV 有 25 个 Block Prefab、79 个参数列及4个只读身份列。已经移除不参与质量计算的旧 `Block.density` 列；组件字段仍保留以兼容旧 Prefab。所有高级列直接显示；独立 Bot/Connector 资源不在表中，维修/收集机器人仍通过所属容器行配置。悬浮控制参数、万能推进模型对齐/响应、维修光束宽度及机器人显示开关由 Inspector 管理。
 
 ## 编辑规则
 
@@ -14,7 +14,7 @@
 | 布尔值 | `true` / `false` 或 `1` / `0` |
 | 枚举 | 使用导出的名称，如 `Coins`、`Technology`、`Enemy` |
 | `Block.mass` | 留空自动使用 `x × y × z`；填写正数为手动质量，改变尺寸不会覆盖它 |
-| `Block.density` | 旧字段，保留但不再参与质量计算 |
+| `Block.density` | 已从 CSV 移除；旧 Prefab 字段保留兼容，质量由 `Block.mass` 或尺寸计算 |
 | `requiresPower` | 映射货仓、收集机器人和维修机器人；需要供电时所属仓必须有 `Power`，维修仓可填 `false` 以使用无电维修 |
 | 其他空单元格 | 保持该 Prefab 当前参数；没有对应组件的字段必须留空 |
 | 说明文本 | 开启 `canEditInfo` 后填写；支持中文、逗号、双引号和多行 |
@@ -37,6 +37,6 @@ Block/绑定的 OnValidate 请求延迟应用；CSV 是已填写数值的权威�
 
 `BlockCsvChecks.RunEditMode()` 在当前 Editor 验证真实文件同步、质量模式、私有字段、子物体、共享 requiresPower、多行文本、幂等和错误拒绝；结束恢复测试前的 CSV/Prefab 字节。`RunPlayMode()` 在 Play Mode 验证真实 Awake 覆盖、耐久初始化顺序和 GUID 绑定。报告位于 `Temp/BlockCsvChecks`，本次交付记录见 [验证记录](Validation/2026-10-11-block-csv.json)。
 
-维修仓原先缺少 Power，导致已选中损坏目标但无法离仓；现已补充 Power，CSV 最低/标准功率为 50/100。保持 requiresPower=true 时需接入发电机与中继供电网络；false 可免供电工作。Bake 会拒绝需要供电却缺少 Power 的货仓或机器人所属仓。
+维修仓原先缺少 Power，导致已选中损坏目标但无法离仓；现已补充 Power。BotContainer 的最低工作功率必须等于额定工作功率，供电只决定是否从仓内起飞；已经离仓的机器人会继续完成任务或返航。保持 requiresPower=true 时需接入发电机与中继供电网络；false 可免供电工作。Bake 会拒绝不满足功率门槛或缺少 Power 的货仓/机器人所属仓。
 
 `BlockCsvRegressionChecks.Begin()` 在 Play Mode 用真实 Prefab 验证无电留仓、供电离仓维修、断电停止及免供电恢复，并检查重复 CSV 应用保留运行状态。后台验证时需临时启用 Application.runInBackground 并在结束后恢复；报告见 [回归记录](Validation/2026-10-11-block-csv-regression.json)。

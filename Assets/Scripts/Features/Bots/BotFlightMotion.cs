@@ -170,7 +170,7 @@ public sealed class BotFlightMotion
                 _settings.ReturnBrakingAcceleration);
             Vector3 acceleration = Vector3.ClampMagnitude(
                 (desiredVelocity - _rigidbody.linearVelocity) / Mathf.Max(0.001f, Time.fixedDeltaTime),
-                Mathf.Max(1f, _settings.ReturnBrakingAcceleration));
+                Mathf.Max(1f, _settings.ReturnBrakingAcceleration, effectiveSpeed * 2f));
             _rigidbody.AddForce(acceleration, ForceMode.Acceleration);
         }
     }
@@ -179,7 +179,10 @@ public sealed class BotFlightMotion
     {
         float remainingDistance = Mathf.Max(0f, Vector3.Distance(_transform.position, targetPosition) - _settings.DockingApproachTolerance);
         float brakingAcceleration = Mathf.Max(0.1f, _settings.ReturnBrakingAcceleration);
-        float maxReturnSpeed = Mathf.Max(_settings.ReturnStopSpeed, effectiveSpeed * 2f);
+        Vector3 homeVelocity = homeRigidbody != null ? homeRigidbody.GetPointVelocity(targetPosition) : Vector3.zero;
+        // 追赶移动中的载体时，Bot 需要比载体保留相对速度；否则载体一加速，返航距离会持续增加。
+        float chaseSpeed = homeVelocity.magnitude * 1.25f;
+        float maxReturnSpeed = Mathf.Max(_settings.ReturnStopSpeed, effectiveSpeed * 2f, chaseSpeed);
         float stoppingLimitedSpeed = Mathf.Sqrt(2f * brakingAcceleration * remainingDistance);
         float distanceLimitedSpeed = Mathf.Lerp(
             _settings.ReturnStopSpeed,
@@ -188,11 +191,12 @@ public sealed class BotFlightMotion
         float facingAlignment = Mathf.Clamp01(Vector3.Dot(_transform.forward, targetDirection));
         float desiredRelativeSpeed = Mathf.Min(stoppingLimitedSpeed, distanceLimitedSpeed, maxReturnSpeed);
         desiredRelativeSpeed = Mathf.Max(_settings.ReturnStopSpeed, desiredRelativeSpeed * Mathf.Lerp(0.35f, 1f, facingAlignment));
-        Vector3 homeVelocity = homeRigidbody != null ? homeRigidbody.GetPointVelocity(targetPosition) : Vector3.zero;
         Vector3 desiredWorldVelocity = homeVelocity + _direction.normalized * desiredRelativeSpeed;
         desiredWorldVelocity = _obstacles.ConstrainVelocity(desiredWorldVelocity, Time.fixedDeltaTime, _rigidbody.linearVelocity, brakingAcceleration);
         Vector3 velocityDelta = desiredWorldVelocity - _rigidbody.linearVelocity;
-        Vector3 acceleration = Vector3.ClampMagnitude(velocityDelta / Mathf.Max(Time.fixedDeltaTime, 0.001f), brakingAcceleration);
+        Vector3 acceleration = Vector3.ClampMagnitude(
+            velocityDelta / Mathf.Max(Time.fixedDeltaTime, 0.001f),
+            Mathf.Max(brakingAcceleration, chaseSpeed * 2f));
         _rigidbody.AddForce(acceleration, ForceMode.Acceleration);
     }
 }

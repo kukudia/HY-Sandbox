@@ -61,7 +61,9 @@ public class RepairBot : Bot
 
         bool requested = currentTarget != null || transform.parent != home;
         Power power = SetHomePowerRequested(_requiresPower && requested);
-        if (_requiresPower && requested && (power == null || !power.isWorking))
+        // Energy is a launch gate. A bot already outside the container keeps
+        // navigating and can return even if the container loses its supply.
+        if (_requiresPower && requested && transform.parent == home && (power == null || !power.isWorking))
         {
             isRepairing = false;
             UpdateRepairBeam(false);

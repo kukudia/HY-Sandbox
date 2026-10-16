@@ -162,6 +162,14 @@ public sealed class BlockCsvDocument
             throw new InvalidDataException(values[0] + "：最低工作功率不能大于额定工作功率。");
         }
 
+        if (values[3].Contains("CollectionBot", StringComparison.Ordinal) || values[3].Contains("RepairBot", StringComparison.Ordinal))
+        {
+            if (minimum.Length == 0 || standard.Length == 0 || !Mathf.Approximately(float.Parse(minimum, Invariant), float.Parse(standard, Invariant)))
+            {
+                throw new InvalidDataException(values[0] + "：BotContainer 的最低工作功率必须等于额定工作功率。");
+            }
+        }
+
         if (Value("Block.info").Length > 0 && Value("Block.canEditInfo") != "true")
         {
             throw new InvalidDataException(values[0] + "：填写说明文本需要开启 canEditInfo。");

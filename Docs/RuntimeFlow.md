@@ -8,7 +8,7 @@
 
     ## CSV 方块配置与质量
 
-源码推导：CSV 是数值源；Editor 导入后延迟校验、备份并同步 Prefab。OnValidate 只排队，不在导入线程写资产；Awake 提前应用配置，随后各组件初始化。空 mass 为体积质量，存档恢复保留实例尺寸再刷新派生数据；运行时不执行制作期组件创建和连接重建，尺寸变化时才重建连接。
+源码推导：CSV 是数值源；Editor 导入后延迟校验、备份并同步 Prefab。旧 density 列已移除，Block 字段保留兼容；BotContainer 要求最低功率等于额定功率，供电只作为起飞门槛，离仓 Bot 继续任务/返航。OnValidate 只排队，不在导入线程写资产；Awake 提前应用配置，随后各组件初始化。空 mass 为体积质量，存档恢复保留实例尺寸再刷新派生数据；运行时不执行制作期组件创建和连接重建，尺寸变化时才重建连接。
 
 ```mermaid
 flowchart TD
@@ -955,21 +955,21 @@ flowchart TD
     F["BotObstacleAvoidance.Evaluate()"]
     click F "../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L63" "打开源码"
     G["RepairBot.CheckAndRepair()"]
-    click G "../Assets/Scripts/Features/Bots/RepairBot.cs#L108" "打开源码"
+    click G "../Assets/Scripts/Features/Bots/RepairBot.cs#L110" "打开源码"
     H["RepairBeamView.Update()"]
     click H "../Assets/Scripts/Features/Bots/RepairBeamView.cs#L49" "打开源码"
     I["CollectionBot.FixedUpdate()"]
     click I "../Assets/Scripts/Features/Bots/CollectionBot.cs#L31" "打开源码"
     J["CollectionBot.FindTarget()"]
-    click J "../Assets/Scripts/Features/Bots/CollectionBot.cs#L104" "打开源码"
+    click J "../Assets/Scripts/Features/Bots/CollectionBot.cs#L106" "打开源码"
     K["LootDrop.Claim()"]
     click K "../Assets/Scripts/Features/Salvage/LootDrop.cs#L188" "打开源码"
     L["CollectionBot.CollectTarget()"]
-    click L "../Assets/Scripts/Features/Bots/CollectionBot.cs#L80" "打开源码"
+    click L "../Assets/Scripts/Features/Bots/CollectionBot.cs#L82" "打开源码"
     M["LootDrop.Carry()"]
     click M "../Assets/Scripts/Features/Salvage/LootDrop.cs#L200" "打开源码"
     N["CollectionBot.ReturnCargo()"]
-    click N "../Assets/Scripts/Features/Bots/CollectionBot.cs#L89" "打开源码"
+    click N "../Assets/Scripts/Features/Bots/CollectionBot.cs#L91" "打开源码"
     O["Bot.NavigateHomeSmoothly()"]
     click O "../Assets/Scripts/Features/Bots/Bot.cs#L267" "打开源码"
     P["BotFlightMotion.NavigateHome()"]
@@ -981,7 +981,7 @@ flowchart TD
     S["LootDrop.Deliver()"]
     click S "../Assets/Scripts/Features/Salvage/LootDrop.cs#L231" "打开源码"
     T["CollectionBot.Abandon()"]
-    click T "../Assets/Scripts/Features/Bots/CollectionBot.cs#L141" "打开源码"
+    click T "../Assets/Scripts/Features/Bots/CollectionBot.cs#L143" "打开源码"
     A --> B
     A -->|扫描目标时| C
     A --> D
@@ -1018,21 +1018,21 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Bots/BotFlightMotion.cs|NavigateToTarget -->
 - [BotObstacleAvoidance.Evaluate](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L63)
 <!-- source: Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs|Evaluate -->
-- [RepairBot.CheckAndRepair](../Assets/Scripts/Features/Bots/RepairBot.cs#L108)
+- [RepairBot.CheckAndRepair](../Assets/Scripts/Features/Bots/RepairBot.cs#L110)
 <!-- source: Assets/Scripts/Features/Bots/RepairBot.cs|CheckAndRepair -->
 - [RepairBeamView.Update](../Assets/Scripts/Features/Bots/RepairBeamView.cs#L49)
 <!-- source: Assets/Scripts/Features/Bots/RepairBeamView.cs|Update -->
 - [CollectionBot.FixedUpdate](../Assets/Scripts/Features/Bots/CollectionBot.cs#L31)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|FixedUpdate -->
-- [CollectionBot.FindTarget](../Assets/Scripts/Features/Bots/CollectionBot.cs#L104)
+- [CollectionBot.FindTarget](../Assets/Scripts/Features/Bots/CollectionBot.cs#L106)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|FindTarget -->
 - [LootDrop.Claim](../Assets/Scripts/Features/Salvage/LootDrop.cs#L188)
 <!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Claim -->
-- [CollectionBot.CollectTarget](../Assets/Scripts/Features/Bots/CollectionBot.cs#L80)
+- [CollectionBot.CollectTarget](../Assets/Scripts/Features/Bots/CollectionBot.cs#L82)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|CollectTarget -->
 - [LootDrop.Carry](../Assets/Scripts/Features/Salvage/LootDrop.cs#L200)
 <!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Carry -->
-- [CollectionBot.ReturnCargo](../Assets/Scripts/Features/Bots/CollectionBot.cs#L89)
+- [CollectionBot.ReturnCargo](../Assets/Scripts/Features/Bots/CollectionBot.cs#L91)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|ReturnCargo -->
 - [Bot.NavigateHomeSmoothly](../Assets/Scripts/Features/Bots/Bot.cs#L267)
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|NavigateHomeSmoothly -->
@@ -1044,7 +1044,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|ReturnHome -->
 - [LootDrop.Deliver](../Assets/Scripts/Features/Salvage/LootDrop.cs#L231)
 <!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Deliver -->
-- [CollectionBot.Abandon](../Assets/Scripts/Features/Bots/CollectionBot.cs#L141)
+- [CollectionBot.Abandon](../Assets/Scripts/Features/Bots/CollectionBot.cs#L143)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|Abandon -->
 
 ## 掉落概率、表现与文字遮挡
@@ -1262,7 +1262,7 @@ flowchart TD
     Y["BuildingRuntime.PrepareForUnload()"]
     click Y "../Assets/Scripts/Features/World/BuildingRuntime.cs#L140" "打开源码"
     Z["CollectionBot.PrepareForHomeDestruction()"]
-    click Z "../Assets/Scripts/Features/Bots/CollectionBot.cs#L164" "打开源码"
+    click Z "../Assets/Scripts/Features/Bots/CollectionBot.cs#L166" "打开源码"
     AA["LootDrop.Release()"]
     click AA "../Assets/Scripts/Features/Salvage/LootDrop.cs#L214" "打开源码"
     A --> B
@@ -1350,7 +1350,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|PrepareForUnload -->
 - [BuildingRuntime.PrepareForUnload](../Assets/Scripts/Features/World/BuildingRuntime.cs#L140)
 <!-- source: Assets/Scripts/Features/World/BuildingRuntime.cs|PrepareForUnload -->
-- [CollectionBot.PrepareForHomeDestruction](../Assets/Scripts/Features/Bots/CollectionBot.cs#L164)
+- [CollectionBot.PrepareForHomeDestruction](../Assets/Scripts/Features/Bots/CollectionBot.cs#L166)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|PrepareForHomeDestruction -->
 - [LootDrop.Release](../Assets/Scripts/Features/Salvage/LootDrop.cs#L214)
 <!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Release -->
@@ -1535,7 +1535,7 @@ flowchart TD
     Q["BuildingRuntime.PrepareForUnload()"]
     click Q "../Assets/Scripts/Features/World/BuildingRuntime.cs#L140" "打开源码"
     R["CollectionBot.PrepareForHomeDestruction()"]
-    click R "../Assets/Scripts/Features/Bots/CollectionBot.cs#L164" "打开源码"
+    click R "../Assets/Scripts/Features/Bots/CollectionBot.cs#L166" "打开源码"
     S["LootDrop.Release()"]
     click S "../Assets/Scripts/Features/Salvage/LootDrop.cs#L214" "打开源码"
     A --> B
@@ -1592,7 +1592,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs|Release -->
 - [BuildingRuntime.PrepareForUnload](../Assets/Scripts/Features/World/BuildingRuntime.cs#L140)
 <!-- source: Assets/Scripts/Features/World/BuildingRuntime.cs|PrepareForUnload -->
-- [CollectionBot.PrepareForHomeDestruction](../Assets/Scripts/Features/Bots/CollectionBot.cs#L164)
+- [CollectionBot.PrepareForHomeDestruction](../Assets/Scripts/Features/Bots/CollectionBot.cs#L166)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|PrepareForHomeDestruction -->
 - [LootDrop.Release](../Assets/Scripts/Features/Salvage/LootDrop.cs#L214)
 <!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Release -->
@@ -2651,7 +2651,7 @@ flowchart TD
     N["CollectionBot.FixedUpdate()"]
     click N "../Assets/Scripts/Features/Bots/CollectionBot.cs#L31" "打开源码"
     O["CollectionBot.ReturnCargo()"]
-    click O "../Assets/Scripts/Features/Bots/CollectionBot.cs#L89" "打开源码"
+    click O "../Assets/Scripts/Features/Bots/CollectionBot.cs#L91" "打开源码"
     P["CargoHold.Store()"]
     click P "../Assets/Scripts/Features/Salvage/CargoHold.cs#L128" "打开源码"
     A --> B
@@ -2699,7 +2699,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Salvage/WreckSalvage.cs|Convert -->
 - [CollectionBot.FixedUpdate](../Assets/Scripts/Features/Bots/CollectionBot.cs#L31)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|FixedUpdate -->
-- [CollectionBot.ReturnCargo](../Assets/Scripts/Features/Bots/CollectionBot.cs#L89)
+- [CollectionBot.ReturnCargo](../Assets/Scripts/Features/Bots/CollectionBot.cs#L91)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|ReturnCargo -->
 - [CargoHold.Store](../Assets/Scripts/Features/Salvage/CargoHold.cs#L128)
 <!-- source: Assets/Scripts/Features/Salvage/CargoHold.cs|Store -->
@@ -2727,7 +2727,7 @@ flowchart TD
     H["CollectionBot.FixedUpdate()"]
     click H "../Assets/Scripts/Features/Bots/CollectionBot.cs#L31" "打开源码"
     I["CollectionBot.ReturnCargo()"]
-    click I "../Assets/Scripts/Features/Bots/CollectionBot.cs#L89" "打开源码"
+    click I "../Assets/Scripts/Features/Bots/CollectionBot.cs#L91" "打开源码"
     J["LootDrop.Deliver()"]
     click J "../Assets/Scripts/Features/Salvage/LootDrop.cs#L231" "打开源码"
     K["CargoHold.Store()"]
@@ -2761,7 +2761,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Update -->
 - [CollectionBot.FixedUpdate](../Assets/Scripts/Features/Bots/CollectionBot.cs#L31)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|FixedUpdate -->
-- [CollectionBot.ReturnCargo](../Assets/Scripts/Features/Bots/CollectionBot.cs#L89)
+- [CollectionBot.ReturnCargo](../Assets/Scripts/Features/Bots/CollectionBot.cs#L91)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|ReturnCargo -->
 - [LootDrop.Deliver](../Assets/Scripts/Features/Salvage/LootDrop.cs#L231)
 <!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Deliver -->
