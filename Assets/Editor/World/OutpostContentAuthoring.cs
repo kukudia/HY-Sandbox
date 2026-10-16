@@ -1,4 +1,4 @@
-// 职责：以明确布局生成六套可编辑建筑/据点JSON，打包既有三套敌机蓝图供驻军选择。
+// 职责：制作三套普通建筑与三套敌机轮廓底座JSON，保留可重建的项目源。
 // 入口：Bake()；只写项目Resources，不修改用户蓝图或存档；已有JSON保留，编辑后可单独删除重建。
 using System;
 using System.IO;
@@ -48,19 +48,42 @@ public static class OutpostContentAuthoring
         Write("Field Workshop", Workshop(), overwrite);
         Write("Abandoned Storehouse", Storehouse(), overwrite);
         Write("Relay Ruins", Ruins(), overwrite);
-        BlockDataList watch = Watch();
-        Defend(watch, enemies[0], new Vector3(-24f, 12f, 0f), 90f);
-        Write("Road Watch Outpost", watch, overwrite);
-        BlockDataList relay = Relay();
-        Defend(relay, enemies[0], new Vector3(-28f, 12f, 0f), 90f);
-        Defend(relay, enemies[1], new Vector3(32f, 12f, 0f), 270f);
-        Write("Relay Station Outpost", relay, overwrite);
-        BlockDataList stronghold = Stronghold();
-        Defend(stronghold, enemies[1], new Vector3(-32f, 14f, 0f), 90f);
-        Defend(stronghold, enemies[2], new Vector3(38f, 14f, 0f), 270f);
-        Defend(stronghold, enemies[0], new Vector3(0f, 14f, 36f), 180f);
-        Write("Supply Stronghold Outpost", stronghold, overwrite);
+        foreach (string enemy in enemies)
+        {
+            BlockDataList blueprint = JsonUtility.FromJson<BlockDataList>(File.ReadAllText(Root + "/Enemies/" + enemy + ".json"));
+            Write(enemy + " Outpost", OutpostBaseDesigner.Create(blueprint, enemy), overwrite);
+        }
+
         AssetDatabase.Refresh();
+    }
+
+    [MenuItem("Tools/HY-Sandbox/Outposts/Export matching bases to BuildingBlueprints")]
+    public static void ExportMatchingBases()
+    {
+        if (EditorApplication.isPlaying)
+        {
+            throw new InvalidOperationException("Exit Play Mode first.");
+        }
+
+        string directory = Path.Combine(Application.persistentDataPath, "BuildingBlueprints");
+        Directory.CreateDirectory(directory);
+        foreach (TextAsset enemy in Resources.LoadAll<TextAsset>("WorldBlueprints/Enemies"))
+        {
+            string path = Path.Combine(directory, enemy.name + " Outpost.json");
+            if (File.Exists(path))
+            {
+                continue;
+            }
+
+            BlockDataList data = OutpostBaseDesigner.Create(JsonUtility.FromJson<BlockDataList>(enemy.text), enemy.name);
+            using (var stream = new FileStream(path, FileMode.CreateNew, FileAccess.Write))
+            {
+                using (var writer = new StreamWriter(stream, new UTF8Encoding(false)))
+                {
+                    writer.Write(JsonUtility.ToJson(data, true));
+                }
+            }
+        }
     }
 
     private static BlockDataList Base(int width, int length)
@@ -173,119 +196,6 @@ public static class OutpostContentAuthoring
             2);
         Add(data, "PowerTransmissionDevice", new Vector3(2f, 9.5f, 2f));
         Loot(data, "TechnologyHold", new Vector3(4f, 2f, 0f), CargoKind.Technology, 12);
-        return data;
-    }
-
-    private static BlockDataList Watch()
-    {
-        BlockDataList data = Base(8, 8);
-        Add(
-            data,
-            "1x1x1",
-            new Vector3(0f, 3f, 3f),
-            3,
-            4,
-            3);
-        Add(data, "PowerGeneratingUnit", new Vector3(3f, 2f, 3f));
-        Add(data, "PowerTransmissionDevice", new Vector3(1.5f, 5.5f, 3.5f));
-        Add(data, "ProjectileTurretSingle", new Vector3(0f, 5.5f, 3f));
-        Add(
-            data,
-            "1x1x1",
-            new Vector3(1.5f, 1.5f, -1.5f),
-            7,
-            1,
-            1);
-        Loot(data, "CoinHold", new Vector3(4f, 2f, 0f), CargoKind.Coins, 100);
-        return data;
-    }
-
-    private static BlockDataList Relay()
-    {
-        BlockDataList data = Base(14, 10);
-        foreach (float x in new[]
-        {
-            0f,
-            9f
-        }
-
-        )
-        {
-            Add(
-                data,
-                "1x1x1",
-                new Vector3(x, 3.5f, 5f),
-                3,
-                5,
-                3);
-            Add(data, "ProjectileTurretDouble", new Vector3(x, 6.5f, 5f));
-        }
-
-        Add(data, "PowerGeneratingUnit", new Vector3(4.5f, 2f, 5f));
-        Add(data, "PowerTransmissionDevice", new Vector3(1.5f, 6.5f, 5.5f));
-        Add(data, "PowerTransmissionDevice", new Vector3(7.5f, 6.5f, 5.5f));
-        Add(
-            data,
-            "1x1x1",
-            new Vector3(4.5f, 6.5f, 5f),
-            6,
-            1,
-            1);
-        Loot(data, "TechnologyHold", new Vector3(4.5f, 2f, 1f), CargoKind.Technology, 35);
-        return data;
-    }
-
-    private static BlockDataList Stronghold()
-    {
-        BlockDataList data = Base(18, 16);
-        Add(
-            data,
-            "1x1x1",
-            new Vector3(-1.5f, 3f, 6f),
-            1,
-            4,
-            16);
-        Add(
-            data,
-            "1x1x1",
-            new Vector3(15.5f, 3f, 6f),
-            1,
-            4,
-            16);
-        Add(
-            data,
-            "1x1x1",
-            new Vector3(7f, 3f, 13.5f),
-            16,
-            4,
-            1);
-        foreach (float x in new[]
-        {
-            0f,
-            13f
-        }
-
-        )
-        {
-            Add(
-                data,
-                "1x1x1",
-                new Vector3(x, 4f, 0f),
-                3,
-                6,
-                3);
-            Add(data, "ProjectileTurretDouble", new Vector3(x, 7.5f, 0f));
-        }
-
-        Add(data, "PowerGeneratingUnit", new Vector3(7f, 2f, 10f));
-        Add(data, "PowerTransmissionDevice", new Vector3(6.5f, 1.5f, 6.5f));
-        Add(data, "PowerTransmissionDevice", new Vector3(1.5f, 7.5f, 1.5f));
-        Add(data, "PowerTransmissionDevice", new Vector3(11.5f, 7.5f, 1.5f));
-        Loot(data, "CoinHold", new Vector3(5f, 2f, 9f), CargoKind.Coins, 100);
-        Loot(data, "CoinHold", new Vector3(3f, 2f, 9f), CargoKind.Coins, 100);
-        Loot(data, "CoinHold", new Vector3(11f, 2f, 9f), CargoKind.Coins, 100);
-        Loot(data, "TechnologyHold", new Vector3(9f, 2f, 9f), CargoKind.Technology, 65);
-        Loot(data, "CargoHold", new Vector3(7f, 2f, 4f), CargoKind.SpecialPart, 8);
         return data;
     }
 
@@ -414,19 +324,6 @@ public static class OutpostContentAuthoring
         }
 
         return resource;
-    }
-
-    private static void Defend(BlockDataList data, string enemy, Vector3 position, float yaw)
-    {
-        if (data.outpost == null)
-        {
-            data.outpost = new EnemyOutpostData
-            {
-                enabled = true
-            };
-        }
-
-        data.outpost.garrison.Add(new OutpostGarrisonData { id = "guard-" + data.outpost.garrison.Count, name = enemy, position = position, yaw = yaw, blueprint = new OutpostEnemyBlueprint { blocks = JsonUtility.FromJson<BlockDataList>(File.ReadAllText(Root + "/Enemies/" + enemy + ".json")).blocks } });
     }
 
     private static void Write(string name, BlockDataList data, bool overwrite)

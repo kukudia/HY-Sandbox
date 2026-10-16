@@ -81,8 +81,37 @@ public sealed class BuildingOutpostEditor : MonoBehaviour
             return;
         }
 
-        templates.Add(data);
-        names.Add(name);
+        int existing = names.IndexOf(name);
+        if (existing >= 0)
+        {
+            templates[existing] = data;
+        }
+        else
+        {
+            templates.Add(data);
+            names.Add(name);
+        }
+    }
+
+    public void CreateMatchingBase()
+    {
+        if (templates.Count == 0)
+        {
+            _status.text = "Select an enemy blueprint first.";
+            return;
+        }
+
+        try
+        {
+            string enemy = names[_blueprint.value];
+            BlockDataList data = OutpostBaseDesigner.Create(templates[_blueprint.value], enemy);
+            string name = SaveManager.instance.SaveNewBuilding(enemy + " Outpost", data);
+            BuildManager.instance.EnterBuildingBlueprintBuildMode(name);
+        }
+        catch (Exception error) when (error is InvalidOperationException || error is IOException || error is UnauthorizedAccessException)
+        {
+            _status.text = "Could not create base: " + error.Message;
+        }
     }
 
     public void CopyBuildingTemplate()
@@ -164,7 +193,13 @@ public sealed class BuildingOutpostEditor : MonoBehaviour
             return;
         }
 
-        data.garrison.Add(new OutpostGarrisonData { id = Guid.NewGuid().ToString("N"), name = names[_blueprint.value], blueprint = new OutpostEnemyBlueprint { blocks = JsonUtility.FromJson<BlockDataList>(JsonUtility.ToJson(templates[_blueprint.value])).blocks }, position = Quaternion.Euler(0f, data.garrison.Count * 45f, 0f) * new Vector3(-40f, 12f, 0f) });
+        Bounds bounds = OutpostBaseDesigner.BoundsOf(templates[_blueprint.value].blocks, Quaternion.identity);
+        BlockDataList building = SaveManager.instance.cachedData;
+        Bounds baseBounds = OutpostBaseDesigner.BoundsOf(building.blocks, Quaternion.identity);
+        Vector3 center = new Vector3(building.foundation.width * .5f - 2f, 0f, building.foundation.length * .5f - 2f);
+        Vector3 position = center - new Vector3(bounds.center.x, bounds.min.y, bounds.center.z);
+        position.y += Mathf.Max(1f, baseBounds.max.y) + .15f;
+        data.garrison.Add(new OutpostGarrisonData { id = Guid.NewGuid().ToString("N"), name = names[_blueprint.value], blueprint = new OutpostEnemyBlueprint { blocks = JsonUtility.FromJson<BlockDataList>(JsonUtility.ToJson(templates[_blueprint.value])).blocks }, position = position });
         if (Save(data))
         {
             _defender.SetValueWithoutNotify(data.garrison.Count - 1);

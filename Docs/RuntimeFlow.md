@@ -111,7 +111,7 @@ flowchart TD
     C["SaveUIPanel.RefreshList()"]
     click C "../Assets/Scripts/Features/Building/SaveUIPanel.cs#L17" "打开源码"
     D["SaveManager.LoadSave()"]
-    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L246" "打开源码"
+    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L256" "打开源码"
     E["BuildManager.LoadAllBlocks()"]
     click E "../Assets/Scripts/Features/Building/BuildManager.cs#L563" "打开源码"
     F["MainUIPanels.PlayStart()"]
@@ -169,7 +169,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Bootstrap/GameManager.cs|Init -->
 - [SaveUIPanel.RefreshList](../Assets/Scripts/Features/Building/SaveUIPanel.cs#L17)
 <!-- source: Assets/Scripts/Features/Building/SaveUIPanel.cs|RefreshList -->
-- [SaveManager.LoadSave](../Assets/Scripts/Features/Building/SaveManager.cs#L246)
+- [SaveManager.LoadSave](../Assets/Scripts/Features/Building/SaveManager.cs#L256)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|LoadSave -->
 - [BuildManager.LoadAllBlocks](../Assets/Scripts/Features/Building/BuildManager.cs#L563)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|LoadAllBlocks -->
@@ -235,7 +235,7 @@ flowchart TD
     M["BuildManager.ExitDeveloperBlueprintBuildMode()"]
     click M "../Assets/Scripts/Features/Building/BuildManager.cs#L228" "打开源码"
     N["SaveManager.LoadSave()"]
-    click N "../Assets/Scripts/Features/Building/SaveManager.cs#L246" "打开源码"
+    click N "../Assets/Scripts/Features/Building/SaveManager.cs#L256" "打开源码"
     A -->|Ctrl+Alt+F| B
     B -->|进入| C
     C --> D
@@ -277,7 +277,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|CheckConnection -->
 - [BuildManager.ExitDeveloperBlueprintBuildMode](../Assets/Scripts/Features/Building/BuildManager.cs#L228)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|ExitDeveloperBlueprintBuildMode -->
-- [SaveManager.LoadSave](../Assets/Scripts/Features/Building/SaveManager.cs#L246)
+- [SaveManager.LoadSave](../Assets/Scripts/Features/Building/SaveManager.cs#L256)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|LoadSave -->
 
 ## 蓝图恢复、统计和取消
@@ -2183,11 +2183,11 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["BuildingOutpostEditor.SetOutpost()"]
-    click A "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L134" "打开源码"
+    click A "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L163" "打开源码"
     B["BuildingOutpostEditor.AddDefender()"]
-    click B "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L151" "打开源码"
+    click B "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L180" "打开源码"
     C["BuildingOutpostEditor.SavePose()"]
-    click C "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L198" "打开源码"
+    click C "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L233" "打开源码"
     D["SaveManager.SaveBuildingOutpost()"]
     click D "../Assets/Scripts/Features/Building/SaveManager.cs#L147" "打开源码"
     E["EnemyOutpostData.Validate()"]
@@ -2203,17 +2203,17 @@ flowchart TD
     J["OutpostEncounterDirector.Tick()"]
     click J "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L51" "打开源码"
     K["OutpostEncounterDirector.Spawn()"]
-    click K "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L161" "打开源码"
+    click K "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L170" "打开源码"
     L["EnemyBlueprintFactory.Spawn()"]
     click L "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L41" "打开源码"
     M["OutpostEncounterDirector.Hibernate()"]
-    click M "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L251" "打开源码"
+    click M "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L293" "打开源码"
     N["DestroyManager.DestroyGameObject()"]
     click N "../Assets/Scripts/Features/Combat/DestroyManager.cs#L30" "打开源码"
     O["EnemyIdentity.ReportDefeated()"]
     click O "../Assets/Scripts/Features/Combat/EnemyIdentity.cs#L9" "打开源码"
     P["OutpostEncounterDirector.Clear()"]
-    click P "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L297" "打开源码"
+    click P "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L339" "打开源码"
     Q["WorldSessionManager.BeginPreparation()"]
     click Q "../Assets/Scripts/Features/World/WorldSessionManager.cs#L85" "打开源码"
     R["OutpostHud.Update()"]
@@ -2240,11 +2240,11 @@ flowchart TD
     S -->|按字形宽度缩短名称| T
 ```
 
-- [BuildingOutpostEditor.SetOutpost](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L134)
+- [BuildingOutpostEditor.SetOutpost](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L163)
 <!-- source: Assets/Scripts/Features/Building/BuildingOutpostEditor.cs|SetOutpost -->
-- [BuildingOutpostEditor.AddDefender](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L151)
+- [BuildingOutpostEditor.AddDefender](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L180)
 <!-- source: Assets/Scripts/Features/Building/BuildingOutpostEditor.cs|AddDefender -->
-- [BuildingOutpostEditor.SavePose](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L198)
+- [BuildingOutpostEditor.SavePose](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L233)
 <!-- source: Assets/Scripts/Features/Building/BuildingOutpostEditor.cs|SavePose -->
 - [SaveManager.SaveBuildingOutpost](../Assets/Scripts/Features/Building/SaveManager.cs#L147)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|SaveBuildingOutpost -->
@@ -2260,17 +2260,17 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Update -->
 - [OutpostEncounterDirector.Tick](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L51)
 <!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Tick -->
-- [OutpostEncounterDirector.Spawn](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L161)
+- [OutpostEncounterDirector.Spawn](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L170)
 <!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Spawn -->
 - [EnemyBlueprintFactory.Spawn](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L41)
 <!-- source: Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs|Spawn -->
-- [OutpostEncounterDirector.Hibernate](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L251)
+- [OutpostEncounterDirector.Hibernate](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L293)
 <!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Hibernate -->
 - [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L30)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyGameObject -->
 - [EnemyIdentity.ReportDefeated](../Assets/Scripts/Features/Combat/EnemyIdentity.cs#L9)
 <!-- source: Assets/Scripts/Features/Combat/EnemyIdentity.cs|ReportDefeated -->
-- [OutpostEncounterDirector.Clear](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L297)
+- [OutpostEncounterDirector.Clear](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L339)
 <!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Clear -->
 - [WorldSessionManager.BeginPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L85)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|BeginPreparation -->
@@ -2283,30 +2283,34 @@ flowchart TD
 
 ## 据点驻军部署范围预览
 
-源码推导：保存位置或切换驻军后，在蓝图根局部坐标绘制实际模块盒、合计范围和朝向。选中驻军显示模块细节，其他驻军仅显示范围；与建筑/其他驻军AABB重叠只给保守警告，不阻止保存。预览只有显示组件，独立拥有并释放运行时Mesh/Material；LateUpdate让标签朝向编辑镜头，退出面板清理。线框不是敌机实体或精确碰撞检测。
+源码推导：保存位置或切换驻军后，按建筑制作世界坐标同时显示底座和完整敌机模型；忽略父Prefab偏移。模块级AABB检查净空，合计范围只用作选择框。预览复制Mesh/Material引用，没有战斗/物理组件；退出面板释放显示对象和临时线框。
 
 ```mermaid
 flowchart TD
     A["BuildingOutpostEditor.SelectDefender()"]
-    click A "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L175" "打开源码"
+    click A "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L210" "打开源码"
     B["BuildingOutpostEditor.ShowPreview()"]
-    click B "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L255" "打开源码"
+    click B "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L290" "打开源码"
     C["OutpostDeploymentPreview.CalculateBounds()"]
-    click C "../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L146" "打开源码"
+    click C "../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L164" "打开源码"
     D["OutpostDeploymentPreview.DrawGuard()"]
-    click D "../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L85" "打开源码"
+    click D "../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L91" "打开源码"
     E["BuildingOutpostEditor.SavePose()"]
-    click E "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L198" "打开源码"
+    click E "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L233" "打开源码"
     F["BuildingOutpostEditor.LateUpdate()"]
-    click F "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L279" "打开源码"
+    click F "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L314" "打开源码"
     G["OutpostDeploymentPreview.FaceLabels()"]
-    click G "../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L138" "打开源码"
+    click G "../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L136" "打开源码"
     H["BuildingOutpostEditor.OnDisable()"]
-    click H "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L274" "打开源码"
+    click H "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L309" "打开源码"
     I["BuildingOutpostEditor.ClearPreview()"]
-    click I "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L265" "打开源码"
+    click I "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L300" "打开源码"
     J["OutpostDeploymentPreview.Dispose()"]
-    click J "../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L206" "打开源码"
+    click J "../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L224" "打开源码"
+    K["BlueprintModelPreview.Create()"]
+    click K "../Assets/Scripts/Features/Building/BlueprintModelPreview.cs#L8" "打开源码"
+    L["OutpostDeploymentPreview.OverlapsBuilding()"]
+    click L "../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L144" "打开源码"
     A --> B
     E -->|经Save与SelectDefender| B
     B --> I
@@ -2315,28 +2319,101 @@ flowchart TD
     F --> G
     H --> I
     I --> J
+    B -->|经预览构造器| K
+    B -->|经预览构造器| L
 ```
 
-- [BuildingOutpostEditor.SelectDefender](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L175)
+- [BuildingOutpostEditor.SelectDefender](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L210)
 <!-- source: Assets/Scripts/Features/Building/BuildingOutpostEditor.cs|SelectDefender -->
-- [BuildingOutpostEditor.ShowPreview](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L255)
+- [BuildingOutpostEditor.ShowPreview](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L290)
 <!-- source: Assets/Scripts/Features/Building/BuildingOutpostEditor.cs|ShowPreview -->
-- [OutpostDeploymentPreview.CalculateBounds](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L146)
+- [OutpostDeploymentPreview.CalculateBounds](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L164)
 <!-- source: Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs|CalculateBounds -->
-- [OutpostDeploymentPreview.DrawGuard](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L85)
+- [OutpostDeploymentPreview.DrawGuard](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L91)
 <!-- source: Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs|DrawGuard -->
-- [BuildingOutpostEditor.SavePose](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L198)
+- [BuildingOutpostEditor.SavePose](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L233)
 <!-- source: Assets/Scripts/Features/Building/BuildingOutpostEditor.cs|SavePose -->
-- [BuildingOutpostEditor.LateUpdate](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L279)
+- [BuildingOutpostEditor.LateUpdate](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L314)
 <!-- source: Assets/Scripts/Features/Building/BuildingOutpostEditor.cs|LateUpdate -->
-- [OutpostDeploymentPreview.FaceLabels](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L138)
+- [OutpostDeploymentPreview.FaceLabels](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L136)
 <!-- source: Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs|FaceLabels -->
-- [BuildingOutpostEditor.OnDisable](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L274)
+- [BuildingOutpostEditor.OnDisable](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L309)
 <!-- source: Assets/Scripts/Features/Building/BuildingOutpostEditor.cs|OnDisable -->
-- [BuildingOutpostEditor.ClearPreview](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L265)
+- [BuildingOutpostEditor.ClearPreview](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L300)
 <!-- source: Assets/Scripts/Features/Building/BuildingOutpostEditor.cs|ClearPreview -->
-- [OutpostDeploymentPreview.Dispose](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L206)
+- [OutpostDeploymentPreview.Dispose](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L224)
 <!-- source: Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs|Dispose -->
+- [BlueprintModelPreview.Create](../Assets/Scripts/Features/Building/BlueprintModelPreview.cs#L8)
+<!-- source: Assets/Scripts/Features/Building/BlueprintModelPreview.cs|Create -->
+- [OutpostDeploymentPreview.OverlapsBuilding](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L144)
+<!-- source: Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs|OverlapsBuilding -->
+
+## 匹配底座与世界停机显示
+
+源码推导：用户选择敌机后生成轮廓平台与服务设施，独立保存组合JSON；已有用户文件不覆盖。世界据点未激活时显示同姿态的完整模型，接近后替换为真实敌机；卸载、击败与会话退出清理显示。
+
+```mermaid
+flowchart TD
+    A["BuildingOutpostEditor.CreateMatchingBase()"]
+    click A "../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L96" "打开源码"
+    B["OutpostBaseDesigner.Create()"]
+    click B "../Assets/Scripts/Features/Building/OutpostBaseDesigner.cs#L37" "打开源码"
+    C["OutpostBaseDesigner.BoundsOf()"]
+    click C "../Assets/Scripts/Features/Building/OutpostBaseDesigner.cs#L9" "打开源码"
+    D["SaveManager.SaveNewBuilding()"]
+    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L189" "打开源码"
+    E["BuildManager.EnterBuildingBlueprintBuildMode()"]
+    click E "../Assets/Scripts/Features/Building/BuildManager.cs#L259" "打开源码"
+    F["OutpostContentAuthoring.ExportMatchingBases()"]
+    click F "../Assets/Editor/World/OutpostContentAuthoring.cs#L60" "打开源码"
+    G["OutpostEncounterDirector.Tick()"]
+    click G "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L51" "打开源码"
+    H["OutpostEncounterDirector.UpdateParkedModel()"]
+    click H "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L242" "打开源码"
+    I["BlueprintModelPreview.Create()"]
+    click I "../Assets/Scripts/Features/Building/BlueprintModelPreview.cs#L8" "打开源码"
+    J["OutpostEncounterDirector.Spawn()"]
+    click J "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L170" "打开源码"
+    K["OutpostEncounterDirector.ClearParkedModel()"]
+    click K "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L263" "打开源码"
+    L["OutpostEncounterDirector.Clear()"]
+    click L "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L339" "打开源码"
+    A --> B
+    B --> C
+    A --> D
+    A --> E
+    F --> B
+    G --> H
+    H --> I
+    G -->|有底座且近距离| J
+    H -->|活动或击败或卸载| K
+    L --> K
+```
+
+- [BuildingOutpostEditor.CreateMatchingBase](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L96)
+<!-- source: Assets/Scripts/Features/Building/BuildingOutpostEditor.cs|CreateMatchingBase -->
+- [OutpostBaseDesigner.Create](../Assets/Scripts/Features/Building/OutpostBaseDesigner.cs#L37)
+<!-- source: Assets/Scripts/Features/Building/OutpostBaseDesigner.cs|Create -->
+- [OutpostBaseDesigner.BoundsOf](../Assets/Scripts/Features/Building/OutpostBaseDesigner.cs#L9)
+<!-- source: Assets/Scripts/Features/Building/OutpostBaseDesigner.cs|BoundsOf -->
+- [SaveManager.SaveNewBuilding](../Assets/Scripts/Features/Building/SaveManager.cs#L189)
+<!-- source: Assets/Scripts/Features/Building/SaveManager.cs|SaveNewBuilding -->
+- [BuildManager.EnterBuildingBlueprintBuildMode](../Assets/Scripts/Features/Building/BuildManager.cs#L259)
+<!-- source: Assets/Scripts/Features/Building/BuildManager.cs|EnterBuildingBlueprintBuildMode -->
+- [OutpostContentAuthoring.ExportMatchingBases](../Assets/Editor/World/OutpostContentAuthoring.cs#L60)
+<!-- source: Assets/Editor/World/OutpostContentAuthoring.cs|ExportMatchingBases -->
+- [OutpostEncounterDirector.Tick](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L51)
+<!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Tick -->
+- [OutpostEncounterDirector.UpdateParkedModel](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L242)
+<!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|UpdateParkedModel -->
+- [BlueprintModelPreview.Create](../Assets/Scripts/Features/Building/BlueprintModelPreview.cs#L8)
+<!-- source: Assets/Scripts/Features/Building/BlueprintModelPreview.cs|Create -->
+- [OutpostEncounterDirector.Spawn](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L170)
+<!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Spawn -->
+- [OutpostEncounterDirector.ClearParkedModel](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L263)
+<!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|ClearParkedModel -->
+- [OutpostEncounterDirector.Clear](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L339)
+<!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Clear -->
 
 ## 敌方蓝图完整恢复
 
@@ -2347,7 +2424,7 @@ flowchart TD
     A["OutpostEncounterDirector.Tick()"]
     click A "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L51" "打开源码"
     B["OutpostEncounterDirector.Spawn()"]
-    click B "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L161" "打开源码"
+    click B "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L170" "打开源码"
     C["EnemyBlueprintFactory.IsValidBlueprint()"]
     click C "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L8" "打开源码"
     D["EnemyBlueprintFactory.Spawn()"]
@@ -2367,7 +2444,7 @@ flowchart TD
     K["EnemyIdentity.SetSpawnMaxHealth()"]
     click K "../Assets/Scripts/Features/Combat/EnemyIdentity.cs#L31" "打开源码"
     L["OutpostEncounterDirector.Hibernate()"]
-    click L "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L251" "打开源码"
+    click L "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L293" "打开源码"
     A -->|未击败、近距离且预算允许| B
     B --> D
     A -->|远离或地形卸载| L
@@ -2383,7 +2460,7 @@ flowchart TD
 
 - [OutpostEncounterDirector.Tick](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L51)
 <!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Tick -->
-- [OutpostEncounterDirector.Spawn](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L161)
+- [OutpostEncounterDirector.Spawn](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L170)
 <!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Spawn -->
 - [EnemyBlueprintFactory.IsValidBlueprint](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L8)
 <!-- source: Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs|IsValidBlueprint -->
@@ -2403,7 +2480,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/ControlUnit.cs|AssignRuntimeOwnershipToBlocks -->
 - [EnemyIdentity.SetSpawnMaxHealth](../Assets/Scripts/Features/Combat/EnemyIdentity.cs#L31)
 <!-- source: Assets/Scripts/Features/Combat/EnemyIdentity.cs|SetSpawnMaxHealth -->
-- [OutpostEncounterDirector.Hibernate](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L251)
+- [OutpostEncounterDirector.Hibernate](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L293)
 <!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Hibernate -->
 
 ## 显式 Player 世界验证

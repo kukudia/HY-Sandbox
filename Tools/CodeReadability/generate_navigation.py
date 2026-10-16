@@ -915,7 +915,7 @@ def main():
     )
     graph(
         "据点驻军部署范围预览",
-        "源码推导：保存位置或切换驻军后，在蓝图根局部坐标绘制实际模块盒、合计范围和朝向。选中驻军显示模块细节，其他驻军仅显示范围；与建筑/其他驻军AABB重叠只给保守警告，不阻止保存。预览只有显示组件，独立拥有并释放运行时Mesh/Material；LateUpdate让标签朝向编辑镜头，退出面板清理。线框不是敌机实体或精确碰撞检测。",
+        "源码推导：保存位置或切换驻军后，按建筑制作世界坐标同时显示底座和完整敌机模型；忽略父Prefab偏移。模块级AABB检查净空，合计范围只用作选择框。预览复制Mesh/Material引用，没有战斗/物理组件；退出面板释放显示对象和临时线框。",
         {
             "A": "BuildingOutpostEditor.SelectDefender",
             "B": "BuildingOutpostEditor.ShowPreview",
@@ -927,11 +927,37 @@ def main():
             "H": "BuildingOutpostEditor.OnDisable",
             "I": "BuildingOutpostEditor.ClearPreview",
             "J": "OutpostDeploymentPreview.Dispose",
+            "K": "BlueprintModelPreview.Create",
+            "L": "OutpostDeploymentPreview.OverlapsBuilding",
         },
         [
             "A --> B", "E -->|经Save与SelectDefender| B", "B --> I",
             "B -->|经预览构造器| C", "B -->|经预览构造器| D",
             "F --> G", "H --> I", "I --> J",
+            "B -->|经预览构造器| K", "B -->|经预览构造器| L",
+        ],
+    )
+    graph(
+        "匹配底座与世界停机显示",
+        "源码推导：用户选择敌机后生成轮廓平台与服务设施，独立保存组合JSON；已有用户文件不覆盖。世界据点未激活时显示同姿态的完整模型，接近后替换为真实敌机；卸载、击败与会话退出清理显示。",
+        {
+            "A": "BuildingOutpostEditor.CreateMatchingBase",
+            "B": "OutpostBaseDesigner.Create",
+            "C": "OutpostBaseDesigner.BoundsOf",
+            "D": "SaveManager.SaveNewBuilding",
+            "E": "BuildManager.EnterBuildingBlueprintBuildMode",
+            "F": "OutpostContentAuthoring.ExportMatchingBases",
+            "G": "OutpostEncounterDirector.Tick",
+            "H": "OutpostEncounterDirector.UpdateParkedModel",
+            "I": "BlueprintModelPreview.Create",
+            "J": "OutpostEncounterDirector.Spawn",
+            "K": "OutpostEncounterDirector.ClearParkedModel",
+            "L": "OutpostEncounterDirector.Clear",
+        },
+        [
+            "A --> B", "B --> C", "A --> D", "A --> E", "F --> B",
+            "G --> H", "H --> I", "G -->|有底座且近距离| J",
+            "H -->|活动或击败或卸载| K", "L --> K",
         ],
     )
     graph(

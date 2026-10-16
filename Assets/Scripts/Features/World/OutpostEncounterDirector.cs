@@ -125,16 +125,25 @@ public sealed class OutpostEncounterDirector
                     activeCount--;
                 }
 
+                if (guard.Snapshot == null && encounter.Building != null)
+                {
+                    encounter.Position = encounter.Building.transform.position;
+                    encounter.Rotation = encounter.Building.transform.rotation;
+                }
+
                 Vector3 position = guard.Snapshot != null ? guard.Position : encounter.Position + encounter.Rotation * guard.Data.position;
                 // A pursuing guard can leave its original site. Resume near its last position,
                 // with a gap below the 180m hibernation threshold to avoid boundary churn.
                 bool deploymentNear = (position - player).sqrMagnitude <= 160f * 160f;
                 bool near = deploymentNear && (guard.Snapshot != null || (encounter.Position - player).sqrMagnitude <= encounter.Data.activationDistance * encounter.Data.activationDistance);
-                if (!spawned && activeCount < 16 && !guard.Defeated && guard.Unit == null && near && world.HasColumn(world.ColumnAt(position)))
+                bool baseReady = encounter.Building != null && encounter.Building.IsOperational;
+                if (!spawned && activeCount < 16 && !guard.Defeated && guard.Unit == null && near && (guard.Snapshot != null || baseReady) && world.HasColumn(world.ColumnAt(position)))
                 {
                     spawned = Spawn(encounter, guard, position);
                     activeCount += guard.Unit != null ? 1 : 0;
                 }
+
+                UpdateParkedModel(encounter, guard, position, baseReady);
             }
 
             bool cleared = remaining == 0 && encounter.Emplacements == 0;
@@ -205,7 +214,9 @@ public sealed class OutpostEncounterDirector
         }
 
         float rise = highest + 2f - bounds.min.y;
-        if (rise > 0f)
+        // Fresh residents must keep the exact authored base pose; only resumed flying snapshots
+        // need terrain clearance after streamed terrain changes.
+        if (guard.Snapshot != null && rise > 0f)
         {
             Rigidbody body = guard.Unit.GetComponent<Rigidbody>();
             body.position += Vector3.up * rise;
@@ -226,6 +237,37 @@ public sealed class OutpostEncounterDirector
         guard.Identity = identity;
         identity.Defeated += () => guard.Defeated = true;
         return true;
+    }
+
+    private void UpdateParkedModel(Encounter encounter, Guard guard, Vector3 position, bool baseReady)
+    {
+        bool visible = !guard.Defeated && guard.Unit == null && (guard.Snapshot != null ? world.HasColumn(world.ColumnAt(position)) : baseReady);
+        if (!visible)
+        {
+            ClearParkedModel(guard);
+            return;
+        }
+
+        if (guard.ParkedModel == null)
+        {
+            guard.ParkedModel = BlueprintModelPreview.Create(
+                (guard.Snapshot ?? guard.Data.CreateBlueprint()).blocks,
+                buildings.transform,
+                "Parked resident " + guard.Data.name);
+        }
+
+        Quaternion rotation = guard.Snapshot != null ? guard.Rotation : encounter.Rotation * Quaternion.Euler(0f, guard.Data.yaw, 0f);
+        guard.ParkedModel.transform.SetPositionAndRotation(position, rotation);
+    }
+
+    private static void ClearParkedModel(Guard guard)
+    {
+        if (guard.ParkedModel != null)
+        {
+            guard.ParkedModel.SetActive(false);
+            UnityEngine.Object.Destroy(guard.ParkedModel);
+            guard.ParkedModel = null;
+        }
     }
 
     private static Bounds DeploymentBounds(BlockDataList blueprint, Vector3 position, Quaternion rotation)
@@ -301,6 +343,7 @@ public sealed class OutpostEncounterDirector
             foreach (Guard guard in encounter.Guards)
             {
                 RefreshOwner(guard);
+                ClearParkedModel(guard);
                 if (guard.Unit != null)
                 {
                     foreach (Bot bot in guard.Unit.GetComponentsInChildren<Bot>(true))
@@ -336,6 +379,7 @@ public sealed class OutpostEncounterDirector
         internal OutpostGarrisonData Data;
         internal ControlUnit Unit;
         internal EnemyIdentity Identity;
+        internal GameObject ParkedModel;
         internal bool Defeated;
         internal BlockDataList Snapshot;
         internal Dictionary<string, float> Health;

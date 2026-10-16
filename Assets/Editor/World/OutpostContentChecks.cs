@@ -102,6 +102,35 @@ public static class OutpostContentChecks
                     checks,
                     asset.name + " capture retains outpost identity",
                     building.Capture().blueprint.IsOutpost == data.IsOutpost);
+                if (data.IsOutpost)
+                {
+                    foreach (OutpostGarrisonData guard in data.outpost.garrison)
+                    {
+                        Bounds envelope = OutpostBaseDesigner.BoundsOf(guard.blueprint.blocks, Quaternion.Euler(0f, guard.yaw, 0f));
+                        envelope.center += guard.position;
+                        Check(
+                            checks,
+                            asset.name + " resident fits above its own base footprint",
+                            envelope.min.x >= -2f && envelope.min.z >= -2f && envelope.max.x <= data.foundation.width - 2f && envelope.max.z <= data.foundation.length - 2f && Mathf.Abs(envelope.min.y - 1.15f) < .001f);
+                        GameObject resident = BlueprintModelPreview.Create(guard.blueprint.blocks, building.transform, "Preview resident");
+                        resident.transform.SetLocalPositionAndRotation(guard.position, Quaternion.Euler(0f, guard.yaw, 0f));
+                        Check(
+                            checks,
+                            asset.name + " solid preview has no gameplay components",
+                            resident.GetComponentsInChildren<MeshFilter>().Length > 50 && resident.GetComponentsInChildren<Component>().All(c => c is Transform || c is MeshFilter || c is MeshRenderer));
+                        Bounds[] baseParts = data.blocks.Select(part => OutpostBaseDesigner.BoundsOf(new[] { part }, Quaternion.identity)).ToArray();
+                        foreach (BlockData part in guard.blueprint.blocks)
+                        {
+                            Bounds residentPart = OutpostBaseDesigner.BoundsOf(new[] { part }, Quaternion.Euler(0f, guard.yaw, 0f));
+                            residentPart.center += guard.position;
+                            Check(
+                                checks,
+                                asset.name + " resident clears base " + part.id,
+                                !baseParts.Any(b => b.Intersects(residentPart)));
+                        }
+                    }
+                }
+
                 Render(building, "Temp/OutpostContent/" + asset.name + ".png");
                 Object.DestroyImmediate(building.gameObject);
             }

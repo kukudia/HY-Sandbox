@@ -1,5 +1,5 @@
-// 职责：以蓝图实际模块尺寸绘制驻军部署线框、朝向和保守包围盒重叠提示。
-// 入口：构造后读取Hint；Dispose释放运行时网格/材质，不创建敌机、碰撞或玩法组件。
+// 职责：在建筑旁展示完整敌机模型、部署线框、朝向及保守包围盒重叠提示。
+// 入口：构造后读取Hint；Dispose释放显示对象与临时网格/材质，不实例化敌机玩法组件。
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -48,6 +48,9 @@ internal sealed class OutpostDeploymentPreview : IDisposable
     {
         root = new GameObject("Outpost deployment preview");
         root.transform.SetParent(parent, false);
+        // The building editor saves block poses in world authoring coordinates; its parent
+        // prefab has an offset. Match the foundation at world zero instead of inheriting it.
+        root.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
         material = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
         material.name = "Outpost bounds preview (runtime)";
         EnemyOutpostData data = building.outpost;
@@ -55,13 +58,16 @@ internal sealed class OutpostDeploymentPreview : IDisposable
         for (int i = 0; i < bounds.Length; i++)
         {
             OutpostGarrisonData guard = data.garrison[i];
+            GameObject model = BlueprintModelPreview.Create(guard.blueprint.blocks, root.transform, "Resident model " + guard.name);
+            model.transform.SetLocalPositionAndRotation(guard.position, Quaternion.Euler(0f, guard.yaw, 0f));
             bounds[i] = CalculateBounds(
                 guard.blueprint.blocks,
                 Matrix4x4.TRS(guard.position, Quaternion.Euler(0f, guard.yaw, 0f), Vector3.one));
         }
 
-        Bounds buildingBounds = CalculateBounds(building.blocks, Matrix4x4.identity);
-        bool overlapsBuilding = building.blocks.Count > 0 && bounds[selected].Intersects(buildingBounds);
+        OutpostGarrisonData selectedGuard = data.garrison[selected];
+        Matrix4x4 selectedPose = Matrix4x4.TRS(selectedGuard.position, Quaternion.Euler(0f, selectedGuard.yaw, 0f), Vector3.one);
+        bool overlapsBuilding = OverlapsBuilding(selectedGuard, selectedPose, building.blocks);
         bool overlapsGuard = false;
         for (int i = 0; i < bounds.Length; i++)
         {
@@ -75,7 +81,7 @@ internal sealed class OutpostDeploymentPreview : IDisposable
         }
 
         Vector3 size = bounds[selected].size;
-        Hint = $"Bounds {size.x:0.#} x {size.y:0.#} x {size.z:0.#}m.\nSelected modules/arrow; grey: other guards.";
+        Hint = $"Enemy {size.x:0.#} x {size.y:0.#} x {size.z:0.#}m.\nFull models + base; cyan: selected resident.";
         if (overlapsBuilding || overlapsGuard)
         {
             Hint = "Orange: bounds overlap " + (overlapsBuilding ? "building" : "another guard") + " (approximate).\n" + Hint;
@@ -88,14 +94,6 @@ internal sealed class OutpostDeploymentPreview : IDisposable
         var indices = new List<int>();
         Matrix4x4 deployment = Matrix4x4.TRS(guard.position, Quaternion.Euler(0f, guard.yaw, 0f), Vector3.one);
         AddBox(vertices, indices, Matrix4x4.TRS(bounds.center, Quaternion.identity, bounds.size));
-        if (selected)
-        {
-            foreach (BlockData block in guard.blueprint.blocks)
-            {
-                AddBox(vertices, indices, deployment * BlockTransform(block));
-            }
-        }
-
         Vector3 forward = deployment.MultiplyVector(Vector3.forward);
         Vector3 right = deployment.MultiplyVector(Vector3.right);
         Vector3 tip = guard.position + forward * 5f;
@@ -141,6 +139,26 @@ internal sealed class OutpostDeploymentPreview : IDisposable
         {
             label.rotation = rotation;
         }
+    }
+
+    private static bool OverlapsBuilding(OutpostGarrisonData guard, Matrix4x4 pose, List<BlockData> building)
+    {
+        var parts = new List<Bounds>();
+        foreach (BlockData block in building)
+        {
+            parts.Add(CalculateBounds(new List<BlockData> { block }, Matrix4x4.identity));
+        }
+
+        foreach (BlockData block in guard.blueprint.blocks)
+        {
+            Bounds bounds = CalculateBounds(new List<BlockData> { block }, pose);
+            if (parts.Exists(part => part.Intersects(bounds)))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static Bounds CalculateBounds(List<BlockData> blocks, Matrix4x4 deployment)

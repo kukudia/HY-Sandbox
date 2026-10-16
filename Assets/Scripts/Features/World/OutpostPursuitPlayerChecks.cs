@@ -51,7 +51,9 @@ internal static class OutpostPursuitPlayerChecks
             }
 
             ControlUnit first = observations[0].Unit;
-            player.transform.position = first.transform.position + Vector3.right * 120f;
+            // Stay in loaded columns: a horizontal teleport can be held at the last safe pose
+            // while terrain streams, leaving the test target inside detection range.
+            player.transform.position = first.transform.position + Vector3.up * 120f;
             until = Time.time + 2f;
             while (Time.time < until)
             {
@@ -59,6 +61,7 @@ internal static class OutpostPursuitPlayerChecks
             }
 
             check(first != null && first.HasValidCockpit, "Disengaged guard remains alive within streaming range");
+            Debug.Log($"Outpost disengagement: distance={Vector3.Distance(first.transform.position, player.transform.position):F1}, range={first.GetComponent<EnemyController>().detectionRange:F1}, target={first.target}");
             check(first.target == null, "Outpost guard releases target outside authored detection radius");
             player.transform.position = first.transform.position + Vector3.up * 15f;
             until = Time.time + 5f;

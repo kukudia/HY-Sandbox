@@ -117,7 +117,8 @@ public class EnemyController : MonoBehaviour
 
         foreach (ControlUnit candidate in units)
         {
-            if (candidate == null || candidate == unit)
+            // The registry can retain a disabled build-mode construct. Hidden units are not targets.
+            if (candidate == null || candidate == unit || !candidate.isActiveAndEnabled)
             {
                 continue;
             }

@@ -30,6 +30,7 @@ public static class OutpostEditorAuthoring
             if (root.GetComponent<BuildingOutpostEditor>() != null)
             {
                 AddTemplateCopy(root, root.GetComponent<BuildingOutpostEditor>());
+                AddMatchingBase(root, root.GetComponent<BuildingOutpostEditor>());
                 PrefabUtility.SaveAsPrefabAsset(root, path);
                 return;
             }
@@ -88,6 +89,7 @@ public static class OutpostEditorAuthoring
             UnityEventTools.AddPersistentListener(save.onClick, editor.SavePose);
             UnityEventTools.AddPersistentListener(remove.onClick, editor.RemoveDefender);
             AddTemplateCopy(root, editor);
+            AddMatchingBase(root, editor);
             foreach (Text text in root.GetComponentsInChildren<Text>(true))
             {
                 text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
@@ -132,6 +134,23 @@ public static class OutpostEditorAuthoring
         var serialized = new SerializedObject(editor);
         serialized.FindProperty("_buildingTemplate").objectReferenceValue = obj.GetComponent<Dropdown>();
         serialized.ApplyModifiedPropertiesWithoutUndo();
+    }
+
+    private static void AddMatchingBase(GameObject root, BuildingOutpostEditor editor)
+    {
+        if (root.transform.Find("MatchingBase") != null)
+        {
+            return;
+        }
+
+        float height = ((RectTransform)root.transform).sizeDelta.y;
+        GameObject button = DefaultControls.CreateButton(new DefaultControls.Resources());
+        Place(button, root.transform, "MatchingBase", new Vector2(398f, 30f), new Vector2(14f, -height + 4f));
+        Text label = button.GetComponentInChildren<Text>();
+        label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        label.text = "Create matching base for selected enemy";
+        UnityEventTools.AddPersistentListener(button.GetComponent<Button>().onClick, editor.CreateMatchingBase);
+        ((RectTransform)root.transform).sizeDelta += Vector2.up * 38f;
     }
 
     private static Dropdown Dropdown(Transform parent, string name, string caption, float y)

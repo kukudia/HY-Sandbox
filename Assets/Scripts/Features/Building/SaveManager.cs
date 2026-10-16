@@ -183,6 +183,16 @@ public class SaveManager : MonoBehaviour
         }
 
         BlockDataList data = JsonUtility.FromJson<BlockDataList>(asset.text);
+        return SaveNewBuilding(template, data);
+    }
+
+    public string SaveNewBuilding(string template, BlockDataList data)
+    {
+        if (BuildManager.instance == null || !BuildManager.instance.IsEditingBuildingBlueprint || BuildManager.instance.IsLoadingBlocks)
+        {
+            throw new System.InvalidOperationException("Wait until the building editor is ready.");
+        }
+
         WorldBuildingValidation.ValidateBlueprint(data);
         string name = template;
         for (int i = 1; File.Exists(GetBuildingBlueprintPath(name)); i++)

@@ -1,0 +1,952 @@
+PASS: Abandoned Storehouse restores every authored block
+PASS: Abandoned Storehouse structure visual matches dimensions: 20d192978ce74005b8f6d306eddd94e8:part-0
+PASS: Abandoned Storehouse structure exposes full connection grid: 20d192978ce74005b8f6d306eddd94e8:part-0
+PASS: Abandoned Storehouse structure visual matches dimensions: 20d192978ce74005b8f6d306eddd94e8:part-1
+PASS: Abandoned Storehouse structure exposes full connection grid: 20d192978ce74005b8f6d306eddd94e8:part-1
+PASS: Abandoned Storehouse structure visual matches dimensions: 20d192978ce74005b8f6d306eddd94e8:part-2
+PASS: Abandoned Storehouse structure exposes full connection grid: 20d192978ce74005b8f6d306eddd94e8:part-2
+PASS: Abandoned Storehouse structure visual matches dimensions: 20d192978ce74005b8f6d306eddd94e8:part-3
+PASS: Abandoned Storehouse structure exposes full connection grid: 20d192978ce74005b8f6d306eddd94e8:part-3
+PASS: Abandoned Storehouse structure visual matches dimensions: 20d192978ce74005b8f6d306eddd94e8:part-4
+PASS: Abandoned Storehouse structure exposes full connection grid: 20d192978ce74005b8f6d306eddd94e8:part-4
+PASS: Abandoned Storehouse all modules connect to foundation:
+PASS: Abandoned Storehouse every defensive turret receives power
+PASS: Abandoned Storehouse capture retains outpost identity
+PASS: CODEX_E01_Finch Outpost restores every authored block
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-0
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-0
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-1
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-1
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-2
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-2
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-3
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-3
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-4
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-4
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-5
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-5
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-6
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-6
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-7
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-7
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-8
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-8
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-9
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-9
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-10
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-10
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-11
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-11
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-12
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-12
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-13
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-13
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-14
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-14
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-15
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-15
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-16
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-16
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-17
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-17
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-18
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-18
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-19
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-19
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-20
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-20
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-21
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-21
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-22
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-22
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-23
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-23
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-24
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-24
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-25
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-25
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-26
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-26
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-27
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-27
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-28
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-28
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-29
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-29
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-30
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-30
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-31
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-31
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-32
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-32
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-33
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-33
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-34
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-34
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-35
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-35
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-36
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-36
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-37
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-37
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-38
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-38
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-39
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-39
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-40
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-40
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-41
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-41
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-42
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-42
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-43
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-43
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-44
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-44
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-45
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-45
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-46
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-46
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-47
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-47
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-48
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-48
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-49
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-49
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-50
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-50
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-51
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-51
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-52
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-52
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-53
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-53
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-54
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-54
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-55
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-55
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-56
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-56
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-57
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-57
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-58
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-58
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-59
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-59
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-60
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-60
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-61
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-61
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-62
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-62
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-63
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-63
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-64
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-64
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-65
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-65
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-66
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-66
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-67
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-67
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-68
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-68
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-69
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-69
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-70
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-70
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-71
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-71
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-72
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-72
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-73
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-73
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-74
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-74
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-75
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-75
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-76
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-76
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-77
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-77
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-78
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-78
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-79
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-79
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-80
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-80
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-81
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-81
+PASS: CODEX_E01_Finch Outpost structure visual matches dimensions: 75c60a1f16364ce1a22ae9967e1e2f7f:base-82
+PASS: CODEX_E01_Finch Outpost structure exposes full connection grid: 75c60a1f16364ce1a22ae9967e1e2f7f:base-82
+PASS: CODEX_E01_Finch Outpost all modules connect to foundation:
+PASS: CODEX_E01_Finch Outpost every defensive turret receives power
+PASS: CODEX_E01_Finch Outpost capture retains outpost identity
+PASS: CODEX_E01_Finch Outpost resident fits above its own base footprint
+PASS: CODEX_E01_Finch Outpost solid preview has no gameplay components
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_000
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_001
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_002
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_003
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_004
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_005
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_006
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_007
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_008
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_009
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_010
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_011
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_012
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_013
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_014
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_015
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_016
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_017
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_018
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_019
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_020
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_021
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_022
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_023
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_024
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_025
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_026
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_027
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_028
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_029
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_030
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_031
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_032
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_033
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_034
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_035
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_036
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_037
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_038
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_039
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_040
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_041
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_042
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_043
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_044
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_045
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_046
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_047
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_048
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_049
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_050
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_051
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_052
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_053
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_054
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_055
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_056
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_057
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_058
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_059
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_060
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_061
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_062
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_063
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_064
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_065
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_066
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_067
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_068
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_069
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_070
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_071
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_072
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_073
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_074
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_075
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_076
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_077
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_078
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_079
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_080
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_081
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_082
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_083
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_084
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_085
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_086
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_087
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_088
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_089
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_090
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_091
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_092
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_093
+PASS: CODEX_E01_Finch Outpost resident clears base CODEX_E01_Finch_094
+PASS: CODEX_E02_Pike Outpost restores every authored block
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-0
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-0
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-1
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-1
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-2
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-2
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-3
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-3
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-4
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-4
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-5
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-5
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-6
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-6
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-7
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-7
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-8
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-8
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-9
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-9
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-10
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-10
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-11
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-11
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-12
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-12
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-13
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-13
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-14
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-14
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-15
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-15
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-16
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-16
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-17
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-17
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-18
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-18
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-19
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-19
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-20
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-20
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-21
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-21
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-22
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-22
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-23
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-23
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-24
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-24
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-25
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-25
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-26
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-26
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-27
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-27
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-28
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-28
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-29
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-29
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-30
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-30
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-31
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-31
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-32
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-32
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-33
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-33
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-34
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-34
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-35
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-35
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-36
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-36
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-37
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-37
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-38
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-38
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-39
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-39
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-40
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-40
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-41
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-41
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-42
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-42
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-43
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-43
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-44
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-44
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-45
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-45
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-46
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-46
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-47
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-47
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-48
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-48
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-49
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-49
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-50
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-50
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-51
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-51
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-52
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-52
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-53
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-53
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-54
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-54
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-55
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-55
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-56
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-56
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-57
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-57
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-58
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-58
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-59
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-59
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-60
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-60
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-61
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-61
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-62
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-62
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-63
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-63
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-64
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-64
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-65
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-65
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-66
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-66
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-67
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-67
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-68
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-68
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-69
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-69
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-70
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-70
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-71
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-71
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-72
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-72
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-73
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-73
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-74
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-74
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-75
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-75
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-76
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-76
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-77
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-77
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-78
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-78
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-79
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-79
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-80
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-80
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-81
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-81
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-82
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-82
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-83
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-83
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-84
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-84
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-85
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-85
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-86
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-86
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-87
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-87
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-88
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-88
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-89
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-89
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-90
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-90
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-91
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-91
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-92
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-92
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-93
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-93
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-94
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-94
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-95
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-95
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-96
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-96
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-97
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-97
+PASS: CODEX_E02_Pike Outpost structure visual matches dimensions: 91e1ab4985ce43e38c1bf5856ff24c7a:base-98
+PASS: CODEX_E02_Pike Outpost structure exposes full connection grid: 91e1ab4985ce43e38c1bf5856ff24c7a:base-98
+PASS: CODEX_E02_Pike Outpost all modules connect to foundation:
+PASS: CODEX_E02_Pike Outpost every defensive turret receives power
+PASS: CODEX_E02_Pike Outpost capture retains outpost identity
+PASS: CODEX_E02_Pike Outpost resident fits above its own base footprint
+PASS: CODEX_E02_Pike Outpost solid preview has no gameplay components
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_000
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_001
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_002
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_003
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_004
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_005
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_006
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_007
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_008
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_009
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_010
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_011
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_012
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_013
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_014
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_015
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_016
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_017
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_018
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_019
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_020
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_021
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_022
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_023
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_024
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_025
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_026
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_027
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_028
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_029
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_030
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_031
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_032
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_033
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_034
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_035
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_036
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_037
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_038
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_039
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_040
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_041
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_042
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_043
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_044
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_045
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_046
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_047
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_048
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_049
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_050
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_051
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_052
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_053
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_054
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_055
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_056
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_057
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_058
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_059
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_060
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_061
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_062
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_063
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_064
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_065
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_066
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_067
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_068
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_069
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_070
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_071
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_072
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_073
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_074
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_075
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_076
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_077
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_078
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_079
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_080
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_081
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_082
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_083
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_084
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_085
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_086
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_087
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_088
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_089
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_090
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_091
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_092
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_093
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_094
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_095
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_096
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_097
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_098
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_099
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_100
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_101
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_102
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_103
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_104
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_105
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_106
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_107
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_108
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_109
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_110
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_111
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_112
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_113
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_114
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_115
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_116
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_117
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_118
+PASS: CODEX_E02_Pike Outpost resident clears base CODEX_E02_Pike_119
+PASS: CODEX_E03_Manta Outpost restores every authored block
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-0
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-0
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-1
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-1
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-2
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-2
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-3
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-3
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-4
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-4
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-5
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-5
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-6
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-6
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-7
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-7
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-8
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-8
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-9
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-9
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-10
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-10
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-11
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-11
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-12
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-12
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-13
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-13
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-14
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-14
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-15
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-15
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-16
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-16
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-17
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-17
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-18
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-18
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-19
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-19
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-20
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-20
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-21
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-21
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-22
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-22
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-23
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-23
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-24
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-24
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-25
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-25
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-26
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-26
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-27
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-27
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-28
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-28
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-29
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-29
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-30
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-30
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-31
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-31
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-32
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-32
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-33
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-33
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-34
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-34
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-35
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-35
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-36
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-36
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-37
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-37
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-38
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-38
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-39
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-39
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-40
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-40
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-41
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-41
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-42
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-42
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-43
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-43
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-44
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-44
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-45
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-45
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-46
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-46
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-47
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-47
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-48
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-48
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-49
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-49
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-50
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-50
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-51
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-51
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-52
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-52
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-53
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-53
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-54
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-54
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-55
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-55
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-56
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-56
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-57
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-57
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-58
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-58
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-59
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-59
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-60
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-60
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-61
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-61
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-62
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-62
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-63
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-63
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-64
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-64
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-65
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-65
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-66
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-66
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-67
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-67
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-68
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-68
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-69
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-69
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-70
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-70
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-71
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-71
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-72
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-72
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-73
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-73
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-74
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-74
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-75
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-75
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-76
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-76
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-77
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-77
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-78
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-78
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-79
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-79
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-80
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-80
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-81
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-81
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-82
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-82
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-83
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-83
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-84
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-84
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-85
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-85
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-86
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-86
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-87
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-87
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-88
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-88
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-89
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-89
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-90
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-90
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-91
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-91
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-92
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-92
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-93
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-93
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-94
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-94
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-95
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-95
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-96
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-96
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-97
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-97
+PASS: CODEX_E03_Manta Outpost structure visual matches dimensions: 6b47bd3bbe4b47c8a4555bcd13f23581:base-98
+PASS: CODEX_E03_Manta Outpost structure exposes full connection grid: 6b47bd3bbe4b47c8a4555bcd13f23581:base-98
+PASS: CODEX_E03_Manta Outpost all modules connect to foundation:
+PASS: CODEX_E03_Manta Outpost every defensive turret receives power
+PASS: CODEX_E03_Manta Outpost capture retains outpost identity
+PASS: CODEX_E03_Manta Outpost resident fits above its own base footprint
+PASS: CODEX_E03_Manta Outpost solid preview has no gameplay components
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_000
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_001
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_002
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_003
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_004
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_005
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_006
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_007
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_008
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_009
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_010
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_011
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_012
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_013
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_014
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_015
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_016
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_017
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_018
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_019
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_020
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_021
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_022
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_023
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_024
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_025
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_026
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_027
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_028
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_029
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_030
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_031
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_032
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_033
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_034
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_035
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_036
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_037
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_038
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_039
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_040
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_041
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_042
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_043
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_044
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_045
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_046
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_047
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_048
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_049
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_050
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_051
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_052
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_053
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_054
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_055
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_056
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_057
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_058
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_059
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_060
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_061
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_062
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_063
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_064
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_065
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_066
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_067
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_068
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_069
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_070
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_071
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_072
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_073
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_074
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_075
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_076
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_077
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_078
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_079
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_080
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_081
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_082
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_083
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_084
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_085
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_086
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_087
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_088
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_089
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_090
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_091
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_092
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_093
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_094
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_095
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_096
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_097
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_098
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_099
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_100
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_101
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_102
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_103
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_104
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_105
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_106
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_107
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_108
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_109
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_110
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_111
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_112
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_113
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_114
+PASS: CODEX_E03_Manta Outpost resident clears base CODEX_E03_Manta_115
+PASS: Field Workshop restores every authored block
+PASS: Field Workshop structure visual matches dimensions: 2890d247051b4adbbf383a0d8fff6fc1:part-0
+PASS: Field Workshop structure exposes full connection grid: 2890d247051b4adbbf383a0d8fff6fc1:part-0
+PASS: Field Workshop structure visual matches dimensions: 2890d247051b4adbbf383a0d8fff6fc1:part-1
+PASS: Field Workshop structure exposes full connection grid: 2890d247051b4adbbf383a0d8fff6fc1:part-1
+PASS: Field Workshop structure visual matches dimensions: 2890d247051b4adbbf383a0d8fff6fc1:part-2
+PASS: Field Workshop structure exposes full connection grid: 2890d247051b4adbbf383a0d8fff6fc1:part-2
+PASS: Field Workshop structure visual matches dimensions: 2890d247051b4adbbf383a0d8fff6fc1:part-3
+PASS: Field Workshop structure exposes full connection grid: 2890d247051b4adbbf383a0d8fff6fc1:part-3
+PASS: Field Workshop structure visual matches dimensions: 2890d247051b4adbbf383a0d8fff6fc1:part-4
+PASS: Field Workshop structure exposes full connection grid: 2890d247051b4adbbf383a0d8fff6fc1:part-4
+PASS: Field Workshop all modules connect to foundation:
+PASS: Field Workshop every defensive turret receives power
+PASS: Field Workshop capture retains outpost identity
+PASS: Relay Ruins restores every authored block
+PASS: Relay Ruins structure visual matches dimensions: ca234f782d734196a4d2f001e59eebfd:part-0
+PASS: Relay Ruins structure exposes full connection grid: ca234f782d734196a4d2f001e59eebfd:part-0
+PASS: Relay Ruins structure visual matches dimensions: ca234f782d734196a4d2f001e59eebfd:part-1
+PASS: Relay Ruins structure exposes full connection grid: ca234f782d734196a4d2f001e59eebfd:part-1
+PASS: Relay Ruins structure visual matches dimensions: ca234f782d734196a4d2f001e59eebfd:part-2
+PASS: Relay Ruins structure exposes full connection grid: ca234f782d734196a4d2f001e59eebfd:part-2
+PASS: Relay Ruins structure visual matches dimensions: ca234f782d734196a4d2f001e59eebfd:part-3
+PASS: Relay Ruins structure exposes full connection grid: ca234f782d734196a4d2f001e59eebfd:part-3
+PASS: Relay Ruins all modules connect to foundation:
+PASS: Relay Ruins every defensive turret receives power
+PASS: Relay Ruins capture retains outpost identity
+ALL PASSED

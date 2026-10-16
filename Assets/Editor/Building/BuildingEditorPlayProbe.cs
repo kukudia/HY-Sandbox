@@ -234,9 +234,9 @@ public static class BuildingEditorPlayProbe
         BuildingOutpostEditor outpost = panel.GetComponent<BuildingOutpostEditor>();
         outpost.enabled = true;
         Check("Building editor exposes authored outpost controls", outpost != null);
-        string bundledCopy = saves.CopyBundledBuilding("Road Watch Outpost");
+        string bundledCopy = saves.CopyBundledBuilding("CODEX_E01_Finch Outpost");
         byte[] firstCopyBytes = File.ReadAllBytes(saves.GetBuildingBlueprintPath(bundledCopy));
-        string secondBundledCopy = saves.CopyBundledBuilding("Road Watch Outpost");
+        string secondBundledCopy = saves.CopyBundledBuilding("CODEX_E01_Finch Outpost");
         Check(
             "Bundled content copies to distinct editable files without overwriting",
             bundledCopy != secondBundledCopy && firstCopyBytes.SequenceEqual(File.ReadAllBytes(saves.GetBuildingBlueprintPath(bundledCopy))));
@@ -252,22 +252,25 @@ public static class BuildingEditorPlayProbe
         Check(
             "Add creates independent stable garrison identities",
             saves.cachedData.outpost.garrison.Count == 2 && saves.cachedData.outpost.garrison[0].id != saves.cachedData.outpost.garrison[1].id);
-        ((InputField)Field(outpost, "_x")).text = "-36.5";
-        ((InputField)Field(outpost, "_y")).text = "15";
+        ((InputField)Field(outpost, "_x")).text = "0";
+        ((InputField)Field(outpost, "_y")).text = saves.cachedData.outpost.garrison[0].position.y.ToString(System.Globalization.CultureInfo.InvariantCulture);
         ((InputField)Field(outpost, "_z")).text = "0";
         ((InputField)Field(outpost, "_yaw")).text = "90";
         outpost.SavePose();
         Check(
             "Deployment pose saves numeric local position and yaw",
-            saves.cachedData.outpost.garrison[1].position.x == -36.5f && saves.cachedData.outpost.garrison[1].yaw == 90f);
+            saves.cachedData.outpost.garrison[1].position.x == 0f && saves.cachedData.outpost.garrison[1].yaw == 90f);
         Transform deployment = GameManager.instance.blocksParent.Cast<Transform>().Last(child => child.name == "Outpost deployment preview" && child.gameObject.activeSelf);
         Check(
             "Deployment preview follows blueprint root without gameplay or physics components",
-            deployment.localPosition == Vector3.zero && deployment.GetComponentsInChildren<Component>(true).All(component => component is Transform || component is MeshFilter || component is MeshRenderer || component is TextMesh));
-        MeshFilter[] outlines = deployment.GetComponentsInChildren<MeshFilter>();
+            deployment.position == Vector3.zero && deployment.GetComponentsInChildren<Component>(true).All(component => component is Transform || component is MeshFilter || component is MeshRenderer || component is TextMesh));
+        MeshFilter[] outlines = deployment.GetComponentsInChildren<MeshFilter>().Where(item => item.sharedMesh.name == "Defender deployment bounds").ToArray();
         Check(
-            "Selected defender shows real module outlines and other guards show bounded geometry",
-            outlines.Length == 2 && outlines[1].sharedMesh.vertexCount > 100 && outlines[0].sharedMesh.vertexCount == 14 && outlines.All(item => item.sharedMesh.GetTopology(0) == MeshTopology.Lines));
+            "Both resident models show actual solid meshes",
+            deployment.GetComponentsInChildren<MeshFilter>().Count(item => item.sharedMesh.GetTopology(0) == MeshTopology.Triangles) > 50);
+        Check(
+            "Full resident models retain a lightweight bounds and heading overlay",
+            outlines.Length == 2 && outlines.All(item => item.sharedMesh.vertexCount == 14 && item.sharedMesh.GetTopology(0) == MeshTopology.Lines));
         Check(
             "Deployment labels use a visible font and render names literally",
             deployment.GetComponentsInChildren<TextMesh>().All(text => text.font != null && !text.richText));
@@ -278,8 +281,8 @@ public static class BuildingEditorPlayProbe
             deploymentStatus.text.Contains("bounds overlap another guard") && deploymentStatus.font != null && deploymentStatus.preferredHeight <= deploymentStatus.rectTransform.rect.height);
         Vector3 cameraPosition = build.mainCamera.transform.position;
         Quaternion cameraRotation = build.mainCamera.transform.rotation;
-        build.mainCamera.transform.position = new Vector3(-65f, 35f, -75f);
-        build.mainCamera.transform.LookAt(new Vector3(-65f, 14f, 0f));
+        build.mainCamera.transform.position = new Vector3(-35f, 35f, -55f);
+        build.mainCamera.transform.LookAt(new Vector3(0f, 7f, 0f));
         yield return null;
         Check(
             "Deployment labels face the actual editing camera",
@@ -436,5 +439,51 @@ public static class BuildingEditorPlayProbe
         Check(
             "Delete affects only requested building file",
             !File.Exists(saves.GetBuildingBlueprintPath("probe_building")) && File.Exists(saves.GetBuildingBlueprintPath(copy)) && File.Exists(saves.GetSavePath(saves.currentSaveName)));
+        build.EnterBuildingBlueprintBuildMode(copy);
+        while (build.IsLoadingBlocks)
+        {
+            yield return null;
+        }
+
+        panel.GetComponent<BuildingOutpostEditor>().Refresh();
+        panel.transform.Find("MatchingBase").GetComponent<Button>().onClick.Invoke();
+        while (build.IsLoadingBlocks)
+        {
+            yield return null;
+        }
+
+        Check(
+            "Matching base button creates named editable combo",
+            build.CurrentBuildName.Contains("Finch Outpost") && saves.cachedData.blocks.Count > 10 && saves.cachedData.outpost.garrison.Count == 1);
+        string comboName = build.CurrentBuildName;
+        string comboJson = File.ReadAllText(saves.GetBuildingBlueprintPath(comboName));
+        build.EnterBuildingBlueprintBuildMode(comboName);
+        while (build.IsLoadingBlocks)
+        {
+            yield return null;
+        }
+
+        Check(
+            "Combined base reload preserves disk data and full preview",
+            comboJson == File.ReadAllText(saves.GetBuildingBlueprintPath(comboName)) && GameManager.instance.blocksParent.GetComponentsInChildren<MeshFilter>().Count(filter => filter.sharedMesh != null) > 100);
+        build.mainCamera.transform.position = new Vector3(-23f, 22f, -29f);
+        build.mainCamera.transform.LookAt(new Vector3(8f, 3f, 8f));
+        yield return null;
+        ScreenCapture.CaptureScreenshot("Temp/BuildingEditor/MatchingBase.png");
+        yield return null;
+        OutpostContentChecks.Run();
+        Check("All bundled base content and resident clearances pass", true);
+        IEnumerator residentChecks = OutpostResidentChecks.Run(Check);
+        try
+        {
+            while (residentChecks.MoveNext())
+            {
+                yield return null;
+            }
+        }
+        finally
+        {
+            (residentChecks as IDisposable)?.Dispose();
+        }
     }
 }

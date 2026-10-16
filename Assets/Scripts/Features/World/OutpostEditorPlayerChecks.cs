@@ -1,4 +1,4 @@
-// 职责：显式Development Player路线用隔离文件仓验证建筑编辑器快捷键、据点保存和线框Shader。
+// 职责：显式Development Player路线用隔离文件仓验证建筑编辑器快捷键、据点保存、完整模型与预览Shader。
 // 入口：Run()；三个文件仓仅在测试期间反射替换，finally恢复，随后只读重载原玩家蓝图。
 using System;
 using System.Collections;
@@ -35,8 +35,18 @@ internal static class OutpostEditorPlayerChecks
         List<string> buildings = saves.buildingBlueprints;
         string directory = Path.Combine(Application.temporaryCachePath, "CodexOutpostEditor", Guid.NewGuid().ToString("N"));
         Keyboard keyboard = InputSystem.AddDevice<Keyboard>();
+        InputSettings.BackgroundBehavior background = InputSystem.settings.backgroundBehavior;
         try
         {
+            InputSystem.settings.backgroundBehavior = InputSettings.BackgroundBehavior.IgnoreFocus;
+            InputSystem.EnableDevice(keyboard);
+            keyboard.MakeCurrent();
+            // Let the loading mask restore input before sending a one-frame shortcut.
+            yield return null;
+            yield return null;
+            check(
+                InputManager.instance.keyInput && !build.IsLoadingBlocks,
+                "Authoring shortcut waits for the startup input gate");
             // Test-only storage injection keeps every copy and edit outside user blueprint directories.
             for (int i = 0; i < fields.Length; i++)
             {
@@ -47,7 +57,12 @@ internal static class OutpostEditorPlayerChecks
             saves.enemyBlueprints = new List<string>();
             saves.buildingBlueprints = new List<string>();
             InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.LeftCtrl, Key.LeftAlt, Key.F));
-            yield return null;
+            for (int frame = 0; frame < 15 && !build.IsEditingBuildingBlueprint; frame++)
+            {
+                yield return null;
+            }
+
+            Debug.Log($"Authoring input: current={Keyboard.current == keyboard}, enabled={keyboard.enabled}, pressed={keyboard.fKey.isPressed}, gate={InputManager.instance.keyInput}, component={InputManager.instance.enabled}, mode={InputSystem.settings.updateMode}, focused={Application.isFocused}, playRequested={PlayManager.instance.WorldSession.IsPlayRequested}");
             InputSystem.QueueStateEvent(keyboard, new KeyboardState());
             yield return null;
             while (build.IsLoadingBlocks)
@@ -59,8 +74,8 @@ internal static class OutpostEditorPlayerChecks
             BuildingOutpostEditor editor = Object.FindFirstObjectByType<BuildingOutpostEditor>();
             check(editor != null, "Saved Main exposes the active outpost authoring panel in Player");
             Dropdown template = editor.transform.Find("BuildingTemplate").GetComponent<Dropdown>();
-            int index = template.options.FindIndex(option => option.text == "Supply Stronghold Outpost");
-            check(index >= 0, "Development Player includes bundled stronghold template");
+            int index = template.options.FindIndex(option => option.text == "CODEX_E03_Manta Outpost");
+            check(index >= 0, "Development Player includes matching Manta base");
             template.value = index;
             editor.transform.Find("CopyTemplate").GetComponent<Button>().onClick.Invoke();
             yield return null;
@@ -70,8 +85,8 @@ internal static class OutpostEditorPlayerChecks
             }
 
             check(
-                saves.cachedData.IsOutpost && saves.cachedData.outpost.garrison.Count == 3,
-                "Player Copy template restores real building and three embedded defenders");
+                saves.cachedData.IsOutpost && saves.cachedData.outpost.garrison.Count == 1,
+                "Player Copy template restores matching base and embedded resident");
             string path = saves.GetBuildingBlueprintPath(build.CurrentBuildingBlueprintName);
             check(
                 Path.GetFullPath(path).StartsWith(Path.GetFullPath(directory) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase),
@@ -79,11 +94,11 @@ internal static class OutpostEditorPlayerChecks
             Transform preview = GameManager.instance.blocksParent.Cast<Transform>().Last(child => child.name == "Outpost deployment preview" && child.gameObject.activeSelf);
             MeshRenderer[] renderers = preview.GetComponentsInChildren<MeshRenderer>();
             check(
-                renderers.Where(renderer => renderer.GetComponent<TextMesh>() == null).All(renderer => renderer.sharedMaterial.shader != null && renderer.sharedMaterial.shader.isSupported && renderer.sharedMaterial.shader.name == "Universal Render Pipeline/Unlit"),
-                "Stripped Development Player retains a supported deployment line Shader");
+                renderers.All(renderer => renderer.sharedMaterials.All(material => material != null && material.shader != null && material.shader.isSupported)),
+                "Development Player retains supported resident and outline shaders");
             check(
-                preview.GetComponentsInChildren<MeshFilter>().Length == 3 && preview.GetComponentsInChildren<Collider>().Length == 0,
-                "Player previews all defender bounds without creating collision bodies");
+                preview.GetComponentsInChildren<MeshFilter>().Length > 50 && preview.GetComponentsInChildren<Collider>().Length == 0,
+                "Player previews the full resident model without creating collision bodies");
             InputField x = editor.transform.Find("X").GetComponent<InputField>();
             InputField yaw = editor.transform.Find("Yaw").GetComponent<InputField>();
             x.text = "-48";
@@ -106,7 +121,11 @@ internal static class OutpostEditorPlayerChecks
                 saves.cachedData.outpost.garrison[0].position.x == -48f,
                 "Development Player reload preserves edited defender deployment");
             InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.LeftCtrl, Key.LeftAlt, Key.F));
-            yield return null;
+            for (int frame = 0; frame < 15 && build.IsEditingBuildingBlueprint; frame++)
+            {
+                yield return null;
+            }
+
             InputSystem.QueueStateEvent(keyboard, new KeyboardState());
             yield return null;
             while (build.IsLoadingBlocks)
@@ -121,6 +140,7 @@ internal static class OutpostEditorPlayerChecks
         }
         finally
         {
+            InputSystem.settings.backgroundBehavior = background;
             InputSystem.RemoveDevice(keyboard);
             build.ExitDeveloperBlueprintBuildMode(false);
             for (int i = 0; i < fields.Length; i++)

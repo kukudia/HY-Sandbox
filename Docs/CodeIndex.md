@@ -365,11 +365,12 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | OutpostEditorAuthoring | [`void Upgrade()`](../Assets/Editor/Building/OutpostEditorAuthoring.cs#L12) | public static |
-| OutpostEditorAuthoring | [`void AddTemplateCopy(GameObject root, BuildingOutpostEditor editor)`](../Assets/Editor/Building/OutpostEditorAuthoring.cs#L104) | private static |
-| OutpostEditorAuthoring | [`Dropdown Dropdown(Transform parent, string name, string caption, float y)`](../Assets/Editor/Building/OutpostEditorAuthoring.cs#L137) | private static |
-| OutpostEditorAuthoring | [`Button Button(Transform parent, string name, string caption, float x)`](../Assets/Editor/Building/OutpostEditorAuthoring.cs#L145) | private static |
-| OutpostEditorAuthoring | [`Text Label(Transform parent, string name, string caption, Vector2 size, Vector2 position)`](../Assets/Editor/Building/OutpostEditorAuthoring.cs#L153) | private static |
-| OutpostEditorAuthoring | [`void Place(GameObject obj, Transform parent, string name, Vector2 size, Vector2 position)`](../Assets/Editor/Building/OutpostEditorAuthoring.cs#L166) | private static |
+| OutpostEditorAuthoring | [`void AddTemplateCopy(GameObject root, BuildingOutpostEditor editor)`](../Assets/Editor/Building/OutpostEditorAuthoring.cs#L106) | private static |
+| OutpostEditorAuthoring | [`void AddMatchingBase(GameObject root, BuildingOutpostEditor editor)`](../Assets/Editor/Building/OutpostEditorAuthoring.cs#L139) | private static |
+| OutpostEditorAuthoring | [`Dropdown Dropdown(Transform parent, string name, string caption, float y)`](../Assets/Editor/Building/OutpostEditorAuthoring.cs#L156) | private static |
+| OutpostEditorAuthoring | [`Button Button(Transform parent, string name, string caption, float x)`](../Assets/Editor/Building/OutpostEditorAuthoring.cs#L164) | private static |
+| OutpostEditorAuthoring | [`Text Label(Transform parent, string name, string caption, Vector2 size, Vector2 position)`](../Assets/Editor/Building/OutpostEditorAuthoring.cs#L172) | private static |
+| OutpostEditorAuthoring | [`void Place(GameObject obj, Transform parent, string name, Vector2 size, Vector2 position)`](../Assets/Editor/Building/OutpostEditorAuthoring.cs#L185) | private static |
 
 ## Assets/Editor/Combat/CombatHudPlayProbe.cs
 
@@ -761,27 +762,24 @@
 
 ## Assets/Editor/World/OutpostContentAuthoring.cs
 
-// 职责：以明确布局生成六套可编辑建筑/据点JSON，打包既有三套敌机蓝图供驻军选择。 // 入口：Bake()；只写项目Resources，不修改用户蓝图或存档；已有JSON保留，编辑后可单独删除重建。
+// 职责：制作三套普通建筑与三套敌机轮廓底座JSON，保留可重建的项目源。 // 入口：Bake()；只写项目Resources，不修改用户蓝图或存档；已有JSON保留，编辑后可单独删除重建。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | OutpostContentAuthoring | [`void Bake()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L12) | public static |
 | OutpostContentAuthoring | [`void Rebuild()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L18) | public static |
 | OutpostContentAuthoring | [`void Bake(bool overwrite)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L24) | private static |
-| OutpostContentAuthoring | [`BlockDataList Base(int width, int length)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L66) | private static |
-| OutpostContentAuthoring | [`BlockDataList Workshop()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L86) | private static |
-| OutpostContentAuthoring | [`BlockDataList Storehouse()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L123) | private static |
-| OutpostContentAuthoring | [`BlockDataList Ruins()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L150) | private static |
-| OutpostContentAuthoring | [`BlockDataList Watch()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L179) | private static |
-| OutpostContentAuthoring | [`BlockDataList Relay()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L203) | private static |
-| OutpostContentAuthoring | [`BlockDataList Stronghold()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L238) | private static |
-| OutpostContentAuthoring | [`void Loot(BlockDataList data, string resource, Vector3 position, CargoKind kind, int amount)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L292) | private static |
-| OutpostContentAuthoring | [`void Add( BlockDataList data, string resource, Vector3 position, int x = 0, int y = 0, int z = 0)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L307) | private static |
-| OutpostContentAuthoring | [`Vector3 SnapPosition(Vector3 position, int x, int y, int z)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L324) | private static |
-| OutpostContentAuthoring | [`void UpgradeGeometry()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L333) | public static |
-| OutpostContentAuthoring | [`string CreateStructuralPart(int x, int y, int z)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L379) | private static |
-| OutpostContentAuthoring | [`void Defend(BlockDataList data, string enemy, Vector3 position, float yaw)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L419) | private static |
-| OutpostContentAuthoring | [`void Write(string name, BlockDataList data, bool overwrite)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L432) | private static |
+| OutpostContentAuthoring | [`void ExportMatchingBases()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L60) | public static |
+| OutpostContentAuthoring | [`BlockDataList Base(int width, int length)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L89) | private static |
+| OutpostContentAuthoring | [`BlockDataList Workshop()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L109) | private static |
+| OutpostContentAuthoring | [`BlockDataList Storehouse()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L146) | private static |
+| OutpostContentAuthoring | [`BlockDataList Ruins()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L173) | private static |
+| OutpostContentAuthoring | [`void Loot(BlockDataList data, string resource, Vector3 position, CargoKind kind, int amount)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L202) | private static |
+| OutpostContentAuthoring | [`void Add( BlockDataList data, string resource, Vector3 position, int x = 0, int y = 0, int z = 0)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L217) | private static |
+| OutpostContentAuthoring | [`Vector3 SnapPosition(Vector3 position, int x, int y, int z)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L234) | private static |
+| OutpostContentAuthoring | [`void UpgradeGeometry()`](../Assets/Editor/World/OutpostContentAuthoring.cs#L243) | public static |
+| OutpostContentAuthoring | [`string CreateStructuralPart(int x, int y, int z)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L289) | private static |
+| OutpostContentAuthoring | [`void Write(string name, BlockDataList data, bool overwrite)`](../Assets/Editor/World/OutpostContentAuthoring.cs#L329) | private static |
 
 ## Assets/Editor/World/OutpostContentChecks.cs
 
@@ -790,8 +788,8 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | OutpostContentChecks | [`string Run()`](../Assets/Editor/World/OutpostContentChecks.cs#L14) | public static |
-| OutpostContentChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/World/OutpostContentChecks.cs#L128) | private static |
-| OutpostContentChecks | [`void Render(BuildingRuntime building, string path)`](../Assets/Editor/World/OutpostContentChecks.cs#L138) | private static |
+| OutpostContentChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/World/OutpostContentChecks.cs#L157) | private static |
+| OutpostContentChecks | [`void Render(BuildingRuntime building, string path)`](../Assets/Editor/World/OutpostContentChecks.cs#L167) | private static |
 
 ## Assets/Editor/World/OutpostHudAuthoring.cs
 
@@ -800,6 +798,14 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | OutpostHudAuthoring | [`void Apply()`](../Assets/Editor/World/OutpostHudAuthoring.cs#L13) | public static |
+
+## Assets/Editor/World/OutpostResidentChecks.cs
+
+// 职责：在隔离真实流式地形验证停机显示、原位激活和击败后不复活的据点生命周期。 // 入口：Run()由建筑编辑Play探针逐帧驱动；finally清理实例，不写用户数据或场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| OutpostResidentChecks | [`IEnumerator Run(Action<string, bool> check)`](../Assets/Editor/World/OutpostResidentChecks.cs#L12) | public static |
 
 ## Assets/Editor/World/ProceduralVoxelWorldEditor.cs
 
@@ -1297,6 +1303,15 @@
 | BlueprintStatistics | [`void Accumulate(Block block)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintStatistics.cs#L26) | public |
 | BlueprintStatistics | [`BlueprintStatistics Calculate(List<BlockData> savedBlocks, Transform parent)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintStatistics.cs#L47) | public static |
 
+## Assets/Scripts/Features/Building/BlueprintModelPreview.cs
+
+// 职责：复制蓝图模块的静态模型与材质，显示完整外形而不实例化战斗、连接或物理脚本。 // 入口：Create()；返回根对象由调用者销毁，网格和材质共享原资源，不拥有资源本体。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlueprintModelPreview | [`GameObject Create(IReadOnlyList<BlockData> blocks, Transform parent, string name)`](../Assets/Scripts/Features/Building/BlueprintModelPreview.cs#L8) | public static |
+| BlueprintModelPreview | [`void CopyVisuals(Transform source, Transform target, bool root)`](../Assets/Scripts/Features/Building/BlueprintModelPreview.cs#L31) | private static |
+
 ## Assets/Scripts/Features/Building/BlueprintUIPanel.cs
 
 // 职责：展示蓝图名称、数量、质量和功率；业务统计由 BlueprintStatistics 提供。 // 入口：Refresh() / DisplayStatistics() / UpdateCurrentSaveName()。
@@ -1448,20 +1463,21 @@
 | --- | --- | --- |
 | BuildingOutpostEditor | [`void Refresh()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L35) | public |
 | BuildingOutpostEditor | [`void AddTemplate(string name, string json)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L76) | private |
-| BuildingOutpostEditor | [`void CopyBuildingTemplate()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L88) | public |
-| BuildingOutpostEditor | [`void RefreshSlots(EnemyOutpostData data)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L106) | private |
-| BuildingOutpostEditor | [`EnemyOutpostData Copy()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L123) | private |
-| BuildingOutpostEditor | [`void SetOutpost()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L134) | public |
-| BuildingOutpostEditor | [`void AddDefender()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L151) | public |
-| BuildingOutpostEditor | [`void SelectDefender()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L175) | public |
-| BuildingOutpostEditor | [`void SavePose()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L198) | public |
-| BuildingOutpostEditor | [`bool Parse(InputField field, out float value)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L218) | private static |
-| BuildingOutpostEditor | [`void RemoveDefender()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L223) | public |
-| BuildingOutpostEditor | [`bool Save(EnemyOutpostData data)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L233) | private |
-| BuildingOutpostEditor | [`void ShowPreview(EnemyOutpostData data)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L255) | private |
-| BuildingOutpostEditor | [`void ClearPreview()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L265) | private |
-| BuildingOutpostEditor | [`void OnDisable()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L274) | private |
-| BuildingOutpostEditor | [`void LateUpdate()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L279) | private |
+| BuildingOutpostEditor | [`void CreateMatchingBase()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L96) | public |
+| BuildingOutpostEditor | [`void CopyBuildingTemplate()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L117) | public |
+| BuildingOutpostEditor | [`void RefreshSlots(EnemyOutpostData data)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L135) | private |
+| BuildingOutpostEditor | [`EnemyOutpostData Copy()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L152) | private |
+| BuildingOutpostEditor | [`void SetOutpost()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L163) | public |
+| BuildingOutpostEditor | [`void AddDefender()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L180) | public |
+| BuildingOutpostEditor | [`void SelectDefender()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L210) | public |
+| BuildingOutpostEditor | [`void SavePose()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L233) | public |
+| BuildingOutpostEditor | [`bool Parse(InputField field, out float value)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L253) | private static |
+| BuildingOutpostEditor | [`void RemoveDefender()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L258) | public |
+| BuildingOutpostEditor | [`bool Save(EnemyOutpostData data)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L268) | private |
+| BuildingOutpostEditor | [`void ShowPreview(EnemyOutpostData data)`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L290) | private |
+| BuildingOutpostEditor | [`void ClearPreview()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L300) | private |
+| BuildingOutpostEditor | [`void OnDisable()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L309) | private |
+| BuildingOutpostEditor | [`void LateUpdate()`](../Assets/Scripts/Features/Building/BuildingOutpostEditor.cs#L314) | private |
 
 ## Assets/Scripts/Features/Building/ConnectorPlacementHints.cs
 
@@ -1588,20 +1604,31 @@
 | MoveBlockAction | [`void Undo()`](../Assets/Scripts/Features/Building/MoveBlockAction.cs#L19) | public |
 | MoveBlockAction | [`void Redo()`](../Assets/Scripts/Features/Building/MoveBlockAction.cs#L29) | public |
 
-## Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs
+## Assets/Scripts/Features/Building/OutpostBaseDesigner.cs
 
-// 职责：以蓝图实际模块尺寸绘制驻军部署线框、朝向和保守包围盒重叠提示。 // 入口：构造后读取Hint；Dispose释放运行时网格/材质，不创建敌机、碰撞或玩法组件。
+// 职责：按敌机模块轮廓制作可编辑停机底座，敌机与建筑使用同一蓝图局部坐标。 // 入口：Create()生成独立组合蓝图；BoundsOf()用于尺寸适配、净空与验证。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| OutpostDeploymentPreview | [`void DrawGuard(OutpostGarrisonData guard, Bounds bounds, int index, bool selected, Color color)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L85) | private |
-| OutpostDeploymentPreview | [`void FaceLabels(Quaternion rotation)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L138) | internal |
-| OutpostDeploymentPreview | [`Bounds CalculateBounds(List<BlockData> blocks, Matrix4x4 deployment)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L146) | private static |
-| OutpostDeploymentPreview | [`Matrix4x4 BlockTransform(BlockData block)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L171) | private static |
-| OutpostDeploymentPreview | [`Vector3 Corner(int index)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L179) | private static |
-| OutpostDeploymentPreview | [`void AddBox(List<Vector3> vertices, List<int> indices, Matrix4x4 transform)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L184) | private static |
-| OutpostDeploymentPreview | [`void AddLine(List<Vector3> vertices, List<int> indices, Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L198) | private static |
-| OutpostDeploymentPreview | [`void Dispose()`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L206) | public |
+| OutpostBaseDesigner | [`Bounds BoundsOf(IReadOnlyList<BlockData> blocks, Quaternion rotation)`](../Assets/Scripts/Features/Building/OutpostBaseDesigner.cs#L9) | public static |
+| OutpostBaseDesigner | [`BlockDataList Create(BlockDataList enemy, string name)`](../Assets/Scripts/Features/Building/OutpostBaseDesigner.cs#L37) | public static |
+| OutpostBaseDesigner | [`void Add(BlockDataList data, string resource, Vector3 position)`](../Assets/Scripts/Features/Building/OutpostBaseDesigner.cs#L133) | private static |
+
+## Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs
+
+// 职责：在建筑旁展示完整敌机模型、部署线框、朝向及保守包围盒重叠提示。 // 入口：构造后读取Hint；Dispose释放显示对象与临时网格/材质，不实例化敌机玩法组件。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| OutpostDeploymentPreview | [`void DrawGuard(OutpostGarrisonData guard, Bounds bounds, int index, bool selected, Color color)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L91) | private |
+| OutpostDeploymentPreview | [`void FaceLabels(Quaternion rotation)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L136) | internal |
+| OutpostDeploymentPreview | [`bool OverlapsBuilding(OutpostGarrisonData guard, Matrix4x4 pose, List<BlockData> building)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L144) | private static |
+| OutpostDeploymentPreview | [`Bounds CalculateBounds(List<BlockData> blocks, Matrix4x4 deployment)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L164) | private static |
+| OutpostDeploymentPreview | [`Matrix4x4 BlockTransform(BlockData block)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L189) | private static |
+| OutpostDeploymentPreview | [`Vector3 Corner(int index)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L197) | private static |
+| OutpostDeploymentPreview | [`void AddBox(List<Vector3> vertices, List<int> indices, Matrix4x4 transform)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L202) | private static |
+| OutpostDeploymentPreview | [`void AddLine(List<Vector3> vertices, List<int> indices, Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L216) | private static |
+| OutpostDeploymentPreview | [`void Dispose()`](../Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs#L224) | public |
 
 ## Assets/Scripts/Features/Building/RotateAxisHandle.cs
 
@@ -1641,20 +1668,21 @@
 | SaveManager | [`void GetAllSaveNames()`](../Assets/Scripts/Features/Building/SaveManager.cs#L137) | public |
 | SaveManager | [`void SaveBuildingOutpost(EnemyOutpostData outpost)`](../Assets/Scripts/Features/Building/SaveManager.cs#L147) | public |
 | SaveManager | [`string CopyBundledBuilding(string template)`](../Assets/Scripts/Features/Building/SaveManager.cs#L172) | public |
-| SaveManager | [`void GetAllEnemyBlueprintNames()`](../Assets/Scripts/Features/Building/SaveManager.cs#L205) | public |
-| SaveManager | [`void CreateNewSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L215) | public |
-| SaveManager | [`void CreateNewEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L233) | public |
-| SaveManager | [`void LoadSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L246) | public |
-| SaveManager | [`void LoadEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L270) | public |
-| SaveManager | [`void DeleteSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L292) | public |
-| SaveManager | [`void DeleteEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L304) | public |
-| SaveManager | [`bool RenameSave(string oldSaveName, string newSaveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L316) | public |
-| SaveManager | [`bool RenameEnemyBlueprint(string oldBlueprintName, string newBlueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L321) | public |
-| SaveManager | [`bool RenameBlueprint(string oldName, string newName, BuildTargetKind kind)`](../Assets/Scripts/Features/Building/SaveManager.cs#L326) | private |
-| SaveManager | [`void DuplicateSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L392) | public |
-| SaveManager | [`string GetSavePath(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L405) | public |
-| SaveManager | [`string GetEnemyBlueprintPath(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L410) | public |
-| SaveManager | [`string GetSaveFileSize(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L415) | public |
+| SaveManager | [`string SaveNewBuilding(string template, BlockDataList data)`](../Assets/Scripts/Features/Building/SaveManager.cs#L189) | public |
+| SaveManager | [`void GetAllEnemyBlueprintNames()`](../Assets/Scripts/Features/Building/SaveManager.cs#L215) | public |
+| SaveManager | [`void CreateNewSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L225) | public |
+| SaveManager | [`void CreateNewEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L243) | public |
+| SaveManager | [`void LoadSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L256) | public |
+| SaveManager | [`void LoadEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L280) | public |
+| SaveManager | [`void DeleteSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L302) | public |
+| SaveManager | [`void DeleteEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L314) | public |
+| SaveManager | [`bool RenameSave(string oldSaveName, string newSaveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L326) | public |
+| SaveManager | [`bool RenameEnemyBlueprint(string oldBlueprintName, string newBlueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L331) | public |
+| SaveManager | [`bool RenameBlueprint(string oldName, string newName, BuildTargetKind kind)`](../Assets/Scripts/Features/Building/SaveManager.cs#L336) | private |
+| SaveManager | [`void DuplicateSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L402) | public |
+| SaveManager | [`string GetSavePath(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L415) | public |
+| SaveManager | [`string GetEnemyBlueprintPath(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L420) | public |
+| SaveManager | [`string GetSaveFileSize(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L425) | public |
 
 ## Assets/Scripts/Features/Building/SaveUIPanel.cs
 
@@ -1756,11 +1784,11 @@
 | EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/EnemyController.cs#L37) | private |
 | EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L83) | private |
 | EnemyController | [`ControlUnit FindNearestPlayer()`](../Assets/Scripts/Features/Combat/EnemyController.cs#L108) | private |
-| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/EnemyController.cs#L141) | private |
-| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L180) | private |
-| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L191) | private |
-| EnemyController | [`Vector3 ProbeObstacle(Vector3 direction, float weight)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L211) | private |
-| RaycastHitDistanceComparer | [`int Compare(RaycastHit a, RaycastHit b)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L259) | public |
+| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/EnemyController.cs#L142) | private |
+| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L181) | private |
+| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L192) | private |
+| EnemyController | [`Vector3 ProbeObstacle(Vector3 direction, float weight)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L212) | private |
+| RaycastHitDistanceComparer | [`int Compare(RaycastHit a, RaycastHit b)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L260) | public |
 
 ## Assets/Scripts/Features/Combat/EnemyIdentity.cs
 
@@ -3012,7 +3040,7 @@
 
 ## Assets/Scripts/Features/World/OutpostEditorPlayerChecks.cs
 
-// 职责：显式Development Player路线用隔离文件仓验证建筑编辑器快捷键、据点保存和线框Shader。 // 入口：Run()；三个文件仓仅在测试期间反射替换，finally恢复，随后只读重载原玩家蓝图。
+// 职责：显式Development Player路线用隔离文件仓验证建筑编辑器快捷键、据点保存、完整模型与预览Shader。 // 入口：Run()；三个文件仓仅在测试期间反射替换，finally恢复，随后只读重载原玩家蓝图。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
@@ -3027,11 +3055,13 @@
 | OutpostEncounterDirector | [`bool IsDefeated(string site, string guard)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L29) | public |
 | OutpostEncounterDirector | [`bool TryGetDefender(string site, string guardId, out ControlUnit unit)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L34) | public |
 | OutpostEncounterDirector | [`void Tick(Vector3 player)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L51) | public |
-| OutpostEncounterDirector | [`bool Spawn(Encounter encounter, Guard guard, Vector3 position)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L161) | private |
-| OutpostEncounterDirector | [`Bounds DeploymentBounds(BlockDataList blueprint, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L231) | private static |
-| OutpostEncounterDirector | [`void Hibernate(Guard guard)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L251) | private static |
-| OutpostEncounterDirector | [`void RefreshOwner(Guard guard)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L288) | private static |
-| OutpostEncounterDirector | [`void Clear()`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L297) | public |
+| OutpostEncounterDirector | [`bool Spawn(Encounter encounter, Guard guard, Vector3 position)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L170) | private |
+| OutpostEncounterDirector | [`void UpdateParkedModel(Encounter encounter, Guard guard, Vector3 position, bool baseReady)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L242) | private |
+| OutpostEncounterDirector | [`void ClearParkedModel(Guard guard)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L263) | private static |
+| OutpostEncounterDirector | [`Bounds DeploymentBounds(BlockDataList blueprint, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L273) | private static |
+| OutpostEncounterDirector | [`void Hibernate(Guard guard)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L293) | private static |
+| OutpostEncounterDirector | [`void RefreshOwner(Guard guard)`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L330) | private static |
+| OutpostEncounterDirector | [`void Clear()`](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L339) | public |
 
 ## Assets/Scripts/Features/World/OutpostHud.cs
 
@@ -3065,8 +3095,8 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | OutpostPursuitPlayerChecks | [`IEnumerator Run(ControlUnit player, IReadOnlyList<ControlUnit> defenders, Action<bool, string> check)`](../Assets/Scripts/Features/World/OutpostPursuitPlayerChecks.cs#L10) | internal static |
-| Observation | [`void Sample(ControlUnit player, Durability health, float initialHealth)`](../Assets/Scripts/Features/World/OutpostPursuitPlayerChecks.cs#L92) | internal |
-| Observation | [`string Describe()`](../Assets/Scripts/Features/World/OutpostPursuitPlayerChecks.cs#L104) | internal |
+| Observation | [`void Sample(ControlUnit player, Durability health, float initialHealth)`](../Assets/Scripts/Features/World/OutpostPursuitPlayerChecks.cs#L100) | internal |
+| Observation | [`string Describe()`](../Assets/Scripts/Features/World/OutpostPursuitPlayerChecks.cs#L112) | internal |
 
 ## Assets/Scripts/Features/World/OutpostSalvagePlayerChecks.cs
 
