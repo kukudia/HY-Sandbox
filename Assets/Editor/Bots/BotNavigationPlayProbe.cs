@@ -1,4 +1,4 @@
-// 职责：隔离 Play 场景执行机器人墙面、U 形围挡、惯性制动和移动 Home 回归验证。
+// 职责：隔离 Play 场景验证 Bot 过滤、墙面、U 形围挡、惯性制动和移动 Home 导航。
 // 入口：Run()；结果保存在 Temp/BotNavigation/PlayValidation.json；不修改作者场景或资产。
 using System;
 using System.Collections.Generic;
@@ -71,6 +71,7 @@ public static class BotNavigationPlayProbe
 
                 Application.logMessageReceived += Capture;
                 _deadline = EditorApplication.timeSinceStartup + 140;
+                ValidateBotFiltering();
                 StartCase();
                 EditorApplication.update += Tick;
             }
@@ -163,6 +164,144 @@ public static class BotNavigationPlayProbe
         else
         {
             StartCase();
+        }
+    }
+
+    private static void ValidateBotFiltering()
+    {
+        GameObject root = new GameObject("BotFilteringProbe");
+        root.transform.position = new Vector3(10000f, 100f, 0f);
+        try
+        {
+            GameObject drone = new GameObject("FilteringDrone");
+            drone.transform.SetParent(root.transform, false);
+            drone.AddComponent<SphereCollider>().radius = 0.2f;
+            GameObject target = new GameObject("FilteringTarget");
+            target.transform.SetParent(root.transform, false);
+            target.transform.localPosition = Vector3.forward * 10f;
+            BotAvoidanceSettings settings = new BotAvoidanceSettings
+            {
+                ObstacleMask = ~0,
+                ClearanceRadius = 0.4f,
+                PredictiveRange = 15f,
+                BrakingAcceleration = 12f,
+                RayCount = 12,
+                StuckTimeout = 1.5f,
+                ProgressDistance = 0.25f,
+                DetourHoldTime = 1f
+            };
+            BotObstacleAvoidance navigation = new BotObstacleAvoidance(drone.transform);
+            Vector3 velocity = Vector3.forward * 6f;
+            foreach (Type botType in new[]
+            {
+                typeof(RepairBot),
+                typeof(CollectionBot)
+            }
+
+            )
+            {
+                GameObject other = new GameObject(botType.Name + " filtering neighbor");
+                other.transform.SetParent(root.transform, false);
+                other.transform.localPosition = Vector3.forward * 2f;
+                Bot bot = (Bot)other.AddComponent(botType);
+                bot.enabled = false;
+                GameObject shape = new GameObject("Bot child collider");
+                shape.transform.SetParent(other.transform, false);
+                BoxCollider collider = shape.AddComponent<BoxCollider>();
+                foreach (int layer in new[]
+                {
+                    0,
+                    LayerMask.NameToLayer("Block")
+                }
+
+                )
+                {
+                    shape.layer = layer;
+                    navigation.Reset();
+                    Physics.SyncTransforms();
+                    BotAvoidanceResult result = navigation.Evaluate(
+                        target.transform,
+                        velocity,
+                        Vector3.forward,
+                        1f,
+                        settings,
+                        10f);
+                    Check(
+                        botType.Name + " child layer " + layer + " does not trigger detour",
+                        !result.OverrideDirection && result.ObstacleCount == 0);
+                    Check(
+                        botType.Name + " child layer " + layer + " does not brake",
+                        (navigation.ConstrainVelocity(velocity, 0.02f, velocity, 12f) - velocity).sqrMagnitude < 0.0001f);
+                }
+
+                other.transform.localPosition = Vector3.forward * 0.3f;
+                navigation.Reset();
+                Physics.SyncTransforms();
+                BotAvoidanceResult overlap = navigation.Evaluate(
+                    target.transform,
+                    velocity,
+                    Vector3.forward,
+                    1f,
+                    settings,
+                    10f);
+                Check(botType.Name + " overlap does not trigger escape", !overlap.OverrideDirection);
+                Check(
+                    botType.Name + " overlap does not redirect velocity",
+                    (navigation.ConstrainVelocity(velocity, 0.02f, velocity, 12f) - velocity).sqrMagnitude < 0.0001f);
+                GameObject wall = new GameObject("Filtering real wall");
+                wall.transform.SetParent(root.transform, false);
+                wall.transform.localPosition = Vector3.forward * 2f;
+                wall.AddComponent<BoxCollider>().size = new Vector3(8f, 8f, 0.5f);
+                navigation.Reset();
+                Physics.SyncTransforms();
+                BotAvoidanceResult blocked = navigation.Evaluate(
+                    target.transform,
+                    velocity,
+                    Vector3.forward,
+                    1f,
+                    settings,
+                    10f);
+                Check(
+                    botType.Name + " overlap does not hide wall",
+                    blocked.OverrideDirection && blocked.ObstacleCount > 0);
+                Check(
+                    botType.Name + " overlap keeps wall braking",
+                    navigation.ConstrainVelocity(velocity, 0.02f, velocity, 12f).z < velocity.z - 0.1f);
+                Object.DestroyImmediate(wall);
+                shape.transform.SetParent(root.transform, false);
+                shape.transform.localPosition = Vector3.forward * 2f;
+                other.transform.localPosition = Vector3.right * 20f;
+                navigation.Reset();
+                Physics.SyncTransforms();
+                BotAvoidanceResult released = navigation.Evaluate(
+                    target.transform,
+                    velocity,
+                    Vector3.forward,
+                    1f,
+                    settings,
+                    10f);
+                Check(
+                    botType.Name + " detached collider becomes obstacle again",
+                    released.OverrideDirection && released.ObstacleCount > 0);
+                Object.DestroyImmediate(collider.gameObject);
+                Object.DestroyImmediate(other);
+            }
+        }
+        finally
+        {
+            Object.DestroyImmediate(root);
+        }
+    }
+
+    private static void Check(string name, bool passed)
+    {
+        if (passed)
+        {
+            Checks.Add(name);
+        }
+        else
+        {
+            Errors.Add(name);
         }
     }
 

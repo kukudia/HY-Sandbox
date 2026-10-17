@@ -363,6 +363,14 @@ public sealed class BotObstacleAvoidance
             return true;
         }
 
+        // Bot 是动态交通对象，不应进入静态净空和脱困判断。仅依赖 LayerMask
+        // 不可靠：运行时生成的子碰撞体可能继承 Block/Default 层，仍会把另一台 Bot
+        // 当成墙，导致多台机器人互相选绕障方向并持续制动。
+        if (collider.GetComponentInParent<Bot>() != null)
+        {
+            return true;
+        }
+
         // 携带物属于机器人层级；任务目标或 Home 自身可接近，其他建造部件仍是真实障碍。
         return _target != null && (collider.transform == _target || collider.transform.IsChildOf(_target));
     }

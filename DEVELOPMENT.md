@@ -309,6 +309,13 @@ ArtSource/VfxGraph和Blueprints下全部16份自有工具已明确职责/入口�
 
 完整历史需求、旧验证结果、美术集成记录与旧函数索引保存于 [DevelopmentHistory](Docs/DevelopmentHistory.md)，仅作为历史，不代表当前路径和实现。Git历史中的场景资源记录仍可追溯。
 
+## 2026-10-17 多 Bot 防阻塞隔离
+
+- `BotObstacleAvoidance` 的 SphereCast、OverlapSphere、ComputePenetration 和速度走廊查询统一忽略带有 `Bot` 父组件的动态机器人碰撞体，不再依赖子物体当前 Layer；目标、Home 和建造/地形障碍继续按原规则参与导航。这样多台 RepairBot/CollectionBot 交叉作业时不会互相触发脱困方向、减速或锁死。
+- `BotNavigationPlayProbe` 新增 RepairBot/CollectionBot 两类 Bot 的 Default/Block 子碰撞体、起点重叠、墙后检测及脱离 Bot 层级后恢复为障碍的检查；Play Mode 共 29 条检查通过（含原有 11 条导航检查），无错误。证据见 [导航回归报告](Docs/Validation/2026-10-17-bot-filtering.json)。
+- `dotnet build HY-Sandbox.sln --no-restore` 0 错误、4 个既有警告，Unity 6000.3.11f1 重新编译通过。全仓可读性检查仅报既有未提交的 `MainUIPanels.cs` 格式差异，本次未改该文件。Main 场景测试后仍为干净状态；Prefab 参数与 GUID 保留。
+- 验证边界：Bot 过滤使用真实 PhysX 查询和禁用任务脚本的 Bot 夹具，原有 5 个飞行场景驱动生产导航/刚体；未重建视频完整探索会话或运行大量 Bot 压力测试，不代表物理碰撞、供电和全部任务交互的端到端验收。
+
 ## 2026-10-11 掉落与机器人阻塞修复
 
 - 掉落文字在 LateUpdate 使用与 StatusIcon 相同的 CombatHud.IsWorldPointOccluded，检查屏幕边界、镜头前方及实体障碍。携带时忽略所属机器人层级，外部障碍仍遮挡。
