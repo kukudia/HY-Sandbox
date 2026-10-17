@@ -6409,7 +6409,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2090465812}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.6037016
+  m_Size: 0.653656
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -25357,10 +25357,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81f2df6c35da4d33894981decc21c30b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  spawnInterval: 60
+  spawnInterval: 15
   spawnOnPlayStart: 0
-  spawnDistance: 100
-  spawnHeightOffset: 6
+  spawnDistance: 50
+  spawnHeightOffset: 15
 --- !u!1 &2090465811
 GameObject:
   m_ObjectHideFlags: 0

@@ -491,7 +491,7 @@ MonoBehaviour:
   damageMultiplier: 10
   explosionForce: 800
   explosionRadius: 8
-  explosionDisconnectProbability: 0.35
+  explosionDisconnectProbability: 0.5
   resourcePath: 
   info: 'Size: 2x2x2
 
@@ -502,7 +502,7 @@ MonoBehaviour:
     Power: 50 min /
     100 standard
 
-    Max thrust: 800 N'
+    Max thrust: 1600 N'
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
   connectorParent: {fileID: 2695719906485559115}
   raycastCollider: {fileID: 5947620224889456253}
@@ -721,7 +721,7 @@ MonoBehaviour:
   model: {fileID: 2664907610342847789}
   thrust: 0
   lastThrustValue: 0
-  maxThrust: 800
+  maxThrust: 1600
   maxThrustChangeRate: 600
   thrustDirection: {x: 0, y: 0, z: 1}
   cameraTransform: {fileID: 0}

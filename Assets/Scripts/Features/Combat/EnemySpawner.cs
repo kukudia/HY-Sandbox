@@ -19,7 +19,7 @@ public class EnemySpawner : MonoBehaviour
     private Transform spawnAnchor;
     private void Awake()
     {
-        enabled = false;
+        //enabled = false;
     }
 
     public void BeginPlayMode(Transform anchor)

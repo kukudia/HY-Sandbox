@@ -991,7 +991,7 @@ MonoBehaviour:
   damageMultiplier: 10
   explosionForce: 800
   explosionRadius: 8
-  explosionDisconnectProbability: 0.35
+  explosionDisconnectProbability: 0.5
   resourcePath: Blocks/CargoHold
   info: 'Size: 2x2x2
 

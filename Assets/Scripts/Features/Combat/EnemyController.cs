@@ -7,7 +7,7 @@ public class EnemyController : MonoBehaviour
 {
     // Produces smoothed movement intent; ControlUnit and thrusters remain the only physics writers.
     private const int MaxObstacleHits = 16;
-    public float detectionRange = 80f;
+    public float detectionRange = 150f;
     public float desiredDistance = 18f;
     public float updateInterval = 0.25f;
     [Min(0.05f)]

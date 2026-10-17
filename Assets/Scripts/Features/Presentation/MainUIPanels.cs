@@ -289,7 +289,7 @@ public class MainUIPanels : MonoBehaviour
     {
         _transitions.CancelAll();
         PlayManager.instance.playMode = false;
-        PlayManager.instance.WorldSession?.EndSession();
+
         if (InputManager.instance != null)
         {
             InputManager.instance.EnterBuildMode();

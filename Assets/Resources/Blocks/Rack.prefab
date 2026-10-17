@@ -556,7 +556,7 @@ MonoBehaviour:
   damageMultiplier: 10
   explosionForce: 500
   explosionRadius: 5
-  explosionDisconnectProbability: 0.35
+  explosionDisconnectProbability: 0.5
   resourcePath: 
   info: 'Size: 1x1x1
 

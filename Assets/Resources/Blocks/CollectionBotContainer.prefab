@@ -878,7 +878,7 @@ MonoBehaviour:
   damageMultiplier: 10
   explosionForce: 500
   explosionRadius: 5
-  explosionDisconnectProbability: 0.35
+  explosionDisconnectProbability: 0.5
   resourcePath: Blocks/CollectionBotContainer
   info: 'Size: 1x1x1
 
@@ -886,7 +886,7 @@ MonoBehaviour:
 
     Durability: 100
 
-    Power: 10 min /
+    Power: 20 min /
     20 standard'
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
   connectorParent: {fileID: 7537050923806151130}
@@ -1222,7 +1222,7 @@ MonoBehaviour:
   homeOffset: {x: 0, y: 0.1, z: 0}
   targetRange: 60
   findTargetInterval: 0.5
-  movementSpeed: 8
+  movementSpeed: 30
   rotationSpeed: 5
   obstacleMask:
     serializedVersion: 2

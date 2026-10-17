@@ -936,7 +936,7 @@ MonoBehaviour:
   homeOffset: {x: 0, y: 0.1, z: 0}
   targetRange: 10
   findTargetInterval: 1
-  movementSpeed: 12
+  movementSpeed: 30
   rotationSpeed: 5
   obstacleMask:
     serializedVersion: 2
@@ -1748,7 +1748,7 @@ MonoBehaviour:
   damageMultiplier: 10
   explosionForce: 500
   explosionRadius: 5
-  explosionDisconnectProbability: 0.35
+  explosionDisconnectProbability: 0.5
   resourcePath: 
   info: 'Size: 1x1x1
 
@@ -1756,8 +1756,8 @@ MonoBehaviour:
 
     Durability: 100
 
-    Power: 50 min /
-    100 standard'
+    Power: 100 min
+    / 100 standard'
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
   connectorParent: {fileID: 2695719906485559115}
   raycastCollider: {fileID: 4245157779349812274}
