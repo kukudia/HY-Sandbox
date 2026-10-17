@@ -126,7 +126,10 @@ public class PlayManager : MonoBehaviour
         BuildManager.instance.DeselectBlock();
         BuildManager.instance.enabled = false;
         playMode = true;
-        // World outposts own finite garrisons; the legacy timer spawner is disabled.
+        if (worldSession == null)
+        {
+            FindFirstObjectByType<EnemySpawner>()?.BeginPlayMode(blocksParent);
+        }
     }
 
     public bool CanStartPlay(out string reason)
@@ -290,6 +293,7 @@ public class PlayManager : MonoBehaviour
 
         BuildManager.instance.enabled = true;
         GameManager.Init();
+        FindFirstObjectByType<EnemySpawner>()?.EndPlayMode();
     }
 
     public void AssignBlocksToParentGroups(List<Block> blocks)

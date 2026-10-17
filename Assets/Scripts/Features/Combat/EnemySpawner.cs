@@ -1,5 +1,5 @@
-// 职责：保留旧蓝图池与显式诊断兼容入口；自动计时刷怪已停用，据点使用EnemyBlueprintFactory。
-// 入口：BeginPlayMode() / SpawnRandomEnemy() / SpawnEnemy()。
+// 职责：缓存敌方蓝图，并在普通建造游玩期间按间隔生成敌机；世界探索由据点驻军独占刷怪。
+// 入口：BeginPlayMode() / EndPlayMode() / SpawnRandomEnemy() / SpawnEnemy()。
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -16,17 +16,51 @@ public class EnemySpawner : MonoBehaviour
     public float spawnHeightOffset = 6f;
     private readonly List<EnemyBlueprintData> enemyBlueprintPool = new List<EnemyBlueprintData>();
     private bool isBlueprintPoolInitialized = false;
+    private float spawnTimer;
     private Transform spawnAnchor;
-    private void Awake()
+    private void Start()
     {
-        //enabled = false;
+        InitializeEnemyBlueprintPool();
+    }
+
+    private void Update()
+    {
+        if (!IsAutomaticSpawningAllowed || !isBlueprintPoolInitialized || enemyBlueprintPool.Count == 0)
+        {
+            return;
+        }
+
+        spawnTimer += Time.deltaTime;
+        if (spawnTimer >= Mathf.Max(0.1f, spawnInterval))
+        {
+            spawnTimer = 0f;
+            SpawnRandomEnemy();
+        }
     }
 
     public void BeginPlayMode(Transform anchor)
     {
+        spawnTimer = 0f;
         spawnAnchor = anchor;
+        if (PlayManager.instance == null || PlayManager.instance.WorldSession != null)
+        {
+            return;
+        }
+
         InitializeEnemyBlueprintPool();
+        if (spawnOnPlayStart)
+        {
+            SpawnRandomEnemy();
+        }
     }
+
+    public void EndPlayMode()
+    {
+        spawnTimer = 0f;
+        spawnAnchor = null;
+    }
+
+    internal bool IsAutomaticSpawningAllowed => PlayManager.instance != null && PlayManager.instance.playMode && PlayManager.instance.WorldSession == null;
 
     private void InitializeEnemyBlueprintPool()
     {

@@ -795,7 +795,7 @@
 
 ## Assets/Editor/World/OutpostHudAuthoring.cs
 
-// 职责：为Main保存据点状态HUD，并在场景中禁用旧EnemySpawner。 // 入口：Apply()；只新增所属HUD，保留既有界面布局。
+// 职责：为Main保存据点状态HUD；世界会话运行时由EnemySpawner自身门控全局刷怪。 // 入口：Apply()；只新增所属HUD，保留既有界面布局。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
@@ -1814,17 +1814,19 @@
 
 ## Assets/Scripts/Features/Combat/EnemySpawner.cs
 
-// 职责：保留旧蓝图池与显式诊断兼容入口；自动计时刷怪已停用，据点使用EnemyBlueprintFactory。 // 入口：BeginPlayMode() / SpawnRandomEnemy() / SpawnEnemy()。
+// 职责：缓存敌方蓝图，并在普通建造游玩期间按间隔生成敌机；世界探索由据点驻军独占刷怪。 // 入口：BeginPlayMode() / EndPlayMode() / SpawnRandomEnemy() / SpawnEnemy()。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| EnemySpawner | [`void Awake()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L20) | private |
-| EnemySpawner | [`void BeginPlayMode(Transform anchor)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L25) | public |
-| EnemySpawner | [`void InitializeEnemyBlueprintPool()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L31) | private |
-| EnemySpawner | [`void SpawnRandomEnemy()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L76) | public |
-| EnemySpawner | [`void SpawnEnemy()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L99) | public |
-| EnemySpawner | [`ControlUnit SpawnBlockData(BlockDataList dataList, string enemyBlueprint, Vector3 spawnPosition, Quaternion spawnRotation)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L110) | internal |
-| EnemySpawner | [`Vector3 GetSpawnPosition()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L115) | private |
+| EnemySpawner | [`void Start()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L21) | private |
+| EnemySpawner | [`void Update()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L26) | private |
+| EnemySpawner | [`void BeginPlayMode(Transform anchor)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L41) | public |
+| EnemySpawner | [`void EndPlayMode()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L57) | public |
+| EnemySpawner | [`void InitializeEnemyBlueprintPool()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L65) | private |
+| EnemySpawner | [`void SpawnRandomEnemy()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L110) | public |
+| EnemySpawner | [`void SpawnEnemy()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L133) | public |
+| EnemySpawner | [`ControlUnit SpawnBlockData(BlockDataList dataList, string enemyBlueprint, Vector3 spawnPosition, Quaternion spawnRotation)`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L144) | internal |
+| EnemySpawner | [`Vector3 GetSpawnPosition()`](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L149) | private |
 
 ## Assets/Scripts/Features/Combat/ExplosionPropagation.cs
 
@@ -2970,18 +2972,18 @@
 | PlayManager | [`void Awake()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L54) | private |
 | PlayManager | [`void FixedUpdate()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L59) | private |
 | PlayManager | [`void PlayStart()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L87) | public |
-| PlayManager | [`bool CanStartPlay(out string reason)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L132) | public |
-| PlayManager | [`void RefreshGroup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L167) | public |
-| PlayManager | [`void SetPlayMode(bool lockView)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L194) | public |
-| PlayManager | [`void CalculateVelocity()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L202) | private |
-| PlayManager | [`void HandleSelection()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L211) | private |
-| PlayManager | [`void SelectBlock(Block block)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L240) | private |
-| PlayManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L259) | public |
-| PlayManager | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L265) | public |
-| PlayManager | [`void AssignBlocksToParentGroups(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L295) | public |
-| PlayManager | [`void RegisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L311) | public |
-| PlayManager | [`void UnregisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L325) | public |
-| PlayManager | [`IReadOnlyList<ControlUnit> GetControlUnits()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L333) | public |
+| PlayManager | [`bool CanStartPlay(out string reason)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L135) | public |
+| PlayManager | [`void RefreshGroup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L170) | public |
+| PlayManager | [`void SetPlayMode(bool lockView)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L197) | public |
+| PlayManager | [`void CalculateVelocity()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L205) | private |
+| PlayManager | [`void HandleSelection()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L214) | private |
+| PlayManager | [`void SelectBlock(Block block)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L243) | private |
+| PlayManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L262) | public |
+| PlayManager | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L268) | public |
+| PlayManager | [`void AssignBlocksToParentGroups(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L299) | public |
+| PlayManager | [`void RegisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L315) | public |
+| PlayManager | [`void UnregisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L329) | public |
+| PlayManager | [`IReadOnlyList<ControlUnit> GetControlUnits()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L337) | public |
 
 ## Assets/Scripts/Features/Simulation/Rack.cs
 

@@ -70,8 +70,8 @@ public static class OutpostPlayerChecks
         bool movingTarget)
     {
         check(
-            Object.FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None).All(item => !item.enabled),
-            "Legacy EnemySpawner is disabled during play");
+            Object.FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None).All(item => !item.IsAutomaticSpawningAllowed),
+            "World session suppresses global EnemySpawner scheduling");
         Vector3 previous = player.transform.position;
         BuildingRuntime site = session.Buildings.Buildings.FirstOrDefault(item => item != null && item.Outpost != null);
         for (int waypoint = 0; waypoint < 8 && site == null; waypoint++)

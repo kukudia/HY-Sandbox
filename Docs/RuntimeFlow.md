@@ -117,11 +117,11 @@ flowchart TD
     F["MainUIPanels.PlayStart()"]
     click F "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L230" "打开源码"
     G["PlayManager.CanStartPlay()"]
-    click G "../Assets/Scripts/Features/Simulation/PlayManager.cs#L132" "打开源码"
+    click G "../Assets/Scripts/Features/Simulation/PlayManager.cs#L135" "打开源码"
     H["PlayManager.PlayStart()"]
     click H "../Assets/Scripts/Features/Simulation/PlayManager.cs#L87" "打开源码"
     I["PlayManager.RefreshGroup()"]
-    click I "../Assets/Scripts/Features/Simulation/PlayManager.cs#L167" "打开源码"
+    click I "../Assets/Scripts/Features/Simulation/PlayManager.cs#L170" "打开源码"
     J["OutpostEncounterDirector.Tick()"]
     click J "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L51" "打开源码"
     K["MainUIPanels.PlayEnd()"]
@@ -129,7 +129,7 @@ flowchart TD
     L["CargoPersistence.SaveReturnCargo()"]
     click L "../Assets/Scripts/Features/Salvage/CargoPersistence.cs#L11" "打开源码"
     M["PlayManager.PlayEnd()"]
-    click M "../Assets/Scripts/Features/Simulation/PlayManager.cs#L265" "打开源码"
+    click M "../Assets/Scripts/Features/Simulation/PlayManager.cs#L268" "打开源码"
     N["MainUIPanels.PlayerDeath()"]
     click N "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L288" "打开源码"
     O["WorldSessionManager.RequestPlay()"]
@@ -175,11 +175,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|LoadAllBlocks -->
 - [MainUIPanels.PlayStart](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L230)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayStart -->
-- [PlayManager.CanStartPlay](../Assets/Scripts/Features/Simulation/PlayManager.cs#L132)
+- [PlayManager.CanStartPlay](../Assets/Scripts/Features/Simulation/PlayManager.cs#L135)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|CanStartPlay -->
 - [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L87)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayStart -->
-- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L167)
+- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L170)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
 - [OutpostEncounterDirector.Tick](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L51)
 <!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Tick -->
@@ -187,7 +187,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayEnd -->
 - [CargoPersistence.SaveReturnCargo](../Assets/Scripts/Features/Salvage/CargoPersistence.cs#L11)
 <!-- source: Assets/Scripts/Features/Salvage/CargoPersistence.cs|SaveReturnCargo -->
-- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L265)
+- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L268)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
 - [MainUIPanels.PlayerDeath](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L288)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayerDeath -->
@@ -615,9 +615,9 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["PlayManager.RefreshGroup()"]
-    click A "../Assets/Scripts/Features/Simulation/PlayManager.cs#L167" "打开源码"
+    click A "../Assets/Scripts/Features/Simulation/PlayManager.cs#L170" "打开源码"
     B["PlayManager.AssignBlocksToParentGroups()"]
-    click B "../Assets/Scripts/Features/Simulation/PlayManager.cs#L295" "打开源码"
+    click B "../Assets/Scripts/Features/Simulation/PlayManager.cs#L299" "打开源码"
     C["RuntimeGroupBuilder.Rebuild()"]
     click C "../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L15" "打开源码"
     D["BlockGroupManager.GroupBlocks()"]
@@ -679,9 +679,9 @@ flowchart TD
     P --> R
 ```
 
-- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L167)
+- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L170)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
-- [PlayManager.AssignBlocksToParentGroups](../Assets/Scripts/Features/Simulation/PlayManager.cs#L295)
+- [PlayManager.AssignBlocksToParentGroups](../Assets/Scripts/Features/Simulation/PlayManager.cs#L299)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|AssignBlocksToParentGroups -->
 - [RuntimeGroupBuilder.Rebuild](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L15)
 <!-- source: Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs|Rebuild -->
@@ -751,7 +751,7 @@ flowchart TD
     J["ExplosionPropagation.DisconnectBlocksInExplosionRange()"]
     click J "../Assets/Scripts/Features/Combat/ExplosionPropagation.cs#L9" "打开源码"
     K["PlayManager.RefreshGroup()"]
-    click K "../Assets/Scripts/Features/Simulation/PlayManager.cs#L167" "打开源码"
+    click K "../Assets/Scripts/Features/Simulation/PlayManager.cs#L170" "打开源码"
     L["ExplosionPropagation.ApplyExplosionForce()"]
     click L "../Assets/Scripts/Features/Combat/ExplosionPropagation.cs#L53" "打开源码"
     M["SalvageCleanupSession.ScheduleUnit()"]
@@ -848,7 +848,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|ExplodeBlock -->
 - [ExplosionPropagation.DisconnectBlocksInExplosionRange](../Assets/Scripts/Features/Combat/ExplosionPropagation.cs#L9)
 <!-- source: Assets/Scripts/Features/Combat/ExplosionPropagation.cs|DisconnectBlocksInExplosionRange -->
-- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L167)
+- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L170)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
 - [ExplosionPropagation.ApplyExplosionForce](../Assets/Scripts/Features/Combat/ExplosionPropagation.cs#L53)
 <!-- source: Assets/Scripts/Features/Combat/ExplosionPropagation.cs|ApplyExplosionForce -->
@@ -910,7 +910,7 @@ flowchart TD
     E["ReturnStatusPanel.Clear()"]
     click E "../Assets/Scripts/Features/Presentation/ReturnStatusPanel.cs#L37" "打开源码"
     F["PlayManager.PlayEnd()"]
-    click F "../Assets/Scripts/Features/Simulation/PlayManager.cs#L265" "打开源码"
+    click F "../Assets/Scripts/Features/Simulation/PlayManager.cs#L268" "打开源码"
     G["GameManager.Init()"]
     click G "../Assets/Scripts/Features/Bootstrap/GameManager.cs#L20" "打开源码"
     A --> B
@@ -931,7 +931,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|CompletePlayEnd -->
 - [ReturnStatusPanel.Clear](../Assets/Scripts/Features/Presentation/ReturnStatusPanel.cs#L37)
 <!-- source: Assets/Scripts/Features/Presentation/ReturnStatusPanel.cs|Clear -->
-- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L265)
+- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L268)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
 - [GameManager.Init](../Assets/Scripts/Features/Bootstrap/GameManager.cs#L20)
 <!-- source: Assets/Scripts/Features/Bootstrap/GameManager.cs|Init -->
@@ -2439,55 +2439,80 @@ flowchart TD
 
 ## 敌方蓝图完整恢复
 
-源码推导：生产入口已改为据点有限驻军，EnemySpawner自动计时已禁用，仅保留显式诊断包装；据点调用EnemyBlueprintFactory生成。生成前检查每个模块资源和恰好一个驾驶舱，缺失或空模块整份拒绝。模块Awake应用CSV后恢复实例尺寸并刷新真实碰撞/连接点/质量，再累加刚体质量、设置敌方身份和运行归属；不以跳过模块生成残缺敌机。
+源码推导：普通建造游玩由PlayManager进入EnemySpawner的按间隔调度；WorldSession存在时由模式门控抑制全局刷怪，探索据点调用EnemyBlueprintFactory生成。生成前检查每个模块资源和恰好一个驾驶舱，缺失或空模块整份拒绝。模块Awake应用CSV后恢复实例尺寸并刷新真实碰撞/连接点/质量，再累加刚体质量、设置敌方身份和运行归属；不以跳过模块生成残缺敌机。
 
 ```mermaid
 flowchart TD
-    A["OutpostEncounterDirector.Tick()"]
-    click A "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L51" "打开源码"
-    B["OutpostEncounterDirector.Spawn()"]
-    click B "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L170" "打开源码"
-    C["EnemyBlueprintFactory.IsValidBlueprint()"]
-    click C "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L8" "打开源码"
-    D["EnemyBlueprintFactory.Spawn()"]
-    click D "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L41" "打开源码"
-    E["EnemyBlueprintFactory.Spawn()"]
-    click E "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L41" "打开源码"
-    F["EnemyBlueprintFactory.ApplyBlueprintLocalTransform()"]
-    click F "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L148" "打开源码"
-    G["Block.RefreshRuntimeData()"]
-    click G "../Assets/Scripts/Features/Simulation/Block.cs#L123" "打开源码"
-    H["EnemyBlueprintFactory.PrepareRuntimeEnemy()"]
-    click H "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L210" "打开源码"
-    I["ControlUnit.RefreshChildren()"]
-    click I "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L159" "打开源码"
-    J["ControlUnit.AssignRuntimeOwnershipToBlocks()"]
-    click J "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L209" "打开源码"
-    K["EnemyIdentity.SetSpawnMaxHealth()"]
-    click K "../Assets/Scripts/Features/Combat/EnemyIdentity.cs#L31" "打开源码"
-    L["OutpostEncounterDirector.Hibernate()"]
-    click L "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L293" "打开源码"
-    A -->|未击败、近距离且预算允许| B
-    B --> D
-    A -->|远离或地形卸载| L
-    D --> E
-    E -->|生成任何实体前| C
+    A["PlayManager.PlayStart()"]
+    click A "../Assets/Scripts/Features/Simulation/PlayManager.cs#L87" "打开源码"
+    B["EnemySpawner.BeginPlayMode()"]
+    click B "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L41" "打开源码"
+    C["EnemySpawner.Update()"]
+    click C "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L26" "打开源码"
+    D["EnemySpawner.SpawnRandomEnemy()"]
+    click D "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L110" "打开源码"
+    E["WorldSessionManager.Update()"]
+    click E "../Assets/Scripts/Features/World/WorldSessionManager.cs#L415" "打开源码"
+    F["OutpostEncounterDirector.Tick()"]
+    click F "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L51" "打开源码"
+    G["OutpostEncounterDirector.Spawn()"]
+    click G "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L170" "打开源码"
+    H["EnemyBlueprintFactory.IsValidBlueprint()"]
+    click H "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L8" "打开源码"
+    I["EnemyBlueprintFactory.Spawn()"]
+    click I "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L41" "打开源码"
+    J["EnemyBlueprintFactory.ApplyBlueprintLocalTransform()"]
+    click J "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L148" "打开源码"
+    K["Block.RefreshRuntimeData()"]
+    click K "../Assets/Scripts/Features/Simulation/Block.cs#L123" "打开源码"
+    L["EnemyBlueprintFactory.PrepareRuntimeEnemy()"]
+    click L "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L210" "打开源码"
+    M["ControlUnit.RefreshChildren()"]
+    click M "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L159" "打开源码"
+    N["ControlUnit.AssignRuntimeOwnershipToBlocks()"]
+    click N "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L209" "打开源码"
+    O["EnemyIdentity.SetSpawnMaxHealth()"]
+    click O "../Assets/Scripts/Features/Combat/EnemyIdentity.cs#L31" "打开源码"
+    P["OutpostEncounterDirector.Hibernate()"]
+    click P "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L293" "打开源码"
+    Q["PlayManager.PlayEnd()"]
+    click Q "../Assets/Scripts/Features/Simulation/PlayManager.cs#L268" "打开源码"
+    R["EnemySpawner.EndPlayMode()"]
+    click R "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L57" "打开源码"
+    A -->|普通模式| B
+    B -.->|引擎Update| C
+    C -->|间隔到期| D
+    D --> I
     E --> F
-    E -->|恢复尺寸后| G
-    E -->|完整构造后| K
-    E --> H
-    E --> I
-    E --> J
+    F -->|未击败、近距离且预算允许| G
+    F -->|远离或地形卸载| P
+    G --> I
+    I -->|生成任何实体前| H
+    I --> J
+    I -->|恢复尺寸后| K
+    I -->|完整构造后| O
+    I --> L
+    I --> M
+    I --> N
+    Q --> R
 ```
 
+- [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L87)
+<!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayStart -->
+- [EnemySpawner.BeginPlayMode](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L41)
+<!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|BeginPlayMode -->
+- [EnemySpawner.Update](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L26)
+<!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|Update -->
+- [EnemySpawner.SpawnRandomEnemy](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L110)
+<!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|SpawnRandomEnemy -->
+- [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L415)
+<!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Update -->
 - [OutpostEncounterDirector.Tick](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L51)
 <!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Tick -->
 - [OutpostEncounterDirector.Spawn](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L170)
 <!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Spawn -->
 - [EnemyBlueprintFactory.IsValidBlueprint](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L8)
 <!-- source: Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs|IsValidBlueprint -->
-- [EnemyBlueprintFactory.Spawn](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L41)
-<!-- source: Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs|Spawn -->
 - [EnemyBlueprintFactory.Spawn](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L41)
 <!-- source: Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs|Spawn -->
 - [EnemyBlueprintFactory.ApplyBlueprintLocalTransform](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L148)
@@ -2504,6 +2529,10 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/EnemyIdentity.cs|SetSpawnMaxHealth -->
 - [OutpostEncounterDirector.Hibernate](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L293)
 <!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Hibernate -->
+- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L268)
+<!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
+- [EnemySpawner.EndPlayMode](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L57)
+<!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|EndPlayMode -->
 
 ## 显式 Player 世界验证
 
@@ -2538,7 +2567,7 @@ flowchart TD
     M["WorldPlayerSmokeChecks.EnemyFixture()"]
     click M "../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L463" "打开源码"
     N["EnemySpawner.SpawnBlockData()"]
-    click N "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L110" "打开源码"
+    click N "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L144" "打开源码"
     O["WorldCombatPlayerChecks.Run()"]
     click O "../Assets/Scripts/Features/World/WorldCombatPlayerChecks.cs#L14" "打开源码"
     P["EnemyFlightPlayerChecks.Run()"]
@@ -2601,7 +2630,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|ValidateEnemyBlueprints -->
 - [WorldPlayerSmokeChecks.EnemyFixture](../Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs#L463)
 <!-- source: Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs|EnemyFixture -->
-- [EnemySpawner.SpawnBlockData](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L110)
+- [EnemySpawner.SpawnBlockData](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L144)
 <!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|SpawnBlockData -->
 - [WorldCombatPlayerChecks.Run](../Assets/Scripts/Features/World/WorldCombatPlayerChecks.cs#L14)
 <!-- source: Assets/Scripts/Features/World/WorldCombatPlayerChecks.cs|Run -->
@@ -2635,7 +2664,7 @@ flowchart TD
     F["WorldCombatPlayerChecks.EnemyCargoFixture()"]
     click F "../Assets/Scripts/Features/World/WorldCombatPlayerChecks.cs#L144" "打开源码"
     G["EnemySpawner.SpawnBlockData()"]
-    click G "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L110" "打开源码"
+    click G "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L144" "打开源码"
     H["Turret.FixedUpdate()"]
     click H "../Assets/Scripts/Features/Combat/Turret.cs#L71" "打开源码"
     I["ProjectileTurret.Fire()"]
@@ -2683,7 +2712,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Power/PowerTransmissionDevice.cs|Update -->
 - [WorldCombatPlayerChecks.EnemyCargoFixture](../Assets/Scripts/Features/World/WorldCombatPlayerChecks.cs#L144)
 <!-- source: Assets/Scripts/Features/World/WorldCombatPlayerChecks.cs|EnemyCargoFixture -->
-- [EnemySpawner.SpawnBlockData](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L110)
+- [EnemySpawner.SpawnBlockData](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L144)
 <!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|SpawnBlockData -->
 - [Turret.FixedUpdate](../Assets/Scripts/Features/Combat/Turret.cs#L71)
 <!-- source: Assets/Scripts/Features/Combat/Turret.cs|FixedUpdate -->

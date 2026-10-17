@@ -1,4 +1,4 @@
-// 职责：为Main保存据点状态HUD，并在场景中禁用旧EnemySpawner。
+// 职责：为Main保存据点状态HUD；世界会话运行时由EnemySpawner自身门控全局刷怪。
 // 入口：Apply()；只新增所属HUD，保留既有界面布局。
 using System;
 using System.Linq;
@@ -58,12 +58,6 @@ public static class OutpostHudAuthoring
 
         shadow.effectColor = new Color(0f, 0f, 0f, 0.9f);
         shadow.effectDistance = new Vector2(1f, -1f);
-        foreach (EnemySpawner spawner in scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<EnemySpawner>(true)))
-        {
-            Undo.RecordObject(spawner, "Disable legacy enemy spawner");
-            spawner.enabled = false;
-        }
-
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
     }
