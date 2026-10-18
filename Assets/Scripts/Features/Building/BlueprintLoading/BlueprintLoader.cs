@@ -261,27 +261,19 @@ internal sealed class BlueprintLoader
 
     private IEnumerator RebuildConnections(int version)
     {
-        var budget = System.Diagnostics.Stopwatch.StartNew();
-        for (int index = 0; index < _saves.blocks.Count; index++)
+        // 批量重建连接：每片段统一物理同步 + 分帧检测，减少 Physics.SyncTransforms() 调用
+        var builder = new BatchConnectionBuilder(_saves.blocks, 2f);
+        IEnumerator routine = builder.RebuildBatchRoutine();
+        try
         {
-            if (!OwnsParent(version))
+            while (OwnsParent(version) && routine.MoveNext())
             {
-                yield break;
+                yield return routine.Current;
             }
-
-            Block block = _saves.blocks[index];
-            if (block != null)
-            {
-                block.neighbors = block.Neighbors();
-                block.CheckConnection();
-            }
-
-            // 大载具的末尾连接重建同样需要分帧，不能在模块逐帧恢复后再集中阻塞数秒。
-            if (budget.Elapsed.TotalMilliseconds >= 2d)
-            {
-                yield return null;
-                budget.Restart();
-            }
+        }
+        finally
+        {
+            (routine as System.IDisposable)?.Dispose();
         }
     }
 

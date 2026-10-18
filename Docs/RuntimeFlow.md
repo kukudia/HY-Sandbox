@@ -310,8 +310,10 @@ flowchart TD
     click K "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L251" "打开源码"
     L["BlueprintLoader.RebuildConnections()"]
     click L "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L262" "打开源码"
+    P["BatchConnectionBuilder.RebuildBatchRoutine()"]
+    click P "../Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs#L18" "打开源码"
     M["BlueprintLoader.FinishSession()"]
-    click M "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L308" "打开源码"
+    click M "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L300" "打开源码"
     N["BlueprintLoader.Cancel()"]
     click N "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L94" "打开源码"
     O["BlueprintLoadCamera.Stop()"]
@@ -327,6 +329,8 @@ flowchart TD
     F -.->|StatisticsChanged| J
     F -->|完成| K
     F --> L
+    L --> P
+    P --> M
     F -->|finally| M
     N -->|版本递增 / 停协程| M
     M --> O
@@ -356,12 +360,83 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|RemoveMissingData -->
 - [BlueprintLoader.RebuildConnections](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L262)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|RebuildConnections -->
-- [BlueprintLoader.FinishSession](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L308)
+- [BatchConnectionBuilder.RebuildBatchRoutine](../Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs#L18)
+<!-- source: Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs|RebuildBatchRoutine -->
+- [BlueprintLoader.FinishSession](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L300)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|FinishSession -->
 - [BlueprintLoader.Cancel](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L94)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|Cancel -->
 - [BlueprintLoadCamera.Stop](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoadCamera.cs#L26)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoadCamera.cs|Stop -->
+
+## 蓝图资源缓存与连接批处理
+
+源码推导：玩家/建筑恢复和敌机校验/创建共享预制体缓存；SubsystemRegistration 清理缓存。连接批处理保留逐块邻接及连接检测，同步版本只在入口同步物理，分帧版本每次恢复重新同步。2ms仅为单块完成后的让出阈值，不保证帧耗时上限。
+
+```mermaid
+flowchart TD
+    A["BlueprintBlockFactory.TryRestore()"]
+    click A "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7" "打开源码"
+    B["EnemyBlueprintFactory.IsValidBlueprint()"]
+    click B "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L8" "打开源码"
+    C["EnemyBlueprintFactory.Spawn()"]
+    click C "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L41" "打开源码"
+    D["BlockPrefabCache.GetPrefab()"]
+    click D "../Assets/Scripts/Features/Building/BlueprintLoading/BlockPrefabCache.cs#L13" "打开源码"
+    E["BlockPrefabCache.Clear()"]
+    click E "../Assets/Scripts/Features/Building/BlueprintLoading/BlockPrefabCache.cs#L37" "打开源码"
+    F["BatchConnectionBuilder.RebuildBatchImmediate()"]
+    click F "../Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs#L40" "打开源码"
+    G["BlueprintLoader.RebuildConnections()"]
+    click G "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L262" "打开源码"
+    H["BatchConnectionBuilder.RebuildBatchRoutine()"]
+    click H "../Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs#L18" "打开源码"
+    I["BatchConnectionBuilder.RefreshBlock()"]
+    click I "../Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs#L54" "打开源码"
+    J["Block.CollectNeighbors()"]
+    click J "../Assets/Scripts/Features/Simulation/Block.cs#L351" "打开源码"
+    K["Block.CheckConnectionAfterPhysicsSync()"]
+    click K "../Assets/Scripts/Features/Simulation/Block.cs#L338" "打开源码"
+    L["BlockConnections.CheckConnection()"]
+    click L "../Assets/Scripts/Features/Simulation/BlockConnections.cs#L34" "打开源码"
+    A --> D
+    B --> D
+    C --> B
+    C --> D
+    C --> F
+    E -.->|启动时清理资源引用| D
+    G -.->|所有权检查后MoveNext| H
+    F --> I
+    H -.->|每片段统一同步物理| I
+    I --> J
+    I --> K
+    K -->|跳过重复同步，仍执行探测| L
+```
+
+- [BlueprintBlockFactory.TryRestore](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7)
+<!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs|TryRestore -->
+- [EnemyBlueprintFactory.IsValidBlueprint](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L8)
+<!-- source: Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs|IsValidBlueprint -->
+- [EnemyBlueprintFactory.Spawn](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L41)
+<!-- source: Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs|Spawn -->
+- [BlockPrefabCache.GetPrefab](../Assets/Scripts/Features/Building/BlueprintLoading/BlockPrefabCache.cs#L13)
+<!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlockPrefabCache.cs|GetPrefab -->
+- [BlockPrefabCache.Clear](../Assets/Scripts/Features/Building/BlueprintLoading/BlockPrefabCache.cs#L37)
+<!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlockPrefabCache.cs|Clear -->
+- [BatchConnectionBuilder.RebuildBatchImmediate](../Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs#L40)
+<!-- source: Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs|RebuildBatchImmediate -->
+- [BlueprintLoader.RebuildConnections](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L262)
+<!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|RebuildConnections -->
+- [BatchConnectionBuilder.RebuildBatchRoutine](../Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs#L18)
+<!-- source: Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs|RebuildBatchRoutine -->
+- [BatchConnectionBuilder.RefreshBlock](../Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs#L54)
+<!-- source: Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs|RefreshBlock -->
+- [Block.CollectNeighbors](../Assets/Scripts/Features/Simulation/Block.cs#L351)
+<!-- source: Assets/Scripts/Features/Simulation/Block.cs|CollectNeighbors -->
+- [Block.CheckConnectionAfterPhysicsSync](../Assets/Scripts/Features/Simulation/Block.cs#L338)
+<!-- source: Assets/Scripts/Features/Simulation/Block.cs|CheckConnectionAfterPhysicsSync -->
+- [BlockConnections.CheckConnection](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L34)
+<!-- source: Assets/Scripts/Features/Simulation/BlockConnections.cs|CheckConnection -->
 
 ## 放置、选中、操作和持久化
 
@@ -623,7 +698,7 @@ flowchart TD
     D["BlockGroupManager.GroupBlocks()"]
     click D "../Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L9" "打开源码"
     E["BlockConnections.CollectNeighbors()"]
-    click E "../Assets/Scripts/Features/Simulation/BlockConnections.cs#L235" "打开源码"
+    click E "../Assets/Scripts/Features/Simulation/BlockConnections.cs#L239" "打开源码"
     F["RuntimeGroupBuilder.RestoreGroupPhysics()"]
     click F "../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L85" "打开源码"
     G["ControlUnit.RefreshChildren()"]
@@ -687,7 +762,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs|Rebuild -->
 - [BlockGroupManager.GroupBlocks](../Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L9)
 <!-- source: Assets/Scripts/Features/Simulation/BlockGroupManager.cs|GroupBlocks -->
-- [BlockConnections.CollectNeighbors](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L235)
+- [BlockConnections.CollectNeighbors](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L239)
 <!-- source: Assets/Scripts/Features/Simulation/BlockConnections.cs|CollectNeighbors -->
 - [RuntimeGroupBuilder.RestoreGroupPhysics](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L85)
 <!-- source: Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs|RestoreGroupPhysics -->
@@ -2034,7 +2109,7 @@ flowchart TD
     I["BuildingRuntime.SplitDisconnected()"]
     click I "../Assets/Scripts/Features/World/BuildingRuntime.cs#L239" "打开源码"
     J["Block.CollectNeighbors()"]
-    click J "../Assets/Scripts/Features/Simulation/Block.cs#L346" "打开源码"
+    click J "../Assets/Scripts/Features/Simulation/Block.cs#L351" "打开源码"
     K["WorldBuildingManager.CreateDebris()"]
     click K "../Assets/Scripts/Features/World/WorldBuildingManager.cs#L421" "打开源码"
     L["WorldBuildingManager.DamageSphere()"]
@@ -2100,7 +2175,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/BuildingRuntime.cs|DestroyBlock -->
 - [BuildingRuntime.SplitDisconnected](../Assets/Scripts/Features/World/BuildingRuntime.cs#L239)
 <!-- source: Assets/Scripts/Features/World/BuildingRuntime.cs|SplitDisconnected -->
-- [Block.CollectNeighbors](../Assets/Scripts/Features/Simulation/Block.cs#L346)
+- [Block.CollectNeighbors](../Assets/Scripts/Features/Simulation/Block.cs#L351)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|CollectNeighbors -->
 - [WorldBuildingManager.CreateDebris](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L421)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|CreateDebris -->
@@ -2462,11 +2537,11 @@ flowchart TD
     I["EnemyBlueprintFactory.Spawn()"]
     click I "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L41" "打开源码"
     J["EnemyBlueprintFactory.ApplyBlueprintLocalTransform()"]
-    click J "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L148" "打开源码"
+    click J "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L150" "打开源码"
     K["Block.RefreshRuntimeData()"]
     click K "../Assets/Scripts/Features/Simulation/Block.cs#L123" "打开源码"
     L["EnemyBlueprintFactory.PrepareRuntimeEnemy()"]
-    click L "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L210" "打开源码"
+    click L "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L212" "打开源码"
     M["ControlUnit.RefreshChildren()"]
     click M "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L159" "打开源码"
     N["ControlUnit.AssignRuntimeOwnershipToBlocks()"]
@@ -2515,11 +2590,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs|IsValidBlueprint -->
 - [EnemyBlueprintFactory.Spawn](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L41)
 <!-- source: Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs|Spawn -->
-- [EnemyBlueprintFactory.ApplyBlueprintLocalTransform](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L148)
+- [EnemyBlueprintFactory.ApplyBlueprintLocalTransform](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L150)
 <!-- source: Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs|ApplyBlueprintLocalTransform -->
 - [Block.RefreshRuntimeData](../Assets/Scripts/Features/Simulation/Block.cs#L123)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|RefreshRuntimeData -->
-- [EnemyBlueprintFactory.PrepareRuntimeEnemy](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L210)
+- [EnemyBlueprintFactory.PrepareRuntimeEnemy](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L212)
 <!-- source: Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs|PrepareRuntimeEnemy -->
 - [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L159)
 <!-- source: Assets/Scripts/Features/Simulation/ControlUnit.cs|RefreshChildren -->

@@ -1,5 +1,11 @@
 # HY-Sandbox 开发与审查入口
 
+## 2026-10-18 蓝图加载连接批处理修正
+
+- 蓝图加载连接重建统一使用 `BatchConnectionBuilder`：每个执行片段一次 `Physics.SyncTransforms()`，原地复用邻接列表并分帧检查连接，避免批处理路径重新调用逐块同步；敌机蓝图生成也复用同一批处理入口。
+- `Block.CheckConnection()` 保持原有公开行为；新增的内部同步后入口只供批量流程使用，保留编辑器放置、爆炸和其他单块刷新路径的物理同步语义。`BlockPrefabCache` 缓存蓝图恢复过程中的重复预制体资源加载。
+- Unity 6000.3.11f1 导入/编译、既有 ArchitecturePlayProbe 和隔离 Play 拓扑对照通过；100/256块连接重建总耗时与基线基本持平，尚无显著提升证据，因此不推送。dotnet build为0错误/4既有警告；全工程可读性检查仅剩原有 MainUIPanels 格式差异，本轮脚本通过。完整证据、执行片段预算和未覆盖范围见 [审查与复测](OPTIMIZATION_TESTING.md)。
+
 ## 2026-10-17 夜间：普通建造敌机刷怪门控收束
 
 - 收束 `EnemySpawner` 的生命周期：普通建造游玩由 `PlayManager.PlayStart()` 设置生成锚点并按 `spawnInterval` 调度，退出时由 `PlayEnd()` 清理计时器与锚点；世界会话保持由据点导演独占敌机生成，避免全局计时器重复刷怪。

@@ -335,6 +335,11 @@ public class Block : MonoBehaviour
         Connections.CheckConnection();
     }
 
+    internal void CheckConnectionAfterPhysicsSync()
+    {
+        Connections.CheckConnection(false);
+    }
+
     public List<Block> Neighbors()
     {
         Physics.SyncTransforms();

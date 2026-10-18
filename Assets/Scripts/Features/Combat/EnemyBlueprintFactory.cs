@@ -16,7 +16,7 @@ public static class EnemyBlueprintFactory
         int cockpits = 0;
         foreach (BlockData data in dataList.blocks)
         {
-            GameObject prefab = data != null && !string.IsNullOrWhiteSpace(data.resourcePath) ? Resources.Load<GameObject>(BuildManager.ConvertToResourcesPath(data.resourcePath)) : null;
+            GameObject prefab = data != null && !string.IsNullOrWhiteSpace(data.resourcePath) ? BlockPrefabCache.GetPrefab(BuildManager.ConvertToResourcesPath(data.resourcePath)) : null;
             if (prefab == null || prefab.GetComponent<Block>() == null)
             {
                 Debug.LogWarning($"Enemy blueprint {enemyBlueprint} contains a missing or invalid module; spawn skipped.");
@@ -54,7 +54,7 @@ public static class EnemyBlueprintFactory
         List<Block> spawnedBlocks = new List<Block>();
         foreach (BlockData data in dataList.blocks)
         {
-            GameObject prefab = Resources.Load<GameObject>(BuildManager.ConvertToResourcesPath(data.resourcePath));
+            GameObject prefab = BlockPrefabCache.GetPrefab(BuildManager.ConvertToResourcesPath(data.resourcePath));
             if (prefab == null)
             {
                 Debug.LogWarning($"Cannot spawn enemy block at Resources/{data.resourcePath}.");
@@ -128,6 +128,8 @@ public static class EnemyBlueprintFactory
             rb.isKinematic = false;
         }
 
+        // 重建连接关系：一次同步物理后批量初始化邻接和连接状态。
+        new BatchConnectionBuilder(spawnedBlocks).RebuildBatchImmediate();
         ControlUnit unit = unitObject.GetComponent<ControlUnit>();
         if (unit != null)
         {

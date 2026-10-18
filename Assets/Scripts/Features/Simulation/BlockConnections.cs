@@ -31,7 +31,7 @@ internal sealed class BlockConnections
         return otherBlock == null || FindMatchingConnector(otherBlock, connector) == null;
     }
 
-    internal void CheckConnection()
+    internal void CheckConnection(bool synchronizePhysics = true)
     {
         // Rebuild connector links from physics probes so edits, loading, and explosions converge on one state.
         if (_block == null)
@@ -40,8 +40,12 @@ internal sealed class BlockConnections
         }
 
         // Transform changes made by the build UI are not guaranteed to be visible to physics immediately.
-        // Sync before probing so a move and its connection refresh observe the same frame.
-        Physics.SyncTransforms();
+        // Batch callers synchronize once before probing all blocks.
+        if (synchronizePhysics)
+        {
+            Physics.SyncTransforms();
+        }
+
         ReleaseExistingConnections();
         foreach (Connector c in _block.connectors)
         {

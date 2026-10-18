@@ -119,12 +119,14 @@
     <Compile Include="Assets\Scripts\Features\Flight\HoverFlightController.cs" />
     <Compile Include="Assets\Scripts\Features\World\WorldBuildingState.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\BotFlightMotion.cs" />
+    <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BlockPrefabCache.cs" />
     <Compile Include="Assets\Scripts\Features\Diagnostics\DurabilityDebugLabels.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\StatusIcon.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\UIInteractionFeedback.cs" />
     <Compile Include="Assets\Scripts\Features\World\OutpostEncounterDirector.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\CollectionBot.cs" />
     <Compile Include="Assets\Scripts\Features\World\VoxelStructureCollapse.cs" />
+    <Compile Include="Assets\Scripts\Features\Simulation\BatchConnectionBuilder.cs" />
     <Compile Include="Assets\Scripts\Features\Salvage\WreckSalvage.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlockDataTables\BlockDataTableSchema.cs" />
     <Compile Include="Assets\Scripts\Features\Player\PlayerController.cs" />

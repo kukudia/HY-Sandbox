@@ -194,6 +194,7 @@ def main():
             "J": "BlueprintUIPanel.DisplayStatistics",
             "K": "BlueprintLoader.RemoveMissingData",
             "L": "BlueprintLoader.RebuildConnections",
+            "P": "BatchConnectionBuilder.RebuildBatchRoutine",
             "M": "BlueprintLoader.FinishSession",
             "N": "BlueprintLoader.Cancel",
             "O": "BlueprintLoadCamera.Stop",
@@ -210,9 +211,35 @@ def main():
             "F -.->|StatisticsChanged| J",
             "F -->|完成| K",
             "F --> L",
+            "L --> P",
+            "P --> M",
             "F -->|finally| M",
             "N -->|版本递增 / 停协程| M",
             "M --> O",
+        ],
+    )
+    graph(
+        "蓝图资源缓存与连接批处理",
+        "源码推导：玩家/建筑恢复和敌机校验/创建共享预制体缓存；SubsystemRegistration 清理缓存。连接批处理保留逐块邻接及连接检测，同步版本只在入口同步物理，分帧版本每次恢复重新同步。2ms仅为单块完成后的让出阈值，不保证帧耗时上限。",
+        {
+            "A": "BlueprintBlockFactory.TryRestore",
+            "B": "EnemyBlueprintFactory.IsValidBlueprint",
+            "C": "EnemyBlueprintFactory.Spawn",
+            "D": "BlockPrefabCache.GetPrefab",
+            "E": "BlockPrefabCache.Clear",
+            "F": "BatchConnectionBuilder.RebuildBatchImmediate",
+            "G": "BlueprintLoader.RebuildConnections",
+            "H": "BatchConnectionBuilder.RebuildBatchRoutine",
+            "I": "BatchConnectionBuilder.RefreshBlock",
+            "J": "Block.CollectNeighbors",
+            "K": "Block.CheckConnectionAfterPhysicsSync",
+            "L": "BlockConnections.CheckConnection",
+        },
+        [
+            "A --> D", "B --> D", "C --> B", "C --> D", "C --> F",
+            "E -.->|启动时清理资源引用| D", "G -.->|所有权检查后MoveNext| H",
+            "F --> I", "H -.->|每片段统一同步物理| I", "I --> J", "I --> K",
+            "K -->|跳过重复同步，仍执行探测| L",
         ],
     )
     graph(

@@ -1243,6 +1243,15 @@
 | BlockDataTableSchema | [`void AddString(List<Column> columns, string group, string property, string label)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L271) | private static |
 | BlockDataTableSchema | [`void AddEnum(List<Column> columns, string group, string property, string label, string[] names)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L284) | private static |
 
+## Assets/Scripts/Features/Building/BlueprintLoading/BlockPrefabCache.cs
+
+// 职责：缓存加载过的方块预制体，避免 Resources.Load() 重复加载相同资源。 // 入口：GetPrefab()；支持清空缓存。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlockPrefabCache | [`GameObject GetPrefab(string resourcePath)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlockPrefabCache.cs#L13) | public static |
+| BlockPrefabCache | [`void Clear()`](../Assets/Scripts/Features/Building/BlueprintLoading/BlockPrefabCache.cs#L37) | public static |
+
 ## Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs
 
 // 职责：从存档恢复一个方块的身份、尺寸、阵营、货仓和耐久。 // 入口：TryRestore()；只创建实体，不负责加载会话、统计、UI 或 JSON 写入。
@@ -1250,8 +1259,8 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BlueprintBlockFactory | [`bool TryRestore(BlockData data, Transform parent, UnitFaction faction, out Block block)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7) | public static |
-| BlueprintBlockFactory | [`void ApplyFaction(Block block, UnitFaction faction)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L55) | public static |
-| BlueprintBlockFactory | [`string ToResourcePath(string fullPath)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L63) | public static |
+| BlueprintBlockFactory | [`void ApplyFaction(Block block, UnitFaction faction)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L56) | public static |
+| BlueprintBlockFactory | [`string ToResourcePath(string fullPath)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L64) | public static |
 
 ## Assets/Scripts/Features/Building/BlueprintLoading/BlueprintFileStore.cs
 
@@ -1303,8 +1312,8 @@
 | BlueprintLoader | [`bool OwnsParent(int version)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L246) | private |
 | BlueprintLoader | [`void RemoveMissingData(HashSet<string> ids)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L251) | private |
 | BlueprintLoader | [`IEnumerator RebuildConnections(int version)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L262) | private |
-| BlueprintLoader | [`void ReleaseInvalidParent()`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L288) | private |
-| BlueprintLoader | [`void FinishSession()`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L308) | private |
+| BlueprintLoader | [`void ReleaseInvalidParent()`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L280) | private |
+| BlueprintLoader | [`void FinishSession()`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L300) | private |
 
 ## Assets/Scripts/Features/Building/BlueprintLoading/BlueprintStatistics.cs
 
@@ -1775,16 +1784,16 @@
 | --- | --- | --- |
 | EnemyBlueprintFactory | [`bool IsValidBlueprint(BlockDataList dataList, string enemyBlueprint)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L8) | public static |
 | EnemyBlueprintFactory | [`ControlUnit Spawn(BlockDataList dataList, string enemyBlueprint, Vector3 spawnPosition, Quaternion spawnRotation)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L41) | public static |
-| EnemyBlueprintFactory | [`void ApplyBlueprintLocalTransform(Transform blockTransform, Vector3 localPosition, Quaternion localRotation)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L148) | private static |
-| EnemyBlueprintFactory | [`Vector3 CleanIntegerPosition(Vector3 position, string blockName)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L154) | private static |
-| EnemyBlueprintFactory | [`Quaternion CleanRightAngleRotation(Quaternion rotation, string blockName)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L165) | private static |
-| EnemyBlueprintFactory | [`float SnapNearInteger(float value)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L177) | private static |
-| EnemyBlueprintFactory | [`float SnapNearRightAngle(float angle)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L183) | private static |
-| EnemyBlueprintFactory | [`bool IsIntegerVector(Vector3 value)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L189) | private static |
-| EnemyBlueprintFactory | [`bool IsRightAngleVector(Vector3 euler)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L194) | private static |
-| EnemyBlueprintFactory | [`bool IsNearlyInteger(float value)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L199) | private static |
-| EnemyBlueprintFactory | [`bool IsNearlyRightAngle(float angle)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L204) | private static |
-| EnemyBlueprintFactory | [`void PrepareRuntimeEnemy(ControlUnit enemy)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L210) | private static |
+| EnemyBlueprintFactory | [`void ApplyBlueprintLocalTransform(Transform blockTransform, Vector3 localPosition, Quaternion localRotation)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L150) | private static |
+| EnemyBlueprintFactory | [`Vector3 CleanIntegerPosition(Vector3 position, string blockName)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L156) | private static |
+| EnemyBlueprintFactory | [`Quaternion CleanRightAngleRotation(Quaternion rotation, string blockName)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L167) | private static |
+| EnemyBlueprintFactory | [`float SnapNearInteger(float value)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L179) | private static |
+| EnemyBlueprintFactory | [`float SnapNearRightAngle(float angle)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L185) | private static |
+| EnemyBlueprintFactory | [`bool IsIntegerVector(Vector3 value)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L191) | private static |
+| EnemyBlueprintFactory | [`bool IsRightAngleVector(Vector3 euler)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L196) | private static |
+| EnemyBlueprintFactory | [`bool IsNearlyInteger(float value)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L201) | private static |
+| EnemyBlueprintFactory | [`bool IsNearlyRightAngle(float angle)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L206) | private static |
+| EnemyBlueprintFactory | [`void PrepareRuntimeEnemy(ControlUnit enemy)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L212) | private static |
 
 ## Assets/Scripts/Features/Combat/EnemyController.cs
 
@@ -2836,6 +2845,16 @@
 | WreckSalvage | [`void Convert(Block block)`](../Assets/Scripts/Features/Salvage/WreckSalvage.cs#L10) | public static |
 | WreckSalvage | [`void ConvertGroup(ControlUnit unit)`](../Assets/Scripts/Features/Salvage/WreckSalvage.cs#L62) | public static |
 
+## Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs
+
+// 职责：批量重建方块邻接与双侧连接；每个执行片段统一同步物理。 // 入口：RebuildBatchRoutine() / RebuildBatchImmediate()；分帧版本用于加载中的静止蓝图。 // 约束：预算在完整单块操作后检查，不保证单个昂贵操作低于预算；恢复后重新同步物理。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BatchConnectionBuilder | [`IEnumerator RebuildBatchRoutine()`](../Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs#L18) | public |
+| BatchConnectionBuilder | [`void RebuildBatchImmediate()`](../Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs#L40) | public |
+| BatchConnectionBuilder | [`void RefreshBlock(Block block)`](../Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs#L54) | private static |
+
 ## Assets/Scripts/Features/Simulation/Block.cs
 
 // 职责：保存方块尺寸、质量、连接面和编辑器配置；由 BlockConnections 维护运行时连接。 // 入口：GetDisplayInfo() / GetConnectorWorldPosition() / GetConnectorWorldNormal()。
@@ -2857,12 +2876,13 @@
 | Block | [`Vector3 GetConnectorWorldNormal(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L323) | public |
 | Block | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L328) | public |
 | Block | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/Block.cs#L333) | public |
-| Block | [`List<Block> Neighbors()`](../Assets/Scripts/Features/Simulation/Block.cs#L338) | public |
-| Block | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L346) | internal |
-| Block | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Block.cs#L351) | public |
-| Block | [`void RefreshConnectionStatus()`](../Assets/Scripts/Features/Simulation/Block.cs#L356) | internal |
-| Block | [`bool IsBlockedGhost()`](../Assets/Scripts/Features/Simulation/Block.cs#L364) | public |
-| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L388) | private |
+| Block | [`void CheckConnectionAfterPhysicsSync()`](../Assets/Scripts/Features/Simulation/Block.cs#L338) | internal |
+| Block | [`List<Block> Neighbors()`](../Assets/Scripts/Features/Simulation/Block.cs#L343) | public |
+| Block | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L351) | internal |
+| Block | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Block.cs#L356) | public |
+| Block | [`void RefreshConnectionStatus()`](../Assets/Scripts/Features/Simulation/Block.cs#L361) | internal |
+| Block | [`bool IsBlockedGhost()`](../Assets/Scripts/Features/Simulation/Block.cs#L369) | public |
+| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L393) | private |
 
 ## Assets/Scripts/Features/Simulation/BlockConnections.cs
 
@@ -2871,17 +2891,17 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BlockConnections | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L20) | internal |
-| BlockConnections | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L34) | internal |
-| BlockConnections | [`void ReleaseExistingConnections()`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L78) | private |
-| BlockConnections | [`void ReleaseConnectionPairWithoutVisual(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L94) | private |
-| BlockConnections | [`void ReleaseConnectionReferences(GameObject connectorObject)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L108) | private |
-| BlockConnections | [`Block FindBlockAcrossConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L138) | private |
-| BlockConnections | [`bool SharesBuildingScope(Block other)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L166) | private |
-| BlockConnections | [`Connector FindMatchingConnector(Block otherBlock, Connector connector, bool requireAvailable = true)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L173) | private |
-| BlockConnections | [`void ConnectTo(Connector connector, Block otherBlock, Connector otherConnector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L195) | private |
-| BlockConnections | [`void ClearConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L216) | private |
-| BlockConnections | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L235) | internal |
-| BlockConnections | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L263) | internal |
+| BlockConnections | [`void CheckConnection(bool synchronizePhysics = true)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L34) | internal |
+| BlockConnections | [`void ReleaseExistingConnections()`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L82) | private |
+| BlockConnections | [`void ReleaseConnectionPairWithoutVisual(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L98) | private |
+| BlockConnections | [`void ReleaseConnectionReferences(GameObject connectorObject)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L112) | private |
+| BlockConnections | [`Block FindBlockAcrossConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L142) | private |
+| BlockConnections | [`bool SharesBuildingScope(Block other)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L170) | private |
+| BlockConnections | [`Connector FindMatchingConnector(Block otherBlock, Connector connector, bool requireAvailable = true)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L177) | private |
+| BlockConnections | [`void ConnectTo(Connector connector, Block otherBlock, Connector otherConnector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L199) | private |
+| BlockConnections | [`void ClearConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L220) | private |
+| BlockConnections | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L239) | internal |
+| BlockConnections | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L267) | internal |
 
 ## Assets/Scripts/Features/Simulation/BlockGroupManager.cs
 

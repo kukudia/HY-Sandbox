@@ -12,7 +12,8 @@ internal static class BlueprintBlockFactory
             return false;
         }
 
-        GameObject prefab = Resources.Load<GameObject>(ToResourcePath(data.resourcePath));
+        string resourcePath = ToResourcePath(data.resourcePath);
+        GameObject prefab = BlockPrefabCache.GetPrefab(resourcePath);
         if (prefab == null)
         {
             return false;
