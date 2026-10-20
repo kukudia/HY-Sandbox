@@ -1,8 +1,8 @@
 {
   "blueprints": [
-    { "name": "DSH_E01_Skimmer", "peakHorizontalSpeed": 3.77, "peakTiltDegrees": 1.26, "idleHoverError": 3.093, "chaseHoverError": 0.116, "recoveryHoverError": 0.100, "minWorkingPowerBlocks": 0, "blocksAtEnd": 70, "connectedGroups": 1, "turrets": 4, "turretsThatEngaged": 0, "repairBays": 2, "repairDronesAway": 0 },
-    { "name": "DSH_E02_Halberd", "peakHorizontalSpeed": 2.80, "peakTiltDegrees": 1.69, "idleHoverError": 3.559, "chaseHoverError": 2.696, "recoveryHoverError": 1.116, "minWorkingPowerBlocks": 1, "blocksAtEnd": 136, "connectedGroups": 1, "turrets": 8, "turretsThatEngaged": 0, "repairBays": 3, "repairDronesAway": 0 },
-    { "name": "DSH_E03_Talos", "peakHorizontalSpeed": 5.50, "peakTiltDegrees": 1.30, "idleHoverError": 3.009, "chaseHoverError": 0.160, "recoveryHoverError": 0.100, "minWorkingPowerBlocks": 0, "blocksAtEnd": 80, "connectedGroups": 1, "turrets": 8, "turretsThatEngaged": 0, "repairBays": 2, "repairDronesAway": 0 }
+    { "name": "DSH_E01_Skimmer", "peakHorizontalSpeed": 8.71, "peakChaseSpeed": 8.71, "peakRecoverySpeed": 8.60, "peakTiltDegrees": 3.33, "idleHoverError": 2.964, "chaseHoverError": 0.661, "recoveryHoverError": 0.108, "minWorkingPowerBlocks": 0, "blocksAtEnd": 97, "connectedGroups": 1, "turrets": 8, "turretsThatEngaged": 0, "repairBays": 2, "repairDronesAway": 0 },
+    { "name": "DSH_E02_Halberd", "peakHorizontalSpeed": 6.82, "peakChaseSpeed": 6.82, "peakRecoverySpeed": 4.57, "peakTiltDegrees": 1.89, "idleHoverError": 2.218, "chaseHoverError": 1.720, "recoveryHoverError": 1.616, "minWorkingPowerBlocks": 0, "blocksAtEnd": 164, "connectedGroups": 1, "turrets": 12, "turretsThatEngaged": 0, "repairBays": 3, "repairDronesAway": 0 },
+    { "name": "DSH_E03_Talos", "peakHorizontalSpeed": 9.25, "peakChaseSpeed": 9.25, "peakRecoverySpeed": 8.16, "peakTiltDegrees": 3.47, "idleHoverError": 2.994, "chaseHoverError": 0.694, "recoveryHoverError": 0.280, "minWorkingPowerBlocks": 0, "blocksAtEnd": 106, "connectedGroups": 1, "turrets": 12, "turretsThatEngaged": 0, "repairBays": 2, "repairDronesAway": 0 }
   ],
   "perCraftSeconds": 80,
   "phases": "idle 40 s, chase 20 s, impulse then recover 20 s",

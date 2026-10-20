@@ -15,7 +15,9 @@
 //   * no two blocks overlap in volume;
 //   * total generator output covers every Power block at >= its minWorkingPower, and every
 //     load sits inside a live relay's 5 m box while every relay reaches a generator;
-//   * total hover thrust exceeds the total weight, and the horizontal pods contribute.
+//   * total hover thrust exceeds the total weight, and the horizontal pods contribute;
+//   * the cockpit is sealed on all six faces (the armour request), and the new ballistic
+//     battery and outboard vector pods are actually mounted.
 var results = new System.Collections.Generic.List<object>();
 var failures = new System.Collections.Generic.List<string>();
 string folder = System.IO.Path.GetFullPath("Blueprints/DSH_Enemies");
@@ -69,7 +71,7 @@ foreach (var file in System.IO.Directory.GetFiles(folder, "DSH_E*.json").OrderBy
     var loads = new System.Collections.Generic.List<UnityEngine.Vector3>();
     var gens = new System.Collections.Generic.List<UnityEngine.Vector3>();
     var relays = new System.Collections.Generic.List<UnityEngine.Vector3>();
-    int cockpit = -1, cockpits = 0, turretsOnDeck = 0, repairBays = 0;
+    int cockpit = -1, cockpits = 0, turretsOnDeck = 0, repairBays = 0, ballisticTurrets = 0, vectorPods = 0;
     float mass = 0f, lift = 0f, horizontal = 0f, demand = 0f, supply = 0f, minPower = 0f;
     for (int i = 0; i < data.blocks.Count; i++)
     {
@@ -127,6 +129,10 @@ foreach (var file in System.IO.Directory.GetFiles(folder, "DSH_E*.json").OrderBy
         if (vector != null)
         {
             horizontal += vector.maxThrust;
+            if (block.x == 2 && block.y == 2 && block.z == 2)
+            {
+                vectorPods++;
+            }
         }
 
         if (prefab.GetComponent<Cockpit>() != null)
@@ -139,9 +145,14 @@ foreach (var file in System.IO.Directory.GetFiles(folder, "DSH_E*.json").OrderBy
         // dressing: without a repair bay the design has no way to recover from damage, and
         // without turrets it cannot fight.  RepairBot lives on the bay's Bot child, so the
         // container is detected by its Bot/RepairBot descendants.
-        if (prefab.GetComponent<TurretWeapon>() != null)
+        var turret = prefab.GetComponent<Turret>();
+        if (turret != null)
         {
             turretsOnDeck++;
+            if (turret is ProjectileTurret)
+            {
+                ballisticTurrets++;
+            }
         }
 
         if (prefab.GetComponentInChildren<RepairBot>(true) != null)
@@ -178,6 +189,50 @@ foreach (var file in System.IO.Directory.GetFiles(folder, "DSH_E*.json").OrderBy
     if (cockpits != 1)
     {
         problems.Add("cockpit count " + cockpits);
+    }
+
+    // Seal check: the request is to protect the cockpit, so require a block on each of its
+    // six faces.  Cage blocks are 2x2x2 and therefore sit exactly 2 m from the cockpit centre;
+    // the deck block under it and the roof block above it are part of the same count.
+    int cockpitArmor = 0;
+    if (cockpit >= 0)
+    {
+        var offsets = new[]
+        {
+            new UnityEngine.Vector3(2f, 0f, 0f),
+            new UnityEngine.Vector3(-2f, 0f, 0f),
+            new UnityEngine.Vector3(0f, 2f, 0f),
+            new UnityEngine.Vector3(0f, -2f, 0f),
+            new UnityEngine.Vector3(0f, 0f, 2f),
+            new UnityEngine.Vector3(0f, 0f, -2f)
+        };
+        foreach (var offset in offsets)
+        {
+            var face = positions[cockpit] + offset;
+            for (int i = 0; i < data.blocks.Count; i++)
+            {
+                if (i != cockpit && (positions[i] - face).sqrMagnitude < 1e-4f)
+                {
+                    cockpitArmor++;
+                    break;
+                }
+            }
+        }
+    }
+
+    if (cockpitArmor < 6)
+    {
+        problems.Add("cockpit is sealed on only " + cockpitArmor + "/6 faces");
+    }
+
+    if (ballisticTurrets < 2)
+    {
+        problems.Add("only " + ballisticTurrets + " ballistic turrets (want at least 2)");
+    }
+
+    if (vectorPods < 2)
+    {
+        problems.Add("only " + vectorPods + " outboard vector pods (want at least 2)");
     }
 
     if (turretsOnDeck < 4)
@@ -468,6 +523,9 @@ foreach (var file in System.IO.Directory.GetFiles(folder, "DSH_E*.json").OrderBy
         matingPairs = mating,
         reachable = visited.Count,
         turrets = turretsOnDeck,
+        ballisticTurrets,
+        vectorPods,
+        cockpitArmor,
         repairBays,
         powerPerLoad = perLoad,
         problems,

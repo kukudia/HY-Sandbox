@@ -1,0 +1,9 @@
+{
+  "blueprints": [
+    { "name": "DSH_E01_Skimmer", "turrets": 8, "turretsEngaged": 8, "turretsPowered": 8, "roofTurrets": 4, "roofTurretsEngaged": 4, "roofTurretsPowered": 4, "projectilesInFlight": 12, "targetDamage": 2568.0 },
+    { "name": "DSH_E02_Halberd", "turrets": 12, "turretsEngaged": 12, "turretsPowered": 12, "roofTurrets": 4, "roofTurretsEngaged": 4, "roofTurretsPowered": 4, "projectilesInFlight": 12, "targetDamage": 3828.0 },
+    { "name": "DSH_E03_Talos", "turrets": 12, "turretsEngaged": 12, "turretsPowered": 12, "roofTurrets": 4, "roofTurretsEngaged": 4, "roofTurretsPowered": 4, "projectilesInFlight": 12, "targetDamage": 3816.0 }
+  ],
+  "perCraftSeconds": 12,
+  "note": "stationary hull, pinned player cockpit 30 m ahead, EnemyController and thrusters held still; engaged means the turret yaw axis moved more than 2 degrees from its rest pose; projectilesInFlight is the peak count of active projectile instances"
+}

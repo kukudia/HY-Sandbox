@@ -125,9 +125,9 @@
             "x": 2,
             "y": 2,
             "z": 2,
-            "posX": 0.0,
-            "posY": 0.0,
-            "posZ": -4.0,
+            "posX": -2.0,
+            "posY": 2.0,
+            "posZ": -2.0,
             "rotX": 0.0,
             "rotY": 0.0,
             "rotZ": 0.0,
@@ -140,6 +140,96 @@
             "x": 2,
             "y": 2,
             "z": 2,
+            "posX": -2.0,
+            "posY": 2.0,
+            "posZ": 0.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/2x2x2.prefab",
+            "cargo": []
+        },
+        {
+            "id": "010_2x2x2",
+            "x": 2,
+            "y": 2,
+            "z": 2,
+            "posX": -2.0,
+            "posY": 2.0,
+            "posZ": 2.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/2x2x2.prefab",
+            "cargo": []
+        },
+        {
+            "id": "011_2x2x2",
+            "x": 2,
+            "y": 2,
+            "z": 2,
+            "posX": -2.0,
+            "posY": 4.0,
+            "posZ": -2.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/2x2x2.prefab",
+            "cargo": []
+        },
+        {
+            "id": "012_2x2x2",
+            "x": 2,
+            "y": 2,
+            "z": 2,
+            "posX": -2.0,
+            "posY": 4.0,
+            "posZ": 0.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/2x2x2.prefab",
+            "cargo": []
+        },
+        {
+            "id": "013_2x2x2",
+            "x": 2,
+            "y": 2,
+            "z": 2,
+            "posX": -2.0,
+            "posY": 4.0,
+            "posZ": 2.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/2x2x2.prefab",
+            "cargo": []
+        },
+        {
+            "id": "014_2x2x2",
+            "x": 2,
+            "y": 2,
+            "z": 2,
+            "posX": 0.0,
+            "posY": 0.0,
+            "posZ": -4.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/2x2x2.prefab",
+            "cargo": []
+        },
+        {
+            "id": "015_2x2x2",
+            "x": 2,
+            "y": 2,
+            "z": 2,
             "posX": 0.0,
             "posY": 0.0,
             "posZ": -2.0,
@@ -151,7 +241,7 @@
             "cargo": []
         },
         {
-            "id": "010_2x2x2",
+            "id": "016_2x2x2",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -166,7 +256,7 @@
             "cargo": []
         },
         {
-            "id": "011_2x2x2",
+            "id": "017_2x2x2",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -181,7 +271,7 @@
             "cargo": []
         },
         {
-            "id": "012_2x2x2",
+            "id": "018_2x2x2",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -196,7 +286,82 @@
             "cargo": []
         },
         {
-            "id": "013_2x2x2",
+            "id": "019_2x2x2",
+            "x": 2,
+            "y": 2,
+            "z": 2,
+            "posX": 0.0,
+            "posY": 2.0,
+            "posZ": -2.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/2x2x2.prefab",
+            "cargo": []
+        },
+        {
+            "id": "020_2x2x2",
+            "x": 2,
+            "y": 2,
+            "z": 2,
+            "posX": 0.0,
+            "posY": 2.0,
+            "posZ": 2.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/2x2x2.prefab",
+            "cargo": []
+        },
+        {
+            "id": "021_2x2x2",
+            "x": 2,
+            "y": 2,
+            "z": 2,
+            "posX": 0.0,
+            "posY": 4.0,
+            "posZ": -2.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/2x2x2.prefab",
+            "cargo": []
+        },
+        {
+            "id": "022_2x2x2",
+            "x": 2,
+            "y": 2,
+            "z": 2,
+            "posX": 0.0,
+            "posY": 4.0,
+            "posZ": 0.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/2x2x2.prefab",
+            "cargo": []
+        },
+        {
+            "id": "023_2x2x2",
+            "x": 2,
+            "y": 2,
+            "z": 2,
+            "posX": 0.0,
+            "posY": 4.0,
+            "posZ": 2.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/2x2x2.prefab",
+            "cargo": []
+        },
+        {
+            "id": "024_2x2x2",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -211,7 +376,7 @@
             "cargo": []
         },
         {
-            "id": "014_2x2x2",
+            "id": "025_2x2x2",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -226,7 +391,7 @@
             "cargo": []
         },
         {
-            "id": "015_2x2x2",
+            "id": "026_2x2x2",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -241,7 +406,7 @@
             "cargo": []
         },
         {
-            "id": "016_2x2x2",
+            "id": "027_2x2x2",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -256,7 +421,7 @@
             "cargo": []
         },
         {
-            "id": "017_2x2x2",
+            "id": "028_2x2x2",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -271,7 +436,97 @@
             "cargo": []
         },
         {
-            "id": "018_2x2x2",
+            "id": "029_2x2x2",
+            "x": 2,
+            "y": 2,
+            "z": 2,
+            "posX": 2.0,
+            "posY": 2.0,
+            "posZ": -2.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/2x2x2.prefab",
+            "cargo": []
+        },
+        {
+            "id": "030_2x2x2",
+            "x": 2,
+            "y": 2,
+            "z": 2,
+            "posX": 2.0,
+            "posY": 2.0,
+            "posZ": 0.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/2x2x2.prefab",
+            "cargo": []
+        },
+        {
+            "id": "031_2x2x2",
+            "x": 2,
+            "y": 2,
+            "z": 2,
+            "posX": 2.0,
+            "posY": 2.0,
+            "posZ": 2.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/2x2x2.prefab",
+            "cargo": []
+        },
+        {
+            "id": "032_2x2x2",
+            "x": 2,
+            "y": 2,
+            "z": 2,
+            "posX": 2.0,
+            "posY": 4.0,
+            "posZ": -2.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/2x2x2.prefab",
+            "cargo": []
+        },
+        {
+            "id": "033_2x2x2",
+            "x": 2,
+            "y": 2,
+            "z": 2,
+            "posX": 2.0,
+            "posY": 4.0,
+            "posZ": 0.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/2x2x2.prefab",
+            "cargo": []
+        },
+        {
+            "id": "034_2x2x2",
+            "x": 2,
+            "y": 2,
+            "z": 2,
+            "posX": 2.0,
+            "posY": 4.0,
+            "posZ": 2.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/2x2x2.prefab",
+            "cargo": []
+        },
+        {
+            "id": "035_2x2x2",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -286,7 +541,7 @@
             "cargo": []
         },
         {
-            "id": "019_2x2x2",
+            "id": "036_2x2x2",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -301,7 +556,7 @@
             "cargo": []
         },
         {
-            "id": "020_2x2x2",
+            "id": "037_2x2x2",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -316,7 +571,7 @@
             "cargo": []
         },
         {
-            "id": "021_Cockpit",
+            "id": "038_Cockpit",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -331,11 +586,11 @@
             "cargo": []
         },
         {
-            "id": "022_HoverFlightController",
+            "id": "039_HoverFlightController",
             "x": 1,
             "y": 1,
             "z": 1,
-            "posX": 2.5,
+            "posX": 3.5,
             "posY": 1.5,
             "posZ": -0.5,
             "rotX": 0.0,
@@ -346,7 +601,7 @@
             "cargo": []
         },
         {
-            "id": "023_HoverThrusterBig",
+            "id": "040_HoverThrusterBig",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -361,7 +616,7 @@
             "cargo": []
         },
         {
-            "id": "024_HoverThrusterBig",
+            "id": "041_HoverThrusterBig",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -376,7 +631,7 @@
             "cargo": []
         },
         {
-            "id": "025_HoverThrusterBig",
+            "id": "042_HoverThrusterBig",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -391,7 +646,7 @@
             "cargo": []
         },
         {
-            "id": "026_HoverThrusterBig",
+            "id": "043_HoverThrusterBig",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -406,7 +661,7 @@
             "cargo": []
         },
         {
-            "id": "027_HoverThrusterBig",
+            "id": "044_HoverThrusterBig",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -421,7 +676,7 @@
             "cargo": []
         },
         {
-            "id": "028_HoverThrusterBig",
+            "id": "045_HoverThrusterBig",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -436,7 +691,7 @@
             "cargo": []
         },
         {
-            "id": "029_HoverThrusterBig",
+            "id": "046_HoverThrusterBig",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -451,7 +706,7 @@
             "cargo": []
         },
         {
-            "id": "030_HoverThrusterBig",
+            "id": "047_HoverThrusterBig",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -466,7 +721,7 @@
             "cargo": []
         },
         {
-            "id": "031_HoverThrusterBig",
+            "id": "048_HoverThrusterBig",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -481,7 +736,7 @@
             "cargo": []
         },
         {
-            "id": "032_HoverThrusterBig",
+            "id": "049_HoverThrusterBig",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -496,7 +751,7 @@
             "cargo": []
         },
         {
-            "id": "033_HoverThrusterBig",
+            "id": "050_HoverThrusterBig",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -511,7 +766,7 @@
             "cargo": []
         },
         {
-            "id": "034_HoverThrusterBig",
+            "id": "051_HoverThrusterBig",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -526,7 +781,7 @@
             "cargo": []
         },
         {
-            "id": "035_HoverThrusterBig",
+            "id": "052_HoverThrusterBig",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -541,7 +796,7 @@
             "cargo": []
         },
         {
-            "id": "036_HoverThrusterBig",
+            "id": "053_HoverThrusterBig",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -556,7 +811,7 @@
             "cargo": []
         },
         {
-            "id": "037_HoverThrusterBig",
+            "id": "054_HoverThrusterBig",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -571,7 +826,7 @@
             "cargo": []
         },
         {
-            "id": "038_HoverThrusterBig",
+            "id": "055_HoverThrusterBig",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -586,7 +841,7 @@
             "cargo": []
         },
         {
-            "id": "039_HoverThrusterBig",
+            "id": "056_HoverThrusterBig",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -601,7 +856,7 @@
             "cargo": []
         },
         {
-            "id": "040_PowerGeneratingUnit",
+            "id": "057_PowerGeneratingUnit",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -616,7 +871,7 @@
             "cargo": []
         },
         {
-            "id": "041_PowerGeneratingUnit",
+            "id": "058_PowerGeneratingUnit",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -631,7 +886,7 @@
             "cargo": []
         },
         {
-            "id": "042_PowerGeneratingUnit",
+            "id": "059_PowerGeneratingUnit",
             "x": 2,
             "y": 2,
             "z": 2,
@@ -646,7 +901,22 @@
             "cargo": []
         },
         {
-            "id": "043_PowerTransmissionDevice",
+            "id": "060_PowerTransmissionDevice",
+            "x": 1,
+            "y": 1,
+            "z": 1,
+            "posX": -3.5,
+            "posY": 1.5,
+            "posZ": -2.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/PowerTransmissionDevice.prefab",
+            "cargo": []
+        },
+        {
+            "id": "061_PowerTransmissionDevice",
             "x": 1,
             "y": 1,
             "z": 1,
@@ -661,7 +931,112 @@
             "cargo": []
         },
         {
-            "id": "044_RepairBotContianer",
+            "id": "062_PowerTransmissionDevice",
+            "x": 1,
+            "y": 1,
+            "z": 1,
+            "posX": -0.5,
+            "posY": 5.5,
+            "posZ": -0.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/PowerTransmissionDevice.prefab",
+            "cargo": []
+        },
+        {
+            "id": "063_PowerTransmissionDevice",
+            "x": 1,
+            "y": 1,
+            "z": 1,
+            "posX": 0.5,
+            "posY": 5.5,
+            "posZ": 0.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/PowerTransmissionDevice.prefab",
+            "cargo": []
+        },
+        {
+            "id": "064_PowerTransmissionDevice",
+            "x": 1,
+            "y": 1,
+            "z": 1,
+            "posX": 3.5,
+            "posY": 1.5,
+            "posZ": -2.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/PowerTransmissionDevice.prefab",
+            "cargo": []
+        },
+        {
+            "id": "065_ProjectileTurretDouble",
+            "x": 1,
+            "y": 1,
+            "z": 1,
+            "posX": -1.5,
+            "posY": 5.5,
+            "posZ": 1.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/ProjectileTurretDouble.prefab",
+            "cargo": []
+        },
+        {
+            "id": "066_ProjectileTurretDouble",
+            "x": 1,
+            "y": 1,
+            "z": 1,
+            "posX": 1.5,
+            "posY": 5.5,
+            "posZ": 1.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/ProjectileTurretDouble.prefab",
+            "cargo": []
+        },
+        {
+            "id": "067_ProjectileTurretSingle",
+            "x": 1,
+            "y": 1,
+            "z": 1,
+            "posX": -1.5,
+            "posY": 5.5,
+            "posZ": -1.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/ProjectileTurretSingle.prefab",
+            "cargo": []
+        },
+        {
+            "id": "068_ProjectileTurretSingle",
+            "x": 1,
+            "y": 1,
+            "z": 1,
+            "posX": 1.5,
+            "posY": 5.5,
+            "posZ": -1.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/ProjectileTurretSingle.prefab",
+            "cargo": []
+        },
+        {
+            "id": "069_RepairBotContianer",
             "x": 1,
             "y": 1,
             "z": 1,
@@ -676,7 +1051,7 @@
             "cargo": []
         },
         {
-            "id": "045_RepairBotContianer",
+            "id": "070_RepairBotContianer",
             "x": 1,
             "y": 1,
             "z": 1,
@@ -691,11 +1066,11 @@
             "cargo": []
         },
         {
-            "id": "046_Turret",
+            "id": "071_Turret",
             "x": 1,
             "y": 1,
             "z": 1,
-            "posX": -1.5,
+            "posX": -3.5,
             "posY": 1.5,
             "posZ": -1.5,
             "rotX": 0.0,
@@ -706,11 +1081,11 @@
             "cargo": []
         },
         {
-            "id": "047_Turret",
+            "id": "072_Turret",
             "x": 1,
             "y": 1,
             "z": 1,
-            "posX": -1.5,
+            "posX": -3.5,
             "posY": 1.5,
             "posZ": 1.5,
             "rotX": 0.0,
@@ -721,11 +1096,11 @@
             "cargo": []
         },
         {
-            "id": "048_Turret",
+            "id": "073_Turret",
             "x": 1,
             "y": 1,
             "z": 1,
-            "posX": 1.5,
+            "posX": 3.5,
             "posY": 1.5,
             "posZ": -1.5,
             "rotX": 0.0,
@@ -736,11 +1111,11 @@
             "cargo": []
         },
         {
-            "id": "049_Turret",
+            "id": "074_Turret",
             "x": 1,
             "y": 1,
             "z": 1,
-            "posX": 1.5,
+            "posX": 3.5,
             "posY": 1.5,
             "posZ": 1.5,
             "rotX": 0.0,
@@ -751,7 +1126,52 @@
             "cargo": []
         },
         {
-            "id": "050_UniversalThruster",
+            "id": "075_UniversalThruster",
+            "x": 1,
+            "y": 1,
+            "z": 1,
+            "posX": -3.5,
+            "posY": 1.5,
+            "posZ": -0.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/UniversalThruster.prefab",
+            "cargo": []
+        },
+        {
+            "id": "076_UniversalThruster",
+            "x": 1,
+            "y": 1,
+            "z": 1,
+            "posX": -3.5,
+            "posY": 1.5,
+            "posZ": 0.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/UniversalThruster.prefab",
+            "cargo": []
+        },
+        {
+            "id": "077_UniversalThruster",
+            "x": 1,
+            "y": 1,
+            "z": 1,
+            "posX": -3.5,
+            "posY": 1.5,
+            "posZ": 2.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/UniversalThruster.prefab",
+            "cargo": []
+        },
+        {
+            "id": "078_UniversalThruster",
             "x": 1,
             "y": 1,
             "z": 1,
@@ -766,7 +1186,22 @@
             "cargo": []
         },
         {
-            "id": "051_UniversalThruster",
+            "id": "079_UniversalThruster",
+            "x": 1,
+            "y": 1,
+            "z": 1,
+            "posX": -2.5,
+            "posY": 1.5,
+            "posZ": -3.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/UniversalThruster.prefab",
+            "cargo": []
+        },
+        {
+            "id": "080_UniversalThruster",
             "x": 1,
             "y": 1,
             "z": 1,
@@ -781,13 +1216,13 @@
             "cargo": []
         },
         {
-            "id": "052_UniversalThruster",
+            "id": "081_UniversalThruster",
             "x": 1,
             "y": 1,
             "z": 1,
             "posX": -1.5,
             "posY": 1.5,
-            "posZ": -0.5,
+            "posZ": -3.5,
             "rotX": 0.0,
             "rotY": 0.0,
             "rotZ": 0.0,
@@ -796,22 +1231,7 @@
             "cargo": []
         },
         {
-            "id": "053_UniversalThruster",
-            "x": 1,
-            "y": 1,
-            "z": 1,
-            "posX": -1.5,
-            "posY": 1.5,
-            "posZ": 0.5,
-            "rotX": 0.0,
-            "rotY": 0.0,
-            "rotZ": 0.0,
-            "rotW": 1.0,
-            "resourcePath": "Assets/Resources/Blocks/UniversalThruster.prefab",
-            "cargo": []
-        },
-        {
-            "id": "054_UniversalThruster",
+            "id": "082_UniversalThruster",
             "x": 1,
             "y": 1,
             "z": 1,
@@ -826,7 +1246,7 @@
             "cargo": []
         },
         {
-            "id": "055_UniversalThruster",
+            "id": "083_UniversalThruster",
             "x": 1,
             "y": 1,
             "z": 1,
@@ -841,7 +1261,7 @@
             "cargo": []
         },
         {
-            "id": "056_UniversalThruster",
+            "id": "084_UniversalThruster",
             "x": 1,
             "y": 1,
             "z": 1,
@@ -856,52 +1276,7 @@
             "cargo": []
         },
         {
-            "id": "057_UniversalThruster",
-            "x": 1,
-            "y": 1,
-            "z": 1,
-            "posX": -0.5,
-            "posY": 1.5,
-            "posZ": -2.5,
-            "rotX": 0.0,
-            "rotY": 0.0,
-            "rotZ": 0.0,
-            "rotW": 1.0,
-            "resourcePath": "Assets/Resources/Blocks/UniversalThruster.prefab",
-            "cargo": []
-        },
-        {
-            "id": "058_UniversalThruster",
-            "x": 1,
-            "y": 1,
-            "z": 1,
-            "posX": -0.5,
-            "posY": 1.5,
-            "posZ": -1.5,
-            "rotX": 0.0,
-            "rotY": 0.0,
-            "rotZ": 0.0,
-            "rotW": 1.0,
-            "resourcePath": "Assets/Resources/Blocks/UniversalThruster.prefab",
-            "cargo": []
-        },
-        {
-            "id": "059_UniversalThruster",
-            "x": 1,
-            "y": 1,
-            "z": 1,
-            "posX": -0.5,
-            "posY": 1.5,
-            "posZ": 1.5,
-            "rotX": 0.0,
-            "rotY": 0.0,
-            "rotZ": 0.0,
-            "rotW": 1.0,
-            "resourcePath": "Assets/Resources/Blocks/UniversalThruster.prefab",
-            "cargo": []
-        },
-        {
-            "id": "060_UniversalThruster",
+            "id": "085_UniversalThruster",
             "x": 1,
             "y": 1,
             "z": 1,
@@ -916,7 +1291,7 @@
             "cargo": []
         },
         {
-            "id": "061_UniversalThruster",
+            "id": "086_UniversalThruster",
             "x": 1,
             "y": 1,
             "z": 1,
@@ -931,7 +1306,7 @@
             "cargo": []
         },
         {
-            "id": "062_UniversalThruster",
+            "id": "087_UniversalThruster",
             "x": 1,
             "y": 1,
             "z": 1,
@@ -946,52 +1321,7 @@
             "cargo": []
         },
         {
-            "id": "063_UniversalThruster",
-            "x": 1,
-            "y": 1,
-            "z": 1,
-            "posX": 0.5,
-            "posY": 1.5,
-            "posZ": -2.5,
-            "rotX": 0.0,
-            "rotY": 0.0,
-            "rotZ": 0.0,
-            "rotW": 1.0,
-            "resourcePath": "Assets/Resources/Blocks/UniversalThruster.prefab",
-            "cargo": []
-        },
-        {
-            "id": "064_UniversalThruster",
-            "x": 1,
-            "y": 1,
-            "z": 1,
-            "posX": 0.5,
-            "posY": 1.5,
-            "posZ": -1.5,
-            "rotX": 0.0,
-            "rotY": 0.0,
-            "rotZ": 0.0,
-            "rotW": 1.0,
-            "resourcePath": "Assets/Resources/Blocks/UniversalThruster.prefab",
-            "cargo": []
-        },
-        {
-            "id": "065_UniversalThruster",
-            "x": 1,
-            "y": 1,
-            "z": 1,
-            "posX": 0.5,
-            "posY": 1.5,
-            "posZ": 1.5,
-            "rotX": 0.0,
-            "rotY": 0.0,
-            "rotZ": 0.0,
-            "rotW": 1.0,
-            "resourcePath": "Assets/Resources/Blocks/UniversalThruster.prefab",
-            "cargo": []
-        },
-        {
-            "id": "066_UniversalThruster",
+            "id": "088_UniversalThruster",
             "x": 1,
             "y": 1,
             "z": 1,
@@ -1006,13 +1336,13 @@
             "cargo": []
         },
         {
-            "id": "067_UniversalThruster",
+            "id": "089_UniversalThruster",
             "x": 1,
             "y": 1,
             "z": 1,
             "posX": 1.5,
             "posY": 1.5,
-            "posZ": -0.5,
+            "posZ": -3.5,
             "rotX": 0.0,
             "rotY": 0.0,
             "rotZ": 0.0,
@@ -1021,22 +1351,7 @@
             "cargo": []
         },
         {
-            "id": "068_UniversalThruster",
-            "x": 1,
-            "y": 1,
-            "z": 1,
-            "posX": 1.5,
-            "posY": 1.5,
-            "posZ": 0.5,
-            "rotX": 0.0,
-            "rotY": 0.0,
-            "rotZ": 0.0,
-            "rotW": 1.0,
-            "resourcePath": "Assets/Resources/Blocks/UniversalThruster.prefab",
-            "cargo": []
-        },
-        {
-            "id": "069_UniversalThruster",
+            "id": "090_UniversalThruster",
             "x": 1,
             "y": 1,
             "z": 1,
@@ -1049,6 +1364,105 @@
             "rotW": -4.371138828673793e-8,
             "resourcePath": "Assets/Resources/Blocks/UniversalThruster.prefab",
             "cargo": []
+        },
+        {
+            "id": "091_UniversalThruster",
+            "x": 1,
+            "y": 1,
+            "z": 1,
+            "posX": 2.5,
+            "posY": 1.5,
+            "posZ": -3.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/UniversalThruster.prefab",
+            "cargo": []
+        },
+        {
+            "id": "092_UniversalThruster",
+            "x": 1,
+            "y": 1,
+            "z": 1,
+            "posX": 3.5,
+            "posY": 1.5,
+            "posZ": 0.5,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.0,
+            "rotW": 1.0,
+            "resourcePath": "Assets/Resources/Blocks/UniversalThruster.prefab",
+            "cargo": []
+        },
+        {
+            "id": "093_UniversalThrusterBig",
+            "x": 2,
+            "y": 2,
+            "z": 2,
+            "posX": -6.0,
+            "posY": 0.0,
+            "posZ": -2.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.7071067690849304,
+            "rotW": 0.7071067690849304,
+            "resourcePath": "Assets/Resources/Blocks/UniversalThrusterBig.prefab",
+            "cargo": []
+        },
+        {
+            "id": "094_UniversalThrusterBig",
+            "x": 2,
+            "y": 2,
+            "z": 2,
+            "posX": -6.0,
+            "posY": 0.0,
+            "posZ": 2.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": 0.7071067690849304,
+            "rotW": 0.7071067690849304,
+            "resourcePath": "Assets/Resources/Blocks/UniversalThrusterBig.prefab",
+            "cargo": []
+        },
+        {
+            "id": "095_UniversalThrusterBig",
+            "x": 2,
+            "y": 2,
+            "z": 2,
+            "posX": 6.0,
+            "posY": 0.0,
+            "posZ": -2.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": -0.7071067690849304,
+            "rotW": 0.7071067690849304,
+            "resourcePath": "Assets/Resources/Blocks/UniversalThrusterBig.prefab",
+            "cargo": []
+        },
+        {
+            "id": "096_UniversalThrusterBig",
+            "x": 2,
+            "y": 2,
+            "z": 2,
+            "posX": 6.0,
+            "posY": 0.0,
+            "posZ": 2.0,
+            "rotX": 0.0,
+            "rotY": 0.0,
+            "rotZ": -0.7071067690849304,
+            "rotW": 0.7071067690849304,
+            "resourcePath": "Assets/Resources/Blocks/UniversalThrusterBig.prefab",
+            "cargo": []
         }
-    ]
+    ],
+    "foundation": {
+        "width": 4,
+        "length": 4
+    },
+    "outpost": {
+        "enabled": false,
+        "garrison": [],
+        "activationDistance": 120.0
+    }
 }

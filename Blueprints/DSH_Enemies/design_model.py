@@ -80,10 +80,13 @@ CATALOG = {
         ],
     ),
     "Door": dict(size=(1, 2, 1), mass=2, sockets=box_sockets(1, 2, 1)),
+    # Thruster, turret and generator numbers mirror Assets/Resources/BlockData/Blocks.csv.
+    # The CSV values are the runtime contract; keeping a stale copy here silently reports
+    # the wrong lift and horizontal acceleration.
     "HoverThruster": dict(
         size=(1, 1, 1),
         mass=1,
-        thrust=100,
+        thrust=200,
         std_power=100,
         min_power=50,
         sockets=[("Up", (0, 0.5, 0), (0, 1, 0))],
@@ -91,7 +94,7 @@ CATALOG = {
     "HoverThrusterBig": dict(
         size=(2, 2, 2),
         mass=8,
-        thrust=800,
+        thrust=1600,
         std_power=100,
         min_power=50,
         sockets=[
@@ -101,7 +104,7 @@ CATALOG = {
     "UniversalThruster": dict(
         size=(1, 1, 1),
         mass=1,
-        thrust=100,
+        thrust=200,
         std_power=100,
         min_power=50,
         sockets=[("Down", (0, -0.5, 0), (0, -1, 0))],
@@ -109,7 +112,7 @@ CATALOG = {
     "UniversalThrusterBig": dict(
         size=(2, 2, 2),
         mass=8,
-        thrust=800,
+        thrust=1600,
         std_power=100,
         min_power=50,
         sockets=[
@@ -121,7 +124,7 @@ CATALOG = {
     "MainThruster": dict(
         size=(1, 1, 1),
         mass=1,
-        thrust=250,
+        thrust=500,
         std_power=100,
         min_power=50,
         sockets=box_sockets(1, 1, 1),
@@ -129,7 +132,7 @@ CATALOG = {
     "MainThrusterBig": dict(
         size=(2, 2, 2),
         mass=8,
-        thrust=2000,
+        thrust=4000,
         std_power=100,
         min_power=50,
         sockets=box_sockets(2, 2, 2),
@@ -137,8 +140,25 @@ CATALOG = {
     "Turret": dict(
         size=(1, 1, 1),
         mass=1,
+        std_power=300,
+        min_power=150,
+        sockets=[("Down", (0, -0.5, 0), (0, -1, 0))],
+    ),
+    # Ballistic turrets already exist as prefabs (CODEX hulls carry one of each).  Adding a
+    # second weapon family gives the DSH hulls a close-range burst option on top of the laser
+    # battery while keeping every part stock.
+    "ProjectileTurretSingle": dict(
+        size=(1, 1, 1),
+        mass=1,
         std_power=100,
         min_power=50,
+        sockets=[("Down", (0, -0.5, 0), (0, -1, 0))],
+    ),
+    "ProjectileTurretDouble": dict(
+        size=(1, 1, 1),
+        mass=1,
+        std_power=150,
+        min_power=75,
         sockets=[("Down", (0, -0.5, 0), (0, -1, 0))],
     ),
     # The asset name really is misspelled this way ("Contianer"); match it exactly or the
@@ -146,6 +166,8 @@ CATALOG = {
     "RepairBotContianer": dict(
         size=(1, 1, 1),
         mass=1,
+        std_power=100,
+        min_power=100,
         durability=100,
         sockets=[("Down", (0, -0.5, 0), (0, -1, 0))],
     ),
@@ -237,6 +259,8 @@ class Design:
         "UniversalThruster",
         "UniversalThrusterBig",
         "Turret",
+        "ProjectileTurretSingle",
+        "ProjectileTurretDouble",
         "HoverFlightController",
         "PowerTransmissionDevice",
     )
@@ -735,14 +759,25 @@ class Design:
         face at (deck +- 0.5, 1.5, deck +- 0.5), where its Down socket meets the deck block's
         Up socket and its local up still points at the sky.
         """
+        return self.place_upright_on_top(type_name, target, 0, note)
+
+    def place_upright_on_top(self, type_name, target, deck_y=0, note=""):
+        """Bolt a 1x1x1 part upright onto any 2x2x2 layer's top face.
+
+        `deck_y` is the layer centre; the part therefore sits at deck_y + 1.5 with its Down
+        socket on the block's Up socket.  The same rule covers the deck battery (deck_y = 0)
+        and the new roof battery on the armoured cockpit (deck_y = 4), and it searches for the
+        nearest free socket instead of trusting a hand-typed half-cell.
+        """
         buckets = self._buckets()
         best = None
+        part_y = deck_y + 1.5
         for (bx, by, bz), index in list(self.by_pos.items()):
-            if index < 0 or by != 0 or self.blocks[index]["type"] != "2x2x2":
+            if index < 0 or by != deck_y or self.blocks[index]["type"] != "2x2x2":
                 continue
             for dx in (-0.5, 0.5):
                 for dz in (-0.5, 0.5):
-                    key = (round((bx + dx) * 2) / 2, 1.5, round((bz + dz) * 2) / 2)
+                    key = (round((bx + dx) * 2) / 2, part_y, round((bz + dz) * 2) / 2)
                     if key in self.by_pos:
                         continue
                     if self._conflict(self._span(key, (1, 1, 1))) is not None:
@@ -759,7 +794,7 @@ class Design:
                     if best is None or dist < best[0]:
                         best = (dist, key)
         if best is None:
-            self.rejected.append((type_name, target, "no upright deck slot " + note))
+            self.rejected.append((type_name, target, "no upright top slot " + note))
             return None
         return self.add(type_name, best[1][0], best[1][1], best[1][2])
 
@@ -907,6 +942,10 @@ class Design:
             mass=round(mass, 1),
             com=tuple(round(c, 3) for c in com),
             ring_centroid=tuple(round(c, 3) for c in ring_c),
+            # The ring's lateral distance from the CoM is the balance metric; a ring *below*
+            # the CoM is the stable pendulum arrangement, so vertical separation is not drift.
+            ring_lateral_offset=round(math.hypot(com[0] - ring_c[0], com[2] - ring_c[2]), 3),
+            ring_height_offset=round(ring_c[1] - com[1], 3),
             ring_offset_from_com=round(math.dist(com, ring_c), 3),
             ring_thrust=ring_thrust,
             lift_ratio=round(ring_thrust / (mass * G), 3),
@@ -1054,9 +1093,99 @@ def _fit(d, slots):
         d.place_under_deck(type_name, (target[0], -1.5, target[1]))
 
 
+def _armored_cockpit(d):
+    """Seal the cockpit in a stock 2x2x2 citadel and cap it with a roof platform.
+
+    The cockpit is the only block whose destruction removes the unit, and the player's
+    turrets deliberately prioritise it.  A solid 3x3 ring of deck blocks at y = 2 (the eight
+    cells around the cockpit) closes every horizontal line of fire, and a 3x3 roof at y = 4
+    closes the vertical one; the deck itself is the floor.  The roof is also a real platform:
+    its Up sockets at y = 5 carry the new ballistic turrets and the roof relays.
+
+    All eight cage blocks stand on deck-cell Up sockets (their Down sockets at y = 1), and the
+    roof blocks mate either with the cage's Up sockets or with the cockpit's.  Adjacent
+    2x2x2 blocks share four side sockets each, so the cage is one rigid structure rather than
+    nine loose decorations.  The free side/corner sockets are deliberate -- structural blocks
+    do not have to mate every socket, only stay in the graph.
+    """
+    for x in (-2, 0, 2):
+        for z in (-2, 0, 2):
+            if (x, z) != (0, 0):
+                d.add("2x2x2", x, 2, z)
+    for x in (-2, 0, 2):
+        for z in (-2, 0, 2):
+            d.add("2x2x2", x, 4, z)
+
+
+def _roof_guns(d):
+    """Bolt the new ballistic battery onto the roof's four corner sockets.
+
+    Two double-barrel turrets face forward and two single-barrel turrets face aft.  They are
+    stock ProjectileTurret prefabs, so the ships keep the proven turret controller and only
+    gain a second weapon family next to the laser battery.
+    """
+    guns = (
+        (1.5, 1.5, "ProjectileTurretDouble"),
+        (-1.5, 1.5, "ProjectileTurretDouble"),
+        (1.5, -1.5, "ProjectileTurretSingle"),
+        (-1.5, -1.5, "ProjectileTurretSingle"),
+    )
+    for x, z, type_name in guns:
+        d.place_upright_on_top(type_name, (x, 5.5, z), 4, note="roof gun")
+
+
+def _roof_relays(d):
+    """Power the roof battery with two redundant relays on the roof's centre sockets.
+
+    A relay only feeds Power blocks inside its 5 m box, and the roof guns sit 3.5 m above the
+    deck relays, so without a roof relay the new battery would be permanently offline.  The
+    two relays are one metre apart: either one alone still covers all four guns, and both
+    connect to the deck relay component within the 10 m link range.
+    """
+    for x, z in ((0.5, 0.5), (-0.5, -0.5)):
+        d.place_upright_on_top(
+            "PowerTransmissionDevice", (x, 5.5, z), 4, note="roof relay"
+        )
+
+
+def _pod_relays(d, z):
+    """Put deck-top relays beside the outboard pods that the under-deck grid cannot reach.
+
+    The rim cells under the pods all carry HoverThrusterBig, so the under-deck relay slots
+    near the aft pods are physically occupied; a single upright relay on the free deck top
+    between the turrets closes the gap without touching the pod or the hover ring.
+    """
+    for x in (-3.5, 3.5):
+        d.place_upright_on_deck(
+            "PowerTransmissionDevice", (x, 1.5, z), note="pod relay"
+        )
+
+
+def _side_pods(d, zs):
+    """Bolt 2x2x2 vector pods to the port and starboard deck edges.
+
+    A pod rolled 90 degrees about Z has all four of its enabled Down sockets pointing inboard
+    at x = +-5, exactly where the edge deck block's side sockets sit.  UniversalThruster
+    re-aims its model in world space every physics tick, so the pod pushes in the commanded
+    direction regardless of the side it hangs on, and four pods add 6.4 kN (six add 9.6 kN)
+    without consuming the scarce under-deck sockets the omni thrusters use.
+    """
+    for sign in (-1, 1):
+        rotation = _q(-90 if sign > 0 else 90, "z")
+        for z in zs:
+            d.place(
+                "UniversalThrusterBig",
+                (6 * sign, 0, z),
+                rot=rotation,
+                radius=1,
+                note="vector pod",
+            )
+
+
 # ======================================================================================
-# E01 "Skimmer" - light wide interceptor.  Broad 12 m beam, thin plate, 17-thruster ring,
-# three generators, two turrets and six short vector pods.  Fastest to change direction.
+# E01 "Skimmer" - light wide interceptor.  Broad 10 m plate, 17-thruster ring, three
+# generators, an armoured cockpit citadel with four ballistic roof guns, four outboard vector
+# pods and a laser battery on the outer deck ring.  Fastest to change direction.
 # ======================================================================================
 def build_e01():
     d = Design("DSH_E01_Skimmer")
@@ -1089,23 +1218,29 @@ def build_e01():
         (0, 4),
     ]
     _plate(d, xs, zs, chamfer, station, ring)
+    # The cockpit citadel goes down before the equipment: it claims the eight deck cells
+    # around the cockpit, and later placements must route around it instead of through it.
+    _armored_cockpit(d)
     # The flight controller must NOT be flipped: it uses transform.up as the craft's up.
-    d.place_upright_on_deck("HoverFlightController", (2.5, 1.5, -0.5))
+    # It stands on the outer starboard ring, clear of the citadel's +X wall.
+    d.place_upright_on_deck("HoverFlightController", (3.5, 1.5, -0.5))
+    # Laser battery on the outer deck ring, four turrets covering port and starboard.
+    d.place_on_deck_list("Turret", ((3.5, 1.5), (3.5, -1.5), (-3.5, 1.5), (-3.5, -1.5)))
+    # The new ballistic battery and its relays sit on the citadel roof.
+    _roof_guns(d)
+    _roof_relays(d)
     # Armament and self-repair on the deck's top face, upright: a RepairBotContianer carries
     # the RepairBot child, whose targetRange is 10 m and repairAmount 20, so each bay covers a
     # 10 m sphere of this hull and flies out to patch it.
-    d.place_on_deck_list("Turret", ((1.5, 1.5), (-1.5, 1.5), (1.5, -1.5), (-1.5, -1.5)))
     d.place_on_deck_list("RepairBotContianer", ((0.5, 3.5), (-0.5, 3.5)))
+    _pod_relays(d, -2.5)
+    # Outboard pods: 4 x 1600 N on top of the 20 x 200 N omni thrusters, so the hull reaches
+    # chase speed quickly without stealing under-deck sockets from the hover ring.
+    _side_pods(d, (-2, 2))
     # Relay coverage has to be settled before anything else claims the under-deck sockets: a
-    # Power block outside every relay's 5 m box simply never runs, and the hover ring reaches
-    # to the plate corners, which is well outside one central relay's reach.
+    # Power block outside every relay's 5 m box simply never runs.  The two roof relays are
+    # already part of the network; the greedy step adds the deck relays the outboard pods need.
     relays = d.place_relays(10, note="interceptor")
-    # Lateral thrust then comes from omni thrusters hung in the sockets that are left: a
-    # UniversalThruster re-aims its model in world space every FixedUpdate, so it needs no
-    # authored facing and can hang upside down exactly like a relay.  The 2x2x2 outboard
-    # vector pods are not used: a pod does bolt onto the plate edge, but every side deck cell
-    # of a ring column is already a hover-ring anchor, so no relay could then be placed within
-    # 5 m of a pod mounted 2 m outside the plate.
     d.place_under_deck_set(
         "UniversalThruster",
         10,
@@ -1119,14 +1254,14 @@ def build_e01():
         ),
         avoid=relays,
     )
-    d.place_deck_top_set("UniversalThruster", 10)
+    d.place_deck_top_set("UniversalThruster", 8)
     return d
 
 
 # ======================================================================================
-# E02 "Halberd" - heavy long catamaran gunship.  Twin keels with a raised spine, chamfered
-# bow and stern, 30-thruster ring along both keels plus bow and stern rows, two generators,
-# four turrets and ten vector pods.  Half the acceleration of the others, twice the mass.
+# E02 "Halberd" - heavy long catamaran gunship.  Twin keels, chamfered bow and stern,
+# 26-thruster ring, three generators, an armoured cockpit citadel with four ballistic roof
+# guns, six outboard vector pods and eight laser turrets along both outer edges.
 # ======================================================================================
 def build_e02():
     d = Design("DSH_E02_Halberd")
@@ -1138,6 +1273,9 @@ def build_e02():
         (4, 2, -8): "PowerGeneratingUnit",
         (-4, 2, 8): "PowerGeneratingUnit",
         (0, 2, -10): "PowerGeneratingUnit",
+        # The extra citadel and ballistic battery raise the load count enough that a fourth
+        # generator is needed to keep the per-load share above the heaviest turret minimum.
+        (0, 2, 4): "PowerGeneratingUnit",
     }
     ring = [
         (x, z)
@@ -1148,31 +1286,32 @@ def build_e02():
     ring += [(x, z) for x in (-2, 0, 2) for z in (-10, 10) if (x, z) not in chamfer]
     ring += [(x, z) for x in (-2, 2) for z in (-8, 8) if (x, z) not in chamfer]
     _plate(d, xs, zs, chamfer, station, ring)
-    # Relays first: a Power block outside every relay's 5 m box simply never runs, and this
-    # hull's ring reaches to both bow and stern.
-    relays = d.place_relays(16, note="gunship")
+    _armored_cockpit(d)
     # The flight controller must NOT be flipped: it uses transform.up as the craft's up.
-    d.place_upright_on_deck("HoverFlightController", (2.5, 1.5, -0.5))
-    # Firepower and damage control along the whole spine: four turrets forward, four aft, and
-    # three repair bays so a 10 m repair sphere covers bow, midships and stern.
+    d.place_upright_on_deck("HoverFlightController", (3.5, 1.5, -0.5))
+    # Eight laser turrets in two four-gun broadsides on the outer edges, clear of the
+    # citadel's walls so every barrel has an unobstructed outward arc.
     d.place_on_deck_list(
         "Turret",
         (
-            (2.5, 3.5),
-            (-2.5, 3.5),
-            (2.5, -3.5),
-            (-2.5, -3.5),
-            (2.5, 7.5),
-            (-2.5, 7.5),
-            (2.5, -7.5),
-            (-2.5, -7.5),
+            (3.5, 1.5),
+            (3.5, -1.5),
+            (3.5, 5.5),
+            (3.5, -5.5),
+            (-3.5, 1.5),
+            (-3.5, -1.5),
+            (-3.5, 5.5),
+            (-3.5, -5.5),
         ),
     )
-    d.place_on_deck_list("RepairBotContianer", ((0.5, 8.5), (-0.5, -8.5), (0.5, 0.5)))
-    # Lateral thrust from omni thrusters in the remaining under-deck and deck-top sockets.
-    # The 2x2x2 outboard pods are deliberately not used: they bolt onto the plate edge, but
-    # every side deck cell of a ring column is already a hover-ring anchor, so no relay could
-    # be placed within the 5 m needed to reach a pod mounted outside the plate.
+    _roof_guns(d)
+    _roof_relays(d)
+    # Three repair bays so a 10 m repair sphere covers bow, midships and stern.
+    d.place_on_deck_list("RepairBotContianer", ((0.5, 8.5), (-0.5, -8.5), (3.5, 0.5)))
+    # Six outboard pods (9.6 kN) double the hull's horizontal thrust while the citadel is
+    # still sealed; the pods hang on side sockets, not on the under-deck omni slots.
+    _side_pods(d, (-4, 0, 4))
+    relays = d.place_relays(16, note="gunship")
     d.place_under_deck_set(
         "UniversalThruster",
         24,
@@ -1188,14 +1327,14 @@ def build_e02():
         ),
         avoid=relays,
     )
-    d.place_deck_top_set("UniversalThruster", 16)
+    d.place_deck_top_set("UniversalThruster", 12)
     return d
 
 
 # ======================================================================================
 # E03 "Talos" - disc gunship.  Same 5x5 plate as the interceptor but chamfered tight and
-# fitted as a gun platform: 17-thruster ring, three generators, six turrets, four pods and
-# an inboard omni pair.  Shortest and most heavily armed of the three.
+# fitted as a gun platform: 17-thruster ring, three generators, an armoured cockpit citadel
+# with four ballistic roof guns, four outboard pods and eight laser turrets ringing the keep.
 # ======================================================================================
 def build_e03():
     d = Design("DSH_E03_Talos")
@@ -1228,25 +1367,29 @@ def build_e03():
         (0, 4),
     ]
     _plate(d, xs, zs, chamfer, station, ring)
+    _armored_cockpit(d)
     # The flight controller must NOT be flipped: it uses transform.up as the craft's up.
-    d.place_upright_on_deck("HoverFlightController", (2.5, 1.5, -0.5))
-    # Heaviest battery of the three, plus two repair bays for self-repair coverage.
+    d.place_upright_on_deck("HoverFlightController", (3.5, 1.5, -0.5))
+    # Eight lasers ring the citadel: four on the fore/aft deck rows and four on the free
+    # corner sockets of the generator-free edges.
     d.place_on_deck_list(
         "Turret",
         (
             (1.5, 3.5),
             (-1.5, 3.5),
-            (2.5, 1.5),
-            (-2.5, 1.5),
-            (2.5, -1.5),
-            (-2.5, -1.5),
             (1.5, -3.5),
             (-1.5, -3.5),
+            (3.5, -1.5),
+            (-3.5, 1.5),
+            (3.5, 0.5),
+            (-3.5, -0.5),
         ),
     )
+    _roof_guns(d)
+    _roof_relays(d)
     d.place_on_deck_list("RepairBotContianer", ((0.5, 3.5), (-0.5, -3.5)))
-    # Relays first (see the E01 note), then omni thrusters in the leftover sockets, plus two
-    # that sit on free top-face sockets near the bow.
+    _pod_relays(d, -2.5)
+    _side_pods(d, (-2, 2))
     relays = d.place_relays(14, note="disc")
     d.place_under_deck_set(
         "UniversalThruster",
@@ -1261,9 +1404,7 @@ def build_e03():
         ),
         avoid=relays,
     )
-    d.place_on_deck("UniversalThruster", (0.5, 1.5, 3.5))
-    d.place_on_deck("UniversalThruster", (-0.5, 1.5, 3.5))
-    d.place_deck_top_set("UniversalThruster", 12)
+    d.place_deck_top_set("UniversalThruster", 10)
     return d
 
 
@@ -1299,9 +1440,14 @@ def main():
             problems.append("lift ratio %.2f below 1.6" % r["lift_ratio"])
         if abs(r["com"][0]) > 0.35:
             problems.append("lateral CoM offset %.3f" % r["com"][0])
-        if r["ring_offset_from_com"] > 2.0:
+        if r["ring_lateral_offset"] > 0.5:
             problems.append(
-                "hover ring centroid %.2f m from CoM" % r["ring_offset_from_com"]
+                "hover ring lateral centroid %.2f m from CoM"
+                % r["ring_lateral_offset"]
+            )
+        if r["ring_height_offset"] > 0.0:
+            problems.append(
+                "hover ring sits %.2f m above CoM" % r["ring_height_offset"]
             )
         if problems:
             ok = False

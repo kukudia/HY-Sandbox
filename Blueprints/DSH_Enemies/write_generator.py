@@ -41,6 +41,14 @@ HEADER = """// 职责：使用离线模型生成的布局写入仓库和 EnemyBl
 //     the station blocks occupy y in [1, 3];
 //   * omni thrusters are mounted the same way, which works because UniversalThruster
 //     re-aims its model in world space every FixedUpdate and so needs no authored facing.
+//
+// This revision adds three things on top of the original hulls:
+//   * an armoured cockpit citadel: eight 2x2x2 blocks seal the cockpit's four sides and four
+//     corners at y = 2, and a 3x3 roof at y = 4 seals it from above (the deck is the floor);
+//   * a ballistic roof battery: two ProjectileTurretDouble and two ProjectileTurretSingle on
+//     the citadel roof, powered by two redundant upright relays on the same roof;
+//   * outboard UniversalThrusterBig pods on the deck-edge side sockets: four on the wide
+//     hulls, six on the long hull, adding 6.4 kN / 9.6 kN of horizontal thrust.
 string folder = System.IO.Path.GetFullPath("Blueprints/DSH_Enemies");
 string destination = System.IO.Path.Combine(UnityEngine.Application.persistentDataPath, "EnemyBlueprints");
 System.IO.Directory.CreateDirectory(folder);
@@ -194,9 +202,9 @@ return new
 """
 
 NOTES = {
-    "DSH_E01_Skimmer": "wide light interceptor",
-    "DSH_E02_Halberd": "heavy long catamaran gunship",
-    "DSH_E03_Talos": "disc gunship",
+    "DSH_E01_Skimmer": "armoured wide interceptor with a ballistic roof battery",
+    "DSH_E02_Halberd": "armoured heavy catamaran gunship with a ballistic roof battery",
+    "DSH_E03_Talos": "armoured disc gunship with a ballistic roof battery",
 }
 
 

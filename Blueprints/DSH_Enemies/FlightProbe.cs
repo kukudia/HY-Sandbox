@@ -53,6 +53,8 @@ var players = new System.Collections.Generic.List<Transform>();
 var checks = new System.Collections.Generic.List<object>();
 var groupCount = new System.Collections.Generic.List<int>();
 var peakSpeed = new System.Collections.Generic.List<float>();
+var chasePeakSpeed = new System.Collections.Generic.List<float>();
+var recoverPeakSpeed = new System.Collections.Generic.List<float>();
 var peakTilt = new System.Collections.Generic.List<float>();
 var peakIdleError = new System.Collections.Generic.List<float>();
 var peakChaseError = new System.Collections.Generic.List<float>();
@@ -88,8 +90,8 @@ for (int i = 0; i < files.Length; i++)
     // Guns stay off for every craft in this probe.  Firing changes the target's altitude (the
     // AI derives its setpoint from it) and adds beampoint/impact work, which would make the
     // three designs' hover and mobility numbers non-comparable.  Turret engagement is verified
-    // separately in Armament.cs, where only that question is being asked.
-    var guns = unit.GetComponentsInChildren<TurretWeapon>();
+    // separately in ArmamentProbe.cs, where only that question is being asked.
+    var guns = unit.GetComponentsInChildren<Turret>();
     foreach (var gun in guns)
     {
         gun.enabled = false;
@@ -102,7 +104,11 @@ for (int i = 0; i < files.Length; i++)
     cockpit.transform.localPosition = UnityEngine.Vector3.zero;
     var playerUnit = player.GetComponent<ControlUnit>();
     playerUnit.RefreshChildren();
-    playerUnit.enabled = false;
+    // Keep the player unit enabled: EnemyController.FindNearestPlayer skips units whose
+    // Behaviour is disabled, so disabling this construct made every "chase" sample targetless
+    // (playerDistance -1) and the only speed in the CSV came from the recovery shove.  The unit
+    // has no thrusters or hover controller and receives no keys, so it stays pinned where placed.
+    playerUnit.enabled = true;
     PlayManager.instance.RegisterControlUnit(playerUnit);
     // Pin the player rigidbody completely.  Leaving useGravity on makes it sink at its terminal
     // velocity, and because the AI derives its altitude setpoint from the target's altitude the
@@ -114,6 +120,15 @@ for (int i = 0; i < files.Length; i++)
     body.linearVelocity = UnityEngine.Vector3.zero;
     body.angularVelocity = UnityEngine.Vector3.zero;
     body.position = origin + new UnityEngine.Vector3(60f, -12f, 0f);
+    // The probe measures mobility, not combat: with the target enabled the AI now really
+    // closes in, and a collidable kinematic target would be rammed (which destroyed E02's
+    // cockpit in the first run).  The AI only reads the target transform, so removing the
+    // colliders keeps the chase identical while leaving damage out of the measurement.
+    foreach (var collider in player.GetComponentsInChildren<UnityEngine.Collider>())
+    {
+        collider.enabled = false;
+    }
+
     UnityEngine.Physics.SyncTransforms();
     // Only one craft runs at a time.  Deactivating the GameObject stops its physics and its
     // FixedUpdate, which is the cleanest way to keep an idle craft from interacting.
@@ -122,6 +137,8 @@ for (int i = 0; i < files.Length; i++)
     players.Add(player.transform);
     groupCount.Add(-1);
     peakSpeed.Add(0f);
+    chasePeakSpeed.Add(0f);
+    recoverPeakSpeed.Add(0f);
     peakTilt.Add(0f);
     peakIdleError.Add(0f);
     peakChaseError.Add(0f);
@@ -211,7 +228,7 @@ tick = () =>
             text.Append("{\n  \"blueprints\": [\n");
             for (int i = 0; i < units.Count; i++)
             {
-                text.Append(string.Format(System.Globalization.CultureInfo.InvariantCulture, "    {{ \"name\": \"{0}\", \"peakHorizontalSpeed\": {1:F2}, " + "\"peakTiltDegrees\": {2:F2}, \"idleHoverError\": {3:F3}, " + "\"chaseHoverError\": {4:F3}, \"recoveryHoverError\": {5:F3}, " + "\"minWorkingPowerBlocks\": {6}, \"blocksAtEnd\": {7}, " + "\"connectedGroups\": {8}, \"turrets\": {9}, \"turretsThatEngaged\": {10}, " + "\"repairBays\": {11}, \"repairDronesAway\": {12} }}{13}\n", units[i].name, peakSpeed[i], peakTilt[i], peakIdleError[i], peakChaseError[i], peakRecoverError[i], minUnpowered[i], units[i].GetComponentsInChildren<Block>().Length, groupCount[i], turretCount[i], turretsEngaged[i], repairBays[i], repairAway[i], i + 1 < units.Count ? "," : ""));
+                text.Append(string.Format(System.Globalization.CultureInfo.InvariantCulture, "    {{ \"name\": \"{0}\", \"peakHorizontalSpeed\": {1:F2}, \"peakChaseSpeed\": {2:F2}, \"peakRecoverySpeed\": {3:F2}, " + "\"peakTiltDegrees\": {4:F2}, \"idleHoverError\": {5:F3}, " + "\"chaseHoverError\": {6:F3}, \"recoveryHoverError\": {7:F3}, " + "\"minWorkingPowerBlocks\": {8}, \"blocksAtEnd\": {9}, " + "\"connectedGroups\": {10}, \"turrets\": {11}, \"turretsThatEngaged\": {12}, " + "\"repairBays\": {13}, \"repairDronesAway\": {14} }}{15}\n", units[i].name, peakSpeed[i], chasePeakSpeed[i], recoverPeakSpeed[i], peakTilt[i], peakIdleError[i], peakChaseError[i], peakRecoverError[i], minUnpowered[i], units[i].GetComponentsInChildren<Block>().Length, groupCount[i], turretCount[i], turretsEngaged[i], repairBays[i], repairAway[i], i + 1 < units.Count ? "," : ""));
             }
 
             text.Append("  ],\n  \"perCraftSeconds\": 80,\n  \"phases\": \"idle 40 s, chase 20 s, " + "impulse then recover 20 s\",\n" + "  \"note\": \"one craft active at a time, all weapons disabled so the " + "three designs' numbers are comparable; stock mass, thrust, power and PID " + "unchanged; the Editor window must stay focused or the player loop is " + "throttled and every reading is meaningless\"\n}\n");
@@ -237,6 +254,11 @@ tick = () =>
         }
 
         var unit = units[current];
+        if (unit == null)
+        {
+            throw new System.Exception("Craft " + current + " was destroyed before its window ended");
+        }
+
         var hover = unit.hoverFlightController;
         var rb = unit.GetComponent<UnityEngine.Rigidbody>();
         float inPhase = elapsed - slot * PerCraft;
@@ -283,7 +305,10 @@ tick = () =>
             var unpoweredAt = new System.Text.StringBuilder();
             foreach (var p in unit.GetComponentsInChildren<Power>())
             {
-                if (p.isWorking)
+                // An idle load is not an unpowered load.  Turrets with no target and omni
+                // thrusters with no movement input intentionally do not request power, so
+                // count only loads that asked for power and still fell below their minimum.
+                if (!p.IsWorkRequested || p.isWorking)
                 {
                     continue;
                 }
@@ -296,7 +321,7 @@ tick = () =>
                 }
             }
 
-            foreach (var gun in unit.GetComponentsInChildren<TurretWeapon>())
+            foreach (var gun in unit.GetComponentsInChildren<Turret>())
             {
                 var axis = gun.horizontalAxis != null ? gun.horizontalAxis : gun.transform;
                 if (UnityEngine.Quaternion.Angle(axis.localRotation, restRotations[current][gun.GetInstanceID()]) > 2f)
@@ -330,6 +355,15 @@ tick = () =>
             }
 
             peakSpeed[current] = UnityEngine.Mathf.Max(peakSpeed[current], horizontal);
+            if (phase == "chase")
+            {
+                chasePeakSpeed[current] = UnityEngine.Mathf.Max(chasePeakSpeed[current], horizontal);
+            }
+            else if (phase == "recover")
+            {
+                recoverPeakSpeed[current] = UnityEngine.Mathf.Max(recoverPeakSpeed[current], horizontal);
+            }
+
             peakTilt[current] = UnityEngine.Mathf.Max(peakTilt[current], tilt);
             minUnpowered[current] = UnityEngine.Mathf.Min(minUnpowered[current], unpowered);
             System.IO.File.AppendAllText(csv, string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0},{1},{2:F3},{3:F4},{4:F4},{5:F4},{6:F4},{7},{8},{9:F4},{10:F1},{11}\n", unit.name, phase, elapsed, heightError, tilt, rb.linearVelocity.y, horizontal, unpowered, unit.GetComponentsInChildren<Block>().Length, unit.target != null ? UnityEngine.Vector3.Distance(unit.transform.position, unit.target.position) : -1f, hover.TargetHeight, unpoweredAt.ToString()));

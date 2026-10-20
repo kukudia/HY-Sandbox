@@ -27,6 +27,14 @@
 //     the station blocks occupy y in [1, 3];
 //   * omni thrusters are mounted the same way, which works because UniversalThruster
 //     re-aims its model in world space every FixedUpdate and so needs no authored facing.
+//
+// This revision adds three things on top of the original hulls:
+//   * an armoured cockpit citadel: eight 2x2x2 blocks seal the cockpit's four sides and four
+//     corners at y = 2, and a 3x3 roof at y = 4 seals it from above (the deck is the floor);
+//   * a ballistic roof battery: two ProjectileTurretDouble and two ProjectileTurretSingle on
+//     the citadel roof, powered by two redundant upright relays on the same roof;
+//   * outboard UniversalThrusterBig pods on the deck-edge side sockets: four on the wide
+//     hulls, six on the long hull, adding 6.4 kN / 9.6 kN of horizontal thrust.
 string folder = System.IO.Path.GetFullPath("Blueprints/DSH_Enemies");
 string destination = System.IO.Path.Combine(UnityEngine.Application.persistentDataPath, "EnemyBlueprints");
 System.IO.Directory.CreateDirectory(folder);
@@ -85,10 +93,10 @@ System.Action<BlockDataList, string, float, float, float, UnityEngine.Quaternion
     d.cargo = new System.Collections.Generic.List<CargoItem>();
     data.blocks.Add(d);
 };
-// DSH_E01_Skimmer - wide light interceptor: 70 blocks, mass 364, lift/weight 3.81, horizontal 2000 N.
-emit("DSH_E01_Skimmer", "wide light interceptor", data =>
+// DSH_E01_Skimmer - armoured wide interceptor with a ballistic roof battery: 97 blocks, mass 538, lift/weight 5.15, horizontal 10000 N.
+emit("DSH_E01_Skimmer", "armoured wide interceptor with a ballistic roof battery", data =>
 {
-    // 2x2x2 x21
+    // 2x2x2 x38
     add(data, "2x2x2", -4f, 0f, -2f, identity);
     add(data, "2x2x2", -4f, 0f, 0f, identity);
     add(data, "2x2x2", -4f, 0f, 2f, identity);
@@ -97,23 +105,40 @@ emit("DSH_E01_Skimmer", "wide light interceptor", data =>
     add(data, "2x2x2", -2f, 0f, 0f, identity);
     add(data, "2x2x2", -2f, 0f, 2f, identity);
     add(data, "2x2x2", -2f, 0f, 4f, identity);
+    add(data, "2x2x2", -2f, 2f, -2f, identity);
+    add(data, "2x2x2", -2f, 2f, 0f, identity);
+    add(data, "2x2x2", -2f, 2f, 2f, identity);
+    add(data, "2x2x2", -2f, 4f, -2f, identity);
+    add(data, "2x2x2", -2f, 4f, 0f, identity);
+    add(data, "2x2x2", -2f, 4f, 2f, identity);
     add(data, "2x2x2", 0f, 0f, -4f, identity);
     add(data, "2x2x2", 0f, 0f, -2f, identity);
     add(data, "2x2x2", 0f, 0f, 0f, identity);
     add(data, "2x2x2", 0f, 0f, 2f, identity);
     add(data, "2x2x2", 0f, 0f, 4f, identity);
+    add(data, "2x2x2", 0f, 2f, -2f, identity);
+    add(data, "2x2x2", 0f, 2f, 2f, identity);
+    add(data, "2x2x2", 0f, 4f, -2f, identity);
+    add(data, "2x2x2", 0f, 4f, 0f, identity);
+    add(data, "2x2x2", 0f, 4f, 2f, identity);
     add(data, "2x2x2", 2f, 0f, -4f, identity);
     add(data, "2x2x2", 2f, 0f, -2f, identity);
     add(data, "2x2x2", 2f, 0f, 0f, identity);
     add(data, "2x2x2", 2f, 0f, 2f, identity);
     add(data, "2x2x2", 2f, 0f, 4f, identity);
+    add(data, "2x2x2", 2f, 2f, -2f, identity);
+    add(data, "2x2x2", 2f, 2f, 0f, identity);
+    add(data, "2x2x2", 2f, 2f, 2f, identity);
+    add(data, "2x2x2", 2f, 4f, -2f, identity);
+    add(data, "2x2x2", 2f, 4f, 0f, identity);
+    add(data, "2x2x2", 2f, 4f, 2f, identity);
     add(data, "2x2x2", 4f, 0f, -2f, identity);
     add(data, "2x2x2", 4f, 0f, 0f, identity);
     add(data, "2x2x2", 4f, 0f, 2f, identity);
     // Cockpit x1
     add(data, "Cockpit", 0f, 2f, 0f, identity);
     // HoverFlightController x1
-    add(data, "HoverFlightController", 2.5f, 1.5f, -0.5f, identity);
+    add(data, "HoverFlightController", 3.5f, 1.5f, -0.5f, identity);
     // HoverThrusterBig x17
     add(data, "HoverThrusterBig", -4f, -2f, -2f, identity);
     add(data, "HoverThrusterBig", -4f, -2f, 0f, identity);
@@ -136,42 +161,55 @@ emit("DSH_E01_Skimmer", "wide light interceptor", data =>
     add(data, "PowerGeneratingUnit", -2f, 2f, 4f, identity);
     add(data, "PowerGeneratingUnit", 0f, 2f, -4f, identity);
     add(data, "PowerGeneratingUnit", 2f, 2f, 4f, identity);
-    // PowerTransmissionDevice x1
+    // PowerTransmissionDevice x5
+    add(data, "PowerTransmissionDevice", -3.5f, 1.5f, -2.5f, identity);
     add(data, "PowerTransmissionDevice", -0.5f, -1.5f, -0.5f, roll180x);
+    add(data, "PowerTransmissionDevice", -0.5f, 5.5f, -0.5f, identity);
+    add(data, "PowerTransmissionDevice", 0.5f, 5.5f, 0.5f, identity);
+    add(data, "PowerTransmissionDevice", 3.5f, 1.5f, -2.5f, identity);
+    // ProjectileTurretDouble x2
+    add(data, "ProjectileTurretDouble", -1.5f, 5.5f, 1.5f, identity);
+    add(data, "ProjectileTurretDouble", 1.5f, 5.5f, 1.5f, identity);
+    // ProjectileTurretSingle x2
+    add(data, "ProjectileTurretSingle", -1.5f, 5.5f, -1.5f, identity);
+    add(data, "ProjectileTurretSingle", 1.5f, 5.5f, -1.5f, identity);
     // RepairBotContianer x2
     add(data, "RepairBotContianer", -0.5f, 1.5f, 3.5f, identity);
     add(data, "RepairBotContianer", 0.5f, 1.5f, 3.5f, identity);
     // Turret x4
-    add(data, "Turret", -1.5f, 1.5f, -1.5f, identity);
-    add(data, "Turret", -1.5f, 1.5f, 1.5f, identity);
-    add(data, "Turret", 1.5f, 1.5f, -1.5f, identity);
-    add(data, "Turret", 1.5f, 1.5f, 1.5f, identity);
-    // UniversalThruster x20
+    add(data, "Turret", -3.5f, 1.5f, -1.5f, identity);
+    add(data, "Turret", -3.5f, 1.5f, 1.5f, identity);
+    add(data, "Turret", 3.5f, 1.5f, -1.5f, identity);
+    add(data, "Turret", 3.5f, 1.5f, 1.5f, identity);
+    // UniversalThruster x18
+    add(data, "UniversalThruster", -3.5f, 1.5f, -0.5f, identity);
+    add(data, "UniversalThruster", -3.5f, 1.5f, 0.5f, identity);
+    add(data, "UniversalThruster", -3.5f, 1.5f, 2.5f, identity);
     add(data, "UniversalThruster", -2.5f, -1.5f, 3.5f, roll180x);
+    add(data, "UniversalThruster", -2.5f, 1.5f, -3.5f, identity);
     add(data, "UniversalThruster", -1.5f, -1.5f, 3.5f, roll180x);
-    add(data, "UniversalThruster", -1.5f, 1.5f, -0.5f, identity);
-    add(data, "UniversalThruster", -1.5f, 1.5f, 0.5f, identity);
+    add(data, "UniversalThruster", -1.5f, 1.5f, -3.5f, identity);
     add(data, "UniversalThruster", -0.5f, -1.5f, -4.5f, roll180x);
     add(data, "UniversalThruster", -0.5f, -1.5f, -3.5f, roll180x);
     add(data, "UniversalThruster", -0.5f, -1.5f, 0.5f, roll180x);
-    add(data, "UniversalThruster", -0.5f, 1.5f, -2.5f, identity);
-    add(data, "UniversalThruster", -0.5f, 1.5f, -1.5f, identity);
-    add(data, "UniversalThruster", -0.5f, 1.5f, 1.5f, identity);
     add(data, "UniversalThruster", 0.5f, -1.5f, -3.5f, roll180x);
     add(data, "UniversalThruster", 0.5f, -1.5f, -0.5f, roll180x);
     add(data, "UniversalThruster", 0.5f, -1.5f, 0.5f, roll180x);
-    add(data, "UniversalThruster", 0.5f, 1.5f, -2.5f, identity);
-    add(data, "UniversalThruster", 0.5f, 1.5f, -1.5f, identity);
-    add(data, "UniversalThruster", 0.5f, 1.5f, 1.5f, identity);
     add(data, "UniversalThruster", 1.5f, -1.5f, 3.5f, roll180x);
-    add(data, "UniversalThruster", 1.5f, 1.5f, -0.5f, identity);
-    add(data, "UniversalThruster", 1.5f, 1.5f, 0.5f, identity);
+    add(data, "UniversalThruster", 1.5f, 1.5f, -3.5f, identity);
     add(data, "UniversalThruster", 2.5f, -1.5f, 3.5f, roll180x);
+    add(data, "UniversalThruster", 2.5f, 1.5f, -3.5f, identity);
+    add(data, "UniversalThruster", 3.5f, 1.5f, 0.5f, identity);
+    // UniversalThrusterBig x4
+    add(data, "UniversalThrusterBig", -6f, 0f, -2f, rollPos90z);
+    add(data, "UniversalThrusterBig", -6f, 0f, 2f, rollPos90z);
+    add(data, "UniversalThrusterBig", 6f, 0f, -2f, rollNeg90z);
+    add(data, "UniversalThrusterBig", 6f, 0f, 2f, rollNeg90z);
 });
-// DSH_E02_Halberd - heavy long catamaran gunship: 136 blocks, mass 703, lift/weight 3.02, horizontal 4000 N.
-emit("DSH_E02_Halberd", "heavy long catamaran gunship", data =>
+// DSH_E02_Halberd - armoured heavy catamaran gunship with a ballistic roof battery: 164 blocks, mass 899, lift/weight 4.72, horizontal 16800 N.
+emit("DSH_E02_Halberd", "armoured heavy catamaran gunship with a ballistic roof battery", data =>
 {
-    // 2x2x2 x51
+    // 2x2x2 x68
     add(data, "2x2x2", -4f, 0f, -8f, identity);
     add(data, "2x2x2", -4f, 0f, -6f, identity);
     add(data, "2x2x2", -4f, 0f, -4f, identity);
@@ -192,6 +230,12 @@ emit("DSH_E02_Halberd", "heavy long catamaran gunship", data =>
     add(data, "2x2x2", -2f, 0f, 6f, identity);
     add(data, "2x2x2", -2f, 0f, 8f, identity);
     add(data, "2x2x2", -2f, 0f, 10f, identity);
+    add(data, "2x2x2", -2f, 2f, -2f, identity);
+    add(data, "2x2x2", -2f, 2f, 0f, identity);
+    add(data, "2x2x2", -2f, 2f, 2f, identity);
+    add(data, "2x2x2", -2f, 4f, -2f, identity);
+    add(data, "2x2x2", -2f, 4f, 0f, identity);
+    add(data, "2x2x2", -2f, 4f, 2f, identity);
     add(data, "2x2x2", 0f, 0f, -10f, identity);
     add(data, "2x2x2", 0f, 0f, -8f, identity);
     add(data, "2x2x2", 0f, 0f, -6f, identity);
@@ -203,6 +247,11 @@ emit("DSH_E02_Halberd", "heavy long catamaran gunship", data =>
     add(data, "2x2x2", 0f, 0f, 6f, identity);
     add(data, "2x2x2", 0f, 0f, 8f, identity);
     add(data, "2x2x2", 0f, 0f, 10f, identity);
+    add(data, "2x2x2", 0f, 2f, -2f, identity);
+    add(data, "2x2x2", 0f, 2f, 2f, identity);
+    add(data, "2x2x2", 0f, 4f, -2f, identity);
+    add(data, "2x2x2", 0f, 4f, 0f, identity);
+    add(data, "2x2x2", 0f, 4f, 2f, identity);
     add(data, "2x2x2", 2f, 0f, -10f, identity);
     add(data, "2x2x2", 2f, 0f, -8f, identity);
     add(data, "2x2x2", 2f, 0f, -6f, identity);
@@ -214,6 +263,12 @@ emit("DSH_E02_Halberd", "heavy long catamaran gunship", data =>
     add(data, "2x2x2", 2f, 0f, 6f, identity);
     add(data, "2x2x2", 2f, 0f, 8f, identity);
     add(data, "2x2x2", 2f, 0f, 10f, identity);
+    add(data, "2x2x2", 2f, 2f, -2f, identity);
+    add(data, "2x2x2", 2f, 2f, 0f, identity);
+    add(data, "2x2x2", 2f, 2f, 2f, identity);
+    add(data, "2x2x2", 2f, 4f, -2f, identity);
+    add(data, "2x2x2", 2f, 4f, 0f, identity);
+    add(data, "2x2x2", 2f, 4f, 2f, identity);
     add(data, "2x2x2", 4f, 0f, -8f, identity);
     add(data, "2x2x2", 4f, 0f, -6f, identity);
     add(data, "2x2x2", 4f, 0f, -4f, identity);
@@ -226,7 +281,7 @@ emit("DSH_E02_Halberd", "heavy long catamaran gunship", data =>
     // Cockpit x1
     add(data, "Cockpit", 0f, 2f, 0f, identity);
     // HoverFlightController x1
-    add(data, "HoverFlightController", 2.5f, 1.5f, -0.5f, identity);
+    add(data, "HoverFlightController", 3.5f, 1.5f, -0.5f, identity);
     // HoverThrusterBig x26
     add(data, "HoverThrusterBig", -4f, -2f, -8f, identity);
     add(data, "HoverThrusterBig", -4f, -2f, -6f, identity);
@@ -254,73 +309,87 @@ emit("DSH_E02_Halberd", "heavy long catamaran gunship", data =>
     add(data, "HoverThrusterBig", 4f, -2f, 4f, identity);
     add(data, "HoverThrusterBig", 4f, -2f, 6f, identity);
     add(data, "HoverThrusterBig", 4f, -2f, 8f, identity);
-    // PowerGeneratingUnit x3
+    // PowerGeneratingUnit x4
     add(data, "PowerGeneratingUnit", -4f, 2f, 8f, identity);
     add(data, "PowerGeneratingUnit", 0f, 2f, -10f, identity);
+    add(data, "PowerGeneratingUnit", 0f, 2f, 4f, identity);
     add(data, "PowerGeneratingUnit", 4f, 2f, -8f, identity);
-    // PowerTransmissionDevice x3
+    // PowerTransmissionDevice x7
+    add(data, "PowerTransmissionDevice", -2.5f, -1.5f, -0.5f, roll180x);
     add(data, "PowerTransmissionDevice", -0.5f, -1.5f, -8.5f, roll180x);
     add(data, "PowerTransmissionDevice", -0.5f, -1.5f, -0.5f, roll180x);
     add(data, "PowerTransmissionDevice", -0.5f, -1.5f, 5.5f, roll180x);
+    add(data, "PowerTransmissionDevice", -0.5f, 5.5f, -0.5f, identity);
+    add(data, "PowerTransmissionDevice", 0.5f, 5.5f, 0.5f, identity);
+    add(data, "PowerTransmissionDevice", 1.5f, -1.5f, -0.5f, roll180x);
+    // ProjectileTurretDouble x2
+    add(data, "ProjectileTurretDouble", -1.5f, 5.5f, 1.5f, identity);
+    add(data, "ProjectileTurretDouble", 1.5f, 5.5f, 1.5f, identity);
+    // ProjectileTurretSingle x2
+    add(data, "ProjectileTurretSingle", -1.5f, 5.5f, -1.5f, identity);
+    add(data, "ProjectileTurretSingle", 1.5f, 5.5f, -1.5f, identity);
     // RepairBotContianer x3
     add(data, "RepairBotContianer", -0.5f, 1.5f, -8.5f, identity);
     add(data, "RepairBotContianer", 0.5f, 1.5f, 8.5f, identity);
-    add(data, "RepairBotContianer", 1.5f, 1.5f, 0.5f, identity);
+    add(data, "RepairBotContianer", 3.5f, 1.5f, 0.5f, identity);
     // Turret x8
-    add(data, "Turret", -2.5f, 1.5f, -7.5f, identity);
-    add(data, "Turret", -2.5f, 1.5f, -3.5f, identity);
-    add(data, "Turret", -2.5f, 1.5f, 3.5f, identity);
-    add(data, "Turret", -2.5f, 1.5f, 7.5f, identity);
-    add(data, "Turret", 2.5f, 1.5f, -7.5f, identity);
-    add(data, "Turret", 2.5f, 1.5f, -3.5f, identity);
-    add(data, "Turret", 2.5f, 1.5f, 3.5f, identity);
-    add(data, "Turret", 2.5f, 1.5f, 7.5f, identity);
-    // UniversalThruster x40
+    add(data, "Turret", -3.5f, 1.5f, -5.5f, identity);
+    add(data, "Turret", -3.5f, 1.5f, -1.5f, identity);
+    add(data, "Turret", -3.5f, 1.5f, 1.5f, identity);
+    add(data, "Turret", -3.5f, 1.5f, 5.5f, identity);
+    add(data, "Turret", 3.5f, 1.5f, -5.5f, identity);
+    add(data, "Turret", 3.5f, 1.5f, -1.5f, identity);
+    add(data, "Turret", 3.5f, 1.5f, 1.5f, identity);
+    add(data, "Turret", 3.5f, 1.5f, 5.5f, identity);
+    // UniversalThruster x36
+    add(data, "UniversalThruster", -3.5f, 1.5f, -2.5f, identity);
+    add(data, "UniversalThruster", -3.5f, 1.5f, -0.5f, identity);
+    add(data, "UniversalThruster", -3.5f, 1.5f, 0.5f, identity);
     add(data, "UniversalThruster", -2.5f, -1.5f, -4.5f, roll180x);
-    add(data, "UniversalThruster", -2.5f, -1.5f, -0.5f, roll180x);
+    add(data, "UniversalThruster", -2.5f, -1.5f, -1.5f, roll180x);
     add(data, "UniversalThruster", -2.5f, -1.5f, 0.5f, roll180x);
     add(data, "UniversalThruster", -2.5f, -1.5f, 4.5f, roll180x);
-    add(data, "UniversalThruster", -2.5f, 1.5f, -0.5f, identity);
-    add(data, "UniversalThruster", -2.5f, 1.5f, 0.5f, identity);
+    add(data, "UniversalThruster", -2.5f, 1.5f, -3.5f, identity);
     add(data, "UniversalThruster", -1.5f, -1.5f, -1.5f, roll180x);
     add(data, "UniversalThruster", -1.5f, -1.5f, -0.5f, roll180x);
     add(data, "UniversalThruster", -1.5f, -1.5f, 0.5f, roll180x);
     add(data, "UniversalThruster", -1.5f, -1.5f, 1.5f, roll180x);
-    add(data, "UniversalThruster", -1.5f, 1.5f, -1.5f, identity);
-    add(data, "UniversalThruster", -1.5f, 1.5f, -0.5f, identity);
-    add(data, "UniversalThruster", -1.5f, 1.5f, 0.5f, identity);
-    add(data, "UniversalThruster", -1.5f, 1.5f, 1.5f, identity);
+    add(data, "UniversalThruster", -1.5f, 1.5f, -3.5f, identity);
+    add(data, "UniversalThruster", -1.5f, 1.5f, 3.5f, identity);
     add(data, "UniversalThruster", -0.5f, -1.5f, -2.5f, roll180x);
     add(data, "UniversalThruster", -0.5f, -1.5f, -1.5f, roll180x);
     add(data, "UniversalThruster", -0.5f, -1.5f, 0.5f, roll180x);
     add(data, "UniversalThruster", -0.5f, -1.5f, 1.5f, roll180x);
-    add(data, "UniversalThruster", -0.5f, 1.5f, -2.5f, identity);
-    add(data, "UniversalThruster", -0.5f, 1.5f, -1.5f, identity);
-    add(data, "UniversalThruster", -0.5f, 1.5f, 1.5f, identity);
+    add(data, "UniversalThruster", -0.5f, 1.5f, -3.5f, identity);
     add(data, "UniversalThruster", 0.5f, -1.5f, -2.5f, roll180x);
     add(data, "UniversalThruster", 0.5f, -1.5f, -1.5f, roll180x);
     add(data, "UniversalThruster", 0.5f, -1.5f, -0.5f, roll180x);
     add(data, "UniversalThruster", 0.5f, -1.5f, 0.5f, roll180x);
     add(data, "UniversalThruster", 0.5f, -1.5f, 1.5f, roll180x);
-    add(data, "UniversalThruster", 0.5f, 1.5f, -2.5f, identity);
-    add(data, "UniversalThruster", 0.5f, 1.5f, -1.5f, identity);
-    add(data, "UniversalThruster", 0.5f, 1.5f, 1.5f, identity);
+    add(data, "UniversalThruster", 0.5f, 1.5f, -3.5f, identity);
     add(data, "UniversalThruster", 1.5f, -1.5f, -1.5f, roll180x);
-    add(data, "UniversalThruster", 1.5f, -1.5f, -0.5f, roll180x);
     add(data, "UniversalThruster", 1.5f, -1.5f, 0.5f, roll180x);
     add(data, "UniversalThruster", 1.5f, -1.5f, 1.5f, roll180x);
-    add(data, "UniversalThruster", 1.5f, 1.5f, -1.5f, identity);
-    add(data, "UniversalThruster", 1.5f, 1.5f, -0.5f, identity);
-    add(data, "UniversalThruster", 1.5f, 1.5f, 1.5f, identity);
+    add(data, "UniversalThruster", 1.5f, 1.5f, -3.5f, identity);
+    add(data, "UniversalThruster", 1.5f, 1.5f, 3.5f, identity);
     add(data, "UniversalThruster", 2.5f, -1.5f, -4.5f, roll180x);
+    add(data, "UniversalThruster", 2.5f, -1.5f, -0.5f, roll180x);
     add(data, "UniversalThruster", 2.5f, -1.5f, 0.5f, roll180x);
     add(data, "UniversalThruster", 2.5f, -1.5f, 4.5f, roll180x);
-    add(data, "UniversalThruster", 2.5f, 1.5f, 0.5f, identity);
+    add(data, "UniversalThruster", 2.5f, 1.5f, -3.5f, identity);
+    add(data, "UniversalThruster", 3.5f, 1.5f, -2.5f, identity);
+    // UniversalThrusterBig x6
+    add(data, "UniversalThrusterBig", -6f, 0f, -4f, rollPos90z);
+    add(data, "UniversalThrusterBig", -6f, 0f, 0f, rollPos90z);
+    add(data, "UniversalThrusterBig", -6f, 0f, 4f, rollPos90z);
+    add(data, "UniversalThrusterBig", 6f, 0f, -4f, rollNeg90z);
+    add(data, "UniversalThrusterBig", 6f, 0f, 0f, rollNeg90z);
+    add(data, "UniversalThrusterBig", 6f, 0f, 4f, rollNeg90z);
 });
-// DSH_E03_Talos - disc gunship: 80 blocks, mass 374, lift/weight 3.71, horizontal 2600 N.
-emit("DSH_E03_Talos", "disc gunship", data =>
+// DSH_E03_Talos - armoured disc gunship with a ballistic roof battery: 106 blocks, mass 547, lift/weight 5.07, horizontal 10800 N.
+emit("DSH_E03_Talos", "armoured disc gunship with a ballistic roof battery", data =>
 {
-    // 2x2x2 x21
+    // 2x2x2 x38
     add(data, "2x2x2", -4f, 0f, -2f, identity);
     add(data, "2x2x2", -4f, 0f, 0f, identity);
     add(data, "2x2x2", -4f, 0f, 2f, identity);
@@ -329,23 +398,40 @@ emit("DSH_E03_Talos", "disc gunship", data =>
     add(data, "2x2x2", -2f, 0f, 0f, identity);
     add(data, "2x2x2", -2f, 0f, 2f, identity);
     add(data, "2x2x2", -2f, 0f, 4f, identity);
+    add(data, "2x2x2", -2f, 2f, -2f, identity);
+    add(data, "2x2x2", -2f, 2f, 0f, identity);
+    add(data, "2x2x2", -2f, 2f, 2f, identity);
+    add(data, "2x2x2", -2f, 4f, -2f, identity);
+    add(data, "2x2x2", -2f, 4f, 0f, identity);
+    add(data, "2x2x2", -2f, 4f, 2f, identity);
     add(data, "2x2x2", 0f, 0f, -4f, identity);
     add(data, "2x2x2", 0f, 0f, -2f, identity);
     add(data, "2x2x2", 0f, 0f, 0f, identity);
     add(data, "2x2x2", 0f, 0f, 2f, identity);
     add(data, "2x2x2", 0f, 0f, 4f, identity);
+    add(data, "2x2x2", 0f, 2f, -2f, identity);
+    add(data, "2x2x2", 0f, 2f, 2f, identity);
+    add(data, "2x2x2", 0f, 4f, -2f, identity);
+    add(data, "2x2x2", 0f, 4f, 0f, identity);
+    add(data, "2x2x2", 0f, 4f, 2f, identity);
     add(data, "2x2x2", 2f, 0f, -4f, identity);
     add(data, "2x2x2", 2f, 0f, -2f, identity);
     add(data, "2x2x2", 2f, 0f, 0f, identity);
     add(data, "2x2x2", 2f, 0f, 2f, identity);
     add(data, "2x2x2", 2f, 0f, 4f, identity);
+    add(data, "2x2x2", 2f, 2f, -2f, identity);
+    add(data, "2x2x2", 2f, 2f, 0f, identity);
+    add(data, "2x2x2", 2f, 2f, 2f, identity);
+    add(data, "2x2x2", 2f, 4f, -2f, identity);
+    add(data, "2x2x2", 2f, 4f, 0f, identity);
+    add(data, "2x2x2", 2f, 4f, 2f, identity);
     add(data, "2x2x2", 4f, 0f, -2f, identity);
     add(data, "2x2x2", 4f, 0f, 0f, identity);
     add(data, "2x2x2", 4f, 0f, 2f, identity);
     // Cockpit x1
     add(data, "Cockpit", 0f, 2f, 0f, identity);
     // HoverFlightController x1
-    add(data, "HoverFlightController", 2.5f, 1.5f, -0.5f, identity);
+    add(data, "HoverFlightController", 3.5f, 1.5f, -0.5f, identity);
     // HoverThrusterBig x17
     add(data, "HoverThrusterBig", -4f, -2f, -2f, identity);
     add(data, "HoverThrusterBig", -4f, -2f, 0f, identity);
@@ -368,47 +454,59 @@ emit("DSH_E03_Talos", "disc gunship", data =>
     add(data, "PowerGeneratingUnit", -4f, 2f, -2f, identity);
     add(data, "PowerGeneratingUnit", 0f, 2f, -4f, identity);
     add(data, "PowerGeneratingUnit", 4f, 2f, 2f, identity);
-    // PowerTransmissionDevice x1
+    // PowerTransmissionDevice x6
+    add(data, "PowerTransmissionDevice", -2.5f, -1.5f, 3.5f, roll180x);
+    add(data, "PowerTransmissionDevice", -2.5f, 1.5f, -3.5f, identity);
     add(data, "PowerTransmissionDevice", -0.5f, -1.5f, -0.5f, roll180x);
+    add(data, "PowerTransmissionDevice", -0.5f, 5.5f, -0.5f, identity);
+    add(data, "PowerTransmissionDevice", 0.5f, 5.5f, 0.5f, identity);
+    add(data, "PowerTransmissionDevice", 3.5f, 1.5f, -2.5f, identity);
+    // ProjectileTurretDouble x2
+    add(data, "ProjectileTurretDouble", -1.5f, 5.5f, 1.5f, identity);
+    add(data, "ProjectileTurretDouble", 1.5f, 5.5f, 1.5f, identity);
+    // ProjectileTurretSingle x2
+    add(data, "ProjectileTurretSingle", -1.5f, 5.5f, -1.5f, identity);
+    add(data, "ProjectileTurretSingle", 1.5f, 5.5f, -1.5f, identity);
     // RepairBotContianer x2
-    add(data, "RepairBotContianer", -0.5f, 1.5f, -2.5f, identity);
+    add(data, "RepairBotContianer", -1.5f, 1.5f, -4.5f, identity);
     add(data, "RepairBotContianer", 0.5f, 1.5f, 3.5f, identity);
     // Turret x8
-    add(data, "Turret", -2.5f, 1.5f, -1.5f, identity);
-    add(data, "Turret", -2.5f, 1.5f, 1.5f, identity);
+    add(data, "Turret", -3.5f, 1.5f, -0.5f, identity);
+    add(data, "Turret", -3.5f, 1.5f, 1.5f, identity);
     add(data, "Turret", -1.5f, 1.5f, -3.5f, identity);
     add(data, "Turret", -1.5f, 1.5f, 3.5f, identity);
     add(data, "Turret", 1.5f, 1.5f, -3.5f, identity);
     add(data, "Turret", 1.5f, 1.5f, 3.5f, identity);
-    add(data, "Turret", 2.5f, 1.5f, -1.5f, identity);
-    add(data, "Turret", 2.5f, 1.5f, 1.5f, identity);
-    // UniversalThruster x26
-    add(data, "UniversalThruster", -2.5f, -1.5f, 3.5f, roll180x);
+    add(data, "Turret", 3.5f, 1.5f, -1.5f, identity);
+    add(data, "Turret", 3.5f, 1.5f, 0.5f, identity);
+    // UniversalThruster x22
+    add(data, "UniversalThruster", -4.5f, 1.5f, -0.5f, identity);
+    add(data, "UniversalThruster", -4.5f, 1.5f, 0.5f, identity);
+    add(data, "UniversalThruster", -3.5f, 1.5f, 0.5f, identity);
+    add(data, "UniversalThruster", -3.5f, 1.5f, 2.5f, identity);
+    add(data, "UniversalThruster", -2.5f, 1.5f, 3.5f, identity);
     add(data, "UniversalThruster", -1.5f, -1.5f, 3.5f, roll180x);
     add(data, "UniversalThruster", -1.5f, -1.5f, 4.5f, roll180x);
-    add(data, "UniversalThruster", -1.5f, 1.5f, -1.5f, identity);
-    add(data, "UniversalThruster", -1.5f, 1.5f, -0.5f, identity);
-    add(data, "UniversalThruster", -1.5f, 1.5f, 0.5f, identity);
-    add(data, "UniversalThruster", -1.5f, 1.5f, 1.5f, identity);
     add(data, "UniversalThruster", -0.5f, -1.5f, -4.5f, roll180x);
     add(data, "UniversalThruster", -0.5f, -1.5f, -3.5f, roll180x);
     add(data, "UniversalThruster", -0.5f, -1.5f, 0.5f, roll180x);
-    add(data, "UniversalThruster", -0.5f, 1.5f, -1.5f, identity);
-    add(data, "UniversalThruster", -0.5f, 1.5f, 1.5f, identity);
     add(data, "UniversalThruster", -0.5f, 1.5f, 3.5f, identity);
     add(data, "UniversalThruster", 0.5f, -1.5f, -4.5f, roll180x);
     add(data, "UniversalThruster", 0.5f, -1.5f, -3.5f, roll180x);
     add(data, "UniversalThruster", 0.5f, -1.5f, -0.5f, roll180x);
     add(data, "UniversalThruster", 0.5f, -1.5f, 0.5f, roll180x);
-    add(data, "UniversalThruster", 0.5f, 1.5f, -1.5f, identity);
-    add(data, "UniversalThruster", 0.5f, 1.5f, 1.5f, identity);
-    add(data, "UniversalThruster", 0.5f, 1.5f, 2.5f, identity);
     add(data, "UniversalThruster", 1.5f, -1.5f, 3.5f, roll180x);
-    add(data, "UniversalThruster", 1.5f, 1.5f, -1.5f, identity);
-    add(data, "UniversalThruster", 1.5f, 1.5f, -0.5f, identity);
-    add(data, "UniversalThruster", 1.5f, 1.5f, 0.5f, identity);
-    add(data, "UniversalThruster", 1.5f, 1.5f, 1.5f, identity);
+    add(data, "UniversalThruster", 1.5f, -1.5f, 4.5f, roll180x);
     add(data, "UniversalThruster", 2.5f, -1.5f, 3.5f, roll180x);
+    add(data, "UniversalThruster", 2.5f, 1.5f, -3.5f, identity);
+    add(data, "UniversalThruster", 2.5f, 1.5f, 3.5f, identity);
+    add(data, "UniversalThruster", 4.5f, 1.5f, -0.5f, identity);
+    add(data, "UniversalThruster", 4.5f, 1.5f, 0.5f, identity);
+    // UniversalThrusterBig x4
+    add(data, "UniversalThrusterBig", -6f, 0f, -2f, rollPos90z);
+    add(data, "UniversalThrusterBig", -6f, 0f, 2f, rollPos90z);
+    add(data, "UniversalThrusterBig", 6f, 0f, -2f, rollNeg90z);
+    add(data, "UniversalThrusterBig", 6f, 0f, 2f, rollNeg90z);
 });
 // ---------------------------------------------------------------------------------------
 object Write(BlockDataList data, string name, string note, string repoFolder, string liveFolder)
