@@ -47,7 +47,7 @@ public sealed class SiegeWaveDirector
         SiegeShipOption option = settings.Ships[random.Next(settings.Ships.Length)];
         double angle = random.NextDouble() * Math.PI * 2.0;
         Vector3 offset = new Vector3((float)Math.Cos(angle), 0f, (float)Math.Sin(angle)) * settings.AttackRadius;
-        Vector3 position = session.Fleet.Base.Unit.transform.position + offset + Vector3.up * 10f;
+        Vector3 position = session.Fleet.Base.Core.transform.position + offset + Vector3.up * 10f;
         BlockDataList blueprint = SiegeFleet.PrepareBlueprint(option.Blueprint, out string id);
         ControlUnit unit = EnemyBlueprintFactory.Spawn(
             blueprint,

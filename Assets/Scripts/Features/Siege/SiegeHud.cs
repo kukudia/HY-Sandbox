@@ -90,7 +90,7 @@ public sealed class SiegeHud : MonoBehaviour
         heading.text = match.Phase == SiegePhase.Defeat ? "BASTION LOST" : "BASTION / " + match.Phase.ToString().ToUpperInvariant();
         economy.text = "CREDITS  " + match.Coins.ToString("N0") + "     WAVE  " + match.Wave + "     RAIDERS  " + match.ActiveAttackers + " / +" + match.PendingAttackers;
         status.text = session.Status;
-        Durability core = session.Fleet.Base.Cockpit != null ? session.Fleet.Base.Cockpit.GetComponent<Durability>() : null;
+        Durability core = session.Fleet.Base.Core != null ? session.Fleet.Base.Core.GetComponent<Durability>() : null;
         coreHealth.text = core != null ? "CORE  " + Mathf.CeilToInt(core.currentDurability) + " / " + Mathf.CeilToInt(core.maxDurability) : "CORE DESTROYED";
         wave.interactable = match.CanRefit;
         repairCore.interactable = match.CanRefit && session.Fleet.Base.IsAlive;

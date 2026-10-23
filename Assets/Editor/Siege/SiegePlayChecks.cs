@@ -100,8 +100,8 @@ public static class SiegePlayChecks
         PlayManager.instance.RefreshGroup(oldCoreGroup);
         Check(
             checks,
-            "base anchor survives production regroup",
-            session.Fleet.Base.Unit != null && session.Fleet.Base.Unit.GetComponent<Rigidbody>().isKinematic && session.Fleet.Base.Cockpit.Anchored);
+            "building support refresh keeps anchored building outside ship regroup",
+            session.Fleet.Base.Unit != null && session.Fleet.Base.Unit.GetComponent<Rigidbody>().isKinematic && session.Fleet.Base.Building.Anchored);
         Check(
             checks,
             "base regroup does not steal player camera ownership",
@@ -128,7 +128,7 @@ public static class SiegePlayChecks
             checks,
             "no surviving ships falls back to base observation",
             session.Match.Phase == SiegePhase.Battle && session.Fleet.Driven == null && PlayManager.instance.blocksParent == session.Fleet.Base.Unit.transform);
-        session.Fleet.Base.Cockpit.GetComponent<Durability>().ApplyDamage(100000f, null);
+        session.Fleet.Base.Core.GetComponent<Durability>().ApplyDamage(100000f, null);
         Check(
             checks,
             "real core destruction ends siege and cancels reinforcements",

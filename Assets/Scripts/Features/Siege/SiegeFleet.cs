@@ -11,7 +11,7 @@ public sealed class SiegeFleet
     {
         get;
     }
-    public SiegeFleetEntry Base
+    public SiegeBase Base
     {
         get; private set;
     }
@@ -29,22 +29,8 @@ public sealed class SiegeFleet
 
     public bool CreateBase(Transform anchor)
     {
-        Base = Create(
-            session.Settings.BaseBlueprint,
-            "Bastion Core",
-            1500,
-            anchor.position,
-            anchor.rotation,
-            true);
-        if (Base == null)
-        {
-            return false;
-        }
-
-        Base.Cockpit.SetAnchored(true);
-        Base.Unit.GetComponent<Rigidbody>().isKinematic = true;
-        Base.LastBoundUnit = Base.Unit;
-        SetCamera(Base.Unit);
+        Base = SiegeBase.Create(session, session.Buildings, anchor);
+        SetBaseCamera();
         return true;
     }
 
@@ -76,8 +62,7 @@ public sealed class SiegeFleet
             option.DisplayName,
             option.Price,
             docks[slot].position,
-            docks[slot].rotation,
-            false);
+            docks[slot].rotation);
         if (entry == null)
         {
             reason = "Ship blueprint could not be restored.";
@@ -120,7 +105,7 @@ public sealed class SiegeFleet
             EnemyController ai = unit.GetComponent<EnemyController>();
             if (ai != null)
             {
-                ai.SetGuardAnchor(Base.Cockpit.transform, session.Settings.GuardRadius);
+                ai.SetGuardAnchor(Base.Core.transform, session.Settings.GuardRadius);
                 ai.enabled = !manual;
             }
         }
@@ -167,15 +152,6 @@ public sealed class SiegeFleet
 
     public void RefreshBindings()
     {
-        if (Base?.Unit != null && Base.LastBoundUnit != Base.Unit)
-        {
-            Base.LastBoundUnit = Base.Unit;
-            if (Driven == null)
-            {
-                SetCamera(Base.Unit);
-            }
-        }
-
         foreach (SiegeFleetEntry entry in Ships)
         {
             ControlUnit unit = entry?.Unit;
@@ -189,7 +165,7 @@ public sealed class SiegeFleet
             EnemyController ai = unit.GetComponent<EnemyController>();
             if (ai != null)
             {
-                ai.SetGuardAnchor(Base.Cockpit.transform, session.Settings.GuardRadius);
+                ai.SetGuardAnchor(Base.Core.transform, session.Settings.GuardRadius);
                 ai.enabled = session.Match.Phase == SiegePhase.Battle && entry != Driven;
             }
 
@@ -200,14 +176,8 @@ public sealed class SiegeFleet
         }
     }
 
-    public bool NotifyLost(Cockpit cockpit)
+    public void NotifyLost(Cockpit cockpit)
     {
-        if (Base?.Cockpit == cockpit)
-        {
-            Base.MarkLost();
-            return true;
-        }
-
         foreach (SiegeFleetEntry entry in Ships)
         {
             if (entry?.Cockpit == cockpit)
@@ -223,34 +193,13 @@ public sealed class SiegeFleet
                     }
                     else if (Base?.Unit != null)
                     {
-                        SetCamera(Base.Unit);
+                        SetBaseCamera();
                     }
                 }
 
                 break;
             }
         }
-
-        return false;
-    }
-
-    private SiegeFleetEntry Create(
-        TextAsset asset,
-        string displayName,
-        int price,
-        Vector3 position,
-        Quaternion rotation,
-        bool isBase)
-    {
-        BlockDataList blueprint = PrepareBlueprint(asset, out string id);
-        return Spawn(
-            blueprint,
-            id,
-            displayName,
-            price,
-            position,
-            rotation,
-            isBase);
     }
 
     private SiegeFleetEntry Spawn(
@@ -259,8 +208,7 @@ public sealed class SiegeFleet
         string displayName,
         int price,
         Vector3 position,
-        Quaternion rotation,
-        bool isBase)
+        Quaternion rotation)
     {
         ControlUnit unit = ModularUnitFactory.Spawn(blueprint, displayName, position, rotation, UnitFaction.Player);
         if (unit == null)
@@ -286,8 +234,7 @@ public sealed class SiegeFleet
             unit.cockpit,
             price,
             position,
-            rotation,
-            isBase);
+            rotation);
     }
 
     public static BlockDataList PrepareBlueprint(TextAsset asset, out string id)
@@ -331,6 +278,15 @@ public sealed class SiegeFleet
         {
             CameraController.instance.playerBody = unit.transform;
             CameraController.instance.currentMode = CameraMode.ThirdPersonLock;
+        }
+    }
+
+    private void SetBaseCamera()
+    {
+        SetCamera(Base.Unit);
+        if (CameraController.instance != null)
+        {
+            CameraController.instance.playerBody = Base.Core.transform;
         }
     }
 }

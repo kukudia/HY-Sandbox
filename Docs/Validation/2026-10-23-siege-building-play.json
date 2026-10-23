@@ -1,0 +1,24 @@
+{
+    "checks": [
+        "PASS base is one real connected component",
+        "PASS first two ships deploy through production economy",
+        "PASS driving authority can switch to a second ship",
+        "PASS exactly one allied ship reads manual input",
+        "PASS non-driven allied ship has autonomous control",
+        "PASS intermission rejects late projectile damage",
+        "PASS surviving-module repair restores health and exact quoted debit",
+        "PASS missing module is rebuilt for quoted cost",
+        "PASS replacement preserves original blueprint identity without duplicates",
+        "PASS detached live module is recovered as the same object",
+        "PASS repair restores actual detached collider participation and single connected hull",
+        "PASS occupied repair bay is rejected without spending",
+        "PASS building support refresh keeps anchored building outside ship regroup",
+        "PASS base regroup does not steal player camera ownership",
+        "PASS wave start activates simulation and closes repair",
+        "PASS autonomous ally retains its body and active AI after physical regroup",
+        "PASS pilot destruction transfers control instead of ending match",
+        "PASS no surviving ships falls back to base observation",
+        "PASS real core destruction ends siege and cancels reinforcements",
+        "PASS defeat rejects new waves, deployment and repairs"
+    ]
+}

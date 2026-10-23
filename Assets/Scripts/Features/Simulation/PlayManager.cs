@@ -188,6 +188,13 @@ public class PlayManager : MonoBehaviour
             return;
         }
 
+        if (unit.Building != null)
+        {
+            // 建筑按底座支撑与自身残骸预算分裂，不能进入舰船驾驶舱重组流程。
+            unit.Building.RefreshStructure();
+            return;
+        }
+
         List<Block> blocks = unit.GetComponentsInChildren<Block>(true).Where(block => block != null && block.isActiveAndEnabled).ToList();
         using SimulationWorkMetrics.Scope timing = SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.Refresh, blocks.Count);
         if (blocks.Count > 0)

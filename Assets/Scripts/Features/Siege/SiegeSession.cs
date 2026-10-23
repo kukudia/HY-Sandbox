@@ -10,6 +10,10 @@ public sealed class SiegeSession : MonoBehaviour
     private Transform baseDock;
     [SerializeField]
     private Transform[] shipDocks = new Transform[4];
+    [SerializeField, Tooltip("大型建筑蓝图基地的运行管理器，独立于舰船。")]
+    private WorldBuildingManager buildings;
+    public WorldBuildingManager Buildings => buildings;
+
     private SiegeWaveDirector waves;
     private bool previousBackground;
     private SiegePhase previousPhase;
@@ -30,6 +34,10 @@ public sealed class SiegeSession : MonoBehaviour
         previousBackground = Application.runInBackground;
         Application.runInBackground = true;
         PlayManager.instance?.BindSiege(this);
+        if (buildings != null)
+        {
+            buildings.SimulationEnabled = false;
+        }
     }
 
     private void Start()
@@ -44,7 +52,7 @@ public sealed class SiegeSession : MonoBehaviour
 
     public bool Begin()
     {
-        if (settings == null || baseDock == null || shipDocks == null || shipDocks.Length == 0 || System.Array.Exists(shipDocks, dock => dock == null) || Match != null)
+        if (settings == null || buildings == null || baseDock == null || shipDocks == null || shipDocks.Length == 0 || System.Array.Exists(shipDocks, dock => dock == null) || Match != null)
         {
             return false;
         }
@@ -93,7 +101,7 @@ public sealed class SiegeSession : MonoBehaviour
     public bool TryRepair(bool repairBase)
     {
         string reason = "The siege is not ready.";
-        bool repaired = Fleet != null && SiegeRefit.Repair(repairBase ? Fleet.Base : Fleet.Driven, this, out reason);
+        bool repaired = Fleet != null && (repairBase ? Fleet.Base.Repair(out reason) : SiegeRefit.Repair(Fleet.Driven, this, out reason));
         Status = reason;
         return repaired;
     }
@@ -125,10 +133,7 @@ public sealed class SiegeSession : MonoBehaviour
 
     public void NotifyCockpitDestroyed(Cockpit cockpit)
     {
-        if (Fleet != null && Fleet.NotifyLost(cockpit))
-        {
-            LoseBase();
-        }
+        Fleet?.NotifyLost(cockpit);
     }
 
     private void Update()
@@ -154,27 +159,19 @@ public sealed class SiegeSession : MonoBehaviour
         }
 
         previousPhase = Match.Phase;
-        ControlUnit core = Fleet.Base?.Unit;
-        if (core != null)
-        {
-            core.GetComponent<Rigidbody>().isKinematic = true;
-            EnemyController ai = core.GetComponent<EnemyController>();
-            if (ai != null)
-            {
-                ai.enabled = false;
-            }
-        }
     }
 
     private void OnDestroy()
     {
         waves?.Stop();
+        Fleet?.Base?.Dispose();
         Application.runInBackground = previousBackground;
     }
 
     private void SetSimulationActive(bool active)
     {
         PlayManager.instance.playMode = active;
+        buildings.SimulationEnabled = active;
         foreach (ControlUnit unit in ControlUnit.RuntimeUnits)
         {
             if (unit == null || unit.gameObject.scene != gameObject.scene)
@@ -189,7 +186,7 @@ public sealed class SiegeSession : MonoBehaviour
                 body.angularVelocity = Vector3.zero;
             }
 
-            body.isKinematic = !active || (unit.cockpit != null && unit.cockpit.Anchored);
+            body.isKinematic = !active || (unit.Building != null && unit.Building.Anchored) || (unit.cockpit != null && unit.cockpit.Anchored);
         }
     }
 }

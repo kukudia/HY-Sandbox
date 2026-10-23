@@ -30,6 +30,29 @@ public sealed class BuildingRuntime : MonoBehaviour
     public string InstanceId => instanceId;
     public bool NeedsActivation => pendingState != null;
 
+    public event Action<Block> BlockDestroyed;
+    internal bool TryRefit(BlockDataList design, out string reason)
+    {
+        reason = "The building cannot be refitted.";
+        if (!IsOperational || !BuildingRefit.Apply(this, blocks, manager, design, out reason))
+        {
+            return false;
+        }
+
+        body.mass = TotalMass();
+        GetComponent<ControlUnit>().RefreshChildren();
+        Physics.SyncTransforms();
+        return true;
+    }
+
+    internal void RefreshStructure()
+    {
+        Physics.SyncTransforms();
+        SplitDisconnected();
+        body.mass = TotalMass();
+        GetComponent<ControlUnit>().RefreshChildren();
+    }
+
     public void Initialize(WorldBuildingManager owner, WorldBuildingState state)
     {
         IEnumerator work = InitializeRoutine(owner, state);
@@ -232,8 +255,10 @@ public sealed class BuildingRuntime : MonoBehaviour
         if (explode)
         {
             manager.DamageSphere(center, radius, force);
-            manager.World.DamageSphere(center, radius, force);
+            manager.World?.DamageSphere(center, radius, force);
         }
+
+        BlockDestroyed?.Invoke(block);
     }
 
     private void SplitDisconnected()
@@ -332,7 +357,7 @@ public sealed class BuildingRuntime : MonoBehaviour
         if (Anchored)
         {
             // 必须先移除体素源碰撞，再让建筑参加下一物理步。
-            manager.World.FlushDirty();
+            manager.World?.FlushDirty();
             body.isKinematic = false;
             body.WakeUp();
         }

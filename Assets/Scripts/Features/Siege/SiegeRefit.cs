@@ -20,6 +20,28 @@ public static class SiegeRefit
             return false;
         }
 
+        return IsGeometryClear(blueprint, position, rotation, ignoredUnitId, out reason);
+    }
+
+    public static bool IsBuildingClear(
+        BlockDataList blueprint,
+        Vector3 position,
+        Quaternion rotation,
+        string ignoredUnitId,
+        out string reason)
+    {
+        WorldBuildingValidation.ValidateBlueprint(blueprint);
+        return IsGeometryClear(blueprint, position, rotation, ignoredUnitId, out reason);
+    }
+
+    private static bool IsGeometryClear(
+        BlockDataList blueprint,
+        Vector3 position,
+        Quaternion rotation,
+        string ignoredUnitId,
+        out string reason)
+    {
+        reason = string.Empty;
         Physics.SyncTransforms();
         foreach (BlockData block in blueprint.blocks)
         {

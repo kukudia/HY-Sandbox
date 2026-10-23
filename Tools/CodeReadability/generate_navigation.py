@@ -382,9 +382,11 @@ def main():
             "AC": "BlockConnectionSnapshot.Capture",
             "AD": "BlockConnections.ReleaseRuntimePair",
             "AE": "BatchConnectionBuilder.RebuildBatchImmediate",
+            "AF": "BuildingRuntime.RefreshStructure",
         },
         [
-            "A --> B",
+            "A -->|建筑按底座支撑分裂| AF",
+            "A -->|舰船| B",
             "B --> C",
             "C --> D",
             "C --> Z", "C --> AA", "C -->|新分量即时登记，外层统一清理| AB",
@@ -1159,7 +1161,7 @@ def main():
     )
     graph(
         "阵地战部署、驾驶与修缮",
-        "源码推导：独立Siege场景Start创建基地，HUD按钮调用部署和接管。部署蓝图清空货仓快照并赋予部署ID，只有成功生成才扣费；驾驶权保存在Cockpit，父物理组改变后重新绑定AI守卫与镜头。整备修缮将同源断裂模块复用并恢复泊位姿态，缺件从空载蓝图补回；先检查完整泊位与报价，完成后扣费。不写玩家蓝图。",
+        "源码推导：独立Siege场景Start以大型建筑蓝图创建基地，HUD按钮调用舰船部署和接管。建筑核心由蓝图模块ID指定，无驾驶舱；建筑由WorldBuildingManager管理。舰船部署清空货仓快照并赋予部署ID，成功生成才扣费；驾驶权保存在舰船Cockpit。整备修缮先验证净空和报价，基地复用建筑模块并补件，舰船复用同源断裂件并恢复泊位姿态；成功后扣费。不写用户蓝图。",
         {
             "A": "SiegeSession.Start", "B": "SiegeSession.Begin", "C": "SiegeFleet.CreateBase",
             "D": "SiegeSession.TryDeploy", "E": "SiegeFleet.Deploy", "F": "ModularUnitFactory.Spawn",
@@ -1167,12 +1169,15 @@ def main():
             "J": "EnemyController.FixedUpdate", "K": "SiegeFleet.RefreshBindings",
             "L": "SiegeSession.TryRepair", "M": "SiegeRefit.Repair", "N": "SiegeRefit.IsClear",
             "O": "SiegeMatch.TrySpend", "P": "SiegeHud.OnEnable",
+            "Q": "SiegeBase.Create", "R": "WorldBuildingManager.RestoreBuilding",
+            "S": "SiegeBase.Repair", "T": "BuildingRuntime.TryRefit", "U": "BuildingRefit.Apply",
         },
         [
-            "A --> B", "B --> C", "C -->|经Spawn| F", "P -.->|按钮监听| D", "D --> E",
+            "A --> B", "B --> C", "C --> Q", "Q --> R", "P -.->|按钮监听| D", "D --> E",
             "E -->|经Spawn| F", "E --> O", "P -.->|接管按钮| G", "G --> H",
             "H -.->|门控玩家输入| I", "H -.->|门控自主驾驶| J", "K -.->|新组的AI与镜头| J",
             "P -.->|修缮按钮经RepairCore/Ship| L", "L --> M", "M --> N", "M --> O",
+            "L -->|建筑基地| S", "S --> T", "T --> U", "S --> O",
         ],
     )
     graph(
@@ -1185,11 +1190,14 @@ def main():
             "I": "Durability.ChangeDurability", "J": "DestroyManager.DestroyGameObject",
             "K": "SiegeSession.NotifyCockpitDestroyed", "L": "SiegeFleet.NotifyLost", "M": "SiegeSession.LoseBase",
             "N": "SiegeSession.OnDestroy", "O": "SiegeWaveDirector.Stop", "P": "SiegeHud.Restart",
+            "Q": "BuildingRuntime.DestroyBlock", "R": "SiegeBase.OnBlockDestroyed", "S": "SiegeBase.Dispose",
         },
         [
             "A --> B", "A --> C", "D --> E", "E --> F", "E --> H",
             "G -.->|Attacker事件标记后由Tick读取| E", "D -->|波次结束| C",
-            "I --> J", "J --> G", "J --> K", "K --> L", "K -->|基地核心丢失| M",
+            "I -->|舰船| J", "J --> G", "J --> K", "K --> L",
+            "I -->|建筑| Q", "Q -.->|BlockDestroyed事件| R", "R -->|指定核心被摧毁| M",
+            "D -->|核心失活或离开建筑主体| M", "N --> S",
             "M --> C", "M --> O", "N --> O", "P -.->|场景重载销毁旧会话| N",
         ],
     )

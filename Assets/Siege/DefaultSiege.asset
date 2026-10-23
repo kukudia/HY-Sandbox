@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: DefaultSiege
   m_EditorClassIdentifier: Assembly-CSharp::SiegeSettings
   baseBlueprint: {fileID: 4900000, guid: 6286f22730017b14f870a95ecf4bb294, type: 3}
+  baseCoreBlockId: bastion-core
+  baseReplacementValue: 6000
   ships:
   - displayName: Finch
     blueprint: {fileID: 4900000, guid: bac1b3f44c1e184498610cea76d95d99, type: 3}

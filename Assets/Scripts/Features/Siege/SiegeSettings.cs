@@ -8,6 +8,10 @@ public sealed class SiegeSettings : ScriptableObject
 {
     [SerializeField]
     private TextAsset baseBlueprint;
+    [SerializeField, Tooltip("建筑蓝图中承担基地核心的模块ID；不能指向驾驶舱。")]
+    private string baseCoreBlockId = "bastion-core";
+    [SerializeField, Min(1), Tooltip("基地缺件维修按模块占比计费的重建估值。")]
+    private int baseReplacementValue = 6000;
     [SerializeField]
     private SiegeShipOption[] ships = Array.Empty<SiegeShipOption>();
     [SerializeField, Min(0)]
@@ -35,6 +39,8 @@ public sealed class SiegeSettings : ScriptableObject
     [SerializeField]
     private int spawnSeed = 14741;
     public TextAsset BaseBlueprint => baseBlueprint;
+    public string BaseCoreBlockId => baseCoreBlockId;
+    public int BaseReplacementValue => baseReplacementValue;
     public SiegeShipOption[] Ships => ships;
     public int MaximumActiveEnemies => maximumActiveEnemies;
     public float SpawnInterval => spawnInterval;

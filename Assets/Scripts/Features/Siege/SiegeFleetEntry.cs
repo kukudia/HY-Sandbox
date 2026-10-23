@@ -1,4 +1,4 @@
-// 职责：持有一艘部署舰或基地的蓝图身份与驾驶舱引用；父物理组变化不改变舰艇身份。
+// 职责：持有一艘部署舰的蓝图身份与驾驶舱引用；父物理组变化不改变舰艇身份。
 // 入口：Unit / IsAlive；仅由SiegeFleet建立，维修按同一部署ID寻找原模块。
 using UnityEngine;
 
@@ -32,10 +32,6 @@ public sealed class SiegeFleetEntry
     {
         get;
     }
-    public bool IsBase
-    {
-        get;
-    }
     public ControlUnit LastBoundUnit
     {
         get; set;
@@ -50,8 +46,7 @@ public sealed class SiegeFleetEntry
         Cockpit cockpit,
         int purchasePrice,
         Vector3 dockPosition,
-        Quaternion dockRotation,
-        bool isBase)
+        Quaternion dockRotation)
     {
         Id = id;
         DisplayName = displayName;
@@ -60,7 +55,6 @@ public sealed class SiegeFleetEntry
         PurchasePrice = purchasePrice;
         DockPosition = dockPosition;
         DockRotation = dockRotation;
-        IsBase = isBase;
     }
 
     public void MarkLost()

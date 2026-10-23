@@ -49,9 +49,14 @@ public static class SiegeSceneAuthoring
             SiegeSession session = sessionObject.AddComponent<SiegeSession>();
             Transform coreDock = new GameObject("Base Dock").transform;
             coreDock.SetParent(sessionObject.transform);
-            coreDock.position = new Vector3(0f, 1f, 0f);
+            coreDock.position = new Vector3(-14f, 0f, -14f);
             Transform[] docks = CreateDocks(sessionObject.transform);
             var serialized = new SerializedObject(session);
+            var buildingOwner = new GameObject("Base Building Manager");
+            buildingOwner.transform.SetParent(sessionObject.transform, false);
+            WorldBuildingManager buildings = buildingOwner.AddComponent<WorldBuildingManager>();
+            SiegeBaseBlueprintAuthoring.ConfigureManager(buildings);
+            serialized.FindProperty("buildings").objectReferenceValue = buildings;
             serialized.FindProperty("settings").objectReferenceValue = settings;
             serialized.FindProperty("baseDock").objectReferenceValue = coreDock;
             SetArray(serialized.FindProperty("shipDocks"), docks);
@@ -106,58 +111,7 @@ public static class SiegeSceneAuthoring
 
     private static TextAsset CreateBaseBlueprint(bool replace = false)
     {
-        string path = AssetFolder + "/BastionBase.json";
-        if (replace || !File.Exists(path))
-        {
-            var blueprint = new BlockDataList();
-            for (int x = -4; x <= 4; x += 2)
-            {
-                for (int z = -4; z <= 4; z += 2)
-                {
-                    AddModule(blueprint, "2x2x2", new Vector3(x, 0f, z));
-                }
-            }
-
-            AddModule(blueprint, "Cockpit", new Vector3(0f, 2f, 0f));
-            AddModule(blueprint, "PowerGeneratingUnit", new Vector3(2f, 2f, 0f));
-            AddModule(blueprint, "PowerTransmissionDevice", new Vector3(-3.5f, 1.5f, 0.5f));
-            foreach (Vector2 corner in new[]
-            {
-                new Vector2(-3.5f, -3.5f),
-                new Vector2(3.5f, -3.5f),
-                new Vector2(-3.5f, 3.5f),
-                new Vector2(3.5f, 3.5f)
-            }
-
-            )
-            {
-                AddModule(blueprint, "ProjectileTurretSingle", new Vector3(corner.x, 1.5f, corner.y));
-            }
-
-            File.WriteAllText(path, JsonUtility.ToJson(blueprint, true));
-            AssetDatabase.ImportAsset(path);
-        }
-
-        return AssetDatabase.LoadAssetAtPath<TextAsset>(path);
-    }
-
-    private static void AddModule(BlockDataList blueprint, string resource, Vector3 position)
-    {
-        Block block = Resources.Load<GameObject>("Blocks/" + resource).GetComponent<Block>();
-        var data = new BlockData(block)
-        {
-            id = "base-" + blueprint.blocks.Count,
-            posX = position.x,
-            posY = position.y,
-            posZ = position.z,
-            rotX = 0f,
-            rotY = 0f,
-            rotZ = 0f,
-            rotW = 1f,
-            resourcePath = "Blocks/" + resource,
-            cargo = null
-        };
-        blueprint.blocks.Add(data);
+        return SiegeBaseBlueprintAuthoring.Generate(replace);
     }
 
     private static SiegeSettings CreateSettings(TextAsset baseBlueprint)
