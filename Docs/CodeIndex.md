@@ -857,15 +857,16 @@
 
 ## Assets/Editor/Siege/SiegePlayerBuild.cs
 
-// 职责：构建以Siege为入口的独立Windows D3D11验证包，不改全局构建场景或用户发布包。 // 入口：Build() / BuildStress() / BuildLargeStress()；通过Temp报告构建结果，显式参数启动Player检查。
+// 职责：构建以Siege为入口的独立Windows D3D11验证包，不改全局构建场景或用户发布包。 // 入口：Build() / BuildStress() / BuildLargeStress() / BuildLargeProfiling()；独立Development包用于引擎归因。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegePlayerBuild | [`void Build()`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L16) | public static |
 | SiegePlayerBuild | [`void BuildStress()`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L22) | public static |
 | SiegePlayerBuild | [`void BuildLargeStress()`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L32) | public static |
-| SiegePlayerBuild | [`void Schedule(string scene, string output, string statusPath)`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L42) | private static |
-| SiegePlayerBuild | [`void BuildNow(string scene, string output, string statusPath)`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L62) | private static |
+| SiegePlayerBuild | [`void BuildLargeProfiling()`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L42) | public static |
+| SiegePlayerBuild | [`void Schedule(string scene, string output, string statusPath, BuildOptions options = BuildOptions.None)`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L53) | private static |
+| SiegePlayerBuild | [`void BuildNow(string scene, string output, string statusPath, BuildOptions options)`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L73) | private static |
 
 ## Assets/Editor/Siege/SiegePlayerSurveyChecks.cs
 
@@ -874,8 +875,8 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegePlayerSurveyChecks | [`string Run()`](../Assets/Editor/Siege/SiegePlayerSurveyChecks.cs#L12) | public static |
-| SiegePlayerSurveyChecks | [`Rigidbody CreateBody(List<GameObject> roots, string name)`](../Assets/Editor/Siege/SiegePlayerSurveyChecks.cs#L114) | private static |
-| SiegePlayerSurveyChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegePlayerSurveyChecks.cs#L124) | private static |
+| SiegePlayerSurveyChecks | [`Rigidbody CreateBody(List<GameObject> roots, string name)`](../Assets/Editor/Siege/SiegePlayerSurveyChecks.cs#L128) | private static |
+| SiegePlayerSurveyChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegePlayerSurveyChecks.cs#L138) | private static |
 
 ## Assets/Editor/Siege/SiegePriorityTargetChecks.cs
 
@@ -3096,6 +3097,16 @@
 | SiegeBase | [`void OnBlockDestroyed(Block block)`](../Assets/Scripts/Features/Siege/SiegeBase.cs#L123) | private |
 | SiegeBase | [`void Dispose()`](../Assets/Scripts/Features/Siege/SiegeBase.cs#L131) | public |
 
+## Assets/Scripts/Features/Siege/SiegeEngineCounters.cs
+
+// 职责：显式性能诊断时读取可用的引擎计时/GC计数，记录缺失和缓冲溢出，避免旧值冒充新帧。 // 入口：Read() / Dispose()；只读已完成样本并清空缓冲，跨帧发布延迟不保证与delta严格对齐。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeEngineCounters | [`Sample Read()`](../Assets/Scripts/Features/Siege/SiegeEngineCounters.cs#L60) | public |
+| SiegeEngineCounters | [`long ReadCounter(int index)`](../Assets/Scripts/Features/Siege/SiegeEngineCounters.cs#L81) | private |
+| SiegeEngineCounters | [`void Dispose()`](../Assets/Scripts/Features/Siege/SiegeEngineCounters.cs#L122) | public |
+
 ## Assets/Scripts/Features/Siege/SiegeFleet.cs
 
 // 职责：部署固定泊位舰队、保持唯一玩家驾驶权，并在波次边界切换舰队物理状态。 // 入口：CreateBase() / Deploy() / TakeControl() / SetCombatActive() / NotifyLost()。
@@ -3158,15 +3169,15 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegePlayerChecks | [`void Initialize()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L28) | private static |
-| SiegePlayerChecks | [`void Update()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L69) | private |
-| SiegePlayerChecks | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L90) | private |
-| SiegePlayerChecks | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L108) | private |
-| SiegePlayerChecks | [`IEnumerator Run()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L114) | private |
-| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L283) | private |
-| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L290) | private |
-| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L300) | private |
-| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L308) | private |
-| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L325) | private |
+| SiegePlayerChecks | [`void Update()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L71) | private |
+| SiegePlayerChecks | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L92) | private |
+| SiegePlayerChecks | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L110) | private |
+| SiegePlayerChecks | [`IEnumerator Run()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L116) | private |
+| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L285) | private |
+| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L292) | private |
+| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L302) | private |
+| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L310) | private |
+| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L327) | private |
 
 ## Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs
 
@@ -3174,15 +3185,15 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegePlayerSurvey | [`void Observe(SiegeSession session, float milliseconds)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L36) | public |
-| SiegePlayerSurvey | [`BodyCounts Classify(Rigidbody[] bodies)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L71) | public static |
-| SiegePlayerSurvey | [`Census TakeCensus(SiegeSession session, float seconds, Work work)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L124) | private static |
-| SiegePlayerSurvey | [`void KeepSlowFrame(SlowFrame frame)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L152) | private |
-| SiegePlayerSurvey | [`Work ReadWork()`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L171) | private |
-| SiegePlayerSurvey | [`StageWork ReadStage(SimulationWorkMetrics.Stage stage)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L195) | private static |
-| SiegePlayerSurvey | [`void Dispose()`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L206) | public |
-| Work | [`Work Subtract(Work current, Work previous)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L300) | public static |
-| Work | [`StageWork Difference(StageWork current, StageWork previous)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L318) | private static |
+| SiegePlayerSurvey | [`void Observe(SiegeSession session, float milliseconds)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L39) | public |
+| SiegePlayerSurvey | [`BodyCounts Classify(Rigidbody[] bodies)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L75) | public static |
+| SiegePlayerSurvey | [`Census TakeCensus(SiegeSession session, float seconds, Work work)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L128) | private static |
+| SiegePlayerSurvey | [`void KeepSlowFrame(SlowFrame frame)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L156) | private |
+| SiegePlayerSurvey | [`Work ReadWork()`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L175) | private |
+| SiegePlayerSurvey | [`StageWork ReadStage(SimulationWorkMetrics.Stage stage)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L199) | private static |
+| SiegePlayerSurvey | [`void Dispose()`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L210) | public |
+| Work | [`Work Subtract(Work current, Work previous)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L307) | public static |
+| Work | [`StageWork Difference(StageWork current, StageWork previous)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L325) | private static |
 
 ## Assets/Scripts/Features/Siege/SiegeRefit.cs
 

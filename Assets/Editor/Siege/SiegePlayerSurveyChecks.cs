@@ -53,6 +53,20 @@ public static class SiegePlayerSurveyChecks
             SimulationWorkMetrics.Enabled = false;
             survey = new SiegePlayerSurvey(Time.realtimeSinceStartup, true);
             Check(checks, "profiling explicitly enables metrics", SimulationWorkMetrics.Enabled);
+            Check(
+                checks,
+                "engine capabilities reported without assuming availability",
+                survey.Result.engineCounters.Count == 9);
+            using (var counters = new SiegeEngineCounters())
+            {
+                counters.Read();
+                SiegeEngineCounters.Sample empty = counters.Read();
+                Check(
+                    checks,
+                    "managed GC buffers drained rather than reusing stale values",
+                    empty.gcCollectNs == -1 && empty.gcAllocatedBytes == -1);
+            }
+
             using (SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.Connectivity, 7))
             {
                 survey.Observe(session, 10f);

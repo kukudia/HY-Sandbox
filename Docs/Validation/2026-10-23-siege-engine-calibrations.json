@@ -1,0 +1,1266 @@
+[
+  {
+    "label": "counters-release-calibration",
+    "role": "Release marker capability; initial counter reader counted empty buckets as observations; samples/value fields identify absence. Concurrent Editor checks; no performance comparison.",
+    "rawSha256": "6cc4130506550c947adb4ecfdd6344c5136f2f53b310d30f2e94014907939af6",
+    "rawArchive": "2026-10-23-siege-engine-counters-release-calibration.json.gz",
+    "status": "passed",
+    "checks": 70,
+    "errors": [],
+    "elapsedSeconds": 32.10034942626953,
+    "development": null,
+    "profilerEnabledAtStartup": null,
+    "counters": [
+      {
+        "name": "Main Thread",
+        "category": "Internal",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 1273,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "Physics.Simulate",
+        "category": "",
+        "unit": "",
+        "available": false,
+        "observations": 0,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "Physics.FetchResults",
+        "category": "",
+        "unit": "",
+        "available": false,
+        "observations": 0,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "Physics.SyncTransforms",
+        "category": "",
+        "unit": "",
+        "available": false,
+        "observations": 0,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "VFX.Update",
+        "category": "",
+        "unit": "",
+        "available": false,
+        "observations": 0,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "VFX.ProcessCamera",
+        "category": "",
+        "unit": "",
+        "available": false,
+        "observations": 0,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "RenderLoop.Draw",
+        "category": "",
+        "unit": "",
+        "available": false,
+        "observations": 0,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "GC.Collect",
+        "category": "GC",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 1273,
+        "samples": 5,
+        "total": 3726500,
+        "maximum": 1084500,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "GC Allocated In Frame",
+        "category": "",
+        "unit": "",
+        "available": false,
+        "observations": 0,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      }
+    ],
+    "slowest": [
+      {
+        "seconds": 23.01643180847168,
+        "frame": 964,
+        "milliseconds": 163.99000549316406,
+        "precedingCensus": 20,
+        "precedingFrameSurvey": -1,
+        "precedingFrameWork": {
+          "connectivity": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "bodyRebuild": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "refresh": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingSupport": {
+            "calls": 1,
+            "inputBlocks": 2042,
+            "milliseconds": 6.549199999999999
+          },
+          "buildingDamage": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGraph": {
+            "calls": 1,
+            "inputBlocks": 2042,
+            "milliseconds": 2.5322999999999993
+          },
+          "buildingGround": {
+            "calls": 1,
+            "inputBlocks": 2042,
+            "milliseconds": 2.1240000000000006
+          },
+          "buildingTraversal": {
+            "calls": 1,
+            "inputBlocks": 2042,
+            "milliseconds": 1.8209999999999997
+          },
+          "buildingDebris": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "physicsNeighborQueries": 120,
+          "legacyReferenceScans": 0
+        },
+        "engine": {
+          "mainThreadNs": 0,
+          "simulateNs": -1,
+          "fetchNs": -1,
+          "syncNs": -1,
+          "vfxUpdateNs": -1,
+          "vfxCameraNs": -1,
+          "renderDrawNs": -1,
+          "gcCollectNs": 0,
+          "gcAllocatedBytes": -1
+        }
+      },
+      {
+        "seconds": 30.55245590209961,
+        "frame": 1277,
+        "milliseconds": 117.60509490966797,
+        "precedingCensus": 28,
+        "precedingFrameSurvey": -1,
+        "precedingFrameWork": {
+          "connectivity": {
+            "calls": 1,
+            "inputBlocks": 117,
+            "milliseconds": 0.17769999999999975
+          },
+          "bodyRebuild": {
+            "calls": 1,
+            "inputBlocks": 117,
+            "milliseconds": 3.7527000000000044
+          },
+          "refresh": {
+            "calls": 1,
+            "inputBlocks": 117,
+            "milliseconds": 5.235100000000003
+          },
+          "buildingSupport": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDamage": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGraph": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGround": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingTraversal": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDebris": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "physicsNeighborQueries": 685,
+          "legacyReferenceScans": 0
+        },
+        "engine": {
+          "mainThreadNs": 0,
+          "simulateNs": -1,
+          "fetchNs": -1,
+          "syncNs": -1,
+          "vfxUpdateNs": -1,
+          "vfxCameraNs": -1,
+          "renderDrawNs": -1,
+          "gcCollectNs": 0,
+          "gcAllocatedBytes": -1
+        }
+      },
+      {
+        "seconds": 6.1864118576049805,
+        "frame": 267,
+        "milliseconds": 95.25810241699219,
+        "precedingCensus": 4,
+        "precedingFrameSurvey": 4,
+        "precedingFrameWork": {
+          "connectivity": {
+            "calls": 1,
+            "inputBlocks": 94,
+            "milliseconds": 1.3947
+          },
+          "bodyRebuild": {
+            "calls": 1,
+            "inputBlocks": 94,
+            "milliseconds": 4.7366
+          },
+          "refresh": {
+            "calls": 1,
+            "inputBlocks": 94,
+            "milliseconds": 5.5582
+          },
+          "buildingSupport": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDamage": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGraph": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGround": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingTraversal": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDebris": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "physicsNeighborQueries": 52,
+          "legacyReferenceScans": 0
+        },
+        "engine": {
+          "mainThreadNs": 0,
+          "simulateNs": -1,
+          "fetchNs": -1,
+          "syncNs": -1,
+          "vfxUpdateNs": -1,
+          "vfxCameraNs": -1,
+          "renderDrawNs": -1,
+          "gcCollectNs": 0,
+          "gcAllocatedBytes": -1
+        }
+      }
+    ]
+  },
+  {
+    "label": "counters-development-calibration",
+    "role": "Development current-thread marker calibration concurrent with Editor checks; no performance comparison.",
+    "rawSha256": "952c9c664e9d657ea656910af9f79cc1b67fd8d5f2330a603cb000e8c5f021e7",
+    "rawArchive": "2026-10-23-siege-engine-counters-development-calibration.json.gz",
+    "status": "passed",
+    "checks": 70,
+    "errors": [],
+    "elapsedSeconds": 32.54740905761719,
+    "development": null,
+    "profilerEnabledAtStartup": null,
+    "counters": [
+      {
+        "name": "Main Thread",
+        "category": "Internal",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 0,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "Physics.Simulate",
+        "category": "Physics",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 0,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "Physics.FetchResults",
+        "category": "Physics",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 0,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "Physics.SyncTransforms",
+        "category": "Physics",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 0,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "VFX.Update",
+        "category": "VFX",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 1122,
+        "samples": 1122,
+        "total": 721175900,
+        "maximum": 1170200,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "VFX.ProcessCamera",
+        "category": "VFX",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 1120,
+        "samples": 2240,
+        "total": 120093900,
+        "maximum": 585900,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "RenderLoop.Draw",
+        "category": "Render",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 0,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "GC.Collect",
+        "category": "GC",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 4,
+        "samples": 4,
+        "total": 4331200,
+        "maximum": 1705600,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "GC Allocated In Frame",
+        "category": "Memory",
+        "unit": "Bytes",
+        "available": true,
+        "observations": 1122,
+        "samples": 1122,
+        "total": 143879748,
+        "maximum": 2524815,
+        "wrappedWindows": 0
+      }
+    ],
+    "slowest": [
+      {
+        "seconds": 26.001895904541016,
+        "frame": 975,
+        "milliseconds": 183.6927947998047,
+        "precedingCensus": 23,
+        "precedingFrameSurvey": 23,
+        "precedingFrameWork": {
+          "connectivity": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "bodyRebuild": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "refresh": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingSupport": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDamage": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGraph": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGround": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingTraversal": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDebris": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "physicsNeighborQueries": 0,
+          "legacyReferenceScans": 0
+        },
+        "engine": {
+          "mainThreadNs": -1,
+          "simulateNs": -1,
+          "fetchNs": -1,
+          "syncNs": -1,
+          "vfxUpdateNs": 862300,
+          "vfxCameraNs": 92800,
+          "renderDrawNs": -1,
+          "gcCollectNs": -1,
+          "gcAllocatedBytes": 369086
+        }
+      },
+      {
+        "seconds": 20.871387481689453,
+        "frame": 815,
+        "milliseconds": 119.72349548339844,
+        "precedingCensus": 18,
+        "precedingFrameSurvey": -1,
+        "precedingFrameWork": {
+          "connectivity": {
+            "calls": 1,
+            "inputBlocks": 114,
+            "milliseconds": 0.23529999999999962
+          },
+          "bodyRebuild": {
+            "calls": 1,
+            "inputBlocks": 114,
+            "milliseconds": 6.841999999999999
+          },
+          "refresh": {
+            "calls": 1,
+            "inputBlocks": 114,
+            "milliseconds": 8.1295
+          },
+          "buildingSupport": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDamage": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGraph": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGround": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingTraversal": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDebris": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "physicsNeighborQueries": 792,
+          "legacyReferenceScans": 0
+        },
+        "engine": {
+          "mainThreadNs": -1,
+          "simulateNs": -1,
+          "fetchNs": -1,
+          "syncNs": -1,
+          "vfxUpdateNs": 895200,
+          "vfxCameraNs": 147900,
+          "renderDrawNs": -1,
+          "gcCollectNs": -1,
+          "gcAllocatedBytes": 605274
+        }
+      },
+      {
+        "seconds": 6.591769218444824,
+        "frame": 252,
+        "milliseconds": 109.64869689941406,
+        "precedingCensus": 4,
+        "precedingFrameSurvey": 4,
+        "precedingFrameWork": {
+          "connectivity": {
+            "calls": 1,
+            "inputBlocks": 94,
+            "milliseconds": 1.6435
+          },
+          "bodyRebuild": {
+            "calls": 1,
+            "inputBlocks": 94,
+            "milliseconds": 5.2708
+          },
+          "refresh": {
+            "calls": 1,
+            "inputBlocks": 94,
+            "milliseconds": 6.1395
+          },
+          "buildingSupport": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDamage": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGraph": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGround": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingTraversal": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDebris": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "physicsNeighborQueries": 52,
+          "legacyReferenceScans": 0
+        },
+        "engine": {
+          "mainThreadNs": -1,
+          "simulateNs": -1,
+          "fetchNs": -1,
+          "syncNs": -1,
+          "vfxUpdateNs": 713300,
+          "vfxCameraNs": 114500,
+          "renderDrawNs": -1,
+          "gcCollectNs": -1,
+          "gcAllocatedBytes": 280426
+        }
+      }
+    ]
+  },
+  {
+    "label": "counters-development-enabled",
+    "role": "Development current-thread calibration with profiler-enable CLI flag; no effective Physics/Main Thread samples.",
+    "rawSha256": "dfd4b02f878d4212de8d12da43ee703f9d927fb27d614f836c4562d32751b6e3",
+    "rawArchive": "2026-10-23-siege-engine-counters-development-enabled.json.gz",
+    "status": "passed",
+    "checks": 70,
+    "errors": [],
+    "elapsedSeconds": 32.47315216064453,
+    "development": null,
+    "profilerEnabledAtStartup": null,
+    "counters": [
+      {
+        "name": "Main Thread",
+        "category": "Internal",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 0,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "Physics.Simulate",
+        "category": "Physics",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 0,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "Physics.FetchResults",
+        "category": "Physics",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 0,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "Physics.SyncTransforms",
+        "category": "Physics",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 0,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "VFX.Update",
+        "category": "VFX",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 1196,
+        "samples": 1196,
+        "total": 785626400,
+        "maximum": 1147000,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "VFX.ProcessCamera",
+        "category": "VFX",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 1194,
+        "samples": 2388,
+        "total": 116295400,
+        "maximum": 480300,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "RenderLoop.Draw",
+        "category": "Render",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 0,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "GC.Collect",
+        "category": "GC",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 2,
+        "samples": 2,
+        "total": 2701700,
+        "maximum": 1429100,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "GC Allocated In Frame",
+        "category": "Memory",
+        "unit": "Bytes",
+        "available": true,
+        "observations": 1196,
+        "samples": 1196,
+        "total": 151228343,
+        "maximum": 2534207,
+        "wrappedWindows": 0
+      }
+    ],
+    "slowest": [
+      {
+        "seconds": 31.040861129760742,
+        "frame": 1207,
+        "milliseconds": 226.85560607910156,
+        "precedingCensus": 28,
+        "precedingFrameSurvey": 28,
+        "precedingFrameWork": {
+          "connectivity": {
+            "calls": 2,
+            "inputBlocks": 205,
+            "milliseconds": 0.4065999999999992
+          },
+          "bodyRebuild": {
+            "calls": 2,
+            "inputBlocks": 205,
+            "milliseconds": 6.898400000000009
+          },
+          "refresh": {
+            "calls": 3,
+            "inputBlocks": 205,
+            "milliseconds": 13.574699999999993
+          },
+          "buildingSupport": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDamage": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGraph": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGround": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingTraversal": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDebris": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "physicsNeighborQueries": 1324,
+          "legacyReferenceScans": 0
+        },
+        "engine": {
+          "mainThreadNs": -1,
+          "simulateNs": -1,
+          "fetchNs": -1,
+          "syncNs": -1,
+          "vfxUpdateNs": 835600,
+          "vfxCameraNs": 152500,
+          "renderDrawNs": -1,
+          "gcCollectNs": -1,
+          "gcAllocatedBytes": 1122026
+        }
+      },
+      {
+        "seconds": 30.166288375854492,
+        "frame": 1182,
+        "milliseconds": 150.968505859375,
+        "precedingCensus": 27,
+        "precedingFrameSurvey": -1,
+        "precedingFrameWork": {
+          "connectivity": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "bodyRebuild": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "refresh": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingSupport": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDamage": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGraph": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGround": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingTraversal": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDebris": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "physicsNeighborQueries": 0,
+          "legacyReferenceScans": 0
+        },
+        "engine": {
+          "mainThreadNs": -1,
+          "simulateNs": -1,
+          "fetchNs": -1,
+          "syncNs": -1,
+          "vfxUpdateNs": 834000,
+          "vfxCameraNs": 217200,
+          "renderDrawNs": -1,
+          "gcCollectNs": -1,
+          "gcAllocatedBytes": 218880
+        }
+      },
+      {
+        "seconds": 25.094520568847656,
+        "frame": 997,
+        "milliseconds": 103.04190063476562,
+        "precedingCensus": 22,
+        "precedingFrameSurvey": -1,
+        "precedingFrameWork": {
+          "connectivity": {
+            "calls": 1,
+            "inputBlocks": 111,
+            "milliseconds": 0.21649999999999991
+          },
+          "bodyRebuild": {
+            "calls": 1,
+            "inputBlocks": 111,
+            "milliseconds": 4.588099999999997
+          },
+          "refresh": {
+            "calls": 1,
+            "inputBlocks": 111,
+            "milliseconds": 5.501400000000004
+          },
+          "buildingSupport": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDamage": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGraph": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGround": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingTraversal": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDebris": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "physicsNeighborQueries": 646,
+          "legacyReferenceScans": 0
+        },
+        "engine": {
+          "mainThreadNs": -1,
+          "simulateNs": -1,
+          "fetchNs": -1,
+          "syncNs": -1,
+          "vfxUpdateNs": 876600,
+          "vfxCameraNs": 156300,
+          "renderDrawNs": -1,
+          "gcCollectNs": -1,
+          "gcAllocatedBytes": 561214
+        }
+      }
+    ]
+  },
+  {
+    "label": "counters-development-threads",
+    "role": "Final all-recorded-thread calibration, Development true and Profiler.enabled at startup false; not a release performance benchmark.",
+    "rawSha256": "e4f9a513108d6d8a3483d1989d6d0b08db46fff5da6e173e99742fbf94b09ff3",
+    "rawArchive": "2026-10-23-siege-engine-counters-development-threads.json.gz",
+    "status": "passed",
+    "checks": 70,
+    "errors": [],
+    "elapsedSeconds": 32.50448226928711,
+    "development": true,
+    "profilerEnabledAtStartup": false,
+    "counters": [
+      {
+        "name": "Main Thread",
+        "category": "Internal",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 0,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "Physics.Simulate",
+        "category": "Physics",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 0,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "Physics.FetchResults",
+        "category": "Physics",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 0,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "Physics.SyncTransforms",
+        "category": "Physics",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 0,
+        "samples": 0,
+        "total": 0,
+        "maximum": 0,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "VFX.Update",
+        "category": "VFX",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 1250,
+        "samples": 2500,
+        "total": 1198853900,
+        "maximum": 2426600,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "VFX.ProcessCamera",
+        "category": "VFX",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 1248,
+        "samples": 3744,
+        "total": 347068000,
+        "maximum": 2147300,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "RenderLoop.Draw",
+        "category": "Render",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 1246,
+        "samples": 43663,
+        "total": 2027592400,
+        "maximum": 7023700,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "GC.Collect",
+        "category": "GC",
+        "unit": "TimeNanoseconds",
+        "available": true,
+        "observations": 2,
+        "samples": 2,
+        "total": 2550900,
+        "maximum": 1315500,
+        "wrappedWindows": 0
+      },
+      {
+        "name": "GC Allocated In Frame",
+        "category": "Memory",
+        "unit": "Bytes",
+        "available": true,
+        "observations": 1250,
+        "samples": 1250,
+        "total": 155176397,
+        "maximum": 2525487,
+        "wrappedWindows": 0
+      }
+    ],
+    "slowest": [
+      {
+        "seconds": 24.69916343688965,
+        "frame": 998,
+        "milliseconds": 142.0070037841797,
+        "precedingCensus": 21,
+        "precedingFrameSurvey": -1,
+        "precedingFrameWork": {
+          "connectivity": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "bodyRebuild": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "refresh": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingSupport": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDamage": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGraph": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGround": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingTraversal": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDebris": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "physicsNeighborQueries": 0,
+          "legacyReferenceScans": 0
+        },
+        "engine": {
+          "mainThreadNs": -1,
+          "simulateNs": -1,
+          "fetchNs": -1,
+          "syncNs": -1,
+          "vfxUpdateNs": 1694300,
+          "vfxCameraNs": 439100,
+          "renderDrawNs": 1287700,
+          "gcCollectNs": -1,
+          "gcAllocatedBytes": 213714
+        }
+      },
+      {
+        "seconds": 30.625003814697266,
+        "frame": 1236,
+        "milliseconds": 117.30010223388672,
+        "precedingCensus": 27,
+        "precedingFrameSurvey": -1,
+        "precedingFrameWork": {
+          "connectivity": {
+            "calls": 1,
+            "inputBlocks": 117,
+            "milliseconds": 0.22489999999999988
+          },
+          "bodyRebuild": {
+            "calls": 1,
+            "inputBlocks": 117,
+            "milliseconds": 4.125
+          },
+          "refresh": {
+            "calls": 1,
+            "inputBlocks": 117,
+            "milliseconds": 6.002700000000004
+          },
+          "buildingSupport": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDamage": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGraph": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGround": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingTraversal": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDebris": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "physicsNeighborQueries": 696,
+          "legacyReferenceScans": 0
+        },
+        "engine": {
+          "mainThreadNs": -1,
+          "simulateNs": -1,
+          "fetchNs": -1,
+          "syncNs": -1,
+          "vfxUpdateNs": 1397400,
+          "vfxCameraNs": 338300,
+          "renderDrawNs": 1170300,
+          "gcCollectNs": -1,
+          "gcAllocatedBytes": 612026
+        }
+      },
+      {
+        "seconds": 6.588138580322266,
+        "frame": 260,
+        "milliseconds": 103.37870025634766,
+        "precedingCensus": 4,
+        "precedingFrameSurvey": 4,
+        "precedingFrameWork": {
+          "connectivity": {
+            "calls": 1,
+            "inputBlocks": 94,
+            "milliseconds": 1.587
+          },
+          "bodyRebuild": {
+            "calls": 1,
+            "inputBlocks": 94,
+            "milliseconds": 5.095
+          },
+          "refresh": {
+            "calls": 1,
+            "inputBlocks": 94,
+            "milliseconds": 5.9972
+          },
+          "buildingSupport": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDamage": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGraph": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingGround": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingTraversal": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "buildingDebris": {
+            "calls": 0,
+            "inputBlocks": 0,
+            "milliseconds": 0.0
+          },
+          "physicsNeighborQueries": 52,
+          "legacyReferenceScans": 0
+        },
+        "engine": {
+          "mainThreadNs": -1,
+          "simulateNs": -1,
+          "fetchNs": -1,
+          "syncNs": -1,
+          "vfxUpdateNs": 2055000,
+          "vfxCameraNs": 495200,
+          "renderDrawNs": 1392600,
+          "gcCollectNs": -1,
+          "gcAllocatedBytes": 278758
+        }
+      }
+    ]
+  }
+]

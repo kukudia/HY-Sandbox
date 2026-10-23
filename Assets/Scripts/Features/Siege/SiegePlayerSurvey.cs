@@ -10,6 +10,7 @@ public sealed class SiegePlayerSurvey : IDisposable
 {
     private const int SlowFrameLimit = 32;
     private readonly bool previousMetrics;
+    private readonly SiegeEngineCounters engine;
     private readonly float started;
     private readonly Work baseline;
     private Work previousWork;
@@ -28,6 +29,8 @@ public sealed class SiegePlayerSurvey : IDisposable
         if (profileWork)
         {
             SimulationWorkMetrics.Enabled = true;
+            engine = new SiegeEngineCounters();
+            Result.engineCounters = engine.Counters;
         }
 
         baseline = previousWork = ReadWork();
@@ -41,6 +44,7 @@ public sealed class SiegePlayerSurvey : IDisposable
         }
 
         Work now = ReadWork();
+        SiegeEngineCounters.Sample engineSample = engine != null ? engine.Read() : default;
         float seconds = Time.realtimeSinceStartup - started;
         if (observed)
         {
@@ -51,7 +55,7 @@ public sealed class SiegePlayerSurvey : IDisposable
             Result.over250Ms += milliseconds > 250f ? 1 : 0;
             if (milliseconds > 1000f / 30f)
             {
-                KeepSlowFrame(new SlowFrame { seconds = seconds, frame = Time.frameCount, milliseconds = milliseconds, precedingCensus = CensusSamples.Count - 1, precedingFrameSurvey = previousSurveyIndex, precedingFrameWork = previousFrameWork });
+                KeepSlowFrame(new SlowFrame { seconds = seconds, frame = Time.frameCount, milliseconds = milliseconds, precedingCensus = CensusSamples.Count - 1, precedingFrameSurvey = previousSurveyIndex, precedingFrameWork = previousFrameWork, engine = engineSample });
             }
         }
 
@@ -211,6 +215,7 @@ public sealed class SiegePlayerSurvey : IDisposable
         }
 
         Result.work = Work.Subtract(ReadWork(), baseline);
+        engine?.Dispose();
         SimulationWorkMetrics.Enabled = previousMetrics;
         disposed = true;
     }
@@ -218,7 +223,7 @@ public sealed class SiegePlayerSurvey : IDisposable
     [Serializable]
     public sealed class Summary
     {
-        public string methodology = "Active scene objects only; inactive pooled projectiles excluded. Root component categories are disjoint, unmarked building debris belongs to other. One census/second allocates query arrays; surveyMs measures its CPU cost. Delta is start-to-start; precedingFrameWork is previous LateUpdate-to-LateUpdate cumulative difference, approximate association only. Nested work stages cannot be added. No GPU/PhysX attribution. First observation omitted from slow-frame summary. Top 32 frames over 33.33ms retained; indices refer to census array, -1 means none.";
+        public string methodology = "Active scene objects only; inactive pooled projectiles excluded. Root component categories are disjoint, unmarked building debris belongs to other. One census/second allocates query arrays; surveyMs measures its CPU cost. Delta is start-to-start; precedingFrameWork is previous LateUpdate-to-LateUpdate cumulative difference, approximate association only. Nested work stages cannot be added. No GPU/PhysX attribution. First observation omitted from slow-frame summary. Engine counters are optional engine published samples across recorded threads; -1 means unavailable or no new sample. Counter units and availability recorded; nested markers cannot be added. Publication lag means engine sample alignment is approximate. Top 32 frames over 33.33ms retained; indices refer to census array, -1 means none.";
         public bool workMetricsEnabled;
         public float maximumMs;
         public int over33Ms;
@@ -226,6 +231,7 @@ public sealed class SiegePlayerSurvey : IDisposable
         public int over100Ms;
         public int over250Ms;
         public Work work;
+        public List<SiegeEngineCounters.Counter> engineCounters = new List<SiegeEngineCounters.Counter>();
         public List<SlowFrame> slowestFrames = new List<SlowFrame>();
     }
 
@@ -273,6 +279,7 @@ public sealed class SiegePlayerSurvey : IDisposable
         public int precedingCensus;
         public int precedingFrameSurvey;
         public Work precedingFrameWork;
+        public SiegeEngineCounters.Sample engine;
     }
 
     [Serializable]

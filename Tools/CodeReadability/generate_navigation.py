@@ -1206,7 +1206,7 @@ def main():
     )
     graph(
         "阵地战独立Player验证",
-        "源码推导：制作工具只构建Siege入口到独立验证目录，不改默认BuildSettings。Player仅显式命令行参数启动；受控smoke使用真实伤害刺激验证闭环，自然soak只执行整备维修和下一波，两者分开报告。LateUpdate记录帧间隔，每秒普查按刚体根组件分类并测量自身开销，保留有限慢帧及前一观察窗口的嵌套工作量；显式profile才启用计时，完成、异常或销毁恢复开关。",
+        "源码推导：制作工具只构建Siege入口到独立验证目录，不改默认BuildSettings。Player仅显式命令行参数启动；受控smoke使用真实伤害刺激验证闭环，自然soak只执行整备维修和下一波，两者分开报告。LateUpdate记录帧间隔，每秒普查按刚体根组件分类并测量自身开销，保留有限慢帧及前一观察窗口的嵌套工作量；显式profile才启用计时并读取可用引擎已完成样本并保留线程覆盖限制，缺失或空样本不冒充零耗时；Development分析包与发布包独立，完成、异常或销毁释放记录器并恢复开关。",
         {
             "A": "SiegePlayerBuild.Build", "B": "SiegePlayerBuild.BuildNow",
             "C": "SiegePlayerChecks.Initialize", "D": "SiegePlayerChecks.Update",
@@ -1218,13 +1218,16 @@ def main():
             "O": "SiegePlayerSurvey.Observe", "P": "SiegePlayerSurvey.Classify",
             "Q": "SiegePlayerSurvey.Dispose", "R": "SiegePlayerChecks.OnDestroy",
             "S": "SiegePlayerSurvey.TakeCensus", "T": "SiegePlayerSurvey.KeepSlowFrame",
+            "U": "SiegeEngineCounters.Read", "V": "SiegeEngineCounters.ReadCounter",
+            "W": "SiegeEngineCounters.Dispose", "X": "SiegePlayerBuild.BuildLargeProfiling",
         },
         [
             "A --> N", "L --> M", "L --> N", "N -.->|一次性Editor update| B", "C -.->|MonoBehaviour Update| D",
             "D -->|推进显式迭代器| E", "E --> H", "E --> I", "E --> J",
             "C -.->|真实帧 LateUpdate| F", "C -.->|日志事件| K",
             "D -->|结束或异常| G", "F --> O", "O --> S", "S --> P",
-            "O --> T", "G --> Q", "R --> Q",
+            "O --> T", "G --> Q", "R --> Q", "O --> U", "U --> V",
+            "Q --> W", "X --> N",
         ],
     )
     graph(

@@ -57,6 +57,8 @@ public sealed class SiegePlayerChecks : MonoBehaviour
 
         checks.report.mode = checks.soak ? "natural-soak" : "scripted-smoke";
         checks.report.utc = DateTime.UtcNow.ToString("O");
+        checks.report.development = Debug.isDebugBuild;
+        checks.report.profilerEnabledAtStartup = UnityEngine.Profiling.Profiler.enabled;
         checks.report.graphics = SystemInfo.graphicsDeviceType.ToString();
         checks.report.unity = Application.unityVersion;
         checks.report.width = Screen.width;
@@ -342,6 +344,8 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         public string utc;
         public string unity;
         public string graphics;
+        public bool development;
+        public bool profilerEnabledAtStartup;
         public string outcome;
         public int width;
         public int height;

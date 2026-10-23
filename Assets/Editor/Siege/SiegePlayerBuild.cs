@@ -1,5 +1,5 @@
 // 职责：构建以Siege为入口的独立Windows D3D11验证包，不改全局构建场景或用户发布包。
-// 入口：Build() / BuildStress() / BuildLargeStress()；通过Temp报告构建结果，显式参数启动Player检查。
+// 入口：Build() / BuildStress() / BuildLargeStress() / BuildLargeProfiling()；独立Development包用于引擎归因。
 using System;
 using System.IO;
 using System.Linq;
@@ -39,7 +39,18 @@ public static class SiegePlayerBuild
             "Temp/Siege/large-stress-player-build.txt");
     }
 
-    private static void Schedule(string scene, string output, string statusPath)
+    [MenuItem("HY-Sandbox/Siege/Build Windows 2048-Module Profiling Player")]
+    public static void BuildLargeProfiling()
+    {
+        SiegeStressAuthoring.CreateLarge();
+        Schedule(
+            SiegeStressAuthoring.LargeScenePath,
+            "Builds/SiegeLargeProfiling/HY-Sandbox.exe",
+            "Temp/Siege/large-profiling-player-build.txt",
+            BuildOptions.Development);
+    }
+
+    private static void Schedule(string scene, string output, string statusPath, BuildOptions options = BuildOptions.None)
     {
         if (pending || EditorApplication.isPlaying || UnityEngine.SceneManagement.SceneManager.GetActiveScene().isDirty || BuildPipeline.isBuildingPlayer)
         {
@@ -54,12 +65,12 @@ public static class SiegePlayerBuild
         build = () =>
         {
             EditorApplication.update -= build;
-            BuildNow(scene, output, statusPath);
+            BuildNow(scene, output, statusPath, options);
         };
         EditorApplication.update += build;
     }
 
-    private static void BuildNow(string scene, string output, string statusPath)
+    private static void BuildNow(string scene, string output, string statusPath, BuildOptions options)
     {
         try
         {
@@ -69,10 +80,10 @@ public static class SiegePlayerBuild
             }
 
             File.WriteAllText(statusPath, "Building");
-            BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = new[] { scene }, locationPathName = output, target = BuildTarget.StandaloneWindows64, options = BuildOptions.None });
+            BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = new[] { scene }, locationPathName = output, target = BuildTarget.StandaloneWindows64, options = options });
             File.WriteAllText(
                 statusPath,
-                $"{report.summary.result}; errors={report.summary.totalErrors}; warnings={report.summary.totalWarnings}; seconds={report.summary.totalTime.TotalSeconds:F2}; bytes={report.summary.totalSize}; output={output}; scene={scene}");
+                $"{report.summary.result}; errors={report.summary.totalErrors}; warnings={report.summary.totalWarnings}; seconds={report.summary.totalTime.TotalSeconds:F2}; bytes={report.summary.totalSize}; output={output}; scene={scene}; options={options}");
         }
         catch (Exception error)
         {

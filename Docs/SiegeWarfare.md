@@ -58,6 +58,9 @@ Siege不加载主世界存档，不复制蓝图货物；部署使用新的单位
 
 ## 性能复现
 
+菜单 `Build Windows 2048-Module Profiling Player` 构建单独Development分析包到 `Builds/SiegeLargeProfiling`。它使用相同可编辑压力场景，不覆盖发布验证目录，不启用Deep Profiling或自动连接。显式profile诊断读取可用的引擎计时与GC计数（跨记录线程的合计），记录类别、单位、有效性、实际样本和缓冲覆盖窗口；读取后清空缓冲，避免把旧GC值重复算作新帧。缺失或没有新样本用-1表示。原生样本有发布延迟，嵌套/重叠阶段不能相加，也不能把worker合计当作主线程墙钟或GPU耗时；Development帧率不能与发布包直接比较。
+
+
 显式自然Player检查现在每秒记录刚体根分类（建筑、有效驾驶舱舰船、无效驾驶舱分量、弹丸、其他）、运动学/睡眠状态、碰撞体数和普查CPU开销。只有额外传入 `-siege-checks-profile` 才在自然观察窗口开启已有嵌套工作计时，结束或销毁时恢复原开关。保留原 `census` 字段，新增 `survey` 汇总和最慢32条超过33.33ms的帧。帧delta是帧起点到起点，前一LateUpdate计时窗口仅近似关联；不能把嵌套阶段相加或据此归因PhysX/GPU。没有组件标记的建筑残骸计入other，闲置池对象排除。`SiegePlayerSurveyChecks.Run()` 要求全新未部署的Siege Play，检查结束会终止该测试会话；慢帧阈值部分用合成delta，不是自然性能证据。
 
 

@@ -1,0 +1,3 @@
+GfxDeviceD3D11Base::PresentFrame() was called without calling GfxDeviceD3D11Base::WaitForLastPresentationAndGetTimestamp() first. This will result in increased input latency.
+GfxDeviceD3D11Base::PresentFrame() was called without calling GfxDeviceD3D11Base::WaitForLastPresentationAndGetTimestamp() first. This will result in increased input latency.
+GfxDeviceD3D11Base::PresentFrame() was called without calling GfxDeviceD3D11Base::WaitForLastPresentationAndGetTimestamp() first. This will result in increased input latency.

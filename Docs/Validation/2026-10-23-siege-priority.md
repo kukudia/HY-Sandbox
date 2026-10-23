@@ -19,3 +19,5 @@
 [自然报告](2026-10-23-siege-priority-visible.json)：182.05秒、11661帧、71项检查通过，完成首波、第二波中，基地剩1985/2048，errors为空。179次普查峰3504模块/249刚体、Unity分配286540351 bytes。帧时间中位12.79/P95 27.04/P99 34.51ms。已实际查看[部署](2026-10-23-siege-priority-deployment.png)及[终态](2026-10-23-siege-priority-final.png)。不是严格加速对照；不同战况和前轮隐藏状态禁止直接比较。本窗口仍有第二波单敌舰收尾，未宣称所有长收尾已解决。
 
 同版[Player75项闭环](2026-10-23-siege-priority-smoke.json)通过；新正常Siege会话[21项玩法检查](2026-10-23-siege-priority-play.json)通过。CLI曾报5秒主线程超时，已按实际最新报告核对，未因超时重复刺激同一会话。dotnet build0错误/4既有警告，diff检查通过，可读性仅既有MainUIPanels差异；38张函数图/297脚本导航及9项Python工具检查通过。
+
+补充原生日志边界：后续完整检查 `priority-visible-natural.log` 发现11条 `GfxDeviceD3D11Base::PresentFrame()` 呈现时序诊断，未进入托管log回调的errors数组。原有玩法契约结果保留，性能窗口不能称为完全无原生诊断；见[引擎能力校准](2026-10-23-siege-engine.md)。
