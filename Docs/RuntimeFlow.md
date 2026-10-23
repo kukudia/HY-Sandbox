@@ -3255,7 +3255,7 @@ flowchart TD
     A["SiegePlayerBuild.Build()"]
     click A "../Assets/Editor/Siege/SiegePlayerBuild.cs#L16" "打开源码"
     B["SiegePlayerBuild.BuildNow()"]
-    click B "../Assets/Editor/Siege/SiegePlayerBuild.cs#L73" "打开源码"
+    click B "../Assets/Editor/Siege/SiegePlayerBuild.cs#L83" "打开源码"
     C["SiegePlayerChecks.Initialize()"]
     click C "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L30" "打开源码"
     D["SiegePlayerChecks.Update()"]
@@ -3265,7 +3265,7 @@ flowchart TD
     F["SiegePlayerChecks.LateUpdate()"]
     click F "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L95" "打开源码"
     G["SiegePlayerChecks.Finish()"]
-    click G "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L343" "打开源码"
+    click G "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L375" "打开源码"
     H["SiegeSession.TryRepair()"]
     click H "../Assets/Scripts/Features/Siege/SiegeSession.cs#L101" "打开源码"
     I["SiegeSession.BeginNextWave()"]
@@ -3273,13 +3273,13 @@ flowchart TD
     J["SiegeSession.TryDeploy()"]
     click J "../Assets/Scripts/Features/Siege/SiegeSession.cs#L88" "打开源码"
     K["SiegePlayerChecks.CaptureError()"]
-    click K "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L335" "打开源码"
+    click K "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L367" "打开源码"
     L["SiegePlayerBuild.BuildStress()"]
     click L "../Assets/Editor/Siege/SiegePlayerBuild.cs#L22" "打开源码"
     M["SiegeStressAuthoring.Create()"]
     click M "../Assets/Editor/Siege/SiegeStressAuthoring.cs#L18" "打开源码"
     N["SiegePlayerBuild.Schedule()"]
-    click N "../Assets/Editor/Siege/SiegePlayerBuild.cs#L53" "打开源码"
+    click N "../Assets/Editor/Siege/SiegePlayerBuild.cs#L63" "打开源码"
     O["SiegePlayerSurvey.Observe()"]
     click O "../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L39" "打开源码"
     P["SiegePlayerSurvey.Classify()"]
@@ -3332,7 +3332,7 @@ flowchart TD
 
 - [SiegePlayerBuild.Build](../Assets/Editor/Siege/SiegePlayerBuild.cs#L16)
 <!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|Build -->
-- [SiegePlayerBuild.BuildNow](../Assets/Editor/Siege/SiegePlayerBuild.cs#L73)
+- [SiegePlayerBuild.BuildNow](../Assets/Editor/Siege/SiegePlayerBuild.cs#L83)
 <!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|BuildNow -->
 - [SiegePlayerChecks.Initialize](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L30)
 <!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|Initialize -->
@@ -3342,7 +3342,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|Run -->
 - [SiegePlayerChecks.LateUpdate](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L95)
 <!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|LateUpdate -->
-- [SiegePlayerChecks.Finish](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L343)
+- [SiegePlayerChecks.Finish](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L375)
 <!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|Finish -->
 - [SiegeSession.TryRepair](../Assets/Scripts/Features/Siege/SiegeSession.cs#L101)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|TryRepair -->
@@ -3350,13 +3350,13 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|BeginNextWave -->
 - [SiegeSession.TryDeploy](../Assets/Scripts/Features/Siege/SiegeSession.cs#L88)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|TryDeploy -->
-- [SiegePlayerChecks.CaptureError](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L335)
+- [SiegePlayerChecks.CaptureError](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L367)
 <!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|CaptureError -->
 - [SiegePlayerBuild.BuildStress](../Assets/Editor/Siege/SiegePlayerBuild.cs#L22)
 <!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|BuildStress -->
 - [SiegeStressAuthoring.Create](../Assets/Editor/Siege/SiegeStressAuthoring.cs#L18)
 <!-- source: Assets/Editor/Siege/SiegeStressAuthoring.cs|Create -->
-- [SiegePlayerBuild.Schedule](../Assets/Editor/Siege/SiegePlayerBuild.cs#L53)
+- [SiegePlayerBuild.Schedule](../Assets/Editor/Siege/SiegePlayerBuild.cs#L63)
 <!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|Schedule -->
 - [SiegePlayerSurvey.Observe](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L39)
 <!-- source: Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs|Observe -->
@@ -3466,9 +3466,9 @@ flowchart TD
     F["SiegePlayerBuild.BuildLargeStress()"]
     click F "../Assets/Editor/Siege/SiegePlayerBuild.cs#L32" "打开源码"
     G["SiegePlayerBuild.Schedule()"]
-    click G "../Assets/Editor/Siege/SiegePlayerBuild.cs#L53" "打开源码"
+    click G "../Assets/Editor/Siege/SiegePlayerBuild.cs#L63" "打开源码"
     H["SiegePlayerBuild.BuildNow()"]
-    click H "../Assets/Editor/Siege/SiegePlayerBuild.cs#L73" "打开源码"
+    click H "../Assets/Editor/Siege/SiegePlayerBuild.cs#L83" "打开源码"
     A --> C
     B --> A
     B --> C
@@ -3491,10 +3491,57 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldBuildingValidation.cs|ValidateBlueprint -->
 - [SiegePlayerBuild.BuildLargeStress](../Assets/Editor/Siege/SiegePlayerBuild.cs#L32)
 <!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|BuildLargeStress -->
-- [SiegePlayerBuild.Schedule](../Assets/Editor/Siege/SiegePlayerBuild.cs#L53)
+- [SiegePlayerBuild.Schedule](../Assets/Editor/Siege/SiegePlayerBuild.cs#L63)
 <!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|Schedule -->
-- [SiegePlayerBuild.BuildNow](../Assets/Editor/Siege/SiegePlayerBuild.cs#L73)
+- [SiegePlayerBuild.BuildNow](../Assets/Editor/Siege/SiegePlayerBuild.cs#L83)
 <!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|BuildNow -->
+
+## 阵地战混合规模压力场
+
+源码推导：独立Scene包含三个可编辑建筑锚点，分帧沿生产恢复链加载6144附加模块，与主基地合计8192建筑预算；六舰和十二敌舰另计，是否超过万模块以实际普查为准，不代表万动态刚体。加载时暂停HUD，成功/失败/销毁恢复交互；主基地核心仍是唯一失败目标。
+
+```mermaid
+flowchart TD
+    A["SiegeMixedStressAuthoring.Create()"]
+    click A "../Assets/Editor/Siege/SiegeMixedStressAuthoring.cs#L15" "打开源码"
+    B["SiegePlayerBuild.BuildMixedStress()"]
+    click B "../Assets/Editor/Siege/SiegePlayerBuild.cs#L53" "打开源码"
+    C["SiegeStressPopulation.Start()"]
+    click C "../Assets/Scripts/Features/Siege/SiegeStressPopulation.cs#L40" "打开源码"
+    D["WorldBuildingManager.RestoreBuildingRoutine()"]
+    click D "../Assets/Scripts/Features/World/WorldBuildingManager.cs#L145" "打开源码"
+    E["WorldBuildingManager.HasCapacity()"]
+    click E "../Assets/Scripts/Features/World/WorldBuildingManager.cs#L200" "打开源码"
+    F["SiegeStressPopulation.RestoreHud()"]
+    click F "../Assets/Scripts/Features/Siege/SiegeStressPopulation.cs#L154" "打开源码"
+    G["SiegeStressPopulation.OnDestroy()"]
+    click G "../Assets/Scripts/Features/Siege/SiegeStressPopulation.cs#L138" "打开源码"
+    H["WorldBuildingManager.RemoveBuilding()"]
+    click H "../Assets/Scripts/Features/World/WorldBuildingManager.cs#L211" "打开源码"
+    B --> A
+    C --> E
+    C -.->|显式推进分帧迭代器| D
+    C -->|finally| F
+    G --> F
+    G -->|仅拥有的卫星| H
+```
+
+- [SiegeMixedStressAuthoring.Create](../Assets/Editor/Siege/SiegeMixedStressAuthoring.cs#L15)
+<!-- source: Assets/Editor/Siege/SiegeMixedStressAuthoring.cs|Create -->
+- [SiegePlayerBuild.BuildMixedStress](../Assets/Editor/Siege/SiegePlayerBuild.cs#L53)
+<!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|BuildMixedStress -->
+- [SiegeStressPopulation.Start](../Assets/Scripts/Features/Siege/SiegeStressPopulation.cs#L40)
+<!-- source: Assets/Scripts/Features/Siege/SiegeStressPopulation.cs|Start -->
+- [WorldBuildingManager.RestoreBuildingRoutine](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L145)
+<!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|RestoreBuildingRoutine -->
+- [WorldBuildingManager.HasCapacity](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L200)
+<!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|HasCapacity -->
+- [SiegeStressPopulation.RestoreHud](../Assets/Scripts/Features/Siege/SiegeStressPopulation.cs#L154)
+<!-- source: Assets/Scripts/Features/Siege/SiegeStressPopulation.cs|RestoreHud -->
+- [SiegeStressPopulation.OnDestroy](../Assets/Scripts/Features/Siege/SiegeStressPopulation.cs#L138)
+<!-- source: Assets/Scripts/Features/Siege/SiegeStressPopulation.cs|OnDestroy -->
+- [WorldBuildingManager.RemoveBuilding](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L211)
+<!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|RemoveBuilding -->
 
 ## 阵地战任务目标与自主索敌
 

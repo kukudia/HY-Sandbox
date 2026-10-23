@@ -1279,6 +1279,20 @@ def main():
         ],
     )
     graph(
+        "阵地战混合规模压力场",
+        "源码推导：独立Scene包含三个可编辑建筑锚点，分帧沿生产恢复链加载6144附加模块，与主基地合计8192建筑预算；六舰和十二敌舰另计，是否超过万模块以实际普查为准，不代表万动态刚体。加载时暂停HUD，成功/失败/销毁恢复交互；主基地核心仍是唯一失败目标。",
+        {
+            "A": "SiegeMixedStressAuthoring.Create", "B": "SiegePlayerBuild.BuildMixedStress",
+            "C": "SiegeStressPopulation.Start", "D": "WorldBuildingManager.RestoreBuildingRoutine",
+            "E": "WorldBuildingManager.HasCapacity", "F": "SiegeStressPopulation.RestoreHud",
+            "G": "SiegeStressPopulation.OnDestroy", "H": "WorldBuildingManager.RemoveBuilding",
+        },
+        [
+            "B --> A", "C --> E", "C -.->|显式推进分帧迭代器| D",
+            "C -->|finally| F", "G --> F", "G -->|仅拥有的卫星| H",
+        ],
+    )
+    graph(
         "阵地战任务目标与自主索敌",
         "源码推导：波次明确指派的有效基地任务目标不受自主索敌半径限制，远程任务也生成接近输入；未指定任务仍只发现半径内敌对单位。所有目标继续校验启用、阵营、运行/模拟状态、场景和守卫范围。FixedUpdate只提交平滑意图，实际施力仍由推进器和电网负责。",
         {

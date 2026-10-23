@@ -1,5 +1,5 @@
 // 职责：构建以Siege为入口的独立Windows D3D11验证包，不改全局构建场景或用户发布包。
-// 入口：Build() / BuildStress() / BuildLargeStress() / BuildLargeProfiling()；独立Development包用于引擎归因。
+// 入口：Build() / BuildStress() / BuildLargeStress() / BuildMixedStress() / BuildLargeProfiling()；独立Development包用于引擎归因。
 using System;
 using System.IO;
 using System.Linq;
@@ -48,6 +48,16 @@ public static class SiegePlayerBuild
             "Builds/SiegeLargeProfiling/HY-Sandbox.exe",
             "Temp/Siege/large-profiling-player-build.txt",
             BuildOptions.Development);
+    }
+
+    [MenuItem("HY-Sandbox/Siege/Build Windows Mixed 10k Stress Player")]
+    public static void BuildMixedStress()
+    {
+        SiegeMixedStressAuthoring.Create();
+        Schedule(
+            SiegeMixedStressAuthoring.ScenePath,
+            "Builds/SiegeMixedStress/HY-Sandbox.exe",
+            "Temp/Siege/mixed-stress-player-build.txt");
     }
 
     private static void Schedule(string scene, string output, string statusPath, BuildOptions options = BuildOptions.None)

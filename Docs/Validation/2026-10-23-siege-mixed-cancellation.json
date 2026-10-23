@@ -1,0 +1,11 @@
+{
+    "status": "passed",
+    "error": "",
+    "checks": [
+        "restoration yields before publishing a building",
+        "loading temporarily disables HUD listeners",
+        "component cancellation restores HUD",
+        "canceled partial building leaves no inactive root",
+        "base and world capacity remain intact"
+    ]
+}

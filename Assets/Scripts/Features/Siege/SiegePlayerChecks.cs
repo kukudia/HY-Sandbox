@@ -127,6 +127,24 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         Check(
             "Siege scene and session started in Player",
             session?.Match != null && session.Match.Phase == SiegePhase.Deployment);
+        SiegeStressPopulation population = Object.FindFirstObjectByType<SiegeStressPopulation>();
+        if (population != null)
+        {
+            report.phase = "population-loading";
+            float loadingDeadline = Time.realtimeSinceStartup + 90f;
+            while (!population.IsReady && string.IsNullOrEmpty(population.Error) && Time.realtimeSinceStartup < loadingDeadline)
+            {
+                yield return null;
+            }
+
+            Check(
+                "mixed stress population restored within existing building budget",
+                population.IsReady && string.IsNullOrEmpty(population.Error));
+            report.additionalBuildings = population.Buildings.Count;
+            report.additionalBuildingBlocks = population.ConfiguredBlocks;
+            report.populationLoadSeconds = population.LoadSeconds;
+        }
+
         report.profile = session.Settings.name;
         report.initialCoins = session.Match.Coins;
         report.requestedShips = shipCount;
@@ -309,6 +327,20 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         SceneManager.LoadScene(session.gameObject.scene.name);
         yield return null;
         SiegeSession restarted = Object.FindFirstObjectByType<SiegeSession>();
+        if (report.additionalBuildings > 0)
+        {
+            SiegeStressPopulation restoredPopulation = Object.FindFirstObjectByType<SiegeStressPopulation>();
+            float populationDeadline = Time.realtimeSinceStartup + 90f;
+            while (restoredPopulation != null && !restoredPopulation.IsReady && string.IsNullOrEmpty(restoredPopulation.Error) && Time.realtimeSinceStartup < populationDeadline)
+            {
+                yield return null;
+            }
+
+            Check(
+                "mixed scene restart restores all satellite buildings without orphaned roots",
+                restoredPopulation != null && restoredPopulation.IsReady && restoredPopulation.Buildings.Count == report.additionalBuildings && restarted.Buildings.Buildings.Sum(building => building.Blocks.Count) == report.configuredBaseBlocks + report.additionalBuildingBlocks && Object.FindObjectsByType<BuildingRuntime>(FindObjectsSortMode.None).Length == report.additionalBuildings + 1);
+        }
+
         Check(
             "scene restart restores pristine building and empty fleet",
             restarted != null && restarted != session && restarted.Match.Phase == SiegePhase.Deployment && restarted.Fleet.Base.Building.Blocks.Count == report.configuredBaseBlocks && restarted.Fleet.Ships.All(ship => ship == null));
@@ -367,6 +399,9 @@ public sealed class SiegePlayerChecks : MonoBehaviour
     [Serializable]
     private sealed class Report
     {
+        public int additionalBuildings;
+        public int additionalBuildingBlocks;
+        public float populationLoadSeconds;
         public SiegeDrivingPlayerChecks.Report driving;
         public string methodology = "Explicit opt-in standalone Player. Scripted smoke uses forced real damage; natural soak only automates intermission repair and next-wave buttons. Once-per-second scene census perturbs timing. Frame deltas include rendering/scheduling, not isolated CPU or GPU time. Soak includes intermission and maintenance spikes. No comparison across unlike battles.";
         public string status = "running";

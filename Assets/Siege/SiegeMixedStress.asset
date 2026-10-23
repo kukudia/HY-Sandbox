@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b46e438410f230044a80d3e23c4cf0c7, type: 3}
+  m_Name: SiegeMixedStress
+  m_EditorClassIdentifier: Assembly-CSharp::SiegeSettings
+  baseBlueprint: {fileID: 4900000, guid: 6ed07574f89c8314eb0eda0b933e5371, type: 3}
+  baseCoreBlockId: bastion-core
+  baseReplacementValue: 6000
+  ships:
+  - displayName: Finch
+    blueprint: {fileID: 4900000, guid: bac1b3f44c1e184498610cea76d95d99, type: 3}
+    price: 500
+  - displayName: Pike
+    blueprint: {fileID: 4900000, guid: 810c1db59d6303d428a266499ea61483, type: 3}
+    price: 850
+  - displayName: Manta
+    blueprint: {fileID: 4900000, guid: 04d828669bafe3046b05d4ec2502e260, type: 3}
+    price: 650
+  startingCoins: 100000
+  firstWaveSize: 12
+  waveGrowth: 2
+  maximumWaveSize: 48
+  maximumActiveEnemies: 12
+  killReward: 120
+  waveReward: 350
+  spawnInterval: 0.5
+  attackRadius: 220
+  guardRadius: 180
+  repairCoinsPerHealth: 0.03
+  spawnSeed: 14741

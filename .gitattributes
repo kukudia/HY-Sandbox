@@ -42,5 +42,7 @@ Assets/Scripts/Features/World/*.meta whitespace=-blank-at-eol
 # Editable siege scene and Unity-authored configuration metadata.
 Assets/Scenes/Siege.unity whitespace=-blank-at-eol
 Assets/Scenes/Siege.unity.meta whitespace=-blank-at-eol
+Assets/Scenes/SiegeMixedStress.unity whitespace=-blank-at-eol
+Assets/Scenes/SiegeMixedStress.unity.meta whitespace=-blank-at-eol
 Assets/Siege.meta whitespace=-blank-at-eol
 Assets/Siege/** whitespace=-blank-at-eol

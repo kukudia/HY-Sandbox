@@ -850,6 +850,24 @@
 | --- | --- | --- |
 | SiegeFoundationCacheChecks | [`string Run()`](../Assets/Editor/Siege/SiegeFoundationCacheChecks.cs#L14) | public static |
 
+## Assets/Editor/Siege/SiegeMixedStressAuthoring.cs
+
+// 职责：制作四栋建筑/六舰/十二敌舰的独立混合压力Scene和配置，保留正常阵地战资产。 // 入口：Create()；首次创建后可编辑保存，已有目标不覆盖，恢复原活动场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeMixedStressAuthoring | [`void Create()`](../Assets/Editor/Siege/SiegeMixedStressAuthoring.cs#L15) | public static |
+
+## Assets/Editor/Siege/SiegeMixedStressChecks.cs
+
+// 职责：验证独立混合压力场的实际建筑规模、预算、模块身份和卫星损毁/清理边界。 // 入口：Start() / Status；真实Play加载完成后执行，仅作用于该测试会话。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeMixedStressChecks | [`void Start()`](../Assets/Editor/Siege/SiegeMixedStressChecks.cs#L16) | public static |
+| SiegeMixedStressChecks | [`void Tick()`](../Assets/Editor/Siege/SiegeMixedStressChecks.cs#L31) | private static |
+| SiegeMixedStressChecks | [`void Check(Report report, string label, bool passed)`](../Assets/Editor/Siege/SiegeMixedStressChecks.cs#L117) | private static |
+
 ## Assets/Editor/Siege/SiegePerformanceCapture.cs
 
 // 职责：采集阵地战真实Play帧观察间隔、分阶段CPU计时和低频场景规模，保存可审查原始样本。 // 入口：StartCapture() / Finish() / Status；Editor观察间隔含编辑器调度，不代表Player或GPU耗时。
@@ -874,7 +892,7 @@
 
 ## Assets/Editor/Siege/SiegePlayerBuild.cs
 
-// 职责：构建以Siege为入口的独立Windows D3D11验证包，不改全局构建场景或用户发布包。 // 入口：Build() / BuildStress() / BuildLargeStress() / BuildLargeProfiling()；独立Development包用于引擎归因。
+// 职责：构建以Siege为入口的独立Windows D3D11验证包，不改全局构建场景或用户发布包。 // 入口：Build() / BuildStress() / BuildLargeStress() / BuildMixedStress() / BuildLargeProfiling()；独立Development包用于引擎归因。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
@@ -882,8 +900,9 @@
 | SiegePlayerBuild | [`void BuildStress()`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L22) | public static |
 | SiegePlayerBuild | [`void BuildLargeStress()`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L32) | public static |
 | SiegePlayerBuild | [`void BuildLargeProfiling()`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L42) | public static |
-| SiegePlayerBuild | [`void Schedule(string scene, string output, string statusPath, BuildOptions options = BuildOptions.None)`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L53) | private static |
-| SiegePlayerBuild | [`void BuildNow(string scene, string output, string statusPath, BuildOptions options)`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L73) | private static |
+| SiegePlayerBuild | [`void BuildMixedStress()`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L53) | public static |
+| SiegePlayerBuild | [`void Schedule(string scene, string output, string statusPath, BuildOptions options = BuildOptions.None)`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L63) | private static |
+| SiegePlayerBuild | [`void BuildNow(string scene, string output, string statusPath, BuildOptions options)`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L83) | private static |
 
 ## Assets/Editor/Siege/SiegePlayerSurveyChecks.cs
 
@@ -1006,6 +1025,16 @@
 | SiegeStressAuthoring | [`void CreateProfile(string scenePath, string settingsPath, string sourcePath, bool large)`](../Assets/Editor/Siege/SiegeStressAuthoring.cs#L31) | private static |
 | SiegeStressAuthoring | [`TextAsset GenerateLargeBlueprint(TextAsset source)`](../Assets/Editor/Siege/SiegeStressAuthoring.cs#L124) | private static |
 | SiegeStressAuthoring | [`SiegeSession FindSession(Scene scene)`](../Assets/Editor/Siege/SiegeStressAuthoring.cs#L166) | private static |
+
+## Assets/Editor/Siege/SiegeStressCancellationChecks.cs
+
+// 职责：在首次分帧恢复中取消压力组件，验证HUD恢复与未发布建筑的回滚。 // 入口：Start() / Status；全新普通Siege Play，两个实际帧后检查无残留根对象。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeStressCancellationChecks | [`string Start()`](../Assets/Editor/Siege/SiegeStressCancellationChecks.cs#L19) | public static |
+| SiegeStressCancellationChecks | [`void Complete()`](../Assets/Editor/Siege/SiegeStressCancellationChecks.cs#L64) | private static |
+| SiegeStressCancellationChecks | [`void Check(string label, bool passed)`](../Assets/Editor/Siege/SiegeStressCancellationChecks.cs#L94) | private static |
 
 ## Assets/Editor/Siege/SiegeTopologyBaseline.cs
 
@@ -3235,11 +3264,11 @@
 | SiegePlayerChecks | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L95) | private |
 | SiegePlayerChecks | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L113) | private |
 | SiegePlayerChecks | [`IEnumerator Run()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L121) | private |
-| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L318) | private |
-| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L325) | private |
-| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L335) | private |
-| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L343) | private |
-| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L362) | private |
+| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L350) | private |
+| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L357) | private |
+| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L367) | private |
+| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L375) | private |
+| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L394) | private |
 
 ## Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs
 
@@ -3298,6 +3327,16 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeSettings | [`SiegeMatch CreateMatch()`](../Assets/Scripts/Features/Siege/SiegeSettings.cs#L52) | public |
+
+## Assets/Scripts/Features/Siege/SiegeStressPopulation.cs
+
+// 职责：在独立压力场景分帧恢复附加建筑，沿用生产建筑预算/支撑/损毁，不参与基地胜负。 // 入口：Start()；Inspector配置真实建筑蓝图与锚点，加载期间暂停HUD交互，场景退出释放拥有的建筑。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeStressPopulation | [`IEnumerator Start()`](../Assets/Scripts/Features/Siege/SiegeStressPopulation.cs#L40) | private |
+| SiegeStressPopulation | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/SiegeStressPopulation.cs#L138) | private |
+| SiegeStressPopulation | [`void RestoreHud()`](../Assets/Scripts/Features/Siege/SiegeStressPopulation.cs#L154) | private |
 
 ## Assets/Scripts/Features/Siege/SiegeWaveDirector.cs
 

@@ -1,0 +1,20 @@
+{
+    "status": "passed",
+    "error": "",
+    "checks": [
+        "population loaded without errors",
+        "four real2048 buildings reach8192 budget",
+        "satellites account for6144 blocks",
+        "all building modules have unique runtime identities",
+        "buildings remain anchored and have no cockpit",
+        "satellites preserve player faction",
+        "existing world budget rejects another module",
+        "HUD restored after loading",
+        "real support refresh preserves all intact buildings",
+        "wave starts after population is ready",
+        "satellite damage uses independent building topology",
+        "damage releases existing building capacity",
+        "satellite core loss does not replace primary base defeat rule",
+        "removing stress component releases only its satellites"
+    ]
+}
