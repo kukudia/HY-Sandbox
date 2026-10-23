@@ -37,6 +37,7 @@
 
 ## 进入与操作
 
+- `Build Windows Validation Player` 构建独立Siege入口Windows验证包，不改变Main默认启动；显式命令行检查、自然多波与显示边界见 [Player验证](Validation/2026-10-23-siege-player.md)。
 - Editor菜单 `HY-Sandbox/Siege/Open Scene` 打开 `Assets/Scenes/Siege.unity`，进入Play。`Create Editable Scene` 只在不存在时创建，避免覆盖手工调整。
 - 左侧按钮购买三种舰艇，六个泊位按钮切换驾驶；其余舰艇自主作战。沿用飞船WASD/QE/Space控制，右键按住观察、松开操作UI。
 - 准备/整备阶段点击开始下一波。击毁敌舰与完成波次获得金币；维修基地或当前驾驶舰会恢复部署时的机体。泊位被其他对象占用时先清空，不会扣款。

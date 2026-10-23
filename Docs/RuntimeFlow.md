@@ -3191,6 +3191,68 @@ flowchart TD
 - [SiegeBase.Dispose](../Assets/Scripts/Features/Siege/SiegeBase.cs#L131)
 <!-- source: Assets/Scripts/Features/Siege/SiegeBase.cs|Dispose -->
 
+## 阵地战独立Player验证
+
+源码推导：制作工具只构建Siege入口到独立验证目录，不改默认BuildSettings。Player仅显式命令行参数启动；受控smoke使用真实伤害刺激验证闭环，自然soak只执行整备维修和下一波，两者分开报告。LateUpdate记录帧间隔与低频规模，完成或异常写报告并正常退出。
+
+```mermaid
+flowchart TD
+    A["SiegePlayerBuild.Build()"]
+    click A "../Assets/Editor/Siege/SiegePlayerBuild.cs#L15" "打开源码"
+    B["SiegePlayerBuild.BuildNow()"]
+    click B "../Assets/Editor/Siege/SiegePlayerBuild.cs#L28" "打开源码"
+    C["SiegePlayerChecks.Initialize()"]
+    click C "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L27" "打开源码"
+    D["SiegePlayerChecks.Update()"]
+    click D "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L67" "打开源码"
+    E["SiegePlayerChecks.Run()"]
+    click E "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L104" "打开源码"
+    F["SiegePlayerChecks.LateUpdate()"]
+    click F "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L88" "打开源码"
+    G["SiegePlayerChecks.Finish()"]
+    click G "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L291" "打开源码"
+    H["SiegeSession.TryRepair()"]
+    click H "../Assets/Scripts/Features/Siege/SiegeSession.cs#L101" "打开源码"
+    I["SiegeSession.BeginNextWave()"]
+    click I "../Assets/Scripts/Features/Siege/SiegeSession.cs#L74" "打开源码"
+    J["SiegeSession.TryDeploy()"]
+    click J "../Assets/Scripts/Features/Siege/SiegeSession.cs#L88" "打开源码"
+    K["SiegePlayerChecks.CaptureError()"]
+    click K "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L283" "打开源码"
+    A -.->|Editor delayCall| B
+    C -.->|MonoBehaviour Update| D
+    D -->|推进显式迭代器| E
+    E --> H
+    E --> I
+    E --> J
+    C -.->|真实帧 LateUpdate| F
+    C -.->|日志事件| K
+    D -->|结束或异常| G
+```
+
+- [SiegePlayerBuild.Build](../Assets/Editor/Siege/SiegePlayerBuild.cs#L15)
+<!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|Build -->
+- [SiegePlayerBuild.BuildNow](../Assets/Editor/Siege/SiegePlayerBuild.cs#L28)
+<!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|BuildNow -->
+- [SiegePlayerChecks.Initialize](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L27)
+<!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|Initialize -->
+- [SiegePlayerChecks.Update](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L67)
+<!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|Update -->
+- [SiegePlayerChecks.Run](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L104)
+<!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|Run -->
+- [SiegePlayerChecks.LateUpdate](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L88)
+<!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|LateUpdate -->
+- [SiegePlayerChecks.Finish](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L291)
+<!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|Finish -->
+- [SiegeSession.TryRepair](../Assets/Scripts/Features/Siege/SiegeSession.cs#L101)
+<!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|TryRepair -->
+- [SiegeSession.BeginNextWave](../Assets/Scripts/Features/Siege/SiegeSession.cs#L74)
+<!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|BeginNextWave -->
+- [SiegeSession.TryDeploy](../Assets/Scripts/Features/Siege/SiegeSession.cs#L88)
+<!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|TryDeploy -->
+- [SiegePlayerChecks.CaptureError](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L283)
+<!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|CaptureError -->
+
 ## 阵地战性能观察与分项计时
 
 源码推导：采样器仅在Siege真实Play显式启动；Editor update观察推进的游戏帧，保留跳帧及游戏delta。连接遍历、物理组重建和完整刷新是嵌套累计CPU计时，不可相加。每秒一次场景查询本身有分配；停止Play或脚本重载会保存已取得的样本并解绑，报告不代表Player/GPU性能。

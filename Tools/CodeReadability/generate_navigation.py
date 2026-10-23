@@ -1203,6 +1203,24 @@ def main():
         ],
     )
     graph(
+        "阵地战独立Player验证",
+        "源码推导：制作工具只构建Siege入口到独立验证目录，不改默认BuildSettings。Player仅显式命令行参数启动；受控smoke使用真实伤害刺激验证闭环，自然soak只执行整备维修和下一波，两者分开报告。LateUpdate记录帧间隔与低频规模，完成或异常写报告并正常退出。",
+        {
+            "A": "SiegePlayerBuild.Build", "B": "SiegePlayerBuild.BuildNow",
+            "C": "SiegePlayerChecks.Initialize", "D": "SiegePlayerChecks.Update",
+            "E": "SiegePlayerChecks.Run", "F": "SiegePlayerChecks.LateUpdate",
+            "G": "SiegePlayerChecks.Finish", "H": "SiegeSession.TryRepair",
+            "I": "SiegeSession.BeginNextWave", "J": "SiegeSession.TryDeploy",
+            "K": "SiegePlayerChecks.CaptureError",
+        },
+        [
+            "A -.->|Editor delayCall| B", "C -.->|MonoBehaviour Update| D",
+            "D -->|推进显式迭代器| E", "E --> H", "E --> I", "E --> J",
+            "C -.->|真实帧 LateUpdate| F", "C -.->|日志事件| K",
+            "D -->|结束或异常| G",
+        ],
+    )
+    graph(
         "阵地战性能观察与分项计时",
         "源码推导：采样器仅在Siege真实Play显式启动；Editor update观察推进的游戏帧，保留跳帧及游戏delta。连接遍历、物理组重建和完整刷新是嵌套累计CPU计时，不可相加。每秒一次场景查询本身有分配；停止Play或脚本重载会保存已取得的样本并解绑，报告不代表Player/GPU性能。",
         {

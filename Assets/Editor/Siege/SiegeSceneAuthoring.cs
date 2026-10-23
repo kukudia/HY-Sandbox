@@ -91,6 +91,32 @@ public static class SiegeSceneAuthoring
         EditorSceneManager.OpenScene(ScenePath);
     }
 
+    [MenuItem("HY-Sandbox/Siege/Fit HUD To Viewport")]
+    public static void FitHudToViewport()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+        if (EditorApplication.isPlaying || scene.path != ScenePath || scene.isDirty)
+        {
+            throw new InvalidOperationException("Open the saved Siege scene in Edit Mode first.");
+        }
+
+        CanvasScaler scaler = Object.FindFirstObjectByType<SiegeHud>().GetComponent<CanvasScaler>();
+        Undo.RecordObject(scaler, "Fit Siege HUD to viewport");
+        // 固定参考坐标必须全部落在可见画布内；Expand在窄屏/超宽屏均保留完整参考区域。
+        scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
+        foreach (Text label in scaler.GetComponentsInChildren<Text>())
+        {
+            if (label.text == "DEPLOY FLEET" || label.text == "TAKE CONTROL")
+            {
+                Undo.RecordObject(label.rectTransform, "Fit Siege section label");
+                label.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 44f);
+            }
+        }
+
+        EditorSceneManager.MarkSceneDirty(scene);
+        EditorSceneManager.SaveScene(scene);
+    }
+
     [MenuItem("HY-Sandbox/Siege/Regenerate Default Base Blueprint")]
     public static void RegenerateDefaultBase()
     {
@@ -266,6 +292,7 @@ public static class SiegeSceneAuthoring
         CanvasScaler scaler = root.GetComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
         scaler.referenceResolution = new Vector2(1920f, 1080f);
+        scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
         scaler.matchWidthOrHeight = 0.5f;
         RectTransform header = Panel(
             root.transform,
@@ -311,7 +338,7 @@ public static class SiegeSceneAuthoring
             20,
             18,
             290,
-            32,
+            44,
             24);
         var deploy = new Button[settings.Ships.Length];
         for (int index = 0; index < deploy.Length; index++)
@@ -332,7 +359,7 @@ public static class SiegeSceneAuthoring
             20,
             275,
             290,
-            32,
+            44,
             24);
         var control = new Button[bays];
         for (int index = 0; index < bays; index++)

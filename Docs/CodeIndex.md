@@ -846,6 +846,15 @@
 | SiegePlayChecks | [`string Run()`](../Assets/Editor/Siege/SiegePlayChecks.cs#L13) | public static |
 | SiegePlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegePlayChecks.cs#L146) | private static |
 
+## Assets/Editor/Siege/SiegePlayerBuild.cs
+
+// 职责：构建以Siege为入口的独立Windows D3D11验证包，不改全局构建场景或用户发布包。 // 入口：Build()；通过Temp状态文件报告真实构建结果，显式命令行才能启动Player自动检查。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegePlayerBuild | [`void Build()`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L15) | public static |
+| SiegePlayerBuild | [`void BuildNow()`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L28) | private static |
+
 ## Assets/Editor/Siege/SiegeRegroupBaseline.cs
 
 // 职责：冻结3b1e13d的整组迁移实现，仅供Editor同布局性能对照，不进入运行时。 // 入口：Rebuild()；连接查询仍调用当前同一几何实现，隔离测量刚体迁移策略差异。
@@ -910,20 +919,21 @@
 | --- | --- | --- |
 | SiegeSceneAuthoring | [`void Create()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L20) | public static |
 | SiegeSceneAuthoring | [`void Open()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L83) | public static |
-| SiegeSceneAuthoring | [`void RegenerateDefaultBase()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L94) | public static |
-| SiegeSceneAuthoring | [`TextAsset CreateBaseBlueprint(bool replace = false)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L112) | private static |
-| SiegeSceneAuthoring | [`SiegeSettings CreateSettings(TextAsset baseBlueprint)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L117) | private static |
-| SiegeSceneAuthoring | [`void CreateManagers()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L162) | private static |
-| SiegeSceneAuthoring | [`void CreateEnvironment()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L178) | private static |
-| SiegeSceneAuthoring | [`Transform[] CreateDocks(Transform parent)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L201) | private static |
-| SiegeSceneAuthoring | [`Material MaterialAsset(string name, Color color)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L222) | private static |
-| SiegeSceneAuthoring | [`void CreateCamera()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L239) | private static |
-| SiegeSceneAuthoring | [`void CreateHud(SiegeSession session, SiegeSettings settings, int bays)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L256) | private static |
-| SiegeSceneAuthoring | [`RectTransform Panel( Transform parent, string name, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L420) | private static |
-| SiegeSceneAuthoring | [`Text Label( Transform parent, string text, float x, float y, float width, float height, int size)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L435) | private static |
-| SiegeSceneAuthoring | [`Button ActionButton( Transform parent, string name, string text, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L456) | private static |
-| SiegeSceneAuthoring | [`void Place(RectTransform rect, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L486) | private static |
-| SiegeSceneAuthoring | [`void SetArray(SerializedProperty property, Object[] values)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L494) | private static |
+| SiegeSceneAuthoring | [`void FitHudToViewport()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L94) | public static |
+| SiegeSceneAuthoring | [`void RegenerateDefaultBase()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L120) | public static |
+| SiegeSceneAuthoring | [`TextAsset CreateBaseBlueprint(bool replace = false)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L138) | private static |
+| SiegeSceneAuthoring | [`SiegeSettings CreateSettings(TextAsset baseBlueprint)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L143) | private static |
+| SiegeSceneAuthoring | [`void CreateManagers()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L188) | private static |
+| SiegeSceneAuthoring | [`void CreateEnvironment()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L204) | private static |
+| SiegeSceneAuthoring | [`Transform[] CreateDocks(Transform parent)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L227) | private static |
+| SiegeSceneAuthoring | [`Material MaterialAsset(string name, Color color)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L248) | private static |
+| SiegeSceneAuthoring | [`void CreateCamera()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L265) | private static |
+| SiegeSceneAuthoring | [`void CreateHud(SiegeSession session, SiegeSettings settings, int bays)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L282) | private static |
+| SiegeSceneAuthoring | [`RectTransform Panel( Transform parent, string name, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L447) | private static |
+| SiegeSceneAuthoring | [`Text Label( Transform parent, string text, float x, float y, float width, float height, int size)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L462) | private static |
+| SiegeSceneAuthoring | [`Button ActionButton( Transform parent, string name, string text, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L483) | private static |
+| SiegeSceneAuthoring | [`void Place(RectTransform rect, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L513) | private static |
+| SiegeSceneAuthoring | [`void SetArray(SerializedProperty property, Object[] values)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L521) | private static |
 
 ## Assets/Editor/Siege/SiegeTopologyBaseline.cs
 
@@ -3086,6 +3096,22 @@
 | SiegeMatch | [`bool CanAfford(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L118) | public |
 | SiegeMatch | [`bool TrySpend(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L123) | public |
 | SiegeMatch | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L134) | public |
+
+## Assets/Scripts/Features/Siege/SiegePlayerChecks.cs
+
+// 职责：仅显式-siege-checks-report参数启动独立Player验证，记录真实帧、玩法契约与自然多波结果。 // 入口：Initialize()；smoke使用明确损伤刺激验证闭环，soak只自然战斗/整备，不把两种结果混用。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegePlayerChecks | [`void Initialize()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L27) | private static |
+| SiegePlayerChecks | [`void Update()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L67) | private |
+| SiegePlayerChecks | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L88) | private |
+| SiegePlayerChecks | [`IEnumerator Run()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L104) | private |
+| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L266) | private |
+| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L273) | private |
+| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L283) | private |
+| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L291) | private |
+| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L307) | private |
 
 ## Assets/Scripts/Features/Siege/SiegeRefit.cs
 
