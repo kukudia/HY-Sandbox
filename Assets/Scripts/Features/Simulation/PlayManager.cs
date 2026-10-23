@@ -190,22 +190,18 @@ public class PlayManager : MonoBehaviour
 
         List<Block> blocks = unit.GetComponentsInChildren<Block>(true).Where(block => block != null && block.isActiveAndEnabled).ToList();
         using SimulationWorkMetrics.Scope timing = SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.Refresh, blocks.Count);
-        if (blocks.Count > 1)
+        if (blocks.Count > 0)
         {
             AssignBlocksToParentGroups(blocks);
         }
-
-        foreach (ControlUnit controlUnit in allControlUnits.ToArray())
+        else
         {
-            if (controlUnit != null)
-            {
-                controlUnit.RefreshChildren();
-            }
+            // 最后一个模块已被移出；清除旧驾驶舱引用，不等待下一帧Destroy空根。
+            unit.RefreshChildren();
         }
 
         RuntimeGroupCleanup.EnforceLimit(allControlUnits, maxUselessControlUnitGroups, DestroyManager.instance);
         RuntimeGroupCleanup.EnforceDistance(allControlUnits, playMode, blocksParent, groupCleanupDistance, DestroyManager.instance);
-        Debug.Log($"Find {allControlUnits.Count} controls");
     }
 
     public void SetPlayMode(bool lockView)
@@ -328,15 +324,19 @@ public class PlayManager : MonoBehaviour
 
     public void RegisterControlUnit(ControlUnit unit)
     {
-        if (unit != null && !allControlUnits.Contains(unit))
-        {
-            allControlUnits.Add(unit);
-        }
-
+        RegisterControlUnitWithoutCleanup(unit);
         if (playMode)
         {
             RuntimeGroupCleanup.EnforceLimit(allControlUnits, maxUselessControlUnitGroups, DestroyManager.instance);
             RuntimeGroupCleanup.EnforceDistance(allControlUnits, playMode, blocksParent, groupCleanupDistance, DestroyManager.instance);
+        }
+    }
+
+    internal void RegisterControlUnitWithoutCleanup(ControlUnit unit)
+    {
+        if (unit != null && !allControlUnits.Contains(unit))
+        {
+            allControlUnits.Add(unit);
         }
     }
 

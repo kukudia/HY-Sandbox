@@ -793,6 +793,42 @@
 | SiegePlayChecks | [`string Run()`](../Assets/Editor/Siege/SiegePlayChecks.cs#L13) | public static |
 | SiegePlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegePlayChecks.cs#L146) | private static |
 
+## Assets/Editor/Siege/SiegeRegroupBaseline.cs
+
+// 职责：冻结3b1e13d的整组迁移实现，仅供Editor同布局性能对照，不进入运行时。 // 入口：Rebuild()；连接查询仍调用当前同一几何实现，隔离测量刚体迁移策略差异。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeRegroupBaseline | [`void Rebuild(List<Block> blocks, GroupPhysicsSettings settings)`](../Assets/Editor/Siege/SiegeRegroupBaseline.cs#L14) | public |
+| SiegeRegroupBaseline | [`Dictionary<Block, Rigidbody> CaptureSourceBodies(List<Block> blocks)`](../Assets/Editor/Siege/SiegeRegroupBaseline.cs#L74) | private static |
+| SiegeRegroupBaseline | [`void RestoreGroupPhysics( Rigidbody targetBody, List<Block> group, Dictionary<Block, Rigidbody> sourceBodies, GroupPhysicsSettings settings)`](../Assets/Editor/Siege/SiegeRegroupBaseline.cs#L94) | private static |
+
+## Assets/Editor/Siege/SiegeRegroupBenchmark.cs
+
+// 职责：在相同真实方块链上交替比较冻结整组迁移与主体保留，分开记录创建/验证和同步刷新耗时。 // 入口：Run()；临时夹具每次立即清理，不将同步CPU对照称为物理帧率。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeRegroupBenchmark | [`string Start()`](../Assets/Editor/Siege/SiegeRegroupBenchmark.cs#L17) | public static |
+| SiegeRegroupBenchmark | [`void ExecuteScheduled()`](../Assets/Editor/Siege/SiegeRegroupBenchmark.cs#L31) | private static |
+| SiegeRegroupBenchmark | [`string Run()`](../Assets/Editor/Siege/SiegeRegroupBenchmark.cs#L49) | public static |
+| SiegeRegroupBenchmark | [`double Measure(int count, bool split, bool baseline, SiegeRegroupBaseline previous, GroupPhysicsSettings settings)`](../Assets/Editor/Siege/SiegeRegroupBenchmark.cs#L127) | private static |
+| SiegeRegroupBenchmark | [`double Median(List<double> values)`](../Assets/Editor/Siege/SiegeRegroupBenchmark.cs#L207) | private static |
+
+## Assets/Editor/Siege/SiegeRegroupChecks.cs
+
+// 职责：验证增量重组保留驾驶主体、世界姿态、源点速度、阵营/货物归属及局部刷新边界。 // 入口：Run()；要求全新Siege Play，受控断链夹具不代表自然战斗性能。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeRegroupChecks | [`string Run()`](../Assets/Editor/Siege/SiegeRegroupChecks.cs#L13) | public static |
+| SiegeRegroupChecks | [`void CheckSingleBlock(List<string> checks)`](../Assets/Editor/Siege/SiegeRegroupChecks.cs#L118) | private static |
+| SiegeRegroupChecks | [`void CheckEmptyRoot(List<string> checks)`](../Assets/Editor/Siege/SiegeRegroupChecks.cs#L147) | private static |
+| SiegeRegroupChecks | [`void CheckCockpitlessSplit(List<string> checks)`](../Assets/Editor/Siege/SiegeRegroupChecks.cs#L178) | private static |
+| SiegeRegroupChecks | [`bool PosesUnchanged(Dictionary<Block, Pose> poses)`](../Assets/Editor/Siege/SiegeRegroupChecks.cs#L234) | private static |
+| SiegeRegroupChecks | [`bool Near(Vector3 left, Vector3 right)`](../Assets/Editor/Siege/SiegeRegroupChecks.cs#L239) | private static |
+| SiegeRegroupChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeRegroupChecks.cs#L244) | private static |
+
 ## Assets/Editor/Siege/SiegeRulesChecks.cs
 
 // 职责：验证阵地战阶段、波次预算和经济的边界；无需进入Play或读写玩家存档。 // 入口：Run() / 菜单 HY-Sandbox/Validation/Siege Rules。
@@ -3192,14 +3228,15 @@
 | PlayManager | [`void PlayStart()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L100) | public |
 | PlayManager | [`bool CanStartPlay(out string reason)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L148) | public |
 | PlayManager | [`void RefreshGroup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L183) | public |
-| PlayManager | [`void SetPlayMode(bool lockView)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L211) | public |
-| PlayManager | [`void CalculateVelocity()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L219) | private |
-| PlayManager | [`void HandleSelection()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L228) | private |
-| PlayManager | [`void SelectBlock(Block block)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L257) | private |
-| PlayManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L276) | public |
-| PlayManager | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L282) | public |
-| PlayManager | [`void AssignBlocksToParentGroups(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L313) | public |
-| PlayManager | [`void RegisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L329) | public |
+| PlayManager | [`void SetPlayMode(bool lockView)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L207) | public |
+| PlayManager | [`void CalculateVelocity()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L215) | private |
+| PlayManager | [`void HandleSelection()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L224) | private |
+| PlayManager | [`void SelectBlock(Block block)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L253) | private |
+| PlayManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L272) | public |
+| PlayManager | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L278) | public |
+| PlayManager | [`void AssignBlocksToParentGroups(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L309) | public |
+| PlayManager | [`void RegisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L325) | public |
+| PlayManager | [`void RegisterControlUnitWithoutCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L335) | internal |
 | PlayManager | [`void UnregisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L343) | public |
 | PlayManager | [`IReadOnlyList<ControlUnit> GetControlUnits()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L351) | public |
 
@@ -3211,13 +3248,15 @@
 
 ## Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs
 
-// 职责：按连接分量建立运行组，迁移方块并恢复受限的源刚体运动。 // 入口：Rebuild()；由 PlayManager.AssignBlocksToParentGroups() 调用。 // 约束：先捕获源刚体；重组保留 RuntimeUnitMember 的原始单位归属。
+// 职责：保留含驾驶舱或最大分量的源刚体，仅迁移分离模块，并恢复捕获的源运动与归属。 // 入口：Rebuild()；先捕获所有源状态，再规划/迁移，最后局部刷新并一次执行外层清理。 // 约束：保留已有根的姿态与运行组件；新碎片不覆盖RuntimeUnitMember原始单位身份。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | RuntimeGroupBuilder | [`void Rebuild(List<Block> blocks, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L15) | internal |
-| RuntimeGroupBuilder | [`Dictionary<Block, Rigidbody> CaptureSourceBodies(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L75) | private static |
-| RuntimeGroupBuilder | [`void RestoreGroupPhysics( Rigidbody targetBody, List<Block> group, Dictionary<Block, Rigidbody> sourceBodies, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L95) | private static |
+| RuntimeGroupBuilder | [`Dictionary<Block, SourceSnapshot> CaptureSourceBodies(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L107) | private static |
+| RuntimeGroupBuilder | [`List<GroupPlan> PlanGroups(List<List<Block>> groups, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L136) | private static |
+| RuntimeGroupBuilder | [`Dictionary<SourceSnapshot, GroupPlan> SelectRetainedGroups(List<GroupPlan> plans, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L167) | private static |
+| RuntimeGroupBuilder | [`void RestoreGroupPhysics(Rigidbody target, SourceSnapshot source, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L206) | private static |
 
 ## Assets/Scripts/Features/Simulation/RuntimeGroupCleanup.cs
 

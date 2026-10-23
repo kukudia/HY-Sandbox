@@ -115,8 +115,8 @@ public static class SiegePlayChecks
         session.Fleet.RefreshBindings();
         Check(
             checks,
-            "autonomous ally resumes AI after physical regroup",
-            session.Fleet.Ships[0].Unit != previousAllyGroup && !session.Fleet.Ships[0].Unit.AcceptsPlayerInput && session.Fleet.Ships[0].Unit.GetComponent<EnemyController>().enabled);
+            "autonomous ally retains its body and active AI after physical regroup",
+            session.Fleet.Ships[0].Unit == previousAllyGroup && !session.Fleet.Ships[0].Unit.AcceptsPlayerInput && session.Fleet.Ships[0].Unit.GetComponent<EnemyController>().enabled);
         Cockpit driven = session.Fleet.Driven.Cockpit;
         driven.GetComponent<Durability>().ApplyDamage(100000f, null);
         Check(

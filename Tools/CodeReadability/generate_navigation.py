@@ -349,7 +349,7 @@ def main():
     )
     graph(
         "物理分组、连接与推进",
-        "连接图是组重建输入；重组先捕获刚体速度，再转移方块与运行归属。几何连接要求两侧方块及规范碰撞体都能参与Block层查询，断链不允许单向向外连接；修缮和底座重建显式恢复原碰撞层。FixedUpdate由引擎调度；悬浮控制器只提交目标，推进器每个物理帧限速一次。关机撤销功率请求但残余推力按maxThrustChangeRate衰减；退出游玩或组件禁用清零。",
+        "连接图是组重建输入；先捕获不可变源速度/质心，优先保留含驾驶舱分量的刚体，无驾驶舱时保留最大分量。只迁移分离模块，所有迁移完成后恢复点速度并局部刷新；不重扫无关单位。几何连接要求两侧规范碰撞体都参与Block层查询，断链不能单向向外连接；修缮/底座重建显式恢复原层。FixedUpdate由引擎调度；悬浮控制器提交目标，推进器每物理帧限速一次。关机撤销功率请求但残余推力按maxThrustChangeRate衰减；退出游玩或组件禁用清零。",
         {
             "A": "PlayManager.RefreshGroup",
             "B": "PlayManager.AssignBlocksToParentGroups",
@@ -376,11 +376,15 @@ def main():
             "W": "BlockConnections.DisConnectAllConnectors",
             "X": "Block.RestoreConnectionParticipation",
             "Y": "BlockConnections.RestoreParticipation",
+            "Z": "RuntimeGroupBuilder.CaptureSourceBodies",
+            "AA": "RuntimeGroupBuilder.SelectRetainedGroups",
+            "AB": "PlayManager.RegisterControlUnitWithoutCleanup",
         },
         [
             "A --> B",
             "B --> C",
             "C --> D",
+            "C --> Z", "C --> AA", "C -->|新分量即时登记，外层统一清理| AB",
             "D -->|BFS 经 Block.CollectNeighbors| E",
             "W -.->|两侧排除断开块| E", "X --> Y",
             "C --> F",

@@ -1,0 +1,23 @@
+{
+    "checks": [
+        "PASS two ships deploy for regroup fixture",
+        "PASS intact regroup retains root rigidbody and runtime identity",
+        "PASS intact regroup retains world poses",
+        "PASS intact regroup preserves linear and angular motion",
+        "PASS unrelated ship component caches are not globally refreshed",
+        "PASS split keeps cockpit component on original rigidbody",
+        "PASS split produces exactly the expected physical components",
+        "PASS only separated modules move to new roots",
+        "PASS split preserves every surviving module world pose",
+        "PASS all fragments preserve original deployment ownership",
+        "PASS manual input and camera remain on cockpit component",
+        "PASS each component has exact module mass",
+        "PASS all fragment motion comes from immutable pre-split point velocity",
+        "PASS all newly created fragments are registered immediately",
+        "PASS refit recovers split modules onto retained body",
+        "PASS single surviving module updates mass without replacing its body",
+        "PASS empty source clears stale cockpit authority immediately",
+        "PASS cockpitless split retains largest component",
+        "PASS new cockpitless fragments inherit source faction"
+    ]
+}

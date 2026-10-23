@@ -129,7 +129,7 @@ flowchart TD
     L["CargoPersistence.SaveReturnCargo()"]
     click L "../Assets/Scripts/Features/Salvage/CargoPersistence.cs#L11" "打开源码"
     M["PlayManager.PlayEnd()"]
-    click M "../Assets/Scripts/Features/Simulation/PlayManager.cs#L282" "打开源码"
+    click M "../Assets/Scripts/Features/Simulation/PlayManager.cs#L278" "打开源码"
     N["MainUIPanels.PlayerDeath()"]
     click N "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L288" "打开源码"
     O["WorldSessionManager.RequestPlay()"]
@@ -187,7 +187,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayEnd -->
 - [CargoPersistence.SaveReturnCargo](../Assets/Scripts/Features/Salvage/CargoPersistence.cs#L11)
 <!-- source: Assets/Scripts/Features/Salvage/CargoPersistence.cs|SaveReturnCargo -->
-- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L282)
+- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L278)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
 - [MainUIPanels.PlayerDeath](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L288)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayerDeath -->
@@ -685,14 +685,14 @@ flowchart TD
 
 ## 物理分组、连接与推进
 
-连接图是组重建输入；重组先捕获刚体速度，再转移方块与运行归属。几何连接要求两侧方块及规范碰撞体都能参与Block层查询，断链不允许单向向外连接；修缮和底座重建显式恢复原碰撞层。FixedUpdate由引擎调度；悬浮控制器只提交目标，推进器每个物理帧限速一次。关机撤销功率请求但残余推力按maxThrustChangeRate衰减；退出游玩或组件禁用清零。
+连接图是组重建输入；先捕获不可变源速度/质心，优先保留含驾驶舱分量的刚体，无驾驶舱时保留最大分量。只迁移分离模块，所有迁移完成后恢复点速度并局部刷新；不重扫无关单位。几何连接要求两侧规范碰撞体都参与Block层查询，断链不能单向向外连接；修缮/底座重建显式恢复原层。FixedUpdate由引擎调度；悬浮控制器提交目标，推进器每物理帧限速一次。关机撤销功率请求但残余推力按maxThrustChangeRate衰减；退出游玩或组件禁用清零。
 
 ```mermaid
 flowchart TD
     A["PlayManager.RefreshGroup()"]
     click A "../Assets/Scripts/Features/Simulation/PlayManager.cs#L183" "打开源码"
     B["PlayManager.AssignBlocksToParentGroups()"]
-    click B "../Assets/Scripts/Features/Simulation/PlayManager.cs#L313" "打开源码"
+    click B "../Assets/Scripts/Features/Simulation/PlayManager.cs#L309" "打开源码"
     C["RuntimeGroupBuilder.Rebuild()"]
     click C "../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L15" "打开源码"
     D["BlockGroupManager.GroupBlocks()"]
@@ -700,7 +700,7 @@ flowchart TD
     E["BlockConnections.CollectNeighbors()"]
     click E "../Assets/Scripts/Features/Simulation/BlockConnections.cs#L260" "打开源码"
     F["RuntimeGroupBuilder.RestoreGroupPhysics()"]
-    click F "../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L95" "打开源码"
+    click F "../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L206" "打开源码"
     G["ControlUnit.RefreshChildren()"]
     click G "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L160" "打开源码"
     H["PlayManager.FixedUpdate()"]
@@ -739,9 +739,18 @@ flowchart TD
     click X "../Assets/Scripts/Features/Simulation/Block.cs#L363" "打开源码"
     Y["BlockConnections.RestoreParticipation()"]
     click Y "../Assets/Scripts/Features/Simulation/BlockConnections.cs#L331" "打开源码"
+    Z["RuntimeGroupBuilder.CaptureSourceBodies()"]
+    click Z "../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L107" "打开源码"
+    AA["RuntimeGroupBuilder.SelectRetainedGroups()"]
+    click AA "../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L167" "打开源码"
+    AB["PlayManager.RegisterControlUnitWithoutCleanup()"]
+    click AB "../Assets/Scripts/Features/Simulation/PlayManager.cs#L335" "打开源码"
     A --> B
     B --> C
     C --> D
+    C --> Z
+    C --> AA
+    C -->|新分量即时登记，外层统一清理| AB
     D -->|BFS 经 Block.CollectNeighbors| E
     W -.->|两侧排除断开块| E
     X --> Y
@@ -764,7 +773,7 @@ flowchart TD
 
 - [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L183)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
-- [PlayManager.AssignBlocksToParentGroups](../Assets/Scripts/Features/Simulation/PlayManager.cs#L313)
+- [PlayManager.AssignBlocksToParentGroups](../Assets/Scripts/Features/Simulation/PlayManager.cs#L309)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|AssignBlocksToParentGroups -->
 - [RuntimeGroupBuilder.Rebuild](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L15)
 <!-- source: Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs|Rebuild -->
@@ -772,7 +781,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/BlockGroupManager.cs|GroupBlocks -->
 - [BlockConnections.CollectNeighbors](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L260)
 <!-- source: Assets/Scripts/Features/Simulation/BlockConnections.cs|CollectNeighbors -->
-- [RuntimeGroupBuilder.RestoreGroupPhysics](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L95)
+- [RuntimeGroupBuilder.RestoreGroupPhysics](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L206)
 <!-- source: Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs|RestoreGroupPhysics -->
 - [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L160)
 <!-- source: Assets/Scripts/Features/Simulation/ControlUnit.cs|RefreshChildren -->
@@ -812,6 +821,12 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|RestoreConnectionParticipation -->
 - [BlockConnections.RestoreParticipation](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L331)
 <!-- source: Assets/Scripts/Features/Simulation/BlockConnections.cs|RestoreParticipation -->
+- [RuntimeGroupBuilder.CaptureSourceBodies](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L107)
+<!-- source: Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs|CaptureSourceBodies -->
+- [RuntimeGroupBuilder.SelectRetainedGroups](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L167)
+<!-- source: Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs|SelectRetainedGroups -->
+- [PlayManager.RegisterControlUnitWithoutCleanup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L335)
+<!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RegisterControlUnitWithoutCleanup -->
 
 ## 战斗、损伤、爆炸与残骸清理
 
@@ -999,7 +1014,7 @@ flowchart TD
     E["ReturnStatusPanel.Clear()"]
     click E "../Assets/Scripts/Features/Presentation/ReturnStatusPanel.cs#L37" "打开源码"
     F["PlayManager.PlayEnd()"]
-    click F "../Assets/Scripts/Features/Simulation/PlayManager.cs#L282" "打开源码"
+    click F "../Assets/Scripts/Features/Simulation/PlayManager.cs#L278" "打开源码"
     G["GameManager.Init()"]
     click G "../Assets/Scripts/Features/Bootstrap/GameManager.cs#L20" "打开源码"
     A --> B
@@ -1020,7 +1035,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|CompletePlayEnd -->
 - [ReturnStatusPanel.Clear](../Assets/Scripts/Features/Presentation/ReturnStatusPanel.cs#L37)
 <!-- source: Assets/Scripts/Features/Presentation/ReturnStatusPanel.cs|Clear -->
-- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L282)
+- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L278)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
 - [GameManager.Init](../Assets/Scripts/Features/Bootstrap/GameManager.cs#L20)
 <!-- source: Assets/Scripts/Features/Bootstrap/GameManager.cs|Init -->
@@ -2565,7 +2580,7 @@ flowchart TD
     P["OutpostEncounterDirector.Hibernate()"]
     click P "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L293" "打开源码"
     Q["PlayManager.PlayEnd()"]
-    click Q "../Assets/Scripts/Features/Simulation/PlayManager.cs#L282" "打开源码"
+    click Q "../Assets/Scripts/Features/Simulation/PlayManager.cs#L278" "打开源码"
     R["EnemySpawner.EndPlayMode()"]
     click R "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L57" "打开源码"
     A -->|普通模式| B
@@ -2618,7 +2633,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/EnemyIdentity.cs|SetSpawnMaxHealth -->
 - [OutpostEncounterDirector.Hibernate](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L293)
 <!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Hibernate -->
-- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L282)
+- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L278)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
 - [EnemySpawner.EndPlayMode](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L57)
 <!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|EndPlayMode -->

@@ -15,7 +15,7 @@
         "PASS base anchor survives production regroup",
         "PASS base regroup does not steal player camera ownership",
         "PASS wave start activates simulation and closes repair",
-        "PASS autonomous ally resumes AI after physical regroup",
+        "PASS autonomous ally retains its body and active AI after physical regroup",
         "PASS pilot destruction transfers control instead of ending match",
         "PASS no surviving ships falls back to base observation",
         "PASS real core destruction ends siege and cancels reinforcements",
