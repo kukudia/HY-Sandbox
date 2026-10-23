@@ -20,7 +20,8 @@ public sealed class SiegePlayerChecks : MonoBehaviour
     private IEnumerator work;
     private bool finished;
     private float started;
-    private float nextCensus;
+    private bool profileWork;
+    private SiegePlayerSurvey survey;
     private SiegeSession activeSession;
     private readonly Report report = new Report();
     private readonly List<float> frameTimes = new List<float>();
@@ -41,6 +42,7 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         Directory.CreateDirectory(Path.GetDirectoryName(checks.reportPath));
         checks.soak = Array.IndexOf(args, "-siege-checks-soak") >= 0;
         checks.capture = Array.IndexOf(args, "-siege-checks-capture") >= 0;
+        checks.profileWork = Array.IndexOf(args, "-siege-checks-profile") >= 0;
         int seconds = Array.IndexOf(args, "-siege-checks-seconds");
         if (seconds >= 0 && seconds + 1 < args.Length && float.TryParse(args[seconds + 1], out float parsedSeconds))
         {
@@ -93,12 +95,20 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         }
 
         frameTimes.Add(Time.unscaledDeltaTime * 1000f);
-        SiegeSession session = activeSession;
-        if (session != null && Time.realtimeSinceStartup >= nextCensus)
+        if (survey == null)
         {
-            nextCensus = Time.realtimeSinceStartup + 1f;
-            report.census.Add(new Census { seconds = Time.realtimeSinceStartup - started, wave = session.Match.Wave, phase = session.Match.Phase.ToString(), attackers = session.Match.ActiveAttackers, pending = session.Match.PendingAttackers, coins = session.Match.Coins, baseBlocks = session.Fleet.Base.Building.Blocks.Count, baseAlive = session.Fleet.Base.IsAlive, blocks = Object.FindObjectsByType<Block>(FindObjectsSortMode.None).Length, bodies = Object.FindObjectsByType<Rigidbody>(FindObjectsSortMode.None).Length, memoryBytes = UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong() });
+            survey = new SiegePlayerSurvey(started, profileWork);
+            report.census = survey.CensusSamples;
+            report.survey = survey.Result;
         }
+
+        survey.Observe(activeSession, Time.unscaledDeltaTime * 1000f);
+    }
+
+    private void OnDestroy()
+    {
+        survey?.Dispose();
+        Application.logMessageReceived -= CaptureError;
     }
 
     private IEnumerator Run()
@@ -298,6 +308,7 @@ public sealed class SiegePlayerChecks : MonoBehaviour
     private void Finish()
     {
         finished = true;
+        survey?.Dispose();
         Application.logMessageReceived -= CaptureError;
         report.elapsedSeconds = Time.realtimeSinceStartup - started;
         frameTimes.Sort();
@@ -346,22 +357,7 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         public List<string> checks = new List<string>();
         public List<string> errors = new List<string>();
         public List<string> actions = new List<string>();
-        public List<Census> census = new List<Census>();
-    }
-
-    [Serializable]
-    private struct Census
-    {
-        public float seconds;
-        public int wave;
-        public string phase;
-        public int attackers;
-        public int pending;
-        public long coins;
-        public int baseBlocks;
-        public bool baseAlive;
-        public int blocks;
-        public int bodies;
-        public long memoryBytes;
+        public SiegePlayerSurvey.Summary survey;
+        public List<SiegePlayerSurvey.Census> census = new List<SiegePlayerSurvey.Census>();
     }
 }

@@ -1,0 +1,19 @@
+{
+    "passed": true,
+    "checks": [
+        "deploy actual ship",
+        "inactive pooled body and null excluded",
+        "real building and cockpit ship classified",
+        "cockpitless unit is fragment",
+        "active projectile distinct from other bodies",
+        "root categories partition all bodies",
+        "physical states partition all bodies and sleeping is observed",
+        "profiling explicitly enables metrics",
+        "slow frames bounded and ordered",
+        "census captures real objects and own cost",
+        "dispose restores disabled state and preserves measured work",
+        "dispose is idempotent",
+        "passive survey leaves external metrics enabled",
+        "passive dispose preserves external metrics enabled"
+    ]
+}

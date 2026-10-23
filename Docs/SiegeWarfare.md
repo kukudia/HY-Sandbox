@@ -58,6 +58,9 @@ Siege不加载主世界存档，不复制蓝图货物；部署使用新的单位
 
 ## 性能复现
 
+显式自然Player检查现在每秒记录刚体根分类（建筑、有效驾驶舱舰船、无效驾驶舱分量、弹丸、其他）、运动学/睡眠状态、碰撞体数和普查CPU开销。只有额外传入 `-siege-checks-profile` 才在自然观察窗口开启已有嵌套工作计时，结束或销毁时恢复原开关。保留原 `census` 字段，新增 `survey` 汇总和最慢32条超过33.33ms的帧。帧delta是帧起点到起点，前一LateUpdate计时窗口仅近似关联；不能把嵌套阶段相加或据此归因PhysX/GPU。没有组件标记的建筑残骸计入other，闲置池对象排除。`SiegePlayerSurveyChecks.Run()` 要求全新未部署的Siege Play，检查结束会终止该测试会话；慢帧阈值部分用合成delta，不是自然性能证据。
+
+
 明确指派基地目标的敌方增援可从自主索敌半径外接近；普通发现半径、守卫范围和阵营/运行校验保持。大基地六舰可见Player的最新规模及帧时间边界见 [任务目标与可见验证](Validation/2026-10-23-siege-priority.md)。
 
 菜单 `Create Editable 2048-Module Stress Profile` 创建独立 `SiegeLargeStress.unity`、配置与 `BastionBase2048.json`。将原基地237块2m装甲各细分为8块1m装甲，加一块有地板支撑的顶层测试块，达到现有单栋2048上限；保留核心、发电机和炮塔。这是模块/碰撞体压力布局，细分改变独立耐久和损毁分量，不作为等价战斗难度或加速对照。已有压力资产不覆盖，可直接编辑保存。`Build Windows 2048-Module Stress Player` 输出 `Builds/SiegeLargeStress/HY-Sandbox.exe`，支持与六舰包相同的显式检查参数。

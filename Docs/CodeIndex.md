@@ -867,6 +867,16 @@
 | SiegePlayerBuild | [`void Schedule(string scene, string output, string statusPath)`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L42) | private static |
 | SiegePlayerBuild | [`void BuildNow(string scene, string output, string statusPath)`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L62) | private static |
 
+## Assets/Editor/Siege/SiegePlayerSurveyChecks.cs
+
+// 职责：在真实Siege Play中校验刚体分类、闲置池过滤与显式采样的计时开关恢复，避免诊断污染玩法。 // 入口：Run()；分类用真实基地/舰船，慢帧边界用合成delta，不是性能或物理步证据。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegePlayerSurveyChecks | [`string Run()`](../Assets/Editor/Siege/SiegePlayerSurveyChecks.cs#L12) | public static |
+| SiegePlayerSurveyChecks | [`Rigidbody CreateBody(List<GameObject> roots, string name)`](../Assets/Editor/Siege/SiegePlayerSurveyChecks.cs#L114) | private static |
+| SiegePlayerSurveyChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegePlayerSurveyChecks.cs#L124) | private static |
+
 ## Assets/Editor/Siege/SiegePriorityTargetChecks.cs
 
 // 职责：用真实基地与敌舰验证任务目标远程追击、普通索敌边界及阵营/启用/守卫约束。 // 入口：Run()；全新Siege Play的同步隔离夹具，不推进物理步，不把该检查当作AI实飞验证。
@@ -3147,15 +3157,32 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegePlayerChecks | [`void Initialize()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L27) | private static |
-| SiegePlayerChecks | [`void Update()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L67) | private |
-| SiegePlayerChecks | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L88) | private |
-| SiegePlayerChecks | [`IEnumerator Run()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L104) | private |
-| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L273) | private |
-| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L280) | private |
-| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L290) | private |
-| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L298) | private |
-| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L314) | private |
+| SiegePlayerChecks | [`void Initialize()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L28) | private static |
+| SiegePlayerChecks | [`void Update()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L69) | private |
+| SiegePlayerChecks | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L90) | private |
+| SiegePlayerChecks | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L108) | private |
+| SiegePlayerChecks | [`IEnumerator Run()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L114) | private |
+| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L283) | private |
+| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L290) | private |
+| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L300) | private |
+| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L308) | private |
+| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L325) | private |
+
+## Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs
+
+// 职责：显式Player检查的低频规模普查、有限慢帧记录和可选嵌套CPU计时；不参与正常游戏。 // 入口：Observe() / Dispose()；帧间隔对应前一观察窗口，普查自身开销单独记录，不能据相关性推断瓶颈。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegePlayerSurvey | [`void Observe(SiegeSession session, float milliseconds)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L36) | public |
+| SiegePlayerSurvey | [`BodyCounts Classify(Rigidbody[] bodies)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L71) | public static |
+| SiegePlayerSurvey | [`Census TakeCensus(SiegeSession session, float seconds, Work work)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L124) | private static |
+| SiegePlayerSurvey | [`void KeepSlowFrame(SlowFrame frame)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L152) | private |
+| SiegePlayerSurvey | [`Work ReadWork()`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L171) | private |
+| SiegePlayerSurvey | [`StageWork ReadStage(SimulationWorkMetrics.Stage stage)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L195) | private static |
+| SiegePlayerSurvey | [`void Dispose()`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L206) | public |
+| Work | [`Work Subtract(Work current, Work previous)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L300) | public static |
+| Work | [`StageWork Difference(StageWork current, StageWork previous)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L318) | private static |
 
 ## Assets/Scripts/Features/Siege/SiegeRefit.cs
 
