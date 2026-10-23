@@ -842,6 +842,14 @@
 | SiegeFleetChecks | [`string Run()`](../Assets/Editor/Siege/SiegeFleetChecks.cs#L12) | public static |
 | SiegeFleetChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeFleetChecks.cs#L108) | private static |
 
+## Assets/Editor/Siege/SiegeFoundationCacheChecks.cs
+
+// 职责：在真实基地上对照缓存与实时底座判定，验证根运动和局部连接几何失效。 // 入口：Run()；同步隔离变化后恢复，不推进物理步或保存场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeFoundationCacheChecks | [`string Run()`](../Assets/Editor/Siege/SiegeFoundationCacheChecks.cs#L14) | public static |
+
 ## Assets/Editor/Siege/SiegePerformanceCapture.cs
 
 // 职责：采集阵地战真实Play帧观察间隔、分阶段CPU计时和低频场景规模，保存可审查原始样本。 // 入口：StartCapture() / Finish() / Status；Editor观察间隔含编辑器调度，不代表Player或GPU耗时。
@@ -3512,7 +3520,9 @@
 | --- | --- | --- |
 | BuildingConnectionGraph | [`void Prepare(List<Block> blocks, Transform root)`](../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L15) | internal |
 | BuildingConnectionGraph | [`void CollectNeighbors(Block block, List<Block> result)`](../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L109) | internal |
-| Node | [`bool IsValid(Block block)`](../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L139) | internal |
+| BuildingConnectionGraph | [`bool TryGetGroundSupport(Block block, Vector2Int footprint, out bool supported)`](../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L126) | internal |
+| BuildingConnectionGraph | [`void StoreGroundSupport(Block block, Vector2Int footprint, bool supported)`](../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L138) | internal |
+| Node | [`bool IsValid(Block block)`](../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L165) | internal |
 
 ## Assets/Scripts/Features/World/BuildingRefit.cs
 
@@ -3540,9 +3550,10 @@
 | BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L189) | public |
 | BuildingRuntime | [`void DestroyBlock(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L242) | public |
 | BuildingRuntime | [`void SplitDisconnected()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L288) | private |
-| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L374) | private |
-| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L395) | public |
-| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L406) | private |
+| BuildingRuntime | [`bool HasPreparedGroundConnector(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L374) | private |
+| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L387) | private |
+| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L408) | public |
+| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L419) | private |
 
 ## Assets/Scripts/Features/World/EnemyFlightPlayerChecks.cs
 

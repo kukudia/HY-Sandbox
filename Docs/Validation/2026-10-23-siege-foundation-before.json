@@ -1,0 +1,680 @@
+{
+    "methodology": "Editor Play, two-layer 1m-block building on virtual foundation at remote coordinates. One warmup plus three fresh fixtures per size. Timed cold and unchanged hot production RefreshGroup, then one radius2.6 damage10000 blast, including production VFX requests/sync/splitting. Creation, validation, cleanup excluded. No physics steps. Graph/ground/traversal/debris counters are inside support, itself inside damage; never sum nested counters. ControlUnit child refresh and transform sync outside support remain in full RefreshGroup timing. Not battle FPS. Siege damage gate temporarily unbound only during synchronous fixture, restored in finally.",
+    "label": "foundation-before",
+    "utc": "2026-10-23T10:33:28.4081515Z",
+    "unity": "6000.3.11f1",
+    "samples": [
+        {
+            "blocks": 1024,
+            "survivors": 982,
+            "intactMs": 26.8992,
+            "damageMs": 34.097,
+            "hotMs": 6.2128000000000009,
+            "intactQueries": 6144,
+            "damageQueries": 288,
+            "hotQueries": 0,
+            "intactSupport": {
+                "calls": 1,
+                "inputBlocks": 1024,
+                "milliseconds": 22.8786,
+                "maximumMilliseconds": 22.8786
+            },
+            "hotSupport": {
+                "calls": 1,
+                "inputBlocks": 1024,
+                "milliseconds": 4.1914,
+                "maximumMilliseconds": 4.1914
+            },
+            "support": {
+                "calls": 1,
+                "inputBlocks": 982,
+                "milliseconds": 7.5145,
+                "maximumMilliseconds": 7.5145
+            },
+            "damage": {
+                "calls": 1,
+                "inputBlocks": 0,
+                "milliseconds": 34.0945,
+                "maximumMilliseconds": 34.0945
+            },
+            "intactStages": {
+                "graph": {
+                    "calls": 1,
+                    "inputBlocks": 1024,
+                    "milliseconds": 21.2427,
+                    "maximumMilliseconds": 21.2427
+                },
+                "ground": {
+                    "calls": 1,
+                    "inputBlocks": 1024,
+                    "milliseconds": 0.9946,
+                    "maximumMilliseconds": 0.9946
+                },
+                "traversal": {
+                    "calls": 1,
+                    "inputBlocks": 1024,
+                    "milliseconds": 0.6056,
+                    "maximumMilliseconds": 0.6056
+                },
+                "debris": {
+                    "calls": 0,
+                    "inputBlocks": 0,
+                    "milliseconds": 0.0,
+                    "maximumMilliseconds": 0.0
+                }
+            },
+            "hotStages": {
+                "graph": {
+                    "calls": 1,
+                    "inputBlocks": 1024,
+                    "milliseconds": 2.3474,
+                    "maximumMilliseconds": 2.3474
+                },
+                "ground": {
+                    "calls": 1,
+                    "inputBlocks": 1024,
+                    "milliseconds": 1.1612,
+                    "maximumMilliseconds": 1.1612
+                },
+                "traversal": {
+                    "calls": 1,
+                    "inputBlocks": 1024,
+                    "milliseconds": 0.646,
+                    "maximumMilliseconds": 0.646
+                },
+                "debris": {
+                    "calls": 0,
+                    "inputBlocks": 0,
+                    "milliseconds": 0.0,
+                    "maximumMilliseconds": 0.0
+                }
+            },
+            "damageStages": {
+                "graph": {
+                    "calls": 1,
+                    "inputBlocks": 982,
+                    "milliseconds": 5.5949,
+                    "maximumMilliseconds": 5.5949
+                },
+                "ground": {
+                    "calls": 1,
+                    "inputBlocks": 982,
+                    "milliseconds": 1.177,
+                    "maximumMilliseconds": 1.177
+                },
+                "traversal": {
+                    "calls": 1,
+                    "inputBlocks": 982,
+                    "milliseconds": 0.7092,
+                    "maximumMilliseconds": 0.7092
+                },
+                "debris": {
+                    "calls": 0,
+                    "inputBlocks": 0,
+                    "milliseconds": 0.0,
+                    "maximumMilliseconds": 0.0
+                }
+            }
+        },
+        {
+            "blocks": 1024,
+            "survivors": 982,
+            "intactMs": 26.5184,
+            "damageMs": 35.5798,
+            "hotMs": 7.6059,
+            "intactQueries": 6144,
+            "damageQueries": 288,
+            "hotQueries": 0,
+            "intactSupport": {
+                "calls": 1,
+                "inputBlocks": 1024,
+                "milliseconds": 23.181,
+                "maximumMilliseconds": 23.181
+            },
+            "hotSupport": {
+                "calls": 1,
+                "inputBlocks": 1024,
+                "milliseconds": 4.3911,
+                "maximumMilliseconds": 4.3911
+            },
+            "support": {
+                "calls": 1,
+                "inputBlocks": 982,
+                "milliseconds": 7.707,
+                "maximumMilliseconds": 7.707
+            },
+            "damage": {
+                "calls": 1,
+                "inputBlocks": 0,
+                "milliseconds": 35.5768,
+                "maximumMilliseconds": 35.5768
+            },
+            "intactStages": {
+                "graph": {
+                    "calls": 1,
+                    "inputBlocks": 1024,
+                    "milliseconds": 21.4164,
+                    "maximumMilliseconds": 21.4164
+                },
+                "ground": {
+                    "calls": 1,
+                    "inputBlocks": 1024,
+                    "milliseconds": 1.0735,
+                    "maximumMilliseconds": 1.0735
+                },
+                "traversal": {
+                    "calls": 1,
+                    "inputBlocks": 1024,
+                    "milliseconds": 0.6548,
+                    "maximumMilliseconds": 0.6548
+                },
+                "debris": {
+                    "calls": 0,
+                    "inputBlocks": 0,
+                    "milliseconds": 0.0,
+                    "maximumMilliseconds": 0.0
+                }
+            },
+            "hotStages": {
+                "graph": {
+                    "calls": 1,
+                    "inputBlocks": 1024,
+                    "milliseconds": 2.4111,
+                    "maximumMilliseconds": 2.4111
+                },
+                "ground": {
+                    "calls": 1,
+                    "inputBlocks": 1024,
+                    "milliseconds": 1.2211,
+                    "maximumMilliseconds": 1.2211
+                },
+                "traversal": {
+                    "calls": 1,
+                    "inputBlocks": 1024,
+                    "milliseconds": 0.7232,
+                    "maximumMilliseconds": 0.7232
+                },
+                "debris": {
+                    "calls": 0,
+                    "inputBlocks": 0,
+                    "milliseconds": 0.0,
+                    "maximumMilliseconds": 0.0
+                }
+            },
+            "damageStages": {
+                "graph": {
+                    "calls": 1,
+                    "inputBlocks": 982,
+                    "milliseconds": 5.6396,
+                    "maximumMilliseconds": 5.6396
+                },
+                "ground": {
+                    "calls": 1,
+                    "inputBlocks": 982,
+                    "milliseconds": 1.2799,
+                    "maximumMilliseconds": 1.2799
+                },
+                "traversal": {
+                    "calls": 1,
+                    "inputBlocks": 982,
+                    "milliseconds": 0.752,
+                    "maximumMilliseconds": 0.752
+                },
+                "debris": {
+                    "calls": 0,
+                    "inputBlocks": 0,
+                    "milliseconds": 0.0,
+                    "maximumMilliseconds": 0.0
+                }
+            }
+        },
+        {
+            "blocks": 1024,
+            "survivors": 982,
+            "intactMs": 25.9085,
+            "damageMs": 30.8718,
+            "hotMs": 7.127800000000001,
+            "intactQueries": 6144,
+            "damageQueries": 288,
+            "hotQueries": 0,
+            "intactSupport": {
+                "calls": 1,
+                "inputBlocks": 1024,
+                "milliseconds": 22.3025,
+                "maximumMilliseconds": 22.3025
+            },
+            "hotSupport": {
+                "calls": 1,
+                "inputBlocks": 1024,
+                "milliseconds": 4.6095,
+                "maximumMilliseconds": 4.6095
+            },
+            "support": {
+                "calls": 1,
+                "inputBlocks": 982,
+                "milliseconds": 7.5085,
+                "maximumMilliseconds": 7.5085
+            },
+            "damage": {
+                "calls": 1,
+                "inputBlocks": 0,
+                "milliseconds": 30.8691,
+                "maximumMilliseconds": 30.8691
+            },
+            "intactStages": {
+                "graph": {
+                    "calls": 1,
+                    "inputBlocks": 1024,
+                    "milliseconds": 20.6782,
+                    "maximumMilliseconds": 20.6782
+                },
+                "ground": {
+                    "calls": 1,
+                    "inputBlocks": 1024,
+                    "milliseconds": 1.0112,
+                    "maximumMilliseconds": 1.0112
+                },
+                "traversal": {
+                    "calls": 1,
+                    "inputBlocks": 1024,
+                    "milliseconds": 0.5782,
+                    "maximumMilliseconds": 0.5782
+                },
+                "debris": {
+                    "calls": 0,
+                    "inputBlocks": 0,
+                    "milliseconds": 0.0,
+                    "maximumMilliseconds": 0.0
+                }
+            },
+            "hotStages": {
+                "graph": {
+                    "calls": 1,
+                    "inputBlocks": 1024,
+                    "milliseconds": 2.6329,
+                    "maximumMilliseconds": 2.6329
+                },
+                "ground": {
+                    "calls": 1,
+                    "inputBlocks": 1024,
+                    "milliseconds": 1.256,
+                    "maximumMilliseconds": 1.256
+                },
+                "traversal": {
+                    "calls": 1,
+                    "inputBlocks": 1024,
+                    "milliseconds": 0.682,
+                    "maximumMilliseconds": 0.682
+                },
+                "debris": {
+                    "calls": 0,
+                    "inputBlocks": 0,
+                    "milliseconds": 0.0,
+                    "maximumMilliseconds": 0.0
+                }
+            },
+            "damageStages": {
+                "graph": {
+                    "calls": 1,
+                    "inputBlocks": 982,
+                    "milliseconds": 5.4483,
+                    "maximumMilliseconds": 5.4483
+                },
+                "ground": {
+                    "calls": 1,
+                    "inputBlocks": 982,
+                    "milliseconds": 1.2931,
+                    "maximumMilliseconds": 1.2931
+                },
+                "traversal": {
+                    "calls": 1,
+                    "inputBlocks": 982,
+                    "milliseconds": 0.7341,
+                    "maximumMilliseconds": 0.7341
+                },
+                "debris": {
+                    "calls": 0,
+                    "inputBlocks": 0,
+                    "milliseconds": 0.0,
+                    "maximumMilliseconds": 0.0
+                }
+            }
+        },
+        {
+            "blocks": 2048,
+            "survivors": 2006,
+            "intactMs": 77.0908,
+            "damageMs": 45.7945,
+            "hotMs": 24.1627,
+            "intactQueries": 12288,
+            "damageQueries": 288,
+            "hotQueries": 0,
+            "intactSupport": {
+                "calls": 1,
+                "inputBlocks": 2048,
+                "milliseconds": 64.0256,
+                "maximumMilliseconds": 64.0256
+            },
+            "hotSupport": {
+                "calls": 1,
+                "inputBlocks": 2048,
+                "milliseconds": 11.2559,
+                "maximumMilliseconds": 11.2559
+            },
+            "support": {
+                "calls": 1,
+                "inputBlocks": 2006,
+                "milliseconds": 14.8784,
+                "maximumMilliseconds": 14.8784
+            },
+            "damage": {
+                "calls": 1,
+                "inputBlocks": 0,
+                "milliseconds": 45.7907,
+                "maximumMilliseconds": 45.7907
+            },
+            "intactStages": {
+                "graph": {
+                    "calls": 1,
+                    "inputBlocks": 2048,
+                    "milliseconds": 59.5864,
+                    "maximumMilliseconds": 59.5864
+                },
+                "ground": {
+                    "calls": 1,
+                    "inputBlocks": 2048,
+                    "milliseconds": 2.7174,
+                    "maximumMilliseconds": 2.7174
+                },
+                "traversal": {
+                    "calls": 1,
+                    "inputBlocks": 2048,
+                    "milliseconds": 1.6364,
+                    "maximumMilliseconds": 1.6364
+                },
+                "debris": {
+                    "calls": 0,
+                    "inputBlocks": 0,
+                    "milliseconds": 0.0,
+                    "maximumMilliseconds": 0.0
+                }
+            },
+            "hotStages": {
+                "graph": {
+                    "calls": 1,
+                    "inputBlocks": 2048,
+                    "milliseconds": 6.8525,
+                    "maximumMilliseconds": 6.8525
+                },
+                "ground": {
+                    "calls": 1,
+                    "inputBlocks": 2048,
+                    "milliseconds": 2.688,
+                    "maximumMilliseconds": 2.688
+                },
+                "traversal": {
+                    "calls": 1,
+                    "inputBlocks": 2048,
+                    "milliseconds": 1.6363,
+                    "maximumMilliseconds": 1.6363
+                },
+                "debris": {
+                    "calls": 0,
+                    "inputBlocks": 0,
+                    "milliseconds": 0.0,
+                    "maximumMilliseconds": 0.0
+                }
+            },
+            "damageStages": {
+                "graph": {
+                    "calls": 1,
+                    "inputBlocks": 2006,
+                    "milliseconds": 10.7292,
+                    "maximumMilliseconds": 10.7292
+                },
+                "ground": {
+                    "calls": 1,
+                    "inputBlocks": 2006,
+                    "milliseconds": 2.5618,
+                    "maximumMilliseconds": 2.5618
+                },
+                "traversal": {
+                    "calls": 1,
+                    "inputBlocks": 2006,
+                    "milliseconds": 1.5179,
+                    "maximumMilliseconds": 1.5179
+                },
+                "debris": {
+                    "calls": 0,
+                    "inputBlocks": 0,
+                    "milliseconds": 0.0,
+                    "maximumMilliseconds": 0.0
+                }
+            }
+        },
+        {
+            "blocks": 2048,
+            "survivors": 2006,
+            "intactMs": 71.1191,
+            "damageMs": 46.8659,
+            "hotMs": 16.6085,
+            "intactQueries": 12288,
+            "damageQueries": 288,
+            "hotQueries": 0,
+            "intactSupport": {
+                "calls": 1,
+                "inputBlocks": 2048,
+                "milliseconds": 62.3982,
+                "maximumMilliseconds": 62.3982
+            },
+            "hotSupport": {
+                "calls": 1,
+                "inputBlocks": 2048,
+                "milliseconds": 9.1194,
+                "maximumMilliseconds": 9.1194
+            },
+            "support": {
+                "calls": 1,
+                "inputBlocks": 2006,
+                "milliseconds": 14.3215,
+                "maximumMilliseconds": 14.3215
+            },
+            "damage": {
+                "calls": 1,
+                "inputBlocks": 0,
+                "milliseconds": 46.8622,
+                "maximumMilliseconds": 46.8622
+            },
+            "intactStages": {
+                "graph": {
+                    "calls": 1,
+                    "inputBlocks": 2048,
+                    "milliseconds": 58.013,
+                    "maximumMilliseconds": 58.013
+                },
+                "ground": {
+                    "calls": 1,
+                    "inputBlocks": 2048,
+                    "milliseconds": 2.6915,
+                    "maximumMilliseconds": 2.6915
+                },
+                "traversal": {
+                    "calls": 1,
+                    "inputBlocks": 2048,
+                    "milliseconds": 1.6109,
+                    "maximumMilliseconds": 1.6109
+                },
+                "debris": {
+                    "calls": 0,
+                    "inputBlocks": 0,
+                    "milliseconds": 0.0,
+                    "maximumMilliseconds": 0.0
+                }
+            },
+            "hotStages": {
+                "graph": {
+                    "calls": 1,
+                    "inputBlocks": 2048,
+                    "milliseconds": 4.9352,
+                    "maximumMilliseconds": 4.9352
+                },
+                "ground": {
+                    "calls": 1,
+                    "inputBlocks": 2048,
+                    "milliseconds": 2.6376,
+                    "maximumMilliseconds": 2.6376
+                },
+                "traversal": {
+                    "calls": 1,
+                    "inputBlocks": 2048,
+                    "milliseconds": 1.4755,
+                    "maximumMilliseconds": 1.4755
+                },
+                "debris": {
+                    "calls": 0,
+                    "inputBlocks": 0,
+                    "milliseconds": 0.0,
+                    "maximumMilliseconds": 0.0
+                }
+            },
+            "damageStages": {
+                "graph": {
+                    "calls": 1,
+                    "inputBlocks": 2006,
+                    "milliseconds": 10.3063,
+                    "maximumMilliseconds": 10.3063
+                },
+                "ground": {
+                    "calls": 1,
+                    "inputBlocks": 2006,
+                    "milliseconds": 2.4929,
+                    "maximumMilliseconds": 2.4929
+                },
+                "traversal": {
+                    "calls": 1,
+                    "inputBlocks": 2006,
+                    "milliseconds": 1.4594,
+                    "maximumMilliseconds": 1.4594
+                },
+                "debris": {
+                    "calls": 0,
+                    "inputBlocks": 0,
+                    "milliseconds": 0.0,
+                    "maximumMilliseconds": 0.0
+                }
+            }
+        },
+        {
+            "blocks": 2048,
+            "survivors": 2006,
+            "intactMs": 68.7185,
+            "damageMs": 44.6238,
+            "hotMs": 16.9954,
+            "intactQueries": 12288,
+            "damageQueries": 288,
+            "hotQueries": 0,
+            "intactSupport": {
+                "calls": 1,
+                "inputBlocks": 2048,
+                "milliseconds": 60.6986,
+                "maximumMilliseconds": 60.6986
+            },
+            "hotSupport": {
+                "calls": 1,
+                "inputBlocks": 2048,
+                "milliseconds": 9.8564,
+                "maximumMilliseconds": 9.8564
+            },
+            "support": {
+                "calls": 1,
+                "inputBlocks": 2006,
+                "milliseconds": 14.3527,
+                "maximumMilliseconds": 14.3527
+            },
+            "damage": {
+                "calls": 1,
+                "inputBlocks": 0,
+                "milliseconds": 44.6204,
+                "maximumMilliseconds": 44.6204
+            },
+            "intactStages": {
+                "graph": {
+                    "calls": 1,
+                    "inputBlocks": 2048,
+                    "milliseconds": 56.7165,
+                    "maximumMilliseconds": 56.7165
+                },
+                "ground": {
+                    "calls": 1,
+                    "inputBlocks": 2048,
+                    "milliseconds": 2.4718,
+                    "maximumMilliseconds": 2.4718
+                },
+                "traversal": {
+                    "calls": 1,
+                    "inputBlocks": 2048,
+                    "milliseconds": 1.4372,
+                    "maximumMilliseconds": 1.4372
+                },
+                "debris": {
+                    "calls": 0,
+                    "inputBlocks": 0,
+                    "milliseconds": 0.0,
+                    "maximumMilliseconds": 0.0
+                }
+            },
+            "hotStages": {
+                "graph": {
+                    "calls": 1,
+                    "inputBlocks": 2048,
+                    "milliseconds": 5.6915,
+                    "maximumMilliseconds": 5.6915
+                },
+                "ground": {
+                    "calls": 1,
+                    "inputBlocks": 2048,
+                    "milliseconds": 2.6155,
+                    "maximumMilliseconds": 2.6155
+                },
+                "traversal": {
+                    "calls": 1,
+                    "inputBlocks": 2048,
+                    "milliseconds": 1.4748,
+                    "maximumMilliseconds": 1.4748
+                },
+                "debris": {
+                    "calls": 0,
+                    "inputBlocks": 0,
+                    "milliseconds": 0.0,
+                    "maximumMilliseconds": 0.0
+                }
+            },
+            "damageStages": {
+                "graph": {
+                    "calls": 1,
+                    "inputBlocks": 2006,
+                    "milliseconds": 10.212,
+                    "maximumMilliseconds": 10.212
+                },
+                "ground": {
+                    "calls": 1,
+                    "inputBlocks": 2006,
+                    "milliseconds": 2.5878,
+                    "maximumMilliseconds": 2.5878
+                },
+                "traversal": {
+                    "calls": 1,
+                    "inputBlocks": 2006,
+                    "milliseconds": 1.485,
+                    "maximumMilliseconds": 1.485
+                },
+                "debris": {
+                    "calls": 0,
+                    "inputBlocks": 0,
+                    "milliseconds": 0.0,
+                    "maximumMilliseconds": 0.0
+                }
+            }
+        }
+    ]
+}

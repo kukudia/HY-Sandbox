@@ -123,8 +123,34 @@ internal sealed class BuildingConnectionGraph
         }
     }
 
+    internal bool TryGetGroundSupport(Block block, Vector2Int footprint, out bool supported)
+    {
+        supported = false;
+        if (complexLayout || !nodes.TryGetValue(block, out Node node) || !node.GroundKnown || node.GroundFootprint != footprint)
+        {
+            return false;
+        }
+
+        supported = node.GroundSupported;
+        return true;
+    }
+
+    internal void StoreGroundSupport(Block block, Vector2Int footprint, bool supported)
+    {
+        // Prepare已经验证几何；节点重建一并清除此判定。复杂连接层级仍每次实时计算。
+        if (!complexLayout && nodes.TryGetValue(block, out Node node))
+        {
+            node.GroundFootprint = footprint;
+            node.GroundSupported = supported;
+            node.GroundKnown = true;
+        }
+    }
+
     private sealed class Node
     {
+        internal bool GroundKnown;
+        internal bool GroundSupported;
+        internal Vector2Int GroundFootprint;
         internal readonly BlockConnectionSnapshot Snapshot;
         internal readonly List<Block> Neighbors = new List<Block>();
         internal readonly bool Participates;

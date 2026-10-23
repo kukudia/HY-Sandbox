@@ -2135,7 +2135,7 @@ flowchart TD
 
 ## WorldLab 建筑支撑与损坏
 
-源码推导：地形修改通知只标记附近固定建筑，FixedUpdate读取体素数据计算虚拟范围的地形支撑比例（不生成地基实体）；默认低于50%脱锚，先刷新源碰撞再启用刚体。方块死亡从虚拟地面连接点开始，用Connector真实几何缓存检查模块连通，局部删除重探附近、配置失效重建、复杂层级实时回退；断裂组最多32块、12片、12秒寿命，超预算移除；Main游玩态先按原阵营释放货仓/运输物并转换掉落，再判定残骸预算。普通卸载/会话清理不转换。爆炸连锁排队结算，同轮命中先完成伤害，按脏建筑各执行一次支撑刷新，避免先脱落禁用导致漏伤；单块直接死亡仍同步完成支撑，残骸不写快照，R重生成恢复初始布局。
+源码推导：地形修改通知只标记附近固定建筑，FixedUpdate读取体素数据计算虚拟范围的地形支撑比例（不生成地基实体）；默认低于50%脱锚，先刷新源碰撞再启用刚体。方块死亡从虚拟地面连接点开始，用Connector真实几何缓存检查模块连通，局部删除重探附近、配置失效重建、复杂层级实时回退；虚拟底座判定复用已验证邻接节点，节点重建或底座尺寸变化失效；断裂组最多32块、12片、12秒寿命，超预算移除；Main游玩态先按原阵营释放货仓/运输物并转换掉落，再判定残骸预算。普通卸载/会话清理不转换。爆炸连锁排队结算，同轮命中先完成伤害，按脏建筑各执行一次支撑刷新，避免先脱落禁用导致漏伤；单块直接死亡仍同步完成支撑，残骸不写快照，R重生成恢复初始布局。
 
 ```mermaid
 flowchart TD
@@ -2148,7 +2148,7 @@ flowchart TD
     D["WorldBuildingPlacement.Support()"]
     click D "../Assets/Scripts/Features/World/WorldBuildingPlacement.cs#L111" "打开源码"
     E["BuildingRuntime.ReleaseAnchor()"]
-    click E "../Assets/Scripts/Features/World/BuildingRuntime.cs#L395" "打开源码"
+    click E "../Assets/Scripts/Features/World/BuildingRuntime.cs#L408" "打开源码"
     F["ProceduralVoxelWorld.FlushDirty()"]
     click F "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L538" "打开源码"
     G["Durability.ApplyDamage()"]
@@ -2180,7 +2180,7 @@ flowchart TD
     Q["WorldBuildingManager.Place()"]
     click Q "../Assets/Scripts/Features/World/WorldBuildingManager.cs#L96" "打开源码"
     R["BuildingRuntime.HasGroundConnector()"]
-    click R "../Assets/Scripts/Features/World/BuildingRuntime.cs#L374" "打开源码"
+    click R "../Assets/Scripts/Features/World/BuildingRuntime.cs#L387" "打开源码"
     S["WreckSalvage.Convert()"]
     click S "../Assets/Scripts/Features/Salvage/WreckSalvage.cs#L10" "打开源码"
     T["CargoHold.ReleaseContents()"]
@@ -2189,6 +2189,12 @@ flowchart TD
     click U "../Assets/Scripts/Features/Bots/Bot.cs#L210" "打开源码"
     V["LootDrop.Spawn()"]
     click V "../Assets/Scripts/Features/Salvage/LootDrop.cs#L83" "打开源码"
+    Z["BuildingRuntime.HasPreparedGroundConnector()"]
+    click Z "../Assets/Scripts/Features/World/BuildingRuntime.cs#L374" "打开源码"
+    AA["BuildingConnectionGraph.TryGetGroundSupport()"]
+    click AA "../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L126" "打开源码"
+    AB["BuildingConnectionGraph.StoreGroundSupport()"]
+    click AB "../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L138" "打开源码"
     A -.->|TerrainChanged事件| B
     B -.->|待检查集合| C
     C --> D
@@ -2197,7 +2203,10 @@ flowchart TD
     G -->|建筑耐久为0| H
     H -->|标记脏结构| W
     W -->|最外层批次结束| I
-    I -->|虚拟地面连接点| R
+    I -->|虚拟地面连接点| Z
+    Z --> AA
+    Z -->|缓存缺失| R
+    Z --> AB
     I -->|校验或增量刷新邻接| X
     X -->|失效或删除附近探测| J
     I -->|BFS读取建筑缓存| Y
@@ -2223,7 +2232,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|FixedUpdate -->
 - [WorldBuildingPlacement.Support](../Assets/Scripts/Features/World/WorldBuildingPlacement.cs#L111)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingPlacement.cs|Support -->
-- [BuildingRuntime.ReleaseAnchor](../Assets/Scripts/Features/World/BuildingRuntime.cs#L395)
+- [BuildingRuntime.ReleaseAnchor](../Assets/Scripts/Features/World/BuildingRuntime.cs#L408)
 <!-- source: Assets/Scripts/Features/World/BuildingRuntime.cs|ReleaseAnchor -->
 - [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L538)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|FlushDirty -->
@@ -2255,7 +2264,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|ClearDebris -->
 - [WorldBuildingManager.Place](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L96)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|Place -->
-- [BuildingRuntime.HasGroundConnector](../Assets/Scripts/Features/World/BuildingRuntime.cs#L374)
+- [BuildingRuntime.HasGroundConnector](../Assets/Scripts/Features/World/BuildingRuntime.cs#L387)
 <!-- source: Assets/Scripts/Features/World/BuildingRuntime.cs|HasGroundConnector -->
 - [WreckSalvage.Convert](../Assets/Scripts/Features/Salvage/WreckSalvage.cs#L10)
 <!-- source: Assets/Scripts/Features/Salvage/WreckSalvage.cs|Convert -->
@@ -2265,6 +2274,12 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|PrepareForHomeDestruction -->
 - [LootDrop.Spawn](../Assets/Scripts/Features/Salvage/LootDrop.cs#L83)
 <!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Spawn -->
+- [BuildingRuntime.HasPreparedGroundConnector](../Assets/Scripts/Features/World/BuildingRuntime.cs#L374)
+<!-- source: Assets/Scripts/Features/World/BuildingRuntime.cs|HasPreparedGroundConnector -->
+- [BuildingConnectionGraph.TryGetGroundSupport](../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L126)
+<!-- source: Assets/Scripts/Features/World/BuildingConnectionGraph.cs|TryGetGroundSupport -->
+- [BuildingConnectionGraph.StoreGroundSupport](../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L138)
+<!-- source: Assets/Scripts/Features/World/BuildingConnectionGraph.cs|StoreGroundSupport -->
 
 ## WorldLab 金属支撑与碎片
 

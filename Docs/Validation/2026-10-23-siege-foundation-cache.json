@@ -1,0 +1,20 @@
+{
+    "checks": [
+        "cold and hot support match direct geometry",
+        "foundation footprint change invalidates cached result",
+        "foundation footprint restoration matches direct geometry",
+        "rigid root translation and tilt preserve local foundation semantics",
+        "uniform root scaling invalidates prepared support",
+        "nonuniform root scaling matches live normal test",
+        "module movement invalidates support",
+        "module rotation invalidates support",
+        "connection face enabled state invalidates support",
+        "connection face position invalidates support",
+        "connection face normal invalidates support",
+        "nested connector hierarchy uses live support",
+        "nested connector ancestor motion remains live",
+        "direct connector root restores cache eligibility",
+        "direct connector motion invalidates support",
+        "restored original connector root matches live support"
+    ]
+}

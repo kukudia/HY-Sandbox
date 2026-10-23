@@ -296,7 +296,7 @@ public sealed class BuildingRuntime : MonoBehaviour
         {
             foreach (Block block in blocks)
             {
-                if (HasGroundConnector(block))
+                if (HasPreparedGroundConnector(block))
                 {
                     connected.Add(block);
                 }
@@ -369,6 +369,19 @@ public sealed class BuildingRuntime : MonoBehaviour
                 manager.CreateDebris(group, body);
             }
         }
+    }
+
+    private bool HasPreparedGroundConnector(Block block)
+    {
+        Vector2Int footprint = FootprintSize;
+        if (connections.TryGetGroundSupport(block, footprint, out bool supported))
+        {
+            return supported;
+        }
+
+        supported = HasGroundConnector(block);
+        connections.StoreGroundSupport(block, footprint, supported);
+        return supported;
     }
 
     private bool HasGroundConnector(Block block)
