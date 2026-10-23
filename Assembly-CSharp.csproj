@@ -143,6 +143,7 @@
     <Compile Include="Assets\Scripts\Features\World\WorldDistanceView.cs" />
     <Compile Include="Assets\Scripts\Features\Bootstrap\GameManager.cs" />
     <Compile Include="Assets\Scripts\Features\Building\ActionManager.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\SiegeWorkshop.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\RepairBot.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\IndustrialPartMotion.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\DestroyManager.cs" />
@@ -264,6 +265,7 @@
     <Compile Include="Assets\Scripts\Features\Simulation\ModularUnitValidator.cs" />
     <Compile Include="Assets\Scripts\Features\World\OutpostPursuitPlayerChecks.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\BlockVfxLibrary.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\SiegeBlueprintCatalog.cs" />
     <Compile Include="Assets\Scripts\Features\World\WorldSessionManager.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interaction\BuildSelection.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\SimulationWorkMetrics.cs" />

@@ -145,6 +145,11 @@ public sealed class SiegeHud : MonoBehaviour
 
     private void PollCamera()
     {
+        if (InputManager.instance != null && InputManager.instance.isActiveAndEnabled)
+        {
+            return;
+        }
+
         if (CameraController.instance == null || Mouse.current == null)
         {
             return;
@@ -174,7 +179,7 @@ public sealed class SiegeHud : MonoBehaviour
         defenderBlueprint.AddOptions(defenders);
         var attackers = new List<string>
         {
-            "ALL ENEMY BLUEPRINTS / RANDOM"
+            "RANDOM ENEMY"
         };
         foreach (SiegeShipOption option in session.AttackerOptions)
         {

@@ -229,6 +229,17 @@ public class MainUIPanels : MonoBehaviour
 
     public void PlayStart()
     {
+        SiegeSession siege = PlayManager.instance.SiegeSession;
+        if (siege != null)
+        {
+            if (siege.IsEditingBlueprint)
+            {
+                siege.Workshop.Close();
+            }
+
+            return;
+        }
+
         if (!PlayManager.instance.CanStartPlay(out string reason))
         {
             Debug.LogWarning(reason);
@@ -266,6 +277,11 @@ public class MainUIPanels : MonoBehaviour
 
     public void PlayEnd()
     {
+        if (PlayManager.instance.SiegeSession != null)
+        {
+            return;
+        }
+
         if (!CargoPersistence.SaveReturnCargo(PlayManager.instance.playMode, out string failureReason))
         {
             _returnStatus?.ShowFailure(failureReason);
@@ -289,7 +305,6 @@ public class MainUIPanels : MonoBehaviour
     {
         _transitions.CancelAll();
         PlayManager.instance.playMode = false;
-
         if (InputManager.instance != null)
         {
             InputManager.instance.EnterBuildMode();

@@ -749,6 +749,11 @@ public class BuildManager : MonoBehaviour
         _blueprintLoader?.Cancel();
     }
 
+    public void CancelBlueprintLoad()
+    {
+        StopActiveBlockLoad();
+    }
+
     public static string ConvertToResourcesPath(string fullPath)
     {
         return BlueprintBlockFactory.ToResourcePath(fullPath);

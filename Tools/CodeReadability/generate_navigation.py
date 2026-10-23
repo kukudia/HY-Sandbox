@@ -1194,11 +1194,28 @@ def main():
         },
         [
             "A --> B", "B --> C", "C --> Q", "Q --> R", "P -.->|按钮监听| D", "D --> E",
-            "B -->|启动时只读快照| V", "V -->|双方独立目录| W", "X -.->|下拉选项事件| Y", "Y --> Z",
+            "B -->|启动时只读快照| V", "V -->|双方独立目录| W", "P -.->|下拉选项事件| Y", "Y --> Z",
             "E -->|经Spawn| F", "E --> O", "P -.->|接管按钮| G", "G --> H",
             "H -.->|门控玩家输入| I", "H -.->|门控自主驾驶| J", "K -.->|新组的AI与镜头| J",
             "P -.->|修缮按钮经RepairCore/Ship| L", "L --> M", "M --> N", "M --> O",
             "L -->|建筑基地| S", "S --> T", "T --> U", "S --> O",
+        ],
+    )
+    graph(
+        "阵地战Main工作台与输入边界",
+        "源码推导：Siege保存Main真实UI与建造依赖，禁用Main自动开档和世界加载。整备B或工作台按钮进入独立存档预览，仅隐藏战场Renderer/Collider，不反复激活Durability；Session跳过战场刷新并拒绝部署、修缮、接管与开波。SaveManager不再全局删除Siege载具，异步BlueprintLoader仅替换预览。P经MainUIPanels返回，取消加载与撤销历史、销毁预览、恢复原显示/碰撞及驾驶视图、刷新蓝图目录；编辑不会免费更新已部署机体。战斗中Alt/F1沿用Main鼠标与推进器窗口操作。",
+        {
+            "A": "InputManager.Update", "B": "InputManager.PollSiege", "C": "SiegeWorkshop.Open",
+            "D": "SaveManager.LoadSave", "E": "BuildManager.LoadAllBlocks", "F": "BlueprintLoader.Load",
+            "G": "BuildManager.CreateBlock", "H": "BuildManager.SaveBlock", "I": "MainUIPanels.PlayStart",
+            "J": "SiegeWorkshop.Close", "K": "BuildManager.CancelBlueprintLoad", "L": "BlueprintLoader.Cancel",
+            "M": "SiegeFleet.RestoreView", "N": "SiegeSession.RefreshBlueprints", "O": "SiegeSession.Update",
+            "P": "ThrusterInfoPanel.Toggle", "Q": "SiegeWorkshop.Start", "R": "SiegeWorkshop.OpenSelected",
+        },
+        [
+            "A --> B", "B -->|整备B| C", "Q -.->|按钮监听| R", "R --> C", "C --> D", "D --> E", "E --> F",
+            "G --> H", "A -->|工作台P| I", "I --> J", "J --> K", "K --> L", "J --> M", "J --> N",
+            "C -.->|编辑状态门控| O", "B -->|战斗F1| P",
         ],
     )
     graph(

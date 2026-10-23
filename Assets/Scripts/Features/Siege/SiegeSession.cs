@@ -17,6 +17,17 @@ public sealed class SiegeSession : MonoBehaviour
     public WorldBuildingManager Buildings => buildings;
 
     private SiegeWaveDirector waves;
+    public SiegeWorkshop Workshop
+    {
+        get; private set;
+    }
+    public bool IsEditingBlueprint => Workshop != null && Workshop.IsOpen;
+
+    public void BindWorkshop(SiegeWorkshop workshop)
+    {
+        Workshop = workshop;
+    }
+
     private SiegeWreckBudget wrecks;
     public SiegeWreckBudget Wrecks => wrecks;
 
@@ -127,6 +138,11 @@ public sealed class SiegeSession : MonoBehaviour
 
     public bool BeginNextWave()
     {
+        if (IsEditingBlueprint)
+        {
+            return false;
+        }
+
         if (AttackerOptions.Length == 0)
         {
             Status = "Select a valid Enemy blueprint before starting a wave.";
@@ -148,20 +164,20 @@ public sealed class SiegeSession : MonoBehaviour
     public bool TryDeploy(int optionIndex, out string reason)
     {
         reason = "The siege is not ready.";
-        bool deployed = Fleet != null && Fleet.Deploy(optionIndex, out reason);
+        bool deployed = !IsEditingBlueprint && Fleet != null && Fleet.Deploy(optionIndex, out reason);
         Status = reason;
         return deployed;
     }
 
     public bool TryTakeControl(int slot)
     {
-        return Fleet != null && Fleet.TakeControl(slot);
+        return !IsEditingBlueprint && Fleet != null && Fleet.TakeControl(slot);
     }
 
     public bool TryRepair(bool repairBase)
     {
         string reason = "The siege is not ready.";
-        bool repaired = Fleet != null && (repairBase ? Fleet.Base.Repair(out reason) : SiegeRefit.Repair(Fleet.Driven, this, out reason));
+        bool repaired = !IsEditingBlueprint && Fleet != null && (repairBase ? Fleet.Base.Repair(out reason) : SiegeRefit.Repair(Fleet.Driven, this, out reason));
         Status = reason;
         return repaired;
     }
@@ -198,7 +214,7 @@ public sealed class SiegeSession : MonoBehaviour
 
     private void Update()
     {
-        if (!IsRunning)
+        if (!IsRunning || IsEditingBlueprint)
         {
             return;
         }

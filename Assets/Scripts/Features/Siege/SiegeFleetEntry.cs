@@ -24,6 +24,10 @@ public sealed class SiegeFleetEntry
     {
         get;
     }
+    public float MaximumDurability
+    {
+        get;
+    }
     public Vector3 DockPosition
     {
         get;
@@ -55,6 +59,11 @@ public sealed class SiegeFleetEntry
         PurchasePrice = purchasePrice;
         DockPosition = dockPosition;
         DockRotation = dockRotation;
+        if (Unit != null)
+        {
+            Unit.TryGetTotalDurability(out _, out float maximum);
+            MaximumDurability = maximum;
+        }
     }
 
     public void MarkLost()

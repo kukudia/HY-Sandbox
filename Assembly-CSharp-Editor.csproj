@@ -70,6 +70,7 @@
     <Compile Include="Assets\Editor\World\WorldPlayerBuildChecks.cs" />
     <Compile Include="Assets\Editor\World\WorldLabAuthoring.cs" />
     <Compile Include="Assets\Editor\Art\BlockArtValidation.cs" />
+    <Compile Include="Assets\Editor\Siege\SiegeWorkshopChecks.cs" />
     <Compile Include="Assets\Editor\Combat\EnemyBlueprintPoolChecks.cs" />
     <Compile Include="Assets\Editor\Combat\CombatHudSetup.cs" />
     <Compile Include="Assets\Editor\Siege\SiegeRegroupBenchmark.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Assets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
     <Compile Include="Assets\Editor\World\WorldSessionPlayChecks.cs" />
     <Compile Include="Assets\Editor\Combat\TurretRuntimeChecks.cs" />
+    <Compile Include="Assets\Editor\Siege\SiegeBlueprintCatalogChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\BlockStatusSetup.cs" />
     <Compile Include="Assets\Editor\Siege\SiegeFleetChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\NativeVfxMigration.cs" />
@@ -101,6 +103,7 @@
     <Compile Include="Assets\Editor\Diagnostics\Benchmarks\PowerPerformanceChecks.cs" />
     <Compile Include="Assets\Editor\Siege\SiegeBaseBlueprintAuthoring.cs" />
     <Compile Include="Assets\Editor\Combat\CombatHudPlayProbe.cs" />
+    <Compile Include="Assets\Editor\Siege\SiegeBlueprintSelectionAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\SiegeStressCancellationChecks.cs" />
     <Compile Include="Assets\Editor\World\WorldLabCollapseChecks.cs" />
     <Compile Include="Assets\Editor\Bots\BotNavigationPlayProbe.cs" />
@@ -141,6 +144,7 @@
     <Compile Include="Assets\Editor\Siege\SiegeTransientEffectBenchmark.cs" />
     <Compile Include="Assets\Editor\World\ProceduralVoxelWorldEditor.cs" />
     <Compile Include="Assets\Editor\World\OutpostContentChecks.cs" />
+    <Compile Include="Assets\Editor\Siege\SiegeMainInterfaceAuthoring.cs" />
     <Compile Include="Assets\Editor\Presentation\VfxGraphAuthoring.cs" />
     <Compile Include="Assets\Editor\Building\BuildPaletteBaker.cs" />
     <Compile Include="Assets\Editor\Siege\SiegeWreckBudgetChecks.cs" />

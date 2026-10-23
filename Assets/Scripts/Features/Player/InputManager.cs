@@ -55,6 +55,13 @@ public class InputManager : MonoBehaviour
             return;
         }
 
+        SiegeSession siege = PlayManager.instance != null ? PlayManager.instance.SiegeSession : null;
+        if (siege != null && !siege.IsEditingBlueprint)
+        {
+            PollSiege(siege, keyboard);
+            return;
+        }
+
         WorldSessionManager worldSession = PlayManager.instance != null ? PlayManager.instance.WorldSession : null;
         if (worldSession != null && worldSession.IsPlayRequested)
         {
@@ -167,6 +174,36 @@ public class InputManager : MonoBehaviour
         }
 
         ApplyCursorState(lockView);
+    }
+
+    private void PollSiege(SiegeSession siege, Keyboard keyboard)
+    {
+        if (keyboard.bKey.wasPressedThisFrame)
+        {
+            siege.Workshop?.Open();
+            return;
+        }
+
+        if (keyboard.pKey.wasPressedThisFrame)
+        {
+            siege.BeginNextWave();
+        }
+
+        if (keyboard.fKey.wasPressedThisFrame && PlayManager.instance.blocksParent != null)
+        {
+            CameraController.instance.FocusCameraOnBlock(PlayManager.instance.blocksParent.gameObject);
+        }
+
+        if (keyboard.f1Key.wasPressedThisFrame && PlayManager.instance.playMode)
+        {
+            MainUIPanels.instance?.ThrusterInfoPanel?.Toggle();
+        }
+
+        bool release = siege.Match == null || siege.Match.CanRefit || siege.Fleet.Driven == null || keyboard.altKey.isPressed;
+        lockView = release;
+        CameraController.instance.currentMode = release ? CameraMode.ThirdPersonLock : CameraMode.ThirdPerson;
+        PlayManager.instance.SetPlayMode(release);
+        ApplyCursorState(release);
     }
 
     private void ApplyCursorState(bool showCursor)

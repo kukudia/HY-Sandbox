@@ -255,6 +255,12 @@ public class SaveManager : MonoBehaviour
 
     public void LoadSave(string saveName)
     {
+        SiegeSession siege = PlayManager.instance != null ? PlayManager.instance.SiegeSession : null;
+        if (siege != null && !siege.IsEditingBlueprint)
+        {
+            return;
+        }
+
         if (BuildManager.instance != null && BuildManager.instance.IsLoadingBuildTarget(BuildTargetKind.PlayerSave, saveName, BuildManager.instance.currentEnemyBlueprintName))
         {
             Debug.Log($"Save {saveName} is already loading.");
@@ -265,7 +271,7 @@ public class SaveManager : MonoBehaviour
         ControlUnit[] deleteObjs = Object.FindObjectsByType<ControlUnit>(FindObjectsSortMode.None);
         foreach (ControlUnit obj in deleteObjs)
         {
-            if (GameManager.instance.blocksParent == null || obj.gameObject != GameManager.instance.blocksParent.gameObject)
+            if (siege == null && (GameManager.instance.blocksParent == null || obj.gameObject != GameManager.instance.blocksParent.gameObject))
             {
                 Destroy(obj.gameObject);
             }
@@ -279,6 +285,12 @@ public class SaveManager : MonoBehaviour
 
     public void LoadEnemyBlueprint(string blueprintName)
     {
+        SiegeSession siege = PlayManager.instance != null ? PlayManager.instance.SiegeSession : null;
+        if (siege != null && !siege.IsEditingBlueprint)
+        {
+            return;
+        }
+
         if (BuildManager.instance != null && BuildManager.instance.IsLoadingBuildTarget(BuildTargetKind.EnemyBlueprint, BuildManager.instance.currentSaveName, blueprintName))
         {
             Debug.Log($"Enemy blueprint {blueprintName} is already loading.");
@@ -289,7 +301,7 @@ public class SaveManager : MonoBehaviour
         ControlUnit[] deleteObjs = Object.FindObjectsByType<ControlUnit>(FindObjectsSortMode.None);
         foreach (ControlUnit obj in deleteObjs)
         {
-            if (GameManager.instance.blocksParent == null || obj.gameObject != GameManager.instance.blocksParent.gameObject)
+            if (siege == null && (GameManager.instance.blocksParent == null || obj.gameObject != GameManager.instance.blocksParent.gameObject))
             {
                 Destroy(obj.gameObject);
             }

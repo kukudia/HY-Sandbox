@@ -274,10 +274,24 @@ public sealed class SiegeFleet
         }
     }
 
-    private static void SetCamera(ControlUnit unit)
+    public void RestoreView()
+    {
+        if (Driven != null && Driven.IsAlive)
+        {
+            SetCamera(Driven.Unit);
+        }
+        else
+        {
+            SetBaseCamera();
+        }
+    }
+
+    private void SetCamera(ControlUnit unit)
     {
         PlayManager.instance.blocksParent = unit.transform;
         GameManager.instance.blocksParent = unit.transform;
+        unit.TryGetTotalDurability(out _, out float maximum);
+        PlayManager.instance.maxHealth = Driven != null && Driven.Unit == unit ? Driven.MaximumDurability : maximum;
         PlayManager.instance.lastHeight = unit.transform.position.y;
         if (CameraController.instance != null)
         {
