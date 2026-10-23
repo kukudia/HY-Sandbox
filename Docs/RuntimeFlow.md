@@ -2148,7 +2148,7 @@ flowchart TD
     D["WorldBuildingPlacement.Support()"]
     click D "../Assets/Scripts/Features/World/WorldBuildingPlacement.cs#L111" "打开源码"
     E["BuildingRuntime.ReleaseAnchor()"]
-    click E "../Assets/Scripts/Features/World/BuildingRuntime.cs#L393" "打开源码"
+    click E "../Assets/Scripts/Features/World/BuildingRuntime.cs#L395" "打开源码"
     F["ProceduralVoxelWorld.FlushDirty()"]
     click F "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L538" "打开源码"
     G["Durability.ApplyDamage()"]
@@ -2180,7 +2180,7 @@ flowchart TD
     Q["WorldBuildingManager.Place()"]
     click Q "../Assets/Scripts/Features/World/WorldBuildingManager.cs#L96" "打开源码"
     R["BuildingRuntime.HasGroundConnector()"]
-    click R "../Assets/Scripts/Features/World/BuildingRuntime.cs#L372" "打开源码"
+    click R "../Assets/Scripts/Features/World/BuildingRuntime.cs#L374" "打开源码"
     S["WreckSalvage.Convert()"]
     click S "../Assets/Scripts/Features/Salvage/WreckSalvage.cs#L10" "打开源码"
     T["CargoHold.ReleaseContents()"]
@@ -2223,7 +2223,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|FixedUpdate -->
 - [WorldBuildingPlacement.Support](../Assets/Scripts/Features/World/WorldBuildingPlacement.cs#L111)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingPlacement.cs|Support -->
-- [BuildingRuntime.ReleaseAnchor](../Assets/Scripts/Features/World/BuildingRuntime.cs#L393)
+- [BuildingRuntime.ReleaseAnchor](../Assets/Scripts/Features/World/BuildingRuntime.cs#L395)
 <!-- source: Assets/Scripts/Features/World/BuildingRuntime.cs|ReleaseAnchor -->
 - [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L538)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|FlushDirty -->
@@ -2255,7 +2255,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|ClearDebris -->
 - [WorldBuildingManager.Place](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L96)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|Place -->
-- [BuildingRuntime.HasGroundConnector](../Assets/Scripts/Features/World/BuildingRuntime.cs#L372)
+- [BuildingRuntime.HasGroundConnector](../Assets/Scripts/Features/World/BuildingRuntime.cs#L374)
 <!-- source: Assets/Scripts/Features/World/BuildingRuntime.cs|HasGroundConnector -->
 - [WreckSalvage.Convert](../Assets/Scripts/Features/Salvage/WreckSalvage.cs#L10)
 <!-- source: Assets/Scripts/Features/Salvage/WreckSalvage.cs|Convert -->

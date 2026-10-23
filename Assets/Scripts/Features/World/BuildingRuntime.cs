@@ -311,8 +311,10 @@ public sealed class BuildingRuntime : MonoBehaviour
                 connections.CollectNeighbors(queue.Dequeue(), neighbors);
                 foreach (Block neighbor in neighbors)
                 {
-                    if (neighbor.GetComponentInParent<BuildingRuntime>() == this && connected.Add(neighbor))
+                    // 大多数边指向已遍历的模块；只为新候选查询Unity层级归属。
+                    if (!connected.Contains(neighbor) && neighbor.GetComponentInParent<BuildingRuntime>() == this)
                     {
+                        connected.Add(neighbor);
                         queue.Enqueue(neighbor);
                     }
                 }
