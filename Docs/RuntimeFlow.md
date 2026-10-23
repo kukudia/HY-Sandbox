@@ -2871,3 +2871,49 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Deliver -->
 - [CargoHold.Store](../Assets/Scripts/Features/Salvage/CargoHold.cs#L128)
 <!-- source: Assets/Scripts/Features/Salvage/CargoHold.cs|Store -->
+
+## 阵地战阶段与经济规则
+
+源码推导：独立规则核心仅在部署和整备阶段允许支出。实际生成成功才登记敌机并消耗名额；登记ID去重，敌机结算一次，最后一个名额完成后发放整波奖励。基地失败清除名额并封锁后续操作。当前图不表示场景、AI或维修已经接入。
+
+```mermaid
+flowchart TD
+    A["SiegeMatch.BeginNextWave()"]
+    click A "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L66" "打开源码"
+    B["SiegeMatch.CanSpawn()"]
+    click B "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L79" "打开源码"
+    C["SiegeMatch.RegisterAttacker()"]
+    click C "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L84" "打开源码"
+    D["SiegeMatch.ResolveAttacker()"]
+    click D "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L96" "打开源码"
+    E["SiegeMatch.TrySpend()"]
+    click E "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L123" "打开源码"
+    F["SiegeMatch.LoseBase()"]
+    click F "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L134" "打开源码"
+    G["SiegeRulesChecks.Run()"]
+    click G "../Assets/Editor/Siege/SiegeRulesChecks.cs#L17" "打开源码"
+    A -.->|等待场景生成器| B
+    C --> B
+    C -.->|等待死亡或移除结算| D
+    D -.->|整备后可开始下一波| A
+    E -.->|仅部署或整备| A
+    F -.->|失败后拒绝| A
+    G -->|规则检查| A
+    G --> E
+    G --> F
+```
+
+- [SiegeMatch.BeginNextWave](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L66)
+<!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|BeginNextWave -->
+- [SiegeMatch.CanSpawn](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L79)
+<!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|CanSpawn -->
+- [SiegeMatch.RegisterAttacker](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L84)
+<!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|RegisterAttacker -->
+- [SiegeMatch.ResolveAttacker](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L96)
+<!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|ResolveAttacker -->
+- [SiegeMatch.TrySpend](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L123)
+<!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|TrySpend -->
+- [SiegeMatch.LoseBase](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L134)
+<!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|LoseBase -->
+- [SiegeRulesChecks.Run](../Assets/Editor/Siege/SiegeRulesChecks.cs#L17)
+<!-- source: Assets/Editor/Siege/SiegeRulesChecks.cs|Run -->

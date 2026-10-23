@@ -762,6 +762,16 @@
 | SalvagePlayProbe | [`IEnumerator BuildingSalvage()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L278) | private static |
 | SalvagePlayProbe | [`IEnumerator Scenario()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L430) | private static |
 
+## Assets/Editor/Siege/SiegeRulesChecks.cs
+
+// 职责：验证阵地战阶段、波次预算和经济的边界；无需进入Play或读写玩家存档。 // 入口：Run() / 菜单 HY-Sandbox/Validation/Siege Rules。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeRulesChecks | [`void RunFromMenu()`](../Assets/Editor/Siege/SiegeRulesChecks.cs#L11) | public static |
+| SiegeRulesChecks | [`string Run()`](../Assets/Editor/Siege/SiegeRulesChecks.cs#L17) | public static |
+| SiegeRulesChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeRulesChecks.cs#L117) | private static |
+
 ## Assets/Editor/World/OutpostContentAuthoring.cs
 
 // 职责：制作三套普通建筑与三套敌机轮廓底座JSON，保留可重建的项目源。 // 入口：Bake()；只写项目Resources，不修改用户蓝图或存档；已有JSON保留，编辑后可单独删除重建。
@@ -2843,6 +2853,20 @@
 | --- | --- | --- |
 | WreckSalvage | [`void Convert(Block block)`](../Assets/Scripts/Features/Salvage/WreckSalvage.cs#L10) | public static |
 | WreckSalvage | [`void ConvertGroup(ControlUnit unit)`](../Assets/Scripts/Features/Salvage/WreckSalvage.cs#L62) | public static |
+
+## Assets/Scripts/Features/Siege/SiegeMatch.cs
+
+// 职责：保存阵地战阶段、波次名额、金币和失败状态；不依赖场景对象或物理引擎。 // 入口：BeginNextWave() / RegisterAttacker() / ResolveAttacker() / TrySpend() / LoseBase()。 // 约束：生成成功才消耗名额；同一敌机只结算一次；维修和部署只能发生在整备阶段。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeMatch | [`bool BeginNextWave()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L66) | public |
+| SiegeMatch | [`bool CanSpawn(int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L79) | public |
+| SiegeMatch | [`bool RegisterAttacker(string id, int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L84) | public |
+| SiegeMatch | [`bool ResolveAttacker(string id, bool defeated)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L96) | public |
+| SiegeMatch | [`bool CanAfford(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L118) | public |
+| SiegeMatch | [`bool TrySpend(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L123) | public |
+| SiegeMatch | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L134) | public |
 
 ## Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs
 

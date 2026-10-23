@@ -1124,6 +1124,25 @@ def main():
             "I -->|实际停靠后| J", "J --> K",
         ],
     )
+    graph(
+        "阵地战阶段与经济规则",
+        "源码推导：独立规则核心仅在部署和整备阶段允许支出。实际生成成功才登记敌机并消耗名额；登记ID去重，敌机结算一次，最后一个名额完成后发放整波奖励。基地失败清除名额并封锁后续操作。当前图不表示场景、AI或维修已经接入。",
+        {
+            "A": "SiegeMatch.BeginNextWave",
+            "B": "SiegeMatch.CanSpawn",
+            "C": "SiegeMatch.RegisterAttacker",
+            "D": "SiegeMatch.ResolveAttacker",
+            "E": "SiegeMatch.TrySpend",
+            "F": "SiegeMatch.LoseBase",
+            "G": "SiegeRulesChecks.Run",
+        },
+        [
+            "A -.->|等待场景生成器| B", "C --> B",
+            "C -.->|等待死亡或移除结算| D", "D -.->|整备后可开始下一波| A",
+            "E -.->|仅部署或整备| A", "F -.->|失败后拒绝| A",
+            "G -->|规则检查| A", "G --> E", "G --> F",
+        ],
+    )
     doc = """# HY-Sandbox 运行时函数图
 
     这些图根据当前源码和调用者整理，用于寻找功能入口，不是采样得到的实际执行轨迹。实线表示直接调用（标注“经”时包含明确中间函数）；虚线标出协程、事件或注入动作。Unity Update/FixedUpdate 的独立入口不代表脚本执行顺序。

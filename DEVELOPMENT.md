@@ -375,3 +375,9 @@ ArtSource/VfxGraph和Blueprints下全部16份自有工具已明确职责/入口�
 ProjectileTurret发射后仅炮管模型沿炮口反向后退0.12m，0.04s快速后退、0.22s平滑恢复；参数和炮管引用在Inspector可编辑。LateUpdate独立于索敌与供电门控，停火继续复位，禁用立即恢复初始位置。单管/双管Prefab已通过Editor只补充引用，原其他参数保留，资产制作源同步。
 
 两个新炮塔的透明二维图重新渲染，并修正Single Sprite导入及真实建造条目Preview引用；Play实例确认两个图标都非空。菜单Refresh turret thumbnails只更新图标，不重新搭建炮塔。28条炮塔/后座检查、10条真实帧飞行/同步后座/停机复位检查通过；Unity编译、166脚本格式/函数图、dotnet build和diff检查通过（4个既有构建警告）。Main及炮弹材质的期间外部改动保留并排除本次提交。见 [验证记录](Docs/Validation/2026-10-11-turret-recoil-icons.json)。
+# 2026-10-23 阵地战研究与实现（进行中）
+
+- 目标与阶段验收见 [阵地战](Docs/SiegeWarfare.md)。先建立纯规则核心，再接入多舰部署/接管、友方AI、真实波次、金币维修和基地失守；后续以相同战斗场景验证拓扑及重组压力。
+- `SiegeMatch` 管理部署/战斗/整备/失败、生成名额和金币；生成成功才扣名额，同一敌机不重复结算，独立在场预算不改变无限波次目标。
+- 真实Unity Editor导入并执行 `SiegeRulesChecks.Run()`：19项通过；这是规则检查，不是玩法、视觉或万块性能验收。
+- 开始基线：dotnet构建0错误/3项既有依赖警告；CodeReadability既有 `MainUIPanels.cs` 格式差异。保留用户Editor布局改动。本次仅本地提交、不推送。
