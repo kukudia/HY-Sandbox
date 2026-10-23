@@ -773,6 +773,25 @@
 | SiegeBaseBlueprintAuthoring | [`TextAsset Generate(bool replace = false)`](../Assets/Editor/Siege/SiegeBaseBlueprintAuthoring.cs#L62) | public static |
 | SiegeBaseBlueprintAuthoring | [`void Add(BlockDataList blueprint, string resource, Vector3 position, string id = null)`](../Assets/Editor/Siege/SiegeBaseBlueprintAuthoring.cs#L153) | private static |
 
+## Assets/Editor/Siege/SiegeBlueprintCatalogChecks.cs
+
+// 职责：验证攻守蓝图目录隔离、坏文件容错、身份复制与源文件只读边界。 // 入口：Run()；使用Temp内独立目录，不读写用户存档。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeBlueprintCatalogChecks | [`string Run()`](../Assets/Editor/Siege/SiegeBlueprintCatalogChecks.cs#L10) | public static |
+| SiegeBlueprintCatalogChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeBlueprintCatalogChecks.cs#L51) | private static |
+
+## Assets/Editor/Siege/SiegeBlueprintSelectionAuthoring.cs
+
+// 职责：通过Editor API为正常Siege安装真实可编辑的双方蓝图选择器，保留压力场夹具。 // 入口：Install()；重复执行复用现有控件，不覆盖Main或用户蓝图。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeBlueprintSelectionAuthoring | [`void Install()`](../Assets/Editor/Siege/SiegeBlueprintSelectionAuthoring.cs#L12) | public static |
+| SiegeBlueprintSelectionAuthoring | [`Dropdown CreateDropdown(Transform parent, string name, float y)`](../Assets/Editor/Siege/SiegeBlueprintSelectionAuthoring.cs#L56) | private static |
+| SiegeBlueprintSelectionAuthoring | [`void Place(RectTransform rect, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeBlueprintSelectionAuthoring.cs#L83) | private static |
+
 ## Assets/Editor/Siege/SiegeBuildingBenchmark.cs
 
 // 职责：用真实两层建筑夹具测量完整支撑与单次范围损毁，保留生产同步开销与正确性计数。 // 入口：Start() / Status；远离战场、无物理步，不代表大规模交火帧率。
@@ -3189,6 +3208,14 @@
 | SiegeBase | [`void OnBlockDestroyed(Block block)`](../Assets/Scripts/Features/Siege/SiegeBase.cs#L123) | private |
 | SiegeBase | [`void Dispose()`](../Assets/Scripts/Features/Siege/SiegeBase.cs#L131) | public |
 
+## Assets/Scripts/Features/Siege/SiegeBlueprintCatalog.cs
+
+// 职责：只读加载阵地战双方的用户蓝图快照，过滤不能部署的存档，不修改源文件。 // 入口：Load()；玩家来自Saves，攻方来自EnemyBlueprints，压力场可保留固定夹具。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeBlueprintCatalog | [`SiegeShipOption[] Load(string directory, int coinsPerBlock, out string message)`](../Assets/Scripts/Features/Siege/SiegeBlueprintCatalog.cs#L10) | public static |
+
 ## Assets/Scripts/Features/Siege/SiegeDrivingPlayerChecks.cs
 
 // 职责：显式Player验证通过虚拟Input System设备走键盘、HUD点击与真实飞行物理链。 // 入口：Run()；只由-siege-checks-driving调用，finally恢复设备与后台输入设置。
@@ -3223,9 +3250,10 @@
 | SiegeFleet | [`void NotifyLost(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/SiegeFleet.cs#L179) | public |
 | SiegeFleet | [`SiegeFleetEntry Spawn( BlockDataList blueprint, string id, string displayName, int price, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Siege/SiegeFleet.cs#L205) | private |
 | SiegeFleet | [`BlockDataList PrepareBlueprint(TextAsset asset, out string id)`](../Assets/Scripts/Features/Siege/SiegeFleet.cs#L240) | public static |
-| SiegeFleet | [`void Park(ControlUnit unit)`](../Assets/Scripts/Features/Siege/SiegeFleet.cs#L254) | private static |
-| SiegeFleet | [`void SetCamera(ControlUnit unit)`](../Assets/Scripts/Features/Siege/SiegeFleet.cs#L272) | private static |
-| SiegeFleet | [`void SetBaseCamera()`](../Assets/Scripts/Features/Siege/SiegeFleet.cs#L284) | private |
+| SiegeFleet | [`BlockDataList PrepareBlueprint(string json, out string id)`](../Assets/Scripts/Features/Siege/SiegeFleet.cs#L245) | public static |
+| SiegeFleet | [`void Park(ControlUnit unit)`](../Assets/Scripts/Features/Siege/SiegeFleet.cs#L259) | private static |
+| SiegeFleet | [`void SetCamera(ControlUnit unit)`](../Assets/Scripts/Features/Siege/SiegeFleet.cs#L277) | private static |
+| SiegeFleet | [`void SetBaseCamera()`](../Assets/Scripts/Features/Siege/SiegeFleet.cs#L289) | private |
 
 ## Assets/Scripts/Features/Siege/SiegeFleetEntry.cs
 
@@ -3241,14 +3269,17 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeHud | [`void OnEnable()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L36) | private |
-| SiegeHud | [`void OnDisable()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L60) | private |
-| SiegeHud | [`void Update()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L80) | private |
-| SiegeHud | [`void PollCamera()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L114) | private |
-| SiegeHud | [`void StartWave()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L127) | private |
-| SiegeHud | [`void RepairCore()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L132) | private |
-| SiegeHud | [`void RepairShip()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L137) | private |
-| SiegeHud | [`void Restart()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L142) | private |
+| SiegeHud | [`void OnEnable()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L44) | private |
+| SiegeHud | [`void OnDisable()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L70) | private |
+| SiegeHud | [`void Update()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L92) | private |
+| SiegeHud | [`void PollCamera()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L146) | private |
+| SiegeHud | [`void RefreshOptions()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L159) | private |
+| SiegeHud | [`void RefreshBlueprints()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L189) | private |
+| SiegeHud | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L195) | private |
+| SiegeHud | [`void StartWave()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L200) | private |
+| SiegeHud | [`void RepairCore()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L205) | private |
+| SiegeHud | [`void RepairShip()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L210) | private |
+| SiegeHud | [`void Restart()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L215) | private |
 
 ## Assets/Scripts/Features/Siege/SiegeMatch.cs
 
@@ -3317,20 +3348,22 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeSession | [`void Awake()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L35) | private |
-| SiegeSession | [`void Start()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L46) | private |
-| SiegeSession | [`bool Begin()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L56) | public |
-| SiegeSession | [`bool BeginNextWave()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L78) | public |
-| SiegeSession | [`bool TryDeploy(int optionIndex, out string reason)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L92) | public |
-| SiegeSession | [`bool TryTakeControl(int slot)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L100) | public |
-| SiegeSession | [`bool TryRepair(bool repairBase)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L105) | public |
-| SiegeSession | [`void End()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L113) | public |
-| SiegeSession | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L124) | public |
-| SiegeSession | [`void NotifyCockpitDestroyed(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L138) | public |
-| SiegeSession | [`void Update()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L143) | private |
-| SiegeSession | [`void RepairBaseBetweenWaves()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L176) | private |
-| SiegeSession | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L187) | private |
-| SiegeSession | [`void SetSimulationActive(bool active)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L194) | private |
+| SiegeSession | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L35) | public |
+| SiegeSession | [`bool RefreshBlueprints()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L43) | public |
+| SiegeSession | [`void Awake()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L84) | private |
+| SiegeSession | [`void Start()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L95) | private |
+| SiegeSession | [`bool Begin()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L105) | public |
+| SiegeSession | [`bool BeginNextWave()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L128) | public |
+| SiegeSession | [`bool TryDeploy(int optionIndex, out string reason)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L148) | public |
+| SiegeSession | [`bool TryTakeControl(int slot)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L156) | public |
+| SiegeSession | [`bool TryRepair(bool repairBase)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L161) | public |
+| SiegeSession | [`void End()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L169) | public |
+| SiegeSession | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L180) | public |
+| SiegeSession | [`void NotifyCockpitDestroyed(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L194) | public |
+| SiegeSession | [`void Update()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L199) | private |
+| SiegeSession | [`void RepairBaseBetweenWaves()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L232) | private |
+| SiegeSession | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L243) | private |
+| SiegeSession | [`void SetSimulationActive(bool active)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L250) | private |
 
 ## Assets/Scripts/Features/Siege/SiegeSettings.cs
 
@@ -3338,7 +3371,7 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeSettings | [`SiegeMatch CreateMatch()`](../Assets/Scripts/Features/Siege/SiegeSettings.cs#L67) | public |
+| SiegeSettings | [`SiegeMatch CreateMatch()`](../Assets/Scripts/Features/Siege/SiegeSettings.cs#L74) | public |
 
 ## Assets/Scripts/Features/Siege/SiegeStressPopulation.cs
 

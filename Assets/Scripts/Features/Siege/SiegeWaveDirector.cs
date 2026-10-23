@@ -38,17 +38,17 @@ public sealed class SiegeWaveDirector
         }
 
         SiegeSettings settings = session.Settings;
-        if (time < nextSpawn || !session.Match.CanSpawn(settings.MaximumActiveEnemies) || settings.Ships.Length == 0 || session.Fleet.Base.Unit == null)
+        if (time < nextSpawn || !session.Match.CanSpawn(settings.MaximumActiveEnemies) || session.AttackerOptions.Length == 0 || session.Fleet.Base.Unit == null)
         {
             return;
         }
 
         nextSpawn = time + Mathf.Max(0.1f, settings.SpawnInterval);
-        SiegeShipOption option = settings.Ships[random.Next(settings.Ships.Length)];
+        SiegeShipOption option = session.AttackerOptions[session.SelectedAttacker >= 0 ? session.SelectedAttacker : random.Next(session.AttackerOptions.Length)];
         double angle = random.NextDouble() * Math.PI * 2.0;
         Vector3 offset = new Vector3((float)Math.Cos(angle), 0f, (float)Math.Sin(angle)) * settings.AttackRadius;
         Vector3 position = session.Fleet.Base.Core.transform.position + offset + Vector3.up * 10f;
-        BlockDataList blueprint = SiegeFleet.PrepareBlueprint(option.Blueprint, out string id);
+        BlockDataList blueprint = SiegeFleet.PrepareBlueprint(option.BlueprintJson, out string id);
         ControlUnit unit = EnemyBlueprintFactory.Spawn(
             blueprint,
             "Raider " + session.Match.Wave + " / " + option.DisplayName,

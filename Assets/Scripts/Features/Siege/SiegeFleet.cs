@@ -37,12 +37,12 @@ public sealed class SiegeFleet
     public bool Deploy(int optionIndex, out string reason)
     {
         reason = "Deployment is only available between waves.";
-        if (!session.Match.CanRefit || optionIndex < 0 || optionIndex >= session.Settings.Ships.Length)
+        if (!session.Match.CanRefit || optionIndex < 0 || optionIndex >= session.DefenderOptions.Length)
         {
             return false;
         }
 
-        SiegeShipOption option = session.Settings.Ships[optionIndex];
+        SiegeShipOption option = session.DefenderOptions[optionIndex];
         int slot = Array.FindIndex(Ships, entry => entry == null || !entry.IsAlive);
         reason = slot < 0 ? "All deployment bays are occupied." : "Insufficient coins.";
         if (slot < 0 || !session.Match.CanAfford(option.Price))
@@ -50,7 +50,7 @@ public sealed class SiegeFleet
             return false;
         }
 
-        BlockDataList blueprint = PrepareBlueprint(option.Blueprint, out string id);
+        BlockDataList blueprint = PrepareBlueprint(option.BlueprintJson, out string id);
         if (!SiegeRefit.IsClear(blueprint, docks[slot].position, docks[slot].rotation, id, out reason))
         {
             return false;
@@ -239,8 +239,13 @@ public sealed class SiegeFleet
 
     public static BlockDataList PrepareBlueprint(TextAsset asset, out string id)
     {
+        return PrepareBlueprint(asset.text, out id);
+    }
+
+    public static BlockDataList PrepareBlueprint(string json, out string id)
+    {
         id = Guid.NewGuid().ToString("N");
-        BlockDataList blueprint = JsonUtility.FromJson<BlockDataList>(asset.text);
+        BlockDataList blueprint = JsonUtility.FromJson<BlockDataList>(json);
         for (int index = 0; index < blueprint.blocks.Count; index++)
         {
             blueprint.blocks[index].id = id + ":" + index;

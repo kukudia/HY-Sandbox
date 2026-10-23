@@ -1,6 +1,8 @@
 // 职责：托管阵地战会话生命周期、波次入口和基地失败；不改变现有Main WorldSession流程。
 // 入口：Begin() / BeginNextWave() / End()；场景通过Inspector引用设置和泊位。
 using UnityEngine;
+using System;
+using System.IO;
 
 public sealed class SiegeSession : MonoBehaviour
 {
@@ -22,6 +24,53 @@ public sealed class SiegeSession : MonoBehaviour
     private SiegePhase previousPhase;
     public string Status { get; private set; } = "Deploy a fleet, then begin the first wave.";
     public SiegeSettings Settings => settings;
+    public SiegeShipOption[] DefenderOptions { get; private set; } = Array.Empty<SiegeShipOption>();
+    public SiegeShipOption[] AttackerOptions { get; private set; } = Array.Empty<SiegeShipOption>();
+    public string BlueprintStatus
+    {
+        get; private set;
+    }
+    public int SelectedAttacker { get; private set; } = -1;
+
+    public void SelectAttacker(int index)
+    {
+        if (Match != null && Match.CanRefit && index >= -1 && index < AttackerOptions.Length)
+        {
+            SelectedAttacker = index;
+        }
+    }
+
+    public bool RefreshBlueprints()
+    {
+        if (Match != null && !Match.CanRefit)
+        {
+            return false;
+        }
+
+        if (settings.UsePlayerBlueprintFolders)
+        {
+            DefenderOptions = SiegeBlueprintCatalog.Load(
+                Path.Combine(Application.persistentDataPath, "Saves"),
+                settings.DeploymentCoinsPerBlock,
+                out string defenders);
+            AttackerOptions = SiegeBlueprintCatalog.Load(
+                Path.Combine(Application.persistentDataPath, "EnemyBlueprints"),
+                settings.DeploymentCoinsPerBlock,
+                out string attackers);
+            BlueprintStatus = defenders + " " + attackers;
+        }
+        else
+        {
+            DefenderOptions = settings.Ships;
+            AttackerOptions = settings.Ships;
+            BlueprintStatus = "Fixed benchmark blueprints.";
+        }
+
+        SelectedAttacker = -1;
+        Status = BlueprintStatus;
+        return true;
+    }
+
     public SiegeMatch Match
     {
         get; private set;
@@ -61,6 +110,7 @@ public sealed class SiegeSession : MonoBehaviour
         }
 
         Match = settings.CreateMatch();
+        RefreshBlueprints();
         Fleet = new SiegeFleet(this, shipDocks);
         if (!Fleet.CreateBase(baseDock))
         {
@@ -77,6 +127,12 @@ public sealed class SiegeSession : MonoBehaviour
 
     public bool BeginNextWave()
     {
+        if (AttackerOptions.Length == 0)
+        {
+            Status = "Select a valid Enemy blueprint before starting a wave.";
+            return false;
+        }
+
         if (!IsRunning || !Match.BeginNextWave())
         {
             return false;

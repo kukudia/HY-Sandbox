@@ -5,6 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public sealed class SiegeHud : MonoBehaviour
 {
@@ -30,6 +31,13 @@ public sealed class SiegeHud : MonoBehaviour
     private Button[] deploy = new Button[0];
     [SerializeField]
     private Button[] takeControl = new Button[0];
+    [SerializeField]
+    private Dropdown defenderBlueprint;
+    [SerializeField]
+    private Dropdown attackerBlueprint;
+    [SerializeField]
+    private Button refreshBlueprints;
+    private SiegeShipOption[] displayedOptions;
     private UnityAction[] deploymentActions;
     private UnityAction[] controlActions;
     private float nextRefresh;
@@ -40,7 +48,7 @@ public sealed class SiegeHud : MonoBehaviour
         for (int index = 0; index < deploy.Length; index++)
         {
             int option = index;
-            deploymentActions[index] = () => session.TryDeploy(option, out _);
+            deploymentActions[index] = () => session.TryDeploy(defenderBlueprint != null ? defenderBlueprint.value : option, out _);
             deploy[index].onClick.AddListener(deploymentActions[index]);
         }
 
@@ -55,6 +63,8 @@ public sealed class SiegeHud : MonoBehaviour
         repairCore.onClick.AddListener(RepairCore);
         repairShip.onClick.AddListener(RepairShip);
         restart.onClick.AddListener(Restart);
+        refreshBlueprints?.onClick.AddListener(RefreshBlueprints);
+        attackerBlueprint?.onValueChanged.AddListener(SelectAttacker);
     }
 
     private void OnDisable()
@@ -73,6 +83,8 @@ public sealed class SiegeHud : MonoBehaviour
         repairCore.onClick.RemoveListener(RepairCore);
         repairShip.onClick.RemoveListener(RepairShip);
         restart.onClick.RemoveListener(Restart);
+        refreshBlueprints?.onClick.RemoveListener(RefreshBlueprints);
+        attackerBlueprint?.onValueChanged.RemoveListener(SelectAttacker);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
@@ -86,18 +98,38 @@ public sealed class SiegeHud : MonoBehaviour
         }
 
         nextRefresh = Time.unscaledTime + 0.25f;
+        if (displayedOptions != session.DefenderOptions)
+        {
+            RefreshOptions();
+        }
+
         SiegeMatch match = session.Match;
         heading.text = match.Phase == SiegePhase.Defeat ? "BASTION LOST" : "BASTION / " + match.Phase.ToString().ToUpperInvariant();
         economy.text = "CREDITS  " + match.Coins.ToString("N0") + "     WAVE  " + match.Wave + "     RAIDERS  " + match.ActiveAttackers + " / +" + match.PendingAttackers;
         status.text = session.Status;
         Durability core = session.Fleet.Base.Core != null ? session.Fleet.Base.Core.GetComponent<Durability>() : null;
         coreHealth.text = core != null ? "CORE  " + Mathf.CeilToInt(core.currentDurability) + " / " + Mathf.CeilToInt(core.maxDurability) : "CORE DESTROYED";
-        wave.interactable = match.CanRefit;
+        wave.interactable = match.CanRefit && session.AttackerOptions.Length > 0;
+        if (defenderBlueprint != null)
+        {
+            defenderBlueprint.interactable = match.CanRefit;
+            attackerBlueprint.interactable = match.CanRefit;
+            refreshBlueprints.interactable = match.CanRefit;
+        }
+
         repairCore.interactable = match.CanRefit && session.Fleet.Base.IsAlive;
         repairShip.interactable = match.CanRefit && session.Fleet.Driven != null && session.Fleet.Driven.IsAlive;
         for (int index = 0; index < deploy.Length; index++)
         {
-            SiegeShipOption option = session.Settings.Ships[index];
+            int optionIndex = defenderBlueprint != null ? defenderBlueprint.value : index;
+            if (optionIndex >= session.DefenderOptions.Length)
+            {
+                deploy[index].interactable = false;
+                deploy[index].GetComponentInChildren<Text>().text = "NO VALID SAVES BLUEPRINT";
+                continue;
+            }
+
+            SiegeShipOption option = session.DefenderOptions[optionIndex];
             deploy[index].interactable = match.CanAfford(option.Price);
             deploy[index].GetComponentInChildren<Text>().text = option.DisplayName.ToUpperInvariant() + "  /  " + option.Price;
         }
@@ -122,6 +154,47 @@ public sealed class SiegeHud : MonoBehaviour
         CameraController.instance.currentMode = looking ? CameraMode.ThirdPerson : CameraMode.ThirdPersonLock;
         Cursor.lockState = looking ? CursorLockMode.Locked : CursorLockMode.None;
         Cursor.visible = !looking;
+    }
+
+    private void RefreshOptions()
+    {
+        displayedOptions = session.DefenderOptions;
+        if (defenderBlueprint == null)
+        {
+            return;
+        }
+
+        var defenders = new List<string>();
+        foreach (SiegeShipOption option in session.DefenderOptions)
+        {
+            defenders.Add(option.DisplayName + " / " + option.Price);
+        }
+
+        defenderBlueprint.ClearOptions();
+        defenderBlueprint.AddOptions(defenders);
+        var attackers = new List<string>
+        {
+            "ALL ENEMY BLUEPRINTS / RANDOM"
+        };
+        foreach (SiegeShipOption option in session.AttackerOptions)
+        {
+            attackers.Add(option.DisplayName);
+        }
+
+        attackerBlueprint.ClearOptions();
+        attackerBlueprint.AddOptions(attackers);
+        attackerBlueprint.SetValueWithoutNotify(0);
+    }
+
+    private void RefreshBlueprints()
+    {
+        session.RefreshBlueprints();
+        RefreshOptions();
+    }
+
+    private void SelectAttacker(int index)
+    {
+        session.SelectAttacker(index - 1);
     }
 
     private void StartWave()

@@ -1189,9 +1189,12 @@ def main():
             "O": "SiegeMatch.TrySpend", "P": "SiegeHud.OnEnable",
             "Q": "SiegeBase.Create", "R": "WorldBuildingManager.RestoreBuilding",
             "S": "SiegeBase.Repair", "T": "BuildingRuntime.TryRefit", "U": "BuildingRefit.Apply",
+            "V": "SiegeSession.RefreshBlueprints", "W": "SiegeBlueprintCatalog.Load", "X": "SiegeHud.RefreshOptions",
+            "Y": "SiegeHud.SelectAttacker", "Z": "SiegeSession.SelectAttacker",
         },
         [
             "A --> B", "B --> C", "C --> Q", "Q --> R", "P -.->|按钮监听| D", "D --> E",
+            "B -->|启动时只读快照| V", "V -->|双方独立目录| W", "X -.->|下拉选项事件| Y", "Y --> Z",
             "E -->|经Spawn| F", "E --> O", "P -.->|接管按钮| G", "G --> H",
             "H -.->|门控玩家输入| I", "H -.->|门控自主驾驶| J", "K -.->|新组的AI与镜头| J",
             "P -.->|修缮按钮经RepairCore/Ship| L", "L --> M", "M --> N", "M --> O",

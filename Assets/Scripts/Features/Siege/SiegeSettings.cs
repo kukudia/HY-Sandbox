@@ -14,6 +14,13 @@ public sealed class SiegeSettings : ScriptableObject
     private int baseReplacementValue = 6000;
     [SerializeField]
     private SiegeShipOption[] ships = Array.Empty<SiegeShipOption>();
+    [SerializeField, Tooltip("正常玩法从Saves与EnemyBlueprints读取；压力场关闭以保留可重复夹具。")]
+    private bool usePlayerBlueprintFolders;
+    [SerializeField, Min(1), Tooltip("用户舰船部署价格：模块数量乘以此单价。")]
+    private int deploymentCoinsPerBlock = 5;
+    public bool UsePlayerBlueprintFolders => usePlayerBlueprintFolders;
+    public int DeploymentCoinsPerBlock => deploymentCoinsPerBlock;
+
     [SerializeField, Min(0)]
     private int startingCoins = 3000;
     [SerializeField, Min(1)]
@@ -79,6 +86,19 @@ public sealed class SiegeSettings : ScriptableObject
 [Serializable]
 public sealed class SiegeShipOption
 {
+    [NonSerialized]
+    private string runtimeJson;
+    public SiegeShipOption()
+    {
+    }
+
+    public SiegeShipOption(string name, string json, int purchasePrice)
+    {
+        displayName = name;
+        runtimeJson = json;
+        price = purchasePrice;
+    }
+
     [SerializeField]
     private string displayName;
     [SerializeField]
@@ -87,5 +107,6 @@ public sealed class SiegeShipOption
     private int price = 500;
     public string DisplayName => displayName;
     public TextAsset Blueprint => blueprint;
+    public string BlueprintJson => runtimeJson ?? (blueprint != null ? blueprint.text : null);
     public int Price => price;
 }

@@ -25,6 +25,8 @@ MonoBehaviour:
   - displayName: Manta
     blueprint: {fileID: 4900000, guid: 04d828669bafe3046b05d4ec2502e260, type: 3}
     price: 650
+  usePlayerBlueprintFolders: 1
+  deploymentCoinsPerBlock: 5
   startingCoins: 3000
   firstWaveSize: 2
   waveGrowth: 1
@@ -41,3 +43,4 @@ MonoBehaviour:
   maximumEnemyWreckBlocks: 512
   enemyWreckLifetime: 15
   enemyWreckRetirePerScan: 8
+  autoRepairBase: 1
