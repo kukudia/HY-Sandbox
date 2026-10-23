@@ -46,6 +46,9 @@ public sealed class SiegeSettings : ScriptableObject
     private float enemyWreckLifetime = 15f;
     [SerializeField, Min(1), Tooltip("每次扫描最多退场组数，控制回收与掉落突发。")]
     private int enemyWreckRetirePerScan = 8;
+    [SerializeField, Tooltip("每次波次结束后按报价自动修缮基地；金币不足或净空受阻时不扣款。")]
+    private bool autoRepairBase = true;
+    public bool AutoRepairBase => autoRepairBase;
     public TextAsset BaseBlueprint => baseBlueprint;
     public string BaseCoreBlockId => baseCoreBlockId;
     public int BaseReplacementValue => baseReplacementValue;

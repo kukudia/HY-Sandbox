@@ -1209,10 +1209,12 @@ def main():
             "K": "SiegeSession.NotifyCockpitDestroyed", "L": "SiegeFleet.NotifyLost", "M": "SiegeSession.LoseBase",
             "N": "SiegeSession.OnDestroy", "O": "SiegeWaveDirector.Stop", "P": "SiegeHud.Restart",
             "Q": "BuildingRuntime.DestroyBlock", "R": "SiegeBase.OnBlockDestroyed", "S": "SiegeBase.Dispose",
+            "T": "SiegeSession.RepairBaseBetweenWaves", "U": "SiegeBase.Quote", "V": "SiegeBase.Repair",
         },
         [
             "A --> B", "A --> C", "D --> E", "E --> F", "E --> H",
             "G -.->|Attacker事件标记后由Tick读取| E", "D -->|波次结束| C",
+            "D -->|进入波次间隔后仅一次| T", "T -->|有损伤才修缮| U", "T -->|成功后扣费| V",
             "I -->|舰船| J", "J --> G", "J --> K", "K --> L",
             "I -->|建筑| Q", "Q -.->|BlockDestroyed事件| R", "R -->|指定核心被摧毁| M",
             "D -->|核心失活或离开建筑主体| M", "N --> S",

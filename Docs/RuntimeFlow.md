@@ -3152,7 +3152,7 @@ flowchart TD
     B["SiegeMatch.BeginNextWave()"]
     click B "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L66" "打开源码"
     C["SiegeSession.SetSimulationActive()"]
-    click C "../Assets/Scripts/Features/Siege/SiegeSession.cs#L181" "打开源码"
+    click C "../Assets/Scripts/Features/Siege/SiegeSession.cs#L194" "打开源码"
     D["SiegeSession.Update()"]
     click D "../Assets/Scripts/Features/Siege/SiegeSession.cs#L143" "打开源码"
     E["SiegeWaveDirector.Tick()"]
@@ -3174,7 +3174,7 @@ flowchart TD
     M["SiegeSession.LoseBase()"]
     click M "../Assets/Scripts/Features/Siege/SiegeSession.cs#L124" "打开源码"
     N["SiegeSession.OnDestroy()"]
-    click N "../Assets/Scripts/Features/Siege/SiegeSession.cs#L174" "打开源码"
+    click N "../Assets/Scripts/Features/Siege/SiegeSession.cs#L187" "打开源码"
     O["SiegeWaveDirector.Stop()"]
     click O "../Assets/Scripts/Features/Siege/SiegeWaveDirector.cs#L75" "打开源码"
     P["SiegeHud.Restart()"]
@@ -3185,6 +3185,12 @@ flowchart TD
     click R "../Assets/Scripts/Features/Siege/SiegeBase.cs#L123" "打开源码"
     S["SiegeBase.Dispose()"]
     click S "../Assets/Scripts/Features/Siege/SiegeBase.cs#L131" "打开源码"
+    T["SiegeSession.RepairBaseBetweenWaves()"]
+    click T "../Assets/Scripts/Features/Siege/SiegeSession.cs#L176" "打开源码"
+    U["SiegeBase.Quote()"]
+    click U "../Assets/Scripts/Features/Siege/SiegeBase.cs#L70" "打开源码"
+    V["SiegeBase.Repair()"]
+    click V "../Assets/Scripts/Features/Siege/SiegeBase.cs#L98" "打开源码"
     A --> B
     A --> C
     D --> E
@@ -3192,6 +3198,9 @@ flowchart TD
     E --> H
     G -.->|Attacker事件标记后由Tick读取| E
     D -->|波次结束| C
+    D -->|进入波次间隔后仅一次| T
+    T -->|有损伤才修缮| U
+    T -->|成功后扣费| V
     I -->|舰船| J
     J --> G
     J --> K
@@ -3211,7 +3220,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|BeginNextWave -->
 - [SiegeMatch.BeginNextWave](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L66)
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|BeginNextWave -->
-- [SiegeSession.SetSimulationActive](../Assets/Scripts/Features/Siege/SiegeSession.cs#L181)
+- [SiegeSession.SetSimulationActive](../Assets/Scripts/Features/Siege/SiegeSession.cs#L194)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|SetSimulationActive -->
 - [SiegeSession.Update](../Assets/Scripts/Features/Siege/SiegeSession.cs#L143)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|Update -->
@@ -3233,7 +3242,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/SiegeFleet.cs|NotifyLost -->
 - [SiegeSession.LoseBase](../Assets/Scripts/Features/Siege/SiegeSession.cs#L124)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|LoseBase -->
-- [SiegeSession.OnDestroy](../Assets/Scripts/Features/Siege/SiegeSession.cs#L174)
+- [SiegeSession.OnDestroy](../Assets/Scripts/Features/Siege/SiegeSession.cs#L187)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|OnDestroy -->
 - [SiegeWaveDirector.Stop](../Assets/Scripts/Features/Siege/SiegeWaveDirector.cs#L75)
 <!-- source: Assets/Scripts/Features/Siege/SiegeWaveDirector.cs|Stop -->
@@ -3245,6 +3254,12 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/SiegeBase.cs|OnBlockDestroyed -->
 - [SiegeBase.Dispose](../Assets/Scripts/Features/Siege/SiegeBase.cs#L131)
 <!-- source: Assets/Scripts/Features/Siege/SiegeBase.cs|Dispose -->
+- [SiegeSession.RepairBaseBetweenWaves](../Assets/Scripts/Features/Siege/SiegeSession.cs#L176)
+<!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|RepairBaseBetweenWaves -->
+- [SiegeBase.Quote](../Assets/Scripts/Features/Siege/SiegeBase.cs#L70)
+<!-- source: Assets/Scripts/Features/Siege/SiegeBase.cs|Quote -->
+- [SiegeBase.Repair](../Assets/Scripts/Features/Siege/SiegeBase.cs#L98)
+<!-- source: Assets/Scripts/Features/Siege/SiegeBase.cs|Repair -->
 
 ## 阵地战独立Player验证
 

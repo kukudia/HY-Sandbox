@@ -115,6 +115,27 @@ public static class SiegePlayChecks
             checks,
             "wave start activates simulation and closes repair",
             session.BeginNextWave() && PlayManager.instance.playMode && !session.TryRepair(false));
+        Durability baseHealth = session.Fleet.Base.Core.GetComponent<Durability>();
+        baseHealth.currentDurability -= 25f;
+        long automaticRepairQuote = session.Fleet.Base.Quote();
+        int waveAttackers = session.Match.PendingAttackers;
+        for (int index = 0; index < waveAttackers; index++)
+        {
+            string attackerId = "automatic-refit-check-" + index;
+            session.Match.RegisterAttacker(attackerId, session.Settings.MaximumActiveEnemies);
+            session.Match.ResolveAttacker(attackerId, true);
+        }
+
+        long coinsBeforeAutomaticRepair = session.Match.Coins;
+        System.Reflection.MethodInfo update = typeof(SiegeSession).GetMethod("Update", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        update.Invoke(session, null);
+        long coinsAfterAutomaticRepair = session.Match.Coins;
+        update.Invoke(session, null);
+        Check(
+            checks,
+            "wave intermission automatically repairs base and spends its exact quote once",
+            session.Match.Phase == SiegePhase.Intermission && Mathf.Approximately(baseHealth.currentDurability, baseHealth.maxDurability) && coinsAfterAutomaticRepair == coinsBeforeAutomaticRepair - automaticRepairQuote && session.Match.Coins == coinsAfterAutomaticRepair && automaticRepairQuote > 0 && session.Status.Contains("Auto-refit"));
+        Check(checks, "next wave starts after automatic refit", session.BeginNextWave());
         ControlUnit previousAllyGroup = session.Fleet.Ships[0].Unit;
         PlayManager.instance.RefreshGroup(previousAllyGroup);
         session.Fleet.RefreshBindings();

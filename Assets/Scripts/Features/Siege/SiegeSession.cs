@@ -166,9 +166,22 @@ public sealed class SiegeSession : MonoBehaviour
             SetSimulationActive(false);
             Fleet.SetCombatActive(false);
             Status = "Wave cleared. Repair and reinforce before the next attack.";
+            RepairBaseBetweenWaves();
         }
 
         previousPhase = Match.Phase;
+    }
+
+    /// <summary>波次边界调用一次，避免每帧重复报价、净空查询或失败重试。</summary>
+    private void RepairBaseBetweenWaves()
+    {
+        if (!settings.AutoRepairBase || !Fleet.Base.IsAlive || Fleet.Base.Quote() == 0)
+        {
+            return;
+        }
+
+        Fleet.Base.Repair(out string reason);
+        Status = "Wave cleared. Auto-refit: " + reason;
     }
 
     private void OnDestroy()

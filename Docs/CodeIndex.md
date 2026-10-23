@@ -888,7 +888,7 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegePlayChecks | [`string Run()`](../Assets/Editor/Siege/SiegePlayChecks.cs#L13) | public static |
-| SiegePlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegePlayChecks.cs#L151) | private static |
+| SiegePlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegePlayChecks.cs#L172) | private static |
 
 ## Assets/Editor/Siege/SiegePlayerBuild.cs
 
@@ -3328,8 +3328,9 @@
 | SiegeSession | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L124) | public |
 | SiegeSession | [`void NotifyCockpitDestroyed(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L138) | public |
 | SiegeSession | [`void Update()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L143) | private |
-| SiegeSession | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L174) | private |
-| SiegeSession | [`void SetSimulationActive(bool active)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L181) | private |
+| SiegeSession | [`void RepairBaseBetweenWaves()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L176) | private |
+| SiegeSession | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L187) | private |
+| SiegeSession | [`void SetSimulationActive(bool active)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L194) | private |
 
 ## Assets/Scripts/Features/Siege/SiegeSettings.cs
 
@@ -3337,7 +3338,7 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeSettings | [`SiegeMatch CreateMatch()`](../Assets/Scripts/Features/Siege/SiegeSettings.cs#L64) | public |
+| SiegeSettings | [`SiegeMatch CreateMatch()`](../Assets/Scripts/Features/Siege/SiegeSettings.cs#L67) | public |
 
 ## Assets/Scripts/Features/Siege/SiegeStressPopulation.cs
 
