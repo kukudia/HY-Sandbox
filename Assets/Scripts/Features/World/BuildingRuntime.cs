@@ -14,6 +14,7 @@ public sealed class BuildingRuntime : MonoBehaviour
     private string instanceId;
     private readonly List<Block> blocks = new List<Block>();
     private readonly List<Block> neighbors = new List<Block>();
+    private readonly BuildingConnectionGraph connections = new BuildingConnectionGraph();
     private BuildingFoundationData foundationData;
     private WorldBuildingState pendingState;
     private EnemyOutpostData outpost;
@@ -287,6 +288,7 @@ public sealed class BuildingRuntime : MonoBehaviour
     private void SplitDisconnected()
     {
         using SimulationWorkMetrics.Scope timing = SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.BuildingSupport, blocks.Count);
+        connections.Prepare(blocks, transform);
         // 编辑底座只提供虚拟连接点，世界中不生成模型、碰撞体或底座方块。
         // 从与这些点匹配的朝下 Connector 出发，再沿真实模块连接遍历。
         var connected = new HashSet<Block>();
@@ -301,7 +303,7 @@ public sealed class BuildingRuntime : MonoBehaviour
         var queue = new Queue<Block>(connected);
         while (queue.Count > 0)
         {
-            queue.Dequeue().CollectNeighbors(neighbors);
+            connections.CollectNeighbors(queue.Dequeue(), neighbors);
             foreach (Block neighbor in neighbors)
             {
                 if (neighbor.GetComponentInParent<BuildingRuntime>() == this && connected.Add(neighbor))
@@ -336,7 +338,7 @@ public sealed class BuildingRuntime : MonoBehaviour
             {
                 Block block = queue.Dequeue();
                 group.Add(block);
-                block.CollectNeighbors(neighbors);
+                connections.CollectNeighbors(block, neighbors);
                 foreach (Block neighbor in neighbors)
                 {
                     if (detached.Remove(neighbor))

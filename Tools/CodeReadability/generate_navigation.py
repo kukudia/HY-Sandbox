@@ -881,7 +881,7 @@ def main():
     )
     graph(
         "WorldLab 建筑支撑与损坏",
-        "源码推导：地形修改通知只标记附近固定建筑，FixedUpdate读取体素数据计算虚拟范围的地形支撑比例（不生成地基实体）；默认低于50%脱锚，先刷新源碰撞再启用刚体。方块死亡从虚拟地面连接点开始，用Connector真实几何检查模块连通；断裂组最多32块、12片、12秒寿命，超预算移除；Main游玩态先按原阵营释放货仓/运输物并转换掉落，再判定残骸预算。普通卸载/会话清理不转换。爆炸连锁排队结算，同轮命中先完成伤害，按脏建筑各执行一次支撑刷新，避免先脱落禁用导致漏伤；单块直接死亡仍同步完成支撑，残骸不写快照，R重生成恢复初始布局。",
+        "源码推导：地形修改通知只标记附近固定建筑，FixedUpdate读取体素数据计算虚拟范围的地形支撑比例（不生成地基实体）；默认低于50%脱锚，先刷新源碰撞再启用刚体。方块死亡从虚拟地面连接点开始，用Connector真实几何缓存检查模块连通，局部删除重探附近、配置失效重建、复杂层级实时回退；断裂组最多32块、12片、12秒寿命，超预算移除；Main游玩态先按原阵营释放货仓/运输物并转换掉落，再判定残骸预算。普通卸载/会话清理不转换。爆炸连锁排队结算，同轮命中先完成伤害，按脏建筑各执行一次支撑刷新，避免先脱落禁用导致漏伤；单块直接死亡仍同步完成支撑，残骸不写快照，R重生成恢复初始布局。",
         {
             "A": "ProceduralVoxelWorld.SetCell",
             "B": "WorldBuildingManager.TerrainChanged",
@@ -897,6 +897,8 @@ def main():
             "L": "WorldBuildingManager.DamageSphere",
             "M": "WorldBuildingDamage.Apply",
             "W": "BuildingRuntime.EndDamageBatch",
+            "X": "BuildingConnectionGraph.Prepare",
+            "Y": "BuildingConnectionGraph.CollectNeighbors",
             "N": "ProceduralVoxelWorld.Generate",
             "O": "WorldBuildingManager.ResetBuildings",
             "P": "WorldBuildingManager.ClearDebris",
@@ -910,7 +912,7 @@ def main():
         [
             "A -.->|TerrainChanged事件| B", "B -.->|待检查集合| C", "C --> D",
             "C -->|支撑低于阈值| E", "E --> F", "G -->|建筑耐久为0| H",
-            "H -->|标记脏结构| W", "W -->|最外层批次结束| I", "I -->|虚拟地面连接点| R", "I -->|BFS连接几何| J", "I -->|断裂组| K",
+            "H -->|标记脏结构| W", "W -->|最外层批次结束| I", "I -->|虚拟地面连接点| R", "I -->|校验或增量刷新邻接| X", "X -->|失效或删除附近探测| J", "I -->|BFS读取建筑缓存| Y", "I -->|断裂组| K",
             "H -->|爆炸方块| L", "L --> M", "M -->|顺序结算，连锁入队| G",
             "K -->|禁用/重挂接及预算判断前| S", "S --> U", "S --> T", "S -->|敌方残骸概率| V", "T -->|建筑既有存量或载具阵营配置| V",
             "N -.->|Regenerated事件| O", "O --> P", "O -->|有效初始布局| Q",

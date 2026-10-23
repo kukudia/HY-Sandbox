@@ -805,6 +805,14 @@
 | SiegeBuildingDamageChecks | [`GameObject CreateTower(bool reverse, out WorldBuildingManager manager, out BuildingRuntime tower)`](../Assets/Editor/Siege/SiegeBuildingDamageChecks.cs#L163) | private static |
 | SiegeBuildingDamageChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeBuildingDamageChecks.cs#L206) | private static |
 
+## Assets/Editor/Siege/SiegeBuildingGraphChecks.cs
+
+// 职责：对照实时几何验证建筑邻接缓存的热路径、根运动、局部修改、断链与删除失效。 // 入口：Run()；隔离真实方块夹具，不运行物理步，不修改场景资产。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeBuildingGraphChecks | [`string Run()`](../Assets/Editor/Siege/SiegeBuildingGraphChecks.cs#L14) | public static |
+
 ## Assets/Editor/Siege/SiegeBuildingPowerProbe.cs
 
 // 职责：用基地中央的高耐久敌方固定靶验证四座建筑炮塔真实索敌、供电和弹道命中。 // 入口：Start() / Status；真实推进物理帧，固定靶是显式夹具，不代表自然波次完成。
@@ -3412,6 +3420,16 @@
 
 数据/配置/接口定义，无方法体。
 
+## Assets/Scripts/Features/World/BuildingConnectionGraph.cs
+
+// 职责：缓存单栋建筑的实际几何邻接；模块删除只更新受影响邻居，姿态/连接面/碰撞配置改变则重建。 // 入口：Prepare() / CollectNeighbors()；不创建连接视觉或跨建筑连边，不替代虚拟地面支撑规则。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BuildingConnectionGraph | [`void Prepare(List<Block> blocks, Transform root)`](../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L15) | internal |
+| BuildingConnectionGraph | [`void CollectNeighbors(Block block, List<Block> result)`](../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L108) | internal |
+| Node | [`bool IsValid(Block block)`](../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L138) | internal |
+
 ## Assets/Scripts/Features/World/BuildingRefit.cs
 
 // 职责：先暂存建筑缺件，再按原蓝图恢复模块身份/姿态/耐久；存活模块保留原对象和货物。 // 入口：Apply()；调用者负责整备权限、空间净空和扣费，本类不替换建筑根或核心。
@@ -3426,21 +3444,21 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BuildingRuntime | [`bool TryRefit(BlockDataList design, out string reason)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L36) | internal |
-| BuildingRuntime | [`void RefreshStructure()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L50) | internal |
-| BuildingRuntime | [`void BeginDamageBatch()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L58) | internal |
-| BuildingRuntime | [`void EndDamageBatch()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L63) | internal |
-| BuildingRuntime | [`void Initialize(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L73) | public |
-| BuildingRuntime | [`IEnumerator InitializeRoutine(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L81) | internal |
-| BuildingRuntime | [`void Activate()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L129) | public |
-| BuildingRuntime | [`IEnumerator ActivateRoutine()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L137) | internal |
-| BuildingRuntime | [`void PrepareForUnload()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L180) | public |
-| BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L188) | public |
-| BuildingRuntime | [`void DestroyBlock(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L241) | public |
-| BuildingRuntime | [`void SplitDisconnected()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L287) | private |
-| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L358) | private |
-| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L379) | public |
-| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L390) | private |
+| BuildingRuntime | [`bool TryRefit(BlockDataList design, out string reason)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L37) | internal |
+| BuildingRuntime | [`void RefreshStructure()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L51) | internal |
+| BuildingRuntime | [`void BeginDamageBatch()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L59) | internal |
+| BuildingRuntime | [`void EndDamageBatch()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L64) | internal |
+| BuildingRuntime | [`void Initialize(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L74) | public |
+| BuildingRuntime | [`IEnumerator InitializeRoutine(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L82) | internal |
+| BuildingRuntime | [`void Activate()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L130) | public |
+| BuildingRuntime | [`IEnumerator ActivateRoutine()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L138) | internal |
+| BuildingRuntime | [`void PrepareForUnload()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L181) | public |
+| BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L189) | public |
+| BuildingRuntime | [`void DestroyBlock(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L242) | public |
+| BuildingRuntime | [`void SplitDisconnected()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L288) | private |
+| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L360) | private |
+| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L381) | public |
+| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L392) | private |
 
 ## Assets/Scripts/Features/World/EnemyFlightPlayerChecks.cs
 
