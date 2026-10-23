@@ -1240,6 +1240,20 @@ def main():
             "H --> G", "G --> E", "K -->|隔离夹具重复同步调用| G",
         ],
     )
+    graph(
+        "阵地战压力资产制作",
+        "源码推导：首次创建独立压力Scene/配置，已有资产不覆盖；2048布局细分237块2m装甲并加一块受支撑顶层块，保留核心与炮塔，但独立耐久和损毁分量不同，不能作为等价战况。Editor API保存后恢复原活动场景；独立构建不改变全局构建列表，Player按配置核对完整模块数。",
+        {
+            "A": "SiegeStressAuthoring.Create", "B": "SiegeStressAuthoring.CreateLarge",
+            "C": "SiegeStressAuthoring.CreateProfile", "D": "SiegeStressAuthoring.GenerateLargeBlueprint",
+            "E": "WorldBuildingValidation.ValidateBlueprint", "F": "SiegePlayerBuild.BuildLargeStress",
+            "G": "SiegePlayerBuild.Schedule", "H": "SiegePlayerBuild.BuildNow",
+        },
+        [
+            "A --> C", "B --> A", "B --> C", "C -->|首次创建大基地配置| D", "D --> E",
+            "F --> B", "F --> G", "G -.->|一次性Editor update| H",
+        ],
+    )
     doc = """# HY-Sandbox 运行时函数图
 
     这些图根据当前源码和调用者整理，用于寻找功能入口，不是采样得到的实际执行轨迹。实线表示直接调用（标注“经”时包含明确中间函数）；虚线标出协程、事件或注入动作。Unity Update/FixedUpdate 的独立入口不代表脚本执行顺序。

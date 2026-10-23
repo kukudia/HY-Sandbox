@@ -1,0 +1,24 @@
+{
+    "checks": [
+        "PASS base uses valid 32x32 building blueprint with hundreds of modules",
+        "PASS base has no cockpit and owns independent core module",
+        "PASS building unit is operational and anchored outside combat",
+        "PASS all authored building modules form one component",
+        "PASS blueprint module occupancy has no overlapping authored volumes",
+        "PASS ship regroup entry delegates to building support and retains complete base",
+        "PASS all floor/wall/tower modules are supported by the virtual foundation",
+        "PASS intermission rejects projectile damage to building core",
+        "PASS building health refit retains root and core with exact quote",
+        "PASS non-core building destruction keeps match and core alive",
+        "PASS occupied building replacement is rejected without spending",
+        "PASS building repair names the obstruction and retry action",
+        "PASS missing building module is rebuilt for exact cost",
+        "PASS building replacement preserves blueprint module identity exactly once",
+        "PASS refitted building remains one supported anchored structure",
+        "PASS a ship can deploy independently beside the large building",
+        "PASS combat activates building systems while preserving ground anchor",
+        "PASS combat rejects building repair",
+        "PASS real building core destruction ends match immediately",
+        "PASS defeated building cannot be rebuilt or launch another wave"
+    ]
+}

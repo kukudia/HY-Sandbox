@@ -58,6 +58,8 @@ Siege不加载主世界存档，不复制蓝图货物；部署使用新的单位
 
 ## 性能复现
 
+菜单 `Create Editable 2048-Module Stress Profile` 创建独立 `SiegeLargeStress.unity`、配置与 `BastionBase2048.json`。将原基地237块2m装甲各细分为8块1m装甲，加一块有地板支撑的顶层测试块，达到现有单栋2048上限；保留核心、发电机和炮塔。这是模块/碰撞体压力布局，细分改变独立耐久和损毁分量，不作为等价战斗难度或加速对照。已有压力资产不覆盖，可直接编辑保存。`Build Windows 2048-Module Stress Player` 输出 `Builds/SiegeLargeStress/HY-Sandbox.exe`，支持与六舰包相同的显式检查参数。
+
 `SiegeBuildingBenchmark.Start("label", true)` 测量1024/2048块建筑的冷刷新、热刷新和局部损毁，增加邻接/底座/遍历/残骸分项；当前实际瓶颈及Jobs选择边界见 [2048块基线](Validation/2026-10-23-siege-building-stages.md)。这是同步夹具，不是千块交火FPS。
 
 菜单 `Create Editable Stress Profile` 创建独立 `SiegeStress.unity` 与 `SiegeStress.asset`，保留正常Siege经济和已有压力场景的手工修改。`Build Windows Stress Player` 输出独立压力包，命令行 `-siege-checks-ships 6` 可验证实际六舰部署。首个六舰自然交火窗口与准确规模边界见 [压力验证](Validation/2026-10-23-siege-six.md)。

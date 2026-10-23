@@ -113,9 +113,10 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         report.profile = session.Settings.name;
         report.initialCoins = session.Match.Coins;
         report.requestedShips = shipCount;
+        report.configuredBaseBlocks = session.Fleet.Base.Blueprint.blocks.Count;
         Check(
             "large building base has independent core and no cockpit",
-            session.Fleet.Base.Building.Blocks.Count == 388 && session.Fleet.Base.Unit.Building != null && !session.Fleet.Base.Unit.HasAnyCockpit && session.Fleet.Base.IsAlive);
+            report.configuredBaseBlocks > 0 && session.Fleet.Base.Building.Blocks.Count == report.configuredBaseBlocks && session.Fleet.Base.Unit.Building != null && !session.Fleet.Base.Unit.HasAnyCockpit && session.Fleet.Base.IsAlive);
         float readyAt = Time.realtimeSinceStartup + 0.4f;
         while (Time.realtimeSinceStartup < readyAt)
         {
@@ -265,7 +266,7 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         SiegeSession restarted = Object.FindFirstObjectByType<SiegeSession>();
         Check(
             "scene restart restores pristine building and empty fleet",
-            restarted != null && restarted != session && restarted.Match.Phase == SiegePhase.Deployment && restarted.Fleet.Base.Building.Blocks.Count == 388 && restarted.Fleet.Ships.All(ship => ship == null));
+            restarted != null && restarted != session && restarted.Match.Phase == SiegePhase.Deployment && restarted.Fleet.Base.Building.Blocks.Count == report.configuredBaseBlocks && restarted.Fleet.Ships.All(ship => ship == null));
         report.outcome = "scripted-loop-passed";
     }
 
@@ -324,6 +325,7 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         public string profile;
         public long initialCoins;
         public int requestedShips;
+        public int configuredBaseBlocks;
         public int deployedShips;
         public string phase;
         public string utc;

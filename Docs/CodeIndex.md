@@ -791,7 +791,7 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeBuildingChecks | [`string Run()`](../Assets/Editor/Siege/SiegeBuildingChecks.cs#L13) | public static |
-| SiegeBuildingChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeBuildingChecks.cs#L150) | private static |
+| SiegeBuildingChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeBuildingChecks.cs#L151) | private static |
 
 ## Assets/Editor/Siege/SiegeBuildingDamageChecks.cs
 
@@ -857,14 +857,15 @@
 
 ## Assets/Editor/Siege/SiegePlayerBuild.cs
 
-// 职责：构建以Siege为入口的独立Windows D3D11验证包，不改全局构建场景或用户发布包。 // 入口：Build()；通过Temp状态文件报告真实构建结果，显式命令行才能启动Player自动检查。
+// 职责：构建以Siege为入口的独立Windows D3D11验证包，不改全局构建场景或用户发布包。 // 入口：Build() / BuildStress() / BuildLargeStress()；通过Temp报告构建结果，显式参数启动Player检查。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegePlayerBuild | [`void Build()`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L16) | public static |
 | SiegePlayerBuild | [`void BuildStress()`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L22) | public static |
-| SiegePlayerBuild | [`void Schedule(string scene, string output, string statusPath)`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L32) | private static |
-| SiegePlayerBuild | [`void BuildNow(string scene, string output, string statusPath)`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L52) | private static |
+| SiegePlayerBuild | [`void BuildLargeStress()`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L32) | public static |
+| SiegePlayerBuild | [`void Schedule(string scene, string output, string statusPath)`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L42) | private static |
+| SiegePlayerBuild | [`void BuildNow(string scene, string output, string statusPath)`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L62) | private static |
 
 ## Assets/Editor/Siege/SiegeRegroupBaseline.cs
 
@@ -948,12 +949,15 @@
 
 ## Assets/Editor/Siege/SiegeStressAuthoring.cs
 
-// 职责：从真实阵地战场景复制可编辑六舰压力夹具，隔离测试经济与正常游戏参数。 // 入口：Create()；仅首次创建，已有场景/配置不覆盖，保存后恢复原活动场景。
+// 职责：从阵地战场景制作六舰/2048模块建筑压力资产，隔离测试经济与正常游戏参数。 // 入口：Create() / CreateLarge()；首次创建不覆盖既有资产，保存后恢复原活动场景。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeStressAuthoring | [`void Create()`](../Assets/Editor/Siege/SiegeStressAuthoring.cs#L14) | public static |
-| SiegeStressAuthoring | [`SiegeSession FindSession(Scene scene)`](../Assets/Editor/Siege/SiegeStressAuthoring.cs#L103) | private static |
+| SiegeStressAuthoring | [`void Create()`](../Assets/Editor/Siege/SiegeStressAuthoring.cs#L18) | public static |
+| SiegeStressAuthoring | [`void CreateLarge()`](../Assets/Editor/Siege/SiegeStressAuthoring.cs#L24) | public static |
+| SiegeStressAuthoring | [`void CreateProfile(string scenePath, string settingsPath, string sourcePath, bool large)`](../Assets/Editor/Siege/SiegeStressAuthoring.cs#L31) | private static |
+| SiegeStressAuthoring | [`TextAsset GenerateLargeBlueprint(TextAsset source)`](../Assets/Editor/Siege/SiegeStressAuthoring.cs#L124) | private static |
+| SiegeStressAuthoring | [`SiegeSession FindSession(Scene scene)`](../Assets/Editor/Siege/SiegeStressAuthoring.cs#L166) | private static |
 
 ## Assets/Editor/Siege/SiegeTopologyBaseline.cs
 
@@ -3127,11 +3131,11 @@
 | SiegePlayerChecks | [`void Update()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L67) | private |
 | SiegePlayerChecks | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L88) | private |
 | SiegePlayerChecks | [`IEnumerator Run()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L104) | private |
-| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L272) | private |
-| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L279) | private |
-| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L289) | private |
-| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L297) | private |
-| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L313) | private |
+| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L273) | private |
+| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L280) | private |
+| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L290) | private |
+| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L298) | private |
+| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L314) | private |
 
 ## Assets/Scripts/Features/Siege/SiegeRefit.cs
 

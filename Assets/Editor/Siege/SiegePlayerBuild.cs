@@ -1,5 +1,5 @@
 // 职责：构建以Siege为入口的独立Windows D3D11验证包，不改全局构建场景或用户发布包。
-// 入口：Build()；通过Temp状态文件报告真实构建结果，显式命令行才能启动Player自动检查。
+// 入口：Build() / BuildStress() / BuildLargeStress()；通过Temp报告构建结果，显式参数启动Player检查。
 using System;
 using System.IO;
 using System.Linq;
@@ -27,6 +27,16 @@ public static class SiegePlayerBuild
             SiegeStressAuthoring.ScenePath,
             "Builds/SiegeStress/HY-Sandbox.exe",
             "Temp/Siege/stress-player-build.txt");
+    }
+
+    [MenuItem("HY-Sandbox/Siege/Build Windows 2048-Module Stress Player")]
+    public static void BuildLargeStress()
+    {
+        SiegeStressAuthoring.CreateLarge();
+        Schedule(
+            SiegeStressAuthoring.LargeScenePath,
+            "Builds/SiegeLargeStress/HY-Sandbox.exe",
+            "Temp/Siege/large-stress-player-build.txt");
     }
 
     private static void Schedule(string scene, string output, string statusPath)

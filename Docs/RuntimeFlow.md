@@ -3210,7 +3210,7 @@ flowchart TD
     A["SiegePlayerBuild.Build()"]
     click A "../Assets/Editor/Siege/SiegePlayerBuild.cs#L16" "打开源码"
     B["SiegePlayerBuild.BuildNow()"]
-    click B "../Assets/Editor/Siege/SiegePlayerBuild.cs#L52" "打开源码"
+    click B "../Assets/Editor/Siege/SiegePlayerBuild.cs#L62" "打开源码"
     C["SiegePlayerChecks.Initialize()"]
     click C "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L27" "打开源码"
     D["SiegePlayerChecks.Update()"]
@@ -3220,7 +3220,7 @@ flowchart TD
     F["SiegePlayerChecks.LateUpdate()"]
     click F "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L88" "打开源码"
     G["SiegePlayerChecks.Finish()"]
-    click G "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L297" "打开源码"
+    click G "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L298" "打开源码"
     H["SiegeSession.TryRepair()"]
     click H "../Assets/Scripts/Features/Siege/SiegeSession.cs#L101" "打开源码"
     I["SiegeSession.BeginNextWave()"]
@@ -3228,13 +3228,13 @@ flowchart TD
     J["SiegeSession.TryDeploy()"]
     click J "../Assets/Scripts/Features/Siege/SiegeSession.cs#L88" "打开源码"
     K["SiegePlayerChecks.CaptureError()"]
-    click K "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L289" "打开源码"
+    click K "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L290" "打开源码"
     L["SiegePlayerBuild.BuildStress()"]
     click L "../Assets/Editor/Siege/SiegePlayerBuild.cs#L22" "打开源码"
     M["SiegeStressAuthoring.Create()"]
-    click M "../Assets/Editor/Siege/SiegeStressAuthoring.cs#L14" "打开源码"
+    click M "../Assets/Editor/Siege/SiegeStressAuthoring.cs#L18" "打开源码"
     N["SiegePlayerBuild.Schedule()"]
-    click N "../Assets/Editor/Siege/SiegePlayerBuild.cs#L32" "打开源码"
+    click N "../Assets/Editor/Siege/SiegePlayerBuild.cs#L42" "打开源码"
     A --> N
     L --> M
     L --> N
@@ -3251,7 +3251,7 @@ flowchart TD
 
 - [SiegePlayerBuild.Build](../Assets/Editor/Siege/SiegePlayerBuild.cs#L16)
 <!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|Build -->
-- [SiegePlayerBuild.BuildNow](../Assets/Editor/Siege/SiegePlayerBuild.cs#L52)
+- [SiegePlayerBuild.BuildNow](../Assets/Editor/Siege/SiegePlayerBuild.cs#L62)
 <!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|BuildNow -->
 - [SiegePlayerChecks.Initialize](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L27)
 <!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|Initialize -->
@@ -3261,7 +3261,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|Run -->
 - [SiegePlayerChecks.LateUpdate](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L88)
 <!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|LateUpdate -->
-- [SiegePlayerChecks.Finish](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L297)
+- [SiegePlayerChecks.Finish](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L298)
 <!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|Finish -->
 - [SiegeSession.TryRepair](../Assets/Scripts/Features/Siege/SiegeSession.cs#L101)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|TryRepair -->
@@ -3269,13 +3269,13 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|BeginNextWave -->
 - [SiegeSession.TryDeploy](../Assets/Scripts/Features/Siege/SiegeSession.cs#L88)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|TryDeploy -->
-- [SiegePlayerChecks.CaptureError](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L289)
+- [SiegePlayerChecks.CaptureError](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L290)
 <!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|CaptureError -->
 - [SiegePlayerBuild.BuildStress](../Assets/Editor/Siege/SiegePlayerBuild.cs#L22)
 <!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|BuildStress -->
-- [SiegeStressAuthoring.Create](../Assets/Editor/Siege/SiegeStressAuthoring.cs#L14)
+- [SiegeStressAuthoring.Create](../Assets/Editor/Siege/SiegeStressAuthoring.cs#L18)
 <!-- source: Assets/Editor/Siege/SiegeStressAuthoring.cs|Create -->
-- [SiegePlayerBuild.Schedule](../Assets/Editor/Siege/SiegePlayerBuild.cs#L32)
+- [SiegePlayerBuild.Schedule](../Assets/Editor/Siege/SiegePlayerBuild.cs#L42)
 <!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|Schedule -->
 
 ## 阵地战性能观察与分项计时
@@ -3341,3 +3341,52 @@ flowchart TD
 <!-- source: Assets/Editor/Siege/SiegePerformanceCapture.cs|BeforeReload -->
 - [SiegeTopologyBaseline.Run](../Assets/Editor/Siege/SiegeTopologyBaseline.cs#L13)
 <!-- source: Assets/Editor/Siege/SiegeTopologyBaseline.cs|Run -->
+
+## 阵地战压力资产制作
+
+源码推导：首次创建独立压力Scene/配置，已有资产不覆盖；2048布局细分237块2m装甲并加一块受支撑顶层块，保留核心与炮塔，但独立耐久和损毁分量不同，不能作为等价战况。Editor API保存后恢复原活动场景；独立构建不改变全局构建列表，Player按配置核对完整模块数。
+
+```mermaid
+flowchart TD
+    A["SiegeStressAuthoring.Create()"]
+    click A "../Assets/Editor/Siege/SiegeStressAuthoring.cs#L18" "打开源码"
+    B["SiegeStressAuthoring.CreateLarge()"]
+    click B "../Assets/Editor/Siege/SiegeStressAuthoring.cs#L24" "打开源码"
+    C["SiegeStressAuthoring.CreateProfile()"]
+    click C "../Assets/Editor/Siege/SiegeStressAuthoring.cs#L31" "打开源码"
+    D["SiegeStressAuthoring.GenerateLargeBlueprint()"]
+    click D "../Assets/Editor/Siege/SiegeStressAuthoring.cs#L124" "打开源码"
+    E["WorldBuildingValidation.ValidateBlueprint()"]
+    click E "../Assets/Scripts/Features/World/WorldBuildingValidation.cs#L11" "打开源码"
+    F["SiegePlayerBuild.BuildLargeStress()"]
+    click F "../Assets/Editor/Siege/SiegePlayerBuild.cs#L32" "打开源码"
+    G["SiegePlayerBuild.Schedule()"]
+    click G "../Assets/Editor/Siege/SiegePlayerBuild.cs#L42" "打开源码"
+    H["SiegePlayerBuild.BuildNow()"]
+    click H "../Assets/Editor/Siege/SiegePlayerBuild.cs#L62" "打开源码"
+    A --> C
+    B --> A
+    B --> C
+    C -->|首次创建大基地配置| D
+    D --> E
+    F --> B
+    F --> G
+    G -.->|一次性Editor update| H
+```
+
+- [SiegeStressAuthoring.Create](../Assets/Editor/Siege/SiegeStressAuthoring.cs#L18)
+<!-- source: Assets/Editor/Siege/SiegeStressAuthoring.cs|Create -->
+- [SiegeStressAuthoring.CreateLarge](../Assets/Editor/Siege/SiegeStressAuthoring.cs#L24)
+<!-- source: Assets/Editor/Siege/SiegeStressAuthoring.cs|CreateLarge -->
+- [SiegeStressAuthoring.CreateProfile](../Assets/Editor/Siege/SiegeStressAuthoring.cs#L31)
+<!-- source: Assets/Editor/Siege/SiegeStressAuthoring.cs|CreateProfile -->
+- [SiegeStressAuthoring.GenerateLargeBlueprint](../Assets/Editor/Siege/SiegeStressAuthoring.cs#L124)
+<!-- source: Assets/Editor/Siege/SiegeStressAuthoring.cs|GenerateLargeBlueprint -->
+- [WorldBuildingValidation.ValidateBlueprint](../Assets/Scripts/Features/World/WorldBuildingValidation.cs#L11)
+<!-- source: Assets/Scripts/Features/World/WorldBuildingValidation.cs|ValidateBlueprint -->
+- [SiegePlayerBuild.BuildLargeStress](../Assets/Editor/Siege/SiegePlayerBuild.cs#L32)
+<!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|BuildLargeStress -->
+- [SiegePlayerBuild.Schedule](../Assets/Editor/Siege/SiegePlayerBuild.cs#L42)
+<!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|Schedule -->
+- [SiegePlayerBuild.BuildNow](../Assets/Editor/Siege/SiegePlayerBuild.cs#L62)
+<!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|BuildNow -->

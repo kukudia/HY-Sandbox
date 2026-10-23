@@ -81,7 +81,8 @@ public static class SiegeBuildingChecks
             checks,
             "building health refit retains root and core with exact quote",
             quote > 0 && session.TryRepair(true) && session.Match.Coins == coins - quote && baseEntry.Core == core && baseEntry.Unit == unit && Mathf.Approximately(health.currentDurability, health.maxDurability));
-        Block removed = building.Blocks.First(block => block.transform.localPosition == new Vector3(1f, 1f, 1f));
+        // 压力蓝图细分了部分装甲，改用实际存在的非核心装甲；保留正常基地的原检查位置。
+        Block removed = building.Blocks.FirstOrDefault(block => block.transform.localPosition == new Vector3(1f, 1f, 1f)) ?? building.Blocks.First(block => block.resourcePath == "Blocks/1x1x1");
         string removedId = removed.uniqueId;
         Vector3 missingPosition = removed.transform.position;
         building.DestroyBlock(removed);
