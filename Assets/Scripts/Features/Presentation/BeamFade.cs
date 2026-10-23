@@ -1,4 +1,5 @@
-// 职责：按寿命衰减能量线并销毁临时对象。
+// 职责：按未缩放时间淡出能量线；池实例到期回收，非池实例仍销毁。
+// 入口：Initialize()；复用时清零寿命，Update()完成淡出与释放。
 using UnityEngine;
 
 public sealed class BeamFade : MonoBehaviour
@@ -7,11 +8,21 @@ public sealed class BeamFade : MonoBehaviour
     private Color color;
     private float duration;
     private float elapsed;
+    private TransientEffectPool pool;
+    internal StylizedBeamEffect Beam => beam;
+
+    internal void SetPool(TransientEffectPool owner, StylizedBeamEffect effect)
+    {
+        pool = owner;
+        beam = effect;
+    }
+
     public void Initialize(StylizedBeamEffect effect, Color lineColor, float lifetime)
     {
         beam = effect;
         color = lineColor;
         duration = lifetime;
+        elapsed = 0f;
     }
 
     private void Update()
@@ -28,7 +39,14 @@ public sealed class BeamFade : MonoBehaviour
         if (t >= 1f)
         {
             beam.SetVisible(false);
-            Destroy(gameObject);
+            if (pool != null)
+            {
+                pool.Return(this);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

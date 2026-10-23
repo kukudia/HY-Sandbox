@@ -1,0 +1,78 @@
+{
+    "methodology": "Editor Play; actual GPU beam prefab and point light, remote coordinates, no physics steps. One warmup then six batches of16. Stopwatch includes reflection invocation. Expiration/query/cleanup excluded. Not FPS or GPU time.",
+    "label": "before",
+    "samples": [
+        {
+            "kind": "beam",
+            "batch": 0,
+            "calls": 16,
+            "milliseconds": 0.8031
+        },
+        {
+            "kind": "beam",
+            "batch": 1,
+            "calls": 16,
+            "milliseconds": 0.7393
+        },
+        {
+            "kind": "beam",
+            "batch": 2,
+            "calls": 16,
+            "milliseconds": 0.73
+        },
+        {
+            "kind": "beam",
+            "batch": 3,
+            "calls": 16,
+            "milliseconds": 0.7245
+        },
+        {
+            "kind": "beam",
+            "batch": 4,
+            "calls": 16,
+            "milliseconds": 0.7155
+        },
+        {
+            "kind": "beam",
+            "batch": 5,
+            "calls": 16,
+            "milliseconds": 0.7332
+        },
+        {
+            "kind": "light",
+            "batch": 0,
+            "calls": 16,
+            "milliseconds": 0.2266
+        },
+        {
+            "kind": "light",
+            "batch": 1,
+            "calls": 16,
+            "milliseconds": 0.2214
+        },
+        {
+            "kind": "light",
+            "batch": 2,
+            "calls": 16,
+            "milliseconds": 0.2082
+        },
+        {
+            "kind": "light",
+            "batch": 3,
+            "calls": 16,
+            "milliseconds": 0.2037
+        },
+        {
+            "kind": "light",
+            "batch": 4,
+            "calls": 16,
+            "milliseconds": 0.2592
+        },
+        {
+            "kind": "light",
+            "batch": 5,
+            "calls": 16,
+            "milliseconds": 0.2101
+        }
+    ]
+}

@@ -58,6 +58,8 @@ Siege不加载主世界存档，不复制蓝图货物；部署使用新的单位
 
 ## 性能复现
 
+短时战斗表现使用 `TransientEffectPool` 复用能量光束和点光源，闲置预算32/16，活动效果不裁剪；淡出和场景卸载负责释放。生命周期检查与大型基地自然回归见 [短时表现复用](Validation/2026-10-23-siege-transient.md)。
+
 建筑虚拟底座接触现在与规范邻接节点共用几何失效生命周期，另验证底座尺寸；复杂连接层级保持实时。`SiegeFoundationCacheChecks.Run()` 在全新Siege部署Play对照实时几何并恢复姿态。2048热底座判定及真实六舰回归边界见 [底座缓存](Validation/2026-10-23-siege-foundation.md)。
 
 逐次毁伤日志使用DestroyManager的 `Debug Destruction` Inspector开关，新建默认关闭。VisualEffectsManager的既有 `Debug Destruction Vfx` 字段保留，但新建默认关闭；Main场景已序列化true保持不变。不开日志仍执行原视觉、销毁与重组链，不全局禁用Unity错误/警告或修改StackTrace设置。`SiegeDestructionLogChecks.Run()` 是部署阶段的隔离ABBA日志对照，临时关闭效果并恢复开关，不作为自然FPS证据。

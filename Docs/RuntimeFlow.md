@@ -1229,7 +1229,7 @@ flowchart TD
 
 ## 表现、镜头与 UI 生命周期
 
-游戏事件选择效果；新建管理器的逐次毁伤/VFX日志默认关闭，既有序列化诊断选择保留，开关不阻止效果。临时表现自行按寿命释放。镜头取景是计算，输入及协程由 CameraController 持有。
+游戏事件选择效果；新建管理器的逐次毁伤/VFX日志默认关闭。短时光束/点光源按场景复用，闲置有界、活动不裁剪；到期回收，场景卸载释放。GPU突发仍沿原预算释放。镜头取景是计算，输入及协程由 CameraController 持有。
 
 ```mermaid
 flowchart TD
@@ -1240,9 +1240,9 @@ flowchart TD
     C["BlockVfxLibrary.Play()"]
     click C "../Assets/Scripts/Features/Presentation/BlockVfxLibrary.cs#L54" "打开源码"
     D["TransientEffects.CreateLightFlash()"]
-    click D "../Assets/Scripts/Features/Presentation/TransientEffects.cs#L47" "打开源码"
+    click D "../Assets/Scripts/Features/Presentation/TransientEffects.cs#L48" "打开源码"
     E["LightFade.Update()"]
-    click E "../Assets/Scripts/Features/Presentation/LightFade.cs#L17" "打开源码"
+    click E "../Assets/Scripts/Features/Presentation/LightFade.cs#L28" "打开源码"
     F["CameraShake.Play()"]
     click F "../Assets/Scripts/Features/Presentation/CameraShake.cs#L29" "打开源码"
     G["CameraShake.CameraShakeRoutine()"]
@@ -1273,10 +1273,28 @@ flowchart TD
     click S "../Assets/Scripts/Features/Presentation/CameraController.cs#L126" "打开源码"
     T["StatusIcon.UpdateIconScreenPosition()"]
     click T "../Assets/Scripts/Features/Presentation/StatusIcon.cs#L313" "打开源码"
+    U["TransientEffectPool.RentLight()"]
+    click U "../Assets/Scripts/Features/Presentation/TransientEffectPool.cs#L50" "打开源码"
+    V["TransientEffectPool.Return()"]
+    click V "../Assets/Scripts/Features/Presentation/TransientEffectPool.cs#L75" "打开源码"
+    W["TransientEffects.CreateLineStreak()"]
+    click W "../Assets/Scripts/Features/Presentation/TransientEffects.cs#L7" "打开源码"
+    X["TransientEffectPool.RentBeam()"]
+    click X "../Assets/Scripts/Features/Presentation/TransientEffectPool.cs#L28" "打开源码"
+    Y["BeamFade.Update()"]
+    click Y "../Assets/Scripts/Features/Presentation/BeamFade.cs#L28" "打开源码"
+    Z["TransientEffectPool.OnDestroy()"]
+    click Z "../Assets/Scripts/Features/Presentation/TransientEffectPool.cs#L113" "打开源码"
     A --> B
     B --> C
     B -->|成功生成| D
     D -.->|引擎Update| E
+    D --> U
+    E -->|到期| V
+    W --> X
+    W -.->|引擎Update| Y
+    Y -->|到期| V
+    Z -.->|随场景销毁子对象| V
     B --> F
     F -.->|协程| G
     H --> I
@@ -1294,9 +1312,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/VisualEffectsManager.cs|PlayBlockExplosion -->
 - [BlockVfxLibrary.Play](../Assets/Scripts/Features/Presentation/BlockVfxLibrary.cs#L54)
 <!-- source: Assets/Scripts/Features/Presentation/BlockVfxLibrary.cs|Play -->
-- [TransientEffects.CreateLightFlash](../Assets/Scripts/Features/Presentation/TransientEffects.cs#L47)
+- [TransientEffects.CreateLightFlash](../Assets/Scripts/Features/Presentation/TransientEffects.cs#L48)
 <!-- source: Assets/Scripts/Features/Presentation/TransientEffects.cs|CreateLightFlash -->
-- [LightFade.Update](../Assets/Scripts/Features/Presentation/LightFade.cs#L17)
+- [LightFade.Update](../Assets/Scripts/Features/Presentation/LightFade.cs#L28)
 <!-- source: Assets/Scripts/Features/Presentation/LightFade.cs|Update -->
 - [CameraShake.Play](../Assets/Scripts/Features/Presentation/CameraShake.cs#L29)
 <!-- source: Assets/Scripts/Features/Presentation/CameraShake.cs|Play -->
@@ -1328,6 +1346,18 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/CameraController.cs|ResolveThirdPersonCollision -->
 - [StatusIcon.UpdateIconScreenPosition](../Assets/Scripts/Features/Presentation/StatusIcon.cs#L313)
 <!-- source: Assets/Scripts/Features/Presentation/StatusIcon.cs|UpdateIconScreenPosition -->
+- [TransientEffectPool.RentLight](../Assets/Scripts/Features/Presentation/TransientEffectPool.cs#L50)
+<!-- source: Assets/Scripts/Features/Presentation/TransientEffectPool.cs|RentLight -->
+- [TransientEffectPool.Return](../Assets/Scripts/Features/Presentation/TransientEffectPool.cs#L75)
+<!-- source: Assets/Scripts/Features/Presentation/TransientEffectPool.cs|Return -->
+- [TransientEffects.CreateLineStreak](../Assets/Scripts/Features/Presentation/TransientEffects.cs#L7)
+<!-- source: Assets/Scripts/Features/Presentation/TransientEffects.cs|CreateLineStreak -->
+- [TransientEffectPool.RentBeam](../Assets/Scripts/Features/Presentation/TransientEffectPool.cs#L28)
+<!-- source: Assets/Scripts/Features/Presentation/TransientEffectPool.cs|RentBeam -->
+- [BeamFade.Update](../Assets/Scripts/Features/Presentation/BeamFade.cs#L28)
+<!-- source: Assets/Scripts/Features/Presentation/BeamFade.cs|Update -->
+- [TransientEffectPool.OnDestroy](../Assets/Scripts/Features/Presentation/TransientEffectPool.cs#L113)
+<!-- source: Assets/Scripts/Features/Presentation/TransientEffectPool.cs|OnDestroy -->
 
 ## Main 大世界会话
 

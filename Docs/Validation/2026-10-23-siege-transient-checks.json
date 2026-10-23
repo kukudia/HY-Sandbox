@@ -1,0 +1,22 @@
+{
+    "status": "passed",
+    "error": "",
+    "checks": [
+        "beam expires inactive with stopped GPU emission",
+        "expired beam reuses same object",
+        "duplicate expiration cannot duplicate a lease",
+        "beam initialization resets elapsed and lifetime",
+        "light expires inactive at zero intensity",
+        "light reuses same object at new position",
+        "light initialization resets elapsed intensity and lifetime",
+        "production beam resets intensity color and width",
+        "production beam resets endpoints and lifetime",
+        "production light resets color intensity range and position",
+        "active effects are not capped by idle budgets",
+        "idle beams bounded to32",
+        "idle lights bounded to16",
+        "pool is owned by fixture scene",
+        "scene unload destroys active and idle effects",
+        "scene unload removes pool singleton"
+    ]
+}

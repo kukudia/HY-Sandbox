@@ -582,7 +582,7 @@ def main():
     )
     graph(
         "表现、镜头与 UI 生命周期",
-        "游戏事件选择效果；新建管理器的逐次毁伤/VFX日志默认关闭，既有序列化诊断选择保留，开关不阻止效果。临时表现自行按寿命释放。镜头取景是计算，输入及协程由 CameraController 持有。",
+        "游戏事件选择效果；新建管理器的逐次毁伤/VFX日志默认关闭。短时光束/点光源按场景复用，闲置有界、活动不裁剪；到期回收，场景卸载释放。GPU突发仍沿原预算释放。镜头取景是计算，输入及协程由 CameraController 持有。",
         {
             "A": "VisualEffectsManager.TryPlayBlockExplosion",
             "B": "VisualEffectsManager.PlayBlockExplosion",
@@ -604,12 +604,24 @@ def main():
             "R": "CameraController.LateUpdate",
             "S": "CameraController.ResolveThirdPersonCollision",
             "T": "StatusIcon.UpdateIconScreenPosition",
+            "U": "TransientEffectPool.RentLight",
+            "V": "TransientEffectPool.Return",
+            "W": "TransientEffects.CreateLineStreak",
+            "X": "TransientEffectPool.RentBeam",
+            "Y": "BeamFade.Update",
+            "Z": "TransientEffectPool.OnDestroy",
         },
         [
             "A --> B",
             "B --> C",
             "B -->|成功生成| D",
             "D -.->|引擎Update| E",
+            "D --> U",
+            "E -->|到期| V",
+            "W --> X",
+            "W -.->|引擎Update| Y",
+            "Y -->|到期| V",
+            "Z -.->|随场景销毁子对象| V",
             "B --> F",
             "F -.->|协程| G",
             "H --> I",

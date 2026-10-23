@@ -1026,6 +1026,27 @@
 | SiegeTopologyChecks | [`bool IsAllSingleton(List<List<Block>> groups)`](../Assets/Editor/Siege/SiegeTopologyChecks.cs#L136) | private static |
 | SiegeTopologyChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeTopologyChecks.cs#L141) | private static |
 
+## Assets/Editor/Siege/SiegeTransientEffectBenchmark.cs
+
+// 职责：测量实际短时光束/点光源的创建路径；远处隔离夹具不代表自然战斗FPS。 // 入口：Run(label)；每批同步到期，清理在计时外，不推进物理或保存场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeTransientEffectBenchmark | [`string Run(string label)`](../Assets/Editor/Siege/SiegeTransientEffectBenchmark.cs#L15) | public static |
+| SiegeTransientEffectBenchmark | [`bool IsOwned(MonoBehaviour item, Vector3 origin)`](../Assets/Editor/Siege/SiegeTransientEffectBenchmark.cs#L81) | private static |
+
+## Assets/Editor/Siege/SiegeTransientEffectChecks.cs
+
+// 职责：检查短时效果复用、重置、闲置上限及场景卸载；不替代自然画面验证。 // 入口：Run() / Status；卸载异步完成后写出最终报告。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeTransientEffectChecks | [`string Run()`](../Assets/Editor/Siege/SiegeTransientEffectChecks.cs#L23) | public static |
+| SiegeTransientEffectChecks | [`void CompleteUnload()`](../Assets/Editor/Siege/SiegeTransientEffectChecks.cs#L145) | private static |
+| SiegeTransientEffectChecks | [`T Read(object owner, string field)`](../Assets/Editor/Siege/SiegeTransientEffectChecks.cs#L174) | private static |
+| SiegeTransientEffectChecks | [`void Expire(MonoBehaviour fade)`](../Assets/Editor/Siege/SiegeTransientEffectChecks.cs#L179) | private static |
+| SiegeTransientEffectChecks | [`void Check(string label, bool passed)`](../Assets/Editor/Siege/SiegeTransientEffectChecks.cs#L186) | private static |
+
 ## Assets/Editor/World/OutpostContentAuthoring.cs
 
 // 职责：制作三套普通建筑与三套敌机轮廓底座JSON，保留可重建的项目源。 // 入口：Bake()；只写项目Resources，不修改用户蓝图或存档；已有JSON保留，编辑后可单独删除重建。
@@ -2633,12 +2654,13 @@
 
 ## Assets/Scripts/Features/Presentation/BeamFade.cs
 
-// 职责：按寿命衰减能量线并销毁临时对象。
+// 职责：按未缩放时间淡出能量线；池实例到期回收，非池实例仍销毁。 // 入口：Initialize()；复用时清零寿命，Update()完成淡出与释放。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BeamFade | [`void Initialize(StylizedBeamEffect effect, Color lineColor, float lifetime)`](../Assets/Scripts/Features/Presentation/BeamFade.cs#L10) | public |
-| BeamFade | [`void Update()`](../Assets/Scripts/Features/Presentation/BeamFade.cs#L17) | private |
+| BeamFade | [`void SetPool(TransientEffectPool owner, StylizedBeamEffect effect)`](../Assets/Scripts/Features/Presentation/BeamFade.cs#L14) | internal |
+| BeamFade | [`void Initialize(StylizedBeamEffect effect, Color lineColor, float lifetime)`](../Assets/Scripts/Features/Presentation/BeamFade.cs#L20) | public |
+| BeamFade | [`void Update()`](../Assets/Scripts/Features/Presentation/BeamFade.cs#L28) | private |
 
 ## Assets/Scripts/Features/Presentation/BlockStatusLight.cs
 
@@ -2786,12 +2808,13 @@
 
 ## Assets/Scripts/Features/Presentation/LightFade.cs
 
-// 职责：按寿命衰减闪光并销毁临时对象。
+// 职责：按未缩放时间衰减闪光；池实例到期回收，非池实例仍销毁。 // 入口：Initialize()；复用时清零寿命，Update()完成淡出与释放。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| LightFade | [`void Initialize(Light light, float lifetime, float intensity)`](../Assets/Scripts/Features/Presentation/LightFade.cs#L10) | public |
-| LightFade | [`void Update()`](../Assets/Scripts/Features/Presentation/LightFade.cs#L17) | private |
+| LightFade | [`void SetPool(TransientEffectPool owner, Light light)`](../Assets/Scripts/Features/Presentation/LightFade.cs#L14) | internal |
+| LightFade | [`void Initialize(Light light, float lifetime, float intensity)`](../Assets/Scripts/Features/Presentation/LightFade.cs#L20) | public |
+| LightFade | [`void Update()`](../Assets/Scripts/Features/Presentation/LightFade.cs#L28) | private |
 
 ## Assets/Scripts/Features/Presentation/MainUIButtons.cs
 
@@ -2929,19 +2952,31 @@
 | StylizedBeamEffect | [`void UpdateBeam()`](../Assets/Scripts/Features/Presentation/StylizedBeamEffect.cs#L72) | private |
 | StylizedBeamEffect | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/StylizedBeamEffect.cs#L94) | private |
 
+## Assets/Scripts/Features/Presentation/TransientEffectPool.cs
+
+// 职责：按场景复用短时光束和点光源；只限制闲置缓存，不裁剪当前战斗效果。 // 入口：RentBeam() / RentLight()；淡出结束Return，场景卸载连同活动及闲置子对象释放。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| TransientEffectPool | [`BeamFade RentBeam()`](../Assets/Scripts/Features/Presentation/TransientEffectPool.cs#L28) | public static |
+| TransientEffectPool | [`LightFade RentLight(Vector3 position)`](../Assets/Scripts/Features/Presentation/TransientEffectPool.cs#L50) | public static |
+| TransientEffectPool | [`void Return(BeamFade fade)`](../Assets/Scripts/Features/Presentation/TransientEffectPool.cs#L75) | internal |
+| TransientEffectPool | [`void Return(LightFade fade)`](../Assets/Scripts/Features/Presentation/TransientEffectPool.cs#L94) | internal |
+| TransientEffectPool | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/TransientEffectPool.cs#L113) | private |
+
 ## Assets/Scripts/Features/Presentation/TransientEffects.cs
 
-// 职责：创建能量线、径向碎光与灯光闪烁，统一颜色及可见网格包围盒规则。 // 入口：CreateLineStreak() / CreateRadialStreakBurst() / CreateLightFlash()；无模式或场景单例依赖。
+// 职责：配置可复用能量线与灯光闪烁，统一径向碎光、颜色及可见网格包围盒规则。 // 入口：CreateLineStreak() / CreateRadialStreakBurst() / CreateLightFlash()；无模式或场景单例依赖。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | TransientEffects | [`void CreateLineStreak(Vector3 from, Vector3 to, Color color, float duration, float width)`](../Assets/Scripts/Features/Presentation/TransientEffects.cs#L7) | public static |
-| TransientEffects | [`void CreateRadialStreakBurst( Vector3 center, Vector3 normal, Color color, int count, float length, float duration, float width)`](../Assets/Scripts/Features/Presentation/TransientEffects.cs#L18) | public static |
-| TransientEffects | [`void CreateLightFlash(Vector3 position, Color color, float intensity, float range, float duration)`](../Assets/Scripts/Features/Presentation/TransientEffects.cs#L47) | public static |
-| TransientEffects | [`Bounds GetBounds(GameObject target, Vector3 fallbackCenter, Vector3 fallbackSize)`](../Assets/Scripts/Features/Presentation/TransientEffects.cs#L60) | public static |
-| TransientEffects | [`Vector3 GetBlockSize(Block block)`](../Assets/Scripts/Features/Presentation/TransientEffects.cs#L86) | public static |
-| TransientEffects | [`Color WithAlpha(Color color, float alpha)`](../Assets/Scripts/Features/Presentation/TransientEffects.cs#L91) | public static |
-| TransientEffects | [`Color Brighten(Color color, float intensity, float whiteBlend = 0f)`](../Assets/Scripts/Features/Presentation/TransientEffects.cs#L97) | public static |
+| TransientEffects | [`void CreateRadialStreakBurst( Vector3 center, Vector3 normal, Color color, int count, float length, float duration, float width)`](../Assets/Scripts/Features/Presentation/TransientEffects.cs#L19) | public static |
+| TransientEffects | [`void CreateLightFlash(Vector3 position, Color color, float intensity, float range, float duration)`](../Assets/Scripts/Features/Presentation/TransientEffects.cs#L48) | public static |
+| TransientEffects | [`Bounds GetBounds(GameObject target, Vector3 fallbackCenter, Vector3 fallbackSize)`](../Assets/Scripts/Features/Presentation/TransientEffects.cs#L58) | public static |
+| TransientEffects | [`Vector3 GetBlockSize(Block block)`](../Assets/Scripts/Features/Presentation/TransientEffects.cs#L84) | public static |
+| TransientEffects | [`Color WithAlpha(Color color, float alpha)`](../Assets/Scripts/Features/Presentation/TransientEffects.cs#L89) | public static |
+| TransientEffects | [`Color Brighten(Color color, float intensity, float whiteBlend = 0f)`](../Assets/Scripts/Features/Presentation/TransientEffects.cs#L95) | public static |
 
 ## Assets/Scripts/Features/Presentation/UIInteractionFeedback.cs
 
