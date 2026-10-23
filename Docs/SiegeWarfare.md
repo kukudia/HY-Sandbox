@@ -1,6 +1,6 @@
 # 阵地战研究与实现
 
-正常 `Siege` 使用 `Application.persistentDataPath/Saves` 的守方舰船，以及 `EnemyBlueprints` 的攻方舰船。在左侧下拉菜单选择守方后部署；攻方可指定一种舰船或在全部有效Enemy蓝图中随机。刷新只在整备时可用，不写入源文件、不自动复制内置示例。用户舰船价格为模块数乘以 `DefaultSiege.asset` 的 `deploymentCoinsPerBlock`；空/坏蓝图被跳过，无攻方蓝图时不能开波。目录约定沿用Main；用户所称Enemy蓝图对应现有持久化目录EnemyBlueprints。
+正常 `Siege` 使用 `Application.persistentDataPath/Saves` 的守方舰船，以及 `EnemyBlueprints` 的攻方舰船。在左侧下拉菜单选择守方后部署；攻方可指定一种舰船或在全部有效Enemy蓝图中随机。整备HUD会显示下一波预计敌舰数量和当前攻方蓝图（`NEXT <数量>x <蓝图>`），帮助玩家在部署/修缮前规划金币；该预览只读，不提前生成敌舰或消耗金币。刷新只在整备时可用，不写入源文件、不自动复制内置示例。用户舰船价格为模块数乘以 `DefaultSiege.asset` 的 `deploymentCoinsPerBlock`；空/坏蓝图被跳过，无攻方蓝图时不能开波。目录约定沿用Main；用户所称Enemy蓝图对应现有持久化目录EnemyBlueprints。
 
 波次结束后默认自动尝试一次基地建筑修缮，使用当前损伤报价并仅在成功修复后扣款；无损、无钱、阻挡不会触发每帧重试。`autoRepairBase` 可在配置关闭。独立压力配置保留固定舰型和原价；既有 `SiegePlayChecks` 的固定价格断言需要固定配置副本，不可直接套用用户蓝图经济。
 

@@ -59,6 +59,7 @@ public sealed class SiegeSettings : ScriptableObject
     private bool autoRepairFleet = true;
     public bool AutoRepairBase => autoRepairBase;
     public bool AutoRepairFleet => autoRepairFleet;
+    public int FirstWaveSize => firstWaveSize;
     public TextAsset BaseBlueprint => baseBlueprint;
     public string BaseCoreBlockId => baseCoreBlockId;
     public int BaseReplacementValue => baseReplacementValue;

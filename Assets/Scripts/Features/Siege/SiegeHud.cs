@@ -105,7 +105,8 @@ public sealed class SiegeHud : MonoBehaviour
 
         SiegeMatch match = session.Match;
         heading.text = match.Phase == SiegePhase.Defeat ? "BASTION LOST" : "BASTION / " + match.Phase.ToString().ToUpperInvariant();
-        economy.text = "CREDITS  " + match.Coins.ToString("N0") + "     WAVE  " + match.Wave + "     RAIDERS  " + match.ActiveAttackers + " / +" + match.PendingAttackers;
+        string preview = match.CanRefit ? "     NEXT  " + session.NextWaveSize + "x " + session.AttackerPreview : string.Empty;
+        economy.text = "CREDITS  " + match.Coins.ToString("N0") + "     WAVE  " + match.Wave + "     RAIDERS  " + match.ActiveAttackers + " / +" + match.PendingAttackers + preview;
         status.text = session.Status;
         Durability core = session.Fleet.Base.Core != null ? session.Fleet.Base.Core.GetComponent<Durability>() : null;
         coreHealth.text = core != null ? "CORE  " + Mathf.CeilToInt(core.currentDurability) + " / " + Mathf.CeilToInt(core.maxDurability) : "CORE DESTROYED";

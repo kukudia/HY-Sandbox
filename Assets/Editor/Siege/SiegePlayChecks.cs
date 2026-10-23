@@ -25,6 +25,10 @@ public static class SiegePlayChecks
             BlockGroupManager.GroupBlocks(session.Fleet.Base.Unit.GetComponentsInChildren<Block>().ToList()).Count == 1);
         Check(
             checks,
+            "intermission previews next wave size and selected enemy",
+            session.NextWaveSize == session.Settings.FirstWaveSize && session.AttackerPreview == "RANDOM ENEMY");
+        Check(
+            checks,
             "first two ships deploy through production economy",
             session.TryDeploy(0, out _) && session.TryDeploy(1, out _) && session.Match.Coins == 1650);
         Check(

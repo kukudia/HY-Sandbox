@@ -42,6 +42,25 @@ public sealed class SiegeSession : MonoBehaviour
         get; private set;
     }
     public int SelectedAttacker { get; private set; } = -1;
+    public int NextWaveSize => Match != null ? Match.NextWaveSize : 0;
+
+    public string AttackerPreview
+    {
+        get
+        {
+            if (AttackerOptions == null || AttackerOptions.Length == 0)
+            {
+                return "NO ENEMY BLUEPRINT";
+            }
+
+            if (SelectedAttacker >= 0 && SelectedAttacker < AttackerOptions.Length)
+            {
+                return AttackerOptions[SelectedAttacker].DisplayName;
+            }
+
+            return "RANDOM ENEMY";
+        }
+    }
 
     public void SelectAttacker(int index)
     {

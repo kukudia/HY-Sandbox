@@ -33,6 +33,8 @@ public sealed class SiegeMatch
     {
         get; private set;
     }
+    /// <summary>整备阶段给UI使用的下一波规模预览，不改变波次状态。</summary>
+    public int NextWaveSize => (int)Math.Min(maximumWaveSize, firstWaveSize + (long)Wave * waveGrowth);
     public int ActiveAttackers => attackers.Count;
     public int DefeatedAttackers
     {
