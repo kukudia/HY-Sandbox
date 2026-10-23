@@ -13,7 +13,8 @@
 - 连接 Unity `6000.3.11f1` 强制 recompile：completed，compilationFailed=false。
 - 目标 Siege Play 中直接读取：`NextWaveSize=2`、`AttackerPreview=RANDOM ENEMY`；Unity console 在清理后为 0 errors/0 warnings。
 - HUD screen capture 成功生成 1280×720 PNG；临时文件已删除。
+- 修正 `SiegePlayChecks` 的部署经济断言：改为从当前 `Saves` 目录中选择可负担的两艘舰，并按其实际配置价格核对扣款；真实用户蓝图目录完整回归通过 28 项。
 
 ## 边界
 
-完整旧版 `SiegePlayChecks.Run()` 在本机用户蓝图目录配置下仍停在原有固定价格断言（`first two ships deploy through production economy`），因此本单元不把它标记为全量Play回归通过；预览直接读取与编译/静态检查已验证。固定压力夹具的 27 项回归证据仍见既有记录。
+本次 `SiegePlayChecks.Run()` 已在本机用户蓝图目录配置下通过 28 项；该回归是受控夹具，不能替代自然多波、正式 Player 或万模块性能验收。固定压力夹具的既有证据仍见相关验证记录。

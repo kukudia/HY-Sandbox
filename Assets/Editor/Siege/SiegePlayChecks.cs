@@ -27,10 +27,16 @@ public static class SiegePlayChecks
             checks,
             "intermission previews next wave size and selected enemy",
             session.NextWaveSize == session.Settings.FirstWaveSize && session.AttackerPreview == "RANDOM ENEMY");
+        long coinsBeforeDeployment = session.Match.Coins;
+        int[] affordableOptions = session.DefenderOptions.Select((option, index) => new { option.Price, index }).OrderBy(entry => entry.Price).Take(2).Select(entry => entry.index).ToArray();
+        int firstOptionIndex = affordableOptions.Length > 0 ? affordableOptions[0] : -1;
+        int secondOptionIndex = affordableOptions.Length > 1 ? affordableOptions[1] : -1;
+        int firstPrice = firstOptionIndex >= 0 ? session.DefenderOptions[firstOptionIndex].Price : 0;
+        int secondPrice = secondOptionIndex >= 0 ? session.DefenderOptions[secondOptionIndex].Price : 0;
         Check(
             checks,
             "first two ships deploy through production economy",
-            session.TryDeploy(0, out _) && session.TryDeploy(1, out _) && session.Match.Coins == 1650);
+            affordableOptions.Length == 2 && session.TryDeploy(firstOptionIndex, out _) && session.TryDeploy(secondOptionIndex, out _) && session.Match.Coins == coinsBeforeDeployment - firstPrice - secondPrice);
         Check(
             checks,
             "driving authority can switch to a second ship",

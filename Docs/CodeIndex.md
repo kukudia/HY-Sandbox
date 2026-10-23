@@ -917,7 +917,7 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegePlayChecks | [`string Run()`](../Assets/Editor/Siege/SiegePlayChecks.cs#L13) | public static |
-| SiegePlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegePlayChecks.cs#L210) | private static |
+| SiegePlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegePlayChecks.cs#L216) | private static |
 
 ## Assets/Editor/Siege/SiegePlayerBuild.cs
 
