@@ -1,0 +1,18 @@
+{
+    "status": "passed",
+    "error": "",
+    "checks": [
+        "only enemy cockpitless same-scene ownership is counted",
+        "group budget retires oldest fragment",
+        "retirement converts once through salvage marker",
+        "half-second scan interval avoids repeated retirement",
+        "module budget retires oversized fragment",
+        "young fragments remain within budget",
+        "lifetime expires even below count budget",
+        "retirement batch preserves one queued burst fragment",
+        "next scan converges to configured budget",
+        "friendly live cockpit adopted and foreign objects survive",
+        "ownership is rechecked before delayed expiration",
+        "primary building and deployment state unchanged"
+    ]
+}

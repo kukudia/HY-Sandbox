@@ -37,3 +37,7 @@ MonoBehaviour:
   guardRadius: 180
   repairCoinsPerHealth: 0.03
   spawnSeed: 14741
+  maximumEnemyWreckGroups: 64
+  maximumEnemyWreckBlocks: 512
+  enemyWreckLifetime: 15
+  enemyWreckRetirePerScan: 8

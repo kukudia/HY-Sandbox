@@ -265,6 +265,9 @@ public sealed class SiegePlayerChecks : MonoBehaviour
             report.finalWave = session.Match.Wave;
             report.finalBaseBlocks = session.Fleet.Base.Building.Blocks.Count;
             report.finalCoins = session.Match.Coins;
+            report.retiredEnemyWreckGroups = session.Wrecks.RetiredGroups;
+            report.pendingEnemyWreckGroups = session.Wrecks.PendingGroups;
+            report.pendingEnemyWreckBlocks = session.Wrecks.PendingBlocks;
             if (capture)
             {
                 ScreenCapture.CaptureScreenshot(ImagePath("final"));
@@ -429,6 +432,9 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         public int finalWave;
         public int finalBaseBlocks;
         public long finalCoins;
+        public int retiredEnemyWreckGroups;
+        public int pendingEnemyWreckGroups;
+        public int pendingEnemyWreckBlocks;
         public List<string> checks = new List<string>();
         public List<string> errors = new List<string>();
         public List<string> actions = new List<string>();

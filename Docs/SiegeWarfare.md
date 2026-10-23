@@ -10,6 +10,8 @@
 
 ## 技术路线
 
+阵地战敌方无驾驶舱碎片按组数/模块数/寿命分批退场，参数可在SiegeSettings编辑；这是允许短时超量的软预算，友舰维修件和存活驾驶舱不参与。见 [验证与发布缺口](Validation/2026-10-23-siege-wreck-budget.md)。
+
 当前取舍、模块/刚体区别及Jobs/Burst/ECS后续条件见 [架构说明](SiegeArchitecture.md)。四栋大型建筑叠加舰队的真实万模块窗口见 [混合压力验证](Validation/2026-10-23-siege-mixed.md)；未达流畅目标，不能将功能检查通过当作性能验收。
 
 - 保留 GameObject、Inspector、现有 PhysX 复合刚体和蓝图资产。阵地战规则不承担 Unity 场景副作用。

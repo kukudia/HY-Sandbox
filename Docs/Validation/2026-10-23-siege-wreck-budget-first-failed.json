@@ -1,0 +1,8 @@
+{
+    "status": "failed",
+    "error": "System.InvalidOperationException: retirement converts once through salvage marker\r\n  at SiegeWreckBudgetChecks.Check (System.String label, System.Boolean passed) [0x00015] in D:\\git_projects\\Unity\\HY-Sandbox\\Assets\\Editor\\Siege\\SiegeWreckBudgetChecks.cs:123 \r\n  at SiegeWreckBudgetChecks.Run () [0x00190] in D:\\git_projects\\Unity\\HY-Sandbox\\Assets\\Editor\\Siege\\SiegeWreckBudgetChecks.cs:48 ",
+    "checks": [
+        "only enemy cockpitless same-scene ownership is counted",
+        "group budget retires oldest fragment"
+    ]
+}

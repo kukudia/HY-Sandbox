@@ -38,6 +38,14 @@ public sealed class SiegeSettings : ScriptableObject
     private float repairCoinsPerHealth = 0.03f;
     [SerializeField]
     private int spawnSeed = 14741;
+    [SerializeField, Min(0), Tooltip("敌方无驾驶舱碎片的软数量预算；每0.5秒分批退场。")]
+    private int maximumEnemyWreckGroups = 64;
+    [SerializeField, Min(0), Tooltip("敌方碎片模块软预算，不包含建筑、存活驾驶舱与友舰维修件。")]
+    private int maximumEnemyWreckBlocks = 512;
+    [SerializeField, Min(0.5f)]
+    private float enemyWreckLifetime = 15f;
+    [SerializeField, Min(1), Tooltip("每次扫描最多退场组数，控制回收与掉落突发。")]
+    private int enemyWreckRetirePerScan = 8;
     public TextAsset BaseBlueprint => baseBlueprint;
     public string BaseCoreBlockId => baseCoreBlockId;
     public int BaseReplacementValue => baseReplacementValue;
@@ -48,6 +56,10 @@ public sealed class SiegeSettings : ScriptableObject
     public float GuardRadius => guardRadius;
     public float RepairCoinsPerHealth => repairCoinsPerHealth;
     public int SpawnSeed => spawnSeed;
+    public int MaximumEnemyWreckGroups => maximumEnemyWreckGroups;
+    public int MaximumEnemyWreckBlocks => maximumEnemyWreckBlocks;
+    public float EnemyWreckLifetime => enemyWreckLifetime;
+    public int EnemyWreckRetirePerScan => enemyWreckRetirePerScan;
 
     public SiegeMatch CreateMatch()
     {

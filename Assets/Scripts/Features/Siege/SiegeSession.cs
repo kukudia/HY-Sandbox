@@ -15,6 +15,9 @@ public sealed class SiegeSession : MonoBehaviour
     public WorldBuildingManager Buildings => buildings;
 
     private SiegeWaveDirector waves;
+    private SiegeWreckBudget wrecks;
+    public SiegeWreckBudget Wrecks => wrecks;
+
     private bool previousBackground;
     private SiegePhase previousPhase;
     public string Status { get; private set; } = "Deploy a fleet, then begin the first wave.";
@@ -66,6 +69,7 @@ public sealed class SiegeSession : MonoBehaviour
         }
 
         waves = new SiegeWaveDirector(this);
+        wrecks = new SiegeWreckBudget(gameObject.scene);
         previousPhase = Match.Phase;
         PlayManager.instance.playMode = false;
         return true;
@@ -150,6 +154,12 @@ public sealed class SiegeSession : MonoBehaviour
         }
 
         Fleet.RefreshBindings();
+        wrecks.Tick(
+            Time.time,
+            settings.MaximumEnemyWreckGroups,
+            settings.MaximumEnemyWreckBlocks,
+            settings.EnemyWreckLifetime,
+            settings.EnemyWreckRetirePerScan);
         waves.Tick(Time.time);
         if (previousPhase == SiegePhase.Battle && Match.Phase == SiegePhase.Intermission)
         {
