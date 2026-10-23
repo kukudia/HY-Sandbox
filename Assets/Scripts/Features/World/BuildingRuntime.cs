@@ -21,6 +21,8 @@ public sealed class BuildingRuntime : MonoBehaviour
     public string BlueprintName => blueprintName;
 
     private Rigidbody body;
+    private int damageBatchDepth;
+    private bool structureDirty;
     public Vector2Int FootprintSize => new Vector2Int(foundationData.width, foundationData.length);
     public bool Anchored => body != null && body.isKinematic;
     public bool IsOperational => isActiveAndEnabled && pendingState == null && blocks.Count > 0;
@@ -51,6 +53,21 @@ public sealed class BuildingRuntime : MonoBehaviour
         SplitDisconnected();
         body.mass = TotalMass();
         GetComponent<ControlUnit>().RefreshChildren();
+    }
+
+    internal void BeginDamageBatch()
+    {
+        damageBatchDepth++;
+    }
+
+    internal void EndDamageBatch()
+    {
+        damageBatchDepth--;
+        if (damageBatchDepth == 0 && structureDirty)
+        {
+            structureDirty = false;
+            RefreshStructure();
+        }
     }
 
     public void Initialize(WorldBuildingManager owner, WorldBuildingState state)
@@ -228,41 +245,48 @@ public sealed class BuildingRuntime : MonoBehaviour
             return;
         }
 
-        bool explode = block.canExplode && !(block.GetComponent<Durability>()?.DestroyedByCollision ?? false);
-        Vector3 center = block.transform.position;
-        float radius = block.explosionRadius;
-        float force = block.explosionForce;
-        if (explode)
+        BeginDamageBatch();
+        try
         {
-            VisualEffectsManager.TryPlayBlockExplosion(block);
-        }
-        else
-        {
-            VisualEffectsManager.TryPlayBlockRemoved(block);
-        }
+            bool explode = block.canExplode && !(block.GetComponent<Durability>()?.DestroyedByCollision ?? false);
+            Vector3 center = block.transform.position;
+            float radius = block.explosionRadius;
+            float force = block.explosionForce;
+            if (explode)
+            {
+                VisualEffectsManager.TryPlayBlockExplosion(block);
+            }
+            else
+            {
+                VisualEffectsManager.TryPlayBlockRemoved(block);
+            }
 
-        foreach (Bot bot in block.GetComponentsInChildren<Bot>(true))
-        {
-            bot.PrepareForHomeDestruction();
-        }
+            foreach (Bot bot in block.GetComponentsInChildren<Bot>(true))
+            {
+                bot.PrepareForHomeDestruction();
+            }
 
-        block.GetComponent<CargoHold>()?.ReleaseContents(GetComponent<ControlUnit>().faction);
-        block.gameObject.SetActive(false);
-        Destroy(block.gameObject);
-        Physics.SyncTransforms();
-        SplitDisconnected();
-        body.mass = TotalMass();
-        if (explode)
-        {
-            manager.DamageSphere(center, radius, force);
-            manager.World?.DamageSphere(center, radius, force);
-        }
+            block.GetComponent<CargoHold>()?.ReleaseContents(GetComponent<ControlUnit>().faction);
+            block.gameObject.SetActive(false);
+            Destroy(block.gameObject);
+            structureDirty = true;
+            if (explode)
+            {
+                manager.DamageSphere(center, radius, force);
+                manager.World?.DamageSphere(center, radius, force);
+            }
 
-        BlockDestroyed?.Invoke(block);
+            BlockDestroyed?.Invoke(block);
+        }
+        finally
+        {
+            EndDamageBatch();
+        }
     }
 
     private void SplitDisconnected()
     {
+        using SimulationWorkMetrics.Scope timing = SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.BuildingSupport, blocks.Count);
         // 编辑底座只提供虚拟连接点，世界中不生成模型、碰撞体或底座方块。
         // 从与这些点匹配的朝下 Connector 出发，再沿真实模块连接遍历。
         var connected = new HashSet<Block>();

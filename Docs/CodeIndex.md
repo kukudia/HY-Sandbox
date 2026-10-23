@@ -773,6 +773,16 @@
 | SiegeBaseBlueprintAuthoring | [`TextAsset Generate(bool replace = false)`](../Assets/Editor/Siege/SiegeBaseBlueprintAuthoring.cs#L62) | public static |
 | SiegeBaseBlueprintAuthoring | [`void Add(BlockDataList blueprint, string resource, Vector3 position, string id = null)`](../Assets/Editor/Siege/SiegeBaseBlueprintAuthoring.cs#L153) | private static |
 
+## Assets/Editor/Siege/SiegeBuildingBenchmark.cs
+
+// 职责：用真实两层建筑夹具测量完整支撑与单次范围损毁，保留生产同步开销与正确性计数。 // 入口：Start() / Status；远离战场、无物理步，不代表大规模交火帧率。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeBuildingBenchmark | [`string Start(string label = "geometry-baseline")`](../Assets/Editor/Siege/SiegeBuildingBenchmark.cs#L17) | public static |
+| SiegeBuildingBenchmark | [`void Execute(string label)`](../Assets/Editor/Siege/SiegeBuildingBenchmark.cs#L42) | private static |
+| SiegeBuildingBenchmark | [`Sample Measure(int count)`](../Assets/Editor/Siege/SiegeBuildingBenchmark.cs#L92) | private static |
+
 ## Assets/Editor/Siege/SiegeBuildingChecks.cs
 
 // 职责：验证真实大型建筑蓝图基地的支撑/净空、原位修缮、独立核心以及舰船生命周期隔离。 // 入口：Run()；全新Siege Play，显式损坏夹具不代表自然波次或性能结论。
@@ -781,6 +791,19 @@
 | --- | --- | --- |
 | SiegeBuildingChecks | [`string Run()`](../Assets/Editor/Siege/SiegeBuildingChecks.cs#L13) | public static |
 | SiegeBuildingChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeBuildingChecks.cs#L145) | private static |
+
+## Assets/Editor/Siege/SiegeBuildingDamageChecks.cs
+
+// 职责：验证建筑批量损毁的命中顺序独立、一次支撑刷新、链式爆炸及单块即时断裂契约。 // 入口：Run()；仅使用远离场景的自有夹具，恢复阵地战伤害门控，不改资产。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeBuildingDamageChecks | [`string Run()`](../Assets/Editor/Siege/SiegeBuildingDamageChecks.cs#L13) | public static |
+| SiegeBuildingDamageChecks | [`void CheckPartialBlast(List<string> checks, bool reverse)`](../Assets/Editor/Siege/SiegeBuildingDamageChecks.cs#L52) | private static |
+| SiegeBuildingDamageChecks | [`void CheckChain(List<string> checks, bool projectile)`](../Assets/Editor/Siege/SiegeBuildingDamageChecks.cs#L87) | private static |
+| SiegeBuildingDamageChecks | [`void CheckImmediate(List<string> checks)`](../Assets/Editor/Siege/SiegeBuildingDamageChecks.cs#L138) | private static |
+| SiegeBuildingDamageChecks | [`GameObject CreateTower(bool reverse, out WorldBuildingManager manager, out BuildingRuntime tower)`](../Assets/Editor/Siege/SiegeBuildingDamageChecks.cs#L163) | private static |
+| SiegeBuildingDamageChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeBuildingDamageChecks.cs#L206) | private static |
 
 ## Assets/Editor/Siege/SiegeBuildingPowerProbe.cs
 
@@ -3350,12 +3373,12 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SimulationWorkMetrics | [`void RecordPhysicsNeighborQuery()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L38) | internal static |
-| SimulationWorkMetrics | [`void RecordLegacyReferenceScan()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L46) | internal static |
-| SimulationWorkMetrics | [`Scope Measure(Stage stage, int inputBlocks = 0)`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L54) | public static |
-| SimulationWorkMetrics | [`Counters Read(Stage stage)`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L59) | public static |
-| SimulationWorkMetrics | [`void Reset()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L64) | public static |
-| Scope | [`void Dispose()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L83) | public |
+| SimulationWorkMetrics | [`void RecordPhysicsNeighborQuery()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L40) | internal static |
+| SimulationWorkMetrics | [`void RecordLegacyReferenceScan()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L48) | internal static |
+| SimulationWorkMetrics | [`Scope Measure(Stage stage, int inputBlocks = 0)`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L56) | public static |
+| SimulationWorkMetrics | [`Counters Read(Stage stage)`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L61) | public static |
+| SimulationWorkMetrics | [`void Reset()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L66) | public static |
+| Scope | [`void Dispose()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L85) | public |
 
 ## Assets/Scripts/Features/Simulation/UnitFaction.cs
 
@@ -3377,19 +3400,21 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BuildingRuntime | [`bool TryRefit(BlockDataList design, out string reason)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L34) | internal |
-| BuildingRuntime | [`void RefreshStructure()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L48) | internal |
-| BuildingRuntime | [`void Initialize(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L56) | public |
-| BuildingRuntime | [`IEnumerator InitializeRoutine(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L64) | internal |
-| BuildingRuntime | [`void Activate()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L112) | public |
-| BuildingRuntime | [`IEnumerator ActivateRoutine()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L120) | internal |
-| BuildingRuntime | [`void PrepareForUnload()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L163) | public |
-| BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L171) | public |
-| BuildingRuntime | [`void DestroyBlock(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L224) | public |
-| BuildingRuntime | [`void SplitDisconnected()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L264) | private |
-| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L334) | private |
-| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L355) | public |
-| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L366) | private |
+| BuildingRuntime | [`bool TryRefit(BlockDataList design, out string reason)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L36) | internal |
+| BuildingRuntime | [`void RefreshStructure()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L50) | internal |
+| BuildingRuntime | [`void BeginDamageBatch()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L58) | internal |
+| BuildingRuntime | [`void EndDamageBatch()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L63) | internal |
+| BuildingRuntime | [`void Initialize(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L73) | public |
+| BuildingRuntime | [`IEnumerator InitializeRoutine(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L81) | internal |
+| BuildingRuntime | [`void Activate()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L129) | public |
+| BuildingRuntime | [`IEnumerator ActivateRoutine()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L137) | internal |
+| BuildingRuntime | [`void PrepareForUnload()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L180) | public |
+| BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L188) | public |
+| BuildingRuntime | [`void DestroyBlock(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L241) | public |
+| BuildingRuntime | [`void SplitDisconnected()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L287) | private |
+| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L358) | private |
+| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L379) | public |
+| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L390) | private |
 
 ## Assets/Scripts/Features/World/EnemyFlightPlayerChecks.cs
 
@@ -3630,7 +3655,7 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldBuildingDamage | [`void Apply(IReadOnlyList<BuildingRuntime> buildings, Vector3 center, float radius, float damage)`](../Assets/Scripts/Features/World/WorldBuildingDamage.cs#L17) | public |
+| WorldBuildingDamage | [`void Apply(IReadOnlyList<BuildingRuntime> buildings, Vector3 center, float radius, float damage)`](../Assets/Scripts/Features/World/WorldBuildingDamage.cs#L18) | public |
 
 ## Assets/Scripts/Features/World/WorldBuildingFootprints.cs
 

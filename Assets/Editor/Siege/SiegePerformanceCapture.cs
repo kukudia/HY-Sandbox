@@ -83,7 +83,7 @@ public static class SiegePerformanceCapture
         }
 
         double now = EditorApplication.timeSinceStartup;
-        report.samples.Add(new FrameSample { seconds = now - started, frame = Time.frameCount, advancedFrames = Time.frameCount - previousFrame, editorObservationMs = (now - previous) * 1000.0, gameDeltaMs = Time.unscaledDeltaTime * 1000.0, gcBytes = gcRecorder.Valid ? gcRecorder.LastValue : -1, connectivity = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.Connectivity), rebuild = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BodyRebuild), refresh = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.Refresh) });
+        report.samples.Add(new FrameSample { seconds = now - started, frame = Time.frameCount, advancedFrames = Time.frameCount - previousFrame, editorObservationMs = (now - previous) * 1000.0, gameDeltaMs = Time.unscaledDeltaTime * 1000.0, gcBytes = gcRecorder.Valid ? gcRecorder.LastValue : -1, connectivity = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.Connectivity), rebuild = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BodyRebuild), refresh = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.Refresh), buildingSupport = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingSupport), buildingDamage = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingDamage) });
         previousFrame = Time.frameCount;
         previous = now;
         if (now >= nextCensus)
@@ -107,7 +107,7 @@ public static class SiegePerformanceCapture
             if (unit != null && unit.gameObject.scene == session.gameObject.scene)
             {
                 units++;
-                if (!unit.HasAnyCockpit)
+                if (!unit.HasAnyCockpit && unit.Building == null)
                 {
                     fragments++;
                 }
@@ -127,7 +127,7 @@ public static class SiegePerformanceCapture
             }
         }
 
-        report.census.Add(new Census { seconds = now - started, wave = session.Match.Wave, phase = session.Match.Phase.ToString(), coins = session.Match.Coins, attackers = session.Match.ActiveAttackers, pending = session.Match.PendingAttackers, units = units, fragments = fragments, blocks = blocks.Length, colliders = colliders.Length, rigidbodies = bodies.Length, awakeDynamicBodies = awake });
+        report.census.Add(new Census { seconds = now - started, wave = session.Match.Wave, phase = session.Match.Phase.ToString(), coins = session.Match.Coins, attackers = session.Match.ActiveAttackers, pending = session.Match.PendingAttackers, units = units, fragments = fragments, blocks = blocks.Length, colliders = colliders.Length, rigidbodies = bodies.Length, awakeDynamicBodies = awake, baseBlocks = session.Fleet.Base.Building.Blocks.Count, baseAlive = session.Fleet.Base.IsAlive });
     }
 
     public static string Finish(string reason = "Manual stop")
@@ -224,6 +224,8 @@ public static class SiegePerformanceCapture
         public SimulationWorkMetrics.Counters connectivity;
         public SimulationWorkMetrics.Counters rebuild;
         public SimulationWorkMetrics.Counters refresh;
+        public SimulationWorkMetrics.Counters buildingSupport;
+        public SimulationWorkMetrics.Counters buildingDamage;
     }
 
     [Serializable]
@@ -241,5 +243,7 @@ public static class SiegePerformanceCapture
         public int colliders;
         public int rigidbodies;
         public int awakeDynamicBodies;
+        public int baseBlocks;
+        public bool baseAlive;
     }
 }

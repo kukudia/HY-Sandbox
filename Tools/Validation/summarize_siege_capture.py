@@ -31,8 +31,8 @@ def summarize(source, prefix):
         for key in ("blocks", "units", "fragments", "colliders", "rigidbodies", "awakeDynamicBodies")
     }
     report["stages"] = {
-        stage: samples[-1][stage] if samples else None
-        for stage in ("connectivity", "rebuild", "refresh")
+        stage: samples[-1].get(stage) if samples else None
+        for stage in ("connectivity", "rebuild", "refresh", "buildingSupport", "buildingDamage")
     }
     report["observedGcBytes"] = {
         "note": "Last profiler counter per Editor observation; may repeat or lag. Do not sum as total GC. Census and capture overhead included.",

@@ -9,7 +9,9 @@ public static class SimulationWorkMetrics
     {
         Connectivity,
         BodyRebuild,
-        Refresh
+        Refresh,
+        BuildingSupport,
+        BuildingDamage
     }
 
     [Serializable]
@@ -21,7 +23,7 @@ public static class SimulationWorkMetrics
         public double maximumMilliseconds;
     }
 
-    private static readonly Counters[] totals = new Counters[3];
+    private static readonly Counters[] totals = new Counters[5];
     public static bool Enabled
     {
         get; set;

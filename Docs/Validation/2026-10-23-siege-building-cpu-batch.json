@@ -1,0 +1,242 @@
+{
+    "methodology": "Editor Play, two-layer 1m-block building on virtual foundation at remote coordinates. One warmup plus three fresh fixtures per size. Timed intact production RefreshGroup and one radius2.6 damage10000 blast, including production VFX requests/sync/splitting. Creation, validation, cleanup excluded. No physics steps. Support is nested in damage, never sum. Not battle FPS. Siege damage gate temporarily unbound only during synchronous fixture, restored in finally.",
+    "label": "batch-geometry",
+    "utc": "2026-10-23T07:11:53.3565320Z",
+    "unity": "6000.3.11f1",
+    "samples": [
+        {
+            "blocks": 100,
+            "survivors": 58,
+            "intactMs": 1.5070000000000002,
+            "damageMs": 26.2698,
+            "intactQueries": 600,
+            "damageQueries": 348,
+            "intactSupport": {
+                "calls": 1,
+                "inputBlocks": 100,
+                "milliseconds": 1.4204,
+                "maximumMilliseconds": 1.4204
+            },
+            "support": {
+                "calls": 1,
+                "inputBlocks": 58,
+                "milliseconds": 0.7939,
+                "maximumMilliseconds": 0.7939
+            },
+            "damage": {
+                "calls": 1,
+                "inputBlocks": 0,
+                "milliseconds": 26.2679,
+                "maximumMilliseconds": 26.2679
+            }
+        },
+        {
+            "blocks": 100,
+            "survivors": 58,
+            "intactMs": 1.5076,
+            "damageMs": 22.5521,
+            "intactQueries": 600,
+            "damageQueries": 348,
+            "intactSupport": {
+                "calls": 1,
+                "inputBlocks": 100,
+                "milliseconds": 1.4224,
+                "maximumMilliseconds": 1.4224
+            },
+            "support": {
+                "calls": 1,
+                "inputBlocks": 58,
+                "milliseconds": 0.8612,
+                "maximumMilliseconds": 0.8612
+            },
+            "damage": {
+                "calls": 1,
+                "inputBlocks": 0,
+                "milliseconds": 22.5504,
+                "maximumMilliseconds": 22.5504
+            }
+        },
+        {
+            "blocks": 100,
+            "survivors": 58,
+            "intactMs": 1.5619,
+            "damageMs": 23.3652,
+            "intactQueries": 600,
+            "damageQueries": 348,
+            "intactSupport": {
+                "calls": 1,
+                "inputBlocks": 100,
+                "milliseconds": 1.4523,
+                "maximumMilliseconds": 1.4523
+            },
+            "support": {
+                "calls": 1,
+                "inputBlocks": 58,
+                "milliseconds": 0.7977,
+                "maximumMilliseconds": 0.7977
+            },
+            "damage": {
+                "calls": 1,
+                "inputBlocks": 0,
+                "milliseconds": 23.3547,
+                "maximumMilliseconds": 23.3547
+            }
+        },
+        {
+            "blocks": 256,
+            "survivors": 214,
+            "intactMs": 4.2795000000000009,
+            "damageMs": 26.094,
+            "intactQueries": 1536,
+            "damageQueries": 1284,
+            "intactSupport": {
+                "calls": 1,
+                "inputBlocks": 256,
+                "milliseconds": 3.9388,
+                "maximumMilliseconds": 3.9388
+            },
+            "support": {
+                "calls": 1,
+                "inputBlocks": 214,
+                "milliseconds": 3.2855,
+                "maximumMilliseconds": 3.2855
+            },
+            "damage": {
+                "calls": 1,
+                "inputBlocks": 0,
+                "milliseconds": 26.0918,
+                "maximumMilliseconds": 26.0918
+            }
+        },
+        {
+            "blocks": 256,
+            "survivors": 214,
+            "intactMs": 4.2154,
+            "damageMs": 26.2271,
+            "intactQueries": 1536,
+            "damageQueries": 1284,
+            "intactSupport": {
+                "calls": 1,
+                "inputBlocks": 256,
+                "milliseconds": 3.9341,
+                "maximumMilliseconds": 3.9341
+            },
+            "support": {
+                "calls": 1,
+                "inputBlocks": 214,
+                "milliseconds": 3.3701,
+                "maximumMilliseconds": 3.3701
+            },
+            "damage": {
+                "calls": 1,
+                "inputBlocks": 0,
+                "milliseconds": 26.2252,
+                "maximumMilliseconds": 26.2252
+            }
+        },
+        {
+            "blocks": 256,
+            "survivors": 214,
+            "intactMs": 4.1482,
+            "damageMs": 27.383000000000004,
+            "intactQueries": 1536,
+            "damageQueries": 1284,
+            "intactSupport": {
+                "calls": 1,
+                "inputBlocks": 256,
+                "milliseconds": 3.8758,
+                "maximumMilliseconds": 3.8758
+            },
+            "support": {
+                "calls": 1,
+                "inputBlocks": 214,
+                "milliseconds": 3.4526,
+                "maximumMilliseconds": 3.4526
+            },
+            "damage": {
+                "calls": 1,
+                "inputBlocks": 0,
+                "milliseconds": 27.381,
+                "maximumMilliseconds": 27.381
+            }
+        },
+        {
+            "blocks": 1024,
+            "survivors": 982,
+            "intactMs": 22.3698,
+            "damageMs": 43.6015,
+            "intactQueries": 6144,
+            "damageQueries": 5892,
+            "intactSupport": {
+                "calls": 1,
+                "inputBlocks": 1024,
+                "milliseconds": 19.2123,
+                "maximumMilliseconds": 19.2123
+            },
+            "support": {
+                "calls": 1,
+                "inputBlocks": 982,
+                "milliseconds": 17.953,
+                "maximumMilliseconds": 17.953
+            },
+            "damage": {
+                "calls": 1,
+                "inputBlocks": 0,
+                "milliseconds": 43.5988,
+                "maximumMilliseconds": 43.5988
+            }
+        },
+        {
+            "blocks": 1024,
+            "survivors": 982,
+            "intactMs": 22.3339,
+            "damageMs": 43.3791,
+            "intactQueries": 6144,
+            "damageQueries": 5892,
+            "intactSupport": {
+                "calls": 1,
+                "inputBlocks": 1024,
+                "milliseconds": 19.0994,
+                "maximumMilliseconds": 19.0994
+            },
+            "support": {
+                "calls": 1,
+                "inputBlocks": 982,
+                "milliseconds": 17.7622,
+                "maximumMilliseconds": 17.7622
+            },
+            "damage": {
+                "calls": 1,
+                "inputBlocks": 0,
+                "milliseconds": 43.3766,
+                "maximumMilliseconds": 43.3766
+            }
+        },
+        {
+            "blocks": 1024,
+            "survivors": 982,
+            "intactMs": 22.0988,
+            "damageMs": 43.269000000000009,
+            "intactQueries": 6144,
+            "damageQueries": 5892,
+            "intactSupport": {
+                "calls": 1,
+                "inputBlocks": 1024,
+                "milliseconds": 19.0751,
+                "maximumMilliseconds": 19.0751
+            },
+            "support": {
+                "calls": 1,
+                "inputBlocks": 982,
+                "milliseconds": 17.6242,
+                "maximumMilliseconds": 17.6242
+            },
+            "damage": {
+                "calls": 1,
+                "inputBlocks": 0,
+                "milliseconds": 43.2664,
+                "maximumMilliseconds": 43.2664
+            }
+        }
+    ]
+}

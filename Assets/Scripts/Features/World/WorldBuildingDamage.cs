@@ -6,6 +6,7 @@ internal sealed class WorldBuildingDamage
 {
     private readonly Queue<Blast> pending = new Queue<Blast>();
     private readonly List<Durability> targets = new List<Durability>();
+    private readonly List<BuildingRuntime> batched = new List<BuildingRuntime>();
     private bool applying;
     private struct Blast
     {
@@ -28,8 +29,20 @@ internal sealed class WorldBuildingDamage
         }
 
         applying = true;
+        using SimulationWorkMetrics.Scope timing = SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.BuildingDamage);
         try
         {
+            // 同一轮连锁先完成命中与销毁，再按建筑各遍历一次支撑。
+            // 不让先脱落的模块提前禁用，从而跳过本轮已命中的其他模块。
+            foreach (BuildingRuntime building in buildings)
+            {
+                if (building != null)
+                {
+                    building.BeginDamageBatch();
+                    batched.Add(building);
+                }
+            }
+
             while (pending.Count > 0)
             {
                 Blast blast = pending.Dequeue();
@@ -62,9 +75,37 @@ internal sealed class WorldBuildingDamage
         }
         finally
         {
-            applying = false;
-            pending.Clear();
-            targets.Clear();
+            System.Exception refreshFailure = null;
+            try
+            {
+                foreach (BuildingRuntime building in batched)
+                {
+                    if (building != null)
+                    {
+                        try
+                        {
+                            building.EndDamageBatch();
+                        }
+                        catch (System.Exception error)
+                        {
+                            // 一栋建筑刷新失败也必须释放其他建筑的批次深度。
+                            refreshFailure ??= error;
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                applying = false;
+                pending.Clear();
+                targets.Clear();
+                batched.Clear();
+            }
+
+            if (refreshFailure != null)
+            {
+                System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(refreshFailure).Throw();
+            }
         }
     }
 }
