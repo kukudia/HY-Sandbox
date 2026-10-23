@@ -16,6 +16,7 @@ public sealed class BuildingFoundation : MonoBehaviour
     {
         Block block = GetComponent<Block>();
         block.DisConnectAllConnectors();
+        block.RestoreConnectionParticipation();
         // 普通拆除流程会移出 Block 层；底座重建后立即恢复参与连接探测。
         gameObject.layer = LayerMask.NameToLayer("Block");
         block.canSpawnConnector = false;

@@ -12,6 +12,21 @@ internal sealed class BlockConnections
     private const float oppositeNormalDotThreshold = 0.75f;
     private readonly Block _block;
     private Collider[] _connectionHits = new Collider[8];
+    private Dictionary<GameObject, int> disconnectedLayers;
+    internal bool CanParticipate
+    {
+        get
+        {
+            if (_block == null || !_block.isActiveAndEnabled || _block.raycastCollider == null || !_block.raycastCollider.enabled || !_block.raycastCollider.gameObject.activeInHierarchy)
+            {
+                return false;
+            }
+
+            int mask = BuildManager.instance != null ? BuildManager.instance.blockLayer.value : LayerMask.GetMask("Block");
+            return (mask & (1 << _block.raycastCollider.gameObject.layer)) != 0;
+        }
+    }
+
     internal BlockConnections(Block block)
     {
         _block = block;
@@ -141,6 +156,12 @@ internal sealed class BlockConnections
 
     private Block FindBlockAcrossConnector(Connector connector)
     {
+        // 断开的方块既不能被查询到，也不能向外连接；否则BFS输入顺序会改变分组。
+        if (!CanParticipate)
+        {
+            return null;
+        }
+
         Vector3 worldPos = _block.GetConnectorWorldPosition(connector);
         Vector3 worldNormal = _block.GetConnectorWorldNormal(connector);
         Vector3 probeCenter = worldPos + worldNormal * connectionProbeOffset;
@@ -156,7 +177,7 @@ internal sealed class BlockConnections
         for (int i = 0; i < hitCount; i++)
         {
             Block otherBlock = _connectionHits[i].GetComponentInParent<Block>();
-            if (otherBlock != null && otherBlock != _block && SharesBuildingScope(otherBlock))
+            if (otherBlock != null && otherBlock != _block && otherBlock.CanParticipateInConnections && SharesBuildingScope(otherBlock))
             {
                 result = otherBlock;
                 break;
@@ -271,11 +292,16 @@ internal sealed class BlockConnections
             return;
         }
 
-        LayerMask rackLayer = 0;
+        disconnectedLayers ??= new Dictionary<GameObject, int>();
         Collider[] colliders = _block.GetComponentsInChildren<Collider>();
         foreach (Collider collider in colliders)
         {
-            collider.gameObject.layer = rackLayer;
+            if (!disconnectedLayers.ContainsKey(collider.gameObject))
+            {
+                disconnectedLayers.Add(collider.gameObject, collider.gameObject.layer);
+            }
+
+            collider.gameObject.layer = 0;
         }
 
         ReleaseExistingConnections();
@@ -300,5 +326,23 @@ internal sealed class BlockConnections
         }
 
         _block.neighbors.Clear();
+    }
+
+    internal void RestoreParticipation()
+    {
+        if (disconnectedLayers == null)
+        {
+            return;
+        }
+
+        foreach (KeyValuePair<GameObject, int> saved in disconnectedLayers)
+        {
+            if (saved.Key != null)
+            {
+                saved.Key.layer = saved.Value;
+            }
+        }
+
+        disconnectedLayers.Clear();
     }
 }

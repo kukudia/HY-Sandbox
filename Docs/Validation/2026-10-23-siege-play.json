@@ -10,6 +10,7 @@
         "PASS missing module is rebuilt for quoted cost",
         "PASS replacement preserves original blueprint identity without duplicates",
         "PASS detached live module is recovered as the same object",
+        "PASS repair restores actual detached collider participation and single connected hull",
         "PASS occupied repair bay is rejected without spending",
         "PASS base anchor survives production regroup",
         "PASS base regroup does not steal player camera ownership",

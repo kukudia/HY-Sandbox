@@ -68,6 +68,8 @@ public static class SiegePlayChecks
             "replacement preserves original blueprint identity without duplicates",
             ship.Unit.GetComponentsInChildren<Block>().Count(block => block.uniqueId == missingId) == 1 && ship.Unit.GetComponentsInChildren<Block>().Length == ship.Blueprint.blocks.Count);
         Block detached = ship.Unit.GetComponentsInChildren<Block>().First(block => block.GetComponent<Cockpit>() == null && block.GetComponent<CargoHold>() == null);
+        int detachedOriginalLayer = detached.raycastCollider.gameObject.layer;
+        detached.DisConnectAllConnectors(false);
         GameObject fragment = Object.Instantiate(
             Resources.Load<GameObject>("BlocksParent/BlocksParent"),
             ship.Unit.transform.position + Vector3.up * 30f,
@@ -79,6 +81,10 @@ public static class SiegePlayChecks
             checks,
             "detached live module is recovered as the same object",
             session.TryRepair(false) && detached != null && detached.GetComponentInParent<ControlUnit>() == ship.Unit && ship.Unit.GetComponentsInChildren<Block>().Length == ship.Blueprint.blocks.Count);
+        Check(
+            checks,
+            "repair restores actual detached collider participation and single connected hull",
+            detached.raycastCollider.gameObject.layer == detachedOriginalLayer && BlockGroupManager.GroupBlocks(ship.Unit.GetComponentsInChildren<Block>().ToList()).Count == 1);
         fragment.SetActive(false);
         Object.Destroy(fragment);
         GameObject obstruction = GameObject.CreatePrimitive(PrimitiveType.Cube);

@@ -1,5 +1,5 @@
-// 职责：执行部署前的静态蓝图与泊位检查；不创建对象、不扣金币、不读取WorldSession。
-// 入口：IsClear()；后续可替换为更精确的空间索引而不改变经济逻辑。
+// 职责：验证泊位净空并报价/执行修缮，复用同源模块、补回缺件，成功后精确扣费。
+// 入口：IsClear() / Quote() / Repair()；部署蓝图不含货物，不读取或改写WorldSession。
 using UnityEngine;
 using System;
 using System.Collections.Generic;
@@ -128,6 +128,7 @@ public static class SiegeRefit
         foreach (BlockData data in entry.Blueprint.blocks)
         {
             Block block = owned[data.id];
+            block.RestoreConnectionParticipation();
             block.transform.SetParent(unit.transform, false);
             block.transform.SetLocalPositionAndRotation(
                 new Vector3(data.posX, data.posY, data.posZ),

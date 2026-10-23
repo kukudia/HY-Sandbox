@@ -791,7 +791,7 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegePlayChecks | [`string Run()`](../Assets/Editor/Siege/SiegePlayChecks.cs#L13) | public static |
-| SiegePlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegePlayChecks.cs#L140) | private static |
+| SiegePlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegePlayChecks.cs#L146) | private static |
 
 ## Assets/Editor/Siege/SiegeRulesChecks.cs
 
@@ -835,6 +835,16 @@
 | --- | --- | --- |
 | SiegeTopologyBaseline | [`string Run()`](../Assets/Editor/Siege/SiegeTopologyBaseline.cs#L13) | public static |
 | SiegeTopologyBaseline | [`string Partition(List<List<Block>> groups)`](../Assets/Editor/Siege/SiegeTopologyBaseline.cs#L103) | private static |
+
+## Assets/Editor/Siege/SiegeTopologyChecks.cs
+
+// 职责：用真实方块验证断链对称性、碰撞层恢复以及移动/禁用连接面等分组契约。 // 入口：Run()；临时夹具与现有单位隔离，失败抛出并在finally清理。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeTopologyChecks | [`string Run()`](../Assets/Editor/Siege/SiegeTopologyChecks.cs#L12) | public static |
+| SiegeTopologyChecks | [`bool IsAllSingleton(List<List<Block>> groups)`](../Assets/Editor/Siege/SiegeTopologyChecks.cs#L136) | private static |
+| SiegeTopologyChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeTopologyChecks.cs#L141) | private static |
 
 ## Assets/Editor/World/OutpostContentAuthoring.cs
 
@@ -1540,8 +1550,8 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BuildingFoundation | [`void Configure(BuildingFoundationData data)`](../Assets/Scripts/Features/Building/BuildingFoundation.cs#L15) | public |
-| BuildingFoundation | [`void RefreshGeometry(Block block)`](../Assets/Scripts/Features/Building/BuildingFoundation.cs#L45) | internal |
-| BuildingFoundation | [`void OnDestroy()`](../Assets/Scripts/Features/Building/BuildingFoundation.cs#L75) | private |
+| BuildingFoundation | [`void RefreshGeometry(Block block)`](../Assets/Scripts/Features/Building/BuildingFoundation.cs#L46) | internal |
+| BuildingFoundation | [`void OnDestroy()`](../Assets/Scripts/Features/Building/BuildingFoundation.cs#L76) | private |
 
 ## Assets/Scripts/Features/Building/BuildingFoundationData.cs
 
@@ -2969,14 +2979,14 @@
 
 ## Assets/Scripts/Features/Siege/SiegeRefit.cs
 
-// 职责：执行部署前的静态蓝图与泊位检查；不创建对象、不扣金币、不读取WorldSession。 // 入口：IsClear()；后续可替换为更精确的空间索引而不改变经济逻辑。
+// 职责：验证泊位净空并报价/执行修缮，复用同源模块、补回缺件，成功后精确扣费。 // 入口：IsClear() / Quote() / Repair()；部署蓝图不含货物，不读取或改写WorldSession。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeRefit | [`bool IsClear( BlockDataList blueprint, Vector3 position, Quaternion rotation, string ignoredUnitId, out string reason)`](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L9) | public static |
 | SiegeRefit | [`long Quote(SiegeFleetEntry entry, SiegeSettings settings)`](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L43) | public static |
 | SiegeRefit | [`bool Repair(SiegeFleetEntry entry, SiegeSession session, out string reason)`](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L75) | public static |
-| SiegeRefit | [`Dictionary<string, Block> CollectOwned(SiegeFleetEntry entry)`](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L154) | private static |
+| SiegeRefit | [`Dictionary<string, Block> CollectOwned(SiegeFleetEntry entry)`](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L155) | private static |
 
 ## Assets/Scripts/Features/Siege/SiegeSession.cs
 
@@ -3034,28 +3044,29 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Block | [`void Awake()`](../Assets/Scripts/Features/Simulation/Block.cs#L50) | private |
-| Block | [`void OnValidate()`](../Assets/Scripts/Features/Simulation/Block.cs#L77) | private |
-| Block | [`void RefreshAuthoringData()`](../Assets/Scripts/Features/Simulation/Block.cs#L94) | public |
-| Block | [`void RefreshRuntimeData(bool rebuildConnectors = false)`](../Assets/Scripts/Features/Simulation/Block.cs#L123) | public |
-| Block | [`void RefreshMass()`](../Assets/Scripts/Features/Simulation/Block.cs#L157) | public |
-| Block | [`void SetMassSettings(bool useCustomMass, float value)`](../Assets/Scripts/Features/Simulation/Block.cs#L170) | public |
-| Block | [`void Reset()`](../Assets/Scripts/Features/Simulation/Block.cs#L178) | private |
-| Block | [`void GenerateConnectionPoints()`](../Assets/Scripts/Features/Simulation/Block.cs#L183) | private |
-| Block | [`string GetDisplayInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L253) | public |
-| Block | [`string GenerateInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L258) | private |
-| Block | [`void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)`](../Assets/Scripts/Features/Simulation/Block.cs#L304) | private |
-| Block | [`Vector3 GetConnectorWorldPosition(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L318) | public |
-| Block | [`Vector3 GetConnectorWorldNormal(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L323) | public |
-| Block | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L328) | public |
-| Block | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/Block.cs#L333) | public |
-| Block | [`void CheckConnectionAfterPhysicsSync()`](../Assets/Scripts/Features/Simulation/Block.cs#L338) | internal |
-| Block | [`List<Block> Neighbors()`](../Assets/Scripts/Features/Simulation/Block.cs#L343) | public |
-| Block | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L351) | internal |
-| Block | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Block.cs#L356) | public |
-| Block | [`void RefreshConnectionStatus()`](../Assets/Scripts/Features/Simulation/Block.cs#L361) | internal |
-| Block | [`bool IsBlockedGhost()`](../Assets/Scripts/Features/Simulation/Block.cs#L369) | public |
-| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L393) | private |
+| Block | [`void Awake()`](../Assets/Scripts/Features/Simulation/Block.cs#L51) | private |
+| Block | [`void OnValidate()`](../Assets/Scripts/Features/Simulation/Block.cs#L78) | private |
+| Block | [`void RefreshAuthoringData()`](../Assets/Scripts/Features/Simulation/Block.cs#L95) | public |
+| Block | [`void RefreshRuntimeData(bool rebuildConnectors = false)`](../Assets/Scripts/Features/Simulation/Block.cs#L124) | public |
+| Block | [`void RefreshMass()`](../Assets/Scripts/Features/Simulation/Block.cs#L158) | public |
+| Block | [`void SetMassSettings(bool useCustomMass, float value)`](../Assets/Scripts/Features/Simulation/Block.cs#L171) | public |
+| Block | [`void Reset()`](../Assets/Scripts/Features/Simulation/Block.cs#L179) | private |
+| Block | [`void GenerateConnectionPoints()`](../Assets/Scripts/Features/Simulation/Block.cs#L184) | private |
+| Block | [`string GetDisplayInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L254) | public |
+| Block | [`string GenerateInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L259) | private |
+| Block | [`void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)`](../Assets/Scripts/Features/Simulation/Block.cs#L305) | private |
+| Block | [`Vector3 GetConnectorWorldPosition(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L319) | public |
+| Block | [`Vector3 GetConnectorWorldNormal(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L324) | public |
+| Block | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L329) | public |
+| Block | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/Block.cs#L334) | public |
+| Block | [`void CheckConnectionAfterPhysicsSync()`](../Assets/Scripts/Features/Simulation/Block.cs#L339) | internal |
+| Block | [`List<Block> Neighbors()`](../Assets/Scripts/Features/Simulation/Block.cs#L344) | public |
+| Block | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L352) | internal |
+| Block | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Block.cs#L357) | public |
+| Block | [`void RestoreConnectionParticipation()`](../Assets/Scripts/Features/Simulation/Block.cs#L363) | public |
+| Block | [`void RefreshConnectionStatus()`](../Assets/Scripts/Features/Simulation/Block.cs#L368) | internal |
+| Block | [`bool IsBlockedGhost()`](../Assets/Scripts/Features/Simulation/Block.cs#L376) | public |
+| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L400) | private |
 
 ## Assets/Scripts/Features/Simulation/BlockConnections.cs
 
@@ -3063,18 +3074,19 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BlockConnections | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L20) | internal |
-| BlockConnections | [`void CheckConnection(bool synchronizePhysics = true)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L34) | internal |
-| BlockConnections | [`void ReleaseExistingConnections()`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L82) | private |
-| BlockConnections | [`void ReleaseConnectionPairWithoutVisual(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L98) | private |
-| BlockConnections | [`void ReleaseConnectionReferences(GameObject connectorObject)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L112) | private |
-| BlockConnections | [`Block FindBlockAcrossConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L142) | private |
-| BlockConnections | [`bool SharesBuildingScope(Block other)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L170) | private |
-| BlockConnections | [`Connector FindMatchingConnector(Block otherBlock, Connector connector, bool requireAvailable = true)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L177) | private |
-| BlockConnections | [`void ConnectTo(Connector connector, Block otherBlock, Connector otherConnector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L199) | private |
-| BlockConnections | [`void ClearConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L220) | private |
-| BlockConnections | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L239) | internal |
-| BlockConnections | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L267) | internal |
+| BlockConnections | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L35) | internal |
+| BlockConnections | [`void CheckConnection(bool synchronizePhysics = true)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L49) | internal |
+| BlockConnections | [`void ReleaseExistingConnections()`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L97) | private |
+| BlockConnections | [`void ReleaseConnectionPairWithoutVisual(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L113) | private |
+| BlockConnections | [`void ReleaseConnectionReferences(GameObject connectorObject)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L127) | private |
+| BlockConnections | [`Block FindBlockAcrossConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L157) | private |
+| BlockConnections | [`bool SharesBuildingScope(Block other)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L191) | private |
+| BlockConnections | [`Connector FindMatchingConnector(Block otherBlock, Connector connector, bool requireAvailable = true)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L198) | private |
+| BlockConnections | [`void ConnectTo(Connector connector, Block otherBlock, Connector otherConnector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L220) | private |
+| BlockConnections | [`void ClearConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L241) | private |
+| BlockConnections | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L260) | internal |
+| BlockConnections | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L288) | internal |
+| BlockConnections | [`void RestoreParticipation()`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L331) | internal |
 
 ## Assets/Scripts/Features/Simulation/BlockGroupManager.cs
 

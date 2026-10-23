@@ -1,0 +1,75 @@
+{
+    "methodology": "Unity Editor Play, real 1x1x1 prefab chain at remote coordinates in default physics scene. One warmup and seven timed synchronous GroupBlocks calls per size; creation, sync before first sample, partition validation and cleanup excluded. GroupBlocks internal sync included. Allocation counter is calibrated with a known allocation; unavailable results are -1, never zero-allocation proof. If supported, bytes include Stopwatch and are current-thread only, not whole-frame GC. No connection visual initialization or physics steps. Detach fixture records a known baseline defect rather than suppressing it. Not large-scale battle FPS.",
+    "unity": "6000.3.11f1",
+    "utc": "2026-10-23T05:05:20.9732288Z",
+    "allocationCounterAvailable": false,
+    "detachOrderIndependent": true,
+    "detachedIsSingleton": true,
+    "detachedForwardGroups": 3,
+    "detachedReverseGroups": 3,
+    "samples": [
+        {
+            "blocks": 100,
+            "milliseconds": [
+                0.6022000000000001,
+                0.6171,
+                0.5864,
+                0.5829,
+                0.5901000000000001,
+                0.5770000000000001,
+                0.6524
+            ],
+            "bytes": [
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1
+            ]
+        },
+        {
+            "blocks": 256,
+            "milliseconds": [
+                1.5539,
+                1.556,
+                1.5797,
+                1.4956,
+                1.5043,
+                1.4971,
+                1.5005000000000002
+            ],
+            "bytes": [
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1
+            ]
+        },
+        {
+            "blocks": 1024,
+            "milliseconds": [
+                6.918,
+                7.0808,
+                7.064,
+                7.0722000000000009,
+                6.774500000000001,
+                6.670100000000001,
+                6.6242
+            ],
+            "bytes": [
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1
+            ]
+        }
+    ]
+}

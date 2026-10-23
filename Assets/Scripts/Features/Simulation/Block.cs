@@ -46,6 +46,7 @@ public class Block : MonoBehaviour
     private StatusIcon _icon;
     private BlockConnections _connections;
     private BlockConnections Connections => _connections ?? (_connections = new BlockConnections(this));
+    internal bool CanParticipateInConnections => Connections.CanParticipate;
 
     private void Awake()
     {
@@ -356,6 +357,12 @@ public class Block : MonoBehaviour
     public void DisConnectAllConnectors(bool refreshNeighbors = true)
     {
         Connections.DisConnectAllConnectors(refreshNeighbors);
+    }
+
+    // 修缮/底座重建显式恢复参与连接；恢复原碰撞层，不将特效/查询子节点强制改成Block层。
+    public void RestoreConnectionParticipation()
+    {
+        Connections.RestoreParticipation();
     }
 
     internal void RefreshConnectionStatus()

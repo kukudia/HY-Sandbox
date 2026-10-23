@@ -1,0 +1,16 @@
+{
+    "checks": [
+        "PASS intact chain is one component",
+        "PASS detached middle yields three singleton components in either order",
+        "PASS refreshing visuals cannot reconnect a detached block",
+        "PASS repeated detach restores exact layers even with multiple colliders per node",
+        "PASS explicit participation restore reconnects geometry",
+        "PASS same-frame transform movement invalidates geometric neighbors",
+        "PASS disabled faces reject both traversal directions with stale flags",
+        "PASS disabled canonical collider cannot emit one-sided links",
+        "PASS topology does not require connection visuals",
+        "PASS null duplicate and external blocks do not leak into grouping",
+        "PASS configured building foundation participates in two-sided graph",
+        "PASS foundation resize restores participation without moving supported grid"
+    ]
+}

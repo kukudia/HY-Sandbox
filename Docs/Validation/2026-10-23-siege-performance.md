@@ -28,3 +28,15 @@ GC.GetAllocatedBytesForCurrentThread增加已知4096字节分配校准；不响�
 - 千块图查询不是千块独立Rigidbody模拟，当前没有万块流畅度结论。
 
 静态检查：dotnet build 0错误/4项既有警告；277源码格式/函数图检查仅保留既有MainUIPanels格式差异；diff检查通过。真实Play完成90秒采样与带分配校准的三规模分组基线，归档gzip解压SHA256及观察数量一致。断链缺陷是本次记录的既有失败，不标成通过。
+
+## 断链对称性修复
+
+`BlockConnections` 现在要求查询源和目标的规范碰撞体都能参与连接层；关闭碰撞体、断链退出连接层或禁用方块时，不允许只从其中一侧形成关系。DisConnect保存每个碰撞节点的原Layer，显式Restore恢复，不把特殊子层统一改成Block。修缮与建筑底座Configure接入恢复。
+
+真实Play的 [12项拓扑检查](2026-10-23-siege-topology-checks.json) 通过，覆盖正倒序三单块、重复断开、多Collider共节点/特殊子层、同帧移动、禁用连接面/碰撞体、无视觉、输入去重、底座生成和扩缩。最新 [20项闭环检查](2026-10-23-siege-play.json) 使用实际DisConnect后再维修，确认机体单连通。
+
+[同样链条的修复后记录](2026-10-23-siege-topology-symmetric.json) 确认正反遍历模块归属一致，断开中间块独立，两侧各自为一分量。此提交修正确性，不宣称性能优化；它增加了参与状态校验，CPU后续需单独优化。
+
+既有 `BuildPalettePlayProbe` 在Main真实Play的102项检查通过，0错误，覆盖原连接视觉、同帧移动、禁用面和完整建造UI回归。检查结束Main干净，已返回Siege；见 [Main回归](2026-10-23-siege-build-regression.json)。
+
+修复检查点静态构建0错误/4项既有警告，278源码检查仅既有MainUIPanels格式差异，新增资产已由Editor导入。未运行最新自然交火窗口或正式Player性能比较。
