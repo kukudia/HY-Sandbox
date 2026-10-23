@@ -1062,7 +1062,7 @@ flowchart TD
 
 ## 维修、回收和移动 Home 返航
 
-机器人使用 Home 实时停靠点与刚体点速度；任务与返航均从机体做净空检测，持续绕障并在停滞后脱困。动态 Bot 及其子碰撞体从净空、重叠和速度走廊查询中过滤，墙体等真实障碍仍参与制动。取消任务释放认领。
+机器人使用 Home 实时停靠点与刚体点速度；任务与返航均从机体做净空检测，持续绕障并在停滞后脱困。动态 Bot 及其子碰撞体从净空、重叠和速度走廊查询中过滤，墙体等真实障碍仍参与制动。单次同步决策复用碰撞体过滤与净空结果，入口清空过滤缓存；导航同帧复用实时目标距离，不降低紧急制动频率。取消任务释放认领。
 
 ```mermaid
 flowchart TD
@@ -1077,7 +1077,7 @@ flowchart TD
     E["BotFlightMotion.NavigateToTarget()"]
     click E "../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L58" "打开源码"
     F["BotObstacleAvoidance.Evaluate()"]
-    click F "../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L63" "打开源码"
+    click F "../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L67" "打开源码"
     G["RepairBot.CheckAndRepair()"]
     click G "../Assets/Scripts/Features/Bots/RepairBot.cs#L110" "打开源码"
     H["RepairBeamView.Update()"]
@@ -1099,7 +1099,7 @@ flowchart TD
     P["BotFlightMotion.NavigateHome()"]
     click P "../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L69" "打开源码"
     Q["BotObstacleAvoidance.ConstrainVelocity()"]
-    click Q "../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L223" "打开源码"
+    click Q "../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L236" "打开源码"
     R["Bot.ReturnHome()"]
     click R "../Assets/Scripts/Features/Bots/Bot.cs#L310" "打开源码"
     S["LootDrop.Deliver()"]
@@ -1140,7 +1140,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|NavigateToTarget -->
 - [BotFlightMotion.NavigateToTarget](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L58)
 <!-- source: Assets/Scripts/Features/Bots/BotFlightMotion.cs|NavigateToTarget -->
-- [BotObstacleAvoidance.Evaluate](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L63)
+- [BotObstacleAvoidance.Evaluate](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L67)
 <!-- source: Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs|Evaluate -->
 - [RepairBot.CheckAndRepair](../Assets/Scripts/Features/Bots/RepairBot.cs#L110)
 <!-- source: Assets/Scripts/Features/Bots/RepairBot.cs|CheckAndRepair -->
@@ -1162,7 +1162,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|NavigateHomeSmoothly -->
 - [BotFlightMotion.NavigateHome](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L69)
 <!-- source: Assets/Scripts/Features/Bots/BotFlightMotion.cs|NavigateHome -->
-- [BotObstacleAvoidance.ConstrainVelocity](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L223)
+- [BotObstacleAvoidance.ConstrainVelocity](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L236)
 <!-- source: Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs|ConstrainVelocity -->
 - [Bot.ReturnHome](../Assets/Scripts/Features/Bots/Bot.cs#L310)
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|ReturnHome -->

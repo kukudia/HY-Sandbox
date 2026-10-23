@@ -1,0 +1,15 @@
+[
+  "Cockpit-less controller never steers or writes the thruster's physical output",
+  "Thruster clears invalid-owner output on its own physics callback",
+  "Controller submits powered target without advancing thrust history",
+  "Valid powered owner produces thrust and angular correction (thrust=0.9999996, angular=(0.15, 0.72, 1.08), up=(0.00, 0.82, 0.57), valid=True)",
+  "Controller power loss stops steering without bypassing thruster rate limits",
+  "Controller power loss decays by exactly one physics-step rate limit",
+  "Controller power loss reaches zero without stale target restarting output",
+  "Leaving play mode clears hover output",
+  "Disabling controller preserves physical history until the thruster callback",
+  "Controller disable decays by exactly one physics-step rate limit",
+  "Controller disable reaches zero without stale target restarting output",
+  "Disabling the thruster itself clears physical output immediately",
+  "Old controller cleanup preserves transferred thruster output"
+]

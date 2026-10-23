@@ -25,6 +25,9 @@ public sealed class BotObstacleAvoidance
     private readonly RaycastHit[] _hits = new RaycastHit[64];
     private readonly Collider[] _overlaps = new Collider[32];
     private readonly Collider[] _bodyColliders;
+    // One synchronous decision can hit the same building collider from dozens of directions.
+    // Clear at each public entry so reparented cargo and changed targets are never stale next tick.
+    private readonly Dictionary<Collider, bool> _ignoredColliders = new Dictionary<Collider, bool>();
     private Collider _overlapObstacle;
     private Vector3 _overlapEscape;
     private readonly List<DebugHit> _debugHits = new List<DebugHit>();
@@ -52,6 +55,7 @@ public sealed class BotObstacleAvoidance
         _lastProgressTime = Time.time;
         _clearSamples = 0;
         _debugHits.Clear();
+        _ignoredColliders.Clear();
     }
 
     public void ClearDebugHits()
@@ -75,6 +79,7 @@ public sealed class BotObstacleAvoidance
 
         _target = target;
         _settings = settings;
+        _ignoredColliders.Clear();
         _debugHits.Clear();
         if (TryGetOverlapEscape(out Vector3 escape))
         {
@@ -121,14 +126,15 @@ public sealed class BotObstacleAvoidance
         }
 
         // 保持一次绕障选择，直到目标连续可见；目标拉力不再逐帧把机器人吸回墙面。
-        if (!detouring || stalled && Time.time >= _detourUntil || GetClearDistance(_detourDirection, range) < radius * 2f)
+        bool chooseNewDirection = !detouring || stalled && Time.time >= _detourUntil;
+        float clearDistance = chooseNewDirection ? 0f : GetClearDistance(_detourDirection, range);
+        if (chooseNewDirection || clearDistance < radius * 2f)
         {
-            _detourDirection = ChooseClearDirection(targetDirection, range, stalled);
+            _detourDirection = ChooseClearDirection(targetDirection, range, stalled, out clearDistance);
             _detourUntil = Time.time + Mathf.Max(0.2f, settings.DetourHoldTime);
             _lastProgressTime = Time.time;
         }
 
-        float clearDistance = GetClearDistance(_detourDirection, range);
         if (blocked)
         {
             _debugHits.Add(new DebugHit { HitPoint = directHit.point, AvoidanceVector = _detourDirection, Distance = directHit.distance, Level = directHit.distance < settings.EmergencyRange ? HazardLevel.Emergency : HazardLevel.Predictive });
@@ -155,7 +161,7 @@ public sealed class BotObstacleAvoidance
         return Time.time - _lastProgressTime >= Mathf.Max(0.5f, _settings.StuckTimeout);
     }
 
-    private Vector3 ChooseClearDirection(Vector3 targetDirection, float range, bool stalled)
+    private Vector3 ChooseClearDirection(Vector3 targetDirection, float range, bool stalled, out float bestClearDistance)
     {
         Vector3 forward = Vector3.ProjectOnPlane(targetDirection, Vector3.up).normalized;
         if (forward.sqrMagnitude < 0.01f)
@@ -165,6 +171,7 @@ public sealed class BotObstacleAvoidance
 
         Vector3 bestDirection = Vector3.up;
         float bestScore = float.NegativeInfinity;
+        bestClearDistance = 0f;
         int rayCount = Mathf.Clamp(_settings.RayCount, 8, 24);
         for (int elevation = -1; elevation <= 1; elevation++)
         {
@@ -178,7 +185,8 @@ public sealed class BotObstacleAvoidance
                     range,
                     stalled,
                     ref bestScore,
-                    ref bestDirection);
+                    ref bestDirection,
+                    ref bestClearDistance);
             }
         }
 
@@ -188,14 +196,16 @@ public sealed class BotObstacleAvoidance
             range,
             stalled,
             ref bestScore,
-            ref bestDirection);
+            ref bestDirection,
+            ref bestClearDistance);
         ConsiderDirection(
             Vector3.down,
             targetDirection,
             range,
             stalled,
             ref bestScore,
-            ref bestDirection);
+            ref bestDirection,
+            ref bestClearDistance);
         return bestDirection;
     }
 
@@ -205,9 +215,11 @@ public sealed class BotObstacleAvoidance
         float range,
         bool stalled,
         ref float bestScore,
-        ref Vector3 bestDirection)
+        ref Vector3 bestDirection,
+        ref float bestClearDistance)
     {
-        float clearance = GetClearDistance(candidate, range) / range;
+        float clearDistance = GetClearDistance(candidate, range);
+        float clearance = clearDistance / range;
         float alignment = Vector3.Dot(candidate, targetDirection);
         float continuity = Vector3.Dot(candidate, _detourDirection);
         // 净空优先；略偏向爬升，地面附近和 U 形围挡不会只在水平面来回试探。
@@ -216,12 +228,14 @@ public sealed class BotObstacleAvoidance
         {
             bestScore = score;
             bestDirection = candidate;
+            bestClearDistance = clearDistance;
         }
     }
 
     /// <summary>每个物理帧检查实际速度走廊；删除撞向墙面的速度分量，保留沿墙运动。</summary>
     public Vector3 ConstrainVelocity(Vector3 desiredVelocity, float deltaTime, Vector3 currentVelocity, float brakingAcceleration)
     {
+        _ignoredColliders.Clear();
         float speed = desiredVelocity.magnitude;
         if (speed < 0.01f)
         {
@@ -357,6 +371,22 @@ public sealed class BotObstacleAvoidance
     }
 
     private bool IsIgnored(Collider collider)
+    {
+        if (collider == null)
+        {
+            return true;
+        }
+
+        if (!_ignoredColliders.TryGetValue(collider, out bool ignored))
+        {
+            ignored = ShouldIgnoreCollider(collider);
+            _ignoredColliders.Add(collider, ignored);
+        }
+
+        return ignored;
+    }
+
+    private bool ShouldIgnoreCollider(Collider collider)
     {
         if (collider == null || collider.transform == _transform || collider.transform.IsChildOf(_transform))
         {

@@ -1,0 +1,35 @@
+{
+    "passed": false,
+    "checks": [
+        "RepairBot child layer 0 does not trigger detour",
+        "RepairBot child layer 0 does not brake",
+        "RepairBot child layer 3 does not trigger detour",
+        "RepairBot child layer 3 does not brake",
+        "RepairBot overlap does not trigger escape",
+        "RepairBot overlap does not redirect velocity",
+        "RepairBot overlap does not hide wall",
+        "RepairBot overlap keeps wall braking",
+        "RepairBot detached collider becomes obstacle again",
+        "CollectionBot child layer 0 does not trigger detour",
+        "CollectionBot child layer 0 does not brake",
+        "CollectionBot child layer 3 does not trigger detour",
+        "CollectionBot child layer 3 does not brake",
+        "CollectionBot overlap does not trigger escape",
+        "CollectionBot overlap does not redirect velocity",
+        "CollectionBot overlap does not hide wall",
+        "CollectionBot overlap keeps wall braking",
+        "CollectionBot detached collider becomes obstacle again",
+        "RepairBot wall crossing reached target through real Rigidbody physics",
+        "RepairBot wall crossing did not collide with walls",
+        "CollectionBot U enclosure reached target through real Rigidbody physics",
+        "CollectionBot U enclosure did not collide with walls",
+        "CollectionBot U enclosure escaped vertically",
+        "RepairBot inertia braking reached target through real Rigidbody physics",
+        "RepairBot inertia braking did not collide with walls",
+        "RepairBot moving Home behind wall reached target through real Rigidbody physics",
+        "RepairBot moving Home behind wall did not collide with walls"
+    ],
+    "errors": [
+        "Navigation probe interrupted by manual Play Mode exit."
+    ]
+}

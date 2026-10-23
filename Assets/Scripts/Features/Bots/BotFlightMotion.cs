@@ -93,14 +93,12 @@ public sealed class BotFlightMotion
         _settings = settings;
         avoidanceRangeScale = Mathf.Clamp01(avoidanceRangeScale);
         // 计算目标方向
-        Vector3 targetDirection = (targetPosition - _transform.position).normalized;
-        SampleGuidance(
-            targetReference,
-            targetDirection,
-            Vector3.Distance(_transform.position, targetPosition),
-            avoidanceRangeScale);
+        Vector3 targetOffset = targetPosition - _transform.position;
+        float targetDistance = targetOffset.magnitude;
+        Vector3 targetDirection = targetDistance > 1e-5f ? targetOffset / targetDistance : Vector3.zero;
+        SampleGuidance(targetReference, targetDirection, targetDistance, avoidanceRangeScale);
         UpdateDirectionAndSpeed(targetDirection, avoidanceRangeScale);
-        ApplyMovement(targetPosition, targetDirection, homeRigidbody, returningHome);
+        ApplyMovement(targetPosition, targetDirection, targetDistance, homeRigidbody, returningHome);
         _avoidanceDirection = _cachedResult.Direction;
     }
 
@@ -144,20 +142,25 @@ public sealed class BotFlightMotion
         float targetSpeedMultiplier = _cachedResult.OverrideDirection ? _cachedResult.SpeedMultiplier : Mathf.Lerp(1f, _cachedResult.SpeedMultiplier, avoidanceRangeScale);
         _speedMultiplier = Mathf.Lerp(_speedMultiplier, targetSpeedMultiplier, Time.fixedDeltaTime * 3f);
         // 旋转朝向移动方向
-        if (_direction.magnitude > 0.1f)
+        if (_direction.sqrMagnitude > 0.01f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(_direction);
             _transform.rotation = Quaternion.Slerp(_transform.rotation, targetRotation, _settings.RotationSpeed * Time.fixedDeltaTime);
         }
     }
 
-    private void ApplyMovement(Vector3 targetPosition, Vector3 targetDirection, Rigidbody homeRigidbody, bool returningHome)
+    private void ApplyMovement(
+        Vector3 targetPosition,
+        Vector3 targetDirection,
+        float targetDistance,
+        Rigidbody homeRigidbody,
+        bool returningHome)
     {
         // 应用移动力
         float effectiveSpeed = _settings.MovementSpeed * _speedMultiplier;
         if (returningHome)
         {
-            ApplyReturnHomeMovement(targetPosition, targetDirection, effectiveSpeed, homeRigidbody);
+            ApplyReturnHomeMovement(targetPosition, targetDirection, targetDistance, effectiveSpeed, homeRigidbody);
         }
         else
         {
@@ -175,9 +178,14 @@ public sealed class BotFlightMotion
         }
     }
 
-    private void ApplyReturnHomeMovement(Vector3 targetPosition, Vector3 targetDirection, float effectiveSpeed, Rigidbody homeRigidbody)
+    private void ApplyReturnHomeMovement(
+        Vector3 targetPosition,
+        Vector3 targetDirection,
+        float targetDistance,
+        float effectiveSpeed,
+        Rigidbody homeRigidbody)
     {
-        float remainingDistance = Mathf.Max(0f, Vector3.Distance(_transform.position, targetPosition) - _settings.DockingApproachTolerance);
+        float remainingDistance = Mathf.Max(0f, targetDistance - _settings.DockingApproachTolerance);
         float brakingAcceleration = Mathf.Max(0.1f, _settings.ReturnBrakingAcceleration);
         Vector3 homeVelocity = homeRigidbody != null ? homeRigidbody.GetPointVelocity(targetPosition) : Vector3.zero;
         // 追赶移动中的载体时，Bot 需要比载体保留相对速度；否则载体一加速，返航距离会持续增加。

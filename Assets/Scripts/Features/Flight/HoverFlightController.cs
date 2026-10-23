@@ -362,6 +362,13 @@ public class HoverFlightController : MonoBehaviour
                 continue;
             }
 
+            // An inactive thruster still receives zero, without evaluating its tilt lever arm.
+            if (!thruster.ShouldActivate())
+            {
+                thruster.SetControlledThrust(0f);
+                continue;
+            }
+
             // 核心修改：按推力占比分配基础推力
             float baseThrust = totalThrustRequired * cachedThrustRatios[i];
             // 姿态调整推力（保持原逻辑）
@@ -382,7 +389,7 @@ public class HoverFlightController : MonoBehaviour
 
             // 合并推力并限制范围
             float finalThrust = Mathf.Clamp(baseThrust + tiltThrust, 0, thruster.maxThrust);
-            thruster.SetControlledThrust(thruster.ShouldActivate() ? finalThrust : 0f);
+            thruster.SetControlledThrust(finalThrust);
         }
     }
 

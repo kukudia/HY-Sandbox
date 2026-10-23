@@ -174,7 +174,6 @@ public abstract class Thruster : MonoBehaviour
     public virtual void VisualizeThrust(bool forceUpdate)
     {
         // Throttle visual updates independently from physics to avoid rebuilding particle state every tick.
-        Vector3 lineDirection = GetNormalizedThrustDirection();
         float currentTime = Time.unscaledTime;
         if (!forceUpdate && visualizationInterval > 0f && currentTime < nextVisualizationTime)
         {
@@ -182,6 +181,7 @@ public abstract class Thruster : MonoBehaviour
         }
 
         nextVisualizationTime = currentTime + Mathf.Max(0f, visualizationInterval);
+        Vector3 lineDirection = GetNormalizedThrustDirection();
         float thrustRatio = maxThrust > 1e-5f ? Mathf.Clamp01(thrust / maxThrust) : 0f;
         EnsureVisualEffect();
         visualEffect.SetThrust(thrustRatio, lineDirection);
