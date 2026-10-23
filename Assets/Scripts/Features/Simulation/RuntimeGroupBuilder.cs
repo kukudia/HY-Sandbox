@@ -32,9 +32,9 @@ internal sealed class RuntimeGroupBuilder
                 if (cockpit != null)
                 {
                     groupControl.faction = cockpit.faction;
-                    if (cockpit.faction == UnitFaction.Player)
+                    if (cockpit.faction == UnitFaction.Player && cockpit.ControlMode == UnitControlMode.Player)
                     {
-                        groupParent.name = SaveManager.instance.currentSaveName;
+                        groupParent.name = !string.IsNullOrEmpty(SaveManager.instance?.currentSaveName) ? SaveManager.instance.currentSaveName : "Player Fleet";
                         _play.blocksParent = groupParent.transform;
                         GameManager.instance.blocksParent = groupParent.transform;
                         Debug.Log($"Change new block parent {_play.blocksParent}.");
@@ -59,7 +59,10 @@ internal sealed class RuntimeGroupBuilder
             groupControl.AssignRuntimeOwnershipToBlocks(false);
         }
 
-        Camera.main.GetComponent<CameraController>().playerBody = _play.blocksParent;
+        if (Camera.main != null && Camera.main.TryGetComponent(out CameraController camera))
+        {
+            camera.playerBody = _play.blocksParent;
+        }
     }
 
     private static Dictionary<Block, Rigidbody> CaptureSourceBodies(List<Block> blocks)

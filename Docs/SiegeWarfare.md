@@ -27,3 +27,11 @@
 - 开始基线：`dotnet build HY-Sandbox.sln --no-restore --nologo` 通过，0错误、3项既有MSB3277依赖冲突警告。
 - 开始基线：CodeReadability检查存在既有 `MainUIPanels.cs` 格式差异；不将其计为本次引入失败。
 - 尚无阵地战运行、视觉或规模性能验收；不得将规则检查称为玩法完成。
+
+### 共用驾驶与蓝图恢复
+
+- `Cockpit.ControlMode` 区分玩家输入和自主驾驶，阵营仍决定友敌。该状态随驾驶舱迁移，物理重组不会重置。
+- `ControlUnit.AcceptsPlayerInput` 是输入门控；推进器手动控制与悬浮高度按键使用同一门控。自主友舰复用 `EnemyController` 的移动、索敌和避障，并可配置基地守卫范围。
+- `ModularUnitFactory` 恢复任意阵营飞船；`EnemyBlueprintFactory` 保留原公开调用入口并委托共用实现。组装过程中保持刚体运动学，连接初始化后恢复动态，避免插值姿态偏移。
+- 真实 Main Play 中 `SiegeFleetChecks.Run()` 的31项检查通过，旧敌机池6项回归通过。检查覆盖恢复、质量、生成姿态和控制门控；未宣称已验证多舰自然交火。
+- 本轮构建0错误/4警告，包含3项依赖冲突和既有Profiler过时API警告；先前提交正文的3警告描述不完整，以此记录为准。

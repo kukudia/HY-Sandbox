@@ -86,7 +86,7 @@ public abstract class Thruster : MonoBehaviour
         return controlUnit != null && controlUnit.HasValidCockpit;
     }
 
-    public bool IsPlayerControllable => isActiveAndEnabled && HasValidRuntimeOwner() && controlUnit.faction == UnitFaction.Player;
+    public bool IsPlayerControllable => isActiveAndEnabled && HasValidRuntimeOwner() && controlUnit.AcceptsPlayerInput;
 
     public float PowerSupplyEfficiency
     {

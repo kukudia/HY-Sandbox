@@ -72,6 +72,7 @@ public class ControlUnit : MonoBehaviour
     public bool HasValidCockpit => hasValidCockpit && cockpit != null;
     public bool HasAnyCockpit => cockpits != null && cockpits.Length > 0 ? System.Array.Exists(cockpits, candidate => candidate != null) : GetComponentInChildren<Cockpit>(true) != null;
     public bool IsPlayer => faction == UnitFaction.Player;
+    public bool AcceptsPlayerInput => IsPlayer && HasValidCockpit && cockpit.ControlMode == UnitControlMode.Player;
     public Vector3 MovementInput => movementInput;
 
     public bool TryGetTotalDurability(out float current, out float maximum)
@@ -128,12 +129,12 @@ public class ControlUnit : MonoBehaviour
             return;
         }
 
-        if (IsPlayer)
+        if (AcceptsPlayerInput)
         {
             movementInput = GetPlayerMovementInput();
         }
 
-        if (IsPlayer && Keyboard.current.spaceKey.wasPressedThisFrame)
+        if (AcceptsPlayerInput && Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             foreach (HoverThruster thruster in hoverThrusters)
             {
@@ -200,7 +201,7 @@ public class ControlUnit : MonoBehaviour
             hoverFlightController.Init();
         }
 
-        if (hasValidCockpit && faction == UnitFaction.Enemy && GetComponent<EnemyController>() == null)
+        if (hasValidCockpit && (faction == UnitFaction.Enemy || cockpit.ControlMode == UnitControlMode.Autonomous) && GetComponent<EnemyController>() == null)
         {
             gameObject.AddComponent<EnemyController>();
         }
@@ -258,6 +259,11 @@ public class ControlUnit : MonoBehaviour
     private Vector3 GetPlayerMovementInput()
     {
         Vector3 dir = Vector3.zero;
+        if (Keyboard.current == null)
+        {
+            return dir;
+        }
+
         Transform cameraTransform = Camera.main != null ? Camera.main.transform : null;
         if (cameraTransform == null)
         {

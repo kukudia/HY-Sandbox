@@ -122,7 +122,7 @@ public class HoverFlightController : MonoBehaviour
             return;
         }
 
-        bool acceptsPlayerInput = controlUnit.faction == UnitFaction.Player;
+        bool acceptsPlayerInput = controlUnit.AcceptsPlayerInput;
         Keyboard keyboard = Keyboard.current;
         if (acceptsPlayerInput && keyboard != null && keyboard.qKey.isPressed && !keyboard.eKey.isPressed)
         {

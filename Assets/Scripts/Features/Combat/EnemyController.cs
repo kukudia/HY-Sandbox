@@ -1,4 +1,4 @@
-// 职责：为敌方控制单元选择目标并生成驾驶/攻击输入。
+// 职责：为敌机与自主友舰选择敌对目标并生成驾驶意图；阵营和玩家驾驶权分别判断。
 // 入口：FixedUpdate()；按固定周期更新目标和避障意图，逐物理步平滑输入。
 using UnityEngine;
 
@@ -28,6 +28,9 @@ public class EnemyController : MonoBehaviour
     private Vector3 desiredMovementInput;
     private bool _hasIdleHoverHeight;
     private float _idleHoverHeight;
+    private Transform guardAnchor;
+    private float guardRadius;
+    private ControlUnit priorityTarget;
     private readonly RaycastHit[] obstacleHits = new RaycastHit[MaxObstacleHits];
     private void Awake()
     {
@@ -42,14 +45,14 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
-        if (unit == null || !unit.HasValidCockpit || unit.faction != UnitFaction.Enemy)
+        if (unit == null || !unit.HasValidCockpit || unit.faction == UnitFaction.Neutral || unit.AcceptsPlayerInput)
         {
             return;
         }
 
         if (Time.time >= nextUpdateTime)
         {
-            currentTarget = FindNearestPlayer();
+            currentTarget = FindNearestOpponent();
             unit.SetTarget(currentTarget != null ? currentTarget.transform : null);
             nextUpdateTime = Time.time + updateInterval;
         }
@@ -57,7 +60,9 @@ public class EnemyController : MonoBehaviour
         ConfigureHoverThrusters();
         if (currentTarget == null)
         {
-            desiredMovementInput = Vector3.zero;
+            Vector3 toGuard = guardAnchor != null ? guardAnchor.position - transform.position : Vector3.zero;
+            toGuard.y = 0f;
+            desiredMovementInput = toGuard.sqrMagnitude > 100f ? ApplyObstacleAvoidance(toGuard.normalized, toGuard) : Vector3.zero;
             unit.SetMovementInput(Vector3.MoveTowards(
                 unit.MovementInput,
                 desiredMovementInput,
@@ -105,8 +110,26 @@ public class EnemyController : MonoBehaviour
         return desiredMove;
     }
 
-    private ControlUnit FindNearestPlayer()
+    public void SetGuardAnchor(Transform anchor, float radius)
     {
+        guardAnchor = anchor;
+        guardRadius = Mathf.Max(1f, radius);
+        nextUpdateTime = 0f;
+    }
+
+    public void SetPriorityTarget(ControlUnit targetUnit)
+    {
+        priorityTarget = targetUnit;
+        nextUpdateTime = 0f;
+    }
+
+    private ControlUnit FindNearestOpponent()
+    {
+        if (IsValidOpponent(priorityTarget) && (priorityTarget.transform.position - transform.position).sqrMagnitude < detectionRange * detectionRange)
+        {
+            return priorityTarget;
+        }
+
         var units = PlayManager.instance != null ? PlayManager.instance.GetControlUnits() : null;
         ControlUnit nearest = null;
         float nearestSqrDistance = detectionRange * detectionRange;
@@ -123,7 +146,7 @@ public class EnemyController : MonoBehaviour
                 continue;
             }
 
-            if (!candidate.HasValidCockpit || candidate.faction != UnitFaction.Player)
+            if (!IsValidOpponent(candidate))
             {
                 continue;
             }
@@ -137,6 +160,35 @@ public class EnemyController : MonoBehaviour
         }
 
         return nearest;
+    }
+
+    private bool IsValidOpponent(ControlUnit candidate)
+    {
+        if (candidate == null || candidate == unit || !candidate.isActiveAndEnabled || !candidate.IsOperational || !candidate.IsSimulationActive || candidate.gameObject.scene != gameObject.scene)
+        {
+            return false;
+        }
+
+        if (candidate.faction == UnitFaction.Neutral || candidate.faction == unit.faction)
+        {
+            return false;
+        }
+
+        return guardAnchor == null || (candidate.transform.position - guardAnchor.position).sqrMagnitude <= guardRadius * guardRadius;
+    }
+
+    private void OnDisable()
+    {
+        if (unit != null && !unit.AcceptsPlayerInput)
+        {
+            unit.SetMovementInput(Vector3.zero);
+            unit.SetTarget(null);
+        }
+
+        currentTarget = null;
+        desiredMovementInput = Vector3.zero;
+        nextUpdateTime = 0f;
+        _hasIdleHoverHeight = false;
     }
 
     private void ConfigureHoverThrusters()

@@ -378,9 +378,9 @@ flowchart TD
     A["BlueprintBlockFactory.TryRestore()"]
     click A "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7" "打开源码"
     B["EnemyBlueprintFactory.IsValidBlueprint()"]
-    click B "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L8" "打开源码"
+    click B "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L7" "打开源码"
     C["EnemyBlueprintFactory.Spawn()"]
-    click C "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L41" "打开源码"
+    click C "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L12" "打开源码"
     D["BlockPrefabCache.GetPrefab()"]
     click D "../Assets/Scripts/Features/Building/BlueprintLoading/BlockPrefabCache.cs#L13" "打开源码"
     E["BlockPrefabCache.Clear()"]
@@ -415,9 +415,9 @@ flowchart TD
 
 - [BlueprintBlockFactory.TryRestore](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs|TryRestore -->
-- [EnemyBlueprintFactory.IsValidBlueprint](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L8)
+- [EnemyBlueprintFactory.IsValidBlueprint](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L7)
 <!-- source: Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs|IsValidBlueprint -->
-- [EnemyBlueprintFactory.Spawn](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L41)
+- [EnemyBlueprintFactory.Spawn](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L12)
 <!-- source: Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs|Spawn -->
 - [BlockPrefabCache.GetPrefab](../Assets/Scripts/Features/Building/BlueprintLoading/BlockPrefabCache.cs#L13)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlockPrefabCache.cs|GetPrefab -->
@@ -700,9 +700,9 @@ flowchart TD
     E["BlockConnections.CollectNeighbors()"]
     click E "../Assets/Scripts/Features/Simulation/BlockConnections.cs#L239" "打开源码"
     F["RuntimeGroupBuilder.RestoreGroupPhysics()"]
-    click F "../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L85" "打开源码"
+    click F "../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L88" "打开源码"
     G["ControlUnit.RefreshChildren()"]
-    click G "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L159" "打开源码"
+    click G "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L160" "打开源码"
     H["PlayManager.FixedUpdate()"]
     click H "../Assets/Scripts/Features/Simulation/PlayManager.cs#L59" "打开源码"
     I["RuntimeGroupCleanup.EnforceDistance()"]
@@ -764,9 +764,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/BlockGroupManager.cs|GroupBlocks -->
 - [BlockConnections.CollectNeighbors](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L239)
 <!-- source: Assets/Scripts/Features/Simulation/BlockConnections.cs|CollectNeighbors -->
-- [RuntimeGroupBuilder.RestoreGroupPhysics](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L85)
+- [RuntimeGroupBuilder.RestoreGroupPhysics](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L88)
 <!-- source: Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs|RestoreGroupPhysics -->
-- [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L159)
+- [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L160)
 <!-- source: Assets/Scripts/Features/Simulation/ControlUnit.cs|RefreshChildren -->
 - [PlayManager.FixedUpdate](../Assets/Scripts/Features/Simulation/PlayManager.cs#L59)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|FixedUpdate -->
@@ -814,7 +814,7 @@ flowchart TD
     D["Durability.ApplyDamage()"]
     click D "../Assets/Scripts/Features/Combat/Durability.cs#L68" "打开源码"
     E["ControlUnit.OnCollisionEnter()"]
-    click E "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L296" "打开源码"
+    click E "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L302" "打开源码"
     F["CollisionDamageResolver.ApplyContactDamage()"]
     click F "../Assets/Scripts/Features/Combat/CollisionDamageResolver.cs#L10" "打开源码"
     G["Durability.ApplyCollisionEnergy()"]
@@ -911,7 +911,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/TurretHitscan.cs|Fire -->
 - [Durability.ApplyDamage](../Assets/Scripts/Features/Combat/Durability.cs#L68)
 <!-- source: Assets/Scripts/Features/Combat/Durability.cs|ApplyDamage -->
-- [ControlUnit.OnCollisionEnter](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L296)
+- [ControlUnit.OnCollisionEnter](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L302)
 <!-- source: Assets/Scripts/Features/Simulation/ControlUnit.cs|OnCollisionEnter -->
 - [CollisionDamageResolver.ApplyContactDamage](../Assets/Scripts/Features/Combat/CollisionDamageResolver.cs#L10)
 <!-- source: Assets/Scripts/Features/Combat/CollisionDamageResolver.cs|ApplyContactDamage -->
@@ -2302,7 +2302,7 @@ flowchart TD
     K["OutpostEncounterDirector.Spawn()"]
     click K "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L170" "打开源码"
     L["EnemyBlueprintFactory.Spawn()"]
-    click L "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L41" "打开源码"
+    click L "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L12" "打开源码"
     M["OutpostEncounterDirector.Hibernate()"]
     click M "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L293" "打开源码"
     N["DestroyManager.DestroyGameObject()"]
@@ -2359,7 +2359,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Tick -->
 - [OutpostEncounterDirector.Spawn](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L170)
 <!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Spawn -->
-- [EnemyBlueprintFactory.Spawn](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L41)
+- [EnemyBlueprintFactory.Spawn](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L12)
 <!-- source: Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs|Spawn -->
 - [OutpostEncounterDirector.Hibernate](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L293)
 <!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Hibernate -->
@@ -2532,20 +2532,20 @@ flowchart TD
     click F "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L51" "打开源码"
     G["OutpostEncounterDirector.Spawn()"]
     click G "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L170" "打开源码"
-    H["EnemyBlueprintFactory.IsValidBlueprint()"]
-    click H "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L8" "打开源码"
+    H["ModularUnitFactory.IsValidBlueprint()"]
+    click H "../Assets/Scripts/Features/Simulation/ModularUnitFactory.cs#L8" "打开源码"
     I["EnemyBlueprintFactory.Spawn()"]
-    click I "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L41" "打开源码"
-    J["EnemyBlueprintFactory.ApplyBlueprintLocalTransform()"]
-    click J "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L150" "打开源码"
+    click I "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L12" "打开源码"
+    J["BlueprintBlockFactory.TryRestore()"]
+    click J "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7" "打开源码"
     K["Block.RefreshRuntimeData()"]
     click K "../Assets/Scripts/Features/Simulation/Block.cs#L123" "打开源码"
-    L["EnemyBlueprintFactory.PrepareRuntimeEnemy()"]
-    click L "../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L212" "打开源码"
+    L["ModularUnitFactory.Spawn()"]
+    click L "../Assets/Scripts/Features/Simulation/ModularUnitFactory.cs#L41" "打开源码"
     M["ControlUnit.RefreshChildren()"]
-    click M "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L159" "打开源码"
+    click M "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L160" "打开源码"
     N["ControlUnit.AssignRuntimeOwnershipToBlocks()"]
-    click N "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L209" "打开源码"
+    click N "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L210" "打开源码"
     O["EnemyIdentity.SetSpawnMaxHealth()"]
     click O "../Assets/Scripts/Features/Combat/EnemyIdentity.cs#L31" "打开源码"
     P["OutpostEncounterDirector.Hibernate()"]
@@ -2562,13 +2562,13 @@ flowchart TD
     F -->|未击败、近距离且预算允许| G
     F -->|远离或地形卸载| P
     G --> I
-    I -->|生成任何实体前| H
-    I --> J
-    I -->|恢复尺寸后| K
-    I -->|完整构造后| O
     I --> L
-    I --> M
-    I --> N
+    L -->|生成任何实体前| H
+    L --> J
+    J -->|恢复尺寸后| K
+    L -->|完整构造后| O
+    L --> M
+    L --> N
     Q --> R
 ```
 
@@ -2586,19 +2586,19 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Tick -->
 - [OutpostEncounterDirector.Spawn](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L170)
 <!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Spawn -->
-- [EnemyBlueprintFactory.IsValidBlueprint](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L8)
-<!-- source: Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs|IsValidBlueprint -->
-- [EnemyBlueprintFactory.Spawn](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L41)
+- [ModularUnitFactory.IsValidBlueprint](../Assets/Scripts/Features/Simulation/ModularUnitFactory.cs#L8)
+<!-- source: Assets/Scripts/Features/Simulation/ModularUnitFactory.cs|IsValidBlueprint -->
+- [EnemyBlueprintFactory.Spawn](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L12)
 <!-- source: Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs|Spawn -->
-- [EnemyBlueprintFactory.ApplyBlueprintLocalTransform](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L150)
-<!-- source: Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs|ApplyBlueprintLocalTransform -->
+- [BlueprintBlockFactory.TryRestore](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7)
+<!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs|TryRestore -->
 - [Block.RefreshRuntimeData](../Assets/Scripts/Features/Simulation/Block.cs#L123)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|RefreshRuntimeData -->
-- [EnemyBlueprintFactory.PrepareRuntimeEnemy](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L212)
-<!-- source: Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs|PrepareRuntimeEnemy -->
-- [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L159)
+- [ModularUnitFactory.Spawn](../Assets/Scripts/Features/Simulation/ModularUnitFactory.cs#L41)
+<!-- source: Assets/Scripts/Features/Simulation/ModularUnitFactory.cs|Spawn -->
+- [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L160)
 <!-- source: Assets/Scripts/Features/Simulation/ControlUnit.cs|RefreshChildren -->
-- [ControlUnit.AssignRuntimeOwnershipToBlocks](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L209)
+- [ControlUnit.AssignRuntimeOwnershipToBlocks](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L210)
 <!-- source: Assets/Scripts/Features/Simulation/ControlUnit.cs|AssignRuntimeOwnershipToBlocks -->
 - [EnemyIdentity.SetSpawnMaxHealth](../Assets/Scripts/Features/Combat/EnemyIdentity.cs#L31)
 <!-- source: Assets/Scripts/Features/Combat/EnemyIdentity.cs|SetSpawnMaxHealth -->
@@ -2731,7 +2731,7 @@ flowchart TD
     B["WorldCombatPlayerChecks.Spawn()"]
     click B "../Assets/Scripts/Features/World/WorldCombatPlayerChecks.cs#L135" "打开源码"
     C["ControlUnit.Update()"]
-    click C "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L112" "打开源码"
+    click C "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L113" "打开源码"
     D["MainThruster.FixedUpdate()"]
     click D "../Assets/Scripts/Features/Flight/MainThruster.cs#L10" "打开源码"
     E["PowerTransmissionDevice.Update()"]
@@ -2779,7 +2779,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldCombatPlayerChecks.cs|Run -->
 - [WorldCombatPlayerChecks.Spawn](../Assets/Scripts/Features/World/WorldCombatPlayerChecks.cs#L135)
 <!-- source: Assets/Scripts/Features/World/WorldCombatPlayerChecks.cs|Spawn -->
-- [ControlUnit.Update](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L112)
+- [ControlUnit.Update](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L113)
 <!-- source: Assets/Scripts/Features/Simulation/ControlUnit.cs|Update -->
 - [MainThruster.FixedUpdate](../Assets/Scripts/Features/Flight/MainThruster.cs#L10)
 <!-- source: Assets/Scripts/Features/Flight/MainThruster.cs|FixedUpdate -->

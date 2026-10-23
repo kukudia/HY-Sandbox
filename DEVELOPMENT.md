@@ -379,5 +379,6 @@ ProjectileTurret发射后仅炮管模型沿炮口反向后退0.12m，0.04s快速
 
 - 目标与阶段验收见 [阵地战](Docs/SiegeWarfare.md)。先建立纯规则核心，再接入多舰部署/接管、友方AI、真实波次、金币维修和基地失守；后续以相同战斗场景验证拓扑及重组压力。
 - `SiegeMatch` 管理部署/战斗/整备/失败、生成名额和金币；生成成功才扣名额，同一敌机不重复结算，独立在场预算不改变无限波次目标。
+- `Cockpit.ControlMode` 与 `ControlUnit.AcceptsPlayerInput` 分离阵营/驾驶权，推进器与悬浮按键一致门控；自主友舰复用AI，物理重组保留驾驶舱状态。共用 `ModularUnitFactory` 恢复各阵营，旧敌机公开入口保留；组装冻结物理，结束后激活。Main真实Play的31项舰队检查与6项旧敌机池回归通过。
 - 真实Unity Editor导入并执行 `SiegeRulesChecks.Run()`：19项通过；这是规则检查，不是玩法、视觉或万块性能验收。
 - 开始基线：dotnet构建0错误/3项既有依赖警告；CodeReadability既有 `MainUIPanels.cs` 格式差异。保留用户Editor布局改动。本次仅本地提交、不推送。

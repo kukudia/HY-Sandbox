@@ -762,6 +762,15 @@
 | SalvagePlayProbe | [`IEnumerator BuildingSalvage()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L278) | private static |
 | SalvagePlayProbe | [`IEnumerator Scenario()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L430) | private static |
 
+## Assets/Editor/Siege/SiegeFleetChecks.cs
+
+// 职责：在真实Play环境验证共用蓝图恢复、阵营与驾驶权隔离、AI接管及旧敌机入口。 // 入口：Run()；创建隔离舰艇，结束后停用并销毁，不保存玩家文件。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeFleetChecks | [`string Run()`](../Assets/Editor/Siege/SiegeFleetChecks.cs#L12) | public static |
+| SiegeFleetChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeFleetChecks.cs#L108) | private static |
+
 ## Assets/Editor/Siege/SiegeRulesChecks.cs
 
 // 职责：验证阵地战阶段、波次预算和经济的边界；无需进入Play或读写玩家存档。 // 入口：Run() / 菜单 HY-Sandbox/Validation/Siege Rules。
@@ -1787,38 +1796,32 @@
 
 ## Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs
 
-// 职责：由已校验的模块蓝图恢复一台敌机，供据点驻军和显式诊断共用。 // 入口：Spawn()；不负责计时、随机刷怪或持久化。
+// 职责：保留敌机生成公开入口；所有阵营共用ModularUnitFactory恢复模块与物理归属。 // 入口：IsValidBlueprint() / Spawn()；现有据点和普通刷怪调用者保持兼容。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| EnemyBlueprintFactory | [`bool IsValidBlueprint(BlockDataList dataList, string enemyBlueprint)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L8) | public static |
-| EnemyBlueprintFactory | [`ControlUnit Spawn(BlockDataList dataList, string enemyBlueprint, Vector3 spawnPosition, Quaternion spawnRotation)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L41) | public static |
-| EnemyBlueprintFactory | [`void ApplyBlueprintLocalTransform(Transform blockTransform, Vector3 localPosition, Quaternion localRotation)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L150) | private static |
-| EnemyBlueprintFactory | [`Vector3 CleanIntegerPosition(Vector3 position, string blockName)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L156) | private static |
-| EnemyBlueprintFactory | [`Quaternion CleanRightAngleRotation(Quaternion rotation, string blockName)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L167) | private static |
-| EnemyBlueprintFactory | [`float SnapNearInteger(float value)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L179) | private static |
-| EnemyBlueprintFactory | [`float SnapNearRightAngle(float angle)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L185) | private static |
-| EnemyBlueprintFactory | [`bool IsIntegerVector(Vector3 value)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L191) | private static |
-| EnemyBlueprintFactory | [`bool IsRightAngleVector(Vector3 euler)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L196) | private static |
-| EnemyBlueprintFactory | [`bool IsNearlyInteger(float value)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L201) | private static |
-| EnemyBlueprintFactory | [`bool IsNearlyRightAngle(float angle)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L206) | private static |
-| EnemyBlueprintFactory | [`void PrepareRuntimeEnemy(ControlUnit enemy)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L212) | private static |
+| EnemyBlueprintFactory | [`bool IsValidBlueprint(BlockDataList dataList, string enemyBlueprint)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L7) | public static |
+| EnemyBlueprintFactory | [`ControlUnit Spawn(BlockDataList dataList, string enemyBlueprint, Vector3 spawnPosition, Quaternion spawnRotation)`](../Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs#L12) | public static |
 
 ## Assets/Scripts/Features/Combat/EnemyController.cs
 
-// 职责：为敌方控制单元选择目标并生成驾驶/攻击输入。 // 入口：FixedUpdate()；按固定周期更新目标和避障意图，逐物理步平滑输入。
+// 职责：为敌机与自主友舰选择敌对目标并生成驾驶意图；阵营和玩家驾驶权分别判断。 // 入口：FixedUpdate()；按固定周期更新目标和避障意图，逐物理步平滑输入。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| EnemyController | [`void Awake()`](../Assets/Scripts/Features/Combat/EnemyController.cs#L32) | private |
-| EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/EnemyController.cs#L37) | private |
-| EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L83) | private |
-| EnemyController | [`ControlUnit FindNearestPlayer()`](../Assets/Scripts/Features/Combat/EnemyController.cs#L108) | private |
-| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/EnemyController.cs#L142) | private |
-| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L181) | private |
-| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L192) | private |
-| EnemyController | [`Vector3 ProbeObstacle(Vector3 direction, float weight)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L212) | private |
-| RaycastHitDistanceComparer | [`int Compare(RaycastHit a, RaycastHit b)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L260) | public |
+| EnemyController | [`void Awake()`](../Assets/Scripts/Features/Combat/EnemyController.cs#L35) | private |
+| EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/EnemyController.cs#L40) | private |
+| EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L88) | private |
+| EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L113) | public |
+| EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L120) | public |
+| EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/EnemyController.cs#L126) | private |
+| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L165) | private |
+| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/EnemyController.cs#L180) | private |
+| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/EnemyController.cs#L194) | private |
+| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L233) | private |
+| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L244) | private |
+| EnemyController | [`Vector3 ProbeObstacle(Vector3 direction, float weight)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L264) | private |
+| RaycastHitDistanceComparer | [`int Compare(RaycastHit a, RaycastHit b)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L312) | public |
 
 ## Assets/Scripts/Features/Combat/EnemyIdentity.cs
 
@@ -2937,9 +2940,11 @@
 
 ## Assets/Scripts/Features/Simulation/Cockpit.cs
 
-// 职责：保存驾驶舱所属阵营及继承的方块行为。
+// 职责：保存驾驶舱阵营与驾驶来源；驾驶权随驾驶舱迁移，不随物理父组重建丢失。
 
-数据/配置/接口定义，无方法体。
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| Cockpit | [`void SetControlMode(UnitControlMode mode)`](../Assets/Scripts/Features/Simulation/Cockpit.cs#L17) | public |
 
 ## Assets/Scripts/Features/Simulation/ControlUnit.cs
 
@@ -2952,19 +2957,19 @@
 | ControlUnit | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L37) | private |
 | ControlUnit | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L45) | private |
 | ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L66) | public |
-| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L77) | public |
-| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L100) | private |
-| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L112) | private |
-| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L159) | public |
-| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L209) | public |
-| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L230) | public |
-| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L238) | public |
-| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L248) | public |
-| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L253) | public |
-| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L258) | private |
-| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L296) | private |
-| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L306) | private |
-| RuntimeUnitMember | [`RuntimeUnitMember Ensure(GameObject obj, string unitId, UnitFaction faction)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L319) | public static |
+| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L78) | public |
+| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L101) | private |
+| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L113) | private |
+| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L160) | public |
+| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L210) | public |
+| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L231) | public |
+| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L239) | public |
+| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L249) | public |
+| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L254) | public |
+| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L259) | private |
+| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L302) | private |
+| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L312) | private |
+| RuntimeUnitMember | [`RuntimeUnitMember Ensure(GameObject obj, string unitId, UnitFaction faction)`](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L325) | public static |
 
 ## Assets/Scripts/Features/Simulation/GroupPhysicsSettings.cs
 
@@ -2986,6 +2991,15 @@
 | ImpactPhysics | [`int CombinePriority(PhysicsMaterialCombine mode)`](../Assets/Scripts/Features/Simulation/ImpactPhysics.cs#L62) | private static |
 | ImpactPhysics | [`Vector3 ClosestPoint(Collider collider, Vector3 position)`](../Assets/Scripts/Features/Simulation/ImpactPhysics.cs#L77) | public static |
 | ImpactPhysics | [`void ReportPlayerImpact(float energy, float impulse)`](../Assets/Scripts/Features/Simulation/ImpactPhysics.cs#L88) | public static |
+
+## Assets/Scripts/Features/Simulation/ModularUnitFactory.cs
+
+// 职责：为任意阵营从蓝图建立模块飞船，统一尺寸、货物、身份、连接和物理初始化。 // 入口：IsValidBlueprint() / Spawn()；不写存档、不控制波次、不决定玩家驾驶权。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| ModularUnitFactory | [`bool IsValidBlueprint(BlockDataList dataList, string displayName)`](../Assets/Scripts/Features/Simulation/ModularUnitFactory.cs#L8) | public static |
+| ModularUnitFactory | [`ControlUnit Spawn( BlockDataList blueprint, string displayName, Vector3 position, Quaternion rotation, UnitFaction faction)`](../Assets/Scripts/Features/Simulation/ModularUnitFactory.cs#L41) | public static |
 
 ## Assets/Scripts/Features/Simulation/ModularUnitValidator.cs
 
@@ -3041,8 +3055,8 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | RuntimeGroupBuilder | [`void Rebuild(List<Block> blocks, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L15) | internal |
-| RuntimeGroupBuilder | [`Dictionary<Block, Rigidbody> CaptureSourceBodies(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L65) | private static |
-| RuntimeGroupBuilder | [`void RestoreGroupPhysics( Rigidbody targetBody, List<Block> group, Dictionary<Block, Rigidbody> sourceBodies, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L85) | private static |
+| RuntimeGroupBuilder | [`Dictionary<Block, Rigidbody> CaptureSourceBodies(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L68) | private static |
+| RuntimeGroupBuilder | [`void RestoreGroupPhysics( Rigidbody targetBody, List<Block> group, Dictionary<Block, Rigidbody> sourceBodies, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L88) | private static |
 
 ## Assets/Scripts/Features/Simulation/RuntimeGroupCleanup.cs
 
