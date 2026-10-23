@@ -3013,7 +3013,7 @@ flowchart TD
     L["SiegeSession.TryRepair()"]
     click L "../Assets/Scripts/Features/Siege/SiegeSession.cs#L101" "打开源码"
     M["SiegeRefit.Repair()"]
-    click M "../Assets/Scripts/Features/Siege/SiegeRefit.cs#L97" "打开源码"
+    click M "../Assets/Scripts/Features/Siege/SiegeRefit.cs#L115" "打开源码"
     N["SiegeRefit.IsClear()"]
     click N "../Assets/Scripts/Features/Siege/SiegeRefit.cs#L9" "打开源码"
     O["SiegeMatch.TrySpend()"]
@@ -3077,7 +3077,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/SiegeFleet.cs|RefreshBindings -->
 - [SiegeSession.TryRepair](../Assets/Scripts/Features/Siege/SiegeSession.cs#L101)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|TryRepair -->
-- [SiegeRefit.Repair](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L97)
+- [SiegeRefit.Repair](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L115)
 <!-- source: Assets/Scripts/Features/Siege/SiegeRefit.cs|Repair -->
 - [SiegeRefit.IsClear](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L9)
 <!-- source: Assets/Scripts/Features/Siege/SiegeRefit.cs|IsClear -->

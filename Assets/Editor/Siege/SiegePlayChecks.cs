@@ -88,12 +88,17 @@ public static class SiegePlayChecks
         fragment.SetActive(false);
         Object.Destroy(fragment);
         GameObject obstruction = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        obstruction.name = "Owned ship repair obstruction";
         obstruction.transform.position = ship.Cockpit.transform.position;
         coins = session.Match.Coins;
         Check(
             checks,
             "occupied repair bay is rejected without spending",
             !session.TryRepair(false) && session.Match.Coins == coins);
+        Check(
+            checks,
+            "ship repair names the blocking object",
+            session.Status.Contains(obstruction.name) && session.Status.Contains("Clear the area"));
         Object.DestroyImmediate(obstruction);
         Physics.SyncTransforms();
         ControlUnit oldCoreGroup = session.Fleet.Base.Unit;

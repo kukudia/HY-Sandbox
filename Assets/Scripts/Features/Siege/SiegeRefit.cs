@@ -53,13 +53,31 @@ public static class SiegeRefit
                 RuntimeUnitMember member = hit.GetComponentInParent<RuntimeUnitMember>();
                 if (member == null || member.ownerUnitId != ignoredUnitId)
                 {
-                    reason = "The deployment bay is occupied.";
+                    reason = DescribeObstruction(hit);
                     return false;
                 }
             }
         }
 
         return true;
+    }
+
+    private static string DescribeObstruction(Collider hit)
+    {
+        Block block = hit.GetComponentInParent<Block>();
+        ControlUnit unit = hit.GetComponentInParent<ControlUnit>();
+        string target = unit != null && unit.Building != null ? "building" : unit != null ? (unit.HasAnyCockpit ? unit.faction + " ship" : "wreckage") : "object";
+        string label = block != null ? block.name : hit.name;
+        label = label.Replace("(Clone)", string.Empty);
+        Vector3 point = hit.bounds.center;
+        return string.Format(
+            System.Globalization.CultureInfo.InvariantCulture,
+            "Blocked by {0}: {1} at ({2:F0}, {3:F0}, {4:F0}). Clear the area, then retry.",
+            target,
+            label,
+            point.x,
+            point.y,
+            point.z);
     }
 
     public static long Quote(SiegeFleetEntry entry, SiegeSettings settings)

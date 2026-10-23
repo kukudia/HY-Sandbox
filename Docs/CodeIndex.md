@@ -790,7 +790,7 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeBuildingChecks | [`string Run()`](../Assets/Editor/Siege/SiegeBuildingChecks.cs#L13) | public static |
-| SiegeBuildingChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeBuildingChecks.cs#L145) | private static |
+| SiegeBuildingChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeBuildingChecks.cs#L150) | private static |
 
 ## Assets/Editor/Siege/SiegeBuildingDamageChecks.cs
 
@@ -852,7 +852,7 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegePlayChecks | [`string Run()`](../Assets/Editor/Siege/SiegePlayChecks.cs#L13) | public static |
-| SiegePlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegePlayChecks.cs#L146) | private static |
+| SiegePlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegePlayChecks.cs#L151) | private static |
 
 ## Assets/Editor/Siege/SiegePlayerBuild.cs
 
@@ -3130,9 +3130,10 @@
 | SiegeRefit | [`bool IsClear( BlockDataList blueprint, Vector3 position, Quaternion rotation, string ignoredUnitId, out string reason)`](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L9) | public static |
 | SiegeRefit | [`bool IsBuildingClear( BlockDataList blueprint, Vector3 position, Quaternion rotation, string ignoredUnitId, out string reason)`](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L26) | public static |
 | SiegeRefit | [`bool IsGeometryClear( BlockDataList blueprint, Vector3 position, Quaternion rotation, string ignoredUnitId, out string reason)`](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L37) | private static |
-| SiegeRefit | [`long Quote(SiegeFleetEntry entry, SiegeSettings settings)`](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L65) | public static |
-| SiegeRefit | [`bool Repair(SiegeFleetEntry entry, SiegeSession session, out string reason)`](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L97) | public static |
-| SiegeRefit | [`Dictionary<string, Block> CollectOwned(SiegeFleetEntry entry)`](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L177) | private static |
+| SiegeRefit | [`string DescribeObstruction(Collider hit)`](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L65) | private static |
+| SiegeRefit | [`long Quote(SiegeFleetEntry entry, SiegeSettings settings)`](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L83) | public static |
+| SiegeRefit | [`bool Repair(SiegeFleetEntry entry, SiegeSession session, out string reason)`](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L115) | public static |
+| SiegeRefit | [`Dictionary<string, Block> CollectOwned(SiegeFleetEntry entry)`](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L195) | private static |
 
 ## Assets/Scripts/Features/Siege/SiegeSession.cs
 

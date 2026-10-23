@@ -92,6 +92,7 @@ public static class SiegeBuildingChecks
         quote = baseEntry.Quote();
         coins = session.Match.Coins;
         GameObject obstruction = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        obstruction.name = "Owned base repair obstruction";
         obstruction.transform.position = missingPosition;
         try
         {
@@ -99,6 +100,10 @@ public static class SiegeBuildingChecks
                 checks,
                 "occupied building replacement is rejected without spending",
                 !session.TryRepair(true) && session.Match.Coins == coins && building.Blocks.Count == count - 1);
+            Check(
+                checks,
+                "building repair names the obstruction and retry action",
+                session.Status.Contains(obstruction.name) && session.Status.Contains("Clear the area"));
         }
         finally
         {
