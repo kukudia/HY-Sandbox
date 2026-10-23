@@ -59,3 +59,5 @@ Siege Play部署两舰后调用 `SiegePerformanceCapture.StartCapture("label", 9
 `SiegeTopologyBaseline.Run()` 在远离战场的临时真实方块链上测量同步分组，并记录断链正序/倒序归属；不用物理步，不等于千块战斗性能。原始JSON可用 `Tools/Validation/summarize_siege_capture.py` 无损压缩并生成摘要。证据与限制见 [性能基线](Validation/2026-10-23-siege-performance.md)。
 
 `SiegeRegroupChecks.Run()` 要求全新Siege Play且未部署舰艇，验证保留主体、运动/姿态、归属、局部刷新和维修。`SiegeRegroupBenchmark.Start()` 在部署状态延后运行同步ABBA对照，`Status` 返回完成报告路径；避免直接Run触发CLI独立5秒主线程请求超时。冻结旧迁移实现只保留在Editor基准工具中，生产运行时只有主体保留实现。
+
+`SiegeRuntimeConnectionChecks.Run()` 验证无视觉双侧连接、刚体整体运动、显式断链零物理查询与零全场扫描、局部修改失效，以及不同单位接触不会自动焊接。战斗重组使用内部 `GroupRuntimeBlocks`，公开 `GroupBlocks` 保留实时几何探测契约。缓存只适用于直接挂在ControlUnit根下且规范碰撞体在模块根上的常规结构，复杂层级回退物理重建；制作/维修改变几何后须重建，不以视觉对象存在与否决定拓扑。

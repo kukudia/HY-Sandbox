@@ -1,0 +1,115 @@
+{
+    "methodology": "Unity Editor Siege deployment, synchronous real 1x1x1 prefab chains, no physics steps/connection visuals. Frozen 3b1e13d body migration plus original global RefreshChildren versus current full RefreshGroup. Both initialize invisible reciprocal links before timing; baseline traverses current symmetric geometry, current traverses valid reciprocal adjacency. Baseline excludes cleanup, current includes cleanup/registry changes. Creation, link setup/sync, validation and immediate cleanup excluded; internal query sync and original baseline Debug.Log included. One warmup per variant then ABBAABBA (four measurements each). Split at count-4 creates three components, retaining count-4 on the original body in current implementation. No cockpit in chain; gameplay contracts tested separately. Editor CPU comparison, not Player frame rate or independent per-block physics.",
+    "unity": "6000.3.11f1",
+    "utc": "2026-10-23T06:03:29.1174790Z",
+    "samples": [
+        {
+            "blocks": 100,
+            "split": false,
+            "baselineMs": [
+                2.8930000000000004,
+                2.9648000000000005,
+                2.8198000000000005,
+                2.8589
+            ],
+            "retainedMs": [
+                0.8455,
+                0.8300000000000001,
+                0.8201,
+                0.8232
+            ],
+            "baselineMedianMs": 2.8759500000000006,
+            "retainedMedianMs": 0.8266
+        },
+        {
+            "blocks": 100,
+            "split": true,
+            "baselineMs": [
+                3.1622000000000005,
+                3.1474,
+                3.4423000000000005,
+                3.2524
+            ],
+            "retainedMs": [
+                0.9704,
+                0.995,
+                0.9872000000000001,
+                1.0205
+            ],
+            "baselineMedianMs": 3.2073,
+            "retainedMedianMs": 0.9911000000000001
+        },
+        {
+            "blocks": 256,
+            "split": false,
+            "baselineMs": [
+                6.0747,
+                5.9451,
+                5.9385,
+                7.9192
+            ],
+            "retainedMs": [
+                2.2037,
+                2.1074,
+                2.1906000000000005,
+                2.8774
+            ],
+            "baselineMedianMs": 6.0099,
+            "retainedMedianMs": 2.19715
+        },
+        {
+            "blocks": 256,
+            "split": true,
+            "baselineMs": [
+                6.7203,
+                7.897,
+                7.516900000000001,
+                7.204400000000001
+            ],
+            "retainedMs": [
+                3.1137,
+                3.0050000000000005,
+                3.3913,
+                2.525
+            ],
+            "baselineMedianMs": 7.360650000000001,
+            "retainedMedianMs": 3.0593500000000004
+        },
+        {
+            "blocks": 1024,
+            "split": false,
+            "baselineMs": [
+                29.5301,
+                32.7705,
+                30.4383,
+                31.018600000000004
+            ],
+            "retainedMs": [
+                13.639100000000001,
+                13.370700000000002,
+                14.2984,
+                15.2139
+            ],
+            "baselineMedianMs": 30.728450000000004,
+            "retainedMedianMs": 13.96875
+        },
+        {
+            "blocks": 1024,
+            "split": true,
+            "baselineMs": [
+                30.834000000000004,
+                33.1957,
+                30.7257,
+                32.2
+            ],
+            "retainedMs": [
+                15.1239,
+                14.355500000000001,
+                14.598700000000001,
+                16.3373
+            ],
+            "baselineMedianMs": 31.517000000000004,
+            "retainedMedianMs": 14.8613
+        }
+    ]
+}

@@ -9,6 +9,32 @@ public class BlockGroupManager : MonoBehaviour
     public static List<List<Block>> GroupBlocks(List<Block> allBlocks)
     {
         using SimulationWorkMetrics.Scope timing = SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.Connectivity, allBlocks?.Count ?? 0);
+        return Traverse(allBlocks, false);
+    }
+
+    internal static List<List<Block>> GroupRuntimeBlocks(List<Block> allBlocks)
+    {
+        using SimulationWorkMetrics.Scope timing = SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.Connectivity, allBlocks?.Count ?? 0);
+        if (allBlocks == null || allBlocks.Count == 0)
+        {
+            return new List<List<Block>>();
+        }
+
+        foreach (Block block in allBlocks)
+        {
+            if (block != null && block.isActiveAndEnabled && !block.HasValidRuntimeConnections)
+            {
+                // 蓝图/制作变更重新探测一次；刚性运动和显式断链复用双侧邻接，不做逐面PhysX查询。
+                new BatchConnectionBuilder(allBlocks).RebuildBatchImmediate();
+                break;
+            }
+        }
+
+        return Traverse(allBlocks, true);
+    }
+
+    private static List<List<Block>> Traverse(List<Block> allBlocks, bool runtimeLinks)
+    {
         List<List<Block>> groups = new List<List<Block>>();
         if (allBlocks == null || allBlocks.Count == 0)
         {
@@ -29,7 +55,11 @@ public class BlockGroupManager : MonoBehaviour
             return groups;
         }
 
-        Physics.SyncTransforms();
+        if (!runtimeLinks)
+        {
+            Physics.SyncTransforms();
+        }
+
         Queue<Block> queue = new Queue<Block>();
         List<Block> neighbors = new List<Block>();
         foreach (Block block in allBlocks)
@@ -45,7 +75,15 @@ public class BlockGroupManager : MonoBehaviour
             {
                 Block current = queue.Dequeue();
                 group.Add(current);
-                current.CollectNeighbors(neighbors);
+                if (runtimeLinks)
+                {
+                    current.CollectRuntimeNeighbors(neighbors);
+                }
+                else
+                {
+                    current.CollectNeighbors(neighbors);
+                }
+
                 foreach (Block neighbor in neighbors)
                 {
                     // Removal both bounds traversal to the input and marks visited.

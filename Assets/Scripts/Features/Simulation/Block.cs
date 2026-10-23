@@ -47,6 +47,32 @@ public class Block : MonoBehaviour
     private BlockConnections _connections;
     private BlockConnections Connections => _connections ?? (_connections = new BlockConnections(this));
     internal bool CanParticipateInConnections => Connections.CanParticipate;
+    internal bool HasValidRuntimeConnections => Connections.RuntimeLinksValid;
+
+    internal void CollectRuntimeNeighbors(List<Block> result)
+    {
+        Connections.CollectRuntimeNeighbors(result);
+    }
+
+    internal void RefreshRuntimeConnectionPose()
+    {
+        Connections.RefreshRuntimePoseIfReady();
+    }
+
+    internal void InvalidateRuntimeConnections()
+    {
+        _connections?.InvalidateRuntimeLinks();
+    }
+
+    private void OnEnable()
+    {
+        InvalidateRuntimeConnections();
+    }
+
+    private void OnDisable()
+    {
+        InvalidateRuntimeConnections();
+    }
 
     private void Awake()
     {
@@ -435,6 +461,10 @@ public class Block : MonoBehaviour
 [System.Serializable]
 public class Connector
 {
+    [System.NonSerialized]
+    internal Block runtimePeerBlock;
+    [System.NonSerialized]
+    internal Connector runtimePeer;
     public string name;
     public bool canConnect;
     public bool isConnected;

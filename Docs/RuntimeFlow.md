@@ -25,7 +25,7 @@ flowchart TD
     F["BlockCsvDocument.Apply()"]
     click F "../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L73" "打开源码"
     G["Block.OnValidate()"]
-    click G "../Assets/Scripts/Features/Simulation/Block.cs#L78" "打开源码"
+    click G "../Assets/Scripts/Features/Simulation/Block.cs#L104" "打开源码"
     H["BlockCsvBinding.RequestValidation()"]
     click H "../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs#L33" "打开源码"
     I["BlockCsvBinding.Awake()"]
@@ -33,15 +33,15 @@ flowchart TD
     J["BlockCsvBinding.Apply()"]
     click J "../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs#L41" "打开源码"
     K["Block.SetMassSettings()"]
-    click K "../Assets/Scripts/Features/Simulation/Block.cs#L171" "打开源码"
+    click K "../Assets/Scripts/Features/Simulation/Block.cs#L197" "打开源码"
     L["Block.RefreshMass()"]
-    click L "../Assets/Scripts/Features/Simulation/Block.cs#L158" "打开源码"
+    click L "../Assets/Scripts/Features/Simulation/Block.cs#L184" "打开源码"
     M["Block.RefreshAuthoringData()"]
-    click M "../Assets/Scripts/Features/Simulation/Block.cs#L95" "打开源码"
+    click M "../Assets/Scripts/Features/Simulation/Block.cs#L121" "打开源码"
     N["BlueprintBlockFactory.TryRestore()"]
     click N "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7" "打开源码"
     O["Block.RefreshRuntimeData()"]
-    click O "../Assets/Scripts/Features/Simulation/Block.cs#L124" "打开源码"
+    click O "../Assets/Scripts/Features/Simulation/Block.cs#L150" "打开源码"
     P["BlockCsvAuthoring.ValidatePowerDependencies()"]
     click P "../Assets/Editor/Building/BlockCsvAuthoring.cs#L246" "打开源码"
     A --> B
@@ -77,7 +77,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs|Parse -->
 - [BlockCsvDocument.Apply](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L73)
 <!-- source: Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs|Apply -->
-- [Block.OnValidate](../Assets/Scripts/Features/Simulation/Block.cs#L78)
+- [Block.OnValidate](../Assets/Scripts/Features/Simulation/Block.cs#L104)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|OnValidate -->
 - [BlockCsvBinding.RequestValidation](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs#L33)
 <!-- source: Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs|RequestValidation -->
@@ -85,15 +85,15 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs|Awake -->
 - [BlockCsvBinding.Apply](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs#L41)
 <!-- source: Assets/Scripts/Features/Building/BlockDataTables/BlockCsvBinding.cs|Apply -->
-- [Block.SetMassSettings](../Assets/Scripts/Features/Simulation/Block.cs#L171)
+- [Block.SetMassSettings](../Assets/Scripts/Features/Simulation/Block.cs#L197)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|SetMassSettings -->
-- [Block.RefreshMass](../Assets/Scripts/Features/Simulation/Block.cs#L158)
+- [Block.RefreshMass](../Assets/Scripts/Features/Simulation/Block.cs#L184)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|RefreshMass -->
-- [Block.RefreshAuthoringData](../Assets/Scripts/Features/Simulation/Block.cs#L95)
+- [Block.RefreshAuthoringData](../Assets/Scripts/Features/Simulation/Block.cs#L121)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|RefreshAuthoringData -->
 - [BlueprintBlockFactory.TryRestore](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs|TryRestore -->
-- [Block.RefreshRuntimeData](../Assets/Scripts/Features/Simulation/Block.cs#L124)
+- [Block.RefreshRuntimeData](../Assets/Scripts/Features/Simulation/Block.cs#L150)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|RefreshRuntimeData -->
 - [BlockCsvAuthoring.ValidatePowerDependencies](../Assets/Editor/Building/BlockCsvAuthoring.cs#L246)
 <!-- source: Assets/Editor/Building/BlockCsvAuthoring.cs|ValidatePowerDependencies -->
@@ -231,7 +231,7 @@ flowchart TD
     K["SaveManager.SaveBuildingFoundation()"]
     click K "../Assets/Scripts/Features/Building/SaveManager.cs#L122" "打开源码"
     L["Block.CheckConnection()"]
-    click L "../Assets/Scripts/Features/Simulation/Block.cs#L334" "打开源码"
+    click L "../Assets/Scripts/Features/Simulation/Block.cs#L360" "打开源码"
     M["BuildManager.ExitDeveloperBlueprintBuildMode()"]
     click M "../Assets/Scripts/Features/Building/BuildManager.cs#L228" "打开源码"
     N["SaveManager.LoadSave()"]
@@ -273,7 +273,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|ResizeBuildingFoundation -->
 - [SaveManager.SaveBuildingFoundation](../Assets/Scripts/Features/Building/SaveManager.cs#L122)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|SaveBuildingFoundation -->
-- [Block.CheckConnection](../Assets/Scripts/Features/Simulation/Block.cs#L334)
+- [Block.CheckConnection](../Assets/Scripts/Features/Simulation/Block.cs#L360)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|CheckConnection -->
 - [BuildManager.ExitDeveloperBlueprintBuildMode](../Assets/Scripts/Features/Building/BuildManager.cs#L228)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|ExitDeveloperBlueprintBuildMode -->
@@ -394,11 +394,11 @@ flowchart TD
     I["BatchConnectionBuilder.RefreshBlock()"]
     click I "../Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs#L54" "打开源码"
     J["Block.CollectNeighbors()"]
-    click J "../Assets/Scripts/Features/Simulation/Block.cs#L352" "打开源码"
+    click J "../Assets/Scripts/Features/Simulation/Block.cs#L378" "打开源码"
     K["Block.CheckConnectionAfterPhysicsSync()"]
-    click K "../Assets/Scripts/Features/Simulation/Block.cs#L339" "打开源码"
+    click K "../Assets/Scripts/Features/Simulation/Block.cs#L365" "打开源码"
     L["BlockConnections.CheckConnection()"]
-    click L "../Assets/Scripts/Features/Simulation/BlockConnections.cs#L49" "打开源码"
+    click L "../Assets/Scripts/Features/Simulation/BlockConnections.cs#L53" "打开源码"
     A --> D
     B --> D
     C --> B
@@ -431,11 +431,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs|RebuildBatchRoutine -->
 - [BatchConnectionBuilder.RefreshBlock](../Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs#L54)
 <!-- source: Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs|RefreshBlock -->
-- [Block.CollectNeighbors](../Assets/Scripts/Features/Simulation/Block.cs#L352)
+- [Block.CollectNeighbors](../Assets/Scripts/Features/Simulation/Block.cs#L378)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|CollectNeighbors -->
-- [Block.CheckConnectionAfterPhysicsSync](../Assets/Scripts/Features/Simulation/Block.cs#L339)
+- [Block.CheckConnectionAfterPhysicsSync](../Assets/Scripts/Features/Simulation/Block.cs#L365)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|CheckConnectionAfterPhysicsSync -->
-- [BlockConnections.CheckConnection](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L49)
+- [BlockConnections.CheckConnection](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L53)
 <!-- source: Assets/Scripts/Features/Simulation/BlockConnections.cs|CheckConnection -->
 
 ## 放置、选中、操作和持久化
@@ -475,7 +475,7 @@ flowchart TD
     O["ActionManager.Redo()"]
     click O "../Assets/Scripts/Features/Building/ActionManager.cs#L50" "打开源码"
     P["Block.CheckConnection()"]
-    click P "../Assets/Scripts/Features/Simulation/Block.cs#L334" "打开源码"
+    click P "../Assets/Scripts/Features/Simulation/Block.cs#L360" "打开源码"
     Q["BuildPalette.Awake()"]
     click Q "../Assets/Scripts/Features/Building/BuildPalette.cs#L27" "打开源码"
     R["BuildPaletteItem.ApplyButtonStyle()"]
@@ -536,7 +536,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/ActionManager.cs|Undo -->
 - [ActionManager.Redo](../Assets/Scripts/Features/Building/ActionManager.cs#L50)
 <!-- source: Assets/Scripts/Features/Building/ActionManager.cs|Redo -->
-- [Block.CheckConnection](../Assets/Scripts/Features/Simulation/Block.cs#L334)
+- [Block.CheckConnection](../Assets/Scripts/Features/Simulation/Block.cs#L360)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|CheckConnection -->
 - [BuildPalette.Awake](../Assets/Scripts/Features/Building/BuildPalette.cs#L27)
 <!-- source: Assets/Scripts/Features/Building/BuildPalette.cs|Awake -->
@@ -695,12 +695,12 @@ flowchart TD
     click B "../Assets/Scripts/Features/Simulation/PlayManager.cs#L309" "打开源码"
     C["RuntimeGroupBuilder.Rebuild()"]
     click C "../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L15" "打开源码"
-    D["BlockGroupManager.GroupBlocks()"]
-    click D "../Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L9" "打开源码"
-    E["BlockConnections.CollectNeighbors()"]
-    click E "../Assets/Scripts/Features/Simulation/BlockConnections.cs#L260" "打开源码"
+    D["BlockGroupManager.GroupRuntimeBlocks()"]
+    click D "../Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L15" "打开源码"
+    E["BlockConnections.CollectRuntimeNeighbors()"]
+    click E "../Assets/Scripts/Features/Simulation/BlockConnections.cs#L430" "打开源码"
     F["RuntimeGroupBuilder.RestoreGroupPhysics()"]
-    click F "../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L206" "打开源码"
+    click F "../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L211" "打开源码"
     G["ControlUnit.RefreshChildren()"]
     click G "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L160" "打开源码"
     H["PlayManager.FixedUpdate()"]
@@ -734,24 +734,33 @@ flowchart TD
     V["UniversalThruster.FixedUpdate()"]
     click V "../Assets/Scripts/Features/Flight/UniversalThruster.cs#L10" "打开源码"
     W["BlockConnections.DisConnectAllConnectors()"]
-    click W "../Assets/Scripts/Features/Simulation/BlockConnections.cs#L288" "打开源码"
+    click W "../Assets/Scripts/Features/Simulation/BlockConnections.cs#L339" "打开源码"
     X["Block.RestoreConnectionParticipation()"]
-    click X "../Assets/Scripts/Features/Simulation/Block.cs#L363" "打开源码"
+    click X "../Assets/Scripts/Features/Simulation/Block.cs#L389" "打开源码"
     Y["BlockConnections.RestoreParticipation()"]
-    click Y "../Assets/Scripts/Features/Simulation/BlockConnections.cs#L331" "打开源码"
+    click Y "../Assets/Scripts/Features/Simulation/BlockConnections.cs#L385" "打开源码"
     Z["RuntimeGroupBuilder.CaptureSourceBodies()"]
-    click Z "../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L107" "打开源码"
+    click Z "../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L112" "打开源码"
     AA["RuntimeGroupBuilder.SelectRetainedGroups()"]
-    click AA "../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L167" "打开源码"
+    click AA "../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L172" "打开源码"
     AB["PlayManager.RegisterControlUnitWithoutCleanup()"]
     click AB "../Assets/Scripts/Features/Simulation/PlayManager.cs#L335" "打开源码"
+    AC["BlockConnectionSnapshot.Capture()"]
+    click AC "../Assets/Scripts/Features/Simulation/BlockConnectionSnapshot.cs#L54" "打开源码"
+    AD["BlockConnections.ReleaseRuntimePair()"]
+    click AD "../Assets/Scripts/Features/Simulation/BlockConnections.cs#L404" "打开源码"
+    AE["BatchConnectionBuilder.RebuildBatchImmediate()"]
+    click AE "../Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs#L40" "打开源码"
     A --> B
     B --> C
     C --> D
     C --> Z
     C --> AA
     C -->|新分量即时登记，外层统一清理| AB
-    D -->|BFS 经 Block.CollectNeighbors| E
+    D -->|有效缓存BFS，经 Block 入口| E
+    D -->|任一快照失效才物理重建| AE
+    AE -.->|每块连接检查后保存| AC
+    W -->|直接清理双侧引用| AD
     W -.->|两侧排除断开块| E
     X --> Y
     C --> F
@@ -777,11 +786,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|AssignBlocksToParentGroups -->
 - [RuntimeGroupBuilder.Rebuild](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L15)
 <!-- source: Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs|Rebuild -->
-- [BlockGroupManager.GroupBlocks](../Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L9)
-<!-- source: Assets/Scripts/Features/Simulation/BlockGroupManager.cs|GroupBlocks -->
-- [BlockConnections.CollectNeighbors](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L260)
-<!-- source: Assets/Scripts/Features/Simulation/BlockConnections.cs|CollectNeighbors -->
-- [RuntimeGroupBuilder.RestoreGroupPhysics](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L206)
+- [BlockGroupManager.GroupRuntimeBlocks](../Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L15)
+<!-- source: Assets/Scripts/Features/Simulation/BlockGroupManager.cs|GroupRuntimeBlocks -->
+- [BlockConnections.CollectRuntimeNeighbors](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L430)
+<!-- source: Assets/Scripts/Features/Simulation/BlockConnections.cs|CollectRuntimeNeighbors -->
+- [RuntimeGroupBuilder.RestoreGroupPhysics](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L211)
 <!-- source: Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs|RestoreGroupPhysics -->
 - [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L160)
 <!-- source: Assets/Scripts/Features/Simulation/ControlUnit.cs|RefreshChildren -->
@@ -815,18 +824,24 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Flight/HoverThruster.cs|FixedUpdate -->
 - [UniversalThruster.FixedUpdate](../Assets/Scripts/Features/Flight/UniversalThruster.cs#L10)
 <!-- source: Assets/Scripts/Features/Flight/UniversalThruster.cs|FixedUpdate -->
-- [BlockConnections.DisConnectAllConnectors](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L288)
+- [BlockConnections.DisConnectAllConnectors](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L339)
 <!-- source: Assets/Scripts/Features/Simulation/BlockConnections.cs|DisConnectAllConnectors -->
-- [Block.RestoreConnectionParticipation](../Assets/Scripts/Features/Simulation/Block.cs#L363)
+- [Block.RestoreConnectionParticipation](../Assets/Scripts/Features/Simulation/Block.cs#L389)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|RestoreConnectionParticipation -->
-- [BlockConnections.RestoreParticipation](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L331)
+- [BlockConnections.RestoreParticipation](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L385)
 <!-- source: Assets/Scripts/Features/Simulation/BlockConnections.cs|RestoreParticipation -->
-- [RuntimeGroupBuilder.CaptureSourceBodies](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L107)
+- [RuntimeGroupBuilder.CaptureSourceBodies](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L112)
 <!-- source: Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs|CaptureSourceBodies -->
-- [RuntimeGroupBuilder.SelectRetainedGroups](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L167)
+- [RuntimeGroupBuilder.SelectRetainedGroups](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L172)
 <!-- source: Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs|SelectRetainedGroups -->
 - [PlayManager.RegisterControlUnitWithoutCleanup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L335)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RegisterControlUnitWithoutCleanup -->
+- [BlockConnectionSnapshot.Capture](../Assets/Scripts/Features/Simulation/BlockConnectionSnapshot.cs#L54)
+<!-- source: Assets/Scripts/Features/Simulation/BlockConnectionSnapshot.cs|Capture -->
+- [BlockConnections.ReleaseRuntimePair](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L404)
+<!-- source: Assets/Scripts/Features/Simulation/BlockConnections.cs|ReleaseRuntimePair -->
+- [BatchConnectionBuilder.RebuildBatchImmediate](../Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs#L40)
+<!-- source: Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs|RebuildBatchImmediate -->
 
 ## 战斗、损伤、爆炸与残骸清理
 
@@ -2138,7 +2153,7 @@ flowchart TD
     I["BuildingRuntime.SplitDisconnected()"]
     click I "../Assets/Scripts/Features/World/BuildingRuntime.cs#L239" "打开源码"
     J["Block.CollectNeighbors()"]
-    click J "../Assets/Scripts/Features/Simulation/Block.cs#L352" "打开源码"
+    click J "../Assets/Scripts/Features/Simulation/Block.cs#L378" "打开源码"
     K["WorldBuildingManager.CreateDebris()"]
     click K "../Assets/Scripts/Features/World/WorldBuildingManager.cs#L421" "打开源码"
     L["WorldBuildingManager.DamageSphere()"]
@@ -2204,7 +2219,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/BuildingRuntime.cs|DestroyBlock -->
 - [BuildingRuntime.SplitDisconnected](../Assets/Scripts/Features/World/BuildingRuntime.cs#L239)
 <!-- source: Assets/Scripts/Features/World/BuildingRuntime.cs|SplitDisconnected -->
-- [Block.CollectNeighbors](../Assets/Scripts/Features/Simulation/Block.cs#L352)
+- [Block.CollectNeighbors](../Assets/Scripts/Features/Simulation/Block.cs#L378)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|CollectNeighbors -->
 - [WorldBuildingManager.CreateDebris](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L421)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|CreateDebris -->
@@ -2568,7 +2583,7 @@ flowchart TD
     J["BlueprintBlockFactory.TryRestore()"]
     click J "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7" "打开源码"
     K["Block.RefreshRuntimeData()"]
-    click K "../Assets/Scripts/Features/Simulation/Block.cs#L124" "打开源码"
+    click K "../Assets/Scripts/Features/Simulation/Block.cs#L150" "打开源码"
     L["ModularUnitFactory.Spawn()"]
     click L "../Assets/Scripts/Features/Simulation/ModularUnitFactory.cs#L41" "打开源码"
     M["ControlUnit.RefreshChildren()"]
@@ -2621,7 +2636,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs|Spawn -->
 - [BlueprintBlockFactory.TryRestore](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs|TryRestore -->
-- [Block.RefreshRuntimeData](../Assets/Scripts/Features/Simulation/Block.cs#L124)
+- [Block.RefreshRuntimeData](../Assets/Scripts/Features/Simulation/Block.cs#L150)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|RefreshRuntimeData -->
 - [ModularUnitFactory.Spawn](../Assets/Scripts/Features/Simulation/ModularUnitFactory.cs#L41)
 <!-- source: Assets/Scripts/Features/Simulation/ModularUnitFactory.cs|Spawn -->
@@ -3140,9 +3155,9 @@ flowchart TD
     D["SiegePerformanceCapture.Finish()"]
     click D "../Assets/Editor/Siege/SiegePerformanceCapture.cs#L133" "打开源码"
     E["SimulationWorkMetrics.Measure()"]
-    click E "../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L30" "打开源码"
+    click E "../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L54" "打开源码"
     F["SimulationWorkMetrics.Read()"]
-    click F "../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L35" "打开源码"
+    click F "../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L59" "打开源码"
     G["BlockGroupManager.GroupBlocks()"]
     click G "../Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L9" "打开源码"
     H["RuntimeGroupBuilder.Rebuild()"]
@@ -3150,7 +3165,7 @@ flowchart TD
     I["PlayManager.RefreshGroup()"]
     click I "../Assets/Scripts/Features/Simulation/PlayManager.cs#L183" "打开源码"
     J["SiegePerformanceCapture.BeforeReload()"]
-    click J "../Assets/Editor/Siege/SiegePerformanceCapture.cs#L182" "打开源码"
+    click J "../Assets/Editor/Siege/SiegePerformanceCapture.cs#L184" "打开源码"
     K["SiegeTopologyBaseline.Run()"]
     click K "../Assets/Editor/Siege/SiegeTopologyBaseline.cs#L13" "打开源码"
     A -.->|Editor update| B
@@ -3174,9 +3189,9 @@ flowchart TD
 <!-- source: Assets/Editor/Siege/SiegePerformanceCapture.cs|TakeCensus -->
 - [SiegePerformanceCapture.Finish](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L133)
 <!-- source: Assets/Editor/Siege/SiegePerformanceCapture.cs|Finish -->
-- [SimulationWorkMetrics.Measure](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L30)
+- [SimulationWorkMetrics.Measure](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L54)
 <!-- source: Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs|Measure -->
-- [SimulationWorkMetrics.Read](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L35)
+- [SimulationWorkMetrics.Read](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L59)
 <!-- source: Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs|Read -->
 - [BlockGroupManager.GroupBlocks](../Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L9)
 <!-- source: Assets/Scripts/Features/Simulation/BlockGroupManager.cs|GroupBlocks -->
@@ -3184,7 +3199,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs|Rebuild -->
 - [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L183)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
-- [SiegePerformanceCapture.BeforeReload](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L182)
+- [SiegePerformanceCapture.BeforeReload](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L184)
 <!-- source: Assets/Editor/Siege/SiegePerformanceCapture.cs|BeforeReload -->
 - [SiegeTopologyBaseline.Run](../Assets/Editor/Siege/SiegeTopologyBaseline.cs#L13)
 <!-- source: Assets/Editor/Siege/SiegeTopologyBaseline.cs|Run -->

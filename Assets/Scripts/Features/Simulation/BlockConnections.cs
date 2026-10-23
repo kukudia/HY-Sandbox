@@ -13,6 +13,9 @@ internal sealed class BlockConnections
     private readonly Block _block;
     private Collider[] _connectionHits = new Collider[8];
     private Dictionary<GameObject, int> disconnectedLayers;
+    private readonly BlockConnectionSnapshot runtimeSnapshot;
+    internal bool RuntimeLinksValid => runtimeSnapshot.IsValid;
+
     internal bool CanParticipate
     {
         get
@@ -22,7 +25,7 @@ internal sealed class BlockConnections
                 return false;
             }
 
-            int mask = BuildManager.instance != null ? BuildManager.instance.blockLayer.value : LayerMask.GetMask("Block");
+            int mask = ConnectionMask();
             return (mask & (1 << _block.raycastCollider.gameObject.layer)) != 0;
         }
     }
@@ -30,6 +33,7 @@ internal sealed class BlockConnections
     internal BlockConnections(Block block)
     {
         _block = block;
+        runtimeSnapshot = new BlockConnectionSnapshot(block);
     }
 
     internal bool IsConnectorAvailableForPlacement(Connector connector)
@@ -92,6 +96,7 @@ internal sealed class BlockConnections
         }
 
         _block.RefreshConnectionStatus();
+        CaptureRuntimePose();
     }
 
     private void ReleaseExistingConnections()
@@ -99,7 +104,19 @@ internal sealed class BlockConnections
         HashSet<GameObject> releasedObjects = new HashSet<GameObject>();
         for (int i = 0; i < _block.connectors.Count; i++)
         {
-            GameObject connectorObject = _block.connectors[i].connector;
+            Connector connector = _block.connectors[i];
+            GameObject connectorObject = connector.connector;
+            if (connector.runtimePeer != null)
+            {
+                ReleaseRuntimePair(connector);
+                if (connectorObject != null && releasedObjects.Add(connectorObject))
+                {
+                    Object.Destroy(connectorObject);
+                }
+
+                continue;
+            }
+
             if (connectorObject == null || !releasedObjects.Add(connectorObject))
             {
                 continue;
@@ -112,6 +129,12 @@ internal sealed class BlockConnections
 
     private void ReleaseConnectionPairWithoutVisual(Connector connector)
     {
+        if (connector.runtimePeer != null)
+        {
+            ReleaseRuntimePair(connector);
+            return;
+        }
+
         Block otherBlock = FindBlockAcrossConnector(connector);
         Connector otherConnector = otherBlock != null ? FindMatchingConnector(otherBlock, connector, false) : null;
         if (otherConnector == null)
@@ -126,6 +149,8 @@ internal sealed class BlockConnections
 
     private void ReleaseConnectionReferences(GameObject connectorObject)
     {
+        // 只兼容域重载后尚无运行时双侧引用的旧视觉；正常连接使用ReleaseRuntimePair。
+        SimulationWorkMetrics.RecordLegacyReferenceScan();
         Block[] blocks = Object.FindObjectsByType<Block>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (Block block in blocks)
         {
@@ -144,6 +169,11 @@ internal sealed class BlockConnections
 
                 connector.connector = null;
                 connector.isConnected = false;
+                if (connector.runtimePeer != null)
+                {
+                    ReleaseRuntimePair(connector);
+                }
+
                 statusChanged = true;
             }
 
@@ -168,8 +198,15 @@ internal sealed class BlockConnections
         int hitCount;
         // Retry full buffers so dense collider arrangements cannot truncate the query.
         int blockLayer = BuildManager.instance != null ? BuildManager.instance.blockLayer.value : LayerMask.GetMask("Block");
-        while ((hitCount = Physics.OverlapSphereNonAlloc(probeCenter, connectionProbeRadius, _connectionHits, blockLayer)) == _connectionHits.Length)
+        while (true)
         {
+            SimulationWorkMetrics.RecordPhysicsNeighborQuery();
+            hitCount = Physics.OverlapSphereNonAlloc(probeCenter, connectionProbeRadius, _connectionHits, blockLayer);
+            if (hitCount < _connectionHits.Length)
+            {
+                break;
+            }
+
             System.Array.Resize(ref _connectionHits, _connectionHits.Length * 2);
         }
 
@@ -192,7 +229,7 @@ internal sealed class BlockConnections
     {
         BuildingRuntime building = _block.GetComponentInParent<BuildingRuntime>();
         BuildingRuntime otherBuilding = other.GetComponentInParent<BuildingRuntime>();
-        return building == otherBuilding;
+        return building == otherBuilding && _block.GetComponentInParent<ControlUnit>() == other.GetComponentInParent<ControlUnit>();
     }
 
     private Connector FindMatchingConnector(Block otherBlock, Connector connector, bool requireAvailable = true)
@@ -231,6 +268,10 @@ internal sealed class BlockConnections
 
         connector.connector = connectorObject;
         otherConnector.connector = connectorObject;
+        connector.runtimePeer = otherConnector;
+        connector.runtimePeerBlock = otherBlock;
+        otherConnector.runtimePeer = connector;
+        otherConnector.runtimePeerBlock = _block;
         _block.RefreshConnectionStatus();
         if (otherBlock != null)
         {
@@ -246,11 +287,21 @@ internal sealed class BlockConnections
         }
 
         GameObject connectorObject = connector.connector;
+        bool knownPair = connector.runtimePeer != null;
+        if (knownPair)
+        {
+            ReleaseRuntimePair(connector);
+        }
+
         connector.connector = null;
         connector.isConnected = false;
         if (connectorObject != null)
         {
-            ReleaseConnectionReferences(connectorObject);
+            if (!knownPair)
+            {
+                ReleaseConnectionReferences(connectorObject);
+            }
+
             Object.Destroy(connectorObject);
         }
     }
@@ -309,8 +360,11 @@ internal sealed class BlockConnections
         {
             connector.isConnected = false;
             connector.connector = null;
+            connector.runtimePeer = null;
+            connector.runtimePeerBlock = null;
         }
 
+        CaptureRuntimePose();
         if (!refreshNeighbors)
         {
             _block.neighbors.Clear();
@@ -330,6 +384,7 @@ internal sealed class BlockConnections
 
     internal void RestoreParticipation()
     {
+        runtimeSnapshot.Invalidate();
         if (disconnectedLayers == null)
         {
             return;
@@ -344,5 +399,73 @@ internal sealed class BlockConnections
         }
 
         disconnectedLayers.Clear();
+    }
+
+    private void ReleaseRuntimePair(Connector connector)
+    {
+        Connector peer = connector.runtimePeer;
+        Block peerBlock = connector.runtimePeerBlock;
+        connector.runtimePeer = null;
+        connector.runtimePeerBlock = null;
+        connector.connector = null;
+        connector.isConnected = false;
+        if (peer != null && peer.runtimePeer == connector)
+        {
+            peer.runtimePeer = null;
+            peer.runtimePeerBlock = null;
+            peer.connector = null;
+            peer.isConnected = false;
+            if (peerBlock != null)
+            {
+                if (!peerBlock.CanParticipateInConnections)
+                {
+                    peerBlock.InvalidateRuntimeConnections();
+                }
+
+                peerBlock.RefreshConnectionStatus();
+            }
+        }
+    }
+
+    internal void CollectRuntimeNeighbors(List<Block> result)
+    {
+        result.Clear();
+        if (!CanParticipate)
+        {
+            return;
+        }
+
+        ControlUnit unit = _block.GetComponentInParent<ControlUnit>();
+        foreach (Connector connector in _block.connectors)
+        {
+            Connector peer = connector.runtimePeer;
+            Block other = connector.runtimePeerBlock;
+            if (!connector.canConnect || peer == null || peer.runtimePeer != connector || !peer.canConnect || other == null || !other.CanParticipateInConnections || other.GetComponentInParent<ControlUnit>() != unit || result.Contains(other))
+            {
+                continue;
+            }
+
+            result.Add(other);
+        }
+    }
+
+    internal void RefreshRuntimePoseIfReady()
+    {
+        runtimeSnapshot.RefreshIfReady();
+    }
+
+    internal void InvalidateRuntimeLinks()
+    {
+        runtimeSnapshot.Invalidate();
+    }
+
+    private void CaptureRuntimePose()
+    {
+        runtimeSnapshot.Capture();
+    }
+
+    private static int ConnectionMask()
+    {
+        return BuildManager.instance != null ? BuildManager.instance.blockLayer.value : LayerMask.GetMask("Block");
     }
 }

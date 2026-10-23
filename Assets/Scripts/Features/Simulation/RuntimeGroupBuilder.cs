@@ -21,7 +21,7 @@ internal sealed class RuntimeGroupBuilder
         }
 
         Dictionary<Block, SourceSnapshot> sources = CaptureSourceBodies(blocks);
-        List<List<Block>> groups = BlockGroupManager.GroupBlocks(blocks);
+        List<List<Block>> groups = BlockGroupManager.GroupRuntimeBlocks(blocks);
         List<GroupPlan> plans = PlanGroups(groups, sources);
         Dictionary<SourceSnapshot, GroupPlan> retained = SelectRetainedGroups(plans, sources);
         GameObject parentPrefab = null;
@@ -85,6 +85,11 @@ internal sealed class RuntimeGroupBuilder
 
             plan.Unit.RefreshChildren();
             plan.Unit.AssignRuntimeOwnershipToBlocks(false);
+            foreach (Block block in plan.Blocks)
+            {
+                block.RefreshRuntimeConnectionPose();
+            }
+
             _play.RegisterControlUnitWithoutCleanup(plan.Unit);
             refreshed.Add(plan.Unit);
         }

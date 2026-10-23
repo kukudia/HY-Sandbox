@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -139,12 +140,16 @@ public static class SiegeRegroupBenchmark
             {
                 Block block = Object.Instantiate(prefab, root.transform.position + Vector3.right * index, Quaternion.identity, root.transform).GetComponent<Block>();
                 block.RefreshRuntimeData(true);
+                block.connectorPrefab = null;
                 blocks.Add(block);
             }
 
             source.RefreshChildren();
             source.AssignRuntimeOwnershipToBlocks(true);
             PlayManager.instance.RegisterControlUnit(source);
+            Type builder = typeof(Block).Assembly.GetType("BatchConnectionBuilder", true);
+            object batch = Activator.CreateInstance(builder, new object[] { blocks, 2f });
+            builder.GetMethod("RebuildBatchImmediate", BindingFlags.Public | BindingFlags.Instance).Invoke(batch, null);
             if (split)
             {
                 blocks[count - 4].DisConnectAllConnectors(false);
@@ -213,7 +218,7 @@ public static class SiegeRegroupBenchmark
     [Serializable]
     private sealed class Report
     {
-        public string methodology = "Unity Editor Siege deployment, synchronous real 1x1x1 prefab chains, no physics steps/connection visuals. Frozen 3b1e13d body migration plus original global RefreshChildren versus current full RefreshGroup; both use current symmetric geometric connectivity. Baseline excludes cleanup, current includes cleanup/registry changes. Creation, initial setup sync, validation and immediate cleanup excluded; internal query sync and original baseline Debug.Log included. One warmup per variant then ABBAABBA (four measurements each). Split at count-4 creates three components, retaining count-4 on the original body in current implementation. No cockpit in chain; gameplay contracts tested separately. Editor CPU comparison, not Player frame rate or independent per-block physics.";
+        public string methodology = "Unity Editor Siege deployment, synchronous real 1x1x1 prefab chains, no physics steps/connection visuals. Frozen 3b1e13d body migration plus original global RefreshChildren versus current full RefreshGroup. Both initialize invisible reciprocal links before timing; baseline traverses current symmetric geometry, current traverses valid reciprocal adjacency. Baseline excludes cleanup, current includes cleanup/registry changes. Creation, link setup/sync, validation and immediate cleanup excluded; internal query sync and original baseline Debug.Log included. One warmup per variant then ABBAABBA (four measurements each). Split at count-4 creates three components, retaining count-4 on the original body in current implementation. No cockpit in chain; gameplay contracts tested separately. Editor CPU comparison, not Player frame rate or independent per-block physics.";
         public string unity;
         public string utc;
         public List<Sample> samples = new List<Sample>();

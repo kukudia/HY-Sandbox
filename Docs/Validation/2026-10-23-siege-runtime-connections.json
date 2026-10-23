@@ -1,0 +1,22 @@
+{
+    "checks": [
+        "PASS initialized invisible links group without physics probes",
+        "PASS rigid root motion preserves cache without physics probes",
+        "PASS explicit detach cuts invisible reciprocal links without probing or scene scans",
+        "PASS cached detached graph is independent of input order",
+        "PASS restoring participation invalidates cache and reconnects",
+        "PASS relative same-frame movement rebuilds physical links",
+        "PASS moving back restores links",
+        "PASS face disabling invalidates cached adjacency",
+        "PASS face enabling discovers newly valid adjacency",
+        "PASS canonical collider disable rebuilds to isolated nodes",
+        "PASS canonical collider reenable reconnects",
+        "PASS disabled block is excluded and cannot bridge components",
+        "PASS reenabling block invalidates and reconnects",
+        "PASS replacing connector objects with identical geometry invalidates cached references",
+        "PASS visual refresh retains exactly two references per live connection",
+        "PASS known reciprocal connections never scan all scene blocks",
+        "PASS refreshed visual graph remains a no-query hot path",
+        "PASS touching independent control units never weld into one component"
+    ]
+}

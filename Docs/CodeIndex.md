@@ -781,8 +781,8 @@
 | SiegePerformanceCapture | [`void Tick()`](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L72) | private static |
 | SiegePerformanceCapture | [`void TakeCensus(double now)`](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L101) | private static |
 | SiegePerformanceCapture | [`string Finish(string reason = "Manual stop")`](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L133) | public static |
-| SiegePerformanceCapture | [`double Percentile(List<double> values, double fraction)`](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L177) | private static |
-| SiegePerformanceCapture | [`void BeforeReload()`](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L182) | private static |
+| SiegePerformanceCapture | [`double Percentile(List<double> values, double fraction)`](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L179) | private static |
+| SiegePerformanceCapture | [`void BeforeReload()`](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L184) | private static |
 
 ## Assets/Editor/Siege/SiegePlayChecks.cs
 
@@ -809,11 +809,11 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeRegroupBenchmark | [`string Start()`](../Assets/Editor/Siege/SiegeRegroupBenchmark.cs#L17) | public static |
-| SiegeRegroupBenchmark | [`void ExecuteScheduled()`](../Assets/Editor/Siege/SiegeRegroupBenchmark.cs#L31) | private static |
-| SiegeRegroupBenchmark | [`string Run()`](../Assets/Editor/Siege/SiegeRegroupBenchmark.cs#L49) | public static |
-| SiegeRegroupBenchmark | [`double Measure(int count, bool split, bool baseline, SiegeRegroupBaseline previous, GroupPhysicsSettings settings)`](../Assets/Editor/Siege/SiegeRegroupBenchmark.cs#L127) | private static |
-| SiegeRegroupBenchmark | [`double Median(List<double> values)`](../Assets/Editor/Siege/SiegeRegroupBenchmark.cs#L207) | private static |
+| SiegeRegroupBenchmark | [`string Start()`](../Assets/Editor/Siege/SiegeRegroupBenchmark.cs#L18) | public static |
+| SiegeRegroupBenchmark | [`void ExecuteScheduled()`](../Assets/Editor/Siege/SiegeRegroupBenchmark.cs#L32) | private static |
+| SiegeRegroupBenchmark | [`string Run()`](../Assets/Editor/Siege/SiegeRegroupBenchmark.cs#L50) | public static |
+| SiegeRegroupBenchmark | [`double Measure(int count, bool split, bool baseline, SiegeRegroupBaseline previous, GroupPhysicsSettings settings)`](../Assets/Editor/Siege/SiegeRegroupBenchmark.cs#L128) | private static |
+| SiegeRegroupBenchmark | [`double Median(List<double> values)`](../Assets/Editor/Siege/SiegeRegroupBenchmark.cs#L212) | private static |
 
 ## Assets/Editor/Siege/SiegeRegroupChecks.cs
 
@@ -838,6 +838,16 @@
 | SiegeRulesChecks | [`void RunFromMenu()`](../Assets/Editor/Siege/SiegeRulesChecks.cs#L11) | public static |
 | SiegeRulesChecks | [`string Run()`](../Assets/Editor/Siege/SiegeRulesChecks.cs#L17) | public static |
 | SiegeRulesChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeRulesChecks.cs#L117) | private static |
+
+## Assets/Editor/Siege/SiegeRuntimeConnectionChecks.cs
+
+// 职责：验证缓存连接的无查询热路径、断链、制作变更失效和无视觉/双侧视觉生命周期。 // 入口：Run()；调用真实内部运行分组入口，物理探测/旧视觉扫描计数由生产代码按需记录。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeRuntimeConnectionChecks | [`string Run()`](../Assets/Editor/Siege/SiegeRuntimeConnectionChecks.cs#L15) | public static |
+| SiegeRuntimeConnectionChecks | [`List<List<Block>> Groups(List<Block> blocks)`](../Assets/Editor/Siege/SiegeRuntimeConnectionChecks.cs#L164) | private static |
+| SiegeRuntimeConnectionChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeRuntimeConnectionChecks.cs#L169) | private static |
 
 ## Assets/Editor/Siege/SiegeSceneAuthoring.cs
 
@@ -3080,29 +3090,45 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Block | [`void Awake()`](../Assets/Scripts/Features/Simulation/Block.cs#L51) | private |
-| Block | [`void OnValidate()`](../Assets/Scripts/Features/Simulation/Block.cs#L78) | private |
-| Block | [`void RefreshAuthoringData()`](../Assets/Scripts/Features/Simulation/Block.cs#L95) | public |
-| Block | [`void RefreshRuntimeData(bool rebuildConnectors = false)`](../Assets/Scripts/Features/Simulation/Block.cs#L124) | public |
-| Block | [`void RefreshMass()`](../Assets/Scripts/Features/Simulation/Block.cs#L158) | public |
-| Block | [`void SetMassSettings(bool useCustomMass, float value)`](../Assets/Scripts/Features/Simulation/Block.cs#L171) | public |
-| Block | [`void Reset()`](../Assets/Scripts/Features/Simulation/Block.cs#L179) | private |
-| Block | [`void GenerateConnectionPoints()`](../Assets/Scripts/Features/Simulation/Block.cs#L184) | private |
-| Block | [`string GetDisplayInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L254) | public |
-| Block | [`string GenerateInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L259) | private |
-| Block | [`void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)`](../Assets/Scripts/Features/Simulation/Block.cs#L305) | private |
-| Block | [`Vector3 GetConnectorWorldPosition(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L319) | public |
-| Block | [`Vector3 GetConnectorWorldNormal(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L324) | public |
-| Block | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L329) | public |
-| Block | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/Block.cs#L334) | public |
-| Block | [`void CheckConnectionAfterPhysicsSync()`](../Assets/Scripts/Features/Simulation/Block.cs#L339) | internal |
-| Block | [`List<Block> Neighbors()`](../Assets/Scripts/Features/Simulation/Block.cs#L344) | public |
-| Block | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L352) | internal |
-| Block | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Block.cs#L357) | public |
-| Block | [`void RestoreConnectionParticipation()`](../Assets/Scripts/Features/Simulation/Block.cs#L363) | public |
-| Block | [`void RefreshConnectionStatus()`](../Assets/Scripts/Features/Simulation/Block.cs#L368) | internal |
-| Block | [`bool IsBlockedGhost()`](../Assets/Scripts/Features/Simulation/Block.cs#L376) | public |
-| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L400) | private |
+| Block | [`void CollectRuntimeNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L52) | internal |
+| Block | [`void RefreshRuntimeConnectionPose()`](../Assets/Scripts/Features/Simulation/Block.cs#L57) | internal |
+| Block | [`void InvalidateRuntimeConnections()`](../Assets/Scripts/Features/Simulation/Block.cs#L62) | internal |
+| Block | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Block.cs#L67) | private |
+| Block | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Block.cs#L72) | private |
+| Block | [`void Awake()`](../Assets/Scripts/Features/Simulation/Block.cs#L77) | private |
+| Block | [`void OnValidate()`](../Assets/Scripts/Features/Simulation/Block.cs#L104) | private |
+| Block | [`void RefreshAuthoringData()`](../Assets/Scripts/Features/Simulation/Block.cs#L121) | public |
+| Block | [`void RefreshRuntimeData(bool rebuildConnectors = false)`](../Assets/Scripts/Features/Simulation/Block.cs#L150) | public |
+| Block | [`void RefreshMass()`](../Assets/Scripts/Features/Simulation/Block.cs#L184) | public |
+| Block | [`void SetMassSettings(bool useCustomMass, float value)`](../Assets/Scripts/Features/Simulation/Block.cs#L197) | public |
+| Block | [`void Reset()`](../Assets/Scripts/Features/Simulation/Block.cs#L205) | private |
+| Block | [`void GenerateConnectionPoints()`](../Assets/Scripts/Features/Simulation/Block.cs#L210) | private |
+| Block | [`string GetDisplayInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L280) | public |
+| Block | [`string GenerateInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L285) | private |
+| Block | [`void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)`](../Assets/Scripts/Features/Simulation/Block.cs#L331) | private |
+| Block | [`Vector3 GetConnectorWorldPosition(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L345) | public |
+| Block | [`Vector3 GetConnectorWorldNormal(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L350) | public |
+| Block | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L355) | public |
+| Block | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/Block.cs#L360) | public |
+| Block | [`void CheckConnectionAfterPhysicsSync()`](../Assets/Scripts/Features/Simulation/Block.cs#L365) | internal |
+| Block | [`List<Block> Neighbors()`](../Assets/Scripts/Features/Simulation/Block.cs#L370) | public |
+| Block | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L378) | internal |
+| Block | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Block.cs#L383) | public |
+| Block | [`void RestoreConnectionParticipation()`](../Assets/Scripts/Features/Simulation/Block.cs#L389) | public |
+| Block | [`void RefreshConnectionStatus()`](../Assets/Scripts/Features/Simulation/Block.cs#L394) | internal |
+| Block | [`bool IsBlockedGhost()`](../Assets/Scripts/Features/Simulation/Block.cs#L402) | public |
+| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L426) | private |
+
+## Assets/Scripts/Features/Simulation/BlockConnectionSnapshot.cs
+
+// 职责：精确校验运行连接缓存的模块局部姿态、连接面身份/几何、规范碰撞体与查询层配置。 // 入口：IsValid / Capture() / Invalidate()；刚体整体运动不失效，复杂层级回退物理探测。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlockConnectionSnapshot | [`void Capture()`](../Assets/Scripts/Features/Simulation/BlockConnectionSnapshot.cs#L54) | internal |
+| BlockConnectionSnapshot | [`void RefreshIfReady()`](../Assets/Scripts/Features/Simulation/BlockConnectionSnapshot.cs#L90) | internal |
+| BlockConnectionSnapshot | [`void Invalidate()`](../Assets/Scripts/Features/Simulation/BlockConnectionSnapshot.cs#L98) | internal |
+| BlockConnectionSnapshot | [`int ConnectionMask()`](../Assets/Scripts/Features/Simulation/BlockConnectionSnapshot.cs#L103) | private static |
 
 ## Assets/Scripts/Features/Simulation/BlockConnections.cs
 
@@ -3110,19 +3136,25 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BlockConnections | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L35) | internal |
-| BlockConnections | [`void CheckConnection(bool synchronizePhysics = true)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L49) | internal |
-| BlockConnections | [`void ReleaseExistingConnections()`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L97) | private |
-| BlockConnections | [`void ReleaseConnectionPairWithoutVisual(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L113) | private |
-| BlockConnections | [`void ReleaseConnectionReferences(GameObject connectorObject)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L127) | private |
-| BlockConnections | [`Block FindBlockAcrossConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L157) | private |
-| BlockConnections | [`bool SharesBuildingScope(Block other)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L191) | private |
-| BlockConnections | [`Connector FindMatchingConnector(Block otherBlock, Connector connector, bool requireAvailable = true)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L198) | private |
-| BlockConnections | [`void ConnectTo(Connector connector, Block otherBlock, Connector otherConnector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L220) | private |
-| BlockConnections | [`void ClearConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L241) | private |
-| BlockConnections | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L260) | internal |
-| BlockConnections | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L288) | internal |
-| BlockConnections | [`void RestoreParticipation()`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L331) | internal |
+| BlockConnections | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L39) | internal |
+| BlockConnections | [`void CheckConnection(bool synchronizePhysics = true)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L53) | internal |
+| BlockConnections | [`void ReleaseExistingConnections()`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L102) | private |
+| BlockConnections | [`void ReleaseConnectionPairWithoutVisual(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L130) | private |
+| BlockConnections | [`void ReleaseConnectionReferences(GameObject connectorObject)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L150) | private |
+| BlockConnections | [`Block FindBlockAcrossConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L187) | private |
+| BlockConnections | [`bool SharesBuildingScope(Block other)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L228) | private |
+| BlockConnections | [`Connector FindMatchingConnector(Block otherBlock, Connector connector, bool requireAvailable = true)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L235) | private |
+| BlockConnections | [`void ConnectTo(Connector connector, Block otherBlock, Connector otherConnector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L257) | private |
+| BlockConnections | [`void ClearConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L282) | private |
+| BlockConnections | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L311) | internal |
+| BlockConnections | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L339) | internal |
+| BlockConnections | [`void RestoreParticipation()`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L385) | internal |
+| BlockConnections | [`void ReleaseRuntimePair(Connector connector)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L404) | private |
+| BlockConnections | [`void CollectRuntimeNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L430) | internal |
+| BlockConnections | [`void RefreshRuntimePoseIfReady()`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L452) | internal |
+| BlockConnections | [`void InvalidateRuntimeLinks()`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L457) | internal |
+| BlockConnections | [`void CaptureRuntimePose()`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L462) | private |
+| BlockConnections | [`int ConnectionMask()`](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L467) | private static |
 
 ## Assets/Scripts/Features/Simulation/BlockGroupManager.cs
 
@@ -3131,7 +3163,9 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BlockGroupManager | [`List<List<Block>> GroupBlocks(List<Block> allBlocks)`](../Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L9) | public static |
-| BlockGroupManager | [`Vector3 CalculateGroupCenter(List<Block> group)`](../Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L66) | public static |
+| BlockGroupManager | [`List<List<Block>> GroupRuntimeBlocks(List<Block> allBlocks)`](../Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L15) | internal static |
+| BlockGroupManager | [`List<List<Block>> Traverse(List<Block> allBlocks, bool runtimeLinks)`](../Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L36) | private static |
+| BlockGroupManager | [`Vector3 CalculateGroupCenter(List<Block> group)`](../Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L104) | public static |
 
 ## Assets/Scripts/Features/Simulation/Cockpit.cs
 
@@ -3253,10 +3287,10 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | RuntimeGroupBuilder | [`void Rebuild(List<Block> blocks, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L15) | internal |
-| RuntimeGroupBuilder | [`Dictionary<Block, SourceSnapshot> CaptureSourceBodies(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L107) | private static |
-| RuntimeGroupBuilder | [`List<GroupPlan> PlanGroups(List<List<Block>> groups, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L136) | private static |
-| RuntimeGroupBuilder | [`Dictionary<SourceSnapshot, GroupPlan> SelectRetainedGroups(List<GroupPlan> plans, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L167) | private static |
-| RuntimeGroupBuilder | [`void RestoreGroupPhysics(Rigidbody target, SourceSnapshot source, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L206) | private static |
+| RuntimeGroupBuilder | [`Dictionary<Block, SourceSnapshot> CaptureSourceBodies(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L112) | private static |
+| RuntimeGroupBuilder | [`List<GroupPlan> PlanGroups(List<List<Block>> groups, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L141) | private static |
+| RuntimeGroupBuilder | [`Dictionary<SourceSnapshot, GroupPlan> SelectRetainedGroups(List<GroupPlan> plans, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L172) | private static |
+| RuntimeGroupBuilder | [`void RestoreGroupPhysics(Rigidbody target, SourceSnapshot source, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L211) | private static |
 
 ## Assets/Scripts/Features/Simulation/RuntimeGroupCleanup.cs
 
@@ -3273,10 +3307,12 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SimulationWorkMetrics | [`Scope Measure(Stage stage, int inputBlocks = 0)`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L30) | public static |
-| SimulationWorkMetrics | [`Counters Read(Stage stage)`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L35) | public static |
-| SimulationWorkMetrics | [`void Reset()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L40) | public static |
-| Scope | [`void Dispose()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L57) | public |
+| SimulationWorkMetrics | [`void RecordPhysicsNeighborQuery()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L38) | internal static |
+| SimulationWorkMetrics | [`void RecordLegacyReferenceScan()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L46) | internal static |
+| SimulationWorkMetrics | [`Scope Measure(Stage stage, int inputBlocks = 0)`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L54) | public static |
+| SimulationWorkMetrics | [`Counters Read(Stage stage)`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L59) | public static |
+| SimulationWorkMetrics | [`void Reset()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L64) | public static |
+| Scope | [`void Dispose()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L83) | public |
 
 ## Assets/Scripts/Features/Simulation/UnitFaction.cs
 

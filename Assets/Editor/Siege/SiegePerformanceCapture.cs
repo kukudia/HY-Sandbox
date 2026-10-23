@@ -142,6 +142,8 @@ public static class SiegePerformanceCapture
         gcRecorder.Dispose();
         report.reason = reason;
         report.elapsedSeconds = EditorApplication.timeSinceStartup - started;
+        report.physicsNeighborQueries = SimulationWorkMetrics.PhysicsNeighborQueries;
+        report.legacyReferenceScans = SimulationWorkMetrics.LegacyReferenceScans;
         var intervals = new List<double>();
         foreach (FrameSample sample in report.samples)
         {
@@ -198,6 +200,8 @@ public static class SiegePerformanceCapture
         public int initialWave;
         public long initialCoins;
         public bool gcCounterAvailable;
+        public long physicsNeighborQueries;
+        public long legacyReferenceScans;
         public string reason;
         public double elapsedSeconds;
         public int skippedObservations;

@@ -26,6 +26,30 @@ public static class SimulationWorkMetrics
     {
         get; set;
     }
+    public static long PhysicsNeighborQueries
+    {
+        get; private set;
+    }
+    public static long LegacyReferenceScans
+    {
+        get; private set;
+    }
+
+    internal static void RecordPhysicsNeighborQuery()
+    {
+        if (Enabled)
+        {
+            PhysicsNeighborQueries++;
+        }
+    }
+
+    internal static void RecordLegacyReferenceScan()
+    {
+        if (Enabled)
+        {
+            LegacyReferenceScans++;
+        }
+    }
 
     public static Scope Measure(Stage stage, int inputBlocks = 0)
     {
@@ -40,6 +64,8 @@ public static class SimulationWorkMetrics
     public static void Reset()
     {
         Array.Clear(totals, 0, totals.Length);
+        PhysicsNeighborQueries = 0;
+        LegacyReferenceScans = 0;
     }
 
     public readonly struct Scope : IDisposable
