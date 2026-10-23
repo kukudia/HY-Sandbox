@@ -247,13 +247,27 @@ public sealed class SiegeSession : MonoBehaviour
     /// <summary>波次边界调用一次，避免每帧重复报价、净空查询或失败重试。</summary>
     private void RepairBaseBetweenWaves()
     {
-        if (!settings.AutoRepairBase || !Fleet.Base.IsAlive || Fleet.Base.Quote() == 0)
+        var results = new System.Collections.Generic.List<string>();
+        if (settings.AutoRepairBase && Fleet.Base.IsAlive && Fleet.Base.Quote() > 0)
         {
-            return;
+            Fleet.Base.Repair(out string baseResult);
+            results.Add("Base: " + baseResult);
         }
 
-        Fleet.Base.Repair(out string reason);
-        Status = "Wave cleared. Auto-refit: " + reason;
+        Fleet.RepairBetweenWaves(out int repaired, out int attempted, out long spent, out string failure);
+        if (attempted > 0)
+        {
+            results.Add("Fleet " + repaired + "/" + attempted + " repaired for " + spent + " coins.");
+            if (!string.IsNullOrEmpty(failure))
+            {
+                results.Add(failure);
+            }
+        }
+
+        if (results.Count > 0)
+        {
+            Status = "Wave cleared. Auto-refit: " + string.Join(" | ", results);
+        }
     }
 
     private void OnDestroy()

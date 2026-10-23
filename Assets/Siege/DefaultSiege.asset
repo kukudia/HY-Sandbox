@@ -44,3 +44,4 @@ MonoBehaviour:
   enemyWreckLifetime: 15
   enemyWreckRetirePerScan: 8
   autoRepairBase: 1
+  autoRepairFleet: 1

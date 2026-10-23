@@ -18,7 +18,7 @@
 
 ## 其他验证
 
-- `SiegePlayChecks.Run()`：23 项通过，包含波次间自动修缮和精确扣款。
+- `SiegePlayChecks.Run()`：25 项通过，包含先基地后舰队自动修缮、精确报价、舰艇状态恢复及重复 Update 不重复扣款。
 - `dotnet run --project Tools/CodeReadability -- --check .`：318 scripts，0 errors；更新 `Docs/RuntimeFlow.md` 与 `Docs/CodeIndex.md`。
 - `dotnet build HY-Sandbox.sln --no-restore`：0 errors、4 个既有警告（3 个 MSB3277 依赖冲突、1 个过时 Profiler API）。
 - `git diff --check`：通过。

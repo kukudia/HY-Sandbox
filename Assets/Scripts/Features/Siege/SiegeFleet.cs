@@ -150,6 +150,46 @@ public sealed class SiegeFleet
         }
     }
 
+    public void RepairBetweenWaves(out int repairedCount, out int attemptedCount, out long spent, out string firstFailure)
+    {
+        repairedCount = 0;
+        attemptedCount = 0;
+        spent = 0;
+        firstFailure = null;
+        if (!session.Settings.AutoRepairFleet)
+        {
+            return;
+        }
+
+        for (int offset = 0; offset < Ships.Length; offset++)
+        {
+            int slot = Driven != null ? (Array.IndexOf(Ships, Driven) + offset) % Ships.Length : offset;
+            SiegeFleetEntry entry = Ships[slot];
+            if (entry == null || !entry.IsAlive || SiegeRefit.Quote(entry, session.Settings) == 0)
+            {
+                continue;
+            }
+
+            attemptedCount++;
+            long balanceBefore = session.Match.Coins;
+            bool repaired = SiegeRefit.Repair(entry, session, out string reason);
+            if (repaired)
+            {
+                repairedCount++;
+                spent += balanceBefore - session.Match.Coins;
+            }
+            else if (firstFailure == null)
+            {
+                firstFailure = entry.DisplayName + ": " + reason;
+            }
+
+            if (repaired && entry == Driven)
+            {
+                SetCamera(entry.Unit);
+            }
+        }
+    }
+
     public void RefreshBindings()
     {
         foreach (SiegeFleetEntry entry in Ships)

@@ -55,7 +55,10 @@ public sealed class SiegeSettings : ScriptableObject
     private int enemyWreckRetirePerScan = 8;
     [SerializeField, Tooltip("每次波次结束后按报价自动修缮基地；金币不足或净空受阻时不扣款。")]
     private bool autoRepairBase = true;
+    [SerializeField, Tooltip("基地自动修缮后，按驾驶舰优先顺序自动修复存活舰船；余额不足或泊位受阻时保留资产并记录结果。")]
+    private bool autoRepairFleet = true;
     public bool AutoRepairBase => autoRepairBase;
+    public bool AutoRepairFleet => autoRepairFleet;
     public TextAsset BaseBlueprint => baseBlueprint;
     public string BaseCoreBlockId => baseCoreBlockId;
     public int BaseReplacementValue => baseReplacementValue;

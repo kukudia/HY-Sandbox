@@ -1220,7 +1220,7 @@ def main():
     )
     graph(
         "阵地战波次、伤害与失败",
-        "源码推导：波次开始启用物理；会话Update串行处理生成预算和真实死亡事件。敌舰Defeated只记事实，后续Tick一次性结算。最后一敌舰结算进入整备并冻结模拟；非战斗阶段拒绝伤害。驾驶舰死亡接管其他舰艇，无舰则观察基地；核心丢失终止波次。销毁会话解绑敌舰事件并恢复后台设置，重开通过实际SceneManager重载。",
+        "源码推导：波次开始启用物理；会话Update串行处理生成预算和真实死亡事件。敌舰Defeated只记事实，后续Tick一次性结算。最后一敌舰结算进入整备并冻结模拟；非战斗阶段拒绝伤害。过渡只发生一次：基地先按建筑蓝图报价检查净空并自动原位修缮，再从驾驶舰开始轮询存活友舰，沿用身份/货舱保护、泊位净空和报价支付；余额不足/占位不扣费并汇报舰队统计，选项可独立关闭。驾驶舰死亡接管其他舰艇，无舰则观察基地；核心丢失终止波次。销毁会话解绑敌舰事件并恢复后台设置，重开通过实际SceneManager重载。",
         {
             "A": "SiegeSession.BeginNextWave", "B": "SiegeMatch.BeginNextWave", "C": "SiegeSession.SetSimulationActive",
             "D": "SiegeSession.Update", "E": "SiegeWaveDirector.Tick", "F": "EnemyBlueprintFactory.Spawn",
@@ -1230,11 +1230,13 @@ def main():
             "N": "SiegeSession.OnDestroy", "O": "SiegeWaveDirector.Stop", "P": "SiegeHud.Restart",
             "Q": "BuildingRuntime.DestroyBlock", "R": "SiegeBase.OnBlockDestroyed", "S": "SiegeBase.Dispose",
             "T": "SiegeSession.RepairBaseBetweenWaves", "U": "SiegeBase.Quote", "V": "SiegeBase.Repair",
+            "W": "SiegeFleet.RepairBetweenWaves", "X": "SiegeRefit.Quote", "Y": "SiegeRefit.Repair",
         },
         [
             "A --> B", "A --> C", "D --> E", "E --> F", "E --> H",
             "G -.->|Attacker事件标记后由Tick读取| E", "D -->|波次结束| C",
-            "D -->|进入波次间隔后仅一次| T", "T -->|有损伤才修缮| U", "T -->|成功后扣费| V",
+            "D -->|进入波次间隔后仅一次| T", "T -->|基地有损伤| U", "T -->|基地成功后扣费| V",
+            "T -->|基地完成/失败后| W", "W -->|每艘存活舰先报价| X", "X -->|损伤且余额足够| Y",
             "I -->|舰船| J", "J --> G", "J --> K", "K --> L",
             "I -->|建筑| Q", "Q -.->|BlockDestroyed事件| R", "R -->|指定核心被摧毁| M",
             "D -->|核心失活或离开建筑主体| M", "N --> S",

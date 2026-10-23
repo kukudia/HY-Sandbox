@@ -101,6 +101,26 @@ public static class SiegePlayChecks
             session.Status.Contains(obstruction.name) && session.Status.Contains("Clear the area"));
         Object.DestroyImmediate(obstruction);
         Physics.SyncTransforms();
+        SiegeFleetEntry autonomous = session.Fleet.Ships[0];
+        Durability autonomousHealth = autonomous.Cockpit.GetComponent<Durability>();
+        autonomousHealth.currentDurability -= 25f;
+        long autonomousQuote = SiegeRefit.Quote(autonomous, session.Settings);
+        var automaticObstruction = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        automaticObstruction.name = "Automatic fleet refit obstruction";
+        automaticObstruction.transform.position = autonomous.Cockpit.transform.position;
+        long unobstructedCoins = session.Match.Coins;
+        session.Fleet.RepairBetweenWaves(out int blockedRepaired, out int blockedAttempted, out long blockedSpend, out string blockedReason);
+        Check(
+            checks,
+            "automatic fleet refit preserves damage and coins when its bay is occupied",
+            blockedRepaired == 0 && blockedAttempted == 1 && blockedSpend == 0 && session.Match.Coins == unobstructedCoins && autonomousHealth.currentDurability < autonomousHealth.maxDurability && blockedReason.Contains(automaticObstruction.name));
+        Object.DestroyImmediate(automaticObstruction);
+        Physics.SyncTransforms();
+        session.Fleet.RepairBetweenWaves(out int clearRepaired, out int clearAttempted, out long clearSpend, out _);
+        Check(
+            checks,
+            "automatic fleet refit restores the ally after clearing its bay",
+            clearRepaired == 1 && clearAttempted == 1 && clearSpend == autonomousQuote && session.Match.Coins == unobstructedCoins - autonomousQuote && Mathf.Approximately(autonomousHealth.currentDurability, autonomousHealth.maxDurability));
         ControlUnit oldCoreGroup = session.Fleet.Base.Unit;
         PlayManager.instance.RefreshGroup(oldCoreGroup);
         Check(
@@ -115,6 +135,10 @@ public static class SiegePlayChecks
             checks,
             "wave start activates simulation and closes repair",
             session.BeginNextWave() && PlayManager.instance.playMode && !session.TryRepair(false));
+        ControlUnit drivenUnit = session.Fleet.Driven.Unit;
+        Durability drivenHealth = drivenUnit.cockpit.GetComponent<Durability>();
+        drivenHealth.currentDurability -= Mathf.Max(1f, drivenHealth.maxDurability * 0.1f);
+        long automaticShipQuote = SiegeRefit.Quote(session.Fleet.Driven, session.Settings);
         Durability baseHealth = session.Fleet.Base.Core.GetComponent<Durability>();
         baseHealth.currentDurability -= 25f;
         long automaticRepairQuote = session.Fleet.Base.Quote();
@@ -133,8 +157,18 @@ public static class SiegePlayChecks
         update.Invoke(session, null);
         Check(
             checks,
-            "wave intermission automatically repairs base and spends its exact quote once",
-            session.Match.Phase == SiegePhase.Intermission && Mathf.Approximately(baseHealth.currentDurability, baseHealth.maxDurability) && coinsAfterAutomaticRepair == coinsBeforeAutomaticRepair - automaticRepairQuote && session.Match.Coins == coinsAfterAutomaticRepair && automaticRepairQuote > 0 && session.Status.Contains("Auto-refit"));
+            "wave intermission automatically repairs the base and spends its exact quote once",
+            session.Match.Phase == SiegePhase.Intermission && Mathf.Approximately(baseHealth.currentDurability, baseHealth.maxDurability) && coinsAfterAutomaticRepair == coinsBeforeAutomaticRepair - automaticRepairQuote - automaticShipQuote && session.Match.Coins == coinsAfterAutomaticRepair && automaticRepairQuote > 0 && session.Status.Contains("Auto-refit"));
+        Check(
+            checks,
+            "wave intermission repairs the driven ship from remaining coins",
+            Mathf.Approximately(drivenHealth.currentDurability, drivenHealth.maxDurability) && automaticShipQuote > 0 && session.Match.Coins == coinsBeforeAutomaticRepair - automaticRepairQuote - automaticShipQuote);
+        long afterAutomaticRepairs = session.Match.Coins;
+        update.Invoke(session, null);
+        Check(
+            checks,
+            "repeated intermission updates never charge the same base or ship repair twice",
+            session.Match.Coins == afterAutomaticRepairs);
         Check(checks, "next wave starts after automatic refit", session.BeginNextWave());
         ControlUnit previousAllyGroup = session.Fleet.Ships[0].Unit;
         PlayManager.instance.RefreshGroup(previousAllyGroup);
