@@ -1179,6 +1179,23 @@ def main():
             "M --> C", "M --> O", "N --> O", "P -.->|场景重载销毁旧会话| N",
         ],
     )
+    graph(
+        "阵地战性能观察与分项计时",
+        "源码推导：采样器仅在Siege真实Play显式启动；Editor update观察推进的游戏帧，保留跳帧及游戏delta。连接遍历、物理组重建和完整刷新是嵌套累计CPU计时，不可相加。每秒一次场景查询本身有分配；停止Play或脚本重载会保存已取得的样本并解绑，报告不代表Player/GPU性能。",
+        {
+            "A": "SiegePerformanceCapture.StartCapture", "B": "SiegePerformanceCapture.Tick",
+            "C": "SiegePerformanceCapture.TakeCensus", "D": "SiegePerformanceCapture.Finish",
+            "E": "SimulationWorkMetrics.Measure", "F": "SimulationWorkMetrics.Read",
+            "G": "BlockGroupManager.GroupBlocks", "H": "RuntimeGroupBuilder.Rebuild",
+            "I": "PlayManager.RefreshGroup", "J": "SiegePerformanceCapture.BeforeReload",
+            "K": "SiegeTopologyBaseline.Run",
+        },
+        [
+            "A -.->|Editor update| B", "B --> C", "B --> F", "B -->|超时或停止| D",
+            "J --> D", "I --> E", "I -->|经AssignBlocksToParentGroups| H", "H --> E",
+            "H --> G", "G --> E", "K -->|隔离夹具重复同步调用| G",
+        ],
+    )
     doc = """# HY-Sandbox 运行时函数图
 
     这些图根据当前源码和调用者整理，用于寻找功能入口，不是采样得到的实际执行轨迹。实线表示直接调用（标注“经”时包含明确中间函数）；虚线标出协程、事件或注入动作。Unity Update/FixedUpdate 的独立入口不代表脚本执行顺序。

@@ -8,6 +8,7 @@ public class BlockGroupManager : MonoBehaviour
     // Synchronize once per traversal; reuse queue and neighbor storage across groups.
     public static List<List<Block>> GroupBlocks(List<Block> allBlocks)
     {
+        using SimulationWorkMetrics.Scope timing = SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.Connectivity, allBlocks?.Count ?? 0);
         List<List<Block>> groups = new List<List<Block>>();
         if (allBlocks == null || allBlocks.Count == 0)
         {

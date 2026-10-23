@@ -14,6 +14,7 @@ internal sealed class RuntimeGroupBuilder
 
     internal void Rebuild(List<Block> blocks, GroupPhysicsSettings settings)
     {
+        using SimulationWorkMetrics.Scope timing = SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.BodyRebuild, blocks?.Count ?? 0);
         Dictionary<Block, Rigidbody> sourceBodies = CaptureSourceBodies(blocks);
         List<List<Block>> groups = BlockGroupManager.GroupBlocks(blocks);
         GameObject parentPrefab = Resources.Load<GameObject>("BlocksParent/BlocksParent");

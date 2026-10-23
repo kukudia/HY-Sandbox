@@ -771,6 +771,19 @@
 | SiegeFleetChecks | [`string Run()`](../Assets/Editor/Siege/SiegeFleetChecks.cs#L12) | public static |
 | SiegeFleetChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeFleetChecks.cs#L108) | private static |
 
+## Assets/Editor/Siege/SiegePerformanceCapture.cs
+
+// 职责：采集阵地战真实Play帧观察间隔、分阶段CPU计时和低频场景规模，保存可审查原始样本。 // 入口：StartCapture() / Finish() / Status；Editor观察间隔含编辑器调度，不代表Player或GPU耗时。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegePerformanceCapture | [`string StartCapture(string label = "natural-baseline", float seconds = 90f)`](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L31) | public static |
+| SiegePerformanceCapture | [`void Tick()`](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L72) | private static |
+| SiegePerformanceCapture | [`void TakeCensus(double now)`](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L101) | private static |
+| SiegePerformanceCapture | [`string Finish(string reason = "Manual stop")`](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L133) | public static |
+| SiegePerformanceCapture | [`double Percentile(List<double> values, double fraction)`](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L177) | private static |
+| SiegePerformanceCapture | [`void BeforeReload()`](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L182) | private static |
+
 ## Assets/Editor/Siege/SiegePlayChecks.cs
 
 // 职责：在独立Siege真实Play中验证部署/接管、修缮身份与金币、驾驶舰死亡和基地失败。 // 入口：Run()；损伤/缺件/断裂为显式夹具，死亡走生产伤害链；不代表自然交火或性能测试。
@@ -813,6 +826,15 @@
 | SiegeSceneAuthoring | [`Button ActionButton( Transform parent, string name, string text, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L502) | private static |
 | SiegeSceneAuthoring | [`void Place(RectTransform rect, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L532) | private static |
 | SiegeSceneAuthoring | [`void SetArray(SerializedProperty property, Object[] values)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L540) | private static |
+
+## Assets/Editor/Siege/SiegeTopologyBaseline.cs
+
+// 职责：在远离战场的真实方块夹具上测量分组，并复现断链后输入顺序影响，保留优化前证据。 // 入口：Run()；不运行物理步，不将同步图查询耗时称为大规模战斗帧率。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeTopologyBaseline | [`string Run()`](../Assets/Editor/Siege/SiegeTopologyBaseline.cs#L13) | public static |
+| SiegeTopologyBaseline | [`string Partition(List<List<Block>> groups)`](../Assets/Editor/Siege/SiegeTopologyBaseline.cs#L103) | private static |
 
 ## Assets/Editor/World/OutpostContentAuthoring.cs
 
@@ -3061,7 +3083,7 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BlockGroupManager | [`List<List<Block>> GroupBlocks(List<Block> allBlocks)`](../Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L9) | public static |
-| BlockGroupManager | [`Vector3 CalculateGroupCenter(List<Block> group)`](../Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L65) | public static |
+| BlockGroupManager | [`Vector3 CalculateGroupCenter(List<Block> group)`](../Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L66) | public static |
 
 ## Assets/Scripts/Features/Simulation/Cockpit.cs
 
@@ -3158,16 +3180,16 @@
 | PlayManager | [`void PlayStart()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L100) | public |
 | PlayManager | [`bool CanStartPlay(out string reason)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L148) | public |
 | PlayManager | [`void RefreshGroup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L183) | public |
-| PlayManager | [`void SetPlayMode(bool lockView)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L210) | public |
-| PlayManager | [`void CalculateVelocity()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L218) | private |
-| PlayManager | [`void HandleSelection()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L227) | private |
-| PlayManager | [`void SelectBlock(Block block)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L256) | private |
-| PlayManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L275) | public |
-| PlayManager | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L281) | public |
-| PlayManager | [`void AssignBlocksToParentGroups(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L312) | public |
-| PlayManager | [`void RegisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L328) | public |
-| PlayManager | [`void UnregisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L342) | public |
-| PlayManager | [`IReadOnlyList<ControlUnit> GetControlUnits()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L350) | public |
+| PlayManager | [`void SetPlayMode(bool lockView)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L211) | public |
+| PlayManager | [`void CalculateVelocity()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L219) | private |
+| PlayManager | [`void HandleSelection()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L228) | private |
+| PlayManager | [`void SelectBlock(Block block)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L257) | private |
+| PlayManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L276) | public |
+| PlayManager | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L282) | public |
+| PlayManager | [`void AssignBlocksToParentGroups(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L313) | public |
+| PlayManager | [`void RegisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L329) | public |
+| PlayManager | [`void UnregisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L343) | public |
+| PlayManager | [`IReadOnlyList<ControlUnit> GetControlUnits()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L351) | public |
 
 ## Assets/Scripts/Features/Simulation/Rack.cs
 
@@ -3182,8 +3204,8 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | RuntimeGroupBuilder | [`void Rebuild(List<Block> blocks, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L15) | internal |
-| RuntimeGroupBuilder | [`Dictionary<Block, Rigidbody> CaptureSourceBodies(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L74) | private static |
-| RuntimeGroupBuilder | [`void RestoreGroupPhysics( Rigidbody targetBody, List<Block> group, Dictionary<Block, Rigidbody> sourceBodies, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L94) | private static |
+| RuntimeGroupBuilder | [`Dictionary<Block, Rigidbody> CaptureSourceBodies(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L75) | private static |
+| RuntimeGroupBuilder | [`void RestoreGroupPhysics( Rigidbody targetBody, List<Block> group, Dictionary<Block, Rigidbody> sourceBodies, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L95) | private static |
 
 ## Assets/Scripts/Features/Simulation/RuntimeGroupCleanup.cs
 
@@ -3193,6 +3215,17 @@
 | --- | --- | --- |
 | RuntimeGroupCleanup | [`void EnforceLimit(List<ControlUnit> units, int maximumUselessGroups, DestroyManager destruction)`](../Assets/Scripts/Features/Simulation/RuntimeGroupCleanup.cs#L8) | internal static |
 | RuntimeGroupCleanup | [`void EnforceDistance( List<ControlUnit> units, bool playMode, Transform playerRoot, float cleanupDistance, DestroyManager destruction)`](../Assets/Scripts/Features/Simulation/RuntimeGroupCleanup.cs#L51) | internal static |
+
+## Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs
+
+// 职责：按需累计连接遍历、刚体重建与完整刷新的CPU工作量，供可重复Play采样读取。 // 入口：Measure() / Read() / Reset()；默认关闭，嵌套阶段分别计时，不能相加为整帧耗时。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SimulationWorkMetrics | [`Scope Measure(Stage stage, int inputBlocks = 0)`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L30) | public static |
+| SimulationWorkMetrics | [`Counters Read(Stage stage)`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L35) | public static |
+| SimulationWorkMetrics | [`void Reset()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L40) | public static |
+| Scope | [`void Dispose()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L57) | public |
 
 ## Assets/Scripts/Features/Simulation/UnitFaction.cs
 

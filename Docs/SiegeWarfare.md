@@ -50,4 +50,10 @@ Siege不加载主世界存档，不复制蓝图货物；部署使用新的单位
 
 ## 后续验证缺口
 
-最新基地布局需自然多波战斗回归；尚未实现规模采样、拓扑缓存、增量重组或Jobs/Burst。当前修缮为全机回泊位恢复，未加入飞行中补给、完整存档或战术指令。Editor Play检查不替代正式Player性能。
+最新基地已采集首波90秒自然战斗性能，但窗口结束时仍有1敌机，未证明多波完成。已有真实帧和100/256/1024块同步分组采样；尚未实现拓扑缓存、增量重组或Jobs/Burst。当前修缮为全机回泊位恢复，未加入飞行中补给、完整存档或战术指令。Editor Play检查不替代正式Player性能。
+
+## 性能复现
+
+Siege Play部署两舰后调用 `SiegePerformanceCapture.StartCapture("label", 90f)`，再开始波次。到时、失败、停止Play或脚本重载时保存已有样本到 `Temp/Siege/Performance`；`Status` 可读状态，`Finish()` 可提前保存。CPU计时默认关闭，仅采样期间开启。各阶段嵌套，完整刷新计时从输入块枚举后开始。
+
+`SiegeTopologyBaseline.Run()` 在远离战场的临时真实方块链上测量同步分组，并记录断链正序/倒序归属；不用物理步，不等于千块战斗性能。原始JSON可用 `Tools/Validation/summarize_siege_capture.py` 无损压缩并生成摘要。证据与限制见 [性能基线](Validation/2026-10-23-siege-performance.md)。

@@ -129,7 +129,7 @@ flowchart TD
     L["CargoPersistence.SaveReturnCargo()"]
     click L "../Assets/Scripts/Features/Salvage/CargoPersistence.cs#L11" "打开源码"
     M["PlayManager.PlayEnd()"]
-    click M "../Assets/Scripts/Features/Simulation/PlayManager.cs#L281" "打开源码"
+    click M "../Assets/Scripts/Features/Simulation/PlayManager.cs#L282" "打开源码"
     N["MainUIPanels.PlayerDeath()"]
     click N "../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L288" "打开源码"
     O["WorldSessionManager.RequestPlay()"]
@@ -187,7 +187,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayEnd -->
 - [CargoPersistence.SaveReturnCargo](../Assets/Scripts/Features/Salvage/CargoPersistence.cs#L11)
 <!-- source: Assets/Scripts/Features/Salvage/CargoPersistence.cs|SaveReturnCargo -->
-- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L281)
+- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L282)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
 - [MainUIPanels.PlayerDeath](../Assets/Scripts/Features/Presentation/MainUIPanels.cs#L288)
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayerDeath -->
@@ -692,7 +692,7 @@ flowchart TD
     A["PlayManager.RefreshGroup()"]
     click A "../Assets/Scripts/Features/Simulation/PlayManager.cs#L183" "打开源码"
     B["PlayManager.AssignBlocksToParentGroups()"]
-    click B "../Assets/Scripts/Features/Simulation/PlayManager.cs#L312" "打开源码"
+    click B "../Assets/Scripts/Features/Simulation/PlayManager.cs#L313" "打开源码"
     C["RuntimeGroupBuilder.Rebuild()"]
     click C "../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L15" "打开源码"
     D["BlockGroupManager.GroupBlocks()"]
@@ -700,7 +700,7 @@ flowchart TD
     E["BlockConnections.CollectNeighbors()"]
     click E "../Assets/Scripts/Features/Simulation/BlockConnections.cs#L239" "打开源码"
     F["RuntimeGroupBuilder.RestoreGroupPhysics()"]
-    click F "../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L94" "打开源码"
+    click F "../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L95" "打开源码"
     G["ControlUnit.RefreshChildren()"]
     click G "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L160" "打开源码"
     H["PlayManager.FixedUpdate()"]
@@ -756,7 +756,7 @@ flowchart TD
 
 - [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L183)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
-- [PlayManager.AssignBlocksToParentGroups](../Assets/Scripts/Features/Simulation/PlayManager.cs#L312)
+- [PlayManager.AssignBlocksToParentGroups](../Assets/Scripts/Features/Simulation/PlayManager.cs#L313)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|AssignBlocksToParentGroups -->
 - [RuntimeGroupBuilder.Rebuild](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L15)
 <!-- source: Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs|Rebuild -->
@@ -764,7 +764,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/BlockGroupManager.cs|GroupBlocks -->
 - [BlockConnections.CollectNeighbors](../Assets/Scripts/Features/Simulation/BlockConnections.cs#L239)
 <!-- source: Assets/Scripts/Features/Simulation/BlockConnections.cs|CollectNeighbors -->
-- [RuntimeGroupBuilder.RestoreGroupPhysics](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L94)
+- [RuntimeGroupBuilder.RestoreGroupPhysics](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L95)
 <!-- source: Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs|RestoreGroupPhysics -->
 - [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L160)
 <!-- source: Assets/Scripts/Features/Simulation/ControlUnit.cs|RefreshChildren -->
@@ -985,7 +985,7 @@ flowchart TD
     E["ReturnStatusPanel.Clear()"]
     click E "../Assets/Scripts/Features/Presentation/ReturnStatusPanel.cs#L37" "打开源码"
     F["PlayManager.PlayEnd()"]
-    click F "../Assets/Scripts/Features/Simulation/PlayManager.cs#L281" "打开源码"
+    click F "../Assets/Scripts/Features/Simulation/PlayManager.cs#L282" "打开源码"
     G["GameManager.Init()"]
     click G "../Assets/Scripts/Features/Bootstrap/GameManager.cs#L20" "打开源码"
     A --> B
@@ -1006,7 +1006,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|CompletePlayEnd -->
 - [ReturnStatusPanel.Clear](../Assets/Scripts/Features/Presentation/ReturnStatusPanel.cs#L37)
 <!-- source: Assets/Scripts/Features/Presentation/ReturnStatusPanel.cs|Clear -->
-- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L281)
+- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L282)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
 - [GameManager.Init](../Assets/Scripts/Features/Bootstrap/GameManager.cs#L20)
 <!-- source: Assets/Scripts/Features/Bootstrap/GameManager.cs|Init -->
@@ -2551,7 +2551,7 @@ flowchart TD
     P["OutpostEncounterDirector.Hibernate()"]
     click P "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L293" "打开源码"
     Q["PlayManager.PlayEnd()"]
-    click Q "../Assets/Scripts/Features/Simulation/PlayManager.cs#L281" "打开源码"
+    click Q "../Assets/Scripts/Features/Simulation/PlayManager.cs#L282" "打开源码"
     R["EnemySpawner.EndPlayMode()"]
     click R "../Assets/Scripts/Features/Combat/EnemySpawner.cs#L57" "打开源码"
     A -->|普通模式| B
@@ -2604,7 +2604,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/EnemyIdentity.cs|SetSpawnMaxHealth -->
 - [OutpostEncounterDirector.Hibernate](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L293)
 <!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Hibernate -->
-- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L281)
+- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L282)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
 - [EnemySpawner.EndPlayMode](../Assets/Scripts/Features/Combat/EnemySpawner.cs#L57)
 <!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|EndPlayMode -->
@@ -3095,3 +3095,67 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/SiegeWaveDirector.cs|Stop -->
 - [SiegeHud.Restart](../Assets/Scripts/Features/Siege/SiegeHud.cs#L142)
 <!-- source: Assets/Scripts/Features/Siege/SiegeHud.cs|Restart -->
+
+## 阵地战性能观察与分项计时
+
+源码推导：采样器仅在Siege真实Play显式启动；Editor update观察推进的游戏帧，保留跳帧及游戏delta。连接遍历、物理组重建和完整刷新是嵌套累计CPU计时，不可相加。每秒一次场景查询本身有分配；停止Play或脚本重载会保存已取得的样本并解绑，报告不代表Player/GPU性能。
+
+```mermaid
+flowchart TD
+    A["SiegePerformanceCapture.StartCapture()"]
+    click A "../Assets/Editor/Siege/SiegePerformanceCapture.cs#L31" "打开源码"
+    B["SiegePerformanceCapture.Tick()"]
+    click B "../Assets/Editor/Siege/SiegePerformanceCapture.cs#L72" "打开源码"
+    C["SiegePerformanceCapture.TakeCensus()"]
+    click C "../Assets/Editor/Siege/SiegePerformanceCapture.cs#L101" "打开源码"
+    D["SiegePerformanceCapture.Finish()"]
+    click D "../Assets/Editor/Siege/SiegePerformanceCapture.cs#L133" "打开源码"
+    E["SimulationWorkMetrics.Measure()"]
+    click E "../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L30" "打开源码"
+    F["SimulationWorkMetrics.Read()"]
+    click F "../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L35" "打开源码"
+    G["BlockGroupManager.GroupBlocks()"]
+    click G "../Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L9" "打开源码"
+    H["RuntimeGroupBuilder.Rebuild()"]
+    click H "../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L15" "打开源码"
+    I["PlayManager.RefreshGroup()"]
+    click I "../Assets/Scripts/Features/Simulation/PlayManager.cs#L183" "打开源码"
+    J["SiegePerformanceCapture.BeforeReload()"]
+    click J "../Assets/Editor/Siege/SiegePerformanceCapture.cs#L182" "打开源码"
+    K["SiegeTopologyBaseline.Run()"]
+    click K "../Assets/Editor/Siege/SiegeTopologyBaseline.cs#L13" "打开源码"
+    A -.->|Editor update| B
+    B --> C
+    B --> F
+    B -->|超时或停止| D
+    J --> D
+    I --> E
+    I -->|经AssignBlocksToParentGroups| H
+    H --> E
+    H --> G
+    G --> E
+    K -->|隔离夹具重复同步调用| G
+```
+
+- [SiegePerformanceCapture.StartCapture](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L31)
+<!-- source: Assets/Editor/Siege/SiegePerformanceCapture.cs|StartCapture -->
+- [SiegePerformanceCapture.Tick](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L72)
+<!-- source: Assets/Editor/Siege/SiegePerformanceCapture.cs|Tick -->
+- [SiegePerformanceCapture.TakeCensus](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L101)
+<!-- source: Assets/Editor/Siege/SiegePerformanceCapture.cs|TakeCensus -->
+- [SiegePerformanceCapture.Finish](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L133)
+<!-- source: Assets/Editor/Siege/SiegePerformanceCapture.cs|Finish -->
+- [SimulationWorkMetrics.Measure](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L30)
+<!-- source: Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs|Measure -->
+- [SimulationWorkMetrics.Read](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L35)
+<!-- source: Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs|Read -->
+- [BlockGroupManager.GroupBlocks](../Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L9)
+<!-- source: Assets/Scripts/Features/Simulation/BlockGroupManager.cs|GroupBlocks -->
+- [RuntimeGroupBuilder.Rebuild](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L15)
+<!-- source: Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs|Rebuild -->
+- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L183)
+<!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
+- [SiegePerformanceCapture.BeforeReload](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L182)
+<!-- source: Assets/Editor/Siege/SiegePerformanceCapture.cs|BeforeReload -->
+- [SiegeTopologyBaseline.Run](../Assets/Editor/Siege/SiegeTopologyBaseline.cs#L13)
+<!-- source: Assets/Editor/Siege/SiegeTopologyBaseline.cs|Run -->

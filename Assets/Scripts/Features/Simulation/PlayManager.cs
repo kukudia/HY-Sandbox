@@ -189,6 +189,7 @@ public class PlayManager : MonoBehaviour
         }
 
         List<Block> blocks = unit.GetComponentsInChildren<Block>(true).Where(block => block != null && block.isActiveAndEnabled).ToList();
+        using SimulationWorkMetrics.Scope timing = SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.Refresh, blocks.Count);
         if (blocks.Count > 1)
         {
             AssignBlocksToParentGroups(blocks);
