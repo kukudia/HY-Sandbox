@@ -10,7 +10,7 @@ public class VisualEffectsManager : MonoBehaviour
     public bool enableRuntimeVfx = true;
     public bool enableSceneLook = true;
     [SerializeField, Tooltip("Log each destruction VFX request and its spawn result.")]
-    private bool _debugDestructionVfx = true;
+    private bool _debugDestructionVfx;
     public float cameraShakeStrength = 0.055f;
     public Color buildColor = new Color(0.2f, 0.95f, 1f, 1f);
     public Color removeColor = new Color(1f, 0.34f, 0.08f, 1f);

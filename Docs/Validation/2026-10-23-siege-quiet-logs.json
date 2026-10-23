@@ -1,0 +1,124 @@
+{
+    "methodology": "Synchronous Editor Play ABBA x2, 64 requests/batch, real production methods with effects disabled. Bare destruction excludes block health/topology and allocation of fixture objects. Logging callback and Editor stack traces included. Not Player, natural combat or end-to-end speedup.",
+    "passed": true,
+    "checks": [
+        "Siege auto-created diagnostics default off",
+        "disabled diagnostics emit no skipped-effect log",
+        "VFX diagnostics remain opt-in",
+        "VFX ABBA exact log count",
+        "VFX ABBA exact log count",
+        "VFX ABBA exact log count",
+        "VFX ABBA exact log count",
+        "VFX ABBA exact log count",
+        "VFX ABBA exact log count",
+        "VFX ABBA exact log count",
+        "VFX ABBA exact log count",
+        "destruction ABBA exact log count",
+        "destruction ABBA exact log count",
+        "destruction ABBA exact log count",
+        "destruction ABBA exact log count",
+        "destruction ABBA exact log count",
+        "destruction ABBA exact log count",
+        "destruction ABBA exact log count",
+        "destruction ABBA exact log count",
+        "fixture preserves real building"
+    ],
+    "samples": [
+        {
+            "path": "VFX disabled branch",
+            "enabled": false,
+            "calls": 64,
+            "milliseconds": 0.0022
+        },
+        {
+            "path": "VFX disabled branch",
+            "enabled": true,
+            "calls": 64,
+            "milliseconds": 7.6547
+        },
+        {
+            "path": "VFX disabled branch",
+            "enabled": true,
+            "calls": 64,
+            "milliseconds": 7.6416
+        },
+        {
+            "path": "VFX disabled branch",
+            "enabled": false,
+            "calls": 64,
+            "milliseconds": 0.0009
+        },
+        {
+            "path": "VFX disabled branch",
+            "enabled": false,
+            "calls": 64,
+            "milliseconds": 0.0007
+        },
+        {
+            "path": "VFX disabled branch",
+            "enabled": true,
+            "calls": 64,
+            "milliseconds": 7.2024
+        },
+        {
+            "path": "VFX disabled branch",
+            "enabled": true,
+            "calls": 64,
+            "milliseconds": 6.9145
+        },
+        {
+            "path": "VFX disabled branch",
+            "enabled": false,
+            "calls": 64,
+            "milliseconds": 0.0007
+        },
+        {
+            "path": "Bare object destruction; effects disabled",
+            "enabled": false,
+            "calls": 64,
+            "milliseconds": 1.4991
+        },
+        {
+            "path": "Bare object destruction; effects disabled",
+            "enabled": true,
+            "calls": 64,
+            "milliseconds": 8.1399
+        },
+        {
+            "path": "Bare object destruction; effects disabled",
+            "enabled": true,
+            "calls": 64,
+            "milliseconds": 7.8236
+        },
+        {
+            "path": "Bare object destruction; effects disabled",
+            "enabled": false,
+            "calls": 64,
+            "milliseconds": 0.3652
+        },
+        {
+            "path": "Bare object destruction; effects disabled",
+            "enabled": false,
+            "calls": 64,
+            "milliseconds": 0.3617
+        },
+        {
+            "path": "Bare object destruction; effects disabled",
+            "enabled": true,
+            "calls": 64,
+            "milliseconds": 7.6538
+        },
+        {
+            "path": "Bare object destruction; effects disabled",
+            "enabled": true,
+            "calls": 64,
+            "milliseconds": 7.1596
+        },
+        {
+            "path": "Bare object destruction; effects disabled",
+            "enabled": false,
+            "calls": 64,
+            "milliseconds": 0.3463
+        }
+    ]
+}

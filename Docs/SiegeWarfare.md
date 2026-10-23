@@ -58,6 +58,8 @@ Siege不加载主世界存档，不复制蓝图货物；部署使用新的单位
 
 ## 性能复现
 
+逐次毁伤日志使用DestroyManager的 `Debug Destruction` Inspector开关，新建默认关闭。VisualEffectsManager的既有 `Debug Destruction Vfx` 字段保留，但新建默认关闭；Main场景已序列化true保持不变。不开日志仍执行原视觉、销毁与重组链，不全局禁用Unity错误/警告或修改StackTrace设置。`SiegeDestructionLogChecks.Run()` 是部署阶段的隔离ABBA日志对照，临时关闭效果并恢复开关，不作为自然FPS证据。
+
 菜单 `Build Windows 2048-Module Profiling Player` 构建单独Development分析包到 `Builds/SiegeLargeProfiling`。它使用相同可编辑压力场景，不覆盖发布验证目录，不启用Deep Profiling或自动连接。显式profile诊断读取可用的引擎计时与GC计数（跨记录线程的合计），记录类别、单位、有效性、实际样本和缓冲覆盖窗口；读取后清空缓冲，避免把旧GC值重复算作新帧。缺失或没有新样本用-1表示。原生样本有发布延迟，嵌套/重叠阶段不能相加，也不能把worker合计当作主线程墙钟或GPU耗时；Development帧率不能与发布包直接比较。
 
 

@@ -869,9 +869,9 @@ flowchart TD
     G["Durability.ApplyCollisionEnergy()"]
     click G "../Assets/Scripts/Features/Combat/Durability.cs#L79" "打开源码"
     H["DestroyManager.DestroyGameObject()"]
-    click H "../Assets/Scripts/Features/Combat/DestroyManager.cs#L30" "打开源码"
+    click H "../Assets/Scripts/Features/Combat/DestroyManager.cs#L32" "打开源码"
     I["DestroyManager.ExplodeBlock()"]
-    click I "../Assets/Scripts/Features/Combat/DestroyManager.cs#L142" "打开源码"
+    click I "../Assets/Scripts/Features/Combat/DestroyManager.cs#L148" "打开源码"
     J["ExplosionPropagation.DisconnectBlocksInExplosionRange()"]
     click J "../Assets/Scripts/Features/Combat/ExplosionPropagation.cs#L9" "打开源码"
     K["PlayManager.RefreshGroup()"]
@@ -966,9 +966,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/CollisionDamageResolver.cs|ApplyContactDamage -->
 - [Durability.ApplyCollisionEnergy](../Assets/Scripts/Features/Combat/Durability.cs#L79)
 <!-- source: Assets/Scripts/Features/Combat/Durability.cs|ApplyCollisionEnergy -->
-- [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L30)
+- [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L32)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyGameObject -->
-- [DestroyManager.ExplodeBlock](../Assets/Scripts/Features/Combat/DestroyManager.cs#L142)
+- [DestroyManager.ExplodeBlock](../Assets/Scripts/Features/Combat/DestroyManager.cs#L148)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|ExplodeBlock -->
 - [ExplosionPropagation.DisconnectBlocksInExplosionRange](../Assets/Scripts/Features/Combat/ExplosionPropagation.cs#L9)
 <!-- source: Assets/Scripts/Features/Combat/ExplosionPropagation.cs|DisconnectBlocksInExplosionRange -->
@@ -1229,7 +1229,7 @@ flowchart TD
 
 ## 表现、镜头与 UI 生命周期
 
-游戏事件选择效果；临时表现自行按寿命释放。镜头取景是计算，输入及协程由 CameraController 持有。
+游戏事件选择效果；新建管理器的逐次毁伤/VFX日志默认关闭，既有序列化诊断选择保留，开关不阻止效果。临时表现自行按寿命释放。镜头取景是计算，输入及协程由 CameraController 持有。
 
 ```mermaid
 flowchart TD
@@ -2370,7 +2370,7 @@ flowchart TD
     M["OutpostEncounterDirector.Hibernate()"]
     click M "../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L293" "打开源码"
     N["DestroyManager.DestroyGameObject()"]
-    click N "../Assets/Scripts/Features/Combat/DestroyManager.cs#L30" "打开源码"
+    click N "../Assets/Scripts/Features/Combat/DestroyManager.cs#L32" "打开源码"
     O["EnemyIdentity.ReportDefeated()"]
     click O "../Assets/Scripts/Features/Combat/EnemyIdentity.cs#L9" "打开源码"
     P["OutpostEncounterDirector.Clear()"]
@@ -2427,7 +2427,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs|Spawn -->
 - [OutpostEncounterDirector.Hibernate](../Assets/Scripts/Features/World/OutpostEncounterDirector.cs#L293)
 <!-- source: Assets/Scripts/Features/World/OutpostEncounterDirector.cs|Hibernate -->
-- [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L30)
+- [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L32)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyGameObject -->
 - [EnemyIdentity.ReportDefeated](../Assets/Scripts/Features/Combat/EnemyIdentity.cs#L9)
 <!-- source: Assets/Scripts/Features/Combat/EnemyIdentity.cs|ReportDefeated -->
@@ -2813,7 +2813,7 @@ flowchart TD
     K["Durability.ApplyDamage()"]
     click K "../Assets/Scripts/Features/Combat/Durability.cs#L68" "打开源码"
     L["DestroyManager.DestroyGameObject()"]
-    click L "../Assets/Scripts/Features/Combat/DestroyManager.cs#L30" "打开源码"
+    click L "../Assets/Scripts/Features/Combat/DestroyManager.cs#L32" "打开源码"
     M["WreckSalvage.Convert()"]
     click M "../Assets/Scripts/Features/Salvage/WreckSalvage.cs#L10" "打开源码"
     N["CollectionBot.FixedUpdate()"]
@@ -2861,7 +2861,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/TurretHitResolver.cs|Apply -->
 - [Durability.ApplyDamage](../Assets/Scripts/Features/Combat/Durability.cs#L68)
 <!-- source: Assets/Scripts/Features/Combat/Durability.cs|ApplyDamage -->
-- [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L30)
+- [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L32)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyGameObject -->
 - [WreckSalvage.Convert](../Assets/Scripts/Features/Salvage/WreckSalvage.cs#L10)
 <!-- source: Assets/Scripts/Features/Salvage/WreckSalvage.cs|Convert -->
@@ -3121,7 +3121,7 @@ flowchart TD
     I["Durability.ChangeDurability()"]
     click I "../Assets/Scripts/Features/Combat/Durability.cs#L128" "打开源码"
     J["DestroyManager.DestroyGameObject()"]
-    click J "../Assets/Scripts/Features/Combat/DestroyManager.cs#L30" "打开源码"
+    click J "../Assets/Scripts/Features/Combat/DestroyManager.cs#L32" "打开源码"
     K["SiegeSession.NotifyCockpitDestroyed()"]
     click K "../Assets/Scripts/Features/Siege/SiegeSession.cs#L134" "打开源码"
     L["SiegeFleet.NotifyLost()"]
@@ -3180,7 +3180,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|ResolveAttacker -->
 - [Durability.ChangeDurability](../Assets/Scripts/Features/Combat/Durability.cs#L128)
 <!-- source: Assets/Scripts/Features/Combat/Durability.cs|ChangeDurability -->
-- [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L30)
+- [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L32)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyGameObject -->
 - [SiegeSession.NotifyCockpitDestroyed](../Assets/Scripts/Features/Siege/SiegeSession.cs#L134)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|NotifyCockpitDestroyed -->

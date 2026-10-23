@@ -7,6 +7,8 @@ public class DestroyManager : MonoBehaviour
 {
     // Centralizes destruction side effects so visuals, unit cleanup, and regrouping happen in a known order.
     public static DestroyManager instance;
+    [SerializeField, Tooltip("Emit per-object destruction diagnostics. Disabled by default to avoid stack traces and log I/O during large battles.")]
+    private bool _debugDestruction;
     private float _refreshDelay = 0.2f;
     private float _unitCleanupDelay = 10f;
     [SerializeField]
@@ -34,11 +36,15 @@ public class DestroyManager : MonoBehaviour
             return;
         }
 
-        Debug.Log($"{obj.name} durability reached 0, destroying object.");
         Durability health = obj.GetComponent<Durability>();
         if (health != null && !health.enabled)
         {
             return;
+        }
+
+        if (_debugDestruction)
+        {
+            Debug.Log($"{obj.name} durability reached 0, destroying object.");
         }
 
         if (health != null)
@@ -220,7 +226,11 @@ public class DestroyManager : MonoBehaviour
 
     private void ExecuteRefresh()
     {
-        Debug.Log($"Refreshing after {_destroyedCount} objects destroyed");
+        if (_debugDestruction)
+        {
+            Debug.Log($"Refreshing after {_destroyedCount} objects destroyed");
+        }
+
         _destroyedCount = 0;
     }
 }

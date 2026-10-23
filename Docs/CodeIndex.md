@@ -824,6 +824,15 @@
 | SiegeBuildingPowerProbe | [`void Tick()`](../Assets/Editor/Siege/SiegeBuildingPowerProbe.cs#L58) | private static |
 | SiegeBuildingPowerProbe | [`void Finish(string result)`](../Assets/Editor/Siege/SiegeBuildingPowerProbe.cs#L87) | private static |
 
+## Assets/Editor/Siege/SiegeDestructionLogChecks.cs
+
+// 职责：隔离检查销毁/VFX诊断默认值、可恢复开关及ABBA日志路径开销，不刺激自然战斗。 // 入口：Run()；禁用效果的同方法对照只测诊断路径，不代表交火帧率或真实爆炸成本。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeDestructionLogChecks | [`string Run()`](../Assets/Editor/Siege/SiegeDestructionLogChecks.cs#L15) | public static |
+| SiegeDestructionLogChecks | [`void Check(Report report, string name, bool passed)`](../Assets/Editor/Siege/SiegeDestructionLogChecks.cs#L118) | private static |
+
 ## Assets/Editor/Siege/SiegeFleetChecks.cs
 
 // 职责：在真实Play环境验证共用蓝图恢复、阵营与驾驶权隔离、AI接管及旧敌机入口。 // 入口：Run()；创建隔离舰艇，结束后停用并销毁，不保存玩家文件。
@@ -1996,16 +2005,16 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| DestroyManager | [`void Awake()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L25) | private |
-| DestroyManager | [`void DestroyGameObject(GameObject obj)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L30) | public |
-| DestroyManager | [`void ExplodeBlock(Block block)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L142) | public |
-| DestroyManager | [`void ScheduleUnitCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L179) | public |
-| DestroyManager | [`void ScheduleDistantGroupCleanup(ControlUnit unit, Transform reference, float maxDistance)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L184) | public |
-| DestroyManager | [`void EndSalvageSession()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L189) | public |
-| DestroyManager | [`void NotifyObjectDestroyed()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L197) | public |
-| DestroyManager | [`void ScheduleRefresh()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L203) | private |
-| DestroyManager | [`IEnumerator DelayedRefresh()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L214) | private |
-| DestroyManager | [`void ExecuteRefresh()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L221) | private |
+| DestroyManager | [`void Awake()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L27) | private |
+| DestroyManager | [`void DestroyGameObject(GameObject obj)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L32) | public |
+| DestroyManager | [`void ExplodeBlock(Block block)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L148) | public |
+| DestroyManager | [`void ScheduleUnitCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L185) | public |
+| DestroyManager | [`void ScheduleDistantGroupCleanup(ControlUnit unit, Transform reference, float maxDistance)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L190) | public |
+| DestroyManager | [`void EndSalvageSession()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L195) | public |
+| DestroyManager | [`void NotifyObjectDestroyed()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L203) | public |
+| DestroyManager | [`void ScheduleRefresh()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L209) | private |
+| DestroyManager | [`IEnumerator DelayedRefresh()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L220) | private |
+| DestroyManager | [`void ExecuteRefresh()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L227) | private |
 
 ## Assets/Scripts/Features/Combat/Durability.cs
 
