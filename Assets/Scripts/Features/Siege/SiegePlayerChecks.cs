@@ -21,6 +21,8 @@ public sealed class SiegePlayerChecks : MonoBehaviour
     private bool finished;
     private float started;
     private bool profileWork;
+    private bool driving;
+    private IEnumerator drivingWork;
     private SiegePlayerSurvey survey;
     private SiegeSession activeSession;
     private readonly Report report = new Report();
@@ -43,6 +45,7 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         checks.soak = Array.IndexOf(args, "-siege-checks-soak") >= 0;
         checks.capture = Array.IndexOf(args, "-siege-checks-capture") >= 0;
         checks.profileWork = Array.IndexOf(args, "-siege-checks-profile") >= 0;
+        checks.driving = Array.IndexOf(args, "-siege-checks-driving") >= 0;
         int seconds = Array.IndexOf(args, "-siege-checks-seconds");
         if (seconds >= 0 && seconds + 1 < args.Length && float.TryParse(args[seconds + 1], out float parsedSeconds))
         {
@@ -55,7 +58,7 @@ public sealed class SiegePlayerChecks : MonoBehaviour
             checks.shipCount = Mathf.Clamp(parsedShips, 2, 6);
         }
 
-        checks.report.mode = checks.soak ? "natural-soak" : "scripted-smoke";
+        checks.report.mode = checks.driving ? "scripted-driving" : checks.soak ? "natural-soak" : "scripted-smoke";
         checks.report.utc = DateTime.UtcNow.ToString("O");
         checks.report.development = Debug.isDebugBuild;
         checks.report.profilerEnabledAtStartup = UnityEngine.Profiling.Profiler.enabled;
@@ -109,6 +112,8 @@ public sealed class SiegePlayerChecks : MonoBehaviour
 
     private void OnDestroy()
     {
+        (drivingWork as IDisposable)?.Dispose();
+        drivingWork = null;
         survey?.Dispose();
         Application.logMessageReceived -= CaptureError;
     }
@@ -184,6 +189,27 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         Check(
             "combat keeps building anchored and rejects repair/deploy",
             session.Fleet.Base.Building.Anchored && !session.TryRepair(true) && !session.TryDeploy(0, out _));
+        if (driving)
+        {
+            Check("driving probe is independent from natural soak", !soak);
+            report.phase = "driving-input";
+            report.driving = new SiegeDrivingPlayerChecks.Report();
+            drivingWork = SiegeDrivingPlayerChecks.Run(session, Check, report.driving);
+            while (drivingWork.MoveNext())
+            {
+                yield return drivingWork.Current;
+            }
+
+            (drivingWork as IDisposable)?.Dispose();
+            drivingWork = null;
+            Check("virtual input devices and background behavior restored", report.driving.devicesRestored);
+            if (capture)
+            {
+                ScreenCapture.CaptureScreenshot(ImagePath("driving"));
+                yield return null;
+            }
+        }
+
         if (soak)
         {
             report.phase = "natural-combat";
@@ -255,6 +281,13 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         Check(
             "pilot loss transfers authority without ending match",
             session.Match.Phase == SiegePhase.Battle && session.Fleet.Driven != null && session.Fleet.Driven.Cockpit != driven);
+        if (driving)
+        {
+            Check(
+                "pilot death rebinds camera to replacement ship",
+                CameraController.instance.playerBody == session.Fleet.Driven.Unit.transform && session.Fleet.Driven.Unit.AcceptsPlayerInput);
+        }
+
         session.Fleet.Base.Core.canExplode = false;
         core.ApplyDamage(1000000f, null);
         Check(
@@ -310,6 +343,8 @@ public sealed class SiegePlayerChecks : MonoBehaviour
     private void Finish()
     {
         finished = true;
+        (drivingWork as IDisposable)?.Dispose();
+        drivingWork = null;
         survey?.Dispose();
         Application.logMessageReceived -= CaptureError;
         report.elapsedSeconds = Time.realtimeSinceStartup - started;
@@ -332,6 +367,7 @@ public sealed class SiegePlayerChecks : MonoBehaviour
     [Serializable]
     private sealed class Report
     {
+        public SiegeDrivingPlayerChecks.Report driving;
         public string methodology = "Explicit opt-in standalone Player. Scripted smoke uses forced real damage; natural soak only automates intermission repair and next-wave buttons. Once-per-second scene census perturbs timing. Frame deltas include rendering/scheduling, not isolated CPU or GPU time. Soak includes intermission and maintenance spikes. No comparison across unlike battles.";
         public string status = "running";
         public string mode;

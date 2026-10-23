@@ -1235,6 +1235,7 @@ def main():
             "S": "SiegePlayerSurvey.TakeCensus", "T": "SiegePlayerSurvey.KeepSlowFrame",
             "U": "SiegeEngineCounters.Read", "V": "SiegeEngineCounters.ReadCounter",
             "W": "SiegeEngineCounters.Dispose", "X": "SiegePlayerBuild.BuildLargeProfiling",
+            "Y": "SiegeDrivingPlayerChecks.Run", "Z": "SiegeSession.TryTakeControl",
         },
         [
             "A --> N", "L --> M", "L --> N", "N -.->|一次性Editor update| B", "C -.->|MonoBehaviour Update| D",
@@ -1243,6 +1244,7 @@ def main():
             "D -->|结束或异常| G", "F --> O", "O --> S", "S --> P",
             "O --> T", "G --> Q", "R --> Q", "O --> U", "U --> V",
             "Q --> W", "X --> N",
+            "E -.->|显式驾驶迭代器，finally恢复虚拟设备| Y", "Y -.->|真实HUD指针点击| Z",
         ],
     )
     graph(

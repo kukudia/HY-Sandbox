@@ -3149,6 +3149,16 @@
 | SiegeBase | [`void OnBlockDestroyed(Block block)`](../Assets/Scripts/Features/Siege/SiegeBase.cs#L123) | private |
 | SiegeBase | [`void Dispose()`](../Assets/Scripts/Features/Siege/SiegeBase.cs#L131) | public |
 
+## Assets/Scripts/Features/Siege/SiegeDrivingPlayerChecks.cs
+
+// 职责：显式Player验证通过虚拟Input System设备走键盘、HUD点击与真实飞行物理链。 // 入口：Run()；只由-siege-checks-driving调用，finally恢复设备与后台输入设置。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeDrivingPlayerChecks | [`IEnumerator Run(SiegeSession session, Action<string, bool> check, Report report)`](../Assets/Scripts/Features/Siege/SiegeDrivingPlayerChecks.cs#L15) | internal static |
+| SiegeDrivingPlayerChecks | [`Thruster[] DirectionalThrusters(ControlUnit unit)`](../Assets/Scripts/Features/Siege/SiegeDrivingPlayerChecks.cs#L186) | private static |
+| SiegeDrivingPlayerChecks | [`float HorizontalDistance(Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Siege/SiegeDrivingPlayerChecks.cs#L191) | private static |
+
 ## Assets/Scripts/Features/Siege/SiegeEngineCounters.cs
 
 // 职责：显式性能诊断时读取可用的引擎计时/GC计数，记录缺失和缓冲溢出，避免旧值冒充新帧。 // 入口：Read() / Dispose()；只读已完成样本并清空缓冲，跨帧发布延迟不保证与delta严格对齐。
@@ -3220,16 +3230,16 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegePlayerChecks | [`void Initialize()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L28) | private static |
-| SiegePlayerChecks | [`void Update()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L71) | private |
-| SiegePlayerChecks | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L92) | private |
-| SiegePlayerChecks | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L110) | private |
-| SiegePlayerChecks | [`IEnumerator Run()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L116) | private |
-| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L285) | private |
-| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L292) | private |
-| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L302) | private |
-| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L310) | private |
-| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L327) | private |
+| SiegePlayerChecks | [`void Initialize()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L30) | private static |
+| SiegePlayerChecks | [`void Update()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L74) | private |
+| SiegePlayerChecks | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L95) | private |
+| SiegePlayerChecks | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L113) | private |
+| SiegePlayerChecks | [`IEnumerator Run()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L121) | private |
+| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L318) | private |
+| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L325) | private |
+| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L335) | private |
+| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L343) | private |
+| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L362) | private |
 
 ## Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs
 

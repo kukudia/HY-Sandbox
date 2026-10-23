@@ -3257,15 +3257,15 @@ flowchart TD
     B["SiegePlayerBuild.BuildNow()"]
     click B "../Assets/Editor/Siege/SiegePlayerBuild.cs#L73" "打开源码"
     C["SiegePlayerChecks.Initialize()"]
-    click C "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L28" "打开源码"
+    click C "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L30" "打开源码"
     D["SiegePlayerChecks.Update()"]
-    click D "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L71" "打开源码"
+    click D "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L74" "打开源码"
     E["SiegePlayerChecks.Run()"]
-    click E "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L116" "打开源码"
+    click E "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L121" "打开源码"
     F["SiegePlayerChecks.LateUpdate()"]
-    click F "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L92" "打开源码"
+    click F "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L95" "打开源码"
     G["SiegePlayerChecks.Finish()"]
-    click G "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L310" "打开源码"
+    click G "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L343" "打开源码"
     H["SiegeSession.TryRepair()"]
     click H "../Assets/Scripts/Features/Siege/SiegeSession.cs#L101" "打开源码"
     I["SiegeSession.BeginNextWave()"]
@@ -3273,7 +3273,7 @@ flowchart TD
     J["SiegeSession.TryDeploy()"]
     click J "../Assets/Scripts/Features/Siege/SiegeSession.cs#L88" "打开源码"
     K["SiegePlayerChecks.CaptureError()"]
-    click K "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L302" "打开源码"
+    click K "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L335" "打开源码"
     L["SiegePlayerBuild.BuildStress()"]
     click L "../Assets/Editor/Siege/SiegePlayerBuild.cs#L22" "打开源码"
     M["SiegeStressAuthoring.Create()"]
@@ -3287,7 +3287,7 @@ flowchart TD
     Q["SiegePlayerSurvey.Dispose()"]
     click Q "../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L210" "打开源码"
     R["SiegePlayerChecks.OnDestroy()"]
-    click R "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L110" "打开源码"
+    click R "../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L113" "打开源码"
     S["SiegePlayerSurvey.TakeCensus()"]
     click S "../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L128" "打开源码"
     T["SiegePlayerSurvey.KeepSlowFrame()"]
@@ -3300,6 +3300,10 @@ flowchart TD
     click W "../Assets/Scripts/Features/Siege/SiegeEngineCounters.cs#L122" "打开源码"
     X["SiegePlayerBuild.BuildLargeProfiling()"]
     click X "../Assets/Editor/Siege/SiegePlayerBuild.cs#L42" "打开源码"
+    Y["SiegeDrivingPlayerChecks.Run()"]
+    click Y "../Assets/Scripts/Features/Siege/SiegeDrivingPlayerChecks.cs#L15" "打开源码"
+    Z["SiegeSession.TryTakeControl()"]
+    click Z "../Assets/Scripts/Features/Siege/SiegeSession.cs#L96" "打开源码"
     A --> N
     L --> M
     L --> N
@@ -3322,21 +3326,23 @@ flowchart TD
     U --> V
     Q --> W
     X --> N
+    E -.->|显式驾驶迭代器，finally恢复虚拟设备| Y
+    Y -.->|真实HUD指针点击| Z
 ```
 
 - [SiegePlayerBuild.Build](../Assets/Editor/Siege/SiegePlayerBuild.cs#L16)
 <!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|Build -->
 - [SiegePlayerBuild.BuildNow](../Assets/Editor/Siege/SiegePlayerBuild.cs#L73)
 <!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|BuildNow -->
-- [SiegePlayerChecks.Initialize](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L28)
+- [SiegePlayerChecks.Initialize](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L30)
 <!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|Initialize -->
-- [SiegePlayerChecks.Update](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L71)
+- [SiegePlayerChecks.Update](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L74)
 <!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|Update -->
-- [SiegePlayerChecks.Run](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L116)
+- [SiegePlayerChecks.Run](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L121)
 <!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|Run -->
-- [SiegePlayerChecks.LateUpdate](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L92)
+- [SiegePlayerChecks.LateUpdate](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L95)
 <!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|LateUpdate -->
-- [SiegePlayerChecks.Finish](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L310)
+- [SiegePlayerChecks.Finish](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L343)
 <!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|Finish -->
 - [SiegeSession.TryRepair](../Assets/Scripts/Features/Siege/SiegeSession.cs#L101)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|TryRepair -->
@@ -3344,7 +3350,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|BeginNextWave -->
 - [SiegeSession.TryDeploy](../Assets/Scripts/Features/Siege/SiegeSession.cs#L88)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|TryDeploy -->
-- [SiegePlayerChecks.CaptureError](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L302)
+- [SiegePlayerChecks.CaptureError](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L335)
 <!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|CaptureError -->
 - [SiegePlayerBuild.BuildStress](../Assets/Editor/Siege/SiegePlayerBuild.cs#L22)
 <!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|BuildStress -->
@@ -3358,7 +3364,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs|Classify -->
 - [SiegePlayerSurvey.Dispose](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L210)
 <!-- source: Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs|Dispose -->
-- [SiegePlayerChecks.OnDestroy](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L110)
+- [SiegePlayerChecks.OnDestroy](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L113)
 <!-- source: Assets/Scripts/Features/Siege/SiegePlayerChecks.cs|OnDestroy -->
 - [SiegePlayerSurvey.TakeCensus](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L128)
 <!-- source: Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs|TakeCensus -->
@@ -3372,6 +3378,10 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/SiegeEngineCounters.cs|Dispose -->
 - [SiegePlayerBuild.BuildLargeProfiling](../Assets/Editor/Siege/SiegePlayerBuild.cs#L42)
 <!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|BuildLargeProfiling -->
+- [SiegeDrivingPlayerChecks.Run](../Assets/Scripts/Features/Siege/SiegeDrivingPlayerChecks.cs#L15)
+<!-- source: Assets/Scripts/Features/Siege/SiegeDrivingPlayerChecks.cs|Run -->
+- [SiegeSession.TryTakeControl](../Assets/Scripts/Features/Siege/SiegeSession.cs#L96)
+<!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|TryTakeControl -->
 
 ## 阵地战性能观察与分项计时
 

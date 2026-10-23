@@ -58,6 +58,8 @@ Siege不加载主世界存档，不复制蓝图货物；部署使用新的单位
 
 ## 性能复现
 
+显式 `-siege-checks-driving` 与独立报告参数可执行真实Input System键鼠、HUD点击、推力与位移验证；不与soak混用。虚拟设备及后台输入设置在finally恢复。正常两舰87项、大型基地六舰91项结果见 [驾驶输入验证](Validation/2026-10-23-siege-driving.md)，不替代人工操控体验。
+
 短时战斗表现使用 `TransientEffectPool` 复用能量光束和点光源，闲置预算32/16，活动效果不裁剪；淡出和场景卸载负责释放。生命周期检查与大型基地自然回归见 [短时表现复用](Validation/2026-10-23-siege-transient.md)。
 
 建筑虚拟底座接触现在与规范邻接节点共用几何失效生命周期，另验证底座尺寸；复杂连接层级保持实时。`SiegeFoundationCacheChecks.Run()` 在全新Siege部署Play对照实时几何并恢复姿态。2048热底座判定及真实六舰回归边界见 [底座缓存](Validation/2026-10-23-siege-foundation.md)。
