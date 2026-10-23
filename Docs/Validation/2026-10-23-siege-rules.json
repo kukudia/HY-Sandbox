@@ -1,0 +1,23 @@
+{
+    "checks": [
+        "PASS deployment permits affordable refit only",
+        "PASS first wave starts exactly once",
+        "PASS active cap preserves unspawned tickets",
+        "PASS duplicate and invalid spawn ids cannot consume tickets",
+        "PASS one kill rewards once without early wave completion",
+        "PASS failed spawn leaves ticket available for retry",
+        "PASS disappeared unit clears wave without kill reward",
+        "PASS unknown deaths cannot manufacture income",
+        "PASS wave growth and repair gate",
+        "PASS wave2 ticket 0",
+        "PASS wave2 ticket 1",
+        "PASS wave2 ticket 2",
+        "PASS wave2 ticket 3",
+        "PASS completion reward is paid exactly once",
+        "PASS unlimited waves respect size cap",
+        "PASS base loss cancels pending spawns and all purchases",
+        "PASS late deaths cannot change defeated match economy",
+        "PASS large wave size remains positive",
+        "PASS invalid economy configuration is rejected"
+    ]
+}

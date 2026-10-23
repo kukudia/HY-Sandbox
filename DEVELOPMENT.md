@@ -1,5 +1,13 @@
 # HY-Sandbox 开发与审查入口
 
+## 2026-10-23 阵地战研究与实现（进行中）
+
+- 独立可编辑场景 `Assets/Scenes/Siege.unity` 已接入部署、唯一驾驶权、友方AI、无限波次/在场预算、金币维修、核心失败与重开。参数入口 `Assets/Siege/DefaultSiege.asset`，规则和使用方式见 [阵地战](Docs/SiegeWarfare.md)。
+- 维修恢复耐久及缺失模块，保留部署身份、复用存活断裂件并清空购买蓝图货物；占用泊位拒绝维修且不扣款。基地为单连通32模块，核心所在分量保持锚定，驾驶舰损失自动接管其他舰或观察基地。
+- 真实Editor规则19项、Main Play舰队31项/旧敌池6项、最新Siege Play闭环19项通过。初版场景首波自然交火完成；最新版基地的自然交火回归和大规模性能尚待执行。证据与准确边界见 [本次验证](Docs/Validation/2026-10-23-siege.md)。
+- 技术路线保留可编辑GameObject/复合刚体，下一阶段分别测量连接搜索与物理重组，再验证邻接图、破坏批处理及主体保留；尚未引入ECS或宣称Jobs加速。
+- 基线保留 `MainUIPanels.cs` 格式差异及Blocks.csv外部占用；不覆盖用户文件。夜班仅本地commit，不推送。
+
 ## 2026-10-20 DSH 敌机装甲、机动与弹道炮塔改版
 
 - 重做 `Blueprints/DSH_Enemies` 三份敌机蓝图：驾驶舱外围 8 个 2×2×2 方块封闭四侧四角、3×3 顶盖封闭上方，甲板作底面，驾驶舱六个面全部有装甲；顶盖安装 2 座 `ProjectileTurretDouble` + 2 座 `ProjectileTurretSingle`，并用两座冗余顶盖中继供电；两舷外挂 4/6/4 个 `UniversalThrusterBig` 吊舱。E02 增第四台发电机。三份均为原装 Prefab/CSV，未改生产 C#、AI、PID、Prefab、场景或 CSV。
@@ -375,10 +383,3 @@ ArtSource/VfxGraph和Blueprints下全部16份自有工具已明确职责/入口�
 ProjectileTurret发射后仅炮管模型沿炮口反向后退0.12m，0.04s快速后退、0.22s平滑恢复；参数和炮管引用在Inspector可编辑。LateUpdate独立于索敌与供电门控，停火继续复位，禁用立即恢复初始位置。单管/双管Prefab已通过Editor只补充引用，原其他参数保留，资产制作源同步。
 
 两个新炮塔的透明二维图重新渲染，并修正Single Sprite导入及真实建造条目Preview引用；Play实例确认两个图标都非空。菜单Refresh turret thumbnails只更新图标，不重新搭建炮塔。28条炮塔/后座检查、10条真实帧飞行/同步后座/停机复位检查通过；Unity编译、166脚本格式/函数图、dotnet build和diff检查通过（4个既有构建警告）。Main及炮弹材质的期间外部改动保留并排除本次提交。见 [验证记录](Docs/Validation/2026-10-11-turret-recoil-icons.json)。
-# 2026-10-23 阵地战研究与实现（进行中）
-
-- 目标与阶段验收见 [阵地战](Docs/SiegeWarfare.md)。先建立纯规则核心，再接入多舰部署/接管、友方AI、真实波次、金币维修和基地失守；后续以相同战斗场景验证拓扑及重组压力。
-- `SiegeMatch` 管理部署/战斗/整备/失败、生成名额和金币；生成成功才扣名额，同一敌机不重复结算，独立在场预算不改变无限波次目标。
-- `Cockpit.ControlMode` 与 `ControlUnit.AcceptsPlayerInput` 分离阵营/驾驶权，推进器与悬浮按键一致门控；自主友舰复用AI，物理重组保留驾驶舱状态。共用 `ModularUnitFactory` 恢复各阵营，旧敌机公开入口保留；组装冻结物理，结束后激活。Main真实Play的31项舰队检查与6项旧敌机池回归通过。
-- 真实Unity Editor导入并执行 `SiegeRulesChecks.Run()`：19项通过；这是规则检查，不是玩法、视觉或万块性能验收。
-- 开始基线：dotnet构建0错误/3项既有依赖警告；CodeReadability既有 `MainUIPanels.cs` 格式差异。保留用户Editor布局改动。本次仅本地提交、不推送。

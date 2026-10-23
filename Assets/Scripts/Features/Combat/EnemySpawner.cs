@@ -42,7 +42,7 @@ public class EnemySpawner : MonoBehaviour
     {
         spawnTimer = 0f;
         spawnAnchor = anchor;
-        if (PlayManager.instance == null || PlayManager.instance.WorldSession != null)
+        if (PlayManager.instance == null || PlayManager.instance.WorldSession != null || PlayManager.instance.SiegeSession != null)
         {
             return;
         }
@@ -60,7 +60,7 @@ public class EnemySpawner : MonoBehaviour
         spawnAnchor = null;
     }
 
-    internal bool IsAutomaticSpawningAllowed => PlayManager.instance != null && PlayManager.instance.playMode && PlayManager.instance.WorldSession == null;
+    internal bool IsAutomaticSpawningAllowed => PlayManager.instance != null && PlayManager.instance.playMode && PlayManager.instance.WorldSession == null && PlayManager.instance.SiegeSession == null;
 
     private void InitializeEnemyBlueprintPool()
     {

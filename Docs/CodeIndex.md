@@ -771,6 +771,15 @@
 | SiegeFleetChecks | [`string Run()`](../Assets/Editor/Siege/SiegeFleetChecks.cs#L12) | public static |
 | SiegeFleetChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeFleetChecks.cs#L108) | private static |
 
+## Assets/Editor/Siege/SiegePlayChecks.cs
+
+// 职责：在独立Siege真实Play中验证部署/接管、修缮身份与金币、驾驶舰死亡和基地失败。 // 入口：Run()；损伤/缺件/断裂为显式夹具，死亡走生产伤害链；不代表自然交火或性能测试。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegePlayChecks | [`string Run()`](../Assets/Editor/Siege/SiegePlayChecks.cs#L13) | public static |
+| SiegePlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegePlayChecks.cs#L140) | private static |
+
 ## Assets/Editor/Siege/SiegeRulesChecks.cs
 
 // 职责：验证阵地战阶段、波次预算和经济的边界；无需进入Play或读写玩家存档。 // 入口：Run() / 菜单 HY-Sandbox/Validation/Siege Rules。
@@ -780,6 +789,30 @@
 | SiegeRulesChecks | [`void RunFromMenu()`](../Assets/Editor/Siege/SiegeRulesChecks.cs#L11) | public static |
 | SiegeRulesChecks | [`string Run()`](../Assets/Editor/Siege/SiegeRulesChecks.cs#L17) | public static |
 | SiegeRulesChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeRulesChecks.cs#L117) | private static |
+
+## Assets/Editor/Siege/SiegeSceneAuthoring.cs
+
+// 职责：通过Unity API创建独立、可编辑的阵地战场景和默认配置，不重写Main场景或用户存档。 // 入口：Create() / Open()；已有场景不覆盖，泊位、UI、材质和波次配置均保存为真实资产。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeSceneAuthoring | [`void Create()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L20) | public static |
+| SiegeSceneAuthoring | [`void Open()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L78) | public static |
+| SiegeSceneAuthoring | [`void RegenerateDefaultBase()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L89) | public static |
+| SiegeSceneAuthoring | [`TextAsset CreateBaseBlueprint(bool replace = false)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L107) | private static |
+| SiegeSceneAuthoring | [`void AddModule(BlockDataList blueprint, string resource, Vector3 position)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L144) | private static |
+| SiegeSceneAuthoring | [`SiegeSettings CreateSettings(TextAsset baseBlueprint)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L163) | private static |
+| SiegeSceneAuthoring | [`void CreateManagers()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L208) | private static |
+| SiegeSceneAuthoring | [`void CreateEnvironment()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L224) | private static |
+| SiegeSceneAuthoring | [`Transform[] CreateDocks(Transform parent)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L247) | private static |
+| SiegeSceneAuthoring | [`Material MaterialAsset(string name, Color color)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L268) | private static |
+| SiegeSceneAuthoring | [`void CreateCamera()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L285) | private static |
+| SiegeSceneAuthoring | [`void CreateHud(SiegeSession session, SiegeSettings settings, int bays)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L302) | private static |
+| SiegeSceneAuthoring | [`RectTransform Panel( Transform parent, string name, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L466) | private static |
+| SiegeSceneAuthoring | [`Text Label( Transform parent, string text, float x, float y, float width, float height, int size)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L481) | private static |
+| SiegeSceneAuthoring | [`Button ActionButton( Transform parent, string name, string text, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L502) | private static |
+| SiegeSceneAuthoring | [`void Place(RectTransform rect, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L532) | private static |
+| SiegeSceneAuthoring | [`void SetArray(SerializedProperty property, Object[] values)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L540) | private static |
 
 ## Assets/Editor/World/OutpostContentAuthoring.cs
 
@@ -1770,14 +1803,14 @@
 | --- | --- | --- |
 | DestroyManager | [`void Awake()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L25) | private |
 | DestroyManager | [`void DestroyGameObject(GameObject obj)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L30) | public |
-| DestroyManager | [`void ExplodeBlock(Block block)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L136) | public |
-| DestroyManager | [`void ScheduleUnitCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L173) | public |
-| DestroyManager | [`void ScheduleDistantGroupCleanup(ControlUnit unit, Transform reference, float maxDistance)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L178) | public |
-| DestroyManager | [`void EndSalvageSession()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L183) | public |
-| DestroyManager | [`void NotifyObjectDestroyed()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L191) | public |
-| DestroyManager | [`void ScheduleRefresh()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L197) | private |
-| DestroyManager | [`IEnumerator DelayedRefresh()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L208) | private |
-| DestroyManager | [`void ExecuteRefresh()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L215) | private |
+| DestroyManager | [`void ExplodeBlock(Block block)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L142) | public |
+| DestroyManager | [`void ScheduleUnitCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L179) | public |
+| DestroyManager | [`void ScheduleDistantGroupCleanup(ControlUnit unit, Transform reference, float maxDistance)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L184) | public |
+| DestroyManager | [`void EndSalvageSession()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L189) | public |
+| DestroyManager | [`void NotifyObjectDestroyed()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L197) | public |
+| DestroyManager | [`void ScheduleRefresh()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L203) | private |
+| DestroyManager | [`IEnumerator DelayedRefresh()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L214) | private |
+| DestroyManager | [`void ExecuteRefresh()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L221) | private |
 
 ## Assets/Scripts/Features/Combat/Durability.cs
 
@@ -2857,6 +2890,47 @@
 | WreckSalvage | [`void Convert(Block block)`](../Assets/Scripts/Features/Salvage/WreckSalvage.cs#L10) | public static |
 | WreckSalvage | [`void ConvertGroup(ControlUnit unit)`](../Assets/Scripts/Features/Salvage/WreckSalvage.cs#L62) | public static |
 
+## Assets/Scripts/Features/Siege/SiegeFleet.cs
+
+// 职责：部署固定泊位舰队、保持唯一玩家驾驶权，并在波次边界切换舰队物理状态。 // 入口：CreateBase() / Deploy() / TakeControl() / SetCombatActive() / NotifyLost()。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeFleet | [`bool CreateBase(Transform anchor)`](../Assets/Scripts/Features/Siege/SiegeFleet.cs#L30) | public |
+| SiegeFleet | [`bool Deploy(int optionIndex, out string reason)`](../Assets/Scripts/Features/Siege/SiegeFleet.cs#L51) | public |
+| SiegeFleet | [`bool TakeControl(int slot)`](../Assets/Scripts/Features/Siege/SiegeFleet.cs#L99) | public |
+| SiegeFleet | [`void SetCombatActive(bool active)`](../Assets/Scripts/Features/Siege/SiegeFleet.cs#L132) | public |
+| SiegeFleet | [`void RefreshBindings()`](../Assets/Scripts/Features/Siege/SiegeFleet.cs#L168) | public |
+| SiegeFleet | [`bool NotifyLost(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/SiegeFleet.cs#L203) | public |
+| SiegeFleet | [`SiegeFleetEntry Create( TextAsset asset, string displayName, int price, Vector3 position, Quaternion rotation, bool isBase)`](../Assets/Scripts/Features/Siege/SiegeFleet.cs#L237) | private |
+| SiegeFleet | [`SiegeFleetEntry Spawn( BlockDataList blueprint, string id, string displayName, int price, Vector3 position, Quaternion rotation, bool isBase)`](../Assets/Scripts/Features/Siege/SiegeFleet.cs#L256) | private |
+| SiegeFleet | [`BlockDataList PrepareBlueprint(TextAsset asset, out string id)`](../Assets/Scripts/Features/Siege/SiegeFleet.cs#L293) | public static |
+| SiegeFleet | [`void Park(ControlUnit unit)`](../Assets/Scripts/Features/Siege/SiegeFleet.cs#L307) | private static |
+| SiegeFleet | [`void SetCamera(ControlUnit unit)`](../Assets/Scripts/Features/Siege/SiegeFleet.cs#L325) | private static |
+
+## Assets/Scripts/Features/Siege/SiegeFleetEntry.cs
+
+// 职责：持有一艘部署舰或基地的蓝图身份与驾驶舱引用；父物理组变化不改变舰艇身份。 // 入口：Unit / IsAlive；仅由SiegeFleet建立，维修按同一部署ID寻找原模块。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeFleetEntry | [`void MarkLost()`](../Assets/Scripts/Features/Siege/SiegeFleetEntry.cs#L66) | public |
+
+## Assets/Scripts/Features/Siege/SiegeHud.cs
+
+// 职责：绑定可编辑UGUI阵地战面板，低频显示金币、波次、核心耐久和舰队驾驶权。 // 入口：OnEnable()注册按钮，OnDisable()解绑；规则与修缮由SiegeSession执行。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeHud | [`void OnEnable()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L36) | private |
+| SiegeHud | [`void OnDisable()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L60) | private |
+| SiegeHud | [`void Update()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L80) | private |
+| SiegeHud | [`void PollCamera()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L114) | private |
+| SiegeHud | [`void StartWave()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L127) | private |
+| SiegeHud | [`void RepairCore()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L132) | private |
+| SiegeHud | [`void RepairShip()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L137) | private |
+| SiegeHud | [`void Restart()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L142) | private |
+
 ## Assets/Scripts/Features/Siege/SiegeMatch.cs
 
 // 职责：保存阵地战阶段、波次名额、金币和失败状态；不依赖场景对象或物理引擎。 // 入口：BeginNextWave() / RegisterAttacker() / ResolveAttacker() / TrySpend() / LoseBase()。 // 约束：生成成功才消耗名额；同一敌机只结算一次；维修和部署只能发生在整备阶段。
@@ -2870,6 +2944,57 @@
 | SiegeMatch | [`bool CanAfford(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L118) | public |
 | SiegeMatch | [`bool TrySpend(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L123) | public |
 | SiegeMatch | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L134) | public |
+
+## Assets/Scripts/Features/Siege/SiegeRefit.cs
+
+// 职责：执行部署前的静态蓝图与泊位检查；不创建对象、不扣金币、不读取WorldSession。 // 入口：IsClear()；后续可替换为更精确的空间索引而不改变经济逻辑。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeRefit | [`bool IsClear( BlockDataList blueprint, Vector3 position, Quaternion rotation, string ignoredUnitId, out string reason)`](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L9) | public static |
+| SiegeRefit | [`long Quote(SiegeFleetEntry entry, SiegeSettings settings)`](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L43) | public static |
+| SiegeRefit | [`bool Repair(SiegeFleetEntry entry, SiegeSession session, out string reason)`](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L75) | public static |
+| SiegeRefit | [`Dictionary<string, Block> CollectOwned(SiegeFleetEntry entry)`](../Assets/Scripts/Features/Siege/SiegeRefit.cs#L154) | private static |
+
+## Assets/Scripts/Features/Siege/SiegeSession.cs
+
+// 职责：托管阵地战会话生命周期、波次入口和基地失败；不改变现有Main WorldSession流程。 // 入口：Begin() / BeginNextWave() / End()；场景通过Inspector引用设置和泊位。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeSession | [`void Awake()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L28) | private |
+| SiegeSession | [`void Start()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L35) | private |
+| SiegeSession | [`bool Begin()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L45) | public |
+| SiegeSession | [`bool BeginNextWave()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L66) | public |
+| SiegeSession | [`bool TryDeploy(int optionIndex, out string reason)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L80) | public |
+| SiegeSession | [`bool TryTakeControl(int slot)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L88) | public |
+| SiegeSession | [`bool TryRepair(bool repairBase)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L93) | public |
+| SiegeSession | [`void End()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L101) | public |
+| SiegeSession | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L112) | public |
+| SiegeSession | [`void NotifyCockpitDestroyed(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L126) | public |
+| SiegeSession | [`void Update()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L134) | private |
+| SiegeSession | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L169) | private |
+| SiegeSession | [`void SetSimulationActive(bool active)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L175) | private |
+
+## Assets/Scripts/Features/Siege/SiegeSettings.cs
+
+// 职责：保存阵地战可编辑蓝图、经济、波次与部署预算；不持有运行中会话状态。 // 入口：CreateMatch()；由SiegeSession读取，场景制作工具创建默认配置资产。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeSettings | [`SiegeMatch CreateMatch()`](../Assets/Scripts/Features/Siege/SiegeSettings.cs#L46) | public |
+
+## Assets/Scripts/Features/Siege/SiegeWaveDirector.cs
+
+// 职责：在独立在场预算内按固定随机种子调度敌舰，并将真实死亡或移除结算给规则核心。 // 入口：Tick() / Stop()；死亡事件只记事实，由下一次Tick统一结算，避免事件中重入生成。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeWaveDirector | [`void Tick(float time)`](../Assets/Scripts/Features/Siege/SiegeWaveDirector.cs#L19) | public |
+| SiegeWaveDirector | [`void Stop()`](../Assets/Scripts/Features/Siege/SiegeWaveDirector.cs#L75) | public |
+| Attacker | [`void OnDefeated()`](../Assets/Scripts/Features/Siege/SiegeWaveDirector.cs#L105) | private |
+| Attacker | [`void RefreshTarget(ControlUnit core)`](../Assets/Scripts/Features/Siege/SiegeWaveDirector.cs#L110) | public |
+| Attacker | [`void Unsubscribe()`](../Assets/Scripts/Features/Siege/SiegeWaveDirector.cs#L123) | public |
 
 ## Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs
 
@@ -2944,7 +3069,8 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Cockpit | [`void SetControlMode(UnitControlMode mode)`](../Assets/Scripts/Features/Simulation/Cockpit.cs#L17) | public |
+| Cockpit | [`void SetControlMode(UnitControlMode mode)`](../Assets/Scripts/Features/Simulation/Cockpit.cs#L20) | public |
+| Cockpit | [`void SetAnchored(bool value)`](../Assets/Scripts/Features/Simulation/Cockpit.cs#L25) | public |
 
 ## Assets/Scripts/Features/Simulation/ControlUnit.cs
 
@@ -3026,21 +3152,22 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| PlayManager | [`void Awake()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L54) | private |
-| PlayManager | [`void FixedUpdate()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L59) | private |
-| PlayManager | [`void PlayStart()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L87) | public |
-| PlayManager | [`bool CanStartPlay(out string reason)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L135) | public |
-| PlayManager | [`void RefreshGroup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L170) | public |
-| PlayManager | [`void SetPlayMode(bool lockView)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L197) | public |
-| PlayManager | [`void CalculateVelocity()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L205) | private |
-| PlayManager | [`void HandleSelection()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L214) | private |
-| PlayManager | [`void SelectBlock(Block block)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L243) | private |
-| PlayManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L262) | public |
-| PlayManager | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L268) | public |
-| PlayManager | [`void AssignBlocksToParentGroups(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L299) | public |
-| PlayManager | [`void RegisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L315) | public |
-| PlayManager | [`void UnregisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L329) | public |
-| PlayManager | [`IReadOnlyList<ControlUnit> GetControlUnits()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L337) | public |
+| PlayManager | [`void BindSiege(SiegeSession session)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L21) | public |
+| PlayManager | [`void Awake()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L63) | private |
+| PlayManager | [`void FixedUpdate()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L68) | private |
+| PlayManager | [`void PlayStart()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L100) | public |
+| PlayManager | [`bool CanStartPlay(out string reason)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L148) | public |
+| PlayManager | [`void RefreshGroup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L183) | public |
+| PlayManager | [`void SetPlayMode(bool lockView)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L210) | public |
+| PlayManager | [`void CalculateVelocity()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L218) | private |
+| PlayManager | [`void HandleSelection()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L227) | private |
+| PlayManager | [`void SelectBlock(Block block)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L256) | private |
+| PlayManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L275) | public |
+| PlayManager | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L281) | public |
+| PlayManager | [`void AssignBlocksToParentGroups(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L312) | public |
+| PlayManager | [`void RegisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L328) | public |
+| PlayManager | [`void UnregisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L342) | public |
+| PlayManager | [`IReadOnlyList<ControlUnit> GetControlUnits()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L350) | public |
 
 ## Assets/Scripts/Features/Simulation/Rack.cs
 
@@ -3055,8 +3182,8 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | RuntimeGroupBuilder | [`void Rebuild(List<Block> blocks, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L15) | internal |
-| RuntimeGroupBuilder | [`Dictionary<Block, Rigidbody> CaptureSourceBodies(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L68) | private static |
-| RuntimeGroupBuilder | [`void RestoreGroupPhysics( Rigidbody targetBody, List<Block> group, Dictionary<Block, Rigidbody> sourceBodies, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L88) | private static |
+| RuntimeGroupBuilder | [`Dictionary<Block, Rigidbody> CaptureSourceBodies(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L74) | private static |
+| RuntimeGroupBuilder | [`void RestoreGroupPhysics( Rigidbody targetBody, List<Block> group, Dictionary<Block, Rigidbody> sourceBodies, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L94) | private static |
 
 ## Assets/Scripts/Features/Simulation/RuntimeGroupCleanup.cs
 

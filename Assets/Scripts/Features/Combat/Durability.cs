@@ -132,6 +132,13 @@ public class Durability : MonoBehaviour
             return;
         }
 
+        ControlUnit owner = value < 0f ? GetComponentInParent<ControlUnit>() : null;
+        SiegeSession siege = owner != null && PlayManager.instance != null ? PlayManager.instance.SiegeSession : null;
+        if (siege != null && siege.Match != null && siege.Match.Phase != SiegePhase.Battle)
+        {
+            return;
+        }
+
         currentDurability += value;
         if (currentDurability > maxDurability)
         {

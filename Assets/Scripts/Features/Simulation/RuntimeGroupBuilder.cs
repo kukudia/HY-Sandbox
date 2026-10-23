@@ -25,12 +25,14 @@ internal sealed class RuntimeGroupBuilder
             GameObject groupParent = Object.Instantiate(parentPrefab, BlockGroupManager.CalculateGroupCenter(group), Quaternion.identity);
             groupParent.name = $"Group_{groupIndex++}";
             float mass = 0f;
+            bool anchored = false;
             ControlUnit groupControl = groupParent.GetComponent<ControlUnit>();
             foreach (Block block in group)
             {
                 Cockpit cockpit = block.GetComponent<Cockpit>();
                 if (cockpit != null)
                 {
+                    anchored |= cockpit.Anchored;
                     groupControl.faction = cockpit.faction;
                     if (cockpit.faction == UnitFaction.Player && cockpit.ControlMode == UnitControlMode.Player)
                     {
@@ -53,8 +55,12 @@ internal sealed class RuntimeGroupBuilder
             body.linearDamping = Mathf.Max(0f, settings.LinearDamping);
             body.angularDamping = Mathf.Max(0f, settings.AngularDamping);
             body.maxDepenetrationVelocity = Mathf.Max(0f, settings.MaxDepenetrationVelocity);
-            body.isKinematic = false;
-            RestoreGroupPhysics(body, group, sourceBodies, settings);
+            body.isKinematic = anchored;
+            if (!anchored)
+            {
+                RestoreGroupPhysics(body, group, sourceBodies, settings);
+            }
+
             groupControl.RefreshChildren();
             groupControl.AssignRuntimeOwnershipToBlocks(false);
         }

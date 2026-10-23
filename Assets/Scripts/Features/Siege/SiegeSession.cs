@@ -1,0 +1,195 @@
+// 职责：托管阵地战会话生命周期、波次入口和基地失败；不改变现有Main WorldSession流程。
+// 入口：Begin() / BeginNextWave() / End()；场景通过Inspector引用设置和泊位。
+using UnityEngine;
+
+public sealed class SiegeSession : MonoBehaviour
+{
+    [SerializeField]
+    private SiegeSettings settings;
+    [SerializeField]
+    private Transform baseDock;
+    [SerializeField]
+    private Transform[] shipDocks = new Transform[4];
+    private SiegeWaveDirector waves;
+    private bool previousBackground;
+    private SiegePhase previousPhase;
+    public string Status { get; private set; } = "Deploy a fleet, then begin the first wave.";
+    public SiegeSettings Settings => settings;
+    public SiegeMatch Match
+    {
+        get; private set;
+    }
+    public SiegeFleet Fleet
+    {
+        get; private set;
+    }
+    public bool IsRunning => Match != null && Match.Phase != SiegePhase.Defeat;
+
+    private void Awake()
+    {
+        previousBackground = Application.runInBackground;
+        Application.runInBackground = true;
+        PlayManager.instance?.BindSiege(this);
+    }
+
+    private void Start()
+    {
+        PlayManager.instance.BindSiege(this);
+        if (!Begin())
+        {
+            Status = "Siege setup failed. Check the scene configuration.";
+            Debug.LogError(Status);
+        }
+    }
+
+    public bool Begin()
+    {
+        if (settings == null || baseDock == null || shipDocks == null || shipDocks.Length == 0 || System.Array.Exists(shipDocks, dock => dock == null) || Match != null)
+        {
+            return false;
+        }
+
+        Match = settings.CreateMatch();
+        Fleet = new SiegeFleet(this, shipDocks);
+        if (!Fleet.CreateBase(baseDock))
+        {
+            Match = null;
+            return false;
+        }
+
+        waves = new SiegeWaveDirector(this);
+        previousPhase = Match.Phase;
+        PlayManager.instance.playMode = false;
+        return true;
+    }
+
+    public bool BeginNextWave()
+    {
+        if (!IsRunning || !Match.BeginNextWave())
+        {
+            return false;
+        }
+
+        Fleet.SetCombatActive(true);
+        SetSimulationActive(true);
+        previousPhase = SiegePhase.Battle;
+        Status = "Wave " + Match.Wave + " incoming. Protect the base core.";
+        return true;
+    }
+
+    public bool TryDeploy(int optionIndex, out string reason)
+    {
+        reason = "The siege is not ready.";
+        bool deployed = Fleet != null && Fleet.Deploy(optionIndex, out reason);
+        Status = reason;
+        return deployed;
+    }
+
+    public bool TryTakeControl(int slot)
+    {
+        return Fleet != null && Fleet.TakeControl(slot);
+    }
+
+    public bool TryRepair(bool repairBase)
+    {
+        string reason = "The siege is not ready.";
+        bool repaired = Fleet != null && SiegeRefit.Repair(repairBase ? Fleet.Base : Fleet.Driven, this, out reason);
+        Status = reason;
+        return repaired;
+    }
+
+    public void End()
+    {
+        waves?.Stop();
+        Fleet?.SetCombatActive(false);
+        Match?.LoseBase();
+        if (PlayManager.instance != null)
+        {
+            SetSimulationActive(false);
+        }
+    }
+
+    public void LoseBase()
+    {
+        if (Match == null)
+        {
+            return;
+        }
+
+        Match.LoseBase();
+        waves?.Stop();
+        Fleet?.SetCombatActive(false);
+        SetSimulationActive(false);
+        Status = "Base core lost. The siege is over.";
+    }
+
+    public void NotifyCockpitDestroyed(Cockpit cockpit)
+    {
+        if (Fleet != null && Fleet.NotifyLost(cockpit))
+        {
+            LoseBase();
+        }
+    }
+
+    private void Update()
+    {
+        if (!IsRunning)
+        {
+            return;
+        }
+
+        if (!Fleet.Base.IsAlive)
+        {
+            LoseBase();
+            return;
+        }
+
+        Fleet.RefreshBindings();
+        waves.Tick(Time.time);
+        if (previousPhase == SiegePhase.Battle && Match.Phase == SiegePhase.Intermission)
+        {
+            SetSimulationActive(false);
+            Fleet.SetCombatActive(false);
+            Status = "Wave cleared. Repair and reinforce before the next attack.";
+        }
+
+        previousPhase = Match.Phase;
+        ControlUnit core = Fleet.Base?.Unit;
+        if (core != null)
+        {
+            core.GetComponent<Rigidbody>().isKinematic = true;
+            EnemyController ai = core.GetComponent<EnemyController>();
+            if (ai != null)
+            {
+                ai.enabled = false;
+            }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        waves?.Stop();
+        Application.runInBackground = previousBackground;
+    }
+
+    private void SetSimulationActive(bool active)
+    {
+        PlayManager.instance.playMode = active;
+        foreach (ControlUnit unit in ControlUnit.RuntimeUnits)
+        {
+            if (unit == null || unit.gameObject.scene != gameObject.scene)
+            {
+                continue;
+            }
+
+            Rigidbody body = unit.GetComponent<Rigidbody>();
+            if (!active && !body.isKinematic)
+            {
+                body.linearVelocity = Vector3.zero;
+                body.angularVelocity = Vector3.zero;
+            }
+
+            body.isKinematic = !active || (unit.cockpit != null && unit.cockpit.Anchored);
+        }
+    }
+}

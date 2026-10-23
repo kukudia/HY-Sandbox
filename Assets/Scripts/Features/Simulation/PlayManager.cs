@@ -14,6 +14,15 @@ public class PlayManager : MonoBehaviour
     private WorldSessionManager worldSession;
     public WorldSessionManager WorldSession => worldSession;
 
+    [SerializeField]
+    private SiegeSession siegeSession;
+    public SiegeSession SiegeSession => siegeSession;
+
+    public void BindSiege(SiegeSession session)
+    {
+        siegeSession = session;
+    }
+
     public bool playMode = false;
     public Transform blocksParent;
     public Camera mainCamera;
@@ -80,7 +89,11 @@ public class PlayManager : MonoBehaviour
         //    lockView = !lockView;
         //    SetPlayMode();
         //}
-        HandleSelection();
+        if (siegeSession == null)
+        {
+            HandleSelection();
+        }
+
         CalculateVelocity();
     }
 

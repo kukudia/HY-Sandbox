@@ -1126,7 +1126,7 @@ def main():
     )
     graph(
         "阵地战阶段与经济规则",
-        "源码推导：独立规则核心仅在部署和整备阶段允许支出。实际生成成功才登记敌机并消耗名额；登记ID去重，敌机结算一次，最后一个名额完成后发放整波奖励。基地失败清除名额并封锁后续操作。当前图不表示场景、AI或维修已经接入。",
+        "源码推导：独立规则核心仅在部署和整备阶段允许支出。实际生成成功才登记敌机并消耗名额；登记ID去重，敌机结算一次，最后一个名额完成后发放整波奖励。基地失败清除名额并封锁后续操作。场景执行与驾驶链见后续阵地战图。",
         {
             "A": "SiegeMatch.BeginNextWave",
             "B": "SiegeMatch.CanSpawn",
@@ -1141,6 +1141,42 @@ def main():
             "C -.->|等待死亡或移除结算| D", "D -.->|整备后可开始下一波| A",
             "E -.->|仅部署或整备| A", "F -.->|失败后拒绝| A",
             "G -->|规则检查| A", "G --> E", "G --> F",
+        ],
+    )
+    graph(
+        "阵地战部署、驾驶与修缮",
+        "源码推导：独立Siege场景Start创建基地，HUD按钮调用部署和接管。部署蓝图清空货仓快照并赋予部署ID，只有成功生成才扣费；驾驶权保存在Cockpit，父物理组改变后重新绑定AI守卫与镜头。整备修缮将同源断裂模块复用并恢复泊位姿态，缺件从空载蓝图补回；先检查完整泊位与报价，完成后扣费。不写玩家蓝图。",
+        {
+            "A": "SiegeSession.Start", "B": "SiegeSession.Begin", "C": "SiegeFleet.CreateBase",
+            "D": "SiegeSession.TryDeploy", "E": "SiegeFleet.Deploy", "F": "ModularUnitFactory.Spawn",
+            "G": "SiegeFleet.TakeControl", "H": "Cockpit.SetControlMode", "I": "ControlUnit.Update",
+            "J": "EnemyController.FixedUpdate", "K": "SiegeFleet.RefreshBindings",
+            "L": "SiegeSession.TryRepair", "M": "SiegeRefit.Repair", "N": "SiegeRefit.IsClear",
+            "O": "SiegeMatch.TrySpend", "P": "SiegeHud.OnEnable",
+        },
+        [
+            "A --> B", "B --> C", "C -->|经Spawn| F", "P -.->|按钮监听| D", "D --> E",
+            "E -->|经Spawn| F", "E --> O", "P -.->|接管按钮| G", "G --> H",
+            "H -.->|门控玩家输入| I", "H -.->|门控自主驾驶| J", "K -.->|新组的AI与镜头| J",
+            "P -.->|修缮按钮经RepairCore/Ship| L", "L --> M", "M --> N", "M --> O",
+        ],
+    )
+    graph(
+        "阵地战波次、伤害与失败",
+        "源码推导：波次开始启用物理；会话Update串行处理生成预算和真实死亡事件。敌舰Defeated只记事实，后续Tick一次性结算。最后一敌舰结算进入整备并冻结模拟；非战斗阶段拒绝伤害。驾驶舰死亡接管其他舰艇，无舰则观察基地；核心丢失终止波次。销毁会话解绑敌舰事件并恢复后台设置，重开通过实际SceneManager重载。",
+        {
+            "A": "SiegeSession.BeginNextWave", "B": "SiegeMatch.BeginNextWave", "C": "SiegeSession.SetSimulationActive",
+            "D": "SiegeSession.Update", "E": "SiegeWaveDirector.Tick", "F": "EnemyBlueprintFactory.Spawn",
+            "G": "EnemyIdentity.ReportDefeated", "H": "SiegeMatch.ResolveAttacker",
+            "I": "Durability.ChangeDurability", "J": "DestroyManager.DestroyGameObject",
+            "K": "SiegeSession.NotifyCockpitDestroyed", "L": "SiegeFleet.NotifyLost", "M": "SiegeSession.LoseBase",
+            "N": "SiegeSession.OnDestroy", "O": "SiegeWaveDirector.Stop", "P": "SiegeHud.Restart",
+        },
+        [
+            "A --> B", "A --> C", "D --> E", "E --> F", "E --> H",
+            "G -.->|Attacker事件标记后由Tick读取| E", "D -->|波次结束| C",
+            "I --> J", "J --> G", "J --> K", "K --> L", "K -->|基地核心丢失| M",
+            "M --> C", "M --> O", "N --> O", "P -.->|场景重载销毁旧会话| N",
         ],
     )
     doc = """# HY-Sandbox 运行时函数图

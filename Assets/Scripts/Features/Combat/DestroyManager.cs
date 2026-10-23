@@ -112,6 +112,12 @@ public class DestroyManager : MonoBehaviour
 
         if (cockpit != null)
         {
+            bool siegeOwnsDeath = PlayManager.instance.SiegeSession != null;
+            if (siegeOwnsDeath)
+            {
+                PlayManager.instance.SiegeSession.NotifyCockpitDestroyed(cockpit);
+            }
+
             if (ownerFaction == UnitFaction.Enemy && health != null && health.LastAttacker != null && health.LastAttacker.faction == UnitFaction.Player && unit != null)
             {
                 EnemyIdentity identity = cockpit.GetComponent<EnemyIdentity>();
@@ -119,7 +125,7 @@ public class DestroyManager : MonoBehaviour
             }
 
             Destroy(obj);
-            if (ownerFaction == UnitFaction.Player && PlayManager.instance.playMode)
+            if (ownerFaction == UnitFaction.Player && PlayManager.instance.playMode && !siegeOwnsDeath)
             {
                 //MainUIPanels.instance.PlayEnd();
                 MainUIPanels.instance.PlayerDeath();
