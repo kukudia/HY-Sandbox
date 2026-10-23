@@ -505,6 +505,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   faction: 0
+  controlMode: 0
+  anchored: 0
 --- !u!114 &4577899561302236958
 MonoBehaviour:
   m_ObjectHideFlags: 0
