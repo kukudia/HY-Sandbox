@@ -12,20 +12,44 @@ public static class SiegePlayerBuild
 {
     public const string Output = "Builds/SiegeValidation/HY-Sandbox.exe";
     public const string StatusPath = "Temp/Siege/player-build.txt";
+    private static bool pending;
     [MenuItem("HY-Sandbox/Siege/Build Windows Validation Player")]
     public static void Build()
     {
-        if (EditorApplication.isPlaying || UnityEngine.SceneManagement.SceneManager.GetActiveScene().isDirty || BuildPipeline.isBuildingPlayer)
+        Schedule(SiegeSceneAuthoring.ScenePath, Output, StatusPath);
+    }
+
+    [MenuItem("HY-Sandbox/Siege/Build Windows Stress Player")]
+    public static void BuildStress()
+    {
+        SiegeStressAuthoring.Create();
+        Schedule(
+            SiegeStressAuthoring.ScenePath,
+            "Builds/SiegeStress/HY-Sandbox.exe",
+            "Temp/Siege/stress-player-build.txt");
+    }
+
+    private static void Schedule(string scene, string output, string statusPath)
+    {
+        if (pending || EditorApplication.isPlaying || UnityEngine.SceneManagement.SceneManager.GetActiveScene().isDirty || BuildPipeline.isBuildingPlayer)
         {
             throw new InvalidOperationException("Save the scene and leave Play before building.");
         }
 
         Directory.CreateDirectory("Temp/Siege");
-        File.WriteAllText(StatusPath, "Scheduled");
-        EditorApplication.delayCall += BuildNow;
+        File.WriteAllText(statusPath, "Scheduled");
+        pending = true;
+        // Unfocused Editor windows may defer delayCall indefinitely during unattended validation.
+        EditorApplication.CallbackFunction build = null;
+        build = () =>
+        {
+            EditorApplication.update -= build;
+            BuildNow(scene, output, statusPath);
+        };
+        EditorApplication.update += build;
     }
 
-    private static void BuildNow()
+    private static void BuildNow(string scene, string output, string statusPath)
     {
         try
         {
@@ -34,16 +58,20 @@ public static class SiegePlayerBuild
                 throw new InvalidOperationException("Validation requires the configured Windows D3D11 backend.");
             }
 
-            File.WriteAllText(StatusPath, "Building");
-            BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = new[] { SiegeSceneAuthoring.ScenePath }, locationPathName = Output, target = BuildTarget.StandaloneWindows64, options = BuildOptions.None });
+            File.WriteAllText(statusPath, "Building");
+            BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = new[] { scene }, locationPathName = output, target = BuildTarget.StandaloneWindows64, options = BuildOptions.None });
             File.WriteAllText(
-                StatusPath,
-                $"{report.summary.result}; errors={report.summary.totalErrors}; warnings={report.summary.totalWarnings}; seconds={report.summary.totalTime.TotalSeconds:F2}; bytes={report.summary.totalSize}; output={Output}");
+                statusPath,
+                $"{report.summary.result}; errors={report.summary.totalErrors}; warnings={report.summary.totalWarnings}; seconds={report.summary.totalTime.TotalSeconds:F2}; bytes={report.summary.totalSize}; output={output}; scene={scene}");
         }
         catch (Exception error)
         {
-            File.WriteAllText(StatusPath, "Failed: " + error);
+            File.WriteAllText(statusPath, "Failed: " + error);
             Debug.LogException(error);
+        }
+        finally
+        {
+            pending = false;
         }
     }
 }

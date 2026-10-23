@@ -110,6 +110,9 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         Check(
             "Siege scene and session started in Player",
             session?.Match != null && session.Match.Phase == SiegePhase.Deployment);
+        report.profile = session.Settings.name;
+        report.initialCoins = session.Match.Coins;
+        report.requestedShips = shipCount;
         Check(
             "large building base has independent core and no cockpit",
             session.Fleet.Base.Building.Blocks.Count == 388 && session.Fleet.Base.Unit.Building != null && !session.Fleet.Base.Unit.HasAnyCockpit && session.Fleet.Base.IsAlive);
@@ -145,6 +148,8 @@ public sealed class SiegePlayerChecks : MonoBehaviour
             Check("deploy ship " + index, session.TryDeploy(index % session.Settings.Ships.Length, out _));
         }
 
+        report.deployedShips = session.Fleet.Ships.Count(ship => ship != null && ship.IsAlive);
+        Check("requested fleet deployed exactly", report.deployedShips == shipCount);
         Check("switch player to second ship", session.TryTakeControl(1));
         Check(
             "one manual driver and remaining ships autonomous",
@@ -162,6 +167,7 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         }
 
         Check("begin first wave", session.BeginNextWave());
+        int firstWaveAttackers = session.Match.PendingAttackers + session.Match.ActiveAttackers;
         Check(
             "combat keeps building anchored and rejects repair/deploy",
             session.Fleet.Base.Building.Anchored && !session.TryRepair(true) && !session.TryDeploy(0, out _));
@@ -229,7 +235,7 @@ public sealed class SiegePlayerChecks : MonoBehaviour
 
         Check(
             "real enemy deaths resolve wave and award coins",
-            session.Match.Phase == SiegePhase.Intermission && session.Match.DefeatedAttackers == 2);
+            session.Match.Phase == SiegePhase.Intermission && session.Match.DefeatedAttackers == firstWaveAttackers);
         Check("second wave starts from intermission", session.BeginNextWave());
         Cockpit driven = session.Fleet.Driven.Cockpit;
         driven.GetComponent<Durability>().ApplyDamage(1000000f, null);
@@ -315,6 +321,10 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         public string methodology = "Explicit opt-in standalone Player. Scripted smoke uses forced real damage; natural soak only automates intermission repair and next-wave buttons. Once-per-second scene census perturbs timing. Frame deltas include rendering/scheduling, not isolated CPU or GPU time. Soak includes intermission and maintenance spikes. No comparison across unlike battles.";
         public string status = "running";
         public string mode;
+        public string profile;
+        public long initialCoins;
+        public int requestedShips;
+        public int deployedShips;
         public string phase;
         public string utc;
         public string unity;

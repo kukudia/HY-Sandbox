@@ -1213,10 +1213,11 @@ def main():
             "E": "SiegePlayerChecks.Run", "F": "SiegePlayerChecks.LateUpdate",
             "G": "SiegePlayerChecks.Finish", "H": "SiegeSession.TryRepair",
             "I": "SiegeSession.BeginNextWave", "J": "SiegeSession.TryDeploy",
-            "K": "SiegePlayerChecks.CaptureError",
+            "K": "SiegePlayerChecks.CaptureError", "L": "SiegePlayerBuild.BuildStress",
+            "M": "SiegeStressAuthoring.Create", "N": "SiegePlayerBuild.Schedule",
         },
         [
-            "A -.->|Editor delayCall| B", "C -.->|MonoBehaviour Update| D",
+            "A --> N", "L --> M", "L --> N", "N -.->|一次性Editor update| B", "C -.->|MonoBehaviour Update| D",
             "D -->|推进显式迭代器| E", "E --> H", "E --> I", "E --> J",
             "C -.->|真实帧 LateUpdate| F", "C -.->|日志事件| K",
             "D -->|结束或异常| G",

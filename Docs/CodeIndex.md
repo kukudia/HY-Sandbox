@@ -860,8 +860,10 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegePlayerBuild | [`void Build()`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L15) | public static |
-| SiegePlayerBuild | [`void BuildNow()`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L28) | private static |
+| SiegePlayerBuild | [`void Build()`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L16) | public static |
+| SiegePlayerBuild | [`void BuildStress()`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L22) | public static |
+| SiegePlayerBuild | [`void Schedule(string scene, string output, string statusPath)`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L32) | private static |
+| SiegePlayerBuild | [`void BuildNow(string scene, string output, string statusPath)`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L52) | private static |
 
 ## Assets/Editor/Siege/SiegeRegroupBaseline.cs
 
@@ -942,6 +944,15 @@
 | SiegeSceneAuthoring | [`Button ActionButton( Transform parent, string name, string text, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L483) | private static |
 | SiegeSceneAuthoring | [`void Place(RectTransform rect, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L513) | private static |
 | SiegeSceneAuthoring | [`void SetArray(SerializedProperty property, Object[] values)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L521) | private static |
+
+## Assets/Editor/Siege/SiegeStressAuthoring.cs
+
+// 职责：从真实阵地战场景复制可编辑六舰压力夹具，隔离测试经济与正常游戏参数。 // 入口：Create()；仅首次创建，已有场景/配置不覆盖，保存后恢复原活动场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeStressAuthoring | [`void Create()`](../Assets/Editor/Siege/SiegeStressAuthoring.cs#L14) | public static |
+| SiegeStressAuthoring | [`SiegeSession FindSession(Scene scene)`](../Assets/Editor/Siege/SiegeStressAuthoring.cs#L103) | private static |
 
 ## Assets/Editor/Siege/SiegeTopologyBaseline.cs
 
@@ -3115,11 +3126,11 @@
 | SiegePlayerChecks | [`void Update()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L67) | private |
 | SiegePlayerChecks | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L88) | private |
 | SiegePlayerChecks | [`IEnumerator Run()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L104) | private |
-| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L266) | private |
-| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L273) | private |
-| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L283) | private |
-| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L291) | private |
-| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L307) | private |
+| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L272) | private |
+| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L279) | private |
+| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L289) | private |
+| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L297) | private |
+| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L313) | private |
 
 ## Assets/Scripts/Features/Siege/SiegeRefit.cs
 
