@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-23",
+  "project": "HY-Sandbox",
+  "unity": "6000.3.11f1",
+  "csv": {
+    "rows": 25,
+    "beforeColumns": 83,
+    "afterColumns": 30,
+    "identityColumns": 4,
+    "parameterColumns": 26,
+    "retainedCellsUnchanged": true
+  },
+  "editMode": {
+    "status": "passed",
+    "checks": [
+      "CSV has 25 Block rows, 26 parameter columns and 4 identity columns",
+      "Direct CSV edit persists manual mass and cost",
+      "Multiple components and inherited fields persisted",
+      "Removed CSV damage field preserves its Inspector value",
+      "Private cargo fields and enum name persisted",
+      "Shared requiresPower column applied to CargoHold",
+      "Shared requiresPower column applied to CollectionBot",
+      "Shared requiresPower column applied to RepairBot",
+      "Shared requiresPower applies to both matching components on one Prefab",
+      "Required power rejects a repair bay without Power",
+      "Optional power permits a repair bay without Power",
+      "Nested bot configuration persisted",
+      "Repeat synchronization produces zero file changes",
+      "Blank mass recomputes volume and collider from changed dimensions",
+      "Invalid CSV rejects whole batch without writing any Prefab",
+      "Scene bytes and Editor scene dirty state unchanged"
+    ]
+  },
+  "playMode": {
+    "status": "passed",
+    "checks": [
+      "Real binding Awake overrides corrupt instance values from Resources CSV",
+      "CSV max durability applied before Durability.OnEnable initializes current health",
+      "Runtime Awake applies private serialized cargo field",
+      "Prefab GUID binding preserved on runtime instance"
+    ]
+  },
+  "finalBake": "25 rows validated; 0 Prefabs changed",
+  "staticBuild": "Passed: 0 errors, 4 warnings (3 MSB3277 dependency conflicts; 1 CS0612 obsolete profiler API)",
+  "readability": "Not passed: existing unchanged Assets/Scripts/Features/Presentation/MainUIPanels.cs format mismatch; modified runtime scripts have no reported mismatch",
+  "diffCheck": "Passed",
+  "scope": "CSV/Prefab import and isolated real Awake checks; no full gameplay or visual regression claim",
+  "recovery": "Git parent commit plus Library/BlockDataTable/Simplify-20261023/Blocks.csv; advanced values remain in existing Prefabs"
+}

@@ -37,23 +37,24 @@ public static class BlockCsvChecks
             BlockCsvDocument.Parse(BlockCsvDocument.WriteRecords(records));
             Check(
                 report,
-                records.Count == 26 && records[0].Count == 83,
-                "CSV has 25 Block rows, 79 parameter columns and 4 identity columns");
+                records.Count == 26 && records[0].Count == 30,
+                "CSV has 25 Block rows, 26 parameter columns and 4 identity columns");
             Set(records, "MainThruster", "Block.mass", "123.5");
             Set(records, "MainThruster", "Block.cost", "789");
             Set(records, "MainThruster", "Durability.maxDurability", "321");
             Set(records, "MainThruster", "Thruster.maxThrust", "456");
-            Set(records, "MainThruster", "Durability.damageMultiplier", "0.123");
+            float inspectorDamage;
+            using (var data = new SerializedObject(Load("MainThruster").GetComponent<Durability>()))
+            {
+                inspectorDamage = data.FindProperty("damageMultiplier").floatValue;
+            }
+
             Set(records, "CargoHold", "CargoHold._capacity", "37");
             Set(records, "CargoHold", "CargoHold._kind", "Coins");
             Set(records, "CargoHold", "requiresPower", "false");
             Set(records, "CollectionBotContainer", "requiresPower", "false");
             Set(records, "RepairBotContianer", "requiresPower", "false");
             Set(records, "RepairBotContianer", "RepairBot.repairAmount", "17");
-            Set(records, "Turret", "Turret.targetFaction", "Neutral");
-            Set(records, "1x1x1", "Block.canEditInfo", "true");
-            string description = "中文, \"说明\"\n第二行";
-            Set(records, "1x1x1", "Block.info", description);
             Write(records);
             BlockCsvAuthoring.Bake();
             var thruster = Load("MainThruster");
@@ -69,8 +70,8 @@ public static class BlockCsvChecks
             {
                 Check(
                     report,
-                    Mathf.Approximately(data.FindProperty("damageMultiplier").floatValue, 0.123f),
-                    "Private serialized damage field persisted");
+                    Mathf.Approximately(data.FindProperty("damageMultiplier").floatValue, inspectorDamage),
+                    "Removed CSV damage field preserves its Inspector value");
             }
 
             Check(
@@ -140,14 +141,6 @@ public static class BlockCsvChecks
                 report,
                 Load("RepairBotContianer").GetComponentInChildren<RepairBot>(true).repairAmount == 17f,
                 "Nested bot configuration persisted");
-            Check(
-                report,
-                Load("Turret").GetComponent<LaserTurret>().targetFaction == UnitFaction.Neutral,
-                "Inherited turret enum persisted");
-            Check(
-                report,
-                Load("1x1x1").GetComponent<Block>().info == description,
-                "Chinese, comma, quotes and multiline description roundtrip");
             var saved = originals.Keys.ToDictionary(path => path, File.ReadAllBytes);
             BlockCsvAuthoring.Bake();
             Check(

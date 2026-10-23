@@ -169,11 +169,6 @@ public sealed class BlockCsvDocument
                 throw new InvalidDataException(values[0] + "：BotContainer 的最低工作功率必须等于额定工作功率。");
             }
         }
-
-        if (Value("Block.info").Length > 0 && Value("Block.canEditInfo") != "true")
-        {
-            throw new InvalidDataException(values[0] + "：填写说明文本需要开启 canEditInfo。");
-        }
     }
 
     private static string Normalize(BlockDataTableSchema.Column column, string value, string name)
