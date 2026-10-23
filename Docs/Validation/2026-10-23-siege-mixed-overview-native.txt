@@ -29,7 +29,8 @@ Begin MonoManager ReloadAssembly
 [Physics::Module] SDK Version: 4.1.2
 [Physics::Module] Integration Version: 1.0.0
 [Physics::Module] Threading Mode: Multi-Threaded
-<RI> Initializing input.
+<RI> Initializing input.
+
 Using Windows.Gaming.Input
 UnloadTime: 0.558300 ms
 GfxDeviceD3D11Base::PresentFrame() was called without calling GfxDeviceD3D11Base::WaitForLastPresentationAndGetTimestamp() first. This will result in increased input latency.
