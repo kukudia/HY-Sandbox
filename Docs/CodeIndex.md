@@ -867,6 +867,26 @@
 | SiegePlayerBuild | [`void Schedule(string scene, string output, string statusPath)`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L42) | private static |
 | SiegePlayerBuild | [`void BuildNow(string scene, string output, string statusPath)`](../Assets/Editor/Siege/SiegePlayerBuild.cs#L62) | private static |
 
+## Assets/Editor/Siege/SiegePriorityTargetChecks.cs
+
+// 职责：用真实基地与敌舰验证任务目标远程追击、普通索敌边界及阵营/启用/守卫约束。 // 入口：Run()；全新Siege Play的同步隔离夹具，不推进物理步，不把该检查当作AI实飞验证。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegePriorityTargetChecks | [`string Run()`](../Assets/Editor/Siege/SiegePriorityTargetChecks.cs#L14) | public static |
+| SiegePriorityTargetChecks | [`void Check(Report report, string name, bool passed)`](../Assets/Editor/Siege/SiegePriorityTargetChecks.cs#L128) | private static |
+
+## Assets/Editor/Siege/SiegePriorityTargetFlight.cs
+
+// 职责：真实Play跨帧验证范围外任务目标的接近输入与刚体位移，保留生产飞行和供电参数。 // 入口：Start() / Status；仅创建并清理自己的敌舰，不代表自然整波性能或全部AI导航。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegePriorityTargetFlight | [`string Start()`](../Assets/Editor/Siege/SiegePriorityTargetFlight.cs#L18) | public static |
+| SiegePriorityTargetFlight | [`void Tick()`](../Assets/Editor/Siege/SiegePriorityTargetFlight.cs#L57) | private static |
+| SiegePriorityTargetFlight | [`void BeforeReload()`](../Assets/Editor/Siege/SiegePriorityTargetFlight.cs#L83) | private static |
+| SiegePriorityTargetFlight | [`void Finish(string reason)`](../Assets/Editor/Siege/SiegePriorityTargetFlight.cs#L88) | private static |
+
 ## Assets/Editor/Siege/SiegeRegroupBaseline.cs
 
 // 职责：冻结3b1e13d的整组迁移实现，仅供Editor同布局性能对照，不进入运行时。 // 入口：Rebuild()；连接查询仍调用当前同一几何实现，隔离测量刚体迁移策略差异。
@@ -2012,13 +2032,13 @@
 | EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L113) | public |
 | EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L120) | public |
 | EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/EnemyController.cs#L126) | private |
-| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L165) | private |
-| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/EnemyController.cs#L180) | private |
-| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/EnemyController.cs#L194) | private |
-| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L233) | private |
-| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L244) | private |
-| EnemyController | [`Vector3 ProbeObstacle(Vector3 direction, float weight)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L264) | private |
-| RaycastHitDistanceComparer | [`int Compare(RaycastHit a, RaycastHit b)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L312) | public |
+| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L166) | private |
+| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/EnemyController.cs#L181) | private |
+| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/EnemyController.cs#L195) | private |
+| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L234) | private |
+| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L245) | private |
+| EnemyController | [`Vector3 ProbeObstacle(Vector3 direction, float weight)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L265) | private |
+| RaycastHitDistanceComparer | [`int Compare(RaycastHit a, RaycastHit b)`](../Assets/Scripts/Features/Combat/EnemyController.cs#L313) | public |
 
 ## Assets/Scripts/Features/Combat/EnemyIdentity.cs
 

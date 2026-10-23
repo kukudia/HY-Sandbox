@@ -1,0 +1,17 @@
+{
+    "passed": true,
+    "failures": 0,
+    "generatedRootDistance": 151.5675048828125,
+    "checks": [
+        "PASS ordinary acquisition stays bounded without an assigned mission",
+        "PASS assigned operational building is acquired outside detection range",
+        "PASS assigned far building produces approach intent",
+        "PASS actual core-centered spawn retains its assigned building target",
+        "PASS near assigned building retains normal acquisition",
+        "PASS ordinary near opponent is acquired from the populated registry",
+        "PASS disabled mission target is rejected",
+        "PASS friendly mission target is rejected",
+        "PASS guard territory still constrains explicit priority",
+        "PASS clearing mission restores bounded ordinary acquisition"
+    ]
+}

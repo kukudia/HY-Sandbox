@@ -3390,3 +3390,45 @@ flowchart TD
 <!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|Schedule -->
 - [SiegePlayerBuild.BuildNow](../Assets/Editor/Siege/SiegePlayerBuild.cs#L62)
 <!-- source: Assets/Editor/Siege/SiegePlayerBuild.cs|BuildNow -->
+
+## 阵地战任务目标与自主索敌
+
+源码推导：波次明确指派的有效基地任务目标不受自主索敌半径限制，远程任务也生成接近输入；未指定任务仍只发现半径内敌对单位。所有目标继续校验启用、阵营、运行/模拟状态、场景和守卫范围。FixedUpdate只提交平滑意图，实际施力仍由推进器和电网负责。
+
+```mermaid
+flowchart TD
+    A["SiegeWaveDirector.Tick()"]
+    click A "../Assets/Scripts/Features/Siege/SiegeWaveDirector.cs#L19" "打开源码"
+    B["EnemyController.SetPriorityTarget()"]
+    click B "../Assets/Scripts/Features/Combat/EnemyController.cs#L120" "打开源码"
+    C["EnemyController.FixedUpdate()"]
+    click C "../Assets/Scripts/Features/Combat/EnemyController.cs#L40" "打开源码"
+    D["EnemyController.FindNearestOpponent()"]
+    click D "../Assets/Scripts/Features/Combat/EnemyController.cs#L126" "打开源码"
+    E["EnemyController.IsValidOpponent()"]
+    click E "../Assets/Scripts/Features/Combat/EnemyController.cs#L166" "打开源码"
+    F["EnemyController.CalculateDesiredMovement()"]
+    click F "../Assets/Scripts/Features/Combat/EnemyController.cs#L88" "打开源码"
+    G["ControlUnit.SetMovementInput()"]
+    click G "../Assets/Scripts/Features/Simulation/ControlUnit.cs#L249" "打开源码"
+    A -->|生成或经Attacker.RefreshTarget重新绑定| B
+    C -->|目标更新周期| D
+    D --> E
+    C -->|有目标且到移动周期| F
+    C -->|每物理步平滑| G
+```
+
+- [SiegeWaveDirector.Tick](../Assets/Scripts/Features/Siege/SiegeWaveDirector.cs#L19)
+<!-- source: Assets/Scripts/Features/Siege/SiegeWaveDirector.cs|Tick -->
+- [EnemyController.SetPriorityTarget](../Assets/Scripts/Features/Combat/EnemyController.cs#L120)
+<!-- source: Assets/Scripts/Features/Combat/EnemyController.cs|SetPriorityTarget -->
+- [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/EnemyController.cs#L40)
+<!-- source: Assets/Scripts/Features/Combat/EnemyController.cs|FixedUpdate -->
+- [EnemyController.FindNearestOpponent](../Assets/Scripts/Features/Combat/EnemyController.cs#L126)
+<!-- source: Assets/Scripts/Features/Combat/EnemyController.cs|FindNearestOpponent -->
+- [EnemyController.IsValidOpponent](../Assets/Scripts/Features/Combat/EnemyController.cs#L166)
+<!-- source: Assets/Scripts/Features/Combat/EnemyController.cs|IsValidOpponent -->
+- [EnemyController.CalculateDesiredMovement](../Assets/Scripts/Features/Combat/EnemyController.cs#L88)
+<!-- source: Assets/Scripts/Features/Combat/EnemyController.cs|CalculateDesiredMovement -->
+- [ControlUnit.SetMovementInput](../Assets/Scripts/Features/Simulation/ControlUnit.cs#L249)
+<!-- source: Assets/Scripts/Features/Simulation/ControlUnit.cs|SetMovementInput -->

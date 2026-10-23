@@ -89,7 +89,7 @@ public class EnemyController : MonoBehaviour
     {
         float distance = flatDirection.magnitude;
         Vector3 desiredMove = Vector3.zero;
-        if (distance <= detectionRange)
+        if (currentTarget == priorityTarget || distance <= detectionRange)
         {
             if (distance > desiredDistance)
             {
@@ -125,7 +125,8 @@ public class EnemyController : MonoBehaviour
 
     private ControlUnit FindNearestOpponent()
     {
-        if (IsValidOpponent(priorityTarget) && (priorityTarget.transform.position - transform.position).sqrMagnitude < detectionRange * detectionRange)
+        // 任务目标由波次明确指派；索敌半径只限制自主发现，不能让远处增援失去进攻方向。
+        if (IsValidOpponent(priorityTarget))
         {
             return priorityTarget;
         }

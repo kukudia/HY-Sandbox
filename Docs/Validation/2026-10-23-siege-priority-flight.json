@@ -1,0 +1,9 @@
+{
+    "passed": true,
+    "reason": "Duration reached",
+    "elapsedSeconds": 12.002392400001554,
+    "frames": 695,
+    "approachFrames": 694,
+    "initialDistance": 315.6247863769531,
+    "finalDistance": 257.5222473144531
+}
