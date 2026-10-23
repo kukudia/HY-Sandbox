@@ -14,7 +14,7 @@ public static class SiegeBuildingBenchmark
     public static string Status { get; private set; } = "Idle";
 
     private static bool running;
-    public static string Start(string label = "geometry-baseline")
+    public static string Start(string label = "geometry-baseline", bool large = false)
     {
         if (running || !EditorApplication.isPlaying || PlayManager.instance == null || PlayManager.instance.playMode)
         {
@@ -33,13 +33,13 @@ public static class SiegeBuildingBenchmark
             }
 
             EditorApplication.update -= scheduled;
-            Execute(label);
+            Execute(label, large);
         };
         EditorApplication.update += scheduled;
         return Status;
     }
 
-    private static void Execute(string label)
+    private static void Execute(string label, bool large)
     {
         SiegeSession siege = PlayManager.instance.SiegeSession;
         bool metrics = SimulationWorkMetrics.Enabled;
@@ -52,7 +52,13 @@ public static class SiegeBuildingBenchmark
                 utc = DateTime.UtcNow.ToString("O"),
                 unity = Application.unityVersion
             };
-            foreach (int count in new[]
+            foreach (int count in large ? new[]
+            {
+                1024,
+                2048
+            }
+
+            : new[]
             {
                 100,
                 256,
@@ -160,8 +166,22 @@ public static class SiegeBuildingBenchmark
                 blocks = count,
                 intactMs = timer.Elapsed.TotalMilliseconds,
                 intactSupport = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingSupport),
-                intactQueries = SimulationWorkMetrics.PhysicsNeighborQueries
+                intactQueries = SimulationWorkMetrics.PhysicsNeighborQueries,
+                intactStages = ReadStages()
             };
+            SimulationWorkMetrics.Reset();
+            timer.Restart();
+            PlayManager.instance.RefreshGroup(building.GetComponent<ControlUnit>());
+            timer.Stop();
+            sample.hotMs = timer.Elapsed.TotalMilliseconds;
+            sample.hotSupport = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingSupport);
+            sample.hotStages = ReadStages();
+            sample.hotQueries = SimulationWorkMetrics.PhysicsNeighborQueries;
+            if (building.Blocks.Count != count || !building.Anchored || sample.hotQueries != 0)
+            {
+                throw new InvalidOperationException("Unchanged hot building must retain support without neighbor queries.");
+            }
+
             SimulationWorkMetrics.Reset();
             Vector3 center = building.transform.TransformPoint(new Vector3(width / 2f - 1.5f, 1f, length / 2f - 1.5f));
             timer.Restart();
@@ -172,6 +192,7 @@ public static class SiegeBuildingBenchmark
             sample.support = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingSupport);
             sample.damage = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingDamage);
             sample.damageQueries = SimulationWorkMetrics.PhysicsNeighborQueries;
+            sample.damageStages = ReadStages();
             if (sample.survivors >= count || sample.survivors == 0 || !building.Anchored)
             {
                 throw new InvalidOperationException("Blast fixture did not retain a damaged anchored building.");
@@ -185,10 +206,30 @@ public static class SiegeBuildingBenchmark
         }
     }
 
+    private static Stages ReadStages()
+    {
+        return new Stages
+        {
+            graph = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingGraph),
+            ground = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingGround),
+            traversal = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingTraversal),
+            debris = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingDebris)
+        };
+    }
+
+    [Serializable]
+    private sealed class Stages
+    {
+        public SimulationWorkMetrics.Counters graph;
+        public SimulationWorkMetrics.Counters ground;
+        public SimulationWorkMetrics.Counters traversal;
+        public SimulationWorkMetrics.Counters debris;
+    }
+
     [Serializable]
     private sealed class Report
     {
-        public string methodology = "Editor Play, two-layer 1m-block building on virtual foundation at remote coordinates. One warmup plus three fresh fixtures per size. Timed intact production RefreshGroup and one radius2.6 damage10000 blast, including production VFX requests/sync/splitting. Creation, validation, cleanup excluded. No physics steps. Support is nested in damage, never sum. Not battle FPS. Siege damage gate temporarily unbound only during synchronous fixture, restored in finally.";
+        public string methodology = "Editor Play, two-layer 1m-block building on virtual foundation at remote coordinates. One warmup plus three fresh fixtures per size. Timed cold and unchanged hot production RefreshGroup, then one radius2.6 damage10000 blast, including production VFX requests/sync/splitting. Creation, validation, cleanup excluded. No physics steps. Graph/ground/traversal/debris counters are inside support, itself inside damage; never sum nested counters. ControlUnit child refresh and transform sync outside support remain in full RefreshGroup timing. Not battle FPS. Siege damage gate temporarily unbound only during synchronous fixture, restored in finally.";
         public string label;
         public string utc;
         public string unity;
@@ -202,10 +243,16 @@ public static class SiegeBuildingBenchmark
         public int survivors;
         public double intactMs;
         public double damageMs;
+        public double hotMs;
         public long intactQueries;
         public long damageQueries;
+        public long hotQueries;
         public SimulationWorkMetrics.Counters intactSupport;
+        public SimulationWorkMetrics.Counters hotSupport;
         public SimulationWorkMetrics.Counters support;
         public SimulationWorkMetrics.Counters damage;
+        public Stages intactStages;
+        public Stages hotStages;
+        public Stages damageStages;
     }
 }

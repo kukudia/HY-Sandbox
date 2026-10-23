@@ -1,0 +1,22 @@
+{
+    "checks": [
+        "PASS partial blast damages future debris before detachment, reverse=False",
+        "PASS partial blast removes stem and detaches top, reverse=False",
+        "PASS one support traversal per dirty building, reverse=False",
+        "PASS snapshot omits removed and detached modules, reverse=False",
+        "PASS partial blast damages future debris before detachment, reverse=True",
+        "PASS partial blast removes stem and detaches top, reverse=True",
+        "PASS one support traversal per dirty building, reverse=True",
+        "PASS snapshot omits removed and detached modules, reverse=True",
+        "PASS queued chain destroys each explosive module once, projectile=False",
+        "PASS whole chain performs one support traversal, projectile=False",
+        "PASS chain has one outer damage scope",
+        "PASS empty or unchanged blast does not refresh support",
+        "PASS queued chain destroys each explosive module once, projectile=True",
+        "PASS whole chain performs one support traversal, projectile=True",
+        "PASS chain has one outer damage scope",
+        "PASS empty or unchanged blast does not refresh support",
+        "PASS single projectile loss still resolves support immediately",
+        "PASS standalone loss updates remaining body mass immediately"
+    ]
+}

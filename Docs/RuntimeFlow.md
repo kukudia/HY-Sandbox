@@ -2148,7 +2148,7 @@ flowchart TD
     D["WorldBuildingPlacement.Support()"]
     click D "../Assets/Scripts/Features/World/WorldBuildingPlacement.cs#L111" "打开源码"
     E["BuildingRuntime.ReleaseAnchor()"]
-    click E "../Assets/Scripts/Features/World/BuildingRuntime.cs#L381" "打开源码"
+    click E "../Assets/Scripts/Features/World/BuildingRuntime.cs#L393" "打开源码"
     F["ProceduralVoxelWorld.FlushDirty()"]
     click F "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L538" "打开源码"
     G["Durability.ApplyDamage()"]
@@ -2170,7 +2170,7 @@ flowchart TD
     X["BuildingConnectionGraph.Prepare()"]
     click X "../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L15" "打开源码"
     Y["BuildingConnectionGraph.CollectNeighbors()"]
-    click Y "../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L108" "打开源码"
+    click Y "../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L109" "打开源码"
     N["ProceduralVoxelWorld.Generate()"]
     click N "../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L99" "打开源码"
     O["WorldBuildingManager.ResetBuildings()"]
@@ -2180,7 +2180,7 @@ flowchart TD
     Q["WorldBuildingManager.Place()"]
     click Q "../Assets/Scripts/Features/World/WorldBuildingManager.cs#L96" "打开源码"
     R["BuildingRuntime.HasGroundConnector()"]
-    click R "../Assets/Scripts/Features/World/BuildingRuntime.cs#L360" "打开源码"
+    click R "../Assets/Scripts/Features/World/BuildingRuntime.cs#L372" "打开源码"
     S["WreckSalvage.Convert()"]
     click S "../Assets/Scripts/Features/Salvage/WreckSalvage.cs#L10" "打开源码"
     T["CargoHold.ReleaseContents()"]
@@ -2223,7 +2223,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|FixedUpdate -->
 - [WorldBuildingPlacement.Support](../Assets/Scripts/Features/World/WorldBuildingPlacement.cs#L111)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingPlacement.cs|Support -->
-- [BuildingRuntime.ReleaseAnchor](../Assets/Scripts/Features/World/BuildingRuntime.cs#L381)
+- [BuildingRuntime.ReleaseAnchor](../Assets/Scripts/Features/World/BuildingRuntime.cs#L393)
 <!-- source: Assets/Scripts/Features/World/BuildingRuntime.cs|ReleaseAnchor -->
 - [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L538)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|FlushDirty -->
@@ -2245,7 +2245,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/BuildingRuntime.cs|EndDamageBatch -->
 - [BuildingConnectionGraph.Prepare](../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L15)
 <!-- source: Assets/Scripts/Features/World/BuildingConnectionGraph.cs|Prepare -->
-- [BuildingConnectionGraph.CollectNeighbors](../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L108)
+- [BuildingConnectionGraph.CollectNeighbors](../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L109)
 <!-- source: Assets/Scripts/Features/World/BuildingConnectionGraph.cs|CollectNeighbors -->
 - [ProceduralVoxelWorld.Generate](../Assets/Scripts/Features/World/ProceduralVoxelWorld.cs#L99)
 <!-- source: Assets/Scripts/Features/World/ProceduralVoxelWorld.cs|Generate -->
@@ -2255,7 +2255,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|ClearDebris -->
 - [WorldBuildingManager.Place](../Assets/Scripts/Features/World/WorldBuildingManager.cs#L96)
 <!-- source: Assets/Scripts/Features/World/WorldBuildingManager.cs|Place -->
-- [BuildingRuntime.HasGroundConnector](../Assets/Scripts/Features/World/BuildingRuntime.cs#L360)
+- [BuildingRuntime.HasGroundConnector](../Assets/Scripts/Features/World/BuildingRuntime.cs#L372)
 <!-- source: Assets/Scripts/Features/World/BuildingRuntime.cs|HasGroundConnector -->
 - [WreckSalvage.Convert](../Assets/Scripts/Features/Salvage/WreckSalvage.cs#L10)
 <!-- source: Assets/Scripts/Features/Salvage/WreckSalvage.cs|Convert -->
@@ -3293,9 +3293,9 @@ flowchart TD
     D["SiegePerformanceCapture.Finish()"]
     click D "../Assets/Editor/Siege/SiegePerformanceCapture.cs#L133" "打开源码"
     E["SimulationWorkMetrics.Measure()"]
-    click E "../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L56" "打开源码"
+    click E "../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L60" "打开源码"
     F["SimulationWorkMetrics.Read()"]
-    click F "../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L61" "打开源码"
+    click F "../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L65" "打开源码"
     G["BlockGroupManager.GroupBlocks()"]
     click G "../Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L9" "打开源码"
     H["RuntimeGroupBuilder.Rebuild()"]
@@ -3327,9 +3327,9 @@ flowchart TD
 <!-- source: Assets/Editor/Siege/SiegePerformanceCapture.cs|TakeCensus -->
 - [SiegePerformanceCapture.Finish](../Assets/Editor/Siege/SiegePerformanceCapture.cs#L133)
 <!-- source: Assets/Editor/Siege/SiegePerformanceCapture.cs|Finish -->
-- [SimulationWorkMetrics.Measure](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L56)
+- [SimulationWorkMetrics.Measure](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L60)
 <!-- source: Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs|Measure -->
-- [SimulationWorkMetrics.Read](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L61)
+- [SimulationWorkMetrics.Read](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L65)
 <!-- source: Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs|Read -->
 - [BlockGroupManager.GroupBlocks](../Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L9)
 <!-- source: Assets/Scripts/Features/Simulation/BlockGroupManager.cs|GroupBlocks -->

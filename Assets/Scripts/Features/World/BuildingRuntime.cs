@@ -292,23 +292,29 @@ public sealed class BuildingRuntime : MonoBehaviour
         // 编辑底座只提供虚拟连接点，世界中不生成模型、碰撞体或底座方块。
         // 从与这些点匹配的朝下 Connector 出发，再沿真实模块连接遍历。
         var connected = new HashSet<Block>();
-        foreach (Block block in blocks)
+        using (SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.BuildingGround, blocks.Count))
         {
-            if (HasGroundConnector(block))
+            foreach (Block block in blocks)
             {
-                connected.Add(block);
+                if (HasGroundConnector(block))
+                {
+                    connected.Add(block);
+                }
             }
         }
 
         var queue = new Queue<Block>(connected);
-        while (queue.Count > 0)
+        using (SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.BuildingTraversal, blocks.Count))
         {
-            connections.CollectNeighbors(queue.Dequeue(), neighbors);
-            foreach (Block neighbor in neighbors)
+            while (queue.Count > 0)
             {
-                if (neighbor.GetComponentInParent<BuildingRuntime>() == this && connected.Add(neighbor))
+                connections.CollectNeighbors(queue.Dequeue(), neighbors);
+                foreach (Block neighbor in neighbors)
                 {
-                    queue.Enqueue(neighbor);
+                    if (neighbor.GetComponentInParent<BuildingRuntime>() == this && connected.Add(neighbor))
+                    {
+                        queue.Enqueue(neighbor);
+                    }
                 }
             }
         }
@@ -334,16 +340,19 @@ public sealed class BuildingRuntime : MonoBehaviour
             var group = new List<Block>();
             queue.Enqueue(first);
             detached.Remove(first);
-            while (queue.Count > 0)
+            using (SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.BuildingTraversal, detached.Count + 1))
             {
-                Block block = queue.Dequeue();
-                group.Add(block);
-                connections.CollectNeighbors(block, neighbors);
-                foreach (Block neighbor in neighbors)
+                while (queue.Count > 0)
                 {
-                    if (detached.Remove(neighbor))
+                    Block block = queue.Dequeue();
+                    group.Add(block);
+                    connections.CollectNeighbors(block, neighbors);
+                    foreach (Block neighbor in neighbors)
                     {
-                        queue.Enqueue(neighbor);
+                        if (detached.Remove(neighbor))
+                        {
+                            queue.Enqueue(neighbor);
+                        }
                     }
                 }
             }
@@ -353,7 +362,10 @@ public sealed class BuildingRuntime : MonoBehaviour
                 blocks.Remove(block);
             }
 
-            manager.CreateDebris(group, body);
+            using (SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.BuildingDebris, group.Count))
+            {
+                manager.CreateDebris(group, body);
+            }
         }
     }
 

@@ -11,7 +11,11 @@ public static class SimulationWorkMetrics
         BodyRebuild,
         Refresh,
         BuildingSupport,
-        BuildingDamage
+        BuildingDamage,
+        BuildingGraph,
+        BuildingGround,
+        BuildingTraversal,
+        BuildingDebris
     }
 
     [Serializable]
@@ -23,7 +27,7 @@ public static class SimulationWorkMetrics
         public double maximumMilliseconds;
     }
 
-    private static readonly Counters[] totals = new Counters[5];
+    private static readonly Counters[] totals = new Counters[Enum.GetValues(typeof(Stage)).Length];
     public static bool Enabled
     {
         get; set;

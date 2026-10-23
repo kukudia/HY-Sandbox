@@ -14,6 +14,7 @@ internal sealed class BuildingConnectionGraph
     private bool complexLayout;
     internal void Prepare(List<Block> blocks, Transform root)
     {
+        using SimulationWorkMetrics.Scope timing = SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.BuildingGraph, blocks.Count);
         current.Clear();
         bool rebuild = complexLayout || !root.lossyScale.Equals(rootScale) || queryTriggers != Physics.queriesHitTriggers;
         bool nextComplexLayout = false;

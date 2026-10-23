@@ -83,7 +83,7 @@ public static class SiegePerformanceCapture
         }
 
         double now = EditorApplication.timeSinceStartup;
-        report.samples.Add(new FrameSample { seconds = now - started, frame = Time.frameCount, advancedFrames = Time.frameCount - previousFrame, editorObservationMs = (now - previous) * 1000.0, gameDeltaMs = Time.unscaledDeltaTime * 1000.0, gcBytes = gcRecorder.Valid ? gcRecorder.LastValue : -1, connectivity = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.Connectivity), rebuild = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BodyRebuild), refresh = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.Refresh), buildingSupport = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingSupport), buildingDamage = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingDamage) });
+        report.samples.Add(new FrameSample { seconds = now - started, frame = Time.frameCount, advancedFrames = Time.frameCount - previousFrame, editorObservationMs = (now - previous) * 1000.0, gameDeltaMs = Time.unscaledDeltaTime * 1000.0, gcBytes = gcRecorder.Valid ? gcRecorder.LastValue : -1, connectivity = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.Connectivity), rebuild = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BodyRebuild), refresh = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.Refresh), buildingSupport = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingSupport), buildingDamage = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingDamage), buildingGraph = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingGraph), buildingGround = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingGround), buildingTraversal = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingTraversal), buildingDebris = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingDebris) });
         previousFrame = Time.frameCount;
         previous = now;
         if (now >= nextCensus)
@@ -226,6 +226,10 @@ public static class SiegePerformanceCapture
         public SimulationWorkMetrics.Counters refresh;
         public SimulationWorkMetrics.Counters buildingSupport;
         public SimulationWorkMetrics.Counters buildingDamage;
+        public SimulationWorkMetrics.Counters buildingGraph;
+        public SimulationWorkMetrics.Counters buildingGround;
+        public SimulationWorkMetrics.Counters buildingTraversal;
+        public SimulationWorkMetrics.Counters buildingDebris;
     }
 
     [Serializable]

@@ -779,9 +779,10 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeBuildingBenchmark | [`string Start(string label = "geometry-baseline")`](../Assets/Editor/Siege/SiegeBuildingBenchmark.cs#L17) | public static |
-| SiegeBuildingBenchmark | [`void Execute(string label)`](../Assets/Editor/Siege/SiegeBuildingBenchmark.cs#L42) | private static |
-| SiegeBuildingBenchmark | [`Sample Measure(int count)`](../Assets/Editor/Siege/SiegeBuildingBenchmark.cs#L92) | private static |
+| SiegeBuildingBenchmark | [`string Start(string label = "geometry-baseline", bool large = false)`](../Assets/Editor/Siege/SiegeBuildingBenchmark.cs#L17) | public static |
+| SiegeBuildingBenchmark | [`void Execute(string label, bool large)`](../Assets/Editor/Siege/SiegeBuildingBenchmark.cs#L42) | private static |
+| SiegeBuildingBenchmark | [`Sample Measure(int count)`](../Assets/Editor/Siege/SiegeBuildingBenchmark.cs#L98) | private static |
+| SiegeBuildingBenchmark | [`Stages ReadStages()`](../Assets/Editor/Siege/SiegeBuildingBenchmark.cs#L209) | private static |
 
 ## Assets/Editor/Siege/SiegeBuildingChecks.cs
 
@@ -3419,12 +3420,12 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SimulationWorkMetrics | [`void RecordPhysicsNeighborQuery()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L40) | internal static |
-| SimulationWorkMetrics | [`void RecordLegacyReferenceScan()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L48) | internal static |
-| SimulationWorkMetrics | [`Scope Measure(Stage stage, int inputBlocks = 0)`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L56) | public static |
-| SimulationWorkMetrics | [`Counters Read(Stage stage)`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L61) | public static |
-| SimulationWorkMetrics | [`void Reset()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L66) | public static |
-| Scope | [`void Dispose()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L85) | public |
+| SimulationWorkMetrics | [`void RecordPhysicsNeighborQuery()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L44) | internal static |
+| SimulationWorkMetrics | [`void RecordLegacyReferenceScan()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L52) | internal static |
+| SimulationWorkMetrics | [`Scope Measure(Stage stage, int inputBlocks = 0)`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L60) | public static |
+| SimulationWorkMetrics | [`Counters Read(Stage stage)`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L65) | public static |
+| SimulationWorkMetrics | [`void Reset()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L70) | public static |
+| Scope | [`void Dispose()`](../Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs#L89) | public |
 
 ## Assets/Scripts/Features/Simulation/UnitFaction.cs
 
@@ -3439,8 +3440,8 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BuildingConnectionGraph | [`void Prepare(List<Block> blocks, Transform root)`](../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L15) | internal |
-| BuildingConnectionGraph | [`void CollectNeighbors(Block block, List<Block> result)`](../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L108) | internal |
-| Node | [`bool IsValid(Block block)`](../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L138) | internal |
+| BuildingConnectionGraph | [`void CollectNeighbors(Block block, List<Block> result)`](../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L109) | internal |
+| Node | [`bool IsValid(Block block)`](../Assets/Scripts/Features/World/BuildingConnectionGraph.cs#L139) | internal |
 
 ## Assets/Scripts/Features/World/BuildingRefit.cs
 
@@ -3468,9 +3469,9 @@
 | BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L189) | public |
 | BuildingRuntime | [`void DestroyBlock(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L242) | public |
 | BuildingRuntime | [`void SplitDisconnected()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L288) | private |
-| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L360) | private |
-| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L381) | public |
-| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L392) | private |
+| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L372) | private |
+| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L393) | public |
+| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/BuildingRuntime.cs#L404) | private |
 
 ## Assets/Scripts/Features/World/EnemyFlightPlayerChecks.cs
 

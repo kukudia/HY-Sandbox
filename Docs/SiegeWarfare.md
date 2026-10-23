@@ -58,6 +58,8 @@ Siege不加载主世界存档，不复制蓝图货物；部署使用新的单位
 
 ## 性能复现
 
+`SiegeBuildingBenchmark.Start("label", true)` 测量1024/2048块建筑的冷刷新、热刷新和局部损毁，增加邻接/底座/遍历/残骸分项；当前实际瓶颈及Jobs选择边界见 [2048块基线](Validation/2026-10-23-siege-building-stages.md)。这是同步夹具，不是千块交火FPS。
+
 菜单 `Create Editable Stress Profile` 创建独立 `SiegeStress.unity` 与 `SiegeStress.asset`，保留正常Siege经济和已有压力场景的手工修改。`Build Windows Stress Player` 输出独立压力包，命令行 `-siege-checks-ships 6` 可验证实际六舰部署。首个六舰自然交火窗口与准确规模边界见 [压力验证](Validation/2026-10-23-siege-six.md)。
 
 Siege Play部署两舰后调用 `SiegePerformanceCapture.StartCapture("label", 90f)`，再开始波次。到时、失败、停止Play或脚本重载时保存已有样本到 `Temp/Siege/Performance`；`Status` 可读状态，`Finish()` 可提前保存。CPU计时默认关闭，仅采样期间开启。各阶段嵌套，完整刷新计时从输入块枚举后开始。
