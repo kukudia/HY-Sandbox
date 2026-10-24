@@ -1,0 +1,128 @@
+{
+  "date": "2026-10-24",
+  "scene": "Assets/Scenes/Siege.unity",
+  "unity": "6000.3.11f1",
+  "cli": "1.0.0-beta.11",
+  "baselineCommit": "d062fc20bcc5574ba6cced5b475634dd175c5963",
+  "before": {
+    "deployment": {
+      "status": "failed",
+      "checks": [],
+      "error": "System.InvalidOperationException: blocked first bay falls through to a clear bay: Blocked by object: Owned blocked deployment bay 0 at (-30, 11, 32). Clear the area, then retry.\r\n  at SiegeUsabilityChecks.RunDeployment () [0x000fe] in D:\\git_projects\\Unity\\HY-Sandbox\\Assets\\Editor\\Siege\\SiegeUsabilityChecks.cs:39 "
+    },
+    "selection": {
+      "status": "failed",
+      "checks": [
+        "test has multiple real player and enemy choices"
+      ],
+      "error": "System.InvalidOperationException: explicit refresh preserves selected attacker\r\n  at SiegeUsabilityChecks.RunSelection () [0x000e2] in D:\\git_projects\\Unity\\HY-Sandbox\\Assets\\Editor\\Siege\\SiegeUsabilityChecks.cs:92 "
+    }
+  },
+  "after": {
+    "deployment": {
+      "status": "passed",
+      "checks": [
+        "blocked first bay falls through to a clear bay: Deployed Swordfish",
+        "clear second bay is used without occupying the blocked first bay",
+        "successful fallback deployment charges exactly once",
+        "all remaining free bays obstructed rejects deployment",
+        "obstruction names a blocking object",
+        "failed deployment preserves balance and existing pilot",
+        "clearing the first bay permits another purchase",
+        "new purchase preserves existing driving authority and exact debit",
+        "invalid option does not debit"
+      ],
+      "error": ""
+    },
+    "selection": {
+      "status": "passed",
+      "checks": [
+        "test has multiple real player and enemy choices",
+        "explicit refresh preserves selected attacker",
+        "explicit refresh preserves selected defender",
+        "workshop opens through production entry",
+        "workshop closes through production entry",
+        "workshop roundtrip preserves both selected blueprints",
+        "refresh and workshop roundtrip spend no coins",
+        "random enemy choice remains random",
+        "removed choices safely fall back to random and empty defender list",
+        "empty attacker catalog prevents wave start"
+      ],
+      "error": ""
+    },
+    "play": {
+      "checks": [
+        "PASS base is one real connected component",
+        "PASS intermission previews next wave size and selected enemy",
+        "PASS first two ships deploy through production economy",
+        "PASS driving authority can switch to a second ship",
+        "PASS exactly one allied ship reads manual input",
+        "PASS non-driven allied ship has autonomous control",
+        "PASS intermission rejects late projectile damage",
+        "PASS surviving-module repair restores health and exact quoted debit",
+        "PASS missing module is rebuilt for quoted cost",
+        "PASS replacement preserves original blueprint identity without duplicates",
+        "PASS detached live module is recovered as the same object",
+        "PASS repair restores actual detached collider participation and single connected hull",
+        "PASS occupied repair bay is rejected without spending",
+        "PASS ship repair names the blocking object",
+        "PASS automatic fleet refit preserves damage and coins when its bay is occupied",
+        "PASS automatic fleet refit restores the ally after clearing its bay",
+        "PASS building support refresh keeps anchored building outside ship regroup",
+        "PASS base regroup does not steal player camera ownership",
+        "PASS wave start activates simulation and closes repair",
+        "PASS wave intermission automatically repairs the base and spends its exact quote once",
+        "PASS wave intermission repairs the driven ship from remaining coins",
+        "PASS repeated intermission updates never charge the same base or ship repair twice",
+        "PASS next wave starts after automatic refit",
+        "PASS autonomous ally retains its body and active AI after physical regroup",
+        "PASS pilot destruction transfers control instead of ending match",
+        "PASS no surviving ships falls back to base observation",
+        "PASS real core destruction ends siege and cancels reinforcements",
+        "PASS defeat rejects new waves, deployment and repairs"
+      ]
+    },
+    "workshop": [
+      "PASS 22 checks",
+      "PASS deploy real defender before editing",
+      "PASS workshop opens during deployment",
+      "PASS live fleet and core survive entry",
+      "PASS battle and spending operations blocked while editing",
+      "PASS Main asynchronous loader restores preview",
+      "PASS Main build writes only test blueprint",
+      "PASS undo persists removal",
+      "PASS redo persists reconstruction",
+      "PASS P returns to siege without starting simulation",
+      "PASS return preserves coins damage and driver",
+      "PASS return restores original runtime objects",
+      "PASS return preserves pre-existing disabled components",
+      "PASS Main integrity uses deployed hull maximum",
+      "PASS B opens Main workshop through real input",
+      "PASS preview load starts for cancellation probe",
+      "PASS closing cancels loader and removes preview",
+      "PASS cancellation never deletes fleet or heals base",
+      "PASS actual pointer click opens blueprint workshop",
+      "PASS P begins wave from strategy mode",
+      "PASS combat locks pointer and denies workshop",
+      "PASS F1 toggles Main thruster panel",
+      "PASS Alt releases pointer during battle"
+    ]
+  },
+  "static": {
+    "solutionBuild": "0 errors, 4 existing warnings",
+    "readability": "319 scripts, 0 formatting differences, 0 errors",
+    "unityCompile": "passed, no compiler errors",
+    "diffCheck": "passed"
+  },
+  "visual": "Viewed actual Game screenshot: preserved CODEX_03_Catamaran defender and default_enemy attacker after workshop roundtrip, 3000 coins",
+  "limits": [
+    "No Windows Player rebuild or natural long soak in this iteration",
+    "No BFS/PhysX/FPS improvement claim",
+    "Selection removal with surviving alternatives and reorder not separately fixture-tested"
+  ],
+  "restored": {
+    "scene": "Assets/Scenes/Main.unity",
+    "playing": false,
+    "dirty": false
+  }
+}

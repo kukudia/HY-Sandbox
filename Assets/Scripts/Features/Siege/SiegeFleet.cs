@@ -43,16 +43,36 @@ public sealed class SiegeFleet
         }
 
         SiegeShipOption option = session.DefenderOptions[optionIndex];
-        int slot = Array.FindIndex(Ships, entry => entry == null || !entry.IsAlive);
-        reason = slot < 0 ? "All deployment bays are occupied." : "Insufficient coins.";
-        if (slot < 0 || !session.Match.CanAfford(option.Price))
+        reason = "Insufficient coins.";
+        if (!session.Match.CanAfford(option.Price))
         {
             return false;
         }
 
         BlockDataList blueprint = PrepareBlueprint(option.BlueprintJson, out string id);
-        if (!SiegeRefit.IsClear(blueprint, docks[slot].position, docks[slot].rotation, id, out reason))
+        int slot = -1;
+        bool foundFreeBay = false;
+        string firstObstruction = null;
+        for (int candidate = 0; candidate < Ships.Length; candidate++)
         {
+            if (Ships[candidate] != null && Ships[candidate].IsAlive)
+            {
+                continue;
+            }
+
+            foundFreeBay = true;
+            if (SiegeRefit.IsClear(blueprint, docks[candidate].position, docks[candidate].rotation, id, out string candidateReason))
+            {
+                slot = candidate;
+                break;
+            }
+
+            firstObstruction ??= candidateReason;
+        }
+
+        if (slot < 0)
+        {
+            reason = foundFreeBay ? firstObstruction ?? "All free deployment bays are blocked." : "All deployment bays are occupied.";
             return false;
         }
 

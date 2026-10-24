@@ -64,6 +64,7 @@ public sealed class SiegeHud : MonoBehaviour
         repairShip.onClick.AddListener(RepairShip);
         restart.onClick.AddListener(Restart);
         refreshBlueprints?.onClick.AddListener(RefreshBlueprints);
+        defenderBlueprint?.onValueChanged.AddListener(SelectDefender);
         attackerBlueprint?.onValueChanged.AddListener(SelectAttacker);
     }
 
@@ -84,6 +85,7 @@ public sealed class SiegeHud : MonoBehaviour
         repairShip.onClick.RemoveListener(RepairShip);
         restart.onClick.RemoveListener(Restart);
         refreshBlueprints?.onClick.RemoveListener(RefreshBlueprints);
+        defenderBlueprint?.onValueChanged.RemoveListener(SelectDefender);
         attackerBlueprint?.onValueChanged.RemoveListener(SelectAttacker);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -189,7 +191,8 @@ public sealed class SiegeHud : MonoBehaviour
 
         attackerBlueprint.ClearOptions();
         attackerBlueprint.AddOptions(attackers);
-        attackerBlueprint.SetValueWithoutNotify(0);
+        defenderBlueprint.SetValueWithoutNotify(session.SelectedDefender >= 0 ? session.SelectedDefender : 0);
+        attackerBlueprint.SetValueWithoutNotify(session.SelectedAttacker + 1);
     }
 
     private void RefreshBlueprints()
@@ -201,6 +204,11 @@ public sealed class SiegeHud : MonoBehaviour
     private void SelectAttacker(int index)
     {
         session.SelectAttacker(index - 1);
+    }
+
+    private void SelectDefender(int index)
+    {
+        session.SelectDefender(index);
     }
 
     private void StartWave()

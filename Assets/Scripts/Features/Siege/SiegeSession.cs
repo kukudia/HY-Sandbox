@@ -42,6 +42,7 @@ public sealed class SiegeSession : MonoBehaviour
         get; private set;
     }
     public int SelectedAttacker { get; private set; } = -1;
+    public int SelectedDefender { get; private set; } = -1;
     public int NextWaveSize => Match != null ? Match.NextWaveSize : 0;
 
     public string AttackerPreview
@@ -70,6 +71,14 @@ public sealed class SiegeSession : MonoBehaviour
         }
     }
 
+    public void SelectDefender(int index)
+    {
+        if (Match != null && Match.CanRefit && index >= 0 && index < DefenderOptions.Length)
+        {
+            SelectedDefender = index;
+        }
+    }
+
     public bool RefreshBlueprints()
     {
         if (Match != null && !Match.CanRefit)
@@ -77,6 +86,8 @@ public sealed class SiegeSession : MonoBehaviour
             return false;
         }
 
+        string previousDefender = SelectedDefender >= 0 && SelectedDefender < DefenderOptions.Length ? DefenderOptions[SelectedDefender].DisplayName : null;
+        string previousAttacker = SelectedAttacker >= 0 && SelectedAttacker < AttackerOptions.Length ? AttackerOptions[SelectedAttacker].DisplayName : null;
         if (settings.UsePlayerBlueprintFolders)
         {
             DefenderOptions = SiegeBlueprintCatalog.Load(
@@ -96,9 +107,26 @@ public sealed class SiegeSession : MonoBehaviour
             BlueprintStatus = "Fixed benchmark blueprints.";
         }
 
-        SelectedAttacker = -1;
+        SelectedDefender = FindOption(DefenderOptions, previousDefender, 0);
+        SelectedAttacker = FindOption(AttackerOptions, previousAttacker, -1);
         Status = BlueprintStatus;
         return true;
+    }
+
+    private static int FindOption(SiegeShipOption[] options, string displayName, int fallback)
+    {
+        if (!string.IsNullOrEmpty(displayName))
+        {
+            for (int index = 0; index < options.Length; index++)
+            {
+                if (string.Equals(options[index].DisplayName, displayName, StringComparison.Ordinal))
+                {
+                    return index;
+                }
+            }
+        }
+
+        return options.Length == 0 || fallback < 0 ? -1 : Mathf.Clamp(fallback, 0, options.Length - 1);
     }
 
     public SiegeMatch Match
