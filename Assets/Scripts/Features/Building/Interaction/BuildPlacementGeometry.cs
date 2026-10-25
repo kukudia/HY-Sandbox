@@ -1,5 +1,5 @@
-// 职责：集中建造尺寸、连接点对齐、半网格吸附、阻挡与步长几何。
-// 入口：SnapCenterByMinCorner() / TryCalculateConnectorAlignedPosition() / IsBlocked()。
+// 职责：集中建造尺寸、连接点对齐、旋转网格锚点、半网格吸附与阻挡几何。
+// 入口：CalculateRotationPosition() / SnapRotationToGrid() / TryCalculateConnectorAlignedPosition() / IsBlocked()。
 // 依赖：显式网格尺寸和方块层；无管理器单例、UI 或存档依赖。
 using UnityEngine;
 
@@ -7,6 +7,38 @@ internal sealed class BuildPlacementGeometry
 {
     public float gridSize;
     public LayerMask blockLayer;
+    public Quaternion SnapRotationToGrid(Quaternion rotation)
+    {
+        Vector3 euler = rotation.eulerAngles;
+        return Quaternion.Euler(
+            (Mathf.RoundToInt(euler.x / 90f) % 4) * 90f,
+            (Mathf.RoundToInt(euler.y / 90f) % 4) * 90f,
+            (Mathf.RoundToInt(euler.z / 90f) % 4) * 90f);
+    }
+
+    public Vector3 CalculateRotationPosition(Vector3 startCenter, Quaternion startRotation, Quaternion targetRotation, Block block)
+    {
+        if (block == null)
+        {
+            return startCenter;
+        }
+
+        // 锚点是中心所在整数格的基准。按世界轴尺寸奇偶取正半格偏移，反向/180°不额外平移一格。
+        // 在整数半格坐标中运算，不能把旋转后的浮点 AABB 尺寸直接加回中心。
+        Vector3 localOffset = new Vector3(block.x % 2 == 0 ? 1 : 0, block.y % 2 == 0 ? 1 : 0, block.z % 2 == 0 ? 1 : 0);
+        Vector3 oldOffset = SnapRotationToGrid(startRotation) * localOffset;
+        Vector3 newOffset = SnapRotationToGrid(targetRotation) * localOffset;
+        float safeGridSize = Mathf.Max(0.0001f, gridSize);
+        Vector3 anchor = new Vector3(
+            Mathf.Round(startCenter.x / safeGridSize - Mathf.Abs(Mathf.Round(oldOffset.x)) * 0.5f),
+            Mathf.Round(startCenter.y / safeGridSize - Mathf.Abs(Mathf.Round(oldOffset.y)) * 0.5f),
+            Mathf.Round(startCenter.z / safeGridSize - Mathf.Abs(Mathf.Round(oldOffset.z)) * 0.5f));
+        return new Vector3(
+            (anchor.x * 2f + Mathf.Abs(Mathf.Round(newOffset.x))) * (safeGridSize * 0.5f),
+            (anchor.y * 2f + Mathf.Abs(Mathf.Round(newOffset.y))) * (safeGridSize * 0.5f),
+            (anchor.z * 2f + Mathf.Abs(Mathf.Round(newOffset.z))) * (safeGridSize * 0.5f));
+    }
+
     public Vector3 GetBlockHalfExtents(Block block)
     {
         if (block == null)
@@ -69,8 +101,25 @@ internal sealed class BuildPlacementGeometry
 
         Vector3 connectorLocalPosition = prefabBlock.transform.InverseTransformPoint(connectorRoot.TransformPoint(bestConnector.localPos));
         connectorLocalPosition = Vector3.Scale(connectorLocalPosition, prefabBlock.transform.localScale);
-        position = targetConnectorPosition - previewRotation * connectorLocalPosition;
+        position = RemoveGridNoise(targetConnectorPosition - previewRotation * connectorLocalPosition);
         return true;
+    }
+
+    private Vector3 RemoveGridNoise(Vector3 position)
+    {
+        // 只清理由正交旋转带来的近网格尾差，不强制改变特殊底座/自定义连接点的有效位置。
+        float step = Mathf.Max(0.0001f, gridSize) * 0.5f;
+        float tolerance = step * 0.0002f;
+        for (int axis = 0; axis < 3; axis++)
+        {
+            float snapped = Mathf.Round(position[axis] / step) * step;
+            if (Mathf.Abs(position[axis] - snapped) <= tolerance)
+            {
+                position[axis] = snapped;
+            }
+        }
+
+        return position;
     }
 
     public Vector3 SnapCenterByMinCorner(Vector3 targetCenter, Quaternion targetRotation, Block b)
@@ -115,7 +164,7 @@ internal sealed class BuildPlacementGeometry
             Mathf.Round((min.y - Vector3.zero.y) / snapStep) * snapStep + Vector3.zero.y,
             Mathf.Round((min.z - Vector3.zero.z) / snapStep) * snapStep + Vector3.zero.z);
         Vector3 snappedCenter = snappedMin + (max - min) * 0.5f;
-        return snappedCenter;
+        return RemoveGridNoise(snappedCenter);
     }
 
     public bool IsBlocked(Vector3 targetCenter, Quaternion targetRotation, Block block)

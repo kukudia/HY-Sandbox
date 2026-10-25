@@ -1,5 +1,5 @@
 // 职责：处理所选方块的键盘移动/旋转、轴拖拽及复制，提交存档和 Undo 动作。
-// 入口：Poll() / TryBeginDrag() / CancelDrag()；旋转锁定中心，移动吸附与阻挡复用 BuildPlacementGeometry。
+// 入口：Poll() / TryBeginDrag() / CancelDrag()；旋转锁定整数格锚点，尺寸半格偏移随姿态换轴。
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -274,10 +274,9 @@ internal sealed class BuildManipulation
         {
             Quaternion oldRot = selectedBlock.transform.rotation;
             // 操作轴来自相机对齐后的世界坐标系，必须在已有姿态左侧叠加。
-            Quaternion newRot = Quaternion.Euler(moveEuler) * oldRot;
+            Quaternion newRot = _geometry.SnapRotationToGrid(Quaternion.Euler(moveEuler) * oldRot);
             Vector3 oldPos = selectedBlock.transform.position;
-            // 放置连接点确定的中心（含偶数尺寸半格偏移）在旋转期间保持不变。
-            Vector3 newPos = oldPos;
+            Vector3 newPos = _geometry.CalculateRotationPosition(oldPos, oldRot, newRot, selectedBlock);
             // 检查是否被阻挡
             if (!_geometry.IsBlocked(newPos, newRot, selectedBlock))
             {
@@ -378,12 +377,12 @@ internal sealed class BuildManipulation
                 Vector3 to = (hitPoint - blockStartRotatePos).normalized;
                 // 计算旋转角度
                 float angle = Vector3.SignedAngle(from, to, axis);
-                // 步进（比如 15°/45°）
-                float step = 15f;
+                // 与 BlockData 的正交网格存档契约一致；所有提交姿态均为整 90°。
+                float step = 90f;
                 float snappedAngle = Mathf.Round(angle / step) * step;
-                Quaternion newRot = Quaternion.AngleAxis(snappedAngle, axis) * blockStartRot;
+                Quaternion newRot = _geometry.SnapRotationToGrid(Quaternion.AngleAxis(snappedAngle, axis) * blockStartRot);
                 // 检查是否阻挡
-                Vector3 newPos = blockStartRotatePos;
+                Vector3 newPos = _geometry.CalculateRotationPosition(blockStartRotatePos, blockStartRot, newRot, selectedBlock);
                 if (!_geometry.IsBlocked(newPos, newRot, selectedBlock))
                 {
                     selectedBlock.transform.position = newPos;

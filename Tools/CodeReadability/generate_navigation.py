@@ -244,7 +244,7 @@ def main():
     )
     graph(
         "放置、选中、操作和持久化",
-        "Update 按输入模式调用预览或选择；预览按连接点确定中心（偶数尺寸可含半格偏移）。键盘/轴拖拽均锁定中心，绕世界轴左乘旋转并检测阻挡；旋转不重新吸附包围盒。输入/Undo、几何规则和JSON各有审查位置。",
+        "预览按连接点确定中心并清理近网格浮点尾差。键盘/拖拽采用世界轴90°旋转：锁定整数格锚点，尺寸半格偏移随新姿态换轴，候选位置由整数半格坐标重建；阻挡拒绝同时保护姿态与位置，Undo/Redo记录两者。",
         {
             "A": "BuildManager.Update",
             "B": "BuildManager.HandleBuildingPreview",
@@ -268,11 +268,15 @@ def main():
             "T": "BuildManager.SetCurrentBlockResource",
             "U": "BuildManipulation.HandleRotation",
             "V": "BuildManipulation.HandleRotateAxisDrag",
+            "W": "BuildPlacementGeometry.CalculateRotationPosition",
+            "X": "BuildPlacementGeometry.SnapRotationToGrid",
+            "Y": "BuildPlacementGeometry.RemoveGridNoise",
         },
         [
             "A --> B",
             "B --> C",
             "C --> D",
+            "D --> Y",
             "C --> E",
             "C -.->|确认后调用注入动作| F",
             "F --> G",
@@ -285,6 +289,11 @@ def main():
             "A --> L",
             "L --> U",
             "L --> V",
+            "U --> X",
+            "V --> X",
+            "U --> W",
+            "V --> W",
+            "W --> X",
             "U --> E",
             "V --> E",
             "U -.->|有效旋转保存| G",
