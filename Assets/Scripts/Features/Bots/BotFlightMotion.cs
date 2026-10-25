@@ -165,7 +165,10 @@ public sealed class BotFlightMotion
         else
         {
             // 导航方向决定平移，模型转向只影响外观；否则机身转向滞后时会持续顶墙。
-            Vector3 desiredVelocity = _direction.normalized * effectiveSpeed;
+            // 只在直达阶段按剩余距离制动；绕障时仍需保持脱离墙面的速度。
+            float arrivalSpeed = Mathf.Sqrt(2f * Mathf.Max(0.1f, _settings.ReturnBrakingAcceleration) * targetDistance);
+            float taskSpeed = _cachedResult.OverrideDirection ? effectiveSpeed : Mathf.Min(effectiveSpeed, arrivalSpeed);
+            Vector3 desiredVelocity = _direction.normalized * taskSpeed;
             desiredVelocity = _obstacles.ConstrainVelocity(
                 desiredVelocity,
                 Time.fixedDeltaTime,

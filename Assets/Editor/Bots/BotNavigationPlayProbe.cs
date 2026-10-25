@@ -14,6 +14,7 @@ public static class BotNavigationPlayProbe
     private const string Pending = "HY.BotNavigationProbe.Pending";
     private static readonly List<string> Checks = new List<string>();
     private static readonly List<string> Errors = new List<string>();
+    private static readonly List<CaseMetrics> Metrics = new List<CaseMetrics>();
     private static BotNavigationProbeDriver _driver;
     private static GameObject _caseRoot;
     private static int _case;
@@ -58,6 +59,7 @@ public static class BotNavigationPlayProbe
             try
             {
                 Checks.Clear();
+                Metrics.Clear();
                 Errors.Clear();
                 _case = 0;
                 _background = SessionState.GetBool(Pending + ".Background", false);
@@ -70,7 +72,7 @@ public static class BotNavigationPlayProbe
                 }
 
                 Application.logMessageReceived += Capture;
-                _deadline = EditorApplication.timeSinceStartup + 140;
+                _deadline = EditorApplication.timeSinceStartup + 165;
                 ValidateBotFiltering();
                 StartCase();
                 EditorApplication.update += Tick;
@@ -121,7 +123,7 @@ public static class BotNavigationPlayProbe
         EditorApplication.QueuePlayerLoopUpdate();
         if (EditorApplication.timeSinceStartup > _deadline)
         {
-            Errors.Add("Navigation probe exceeded 140 seconds.");
+            Errors.Add("Navigation probe exceeded 165 seconds.");
             Finish();
             return;
         }
@@ -132,6 +134,7 @@ public static class BotNavigationPlayProbe
         }
 
         string name = _driver.CaseName;
+        Metrics.Add(new CaseMetrics { name = name, seconds = _driver.Elapsed, pathLength = _driver.PathLength, remainingDistance = _driver.RemainingDistance });
         if (!_driver.Reached)
         {
             Errors.Add(name + " failed to reach target; distance=" + _driver.RemainingDistance);
@@ -155,9 +158,16 @@ public static class BotNavigationPlayProbe
             Checks.Add("CollectionBot U enclosure escaped vertically");
         }
 
+        if (_case == 5)
+        {
+            Check(
+                "Open approach reaches target without a wide overshoot loop",
+                _driver.Reached && _driver.PathLength < 22f);
+        }
+
         Object.DestroyImmediate(_caseRoot);
         _case++;
-        if (_case >= 5)
+        if (_case >= 6)
         {
             Finish();
         }
@@ -334,7 +344,11 @@ public static class BotNavigationPlayProbe
             home.isKinematic = true;
         }
 
-        Wall(new Vector3(0f, 3f, _case == 1 ? 5f : 0f), new Vector3(_case == 1 ? 8f : 16f, 6f, 1f));
+        if (_case < 5)
+        {
+            Wall(new Vector3(0f, 3f, _case == 1 ? 5f : 0f), new Vector3(_case == 1 ? 8f : 16f, 6f, 1f));
+        }
+
         if (_case == 1)
         {
             Wall(new Vector3(-4f, 3f, 1f), new Vector3(1f, 6f, 9f));
@@ -343,7 +357,7 @@ public static class BotNavigationPlayProbe
 
         _driver = drone.AddComponent<BotNavigationProbeDriver>();
         _driver.Initialize(
-            _case == 1 ? "CollectionBot U enclosure" : _case == 2 ? "RepairBot inertia braking" : _case == 3 ? "RepairBot moving Home behind wall" : _case == 4 ? "RepairBot initial overlap escape" : "RepairBot wall crossing",
+            _case == 1 ? "CollectionBot U enclosure" : _case == 2 ? "RepairBot inertia braking" : _case == 3 ? "RepairBot moving Home behind wall" : _case == 4 ? "RepairBot initial overlap escape" : _case == 5 ? "RepairBot open approach" : "RepairBot wall crossing",
             target.transform,
             body,
             home,
@@ -382,13 +396,23 @@ public static class BotNavigationPlayProbe
         File.WriteAllText(
             "Temp/BotNavigation/PlayValidation.json",
             JsonUtility.ToJson(
-                new Report { passed = Errors.Count == 0, checks = Checks.ToArray(), errors = Errors.ToArray() },
+                new Report { passed = Errors.Count == 0, checks = Checks.ToArray(), errors = Errors.ToArray(), metrics = Metrics.ToArray() },
                 true));
+    }
+
+    [Serializable]
+    private sealed class CaseMetrics
+    {
+        public string name;
+        public float seconds;
+        public float pathLength;
+        public float remainingDistance;
     }
 
     [Serializable]
     private sealed class Report
     {
+        public CaseMetrics[] metrics;
         public bool passed;
         public string[] checks;
         public string[] errors;

@@ -38,6 +38,7 @@ public sealed class BotObstacleAvoidance
     private float _bestDistance = float.PositiveInfinity;
     private float _lastProgressTime;
     private int _clearSamples;
+    private bool _escapingOverlap;
     public IReadOnlyList<DebugHit> DebugHits => _debugHits;
 
     public BotObstacleAvoidance(Transform transform)
@@ -54,6 +55,7 @@ public sealed class BotObstacleAvoidance
         _bestDistance = float.PositiveInfinity;
         _lastProgressTime = Time.time;
         _clearSamples = 0;
+        _escapingOverlap = false;
         _debugHits.Clear();
         _ignoredColliders.Clear();
     }
@@ -83,6 +85,7 @@ public sealed class BotObstacleAvoidance
         _debugHits.Clear();
         if (TryGetOverlapEscape(out Vector3 escape))
         {
+            _escapingOverlap = true;
             _detourDirection = escape;
             _detourUntil = Time.time + Mathf.Max(0.2f, settings.DetourHoldTime);
             _lastProgressTime = Time.time;
@@ -94,6 +97,15 @@ public sealed class BotObstacleAvoidance
                 SpeedMultiplier = 0.4f,
                 ObstacleCount = 1
             };
+        }
+
+        // 分离方向只用于退出重叠；退出后重新选路，避免继续背离目标整段保持时间。
+        if (_escapingOverlap)
+        {
+            _escapingOverlap = false;
+            _detourDirection = Vector3.zero;
+            _bestDistance = targetDistance;
+            _lastProgressTime = Time.time;
         }
 
         float radius = Mathf.Max(0.05f, settings.ClearanceRadius);
@@ -109,7 +121,7 @@ public sealed class BotObstacleAvoidance
         if (!blocked && !stalled)
         {
             _clearSamples++;
-            if (!detouring || Time.time >= _detourUntil && _clearSamples >= 3)
+            if (!detouring || _clearSamples >= 2)
             {
                 _detourDirection = Vector3.zero;
                 _overlapObstacle = null;
@@ -133,6 +145,7 @@ public sealed class BotObstacleAvoidance
             _detourDirection = ChooseClearDirection(targetDirection, range, stalled, out clearDistance);
             _detourUntil = Time.time + Mathf.Max(0.2f, settings.DetourHoldTime);
             _lastProgressTime = Time.time;
+            _bestDistance = targetDistance;
         }
 
         if (blocked)
@@ -158,7 +171,16 @@ public sealed class BotObstacleAvoidance
             _lastProgressTime = Time.time;
         }
 
-        return Time.time - _lastProgressTime >= Mathf.Max(0.5f, _settings.StuckTimeout);
+        float timeout = Mathf.Max(0.5f, _settings.StuckTimeout);
+        if (Time.time - _lastProgressTime < timeout)
+        {
+            return false;
+        }
+
+        // 绕路或目标移动后重建进展窗口，不要求先突破整段任务的历史最近距离。
+        _bestDistance = targetDistance;
+        _lastProgressTime = Time.time;
+        return true;
     }
 
     private Vector3 ChooseClearDirection(Vector3 targetDirection, float range, bool stalled, out float bestClearDistance)

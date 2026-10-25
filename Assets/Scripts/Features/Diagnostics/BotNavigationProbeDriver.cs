@@ -11,6 +11,12 @@ public sealed class BotNavigationProbeDriver : MonoBehaviour
     private BotFlightMotion _motion;
     private BotFlightMotion.Settings _settings;
     private float _started;
+    private Vector3 _previousPosition;
+    public float Elapsed => Time.time - _started;
+    public float PathLength
+    {
+        get; private set;
+    }
     public string CaseName
     {
         get; private set;
@@ -42,6 +48,7 @@ public sealed class BotNavigationProbeDriver : MonoBehaviour
         _motion = new BotFlightMotion(transform, body);
         _motion.ResetDirection();
         _started = Time.time;
+        _previousPosition = transform.position;
         _settings = new BotFlightMotion.Settings
         {
             MovementSpeed = authored.movementSpeed,
@@ -74,6 +81,8 @@ public sealed class BotNavigationProbeDriver : MonoBehaviour
             return;
         }
 
+        PathLength += Vector3.Distance(_previousPosition, transform.position);
+        _previousPosition = transform.position;
         MaximumHeight = Mathf.Max(MaximumHeight, transform.position.y);
         if (_home != null)
         {

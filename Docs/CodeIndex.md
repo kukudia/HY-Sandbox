@@ -206,18 +206,18 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BotNavigationPlayProbe | [`void Run()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L30) | public static |
-| BotNavigationPlayProbe | [`void StateChanged(PlayModeStateChange state)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L49) | private static |
-| BotNavigationPlayProbe | [`void Capture(string condition, string stack, LogType type)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L98) | private static |
-| BotNavigationPlayProbe | [`void Tick()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L106) | private static |
-| BotNavigationPlayProbe | [`void TickCase()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L119) | private static |
-| BotNavigationPlayProbe | [`void ValidateBotFiltering()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L170) | private static |
-| BotNavigationPlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L296) | private static |
-| BotNavigationPlayProbe | [`void StartCase()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L308) | private static |
-| BotNavigationPlayProbe | [`void Wall(Vector3 position, Vector3 scale)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L354) | private static |
-| BotNavigationPlayProbe | [`void Finish()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L363) | private static |
-| BotNavigationPlayProbe | [`void Restore()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L370) | private static |
-| BotNavigationPlayProbe | [`void WriteReport()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L379) | private static |
+| BotNavigationPlayProbe | [`void Run()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L31) | public static |
+| BotNavigationPlayProbe | [`void StateChanged(PlayModeStateChange state)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L50) | private static |
+| BotNavigationPlayProbe | [`void Capture(string condition, string stack, LogType type)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L100) | private static |
+| BotNavigationPlayProbe | [`void Tick()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L108) | private static |
+| BotNavigationPlayProbe | [`void TickCase()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L121) | private static |
+| BotNavigationPlayProbe | [`void ValidateBotFiltering()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L180) | private static |
+| BotNavigationPlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L306) | private static |
+| BotNavigationPlayProbe | [`void StartCase()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L318) | private static |
+| BotNavigationPlayProbe | [`void Wall(Vector3 position, Vector3 scale)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L368) | private static |
+| BotNavigationPlayProbe | [`void Finish()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L377) | private static |
+| BotNavigationPlayProbe | [`void Restore()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L384) | private static |
+| BotNavigationPlayProbe | [`void WriteReport()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L393) | private static |
 
 ## Assets/Editor/Build/AutoBuildTool.cs
 
@@ -1449,7 +1449,7 @@
 | BotFlightMotion | [`void SampleGuidance( Transform targetReference, Vector3 targetDirection, float targetDistance, float avoidanceRangeScale)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L105) | private |
 | BotFlightMotion | [`void UpdateDirectionAndSpeed(Vector3 targetDirection, float avoidanceRangeScale)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L127) | private |
 | BotFlightMotion | [`void ApplyMovement( Vector3 targetPosition, Vector3 targetDirection, float targetDistance, Rigidbody homeRigidbody, bool returningHome)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L152) | private |
-| BotFlightMotion | [`void ApplyReturnHomeMovement( Vector3 targetPosition, Vector3 targetDirection, float targetDistance, float effectiveSpeed, Rigidbody homeRigidbody)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L181) | private |
+| BotFlightMotion | [`void ApplyReturnHomeMovement( Vector3 targetPosition, Vector3 targetDirection, float targetDistance, float effectiveSpeed, Rigidbody homeRigidbody)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L184) | private |
 
 ## Assets/Scripts/Features/Bots/BotNavigationGizmos.cs
 
@@ -1465,19 +1465,19 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BotObstacleAvoidance | [`void Reset()`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L49) | public |
-| BotObstacleAvoidance | [`void ClearDebugHits()`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L61) | public |
-| BotObstacleAvoidance | [`BotAvoidanceResult Evaluate( Transform target, Vector3 velocity, Vector3 targetDirection, float rangeScale, BotAvoidanceSettings settings, float targetDistance = float.PositiveInfinity)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L67) | public |
-| BotObstacleAvoidance | [`bool CheckProgress(float targetDistance)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L153) | private |
-| BotObstacleAvoidance | [`Vector3 ChooseClearDirection(Vector3 targetDirection, float range, bool stalled, out float bestClearDistance)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L164) | private |
-| BotObstacleAvoidance | [`void ConsiderDirection( Vector3 candidate, Vector3 targetDirection, float range, bool stalled, ref float bestScore, ref Vector3 bestDirection, ref float bestClearDistance)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L212) | private |
-| BotObstacleAvoidance | [`Vector3 ConstrainVelocity(Vector3 desiredVelocity, float deltaTime, Vector3 currentVelocity, float brakingAcceleration)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L236) | public |
-| BotObstacleAvoidance | [`Vector3 LimitApproachSpeed(Vector3 desiredVelocity, Vector3 corridor, float lookAhead, float margin, float acceleration)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L263) | private |
-| BotObstacleAvoidance | [`float GetClearDistance(Vector3 direction, float range)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L280) | private |
-| BotObstacleAvoidance | [`bool Cast(Vector3 direction, float range, out RaycastHit nearest)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L285) | private |
-| BotObstacleAvoidance | [`bool TryGetOverlapEscape(out Vector3 escape)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L318) | private |
-| BotObstacleAvoidance | [`bool IsIgnored(Collider collider)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L373) | private |
-| BotObstacleAvoidance | [`bool ShouldIgnoreCollider(Collider collider)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L389) | private |
+| BotObstacleAvoidance | [`void Reset()`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L50) | public |
+| BotObstacleAvoidance | [`void ClearDebugHits()`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L63) | public |
+| BotObstacleAvoidance | [`BotAvoidanceResult Evaluate( Transform target, Vector3 velocity, Vector3 targetDirection, float rangeScale, BotAvoidanceSettings settings, float targetDistance = float.PositiveInfinity)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L69) | public |
+| BotObstacleAvoidance | [`bool CheckProgress(float targetDistance)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L166) | private |
+| BotObstacleAvoidance | [`Vector3 ChooseClearDirection(Vector3 targetDirection, float range, bool stalled, out float bestClearDistance)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L186) | private |
+| BotObstacleAvoidance | [`void ConsiderDirection( Vector3 candidate, Vector3 targetDirection, float range, bool stalled, ref float bestScore, ref Vector3 bestDirection, ref float bestClearDistance)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L234) | private |
+| BotObstacleAvoidance | [`Vector3 ConstrainVelocity(Vector3 desiredVelocity, float deltaTime, Vector3 currentVelocity, float brakingAcceleration)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L258) | public |
+| BotObstacleAvoidance | [`Vector3 LimitApproachSpeed(Vector3 desiredVelocity, Vector3 corridor, float lookAhead, float margin, float acceleration)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L285) | private |
+| BotObstacleAvoidance | [`float GetClearDistance(Vector3 direction, float range)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L302) | private |
+| BotObstacleAvoidance | [`bool Cast(Vector3 direction, float range, out RaycastHit nearest)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L307) | private |
+| BotObstacleAvoidance | [`bool TryGetOverlapEscape(out Vector3 escape)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L340) | private |
+| BotObstacleAvoidance | [`bool IsIgnored(Collider collider)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L395) | private |
+| BotObstacleAvoidance | [`bool ShouldIgnoreCollider(Collider collider)`](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L411) | private |
 
 ## Assets/Scripts/Features/Bots/CollectionBot.cs
 
@@ -2393,9 +2393,9 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BotNavigationProbeDriver | [`void Initialize(string caseName, Transform target, Rigidbody body, Rigidbody home, Bot authored)`](../Assets/Scripts/Features/Diagnostics/BotNavigationProbeDriver.cs#L36) | public |
-| BotNavigationProbeDriver | [`void FixedUpdate()`](../Assets/Scripts/Features/Diagnostics/BotNavigationProbeDriver.cs#L70) | private |
-| BotNavigationProbeDriver | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Diagnostics/BotNavigationProbeDriver.cs#L97) | private |
+| BotNavigationProbeDriver | [`void Initialize(string caseName, Transform target, Rigidbody body, Rigidbody home, Bot authored)`](../Assets/Scripts/Features/Diagnostics/BotNavigationProbeDriver.cs#L42) | public |
+| BotNavigationProbeDriver | [`void FixedUpdate()`](../Assets/Scripts/Features/Diagnostics/BotNavigationProbeDriver.cs#L77) | private |
+| BotNavigationProbeDriver | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Diagnostics/BotNavigationProbeDriver.cs#L106) | private |
 
 ## Assets/Scripts/Features/Diagnostics/DebugManager.cs
 

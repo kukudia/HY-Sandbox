@@ -455,3 +455,10 @@ ArtSource/VfxGraph和Blueprints下全部16份自有工具已明确职责/入口�
 ProjectileTurret发射后仅炮管模型沿炮口反向后退0.12m，0.04s快速后退、0.22s平滑恢复；参数和炮管引用在Inspector可编辑。LateUpdate独立于索敌与供电门控，停火继续复位，禁用立即恢复初始位置。单管/双管Prefab已通过Editor只补充引用，原其他参数保留，资产制作源同步。
 
 两个新炮塔的透明二维图重新渲染，并修正Single Sprite导入及真实建造条目Preview引用；Play实例确认两个图标都非空。菜单Refresh turret thumbnails只更新图标，不重新搭建炮塔。28条炮塔/后座检查、10条真实帧飞行/同步后座/停机复位检查通过；Unity编译、166脚本格式/函数图、dotnet build和diff检查通过（4个既有构建警告）。Main及炮弹材质的期间外部改动保留并排除本次提交。见 [验证记录](Docs/Validation/2026-10-11-turret-recoil-icons.json)。
+
+## 2026-10-25 Bot 寻路调优
+
+- 入口：`BotFlightMotion.ApplyMovement` / `BotObstacleAvoidance.Evaluate`；维修与回收共用。直达任务按剩余距离和 Inspector 的 `returnBrakingAcceleration` 制动，避免高速越过目标再绕回；绕障阶段保留脱离速度。
+- 连续两次采样确认直达走廊净空后恢复追踪，无需等满绕障保持时间；退出起点重叠后立即重新选路。停滞检测按当前进展窗口重置，绕远后不再必须突破整段任务历史最近距离才能确认进展。移动 Home 的实时点位/点速度、逐物理帧速度走廊制动及 Bot 过滤保留。
+- 导航探针增加耗时、路线长度及空旷接近回归。Unity Play Mode 6 个真实 PhysX 场景、32 项检查通过，均到达且无墙体碰撞。相同条件单次前后对照：绕墙路线 56.09→37.71m，U 形围挡 50.80→33.42m，惯性制动 58.54→29.33m，移动 Home 25.11→23.95m，起点重叠 80.36→35.23m；不作为统计基准或任意迷宫保证。
+- 真实任务 Play 回归 71 项通过，覆盖回收运输/货仓持久化、维修和移动 Home 插槽返航。静态构建通过（0 错误、4 个警告）。函数图及源码导航已同步；验证证据见 [调优对照](Docs/Validation/2026-10-25-bot-navigation-tuning.json)。大量 Bot 压力、任意封闭迷宫和全部 Home 运动组合未覆盖。
