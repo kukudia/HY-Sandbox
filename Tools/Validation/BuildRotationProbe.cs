@@ -123,6 +123,7 @@ public static class BuildRotationProbe
 
                 RotateAxisHandle handle = Child(root, "right drag handle").AddComponent<RotateAxisHandle>();
                 Set(manipulation, "activeRotateHandle", handle);
+                Set(manipulation, "blockStartRotateAxis", Vector3.right);
                 Set(manipulation, "blockStartRot", initial);
                 Set(manipulation, "blockStartRotatePos", centers[0]);
                 Set(manipulation, "rotateLastRot", initial);

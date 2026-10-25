@@ -244,7 +244,7 @@ def main():
     )
     graph(
         "放置、选中、操作和持久化",
-        "预览按连接点确定中心并清理近网格浮点尾差。键盘/拖拽采用世界轴90°旋转：锁定整数格锚点，尺寸半格偏移随新姿态换轴，候选位置由整数半格坐标重建；阻挡拒绝同时保护姿态与位置，Undo/Redo记录两者。",
+        "预览按连接点确定中心并清理近网格浮点尾差。相机前/上轴正交选取，拖拽按下时捕获世界轴；键盘/拖拽采用世界轴90°旋转，锁定整数格锚点，尺寸半格偏移随新姿态换轴；阻挡拒绝保护姿态与位置，Undo/Redo记录两者。",
         {
             "A": "BuildManager.Update",
             "B": "BuildManager.HandleBuildingPreview",
@@ -271,6 +271,8 @@ def main():
             "W": "BuildPlacementGeometry.CalculateRotationPosition",
             "X": "BuildPlacementGeometry.SnapRotationToGrid",
             "Y": "BuildPlacementGeometry.RemoveGridNoise",
+            "Z": "BuildManipulation.AlignAxisToNearestWorldDir",
+            "AA": "BuildManipulation.TryBeginDrag",
         },
         [
             "A --> B",
@@ -286,7 +288,10 @@ def main():
             "F --> M",
             "A --> J",
             "J --> K",
+            "J --> AA",
             "A --> L",
+            "L --> Z",
+            "AA -.->|捕获起始世界轴及姿态供后续帧使用| V",
             "L --> U",
             "L --> V",
             "U --> X",

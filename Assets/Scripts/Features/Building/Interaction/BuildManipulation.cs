@@ -20,6 +20,7 @@ internal sealed class BuildManipulation
     private Vector3 rotateDragStart;
     private Quaternion blockStartRot;
     private Vector3 blockStartRotatePos;
+    private Vector3 blockStartRotateAxis;
     private Vector3 rotateLastPos;
     private Quaternion rotateLastRot;
     private Vector3 axisForward;
@@ -106,6 +107,7 @@ internal sealed class BuildManipulation
                 rotateDragStart = hit.point;
                 blockStartRot = block.transform.rotation;
                 blockStartRotatePos = block.transform.position;
+                blockStartRotateAxis = handle.WorldAxis;
                 rotateLastRot = blockStartRot;
                 rotateLastPos = blockStartRotatePos;
                 return true;
@@ -127,23 +129,27 @@ internal sealed class BuildManipulation
         Vector3 camUp = mainCamera.transform.up.normalized;
         // 找到与相机 forward 最接近的方向
         Vector3 nearestForward = dirs[0];
-        Vector3 nearestUp = dirs[0];
         float maxDotForward = Vector3.Dot(camForward, nearestForward);
-        float maxDotUp = Vector3.Dot(camForward, nearestUp);
         for (int i = 1; i < dirs.Length; i++)
         {
             float dotForward = Vector3.Dot(camForward, dirs[i]);
-            float dotUp = Vector3.Dot(camUp, dirs[i]);
             if (dotForward > maxDotForward)
             {
                 maxDotForward = dotForward;
                 nearestForward = dirs[i];
             }
+        }
 
-            if (dotUp > maxDotUp)
+        // 向上轴必须与已选前轴垂直；斜视时独立选最近轴可能选中同一轴，导致叉积为零。
+        Vector3 nearestUp = Vector3.zero;
+        float maxDotUp = float.NegativeInfinity;
+        foreach (Vector3 direction in dirs)
+        {
+            float dotUp = Vector3.Dot(camUp, direction);
+            if (Vector3.Dot(direction, nearestForward) == 0f && dotUp > maxDotUp)
             {
                 maxDotUp = dotUp;
-                nearestUp = dirs[i];
+                nearestUp = direction;
             }
         }
 
@@ -360,7 +366,8 @@ internal sealed class BuildManipulation
         if (Mouse.current.leftButton.isPressed && activeRotateHandle != null)
         {
             // 旋转轴（世界空间）
-            Vector3 axis = activeRotateHandle.WorldAxis;
+            // 手柄可能是方块的子对象；整个拖拽使用按下时捕获的世界轴，不随父对象旋转。
+            Vector3 axis = blockStartRotateAxis;
             if (axis.sqrMagnitude < 0.001f)
             {
                 return;

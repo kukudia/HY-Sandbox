@@ -440,7 +440,7 @@ flowchart TD
 
 ## 放置、选中、操作和持久化
 
-预览按连接点确定中心并清理近网格浮点尾差。键盘/拖拽采用世界轴90°旋转：锁定整数格锚点，尺寸半格偏移随新姿态换轴，候选位置由整数半格坐标重建；阻挡拒绝同时保护姿态与位置，Undo/Redo记录两者。
+预览按连接点确定中心并清理近网格浮点尾差。相机前/上轴正交选取，拖拽按下时捕获世界轴；键盘/拖拽采用世界轴90°旋转，锁定整数格锚点，尺寸半格偏移随新姿态换轴；阻挡拒绝保护姿态与位置，Undo/Redo记录两者。
 
 ```mermaid
 flowchart TD
@@ -467,7 +467,7 @@ flowchart TD
     K["BuildSelection.SelectBlock()"]
     click K "../Assets/Scripts/Features/Building/Interaction/BuildSelection.cs#L80" "打开源码"
     L["BuildManipulation.Poll()"]
-    click L "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L59" "打开源码"
+    click L "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L60" "打开源码"
     M["ActionManager.Push()"]
     click M "../Assets/Scripts/Features/Building/ActionManager.cs#L26" "打开源码"
     N["ActionManager.Undo()"]
@@ -485,15 +485,19 @@ flowchart TD
     T["BuildManager.SetCurrentBlockResource()"]
     click T "../Assets/Scripts/Features/Building/BuildManager.cs#L360" "打开源码"
     U["BuildManipulation.HandleRotation()"]
-    click U "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L235" "打开源码"
+    click U "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L241" "打开源码"
     V["BuildManipulation.HandleRotateAxisDrag()"]
-    click V "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L358" "打开源码"
+    click V "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L364" "打开源码"
     W["BuildPlacementGeometry.CalculateRotationPosition()"]
     click W "../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L19" "打开源码"
     X["BuildPlacementGeometry.SnapRotationToGrid()"]
     click X "../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L10" "打开源码"
     Y["BuildPlacementGeometry.RemoveGridNoise()"]
     click Y "../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L108" "打开源码"
+    Z["BuildManipulation.AlignAxisToNearestWorldDir()"]
+    click Z "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L126" "打开源码"
+    AA["BuildManipulation.TryBeginDrag()"]
+    click AA "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L81" "打开源码"
     A --> B
     B --> C
     C --> D
@@ -507,7 +511,10 @@ flowchart TD
     F --> M
     A --> J
     J --> K
+    J --> AA
     A --> L
+    L --> Z
+    AA -.->|捕获起始世界轴及姿态供后续帧使用| V
     L --> U
     L --> V
     U --> X
@@ -550,7 +557,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildSelection.cs|Poll -->
 - [BuildSelection.SelectBlock](../Assets/Scripts/Features/Building/Interaction/BuildSelection.cs#L80)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildSelection.cs|SelectBlock -->
-- [BuildManipulation.Poll](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L59)
+- [BuildManipulation.Poll](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L60)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs|Poll -->
 - [ActionManager.Push](../Assets/Scripts/Features/Building/ActionManager.cs#L26)
 <!-- source: Assets/Scripts/Features/Building/ActionManager.cs|Push -->
@@ -568,9 +575,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BuildPaletteItem.cs|BindPalette -->
 - [BuildManager.SetCurrentBlockResource](../Assets/Scripts/Features/Building/BuildManager.cs#L360)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|SetCurrentBlockResource -->
-- [BuildManipulation.HandleRotation](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L235)
+- [BuildManipulation.HandleRotation](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L241)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs|HandleRotation -->
-- [BuildManipulation.HandleRotateAxisDrag](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L358)
+- [BuildManipulation.HandleRotateAxisDrag](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L364)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs|HandleRotateAxisDrag -->
 - [BuildPlacementGeometry.CalculateRotationPosition](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L19)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs|CalculateRotationPosition -->
@@ -578,6 +585,10 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs|SnapRotationToGrid -->
 - [BuildPlacementGeometry.RemoveGridNoise](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L108)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs|RemoveGridNoise -->
+- [BuildManipulation.AlignAxisToNearestWorldDir](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L126)
+<!-- source: Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs|AlignAxisToNearestWorldDir -->
+- [BuildManipulation.TryBeginDrag](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L81)
+<!-- source: Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs|TryBeginDrag -->
 
 ## 供电网络与可视范围
 
