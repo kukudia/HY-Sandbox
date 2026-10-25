@@ -208,16 +208,26 @@
 | --- | --- | --- |
 | BotNavigationPlayProbe | [`void Run()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L31) | public static |
 | BotNavigationPlayProbe | [`void StateChanged(PlayModeStateChange state)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L50) | private static |
-| BotNavigationPlayProbe | [`void Capture(string condition, string stack, LogType type)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L100) | private static |
-| BotNavigationPlayProbe | [`void Tick()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L108) | private static |
-| BotNavigationPlayProbe | [`void TickCase()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L121) | private static |
-| BotNavigationPlayProbe | [`void ValidateBotFiltering()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L180) | private static |
-| BotNavigationPlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L306) | private static |
-| BotNavigationPlayProbe | [`void StartCase()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L318) | private static |
-| BotNavigationPlayProbe | [`void Wall(Vector3 position, Vector3 scale)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L368) | private static |
-| BotNavigationPlayProbe | [`void Finish()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L377) | private static |
-| BotNavigationPlayProbe | [`void Restore()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L384) | private static |
-| BotNavigationPlayProbe | [`void WriteReport()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L393) | private static |
+| BotNavigationPlayProbe | [`void Capture(string condition, string stack, LogType type)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L101) | private static |
+| BotNavigationPlayProbe | [`void Tick()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L109) | private static |
+| BotNavigationPlayProbe | [`void TickCase()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L122) | private static |
+| BotNavigationPlayProbe | [`void ValidateBotFiltering()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L198) | private static |
+| BotNavigationPlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L324) | private static |
+| BotNavigationPlayProbe | [`void ValidateFrozenNavigation()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L336) | private static |
+| BotNavigationPlayProbe | [`void StartCase()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L362) | private static |
+| BotNavigationPlayProbe | [`void Wall(Vector3 position, Vector3 scale)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L426) | private static |
+| BotNavigationPlayProbe | [`void Finish()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L435) | private static |
+| BotNavigationPlayProbe | [`void Restore()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L442) | private static |
+| BotNavigationPlayProbe | [`void WriteReport()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L451) | private static |
+
+## Assets/Editor/Bots/BotNavigationPolicyMigration.cs
+
+// 职责：通过 Editor 重存 Bot Prefab，清理已固化的旧导航字段并核对剩余创作数据。 // 入口：Run() / Tools/Bots/Migrate fixed navigation policy；不保存场景、不重建 GUID。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BotNavigationPolicyMigration | [`string Run()`](../Assets/Editor/Bots/BotNavigationPolicyMigration.cs#L12) | public static |
+| BotNavigationPolicyMigration | [`string Snapshot(string path)`](../Assets/Editor/Bots/BotNavigationPolicyMigration.cs#L62) | private static |
 
 ## Assets/Editor/Build/AutoBuildTool.cs
 
@@ -735,10 +745,10 @@
 | SalvageAssetBaker | [`Material Material(string name, Color color, bool transparent, bool emissive)`](../Assets/Editor/Salvage/SalvageAssetBaker.cs#L68) | private static |
 | SalvageAssetBaker | [`void Hold( string name, CargoKind kind, int size, int capacity, bool explosive, bool enemyDrops)`](../Assets/Editor/Salvage/SalvageAssetBaker.cs#L107) | private static |
 | SalvageAssetBaker | [`void CollectionBay()`](../Assets/Editor/Salvage/SalvageAssetBaker.cs#L246) | private static |
-| SalvageAssetBaker | [`void DropPrefab()`](../Assets/Editor/Salvage/SalvageAssetBaker.cs#L331) | private static |
-| SalvageAssetBaker | [`GameObject Cube(string name, Transform parent, Vector3 position, Vector3 scale, Material material)`](../Assets/Editor/Salvage/SalvageAssetBaker.cs#L372) | private static |
-| SalvageAssetBaker | [`void Set(Object target, string property, Object value)`](../Assets/Editor/Salvage/SalvageAssetBaker.cs#L385) | public static |
-| SalvageAssetBaker | [`void Preview()`](../Assets/Editor/Salvage/SalvageAssetBaker.cs#L392) | public static |
+| SalvageAssetBaker | [`void DropPrefab()`](../Assets/Editor/Salvage/SalvageAssetBaker.cs#L329) | private static |
+| SalvageAssetBaker | [`GameObject Cube(string name, Transform parent, Vector3 position, Vector3 scale, Material material)`](../Assets/Editor/Salvage/SalvageAssetBaker.cs#L370) | private static |
+| SalvageAssetBaker | [`void Set(Object target, string property, Object value)`](../Assets/Editor/Salvage/SalvageAssetBaker.cs#L383) | public static |
+| SalvageAssetBaker | [`void Preview()`](../Assets/Editor/Salvage/SalvageAssetBaker.cs#L390) | public static |
 
 ## Assets/Editor/Salvage/SalvagePlayProbe.cs
 
@@ -760,7 +770,7 @@
 | SalvagePlayProbe | [`CargoItem Part()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L228) | private static |
 | SalvagePlayProbe | [`BuildingRuntime SalvageBuilding(WorldBuildingManager manager, UnitFaction faction, bool withBot = false)`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L234) | private static |
 | SalvagePlayProbe | [`IEnumerator BuildingSalvage()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L278) | private static |
-| SalvagePlayProbe | [`IEnumerator Scenario()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L430) | private static |
+| SalvagePlayProbe | [`IEnumerator Scenario()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L428) | private static |
 
 ## Assets/Editor/Siege/SiegeBaseBlueprintAuthoring.cs
 
@@ -1393,26 +1403,25 @@
 
 ## Assets/Scripts/Features/Bots/Bot.cs
 
-// 职责：保存无人机 Inspector 配置并组织任务飞行、返航、离家和精确停靠状态。 // 入口：派生机器人的 FixedUpdate → TickNavigation() → NavigateToTarget()/NavigateHomeSmoothly()。 // 依赖：BotFlightMotion 处理飞行/制动；BotObstacleAvoidance 负责三维净空与脱困。 // 不变量：homeOffset 保持 Home 局部坐标；停靠切为运动学刚体，完成后恢复准确局部姿态。
+// 职责：保存无人机任务/插槽配置并组织任务飞行、返航、离家和精确停靠状态。 // 入口：派生机器人的 FixedUpdate → TickNavigation() → NavigateToTarget()/NavigateHomeSmoothly()。 // 依赖：BotFlightMotion 处理飞行/制动；BotObstacleAvoidance 负责三维净空与脱困。 // 不变量：homeOffset 保持 Home 局部坐标；停靠切为运动学刚体，完成后恢复准确局部姿态。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Bot | [`void Start()`](../Assets/Scripts/Features/Bots/Bot.cs#L130) | protected virtual |
-| Bot | [`bool TickNavigation()`](../Assets/Scripts/Features/Bots/Bot.cs#L158) | protected |
-| Bot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Bot.cs#L172) | protected virtual |
-| Bot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/Bot.cs#L191) | protected virtual |
-| Bot | [`Power SetHomePowerRequested(bool requested)`](../Assets/Scripts/Features/Bots/Bot.cs#L197) | protected |
-| Bot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/Bot.cs#L210) | public virtual |
-| Bot | [`void InitializeTrail()`](../Assets/Scripts/Features/Bots/Bot.cs#L214) | private |
-| Bot | [`void LateUpdate()`](../Assets/Scripts/Features/Bots/Bot.cs#L234) | private |
-| Bot | [`void NavigateToTarget(Transform target)`](../Assets/Scripts/Features/Bots/Bot.cs#L247) | protected |
-| Bot | [`void NavigateHomeSmoothly()`](../Assets/Scripts/Features/Bots/Bot.cs#L267) | protected |
-| Bot | [`Vector3 GetRelativeHomeVelocity(Vector3 worldPosition)`](../Assets/Scripts/Features/Bots/Bot.cs#L304) | private |
-| Bot | [`void ReturnHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L310) | private |
-| Bot | [`void LeaveHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L346) | private |
-| Bot | [`void SetNavigationState(NavigationState nextState)`](../Assets/Scripts/Features/Bots/Bot.cs#L358) | private |
-| Bot | [`BotFlightMotion.Settings CreateFlightSettings()`](../Assets/Scripts/Features/Bots/Bot.cs#L378) | private |
-| Bot | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Bots/Bot.cs#L405) | private |
+| Bot | [`void Start()`](../Assets/Scripts/Features/Bots/Bot.cs#L52) | protected virtual |
+| Bot | [`bool TickNavigation()`](../Assets/Scripts/Features/Bots/Bot.cs#L79) | protected |
+| Bot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Bot.cs#L93) | protected virtual |
+| Bot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/Bot.cs#L112) | protected virtual |
+| Bot | [`Power SetHomePowerRequested(bool requested)`](../Assets/Scripts/Features/Bots/Bot.cs#L118) | protected |
+| Bot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/Bot.cs#L131) | public virtual |
+| Bot | [`void InitializeTrail()`](../Assets/Scripts/Features/Bots/Bot.cs#L135) | private |
+| Bot | [`void LateUpdate()`](../Assets/Scripts/Features/Bots/Bot.cs#L155) | private |
+| Bot | [`void NavigateToTarget(Transform target)`](../Assets/Scripts/Features/Bots/Bot.cs#L168) | protected |
+| Bot | [`void NavigateHomeSmoothly()`](../Assets/Scripts/Features/Bots/Bot.cs#L188) | protected |
+| Bot | [`Vector3 GetRelativeHomeVelocity(Vector3 worldPosition)`](../Assets/Scripts/Features/Bots/Bot.cs#L225) | private |
+| Bot | [`void ReturnHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L231) | private |
+| Bot | [`void LeaveHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L273) | private |
+| Bot | [`void SetNavigationState(NavigationState nextState)`](../Assets/Scripts/Features/Bots/Bot.cs#L285) | private |
+| Bot | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Bots/Bot.cs#L310) | private |
 
 ## Assets/Scripts/Features/Bots/BotAvoidanceResult.cs
 
@@ -1441,15 +1450,14 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BotFlightMotion | [`void ResetDirection()`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L44) | public |
-| BotFlightMotion | [`void ClearTarget()`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L49) | public |
-| BotFlightMotion | [`void NavigateToTarget(Transform target, Settings settings)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L58) | public |
-| BotFlightMotion | [`void NavigateHome( Transform home, Vector3 approachPosition, Rigidbody homeRigidbody, float rangeScale, Settings settings)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L69) | public |
-| BotFlightMotion | [`void NavigateToPosition( Vector3 targetPosition, Transform targetReference, Rigidbody homeRigidbody, bool returningHome, float avoidanceRangeScale, Settings settings)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L85) | private |
-| BotFlightMotion | [`void SampleGuidance( Transform targetReference, Vector3 targetDirection, float targetDistance, float avoidanceRangeScale)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L105) | private |
-| BotFlightMotion | [`void UpdateDirectionAndSpeed(Vector3 targetDirection, float avoidanceRangeScale)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L127) | private |
-| BotFlightMotion | [`void ApplyMovement( Vector3 targetPosition, Vector3 targetDirection, float targetDistance, Rigidbody homeRigidbody, bool returningHome)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L152) | private |
-| BotFlightMotion | [`void ApplyReturnHomeMovement( Vector3 targetPosition, Vector3 targetDirection, float targetDistance, float effectiveSpeed, Rigidbody homeRigidbody)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L184) | private |
+| BotFlightMotion | [`void ResetDirection()`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L30) | public |
+| BotFlightMotion | [`void ClearTarget()`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L35) | public |
+| BotFlightMotion | [`void NavigateToTarget(Transform target)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L43) | public |
+| BotFlightMotion | [`void NavigateHome(Transform home, Vector3 approachPosition, Rigidbody homeRigidbody, float rangeScale)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L48) | public |
+| BotFlightMotion | [`void NavigateToPosition( Vector3 targetPosition, Transform targetReference, Rigidbody homeRigidbody, bool returningHome, float avoidanceRangeScale)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L53) | private |
+| BotFlightMotion | [`void SampleGuidance( Transform targetReference, Vector3 targetDirection, float targetDistance, float avoidanceRangeScale)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L71) | private |
+| BotFlightMotion | [`void UpdateDirectionAndSpeed(Vector3 targetDirection)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L96) | private |
+| BotFlightMotion | [`void ApplyMovement( Vector3 targetPosition, Vector3 targetDirection, float targetDistance, Rigidbody homeRigidbody, bool returningHome)`](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L114) | private |
 
 ## Assets/Scripts/Features/Bots/BotNavigationGizmos.cs
 
@@ -1458,6 +1466,15 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BotNavigationGizmos | [`void Draw( Transform transform, Transform navigateTarget, Rigidbody rb, Bot.NavigationState currentState, BotFlightMotion motion, bool showAvoidanceRays, bool showDirectionVectors)`](../Assets/Scripts/Features/Bots/BotNavigationGizmos.cs#L7) | public static |
+
+## Assets/Scripts/Features/Bots/BotNavigationPolicy.cs
+
+// 职责：定义维修/回收 Bot 共用且不可由 Inspector/CSV 覆盖的导航规则。 // 契约：速度没有固定上限；只限制加速度、可制动距离及转弯净空，单位为米和秒。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BotNavigationPolicy | [`BotAvoidanceSettings CreateAvoidanceSettings()`](../Assets/Scripts/Features/Bots/BotNavigationPolicy.cs#L19) | public static |
+| BotNavigationPolicy | [`void ConfigureBody(Rigidbody body)`](../Assets/Scripts/Features/Bots/BotNavigationPolicy.cs#L35) | public static |
 
 ## Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs
 
@@ -1614,10 +1631,10 @@
 | --- | --- | --- |
 | Column | [`Component[] FindTargets(GameObject root)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L31) | public |
 | BlockDataTableSchema | [`List<Column> CreateColumns()`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L66) | public static |
-| BlockDataTableSchema | [`void AddFloat( List<Column> columns, string group, string property, string label, double minimum = 0, double maximum = double.PositiveInfinity)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L117) | private static |
-| BlockDataTableSchema | [`void AddInteger( List<Column> columns, string group, string property, string label, double minimum = 0, double maximum = double.PositiveInfinity)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L136) | private static |
-| BlockDataTableSchema | [`void AddBoolean(List<Column> columns, string group, string property, string label)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L155) | private static |
-| BlockDataTableSchema | [`void AddEnum(List<Column> columns, string group, string property, string label, string[] names)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L168) | private static |
+| BlockDataTableSchema | [`void AddFloat( List<Column> columns, string group, string property, string label, double minimum = 0, double maximum = double.PositiveInfinity)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L116) | private static |
+| BlockDataTableSchema | [`void AddInteger( List<Column> columns, string group, string property, string label, double minimum = 0, double maximum = double.PositiveInfinity)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L135) | private static |
+| BlockDataTableSchema | [`void AddBoolean(List<Column> columns, string group, string property, string label)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L154) | private static |
+| BlockDataTableSchema | [`void AddEnum(List<Column> columns, string group, string property, string label, string[] names)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L167) | private static |
 
 ## Assets/Scripts/Features/Building/BlueprintLoading/BlockPrefabCache.cs
 
@@ -2393,9 +2410,9 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BotNavigationProbeDriver | [`void Initialize(string caseName, Transform target, Rigidbody body, Rigidbody home, Bot authored)`](../Assets/Scripts/Features/Diagnostics/BotNavigationProbeDriver.cs#L42) | public |
-| BotNavigationProbeDriver | [`void FixedUpdate()`](../Assets/Scripts/Features/Diagnostics/BotNavigationProbeDriver.cs#L77) | private |
-| BotNavigationProbeDriver | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Diagnostics/BotNavigationProbeDriver.cs#L106) | private |
+| BotNavigationProbeDriver | [`void Initialize(string caseName, Transform target, Rigidbody body, Rigidbody home)`](../Assets/Scripts/Features/Diagnostics/BotNavigationProbeDriver.cs#L45) | public |
+| BotNavigationProbeDriver | [`void FixedUpdate()`](../Assets/Scripts/Features/Diagnostics/BotNavigationProbeDriver.cs#L58) | private |
+| BotNavigationProbeDriver | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Diagnostics/BotNavigationProbeDriver.cs#L88) | private |
 
 ## Assets/Scripts/Features/Diagnostics/DebugManager.cs
 

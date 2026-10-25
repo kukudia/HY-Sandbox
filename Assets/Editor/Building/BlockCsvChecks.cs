@@ -37,8 +37,8 @@ public static class BlockCsvChecks
             BlockCsvDocument.Parse(BlockCsvDocument.WriteRecords(records));
             Check(
                 report,
-                records.Count == 26 && records[0].Count == 30,
-                "CSV has 25 Block rows, 26 parameter columns and 4 identity columns");
+                records.Count == 26 && records[0].Count == 29,
+                "CSV has 25 Block rows, 25 parameter columns and 4 identity columns");
             Set(records, "MainThruster", "Block.mass", "123.5");
             Set(records, "MainThruster", "Block.cost", "789");
             Set(records, "MainThruster", "Durability.maxDurability", "321");

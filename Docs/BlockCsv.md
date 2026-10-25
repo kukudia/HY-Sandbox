@@ -2,7 +2,7 @@
 
 直接编辑 [Blocks.csv](../Assets/Resources/BlockData/Blocks.csv) 并保存。Unity 导入 CSV 后自动更新对应 Prefab；无需逐格操作 Inspector 或手动导入。菜单 `Tools/HY-Sandbox/CSV/打开方块 CSV` 可用系统默认应用打开；关闭 Prefab 编辑模式后可用“立即校验并同步 Prefab”重试同步。
 
-当前 CSV 有 25 个 Block Prefab、**30 列（4 个只读身份列 + 26 个参数列）**。仅保留常用基础数值和核心性能，Editor 导出与运行时读取共用同一精简白名单，不会重新生成高级列。维修/收集机器人通过所属容器行配置，独立 Bot/Connector 资源不在表中。
+当前 CSV 有 25 个 Block Prefab、**29 列（4 个只读身份列 + 25 个参数列）**。仅保留常用基础数值和核心性能，Editor 导出与运行时读取共用同一精简白名单，不会重新生成高级列。维修/收集机器人通过所属容器行配置，独立 Bot/Connector 资源不在表中。
 
 | 类别 | 可编辑参数 |
 | --- | --- |
@@ -12,7 +12,7 @@
 | 货仓/供电（3） | 货物类型、容量、需要供电（货仓/机器人共享） |
 | 无人机（4） | 搜索范围、移动速度、单次维修量、维修间隔 |
 
-旋转/删除/连接点/标签开关、自定义说明、碰撞伤害细节、推进响应、炮塔转速/俯仰/索敌/阵营、弹丸寿命/冲量/后坐、货物掉落、机器人避障/返航/停靠/拾取细节以及各类表现参数统一在 Prefab Inspector 编辑。删列前已通过 Unity Bake 确认旧表与 25 个 Prefab 无数值差异；原组件字段、GUID 和序列化值保留，CSV 不再覆盖这些参数。旧 `Block.density` 仍不参与质量计算。
+旋转/删除/连接点/标签开关、自定义说明、碰撞伤害细节、推进响应、炮塔转速/俯仰/索敌/阵营、弹丸寿命/冲量/后坐、货物掉落、机器人拾取细节以及各类表现参数统一在 Prefab Inspector 编辑。删列前已通过 Unity Bake 确认旧表与 25 个 Prefab 无数值差异；原组件字段、GUID 和序列化值保留，CSV 不再覆盖这些参数。旧 `Block.density` 仍不参与质量计算。
 
 ## 编辑规则
 
@@ -51,3 +51,6 @@ Block/绑定的 OnValidate 请求延迟应用；CSV 是已填写数值的权威�
 `BlockCsvRegressionChecks.Begin()` 在 Play Mode 用真实 Prefab 验证无电留仓、供电离仓维修、离仓断电继续运行及免供电恢复，并检查重复 CSV 应用保留运行状态。后台验证时需临时启用 Application.runInBackground 并在结束后恢复；报告见 [回归记录](Validation/2026-10-11-block-csv-regression.json)。
 
 2026-10-23 精简验证：30 列/25 行及保留单元格逐项比对通过；Unity Edit Mode 16 项、Play Mode 4 项检查通过，最终 Bake 无 Prefab 差异；静态构建通过（4 个警告），git diff --check 通过。全仓可读性检查仍被未修改的 MainUIPanels.cs 既有格式问题阻断。详见 [本次验证记录](Validation/2026-10-23-block-csv-slim.json)。
+
+
+2026-10-25：移除 `Bot.movementSpeed` 列。Bot 飞行无固定速度上限，按航段距离、转弯、净空与制动能力控制速度；导航、避障、返航和停靠参数集中在 `BotNavigationPolicy`，不再接受 Inspector/CSV 覆盖。搜索范围、扫描间隔、维修能力和模型插槽仍可编辑。三个 Bot Prefab 通过 `BotNavigationPolicyMigration.Run()` 重存清理旧字段，GUID 与剩余创作数据保持。

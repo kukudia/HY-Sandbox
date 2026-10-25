@@ -117,6 +117,7 @@
     <Compile Include="Assets\Scripts\Features\Building\RotateBlockAction.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\TurretHitResolver.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\BotAvoidanceSettings.cs" />
+    <Compile Include="Assets\Scripts\Features\Bots\BotNavigationPolicy.cs" />
     <Compile Include="Assets\Scripts\Features\Player\InputManager.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\CameraShake.cs" />
     <Compile Include="Assets\Scripts\Features\Flight\HoverFlightController.cs" />

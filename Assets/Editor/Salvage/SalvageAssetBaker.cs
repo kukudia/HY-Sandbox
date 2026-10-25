@@ -280,8 +280,6 @@ public static class SalvageAssetBaker
             destination.ApplyModifiedPropertiesWithoutUndo();
             collector.targetRange = 60;
             collector.findTargetInterval = 0.5f;
-            collector.movementSpeed = 8f;
-            collector.obstacleMask = LayerMask.GetMask("Block", "Default");
             collector.showAvoidanceZones = collector.showAvoidanceRays = collector.showDirectionVectors = false;
             foreach (BlockStatusLight status in root.GetComponentsInChildren<BlockStatusLight>(true))
             {

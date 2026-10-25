@@ -110,6 +110,7 @@
     <Compile Include="Assets\Editor\Art\BlockArtPreview.cs" />
     <Compile Include="Assets\Editor\World\WorldSessionEdgeChecks.cs" />
     <Compile Include="Assets\Editor\Siege\SiegePriorityTargetChecks.cs" />
+    <Compile Include="Assets\Editor\Bots\BotNavigationPolicyMigration.cs" />
     <Compile Include="Assets\Editor\Presentation\SceneCameraPreviewSync.cs" />
     <Compile Include="Assets\Editor\Siege\SiegePerformanceCapture.cs" />
     <Compile Include="Assets\Editor\Building\BuildInteractionSetup.cs" />

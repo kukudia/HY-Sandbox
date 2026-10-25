@@ -6,19 +6,6 @@ using UnityEngine;
 
 public sealed class BotFlightMotion
 {
-    public struct Settings
-    {
-        public float SampleInterval;
-        public float DirectionResponseRate;
-        public float RotationSpeed;
-        public float MovementSpeed;
-        public float DockingApproachTolerance;
-        public float ReturnBrakingAcceleration;
-        public float ReturnStopSpeed;
-        public float ReturnBrakeDistance;
-        public BotAvoidanceSettings Avoidance;
-    }
-
     private readonly Transform _transform;
     private readonly Rigidbody _rigidbody;
     private readonly BotObstacleAvoidance _obstacles;
@@ -26,10 +13,9 @@ public sealed class BotFlightMotion
     private BotAvoidanceResult _cachedResult;
     private Vector3 _direction;
     private Vector3 _avoidanceDirection;
-    private float _speedMultiplier = 1f;
     private float _nextSampleTime;
     private float _cachedRangeScale = 1f;
-    private Settings _settings;
+    private readonly BotAvoidanceSettings _avoidance = BotNavigationPolicy.CreateAvoidanceSettings();
     public Vector3 Direction => _direction;
     public Vector3 AvoidanceDirection => _avoidanceDirection;
     public IReadOnlyList<BotObstacleAvoidance.DebugHit> DebugHits => _obstacles.DebugHits;
@@ -51,35 +37,17 @@ public sealed class BotFlightMotion
         _cachedTarget = null;
         _nextSampleTime = 0f;
         _cachedResult = default;
-        _speedMultiplier = 1f;
         _obstacles.Reset();
     }
 
-    public void NavigateToTarget(Transform target, Settings settings)
+    public void NavigateToTarget(Transform target)
     {
-        NavigateToPosition(
-            target.position,
-            target,
-            null,
-            false,
-            1f,
-            settings);
+        NavigateToPosition(target.position, target, null, false, 1f);
     }
 
-    public void NavigateHome(
-        Transform home,
-        Vector3 approachPosition,
-        Rigidbody homeRigidbody,
-        float rangeScale,
-        Settings settings)
+    public void NavigateHome(Transform home, Vector3 approachPosition, Rigidbody homeRigidbody, float rangeScale)
     {
-        NavigateToPosition(
-            approachPosition,
-            home,
-            homeRigidbody,
-            true,
-            rangeScale,
-            settings);
+        NavigateToPosition(approachPosition, home, homeRigidbody, true, rangeScale);
     }
 
     private void NavigateToPosition(
@@ -87,17 +55,15 @@ public sealed class BotFlightMotion
         Transform targetReference,
         Rigidbody homeRigidbody,
         bool returningHome,
-        float avoidanceRangeScale,
-        Settings settings)
+        float avoidanceRangeScale)
     {
-        _settings = settings;
         avoidanceRangeScale = Mathf.Clamp01(avoidanceRangeScale);
         // 计算目标方向
         Vector3 targetOffset = targetPosition - _transform.position;
         float targetDistance = targetOffset.magnitude;
         Vector3 targetDirection = targetDistance > 1e-5f ? targetOffset / targetDistance : Vector3.zero;
         SampleGuidance(targetReference, targetDirection, targetDistance, avoidanceRangeScale);
-        UpdateDirectionAndSpeed(targetDirection, avoidanceRangeScale);
+        UpdateDirectionAndSpeed(targetDirection);
         ApplyMovement(targetPosition, targetDirection, targetDistance, homeRigidbody, returningHome);
         _avoidanceDirection = _cachedResult.Direction;
     }
@@ -108,23 +74,26 @@ public sealed class BotFlightMotion
         float targetDistance,
         float avoidanceRangeScale)
     {
-        // 原 Prefab 配置一秒采样会错过快速飞行中的墙；保留 Inspector 值但限定安全最大间隔。
+        // 高速时缩短采样间隔，前瞻距离另由实际速度的制动距离扩展。
         if (targetReference != _cachedTarget || Time.time >= _nextSampleTime || Mathf.Abs(avoidanceRangeScale - _cachedRangeScale) >= 0.15f)
         {
             _cachedTarget = targetReference;
             _cachedRangeScale = avoidanceRangeScale;
-            _nextSampleTime = Time.time + Mathf.Clamp(_settings.SampleInterval, 0.05f, 0.2f);
+            _nextSampleTime = Time.time + Mathf.Clamp(
+                2f / Mathf.Max(1f, _rigidbody.linearVelocity.magnitude),
+                Time.fixedDeltaTime,
+                BotNavigationPolicy.SampleInterval);
             _cachedResult = _obstacles.Evaluate(
                 targetReference,
                 _rigidbody.linearVelocity,
                 targetDirection,
                 avoidanceRangeScale,
-                _settings.Avoidance,
+                _avoidance,
                 targetDistance);
         }
     }
 
-    private void UpdateDirectionAndSpeed(Vector3 targetDirection, float avoidanceRangeScale)
+    private void UpdateDirectionAndSpeed(Vector3 targetDirection)
     {
         // 目标方向使用当前世界坐标实时计算；避障查询可以降频，但移动中的 home 不能使用旧位置。
         Vector3 finalDirection = _cachedResult.OverrideDirection ? _cachedResult.Direction : targetDirection;
@@ -133,19 +102,12 @@ public sealed class BotFlightMotion
             _direction = _transform.forward;
         }
 
-        _direction = Vector3.RotateTowards(
-            _direction,
-            finalDirection,
-            Mathf.Max(0.1f, _settings.DirectionResponseRate) * Time.fixedDeltaTime,
-            0f);
-        // 根据障碍物密度调整速度
-        float targetSpeedMultiplier = _cachedResult.OverrideDirection ? _cachedResult.SpeedMultiplier : Mathf.Lerp(1f, _cachedResult.SpeedMultiplier, avoidanceRangeScale);
-        _speedMultiplier = Mathf.Lerp(_speedMultiplier, targetSpeedMultiplier, Time.fixedDeltaTime * 3f);
+        _direction = Vector3.RotateTowards(_direction, finalDirection, BotNavigationPolicy.DirectionResponseRate * Time.fixedDeltaTime, 0f);
         // 旋转朝向移动方向
         if (_direction.sqrMagnitude > 0.01f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(_direction);
-            _transform.rotation = Quaternion.Slerp(_transform.rotation, targetRotation, _settings.RotationSpeed * Time.fixedDeltaTime);
+            _transform.rotation = Quaternion.Slerp(_transform.rotation, targetRotation, BotNavigationPolicy.RotationSpeed * Time.fixedDeltaTime);
         }
     }
 
@@ -156,58 +118,36 @@ public sealed class BotFlightMotion
         Rigidbody homeRigidbody,
         bool returningHome)
     {
-        // 应用移动力
-        float effectiveSpeed = _settings.MovementSpeed * _speedMultiplier;
-        if (returningHome)
+        Vector3 frameVelocity = returningHome && homeRigidbody != null ? homeRigidbody.GetPointVelocity(targetPosition) : Vector3.zero;
+        float remainingDistance = Mathf.Max(0f, targetDistance - (returningHome ? BotNavigationPolicy.DockingApproachTolerance : 0f));
+        // 没有巡航速度上限：航段越长可加速越高；0.8 为离散物理/方向采样留出制动余量。
+        float desiredSpeed = Mathf.Sqrt(2f * BotNavigationPolicy.Acceleration * remainingDistance) * 0.8f;
+        if (_cachedResult.OverrideDirection)
         {
-            ApplyReturnHomeMovement(targetPosition, targetDirection, targetDistance, effectiveSpeed, homeRigidbody);
+            desiredSpeed *= _cachedResult.SpeedMultiplier;
         }
         else
         {
-            // 导航方向决定平移，模型转向只影响外观；否则机身转向滞后时会持续顶墙。
-            // 只在直达阶段按剩余距离制动；绕障时仍需保持脱离墙面的速度。
-            float arrivalSpeed = Mathf.Sqrt(2f * Mathf.Max(0.1f, _settings.ReturnBrakingAcceleration) * targetDistance);
-            float taskSpeed = _cachedResult.OverrideDirection ? effectiveSpeed : Mathf.Min(effectiveSpeed, arrivalSpeed);
-            Vector3 desiredVelocity = _direction.normalized * taskSpeed;
-            desiredVelocity = _obstacles.ConstrainVelocity(
-                desiredVelocity,
-                Time.fixedDeltaTime,
-                _rigidbody.linearVelocity,
-                _settings.ReturnBrakingAcceleration);
-            Vector3 acceleration = Vector3.ClampMagnitude(
-                (desiredVelocity - _rigidbody.linearVelocity) / Mathf.Max(0.001f, Time.fixedDeltaTime),
-                Mathf.Max(1f, _settings.ReturnBrakingAcceleration, effectiveSpeed * 2f));
-            _rigidbody.AddForce(acceleration, ForceMode.Acceleration);
+            // 急转时先消除旧方向速度，避免高速画圈或从目标侧面掠过。
+            desiredSpeed *= Mathf.Clamp01(Vector3.Dot(_direction, targetDirection));
         }
-    }
 
-    private void ApplyReturnHomeMovement(
-        Vector3 targetPosition,
-        Vector3 targetDirection,
-        float targetDistance,
-        float effectiveSpeed,
-        Rigidbody homeRigidbody)
-    {
-        float remainingDistance = Mathf.Max(0f, targetDistance - _settings.DockingApproachTolerance);
-        float brakingAcceleration = Mathf.Max(0.1f, _settings.ReturnBrakingAcceleration);
-        Vector3 homeVelocity = homeRigidbody != null ? homeRigidbody.GetPointVelocity(targetPosition) : Vector3.zero;
-        // 追赶移动中的载体时，Bot 需要比载体保留相对速度；否则载体一加速，返航距离会持续增加。
-        float chaseSpeed = homeVelocity.magnitude * 1.25f;
-        float maxReturnSpeed = Mathf.Max(_settings.ReturnStopSpeed, effectiveSpeed * 2f, chaseSpeed);
-        float stoppingLimitedSpeed = Mathf.Sqrt(2f * brakingAcceleration * remainingDistance);
-        float distanceLimitedSpeed = Mathf.Lerp(
-            _settings.ReturnStopSpeed,
-            maxReturnSpeed,
-            Mathf.Clamp01(remainingDistance / Mathf.Max(0.1f, _settings.ReturnBrakeDistance)));
-        float facingAlignment = Mathf.Clamp01(Vector3.Dot(_transform.forward, targetDirection));
-        float desiredRelativeSpeed = Mathf.Min(stoppingLimitedSpeed, distanceLimitedSpeed, maxReturnSpeed);
-        desiredRelativeSpeed = Mathf.Max(_settings.ReturnStopSpeed, desiredRelativeSpeed * Mathf.Lerp(0.35f, 1f, facingAlignment));
-        Vector3 desiredWorldVelocity = homeVelocity + _direction.normalized * desiredRelativeSpeed;
-        desiredWorldVelocity = _obstacles.ConstrainVelocity(desiredWorldVelocity, Time.fixedDeltaTime, _rigidbody.linearVelocity, brakingAcceleration);
-        Vector3 velocityDelta = desiredWorldVelocity - _rigidbody.linearVelocity;
-        Vector3 acceleration = Vector3.ClampMagnitude(
-            velocityDelta / Mathf.Max(Time.fixedDeltaTime, 0.001f),
-            Mathf.Max(brakingAcceleration, chaseSpeed * 2f));
+        Vector3 desiredVelocity = frameVelocity + _direction.normalized * desiredSpeed;
+        desiredVelocity = _obstacles.ConstrainVelocity(desiredVelocity, Time.fixedDeltaTime, _rigidbody.linearVelocity, BotNavigationPolicy.Acceleration);
+        Vector3 requestedAcceleration = (desiredVelocity - _rigidbody.linearVelocity) / Mathf.Max(Time.fixedDeltaTime, 0.001f);
+        Vector3 acceleration = Vector3.ClampMagnitude(requestedAcceleration, BotNavigationPolicy.Acceleration);
+        if (_rigidbody.linearVelocity.sqrMagnitude > 1f)
+        {
+            // 制动优先；横向急转不能挤占高速走廊所依赖的纵向减速度。
+            Vector3 heading = _rigidbody.linearVelocity.normalized;
+            float braking = Mathf.Clamp(Vector3.Dot(requestedAcceleration, heading), -BotNavigationPolicy.Acceleration, 0f);
+            float turningBudget = Mathf.Sqrt(Mathf.Max(0f, BotNavigationPolicy.Acceleration * BotNavigationPolicy.Acceleration - braking * braking));
+            if (braking < 0f)
+            {
+                acceleration = heading * braking + Vector3.ClampMagnitude(Vector3.ProjectOnPlane(requestedAcceleration, heading), turningBudget);
+            }
+        }
+
         _rigidbody.AddForce(acceleration, ForceMode.Acceleration);
     }
 }

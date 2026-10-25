@@ -285,7 +285,7 @@ WorldSessionPerformanceChecks 修复遮罩持焦点后第2帧停滞和无新帧�
 
 2026-10-14 供电网络性能优化：`PowerNetwork.Rebuild` 保留每帧功率清零、分配和状态提交，但缓存由中继/发电机位置及连接距离决定的拓扑；拓扑未变化时跳过连接清空、发电机连接和中继两两检测。拓扑变化仍自动重建，供电行为契约不变。新增空间索引候选筛选和连通分量缓存；300轮新旧等价对照、32项玩法回归通过。100中继/500负载静态更新10.73→0.56ms，持续移动11.02→0.99ms。新增炮弹池、可增长查询缓冲及正常图标跳过投影；28项炮塔检查、10项真实飞行、4项复用及5项表现检查通过。完整条件、原始样本和限制见 Docs/Validation/2026-10-14-performance.md。
 
-2026-10-23 CSV 方块数值精简：直接编辑 `Assets/Resources/BlockData/Blocks.csv`（25 行、30 列：26 参数列及 4 个只读身份列）。Editor 导入后自动校验、备份并同步 Prefab；Block/绑定组件 OnValidate 延迟请求校验，绑定 Awake 在其他组件之前应用 Resources 中的 CSV。mass 留空使用 x × y × z，填写正数使用手动质量；不参与质量计算的 density 已从 CSV 移除，组件字段保留兼容。requiresPower 合并应用货仓、收集机器人和维修机器人；BotContainer 的最低/额定功率相等，断电只阻止起飞，已离仓 Bot 继续任务或返航；仅保留基础数值及核心性能；自定义说明、开关、碰撞损伤细节、导航/停靠及表现参数由 Prefab Inspector 管理，原组件值保留。Bot/Connector 辅助资源不纳入表。CSV/蓝图运行时刷新保留连接状态与实例引用，Bake 拒绝缺失供电依赖。使用与生命周期详见 [CSV说明](Docs/BlockCsv.md)，函数图见 [RuntimeFlow](Docs/RuntimeFlow.md)。 2026-10-23 精简验证：30 列/25 行及保留单元格逐项比对通过；Unity Edit Mode 16 项、Play Mode 4 项检查通过，最终 Bake 无 Prefab 差异；静态构建通过（4 个警告），git diff --check 通过。全仓可读性检查仍被未修改的 MainUIPanels.cs 既有格式问题阻断。[验证记录](Docs/Validation/2026-10-23-block-csv-slim.json)。
+2026-10-23 CSV 方块数值精简：直接编辑 `Assets/Resources/BlockData/Blocks.csv`（当前 25 行、29 列：25 参数列及 4 个只读身份列，2026-10-25 移除 Bot 速度列）。Editor 导入后自动校验、备份并同步 Prefab；Block/绑定组件 OnValidate 延迟请求校验，绑定 Awake 在其他组件之前应用 Resources 中的 CSV。mass 留空使用 x × y × z，填写正数使用手动质量；不参与质量计算的 density 已从 CSV 移除，组件字段保留兼容。requiresPower 合并应用货仓、收集机器人和维修机器人；BotContainer 的最低/额定功率相等，断电只阻止起飞，已离仓 Bot 继续任务或返航；仅保留基础数值及核心性能；自定义说明、开关、碰撞损伤细节、表现及任务参数由 Prefab Inspector 管理；Bot 导航/停靠已固化为 BotNavigationPolicy，原组件值保留。Bot/Connector 辅助资源不纳入表。CSV/蓝图运行时刷新保留连接状态与实例引用，Bake 拒绝缺失供电依赖。使用与生命周期详见 [CSV说明](Docs/BlockCsv.md)，函数图见 [RuntimeFlow](Docs/RuntimeFlow.md)。 2026-10-23 精简验证：30 列/25 行及保留单元格逐项比对通过；Unity Edit Mode 16 项、Play Mode 4 项检查通过，最终 Bake 无 Prefab 差异；静态构建通过（4 个警告），git diff --check 通过。全仓可读性检查仍被未修改的 MainUIPanels.cs 既有格式问题阻断。[验证记录](Docs/Validation/2026-10-23-block-csv-slim.json)。
 
 2026-10-11 推进器字体状态修正：ThrusterInfoPanel 读取 Power.CommitPowerStatus 确认的 SupplyEfficiency，不再读取物理帧中暂时清零的即时供电值。撤销工作请求立即恢复正常显示，重新申请后等待电网确认缺电；残余推力及关机衰减不参与字体颜色判断。实际施力仍使用即时供电效率。验证见 `Docs/Validation/2026-10-11-thruster-power-colors.json`。
 
@@ -458,7 +458,16 @@ ProjectileTurret发射后仅炮管模型沿炮口反向后退0.12m，0.04s快速
 
 ## 2026-10-25 Bot 寻路调优
 
-- 入口：`BotFlightMotion.ApplyMovement` / `BotObstacleAvoidance.Evaluate`；维修与回收共用。直达任务按剩余距离和 Inspector 的 `returnBrakingAcceleration` 制动，避免高速越过目标再绕回；绕障阶段保留脱离速度。
+- 入口：`BotFlightMotion.ApplyMovement` / `BotObstacleAvoidance.Evaluate`；维修与回收共用。直达任务按剩余距离制动（2026-10-25 已改用固化的 `BotNavigationPolicy.Acceleration`），避免高速越过目标再绕回；绕障阶段保留脱离速度。
 - 连续两次采样确认直达走廊净空后恢复追踪，无需等满绕障保持时间；退出起点重叠后立即重新选路。停滞检测按当前进展窗口重置，绕远后不再必须突破整段任务历史最近距离才能确认进展。移动 Home 的实时点位/点速度、逐物理帧速度走廊制动及 Bot 过滤保留。
 - 导航探针增加耗时、路线长度及空旷接近回归。Unity Play Mode 6 个真实 PhysX 场景、32 项检查通过，均到达且无墙体碰撞。相同条件单次前后对照：绕墙路线 56.09→37.71m，U 形围挡 50.80→33.42m，惯性制动 58.54→29.33m，移动 Home 25.11→23.95m，起点重叠 80.36→35.23m；不作为统计基准或任意迷宫保证。
 - 真实任务 Play 回归 71 项通过，覆盖回收运输/货仓持久化、维修和移动 Home 插槽返航。静态构建通过（0 错误、4 个警告）。函数图及源码导航已同步；验证证据见 [调优对照](Docs/Validation/2026-10-25-bot-navigation-tuning.json)。大量 Bot 压力、任意封闭迷宫和全部 Home 运动组合未覆盖。
+
+
+## 2026-10-25 Bot 无固定速度上限与参数固化
+
+- BotNavigationPolicy 为唯一飞行/避障/停靠策略入口：加速度48m/s²、方向响应5rad/s、16方位三层净空、0.1s基础采样且随速度缩短到物理帧。任务与返航共用 BotFlightMotion.ApplyMovement，按剩余距离制动；转向前优先消除危险纵向速度，移动Home使用实时目标点和刚体点速度。
+- 删除固定巡航速度、旧返航倍率和阻力终端速度，设置 Rigidbody.maxLinearVelocity=float.MaxValue；飞行启用 ContinuousDynamic，停靠前恢复 Discrete/运动学。无固定速度上限仍受加速度、目标距离和障碍净空约束，不向物理系统写入 Infinity。
+- 导航、避障、返航和停靠参数从 Inspector 序列化及 CSV 中移除；搜索范围/扫描间隔、维修能力、拾取行为、模型插槽和表现继续可编辑。CSV 现为29列（25参数+4身份），所有保留单元格和UTF-8 BOM比对通过。BotNavigationPolicyMigration.Run() 通过 PrefabUtility 重存三个Bot资产，清理旧导航字段并比较剩余序列化数据/GUID；旧Bot基础资产显式保存原有 requiresPower=true 默认值。
+- Unity Play：10个真实物理导航场景、51项检查全部通过且无障碍碰撞，含100m/s薄墙、目标在后方、起点重叠、移动Home；200m/2000m飞行峰值86.4/273.6m/s。绕墙/U形/重叠/移动Home耗时约2.23/2.06/2.44/2.14s；带初始30m/s的制动案例约3.24s，慢于上版2.18s，保留制动优先结果。真实任务71项、CSV Edit16项/Play4项通过，构建0错误/4个既有警告。
+- 验证证据：[无上限策略记录](Docs/Validation/2026-10-25-bot-unlimited-policy.json)。仍为局部三维导航，不保证任意封闭迷宫；未做大量Bot压力、极端世界坐标和全部Home运动组合验证。

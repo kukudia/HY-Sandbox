@@ -9,9 +9,12 @@ public sealed class BotNavigationProbeDriver : MonoBehaviour
     private Rigidbody _body;
     private Rigidbody _home;
     private BotFlightMotion _motion;
-    private BotFlightMotion.Settings _settings;
     private float _started;
     private Vector3 _previousPosition;
+    public float PeakSpeed
+    {
+        get; private set;
+    }
     public float Elapsed => Time.time - _started;
     public float PathLength
     {
@@ -39,7 +42,7 @@ public sealed class BotNavigationProbeDriver : MonoBehaviour
     }
     public float RemainingDistance => _target == null ? float.PositiveInfinity : Vector3.Distance(transform.position, _target.position);
 
-    public void Initialize(string caseName, Transform target, Rigidbody body, Rigidbody home, Bot authored)
+    public void Initialize(string caseName, Transform target, Rigidbody body, Rigidbody home)
     {
         CaseName = caseName;
         _target = target;
@@ -49,29 +52,7 @@ public sealed class BotNavigationProbeDriver : MonoBehaviour
         _motion.ResetDirection();
         _started = Time.time;
         _previousPosition = transform.position;
-        _settings = new BotFlightMotion.Settings
-        {
-            MovementSpeed = authored.movementSpeed,
-            RotationSpeed = authored.rotationSpeed,
-            DirectionResponseRate = authored.directionResponseRate,
-            SampleInterval = authored.directionUpdateInterval,
-            DockingApproachTolerance = authored.dockingApproachTolerance,
-            ReturnBrakingAcceleration = authored.returnBrakingAcceleration,
-            ReturnBrakeDistance = authored.returnBrakeDistance,
-            ReturnStopSpeed = authored.returnStopSpeed,
-            Avoidance = new BotAvoidanceSettings
-            {
-                ObstacleMask = authored.obstacleMask,
-                ClearanceRadius = 0.4f,
-                PredictiveRange = authored.predictiveAvoidanceRange,
-                EmergencyRange = authored.emergencyAvoidanceRange,
-                BrakingAcceleration = authored.returnBrakingAcceleration,
-                RayCount = authored.avoidanceRays,
-                StuckTimeout = 1.5f,
-                ProgressDistance = 0.25f,
-                DetourHoldTime = 1f
-            }
-        };
+        BotNavigationPolicy.ConfigureBody(body);
     }
 
     private void FixedUpdate()
@@ -81,6 +62,7 @@ public sealed class BotNavigationProbeDriver : MonoBehaviour
             return;
         }
 
+        PeakSpeed = Mathf.Max(PeakSpeed, _body.linearVelocity.magnitude);
         PathLength += Vector3.Distance(_previousPosition, transform.position);
         _previousPosition = transform.position;
         MaximumHeight = Mathf.Max(MaximumHeight, transform.position.y);
@@ -88,11 +70,11 @@ public sealed class BotNavigationProbeDriver : MonoBehaviour
         {
             _home.MovePosition(_home.position + Vector3.right * (0.8f * Time.fixedDeltaTime));
             float rangeScale = Mathf.InverseLerp(0.2f, 15f, RemainingDistance);
-            _motion.NavigateHome(_target, _target.position, _home, rangeScale, _settings);
+            _motion.NavigateHome(_target, _target.position, _home, rangeScale);
         }
         else
         {
-            _motion.NavigateToTarget(_target, _settings);
+            _motion.NavigateToTarget(_target);
         }
 
         Reached = RemainingDistance < 0.8f;

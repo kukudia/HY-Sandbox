@@ -336,9 +336,7 @@ public static class SalvagePlayProbe
                 serialized.ApplyModifiedPropertiesWithoutUndo();
                 BuildingRuntime carrier = SalvageBuilding(manager, UnitFaction.Player, true);
                 CollectionBot flying = carrier.GetComponentInChildren<CollectionBot>();
-                flying.obstacleMask = 0;
                 flying.targetRange = 30;
-                flying.movementSpeed = 10f;
                 foreach (Power power in carrier.GetComponentsInChildren<Power>())
                 {
                     power.SetWorkRequested(carrier, true);
@@ -541,7 +539,6 @@ public static class SalvagePlayProbe
             Mathf.Abs(technology.transform.Find("Model/Liquid fill").localScale.y - 0.81f * 0.25f) < 0.001f);
         var bay = Spawn("CollectionBotContainer", owner, Vector3.zero);
         var bot = bay.GetComponentInChildren<CollectionBot>();
-        bot.movementSpeed = 8f;
         var drop = LootDrop.Spawn(Part(), new Vector3(0, 1, 5));
         yield return 0.4f;
         Check(
@@ -565,7 +562,6 @@ public static class SalvagePlayProbe
         hold.RestoreContents(Enumerable.Range(0, 7).Select(_ => Part()).ToList());
         var bay2 = Spawn("CollectionBotContainer", owner, new Vector3(-3, 0, 0));
         var bot2 = bay2.GetComponentInChildren<CollectionBot>();
-        bot2.obstacleMask = 0;
         var drop2 = LootDrop.Spawn(Part(), new Vector3(0, 2, 10));
         var drop3 = LootDrop.Spawn(Part(), new Vector3(0, 2, 11));
         yield return 0.8f;
@@ -585,7 +581,6 @@ public static class SalvagePlayProbe
         hold.RestoreContents(new List<CargoItem>());
         var doomedBay = Spawn("CollectionBotContainer", owner, Vector3.zero);
         var doomedBot = doomedBay.GetComponentInChildren<CollectionBot>();
-        doomedBot.obstacleMask = 0;
         var carriedDrop = LootDrop.Spawn(Part(), new Vector3(0, 1, 5));
         deadline = Time.time + 20f;
         while (!doomedBot.HasCargo && Time.time < deadline)
@@ -734,7 +729,6 @@ public static class SalvagePlayProbe
         var repairBay = Spawn("RepairBotContianer", repairOwner, Vector3.zero);
         var repair = repairBay.GetComponentInChildren<RepairBot>();
         repair.targetRange = 20;
-        repair.obstacleMask = 0;
         var target = Spawn("1x1x1", repairOwner, new Vector3(0, 0, 4)).GetComponent<Durability>();
         target.currentDurability = 70f;
         yield return 7f;

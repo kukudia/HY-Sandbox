@@ -1,4 +1,4 @@
-// 职责：保存无人机 Inspector 配置并组织任务飞行、返航、离家和精确停靠状态。
+// 职责：保存无人机任务/插槽配置并组织任务飞行、返航、离家和精确停靠状态。
 // 入口：派生机器人的 FixedUpdate → TickNavigation() → NavigateToTarget()/NavigateHomeSmoothly()。
 // 依赖：BotFlightMotion 处理飞行/制动；BotObstacleAvoidance 负责三维净空与脱困。
 // 不变量：homeOffset 保持 Home 局部坐标；停靠切为运动学刚体，完成后恢复准确局部姿态。
@@ -21,84 +21,6 @@ public abstract class Bot : MonoBehaviour
     [Min(0)]
     public int targetRange = 5;
     public float findTargetInterval = 1f;
-    public float movementSpeed = 5f;
-    public float rotationSpeed = 2f;
-    [Header("优化避障设置")]
-    public LayerMask obstacleMask;
-    [Tooltip("紧急避障距离（立即反应）")]
-    public float emergencyAvoidanceRange = 3f;
-    [Tooltip("主要避障距离")]
-    // 旧版兼容字段：保留序列化/外部身份，新导航不使用。
-    public float primaryAvoidanceRange = 8f;
-    [Tooltip("预测避障距离（提前规划）")]
-    public float predictiveAvoidanceRange = 15f;
-    [Tooltip("紧急避障力度")]
-    // 旧版兼容字段：保留序列化/外部身份，新导航不使用。
-    public float emergencyAvoidanceForce = 10f;
-    [Tooltip("主要避障力度")]
-    // 旧版兼容字段：保留序列化/外部身份，新导航不使用。
-    public float primaryAvoidanceForce = 5f;
-    [Tooltip("预测避障力度")]
-    // 旧版兼容字段：保留序列化/外部身份，新导航不使用。
-    public float predictiveAvoidanceForce = 2f;
-    [Tooltip("目标方向基础权重")]
-    // 旧版兼容字段：保留序列化/外部身份，新导航不使用。
-    public float targetDirectionWeight = 3f;
-    [Tooltip("射线检测数量")]
-    public int avoidanceRays = 12;
-    [Tooltip("地面法线点积阈值")]
-    // 旧版兼容字段：保留序列化/外部身份，新导航不使用。
-    public float groundNormalThreshold = 0.9f;
-    [Tooltip("忽略此高度以下的障碍物")]
-    // 旧版兼容字段：保留序列化/外部身份，新导航不使用。
-    public float groundHeightThreshold = -2f;
-    [Tooltip("速度衰减系数（障碍物密集时减速）")]
-    // 旧版兼容字段：保留序列化/外部身份，新导航不使用。
-    public float speedDampingFactor = 0.5f;
-    [Tooltip("路径平滑系数（0-1，越大越平滑）")]
-    // 保留旧 Inspector 身份；当前方向响应由 directionResponseRate 控制。
-    public float pathSmoothness = 0.7f;
-    [Header("寻路平滑设置")]
-    [Min(0.05f)]
-    public float directionUpdateInterval = 0.25f;
-    [Min(0.1f)]
-    public float directionResponseRate = 3f;
-    [Min(0.1f)]
-    public float returnAlignmentAngle = 8f;
-    [Min(0.1f)]
-    public float returnBrakeDistance = 2f;
-    [Min(0.01f)]
-    public float returnPositionTolerance = 0.08f;
-    [Min(0.01f)]
-    public float returnStopSpeed = 0.15f;
-    [Min(0.1f)]
-    public float returnBrakingAcceleration = 12f;
-    [Min(0.1f)]
-    public float dockingApproachHeight = 1f;
-    [Min(0.01f)]
-    public float dockingApproachTolerance = 0.2f;
-    [Min(0.1f)]
-    public float dockingPositionSpeed = 2f;
-    [Range(0f, 90f)]
-    // 旧版兼容字段：保留序列化/外部身份，新导航不使用。
-    public float returnMaxAvoidanceAngle = 65f;
-    // 保留旧场景/Prefab 的 public 序列化身份；三维导航不再使用 Home 原点射线或偏角限制。
-    [Header("旧版返航引导（兼容字段，新导航不使用）")]
-    [Range(4, 16)]
-    public int homeGuidanceRays = 8;
-    [Min(0.5f)]
-    public float homeGuidanceRange = 8f;
-    [Range(0f, 2f)]
-    public float homeGuidanceAlignmentWeight = 0.75f;
-    [Header("三维绕障与脱困")]
-    [SerializeField, Min(0.05f), Tooltip("球形导航净空半径，按机器人机身大小调整（米）")]
-    private float _navigationClearanceRadius = 0.4f;
-    [SerializeField, Min(0.5f), Tooltip("持续未接近目标多久后重新选择脱困方向（秒）")]
-    private float _navigationStuckTimeout = 1.5f;
-    [SerializeField, Min(0.05f), Tooltip("视为有效接近目标的最小距离（米）")]
-    private float _navigationProgressDistance = 0.25f;
-    [SerializeField, Min(0.2f), Tooltip("绕障方向最短保持时间，避免左右反复切换（秒）")]
-    private float _navigationDetourHoldTime = 1f;
     [Header("可视化设置")]
     public bool showTrail = true;
     public bool showAvoidanceRays = true;
@@ -145,8 +67,7 @@ public abstract class Bot : MonoBehaviour
             rb = gameObject.AddComponent<Rigidbody>();
         }
 
-        rb.useGravity = false;
-        rb.linearDamping = 2f;
+        BotNavigationPolicy.ConfigureBody(rb);
         rb.angularDamping = 3f;
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         _flightMotion = new BotFlightMotion(transform, rb);
@@ -238,7 +159,7 @@ public abstract class Bot : MonoBehaviour
             rb,
             flying,
             showTrail,
-            movementSpeed,
+            BotNavigationPolicy.EffectFullSpeed,
             trailRenderer,
             trailCoreRenderer,
             _flightEffect);
@@ -260,7 +181,7 @@ public abstract class Bot : MonoBehaviour
         }
 
         navigateTarget = target;
-        _flightMotion.NavigateToTarget(target, CreateFlightSettings());
+        _flightMotion.NavigateToTarget(target);
     }
 
     /// <summary>追踪移动 Home 的实时接近点，达到捕获距离后执行精确局部坐标停靠。</summary>
@@ -278,7 +199,7 @@ public abstract class Bot : MonoBehaviour
             SetNavigationState(NavigationState.ReturningHome);
         }
 
-        Vector3 approachPosition = home.TransformPoint(homeOffset + Vector3.up * dockingApproachHeight);
+        Vector3 approachPosition = home.TransformPoint(homeOffset + Vector3.up * BotNavigationPolicy.DockingApproachHeight);
         if (currentState == NavigationState.Docking)
         {
             ReturnHome();
@@ -286,7 +207,7 @@ public abstract class Bot : MonoBehaviour
         }
 
         float dockingCaptureDistance = Mathf.Max(
-            dockingApproachTolerance,
+            BotNavigationPolicy.DockingApproachTolerance,
             GetRelativeHomeVelocity(approachPosition).magnitude * Time.fixedDeltaTime * 1.5f);
         if ((approachPosition - transform.position).sqrMagnitude <= dockingCaptureDistance * dockingCaptureDistance)
         {
@@ -296,9 +217,9 @@ public abstract class Bot : MonoBehaviour
 
         float avoidanceRangeScale = Mathf.InverseLerp(
             dockingCaptureDistance,
-            Mathf.Max(dockingCaptureDistance + 0.01f, predictiveAvoidanceRange),
+            Mathf.Max(dockingCaptureDistance + 0.01f, BotNavigationPolicy.PredictiveRange),
             Vector3.Distance(transform.position, approachPosition));
-        _flightMotion.NavigateHome(home, approachPosition, homeRigidbody, avoidanceRangeScale, CreateFlightSettings());
+        _flightMotion.NavigateHome(home, approachPosition, homeRigidbody, avoidanceRangeScale);
     }
 
     private Vector3 GetRelativeHomeVelocity(Vector3 worldPosition)
@@ -329,9 +250,15 @@ public abstract class Bot : MonoBehaviour
 
         Vector3 dockPosition = home.TransformPoint(homeOffset);
         Quaternion dockRotation = home.rotation;
-        transform.position = Vector3.MoveTowards(transform.position, dockPosition, Mathf.Max(0.1f, dockingPositionSpeed) * Time.fixedDeltaTime);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, dockRotation, Mathf.Max(1f, rotationSpeed * 90f) * Time.fixedDeltaTime);
-        if ((dockPosition - transform.position).sqrMagnitude > returnPositionTolerance * returnPositionTolerance || Quaternion.Angle(transform.rotation, dockRotation) > returnAlignmentAngle)
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            dockPosition,
+            Mathf.Max(0.1f, BotNavigationPolicy.DockingPositionSpeed) * Time.fixedDeltaTime);
+        transform.rotation = Quaternion.RotateTowards(
+            transform.rotation,
+            dockRotation,
+            Mathf.Max(1f, BotNavigationPolicy.RotationSpeed * 90f) * Time.fixedDeltaTime);
+        if ((dockPosition - transform.position).sqrMagnitude > BotNavigationPolicy.DockingPositionTolerance * BotNavigationPolicy.DockingPositionTolerance || Quaternion.Angle(transform.rotation, dockRotation) > BotNavigationPolicy.DockingAlignmentAngle)
         {
             return;
         }
@@ -368,38 +295,16 @@ public abstract class Bot : MonoBehaviour
         _navigationStateInitialized = true;
         if (rb != null)
         {
+            rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
             rb.isKinematic = docked;
             rb.detectCollisions = !docked;
+            if (!docked)
+            {
+                rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+            }
         }
 
         BotFlightEffects.SetDocked(docked, trailRenderer, trailCoreRenderer, _flightEffect);
-    }
-
-    private BotFlightMotion.Settings CreateFlightSettings()
-    {
-        return new BotFlightMotion.Settings
-        {
-            SampleInterval = directionUpdateInterval,
-            DirectionResponseRate = directionResponseRate,
-            RotationSpeed = rotationSpeed,
-            MovementSpeed = movementSpeed,
-            DockingApproachTolerance = dockingApproachTolerance,
-            ReturnBrakingAcceleration = returnBrakingAcceleration,
-            ReturnStopSpeed = returnStopSpeed,
-            ReturnBrakeDistance = returnBrakeDistance,
-            Avoidance = new BotAvoidanceSettings
-            {
-                ObstacleMask = obstacleMask,
-                ClearanceRadius = _navigationClearanceRadius,
-                StuckTimeout = _navigationStuckTimeout,
-                ProgressDistance = _navigationProgressDistance,
-                DetourHoldTime = _navigationDetourHoldTime,
-                EmergencyRange = emergencyAvoidanceRange,
-                PredictiveRange = predictiveAvoidanceRange,
-                BrakingAcceleration = returnBrakingAcceleration,
-                RayCount = avoidanceRays,
-            },
-        };
     }
 
     private void OnDrawGizmos()

@@ -108,7 +108,6 @@ public static class BlockDataTableSchema
         AddInteger<CargoHold>(columns, "货仓", "_capacity", "容量", 1);
         AddBoolean<CargoHold>(columns, "货仓", "_requiresPower", "需要供电");
         AddInteger<Bot>(columns, "无人机", "targetRange", "搜索范围");
-        AddFloat<Bot>(columns, "无人机", "movementSpeed", "移动速度 m/s");
         AddFloat<RepairBot>(columns, "无人机", "repairAmount", "单次维修量");
         AddFloat<RepairBot>(columns, "无人机", "repairCooldown", "维修间隔 s", 0.000001);
         return columns;

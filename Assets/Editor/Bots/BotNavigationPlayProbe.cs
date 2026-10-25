@@ -72,8 +72,9 @@ public static class BotNavigationPlayProbe
                 }
 
                 Application.logMessageReceived += Capture;
-                _deadline = EditorApplication.timeSinceStartup + 165;
+                _deadline = EditorApplication.timeSinceStartup + 265;
                 ValidateBotFiltering();
+                ValidateFrozenNavigation();
                 StartCase();
                 EditorApplication.update += Tick;
             }
@@ -123,7 +124,7 @@ public static class BotNavigationPlayProbe
         EditorApplication.QueuePlayerLoopUpdate();
         if (EditorApplication.timeSinceStartup > _deadline)
         {
-            Errors.Add("Navigation probe exceeded 165 seconds.");
+            Errors.Add("Navigation probe exceeded 265 seconds.");
             Finish();
             return;
         }
@@ -134,7 +135,7 @@ public static class BotNavigationPlayProbe
         }
 
         string name = _driver.CaseName;
-        Metrics.Add(new CaseMetrics { name = name, seconds = _driver.Elapsed, pathLength = _driver.PathLength, remainingDistance = _driver.RemainingDistance });
+        Metrics.Add(new CaseMetrics { name = name, seconds = _driver.Elapsed, pathLength = _driver.PathLength, peakSpeed = _driver.PeakSpeed, remainingDistance = _driver.RemainingDistance });
         if (!_driver.Reached)
         {
             Errors.Add(name + " failed to reach target; distance=" + _driver.RemainingDistance);
@@ -165,9 +166,26 @@ public static class BotNavigationPlayProbe
                 _driver.Reached && _driver.PathLength < 22f);
         }
 
+        if (_case == 6 || _case == 7)
+        {
+            Check("Long open flight exceeds the former 30 m/s cap", _driver.PeakSpeed > 60f);
+        }
+
+        if (_case == 7)
+        {
+            Check(
+                "Longer flight continues accelerating beyond the shorter flight peak",
+                _driver.PeakSpeed > Metrics[6].peakSpeed * 2f);
+        }
+
+        if (_case == 9)
+        {
+            Check("Target behind Bot does not cause a wide turn loop", _driver.PathLength < 22f);
+        }
+
         Object.DestroyImmediate(_caseRoot);
         _case++;
-        if (_case >= 6)
+        if (_case >= 10)
         {
             Finish();
         }
@@ -315,14 +333,48 @@ public static class BotNavigationPlayProbe
         }
     }
 
+    private static void ValidateFrozenNavigation()
+    {
+        foreach (string asset in new[]
+        {
+            "Blocks/Bot",
+            "Blocks/RepairBotContianer",
+            "Blocks/CollectionBotContainer"
+        }
+
+        )
+        {
+            Bot bot = Resources.Load<GameObject>(asset).GetComponentInChildren<Bot>(true);
+            using var serialized = new SerializedObject(bot);
+            Check(
+                asset + " has no serialized navigation tuning",
+                serialized.FindProperty("movementSpeed") == null && serialized.FindProperty("obstacleMask") == null && serialized.FindProperty("_navigationClearanceRadius") == null);
+            Check(
+                asset + " preserves editable mission range and model sockets",
+                serialized.FindProperty("targetRange") != null && serialized.FindProperty("_flightEffect") != null);
+        }
+
+        Check(
+            "CSV has no Bot speed column",
+            !BlockDataTableSchema.CreateColumns().Exists(column => column.Id == "Bot.movementSpeed"));
+    }
+
     private static void StartCase()
     {
         _caseRoot = new GameObject("BotNavigationProbeCase");
-        string asset = _case == 1 ? "Blocks/CollectionBotContainer" : "Blocks/RepairBotContianer";
-        Bot authored = Resources.Load<GameObject>(asset).GetComponentInChildren<Bot>(true);
         GameObject target = new GameObject("NavigationTarget");
         target.transform.SetParent(_caseRoot.transform);
         target.transform.position = new Vector3(0f, 3f, _case == 1 ? 12f : 8f);
+        if (_case == 6 || _case == 7)
+        {
+            target.transform.position = new Vector3(0f, 3f, _case == 6 ? 190f : 1990f);
+        }
+
+        if (_case == 9)
+        {
+            target.transform.position = new Vector3(0f, 3f, -28f);
+        }
+
         GameObject drone = new GameObject("NavigationProbeDrone");
         drone.transform.SetParent(_caseRoot.transform);
         drone.transform.position = new Vector3(0f, 3f, _case == 1 ? 1f : _case == 4 ? -0.55f : -10f);
@@ -333,7 +385,14 @@ public static class BotNavigationPlayProbe
         body.constraints = RigidbodyConstraints.FreezeRotation;
         if (_case == 2)
         {
-            body.linearVelocity = Vector3.forward * authored.movementSpeed;
+            body.linearVelocity = Vector3.forward * 30f;
+        }
+
+        if (_case == 8)
+        {
+            drone.transform.position = new Vector3(0f, 3f, -150f);
+            body.linearVelocity = Vector3.forward * 100f;
+            Wall(new Vector3(0f, 3f, 0f), new Vector3(16f, 6f, 0.1f));
         }
 
         Rigidbody home = null;
@@ -357,11 +416,10 @@ public static class BotNavigationPlayProbe
 
         _driver = drone.AddComponent<BotNavigationProbeDriver>();
         _driver.Initialize(
-            _case == 1 ? "CollectionBot U enclosure" : _case == 2 ? "RepairBot inertia braking" : _case == 3 ? "RepairBot moving Home behind wall" : _case == 4 ? "RepairBot initial overlap escape" : _case == 5 ? "RepairBot open approach" : "RepairBot wall crossing",
+            _case == 1 ? "Bot U enclosure" : _case == 2 ? "Bot inertia braking" : _case == 3 ? "Bot moving Home behind wall" : _case == 4 ? "Bot initial overlap escape" : _case == 5 ? "Bot open approach" : _case == 6 ? "Bot 200m flight" : _case == 7 ? "Bot 2000m flight" : _case == 8 ? "Bot 100m/s thin wall" : _case == 9 ? "Bot target behind" : "Bot wall crossing",
             target.transform,
             body,
-            home,
-            authored);
+            home);
         Physics.SyncTransforms();
     }
 
@@ -406,6 +464,7 @@ public static class BotNavigationPlayProbe
         public string name;
         public float seconds;
         public float pathLength;
+        public float peakSpeed;
         public float remainingDistance;
     }
 

@@ -936,41 +936,6 @@ MonoBehaviour:
   homeOffset: {x: 0, y: 0.1, z: 0}
   targetRange: 10
   findTargetInterval: 1
-  movementSpeed: 30
-  rotationSpeed: 5
-  obstacleMask:
-    serializedVersion: 2
-    m_Bits: 9
-  emergencyAvoidanceRange: 3
-  primaryAvoidanceRange: 8
-  predictiveAvoidanceRange: 15
-  emergencyAvoidanceForce: 15
-  primaryAvoidanceForce: 5
-  predictiveAvoidanceForce: 2
-  targetDirectionWeight: 3
-  avoidanceRays: 6
-  groundNormalThreshold: 0.9
-  groundHeightThreshold: -2
-  speedDampingFactor: 0.51
-  pathSmoothness: 0.7
-  directionUpdateInterval: 1
-  directionResponseRate: 3
-  returnAlignmentAngle: 8
-  returnBrakeDistance: 2
-  returnPositionTolerance: 0.08
-  returnStopSpeed: 0.15
-  returnBrakingAcceleration: 12
-  dockingApproachHeight: 1
-  dockingApproachTolerance: 0.2
-  dockingPositionSpeed: 2
-  returnMaxAvoidanceAngle: 65
-  homeGuidanceRays: 8
-  homeGuidanceRange: 8
-  homeGuidanceAlignmentWeight: 0.75
-  _navigationClearanceRadius: 0.4
-  _navigationStuckTimeout: 1.5
-  _navigationProgressDistance: 0.25
-  _navigationDetourHoldTime: 1
   showTrail: 1
   showAvoidanceRays: 1
   showDirectionVectors: 1

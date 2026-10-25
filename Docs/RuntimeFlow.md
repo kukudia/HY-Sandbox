@@ -8,7 +8,7 @@
 
     ## CSV 方块配置与质量
 
-源码推导：CSV 仅管理 26 个常用参数（另有 4 个身份列），高级参数由 Prefab Inspector 管理；Editor 导入后延迟校验、备份并同步 Prefab。旧 density 列已移除，Block 字段保留兼容；BotContainer 要求最低功率等于额定功率，供电只作为起飞门槛，离仓 Bot 继续任务/返航。OnValidate 只排队，不在导入线程写资产；Awake 提前应用配置，随后各组件初始化。空 mass 为体积质量，存档恢复保留实例尺寸再刷新派生数据；运行时不执行制作期组件创建和连接重建，尺寸变化时才重建连接。
+源码推导：CSV 仅管理 25 个常用参数（另有 4 个身份列），高级参数由 Prefab Inspector 管理；Editor 导入后延迟校验、备份并同步 Prefab。旧 density 列已移除，Block 字段保留兼容；BotContainer 要求最低功率等于额定功率，供电只作为起飞门槛，离仓 Bot 继续任务/返航。OnValidate 只排队，不在导入线程写资产；Awake 提前应用配置，随后各组件初始化。空 mass 为体积质量，存档恢复保留实例尺寸再刷新派生数据；运行时不执行制作期组件创建和连接重建，尺寸变化时才重建连接。
 
 ```mermaid
 flowchart TD
@@ -1105,20 +1105,20 @@ flowchart TD
 
 ## 维修、回收和移动 Home 返航
 
-机器人使用 Home 实时停靠点与刚体点速度；任务与返航均从机体做净空检测，持续绕障并在停滞后脱困。动态 Bot 及其子碰撞体从净空、重叠和速度走廊查询中过滤，墙体等真实障碍仍参与制动。单次同步决策复用碰撞体过滤与净空结果，入口清空过滤缓存；导航同帧复用实时目标距离，不降低紧急制动频率。直达任务按剩余距离制动；连续两次净空后恢复直达，退出重叠后立即重选路线；停滞窗口在脱困决策后重置，避免历史最近距离触发重复换向。取消任务释放认领。
+机器人使用 Home 实时停靠点与刚体点速度；任务与返航均从机体做净空检测，持续绕障并在停滞后脱困。动态 Bot 及其子碰撞体从净空、重叠和速度走廊查询中过滤，墙体等真实障碍仍参与制动。单次同步决策复用碰撞体过滤与净空结果，入口清空过滤缓存；导航同帧复用实时目标距离，不降低紧急制动频率。BotNavigationPolicy 固化导航规则，不接受 Inspector/CSV 速度或寻路参数；任务/返航共用无固定速度上限的加速/到达控制，按距离与净空制动并优先消除危险纵向速度；连续两次净空后恢复直达，退出重叠后立即重选路线；停滞窗口在脱困决策后重置，避免历史最近距离触发重复换向。取消任务释放认领。
 
 ```mermaid
 flowchart TD
     A["RepairBot.FixedUpdate()"]
     click A "../Assets/Scripts/Features/Bots/RepairBot.cs#L36" "打开源码"
     B["Bot.TickNavigation()"]
-    click B "../Assets/Scripts/Features/Bots/Bot.cs#L158" "打开源码"
+    click B "../Assets/Scripts/Features/Bots/Bot.cs#L79" "打开源码"
     C["RepairTargetSearch.Scan()"]
     click C "../Assets/Scripts/Features/Bots/RepairTargetSearch.cs#L15" "打开源码"
     D["Bot.NavigateToTarget()"]
-    click D "../Assets/Scripts/Features/Bots/Bot.cs#L247" "打开源码"
+    click D "../Assets/Scripts/Features/Bots/Bot.cs#L168" "打开源码"
     E["BotFlightMotion.NavigateToTarget()"]
-    click E "../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L58" "打开源码"
+    click E "../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L43" "打开源码"
     F["BotObstacleAvoidance.Evaluate()"]
     click F "../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L69" "打开源码"
     G["RepairBot.CheckAndRepair()"]
@@ -1138,13 +1138,13 @@ flowchart TD
     N["CollectionBot.ReturnCargo()"]
     click N "../Assets/Scripts/Features/Bots/CollectionBot.cs#L91" "打开源码"
     O["Bot.NavigateHomeSmoothly()"]
-    click O "../Assets/Scripts/Features/Bots/Bot.cs#L267" "打开源码"
+    click O "../Assets/Scripts/Features/Bots/Bot.cs#L188" "打开源码"
     P["BotFlightMotion.NavigateHome()"]
-    click P "../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L69" "打开源码"
+    click P "../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L48" "打开源码"
     Q["BotObstacleAvoidance.ConstrainVelocity()"]
     click Q "../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L258" "打开源码"
     R["Bot.ReturnHome()"]
-    click R "../Assets/Scripts/Features/Bots/Bot.cs#L310" "打开源码"
+    click R "../Assets/Scripts/Features/Bots/Bot.cs#L231" "打开源码"
     S["LootDrop.Deliver()"]
     click S "../Assets/Scripts/Features/Salvage/LootDrop.cs#L231" "打开源码"
     T["CollectionBot.Abandon()"]
@@ -1166,7 +1166,7 @@ flowchart TD
     I --> N
     N --> O
     O --> P
-    P -->|每物理帧经 ApplyReturnHomeMovement| Q
+    P -->|每物理帧经 ApplyMovement| Q
     P -->|机体净空与脱困| F
     O -->|可停靠| R
     N -->|完成停靠| S
@@ -1175,13 +1175,13 @@ flowchart TD
 
 - [RepairBot.FixedUpdate](../Assets/Scripts/Features/Bots/RepairBot.cs#L36)
 <!-- source: Assets/Scripts/Features/Bots/RepairBot.cs|FixedUpdate -->
-- [Bot.TickNavigation](../Assets/Scripts/Features/Bots/Bot.cs#L158)
+- [Bot.TickNavigation](../Assets/Scripts/Features/Bots/Bot.cs#L79)
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|TickNavigation -->
 - [RepairTargetSearch.Scan](../Assets/Scripts/Features/Bots/RepairTargetSearch.cs#L15)
 <!-- source: Assets/Scripts/Features/Bots/RepairTargetSearch.cs|Scan -->
-- [Bot.NavigateToTarget](../Assets/Scripts/Features/Bots/Bot.cs#L247)
+- [Bot.NavigateToTarget](../Assets/Scripts/Features/Bots/Bot.cs#L168)
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|NavigateToTarget -->
-- [BotFlightMotion.NavigateToTarget](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L58)
+- [BotFlightMotion.NavigateToTarget](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L43)
 <!-- source: Assets/Scripts/Features/Bots/BotFlightMotion.cs|NavigateToTarget -->
 - [BotObstacleAvoidance.Evaluate](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L69)
 <!-- source: Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs|Evaluate -->
@@ -1201,13 +1201,13 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Carry -->
 - [CollectionBot.ReturnCargo](../Assets/Scripts/Features/Bots/CollectionBot.cs#L91)
 <!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|ReturnCargo -->
-- [Bot.NavigateHomeSmoothly](../Assets/Scripts/Features/Bots/Bot.cs#L267)
+- [Bot.NavigateHomeSmoothly](../Assets/Scripts/Features/Bots/Bot.cs#L188)
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|NavigateHomeSmoothly -->
-- [BotFlightMotion.NavigateHome](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L69)
+- [BotFlightMotion.NavigateHome](../Assets/Scripts/Features/Bots/BotFlightMotion.cs#L48)
 <!-- source: Assets/Scripts/Features/Bots/BotFlightMotion.cs|NavigateHome -->
 - [BotObstacleAvoidance.ConstrainVelocity](../Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L258)
 <!-- source: Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs|ConstrainVelocity -->
-- [Bot.ReturnHome](../Assets/Scripts/Features/Bots/Bot.cs#L310)
+- [Bot.ReturnHome](../Assets/Scripts/Features/Bots/Bot.cs#L231)
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|ReturnHome -->
 - [LootDrop.Deliver](../Assets/Scripts/Features/Salvage/LootDrop.cs#L231)
 <!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Deliver -->
@@ -2259,7 +2259,7 @@ flowchart TD
     T["CargoHold.ReleaseContents()"]
     click T "../Assets/Scripts/Features/Salvage/CargoHold.cs#L206" "打开源码"
     U["Bot.PrepareForHomeDestruction()"]
-    click U "../Assets/Scripts/Features/Bots/Bot.cs#L210" "打开源码"
+    click U "../Assets/Scripts/Features/Bots/Bot.cs#L131" "打开源码"
     V["LootDrop.Spawn()"]
     click V "../Assets/Scripts/Features/Salvage/LootDrop.cs#L83" "打开源码"
     Z["BuildingRuntime.HasPreparedGroundConnector()"]
@@ -2343,7 +2343,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Salvage/WreckSalvage.cs|Convert -->
 - [CargoHold.ReleaseContents](../Assets/Scripts/Features/Salvage/CargoHold.cs#L206)
 <!-- source: Assets/Scripts/Features/Salvage/CargoHold.cs|ReleaseContents -->
-- [Bot.PrepareForHomeDestruction](../Assets/Scripts/Features/Bots/Bot.cs#L210)
+- [Bot.PrepareForHomeDestruction](../Assets/Scripts/Features/Bots/Bot.cs#L131)
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|PrepareForHomeDestruction -->
 - [LootDrop.Spawn](../Assets/Scripts/Features/Salvage/LootDrop.cs#L83)
 <!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Spawn -->
