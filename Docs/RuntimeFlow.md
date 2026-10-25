@@ -282,7 +282,7 @@ flowchart TD
 
 ## 蓝图恢复、统计和取消
 
-Load 先验证文件，再替换父对象；协程按请求版本检查所有权。统计事件指向显示。取消使旧版本失效；缺资源移出缓存和JSON。
+Load 先验证文件，再以单位变换创建建造父对象，使Inspector局部坐标与BlockData世界坐标一致；逐块保留原世界姿态，协程按请求版本检查所有权。统计事件指向显示。取消使旧版本失效；缺资源移出缓存和JSON。
 
 ```mermaid
 flowchart TD
@@ -299,7 +299,7 @@ flowchart TD
     F["BlueprintLoader.LoadRoutine()"]
     click F "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L107" "打开源码"
     G["BlueprintLoader.OwnsParent()"]
-    click G "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L246" "打开源码"
+    click G "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L249" "打开源码"
     H["BlueprintBlockFactory.TryRestore()"]
     click H "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7" "打开源码"
     I["BlueprintStatistics.Accumulate()"]
@@ -307,13 +307,13 @@ flowchart TD
     J["BlueprintUIPanel.DisplayStatistics()"]
     click J "../Assets/Scripts/Features/Building/BlueprintUIPanel.cs#L44" "打开源码"
     K["BlueprintLoader.RemoveMissingData()"]
-    click K "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L251" "打开源码"
+    click K "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L254" "打开源码"
     L["BlueprintLoader.RebuildConnections()"]
-    click L "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L262" "打开源码"
+    click L "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L265" "打开源码"
     P["BatchConnectionBuilder.RebuildBatchRoutine()"]
     click P "../Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs#L18" "打开源码"
     M["BlueprintLoader.FinishSession()"]
-    click M "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L300" "打开源码"
+    click M "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L303" "打开源码"
     N["BlueprintLoader.Cancel()"]
     click N "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L94" "打开源码"
     O["BlueprintLoadCamera.Stop()"]
@@ -348,7 +348,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoadCamera.cs|Begin -->
 - [BlueprintLoader.LoadRoutine](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L107)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|LoadRoutine -->
-- [BlueprintLoader.OwnsParent](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L246)
+- [BlueprintLoader.OwnsParent](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L249)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|OwnsParent -->
 - [BlueprintBlockFactory.TryRestore](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs|TryRestore -->
@@ -356,13 +356,13 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintStatistics.cs|Accumulate -->
 - [BlueprintUIPanel.DisplayStatistics](../Assets/Scripts/Features/Building/BlueprintUIPanel.cs#L44)
 <!-- source: Assets/Scripts/Features/Building/BlueprintUIPanel.cs|DisplayStatistics -->
-- [BlueprintLoader.RemoveMissingData](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L251)
+- [BlueprintLoader.RemoveMissingData](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L254)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|RemoveMissingData -->
-- [BlueprintLoader.RebuildConnections](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L262)
+- [BlueprintLoader.RebuildConnections](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L265)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|RebuildConnections -->
 - [BatchConnectionBuilder.RebuildBatchRoutine](../Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs#L18)
 <!-- source: Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs|RebuildBatchRoutine -->
-- [BlueprintLoader.FinishSession](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L300)
+- [BlueprintLoader.FinishSession](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L303)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|FinishSession -->
 - [BlueprintLoader.Cancel](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L94)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|Cancel -->
@@ -388,7 +388,7 @@ flowchart TD
     F["BatchConnectionBuilder.RebuildBatchImmediate()"]
     click F "../Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs#L40" "打开源码"
     G["BlueprintLoader.RebuildConnections()"]
-    click G "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L262" "打开源码"
+    click G "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L265" "打开源码"
     H["BatchConnectionBuilder.RebuildBatchRoutine()"]
     click H "../Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs#L18" "打开源码"
     I["BatchConnectionBuilder.RefreshBlock()"]
@@ -425,7 +425,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlockPrefabCache.cs|Clear -->
 - [BatchConnectionBuilder.RebuildBatchImmediate](../Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs#L40)
 <!-- source: Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs|RebuildBatchImmediate -->
-- [BlueprintLoader.RebuildConnections](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L262)
+- [BlueprintLoader.RebuildConnections](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L265)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|RebuildConnections -->
 - [BatchConnectionBuilder.RebuildBatchRoutine](../Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs#L18)
 <!-- source: Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs|RebuildBatchRoutine -->
@@ -1571,7 +1571,7 @@ flowchart TD
     F["BlueprintLoader.LoadRoutine()"]
     click F "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L107" "打开源码"
     G["BlueprintLoader.RebuildConnections()"]
-    click G "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L262" "打开源码"
+    click G "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L265" "打开源码"
     A --> B
     A --> C
     C --> E
@@ -1594,7 +1594,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldLoadingPanel.cs|Show -->
 - [BlueprintLoader.LoadRoutine](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L107)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|LoadRoutine -->
-- [BlueprintLoader.RebuildConnections](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L262)
+- [BlueprintLoader.RebuildConnections](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L265)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|RebuildConnections -->
 
 ## 用户建筑库、自然出生和远景
@@ -1902,7 +1902,7 @@ flowchart TD
     L["BlueprintLoader.LoadRoutine()"]
     click L "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L107" "打开源码"
     M["BlueprintLoader.RebuildConnections()"]
-    click M "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L262" "打开源码"
+    click M "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L265" "打开源码"
     A -.->|创建预算| B
     B --> C
     B --> D
@@ -1939,7 +1939,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldBuildingRenderCache.cs|Clear -->
 - [BlueprintLoader.LoadRoutine](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L107)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|LoadRoutine -->
-- [BlueprintLoader.RebuildConnections](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L262)
+- [BlueprintLoader.RebuildConnections](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L265)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|RebuildConnections -->
 
 ## 耐久调试标签与炮塔搜索预算

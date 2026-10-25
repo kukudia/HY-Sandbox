@@ -70,6 +70,7 @@ public static class BuildRotationCatalogProbe
             List<Quaternion> orientations = Orientations();
             Check(orientations.Count == 24, "24 unique orientations");
             CheckCameraFrames(manipulation, camera, orientations);
+            Transform buildRoot = CheckBuildParent(root);
             GameObject[] prefabs = Resources.LoadAll<GameObject>("Blocks")
                 .Where(p => p.GetComponent<Block>() != null).OrderBy(p => p.name).ToArray();
             var rows = new List<Row>();
@@ -78,7 +79,7 @@ public static class BuildRotationCatalogProbe
                 int before = _checks;
                 Block definition = prefab.GetComponent<Block>();
                 Check(prefab.transform.localScale == Vector3.one, prefab.name + " unit root scale");
-                Block block = Object.Instantiate(prefab, Vector3.zero, Quaternion.identity, root.transform).GetComponent<Block>();
+                Block block = Object.Instantiate(prefab, Vector3.zero, Quaternion.identity, buildRoot).GetComponent<Block>();
                 foreach (Collider collider in block.GetComponentsInChildren<Collider>())
                 {
                     collider.gameObject.layer = 30;
@@ -197,6 +198,48 @@ public static class BuildRotationCatalogProbe
         }
     }
 
+    private static Transform CheckBuildParent(GameObject root)
+    {
+        GameObject services = Child(root, "Inactive loader dependencies");
+        services.SetActive(false);
+        SaveManager saves = services.AddComponent<SaveManager>();
+        GameManager game = services.AddComponent<GameManager>();
+        PlayManager play = services.AddComponent<PlayManager>();
+        Type loaderType = typeof(Block).Assembly.GetType("BlueprintLoader");
+        object loader = Activator.CreateInstance(loaderType, new object[] { game, saves, game, play });
+        GameObject prefab = Resources.Load<GameObject>("BlocksParent/BlocksParent");
+        Vector3 originalPosition = prefab.transform.position;
+        loaderType.GetMethod("ReplaceParent", Hidden).Invoke(loader, new object[] { prefab, "Inspector coordinate regression" });
+        Transform parent = game.blocksParent;
+        parent.SetParent(root.transform, true);
+        Check(Exact(parent.position, Vector3.zero), "Production build root ignores prefab authoring position");
+        Check(Quaternion.Angle(parent.rotation, Quaternion.identity) == 0 && Exact(parent.localScale, Vector3.one),
+            "Production build root uses identity rotation and scale");
+        Check(play.blocksParent == parent && parent.GetComponent<Rigidbody>().isKinematic, "Loader registries and build physics retained");
+        Check(Exact(prefab.transform.position, originalPosition), "Source parent prefab unchanged");
+
+        Block definition = Resources.Load<GameObject>("Blocks/2x1x1").GetComponent<Block>();
+        BlockData data = new BlockData(definition)
+        {
+            id = "inspector-coordinate-regression", resourcePath = "Blocks/2x1x1",
+            posX = -2, posY = 2.5f, posZ = 0,
+            rotX = 0, rotY = 0, rotZ = Mathf.Sqrt(0.5f), rotW = Mathf.Sqrt(0.5f)
+        };
+        string before = JsonUtility.ToJson(data);
+        Type factory = typeof(Block).Assembly.GetType("BlueprintBlockFactory");
+        object[] args = { data, parent, UnitFaction.Player, null };
+        Check((bool)factory.GetMethod("TryRestore").Invoke(null, args), "Restore screenshot world pose through real factory");
+        Block restored = (Block)args[3];
+        Vector3 expected = new Vector3(-2, 2.5f, 0);
+        Check(Exact(restored.transform.position, expected) && Exact(restored.transform.localPosition, expected),
+            "Inspector local position equals preserved screenshot world position");
+        BlockData captured = new BlockData(restored);
+        Check(captured.posX == data.posX && captured.posY == data.posY && captured.posZ == data.posZ &&
+            JsonUtility.ToJson(data) == before, "Restore does not migrate or mutate saved world coordinates");
+        Object.DestroyImmediate(restored.gameObject);
+        return parent;
+    }
+
     private static void CheckCameraFrames(object manipulation, Camera camera, List<Quaternion> orientations)
     {
         var views = new List<Quaternion>(orientations);
@@ -305,7 +348,8 @@ public static class BuildRotationCatalogProbe
 
     private static void CheckPose(Block block, Vector3 position, Quaternion rotation, string label)
     {
-        Check(Exact(block.transform.position, position) && Quaternion.Angle(block.transform.rotation, rotation) < 0.03f, label);
+        Check(Exact(block.transform.position, position) && Exact(block.transform.localPosition, position) &&
+            Quaternion.Angle(block.transform.rotation, rotation) < 0.03f, label);
     }
 
     private static bool Exact(Vector3 a, Vector3 b) => a.x == b.x && a.y == b.y && a.z == b.z;

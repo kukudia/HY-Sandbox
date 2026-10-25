@@ -234,7 +234,10 @@ internal sealed class BlueprintLoader
             UnityEngine.Object.Destroy(_game.blocksParent.gameObject);
         }
 
-        GameObject obj = UnityEngine.Object.Instantiate(prefab);
+        // BlockData保存世界坐标；建造容器必须是单位变换，否则Inspector局部坐标会被Prefab制作偏移污染。
+        // 方块随后以原世界姿态恢复，不修改已有蓝图数据或方块间相对位置。
+        GameObject obj = UnityEngine.Object.Instantiate(prefab, Vector3.zero, Quaternion.identity);
+        obj.transform.localScale = Vector3.one;
         obj.name = name;
         _parent = obj.transform;
         _game.blocksParent = _parent;
