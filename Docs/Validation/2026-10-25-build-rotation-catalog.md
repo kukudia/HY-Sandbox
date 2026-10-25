@@ -2,7 +2,11 @@
 
 ## 规则与实现
 
-沿用[尺寸奇偶网格规则](2026-10-25-build-rotation.md)：世界尺寸为奇数的轴中心是整数、偶数的轴中心是整数加半格，旋转保持整数锚点并重新计算偏移；不按方块名写特例，不修改Prefab或GUID。
+当前[尺寸奇偶网格规则](2026-10-25-build-rotation.md)以真实驾驶舱的整数占格边界为准：世界尺寸奇数轴中心为半整数、偶数轴中心为整数。2×1×1绕Z轴90°的世界尺寸1×2×1，中心为`(.5,整数,.5)`。此前奇偶映射相反，已替换；不能将此前自动断言数量解释为错误映射得到验证。
+
+最新Unity隔离Play验证为78,769条断言通过，原460项回归同步当前规则并通过。新增真实驾驶舱所有连接点作为放置目标，检查所有姿态下方块AABB边界为整数，避免测试期望和生产代码的奇偶公式一同写反。测试范围仍为25种方块、24种朝向、六个旋转方向与64种合成尺寸。
+
+旧用户存档与已摆放坐标不自动修改；再次旋转/重新放置时使用新规则。以下Inspector父对象回归的旧坐标只是说明局部/世界差值，不代表其符合更正后的占格规则。
 
 本轮修复BuildManipulation.AlignAxisToNearestWorldDir：原上轴初始评分错误使用相机前向，且前/上方向独立选择可能重合；现在先选前轴，再从垂直方向中选择最接近相机上方的轴。TryBeginDrag捕获开始时的世界轴，后续帧不再读取手柄方向。
 
@@ -30,31 +34,31 @@ BlueprintLoader.ReplaceParent现在使用单位变换创建建造容器；方块
 
 | 方块 | 逻辑尺寸 | 本方块断言数 |
 | --- | --- | ---: |
-| 1x1x1 | 1x1x1 | 2593 |
-| 2x1x1 | 2x1x1 | 2593 |
-| 2x2x1 | 2x2x1 | 2593 |
-| 2x2x2 | 2x2x2 | 2593 |
-| CargoHold | 2x2x2 | 2593 |
-| Cockpit | 2x2x2 | 2593 |
-| CoinHold | 1x1x1 | 2593 |
-| CollectionBotContainer | 1x1x1 | 2473 |
-| Door | 1x2x1 | 2593 |
-| HoverFlightController | 1x1x1 | 2473 |
-| HoverThruster | 1x1x1 | 2473 |
-| HoverThrusterBig | 2x2x2 | 2473 |
-| MainThruster | 1x1x1 | 2593 |
-| MainThrusterBig | 2x2x2 | 2545 |
-| PowerGeneratingUnit | 2x2x2 | 2473 |
-| PowerTransmissionDevice | 1x1x1 | 2473 |
-| ProjectileTurretDouble | 1x1x1 | 2473 |
-| ProjectileTurretSingle | 1x1x1 | 2473 |
-| Rack | 1x1x1 | 2593 |
-| RepairBotContianer | 1x1x1 | 2473 |
-| Stairs | 1x1x1 | 2545 |
-| TechnologyHold | 1x1x1 | 2593 |
-| Turret | 1x1x1 | 2473 |
-| UniversalThruster | 1x1x1 | 2473 |
-| UniversalThrusterBig | 2x2x2 | 2473 |
+| 1x1x1 | 1x1x1 | 3025 |
+| 2x1x1 | 2x1x1 | 3025 |
+| 2x2x1 | 2x2x1 | 3025 |
+| 2x2x2 | 2x2x2 | 3025 |
+| CargoHold | 2x2x2 | 3025 |
+| Cockpit | 2x2x2 | 3025 |
+| CoinHold | 1x1x1 | 3025 |
+| CollectionBotContainer | 1x1x1 | 2545 |
+| Door | 1x2x1 | 3025 |
+| HoverFlightController | 1x1x1 | 2545 |
+| HoverThruster | 1x1x1 | 2545 |
+| HoverThrusterBig | 2x2x2 | 2545 |
+| MainThruster | 1x1x1 | 3025 |
+| MainThrusterBig | 2x2x2 | 2833 |
+| PowerGeneratingUnit | 2x2x2 | 2545 |
+| PowerTransmissionDevice | 1x1x1 | 2545 |
+| ProjectileTurretDouble | 1x1x1 | 2545 |
+| ProjectileTurretSingle | 1x1x1 | 2545 |
+| Rack | 1x1x1 | 3025 |
+| RepairBotContianer | 1x1x1 | 2545 |
+| Stairs | 1x1x1 | 2833 |
+| TechnologyHold | 1x1x1 | 3025 |
+| Turret | 1x1x1 | 2545 |
+| UniversalThruster | 1x1x1 | 2545 |
+| UniversalThrusterBig | 2x2x2 | 2545 |
 
 上表来自实际机器结果Temp/build-rotation-catalog.json，合成尺寸与相机断言不计入各行；临时JSON不提交。动态报告使用托管JSON序列化，避免Unity原生序列化器遗漏动态编译的嵌套逐Prefab结果。
 

@@ -23,9 +23,10 @@ internal sealed class BuildPlacementGeometry
             return startCenter;
         }
 
-        // 锚点是中心所在整数格的基准。按世界轴尺寸奇偶取正半格偏移，反向/180°不额外平移一格。
+        // 现有驾驶舱以整数边界占格：奇数尺寸中心为半整数，偶数尺寸中心为整数。
+        // 锚点是中心所在整数格的基准；偏移仅取尺寸奇偶，反向/180°不额外平移一格。
         // 在整数半格坐标中运算，不能把旋转后的浮点 AABB 尺寸直接加回中心。
-        Vector3 localOffset = new Vector3(block.x % 2 == 0 ? 1 : 0, block.y % 2 == 0 ? 1 : 0, block.z % 2 == 0 ? 1 : 0);
+        Vector3 localOffset = new Vector3(block.x % 2, block.y % 2, block.z % 2);
         Vector3 oldOffset = SnapRotationToGrid(startRotation) * localOffset;
         Vector3 newOffset = SnapRotationToGrid(targetRotation) * localOffset;
         float safeGridSize = Mathf.Max(0.0001f, gridSize);

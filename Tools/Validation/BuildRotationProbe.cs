@@ -85,9 +85,9 @@ public static class BuildRotationProbe
                 }
 
                 Quaternion initial = Quaternion.Euler(0, 90, 0);
-                float a = block.x % 2 == 0 ? 0.5f : 0f;
-                float b = block.y % 2 == 0 ? 0.5f : 0f;
-                float c = block.z % 2 == 0 ? 0.5f : 0f;
+                float a = block.x % 2 * 0.5f;
+                float b = block.y % 2 * 0.5f;
+                float c = block.z % 2 * 0.5f;
                 Vector3 anchor = new Vector3(0, 1, 0);
                 // 已知 Y=90° 起始姿态、绕世界 X 四次的解析解，不调用被测位置算法求期望。
                 Vector3[] centers =
@@ -176,15 +176,15 @@ public static class BuildRotationProbe
                 Object.DestroyImmediate(handle.gameObject);
             }
 
-            // 用户提供的明确回归：X 半格偏移必须换到 Z，逐分量严格相等，不使用 Vector3 的近似比较。
+            // 用户回归：整数边界网格上奇数轴取半格中心；逐分量严格比较，不用Vector3的近似相等。
             Block even = Resources.Load<GameObject>("Blocks/2x1x1").GetComponent<Block>();
-            Vector3 start = new Vector3(0.5f, 1, 0);
+            Vector3 start = new Vector3(0, 1.5f, 0.5f);
             Block userBlock = Object.Instantiate(even.gameObject, start, Quaternion.identity, root.transform).GetComponent<Block>();
             Set(manipulation, "selectedBlock", userBlock);
             Vector3[] userPositions =
             {
-                new Vector3(0, 1, 0.5f), start,
-                new Vector3(0, 1, 0.5f), start
+                new Vector3(0.5f, 1.5f, 0), start,
+                new Vector3(0.5f, 1.5f, 0), start
             };
             for (int turn = 0; turn < 4; turn++)
             {
@@ -207,8 +207,8 @@ public static class BuildRotationProbe
                 Quaternion rotation = Quaternion.identity;
                 Vector3[] expected =
                 {
-                    new Vector3(0, 1, 0.5f), start,
-                    new Vector3(0, 1, 0.5f), start
+                    new Vector3(0.5f, 1.5f, 0), start,
+                    new Vector3(0.5f, 1.5f, 0), start
                 };
                 for (int turn = 0; turn < 100; turn++)
                 {

@@ -440,7 +440,7 @@ flowchart TD
 
 ## 放置、选中、操作和持久化
 
-预览按连接点确定中心并清理近网格浮点尾差。相机前/上轴正交选取，拖拽按下时捕获世界轴；键盘/拖拽采用世界轴90°旋转，锁定整数格锚点，尺寸半格偏移随新姿态换轴；阻挡拒绝保护姿态与位置，Undo/Redo记录两者。
+预览按真实连接点确定中心并清理尾差。以驾驶舱整数边界为准：奇数尺寸轴中心半整数、偶数轴中心整数。相机轴正交选取，拖拽捕获世界轴；90°旋转锁定整数锚点并换轴半格偏移；阻挡拒绝保护姿态与位置，Undo/Redo记录两者。
 
 ```mermaid
 flowchart TD
@@ -451,9 +451,9 @@ flowchart TD
     C["BuildPreview.Poll()"]
     click C "../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L41" "打开源码"
     D["BuildPlacementGeometry.TryCalculateConnectorAlignedPosition()"]
-    click D "../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L63" "打开源码"
+    click D "../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L64" "打开源码"
     E["BuildPlacementGeometry.IsBlocked()"]
-    click E "../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L170" "打开源码"
+    click E "../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L171" "打开源码"
     F["BuildManager.CreateBlock()"]
     click F "../Assets/Scripts/Features/Building/BuildManager.cs#L473" "打开源码"
     G["BuildManager.SaveBlock()"]
@@ -493,7 +493,7 @@ flowchart TD
     X["BuildPlacementGeometry.SnapRotationToGrid()"]
     click X "../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L10" "打开源码"
     Y["BuildPlacementGeometry.RemoveGridNoise()"]
-    click Y "../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L108" "打开源码"
+    click Y "../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L109" "打开源码"
     Z["BuildManipulation.AlignAxisToNearestWorldDir()"]
     click Z "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L126" "打开源码"
     AA["BuildManipulation.TryBeginDrag()"]
@@ -541,9 +541,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|HandleBuildingPreview -->
 - [BuildPreview.Poll](../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L41)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPreview.cs|Poll -->
-- [BuildPlacementGeometry.TryCalculateConnectorAlignedPosition](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L63)
+- [BuildPlacementGeometry.TryCalculateConnectorAlignedPosition](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L64)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs|TryCalculateConnectorAlignedPosition -->
-- [BuildPlacementGeometry.IsBlocked](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L170)
+- [BuildPlacementGeometry.IsBlocked](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L171)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs|IsBlocked -->
 - [BuildManager.CreateBlock](../Assets/Scripts/Features/Building/BuildManager.cs#L473)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|CreateBlock -->
@@ -583,7 +583,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs|CalculateRotationPosition -->
 - [BuildPlacementGeometry.SnapRotationToGrid](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L10)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs|SnapRotationToGrid -->
-- [BuildPlacementGeometry.RemoveGridNoise](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L108)
+- [BuildPlacementGeometry.RemoveGridNoise](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L109)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs|RemoveGridNoise -->
 - [BuildManipulation.AlignAxisToNearestWorldDir](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L126)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs|AlignAxisToNearestWorldDir -->

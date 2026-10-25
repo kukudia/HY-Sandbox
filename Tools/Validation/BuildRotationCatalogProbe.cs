@@ -297,19 +297,26 @@ public static class BuildRotationCatalogProbe
 
     private static void CheckPlacement(object geometry, Block definition, Quaternion rotation, Vector3 anchor)
     {
-        foreach (Vector3 axis in Axes)
+        // 使用真实驾驶舱的连接点作为网格依据，避免测试期望与错误的尺寸奇偶公式一同翻转。
+        Block cockpit = Resources.Load<GameObject>("Blocks/Cockpit").GetComponent<Block>();
+        foreach (Connector socket in cockpit.connectors)
         {
-            foreach (int sign in new[] { -1, 1 })
+            object[] args = { definition, rotation, anchor + cockpit.GetConnectorWorldPosition(socket), cockpit.GetConnectorWorldNormal(socket), Vector3.zero };
+            bool aligned = (bool)Geometry.GetMethod("TryCalculateConnectorAlignedPosition").Invoke(geometry, args);
+            if (aligned)
             {
-                object[] args = { definition, rotation, anchor, axis * sign, Vector3.zero };
-                bool aligned = (bool)Geometry.GetMethod("TryCalculateConnectorAlignedPosition").Invoke(geometry, args);
-                // A face without enabled connectors may legitimately use BuildPreview's extent fallback.
-                if (aligned)
-                {
-                    Vector3 position = (Vector3)args[4];
-                    Check(position.x * 2 == Mathf.Round(position.x * 2) && position.y * 2 == Mathf.Round(position.y * 2) &&
-                        position.z * 2 == Mathf.Round(position.z * 2), definition.name + " connector placement exact half-grid");
-                }
+                Vector3 position = (Vector3)args[4];
+                Vector3 right = rotation * Vector3.right;
+                Vector3 up = rotation * Vector3.up;
+                Vector3 forward = rotation * Vector3.forward;
+                Vector3 minimum = position - new Vector3(
+                    Mathf.Abs(right.x) * definition.x + Mathf.Abs(up.x) * definition.y + Mathf.Abs(forward.x) * definition.z,
+                    Mathf.Abs(right.y) * definition.x + Mathf.Abs(up.y) * definition.y + Mathf.Abs(forward.y) * definition.z,
+                    Mathf.Abs(right.z) * definition.x + Mathf.Abs(up.z) * definition.y + Mathf.Abs(forward.z) * definition.z) * 0.5f;
+                Check(position.x * 2 == Mathf.Round(position.x * 2) && position.y * 2 == Mathf.Round(position.y * 2) &&
+                    position.z * 2 == Mathf.Round(position.z * 2) && Mathf.Abs(minimum.x - Mathf.Round(minimum.x)) < 0.0001f &&
+                    Mathf.Abs(minimum.y - Mathf.Round(minimum.y)) < 0.0001f && Mathf.Abs(minimum.z - Mathf.Round(minimum.z)) < 0.0001f,
+                    definition.name + " actual cockpit sockets produce integer grid boundaries");
             }
         }
     }
@@ -325,9 +332,9 @@ public static class BuildRotationCatalogProbe
             Mathf.Abs(right.y) * block.x + Mathf.Abs(up.y) * block.y + Mathf.Abs(forward.y) * block.z,
             Mathf.Abs(right.z) * block.x + Mathf.Abs(up.z) * block.y + Mathf.Abs(forward.z) * block.z);
         return anchor + new Vector3(
-            (Mathf.RoundToInt(worldSize.x) + 1) % 2 * 0.5f,
-            (Mathf.RoundToInt(worldSize.y) + 1) % 2 * 0.5f,
-            (Mathf.RoundToInt(worldSize.z) + 1) % 2 * 0.5f);
+            Mathf.RoundToInt(worldSize.x) % 2 * 0.5f,
+            Mathf.RoundToInt(worldSize.y) % 2 * 0.5f,
+            Mathf.RoundToInt(worldSize.z) % 2 * 0.5f);
     }
 
     private static List<Quaternion> Orientations()
