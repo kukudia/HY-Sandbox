@@ -244,7 +244,7 @@ def main():
     )
     graph(
         "放置、选中、操作和持久化",
-        "Update 按输入模式调用预览或选择；预览确认放置调用显式注入的创建动作。输入/Undo、几何规则和JSON各有审查位置。",
+        "Update 按输入模式调用预览或选择；预览按连接点确定中心（偶数尺寸可含半格偏移）。键盘/轴拖拽均锁定中心，绕世界轴左乘旋转并检测阻挡；旋转不重新吸附包围盒。输入/Undo、几何规则和JSON各有审查位置。",
         {
             "A": "BuildManager.Update",
             "B": "BuildManager.HandleBuildingPreview",
@@ -266,6 +266,8 @@ def main():
             "R": "BuildPaletteItem.ApplyButtonStyle",
             "S": "BuildPaletteItem.BindPalette",
             "T": "BuildManager.SetCurrentBlockResource",
+            "U": "BuildManipulation.HandleRotation",
+            "V": "BuildManipulation.HandleRotateAxisDrag",
         },
         [
             "A --> B",
@@ -281,8 +283,14 @@ def main():
             "A --> J",
             "J --> K",
             "A --> L",
-            "L -.->|保存动作| G",
-            "L --> M",
+            "L --> U",
+            "L --> V",
+            "U --> E",
+            "V --> E",
+            "U -.->|有效旋转保存| G",
+            "V -.->|释放拖拽后保存| G",
+            "U --> M",
+            "V --> M",
             "A --> N",
             "A --> O",
             "Q --> R",

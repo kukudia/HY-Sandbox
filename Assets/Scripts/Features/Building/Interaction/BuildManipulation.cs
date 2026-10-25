@@ -1,5 +1,5 @@
 // 职责：处理所选方块的键盘移动/旋转、轴拖拽及复制，提交存档和 Undo 动作。
-// 入口：Poll() / TryBeginDrag() / CancelDrag()；几何判定复用 BuildPlacementGeometry。
+// 入口：Poll() / TryBeginDrag() / CancelDrag()；旋转锁定中心，移动吸附与阻挡复用 BuildPlacementGeometry。
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -273,9 +273,11 @@ internal sealed class BuildManipulation
         if (moveEuler != Vector3.zero)
         {
             Quaternion oldRot = selectedBlock.transform.rotation;
-            Quaternion newRot = oldRot * Quaternion.Euler(moveEuler);
+            // 操作轴来自相机对齐后的世界坐标系，必须在已有姿态左侧叠加。
+            Quaternion newRot = Quaternion.Euler(moveEuler) * oldRot;
             Vector3 oldPos = selectedBlock.transform.position;
-            Vector3 newPos = _geometry.SnapCenterByMinCorner(oldPos, newRot, selectedBlock);
+            // 放置连接点确定的中心（含偶数尺寸半格偏移）在旋转期间保持不变。
+            Vector3 newPos = oldPos;
             // 检查是否被阻挡
             if (!_geometry.IsBlocked(newPos, newRot, selectedBlock))
             {
@@ -366,22 +368,22 @@ internal sealed class BuildManipulation
             }
 
             // 从相机发射射线，与一个垂直于旋转轴的平面相交
-            Plane dragPlane = new Plane(axis, selectedBlock.transform.position);
+            Plane dragPlane = new Plane(axis, blockStartRotatePos);
             Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
             if (dragPlane.Raycast(ray, out float enter))
             {
                 Vector3 hitPoint = ray.GetPoint(enter);
                 // 起点和当前点在平面上的向量
-                Vector3 from = (rotateDragStart - selectedBlock.transform.position).normalized;
-                Vector3 to = (hitPoint - selectedBlock.transform.position).normalized;
+                Vector3 from = (rotateDragStart - blockStartRotatePos).normalized;
+                Vector3 to = (hitPoint - blockStartRotatePos).normalized;
                 // 计算旋转角度
                 float angle = Vector3.SignedAngle(from, to, axis);
                 // 步进（比如 15°/45°）
                 float step = 15f;
                 float snappedAngle = Mathf.Round(angle / step) * step;
-                Quaternion newRot = blockStartRot * Quaternion.AngleAxis(snappedAngle, axis);
+                Quaternion newRot = Quaternion.AngleAxis(snappedAngle, axis) * blockStartRot;
                 // 检查是否阻挡
-                Vector3 newPos = _geometry.SnapCenterByMinCorner(blockStartRotatePos, newRot, selectedBlock);
+                Vector3 newPos = blockStartRotatePos;
                 if (!_geometry.IsBlocked(newPos, newRot, selectedBlock))
                 {
                     selectedBlock.transform.position = newPos;
