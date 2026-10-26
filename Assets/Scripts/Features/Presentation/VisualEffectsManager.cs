@@ -214,6 +214,20 @@ public class VisualEffectsManager : MonoBehaviour
         Shake.Play(Camera.main, amplitude, duration);
     }
 
+    /// <summary>敌舰入场信标：一次闪光、垂直光柱和短促爆闪，复用既有池，标记进场方向。</summary>
+    public void PlaySpawnBeacon(Vector3 position)
+    {
+        if (!enableRuntimeVfx)
+        {
+            return;
+        }
+
+        Color beacon = new Color(1f, 0.44f, 0.2f, 1f);
+        TransientEffects.CreateLightFlash(position, beacon, 7f, 34f, 1.1f);
+        TransientEffects.CreateLineStreak(position, position + Vector3.up * 14f, beacon, 2.2f, 0.5f);
+        TransientEffects.CreateRadialStreakBurst(position, Vector3.up, beacon, 6, 7f, 0.6f, 0.07f);
+    }
+
     private void OnDestroy()
     {
         _cameraShake?.Cancel();
