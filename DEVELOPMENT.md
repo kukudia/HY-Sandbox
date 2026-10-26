@@ -1,5 +1,10 @@
 # HY-Sandbox 开发与审查入口
 
+## 2026-10-26 自然战斗Player帧记录
+
+- 独立Windows D3D11发布包（非Development，3200×2000）跑 `-siege-checks-soak`：**86项通过/0错误**，9,234帧/93.83秒，中位 **9.99ms**、P95 **10.54ms**、P99 **10.93ms**，最大帧86.84ms（生成期），>100ms长帧0个。第1波核心被击毁，只跑到93.8秒。
+- 中位与P99贴着10ms，说明该负载下帧时间被钳制，**不能据此判断性能余量，也不声称UI简化带来FPS提升**；未开启嵌套工作计时，没有BFS/刷新分项。数据与边界见 [自然战斗帧记录](Docs/Validation/2026-10-26-siege-player-soak.md)，原始JSON已随仓库保存。
+
 ## 2026-10-26 阵地战战果记录与失败结算
 
 - 新增 `SiegeProgress`：失败时把最高波次、累计击毁、总场次写入本地 `PlayerPrefs`，`SiegeSettings.trackRecords` 可关闭。HUD 在整备阶段金币行显示 `BEST n`，失败横幅显示 `NEW RECORD · WAVE n` 或 `BEST WAVE n`。
