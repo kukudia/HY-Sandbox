@@ -1,6 +1,6 @@
 # 阵地战 2026-10-26 夜间连续开发交接
 
-本轮从 2026-10-26 23:04 开始，目标为“使用NightDesk，持续完善Siege玩法，简化多余UI，兼顾性能并更壮观”，默认只做本地提交、不推送。截止 2026-10-27 08:00（Asia/Kuala_Lumpur），07:30 起停止接新需求收尾。全部改动是 `main` 上的 **17 个本地提交**，未 push、未建PR、未发布、未改凭据。
+本轮从 2026-10-26 23:04 开始，目标为“使用NightDesk，持续完善Siege玩法，简化多余UI，兼顾性能并更壮观”，默认只做本地提交、不推送。截止 2026-10-27 08:00（Asia/Kuala_Lumpur），07:30 起停止接新需求收尾。全部改动是 `main` 上的 **22 个本地提交**，未 push、未建PR、未发布、未改凭据。
 
 ## 完成的工作（按提交顺序）
 
@@ -22,6 +22,9 @@
 | `369b82d` 竞技场信标塔 | 12座250米环上的装饰塔（无碰撞体） | 场景读数12座、信标为单位缩放 |
 | `3056d41` 蜂群波 | 每3波数量翻倍、生成间隔×0.65；与精英重叠时精英优先 | 规则检查增至21项；第3波 `swarm=True pending=8` 截屏 |
 | `1d584c9` 预览纳入蜂群 | 整备预览按蜂群放大并标注 `SWARM`/`ELITE` | 23项规则检查；`NEXT 8 × RANDOM · SWARM` |
+| `4b5442b` 战果清除菜单与交接文档 | 新增 `Clear Local Siege Records` 菜单、序列化蜂群默认值、重写交接文档 | 菜单把本机纪录清回0；最终矩阵全绿 |
+| `3160ba3` 最终Player认证 | 把最终树的发布包报告入库 | 89项通过/0错误 |
+| `7ede184` 连击上限与难度曲线 | `comboBonusCap`（默认300）、纯函数 `ComboBonusFor`、难度曲线表 | 规则检查增至25项 |
 | `a5506ec` 后段波次采样与尖峰定位 | 无人驾驶推进到第5/6波：中位15.8–16.4ms、P95 31.9–34.4ms、P99 50.9–59.3ms、最大272–291ms；尖峰落在波次边界修缮与敌舰断裂重组 | 两份soak JSON入库 |
 
 附加：`SiegeProgressAuthoring` 菜单 `HY-Sandbox/Siege/Clear Local Siege Records` 可清除本机战果记录；验证用的临时纪录已清回0。
@@ -33,8 +36,8 @@
 | `SiegePlayChecks.Run()` | 28/28 PASS |
 | `SiegeUsabilityChecks.RunDeployment()` | 9/9 |
 | `SiegeUsabilityChecks.RunSelection()` | 10/10 |
-| `SiegeCombatFeedbackChecks.Run()` | 23/23 |
-| 独立Windows D3D11 Player `-siege-checks-report` | 89项通过/0错误，`scripted-loop-passed` |
+| `SiegeCombatFeedbackChecks.Run()` | 25/25 |
+| 独立Windows D3D11 Player `-siege-checks-report` | 89项通过/0错误，`scripted-loop-passed`（最终树重建后复验） |
 | `CodeReadability --check` | 326脚本、0格式差异、0错误 |
 | `dotnet build HY-Sandbox.sln --no-restore` | 0错误、4既有警告 |
 | `git diff --check` | 通过 |
