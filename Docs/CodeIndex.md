@@ -868,7 +868,7 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeCombatFeedbackChecks | [`string Run()`](../Assets/Editor/Siege/SiegeCombatFeedbackChecks.cs#L16) | public static |
-| SiegeCombatFeedbackChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeCombatFeedbackChecks.cs#L112) | private static |
+| SiegeCombatFeedbackChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeCombatFeedbackChecks.cs#L135) | private static |
 
 ## Assets/Editor/Siege/SiegeCommandHudAuthoring.cs
 
@@ -888,20 +888,20 @@
 | SiegeCommandHudAuthoring | [`void Edge( Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax, Vector2 offsetMin, Vector2 offsetMax)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L729) | private static |
 | SiegeCommandHudAuthoring | [`RectTransform Group( Transform parent, string name, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L758) | private static |
 | SiegeCommandHudAuthoring | [`void ThreatMarkers(SiegeHud hud)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L780) | private static |
-| SiegeCommandHudAuthoring | [`void ControlsHelp(SiegeHud hud, Text template)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L793) | private static |
-| SiegeCommandHudAuthoring | [`Text CloneLabel( Transform parent, Text template, string name, string text, float x, float y, float width, float height, int size)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L880) | private static |
-| SiegeCommandHudAuthoring | [`void StyleButton(Button button, int fontSize, bool primary)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L907) | private static |
-| SiegeCommandHudAuthoring | [`void PlaceOptional( Transform parent, string name, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L935) | private static |
-| SiegeCommandHudAuthoring | [`Text RequireText(Transform parent, string name)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L950) | private static |
-| SiegeCommandHudAuthoring | [`RectTransform Require(Transform parent, string path)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L962) | private static |
-| SiegeCommandHudAuthoring | [`Text FindText(Transform parent, string name)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L973) | private static |
-| SiegeCommandHudAuthoring | [`Transform FindChild(Transform parent, string name)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L980) | private static |
-| SiegeCommandHudAuthoring | [`Transform FindDeep(Transform parent, string name)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L994) | private static |
-| SiegeCommandHudAuthoring | [`Transform FindUnder(Transform root, string path)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L1007) | private static |
-| SiegeCommandHudAuthoring | [`Transform FindByPath(string path)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L1022) | private static |
-| SiegeCommandHudAuthoring | [`RectTransform Panel( Transform parent, string name, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L1035) | private static |
-| SiegeCommandHudAuthoring | [`void EnsureLine( Transform parent, string name, float x, float y, float width, float height, Color color)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L1050) | private static |
-| SiegeCommandHudAuthoring | [`void Place(RectTransform rect, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L1072) | private static |
+| SiegeCommandHudAuthoring | [`void ControlsHelp(SiegeHud hud, Text template)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L794) | private static |
+| SiegeCommandHudAuthoring | [`Text CloneLabel( Transform parent, Text template, string name, string text, float x, float y, float width, float height, int size)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L881) | private static |
+| SiegeCommandHudAuthoring | [`void StyleButton(Button button, int fontSize, bool primary)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L908) | private static |
+| SiegeCommandHudAuthoring | [`void PlaceOptional( Transform parent, string name, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L936) | private static |
+| SiegeCommandHudAuthoring | [`Text RequireText(Transform parent, string name)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L951) | private static |
+| SiegeCommandHudAuthoring | [`RectTransform Require(Transform parent, string path)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L963) | private static |
+| SiegeCommandHudAuthoring | [`Text FindText(Transform parent, string name)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L974) | private static |
+| SiegeCommandHudAuthoring | [`Transform FindChild(Transform parent, string name)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L981) | private static |
+| SiegeCommandHudAuthoring | [`Transform FindDeep(Transform parent, string name)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L995) | private static |
+| SiegeCommandHudAuthoring | [`Transform FindUnder(Transform root, string path)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L1008) | private static |
+| SiegeCommandHudAuthoring | [`Transform FindByPath(string path)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L1023) | private static |
+| SiegeCommandHudAuthoring | [`RectTransform Panel( Transform parent, string name, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L1036) | private static |
+| SiegeCommandHudAuthoring | [`void EnsureLine( Transform parent, string name, float x, float y, float width, float height, Color color)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L1051) | private static |
+| SiegeCommandHudAuthoring | [`void Place(RectTransform rect, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L1073) | private static |
 
 ## Assets/Editor/Siege/SiegeDestructionLogChecks.cs
 
@@ -3204,22 +3204,22 @@
 | VisualEffectsManager | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L206) | private |
 | VisualEffectsManager | [`void PlayCameraShake(float amplitude, float duration)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L212) | public |
 | VisualEffectsManager | [`void PlaySpawnBeacon(Vector3 position)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L218) | public |
-| VisualEffectsManager | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L231) | private |
-| VisualEffectsManager | [`void OnEnable()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L240) | private |
-| VisualEffectsManager | [`void ApplySceneLook()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L245) | private |
-| VisualEffectsManager | [`void PlayBlockPlaced(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L260) | private |
-| VisualEffectsManager | [`void PlayBlockRemoved(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L284) | private |
-| VisualEffectsManager | [`void PlayBlockExplosion(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L307) | private |
-| VisualEffectsManager | [`void PlayObjectDestroyed(GameObject target)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L341) | private |
-| VisualEffectsManager | [`void PlayRepairPulse(Vector3 origin, Vector3 target, Color color, float width)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L373) | private |
-| VisualEffectsManager | [`void PlayBlockMoved(Block block, Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L400) | private |
-| VisualEffectsManager | [`void PlayBlockRotated(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L413) | private |
-| VisualEffectsManager | [`void ShowBlockSelection(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L434) | private |
-| VisualEffectsManager | [`void ClearBlockSelection(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L448) | private |
-| VisualEffectsManager | [`void UpdateGhostPreview(Transform ghost, bool isBlocked)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L453) | private |
-| VisualEffectsManager | [`void ClearGhostPreview()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L458) | private |
-| VisualEffectsManager | [`void DecorateMeteor(Meteor meteor)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L462) | private |
-| VisualEffectsManager | [`void PlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L503) | private |
+| VisualEffectsManager | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L238) | private |
+| VisualEffectsManager | [`void OnEnable()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L247) | private |
+| VisualEffectsManager | [`void ApplySceneLook()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L252) | private |
+| VisualEffectsManager | [`void PlayBlockPlaced(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L267) | private |
+| VisualEffectsManager | [`void PlayBlockRemoved(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L291) | private |
+| VisualEffectsManager | [`void PlayBlockExplosion(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L314) | private |
+| VisualEffectsManager | [`void PlayObjectDestroyed(GameObject target)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L348) | private |
+| VisualEffectsManager | [`void PlayRepairPulse(Vector3 origin, Vector3 target, Color color, float width)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L380) | private |
+| VisualEffectsManager | [`void PlayBlockMoved(Block block, Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L407) | private |
+| VisualEffectsManager | [`void PlayBlockRotated(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L420) | private |
+| VisualEffectsManager | [`void ShowBlockSelection(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L441) | private |
+| VisualEffectsManager | [`void ClearBlockSelection(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L455) | private |
+| VisualEffectsManager | [`void UpdateGhostPreview(Transform ghost, bool isBlocked)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L460) | private |
+| VisualEffectsManager | [`void ClearGhostPreview()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L465) | private |
+| VisualEffectsManager | [`void DecorateMeteor(Meteor meteor)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L469) | private |
+| VisualEffectsManager | [`void PlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L510) | private |
 
 ## Assets/Scripts/Features/Salvage/CargoHold.cs
 
@@ -3382,23 +3382,23 @@
 | SiegeHud | [`void OnEnable()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L108) | private |
 | SiegeHud | [`void OnDisable()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L142) | private |
 | SiegeHud | [`void Update()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L165) | private |
-| SiegeHud | [`void UpdateTransient()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L265) | private |
-| SiegeHud | [`void UpdatePhase(SiegeMatch match)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L296) | private |
-| SiegeHud | [`void ApplyDockLayout(bool battle)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L388) | private |
-| SiegeHud | [`void RefreshShipStatus()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L422) | private |
-| SiegeHud | [`void SetBar(Image fill, Text value, float current, float maximum)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L455) | private static |
-| SiegeHud | [`void ShowBanner(string title, string subtitle)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L471) | private |
-| SiegeHud | [`void ToggleHelp()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L497) | private |
-| SiegeHud | [`void PollCamera()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L507) | private |
-| SiegeHud | [`void RefreshOptions()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L525) | private |
-| SiegeHud | [`void RefreshBlueprints()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L556) | private |
-| SiegeHud | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L562) | private |
-| SiegeHud | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L567) | private |
-| SiegeHud | [`void StartWave()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L572) | private |
-| SiegeHud | [`void RepairCore()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L577) | private |
-| SiegeHud | [`void RepairShip()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L583) | private |
-| SiegeHud | [`void RefreshRefitQuotes()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L590) | private |
-| SiegeHud | [`void Restart()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L613) | private |
+| SiegeHud | [`void UpdateTransient()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L266) | private |
+| SiegeHud | [`void UpdatePhase(SiegeMatch match)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L297) | private |
+| SiegeHud | [`void ApplyDockLayout(bool battle)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L389) | private |
+| SiegeHud | [`void RefreshShipStatus()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L430) | private |
+| SiegeHud | [`void SetBar(Image fill, Text value, float current, float maximum)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L463) | private static |
+| SiegeHud | [`void ShowBanner(string title, string subtitle)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L479) | private |
+| SiegeHud | [`void ToggleHelp()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L505) | private |
+| SiegeHud | [`void PollCamera()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L515) | private |
+| SiegeHud | [`void RefreshOptions()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L533) | private |
+| SiegeHud | [`void RefreshBlueprints()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L564) | private |
+| SiegeHud | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L570) | private |
+| SiegeHud | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L575) | private |
+| SiegeHud | [`void StartWave()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L580) | private |
+| SiegeHud | [`void RepairCore()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L585) | private |
+| SiegeHud | [`void RepairShip()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L591) | private |
+| SiegeHud | [`void RefreshRefitQuotes()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L598) | private |
+| SiegeHud | [`void Restart()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L621) | private |
 
 ## Assets/Scripts/Features/Siege/SiegeMatch.cs
 
@@ -3448,6 +3448,15 @@
 | Work | [`Work Subtract(Work current, Work previous)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L307) | public static |
 | Work | [`StageWork Difference(StageWork current, StageWork previous)`](../Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs#L325) | private static |
 
+## Assets/Scripts/Features/Siege/SiegeProgress.cs
+
+// 职责：记录阵地战的跨启动战果（最高波次与累计击毁），只写本地PlayerPrefs，不参与单局规则。 // 入口：TryRecordResult() / BestWave / TotalKills；由SiegeSession在失败时调用。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeProgress | [`bool TryRecordResult(int wave, int kills)`](../Assets/Scripts/Features/Siege/SiegeProgress.cs#L15) | public static |
+| SiegeProgress | [`void RestoreForProbe(int bestWave, int totalKills, int totalRuns)`](../Assets/Scripts/Features/Siege/SiegeProgress.cs#L35) | public static |
+
 ## Assets/Scripts/Features/Siege/SiegeRefit.cs
 
 // 职责：验证泊位净空并报价/执行修缮，复用同源模块、补回缺件，成功后精确扣费。 // 入口：IsClear() / Quote() / Repair()；部署蓝图不含货物，不读取或改写WorldSession。
@@ -3469,25 +3478,25 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeSession | [`void BindWorkshop(SiegeWorkshop workshop)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L26) | public |
-| SiegeSession | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L78) | public |
-| SiegeSession | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L86) | public |
-| SiegeSession | [`bool RefreshBlueprints()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L94) | public |
-| SiegeSession | [`int FindOption(SiegeShipOption[] options, string displayName, int fallback)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L128) | private static |
-| SiegeSession | [`void Awake()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L154) | private |
-| SiegeSession | [`void Start()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L165) | private |
-| SiegeSession | [`bool Begin()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L175) | public |
-| SiegeSession | [`bool BeginNextWave()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L198) | public |
-| SiegeSession | [`bool TryDeploy(int optionIndex, out string reason)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L223) | public |
-| SiegeSession | [`bool TryTakeControl(int slot)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L231) | public |
-| SiegeSession | [`bool TryRepair(bool repairBase)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L236) | public |
-| SiegeSession | [`void End()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L244) | public |
-| SiegeSession | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L255) | public |
-| SiegeSession | [`void NotifyCockpitDestroyed(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L269) | public |
-| SiegeSession | [`void Update()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L274) | private |
-| SiegeSession | [`void TickKillStreak()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L308) | private |
-| SiegeSession | [`void RepairBaseBetweenWaves()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L333) | private |
-| SiegeSession | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L367) | private |
-| SiegeSession | [`void SetSimulationActive(bool active)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L374) | private |
+| SiegeSession | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L84) | public |
+| SiegeSession | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L92) | public |
+| SiegeSession | [`bool RefreshBlueprints()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L100) | public |
+| SiegeSession | [`int FindOption(SiegeShipOption[] options, string displayName, int fallback)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L134) | private static |
+| SiegeSession | [`void Awake()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L160) | private |
+| SiegeSession | [`void Start()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L171) | private |
+| SiegeSession | [`bool Begin()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L181) | public |
+| SiegeSession | [`bool BeginNextWave()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L204) | public |
+| SiegeSession | [`bool TryDeploy(int optionIndex, out string reason)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L229) | public |
+| SiegeSession | [`bool TryTakeControl(int slot)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L237) | public |
+| SiegeSession | [`bool TryRepair(bool repairBase)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L242) | public |
+| SiegeSession | [`void End()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L250) | public |
+| SiegeSession | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L261) | public |
+| SiegeSession | [`void NotifyCockpitDestroyed(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L279) | public |
+| SiegeSession | [`void Update()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L284) | private |
+| SiegeSession | [`void TickKillStreak()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L318) | private |
+| SiegeSession | [`void RepairBaseBetweenWaves()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L343) | private |
+| SiegeSession | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L377) | private |
+| SiegeSession | [`void SetSimulationActive(bool active)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L384) | private |
 
 ## Assets/Scripts/Features/Siege/SiegeSettings.cs
 
@@ -3495,7 +3504,7 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeSettings | [`SiegeMatch CreateMatch()`](../Assets/Scripts/Features/Siege/SiegeSettings.cs#L93) | public |
+| SiegeSettings | [`SiegeMatch CreateMatch()`](../Assets/Scripts/Features/Siege/SiegeSettings.cs#L96) | public |
 
 ## Assets/Scripts/Features/Siege/SiegeStressPopulation.cs
 
@@ -3513,12 +3522,12 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeThreatMarkers | [`void Awake()`](../Assets/Scripts/Features/Siege/SiegeThreatMarkers.cs#L35) | private |
-| SiegeThreatMarkers | [`void Start()`](../Assets/Scripts/Features/Siege/SiegeThreatMarkers.cs#L41) | private |
-| SiegeThreatMarkers | [`void Build()`](../Assets/Scripts/Features/Siege/SiegeThreatMarkers.cs#L50) | private |
-| SiegeThreatMarkers | [`void Update()`](../Assets/Scripts/Features/Siege/SiegeThreatMarkers.cs#L100) | private |
-| SiegeThreatMarkers | [`void PlaceMarker(int index, Camera camera, Vector3 world, Vector3 viewport, float distance)`](../Assets/Scripts/Features/Siege/SiegeThreatMarkers.cs#L154) | private |
-| SiegeThreatMarkers | [`void HideAll()`](../Assets/Scripts/Features/Siege/SiegeThreatMarkers.cs#L194) | private |
+| SiegeThreatMarkers | [`void Awake()`](../Assets/Scripts/Features/Siege/SiegeThreatMarkers.cs#L34) | private |
+| SiegeThreatMarkers | [`void Start()`](../Assets/Scripts/Features/Siege/SiegeThreatMarkers.cs#L40) | private |
+| SiegeThreatMarkers | [`void Build()`](../Assets/Scripts/Features/Siege/SiegeThreatMarkers.cs#L49) | private |
+| SiegeThreatMarkers | [`void Update()`](../Assets/Scripts/Features/Siege/SiegeThreatMarkers.cs#L99) | private |
+| SiegeThreatMarkers | [`void PlaceMarker(int index, Camera camera, Vector3 world, Vector3 viewport, float distance)`](../Assets/Scripts/Features/Siege/SiegeThreatMarkers.cs#L150) | private |
+| SiegeThreatMarkers | [`void HideAll()`](../Assets/Scripts/Features/Siege/SiegeThreatMarkers.cs#L189) | private |
 
 ## Assets/Scripts/Features/Siege/SiegeWaveDirector.cs
 

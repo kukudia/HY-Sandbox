@@ -183,7 +183,8 @@ public sealed class SiegeHud : MonoBehaviour
         heading.text = match.Phase == SiegePhase.Battle && match.IsEliteWave ? "BASTION   ·   ELITE WAVE" : match.Phase == SiegePhase.Defeat ? "BASTION   ·   LOST" : "BASTION   ·   " + match.Phase.ToString().ToUpperInvariant();
         string preview = match.CanRefit ? "     NEXT  " + session.NextWaveSize + " × " + session.AttackerPreview : string.Empty;
         int remaining = match.ActiveAttackers + match.PendingAttackers;
-        economy.text = "CREDITS  " + match.Coins.ToString("N0") + "      WAVE  " + match.Wave + "      RAIDERS  " + remaining + preview;
+        string record = match.CanRefit && session.BestWave > 0 ? "      BEST  " + session.BestWave : string.Empty;
+        economy.text = "CREDITS  " + match.Coins.ToString("N0") + "      WAVE  " + match.Wave + "      RAIDERS  " + remaining + preview + record;
         if (session.Status != statusSnapshot)
         {
             statusSnapshot = session.Status;
@@ -348,7 +349,9 @@ public sealed class SiegeHud : MonoBehaviour
             }
             else if (match.Phase == SiegePhase.Defeat)
             {
-                ShowBanner("BASTION LOST", "THE CORE IS GONE");
+                ShowBanner(
+                    "BASTION LOST",
+                    session.NewRecord ? "NEW RECORD   ·   WAVE " + match.Wave : "BEST WAVE  " + Mathf.Max(session.BestWave, match.Wave));
             }
         }
 
@@ -387,6 +390,13 @@ public sealed class SiegeHud : MonoBehaviour
     /// <summary>战斗阶段收起部署区并压缩舰队坞，把视野让给战场；整备阶段恢复完整高度。</summary>
     private void ApplyDockLayout(bool battle)
     {
+        bool defeat = session.Match != null && session.Match.Phase == SiegePhase.Defeat;
+        if (dockPanel != null && dockPanel.activeSelf == defeat)
+        {
+            // 失败后没有可执行的舰队操作，整块舰队坞退场，只留结算横幅与重开按钮。
+            dockPanel.SetActive(!defeat);
+        }
+
         if (refitGroup != null && refitGroup.activeSelf == battle)
         {
             refitGroup.SetActive(!battle);

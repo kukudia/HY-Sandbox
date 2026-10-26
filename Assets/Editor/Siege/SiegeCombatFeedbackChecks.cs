@@ -99,6 +99,26 @@ public static class SiegeCombatFeedbackChecks
             checks,
             "disabled elite interval keeps every wave normal",
             !linear.IsEliteWave && linear.KillReward == 100);
+        // 跨启动战果：写入后立即核对，再把原值原样恢复，避免验证留下假成绩。
+        int previousBest = SiegeProgress.BestWave;
+        int previousKills = SiegeProgress.TotalKills;
+        int previousRuns = SiegeProgress.TotalRuns;
+        bool raised = SiegeProgress.TryRecordResult(previousBest + 1, 3);
+        Check(checks, "record run raises the best wave", raised && SiegeProgress.BestWave == previousBest + 1);
+        Check(
+            checks,
+            "record run accumulates kills and runs",
+            SiegeProgress.TotalKills == previousKills + 3 && SiegeProgress.TotalRuns == previousRuns + 1);
+        bool lowered = SiegeProgress.TryRecordResult(previousBest, 1);
+        Check(
+            checks,
+            "shorter run keeps the record and still counts kills",
+            !lowered && SiegeProgress.BestWave == previousBest + 1 && SiegeProgress.TotalKills == previousKills + 4);
+        SiegeProgress.RestoreForProbe(previousBest, previousKills, previousRuns);
+        Check(
+            checks,
+            "probe restores the original record",
+            SiegeProgress.BestWave == previousBest && SiegeProgress.TotalKills == previousKills && SiegeProgress.TotalRuns == previousRuns);
         var report = new Report
         {
             checks = checks

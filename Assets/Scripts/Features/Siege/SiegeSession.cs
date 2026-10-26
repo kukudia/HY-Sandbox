@@ -40,6 +40,12 @@ public sealed class SiegeSession : MonoBehaviour
     {
         get; private set;
     }
+    /// <summary>本局失败时是否刷新了历史最高波次；供结算横幅显示。</summary>
+    public bool NewRecord
+    {
+        get; private set;
+    }
+    public int BestWave => SiegeProgress.BestWave;
     /// <summary>最近一次连击额外发放的金币，仅供HUD提示。</summary>
     public int LastComboBonus
     {
@@ -260,6 +266,11 @@ public sealed class SiegeSession : MonoBehaviour
         }
 
         Match.LoseBase();
+        if (settings.TrackRecords)
+        {
+            NewRecord = SiegeProgress.TryRecordResult(Match.Wave, Match.DefeatedAttackers);
+        }
+
         waves?.Stop();
         Fleet?.SetCombatActive(false);
         SetSimulationActive(false);

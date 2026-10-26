@@ -67,9 +67,12 @@ public sealed class SiegeSettings : ScriptableObject
     private int comboBonusCoins = 60;
     [SerializeField, Min(0), Tooltip("波次结束时基地核心未受损的奖励（金币×波次），在自动修缮之前判定。")]
     private int flawlessBonusPerWave = 80;
+    [SerializeField, Tooltip("失败时把最高波次与累计击毁写入本地PlayerPrefs；关闭后只保留本局显示。")]
+    private bool trackRecords = true;
     public bool AutoRepairBase => autoRepairBase;
     public bool AutoRepairFleet => autoRepairFleet;
     public int FlawlessBonusPerWave => flawlessBonusPerWave;
+    public bool TrackRecords => trackRecords;
     public int EliteEveryNWaves => eliteEveryNWaves;
     public int EliteRewardMultiplier => eliteRewardMultiplier;
     public float ComboWindow => comboWindow;

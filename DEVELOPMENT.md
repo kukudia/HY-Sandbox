@@ -1,5 +1,11 @@
 # HY-Sandbox 开发与审查入口
 
+## 2026-10-26 阵地战战果记录与失败结算
+
+- 新增 `SiegeProgress`：失败时把最高波次、累计击毁、总场次写入本地 `PlayerPrefs`，`SiegeSettings.trackRecords` 可关闭。HUD 在整备阶段金币行显示 `BEST n`，失败横幅显示 `NEW RECORD · WAVE n` 或 `BEST WAVE n`。
+- 失败后不再显示舰队坞（没有可执行操作），只保留 `RESTART SIEGE` 与按键提示；横幅与顶部 `BASTION · LOST` 保留。真实Play确认 `BEST 7` 显示与 `BASTION LOST / BEST WAVE 7` 横幅，验证用的临时纪录已还原为原值。
+- `SiegeCombatFeedbackChecks` 增至17项（新增4项记录写入/累计/不覆盖/恢复），17项全部通过。详见 [战果记录验证](Docs/Validation/2026-10-26-siege-progress-record.md)。连续多局刷纪录与Player/编辑器PlayerPrefs共享行为未验证。
+
 ## 2026-10-26 阵地战来袭方向标记
 
 - 夜色场景暴露了可读性问题：敌舰在130米外进场，默认视角看不到。新增 `SiegeThreatMarkers`（挂在HUD，由 `Apply Command HUD` 幂等装配）：固定6个橙色菱形+距离标记，只在敌人不在视野内或超过90米时显示，0.1秒节流，画布坐标经 `RectTransformUtility` 换算后夹到边缘。

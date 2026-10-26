@@ -225,7 +225,14 @@ public class VisualEffectsManager : MonoBehaviour
         Color beacon = new Color(1f, 0.44f, 0.2f, 1f);
         TransientEffects.CreateLightFlash(position, beacon, 7f, 34f, 1.1f);
         TransientEffects.CreateLineStreak(position, position + Vector3.up * 14f, beacon, 2.2f, 0.5f);
-        TransientEffects.CreateRadialStreakBurst(position, Vector3.up, beacon, 6, 7f, 0.6f, 0.07f);
+        TransientEffects.CreateRadialStreakBurst(
+            position,
+            Vector3.up,
+            beacon,
+            6,
+            7f,
+            0.6f,
+            0.07f);
     }
 
     private void OnDestroy()
