@@ -157,7 +157,15 @@ public static class SiegeCombatFeedbackChecks
             checks,
             "disabled swarm interval keeps linear counts",
             !noSwarm.IsSwarmWave && noSwarm.PendingAttackers == 2);
-        // 整备预览要提前把蜂群/精英的倍率算进去，否则玩家按低估的数量备舰。
+        // 连击奖励上限：避免高波次连续清场把经济打穿。
+        Check(
+            checks,
+            "combo bonus starts at the second kill",
+            SiegeSession.ComboBonusFor(1, 60, 300) == 0 && SiegeSession.ComboBonusFor(2, 60, 300) == 60);
+        Check(
+            checks,
+            "combo bonus is capped",
+            SiegeSession.ComboBonusFor(10, 60, 300) == 300 && SiegeSession.ComboBonusFor(10, 60, 0) == 540); // 整备预览要提前把蜂群/精英的倍率算进去，否则玩家按低估的数量备舰。
         var preview = new SiegeMatch(
             0,
             2,

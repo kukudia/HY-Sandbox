@@ -65,6 +65,8 @@ public sealed class SiegeSettings : ScriptableObject
     private float comboWindow = 5f;
     [SerializeField, Min(0), Tooltip("连击从第二次击毁开始，每次额外奖励的金币。")]
     private int comboBonusCoins = 60;
+    [SerializeField, Min(0), Tooltip("单次连击奖励上限，避免高波次连续清场把经济打穿；0表示不设上限。")]
+    private int comboBonusCap = 300;
     [SerializeField, Min(0), Tooltip("波次结束时基地核心未受损的奖励（金币×波次），在自动修缮之前判定。")]
     private int flawlessBonusPerWave = 80;
     [SerializeField, Tooltip("失败时把最高波次与累计击毁写入本地PlayerPrefs；关闭后只保留本局显示。")]
@@ -86,6 +88,7 @@ public sealed class SiegeSettings : ScriptableObject
     public int EliteRewardMultiplier => eliteRewardMultiplier;
     public float ComboWindow => comboWindow;
     public int ComboBonusCoins => comboBonusCoins;
+    public int ComboBonusCap => comboBonusCap;
     public int FirstWaveSize => firstWaveSize;
     public TextAsset BaseBlueprint => baseBlueprint;
     public string BaseCoreBlockId => baseCoreBlockId;

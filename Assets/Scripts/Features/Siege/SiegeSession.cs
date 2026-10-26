@@ -331,6 +331,18 @@ public sealed class SiegeSession : MonoBehaviour
         previousPhase = Match.Phase;
     }
 
+    /// <summary>连击奖励的纯计算：从第二次击毁起每次加钱，并有单次上限；0上限表示不限制。</summary>
+    public static int ComboBonusFor(int combo, int perKill, int cap)
+    {
+        if (combo < 2 || perKill <= 0)
+        {
+            return 0;
+        }
+
+        int bonus = perKill * (combo - 1);
+        return cap > 0 ? Mathf.Min(bonus, cap) : bonus;
+    }
+
     /// <summary>读取公开击毁计数推进连击；波次末尾的击毁仍可结算，部署阶段不会发放。</summary>
     private void TickKillStreak()
     {
@@ -348,7 +360,7 @@ public sealed class SiegeSession : MonoBehaviour
         Combo = chained ? Combo + kills : kills;
         lastKillAt = now;
         LastComboBonus = 0;
-        int bonus = settings.ComboBonusCoins * (Combo - 1);
+        int bonus = ComboBonusFor(Combo, settings.ComboBonusCoins, settings.ComboBonusCap);
         if (bonus > 0 && Match.GrantBonus(bonus))
         {
             LastComboBonus = bonus;
