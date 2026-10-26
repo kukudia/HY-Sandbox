@@ -43,8 +43,21 @@ public sealed class SiegeMatch
     {
         get; private set;
     }
-    /// <summary>整备阶段给UI使用的下一波规模预览，不改变波次状态。</summary>
-    public int NextWaveSize => (int)Math.Min(maximumWaveSize, firstWaveSize + (long)Wave * waveGrowth);
+
+    /// <summary>整备阶段给UI使用的下一波规模预览；包含蜂群倍率，避免低估下一波。</summary>
+    public int NextWaveSize
+    {
+        get
+        {
+            long baseSize = firstWaveSize + (long)Wave * waveGrowth;
+            return (int)Math.Min(maximumWaveSize, NextWaveIsSwarm ? baseSize * swarmSizeMultiplier : baseSize);
+        }
+    }
+
+    /// <summary>下一波是否为蜂群波；与精英重叠时按精英处理。</summary>
+    public bool NextWaveIsSwarm => swarmEveryNWaves > 0 && (Wave + 1) % swarmEveryNWaves == 0 && !NextWaveIsElite;
+    /// <summary>下一波是否为精英波。</summary>
+    public bool NextWaveIsElite => eliteEveryNWaves > 0 && (Wave + 1) % eliteEveryNWaves == 0;
     public int ActiveAttackers => attackers.Count;
     public int DefeatedAttackers
     {

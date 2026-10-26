@@ -182,6 +182,15 @@ public sealed class SiegeHud : MonoBehaviour
         UpdatePhase(match);
         heading.text = match.Phase == SiegePhase.Battle && match.IsEliteWave ? "BASTION   ·   ELITE WAVE" : match.Phase == SiegePhase.Defeat ? "BASTION   ·   LOST" : "BASTION   ·   " + match.Phase.ToString().ToUpperInvariant();
         string preview = match.CanRefit ? "     NEXT  " + session.NextWaveSize + " × " + session.AttackerPreview : string.Empty;
+        if (match.CanRefit && match.NextWaveIsSwarm)
+        {
+            preview += "  ·  SWARM";
+        }
+        else if (match.CanRefit && match.NextWaveIsElite)
+        {
+            preview += "  ·  ELITE";
+        }
+
         if (match.CanRefit && match.EliteInWaves > 0 && match.EliteInWaves <= 2)
         {
             // 只在临近精英波时提示，避免顶栏被塞满并压到核心耐久条。

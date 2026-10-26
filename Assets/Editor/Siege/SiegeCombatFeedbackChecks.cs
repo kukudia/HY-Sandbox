@@ -157,6 +157,47 @@ public static class SiegeCombatFeedbackChecks
             checks,
             "disabled swarm interval keeps linear counts",
             !noSwarm.IsSwarmWave && noSwarm.PendingAttackers == 2);
+        // 整备预览要提前把蜂群/精英的倍率算进去，否则玩家按低估的数量备舰。
+        var preview = new SiegeMatch(
+            0,
+            2,
+            1,
+            40,
+            100,
+            200,
+            4,
+            2,
+            2,
+            2);
+        preview.BeginNextWave();
+        preview.RegisterAttacker("p1", 40);
+        preview.RegisterAttacker("p2", 40);
+        preview.ResolveAttacker("p1", false);
+        preview.ResolveAttacker("p2", false);
+        Check(
+            checks,
+            "refit preview scales and flags the upcoming swarm",
+            preview.NextWaveIsSwarm && !preview.NextWaveIsElite && preview.NextWaveSize == 6);
+        var elitePreview = new SiegeMatch(
+            0,
+            2,
+            1,
+            40,
+            100,
+            200,
+            2,
+            2,
+            2,
+            2);
+        elitePreview.BeginNextWave();
+        elitePreview.RegisterAttacker("q1", 40);
+        elitePreview.RegisterAttacker("q2", 40);
+        elitePreview.ResolveAttacker("q1", false);
+        elitePreview.ResolveAttacker("q2", false);
+        Check(
+            checks,
+            "refit preview flags the upcoming elite without swarm scaling",
+            elitePreview.NextWaveIsElite && !elitePreview.NextWaveIsSwarm && elitePreview.NextWaveSize == 3);
         int previousBest = SiegeProgress.BestWave;
         int previousKills = SiegeProgress.TotalKills;
         int previousRuns = SiegeProgress.TotalRuns;
