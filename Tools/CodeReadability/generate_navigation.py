@@ -1247,11 +1247,11 @@ def main():
             "D": "SiegeHud.ApplyDockLayout", "E": "SiegeHud.ShowBanner", "F": "SiegeHud.RefreshShipStatus",
             "G": "SiegeHud.SetBar", "H": "SiegeHud.ToggleHelp", "I": "SiegeHud.StartWave",
             "J": "SiegeSession.BeginNextWave",
-            "O": "SiegeHud.RefreshOptions",
+            "O": "SiegeHud.RefreshOptions", "P": "SiegeThreatMarkers.Update",
         },
         [
             "A --> B", "A --> C", "A --> H", "A -->|选项列表变化| O", "C -->|阶段变化| D",
-            "C -->|进入波次/清空/失败| E", "C -->|战斗中| F", "F --> G",
+            "C -->|进入波次/清空/失败| E", "C -->|战斗中| F", "F --> G", "A -->|敌人不在视野| P",
             "I --> J",
         ],
     )

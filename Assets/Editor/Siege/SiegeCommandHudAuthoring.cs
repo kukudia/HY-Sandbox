@@ -53,6 +53,7 @@ public static class SiegeCommandHudAuthoring
         FleetDock(hud);
         ActionBar(hud);
         CombatHud(hud, template);
+        ThreatMarkers(hud);
         ControlsHelp(hud, template);
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
@@ -775,61 +776,76 @@ public static class SiegeCommandHudAuthoring
         return root.GetComponent<RectTransform>();
     }
 
+    /// <summary>挂上有界威胁标记组件；标记池在运行时建立，场景里只保留可编辑参数。</summary>
+    private static void ThreatMarkers(SiegeHud hud)
+    {
+        SiegeThreatMarkers markers = hud.GetComponent<SiegeThreatMarkers>();
+        if (markers == null)
+        {
+            markers = hud.gameObject.AddComponent<SiegeThreatMarkers>();
+        }
+
+        var serialized = new SerializedObject(markers);
+        serialized.FindProperty("session").objectReferenceValue = Object.FindFirstObjectByType<SiegeSession>();
+        serialized.FindProperty("worldCamera").objectReferenceValue = Camera.main;
+        serialized.ApplyModifiedPropertiesWithoutUndo();
+    }
+
     private static void ControlsHelp(SiegeHud hud, Text template)
     {
         RectTransform panel = Panel(
-            hud.transform,
-            "Controls Help",
-            660f,
-            676f,
-            780f,
-            260f);
-        panel.GetComponent<Image>().color = new Color(0.02f, 0.045f, 0.07f, 0.97f);
+hud.transform,
+    "Controls Help",
+    660f,
+    676f,
+    780f,
+    260f);
+    panel.GetComponent<Image>().color = new Color(0.02f, 0.045f, 0.07f, 0.97f);
         EnsureLine(
-            panel,
-            "Help Accent",
-            0f,
-            0f,
-            780f,
-            3f,
-            AccentColor);
-        Text title = CloneLabel(
-            panel,
-            template,
-            "Help Title",
-            "CONTROLS",
-            20f,
-            12f,
-            400f,
-            28f,
-            18);
-        title.color = AccentColor;
+panel,
+    "Help Accent",
+    0f,
+    0f,
+    780f,
+    3f,
+    AccentColor);
+    Text title = CloneLabel(
+panel,
+    template,
+    "Help Title",
+    "CONTROLS",
+    20f,
+    12f,
+    400f,
+    28f,
+    18);
+    title.color = AccentColor;
         Text close = CloneLabel(
-            panel,
-            template,
-            "Help Close",
-            "F2  CLOSE",
-            560f,
-            12f,
-            200f,
-            28f,
-            15);
-        close.alignment = TextAnchor.MiddleRight;
+panel,
+    template,
+    "Help Close",
+    "F2  CLOSE",
+    560f,
+    12f,
+    200f,
+    28f,
+    15);
+    close.alignment = TextAnchor.MiddleRight;
         close.color = DimColor;
         Text legacy = FindLegacyHelp(hud);
         if (legacy == null)
         {
             legacy = CloneLabel(
-                panel,
-                template,
-                "Controls Body",
-                string.Empty,
-                20f,
-                54f,
-                740f,
-                190f,
-                19);
-        }
+panel,
+    template,
+    "Controls Body",
+    string.Empty,
+    20f,
+    54f,
+    740f,
+    190f,
+    19);
+    }
         else
         {
             legacy.transform.SetParent(panel, false);
@@ -845,16 +861,16 @@ public static class SiegeCommandHudAuthoring
         legacy.verticalOverflow = VerticalWrapMode.Overflow;
         panel.gameObject.SetActive(false);
         Text hint = CloneLabel(
-            hud.transform,
-            template,
-            "Controls Hint",
-            "F2  CONTROLS",
-            1400f,
-            1032f,
-            180f,
-            28f,
-            15);
-        hint.color = DimColor;
+hud.transform,
+    template,
+    "Controls Hint",
+    "F2  CONTROLS",
+    1400f,
+    1032f,
+    180f,
+    28f,
+    15);
+    hint.color = DimColor;
         hint.alignment = TextAnchor.MiddleRight;
         var serialized = new SerializedObject(hud);
         serialized.FindProperty("helpPanel").objectReferenceValue = panel.gameObject;
@@ -863,15 +879,15 @@ public static class SiegeCommandHudAuthoring
 
     /// <summary>克隆HUD内已有文本，继承真实字体、阴影和材质；直接新建的Text在保存场景后不出图。</summary>
     private static Text CloneLabel(
-        Transform parent,
-        Text template,
-        string name,
-        string text,
-        float x,
-        float y,
-        float width,
-        float height,
-        int size)
+    Transform parent,
+    Text template,
+    string name,
+    string text,
+    float x,
+    float y,
+    float width,
+    float height,
+    int size)
     {
         Text label = Object.Instantiate(template, parent, false);
         label.name = name;
@@ -918,12 +934,12 @@ public static class SiegeCommandHudAuthoring
     }
 
     private static void PlaceOptional(
-        Transform parent,
-        string name,
-        float x,
-        float y,
-        float width,
-        float height)
+Transform parent,
+    string name,
+    float x,
+    float y,
+    float width,
+    float height)
     {
         Transform target = FindDeep(parent, name);
         if (target != null)
@@ -1018,12 +1034,12 @@ public static class SiegeCommandHudAuthoring
     }
 
     private static RectTransform Panel(
-        Transform parent,
-        string name,
-        float x,
-        float y,
-        float width,
-        float height)
+Transform parent,
+    string name,
+    float x,
+    float y,
+    float width,
+    float height)
     {
         var root = new GameObject(name, typeof(RectTransform), typeof(Image));
         root.transform.SetParent(parent, false);
@@ -1033,13 +1049,13 @@ public static class SiegeCommandHudAuthoring
     }
 
     private static void EnsureLine(
-        Transform parent,
-        string name,
-        float x,
-        float y,
-        float width,
-        float height,
-        Color color)
+Transform parent,
+    string name,
+    float x,
+    float y,
+    float width,
+    float height,
+    Color color)
     {
         Transform existing = parent.Find(name);
         if (existing == null)
