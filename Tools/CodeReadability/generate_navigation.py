@@ -1,4 +1,4 @@
-# 职责：由实际 Roslyn 符号生成函数导航；图规格在本文件按功能维护。
+﻿# 职责：由实际 Roslyn 符号生成函数导航；图规格在本文件按功能维护。
 # 入口：python Tools/CodeReadability/generate_navigation.py
 from pathlib import Path
 import json, re, subprocess
@@ -1223,6 +1223,22 @@ def main():
             "H -.->|门控玩家输入| I", "H -.->|门控自主驾驶| J", "K -.->|新组的AI与镜头| J",
             "P -.->|修缮按钮经RepairCore/Ship| L", "L --> M", "M --> N", "M --> O",
             "L -->|建筑基地| S", "S --> T", "T --> U", "S --> O",
+        ],
+    )
+    graph(
+        "阵地战HUD指挥栏与阶段切换",
+        "源码推导：HUD只读取SiegeSession/SiegeMatch的公开状态，0.25秒节流刷新文字，每帧只推进横幅与击杀提示的CanvasGroup透明度。制作者通过Editor菜单重排指挥栏、舰队坞与动作行，并把Main遗留的世界准备、推进器窗口与物理遥测隐藏。整备阶段显示部署组与修订按钮；战斗阶段收起部署组、压缩舰队坞、显示坐舰耐久与波次进度；波次进入/清空/失败各弹一次横幅。HUD不参与规则、结算或物理。",
+        {
+            "A": "SiegeHud.Update", "B": "SiegeHud.UpdateTransient", "C": "SiegeHud.UpdatePhase",
+            "D": "SiegeHud.ApplyDockLayout", "E": "SiegeHud.ShowBanner", "F": "SiegeHud.RefreshShipStatus",
+            "G": "SiegeHud.SetBar", "H": "SiegeHud.ToggleHelp", "I": "SiegeHud.StartWave",
+            "J": "SiegeSession.BeginNextWave",
+            "O": "SiegeHud.RefreshOptions",
+        },
+        [
+            "A --> B", "A --> C", "A --> H", "A -->|选项列表变化| O", "C -->|阶段变化| D",
+            "C -->|进入波次/清空/失败| E", "C -->|战斗中| F", "F --> G",
+            "I --> J",
         ],
     )
     graph(

@@ -50,7 +50,8 @@
 
 - `Build Windows Validation Player` 构建独立Siege入口Windows验证包，不改变Main默认启动；显式命令行检查、自然多波与显示边界见 [Player验证](Validation/2026-10-23-siege-player.md)。
 - Editor菜单 `HY-Sandbox/Siege/Open Scene` 打开 `Assets/Scenes/Siege.unity`，进入Play。`Create Editable Scene` 只在不存在时创建，避免覆盖手工调整。
-- 正常场景左侧从 `Saves` 选择购买舰艇、从 `EnemyBlueprints` 选择敌方舰型或随机目录；六个泊位按钮切换驾驶，其余舰艇自主作战。压力场保留固定夹具。沿用 Main 的 WASD/QE/Space 飞行控制；战斗默认鼠标观察，按住 Alt 释放指针，F聚焦、F1推进器面板。
+- 正常场景左侧从 `Saves` 选择购买舰艇、从 `EnemyBlueprints` 选择敌方舰型或随机目录；六个泊位按钮切换驾驶，其余舰艇自主作战。压力场保留固定夹具。沿用 Main 的 WASD/QE/Space 飞行控制；战斗默认鼠标观察，按住 Alt 释放指针，F聚焦、F1推进器面板、F2按键说明。
+- 顶部指挥栏显示阶段、金币、波次、剩余来袭数、下一波预览与基地核心耐久；整备阶段下方是部署与修缮，战斗阶段自动收起部署组并显示波次进度与坐舰耐久。制作入口为 `HY-Sandbox/Siege/Apply Command HUD`，重排后保存为可编辑场景，不覆盖手工调整之外的对象引用。
 - 整备阶段 B 或 `Build / Blueprints` 打开 Main 的真实蓝图工作台，支持存档列表、方块选取/放置/移动/旋转及撤销重做；工作台中 B仍是Main建造视角切换，P或返回按钮退出。编辑对存档直接保存，仅影响后续购买，不免费改装或修复已部署舰队。工作台中禁止开波、部署和维修，退出保留战场伤势及金币。完整验证范围见 [Main工作台](Validation/2026-10-24-siege-main-workshop.md)。
 - 准备/整备阶段点击开始下一波。击毁敌舰与完成波次获得金币；波次结束先按报价自动修基地，再按驾驶舰优先顺序自动修复所有存活友舰。`DefaultSiege` 的自动修基地/舰队开关可分别关闭；余额不足或泊位被其他对象占用时保留金币并显示失败原因。手动按钮仍可维修基地和当前驾驶舰。
 - 驾驶舱被毁自动接管其余存活舰；全部舰艇损失后观察基地，基地核心被毁后失败。Restart重新载入本场景。

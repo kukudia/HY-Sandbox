@@ -40,6 +40,8 @@ public sealed class SiegeMatch
     {
         get; private set;
     }
+    /// <summary>HUD只读的单次击毁奖励，用于显示公开战果。</summary>
+    public int KillReward => killReward;
     public bool CanRefit => Phase == SiegePhase.Deployment || Phase == SiegePhase.Intermission;
 
     public SiegeMatch(

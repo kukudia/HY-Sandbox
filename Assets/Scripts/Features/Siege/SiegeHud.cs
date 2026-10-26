@@ -1,5 +1,5 @@
 // 职责：绑定可编辑UGUI阵地战面板，低频显示金币、波次、核心耐久和舰队驾驶权。
-// 入口：OnEnable()注册按钮，OnDisable()解绑；规则与修缮由SiegeSession执行。
+// 入口：OnEnable()注册按钮与缓存标签，OnDisable()解绑；规则与修缮由SiegeSession执行。
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -19,6 +19,50 @@ public sealed class SiegeHud : MonoBehaviour
     private Text status;
     [SerializeField]
     private Text coreHealth;
+    [SerializeField, Tooltip("顶部指挥栏的核心耐久填充条；按比例改变锚点宽度。")]
+    private Image coreFill;
+    [SerializeField, Tooltip("默认隐藏的按键说明面板，F2切换，避免长期遮挡战场。")]
+    private GameObject helpPanel;
+    [SerializeField, Tooltip("整备阶段的部署控件组；战斗中隐藏，只保留泊位切换。")]
+    private GameObject deployGroup;
+    [SerializeField, Tooltip("战斗阶段的底部波次进度面板。")]
+    private GameObject combatGroup;
+    [SerializeField]
+    private Text combatLabel;
+    [SerializeField]
+    private Image combatFill;
+    [SerializeField, Tooltip("波次入场横幅，进入战斗时短暂显示后淡出。")]
+    private GameObject bannerPanel;
+    [SerializeField]
+    private Text bannerTitle;
+    [SerializeField]
+    private Text bannerSubtitle;
+    [SerializeField]
+    private CanvasGroup bannerGroup;
+    [SerializeField, Tooltip("击毁敌舰的短时提示；只显示公开战果，不参与结算。")]
+    private Text killFeed;
+    [SerializeField]
+    private CanvasGroup killGroup;
+    [SerializeField, Tooltip("Main的坐舰耐久面板：只在战斗阶段显示，避免整备时占用视野。")]
+    private GameObject shipStatus;
+    [SerializeField]
+    private GameObject dockPanel;
+    [SerializeField]
+    private GameObject baysGroup;
+    [SerializeField]
+    private GameObject refitGroup;
+    [SerializeField]
+    private GameObject dockTitle;
+    [SerializeField]
+    private Text shipTitle;
+    [SerializeField]
+    private Image shipIntegrityFill;
+    [SerializeField]
+    private Text shipIntegrityValue;
+    [SerializeField]
+    private Image shipCockpitFill;
+    [SerializeField]
+    private Text shipCockpitValue;
     [SerializeField]
     private Button wave;
     [SerializeField]
@@ -37,19 +81,36 @@ public sealed class SiegeHud : MonoBehaviour
     private Dropdown attackerBlueprint;
     [SerializeField]
     private Button refreshBlueprints;
+    private static readonly Color Accent = new Color(0.31f, 0.88f, 0.95f, 1f);
+    private static readonly Color Idle = new Color(0.83f, 0.94f, 0.98f, 1f);
+    private static readonly Color Muted = new Color(0.5f, 0.62f, 0.68f, 1f);
+    private static readonly Color Warning = new Color(1f, 0.78f, 0.32f, 1f);
+    private static readonly Color Critical = new Color(1f, 0.36f, 0.33f, 1f);
     private SiegeShipOption[] displayedOptions;
     private UnityAction[] deploymentActions;
     private UnityAction[] controlActions;
+    private Text[] deploymentLabels = new Text[0];
+    private Text[] controlLabels = new Text[0];
+    private GameObject workshopButton;
     private float nextRefresh;
+    private SiegePhase phaseTransition = SiegePhase.Defeat;
+    private int lastDefeated;
+    private int waveTotal;
+    private float bannerUntil;
+    private float killUntil;
     private void OnEnable()
     {
+        workshopButton = transform.Find("Open Blueprint Workshop")?.gameObject;
         deploymentActions = new UnityAction[deploy.Length];
         controlActions = new UnityAction[takeControl.Length];
+        deploymentLabels = new Text[deploy.Length];
+        controlLabels = new Text[takeControl.Length];
         for (int index = 0; index < deploy.Length; index++)
         {
             int option = index;
             deploymentActions[index] = () => session.TryDeploy(defenderBlueprint != null ? defenderBlueprint.value : option, out _);
             deploy[index].onClick.AddListener(deploymentActions[index]);
+            deploymentLabels[index] = deploy[index].GetComponentInChildren<Text>();
         }
 
         for (int index = 0; index < takeControl.Length; index++)
@@ -57,6 +118,7 @@ public sealed class SiegeHud : MonoBehaviour
             int slot = index;
             controlActions[index] = () => session.TryTakeControl(slot);
             takeControl[index].onClick.AddListener(controlActions[index]);
+            controlLabels[index] = takeControl[index].GetComponentInChildren<Text>();
         }
 
         wave.onClick.AddListener(StartWave);
@@ -94,7 +156,9 @@ public sealed class SiegeHud : MonoBehaviour
     private void Update()
     {
         PollCamera();
-        if (session.Match == null || Time.unscaledTime < nextRefresh)
+        ToggleHelp();
+        UpdateTransient();
+        if (session == null || session.Match == null || Time.unscaledTime < nextRefresh)
         {
             return;
         }
@@ -106,12 +170,24 @@ public sealed class SiegeHud : MonoBehaviour
         }
 
         SiegeMatch match = session.Match;
-        heading.text = match.Phase == SiegePhase.Defeat ? "BASTION LOST" : "BASTION / " + match.Phase.ToString().ToUpperInvariant();
-        string preview = match.CanRefit ? "     NEXT  " + session.NextWaveSize + "x " + session.AttackerPreview : string.Empty;
-        economy.text = "CREDITS  " + match.Coins.ToString("N0") + "     WAVE  " + match.Wave + "     RAIDERS  " + match.ActiveAttackers + " / +" + match.PendingAttackers + preview;
+        UpdatePhase(match);
+        heading.text = match.Phase == SiegePhase.Defeat ? "BASTION   ·   LOST" : "BASTION   ·   " + match.Phase.ToString().ToUpperInvariant();
+        string preview = match.CanRefit ? "     NEXT  " + session.NextWaveSize + " × " + session.AttackerPreview : string.Empty;
+        int remaining = match.ActiveAttackers + match.PendingAttackers;
+        economy.text = "CREDITS  " + match.Coins.ToString("N0") + "      WAVE  " + match.Wave + "      RAIDERS  " + remaining + preview;
         status.text = session.Status;
         Durability core = session.Fleet.Base.Core != null ? session.Fleet.Base.Core.GetComponent<Durability>() : null;
+        float ratio = core != null && core.maxDurability > 0f ? Mathf.Clamp01(core.currentDurability / core.maxDurability) : 0f;
         coreHealth.text = core != null ? "CORE  " + Mathf.CeilToInt(core.currentDurability) + " / " + Mathf.CeilToInt(core.maxDurability) : "CORE DESTROYED";
+        coreHealth.color = core == null ? Critical : ratio < 0.25f ? Critical : ratio < 0.55f ? Warning : Idle;
+        if (coreFill != null)
+        {
+            RectTransform fill = coreFill.rectTransform;
+            fill.anchorMax = new Vector2(ratio, 1f);
+            fill.offsetMax = Vector2.zero;
+            coreFill.color = ratio < 0.25f ? Critical : ratio < 0.55f ? Warning : Accent;
+        }
+
         wave.interactable = match.CanRefit && session.AttackerOptions.Length > 0;
         if (defenderBlueprint != null)
         {
@@ -125,16 +201,19 @@ public sealed class SiegeHud : MonoBehaviour
         for (int index = 0; index < deploy.Length; index++)
         {
             int optionIndex = defenderBlueprint != null ? defenderBlueprint.value : index;
+            Text label = deploymentLabels[index];
             if (optionIndex >= session.DefenderOptions.Length)
             {
                 deploy[index].interactable = false;
-                deploy[index].GetComponentInChildren<Text>().text = "NO VALID SAVES BLUEPRINT";
+                label.text = "NO VALID SAVES BLUEPRINT";
+                label.color = Muted;
                 continue;
             }
 
             SiegeShipOption option = session.DefenderOptions[optionIndex];
             deploy[index].interactable = match.CanAfford(option.Price);
-            deploy[index].GetComponentInChildren<Text>().text = option.DisplayName.ToUpperInvariant() + "  /  " + option.Price;
+            label.text = "DEPLOY  " + option.DisplayName.ToUpperInvariant() + "   ·   " + option.Price.ToString("N0");
+            label.color = Idle;
         }
 
         for (int index = 0; index < takeControl.Length; index++)
@@ -142,8 +221,236 @@ public sealed class SiegeHud : MonoBehaviour
             SiegeFleetEntry ship = session.Fleet.Ships[index];
             bool alive = ship != null && ship.IsAlive;
             takeControl[index].interactable = alive && match.Phase != SiegePhase.Defeat;
-            takeControl[index].GetComponentInChildren<Text>().text = alive ? (ship == session.Fleet.Driven ? "PILOT  /  " : "AI  /  ") + ship.DisplayName : "BAY " + (index + 1) + "  /  EMPTY";
+            Text label = controlLabels[index];
+            if (!alive)
+            {
+                label.text = "BAY " + (index + 1) + "   ·   EMPTY";
+                label.color = Muted;
+                continue;
+            }
+
+            bool pilot = ship == session.Fleet.Driven;
+            label.text = "BAY " + (index + 1) + "   ·   " + (pilot ? "PILOT   " : "AI   ") + ship.DisplayName.ToUpperInvariant();
+            label.color = pilot ? Accent : Idle;
         }
+    }
+
+    /// <summary>每帧推进横幅与击杀提示的淡出；只改CanvasGroup透明度，不做布局或文字重建。</summary>
+    private void UpdateTransient()
+    {
+        if (bannerGroup != null && bannerPanel != null && bannerPanel.activeSelf)
+        {
+            float remaining = bannerUntil - Time.unscaledTime;
+            if (remaining <= 0f)
+            {
+                bannerPanel.SetActive(false);
+            }
+            else
+            {
+                bannerGroup.alpha = Mathf.Clamp01(remaining / 0.6f);
+            }
+        }
+
+        if (killGroup != null)
+        {
+            float remaining = killUntil - Time.unscaledTime;
+            killGroup.alpha = remaining > 0f ? Mathf.Clamp01(remaining / 0.5f) : 0f;
+        }
+    }
+
+    /// <summary>按阶段切换整备/战斗控件，并给出波次总览、入场横幅与击毁提示。</summary>
+    private void UpdatePhase(SiegeMatch match)
+    {
+        bool battle = match.Phase == SiegePhase.Battle;
+        if (deployGroup != null)
+        {
+            deployGroup.SetActive(match.CanRefit);
+        }
+
+        if (wave != null && wave.gameObject.activeSelf != match.CanRefit)
+        {
+            wave.gameObject.SetActive(match.CanRefit);
+        }
+
+        if (workshopButton != null && workshopButton.activeSelf != match.CanRefit)
+        {
+            workshopButton.SetActive(match.CanRefit);
+        }
+
+        if (combatGroup != null)
+        {
+            combatGroup.SetActive(battle);
+        }
+
+        if (shipStatus != null && shipStatus.activeSelf != battle)
+        {
+            shipStatus.SetActive(battle);
+        }
+
+        if (phaseTransition != match.Phase)
+        {
+            phaseTransition = match.Phase;
+            ApplyDockLayout(battle);
+            if (battle)
+            {
+                waveTotal = Mathf.Max(1, match.ActiveAttackers + match.PendingAttackers);
+                ShowBanner("WAVE " + match.Wave, waveTotal == 1 ? "1 RAIDER INBOUND" : waveTotal + " RAIDERS INBOUND");
+            }
+            else if (match.Phase == SiegePhase.Intermission)
+            {
+                ShowBanner("WAVE " + match.Wave + " CLEARED", "REPAIR AND REINFORCE");
+            }
+            else if (match.Phase == SiegePhase.Defeat)
+            {
+                ShowBanner("BASTION LOST", "THE CORE IS GONE");
+            }
+        }
+
+        if (battle)
+        {
+            RefreshShipStatus();
+        }
+
+        if (match.DefeatedAttackers > lastDefeated)
+        {
+            lastDefeated = match.DefeatedAttackers;
+            if (killFeed != null)
+            {
+                killFeed.text = "RAIDER DESTROYED   ·   +" + match.KillReward.ToString("N0") + " CREDITS";
+                killUntil = Time.unscaledTime + 2.6f;
+            }
+        }
+
+        if (battle && combatLabel != null)
+        {
+            int remaining = match.ActiveAttackers + match.PendingAttackers;
+            combatLabel.text = "WAVE " + match.Wave + "   ·   RAIDERS " + remaining + " / " + waveTotal;
+            if (combatFill != null)
+            {
+                combatFill.rectTransform.anchorMax = new Vector2(waveTotal > 0 ? Mathf.Clamp01((float)remaining / waveTotal) : 0f, 1f);
+                combatFill.rectTransform.offsetMax = Vector2.zero;
+            }
+        }
+    }
+
+    /// <summary>战斗阶段收起部署区并压缩舰队坞，把视野让给战场；整备阶段恢复完整高度。</summary>
+    private void ApplyDockLayout(bool battle)
+    {
+        if (refitGroup != null && refitGroup.activeSelf == battle)
+        {
+            refitGroup.SetActive(!battle);
+        }
+
+        if (dockTitle != null && dockTitle.activeSelf == battle)
+        {
+            dockTitle.SetActive(!battle);
+        }
+
+        if (baysGroup != null)
+        {
+            RectTransform bays = (RectTransform)baysGroup.transform;
+            Vector2 target = battle ? new Vector2(0f, -16f) : new Vector2(0f, -266f);
+            if (bays.anchoredPosition != target)
+            {
+                bays.anchoredPosition = target;
+            }
+        }
+
+        if (dockPanel != null)
+        {
+            RectTransform dock = (RectTransform)dockPanel.transform;
+            float height = battle ? 344f : 726f;
+            if (!Mathf.Approximately(dock.sizeDelta.y, height))
+            {
+                dock.sizeDelta = new Vector2(dock.sizeDelta.x, height);
+            }
+        }
+    }
+
+    /// <summary>座舰耐久只在战斗界面刷新；整备阶段的舰队状态由泊位按钮表达。</summary>
+    private void RefreshShipStatus()
+    {
+        SiegeFleetEntry driven = session.Fleet != null ? session.Fleet.Driven : null;
+        ControlUnit unit = driven != null ? driven.Unit : null;
+        if (unit == null || !driven.IsAlive)
+        {
+            if (shipTitle != null)
+            {
+                shipTitle.text = "PILOT   ·   NO SHIP";
+            }
+
+            SetBar(shipIntegrityFill, shipIntegrityValue, 0f, 0f);
+            SetBar(shipCockpitFill, shipCockpitValue, 0f, 0f);
+            return;
+        }
+
+        if (shipTitle != null)
+        {
+            shipTitle.text = "PILOT   ·   " + driven.DisplayName.ToUpperInvariant();
+        }
+
+        if (unit.TryGetTotalDurability(out float integrity, out float maximum))
+        {
+            SetBar(shipIntegrityFill, shipIntegrityValue, integrity, maximum);
+        }
+
+        Durability cockpit = unit.cockpit != null ? unit.cockpit.GetComponent<Durability>() : null;
+        if (cockpit != null)
+        {
+            SetBar(shipCockpitFill, shipCockpitValue, cockpit.currentDurability, cockpit.maxDurability);
+        }
+    }
+
+    private static void SetBar(Image fill, Text value, float current, float maximum)
+    {
+        float ratio = maximum > 0f ? Mathf.Clamp01(current / maximum) : 0f;
+        if (fill != null)
+        {
+            fill.rectTransform.anchorMax = new Vector2(ratio, 1f);
+            fill.rectTransform.offsetMax = Vector2.zero;
+            fill.color = ratio < 0.25f ? Critical : ratio < 0.55f ? Warning : Accent;
+        }
+
+        if (value != null)
+        {
+            value.text = Mathf.CeilToInt(Mathf.Max(0f, current)) + " / " + Mathf.CeilToInt(Mathf.Max(0f, maximum));
+        }
+    }
+
+    private void ShowBanner(string title, string subtitle)
+    {
+        if (bannerPanel == null)
+        {
+            return;
+        }
+
+        if (bannerTitle != null)
+        {
+            bannerTitle.text = title;
+        }
+
+        if (bannerSubtitle != null)
+        {
+            bannerSubtitle.text = subtitle;
+        }
+
+        bannerPanel.SetActive(true);
+        if (bannerGroup != null)
+        {
+            bannerGroup.alpha = 1f;
+        }
+
+        bannerUntil = Time.unscaledTime + 2.6f;
+    }
+
+    private void ToggleHelp()
+    {
+        if (helpPanel == null || Keyboard.current == null || !Keyboard.current.f2Key.wasPressedThisFrame)
+        {
+            return;
+        }
+
+        helpPanel.SetActive(!helpPanel.activeSelf);
     }
 
     private void PollCamera()
@@ -175,7 +482,7 @@ public sealed class SiegeHud : MonoBehaviour
         var defenders = new List<string>();
         foreach (SiegeShipOption option in session.DefenderOptions)
         {
-            defenders.Add(option.DisplayName + " / " + option.Price);
+            defenders.Add(option.DisplayName + "  /  " + option.Price.ToString("N0"));
         }
 
         defenderBlueprint.ClearOptions();

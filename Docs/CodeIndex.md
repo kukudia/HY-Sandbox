@@ -853,6 +853,37 @@
 | SiegeBuildingPowerProbe | [`void Tick()`](../Assets/Editor/Siege/SiegeBuildingPowerProbe.cs#L58) | private static |
 | SiegeBuildingPowerProbe | [`void Finish(string result)`](../Assets/Editor/Siege/SiegeBuildingPowerProbe.cs#L87) | private static |
 
+## Assets/Editor/Siege/SiegeCommandHudAuthoring.cs
+
+// 职责：把阵地战HUD重排为单条指挥栏、左侧舰队坞与底部主操作，并停用Main遗留的准备/调试遮罩。 // 入口：Apply()；幂等重排，克隆HUD已有文本以保证字体/阴影材质可渲染，不改Main场景与用户蓝图。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeCommandHudAuthoring | [`void Apply()`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L21) | public static |
+| SiegeCommandHudAuthoring | [`void RescueLegacyHelp(SiegeHud hud)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L63) | private static |
+| SiegeCommandHudAuthoring | [`Text FindLegacyHelp(SiegeHud hud)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L72) | private static |
+| SiegeCommandHudAuthoring | [`void DestroyGenerated(SiegeHud hud, params string[] names)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L85) | private static |
+| SiegeCommandHudAuthoring | [`void DisableLegacyOverlays()`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L98) | private static |
+| SiegeCommandHudAuthoring | [`void CommandBar(SiegeHud hud, Text template)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L127) | private static |
+| SiegeCommandHudAuthoring | [`void FleetDock(SiegeHud hud)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L208) | private static |
+| SiegeCommandHudAuthoring | [`void ActionBar(SiegeHud hud)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L410) | private static |
+| SiegeCommandHudAuthoring | [`void CombatHud(SiegeHud hud, Text template)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L440) | private static |
+| SiegeCommandHudAuthoring | [`RectTransform Group( Transform parent, string name, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L680) | private static |
+| SiegeCommandHudAuthoring | [`void ControlsHelp(SiegeHud hud, Text template)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L701) | private static |
+| SiegeCommandHudAuthoring | [`Text CloneLabel( Transform parent, Text template, string name, string text, float x, float y, float width, float height, int size)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L788) | private static |
+| SiegeCommandHudAuthoring | [`void StyleButton(Button button, int fontSize, bool primary)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L815) | private static |
+| SiegeCommandHudAuthoring | [`void PlaceOptional( Transform parent, string name, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L843) | private static |
+| SiegeCommandHudAuthoring | [`Text RequireText(Transform parent, string name)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L858) | private static |
+| SiegeCommandHudAuthoring | [`RectTransform Require(Transform parent, string path)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L870) | private static |
+| SiegeCommandHudAuthoring | [`Text FindText(Transform parent, string name)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L881) | private static |
+| SiegeCommandHudAuthoring | [`Transform FindChild(Transform parent, string name)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L888) | private static |
+| SiegeCommandHudAuthoring | [`Transform FindDeep(Transform parent, string name)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L902) | private static |
+| SiegeCommandHudAuthoring | [`Transform FindUnder(Transform root, string path)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L915) | private static |
+| SiegeCommandHudAuthoring | [`Transform FindByPath(string path)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L930) | private static |
+| SiegeCommandHudAuthoring | [`RectTransform Panel( Transform parent, string name, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L943) | private static |
+| SiegeCommandHudAuthoring | [`void EnsureLine( Transform parent, string name, float x, float y, float width, float height, Color color)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L958) | private static |
+| SiegeCommandHudAuthoring | [`void Place(RectTransform rect, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L980) | private static |
+
 ## Assets/Editor/Siege/SiegeDestructionLogChecks.cs
 
 // 职责：隔离检查销毁/VFX诊断默认值、可恢复开关及ABBA日志路径开销，不刺激自然战斗。 // 入口：Run()；禁用效果的同方法对照只测诊断路径，不代表交火帧率或真实爆炸成本。
@@ -3322,22 +3353,29 @@
 
 ## Assets/Scripts/Features/Siege/SiegeHud.cs
 
-// 职责：绑定可编辑UGUI阵地战面板，低频显示金币、波次、核心耐久和舰队驾驶权。 // 入口：OnEnable()注册按钮，OnDisable()解绑；规则与修缮由SiegeSession执行。
+// 职责：绑定可编辑UGUI阵地战面板，低频显示金币、波次、核心耐久和舰队驾驶权。 // 入口：OnEnable()注册按钮与缓存标签，OnDisable()解绑；规则与修缮由SiegeSession执行。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeHud | [`void OnEnable()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L44) | private |
-| SiegeHud | [`void OnDisable()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L71) | private |
-| SiegeHud | [`void Update()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L94) | private |
-| SiegeHud | [`void PollCamera()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L149) | private |
-| SiegeHud | [`void RefreshOptions()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L167) | private |
-| SiegeHud | [`void RefreshBlueprints()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L198) | private |
-| SiegeHud | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L204) | private |
-| SiegeHud | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L209) | private |
-| SiegeHud | [`void StartWave()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L214) | private |
-| SiegeHud | [`void RepairCore()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L219) | private |
-| SiegeHud | [`void RepairShip()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L224) | private |
-| SiegeHud | [`void Restart()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L229) | private |
+| SiegeHud | [`void OnEnable()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L101) | private |
+| SiegeHud | [`void OnDisable()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L133) | private |
+| SiegeHud | [`void Update()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L156) | private |
+| SiegeHud | [`void UpdateTransient()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L239) | private |
+| SiegeHud | [`void UpdatePhase(SiegeMatch match)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L262) | private |
+| SiegeHud | [`void ApplyDockLayout(bool battle)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L337) | private |
+| SiegeHud | [`void RefreshShipStatus()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L371) | private |
+| SiegeHud | [`void SetBar(Image fill, Text value, float current, float maximum)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L404) | private static |
+| SiegeHud | [`void ShowBanner(string title, string subtitle)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L420) | private |
+| SiegeHud | [`void ToggleHelp()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L446) | private |
+| SiegeHud | [`void PollCamera()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L456) | private |
+| SiegeHud | [`void RefreshOptions()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L474) | private |
+| SiegeHud | [`void RefreshBlueprints()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L505) | private |
+| SiegeHud | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L511) | private |
+| SiegeHud | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L516) | private |
+| SiegeHud | [`void StartWave()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L521) | private |
+| SiegeHud | [`void RepairCore()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L526) | private |
+| SiegeHud | [`void RepairShip()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L531) | private |
+| SiegeHud | [`void Restart()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L536) | private |
 
 ## Assets/Scripts/Features/Siege/SiegeMatch.cs
 
@@ -3345,13 +3383,13 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeMatch | [`bool BeginNextWave()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L68) | public |
-| SiegeMatch | [`bool CanSpawn(int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L81) | public |
-| SiegeMatch | [`bool RegisterAttacker(string id, int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L86) | public |
-| SiegeMatch | [`bool ResolveAttacker(string id, bool defeated)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L98) | public |
-| SiegeMatch | [`bool CanAfford(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L120) | public |
-| SiegeMatch | [`bool TrySpend(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L125) | public |
-| SiegeMatch | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L136) | public |
+| SiegeMatch | [`bool BeginNextWave()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L70) | public |
+| SiegeMatch | [`bool CanSpawn(int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L83) | public |
+| SiegeMatch | [`bool RegisterAttacker(string id, int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L88) | public |
+| SiegeMatch | [`bool ResolveAttacker(string id, bool defeated)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L100) | public |
+| SiegeMatch | [`bool CanAfford(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L122) | public |
+| SiegeMatch | [`bool TrySpend(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L127) | public |
+| SiegeMatch | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L138) | public |
 
 ## Assets/Scripts/Features/Siege/SiegePlayerChecks.cs
 
