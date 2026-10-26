@@ -1,5 +1,10 @@
 # HY-Sandbox 开发与审查入口
 
+## 2026-10-27 阵地战波次结算战果
+
+- 波次清空横幅现在显示本波战果 `n KILLS · +x CREDITS`：会话在开波时记录金币与击毁基线，进入整备时一次性算出差值（统计点在自动修缮之前，语义是“这一波赚到的”）。同帧顺序不确定时退回原提示语，不显示0。
+- 真实Play第1波读数 `2 KILLS · +650 CREDITS`（120×2+350+连击60）；`SiegePlayChecks` 28/28、`SiegeCombatFeedbackChecks` 23/23 重跑通过。详见 [波次战果验证](Docs/Validation/2026-10-27-siege-wave-result-banner.md)。未做长期多波读数抽样。
+
 ## 2026-10-26 阵地战蜂群波次
 
 - 新增蜂群波：每 `swarmEveryNWaves`（默认3）波数量翻倍、生成间隔×0.65，与精英波错开；同波重叠时精英优先，避免倍率叠加不可玩。名额仍受 `maximumWaveSize` 与同屏上限约束。

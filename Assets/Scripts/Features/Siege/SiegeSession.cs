@@ -34,6 +34,8 @@ public sealed class SiegeSession : MonoBehaviour
     private bool previousBackground;
     private SiegePhase previousPhase;
     private int lastDefeatedCount;
+    private int waveStartDefeated;
+    private long waveStartCoins;
     private float lastKillAt = -1000f;
     /// <summary>连击窗口内的连续击毁数；由会话读取公开战果推进，不参与敌舰生成。</summary>
     public int Combo
@@ -46,6 +48,16 @@ public sealed class SiegeSession : MonoBehaviour
         get; private set;
     }
     public int BestWave => SiegeProgress.BestWave;
+    /// <summary>上一波获得的击毁数，供波次结算横幅显示。</summary>
+    public int LastWaveKills
+    {
+        get; private set;
+    }
+    /// <summary>上一波的金币净变化，供波次结算横幅显示。</summary>
+    public long LastWaveCoins
+    {
+        get; private set;
+    }
     /// <summary>最近一次连击额外发放的金币，仅供HUD提示。</summary>
     public int LastComboBonus
     {
@@ -219,6 +231,8 @@ public sealed class SiegeSession : MonoBehaviour
             return false;
         }
 
+        waveStartCoins = Match.Coins;
+        waveStartDefeated = Match.DefeatedAttackers;
         Fleet.SetCombatActive(true);
         SetSimulationActive(true);
         previousPhase = SiegePhase.Battle;
@@ -306,6 +320,8 @@ public sealed class SiegeSession : MonoBehaviour
         TickKillStreak();
         if (previousPhase == SiegePhase.Battle && Match.Phase == SiegePhase.Intermission)
         {
+            LastWaveKills = Mathf.Max(0, Match.DefeatedAttackers - waveStartDefeated);
+            LastWaveCoins = Match.Coins - waveStartCoins;
             SetSimulationActive(false);
             Fleet.SetCombatActive(false);
             Status = "Wave cleared. Repair and reinforce before the next attack.";

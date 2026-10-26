@@ -366,7 +366,9 @@ public sealed class SiegeHud : MonoBehaviour
             }
             else if (match.Phase == SiegePhase.Intermission)
             {
-                ShowBanner("WAVE " + match.Wave + " CLEARED", "REPAIR AND REINFORCE");
+                // 会话与本组件的Update顺序不确定：拿到本波战果就显示，否则退回提示语。
+                string cleared = session.LastWaveKills > 0 ? session.LastWaveKills + " KILLS   ·   +" + session.LastWaveCoins.ToString("N0") + " CREDITS" : "REPAIR AND REINFORCE";
+                ShowBanner("WAVE " + match.Wave + " CLEARED", cleared);
             }
             else if (match.Phase == SiegePhase.Defeat)
             {
