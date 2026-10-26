@@ -281,6 +281,8 @@ public sealed class SiegeHud : MonoBehaviour
             else
             {
                 bannerGroup.alpha = Mathf.Clamp01(remaining / 0.6f);
+                float pulse = Mathf.Clamp01((remaining - 2.35f) / 0.25f);
+                bannerGroup.transform.localScale = Vector3.Lerp(Vector3.one, bannerGroup.transform.localScale, pulse);
             }
         }
 
@@ -505,6 +507,8 @@ public sealed class SiegeHud : MonoBehaviour
         if (bannerGroup != null)
         {
             bannerGroup.alpha = 1f;
+            // 入场时轻微放大回弹，比单纯淡出更有冲击；只改localScale。
+            bannerGroup.transform.localScale = Vector3.one * 1.06f;
         }
 
         bannerUntil = Time.unscaledTime + 2.6f;
@@ -549,7 +553,9 @@ public sealed class SiegeHud : MonoBehaviour
         var defenders = new List<string>();
         foreach (SiegeShipOption option in session.DefenderOptions)
         {
-            defenders.Add(option.DisplayName + "  /  " + option.Price.ToString("N0"));
+            // 顺带给出模块数，让价格与体量的关系一眼可见。
+            string size = option.BlockCount > 0 ? "  ·  " + option.BlockCount + " blk" : string.Empty;
+            defenders.Add(option.DisplayName + "  /  " + option.Price.ToString("N0") + size);
         }
 
         defenderBlueprint.ClearOptions();

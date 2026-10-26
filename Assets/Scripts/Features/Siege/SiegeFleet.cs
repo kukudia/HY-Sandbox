@@ -91,13 +91,20 @@ public sealed class SiegeFleet
 
         session.Match.TrySpend(option.Price);
         Ships[slot] = entry;
+        // 用户蓝图可能自带半格偏移的独立吊舱：如实提示，避免玩家以为船体无故散开。
+        int parts = BlockGroupManager.GroupBlocks(new System.Collections.Generic.List<Block>(entry.Unit.GetComponentsInChildren<Block>())).Count;
+        if (parts > 1)
+        {
+            Debug.LogWarning("Siege blueprint '" + option.DisplayName + "' deploys as " + parts + " disconnected hull parts; blocks are not connector-aligned.");
+        }
+
         Park(entry.Unit);
         if (Driven == null || !Driven.IsAlive)
         {
             TakeControl(slot);
         }
 
-        reason = "Deployed " + option.DisplayName;
+        reason = "Deployed " + option.DisplayName + (parts > 1 ? "  ·  " + parts + " hull parts" : string.Empty);
         return true;
     }
 
