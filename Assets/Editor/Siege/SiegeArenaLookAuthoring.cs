@@ -100,9 +100,84 @@ public static class SiegeArenaLookAuthoring
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
+        Pylons();
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
         AssetDatabase.SaveAssets();
         Debug.Log("Siege night arena look applied: procedural sky, matched fog, cooler ambient and sun.");
+    }
+
+    /// <summary>沿竞技场外圈生成12座带信标塔，给夜色场地提供尺度与纵深；纯装饰、无碰撞体，可重复重建。</summary>
+    private static void Pylons()
+    {
+        for (int index = 0; index < 32; index++)
+        {
+            foreach (string suffix in new[]
+            {
+                string.Empty,
+                " Beacon"
+            }
+
+            )
+            {
+                GameObject stale = GameObject.Find("Arena Pylon " + index + suffix);
+                if (stale != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(stale);
+                }
+            }
+        }
+
+        Material body = Material("ArenaPylon", new Color(0.045f, 0.06f, 0.08f), null);
+        Material beacon = Material("ArenaBeacon", new Color(0.02f, 0.03f, 0.04f), new Color(0.12f, 0.68f, 0.85f) * 1.6f);
+        const int count = 12;
+        const float radius = 250f;
+        for (int index = 0; index < count; index++)
+        {
+            float angle = index * Mathf.PI * 2f / count;
+            var origin = new Vector3(Mathf.Sin(angle) * radius, 0f, Mathf.Cos(angle) * radius);
+            float height = index % 2 == 0 ? 30f : 20f;
+            GameObject shaft = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            shaft.name = "Arena Pylon " + index;
+            shaft.transform.position = origin + Vector3.up * (height * 0.5f);
+            shaft.transform.rotation = Quaternion.LookRotation(-new Vector3(origin.x, 0f, origin.z));
+            shaft.transform.localScale = new Vector3(8f, height, 8f);
+            shaft.GetComponent<Renderer>().sharedMaterial = body;
+            UnityEngine.Object.DestroyImmediate(shaft.GetComponent<Collider>());
+            GameObject cap = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            cap.name = "Arena Pylon " + index + " Beacon";
+            // 不挂到非等比缩放的塔身上，否则信标会继承 7x40x7 的世界缩放而变成巨块。
+            cap.transform.position = origin + Vector3.up * (height + 1.2f);
+            cap.transform.localScale = new Vector3(3.6f, 3.6f, 3.6f);
+            cap.GetComponent<Renderer>().sharedMaterial = beacon;
+            UnityEngine.Object.DestroyImmediate(cap.GetComponent<Collider>());
+        }
+    }
+
+    private static Material Material(string name, Color color, Color? emission)
+    {
+        string path = "Assets/Siege/" + name + ".mat";
+        Material material = AssetDatabase.LoadAssetAtPath<Material>(path);
+        if (material == null)
+        {
+            Shader shader = Shader.Find("Universal Render Pipeline/Lit");
+            material = new Material(shader)
+            {
+                name = name
+            };
+            AssetDatabase.CreateAsset(material, path);
+        }
+
+        material.SetColor("_BaseColor", color);
+        material.SetFloat("_Smoothness", 0.25f);
+        if (emission.HasValue)
+        {
+            material.EnableKeyword("_EMISSION");
+            material.SetColor("_EmissionColor", emission.Value);
+            material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+        }
+
+        EditorUtility.SetDirty(material);
+        return material;
     }
 }
