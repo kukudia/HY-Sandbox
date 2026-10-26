@@ -57,8 +57,20 @@ public sealed class SiegeSettings : ScriptableObject
     private bool autoRepairBase = true;
     [SerializeField, Tooltip("基地自动修缮后，按驾驶舰优先顺序自动修复存活舰船；余额不足或泊位受阻时保留资产并记录结果。")]
     private bool autoRepairFleet = true;
+    [SerializeField, Min(0), Tooltip("每隔多少波出现一次精英波，0关闭；精英波使用最重的敌方蓝图并提高金币回报。")]
+    private int eliteEveryNWaves = 5;
+    [SerializeField, Min(1), Tooltip("精英波次击毁与清波奖励的倍数。")]
+    private int eliteRewardMultiplier = 2;
+    [SerializeField, Min(0f), Tooltip("两次击毁之间的连击窗口（秒）；窗口内再次击毁累计连击。")]
+    private float comboWindow = 5f;
+    [SerializeField, Min(0), Tooltip("连击从第二次击毁开始，每次额外奖励的金币。")]
+    private int comboBonusCoins = 60;
     public bool AutoRepairBase => autoRepairBase;
     public bool AutoRepairFleet => autoRepairFleet;
+    public int EliteEveryNWaves => eliteEveryNWaves;
+    public int EliteRewardMultiplier => eliteRewardMultiplier;
+    public float ComboWindow => comboWindow;
+    public int ComboBonusCoins => comboBonusCoins;
     public int FirstWaveSize => firstWaveSize;
     public TextAsset BaseBlueprint => baseBlueprint;
     public string BaseCoreBlockId => baseCoreBlockId;
@@ -83,7 +95,9 @@ public sealed class SiegeSettings : ScriptableObject
             waveGrowth,
             maximumWaveSize,
             killReward,
-            waveReward);
+            waveReward,
+            eliteEveryNWaves,
+            eliteRewardMultiplier);
     }
 }
 
@@ -96,11 +110,12 @@ public sealed class SiegeShipOption
     {
     }
 
-    public SiegeShipOption(string name, string json, int purchasePrice)
+    public SiegeShipOption(string name, string json, int purchasePrice, int blockCount = 0)
     {
         displayName = name;
         runtimeJson = json;
         price = purchasePrice;
+        this.blockCount = blockCount;
     }
 
     [SerializeField]
@@ -109,8 +124,11 @@ public sealed class SiegeShipOption
     private TextAsset blueprint;
     [SerializeField, Min(1)]
     private int price = 500;
+    [NonSerialized, Tooltip("加载时记录的模块数；精英波次用它挑出最重的蓝图。")]
+    private int blockCount;
     public string DisplayName => displayName;
     public TextAsset Blueprint => blueprint;
     public string BlueprintJson => runtimeJson ?? (blueprint != null ? blueprint.text : null);
     public int Price => price;
+    public int BlockCount => blockCount;
 }

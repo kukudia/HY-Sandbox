@@ -1,4 +1,4 @@
-﻿# 职责：由实际 Roslyn 符号生成函数导航；图规格在本文件按功能维护。
+# 职责：由实际 Roslyn 符号生成函数导航；图规格在本文件按功能维护。
 # 入口：python Tools/CodeReadability/generate_navigation.py
 from pathlib import Path
 import json, re, subprocess
@@ -1223,6 +1223,20 @@ def main():
             "H -.->|门控玩家输入| I", "H -.->|门控自主驾驶| J", "K -.->|新组的AI与镜头| J",
             "P -.->|修缮按钮经RepairCore/Ship| L", "L --> M", "M --> N", "M --> O",
             "L -->|建筑基地| S", "S --> T", "T --> U", "S --> O",
+        ],
+    )
+    graph(
+        "阵地战精英波次与连击奖励",
+        "源码推导：波次总监在精英波次挑出目录里模块数最多的敌方蓝图；规则核心按倍数放大击毁与清波奖励，并拒绝部署阶段与失败后的额外奖励。会话每帧比较公开击毁计数，在连击窗口内按实际击毁数累加并发放金币；HUD只读Combo/LastComboBonus显示战果，核心受击时驱动告警条与一次镜头抖动。不改蓝图、不生成额外敌舰、不新增物理查询。",
+        {
+            "A": "SiegeWaveDirector.Tick", "B": "SiegeWaveDirector.PickBlueprint",
+            "C": "SiegeMatch.ResolveAttacker", "D": "SiegeMatch.GrantBonus",
+            "E": "SiegeSession.TickKillStreak", "F": "SiegeSession.Update",
+            "G": "SiegeHud.UpdatePhase", "H": "SiegeSettings.CreateMatch",
+        },
+        [
+            "A -->|精英波次| B", "A --> C", "F --> E", "E --> D",
+            "H -->|传入间隔与倍数| C", "G -->|读取连击| E",
         ],
     )
     graph(

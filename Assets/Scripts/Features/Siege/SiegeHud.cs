@@ -45,6 +45,8 @@ public sealed class SiegeHud : MonoBehaviour
     private CanvasGroup killGroup;
     [SerializeField, Tooltip("Main的坐舰耐久面板：只在战斗阶段显示，避免整备时占用视野。")]
     private GameObject shipStatus;
+    [SerializeField, Tooltip("核心受击的全屏告警层；低耐久时保持低频脉动。")]
+    private CanvasGroup damageGroup;
     [SerializeField]
     private GameObject dockPanel;
     [SerializeField]
@@ -98,6 +100,8 @@ public sealed class SiegeHud : MonoBehaviour
     private int waveTotal;
     private float bannerUntil;
     private float killUntil;
+    private float coreHitUntil;
+    private float coreRatio = 1f;
     private void OnEnable()
     {
         workshopButton = transform.Find("Open Blueprint Workshop")?.gameObject;
@@ -171,13 +175,20 @@ public sealed class SiegeHud : MonoBehaviour
 
         SiegeMatch match = session.Match;
         UpdatePhase(match);
-        heading.text = match.Phase == SiegePhase.Defeat ? "BASTION   ·   LOST" : "BASTION   ·   " + match.Phase.ToString().ToUpperInvariant();
+        heading.text = match.Phase == SiegePhase.Battle && match.IsEliteWave ? "BASTION   ·   ELITE WAVE" : match.Phase == SiegePhase.Defeat ? "BASTION   ·   LOST" : "BASTION   ·   " + match.Phase.ToString().ToUpperInvariant();
         string preview = match.CanRefit ? "     NEXT  " + session.NextWaveSize + " × " + session.AttackerPreview : string.Empty;
         int remaining = match.ActiveAttackers + match.PendingAttackers;
         economy.text = "CREDITS  " + match.Coins.ToString("N0") + "      WAVE  " + match.Wave + "      RAIDERS  " + remaining + preview;
         status.text = session.Status;
         Durability core = session.Fleet.Base.Core != null ? session.Fleet.Base.Core.GetComponent<Durability>() : null;
         float ratio = core != null && core.maxDurability > 0f ? Mathf.Clamp01(core.currentDurability / core.maxDurability) : 0f;
+        if (ratio < coreRatio - 0.0005f)
+        {
+            coreHitUntil = Time.unscaledTime + 0.5f;
+            VisualEffectsManager.instance?.PlayCameraShake(0.35f + 0.5f * (coreRatio - ratio), 0.22f);
+        }
+
+        coreRatio = ratio;
         coreHealth.text = core != null ? "CORE  " + Mathf.CeilToInt(core.currentDurability) + " / " + Mathf.CeilToInt(core.maxDurability) : "CORE DESTROYED";
         coreHealth.color = core == null ? Critical : ratio < 0.25f ? Critical : ratio < 0.55f ? Warning : Idle;
         if (coreFill != null)
@@ -256,6 +267,14 @@ public sealed class SiegeHud : MonoBehaviour
             float remaining = killUntil - Time.unscaledTime;
             killGroup.alpha = remaining > 0f ? Mathf.Clamp01(remaining / 0.5f) : 0f;
         }
+
+        if (damageGroup != null)
+        {
+            float flash = coreHitUntil > Time.unscaledTime ? Mathf.Clamp01((coreHitUntil - Time.unscaledTime) / 0.5f) : 0f;
+            // 低耐久常驻低频脉动，只在比例变化时读取，不参与布局或物理。
+            float alarm = coreRatio > 0f && coreRatio < 0.3f ? 0.24f + 0.10f * Mathf.Sin(Time.unscaledTime * 2.6f) : 0f;
+            damageGroup.alpha = Mathf.Clamp01(Mathf.Max(flash * 0.85f, alarm));
+        }
     }
 
     /// <summary>按阶段切换整备/战斗控件，并给出波次总览、入场横幅与击毁提示。</summary>
@@ -294,7 +313,14 @@ public sealed class SiegeHud : MonoBehaviour
             if (battle)
             {
                 waveTotal = Mathf.Max(1, match.ActiveAttackers + match.PendingAttackers);
-                ShowBanner("WAVE " + match.Wave, waveTotal == 1 ? "1 RAIDER INBOUND" : waveTotal + " RAIDERS INBOUND");
+                if (match.IsEliteWave)
+                {
+                    ShowBanner("ELITE WAVE " + match.Wave, waveTotal + " HEAVY RAIDERS   ·   DOUBLE REWARD");
+                }
+                else
+                {
+                    ShowBanner("WAVE " + match.Wave, waveTotal == 1 ? "1 RAIDER INBOUND" : waveTotal + " RAIDERS INBOUND");
+                }
             }
             else if (match.Phase == SiegePhase.Intermission)
             {
@@ -317,6 +343,11 @@ public sealed class SiegeHud : MonoBehaviour
             if (killFeed != null)
             {
                 killFeed.text = "RAIDER DESTROYED   ·   +" + match.KillReward.ToString("N0") + " CREDITS";
+                if (session.Combo >= 2 && session.LastComboBonus > 0)
+                {
+                    killFeed.text += "      COMBO x" + session.Combo + "   +" + session.LastComboBonus.ToString("N0");
+                }
+
                 killUntil = Time.unscaledTime + 2.6f;
             }
         }

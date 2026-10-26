@@ -44,7 +44,7 @@ public sealed class SiegeWaveDirector
         }
 
         nextSpawn = time + Mathf.Max(0.1f, settings.SpawnInterval);
-        SiegeShipOption option = session.AttackerOptions[session.SelectedAttacker >= 0 ? session.SelectedAttacker : random.Next(session.AttackerOptions.Length)];
+        SiegeShipOption option = PickBlueprint(settings);
         double angle = random.NextDouble() * Math.PI * 2.0;
         Vector3 offset = new Vector3((float)Math.Cos(angle), 0f, (float)Math.Sin(angle)) * settings.AttackRadius;
         Vector3 position = session.Fleet.Base.Core.transform.position + offset + Vector3.up * 10f;
@@ -70,6 +70,27 @@ public sealed class SiegeWaveDirector
 
         unit.GetComponent<EnemyController>().SetPriorityTarget(session.Fleet.Base.Unit);
         attackers.Add(new Attacker(id, unit.cockpit));
+    }
+
+    /// <summary>精英波次固定挑最重的蓝图，其余波次沿用玩家指定或按种子随机。</summary>
+    private SiegeShipOption PickBlueprint(SiegeSettings settings)
+    {
+        SiegeShipOption[] options = session.AttackerOptions;
+        if (session.Match.IsEliteWave)
+        {
+            SiegeShipOption heaviest = options[0];
+            for (int index = 1; index < options.Length; index++)
+            {
+                if (options[index].BlockCount > heaviest.BlockCount)
+                {
+                    heaviest = options[index];
+                }
+            }
+
+            return heaviest;
+        }
+
+        return options[session.SelectedAttacker >= 0 ? session.SelectedAttacker : random.Next(options.Length)];
     }
 
     public void Stop()

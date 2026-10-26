@@ -196,6 +196,12 @@ public class VisualEffectsManager : MonoBehaviour
         _cameraShake?.Cancel();
     }
 
+    /// <summary>供独立玩法界面请求一次镜头抖动；不创建对象、不改变效果预算。</summary>
+    public void PlayCameraShake(float amplitude, float duration)
+    {
+        Shake.Play(Camera.main, amplitude, duration);
+    }
+
     private void OnDestroy()
     {
         _cameraShake?.Cancel();

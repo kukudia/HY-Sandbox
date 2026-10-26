@@ -43,6 +43,7 @@ public static class SiegeCommandHudAuthoring
             "Probe Label",
             "Dock Hint",
             "Ship Status",
+            "Damage Vignette",
             "Wave Status",
             "Wave Banner",
             "Kill Feed");
@@ -542,6 +543,51 @@ public static class SiegeCommandHudAuthoring
             8f);
         cockpitFill.GetComponent<Image>().color = AccentColor;
         ship.gameObject.SetActive(false);
+        RectTransform vignette = Group(
+            hud.transform,
+            "Damage Vignette",
+            0f,
+            0f,
+            ReferenceWidth,
+            1080f);
+        vignette.anchorMin = Vector2.zero;
+        vignette.anchorMax = Vector2.one;
+        vignette.offsetMin = Vector2.zero;
+        vignette.offsetMax = Vector2.zero;
+        var damageGroup = vignette.gameObject.AddComponent<CanvasGroup>();
+        damageGroup.alpha = 0f;
+        damageGroup.blocksRaycasts = false;
+        damageGroup.interactable = false;
+        // 只压四条边，保持画面中心可读；单一CanvasGroup透明度的成本与整屏色块相同。
+        Edge(
+            vignette,
+            "Alarm Top",
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0f, -96f),
+            Vector2.zero);
+        Edge(
+            vignette,
+            "Alarm Bottom",
+            new Vector2(0f, 0f),
+            new Vector2(1f, 0f),
+            Vector2.zero,
+            new Vector2(0f, 96f));
+        Edge(
+            vignette,
+            "Alarm Left",
+            new Vector2(0f, 0f),
+            new Vector2(0f, 1f),
+            Vector2.zero,
+            new Vector2(96f, 0f));
+        Edge(
+            vignette,
+            "Alarm Right",
+            new Vector2(1f, 0f),
+            new Vector2(1f, 1f),
+            new Vector2(-96f, 0f),
+            Vector2.zero);
+        vignette.SetAsFirstSibling();
         RectTransform status = Panel(
             hud.transform,
             "Wave Status",
@@ -665,6 +711,7 @@ public static class SiegeCommandHudAuthoring
         }
 
         serialized.FindProperty("shipStatus").objectReferenceValue = ship.gameObject;
+        serialized.FindProperty("damageGroup").objectReferenceValue = damageGroup;
         serialized.FindProperty("shipTitle").objectReferenceValue = shipTitle;
         serialized.FindProperty("shipIntegrityFill").objectReferenceValue = integrityFill.GetComponent<Image>();
         serialized.FindProperty("shipIntegrityValue").objectReferenceValue = integrityValue;
@@ -675,6 +722,36 @@ public static class SiegeCommandHudAuthoring
         serialized.FindProperty("baysGroup").objectReferenceValue = hud.transform.Find("Fleet Commands/Dock Bays Group").gameObject;
         serialized.FindProperty("refitGroup").objectReferenceValue = hud.transform.Find("Fleet Commands/Dock Refit Group").gameObject;
         serialized.ApplyModifiedPropertiesWithoutUndo();
+    }
+
+    /// <summary>创建一条贴边的告警色块；只用锚点+偏移定位，屏幕比例变化时仍贴合边缘。</summary>
+    private static void Edge(
+        Transform parent,
+        string name,
+        Vector2 anchorMin,
+        Vector2 anchorMax,
+        Vector2 offsetMin,
+        Vector2 offsetMax)
+    {
+        Transform existing = FindChild(parent, name);
+        RectTransform bar;
+        if (existing == null)
+        {
+            var root = new GameObject(name, typeof(RectTransform), typeof(Image));
+            root.transform.SetParent(parent, false);
+            bar = root.GetComponent<RectTransform>();
+            root.GetComponent<Image>().raycastTarget = false;
+        }
+        else
+        {
+            bar = (RectTransform)existing;
+        }
+
+        bar.anchorMin = anchorMin;
+        bar.anchorMax = anchorMax;
+        bar.offsetMin = offsetMin;
+        bar.offsetMax = offsetMax;
+        bar.GetComponent<Image>().color = new Color(0.62f, 0.05f, 0.04f, 1f);
     }
 
     private static RectTransform Group(

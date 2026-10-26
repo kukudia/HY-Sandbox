@@ -20,6 +20,10 @@ public sealed class SiegeMatch
     private readonly int maximumWaveSize;
     private readonly int killReward;
     private readonly int completionReward;
+    private readonly int eliteEveryNWaves;
+    private readonly int eliteRewardMultiplier;
+    /// <summary>精英波次按固定间隔出现；0表示关闭，保持既有线性波次。</summary>
+    public bool IsEliteWave => eliteEveryNWaves > 0 && Wave > 0 && Wave % eliteEveryNWaves == 0;
     public SiegePhase Phase { get; private set; } = SiegePhase.Deployment;
     public long Coins
     {
@@ -40,8 +44,8 @@ public sealed class SiegeMatch
     {
         get; private set;
     }
-    /// <summary>HUD只读的单次击毁奖励，用于显示公开战果。</summary>
-    public int KillReward => killReward;
+    /// <summary>HUD只读的单次击毁奖励；精英波次按倍数放大，供横幅与提示显示。</summary>
+    public int KillReward => IsEliteWave ? killReward * eliteRewardMultiplier : killReward;
     public bool CanRefit => Phase == SiegePhase.Deployment || Phase == SiegePhase.Intermission;
 
     public SiegeMatch(
@@ -50,7 +54,9 @@ public sealed class SiegeMatch
         int waveGrowth,
         int maximumWaveSize,
         int killReward,
-        int completionReward)
+        int completionReward,
+        int eliteEveryNWaves = 0,
+        int eliteRewardMultiplier = 2)
     {
         if (initialCoins < 0 || firstWaveSize < 1 || waveGrowth < 0 || maximumWaveSize < firstWaveSize || killReward < 0 || completionReward < 0)
         {
@@ -65,6 +71,8 @@ public sealed class SiegeMatch
         this.maximumWaveSize = maximumWaveSize;
         this.killReward = killReward;
         this.completionReward = completionReward;
+        this.eliteEveryNWaves = Math.Max(0, eliteEveryNWaves);
+        this.eliteRewardMultiplier = Math.Max(1, eliteRewardMultiplier);
     }
 
     public bool BeginNextWave()
@@ -106,16 +114,28 @@ public sealed class SiegeMatch
 
         if (defeated)
         {
-            Coins += killReward;
+            Coins += KillReward;
             DefeatedAttackers++;
         }
 
         if (PendingAttackers == 0 && attackers.Count == 0)
         {
-            Coins += completionReward;
+            Coins += IsEliteWave ? completionReward * eliteRewardMultiplier : completionReward;
             Phase = SiegePhase.Intermission;
         }
 
+        return true;
+    }
+
+    /// <summary>战斗与波次结算瞬间的额外奖励（连击）；部署阶段与失败后不发放。</summary>
+    public bool GrantBonus(int coins)
+    {
+        if ((Phase != SiegePhase.Battle && Phase != SiegePhase.Intermission) || coins <= 0)
+        {
+            return false;
+        }
+
+        Coins += coins;
         return true;
     }
 

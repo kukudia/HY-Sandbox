@@ -35,7 +35,7 @@ public static class SiegeBlueprintCatalog
                     }
 
                     int price = (int)Math.Min(int.MaxValue, (long)data.blocks.Count * Math.Max(1, coinsPerBlock));
-                    options.Add(new SiegeShipOption(Path.GetFileNameWithoutExtension(file), json, price));
+                    options.Add(new SiegeShipOption(Path.GetFileNameWithoutExtension(file), json, price, data.blocks.Count));
                 }
                 catch (Exception exception) when (exception is IOException || exception is UnauthorizedAccessException || exception is ArgumentException)
                 {

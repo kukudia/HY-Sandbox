@@ -33,6 +33,18 @@ public sealed class SiegeSession : MonoBehaviour
 
     private bool previousBackground;
     private SiegePhase previousPhase;
+    private int lastDefeatedCount;
+    private float lastKillAt = -1000f;
+    /// <summary>连击窗口内的连续击毁数；由会话读取公开战果推进，不参与敌舰生成。</summary>
+    public int Combo
+    {
+        get; private set;
+    }
+    /// <summary>最近一次连击额外发放的金币，仅供HUD提示。</summary>
+    public int LastComboBonus
+    {
+        get; private set;
+    }
     public string Status { get; private set; } = "Deploy a fleet, then begin the first wave.";
     public SiegeSettings Settings => settings;
     public SiegeShipOption[] DefenderOptions { get; private set; } = Array.Empty<SiegeShipOption>();
@@ -280,6 +292,7 @@ public sealed class SiegeSession : MonoBehaviour
             settings.EnemyWreckLifetime,
             settings.EnemyWreckRetirePerScan);
         waves.Tick(Time.time);
+        TickKillStreak();
         if (previousPhase == SiegePhase.Battle && Match.Phase == SiegePhase.Intermission)
         {
             SetSimulationActive(false);
@@ -289,6 +302,31 @@ public sealed class SiegeSession : MonoBehaviour
         }
 
         previousPhase = Match.Phase;
+    }
+
+    /// <summary>读取公开击毁计数推进连击；波次末尾的击毁仍可结算，部署阶段不会发放。</summary>
+    private void TickKillStreak()
+    {
+        int defeated = Match.DefeatedAttackers;
+        if (defeated <= lastDefeatedCount)
+        {
+            return;
+        }
+
+        int kills = defeated - lastDefeatedCount;
+        lastDefeatedCount = defeated;
+        float now = Time.time;
+        // 同一帧多架同时被击毁时按次数累计，避免一次齐射清波只算一次连击。
+        bool chained = now - lastKillAt <= settings.ComboWindow && Combo > 0;
+        Combo = chained ? Combo + kills : kills;
+        lastKillAt = now;
+        LastComboBonus = 0;
+        int bonus = settings.ComboBonusCoins * (Combo - 1);
+        if (bonus > 0 && Match.GrantBonus(bonus))
+        {
+            LastComboBonus = bonus;
+            Status = "COMBO x" + Combo + "   +" + bonus + " coins";
+        }
     }
 
     /// <summary>波次边界调用一次，避免每帧重复报价、净空查询或失败重试。</summary>
