@@ -24,6 +24,8 @@ public sealed class SiegeMatch
     private readonly int eliteRewardMultiplier;
     /// <summary>精英波次按固定间隔出现；0表示关闭，保持既有线性波次。</summary>
     public bool IsEliteWave => eliteEveryNWaves > 0 && Wave > 0 && Wave % eliteEveryNWaves == 0;
+    /// <summary>距离下一次精英波次还剩几波；0表示关闭精英或本身就是精英波。</summary>
+    public int EliteInWaves => eliteEveryNWaves <= 0 || IsEliteWave ? 0 : eliteEveryNWaves - Wave % eliteEveryNWaves;
     public SiegePhase Phase { get; private set; } = SiegePhase.Deployment;
     public long Coins
     {

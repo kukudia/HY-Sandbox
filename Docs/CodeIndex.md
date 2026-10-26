@@ -883,25 +883,25 @@
 | SiegeCommandHudAuthoring | [`void DisableLegacyOverlays()`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L100) | private static |
 | SiegeCommandHudAuthoring | [`void CommandBar(SiegeHud hud, Text template)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L129) | private static |
 | SiegeCommandHudAuthoring | [`void FleetDock(SiegeHud hud)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L210) | private static |
-| SiegeCommandHudAuthoring | [`void ActionBar(SiegeHud hud)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L412) | private static |
-| SiegeCommandHudAuthoring | [`void CombatHud(SiegeHud hud, Text template)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L442) | private static |
-| SiegeCommandHudAuthoring | [`void Edge( Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax, Vector2 offsetMin, Vector2 offsetMax)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L729) | private static |
-| SiegeCommandHudAuthoring | [`RectTransform Group( Transform parent, string name, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L758) | private static |
-| SiegeCommandHudAuthoring | [`void ThreatMarkers(SiegeHud hud)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L780) | private static |
-| SiegeCommandHudAuthoring | [`void ControlsHelp(SiegeHud hud, Text template)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L794) | private static |
-| SiegeCommandHudAuthoring | [`Text CloneLabel( Transform parent, Text template, string name, string text, float x, float y, float width, float height, int size)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L881) | private static |
-| SiegeCommandHudAuthoring | [`void StyleButton(Button button, int fontSize, bool primary)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L908) | private static |
-| SiegeCommandHudAuthoring | [`void PlaceOptional( Transform parent, string name, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L936) | private static |
-| SiegeCommandHudAuthoring | [`Text RequireText(Transform parent, string name)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L951) | private static |
-| SiegeCommandHudAuthoring | [`RectTransform Require(Transform parent, string path)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L963) | private static |
-| SiegeCommandHudAuthoring | [`Text FindText(Transform parent, string name)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L974) | private static |
-| SiegeCommandHudAuthoring | [`Transform FindChild(Transform parent, string name)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L981) | private static |
-| SiegeCommandHudAuthoring | [`Transform FindDeep(Transform parent, string name)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L995) | private static |
-| SiegeCommandHudAuthoring | [`Transform FindUnder(Transform root, string path)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L1008) | private static |
-| SiegeCommandHudAuthoring | [`Transform FindByPath(string path)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L1023) | private static |
-| SiegeCommandHudAuthoring | [`RectTransform Panel( Transform parent, string name, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L1036) | private static |
-| SiegeCommandHudAuthoring | [`void EnsureLine( Transform parent, string name, float x, float y, float width, float height, Color color)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L1051) | private static |
-| SiegeCommandHudAuthoring | [`void Place(RectTransform rect, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L1073) | private static |
+| SiegeCommandHudAuthoring | [`void ActionBar(SiegeHud hud)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L411) | private static |
+| SiegeCommandHudAuthoring | [`void CombatHud(SiegeHud hud, Text template)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L441) | private static |
+| SiegeCommandHudAuthoring | [`void Edge( Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax, Vector2 offsetMin, Vector2 offsetMax)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L728) | private static |
+| SiegeCommandHudAuthoring | [`RectTransform Group( Transform parent, string name, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L757) | private static |
+| SiegeCommandHudAuthoring | [`void ThreatMarkers(SiegeHud hud)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L779) | private static |
+| SiegeCommandHudAuthoring | [`void ControlsHelp(SiegeHud hud, Text template)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L793) | private static |
+| SiegeCommandHudAuthoring | [`Text CloneLabel( Transform parent, Text template, string name, string text, float x, float y, float width, float height, int size)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L880) | private static |
+| SiegeCommandHudAuthoring | [`void StyleButton(Button button, int fontSize, bool primary)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L907) | private static |
+| SiegeCommandHudAuthoring | [`void PlaceOptional( Transform parent, string name, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L935) | private static |
+| SiegeCommandHudAuthoring | [`Text RequireText(Transform parent, string name)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L950) | private static |
+| SiegeCommandHudAuthoring | [`RectTransform Require(Transform parent, string path)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L962) | private static |
+| SiegeCommandHudAuthoring | [`Text FindText(Transform parent, string name)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L973) | private static |
+| SiegeCommandHudAuthoring | [`Transform FindChild(Transform parent, string name)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L980) | private static |
+| SiegeCommandHudAuthoring | [`Transform FindDeep(Transform parent, string name)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L994) | private static |
+| SiegeCommandHudAuthoring | [`Transform FindUnder(Transform root, string path)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L1007) | private static |
+| SiegeCommandHudAuthoring | [`Transform FindByPath(string path)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L1022) | private static |
+| SiegeCommandHudAuthoring | [`RectTransform Panel( Transform parent, string name, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L1035) | private static |
+| SiegeCommandHudAuthoring | [`void EnsureLine( Transform parent, string name, float x, float y, float width, float height, Color color)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L1050) | private static |
+| SiegeCommandHudAuthoring | [`void Place(RectTransform rect, float x, float y, float width, float height)`](../Assets/Editor/Siege/SiegeCommandHudAuthoring.cs#L1072) | private static |
 
 ## Assets/Editor/Siege/SiegeDestructionLogChecks.cs
 
@@ -3382,23 +3382,23 @@
 | SiegeHud | [`void OnEnable()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L108) | private |
 | SiegeHud | [`void OnDisable()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L142) | private |
 | SiegeHud | [`void Update()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L165) | private |
-| SiegeHud | [`void UpdateTransient()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L266) | private |
-| SiegeHud | [`void UpdatePhase(SiegeMatch match)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L297) | private |
-| SiegeHud | [`void ApplyDockLayout(bool battle)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L391) | private |
-| SiegeHud | [`void RefreshShipStatus()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L432) | private |
-| SiegeHud | [`void SetBar(Image fill, Text value, float current, float maximum)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L465) | private static |
-| SiegeHud | [`void ShowBanner(string title, string subtitle)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L481) | private |
-| SiegeHud | [`void ToggleHelp()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L507) | private |
-| SiegeHud | [`void PollCamera()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L517) | private |
-| SiegeHud | [`void RefreshOptions()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L535) | private |
-| SiegeHud | [`void RefreshBlueprints()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L566) | private |
-| SiegeHud | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L572) | private |
-| SiegeHud | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L577) | private |
-| SiegeHud | [`void StartWave()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L582) | private |
-| SiegeHud | [`void RepairCore()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L587) | private |
-| SiegeHud | [`void RepairShip()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L593) | private |
-| SiegeHud | [`void RefreshRefitQuotes()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L600) | private |
-| SiegeHud | [`void Restart()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L623) | private |
+| SiegeHud | [`void UpdateTransient()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L271) | private |
+| SiegeHud | [`void UpdatePhase(SiegeMatch match)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L302) | private |
+| SiegeHud | [`void ApplyDockLayout(bool battle)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L396) | private |
+| SiegeHud | [`void RefreshShipStatus()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L437) | private |
+| SiegeHud | [`void SetBar(Image fill, Text value, float current, float maximum)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L470) | private static |
+| SiegeHud | [`void ShowBanner(string title, string subtitle)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L486) | private |
+| SiegeHud | [`void ToggleHelp()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L512) | private |
+| SiegeHud | [`void PollCamera()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L522) | private |
+| SiegeHud | [`void RefreshOptions()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L540) | private |
+| SiegeHud | [`void RefreshBlueprints()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L571) | private |
+| SiegeHud | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L577) | private |
+| SiegeHud | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L582) | private |
+| SiegeHud | [`void StartWave()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L587) | private |
+| SiegeHud | [`void RepairCore()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L592) | private |
+| SiegeHud | [`void RepairShip()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L598) | private |
+| SiegeHud | [`void RefreshRefitQuotes()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L605) | private |
+| SiegeHud | [`void Restart()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L628) | private |
 
 ## Assets/Scripts/Features/Siege/SiegeMatch.cs
 
@@ -3406,14 +3406,14 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeMatch | [`bool BeginNextWave()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L78) | public |
-| SiegeMatch | [`bool CanSpawn(int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L91) | public |
-| SiegeMatch | [`bool RegisterAttacker(string id, int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L96) | public |
-| SiegeMatch | [`bool ResolveAttacker(string id, bool defeated)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L108) | public |
-| SiegeMatch | [`bool GrantBonus(int coins)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L131) | public |
-| SiegeMatch | [`bool CanAfford(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L142) | public |
-| SiegeMatch | [`bool TrySpend(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L147) | public |
-| SiegeMatch | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L158) | public |
+| SiegeMatch | [`bool BeginNextWave()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L80) | public |
+| SiegeMatch | [`bool CanSpawn(int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L93) | public |
+| SiegeMatch | [`bool RegisterAttacker(string id, int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L98) | public |
+| SiegeMatch | [`bool ResolveAttacker(string id, bool defeated)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L110) | public |
+| SiegeMatch | [`bool GrantBonus(int coins)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L133) | public |
+| SiegeMatch | [`bool CanAfford(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L144) | public |
+| SiegeMatch | [`bool TrySpend(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L149) | public |
+| SiegeMatch | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L160) | public |
 
 ## Assets/Scripts/Features/Siege/SiegePlayerChecks.cs
 
