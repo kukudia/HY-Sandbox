@@ -34,6 +34,17 @@ public class CargoHoldView : MonoBehaviour
     {
         if (_statusLamp != null)
         {
+            // 预制体/蓝图恢复出来的实例在部分路径下没有执行过Awake，就地补齐依赖后仍然只更新灯色。
+            if (_hold == null)
+            {
+                _hold = GetComponent<CargoHold>();
+                if (_hold == null)
+                {
+                    return;
+                }
+            }
+
+            _properties ??= new MaterialPropertyBlock();
             Color color = _hold.Free == 0 ? _full : _hold.Used == 0 ? _empty : _loaded;
             if (!_hold.IsOperational)
             {

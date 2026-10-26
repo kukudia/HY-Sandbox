@@ -93,6 +93,9 @@ public sealed class SiegeHud : MonoBehaviour
     private UnityAction[] controlActions;
     private Text[] deploymentLabels = new Text[0];
     private Text[] controlLabels = new Text[0];
+    private string statusSnapshot;
+    private Text repairCoreLabel;
+    private Text repairShipLabel;
     private GameObject workshopButton;
     private float nextRefresh;
     private SiegePhase phaseTransition = SiegePhase.Defeat;
@@ -109,6 +112,8 @@ public sealed class SiegeHud : MonoBehaviour
         controlActions = new UnityAction[takeControl.Length];
         deploymentLabels = new Text[deploy.Length];
         controlLabels = new Text[takeControl.Length];
+        repairCoreLabel = repairCore.GetComponentInChildren<Text>();
+        repairShipLabel = repairShip.GetComponentInChildren<Text>();
         for (int index = 0; index < deploy.Length; index++)
         {
             int option = index;
@@ -179,7 +184,17 @@ public sealed class SiegeHud : MonoBehaviour
         string preview = match.CanRefit ? "     NEXT  " + session.NextWaveSize + " × " + session.AttackerPreview : string.Empty;
         int remaining = match.ActiveAttackers + match.PendingAttackers;
         economy.text = "CREDITS  " + match.Coins.ToString("N0") + "      WAVE  " + match.Wave + "      RAIDERS  " + remaining + preview;
-        status.text = session.Status;
+        if (session.Status != statusSnapshot)
+        {
+            statusSnapshot = session.Status;
+            status.text = statusSnapshot;
+            if (match.CanRefit)
+            {
+                // 自动修缮会改写Status；在这里刷新报价，避免显示波次结束前的旧价格。
+                RefreshRefitQuotes();
+            }
+        }
+
         Durability core = session.Fleet.Base.Core != null ? session.Fleet.Base.Core.GetComponent<Durability>() : null;
         float ratio = core != null && core.maxDurability > 0f ? Mathf.Clamp01(core.currentDurability / core.maxDurability) : 0f;
         if (ratio < coreRatio - 0.0005f)
@@ -310,6 +325,11 @@ public sealed class SiegeHud : MonoBehaviour
         {
             phaseTransition = match.Phase;
             ApplyDockLayout(battle);
+            if (match.CanRefit)
+            {
+                RefreshRefitQuotes();
+            }
+
             if (battle)
             {
                 waveTotal = Mathf.Max(1, match.ActiveAttackers + match.PendingAttackers);
@@ -557,11 +577,37 @@ public sealed class SiegeHud : MonoBehaviour
     private void RepairCore()
     {
         session.TryRepair(true);
+        RefreshRefitQuotes();
     }
 
     private void RepairShip()
     {
         session.TryRepair(false);
+        RefreshRefitQuotes();
+    }
+
+    /// <summary>只在整备入口与每次修缮后报价，避免在高模块基地上每帧遍历方块。</summary>
+    private void RefreshRefitQuotes()
+    {
+        if (session == null || session.Fleet == null || session.Fleet.Base == null)
+        {
+            return;
+        }
+
+        long baseQuote = session.Fleet.Base.IsAlive ? session.Fleet.Base.Quote() : 0;
+        SiegeFleetEntry driven = session.Fleet.Driven;
+        long shipQuote = driven != null && driven.IsAlive ? SiegeRefit.Quote(driven, session.Settings) : 0;
+        if (repairCoreLabel != null)
+        {
+            repairCoreLabel.text = baseQuote > 0 ? "REFIT BASE CORE   " + baseQuote.ToString("N0") : "BASE CORE   INTACT";
+            repairCoreLabel.color = baseQuote > 0 ? Idle : Muted;
+        }
+
+        if (repairShipLabel != null)
+        {
+            repairShipLabel.text = driven == null || !driven.IsAlive ? "NO PILOT SHIP" : shipQuote > 0 ? "REFIT PILOT SHIP   " + shipQuote.ToString("N0") : "PILOT SHIP   INTACT";
+            repairShipLabel.color = shipQuote > 0 ? Idle : Muted;
+        }
     }
 
     private void Restart()

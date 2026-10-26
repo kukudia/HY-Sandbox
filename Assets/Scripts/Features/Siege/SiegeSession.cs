@@ -333,6 +333,9 @@ public sealed class SiegeSession : MonoBehaviour
     private void RepairBaseBetweenWaves()
     {
         var results = new System.Collections.Generic.List<string>();
+        // 无伤奖励必须在自动修缮之前判定，否则“全额修好”会伪装成无伤。
+        Durability core = Fleet.Base.Core != null ? Fleet.Base.Core.GetComponent<Durability>() : null;
+        bool flawless = core != null && core.maxDurability > 0f && core.currentDurability >= core.maxDurability - 0.01f;
         if (settings.AutoRepairBase && Fleet.Base.IsAlive && Fleet.Base.Quote() > 0)
         {
             Fleet.Base.Repair(out string baseResult);
@@ -347,6 +350,12 @@ public sealed class SiegeSession : MonoBehaviour
             {
                 results.Add(failure);
             }
+        }
+
+        int flawlessBonus = settings.FlawlessBonusPerWave * Mathf.Max(1, Match.Wave);
+        if (flawless && flawlessBonus > 0 && Match.GrantBonus(flawlessBonus))
+        {
+            results.Add("Core intact +" + flawlessBonus + " coins.");
         }
 
         if (results.Count > 0)

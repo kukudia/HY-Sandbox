@@ -127,6 +127,31 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         Check(
             "Siege scene and session started in Player",
             session?.Match != null && session.Match.Phase == SiegePhase.Deployment);
+        // 规则层证据：不依赖场景，确认Player构建里同样启用精英波次与连击门控。
+        var eliteRules = new SiegeMatch(
+            0,
+            2,
+            0,
+            8,
+            100,
+            200,
+            2,
+            2);
+        eliteRules.BeginNextWave();
+        bool firstWaveNormal = !eliteRules.IsEliteWave && eliteRules.KillReward == 100;
+        eliteRules.RegisterAttacker("player-rule-1", 8);
+        eliteRules.RegisterAttacker("player-rule-2", 8);
+        eliteRules.ResolveAttacker("player-rule-1", true);
+        eliteRules.ResolveAttacker("player-rule-2", true);
+        eliteRules.BeginNextWave();
+        Check(
+            "player build keeps elite cadence and doubled rewards",
+            firstWaveNormal && eliteRules.IsEliteWave && eliteRules.KillReward == 200);
+        Check(
+            "player build accepts combo bonus and rejects it during defeat",
+            eliteRules.GrantBonus(60) && !eliteRules.GrantBonus(0));
+        eliteRules.LoseBase();
+        Check("player build rejects combo bonus after defeat", !eliteRules.GrantBonus(60));
         SiegeStressPopulation population = Object.FindFirstObjectByType<SiegeStressPopulation>();
         if (population != null)
         {
@@ -179,9 +204,14 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         Check(
             "Player base repair restores health and quoted debit",
             price > 0 && session.TryRepair(true) && Mathf.Approximately(core.currentDurability, core.maxDurability) && session.Match.Coins == coins - price);
-        for (int index = 0; index < shipCount; index++)
+        // 用户蓝图目录的价格随内容变化：按当前报价挑最便宜的可负担项，不假设固定夹具下标。
+        int[] affordable = Enumerable.Range(0, session.DefenderOptions.Length).OrderBy(index => session.DefenderOptions[index].Price).Take(shipCount).ToArray();
+        Check("player catalog offers deployable ships", affordable.Length == shipCount);
+        foreach (int optionIndex in affordable)
         {
-            Check("deploy ship " + index, session.TryDeploy(index % session.Settings.Ships.Length, out _));
+            Check(
+                "deploy ship " + optionIndex,
+                session.Match.CanAfford(session.DefenderOptions[optionIndex].Price) && session.TryDeploy(optionIndex, out _));
         }
 
         report.deployedShips = session.Fleet.Ships.Count(ship => ship != null && ship.IsAlive);

@@ -65,8 +65,11 @@ public sealed class SiegeSettings : ScriptableObject
     private float comboWindow = 5f;
     [SerializeField, Min(0), Tooltip("连击从第二次击毁开始，每次额外奖励的金币。")]
     private int comboBonusCoins = 60;
+    [SerializeField, Min(0), Tooltip("波次结束时基地核心未受损的奖励（金币×波次），在自动修缮之前判定。")]
+    private int flawlessBonusPerWave = 80;
     public bool AutoRepairBase => autoRepairBase;
     public bool AutoRepairFleet => autoRepairFleet;
+    public int FlawlessBonusPerWave => flawlessBonusPerWave;
     public int EliteEveryNWaves => eliteEveryNWaves;
     public int EliteRewardMultiplier => eliteRewardMultiplier;
     public float ComboWindow => comboWindow;

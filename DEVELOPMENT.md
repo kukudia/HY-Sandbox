@@ -1,5 +1,12 @@
 # HY-Sandbox 开发与审查入口
 
+## 2026-10-26 阵地战修缮报价、核心无伤奖励与Player验证
+
+- 整备阶段两个修缮按钮显示真实报价（`REFIT BASE CORE 127` / `PILOT SHIP INTACT`），报价只在进入整备、点击修缮和状态变化时计算，避免在高模块基地上每帧遍历方块。玩家不用盲猜金币是否够。
+- 新增“核心未受损”奖励（默认80×波次），在自动修缮之前判定，避免全额修好被误判为无伤；状态行写明 `Core intact +N`。实测第1波+80、第2波+160。
+- 修复 `CargoHoldView` 在蓝图恢复实例上的 `MaterialPropertyBlock` 空引用（修复前同一场Play累计50条），修复后全新Play `consoleErrors=0`。修复 `SiegePlayerChecks` 的旧部署假设，改为按当前蓝图目录报价挑可负担项。
+- 独立Player验证包实测 **91项通过/0错误**，覆盖HUD几何与文本、部署、开波、真实死亡结算、接管、核心被毁与重开，并断言精英节奏与连击门控在新构建中生效。详见 [稳定性与成本核对](Docs/Validation/2026-10-26-siege-hud-stability-cost.md)。HUD帧成本仍无可靠对照，未声称FPS变化。
+
 ## 2026-10-26 阵地战夜色竞技场外观
 
 - 新增 `SiegeArenaLookAuthoring`（菜单 `HY-Sandbox/Siege/Apply Night Arena Look`）：程序化夜空材质 `Assets/Siege/NightArenaSky.mat`、与天空匹配的雾、冷色环境光与月光，并把竞技场地面扩到900×900使边缘落在雾程之外，去掉旧版生硬的直角地平线。地面仍是单个静态BoxCollider，没有新增渲染批次或碰撞体。
