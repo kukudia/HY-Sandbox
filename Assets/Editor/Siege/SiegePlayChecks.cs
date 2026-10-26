@@ -10,8 +10,10 @@ using Object = UnityEngine.Object;
 
 public static class SiegePlayChecks
 {
+    private static readonly List<string> failures = new List<string>();
     public static string Run()
     {
+        failures.Clear();
         SiegeSession session = Object.FindFirstObjectByType<SiegeSession>();
         if (!EditorApplication.isPlaying || session == null || session.Match == null || session.Match.Wave != 0)
         {
@@ -50,6 +52,9 @@ public static class SiegePlayChecks
             "non-driven allied ship has autonomous control",
             !session.Fleet.Ships[0].Unit.AcceptsPlayerInput && session.Fleet.Ships[0].Unit.GetComponent<EnemyController>() != null);
         SiegeFleetEntry ship = session.Fleet.Ships[1];
+        // 用户蓝图可能自带半格偏移的独立吊舱（例如 Swordfish 的侧舱），因此“单连通壳体”的基线要按实物取，
+        // 修缮只要求不把壳体拆得比出厂更碎，而不是假设所有存档都是单连通。
+        int baselineHullGroups = BlockGroupManager.GroupBlocks(ship.Unit.GetComponentsInChildren<Block>().ToList()).Count;
         Durability health = ship.Cockpit.GetComponent<Durability>();
         float intactHealth = health.currentDurability;
         health.ApplyDamage(50f, null);
@@ -93,8 +98,8 @@ public static class SiegePlayChecks
             session.TryRepair(false) && detached != null && detached.GetComponentInParent<ControlUnit>() == ship.Unit && ship.Unit.GetComponentsInChildren<Block>().Length == ship.Blueprint.blocks.Count);
         Check(
             checks,
-            "repair restores actual detached collider participation and single connected hull",
-            detached.raycastCollider.gameObject.layer == detachedOriginalLayer && BlockGroupManager.GroupBlocks(ship.Unit.GetComponentsInChildren<Block>().ToList()).Count == 1);
+            "repair restores actual detached collider participation and baseline hull connectivity",
+            detached.raycastCollider.gameObject.layer == detachedOriginalLayer && BlockGroupManager.GroupBlocks(ship.Unit.GetComponentsInChildren<Block>().ToList()).Count == baselineHullGroups);
         fragment.SetActive(false);
         Object.Destroy(fragment);
         GameObject obstruction = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -161,6 +166,8 @@ public static class SiegePlayChecks
         }
 
         long coinsBeforeAutomaticRepair = session.Match.Coins;
+        // 连击奖励也在这帧发放；本段只核对自动修缮的精确扣费，所以先把连击加成临时归零，结束再恢复。
+        int originalComboBonus = SetComboBonus(session, 0);
         System.Reflection.MethodInfo update = typeof(SiegeSession).GetMethod("Update", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
         update.Invoke(session, null);
         long coinsAfterAutomaticRepair = session.Match.Coins;
@@ -173,6 +180,7 @@ public static class SiegePlayChecks
             checks,
             "wave intermission repairs the driven ship from remaining coins",
             Mathf.Approximately(drivenHealth.currentDurability, drivenHealth.maxDurability) && automaticShipQuote > 0 && session.Match.Coins == coinsBeforeAutomaticRepair - automaticRepairQuote - automaticShipQuote);
+        SetComboBonus(session, originalComboBonus);
         long afterAutomaticRepairs = session.Match.Coins;
         update.Invoke(session, null);
         Check(
@@ -207,17 +215,37 @@ public static class SiegePlayChecks
             checks,
             "defeat rejects new waves, deployment and repairs",
             !session.BeginNextWave() && !session.TryDeploy(0, out _) && !session.TryRepair(true));
-        string json = JsonUtility.ToJson(new Report { checks = checks }, true);
+        string json = JsonUtility.ToJson(new Report { checks = checks, failures = new List<string>(failures) }, true);
         Directory.CreateDirectory("Temp/Siege");
         File.WriteAllText("Temp/Siege/play.json", json);
+        if (failures.Count > 0)
+        {
+            throw new InvalidOperationException("Siege Play checks failed: " + string.Join(" | ", failures));
+        }
+
         return json;
     }
 
+    /// <summary>测试夹具有限地改设置：只改内存中的连击单价，调用方负责恢复并避免保存资产。</summary>
+    private static int SetComboBonus(SiegeSession session, int value)
+    {
+        var data = new SerializedObject(session.Settings);
+        SerializedProperty property = data.FindProperty("comboBonusCoins");
+        int previous = property.intValue;
+        property.intValue = value;
+        data.ApplyModifiedPropertiesWithoutUndo();
+        return previous;
+    }
+
+    // 逐项记录而不是首个失败就中断：同一次运行能看到全部失败项，避免“每次停在不同断点”。
     private static void Check(List<string> checks, string name, bool passed)
     {
         if (!passed)
         {
-            throw new InvalidOperationException("Siege Play check failed: " + name);
+            failures.Add(name);
+            checks.Add("FAIL " + name);
+            Debug.LogError("Siege Play check failed: " + name);
+            return;
         }
 
         checks.Add("PASS " + name);
@@ -227,5 +255,6 @@ public static class SiegePlayChecks
     private sealed class Report
     {
         public List<string> checks;
+        public List<string> failures;
     }
 }

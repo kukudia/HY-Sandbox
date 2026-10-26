@@ -25,6 +25,18 @@
 
 `SiegeHud.activeGraphics=50 / total=94`（含未激活的帮助面板、横幅、告警条）。MainCanvas 在战斗视图的激活Graphic为0，说明旧覆盖确实退出渲染，而不是只把alpha设为0。
 
+## 回归套件恢复可用
+
+`SiegePlayChecks.Run()` 此前在HEAD上会停在不同断点，无法作为回归证据。本轮把它修回可用，并说明每个失败的真实原因：
+
+| 失败项 | 根因 | 处理 |
+| --- | --- | --- |
+| `repair restores actual detached collider participation and single connected hull` | 断言假设“出厂即单连通壳体”。实测新部署的 Swordfish 在**任何破坏之前**就是46+7两组：用户蓝图在 x≈-5.5~-6.5 有一个半格偏移的侧吊舱，几何相邻但连接件不对齐。 | 改为记录部署时的 `baselineHullGroups`，断言修缮后不比出厂更碎；名字改为 `...baseline hull connectivity`。 |
+| `wave intermission automatically repairs the base and spends its exact quote once` / `...repairs the driven ship from remaining coins` | 这两段在同一帧调用 `SiegeSession.Update`，本轮的连击奖励也在这一帧发钱，旧断言用精确等式扣费自然不等。 | 用 `SetComboBonus(0)` 在该段临时把连击单价归零，结束后恢复；只测自动修缮的扣费。 |
+| 首个失败即抛异常 | 只能看到第一个问题，且每次运行停在不同位置。 | `Check` 改为逐项 `FAIL` 记录并继续，结束时一次性抛出全部失败项；报告 JSON 增加 `failures`。 |
+
+修复后**28项全部通过**（`Temp/Siege/play.json`，28 PASS / 0 FAIL）。
+
 ## 未完成或不可靠的测量
 
 - 尝试用外部逐帧读取 `Time.unscaledDeltaTime` 做“HUD开/关”对照，单次CLI往返开销远大于帧间隔，样本不具可比性，已放弃并记录；没有得出HUD帧成本数字。
