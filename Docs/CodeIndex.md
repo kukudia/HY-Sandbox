@@ -779,8 +779,8 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeArenaLookAuthoring | [`void ApplyLook()`](../Assets/Editor/Siege/SiegeArenaLookAuthoring.cs#L18) | public static |
-| SiegeArenaLookAuthoring | [`void Pylons()`](../Assets/Editor/Siege/SiegeArenaLookAuthoring.cs#L112) | private static |
-| SiegeArenaLookAuthoring | [`Material Material(string name, Color color, Color? emission)`](../Assets/Editor/Siege/SiegeArenaLookAuthoring.cs#L152) | private static |
+| SiegeArenaLookAuthoring | [`void Pylons()`](../Assets/Editor/Siege/SiegeArenaLookAuthoring.cs#L111) | private static |
+| SiegeArenaLookAuthoring | [`Material Material(string name, Color color, Color? emission)`](../Assets/Editor/Siege/SiegeArenaLookAuthoring.cs#L157) | private static |
 
 ## Assets/Editor/Siege/SiegeBaseBlueprintAuthoring.cs
 
@@ -870,7 +870,7 @@
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeCombatFeedbackChecks | [`string Run()`](../Assets/Editor/Siege/SiegeCombatFeedbackChecks.cs#L16) | public static |
-| SiegeCombatFeedbackChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeCombatFeedbackChecks.cs#L157) | private static |
+| SiegeCombatFeedbackChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegeCombatFeedbackChecks.cs#L230) | private static |
 
 ## Assets/Editor/Siege/SiegeCommandHudAuthoring.cs
 
@@ -1025,6 +1025,14 @@
 | SiegePriorityTargetFlight | [`void Tick()`](../Assets/Editor/Siege/SiegePriorityTargetFlight.cs#L57) | private static |
 | SiegePriorityTargetFlight | [`void BeforeReload()`](../Assets/Editor/Siege/SiegePriorityTargetFlight.cs#L83) | private static |
 | SiegePriorityTargetFlight | [`void Finish(string reason)`](../Assets/Editor/Siege/SiegePriorityTargetFlight.cs#L88) | private static |
+
+## Assets/Editor/Siege/SiegeProgressAuthoring.cs
+
+// 职责：提供清除本机阵地战战果记录的显式菜单，便于测试或重新开始统计。 // 入口：ClearRecords()；只写本地PlayerPrefs，不触碰存档蓝图或场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeProgressAuthoring | [`void ClearRecords()`](../Assets/Editor/Siege/SiegeProgressAuthoring.cs#L8) | public static |
 
 ## Assets/Editor/Siege/SiegeRegroupBaseline.cs
 
@@ -3384,23 +3392,23 @@
 | SiegeHud | [`void OnEnable()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L108) | private |
 | SiegeHud | [`void OnDisable()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L142) | private |
 | SiegeHud | [`void Update()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L165) | private |
-| SiegeHud | [`void UpdateTransient()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L272) | private |
-| SiegeHud | [`void UpdatePhase(SiegeMatch match)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L305) | private |
-| SiegeHud | [`void ApplyDockLayout(bool battle)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L403) | private |
-| SiegeHud | [`void RefreshShipStatus()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L444) | private |
-| SiegeHud | [`void SetBar(Image fill, Text value, float current, float maximum)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L477) | private static |
-| SiegeHud | [`void ShowBanner(string title, string subtitle)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L493) | private |
-| SiegeHud | [`void ToggleHelp()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L521) | private |
-| SiegeHud | [`void PollCamera()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L531) | private |
-| SiegeHud | [`void RefreshOptions()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L549) | private |
-| SiegeHud | [`void RefreshBlueprints()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L582) | private |
-| SiegeHud | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L588) | private |
-| SiegeHud | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L593) | private |
-| SiegeHud | [`void StartWave()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L598) | private |
-| SiegeHud | [`void RepairCore()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L603) | private |
-| SiegeHud | [`void RepairShip()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L609) | private |
-| SiegeHud | [`void RefreshRefitQuotes()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L616) | private |
-| SiegeHud | [`void Restart()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L639) | private |
+| SiegeHud | [`void UpdateTransient()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L281) | private |
+| SiegeHud | [`void UpdatePhase(SiegeMatch match)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L314) | private |
+| SiegeHud | [`void ApplyDockLayout(bool battle)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L412) | private |
+| SiegeHud | [`void RefreshShipStatus()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L453) | private |
+| SiegeHud | [`void SetBar(Image fill, Text value, float current, float maximum)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L486) | private static |
+| SiegeHud | [`void ShowBanner(string title, string subtitle)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L502) | private |
+| SiegeHud | [`void ToggleHelp()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L530) | private |
+| SiegeHud | [`void PollCamera()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L540) | private |
+| SiegeHud | [`void RefreshOptions()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L558) | private |
+| SiegeHud | [`void RefreshBlueprints()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L591) | private |
+| SiegeHud | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L597) | private |
+| SiegeHud | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L602) | private |
+| SiegeHud | [`void StartWave()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L607) | private |
+| SiegeHud | [`void RepairCore()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L612) | private |
+| SiegeHud | [`void RepairShip()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L618) | private |
+| SiegeHud | [`void RefreshRefitQuotes()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L625) | private |
+| SiegeHud | [`void Restart()`](../Assets/Scripts/Features/Siege/SiegeHud.cs#L648) | private |
 
 ## Assets/Scripts/Features/Siege/SiegeMatch.cs
 
@@ -3408,14 +3416,14 @@
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeMatch | [`bool BeginNextWave()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L88) | public |
-| SiegeMatch | [`bool CanSpawn(int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L104) | public |
-| SiegeMatch | [`bool RegisterAttacker(string id, int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L109) | public |
-| SiegeMatch | [`bool ResolveAttacker(string id, bool defeated)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L121) | public |
-| SiegeMatch | [`bool GrantBonus(int coins)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L144) | public |
-| SiegeMatch | [`bool CanAfford(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L155) | public |
-| SiegeMatch | [`bool TrySpend(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L160) | public |
-| SiegeMatch | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L171) | public |
+| SiegeMatch | [`bool BeginNextWave()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L101) | public |
+| SiegeMatch | [`bool CanSpawn(int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L117) | public |
+| SiegeMatch | [`bool RegisterAttacker(string id, int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L122) | public |
+| SiegeMatch | [`bool ResolveAttacker(string id, bool defeated)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L134) | public |
+| SiegeMatch | [`bool GrantBonus(int coins)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L157) | public |
+| SiegeMatch | [`bool CanAfford(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L168) | public |
+| SiegeMatch | [`bool TrySpend(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L173) | public |
+| SiegeMatch | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L184) | public |
 
 ## Assets/Scripts/Features/Siege/SiegePlayerChecks.cs
 
@@ -3428,11 +3436,11 @@
 | SiegePlayerChecks | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L114) | private |
 | SiegePlayerChecks | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L132) | private |
 | SiegePlayerChecks | [`IEnumerator Run()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L140) | private |
-| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L407) | private |
-| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L414) | private |
-| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L424) | private |
-| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L432) | private |
-| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L451) | private |
+| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L426) | private |
+| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L433) | private |
+| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L443) | private |
+| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L451) | private |
+| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Siege/SiegePlayerChecks.cs#L470) | private |
 
 ## Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs
 
