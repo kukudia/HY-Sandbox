@@ -22,6 +22,19 @@
 | 静态检查 | `CodeReadability --check`：323脚本、0格式差异、0错误；`dotnet build HY-Sandbox.sln --no-restore` 0错误/4既有警告；`git diff --check` 通过。 |
 | 导航 | `generate_navigation.py` 重新生成43图/323脚本，新增“阵地战精英波次与连击奖励”函数图。 |
 
+## 自然推进到第5波的补充证据
+
+之前的精英验证用的是强制 `SiegeMatch` 夹具。本轮补了一次自然推进：部署 AirKing 后连续开波，用真实损伤打掉每波敌舰，直到第5波。
+
+| 观察 | 结果 |
+| --- | --- |
+| 波次与精英标记 | 第1–4波 `IsEliteWave=False`；第5波自动变为 `elite=True`，`KillReward=240`（120×2）。 |
+| 蓝图挑选 | 第5波生成的两架均为 `Raider 5 / Type06`，**219模块**，等于当前攻方目录（14项）里的最大模块数；不是玩家选定的随机舰型。 |
+| 同帧画面 | 截屏 [elite-wave5](2026-10-26-siege-elite-wave5.png)：顶部 `BASTION · ELITE WAVE`、状态行 `COMBO x4 +180 coins`、横幅 `ELITE WAVE 5 / 6 HEAVY RAIDERS · DOUBLE REWARD`、底部 `WAVE 5 · RAIDERS 2 / 6`、右下两个来袭标记（35 m/36 m），以及前几波留下的残骸。 |
+| 连击 | 连续击杀累计到 `COMBO x4`，状态行给出 `+180 coins`（60×3）。 |
+
+这次推进仍然用“直接对驾驶舱施加伤害”触发真实死亡与结算链，不是人工驾驶交火；但波次计数、精英判定、最重蓝图挑选与奖励倍数是自然流程里发生的。
+
 ## 局限与未验证
 
 - 镜头抖动只确认了代码路径被调用（核心掉血时请求 `PlayCameraShake`），静态截屏无法证明手感强度；需要在真实操作中调节。
