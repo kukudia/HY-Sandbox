@@ -49,6 +49,7 @@ MonoBehaviour:
   eliteRewardMultiplier: 2
   comboWindow: 5
   comboBonusCoins: 60
+  comboBonusCap: 300
   flawlessBonusPerWave: 80
   trackRecords: 1
   swarmEveryNWaves: 3
