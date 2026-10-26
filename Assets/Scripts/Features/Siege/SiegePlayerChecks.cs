@@ -66,6 +66,25 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         checks.report.unity = Application.unityVersion;
         checks.report.width = Screen.width;
         checks.report.height = Screen.height;
+        // 诊断专用开关：关闭垂直同步才能看出不同UI负载的差异；关闭HUD用于隔离界面脚本与渲染成本。
+        if (Array.IndexOf(args, "-siege-novsync") >= 0)
+        {
+            QualitySettings.vSyncCount = 0;
+            Application.targetFrameRate = -1;
+            checks.report.profile = "novsync";
+        }
+
+        if (Array.IndexOf(args, "-siege-hud-off") >= 0)
+        {
+            SiegeHud hud = Object.FindFirstObjectByType<SiegeHud>();
+            if (hud != null)
+            {
+                hud.gameObject.SetActive(false);
+            }
+
+            checks.report.profile = checks.report.profile + "+hud-off";
+        }
+
         checks.started = Time.realtimeSinceStartup;
         Application.logMessageReceived += checks.CaptureError;
         checks.work = checks.Run();
@@ -184,16 +203,21 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         }
 
         Canvas.ForceUpdateCanvases();
-        foreach (Graphic graphic in Object.FindFirstObjectByType<SiegeHud>().GetComponentsInChildren<Graphic>())
+        // 诊断性关闭HUD时跳过界面几何断言，否则会把“故意隐藏”当成失败。
+        SiegeHud hudForBounds = Object.FindFirstObjectByType<SiegeHud>();
+        if (hudForBounds != null && hudForBounds.gameObject.activeInHierarchy)
         {
-            var corners = new Vector3[4];
-            graphic.rectTransform.GetWorldCorners(corners);
-            Check(
-                "HUD bounds: " + graphic.name,
-                corners.All(point => point.x >= -1f && point.x <= Screen.width + 1f && point.y >= -1f && point.y <= Screen.height + 1f));
-            if (graphic is Text label && !string.IsNullOrWhiteSpace(label.text))
+            foreach (Graphic graphic in hudForBounds.GetComponentsInChildren<Graphic>())
             {
-                Check("HUD text geometry: " + label.name, label.cachedTextGenerator.vertexCount > 4);
+                var corners = new Vector3[4];
+                graphic.rectTransform.GetWorldCorners(corners);
+                Check(
+                    "HUD bounds: " + graphic.name,
+                    corners.All(point => point.x >= -1f && point.x <= Screen.width + 1f && point.y >= -1f && point.y <= Screen.height + 1f));
+                if (graphic is Text label && !string.IsNullOrWhiteSpace(label.text))
+                {
+                    Check("HUD text geometry: " + label.name, label.cachedTextGenerator.vertexCount > 4);
+                }
             }
         }
 
