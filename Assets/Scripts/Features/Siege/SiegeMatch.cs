@@ -22,10 +22,14 @@ public sealed class SiegeMatch
     private readonly int completionReward;
     private readonly int eliteEveryNWaves;
     private readonly int eliteRewardMultiplier;
+    private readonly int swarmEveryNWaves;
+    private readonly int swarmSizeMultiplier;
     /// <summary>精英波次按固定间隔出现；0表示关闭，保持既有线性波次。</summary>
     public bool IsEliteWave => eliteEveryNWaves > 0 && Wave > 0 && Wave % eliteEveryNWaves == 0;
     /// <summary>距离下一次精英波次还剩几波；0表示关闭精英或本身就是精英波。</summary>
     public int EliteInWaves => eliteEveryNWaves <= 0 || IsEliteWave ? 0 : eliteEveryNWaves - Wave % eliteEveryNWaves;
+    /// <summary>蜂群波次：数量翻倍、生成更密；与精英波重叠时精英优先，避免两个倍率叠加。</summary>
+    public bool IsSwarmWave => swarmEveryNWaves > 0 && Wave > 0 && Wave % swarmEveryNWaves == 0 && !IsEliteWave;
     public SiegePhase Phase { get; private set; } = SiegePhase.Deployment;
     public long Coins
     {
@@ -58,7 +62,9 @@ public sealed class SiegeMatch
         int killReward,
         int completionReward,
         int eliteEveryNWaves = 0,
-        int eliteRewardMultiplier = 2)
+        int eliteRewardMultiplier = 2,
+        int swarmEveryNWaves = 0,
+        int swarmSizeMultiplier = 2)
     {
         if (initialCoins < 0 || firstWaveSize < 1 || waveGrowth < 0 || maximumWaveSize < firstWaveSize || killReward < 0 || completionReward < 0)
         {
@@ -75,6 +81,8 @@ public sealed class SiegeMatch
         this.completionReward = completionReward;
         this.eliteEveryNWaves = Math.Max(0, eliteEveryNWaves);
         this.eliteRewardMultiplier = Math.Max(1, eliteRewardMultiplier);
+        this.swarmEveryNWaves = Math.Max(0, swarmEveryNWaves);
+        this.swarmSizeMultiplier = Math.Max(1, swarmSizeMultiplier);
     }
 
     public bool BeginNextWave()
@@ -85,7 +93,10 @@ public sealed class SiegeMatch
         }
 
         Wave++;
-        PendingAttackers = (int)Math.Min(maximumWaveSize, firstWaveSize + (long)(Wave - 1) * waveGrowth);
+        long baseSize = firstWaveSize + (long)(Wave - 1) * waveGrowth;
+        // 蜂群波在整除后的波次把名额放大；精英波不加量，只换更重的蓝图与更高奖励。
+        long scaledSize = swarmEveryNWaves > 0 && Wave % swarmEveryNWaves == 0 && (eliteEveryNWaves <= 0 || Wave % eliteEveryNWaves != 0) ? baseSize * swarmSizeMultiplier : baseSize;
+        PendingAttackers = (int)Math.Min(maximumWaveSize, scaledSize);
         Phase = SiegePhase.Battle;
         return true;
     }

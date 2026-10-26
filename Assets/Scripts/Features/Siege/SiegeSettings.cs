@@ -69,10 +69,19 @@ public sealed class SiegeSettings : ScriptableObject
     private int flawlessBonusPerWave = 80;
     [SerializeField, Tooltip("失败时把最高波次与累计击毁写入本地PlayerPrefs；关闭后只保留本局显示。")]
     private bool trackRecords = true;
+    [SerializeField, Min(0), Tooltip("每隔多少波出现一次蜂群波（数量翻倍、生成更快），0关闭；精英波优先。")]
+    private int swarmEveryNWaves = 3;
+    [SerializeField, Min(1), Tooltip("蜂群波的来袭数量倍数。")]
+    private int swarmSizeMultiplier = 2;
+    [SerializeField, Range(0.2f, 1f), Tooltip("蜂群波的生成间隔比例，越小越密。")]
+    private float swarmSpawnIntervalScale = 0.65f;
     public bool AutoRepairBase => autoRepairBase;
     public bool AutoRepairFleet => autoRepairFleet;
     public int FlawlessBonusPerWave => flawlessBonusPerWave;
     public bool TrackRecords => trackRecords;
+    public int SwarmEveryNWaves => swarmEveryNWaves;
+    public int SwarmSizeMultiplier => swarmSizeMultiplier;
+    public float SwarmSpawnIntervalScale => swarmSpawnIntervalScale;
     public int EliteEveryNWaves => eliteEveryNWaves;
     public int EliteRewardMultiplier => eliteRewardMultiplier;
     public float ComboWindow => comboWindow;
@@ -103,7 +112,9 @@ public sealed class SiegeSettings : ScriptableObject
             killReward,
             waveReward,
             eliteEveryNWaves,
-            eliteRewardMultiplier);
+            eliteRewardMultiplier,
+            swarmEveryNWaves,
+            swarmSizeMultiplier);
     }
 }
 

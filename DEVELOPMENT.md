@@ -1,5 +1,10 @@
 # HY-Sandbox 开发与审查入口
 
+## 2026-10-26 阵地战蜂群波次
+
+- 新增蜂群波：每 `swarmEveryNWaves`（默认3）波数量翻倍、生成间隔×0.65，与精英波错开；同波重叠时精英优先，避免倍率叠加不可玩。名额仍受 `maximumWaveSize` 与同屏上限约束。
+- HUD 横幅 `SWARM WAVE n / k RAIDERS · FAST SPAWN`；构造参数可选，既有规则测试行为不变。检查增至21项全部通过；真实Play第3波 `swarm=True pending=8` 并截屏。详见 [蜂群波验证](Docs/Validation/2026-10-26-siege-swarm-wave.md)。未做蜂群+精英连续节奏与帧时间对照。
+
 ## 2026-10-26 HUD开关同场景对照与诊断开关
 
 - 新增两个仅 `-siege-checks-report` 生效的诊断开关：`-siege-novsync`（关闭垂直同步与目标帧率）、`-siege-hud-off`（停用HUD对象，同时跳过界面几何断言）。它们不改变正常游戏路径。

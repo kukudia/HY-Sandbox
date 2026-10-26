@@ -346,6 +346,10 @@ public sealed class SiegeHud : MonoBehaviour
                 {
                     ShowBanner("ELITE WAVE " + match.Wave, waveTotal + " HEAVY RAIDERS   ·   DOUBLE REWARD");
                 }
+                else if (match.IsSwarmWave)
+                {
+                    ShowBanner("SWARM WAVE " + match.Wave, waveTotal + " RAIDERS   ·   FAST SPAWN");
+                }
                 else
                 {
                     ShowBanner("WAVE " + match.Wave, waveTotal == 1 ? "1 RAIDER INBOUND" : waveTotal + " RAIDERS INBOUND");

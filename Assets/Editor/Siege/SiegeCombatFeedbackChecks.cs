@@ -99,7 +99,64 @@ public static class SiegeCombatFeedbackChecks
             checks,
             "disabled elite interval keeps every wave normal",
             !linear.IsEliteWave && linear.KillReward == 100);
-        // 跨启动战果：写入后立即核对，再把原值原样恢复，避免验证留下假成绩。
+        // 蜂群波：数量翻倍、与精英波重叠时精英优先；关闭间隔时保持线性。
+        var swarm = new SiegeMatch(
+            0,
+            2,
+            1,
+            40,
+            100,
+            200,
+            4,
+            2,
+            2,
+            2);
+        swarm.BeginNextWave();
+        Check(checks, "first wave is not a swarm", !swarm.IsSwarmWave && swarm.PendingAttackers == 2);
+        swarm.RegisterAttacker("s1", 40);
+        swarm.RegisterAttacker("s2", 40);
+        swarm.ResolveAttacker("s1", false);
+        swarm.ResolveAttacker("s2", false);
+        Check(
+            checks,
+            "swarm wave doubles the incoming count",
+            swarm.BeginNextWave() && swarm.IsSwarmWave && swarm.PendingAttackers == 6);
+        var both = new SiegeMatch(
+            0,
+            2,
+            1,
+            40,
+            100,
+            200,
+            2,
+            2,
+            2,
+            2);
+        both.BeginNextWave();
+        both.RegisterAttacker("b1", 40);
+        both.RegisterAttacker("b2", 40);
+        both.ResolveAttacker("b1", false);
+        both.ResolveAttacker("b2", false);
+        Check(
+            checks,
+            "elite interval wins over swarm on the same wave",
+            both.BeginNextWave() && both.Wave == 2 && both.IsEliteWave && !both.IsSwarmWave && both.PendingAttackers == 3);
+        var noSwarm = new SiegeMatch(
+            0,
+            2,
+            1,
+            40,
+            100,
+            200,
+            0,
+            2,
+            0,
+            2);
+        noSwarm.BeginNextWave();
+        Check(
+            checks,
+            "disabled swarm interval keeps linear counts",
+            !noSwarm.IsSwarmWave && noSwarm.PendingAttackers == 2);
         int previousBest = SiegeProgress.BestWave;
         int previousKills = SiegeProgress.TotalKills;
         int previousRuns = SiegeProgress.TotalRuns;

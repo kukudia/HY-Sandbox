@@ -43,7 +43,8 @@ public sealed class SiegeWaveDirector
             return;
         }
 
-        nextSpawn = time + Mathf.Max(0.1f, settings.SpawnInterval);
+        float interval = settings.SpawnInterval * (session.Match.IsSwarmWave ? Mathf.Clamp(settings.SwarmSpawnIntervalScale, 0.2f, 1f) : 1f);
+        nextSpawn = time + Mathf.Max(0.1f, interval);
         SiegeShipOption option = PickBlueprint(settings);
         double angle = random.NextDouble() * Math.PI * 2.0;
         Vector3 offset = new Vector3((float)Math.Cos(angle), 0f, (float)Math.Sin(angle)) * settings.AttackRadius;
