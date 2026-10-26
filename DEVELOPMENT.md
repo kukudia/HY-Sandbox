@@ -5,6 +5,11 @@
 - 新增蜂群波：每 `swarmEveryNWaves`（默认3）波数量翻倍、生成间隔×0.65，与精英波错开；同波重叠时精英优先，避免倍率叠加不可玩。名额仍受 `maximumWaveSize` 与同屏上限约束。
 - HUD 横幅 `SWARM WAVE n / k RAIDERS · FAST SPAWN`；构造参数可选，既有规则测试行为不变。检查增至21项全部通过；真实Play第3波 `swarm=True pending=8` 并截屏。详见 [蜂群波验证](Docs/Validation/2026-10-26-siege-swarm-wave.md)。未做蜂群+精英连续节奏与帧时间对照。
 
+## 2026-10-26 后段波次性能采样与尖峰定位
+
+- 自然观察窗口改为优先买最贵的可负担舰，无人驾驶下推进到第5波精英才失守：164.8秒/9,266帧，中位15.82ms、P95 34.36ms、P99 59.29ms、最大272ms（495帧>33ms、15帧>100ms）。第5波规模：约1,894模块/2,176碰撞体/341刚体。
+- 最慢帧集中在**波次边界自动修缮**（272ms，此时仅12个唤醒刚体）与**敌舰断裂重组**（291ms）。带 `-siege-checks-profile` 的累计计时显示 refresh 556ms/190次、bodyRebuild 398ms/178次、connectivity 60ms/178次、约11.9万次邻接查询；计时为累计值，不能把单帧直接归因。
+- 结论只到“后段成本显著高于首波、尖峰在修缮与重组”，未优化、无GPU/PhysX归因。数据与边界见 [Player帧记录](Docs/Validation/2026-10-26-siege-player-soak.md)，两份JSON已入库。
 ## 2026-10-26 HUD开关同场景对照与诊断开关
 
 - 新增两个仅 `-siege-checks-report` 生效的诊断开关：`-siege-novsync`（关闭垂直同步与目标帧率）、`-siege-hud-off`（停用HUD对象，同时跳过界面几何断言）。它们不改变正常游戏路径。

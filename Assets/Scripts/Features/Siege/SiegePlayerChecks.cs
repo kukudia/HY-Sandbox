@@ -228,8 +228,27 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         Check(
             "Player base repair restores health and quoted debit",
             price > 0 && session.TryRepair(true) && Mathf.Approximately(core.currentDurability, core.maxDurability) && session.Match.Coins == coins - price);
-        // 用户蓝图目录的价格随内容变化：按当前报价挑最便宜的可负担项，不假设固定夹具下标。
-        int[] affordable = Enumerable.Range(0, session.DefenderOptions.Length).OrderBy(index => session.DefenderOptions[index].Price).Take(shipCount).ToArray();
+        // 用户蓝图目录的价格随内容变化：按当前报价挑可负担项，不假设固定夹具下标。
+        // 自然观察窗口改为优先买最贵的可负担舰，让无人驾驶的自动流程也能撑过更多波次；
+        // 冒烟模式保持便宜的确定性选择，便于断言金币。
+        IEnumerable<int> ordered = soak
+            ? Enumerable.Range(0, session.DefenderOptions.Length).OrderByDescending(index => session.DefenderOptions[index].Price)
+            : Enumerable.Range(0, session.DefenderOptions.Length).OrderBy(index => session.DefenderOptions[index].Price);
+        var picked = new List<int>();
+        long budget = session.Match.Coins;
+        foreach (int index in ordered)
+        {
+            int cost = session.DefenderOptions[index].Price;
+            if (picked.Count >= shipCount || cost > budget)
+            {
+                continue;
+            }
+
+            picked.Add(index);
+            budget -= cost;
+        }
+
+        int[] affordable = picked.ToArray();
         Check("player catalog offers deployable ships", affordable.Length == shipCount);
         foreach (int optionIndex in affordable)
         {
