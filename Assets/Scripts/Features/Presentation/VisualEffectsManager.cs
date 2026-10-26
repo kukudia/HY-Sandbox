@@ -2,6 +2,7 @@
 // 入口：EnsureInstance() / GetSharedLineMaterial() / TryPlayBlockPlaced()。
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class VisualEffectsManager : MonoBehaviour
 {
@@ -17,6 +18,17 @@ public class VisualEffectsManager : MonoBehaviour
     public Color selectionColor = new Color(0.38f, 0.95f, 1f, 1f);
     public Color blockedGhostColor = new Color(1f, 0.12f, 0.08f, 1f);
     public Color validGhostColor = new Color(0.24f, 1f, 0.58f, 1f);
+    [Header("Scene Look")]
+    [SerializeField, Tooltip("场景雾色；默认值保持既有Main外观，Siege场景单独覆盖为夜色。")]
+    private Color sceneFogColor = new Color(0.035f, 0.047f, 0.065f, 1f);
+    [SerializeField, Min(0f), Tooltip("场景雾密度的下限，不会把已有更高密度调低。")]
+    private float sceneFogDensity = 0.0045f;
+    [SerializeField, Tooltip("环境光模式；场景已有设置会被这里覆盖。")]
+    private AmbientMode sceneAmbientMode = AmbientMode.Flat;
+    [SerializeField, Tooltip("环境光目标色，按混合比例靠近当前环境光。")]
+    private Color sceneAmbientColor = new Color(0.17f, 0.2f, 0.25f, 1f);
+    [SerializeField, Range(0f, 1f), Tooltip("向环境光目标色混合的比例；0保持场景原值。")]
+    private float sceneAmbientBlend = 0.45f;
     private CameraShake _cameraShake;
     private CameraShake Shake => _cameraShake ?? (_cameraShake = new CameraShake(this));
 
@@ -225,9 +237,10 @@ public class VisualEffectsManager : MonoBehaviour
 
         RenderSettings.fog = true;
         RenderSettings.fogMode = FogMode.ExponentialSquared;
-        RenderSettings.fogColor = new Color(0.035f, 0.047f, 0.065f, 1f);
-        RenderSettings.fogDensity = Mathf.Max(RenderSettings.fogDensity, 0.0045f);
-        RenderSettings.ambientLight = Color.Lerp(RenderSettings.ambientLight, new Color(0.17f, 0.2f, 0.25f), 0.45f);
+        RenderSettings.fogColor = sceneFogColor;
+        RenderSettings.fogDensity = Mathf.Max(RenderSettings.fogDensity, sceneFogDensity);
+        RenderSettings.ambientMode = sceneAmbientMode;
+        RenderSettings.ambientLight = Color.Lerp(RenderSettings.ambientLight, sceneAmbientColor, sceneAmbientBlend);
     }
 
     private void PlayBlockPlaced(Block block)
