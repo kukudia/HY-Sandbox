@@ -100,8 +100,8 @@ public static class SiegeUsabilityChecks
         try
         {
             SiegeHud hud = Object.FindFirstObjectByType<SiegeHud>();
-            Dropdown defender = (Dropdown)typeof(SiegeHud).GetField("defenderBlueprint", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(hud);
-            Dropdown attacker = (Dropdown)typeof(SiegeHud).GetField("attackerBlueprint", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(hud);
+            Dropdown defender = (Dropdown)typeof(SiegeDeploymentView).GetField("defenderBlueprint", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(hud.GetComponent<SiegeDeploymentView>());
+            Dropdown attacker = (Dropdown)typeof(SiegeDeploymentView).GetField("attackerBlueprint", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(hud.GetComponent<SiegeDeploymentView>());
             RefreshHud(hud);
             Check(
                 checks,
@@ -184,8 +184,8 @@ public static class SiegeUsabilityChecks
 
     private static void RefreshHud(SiegeHud hud)
     {
-        typeof(SiegeHud).GetField("nextRefresh", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(hud, 0f);
-        typeof(SiegeHud).GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(hud, null);
+        hud.GetComponent<SiegeDeploymentView>().RefreshOptions();
+        hud.Refresh();
     }
 
     private static void Check(List<string> checks, string label, bool passed)

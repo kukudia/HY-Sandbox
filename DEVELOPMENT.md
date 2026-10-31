@@ -1,5 +1,18 @@
 # HY-Sandbox 开发与审查入口
 
+## 2026-10-31 Siege 场景部署与三轮精简
+
+- 入口：`Assets/Scenes/Siege.unity`；整备点击场景平台或其 + 标记，选择蓝图并预览，确认后才部署并扣费。固定Bays列表已移除；点击友舰打开驾驶/维修卡片，Tab切换存活舰船，战斗中Alt释放指针。
+- `SiegeHud` 负责阶段与顶栏；`SiegeDeploymentView` 负责按需交互，`SiegeBattleFeedback` 负责波次/击毁/受击反馈。攻方选择和目录刷新移入F3调试页；F2显示操作帮助。
+- `SiegeSession.TryDeployAt` 精确验证指定位置，不自动换位；舰船身份仍为独立部署ID，场景位置仅用于部署和修缮回位。`TryDeploy` 自动选空位入口保留给既有压力夹具，委托同一部署实现。
+- 驾驶镜头与物理边界分别在 `SiegeFleetView` / `SiegeFleetPhysics`；修缮由Session统一入口发起，明确 `RefitChanged` 事件刷新报价，不再依赖Status文本。原经济/货物/蓝图身份约束保持。
+- `SiegeWorkshopStage` 将战场暂存于不模拟的LocalPhysicsScene，蓝图在独立预览场景编辑；显式保存/恢复层、镜头掩码、父节点和场景，跨场景迁移不初始化Durability伤势。取消异步加载后再卸载预览场景。
+- 制作入口 `HY-Sandbox/Siege/Apply Scene Deployment Interface` 保存真实UGUI；旧HUD/选择/布局菜单委托同一入口，四个Siege场景同步迁移，保留原GUID和竞技场布置。
+- `SimulationWorkMetrics` 增加Siege阶段切换、友舰物理、波间修缮、工作台计时；Editor采样增加观测区间增量，Player survey同步记录，嵌套阶段不能相加为整帧耗时。
+- Editor功能回归135项通过；独立Windows D3D11 Player在1080p/720p各67项通过（含工坊隔离），显式驾驶输入83项通过，三个压力场景仅验证加载/引用。静态构建0错误/4项既有警告，格式检查通过。90秒Editor自然样本只到首波，不声称FPS改善或后期长帧解决。
+- 验证与已知边界见 [三轮验证记录](Docs/Validation/2026-10-31-siege-streamline.md)。源码函数图由 `Tools/CodeReadability/generate_navigation.py` 维护。
+
+
 ## 2026-10-27 连击上限与难度曲线
 
 - 新增 `comboBonusCap`（默认300，0不限制）给单次连击奖励封顶，避免蜂群后期20连击一次拿1,140金币打穿经济；连击计算抽成纯函数 `SiegeSession.ComboBonusFor`，规则检查可直接覆盖起点与上限。

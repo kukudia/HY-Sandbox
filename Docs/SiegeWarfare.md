@@ -1,6 +1,6 @@
 # 阵地战研究与实现
 
-正常 `Siege` 使用 `Application.persistentDataPath/Saves` 的守方舰船，以及 `EnemyBlueprints` 的攻方舰船。在左侧下拉菜单选择守方后部署；攻方可指定一种舰船或在全部有效Enemy蓝图中随机。整备HUD会显示下一波预计敌舰数量和当前攻方蓝图（`NEXT <数量>x <蓝图>`），帮助玩家在部署/修缮前规划金币；该预览只读，不提前生成敌舰或消耗金币。刷新只在整备时可用，不写入源文件、不自动复制内置示例。用户舰船价格为模块数乘以 `DefaultSiege.asset` 的 `deploymentCoinsPerBlock`；空/坏蓝图被跳过，无攻方蓝图时不能开波。目录约定沿用Main；用户所称Enemy蓝图对应现有持久化目录EnemyBlueprints。
+正常 `Siege` 使用 `Application.persistentDataPath/Saves` 的守方舰船，以及 `EnemyBlueprints` 的攻方舰船。整备时点击战场上的部署平台或 + 标记，选择守方蓝图并查看真实静态模型预览；确认后在该位置部署。攻方默认随机，F3调试页可指定舰型或刷新目录。整备HUD会显示下一波预计敌舰数量和当前攻方蓝图（`NEXT <数量>x <蓝图>`），帮助玩家在部署/修缮前规划金币；该预览只读，不提前生成敌舰或消耗金币。预览不创建战斗组件、不消费金币；确认时重新验证指定位置占用、几何净空和余额，失败不自动换位。刷新只在整备时可用，不写入源文件、不自动复制内置示例。用户舰船价格为模块数乘以 `DefaultSiege.asset` 的 `deploymentCoinsPerBlock`；空/坏蓝图被跳过，无攻方蓝图时不能开波。目录约定沿用Main；用户所称Enemy蓝图对应现有持久化目录EnemyBlueprints。
 
 波次结束后默认自动尝试一次基地建筑修缮，使用当前损伤报价并仅在成功修复后扣款；无损、无钱、阻挡不会触发每帧重试。`autoRepairBase` 可在配置关闭。独立压力配置保留固定舰型和原价；`SiegePlayChecks` 的部署经济断言按当前目录价格动态选择可负担舰艇，正常用户蓝图与固定压力配置都可复用。
 
@@ -34,9 +34,9 @@
 
 ## 当前状态
 
-独立场景已完成首个可玩闭环，性能基线与底层优化仍在进行。最新证据见 [验证记录](Validation/2026-10-23-siege.md)，不能将受控检查视为万块性能验收。
+独立场景已完成首个可玩闭环，性能基线与底层优化仍在进行。本轮界面与工坊证据见 [三轮验证](Validation/2026-10-31-siege-streamline.md)，不能将受控检查视为万块性能验收。
 
-2026-10-26 夜间连续开发把界面、战斗反馈与场景观感推进到可连续游玩的形态，完整记录与缺口见 [夜间交接](SiegeHandoff-2026-10-27.md)：
+以下为改造前的历史状态；当前界面以本文“进入与操作”为准。2026-10-26 夜间连续开发把界面、战斗反馈与场景观感推进到可连续游玩的形态，完整记录与缺口见 [夜间交接](SiegeHandoff-2026-10-27.md)：
 
 - 指挥栏/舰队坞/动作行的阶段化HUD，隐藏Main遗留遮罩；战斗阶段自动收起部署与修缮，显示波次进度与坐舰耐久；`F2` 帮助面板。
 - 每5波精英波次（最重蓝图、双倍奖励）、每3波蜂群波（数量翻倍、生成更密）、连击窗口内按次数加金币、核心未受损按波次奖励；修缮按钮直接显示报价。
@@ -66,55 +66,23 @@
 - 单波收益：击毁120/架（精英240）、清波350（精英700）、核心未受损80×波次；连击在5秒窗口内按击毁数累加，单次上限300金币。这些参数都在 `Assets/Siege/DefaultSiege.asset` 可编辑。
 ## 进入与操作
 
-- `Build Windows Validation Player` 构建独立Siege入口Windows验证包，不改变Main默认启动；显式命令行检查、自然多波与显示边界见 [Player验证](Validation/2026-10-23-siege-player.md)。
-- Editor菜单 `HY-Sandbox/Siege/Open Scene` 打开 `Assets/Scenes/Siege.unity`，进入Play。`Create Editable Scene` 只在不存在时创建，避免覆盖手工调整。
-- 正常场景左侧从 `Saves` 选择购买舰艇、从 `EnemyBlueprints` 选择敌方舰型或随机目录；六个泊位按钮切换驾驶，其余舰艇自主作战。压力场保留固定夹具。沿用 Main 的 WASD/QE/Space 飞行控制；战斗默认鼠标观察，按住 Alt 释放指针，F聚焦、F1推进器面板、F2按键说明。
-- 顶部指挥栏显示阶段、金币、波次、剩余来袭数、下一波预览与基地核心耐久；整备阶段下方是部署与修缮，战斗阶段自动收起部署组并显示波次进度与坐舰耐久。制作入口为 `HY-Sandbox/Siege/Apply Command HUD`，重排后保存为可编辑场景，不覆盖手工调整之外的对象引用。
-- 战斗反馈：每 `eliteEveryNWaves`（默认5）波出现精英波次，使用攻方目录里模块数最多的蓝图并双倍奖励；连击窗口内连续击毁按次数追加金币，HUD显示 `COMBO x n`；核心受击时四边红色告警条短暂增强，低于30%持续脉动，并请求一次镜头抖动。相关参数都在 `DefaultSiege.asset` 可编辑。
-- 整备阶段 B 或 `Build / Blueprints` 打开 Main 的真实蓝图工作台，支持存档列表、方块选取/放置/移动/旋转及撤销重做；工作台中 B仍是Main建造视角切换，P或返回按钮退出。编辑对存档直接保存，仅影响后续购买，不免费改装或修复已部署舰队。工作台中禁止开波、部署和维修，退出保留战场伤势及金币。完整验证范围见 [Main工作台](Validation/2026-10-24-siege-main-workshop.md)。
-- 准备/整备阶段点击开始下一波。击毁敌舰与完成波次获得金币；波次结束先按报价自动修基地，再按驾驶舰优先顺序自动修复所有存活友舰。`DefaultSiege` 的自动修基地/舰队开关可分别关闭；余额不足或泊位被其他对象占用时保留金币并显示失败原因。手动按钮仍可维修基地和当前驾驶舰。
-- 驾驶舱被毁自动接管其余存活舰；全部舰艇损失后观察基地，基地核心被毁后失败。Restart重新载入本场景。
+- Editor菜单 `HY-Sandbox/Siege/Open Scene` 打开 `Assets/Scenes/Siege.unity` 进入Play。创建场景不会覆盖已有文件；界面重建用 `Apply Scene Deployment Interface`，旧HUD、蓝图选择和布局菜单统一委托它。工具只重建自己拥有的Siege HUD，竞技场布局与部署点保留。
+- 整备：点击平台或 + 标记 → 选择蓝图 → 预览 → 确认；ESC或Close取消。灰色确认按钮会说明余额不足或净空受阻。部署位置数量来自场景Transform引用，不显示固定Bays列表。
+- 点击存活友舰打开操作卡片，可接管或在整备时维修该舰。Tab直接切换存活友舰；非驾驶舰执行友方AI。战斗按住Alt释放鼠标后可点击舰船；沿用Main的WASD/QE/Space控制与F聚焦。
+- 底部整备动作只有Blueprints、基地维修和下一波；战斗隐藏空泊位标记与部署/维修入口，只保留核心/驾驶舰状态、来袭数量和短时反馈。失败显示结算与重开。F2打开帮助；F3调试页提供攻方目录选择与刷新，战斗和编辑中不可用。
+- B或Blueprints进入独立蓝图编辑预览，保留Main的选块、放置、移动、旋转、存档列表与撤销重做；P或返回按钮退出。调试叠层从正常编辑页移除。保存继续使用原有蓝图存档规则，编辑只影响后续购买，不免费改装或修复战场舰船。
+- 工作台将战场转移到不模拟的独立PhysicsScene并从相机剔除，蓝图编辑留在独立预览场景；不再循环关闭Renderer/Collider。Durability在明确的跨场景迁移期间保留伤势、碰撞保护和伤害归因。返回恢复原场景、父节点、层与镜头掩码，取消异步加载并清空编辑历史。
+- P或Next Wave手动开始下一波。波次结束按配置自动维修基地和舰队；驾驶舰优先。按钮可维修基地或任意选中的存活友舰；修缮依旧回到部署位置，空间受阻不扣费。只有成功恢复模块后才扣费，补件保持部署ID，不复制货物。
+- 驾驶舰被毁自动接管下一艘存活友舰；全部友舰损失后观察基地，核心被毁才结束整局。默认精英/蜂群、连击奖励、无伤奖励和本地纪录继续保留，HUD不重复堆叠长期提示。
 
-## 可编辑制作与会话边界
+## 当前模块边界
 
-`DefaultSiege.asset` 管理金币、价格、蓝图、波次规模、同时在场上限、生成间隔/半径和种子。默认初始金币3000，首波2架、每波增加1架、单波上限48、同时最多6架；无限波次不代表无限同时在场。
+`SiegeSession` 协调命令与波次；`SiegeMatch` 保持纯规则；`SiegeFleet` 管理部署身份和生命周期；`SiegeFleetView` 绑定镜头；`SiegeFleetPhysics` 处理友舰战斗/停靠。`SiegeRefit` 与 `SiegeBase` 保持各自修缮实现，Session统一发起并发布RefitChanged，UI不通过Status字符串判断报价失效。
 
-基地388模块使用建筑虚拟底座支撑，损毁经BuildingRuntime分裂并服从建筑残骸预算；不会进入舰船驾驶舱重组。核心离开建筑主体或被毁判负。菜单 `Regenerate Default Base Blueprint` 在Temp备份后重建默认蓝图；`Upgrade Base To Building Blueprint` 迁移旧Siege场景的管理器、锚点与核心配置，保留舰船泊位/UI。蓝图GUID保留，不改用户建筑目录；Main仍为构建第一场景。
+当前没有为报价额外引入跨帧缓存：报价按明确操作/选择变化更新，确认修缮时重新计算。制作界面仍用UGUI，无需UI Toolkit迁移。兼容压力夹具的TryDeploy自动选位入口与TryDeployAt指定位置入口共享同一部署实现。
 
-Siege不加载主世界存档，不复制蓝图货物；部署使用新的单位/模块ID。整备期间冻结场景载具，拒绝残余弹丸负向伤害；战斗恢复模拟。场景临时启用后台运行，退出恢复原值。
+## 性能与验证
 
-## 后续验证缺口
+`SimulationWorkMetrics` 默认关闭。打开采样后分别测量SiegeSimulation、SiegeFleetPhysics、SiegeRefit、SiegeWorkshop；Editor观测记录各阶段累计值和区间增量，advancedFrames>1时不能称为单帧耗时。Player survey同步记录差量。嵌套阶段不可相加，脚本计时不代表GPU/PhysX成本。
 
-大型建筑首轮90秒真实战斗已记录，但发现角落炮塔不在中继供电范围；该失败布局保留为独立证据。修正后固定靶4秒/214推进帧四塔均供电并命中216伤害；修正布局90秒自然窗口4467观察，中位19.40/P95 29.18/P99 39.78ms，403190邻接查询；波次变化来源不能全部确认，不作为确定性对照。详见[建筑迁移验证](Validation/2026-10-23-siege-building.md)。已有真实帧、100/256/1024块同步分组采样、主体保留/局部刷新与运行邻接；未引入Jobs/Burst。建筑原位修缮，舰船回泊位恢复；未加入完整存档或战术指令。Editor Play检查不替代正式Player性能。
-
-## 性能复现
-
-显式 `-siege-checks-driving` 与独立报告参数可执行真实Input System键鼠、HUD点击、推力与位移验证；不与soak混用。虚拟设备及后台输入设置在finally恢复。正常两舰87项、大型基地六舰91项结果见 [驾驶输入验证](Validation/2026-10-23-siege-driving.md)，不替代人工操控体验。
-
-短时战斗表现使用 `TransientEffectPool` 复用能量光束和点光源，闲置预算32/16，活动效果不裁剪；淡出和场景卸载负责释放。生命周期检查与大型基地自然回归见 [短时表现复用](Validation/2026-10-23-siege-transient.md)。
-
-建筑虚拟底座接触现在与规范邻接节点共用几何失效生命周期，另验证底座尺寸；复杂连接层级保持实时。`SiegeFoundationCacheChecks.Run()` 在全新Siege部署Play对照实时几何并恢复姿态。2048热底座判定及真实六舰回归边界见 [底座缓存](Validation/2026-10-23-siege-foundation.md)。
-
-逐次毁伤日志使用DestroyManager的 `Debug Destruction` Inspector开关，新建默认关闭。VisualEffectsManager的既有 `Debug Destruction Vfx` 字段保留，但新建默认关闭；Main场景已序列化true保持不变。不开日志仍执行原视觉、销毁与重组链，不全局禁用Unity错误/警告或修改StackTrace设置。`SiegeDestructionLogChecks.Run()` 是部署阶段的隔离ABBA日志对照，临时关闭效果并恢复开关，不作为自然FPS证据。
-
-菜单 `Build Windows 2048-Module Profiling Player` 构建单独Development分析包到 `Builds/SiegeLargeProfiling`。它使用相同可编辑压力场景，不覆盖发布验证目录，不启用Deep Profiling或自动连接。显式profile诊断读取可用的引擎计时与GC计数（跨记录线程的合计），记录类别、单位、有效性、实际样本和缓冲覆盖窗口；读取后清空缓冲，避免把旧GC值重复算作新帧。缺失或没有新样本用-1表示。原生样本有发布延迟，嵌套/重叠阶段不能相加，也不能把worker合计当作主线程墙钟或GPU耗时；Development帧率不能与发布包直接比较。
-
-
-显式自然Player检查现在每秒记录刚体根分类（建筑、有效驾驶舱舰船、无效驾驶舱分量、弹丸、其他）、运动学/睡眠状态、碰撞体数和普查CPU开销。只有额外传入 `-siege-checks-profile` 才在自然观察窗口开启已有嵌套工作计时，结束或销毁时恢复原开关。保留原 `census` 字段，新增 `survey` 汇总和最慢32条超过33.33ms的帧。帧delta是帧起点到起点，前一LateUpdate计时窗口仅近似关联；不能把嵌套阶段相加或据此归因PhysX/GPU。没有组件标记的建筑残骸计入other，闲置池对象排除。`SiegePlayerSurveyChecks.Run()` 要求全新未部署的Siege Play，检查结束会终止该测试会话；慢帧阈值部分用合成delta，不是自然性能证据。
-
-
-明确指派基地目标的敌方增援可从自主索敌半径外接近；普通发现半径、守卫范围和阵营/运行校验保持。大基地六舰可见Player的最新规模及帧时间边界见 [任务目标与可见验证](Validation/2026-10-23-siege-priority.md)。
-
-菜单 `Create Editable 2048-Module Stress Profile` 创建独立 `SiegeLargeStress.unity`、配置与 `BastionBase2048.json`。将原基地237块2m装甲各细分为8块1m装甲，加一块有地板支撑的顶层测试块，达到现有单栋2048上限；保留核心、发电机和炮塔。这是模块/碰撞体压力布局，细分改变独立耐久和损毁分量，不作为等价战斗难度或加速对照。已有压力资产不覆盖，可直接编辑保存。`Build Windows 2048-Module Stress Player` 输出 `Builds/SiegeLargeStress/HY-Sandbox.exe`，支持与六舰包相同的显式检查参数。
-
-`SiegeBuildingBenchmark.Start("label", true)` 测量1024/2048块建筑的冷刷新、热刷新和局部损毁，增加邻接/底座/遍历/残骸分项；当前实际瓶颈及Jobs选择边界见 [2048块基线](Validation/2026-10-23-siege-building-stages.md)。这是同步夹具，不是千块交火FPS。
-
-菜单 `Create Editable Stress Profile` 创建独立 `SiegeStress.unity` 与 `SiegeStress.asset`，保留正常Siege经济和已有压力场景的手工修改。`Build Windows Stress Player` 输出独立压力包，命令行 `-siege-checks-ships 6` 可验证实际六舰部署。首个六舰自然交火窗口与准确规模边界见 [压力验证](Validation/2026-10-23-siege-six.md)。
-
-Siege Play部署两舰后调用 `SiegePerformanceCapture.StartCapture("label", 90f)`，再开始波次。到时、失败、停止Play或脚本重载时保存已有样本到 `Temp/Siege/Performance`；`Status` 可读状态，`Finish()` 可提前保存。CPU计时默认关闭，仅采样期间开启。各阶段嵌套，完整刷新计时从输入块枚举后开始。
-
-`SiegeTopologyBaseline.Run()` 在远离战场的临时真实方块链上测量同步分组，并记录断链正序/倒序归属；不用物理步，不等于千块战斗性能。原始JSON可用 `Tools/Validation/summarize_siege_capture.py` 无损压缩并生成摘要。证据与限制见 [性能基线](Validation/2026-10-23-siege-performance.md)。
-
-`SiegeRegroupChecks.Run()` 要求全新Siege Play且未部署舰艇，验证保留主体、运动/姿态、归属、局部刷新和维修。`SiegeRegroupBenchmark.Start()` 在部署状态延后运行同步ABBA对照，`Status` 返回完成报告路径；避免直接Run触发CLI独立5秒主线程请求超时。冻结旧迁移实现只保留在Editor基准工具中，生产运行时只有主体保留实现。
-
-`SiegeRuntimeConnectionChecks.Run()` 验证无视觉双侧连接、刚体整体运动、显式断链零物理查询与零全场扫描、局部修改失效，以及不同单位接触不会自动焊接。战斗重组使用内部 `GroupRuntimeBlocks`，公开 `GroupBlocks` 保留实时几何探测契约。缓存只适用于直接挂在ControlUnit根下且规范碰撞体在模块根上的常规结构，复杂层级回退物理重建；制作/维修改变几何后须重建，不以视觉对象存在与否决定拓扑。
+本轮实际结果与限制见 [2026-10-31三轮验证](Validation/2026-10-31-siege-streamline.md)。此前夜间数据保留为历史，不与本次不同配置的Editor样本直接比较。

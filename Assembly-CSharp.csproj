@@ -101,6 +101,7 @@
     <Compile Include="Assets\Scripts\Features\Building\BlockData.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\CargoVisual.cs" />
     <Compile Include="Assets\Scripts\Features\Salvage\CargoPersistence.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\SiegeProgress.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\BlockConnectionSnapshot.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\CameraFraming.cs" />
     <Compile Include="Assets\Scripts\Features\Building\IBlockAction.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="Assets\Scripts\Features\Building\BlockDataTables\BlockDataTableSchema.cs" />
     <Compile Include="Assets\Scripts\Features\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Features\World\WorldBuildingPlacement.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\SiegeThreatMarkers.cs" />
     <Compile Include="Assets\Scripts\Features\World\WorldReturnPlayerChecks.cs" />
     <Compile Include="Assets\Scripts\Features\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\BotObstacleAvoidance.cs" />
@@ -144,12 +146,15 @@
     <Compile Include="Assets\Scripts\Features\World\WorldDistanceView.cs" />
     <Compile Include="Assets\Scripts\Features\Bootstrap\GameManager.cs" />
     <Compile Include="Assets\Scripts\Features\Building\ActionManager.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\SiegeFleetView.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\SiegeWorkshop.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\RepairBot.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\SiegeDeploymentPad.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\IndustrialPartMotion.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\DestroyManager.cs" />
     <Compile Include="Assets\Scripts\Features\World\VoxelWorldData.cs" />
     <Compile Include="Assets\Scripts\Features\Salvage\SalvageSettings.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\SiegeFleetPhysics.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\ProjectileTurret.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\EnemyController.cs" />
     <Compile Include="Assets\Scripts\Features\Salvage\CargoItem.cs" />
@@ -209,6 +214,7 @@
     <Compile Include="Assets\Scripts\Features\Bots\BotNavigationGizmos.cs" />
     <Compile Include="Assets\Scripts\Features\World\VoxelStructureSupport.cs" />
     <Compile Include="Assets\Scripts\Features\World\VoxelSurfaceMesher.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\SiegeWorkshopStage.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\GlobalTextStyler.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\SiegeEngineCounters.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BuildPalette.cs" />
@@ -239,6 +245,7 @@
     <Compile Include="Assets\Scripts\Features\Combat\TurretHitscan.cs" />
     <Compile Include="Assets\Scripts\Features\Flight\MainThruster.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\MeteorTrailFollower.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\SiegeBattleFeedback.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\RuntimeGroupBuilder.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\PlayBlockSelection.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\SiegeSettings.cs" />
@@ -258,6 +265,7 @@
     <Compile Include="Assets\Scripts\Features\Presentation\CargoHoldView.cs" />
     <Compile Include="Assets\Scripts\Features\World\EnemyFlightPlayerChecks.cs" />
     <Compile Include="Assets\Scripts\Features\Flight\HoverControlSolver.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\SiegeDeploymentView.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\ImpactPhysics.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\TurretProjectile.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\SiegeFleetEntry.cs" />

@@ -240,24 +240,68 @@ public sealed class SiegeSession : MonoBehaviour
         return true;
     }
 
+    public event Action RefitChanged;
+    public void NotifyRefitChanged()
+    {
+        RefitChanged?.Invoke();
+    }
+
+    public bool TryDeployAt(int optionIndex, int dock, out string reason)
+    {
+        reason = "The siege is not ready.";
+        bool deployed = !IsEditingBlueprint && Fleet != null && Fleet.DeployAt(optionIndex, dock, out reason);
+        Status = reason;
+        NotifyRefitChanged();
+        return deployed;
+    }
+
     public bool TryDeploy(int optionIndex, out string reason)
     {
         reason = "The siege is not ready.";
         bool deployed = !IsEditingBlueprint && Fleet != null && Fleet.Deploy(optionIndex, out reason);
         Status = reason;
+        NotifyRefitChanged();
         return deployed;
     }
 
     public bool TryTakeControl(int slot)
     {
-        return !IsEditingBlueprint && Fleet != null && Fleet.TakeControl(slot);
+        bool changed = !IsEditingBlueprint && Fleet != null && Fleet.TakeControl(slot);
+        if (changed)
+        {
+            NotifyRefitChanged();
+        }
+
+        return changed;
+    }
+
+    public bool TryTakeControl(string id)
+    {
+        SiegeFleetEntry entry = Fleet?.Find(id);
+        return entry != null && TryTakeControl(Array.IndexOf(Fleet.Ships, entry));
     }
 
     public bool TryRepair(bool repairBase)
     {
-        string reason = "The siege is not ready.";
-        bool repaired = !IsEditingBlueprint && Fleet != null && (repairBase ? Fleet.Base.Repair(out reason) : SiegeRefit.Repair(Fleet.Driven, this, out reason));
+        return TryRepairShip(repairBase ? null : Fleet?.Driven?.Id, repairBase);
+    }
+
+    public bool TryRepairShip(string id, bool repairBase = false)
+    {
+        string reason = "Repairs require an intermission outside the workshop.";
+        bool repaired = false;
+        if (!IsEditingBlueprint && Fleet != null && Match.CanRefit)
+        {
+            repaired = repairBase ? Fleet.Base.Repair(out reason) : SiegeRefit.Repair(Fleet.Find(id), this, out reason);
+        }
+
         Status = reason;
+        NotifyRefitChanged();
+        if (repaired)
+        {
+            Fleet.RestoreView();
+        }
+
         return repaired;
     }
 
@@ -294,6 +338,7 @@ public sealed class SiegeSession : MonoBehaviour
     public void NotifyCockpitDestroyed(Cockpit cockpit)
     {
         Fleet?.NotifyLost(cockpit);
+        NotifyRefitChanged();
     }
 
     private void Update()
@@ -326,6 +371,7 @@ public sealed class SiegeSession : MonoBehaviour
             Fleet.SetCombatActive(false);
             Status = "Wave cleared. Repair and reinforce before the next attack.";
             RepairBaseBetweenWaves();
+            NotifyRefitChanged();
         }
 
         previousPhase = Match.Phase;
@@ -371,6 +417,7 @@ public sealed class SiegeSession : MonoBehaviour
     /// <summary>波次边界调用一次，避免每帧重复报价、净空查询或失败重试。</summary>
     private void RepairBaseBetweenWaves()
     {
+        using var measurement = SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.SiegeRefit);
         var results = new System.Collections.Generic.List<string>();
         // 无伤奖励必须在自动修缮之前判定，否则“全额修好”会伪装成无伤。
         Durability core = Fleet.Base.Core != null ? Fleet.Base.Core.GetComponent<Durability>() : null;
@@ -412,6 +459,7 @@ public sealed class SiegeSession : MonoBehaviour
 
     private void SetSimulationActive(bool active)
     {
+        using var measurement = SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.SiegeSimulation);
         PlayManager.instance.playMode = active;
         buildings.SimulationEnabled = active;
         foreach (ControlUnit unit in ControlUnit.RuntimeUnits)
@@ -428,7 +476,11 @@ public sealed class SiegeSession : MonoBehaviour
                 body.angularVelocity = Vector3.zero;
             }
 
-            body.isKinematic = !active || (unit.Building != null && unit.Building.Anchored) || (unit.cockpit != null && unit.cockpit.Anchored);
+            bool parked = !active || (unit.Building != null && unit.Building.Anchored) || (unit.cockpit != null && unit.cockpit.Anchored);
+            if (body.isKinematic != parked)
+            {
+                body.isKinematic = parked;
+            }
         }
     }
 }

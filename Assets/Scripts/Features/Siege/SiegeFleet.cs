@@ -27,6 +27,18 @@ public sealed class SiegeFleet
         Ships = new SiegeFleetEntry[docks.Length];
     }
 
+    public int DeploymentCount => docks.Length;
+
+    public Transform GetDeploymentPoint(int index)
+    {
+        return index >= 0 && index < docks.Length ? docks[index] : null;
+    }
+
+    public SiegeFleetEntry Find(string id)
+    {
+        return Array.Find(Ships, ship => ship != null && ship.Id == id && ship.IsAlive);
+    }
+
     public bool CreateBase(Transform anchor)
     {
         Base = SiegeBase.Create(session, session.Buildings, anchor);
@@ -35,6 +47,11 @@ public sealed class SiegeFleet
     }
 
     public bool Deploy(int optionIndex, out string reason)
+    {
+        return DeployAt(optionIndex, -1, out reason);
+    }
+
+    public bool DeployAt(int optionIndex, int requestedDock, out string reason)
     {
         reason = "Deployment is only available between waves.";
         if (!session.Match.CanRefit || optionIndex < 0 || optionIndex >= session.DefenderOptions.Length)
@@ -52,9 +69,20 @@ public sealed class SiegeFleet
         BlockDataList blueprint = PrepareBlueprint(option.BlueprintJson, out string id);
         int slot = -1;
         bool foundFreeBay = false;
+        if (requestedDock < -1 || requestedDock >= docks.Length)
+        {
+            reason = "Unknown deployment position.";
+            return false;
+        }
+
         string firstObstruction = null;
         for (int candidate = 0; candidate < Ships.Length; candidate++)
         {
+            if (requestedDock >= 0 && requestedDock != candidate)
+            {
+                continue;
+            }
+
             if (Ships[candidate] != null && Ships[candidate].IsAlive)
             {
                 continue;
@@ -72,7 +100,7 @@ public sealed class SiegeFleet
 
         if (slot < 0)
         {
-            reason = foundFreeBay ? firstObstruction ?? "All free deployment bays are blocked." : "All deployment bays are occupied.";
+            reason = foundFreeBay ? firstObstruction ?? "The selected deployment area is blocked." : "The deployment position is occupied.";
             return false;
         }
 
@@ -98,7 +126,7 @@ public sealed class SiegeFleet
             Debug.LogWarning("Siege blueprint '" + option.DisplayName + "' deploys as " + parts + " disconnected hull parts; blocks are not connector-aligned.");
         }
 
-        Park(entry.Unit);
+        SiegeFleetPhysics.Park(entry.Unit);
         if (Driven == null || !Driven.IsAlive)
         {
             TakeControl(slot);
@@ -133,7 +161,7 @@ public sealed class SiegeFleet
             if (ai != null)
             {
                 ai.SetGuardAnchor(Base.Core.transform, session.Settings.GuardRadius);
-                ai.enabled = !manual;
+                ai.enabled = session.Match.Phase == SiegePhase.Battle && !manual;
             }
         }
 
@@ -143,6 +171,7 @@ public sealed class SiegeFleet
 
     public void SetCombatActive(bool active)
     {
+        using var measurement = SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.SiegeFleetPhysics);
         foreach (SiegeFleetEntry entry in Ships)
         {
             ControlUnit unit = entry?.Unit;
@@ -151,28 +180,13 @@ public sealed class SiegeFleet
                 continue;
             }
 
-            if (!active)
+            if (active)
             {
-                Park(unit);
-                continue;
+                SiegeFleetPhysics.Activate(unit);
             }
-
-            unit.GetComponent<Rigidbody>().isKinematic = false;
-            foreach (HoverThruster thruster in unit.hoverThrusters)
+            else
             {
-                thruster.isHovered = true;
-            }
-
-            if (unit.hoverFlightController != null)
-            {
-                unit.hoverFlightController.setHeight = true;
-                unit.hoverFlightController.targetHoverHeight = Mathf.Max(8f, unit.transform.position.y);
-            }
-
-            EnemyController ai = unit.GetComponent<EnemyController>();
-            if (ai != null)
-            {
-                ai.enabled = !unit.AcceptsPlayerInput;
+                SiegeFleetPhysics.Park(unit);
             }
         }
     }
@@ -323,24 +337,6 @@ public sealed class SiegeFleet
         return blueprint;
     }
 
-    private static void Park(ControlUnit unit)
-    {
-        Rigidbody body = unit.GetComponent<Rigidbody>();
-        if (!body.isKinematic)
-        {
-            body.linearVelocity = Vector3.zero;
-            body.angularVelocity = Vector3.zero;
-        }
-
-        body.isKinematic = true;
-        unit.SetMovementInput(Vector3.zero);
-        EnemyController ai = unit.GetComponent<EnemyController>();
-        if (ai != null)
-        {
-            ai.enabled = false;
-        }
-    }
-
     public void RestoreView()
     {
         if (Driven != null && Driven.IsAlive)
@@ -355,24 +351,11 @@ public sealed class SiegeFleet
 
     private void SetCamera(ControlUnit unit)
     {
-        PlayManager.instance.blocksParent = unit.transform;
-        GameManager.instance.blocksParent = unit.transform;
-        unit.TryGetTotalDurability(out _, out float maximum);
-        PlayManager.instance.maxHealth = Driven != null && Driven.Unit == unit ? Driven.MaximumDurability : maximum;
-        PlayManager.instance.lastHeight = unit.transform.position.y;
-        if (CameraController.instance != null)
-        {
-            CameraController.instance.playerBody = unit.transform;
-            CameraController.instance.currentMode = CameraMode.ThirdPersonLock;
-        }
+        SiegeFleetView.Focus(unit, Driven != null && Driven.Unit == unit ? Driven.MaximumDurability : 0f);
     }
 
     private void SetBaseCamera()
     {
-        SetCamera(Base.Unit);
-        if (CameraController.instance != null)
-        {
-            CameraController.instance.playerBody = Base.Core.transform;
-        }
+        SiegeFleetView.FocusBase(Base);
     }
 }

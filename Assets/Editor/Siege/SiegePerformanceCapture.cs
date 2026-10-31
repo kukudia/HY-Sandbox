@@ -21,6 +21,10 @@ public static class SiegePerformanceCapture
     private static int previousFrame;
     private static bool previousMetrics;
     private static string outputPath;
+    private static double previousSimulation;
+    private static double previousFleet;
+    private static double previousRefit;
+    private static double previousWorkshop;
     public static string Status => report == null ? "Idle" : $"Capturing {report.samples.Count} observations / {EditorApplication.timeSinceStartup - started:F1}s";
 
     static SiegePerformanceCapture()
@@ -58,6 +62,7 @@ public static class SiegePerformanceCapture
         };
         previousMetrics = SimulationWorkMetrics.Enabled;
         SimulationWorkMetrics.Reset();
+        previousSimulation = previousFleet = previousRefit = previousWorkshop = 0;
         SimulationWorkMetrics.Enabled = true;
         gcRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Memory, "GC Allocated In Frame", 1);
         report.gcCounterAvailable = gcRecorder.Valid;
@@ -83,7 +88,15 @@ public static class SiegePerformanceCapture
         }
 
         double now = EditorApplication.timeSinceStartup;
-        report.samples.Add(new FrameSample { seconds = now - started, frame = Time.frameCount, advancedFrames = Time.frameCount - previousFrame, editorObservationMs = (now - previous) * 1000.0, gameDeltaMs = Time.unscaledDeltaTime * 1000.0, gcBytes = gcRecorder.Valid ? gcRecorder.LastValue : -1, connectivity = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.Connectivity), rebuild = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BodyRebuild), refresh = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.Refresh), buildingSupport = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingSupport), buildingDamage = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingDamage), buildingGraph = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingGraph), buildingGround = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingGround), buildingTraversal = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingTraversal), buildingDebris = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingDebris) });
+        var simulation = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.SiegeSimulation);
+        var fleet = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.SiegeFleetPhysics);
+        var refit = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.SiegeRefit);
+        var workshop = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.SiegeWorkshop);
+        report.samples.Add(new FrameSample { simulationDeltaMs = simulation.milliseconds - previousSimulation, fleetDeltaMs = fleet.milliseconds - previousFleet, refitDeltaMs = refit.milliseconds - previousRefit, workshopDeltaMs = workshop.milliseconds - previousWorkshop, siegeSimulation = simulation, siegeFleet = fleet, siegeRefit = refit, siegeWorkshop = workshop, seconds = now - started, frame = Time.frameCount, advancedFrames = Time.frameCount - previousFrame, editorObservationMs = (now - previous) * 1000.0, gameDeltaMs = Time.unscaledDeltaTime * 1000.0, gcBytes = gcRecorder.Valid ? gcRecorder.LastValue : -1, connectivity = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.Connectivity), rebuild = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BodyRebuild), refresh = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.Refresh), buildingSupport = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingSupport), buildingDamage = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingDamage), buildingGraph = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingGraph), buildingGround = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingGround), buildingTraversal = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingTraversal), buildingDebris = SimulationWorkMetrics.Read(SimulationWorkMetrics.Stage.BuildingDebris) });
+        previousSimulation = simulation.milliseconds;
+        previousFleet = fleet.milliseconds;
+        previousRefit = refit.milliseconds;
+        previousWorkshop = workshop.milliseconds;
         previousFrame = Time.frameCount;
         previous = now;
         if (now >= nextCensus)
@@ -221,6 +234,15 @@ public static class SiegePerformanceCapture
         public double editorObservationMs;
         public double gameDeltaMs;
         public long gcBytes;
+        // advancedFrames>1 时增量覆盖多帧，不伪装成单帧归因；嵌套阶段不能相加。
+        public double simulationDeltaMs;
+        public double fleetDeltaMs;
+        public double refitDeltaMs;
+        public double workshopDeltaMs;
+        public SimulationWorkMetrics.Counters siegeSimulation;
+        public SimulationWorkMetrics.Counters siegeFleet;
+        public SimulationWorkMetrics.Counters siegeRefit;
+        public SimulationWorkMetrics.Counters siegeWorkshop;
         public SimulationWorkMetrics.Counters connectivity;
         public SimulationWorkMetrics.Counters rebuild;
         public SimulationWorkMetrics.Counters refresh;

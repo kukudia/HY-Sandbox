@@ -50,9 +50,20 @@ public class Durability : MonoBehaviour
         }
     }
 
+    // 跨PhysicsScene迁移会重新启用组件，但这不是对象池复用，不应重置伤势或归因。
+    internal bool PreserveStateForSceneTransfer
+    {
+        get; set;
+    }
+
     private void OnEnable()
     {
         active.Add(this);
+        if (PreserveStateForSceneTransfer)
+        {
+            return;
+        }
+
         LastAttacker = null;
         DestroyedByCollision = false;
         _nextCollisionDamage = _explosionProtectionUntil = 0f;

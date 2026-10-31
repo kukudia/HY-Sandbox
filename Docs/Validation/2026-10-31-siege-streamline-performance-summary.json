@@ -1,0 +1,361 @@
+[
+  {
+    "rawLocalPath": "Temp\\Siege\\Performance\\20261031-115611-986-streamline-natural-six-cheapest.json",
+    "sha256": "5d33cbf600ec0bf3c1d0318ef9ea8b32196de10ad327ccfb292d3510b2aca051",
+    "summary": {
+      "methodology": "Unity Editor Siege Play. Editor update observes advancing game frames; single-frame observation intervals are summarized, gaps retained and counted. Game delta is also retained. CPU counters are cumulative and nested: refresh includes rebuild, rebuild includes connectivity; never sum them. Full refresh timing begins after input block enumeration. GC counter is observed last profiler value, not a complete allocation trace. Once-per-second scene census allocates and perturbs measurements. Includes editor, render and scheduling effects; not Player FPS, GPU time, deterministic combat or an isolated subsystem benchmark.",
+      "label": "streamline-natural-six-cheapest",
+      "utc": "2026-10-31T11:56:11.9896013Z",
+      "unityVersion": "6000.3.11f1",
+      "processor": "Intel(R) Core(TM) Ultra 5 225H",
+      "processorCount": 14,
+      "seed": 14741,
+      "maxActiveAttackers": 6,
+      "initialWave": 0,
+      "initialCoins": 3000,
+      "gcCounterAvailable": true,
+      "physicsNeighborQueries": 27981,
+      "legacyReferenceScans": 0,
+      "reason": "Duration reached",
+      "elapsedSeconds": 90.00806780000039,
+      "skippedObservations": 0,
+      "observationMedianMs": 10.11659999994663,
+      "observationP95Ms": 20.03310000009151,
+      "observationP99Ms": 20.387799999753042
+    },
+    "observations": 7805,
+    "censusWaves": [
+      0,
+      1
+    ],
+    "lastSample": {
+      "seconds": 90.00750890000018,
+      "frame": 10538,
+      "advancedFrames": 1,
+      "editorObservationMs": 9.840799999892624,
+      "gameDeltaMs": 9.876701049506664,
+      "gcBytes": 22349,
+      "simulationDeltaMs": 0.0,
+      "fleetDeltaMs": 0.0,
+      "refitDeltaMs": 0.0,
+      "workshopDeltaMs": 0.0,
+      "siegeSimulation": {
+        "calls": 1,
+        "inputBlocks": 0,
+        "milliseconds": 0.0469,
+        "maximumMilliseconds": 0.0469
+      },
+      "siegeFleet": {
+        "calls": 1,
+        "inputBlocks": 0,
+        "milliseconds": 0.1934,
+        "maximumMilliseconds": 0.1934
+      },
+      "siegeRefit": {
+        "calls": 0,
+        "inputBlocks": 0,
+        "milliseconds": 0.0,
+        "maximumMilliseconds": 0.0
+      },
+      "siegeWorkshop": {
+        "calls": 0,
+        "inputBlocks": 0,
+        "milliseconds": 0.0,
+        "maximumMilliseconds": 0.0
+      },
+      "connectivity": {
+        "calls": 8,
+        "inputBlocks": 161,
+        "milliseconds": 1.7628000000000001,
+        "maximumMilliseconds": 0.8406
+      },
+      "rebuild": {
+        "calls": 2,
+        "inputBlocks": 155,
+        "milliseconds": 6.0196000000000005,
+        "maximumMilliseconds": 4.7461
+      },
+      "refresh": {
+        "calls": 4,
+        "inputBlocks": 155,
+        "milliseconds": 7.099400000000001,
+        "maximumMilliseconds": 5.7441
+      },
+      "buildingSupport": {
+        "calls": 148,
+        "inputBlocks": 45333,
+        "milliseconds": 301.2334999999999,
+        "maximumMilliseconds": 23.0064
+      },
+      "buildingDamage": {
+        "calls": 1,
+        "inputBlocks": 0,
+        "milliseconds": 8.8976,
+        "maximumMilliseconds": 8.8976
+      },
+      "buildingGraph": {
+        "calls": 148,
+        "inputBlocks": 45333,
+        "milliseconds": 259.5516000000001,
+        "maximumMilliseconds": 19.5713
+      },
+      "buildingGround": {
+        "calls": 148,
+        "inputBlocks": 45333,
+        "milliseconds": 6.712100000000004,
+        "maximumMilliseconds": 2.0327
+      },
+      "buildingTraversal": {
+        "calls": 154,
+        "inputBlocks": 45339,
+        "milliseconds": 27.783600000000007,
+        "maximumMilliseconds": 0.4757
+      },
+      "buildingDebris": {
+        "calls": 6,
+        "inputBlocks": 6,
+        "milliseconds": 3.9069,
+        "maximumMilliseconds": 1.7849
+      }
+    }
+  },
+  {
+    "rawLocalPath": "Temp\\Siege\\Performance\\20261031-120720-981-scripted-boundaries-and-workshop.json",
+    "sha256": "7d9aaf6f30ee91f5e11f6e54cd945808b2199dd28ce16834ced442d0289e1ebb",
+    "summary": {
+      "methodology": "Unity Editor Siege Play. Editor update observes advancing game frames; single-frame observation intervals are summarized, gaps retained and counted. Game delta is also retained. CPU counters are cumulative and nested: refresh includes rebuild, rebuild includes connectivity; never sum them. Full refresh timing begins after input block enumeration. GC counter is observed last profiler value, not a complete allocation trace. Once-per-second scene census allocates and perturbs measurements. Includes editor, render and scheduling effects; not Player FPS, GPU time, deterministic combat or an isolated subsystem benchmark.",
+      "label": "scripted-boundaries-and-workshop",
+      "utc": "2026-10-31T12:07:20.9838389Z",
+      "unityVersion": "6000.3.11f1",
+      "processor": "Intel(R) Core(TM) Ultra 5 225H",
+      "processorCount": 14,
+      "seed": 14741,
+      "maxActiveAttackers": 6,
+      "initialWave": 0,
+      "initialCoins": 3000,
+      "gcCounterAvailable": true,
+      "physicsNeighborQueries": 11892,
+      "legacyReferenceScans": 0,
+      "reason": "Duration reached",
+      "elapsedSeconds": 20.004495000000134,
+      "skippedObservations": 0,
+      "observationMedianMs": 10.097399999722256,
+      "observationP95Ms": 19.963199999892822,
+      "observationP99Ms": 31.281899999612506
+    },
+    "observations": 1682,
+    "censusWaves": [
+      0,
+      1
+    ],
+    "lastSample": {
+      "seconds": 20.003659099999823,
+      "frame": 1683,
+      "advancedFrames": 1,
+      "editorObservationMs": 10.558299999956944,
+      "gameDeltaMs": 9.428996592760086,
+      "gcBytes": 22477,
+      "simulationDeltaMs": 0.0,
+      "fleetDeltaMs": 0.0,
+      "refitDeltaMs": 0.0,
+      "workshopDeltaMs": 0.0,
+      "siegeSimulation": {
+        "calls": 1,
+        "inputBlocks": 0,
+        "milliseconds": 0.0537,
+        "maximumMilliseconds": 0.0537
+      },
+      "siegeFleet": {
+        "calls": 1,
+        "inputBlocks": 0,
+        "milliseconds": 0.1946,
+        "maximumMilliseconds": 0.1946
+      },
+      "siegeRefit": {
+        "calls": 0,
+        "inputBlocks": 0,
+        "milliseconds": 0.0,
+        "maximumMilliseconds": 0.0
+      },
+      "siegeWorkshop": {
+        "calls": 6,
+        "inputBlocks": 0,
+        "milliseconds": 94.68560000000001,
+        "maximumMilliseconds": 30.9892
+      },
+      "connectivity": {
+        "calls": 1,
+        "inputBlocks": 1,
+        "milliseconds": 1.2483,
+        "maximumMilliseconds": 1.2483
+      },
+      "rebuild": {
+        "calls": 0,
+        "inputBlocks": 0,
+        "milliseconds": 0.0,
+        "maximumMilliseconds": 0.0
+      },
+      "refresh": {
+        "calls": 0,
+        "inputBlocks": 0,
+        "milliseconds": 0.0,
+        "maximumMilliseconds": 0.0
+      },
+      "buildingSupport": {
+        "calls": 10,
+        "inputBlocks": 3813,
+        "milliseconds": 50.04550000000001,
+        "maximumMilliseconds": 25.2979
+      },
+      "buildingDamage": {
+        "calls": 0,
+        "inputBlocks": 0,
+        "milliseconds": 0.0,
+        "maximumMilliseconds": 0.0
+      },
+      "buildingGraph": {
+        "calls": 10,
+        "inputBlocks": 3813,
+        "milliseconds": 40.4443,
+        "maximumMilliseconds": 20.8078
+      },
+      "buildingGround": {
+        "calls": 10,
+        "inputBlocks": 3813,
+        "milliseconds": 3.0992000000000006,
+        "maximumMilliseconds": 2.7303
+      },
+      "buildingTraversal": {
+        "calls": 12,
+        "inputBlocks": 3815,
+        "milliseconds": 2.8480999999999996,
+        "maximumMilliseconds": 0.5877
+      },
+      "buildingDebris": {
+        "calls": 2,
+        "inputBlocks": 2,
+        "milliseconds": 2.2294,
+        "maximumMilliseconds": 1.8248
+      }
+    }
+  },
+  {
+    "rawLocalPath": "Temp\\Siege\\Performance\\20261031-120819-819-scripted-wave-boundaries.json",
+    "sha256": "13798d313fabdefc01f1dd6f6f6a52c0ace0f1c7aff2a577d0ba84ccb55ad80e",
+    "summary": {
+      "methodology": "Unity Editor Siege Play. Editor update observes advancing game frames; single-frame observation intervals are summarized, gaps retained and counted. Game delta is also retained. CPU counters are cumulative and nested: refresh includes rebuild, rebuild includes connectivity; never sum them. Full refresh timing begins after input block enumeration. GC counter is observed last profiler value, not a complete allocation trace. Once-per-second scene census allocates and perturbs measurements. Includes editor, render and scheduling effects; not Player FPS, GPU time, deterministic combat or an isolated subsystem benchmark.",
+      "label": "scripted-wave-boundaries",
+      "utc": "2026-10-31T12:08:19.8223753Z",
+      "unityVersion": "6000.3.11f1",
+      "processor": "Intel(R) Core(TM) Ultra 5 225H",
+      "processorCount": 14,
+      "seed": 14741,
+      "maxActiveAttackers": 6,
+      "initialWave": 0,
+      "initialCoins": 3000,
+      "gcCounterAvailable": true,
+      "physicsNeighborQueries": 23221,
+      "legacyReferenceScans": 0,
+      "reason": "Base defeated",
+      "elapsedSeconds": 0.5112503000000288,
+      "skippedObservations": 0,
+      "observationMedianMs": 507.86210000023857,
+      "observationP95Ms": 507.86210000023857,
+      "observationP99Ms": 507.86210000023857
+    },
+    "observations": 1,
+    "censusWaves": [
+      2
+    ],
+    "lastSample": {
+      "seconds": 0.5078621000002386,
+      "frame": 2,
+      "advancedFrames": 1,
+      "editorObservationMs": 507.86210000023857,
+      "gameDeltaMs": 2616.0643100738525,
+      "gcBytes": 10872559,
+      "simulationDeltaMs": 0.1721,
+      "fleetDeltaMs": 0.24480000000000002,
+      "refitDeltaMs": 32.7309,
+      "workshopDeltaMs": 0.0,
+      "siegeSimulation": {
+        "calls": 4,
+        "inputBlocks": 0,
+        "milliseconds": 0.1721,
+        "maximumMilliseconds": 0.1091
+      },
+      "siegeFleet": {
+        "calls": 4,
+        "inputBlocks": 0,
+        "milliseconds": 0.24480000000000002,
+        "maximumMilliseconds": 0.186
+      },
+      "siegeRefit": {
+        "calls": 1,
+        "inputBlocks": 0,
+        "milliseconds": 32.7309,
+        "maximumMilliseconds": 32.7309
+      },
+      "siegeWorkshop": {
+        "calls": 0,
+        "inputBlocks": 0,
+        "milliseconds": 0.0,
+        "maximumMilliseconds": 0.0
+      },
+      "connectivity": {
+        "calls": 7,
+        "inputBlocks": 601,
+        "milliseconds": 21.884999999999998,
+        "maximumMilliseconds": 19.0582
+      },
+      "rebuild": {
+        "calls": 2,
+        "inputBlocks": 53,
+        "milliseconds": 12.202,
+        "maximumMilliseconds": 9.0435
+      },
+      "refresh": {
+        "calls": 3,
+        "inputBlocks": 53,
+        "milliseconds": 16.9228,
+        "maximumMilliseconds": 10.2754
+      },
+      "buildingSupport": {
+        "calls": 2,
+        "inputBlocks": 731,
+        "milliseconds": 26.8574,
+        "maximumMilliseconds": 22.775
+      },
+      "buildingDamage": {
+        "calls": 1,
+        "inputBlocks": 0,
+        "milliseconds": 32.2365,
+        "maximumMilliseconds": 32.2365
+      },
+      "buildingGraph": {
+        "calls": 2,
+        "inputBlocks": 731,
+        "milliseconds": 23.1135,
+        "maximumMilliseconds": 19.3419
+      },
+      "buildingGround": {
+        "calls": 2,
+        "inputBlocks": 731,
+        "milliseconds": 2.0401,
+        "maximumMilliseconds": 2.0101
+      },
+      "buildingTraversal": {
+        "calls": 2,
+        "inputBlocks": 731,
+        "milliseconds": 0.7390000000000001,
+        "maximumMilliseconds": 0.4756
+      },
+      "buildingDebris": {
+        "calls": 0,
+        "inputBlocks": 0,
+        "milliseconds": 0.0,
+        "maximumMilliseconds": 0.0
+      }
+    }
+  }
+]

@@ -1,6 +1,5 @@
 // 职责：在整备阶段复用 Main 蓝图编辑器，隔离已部署舰队与大型建筑，退出后恢复驾驶视图。
 // 入口：Open() / Close()；只编辑存档预览，不免费替换战场机体或恢复耐久。
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,8 +14,7 @@ public sealed class SiegeWorkshop : MonoBehaviour
     private CanvasGroup strategyHud;
     [SerializeField]
     private Button buildButton;
-    private readonly List<Renderer> hiddenRenderers = new List<Renderer>();
-    private readonly List<Collider> hiddenColliders = new List<Collider>();
+    private SiegeWorkshopStage stage;
     public bool IsOpen
     {
         get; private set;
@@ -53,32 +51,19 @@ public sealed class SiegeWorkshop : MonoBehaviour
             return false;
         }
 
+        strategyHud.GetComponent<SiegeDeploymentView>()?.Cancel();
         IsOpen = true;
-        // OnEnable restores durability on existing blocks: keep objects alive and hide only presentation/queries.
-        foreach (ControlUnit unit in ControlUnit.RuntimeUnits)
+        stage = new SiegeWorkshopStage();
+        try
         {
-            if (unit == null || unit.gameObject.scene != gameObject.scene)
-            {
-                continue;
-            }
-
-            foreach (Renderer renderer in unit.GetComponentsInChildren<Renderer>())
-            {
-                if (renderer.enabled)
-                {
-                    hiddenRenderers.Add(renderer);
-                    renderer.enabled = false;
-                }
-            }
-
-            foreach (Collider collider in unit.GetComponentsInChildren<Collider>())
-            {
-                if (collider.enabled)
-                {
-                    hiddenColliders.Add(collider);
-                    collider.enabled = false;
-                }
-            }
+            stage.Open(gameObject.scene);
+        }
+        catch
+        {
+            stage.Dispose();
+            stage = null;
+            IsOpen = false;
+            throw;
         }
 
         GameManager.instance.blocksParent = null;
@@ -123,36 +108,22 @@ public sealed class SiegeWorkshop : MonoBehaviour
         }
 
         SaveManager.instance.blocks.Clear();
-        foreach (Renderer renderer in hiddenRenderers)
-        {
-            if (renderer != null)
-            {
-                renderer.enabled = true;
-            }
-        }
-
-        foreach (Collider collider in hiddenColliders)
-        {
-            if (collider != null)
-            {
-                collider.enabled = true;
-            }
-        }
-
-        hiddenRenderers.Clear();
-        hiddenColliders.Clear();
+        stage?.Dispose();
+        stage = null;
         IsOpen = false;
         InputManager.instance.keyInput = true;
         SetPanels(false);
         session.Fleet.RestoreView();
         session.RefreshBlueprints();
+        session.NotifyRefitChanged();
+        strategyHud.GetComponent<SiegeHud>()?.Refresh();
         return true;
     }
 
     private void SetPanels(bool editing)
     {
         panels.buildPanel.SetActive(editing);
-        panels.playPanel.SetActive(!editing);
+        panels.playPanel.SetActive(false);
         panels.createPanel.SetActive(false);
         panels.deletePanel.SetActive(false);
         panels.deathPanel.SetActive(false);
@@ -182,5 +153,7 @@ public sealed class SiegeWorkshop : MonoBehaviour
     private void OnDestroy()
     {
         buildButton?.onClick.RemoveListener(OpenSelected);
+        stage?.Dispose();
+        stage = null;
     }
 }

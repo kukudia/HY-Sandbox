@@ -134,64 +134,6 @@ public static class SiegeMainInterfaceAuthoring
     [MenuItem("HY-Sandbox/Siege/Fit Main Interface Layout")]
     public static void FitLayout()
     {
-        Scene scene = SceneManager.GetActiveScene();
-        if (EditorApplication.isPlaying || scene.path != SiegeSceneAuthoring.ScenePath || scene.isDirty)
-        {
-            throw new InvalidOperationException("Open the saved Siege scene in Edit Mode.");
-        }
-
-        MainUIPanels panels = Object.FindFirstObjectByType<MainUIPanels>();
-        VisualEffectsManager effects = Object.FindFirstObjectByType<VisualEffectsManager>();
-        var effectData = new SerializedObject(effects);
-        effectData.FindProperty("_debugDestructionVfx").boolValue = false;
-        effectData.ApplyModifiedPropertiesWithoutUndo();
-        RectTransform health = panels.playPanel.transform.Find("HealthBar").GetComponent<RectTransform>();
-        health.anchorMin = health.anchorMax = health.pivot = Vector2.one;
-        health.anchoredPosition = new Vector2(-28f, -280f);
-        panels.playPanel.transform.Find("OutpostStatus").gameObject.SetActive(false);
-        SiegeHud hud = Object.FindFirstObjectByType<SiegeHud>();
-        Place(hud.transform.Find("Begin Wave").GetComponent<RectTransform>(), 600f, 970f, 300f, 54f);
-        Place(hud.transform.Find("Open Blueprint Workshop").GetComponent<RectTransform>(), 930f, 970f, 340f, 54f);
-        Place(hud.transform.Find("Restart").GetComponent<RectTransform>(), 1300f, 970f, 228f, 54f);
-        Button style = Object.FindFirstObjectByType<MainUIButtons>().playButton;
-        foreach (Button button in hud.GetComponentsInChildren<Button>(true))
-        {
-            button.colors = style.colors;
-            button.targetGraphic.color = style.targetGraphic.color;
-            foreach (Text label in button.GetComponentsInChildren<Text>(true))
-            {
-                label.font = style.GetComponentInChildren<Text>().font;
-                label.color = new Color(0.83f, 0.94f, 0.96f);
-                label.alignment = TextAnchor.MiddleCenter;
-                label.resizeTextForBestFit = true;
-                label.resizeTextMinSize = 14;
-                label.resizeTextMaxSize = 20;
-                label.rectTransform.anchorMin = Vector2.zero;
-                label.rectTransform.anchorMax = Vector2.one;
-                label.rectTransform.offsetMin = new Vector2(10f, 4f);
-                label.rectTransform.offsetMax = new Vector2(-10f, -4f);
-            }
-        }
-
-        foreach (Text label in hud.GetComponentsInChildren<Text>(true))
-        {
-            if (label.text.StartsWith("WASD /"))
-            {
-                label.text = "WASD / drive   Q E / altitude   SPACE / hover\nALT / pointer   F / focus   F1 / thrusters   P / next wave\nB / blueprint workshop between waves   Scroll / zoom";
-                label.alignment = TextAnchor.MiddleCenter;
-                Place(label.rectTransform, 600f, 845f, 950f, 100f);
-            }
-        }
-
-        EditorSceneManager.MarkSceneDirty(scene);
-        EditorSceneManager.SaveScene(scene);
-    }
-
-    private static void Place(RectTransform rect, float x, float y, float width, float height)
-    {
-        rect.anchorMin = rect.anchorMax = new Vector2(0f, 1f);
-        rect.pivot = new Vector2(0f, 1f);
-        rect.anchoredPosition = new Vector2(x, -y);
-        rect.sizeDelta = new Vector2(width, height);
+        SiegeInterfaceAuthoring.Apply();
     }
 }

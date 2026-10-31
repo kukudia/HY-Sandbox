@@ -100,7 +100,15 @@ internal static class SiegeDrivingPlayerChecks
 
             InputSystem.QueueStateEvent(keyboard, new KeyboardState());
             check("second space press restores hover", unit.hoverFlightController.setHeight == previousHover);
-            Button switchButton = Object.FindFirstObjectByType<SiegeHud>().GetComponentsInChildren<Button>().Single(button => button.name == "Pilot Bay 1");
+            // 战斗中按Alt释放指针，再走真实操作卡点击。
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.LeftAlt));
+            yield return null;
+            yield return null;
+            SiegeDeploymentView selection = Object.FindFirstObjectByType<SiegeDeploymentView>();
+            selection.SelectShip(session.Fleet.Ships[0].Id);
+            yield return null;
+            Canvas.ForceUpdateCanvases();
+            Button switchButton = selection.GetComponentsInChildren<Button>().Single(button => button.name == "Pilot Ship");
             var corners = new Vector3[4];
             switchButton.GetComponent<RectTransform>().GetWorldCorners(corners);
             Vector2 center = (corners[0] + corners[2]) * 0.5f;
@@ -118,7 +126,7 @@ internal static class SiegeDrivingPlayerChecks
             }
 
             check(
-                "actual HUD pointer click transfers to Bay1",
+                "actual ship-card pointer click transfers to first deployed ship",
                 session.Fleet.Driven == session.Fleet.Ships[0] && session.Fleet.Driven != first);
             unit = session.Fleet.Driven.Unit;
             directional = DirectionalThrusters(unit);

@@ -189,7 +189,11 @@ public sealed class SiegePlayerSurvey : IDisposable
             buildingGraph = ReadStage(SimulationWorkMetrics.Stage.BuildingGraph),
             buildingGround = ReadStage(SimulationWorkMetrics.Stage.BuildingGround),
             buildingTraversal = ReadStage(SimulationWorkMetrics.Stage.BuildingTraversal),
-            buildingDebris = ReadStage(SimulationWorkMetrics.Stage.BuildingDebris)
+            buildingDebris = ReadStage(SimulationWorkMetrics.Stage.BuildingDebris),
+            siegeSimulation = ReadStage(SimulationWorkMetrics.Stage.SiegeSimulation),
+            siegeFleetPhysics = ReadStage(SimulationWorkMetrics.Stage.SiegeFleetPhysics),
+            siegeRefit = ReadStage(SimulationWorkMetrics.Stage.SiegeRefit),
+            siegeWorkshop = ReadStage(SimulationWorkMetrics.Stage.SiegeWorkshop)
         };
         sample.physicsNeighborQueries = SimulationWorkMetrics.PhysicsNeighborQueries;
         sample.legacyReferenceScans = SimulationWorkMetrics.LegacyReferenceScans;
@@ -302,6 +306,10 @@ public sealed class SiegePlayerSurvey : IDisposable
         public StageWork buildingGround;
         public StageWork buildingTraversal;
         public StageWork buildingDebris;
+        public StageWork siegeSimulation;
+        public StageWork siegeFleetPhysics;
+        public StageWork siegeRefit;
+        public StageWork siegeWorkshop;
         public long physicsNeighborQueries;
         public long legacyReferenceScans;
         public static Work Subtract(Work current, Work previous)
@@ -317,6 +325,10 @@ public sealed class SiegePlayerSurvey : IDisposable
                 buildingGround = Difference(current.buildingGround, previous.buildingGround),
                 buildingTraversal = Difference(current.buildingTraversal, previous.buildingTraversal),
                 buildingDebris = Difference(current.buildingDebris, previous.buildingDebris),
+                siegeSimulation = Difference(current.siegeSimulation, previous.siegeSimulation),
+                siegeFleetPhysics = Difference(current.siegeFleetPhysics, previous.siegeFleetPhysics),
+                siegeRefit = Difference(current.siegeRefit, previous.siegeRefit),
+                siegeWorkshop = Difference(current.siegeWorkshop, previous.siegeWorkshop),
                 physicsNeighborQueries = current.physicsNeighborQueries - previous.physicsNeighborQueries,
                 legacyReferenceScans = current.legacyReferenceScans - previous.legacyReferenceScans
             };

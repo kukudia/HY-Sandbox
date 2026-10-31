@@ -1,0 +1,191 @@
+{
+    "additionalBuildings": 0,
+    "additionalBuildingBlocks": 0,
+    "populationLoadSeconds": 0.0,
+    "driving": {
+        "devicesRestored": false,
+        "methodology": "Explicit virtual Input System keyboard/mouse in standalone Player, actual Update/FixedUpdate and HUD pointer routing. Enemy battle continues naturally. Controlled input probe, not human playtesting or performance comparison. Devices and background setting restored in finally.",
+        "samples": []
+    },
+    "methodology": "Explicit opt-in standalone Player. Scripted smoke uses forced real damage; natural soak only automates intermission repair and next-wave buttons. Once-per-second scene census perturbs timing. Frame deltas include rendering/scheduling, not isolated CPU or GPU time. Soak includes intermission and maintenance spikes. No comparison across unlike battles.",
+    "status": "passed",
+    "mode": "scripted-smoke",
+    "profile": "DefaultSiege",
+    "initialCoins": 3000,
+    "requestedShips": 2,
+    "configuredBaseBlocks": 388,
+    "deployedShips": 2,
+    "phase": "restart",
+    "utc": "2026-10-31T12:16:28.3094336Z",
+    "unity": "6000.3.11f1",
+    "graphics": "Direct3D11",
+    "development": false,
+    "profilerEnabledAtStartup": false,
+    "outcome": "scripted-loop-passed",
+    "width": 1920,
+    "height": 1080,
+    "frames": 0,
+    "medianMs": 0.0,
+    "p95Ms": 0.0,
+    "p99Ms": 0.0,
+    "elapsedSeconds": 11.112371444702149,
+    "completedWaves": 0,
+    "finalWave": 0,
+    "finalBaseBlocks": 0,
+    "finalCoins": 0,
+    "retiredEnemyWreckGroups": 0,
+    "pendingEnemyWreckGroups": 0,
+    "pendingEnemyWreckBlocks": 0,
+    "checks": [
+        "Siege scene and session started in Player",
+        "player build keeps elite cadence and doubled rewards",
+        "player build accepts combo bonus and rejects it during defeat",
+        "player build rejects combo bonus after defeat",
+        "large building base has independent core and no cockpit",
+        "HUD bounds: Command Header",
+        "HUD bounds: Heading",
+        "HUD text geometry: Heading",
+        "HUD bounds: Economy",
+        "HUD text geometry: Economy",
+        "HUD bounds: Integrity",
+        "HUD text geometry: Integrity",
+        "HUD bounds: Status",
+        "HUD text geometry: Status",
+        "HUD bounds: Preparation Actions",
+        "HUD bounds: Open Blueprint Workshop",
+        "HUD bounds: Label",
+        "HUD text geometry: Label",
+        "HUD bounds: Repair Base",
+        "HUD bounds: Label",
+        "HUD text geometry: Label",
+        "HUD bounds: Begin Wave",
+        "HUD bounds: Label",
+        "HUD text geometry: Label",
+        "HUD bounds: Controls Hint",
+        "HUD text geometry: Controls Hint",
+        "HUD bounds: Deployment Marker 1",
+        "HUD bounds: Label",
+        "HUD text geometry: Label",
+        "HUD bounds: Deployment Marker 2",
+        "HUD bounds: Label",
+        "HUD text geometry: Label",
+        "HUD bounds: Deployment Marker 3",
+        "HUD bounds: Label",
+        "HUD text geometry: Label",
+        "HUD bounds: Deployment Marker 4",
+        "HUD bounds: Label",
+        "HUD text geometry: Label",
+        "HUD bounds: Deployment Marker 5",
+        "HUD bounds: Label",
+        "HUD text geometry: Label",
+        "HUD bounds: Deployment Marker 6",
+        "HUD bounds: Label",
+        "HUD text geometry: Label",
+        "HUD bounds: Wave Banner",
+        "HUD text geometry: Wave Banner",
+        "HUD bounds: Kill Feed",
+        "HUD bounds: Core Alarm",
+        "Player workshop opens",
+        "Player workshop isolates battlefield physics and rendering without healing",
+        "Player workshop loads editable preview in active preview scene",
+        "Player workshop closes",
+        "Player workshop restores scene camera damage and credits",
+        "Player base repair restores health and quoted debit",
+        "player catalog offers deployable ships",
+        "deploy ship 12",
+        "deploy ship 8",
+        "requested fleet deployed exactly",
+        "switch player to second ship",
+        "one manual driver and remaining ships autonomous",
+        "begin first wave",
+        "combat keeps building anchored and rejects repair/deploy",
+        "real enemy deaths resolve wave and award coins",
+        "second wave starts from intermission",
+        "pilot loss transfers authority without ending match",
+        "real core destruction ends Player match and reinforcements",
+        "scene restart restores pristine building and empty fleet"
+    ],
+    "errors": [],
+    "actions": [],
+    "survey": {
+        "methodology": "Active scene objects only; inactive pooled projectiles excluded. Root component categories are disjoint, unmarked building debris belongs to other. One census/second allocates query arrays; surveyMs measures its CPU cost. Delta is start-to-start; precedingFrameWork is previous LateUpdate-to-LateUpdate cumulative difference, approximate association only. Nested work stages cannot be added. No GPU/PhysX attribution. First observation omitted from slow-frame summary. Engine counters are optional engine published samples across recorded threads; -1 means unavailable or no new sample. Counter units and availability recorded; nested markers cannot be added. Publication lag means engine sample alignment is approximate. Top 32 frames over 33.33ms retained; indices refer to census array, -1 means none.",
+        "workMetricsEnabled": false,
+        "maximumMs": 0.0,
+        "over33Ms": 0,
+        "over50Ms": 0,
+        "over100Ms": 0,
+        "over250Ms": 0,
+        "work": {
+            "connectivity": {
+                "calls": 0,
+                "inputBlocks": 0,
+                "milliseconds": 0.0
+            },
+            "bodyRebuild": {
+                "calls": 0,
+                "inputBlocks": 0,
+                "milliseconds": 0.0
+            },
+            "refresh": {
+                "calls": 0,
+                "inputBlocks": 0,
+                "milliseconds": 0.0
+            },
+            "buildingSupport": {
+                "calls": 0,
+                "inputBlocks": 0,
+                "milliseconds": 0.0
+            },
+            "buildingDamage": {
+                "calls": 0,
+                "inputBlocks": 0,
+                "milliseconds": 0.0
+            },
+            "buildingGraph": {
+                "calls": 0,
+                "inputBlocks": 0,
+                "milliseconds": 0.0
+            },
+            "buildingGround": {
+                "calls": 0,
+                "inputBlocks": 0,
+                "milliseconds": 0.0
+            },
+            "buildingTraversal": {
+                "calls": 0,
+                "inputBlocks": 0,
+                "milliseconds": 0.0
+            },
+            "buildingDebris": {
+                "calls": 0,
+                "inputBlocks": 0,
+                "milliseconds": 0.0
+            },
+            "siegeSimulation": {
+                "calls": 0,
+                "inputBlocks": 0,
+                "milliseconds": 0.0
+            },
+            "siegeFleetPhysics": {
+                "calls": 0,
+                "inputBlocks": 0,
+                "milliseconds": 0.0
+            },
+            "siegeRefit": {
+                "calls": 0,
+                "inputBlocks": 0,
+                "milliseconds": 0.0
+            },
+            "siegeWorkshop": {
+                "calls": 0,
+                "inputBlocks": 0,
+                "milliseconds": 0.0
+            },
+            "physicsNeighborQueries": 0,
+            "legacyReferenceScans": 0
+        },
+        "engineCounters": [],
+        "slowestFrames": []
+    },
+    "census": []
+}

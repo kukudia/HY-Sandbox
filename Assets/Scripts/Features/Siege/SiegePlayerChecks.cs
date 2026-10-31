@@ -216,13 +216,36 @@ public sealed class SiegePlayerChecks : MonoBehaviour
                     corners.All(point => point.x >= -1f && point.x <= Screen.width + 1f && point.y >= -1f && point.y <= Screen.height + 1f));
                 if (graphic is Text label && !string.IsNullOrWhiteSpace(label.text))
                 {
-                    Check("HUD text geometry: " + label.name, label.cachedTextGenerator.vertexCount > 4);
+                    Check("HUD text geometry: " + label.name, label.cachedTextGenerator.vertexCount >= 4);
                 }
             }
         }
 
         Durability core = session.Fleet.Base.Core.GetComponent<Durability>();
         core.currentDurability -= 25f;
+        float damagedHealth = core.currentDurability;
+        long workshopCoins = session.Match.Coins;
+        int cameraMask = Camera.main.cullingMask;
+        Scene battlefield = session.gameObject.scene;
+        Check("Player workshop opens", session.Workshop.Open());
+        Check(
+            "Player workshop isolates battlefield physics and rendering without healing",
+            core.gameObject.scene != battlefield && core.gameObject.scene.GetPhysicsScene() != Physics.defaultPhysicsScene && (Camera.main.cullingMask & (1 << core.gameObject.layer)) == 0 && core.currentDurability == damagedHealth);
+        float workshopDeadline = Time.realtimeSinceStartup + 20f;
+        while (BuildManager.instance.IsLoadingBlocks && Time.realtimeSinceStartup < workshopDeadline)
+        {
+            yield return null;
+        }
+
+        Check(
+            "Player workshop loads editable preview in active preview scene",
+            !BuildManager.instance.IsLoadingBlocks && GameManager.instance.blocksParent != null && GameManager.instance.blocksParent.gameObject.scene == SceneManager.GetActiveScene() && SceneManager.GetActiveScene() != battlefield);
+        Check("Player workshop closes", session.Workshop.Close());
+        yield return null;
+        yield return null;
+        Check(
+            "Player workshop restores scene camera damage and credits",
+            core.gameObject.scene == battlefield && SceneManager.GetActiveScene() == battlefield && Camera.main.cullingMask == cameraMask && core.currentDurability == damagedHealth && session.Match.Coins == workshopCoins);
         long price = session.Fleet.Base.Quote();
         long coins = session.Match.Coins;
         Check(
@@ -244,6 +267,17 @@ public sealed class SiegePlayerChecks : MonoBehaviour
 
             picked.Add(index);
             budget -= cost;
+        }
+
+        if (driving)
+        {
+            // 驾驶夹具要求两艘都带悬浮控制和方向推进器；普通冒烟仍接受任意合法蓝图。
+            int configured = Enumerable.Range(0, session.DefenderOptions.Length).OrderBy(index => session.DefenderOptions[index].Price).Where(index => (long)session.DefenderOptions[index].Price * shipCount <= session.Match.Coins && SupportsDriving(session.DefenderOptions[index])).DefaultIfEmpty(-1).First();
+            picked.Clear();
+            if (configured >= 0)
+            {
+                picked.AddRange(Enumerable.Repeat(configured, shipCount));
+            }
         }
 
         int[] affordable = picked.ToArray();
@@ -419,6 +453,13 @@ public sealed class SiegePlayerChecks : MonoBehaviour
             "scene restart restores pristine building and empty fleet",
             restarted != null && restarted != session && restarted.Match.Phase == SiegePhase.Deployment && restarted.Fleet.Base.Building.Blocks.Count == report.configuredBaseBlocks && restarted.Fleet.Ships.All(ship => ship == null));
         report.outcome = "scripted-loop-passed";
+    }
+
+    private static bool SupportsDriving(SiegeShipOption option)
+    {
+        BlockDataList blueprint = JsonUtility.FromJson<BlockDataList>(option.BlueprintJson);
+        GameObject[] parts = blueprint.blocks.Select(block => Resources.Load<GameObject>(block.resourcePath)).Where(part => part != null).ToArray();
+        return parts.Any(part => part.GetComponentInChildren<HoverFlightController>(true) != null) && parts.Any(part => part.GetComponentInChildren<HoverThruster>(true) != null) && parts.Any(part => part.GetComponentInChildren<Thruster>(true) is Thruster thruster && !(thruster is HoverThruster));
     }
 
     private string ImagePath(string suffix)

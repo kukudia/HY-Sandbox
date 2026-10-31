@@ -15,7 +15,11 @@ public static class SimulationWorkMetrics
         BuildingGraph,
         BuildingGround,
         BuildingTraversal,
-        BuildingDebris
+        BuildingDebris,
+        SiegeSimulation,
+        SiegeFleetPhysics,
+        SiegeRefit,
+        SiegeWorkshop
     }
 
     [Serializable]

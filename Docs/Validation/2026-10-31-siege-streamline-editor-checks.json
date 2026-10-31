@@ -1,0 +1,120 @@
+{
+  "rules.json": {
+    "checks": [
+      "PASS deployment permits affordable refit only",
+      "PASS first wave starts exactly once",
+      "PASS active cap preserves unspawned tickets",
+      "PASS duplicate and invalid spawn ids cannot consume tickets",
+      "PASS one kill rewards once without early wave completion",
+      "PASS failed spawn leaves ticket available for retry",
+      "PASS disappeared unit clears wave without kill reward",
+      "PASS unknown deaths cannot manufacture income",
+      "PASS wave growth and repair gate",
+      "PASS wave2 ticket 0",
+      "PASS wave2 ticket 1",
+      "PASS wave2 ticket 2",
+      "PASS wave2 ticket 3",
+      "PASS completion reward is paid exactly once",
+      "PASS unlimited waves respect size cap",
+      "PASS base loss cancels pending spawns and all purchases",
+      "PASS late deaths cannot change defeated match economy",
+      "PASS large wave size remains positive",
+      "PASS invalid economy configuration is rejected"
+    ]
+  },
+  "play.json": {
+    "checks": [
+      "PASS base is one real connected component",
+      "PASS intermission previews next wave size and selected enemy",
+      "PASS first two ships deploy through production economy",
+      "PASS driving authority can switch to a second ship",
+      "PASS exactly one allied ship reads manual input",
+      "PASS non-driven allied ship has autonomous control",
+      "PASS intermission rejects late projectile damage",
+      "PASS surviving-module repair restores health and exact quoted debit",
+      "PASS missing module is rebuilt for quoted cost",
+      "PASS replacement preserves original blueprint identity without duplicates",
+      "PASS detached live module is recovered as the same object",
+      "PASS repair restores actual detached collider participation and baseline hull connectivity",
+      "PASS occupied repair bay is rejected without spending",
+      "PASS ship repair names the blocking object",
+      "PASS automatic fleet refit preserves damage and coins when its bay is occupied",
+      "PASS automatic fleet refit restores the ally after clearing its bay",
+      "PASS building support refresh keeps anchored building outside ship regroup",
+      "PASS base regroup does not steal player camera ownership",
+      "PASS wave start activates simulation and closes repair",
+      "PASS wave intermission automatically repairs the base and spends its exact quote once",
+      "PASS wave intermission repairs the driven ship from remaining coins",
+      "PASS repeated intermission updates never charge the same base or ship repair twice",
+      "PASS next wave starts after automatic refit",
+      "PASS autonomous ally retains its body and active AI after physical regroup",
+      "PASS pilot destruction transfers control instead of ending match",
+      "PASS no surviving ships falls back to base observation",
+      "PASS real core destruction ends siege and cancels reinforcements",
+      "PASS defeat rejects new waves, deployment and repairs"
+    ],
+    "failures": []
+  },
+  "usability-selection.json": {
+    "status": "passed",
+    "checks": [
+      "test has multiple real player and enemy choices",
+      "explicit refresh preserves selected attacker",
+      "explicit refresh preserves selected defender",
+      "workshop opens through production entry",
+      "workshop closes through production entry",
+      "workshop roundtrip preserves both selected blueprints",
+      "refresh and workshop roundtrip spend no coins",
+      "random enemy choice remains random",
+      "removed choices safely fall back to random and empty defender list",
+      "empty attacker catalog prevents wave start"
+    ],
+    "error": ""
+  },
+  "usability-deployment.json": {
+    "status": "passed",
+    "checks": [
+      "blocked first bay falls through to a clear bay: Deployed Type 04",
+      "clear second bay is used without occupying the blocked first bay",
+      "successful fallback deployment charges exactly once",
+      "all remaining free bays obstructed rejects deployment",
+      "obstruction names a blocking object",
+      "failed deployment preserves balance and existing pilot",
+      "clearing the first bay permits another purchase",
+      "new purchase preserves existing driving authority and exact debit",
+      "invalid option does not debit"
+    ],
+    "error": ""
+  },
+  "combat-feedback-20261031-115046.json": {
+    "checks": [
+      "first wave is not elite",
+      "normal kill and clear rewards stay unchanged",
+      "normal wave clear adds the base reward",
+      "every second wave is elite",
+      "elite wave doubles the displayed kill reward",
+      "elite kill pays the doubled reward once",
+      "elite wave clear pays the doubled reward once",
+      "intermission accepts the wave-final combo bonus",
+      "battle accepts combo bonuses",
+      "zero or negative bonuses are rejected",
+      "deployment phase rejects bonuses",
+      "defeat rejects bonuses",
+      "disabled elite interval keeps every wave normal",
+      "first wave is not a swarm",
+      "swarm wave doubles the incoming count",
+      "elite interval wins over swarm on the same wave",
+      "disabled swarm interval keeps linear counts",
+      "combo bonus starts at the second kill",
+      "combo bonus is capped",
+      "refit preview scales and flags the upcoming swarm",
+      "refit preview flags the upcoming elite without swarm scaling",
+      "record run raises the best wave",
+      "record run accumulates kills and runs",
+      "shorter run keeps the record and still counts kills",
+      "probe restores the original record"
+    ]
+  },
+  "scene-interaction-checks.txt": "PASS 22 checks\nPASS actual pointer click selects a world deployment marker\nPASS preview has no behaviours or colliders\nPASS preview spends no credits and creates no fleet entry\nPASS actual cancel removes preview without spending\nPASS confirmation deploys exactly at the selected point\nPASS confirmation debits exactly once\nPASS occupied point rejects duplicate deployment\nPASS specified obstructed point never falls back or charges\nPASS second support ship deploys\nPASS ship card transfers unique pilot ownership\nPASS Tab action cycles surviving ships\nPASS selected non-pilot repair restores damage and exact debit\nPASS workshop opens from intermission\nPASS battlefield is in a separate unsimulated physics scene\nPASS editing preserves damage and isolates rendering\nPASS editing rejects all spending and wave actions\nPASS workshop closes and cancels active blueprint loading\nPASS return restores scene layers camera and exact match state\nPASS starting wave uses production entry\nPASS combat hides empty pads and deployment preview\nPASS combat rejects deployment and repair without spending\nPASS defeat rejects ship selection",
+  "workshop-checks.txt": "PASS 22 checks\nPASS deploy real defender before editing\nPASS workshop opens during deployment\nPASS live fleet and core survive entry\nPASS battle and spending operations blocked while editing\nPASS Main asynchronous loader restores preview\nPASS Main build writes only test blueprint\nPASS undo persists removal\nPASS redo persists reconstruction\nPASS P returns to siege without starting simulation\nPASS return preserves coins damage and driver\nPASS return restores original runtime objects\nPASS return preserves pre-existing disabled components\nPASS Main integrity uses deployed hull maximum\nPASS B opens Main workshop through real input\nPASS preview load starts for cancellation probe\nPASS closing cancels loader and removes preview\nPASS cancellation never deletes fleet or heals base\nPASS actual pointer click opens blueprint workshop\nPASS P begins wave from strategy mode\nPASS combat locks pointer and denies workshop\nPASS F1 toggles Main thruster panel\nPASS Alt releases pointer during battle"
+}
