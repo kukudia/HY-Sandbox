@@ -1,5 +1,12 @@
 # HY-Sandbox 开发与审查入口
 
+## 2026-11-02 建筑删除与显式新建
+
+建筑编辑不再把打开当作新建，也不自动补回`default_building`。快捷键进入时优先恢复仍存在的上次选择，否则打开按名称排序的第一份建筑；目录为空则保留建筑模式并显示新建界面。只有明确新建才写文件。删除当前项会取消旧恢复、清理操作状态后打开剩余项；删空则清除名称、父对象、底座和缓存。删除其他建筑不切换当前项，建筑删除确认不再统一跳回玩家存档。空目标禁止加载/放置，尺寸与据点面板隐藏，拒绝空名称路径。
+
+使用原建筑隔离Play探针扩展覆盖新建、删除、重新进入与缺失文件打开；验证见 [本轮记录](Docs/Validation/2026-11-02-building-delete.md)。实际用户已有default_building文件保留，未替用户执行删除。
+
+
 ## 2026-11-02 建筑蓝图共用读取入口
 
 World与WorldLab现在像Enemy一样，通过SaveManager的建筑文件仓获取用户蓝图：`GetBuildingBlueprintFiles()`在Main返回现有`BuildingFiles`，独立WorldLab没有管理器时复用同一路径规则创建文件仓。WorldBuildingLibrary统一列表、解析、同名覆盖、4MB限制和坏文件隔离；WorldBuildingPalette不再独立扫描目录和解析JSON。内置模板来源保持各场景原配置，世界资源异步预热与生成平台约束继续归World。

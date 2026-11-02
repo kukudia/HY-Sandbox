@@ -111,11 +111,11 @@ flowchart TD
     C["SaveUIPanel.RefreshList()"]
     click C "../Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs#L17" "打开源码"
     D["SaveManager.LoadSave()"]
-    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L261" "打开源码"
+    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L283" "打开源码"
     E["BuildManager.LoadAllBlocks()"]
-    click E "../Assets/Scripts/Features/Building/BuildManager.cs#L563" "打开源码"
+    click E "../Assets/Scripts/Features/Building/BuildManager.cs#L598" "打开源码"
     F["MainUIPanels.PlayStart()"]
-    click F "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L230" "打开源码"
+    click F "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L233" "打开源码"
     G["PlayManager.CanStartPlay()"]
     click G "../Assets/Scripts/Features/Simulation/PlayManager.cs#L148" "打开源码"
     H["PlayManager.PlayStart()"]
@@ -125,21 +125,21 @@ flowchart TD
     J["OutpostEncounterDirector.Tick()"]
     click J "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L51" "打开源码"
     K["MainUIPanels.PlayEnd()"]
-    click K "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L278" "打开源码"
+    click K "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L281" "打开源码"
     L["CargoPersistence.SaveReturnCargo()"]
     click L "../Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs#L11" "打开源码"
     M["PlayManager.PlayEnd()"]
     click M "../Assets/Scripts/Features/Simulation/PlayManager.cs#L285" "打开源码"
     N["MainUIPanels.PlayerDeath()"]
-    click N "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L304" "打开源码"
+    click N "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L307" "打开源码"
     O["WorldSessionManager.RequestPlay()"]
     click O "../Assets/Scripts/Features/World/WorldSessionManager.cs#L174" "打开源码"
     P["WorldSessionManager.CompletePendingPlay()"]
     click P "../Assets/Scripts/Features/World/WorldSessionManager.cs#L197" "打开源码"
     Q["MainUIPanels.CompletePlayStart()"]
-    click Q "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L258" "打开源码"
+    click Q "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L261" "打开源码"
     R["MainUIPanels.CompletePlayEnd()"]
-    click R "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L294" "打开源码"
+    click R "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L297" "打开源码"
     S["WorldSessionManager.EndSession()"]
     click S "../Assets/Scripts/Features/World/WorldSessionManager.cs#L306" "打开源码"
     A --> B
@@ -169,11 +169,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Bootstrap/GameManager.cs|Init -->
 - [SaveUIPanel.RefreshList](../Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs#L17)
 <!-- source: Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs|RefreshList -->
-- [SaveManager.LoadSave](../Assets/Scripts/Features/Building/SaveManager.cs#L261)
+- [SaveManager.LoadSave](../Assets/Scripts/Features/Building/SaveManager.cs#L283)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|LoadSave -->
-- [BuildManager.LoadAllBlocks](../Assets/Scripts/Features/Building/BuildManager.cs#L563)
+- [BuildManager.LoadAllBlocks](../Assets/Scripts/Features/Building/BuildManager.cs#L598)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|LoadAllBlocks -->
-- [MainUIPanels.PlayStart](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L230)
+- [MainUIPanels.PlayStart](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L233)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayStart -->
 - [PlayManager.CanStartPlay](../Assets/Scripts/Features/Simulation/PlayManager.cs#L148)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|CanStartPlay -->
@@ -183,63 +183,75 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
 - [OutpostEncounterDirector.Tick](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L51)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs|Tick -->
-- [MainUIPanels.PlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L278)
+- [MainUIPanels.PlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L281)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayEnd -->
 - [CargoPersistence.SaveReturnCargo](../Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs#L11)
 <!-- source: Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs|SaveReturnCargo -->
 - [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L285)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
-- [MainUIPanels.PlayerDeath](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L304)
+- [MainUIPanels.PlayerDeath](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L307)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayerDeath -->
 - [WorldSessionManager.RequestPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L174)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|RequestPlay -->
 - [WorldSessionManager.CompletePendingPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L197)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|CompletePendingPlay -->
-- [MainUIPanels.CompletePlayStart](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L258)
+- [MainUIPanels.CompletePlayStart](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L261)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|CompletePlayStart -->
-- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L294)
+- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L297)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|CompletePlayEnd -->
 - [WorldSessionManager.EndSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L306)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EndSession -->
 
 ## 开发者建筑蓝图编辑
 
-源码推导：Ctrl+Alt+F 进入/退出建筑，Ctrl+Alt+E 切换敌人。建筑使用独立目录，加载父对象后由注入回调创建底座；底座不参与方块存档和操作栈。尺寸 UI 先保存元数据，再生成向上连接点并刷新已有连接，块坐标不变。
+源码推导：Ctrl+Alt+F 进入/退出建筑，Ctrl+Alt+E 切换敌人。建筑使用独立目录；进入/打开不创建文件，只由明确新建写入。删除当前项切换剩余建筑，删空后清除目标/父对象并显示新建；不再使用default_building回退。加载父对象后由注入回调创建底座；底座不参与方块存档和操作栈。尺寸 UI 先保存元数据，再生成向上连接点并刷新已有连接，块坐标不变。
 
 ```mermaid
 flowchart TD
     A["InputManager.Update()"]
     click A "../Assets/Scripts/Features/Player/InputManager.cs#L40" "打开源码"
     B["BuildManager.ToggleBuildingBlueprintBuildMode()"]
-    click B "../Assets/Scripts/Features/Building/BuildManager.cs#L247" "打开源码"
+    click B "../Assets/Scripts/Features/Building/BuildManager.cs#L253" "打开源码"
     C["BuildManager.EnterBuildingBlueprintBuildMode()"]
-    click C "../Assets/Scripts/Features/Building/BuildManager.cs#L259" "打开源码"
+    click C "../Assets/Scripts/Features/Building/BuildManager.cs#L268" "打开源码"
     D["SaveManager.CreateNewBuildingBlueprint()"]
-    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L85" "打开源码"
+    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L86" "打开源码"
     E["BuildManager.LoadAllBlocks()"]
-    click E "../Assets/Scripts/Features/Building/BuildManager.cs#L563" "打开源码"
+    click E "../Assets/Scripts/Features/Building/BuildManager.cs#L598" "打开源码"
     F["BlueprintLoader.Load()"]
     click F "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L43" "打开源码"
     G["BuildManager.PrepareBuildingFoundation()"]
-    click G "../Assets/Scripts/Features/Building/BuildManager.cs#L280" "打开源码"
+    click G "../Assets/Scripts/Features/Building/BuildManager.cs#L315" "打开源码"
     H["BuildingFoundation.Configure()"]
     click H "../Assets/Scripts/Features/Building/BuildingEditor/BuildingFoundation.cs#L15" "打开源码"
     I["BuildingEditorPanel.ApplySize()"]
     click I "../Assets/Scripts/Features/Building/BuildingEditor/BuildingEditorPanel.cs#L25" "打开源码"
     J["BuildManager.ResizeBuildingFoundation()"]
-    click J "../Assets/Scripts/Features/Building/BuildManager.cs#L303" "打开源码"
+    click J "../Assets/Scripts/Features/Building/BuildManager.cs#L338" "打开源码"
     K["SaveManager.SaveBuildingFoundation()"]
-    click K "../Assets/Scripts/Features/Building/SaveManager.cs#L127" "打开源码"
+    click K "../Assets/Scripts/Features/Building/SaveManager.cs#L149" "打开源码"
     L["Block.CheckConnection()"]
     click L "../Assets/Scripts/Features/Simulation/Block.cs#L360" "打开源码"
     M["BuildManager.ExitDeveloperBlueprintBuildMode()"]
-    click M "../Assets/Scripts/Features/Building/BuildManager.cs#L228" "打开源码"
+    click M "../Assets/Scripts/Features/Building/BuildManager.cs#L234" "打开源码"
     N["SaveManager.LoadSave()"]
-    click N "../Assets/Scripts/Features/Building/SaveManager.cs#L261" "打开源码"
+    click N "../Assets/Scripts/Features/Building/SaveManager.cs#L283" "打开源码"
+    O["MainUIPanels.OnConfirmCreate()"]
+    click O "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L167" "打开源码"
+    P["MainUIPanels.OnConfirmDelete()"]
+    click P "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L207" "打开源码"
+    Q["SaveManager.DeleteBuildingBlueprint()"]
+    click Q "../Assets/Scripts/Features/Building/SaveManager.cs#L107" "打开源码"
+    R["MainUIPanels.ShowCreatePanel()"]
+    click R "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L90" "打开源码"
     A -->|Ctrl+Alt+F| B
     B -->|进入| C
-    C --> D
-    C --> E
+    O -->|明确新建| D
+    O -->|经LoadBuildingBlueprint打开| C
+    C -->|已有文件| E
+    C -->|目录为空| R
+    P -->|建筑删除| Q
+    Q -->|删除当前项后重选或清空| C
     E --> F
     F -.->|prepareParent 回调| G
     G --> H
@@ -253,32 +265,40 @@ flowchart TD
 
 - [InputManager.Update](../Assets/Scripts/Features/Player/InputManager.cs#L40)
 <!-- source: Assets/Scripts/Features/Player/InputManager.cs|Update -->
-- [BuildManager.ToggleBuildingBlueprintBuildMode](../Assets/Scripts/Features/Building/BuildManager.cs#L247)
+- [BuildManager.ToggleBuildingBlueprintBuildMode](../Assets/Scripts/Features/Building/BuildManager.cs#L253)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|ToggleBuildingBlueprintBuildMode -->
-- [BuildManager.EnterBuildingBlueprintBuildMode](../Assets/Scripts/Features/Building/BuildManager.cs#L259)
+- [BuildManager.EnterBuildingBlueprintBuildMode](../Assets/Scripts/Features/Building/BuildManager.cs#L268)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|EnterBuildingBlueprintBuildMode -->
-- [SaveManager.CreateNewBuildingBlueprint](../Assets/Scripts/Features/Building/SaveManager.cs#L85)
+- [SaveManager.CreateNewBuildingBlueprint](../Assets/Scripts/Features/Building/SaveManager.cs#L86)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|CreateNewBuildingBlueprint -->
-- [BuildManager.LoadAllBlocks](../Assets/Scripts/Features/Building/BuildManager.cs#L563)
+- [BuildManager.LoadAllBlocks](../Assets/Scripts/Features/Building/BuildManager.cs#L598)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|LoadAllBlocks -->
 - [BlueprintLoader.Load](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L43)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|Load -->
-- [BuildManager.PrepareBuildingFoundation](../Assets/Scripts/Features/Building/BuildManager.cs#L280)
+- [BuildManager.PrepareBuildingFoundation](../Assets/Scripts/Features/Building/BuildManager.cs#L315)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|PrepareBuildingFoundation -->
 - [BuildingFoundation.Configure](../Assets/Scripts/Features/Building/BuildingEditor/BuildingFoundation.cs#L15)
 <!-- source: Assets/Scripts/Features/Building/BuildingEditor/BuildingFoundation.cs|Configure -->
 - [BuildingEditorPanel.ApplySize](../Assets/Scripts/Features/Building/BuildingEditor/BuildingEditorPanel.cs#L25)
 <!-- source: Assets/Scripts/Features/Building/BuildingEditor/BuildingEditorPanel.cs|ApplySize -->
-- [BuildManager.ResizeBuildingFoundation](../Assets/Scripts/Features/Building/BuildManager.cs#L303)
+- [BuildManager.ResizeBuildingFoundation](../Assets/Scripts/Features/Building/BuildManager.cs#L338)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|ResizeBuildingFoundation -->
-- [SaveManager.SaveBuildingFoundation](../Assets/Scripts/Features/Building/SaveManager.cs#L127)
+- [SaveManager.SaveBuildingFoundation](../Assets/Scripts/Features/Building/SaveManager.cs#L149)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|SaveBuildingFoundation -->
 - [Block.CheckConnection](../Assets/Scripts/Features/Simulation/Block.cs#L360)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|CheckConnection -->
-- [BuildManager.ExitDeveloperBlueprintBuildMode](../Assets/Scripts/Features/Building/BuildManager.cs#L228)
+- [BuildManager.ExitDeveloperBlueprintBuildMode](../Assets/Scripts/Features/Building/BuildManager.cs#L234)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|ExitDeveloperBlueprintBuildMode -->
-- [SaveManager.LoadSave](../Assets/Scripts/Features/Building/SaveManager.cs#L261)
+- [SaveManager.LoadSave](../Assets/Scripts/Features/Building/SaveManager.cs#L283)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|LoadSave -->
+- [MainUIPanels.OnConfirmCreate](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L167)
+<!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|OnConfirmCreate -->
+- [MainUIPanels.OnConfirmDelete](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L207)
+<!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|OnConfirmDelete -->
+- [SaveManager.DeleteBuildingBlueprint](../Assets/Scripts/Features/Building/SaveManager.cs#L107)
+<!-- source: Assets/Scripts/Features/Building/SaveManager.cs|DeleteBuildingBlueprint -->
+- [MainUIPanels.ShowCreatePanel](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L90)
+<!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|ShowCreatePanel -->
 
 ## 蓝图恢复、统计和取消
 
@@ -287,7 +307,7 @@ Load 先验证文件，再以单位变换创建建造父对象，使Inspector局
 ```mermaid
 flowchart TD
     A["BuildManager.LoadAllBlocks()"]
-    click A "../Assets/Scripts/Features/Building/BuildManager.cs#L563" "打开源码"
+    click A "../Assets/Scripts/Features/Building/BuildManager.cs#L598" "打开源码"
     B["BlueprintLoader.Load()"]
     click B "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L43" "打开源码"
     C["BlueprintLoader.TryRead()"]
@@ -336,7 +356,7 @@ flowchart TD
     M --> O
 ```
 
-- [BuildManager.LoadAllBlocks](../Assets/Scripts/Features/Building/BuildManager.cs#L563)
+- [BuildManager.LoadAllBlocks](../Assets/Scripts/Features/Building/BuildManager.cs#L598)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|LoadAllBlocks -->
 - [BlueprintLoader.Load](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L43)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|Load -->
@@ -445,9 +465,9 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["BuildManager.Update()"]
-    click A "../Assets/Scripts/Features/Building/BuildManager.cs#L108" "打开源码"
+    click A "../Assets/Scripts/Features/Building/BuildManager.cs#L109" "打开源码"
     B["BuildManager.HandleBuildingPreview()"]
-    click B "../Assets/Scripts/Features/Building/BuildManager.cs#L439" "打开源码"
+    click B "../Assets/Scripts/Features/Building/BuildManager.cs#L474" "打开源码"
     C["BuildPreview.Poll()"]
     click C "../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L41" "打开源码"
     D["BuildPlacementGeometry.TryCalculateConnectorAlignedPosition()"]
@@ -455,9 +475,9 @@ flowchart TD
     E["BuildPlacementGeometry.IsBlocked()"]
     click E "../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L171" "打开源码"
     F["BuildManager.CreateBlock()"]
-    click F "../Assets/Scripts/Features/Building/BuildManager.cs#L473" "打开源码"
+    click F "../Assets/Scripts/Features/Building/BuildManager.cs#L508" "打开源码"
     G["BuildManager.SaveBlock()"]
-    click G "../Assets/Scripts/Features/Building/BuildManager.cs#L537" "打开源码"
+    click G "../Assets/Scripts/Features/Building/BuildManager.cs#L572" "打开源码"
     H["BuildBlueprintEditor.Save()"]
     click H "../Assets/Scripts/Features/Building/Interaction/BuildBlueprintEditor.cs#L17" "打开源码"
     I["BuildBlueprintEditor.RefreshConnectionsAround()"]
@@ -483,7 +503,7 @@ flowchart TD
     S["BuildPaletteItem.BindPalette()"]
     click S "../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L35" "打开源码"
     T["BuildManager.SetCurrentBlockResource()"]
-    click T "../Assets/Scripts/Features/Building/BuildManager.cs#L360" "打开源码"
+    click T "../Assets/Scripts/Features/Building/BuildManager.cs#L395" "打开源码"
     U["BuildManipulation.HandleRotation()"]
     click U "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L241" "打开源码"
     V["BuildManipulation.HandleRotateAxisDrag()"]
@@ -535,9 +555,9 @@ flowchart TD
     S -.->|按钮点击| T
 ```
 
-- [BuildManager.Update](../Assets/Scripts/Features/Building/BuildManager.cs#L108)
+- [BuildManager.Update](../Assets/Scripts/Features/Building/BuildManager.cs#L109)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|Update -->
-- [BuildManager.HandleBuildingPreview](../Assets/Scripts/Features/Building/BuildManager.cs#L439)
+- [BuildManager.HandleBuildingPreview](../Assets/Scripts/Features/Building/BuildManager.cs#L474)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|HandleBuildingPreview -->
 - [BuildPreview.Poll](../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L41)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPreview.cs|Poll -->
@@ -545,9 +565,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs|TryCalculateConnectorAlignedPosition -->
 - [BuildPlacementGeometry.IsBlocked](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L171)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs|IsBlocked -->
-- [BuildManager.CreateBlock](../Assets/Scripts/Features/Building/BuildManager.cs#L473)
+- [BuildManager.CreateBlock](../Assets/Scripts/Features/Building/BuildManager.cs#L508)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|CreateBlock -->
-- [BuildManager.SaveBlock](../Assets/Scripts/Features/Building/BuildManager.cs#L537)
+- [BuildManager.SaveBlock](../Assets/Scripts/Features/Building/BuildManager.cs#L572)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|SaveBlock -->
 - [BuildBlueprintEditor.Save](../Assets/Scripts/Features/Building/Interaction/BuildBlueprintEditor.cs#L17)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildBlueprintEditor.cs|Save -->
@@ -573,7 +593,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs|ApplyButtonStyle -->
 - [BuildPaletteItem.BindPalette](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L35)
 <!-- source: Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs|BindPalette -->
-- [BuildManager.SetCurrentBlockResource](../Assets/Scripts/Features/Building/BuildManager.cs#L360)
+- [BuildManager.SetCurrentBlockResource](../Assets/Scripts/Features/Building/BuildManager.cs#L395)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|SetCurrentBlockResource -->
 - [BuildManipulation.HandleRotation](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L241)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs|HandleRotation -->
@@ -1067,13 +1087,13 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["MainUIPanels.PlayEnd()"]
-    click A "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L278" "打开源码"
+    click A "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L281" "打开源码"
     B["CargoPersistence.SaveReturnCargo()"]
     click B "../Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs#L11" "打开源码"
     C["ReturnStatusPanel.ShowFailure()"]
     click C "../Assets/Scripts/Features/Presentation/Interface/ReturnStatusPanel.cs#L20" "打开源码"
     D["MainUIPanels.CompletePlayEnd()"]
-    click D "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L294" "打开源码"
+    click D "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L297" "打开源码"
     E["ReturnStatusPanel.Clear()"]
     click E "../Assets/Scripts/Features/Presentation/Interface/ReturnStatusPanel.cs#L37" "打开源码"
     F["PlayManager.PlayEnd()"]
@@ -1088,13 +1108,13 @@ flowchart TD
     F -->|清理后| G
 ```
 
-- [MainUIPanels.PlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L278)
+- [MainUIPanels.PlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L281)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayEnd -->
 - [CargoPersistence.SaveReturnCargo](../Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs#L11)
 <!-- source: Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs|SaveReturnCargo -->
 - [ReturnStatusPanel.ShowFailure](../Assets/Scripts/Features/Presentation/Interface/ReturnStatusPanel.cs#L20)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/ReturnStatusPanel.cs|ShowFailure -->
-- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L294)
+- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L297)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|CompletePlayEnd -->
 - [ReturnStatusPanel.Clear](../Assets/Scripts/Features/Presentation/Interface/ReturnStatusPanel.cs#L37)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/ReturnStatusPanel.cs|Clear -->
@@ -1425,7 +1445,7 @@ flowchart TD
     H["WorldSessionManager.CancelPlayRequest()"]
     click H "../Assets/Scripts/Features/World/WorldSessionManager.cs#L191" "打开源码"
     I["MainUIPanels.CompletePlayStart()"]
-    click I "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L258" "打开源码"
+    click I "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L261" "打开源码"
     J["PlayManager.PlayStart()"]
     click J "../Assets/Scripts/Features/Simulation/PlayManager.cs#L100" "打开源码"
     K["WorldSessionManager.EnterPlay()"]
@@ -1441,7 +1461,7 @@ flowchart TD
     P["WorldSessionManager.Update()"]
     click P "../Assets/Scripts/Features/World/WorldSessionManager.cs#L415" "打开源码"
     Q["MainUIPanels.CompletePlayEnd()"]
-    click Q "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L294" "打开源码"
+    click Q "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L297" "打开源码"
     R["WorldSessionManager.OnDisable()"]
     click R "../Assets/Scripts/Features/World/WorldSessionManager.cs#L532" "打开源码"
     S["WorldBuildingManager.ClearSession()"]
@@ -1513,7 +1533,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|RequestPlay -->
 - [WorldSessionManager.CancelPlayRequest](../Assets/Scripts/Features/World/WorldSessionManager.cs#L191)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|CancelPlayRequest -->
-- [MainUIPanels.CompletePlayStart](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L258)
+- [MainUIPanels.CompletePlayStart](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L261)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|CompletePlayStart -->
 - [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L100)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayStart -->
@@ -1529,7 +1549,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Fail -->
 - [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L415)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Update -->
-- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L294)
+- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L297)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|CompletePlayEnd -->
 - [WorldSessionManager.OnDisable](../Assets/Scripts/Features/World/WorldSessionManager.cs#L532)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|OnDisable -->
@@ -2453,7 +2473,7 @@ flowchart TD
     C["BuildingOutpostEditor.SavePose()"]
     click C "../Assets/Scripts/Features/Building/BuildingEditor/BuildingOutpostEditor.cs#L233" "打开源码"
     D["SaveManager.SaveBuildingOutpost()"]
-    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L152" "打开源码"
+    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L174" "打开源码"
     E["EnemyOutpostData.Validate()"]
     click E "../Assets/Scripts/Features/World/Outposts/EnemyOutpostData.cs#L13" "打开源码"
     F["WorldBuildingLibrary.ReadSource()"]
@@ -2510,7 +2530,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BuildingEditor/BuildingOutpostEditor.cs|AddDefender -->
 - [BuildingOutpostEditor.SavePose](../Assets/Scripts/Features/Building/BuildingEditor/BuildingOutpostEditor.cs#L233)
 <!-- source: Assets/Scripts/Features/Building/BuildingEditor/BuildingOutpostEditor.cs|SavePose -->
-- [SaveManager.SaveBuildingOutpost](../Assets/Scripts/Features/Building/SaveManager.cs#L152)
+- [SaveManager.SaveBuildingOutpost](../Assets/Scripts/Features/Building/SaveManager.cs#L174)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|SaveBuildingOutpost -->
 - [EnemyOutpostData.Validate](../Assets/Scripts/Features/World/Outposts/EnemyOutpostData.cs#L13)
 <!-- source: Assets/Scripts/Features/World/Outposts/EnemyOutpostData.cs|Validate -->
@@ -2625,9 +2645,9 @@ flowchart TD
     C["OutpostBaseDesigner.BoundsOf()"]
     click C "../Assets/Scripts/Features/Building/BuildingEditor/OutpostBaseDesigner.cs#L9" "打开源码"
     D["SaveManager.SaveNewBuilding()"]
-    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L194" "打开源码"
+    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L216" "打开源码"
     E["BuildManager.EnterBuildingBlueprintBuildMode()"]
-    click E "../Assets/Scripts/Features/Building/BuildManager.cs#L259" "打开源码"
+    click E "../Assets/Scripts/Features/Building/BuildManager.cs#L268" "打开源码"
     F["OutpostContentAuthoring.ExportMatchingBases()"]
     click F "../Assets/Editor/World/Outposts/OutpostContentAuthoring.cs#L60" "打开源码"
     G["OutpostEncounterDirector.Tick()"]
@@ -2660,9 +2680,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BuildingEditor/OutpostBaseDesigner.cs|Create -->
 - [OutpostBaseDesigner.BoundsOf](../Assets/Scripts/Features/Building/BuildingEditor/OutpostBaseDesigner.cs#L9)
 <!-- source: Assets/Scripts/Features/Building/BuildingEditor/OutpostBaseDesigner.cs|BoundsOf -->
-- [SaveManager.SaveNewBuilding](../Assets/Scripts/Features/Building/SaveManager.cs#L194)
+- [SaveManager.SaveNewBuilding](../Assets/Scripts/Features/Building/SaveManager.cs#L216)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|SaveNewBuilding -->
-- [BuildManager.EnterBuildingBlueprintBuildMode](../Assets/Scripts/Features/Building/BuildManager.cs#L259)
+- [BuildManager.EnterBuildingBlueprintBuildMode](../Assets/Scripts/Features/Building/BuildManager.cs#L268)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|EnterBuildingBlueprintBuildMode -->
 - [OutpostContentAuthoring.ExportMatchingBases](../Assets/Editor/World/Outposts/OutpostContentAuthoring.cs#L60)
 <!-- source: Assets/Editor/World/Outposts/OutpostContentAuthoring.cs|ExportMatchingBases -->
@@ -2793,9 +2813,9 @@ flowchart TD
     E["WorldPlayerSmokeChecks.Scenario()"]
     click E "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L191" "打开源码"
     F["MainUIPanels.PlayStart()"]
-    click F "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L230" "打开源码"
+    click F "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L233" "打开源码"
     G["MainUIPanels.CompletePlayEnd()"]
-    click G "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L294" "打开源码"
+    click G "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L297" "打开源码"
     H["WorldPlayerSmokeChecks.Next()"]
     click H "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L572" "打开源码"
     I["WorldPlayerSmokeChecks.Save()"]
@@ -2856,9 +2876,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs|Update -->
 - [WorldPlayerSmokeChecks.Scenario](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L191)
 <!-- source: Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs|Scenario -->
-- [MainUIPanels.PlayStart](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L230)
+- [MainUIPanels.PlayStart](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L233)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayStart -->
-- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L294)
+- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L297)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|CompletePlayEnd -->
 - [WorldPlayerSmokeChecks.Next](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L572)
 <!-- source: Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs|Next -->
@@ -3421,21 +3441,21 @@ flowchart TD
     C["SiegeWorkshop.Open()"]
     click C "../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshop.cs#L47" "打开源码"
     D["SaveManager.LoadSave()"]
-    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L261" "打开源码"
+    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L283" "打开源码"
     E["BuildManager.LoadAllBlocks()"]
-    click E "../Assets/Scripts/Features/Building/BuildManager.cs#L563" "打开源码"
+    click E "../Assets/Scripts/Features/Building/BuildManager.cs#L598" "打开源码"
     F["BlueprintLoader.Load()"]
     click F "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L43" "打开源码"
     G["BuildManager.CreateBlock()"]
-    click G "../Assets/Scripts/Features/Building/BuildManager.cs#L473" "打开源码"
+    click G "../Assets/Scripts/Features/Building/BuildManager.cs#L508" "打开源码"
     H["BuildManager.SaveBlock()"]
-    click H "../Assets/Scripts/Features/Building/BuildManager.cs#L537" "打开源码"
+    click H "../Assets/Scripts/Features/Building/BuildManager.cs#L572" "打开源码"
     I["MainUIPanels.PlayStart()"]
-    click I "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L230" "打开源码"
+    click I "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L233" "打开源码"
     J["SiegeWorkshop.Close()"]
     click J "../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshop.cs#L88" "打开源码"
     K["BuildManager.CancelBlueprintLoad()"]
-    click K "../Assets/Scripts/Features/Building/BuildManager.cs#L752" "打开源码"
+    click K "../Assets/Scripts/Features/Building/BuildManager.cs#L797" "打开源码"
     L["BlueprintLoader.Cancel()"]
     click L "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L94" "打开源码"
     M["SiegeFleet.RestoreView()"]
@@ -3484,21 +3504,21 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Player/InputManager.cs|PollSiege -->
 - [SiegeWorkshop.Open](../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshop.cs#L47)
 <!-- source: Assets/Scripts/Features/Siege/Workshop/SiegeWorkshop.cs|Open -->
-- [SaveManager.LoadSave](../Assets/Scripts/Features/Building/SaveManager.cs#L261)
+- [SaveManager.LoadSave](../Assets/Scripts/Features/Building/SaveManager.cs#L283)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|LoadSave -->
-- [BuildManager.LoadAllBlocks](../Assets/Scripts/Features/Building/BuildManager.cs#L563)
+- [BuildManager.LoadAllBlocks](../Assets/Scripts/Features/Building/BuildManager.cs#L598)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|LoadAllBlocks -->
 - [BlueprintLoader.Load](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L43)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|Load -->
-- [BuildManager.CreateBlock](../Assets/Scripts/Features/Building/BuildManager.cs#L473)
+- [BuildManager.CreateBlock](../Assets/Scripts/Features/Building/BuildManager.cs#L508)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|CreateBlock -->
-- [BuildManager.SaveBlock](../Assets/Scripts/Features/Building/BuildManager.cs#L537)
+- [BuildManager.SaveBlock](../Assets/Scripts/Features/Building/BuildManager.cs#L572)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|SaveBlock -->
-- [MainUIPanels.PlayStart](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L230)
+- [MainUIPanels.PlayStart](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L233)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayStart -->
 - [SiegeWorkshop.Close](../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshop.cs#L88)
 <!-- source: Assets/Scripts/Features/Siege/Workshop/SiegeWorkshop.cs|Close -->
-- [BuildManager.CancelBlueprintLoad](../Assets/Scripts/Features/Building/BuildManager.cs#L752)
+- [BuildManager.CancelBlueprintLoad](../Assets/Scripts/Features/Building/BuildManager.cs#L797)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|CancelBlueprintLoad -->
 - [BlueprintLoader.Cancel](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L94)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|Cancel -->

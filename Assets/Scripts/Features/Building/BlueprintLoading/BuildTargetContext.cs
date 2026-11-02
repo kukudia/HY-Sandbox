@@ -22,7 +22,7 @@ public readonly struct BuildTargetContext
         Kind = kind;
         SaveName = NormalizeName(saveName, "default");
         EnemyBlueprintName = NormalizeName(enemyBlueprintName, "default_enemy");
-        BuildingBlueprintName = NormalizeName(buildingBlueprintName, "default_building");
+        BuildingBlueprintName = string.IsNullOrWhiteSpace(buildingBlueprintName) ? string.Empty : buildingBlueprintName.Trim();
     }
 
     public bool IsEnemyBlueprint => Kind == BuildTargetKind.EnemyBlueprint;

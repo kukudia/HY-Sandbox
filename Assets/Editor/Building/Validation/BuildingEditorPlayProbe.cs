@@ -212,6 +212,17 @@ public static class BuildingEditorPlayProbe
         Shortcut(Key.LeftCtrl, Key.LeftAlt, Key.F);
         Check("Ctrl+Alt+F enters building editor", build.IsEditingBuildingBlueprint);
         Check(
+            "Entering an empty building directory does not create default_building",
+            !build.HasBuildingBlueprint && saves.buildingBlueprints.Count == 0 && Directory.GetFiles(Path.Combine(folder, "BuildingBlueprints"), "*.json").Length == 0);
+        Check(
+            "Empty building editor shows create dialog without a stale editable parent",
+            MainUIPanels.instance.createPanel.activeSelf && GameManager.instance.blocksParent == null && build.Foundation == null);
+        MainUIPanels.instance.inputName.text = "default_building";
+        MainUIPanels.instance.OnConfirmCreate();
+        Check(
+            "Only explicit Create writes and opens a named building",
+            build.HasBuildingBlueprint && File.Exists(saves.GetBuildingBlueprintPath("default_building")));
+        Check(
             "Building directory differs from player and enemy paths",
             Path.GetDirectoryName(saves.GetBuildingBlueprintPath(build.CurrentBuildName)) == Path.Combine(folder, "BuildingBlueprints"));
         Check(
@@ -485,5 +496,70 @@ public static class BuildingEditorPlayProbe
         {
             (residentChecks as IDisposable)?.Dispose();
         }
+
+        string retainedName = build.CurrentBuildingBlueprintName;
+        saves.CreateNewBuildingBlueprint("delete_other");
+        MainUIPanels.instance.ShowDeletePanel("delete_other");
+        MainUIButtons.instance.confirmDeleteButton.onClick.Invoke();
+        Check(
+            "Deleting another building keeps current building mode and selection",
+            build.HasBuildingBlueprint && build.CurrentBuildingBlueprintName == retainedName && !File.Exists(saves.GetBuildingBlueprintPath("delete_other")));
+        MainUIPanels.instance.ShowDeletePanel(retainedName);
+        MainUIButtons.instance.confirmDeleteButton.onClick.Invoke();
+        while (build.IsLoadingBlocks)
+        {
+            yield return null;
+        }
+
+        Check(
+            "Deleting the current building opens a remaining building without returning to player",
+            build.HasBuildingBlueprint && build.CurrentBuildingBlueprintName != retainedName && !File.Exists(saves.GetBuildingBlueprintPath(retainedName)));
+        saves.GetAllBuildingBlueprintNames();
+        foreach (string name in saves.buildingBlueprints.ToArray())
+        {
+            MainUIPanels.instance.ShowDeletePanel(name);
+            MainUIButtons.instance.confirmDeleteButton.onClick.Invoke();
+            while (build.IsLoadingBlocks)
+            {
+                yield return null;
+            }
+        }
+
+        yield return null;
+        Check(
+            "Deleting the last building clears target, parent, foundation and cached data",
+            build.IsEditingBuildingBlueprint && !build.HasBuildingBlueprint && string.IsNullOrEmpty(saves.currentBuildingBlueprintName) && build.Foundation == null && GameManager.instance.blocksParent == null && saves.cachedData.blocks.Count == 0);
+        Check(
+            "Deleting the last building shows Create and writes no replacement file",
+            MainUIPanels.instance.createPanel.activeSelf && Directory.GetFiles(Path.Combine(folder, "BuildingBlueprints"), "*.json").Length == 0);
+        MainUIPanels.instance.HideCreatePanel();
+        build.LoadAllBlocks();
+        build.ExitDeveloperBlueprintBuildMode(true);
+        build.ToggleBuildingBlueprintBuildMode();
+        Check(
+            "Reentering after delete does not resurrect default_building or an unnamed JSON",
+            !build.HasBuildingBlueprint && Directory.GetFiles(Path.Combine(folder, "BuildingBlueprints"), "*.json").Length == 0);
+        MainUIPanels.instance.HideCreatePanel();
+        build.EnterBuildingBlueprintBuildMode("missing_building");
+        Check(
+            "Opening a missing named building does not implicitly create it",
+            !build.HasBuildingBlueprint && !File.Exists(saves.GetBuildingBlueprintPath("missing_building")));
+        MainUIPanels.instance.HideCreatePanel();
+        File.WriteAllText(saves.GetBuildingBlueprintPath("loading_building"), comboJson);
+        build.BlockLoadIntervalSeconds = 1f;
+        build.EnterBuildingBlueprintBuildMode("loading_building");
+        Check("Deletion fixture owns an in-progress building restore", build.IsLoadingBlocks);
+        MainUIPanels.instance.ShowDeletePanel("loading_building");
+        MainUIButtons.instance.confirmDeleteButton.onClick.Invoke();
+        yield return null;
+        Check(
+            "Deleting the last building during restore cancels loading without resurrecting content",
+            !build.IsLoadingBlocks && !build.HasBuildingBlueprint && GameManager.instance.blocksParent == null && Directory.GetFiles(Path.Combine(folder, "BuildingBlueprints"), "*.json").Length == 0);
+        MainUIPanels.instance.HideCreatePanel();
+        build.BlockLoadIntervalSeconds = 0f;
+        build.ExitDeveloperBlueprintBuildMode(true);
+        Check(
+            "Deletion lifecycle leaves isolated player and enemy bytes unchanged",
+            player.SequenceEqual(File.ReadAllBytes(saves.GetSavePath(saves.currentSaveName))) && enemy.SequenceEqual(File.ReadAllBytes(saves.GetEnemyBlueprintPath(build.currentEnemyBlueprintName))));
     }
 }

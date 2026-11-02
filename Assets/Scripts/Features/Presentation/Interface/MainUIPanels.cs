@@ -208,7 +208,10 @@ public class MainUIPanels : MonoBehaviour
     {
         if (BuildManager.instance != null && BuildManager.instance.IsEditingBuildingBlueprint)
         {
+            // Close the confirmation before deletion may open the empty editor's create dialog.
+            HideDeletePanel();
             SaveManager.instance.DeleteBuildingBlueprint(save);
+            return;
         }
         else if (BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint)
         {
@@ -341,7 +344,7 @@ public class MainUIPanels : MonoBehaviour
 
     public void RefreshBlueprintEditorMode()
     {
-        bool building = BuildManager.instance.IsEditingBuildingBlueprint;
+        bool building = BuildManager.instance.HasBuildingBlueprint;
         if (building && _buildingEditorPanel == null)
         {
             GameObject prefab = Resources.Load<GameObject>("BuildingEditor/EditorPanel");

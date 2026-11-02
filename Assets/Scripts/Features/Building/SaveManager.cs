@@ -80,6 +80,7 @@ public class SaveManager : MonoBehaviour
     {
         buildingBlueprints.Clear();
         buildingBlueprints.AddRange(BuildingFiles.GetNames());
+        buildingBlueprints.Sort(System.StringComparer.OrdinalIgnoreCase);
     }
 
     public void CreateNewBuildingBlueprint(string blueprintName)
@@ -111,6 +112,22 @@ public class SaveManager : MonoBehaviour
             File.Delete(path);
         }
 
+        GetAllBuildingBlueprintNames();
+        BuildManager build = BuildManager.instance;
+        if (build != null && string.Equals(build.CurrentBuildingBlueprintName, blueprintName, System.StringComparison.OrdinalIgnoreCase))
+        {
+            string next = buildingBlueprints.Count > 0 ? buildingBlueprints[0] : string.Empty;
+            currentBuildingBlueprintName = next;
+            if (build.IsEditingBuildingBlueprint)
+            {
+                build.EnterBuildingBlueprintBuildMode(next);
+            }
+            else
+            {
+                build.SetCurrentBuildingBlueprintName(next);
+            }
+        }
+
         SaveUIPanel.instance.RefreshList();
     }
 
@@ -121,6 +138,11 @@ public class SaveManager : MonoBehaviour
 
     public string GetBuildingBlueprintPath(string blueprintName)
     {
+        if (string.IsNullOrWhiteSpace(blueprintName))
+        {
+            throw new System.ArgumentException("Choose or create a building blueprint first.", nameof(blueprintName));
+        }
+
         return BuildingFiles.GetPath(blueprintName);
     }
 

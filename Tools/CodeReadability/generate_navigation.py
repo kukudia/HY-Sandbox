@@ -145,7 +145,7 @@ def main():
     )
     graph(
         "开发者建筑蓝图编辑",
-        "源码推导：Ctrl+Alt+F 进入/退出建筑，Ctrl+Alt+E 切换敌人。建筑使用独立目录，加载父对象后由注入回调创建底座；底座不参与方块存档和操作栈。尺寸 UI 先保存元数据，再生成向上连接点并刷新已有连接，块坐标不变。",
+        "源码推导：Ctrl+Alt+F 进入/退出建筑，Ctrl+Alt+E 切换敌人。建筑使用独立目录；进入/打开不创建文件，只由明确新建写入。删除当前项切换剩余建筑，删空后清除目标/父对象并显示新建；不再使用default_building回退。加载父对象后由注入回调创建底座；底座不参与方块存档和操作栈。尺寸 UI 先保存元数据，再生成向上连接点并刷新已有连接，块坐标不变。",
         {
             "A": "InputManager.Update",
             "B": "BuildManager.ToggleBuildingBlueprintBuildMode",
@@ -161,12 +161,20 @@ def main():
             "L": "Block.CheckConnection",
             "M": "BuildManager.ExitDeveloperBlueprintBuildMode",
             "N": "SaveManager.LoadSave",
+            "O": "MainUIPanels.OnConfirmCreate",
+            "P": "MainUIPanels.OnConfirmDelete",
+            "Q": "SaveManager.DeleteBuildingBlueprint",
+            "R": "MainUIPanels.ShowCreatePanel",
         },
         [
             "A -->|Ctrl+Alt+F| B",
             "B -->|进入| C",
-            "C --> D",
-            "C --> E",
+            "O -->|明确新建| D",
+            "O -->|经LoadBuildingBlueprint打开| C",
+            "C -->|已有文件| E",
+            "C -->|目录为空| R",
+            "P -->|建筑删除| Q",
+            "Q -->|删除当前项后重选或清空| C",
             "E --> F",
             "F -.->|prepareParent 回调| G",
             "G --> H",

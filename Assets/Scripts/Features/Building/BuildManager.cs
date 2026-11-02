@@ -37,8 +37,9 @@ public class BuildManager : MonoBehaviour
     [SerializeField]
     private bool _buildingBlueprintBuildMode;
     [SerializeField]
-    private string _currentBuildingBlueprintName = "default_building";
+    private string _currentBuildingBlueprintName = string.Empty;
     public string CurrentBuildingBlueprintName => _currentBuildingBlueprintName;
+    public bool HasBuildingBlueprint => IsEditingBuildingBlueprint && !string.IsNullOrEmpty(CurrentBuildingBlueprintName);
     public BuildingFoundation Foundation
     {
         get; private set;
@@ -107,6 +108,11 @@ public class BuildManager : MonoBehaviour
 
     private void Update()
     {
+        if (IsEditingBuildingBlueprint && !HasBuildingBlueprint)
+        {
+            return;
+        }
+
         EnsureBuildInteraction();
         if (IsLoadingBlocks)
         {
@@ -252,7 +258,10 @@ public class BuildManager : MonoBehaviour
         }
         else
         {
-            EnterBuildingBlueprintBuildMode(_currentBuildingBlueprintName);
+            SaveManager saves = SaveManager.instance;
+            saves.GetAllBuildingBlueprintNames();
+            string name = saves.buildingBlueprints.Contains(_currentBuildingBlueprintName) ? _currentBuildingBlueprintName : saves.buildingBlueprints.Count > 0 ? saves.buildingBlueprints[0] : string.Empty;
+            EnterBuildingBlueprintBuildMode(name);
         }
     }
 
@@ -272,7 +281,33 @@ public class BuildManager : MonoBehaviour
         SetBuildTarget(target);
         currentBlockResourcePath = string.Empty;
         ResetBuildState();
-        SaveManager.instance.CreateNewBuildingBlueprint(CurrentBuildingBlueprintName);
+        SaveManager saves = SaveManager.instance;
+        saves.GetAllBuildingBlueprintNames();
+        // Opening is read-only. An absent target becomes an empty editor, never an implicit file.
+        if (string.IsNullOrEmpty(CurrentBuildingBlueprintName) || !System.IO.File.Exists(saves.GetBuildingBlueprintPath(CurrentBuildingBlueprintName)))
+        {
+            SetCurrentBuildingBlueprintName(string.Empty);
+            saves.currentBuildingBlueprintName = string.Empty;
+            Foundation = null;
+            if (GameManager.instance.blocksParent != null)
+            {
+                Destroy(GameManager.instance.blocksParent.gameObject);
+                GameManager.instance.blocksParent = null;
+            }
+
+            saves.cachedData = new BlockDataList();
+            saves.blocks.Clear();
+            MainUIPanels.instance.RefreshBlueprintEditorMode();
+            RefreshBlueprintUI();
+            if (saves.buildingBlueprints.Count == 0)
+            {
+                MainUIPanels.instance.ShowCreatePanel();
+            }
+
+            return;
+        }
+
+        saves.currentBuildingBlueprintName = CurrentBuildingBlueprintName;
         MainUIPanels.instance.RefreshBlueprintEditorMode();
         LoadAllBlocks();
     }
@@ -536,7 +571,7 @@ public class BuildManager : MonoBehaviour
 
     public void SaveBlock(Block block)
     {
-        if (block == null || SaveManager.instance == null)
+        if (block == null || SaveManager.instance == null || (IsEditingBuildingBlueprint && !HasBuildingBlueprint))
         {
             return;
         }
@@ -562,6 +597,11 @@ public class BuildManager : MonoBehaviour
     /// <summary>蓝图加载入口；文件、逐帧恢复和统计在 BlueprintLoader 中审查。</summary>
     public void LoadAllBlocks()
     {
+        if (IsEditingBuildingBlueprint && !HasBuildingBlueprint)
+        {
+            return;
+        }
+
         if (!IsEditingDeveloperBlueprint && currentSaveName == String.Empty && SaveManager.instance.saves.Count > 0)
         {
             currentSaveName = SaveManager.instance.saves[0];
@@ -643,6 +683,11 @@ public class BuildManager : MonoBehaviour
 
     private bool IsLoadingBuildTarget(BuildTargetContext context)
     {
+        if (context.IsBuildingBlueprint && string.IsNullOrEmpty(context.BuildingBlueprintName))
+        {
+            return false;
+        }
+
         return _blueprintLoader != null && _blueprintLoader.IsLoadingTarget(context);
     }
 
