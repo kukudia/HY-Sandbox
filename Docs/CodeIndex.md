@@ -4399,22 +4399,22 @@ HY-Sandbox/
 
 ## Assets/Scripts/Features/World/Buildings/Data/WorldBuildingCatalog.cs
 
-// 职责：可编辑的随项目建筑模板与初始布局；用户建筑文件由运行时面板另行读取。
+// 职责：保存建筑制作参考与WorldLab初始布局；运行时内容只从BuildingBlueprints按名称解析。
 
 数据/配置/接口定义，无方法体。
 
 ## Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs
 
-// 职责：从SaveManager共用文件仓读取建筑快照，合并内置模板；World与WorldLab共用解析、覆盖和错误隔离。 // 入口：LoadRoutine()预热世界资源；Load()刷新WorldLab目录；仅世界生成检查平台范围，不修改源文件。
+// 职责：仅从SaveManager共用文件仓读取建筑快照；World与WorldLab共用解析和错误隔离。 // 入口：LoadRoutine()预热世界资源；Load()刷新WorldLab目录；仅世界生成检查平台范围，不修改源文件。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | WorldBuildingLibrary | [`IEnumerator LoadRoutine(BlueprintFileStore files)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L19) | internal |
-| WorldBuildingLibrary | [`void Load(BlueprintFileStore files, IEnumerable<TextAsset> bundled)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L52) | internal |
-| WorldBuildingLibrary | [`IEnumerable<string> ReadSources( BlueprintFileStore files, IEnumerable<TextAsset> bundled, bool forWorldGeneration, HashSet<string> warmupResources)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L60) | private |
-| WorldBuildingLibrary | [`void ReadSource(string name, string json, string path, bool forWorldGeneration, HashSet<string> warmupResources)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L96) | private |
-| WorldBuildingLibrary | [`void CollectBlueprintResources(BlockDataList blueprint, HashSet<string> resources)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L137) | private static |
-| WorldBuildingLibrary | [`void ValidateWorldTemplate(BlockDataList blueprint)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L171) | private static |
+| WorldBuildingLibrary | [`void Load(BlueprintFileStore files)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L51) | internal |
+| WorldBuildingLibrary | [`IEnumerable<string> ReadSources(BlueprintFileStore files, bool forWorldGeneration, HashSet<string> warmupResources)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L59) | private |
+| WorldBuildingLibrary | [`void ReadSource(string name, string path, bool forWorldGeneration, HashSet<string> warmupResources)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L82) | private |
+| WorldBuildingLibrary | [`void CollectBlueprintResources(BlockDataList blueprint, HashSet<string> resources)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L114) | private static |
+| WorldBuildingLibrary | [`void ValidateWorldTemplate(BlockDataList blueprint)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L148) | private static |
 
 ## Assets/Scripts/Features/World/Buildings/Data/WorldBuildingState.cs
 
@@ -4439,12 +4439,12 @@ HY-Sandbox/
 | --- | --- | --- |
 | WorldBuildingPalette | [`void Start()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L37) | private |
 | WorldBuildingPalette | [`void RefreshCatalog()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L42) | public |
-| WorldBuildingPalette | [`void Update()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L58) | private |
-| WorldBuildingPalette | [`void BeginPlacement()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L133) | public |
-| WorldBuildingPalette | [`void AddPreviewMeshes(GameObject prefab, Vector3 localPosition, Quaternion localRotation, Vector3? size = null)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L163) | private |
-| WorldBuildingPalette | [`void Cancel()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L203) | public |
-| WorldBuildingPalette | [`void OnDisable()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L218) | private |
-| WorldBuildingPalette | [`void OnGUI()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L223) | private |
+| WorldBuildingPalette | [`void Update()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L56) | private |
+| WorldBuildingPalette | [`void BeginPlacement()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L131) | public |
+| WorldBuildingPalette | [`void AddPreviewMeshes(GameObject prefab, Vector3 localPosition, Quaternion localRotation, Vector3? size = null)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L161) | private |
+| WorldBuildingPalette | [`void Cancel()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L201) | public |
+| WorldBuildingPalette | [`void OnDisable()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L216) | private |
+| WorldBuildingPalette | [`void OnGUI()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L221) | private |
 
 ## Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs
 
@@ -4513,7 +4513,7 @@ HY-Sandbox/
 
 ## Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs
 
-// 职责：拥有 WorldLab 建筑实例、初始布局、地形支撑通知和有界残骸。 // 入口：Place() / Capture() / Restore() / ResetBuildings()；不调用玩家 SaveManager。
+// 职责：拥有 WorldLab 建筑实例、初始布局、地形支撑通知和有界残骸。 // 入口：Place() / Capture() / Restore() / ResetBuildings()；初始布局仅按名称查找共用建筑文件仓。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
@@ -4534,12 +4534,12 @@ HY-Sandbox/
 | WorldBuildingManager | [`WorldLabSnapshot Capture()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L265) | public |
 | WorldBuildingManager | [`void Restore(WorldLabSnapshot snapshot)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L285) | public |
 | WorldBuildingManager | [`void ResetBuildings()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L338) | public |
-| WorldBuildingManager | [`void ClearBuildings()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L372) | private |
-| WorldBuildingManager | [`void TerrainChanged(Bounds changed)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L388) | private |
-| WorldBuildingManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L399) | private |
-| WorldBuildingManager | [`void DamageSphere(Vector3 center, float radius, float damage)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L416) | public |
-| WorldBuildingManager | [`void CreateDebris(List<Block> group, Rigidbody source)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L421) | internal |
-| WorldBuildingManager | [`void ClearDebris()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L464) | private |
+| WorldBuildingManager | [`void ClearBuildings()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L382) | private |
+| WorldBuildingManager | [`void TerrainChanged(Bounds changed)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L398) | private |
+| WorldBuildingManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L409) | private |
+| WorldBuildingManager | [`void DamageSphere(Vector3 center, float radius, float damage)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L426) | public |
+| WorldBuildingManager | [`void CreateDebris(List<Block> group, Rigidbody source)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L431) | internal |
+| WorldBuildingManager | [`void ClearDebris()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L474) | private |
 
 ## Assets/Scripts/Features/World/Outposts/EnemyOutpostData.cs
 

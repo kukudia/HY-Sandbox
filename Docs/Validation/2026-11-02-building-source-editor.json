@@ -1,0 +1,13 @@
+[
+  "Empty shared store ignores all packaged templates",
+  "Empty world generation routine has no fallback buildings",
+  "Library only contains the file explicitly present in BuildingBlueprints",
+  "Malformed, invalid, oversized and locked files are skipped without packaged fallback",
+  "World platform rejection does not resurrect same-name packaged template",
+  "WorldLab palette reads the shared store and ignores Catalog blueprint content",
+  "Initial layout skips packaged blueprint missing from shared store",
+  "Refreshing after deleting the last valid file leaves WorldLab palette empty",
+  "Reusing the library after deletion clears previous templates",
+  "Reentering world generation after deletion completes empty without builtin fallback",
+  "Standalone WorldLab resolves the same BuildingBlueprints directory"
+]

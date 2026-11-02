@@ -726,7 +726,7 @@ def main():
     )
     graph(
         "用户建筑库、自然出生和远景",
-        "源码推导：World和WorldLab通过SaveManager.GetBuildingBlueprintFiles共用建筑文件仓；每次会话读取全部有效JSON，单独报告坏文件并快照每套蓝图实际占地；落点按同一模板索引居中，半格支撑边距外6m接回自然坡面。进入时按载具覆盖范围最高地面加净空抬升。详细地形外分帧缓存无碰撞体素列，保持同样阶梯及草土材质，按列版本隐藏已加载列代理；默认12圈后衔接8m采样远景，空洞与外环原子切换，裙边遮缝、距离雾过渡背景。跨四列重采样，淘汰外环缓存并释放网格；退出恢复相机/雾并销毁自有网格。",
+        "源码推导：World和WorldLab通过SaveManager.GetBuildingBlueprintFiles共用建筑文件仓；每次会话只读取BuildingBlueprints中的有效JSON，不合并内置模板；目录为空不生成建筑，单独报告坏文件并快照每套蓝图实际占地；落点按同一模板索引居中，半格支撑边距外6m接回自然坡面。进入时按载具覆盖范围最高地面加净空抬升。详细地形外分帧缓存无碰撞体素列，保持同样阶梯及草土材质，按列版本隐藏已加载列代理；默认12圈后衔接8m采样远景，空洞与外环原子切换，裙边遮缝、距离雾过渡背景。跨四列重采样，淘汰外环缓存并释放网格；退出恢复相机/雾并销毁自有网格。",
         {
             "A": "WorldSessionManager.PrepareWorld",
             "B": "WorldBuildingLibrary.LoadRoutine",
@@ -889,7 +889,7 @@ def main():
     )
     graph(
         "WorldLab 建筑放置与快照",
-        "源码推导：可编辑目录和BuildingBlueprints用户文件只提供模板。预览只复制Mesh，B/Q/T/左键触发放置，所有实例使用底座局部坐标、独立身份和ControlUnit战斗注册。F5保存体素差量与当前建筑快照；F9校验资源、身份、耐久和地形后暂存禁用层级，成功才替换活动世界。旧差量迁移为空建筑列表。",
+        "源码推导：BuildingBlueprints是建筑库唯一来源；Catalog仅保留制作参考和初始布局，布局按名称解析共用文件仓，缺失或无效跳过。预览只复制Mesh，B/Q/T/左键触发放置，所有实例使用底座局部坐标、独立身份和ControlUnit战斗注册。F5保存体素差量与当前建筑快照；F9校验资源、身份、耐久和地形后暂存禁用层级，成功才替换活动世界。快照恢复保留已放置实例，不用于生成新建筑。旧差量迁移为空建筑列表。",
         {
             "A": "WorldBuildingAuthoring.Install",
             "B": "WorldBuildingPalette.RefreshCatalog",
@@ -914,6 +914,7 @@ def main():
             "U": "WorldBuildingManager.RestoreBuilding",
             "V": "SaveManager.GetBuildingBlueprintFiles",
             "W": "WorldBuildingLibrary.Load",
+            "X": "WorldBuildingManager.ResetBuildings",
         },
         [
             "A -.->|保存场景/目录供Start读取| B", "B --> V", "B --> W", "C -->|B键| D",
@@ -922,6 +923,7 @@ def main():
             "K -->|F9| O", "K -->|完整快照| P", "P --> R", "P -->|全部实例| Q",
             "P -->|校验后暂存禁用层级，失败销毁暂存| H", "P -->|暂存全部成功| S",
             "P --> T", "P -->|启用后恢复尺寸与耐久| J",
+            "X --> V", "X --> W", "X -->|仅存在且有效的同名文件| G",
         ],
     )
     graph(

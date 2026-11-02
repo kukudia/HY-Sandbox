@@ -46,9 +46,7 @@ public sealed class WorldBuildingPalette : MonoBehaviour
         templates.Clear();
         errors.Clear();
         var library = new WorldBuildingLibrary();
-        library.Load(
-            SaveManager.GetBuildingBlueprintFiles(),
-            manager.Catalog != null ? manager.Catalog.blueprints : Array.Empty<TextAsset>());
+        library.Load(SaveManager.GetBuildingBlueprintFiles());
         names.AddRange(library.Names);
         templates.AddRange(library.Templates);
         errors.AddRange(library.Errors);

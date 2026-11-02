@@ -1619,7 +1619,7 @@ flowchart TD
 
 ## 用户建筑库、自然出生和远景
 
-源码推导：World和WorldLab通过SaveManager.GetBuildingBlueprintFiles共用建筑文件仓；每次会话读取全部有效JSON，单独报告坏文件并快照每套蓝图实际占地；落点按同一模板索引居中，半格支撑边距外6m接回自然坡面。进入时按载具覆盖范围最高地面加净空抬升。详细地形外分帧缓存无碰撞体素列，保持同样阶梯及草土材质，按列版本隐藏已加载列代理；默认12圈后衔接8m采样远景，空洞与外环原子切换，裙边遮缝、距离雾过渡背景。跨四列重采样，淘汰外环缓存并释放网格；退出恢复相机/雾并销毁自有网格。
+源码推导：World和WorldLab通过SaveManager.GetBuildingBlueprintFiles共用建筑文件仓；每次会话只读取BuildingBlueprints中的有效JSON，不合并内置模板；目录为空不生成建筑，单独报告坏文件并快照每套蓝图实际占地；落点按同一模板索引居中，半格支撑边距外6m接回自然坡面。进入时按载具覆盖范围最高地面加净空抬升。详细地形外分帧缓存无碰撞体素列，保持同样阶梯及草土材质，按列版本隐藏已加载列代理；默认12圈后衔接8m采样远景，空洞与外环原子切换，裙边遮缝、距离雾过渡背景。跨四列重采样，淘汰外环缓存并释放网格；退出恢复相机/雾并销毁自有网格。
 
 ```mermaid
 flowchart TD
@@ -2120,7 +2120,7 @@ flowchart TD
 
 ## WorldLab 建筑放置与快照
 
-源码推导：可编辑目录和BuildingBlueprints用户文件只提供模板。预览只复制Mesh，B/Q/T/左键触发放置，所有实例使用底座局部坐标、独立身份和ControlUnit战斗注册。F5保存体素差量与当前建筑快照；F9校验资源、身份、耐久和地形后暂存禁用层级，成功才替换活动世界。旧差量迁移为空建筑列表。
+源码推导：BuildingBlueprints是建筑库唯一来源；Catalog仅保留制作参考和初始布局，布局按名称解析共用文件仓，缺失或无效跳过。预览只复制Mesh，B/Q/T/左键触发放置，所有实例使用底座局部坐标、独立身份和ControlUnit战斗注册。F5保存体素差量与当前建筑快照；F9校验资源、身份、耐久和地形后暂存禁用层级，成功才替换活动世界。快照恢复保留已放置实例，不用于生成新建筑。旧差量迁移为空建筑列表。
 
 ```mermaid
 flowchart TD
@@ -2129,9 +2129,9 @@ flowchart TD
     B["WorldBuildingPalette.RefreshCatalog()"]
     click B "../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L42" "打开源码"
     C["WorldBuildingPalette.Update()"]
-    click C "../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L58" "打开源码"
+    click C "../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L56" "打开源码"
     D["WorldBuildingPalette.BeginPlacement()"]
-    click D "../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L133" "打开源码"
+    click D "../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L131" "打开源码"
     E["WorldBuildingManager.CanPlace()"]
     click E "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L76" "打开源码"
     F["WorldBuildingPlacement.Check()"]
@@ -2163,13 +2163,15 @@ flowchart TD
     S["ProceduralVoxelWorld.RestoreEdits()"]
     click S "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L418" "打开源码"
     T["WorldBuildingManager.ClearBuildings()"]
-    click T "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L372" "打开源码"
+    click T "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L382" "打开源码"
     U["WorldBuildingManager.RestoreBuilding()"]
     click U "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L126" "打开源码"
     V["SaveManager.GetBuildingBlueprintFiles()"]
     click V "../Assets/Scripts/Features/Building/SaveManager.cs#L74" "打开源码"
     W["WorldBuildingLibrary.Load()"]
-    click W "../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L52" "打开源码"
+    click W "../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L51" "打开源码"
+    X["WorldBuildingManager.ResetBuildings()"]
+    click X "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L338" "打开源码"
     A -.->|保存场景/目录供Start读取| B
     B --> V
     B --> W
@@ -2192,15 +2194,18 @@ flowchart TD
     P -->|暂存全部成功| S
     P --> T
     P -->|启用后恢复尺寸与耐久| J
+    X --> V
+    X --> W
+    X -->|仅存在且有效的同名文件| G
 ```
 
 - [WorldBuildingAuthoring.Install](../Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs#L12)
 <!-- source: Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs|Install -->
 - [WorldBuildingPalette.RefreshCatalog](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L42)
 <!-- source: Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs|RefreshCatalog -->
-- [WorldBuildingPalette.Update](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L58)
+- [WorldBuildingPalette.Update](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L56)
 <!-- source: Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs|Update -->
-- [WorldBuildingPalette.BeginPlacement](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L133)
+- [WorldBuildingPalette.BeginPlacement](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L131)
 <!-- source: Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs|BeginPlacement -->
 - [WorldBuildingManager.CanPlace](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L76)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|CanPlace -->
@@ -2232,14 +2237,16 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Persistence/VoxelWorldEdits.cs|Restore -->
 - [ProceduralVoxelWorld.RestoreEdits](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L418)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|RestoreEdits -->
-- [WorldBuildingManager.ClearBuildings](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L372)
+- [WorldBuildingManager.ClearBuildings](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L382)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|ClearBuildings -->
 - [WorldBuildingManager.RestoreBuilding](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L126)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|RestoreBuilding -->
 - [SaveManager.GetBuildingBlueprintFiles](../Assets/Scripts/Features/Building/SaveManager.cs#L74)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|GetBuildingBlueprintFiles -->
-- [WorldBuildingLibrary.Load](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L52)
+- [WorldBuildingLibrary.Load](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L51)
 <!-- source: Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs|Load -->
+- [WorldBuildingManager.ResetBuildings](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L338)
+<!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|ResetBuildings -->
 
 ## WorldLab 建筑支撑与损坏
 
@@ -2250,9 +2257,9 @@ flowchart TD
     A["ProceduralVoxelWorld.SetCell()"]
     click A "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L395" "打开源码"
     B["WorldBuildingManager.TerrainChanged()"]
-    click B "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L388" "打开源码"
+    click B "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L398" "打开源码"
     C["WorldBuildingManager.FixedUpdate()"]
-    click C "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L399" "打开源码"
+    click C "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L409" "打开源码"
     D["WorldBuildingPlacement.Support()"]
     click D "../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs#L111" "打开源码"
     E["BuildingRuntime.ReleaseAnchor()"]
@@ -2268,9 +2275,9 @@ flowchart TD
     J["Block.CollectNeighbors()"]
     click J "../Assets/Scripts/Features/Simulation/Block.cs#L378" "打开源码"
     K["WorldBuildingManager.CreateDebris()"]
-    click K "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L421" "打开源码"
+    click K "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L431" "打开源码"
     L["WorldBuildingManager.DamageSphere()"]
-    click L "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L416" "打开源码"
+    click L "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L426" "打开源码"
     M["WorldBuildingDamage.Apply()"]
     click M "../Assets/Scripts/Features/World/Buildings/Topology/WorldBuildingDamage.cs#L18" "打开源码"
     W["BuildingRuntime.EndDamageBatch()"]
@@ -2284,7 +2291,7 @@ flowchart TD
     O["WorldBuildingManager.ResetBuildings()"]
     click O "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L338" "打开源码"
     P["WorldBuildingManager.ClearDebris()"]
-    click P "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L464" "打开源码"
+    click P "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L474" "打开源码"
     Q["WorldBuildingManager.Place()"]
     click Q "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L96" "打开源码"
     R["BuildingRuntime.HasGroundConnector()"]
@@ -2334,9 +2341,9 @@ flowchart TD
 
 - [ProceduralVoxelWorld.SetCell](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L395)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|SetCell -->
-- [WorldBuildingManager.TerrainChanged](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L388)
+- [WorldBuildingManager.TerrainChanged](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L398)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|TerrainChanged -->
-- [WorldBuildingManager.FixedUpdate](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L399)
+- [WorldBuildingManager.FixedUpdate](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L409)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|FixedUpdate -->
 - [WorldBuildingPlacement.Support](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs#L111)
 <!-- source: Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs|Support -->
@@ -2352,9 +2359,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|SplitDisconnected -->
 - [Block.CollectNeighbors](../Assets/Scripts/Features/Simulation/Block.cs#L378)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|CollectNeighbors -->
-- [WorldBuildingManager.CreateDebris](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L421)
+- [WorldBuildingManager.CreateDebris](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L431)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|CreateDebris -->
-- [WorldBuildingManager.DamageSphere](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L416)
+- [WorldBuildingManager.DamageSphere](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L426)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|DamageSphere -->
 - [WorldBuildingDamage.Apply](../Assets/Scripts/Features/World/Buildings/Topology/WorldBuildingDamage.cs#L18)
 <!-- source: Assets/Scripts/Features/World/Buildings/Topology/WorldBuildingDamage.cs|Apply -->
@@ -2368,7 +2375,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|Generate -->
 - [WorldBuildingManager.ResetBuildings](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L338)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|ResetBuildings -->
-- [WorldBuildingManager.ClearDebris](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L464)
+- [WorldBuildingManager.ClearDebris](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L474)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|ClearDebris -->
 - [WorldBuildingManager.Place](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L96)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|Place -->
@@ -2477,7 +2484,7 @@ flowchart TD
     E["EnemyOutpostData.Validate()"]
     click E "../Assets/Scripts/Features/World/Outposts/EnemyOutpostData.cs#L13" "打开源码"
     F["WorldBuildingLibrary.ReadSource()"]
-    click F "../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L96" "打开源码"
+    click F "../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L82" "打开源码"
     G["WorldBuildingStreaming.LoadColumn()"]
     click G "../Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs#L34" "打开源码"
     H["BuildingRuntime.InitializeRoutine()"]
@@ -2534,7 +2541,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|SaveBuildingOutpost -->
 - [EnemyOutpostData.Validate](../Assets/Scripts/Features/World/Outposts/EnemyOutpostData.cs#L13)
 <!-- source: Assets/Scripts/Features/World/Outposts/EnemyOutpostData.cs|Validate -->
-- [WorldBuildingLibrary.ReadSource](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L96)
+- [WorldBuildingLibrary.ReadSource](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L82)
 <!-- source: Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs|ReadSource -->
 - [WorldBuildingStreaming.LoadColumn](../Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs#L34)
 <!-- source: Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs|LoadColumn -->

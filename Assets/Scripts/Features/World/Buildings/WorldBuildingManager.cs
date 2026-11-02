@@ -1,5 +1,5 @@
 // 职责：拥有 WorldLab 建筑实例、初始布局、地形支撑通知和有界残骸。
-// 入口：Place() / Capture() / Restore() / ResetBuildings()；不调用玩家 SaveManager。
+// 入口：Place() / Capture() / Restore() / ResetBuildings()；初始布局仅按名称查找共用建筑文件仓。
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -344,6 +344,8 @@ public sealed class WorldBuildingManager : MonoBehaviour
             return;
         }
 
+        var library = new WorldBuildingLibrary();
+        library.Load(SaveManager.GetBuildingBlueprintFiles());
         foreach (WorldBuildingCatalog.InitialBuilding initial in catalog.initialBuildings)
         {
             try
@@ -354,7 +356,15 @@ public sealed class WorldBuildingManager : MonoBehaviour
                     continue;
                 }
 
-                BlockDataList blueprint = JsonUtility.FromJson<BlockDataList>(initial.blueprint.text);
+                // Keep authored poses, but never use the catalog asset as a second blueprint source.
+                int index = library.Names.IndexOf(initial.blueprint.name);
+                if (index < 0)
+                {
+                    LastMessage = "Initial building skipped: not found in BuildingBlueprints: " + initial.blueprint.name;
+                    continue;
+                }
+
+                BlockDataList blueprint = library.Templates[index];
                 Place(
                     blueprint,
                     initial.blueprint.name,

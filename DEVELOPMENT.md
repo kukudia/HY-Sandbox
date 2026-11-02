@@ -1,5 +1,11 @@
 # HY-Sandbox 开发与审查入口
 
+## 2026-11-02 建筑生成唯一来源
+
+`BuildingBlueprints`现在是World生成与WorldLab建筑选择的唯一蓝图来源。WorldBuildingLibrary不再读取Resources内置建筑，也没有同名回退；空目录或全部无效时不生成建筑。WorldLab初始布局保留Catalog中的位置/朝向，但仅按名称解析共用文件仓，文件缺失或无效则跳过。制作参考资源和建筑编辑器的显式复制入口保留，复制到该目录后才能参与生成。
+
+每次世界会话重新读取文件；删除后重新开始会话清空旧模板、实例和休眠数据。当前会话已生成的建筑及WorldLab手动恢复的实例快照保留其独立状态，文件删除不作为实时拆除命令。11项隔离Editor检查、4项真实Main Play会话检查通过，详见[验证记录](Docs/Validation/2026-11-02-building-source.md)。
+
 ## 2026-11-02 建筑删除与显式新建
 
 建筑编辑不再把打开当作新建，也不自动补回`default_building`。快捷键进入时优先恢复仍存在的上次选择，否则打开按名称排序的第一份建筑；目录为空则保留建筑模式并显示新建界面。只有明确新建才写文件。删除当前项会取消旧恢复、清理操作状态后打开剩余项；删空则清除名称、父对象、底座和缓存。删除其他建筑不切换当前项，建筑删除确认不再统一跳回玩家存档。空目标禁止加载/放置，尺寸与据点面板隐藏，拒绝空名称路径。
@@ -9,7 +15,7 @@
 
 ## 2026-11-02 建筑蓝图共用读取入口
 
-World与WorldLab现在像Enemy一样，通过SaveManager的建筑文件仓获取用户蓝图：`GetBuildingBlueprintFiles()`在Main返回现有`BuildingFiles`，独立WorldLab没有管理器时复用同一路径规则创建文件仓。WorldBuildingLibrary统一列表、解析、同名覆盖、4MB限制和坏文件隔离；WorldBuildingPalette不再独立扫描目录和解析JSON。内置模板来源保持各场景原配置，世界资源异步预热与生成平台约束继续归World。
+World与WorldLab通过SaveManager的建筑文件仓获取用户蓝图：`GetBuildingBlueprintFiles()`在Main返回现有`BuildingFiles`，独立WorldLab没有管理器时复用同一路径规则创建文件仓。WorldBuildingLibrary统一列表、解析、4MB限制和坏文件隔离；WorldBuildingPalette不再独立扫描目录和解析JSON。内置合并已由上方“建筑生成唯一来源”改动移除，世界资源异步预热与生成平台约束继续归World。
 
 9项隔离Editor检查通过，覆盖注入文件仓、名称、合并、坏/锁定/超大文件、WorldLab共用及只读源文件；真实世界会话回归与静态检查详见 [本轮验证](Docs/Validation/2026-11-02-building-catalog.md)。
 

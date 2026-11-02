@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "unity": "6000.3.11f1",
+  "checks": [
+    "Real Main world session contains only names in the actual BuildingBlueprints directory",
+    "Actual world preparation selects only the isolated on-disk blueprint",
+    "Real generated buildings all use the sole on-disk blueprint",
+    "After deleting the last file and rebuilding the session, templates, live and dormant buildings are all empty"
+  ],
+  "errors": []
+}
