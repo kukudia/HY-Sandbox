@@ -1420,6 +1420,39 @@ def main():
     index = [
         "# 自有代码导航\n\n由 Roslyn 实际语法节点生成；脚本介绍定位职责，方法链接定位实现。不是行为测试报告。完整入口链见 [RuntimeFlow](RuntimeFlow.md)。\n"
     ]
+    # Reuse the owned-source inventories so vendor/cache folders never enter the tree.
+    source_paths = [Path(script["file"]) for script in inventory]
+    tool_index = (repo / "Docs/ToolIndex.md").read_text(encoding="utf-8")
+    for relative in re.findall(r"\]\(\.\./([^)#]+)(?:#L\d+)?\)", tool_index):
+        path = Path(relative)
+        if not (repo / path).is_file():
+            raise FileNotFoundError(f"ToolIndex source is missing: {relative}")
+        source_paths.append(path)
+    folders = {}
+    for path in source_paths:
+        branch = folders
+        for part in path.parent.parts:
+            branch = branch.setdefault(part, {})
+
+    def folder_lines(branch, prefix=""):
+        """Render every owned-source parent once, with stable sibling ordering."""
+        children = sorted(branch, key=lambda name: (name.casefold(), name))
+        for position, name in enumerate(children):
+            last = position == len(children) - 1
+            yield prefix + ("└── " if last else "├── ") + name + "/"
+            yield from folder_lines(
+                branch[name], prefix + ("    " if last else "│   ")
+            )
+
+    index.append(
+        "## 代码文件夹位置\n\n"
+        "相对于项目根；完整列出 Roslyn 自有脚本清单与 [ToolIndex](ToolIndex.md) "
+        "所收录工具的父目录，省略文件。Assets/Scripts/Features 为运行时代码，"
+        "Assets/Editor 为编辑器制作/验证工具；Tools、Blueprints 和 ArtSource "
+        "为游戏运行时之外的开发工具。不含第三方、Package、缓存、构建产物及历史归档。"
+        "由 generate_navigation.py 同步生成；下方各脚本章节可查看具体职责和方法。\n\n"
+        "```text\nHY-Sandbox/\n" + "\n".join(folder_lines(folders)) + "\n```\n"
+    )
     for x in sorted(inventory, key=lambda x: x["file"]):
         index.append(f'## {x["file"]}\n\n{x["introduction"]}\n')
         methods = x["methods"]

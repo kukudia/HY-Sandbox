@@ -2,6 +2,56 @@
 
 由 Roslyn 实际语法节点生成；脚本介绍定位职责，方法链接定位实现。不是行为测试报告。完整入口链见 [RuntimeFlow](RuntimeFlow.md)。
 
+## 代码文件夹位置
+
+相对于项目根；完整列出 Roslyn 自有脚本清单与 [ToolIndex](ToolIndex.md) 所收录工具的父目录，省略文件。Assets/Scripts/Features 为运行时代码，Assets/Editor 为编辑器制作/验证工具；Tools、Blueprints 和 ArtSource 为游戏运行时之外的开发工具。不含第三方、Package、缓存、构建产物及历史归档。由 generate_navigation.py 同步生成；下方各脚本章节可查看具体职责和方法。
+
+```text
+HY-Sandbox/
+├── ArtSource/
+│   └── VfxGraph/
+├── Assets/
+│   ├── Editor/
+│   │   ├── Architecture/
+│   │   ├── Art/
+│   │   ├── Bots/
+│   │   ├── Build/
+│   │   ├── Building/
+│   │   ├── Combat/
+│   │   ├── Diagnostics/
+│   │   │   └── Benchmarks/
+│   │   ├── Flight/
+│   │   ├── Power/
+│   │   ├── Presentation/
+│   │   ├── Salvage/
+│   │   ├── Siege/
+│   │   └── World/
+│   └── Scripts/
+│       └── Features/
+│           ├── Bootstrap/
+│           ├── Bots/
+│           ├── Building/
+│           │   ├── BlockDataTables/
+│           │   ├── BlueprintLoading/
+│           │   └── Interaction/
+│           ├── Combat/
+│           ├── Diagnostics/
+│           ├── Flight/
+│           ├── Player/
+│           ├── Power/
+│           ├── Presentation/
+│           ├── Salvage/
+│           ├── Siege/
+│           ├── Simulation/
+│           └── World/
+├── Blueprints/
+│   ├── CODEX/
+│   ├── CODEX_Enemies/
+│   └── DSH_Enemies/
+└── Tools/
+    └── CodeReadability/
+```
+
 ## Assets/Editor/Architecture/ArchitecturePlayProbe.cs
 
 // 职责：在一次临时 Play Mode 会话中回归蓝图加载、文件命名和实体恢复的架构契约。 // 入口：Tools/Architecture/Run Play Mode validation；结果写入 Temp/Architecture/Validation.json。 // 隔离：暂停场景业务，反射装配真实加载器；只写随机前缀临时目录，finally 恢复管理器状态。

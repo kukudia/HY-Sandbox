@@ -21,6 +21,6 @@ python Tools/CodeReadability/generate_flow_browser.py
 
 `generate_flow_browser.py` 从 RuntimeFlow.md 同源生成 HTML，可切换图、缩放和点击源码。打开时需要访问固定 Mermaid 11.12.0 CDN；离线可阅读 Mermaid 原文和函数索引。
 
-`generate_navigation.py`中的图规格表达实际主链，更新功能时同时修改它；生成Docs/RuntimeFlow.md的可点击源码节点和Docs/CodeIndex.md的全部方法签名/行号。生成器拒绝不存在的符号。静态符号有效不证明图语义或执行顺序，协程/通知使用虚线，人工审查调用者。
+`generate_navigation.py`中的图规格表达实际主链，更新功能时同时修改它；生成Docs/RuntimeFlow.md的可点击源码节点和Docs/CodeIndex.md的全部方法签名/行号。同时从 Roslyn 清单和 ToolIndex 生成代码文件夹树，按真实层级稳定排序，排除第三方与缓存；新增、移动或删除代码目录后重新生成。生成器拒绝不存在的符号或 ToolIndex 源文件。静态符号有效不证明图语义或执行顺序，协程/通知使用虚线，人工审查调用者。
 
 GitHub检查仅验证格式、说明和导航，不能替代Unity导入、Play Mode或Player构建。Unity探针菜单及报告详见DEVELOPMENT.md。
