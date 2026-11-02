@@ -1,0 +1,1935 @@
+{
+  "baseline": "beeff9bbce2cd9e12c88812c717479572fcd0df3",
+  "invariants": [
+    "Existing source bytes and meta bytes unchanged except explicit path reference migration in SpaceKitCurator",
+    "Existing script GUIDs and type names unchanged",
+    "No serialized scene, Prefab, asset or user save changes"
+  ],
+  "moves": [
+    {
+      "old": "Assets/Scripts/Features/Bots/BotAvoidanceResult.cs",
+      "new": "Assets/Scripts/Features/Bots/Navigation/BotAvoidanceResult.cs",
+      "guid": "c95226055cd3433f978f37853e54af30",
+      "sha256": "86f3c123b37cdc84acc4702d5cf108dba165e996fd60f6db16fdc82cd23b9f29",
+      "metaSha256": "92252fd53f4cdf99deaa1e48366dd4b74ff6309908a6a8b7e63b541821b5145a"
+    },
+    {
+      "old": "Assets/Scripts/Features/Bots/BotAvoidanceSettings.cs",
+      "new": "Assets/Scripts/Features/Bots/Navigation/BotAvoidanceSettings.cs",
+      "guid": "6f5218d0bd3e4467819e0c67a57aad5b",
+      "sha256": "1a89b2b788efeee72b98b888d6414ebe4eb338f2ab7410c3e1466b79aaf34fc4",
+      "metaSha256": "0132829d9f23d4430653a78d912c1bcf51605e8908516328d76a7a41aeeb6559"
+    },
+    {
+      "old": "Assets/Scripts/Features/Bots/BotFlightMotion.cs",
+      "new": "Assets/Scripts/Features/Bots/Navigation/BotFlightMotion.cs",
+      "guid": "cba104dcbf154893b48a8fd488340931",
+      "sha256": "d5634daa709de1aff0c4b043f96bda077f84258da734e2096ea29ee5c8ef3c06",
+      "metaSha256": "7271dacc05e9f965f77e8d18c0be244cd61257ce3750d69f35ce93b82f04a7b7"
+    },
+    {
+      "old": "Assets/Scripts/Features/Bots/BotNavigationPolicy.cs",
+      "new": "Assets/Scripts/Features/Bots/Navigation/BotNavigationPolicy.cs",
+      "guid": "4d76e0f63c5c44788db5f0c0d2d16446",
+      "sha256": "0195f58c1452dd8d6370d99ce5c119042a217ce1e19d4c6f7c7440ca8cfe9840",
+      "metaSha256": "20b039464ff36de2448536fc147dede32c186eeaa8d843a24755bca421b2831f"
+    },
+    {
+      "old": "Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs",
+      "new": "Assets/Scripts/Features/Bots/Navigation/BotObstacleAvoidance.cs",
+      "guid": "a2cfc4ab355640338024b31452d84379",
+      "sha256": "610454771f68303473ba4e3003a39b50599c94be565bc98ba58d3c87417acba6",
+      "metaSha256": "3a7aa39f144da4aff8a6d9a13b59f741d678f8ffa8e206aa7c3f984014fc18a1"
+    },
+    {
+      "old": "Assets/Scripts/Features/Bots/RepairBot.cs",
+      "new": "Assets/Scripts/Features/Bots/Repair/RepairBot.cs",
+      "guid": "f60bfef218079e044a227a007c43da2e",
+      "sha256": "d06952431d9511c305fd99ab968f3dd24b21e5224d728c5be6ca05132d2542d9",
+      "metaSha256": "d1da630014e165b1a4ab3ccd0d38e0abada74576fe838ba5496061683045a79d"
+    },
+    {
+      "old": "Assets/Scripts/Features/Bots/RepairTargetSearch.cs",
+      "new": "Assets/Scripts/Features/Bots/Repair/RepairTargetSearch.cs",
+      "guid": "c8aec8d305434b1494ef4ee39ab3d218",
+      "sha256": "240a6f03bdceb9fa31d3bf0bc6a48f3e69e97efc7150719dd96d9ad9048b2007",
+      "metaSha256": "9955147cf2d80b9bc2a4d4dc7e21beebc77c83c3c061fbee2cb002abd94e8ada"
+    },
+    {
+      "old": "Assets/Scripts/Features/Bots/RepairBeamView.cs",
+      "new": "Assets/Scripts/Features/Bots/Repair/RepairBeamView.cs",
+      "guid": "3d6938e1ad464bc193a649b58a64c773",
+      "sha256": "4ae28585bd29b15f92f706544e960964dfdf81276b59d52c3d9644de12209fb8",
+      "metaSha256": "85510bc97ddd3275e27c62fb5e3a1d8abb3478d3a39012766832d335f6abc7c0"
+    },
+    {
+      "old": "Assets/Scripts/Features/Bots/CollectionBot.cs",
+      "new": "Assets/Scripts/Features/Bots/Collection/CollectionBot.cs",
+      "guid": "d9cd226f6bc8ffb4fb2888f63a7c02aa",
+      "sha256": "f189101d5c53f6ffd87488e73813c942033be2fc9bc8a292eeee94986efc91b5",
+      "metaSha256": "6e8782d3a2066ffe17e16537944b54e975595d11a56d56c1fee9edb61fb58baa"
+    },
+    {
+      "old": "Assets/Scripts/Features/Bots/BotFlightEffects.cs",
+      "new": "Assets/Scripts/Features/Bots/Presentation/BotFlightEffects.cs",
+      "guid": "db6cec3ec0fa4e4480d23d98b70d96b3",
+      "sha256": "2eab7eea14c6e45b940aa7830dfc341374afcd5b1ab4563791dea14e2bab0ddc",
+      "metaSha256": "9fe3263c3440100d0d9568372f9b8e3f5681628648635b77bec28bf15d171913"
+    },
+    {
+      "old": "Assets/Scripts/Features/Bots/BotNavigationGizmos.cs",
+      "new": "Assets/Scripts/Features/Bots/Presentation/BotNavigationGizmos.cs",
+      "guid": "58c0964d09a7405c8cb6a0db79df7ee9",
+      "sha256": "6cd0d4e423d67769689a5b8af2f6e82b144ce8df8922f80b2c712f8bbe1d1958",
+      "metaSha256": "74c9717eb5453d1111380ef722f523dc48f089ccae6379b19d8e8c99ee6e7fcc"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/ActionManager.cs",
+      "new": "Assets/Scripts/Features/Building/Actions/ActionManager.cs",
+      "guid": "2ed108a86a6c2a64785bd050e17790dd",
+      "sha256": "06c11f2000faab84865057fd704f0c53631ec7dd6583c8f7694df8fb3106982a",
+      "metaSha256": "89cdee2c098164cb4e64d11b3f12be1aff419895086a3de203f02d2b744c96ff"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/IBlockAction.cs",
+      "new": "Assets/Scripts/Features/Building/Actions/IBlockAction.cs",
+      "guid": "9fdb9b94188a34f44a390308254e4307",
+      "sha256": "93bac96c4625ee67b2b93feb212a6f48e28d28af2fb79c76283a7d5de2c88ec8",
+      "metaSha256": "5d3ad4328a55fa1bf6683e7719b39d7b25e20cc5b6018d4547e7fc28407f33b9"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/AddBlockAction.cs",
+      "new": "Assets/Scripts/Features/Building/Actions/AddBlockAction.cs",
+      "guid": "0995e5d3039498b45a459bf80d382140",
+      "sha256": "f6948548793e56a38b5efa950fc1eb8a27da032afb49ae80593bd085186e1fbd",
+      "metaSha256": "8442d58a283d8f53d7b5b0c51804de0d17ddcae0ff41048e4a3c68eaf79a1635"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/DeleteBlockAction.cs",
+      "new": "Assets/Scripts/Features/Building/Actions/DeleteBlockAction.cs",
+      "guid": "6efaec21ad88a3c46956136aa02cc16d",
+      "sha256": "feb00ed195690d731aa5c38f76cb47ad6235d1302460892c05bc5dd89d1ee346",
+      "metaSha256": "f5a428d0a9e4300c537824bf2fb368ac5d8a95711401c689115587084ddbf469"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/GroupAction.cs",
+      "new": "Assets/Scripts/Features/Building/Actions/GroupAction.cs",
+      "guid": "4402dc178149ebd4a8a1fa2c120590b2",
+      "sha256": "c59820fb63faa16c28e311749ece03cf7303446c2b16cca21ad2dd0bfbf00867",
+      "metaSha256": "9d7444f2b55c8e8a9fa08dad90983fe8a5ef209c7ebea2eb3a51607e6976ef05"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/MoveBlockAction.cs",
+      "new": "Assets/Scripts/Features/Building/Actions/MoveBlockAction.cs",
+      "guid": "8d894d11115e0de4fb7fc64ff1536176",
+      "sha256": "a28bf8226beaf6f299958ccf1932e8d884644d8b2ffac8333910087b04d6a6ba",
+      "metaSha256": "93f6d1de130e81c7b58f415f3a667ca4c78da3569522988bf1c3d9ada7427de0"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/RotateBlockAction.cs",
+      "new": "Assets/Scripts/Features/Building/Actions/RotateBlockAction.cs",
+      "guid": "a15509035f010df4285a7ffb93fd0700",
+      "sha256": "4f2ea5e116e53aac4ec5df6495d3d268b3a2562088247280fd53bdb5d2a2c3d9",
+      "metaSha256": "6f09d99455a7809824620c1fb19c5dbd46f9390832ec96d066fe615f1c15fa9e"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/ActionCounterUI.cs",
+      "new": "Assets/Scripts/Features/Building/Interface/ActionCounterUI.cs",
+      "guid": "5b26d808929bd72458c25b7d45b48ccb",
+      "sha256": "afdabf63652b2564342634727825f82df3c3ea5021284c5cde43fc2f37f3e8e7",
+      "metaSha256": "9c7f79ccf44d2eb30ba8c7bd59c1336bbdfb54e2bad2bc5bb61a05dcb603d9e7"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/BlueprintUIPanel.cs",
+      "new": "Assets/Scripts/Features/Building/Interface/BlueprintUIPanel.cs",
+      "guid": "c718fc11b5c54864bafa79351e4af686",
+      "sha256": "6b625c279d02b9270051ea94cfe166a6111f0f426300c146d5d2e68dbb66b027",
+      "metaSha256": "d9defc3b4ad5fd25a0c73bed5641b0aaaa7c36e24515682d03d6797bc69dcf3d"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/SaveUIPanel.cs",
+      "new": "Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs",
+      "guid": "0dca431fbd662794880ef8f67f84391c",
+      "sha256": "704f1c6ad9e2333dca3d3a03a0d4c0a274ce9274fdcf081855dd55712f2f6cd3",
+      "metaSha256": "92fcc31131dba6cc529e5eb1d5e789f392b7e49e4502f0ac2c80dd49d2f46312"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/BuildPalette.cs",
+      "new": "Assets/Scripts/Features/Building/Interface/BuildPalette.cs",
+      "guid": "1e58407f6f04d0445a2eb2975df485bc",
+      "sha256": "091f759a15aca5f6131093cfeb35edd69a30b7dd25fa53233adce51e9e683827",
+      "metaSha256": "30aa03d9c943ef530f134979d8227689a537788934f8216cc61cf913f631bc83"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/BuildPaletteItem.cs",
+      "new": "Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs",
+      "guid": "ade3f63221960774da27c9cc56c60254",
+      "sha256": "3cd2720f93d8d633e46c141991ee5363305e31f55f47ea8344307ae71e12d17a",
+      "metaSha256": "21db07b92f0a1408bf38b8a2e22e8e6ccfa7b0278d535c0f030c1f2fb30ae09d"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/ConnectorPlacementHints.cs",
+      "new": "Assets/Scripts/Features/Building/Interaction/ConnectorPlacementHints.cs",
+      "guid": "c7bae6c6a02c44049b28793dc2003278",
+      "sha256": "ed9d819e191afec0d31005be53426629e4661dbb46b5fa1cb61bcccf2b821a4b",
+      "metaSha256": "733a0c2f8121a0abfd11935dcf57febfcbb8c010444a4d468f6d55c7d135ece4"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/MoveAxisHandle.cs",
+      "new": "Assets/Scripts/Features/Building/Interaction/MoveAxisHandle.cs",
+      "guid": "7ef1772c456fc7846a220aa23de526d6",
+      "sha256": "ac7b5fc60c04e6b0951ba2172a3553c3b39e57f09a25c8fa507e0b37d07e694f",
+      "metaSha256": "c2baf31780efa0fae9c057b82b1e95444386a83c462b4f83d723f0e9da48e8bd"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/RotateAxisHandle.cs",
+      "new": "Assets/Scripts/Features/Building/Interaction/RotateAxisHandle.cs",
+      "guid": "7561b3fa4c21ce34b9d81c366c48203a",
+      "sha256": "0c0b84b35a540e689211f1c270ea390c33a45d20cd4fe9ba6da11142b7faad0b",
+      "metaSha256": "590f2e7c5e6eef09172f98c64afde65a6c2af993ccfdb544aaae5cbbeeb48a67"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/BlockData.cs",
+      "new": "Assets/Scripts/Features/Building/BlueprintLoading/BlockData.cs",
+      "guid": "f30789b3a7594494b6b730e1bcc04577",
+      "sha256": "8e4386620e6832616d731f28d3329df55758808891519c222ec7ff4cbeac57c2",
+      "metaSha256": "254c174d03cab47f77fe6a4101d0a1a84e6860a77ff55b1c4df94d41503cbfa6"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/BuildTargetContext.cs",
+      "new": "Assets/Scripts/Features/Building/BlueprintLoading/BuildTargetContext.cs",
+      "guid": "c1265521478b4766ae648400e3c15ac9",
+      "sha256": "de4800d2d3c3cf666dfa0793b887c6a8226774a125f92f7c9421714685c67b2e",
+      "metaSha256": "483e4a67017673addc5bd31a767a0ad55b358decb677f62f60104b79d605d0fc"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/BlueprintModelPreview.cs",
+      "new": "Assets/Scripts/Features/Building/BlueprintLoading/BlueprintModelPreview.cs",
+      "guid": "ea50c68a825d0794b8d7824b976dc6f9",
+      "sha256": "4a750808cf4b84b5a455cb52b130886a2482bda0e6ed32ac1e2935d62b91b609",
+      "metaSha256": "2a8ec85b8e6b4db74bafe54460d31fcd3db1f5e370178ccbfce8ffc2f9c1728c"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/BuildingEditorPanel.cs",
+      "new": "Assets/Scripts/Features/Building/BuildingEditor/BuildingEditorPanel.cs",
+      "guid": "25b1395c87ea90e4dbbe0fa744f3dc07",
+      "sha256": "4357cd88be1f44000d2f40c8301cb8865cef6afac5a5cfd0c5b0a164d85bc963",
+      "metaSha256": "22ebab4c000350202d6877be0c7bd399bda0b97105d639abf8e0268b0c4b4552"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/BuildingFoundation.cs",
+      "new": "Assets/Scripts/Features/Building/BuildingEditor/BuildingFoundation.cs",
+      "guid": "ba44011b51664e14e853cbf04a865aad",
+      "sha256": "147351136bf4114a35d3cadcbfa21f6f5e717fc1dbb8ca82c64992f0291f8e4c",
+      "metaSha256": "00e446cfda97bf23fdeb272c63a9573d8a30b1c87623d9851d3ad5a97a5afd16"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/BuildingFoundationData.cs",
+      "new": "Assets/Scripts/Features/Building/BuildingEditor/BuildingFoundationData.cs",
+      "guid": "6dc770e34eefdc84896697e21e3d68a0",
+      "sha256": "06f52d0821702d65f057d91c9a37e0e8716e15d0c4319fb252287ec2e6c8d26a",
+      "metaSha256": "e503a38a72d1e10c9af101f7d3fc41dbbfeff2c888cc33a0a8bcda94f3d466b4"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/BuildingOutpostEditor.cs",
+      "new": "Assets/Scripts/Features/Building/BuildingEditor/BuildingOutpostEditor.cs",
+      "guid": "897977942a0088f479621272e7a41338",
+      "sha256": "b4975755daec2880115d9ed580df89ed8a82ceaf5029731eedfb21a4ef5560a8",
+      "metaSha256": "734441975dc00395be75eaefc47b22912bdaa3fbc6c109164d98744977d119e4"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/OutpostBaseDesigner.cs",
+      "new": "Assets/Scripts/Features/Building/BuildingEditor/OutpostBaseDesigner.cs",
+      "guid": "5034df2b9b6f54b4a8040ccdc9ff2080",
+      "sha256": "40371a4ed0c316018b3a4e6b29376090023674a70cacf3f18fe26bd0f80e8367",
+      "metaSha256": "0e1622e5d6ed3b38e98d595bb9e707db92f04c32bd6aff803a2f9519adbaba08"
+    },
+    {
+      "old": "Assets/Scripts/Features/Building/OutpostDeploymentPreview.cs",
+      "new": "Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs",
+      "guid": "59219bdd731f0494eb8e2843361a5205",
+      "sha256": "1374a7b1b51499f95226b580f1988af5c9b6d2d9e466e568315232b50b20ed4d",
+      "metaSha256": "bc3ada55070759389465ffaa0488467474bcaae72bc9165f43bbca4d3997b931"
+    },
+    {
+      "old": "Assets/Scripts/Features/Combat/EnemyController.cs",
+      "new": "Assets/Scripts/Features/Combat/Enemies/EnemyController.cs",
+      "guid": "6f21b2e181334d6cbfe39c7548fe1adb",
+      "sha256": "8399e6ae8da4a2fed7302c8a87209e014e60df52debf1d632b2c1a47c75a9ba4",
+      "metaSha256": "a79836eaa08eb68b7801cae7cfddc3754e9e5c6f4beec299127100efa78dbc3d"
+    },
+    {
+      "old": "Assets/Scripts/Features/Combat/EnemyIdentity.cs",
+      "new": "Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs",
+      "guid": "4bb6800ccf8a8b94eb31b32bbd3da643",
+      "sha256": "ec5d049040a41cb611bd0e6991bd38d90de44a7da681033573417e43a5b2e7f1",
+      "metaSha256": "e54228fb59a8c91251aa19785921f633af5a831b70c4e636392184aa6e2fc956"
+    },
+    {
+      "old": "Assets/Scripts/Features/Combat/EnemySpawner.cs",
+      "new": "Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs",
+      "guid": "81f2df6c35da4d33894981decc21c30b",
+      "sha256": "486e834d66277c295244e9ebe3f0cd01adda6306cc8a3a6a8f0b514455895b44",
+      "metaSha256": "e11d2aee5396da887011a3755999b9a8eeefbc24099f84f0bd6f3b7b6773b12f"
+    },
+    {
+      "old": "Assets/Scripts/Features/Combat/EnemyBlueprintFactory.cs",
+      "new": "Assets/Scripts/Features/Combat/Enemies/EnemyBlueprintFactory.cs",
+      "guid": "c8a5833c25905484e9c31f345b25bbef",
+      "sha256": "523dd7e405a657afe1e32f4bf21d0aa65618019f2add0d5b91921dac61bc7660",
+      "metaSha256": "ab88ffaa3bf78e1eb63bb77ae7b66b420b26cb352f2191e629e210add79c0398"
+    },
+    {
+      "old": "Assets/Scripts/Features/Combat/Turret.cs",
+      "new": "Assets/Scripts/Features/Combat/Turrets/Turret.cs",
+      "guid": "831c51573e3cde747b102e7468e1f1e1",
+      "sha256": "2c908ef3a5b883e74efdf1ce47984c1d984d9e727cc5a5c90aff7e4b31de919a",
+      "metaSha256": "0976f7d57cfa6f9dad0bb8736e26775d9e2cba9ef304f7bab15b5624e0cee6d8"
+    },
+    {
+      "old": "Assets/Scripts/Features/Combat/TurretTargetSelector.cs",
+      "new": "Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs",
+      "guid": "e3ab80f31d8f43f2ae4172eb6b929bab",
+      "sha256": "590de51e78a68af225fc7a007e83ea7db7f7d0fd0acc7082602caf958dc4e089",
+      "metaSha256": "7e97be54d68a3f6d2dfb1f34b0b93a8ae416f99820b7861dd8b6f651c01d5f3e"
+    },
+    {
+      "old": "Assets/Scripts/Features/Combat/TurretHitResolver.cs",
+      "new": "Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs",
+      "guid": "5a49c71296718e445b7b934ba097809a",
+      "sha256": "42257cb029f1f1f44f094be304d4069136db82b9b247a888f72de0a947cbd544",
+      "metaSha256": "76a0b634a1c876dabf0cca997e9502faecfe79a433e2e549c07ed1382b4bfc77"
+    },
+    {
+      "old": "Assets/Scripts/Features/Combat/TurretHitscan.cs",
+      "new": "Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs",
+      "guid": "85bec99b1a2145d491e30cd9431415f5",
+      "sha256": "ff9a323750baeade6fb01d3695c4761a3b6dffbfb9509712fe1691397f71b062",
+      "metaSha256": "db68a0e24b176dabea5df204ab57f6ddfade4f6b222a8e120c8d1c046a3f2267"
+    },
+    {
+      "old": "Assets/Scripts/Features/Combat/LaserTurret.cs",
+      "new": "Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs",
+      "guid": "f5a03ef431944f29b88e05e1c8ee2594",
+      "sha256": "e374209d562431f2ab90c165e48e3e364f0b043f7d812003c405390f19e4b15a",
+      "metaSha256": "9e8d0182fa7a148e6346be59e655aafef30a7e2f567132fd0b3c24838f6dcb27"
+    },
+    {
+      "old": "Assets/Scripts/Features/Combat/ProjectileTurret.cs",
+      "new": "Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs",
+      "guid": "4f7a01c8ea112ac4fa0e06e6442e0f77",
+      "sha256": "38614649e07f614e34ad390ec65ccd161e1bd689e65fb14903688603da91e3d5",
+      "metaSha256": "681d67ec4d961d36162109bf4cba3628e23c131756399e0ab198e5e1cdfa19ba"
+    },
+    {
+      "old": "Assets/Scripts/Features/Combat/TurretProjectile.cs",
+      "new": "Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs",
+      "guid": "66baac005f8bfb54194c6bdd378052b5",
+      "sha256": "c995f078f3fcb0572e2123ab2789c3fae97c85d0c9f445761ac7ea656e792f59",
+      "metaSha256": "651a1f31805e0b375ce10c5569aff776c13611d022869d9e598f8c7c2b04a14a"
+    },
+    {
+      "old": "Assets/Scripts/Features/Combat/TurretProjectilePool.cs",
+      "new": "Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs",
+      "guid": "dee080ac270d88d4fbc8bde0ee66cac0",
+      "sha256": "91b66c6db6ebc8f62ce9680a7be063643072f247c7b56b546f5fe4242c767b0b",
+      "metaSha256": "8967f4e7945e89001f465c1d577b31ce51a594d07c694ff9fece54fe74d8ff40"
+    },
+    {
+      "old": "Assets/Scripts/Features/Combat/Durability.cs",
+      "new": "Assets/Scripts/Features/Combat/Damage/Durability.cs",
+      "guid": "f887aec31b46cb74db9436ab89ebf777",
+      "sha256": "be17f85f38507ad4f0d812e74b2dc078efe0596bbbac16721f6c2070b5f124cf",
+      "metaSha256": "6da4333197a8ac45561405cda1aa44c2cf953ad507509bd0948035a4a6d99aff"
+    },
+    {
+      "old": "Assets/Scripts/Features/Combat/CollisionDamageResolver.cs",
+      "new": "Assets/Scripts/Features/Combat/Damage/CollisionDamageResolver.cs",
+      "guid": "78ad8c48aaca4ad6b6c8e94317af61b0",
+      "sha256": "578b416592874bddfaf9c0af1a0b36afb3cc20c924e9da53f1af31e7020cd3b5",
+      "metaSha256": "86806f02a8c60eb0df39ae49efb090d6eb84c3452397daa2d53e7d8498a779e9"
+    },
+    {
+      "old": "Assets/Scripts/Features/Combat/ExplosionPropagation.cs",
+      "new": "Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs",
+      "guid": "27df2d78c1614ee1b7750eb85543b61d",
+      "sha256": "d7bb2bed4ed051825dd5cdb00f8b23509d014ad8da07bf1a533d1816ded7a230",
+      "metaSha256": "703da406f4316d04bd7756378d3aa4d6ab15a45ff478c2fa2c466f93fa969d95"
+    },
+    {
+      "old": "Assets/Scripts/Features/Combat/SalvageCleanupSession.cs",
+      "new": "Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs",
+      "guid": "25021615bc614892a71b5badcd4afbf6",
+      "sha256": "02b57437d540b0f26332b30e2566ef200b3e2fcd0863dc0431012935673b24e7",
+      "metaSha256": "9188e3ffef3fdc6ad96e5bbbf1af8862d37d8625b9c4408be030224bf2e2710f"
+    },
+    {
+      "old": "Assets/Scripts/Features/Combat/Meteor.cs",
+      "new": "Assets/Scripts/Features/Combat/Meteors/Meteor.cs",
+      "guid": "9efb3ebb6d7899047a056a8bb0772ee0",
+      "sha256": "4fbe1b686334dce9e4fd30bc50397b873ba57ea7eb07f64cfca89fe1e02b25a2",
+      "metaSha256": "ae8983f462b084698d2d3ad602969266afd1adcc3593b12d956d1c138d88104d"
+    },
+    {
+      "old": "Assets/Scripts/Features/Combat/MeteorShower.cs",
+      "new": "Assets/Scripts/Features/Combat/Meteors/MeteorShower.cs",
+      "guid": "04570ca592742f744a5c5022a54ef40d",
+      "sha256": "63bf34004dfe44a0e0c32dcf1db28847cac3e96da3909505dc20e28f69631ee8",
+      "metaSha256": "d1eabc0f23b15a48b9c96a667a5f068be6de6fe5d9801be919a225022506bab4"
+    },
+    {
+      "old": "Assets/Scripts/Features/Combat/CombatHud.cs",
+      "new": "Assets/Scripts/Features/Combat/Interface/CombatHud.cs",
+      "guid": "3fc1c47cd0ad79241954ac3a18b00e13",
+      "sha256": "edc4783b4c5cb76980858bb542fc9524515a09ab81209590715b589fab0f6490",
+      "metaSha256": "72e0b64ffbd27defd00e1875062a9aa6e2b0409e46207bea51efa27f79b8a22a"
+    },
+    {
+      "old": "Assets/Scripts/Features/Diagnostics/AbnormalImpulseBodyProbe.cs",
+      "new": "Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseBodyProbe.cs",
+      "guid": "0fae08ac63693f94d9243548ad294a6f",
+      "sha256": "011468927f6c47157c5d6708265c69fc13c3cb870eb2071aa78340e9ca8fced5",
+      "metaSha256": "f228dbde9895a5b02027200c63820037b0697422557657d931c8e49a20870a99"
+    },
+    {
+      "old": "Assets/Scripts/Features/Diagnostics/AbnormalImpulseRecorder.cs",
+      "new": "Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs",
+      "guid": "9dbf125b814b1c1458e0e325dd6c8050",
+      "sha256": "b6379e8ff6d85c130f305131e7b4e2ab1dea0943b7c21c7b653ee61d109ca7e0",
+      "metaSha256": "6e82660ff69458b7b79582e9a8d45fe3646af8994196e3d1bd848dcb21dd3c90"
+    },
+    {
+      "old": "Assets/Scripts/Features/Diagnostics/PhysicsTelemetryHud.cs",
+      "new": "Assets/Scripts/Features/Diagnostics/Physics/PhysicsTelemetryHud.cs",
+      "guid": "246de0cd95f75f94dad2be8744ccab35",
+      "sha256": "c3ff4428c5314ae2fbf78016ad083d0698c6855a42a2ca56ca9521ef0f250106",
+      "metaSha256": "c4836debfea43ad691f9760592a47e3c5a00e1c567ef82245041a993050539ef"
+    },
+    {
+      "old": "Assets/Scripts/Features/Diagnostics/BotNavigationProbeDriver.cs",
+      "new": "Assets/Scripts/Features/Diagnostics/Bots/BotNavigationProbeDriver.cs",
+      "guid": "ca66f516439f44a4afcfdb6756245f41",
+      "sha256": "5b1ba4f348a7097d36c860890502f9d320865dad9cde0e581db152b10676ec7d",
+      "metaSha256": "de0f38b4cbde3cd7ddf3674c2ff76cac08b72b391bb0daee8123c1dde429a186"
+    },
+    {
+      "old": "Assets/Scripts/Features/Diagnostics/DurabilityDebugLabels.cs",
+      "new": "Assets/Scripts/Features/Diagnostics/Interface/DurabilityDebugLabels.cs",
+      "guid": "174494f93373b8144a14b530794afbf1",
+      "sha256": "5daffd746b3bf978420f8c0fbf99c4473cdc24bf5a69c11b3786828bf8127454",
+      "metaSha256": "7104e8e51734a2cf7f2135694df667f754b9705b50da515a41d8eac73b20b1df"
+    },
+    {
+      "old": "Assets/Scripts/Features/Diagnostics/PerformanceMonitor.cs",
+      "new": "Assets/Scripts/Features/Diagnostics/Interface/PerformanceMonitor.cs",
+      "guid": "20419a479836d9d4f911f90e55a2a9e7",
+      "sha256": "280b33bb6d3fb6d18047462ac4505e808723a82a43f1d29e7667b1318e1d1d41",
+      "metaSha256": "a27b0e21d47a7c4e907496fe6385411d573e2eaa9b96984b8d2637333714a115"
+    },
+    {
+      "old": "Assets/Scripts/Features/Flight/HoverControlSolver.cs",
+      "new": "Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs",
+      "guid": "b6b8007dafea4451b48cdaa829f68a1d",
+      "sha256": "4af9580651b793fe2c304367c133b7db6f450d3c16400d5c59d31a348ac83fe6",
+      "metaSha256": "3689c8851ca4ecb5bbe45d2f13a6bedcdf9ca390cad2e1ea2f88e297279628d0"
+    },
+    {
+      "old": "Assets/Scripts/Features/Flight/ThrusterAllocator.cs",
+      "new": "Assets/Scripts/Features/Flight/Hover/ThrusterAllocator.cs",
+      "guid": "6b29ca193580d1240a75312f25643238",
+      "sha256": "d5c3392f3bfdd1d8dd4e29e35672afc19e71b44aa2049a5923ab08237c538095",
+      "metaSha256": "e3e7e10dc5809744ff68a421c0aa8c890cb0d278418c96d25ef5c6e845abe9c1"
+    },
+    {
+      "old": "Assets/Scripts/Features/Flight/Thruster.cs",
+      "new": "Assets/Scripts/Features/Flight/Thrusters/Thruster.cs",
+      "guid": "7f2bbcd6046110e4092059040ca34ae8",
+      "sha256": "f37aa092c59156cf3964f3991d5a65227759a1eefb4ff54002daf15e7420e517",
+      "metaSha256": "cd8a55bb81ff1d3cb8c03995dfd9c620ef875484c0b2c8abfec6e3db2f337303"
+    },
+    {
+      "old": "Assets/Scripts/Features/Flight/HoverThruster.cs",
+      "new": "Assets/Scripts/Features/Flight/Thrusters/HoverThruster.cs",
+      "guid": "2046c8acffab30e439727a99f017b258",
+      "sha256": "2e2f9fd33c50af59707e4cbfc3e2593bdcce19b346a2b81c3c74f36aa7fa20c7",
+      "metaSha256": "d59b2f7ff0ec5bc727f361e7345fbccef815a236b01cd8b331f128ba5aac7ed5"
+    },
+    {
+      "old": "Assets/Scripts/Features/Flight/MainThruster.cs",
+      "new": "Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs",
+      "guid": "57334dc6d946f994f8225fbf6ee3a5f1",
+      "sha256": "83262c09a8a9136bd63c32ced1c14f5a70c51e89b1a5cd5e77725f2d51390f17",
+      "metaSha256": "ec55064dd7e6d6bc88b018234fb3d11e4e4bb3f8dabd8f678e10b1eaa13828d9"
+    },
+    {
+      "old": "Assets/Scripts/Features/Flight/UniversalThruster.cs",
+      "new": "Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs",
+      "guid": "f543cb2ac4c31aa4a8e8ba0cc0963046",
+      "sha256": "f9450c96c0e4d0e9c8c7750c5e5094fad0f80e548a7958247356e37e12cca53d",
+      "metaSha256": "7b7eae897eac327b30a171dd165f25bf6aefc3022850e4a0a7887eef4d0fb616"
+    },
+    {
+      "old": "Assets/Scripts/Features/Flight/ThrusterInfoPanel.cs",
+      "new": "Assets/Scripts/Features/Flight/Presentation/ThrusterInfoPanel.cs",
+      "guid": "dc8af3a3480a24b4a9e684f0289602c3",
+      "sha256": "5c68e28bd3e452ebfb3bf94489547f8bec3bea644a9a99179ba00f491f85860a",
+      "metaSha256": "a5ba76f15c02f5587717f930fad544061131a3656215b29443d6358dbff41003"
+    },
+    {
+      "old": "Assets/Scripts/Features/Flight/ThrusterVisualEffect.cs",
+      "new": "Assets/Scripts/Features/Flight/Presentation/ThrusterVisualEffect.cs",
+      "guid": "25834dd6b7f546d78a148b4e63278b56",
+      "sha256": "c5641650cb51334c6af8da7a76b47f52b8fac21632228b51fdc3c82306998d56",
+      "metaSha256": "5516320b9d548411303cfa437ee4392fc5c4eb55bd29a5e6a78a748ec8e5418a"
+    },
+    {
+      "old": "Assets/Scripts/Features/Power/PowerNetworkBaseline.cs",
+      "new": "Assets/Scripts/Features/Power/Network/PowerNetworkBaseline.cs",
+      "guid": "a7aa1472df40002498566c39e666286d",
+      "sha256": "81f5b999804ba6b7abcbc07b369a22019e21858aae1c3974e74738872afb534e",
+      "metaSha256": "851577bbe85a7a5b6c9f0f37c2552abd67baf9eee5f90eb001aef16359a7eaa3"
+    },
+    {
+      "old": "Assets/Scripts/Features/Power/PowerPositionIndex.cs",
+      "new": "Assets/Scripts/Features/Power/Network/PowerPositionIndex.cs",
+      "guid": "24117f9880d8ca24e8493adbd1bb90f5",
+      "sha256": "74c44393fa74aa97625cd2eac55b1aa230acdda8ab543df6ca3e1dcd83485dc9",
+      "metaSha256": "95832f15aca7bcfdf627c7087eb788abb2fafd76bf5221211fb10a3607ee666d"
+    },
+    {
+      "old": "Assets/Scripts/Features/Power/PowerGeneratingUnit.cs",
+      "new": "Assets/Scripts/Features/Power/Devices/PowerGeneratingUnit.cs",
+      "guid": "40f363da8d12ff64fbb824114be4d4ac",
+      "sha256": "a37a385cfc328214393a8273e3e644b0bd056dd12ecc3db7263291052bcd8ff5",
+      "metaSha256": "becb146c651f08d373203cf4d405e81c6052e083cee6c705766b553eabc846bf"
+    },
+    {
+      "old": "Assets/Scripts/Features/Power/PowerTransmissionDevice.cs",
+      "new": "Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs",
+      "guid": "9fe4526fdc8afc7479306c79f430fbcb",
+      "sha256": "bf03c09767d486f159433d3c4105ee84a6c75396ea1713ae6cded312241e494d",
+      "metaSha256": "075799f88cceb4980c85a630b846fe66c1f7e7aefdaf6939844c9fc49e841ed9"
+    },
+    {
+      "old": "Assets/Scripts/Features/Power/PowerConnectionVisuals.cs",
+      "new": "Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs",
+      "guid": "e6614be6a6c04ff0b15491b9bcb7e7f3",
+      "sha256": "7125e98decf7595e094bd2402464aaf3978ead191c73f9a99cd9bdb2559d8dd5",
+      "metaSha256": "08393e1276ba6c4d72ecd2c249e47729713e83ef772ff05a47977036f295a0ab"
+    },
+    {
+      "old": "Assets/Scripts/Features/Power/PowerRangeUnionView.cs",
+      "new": "Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs",
+      "guid": "5b57dd3ee60e4d5dbabaaccb87698a52",
+      "sha256": "108027a3583ee16f117ed36198dfe3d8b20fc241a3ac1f970f38dbce1aa26407",
+      "metaSha256": "547ad18f311929285478b5ac33a2c8913b6134cfdfe6aac87f1ed9836bc9fb27"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/CameraController.cs",
+      "new": "Assets/Scripts/Features/Presentation/Camera/CameraController.cs",
+      "guid": "735e930164bd6ec46ad20802a24df1b8",
+      "sha256": "81abaf6949c642939229ad852b5d4355606eb7f3be3070a354f03c8dc79653a2",
+      "metaSha256": "b8f8fa4fd69239269d0f24c8719f0ad79f92b1b0fa3dfd31ace40a5a02951089"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/CameraFraming.cs",
+      "new": "Assets/Scripts/Features/Presentation/Camera/CameraFraming.cs",
+      "guid": "30e087f4f7d1968409832cfd64080df5",
+      "sha256": "e4433de1e9b03af939732a18f075fc2e10c7c7f009099a92a0ea9b4de5a3cc37",
+      "metaSha256": "15ca0bab7869c3dae117a79cb55ed8360f97f87fb99b05a2bb41caae642b443c"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/CameraShake.cs",
+      "new": "Assets/Scripts/Features/Presentation/Camera/CameraShake.cs",
+      "guid": "25191cbb422a9f04b89cd0c1c8501785",
+      "sha256": "86f4f0091f9576f3552a0845c9f4778927c6d2ed75161228cded2991dbd4e319",
+      "metaSha256": "a97e7e1bb74471c47b4f582f9fb3ed331c9b8bf70da839793210d762dd539eec"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/GlobalTextStyler.cs",
+      "new": "Assets/Scripts/Features/Presentation/Interface/GlobalTextStyler.cs",
+      "guid": "3378f0f3042ab184abfa811bae70270d",
+      "sha256": "15410d844635e79fb08a238f76da408f67474bd6adcceba89356b48fa0082df4",
+      "metaSha256": "a05ee12a396814791a17fb8a43d90a9a055f764d01a6cb021d89005af6995f0a"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/IconManager.cs",
+      "new": "Assets/Scripts/Features/Presentation/Interface/IconManager.cs",
+      "guid": "54b6d5e1a71046845b6e1e56f59c95b8",
+      "sha256": "b478d494196c6591448a6dc9bad43454e54647e243ca1f2547f3ff1827696bbf",
+      "metaSha256": "ba9f617a743f5322f23228032ff8e0e5ba4f84fcbd5812959a5da6b0a27184b3"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/MainUIButtons.cs",
+      "new": "Assets/Scripts/Features/Presentation/Interface/MainUIButtons.cs",
+      "guid": "241ddf312f2da0e49b4d3cb3e1900ce7",
+      "sha256": "873ee5b15036c12031474f5defd865351e472aba9b2d1c7618e09696ad3c8720",
+      "metaSha256": "f51c21e8f95be5430d45d8c348e83bd9428a8511b0391ee4663d90193a7ddd6e"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/MainUIPanels.cs",
+      "new": "Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs",
+      "guid": "ff44bd663c39db54b941ea32fde896e7",
+      "sha256": "abd03b89e7002bfb35194e6c6ce648c690a1a2e0fdb2c4e664429c53e0d79c5c",
+      "metaSha256": "eaff1474c3db5153ce7423b0b1d54ca9668073b3ba3c911e7155ee5ada6d1f37"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/PanelTransitions.cs",
+      "new": "Assets/Scripts/Features/Presentation/Interface/PanelTransitions.cs",
+      "guid": "cca71eddb36533b46ad68bb202d3c9fe",
+      "sha256": "94de0ec9d67d8e62f7882773790989517ca69218d92fb0b00ab20b7c7dfcca02",
+      "metaSha256": "4aca32b62d9840fedf2a580ffbd02307bca8cc0b7eefc1730ad16eac39922c4c"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/ReturnStatusPanel.cs",
+      "new": "Assets/Scripts/Features/Presentation/Interface/ReturnStatusPanel.cs",
+      "guid": "f3941ab0c4076584a8cac42914484ede",
+      "sha256": "83a1f4010715e232c9c7baf0517da4dc599fdeb2b9d147d14a9095d561d8674c",
+      "metaSha256": "1ed1c1e0886ce89c05d0208c0ca5ad2bb2d88c422979b15134113401ad7a8643"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/StatusIcon.cs",
+      "new": "Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs",
+      "guid": "d918074d82ae8274ab6fa09613242220",
+      "sha256": "c2a8cd40eea89c0bb8e51f3c7bc6710b4ada939171473036ac1a43ababd7077e",
+      "metaSha256": "5ed9e7e41f9863f8ca9ae56fc526ffd6aa9e2ba5c5cb0a4a290a1087a96975ea"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/UIInteractionFeedback.cs",
+      "new": "Assets/Scripts/Features/Presentation/Interface/UIInteractionFeedback.cs",
+      "guid": "0684d39083059514d9eab159edf060ba",
+      "sha256": "71db11c67aef28261653558b8afe2cf14cae99e6d97383fd0b79cb3bd0ff3610",
+      "metaSha256": "bdc800080a95a1ac74fd3edd181b0992112c5e5f5eb881e7fdfc317472d438d3"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/BlockStatusLight.cs",
+      "new": "Assets/Scripts/Features/Presentation/Blocks/BlockStatusLight.cs",
+      "guid": "29a5772865e47b54495fc44376cbfc39",
+      "sha256": "3a849411194bfad76755fea57da4559f2d2d934d2cd0be8047986b15d867aeb8",
+      "metaSha256": "59ab32b30b626829866395684d38c2999e9360dcc2e38a7204370778016a04c7"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/CargoHoldView.cs",
+      "new": "Assets/Scripts/Features/Presentation/Blocks/CargoHoldView.cs",
+      "guid": "51d1147138e8f104b8176bed7e40fc2e",
+      "sha256": "f49d5447f64920ec47b5401297826fe13ba1a2f5b9f2407e575758cfc140e1e8",
+      "metaSha256": "c5f39fedb56e28424c6c3cad723d82048d5b7194e4c5eb71e850e412a30ce7fc"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/CargoVisual.cs",
+      "new": "Assets/Scripts/Features/Presentation/Blocks/CargoVisual.cs",
+      "guid": "c039c40de410a9745859aa587707ab5c",
+      "sha256": "628e96a66fbc66baaf5b4c195367d9d35c7618d71cb9d8438ae7f0619f6bd523",
+      "metaSha256": "1542ca5cbe44a47267086cdb8ddc2804999e742491b5cfd8f4dc38cd7546cd84"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/HoverControllerStatusLight.cs",
+      "new": "Assets/Scripts/Features/Presentation/Blocks/HoverControllerStatusLight.cs",
+      "guid": "adcf8df7c43fd7849a3304f9338dc5e0",
+      "sha256": "5801d460a9a876b3d490968cb5d0aae7399b6b9edad248565186798b1fc88a88",
+      "metaSha256": "dded35d845746824e385bc49488bb9118b6d1eebcd7ea32f7d518b3e50a1c2fb"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/IndustrialPartMotion.cs",
+      "new": "Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs",
+      "guid": "04414eab24062b545b0f8513fb29b41b",
+      "sha256": "17fe9586ab7e951b98fe3f00596bf35a8decd7d0d99e086c35636978e5194fd7",
+      "metaSha256": "c14e518fb66bf3938c4bfb094057dbf8814ae2bb8a4281179e1fbb098f4293e4"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/BeamFade.cs",
+      "new": "Assets/Scripts/Features/Presentation/Effects/BeamFade.cs",
+      "guid": "47f2b6e3707fd60489ed240d43a2b469",
+      "sha256": "7eaad674b82ceb51e2eeb69ada2fb5d0f3f6bc3d747db7151138cc7ba8fd4eed",
+      "metaSha256": "678f87e12fe7ac77a11989bf79b626772cccaf405f71f646e5100c5d6440f5a8"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/BlockVfxLibrary.cs",
+      "new": "Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs",
+      "guid": "6ae0b407f1500714a9b1812195eafec9",
+      "sha256": "b2e60cab032c043076d89ccacd988ffa307e79b6b0243e52d5c8ee4cf2ee343c",
+      "metaSha256": "5eb2d74e7de2dcef0868e2d9821f589d032d2815ea5fbae9f3bc7cff12c7f70c"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/DetachedPartSmokeTrail.cs",
+      "new": "Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs",
+      "guid": "a83a0be8c35302648af39c6447ac22d3",
+      "sha256": "480a0bdbb1d7e0b8dc00f6610e77b421fa28a2df10238b2653b771f58ccc1a3a",
+      "metaSha256": "d9657f2845c60e891515bdd5efe97f05a82f89a14bbd2dce14b0fd5dfaffc520"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/LightFade.cs",
+      "new": "Assets/Scripts/Features/Presentation/Effects/LightFade.cs",
+      "guid": "c01aea36883f611489fe581dd99676c6",
+      "sha256": "6b736d1561ea2ab6ca0c2082cdca2f10400264dece092276d125173d3ccb8628",
+      "metaSha256": "21d2cdbf75415412fd9d2955df782b1908534f50fffd7208e4b1454953d80c1a"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/MeteorLightToken.cs",
+      "new": "Assets/Scripts/Features/Presentation/Effects/MeteorLightToken.cs",
+      "guid": "ab0faa8412429c54c846e5ee83be969e",
+      "sha256": "11bbc5de1b86a12b70546f6dcb1d2b4c303dd64651381e43875d315a0bd98e9d",
+      "metaSha256": "4ef6c71bd6e0ecb927a0eca5e82438b436d8a3f3fa535bface549716bdf763db"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/MeteorTrailFollower.cs",
+      "new": "Assets/Scripts/Features/Presentation/Effects/MeteorTrailFollower.cs",
+      "guid": "5e6286afe6c24d04ba2334937dddca6f",
+      "sha256": "bb427e270deb4fc2ea9d898674e5639b719ce1ed94e8f73d143b780c2e367670",
+      "metaSha256": "fcce0b1137fa1d00ba78e2f361a8ea16b1a2b28fbb39828e89483f949904a17c"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/StylizedBeamEffect.cs",
+      "new": "Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs",
+      "guid": "fcd637ae7930403982de6749fa56d441",
+      "sha256": "ee7a848fa9dffeb6dfc0ab9644e2b68cb81c47c0f4a8b6d8d50ce71ba2c0f200",
+      "metaSha256": "742800278aacdb224a2e161cc0f9498d41a2876dda1e6ed2f7e518f03aa2a770"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/TransientEffectPool.cs",
+      "new": "Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs",
+      "guid": "6f4f0d00bbfd9af45b1c7afcaa316da8",
+      "sha256": "8daa7e86c4ae9435d71bec7b9a3722ce1eaaec456154839bf29fff939701f260",
+      "metaSha256": "7e9ddb4a8d7a3bc81eaa579d49c88b8785dc30b60dc5ef70fa652808914a0e7f"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/TransientEffects.cs",
+      "new": "Assets/Scripts/Features/Presentation/Effects/TransientEffects.cs",
+      "guid": "fb4b8c1a289ed7d4092c94dbc1846ac2",
+      "sha256": "4f35a5e8642e21f70fbef90a515178041f20e6566577dae8c1ed421bea7f0250",
+      "metaSha256": "896bb0d246dcfeaeb7359de93c3e06c5bad5515ddb91c6e5e8a5f788ac215d33"
+    },
+    {
+      "old": "Assets/Scripts/Features/Presentation/VfxEffect.cs",
+      "new": "Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs",
+      "guid": "66b52b53860fb564e9fb774c164b608e",
+      "sha256": "cb11b172813d10775515f7b7950f550631922169dd19b0517588995b3a9e41c7",
+      "metaSha256": "d2bd0bd03b50c191c85af824c1cc1800285ca96698c983787262e80d039f6094"
+    },
+    {
+      "old": "Assets/Scripts/Features/Salvage/CargoHold.cs",
+      "new": "Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs",
+      "guid": "16e7925de25f17343b8840338cd38fff",
+      "sha256": "94248e9f218f76c77cb221a4d344498ed9f0aa20a4678e12ef20eda512d062da",
+      "metaSha256": "dbcc0a0da22745f45205d70e77b9ce020ad3001f4d2bce97f1d0471230aa3395"
+    },
+    {
+      "old": "Assets/Scripts/Features/Salvage/CargoItem.cs",
+      "new": "Assets/Scripts/Features/Salvage/Cargo/CargoItem.cs",
+      "guid": "4fba8ae1ef1eceb449e77e8c9c6791b5",
+      "sha256": "d1fd4dadb80af3635c2dee72cd0224ab5d98c99421ddb812969878813cc74e8d",
+      "metaSha256": "1d3a45bbc69cdec9f0beeec8c9779c5fb5b7eab4c1f1cb706ced11aed6307525"
+    },
+    {
+      "old": "Assets/Scripts/Features/Salvage/CargoPersistence.cs",
+      "new": "Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs",
+      "guid": "99addb141384a4e4899d45a989997d41",
+      "sha256": "4103d1a019ccb71ade317bd3545d1411866a1626d0291d51b41b9056f1d87f6c",
+      "metaSha256": "2c9e15e8fa46e421db5d0696b9112c2d767ee9175bc217367a27255894b365c6"
+    },
+    {
+      "old": "Assets/Scripts/Features/Salvage/LootDrop.cs",
+      "new": "Assets/Scripts/Features/Salvage/Drops/LootDrop.cs",
+      "guid": "a98b1adbe0efb404984dd4d3ef3b9e9a",
+      "sha256": "445b57ef68b22bc746c9a63ef647e7dd3dae52425697daaa4ed76df5938544ed",
+      "metaSha256": "38a6091883cd809283a2c768d1f3e6521851d4e72cd81556108f50df460127d6"
+    },
+    {
+      "old": "Assets/Scripts/Features/Salvage/WreckSalvage.cs",
+      "new": "Assets/Scripts/Features/Salvage/Drops/WreckSalvage.cs",
+      "guid": "81bbcf36bb3067c46af318f3bb5cd263",
+      "sha256": "18d00ca80061aac6c81da395017c81dbda46ac5c49a829140f7b88f87fcae772",
+      "metaSha256": "f0be63820b460317919e1ac1ee4d70941c20ed0b57663af5e12e6493cc6a9f85"
+    },
+    {
+      "old": "Assets/Scripts/Features/Salvage/CoinManager.cs",
+      "new": "Assets/Scripts/Features/Salvage/Economy/CoinManager.cs",
+      "guid": "fb4bd01832b028c4d953a1c4ae3ec1fd",
+      "sha256": "18542564956cd5ac802ca92426e40cb0d502f2d269285dc90baad1fb113d0209",
+      "metaSha256": "88b895c9839e847be5882350b19086da79ea39a87325b209cc12ba8199188b2f"
+    },
+    {
+      "old": "Assets/Scripts/Features/Siege/SiegeBase.cs",
+      "new": "Assets/Scripts/Features/Siege/Battle/SiegeBase.cs",
+      "guid": "85ba841e94d38984885a1b54f8e09d69",
+      "sha256": "388b4cf41061fe449ce94532d441c2d056626bd7dd4639462d8b18150c6b81b1",
+      "metaSha256": "553c68b0a3a404e2a40e6ea25cd8125b1bb312168fd43041b8d52b29255dbf6d"
+    },
+    {
+      "old": "Assets/Scripts/Features/Siege/SiegeWaveDirector.cs",
+      "new": "Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs",
+      "guid": "a773e856619b50b47aa7caec6d9cabab",
+      "sha256": "e4cee0b7b330fdeae46bda9add8efe89e52dd6dc6405aa4b343d6dc752f526ca",
+      "metaSha256": "0c1a02fc00b24818e551ffc8d31f811c22584294bb7ec19ceb12576f4be56075"
+    },
+    {
+      "old": "Assets/Scripts/Features/Siege/SiegeWreckBudget.cs",
+      "new": "Assets/Scripts/Features/Siege/Battle/SiegeWreckBudget.cs",
+      "guid": "ff5a0fc767cc2ce4588879a7a622fddb",
+      "sha256": "1fdd271079c893e9d6192c3469bf03b760637fad4dfdbaad698e98038dcdb8fd",
+      "metaSha256": "d429805c1fef3fd094c2be3e3bdaf24ba65716d097b74ddc70d72f340adef751"
+    },
+    {
+      "old": "Assets/Scripts/Features/Siege/SiegeFleet.cs",
+      "new": "Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs",
+      "guid": "a0d17e418e5ddf441bfcb42606650913",
+      "sha256": "b8f69ed09e4e340931012671c1a5c91d8012b5f7b6acf6a36d1f858d986ce364",
+      "metaSha256": "bc1d101eb11cb0e8523961671cd68ff402d04542caf6a95f9c28bd9434e15198"
+    },
+    {
+      "old": "Assets/Scripts/Features/Siege/SiegeFleetEntry.cs",
+      "new": "Assets/Scripts/Features/Siege/Fleet/SiegeFleetEntry.cs",
+      "guid": "d5e505d71d5a2f1418d8a623bb1d748c",
+      "sha256": "5c95f97f4e0cf913912c77166344fa8ea544f43291c49724fd22e9ca8d4d0a2e",
+      "metaSha256": "ba9d4781f5a5d75f0cf2a3c41241748e61e61ff497065c1985986ce3e08e9977"
+    },
+    {
+      "old": "Assets/Scripts/Features/Siege/SiegeFleetPhysics.cs",
+      "new": "Assets/Scripts/Features/Siege/Fleet/SiegeFleetPhysics.cs",
+      "guid": "e13d5d724a23b1143a27556ceac8507f",
+      "sha256": "0f66983a51a2468ec72c8253c8b4de18a5e0260d474b62d1a2f90f44643a7025",
+      "metaSha256": "4eecf7c5a9c93cab673eeaa986c574c12391ec4cac48da33dba8666ab4b0973b"
+    },
+    {
+      "old": "Assets/Scripts/Features/Siege/SiegeBlueprintCatalog.cs",
+      "new": "Assets/Scripts/Features/Siege/Fleet/SiegeBlueprintCatalog.cs",
+      "guid": "84b74308f6b870f4985ebff6cc7a4fbf",
+      "sha256": "90388c41637b7b2c8a9afa03645be32289c302effe7e03704ec19d39c31d13ca",
+      "metaSha256": "1fb2a89a79cb16f3f2988cf164078fdcac01a8636f98df346739b097eb1de4b7"
+    },
+    {
+      "old": "Assets/Scripts/Features/Siege/SiegeDeploymentPad.cs",
+      "new": "Assets/Scripts/Features/Siege/Fleet/SiegeDeploymentPad.cs",
+      "guid": "e90f0705e9a6f9c4c9d5403305912ef1",
+      "sha256": "cc164e5d7bfb737b3d9675a26483da4ef49196f83e3c25df4e223f5309cb2ca0",
+      "metaSha256": "cb2ff5a1a2b0bbd28a2670fea7d0bd7063e42bf27c08b5238be1a99c24df1926"
+    },
+    {
+      "old": "Assets/Scripts/Features/Siege/SiegeRefit.cs",
+      "new": "Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs",
+      "guid": "e60280f029e5f9143b37536839b8748d",
+      "sha256": "b904b8c2be36deb02348a0440df971ce64be8fa388995973c0e37ef720a6c4d4",
+      "metaSha256": "c5ef70ea419717c5b8c03da63b21a5c8ab03775423b2690b716c6055889ca7c5"
+    },
+    {
+      "old": "Assets/Scripts/Features/Siege/SiegeHud.cs",
+      "new": "Assets/Scripts/Features/Siege/Interface/SiegeHud.cs",
+      "guid": "f201804d6a93f364bb35b91d8aa835d1",
+      "sha256": "520ad07454678899d5f4a882a91d43fcfa9fcb9eddc4dc76f8f70a5f2b6f1f47",
+      "metaSha256": "9793fa57bb9dadfb8fc0bb37447f6e75c54f7d994a01437d0b1104f7e0c4ba92"
+    },
+    {
+      "old": "Assets/Scripts/Features/Siege/SiegeBattleFeedback.cs",
+      "new": "Assets/Scripts/Features/Siege/Interface/SiegeBattleFeedback.cs",
+      "guid": "d5b4f09559b7d1341af40734ab42a4ed",
+      "sha256": "bd1684cb8df4e3b2b3a0ffd2d1fcfc127e5998e92ee51d644339f77d0d106612",
+      "metaSha256": "0aa470072404f1decdba9ae95d2ed01c08c4e8ee61eec4239848e27827a18f27"
+    },
+    {
+      "old": "Assets/Scripts/Features/Siege/SiegeDeploymentView.cs",
+      "new": "Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs",
+      "guid": "cd0a0a89cd6d2a641abbc4ed4cdeb15d",
+      "sha256": "611746c796911a9289071d19c127fcb0f6dbe8364ddc508c6f94ec30edb1b1fc",
+      "metaSha256": "ae59da94a1213a1d5742e5c6186f3a854642dd102ebb9fb7e88b9d8a49c5d044"
+    },
+    {
+      "old": "Assets/Scripts/Features/Siege/SiegeFleetView.cs",
+      "new": "Assets/Scripts/Features/Siege/Interface/SiegeFleetView.cs",
+      "guid": "55a36d049d976ab4d813095ce8b9f0d5",
+      "sha256": "ad25881fc2a38771ce859fd6551eb9d7a8e3c64ebb76f7479f14d84ca88bbb3e",
+      "metaSha256": "f5c5bb6afff0fdb5a6f4f400635dcabdde1caff84ac18f5a9826fe2a643ca702"
+    },
+    {
+      "old": "Assets/Scripts/Features/Siege/SiegeThreatMarkers.cs",
+      "new": "Assets/Scripts/Features/Siege/Interface/SiegeThreatMarkers.cs",
+      "guid": "828a4f4bf4f6d2947bfed50a109a7a4a",
+      "sha256": "0cdc7b7a76eac3af949ff2520235b02e96878a745ebfed536e48494b9b2d5761",
+      "metaSha256": "f50318509ec5f452be5db2705840d9242c8d148bf0118e06383b907cee8ad198"
+    },
+    {
+      "old": "Assets/Scripts/Features/Siege/SiegeWorkshop.cs",
+      "new": "Assets/Scripts/Features/Siege/Workshop/SiegeWorkshop.cs",
+      "guid": "7d1784923c70ccd46af0db02aa4c3c3d",
+      "sha256": "2f0f14953b5baa6634430fc47a98b847137c8acd43af474222a173274eb30a1e",
+      "metaSha256": "d01c84fa675c79be7ecc390b372bbe1f9502fe2fa1376620d0fe80f629a19439"
+    },
+    {
+      "old": "Assets/Scripts/Features/Siege/SiegeWorkshopStage.cs",
+      "new": "Assets/Scripts/Features/Siege/Workshop/SiegeWorkshopStage.cs",
+      "guid": "570ec16467fc81a4d8dafbe91f8f288d",
+      "sha256": "23aeb4e34f79cd550224a97097c577953eb47494b229464488bab0a838866948",
+      "metaSha256": "c7dbac02b84b2213d3fc182067cae69bfd4ab9d341f2dd3db14941fa2f80c945"
+    },
+    {
+      "old": "Assets/Scripts/Features/Siege/SiegeDrivingPlayerChecks.cs",
+      "new": "Assets/Scripts/Features/Siege/Validation/SiegeDrivingPlayerChecks.cs",
+      "guid": "ebf8e4cc6e48c6747a3961336382bf86",
+      "sha256": "e6abe76b91a83d6d806223526ab99176b3be3722cd00ce42abd407c4070f1df3",
+      "metaSha256": "fb1b946957d9d54ba0150c4fd78ef73a4b49be57bd6bf6f6f5bd98eb95b7fe50"
+    },
+    {
+      "old": "Assets/Scripts/Features/Siege/SiegeEngineCounters.cs",
+      "new": "Assets/Scripts/Features/Siege/Validation/SiegeEngineCounters.cs",
+      "guid": "243ff660a32cf264ca3ff9db3c6bb577",
+      "sha256": "292021ed6536d2d4adb2f2b00309db6fb944172d072d883f0de5c7b8ac3afdde",
+      "metaSha256": "a352daff4c82023b477666f70a648401c87b23c202ed28f79b78b568480b8b14"
+    },
+    {
+      "old": "Assets/Scripts/Features/Siege/SiegePlayerChecks.cs",
+      "new": "Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs",
+      "guid": "b99a108c477c82f46804f9f4d0022460",
+      "sha256": "86c1dde4b3b733b3a0fadf161fd1f4bcd4e61f675bfb9bfb634250cb56b7af37",
+      "metaSha256": "8a25d8927f6c07e987b9d9d4672e820bab15ed6358bc1278a4968a623d8c7d64"
+    },
+    {
+      "old": "Assets/Scripts/Features/Siege/SiegePlayerSurvey.cs",
+      "new": "Assets/Scripts/Features/Siege/Validation/SiegePlayerSurvey.cs",
+      "guid": "d580e25f69dae02478d2242c13f9fb5f",
+      "sha256": "fd13578bc3c99a138cac650ae7f4213d3270d96e9bd20a32733814793cd2a4fc",
+      "metaSha256": "a636a670c5b6b40c0755481ea80eb4e4a0ed284dfe4851ebfee14165a9f4603e"
+    },
+    {
+      "old": "Assets/Scripts/Features/Siege/SiegeStressPopulation.cs",
+      "new": "Assets/Scripts/Features/Siege/Validation/SiegeStressPopulation.cs",
+      "guid": "3d174bd26e578f14b9150f359ecd1837",
+      "sha256": "c0b264d1af14ea31e8f573e7931d2765761ee9479ef4de3951f70f9f674084f6",
+      "metaSha256": "5e28d4f77491858384524d9d36aa0df93b2350d3c370b98bb82d7f04db351dee"
+    },
+    {
+      "old": "Assets/Scripts/Features/Simulation/BatchConnectionBuilder.cs",
+      "new": "Assets/Scripts/Features/Simulation/Connections/BatchConnectionBuilder.cs",
+      "guid": "d779e3da822cbdc42a21ed96c3794321",
+      "sha256": "af2eb86f751aa3069c11517013bd2f26edcd56baa8c976ffe4e9be648ee32e02",
+      "metaSha256": "eeb70b60081200fefa3de4a1d8ab1a1d37cd9ec88d6b2f7da0ab9dbfd2b44e35"
+    },
+    {
+      "old": "Assets/Scripts/Features/Simulation/BlockConnections.cs",
+      "new": "Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs",
+      "guid": "462aced43d5e4a15acc6651cbc7c2dc1",
+      "sha256": "0e2fe10f4f2d479670e59c189c154be3546eae89bb1b2c36bdcc84a116d55d40",
+      "metaSha256": "40b45edd62202f5ea0c06418c62e718339e57425c25e271a8682914929d262a7"
+    },
+    {
+      "old": "Assets/Scripts/Features/Simulation/BlockConnectionSnapshot.cs",
+      "new": "Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs",
+      "guid": "0f83610d10b7e7c4ead48d65a570370a",
+      "sha256": "279ad5b685ecc0c3799b1d6f4863a90c735201315a1e3978bc8922e42329f9c4",
+      "metaSha256": "6fac76b6f79d5da675e905f6c68a665fc05fd5f4c92d7cbf92e9f638ba0abc50"
+    },
+    {
+      "old": "Assets/Scripts/Features/Simulation/BlockGroupManager.cs",
+      "new": "Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs",
+      "guid": "f294873741ec6e94382c5e8355735d4d",
+      "sha256": "d820dd425697accd8e478fa0bb8b6832c7d107e6abfbca29bf37b3a2b6207bcb",
+      "metaSha256": "5c75440368dc329a157571943f3d6065a047dcf55bd121f5022b65544e36404e"
+    },
+    {
+      "old": "Assets/Scripts/Features/Simulation/GroupPhysicsSettings.cs",
+      "new": "Assets/Scripts/Features/Simulation/Groups/GroupPhysicsSettings.cs",
+      "guid": "c76bdf6448af49caafc263736b825b77",
+      "sha256": "7b084755c94366c298ef88cfb28fcb3c59e8fd771a538fe70f01b9be09fafa06",
+      "metaSha256": "ac1310e72d6df3c0fb1411772e15b75b2c34032e258f029ea4c1054cb880d3cb"
+    },
+    {
+      "old": "Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs",
+      "new": "Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs",
+      "guid": "19f1d54f6dcf4ea19d3e16cbd87a8209",
+      "sha256": "ab8a1f4002f94ffd446279f866f4685d8e6cb92411548db1d68f50a525ab4d82",
+      "metaSha256": "c7944e2c63230ab80275d0418cffc68ecf227980e053c2df6c746d309f96bdb6"
+    },
+    {
+      "old": "Assets/Scripts/Features/Simulation/RuntimeGroupCleanup.cs",
+      "new": "Assets/Scripts/Features/Simulation/Groups/RuntimeGroupCleanup.cs",
+      "guid": "dc22c23c6212482b9c44e5476fb1cb53",
+      "sha256": "f9c3368d69b9317a3845b02c1685b2765d0f2a7416a63d19977e4595b6ffc81e",
+      "metaSha256": "aa0b44075903ae1404a167217d0b16f0c89698798c13bb03d1777fc624378912"
+    },
+    {
+      "old": "Assets/Scripts/Features/Simulation/Cockpit.cs",
+      "new": "Assets/Scripts/Features/Simulation/Units/Cockpit.cs",
+      "guid": "15ee5b7c30b38874ba9fb4936c782e01",
+      "sha256": "1b5083efdac3a73cbe8baa37c5e72616be762cdde3310d627696b73826f99a97",
+      "metaSha256": "8d525096e9e1794c5978d3e1d2b9d6d1260bac9d123495151c7bc7febbdbd3a6"
+    },
+    {
+      "old": "Assets/Scripts/Features/Simulation/ControlUnit.cs",
+      "new": "Assets/Scripts/Features/Simulation/Units/ControlUnit.cs",
+      "guid": "5a5fe22249f25274a85d0f62de5a8851",
+      "sha256": "6e24c26c7eeea0b46172005db003db768daddb6fa891547c344e35265b7a9dfc",
+      "metaSha256": "554d20cac388d40853268ca8c699b5a96156d67c04d748549dd7956afb995e33"
+    },
+    {
+      "old": "Assets/Scripts/Features/Simulation/ModularUnitFactory.cs",
+      "new": "Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs",
+      "guid": "742cfef271bbf3643a122f0cc476fcec",
+      "sha256": "629926804b273124def74f656f8e56dc6b8584fe2276343c2a56900532a87137",
+      "metaSha256": "f74e7e12df5f00a7f3895d486dfba76732b34009e7154fd6e79ea7dd424c12a5"
+    },
+    {
+      "old": "Assets/Scripts/Features/Simulation/ModularUnitValidator.cs",
+      "new": "Assets/Scripts/Features/Simulation/Units/ModularUnitValidator.cs",
+      "guid": "3ae4e960de5841e68f4c0da7759f7aac",
+      "sha256": "f85579d128906fb6c5a8108fffe140039a51d11a722082e31c71bad16b16171a",
+      "metaSha256": "3a42799b136fc050102969d0361685270c19e3608a2e2efb7feb4c5b5464be75"
+    },
+    {
+      "old": "Assets/Scripts/Features/Simulation/Rack.cs",
+      "new": "Assets/Scripts/Features/Simulation/Units/Rack.cs",
+      "guid": "e6525ba235921034c8bec3b73f107510",
+      "sha256": "b623daa7c96684c54e2b0b80851abedd9d6e07e9574a506609ba51dfb233e948",
+      "metaSha256": "edfe7f4cbf242177adf976f7710884f2eb681be09bbc87d9c478821e0998c2bb"
+    },
+    {
+      "old": "Assets/Scripts/Features/Simulation/UnitFaction.cs",
+      "new": "Assets/Scripts/Features/Simulation/Units/UnitFaction.cs",
+      "guid": "41b716f4dd044ac6ac43a7c7ef2b2071",
+      "sha256": "7134cb4b468c243489bb1b85f264336ab4e76b9215d68b490ce8eed8e0125400",
+      "metaSha256": "e3ecb9bfa8824a6c0c952edaed427000842b1775a35fdfcb0f3565de4c363334"
+    },
+    {
+      "old": "Assets/Scripts/Features/Simulation/ImpactPhysics.cs",
+      "new": "Assets/Scripts/Features/Simulation/Physics/ImpactPhysics.cs",
+      "guid": "5d937f7e01e12ad489d58c8a08d5277a",
+      "sha256": "3a11adb7e5f41bf568d3ab4cf1ab8331440138be6840eda99a7cba1ed9beca12",
+      "metaSha256": "e0beb6d02bce9d67f73361832cadb21105a7c6c77f89da4f1d16c9bcae5c09b0"
+    },
+    {
+      "old": "Assets/Scripts/Features/Simulation/PlayBlockSelection.cs",
+      "new": "Assets/Scripts/Features/Simulation/Presentation/PlayBlockSelection.cs",
+      "guid": "559712d6c02e43609457631ffe91ace8",
+      "sha256": "808a1c396d2659a5b7708db6f8ec11fdf538b8a4b7172d68b0484b09fab01b01",
+      "metaSha256": "38a14032d5302cbf1f64987d6f0d5eeecd1bfe906de689feb81c146f88ee7848"
+    },
+    {
+      "old": "Assets/Scripts/Features/Simulation/SimulationWorkMetrics.cs",
+      "new": "Assets/Scripts/Features/Simulation/Diagnostics/SimulationWorkMetrics.cs",
+      "guid": "5dbdfa2d832182547a3c9a5f7eca3a71",
+      "sha256": "783269a594a3248c6db99d17413de448f77ba24b31c3632acaa10c1c170f6fae",
+      "metaSha256": "a262f9d4a36139bb165e94c91dc9315dd476fe44be254ca40c49f3d904ceed5b"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/ProceduralVoxelWorld.cs",
+      "new": "Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs",
+      "guid": "e73ca44e20a104d4a9fe17f78b15fd21",
+      "sha256": "9d527939fda00e4976ff99520240f8efd875f77c0b8950b514990bbd7c8311c3",
+      "metaSha256": "09f96b18f670d5d6e732af08727b70c4a12a9dac3fe3fd47419e7c699b86b92d"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/StreamingWorldTerrain.cs",
+      "new": "Assets/Scripts/Features/World/Terrain/StreamingWorldTerrain.cs",
+      "guid": "912f8f2ec190449f94acfe1dccfcf8b0",
+      "sha256": "b35cb435a937e13cd93a57027af68ba542694a8b16ee1cc67b9bae2d999d4c27",
+      "metaSha256": "b73c56c5b88197a1ef24b8778044f69ea748fa9354664505e3560d4510baf845"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/VoxelWorldData.cs",
+      "new": "Assets/Scripts/Features/World/Terrain/VoxelWorldData.cs",
+      "guid": "e668352650024b34584aaa01482405cb",
+      "sha256": "9f6d4a26c0a0d1af102ae70d86d79832acfa2d9ca9ae350689058b5d476cb257",
+      "metaSha256": "f18bf8312037681a42144e41e0fdf38c1a23a31b8f7d82ae017d0f74f7315fe1"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/VoxelWorldChunk.cs",
+      "new": "Assets/Scripts/Features/World/Terrain/VoxelWorldChunk.cs",
+      "guid": "5924a9bf24912244c979f933d5596f15",
+      "sha256": "1eaa93c6c22cd850af73bdf495e452e28e35f804c90ab186a9260ea24ed380d6",
+      "metaSha256": "99e2f7bb892a8d01ef3e8823e73fbd613c005c37483c174268fcc5dcf65bb90f"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/VoxelMeshData.cs",
+      "new": "Assets/Scripts/Features/World/Terrain/Meshing/VoxelMeshData.cs",
+      "guid": "570c476609bd1824cb3899cff378f2fc",
+      "sha256": "11cb0620c28ee2e7aacad04924831aeeb14663fa7aae23696fd41ba10babfbff",
+      "metaSha256": "4e3112ae318ed443c7471d72bef7f5c3c9e790f3301c9eb599b3b814348e6185"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/VoxelSurfaceMesher.cs",
+      "new": "Assets/Scripts/Features/World/Terrain/Meshing/VoxelSurfaceMesher.cs",
+      "guid": "e7f4c408fc691a44f9fa4451118581a4",
+      "sha256": "04191386927c43d1928b5ff893cd9deb95cfc7d661df62d830c6fbf9f92957e0",
+      "metaSha256": "9144875490e5afa537553e5c2a07fb151c671f2a50097caf4e6fbc211a866af5"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/VoxelDebrisPiece.cs",
+      "new": "Assets/Scripts/Features/World/Terrain/Destruction/VoxelDebrisPiece.cs",
+      "guid": "ee884f9f87de4854681cd4f19ccf170d",
+      "sha256": "0561134fd2914d4e3394ffef92ac8f95ada15b7b112fe961679aff072eb756bf",
+      "metaSha256": "9a772dded68f076dacdd8a5944482c82417e2e2df71906fb844b25c685733864"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/VoxelStructureCollapse.cs",
+      "new": "Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs",
+      "guid": "215c6fbfd213df94480cc7afced11d88",
+      "sha256": "4d7a00e5dc29cd843792b5eabaa7d8cad9a6fe847cd5cb6bfe12adfa5ae703d1",
+      "metaSha256": "43dd4e4a97f77200bf823787693b33475d64b6ad80ea3f237648aa06093ad354"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/VoxelStructureSupport.cs",
+      "new": "Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureSupport.cs",
+      "guid": "206c496be52537f429a6dd076f291c45",
+      "sha256": "eb53730e0c3801aaeb5f40e8a1d1fd2219ec82bcbf8da1e43f0609454f7f392f",
+      "metaSha256": "58e9d474b76178248794d89cc3c940a4b6d52f9ec06d59477b4352688cae4474"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldBuildingManager.cs",
+      "new": "Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs",
+      "guid": "a0c76dc90ada29a42823329a16472909",
+      "sha256": "5660b49926f55be0b7fd13b7088000f6e42e3eaa95b4cc233eba2ca14f6489ce",
+      "metaSha256": "44706bd803d9b5360d95400471f649aeabe51921e714cd0360588dd92f4ad740"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/BuildingRuntime.cs",
+      "new": "Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs",
+      "guid": "671e359a7ca65f14ca3f7ce2d071d0be",
+      "sha256": "55177adc5dee0fae14e7ba0b2b5004b78eacc08eb9e3efc500478998c90eaad9",
+      "metaSha256": "a211002901e08212f736a1c0026672b41e40c26354589faaf939a6596828e712"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/BuildingConnectionGraph.cs",
+      "new": "Assets/Scripts/Features/World/Buildings/Topology/BuildingConnectionGraph.cs",
+      "guid": "77ed02f67b02b834c945953784c704f0",
+      "sha256": "2cb00f0f5bf448b92324cf150bb78734887d6a70abb4909934afcedcf606eb79",
+      "metaSha256": "3350c5a8e99657fff52228b61d77d5bde73be5e2d6110aeabe33b5b1adba7280"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldBuildingDamage.cs",
+      "new": "Assets/Scripts/Features/World/Buildings/Topology/WorldBuildingDamage.cs",
+      "guid": "66766b53baf1b89429b8460b8e4cf1f5",
+      "sha256": "3a3942bacb74c34a47e89377d8f5894000443750268961c3ca2070170f9f185d",
+      "metaSha256": "1a29cde3b1a40732025530d93af8c4aa943ce54b4fa71fe5f2835764925313ee"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/BuildingRefit.cs",
+      "new": "Assets/Scripts/Features/World/Buildings/Topology/BuildingRefit.cs",
+      "guid": "521c04dda38235548970d4c792167a57",
+      "sha256": "617e25227ccd5c7f8691a237e0a4a66a4cb94b414c731ea73159b92cb578bfce",
+      "metaSha256": "4c718fbcd0e529b4ba9077f05eff4149ce84242f88a301d321da70914c87bb47"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldBuildingPlacement.cs",
+      "new": "Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs",
+      "guid": "eb23ba3fe8b8a3040bb39ef09ee67287",
+      "sha256": "c387b0013141362b9da29b98cd179d46b40f65eab1f1edef57c08a9c5ec728f6",
+      "metaSha256": "bf7829b732de7a40f803dc89d131317a3fab61407090c304d9c60b7fb33440f8"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldBuildingPalette.cs",
+      "new": "Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs",
+      "guid": "dcf7d53a1b46b8842acfb4e7e4997f39",
+      "sha256": "a7d36a055cf7243febd2cbe46f99a548ebdf466179dd300cd4cc1cd66cbe67e1",
+      "metaSha256": "6e43ca7aa0f4887c8ad1c2e9f6bd140198b0a6e320039b23f78f18ba69d5ac37"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldBuildingFootprints.cs",
+      "new": "Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingFootprints.cs",
+      "guid": "510f6633ca0796847a40f54631f08fd4",
+      "sha256": "2bc55c1ed129ac3323a330c79039ae7afbb5d0789d2bf4636c06fa59726164b5",
+      "metaSha256": "e8b7baa3d921d8abad8e2fddeed6e19dd37982af8ee7d4f37f7b75f2139a9f22"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldBuildingValidation.cs",
+      "new": "Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs",
+      "guid": "affb4d55d44bb26439262af4fa48c458",
+      "sha256": "d44721b1aa43f0fe72833e8d8b2f8681178ee36fdde2fef76afa3481e31b4e9b",
+      "metaSha256": "f57ec7d89d7c2aa4ba72a9b761fb4d3bc9116d61648d2b2ad99f6a06c4d430ab"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldBuildingCatalog.cs",
+      "new": "Assets/Scripts/Features/World/Buildings/Data/WorldBuildingCatalog.cs",
+      "guid": "5b0b831255f831440916da064c0e61f2",
+      "sha256": "da1727f8a22521c28722ee7f4891ffd1ddf1276faf4be479e1b177ff87bb5f96",
+      "metaSha256": "ae9644dd5a13e787ea0c67744dea33daab30d6195a75f30b0ab17595500de7e8"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldBuildingLibrary.cs",
+      "new": "Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs",
+      "guid": "e11a25da45f24b2796b5edc9db89530f",
+      "sha256": "037299de651da8bc8be22896157ed787bc578ee90bd45c87cd4bbb660eb96afc",
+      "metaSha256": "7a8a73f3c60a20d77338deddaa25495a2536bae1f668285b7358f3fd383f7f19"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldBuildingState.cs",
+      "new": "Assets/Scripts/Features/World/Buildings/Data/WorldBuildingState.cs",
+      "guid": "921d33ca573c30b4fbae5fe982e58fbf",
+      "sha256": "decea631edd9396f90c76e9c113978b8e9395bd8b48328b0363a0ce34d0deb80",
+      "metaSha256": "ddd5115763bc34175d7e09b22ab9e1d22b9ae4c205bffed0455736abd3349a2a"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldBuildingRenderCache.cs",
+      "new": "Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs",
+      "guid": "3c168cb781e14b14b808520d026ae77c",
+      "sha256": "89e0bfbd82ecfceab072a8667e653f9bddabb854c924d63b7f3af98cc1512678",
+      "metaSha256": "8323e51b7e3e736e8ea5fee4773a73ae80b3b9b2c19f8acc772c453c43e66795"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/EnemyOutpostData.cs",
+      "new": "Assets/Scripts/Features/World/Outposts/EnemyOutpostData.cs",
+      "guid": "648434078e842e245a32acc561d1be5c",
+      "sha256": "729123f8a17331c4bb3b35188c83211cf92670e305edbefb95df96fe8554fb80",
+      "metaSha256": "c01d554add110c6fcb88f269bf3da61b651ede4f202eb5e15d09d2fd6243738b"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/OutpostEncounterDirector.cs",
+      "new": "Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs",
+      "guid": "5f22c66ecaa151543be68caa6c60c579",
+      "sha256": "e86923ec22f5e854d453aaf67e396b7cd62575007c68aeeb58ca30184530de05",
+      "metaSha256": "84628ce781be4f73c269fdd6dfb5a900bdad1af5d7df29030b5b6a69cff35c82"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/OutpostHud.cs",
+      "new": "Assets/Scripts/Features/World/Outposts/OutpostHud.cs",
+      "guid": "7fd1147a9c780064aaf166d8279f26b6",
+      "sha256": "4d85ec6f1be544248db1f66d195fe65bf8f148f9864b0c0d92219da01541990f",
+      "metaSha256": "8e6132a0bfb3b148f967b8b495967b9676901be9e90a0cf44e762fb3a420aaa3"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldRegionStreaming.cs",
+      "new": "Assets/Scripts/Features/World/Streaming/WorldRegionStreaming.cs",
+      "guid": "35ab1611fdd34f9d97c5984284a0ab2b",
+      "sha256": "7e9242cc587913ad1d4a4cba05a17976d51a43cf5d1a64b652f7fef3f2881c11",
+      "metaSha256": "1427470110acdd6b6f51c48f7e0603c8720ec1de7a538aa62cbbf917005ee38c"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldBuildingStreaming.cs",
+      "new": "Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs",
+      "guid": "759aa74cd166c0a4d98f3f5a2d45e8c2",
+      "sha256": "d87a90b7bf6217639de9601687875fc62a6cadc8d1987167f7b507c67646fdb0",
+      "metaSha256": "61a314c235af68153b6d366dc29b03367e373af40da973ef53dcf7f0ea104460"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldPlayerStreamingGuard.cs",
+      "new": "Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs",
+      "guid": "99b4e0fa975647b4f85606da9cd61948",
+      "sha256": "516c2621d0dafb294680e3b1b69b39fe879fe267eb18f13388b6db111afc49e9",
+      "metaSha256": "3fc237b70c083954a13729e119125cf8be7eba469f17e6d4da87551a3c81c03d"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldDistanceView.cs",
+      "new": "Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs",
+      "guid": "7bbddf8ee08241498e3ff3a0d41f163a",
+      "sha256": "50c0f1b95d6db308b861f030fedf19c6e9abd349e57796726e29a56016d336e0",
+      "metaSha256": "c743c36a46ab1c034572991ee65c4eb72fdfd43cc00e99fb2810a29bd57c9f7b"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldTerrainTransitionMesh.cs",
+      "new": "Assets/Scripts/Features/World/Presentation/WorldTerrainTransitionMesh.cs",
+      "guid": "d0e994eb5c7e823448ad104133c89017",
+      "sha256": "1b8e91b1ecde9f89faec290e491f34c474cce8e27d7bc1530c3d264eaa4d7ed5",
+      "metaSha256": "88681179a193b9226595da18cdeb37aede346af8a82e6a09ce52c3119ddb9e09"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldLoadingPanel.cs",
+      "new": "Assets/Scripts/Features/World/Presentation/WorldLoadingPanel.cs",
+      "guid": "79de3e2d282ab4241bbe54eabff9d2b9",
+      "sha256": "4b7474fd4ddb7273385cf2dc379aa5bac347d5cb75ceb0ae03703a6a7c8088d0",
+      "metaSha256": "fda53a2ceb92de283607a69a41a4ec1131d8bdc011caedef03e83f19e73bfe53"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/VoxelWorldEdits.cs",
+      "new": "Assets/Scripts/Features/World/Persistence/VoxelWorldEdits.cs",
+      "guid": "bdc7631aa87afa749b036a7525c22516",
+      "sha256": "ce29e5b0248aad979ed0db61144dccdf15053509e6a53b7dec4db5cebc7454b5",
+      "metaSha256": "8179cdce6333f2f6b94289a8d95dcd265be1a770b844fb7de4b99906725969e5"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldLabPersistence.cs",
+      "new": "Assets/Scripts/Features/World/Persistence/WorldLabPersistence.cs",
+      "guid": "71fe93872d59910488dbc2266f8ae325",
+      "sha256": "74a7a85957659d9c7f1898cd865c5cc14744b4c08bceb6ba6e840b6844382e40",
+      "metaSha256": "22b17a02b15259efd9660dbdc941a3972637d07cbd110aa9a970b0e76643b466"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldLabController.cs",
+      "new": "Assets/Scripts/Features/World/WorldLab/WorldLabController.cs",
+      "guid": "4a36d96ae83133043838f7c0fc5e342b",
+      "sha256": "6bc1a9fe676a6ca9384545be2f382313fcf2763523264f335467b158cbcc7f51",
+      "metaSha256": "268cd0339fa4424f89d6142b596c8e3e54d22fcff5d5b01ec3981ed2b4a725f2"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldPlayerSmokeChecks.cs",
+      "new": "Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs",
+      "guid": "70c1241c111a20748a35f5813cbd8d08",
+      "sha256": "b10c1591cf2a6c5c3a1f41fb8a20e2500e66926181b8bed9cb02578b887a7abd",
+      "metaSha256": "8c7a0da2c0f43e111af8a58b4d16e186b2dc6090a2e28743dd6c65716a04ccac"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/EnemyFlightPlayerChecks.cs",
+      "new": "Assets/Scripts/Features/World/Validation/EnemyFlightPlayerChecks.cs",
+      "guid": "bc9486ae632f5dd4aa9533b7240a28ae",
+      "sha256": "49e3f93a0812086292ba90c03a466398af0aded7ddcfcfd7de73511fad86624d",
+      "metaSha256": "e412a8689fbf91e994f411a46b078df0078536b64741becf0405eb28b67ff416"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/OutpostEditorPlayerChecks.cs",
+      "new": "Assets/Scripts/Features/World/Validation/OutpostEditorPlayerChecks.cs",
+      "guid": "1baa6e4fc2375e4419e22c8de4e28bde",
+      "sha256": "c23cb842ba1e5cf5a474605562511c5d178f262fe09e54a545c85a57b84936dd",
+      "metaSha256": "83aa65a01532f19ae462b09f07c8a53872ad1f50d7ddd1f25673114c987cf3af"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/OutpostPlayerChecks.cs",
+      "new": "Assets/Scripts/Features/World/Validation/OutpostPlayerChecks.cs",
+      "guid": "2d82a3e419a61464d851506610ba12f0",
+      "sha256": "ebb2576cb605c2a2fefc512492c458559a404c145983429a4762de413d9e7b34",
+      "metaSha256": "e64f527b1329b84ab8160ce65b290abcd5003d49815bd30ea36135ff799e61e6"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/OutpostPursuitPlayerChecks.cs",
+      "new": "Assets/Scripts/Features/World/Validation/OutpostPursuitPlayerChecks.cs",
+      "guid": "e07fd71104d53eb45b5c96cebfec9aaa",
+      "sha256": "db0462ffd6e7b67e161cf353c0476461e95803ce26b0e8895be784690e963be6",
+      "metaSha256": "9ac40af6e1ce67a9c17522861008ba2d4f02058c479984cecaf3261be49d5d97"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/OutpostSalvagePlayerChecks.cs",
+      "new": "Assets/Scripts/Features/World/Validation/OutpostSalvagePlayerChecks.cs",
+      "guid": "a021f0ddef1a8bc40b35ca168e40821c",
+      "sha256": "097791bb03a4eadfdef457444d03b968963664dbc0f07e25552dfbaf6631471b",
+      "metaSha256": "07f7d4f7c2def249a72dc9e4f14bf31c4caaaeef75e2b6497f8984860e31c8bb"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldCombatPlayerChecks.cs",
+      "new": "Assets/Scripts/Features/World/Validation/WorldCombatPlayerChecks.cs",
+      "guid": "fac358195fd719a4dba53b3e0ec5c9f9",
+      "sha256": "6ad75fddec901a2249451726f043c776b064c427e834fc52cd23d0173786ba11",
+      "metaSha256": "264db98e6b66ef11cb918fd95844e4de0539e43befc1d0354575e6ad4cf0889d"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldReturnPlayerChecks.cs",
+      "new": "Assets/Scripts/Features/World/Validation/WorldReturnPlayerChecks.cs",
+      "guid": "ff13caef923f3c444ae865e85908b144",
+      "sha256": "159d09a9db207235bb10ccfdf980d78ea75f802cf8d75d5a6e4823b76aee4d06",
+      "metaSha256": "f075586ee177ac7463f30acf4d6e332460211d84dd1006d2bc1f2a628c523c3f"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldLabDebrisProbe.cs",
+      "new": "Assets/Scripts/Features/World/Validation/WorldLab/WorldLabDebrisProbe.cs",
+      "guid": "f61ae829f00b5394595d637053c070ec",
+      "sha256": "aa7f1c3135ba8cdec60d42cda731f68e5e424081034e11fb6a17f8b3764708bf",
+      "metaSha256": "ec6131fc2872980a9a652f50e04c26f389139eb5c5b25bf82b7dd726658a0ef8"
+    },
+    {
+      "old": "Assets/Scripts/Features/World/WorldLabPhysicsProbe.cs",
+      "new": "Assets/Scripts/Features/World/Validation/WorldLab/WorldLabPhysicsProbe.cs",
+      "guid": "72f9200d78251294c84bffb0722d0225",
+      "sha256": "80df951b7c3fa25886387bf44257431d1948cbc87b22602154a09479f94c229b",
+      "metaSha256": "b3154b69964bc8c876575f7848260a38d21dc8440588f05bfb168677f2e2591c"
+    },
+    {
+      "old": "Assets/Editor/Art/BlockArtDependencies.cs",
+      "new": "Assets/Editor/Art/Validation/BlockArtDependencies.cs",
+      "guid": "04b8ae964a38d63458e4dfb6d314fa9e",
+      "sha256": "32f04b05dee217ca90837f7524b0b73c7570f83fe5f440915f30f7db9d445e4b",
+      "metaSha256": "1d3191da9213e3a3503f2351b16ea0532c2f700204b827dd6265cf056e63143b"
+    },
+    {
+      "old": "Assets/Editor/Art/BlockArtPlayProbe.cs",
+      "new": "Assets/Editor/Art/Validation/BlockArtPlayProbe.cs",
+      "guid": "3f1b4e9541309f34c88395b7258530b0",
+      "sha256": "26b60c778c00e3b5300b21e1668a92077119b72d976e8ecc33f151c4413b3657",
+      "metaSha256": "f0eed71f9984e213428dfdd74cf25b7b131d876dc40973a0ba8a0613b6bbef50"
+    },
+    {
+      "old": "Assets/Editor/Art/BlockArtValidation.cs",
+      "new": "Assets/Editor/Art/Validation/BlockArtValidation.cs",
+      "guid": "660991aeb148fe949b5dff130d2773f6",
+      "sha256": "1bc1447fa2e40cc457dd93ccf78d9334e232f92b7c9aa1a191131fdae031f320",
+      "metaSha256": "2d3117e5db72a4254ac00f6937e6a2eec8d21a92d0bd63b558e936a7322feb9e"
+    },
+    {
+      "old": "Assets/Editor/Art/BlockArtPreview.cs",
+      "new": "Assets/Editor/Art/Preview/BlockArtPreview.cs",
+      "guid": "d84c518d105454f46b7bb0756e3c1ce9",
+      "sha256": "462375bc75451ee71176f4f45258bd938eeb5693cc5424b927743d2f2730e1ab",
+      "metaSha256": "832fb709d2b33f0a4320ee4f0b052fad95c343e160ff775279da6ab6e2102610"
+    },
+    {
+      "old": "Assets/Editor/Art/IndustrialArtGenerator.cs",
+      "new": "Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs",
+      "guid": "fb0d6f7c580736c4bbdc5d4004fd50cb",
+      "sha256": "f230a07324c30c732ea96e0cb35ece5823cd306a91789a305311f2653e1465a7",
+      "metaSha256": "7a9d7dac40fd78fee1de8ff807654c5994088fd2617dab625b464f031c39e9b9"
+    },
+    {
+      "old": "Assets/Editor/Art/SpaceKitCurator.cs",
+      "new": "Assets/Editor/Art/Authoring/SpaceKitCurator.cs",
+      "guid": "986d7d114a751a44696ce13d77b364a6",
+      "sha256": "fe22daf705473d473943bc79f6bfa5357fbc350d508c0424be0216a7ae5acf4c",
+      "metaSha256": "508e42b9d22649318448089bcd2a8ba46c2824e50ebe95a5a9778779a1167767"
+    },
+    {
+      "old": "Assets/Editor/Building/BlockCsvAuthoring.cs",
+      "new": "Assets/Editor/Building/BlockDataTables/BlockCsvAuthoring.cs",
+      "guid": "070a2bd8f76441b4faa8def4ad4e35cf",
+      "sha256": "6b92e6fad4875de15f05b32a84a80907eb60877f77f26897b61450dac2db94ae",
+      "metaSha256": "9ab9ec7eb77133bf6534085c6c4b7826e5a7ce80df6c098dcdd1453cb7ac6bf5"
+    },
+    {
+      "old": "Assets/Editor/Building/BlockCsvPostprocessor.cs",
+      "new": "Assets/Editor/Building/BlockDataTables/BlockCsvPostprocessor.cs",
+      "guid": "4dab63786a2f2f249a9e2ce274e3beac",
+      "sha256": "38377903373076d73f28dd438199b6ada602c41ed42a10e7e6fdde3fa3d2ffc3",
+      "metaSha256": "c4785fcf3e01d528468326a05efaecb9540c2219fa1ebd205557b3791b1a325f"
+    },
+    {
+      "old": "Assets/Editor/Building/BlockCsvChecks.cs",
+      "new": "Assets/Editor/Building/BlockDataTables/BlockCsvChecks.cs",
+      "guid": "1eb386c5feb8d6b419a95ea0ebe02a2d",
+      "sha256": "f96bc7e3f6a7f404ae9417ea4657a6db0447a73de05925a2eb1ec26c9aec3299",
+      "metaSha256": "62ce87c5fe5e0da910be5bc0744ca07a5b12fa6b69b5106a84f9e2b8fdfd93bd"
+    },
+    {
+      "old": "Assets/Editor/Building/BlockCsvRegressionChecks.cs",
+      "new": "Assets/Editor/Building/BlockDataTables/BlockCsvRegressionChecks.cs",
+      "guid": "fe39104c40bf4934a836279eb0da1f5d",
+      "sha256": "f5c5a8b11632b4f733ec060c6a3290abd2b8bfbbb89657a75b92a774e5331296",
+      "metaSha256": "9494ab5a36db6a0b4f855cba6047b1189811054b6b5127227c7ea30b2ad37866"
+    },
+    {
+      "old": "Assets/Editor/Building/BuildInteractionSetup.cs",
+      "new": "Assets/Editor/Building/Interface/BuildInteractionSetup.cs",
+      "guid": "51d723a29c30de846bc99f7e529d7fe3",
+      "sha256": "c1404765bfed27fef84c6b7b02a38a8de7fe7b6bebe46c1275fa0edcd3f3bcb3",
+      "metaSha256": "9def8c893678f0d03eda7be3b168fde1c99885a324de74a64e2cc544984ce668"
+    },
+    {
+      "old": "Assets/Editor/Building/BuildPaletteBaker.cs",
+      "new": "Assets/Editor/Building/Interface/BuildPaletteBaker.cs",
+      "guid": "2e46a6f6754bd4643ad8a8e5323648d4",
+      "sha256": "f43884417141d09dee9d7a03981fe1ae650e4ec75a154a5aebc646c30d271dcc",
+      "metaSha256": "1a6dc3647b264b09c9725c416a414473c1bb17f7d0a25f09bea2678d7da7dacf"
+    },
+    {
+      "old": "Assets/Editor/Building/BuildingEditorPlayProbe.cs",
+      "new": "Assets/Editor/Building/Validation/BuildingEditorPlayProbe.cs",
+      "guid": "fb61cf1177c319748b34c6e4d28c4bc9",
+      "sha256": "d1b602c1f438cde1b4f2a6921574b6f402aa8420d6923bb762ca5ba0bee13b06",
+      "metaSha256": "20ce38a0d1f8e964b0fd17700933e1fc1794220a07bb7002636dbe4c83dd557b"
+    },
+    {
+      "old": "Assets/Editor/Building/BuildPalettePlayProbe.cs",
+      "new": "Assets/Editor/Building/Validation/BuildPalettePlayProbe.cs",
+      "guid": "75326d5551da24d4b9ae01859270dfe6",
+      "sha256": "41f5f26551e11caa77d55a0f9c6b225e1686449a7faa2ec4244ddca0e588bfbb",
+      "metaSha256": "d8aacc1f5f003dbc28d4f8d60b50e9c66882d9ee701f8622a3f693125a8a2623"
+    },
+    {
+      "old": "Assets/Editor/Building/OutpostEditorAuthoring.cs",
+      "new": "Assets/Editor/Building/Outposts/OutpostEditorAuthoring.cs",
+      "guid": "3715b4d366af4ff4897e2f3375ab95a9",
+      "sha256": "3d5467e12146c4df95878919e345771c97a5475e75a374dca4c17b4694f77688",
+      "metaSha256": "3528d52d6a7cefc5d57d9b5d982523ef765a2bce14912a55d853e18f01a7c266"
+    },
+    {
+      "old": "Assets/Editor/Combat/CombatHudSetup.cs",
+      "new": "Assets/Editor/Combat/Interface/CombatHudSetup.cs",
+      "guid": "55ae0d79bc3dce14ba94698c635eafa8",
+      "sha256": "a0d272a1cccabe8961a2a4e2670214f7d40b773e3e0aefe4ccde91e1d9fbfbec",
+      "metaSha256": "9e381980720a5b4469256b31e8af8d13ba75fc783c0f28a90906b62383982d20"
+    },
+    {
+      "old": "Assets/Editor/Combat/HealthHudPreview.cs",
+      "new": "Assets/Editor/Combat/Interface/HealthHudPreview.cs",
+      "guid": "45a7b30ce872a7746826f2488d0de73a",
+      "sha256": "7bafa5c2022105995816e9e4346af304154b751662c368312605d7b3ca9162ee",
+      "metaSha256": "c1f332ce95167066d10d26748345f9a2d9f81bdc61a18f4360f91fcc6118a54c"
+    },
+    {
+      "old": "Assets/Editor/Combat/TurretAssetBaker.cs",
+      "new": "Assets/Editor/Combat/Turrets/TurretAssetBaker.cs",
+      "guid": "654f50dd63c4d6e4b899398928808d11",
+      "sha256": "f75b02dbab386ecf11361d552577aeb95869d3253a73d2c6da89937b76b492ec",
+      "metaSha256": "e59310c3281c18d9b8f1bab63764f21a130a4caaa80d55b8d06279cb05b13f5e"
+    },
+    {
+      "old": "Assets/Editor/Combat/CombatHudPlayProbe.cs",
+      "new": "Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs",
+      "guid": "0e8280c16554a20419d603b3baafc053",
+      "sha256": "9b716f98f4223b4589f17d8b49b6879f9cfa1159a19a64136fb4a5ed07446587",
+      "metaSha256": "a3ac2f0009551d5385bf025d8d509e1f2a988641ad5f6c2bbb08d3b241a63a7b"
+    },
+    {
+      "old": "Assets/Editor/Combat/EnemyBlueprintPoolChecks.cs",
+      "new": "Assets/Editor/Combat/Validation/EnemyBlueprintPoolChecks.cs",
+      "guid": "8f440e7817aa3a6428bd39fb7262c021",
+      "sha256": "5586805d4e688ed734fb97766dd6558346e9ed59ac5554c4a5988ad9d9c93c13",
+      "metaSha256": "6f7f1257ab846177f6fb9bf55491f07bbc40dc99152224b5259411be339cc703"
+    },
+    {
+      "old": "Assets/Editor/Combat/TurretFlightPlayProbe.cs",
+      "new": "Assets/Editor/Combat/Validation/TurretFlightPlayProbe.cs",
+      "guid": "b8b72162b6576ee4f9b1e1d3cc2ee14d",
+      "sha256": "3ca6d83b0215ba759941e8194962acb745ef5d723233b22597941bfbb5b12ef8",
+      "metaSha256": "53f5e21fd3dc1fe9f08b6d1ba13642f94f7b87e3dcd79265d9f59164ed8fb8f1"
+    },
+    {
+      "old": "Assets/Editor/Combat/TurretRuntimeChecks.cs",
+      "new": "Assets/Editor/Combat/Validation/TurretRuntimeChecks.cs",
+      "guid": "c51e863f4aa11384fb2a2a4f75ae6d32",
+      "sha256": "3a43fa81e34588549426d93e20d20d25f974f7ee9ab6fd797a12b2e9c512b4e9",
+      "metaSha256": "800df32eac5c25f02031e9cc556c9a353fd3be8bb050391fb0f7a155637a7076"
+    },
+    {
+      "old": "Assets/Editor/Presentation/BlockVfxBaker.cs",
+      "new": "Assets/Editor/Presentation/Effects/BlockVfxBaker.cs",
+      "guid": "2c894402a223cb44085ca7c7eccfe5a4",
+      "sha256": "0566d0f48c56d59ac5809a0a7a3cef3e1fb4255eb1b82c7b816e8b2419714143",
+      "metaSha256": "0787b6c096db1c0d53c8ff1d60a9c0f3f58ca45b3f3936cf4f1647f65dea03bd"
+    },
+    {
+      "old": "Assets/Editor/Presentation/NativeVfxLibraryBuilder.cs",
+      "new": "Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs",
+      "guid": "d76e115b630b0ad46addffb874178788",
+      "sha256": "c53d9f83297c18a16ede9e7ae6f8a21c8aeed85dfd11fd5798d4fac27eda6bd9",
+      "metaSha256": "c9b0dc2440ca750372e67024426048b6ba42a23239539d2c497fcc1b978c35ad"
+    },
+    {
+      "old": "Assets/Editor/Presentation/NativeVfxMigration.cs",
+      "new": "Assets/Editor/Presentation/Effects/NativeVfxMigration.cs",
+      "guid": "9035e6fcc176c4c47be54e5bc79d0c28",
+      "sha256": "26283f1c3816594e0199ddd5b693288215f190ca522132faddcbf9c6a8e9c11f",
+      "metaSha256": "135b5d3656ab87883b3690936b783df2eaec103acf741eb8e2fc001077d5b7fe"
+    },
+    {
+      "old": "Assets/Editor/Presentation/VfxGraphAuthoring.cs",
+      "new": "Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs",
+      "guid": "d1cd52fb508c4b94c86a29cdae62ff7f",
+      "sha256": "550c745292dbc49efa190e45316a5a688051721508fc014eab3493309ab5504c",
+      "metaSha256": "a67cb72dccbc3b3fc66cb4360925970715923abd7a07a18d0e56c8329cea3958"
+    },
+    {
+      "old": "Assets/Editor/Presentation/BlockStatusSetup.cs",
+      "new": "Assets/Editor/Presentation/Interface/BlockStatusSetup.cs",
+      "guid": "d74d70b49357b99428d811671bf60056",
+      "sha256": "9f3f616f6b7f773b06ca83eccbb97307f05e9148109cd50ca541278b738584d4",
+      "metaSha256": "9922765c898106d281ef6f965473104fd4944c8902d5df34d2343d86520381e2"
+    },
+    {
+      "old": "Assets/Editor/Presentation/ReturnStatusSetup.cs",
+      "new": "Assets/Editor/Presentation/Interface/ReturnStatusSetup.cs",
+      "guid": "0d39600cdc6cc7641a80549d782aed99",
+      "sha256": "60a109ea5fda438b38d33ecffb8c24027d0a2ccdbb07a626078b293540484791",
+      "metaSha256": "bc80f7347be5bc3c114582f3b969bbdbd39d15ed40ac09632bd1d520e15cf29c"
+    },
+    {
+      "old": "Assets/Editor/Presentation/SceneCameraPreviewSync.cs",
+      "new": "Assets/Editor/Presentation/Camera/SceneCameraPreviewSync.cs",
+      "guid": "b4b1d75c0efb4efeb1aa8a69ec86577d",
+      "sha256": "7e437c2f27bc811bf6f7ec20fd0bf804a8e855cb3305a66ea333b0fc397f9ca6",
+      "metaSha256": "ae8d4a5790f769f8e5445187975ad71c44ca0ec05db7247453f12130d6056098"
+    },
+    {
+      "old": "Assets/Editor/Presentation/NativeVfxPlaybackProbe.cs",
+      "new": "Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs",
+      "guid": "87819f59e0b2ef94984dd4121010672e",
+      "sha256": "e4b61ef5c4fbee9386423c2b1c403bbec92dcac9cceff09eed1e0a8bcc1aeb7c",
+      "metaSha256": "7488c1bbd7926ff69e1d403922f4de6ff71ac96ea3db46190922c3c07d03d98e"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeArenaLookAuthoring.cs",
+      "new": "Assets/Editor/Siege/Authoring/SiegeArenaLookAuthoring.cs",
+      "guid": "e28bd9fe717c37a4bb19f9b379b1b8dc",
+      "sha256": "e2519d81059972d6806a39ef0513d20e602b7ecfde302e281bf9a3748b3789c8",
+      "metaSha256": "9cf59c3e33f8f3aaa1e9946c508276212e280755c4db3d739a3e245219cc31a2"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeBaseBlueprintAuthoring.cs",
+      "new": "Assets/Editor/Siege/Authoring/SiegeBaseBlueprintAuthoring.cs",
+      "guid": "4c7c8cc1dd53009428acbdf2fb87c61c",
+      "sha256": "e5c156f58b5c7ad82a321245a5d395e59946ff73a2d1e18bf27efeefdce4ae6a",
+      "metaSha256": "1769fab4d2212ced7c153bce8f49288a669487ee5ded89bc57e2265833ed47c3"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeBlueprintSelectionAuthoring.cs",
+      "new": "Assets/Editor/Siege/Authoring/SiegeBlueprintSelectionAuthoring.cs",
+      "guid": "da30724c466e15845b8e7b24f85aa02b",
+      "sha256": "afa5d8055e5b0442925b2d75e304ffee643db94863a29e1e2a151f39a32d0d1f",
+      "metaSha256": "cd81b8e850535538a0df26df25efe4bf2b200e02e3a8a27b77d6993570e15ce1"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeCommandHudAuthoring.cs",
+      "new": "Assets/Editor/Siege/Authoring/SiegeCommandHudAuthoring.cs",
+      "guid": "bffa744a5d2e41b4bacf932b4969a6e1",
+      "sha256": "36dd3e196bc7da814e5459feabd0c96c3bf6c587695d28139129e88e849837f4",
+      "metaSha256": "da7759143a9cdb2703318e2e77eaea6806b1ebc8d0d3a4615dd6c9a9b753da4c"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeInterfaceAuthoring.cs",
+      "new": "Assets/Editor/Siege/Authoring/SiegeInterfaceAuthoring.cs",
+      "guid": "06b8dd1bc56590f46ab788984b72f7a2",
+      "sha256": "b869169d85dc5ee5fee37a12fff3d93b495684919bfb460db2f74463b2215e7c",
+      "metaSha256": "38fc348d83d76a4b279cc5267218406d263d774abb20cee13a506eb91eb2422c"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeMainInterfaceAuthoring.cs",
+      "new": "Assets/Editor/Siege/Authoring/SiegeMainInterfaceAuthoring.cs",
+      "guid": "734f0fffc56564e4eacce7e81406da1b",
+      "sha256": "ece93806f090d82e44f1b0c9c176f4f3b74c2a9a61633adacdf4a64f7bb158d8",
+      "metaSha256": "eb74b604dec6a0f21faf3bbdb379b074e930062c6cf041d97d35ad59c44f9a90"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeMixedStressAuthoring.cs",
+      "new": "Assets/Editor/Siege/Authoring/SiegeMixedStressAuthoring.cs",
+      "guid": "678f5b4701538b04cb0d6bef4a74ee9a",
+      "sha256": "bdf9160545de334d022a9529dceb4a48f2c9c5a5b8d84af39b9c37f2c7b178ab",
+      "metaSha256": "389c75a0a45797aec49a822e5afacf3bc24108941703e7e36d73726b759ea06b"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeProgressAuthoring.cs",
+      "new": "Assets/Editor/Siege/Authoring/SiegeProgressAuthoring.cs",
+      "guid": "5cf6931fb62a8794a95fa4fb0bbf05e3",
+      "sha256": "5210aa9238cea23193eb7df127aa62d7ed46a7a20acc0a46c04ca377d65b1b89",
+      "metaSha256": "0915cb5978265bfb07ef0f1395f2e4c8aea6b98a39dd49091d0e6a45c2956aad"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeStressAuthoring.cs",
+      "new": "Assets/Editor/Siege/Authoring/SiegeStressAuthoring.cs",
+      "guid": "59d2d3135f7b3b046ac4d2d589c7789b",
+      "sha256": "e43c72356f4b0d3e140c9af51de9070deb640299dab38008f51554805e3ae697",
+      "metaSha256": "212914753716ef8a5a77971d3f1a2484cd2794c33eba015eb55799567bd80137"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeBuildingChecks.cs",
+      "new": "Assets/Editor/Siege/Validation/Buildings/SiegeBuildingChecks.cs",
+      "guid": "0c871bc49aaf3b64d8cc3e048245d66a",
+      "sha256": "1ba3ffc6eefecb02cfbb177cc1d44f36265198b8fa4e2f9c66135e2f0c68d76e",
+      "metaSha256": "6d602f0a7e75a039923aec9ef970ad14f6f068db36347155fbdb09f662d295fb"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeBuildingDamageChecks.cs",
+      "new": "Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs",
+      "guid": "d6e2bc8eba8ab8348b4ff0472ae55d15",
+      "sha256": "773a5470541705c5643dc350982759078956928a8212a63f104df02ca291d981",
+      "metaSha256": "4762d8167bac78ef7a5c917c4f653c3a54535687edf20541bde3eaae9e8732a6"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeBuildingGraphChecks.cs",
+      "new": "Assets/Editor/Siege/Validation/Buildings/SiegeBuildingGraphChecks.cs",
+      "guid": "be1184cc2e506f043b84b72d645880a2",
+      "sha256": "875ed032716a9030cc6367033e5d11c6881e9e82cc9a52d665fc53e41324620b",
+      "metaSha256": "17822c353a49e4eee398b3f46e98304d64df5c37846299048a88c14538a13c6a"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeBuildingPowerProbe.cs",
+      "new": "Assets/Editor/Siege/Validation/Buildings/SiegeBuildingPowerProbe.cs",
+      "guid": "6e2120321e96205448700e9297299f34",
+      "sha256": "94e1b8ad674c781d7adf12671f3fed90b6cbbd831a01ad790a1719bfcb9c4798",
+      "metaSha256": "10f1c7840dbffee727b525b731d3d0fdd8526d35352fc793068112fc72ed0404"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeFoundationCacheChecks.cs",
+      "new": "Assets/Editor/Siege/Validation/Buildings/SiegeFoundationCacheChecks.cs",
+      "guid": "a4e83aa10b223de448b36bacff26a54a",
+      "sha256": "0ed71b61d9d136a9fc9421812225c311228fe59dfad99a322d93fb0b0ca8a58e",
+      "metaSha256": "1f23b870723b967f43696f6af9ece70b9acc281c843dba3105a9d84b965e99b7"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeBlueprintCatalogChecks.cs",
+      "new": "Assets/Editor/Siege/Validation/Fleet/SiegeBlueprintCatalogChecks.cs",
+      "guid": "3f9cd2d2f23487d4984eb42a2c4f7b85",
+      "sha256": "9cd5761babfca8ef5bf385362366e7ba6814bba27954034e317ab1bf344a75a7",
+      "metaSha256": "5dcd0174ea0c43e6a8bd7764753f7663d42207a1bae358b7aa9e740bb7b6ceb4"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeFleetChecks.cs",
+      "new": "Assets/Editor/Siege/Validation/Fleet/SiegeFleetChecks.cs",
+      "guid": "0cbb64ef913f8da46a49f12171f4ec74",
+      "sha256": "dc42dd2ce255adef26b69e68cd6f7a29b195592437b0e023ca2b1ba9dc446915",
+      "metaSha256": "01604c08bb2b1d59dce193ebc409a5ee1531a8611647c8c3c0d29d87526342f2"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegePriorityTargetChecks.cs",
+      "new": "Assets/Editor/Siege/Validation/Fleet/SiegePriorityTargetChecks.cs",
+      "guid": "735bb865676ea55408ec550fd5ff10c3",
+      "sha256": "50966474ca802e6ac8da80620347b33c3ad21a6e18b006eff80658ba08836ff7",
+      "metaSha256": "4b4535f6dfaa8016ce44baa413ed7c9652cae79c0bb09daa92155ac8d75aa7e6"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegePriorityTargetFlight.cs",
+      "new": "Assets/Editor/Siege/Validation/Fleet/SiegePriorityTargetFlight.cs",
+      "guid": "cbab7f52f9002a24ab2f511b0535f837",
+      "sha256": "bb2ed8311cdda95fd42ba2331d57fb11c96be7a32b89205e9c1e798d57cb39e6",
+      "metaSha256": "7a49244464b9781286b69bdcdaef7ea13f98f28c9677a7ef04860fc201934063"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeRegroupChecks.cs",
+      "new": "Assets/Editor/Siege/Validation/Fleet/SiegeRegroupChecks.cs",
+      "guid": "6ad95e3e11dcc4848addc48446d16ffc",
+      "sha256": "45d935699615fea0ce9f62097947e1e52b1b7188ef784257b0f46be4ae6c6a64",
+      "metaSha256": "6a0a814651652ed26c8b2b5561e584d8fdf388eb6ec8011c5e8e1eb371ce4383"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeRuntimeConnectionChecks.cs",
+      "new": "Assets/Editor/Siege/Validation/Fleet/SiegeRuntimeConnectionChecks.cs",
+      "guid": "3c14e9b0a2f73314f9de204b0a8b71b4",
+      "sha256": "e93c4a05277e017e728a7ed4d69a41e446a63fa7f5c03e51dbbf201ea426981b",
+      "metaSha256": "272cca496cce84d1a39f3bd3e44af6966d9235eb9efc3b5ef7d5e6cd0ca55cdb"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeTopologyChecks.cs",
+      "new": "Assets/Editor/Siege/Validation/Fleet/SiegeTopologyChecks.cs",
+      "guid": "b44858b59595fad428b348b6a0f29395",
+      "sha256": "2e66da8670b29d90d9fc057dc6b8f6a3b2d3b16e8f8df7e321a3860db2a5a33b",
+      "metaSha256": "b0f65e1b2bdc684ee01dc98aef8a8af038a96f37d63c934e25173824bc4d5c9b"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeWorkshopChecks.cs",
+      "new": "Assets/Editor/Siege/Validation/Fleet/SiegeWorkshopChecks.cs",
+      "guid": "322962d77c04ebd40b7af0466bc813cc",
+      "sha256": "5fe88231d27a0058cd1c705788610781fdcd8a8d6090f33df6726348308c1b7c",
+      "metaSha256": "0a4eaf4488884be3324ab25e96eaff37e190cf6fc2e8e77ea8d0853c344dd270"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeWreckBudgetChecks.cs",
+      "new": "Assets/Editor/Siege/Validation/Fleet/SiegeWreckBudgetChecks.cs",
+      "guid": "af565856578717e4abdcd44aab02c1dc",
+      "sha256": "894a4f2b2ff5faf57c602285953345c8cb0096e83ada3ba85cddb77b91596858",
+      "metaSha256": "7dd1a7936f1f37a9f0840446b9ec2407be38d01f7f78979a04b89df1ddf286d5"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeCombatFeedbackChecks.cs",
+      "new": "Assets/Editor/Siege/Validation/Interface/SiegeCombatFeedbackChecks.cs",
+      "guid": "19bc337ab77412449a431fc24359e02c",
+      "sha256": "64ecc5faf2675798d2ed707acf60ad278f6e780706b5695ba4c873ca30b95f47",
+      "metaSha256": "f75d0b96dd0d294970001f4c2898b98cdb4be35522b7aee5757e71171ddc9d29"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeSceneInteractionChecks.cs",
+      "new": "Assets/Editor/Siege/Validation/Interface/SiegeSceneInteractionChecks.cs",
+      "guid": "bb337b0c14d101a44b6e04bbb6c0b1b7",
+      "sha256": "edd0c77c436a5bd7f8ef7e7b008fb887cba2e7a137929aebf5a998e0c82e098b",
+      "metaSha256": "c8af4736aaca7bac24df2a6c0fdf504f3ef3a9fc37e979e096ae34ce50773955"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeUsabilityChecks.cs",
+      "new": "Assets/Editor/Siege/Validation/Interface/SiegeUsabilityChecks.cs",
+      "guid": "3b521ad587b6e1645a317cc48ced9d9d",
+      "sha256": "5c38bc4f36cf5bdf39f53678ff1a528aaa9d07b277a6a3aada0fef0193fc6f9e",
+      "metaSha256": "9f0b6768186849106c6f6c7753683201d1f72c7b260bc3a68a8308323f7912cf"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeDestructionLogChecks.cs",
+      "new": "Assets/Editor/Siege/Validation/Rules/SiegeDestructionLogChecks.cs",
+      "guid": "f1eab6da27e8a8b4e99c80338e896f9b",
+      "sha256": "585b698c7445fbb0104e484465ec1059646a9eaf8d5877d2234cdf94e0902bc3",
+      "metaSha256": "dd4bbc02a4ac4ea401979e97458bc1ab28c460f776cf17f647bec951583b1f0b"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeMixedStressChecks.cs",
+      "new": "Assets/Editor/Siege/Validation/Rules/SiegeMixedStressChecks.cs",
+      "guid": "3e37f39ec43c969419d35e36e1dd1eb6",
+      "sha256": "286333d7a76b7b57160e4a1bf82f50e488e09cd4b7cc4c293d5358e35c91a03a",
+      "metaSha256": "2d7c1bb6b75f96fafc2f13515f6eb079e7e9f6ea3a0aaa4ca9c4761926562acb"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegePlayerSurveyChecks.cs",
+      "new": "Assets/Editor/Siege/Validation/Rules/SiegePlayerSurveyChecks.cs",
+      "guid": "01dec8598bf92554ea3a371926cac52f",
+      "sha256": "233ec524b3cfe4ccc45d6cbd48b6c1b24490e8cb950703581f16c9f392da69b9",
+      "metaSha256": "b5d7aa84de6f7125e74923fec0e4eb4140f1302e90f8061b415f715e3854108b"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeRulesChecks.cs",
+      "new": "Assets/Editor/Siege/Validation/Rules/SiegeRulesChecks.cs",
+      "guid": "2665115629c58d9478a633ead7e312dc",
+      "sha256": "9456500fe51d97074b8ccd31f2970d1c67e241efd79461dc8bd50a923df31cc1",
+      "metaSha256": "80c68f55b9ff7e71e8768e11c6b6cef5aa2b815b562e7fb79006354d1339f713"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeStressCancellationChecks.cs",
+      "new": "Assets/Editor/Siege/Validation/Rules/SiegeStressCancellationChecks.cs",
+      "guid": "4cab2cba192f58248b125b51c1645d64",
+      "sha256": "295638ea1d57acb9e8e32365d63df1761ddd45205b0465ba49fc112dce54a74f",
+      "metaSha256": "551213d9f1f4e33760c83a0aa2d169e8525f6603762d56231624a8523b33ede3"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeTransientEffectChecks.cs",
+      "new": "Assets/Editor/Siege/Validation/Rules/SiegeTransientEffectChecks.cs",
+      "guid": "de0d5211ed3c57b4899d69c0bb569677",
+      "sha256": "1bfa0f724873eeedae67ddcf5a833c950aa44221f1b79d30aca6926f5b1fd0b2",
+      "metaSha256": "77790c42887473e103307faa69d5f5eee5112e4efb390453cc00111f33edae95"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeBuildingBenchmark.cs",
+      "new": "Assets/Editor/Siege/Benchmarks/SiegeBuildingBenchmark.cs",
+      "guid": "23c76c34496e7c646aed994395f17314",
+      "sha256": "9edf7d2310002d99472b93caff2935af6fc305da7997ed3d31678af9444d6b1f",
+      "metaSha256": "e593235ce2fe3f571b157805a902b52e5d666e6252ea8aa6575e2f10a7922f41"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegePerformanceCapture.cs",
+      "new": "Assets/Editor/Siege/Benchmarks/SiegePerformanceCapture.cs",
+      "guid": "d9b4586935ceb574a8d40762d9004bb7",
+      "sha256": "157434e866bae7e0bc5ac2f8b89729a02696810350ebcecdea3d99ec542a320e",
+      "metaSha256": "ad4eb0ca3fec2ce436b345aec12fa04fb60f280f56416e6d9526ba16a49bd821"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeRegroupBaseline.cs",
+      "new": "Assets/Editor/Siege/Benchmarks/SiegeRegroupBaseline.cs",
+      "guid": "44c50180cbf50b34bb143d53de2d1bb5",
+      "sha256": "646ae1a52b4808a3946de42fb4676ea200f475e109eb194923ada2f6b94eccb4",
+      "metaSha256": "687bf484cb0aa814eb0d1cc3f9b1b7d89b67275cd0581e228a265d68997144dc"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeRegroupBenchmark.cs",
+      "new": "Assets/Editor/Siege/Benchmarks/SiegeRegroupBenchmark.cs",
+      "guid": "23ccf2f661631b843be4fe674b7d816f",
+      "sha256": "b7b8d4306a7af40cb3eaaa178080391c4ea12be3658aeec4ad743dd8325be90f",
+      "metaSha256": "8c71fb81977482a27a15989b5546ca31dd9c8157f5204a999edc124730a24d30"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeTopologyBaseline.cs",
+      "new": "Assets/Editor/Siege/Benchmarks/SiegeTopologyBaseline.cs",
+      "guid": "8fdc314e4557dbe45829db77378a4484",
+      "sha256": "b405489d5837e3b7c688cd0f0a2f42243a200f3ecd693c8a633293379cf480a4",
+      "metaSha256": "45f7819e7e0ec7b0145dff8892d323d6027ac0c09cb7a8006f14bb7e30617c61"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegeTransientEffectBenchmark.cs",
+      "new": "Assets/Editor/Siege/Benchmarks/SiegeTransientEffectBenchmark.cs",
+      "guid": "359e2d946edd26b4f94e81b79f9c8899",
+      "sha256": "4afb0f789bc5a3e56c99f4756a266c2683650e3e40515d10f74a89fec4782a2e",
+      "metaSha256": "8639c924e32e9350203b3eb7d6dd7d7f07afca075443d7041dffa7a210d2ed07"
+    },
+    {
+      "old": "Assets/Editor/Siege/SiegePlayerBuild.cs",
+      "new": "Assets/Editor/Siege/Player/SiegePlayerBuild.cs",
+      "guid": "06aa585843ab17949aab1f3f7b008702",
+      "sha256": "e86811105c89d7426ebe4d9b13c4c2ac582849a8ca717bcbb0df0c0f2eb1736f",
+      "metaSha256": "689b6836097ea191324e955b33482c1b449a5d980c35472ae9a96a5c74da120a"
+    },
+    {
+      "old": "Assets/Editor/World/ProceduralVoxelWorldEditor.cs",
+      "new": "Assets/Editor/World/Terrain/ProceduralVoxelWorldEditor.cs",
+      "guid": "767e164da87dcc046886b4b6263ff269",
+      "sha256": "7eddafad7e22d05d7fe754e7fa80b737eeb354c8a73075050624d645f380945f",
+      "metaSha256": "e3d80bd878db7e6133f4a46612a68e7129d936404c1bf82c86a5ab94f1f6f5ff"
+    },
+    {
+      "old": "Assets/Editor/World/WorldBuildingAuthoring.cs",
+      "new": "Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs",
+      "guid": "76ac1b79ece7c0a4b9a36d3692eb218d",
+      "sha256": "a721bbc77fd23da5dc44352cdd1c57aa09ce2029d0a4ed1fff260fa47827ebdf",
+      "metaSha256": "eca8806e47e90b0b840ae828a986c1f932bc7c2eea4119df975932a3bd599a69"
+    },
+    {
+      "old": "Assets/Editor/World/OutpostContentAuthoring.cs",
+      "new": "Assets/Editor/World/Outposts/OutpostContentAuthoring.cs",
+      "guid": "f742ac777891e234e9c6639c722ac71d",
+      "sha256": "85a457ba6350e3433afd5726add03ba82d4ba6eb779bb7de64d90ea96dd28267",
+      "metaSha256": "016615110ba5139da922fa14ba1f30f5ca71a83e97c602e4a43f98b99d5fda4a"
+    },
+    {
+      "old": "Assets/Editor/World/OutpostHudAuthoring.cs",
+      "new": "Assets/Editor/World/Outposts/OutpostHudAuthoring.cs",
+      "guid": "6b03311b9adb3fa40b9a63064b348f8b",
+      "sha256": "6a89d8d2791f237792afb7d9f4d308dac0f729a68e4398a3f9154f0d31a11923",
+      "metaSha256": "5d111fa83a1f88ab24af7adbf594839ab263d8d9dc2ff5cff9e80b6d6db5cc47"
+    },
+    {
+      "old": "Assets/Editor/World/WorldLabAuthoring.cs",
+      "new": "Assets/Editor/World/WorldLab/WorldLabAuthoring.cs",
+      "guid": "3fd9d84dfd946ac44ac33ae0054e2fe2",
+      "sha256": "e0bb6472e8a64a3f0168bde66c011e69b56558dd28fdf4fca9ebbef64b2b3109",
+      "metaSha256": "08a181485b4087028a1ecca600434824ea295299cede5ab7f284f5efb5acc01c"
+    },
+    {
+      "old": "Assets/Editor/World/OutpostContentChecks.cs",
+      "new": "Assets/Editor/World/Validation/Outposts/OutpostContentChecks.cs",
+      "guid": "0a44aaa6610a5dc4985a8e93c1fdbb00",
+      "sha256": "59e3331b85ff39b9e0c5b0ff9768d86bd4dc9536fb8464f0f2b9a22c9f7fe0ca",
+      "metaSha256": "ec3a8315da4a2dcc44ee504a0f4f4b2c1ed6842fdcc41b62f0728cc2a23310e2"
+    },
+    {
+      "old": "Assets/Editor/World/OutpostResidentChecks.cs",
+      "new": "Assets/Editor/World/Validation/Outposts/OutpostResidentChecks.cs",
+      "guid": "20db5553ee741534fa7bd7a5267abd61",
+      "sha256": "d0c71f85ea7f2fbb2a8c281b3761aee520f877203a47cf75f0d6a10fd58c057f",
+      "metaSha256": "9a77b62f21c2f906ecfb583f654853fe313206b56adf571b6d4b5b93cff0c63a"
+    },
+    {
+      "old": "Assets/Editor/World/VoxelMeshingChecks.cs",
+      "new": "Assets/Editor/World/Validation/Terrain/VoxelMeshingChecks.cs",
+      "guid": "20f5c8f8d26317542bc9a708a7443bfb",
+      "sha256": "1032d5c10f5dfb09fd96c1af5d63be4c607f4eaf3ac5971a1a3d48b3ba76a3ba",
+      "metaSha256": "7ad31fc9e18a011dd6ca54d82d06fb1ef27252ccb9adfb56524a8c39bb6c1464"
+    },
+    {
+      "old": "Assets/Editor/World/WorldTerrainIntegrationChecks.cs",
+      "new": "Assets/Editor/World/Validation/Terrain/WorldTerrainIntegrationChecks.cs",
+      "guid": "fb8fb02ded2020e469b72ecf89f533a9",
+      "sha256": "85dbb25672ed9bcb4966ed5296e7b0629ad5613eea4ab4821227b72947f945d9",
+      "metaSha256": "7ae90de646ae4fd780d14348bd8a69c74e540a4a24509b6b4d19821a5456142e"
+    },
+    {
+      "old": "Assets/Editor/World/WorldLabChecks.cs",
+      "new": "Assets/Editor/World/Validation/WorldLab/WorldLabChecks.cs",
+      "guid": "accd994795c3be54ab585ffc68d4829d",
+      "sha256": "6e6fa6b5d73ac3486df0d8686d4ff0e762fad86500603bed22ae5bc8ba8fc436",
+      "metaSha256": "c1584ebd66d21c4aa1c4b640d697f7fd526970c5aaf6148ac5994bc504e508de"
+    },
+    {
+      "old": "Assets/Editor/World/WorldLabCollapseChecks.cs",
+      "new": "Assets/Editor/World/Validation/WorldLab/WorldLabCollapseChecks.cs",
+      "guid": "73bd49386fe424844896b7065bbc6185",
+      "sha256": "53d2c6a0a4d7088b9b5cbab892ce281aca2003a5b5b812c8a247ee65d3fc87d3",
+      "metaSha256": "a198f16ba55bf7ae8e1206301a1f85517bbc39e67afb6c06c0ab06fceb847c05"
+    },
+    {
+      "old": "Assets/Editor/World/WorldLabPerformanceChecks.cs",
+      "new": "Assets/Editor/World/Validation/WorldLab/WorldLabPerformanceChecks.cs",
+      "guid": "7cbb1bf89d9dd7d4fa5d816753e8eabd",
+      "sha256": "ec8be9e8e2189432b937a8c2caba609d8bf9893bb8304c3847d57d3158a9d368",
+      "metaSha256": "0ae8a82e71d9e10ce195e673ad23556c8faf2185f5085cebb3185bfd20fa01c9"
+    },
+    {
+      "old": "Assets/Editor/World/WorldLabPersistenceChecks.cs",
+      "new": "Assets/Editor/World/Validation/WorldLab/WorldLabPersistenceChecks.cs",
+      "guid": "c5cce24ad3b5dc3468478e02f896a8ca",
+      "sha256": "ee6ced70b833f7e40481e09528369afcdf8d515382c18e3c0db023f78a014b29",
+      "metaSha256": "72720c0d4f551dd40d0940d7e2635bd541b7f2617bdd6b2a63752e98bb0a3bc0"
+    },
+    {
+      "old": "Assets/Editor/World/WorldLabSoakChecks.cs",
+      "new": "Assets/Editor/World/Validation/WorldLab/WorldLabSoakChecks.cs",
+      "guid": "98626bf83d97e8348975d774aa2d5aed",
+      "sha256": "0a372c83454fcab1f088e6af80c609a87670bf5f6e9a126a743205124b2653b0",
+      "metaSha256": "f318b81f7263e5b0499c645c24da7d0a0282ee5070b0ed586cdf50f24389ba14"
+    },
+    {
+      "old": "Assets/Editor/World/WorldBuildingPlayProbe.cs",
+      "new": "Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs",
+      "guid": "104887b4f72d3ae4e8d22122f233f7ca",
+      "sha256": "477d8353751fdca46d438b4616f85edb8412d1ba1eba472d15f376ba07b29f85",
+      "metaSha256": "1591bee999b6a534885b23acd4f1fbfdd6c42741a808b0ddf5c9a968112b275e"
+    },
+    {
+      "old": "Assets/Editor/World/WorldSessionEdgeChecks.cs",
+      "new": "Assets/Editor/World/Validation/Session/WorldSessionEdgeChecks.cs",
+      "guid": "57b9485cf8dd43cc991db7251c15db9b",
+      "sha256": "ab7e6b04b4922e49df0caadc134e1b40e441b21480af5beddc0a5abdad429ec1",
+      "metaSha256": "85a40c4c60980f3c379e52d641405fa92277dff3db1e4901ccd3232daf2f9fe8"
+    },
+    {
+      "old": "Assets/Editor/World/WorldSessionPerformanceChecks.cs",
+      "new": "Assets/Editor/World/Validation/Session/WorldSessionPerformanceChecks.cs",
+      "guid": "6a3f11948168e3c4b8aabcb19fd5e68d",
+      "sha256": "d234cf7917c27973b7df85be266635c6107fdc4cac538c05bf12394e02262f8c",
+      "metaSha256": "cdb8c6fd71333dfc9479eb323ef6ffe91ce2c614fd059e86d38da663ccc9a85d"
+    },
+    {
+      "old": "Assets/Editor/World/WorldSessionPlayChecks.cs",
+      "new": "Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs",
+      "guid": "7da3fcc087c94cdd9901c2ce4fecca78",
+      "sha256": "9afcf91624a03e738f438e6be47b7dedf608782db295b7e158110a540dd31a37",
+      "metaSha256": "19f0c006fe6c900ac6c0a6cb4e5969558c9e5453e4b50b79db7ffdaa89564e19"
+    },
+    {
+      "old": "Assets/Editor/World/WorldPlayerBuildChecks.cs",
+      "new": "Assets/Editor/World/Player/WorldPlayerBuildChecks.cs",
+      "guid": "446b703dabaf1a04e946b4043505f3ae",
+      "sha256": "8f48bc19e8ff7f2afa0c61a9a46d658ae65f6578848547f062962747709d2f9b",
+      "metaSha256": "f57f7ac659cf3cc187e140ee7ac802345f8c5c6a68f348e95afcd3f1b542475c"
+    }
+  ]
+}

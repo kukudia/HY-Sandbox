@@ -17,13 +17,13 @@ flowchart TD
     B["GameManager.Init()"]
     click B "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bootstrap/GameManager.cs#L20" "打开源码"
     C["SaveUIPanel.RefreshList()"]
-    click C "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/SaveUIPanel.cs#L17" "打开源码"
+    click C "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs#L17" "打开源码"
     D["SaveManager.LoadSave()"]
     click D "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/SaveManager.cs#L111" "打开源码"
     E["BuildManager.LoadAllBlocks()"]
     click E "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/BuildManager.cs#L411" "打开源码"
     F["MainUIPanels.PlayStart()"]
-    click F "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/MainUIPanels.cs#L216" "打开源码"
+    click F "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L216" "打开源码"
     G["PlayManager.CanStartPlay()"]
     click G "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/PlayManager.cs#L113" "打开源码"
     H["PlayManager.PlayStart()"]
@@ -31,15 +31,15 @@ flowchart TD
     I["PlayManager.RefreshGroup()"]
     click I "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/PlayManager.cs#L148" "打开源码"
     J["EnemySpawner.BeginPlayMode()"]
-    click J "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/EnemySpawner.cs#L43" "打开源码"
+    click J "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L43" "打开源码"
     K["MainUIPanels.PlayEnd()"]
-    click K "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/MainUIPanels.cs#L231" "打开源码"
+    click K "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L231" "打开源码"
     L["CargoPersistence.SaveReturnCargo()"]
-    click L "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Salvage/CargoPersistence.cs#L11" "打开源码"
+    click L "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs#L11" "打开源码"
     M["PlayManager.PlayEnd()"]
     click M "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/PlayManager.cs#L246" "打开源码"
     N["MainUIPanels.PlayerDeath()"]
-    click N "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/MainUIPanels.cs#L245" "打开源码"
+    click N "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L245" "打开源码"
     A --> B
     B --> C
     B --> D
@@ -58,30 +58,30 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Bootstrap/GameManager.cs|Start -->
 - [GameManager.Init](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bootstrap/GameManager.cs#L20)
 <!-- source: Assets/Scripts/Features/Bootstrap/GameManager.cs|Init -->
-- [SaveUIPanel.RefreshList](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/SaveUIPanel.cs#L17)
-<!-- source: Assets/Scripts/Features/Building/SaveUIPanel.cs|RefreshList -->
+- [SaveUIPanel.RefreshList](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs#L17)
+<!-- source: Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs|RefreshList -->
 - [SaveManager.LoadSave](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/SaveManager.cs#L111)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|LoadSave -->
 - [BuildManager.LoadAllBlocks](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/BuildManager.cs#L411)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|LoadAllBlocks -->
-- [MainUIPanels.PlayStart](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/MainUIPanels.cs#L216)
-<!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayStart -->
+- [MainUIPanels.PlayStart](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L216)
+<!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayStart -->
 - [PlayManager.CanStartPlay](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/PlayManager.cs#L113)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|CanStartPlay -->
 - [PlayManager.PlayStart](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/PlayManager.cs#L84)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayStart -->
 - [PlayManager.RefreshGroup](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/PlayManager.cs#L148)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
-- [EnemySpawner.BeginPlayMode](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/EnemySpawner.cs#L43)
-<!-- source: Assets/Scripts/Features/Combat/EnemySpawner.cs|BeginPlayMode -->
-- [MainUIPanels.PlayEnd](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/MainUIPanels.cs#L231)
-<!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayEnd -->
-- [CargoPersistence.SaveReturnCargo](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Salvage/CargoPersistence.cs#L11)
-<!-- source: Assets/Scripts/Features/Salvage/CargoPersistence.cs|SaveReturnCargo -->
+- [EnemySpawner.BeginPlayMode](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L43)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs|BeginPlayMode -->
+- [MainUIPanels.PlayEnd](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L231)
+<!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayEnd -->
+- [CargoPersistence.SaveReturnCargo](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs#L11)
+<!-- source: Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs|SaveReturnCargo -->
 - [PlayManager.PlayEnd](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/PlayManager.cs#L246)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
-- [MainUIPanels.PlayerDeath](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/MainUIPanels.cs#L245)
-<!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|PlayerDeath -->
+- [MainUIPanels.PlayerDeath](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L245)
+<!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayerDeath -->
 
 ## 蓝图恢复、统计和取消
 
@@ -108,7 +108,7 @@ flowchart TD
     I["BlueprintStatistics.Accumulate()"]
     click I "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/BlueprintLoading/BlueprintStatistics.cs#L26" "打开源码"
     J["BlueprintUIPanel.DisplayStatistics()"]
-    click J "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/BlueprintUIPanel.cs#L44" "打开源码"
+    click J "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/Interface/BlueprintUIPanel.cs#L44" "打开源码"
     K["BlueprintLoader.RemoveMissingData()"]
     click K "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L227" "打开源码"
     L["BlueprintLoader.RebuildConnections()"]
@@ -153,8 +153,8 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs|TryRestore -->
 - [BlueprintStatistics.Accumulate](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/BlueprintLoading/BlueprintStatistics.cs#L26)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintStatistics.cs|Accumulate -->
-- [BlueprintUIPanel.DisplayStatistics](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/BlueprintUIPanel.cs#L44)
-<!-- source: Assets/Scripts/Features/Building/BlueprintUIPanel.cs|DisplayStatistics -->
+- [BlueprintUIPanel.DisplayStatistics](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/Interface/BlueprintUIPanel.cs#L44)
+<!-- source: Assets/Scripts/Features/Building/Interface/BlueprintUIPanel.cs|DisplayStatistics -->
 - [BlueprintLoader.RemoveMissingData](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L227)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs|RemoveMissingData -->
 - [BlueprintLoader.RebuildConnections](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoader.cs#L238)
@@ -197,11 +197,11 @@ flowchart TD
     L["BuildManipulation.Poll()"]
     click L "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L59" "打开源码"
     M["ActionManager.Push()"]
-    click M "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/ActionManager.cs#L26" "打开源码"
+    click M "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/Actions/ActionManager.cs#L26" "打开源码"
     N["ActionManager.Undo()"]
-    click N "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/ActionManager.cs#L37" "打开源码"
+    click N "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/Actions/ActionManager.cs#L37" "打开源码"
     O["ActionManager.Redo()"]
-    click O "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/ActionManager.cs#L50" "打开源码"
+    click O "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/Actions/ActionManager.cs#L50" "打开源码"
     P["Block.CheckConnection()"]
     click P "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/Block.cs#L261" "打开源码"
     A --> B
@@ -247,12 +247,12 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildSelection.cs|SelectBlock -->
 - [BuildManipulation.Poll](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L59)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs|Poll -->
-- [ActionManager.Push](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/ActionManager.cs#L26)
-<!-- source: Assets/Scripts/Features/Building/ActionManager.cs|Push -->
-- [ActionManager.Undo](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/ActionManager.cs#L37)
-<!-- source: Assets/Scripts/Features/Building/ActionManager.cs|Undo -->
-- [ActionManager.Redo](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/ActionManager.cs#L50)
-<!-- source: Assets/Scripts/Features/Building/ActionManager.cs|Redo -->
+- [ActionManager.Push](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/Actions/ActionManager.cs#L26)
+<!-- source: Assets/Scripts/Features/Building/Actions/ActionManager.cs|Push -->
+- [ActionManager.Undo](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/Actions/ActionManager.cs#L37)
+<!-- source: Assets/Scripts/Features/Building/Actions/ActionManager.cs|Undo -->
+- [ActionManager.Redo](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Building/Actions/ActionManager.cs#L50)
+<!-- source: Assets/Scripts/Features/Building/Actions/ActionManager.cs|Redo -->
 - [Block.CheckConnection](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/Block.cs#L261)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|CheckConnection -->
 
@@ -263,7 +263,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["PowerTransmissionDevice.Update()"]
-    click A "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/PowerTransmissionDevice.cs#L61" "打开源码"
+    click A "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L61" "打开源码"
     B["PowerNetwork.Rebuild()"]
     click B "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/PowerNetwork.cs#L21" "打开源码"
     C["PowerNetwork.ResetConnectionsAndPower()"]
@@ -281,23 +281,23 @@ flowchart TD
     I["Power.CommitPowerStatus()"]
     click I "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/Power.cs#L46" "打开源码"
     J["PowerConnectionVisuals.Refresh()"]
-    click J "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/PowerConnectionVisuals.cs#L19" "打开源码"
+    click J "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L19" "打开源码"
     K["PowerTransmissionDevice.OnDisable()"]
-    click K "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/PowerTransmissionDevice.cs#L74" "打开源码"
+    click K "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L74" "打开源码"
     L["PowerNetwork.Clear()"]
     click L "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/PowerNetwork.cs#L34" "打开源码"
     M["DebugManager.RefreshPowerRangeMesh()"]
     click M "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Diagnostics/DebugManager.cs#L132" "打开源码"
     N["PowerRangeUnionView.Refresh()"]
-    click N "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/PowerRangeUnionView.cs#L36" "打开源码"
+    click N "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L36" "打开源码"
     O["DebugManager.TogglePowerRange()"]
     click O "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Diagnostics/DebugManager.cs#L74" "打开源码"
     P["PowerRangeUnionView.Hide()"]
-    click P "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/PowerRangeUnionView.cs#L66" "打开源码"
+    click P "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L66" "打开源码"
     Q["DebugManager.OnDestroy()"]
     click Q "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Diagnostics/DebugManager.cs#L50" "打开源码"
     R["PowerRangeUnionView.Dispose()"]
-    click R "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/PowerRangeUnionView.cs#L79" "打开源码"
+    click R "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L79" "打开源码"
     A -->|首个本帧中继| B
     B --> C
     B --> D
@@ -314,8 +314,8 @@ flowchart TD
     Q --> R
 ```
 
-- [PowerTransmissionDevice.Update](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/PowerTransmissionDevice.cs#L61)
-<!-- source: Assets/Scripts/Features/Power/PowerTransmissionDevice.cs|Update -->
+- [PowerTransmissionDevice.Update](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L61)
+<!-- source: Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs|Update -->
 - [PowerNetwork.Rebuild](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/PowerNetwork.cs#L21)
 <!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|Rebuild -->
 - [PowerNetwork.ResetConnectionsAndPower](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/PowerNetwork.cs#L88)
@@ -332,24 +332,24 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|CommitPowerStatuses -->
 - [Power.CommitPowerStatus](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/Power.cs#L46)
 <!-- source: Assets/Scripts/Features/Power/Power.cs|CommitPowerStatus -->
-- [PowerConnectionVisuals.Refresh](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/PowerConnectionVisuals.cs#L19)
-<!-- source: Assets/Scripts/Features/Power/PowerConnectionVisuals.cs|Refresh -->
-- [PowerTransmissionDevice.OnDisable](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/PowerTransmissionDevice.cs#L74)
-<!-- source: Assets/Scripts/Features/Power/PowerTransmissionDevice.cs|OnDisable -->
+- [PowerConnectionVisuals.Refresh](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L19)
+<!-- source: Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs|Refresh -->
+- [PowerTransmissionDevice.OnDisable](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L74)
+<!-- source: Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs|OnDisable -->
 - [PowerNetwork.Clear](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/PowerNetwork.cs#L34)
 <!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|Clear -->
 - [DebugManager.RefreshPowerRangeMesh](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Diagnostics/DebugManager.cs#L132)
 <!-- source: Assets/Scripts/Features/Diagnostics/DebugManager.cs|RefreshPowerRangeMesh -->
-- [PowerRangeUnionView.Refresh](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/PowerRangeUnionView.cs#L36)
-<!-- source: Assets/Scripts/Features/Power/PowerRangeUnionView.cs|Refresh -->
+- [PowerRangeUnionView.Refresh](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L36)
+<!-- source: Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs|Refresh -->
 - [DebugManager.TogglePowerRange](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Diagnostics/DebugManager.cs#L74)
 <!-- source: Assets/Scripts/Features/Diagnostics/DebugManager.cs|TogglePowerRange -->
-- [PowerRangeUnionView.Hide](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/PowerRangeUnionView.cs#L66)
-<!-- source: Assets/Scripts/Features/Power/PowerRangeUnionView.cs|Hide -->
+- [PowerRangeUnionView.Hide](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L66)
+<!-- source: Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs|Hide -->
 - [DebugManager.OnDestroy](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Diagnostics/DebugManager.cs#L50)
 <!-- source: Assets/Scripts/Features/Diagnostics/DebugManager.cs|OnDestroy -->
-- [PowerRangeUnionView.Dispose](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/PowerRangeUnionView.cs#L79)
-<!-- source: Assets/Scripts/Features/Power/PowerRangeUnionView.cs|Dispose -->
+- [PowerRangeUnionView.Dispose](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L79)
+<!-- source: Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs|Dispose -->
 
 ## 物理分组、连接与推进
 
@@ -362,35 +362,35 @@ flowchart TD
     B["PlayManager.AssignBlocksToParentGroups()"]
     click B "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/PlayManager.cs#L270" "打开源码"
     C["RuntimeGroupBuilder.Rebuild()"]
-    click C "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L15" "打开源码"
+    click C "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L15" "打开源码"
     D["BlockGroupManager.GroupBlocks()"]
-    click D "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L9" "打开源码"
+    click D "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs#L9" "打开源码"
     E["BlockConnections.CollectNeighbors()"]
-    click E "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/BlockConnections.cs#L232" "打开源码"
+    click E "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L232" "打开源码"
     F["RuntimeGroupBuilder.RestoreGroupPhysics()"]
-    click F "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L84" "打开源码"
+    click F "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L84" "打开源码"
     G["ControlUnit.RefreshChildren()"]
-    click G "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/ControlUnit.cs#L117" "打开源码"
+    click G "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L117" "打开源码"
     H["PlayManager.FixedUpdate()"]
     click H "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/PlayManager.cs#L56" "打开源码"
     I["RuntimeGroupCleanup.EnforceDistance()"]
-    click I "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/RuntimeGroupCleanup.cs#L51" "打开源码"
+    click I "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/Groups/RuntimeGroupCleanup.cs#L51" "打开源码"
     J["HoverFlightController.FixedUpdate()"]
     click J "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/HoverFlightController.cs#L102" "打开源码"
     K["HoverFlightController.DistributeThrust()"]
     click K "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/HoverFlightController.cs#L339" "打开源码"
     L["MainThruster.FixedUpdate()"]
-    click L "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/MainThruster.cs#L10" "打开源码"
+    click L "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs#L10" "打开源码"
     M["Thruster.ApplyThrustChangeRateLimit()"]
-    click M "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/Thruster.cs#L113" "打开源码"
+    click M "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L113" "打开源码"
     N["HoverControlSolver.StepHeight()"]
-    click N "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/HoverControlSolver.cs#L29" "打开源码"
+    click N "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L29" "打开源码"
     O["HoverControlSolver.CalculateTilt()"]
-    click O "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/HoverControlSolver.cs#L55" "打开源码"
+    click O "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L55" "打开源码"
     P["HoverFlightController.StopControlOutput()"]
     click P "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/HoverFlightController.cs#L160" "打开源码"
     Q["HoverControlSolver.Reset()"]
-    click Q "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/HoverControlSolver.cs#L23" "打开源码"
+    click Q "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L23" "打开源码"
     R["HoverFlightController.ClearHoverThrust()"]
     click R "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/HoverFlightController.cs#L167" "打开源码"
     S["HoverFlightController.OnDisable()"]
@@ -417,36 +417,36 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
 - [PlayManager.AssignBlocksToParentGroups](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/PlayManager.cs#L270)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|AssignBlocksToParentGroups -->
-- [RuntimeGroupBuilder.Rebuild](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L15)
-<!-- source: Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs|Rebuild -->
-- [BlockGroupManager.GroupBlocks](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/BlockGroupManager.cs#L9)
-<!-- source: Assets/Scripts/Features/Simulation/BlockGroupManager.cs|GroupBlocks -->
-- [BlockConnections.CollectNeighbors](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/BlockConnections.cs#L232)
-<!-- source: Assets/Scripts/Features/Simulation/BlockConnections.cs|CollectNeighbors -->
-- [RuntimeGroupBuilder.RestoreGroupPhysics](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs#L84)
-<!-- source: Assets/Scripts/Features/Simulation/RuntimeGroupBuilder.cs|RestoreGroupPhysics -->
-- [ControlUnit.RefreshChildren](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/ControlUnit.cs#L117)
-<!-- source: Assets/Scripts/Features/Simulation/ControlUnit.cs|RefreshChildren -->
+- [RuntimeGroupBuilder.Rebuild](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L15)
+<!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|Rebuild -->
+- [BlockGroupManager.GroupBlocks](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs#L9)
+<!-- source: Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs|GroupBlocks -->
+- [BlockConnections.CollectNeighbors](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L232)
+<!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs|CollectNeighbors -->
+- [RuntimeGroupBuilder.RestoreGroupPhysics](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L84)
+<!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|RestoreGroupPhysics -->
+- [ControlUnit.RefreshChildren](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L117)
+<!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|RefreshChildren -->
 - [PlayManager.FixedUpdate](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/PlayManager.cs#L56)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|FixedUpdate -->
-- [RuntimeGroupCleanup.EnforceDistance](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/RuntimeGroupCleanup.cs#L51)
-<!-- source: Assets/Scripts/Features/Simulation/RuntimeGroupCleanup.cs|EnforceDistance -->
+- [RuntimeGroupCleanup.EnforceDistance](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/Groups/RuntimeGroupCleanup.cs#L51)
+<!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupCleanup.cs|EnforceDistance -->
 - [HoverFlightController.FixedUpdate](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/HoverFlightController.cs#L102)
 <!-- source: Assets/Scripts/Features/Flight/HoverFlightController.cs|FixedUpdate -->
 - [HoverFlightController.DistributeThrust](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/HoverFlightController.cs#L339)
 <!-- source: Assets/Scripts/Features/Flight/HoverFlightController.cs|DistributeThrust -->
-- [MainThruster.FixedUpdate](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/MainThruster.cs#L10)
-<!-- source: Assets/Scripts/Features/Flight/MainThruster.cs|FixedUpdate -->
-- [Thruster.ApplyThrustChangeRateLimit](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/Thruster.cs#L113)
-<!-- source: Assets/Scripts/Features/Flight/Thruster.cs|ApplyThrustChangeRateLimit -->
-- [HoverControlSolver.StepHeight](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/HoverControlSolver.cs#L29)
-<!-- source: Assets/Scripts/Features/Flight/HoverControlSolver.cs|StepHeight -->
-- [HoverControlSolver.CalculateTilt](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/HoverControlSolver.cs#L55)
-<!-- source: Assets/Scripts/Features/Flight/HoverControlSolver.cs|CalculateTilt -->
+- [MainThruster.FixedUpdate](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs#L10)
+<!-- source: Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs|FixedUpdate -->
+- [Thruster.ApplyThrustChangeRateLimit](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L113)
+<!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|ApplyThrustChangeRateLimit -->
+- [HoverControlSolver.StepHeight](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L29)
+<!-- source: Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs|StepHeight -->
+- [HoverControlSolver.CalculateTilt](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L55)
+<!-- source: Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs|CalculateTilt -->
 - [HoverFlightController.StopControlOutput](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/HoverFlightController.cs#L160)
 <!-- source: Assets/Scripts/Features/Flight/HoverFlightController.cs|StopControlOutput -->
-- [HoverControlSolver.Reset](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/HoverControlSolver.cs#L23)
-<!-- source: Assets/Scripts/Features/Flight/HoverControlSolver.cs|Reset -->
+- [HoverControlSolver.Reset](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L23)
+<!-- source: Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs|Reset -->
 - [HoverFlightController.ClearHoverThrust](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/HoverFlightController.cs#L167)
 <!-- source: Assets/Scripts/Features/Flight/HoverFlightController.cs|ClearHoverThrust -->
 - [HoverFlightController.OnDisable](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Flight/HoverFlightController.cs#L91)
@@ -461,33 +461,33 @@ flowchart TD
     A["TurretWeapon.FixedUpdate()"]
     click A "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/TurretWeapon.cs#L110" "打开源码"
     B["TurretTargetSelector.FindNearestTarget()"]
-    click B "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/TurretTargetSelector.cs#L16" "打开源码"
+    click B "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L16" "打开源码"
     C["TurretHitscan.Fire()"]
-    click C "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/TurretHitscan.cs#L10" "打开源码"
+    click C "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs#L10" "打开源码"
     D["Durability.ApplyDamage()"]
-    click D "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Durability.cs#L63" "打开源码"
+    click D "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Damage/Durability.cs#L63" "打开源码"
     E["ControlUnit.OnCollisionEnter()"]
-    click E "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/ControlUnit.cs#L254" "打开源码"
+    click E "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L254" "打开源码"
     F["CollisionDamageResolver.ApplyContactDamage()"]
-    click F "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/CollisionDamageResolver.cs#L10" "打开源码"
+    click F "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Damage/CollisionDamageResolver.cs#L10" "打开源码"
     G["Durability.ApplyCollisionEnergy()"]
-    click G "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Durability.cs#L74" "打开源码"
+    click G "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Damage/Durability.cs#L74" "打开源码"
     H["DestroyManager.DestroyGameObject()"]
     click H "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/DestroyManager.cs#L30" "打开源码"
     I["DestroyManager.ExplodeBlock()"]
     click I "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/DestroyManager.cs#L131" "打开源码"
     J["ExplosionPropagation.DisconnectBlocksInExplosionRange()"]
-    click J "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/ExplosionPropagation.cs#L9" "打开源码"
+    click J "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L9" "打开源码"
     K["PlayManager.RefreshGroup()"]
     click K "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/PlayManager.cs#L148" "打开源码"
     L["ExplosionPropagation.ApplyExplosionForce()"]
-    click L "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/ExplosionPropagation.cs#L53" "打开源码"
+    click L "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L53" "打开源码"
     M["SalvageCleanupSession.ScheduleUnit()"]
-    click M "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/SalvageCleanupSession.cs#L17" "打开源码"
+    click M "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L17" "打开源码"
     N["SalvageCleanupSession.CleanupUnitAfterDelay()"]
-    click N "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/SalvageCleanupSession.cs#L106" "打开源码"
+    click N "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L106" "打开源码"
     O["CargoHold.ReleaseContents()"]
-    click O "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Salvage/CargoHold.cs#L188" "打开源码"
+    click O "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L188" "打开源码"
     A --> B
     A -->|瞄准且冷却满足| C
     C --> D
@@ -506,34 +506,34 @@ flowchart TD
 
 - [TurretWeapon.FixedUpdate](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/TurretWeapon.cs#L110)
 <!-- source: Assets/Scripts/Features/Combat/TurretWeapon.cs|FixedUpdate -->
-- [TurretTargetSelector.FindNearestTarget](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/TurretTargetSelector.cs#L16)
-<!-- source: Assets/Scripts/Features/Combat/TurretTargetSelector.cs|FindNearestTarget -->
-- [TurretHitscan.Fire](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/TurretHitscan.cs#L10)
-<!-- source: Assets/Scripts/Features/Combat/TurretHitscan.cs|Fire -->
-- [Durability.ApplyDamage](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Durability.cs#L63)
-<!-- source: Assets/Scripts/Features/Combat/Durability.cs|ApplyDamage -->
-- [ControlUnit.OnCollisionEnter](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/ControlUnit.cs#L254)
-<!-- source: Assets/Scripts/Features/Simulation/ControlUnit.cs|OnCollisionEnter -->
-- [CollisionDamageResolver.ApplyContactDamage](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/CollisionDamageResolver.cs#L10)
-<!-- source: Assets/Scripts/Features/Combat/CollisionDamageResolver.cs|ApplyContactDamage -->
-- [Durability.ApplyCollisionEnergy](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Durability.cs#L74)
-<!-- source: Assets/Scripts/Features/Combat/Durability.cs|ApplyCollisionEnergy -->
+- [TurretTargetSelector.FindNearestTarget](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L16)
+<!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|FindNearestTarget -->
+- [TurretHitscan.Fire](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs#L10)
+<!-- source: Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs|Fire -->
+- [Durability.ApplyDamage](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Damage/Durability.cs#L63)
+<!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|ApplyDamage -->
+- [ControlUnit.OnCollisionEnter](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L254)
+<!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|OnCollisionEnter -->
+- [CollisionDamageResolver.ApplyContactDamage](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Damage/CollisionDamageResolver.cs#L10)
+<!-- source: Assets/Scripts/Features/Combat/Damage/CollisionDamageResolver.cs|ApplyContactDamage -->
+- [Durability.ApplyCollisionEnergy](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Damage/Durability.cs#L74)
+<!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|ApplyCollisionEnergy -->
 - [DestroyManager.DestroyGameObject](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/DestroyManager.cs#L30)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyGameObject -->
 - [DestroyManager.ExplodeBlock](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/DestroyManager.cs#L131)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|ExplodeBlock -->
-- [ExplosionPropagation.DisconnectBlocksInExplosionRange](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/ExplosionPropagation.cs#L9)
-<!-- source: Assets/Scripts/Features/Combat/ExplosionPropagation.cs|DisconnectBlocksInExplosionRange -->
+- [ExplosionPropagation.DisconnectBlocksInExplosionRange](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L9)
+<!-- source: Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs|DisconnectBlocksInExplosionRange -->
 - [PlayManager.RefreshGroup](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Simulation/PlayManager.cs#L148)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
-- [ExplosionPropagation.ApplyExplosionForce](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/ExplosionPropagation.cs#L53)
-<!-- source: Assets/Scripts/Features/Combat/ExplosionPropagation.cs|ApplyExplosionForce -->
-- [SalvageCleanupSession.ScheduleUnit](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/SalvageCleanupSession.cs#L17)
-<!-- source: Assets/Scripts/Features/Combat/SalvageCleanupSession.cs|ScheduleUnit -->
-- [SalvageCleanupSession.CleanupUnitAfterDelay](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/SalvageCleanupSession.cs#L106)
-<!-- source: Assets/Scripts/Features/Combat/SalvageCleanupSession.cs|CleanupUnitAfterDelay -->
-- [CargoHold.ReleaseContents](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Salvage/CargoHold.cs#L188)
-<!-- source: Assets/Scripts/Features/Salvage/CargoHold.cs|ReleaseContents -->
+- [ExplosionPropagation.ApplyExplosionForce](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L53)
+<!-- source: Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs|ApplyExplosionForce -->
+- [SalvageCleanupSession.ScheduleUnit](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L17)
+<!-- source: Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs|ScheduleUnit -->
+- [SalvageCleanupSession.CleanupUnitAfterDelay](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L106)
+<!-- source: Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs|CleanupUnitAfterDelay -->
+- [CargoHold.ReleaseContents](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L188)
+<!-- source: Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs|ReleaseContents -->
 
 ## 维修、回收和移动 Home 返航
 
@@ -542,45 +542,45 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["RepairBot.FixedUpdate()"]
-    click A "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/RepairBot.cs#L34" "打开源码"
+    click A "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L34" "打开源码"
     B["Bot.TickNavigation()"]
     click B "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Bot.cs#L138" "打开源码"
     C["RepairTargetSearch.Scan()"]
-    click C "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/RepairTargetSearch.cs#L15" "打开源码"
+    click C "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Repair/RepairTargetSearch.cs#L15" "打开源码"
     D["Bot.NavigateToTarget()"]
     click D "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Bot.cs#L210" "打开源码"
     E["BotFlightMotion.NavigateToTarget()"]
-    click E "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/BotFlightMotion.cs#L58" "打开源码"
+    click E "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Navigation/BotFlightMotion.cs#L58" "打开源码"
     F["BotObstacleAvoidance.Evaluate()"]
-    click F "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L55" "打开源码"
+    click F "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Navigation/BotObstacleAvoidance.cs#L55" "打开源码"
     G["RepairBot.CheckAndRepair()"]
-    click G "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/RepairBot.cs#L85" "打开源码"
+    click G "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L85" "打开源码"
     H["RepairBeamView.Update()"]
-    click H "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/RepairBeamView.cs#L49" "打开源码"
+    click H "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Repair/RepairBeamView.cs#L49" "打开源码"
     I["CollectionBot.FixedUpdate()"]
-    click I "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/CollectionBot.cs#L31" "打开源码"
+    click I "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L31" "打开源码"
     J["CollectionBot.FindTarget()"]
-    click J "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/CollectionBot.cs#L94" "打开源码"
+    click J "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L94" "打开源码"
     K["LootDrop.Claim()"]
-    click K "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Salvage/LootDrop.cs#L154" "打开源码"
+    click K "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Salvage/Drops/LootDrop.cs#L154" "打开源码"
     L["CollectionBot.CollectTarget()"]
-    click L "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/CollectionBot.cs#L73" "打开源码"
+    click L "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L73" "打开源码"
     M["LootDrop.Carry()"]
-    click M "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Salvage/LootDrop.cs#L166" "打开源码"
+    click M "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Salvage/Drops/LootDrop.cs#L166" "打开源码"
     N["CollectionBot.ReturnCargo()"]
-    click N "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/CollectionBot.cs#L82" "打开源码"
+    click N "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L82" "打开源码"
     O["Bot.NavigateHomeSmoothly()"]
     click O "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Bot.cs#L230" "打开源码"
     P["BotFlightMotion.NavigateHome()"]
-    click P "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/BotFlightMotion.cs#L71" "打开源码"
+    click P "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Navigation/BotFlightMotion.cs#L71" "打开源码"
     Q["BotHomeGuidance.Evaluate()"]
     click Q "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/BotHomeGuidance.cs#L27" "打开源码"
     R["Bot.ReturnHome()"]
     click R "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Bot.cs#L280" "打开源码"
     S["LootDrop.Deliver()"]
-    click S "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Salvage/LootDrop.cs#L195" "打开源码"
+    click S "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Salvage/Drops/LootDrop.cs#L195" "打开源码"
     T["CollectionBot.Abandon()"]
-    click T "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/CollectionBot.cs#L131" "打开源码"
+    click T "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L131" "打开源码"
     A --> B
     A -->|扫描目标时| C
     A --> D
@@ -603,46 +603,46 @@ flowchart TD
     N --> T
 ```
 
-- [RepairBot.FixedUpdate](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/RepairBot.cs#L34)
-<!-- source: Assets/Scripts/Features/Bots/RepairBot.cs|FixedUpdate -->
+- [RepairBot.FixedUpdate](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L34)
+<!-- source: Assets/Scripts/Features/Bots/Repair/RepairBot.cs|FixedUpdate -->
 - [Bot.TickNavigation](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Bot.cs#L138)
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|TickNavigation -->
-- [RepairTargetSearch.Scan](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/RepairTargetSearch.cs#L15)
-<!-- source: Assets/Scripts/Features/Bots/RepairTargetSearch.cs|Scan -->
+- [RepairTargetSearch.Scan](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Repair/RepairTargetSearch.cs#L15)
+<!-- source: Assets/Scripts/Features/Bots/Repair/RepairTargetSearch.cs|Scan -->
 - [Bot.NavigateToTarget](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Bot.cs#L210)
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|NavigateToTarget -->
-- [BotFlightMotion.NavigateToTarget](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/BotFlightMotion.cs#L58)
-<!-- source: Assets/Scripts/Features/Bots/BotFlightMotion.cs|NavigateToTarget -->
-- [BotObstacleAvoidance.Evaluate](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs#L55)
-<!-- source: Assets/Scripts/Features/Bots/BotObstacleAvoidance.cs|Evaluate -->
-- [RepairBot.CheckAndRepair](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/RepairBot.cs#L85)
-<!-- source: Assets/Scripts/Features/Bots/RepairBot.cs|CheckAndRepair -->
-- [RepairBeamView.Update](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/RepairBeamView.cs#L49)
-<!-- source: Assets/Scripts/Features/Bots/RepairBeamView.cs|Update -->
-- [CollectionBot.FixedUpdate](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/CollectionBot.cs#L31)
-<!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|FixedUpdate -->
-- [CollectionBot.FindTarget](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/CollectionBot.cs#L94)
-<!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|FindTarget -->
-- [LootDrop.Claim](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Salvage/LootDrop.cs#L154)
-<!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Claim -->
-- [CollectionBot.CollectTarget](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/CollectionBot.cs#L73)
-<!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|CollectTarget -->
-- [LootDrop.Carry](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Salvage/LootDrop.cs#L166)
-<!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Carry -->
-- [CollectionBot.ReturnCargo](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/CollectionBot.cs#L82)
-<!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|ReturnCargo -->
+- [BotFlightMotion.NavigateToTarget](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Navigation/BotFlightMotion.cs#L58)
+<!-- source: Assets/Scripts/Features/Bots/Navigation/BotFlightMotion.cs|NavigateToTarget -->
+- [BotObstacleAvoidance.Evaluate](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Navigation/BotObstacleAvoidance.cs#L55)
+<!-- source: Assets/Scripts/Features/Bots/Navigation/BotObstacleAvoidance.cs|Evaluate -->
+- [RepairBot.CheckAndRepair](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L85)
+<!-- source: Assets/Scripts/Features/Bots/Repair/RepairBot.cs|CheckAndRepair -->
+- [RepairBeamView.Update](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Repair/RepairBeamView.cs#L49)
+<!-- source: Assets/Scripts/Features/Bots/Repair/RepairBeamView.cs|Update -->
+- [CollectionBot.FixedUpdate](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L31)
+<!-- source: Assets/Scripts/Features/Bots/Collection/CollectionBot.cs|FixedUpdate -->
+- [CollectionBot.FindTarget](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L94)
+<!-- source: Assets/Scripts/Features/Bots/Collection/CollectionBot.cs|FindTarget -->
+- [LootDrop.Claim](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Salvage/Drops/LootDrop.cs#L154)
+<!-- source: Assets/Scripts/Features/Salvage/Drops/LootDrop.cs|Claim -->
+- [CollectionBot.CollectTarget](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L73)
+<!-- source: Assets/Scripts/Features/Bots/Collection/CollectionBot.cs|CollectTarget -->
+- [LootDrop.Carry](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Salvage/Drops/LootDrop.cs#L166)
+<!-- source: Assets/Scripts/Features/Salvage/Drops/LootDrop.cs|Carry -->
+- [CollectionBot.ReturnCargo](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L82)
+<!-- source: Assets/Scripts/Features/Bots/Collection/CollectionBot.cs|ReturnCargo -->
 - [Bot.NavigateHomeSmoothly](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Bot.cs#L230)
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|NavigateHomeSmoothly -->
-- [BotFlightMotion.NavigateHome](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/BotFlightMotion.cs#L71)
-<!-- source: Assets/Scripts/Features/Bots/BotFlightMotion.cs|NavigateHome -->
+- [BotFlightMotion.NavigateHome](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Navigation/BotFlightMotion.cs#L71)
+<!-- source: Assets/Scripts/Features/Bots/Navigation/BotFlightMotion.cs|NavigateHome -->
 - [BotHomeGuidance.Evaluate](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/BotHomeGuidance.cs#L27)
 <!-- source: Assets/Scripts/Features/Bots/BotHomeGuidance.cs|Evaluate -->
 - [Bot.ReturnHome](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Bot.cs#L280)
 <!-- source: Assets/Scripts/Features/Bots/Bot.cs|ReturnHome -->
-- [LootDrop.Deliver](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Salvage/LootDrop.cs#L195)
-<!-- source: Assets/Scripts/Features/Salvage/LootDrop.cs|Deliver -->
-- [CollectionBot.Abandon](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/CollectionBot.cs#L131)
-<!-- source: Assets/Scripts/Features/Bots/CollectionBot.cs|Abandon -->
+- [LootDrop.Deliver](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Salvage/Drops/LootDrop.cs#L195)
+<!-- source: Assets/Scripts/Features/Salvage/Drops/LootDrop.cs|Deliver -->
+- [CollectionBot.Abandon](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L131)
+<!-- source: Assets/Scripts/Features/Bots/Collection/CollectionBot.cs|Abandon -->
 
 ## 表现、镜头与 UI 生命周期
 
@@ -655,35 +655,35 @@ flowchart TD
     B["VisualEffectsManager.PlayBlockExplosion()"]
     click B "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L274" "打开源码"
     C["BlockVfxLibrary.Play()"]
-    click C "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/BlockVfxLibrary.cs#L54" "打开源码"
+    click C "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L54" "打开源码"
     D["TransientEffects.CreateLightFlash()"]
-    click D "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/TransientEffects.cs#L47" "打开源码"
+    click D "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Effects/TransientEffects.cs#L47" "打开源码"
     E["LightFade.Update()"]
-    click E "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/LightFade.cs#L17" "打开源码"
+    click E "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Effects/LightFade.cs#L17" "打开源码"
     F["CameraShake.Play()"]
-    click F "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/CameraShake.cs#L29" "打开源码"
+    click F "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Camera/CameraShake.cs#L29" "打开源码"
     G["CameraShake.CameraShakeRoutine()"]
-    click G "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/CameraShake.cs#L57" "打开源码"
+    click G "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Camera/CameraShake.cs#L57" "打开源码"
     H["VisualEffectsManager.OnDisable()"]
     click H "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L194" "打开源码"
     I["CameraShake.Cancel()"]
-    click I "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/CameraShake.cs#L17" "打开源码"
+    click I "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Camera/CameraShake.cs#L17" "打开源码"
     J["CameraController.SmoothFocusCameraOnBlock()"]
-    click J "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/CameraController.cs#L152" "打开源码"
+    click J "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Camera/CameraController.cs#L152" "打开源码"
     K["CameraFraming.TryGetFocusPose()"]
-    click K "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/CameraFraming.cs#L26" "打开源码"
+    click K "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Camera/CameraFraming.cs#L26" "打开源码"
     L["CameraController.SmoothFocusRoutine()"]
-    click L "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/CameraController.cs#L329" "打开源码"
+    click L "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Camera/CameraController.cs#L329" "打开源码"
     M["MainUIPanels.ShowCreatePanel()"]
-    click M "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/MainUIPanels.cs#L85" "打开源码"
+    click M "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L85" "打开源码"
     N["PanelTransitions.Show()"]
-    click N "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/PanelTransitions.cs#L29" "打开源码"
+    click N "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Interface/PanelTransitions.cs#L29" "打开源码"
     O["PanelTransitions.Fade()"]
-    click O "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/PanelTransitions.cs#L53" "打开源码"
+    click O "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Interface/PanelTransitions.cs#L53" "打开源码"
     P["MainUIPanels.OnDisable()"]
-    click P "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/MainUIPanels.cs#L71" "打开源码"
+    click P "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L71" "打开源码"
     Q["PanelTransitions.CancelAll()"]
-    click Q "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/PanelTransitions.cs#L16" "打开源码"
+    click Q "https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Interface/PanelTransitions.cs#L16" "打开源码"
     A --> B
     B --> C
     B -->|成功生成| D
@@ -702,33 +702,33 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/VisualEffectsManager.cs|TryPlayBlockExplosion -->
 - [VisualEffectsManager.PlayBlockExplosion](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L274)
 <!-- source: Assets/Scripts/Features/Presentation/VisualEffectsManager.cs|PlayBlockExplosion -->
-- [BlockVfxLibrary.Play](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/BlockVfxLibrary.cs#L54)
-<!-- source: Assets/Scripts/Features/Presentation/BlockVfxLibrary.cs|Play -->
-- [TransientEffects.CreateLightFlash](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/TransientEffects.cs#L47)
-<!-- source: Assets/Scripts/Features/Presentation/TransientEffects.cs|CreateLightFlash -->
-- [LightFade.Update](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/LightFade.cs#L17)
-<!-- source: Assets/Scripts/Features/Presentation/LightFade.cs|Update -->
-- [CameraShake.Play](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/CameraShake.cs#L29)
-<!-- source: Assets/Scripts/Features/Presentation/CameraShake.cs|Play -->
-- [CameraShake.CameraShakeRoutine](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/CameraShake.cs#L57)
-<!-- source: Assets/Scripts/Features/Presentation/CameraShake.cs|CameraShakeRoutine -->
+- [BlockVfxLibrary.Play](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L54)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs|Play -->
+- [TransientEffects.CreateLightFlash](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Effects/TransientEffects.cs#L47)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/TransientEffects.cs|CreateLightFlash -->
+- [LightFade.Update](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Effects/LightFade.cs#L17)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/LightFade.cs|Update -->
+- [CameraShake.Play](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Camera/CameraShake.cs#L29)
+<!-- source: Assets/Scripts/Features/Presentation/Camera/CameraShake.cs|Play -->
+- [CameraShake.CameraShakeRoutine](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Camera/CameraShake.cs#L57)
+<!-- source: Assets/Scripts/Features/Presentation/Camera/CameraShake.cs|CameraShakeRoutine -->
 - [VisualEffectsManager.OnDisable](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L194)
 <!-- source: Assets/Scripts/Features/Presentation/VisualEffectsManager.cs|OnDisable -->
-- [CameraShake.Cancel](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/CameraShake.cs#L17)
-<!-- source: Assets/Scripts/Features/Presentation/CameraShake.cs|Cancel -->
-- [CameraController.SmoothFocusCameraOnBlock](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/CameraController.cs#L152)
-<!-- source: Assets/Scripts/Features/Presentation/CameraController.cs|SmoothFocusCameraOnBlock -->
-- [CameraFraming.TryGetFocusPose](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/CameraFraming.cs#L26)
-<!-- source: Assets/Scripts/Features/Presentation/CameraFraming.cs|TryGetFocusPose -->
-- [CameraController.SmoothFocusRoutine](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/CameraController.cs#L329)
-<!-- source: Assets/Scripts/Features/Presentation/CameraController.cs|SmoothFocusRoutine -->
-- [MainUIPanels.ShowCreatePanel](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/MainUIPanels.cs#L85)
-<!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|ShowCreatePanel -->
-- [PanelTransitions.Show](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/PanelTransitions.cs#L29)
-<!-- source: Assets/Scripts/Features/Presentation/PanelTransitions.cs|Show -->
-- [PanelTransitions.Fade](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/PanelTransitions.cs#L53)
-<!-- source: Assets/Scripts/Features/Presentation/PanelTransitions.cs|Fade -->
-- [MainUIPanels.OnDisable](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/MainUIPanels.cs#L71)
-<!-- source: Assets/Scripts/Features/Presentation/MainUIPanels.cs|OnDisable -->
-- [PanelTransitions.CancelAll](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/PanelTransitions.cs#L16)
-<!-- source: Assets/Scripts/Features/Presentation/PanelTransitions.cs|CancelAll -->
+- [CameraShake.Cancel](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Camera/CameraShake.cs#L17)
+<!-- source: Assets/Scripts/Features/Presentation/Camera/CameraShake.cs|Cancel -->
+- [CameraController.SmoothFocusCameraOnBlock](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Camera/CameraController.cs#L152)
+<!-- source: Assets/Scripts/Features/Presentation/Camera/CameraController.cs|SmoothFocusCameraOnBlock -->
+- [CameraFraming.TryGetFocusPose](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Camera/CameraFraming.cs#L26)
+<!-- source: Assets/Scripts/Features/Presentation/Camera/CameraFraming.cs|TryGetFocusPose -->
+- [CameraController.SmoothFocusRoutine](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Camera/CameraController.cs#L329)
+<!-- source: Assets/Scripts/Features/Presentation/Camera/CameraController.cs|SmoothFocusRoutine -->
+- [MainUIPanels.ShowCreatePanel](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L85)
+<!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|ShowCreatePanel -->
+- [PanelTransitions.Show](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Interface/PanelTransitions.cs#L29)
+<!-- source: Assets/Scripts/Features/Presentation/Interface/PanelTransitions.cs|Show -->
+- [PanelTransitions.Fade](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Interface/PanelTransitions.cs#L53)
+<!-- source: Assets/Scripts/Features/Presentation/Interface/PanelTransitions.cs|Fade -->
+- [MainUIPanels.OnDisable](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L71)
+<!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|OnDisable -->
+- [PanelTransitions.CancelAll](https://github.com/kukudia/HY-Sandbox/blob/beaf6da90de7e8b4eb0fe07ed617a3b104882c71/Assets/Scripts/Features/Presentation/Interface/PanelTransitions.cs#L16)
+<!-- source: Assets/Scripts/Features/Presentation/Interface/PanelTransitions.cs|CancelAll -->

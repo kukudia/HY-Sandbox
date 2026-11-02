@@ -4,7 +4,7 @@
 
 源资源为项目内 `Assets/Art/SpaceKit/Prefabs/Modules/Turrets/Polygon/SM_Prop_Turret_Base_Single_01.prefab` 和 `SM_Prop_Turret_Base_Double_01.prefab`，保留其网格、材质、贴图和本地炮管变换；许可沿用项目原供应商资源许可，本次未重新审计授权。
 
-`Assets/Editor/Combat/TurretAssetBaker.cs` 是可复现制作源。菜单 **Tools/HY Sandbox/Combat/Bake projectile turrets** 创建并保存：
+`Assets/Editor/Combat/Turrets/TurretAssetBaker.cs` 是可复现制作源。菜单 **Tools/HY Sandbox/Combat/Bake projectile turrets** 创建并保存：
 
 - `Resources/Blocks/ProjectileTurretSingle`：一炮口，每轮一发。
 - `Resources/Blocks/ProjectileTurretDouble`：两炮口，每轮两发。

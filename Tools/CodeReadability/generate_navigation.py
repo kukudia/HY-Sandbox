@@ -1433,21 +1433,27 @@ def main():
         branch = folders
         for part in path.parent.parts:
             branch = branch.setdefault(part, {})
+        branch[path.name] = None
 
     def folder_lines(branch, prefix=""):
-        """Render every owned-source parent once, with stable sibling ordering."""
-        children = sorted(branch, key=lambda name: (name.casefold(), name))
+        """Show each level's source files beside its actual subfeature folders."""
+        children = sorted(
+            branch, key=lambda name: (branch[name] is not None, name.casefold(), name)
+        )
         for position, name in enumerate(children):
             last = position == len(children) - 1
-            yield prefix + ("└── " if last else "├── ") + name + "/"
-            yield from folder_lines(
-                branch[name], prefix + ("    " if last else "│   ")
-            )
+            directory = branch[name] is not None
+            yield prefix + ("└── " if last else "├── ") + name + ("/" if directory else "")
+            if directory:
+                yield from folder_lines(
+                    branch[name], prefix + ("    " if last else "│   ")
+                )
 
     index.append(
         "## 代码文件夹位置\n\n"
         "相对于项目根；完整列出 Roslyn 自有脚本清单与 [ToolIndex](ToolIndex.md) "
-        "所收录工具的父目录，省略文件。Assets/Scripts/Features 为运行时代码，"
+        "所收录工具的文件及父目录。每层主要代码直接列在其功能目录，子功能继续细分。"
+        "分类决策见 [CodeLayout](CodeLayout.md)。Assets/Scripts/Features 为运行时代码，"
         "Assets/Editor 为编辑器制作/验证工具；Tools、Blueprints 和 ArtSource "
         "为游戏运行时之外的开发工具。不含第三方、Package、缓存、构建产物及历史归档。"
         "由 generate_navigation.py 同步生成；下方各脚本章节可查看具体职责和方法。\n\n"

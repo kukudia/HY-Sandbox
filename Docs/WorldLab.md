@@ -31,7 +31,7 @@
 
 Unity6000.3.11f1 / URP / Windows；研究假设为128m×48m×128m有限区域，最近观察约2m，适合方块原型而非光滑自然地形。坐标Y-up、米、根Pivot为世界最小角；材质使用自建URP Lit，不依赖外部贴图、骨骼或音频。静态非凸MeshCollider，不可直接把整个世界设成动态刚体；不设置无依据LOD。
 
-源是 `Features/World/VoxelWorldData.cs`、`VoxelSurfaceMesher.cs` 和Editor制作工具；种子14721。地形、遗迹规则、材质均为本次项目内程序化制作，无外部AI或第三方美术输入。生成规则、Inspector参数和Bake入口保留可编辑性。所有资产有meta，已有脚本GUID不改。
+源是 `Features/World/Terrain/VoxelWorldData.cs`、`VoxelSurfaceMesher.cs` 和Editor制作工具；种子14721。地形、遗迹规则、材质均为本次项目内程序化制作，无外部AI或第三方美术输入。生成规则、Inspector参数和Bake入口保留可编辑性。所有资产有meta，已有脚本GUID不改。
 
 ## 验证
 

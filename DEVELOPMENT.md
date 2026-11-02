@@ -378,9 +378,9 @@ WorldSessionPerformanceChecks 修复遮罩持焦点后第2帧停滞和无新帧�
 
 ## 代码目录位置
 
-代码文件夹按真实父子层级展示，见 [代码目录树](Docs/CodeIndex.md#代码文件夹位置)。运行时、Editor 与外围开发工具统一从现有清单生成；新增、移动或删除目录后运行 `generate_navigation.py` 刷新。功能入口见下表，调用关系见 RuntimeFlow。
+源码按递归功能树实际组织：每层保留主要入口、协调器与核心契约，独立职责进入子功能目录，子功能内部继续细分。分类、主入口和边界见 [CodeLayout](Docs/CodeLayout.md)，全部实际文件树见 [CodeIndex](Docs/CodeIndex.md#代码文件夹位置)。函数图与源码链接由原导航命令刷新。
 
-2026-11-02：目录树与原导航同源生成，覆盖335份自有C#脚本和ToolIndex所列开发工具；skill校验、9份Python工具语法/入口检查、可读性检查（335脚本、0差异/0错误）、静态构建（0错误/3项依赖警告）及diff检查通过。本机缺少锁定SDK 9.0.318，从项目外部使用已安装9.0.320执行，未修改global.json。本次只修改规范、文档和导航生成器，未运行Unity导入或Play Mode验证。
+2026-11-02 更正：上一轮仅添加文档树，没有完成源码分类。本轮通过 Unity AssetDatabase 实际迁移275份运行时及Editor脚本，保留GUID、类型、源码字节和序列化契约；仅 SpaceKitCurator 的脚本依赖白名单跟随新路径。迁移与验证结果见 [目录分类验证](Docs/Validation/2026-11-02-code-layout.md)。
 
 ## 功能入口
 
@@ -393,13 +393,13 @@ WorldSessionPerformanceChecks 修复遮罩持焦点后第2帧停滞和无新帧�
 | 进入/退出游玩 | `Simulation/PlayManager.PlayStart` / `PlayEnd` | `RuntimeGroupBuilder` / `RuntimeGroupCleanup` / `PlayBlockSelection` |
 | 大世界与建筑 | `World/WorldSessionManager` / `WorldGenerationSettings` | `WorldRegionStreaming` / `WorldBuildingStreaming` / `WorldPlayerStreamingGuard`；`ProceduralVoxelWorld`支持有限WorldLab与Main流式数据 |
 | 连接 | `Simulation/Block.CheckConnection` | `BlockConnections` 双边连接几何和状态 |
-| 供电 | `Power/PowerTransmissionDevice.Update` | `PowerNetwork.Rebuild`；`PowerConnectionVisuals` 连接线 |
+| 供电 | `Power/Devices/PowerTransmissionDevice.Update` | `PowerNetwork.Rebuild`；`PowerConnectionVisuals` 连接线 |
 | 飞行 | `Flight/HoverFlightController.FixedUpdate` | `HoverControlSolver` PID与姿态计算；`ThrusterAllocator` 分配求解；各推进器施力 |
-| 维修/回收无人机 | `Bots/RepairBot.FixedUpdate` / `CollectionBot.FixedUpdate` | `BotFlightMotion` / `BotObstacleAvoidance` / `RepairTargetSearch` |
-| 战斗/损伤 | `Combat/Turret.FixedUpdate` / `Durability.ApplyDamage` | `LaserTurret` / `ProjectileTurret` / `TurretProjectile` / `TurretHitResolver` / `CollisionDamageResolver` |
+| 维修/回收无人机 | `Bots/Repair/RepairBot.FixedUpdate` / `CollectionBot.FixedUpdate` | `BotFlightMotion` / `BotObstacleAvoidance` / `RepairTargetSearch` |
+| 战斗/损伤 | `Combat/Turrets/Turret.FixedUpdate` / `Durability.ApplyDamage` | `LaserTurret` / `ProjectileTurret` / `TurretProjectile` / `TurretHitResolver` / `CollisionDamageResolver` |
 | 销毁/爆炸 | `Combat/DestroyManager.DestroyGameObject` | `ExplosionPropagation` / `SalvageCleanupSession` |
-| 回收与持久化 | `Salvage/LootDrop.Deliver` / `CargoPersistence.SaveReturnCargo` | `CargoHold` 数据与约束；表现位于 Presentation |
-| 镜头/特效/UI | `Presentation/CameraController` / `VisualEffectsManager` / `MainUIPanels` | `CameraFraming` / `CameraShake` / `TransientEffects` / `PanelTransitions` |
+| 回收与持久化 | `Salvage/Drops/LootDrop.Deliver` / `CargoPersistence.SaveReturnCargo` | `CargoHold` 数据与约束；表现位于 Presentation |
+| 镜头/特效/UI | `Presentation/Camera/CameraController` / `VisualEffectsManager` / `MainUIPanels` | `CameraFraming` / `CameraShake` / `TransientEffects` / `PanelTransitions` |
 | 玩家/输入 | `Player/InputManager.Update` / `PlayerController` | 原 Input System及模式门限 |
 | 诊断 | `Diagnostics/DebugManager` / `AbnormalImpulseRecorder` | 场景调试、物理遥测与记录 |
 

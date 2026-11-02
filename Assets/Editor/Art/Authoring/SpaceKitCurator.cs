@@ -434,7 +434,7 @@ public static class SpaceKitCurator
 
             foreach (string dependency in AssetDatabase.GetDependencies(path, true))
             {
-                if (dependency.StartsWith("Assets/", StringComparison.Ordinal) && !dependency.StartsWith("Assets/Art/", StringComparison.Ordinal) && dependency != "Assets/Scripts/Features/Presentation/VfxEffect.cs")
+                if (dependency.StartsWith("Assets/", StringComparison.Ordinal) && !dependency.StartsWith("Assets/Art/", StringComparison.Ordinal) && dependency != "Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs")
                 {
                     errors.Add("External dependency: " + path + " -> " + dependency);
                 }
