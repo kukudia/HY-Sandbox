@@ -12,22 +12,21 @@ public class SaveManager : MonoBehaviour
     private string enemyBlueprintDirectory => Path.Combine(Application.persistentDataPath, "EnemyBlueprints");
     private static string buildingBlueprintDirectory => Path.Combine(Application.persistentDataPath, "BuildingBlueprints");
 
-    private BlueprintFileStore _buildingFiles;
-    private BlueprintFileStore BuildingFiles => _buildingFiles ?? (_buildingFiles = new BlueprintFileStore(buildingBlueprintDirectory));
-
     public string currentBuildingBlueprintName;
     public List<string> buildingBlueprints = new List<string>();
+    private BlueprintFileStore _playerFiles;
+    private BlueprintFileStore _enemyFiles;
+    private BlueprintFileStore _buildingFiles;
+    private BlueprintFileStore PlayerFiles => _playerFiles ?? (_playerFiles = new BlueprintFileStore(saveDirectory));
+    private BlueprintFileStore EnemyFiles => _enemyFiles ?? (_enemyFiles = new BlueprintFileStore(enemyBlueprintDirectory));
+    private BlueprintFileStore BuildingFiles => _buildingFiles ?? (_buildingFiles = new BlueprintFileStore(buildingBlueprintDirectory));
+
     private BlueprintFileStore FilesFor(BuildTargetKind kind)
     {
         return kind == BuildTargetKind.BuildingBlueprint ? BuildingFiles : kind == BuildTargetKind.EnemyBlueprint ? EnemyFiles : PlayerFiles;
     }
 
     private BlueprintFileStore CurrentFiles => FilesFor(BuildManager.instance != null ? BuildManager.instance.CurrentBuildTarget : BuildTargetKind.PlayerSave);
-
-    private BlueprintFileStore _playerFiles;
-    private BlueprintFileStore _enemyFiles;
-    private BlueprintFileStore PlayerFiles => _playerFiles ?? (_playerFiles = new BlueprintFileStore(saveDirectory));
-    private BlueprintFileStore EnemyFiles => _enemyFiles ?? (_enemyFiles = new BlueprintFileStore(enemyBlueprintDirectory));
 
     public string currentSaveName;
     public string currentEnemyBlueprintName;
