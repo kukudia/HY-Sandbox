@@ -82,4 +82,3 @@ finally
 }
 System.IO.File.WriteAllText("Temp/BuildingCatalog/isolated.json",Newtonsoft.Json.JsonConvert.SerializeObject(checks,Newtonsoft.Json.Formatting.Indented));
 return checks;
-
