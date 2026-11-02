@@ -1835,10 +1835,11 @@ HY-Sandbox/
 | WorldSessionPlayChecks | [`void Tick()`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L70) | private static |
 | WorldSessionPlayChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L96) | private static |
 | WorldSessionPlayChecks | [`void Check(bool condition, string description)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L104) | private static |
-| WorldSessionPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L114) | private static |
-| WorldSessionPlayChecks | [`IEnumerator StreamingChecks(WorldGenerationSettings settings)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L409) | private static |
-| WorldSessionPlayChecks | [`bool NeighborhoodReady(ProceduralVoxelWorld world, Vector2Int center)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L517) | private static |
-| WorldSessionPlayChecks | [`void Finish(bool exitPlayMode)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L533) | private static |
+| WorldSessionPlayChecks | [`bool IsPopulatedBuilding(string path)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L114) | private static |
+| WorldSessionPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L128) | private static |
+| WorldSessionPlayChecks | [`IEnumerator StreamingChecks(WorldGenerationSettings settings)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L423) | private static |
+| WorldSessionPlayChecks | [`bool NeighborhoodReady(ProceduralVoxelWorld world, Vector2Int center)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L531) | private static |
+| WorldSessionPlayChecks | [`void Finish(bool exitPlayMode)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L547) | private static |
 
 ## Assets/Editor/World/Validation/Terrain/VoxelMeshingChecks.cs
 
@@ -2634,35 +2635,36 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SaveManager | [`BlueprintFileStore FilesFor(BuildTargetKind kind)`](../Assets/Scripts/Features/Building/SaveManager.cs#L20) | private |
-| SaveManager | [`void Awake()`](../Assets/Scripts/Features/Building/SaveManager.cs#L38) | private |
-| SaveManager | [`void OnDestroy()`](../Assets/Scripts/Features/Building/SaveManager.cs#L52) | private |
-| SaveManager | [`void EnsureSaveDirectories()`](../Assets/Scripts/Features/Building/SaveManager.cs#L60) | public |
-| SaveManager | [`void GetAllBuildingBlueprintNames()`](../Assets/Scripts/Features/Building/SaveManager.cs#L74) | public |
-| SaveManager | [`void CreateNewBuildingBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L80) | public |
-| SaveManager | [`void LoadBuildingBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L96) | public |
-| SaveManager | [`void DeleteBuildingBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L101) | public |
-| SaveManager | [`bool RenameBuildingBlueprint(string oldName, string newName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L112) | public |
-| SaveManager | [`string GetBuildingBlueprintPath(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L117) | public |
-| SaveManager | [`void SaveBuildingFoundation(BuildingFoundationData foundation)`](../Assets/Scripts/Features/Building/SaveManager.cs#L122) | public |
-| SaveManager | [`void GetAllSaveNames()`](../Assets/Scripts/Features/Building/SaveManager.cs#L137) | public |
-| SaveManager | [`void SaveBuildingOutpost(EnemyOutpostData outpost)`](../Assets/Scripts/Features/Building/SaveManager.cs#L147) | public |
-| SaveManager | [`string CopyBundledBuilding(string template)`](../Assets/Scripts/Features/Building/SaveManager.cs#L172) | public |
-| SaveManager | [`string SaveNewBuilding(string template, BlockDataList data)`](../Assets/Scripts/Features/Building/SaveManager.cs#L189) | public |
-| SaveManager | [`void GetAllEnemyBlueprintNames()`](../Assets/Scripts/Features/Building/SaveManager.cs#L215) | public |
-| SaveManager | [`void CreateNewSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L225) | public |
-| SaveManager | [`void CreateNewEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L243) | public |
-| SaveManager | [`void LoadSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L256) | public |
-| SaveManager | [`void LoadEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L286) | public |
-| SaveManager | [`void DeleteSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L314) | public |
-| SaveManager | [`void DeleteEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L326) | public |
-| SaveManager | [`bool RenameSave(string oldSaveName, string newSaveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L338) | public |
-| SaveManager | [`bool RenameEnemyBlueprint(string oldBlueprintName, string newBlueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L343) | public |
-| SaveManager | [`bool RenameBlueprint(string oldName, string newName, BuildTargetKind kind)`](../Assets/Scripts/Features/Building/SaveManager.cs#L348) | private |
-| SaveManager | [`void DuplicateSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L414) | public |
-| SaveManager | [`string GetSavePath(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L427) | public |
-| SaveManager | [`string GetEnemyBlueprintPath(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L432) | public |
-| SaveManager | [`string GetSaveFileSize(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L437) | public |
+| SaveManager | [`BlueprintFileStore FilesFor(BuildTargetKind kind)`](../Assets/Scripts/Features/Building/SaveManager.cs#L24) | private |
+| SaveManager | [`void Awake()`](../Assets/Scripts/Features/Building/SaveManager.cs#L37) | private |
+| SaveManager | [`void OnDestroy()`](../Assets/Scripts/Features/Building/SaveManager.cs#L51) | private |
+| SaveManager | [`void EnsureSaveDirectories()`](../Assets/Scripts/Features/Building/SaveManager.cs#L59) | public |
+| SaveManager | [`BlueprintFileStore GetBuildingBlueprintFiles()`](../Assets/Scripts/Features/Building/SaveManager.cs#L74) | internal static |
+| SaveManager | [`void GetAllBuildingBlueprintNames()`](../Assets/Scripts/Features/Building/SaveManager.cs#L79) | public |
+| SaveManager | [`void CreateNewBuildingBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L85) | public |
+| SaveManager | [`void LoadBuildingBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L101) | public |
+| SaveManager | [`void DeleteBuildingBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L106) | public |
+| SaveManager | [`bool RenameBuildingBlueprint(string oldName, string newName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L117) | public |
+| SaveManager | [`string GetBuildingBlueprintPath(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L122) | public |
+| SaveManager | [`void SaveBuildingFoundation(BuildingFoundationData foundation)`](../Assets/Scripts/Features/Building/SaveManager.cs#L127) | public |
+| SaveManager | [`void GetAllSaveNames()`](../Assets/Scripts/Features/Building/SaveManager.cs#L142) | public |
+| SaveManager | [`void SaveBuildingOutpost(EnemyOutpostData outpost)`](../Assets/Scripts/Features/Building/SaveManager.cs#L152) | public |
+| SaveManager | [`string CopyBundledBuilding(string template)`](../Assets/Scripts/Features/Building/SaveManager.cs#L177) | public |
+| SaveManager | [`string SaveNewBuilding(string template, BlockDataList data)`](../Assets/Scripts/Features/Building/SaveManager.cs#L194) | public |
+| SaveManager | [`void GetAllEnemyBlueprintNames()`](../Assets/Scripts/Features/Building/SaveManager.cs#L220) | public |
+| SaveManager | [`void CreateNewSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L230) | public |
+| SaveManager | [`void CreateNewEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L248) | public |
+| SaveManager | [`void LoadSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L261) | public |
+| SaveManager | [`void LoadEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L291) | public |
+| SaveManager | [`void DeleteSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L319) | public |
+| SaveManager | [`void DeleteEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L331) | public |
+| SaveManager | [`bool RenameSave(string oldSaveName, string newSaveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L343) | public |
+| SaveManager | [`bool RenameEnemyBlueprint(string oldBlueprintName, string newBlueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L348) | public |
+| SaveManager | [`bool RenameBlueprint(string oldName, string newName, BuildTargetKind kind)`](../Assets/Scripts/Features/Building/SaveManager.cs#L353) | private |
+| SaveManager | [`void DuplicateSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L419) | public |
+| SaveManager | [`string GetSavePath(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L432) | public |
+| SaveManager | [`string GetEnemyBlueprintPath(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L437) | public |
+| SaveManager | [`string GetSaveFileSize(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L442) | public |
 
 ## Assets/Scripts/Features/Combat/Damage/CollisionDamageResolver.cs
 
@@ -4403,14 +4405,16 @@ HY-Sandbox/
 
 ## Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs
 
-// 职责：读取用户建筑目录的全部有效JSON，校验范围并覆盖同名模板；坏文件单独报告而不阻断世界。 // 入口：Load()；每次新会话重新读取，不修改用户蓝图文件。
+// 职责：从SaveManager共用文件仓读取建筑快照，合并内置模板；World与WorldLab共用解析、覆盖和错误隔离。 // 入口：LoadRoutine()预热世界资源；Load()刷新WorldLab目录；仅世界生成检查平台范围，不修改源文件。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldBuildingLibrary | [`IEnumerator LoadRoutine(string directory)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L20) | internal |
-| WorldBuildingLibrary | [`void CollectResources(string path, HashSet<string> resources)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L58) | private static |
-| WorldBuildingLibrary | [`void CollectBlueprintResources(BlockDataList blueprint, HashSet<string> resources)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L81) | private static |
-| WorldBuildingLibrary | [`void Load(string directory)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L115) | internal |
+| WorldBuildingLibrary | [`IEnumerator LoadRoutine(BlueprintFileStore files)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L19) | internal |
+| WorldBuildingLibrary | [`void Load(BlueprintFileStore files, IEnumerable<TextAsset> bundled)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L52) | internal |
+| WorldBuildingLibrary | [`IEnumerable<string> ReadSources( BlueprintFileStore files, IEnumerable<TextAsset> bundled, bool forWorldGeneration, HashSet<string> warmupResources)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L60) | private |
+| WorldBuildingLibrary | [`void ReadSource(string name, string json, string path, bool forWorldGeneration, HashSet<string> warmupResources)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L96) | private |
+| WorldBuildingLibrary | [`void CollectBlueprintResources(BlockDataList blueprint, HashSet<string> resources)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L137) | private static |
+| WorldBuildingLibrary | [`void ValidateWorldTemplate(BlockDataList blueprint)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L171) | private static |
 
 ## Assets/Scripts/Features/World/Buildings/Data/WorldBuildingState.cs
 
@@ -4433,15 +4437,14 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldBuildingPalette | [`void Start()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L38) | private |
-| WorldBuildingPalette | [`void RefreshCatalog()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L43) | public |
-| WorldBuildingPalette | [`void AddTemplate(string name, string json)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L84) | private |
-| WorldBuildingPalette | [`void Update()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L99) | private |
-| WorldBuildingPalette | [`void BeginPlacement()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L174) | public |
-| WorldBuildingPalette | [`void AddPreviewMeshes(GameObject prefab, Vector3 localPosition, Quaternion localRotation, Vector3? size = null)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L204) | private |
-| WorldBuildingPalette | [`void Cancel()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L244) | public |
-| WorldBuildingPalette | [`void OnDisable()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L259) | private |
-| WorldBuildingPalette | [`void OnGUI()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L264) | private |
+| WorldBuildingPalette | [`void Start()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L37) | private |
+| WorldBuildingPalette | [`void RefreshCatalog()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L42) | public |
+| WorldBuildingPalette | [`void Update()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L58) | private |
+| WorldBuildingPalette | [`void BeginPlacement()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L133) | public |
+| WorldBuildingPalette | [`void AddPreviewMeshes(GameObject prefab, Vector3 localPosition, Quaternion localRotation, Vector3? size = null)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L163) | private |
+| WorldBuildingPalette | [`void Cancel()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L203) | public |
+| WorldBuildingPalette | [`void OnDisable()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L218) | private |
+| WorldBuildingPalette | [`void OnGUI()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L223) | private |
 
 ## Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs
 

@@ -111,6 +111,20 @@ public static class WorldSessionPlayChecks
         report.checks.Add(description);
     }
 
+    private static bool IsPopulatedBuilding(string path)
+    {
+        try
+        {
+            BlockDataList blueprint = JsonUtility.FromJson<BlockDataList>(File.ReadAllText(path));
+            WorldBuildingValidation.ValidateBlueprint(blueprint);
+            return blueprint.blocks.Count > 0;
+        }
+        catch (Exception error) when (error is ArgumentException || error is InvalidOperationException || error is IOException || error is UnauthorizedAccessException)
+        {
+            return false;
+        }
+    }
+
     private static IEnumerator Scenario()
     {
         yield return null;
@@ -160,7 +174,7 @@ public static class WorldSessionPlayChecks
             session.State == WorldSessionState.Ready && session.Progress >= 1f,
             "background preparation reaches Ready with full progress");
         string blueprintDirectory = Path.Combine(Application.persistentDataPath, "BuildingBlueprints");
-        string[] userBlueprints = Directory.GetFiles(blueprintDirectory, "*.json").Select(Path.GetFileNameWithoutExtension).OrderBy(name => name, StringComparer.OrdinalIgnoreCase).ToArray();
+        string[] userBlueprints = Directory.GetFiles(blueprintDirectory, "*.json").Where(IsPopulatedBuilding).Select(Path.GetFileNameWithoutExtension).OrderBy(name => name, StringComparer.OrdinalIgnoreCase).ToArray();
         Check(
             userBlueprints.All(name => session.BuildingTemplates.Contains(name)) && Resources.LoadAll<TextAsset>("WorldBlueprints/Buildings").All(asset => session.BuildingTemplates.Contains(asset.name)),
             "generation pool includes user blueprints and authored bundled buildings/outposts");

@@ -111,7 +111,7 @@ flowchart TD
     C["SaveUIPanel.RefreshList()"]
     click C "../Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs#L17" "打开源码"
     D["SaveManager.LoadSave()"]
-    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L256" "打开源码"
+    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L261" "打开源码"
     E["BuildManager.LoadAllBlocks()"]
     click E "../Assets/Scripts/Features/Building/BuildManager.cs#L563" "打开源码"
     F["MainUIPanels.PlayStart()"]
@@ -169,7 +169,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Bootstrap/GameManager.cs|Init -->
 - [SaveUIPanel.RefreshList](../Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs#L17)
 <!-- source: Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs|RefreshList -->
-- [SaveManager.LoadSave](../Assets/Scripts/Features/Building/SaveManager.cs#L256)
+- [SaveManager.LoadSave](../Assets/Scripts/Features/Building/SaveManager.cs#L261)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|LoadSave -->
 - [BuildManager.LoadAllBlocks](../Assets/Scripts/Features/Building/BuildManager.cs#L563)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|LoadAllBlocks -->
@@ -215,7 +215,7 @@ flowchart TD
     C["BuildManager.EnterBuildingBlueprintBuildMode()"]
     click C "../Assets/Scripts/Features/Building/BuildManager.cs#L259" "打开源码"
     D["SaveManager.CreateNewBuildingBlueprint()"]
-    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L80" "打开源码"
+    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L85" "打开源码"
     E["BuildManager.LoadAllBlocks()"]
     click E "../Assets/Scripts/Features/Building/BuildManager.cs#L563" "打开源码"
     F["BlueprintLoader.Load()"]
@@ -229,13 +229,13 @@ flowchart TD
     J["BuildManager.ResizeBuildingFoundation()"]
     click J "../Assets/Scripts/Features/Building/BuildManager.cs#L303" "打开源码"
     K["SaveManager.SaveBuildingFoundation()"]
-    click K "../Assets/Scripts/Features/Building/SaveManager.cs#L122" "打开源码"
+    click K "../Assets/Scripts/Features/Building/SaveManager.cs#L127" "打开源码"
     L["Block.CheckConnection()"]
     click L "../Assets/Scripts/Features/Simulation/Block.cs#L360" "打开源码"
     M["BuildManager.ExitDeveloperBlueprintBuildMode()"]
     click M "../Assets/Scripts/Features/Building/BuildManager.cs#L228" "打开源码"
     N["SaveManager.LoadSave()"]
-    click N "../Assets/Scripts/Features/Building/SaveManager.cs#L256" "打开源码"
+    click N "../Assets/Scripts/Features/Building/SaveManager.cs#L261" "打开源码"
     A -->|Ctrl+Alt+F| B
     B -->|进入| C
     C --> D
@@ -257,7 +257,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|ToggleBuildingBlueprintBuildMode -->
 - [BuildManager.EnterBuildingBlueprintBuildMode](../Assets/Scripts/Features/Building/BuildManager.cs#L259)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|EnterBuildingBlueprintBuildMode -->
-- [SaveManager.CreateNewBuildingBlueprint](../Assets/Scripts/Features/Building/SaveManager.cs#L80)
+- [SaveManager.CreateNewBuildingBlueprint](../Assets/Scripts/Features/Building/SaveManager.cs#L85)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|CreateNewBuildingBlueprint -->
 - [BuildManager.LoadAllBlocks](../Assets/Scripts/Features/Building/BuildManager.cs#L563)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|LoadAllBlocks -->
@@ -271,13 +271,13 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BuildingEditor/BuildingEditorPanel.cs|ApplySize -->
 - [BuildManager.ResizeBuildingFoundation](../Assets/Scripts/Features/Building/BuildManager.cs#L303)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|ResizeBuildingFoundation -->
-- [SaveManager.SaveBuildingFoundation](../Assets/Scripts/Features/Building/SaveManager.cs#L122)
+- [SaveManager.SaveBuildingFoundation](../Assets/Scripts/Features/Building/SaveManager.cs#L127)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|SaveBuildingFoundation -->
 - [Block.CheckConnection](../Assets/Scripts/Features/Simulation/Block.cs#L360)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|CheckConnection -->
 - [BuildManager.ExitDeveloperBlueprintBuildMode](../Assets/Scripts/Features/Building/BuildManager.cs#L228)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|ExitDeveloperBlueprintBuildMode -->
-- [SaveManager.LoadSave](../Assets/Scripts/Features/Building/SaveManager.cs#L256)
+- [SaveManager.LoadSave](../Assets/Scripts/Features/Building/SaveManager.cs#L261)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|LoadSave -->
 
 ## 蓝图恢复、统计和取消
@@ -1599,14 +1599,14 @@ flowchart TD
 
 ## 用户建筑库、自然出生和远景
 
-源码推导：每次会话读取persistentDataPath/BuildingBlueprints全部有效JSON，单独报告坏文件并快照每套蓝图实际占地；落点按同一模板索引居中，半格支撑边距外6m接回自然坡面。进入时按载具覆盖范围最高地面加净空抬升。详细地形外分帧缓存无碰撞体素列，保持同样阶梯及草土材质，按列版本隐藏已加载列代理；默认12圈后衔接8m采样远景，空洞与外环原子切换，裙边遮缝、距离雾过渡背景。跨四列重采样，淘汰外环缓存并释放网格；退出恢复相机/雾并销毁自有网格。
+源码推导：World和WorldLab通过SaveManager.GetBuildingBlueprintFiles共用建筑文件仓；每次会话读取全部有效JSON，单独报告坏文件并快照每套蓝图实际占地；落点按同一模板索引居中，半格支撑边距外6m接回自然坡面。进入时按载具覆盖范围最高地面加净空抬升。详细地形外分帧缓存无碰撞体素列，保持同样阶梯及草土材质，按列版本隐藏已加载列代理；默认12圈后衔接8m采样远景，空洞与外环原子切换，裙边遮缝、距离雾过渡背景。跨四列重采样，淘汰外环缓存并释放网格；退出恢复相机/雾并销毁自有网格。
 
 ```mermaid
 flowchart TD
     A["WorldSessionManager.PrepareWorld()"]
     click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L125" "打开源码"
     B["WorldBuildingLibrary.LoadRoutine()"]
-    click B "../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L20" "打开源码"
+    click B "../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L19" "打开源码"
     C["WorldBuildingValidation.ValidateBlueprint()"]
     click C "../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs#L11" "打开源码"
     D["WorldBuildingFootprints.Get()"]
@@ -1637,8 +1637,11 @@ flowchart TD
     click P "../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L232" "打开源码"
     Q["WorldDistanceView.ReleaseExpiredRing()"]
     click Q "../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L250" "打开源码"
+    R["SaveManager.GetBuildingBlueprintFiles()"]
+    click R "../Assets/Scripts/Features/Building/SaveManager.cs#L74" "打开源码"
+    A -->|取得共用文件仓| R
     A --> B
-    B -->|异步预热后经Load校验| C
+    B -->|异步预热后经ReadSources校验| C
     A --> E
     H -->|经Height按所选蓝图取范围| D
     A -.->|初始列完成才刷新| F
@@ -1658,7 +1661,7 @@ flowchart TD
 
 - [WorldSessionManager.PrepareWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L125)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|PrepareWorld -->
-- [WorldBuildingLibrary.LoadRoutine](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L20)
+- [WorldBuildingLibrary.LoadRoutine](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L19)
 <!-- source: Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs|LoadRoutine -->
 - [WorldBuildingValidation.ValidateBlueprint](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs#L11)
 <!-- source: Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs|ValidateBlueprint -->
@@ -1690,6 +1693,8 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs|UpdateRingVisibility -->
 - [WorldDistanceView.ReleaseExpiredRing](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L250)
 <!-- source: Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs|ReleaseExpiredRing -->
+- [SaveManager.GetBuildingBlueprintFiles](../Assets/Scripts/Features/Building/SaveManager.cs#L74)
+<!-- source: Assets/Scripts/Features/Building/SaveManager.cs|GetBuildingBlueprintFiles -->
 
 ## 区块流式与建筑休眠
 
@@ -2102,11 +2107,11 @@ flowchart TD
     A["WorldBuildingAuthoring.Install()"]
     click A "../Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs#L12" "打开源码"
     B["WorldBuildingPalette.RefreshCatalog()"]
-    click B "../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L43" "打开源码"
+    click B "../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L42" "打开源码"
     C["WorldBuildingPalette.Update()"]
-    click C "../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L99" "打开源码"
+    click C "../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L58" "打开源码"
     D["WorldBuildingPalette.BeginPlacement()"]
-    click D "../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L174" "打开源码"
+    click D "../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L133" "打开源码"
     E["WorldBuildingManager.CanPlace()"]
     click E "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L76" "打开源码"
     F["WorldBuildingPlacement.Check()"]
@@ -2141,7 +2146,13 @@ flowchart TD
     click T "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L372" "打开源码"
     U["WorldBuildingManager.RestoreBuilding()"]
     click U "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L126" "打开源码"
+    V["SaveManager.GetBuildingBlueprintFiles()"]
+    click V "../Assets/Scripts/Features/Building/SaveManager.cs#L74" "打开源码"
+    W["WorldBuildingLibrary.Load()"]
+    click W "../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L52" "打开源码"
     A -.->|保存场景/目录供Start读取| B
+    B --> V
+    B --> W
     C -->|B键| D
     C --> E
     E --> F
@@ -2165,11 +2176,11 @@ flowchart TD
 
 - [WorldBuildingAuthoring.Install](../Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs#L12)
 <!-- source: Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs|Install -->
-- [WorldBuildingPalette.RefreshCatalog](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L43)
+- [WorldBuildingPalette.RefreshCatalog](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L42)
 <!-- source: Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs|RefreshCatalog -->
-- [WorldBuildingPalette.Update](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L99)
+- [WorldBuildingPalette.Update](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L58)
 <!-- source: Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs|Update -->
-- [WorldBuildingPalette.BeginPlacement](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L174)
+- [WorldBuildingPalette.BeginPlacement](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L133)
 <!-- source: Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs|BeginPlacement -->
 - [WorldBuildingManager.CanPlace](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L76)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|CanPlace -->
@@ -2205,6 +2216,10 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|ClearBuildings -->
 - [WorldBuildingManager.RestoreBuilding](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L126)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|RestoreBuilding -->
+- [SaveManager.GetBuildingBlueprintFiles](../Assets/Scripts/Features/Building/SaveManager.cs#L74)
+<!-- source: Assets/Scripts/Features/Building/SaveManager.cs|GetBuildingBlueprintFiles -->
+- [WorldBuildingLibrary.Load](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L52)
+<!-- source: Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs|Load -->
 
 ## WorldLab 建筑支撑与损坏
 
@@ -2438,11 +2453,11 @@ flowchart TD
     C["BuildingOutpostEditor.SavePose()"]
     click C "../Assets/Scripts/Features/Building/BuildingEditor/BuildingOutpostEditor.cs#L233" "打开源码"
     D["SaveManager.SaveBuildingOutpost()"]
-    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L147" "打开源码"
+    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L152" "打开源码"
     E["EnemyOutpostData.Validate()"]
     click E "../Assets/Scripts/Features/World/Outposts/EnemyOutpostData.cs#L13" "打开源码"
-    F["WorldBuildingLibrary.Load()"]
-    click F "../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L115" "打开源码"
+    F["WorldBuildingLibrary.ReadSource()"]
+    click F "../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L96" "打开源码"
     G["WorldBuildingStreaming.LoadColumn()"]
     click G "../Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs#L34" "打开源码"
     H["BuildingRuntime.InitializeRoutine()"]
@@ -2495,12 +2510,12 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BuildingEditor/BuildingOutpostEditor.cs|AddDefender -->
 - [BuildingOutpostEditor.SavePose](../Assets/Scripts/Features/Building/BuildingEditor/BuildingOutpostEditor.cs#L233)
 <!-- source: Assets/Scripts/Features/Building/BuildingEditor/BuildingOutpostEditor.cs|SavePose -->
-- [SaveManager.SaveBuildingOutpost](../Assets/Scripts/Features/Building/SaveManager.cs#L147)
+- [SaveManager.SaveBuildingOutpost](../Assets/Scripts/Features/Building/SaveManager.cs#L152)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|SaveBuildingOutpost -->
 - [EnemyOutpostData.Validate](../Assets/Scripts/Features/World/Outposts/EnemyOutpostData.cs#L13)
 <!-- source: Assets/Scripts/Features/World/Outposts/EnemyOutpostData.cs|Validate -->
-- [WorldBuildingLibrary.Load](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L115)
-<!-- source: Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs|Load -->
+- [WorldBuildingLibrary.ReadSource](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L96)
+<!-- source: Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs|ReadSource -->
 - [WorldBuildingStreaming.LoadColumn](../Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs#L34)
 <!-- source: Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs|LoadColumn -->
 - [BuildingRuntime.InitializeRoutine](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L82)
@@ -2610,7 +2625,7 @@ flowchart TD
     C["OutpostBaseDesigner.BoundsOf()"]
     click C "../Assets/Scripts/Features/Building/BuildingEditor/OutpostBaseDesigner.cs#L9" "打开源码"
     D["SaveManager.SaveNewBuilding()"]
-    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L189" "打开源码"
+    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L194" "打开源码"
     E["BuildManager.EnterBuildingBlueprintBuildMode()"]
     click E "../Assets/Scripts/Features/Building/BuildManager.cs#L259" "打开源码"
     F["OutpostContentAuthoring.ExportMatchingBases()"]
@@ -2645,7 +2660,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BuildingEditor/OutpostBaseDesigner.cs|Create -->
 - [OutpostBaseDesigner.BoundsOf](../Assets/Scripts/Features/Building/BuildingEditor/OutpostBaseDesigner.cs#L9)
 <!-- source: Assets/Scripts/Features/Building/BuildingEditor/OutpostBaseDesigner.cs|BoundsOf -->
-- [SaveManager.SaveNewBuilding](../Assets/Scripts/Features/Building/SaveManager.cs#L189)
+- [SaveManager.SaveNewBuilding](../Assets/Scripts/Features/Building/SaveManager.cs#L194)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|SaveNewBuilding -->
 - [BuildManager.EnterBuildingBlueprintBuildMode](../Assets/Scripts/Features/Building/BuildManager.cs#L259)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|EnterBuildingBlueprintBuildMode -->
@@ -3406,7 +3421,7 @@ flowchart TD
     C["SiegeWorkshop.Open()"]
     click C "../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshop.cs#L47" "打开源码"
     D["SaveManager.LoadSave()"]
-    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L256" "打开源码"
+    click D "../Assets/Scripts/Features/Building/SaveManager.cs#L261" "打开源码"
     E["BuildManager.LoadAllBlocks()"]
     click E "../Assets/Scripts/Features/Building/BuildManager.cs#L563" "打开源码"
     F["BlueprintLoader.Load()"]
@@ -3469,7 +3484,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Player/InputManager.cs|PollSiege -->
 - [SiegeWorkshop.Open](../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshop.cs#L47)
 <!-- source: Assets/Scripts/Features/Siege/Workshop/SiegeWorkshop.cs|Open -->
-- [SaveManager.LoadSave](../Assets/Scripts/Features/Building/SaveManager.cs#L256)
+- [SaveManager.LoadSave](../Assets/Scripts/Features/Building/SaveManager.cs#L261)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|LoadSave -->
 - [BuildManager.LoadAllBlocks](../Assets/Scripts/Features/Building/BuildManager.cs#L563)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|LoadAllBlocks -->

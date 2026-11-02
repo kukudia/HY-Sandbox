@@ -2,7 +2,6 @@
 // 入口：Update() / OnGUI()；B开关建筑模式，Q/T旋转，左键放置，Esc取消。
 using System;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -46,54 +45,14 @@ public sealed class WorldBuildingPalette : MonoBehaviour
         names.Clear();
         templates.Clear();
         errors.Clear();
-        if (manager.Catalog != null)
-        {
-            foreach (TextAsset asset in manager.Catalog.blueprints)
-            {
-                if (asset != null)
-                {
-                    AddTemplate(asset.name, asset.text);
-                }
-            }
-        }
-
-        string directory = Path.Combine(Application.persistentDataPath, "BuildingBlueprints");
-        try
-        {
-            if (Directory.Exists(directory))
-            {
-                string[] files = Directory.GetFiles(directory, "*.json");
-                Array.Sort(files, StringComparer.OrdinalIgnoreCase);
-                foreach (string path in files)
-                {
-                    if (new FileInfo(path).Length <= 4 * 1024 * 1024)
-                    {
-                        AddTemplate(Path.GetFileNameWithoutExtension(path), File.ReadAllText(path));
-                    }
-                }
-            }
-        }
-        catch (Exception error) when (error is IOException || error is UnauthorizedAccessException)
-        {
-            errors.Add(error.Message);
-        }
-
+        var library = new WorldBuildingLibrary();
+        library.Load(
+            SaveManager.GetBuildingBlueprintFiles(),
+            manager.Catalog != null ? manager.Catalog.blueprints : Array.Empty<TextAsset>());
+        names.AddRange(library.Names);
+        templates.AddRange(library.Templates);
+        errors.AddRange(library.Errors);
         selected = Mathf.Clamp(selected, 0, templates.Count - 1);
-    }
-
-    private void AddTemplate(string name, string json)
-    {
-        try
-        {
-            BlockDataList blueprint = JsonUtility.FromJson<BlockDataList>(json);
-            WorldBuildingValidation.ValidateBlueprint(blueprint);
-            names.Add(name);
-            templates.Add(blueprint);
-        }
-        catch (Exception error) when (error is ArgumentException || error is InvalidOperationException)
-        {
-            errors.Add(name + ": " + error.Message);
-        }
     }
 
     private void Update()

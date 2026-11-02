@@ -1,5 +1,5 @@
-// 职责：读取用户建筑目录的全部有效JSON，校验范围并覆盖同名模板；坏文件单独报告而不阻断世界。
-// 入口：Load()；每次新会话重新读取，不修改用户蓝图文件。
+// 职责：从SaveManager共用文件仓读取建筑快照，合并内置模板；World与WorldLab共用解析、覆盖和错误隔离。
+// 入口：LoadRoutine()预热世界资源；Load()刷新WorldLab目录；仅世界生成检查平台范围，不修改源文件。
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,28 +11,18 @@ internal sealed class WorldBuildingLibrary
     internal readonly List<BlockDataList> Templates = new List<BlockDataList>();
     internal readonly List<string> Names = new List<string>();
     internal readonly List<string> Errors = new List<string>();
-    internal static string DirectoryPath => Path.Combine(Application.persistentDataPath, "BuildingBlueprints");
     internal float Progress
     {
         get; private set;
     }
 
-    internal IEnumerator LoadRoutine(string directory)
+    internal IEnumerator LoadRoutine(BlueprintFileStore files)
     {
         Progress = 0f;
+        TextAsset[] bundled = Resources.LoadAll<TextAsset>("WorldBlueprints/Buildings");
         var resources = new HashSet<string>(StringComparer.Ordinal);
-        if (Directory.Exists(directory))
+        foreach (string name in ReadSources(files, bundled, false, resources))
         {
-            foreach (string path in Directory.GetFiles(directory, "*.json"))
-            {
-                CollectResources(path, resources);
-                yield return null;
-            }
-        }
-
-        foreach (TextAsset asset in Resources.LoadAll<TextAsset>("WorldBlueprints/Buildings"))
-        {
-            CollectBlueprintResources(JsonUtility.FromJson<BlockDataList>(asset.text), resources);
             yield return null;
         }
 
@@ -51,30 +41,96 @@ internal sealed class WorldBuildingLibrary
             yield return null;
         }
 
-        Load(directory);
+        foreach (string name in ReadSources(files, bundled, true, null))
+        {
+            yield return null;
+        }
+
         Progress = 1f;
     }
 
-    private static void CollectResources(string path, HashSet<string> resources)
+    internal void Load(BlueprintFileStore files, IEnumerable<TextAsset> bundled)
+    {
+        // The standalone palette refresh is synchronous; the world yields between the same reads.
+        foreach (string name in ReadSources(files, bundled, false, null))
+        {
+        }
+    }
+
+    private IEnumerable<string> ReadSources(
+        BlueprintFileStore files,
+        IEnumerable<TextAsset> bundled,
+        bool forWorldGeneration,
+        HashSet<string> warmupResources)
+    {
+        Templates.Clear();
+        Names.Clear();
+        Errors.Clear();
+        foreach (TextAsset asset in bundled)
+        {
+            if (asset != null)
+            {
+                ReadSource(asset.name, asset.text, null, forWorldGeneration, warmupResources);
+                yield return asset.name;
+            }
+        }
+
+        var names = new List<string>();
+        try
+        {
+            names.AddRange(files.GetNames());
+            names.Sort(StringComparer.OrdinalIgnoreCase);
+        }
+        catch (Exception error) when (error is IOException || error is UnauthorizedAccessException)
+        {
+            Errors.Add(error.Message);
+        }
+
+        foreach (string name in names)
+        {
+            ReadSource(name, null, files.GetPath(name), forWorldGeneration, warmupResources);
+            yield return name;
+        }
+    }
+
+    private void ReadSource(string name, string json, string path, bool forWorldGeneration, HashSet<string> warmupResources)
     {
         try
         {
-            if (new FileInfo(path).Length > 4 * 1024 * 1024)
+            if (path != null && new FileInfo(path).Length > 4 * 1024 * 1024)
             {
+                throw new InvalidOperationException("Blueprint exceeds 4 MB.");
+            }
+
+            BlockDataList blueprint = JsonUtility.FromJson<BlockDataList>(json ?? File.ReadAllText(path));
+            if (warmupResources != null)
+            {
+                // Warm both bundled and user sources, including the fallback of an invalid override.
+                CollectBlueprintResources(blueprint, warmupResources);
                 return;
             }
 
-            BlockDataList blueprint = JsonUtility.FromJson<BlockDataList>(File.ReadAllText(path));
-            if (blueprint?.blocks == null)
+            WorldBuildingValidation.ValidateBlueprint(blueprint);
+            if (forWorldGeneration)
             {
-                return;
+                ValidateWorldTemplate(blueprint);
             }
 
-            CollectBlueprintResources(blueprint, resources);
+            // Only fully valid user data can replace a bundled fallback.
+            int existing = Names.IndexOf(name);
+            if (existing >= 0)
+            {
+                Templates[existing] = blueprint;
+            }
+            else
+            {
+                Templates.Add(blueprint);
+                Names.Add(name);
+            }
         }
-        catch (Exception error) when (error is ArgumentException || error is IOException || error is UnauthorizedAccessException)
+        catch (Exception error) when (error is ArgumentException || error is InvalidOperationException || error is IOException || error is UnauthorizedAccessException)
         {
-            // Load()统一报告非法文件；预热阶段跳过它，避免一份损坏JSON阻断其他蓝图。
+            Errors.Add(name + ".json: " + error.Message);
         }
     }
 
@@ -112,72 +168,27 @@ internal sealed class WorldBuildingLibrary
         }
     }
 
-    internal void Load(string directory)
+    private static void ValidateWorldTemplate(BlockDataList blueprint)
     {
-        Templates.Clear();
-        Names.Clear();
-        Errors.Clear();
-        string[] files = Directory.Exists(directory) ? Directory.GetFiles(directory, "*.json") : Array.Empty<string>();
-        Array.Sort(files, StringComparer.OrdinalIgnoreCase);
-        var sources = new List<KeyValuePair<string, string>>();
-        foreach (TextAsset asset in Resources.LoadAll<TextAsset>("WorldBlueprints/Buildings"))
+        if (blueprint.blocks.Count == 0)
         {
-            sources.Add(new KeyValuePair<string, string>(asset.name, asset.text));
+            throw new InvalidOperationException("Blueprint has no blocks.");
         }
 
-        foreach (string path in files)
+        foreach (BlockData block in blueprint.blocks)
         {
-            sources.Add(new KeyValuePair<string, string>(Path.GetFileNameWithoutExtension(path), null));
-        }
-
-        foreach (KeyValuePair<string, string> source in sources)
-        {
-            string path = Path.Combine(directory, source.Key + ".json");
-            try
+            Vector3 half = new Vector3(block.x, block.y, block.z) * 0.5f;
+            Quaternion rotation = new Quaternion(block.rotX, block.rotY, block.rotZ, block.rotW);
+            for (int corner = 0; corner < 8; corner++)
             {
-                if (source.Value == null && new FileInfo(path).Length > 4 * 1024 * 1024)
+                Vector3 point = rotation * Vector3.Scale(
+                    half,
+                    new Vector3((corner & 1) == 0 ? -1f : 1f, (corner & 2) == 0 ? -1f : 1f, (corner & 4) == 0 ? -1f : 1f));
+                point += new Vector3(block.posX, block.posY, block.posZ);
+                if (point.y < -0.01f || Mathf.Max(Mathf.Abs(point.x), Mathf.Abs(point.z)) > 128f)
                 {
-                    throw new InvalidOperationException("Blueprint exceeds 4 MB.");
+                    throw new InvalidOperationException("Building extends below its foundation or beyond the 128 m platform radius.");
                 }
-
-                BlockDataList blueprint = JsonUtility.FromJson<BlockDataList>(source.Value ?? File.ReadAllText(path));
-                WorldBuildingValidation.ValidateBlueprint(blueprint);
-                if (blueprint.blocks.Count == 0)
-                {
-                    throw new InvalidOperationException("Blueprint has no blocks.");
-                }
-
-                foreach (BlockData block in blueprint.blocks)
-                {
-                    Vector3 half = new Vector3(block.x, block.y, block.z) * 0.5f;
-                    Quaternion rotation = new Quaternion(block.rotX, block.rotY, block.rotZ, block.rotW);
-                    for (int corner = 0; corner < 8; corner++)
-                    {
-                        Vector3 point = rotation * Vector3.Scale(
-                            half,
-                            new Vector3((corner & 1) == 0 ? -1f : 1f, (corner & 2) == 0 ? -1f : 1f, (corner & 4) == 0 ? -1f : 1f));
-                        point += new Vector3(block.posX, block.posY, block.posZ);
-                        if (point.y < -0.01f || Mathf.Max(Mathf.Abs(point.x), Mathf.Abs(point.z)) > 128f)
-                        {
-                            throw new InvalidOperationException("Building extends below its foundation or beyond the 128 m platform radius.");
-                        }
-                    }
-                }
-
-                int existing = Names.IndexOf(source.Key);
-                if (existing >= 0)
-                {
-                    Templates[existing] = blueprint;
-                }
-                else
-                {
-                    Templates.Add(blueprint);
-                    Names.Add(source.Key);
-                }
-            }
-            catch (Exception error) when (error is ArgumentException || error is InvalidOperationException || error is IOException || error is UnauthorizedAccessException)
-            {
-                Errors.Add(Path.GetFileName(path) + ": " + error.Message);
             }
         }
     }

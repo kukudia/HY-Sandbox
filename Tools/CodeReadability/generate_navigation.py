@@ -718,7 +718,7 @@ def main():
     )
     graph(
         "用户建筑库、自然出生和远景",
-        "源码推导：每次会话读取persistentDataPath/BuildingBlueprints全部有效JSON，单独报告坏文件并快照每套蓝图实际占地；落点按同一模板索引居中，半格支撑边距外6m接回自然坡面。进入时按载具覆盖范围最高地面加净空抬升。详细地形外分帧缓存无碰撞体素列，保持同样阶梯及草土材质，按列版本隐藏已加载列代理；默认12圈后衔接8m采样远景，空洞与外环原子切换，裙边遮缝、距离雾过渡背景。跨四列重采样，淘汰外环缓存并释放网格；退出恢复相机/雾并销毁自有网格。",
+        "源码推导：World和WorldLab通过SaveManager.GetBuildingBlueprintFiles共用建筑文件仓；每次会话读取全部有效JSON，单独报告坏文件并快照每套蓝图实际占地；落点按同一模板索引居中，半格支撑边距外6m接回自然坡面。进入时按载具覆盖范围最高地面加净空抬升。详细地形外分帧缓存无碰撞体素列，保持同样阶梯及草土材质，按列版本隐藏已加载列代理；默认12圈后衔接8m采样远景，空洞与外环原子切换，裙边遮缝、距离雾过渡背景。跨四列重采样，淘汰外环缓存并释放网格；退出恢复相机/雾并销毁自有网格。",
         {
             "A": "WorldSessionManager.PrepareWorld",
             "B": "WorldBuildingLibrary.LoadRoutine",
@@ -737,9 +737,10 @@ def main():
             "O": "WorldTerrainTransitionMesh.Build",
             "P": "WorldDistanceView.UpdateRingVisibility",
             "Q": "WorldDistanceView.ReleaseExpiredRing",
+            "R": "SaveManager.GetBuildingBlueprintFiles",
         },
         [
-            "A --> B", "B -->|异步预热后经Load校验| C", "A --> E", "H -->|经Height按所选蓝图取范围| D",
+            "A -->|取得共用文件仓| R", "A --> B", "B -->|异步预热后经ReadSources校验| C", "A --> E", "H -->|经Height按所选蓝图取范围| D",
             "A -.->|初始列完成才刷新| F", "F -->|列版本更新索引，跨四列才重采样| G", "G --> H",
             "I --> J", "J --> H", "I --> K", "L -->|先停止远景协程| M",
             "G -.->|预算内逐列缓存| N", "N --> O", "O -->|同近景2m阶梯轮廓| H",
@@ -903,9 +904,11 @@ def main():
             "S": "ProceduralVoxelWorld.RestoreEdits",
             "T": "WorldBuildingManager.ClearBuildings",
             "U": "WorldBuildingManager.RestoreBuilding",
+            "V": "SaveManager.GetBuildingBlueprintFiles",
+            "W": "WorldBuildingLibrary.Load",
         },
         [
-            "A -.->|保存场景/目录供Start读取| B", "C -->|B键| D",
+            "A -.->|保存场景/目录供Start读取| B", "B --> V", "B --> W", "C -->|B键| D",
             "C --> E", "E --> F", "C -->|有效预览左键| G", "G --> U", "U --> H",
             "H --> I", "U -->|活动根下| J", "K -->|F5| L", "L --> M", "K -->|原子写盘| N",
             "K -->|F9| O", "K -->|完整快照| P", "P --> R", "P -->|全部实例| Q",
@@ -985,7 +988,7 @@ def main():
         {
             "A": "BuildingOutpostEditor.SetOutpost", "B": "BuildingOutpostEditor.AddDefender",
             "C": "BuildingOutpostEditor.SavePose", "D": "SaveManager.SaveBuildingOutpost",
-            "E": "EnemyOutpostData.Validate", "F": "WorldBuildingLibrary.Load",
+            "E": "EnemyOutpostData.Validate", "F": "WorldBuildingLibrary.ReadSource",
             "G": "WorldBuildingStreaming.LoadColumn", "H": "BuildingRuntime.InitializeRoutine",
             "I": "WorldSessionManager.Update", "J": "OutpostEncounterDirector.Tick",
             "K": "OutpostEncounterDirector.Spawn", "L": "EnemyBlueprintFactory.Spawn",

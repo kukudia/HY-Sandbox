@@ -127,7 +127,7 @@ public sealed class WorldSessionManager : MonoBehaviour
         // 先让UI呈现一帧，再读取和预加载资源；Resources异步请求避免首次同步加载整套模型。
         yield return null;
         var library = new WorldBuildingLibrary();
-        IEnumerator load = library.LoadRoutine(WorldBuildingLibrary.DirectoryPath);
+        IEnumerator load = library.LoadRoutine(SaveManager.GetBuildingBlueprintFiles());
         try
         {
             while (load.MoveNext())

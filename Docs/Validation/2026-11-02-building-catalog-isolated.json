@@ -1,0 +1,11 @@
+[
+  "shared accessor preserves SaveManager injected BuildingFiles",
+  "SaveManager name list reads the injected store",
+  "user template and bundled template merge with one entry per name",
+  "malformed, invalid, oversized and locked files are isolated",
+  "invalid user override preserves bundled fallback",
+  "world-only platform rejection preserves valid bundled fallback",
+  "WorldLab palette uses the same injected file store and merge policy",
+  "all fixture source bytes preserved by reads",
+  "standalone WorldLab resolves the same store type without a SaveManager"
+]

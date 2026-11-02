@@ -1,5 +1,12 @@
 # HY-Sandbox 开发与审查入口
 
+## 2026-11-02 建筑蓝图共用读取入口
+
+World与WorldLab现在像Enemy一样，通过SaveManager的建筑文件仓获取用户蓝图：`GetBuildingBlueprintFiles()`在Main返回现有`BuildingFiles`，独立WorldLab没有管理器时复用同一路径规则创建文件仓。WorldBuildingLibrary统一列表、解析、同名覆盖、4MB限制和坏文件隔离；WorldBuildingPalette不再独立扫描目录和解析JSON。内置模板来源保持各场景原配置，世界资源异步预热与生成平台约束继续归World。
+
+9项隔离Editor检查通过，覆盖注入文件仓、名称、合并、坏/锁定/超大文件、WorldLab共用及只读源文件；真实世界会话回归与静态检查详见 [本轮验证](Docs/Validation/2026-11-02-building-catalog.md)。
+
+
 ## 2026-10-31 Siege 场景部署与三轮精简
 
 - 入口：`Assets/Scenes/Siege.unity`；整备点击场景平台或其 + 标记，选择蓝图并预览，确认后才部署并扣费。固定Bays列表已移除；点击友舰打开驾驶/维修卡片，Tab切换存活舰船，战斗中Alt释放指针。

@@ -10,7 +10,7 @@ public class SaveManager : MonoBehaviour
     public static SaveManager instance;
     private string saveDirectory => Path.Combine(Application.persistentDataPath, "Saves");
     private string enemyBlueprintDirectory => Path.Combine(Application.persistentDataPath, "EnemyBlueprints");
-    private string buildingBlueprintDirectory => Path.Combine(Application.persistentDataPath, "BuildingBlueprints");
+    private static string buildingBlueprintDirectory => Path.Combine(Application.persistentDataPath, "BuildingBlueprints");
 
     private BlueprintFileStore _buildingFiles;
     private BlueprintFileStore BuildingFiles => _buildingFiles ?? (_buildingFiles = new BlueprintFileStore(buildingBlueprintDirectory));
@@ -69,6 +69,12 @@ public class SaveManager : MonoBehaviour
         {
             Directory.CreateDirectory(enemyBlueprintDirectory);
         }
+    }
+
+    // WorldLab can run without the Main scene; Main must use the same injected store as the editor.
+    internal static BlueprintFileStore GetBuildingBlueprintFiles()
+    {
+        return instance != null ? instance.BuildingFiles : new BlueprintFileStore(buildingBlueprintDirectory);
     }
 
     public void GetAllBuildingBlueprintNames()
