@@ -19,7 +19,7 @@ public static class SiegeBuildingGraphChecks
         }
 
         var checks = new List<string>();
-        Type graphType = typeof(BuildingRuntime).Assembly.GetType("BuildingConnectionGraph");
+        Type graphType = typeof(BuildingRuntime).Assembly.GetType("BlockConnectionGraph");
         object graph = Activator.CreateInstance(graphType, true);
         MethodInfo prepare = graphType.GetMethod("Prepare", BindingFlags.Instance | BindingFlags.NonPublic);
         MethodInfo collect = graphType.GetMethod("CollectNeighbors", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -89,7 +89,7 @@ public static class SiegeBuildingGraphChecks
             Physics.queriesHitTriggers = queriesHitTriggers;
             verify("query policy restoration rebuilds graph", true);
             blocks[1].DisConnectAllConnectors(false);
-            verify("explicit disconnect invalidates graph", true);
+            verify("explicit disconnect updates shared reciprocal graph without queries", false);
             blocks[1].RestoreConnectionParticipation();
             verify("repair participation restoration rebuilds graph", true);
             Block removed = blocks[1];
@@ -161,6 +161,8 @@ public static class SiegeBuildingGraphChecks
             verify("destroyed connector reference can be cached as null", false);
             added.connectorParent = originalConnectorRoot;
             verify("original connector reference restoration rebuilds graph", true);
+            SparseRemovalChecks(checks, prefab, graphType, prepare, collect);
+            ConnectionVisualPolicyChecks(checks, prefab, graphType, prepare, collect);
             string json = JsonUtility.ToJson(new Report { checks = checks }, true);
             Directory.CreateDirectory("Temp/Siege");
             File.WriteAllText("Temp/Siege/building-graph-checks.json", json);
@@ -170,6 +172,172 @@ public static class SiegeBuildingGraphChecks
         {
             SimulationWorkMetrics.Enabled = false;
             Physics.queriesHitTriggers = queriesHitTriggers;
+            Object.DestroyImmediate(root);
+        }
+    }
+
+    private static void ConnectionVisualPolicyChecks(List<string> checks, GameObject prefab, Type graphType, MethodInfo prepare, MethodInfo collect)
+    {
+        foreach (bool building in new[]
+        {
+            true,
+            false
+        }
+
+        )
+        {
+            var root = new GameObject("Owned connection visual policy checks", typeof(ControlUnit), typeof(Rigidbody));
+            root.transform.position = new Vector3(14000f, 2000f, 0f);
+            root.GetComponent<Rigidbody>().isKinematic = true;
+            if (building)
+            {
+                root.AddComponent<BuildingRuntime>();
+            }
+
+            try
+            {
+                var blocks = new List<Block>();
+                for (int index = 0; index < 2; index++)
+                {
+                    Block block = Object.Instantiate(prefab, root.transform).GetComponent<Block>();
+                    block.transform.SetLocalPositionAndRotation(Vector3.right * index, Quaternion.identity);
+                    block.RefreshRuntimeData(true);
+                    // Gizmo开关不应控制游戏内接缝装饰；两个领域故意采用相反值。
+                    block.showConnectors = building;
+                    blocks.Add(block);
+                }
+
+                object graph = Activator.CreateInstance(graphType, true);
+                prepare.Invoke(graph, new object[] { blocks, root.transform });
+                var neighbors = new List<Block>();
+                collect.Invoke(graph, new object[] { blocks[0], neighbors });
+                List<Connector> linked = blocks.SelectMany(block => block.connectors).Where(connector => connector.isConnected).ToList();
+                if (neighbors.Count != 1 || neighbors[0] != blocks[1] || linked.Count != 2)
+                {
+                    throw new InvalidOperationException("Connection visual policy changed reciprocal topology.");
+                }
+
+                bool expectedVisuals = building ? linked.All(connector => connector.connector == null) : linked[0].connector != null && linked[0].connector == linked[1].connector;
+                if (!expectedVisuals)
+                {
+                    throw new InvalidOperationException(building ? "Building connection unexpectedly created a visual decoration." : "Vehicle connection lost its shared visual decoration.");
+                }
+
+                SimulationWorkMetrics.Reset();
+                prepare.Invoke(graph, new object[] { blocks, root.transform });
+                if (SimulationWorkMetrics.PhysicsNeighborQueries != 0)
+                {
+                    throw new InvalidOperationException("Connection visual policy invalidated otherwise unchanged geometry.");
+                }
+
+                checks.Add(building ? "PASS real BuildingRuntime keeps reciprocal cached topology without connection decorations regardless of Gizmo flag" : "PASS vehicle keeps its shared connection decoration and cached topology regardless of Gizmo flag");
+            }
+            finally
+            {
+                Object.DestroyImmediate(root);
+            }
+        }
+    }
+
+    private static void SparseRemovalChecks(List<string> checks, GameObject prefab, Type graphType, MethodInfo prepare, MethodInfo collect)
+    {
+        var root = new GameObject("Owned sparse graph removal checks", typeof(ControlUnit), typeof(Rigidbody));
+        root.transform.SetPositionAndRotation(new Vector3(16000f, 2200f, 0f), Quaternion.Euler(0f, 37f, 0f));
+        root.transform.localScale = new Vector3(0.75f, 1.25f, 0.9f);
+        root.GetComponent<Rigidbody>().isKinematic = true;
+        var blocks = new List<Block>();
+        object graph = Activator.CreateInstance(graphType, true);
+        FieldInfo peerField = typeof(Connector).GetField("runtimePeer", BindingFlags.Instance | BindingFlags.NonPublic);
+        PropertyInfo revision = graphType.GetProperty("Revision", BindingFlags.Instance | BindingFlags.NonPublic);
+        try
+        {
+            Func<float, Block> add = x =>
+            {
+                Block block = Object.Instantiate(prefab, root.transform).GetComponent<Block>();
+                block.transform.SetLocalPositionAndRotation(Vector3.right * x, Quaternion.identity);
+                block.RefreshRuntimeData(true);
+                block.connectorPrefab = null;
+                blocks.Add(block);
+                return block;
+            };
+            for (int index = 0; index < 3; index++)
+            {
+                add(index);
+                add(10f + index);
+            }
+
+            Block firstMiddle = blocks[2];
+            Block secondMiddle = blocks[3];
+            Block far = null;
+            for (int pair = 0; pair < 8; pair++)
+            {
+                Block endpoint = add(100f + pair * 4f);
+                far ??= endpoint;
+                add(101f + pair * 4f);
+            }
+
+            prepare.Invoke(graph, new object[] { blocks, root.transform });
+            Func<Block, long> removeAndMeasure = deleted =>
+            {
+                object[] peers = far.connectors.Select(connector => peerField.GetValue(connector)).ToArray();
+                var before = new List<Block>();
+                collect.Invoke(graph, new object[] { far, before });
+                int oldRevision = (int)revision.GetValue(graph);
+                deleted.gameObject.SetActive(false);
+                blocks.Remove(deleted);
+                SimulationWorkMetrics.Reset();
+                prepare.Invoke(graph, new object[] { blocks, root.transform });
+                long queries = SimulationWorkMetrics.PhysicsNeighborQueries;
+                var after = new List<Block>();
+                collect.Invoke(graph, new object[] { far, after });
+                bool samePeers = far.connectors.Select(connector => peerField.GetValue(connector)).SequenceEqual(peers);
+                bool reciprocal = far.connectors.All(connector => peerField.GetValue(connector) is not Connector peer || ReferenceEquals(peerField.GetValue(peer), connector));
+                if (before.Count != 1 || !new HashSet<Block>(before).SetEquals(after) || !samePeers || !reciprocal || (int)revision.GetValue(graph) != oldRevision + 1)
+                {
+                    throw new InvalidOperationException("Local removal changed distant reciprocal links or did not advance graph revision.");
+                }
+
+                foreach (Block block in blocks)
+                {
+                    var actual = new List<Block>();
+                    collect.Invoke(graph, new object[] { block, actual });
+                    var expected = block.Neighbors();
+                    expected.RemoveAll(neighbor => !blocks.Contains(neighbor));
+                    if (!new HashSet<Block>(actual).SetEquals(expected))
+                    {
+                        throw new InvalidOperationException("Sparse incremental removal differs from live geometry at " + block.transform.localPosition);
+                    }
+                }
+
+                SimulationWorkMetrics.Reset();
+                prepare.Invoke(graph, new object[] { blocks, root.transform });
+                if (SimulationWorkMetrics.PhysicsNeighborQueries != 0 || (int)revision.GetValue(graph) != oldRevision + 1)
+                {
+                    throw new InvalidOperationException("Sparse graph removal left an invalid cache or advanced the revision without changes.");
+                }
+
+                return queries;
+            };
+            long smallQueries = removeAndMeasure(firstMiddle);
+            for (int pair = 8; pair < 128; pair++)
+            {
+                add(100f + pair * 4f);
+                add(101f + pair * 4f);
+            }
+
+            prepare.Invoke(graph, new object[] { blocks, root.transform });
+            long largeQueries = removeAndMeasure(secondMiddle);
+            if (smallQueries <= 0 || largeQueries != smallQueries)
+            {
+                throw new InvalidOperationException("Local deletion queries grew with remote population: " + smallQueries + " -> " + largeQueries);
+            }
+
+            checks.Add("PASS sparse removal preserves distant reciprocal links and matches live geometry under scaled rotated root");
+            checks.Add("PASS growing the same construct from 8 to 128 distant pairs keeps local deletion queries constant: " + largeQueries);
+            checks.Add("PASS deletion advances graph revision once and the resulting graph resumes query-free caching");
+        }
+        finally
+        {
             Object.DestroyImmediate(root);
         }
     }

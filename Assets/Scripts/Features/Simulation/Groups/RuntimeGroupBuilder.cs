@@ -74,13 +74,14 @@ internal sealed class RuntimeGroupBuilder
         {
             Rigidbody body = plan.Unit.GetComponent<Rigidbody>();
             body.mass = Mathf.Max(0.001f, plan.Mass);
-            body.linearDamping = Mathf.Max(0f, settings.LinearDamping);
-            body.angularDamping = Mathf.Max(0f, settings.AngularDamping);
-            body.maxDepenetrationVelocity = Mathf.Max(0f, settings.MaxDepenetrationVelocity);
+            settings.ApplyTo(body);
             body.isKinematic = plan.Anchored;
             if (!plan.Anchored)
             {
-                RestoreGroupPhysics(body, plan.Source, settings);
+                if (plan.Source != null)
+                {
+                    plan.Source.Motion.Restore(body, settings);
+                }
             }
 
             plan.Unit.RefreshChildren();
@@ -208,19 +209,6 @@ internal sealed class RuntimeGroupBuilder
         return retained;
     }
 
-    private static void RestoreGroupPhysics(Rigidbody target, SourceSnapshot source, GroupPhysicsSettings settings)
-    {
-        if (source == null)
-        {
-            return;
-        }
-
-        Vector3 tangential = Vector3.Cross(source.AngularVelocity, target.worldCenterOfMass - source.WorldCenterOfMass);
-        target.linearVelocity = source.LinearVelocity + Vector3.ClampMagnitude(tangential, settings.MaximumTangentialSpeed);
-        target.angularVelocity = Vector3.ClampMagnitude(source.AngularVelocity, settings.MaximumAngularSpeed);
-        target.WakeUp();
-    }
-
     private sealed class GroupPlan
     {
         internal List<Block> Blocks;
@@ -235,9 +223,7 @@ internal sealed class RuntimeGroupBuilder
     {
         internal readonly ControlUnit Unit;
         internal readonly UnitFaction Faction;
-        internal readonly Vector3 LinearVelocity;
-        internal readonly Vector3 AngularVelocity;
-        internal readonly Vector3 WorldCenterOfMass;
+        internal readonly RigidbodyMotion Motion;
         internal bool RetentionChecked;
         internal bool CanRetain;
         internal SourceSnapshot(ControlUnit unit)
@@ -245,9 +231,7 @@ internal sealed class RuntimeGroupBuilder
             Unit = unit;
             Faction = unit.faction;
             Rigidbody body = unit.GetComponent<Rigidbody>();
-            LinearVelocity = body.linearVelocity;
-            AngularVelocity = body.angularVelocity;
-            WorldCenterOfMass = body.worldCenterOfMass;
+            Motion = new RigidbodyMotion(body);
         }
     }
 }

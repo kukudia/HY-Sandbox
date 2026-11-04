@@ -13,8 +13,10 @@ public sealed class BuildingRuntime : MonoBehaviour
     private string blueprintName;
     private string instanceId;
     private readonly List<Block> blocks = new List<Block>();
-    private readonly List<Block> neighbors = new List<Block>();
-    private readonly BuildingConnectionGraph connections = new BuildingConnectionGraph();
+    private readonly BlockConnectionGraph connections = new BlockConnectionGraph();
+    private readonly Dictionary<Block, bool> groundSupport = new Dictionary<Block, bool>();
+    private int groundRevision = -1;
+    private Vector2Int groundFootprint;
     private BuildingFoundationData foundationData;
     private WorldBuildingState pendingState;
     private EnemyOutpostData outpost;
@@ -263,12 +265,7 @@ public sealed class BuildingRuntime : MonoBehaviour
                 VisualEffectsManager.TryPlayBlockRemoved(block);
             }
 
-            foreach (Bot bot in block.GetComponentsInChildren<Bot>(true))
-            {
-                bot.PrepareForHomeDestruction();
-            }
-
-            block.GetComponent<CargoHold>()?.ReleaseContents(GetComponent<ControlUnit>().faction);
+            WreckSalvage.ReleaseContents(block.gameObject, GetComponent<ControlUnit>().faction);
             block.gameObject.SetActive(false);
             Destroy(block.gameObject);
             structureDirty = true;
@@ -290,74 +287,14 @@ public sealed class BuildingRuntime : MonoBehaviour
     {
         using SimulationWorkMetrics.Scope timing = SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.BuildingSupport, blocks.Count);
         connections.Prepare(blocks, transform);
-        // 编辑底座只提供虚拟连接点，世界中不生成模型、碰撞体或底座方块。
-        // 从与这些点匹配的朝下 Connector 出发，再沿真实模块连接遍历。
-        var connected = new HashSet<Block>();
-        using (SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.BuildingGround, blocks.Count))
+        RigidbodyMotion motion = new RigidbodyMotion(body);
+        // 建筑与载具共享同一双侧邻接和分组算法；建筑只负责判断哪些分量仍连接虚拟地面。
+        foreach (List<Block> group in BlockGroupManager.GroupPreparedBlocks(blocks))
         {
-            foreach (Block block in blocks)
+            bool supported = group.Exists(HasPreparedGroundConnector);
+            if (supported)
             {
-                if (HasPreparedGroundConnector(block))
-                {
-                    connected.Add(block);
-                }
-            }
-        }
-
-        var queue = new Queue<Block>(connected);
-        using (SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.BuildingTraversal, blocks.Count))
-        {
-            while (queue.Count > 0)
-            {
-                connections.CollectNeighbors(queue.Dequeue(), neighbors);
-                foreach (Block neighbor in neighbors)
-                {
-                    // 大多数边指向已遍历的模块；只为新候选查询Unity层级归属。
-                    if (!connected.Contains(neighbor) && neighbor.GetComponentInParent<BuildingRuntime>() == this)
-                    {
-                        connected.Add(neighbor);
-                        queue.Enqueue(neighbor);
-                    }
-                }
-            }
-        }
-
-        var detached = new HashSet<Block>();
-        foreach (Block block in blocks)
-        {
-            if (block != null && !connected.Contains(block))
-            {
-                detached.Add(block);
-            }
-        }
-
-        while (detached.Count > 0)
-        {
-            Block first = null;
-            foreach (Block block in detached)
-            {
-                first = block;
-                break;
-            }
-
-            var group = new List<Block>();
-            queue.Enqueue(first);
-            detached.Remove(first);
-            using (SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.BuildingTraversal, detached.Count + 1))
-            {
-                while (queue.Count > 0)
-                {
-                    Block block = queue.Dequeue();
-                    group.Add(block);
-                    connections.CollectNeighbors(block, neighbors);
-                    foreach (Block neighbor in neighbors)
-                    {
-                        if (detached.Remove(neighbor))
-                        {
-                            queue.Enqueue(neighbor);
-                        }
-                    }
-                }
+                continue;
             }
 
             foreach (Block block in group)
@@ -367,7 +304,7 @@ public sealed class BuildingRuntime : MonoBehaviour
 
             using (SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.BuildingDebris, group.Count))
             {
-                manager.CreateDebris(group, body);
+                manager.CreateDebris(group, body, motion);
             }
         }
     }
@@ -375,13 +312,19 @@ public sealed class BuildingRuntime : MonoBehaviour
     private bool HasPreparedGroundConnector(Block block)
     {
         Vector2Int footprint = FootprintSize;
-        if (connections.TryGetGroundSupport(block, footprint, out bool supported))
+        if (groundRevision != connections.Revision || groundFootprint != footprint)
         {
-            return supported;
+            groundSupport.Clear();
+            groundRevision = connections.Revision;
+            groundFootprint = footprint;
         }
 
-        supported = HasGroundConnector(block);
-        connections.StoreGroundSupport(block, footprint, supported);
+        if (!groundSupport.TryGetValue(block, out bool supported))
+        {
+            supported = HasGroundConnector(block);
+            groundSupport.Add(block, supported);
+        }
+
         return supported;
     }
 

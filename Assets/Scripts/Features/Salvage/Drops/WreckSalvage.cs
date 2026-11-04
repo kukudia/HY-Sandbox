@@ -26,20 +26,10 @@ public class WreckSalvage : MonoBehaviour
         }
 
         marker._converted = true;
-        foreach (Bot bot in block.GetComponentsInChildren<Bot>(true))
-        {
-            bot.PrepareForHomeDestruction();
-        }
-
         RuntimeUnitMember member = block.GetComponent<RuntimeUnitMember>();
         ControlUnit unit = block.GetComponentInParent<ControlUnit>();
         UnitFaction faction = member != null ? member.ownerFaction : unit != null ? unit.faction : UnitFaction.Player;
-        CargoHold cargo = block.GetComponent<CargoHold>();
-        if (cargo != null)
-        {
-            cargo.ReleaseContents(faction);
-        }
-
+        ReleaseContents(block.gameObject, faction);
         if (faction != UnitFaction.Enemy)
         {
             return;
@@ -57,6 +47,17 @@ public class WreckSalvage : MonoBehaviour
         LootDrop.Spawn(
             new CargoItem { kind = special ? CargoKind.SpecialPart : CargoKind.Coins, resourcePath = special ? path : string.Empty, amount = special ? 1 : settings != null ? Mathf.Max(1, settings.coinsPerBlock) : 2 },
             block.transform.position);
+    }
+
+    // 运输必须先解除认领再释放货仓；卸载/休眠不调用本入口，随机奖励仍只属于Convert。
+    public static void ReleaseContents(GameObject module, UnitFaction faction)
+    {
+        foreach (Bot bot in module.GetComponentsInChildren<Bot>(true))
+        {
+            bot.PrepareForHomeDestruction();
+        }
+
+        module.GetComponent<CargoHold>()?.ReleaseContents(faction);
     }
 
     public static void ConvertGroup(ControlUnit unit)

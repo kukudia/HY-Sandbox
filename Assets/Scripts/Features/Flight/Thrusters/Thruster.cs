@@ -1,7 +1,6 @@
 // 职责：提供推进器共用的供电门控、运行归属和力学输出生命周期。
-// 入口：ShouldActivate() / SetRuntimeReferences() / ApplyThrustChangeRateLimit()。
+// 入口：TickInputThrust() / ShouldActivate() / SetRuntimeReferences() / ApplyThrustChangeRateLimit()。
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 [DisallowMultipleComponent, RequireComponent(typeof(Power))]
 public abstract class Thruster : MonoBehaviour
@@ -86,6 +85,48 @@ public abstract class Thruster : MonoBehaviour
         return controlUnit != null && controlUnit.HasValidCockpit;
     }
 
+    // 输入推进器共享物理步；悬浮推进器仍由高度控制器提交独立目标。
+    protected void TickInputThrust(ref Vector3 input)
+    {
+        if (!IsPlayModeActive())
+        {
+            SetPowerRequested(false);
+            thrust = 0f;
+            lastThrustValue = 0f;
+            return;
+        }
+
+        RefreshRuntimeReferences();
+        bool hasValidOwner = HasValidRuntimeOwner();
+        input = hasValidOwner ? controlUnit.MovementInput : Vector3.zero;
+        thrust = CalculateInputThrust(input, hasValidOwner && input.sqrMagnitude > InputEpsilonSqr);
+        SetPowerRequested(thrust > 0f);
+        ApplyThrustChangeRateLimit();
+        ApplyDirectionalThrust();
+        VisualizeThrust();
+    }
+
+    protected virtual float CalculateInputThrust(Vector3 input, bool active)
+    {
+        return active ? maxThrust : 0f;
+    }
+
+    protected bool ShouldActivateInputThrust(Vector3 input)
+    {
+        return input.sqrMagnitude > InputEpsilonSqr && IsPlayModeActive() && HasValidRuntimeOwner();
+    }
+
+    protected void ApplyDirectionalThrust()
+    {
+        if (thrust <= 0f || !CanApplyThrust() || !TryEnsureRigidbody())
+        {
+            return;
+        }
+
+        thrustDirection = model != null ? model.forward : transform.forward;
+        rb.AddForceAtPosition(thrustDirection * thrust, transform.position);
+    }
+
     public bool IsPlayerControllable => isActiveAndEnabled && HasValidRuntimeOwner() && controlUnit.AcceptsPlayerInput;
 
     public float PowerSupplyEfficiency
@@ -125,7 +166,7 @@ public abstract class Thruster : MonoBehaviour
 
     public virtual void ApplyThrustChangeRateLimit()
     {
-        float powerEfficiency = GetPowerEfficiency();
+        float powerEfficiency = PowerEfficiency;
         // 供电只限制目标输出；撤销工作请求后的残余推力仍按变化率衰减。
         float targetThrust = Mathf.Clamp(thrust * powerEfficiency, 0f, Mathf.Max(0f, maxThrust));
         float maxChange = Mathf.Max(0f, maxThrustChangeRate) * Time.fixedDeltaTime;
@@ -156,16 +197,6 @@ public abstract class Thruster : MonoBehaviour
         return IsPlayModeActive() && HasValidRuntimeOwner();
     }
 
-    private float GetPowerEfficiency()
-    {
-        if (power == null)
-        {
-            power = GetComponent<Power>();
-        }
-
-        return power != null && power.isWorking ? power.efficiency : 0f;
-    }
-
     public virtual void VisualizeThrust()
     {
         VisualizeThrust(false);
@@ -187,28 +218,6 @@ public abstract class Thruster : MonoBehaviour
         visualEffect.SetThrust(thrustRatio, lineDirection);
     }
 
-    //public virtual Vector3 GetInputDirection()
-    //{
-    //    Vector3 dir = Vector3.zero;
-    //    if (cameraTransform == null)
-    //    {
-    //        Camera mainCamera = Camera.main;
-    //        if (mainCamera == null) return dir;
-    //        cameraTransform = mainCamera.transform;
-    //    }
-    //    // 摄像机 forward / right 的水平分量
-    //    Vector3 camFwd = cameraTransform.forward; camFwd.y = 0f; camFwd.Normalize();
-    //    Vector3 camRight = cameraTransform.right; camRight.y = 0f; camRight.Normalize();
-    //    Keyboard keyboard = Keyboard.current;
-    //    if (keyboard == null) return dir;
-    //    if (keyboard.wKey.isPressed) dir += camFwd;
-    //    if (keyboard.sKey.isPressed) dir -= camFwd;
-    //    if (keyboard.aKey.isPressed) dir -= camRight;
-    //    if (keyboard.dKey.isPressed) dir += camRight;
-    //    if (dir.sqrMagnitude > InputEpsilonSqr)
-    //        dir.Normalize();
-    //    return dir;
-    //}
     private void DisableLegacyLineRenderer()
     {
         LineRenderer legacyLine = GetComponent<LineRenderer>();

@@ -8,9 +8,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp.Formatting;
 using Microsoft.CodeAnalysis.Formatting;
 
-if (args.Length != 2 || args[0] is not ("--check" or "--write" or "--inventory" or "--check-tools" or "--write-tools"))
+if (args.Length != 2 || args[0] is not ("--check" or "--write" or "--inventory" or "--check-tools" or "--write-tools" or "--duplicates"))
 {
-    Console.Error.WriteLine("Usage: CodeReadability --check|--write|--inventory|--check-tools|--write-tools <Unity project root>");
+    Console.Error.WriteLine("Usage: CodeReadability --check|--write|--inventory|--check-tools|--write-tools|--duplicates <Unity project root>");
     return 2;
 }
 
@@ -19,6 +19,8 @@ string projectRoot = Path.GetFullPath(args[1]);
 bool write = args[0] is "--write" or "--write-tools";
 bool toolScripts = args[0] is "--check-tools" or "--write-tools";
 bool inventoryOnly = args[0] == "--inventory";
+bool duplicatesOnly = args[0] == "--duplicates";
+var methodBodies = new Dictionary<string, List<object>>();
 var inventory = new List<object>();
 string[] roots = toolScripts ? ["Blueprints/CODEX", "Blueprints/CODEX_Enemies", "Blueprints/DSH_Enemies"] : ["Assets/Scripts", "Assets/Editor"];
 using var workspace = new AdhocWorkspace();
@@ -63,6 +65,46 @@ foreach (string relative in roots)
         string key = Path.GetRelativePath(projectRoot, file).Replace('\\', '/');
         symbols[key] = root.DescendantNodes().OfType<MethodDeclarationSyntax>()
             .Select(m => m.Identifier.ValueText).ToHashSet();
+        if (duplicatesOnly)
+        {
+            // 只报告生产源码的较长、token完全相同方法；语义相似和跨生命周期差异仍需人工审查。
+            if (relative == "Assets/Scripts" && !key.Contains("/Validation/", StringComparison.Ordinal) && !text.TrimStart().StartsWith("#if UNITY_EDITOR", StringComparison.Ordinal))
+            {
+                foreach (MethodDeclarationSyntax method in root.DescendantNodes().OfType<MethodDeclarationSyntax>())
+                {
+                    SyntaxNode? body = (SyntaxNode?)method.Body ?? method.ExpressionBody;
+                    if (body == null)
+                    {
+                        continue;
+                    }
+
+                    SyntaxToken[] tokens = body.DescendantTokens().ToArray();
+                    if (tokens.Length < 50)
+                    {
+                        continue;
+                    }
+
+                    string fingerprint = string.Join("\u001f", tokens.Select(token => token.RawKind + ":" + token.Text));
+                    if (!methodBodies.TryGetValue(fingerprint, out List<object>? occurrences))
+                    {
+                        occurrences = new List<object>();
+                        methodBodies.Add(fingerprint, occurrences);
+                    }
+
+                    occurrences.Add(new
+                    {
+                        file = key,
+                        type = method.Ancestors().OfType<TypeDeclarationSyntax>().First().Identifier.ValueText,
+                        method = method.Identifier.ValueText,
+                        line = method.GetLocation().GetLineSpan().StartLinePosition.Line + 1,
+                        tokens = tokens.Length
+                    });
+                }
+            }
+
+            continue;
+        }
+
         if (inventoryOnly)
         {
             inventory.Add(new
@@ -138,6 +180,17 @@ foreach (string relative in roots)
             Console.WriteLine($"Review signal (not an error): {key}, {lines} lines");
         }
     }
+}
+
+if (duplicatesOnly)
+{
+    Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new
+    {
+        scannedScripts = count,
+        scope = "Production methods, exact tokens, at least 50 tokens; semantic review is still required",
+        groups = methodBodies.Values.Where(group => group.Count > 1).ToArray()
+    }, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
+    return failures == 0 ? 0 : 1;
 }
 
 if (inventoryOnly)

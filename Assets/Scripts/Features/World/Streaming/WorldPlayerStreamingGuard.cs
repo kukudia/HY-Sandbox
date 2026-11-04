@@ -132,27 +132,7 @@ internal sealed class WorldPlayerStreamingGuard
 
     internal static Bounds CaptureLocalBounds(Transform construct)
     {
-        Bounds bounds = new Bounds(Vector3.zero, Vector3.zero);
-        bool found = false;
-        foreach (Block block in construct.GetComponentsInChildren<Block>())
-        {
-            Vector3 half = new Vector3(block.x, block.y, block.z) * 0.5f;
-            for (int i = 0; i < 8; i++)
-            {
-                Vector3 point = construct.InverseTransformPoint(block.transform.TransformPoint(Vector3.Scale(half, new Vector3((i & 1) == 0 ? -1f : 1f, (i & 2) == 0 ? -1f : 1f, (i & 4) == 0 ? -1f : 1f))));
-                if (!found)
-                {
-                    bounds = new Bounds(point, Vector3.zero);
-                    found = true;
-                }
-                else
-                {
-                    bounds.Encapsulate(point);
-                }
-            }
-        }
-
-        return bounds;
+        return BlockBounds.FromConstruct(construct, construct.worldToLocalMatrix, Vector3.zero);
     }
 
     internal void Release()

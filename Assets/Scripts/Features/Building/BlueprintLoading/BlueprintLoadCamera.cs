@@ -127,15 +127,7 @@ internal sealed class BlueprintLoadCamera
             }
 
             Bounds blockBounds = CalculateBlockDataBounds(data);
-            if (!hasBounds)
-            {
-                bounds = blockBounds;
-                hasBounds = true;
-            }
-            else
-            {
-                bounds.Encapsulate(blockBounds);
-            }
+            BlockBounds.Encapsulate(ref bounds, ref hasBounds, blockBounds);
         }
 
         return hasBounds;
@@ -163,29 +155,6 @@ internal sealed class BlueprintLoadCamera
             rotation = Quaternion.identity;
         }
 
-        Bounds bounds = new Bounds(center, Vector3.zero);
-        bool hasCorner = false;
-        for (int x = -1; x <= 1; x += 2)
-        {
-            for (int y = -1; y <= 1; y += 2)
-            {
-                for (int z = -1; z <= 1; z += 2)
-                {
-                    Vector3 localCorner = Vector3.Scale(halfSize, new Vector3(x, y, z));
-                    Vector3 worldCorner = center + rotation * localCorner;
-                    if (!hasCorner)
-                    {
-                        bounds = new Bounds(worldCorner, Vector3.zero);
-                        hasCorner = true;
-                    }
-                    else
-                    {
-                        bounds.Encapsulate(worldCorner);
-                    }
-                }
-            }
-        }
-
-        return bounds;
+        return BlockBounds.Transform(new Bounds(Vector3.zero, halfSize * 2f), Matrix4x4.TRS(center, rotation, Vector3.one));
     }
 }

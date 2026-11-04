@@ -5,7 +5,6 @@ using UnityEngine;
 public sealed class BeamFade : MonoBehaviour
 {
     private StylizedBeamEffect beam;
-    private Color color;
     private float duration;
     private float elapsed;
     private TransientEffectPool pool;
@@ -17,10 +16,9 @@ public sealed class BeamFade : MonoBehaviour
         beam = effect;
     }
 
-    public void Initialize(StylizedBeamEffect effect, Color lineColor, float lifetime)
+    public void Initialize(StylizedBeamEffect effect, float lifetime)
     {
         beam = effect;
-        color = lineColor;
         duration = lifetime;
         elapsed = 0f;
     }

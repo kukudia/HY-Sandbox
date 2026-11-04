@@ -428,7 +428,7 @@ public sealed class WorldBuildingManager : MonoBehaviour
         this.damage.Apply(buildings, center, radius, damage);
     }
 
-    internal void CreateDebris(List<Block> group, Rigidbody source)
+    internal void CreateDebris(List<Block> group, Rigidbody source, RigidbodyMotion motion)
     {
         // 断裂组已经离开主体快照；先释放运输/货仓并按原阵营转换，再决定物理残骸预算。
         // 不放在 OnDestroy：流式休眠、恢复和退出会话不能凭空产生掉落。
@@ -449,6 +449,7 @@ public sealed class WorldBuildingManager : MonoBehaviour
             return;
         }
 
+        GroupPhysicsSettings settings = PlayManager.instance != null ? PlayManager.instance.GroupPhysics : GroupPhysicsSettings.FromBody(source);
         var piece = new GameObject("Building debris");
         piece.transform.SetParent(transform, false);
         piece.transform.position = group[0].transform.position;
@@ -465,8 +466,8 @@ public sealed class WorldBuildingManager : MonoBehaviour
 
         Rigidbody body = piece.AddComponent<Rigidbody>();
         body.mass = Mathf.Max(0.1f, mass);
-        body.linearVelocity = source.isKinematic ? Vector3.zero : source.GetPointVelocity(body.worldCenterOfMass);
-        body.angularVelocity = source.isKinematic ? Vector3.zero : source.angularVelocity;
+        settings.ApplyTo(body);
+        motion.Restore(body, settings);
         debris.Add(piece);
         Destroy(piece, debrisLifetime);
     }

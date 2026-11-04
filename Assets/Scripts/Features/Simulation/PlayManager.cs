@@ -320,14 +320,15 @@ public class PlayManager : MonoBehaviour
             _groupBuilder = new RuntimeGroupBuilder(this);
         }
 
-        GroupPhysicsSettings settings = new GroupPhysicsSettings(
-            _groupLinearDamping,
-            _groupAngularDamping,
-            _groupMaxDepenetrationVelocity,
-            _maximumInheritedTangentialSpeed,
-            _maximumInheritedAngularSpeed);
-        _groupBuilder.Rebuild(blocks, settings);
+        _groupBuilder.Rebuild(blocks, GroupPhysics);
     }
+
+    internal GroupPhysicsSettings GroupPhysics => new GroupPhysicsSettings(
+        _groupLinearDamping,
+        _groupAngularDamping,
+        _groupMaxDepenetrationVelocity,
+        _maximumInheritedTangentialSpeed,
+        _maximumInheritedAngularSpeed);
 
     public void RegisterControlUnit(ControlUnit unit)
     {

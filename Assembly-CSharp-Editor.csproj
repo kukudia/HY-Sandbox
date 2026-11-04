@@ -147,6 +147,7 @@
     <Compile Include="Assets\Editor\World\Validation\WorldLab\WorldLabCollapseChecks.cs" />
     <Compile Include="Assets\Editor\Combat\Validation\TurretRuntimeChecks.cs" />
     <Compile Include="Assets\Editor\Art\Authoring\IndustrialArtGenerator.cs" />
+    <Compile Include="Assets\Editor\Architecture\SharedMechanismChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Buildings\SiegeBuildingChecks.cs" />
     <Compile Include="Assets\Editor\Combat\Validation\CombatHudPlayProbe.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegeTopologyChecks.cs" />

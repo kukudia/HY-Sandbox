@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\Features\Presentation\Camera\CameraShake.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BlueprintLoadCamera.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Interface\GlobalTextStyler.cs" />
+    <Compile Include="Assets\Scripts\Features\Simulation\Geometry\BlockBounds.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Actions\AddBlockAction.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interface\BlueprintUIPanel.cs" />
     <Compile Include="Assets\Scripts\Features\World\Validation\OutpostEditorPlayerChecks.cs" />
@@ -134,6 +135,7 @@
     <Compile Include="Assets\Scripts\Features\Combat\Damage\SalvageCleanupSession.cs" />
     <Compile Include="Assets\Scripts\Features\World\Terrain\Meshing\VoxelMeshData.cs" />
     <Compile Include="Assets\Scripts\Features\Power\Devices\PowerTransmissionDevice.cs" />
+    <Compile Include="Assets\Scripts\Features\Simulation\Connections\BlockConnectionGraph.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Workshop\SiegeWorkshop.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BuildingEditor\BuildingFoundation.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Groups\RuntimeGroupCleanup.cs" />
@@ -143,11 +145,13 @@
     <Compile Include="Assets\Scripts\Features\Building\BlockDataTables\BlockDataTableSchema.cs" />
     <Compile Include="Assets\Scripts\Features\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Features\World\Buildings\Placement\WorldBuildingFootprints.cs" />
+    <Compile Include="Assets\Scripts\Features\Building\Actions\BlockActionState.cs" />
     <Compile Include="Assets\Scripts\Features\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Features\Flight\Presentation\ThrusterInfoPanel.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Interface\SiegeThreatMarkers.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\Repair\RepairBeamView.cs" />
     <Compile Include="Assets\Scripts\Features\Bootstrap\GameManager.cs" />
+    <Compile Include="Assets\Scripts\Features\Simulation\Physics\RigidbodyMotion.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\TurretTargetSelector.cs" />
     <Compile Include="Assets\Scripts\Features\Power\Devices\PowerGeneratingUnit.cs" />
     <Compile Include="Assets\Scripts\Features\World\Terrain\ProceduralVoxelWorld.cs" />
@@ -229,6 +233,7 @@
     <Compile Include="Assets\Scripts\Features\Siege\Battle\SiegeBase.cs" />
     <Compile Include="Assets\Scripts\Features\Power\Presentation\PowerRangeUnionView.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlockDataTables\BlockCsvDocument.cs" />
+    <Compile Include="Assets\Scripts\Features\Building\Interaction\BuildHandleAxis.cs" />
     <Compile Include="Assets\Scripts\Features\Power\Power.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\MeteorLightToken.cs" />
     <Compile Include="Assets\Scripts\Features\World\Buildings\Data\WorldBuildingLibrary.cs" />
@@ -257,7 +262,6 @@
     <Compile Include="Assets\Scripts\Features\Combat\Interface\CombatHud.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BlueprintLoadSettings.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Actions\ActionManager.cs" />
-    <Compile Include="Assets\Scripts\Features\World\Buildings\Topology\BuildingConnectionGraph.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Interface\MainUIPanels.cs" />
     <Compile Include="Assets\Scripts\Features\World\Terrain\Destruction\VoxelStructureCollapse.cs" />
     <Compile Include="Assets\Scripts\Features\World\Validation\OutpostPursuitPlayerChecks.cs" />

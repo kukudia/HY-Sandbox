@@ -1,5 +1,5 @@
-﻿// 职责：根据主推进需求判断激活并提供推进方向。
-// 入口：ApplyThrust() / ShouldActivate()。
+﻿// 职责：将移动输入投影到主推进方向，其余输入推进生命周期复用 Thruster。
+// 入口：FixedUpdate() → TickInputThrust()；保留 ApplyThrust() / ShouldActivate()。
 using UnityEngine;
 
 public class MainThruster : Thruster
@@ -9,39 +9,22 @@ public class MainThruster : Thruster
     public Vector3 inputDir;
     private void FixedUpdate()
     {
-        if (!IsPlayModeActive())
-        {
-            SetPowerRequested(false);
-            thrust = 0f;
-            lastThrustValue = 0f;
-            return;
-        }
+        TickInputThrust(ref inputDir);
+    }
 
-        RefreshRuntimeReferences();
-        bool hasValidOwner = HasValidRuntimeOwner();
-        inputDir = hasValidOwner ? controlUnit.MovementInput : Vector3.zero;
+    protected override float CalculateInputThrust(Vector3 input, bool active)
+    {
         thrustDirection = transform.forward;
-        bool active = hasValidOwner && inputDir.sqrMagnitude > InputEpsilonSqr;
-        thrust = active ? maxThrust * Mathf.Max(0f, Vector3.Dot(inputDir, thrustDirection)) : 0f;
-        SetPowerRequested(thrust > 0f);
-        ApplyThrustChangeRateLimit();
-        ApplyThrust();
-        VisualizeThrust();
+        return active ? maxThrust * Mathf.Max(0f, Vector3.Dot(input, thrustDirection)) : 0f;
     }
 
     public void ApplyThrust()
     {
-        if (thrust <= 0f || !CanApplyThrust() || !TryEnsureRigidbody())
-        {
-            return;
-        }
-
-        thrustDirection = model != null ? model.forward : transform.forward;
-        rb.AddForceAtPosition(thrustDirection * thrust, transform.position);
+        ApplyDirectionalThrust();
     }
 
     public override bool ShouldActivate()
     {
-        return inputDir.sqrMagnitude > InputEpsilonSqr && IsPlayModeActive() && HasValidRuntimeOwner();
+        return ShouldActivateInputThrust(inputDir);
     }
 }

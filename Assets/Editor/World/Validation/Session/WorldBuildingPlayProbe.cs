@@ -1,5 +1,5 @@
 // 职责：在 WorldLab 真实物理帧验证建筑放置、战斗、事务恢复、支撑坍塌和输入预览。
-// 入口：Run()；存档只写 Temp/WorldBuildings，结束恢复种子和初始建筑，不保存运行场景。
+// 入口：Run()；临时文件仓/目录自包含，结束恢复运行状态；报告只写 Temp/Reuse，不覆盖历史验证。
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,7 +16,9 @@ using Object = UnityEngine.Object;
 public static class WorldBuildingPlayProbe
 {
     private const string Pending = "HY.WorldBuildingProbe";
+    private const string ReportPath = "Temp/Reuse/world-building-integration.json";
     private static IEnumerator scenario;
+    private static ProbeFixture fixture;
     private static Report report;
     private static double nextTick;
     private static double deadline;
@@ -29,6 +31,104 @@ public static class WorldBuildingPlayProbe
         public string status;
         public List<string> checks = new List<string>();
         public List<string> errors = new List<string>();
+    }
+
+    private sealed class ProbeFixture : IDisposable
+    {
+        private readonly WorldBuildingManager manager;
+        private readonly WorldBuildingPalette palette;
+        private readonly WorldLabController controller;
+        private readonly WorldBuildingCatalog originalCatalog;
+        private readonly SaveManager originalSaves;
+        private readonly WorldLabSnapshot originalWorld;
+        private readonly bool controllerEnabled;
+        private readonly Vector3 cameraPosition;
+        private readonly Quaternion cameraRotation;
+        private GameObject storeObject;
+        private WorldBuildingCatalog catalog;
+        private TextAsset catalogReference;
+        public ProbeFixture(WorldBuildingManager manager, WorldBuildingPalette palette, WorldLabController controller)
+        {
+            this.manager = manager;
+            this.palette = palette;
+            this.controller = controller;
+            originalCatalog = manager.Catalog;
+            originalSaves = SaveManager.instance;
+            originalWorld = manager.Capture();
+            controllerEnabled = controller.enabled;
+            cameraPosition = palette.transform.position;
+            cameraRotation = palette.transform.rotation;
+        }
+
+        public void Install()
+        {
+            const string blueprintName = "IntegrationProbeOutpost";
+            BlockDataList sample = WorldBuildingAuthoring.CreateSample();
+            string directory = Path.GetFullPath("Temp/WorldBuildings/Fixture-" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(directory);
+            File.WriteAllText(Path.Combine(directory, blueprintName + ".json"), JsonUtility.ToJson(sample, true));
+            storeObject = new GameObject("Inactive building integration file store");
+            storeObject.SetActive(false);
+            SaveManager saves = storeObject.AddComponent<SaveManager>();
+            Type storeType = typeof(SaveManager).Assembly.GetType("BlueprintFileStore");
+            typeof(SaveManager).GetField("_buildingFiles", Private).SetValue(saves, Activator.CreateInstance(storeType, new object[] { directory }));
+            // 保持对象禁用，避免SaveManager.Awake访问用户存档目录；仅注入生产文件仓入口。
+            SaveManager.instance = saves;
+            Vector3 initial = (Vector3)typeof(WorldBuildingAuthoring).GetMethod("FindFlatPosition", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] { manager.World, sample });
+            catalogReference = new TextAsset("{}")
+            {
+                name = blueprintName
+            };
+            catalog = ScriptableObject.CreateInstance<WorldBuildingCatalog>();
+            catalog.initialBuildings = new[]
+            {
+                new WorldBuildingCatalog.InitialBuilding
+                {
+                    blueprint = catalogReference,
+                    worldLocalPosition = initial,
+                    faction = UnitFaction.Enemy
+                }
+            };
+            typeof(WorldBuildingManager).GetField("catalog", Private).SetValue(manager, catalog);
+            manager.ResetBuildings();
+            palette.RefreshCatalog();
+            controller.enabled = false;
+        }
+
+        public void Dispose()
+        {
+            SaveManager.instance = originalSaves;
+            try
+            {
+                if (manager != null)
+                {
+                    typeof(WorldBuildingManager).GetField("catalog", Private).SetValue(manager, originalCatalog);
+                    manager.Restore(originalWorld);
+                }
+            }
+            finally
+            {
+                try
+                {
+                    if (palette != null)
+                    {
+                        palette.transform.SetPositionAndRotation(cameraPosition, cameraRotation);
+                        palette.RefreshCatalog();
+                    }
+                }
+                finally
+                {
+                    if (controller != null)
+                    {
+                        controller.enabled = controllerEnabled;
+                    }
+
+                    Object.DestroyImmediate(storeObject);
+                    Object.DestroyImmediate(catalog);
+                    Object.DestroyImmediate(catalogReference);
+                }
+            }
+        }
     }
 
     static WorldBuildingPlayProbe()
@@ -120,8 +220,12 @@ public static class WorldBuildingPlayProbe
         ProceduralVoxelWorld world = manager.World;
         WorldBuildingPalette palette = Object.FindFirstObjectByType<WorldBuildingPalette>();
         WorldLabController controller = Object.FindFirstObjectByType<WorldLabController>();
-        controller.enabled = false;
-        Check(manager.Buildings.Count == 1, "serialized initial layout spawns a real outpost");
+        fixture = new ProbeFixture(manager, palette, controller);
+        fixture.Install();
+        yield return null;
+        Check(
+            manager.Buildings.Count == 1,
+            "isolated file-store initial layout spawns a real outpost by catalog name");
         Check(
             PlayManager.instance == null && GameManager.instance == null,
             "WorldLab works without Main managers");
@@ -449,10 +553,31 @@ public static class WorldBuildingPlayProbe
 
         EditorApplication.update -= Tick;
         SessionState.SetBool(Pending, false);
+        try
+        {
+            try
+            {
+                (scenario as IDisposable)?.Dispose();
+            }
+            finally
+            {
+                fixture?.Dispose();
+            }
+        }
+        catch (Exception error)
+        {
+            report.errors.Add("Fixture cleanup: " + error);
+        }
+        finally
+        {
+            scenario = null;
+            fixture = null;
+        }
+
         report.status = report.errors.Count == 0 ? "passed" : "failed";
-        Directory.CreateDirectory("Docs/Validation");
-        File.WriteAllText("Docs/Validation/2026-10-15-world-buildings.json", JsonUtility.ToJson(report, true));
-        Debug.Log("World building validation: " + report.status + " / " + report.checks.Count + " checks");
+        Directory.CreateDirectory(Path.GetDirectoryName(ReportPath));
+        File.WriteAllText(ReportPath, JsonUtility.ToJson(report, true));
+        Debug.Log("World building validation: " + report.status + " / " + report.checks.Count + " checks / " + ReportPath);
         EditorApplication.isPlaying = false;
     }
 }

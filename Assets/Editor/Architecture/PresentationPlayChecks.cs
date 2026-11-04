@@ -211,17 +211,22 @@ internal static class PresentationPlayChecks
                 "Transient line, three radial streaks and flash create five lifetime-owned objects",
                 transientObjects.Count == 5);
             yield return 0.2f;
-            bool allDestroyed = true;
+            bool allReleased = true;
             foreach (GameObject transient in transientObjects)
             {
-                allDestroyed &= transient == null;
+                // 当前生产生命周期是池化回收；非池实例仍可销毁，不能把闲置对象误判为泄漏。
+                allReleased &= transient == null || !transient.activeSelf;
+                if (transient != null && transient.TryGetComponent(out Light lamp))
+                {
+                    allReleased &= lamp.intensity == 0f;
+                }
             }
 
             Check(
                 checks,
                 failures,
-                "Transient beam and light fade objects are destroyed after their real Play lifetime",
-                allDestroyed);
+                "Transient beam and light objects release their active lifetime and light output",
+                allReleased);
             GameObject missingBeamObject = Own(ownedObjects, "Probe missing beam target", root.transform);
             missingBeamObject.AddComponent<BeamFade>();
             GameObject missingLightObject = Own(ownedObjects, "Probe missing light target", root.transform);

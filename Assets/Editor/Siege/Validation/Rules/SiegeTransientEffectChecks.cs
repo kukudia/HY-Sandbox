@@ -43,7 +43,7 @@ public static class SiegeTransientEffectChecks
             visual.SetEndpoints(Vector3.one * 10000f, Vector3.one * 10000f + Vector3.forward);
             visual.SetIntensity(0.2f);
             visual.SetVisible(true);
-            beam.Initialize(visual, Color.cyan, 0.1f);
+            beam.Initialize(visual, 0.1f);
             Expire(beam);
             Check(
                 "beam expires inactive with stopped GPU emission",
@@ -53,7 +53,7 @@ public static class SiegeTransientEffectChecks
             Check("expired beam reuses same object", reused == beam);
             BeamFade concurrent = TransientEffectPool.RentBeam();
             Check("duplicate expiration cannot duplicate a lease", concurrent != reused);
-            reused.Initialize(visual, Color.red, 2f);
+            reused.Initialize(visual, 2f);
             Check(
                 "beam initialization resets elapsed and lifetime",
                 Read<float>(reused, "elapsed") == 0f && Read<float>(reused, "duration") == 2f);

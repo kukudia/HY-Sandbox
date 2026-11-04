@@ -146,6 +146,7 @@ public static class SiegeRuntimeConnectionChecks
                 checks,
                 "touching independent control units never weld into one component",
                 BlockGroupManager.GroupBlocks(combined).Count == 2 && Groups(combined).Count == 2 && other.Neighbors().Count == 0);
+            RobotContainerChecks(checks);
         }
         finally
         {
@@ -164,6 +165,99 @@ public static class SiegeRuntimeConnectionChecks
     private static List<List<Block>> Groups(List<Block> blocks)
     {
         return (List<List<Block>>)RuntimeGrouping.Invoke(null, new object[] { blocks });
+    }
+
+    private static void RobotContainerChecks(List<string> checks)
+    {
+        foreach (string resource in new[]
+        {
+            "Blocks/RepairBotContianer",
+            "Blocks/CollectionBotContainer"
+        }
+
+        )
+        {
+            var root = new GameObject("Owned robot container cache checks", typeof(ControlUnit), typeof(Rigidbody));
+            root.transform.position = new Vector3(12000f, 1800f, 0f);
+            root.GetComponent<Rigidbody>().isKinematic = true;
+            try
+            {
+                Block container = Object.Instantiate(Resources.Load<GameObject>(resource), root.transform).GetComponent<Block>();
+                container.RefreshRuntimeData(true);
+                container.connectorPrefab = null;
+                Bot bot = container.GetComponentInChildren<Bot>(true);
+                Check(
+                    checks,
+                    resource + " has a real docked bot fixture",
+                    bot != null && bot.GetComponent<Rigidbody>() != null);
+                bot.enabled = false;
+                Collider botCollider = bot.GetComponent<Collider>();
+                var blocks = new List<Block>
+                {
+                    container
+                };
+                SimulationWorkMetrics.Reset();
+                Check(
+                    checks,
+                    resource + " cold graph initializes through real probes",
+                    Groups(blocks).Count == 1 && SimulationWorkMetrics.PhysicsNeighborQueries > 0);
+                for (int repeat = 0; repeat < 3; repeat++)
+                {
+                    SimulationWorkMetrics.Reset();
+                    Check(
+                        checks,
+                        resource + " docked bot keeps query-free grouping " + repeat,
+                        Groups(blocks).Count == 1 && SimulationWorkMetrics.PhysicsNeighborQueries == 0);
+                }
+
+                Vector3 dockPosition = bot.transform.localPosition;
+                bot.transform.localPosition += Vector3.up * 0.1f;
+                botCollider.enabled = !botCollider.enabled;
+                SimulationWorkMetrics.Reset();
+                bool independentMotionCached = Groups(blocks).Count == 1 && SimulationWorkMetrics.PhysicsNeighborQueries == 0;
+                bot.transform.localPosition = dockPosition;
+                botCollider.enabled = !botCollider.enabled;
+                Check(
+                    checks,
+                    resource + " independent bot motion and collider state do not invalidate module geometry",
+                    independentMotionCached);
+                Transform home = bot.transform.parent;
+                bot.transform.SetParent(null, true);
+                SimulationWorkMetrics.Reset();
+                bool departureCached = Groups(blocks).Count == 1 && SimulationWorkMetrics.PhysicsNeighborQueries == 0;
+                bot.transform.SetParent(home, false);
+                bot.transform.localPosition = dockPosition;
+                bool dockingCached = Groups(blocks).Count == 1 && SimulationWorkMetrics.PhysicsNeighborQueries == 0;
+                Check(
+                    checks,
+                    resource + " bot departure and redocking preserve the module graph",
+                    departureCached && dockingCached);
+                SphereCollider extra = container.gameObject.AddComponent<SphereCollider>();
+                extra.radius = 0.1f;
+                SimulationWorkMetrics.Reset();
+                Check(
+                    checks,
+                    resource + " real additional module collider forces geometry fallback",
+                    Groups(blocks).Count == 1 && SimulationWorkMetrics.PhysicsNeighborQueries > 0);
+                extra.center = Vector3.up * 0.1f;
+                SimulationWorkMetrics.Reset();
+                Check(
+                    checks,
+                    resource + " additional module collider mutations remain live",
+                    Groups(blocks).Count == 1 && SimulationWorkMetrics.PhysicsNeighborQueries > 0);
+                Object.DestroyImmediate(extra);
+                Groups(blocks);
+                SimulationWorkMetrics.Reset();
+                Check(
+                    checks,
+                    resource + " canonical module layout resumes caching with bot docked",
+                    Groups(blocks).Count == 1 && SimulationWorkMetrics.PhysicsNeighborQueries == 0);
+            }
+            finally
+            {
+                Object.DestroyImmediate(root);
+            }
+        }
     }
 
     private static void Check(List<string> checks, string name, bool passed)

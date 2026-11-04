@@ -13,7 +13,7 @@ internal static class TransientEffects
         beam.SetColor(color);
         beam.SetIntensity(1f);
         beam.SetVisible(true);
-        fade.Initialize(beam, color, Mathf.Max(0.05f, duration));
+        fade.Initialize(beam, Mathf.Max(0.05f, duration));
     }
 
     public static void CreateRadialStreakBurst(

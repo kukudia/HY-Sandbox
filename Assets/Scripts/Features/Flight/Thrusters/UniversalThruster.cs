@@ -1,5 +1,5 @@
-﻿// 职责：根据控制输入确定通用推进器的激活与方向。
-// 入口：ApplyThrust() / ShouldActivate()。
+﻿// 职责：按移动输入转动通用推进模型，其余输入推进生命周期复用 Thruster。
+// 入口：FixedUpdate() → TickInputThrust()；保留 ApplyThrust() / ShouldActivate()。
 using UnityEngine;
 
 public class UniversalThruster : Thruster
@@ -9,24 +9,13 @@ public class UniversalThruster : Thruster
     public Vector3 inputDir;
     private void FixedUpdate()
     {
-        if (!IsPlayModeActive())
-        {
-            SetPowerRequested(false);
-            thrust = 0f;
-            lastThrustValue = 0f;
-            return;
-        }
+        TickInputThrust(ref inputDir);
+    }
 
-        RefreshRuntimeReferences();
-        bool hasValidOwner = HasValidRuntimeOwner();
-        inputDir = hasValidOwner ? controlUnit.MovementInput : Vector3.zero;
-        bool active = hasValidOwner && inputDir.sqrMagnitude > InputEpsilonSqr;
-        RotateThruster(inputDir, active);
-        thrust = active ? maxThrust : 0f;
-        SetPowerRequested(thrust > 0f);
-        ApplyThrustChangeRateLimit();
-        ApplyThrust();
-        VisualizeThrust();
+    protected override float CalculateInputThrust(Vector3 input, bool active)
+    {
+        RotateThruster(input, active);
+        return base.CalculateInputThrust(input, active);
     }
 
     private void RotateThruster(Vector3 worldDir, bool active)
@@ -42,17 +31,11 @@ public class UniversalThruster : Thruster
 
     public void ApplyThrust()
     {
-        if (thrust <= 0f || !CanApplyThrust() || !TryEnsureRigidbody())
-        {
-            return;
-        }
-
-        thrustDirection = model != null ? model.forward : transform.forward;
-        rb.AddForceAtPosition(thrustDirection * thrust, transform.position);
+        ApplyDirectionalThrust();
     }
 
     public override bool ShouldActivate()
     {
-        return inputDir.sqrMagnitude > InputEpsilonSqr && IsPlayModeActive() && HasValidRuntimeOwner();
+        return ShouldActivateInputThrust(inputDir);
     }
 }

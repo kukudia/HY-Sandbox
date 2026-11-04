@@ -259,7 +259,9 @@ internal sealed class BlockConnections
         connector.isConnected = true;
         otherConnector.isConnected = true;
         GameObject connectorObject = connector.connector != null ? connector.connector : otherConnector.connector;
-        if (connectorObject == null && _block.connectorPrefab != null)
+        // 建筑使用同一连接拓扑，但世界模块不显示载具接缝装饰；showConnectors仅控制编辑器Gizmo。
+        bool showConnectionVisual = _block.GetComponentInParent<BuildingRuntime>() == null;
+        if (connectorObject == null && _block.connectorPrefab != null && showConnectionVisual)
         {
             connectorObject = Object.Instantiate(_block.connectorPrefab, _block.connectorParent != null ? _block.connectorParent : _block.transform);
             connectorObject.transform.localPosition = connector.localPos;

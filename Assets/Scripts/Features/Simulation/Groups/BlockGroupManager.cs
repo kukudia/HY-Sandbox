@@ -20,17 +20,13 @@ public class BlockGroupManager : MonoBehaviour
             return new List<List<Block>>();
         }
 
-        foreach (Block block in allBlocks)
-        {
-            if (block != null && block.isActiveAndEnabled && !block.HasValidRuntimeConnections)
-            {
-                // 蓝图/制作变更重新探测一次；刚性运动和显式断链复用双侧邻接，不做逐面PhysX查询。
-                new BatchConnectionBuilder(allBlocks).RebuildBatchImmediate();
-                break;
-            }
-        }
-
+        BlockConnectionGraph.PrepareBlocks(allBlocks);
         return Traverse(allBlocks, true);
+    }
+
+    internal static List<List<Block>> GroupPreparedBlocks(List<Block> blocks)
+    {
+        return Traverse(blocks, true);
     }
 
     private static List<List<Block>> Traverse(List<Block> allBlocks, bool runtimeLinks)

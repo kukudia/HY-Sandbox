@@ -146,12 +146,12 @@ internal sealed class OutpostDeploymentPreview : IDisposable
         var parts = new List<Bounds>();
         foreach (BlockData block in building)
         {
-            parts.Add(CalculateBounds(new List<BlockData> { block }, Matrix4x4.identity));
+            parts.Add(BlockBounds.FromBlueprint(block, Matrix4x4.identity));
         }
 
         foreach (BlockData block in guard.blueprint.blocks)
         {
-            Bounds bounds = CalculateBounds(new List<BlockData> { block }, pose);
+            Bounds bounds = BlockBounds.FromBlueprint(block, pose);
             if (parts.Exists(part => part.Intersects(bounds)))
             {
                 return true;
@@ -163,35 +163,7 @@ internal sealed class OutpostDeploymentPreview : IDisposable
 
     private static Bounds CalculateBounds(List<BlockData> blocks, Matrix4x4 deployment)
     {
-        Bounds bounds = default;
-        bool first = true;
-        foreach (BlockData block in blocks)
-        {
-            Matrix4x4 transform = deployment * BlockTransform(block);
-            for (int i = 0; i < 8; i++)
-            {
-                Vector3 point = transform.MultiplyPoint3x4(Corner(i));
-                if (first)
-                {
-                    bounds = new Bounds(point, Vector3.zero);
-                    first = false;
-                }
-                else
-                {
-                    bounds.Encapsulate(point);
-                }
-            }
-        }
-
-        return bounds;
-    }
-
-    private static Matrix4x4 BlockTransform(BlockData block)
-    {
-        return Matrix4x4.TRS(
-            new Vector3(block.posX, block.posY, block.posZ),
-            new Quaternion(block.rotX, block.rotY, block.rotZ, block.rotW),
-            new Vector3(block.x, block.y, block.z));
+        return BlockBounds.FromBlueprint(blocks, deployment);
     }
 
     private static Vector3 Corner(int index)

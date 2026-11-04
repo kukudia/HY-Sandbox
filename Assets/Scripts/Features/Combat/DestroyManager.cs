@@ -1,6 +1,5 @@
 // 职责：协调销毁主链、资源释放与驾驶舱死亡；配置并调用爆炸规则及残骸清理会话。
 // 入口：DestroyGameObject() / ExplodeBlock() / ScheduleUnitCleanup()。
-using System.Collections;
 using UnityEngine;
 
 public class DestroyManager : MonoBehaviour
@@ -9,7 +8,6 @@ public class DestroyManager : MonoBehaviour
     public static DestroyManager instance;
     [SerializeField, Tooltip("Emit per-object destruction diagnostics. Disabled by default to avoid stack traces and log I/O during large battles.")]
     private bool _debugDestruction;
-    private float _refreshDelay = 0.2f;
     private float _unitCleanupDelay = 10f;
     [SerializeField]
     private float _blockExplosionUpwardsModifier = 1.2f;
@@ -19,8 +17,6 @@ public class DestroyManager : MonoBehaviour
     private float _maximumExplosionSpeedChange = 3f;
     [SerializeField, Min(0f)]
     private float _explosionCollisionProtection = 3f;
-    private bool _isRefreshScheduled;
-    private int _destroyedCount;
     private SalvageCleanupSession _cleanupSession;
     private SalvageCleanupSession CleanupSession => _cleanupSession ?? (_cleanupSession = new SalvageCleanupSession(this));
 
@@ -91,17 +87,7 @@ public class DestroyManager : MonoBehaviour
             return;
         }
 
-        CargoHold destroyedHold = obj.GetComponent<CargoHold>();
-        foreach (Bot bot in obj.GetComponentsInChildren<Bot>(true))
-        {
-            bot.PrepareForHomeDestruction();
-        }
-
-        if (destroyedHold != null)
-        {
-            destroyedHold.ReleaseContents(ownerFaction);
-        }
-
+        WreckSalvage.ReleaseContents(obj, ownerFaction);
         if (willExplode)
         {
             ExplodeBlock(block);
@@ -197,41 +183,5 @@ public class DestroyManager : MonoBehaviour
     {
         StopAllCoroutines();
         _cleanupSession?.Clear();
-        _isRefreshScheduled = false;
-        _destroyedCount = 0;
-    }
-
-    public void NotifyObjectDestroyed()
-    {
-        _destroyedCount++;
-        ScheduleRefresh();
-    }
-
-    private void ScheduleRefresh()
-    {
-        if (_isRefreshScheduled)
-        {
-            return;
-        }
-
-        _isRefreshScheduled = true;
-        StartCoroutine(DelayedRefresh());
-    }
-
-    private IEnumerator DelayedRefresh()
-    {
-        yield return new WaitForSeconds(_refreshDelay);
-        ExecuteRefresh();
-        _isRefreshScheduled = false;
-    }
-
-    private void ExecuteRefresh()
-    {
-        if (_debugDestruction)
-        {
-            Debug.Log($"Refreshing after {_destroyedCount} objects destroyed");
-        }
-
-        _destroyedCount = 0;
     }
 }

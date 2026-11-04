@@ -1,68 +1,22 @@
-// 职责：保存新建方块快照，实施创建动作的撤销与重做。
-// 入口：Undo() / Redo()。
-using UnityEngine;
-
+// 职责：记录创建动作，委托共享方块状态完成删除与恢复。
+// 入口：Undo() / Redo()；撤销时捕获当前货仓，重做沿用同一方块身份。
 public class CreateBlockAction : IBlockAction
 {
     public string ActionName => "Create";
 
-    private string resourcePath;
-    private Vector3 pos;
-    private Quaternion rot;
-    private int x, y, z;
-    private GameObject createdObject;
-    private System.Collections.Generic.List<CargoItem> _cargo;
+    private readonly BlockActionState state;
     public CreateBlockAction(Block block)
     {
-        resourcePath = block.resourcePath;
-        pos = block.transform.position;
-        rot = block.transform.rotation;
-        x = block.x;
-        y = block.y;
-        z = block.z;
-        createdObject = block.gameObject;
+        state = new BlockActionState(block);
     }
 
     public void Undo()
     {
-        if (createdObject != null)
-        {
-            Block block = createdObject.GetComponent<Block>();
-            _cargo = createdObject.GetComponent<CargoHold>()?.CaptureContents();
-            VisualEffectsManager.TryPlayBlockRemoved(block);
-            BuildManager.instance.RemoveBlock(block);
-            Object.Destroy(createdObject);
-            createdObject = null;
-        }
+        state.Remove(true);
     }
 
     public void Redo()
     {
-        if (createdObject == null && !string.IsNullOrEmpty(resourcePath))
-        {
-            GameObject prefab = Resources.Load<GameObject>(resourcePath);
-            if (prefab != null)
-            {
-                createdObject = Object.Instantiate(prefab, pos, rot);
-                if (GameManager.instance.blocksParent != null)
-                {
-                    createdObject.transform.SetParent(GameManager.instance.blocksParent);
-                }
-
-                Block block = createdObject.GetComponent<Block>();
-                block.x = x;
-                block.y = y;
-                block.z = z;
-                block.resourcePath = resourcePath;
-                if (_cargo != null)
-                {
-                    createdObject.GetComponent<CargoHold>()?.RestoreContents(_cargo);
-                }
-
-                BuildManager.instance.ApplyBlockBuildDefaults(block);
-                BuildManager.instance.SaveBlock(block);
-                VisualEffectsManager.TryPlayBlockPlaced(block);
-            }
-        }
+        state.Restore();
     }
 }

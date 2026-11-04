@@ -50,10 +50,7 @@ public class CollectionBot : Bot
         }
 
         bool requested = canStart && (_target != null || transform.parent != home);
-        Power power = SetHomePowerRequested(_requiresPower && requested);
-        // Energy is a launch gate. Once the bot has left the container, it must
-        // finish or abandon its current mission and return under its own inertia.
-        if (_requiresPower && requested && transform.parent == home && (power == null || !power.isWorking))
+        if (!CanLaunchForWork(_requiresPower, requested))
         {
             return;
         }

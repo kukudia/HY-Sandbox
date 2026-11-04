@@ -128,6 +128,13 @@ public abstract class Bot : MonoBehaviour
         return _homePower;
     }
 
+    // 供电只限制起飞；离仓任务必须能够继续完成或返航。
+    protected bool CanLaunchForWork(bool requiresPower, bool requested)
+    {
+        Power power = SetHomePowerRequested(requiresPower && requested);
+        return !requiresPower || !requested || transform.parent != home || (power != null && power.isWorking);
+    }
+
     public virtual void PrepareForHomeDestruction()
     {
     }

@@ -272,19 +272,11 @@ public sealed class OutpostEncounterDirector
 
     private static Bounds DeploymentBounds(BlockDataList blueprint, Vector3 position, Quaternion rotation)
     {
-        var bounds = new Bounds(position, Vector3.zero);
-        foreach (BlockData block in blueprint.blocks)
+        // 流式加载范围有意包含出生原点，即使所有模块都偏在原点一侧。
+        Bounds bounds = new Bounds(position, Vector3.zero);
+        if (blueprint.blocks.Count > 0)
         {
-            Vector3 center = new Vector3(block.posX, block.posY, block.posZ);
-            Quaternion local = new Quaternion(block.rotX, block.rotY, block.rotZ, block.rotW);
-            for (int i = 0; i < 8; i++)
-            {
-                Vector3 corner = new Vector3(
-                    (i & 1) == 0 ? -block.x * 0.5f : block.x * 0.5f,
-                    (i & 2) == 0 ? -block.y * 0.5f : block.y * 0.5f,
-                    (i & 4) == 0 ? -block.z * 0.5f : block.z * 0.5f);
-                bounds.Encapsulate(position + rotation * (center + local * corner));
-            }
+            bounds.Encapsulate(BlockBounds.FromBlueprint(blueprint.blocks, Matrix4x4.TRS(position, rotation, Vector3.one)));
         }
 
         return bounds;

@@ -25,37 +25,28 @@ public class SaveUIPanel : MonoBehaviour
         if (BuildManager.instance.IsEditingBuildingBlueprint)
         {
             SaveManager.instance.GetAllBuildingBlueprintNames();
-            foreach (string blueprint in SaveManager.instance.buildingBlueprints)
-            {
-                GameObject obj = Instantiate(savePrefab, listParent);
-                ConfigureSaveItem(obj, blueprint, () => SaveManager.instance.LoadBuildingBlueprint(blueprint));
-            }
+            ShowEntries(SaveManager.instance.buildingBlueprints, SaveManager.instance.LoadBuildingBlueprint);
         }
         else if (BuildManager.instance.IsEditingEnemyBlueprint)
         {
             Debug.Log("Refreshing enemy blueprint list...");
             SaveManager.instance.GetAllEnemyBlueprintNames();
-            if (SaveManager.instance.enemyBlueprints.Count > 0)
-            {
-                foreach (string blueprint in SaveManager.instance.enemyBlueprints)
-                {
-                    GameObject obj = Instantiate(savePrefab, listParent);
-                    ConfigureSaveItem(obj, blueprint, () => OnEnemyBlueprintClicked(blueprint));
-                }
-            }
+            ShowEntries(SaveManager.instance.enemyBlueprints, OnEnemyBlueprintClicked);
         }
         else
         {
             Debug.Log("Refreshing save list...");
             SaveManager.instance.GetAllSaveNames();
-            if (SaveManager.instance.saves.Count > 0)
-            {
-                foreach (string save in SaveManager.instance.saves)
-                {
-                    GameObject obj = Instantiate(savePrefab, listParent);
-                    ConfigureSaveItem(obj, save, () => OnSaveClicked(save));
-                }
-            }
+            ShowEntries(SaveManager.instance.saves, OnSaveClicked);
+        }
+    }
+
+    private void ShowEntries(IEnumerable<string> names, System.Action<string> open)
+    {
+        foreach (string name in names)
+        {
+            GameObject item = Instantiate(savePrefab, listParent);
+            ConfigureSaveItem(item, name, () => open(name));
         }
     }
 
@@ -77,23 +68,6 @@ public class SaveUIPanel : MonoBehaviour
         saveSizeText.text = SaveManager.instance.GetSaveFileSize(saveName);
     }
 
-    private Button CreateRenameButton(Button deleteButton, Transform parent)
-    {
-        Button renameButton = Instantiate(deleteButton, parent);
-        renameButton.name = "RenameSaveButton";
-        renameButton.onClick.RemoveAllListeners();
-        RectTransform renameRect = renameButton.GetComponent<RectTransform>();
-        RectTransform deleteRect = deleteButton.GetComponent<RectTransform>();
-        renameRect.anchoredPosition = deleteRect.anchoredPosition + new Vector2(-55f, 0f);
-        Text text = renameButton.GetComponentInChildren<Text>();
-        if (text != null)
-        {
-            text.text = "R";
-        }
-
-        return renameButton;
-    }
-
     private void OnSaveClicked(string saveName)
     {
         SaveManager.instance.LoadSave(saveName);
@@ -104,10 +78,6 @@ public class SaveUIPanel : MonoBehaviour
         SaveManager.instance.LoadEnemyBlueprint(blueprintName);
     }
 
-    //private void OnDeleteClicked(string saveName)
-    //{
-    //    SaveManager.instance.DeleteSave(saveName);
-    //}
     private void OnDuplicateClicked(string saveName)
     {
         SaveManager.instance.DuplicateSave(saveName);

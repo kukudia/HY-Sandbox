@@ -8,30 +8,7 @@ public static class OutpostBaseDesigner
 {
     public static Bounds BoundsOf(IReadOnlyList<BlockData> blocks, Quaternion rotation)
     {
-        Bounds result = default;
-        bool first = true;
-        foreach (BlockData block in blocks)
-        {
-            Matrix4x4 matrix = Matrix4x4.TRS(
-                rotation * new Vector3(block.posX, block.posY, block.posZ),
-                rotation * new Quaternion(block.rotX, block.rotY, block.rotZ, block.rotW),
-                new Vector3(block.x, block.y, block.z));
-            for (int i = 0; i < 8; i++)
-            {
-                Vector3 point = matrix.MultiplyPoint3x4(new Vector3((i & 1) == 0 ? -.5f : .5f, (i & 2) == 0 ? -.5f : .5f, (i & 4) == 0 ? -.5f : .5f));
-                if (first)
-                {
-                    result = new Bounds(point, Vector3.zero);
-                    first = false;
-                }
-                else
-                {
-                    result.Encapsulate(point);
-                }
-            }
-        }
-
-        return result;
+        return BlockBounds.FromBlueprint(blocks, Matrix4x4.Rotate(rotation));
     }
 
     public static BlockDataList Create(BlockDataList enemy, string name)

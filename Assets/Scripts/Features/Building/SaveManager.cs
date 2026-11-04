@@ -106,12 +106,7 @@ public class SaveManager : MonoBehaviour
 
     public void DeleteBuildingBlueprint(string blueprintName)
     {
-        string path = GetBuildingBlueprintPath(blueprintName);
-        if (File.Exists(path))
-        {
-            File.Delete(path);
-        }
-
+        DeleteBlueprintFile(GetBuildingBlueprintPath(blueprintName));
         GetAllBuildingBlueprintNames();
         BuildManager build = BuildManager.instance;
         if (build != null && string.Equals(build.CurrentBuildingBlueprintName, blueprintName, System.StringComparison.OrdinalIgnoreCase))
@@ -282,84 +277,96 @@ public class SaveManager : MonoBehaviour
 
     public void LoadSave(string saveName)
     {
-        SiegeSession siege = PlayManager.instance != null ? PlayManager.instance.SiegeSession : null;
-        if (siege != null && !siege.IsEditingBlueprint)
-        {
-            return;
-        }
-
-        if (BuildManager.instance != null && BuildManager.instance.IsLoadingBuildTarget(BuildTargetKind.PlayerSave, saveName, BuildManager.instance.currentEnemyBlueprintName))
-        {
-            Debug.Log($"Save {saveName} is already loading.");
-            return;
-        }
-
-        currentSaveName = saveName;
-        ControlUnit[] deleteObjs = Object.FindObjectsByType<ControlUnit>(FindObjectsSortMode.None);
-        foreach (ControlUnit obj in deleteObjs)
-        {
-            if (siege == null && (GameManager.instance.blocksParent == null || obj.gameObject != GameManager.instance.blocksParent.gameObject))
-            {
-                Destroy(obj.gameObject);
-            }
-        }
-
-        BuildManager.instance.ExitDeveloperBlueprintBuildMode(false);
-        BuildManager.instance.SetCurrentSaveName(saveName);
-        BuildManager.instance.LoadAllBlocks();
-        Debug.Log($"Loaded save: {saveName}");
+        LoadBlueprint(saveName, BuildTargetKind.PlayerSave);
     }
 
     public void LoadEnemyBlueprint(string blueprintName)
     {
+        LoadBlueprint(blueprintName, BuildTargetKind.EnemyBlueprint);
+    }
+
+    private void LoadBlueprint(string name, BuildTargetKind kind)
+    {
         SiegeSession siege = PlayManager.instance != null ? PlayManager.instance.SiegeSession : null;
         if (siege != null && !siege.IsEditingBlueprint)
         {
             return;
         }
 
-        if (BuildManager.instance != null && BuildManager.instance.IsLoadingBuildTarget(BuildTargetKind.EnemyBlueprint, BuildManager.instance.currentSaveName, blueprintName))
+        BuildManager build = BuildManager.instance;
+        bool enemy = kind == BuildTargetKind.EnemyBlueprint;
+        string label = enemy ? "enemy blueprint" : "save";
+        if (build != null && build.IsLoadingBuildTarget(kind, enemy ? build.currentSaveName : name, enemy ? name : build.currentEnemyBlueprintName))
         {
-            Debug.Log($"Enemy blueprint {blueprintName} is already loading.");
+            Debug.Log($"The {label} {name} is already loading.");
             return;
         }
 
-        currentEnemyBlueprintName = blueprintName;
-        ControlUnit[] deleteObjs = Object.FindObjectsByType<ControlUnit>(FindObjectsSortMode.None);
-        foreach (ControlUnit obj in deleteObjs)
+        if (enemy)
         {
-            if (siege == null && (GameManager.instance.blocksParent == null || obj.gameObject != GameManager.instance.blocksParent.gameObject))
+            currentEnemyBlueprintName = name;
+        }
+        else
+        {
+            currentSaveName = name;
+        }
+
+        // 工坊只替换隔离预览；正常建造入口才清除其他运行单元。
+        if (siege == null)
+        {
+            foreach (ControlUnit unit in Object.FindObjectsByType<ControlUnit>(FindObjectsSortMode.None))
             {
-                Destroy(obj.gameObject);
+                if (GameManager.instance.blocksParent == null || unit.gameObject != GameManager.instance.blocksParent.gameObject)
+                {
+                    Destroy(unit.gameObject);
+                }
             }
         }
 
-        BuildManager.instance.EnterEnemyBlueprintBuildMode(blueprintName);
-        Debug.Log($"Loaded enemy blueprint: {blueprintName}");
+        if (enemy)
+        {
+            build.EnterEnemyBlueprintBuildMode(name);
+        }
+        else
+        {
+            build.ExitDeveloperBlueprintBuildMode(false);
+            build.SetCurrentSaveName(name);
+            build.LoadAllBlocks();
+        }
+
+        Debug.Log($"Loaded {label}: {name}");
     }
 
     public void DeleteSave(string saveName)
     {
-        string path = GetSavePath(saveName);
-        if (File.Exists(path))
+        DeleteBlueprint(saveName, BuildTargetKind.PlayerSave);
+    }
+
+    public void DeleteEnemyBlueprint(string blueprintName)
+    {
+        DeleteBlueprint(blueprintName, BuildTargetKind.EnemyBlueprint);
+    }
+
+    private void DeleteBlueprint(string name, BuildTargetKind kind)
+    {
+        if (DeleteBlueprintFile(FilesFor(kind).GetPath(name)))
         {
-            File.Delete(path);
-            Debug.Log($"Deleted save: {saveName}");
+            string label = kind == BuildTargetKind.EnemyBlueprint ? "enemy blueprint" : "save";
+            Debug.Log($"Deleted {label}: {name}");
         }
 
         SaveUIPanel.instance.RefreshList();
     }
 
-    public void DeleteEnemyBlueprint(string blueprintName)
+    private static bool DeleteBlueprintFile(string path)
     {
-        string path = GetEnemyBlueprintPath(blueprintName);
-        if (File.Exists(path))
+        if (!File.Exists(path))
         {
-            File.Delete(path);
-            Debug.Log($"Deleted enemy blueprint: {blueprintName}");
+            return false;
         }
 
-        SaveUIPanel.instance.RefreshList();
+        File.Delete(path);
+        return true;
     }
 
     public bool RenameSave(string oldSaveName, string newSaveName)

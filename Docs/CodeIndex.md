@@ -17,7 +17,8 @@ HY-Sandbox/
 │   │   ├── Architecture/
 │   │   │   ├── ArchitecturePlayProbe.cs
 │   │   │   ├── HoverControlPlayChecks.cs
-│   │   │   └── PresentationPlayChecks.cs
+│   │   │   ├── PresentationPlayChecks.cs
+│   │   │   └── SharedMechanismChecks.cs
 │   │   ├── Art/
 │   │   │   ├── BlockArtIntegrator.cs
 │   │   │   ├── Authoring/
@@ -197,6 +198,7 @@ HY-Sandbox/
 │           │   ├── Actions/
 │           │   │   ├── ActionManager.cs
 │           │   │   ├── AddBlockAction.cs
+│           │   │   ├── BlockActionState.cs
 │           │   │   ├── DeleteBlockAction.cs
 │           │   │   ├── GroupAction.cs
 │           │   │   ├── IBlockAction.cs
@@ -226,6 +228,7 @@ HY-Sandbox/
 │           │   │   └── OutpostDeploymentPreview.cs
 │           │   ├── Interaction/
 │           │   │   ├── BuildBlueprintEditor.cs
+│           │   │   ├── BuildHandleAxis.cs
 │           │   │   ├── BuildManipulation.cs
 │           │   │   ├── BuildPlacementGeometry.cs
 │           │   │   ├── BuildPreview.cs
@@ -386,17 +389,21 @@ HY-Sandbox/
 │           │   ├── PlayManager.cs
 │           │   ├── Connections/
 │           │   │   ├── BatchConnectionBuilder.cs
+│           │   │   ├── BlockConnectionGraph.cs
 │           │   │   ├── BlockConnections.cs
 │           │   │   └── BlockConnectionSnapshot.cs
 │           │   ├── Diagnostics/
 │           │   │   └── SimulationWorkMetrics.cs
+│           │   ├── Geometry/
+│           │   │   └── BlockBounds.cs
 │           │   ├── Groups/
 │           │   │   ├── BlockGroupManager.cs
 │           │   │   ├── GroupPhysicsSettings.cs
 │           │   │   ├── RuntimeGroupBuilder.cs
 │           │   │   └── RuntimeGroupCleanup.cs
 │           │   ├── Physics/
-│           │   │   └── ImpactPhysics.cs
+│           │   │   ├── ImpactPhysics.cs
+│           │   │   └── RigidbodyMotion.cs
 │           │   ├── Presentation/
 │           │   │   └── PlayBlockSelection.cs
 │           │   └── Units/
@@ -424,7 +431,6 @@ HY-Sandbox/
 │               │   ├── Presentation/
 │               │   │   └── WorldBuildingRenderCache.cs
 │               │   └── Topology/
-│               │       ├── BuildingConnectionGraph.cs
 │               │       ├── BuildingRefit.cs
 │               │       └── WorldBuildingDamage.cs
 │               ├── Outposts/
@@ -541,15 +547,38 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | PresentationPlayChecks | [`IEnumerator Run(List<string> checks)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L16) | internal static |
-| PresentationPlayChecks | [`GameObject Own(List<GameObject> owned, string name, Transform parent = null)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L279) | private static |
-| PresentationPlayChecks | [`Type RuntimeType(string name)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L291) | private static |
-| PresentationPlayChecks | [`object CreateRuntimeObject(string name, MonoBehaviour runner)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L296) | private static |
-| PresentationPlayChecks | [`object GetField(object target, string name)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L301) | private static |
-| PresentationPlayChecks | [`void SetField(object target, string name, object value)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L306) | private static |
-| PresentationPlayChecks | [`void Invoke(object target, string name, params object[] arguments)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L311) | private static |
-| PresentationPlayChecks | [`void InvokeStatic(Type type, string name, params object[] arguments)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L316) | private static |
-| PresentationPlayChecks | [`bool Near(Vector3 actual, Vector3 expected)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L321) | private static |
-| PresentationPlayChecks | [`void Check(List<string> checks, List<string> failures, string name, bool passed)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L326) | private static |
+| PresentationPlayChecks | [`GameObject Own(List<GameObject> owned, string name, Transform parent = null)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L284) | private static |
+| PresentationPlayChecks | [`Type RuntimeType(string name)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L296) | private static |
+| PresentationPlayChecks | [`object CreateRuntimeObject(string name, MonoBehaviour runner)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L301) | private static |
+| PresentationPlayChecks | [`object GetField(object target, string name)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L306) | private static |
+| PresentationPlayChecks | [`void SetField(object target, string name, object value)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L311) | private static |
+| PresentationPlayChecks | [`void Invoke(object target, string name, params object[] arguments)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L316) | private static |
+| PresentationPlayChecks | [`void InvokeStatic(Type type, string name, params object[] arguments)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L321) | private static |
+| PresentationPlayChecks | [`bool Near(Vector3 actual, Vector3 expected)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L326) | private static |
+| PresentationPlayChecks | [`void Check(List<string> checks, List<string> failures, string name, bool passed)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L331) | private static |
+
+## Assets/Editor/Architecture/SharedMechanismChecks.cs
+
+// 职责：在隔离场景回归共用包围盒、编辑动作恢复和建筑残骸运动继承。 // 入口：Main Play调用Run()，Editor update推进真实帧；报告Temp/Reuse/shared-mechanism-checks.json。 // 隔离：仅同步动作期间替换管理器实例，文件仓定向Temp；finally恢复静态状态并卸载测试场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SharedMechanismChecks | [`string Run()`](../Assets/Editor/Architecture/SharedMechanismChecks.cs#L28) | public static |
+| SharedMechanismChecks | [`void Tick()`](../Assets/Editor/Architecture/SharedMechanismChecks.cs#L55) | private static |
+| SharedMechanismChecks | [`void Finish()`](../Assets/Editor/Architecture/SharedMechanismChecks.cs#L84) | private static |
+| SharedMechanismChecks | [`IEnumerator RunRoutine()`](../Assets/Editor/Architecture/SharedMechanismChecks.cs#L107) | private static |
+| SharedMechanismChecks | [`void BoundsChecks()`](../Assets/Editor/Architecture/SharedMechanismChecks.cs#L144) | private static |
+| SharedMechanismChecks | [`void MotionChecks()`](../Assets/Editor/Architecture/SharedMechanismChecks.cs#L247) | private static |
+| SharedMechanismChecks | [`IEnumerator ActionChecks()`](../Assets/Editor/Architecture/SharedMechanismChecks.cs#L317) | private static |
+| SharedMechanismChecks | [`void CheckRestored( string label, Block block, string id, float mass, Vector3 position, Quaternion rotation, int coins)`](../Assets/Editor/Architecture/SharedMechanismChecks.cs#L399) | private static |
+| SharedMechanismChecks | [`void WithManagers(Action operation)`](../Assets/Editor/Architecture/SharedMechanismChecks.cs#L419) | private static |
+| SharedMechanismChecks | [`GameObject NewObject(string name)`](../Assets/Editor/Architecture/SharedMechanismChecks.cs#L445) | private static |
+| SharedMechanismChecks | [`Type RuntimeType(string name)`](../Assets/Editor/Architecture/SharedMechanismChecks.cs#L452) | private static |
+| SharedMechanismChecks | [`object Call(Type type, object target, string name, params object[] arguments)`](../Assets/Editor/Architecture/SharedMechanismChecks.cs#L457) | private static |
+| SharedMechanismChecks | [`void Set(object target, string name, object value)`](../Assets/Editor/Architecture/SharedMechanismChecks.cs#L462) | private static |
+| SharedMechanismChecks | [`bool Near(Vector3 actual, Vector3 expected)`](../Assets/Editor/Architecture/SharedMechanismChecks.cs#L467) | private static |
+| SharedMechanismChecks | [`bool Close(Bounds actual, Bounds expected)`](../Assets/Editor/Architecture/SharedMechanismChecks.cs#L472) | private static |
+| SharedMechanismChecks | [`void Check(string name, bool passed)`](../Assets/Editor/Architecture/SharedMechanismChecks.cs#L477) | private static |
 
 ## Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs
 
@@ -1493,6 +1522,8 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeBuildingGraphChecks | [`string Run()`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingGraphChecks.cs#L14) | public static |
+| SiegeBuildingGraphChecks | [`void ConnectionVisualPolicyChecks(List<string> checks, GameObject prefab, Type graphType, MethodInfo prepare, MethodInfo collect)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingGraphChecks.cs#L179) | private static |
+| SiegeBuildingGraphChecks | [`void SparseRemovalChecks(List<string> checks, GameObject prefab, Type graphType, MethodInfo prepare, MethodInfo collect)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingGraphChecks.cs#L242) | private static |
 
 ## Assets/Editor/Siege/Validation/Buildings/SiegeBuildingPowerProbe.cs
 
@@ -1571,8 +1602,9 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeRuntimeConnectionChecks | [`string Run()`](../Assets/Editor/Siege/Validation/Fleet/SiegeRuntimeConnectionChecks.cs#L15) | public static |
-| SiegeRuntimeConnectionChecks | [`List<List<Block>> Groups(List<Block> blocks)`](../Assets/Editor/Siege/Validation/Fleet/SiegeRuntimeConnectionChecks.cs#L164) | private static |
-| SiegeRuntimeConnectionChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/Validation/Fleet/SiegeRuntimeConnectionChecks.cs#L169) | private static |
+| SiegeRuntimeConnectionChecks | [`List<List<Block>> Groups(List<Block> blocks)`](../Assets/Editor/Siege/Validation/Fleet/SiegeRuntimeConnectionChecks.cs#L165) | private static |
+| SiegeRuntimeConnectionChecks | [`void RobotContainerChecks(List<string> checks)`](../Assets/Editor/Siege/Validation/Fleet/SiegeRuntimeConnectionChecks.cs#L170) | private static |
+| SiegeRuntimeConnectionChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/Validation/Fleet/SiegeRuntimeConnectionChecks.cs#L263) | private static |
 
 ## Assets/Editor/Siege/Validation/Fleet/SiegeTopologyChecks.cs
 
@@ -1779,19 +1811,21 @@ HY-Sandbox/
 
 ## Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs
 
-// 职责：在 WorldLab 真实物理帧验证建筑放置、战斗、事务恢复、支撑坍塌和输入预览。 // 入口：Run()；存档只写 Temp/WorldBuildings，结束恢复种子和初始建筑，不保存运行场景。
+// 职责：在 WorldLab 真实物理帧验证建筑放置、战斗、事务恢复、支撑坍塌和输入预览。 // 入口：Run()；临时文件仓/目录自包含，结束恢复运行状态；报告只写 Temp/Reuse，不覆盖历史验证。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldBuildingPlayProbe | [`void Run()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L39) | public static |
-| WorldBuildingPlayProbe | [`void StateChanged(PlayModeStateChange state)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L51) | private static |
-| WorldBuildingPlayProbe | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L69) | private static |
-| WorldBuildingPlayProbe | [`void Tick()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L77) | private static |
-| WorldBuildingPlayProbe | [`void Check(bool result, string description)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L106) | private static |
-| WorldBuildingPlayProbe | [`IEnumerator Scenario()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L116) | private static |
-| WorldBuildingPlayProbe | [`void InvokeUpdate(MonoBehaviour behaviour)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L417) | private static |
-| WorldBuildingPlayProbe | [`void ExpectRejected(WorldBuildingManager manager, WorldLabSnapshot snapshot, string name)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L422) | private static |
-| WorldBuildingPlayProbe | [`void Finish()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L437) | private static |
+| ProbeFixture | [`void Install()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L63) | public |
+| ProbeFixture | [`void Dispose()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L98) | public |
+| WorldBuildingPlayProbe | [`void Run()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L139) | public static |
+| WorldBuildingPlayProbe | [`void StateChanged(PlayModeStateChange state)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L151) | private static |
+| WorldBuildingPlayProbe | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L169) | private static |
+| WorldBuildingPlayProbe | [`void Tick()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L177) | private static |
+| WorldBuildingPlayProbe | [`void Check(bool result, string description)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L206) | private static |
+| WorldBuildingPlayProbe | [`IEnumerator Scenario()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L216) | private static |
+| WorldBuildingPlayProbe | [`void InvokeUpdate(MonoBehaviour behaviour)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L521) | private static |
+| WorldBuildingPlayProbe | [`void ExpectRejected(WorldBuildingManager manager, WorldLabSnapshot snapshot, string name)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L526) | private static |
+| WorldBuildingPlayProbe | [`void Finish()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L541) | private static |
 
 ## Assets/Editor/World/Validation/Session/WorldSessionEdgeChecks.cs
 
@@ -1964,16 +1998,17 @@ HY-Sandbox/
 | Bot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Bot.cs#L93) | protected virtual |
 | Bot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/Bot.cs#L112) | protected virtual |
 | Bot | [`Power SetHomePowerRequested(bool requested)`](../Assets/Scripts/Features/Bots/Bot.cs#L118) | protected |
-| Bot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/Bot.cs#L131) | public virtual |
-| Bot | [`void InitializeTrail()`](../Assets/Scripts/Features/Bots/Bot.cs#L135) | private |
-| Bot | [`void LateUpdate()`](../Assets/Scripts/Features/Bots/Bot.cs#L155) | private |
-| Bot | [`void NavigateToTarget(Transform target)`](../Assets/Scripts/Features/Bots/Bot.cs#L168) | protected |
-| Bot | [`void NavigateHomeSmoothly()`](../Assets/Scripts/Features/Bots/Bot.cs#L188) | protected |
-| Bot | [`Vector3 GetRelativeHomeVelocity(Vector3 worldPosition)`](../Assets/Scripts/Features/Bots/Bot.cs#L225) | private |
-| Bot | [`void ReturnHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L231) | private |
-| Bot | [`void LeaveHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L273) | private |
-| Bot | [`void SetNavigationState(NavigationState nextState)`](../Assets/Scripts/Features/Bots/Bot.cs#L285) | private |
-| Bot | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Bots/Bot.cs#L310) | private |
+| Bot | [`bool CanLaunchForWork(bool requiresPower, bool requested)`](../Assets/Scripts/Features/Bots/Bot.cs#L132) | protected |
+| Bot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/Bot.cs#L138) | public virtual |
+| Bot | [`void InitializeTrail()`](../Assets/Scripts/Features/Bots/Bot.cs#L142) | private |
+| Bot | [`void LateUpdate()`](../Assets/Scripts/Features/Bots/Bot.cs#L162) | private |
+| Bot | [`void NavigateToTarget(Transform target)`](../Assets/Scripts/Features/Bots/Bot.cs#L175) | protected |
+| Bot | [`void NavigateHomeSmoothly()`](../Assets/Scripts/Features/Bots/Bot.cs#L195) | protected |
+| Bot | [`Vector3 GetRelativeHomeVelocity(Vector3 worldPosition)`](../Assets/Scripts/Features/Bots/Bot.cs#L232) | private |
+| Bot | [`void ReturnHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L238) | private |
+| Bot | [`void LeaveHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L280) | private |
+| Bot | [`void SetNavigationState(NavigationState nextState)`](../Assets/Scripts/Features/Bots/Bot.cs#L292) | private |
+| Bot | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Bots/Bot.cs#L317) | private |
 
 ## Assets/Scripts/Features/Bots/Collection/CollectionBot.cs
 
@@ -1983,14 +2018,14 @@ HY-Sandbox/
 | --- | --- | --- |
 | CollectionBot | [`void Start()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L22) | protected override |
 | CollectionBot | [`void FixedUpdate()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L31) | private |
-| CollectionBot | [`bool IsMissionInvalid(ControlUnit owner, bool canWork)`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L77) | private |
-| CollectionBot | [`void CollectTarget()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L82) | private |
-| CollectionBot | [`void ReturnCargo()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L91) | private |
-| CollectionBot | [`void FindTarget(ControlUnit owner)`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L106) | private |
-| CollectionBot | [`void Abandon()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L143) | private |
-| CollectionBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L154) | protected override |
-| CollectionBot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L160) | protected override |
-| CollectionBot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L166) | public override |
+| CollectionBot | [`bool IsMissionInvalid(ControlUnit owner, bool canWork)`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L74) | private |
+| CollectionBot | [`void CollectTarget()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L79) | private |
+| CollectionBot | [`void ReturnCargo()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L88) | private |
+| CollectionBot | [`void FindTarget(ControlUnit owner)`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L103) | private |
+| CollectionBot | [`void Abandon()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L140) | private |
+| CollectionBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L151) | protected override |
+| CollectionBot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L157) | protected override |
+| CollectionBot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L163) | public override |
 
 ## Assets/Scripts/Features/Bots/Navigation/BotAvoidanceResult.cs
 
@@ -2086,12 +2121,12 @@ HY-Sandbox/
 | --- | --- | --- |
 | RepairBot | [`void Start()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L26) | protected override |
 | RepairBot | [`void FixedUpdate()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L36) | private |
-| RepairBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L91) | protected override |
-| RepairBot | [`void FindDamagedBlock()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L97) | private |
-| RepairBot | [`void CheckAndRepair()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L110) | private |
-| RepairBot | [`void UpdateRepairBeam(bool active)`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L151) | private |
-| RepairBot | [`void EnsureRepairBeamGradient()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L156) | private |
-| RepairBot | [`void ClearTarget()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L169) | public |
+| RepairBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L88) | protected override |
+| RepairBot | [`void FindDamagedBlock()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L94) | private |
+| RepairBot | [`void CheckAndRepair()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L107) | private |
+| RepairBot | [`void UpdateRepairBeam(bool active)`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L148) | private |
+| RepairBot | [`void EnsureRepairBeamGradient()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L153) | private |
+| RepairBot | [`void ClearTarget()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L166) | public |
 
 ## Assets/Scripts/Features/Bots/Repair/RepairTargetSearch.cs
 
@@ -2123,21 +2158,30 @@ HY-Sandbox/
 
 ## Assets/Scripts/Features/Building/Actions/AddBlockAction.cs
 
-// 职责：保存新建方块快照，实施创建动作的撤销与重做。 // 入口：Undo() / Redo()。
+// 职责：记录创建动作，委托共享方块状态完成删除与恢复。 // 入口：Undo() / Redo()；撤销时捕获当前货仓，重做沿用同一方块身份。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| CreateBlockAction | [`void Undo()`](../Assets/Scripts/Features/Building/Actions/AddBlockAction.cs#L26) | public |
-| CreateBlockAction | [`void Redo()`](../Assets/Scripts/Features/Building/Actions/AddBlockAction.cs#L39) | public |
+| CreateBlockAction | [`void Undo()`](../Assets/Scripts/Features/Building/Actions/AddBlockAction.cs#L13) | public |
+| CreateBlockAction | [`void Redo()`](../Assets/Scripts/Features/Building/Actions/AddBlockAction.cs#L18) | public |
+
+## Assets/Scripts/Features/Building/Actions/BlockActionState.cs
+
+// 职责：保存建造动作的稳定方块身份、精确世界姿态和货仓，统一删除与蓝图工厂恢复。 // 入口：Remove() / Restore()；创建和删除动作只选择操作方向，当前建造目标切换时由ActionManager清空。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlockActionState | [`void Remove(bool captureCargo)`](../Assets/Scripts/Features/Building/Actions/BlockActionState.cs#L25) | internal |
+| BlockActionState | [`void Restore()`](../Assets/Scripts/Features/Building/Actions/BlockActionState.cs#L43) | internal |
 
 ## Assets/Scripts/Features/Building/Actions/DeleteBlockAction.cs
 
-// 职责：保存删除方块和货仓快照，实施删除动作的撤销与重做。 // 入口：Undo() / Redo()。
+// 职责：记录删除动作，委托共享方块状态完成恢复与删除。 // 入口：Undo() / Redo()；货仓与姿态来自删除时快照，撤销沿用同一方块身份。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| DeleteBlockAction | [`void Undo()`](../Assets/Scripts/Features/Building/Actions/DeleteBlockAction.cs#L27) | public |
-| DeleteBlockAction | [`void Redo()`](../Assets/Scripts/Features/Building/Actions/DeleteBlockAction.cs#L57) | public |
+| DeleteBlockAction | [`void Undo()`](../Assets/Scripts/Features/Building/Actions/DeleteBlockAction.cs#L13) | public |
+| DeleteBlockAction | [`void Redo()`](../Assets/Scripts/Features/Building/Actions/DeleteBlockAction.cs#L18) | public |
 
 ## Assets/Scripts/Features/Building/Actions/GroupAction.cs
 
@@ -2266,7 +2310,7 @@ HY-Sandbox/
 | BlueprintLoadCamera | [`CameraController GetMainCameraController()`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoadCamera.cs#L90) | private |
 | BlueprintLoadCamera | [`float GetCameraOrbitAngle(Vector3 orbitCenter)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoadCamera.cs#L96) | private |
 | BlueprintLoadCamera | [`bool TryCalculateLoadingCameraOrbitBounds(List<BlockData> blocksToLoad, Vector3 fallbackCenter, out Bounds bounds)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoadCamera.cs#L113) | private |
-| BlueprintLoadCamera | [`Bounds CalculateBlockDataBounds(BlockData data)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoadCamera.cs#L144) | private |
+| BlueprintLoadCamera | [`Bounds CalculateBlockDataBounds(BlockData data)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoadCamera.cs#L136) | private |
 
 ## Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoadSettings.cs
 
@@ -2438,8 +2482,8 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | OutpostBaseDesigner | [`Bounds BoundsOf(IReadOnlyList<BlockData> blocks, Quaternion rotation)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostBaseDesigner.cs#L9) | public static |
-| OutpostBaseDesigner | [`BlockDataList Create(BlockDataList enemy, string name)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostBaseDesigner.cs#L37) | public static |
-| OutpostBaseDesigner | [`void Add(BlockDataList data, string resource, Vector3 position)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostBaseDesigner.cs#L133) | private static |
+| OutpostBaseDesigner | [`BlockDataList Create(BlockDataList enemy, string name)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostBaseDesigner.cs#L14) | public static |
+| OutpostBaseDesigner | [`void Add(BlockDataList data, string resource, Vector3 position)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostBaseDesigner.cs#L110) | private static |
 
 ## Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs
 
@@ -2451,11 +2495,10 @@ HY-Sandbox/
 | OutpostDeploymentPreview | [`void FaceLabels(Quaternion rotation)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L136) | internal |
 | OutpostDeploymentPreview | [`bool OverlapsBuilding(OutpostGarrisonData guard, Matrix4x4 pose, List<BlockData> building)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L144) | private static |
 | OutpostDeploymentPreview | [`Bounds CalculateBounds(List<BlockData> blocks, Matrix4x4 deployment)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L164) | private static |
-| OutpostDeploymentPreview | [`Matrix4x4 BlockTransform(BlockData block)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L189) | private static |
-| OutpostDeploymentPreview | [`Vector3 Corner(int index)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L197) | private static |
-| OutpostDeploymentPreview | [`void AddBox(List<Vector3> vertices, List<int> indices, Matrix4x4 transform)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L202) | private static |
-| OutpostDeploymentPreview | [`void AddLine(List<Vector3> vertices, List<int> indices, Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L216) | private static |
-| OutpostDeploymentPreview | [`void Dispose()`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L224) | public |
+| OutpostDeploymentPreview | [`Vector3 Corner(int index)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L169) | private static |
+| OutpostDeploymentPreview | [`void AddBox(List<Vector3> vertices, List<int> indices, Matrix4x4 transform)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L174) | private static |
+| OutpostDeploymentPreview | [`void AddLine(List<Vector3> vertices, List<int> indices, Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L188) | private static |
+| OutpostDeploymentPreview | [`void Dispose()`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L196) | public |
 
 ## Assets/Scripts/Features/Building/Interaction/BuildBlueprintEditor.cs
 
@@ -2468,6 +2511,15 @@ HY-Sandbox/
 | BuildBlueprintEditor | [`bool RemoveData(string id, string path)`](../Assets/Scripts/Features/Building/Interaction/BuildBlueprintEditor.cs#L50) | public |
 | BuildBlueprintEditor | [`void Write(string path)`](../Assets/Scripts/Features/Building/Interaction/BuildBlueprintEditor.cs#L63) | private |
 | BuildBlueprintEditor | [`void RefreshConnectionsAround(Block block)`](../Assets/Scripts/Features/Building/Interaction/BuildBlueprintEditor.cs#L68) | private |
+
+## Assets/Scripts/Features/Building/Interaction/BuildHandleAxis.cs
+
+// 职责：统一移动/旋转操作轴的方向推断；保持既有本地位置及名称回退语义。 // 入口：Local() / World()；不拥有组件身份或序列化字段。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BuildHandleAxis | [`Vector3 World(Transform handle)`](../Assets/Scripts/Features/Building/Interaction/BuildHandleAxis.cs#L7) | internal static |
+| BuildHandleAxis | [`Vector3 Local(Transform handle)`](../Assets/Scripts/Features/Building/Interaction/BuildHandleAxis.cs#L13) | internal static |
 
 ## Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs
 
@@ -2547,7 +2599,6 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | MoveAxisHandle | [`void Awake()`](../Assets/Scripts/Features/Building/Interaction/MoveAxisHandle.cs#L10) | private |
-| MoveAxisHandle | [`Vector3 GetLocalAxis()`](../Assets/Scripts/Features/Building/Interaction/MoveAxisHandle.cs#L18) | private |
 
 ## Assets/Scripts/Features/Building/Interaction/RotateAxisHandle.cs
 
@@ -2556,7 +2607,6 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | RotateAxisHandle | [`void Awake()`](../Assets/Scripts/Features/Building/Interaction/RotateAxisHandle.cs#L10) | private |
-| RotateAxisHandle | [`Vector3 GetLocalAxis()`](../Assets/Scripts/Features/Building/Interaction/RotateAxisHandle.cs#L18) | private |
 
 ## Assets/Scripts/Features/Building/Interface/ActionCounterUI.cs
 
@@ -2627,11 +2677,11 @@ HY-Sandbox/
 | --- | --- | --- |
 | SaveUIPanel | [`void Awake()`](../Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs#L12) | private |
 | SaveUIPanel | [`void RefreshList()`](../Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs#L17) | public |
-| SaveUIPanel | [`void ConfigureSaveItem(GameObject obj, string saveName, UnityEngine.Events.UnityAction onOpen)`](../Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs#L62) | private |
-| SaveUIPanel | [`Button CreateRenameButton(Button deleteButton, Transform parent)`](../Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs#L80) | private |
-| SaveUIPanel | [`void OnSaveClicked(string saveName)`](../Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs#L97) | private |
-| SaveUIPanel | [`void OnEnemyBlueprintClicked(string blueprintName)`](../Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs#L102) | private |
-| SaveUIPanel | [`void OnDuplicateClicked(string saveName)`](../Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs#L111) | private |
+| SaveUIPanel | [`void ShowEntries(IEnumerable<string> names, System.Action<string> open)`](../Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs#L44) | private |
+| SaveUIPanel | [`void ConfigureSaveItem(GameObject obj, string saveName, UnityEngine.Events.UnityAction onOpen)`](../Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs#L53) | private |
+| SaveUIPanel | [`void OnSaveClicked(string saveName)`](../Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs#L71) | private |
+| SaveUIPanel | [`void OnEnemyBlueprintClicked(string blueprintName)`](../Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs#L76) | private |
+| SaveUIPanel | [`void OnDuplicateClicked(string saveName)`](../Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs#L81) | private |
 
 ## Assets/Scripts/Features/Building/SaveManager.cs
 
@@ -2648,27 +2698,30 @@ HY-Sandbox/
 | SaveManager | [`void CreateNewBuildingBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L86) | public |
 | SaveManager | [`void LoadBuildingBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L102) | public |
 | SaveManager | [`void DeleteBuildingBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L107) | public |
-| SaveManager | [`bool RenameBuildingBlueprint(string oldName, string newName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L134) | public |
-| SaveManager | [`string GetBuildingBlueprintPath(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L139) | public |
-| SaveManager | [`void SaveBuildingFoundation(BuildingFoundationData foundation)`](../Assets/Scripts/Features/Building/SaveManager.cs#L149) | public |
-| SaveManager | [`void GetAllSaveNames()`](../Assets/Scripts/Features/Building/SaveManager.cs#L164) | public |
-| SaveManager | [`void SaveBuildingOutpost(EnemyOutpostData outpost)`](../Assets/Scripts/Features/Building/SaveManager.cs#L174) | public |
-| SaveManager | [`string CopyBundledBuilding(string template)`](../Assets/Scripts/Features/Building/SaveManager.cs#L199) | public |
-| SaveManager | [`string SaveNewBuilding(string template, BlockDataList data)`](../Assets/Scripts/Features/Building/SaveManager.cs#L216) | public |
-| SaveManager | [`void GetAllEnemyBlueprintNames()`](../Assets/Scripts/Features/Building/SaveManager.cs#L242) | public |
-| SaveManager | [`void CreateNewSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L252) | public |
-| SaveManager | [`void CreateNewEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L270) | public |
-| SaveManager | [`void LoadSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L283) | public |
-| SaveManager | [`void LoadEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L313) | public |
-| SaveManager | [`void DeleteSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L341) | public |
-| SaveManager | [`void DeleteEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L353) | public |
-| SaveManager | [`bool RenameSave(string oldSaveName, string newSaveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L365) | public |
-| SaveManager | [`bool RenameEnemyBlueprint(string oldBlueprintName, string newBlueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L370) | public |
-| SaveManager | [`bool RenameBlueprint(string oldName, string newName, BuildTargetKind kind)`](../Assets/Scripts/Features/Building/SaveManager.cs#L375) | private |
-| SaveManager | [`void DuplicateSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L441) | public |
-| SaveManager | [`string GetSavePath(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L454) | public |
-| SaveManager | [`string GetEnemyBlueprintPath(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L459) | public |
-| SaveManager | [`string GetSaveFileSize(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L464) | public |
+| SaveManager | [`bool RenameBuildingBlueprint(string oldName, string newName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L129) | public |
+| SaveManager | [`string GetBuildingBlueprintPath(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L134) | public |
+| SaveManager | [`void SaveBuildingFoundation(BuildingFoundationData foundation)`](../Assets/Scripts/Features/Building/SaveManager.cs#L144) | public |
+| SaveManager | [`void GetAllSaveNames()`](../Assets/Scripts/Features/Building/SaveManager.cs#L159) | public |
+| SaveManager | [`void SaveBuildingOutpost(EnemyOutpostData outpost)`](../Assets/Scripts/Features/Building/SaveManager.cs#L169) | public |
+| SaveManager | [`string CopyBundledBuilding(string template)`](../Assets/Scripts/Features/Building/SaveManager.cs#L194) | public |
+| SaveManager | [`string SaveNewBuilding(string template, BlockDataList data)`](../Assets/Scripts/Features/Building/SaveManager.cs#L211) | public |
+| SaveManager | [`void GetAllEnemyBlueprintNames()`](../Assets/Scripts/Features/Building/SaveManager.cs#L237) | public |
+| SaveManager | [`void CreateNewSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L247) | public |
+| SaveManager | [`void CreateNewEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L265) | public |
+| SaveManager | [`void LoadSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L278) | public |
+| SaveManager | [`void LoadEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L283) | public |
+| SaveManager | [`void LoadBlueprint(string name, BuildTargetKind kind)`](../Assets/Scripts/Features/Building/SaveManager.cs#L288) | private |
+| SaveManager | [`void DeleteSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L340) | public |
+| SaveManager | [`void DeleteEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L345) | public |
+| SaveManager | [`void DeleteBlueprint(string name, BuildTargetKind kind)`](../Assets/Scripts/Features/Building/SaveManager.cs#L350) | private |
+| SaveManager | [`bool DeleteBlueprintFile(string path)`](../Assets/Scripts/Features/Building/SaveManager.cs#L361) | private static |
+| SaveManager | [`bool RenameSave(string oldSaveName, string newSaveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L372) | public |
+| SaveManager | [`bool RenameEnemyBlueprint(string oldBlueprintName, string newBlueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L377) | public |
+| SaveManager | [`bool RenameBlueprint(string oldName, string newName, BuildTargetKind kind)`](../Assets/Scripts/Features/Building/SaveManager.cs#L382) | private |
+| SaveManager | [`void DuplicateSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L448) | public |
+| SaveManager | [`string GetSavePath(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L461) | public |
+| SaveManager | [`string GetEnemyBlueprintPath(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L466) | public |
+| SaveManager | [`string GetSaveFileSize(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L471) | public |
 
 ## Assets/Scripts/Features/Combat/Damage/CollisionDamageResolver.cs
 
@@ -2724,16 +2777,12 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| DestroyManager | [`void Awake()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L27) | private |
-| DestroyManager | [`void DestroyGameObject(GameObject obj)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L32) | public |
-| DestroyManager | [`void ExplodeBlock(Block block)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L149) | public |
-| DestroyManager | [`void ScheduleUnitCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L186) | public |
-| DestroyManager | [`void ScheduleDistantGroupCleanup(ControlUnit unit, Transform reference, float maxDistance)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L191) | public |
-| DestroyManager | [`void EndSalvageSession()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L196) | public |
-| DestroyManager | [`void NotifyObjectDestroyed()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L204) | public |
-| DestroyManager | [`void ScheduleRefresh()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L210) | private |
-| DestroyManager | [`IEnumerator DelayedRefresh()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L221) | private |
-| DestroyManager | [`void ExecuteRefresh()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L228) | private |
+| DestroyManager | [`void Awake()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L23) | private |
+| DestroyManager | [`void DestroyGameObject(GameObject obj)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L28) | public |
+| DestroyManager | [`void ExplodeBlock(Block block)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L135) | public |
+| DestroyManager | [`void ScheduleUnitCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L172) | public |
+| DestroyManager | [`void ScheduleDistantGroupCleanup(ControlUnit unit, Transform reference, float maxDistance)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L177) | public |
+| DestroyManager | [`void EndSalvageSession()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L182) | public |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyBlueprintFactory.cs
 
@@ -3103,51 +3152,56 @@ HY-Sandbox/
 
 ## Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs
 
-// 职责：根据主推进需求判断激活并提供推进方向。 // 入口：ApplyThrust() / ShouldActivate()。
+// 职责：将移动输入投影到主推进方向，其余输入推进生命周期复用 Thruster。 // 入口：FixedUpdate() → TickInputThrust()；保留 ApplyThrust() / ShouldActivate()。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | MainThruster | [`void FixedUpdate()`](../Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs#L10) | private |
-| MainThruster | [`void ApplyThrust()`](../Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs#L32) | public |
-| MainThruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs#L43) | public override |
+| MainThruster | [`float CalculateInputThrust(Vector3 input, bool active)`](../Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs#L15) | protected override |
+| MainThruster | [`void ApplyThrust()`](../Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs#L21) | public |
+| MainThruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs#L26) | public override |
 
 ## Assets/Scripts/Features/Flight/Thrusters/Thruster.cs
 
-// 职责：提供推进器共用的供电门控、运行归属和力学输出生命周期。 // 入口：ShouldActivate() / SetRuntimeReferences() / ApplyThrustChangeRateLimit()。
+// 职责：提供推进器共用的供电门控、运行归属和力学输出生命周期。 // 入口：TickInputThrust() / ShouldActivate() / SetRuntimeReferences() / ApplyThrustChangeRateLimit()。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Thruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L30) | public abstract |
-| Thruster | [`void Awake()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L31) | protected virtual |
-| Thruster | [`void Start()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L38) | protected virtual |
-| Thruster | [`void OnTransformChildrenChanged()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L45) | private |
-| Thruster | [`void SetRuntimeReferences(ControlUnit owner, Rigidbody ownerRigidbody)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L50) | public |
-| Thruster | [`bool RefreshRuntimeReferences()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L57) | protected |
-| Thruster | [`bool TryEnsureRigidbody()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L69) | protected |
-| Thruster | [`bool IsPlayModeActive()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L79) | protected |
-| Thruster | [`bool HasValidRuntimeOwner()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L84) | protected |
-| Thruster | [`void CacheLocalReferences()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L117) | protected |
-| Thruster | [`void ApplyThrustChangeRateLimit()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L126) | public virtual |
-| Thruster | [`void SetPowerRequested(bool requested)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L136) | protected |
-| Thruster | [`void OnDisable()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L146) | protected virtual |
-| Thruster | [`bool CanApplyThrust()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L153) | protected |
-| Thruster | [`float GetPowerEfficiency()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L159) | private |
-| Thruster | [`void VisualizeThrust()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L169) | public virtual |
-| Thruster | [`void VisualizeThrust(bool forceUpdate)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L174) | public virtual |
-| Thruster | [`void DisableLegacyLineRenderer()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L212) | private |
-| Thruster | [`void EnsureVisualEffect()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L221) | private |
-| Thruster | [`Vector3 GetNormalizedThrustDirection()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L236) | private |
+| Thruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L29) | public abstract |
+| Thruster | [`void Awake()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L30) | protected virtual |
+| Thruster | [`void Start()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L37) | protected virtual |
+| Thruster | [`void OnTransformChildrenChanged()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L44) | private |
+| Thruster | [`void SetRuntimeReferences(ControlUnit owner, Rigidbody ownerRigidbody)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L49) | public |
+| Thruster | [`bool RefreshRuntimeReferences()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L56) | protected |
+| Thruster | [`bool TryEnsureRigidbody()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L68) | protected |
+| Thruster | [`bool IsPlayModeActive()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L78) | protected |
+| Thruster | [`bool HasValidRuntimeOwner()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L83) | protected |
+| Thruster | [`void TickInputThrust(ref Vector3 input)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L89) | protected |
+| Thruster | [`float CalculateInputThrust(Vector3 input, bool active)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L109) | protected virtual |
+| Thruster | [`bool ShouldActivateInputThrust(Vector3 input)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L114) | protected |
+| Thruster | [`void ApplyDirectionalThrust()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L119) | protected |
+| Thruster | [`void CacheLocalReferences()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L158) | protected |
+| Thruster | [`void ApplyThrustChangeRateLimit()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L167) | public virtual |
+| Thruster | [`void SetPowerRequested(bool requested)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L177) | protected |
+| Thruster | [`void OnDisable()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L187) | protected virtual |
+| Thruster | [`bool CanApplyThrust()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L194) | protected |
+| Thruster | [`void VisualizeThrust()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L200) | public virtual |
+| Thruster | [`void VisualizeThrust(bool forceUpdate)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L205) | public virtual |
+| Thruster | [`void DisableLegacyLineRenderer()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L221) | private |
+| Thruster | [`void EnsureVisualEffect()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L230) | private |
+| Thruster | [`Vector3 GetNormalizedThrustDirection()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L245) | private |
 
 ## Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs
 
-// 职责：根据控制输入确定通用推进器的激活与方向。 // 入口：ApplyThrust() / ShouldActivate()。
+// 职责：按移动输入转动通用推进模型，其余输入推进生命周期复用 Thruster。 // 入口：FixedUpdate() → TickInputThrust()；保留 ApplyThrust() / ShouldActivate()。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | UniversalThruster | [`void FixedUpdate()`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L10) | private |
-| UniversalThruster | [`void RotateThruster(Vector3 worldDir, bool active)`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L32) | private |
-| UniversalThruster | [`void ApplyThrust()`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L43) | public |
-| UniversalThruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L54) | public override |
+| UniversalThruster | [`float CalculateInputThrust(Vector3 input, bool active)`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L15) | protected override |
+| UniversalThruster | [`void RotateThruster(Vector3 worldDir, bool active)`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L21) | private |
+| UniversalThruster | [`void ApplyThrust()`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L32) | public |
+| UniversalThruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L37) | public override |
 
 ## Assets/Scripts/Features/Player/InputManager.cs
 
@@ -3428,9 +3482,9 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BeamFade | [`void SetPool(TransientEffectPool owner, StylizedBeamEffect effect)`](../Assets/Scripts/Features/Presentation/Effects/BeamFade.cs#L14) | internal |
-| BeamFade | [`void Initialize(StylizedBeamEffect effect, Color lineColor, float lifetime)`](../Assets/Scripts/Features/Presentation/Effects/BeamFade.cs#L20) | public |
-| BeamFade | [`void Update()`](../Assets/Scripts/Features/Presentation/Effects/BeamFade.cs#L28) | private |
+| BeamFade | [`void SetPool(TransientEffectPool owner, StylizedBeamEffect effect)`](../Assets/Scripts/Features/Presentation/Effects/BeamFade.cs#L13) | internal |
+| BeamFade | [`void Initialize(StylizedBeamEffect effect, float lifetime)`](../Assets/Scripts/Features/Presentation/Effects/BeamFade.cs#L19) | public |
+| BeamFade | [`void Update()`](../Assets/Scripts/Features/Presentation/Effects/BeamFade.cs#L26) | private |
 
 ## Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs
 
@@ -3790,7 +3844,8 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | WreckSalvage | [`void Convert(Block block)`](../Assets/Scripts/Features/Salvage/Drops/WreckSalvage.cs#L10) | public static |
-| WreckSalvage | [`void ConvertGroup(ControlUnit unit)`](../Assets/Scripts/Features/Salvage/Drops/WreckSalvage.cs#L62) | public static |
+| WreckSalvage | [`void ReleaseContents(GameObject module, UnitFaction faction)`](../Assets/Scripts/Features/Salvage/Drops/WreckSalvage.cs#L53) | public static |
+| WreckSalvage | [`void ConvertGroup(ControlUnit unit)`](../Assets/Scripts/Features/Salvage/Drops/WreckSalvage.cs#L63) | public static |
 
 ## Assets/Scripts/Features/Salvage/Economy/CoinManager.cs
 
@@ -4177,16 +4232,28 @@ HY-Sandbox/
 | BatchConnectionBuilder | [`void RebuildBatchImmediate()`](../Assets/Scripts/Features/Simulation/Connections/BatchConnectionBuilder.cs#L40) | public |
 | BatchConnectionBuilder | [`void RefreshBlock(Block block)`](../Assets/Scripts/Features/Simulation/Connections/BatchConnectionBuilder.cs#L54) | private static |
 
+## Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs
+
+// 职责：为建筑与载具准备同一份双侧连接图；几何失效重建，删除成员仅重探附近幸存模块。 // 入口：Prepare() / PrepareBlocks() / CollectNeighbors()；支撑和驾驶舱策略由消费者决定。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlockConnectionGraph | [`void Prepare(List<Block> blocks, Transform root)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L19) | internal |
+| BlockConnectionGraph | [`Bounds ProbeBounds(Block block, Matrix4x4 worldToRoot)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L87) | private static |
+| BlockConnectionGraph | [`bool PrepareBlocks(List<Block> blocks, bool force = false)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L109) | internal static |
+| BlockConnectionGraph | [`void CollectNeighbors(Block block, List<Block> result)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L131) | internal |
+
 ## Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs
 
 // 职责：精确校验运行连接缓存的模块局部姿态、连接面身份/几何、规范碰撞体与查询层配置。 // 入口：IsValid / Capture() / Invalidate()；刚体整体运动不失效，复杂层级回退物理探测。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BlockConnectionSnapshot | [`void Capture()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs#L54) | internal |
-| BlockConnectionSnapshot | [`void RefreshIfReady()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs#L90) | internal |
-| BlockConnectionSnapshot | [`void Invalidate()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs#L98) | internal |
-| BlockConnectionSnapshot | [`int ConnectionMask()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs#L103) | private static |
+| BlockConnectionSnapshot | [`void Capture()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs#L71) | internal |
+| BlockConnectionSnapshot | [`bool HasCanonicalColliderLayout()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs#L120) | private |
+| BlockConnectionSnapshot | [`void RefreshIfReady()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs#L142) | internal |
+| BlockConnectionSnapshot | [`void Invalidate()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs#L150) | internal |
+| BlockConnectionSnapshot | [`int ConnectionMask()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs#L155) | private static |
 
 ## Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs
 
@@ -4203,16 +4270,16 @@ HY-Sandbox/
 | BlockConnections | [`bool SharesBuildingScope(Block other)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L228) | private |
 | BlockConnections | [`Connector FindMatchingConnector(Block otherBlock, Connector connector, bool requireAvailable = true)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L235) | private |
 | BlockConnections | [`void ConnectTo(Connector connector, Block otherBlock, Connector otherConnector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L257) | private |
-| BlockConnections | [`void ClearConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L282) | private |
-| BlockConnections | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L311) | internal |
-| BlockConnections | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L339) | internal |
-| BlockConnections | [`void RestoreParticipation()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L385) | internal |
-| BlockConnections | [`void ReleaseRuntimePair(Connector connector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L404) | private |
-| BlockConnections | [`void CollectRuntimeNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L430) | internal |
-| BlockConnections | [`void RefreshRuntimePoseIfReady()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L452) | internal |
-| BlockConnections | [`void InvalidateRuntimeLinks()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L457) | internal |
-| BlockConnections | [`void CaptureRuntimePose()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L462) | private |
-| BlockConnections | [`int ConnectionMask()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L467) | private static |
+| BlockConnections | [`void ClearConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L284) | private |
+| BlockConnections | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L313) | internal |
+| BlockConnections | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L341) | internal |
+| BlockConnections | [`void RestoreParticipation()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L387) | internal |
+| BlockConnections | [`void ReleaseRuntimePair(Connector connector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L406) | private |
+| BlockConnections | [`void CollectRuntimeNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L432) | internal |
+| BlockConnections | [`void RefreshRuntimePoseIfReady()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L454) | internal |
+| BlockConnections | [`void InvalidateRuntimeLinks()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L459) | internal |
+| BlockConnections | [`void CaptureRuntimePose()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L464) | private |
+| BlockConnections | [`int ConnectionMask()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L469) | private static |
 
 ## Assets/Scripts/Features/Simulation/Diagnostics/SimulationWorkMetrics.cs
 
@@ -4227,6 +4294,18 @@ HY-Sandbox/
 | SimulationWorkMetrics | [`void Reset()`](../Assets/Scripts/Features/Simulation/Diagnostics/SimulationWorkMetrics.cs#L74) | public static |
 | Scope | [`void Dispose()`](../Assets/Scripts/Features/Simulation/Diagnostics/SimulationWorkMetrics.cs#L93) | public |
 
+## Assets/Scripts/Features/Simulation/Geometry/BlockBounds.cs
+
+// 职责：统一逻辑方块与场景方块的变换包围盒，不包含地基、净空或加载窗口策略。 // 入口：FromBlueprint() / FromConstruct() / Transform()；调用者显式选择输出坐标和是否包含额外原点。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlockBounds | [`Bounds FromBlueprint(BlockData block, Matrix4x4 localToOutput)`](../Assets/Scripts/Features/Simulation/Geometry/BlockBounds.cs#L8) | public static |
+| BlockBounds | [`Bounds FromBlueprint(IReadOnlyList<BlockData> blocks, Matrix4x4 localToOutput)`](../Assets/Scripts/Features/Simulation/Geometry/BlockBounds.cs#L17) | public static |
+| BlockBounds | [`Bounds FromConstruct(Transform construct, Matrix4x4 worldToOutput, Vector3 emptyCenter)`](../Assets/Scripts/Features/Simulation/Geometry/BlockBounds.cs#L29) | public static |
+| BlockBounds | [`Bounds Transform(Bounds local, Matrix4x4 localToOutput)`](../Assets/Scripts/Features/Simulation/Geometry/BlockBounds.cs#L42) | public static |
+| BlockBounds | [`void Encapsulate(ref Bounds bounds, ref bool found, Bounds next)`](../Assets/Scripts/Features/Simulation/Geometry/BlockBounds.cs#L62) | public static |
+
 ## Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs
 
 // 职责：按方块连接关系分组并计算组中心，供游玩物理单元建立使用。 // 入口：GroupBlocks() / CalculateGroupCenter()。
@@ -4235,14 +4314,18 @@ HY-Sandbox/
 | --- | --- | --- |
 | BlockGroupManager | [`List<List<Block>> GroupBlocks(List<Block> allBlocks)`](../Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs#L9) | public static |
 | BlockGroupManager | [`List<List<Block>> GroupRuntimeBlocks(List<Block> allBlocks)`](../Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs#L15) | internal static |
-| BlockGroupManager | [`List<List<Block>> Traverse(List<Block> allBlocks, bool runtimeLinks)`](../Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs#L36) | private static |
-| BlockGroupManager | [`Vector3 CalculateGroupCenter(List<Block> group)`](../Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs#L104) | public static |
+| BlockGroupManager | [`List<List<Block>> GroupPreparedBlocks(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs#L27) | internal static |
+| BlockGroupManager | [`List<List<Block>> Traverse(List<Block> allBlocks, bool runtimeLinks)`](../Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs#L32) | private static |
+| BlockGroupManager | [`Vector3 CalculateGroupCenter(List<Block> group)`](../Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs#L100) | public static |
 
 ## Assets/Scripts/Features/Simulation/Groups/GroupPhysicsSettings.cs
 
-// 职责：传递重组刚体的阻尼、解穿透及继承速度限制，不拥有 Inspector 数据。 // 入口：由 PlayManager 从现有序列化字段构造，供 RuntimeGroupBuilder 使用。
+// 职责：传递重组刚体的阻尼、解穿透及继承速度限制，不拥有 Inspector 数据。 // 入口：由 PlayManager 从现有序列化字段构造，载具与建筑共用 ApplyTo() 和运动继承限制。
 
-数据/配置/接口定义，无方法体。
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| GroupPhysicsSettings | [`void ApplyTo(Rigidbody body)`](../Assets/Scripts/Features/Simulation/Groups/GroupPhysicsSettings.cs#L12) | internal |
+| GroupPhysicsSettings | [`GroupPhysicsSettings FromBody(Rigidbody body)`](../Assets/Scripts/Features/Simulation/Groups/GroupPhysicsSettings.cs#L19) | internal static |
 
 ## Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs
 
@@ -4251,10 +4334,9 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | RuntimeGroupBuilder | [`void Rebuild(List<Block> blocks, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L15) | internal |
-| RuntimeGroupBuilder | [`Dictionary<Block, SourceSnapshot> CaptureSourceBodies(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L112) | private static |
-| RuntimeGroupBuilder | [`List<GroupPlan> PlanGroups(List<List<Block>> groups, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L141) | private static |
-| RuntimeGroupBuilder | [`Dictionary<SourceSnapshot, GroupPlan> SelectRetainedGroups(List<GroupPlan> plans, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L172) | private static |
-| RuntimeGroupBuilder | [`void RestoreGroupPhysics(Rigidbody target, SourceSnapshot source, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L211) | private static |
+| RuntimeGroupBuilder | [`Dictionary<Block, SourceSnapshot> CaptureSourceBodies(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L113) | private static |
+| RuntimeGroupBuilder | [`List<GroupPlan> PlanGroups(List<List<Block>> groups, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L142) | private static |
+| RuntimeGroupBuilder | [`Dictionary<SourceSnapshot, GroupPlan> SelectRetainedGroups(List<GroupPlan> plans, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L173) | private static |
 
 ## Assets/Scripts/Features/Simulation/Groups/RuntimeGroupCleanup.cs
 
@@ -4280,6 +4362,14 @@ HY-Sandbox/
 | ImpactPhysics | [`Vector3 ClosestPoint(Collider collider, Vector3 position)`](../Assets/Scripts/Features/Simulation/Physics/ImpactPhysics.cs#L77) | public static |
 | ImpactPhysics | [`void ReportPlayerImpact(float energy, float impulse)`](../Assets/Scripts/Features/Simulation/Physics/ImpactPhysics.cs#L88) | public static |
 
+## Assets/Scripts/Features/Simulation/Physics/RigidbodyMotion.cs
+
+// 职责：在拆分层级前捕获刚体运动，供载具分组和建筑残骸共同继承质心速度与角速度。 // 入口：构造时捕获；Restore() 在迁移和质量更新后调用，避免源质心变化污染后续碎片。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| RigidbodyMotion | [`void Restore(Rigidbody target, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/Physics/RigidbodyMotion.cs#L17) | internal |
+
 ## Assets/Scripts/Features/Simulation/PlayManager.cs
 
 // 职责：协调建造/游玩会话、组注册、选中表现及遥测；重组和清理规则由 Simulation 功能实现。 // 入口：PlayStart() / CanStartPlay() / RefreshGroup()。
@@ -4299,10 +4389,10 @@ HY-Sandbox/
 | PlayManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L279) | public |
 | PlayManager | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L285) | public |
 | PlayManager | [`void AssignBlocksToParentGroups(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L316) | public |
-| PlayManager | [`void RegisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L332) | public |
-| PlayManager | [`void RegisterControlUnitWithoutCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L342) | internal |
-| PlayManager | [`void UnregisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L350) | public |
-| PlayManager | [`IReadOnlyList<ControlUnit> GetControlUnits()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L358) | public |
+| PlayManager | [`void RegisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L333) | public |
+| PlayManager | [`void RegisterControlUnitWithoutCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L343) | internal |
+| PlayManager | [`void UnregisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L351) | public |
+| PlayManager | [`IReadOnlyList<ControlUnit> GetControlUnits()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L359) | public |
 
 ## Assets/Scripts/Features/Simulation/Presentation/PlayBlockSelection.cs
 
@@ -4384,22 +4474,22 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BuildingRuntime | [`bool TryRefit(BlockDataList design, out string reason)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L37) | internal |
-| BuildingRuntime | [`void RefreshStructure()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L51) | internal |
-| BuildingRuntime | [`void BeginDamageBatch()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L59) | internal |
-| BuildingRuntime | [`void EndDamageBatch()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L64) | internal |
-| BuildingRuntime | [`void Initialize(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L74) | public |
-| BuildingRuntime | [`IEnumerator InitializeRoutine(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L82) | internal |
-| BuildingRuntime | [`void Activate()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L130) | public |
-| BuildingRuntime | [`IEnumerator ActivateRoutine()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L138) | internal |
-| BuildingRuntime | [`void PrepareForUnload()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L181) | public |
-| BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L189) | public |
-| BuildingRuntime | [`void DestroyBlock(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L242) | public |
-| BuildingRuntime | [`void SplitDisconnected()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L289) | private |
-| BuildingRuntime | [`bool HasPreparedGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L375) | private |
-| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L388) | private |
-| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L409) | public |
-| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L420) | private |
+| BuildingRuntime | [`bool TryRefit(BlockDataList design, out string reason)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L39) | internal |
+| BuildingRuntime | [`void RefreshStructure()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L53) | internal |
+| BuildingRuntime | [`void BeginDamageBatch()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L61) | internal |
+| BuildingRuntime | [`void EndDamageBatch()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L66) | internal |
+| BuildingRuntime | [`void Initialize(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L76) | public |
+| BuildingRuntime | [`IEnumerator InitializeRoutine(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L84) | internal |
+| BuildingRuntime | [`void Activate()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L132) | public |
+| BuildingRuntime | [`IEnumerator ActivateRoutine()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L140) | internal |
+| BuildingRuntime | [`void PrepareForUnload()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L183) | public |
+| BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L191) | public |
+| BuildingRuntime | [`void DestroyBlock(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L244) | public |
+| BuildingRuntime | [`void SplitDisconnected()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L286) | private |
+| BuildingRuntime | [`bool HasPreparedGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L312) | private |
+| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L331) | private |
+| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L352) | public |
+| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L363) | private |
 
 ## Assets/Scripts/Features/World/Buildings/Data/WorldBuildingCatalog.cs
 
@@ -4487,18 +4577,6 @@ HY-Sandbox/
 | WorldBuildingRenderCache | [`Visual Build(Transform model, MeshRenderer[] renderers)`](../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L109) | private static |
 | WorldBuildingRenderCache | [`void Clear()`](../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L189) | internal |
 
-## Assets/Scripts/Features/World/Buildings/Topology/BuildingConnectionGraph.cs
-
-// 职责：缓存单栋建筑的实际几何邻接；模块删除只更新受影响邻居，姿态/连接面/碰撞配置改变则重建。 // 入口：Prepare() / CollectNeighbors()；不创建连接视觉或跨建筑连边，不替代虚拟地面支撑规则。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| BuildingConnectionGraph | [`void Prepare(List<Block> blocks, Transform root)`](../Assets/Scripts/Features/World/Buildings/Topology/BuildingConnectionGraph.cs#L15) | internal |
-| BuildingConnectionGraph | [`void CollectNeighbors(Block block, List<Block> result)`](../Assets/Scripts/Features/World/Buildings/Topology/BuildingConnectionGraph.cs#L109) | internal |
-| BuildingConnectionGraph | [`bool TryGetGroundSupport(Block block, Vector2Int footprint, out bool supported)`](../Assets/Scripts/Features/World/Buildings/Topology/BuildingConnectionGraph.cs#L126) | internal |
-| BuildingConnectionGraph | [`void StoreGroundSupport(Block block, Vector2Int footprint, bool supported)`](../Assets/Scripts/Features/World/Buildings/Topology/BuildingConnectionGraph.cs#L138) | internal |
-| Node | [`bool IsValid(Block block)`](../Assets/Scripts/Features/World/Buildings/Topology/BuildingConnectionGraph.cs#L165) | internal |
-
 ## Assets/Scripts/Features/World/Buildings/Topology/BuildingRefit.cs
 
 // 职责：先暂存建筑缺件，再按原蓝图恢复模块身份/姿态/耐久；存活模块保留原对象和货物。 // 入口：Apply()；调用者负责整备权限、空间净空和扣费，本类不替换建筑根或核心。
@@ -4542,8 +4620,8 @@ HY-Sandbox/
 | WorldBuildingManager | [`void TerrainChanged(Bounds changed)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L398) | private |
 | WorldBuildingManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L409) | private |
 | WorldBuildingManager | [`void DamageSphere(Vector3 center, float radius, float damage)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L426) | public |
-| WorldBuildingManager | [`void CreateDebris(List<Block> group, Rigidbody source)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L431) | internal |
-| WorldBuildingManager | [`void ClearDebris()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L474) | private |
+| WorldBuildingManager | [`void CreateDebris(List<Block> group, Rigidbody source, RigidbodyMotion motion)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L431) | internal |
+| WorldBuildingManager | [`void ClearDebris()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L475) | private |
 
 ## Assets/Scripts/Features/World/Outposts/EnemyOutpostData.cs
 
@@ -4567,9 +4645,9 @@ HY-Sandbox/
 | OutpostEncounterDirector | [`void UpdateParkedModel(Encounter encounter, Guard guard, Vector3 position, bool baseReady)`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L242) | private |
 | OutpostEncounterDirector | [`void ClearParkedModel(Guard guard)`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L263) | private static |
 | OutpostEncounterDirector | [`Bounds DeploymentBounds(BlockDataList blueprint, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L273) | private static |
-| OutpostEncounterDirector | [`void Hibernate(Guard guard)`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L293) | private static |
-| OutpostEncounterDirector | [`void RefreshOwner(Guard guard)`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L330) | private static |
-| OutpostEncounterDirector | [`void Clear()`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L339) | public |
+| OutpostEncounterDirector | [`void Hibernate(Guard guard)`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L285) | private static |
+| OutpostEncounterDirector | [`void RefreshOwner(Guard guard)`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L322) | private static |
+| OutpostEncounterDirector | [`void Clear()`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L331) | public |
 
 ## Assets/Scripts/Features/World/Outposts/OutpostHud.cs
 
@@ -4663,7 +4741,7 @@ HY-Sandbox/
 | WorldPlayerStreamingGuard | [`void Tick(Transform player)`](../Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs#L31) | internal |
 | WorldPlayerStreamingGuard | [`bool HasTerrainForBounds(Transform player, Vector3 target, Vector3 prediction)`](../Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs#L99) | private |
 | WorldPlayerStreamingGuard | [`Bounds CaptureLocalBounds(Transform construct)`](../Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs#L133) | internal static |
-| WorldPlayerStreamingGuard | [`void Release()`](../Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs#L158) | internal |
+| WorldPlayerStreamingGuard | [`void Release()`](../Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs#L138) | internal |
 
 ## Assets/Scripts/Features/World/Streaming/WorldRegionStreaming.cs
 
@@ -4958,7 +5036,7 @@ HY-Sandbox/
 | WorldSessionManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L390) | private |
 | WorldSessionManager | [`void Update()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L415) | private |
 | WorldSessionManager | [`Bounds ConstructBounds(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L430) | private static |
-| WorldSessionManager | [`void SetBuildEnvironmentVisible(bool visible)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L455) | private |
-| WorldSessionManager | [`void StopPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L485) | private |
-| WorldSessionManager | [`void Fail(Exception error)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L517) | private |
-| WorldSessionManager | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L532) | private |
+| WorldSessionManager | [`void SetBuildEnvironmentVisible(bool visible)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L435) | private |
+| WorldSessionManager | [`void StopPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L465) | private |
+| WorldSessionManager | [`void Fail(Exception error)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L497) | private |
+| WorldSessionManager | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L512) | private |
