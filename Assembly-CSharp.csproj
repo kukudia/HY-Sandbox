@@ -157,8 +157,8 @@
     <Compile Include="Assets\Scripts\Features\Combat\DestroyManager.cs" />
     <Compile Include="Assets\Scripts\Features\World\Validation\WorldLab\WorldLabPhysicsProbe.cs" />
     <Compile Include="Assets\Scripts\Features\Salvage\SalvageSettings.cs" />
-    <Compile Include="Assets\Scripts\Features\Simulation\Units\ModularUnitValidator.cs" />
     <Compile Include="Assets\Scripts\Features\Power\Network\PowerPositionIndex.cs" />
+    <Compile Include="Assets\Scripts\Features\Simulation\Units\ModularUnitValidator.cs" />
     <Compile Include="Assets\Scripts\Features\World\Streaming\WorldRegionStreaming.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Enemies\EnemyBlueprintFactory.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Interface\SiegeHud.cs" />
@@ -247,8 +247,8 @@
     <Compile Include="Assets\Scripts\Features\World\Terrain\Destruction\VoxelStructureSupport.cs" />
     <Compile Include="Assets\Scripts\Features\World\Terrain\Meshing\VoxelSurfaceMesher.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\VisualEffectsManager.cs" />
-    <Compile Include="Assets\Scripts\Features\Building\Interaction\RotateAxisHandle.cs" />
     <Compile Include="Assets\Scripts\Features\Power\Network\PowerNetworkBaseline.cs" />
+    <Compile Include="Assets\Scripts\Features\Building\Interaction\RotateAxisHandle.cs" />
     <Compile Include="Assets\Scripts\Features\World\Terrain\Destruction\VoxelDebrisPiece.cs" />
     <Compile Include="Assets\Scripts\Features\World\Terrain\VoxelWorldChunk.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Damage\ExplosionPropagation.cs" />
