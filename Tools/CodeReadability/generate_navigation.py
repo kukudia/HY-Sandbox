@@ -252,11 +252,12 @@ def main():
     )
     graph(
         "放置、选中、操作和持久化",
-        "预览按真实连接点确定中心并清理尾差。以驾驶舱整数边界为准：奇数尺寸轴中心半整数、偶数轴中心整数。相机轴正交选取，拖拽捕获世界轴；90°旋转锁定整数锚点并换轴半格偏移；阻挡拒绝保护姿态与位置，Undo/Redo记录两者。",
+        "源码推导：预览保持资源默认整格朝向，不继承目标旋转；切换资源时重建 Ghost，按真实连接点确定中心并清理尾差。以驾驶舱整数边界为准：奇数尺寸轴中心半整数、偶数轴中心整数。坐标轴独立于可销毁的选中方块，每帧刷新位置/朝向/可见性；视角解锁时隐藏、重锁时恢复。相机轴正交选取，拖拽捕获世界轴；90°旋转锁定整数锚点并换轴半格偏移；阻挡拒绝保护姿态与位置，Undo/Redo记录两者。",
         {
             "A": "BuildManager.Update",
             "B": "BuildManager.HandleBuildingPreview",
             "C": "BuildPreview.Poll",
+            "AB": "BuildSelection.RefreshBuildGizmos",
             "D": "BuildPlacementGeometry.TryCalculateConnectorAlignedPosition",
             "E": "BuildPlacementGeometry.IsBlocked",
             "F": "BuildManager.CreateBlock",
@@ -298,6 +299,8 @@ def main():
             "J --> K",
             "J --> AA",
             "A --> L",
+            "A --> AB",
+            "K --> AB",
             "L --> Z",
             "AA -.->|捕获起始世界轴及姿态供后续帧使用| V",
             "L --> U",

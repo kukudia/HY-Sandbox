@@ -81,6 +81,12 @@ public class BuildManager : MonoBehaviour
     private void OnDisable()
     {
         ClearCurrentGhost();
+        _selection?.SetGizmosEnabled(false);
+    }
+
+    private void OnEnable()
+    {
+        _selection?.SetGizmosEnabled(InputManager.instance == null || InputManager.instance.lockView);
     }
 
     private void OnDestroy()
@@ -143,6 +149,8 @@ public class BuildManager : MonoBehaviour
             selectedBlock = _selection.selectedBlock;
         }
 
+        // Axis objects stay outside replaceable blueprints; follow edits and Undo each frame.
+        _selection.RefreshBuildGizmos();
         // 删除
         if (selectedBlock != null)
         {

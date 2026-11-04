@@ -145,33 +145,47 @@ internal sealed class BuildSelection
 
     public void RefreshBuildGizmos()
     {
-        HideBuildGizmos();
         if (!_gizmosEnabled || selectedBlock == null || (currentBuildType != BuildType.Move && currentBuildType != BuildType.Rotate))
         {
+            HideBuildGizmos();
             return;
         }
 
         GameObject gizmo = currentBuildType == BuildType.Move ? moveAxis : rotateAxis;
+        HideBuildGizmos(gizmo);
         if (gizmo == null)
         {
             return;
         }
 
-        gizmo.SetActive(true);
-        gizmo.transform.SetParent(selectedBlock.transform, true);
+        // Tools belong to the editor session, not to a disposable blueprint block.
+        // Keep them unparented so loading/deletion cannot destroy the axis instances.
+        if (gizmo.transform.parent != null)
+        {
+            gizmo.transform.SetParent(null, true);
+        }
+
         gizmo.transform.position = selectedBlock.transform.position;
-        gizmo.transform.rotation = Quaternion.LookRotation(_manipulation.AxisForward, _manipulation.AxisUp);
+        if (_manipulation.AxisForward.sqrMagnitude > 0.5f && _manipulation.AxisUp.sqrMagnitude > 0.5f)
+        {
+            gizmo.transform.rotation = Quaternion.LookRotation(_manipulation.AxisForward, _manipulation.AxisUp);
+        }
+
+        if (!gizmo.activeSelf)
+        {
+            gizmo.SetActive(true);
+        }
     }
 
-    private void HideBuildGizmos()
+    private void HideBuildGizmos(GameObject keepVisible = null)
     {
-        if (moveAxis != null)
+        if (moveAxis != null && moveAxis != keepVisible)
         {
             moveAxis.SetActive(false);
             moveAxis.transform.SetParent(null, true);
         }
 
-        if (rotateAxis != null)
+        if (rotateAxis != null && rotateAxis != keepVisible)
         {
             rotateAxis.SetActive(false);
             rotateAxis.transform.SetParent(null, true);

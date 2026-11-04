@@ -359,6 +359,35 @@ public static class BuildPalettePlayProbe
                 selectionTarget.GetComponentInChildren<MeshRenderer>().sharedMaterials.SequenceEqual(selectedMaterials));
         }
 
+        ui.SetMove();
+        Check(
+            "Move button preserves selection and restores move axis",
+            manager.selectedBlock == selectionTarget && manager.moveAxis.activeInHierarchy && !manager.rotateAxis.activeSelf);
+        ui.SetRotate();
+        Check(
+            "Rotate button preserves selection and restores rotate axis",
+            manager.selectedBlock == selectionTarget && manager.rotateAxis.activeInHierarchy && !manager.moveAxis.activeSelf);
+        selectionTarget.transform.position += new Vector3(2, 3, 4);
+        selection.GetType().GetMethod("RefreshBuildGizmos").Invoke(selection, null);
+        Check(
+            "Independent axis follows selection movement",
+            Vector3.Distance(manager.rotateAxis.transform.position, selectionTarget.transform.position) < 0.001f);
+        Check(
+            "Axes are not owned by a disposable selection",
+            !manager.moveAxis.transform.IsChildOf(selectionTarget.transform) && !manager.rotateAxis.transform.IsChildOf(selectionTarget.transform));
+        Object.Destroy(selectionTarget.gameObject);
+        yield return 0.1f;
+        selection.GetType().GetMethod("RefreshBuildGizmos").Invoke(selection, null);
+        Check(
+            "Destroying selection preserves reusable axes and hides them",
+            manager.moveAxis != null && manager.rotateAxis != null && !manager.moveAxis.activeSelf && !manager.rotateAxis.activeSelf);
+        selectionTarget = Object.Instantiate(Resources.Load<GameObject>("Blocks/1x1x1")).GetComponent<Block>();
+        selection.GetType().GetMethod("SelectBlock").Invoke(selection, new object[] { selectionTarget });
+        manager.selectedBlock = selectionTarget;
+        ui.SetMove();
+        Check(
+            "New selection restores axes after old blueprint block is destroyed",
+            manager.moveAxis.activeInHierarchy);
         manager.DeselectBlock();
         Object.Destroy(selectionTarget.gameObject);
         ui.SetMove();
@@ -535,6 +564,40 @@ public static class BuildPalettePlayProbe
         Check(
             "2x2x2 top preview X/Z stay on integer offsets",
             Mathf.Abs(largeGhost.transform.position.x - Mathf.Round(largeGhost.transform.position.x)) < 0.001f && Mathf.Abs(largeGhost.transform.position.z - Mathf.Round(largeGhost.transform.position.z)) < 0.001f);
+        foreach (Vector3 rotation in new[]
+        {
+            new Vector3(90, 0, 0),
+            new Vector3(0, 90, 0),
+            new Vector3(0, 0, 90)
+        }
+
+        )
+        {
+            target.transform.rotation = Quaternion.Euler(rotation);
+            MovePointer(camera.WorldToScreenPoint(target.transform.position));
+            Physics.SyncTransforms();
+            Invoke(BuildManager.instance, "HandleBuildingPreview");
+            GameObject ghost = BuildManager.instance.currentGhost;
+            Check(
+                "Rotated target does not rotate preview: " + rotation,
+                ghost != null && Quaternion.Angle(ghost.transform.rotation, Quaternion.identity) < 0.001f);
+            Connector connector = BuildManager.instance.hoveredConnector;
+            Block previewBlock = ghost.GetComponent<Block>();
+            Vector3 point = block.GetConnectorWorldPosition(connector);
+            Vector3 normal = block.GetConnectorWorldNormal(connector);
+            Check(
+                "Rotated target keeps connectors aligned and preview valid: " + rotation,
+                previewBlock.connectors.Any(c => c.canConnect && Vector3.Distance(previewBlock.GetConnectorWorldPosition(c), point) < 0.001f && Vector3.Dot(previewBlock.GetConnectorWorldNormal(c), -normal) > 0.999f) && ghost.GetComponentInChildren<MeshRenderer>().material.color.g > 0.5f);
+        }
+
+        // The public resource path is also used by callers that bypass the palette setter.
+        BuildManager.instance.currentBlockResourcePath = "Blocks/1x1x1";
+        MovePointer(camera.WorldToScreenPoint(target.transform.position));
+        Invoke(BuildManager.instance, "HandleBuildingPreview");
+        Block switchedGhost = BuildManager.instance.currentGhost.GetComponent<Block>();
+        Check(
+            "Direct resource change replaces stale preview model",
+            switchedGhost.x == 1 && switchedGhost.y == 1 && switchedGhost.z == 1);
         BuildManager.instance.SetBuildMode(false);
         Object.Destroy(target);
         yield return 0.1f;

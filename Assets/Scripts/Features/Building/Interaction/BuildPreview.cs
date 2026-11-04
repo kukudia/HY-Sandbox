@@ -15,6 +15,7 @@ internal sealed class BuildPreview
     private Material _highlight;
     private ConnectorPlacementHints _hints;
     private float _range;
+    private GameObject _ghostPrefab;
     public string ResourcePath;
     public bool PenetrationMode;
     public GameObject currentGhost;
@@ -46,6 +47,12 @@ internal sealed class BuildPreview
         {
             Clear();
             return;
+        }
+
+        // ResourcePath is public: callers may change it without using the palette setter.
+        if (currentGhost != null && _ghostPrefab != prefab)
+        {
+            Clear(false);
         }
 
         if (_hints != null)
@@ -109,6 +116,7 @@ internal sealed class BuildPreview
                     if (currentGhost == null)
                     {
                         currentGhost = Object.Instantiate(prefab);
+                        _ghostPrefab = prefab;
                         Collider[] colliders = currentGhost.GetComponentsInChildren<Collider>();
                         foreach (var collider in colliders)
                         {
@@ -118,9 +126,9 @@ internal sealed class BuildPreview
 
                     // Put the preview's nearest face on the target connector. The old fixed 0.5 offset
                     // only worked for 1x1x1 blocks and left larger prefabs floating or intersecting.
-                    // Match the target's quarter-turn orientation so connector faces stay coplanar
-                    // when the target has been rotated in the build grid.
-                    currentGhost.transform.rotation = block.transform.rotation;
+                    // A rotated neighbour must not change the new block's authored orientation.
+                    // Use the same grid rotation as Block.Awake so preview and placement agree.
+                    currentGhost.transform.rotation = _geometry.SnapRotationToGrid(prefab.transform.rotation);
                     Quaternion previewRotation = currentGhost.transform.rotation;
                     if (!_geometry.TryCalculateConnectorAlignedPosition(prefabBlock, previewRotation, nearestWorldPos, nearestNormal, out snappedPos))
                     {
@@ -200,6 +208,7 @@ internal sealed class BuildPreview
         }
 
         hoveredConnector = null;
+        _ghostPrefab = null;
         if (currentGhost == null)
         {
             return;
