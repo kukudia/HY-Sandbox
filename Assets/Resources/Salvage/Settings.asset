@@ -22,4 +22,5 @@ MonoBehaviour:
   - Blocks/HoverThruster
   - Blocks/RepairBotContianer
   cleanupDelay: 5
+  minimumFragmentLifetime: 10
   maxCurrencyPackets: 64

@@ -72,6 +72,7 @@
     <Compile Include="Assets\Editor\Presentation\Validation\NativeVfxPlaybackProbe.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
     <Compile Include="Assets\Editor\Presentation\Effects\BlockVfxBaker.cs" />
+    <Compile Include="Assets\Editor\Architecture\DetachedVehicleChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegeRuntimeConnectionChecks.cs" />
     <Compile Include="Assets\Editor\Combat\Interface\CombatHudSetup.cs" />
     <Compile Include="Assets\Editor\World\Validation\WorldLab\WorldLabPerformanceChecks.cs" />
@@ -143,6 +144,7 @@
     <Compile Include="Assets\Editor\Combat\Interface\HealthHudPreview.cs" />
     <Compile Include="Assets\Editor\Presentation\Camera\SceneCameraPreviewSync.cs" />
     <Compile Include="Assets\Editor\Art\Validation\BlockArtPlayProbe.cs" />
+    <Compile Include="Assets\Editor\Architecture\FragmentRetentionChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Authoring\SiegeCommandHudAuthoring.cs" />
     <Compile Include="Assets\Editor\World\Validation\WorldLab\WorldLabCollapseChecks.cs" />
     <Compile Include="Assets\Editor\Combat\Validation\TurretRuntimeChecks.cs" />

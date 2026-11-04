@@ -27,11 +27,15 @@ public static class SiegeWreckBudgetChecks
         SceneManager.MoveGameObjectToScene(root, fixture);
         GameObject foreign = null;
         bool previousPlayMode = PlayManager.instance.playMode;
+        SalvageSettings settings = WreckSalvage.Settings;
+        float previousMinimum = settings.minimumFragmentLifetime;
         UnityEngine.Random.State previousRandom = UnityEngine.Random.state;
         var previousDrops = new HashSet<LootDrop>(Object.FindObjectsByType<LootDrop>(FindObjectsSortMode.None));
         try
         {
             PlayManager.instance.playMode = true;
+            // 原有边界检查隔离最短保留策略，末尾单独验证保护期优先于预算和寿命。
+            settings.minimumFragmentLifetime = 0f;
             var budget = new SiegeWreckBudget(fixture);
             ControlUnit friend = Create("friendly repairable", UnitFaction.Player, 2);
             ControlUnit live = Create("live enemy", UnitFaction.Enemy, 2);
@@ -88,6 +92,18 @@ public static class SiegeWreckBudgetChecks
             Check(
                 "primary building and deployment state unchanged",
                 session.Fleet.Base.IsAlive && session.Match.Wave == 0 && session.Buildings.Buildings.Count == 1);
+            settings.minimumFragmentLifetime = 2f;
+            ControlUnit young = Create("oversized newborn fragment", UnitFaction.Enemy, 40);
+            budget.Tick(200f, 0, 0, 0.5f, 8);
+            Check(
+                "zero budget preserves newborn oversized physical fragment",
+                young.gameObject.activeSelf && budget.PendingBlocks == 40);
+            budget.Tick(201f, 0, 0, 0.5f, 8);
+            Check("expired lifetime cannot bypass shared minimum retention", young.gameObject.activeSelf);
+            budget.Tick(202f, 0, 0, 0.5f, 8);
+            Check(
+                "budget converges after shared minimum retention",
+                !young.gameObject.activeSelf && budget.PendingBlocks == 0);
             report.status = "passed";
         }
         catch (Exception error)
@@ -98,6 +114,7 @@ public static class SiegeWreckBudgetChecks
         finally
         {
             PlayManager.instance.playMode = previousPlayMode;
+            settings.minimumFragmentLifetime = previousMinimum;
             UnityEngine.Random.state = previousRandom;
             foreach (LootDrop drop in Object.FindObjectsByType<LootDrop>(FindObjectsSortMode.None))
             {

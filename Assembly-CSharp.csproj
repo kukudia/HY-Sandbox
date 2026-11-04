@@ -109,6 +109,7 @@
     <Compile Include="Assets\Scripts\Features\Flight\Thrusters\HoverThruster.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Actions\DeleteBlockAction.cs" />
     <Compile Include="Assets\Scripts\Features\World\Validation\WorldLab\WorldLabDebrisProbe.cs" />
+    <Compile Include="Assets\Scripts\Features\Simulation\Physics\FragmentLifetime.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\SiegeProgress.cs" />
     <Compile Include="Assets\Scripts\Features\World\Buildings\Placement\WorldBuildingValidation.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\PlayManager.cs" />

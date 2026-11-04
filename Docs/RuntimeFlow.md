@@ -6,7 +6,59 @@
 
     维护：业务变化更新受影响图和 DEVELOPMENT；纯格式变化重新生成行号。`dotnet run --project Tools/CodeReadability -- --check .` 会拒绝失效符号。
 
-    ## 共享几何与编辑恢复
+    ## 断片最短物理保留期
+
+源码推导：建筑无论组大小与预算均先创建完整物理残骸。建筑、载具与阵地战敌方预算共用FragmentLifetime；计时器到期重查新碎片年龄，最短期内允许暂超软预算。该保护不阻止实际伤害、主动卸载或退出。载具新刚体保持源PhysicsScene和剩余碰撞保护。
+
+```mermaid
+flowchart TD
+    A["WorldBuildingManager.CreateDebris()"]
+    click A "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L431" "打开源码"
+    B["RuntimeGroupBuilder.Rebuild()"]
+    click B "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16" "打开源码"
+    C["FragmentLifetime.Mark()"]
+    click C "../Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs#L15" "打开源码"
+    D["FragmentLifetime.Remaining()"]
+    click D "../Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs#L23" "打开源码"
+    E["SiegeWreckBudget.Tick()"]
+    click E "../Assets/Scripts/Features/Siege/Battle/SiegeWreckBudget.cs#L34" "打开源码"
+    F["FragmentLifetime.CanRetire()"]
+    click F "../Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs#L29" "打开源码"
+    G["SalvageCleanupSession.CleanupGroupAfterDelay()"]
+    click G "../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L95" "打开源码"
+    H["SalvageCleanupSession.CleanupUnitAfterDelay()"]
+    click H "../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L108" "打开源码"
+    I["SalvageCleanupSession.WaitForFragment()"]
+    click I "../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L161" "打开源码"
+    A --> C
+    A -->|安排清理至少等待保护期| D
+    B --> C
+    E --> F
+    G -.-> I
+    I --> D
+    H -.->|旧单位计时器重查新片段| D
+```
+
+- [WorldBuildingManager.CreateDebris](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L431)
+<!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|CreateDebris -->
+- [RuntimeGroupBuilder.Rebuild](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16)
+<!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|Rebuild -->
+- [FragmentLifetime.Mark](../Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs#L15)
+<!-- source: Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs|Mark -->
+- [FragmentLifetime.Remaining](../Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs#L23)
+<!-- source: Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs|Remaining -->
+- [SiegeWreckBudget.Tick](../Assets/Scripts/Features/Siege/Battle/SiegeWreckBudget.cs#L34)
+<!-- source: Assets/Scripts/Features/Siege/Battle/SiegeWreckBudget.cs|Tick -->
+- [FragmentLifetime.CanRetire](../Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs#L29)
+<!-- source: Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs|CanRetire -->
+- [SalvageCleanupSession.CleanupGroupAfterDelay](../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L95)
+<!-- source: Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs|CleanupGroupAfterDelay -->
+- [SalvageCleanupSession.CleanupUnitAfterDelay](../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L108)
+<!-- source: Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs|CleanupUnitAfterDelay -->
+- [SalvageCleanupSession.WaitForFragment](../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L161)
+<!-- source: Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs|WaitForFragment -->
+
+## 共享几何与编辑恢复
 
 源码推导：六处包围盒消费者共用八角变换，原点包含和镜头网格下限留在领域入口。创建/删除动作共享稳定身份、精确世界姿态、尺寸和货仓恢复；生产蓝图工厂是唯一实体恢复机制。
 
@@ -887,7 +939,7 @@ flowchart TD
     B["PlayManager.AssignBlocksToParentGroups()"]
     click B "../Assets/Scripts/Features/Simulation/PlayManager.cs#L316" "打开源码"
     C["RuntimeGroupBuilder.Rebuild()"]
-    click C "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L15" "打开源码"
+    click C "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16" "打开源码"
     D["BlockGroupManager.GroupRuntimeBlocks()"]
     click D "../Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs#L15" "打开源码"
     E["BlockConnections.CollectRuntimeNeighbors()"]
@@ -933,9 +985,9 @@ flowchart TD
     Y["BlockConnections.RestoreParticipation()"]
     click Y "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L387" "打开源码"
     Z["RuntimeGroupBuilder.CaptureSourceBodies()"]
-    click Z "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L113" "打开源码"
+    click Z "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L131" "打开源码"
     AA["RuntimeGroupBuilder.SelectRetainedGroups()"]
-    click AA "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L173" "打开源码"
+    click AA "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L191" "打开源码"
     AB["PlayManager.RegisterControlUnitWithoutCleanup()"]
     click AB "../Assets/Scripts/Features/Simulation/PlayManager.cs#L343" "打开源码"
     AC["BlockConnectionSnapshot.Capture()"]
@@ -992,7 +1044,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
 - [PlayManager.AssignBlocksToParentGroups](../Assets/Scripts/Features/Simulation/PlayManager.cs#L316)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|AssignBlocksToParentGroups -->
-- [RuntimeGroupBuilder.Rebuild](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L15)
+- [RuntimeGroupBuilder.Rebuild](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|Rebuild -->
 - [BlockGroupManager.GroupRuntimeBlocks](../Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs#L15)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs|GroupRuntimeBlocks -->
@@ -1038,9 +1090,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|RestoreConnectionParticipation -->
 - [BlockConnections.RestoreParticipation](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L387)
 <!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs|RestoreParticipation -->
-- [RuntimeGroupBuilder.CaptureSourceBodies](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L113)
+- [RuntimeGroupBuilder.CaptureSourceBodies](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L131)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|CaptureSourceBodies -->
-- [RuntimeGroupBuilder.SelectRetainedGroups](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L173)
+- [RuntimeGroupBuilder.SelectRetainedGroups](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L191)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|SelectRetainedGroups -->
 - [PlayManager.RegisterControlUnitWithoutCleanup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L343)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RegisterControlUnitWithoutCleanup -->
@@ -1094,7 +1146,7 @@ flowchart TD
     M["SalvageCleanupSession.ScheduleUnit()"]
     click M "../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L17" "打开源码"
     N["SalvageCleanupSession.CleanupUnitAfterDelay()"]
-    click N "../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L106" "打开源码"
+    click N "../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L108" "打开源码"
     O["CargoHold.ReleaseContents()"]
     click O "../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L206" "打开源码"
     P["LaserTurret.Fire()"]
@@ -1191,7 +1243,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs|ApplyExplosionForce -->
 - [SalvageCleanupSession.ScheduleUnit](../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L17)
 <!-- source: Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs|ScheduleUnit -->
-- [SalvageCleanupSession.CleanupUnitAfterDelay](../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L106)
+- [SalvageCleanupSession.CleanupUnitAfterDelay](../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L108)
 <!-- source: Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs|CleanupUnitAfterDelay -->
 - [CargoHold.ReleaseContents](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L206)
 <!-- source: Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs|ReleaseContents -->
@@ -2400,7 +2452,7 @@ flowchart TD
 
 ## WorldLab 建筑支撑与损坏
 
-源码推导：地形修改通知只标记附近固定建筑，FixedUpdate读取体素数据计算虚拟范围的地形支撑比例（不生成地基实体）；按WorldBuildingManager序列化支撑阈值脱锚，先刷新源碰撞再启用刚体。方块死亡后共用载具的双侧Connector缓存和BFS分组，以虚拟地面连接点判断分量是否保留，局部删除重探附近、配置失效重建、复杂层级实时回退；虚拟底座判定按共享图Revision及底座尺寸缓存，图变化或底座尺寸改变时失效；断裂组最多32块、12片、12秒寿命，超预算移除；Main游玩态先按原阵营释放货仓/运输物并转换掉落，再判定残骸预算。普通卸载/会话清理不转换。爆炸连锁排队结算，同轮命中先完成伤害，按脏建筑各执行一次支撑刷新，避免先脱落禁用导致漏伤；单块直接死亡仍同步完成支撑，残骸不写快照，R重生成恢复初始布局。
+源码推导：地形修改通知只标记附近固定建筑，FixedUpdate读取体素数据计算虚拟范围的地形支撑比例（不生成地基实体）；按WorldBuildingManager序列化支撑阈值脱锚，先刷新源碰撞再启用刚体。方块死亡后共用载具的双侧Connector缓存和BFS分组，以虚拟地面连接点判断分量是否保留，局部删除重探附近、配置失效重建、复杂层级实时回退；虚拟底座判定按共享图Revision及底座尺寸缓存，图变化或底座尺寸改变时失效；断裂组完整生成物理残骸；32块/12片为软回收阈值，正常寿命12秒，所有预算与寿命均等待共用最短保留期；Main游玩态先按原阵营释放货仓/运输物并转换掉落，再判定残骸预算。普通卸载/会话清理不转换。爆炸连锁排队结算，同轮命中先完成伤害，按脏建筑各执行一次支撑刷新，避免先脱落禁用导致漏伤；单块直接死亡仍同步完成支撑，残骸不写快照，R重生成恢复初始布局。
 
 ```mermaid
 flowchart TD
@@ -2441,7 +2493,7 @@ flowchart TD
     O["WorldBuildingManager.ResetBuildings()"]
     click O "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L338" "打开源码"
     P["WorldBuildingManager.ClearDebris()"]
-    click P "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L475" "打开源码"
+    click P "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L467" "打开源码"
     Q["WorldBuildingManager.Place()"]
     click Q "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L96" "打开源码"
     R["BuildingRuntime.HasGroundConnector()"]
@@ -2541,7 +2593,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|Generate -->
 - [WorldBuildingManager.ResetBuildings](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L338)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|ResetBuildings -->
-- [WorldBuildingManager.ClearDebris](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L475)
+- [WorldBuildingManager.ClearDebris](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L467)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|ClearDebris -->
 - [WorldBuildingManager.Place](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L96)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|Place -->
@@ -4017,7 +4069,7 @@ flowchart TD
     G["BlockGroupManager.GroupBlocks()"]
     click G "../Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs#L9" "打开源码"
     H["RuntimeGroupBuilder.Rebuild()"]
-    click H "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L15" "打开源码"
+    click H "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16" "打开源码"
     I["PlayManager.RefreshGroup()"]
     click I "../Assets/Scripts/Features/Simulation/PlayManager.cs#L183" "打开源码"
     J["SiegePerformanceCapture.BeforeReload()"]
@@ -4051,7 +4103,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Diagnostics/SimulationWorkMetrics.cs|Read -->
 - [BlockGroupManager.GroupBlocks](../Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs#L9)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs|GroupBlocks -->
-- [RuntimeGroupBuilder.Rebuild](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L15)
+- [RuntimeGroupBuilder.Rebuild](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|Rebuild -->
 - [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L183)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
@@ -4158,7 +4210,7 @@ flowchart TD
 
 ## 阵地战敌方碎片预算
 
-源码推导：会话每半秒检查同场景敌方无驾驶舱组及每个模块归属；按首次观察时间优先退场，超过组数/模块软预算或寿命时每次最多回收配置组数。复用既有幂等掉落转换，先停用再延迟销毁。友舰维修件、建筑、存活驾驶舱和其他场景不参与。
+源码推导：会话每半秒检查同场景敌方无驾驶舱组及每个模块归属；按首次观察时间优先退场，超过组数/模块软预算或寿命且已过共用最短保留期时，每次最多回收配置组数。复用既有幂等掉落转换，先停用再延迟销毁。友舰维修件、建筑、存活驾驶舱和其他场景不参与。
 
 ```mermaid
 flowchart TD
@@ -4167,7 +4219,7 @@ flowchart TD
     B["SiegeWreckBudget.Tick()"]
     click B "../Assets/Scripts/Features/Siege/Battle/SiegeWreckBudget.cs#L34" "打开源码"
     C["SiegeWreckBudget.Eligible()"]
-    click C "../Assets/Scripts/Features/Siege/Battle/SiegeWreckBudget.cs#L106" "打开源码"
+    click C "../Assets/Scripts/Features/Siege/Battle/SiegeWreckBudget.cs#L111" "打开源码"
     D["WreckSalvage.ConvertGroup()"]
     click D "../Assets/Scripts/Features/Salvage/Drops/WreckSalvage.cs#L63" "打开源码"
     E["WreckSalvage.Convert()"]
@@ -4182,7 +4234,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|Update -->
 - [SiegeWreckBudget.Tick](../Assets/Scripts/Features/Siege/Battle/SiegeWreckBudget.cs#L34)
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeWreckBudget.cs|Tick -->
-- [SiegeWreckBudget.Eligible](../Assets/Scripts/Features/Siege/Battle/SiegeWreckBudget.cs#L106)
+- [SiegeWreckBudget.Eligible](../Assets/Scripts/Features/Siege/Battle/SiegeWreckBudget.cs#L111)
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeWreckBudget.cs|Eligible -->
 - [WreckSalvage.ConvertGroup](../Assets/Scripts/Features/Salvage/Drops/WreckSalvage.cs#L63)
 <!-- source: Assets/Scripts/Features/Salvage/Drops/WreckSalvage.cs|ConvertGroup -->

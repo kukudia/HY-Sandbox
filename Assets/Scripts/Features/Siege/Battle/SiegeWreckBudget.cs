@@ -86,6 +86,11 @@ public sealed class SiegeWreckBudget
             }
 
             bool expired = time - candidate.Started >= Mathf.Max(0.5f, lifetime);
+            if (!FragmentLifetime.CanRetire(time - candidate.Started))
+            {
+                continue;
+            }
+
             if (!expired && PendingGroups <= Mathf.Max(0, maximumGroups) && PendingBlocks <= Mathf.Max(0, maximumBlocks))
             {
                 continue;

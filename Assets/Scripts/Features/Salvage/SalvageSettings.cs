@@ -14,6 +14,8 @@ public class SalvageSettings : ScriptableObject
     public string[] specialPartResources;
     [Min(1f)]
     public float cleanupDelay = 10f;
+    [Min(0f), Tooltip("建筑和载具脱落碎片至少参与物理的秒数；预算和旧清理任务均等待此期限，伤害及退出场景除外。")]
+    public float minimumFragmentLifetime = 10f;
     [Tooltip("Resource packets merge beyond this count. Special parts are never removed by this limit.")]
     [Min(8)]
     public int maxCurrencyPackets = 64;

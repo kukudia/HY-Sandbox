@@ -21,7 +21,7 @@ public sealed class WorldBuildingManager : MonoBehaviour
     private int maximumBuildings = 64;
     [SerializeField, Range(0, 24)]
     private int maximumDebrisPieces = 12;
-    [SerializeField, Range(1, 64)]
+    [SerializeField, Range(1, 64), Tooltip("碎片超过此模块数时提前安排回收，仍先生成物理实体并等待共用最短保留期。")]
     private int maximumBlocksPerDebris = 32;
     [SerializeField, Min(1f)]
     private float debrisLifetime = 12f;
@@ -438,17 +438,7 @@ public sealed class WorldBuildingManager : MonoBehaviour
         }
 
         debris.RemoveAll(piece => piece == null);
-        if (debris.Count >= maximumDebrisPieces || group.Count > maximumBlocksPerDebris)
-        {
-            foreach (Block block in group)
-            {
-                block.gameObject.SetActive(false);
-                Destroy(block.gameObject);
-            }
-
-            return;
-        }
-
+        bool overBudget = debris.Count >= maximumDebrisPieces || group.Count > maximumBlocksPerDebris;
         GroupPhysicsSettings settings = PlayManager.instance != null ? PlayManager.instance.GroupPhysics : GroupPhysicsSettings.FromBody(source);
         var piece = new GameObject("Building debris");
         piece.transform.SetParent(transform, false);
@@ -468,8 +458,10 @@ public sealed class WorldBuildingManager : MonoBehaviour
         body.mass = Mathf.Max(0.1f, mass);
         settings.ApplyTo(body);
         motion.Restore(body, settings);
+        FragmentLifetime.Mark(piece);
         debris.Add(piece);
-        Destroy(piece, debrisLifetime);
+        // 预算是退场请求，不再跳过实体生成；即使是大型结构也先完整下落。
+        Destroy(piece, Mathf.Max(FragmentLifetime.Remaining(piece), overBudget ? 0f : debrisLifetime));
     }
 
     private void ClearDebris()

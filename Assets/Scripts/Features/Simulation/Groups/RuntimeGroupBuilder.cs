@@ -3,6 +3,7 @@
 // 约束：保留已有根的姿态与运行组件；新碎片不覆盖RuntimeUnitMember原始单位身份。
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 internal sealed class RuntimeGroupBuilder
 {
@@ -38,6 +39,13 @@ internal sealed class RuntimeGroupBuilder
                 // 新插值刚体直接出生在最终姿态，避免先Instantiate再只移动Transform产生拖影。
                 GameObject parent = Object.Instantiate(parentPrefab, BlockGroupManager.CalculateGroupCenter(plan.Blocks), Quaternion.identity);
                 parent.name = "Detached Group";
+                // 先迁移空根，模块始终留在原PhysicsScene，避免转场重启耐久生命周期或丢失接触。
+                Scene sourceScene = plan.Source != null ? plan.Source.Unit.gameObject.scene : plan.Blocks[0].gameObject.scene;
+                if (parent.scene != sourceScene)
+                {
+                    SceneManager.MoveGameObjectToScene(parent, sourceScene);
+                }
+
                 plan.Unit = parent.GetComponent<ControlUnit>();
                 plan.Unit.faction = plan.Source?.Faction ?? UnitFaction.Player;
             }
@@ -85,6 +93,16 @@ internal sealed class RuntimeGroupBuilder
             }
 
             plan.Unit.RefreshChildren();
+            if (!plan.Unit.HasAnyCockpit)
+            {
+                FragmentLifetime.Mark(plan.Unit.gameObject);
+            }
+
+            if (plan.Source != null)
+            {
+                plan.Unit.ProtectExplosionContacts(plan.Source.ProtectedUntil - Time.time);
+            }
+
             plan.Unit.AssignRuntimeOwnershipToBlocks(false);
             foreach (Block block in plan.Blocks)
             {
@@ -224,12 +242,14 @@ internal sealed class RuntimeGroupBuilder
         internal readonly ControlUnit Unit;
         internal readonly UnitFaction Faction;
         internal readonly RigidbodyMotion Motion;
+        internal readonly float ProtectedUntil;
         internal bool RetentionChecked;
         internal bool CanRetain;
         internal SourceSnapshot(ControlUnit unit)
         {
             Unit = unit;
             Faction = unit.faction;
+            ProtectedUntil = unit.ExplosionCollisionProtectedUntil;
             Rigidbody body = unit.GetComponent<Rigidbody>();
             Motion = new RigidbodyMotion(body);
         }

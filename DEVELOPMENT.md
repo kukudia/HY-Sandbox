@@ -4,6 +4,8 @@ Unity 6000.3.11f1。本文只维护当前功能、契约与验证入口；历史
 
 ## 本轮复用与精简
 
+断片保留修复：建筑超过32模块或残骸数量预算时仍生成完整物理残骸，预算只请求延后退场。建筑、阵地战敌方碎片及载具延迟清理共用 `FragmentLifetime` 最短保留期（`Resources/Salvage/Settings.minimumFragmentLifetime`，当前10秒）；伤害销毁、卸载和会话退出不受此保护。载具重组保留源 PhysicsScene、损伤归因及剩余碰撞保护。验证见 [断片保留报告](Docs/Validation/2026-11-04-fragment-retention.md)。
+
 建筑与载具共用 `BlockConnectionSnapshot` / `BlockConnections` 双侧连接、`BlockGroupManager` BFS 分组及 `RigidbodyMotion` 运动继承。`BuildingConnectionGraph` 旧实现已删除，建筑只保留虚拟地面支撑、地形脱锚、残骸预算和存档边界；载具保留驾驶舱选择、操控和组清理。删除节点只重探邻近模块；真正复杂碰撞布局继续实时探测，独立停靠机器人的碰撞体不使主体缓存失效。
 
 共享规则同时收束到：`Thruster` 输入推进链、`BlockBounds` 几何、`BlockActionState` 撤销恢复、`SaveManager.LoadBlueprint` 加载协调、`WreckSalvage.ReleaseContents` 模块货物释放、`Bot.CanLaunchForWork` 起飞门槛、`BuildHandleAxis` 操作轴方向，以及存档列表的统一构建。清理失效的销毁延迟刷新、动态重命名按钮和重复特效状态；兼容入口只委托共享规则。

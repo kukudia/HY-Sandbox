@@ -82,6 +82,7 @@ internal sealed class SalvageCleanupSession
         float fallbackDelay)
     {
         yield return new WaitForSeconds(GetCleanupDelay(fallbackDelay));
+        yield return WaitForFragment(unit);
         if (unit != null && reference != null && unit.runtimeUnitId == ownerUnitId && (unit.transform.position - reference.position).sqrMagnitude > maxDistanceSqr)
         {
             WreckSalvage.ConvertGroup(unit);
@@ -94,6 +95,7 @@ internal sealed class SalvageCleanupSession
     private IEnumerator CleanupGroupAfterDelay(ControlUnit unit, string ownerUnitId, float fallbackDelay)
     {
         yield return new WaitForSeconds(GetCleanupDelay(fallbackDelay));
+        yield return WaitForFragment(unit);
         if (unit != null && unit.runtimeUnitId == ownerUnitId && !unit.HasAnyCockpit)
         {
             WreckSalvage.ConvertGroup(unit);
@@ -106,10 +108,45 @@ internal sealed class SalvageCleanupSession
     private IEnumerator CleanupUnitAfterDelay(string ownerUnitId, float fallbackDelay)
     {
         yield return new WaitForSeconds(GetCleanupDelay(fallbackDelay));
+        // 原单位死亡后仍可能继续断裂；旧单位计时器不能直接删掉刚生成的新碎片。
+        while (true)
+        {
+            float remaining = 0f;
+            foreach (ControlUnit unit in ControlUnit.RuntimeUnits)
+            {
+                if (unit == null || unit.HasAnyCockpit)
+                {
+                    continue;
+                }
+
+                foreach (RuntimeUnitMember member in unit.GetComponentsInChildren<RuntimeUnitMember>())
+                {
+                    if (member.ownerUnitId == ownerUnitId)
+                    {
+                        remaining = Mathf.Max(remaining, FragmentLifetime.Remaining(unit.gameObject));
+                        break;
+                    }
+                }
+            }
+
+            if (remaining <= 0f)
+            {
+                break;
+            }
+
+            yield return new WaitForSeconds(remaining);
+        }
+
         RuntimeUnitMember[] members = Object.FindObjectsByType<RuntimeUnitMember>(FindObjectsSortMode.None);
         foreach (RuntimeUnitMember member in members)
         {
             if (member == null || member.ownerUnitId != ownerUnitId)
+            {
+                continue;
+            }
+
+            ControlUnit owner = member.GetComponentInParent<ControlUnit>();
+            if (owner != null && owner.HasAnyCockpit)
             {
                 continue;
             }
@@ -119,5 +156,19 @@ internal sealed class SalvageCleanupSession
         }
 
         _scheduledUnits.Remove(ownerUnitId);
+    }
+
+    private static IEnumerator WaitForFragment(ControlUnit unit)
+    {
+        while (unit != null)
+        {
+            float remaining = FragmentLifetime.Remaining(unit.gameObject);
+            if (remaining <= 0f)
+            {
+                yield break;
+            }
+
+            yield return new WaitForSeconds(remaining);
+        }
     }
 }

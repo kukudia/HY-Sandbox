@@ -16,6 +16,8 @@ HY-Sandbox/
 │   ├── Editor/
 │   │   ├── Architecture/
 │   │   │   ├── ArchitecturePlayProbe.cs
+│   │   │   ├── DetachedVehicleChecks.cs
+│   │   │   ├── FragmentRetentionChecks.cs
 │   │   │   ├── HoverControlPlayChecks.cs
 │   │   │   ├── PresentationPlayChecks.cs
 │   │   │   └── SharedMechanismChecks.cs
@@ -402,6 +404,7 @@ HY-Sandbox/
 │           │   │   ├── RuntimeGroupBuilder.cs
 │           │   │   └── RuntimeGroupCleanup.cs
 │           │   ├── Physics/
+│           │   │   ├── FragmentLifetime.cs
 │           │   │   ├── ImpactPhysics.cs
 │           │   │   └── RigidbodyMotion.cs
 │           │   ├── Presentation/
@@ -527,6 +530,37 @@ HY-Sandbox/
 | ArchitecturePlayProbe | [`void SetField(object target, string field, object value)`](../Assets/Editor/Architecture/ArchitecturePlayProbe.cs#L597) | private static |
 | ArchitecturePlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Architecture/ArchitecturePlayProbe.cs#L602) | private static |
 | ArchitecturePlayProbe | [`void RestoreIsolation()`](../Assets/Editor/Architecture/ArchitecturePlayProbe.cs#L612) | private static |
+
+## Assets/Editor/Architecture/DetachedVehicleChecks.cs
+
+// 职责：以真实玩家帧区分载具断片的即时销毁、延时清理和跨场景/保护状态丢失。 // 入口：Run()；要求已在Play Mode，报告Temp/Reuse/detached-vehicle.json，不操作Editor播放状态。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| DetachedVehicleChecks | [`string Run()`](../Assets/Editor/Architecture/DetachedVehicleChecks.cs#L19) | public static |
+| DetachedVehicleChecks | [`void Tick()`](../Assets/Editor/Architecture/DetachedVehicleChecks.cs#L35) | private static |
+| DetachedVehicleChecks | [`IEnumerator Scenario()`](../Assets/Editor/Architecture/DetachedVehicleChecks.cs#L80) | private static |
+| DetachedVehicleChecks | [`void Check(string label, bool result)`](../Assets/Editor/Architecture/DetachedVehicleChecks.cs#L258) | private static |
+
+## Assets/Editor/Architecture/FragmentRetentionChecks.cs
+
+// 职责：以真实 Play 帧回归建筑断片、旧清理计时器和驾驶舱恢复的最短保留期。 // 入口：Main 编辑态玩法下调用 Run()；报告 Temp/Reuse/fragment-retention.json。 // 隔离：独立 PhysicsScene，设置仅内存暂存；finally 恢复并卸载，不替代生产延迟清理。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| FragmentRetentionChecks | [`string Run()`](../Assets/Editor/Architecture/FragmentRetentionChecks.cs#L24) | public static |
+| FragmentRetentionChecks | [`void Tick()`](../Assets/Editor/Architecture/FragmentRetentionChecks.cs#L46) | private static |
+| FragmentRetentionChecks | [`void Finish()`](../Assets/Editor/Architecture/FragmentRetentionChecks.cs#L85) | private static |
+| FragmentRetentionChecks | [`IEnumerator RunRoutine()`](../Assets/Editor/Architecture/FragmentRetentionChecks.cs#L107) | private static |
+| FragmentRetentionChecks | [`GameObject CreateDebris(WorldBuildingManager host, int count, float height)`](../Assets/Editor/Architecture/FragmentRetentionChecks.cs#L241) | private static |
+| FragmentRetentionChecks | [`ControlUnit NewUnit(string name)`](../Assets/Editor/Architecture/FragmentRetentionChecks.cs#L272) | private static |
+| FragmentRetentionChecks | [`Block NewBlock(string name, Transform parent)`](../Assets/Editor/Architecture/FragmentRetentionChecks.cs#L280) | private static |
+| FragmentRetentionChecks | [`GameObject NewObject(string name, Transform parent = null)`](../Assets/Editor/Architecture/FragmentRetentionChecks.cs#L291) | private static |
+| FragmentRetentionChecks | [`void Mark(GameObject root)`](../Assets/Editor/Architecture/FragmentRetentionChecks.cs#L299) | private static |
+| FragmentRetentionChecks | [`Type RuntimeType(string name)`](../Assets/Editor/Architecture/FragmentRetentionChecks.cs#L304) | private static |
+| FragmentRetentionChecks | [`void Set(object target, string field, object value)`](../Assets/Editor/Architecture/FragmentRetentionChecks.cs#L305) | private static |
+| FragmentRetentionChecks | [`void Call(object target, string method, params object[] arguments)`](../Assets/Editor/Architecture/FragmentRetentionChecks.cs#L310) | private static |
+| FragmentRetentionChecks | [`void Require(bool condition, string message)`](../Assets/Editor/Architecture/FragmentRetentionChecks.cs#L315) | private static |
 
 ## Assets/Editor/Architecture/HoverControlPlayChecks.cs
 
@@ -1633,8 +1667,8 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeWreckBudgetChecks | [`string Run()`](../Assets/Editor/Siege/Validation/Fleet/SiegeWreckBudgetChecks.cs#L15) | public static |
-| SiegeWreckBudgetChecks | [`ControlUnit Create(string label, UnitFaction faction, int count)`](../Assets/Editor/Siege/Validation/Fleet/SiegeWreckBudgetChecks.cs#L125) | private static |
-| SiegeWreckBudgetChecks | [`void Check(string label, bool passed)`](../Assets/Editor/Siege/Validation/Fleet/SiegeWreckBudgetChecks.cs#L144) | private static |
+| SiegeWreckBudgetChecks | [`ControlUnit Create(string label, UnitFaction faction, int count)`](../Assets/Editor/Siege/Validation/Fleet/SiegeWreckBudgetChecks.cs#L142) | private static |
+| SiegeWreckBudgetChecks | [`void Check(string label, bool passed)`](../Assets/Editor/Siege/Validation/Fleet/SiegeWreckBudgetChecks.cs#L161) | private static |
 
 ## Assets/Editor/Siege/Validation/Interface/SiegeCombatFeedbackChecks.cs
 
@@ -2768,8 +2802,9 @@ HY-Sandbox/
 | SalvageCleanupSession | [`bool TrySchedule(string ownerUnitId)`](../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L67) | private |
 | SalvageCleanupSession | [`float GetCleanupDelay(float fallbackDelay)`](../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L72) | private static |
 | SalvageCleanupSession | [`IEnumerator CleanupDistantGroupAfterDelay( ControlUnit unit, string ownerUnitId, Transform reference, float maxDistanceSqr, float fallbackDelay)`](../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L77) | private |
-| SalvageCleanupSession | [`IEnumerator CleanupGroupAfterDelay(ControlUnit unit, string ownerUnitId, float fallbackDelay)`](../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L94) | private |
-| SalvageCleanupSession | [`IEnumerator CleanupUnitAfterDelay(string ownerUnitId, float fallbackDelay)`](../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L106) | private |
+| SalvageCleanupSession | [`IEnumerator CleanupGroupAfterDelay(ControlUnit unit, string ownerUnitId, float fallbackDelay)`](../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L95) | private |
+| SalvageCleanupSession | [`IEnumerator CleanupUnitAfterDelay(string ownerUnitId, float fallbackDelay)`](../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L108) | private |
+| SalvageCleanupSession | [`IEnumerator WaitForFragment(ControlUnit unit)`](../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L161) | private static |
 
 ## Assets/Scripts/Features/Combat/DestroyManager.cs
 
@@ -3894,7 +3929,7 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeWreckBudget | [`void Tick(float time, int maximumGroups, int maximumBlocks, float lifetime, int retirePerScan)`](../Assets/Scripts/Features/Siege/Battle/SiegeWreckBudget.cs#L34) | public |
-| SiegeWreckBudget | [`bool Eligible(ControlUnit unit)`](../Assets/Scripts/Features/Siege/Battle/SiegeWreckBudget.cs#L106) | private |
+| SiegeWreckBudget | [`bool Eligible(ControlUnit unit)`](../Assets/Scripts/Features/Siege/Battle/SiegeWreckBudget.cs#L111) | private |
 
 ## Assets/Scripts/Features/Siege/Fleet/SiegeBlueprintCatalog.cs
 
@@ -4333,10 +4368,10 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| RuntimeGroupBuilder | [`void Rebuild(List<Block> blocks, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L15) | internal |
-| RuntimeGroupBuilder | [`Dictionary<Block, SourceSnapshot> CaptureSourceBodies(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L113) | private static |
-| RuntimeGroupBuilder | [`List<GroupPlan> PlanGroups(List<List<Block>> groups, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L142) | private static |
-| RuntimeGroupBuilder | [`Dictionary<SourceSnapshot, GroupPlan> SelectRetainedGroups(List<GroupPlan> plans, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L173) | private static |
+| RuntimeGroupBuilder | [`void Rebuild(List<Block> blocks, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16) | internal |
+| RuntimeGroupBuilder | [`Dictionary<Block, SourceSnapshot> CaptureSourceBodies(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L131) | private static |
+| RuntimeGroupBuilder | [`List<GroupPlan> PlanGroups(List<List<Block>> groups, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L160) | private static |
+| RuntimeGroupBuilder | [`Dictionary<SourceSnapshot, GroupPlan> SelectRetainedGroups(List<GroupPlan> plans, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L191) | private static |
 
 ## Assets/Scripts/Features/Simulation/Groups/RuntimeGroupCleanup.cs
 
@@ -4346,6 +4381,17 @@ HY-Sandbox/
 | --- | --- | --- |
 | RuntimeGroupCleanup | [`void EnforceLimit(List<ControlUnit> units, int maximumUselessGroups, DestroyManager destruction)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupCleanup.cs#L8) | internal static |
 | RuntimeGroupCleanup | [`void EnforceDistance( List<ControlUnit> units, bool playMode, Transform playerRoot, float cleanupDistance, DestroyManager destruction)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupCleanup.cs#L51) | internal static |
+
+## Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs
+
+// 职责：为建筑与载具碎片提供同一最短物理保留期，避免预算和旧清理计时器吞掉新断片。 // 入口：Mark() 在脱落时调用；Remaining() / CanRetire() 在真正清理前检查；不阻止伤害和场景卸载。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| FragmentLifetime | [`void Awake()`](../Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs#L10) | private |
+| FragmentLifetime | [`void Mark(GameObject root)`](../Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs#L15) | internal static |
+| FragmentLifetime | [`float Remaining(GameObject root)`](../Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs#L23) | internal static |
+| FragmentLifetime | [`bool CanRetire(float age)`](../Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs#L29) | internal static |
 
 ## Assets/Scripts/Features/Simulation/Physics/ImpactPhysics.cs
 
@@ -4621,7 +4667,7 @@ HY-Sandbox/
 | WorldBuildingManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L409) | private |
 | WorldBuildingManager | [`void DamageSphere(Vector3 center, float radius, float damage)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L426) | public |
 | WorldBuildingManager | [`void CreateDebris(List<Block> group, Rigidbody source, RigidbodyMotion motion)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L431) | internal |
-| WorldBuildingManager | [`void ClearDebris()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L475) | private |
+| WorldBuildingManager | [`void ClearDebris()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L467) | private |
 
 ## Assets/Scripts/Features/World/Outposts/EnemyOutpostData.cs
 
