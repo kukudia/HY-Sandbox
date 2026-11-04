@@ -70,7 +70,8 @@ public class DestroyManager : MonoBehaviour
         UnitFaction ownerFaction = member != null ? member.ownerFaction : cockpit != null ? cockpit.faction : unit != null ? unit.faction : UnitFaction.Enemy;
         Block block = obj.GetComponent<Block>();
         bool shouldExplodeCockpit = cockpit != null && block != null && PlayManager.instance != null && PlayManager.instance.playMode;
-        bool willExplode = block != null && block.canExplode && (health == null || !health.DestroyedByCollision) && PlayManager.instance != null && PlayManager.instance.playMode;
+        // Explosive blocks react to every lethal damage source; fragment contacts are protected separately.
+        bool willExplode = block != null && block.canExplode && PlayManager.instance != null && PlayManager.instance.playMode;
         // ExplodeBlock owns the single destruction burst for explosive blocks.
         if (!willExplode)
         {

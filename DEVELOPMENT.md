@@ -1,5 +1,11 @@
 # HY-Sandbox 开发与审查入口
 
+## 2026-11-04 撞击致死恢复爆炸
+
+`DestroyManager.DestroyGameObject` 和 `BuildingRuntime.DestroyBlock` 不再用 `Durability.DestroyedByCollision` 排除爆炸。启用 `canExplode` 的方块撞毁时恢复既有爆炸特效/后续处理；单位继续使用断链、重组、有界冲量和碎片碰撞保护，建筑继续使用范围伤害与地形破坏批次。普通方块及编辑态销毁规则保留。
+
+Unity Main Play 中 `PhysicsSandboxProbe.Run()` 33项通过，覆盖撞击致死爆炸、普通块不爆炸、重复销毁不重复爆炸、建筑撞毁爆炸，以及现有真实PhysX能量与爆炸保护检查。详情见 [验证记录](Docs/Validation/2026-11-04-impact-explosion.md)。
+
 ## 2026-11-04 建造预览朝向与坐标轴生命周期
 
 `BuildPreview.Poll` 恢复资源默认整格朝向，不再继承瞄准方块的旋转；保留真实连接点对齐和大尺寸吸附。额外跟转来自 2026-09-23 的 `d767c2b`，10月重构仅迁移该实现。直接更改公开资源路径时会重建 Ghost，避免旧模型与实际放置资源不一致。

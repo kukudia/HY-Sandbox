@@ -249,7 +249,8 @@ public sealed class BuildingRuntime : MonoBehaviour
         BeginDamageBatch();
         try
         {
-            bool explode = block.canExplode && !(block.GetComponent<Durability>()?.DestroyedByCollision ?? false);
+            // Keep building and construct destruction consistent, including lethal impacts.
+            bool explode = block.canExplode;
             Vector3 center = block.transform.position;
             float radius = block.explosionRadius;
             float force = block.explosionForce;

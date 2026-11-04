@@ -166,6 +166,9 @@ public static class PhysicsSandboxProbe
                 checks,
                 "Explosion marks outgoing contacts as protected",
                 fragmentUnit.ExplosionCollisionProtectedUntil > Time.time);
+            CheckLethalImpactExplosion(scene, checks, true);
+            CheckLethalImpactExplosion(scene, checks, false);
+            CheckBuildingImpactExplosion(scene, checks);
             return Save(checks, null);
         }
         catch (Exception error)
@@ -183,6 +186,78 @@ public static class PhysicsSandboxProbe
 
             SceneManager.UnloadSceneAsync(scene);
         }
+    }
+
+    private static void CheckLethalImpactExplosion(Scene scene, List<string> checks, bool explosive)
+    {
+        var target = new GameObject("Lethal impact block");
+        SceneManager.MoveGameObjectToScene(target, scene);
+        target.transform.position = Vector3.right * 1000f;
+        Block block = target.AddComponent<Block>();
+        block.canExplode = explosive;
+        block.explosionForce = 0f;
+        Durability health = target.AddComponent<Durability>();
+        int before = CountExplosionEffects();
+        health.ApplyCollisionEnergy(10000000f, 1000f, 1f);
+        Check(
+            checks,
+            "Lethal impact reaches destruction, explosive=" + explosive,
+            health.DestroyedByCollision && health.currentDurability == 0f && !health.enabled);
+        Check(
+            checks,
+            "Lethal impact respects canExplode=" + explosive,
+            CountExplosionEffects() - before == (explosive ? 1 : 0));
+        DestroyManager.instance.DestroyGameObject(target);
+        Check(
+            checks,
+            "Repeated destruction does not duplicate explosion, explosive=" + explosive,
+            CountExplosionEffects() - before == (explosive ? 1 : 0));
+    }
+
+    private static void CheckBuildingImpactExplosion(Scene scene, List<string> checks)
+    {
+        var host = new GameObject("Building impact probe");
+        SceneManager.MoveGameObjectToScene(host, scene);
+        WorldBuildingManager manager = host.AddComponent<WorldBuildingManager>();
+        BlockDataList blueprint = WorldBuildingAuthoring.CreateSample();
+        var health = new float[blueprint.blocks.Count];
+        for (int i = 0; i < health.Length; i++)
+        {
+            health[i] = float.MaxValue;
+        }
+
+        BuildingRuntime building = manager.RestoreBuilding(new WorldBuildingState { instanceId = Guid.NewGuid().ToString("N"), blueprintName = "Impact probe", blueprint = blueprint, position = Vector3.right * 2000f, rotation = Quaternion.identity, faction = UnitFaction.Enemy, anchored = true, durability = health });
+        Block source = building.Blocks[0];
+        source.canExplode = true;
+        source.explosionForce = 0f;
+        int before = CountExplosionEffects();
+        Durability durability = source.GetComponent<Durability>();
+        durability.ApplyCollisionEnergy(10000000f, 1000f, 1f);
+        Check(
+            checks,
+            "Building lethal impact produces explosion",
+            durability.DestroyedByCollision && !source.gameObject.activeSelf && CountExplosionEffects() == before + 1);
+        building.DestroyBlock(source);
+        Check(
+            checks,
+            "Building repeated destruction does not duplicate explosion",
+            CountExplosionEffects() == before + 1);
+    }
+
+    private static int CountExplosionEffects()
+    {
+        var library = new UnityEditor.SerializedObject(BlockVfxLibrary.Instance);
+        string effectName = library.FindProperty("_bursts").GetArrayElementAtIndex((int)BlockVfxLibrary.Effect.Explosion).objectReferenceValue.name + "(Clone)";
+        int count = 0;
+        foreach (VfxEffect effect in UnityEngine.Object.FindObjectsByType<VfxEffect>(FindObjectsSortMode.None))
+        {
+            if (effect.name == effectName)
+            {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     private static float Collide(
