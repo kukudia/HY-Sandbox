@@ -65,33 +65,28 @@ internal sealed class BlockConnections
             Physics.SyncTransforms();
         }
 
-        ReleaseExistingConnections();
-        foreach (Connector c in _block.connectors)
+        foreach (Connector connector in _block.connectors)
         {
-            if (c.isConnected && c.connector == null)
+            if (!connector.canConnect)
             {
-                ReleaseConnectionPairWithoutVisual(c);
-            }
-
-            c.isConnected = false;
-            if (!c.canConnect)
-            {
-                ClearConnector(c);
+                ClearConnector(connector);
                 continue;
             }
 
-            Block otherBlock = FindBlockAcrossConnector(c);
-            Connector otherConnector = otherBlock != null ? FindMatchingConnector(otherBlock, c) : null;
-            // A ray hit alone is never enough to connect. Both sides must explicitly
-            // allow connections, be free, and match by position and opposite normal.
-            if (c.canConnect && otherBlock != null && otherConnector != null && otherConnector.canConnect && !c.isConnected && !otherConnector.isConnected)
+            Block otherBlock = FindBlockAcrossConnector(connector);
+            Connector other = otherBlock != null ? FindMatchingConnector(otherBlock, connector, false) : null;
+            // 重新探测几何，但未改变的双侧连接保留原视觉，避免伤害刷新整舰时成批销毁/创建。
+            bool retained = connector.isConnected && other != null && other.isConnected && connector.runtimePeer == other && other.runtimePeer == connector && connector.runtimePeerBlock == otherBlock && other.runtimePeerBlock == _block;
+            if (retained)
             {
-                ConnectTo(c, otherBlock, otherConnector);
+                ConnectTo(connector, otherBlock, other);
+                continue;
             }
 
-            if (c.connector != null && !c.isConnected)
+            ClearConnector(connector);
+            if (other != null && !other.isConnected)
             {
-                ClearConnector(c);
+                ConnectTo(connector, otherBlock, other);
             }
         }
 
@@ -125,26 +120,6 @@ internal sealed class BlockConnections
             ReleaseConnectionReferences(connectorObject);
             Object.Destroy(connectorObject);
         }
-    }
-
-    private void ReleaseConnectionPairWithoutVisual(Connector connector)
-    {
-        if (connector.runtimePeer != null)
-        {
-            ReleaseRuntimePair(connector);
-            return;
-        }
-
-        Block otherBlock = FindBlockAcrossConnector(connector);
-        Connector otherConnector = otherBlock != null ? FindMatchingConnector(otherBlock, connector, false) : null;
-        if (otherConnector == null)
-        {
-            return;
-        }
-
-        otherConnector.connector = null;
-        otherConnector.isConnected = false;
-        otherBlock.RefreshConnectionStatus();
     }
 
     private void ReleaseConnectionReferences(GameObject connectorObject)

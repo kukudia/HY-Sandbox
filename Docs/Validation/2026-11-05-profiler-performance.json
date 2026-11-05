@@ -1,0 +1,463 @@
+{
+  "capture": {
+    "file": "ProfilerCaptures/HY-Sandbox_2026-11-05_16-35-27.data",
+    "frames": 2000,
+    "cpuFrameMs": {
+      "average": 70.981,
+      "p50": 26.151,
+      "p95": 237.112,
+      "max": 701.175
+    },
+    "gpuAvailable": false,
+    "turretInclusiveMsPerFrame": 22.864625,
+    "physicsInclusiveMsPerFrame": 2.2397315,
+    "gizmoManagerInclusiveMsPerFrame": 7.0355799999999995
+  },
+  "benchmarks": {
+    "search": {
+      "before": {
+        "raw": [
+          {
+            "batch": "0",
+            "ms": "21.0448"
+          },
+          {
+            "batch": "1",
+            "ms": "21.1171"
+          },
+          {
+            "batch": "2",
+            "ms": "21.2419"
+          },
+          {
+            "batch": "3",
+            "ms": "21.1299"
+          },
+          {
+            "batch": "4",
+            "ms": "21.0738"
+          },
+          {
+            "batch": "5",
+            "ms": "21.5751"
+          },
+          {
+            "batch": "6",
+            "ms": "21.8618"
+          },
+          {
+            "batch": "7",
+            "ms": "21.6518"
+          }
+        ],
+        "medianMs": 21.1859
+      },
+      "after": {
+        "raw": [
+          {
+            "batch": "0",
+            "ms": "3.9065"
+          },
+          {
+            "batch": "1",
+            "ms": "3.8865"
+          },
+          {
+            "batch": "2",
+            "ms": "3.8471"
+          },
+          {
+            "batch": "3",
+            "ms": "3.85"
+          },
+          {
+            "batch": "4",
+            "ms": "3.84"
+          },
+          {
+            "batch": "5",
+            "ms": "3.8775"
+          },
+          {
+            "batch": "6",
+            "ms": "3.8239"
+          },
+          {
+            "batch": "7",
+            "ms": "3.8693"
+          }
+        ],
+        "medianMs": 3.8596500000000002
+      }
+    },
+    "connector": {
+      "before": {
+        "raw": [
+          {
+            "repeat": "0",
+            "ms": "24.4459",
+            "bytes": "0",
+            "retained": "0",
+            "connections": "127"
+          },
+          {
+            "repeat": "1",
+            "ms": "25.9106",
+            "bytes": "0",
+            "retained": "0",
+            "connections": "127"
+          },
+          {
+            "repeat": "2",
+            "ms": "23.7206",
+            "bytes": "0",
+            "retained": "0",
+            "connections": "127"
+          },
+          {
+            "repeat": "3",
+            "ms": "25.2881",
+            "bytes": "0",
+            "retained": "0",
+            "connections": "127"
+          },
+          {
+            "repeat": "4",
+            "ms": "26.4091",
+            "bytes": "0",
+            "retained": "0",
+            "connections": "127"
+          },
+          {
+            "repeat": "5",
+            "ms": "24.6249",
+            "bytes": "0",
+            "retained": "0",
+            "connections": "127"
+          },
+          {
+            "repeat": "6",
+            "ms": "25.8668",
+            "bytes": "0",
+            "retained": "0",
+            "connections": "127"
+          },
+          {
+            "repeat": "7",
+            "ms": "25.7386",
+            "bytes": "0",
+            "retained": "0",
+            "connections": "127"
+          }
+        ],
+        "medianMs": 25.513350000000003
+      },
+      "after": {
+        "raw": [
+          {
+            "repeat": "0",
+            "ms": "1.1574",
+            "bytes": "0",
+            "retained": "127",
+            "connections": "127"
+          },
+          {
+            "repeat": "1",
+            "ms": "1.1764",
+            "bytes": "0",
+            "retained": "127",
+            "connections": "127"
+          },
+          {
+            "repeat": "2",
+            "ms": "1.109",
+            "bytes": "0",
+            "retained": "127",
+            "connections": "127"
+          },
+          {
+            "repeat": "3",
+            "ms": "1.0904",
+            "bytes": "0",
+            "retained": "127",
+            "connections": "127"
+          },
+          {
+            "repeat": "4",
+            "ms": "1.1195",
+            "bytes": "0",
+            "retained": "127",
+            "connections": "127"
+          },
+          {
+            "repeat": "5",
+            "ms": "1.0961",
+            "bytes": "0",
+            "retained": "127",
+            "connections": "127"
+          },
+          {
+            "repeat": "6",
+            "ms": "1.0854",
+            "bytes": "0",
+            "retained": "127",
+            "connections": "127"
+          },
+          {
+            "repeat": "7",
+            "ms": "1.0894",
+            "bytes": "0",
+            "retained": "127",
+            "connections": "127"
+          }
+        ],
+        "medianMs": 1.10255
+      }
+    }
+  },
+  "naturalCombat": {
+    "before": {
+      "methodology": "Unity Editor Siege Play. Editor update observes advancing game frames; single-frame observation intervals are summarized, gaps retained and counted. Game delta is also retained. CPU counters are cumulative and nested: refresh includes rebuild, rebuild includes connectivity; never sum them. Full refresh timing begins after input block enumeration. GC counter is observed last profiler value, not a complete allocation trace. Once-per-second scene census allocates and perturbs measurements. Includes editor, render and scheduling effects; not Player FPS, GPU time, deterministic combat or an isolated subsystem benchmark.",
+      "label": "profiler-before",
+      "utc": "2026-11-05T08:47:10.8942316Z",
+      "unityVersion": "6000.6.8f1",
+      "processor": "Intel(R) Core(TM) Ultra 5 225H",
+      "processorCount": 14,
+      "seed": 14741,
+      "maxActiveAttackers": 6,
+      "initialWave": 0,
+      "initialCoins": 2730,
+      "gcCounterAvailable": true,
+      "physicsNeighborQueries": 48089,
+      "legacyReferenceScans": 0,
+      "reason": "Duration reached",
+      "elapsedSeconds": 60.001581599999554,
+      "skippedObservations": 0,
+      "observationMedianMs": 15.827299999727984,
+      "observationP95Ms": 45.55700000037177,
+      "observationP99Ms": 55.92909999995754,
+      "frames": 3277,
+      "observedFramesPerSecond": 54.61522700928311,
+      "census": [
+        {
+          "seconds": 0.13724159999947005,
+          "wave": 1,
+          "phase": "Battle",
+          "coins": 2730,
+          "attackers": 1,
+          "pending": 1,
+          "units": 4,
+          "fragments": 0,
+          "blocks": 498,
+          "colliders": 511,
+          "rigidbodies": 10,
+          "awakeDynamicBodies": 3,
+          "baseBlocks": 388,
+          "baseAlive": true
+        },
+        {
+          "seconds": 10.30384950000007,
+          "wave": 1,
+          "phase": "Battle",
+          "coins": 2730,
+          "attackers": 2,
+          "pending": 0,
+          "units": 17,
+          "fragments": 12,
+          "blocks": 575,
+          "colliders": 598,
+          "rigidbodies": 33,
+          "awakeDynamicBodies": 19,
+          "baseBlocks": 388,
+          "baseAlive": true
+        },
+        {
+          "seconds": 20.487810599999648,
+          "wave": 1,
+          "phase": "Battle",
+          "coins": 2730,
+          "attackers": 2,
+          "pending": 0,
+          "units": 38,
+          "fragments": 33,
+          "blocks": 558,
+          "colliders": 579,
+          "rigidbodies": 54,
+          "awakeDynamicBodies": 13,
+          "baseBlocks": 371,
+          "baseAlive": true
+        },
+        {
+          "seconds": 30.6963224000001,
+          "wave": 1,
+          "phase": "Battle",
+          "coins": 2730,
+          "attackers": 2,
+          "pending": 0,
+          "units": 38,
+          "fragments": 33,
+          "blocks": 530,
+          "colliders": 552,
+          "rigidbodies": 54,
+          "awakeDynamicBodies": 12,
+          "baseBlocks": 344,
+          "baseAlive": true
+        },
+        {
+          "seconds": 40.86819360000027,
+          "wave": 1,
+          "phase": "Battle",
+          "coins": 2730,
+          "attackers": 2,
+          "pending": 0,
+          "units": 38,
+          "fragments": 33,
+          "blocks": 505,
+          "colliders": 527,
+          "rigidbodies": 55,
+          "awakeDynamicBodies": 4,
+          "baseBlocks": 316,
+          "baseAlive": true
+        },
+        {
+          "seconds": 51.027333400000316,
+          "wave": 1,
+          "phase": "Battle",
+          "coins": 2730,
+          "attackers": 2,
+          "pending": 0,
+          "units": 38,
+          "fragments": 33,
+          "blocks": 477,
+          "colliders": 499,
+          "rigidbodies": 54,
+          "awakeDynamicBodies": 5,
+          "baseBlocks": 291,
+          "baseAlive": true
+        }
+      ]
+    },
+    "after": {
+      "methodology": "Unity Editor Siege Play. Editor update observes advancing game frames; single-frame observation intervals are summarized, gaps retained and counted. Game delta is also retained. CPU counters are cumulative and nested: refresh includes rebuild, rebuild includes connectivity; never sum them. Full refresh timing begins after input block enumeration. GC counter is observed last profiler value, not a complete allocation trace. Once-per-second scene census allocates and perturbs measurements. Includes editor, render and scheduling effects; not Player FPS, GPU time, deterministic combat or an isolated subsystem benchmark.",
+      "label": "profiler-after",
+      "utc": "2026-11-05T08:56:19.0245142Z",
+      "unityVersion": "6000.6.8f1",
+      "processor": "Intel(R) Core(TM) Ultra 5 225H",
+      "processorCount": 14,
+      "seed": 14741,
+      "maxActiveAttackers": 6,
+      "initialWave": 0,
+      "initialCoins": 2730,
+      "gcCounterAvailable": true,
+      "physicsNeighborQueries": 33067,
+      "legacyReferenceScans": 0,
+      "reason": "Duration reached",
+      "elapsedSeconds": 60.00960480000049,
+      "skippedObservations": 0,
+      "observationMedianMs": 14.357099999870115,
+      "observationP95Ms": 42.92189999978291,
+      "observationP99Ms": 54.07519999971555,
+      "frames": 3537,
+      "observedFramesPerSecond": 58.940564794387235,
+      "census": [
+        {
+          "seconds": 0.19143929999972897,
+          "wave": 1,
+          "phase": "Battle",
+          "coins": 2730,
+          "attackers": 1,
+          "pending": 1,
+          "units": 4,
+          "fragments": 0,
+          "blocks": 498,
+          "colliders": 511,
+          "rigidbodies": 10,
+          "awakeDynamicBodies": 3,
+          "baseBlocks": 388,
+          "baseAlive": true
+        },
+        {
+          "seconds": 10.337310800000523,
+          "wave": 1,
+          "phase": "Battle",
+          "coins": 2730,
+          "attackers": 2,
+          "pending": 0,
+          "units": 49,
+          "fragments": 44,
+          "blocks": 575,
+          "colliders": 601,
+          "rigidbodies": 68,
+          "awakeDynamicBodies": 57,
+          "baseBlocks": 388,
+          "baseAlive": true
+        },
+        {
+          "seconds": 20.50788879999982,
+          "wave": 1,
+          "phase": "Battle",
+          "coins": 2850,
+          "attackers": 1,
+          "pending": 0,
+          "units": 65,
+          "fragments": 61,
+          "blocks": 564,
+          "colliders": 591,
+          "rigidbodies": 86,
+          "awakeDynamicBodies": 21,
+          "baseBlocks": 379,
+          "baseAlive": true
+        },
+        {
+          "seconds": 30.732495299999755,
+          "wave": 1,
+          "phase": "Battle",
+          "coins": 2850,
+          "attackers": 1,
+          "pending": 0,
+          "units": 32,
+          "fragments": 28,
+          "blocks": 482,
+          "colliders": 501,
+          "rigidbodies": 45,
+          "awakeDynamicBodies": 12,
+          "baseBlocks": 362,
+          "baseAlive": true
+        },
+        {
+          "seconds": 40.90619090000018,
+          "wave": 1,
+          "phase": "Battle",
+          "coins": 2850,
+          "attackers": 1,
+          "pending": 0,
+          "units": 32,
+          "fragments": 28,
+          "blocks": 472,
+          "colliders": 489,
+          "rigidbodies": 43,
+          "awakeDynamicBodies": 9,
+          "baseBlocks": 353,
+          "baseAlive": true
+        },
+        {
+          "seconds": 51.027978500000245,
+          "wave": 1,
+          "phase": "Battle",
+          "coins": 2850,
+          "attackers": 1,
+          "pending": 0,
+          "units": 32,
+          "fragments": 28,
+          "blocks": 460,
+          "colliders": 477,
+          "rigidbodies": 44,
+          "awakeDynamicBodies": 5,
+          "baseBlocks": 340,
+          "baseAlive": true
+        }
+      ]
+    }
+  },
+  "methodology": "Before at daffcee; after working tree. Intel Core Ultra 5 225H; Unity 6000.6.8f1 Editor. Subsystem tests use identical isolated fixtures, warmup then 8 batches; sequential before/after, not ABBA, no frame advancement. Search: 40 weapons, 12 units x 96 health modules x 8 visual children; 45m range. Connector:128 real Blocks/1x1x1 in chain, 127 shared connection visuals; 8 full rechecks, creation/destruction outside synchronous time. GC byte counter returned zero even for allocating baseline and is NOT accepted as allocation proof. Natural Siege: fresh scene per run, RNG4721, settings seed14741, two cheapest defender options, wave1,60s, same camera/render settings, periodic census allocations and editor/profiler overhead included. Natural combat trajectories diverge; observed FPS change is not a causal estimate or Player performance."
+}

@@ -111,11 +111,16 @@ public static class SiegeRuntimeConnectionChecks
                 block.CheckConnection();
             }
 
+            GameObject[] stableVisuals = blocks.SelectMany(block => block.connectors).Select(connector => connector.connector).Where(item => item != null).Distinct().ToArray();
             for (int repeat = 0; repeat < 3; repeat++)
             {
                 middle.CheckConnection();
             }
 
+            Check(
+                checks,
+                "unchanged physical links retain exact visual object identities across repeated probes",
+                stableVisuals.Length == 2 && stableVisuals.All(item => item != null && blocks.Sum(block => block.connectors.Count(connector => connector.connector == item)) == 2));
             bool pairedVisuals = blocks.SelectMany(block => block.connectors).Where(connector => connector.isConnected).All(connector => connector.connector != null && blocks.Sum(block => block.connectors.Count(other => other.connector == connector.connector)) == 2);
             Check(checks, "visual refresh retains exactly two references per live connection", pairedVisuals);
             Check(

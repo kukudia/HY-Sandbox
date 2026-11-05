@@ -1,13 +1,12 @@
 // 职责：从有效敌对组中选择范围内最近的伤害目标，支持玩家优先攻击敌方驾驶舱。
 // 入口：FindNearestTarget()；由 Turret 按索敌周期调用，不依赖当前供电。
-// 生命周期：复用扫描缓冲，每次索敌读取当前层级，感知修复新增与重组移出的模块。
+// 生命周期：共享单位当前物理步的层级快照，实时验证伤势、位置和归属；修复/重组使快照失效。
 using System.Collections.Generic;
 using UnityEngine;
 
 internal sealed class TurretTargetSelector
 {
     private readonly Transform _weapon;
-    private readonly List<Durability> _durabilities = new List<Durability>();
     internal TurretTargetSelector(Transform weapon)
     {
         _weapon = weapon;
@@ -24,6 +23,7 @@ internal sealed class TurretTargetSelector
         ControlUnit nearest = null;
         nearestDurability = null;
         float nearestSqrDistance = range * range;
+        Vector3 origin = _weapon.position;
         if (units == null)
         {
             return null;
@@ -49,7 +49,7 @@ internal sealed class TurretTargetSelector
                     continue;
                 }
 
-                float sqrDistance = (cockpitDurability.transform.position - _weapon.position).sqrMagnitude;
+                float sqrDistance = (cockpitDurability.transform.position - origin).sqrMagnitude;
                 if (sqrDistance < nearestSqrDistance)
                 {
                     nearest = candidate;
@@ -76,13 +76,13 @@ internal sealed class TurretTargetSelector
                 continue;
             }
 
-            Durability candidateDurability = FindNearestDurability(candidate);
+            Durability candidateDurability = FindNearestDurability(candidate, origin, nearestSqrDistance);
             if (candidateDurability == null)
             {
                 continue;
             }
 
-            float sqrDistance = (candidateDurability.transform.position - _weapon.position).sqrMagnitude;
+            float sqrDistance = (candidateDurability.transform.position - origin).sqrMagnitude;
             if (sqrDistance < nearestSqrDistance)
             {
                 nearest = candidate;
@@ -94,20 +94,20 @@ internal sealed class TurretTargetSelector
         return nearest;
     }
 
-    private Durability FindNearestDurability(ControlUnit unit)
+    private Durability FindNearestDurability(ControlUnit unit, Vector3 origin, float nearestSqrDistance)
     {
-        unit.GetComponentsInChildren<Durability>(_durabilities);
         Durability nearest = null;
-        float nearestSqrDistance = float.MaxValue;
-        foreach (Durability durability in _durabilities)
+        IReadOnlyList<Durability> targets = unit.GetDamageTargets();
+        for (int index = 0; index < targets.Count; index++)
         {
-            if (durability == null || !durability.isActiveAndEnabled || durability.currentDurability <= 0f || durability.GetComponentInParent<ControlUnit>() != unit)
+            Durability durability = targets[index];
+            if (durability == null || !durability.isActiveAndEnabled || durability.currentDurability <= 0f)
             {
                 continue;
             }
 
-            float sqrDistance = (durability.transform.position - _weapon.position).sqrMagnitude;
-            if (sqrDistance < nearestSqrDistance)
+            float sqrDistance = (durability.transform.position - origin).sqrMagnitude;
+            if (sqrDistance < nearestSqrDistance && durability.GetComponentInParent<ControlUnit>() == unit)
             {
                 nearest = durability;
                 nearestSqrDistance = sqrDistance;

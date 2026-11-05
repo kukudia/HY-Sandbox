@@ -10,6 +10,12 @@ Unity 6000.6.8f1（URP / VFX Graph 17.6.0，Input System 1.20.1）。本文只�
 
 敌机新增稳定索敌、即时失效与错峰调度，避障过滤触发器和地板重叠伪法线；实体炮塔按目标/射手点速度预测交会，修复新增模块与重组变更在索敌时可见。机器人导航基线通过，本轮保留其现有算法。入口、Inspector 开关、真实 Play 证据和性能/长时验证缺口见 [AI 升级报告](Docs/Validation/2026-11-05-ai-upgrade.md)。
 
+## 最新 Profiler 与战斗性能
+
+已分析 2026-11-05 16:35 的 2,000 帧采样：炮塔固定步及伤害触发的连接视觉重复创建/销毁是主要可修复热点。`BlockConnections.CheckConnection` 保留未改变的双侧连接视觉；`ControlUnit.GetDamageTargets` 共享当前物理步的模块层级快照，炮塔仍实时验证位置、伤势和归属。新增同一步激活、移动、重组及视觉身份回归；没有降低物理频率、伤害或渲染质量。
+
+相同隔离夹具连接刷新中位 25.51→1.10ms，40炮塔索敌批次 21.19→3.86ms；自然阵地战60秒 Editor 观察54.6→58.9帧/秒，但战斗轨迹不同，不作为确定性收益或Player帧率。采样局限、逐项证据及剩余Gizmos/渲染热点见 [性能报告](Docs/Validation/2026-11-05-profiler-performance.md) 与 [原始汇总](Docs/Validation/2026-11-05-profiler-performance.json)。
+
 ## 本轮复用与精简
 
 断片保留修复：建筑超过32模块或残骸数量预算时仍生成完整物理残骸，预算只请求延后退场。建筑、阵地战敌方碎片及载具延迟清理共用 `FragmentLifetime` 最短保留期（`Resources/Salvage/Settings.minimumFragmentLifetime`，当前10秒）；伤害销毁、卸载和会话退出不受此保护。载具重组保留源 PhysicsScene、损伤归因及剩余碰撞保护。验证见 [断片保留报告](Docs/Validation/2026-11-04-fragment-retention.md)。

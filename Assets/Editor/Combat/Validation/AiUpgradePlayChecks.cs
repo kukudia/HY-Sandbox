@@ -127,6 +127,32 @@ public static class AiUpgradePlayChecks
             Check(checks, "Reparented damage module is removed from old target", args[5] == null);
             repaired.transform.SetParent(first.transform, true);
             original.enabled = true;
+            select.Invoke(selector, args);
+            var inactive = new GameObject("Inactive nested module");
+            inactive.SetActive(false);
+            inactive.transform.SetParent(first.transform, false);
+            Durability inactiveHealth = Health(inactive.transform, "Health", Vector3.back * 5f);
+            select.Invoke(selector, args);
+            inactive.SetActive(true);
+            select.Invoke(selector, args);
+            Check(
+                checks,
+                "Same-step activation invalidates shared hierarchy snapshot",
+                args[5] as Durability == inactiveHealth);
+            inactiveHealth.transform.localPosition = Vector3.forward * 50f;
+            select.Invoke(selector, args);
+            Check(
+                checks,
+                "Shared membership still reads live module positions",
+                args[5] as Durability != inactiveHealth);
+            inactive.transform.SetParent(second.transform, true);
+            inactiveHealth.transform.localPosition = Vector3.zero;
+            select.Invoke(selector, args);
+            Check(
+                checks,
+                "Ancestor regroup cannot leave a module selectable by its old unit",
+                args[5] as Durability != inactiveHealth);
+            UnityEngine.Object.DestroyImmediate(inactive);
             ProjectileTurret cannon = Object.Instantiate(Resources.Load<GameObject>("Blocks/ProjectileTurretSingle"), owner.transform).GetComponent<ProjectileTurret>();
             if (cannon == null)
             {

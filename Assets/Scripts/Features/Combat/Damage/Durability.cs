@@ -5,6 +5,20 @@ using System.Collections.Generic;
 
 public class Durability : MonoBehaviour
 {
+    // 同步索敌快照仅在当前物理步复用；修复新增和模块换父级必须能在同一步被发现。
+    internal static uint HierarchyVersion
+    {
+        get; private set;
+    }
+
+    private void OnTransformParentChanged()
+    {
+        unchecked
+        {
+            HierarchyVersion++;
+        }
+    }
+
     private static readonly HashSet<Durability> active = new HashSet<Durability>();
     internal static IEnumerable<Durability> Active => active;
 
@@ -58,6 +72,11 @@ public class Durability : MonoBehaviour
 
     private void OnEnable()
     {
+        unchecked
+        {
+            HierarchyVersion++;
+        }
+
         active.Add(this);
         if (PreserveStateForSceneTransfer)
         {
@@ -73,6 +92,11 @@ public class Durability : MonoBehaviour
 
     private void OnDisable()
     {
+        unchecked
+        {
+            HierarchyVersion++;
+        }
+
         active.Remove(this);
     }
 

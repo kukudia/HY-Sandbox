@@ -9,6 +9,29 @@ public class ControlUnit : MonoBehaviour
     private static readonly List<ControlUnit> ActiveUnits = new List<ControlUnit>();
     public static IReadOnlyList<ControlUnit> RuntimeUnits => ActiveUnits;
 
+    private readonly List<Durability> damageTargets = new List<Durability>();
+    private int damageTargetsFrame = -1;
+    private double damageTargetsStep = -1;
+    private uint damageTargetsVersion;
+    // 多座炮塔共享当前物理步的层级读取；位置、阵营、伤势和真实归属仍在每次选择时验证。
+    internal IReadOnlyList<Durability> GetDamageTargets()
+    {
+        if (damageTargetsFrame != Time.frameCount || damageTargetsStep != Time.fixedTimeAsDouble || damageTargetsVersion != Durability.HierarchyVersion)
+        {
+            GetComponentsInChildren(true, damageTargets);
+            damageTargetsFrame = Time.frameCount;
+            damageTargetsStep = Time.fixedTimeAsDouble;
+            damageTargetsVersion = Durability.HierarchyVersion;
+        }
+
+        return damageTargets;
+    }
+
+    private void OnTransformChildrenChanged()
+    {
+        damageTargetsFrame = -1;
+    }
+
     public static bool IsSceneSimulationActive(UnityEngine.SceneManagement.Scene scene)
     {
         foreach (ControlUnit unit in ActiveUnits)
@@ -159,6 +182,7 @@ public class ControlUnit : MonoBehaviour
 
     public void RefreshChildren()
     {
+        damageTargetsFrame = -1;
         // Refresh after loading or regrouping because child components and Rigidbody ownership may have changed.
         EnsureRuntimeUnitId();
         hoverFlightController = GetComponentInChildren<HoverFlightController>();

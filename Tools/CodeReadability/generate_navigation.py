@@ -419,7 +419,7 @@ def main():
     )
     graph(
         "物理分组、连接与推进",
-        "连接图是组重建输入；先捕获不可变源速度/质心，优先保留含驾驶舱分量的刚体，无驾驶舱时保留最大分量。只迁移分离模块，所有迁移完成后恢复点速度并局部刷新；不重扫无关单位。几何连接要求两侧规范碰撞体都参与Block层查询，断链不能单向向外连接；修缮/底座重建显式恢复原层。FixedUpdate由引擎调度；悬浮控制器提交目标，推进器每物理帧限速一次。关机撤销功率请求但残余推力按maxThrustChangeRate衰减；退出游玩或组件禁用清零。",
+        "连接图是组重建输入；先捕获不可变源速度/质心，优先保留含驾驶舱分量的刚体，无驾驶舱时保留最大分量。只迁移分离模块，所有迁移完成后恢复点速度并局部刷新；不重扫无关单位。重新探测时仍有效的双侧连接保留原视觉，只释放改变的连接，避免重建时成批Instantiate/Destroy。几何连接要求两侧规范碰撞体都参与Block层查询，断链不能单向向外连接；修缮/底座重建显式恢复原层。FixedUpdate由引擎调度；悬浮控制器提交目标，推进器每物理帧限速一次。关机撤销功率请求但残余推力按maxThrustChangeRate衰减；退出游玩或组件禁用清零。",
         {
             "A": "PlayManager.RefreshGroup",
             "B": "PlayManager.AssignBlocksToParentGroups",
@@ -457,6 +457,9 @@ def main():
             "AH": "Thruster.TickInputThrust",
             "AI": "Thruster.ApplyDirectionalThrust",
             "AJ": "GroupPhysicsSettings.ApplyTo",
+            "AK": "BlockConnections.CheckConnection",
+            "AL": "BlockConnections.ConnectTo",
+            "AM": "BlockConnections.ClearConnector",
         },
         [
             "A -->|建筑按底座支撑分裂| AF",
@@ -466,6 +469,7 @@ def main():
             "C --> Z", "C --> AA", "C -->|新分量即时登记，外层统一清理| AB",
             "D -->|有效缓存BFS，经 Block 入口| E",
             "D --> AG", "AG -->|任一快照失效才物理重建| AE",
+            "AE --> AK", "AK -->|几何与双侧身份未变时复用视觉| AL", "AK -->|连接改变或失效| AM",
             "AE -.->|每块连接检查后保存| AC",
             "W -->|直接清理双侧引用| AD",
             "W -.->|两侧排除断开块| E", "X --> Y",
@@ -885,7 +889,7 @@ def main():
     )
     graph(
         "耐久调试标签与炮塔搜索预算",
-        "源码推导：DebugManager只装配一个耐久标签绘制器；各Durability的启用/禁用只维护活动注册，关闭标签时不扫描模块，不再为每个方块注册OnGUI/LateUpdate。炮塔目标失效时立即重搜，空目标沿用targetRefreshInterval，先按阵营排除不相关单位。",
+        "源码推导：DebugManager只装配一个耐久标签绘制器；各Durability的启用/禁用只维护活动注册，关闭标签时不扫描模块，不再为每个方块注册OnGUI/LateUpdate。炮塔目标失效时立即重搜，空目标沿用targetRefreshInterval，先按阵营排除不相关单位；每个ControlUnit共享当前物理步的层级快照，启用/禁用/换父级及RefreshChildren使其失效，候选的伤势、位置和真实归属仍实时检查。",
         {
             "A": "DebugManager.Awake",
             "B": "Durability.OnEnable",
@@ -894,10 +898,14 @@ def main():
             "E": "Turret.FixedUpdate",
             "F": "Turret.RefreshTarget",
             "G": "TurretTargetSelector.FindNearestTarget",
+            "H": "ControlUnit.GetDamageTargets",
+            "I": "Durability.OnTransformParentChanged",
+            "J": "ControlUnit.RefreshChildren",
         },
         [
             "A -.->|装配单个标签组件，UnityGUI回调| D", "B -.->|活动注册| D", "C -.->|移除注册| D",
-            "E --> F", "F -->|到达搜索间隔或已有目标失效| G",
+            "E --> F", "F -->|到达搜索间隔或已有目标失效| G", "G --> H",
+            "B -.->|版本失效| H", "C -.->|版本失效| H", "I -.->|版本失效| H", "J -.->|快照失效| H",
         ],
     )
     graph(
