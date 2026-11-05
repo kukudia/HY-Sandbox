@@ -132,7 +132,7 @@ public static class TurretFlightPlayProbe
                 _phase = 1;
             }
 
-            TurretProjectile[] shots = Object.FindObjectsByType<TurretProjectile>(FindObjectsSortMode.None);
+            TurretProjectile[] shots = Object.FindObjectsByType<TurretProjectile>();
             _sawRecoil |= _turret.Muzzles.Select((m, i) => Vector3.Distance(m.parent.localPosition, _barrelRest[i])).All(d => d > 0.1f);
             if (_phase == 1 && shots.Length > 0)
             {
@@ -220,7 +220,7 @@ public static class TurretFlightPlayProbe
         _manager.allControlUnits = _previousUnits;
         _manager.enabled = _previousEnabled;
         Application.runInBackground = _previousBackground;
-        foreach (TurretProjectile shot in Object.FindObjectsByType<TurretProjectile>(FindObjectsSortMode.None))
+        foreach (TurretProjectile shot in Object.FindObjectsByType<TurretProjectile>())
         {
             if (Vector3.Distance(shot.transform.position, _root.transform.position) < 50f)
             {

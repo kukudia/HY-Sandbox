@@ -30,7 +30,7 @@ public static class SiegeWreckBudgetChecks
         SalvageSettings settings = WreckSalvage.Settings;
         float previousMinimum = settings.minimumFragmentLifetime;
         UnityEngine.Random.State previousRandom = UnityEngine.Random.state;
-        var previousDrops = new HashSet<LootDrop>(Object.FindObjectsByType<LootDrop>(FindObjectsSortMode.None));
+        var previousDrops = new HashSet<LootDrop>(Object.FindObjectsByType<LootDrop>());
         try
         {
             PlayManager.instance.playMode = true;
@@ -116,7 +116,7 @@ public static class SiegeWreckBudgetChecks
             PlayManager.instance.playMode = previousPlayMode;
             settings.minimumFragmentLifetime = previousMinimum;
             UnityEngine.Random.state = previousRandom;
-            foreach (LootDrop drop in Object.FindObjectsByType<LootDrop>(FindObjectsSortMode.None))
+            foreach (LootDrop drop in Object.FindObjectsByType<LootDrop>())
             {
                 if (!previousDrops.Contains(drop))
                 {

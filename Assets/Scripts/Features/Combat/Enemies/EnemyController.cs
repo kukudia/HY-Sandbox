@@ -238,7 +238,9 @@ public class EnemyController : MonoBehaviour
             return Vector3.zero;
         }
 
-        float sign = Mathf.Sin(Time.time * 0.7f + GetInstanceID()) >= 0f ? 1f : -1f;
+        // EntityId 只作个体相位种子；限定幅度，避免大整数转 float 后吞掉时间增量。
+        float phase = (GetEntityId().GetHashCode() & 0xFFFF) * (Mathf.PI * 2f / 65536f);
+        float sign = Mathf.Sin(Time.time * 0.7f + phase) >= 0f ? 1f : -1f;
         return Vector3.Cross(Vector3.up, flatDirection.normalized) * sign * 0.45f;
     }
 

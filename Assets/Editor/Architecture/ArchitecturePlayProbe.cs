@@ -411,7 +411,7 @@ public static class ArchitecturePlayProbe
 
     private static void PauseSceneUpdates(bool stopStartupCoroutines)
     {
-        foreach (MonoBehaviour behaviour in Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        foreach (MonoBehaviour behaviour in Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include))
         {
             behaviour.enabled = false;
             if (stopStartupCoroutines || behaviour != _build)

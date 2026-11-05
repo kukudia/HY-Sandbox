@@ -249,7 +249,7 @@ public static class PhysicsSandboxProbe
         var library = new UnityEditor.SerializedObject(BlockVfxLibrary.Instance);
         string effectName = library.FindProperty("_bursts").GetArrayElementAtIndex((int)BlockVfxLibrary.Effect.Explosion).objectReferenceValue.name + "(Clone)";
         int count = 0;
-        foreach (VfxEffect effect in UnityEngine.Object.FindObjectsByType<VfxEffect>(FindObjectsSortMode.None))
+        foreach (VfxEffect effect in UnityEngine.Object.FindObjectsByType<VfxEffect>())
         {
             if (effect.name == effectName)
             {

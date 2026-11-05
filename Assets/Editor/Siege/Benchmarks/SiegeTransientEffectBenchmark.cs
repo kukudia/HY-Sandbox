@@ -58,7 +58,7 @@ public static class SiegeTransientEffectBenchmark
                 }
 
                 // 使用实际到期回调；仅触及本夹具坐标的活动对象，生产池的闲置对象保留供热复用。
-                foreach (MonoBehaviour fade in Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).Where(item => IsOwned(item, origin)))
+                foreach (MonoBehaviour fade in Object.FindObjectsByType<MonoBehaviour>().Where(item => IsOwned(item, origin)))
                 {
                     Type type = fade.GetType();
                     const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;

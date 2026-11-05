@@ -82,7 +82,7 @@ internal static class WorldCombatPlayerChecks
             until = Time.time + 45f;
             while (cockpitHealth != null && cockpitHealth.enabled && Time.time < until)
             {
-                sawShell |= Object.FindObjectsByType<TurretProjectile>(FindObjectsSortMode.None).Length > 0;
+                sawShell |= Object.FindObjectsByType<TurretProjectile>().Length > 0;
                 sawDamage |= cockpitHealth.currentDurability < initialHealth;
                 yield return null;
             }

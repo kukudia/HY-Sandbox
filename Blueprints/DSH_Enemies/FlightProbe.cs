@@ -30,7 +30,7 @@ UnityEngine.Application.runInBackground = true;
 var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
 typeof(BuildManager).GetMethod("StopActiveBlockLoad", flags).Invoke(BuildManager.instance, null);
 BuildManager.instance.enabled = false;
-foreach (var u in UnityEngine.Object.FindObjectsByType<ControlUnit>(UnityEngine.FindObjectsSortMode.None))
+foreach (var u in UnityEngine.Object.FindObjectsByType<ControlUnit>())
 {
     UnityEngine.Object.Destroy(u.gameObject);
 }
@@ -64,8 +64,8 @@ var turretCount = new System.Collections.Generic.List<int>();
 var turretsEngaged = new System.Collections.Generic.List<int>();
 var repairBays = new System.Collections.Generic.List<int>();
 var repairAway = new System.Collections.Generic.List<int>();
-var restRotations = new System.Collections.Generic.List<System.Collections.Generic.Dictionary<int, UnityEngine.Quaternion>>();
-var engaged = new System.Collections.Generic.List<System.Collections.Generic.HashSet<int>>();
+var restRotations = new System.Collections.Generic.List<System.Collections.Generic.Dictionary<UnityEngine.EntityId, UnityEngine.Quaternion>>();
+var engaged = new System.Collections.Generic.List<System.Collections.Generic.HashSet<UnityEngine.EntityId>>();
 for (int i = 0; i < files.Length; i++)
 {
     var data = UnityEngine.JsonUtility.FromJson<BlockDataList>(System.IO.File.ReadAllText(files[i]));
@@ -154,15 +154,15 @@ for (int i = 0; i < files.Length; i++)
 
     repairBays.Add(bays);
     repairAway.Add(0);
-    var rest = new System.Collections.Generic.Dictionary<int, UnityEngine.Quaternion>();
+    var rest = new System.Collections.Generic.Dictionary<UnityEngine.EntityId, UnityEngine.Quaternion>();
     foreach (var gun in guns)
     {
         var axis = gun.horizontalAxis != null ? gun.horizontalAxis : gun.transform;
-        rest[gun.GetInstanceID()] = axis.localRotation;
+        rest[gun.GetEntityId()] = axis.localRotation;
     }
 
     restRotations.Add(rest);
-    engaged.Add(new System.Collections.Generic.HashSet<int>());
+    engaged.Add(new System.Collections.Generic.HashSet<UnityEngine.EntityId>());
     checks.Add(new
     {
         name,
@@ -324,9 +324,9 @@ tick = () =>
             foreach (var gun in unit.GetComponentsInChildren<Turret>())
             {
                 var axis = gun.horizontalAxis != null ? gun.horizontalAxis : gun.transform;
-                if (UnityEngine.Quaternion.Angle(axis.localRotation, restRotations[current][gun.GetInstanceID()]) > 2f)
+                if (UnityEngine.Quaternion.Angle(axis.localRotation, restRotations[current][gun.GetEntityId()]) > 2f)
                 {
-                    engaged[current].Add(gun.GetInstanceID());
+                    engaged[current].Add(gun.GetEntityId());
                 }
             }
 

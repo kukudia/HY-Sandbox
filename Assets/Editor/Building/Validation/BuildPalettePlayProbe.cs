@@ -69,7 +69,7 @@ public static class BuildPalettePlayProbe
             _background = Application.runInBackground;
             Application.runInBackground = true;
             // Awake establishes manager references. Stop gameplay updates and pending load/camera coroutines during assertions.
-            foreach (MonoBehaviour behaviour in Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            foreach (MonoBehaviour behaviour in Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include))
             {
                 if (!(behaviour is UIBehaviour) && !(behaviour is MainUIButtons) && !(behaviour is BuildPalette) && !(behaviour is BuildPaletteItem) && !(behaviour is ConnectorPlacementHints))
                 {

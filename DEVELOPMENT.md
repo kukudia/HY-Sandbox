@@ -1,6 +1,10 @@
 # HY-Sandbox 开发入口
 
-Unity 6000.3.11f1。本文只维护当前功能、契约与验证入口；历史变更和旧验收完整保存在 [DevelopmentHistory](Docs/DevelopmentHistory.md)。
+Unity 6000.6.8f1（URP / VFX Graph 17.6.0，Input System 1.20.1）。本文只维护当前功能、契约与验证入口；历史变更和旧验收完整保存在 [DevelopmentHistory](Docs/DevelopmentHistory.md)。
+
+## Unity 6.6 升级适配
+
+已迁移禁用的对象/序列化整数身份 API 至 EntityId，保留缓存、去重与引用检查语义；无序查询使用新版重载，性能探针显式记录 drawCalls。已执行验证、剩余弃用项和引擎适配优先级见 [升级适配报告](Docs/Validation/2026-11-05-unity-6000.6-upgrade.md)。运行调用链未重构，函数图仍适用，导航已刷新。
 
 ## 本轮复用与精简
 

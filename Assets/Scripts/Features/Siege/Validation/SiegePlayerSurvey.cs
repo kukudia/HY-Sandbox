@@ -128,9 +128,9 @@ public sealed class SiegePlayerSurvey : IDisposable
     private static Census TakeCensus(SiegeSession session, float seconds, Work work)
     {
         long begin = Stopwatch.GetTimestamp();
-        Block[] blocks = Object.FindObjectsByType<Block>(FindObjectsSortMode.None);
-        Rigidbody[] bodies = Object.FindObjectsByType<Rigidbody>(FindObjectsSortMode.None);
-        Collider[] colliders = Object.FindObjectsByType<Collider>(FindObjectsSortMode.None);
+        Block[] blocks = Object.FindObjectsByType<Block>();
+        Rigidbody[] bodies = Object.FindObjectsByType<Rigidbody>();
+        Collider[] colliders = Object.FindObjectsByType<Collider>();
         var sample = new Census
         {
             seconds = seconds,

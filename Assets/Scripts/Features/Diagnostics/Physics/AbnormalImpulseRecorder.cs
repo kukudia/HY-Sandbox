@@ -79,7 +79,7 @@ _logPath,
         if (Time.time >= _nextDiscovery)
         {
             _nextDiscovery = Time.time + _discoveryInterval;
-            foreach (Rigidbody body in FindObjectsByType<Rigidbody>(FindObjectsSortMode.None))
+            foreach (Rigidbody body in FindObjectsByType<Rigidbody>())
             {
                 if (body != null && !_previousVelocities.ContainsKey(body))
                 {

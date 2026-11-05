@@ -467,7 +467,7 @@ public static class WorldBuildingPlayProbe
         yield return null;
         Check(first.Blocks.Count < originalCount - 1, "destroyed support detaches disconnected blocks");
         Check(
-            Object.FindObjectsByType<Rigidbody>(FindObjectsSortMode.None).Any(body => body.name == "Building debris" && !body.isKinematic),
+            Object.FindObjectsByType<Rigidbody>().Any(body => body.name == "Building debris" && !body.isKinematic),
             "disconnected group becomes bounded physical debris");
         WorldLabSnapshot damagedSnapshot = manager.Capture();
         manager.Restore(damagedSnapshot);
@@ -513,7 +513,7 @@ public static class WorldBuildingPlayProbe
         Check(manager.Buildings.Count == 0, "legacy voxel save migrates to empty building list");
         world.Generate();
         Check(
-            manager.Buildings.Count == 1 && !Object.FindObjectsByType<Rigidbody>(FindObjectsSortMode.None).Any(body => body.name == "Building debris" && body.gameObject.activeSelf),
+            manager.Buildings.Count == 1 && !Object.FindObjectsByType<Rigidbody>().Any(body => body.name == "Building debris" && body.gameObject.activeSelf),
             "regenerate restores configured layout and clears building debris");
         controller.enabled = true;
     }

@@ -391,7 +391,7 @@ internal sealed class PowerRangeUnionView
                     continue;
                 }
 
-                int deviceSignature = device.GetInstanceID();
+                int deviceSignature = device.GetEntityId().GetHashCode();
                 deviceSignature = (deviceSignature * 397) ^ device.transform.position.GetHashCode();
                 deviceSignature = (deviceSignature * 397) ^ device.powerRange;
                 deviceSignature = (deviceSignature * 397) ^ GetPowerState(device);

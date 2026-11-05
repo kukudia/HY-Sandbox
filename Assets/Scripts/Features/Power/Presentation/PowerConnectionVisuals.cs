@@ -35,8 +35,8 @@ internal sealed class PowerConnectionVisuals
 
         foreach (PowerTransmissionDevice other in _device.connectedDevices)
         {
-            // 无向边由实例编号较小的一端绘制，避免重复线与重复对象。
-            if (other != null && _device.GetInstanceID() < other.GetInstanceID())
+            // 无向边由实体标识排序较小的一端绘制，避免重复线与重复对象。
+            if (other != null && _device.GetEntityId().CompareTo(other.GetEntityId()) < 0)
             {
                 DrawConnection(lineIndex++, other.transform.position, settings.deviceConnectionColor, settings);
             }

@@ -299,15 +299,15 @@ public static class BlockArtPlayProbe
                 _meteorTail.StopAndRelease();
                 _meteor.trailEffect = null;
                 Object.Destroy(_meteor.gameObject);
-                int streaksBeforeExplosion = Object.FindObjectsByType<StylizedBeamEffect>(FindObjectsSortMode.None).Length;
+                int streaksBeforeExplosion = Object.FindObjectsByType<StylizedBeamEffect>().Length;
                 VisualEffectsManager.TryPlayBlockExplosion(_main.GetComponent<Block>());
-                VfxEffect blockExplosion = Object.FindObjectsByType<VfxEffect>(FindObjectsSortMode.None).FirstOrDefault(effect => effect.name.StartsWith("Explosion") && effect.transform.parent == null);
+                VfxEffect blockExplosion = Object.FindObjectsByType<VfxEffect>().FirstOrDefault(effect => effect.name.StartsWith("Explosion") && effect.transform.parent == null);
                 Check(
                     "Block explosion plays only native UNI Aerial Explosion",
-                    blockExplosion != null && blockExplosion.Graphs.Length == 1 && blockExplosion.Graphs[0].visualEffectAsset.name == "UNI_Aerial_Explosion" && Object.FindObjectsByType<StylizedBeamEffect>(FindObjectsSortMode.None).Length == streaksBeforeExplosion);
+                    blockExplosion != null && blockExplosion.Graphs.Length == 1 && blockExplosion.Graphs[0].visualEffectAsset.name == "UNI_Aerial_Explosion" && Object.FindObjectsByType<StylizedBeamEffect>().Length == streaksBeforeExplosion);
                 Check(
                     "Generator and repair bay lights illuminate",
-                    Object.FindObjectsByType<BlockStatusLight>(FindObjectsSortMode.None).All(s => s.GetComponentsInChildren<Light>().Count(l => l.intensity > 0f) == 2));
+                    Object.FindObjectsByType<BlockStatusLight>().All(s => s.GetComponentsInChildren<Light>().Count(l => l.intensity > 0f) == 2));
                 Check("Main thrust moves rotated unit along world X", _body.linearVelocity.x > 0.2f);
                 Check(
                     "Universal head rotates while base stays fixed",
@@ -364,7 +364,7 @@ public static class BlockArtPlayProbe
                     BlockVfxLibrary.Play(kind, new Vector3(50f + (int)kind * 4f, 0f, 0f), Quaternion.identity);
                 }
 
-                _bursts = Object.FindObjectsByType<VfxEffect>(FindObjectsSortMode.None).Where(e => e.transform.parent == null && e.transform.position.x >= 50f && e.transform.position.x <= 74f).ToArray();
+                _bursts = Object.FindObjectsByType<VfxEffect>().Where(e => e.transform.parent == null && e.transform.position.x >= 50f && e.transform.position.x <= 74f).ToArray();
                 Check("All seven event effects instantiate", _bursts.Length == 7);
                 var debris = new GameObject("Probe debris").AddComponent<Rigidbody>();
                 debris.useGravity = false;
@@ -415,7 +415,7 @@ public static class BlockArtPlayProbe
                 Check("Event effects release after playback", _bursts != null && _bursts.All(e => e == null));
                 Check(
                     "Detached smoke releases its controller",
-                    Object.FindObjectsByType<DetachedPartSmokeTrail>(FindObjectsSortMode.None).Length == 0);
+                    Object.FindObjectsByType<DetachedPartSmokeTrail>().Length == 0);
                 Check("Meteor tail survives owner removal then releases", _meteorTail == null);
                 Finish();
             }

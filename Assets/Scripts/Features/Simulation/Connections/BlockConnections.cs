@@ -151,7 +151,7 @@ internal sealed class BlockConnections
     {
         // 只兼容域重载后尚无运行时双侧引用的旧视觉；正常连接使用ReleaseRuntimePair。
         SimulationWorkMetrics.RecordLegacyReferenceScan();
-        Block[] blocks = Object.FindObjectsByType<Block>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        Block[] blocks = Object.FindObjectsByType<Block>(FindObjectsInactive.Include);
         foreach (Block block in blocks)
         {
             if (block == null || block.connectors == null)

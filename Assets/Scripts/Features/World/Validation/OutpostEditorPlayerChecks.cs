@@ -135,7 +135,7 @@ internal static class OutpostEditorPlayerChecks
 
             check(!build.IsEditingDeveloperBlueprint, "Player shortcut exits authoring into normal build mode");
             check(
-                !Object.FindObjectsByType<MeshFilter>(FindObjectsSortMode.None).Any(filter => filter.sharedMesh != null && filter.sharedMesh.name == "Defender deployment bounds"),
+                !Object.FindObjectsByType<MeshFilter>().Any(filter => filter.sharedMesh != null && filter.sharedMesh.name == "Defender deployment bounds"),
                 "Player mode exit removes active deployment geometry");
         }
         finally

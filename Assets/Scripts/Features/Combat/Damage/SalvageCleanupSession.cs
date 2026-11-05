@@ -137,7 +137,7 @@ internal sealed class SalvageCleanupSession
             yield return new WaitForSeconds(remaining);
         }
 
-        RuntimeUnitMember[] members = Object.FindObjectsByType<RuntimeUnitMember>(FindObjectsSortMode.None);
+        RuntimeUnitMember[] members = Object.FindObjectsByType<RuntimeUnitMember>();
         foreach (RuntimeUnitMember member in members)
         {
             if (member == null || member.ownerUnitId != ownerUnitId)

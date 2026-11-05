@@ -78,7 +78,7 @@ public static class SiegeArenaLookAuthoring
             ground.transform.localScale = new Vector3(900f, 1f, 900f);
         }
 
-        foreach (Light light in UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
+        foreach (Light light in UnityEngine.Object.FindObjectsByType<Light>())
         {
             if (light.type == LightType.Directional)
             {

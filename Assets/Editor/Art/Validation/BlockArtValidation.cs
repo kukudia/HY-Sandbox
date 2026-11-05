@@ -51,7 +51,7 @@ public static class BlockArtValidation
                         var property = serialized.GetIterator();
                         while (property.NextVisible(true))
                         {
-                            if (property.propertyType == SerializedPropertyType.ObjectReference && property.objectReferenceValue == null && property.objectReferenceInstanceIDValue != 0)
+                            if (property.propertyType == SerializedPropertyType.ObjectReference && property.objectReferenceValue == null && property.objectReferenceEntityIdValue != EntityId.None)
                             {
                                 issues.Add(path + ": broken " + component.GetType().Name + "." + property.propertyPath);
                             }

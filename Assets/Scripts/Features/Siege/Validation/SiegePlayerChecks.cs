@@ -389,7 +389,7 @@ public sealed class SiegePlayerChecks : MonoBehaviour
             if (session.Match.PendingAttackers == 0)
             {
                 // 明确刺激真实死亡链，只验证波次/奖励，不作为自然交火成绩。
-                foreach (Cockpit enemy in Object.FindObjectsByType<Cockpit>(FindObjectsSortMode.None).Where(cockpit => cockpit.faction == UnitFaction.Enemy).ToArray())
+                foreach (Cockpit enemy in Object.FindObjectsByType<Cockpit>().Where(cockpit => cockpit.faction == UnitFaction.Enemy).ToArray())
                 {
                     enemy.GetComponent<Durability>().ApplyDamage(1000000f, session.Fleet.Driven.Unit);
                 }
@@ -446,7 +446,7 @@ public sealed class SiegePlayerChecks : MonoBehaviour
 
             Check(
                 "mixed scene restart restores all satellite buildings without orphaned roots",
-                restoredPopulation != null && restoredPopulation.IsReady && restoredPopulation.Buildings.Count == report.additionalBuildings && restarted.Buildings.Buildings.Sum(building => building.Blocks.Count) == report.configuredBaseBlocks + report.additionalBuildingBlocks && Object.FindObjectsByType<BuildingRuntime>(FindObjectsSortMode.None).Length == report.additionalBuildings + 1);
+                restoredPopulation != null && restoredPopulation.IsReady && restoredPopulation.Buildings.Count == report.additionalBuildings && restarted.Buildings.Buildings.Sum(building => building.Blocks.Count) == report.configuredBaseBlocks + report.additionalBuildingBlocks && Object.FindObjectsByType<BuildingRuntime>().Length == report.additionalBuildings + 1);
         }
 
         Check(

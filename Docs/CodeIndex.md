@@ -2844,9 +2844,9 @@ HY-Sandbox/
 | EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L181) | private |
 | EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L195) | private |
 | EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L234) | private |
-| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L245) | private |
-| EnemyController | [`Vector3 ProbeObstacle(Vector3 direction, float weight)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L265) | private |
-| RaycastHitDistanceComparer | [`int Compare(RaycastHit a, RaycastHit b)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L313) | public |
+| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L247) | private |
+| EnemyController | [`Vector3 ProbeObstacle(Vector3 direction, float weight)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L267) | private |
+| RaycastHitDistanceComparer | [`int Compare(RaycastHit a, RaycastHit b)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L315) | public |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs
 

@@ -128,9 +128,9 @@ public static class SiegePerformanceCapture
         }
 
         // 全场查询仅每秒一次；该观察本身会产生开销，报告明确保留此限制。
-        Block[] blocks = Object.FindObjectsByType<Block>(FindObjectsSortMode.None);
-        Collider[] colliders = Object.FindObjectsByType<Collider>(FindObjectsSortMode.None);
-        Rigidbody[] bodies = Object.FindObjectsByType<Rigidbody>(FindObjectsSortMode.None);
+        Block[] blocks = Object.FindObjectsByType<Block>();
+        Collider[] colliders = Object.FindObjectsByType<Collider>();
+        Rigidbody[] bodies = Object.FindObjectsByType<Rigidbody>();
         int awake = 0;
         foreach (Rigidbody body in bodies)
         {

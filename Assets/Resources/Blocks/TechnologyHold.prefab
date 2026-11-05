@@ -1157,8 +1157,7 @@ MonoBehaviour:
 
     Durability: 100
 
-    Power: 10 min /
-    20 standard
+    Power: 10 min / 20 standard
 
     Capacity: 100'
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}

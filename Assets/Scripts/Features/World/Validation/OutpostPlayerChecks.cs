@@ -70,7 +70,7 @@ public static class OutpostPlayerChecks
         bool movingTarget)
     {
         check(
-            Object.FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None).All(item => !item.IsAutomaticSpawningAllowed),
+            Object.FindObjectsByType<EnemySpawner>().All(item => !item.IsAutomaticSpawningAllowed),
             "World session suppresses global EnemySpawner scheduling");
         Vector3 previous = player.transform.position;
         BuildingRuntime site = session.Buildings.Buildings.FirstOrDefault(item => item != null && item.Outpost != null);
@@ -211,14 +211,14 @@ public static class OutpostPlayerChecks
         health.ApplyDamage(5f, player);
         float damaged = health.currentDurability;
         EnemyIdentity survivingIdentity = defender.cockpit.GetComponent<EnemyIdentity>();
-        int regroupIdentity = survivingIdentity.GetInstanceID();
+        EntityId regroupIdentity = survivingIdentity.GetEntityId();
         Vector3 cockpitBeforeRegroup = survivingIdentity.transform.position;
         PlayManager.instance.RefreshGroup(defender);
         yield return null;
         bool trackedAfterRegroup = session.Outposts.TryGetDefender(siteId, first.id, out ControlUnit regrouped);
-        Debug.Log("Outpost regroup: tracked=" + trackedAfterRegroup + ", expected=" + regroupIdentity + ", actual=" + (regrouped != null && regrouped.cockpit != null ? regrouped.cockpit.GetComponent<EnemyIdentity>().GetInstanceID() : 0) + ", identityAlive=" + (survivingIdentity != null) + ", identityPosition=" + (survivingIdentity != null ? survivingIdentity.transform.position.ToString() : "destroyed") + ", player=" + player.transform.position);
+        Debug.Log("Outpost regroup: tracked=" + trackedAfterRegroup + ", expected=" + regroupIdentity + ", actual=" + (regrouped != null && regrouped.cockpit != null ? regrouped.cockpit.GetComponent<EnemyIdentity>().GetEntityId() : EntityId.None) + ", identityAlive=" + (survivingIdentity != null) + ", identityPosition=" + (survivingIdentity != null ? survivingIdentity.transform.position.ToString() : "destroyed") + ", player=" + player.transform.position);
         check(
-            trackedAfterRegroup && regrouped != null && regrouped.cockpit.GetComponent<EnemyIdentity>().GetInstanceID() == regroupIdentity,
+            trackedAfterRegroup && regrouped != null && regrouped.cockpit.GetComponent<EnemyIdentity>().GetEntityId() == regroupIdentity,
             "Damaged defender remains tracked after block regroup");
         check(
             Vector3.Distance(survivingIdentity.transform.position, cockpitBeforeRegroup) < 2f,

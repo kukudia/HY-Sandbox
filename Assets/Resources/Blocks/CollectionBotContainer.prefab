@@ -40,7 +40,7 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 161767239415906829}
   m_Enabled: 1
-  serializedVersion: 12
+  serializedVersion: 13
   m_Type: 2
   m_Color: {r: 0.12, g: 0.8, b: 1, a: 1}
   m_Intensity: 1
@@ -92,7 +92,7 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ForceVisible: 0
-  m_ShadowRadius: 0
+  m_ShapeRadius: 0
   m_ShadowAngle: 0
   m_LightUnit: 1
   m_LuxAtDistance: 1
@@ -265,7 +265,7 @@ VisualEffect:
   m_StartSeed: 0
   m_ResetSeedOnPlay: 1
   m_AllowInstancing: 1
-  m_ResourceVersion: 1
+  m_ReleaseInstanceOnDisable: 0
   m_PropertySheet:
     m_Float:
       m_Array:
@@ -410,7 +410,7 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2378972257998941362}
   m_Enabled: 1
-  serializedVersion: 12
+  serializedVersion: 13
   m_Type: 2
   m_Color: {r: 0.12, g: 0.8, b: 1, a: 1}
   m_Intensity: 1
@@ -462,7 +462,7 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ForceVisible: 0
-  m_ShadowRadius: 0
+  m_ShapeRadius: 0
   m_ShadowAngle: 0
   m_LightUnit: 1
   m_LuxAtDistance: 1
@@ -886,8 +886,7 @@ MonoBehaviour:
 
     Durability: 100
 
-    Power: 20 min /
-    20 standard'
+    Power: 20 min / 20 standard'
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
   connectorParent: {fileID: 7537050923806151130}
   raycastCollider: {fileID: 8339400636307940669}
@@ -1464,7 +1463,7 @@ VisualEffect:
   m_StartSeed: 0
   m_ResetSeedOnPlay: 1
   m_AllowInstancing: 1
-  m_ResourceVersion: 1
+  m_ReleaseInstanceOnDisable: 0
   m_PropertySheet:
     m_Float:
       m_Array: []
@@ -1878,7 +1877,7 @@ VisualEffect:
   m_StartSeed: 0
   m_ResetSeedOnPlay: 1
   m_AllowInstancing: 1
-  m_ResourceVersion: 1
+  m_ReleaseInstanceOnDisable: 0
   m_PropertySheet:
     m_Float:
       m_Array: []
@@ -2078,7 +2077,7 @@ VisualEffect:
   m_StartSeed: 0
   m_ResetSeedOnPlay: 1
   m_AllowInstancing: 1
-  m_ResourceVersion: 1
+  m_ReleaseInstanceOnDisable: 0
   m_PropertySheet:
     m_Float:
       m_Array:

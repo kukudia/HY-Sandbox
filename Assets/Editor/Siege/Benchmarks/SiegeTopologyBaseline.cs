@@ -105,10 +105,10 @@ public static class SiegeTopologyBaseline
         var partitions = new List<string>();
         foreach (List<Block> group in groups)
         {
-            var identities = new List<int>();
+            var identities = new List<EntityId>();
             foreach (Block block in group)
             {
-                identities.Add(block.GetInstanceID());
+                identities.Add(block.GetEntityId());
             }
 
             identities.Sort();

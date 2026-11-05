@@ -136,7 +136,7 @@ tick = () =>
             var blocks = parent != null ? parent.GetComponentsInChildren<Block>() : new Block[0];
             var rb = parent != null ? parent.GetComponent<UnityEngine.Rigidbody>() : null;
             int unpowered = parent != null ? parent.GetComponentsInChildren<Power>().Count(p => !p.isWorking) : -1;
-            int enemies = UnityEngine.Object.FindObjectsByType<ControlUnit>(UnityEngine.FindObjectsSortMode.None).Count(u => u.faction == UnitFaction.Enemy && u.HasValidCockpit);
+            int enemies = UnityEngine.Object.FindObjectsByType<ControlUnit>().Count(u => u.faction == UnitFaction.Enemy && u.HasValidCockpit);
             System.IO.File.AppendAllText(report, names[index] + "\tflight\t" + elapsed.ToString("F2", System.Globalization.CultureInfo.InvariantCulture) + "\t" + blocks.Length + "\t" + (cockpit != null ? cockpit.GetComponent<Durability>().currentDurability : 0) + "\t" + unpowered + "\t" + (parent != null ? parent.position.ToString("F2") : "lost") + "\t" + (rb != null ? rb.linearVelocity.magnitude.ToString("F2") : "0") + "\t" + enemies + "\n");
         }
 

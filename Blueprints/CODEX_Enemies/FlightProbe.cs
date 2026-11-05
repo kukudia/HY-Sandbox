@@ -12,7 +12,7 @@ UnityEngine.Application.runInBackground = true;
 var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
 typeof(BuildManager).GetMethod("StopActiveBlockLoad", flags).Invoke(BuildManager.instance, null);
 BuildManager.instance.enabled = false;
-foreach (var u in UnityEngine.Object.FindObjectsByType<ControlUnit>(UnityEngine.FindObjectsSortMode.None))
+foreach (var u in UnityEngine.Object.FindObjectsByType<ControlUnit>())
 {
     UnityEngine.Object.Destroy(u.gameObject);
 }

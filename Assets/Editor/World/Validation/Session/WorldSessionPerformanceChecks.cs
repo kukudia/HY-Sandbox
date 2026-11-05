@@ -248,13 +248,13 @@ public static class WorldSessionPerformanceChecks
             yield return null;
         }
 
-        results.Add($"rendering: batches={UnityStats.batches}, triangles={UnityStats.triangles}, shadowCasters={UnityStats.shadowCasters}, screen={UnityStats.screenRes}");
+        results.Add($"rendering: drawCalls={UnityStats.drawCalls}, triangles={UnityStats.triangles}, shadowCasters={UnityStats.shadowCasters}, screen={UnityStats.screenRes}");
         for (int i = 0; i < 120; i++)
         {
             yield return null;
         }
 
-        results.Add($"settled rendering: batches={UnityStats.batches}, triangles={UnityStats.triangles}, shadowCasters={UnityStats.shadowCasters}, screen={UnityStats.screenRes}");
+        results.Add($"settled rendering: drawCalls={UnityStats.drawCalls}, triangles={UnityStats.triangles}, shadowCasters={UnityStats.shadowCasters}, screen={UnityStats.screenRes}");
         Next("idle");
         double idleEnd = clock.Elapsed.TotalSeconds + 3;
         for (int i = 0; i < 240 || clock.Elapsed.TotalSeconds < idleEnd; i++)

@@ -64,7 +64,7 @@ public static class BuildingEditorPlayProbe
         _background = Application.runInBackground;
         Application.runInBackground = true;
         // Awake 已建立依赖；在 Start 自动加载真实玩家存档前停止常规业务。
-        foreach (MonoBehaviour behaviour in Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        foreach (MonoBehaviour behaviour in Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include))
         {
             if (!(behaviour is UnityEngine.EventSystems.UIBehaviour))
             {
@@ -416,7 +416,7 @@ public static class BuildingEditorPlayProbe
             GameManager.instance.blocksParent.GetComponentsInChildren<Cockpit>().Length == 1 && !panel.gameObject.activeSelf);
         Check(
             "Leaving building editor removes active deployment previews",
-            !Object.FindObjectsByType<MeshFilter>(FindObjectsSortMode.None).Any(filter => filter.sharedMesh != null && filter.sharedMesh.name == "Defender deployment bounds"));
+            !Object.FindObjectsByType<MeshFilter>().Any(filter => filter.sharedMesh != null && filter.sharedMesh.name == "Defender deployment bounds"));
         byte[] enemy = File.ReadAllBytes(saves.GetEnemyBlueprintPath(build.currentEnemyBlueprintName));
         Shortcut(Key.LeftCtrl, Key.LeftAlt, Key.F);
         while (build.IsLoadingBlocks)

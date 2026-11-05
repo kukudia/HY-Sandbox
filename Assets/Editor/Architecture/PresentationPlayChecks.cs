@@ -145,16 +145,16 @@ internal static class PresentationPlayChecks
                 failures,
                 "A completed fade reaches its final alpha and removes the transition",
                 group.alpha == 1f && ((IDictionary)GetField(transitions, "_transitions")).Count == 0);
-            var existingBeams = new HashSet<int>();
-            foreach (BeamFade beam in Object.FindObjectsByType<BeamFade>(FindObjectsSortMode.None))
+            var existingBeams = new HashSet<EntityId>();
+            foreach (BeamFade beam in Object.FindObjectsByType<BeamFade>())
             {
-                existingBeams.Add(beam.GetInstanceID());
+                existingBeams.Add(beam.GetEntityId());
             }
 
-            var existingLights = new HashSet<int>();
-            foreach (LightFade light in Object.FindObjectsByType<LightFade>(FindObjectsSortMode.None))
+            var existingLights = new HashSet<EntityId>();
+            foreach (LightFade light in Object.FindObjectsByType<LightFade>())
             {
-                existingLights.Add(light.GetInstanceID());
+                existingLights.Add(light.GetEntityId());
             }
 
             Type effectsType = RuntimeType("TransientEffects");
@@ -185,9 +185,9 @@ internal static class PresentationPlayChecks
                 1f,
                 0.05f);
             var transientObjects = new List<GameObject>();
-            foreach (BeamFade beam in Object.FindObjectsByType<BeamFade>(FindObjectsSortMode.None))
+            foreach (BeamFade beam in Object.FindObjectsByType<BeamFade>())
             {
-                if (!existingBeams.Contains(beam.GetInstanceID()))
+                if (!existingBeams.Contains(beam.GetEntityId()))
                 {
                     beam.transform.SetParent(root.transform, true);
                     transientObjects.Add(beam.gameObject);
@@ -195,9 +195,9 @@ internal static class PresentationPlayChecks
                 }
             }
 
-            foreach (LightFade light in Object.FindObjectsByType<LightFade>(FindObjectsSortMode.None))
+            foreach (LightFade light in Object.FindObjectsByType<LightFade>())
             {
-                if (!existingLights.Contains(light.GetInstanceID()))
+                if (!existingLights.Contains(light.GetEntityId()))
                 {
                     light.transform.SetParent(root.transform, true);
                     transientObjects.Add(light.gameObject);

@@ -151,7 +151,7 @@ public static class SiegeWorkshopChecks
             Check(
                 checks,
                 "closing cancels loader and removes preview",
-                !BuildManager.instance.IsLoadingBlocks && Object.FindObjectsByType<ControlUnit>(FindObjectsSortMode.None).All(unit => unit.name != name));
+                !BuildManager.instance.IsLoadingBlocks && Object.FindObjectsByType<ControlUnit>().All(unit => unit.name != name));
             Check(
                 checks,
                 "cancellation never deletes fleet or heals base",

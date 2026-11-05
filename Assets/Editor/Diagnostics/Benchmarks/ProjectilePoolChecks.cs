@@ -115,7 +115,7 @@ public static class ProjectilePoolChecks
         }
         finally
         {
-            foreach (TurretProjectilePool pool in Object.FindObjectsByType<TurretProjectilePool>(FindObjectsSortMode.None))
+            foreach (TurretProjectilePool pool in Object.FindObjectsByType<TurretProjectilePool>())
             {
                 Object.DestroyImmediate(pool.gameObject);
             }

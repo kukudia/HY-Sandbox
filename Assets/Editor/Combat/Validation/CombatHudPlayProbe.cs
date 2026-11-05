@@ -52,7 +52,7 @@ public static class CombatHudPlayProbe
         {
             Checks.Clear();
             Errors.Clear();
-            foreach (MonoBehaviour behaviour in UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            foreach (MonoBehaviour behaviour in UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include))
             {
                 if (!(behaviour is UnityEngine.EventSystems.UIBehaviour) && !(behaviour is CombatHud) && !(behaviour is MainUIPanels) && !(behaviour is ThrusterInfoPanel))
                 {
@@ -60,7 +60,7 @@ public static class CombatHudPlayProbe
                 }
             }
 
-            foreach (Collider collider in UnityEngine.Object.FindObjectsByType<Collider>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            foreach (Collider collider in UnityEngine.Object.FindObjectsByType<Collider>(FindObjectsInactive.Include))
             {
                 collider.enabled = false;
             }

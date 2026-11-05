@@ -314,7 +314,7 @@ public class SaveManager : MonoBehaviour
         // 工坊只替换隔离预览；正常建造入口才清除其他运行单元。
         if (siege == null)
         {
-            foreach (ControlUnit unit in Object.FindObjectsByType<ControlUnit>(FindObjectsSortMode.None))
+            foreach (ControlUnit unit in Object.FindObjectsByType<ControlUnit>())
             {
                 if (GameManager.instance.blocksParent == null || unit.gameObject != GameManager.instance.blocksParent.gameObject)
                 {

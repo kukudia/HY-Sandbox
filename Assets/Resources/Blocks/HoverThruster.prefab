@@ -203,7 +203,7 @@ VisualEffect:
   m_StartSeed: 0
   m_ResetSeedOnPlay: 1
   m_AllowInstancing: 1
-  m_ResourceVersion: 1
+  m_ReleaseInstanceOnDisable: 0
   m_PropertySheet:
     m_Float:
       m_Array:
@@ -356,8 +356,7 @@ MonoBehaviour:
 
     Durability: 100
 
-    Power: 50 min /
-    100 standard
+    Power: 50 min / 100 standard
 
     Max thrust: 200 N'
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}

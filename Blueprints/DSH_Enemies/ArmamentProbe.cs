@@ -19,7 +19,7 @@ UnityEngine.Application.runInBackground = true;
 var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
 typeof(BuildManager).GetMethod("StopActiveBlockLoad", flags).Invoke(BuildManager.instance, null);
 BuildManager.instance.enabled = false;
-foreach (var existing in UnityEngine.Object.FindObjectsByType<ControlUnit>(UnityEngine.FindObjectsSortMode.None))
+foreach (var existing in UnityEngine.Object.FindObjectsByType<ControlUnit>())
 {
     UnityEngine.Object.Destroy(existing.gameObject);
 }
@@ -55,7 +55,7 @@ UnityEngine.Physics.SyncTransforms();
 PlayManager.instance.RegisterControlUnit(playerUnit);
 PlayManager.instance.playMode = true;
 ControlUnit unit = null;
-System.Collections.Generic.Dictionary<int, UnityEngine.Quaternion> restRotations = null;
+System.Collections.Generic.Dictionary<UnityEngine.EntityId, UnityEngine.Quaternion> restRotations = null;
 System.Collections.Generic.List<Turret> guns = null;
 int index = -1;
 double phaseStart = 0d;
@@ -102,12 +102,12 @@ System.Action spawnNext = () =>
     }
 
     guns = unit.GetComponentsInChildren<Turret>().ToList();
-    restRotations = new System.Collections.Generic.Dictionary<int, UnityEngine.Quaternion>();
+    restRotations = new System.Collections.Generic.Dictionary<UnityEngine.EntityId, UnityEngine.Quaternion>();
     roofTotal = 0;
     foreach (var gun in guns)
     {
         var axis = gun.horizontalAxis != null ? gun.horizontalAxis : gun.transform;
-        restRotations[gun.GetInstanceID()] = axis.localRotation;
+        restRotations[gun.GetEntityId()] = axis.localRotation;
         if (gun.transform.localPosition.y > 4.5f)
         {
             roofTotal++;
@@ -139,7 +139,7 @@ tick = () =>
     foreach (var gun in guns)
     {
         var axis = gun.horizontalAxis != null ? gun.horizontalAxis : gun.transform;
-        bool aimed = UnityEngine.Quaternion.Angle(axis.localRotation, restRotations[gun.GetInstanceID()]) > 2f;
+        bool aimed = UnityEngine.Quaternion.Angle(axis.localRotation, restRotations[gun.GetEntityId()]) > 2f;
         var power = gun.GetComponent<Power>();
         bool supplied = power != null && power.isWorking && power.currentPower > 0f;
         if (aimed)
@@ -170,7 +170,7 @@ tick = () =>
     maxPowered = UnityEngine.Mathf.Max(maxPowered, powered);
     maxRoofEngaged = UnityEngine.Mathf.Max(maxRoofEngaged, roofEngaged);
     maxRoofPowered = UnityEngine.Mathf.Max(maxRoofPowered, roofPowered);
-    maxProjectiles = UnityEngine.Mathf.Max(maxProjectiles, UnityEngine.Object.FindObjectsByType<TurretProjectile>(UnityEngine.FindObjectsSortMode.None).Length);
+    maxProjectiles = UnityEngine.Mathf.Max(maxProjectiles, UnityEngine.Object.FindObjectsByType<TurretProjectile>().Length);
     if (UnityEngine.Time.timeAsDouble - phaseStart < PerCraft)
     {
         return;

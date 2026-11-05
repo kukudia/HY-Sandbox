@@ -539,8 +539,7 @@ MonoBehaviour:
 
     Durability: 200
 
-    Power: 75 min /
-    150 standard'
+    Power: 75 min / 150 standard'
   connectorPrefab: {fileID: 6443708142028999146, guid: 33acf57afda57144ba7da50cf785da73, type: 3}
   connectorParent: {fileID: 2166004400879481904}
   raycastCollider: {fileID: 5706229794161447399}

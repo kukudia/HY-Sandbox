@@ -85,7 +85,7 @@ internal static class ExplosionPropagation
         // A grouped Rigidbody can be centered outside the radius while one of its child blocks is inside it.
         if (!string.IsNullOrEmpty(ownerUnitId))
         {
-            RuntimeUnitMember[] members = Object.FindObjectsByType<RuntimeUnitMember>(FindObjectsSortMode.None);
+            RuntimeUnitMember[] members = Object.FindObjectsByType<RuntimeUnitMember>();
             foreach (RuntimeUnitMember member in members)
             {
                 if (member == null || member.ownerUnitId != ownerUnitId)

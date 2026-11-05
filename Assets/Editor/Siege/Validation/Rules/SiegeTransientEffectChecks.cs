@@ -79,10 +79,10 @@ public static class SiegeTransientEffectChecks
             MethodInfo createBeam = transient.GetMethod("CreateLineStreak");
             Vector3 origin = Vector3.one * 10000f;
             createBeam.Invoke(null, new object[] { origin, origin + Vector3.forward * 2f, Color.red, 0.2f, 0.08f });
-            BeamFade first = Object.FindObjectsByType<BeamFade>(FindObjectsSortMode.None).Single(item => item.gameObject.scene == fixture);
+            BeamFade first = Object.FindObjectsByType<BeamFade>().Single(item => item.gameObject.scene == fixture);
             Expire(first);
             createBeam.Invoke(null, new object[] { origin + Vector3.right, origin + Vector3.up, Color.green, 1f, 0.02f });
-            BeamFade second = Object.FindObjectsByType<BeamFade>(FindObjectsSortMode.None).Single(item => item.gameObject.scene == fixture);
+            BeamFade second = Object.FindObjectsByType<BeamFade>().Single(item => item.gameObject.scene == fixture);
             StylizedBeamEffect secondVisual = second.GetComponent<StylizedBeamEffect>();
             Check(
                 "production beam resets intensity color and width",
@@ -93,10 +93,10 @@ public static class SiegeTransientEffectChecks
             Expire(second);
             MethodInfo createLight = transient.GetMethod("CreateLightFlash");
             createLight.Invoke(null, new object[] { origin, Color.red, 8f, 4f, 0.1f });
-            LightFade firstLight = Object.FindObjectsByType<LightFade>(FindObjectsSortMode.None).Single(item => item.gameObject.scene == fixture);
+            LightFade firstLight = Object.FindObjectsByType<LightFade>().Single(item => item.gameObject.scene == fixture);
             Expire(firstLight);
             createLight.Invoke(null, new object[] { origin + Vector3.up, Color.blue, 2f, 7f, 1f });
-            LightFade secondLight = Object.FindObjectsByType<LightFade>(FindObjectsSortMode.None).Single(item => item.gameObject.scene == fixture);
+            LightFade secondLight = Object.FindObjectsByType<LightFade>().Single(item => item.gameObject.scene == fixture);
             Light secondLamp = secondLight.GetComponent<Light>();
             Check(
                 "production light resets color intensity range and position",

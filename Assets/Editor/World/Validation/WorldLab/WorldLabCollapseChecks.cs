@@ -77,7 +77,7 @@ public static class WorldLabCollapseChecks
         collapse.ResolveDetached();
         Check(world.Data.Get(a) == 0 && world.Data.Get(b) == 0, "detached metal removed from static data");
         Check(collapse.ActivePieces >= 1 && collapse.ActivePieces <= 12, "fragment count bounded");
-        VoxelDebrisPiece[] fragments = Object.FindObjectsByType<VoxelDebrisPiece>(FindObjectsSortMode.None);
+        VoxelDebrisPiece[] fragments = Object.FindObjectsByType<VoxelDebrisPiece>();
         VoxelDebrisPiece target = null;
         foreach (VoxelDebrisPiece fragment in fragments)
         {

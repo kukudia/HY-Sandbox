@@ -23,7 +23,7 @@ internal sealed class BlockConnectionSnapshot
     private bool queryTriggers;
     private Vector3 rootScale;
     private Transform connectorRoot;
-    private int connectorRootId;
+    private EntityId connectorRootId;
     private Vector3 connectorPosition;
     private Quaternion connectorRotation;
     private Vector3 connectorScale;
@@ -48,7 +48,7 @@ internal sealed class BlockConnectionSnapshot
             }
 
             Transform currentRoot = block.connectorParent;
-            int currentRootId = currentRoot != null ? currentRoot.GetInstanceID() : 0;
+            EntityId currentRootId = currentRoot != null ? currentRoot.GetEntityId() : EntityId.None;
             if (!HasCanonicalColliderLayout() || collider.isTrigger != trigger || Physics.queriesHitTriggers != queryTriggers || !parent.lossyScale.Equals(rootScale) || currentRootId != connectorRootId || (currentRoot != null && currentRoot != block.transform && (currentRoot.parent != block.transform || !currentRoot.localPosition.Equals(connectorPosition) || !currentRoot.localRotation.Equals(connectorRotation) || !currentRoot.localScale.Equals(connectorScale))))
             {
                 return false;
@@ -104,7 +104,7 @@ internal sealed class BlockConnectionSnapshot
         queryTriggers = Physics.queriesHitTriggers;
         rootScale = parent != null ? parent.lossyScale : Vector3.one;
         connectorRoot = block.connectorParent;
-        connectorRootId = connectorRoot != null ? connectorRoot.GetInstanceID() : 0;
+        connectorRootId = connectorRoot != null ? connectorRoot.GetEntityId() : EntityId.None;
         if (connectorRoot != null)
         {
             connectorPosition = connectorRoot.localPosition;
