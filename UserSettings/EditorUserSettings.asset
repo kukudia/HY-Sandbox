@@ -3,12 +3,18 @@
 --- !u!162 &1
 EditorUserSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 4
+  serializedVersion: 5
   m_ConfigSettings:
+    QuickInstaller_com.unity.multiplayer.center_installRecorded:
+      value: 37434103
+      flags: 0
     QuickInstaller_com.unity.purchasing_installRecorded:
       value: 2550581500
       flags: 0
     QuickInstaller_com.unity.services.levelplay_installRecorded:
+      value: 2550581500
+      flags: 0
+    QuickInstaller_com.unity.services.vivox_installRecorded:
       value: 2550581500
       flags: 0
     RecentlyUsedSceneGuid-0:
@@ -27,19 +33,19 @@ EditorUserSettings:
       value: 05000157575650585f58597515740c44154e4a7d2e787f33747e1f64b3b6306b
       flags: 0
     RecentlyUsedSceneGuid-5:
-      value: 5b070105000c0a59540f5f7716760844121641297b2c74357d2c4e30b3b3303d
-      flags: 0
-    RecentlyUsedSceneGuid-6:
       value: 5501025700530d09580a0d21477606444e4f1a7b787c70607b2f1f60bbb9646d
       flags: 0
-    RecentlyUsedSceneGuid-7:
-      value: 560555075302500c550c0a7b137a0e444f4e492b7e71706874701931e3e5666d
-      flags: 0
-    RecentlyUsedSceneGuid-8:
+    RecentlyUsedSceneGuid-6:
       value: 07080750570c0c0b095f55241125074413161c722d2c76697e2f4437e7b2653b
       flags: 0
-    RecentlyUsedSceneGuid-9:
+    RecentlyUsedSceneGuid-7:
+      value: 5b070105000c0a59540f5f7716760844121641297b2c74357d2c4e30b3b3303d
+      flags: 0
+    RecentlyUsedSceneGuid-8:
       value: 5a08575f5207595a0f5d59741173094444164f7d7d2a23317c7a4465bbe1646d
+      flags: 0
+    RecentlyUsedSceneGuid-9:
+      value: 560555075302500c550c0a7b137a0e444f4e492b7e71706874701931e3e5666d
       flags: 0
     UnityEditor.ShaderGraph.Blackboard:
       value: 18135939215a0a5004000b0e15254b524c030a3f2964643d120d1230e9e93a3fd6e826abbd2e2d293c4ead313b08042de6030a0afa240c0d020be94c4ba75e435d8715fa32c70d15d11612dacc11fee5d3c5d1fe9ab1bf968e93e2ffcbc3e7e2f0b3ffe0e8b0be9af8ffaeffff8e85dd8390e3949c8899daa7
@@ -70,3 +76,4 @@ EditorUserSettings:
   m_VCScanLocalPackagesOnConnect: 1
   m_ArtifactGarbageCollection: 1
   m_CompressAssetsOnImport: 1
+  m_VCAutoRevertUnchangedFiles: 0
