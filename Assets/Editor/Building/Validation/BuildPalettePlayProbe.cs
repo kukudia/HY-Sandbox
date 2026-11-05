@@ -210,7 +210,7 @@ public static class BuildPalettePlayProbe
 
     private static IEnumerator Scenario()
     {
-        var ui = Object.FindFirstObjectByType<MainUIButtons>(FindObjectsInactive.Include);
+        var ui = SceneObjectQuery.FindInActiveScene<MainUIButtons>(FindObjectsInactive.Include);
         ui.gameObject.SetActive(true);
         foreach (Transform panel in ui.transform)
         {

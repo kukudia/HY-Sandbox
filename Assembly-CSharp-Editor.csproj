@@ -140,6 +140,7 @@
     <Compile Include="Assets\Editor\Siege\SiegePlayChecks.cs" />
     <Compile Include="Assets\Editor\Architecture\PresentationPlayChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Benchmarks\SiegeTopologyBaseline.cs" />
+    <Compile Include="Assets\Editor\Diagnostics\UpgradeCompatibilityChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Rules\SiegeRulesChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Rules\SiegePlayerSurveyChecks.cs" />
     <Compile Include="Assets\Editor\Building\Interface\BuildInteractionSetup.cs" />

@@ -59,7 +59,7 @@ public static class WorldLabCollapseChecks
         }
 
         Checks.Clear();
-        var world = Object.FindFirstObjectByType<ProceduralVoxelWorld>();
+        var world = SceneObjectQuery.FindInActiveScene<ProceduralVoxelWorld>();
         var collapse = world.GetComponent<VoxelStructureCollapse>();
         if (collapse == null)
         {

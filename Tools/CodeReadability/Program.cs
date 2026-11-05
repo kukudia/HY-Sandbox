@@ -2,6 +2,7 @@
 // 入口：dotnet run --project Tools/CodeReadability -- --check <project-root>；--write 显式写入。
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -16,6 +17,24 @@ if (args.Length != 2 || args[0] is not ("--check" or "--write" or "--inventory" 
 
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 string projectRoot = Path.GetFullPath(args[1]);
+// 使用Unity实际生成的解析符号，覆盖当前引擎、包及Windows Editor平台；不手写过期版本链。
+string[] runtimeSymbols = ReadUnitySymbols("Assembly-CSharp.csproj");
+string[] editorSymbols = ReadUnitySymbols("Assembly-CSharp-Editor.csproj");
+if (!runtimeSymbols.Contains("UNITY_6000_6_OR_NEWER") || !editorSymbols.Contains("UNITY_6000_6_OR_NEWER"))
+{
+    Console.Error.WriteLine("Unity project symbols are stale; regenerate C# projects in the target Editor before checking.");
+    return 2;
+}
+
+string[] ReadUnitySymbols(string projectName)
+{
+    return XDocument.Load(Path.Combine(projectRoot, projectName)).Descendants()
+        .Where(element => element.Name.LocalName == "DefineConstants")
+        .SelectMany(element => element.Value.Split(';'))
+        .Where(symbol => Regex.IsMatch(symbol, @"^[A-Za-z_][A-Za-z0-9_]*$"))
+        .Distinct().ToArray();
+}
+
 bool write = args[0] is "--write" or "--write-tools";
 bool toolScripts = args[0] is "--check-tools" or "--write-tools";
 bool inventoryOnly = args[0] == "--inventory";
@@ -54,7 +73,7 @@ foreach (string relative in roots)
             text = encoding.GetString(bytes);
         }
         // Normalize accidental CRCRLF before parsing, without interpreting string literal contents.
-        var tree = CSharpSyntaxTree.ParseText(text, new CSharpParseOptions(LanguageVersion.CSharp9, kind: toolScripts ? SourceCodeKind.Script : SourceCodeKind.Regular, preprocessorSymbols: new[] { "UNITY_EDITOR", "UNITY_6000_3_OR_NEWER", "ENABLE_INPUT_SYSTEM" }));
+        var tree = CSharpSyntaxTree.ParseText(text, new CSharpParseOptions(LanguageVersion.CSharp9, kind: toolScripts ? SourceCodeKind.Script : SourceCodeKind.Regular, preprocessorSymbols: toolScripts || relative == "Assets/Editor" ? editorSymbols : runtimeSymbols));
         if (tree.GetDiagnostics().Any(d => d.Severity == DiagnosticSeverity.Error))
         {
             Console.Error.WriteLine($"Syntax error: {Path.GetRelativePath(projectRoot, file)}");

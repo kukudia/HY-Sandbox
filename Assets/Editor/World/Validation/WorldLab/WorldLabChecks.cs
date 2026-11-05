@@ -86,7 +86,7 @@ public static class WorldLabChecks
         }
 
         Passed.Clear();
-        ProceduralVoxelWorld world = Object.FindFirstObjectByType<ProceduralVoxelWorld>();
+        ProceduralVoxelWorld world = SceneObjectQuery.FindInActiveScene<ProceduralVoxelWorld>();
         Check(world != null && world.Data.IsValid, "baked world loads in Play");
         uint original = world.Data.Fingerprint();
         var a = new Vector3Int(15, 22, 15);

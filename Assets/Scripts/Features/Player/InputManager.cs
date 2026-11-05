@@ -13,10 +13,10 @@ public class InputManager : MonoBehaviour
     {
         get
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR
             return true;
 #else
-            return false;
+            return Debug.isDebugBuild;
 #endif
         }
     }

@@ -32,7 +32,7 @@ public sealed class SiegePlayerChecks : MonoBehaviour
     {
         string[] args = Environment.GetCommandLineArgs();
         int index = Array.IndexOf(args, "-siege-checks-report");
-        if (index < 0 || index + 1 >= args.Length || Object.FindFirstObjectByType<SiegePlayerChecks>() != null)
+        if (index < 0 || index + 1 >= args.Length || Object.FindAnyObjectByType<SiegePlayerChecks>() != null)
         {
             return;
         }
@@ -76,7 +76,7 @@ public sealed class SiegePlayerChecks : MonoBehaviour
 
         if (Array.IndexOf(args, "-siege-hud-off") >= 0)
         {
-            SiegeHud hud = Object.FindFirstObjectByType<SiegeHud>();
+            SiegeHud hud = SceneObjectQuery.FindInActiveScene<SiegeHud>();
             if (hud != null)
             {
                 hud.gameObject.SetActive(false);
@@ -141,7 +141,19 @@ public sealed class SiegePlayerChecks : MonoBehaviour
     {
         report.phase = "startup";
         yield return null;
-        SiegeSession session = Object.FindFirstObjectByType<SiegeSession>();
+        // The normal development build starts at Main; this opt-in probe must test the real scene transition too.
+        if (SceneManager.GetActiveScene().name != "Siege")
+        {
+            AsyncOperation loading = SceneManager.LoadSceneAsync("Siege");
+            while (!loading.isDone)
+            {
+                yield return null;
+            }
+
+            yield return null;
+        }
+
+        SiegeSession session = SceneObjectQuery.FindInActiveScene<SiegeSession>();
         activeSession = session;
         Check(
             "Siege scene and session started in Player",
@@ -171,7 +183,7 @@ public sealed class SiegePlayerChecks : MonoBehaviour
             eliteRules.GrantBonus(60) && !eliteRules.GrantBonus(0));
         eliteRules.LoseBase();
         Check("player build rejects combo bonus after defeat", !eliteRules.GrantBonus(60));
-        SiegeStressPopulation population = Object.FindFirstObjectByType<SiegeStressPopulation>();
+        SiegeStressPopulation population = SceneObjectQuery.FindInActiveScene<SiegeStressPopulation>();
         if (population != null)
         {
             report.phase = "population-loading";
@@ -204,7 +216,7 @@ public sealed class SiegePlayerChecks : MonoBehaviour
 
         Canvas.ForceUpdateCanvases();
         // 诊断性关闭HUD时跳过界面几何断言，否则会把“故意隐藏”当成失败。
-        SiegeHud hudForBounds = Object.FindFirstObjectByType<SiegeHud>();
+        SiegeHud hudForBounds = SceneObjectQuery.FindInActiveScene<SiegeHud>();
         if (hudForBounds != null && hudForBounds.gameObject.activeInHierarchy)
         {
             foreach (Graphic graphic in hudForBounds.GetComponentsInChildren<Graphic>())
@@ -434,10 +446,10 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         yield return null;
         SceneManager.LoadScene(session.gameObject.scene.name);
         yield return null;
-        SiegeSession restarted = Object.FindFirstObjectByType<SiegeSession>();
+        SiegeSession restarted = SceneObjectQuery.FindInActiveScene<SiegeSession>();
         if (report.additionalBuildings > 0)
         {
-            SiegeStressPopulation restoredPopulation = Object.FindFirstObjectByType<SiegeStressPopulation>();
+            SiegeStressPopulation restoredPopulation = SceneObjectQuery.FindInActiveScene<SiegeStressPopulation>();
             float populationDeadline = Time.realtimeSinceStartup + 90f;
             while (restoredPopulation != null && !restoredPopulation.IsReady && string.IsNullOrEmpty(restoredPopulation.Error) && Time.realtimeSinceStartup < populationDeadline)
             {

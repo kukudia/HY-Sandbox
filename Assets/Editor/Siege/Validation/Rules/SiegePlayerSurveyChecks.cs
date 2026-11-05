@@ -11,7 +11,7 @@ public static class SiegePlayerSurveyChecks
 {
     public static string Run()
     {
-        SiegeSession session = Object.FindFirstObjectByType<SiegeSession>();
+        SiegeSession session = SceneObjectQuery.FindInActiveScene<SiegeSession>();
         if (!EditorApplication.isPlaying || session?.Match == null || session.Match.Wave != 0 || session.Fleet.Driven != null)
         {
             throw new InvalidOperationException("Requires fresh Siege Play without deployed ships.");

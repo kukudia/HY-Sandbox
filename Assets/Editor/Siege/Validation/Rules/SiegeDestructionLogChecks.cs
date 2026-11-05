@@ -14,7 +14,7 @@ public static class SiegeDestructionLogChecks
 {
     public static string Run()
     {
-        SiegeSession session = Object.FindFirstObjectByType<SiegeSession>();
+        SiegeSession session = SceneObjectQuery.FindInActiveScene<SiegeSession>();
         if (!EditorApplication.isPlaying || session?.Match == null || session.Match.Wave != 0)
         {
             throw new InvalidOperationException("Requires fresh Siege Play.");

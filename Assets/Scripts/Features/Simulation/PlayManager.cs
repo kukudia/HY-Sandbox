@@ -141,7 +141,7 @@ public class PlayManager : MonoBehaviour
         playMode = true;
         if (worldSession == null)
         {
-            FindFirstObjectByType<EnemySpawner>()?.BeginPlayMode(blocksParent);
+            SceneObjectQuery.FindInScene<EnemySpawner>(gameObject.scene)?.BeginPlayMode(blocksParent);
         }
     }
 
@@ -310,7 +310,7 @@ public class PlayManager : MonoBehaviour
 
         BuildManager.instance.enabled = true;
         GameManager.Init();
-        FindFirstObjectByType<EnemySpawner>()?.EndPlayMode();
+        SceneObjectQuery.FindInScene<EnemySpawner>(gameObject.scene)?.EndPlayMode();
     }
 
     public void AssignBlocksToParentGroups(List<Block> blocks)

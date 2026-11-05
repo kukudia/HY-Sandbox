@@ -17,7 +17,7 @@ public static class SiegeSceneInteractionChecks
     private static bool running;
     public static void Run()
     {
-        SiegeSession session = Object.FindFirstObjectByType<SiegeSession>();
+        SiegeSession session = SceneObjectQuery.FindInActiveScene<SiegeSession>();
         if (!EditorApplication.isPlaying || running || session?.Match?.Wave != 0 || session.Fleet.Ships.Any(ship => ship != null))
         {
             throw new InvalidOperationException("Requires a fresh Siege Play session.");
@@ -45,7 +45,7 @@ public static class SiegeSceneInteractionChecks
             InputSystem.settings.backgroundBehavior = InputSettings.BackgroundBehavior.IgnoreFocus;
             InputSystem.EnableDevice(mouse);
             mouse.MakeCurrent();
-            SiegeDeploymentView view = Object.FindFirstObjectByType<SiegeDeploymentView>();
+            SiegeDeploymentView view = SceneObjectQuery.FindInActiveScene<SiegeDeploymentView>();
             int cheapest = Array.FindIndex(session.DefenderOptions, option => option.Price == session.DefenderOptions.Min(item => item.Price));
             session.SelectDefender(cheapest);
             long balance = session.Match.Coins;

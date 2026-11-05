@@ -104,7 +104,7 @@ internal static class SiegeDrivingPlayerChecks
             InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.LeftAlt));
             yield return null;
             yield return null;
-            SiegeDeploymentView selection = Object.FindFirstObjectByType<SiegeDeploymentView>();
+            SiegeDeploymentView selection = SceneObjectQuery.FindInActiveScene<SiegeDeploymentView>();
             selection.SelectShip(session.Fleet.Ships[0].Id);
             yield return null;
             Canvas.ForceUpdateCanvases();

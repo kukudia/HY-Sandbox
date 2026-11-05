@@ -88,7 +88,7 @@ public static class SiegeArenaLookAuthoring
             }
         }
 
-        VisualEffectsManager effects = UnityEngine.Object.FindFirstObjectByType<VisualEffectsManager>();
+        VisualEffectsManager effects = UnityEngine.Object.FindAnyObjectByType<VisualEffectsManager>();
         if (effects != null)
         {
             var serialized = new SerializedObject(effects);

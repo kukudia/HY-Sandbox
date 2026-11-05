@@ -32,8 +32,8 @@ public static class WorldBuildingAuthoring
 
         AssetDatabase.Refresh();
         EditorSceneManager.OpenScene(WorldLabAuthoring.ScenePath);
-        ProceduralVoxelWorld world = UnityEngine.Object.FindFirstObjectByType<ProceduralVoxelWorld>();
-        Camera camera = UnityEngine.Object.FindFirstObjectByType<WorldLabController>().GetComponent<Camera>();
+        ProceduralVoxelWorld world = SceneObjectQuery.FindInActiveScene<ProceduralVoxelWorld>();
+        Camera camera = SceneObjectQuery.FindInActiveScene<WorldLabController>().GetComponent<Camera>();
         string catalogPath = Root + "/Catalog.asset";
         var catalog = AssetDatabase.LoadAssetAtPath<WorldBuildingCatalog>(catalogPath);
         if (catalog == null)
@@ -58,7 +58,7 @@ public static class WorldBuildingAuthoring
             AssetDatabase.CreateAsset(catalog, catalogPath);
         }
 
-        WorldBuildingManager manager = UnityEngine.Object.FindFirstObjectByType<WorldBuildingManager>();
+        WorldBuildingManager manager = SceneObjectQuery.FindInActiveScene<WorldBuildingManager>();
         if (manager == null)
         {
             manager = new GameObject("WorldLab Buildings").AddComponent<WorldBuildingManager>();

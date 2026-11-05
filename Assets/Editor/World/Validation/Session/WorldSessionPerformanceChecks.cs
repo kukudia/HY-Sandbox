@@ -197,7 +197,7 @@ public static class WorldSessionPerformanceChecks
     private static IEnumerator Scenario()
     {
         yield return null;
-        WorldSessionManager session = Object.FindFirstObjectByType<WorldSessionManager>();
+        WorldSessionManager session = SceneObjectQuery.FindInActiveScene<WorldSessionManager>();
         var configuration = Object.Instantiate(session.Settings);
         var data = new SerializedObject(configuration);
         data.FindProperty("randomizeSeed").boolValue = false;
@@ -231,7 +231,7 @@ public static class WorldSessionPerformanceChecks
         bool production = SessionState.GetString(Pending, "").Contains("production");
         if (production)
         {
-            EnemySpawner spawner = Object.FindFirstObjectByType<EnemySpawner>();
+            EnemySpawner spawner = SceneObjectQuery.FindInActiveScene<EnemySpawner>();
             spawner.spawnOnPlayStart = false;
             spawner.spawnInterval = float.MaxValue;
             MainUIPanels.instance.PlayStart();

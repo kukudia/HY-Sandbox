@@ -343,7 +343,7 @@ public static class WorldSessionAuthoring
             throw new InvalidOperationException("Enter Main Play Mode and stay in build mode before regenerating the world preview.");
         }
 
-        WorldSessionManager session = Object.FindFirstObjectByType<WorldSessionManager>();
+        WorldSessionManager session = SceneObjectQuery.FindInActiveScene<WorldSessionManager>();
         if (session == null)
         {
             throw new InvalidOperationException("Install the Main world session first.");

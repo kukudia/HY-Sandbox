@@ -117,6 +117,7 @@ public static class WorldSessionPlayChecks
         {
             BlockDataList blueprint = JsonUtility.FromJson<BlockDataList>(File.ReadAllText(path));
             WorldBuildingValidation.ValidateBlueprint(blueprint);
+            WorldBuildingValidation.ValidateWorldTemplate(blueprint);
             return blueprint.blocks.Count > 0;
         }
         catch (Exception error) when (error is ArgumentException || error is InvalidOperationException || error is IOException || error is UnauthorizedAccessException)
@@ -128,7 +129,7 @@ public static class WorldSessionPlayChecks
     private static IEnumerator Scenario()
     {
         yield return null;
-        WorldSessionManager session = Object.FindFirstObjectByType<WorldSessionManager>();
+        WorldSessionManager session = SceneObjectQuery.FindInActiveScene<WorldSessionManager>();
         Check(
             session != null && PlayManager.instance.WorldSession == session,
             "Main binds the authored world session to PlayManager");
@@ -176,11 +177,11 @@ public static class WorldSessionPlayChecks
         string blueprintDirectory = Path.Combine(Application.persistentDataPath, "BuildingBlueprints");
         string[] userBlueprints = Directory.GetFiles(blueprintDirectory, "*.json").Where(IsPopulatedBuilding).Select(Path.GetFileNameWithoutExtension).OrderBy(name => name, StringComparer.OrdinalIgnoreCase).ToArray();
         Check(
-            userBlueprints.All(name => session.BuildingTemplates.Contains(name)) && Resources.LoadAll<TextAsset>("WorldBlueprints/Buildings").All(asset => session.BuildingTemplates.Contains(asset.name)),
-            "generation pool includes user blueprints and authored bundled buildings/outposts");
+            userBlueprints.All(name => session.BuildingTemplates.Contains(name)) && session.BuildingTemplates.All(name => userBlueprints.Contains(name)),
+            "generation pool contains exactly validated world-compatible files from the shared user store");
         Check(
             buildings.Buildings.All(building => session.BuildingTemplates.Contains(building.Capture().blueprintName)),
-            "spawned buildings use the merged validated blueprint library");
+            "spawned buildings use the validated shared blueprint library");
         Transform horizon = world.transform.Find("Distant terrain - visual only");
         Mesh horizonMesh = horizon.GetComponent<MeshFilter>().sharedMesh;
         Check(
@@ -195,6 +196,28 @@ public static class WorldSessionPlayChecks
         Check(
             buildings.Buildings.All(building => !building.IsSimulationActive),
             "prepared buildings stay dormant before entering play");
+        MeshFilter transition = world.GetComponentsInChildren<MeshFilter>(true).First(filter => filter.name.StartsWith("Visual voxel ring ") && world.HasColumn(world.ColumnAt(filter.transform.position)));
+        Vector2Int transitionColumn = world.ColumnAt(transition.transform.position);
+        world.UnloadColumn(transitionColumn);
+        Check(
+            transition.gameObject.activeSelf,
+            "unloading a near column immediately reveals its visual transition");
+        IEnumerator reloadColumn = world.LoadColumn(transitionColumn);
+        try
+        {
+            while (reloadColumn.MoveNext())
+            {
+                yield return reloadColumn.Current;
+            }
+        }
+        finally
+        {
+            (reloadColumn as IDisposable)?.Dispose();
+        }
+
+        Check(
+            world.HasColumn(transitionColumn) && !transition.gameObject.activeSelf,
+            "column commit immediately hides the overlapping visual transition before another frame");
         while (BuildManager.instance.IsLoadingBlocks)
         {
             yield return null;
@@ -227,7 +250,7 @@ public static class WorldSessionPlayChecks
         Color previousFogColor = RenderSettings.fogColor;
         CameraClearFlags previousClearFlags = Camera.main.clearFlags;
         session.EnterPlay(testPlayer.transform);
-        WorldLoadingPanel entryPanel = Object.FindFirstObjectByType<WorldLoadingPanel>();
+        WorldLoadingPanel entryPanel = SceneObjectQuery.FindInActiveScene<WorldLoadingPanel>();
         Check(
             session.IsEntering && Time.timeScale == 0f,
             "world activation pauses physics until all building batches finish");
@@ -367,7 +390,7 @@ public static class WorldSessionPlayChecks
         session.RequestPlay();
         session.CancelPlayRequest();
         Check(!session.IsPlayRequested, "repeated play requests can be cancelled without a stale transition");
-        WorldLoadingPanel panel = Object.FindFirstObjectByType<WorldLoadingPanel>();
+        WorldLoadingPanel panel = SceneObjectQuery.FindInActiveScene<WorldLoadingPanel>();
         Check(
             panel != null && panel.GetComponent<CanvasGroup>().alpha == 0f,
             "cancel dismisses the blocking loading interface");
@@ -385,7 +408,7 @@ public static class WorldSessionPlayChecks
             yield return null;
         }
 
-        EnemySpawner spawner = Object.FindFirstObjectByType<EnemySpawner>();
+        EnemySpawner spawner = SceneObjectQuery.FindInActiveScene<EnemySpawner>();
         if (spawner == null)
         {
             spawner = new GameObject("World session validation enemy scheduler").AddComponent<EnemySpawner>();
@@ -401,14 +424,25 @@ public static class WorldSessionPlayChecks
             "the production Main Play button enables the prepared world and player simulation");
         MainUIPanels.instance.PlayerDeath();
         Check(
+            !PlayManager.instance.playMode && MainUIButtons.instance.respawnButton.interactable,
+            "death displays an immediately usable respawn action");
+        // Exercise the teardown after death without the real respawn button's player-file write.
+        // Isolated WorldReturnPlayerChecks covers the actual button and persistence in the Player.
+        MainUIPanels.instance.CompletePlayEnd();
+        Check(
             !PlayManager.instance.playMode && session.State == WorldSessionState.Preparing && !worldRoot.activeInHierarchy && session.DormantBuildingCount == 0 && Time.timeScale == 1f,
-            "the production death path discards the exploration world and restores build preparation");
+            "death teardown discards the exploration world and restores build preparation");
         while (session.State == WorldSessionState.Preparing)
         {
             yield return null;
         }
 
         MainUIPanels.instance.PlayStart();
+        while (session.IsPlayRequested || session.IsEntering)
+        {
+            yield return null;
+        }
+
         Check(
             PlayManager.instance.playMode,
             "the next exploration starts after death without stale session state");

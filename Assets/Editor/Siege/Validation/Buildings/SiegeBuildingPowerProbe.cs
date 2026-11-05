@@ -22,7 +22,7 @@ public static class SiegeBuildingPowerProbe
             throw new InvalidOperationException("Requires fresh Siege Play without another power probe.");
         }
 
-        session = Object.FindFirstObjectByType<SiegeSession>();
+        session = SceneObjectQuery.FindInActiveScene<SiegeSession>();
         if (session?.Match == null || session.Match.Wave != 0)
         {
             throw new InvalidOperationException("Start a fresh Siege session.");

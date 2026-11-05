@@ -17,7 +17,7 @@ public static class SiegePriorityTargetFlight
     private static int lastFrame;
     public static string Start()
     {
-        SiegeSession session = Object.FindFirstObjectByType<SiegeSession>();
+        SiegeSession session = SceneObjectQuery.FindInActiveScene<SiegeSession>();
         if (!EditorApplication.isPlaying || session?.Match == null || session.Match.Wave != 0 || raider != null)
         {
             throw new InvalidOperationException("Requires fresh Siege Play without a running flight check.");

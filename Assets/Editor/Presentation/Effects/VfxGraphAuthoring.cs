@@ -10,11 +10,11 @@ using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-/// <summary>Unity 6.3's graph-model API is internal. Keep the version-specific Editor bridge here.</summary>
+/// <summary>Unity 6000.6 / VFX Graph 17.6 graph-model API is internal. Keep the version-specific Editor bridge here.</summary>
 public static class VfxGraphAuthoring
 {
     private const BindingFlags Flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
-    public static Type Type(string name) => AppDomain.CurrentDomain.GetAssemblies().Select(a => a.GetType(name)).First(t => t != null);
+    public static Type Type(string name) => UnityEngine.Assemblies.CurrentAssemblies.GetLoadedAssemblies().Select(a => a.GetType(name)).FirstOrDefault(t => t != null) ?? throw new TypeLoadException("VFX Graph 17.6 bridge cannot resolve " + name);
     private static PropertyInfo Property(object target, string name)
     {
         for (var type = target.GetType(); type != null; type = type.BaseType)
@@ -55,13 +55,26 @@ public static class VfxGraphAuthoring
     {
         var type = target as Type ?? target.GetType();
         var candidates = type.GetMethods(Flags).Where(m => !m.ContainsGenericParameters && m.Name == method && m.GetParameters().Length == args.Length);
-        var match = candidates.First(m => m.GetParameters().Select((p, i) => args[i] == null || p.ParameterType.IsInstanceOfType(args[i])).All(x => x));
+        var match = candidates.SingleOrDefault(m => m.GetParameters().Select((p, i) => args[i] == null || p.ParameterType.IsInstanceOfType(args[i])).All(x => x));
+        if (match == null)
+        {
+            throw new MissingMethodException(
+                type.FullName,
+                method + "(" + string.Join(", ", args.Select(arg => arg?.GetType().Name ?? "null")) + ")");
+        }
+
         return match.Invoke(target is Type ? null : target, args);
     }
 
     public static object[] Items(object target, string property) => ((IEnumerable)Get(target, property)).Cast<object>().ToArray();
     public static object Resource(string path) => Call(Type("UnityEditor.VFX.VisualEffectResource"), "GetResourceAtPath", path);
-    public static object Graph(string path) => Call(Type("UnityEditor.VFX.VisualEffectResourceExtensions"), "GetOrCreateGraph", Resource(path));
+    public static object Graph(string path)
+    {
+        object resource = Resource(path);
+        Type extensions = Type("UnityEditor.VFX.VisualEffectResourceExtensions");
+        return Call(extensions, "GetGraph", resource) ?? Call(extensions, "CreateGraph", resource);
+    }
+
     public static Object[] Contents(string path) => (Object[])Call(Resource(path), "GetContents");
     public static void Save(string path)
     {

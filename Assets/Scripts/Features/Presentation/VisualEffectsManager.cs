@@ -39,7 +39,7 @@ public class VisualEffectsManager : MonoBehaviour
             return instance;
         }
 
-        instance = FindFirstObjectByType<VisualEffectsManager>();
+        instance = FindAnyObjectByType<VisualEffectsManager>();
         if (instance != null)
         {
             return instance;

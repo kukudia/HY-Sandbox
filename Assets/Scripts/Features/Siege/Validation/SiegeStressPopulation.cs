@@ -40,7 +40,7 @@ public sealed class SiegeStressPopulation : MonoBehaviour
     private IEnumerator Start()
     {
         float started = Time.realtimeSinceStartup;
-        hud = Object.FindFirstObjectByType<SiegeHud>();
+        hud = SceneObjectQuery.FindInScene<SiegeHud>(gameObject.scene);
         hudWasEnabled = hud != null && hud.enabled;
         if (hudWasEnabled)
         {

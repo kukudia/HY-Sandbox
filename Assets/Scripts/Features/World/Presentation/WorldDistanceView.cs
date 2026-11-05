@@ -62,6 +62,8 @@ internal sealed class WorldDistanceView : IDisposable
         renderer.sharedMaterial = world.Materials[0];
         renderer.shadowCastingMode = ShadowCastingMode.Off;
         renderer.receiveShadows = true;
+        world.ColumnVisibilityChanged += OnColumnVisibilityChanged;
+        world.StreamingCleared += UpdateRingVisibility;
     }
 
     internal IEnumerator Refresh()
@@ -229,6 +231,20 @@ internal sealed class WorldDistanceView : IDisposable
         ReleaseExpiredRing(center, ringRadius + 2);
     }
 
+    private void OnColumnVisibilityChanged(Vector2Int coordinate, bool loaded)
+    {
+        // Column loading and this view's coroutine may resume in either order. Hide the
+        // overlapping mesh at the commit point, before any later behaviour or camera can observe it.
+        if (voxelRing.TryGetValue(coordinate, out MeshFilter column))
+        {
+            bool active = visibleRing.Contains(coordinate) && !loaded;
+            if (column.gameObject.activeSelf != active)
+            {
+                column.gameObject.SetActive(active);
+            }
+        }
+    }
+
     private void UpdateRingVisibility()
     {
         if (ringVisibilityVersion == world.ColumnVersion)
@@ -349,6 +365,8 @@ internal sealed class WorldDistanceView : IDisposable
 
     public void Dispose()
     {
+        world.ColumnVisibilityChanged -= OnColumnVisibilityChanged;
+        world.StreamingCleared -= UpdateRingVisibility;
         if (entered)
         {
             RenderSettings.fog = previousFog;

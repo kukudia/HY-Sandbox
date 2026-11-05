@@ -18,7 +18,7 @@ public static class SiegeWorkshopChecks
     [MenuItem("HY-Sandbox/Siege/Check Main Workshop In Play")]
     public static void Run()
     {
-        SiegeSession session = Object.FindFirstObjectByType<SiegeSession>();
+        SiegeSession session = SceneObjectQuery.FindInActiveScene<SiegeSession>();
         if (!EditorApplication.isPlaying || running || session?.Workshop == null || !session.Match.CanRefit || session.IsEditingBlueprint)
         {
             throw new InvalidOperationException("Start a fresh normal Siege Play session first.");
@@ -156,7 +156,7 @@ public static class SiegeWorkshopChecks
                 checks,
                 "cancellation never deletes fleet or heals base",
                 units.All(unit => unit != null) && driven.IsAlive && core.currentDurability == health && session.Match.Coins == coins);
-            Button entry = Object.FindFirstObjectByType<SiegeHud>().GetComponentsInChildren<Button>().Single(button => button.name == "Open Blueprint Workshop");
+            Button entry = SceneObjectQuery.FindInActiveScene<SiegeHud>().GetComponentsInChildren<Button>().Single(button => button.name == "Open Blueprint Workshop");
             var corners = new Vector3[4];
             entry.GetComponent<RectTransform>().GetWorldCorners(corners);
             Vector2 center = (corners[0] + corners[2]) * 0.5f;

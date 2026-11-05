@@ -40,7 +40,7 @@ public static class OutpostHudAuthoring
             OutpostHud hud = root.AddComponent<OutpostHud>();
             var serialized = new SerializedObject(hud);
             serialized.FindProperty("_label").objectReferenceValue = label;
-            serialized.FindProperty("_session").objectReferenceValue = UnityEngine.Object.FindFirstObjectByType<WorldSessionManager>();
+            serialized.FindProperty("_session").objectReferenceValue = SceneObjectQuery.FindInActiveScene<WorldSessionManager>();
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 

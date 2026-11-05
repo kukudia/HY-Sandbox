@@ -32,7 +32,7 @@ public static class WorldLabSoakChecks
             throw new InvalidOperationException("Start one soak in WorldLab Play Mode.");
         }
 
-        world = Object.FindFirstObjectByType<ProceduralVoxelWorld>();
+        world = SceneObjectQuery.FindInActiveScene<ProceduralVoxelWorld>();
         world.Generate();
         expectedChunks = world.GetComponentsInChildren<VoxelWorldChunk>().Length;
         initialFingerprint = world.Data.Fingerprint();

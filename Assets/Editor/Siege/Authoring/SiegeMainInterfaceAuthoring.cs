@@ -20,7 +20,7 @@ public static class SiegeMainInterfaceAuthoring
             throw new InvalidOperationException("Open the saved Siege scene in Edit Mode.");
         }
 
-        if (Object.FindFirstObjectByType<SiegeWorkshop>() != null)
+        if (SceneObjectQuery.FindInActiveScene<SiegeWorkshop>() != null)
         {
             Debug.Log("Main interface already installed; edit the saved components directly.");
             return;
@@ -69,7 +69,7 @@ public static class SiegeMainInterfaceAuthoring
         PlayManager play = clone.GetComponentInChildren<PlayManager>(true);
         var playData = new SerializedObject(play);
         playData.FindProperty("worldSession").objectReferenceValue = null;
-        playData.FindProperty("siegeSession").objectReferenceValue = Object.FindFirstObjectByType<SiegeSession>();
+        playData.FindProperty("siegeSession").objectReferenceValue = SceneObjectQuery.FindInActiveScene<SiegeSession>();
         playData.ApplyModifiedPropertiesWithoutUndo();
         play.blocksParent = null;
         play.groupCleanupDistance = 500f;
@@ -99,7 +99,7 @@ public static class SiegeMainInterfaceAuthoring
         panels.createPanel.SetActive(false);
         panels.deletePanel.SetActive(false);
         panels.deathPanel.SetActive(false);
-        SiegeHud hud = Object.FindFirstObjectByType<SiegeHud>();
+        SiegeHud hud = SceneObjectQuery.FindInActiveScene<SiegeHud>();
         CanvasGroup group = hud.GetComponent<CanvasGroup>();
         if (group == null)
         {
@@ -119,7 +119,7 @@ public static class SiegeMainInterfaceAuthoring
         rect.sizeDelta = new Vector2(340f, 54f);
         SiegeWorkshop workshop = clone.AddComponent<SiegeWorkshop>();
         var data = new SerializedObject(workshop);
-        data.FindProperty("session").objectReferenceValue = Object.FindFirstObjectByType<SiegeSession>();
+        data.FindProperty("session").objectReferenceValue = SceneObjectQuery.FindInActiveScene<SiegeSession>();
         data.FindProperty("panels").objectReferenceValue = panels;
         data.FindProperty("strategyHud").objectReferenceValue = group;
         data.FindProperty("buildButton").objectReferenceValue = entry;

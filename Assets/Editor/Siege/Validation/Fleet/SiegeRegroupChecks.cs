@@ -12,7 +12,7 @@ public static class SiegeRegroupChecks
 {
     public static string Run()
     {
-        SiegeSession session = Object.FindFirstObjectByType<SiegeSession>();
+        SiegeSession session = SceneObjectQuery.FindInActiveScene<SiegeSession>();
         if (!EditorApplication.isPlaying || session?.Match == null || session.Match.Wave != 0 || session.Fleet.Ships.Any(entry => entry != null))
         {
             throw new InvalidOperationException("Requires fresh Siege Play without deployed ships.");

@@ -39,7 +39,7 @@ public static class SiegePerformanceCapture
             throw new InvalidOperationException("Finish the current capture first.");
         }
 
-        session = Object.FindFirstObjectByType<SiegeSession>();
+        session = SceneObjectQuery.FindInActiveScene<SiegeSession>();
         if (!EditorApplication.isPlaying || session?.Match == null)
         {
             throw new InvalidOperationException("Requires a running Siege session.");

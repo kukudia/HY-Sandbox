@@ -55,6 +55,21 @@ def main():
         )
 
     graph(
+        "Unity 6.6 兼容查询与制作验证",
+        "源码推导：运行服务限定拥有者场景，制作工具限定活动场景；重复服务拒绝依赖对象顺序。VFX 17.6 桥接仅在 Editor，使用当前程序集和 GetGraph/CreateGraph；验证只修改临时副本。",
+        {
+            "A": "PlayManager.PlayStart", "B": "SceneObjectQuery.FindInScene",
+            "C": "SceneObjectQuery.FindInActiveScene", "D": "SiegeThreatMarkers.Start",
+            "E": "UpgradeCompatibilityChecks.CheckSceneQueries", "F": "UpgradeCompatibilityChecks.CheckVfxBridge",
+            "G": "VfxGraphAuthoring.Graph", "H": "VfxGraphAuthoring.Save",
+            "I": "UpgradeCompatibilityChecks.MigrateExhaustImporter",
+            "J": "ProfilerCaptureAnalysis.Analyze", "K": "ProfilerCaptureAnalysis.AddCounters",
+            "L": "ProfilerCaptureAnalysis.WriteCounters",
+        },
+        ["A --> B", "C --> B", "D --> B", "E --> B", "E --> C", "F --> G", "F --> H", "J --> K", "J --> L"],
+    )
+
+    graph(
         "断片最短物理保留期",
         "源码推导：建筑无论组大小与预算均先创建完整物理残骸。建筑、载具与阵地战敌方预算共用FragmentLifetime；计时器到期重查新碎片年龄，最短期内允许暂超软预算。该保护不阻止实际伤害、主动卸载或退出。载具新刚体保持源PhysicsScene和剩余碰撞保护。",
         {
@@ -797,6 +812,8 @@ def main():
             "P": "WorldDistanceView.UpdateRingVisibility",
             "Q": "WorldDistanceView.ReleaseExpiredRing",
             "R": "SaveManager.GetBuildingBlueprintFiles",
+            "S": "ProceduralVoxelWorld.LoadColumn", "T": "ProceduralVoxelWorld.UnloadColumn",
+            "U": "WorldDistanceView.OnColumnVisibilityChanged",
         },
         [
             "A -->|取得共用文件仓| R", "A --> B", "B -->|异步预热后经ReadSources校验| C", "A --> E", "H -->|经Height按所选蓝图取范围| D",
@@ -804,6 +821,7 @@ def main():
             "I --> J", "J --> H", "I --> K", "L -->|先停止远景协程| M",
             "G -.->|预算内逐列缓存| N", "N --> O", "O -->|同近景2m阶梯轮廓| H",
             "F -->|列版本变化隐藏详细列代理| P", "G -->|孔洞和外环同帧切换| P", "G --> Q",
+            "S -.->|发布列同步通知| U", "T -.->|卸载列同步通知| U", "M -->|取消订阅| U",
         ],
     )
     graph(
@@ -1090,6 +1108,7 @@ def main():
             "O": "EnemyIdentity.ReportDefeated", "P": "OutpostEncounterDirector.Clear",
             "Q": "WorldSessionManager.BeginPreparation", "R": "OutpostHud.Update",
             "S": "OutpostHud.Format", "T": "OutpostHud.FitName",
+            "U": "WorldBuildingValidation.ValidateWorldTemplate",
         },
         [
             "A --> B", "B --> D", "C --> D", "D --> E", "F --> E",
@@ -1097,6 +1116,7 @@ def main():
             "J -->|远离或地形卸载| M", "N -->|敌方驾驶舱死亡| O",
             "O -.->|Defeated事件修改该驻军记录| J", "Q --> P", "R -.->|只读状态| J",
             "R --> S", "S -->|按字形宽度缩短名称| T",
+            "F -->|世界生成范围约束| U",
         ],
     )
     graph(
@@ -1184,7 +1204,7 @@ def main():
             "A": "WorldPlayerSmokeChecks.Initialize",
             "B": "WorldPlayerSmokeChecks.ReadInteger",
             "C": "WorldPlayerSmokeChecks.Start",
-            "D": "WorldPlayerSmokeChecks.Update",
+            "D": "WorldPlayerSmokeChecks.LateUpdate",
             "E": "WorldPlayerSmokeChecks.Scenario",
             "F": "MainUIPanels.PlayStart",
             "G": "MainUIPanels.CompletePlayEnd",

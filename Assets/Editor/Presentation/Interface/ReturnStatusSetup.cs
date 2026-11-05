@@ -17,7 +17,7 @@ public static class ReturnStatusSetup
             throw new InvalidOperationException("Requires clean Main in Edit Mode.");
         }
 
-        MainUIPanels panels = UnityEngine.Object.FindFirstObjectByType<MainUIPanels>();
+        MainUIPanels panels = SceneObjectQuery.FindInActiveScene<MainUIPanels>();
         Transform canvas = panels.GetComponentInParent<Canvas>().transform;
         Transform existing = canvas.Find("Return Status");
         ReturnStatusPanel status;

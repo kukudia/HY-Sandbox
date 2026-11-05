@@ -16,7 +16,7 @@ python Tools/CodeReadability/generate_flow_browser.py
 
 `--write`整理Allman、4空格、控制流块、长参数列表和CRLF。扫描范围仅Assets/Scripts与Assets/Editor；保留实际UTF8/BOM/GB18030。写入前核对非括号token，拒绝改业务词法。`--check`还检查顶部职责说明、替换字符和RuntimeFlow符号；文件行数仅提示人工审查，不是质量验收。
 
-`--inventory`输出真实脚本/方法/公开或序列化字段JSON，可用于迁移核查；不是完整ABI分析器。配置的预处理符号用于当前Unity6.3 Editor路径；新增平台条件应同步其符号并通过真正的Unity目标编译。
+`--inventory`输出真实脚本/方法/公开或序列化字段JSON，可用于迁移核查；不是完整ABI分析器。解析符号分别读取目标Editor实际生成的Assembly-CSharp.csproj和Assembly-CSharp-Editor.csproj（当前Unity6000.6 Windows Editor，含版本链、包开关及每个程序集不同的.NET配置），并拒绝缺少UNITY_6000_6_OR_NEWER的过期工程文件。Windows Player和其他平台的排除分支仍须通过真正的目标构建验证，不能将单个Editor语法树称为全平台检查。
 
 `--duplicates`只读扫描生产方法，报告不少于50个token且方法体token完全相同的候选，忽略注释/空白；排除Editor、Validation和整文件`#if UNITY_EDITOR`参考基准。它不归一化变量名、不推断语义、不自动删除代码；候选应核对调用者和领域差异，零候选也不能证明没有语义重复。新增消费者应先复用已有机制，再显式表达策略差异。
 

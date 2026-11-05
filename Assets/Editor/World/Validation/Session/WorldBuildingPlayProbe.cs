@@ -216,10 +216,10 @@ public static class WorldBuildingPlayProbe
     private static IEnumerator Scenario()
     {
         yield return null;
-        WorldBuildingManager manager = Object.FindFirstObjectByType<WorldBuildingManager>();
+        WorldBuildingManager manager = SceneObjectQuery.FindInActiveScene<WorldBuildingManager>();
         ProceduralVoxelWorld world = manager.World;
-        WorldBuildingPalette palette = Object.FindFirstObjectByType<WorldBuildingPalette>();
-        WorldLabController controller = Object.FindFirstObjectByType<WorldLabController>();
+        WorldBuildingPalette palette = SceneObjectQuery.FindInActiveScene<WorldBuildingPalette>();
+        WorldLabController controller = SceneObjectQuery.FindInActiveScene<WorldLabController>();
         fixture = new ProbeFixture(manager, palette, controller);
         fixture.Install();
         yield return null;

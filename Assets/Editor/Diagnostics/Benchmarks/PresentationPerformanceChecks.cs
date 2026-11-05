@@ -13,7 +13,7 @@ public static class PresentationPerformanceChecks
     public static string[] Run()
     {
         GameObject root = new GameObject("Presentation isolated checks");
-        CameraController controller = Object.FindFirstObjectByType<CameraController>();
+        CameraController controller = SceneObjectQuery.FindInActiveScene<CameraController>();
         FieldInfo playerField = typeof(CameraController).GetField("playerBody", BindingFlags.Public | PrivateInstance);
         object previousPlayer = playerField.GetValue(controller);
         List<string> checks = new List<string>();

@@ -10,6 +10,7 @@ using UnityEditor;
 using UnityEditor.Profiling;
 using UnityEditorInternal;
 using UnityEngine;
+using Unity.Profiling.LowLevel;
 
 public static class ProfilerCaptureAnalysis
 {
@@ -27,6 +28,7 @@ public static class ProfilerCaptureAnalysis
     {
         var report = new StringBuilder();
         report.AppendLine("Capture: " + capturePath);
+        report.AppendLine("Source: recorded capture; Editor/Player provenance must be supplied by the capture operator.");
         if (string.IsNullOrEmpty(capturePath) || !File.Exists(capturePath))
         {
             report.AppendLine("Loaded: False");
@@ -48,6 +50,7 @@ public static class ProfilerCaptureAnalysis
         }
 
         var frames = new List<FrameSummary>();
+        var counters = new Dictionary<string, CounterAggregate>(StringComparer.Ordinal);
         var aggregate = new Dictionary<string, MarkerAggregate>(StringComparer.Ordinal);
         var gcMarkers = new Dictionary<string, MarkerAggregate>(StringComparer.Ordinal);
         var scriptMarkers = new Dictionary<string, MarkerAggregate>(StringComparer.Ordinal);
@@ -84,7 +87,7 @@ public static class ProfilerCaptureAnalysis
                             Frame = frame,
                             Fps = raw.frameFps,
                             CpuMs = raw.frameTimeMs,
-                            GpuMs = raw.frameGpuTimeMs
+                            GpuMs = (ProfilerDriver.GetGpuStatisticsAvailabilityState(frame) & GpuProfilingStatisticsAvailabilityStates.Gathered) != 0 ? raw.frameGpuTimeMs : float.NaN
                         };
                     }
 
@@ -96,6 +99,8 @@ public static class ProfilerCaptureAnalysis
                     summary.MainThreadName = raw.threadName;
                     summary.MainSamples = raw.sampleCount;
                     AddRawMarkers(raw, aggregate, gcMarkers, scriptMarkers, summary);
+                    AddCounters(raw, counters);
+                    break;
                 }
             }
 
@@ -107,7 +112,7 @@ public static class ProfilerCaptureAnalysis
 
         report.AppendLine();
         WriteFrameStats(report, frames);
-        WriteCounters(report);
+        WriteCounters(report, counters, frames.Count);
         WriteMarkers(report, "Top main-thread markers by inclusive time", aggregate.Values, 25);
         WriteMarkers(report, "GC / allocation related markers", gcMarkers.Values, 25);
         WriteMarkers(report, "Script / behaviour markers", scriptMarkers.Values, 25);
@@ -190,33 +195,81 @@ public static class ProfilerCaptureAnalysis
         {
             report.AppendLine("GPU frame ms avg/p50/p95/max: " + F(gpu.Average()) + " / " + F(Percentile(gpu, 50)) + " / " + F(Percentile(gpu, 95)) + " / " + F(gpu.Last()));
         }
+        else
+        {
+            report.AppendLine("GPU hierarchy frame time: unavailable in this capture (not zero). Frame-timing counters, when present below, are a separate measurement.");
+        }
     }
 
-    [Obsolete]
-    private static void WriteCounters(StringBuilder report)
+    private static void AddCounters(RawFrameDataView raw, Dictionary<string, CounterAggregate> counters)
     {
-        report.AppendLine();
-        report.AppendLine("Available profiler statistics sample:");
-        foreach (var name in ProfilerDriver.GetAllStatisticsProperties().Take(120))
+        var markers = new List<FrameDataView.MarkerInfo>();
+        raw.GetMarkers(markers);
+        foreach (var marker in markers)
         {
-            int id = ProfilerDriver.GetStatisticsIdentifier(name);
-            if (id == -1)
+            if (!raw.HasCounterValue(marker.id) || marker.metadataInfo == null || marker.metadataInfo.Length == 0)
             {
                 continue;
             }
 
-            var buffer = new float[Math.Max(1, ProfilerDriver.lastFrameIndex - ProfilerDriver.firstFrameIndex + 1)];
-            try
+            var metadata = marker.metadataInfo[0];
+            double value;
+            // Counter storage is typed; reinterpret unsigned values rather than reading them as doubles.
+            switch (metadata.type)
             {
-                ProfilerDriver.GetStatisticsValues(id, ProfilerDriver.firstFrameIndex, 1f, buffer, out float max);
-                if (max > 0)
-                {
-                    report.AppendLine("  " + name + ": max=" + F(max) + ", avg=" + F(buffer.Where(v => v > 0).DefaultIfEmpty().Average()));
-                }
+                case ProfilerMarkerDataType.Int32:
+                    value = raw.GetCounterValueAsInt(marker.id);
+                    break;
+                case ProfilerMarkerDataType.UInt32:
+                    value = unchecked((uint)raw.GetCounterValueAsInt(marker.id));
+                    break;
+                case ProfilerMarkerDataType.Int64:
+                    value = raw.GetCounterValueAsLong(marker.id);
+                    break;
+                case ProfilerMarkerDataType.UInt64:
+                    value = unchecked((ulong)raw.GetCounterValueAsLong(marker.id));
+                    break;
+                case ProfilerMarkerDataType.Float:
+                    value = raw.GetCounterValueAsFloat(marker.id);
+                    break;
+                case ProfilerMarkerDataType.Double:
+                    value = raw.GetCounterValueAsDouble(marker.id);
+                    break;
+                default:
+                    continue;
             }
-            catch
+
+            if (double.IsNaN(value) || double.IsInfinity(value))
             {
+                continue;
             }
+
+            string key = marker.category + "/" + marker.name + " [" + metadata.unit + ", " + metadata.type + "]";
+            if (!counters.TryGetValue(key, out var counter))
+            {
+                counter = new CounterAggregate();
+                counters.Add(key, counter);
+            }
+
+            counter.Count++;
+            counter.Sum += value;
+            counter.Max = Math.Max(counter.Max, value);
+        }
+    }
+
+    private static void WriteCounters(StringBuilder report, Dictionary<string, CounterAggregate> counters, int frameCount)
+    {
+        report.AppendLine();
+        report.AppendLine("Captured numeric counters (raw units; averages include zero; missing frames excluded):");
+        foreach (var pair in counters.OrderBy(pair => pair.Key, StringComparer.Ordinal))
+        {
+            CounterAggregate counter = pair.Value;
+            report.AppendLine("  " + pair.Key + ": max=" + F(counter.Max) + ", avg=" + F(counter.Sum / counter.Count) + ", available=" + counter.Count + "/" + frameCount);
+        }
+
+        if (counters.Count == 0)
+        {
+            report.AppendLine("  unavailable: no supported numeric counters in the captured main-thread frames.");
         }
     }
 
@@ -236,7 +289,7 @@ public static class ProfilerCaptureAnalysis
         report.AppendLine("Worst frames:");
         foreach (var frame in frames.OrderByDescending(f => f.CpuMs).Take(count))
         {
-            report.AppendLine("  frame " + frame.Frame + " CPU " + F(frame.CpuMs) + " ms" + " GPU " + F(frame.GpuMs) + " ms" + " FPS " + F(frame.Fps) + " top " + F(frame.TopMarkerMs) + " ms " + frame.TopMarker + " thread " + frame.MainThreadName);
+            report.AppendLine("  frame " + frame.Frame + " CPU " + F(frame.CpuMs) + " ms" + " GPU " + (float.IsNaN(frame.GpuMs) ? "unavailable" : F(frame.GpuMs) + " ms") + " FPS " + F(frame.Fps) + " top " + F(frame.TopMarkerMs) + " ms " + frame.TopMarker + " thread " + frame.MainThreadName);
         }
     }
 
@@ -362,5 +415,12 @@ public static class ProfilerCaptureAnalysis
         public string TopMarker = "";
         public float TopMarkerMs;
         public float GcRelatedMs;
+    }
+
+    private sealed class CounterAggregate
+    {
+        public int Count;
+        public double Sum;
+        public double Max = double.NegativeInfinity;
     }
 }

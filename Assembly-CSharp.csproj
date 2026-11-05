@@ -159,6 +159,7 @@
     <Compile Include="Assets\Scripts\Features\Bots\Repair\RepairBeamView.cs" />
     <Compile Include="Assets\Scripts\Features\Bootstrap\GameManager.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Physics\RigidbodyMotion.cs" />
+    <Compile Include="Assets\Scripts\Features\Bootstrap\SceneObjectQuery.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\TurretTargetSelector.cs" />
     <Compile Include="Assets\Scripts\Features\Power\Devices\PowerGeneratingUnit.cs" />
     <Compile Include="Assets\Scripts\Features\World\Terrain\ProceduralVoxelWorld.cs" />

@@ -41,7 +41,7 @@ public sealed class SiegeThreatMarkers : MonoBehaviour
     {
         if (session == null)
         {
-            session = Object.FindFirstObjectByType<SiegeSession>();
+            session = SceneObjectQuery.FindInScene<SiegeSession>(gameObject.scene);
         }
     }
 
@@ -149,7 +149,7 @@ public sealed class SiegeThreatMarkers : MonoBehaviour
     /// <summary>把世界坐标压到屏幕边缘：视野内但过远时按真实方向，视野外时按画布方向夹取。</summary>
     private void PlaceMarker(int index, Camera camera, Vector3 world, Vector3 viewport, float distance)
     {
-    RectTransform marker = markers[index];
+        RectTransform marker = markers[index];
         if (!marker.gameObject.activeSelf)
         {
             marker.gameObject.SetActive(true);

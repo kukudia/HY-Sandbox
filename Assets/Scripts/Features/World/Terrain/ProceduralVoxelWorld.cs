@@ -11,6 +11,8 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
 {
     public event System.Action<Bounds> TerrainChanged;
     public event System.Action Regenerated;
+    public event Action<Vector2Int, bool> ColumnVisibilityChanged;
+    public event Action StreamingCleared;
     [SerializeField, Tooltip("由世界会话驱动分块加载；启用后 Awake 不生成有限 WorldLab。")]
     private bool streaming;
     [SerializeField]
@@ -287,6 +289,7 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
             {
                 loadedColumns.Add(coordinate);
                 ColumnVersion++;
+                ColumnVisibilityChanged?.Invoke(coordinate, true);
                 complete = true;
             }
         }
@@ -318,6 +321,7 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
         if (loadedColumns.Remove(coordinate))
         {
             ColumnVersion++;
+            ColumnVisibilityChanged?.Invoke(coordinate, false);
         }
 
         for (int y = 0; y < data.Maximum.y; y += chunkSize)
@@ -337,6 +341,7 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
         loadingColumns.Clear();
         loadedColumns.Clear();
         ColumnVersion++;
+        StreamingCleared?.Invoke();
         foreach (VoxelWorldChunk chunk in chunks.Values)
         {
             DestroyChunk(chunk);

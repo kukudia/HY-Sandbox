@@ -105,4 +105,29 @@ public static class WorldBuildingValidation
         float norm = value.x * value.x + value.y * value.y + value.z * value.z + value.w * value.w;
         return Finite(norm) && Mathf.Abs(norm - 1f) < 0.01f;
     }
+
+    public static void ValidateWorldTemplate(BlockDataList blueprint)
+    {
+        if (blueprint.blocks.Count == 0)
+        {
+            throw new InvalidOperationException("Blueprint has no blocks.");
+        }
+
+        foreach (BlockData block in blueprint.blocks)
+        {
+            Vector3 half = new Vector3(block.x, block.y, block.z) * 0.5f;
+            Quaternion rotation = new Quaternion(block.rotX, block.rotY, block.rotZ, block.rotW);
+            for (int corner = 0; corner < 8; corner++)
+            {
+                Vector3 point = rotation * Vector3.Scale(
+                    half,
+                    new Vector3((corner & 1) == 0 ? -1f : 1f, (corner & 2) == 0 ? -1f : 1f, (corner & 4) == 0 ? -1f : 1f));
+                point += new Vector3(block.posX, block.posY, block.posZ);
+                if (point.y < -0.01f || Mathf.Max(Mathf.Abs(point.x), Mathf.Abs(point.z)) > 128f)
+                {
+                    throw new InvalidOperationException("Building extends below its foundation or beyond the 128 m platform radius.");
+                }
+            }
+        }
+    }
 }

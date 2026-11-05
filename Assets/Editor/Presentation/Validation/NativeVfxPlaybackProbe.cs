@@ -59,16 +59,24 @@ public static class NativeVfxPlaybackProbe
 
         string name = queue.Split(',')[0];
         SessionState.SetString(Key + "Queue", string.Join(",", queue.Split(',').Skip(1)));
-        Run(BlockVfxBaker.Root + "/" + name + ".prefab", NativeVfxLibraryBuilder.Root + "/Preview/" + name);
+        Run(
+            BlockVfxBaker.Root + "/" + name + ".prefab",
+            SessionState.GetString(Key + "SuiteOutput", NativeVfxLibraryBuilder.Root + "/Preview") + "/" + name);
     }
 
     [MenuItem("Tools/HY Sandbox/VFX Graph/5 Capture Lifecycle Suite")]
     public static void RunSuite()
     {
+        RunSuite(NativeVfxLibraryBuilder.Root + "/Preview");
+    }
+
+    public static void RunSuite(string outputRoot)
+    {
+        SessionState.SetString(Key + "SuiteOutput", outputRoot);
         SessionState.SetString(
             Key + "Queue",
             "BreakBurst,ImpactBurst,SmokeBurst,DetachedSmoke,ThrusterJet,RepairContact,EnergyBeam,EnergyTrail,BuildBurst");
-        Run(BlockVfxBaker.Root + "/Explosion.prefab", NativeVfxLibraryBuilder.Root + "/Preview/Explosion");
+        Run(BlockVfxBaker.Root + "/Explosion.prefab", outputRoot + "/Explosion");
     }
 
     public static void Run(string prefab, string output)

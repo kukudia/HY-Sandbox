@@ -177,7 +177,7 @@ public static class OutpostPlayerChecks
             yield return OutpostPursuitPlayerChecks.Run(player, observations.Select(item => item.Unit).ToArray(), check);
         }
 
-        OutpostHud hud = Object.FindFirstObjectByType<OutpostHud>();
+        OutpostHud hud = SceneObjectQuery.FindInActiveScene<OutpostHud>();
         UnityEngine.UI.Text hudLabel = hud.GetComponent<UnityEngine.UI.Text>();
         check(hudLabel.text.Contains("m\nDefenders"), "Live outpost HUD separates distance and defender counts");
         string currentLabel = hudLabel.text;

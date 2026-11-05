@@ -4,7 +4,9 @@ Unity 6000.6.8f1（URP / VFX Graph 17.6.0，Input System 1.20.1）。本文只�
 
 ## Unity 6.6 升级适配
 
-已迁移禁用的对象/序列化整数身份 API 至 EntityId，保留缓存、去重与引用检查语义；无序查询使用新版重载，性能探针显式记录 drawCalls。已执行验证、剩余弃用项和引擎适配优先级见 [升级适配报告](Docs/Validation/2026-11-05-unity-6000.6-upgrade.md)。运行调用链未重构，函数图仍适用，导航已刷新。
+已迁移禁用的对象/序列化整数身份 API 至 EntityId。后续场景服务使用 SceneObjectQuery 明确归属并拒绝重复实例；VFX 桥接适配 17.6 的 GetGraph/CreateGraph，喷口 FBX 用显式材质 remap 保留引用，Profiler 读取录制帧的类型化计数及可用性。CodeReadability 从真实工程读取条件符号。入口与实际验证/未覆盖边界见 [后续适配报告](Docs/Validation/2026-11-05-unity-6000.6-followup.md)，原始清单见 [升级报告](Docs/Validation/2026-11-05-unity-6000.6-upgrade.md)。函数图和导航已同步。
+
+Player 回归发现并修复近景列提交与远景环刷新的同步空窗：列加载/卸载事件立即切换对应代理，退出解除订阅。最终 Main Editor 会话 57 项、Main Player 33 项、Siege Player 67 项通过，Windows Mono Development 构建 0 错误；隐藏 Player 的黑帧截图不作为画面验收，真实硬件交互、可见 Player 画面和长期压力仍待验证。
 
 ## 飞行与战斗 AI 升级
 

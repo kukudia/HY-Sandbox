@@ -238,7 +238,7 @@ public static class BuildingEditorPlayProbe
         Check(
             "Foundation collider is a thin plane below the sockets",
             foundation.raycastCollider.bounds.max.y <= 0.001f && foundation.raycastCollider.size.y < 0.2f);
-        var panel = Object.FindFirstObjectByType<BuildingEditorPanel>();
+        var panel = SceneObjectQuery.FindInActiveScene<BuildingEditorPanel>();
         Check(
             "Editable size panel is visible and Play button hidden",
             panel != null && !MainUIButtons.instance.playButton.gameObject.activeSelf);

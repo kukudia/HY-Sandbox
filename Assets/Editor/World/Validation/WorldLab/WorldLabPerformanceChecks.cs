@@ -17,7 +17,7 @@ public static class WorldLabPerformanceChecks
             throw new InvalidOperationException("Run in WorldLab Play Mode only.");
         }
 
-        var world = Object.FindFirstObjectByType<ProceduralVoxelWorld>();
+        var world = SceneObjectQuery.FindInActiveScene<ProceduralVoxelWorld>();
         var timer = new Stopwatch();
         var report = new Report();
         world.Generate();

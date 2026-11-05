@@ -67,6 +67,7 @@ HY-Sandbox/
 │   │   ├── Diagnostics/
 │   │   │   ├── PhysicsSandboxProbe.cs
 │   │   │   ├── ProfilerCaptureAnalysis.cs
+│   │   │   ├── UpgradeCompatibilityChecks.cs
 │   │   │   └── Benchmarks/
 │   │   │       ├── FleetPresentationBenchmark.cs
 │   │   │       ├── IndustrialMotionChecks.cs
@@ -179,7 +180,8 @@ HY-Sandbox/
 │   └── Scripts/
 │       └── Features/
 │           ├── Bootstrap/
-│           │   └── GameManager.cs
+│           │   ├── GameManager.cs
+│           │   └── SceneObjectQuery.cs
 │           ├── Bots/
 │           │   ├── Bot.cs
 │           │   ├── Collection/
@@ -1142,24 +1144,42 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| ProfilerCaptureAnalysis | [`void AnalyzeLatest()`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L18) | public static |
-| ProfilerCaptureAnalysis | [`void Analyze(string capturePath, string reportPath)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L26) | public static |
-| ProfilerCaptureAnalysis | [`string GetLatestCapturePath()`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L120) | private static |
-| ProfilerCaptureAnalysis | [`void AddRawMarkers( RawFrameDataView raw, Dictionary<string, MarkerAggregate> aggregate, Dictionary<string, MarkerAggregate> gcMarkers, Dictionary<string, MarkerAggregate> scriptMarkers, FrameSummary summary)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L131) | private static |
-| ProfilerCaptureAnalysis | [`MarkerAggregate GetOrCreate(Dictionary<string, MarkerAggregate> map, string name)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L163) | private static |
-| ProfilerCaptureAnalysis | [`void WriteFrameStats(StringBuilder report, List<FrameSummary> frames)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L177) | private static |
-| ProfilerCaptureAnalysis | [`void WriteCounters(StringBuilder report)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L195) | private static |
-| ProfilerCaptureAnalysis | [`void WriteMarkers(StringBuilder report, string title, IEnumerable<MarkerAggregate> markers, int count)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L223) | private static |
-| ProfilerCaptureAnalysis | [`void WriteWorstFrames(StringBuilder report, List<FrameSummary> frames, int count)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L233) | private static |
-| ProfilerCaptureAnalysis | [`void WriteHierarchyDrilldowns(StringBuilder report, IEnumerable<int> frames)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L243) | private static |
-| ProfilerCaptureAnalysis | [`void WriteHierarchyItem(StringBuilder report, HierarchyFrameDataView view, int id, int depth, int maxDepth)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L267) | private static |
-| ProfilerCaptureAnalysis | [`float Percentile(float[] sorted, int pct)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L287) | private static |
-| ProfilerCaptureAnalysis | [`void WriteReport(string reportPath, StringBuilder report)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L298) | private static |
-| ProfilerCaptureAnalysis | [`void Finish(string message)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L309) | private static |
-| ProfilerCaptureAnalysis | [`string F(float value)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L318) | private static |
-| ProfilerCaptureAnalysis | [`string F(double value)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L323) | private static |
-| ProfilerCaptureAnalysis | [`string Pad(string value, int width)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L328) | private static |
-| MarkerAggregate | [`void Add(float ms, int frame)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L342) | public |
+| ProfilerCaptureAnalysis | [`void AnalyzeLatest()`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L19) | public static |
+| ProfilerCaptureAnalysis | [`void Analyze(string capturePath, string reportPath)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L27) | public static |
+| ProfilerCaptureAnalysis | [`string GetLatestCapturePath()`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L125) | private static |
+| ProfilerCaptureAnalysis | [`void AddRawMarkers( RawFrameDataView raw, Dictionary<string, MarkerAggregate> aggregate, Dictionary<string, MarkerAggregate> gcMarkers, Dictionary<string, MarkerAggregate> scriptMarkers, FrameSummary summary)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L136) | private static |
+| ProfilerCaptureAnalysis | [`MarkerAggregate GetOrCreate(Dictionary<string, MarkerAggregate> map, string name)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L168) | private static |
+| ProfilerCaptureAnalysis | [`void WriteFrameStats(StringBuilder report, List<FrameSummary> frames)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L182) | private static |
+| ProfilerCaptureAnalysis | [`void AddCounters(RawFrameDataView raw, Dictionary<string, CounterAggregate> counters)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L204) | private static |
+| ProfilerCaptureAnalysis | [`void WriteCounters(StringBuilder report, Dictionary<string, CounterAggregate> counters, int frameCount)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L260) | private static |
+| ProfilerCaptureAnalysis | [`void WriteMarkers(StringBuilder report, string title, IEnumerable<MarkerAggregate> markers, int count)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L276) | private static |
+| ProfilerCaptureAnalysis | [`void WriteWorstFrames(StringBuilder report, List<FrameSummary> frames, int count)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L286) | private static |
+| ProfilerCaptureAnalysis | [`void WriteHierarchyDrilldowns(StringBuilder report, IEnumerable<int> frames)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L296) | private static |
+| ProfilerCaptureAnalysis | [`void WriteHierarchyItem(StringBuilder report, HierarchyFrameDataView view, int id, int depth, int maxDepth)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L320) | private static |
+| ProfilerCaptureAnalysis | [`float Percentile(float[] sorted, int pct)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L340) | private static |
+| ProfilerCaptureAnalysis | [`void WriteReport(string reportPath, StringBuilder report)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L351) | private static |
+| ProfilerCaptureAnalysis | [`void Finish(string message)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L362) | private static |
+| ProfilerCaptureAnalysis | [`string F(float value)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L371) | private static |
+| ProfilerCaptureAnalysis | [`string F(double value)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L376) | private static |
+| ProfilerCaptureAnalysis | [`string Pad(string value, int width)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L381) | private static |
+| MarkerAggregate | [`void Add(float ms, int frame)`](../Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs#L395) | public |
+
+## Assets/Editor/Diagnostics/UpgradeCompatibilityChecks.cs
+
+// 职责：验证引擎升级后的场景查询、VFX 制作桥接和受影响 FBX 材质迁移。 // 入口：CheckSceneQueries() / CheckVfxBridge() / MigrateExhaustImporter()；结果写 Logs/UpgradeFollowup。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| UpgradeCompatibilityChecks | [`object CheckInputLifecycle()`](../Assets/Editor/Diagnostics/UpgradeCompatibilityChecks.cs#L20) | public static |
+| UpgradeCompatibilityChecks | [`object EnableVfxMeshReadability()`](../Assets/Editor/Diagnostics/UpgradeCompatibilityChecks.cs#L91) | public static |
+| UpgradeCompatibilityChecks | [`string VfxMeshSnapshot(string path)`](../Assets/Editor/Diagnostics/UpgradeCompatibilityChecks.cs#L126) | private static |
+| UpgradeCompatibilityChecks | [`object CheckSceneQueries()`](../Assets/Editor/Diagnostics/UpgradeCompatibilityChecks.cs#L131) | public static |
+| UpgradeCompatibilityChecks | [`object CheckVfxBridge()`](../Assets/Editor/Diagnostics/UpgradeCompatibilityChecks.cs#L181) | public static |
+| UpgradeCompatibilityChecks | [`object MigrateExhaustImporter()`](../Assets/Editor/Diagnostics/UpgradeCompatibilityChecks.cs#L227) | public static |
+| UpgradeCompatibilityChecks | [`string ModelSnapshot(string path)`](../Assets/Editor/Diagnostics/UpgradeCompatibilityChecks.cs#L269) | private static |
+| UpgradeCompatibilityChecks | [`object Reference(Object asset)`](../Assets/Editor/Diagnostics/UpgradeCompatibilityChecks.cs#L280) | private static |
+| UpgradeCompatibilityChecks | [`void Require(bool condition, string name)`](../Assets/Editor/Diagnostics/UpgradeCompatibilityChecks.cs#L291) | private static |
+| UpgradeCompatibilityChecks | [`object Write(string name, object result)`](../Assets/Editor/Diagnostics/UpgradeCompatibilityChecks.cs#L299) | private static |
 
 ## Assets/Editor/Flight/ThrusterHudSetup.cs
 
@@ -1259,21 +1279,21 @@ HY-Sandbox/
 | VfxGraphAuthoring | [`object Get(object target, string name)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L32) | public static |
 | VfxGraphAuthoring | [`void Set(object target, string name, object value)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L33) | public static |
 | VfxGraphAuthoring | [`object Call(object target, string method, params object[] args)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L54) | public static |
-| VfxGraphAuthoring | [`object[] Items(object target, string property)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L62) | public static |
-| VfxGraphAuthoring | [`object Resource(string path)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L63) | public static |
-| VfxGraphAuthoring | [`object Graph(string path)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L64) | public static |
-| VfxGraphAuthoring | [`Object[] Contents(string path)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L65) | public static |
-| VfxGraphAuthoring | [`void Save(string path)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L66) | public static |
-| VfxGraphAuthoring | [`object Create(string name)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L74) | public static |
-| VfxGraphAuthoring | [`void Add(object parent, object child)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L75) | public static |
-| VfxGraphAuthoring | [`void Setting(object target, string fieldName, object value)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L76) | public static |
-| VfxGraphAuthoring | [`object Slot(object target, string name)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L97) | public static |
-| VfxGraphAuthoring | [`void Value(object target, string name, object value)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L98) | public static |
-| VfxGraphAuthoring | [`object Parameter(object graph, string name, object value)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L99) | public static |
-| VfxGraphAuthoring | [`void Link(object parameter, object input)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L116) | public static |
-| VfxGraphAuthoring | [`object Attribute(object context, string name, object value, bool multiply = false)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L117) | public static |
-| VfxGraphAuthoring | [`void AddIntensity(string path)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L131) | public static |
-| VfxGraphAuthoring | [`object Describe(string path)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L149) | public static |
+| VfxGraphAuthoring | [`object[] Items(object target, string property)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L69) | public static |
+| VfxGraphAuthoring | [`object Resource(string path)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L70) | public static |
+| VfxGraphAuthoring | [`object Graph(string path)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L71) | public static |
+| VfxGraphAuthoring | [`Object[] Contents(string path)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L78) | public static |
+| VfxGraphAuthoring | [`void Save(string path)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L79) | public static |
+| VfxGraphAuthoring | [`object Create(string name)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L87) | public static |
+| VfxGraphAuthoring | [`void Add(object parent, object child)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L88) | public static |
+| VfxGraphAuthoring | [`void Setting(object target, string fieldName, object value)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L89) | public static |
+| VfxGraphAuthoring | [`object Slot(object target, string name)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L110) | public static |
+| VfxGraphAuthoring | [`void Value(object target, string name, object value)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L111) | public static |
+| VfxGraphAuthoring | [`object Parameter(object graph, string name, object value)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L112) | public static |
+| VfxGraphAuthoring | [`void Link(object parameter, object input)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L129) | public static |
+| VfxGraphAuthoring | [`object Attribute(object context, string name, object value, bool multiply = false)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L130) | public static |
+| VfxGraphAuthoring | [`void AddIntensity(string path)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L144) | public static |
+| VfxGraphAuthoring | [`object Describe(string path)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L162) | public static |
 
 ## Assets/Editor/Presentation/Interface/BlockStatusSetup.cs
 
@@ -1321,14 +1341,15 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | NativeVfxPlaybackProbe | [`void NextQueued()`](../Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs#L47) | private static |
-| NativeVfxPlaybackProbe | [`void RunSuite()`](../Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs#L65) | public static |
-| NativeVfxPlaybackProbe | [`void Run(string prefab, string output)`](../Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs#L74) | public static |
-| NativeVfxPlaybackProbe | [`void RunPositionTest(string prefab, string output)`](../Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs#L81) | public static |
-| NativeVfxPlaybackProbe | [`void RunBlockTest(string prefab, string output)`](../Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs#L88) | public static |
-| NativeVfxPlaybackProbe | [`void StartCapture(string prefab, string output)`](../Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs#L95) | private static |
-| NativeVfxPlaybackProbe | [`void State(PlayModeStateChange state)`](../Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs#L110) | private static |
-| NativeVfxPlaybackProbe | [`void Tick()`](../Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs#L225) | private static |
-| NativeVfxPlaybackProbe | [`void Finish()`](../Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs#L315) | private static |
+| NativeVfxPlaybackProbe | [`void RunSuite()`](../Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs#L67) | public static |
+| NativeVfxPlaybackProbe | [`void RunSuite(string outputRoot)`](../Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs#L73) | public static |
+| NativeVfxPlaybackProbe | [`void Run(string prefab, string output)`](../Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs#L82) | public static |
+| NativeVfxPlaybackProbe | [`void RunPositionTest(string prefab, string output)`](../Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs#L89) | public static |
+| NativeVfxPlaybackProbe | [`void RunBlockTest(string prefab, string output)`](../Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs#L96) | public static |
+| NativeVfxPlaybackProbe | [`void StartCapture(string prefab, string output)`](../Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs#L103) | private static |
+| NativeVfxPlaybackProbe | [`void State(PlayModeStateChange state)`](../Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs#L118) | private static |
+| NativeVfxPlaybackProbe | [`void Tick()`](../Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs#L233) | private static |
+| NativeVfxPlaybackProbe | [`void Finish()`](../Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs#L323) | private static |
 
 ## Assets/Editor/Salvage/CargoReturnFileChecks.cs
 
@@ -1797,8 +1818,8 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeStressCancellationChecks | [`string Start()`](../Assets/Editor/Siege/Validation/Rules/SiegeStressCancellationChecks.cs#L19) | public static |
-| SiegeStressCancellationChecks | [`void Complete()`](../Assets/Editor/Siege/Validation/Rules/SiegeStressCancellationChecks.cs#L64) | private static |
-| SiegeStressCancellationChecks | [`void Check(string label, bool passed)`](../Assets/Editor/Siege/Validation/Rules/SiegeStressCancellationChecks.cs#L94) | private static |
+| SiegeStressCancellationChecks | [`void Complete()`](../Assets/Editor/Siege/Validation/Rules/SiegeStressCancellationChecks.cs#L66) | private static |
+| SiegeStressCancellationChecks | [`void Check(string label, bool passed)`](../Assets/Editor/Siege/Validation/Rules/SiegeStressCancellationChecks.cs#L96) | private static |
 
 ## Assets/Editor/Siege/Validation/Rules/SiegeTransientEffectChecks.cs
 
@@ -1858,11 +1879,12 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldPlayerBuildChecks | [`void Build()`](../Assets/Editor/World/Player/WorldPlayerBuildChecks.cs#L13) | public static |
-| WorldPlayerBuildChecks | [`void BuildNow()`](../Assets/Editor/World/Player/WorldPlayerBuildChecks.cs#L25) | private static |
-| WorldPlayerBuildChecks | [`void BuildAuthoring()`](../Assets/Editor/World/Player/WorldPlayerBuildChecks.cs#L33) | public static |
-| WorldPlayerBuildChecks | [`void BuildAuthoringNow()`](../Assets/Editor/World/Player/WorldPlayerBuildChecks.cs#L44) | private static |
-| WorldPlayerBuildChecks | [`void BuildPlayer(string output, string reportPath, BuildOptions options)`](../Assets/Editor/World/Player/WorldPlayerBuildChecks.cs#L52) | private static |
+| WorldPlayerBuildChecks | [`void Build()`](../Assets/Editor/World/Player/WorldPlayerBuildChecks.cs#L14) | public static |
+| WorldPlayerBuildChecks | [`void BuildNow()`](../Assets/Editor/World/Player/WorldPlayerBuildChecks.cs#L26) | private static |
+| WorldPlayerBuildChecks | [`void BuildAuthoring()`](../Assets/Editor/World/Player/WorldPlayerBuildChecks.cs#L34) | public static |
+| WorldPlayerBuildChecks | [`void Schedule(Action action)`](../Assets/Editor/World/Player/WorldPlayerBuildChecks.cs#L45) | private static |
+| WorldPlayerBuildChecks | [`void BuildAuthoringNow()`](../Assets/Editor/World/Player/WorldPlayerBuildChecks.cs#L70) | private static |
+| WorldPlayerBuildChecks | [`void BuildPlayer(string output, string reportPath, BuildOptions options)`](../Assets/Editor/World/Player/WorldPlayerBuildChecks.cs#L78) | private static |
 
 ## Assets/Editor/World/Terrain/ProceduralVoxelWorldEditor.cs
 
@@ -1954,10 +1976,10 @@ HY-Sandbox/
 | WorldSessionPlayChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L96) | private static |
 | WorldSessionPlayChecks | [`void Check(bool condition, string description)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L104) | private static |
 | WorldSessionPlayChecks | [`bool IsPopulatedBuilding(string path)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L114) | private static |
-| WorldSessionPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L128) | private static |
-| WorldSessionPlayChecks | [`IEnumerator StreamingChecks(WorldGenerationSettings settings)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L423) | private static |
-| WorldSessionPlayChecks | [`bool NeighborhoodReady(ProceduralVoxelWorld world, Vector2Int center)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L531) | private static |
-| WorldSessionPlayChecks | [`void Finish(bool exitPlayMode)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L547) | private static |
+| WorldSessionPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L129) | private static |
+| WorldSessionPlayChecks | [`IEnumerator StreamingChecks(WorldGenerationSettings settings)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L457) | private static |
+| WorldSessionPlayChecks | [`bool NeighborhoodReady(ProceduralVoxelWorld world, Vector2Int center)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L565) | private static |
+| WorldSessionPlayChecks | [`void Finish(bool exitPlayMode)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L581) | private static |
 
 ## Assets/Editor/World/Validation/Terrain/VoxelMeshingChecks.cs
 
@@ -2067,6 +2089,15 @@ HY-Sandbox/
 | GameManager | [`void Awake()`](../Assets/Scripts/Features/Bootstrap/GameManager.cs#L9) | private |
 | GameManager | [`void Start()`](../Assets/Scripts/Features/Bootstrap/GameManager.cs#L15) | private |
 | GameManager | [`void Init()`](../Assets/Scripts/Features/Bootstrap/GameManager.cs#L20) | public static |
+
+## Assets/Scripts/Features/Bootstrap/SceneObjectQuery.cs
+
+// 职责：显式限定场景的服务查找，拒绝用对象创建顺序解决重复实例。 // 入口：FindInScene()/FindInActiveScene()；缺失返回null，同场景重复抛出明确错误。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SceneObjectQuery | [`T FindInActiveScene(FindObjectsInactive inactive = FindObjectsInactive.Exclude)`](../Assets/Scripts/Features/Bootstrap/SceneObjectQuery.cs#L9) | public static |
+| SceneObjectQuery | [`T FindInScene(Scene scene, FindObjectsInactive inactive = FindObjectsInactive.Exclude)`](../Assets/Scripts/Features/Bootstrap/SceneObjectQuery.cs#L15) | public static |
 
 ## Assets/Scripts/Features/Bots/Bot.cs
 
@@ -4249,12 +4280,12 @@ HY-Sandbox/
 | SiegePlayerChecks | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L114) | private |
 | SiegePlayerChecks | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L132) | private |
 | SiegePlayerChecks | [`IEnumerator Run()`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L140) | private |
-| SiegePlayerChecks | [`bool SupportsDriving(SiegeShipOption option)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L458) | private static |
-| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L465) | private |
-| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L472) | private |
-| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L482) | private |
-| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L490) | private |
-| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L509) | private |
+| SiegePlayerChecks | [`bool SupportsDriving(SiegeShipOption option)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L470) | private static |
+| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L477) | private |
+| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L484) | private |
+| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L494) | private |
+| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L502) | private |
+| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L521) | private |
 
 ## Assets/Scripts/Features/Siege/Validation/SiegePlayerSurvey.cs
 
@@ -4642,7 +4673,6 @@ HY-Sandbox/
 | WorldBuildingLibrary | [`IEnumerable<string> ReadSources(BlueprintFileStore files, bool forWorldGeneration, HashSet<string> warmupResources)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L59) | private |
 | WorldBuildingLibrary | [`void ReadSource(string name, string path, bool forWorldGeneration, HashSet<string> warmupResources)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L82) | private |
 | WorldBuildingLibrary | [`void CollectBlueprintResources(BlockDataList blueprint, HashSet<string> resources)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L114) | private static |
-| WorldBuildingLibrary | [`void ValidateWorldTemplate(BlockDataList blueprint)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L148) | private static |
 
 ## Assets/Scripts/Features/World/Buildings/Data/WorldBuildingState.cs
 
@@ -4698,6 +4728,7 @@ HY-Sandbox/
 | WorldBuildingValidation | [`bool Finite(float value)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs#L93) | public static |
 | WorldBuildingValidation | [`bool Finite(Vector3 value)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs#L98) | public static |
 | WorldBuildingValidation | [`bool ValidRotation(Quaternion value)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs#L103) | public static |
+| WorldBuildingValidation | [`void ValidateWorldTemplate(BlockDataList blueprint)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs#L109) | public static |
 
 ## Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs
 
@@ -4822,14 +4853,15 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | WorldDistanceView | [`Vector2Int CenterAtFocus()`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L47) | private |
-| WorldDistanceView | [`IEnumerator Refresh()`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L67) | internal |
-| WorldDistanceView | [`IEnumerator Rebuild(Vector2Int center)`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L93) | private |
-| WorldDistanceView | [`void UpdateRingVisibility()`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L232) | private |
-| WorldDistanceView | [`void ReleaseExpiredRing(Vector2Int center, int radius)`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L250) | private |
-| WorldDistanceView | [`MeshFilter BuildRingColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L270) | private |
-| WorldDistanceView | [`void AddSkirt(List<Vector3> vertices, List<int> triangles, int a, int b)`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L292) | private |
-| WorldDistanceView | [`void Enter(Camera view)`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L323) | internal |
-| WorldDistanceView | [`void Dispose()`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L350) | public |
+| WorldDistanceView | [`IEnumerator Refresh()`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L69) | internal |
+| WorldDistanceView | [`IEnumerator Rebuild(Vector2Int center)`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L95) | private |
+| WorldDistanceView | [`void OnColumnVisibilityChanged(Vector2Int coordinate, bool loaded)`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L234) | private |
+| WorldDistanceView | [`void UpdateRingVisibility()`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L248) | private |
+| WorldDistanceView | [`void ReleaseExpiredRing(Vector2Int center, int radius)`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L266) | private |
+| WorldDistanceView | [`MeshFilter BuildRingColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L286) | private |
+| WorldDistanceView | [`void AddSkirt(List<Vector3> vertices, List<int> triangles, int a, int b)`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L308) | private |
+| WorldDistanceView | [`void Enter(Camera view)`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L339) | internal |
+| WorldDistanceView | [`void Dispose()`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L366) | public |
 
 ## Assets/Scripts/Features/World/Presentation/WorldLoadingPanel.cs
 
@@ -4948,30 +4980,30 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| ProceduralVoxelWorld | [`float SurfaceHeight(int x, int z)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L51) | public |
-| ProceduralVoxelWorld | [`Vector3 FindSpawnSurface(Bounds construct)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L52) | public |
-| ProceduralVoxelWorld | [`void Awake()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L80) | private |
-| ProceduralVoxelWorld | [`void Generate(System.Action<GameObject> registerCreated = null, System.Action<GameObject> destroyObsolete = null)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L99) | public |
-| ProceduralVoxelWorld | [`void InitializeStreaming( WorldGenerationSettings settings, int sessionSeed, IReadOnlyList<BlockDataList> buildingTemplates = null)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L178) | public |
-| ProceduralVoxelWorld | [`bool HasColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L203) | public |
-| ProceduralVoxelWorld | [`bool IsColumnInBounds(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L208) | public |
-| ProceduralVoxelWorld | [`Vector2Int ColumnAt(Vector3 worldPosition)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L213) | public |
-| ProceduralVoxelWorld | [`bool TryGetBuildingSite(Vector2Int coordinate, out Vector3 worldPosition, out Quaternion rotation)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L219) | public |
-| ProceduralVoxelWorld | [`IEnumerator LoadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L234) | public |
-| ProceduralVoxelWorld | [`void UnloadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L315) | public |
-| ProceduralVoxelWorld | [`void ClearStreaming()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L335) | public |
-| ProceduralVoxelWorld | [`void DestroyChunk(VoxelWorldChunk chunk)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L354) | private |
-| ProceduralVoxelWorld | [`void CacheChunks()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L373) | private |
-| ProceduralVoxelWorld | [`Vector3Int WorldToCell(Vector3 position)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L385) | public |
-| ProceduralVoxelWorld | [`Vector3 CellCenter(Vector3Int cell)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L390) | public |
-| ProceduralVoxelWorld | [`bool SetCell(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L395) | public |
-| ProceduralVoxelWorld | [`VoxelWorldEdits CaptureEdits()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L408) | public |
-| ProceduralVoxelWorld | [`void RestoreEdits(VoxelWorldEdits edits)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L418) | public |
-| ProceduralVoxelWorld | [`int DamageSphere(Vector3 center, float radius, float energy)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L446) | public |
-| ProceduralVoxelWorld | [`void QueueCell(Vector3Int cell)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L505) | private |
-| ProceduralVoxelWorld | [`void QueueChunk(Vector3Int cell)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L516) | private |
-| ProceduralVoxelWorld | [`void LateUpdate()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L533) | private |
-| ProceduralVoxelWorld | [`void FlushDirty(int budget = int.MaxValue, float milliseconds = float.PositiveInfinity)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L538) | public |
+| ProceduralVoxelWorld | [`float SurfaceHeight(int x, int z)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L53) | public |
+| ProceduralVoxelWorld | [`Vector3 FindSpawnSurface(Bounds construct)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L54) | public |
+| ProceduralVoxelWorld | [`void Awake()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L82) | private |
+| ProceduralVoxelWorld | [`void Generate(System.Action<GameObject> registerCreated = null, System.Action<GameObject> destroyObsolete = null)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L101) | public |
+| ProceduralVoxelWorld | [`void InitializeStreaming( WorldGenerationSettings settings, int sessionSeed, IReadOnlyList<BlockDataList> buildingTemplates = null)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L180) | public |
+| ProceduralVoxelWorld | [`bool HasColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L205) | public |
+| ProceduralVoxelWorld | [`bool IsColumnInBounds(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L210) | public |
+| ProceduralVoxelWorld | [`Vector2Int ColumnAt(Vector3 worldPosition)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L215) | public |
+| ProceduralVoxelWorld | [`bool TryGetBuildingSite(Vector2Int coordinate, out Vector3 worldPosition, out Quaternion rotation)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L221) | public |
+| ProceduralVoxelWorld | [`IEnumerator LoadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L236) | public |
+| ProceduralVoxelWorld | [`void UnloadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L318) | public |
+| ProceduralVoxelWorld | [`void ClearStreaming()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L339) | public |
+| ProceduralVoxelWorld | [`void DestroyChunk(VoxelWorldChunk chunk)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L359) | private |
+| ProceduralVoxelWorld | [`void CacheChunks()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L378) | private |
+| ProceduralVoxelWorld | [`Vector3Int WorldToCell(Vector3 position)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L390) | public |
+| ProceduralVoxelWorld | [`Vector3 CellCenter(Vector3Int cell)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L395) | public |
+| ProceduralVoxelWorld | [`bool SetCell(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L400) | public |
+| ProceduralVoxelWorld | [`VoxelWorldEdits CaptureEdits()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L413) | public |
+| ProceduralVoxelWorld | [`void RestoreEdits(VoxelWorldEdits edits)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L423) | public |
+| ProceduralVoxelWorld | [`int DamageSphere(Vector3 center, float radius, float energy)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L451) | public |
+| ProceduralVoxelWorld | [`void QueueCell(Vector3Int cell)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L510) | private |
+| ProceduralVoxelWorld | [`void QueueChunk(Vector3Int cell)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L521) | private |
+| ProceduralVoxelWorld | [`void LateUpdate()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L538) | private |
+| ProceduralVoxelWorld | [`void FlushDirty(int budget = int.MaxValue, float milliseconds = float.PositiveInfinity)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L543) | public |
 
 ## Assets/Scripts/Features/World/Terrain/StreamingWorldTerrain.cs
 
@@ -5108,15 +5140,15 @@ HY-Sandbox/
 | WorldPlayerSmokeChecks | [`void Initialize()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L69) | private static |
 | WorldPlayerSmokeChecks | [`int ReadInteger(string[] args, int index, string name, int minimum, int maximum)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L135) | private static |
 | WorldPlayerSmokeChecks | [`void Start()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L145) | private |
-| WorldPlayerSmokeChecks | [`void Update()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L162) | private |
-| WorldPlayerSmokeChecks | [`IEnumerator Scenario()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L191) | private |
-| WorldPlayerSmokeChecks | [`BlockDataList EnemyFixture()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L463) | private static |
-| WorldPlayerSmokeChecks | [`IEnumerator ValidateEnemyBlueprints(EnemySpawner spawner, Vector3 origin)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L499) | private |
-| WorldPlayerSmokeChecks | [`void Check(bool valid, string name)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L559) | private |
-| WorldPlayerSmokeChecks | [`void Next(string name)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L572) | private |
-| WorldPlayerSmokeChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L585) | private |
-| WorldPlayerSmokeChecks | [`void Save()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L593) | private |
-| WorldPlayerSmokeChecks | [`void Finish()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L598) | private |
+| WorldPlayerSmokeChecks | [`void LateUpdate()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L163) | private |
+| WorldPlayerSmokeChecks | [`IEnumerator Scenario()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L192) | private |
+| WorldPlayerSmokeChecks | [`BlockDataList EnemyFixture()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L464) | private static |
+| WorldPlayerSmokeChecks | [`IEnumerator ValidateEnemyBlueprints(EnemySpawner spawner, Vector3 origin)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L500) | private |
+| WorldPlayerSmokeChecks | [`void Check(bool valid, string name)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L560) | private |
+| WorldPlayerSmokeChecks | [`void Next(string name)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L573) | private |
+| WorldPlayerSmokeChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L586) | private |
+| WorldPlayerSmokeChecks | [`void Save()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L594) | private |
+| WorldPlayerSmokeChecks | [`void Finish()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L599) | private |
 
 ## Assets/Scripts/Features/World/Validation/WorldReturnPlayerChecks.cs
 

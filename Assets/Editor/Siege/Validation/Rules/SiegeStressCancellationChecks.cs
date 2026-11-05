@@ -18,7 +18,7 @@ public static class SiegeStressCancellationChecks
 
     public static string Start()
     {
-        session = Object.FindFirstObjectByType<SiegeSession>();
+        session = SceneObjectQuery.FindInActiveScene<SiegeSession>();
         if (!EditorApplication.isPlaying || session?.Match == null || session.Match.Wave != 0 || session.Buildings.Buildings.Count != 1)
         {
             throw new InvalidOperationException("Requires fresh normal Siege Play with only its base.");
@@ -44,9 +44,11 @@ public static class SiegeStressCancellationChecks
             Check(
                 "restoration yields before publishing a building",
                 routine.MoveNext() && !population.IsReady && population.Buildings.Count == 0 && session.Buildings.Buildings.Count == 1);
-            Check("loading temporarily disables HUD listeners", !Object.FindFirstObjectByType<SiegeHud>().enabled);
+            Check(
+                "loading temporarily disables HUD listeners",
+                !SceneObjectQuery.FindInActiveScene<SiegeHud>().enabled);
             Object.DestroyImmediate(population);
-            Check("component cancellation restores HUD", Object.FindFirstObjectByType<SiegeHud>().enabled);
+            Check("component cancellation restores HUD", SceneObjectQuery.FindInActiveScene<SiegeHud>().enabled);
         }
         finally
         {

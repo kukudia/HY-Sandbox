@@ -14,7 +14,7 @@ public static class SiegePlayChecks
     public static string Run()
     {
         failures.Clear();
-        SiegeSession session = Object.FindFirstObjectByType<SiegeSession>();
+        SiegeSession session = SceneObjectQuery.FindInActiveScene<SiegeSession>();
         if (!EditorApplication.isPlaying || session == null || session.Match == null || session.Match.Wave != 0)
         {
             throw new InvalidOperationException("Start a fresh Siege Play session before running checks.");

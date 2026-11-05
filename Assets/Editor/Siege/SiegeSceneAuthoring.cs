@@ -100,7 +100,7 @@ public static class SiegeSceneAuthoring
             throw new InvalidOperationException("Open the saved Siege scene in Edit Mode first.");
         }
 
-        CanvasScaler scaler = Object.FindFirstObjectByType<SiegeHud>().GetComponent<CanvasScaler>();
+        CanvasScaler scaler = SceneObjectQuery.FindInActiveScene<SiegeHud>().GetComponent<CanvasScaler>();
         Undo.RecordObject(scaler, "Fit Siege HUD to viewport");
         // 固定参考坐标必须全部落在可见画布内；Expand在窄屏/超宽屏均保留完整参考区域。
         scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
@@ -276,7 +276,7 @@ public static class SiegeSceneAuthoring
         controller.thirdPersonOffset = new Vector3(0f, 8f, -38f);
         controller.minZoom = -15f;
         controller.maxZoom = -90f;
-        Object.FindFirstObjectByType<PlayManager>().mainCamera = camera;
+        SceneObjectQuery.FindInActiveScene<PlayManager>().mainCamera = camera;
     }
 
     private static void CreateHud(SiegeSession session, SiegeSettings settings, int bays)

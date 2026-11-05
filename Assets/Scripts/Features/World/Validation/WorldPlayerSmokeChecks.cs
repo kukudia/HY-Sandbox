@@ -97,7 +97,7 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
             if (seedIndex >= 0)
             {
                 int seed = ReadInteger(args, seedIndex, "seed", int.MinValue, int.MaxValue);
-                WorldSessionManager session = Object.FindFirstObjectByType<WorldSessionManager>();
+                WorldSessionManager session = SceneObjectQuery.FindInActiveScene<WorldSessionManager>();
                 if (session == null)
                 {
                     throw new InvalidOperationException("Fixed-seed validation requires Main world session.");
@@ -159,7 +159,8 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
         }
     }
 
-    private void Update()
+    // Observe presentation after yield-null streaming/visibility coroutines have completed for this frame.
+    private void LateUpdate()
     {
         if (finished)
         {
@@ -191,12 +192,12 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
     private IEnumerator Scenario()
     {
         yield return null;
-        WorldSessionManager session = Object.FindFirstObjectByType<WorldSessionManager>();
+        WorldSessionManager session = SceneObjectQuery.FindInActiveScene<WorldSessionManager>();
         Check(session != null, "Main starts with world session");
         bool capturedStartup = false;
         while (BuildManager.instance.IsLoadingBlocks)
         {
-            WorldLoadingPanel startupPanel = Object.FindFirstObjectByType<WorldLoadingPanel>();
+            WorldLoadingPanel startupPanel = SceneObjectQuery.FindInActiveScene<WorldLoadingPanel>();
             Check(
                 startupPanel.GetComponent<CanvasGroup>().alpha >= .99f,
                 "startup mask stays opaque during construct restoration");
@@ -246,7 +247,7 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
 
             GameManager.instance.blocksParent = player.transform;
             PlayManager.instance.blocksParent = player.transform;
-            EnemySpawner spawner = Object.FindFirstObjectByType<EnemySpawner>();
+            EnemySpawner spawner = SceneObjectQuery.FindInActiveScene<EnemySpawner>();
             spawner.spawnOnPlayStart = false;
             spawner.spawnInterval = float.MaxValue;
             Next("loading-and-entry");
@@ -256,7 +257,7 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
             while (session.State != WorldSessionState.Playing || session.IsEntering)
             {
                 Check(session.State != WorldSessionState.Failed, "world generation remains valid");
-                WorldLoadingPanel panel = Object.FindFirstObjectByType<WorldLoadingPanel>();
+                WorldLoadingPanel panel = SceneObjectQuery.FindInActiveScene<WorldLoadingPanel>();
                 if (!sawMask && panel.GetComponent<CanvasGroup>().alpha >= .99f)
                 {
                     sawMask = true;

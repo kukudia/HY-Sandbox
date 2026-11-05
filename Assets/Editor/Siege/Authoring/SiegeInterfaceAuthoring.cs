@@ -23,8 +23,8 @@ public static class SiegeInterfaceAuthoring
             throw new InvalidOperationException("Open Siege in Edit Mode first.");
         }
 
-        SiegeHud hud = Object.FindFirstObjectByType<SiegeHud>();
-        SiegeSession session = Object.FindFirstObjectByType<SiegeSession>();
+        SiegeHud hud = SceneObjectQuery.FindInActiveScene<SiegeHud>();
+        SiegeSession session = SceneObjectQuery.FindInActiveScene<SiegeSession>();
         font = hud.GetComponentsInChildren<Text>(true).Select(text => text.font).FirstOrDefault(item => item != null) ?? Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         Dropdown source = hud.GetComponentsInChildren<Dropdown>(true).FirstOrDefault();
         GameObject template = source != null ? Object.Instantiate(source.gameObject) : DefaultControls.CreateDropdown(new DefaultControls.Resources());
@@ -344,7 +344,7 @@ public static class SiegeInterfaceAuthoring
         CanvasGroup damage = alarm.gameObject.AddComponent<CanvasGroup>();
         damage.blocksRaycasts = false;
         Bind(feedback, "damage", damage);
-        SiegeWorkshop editor = Object.FindFirstObjectByType<SiegeWorkshop>();
+        SiegeWorkshop editor = SceneObjectQuery.FindInActiveScene<SiegeWorkshop>();
         if (editor != null)
         {
             Bind(editor, "buildButton", workshop);
@@ -354,7 +354,7 @@ public static class SiegeInterfaceAuthoring
             workshop.gameObject.SetActive(false);
         }
 
-        MainUIPanels panels = Object.FindFirstObjectByType<MainUIPanels>();
+        MainUIPanels panels = SceneObjectQuery.FindInActiveScene<MainUIPanels>();
         if (panels != null)
         {
             panels.playPanel.SetActive(false);
@@ -368,7 +368,7 @@ public static class SiegeInterfaceAuthoring
             debugSettings.gameObject.SetActive(false);
         }
 
-        MainUIButtons buttons = Object.FindFirstObjectByType<MainUIButtons>();
+        MainUIButtons buttons = SceneObjectQuery.FindInActiveScene<MainUIButtons>();
         foreach (Button button in buttons != null ? new[]
         {
             buttons.showPowerRangeButton,

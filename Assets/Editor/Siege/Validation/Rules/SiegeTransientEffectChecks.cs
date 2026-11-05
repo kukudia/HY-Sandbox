@@ -22,7 +22,7 @@ public static class SiegeTransientEffectChecks
 
     public static string Run()
     {
-        if (!EditorApplication.isPlaying || Object.FindFirstObjectByType<TransientEffectPool>() != null || unload != null)
+        if (!EditorApplication.isPlaying || Object.FindAnyObjectByType<TransientEffectPool>() != null || unload != null)
         {
             throw new InvalidOperationException("Requires fresh Play without a transient pool.");
         }
@@ -156,7 +156,7 @@ public static class SiegeTransientEffectChecks
             Check(
                 "scene unload destroys active and idle effects",
                 ownedRoot == null && ownedBeam == null && ownedLight == null);
-            Check("scene unload removes pool singleton", Object.FindFirstObjectByType<TransientEffectPool>() == null);
+            Check("scene unload removes pool singleton", Object.FindAnyObjectByType<TransientEffectPool>() == null);
         }
         catch (Exception error)
         {

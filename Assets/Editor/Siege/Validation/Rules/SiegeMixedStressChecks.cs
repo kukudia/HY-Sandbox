@@ -15,7 +15,7 @@ public static class SiegeMixedStressChecks
 
     public static void Start()
     {
-        if (!EditorApplication.isPlaying || Object.FindFirstObjectByType<SiegeStressPopulation>() == null)
+        if (!EditorApplication.isPlaying || SceneObjectQuery.FindInActiveScene<SiegeStressPopulation>() == null)
         {
             throw new InvalidOperationException("Requires fresh mixed stress Play.");
         }
@@ -33,7 +33,7 @@ public static class SiegeMixedStressChecks
         var report = new Report();
         try
         {
-            SiegeStressPopulation population = Object.FindFirstObjectByType<SiegeStressPopulation>();
+            SiegeStressPopulation population = SceneObjectQuery.FindInActiveScene<SiegeStressPopulation>();
             if (EditorApplication.isPlaying && population != null && !population.IsReady && string.IsNullOrEmpty(population.Error) && Time.realtimeSinceStartup < deadline)
             {
                 return;
@@ -44,7 +44,7 @@ public static class SiegeMixedStressChecks
                 report,
                 "population loaded without errors",
                 population != null && population.IsReady && string.IsNullOrEmpty(population.Error));
-            SiegeSession session = Object.FindFirstObjectByType<SiegeSession>();
+            SiegeSession session = SceneObjectQuery.FindInActiveScene<SiegeSession>();
             BuildingRuntime[] buildings = session.Buildings.Buildings.ToArray();
             Check(
                 report,
@@ -67,7 +67,7 @@ public static class SiegeMixedStressChecks
                 "satellites preserve player faction",
                 population.Buildings.All(building => building.GetComponent<ControlUnit>().faction == UnitFaction.Player));
             Check(report, "existing world budget rejects another module", !session.Buildings.HasCapacity(1));
-            Check(report, "HUD restored after loading", Object.FindFirstObjectByType<SiegeHud>().enabled);
+            Check(report, "HUD restored after loading", SceneObjectQuery.FindInActiveScene<SiegeHud>().enabled);
             foreach (BuildingRuntime building in buildings)
             {
                 PlayManager.instance.RefreshGroup(building.GetComponent<ControlUnit>());

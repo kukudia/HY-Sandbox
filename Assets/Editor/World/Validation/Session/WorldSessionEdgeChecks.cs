@@ -125,7 +125,7 @@ public static class WorldSessionEdgeChecks
     private static IEnumerator Scenario()
     {
         yield return null;
-        session = Object.FindFirstObjectByType<WorldSessionManager>();
+        session = SceneObjectQuery.FindInActiveScene<WorldSessionManager>();
         Check(session != null, "Main contains the production world session");
         while (BuildManager.instance.IsLoadingBlocks)
         {
@@ -348,7 +348,7 @@ public static class WorldSessionEdgeChecks
         unit.RefreshChildren();
         GameManager.instance.blocksParent = testPlayer.transform;
         PlayManager.instance.blocksParent = testPlayer.transform;
-        EnemySpawner spawner = Object.FindFirstObjectByType<EnemySpawner>();
+        EnemySpawner spawner = SceneObjectQuery.FindInActiveScene<EnemySpawner>();
         if (spawner != null)
         {
             spawner.spawnOnPlayStart = false;

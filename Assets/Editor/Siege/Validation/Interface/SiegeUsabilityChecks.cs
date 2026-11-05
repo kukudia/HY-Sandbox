@@ -99,7 +99,7 @@ public static class SiegeUsabilityChecks
         var checks = new List<string>();
         try
         {
-            SiegeHud hud = Object.FindFirstObjectByType<SiegeHud>();
+            SiegeHud hud = SceneObjectQuery.FindInActiveScene<SiegeHud>();
             Dropdown defender = (Dropdown)typeof(SiegeDeploymentView).GetField("defenderBlueprint", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(hud.GetComponent<SiegeDeploymentView>());
             Dropdown attacker = (Dropdown)typeof(SiegeDeploymentView).GetField("attackerBlueprint", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(hud.GetComponent<SiegeDeploymentView>());
             RefreshHud(hud);
@@ -173,7 +173,7 @@ public static class SiegeUsabilityChecks
 
     private static SiegeSession FreshSession()
     {
-        SiegeSession session = Object.FindFirstObjectByType<SiegeSession>();
+        SiegeSession session = SceneObjectQuery.FindInActiveScene<SiegeSession>();
         if (!EditorApplication.isPlaying || session?.Match == null || session.Match.Wave != 0 || session.Fleet.Ships.Any(ship => ship != null))
         {
             throw new InvalidOperationException("Requires fresh normal Siege Play with real blueprint catalogs.");

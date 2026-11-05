@@ -10,6 +10,7 @@ using UnityEngine.Rendering;
 
 public static class WorldPlayerBuildChecks
 {
+    private static bool pending;
     public static void Build()
     {
         if (EditorApplication.isPlaying || UnityEngine.SceneManagement.SceneManager.GetActiveScene().isDirty)
@@ -19,7 +20,7 @@ public static class WorldPlayerBuildChecks
 
         Directory.CreateDirectory("Temp/WorldPlayer");
         File.WriteAllText("Temp/WorldPlayer/build.txt", "scheduled");
-        EditorApplication.delayCall += BuildNow;
+        Schedule(BuildNow);
     }
 
     private static void BuildNow()
@@ -38,7 +39,32 @@ public static class WorldPlayerBuildChecks
             throw new InvalidOperationException("Save the scene and leave Play Mode before building.");
         }
 
-        EditorApplication.delayCall += BuildAuthoringNow;
+        Schedule(BuildAuthoringNow);
+    }
+
+    private static void Schedule(Action action)
+    {
+        if (pending || BuildPipeline.isBuildingPlayer)
+        {
+            throw new InvalidOperationException("A validation build is already pending.");
+        }
+
+        pending = true;
+        // Unfocused Editors may defer delayCall; a one-shot update also works for CLI-driven validation.
+        EditorApplication.CallbackFunction run = null;
+        run = () =>
+        {
+            EditorApplication.update -= run;
+            try
+            {
+                action();
+            }
+            finally
+            {
+                pending = false;
+            }
+        };
+        EditorApplication.update += run;
     }
 
     private static void BuildAuthoringNow()

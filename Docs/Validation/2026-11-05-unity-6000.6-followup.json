@@ -1,0 +1,483 @@
+{
+  "unity": "6000.6.8f1",
+  "scope": "P1 compatibility fixes and Windows Mono Development validation; manual visuals/devices and long stress remain",
+  "static": {
+    "scripts": 351,
+    "formatDifferences": 0,
+    "errors": 0,
+    "dotnetErrors": 0,
+    "dotnetMSB3277Warnings": 22
+  },
+  "sceneQueries": {
+    "passed": true,
+    "checks": 6
+  },
+  "vfxBridge": {
+    "passed": true,
+    "graphs": [
+      "Assets/Art/VFX/Graphs/EnergyBeam.vfx",
+      "Assets/Art/VFX/Graphs/EnergyBurst.vfx",
+      "Assets/Art/VFX/Graphs/EnergyContact.vfx",
+      "Assets/Art/VFX/Graphs/EnergyTrail.vfx",
+      "Assets/Art/VFX/Graphs/UNI_Gas_Fire_Thruster.vfx",
+      "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Aerial_Explosion.vfx",
+      "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Device_Fire.vfx",
+      "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Gas_Fire.vfx",
+      "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Impact_Explosion.vfx",
+      "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Small_Explosion.vfx",
+      "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Small_Smoke_Impact.vfx",
+      "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Visual Effects/UNI_Steam_Leak.vfx"
+    ]
+  },
+  "vfxLifecycle": {
+    "passed": true,
+    "effects": [
+      {
+        "effect": "BreakBurst",
+        "passed": true,
+        "particles": [
+          0,
+          30,
+          30,
+          8,
+          0,
+          0,
+          30
+        ],
+        "samples": 7
+      },
+      {
+        "effect": "BuildBurst",
+        "passed": true,
+        "particles": [
+          0,
+          16,
+          16,
+          0,
+          0,
+          0,
+          16
+        ],
+        "samples": 7
+      },
+      {
+        "effect": "DetachedSmoke",
+        "passed": true,
+        "particles": [
+          0,
+          2,
+          2,
+          21,
+          10,
+          0,
+          2
+        ],
+        "samples": 7
+      },
+      {
+        "effect": "EnergyBeam",
+        "passed": true,
+        "particles": [
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1
+        ],
+        "samples": 7
+      },
+      {
+        "effect": "EnergyTrail",
+        "passed": true,
+        "particles": [
+          0,
+          6,
+          6,
+          27,
+          0,
+          0,
+          5
+        ],
+        "samples": 7
+      },
+      {
+        "effect": "Explosion",
+        "passed": true,
+        "particles": [
+          0,
+          116,
+          116,
+          29,
+          2,
+          0,
+          112
+        ],
+        "samples": 7
+      },
+      {
+        "effect": "ImpactBurst",
+        "passed": true,
+        "particles": [
+          0,
+          174,
+          174,
+          43,
+          0,
+          0,
+          174
+        ],
+        "samples": 7
+      },
+      {
+        "effect": "RepairContact",
+        "passed": true,
+        "particles": [
+          0,
+          5,
+          5,
+          20,
+          0,
+          0,
+          4
+        ],
+        "samples": 7
+      },
+      {
+        "effect": "SmokeBurst",
+        "passed": true,
+        "particles": [
+          0,
+          15,
+          15,
+          3,
+          0,
+          0,
+          15
+        ],
+        "samples": 7
+      },
+      {
+        "effect": "ThrusterJet",
+        "passed": true,
+        "particles": [
+          0,
+          4,
+          4,
+          17,
+          0,
+          0,
+          2
+        ],
+        "samples": 7
+      }
+    ]
+  },
+  "fbx": {
+    "passed": true,
+    "path": "Assets/Art/SpaceKit/Models/Cube/FBX/FX Exhaust.FBX",
+    "externalAudited": 104,
+    "externalWithMaterialImport": 1,
+    "unchangedMeshAndMaterialReferences": true,
+    "snapshot": {
+      "guid": "ed36196170a686d4495ce67041d91c13",
+      "renderers": [
+        {
+          "name": "FX Exhaust",
+          "materials": [
+            {
+              "guid": "5eb4cc0f5677aec40a0b19022f514692",
+              "localId": 2100000
+            }
+          ]
+        }
+      ],
+      "meshes": [
+        {
+          "reference": {
+            "guid": "ed36196170a686d4495ce67041d91c13",
+            "localId": 4300000
+          },
+          "vertexCount": 100,
+          "indices": 384,
+          "bounds": "Center: (0.000000, 0.000000, -0.376173), Extents: (0.378251, 0.378251, 0.378251)"
+        }
+      ]
+    }
+  },
+  "vfxMeshes": {
+    "passed": true,
+    "paths": [
+      "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Models/uni_firestreak.fbx",
+      "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Models/uni_shockwave_ground.fbx",
+      "Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Models/uni_third.fbx"
+    ]
+  },
+  "input": [
+    {
+      "passed": true,
+      "checks": 10,
+      "scope": "Isolated clone of project actions with synthetic keyboard/gamepad; physical devices and end-to-end UI focus excluded."
+    },
+    {
+      "passed": true,
+      "checks": 10,
+      "scope": "Isolated clone of project actions with synthetic keyboard/gamepad; physical devices and end-to-end UI focus excluded."
+    }
+  ],
+  "worldSession": {
+    "status": "passed",
+    "checks": [
+      "Main binds the authored world session to PlayManager",
+      "spawn ground follows seeded natural terrain instead of a fixed depressed platform",
+      "a fixed seed deterministically reproduces positive and negative terrain coordinates",
+      "a fixed seed deterministically reproduces building sites and rotations",
+      "a different seed changes the sampled terrain baseline",
+      "streamed terrain rejects incompatible WorldLab snapshot capture",
+      "a raw column loader yields before publishing a completed column",
+      "asynchronous column continues before its first mesh upload",
+      "the interrupted column owns a generated mesh before cancellation",
+      "unload clears the partial mesh presentation, disables collision and never publishes the column",
+      "the cancelled column releases its owned mesh and chunk objects after Unity destruction",
+      "the scene binds the existing build grounds without replacing lighting or the Canvas",
+      "world content remains hidden while Main is in build mode",
+      "background preparation runs no active building simulation",
+      "background preparation reaches Ready with full progress",
+      "generation pool contains exactly validated world-compatible files from the shared user store",
+      "spawned buildings use the validated shared blueprint library",
+      "the prepared visual horizon extends beyond the fog range without adding distant physics",
+      "only the initial load radius is generated",
+      "terrain and real Buildings are prepared together while hidden",
+      "prepared buildings stay dormant before entering play",
+      "unloading a near column immediately reveals its visual transition",
+      "column commit immediately hides the overlapping visual transition before another frame",
+      "world activation pauses physics until all building batches finish",
+      "activation uses an opaque input-blocking progress overlay",
+      "activation updates intermediate progress and restores physics and view when complete",
+      "EnterPlay displays and enables the prepared world",
+      "entering play hides the old build grounds",
+      "entering play activates building simulation",
+      "world modules share combined visual meshes while retaining separate block entities",
+      "spawn has a loaded terrain collider underneath",
+      "the player bottom is raised above the highest natural terrain under its entire footprint",
+      "the extended view fades into a matching fog background before the distant mesh boundary",
+      "terrain at the prepared spawn can be modified",
+      "the cargo persistence fixture accepts three items matching its hold kind",
+      "leaving a region stores dormant building state",
+      "positive world travel keeps the loaded terrain bounded",
+      "negative coordinates stream and unload within the same bound",
+      "building cargo survives unloading and reloading within a session",
+      "building damage survives unloading and reloading within a session",
+      "terrain edits survive unloading and reloading within a session",
+      "exit hides the world and starts a fresh preparation",
+      "exit restores each build ground's authored activation state",
+      "exit restores the authored build fog and camera background mode",
+      "exit clears terrain, buildings and dormant state immediately",
+      "a fresh session restores baseline terrain instead of retaining changes",
+      "a new session discards modified building cargo",
+      "repeated play requests can be cancelled without a stale transition",
+      "cancel dismisses the blocking loading interface",
+      "the authored Cancel button invokes production cancellation",
+      "cancel and exit cannot reactivate obsolete prepared content",
+      "the production Main Play button enables the prepared world and player simulation",
+      "death displays an immediately usable respawn action",
+      "death teardown discards the exploration world and restores build preparation",
+      "the next exploration starts after death without stale session state",
+      "the production PlayManager exit discards the world and prepares the next session",
+      "Main world session completes with no Unity error or exception logs"
+    ],
+    "errors": []
+  },
+  "worldLab": {
+    "play": {
+      "phase": "play",
+      "passed": 16,
+      "checks": [
+        "baked world loads in Play",
+        "seam edit queues only affected neighbors",
+        "per-frame rebuild budget enforced",
+        "placed cell has real PhysX surface",
+        "zero radius ignored",
+        "sub-threshold hit retains rock",
+        "damage accumulates to remove rock",
+        "removed rock no longer collides",
+        "fill restores collision",
+        "production turret hit damages terrain",
+        "sphere blast changes data and queues chunks",
+        "all chunk mesh references valid after edits",
+        "regenerate restores seed content and counters",
+        "delta restore replaces live world and queues collision refresh",
+        "failed delta restore leaves live world intact",
+        "restored delta rebuilds physical surface"
+      ]
+    },
+    "data": {
+      "phase": "data",
+      "passed": 12,
+      "checks": [
+        "same seed gives same voxel content",
+        "different seed changes content",
+        "bounded generated density",
+        "out of bounds reads air",
+        "out of bounds write rejected",
+        "invalid material rejected",
+        "serialized bake retains cells and count",
+        "cross-chunk internal faces culled",
+        "material submeshes retain faces",
+        "unit outward face normals",
+        "removed neighbor exposes seam face",
+        "cell counter tracks removal"
+      ]
+    },
+    "physics": {
+      "terrainContact": true,
+      "fixedFrames": 180,
+      "position": {
+        "x": 64.0,
+        "y": 16.5,
+        "z": 64.0
+      },
+      "elapsed": 4.629825592041016
+    }
+  },
+  "playerBuild": {
+    "result": 1,
+    "totalErrors": 0,
+    "totalWarnings": 1,
+    "warnings": [
+      "Pipeline: No RuntimePipelineConfig asset found (Project Settings > Pipeline > Runtime). Pipeline will be disabled in Player builds."
+    ]
+  },
+  "playerBuildSummary": "Succeeded; errors=0; warnings=1; duration=00:00:10.8684691; bytes=481519168",
+  "mainPlayer": {
+    "status": "passed",
+    "graphics": "Direct3D11",
+    "seed": 14721,
+    "checks": [
+      "Main starts with world session",
+      "startup mask stays opaque during construct restoration",
+      "construct load exposes bounded progress",
+      "world generation remains valid",
+      "opaque loading mask renders while waiting or enabling",
+      "loading reaches completion",
+      "configured initial terrain columns loaded",
+      "Player creates buildings from blueprint library",
+      "Player loads external blueprint library",
+      "spawn has real terrain collision",
+      "session stays playing",
+      "Player crosses multiple chunk boundaries",
+      "travel retains terrain under player",
+      "loaded terrain remains bounded",
+      "voxel transition ring exists",
+      "visual transition adds no physics colliders",
+      "visual ring never overlays loaded editable terrain",
+      "exit discards world and prepares fresh session",
+      "second preparation completes",
+      "previous expedition transition meshes released",
+      "return fixture loads connected cockpit and cargo hold through production loader",
+      "successful UI return clears previous failure notice",
+      "normal UI return saves before ending actual world session",
+      "normal return persists cargo into isolated player blueprint",
+      "normal return completes atomic replace and backup in Player",
+      "build reload restores returned cargo before next departure",
+      "second departure retains exactly one returned part",
+      "real cockpit destruction opens usable death respawn action",
+      "death respawn clears saved cargo while preserving original modules",
+      "death reload restores empty cargo in ready build session",
+      "third departure starts after death and respawn",
+      "post-death departure returns safely to ready build session",
+      "isolated return route restores original read-only save and ready world"
+    ],
+    "errors": [],
+    "completedCycles": 1
+  },
+  "siegePlayer": {
+    "status": "passed",
+    "graphics": "Direct3D11",
+    "development": true,
+    "checks": [
+      "Siege scene and session started in Player",
+      "player build keeps elite cadence and doubled rewards",
+      "player build accepts combo bonus and rejects it during defeat",
+      "player build rejects combo bonus after defeat",
+      "large building base has independent core and no cockpit",
+      "HUD bounds: Command Header",
+      "HUD bounds: Heading",
+      "HUD text geometry: Heading",
+      "HUD bounds: Economy",
+      "HUD text geometry: Economy",
+      "HUD bounds: Integrity",
+      "HUD text geometry: Integrity",
+      "HUD bounds: Status",
+      "HUD text geometry: Status",
+      "HUD bounds: Preparation Actions",
+      "HUD bounds: Open Blueprint Workshop",
+      "HUD bounds: Label",
+      "HUD text geometry: Label",
+      "HUD bounds: Repair Base",
+      "HUD bounds: Label",
+      "HUD text geometry: Label",
+      "HUD bounds: Begin Wave",
+      "HUD bounds: Label",
+      "HUD text geometry: Label",
+      "HUD bounds: Controls Hint",
+      "HUD text geometry: Controls Hint",
+      "HUD bounds: Deployment Marker 1",
+      "HUD bounds: Label",
+      "HUD text geometry: Label",
+      "HUD bounds: Deployment Marker 2",
+      "HUD bounds: Label",
+      "HUD text geometry: Label",
+      "HUD bounds: Deployment Marker 3",
+      "HUD bounds: Label",
+      "HUD text geometry: Label",
+      "HUD bounds: Deployment Marker 4",
+      "HUD bounds: Label",
+      "HUD text geometry: Label",
+      "HUD bounds: Deployment Marker 5",
+      "HUD bounds: Label",
+      "HUD text geometry: Label",
+      "HUD bounds: Deployment Marker 6",
+      "HUD bounds: Label",
+      "HUD text geometry: Label",
+      "HUD bounds: Wave Banner",
+      "HUD text geometry: Wave Banner",
+      "HUD bounds: Kill Feed",
+      "HUD bounds: Core Alarm",
+      "Player workshop opens",
+      "Player workshop isolates battlefield physics and rendering without healing",
+      "Player workshop loads editable preview in active preview scene",
+      "Player workshop closes",
+      "Player workshop restores scene camera damage and credits",
+      "Player base repair restores health and quoted debit",
+      "player catalog offers deployable ships",
+      "deploy ship 12",
+      "deploy ship 8",
+      "requested fleet deployed exactly",
+      "switch player to second ship",
+      "one manual driver and remaining ships autonomous",
+      "begin first wave",
+      "combat keeps building anchored and rejects repair/deploy",
+      "real enemy deaths resolve wave and award coins",
+      "second wave starts from intermission",
+      "pilot loss transfers authority without ending match",
+      "real core destruction ends Player match and reinforcements",
+      "scene restart restores pristine building and empty fleet"
+    ],
+    "errors": []
+  },
+  "limits": [
+    "Hidden Player window screenshots were black; Player visual correctness unverified",
+    "Synthetic project action devices do not prove physical devices or end-to-end UI/gamepad support",
+    "No new comparable large-fleet performance baseline; counter reader checked against 345 existing frames",
+    "IL2CPP/Mobile/other graphics APIs and long combat stress not run"
+  ],
+  "failuresRetained": [
+    "Outdated library/death assertions repaired against production contract",
+    "VFX removed GetOrCreateGraph located and replaced",
+    "Main Player ring assertion failed in Update and LateUpdate; fixed synchronous column visibility notification",
+    "One Editor session timed out at 240 seconds; unchanged limit full rerun passed 57 checks"
+  ],
+  "playerExecutableSha256": "ab35aca49c0e90c26b211aced621b60f0c615cff948bf758c4163bfa642dc6e4"
+}

@@ -24,7 +24,7 @@ public static class SiegeBaseBlueprintAuthoring
             EditorSceneManager.OpenScene(SiegeSceneAuthoring.ScenePath);
         }
 
-        SiegeSession session = UnityEngine.Object.FindFirstObjectByType<SiegeSession>();
+        SiegeSession session = SceneObjectQuery.FindInActiveScene<SiegeSession>();
         var serialized = new SerializedObject(session);
         var settings = (SiegeSettings)serialized.FindProperty("settings").objectReferenceValue;
         WorldBuildingManager buildings = session.GetComponentInChildren<WorldBuildingManager>();
