@@ -219,6 +219,7 @@
     <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BlueprintBlockFactory.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Workshop\SiegeWorkshopStage.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Physics\ImpactPhysics.cs" />
+    <Compile Include="Assets\Scripts\Features\Combat\Turrets\ProjectileIntercept.cs" />
     <Compile Include="Assets\Scripts\Features\World\Presentation\WorldTerrainTransitionMesh.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BuildingEditor\OutpostBaseDesigner.cs" />
     <Compile Include="Assets\Scripts\Features\World\WorldLab\WorldLabController.cs" />

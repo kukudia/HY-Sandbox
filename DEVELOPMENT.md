@@ -6,6 +6,10 @@ Unity 6000.6.8f1（URP / VFX Graph 17.6.0，Input System 1.20.1）。本文只�
 
 已迁移禁用的对象/序列化整数身份 API 至 EntityId，保留缓存、去重与引用检查语义；无序查询使用新版重载，性能探针显式记录 drawCalls。已执行验证、剩余弃用项和引擎适配优先级见 [升级适配报告](Docs/Validation/2026-11-05-unity-6000.6-upgrade.md)。运行调用链未重构，函数图仍适用，导航已刷新。
 
+## 飞行与战斗 AI 升级
+
+敌机新增稳定索敌、即时失效与错峰调度，避障过滤触发器和地板重叠伪法线；实体炮塔按目标/射手点速度预测交会，修复新增模块与重组变更在索敌时可见。机器人导航基线通过，本轮保留其现有算法。入口、Inspector 开关、真实 Play 证据和性能/长时验证缺口见 [AI 升级报告](Docs/Validation/2026-11-05-ai-upgrade.md)。
+
 ## 本轮复用与精简
 
 断片保留修复：建筑超过32模块或残骸数量预算时仍生成完整物理残骸，预算只请求延后退场。建筑、阵地战敌方碎片及载具延迟清理共用 `FragmentLifetime` 最短保留期（`Resources/Salvage/Settings.minimumFragmentLifetime`，当前10秒）；伤害销毁、卸载和会话退出不受此保护。载具重组保留源 PhysicsScene、损伤归因及剩余碰撞保护。验证见 [断片保留报告](Docs/Validation/2026-11-04-fragment-retention.md)。

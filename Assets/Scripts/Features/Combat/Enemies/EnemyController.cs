@@ -1,12 +1,15 @@
 // 职责：为敌机与自主友舰选择敌对目标并生成驾驶意图；阵营和玩家驾驶权分别判断。
 // 入口：FixedUpdate()；按固定周期更新目标和避障意图，逐物理步平滑输入。
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(ControlUnit))]
 public class EnemyController : MonoBehaviour
 {
     // Produces smoothed movement intent; ControlUnit and thrusters remain the only physics writers.
     private const int MaxObstacleHits = 16;
+    [SerializeField, Range(0.1f, 1f), Tooltip("新目标必须比当前目标更近的距离比例，抑制交叉飞行时反复换目标。")]
+    private float targetSwitchDistanceRatio = 0.85f;
     public float detectionRange = 150f;
     public float desiredDistance = 18f;
     public float updateInterval = 0.25f;
@@ -31,7 +34,15 @@ public class EnemyController : MonoBehaviour
     private Transform guardAnchor;
     private float guardRadius;
     private ControlUnit priorityTarget;
-    private readonly RaycastHit[] obstacleHits = new RaycastHit[MaxObstacleHits];
+    private RaycastHit[] obstacleHits = new RaycastHit[MaxObstacleHits];
+    private void OnEnable()
+    {
+        // 同批生成单位错开自主扫描；明确任务指派仍会立即清零调度。
+        float phase = (GetEntityId().GetHashCode() & 1023) / 1024f;
+        nextUpdateTime = Time.time + phase * Mathf.Max(0.01f, updateInterval);
+        nextMovementUpdateTime = 0f;
+    }
+
     private void Awake()
     {
         unit = GetComponent<ControlUnit>();
@@ -50,19 +61,39 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
+        if (!ReferenceEquals(currentTarget, null) && !IsValidOpponent(currentTarget))
+        {
+            currentTarget = null;
+            desiredMovementInput = Vector3.zero;
+            unit.SetTarget(null);
+            nextUpdateTime = 0f;
+            nextMovementUpdateTime = 0f;
+        }
+
         if (Time.time >= nextUpdateTime)
         {
+            ControlUnit previousTarget = currentTarget;
             currentTarget = FindNearestOpponent();
+            if (previousTarget != currentTarget)
+            {
+                nextMovementUpdateTime = 0f;
+            }
+
             unit.SetTarget(currentTarget != null ? currentTarget.transform : null);
-            nextUpdateTime = Time.time + updateInterval;
+            nextUpdateTime = Time.time + Mathf.Max(0.01f, updateInterval);
         }
 
         ConfigureHoverThrusters();
         if (currentTarget == null)
         {
-            Vector3 toGuard = guardAnchor != null ? guardAnchor.position - transform.position : Vector3.zero;
-            toGuard.y = 0f;
-            desiredMovementInput = toGuard.sqrMagnitude > 100f ? ApplyObstacleAvoidance(toGuard.normalized, toGuard) : Vector3.zero;
+            if (Time.time >= nextMovementUpdateTime)
+            {
+                Vector3 toGuard = guardAnchor != null ? guardAnchor.position - transform.position : Vector3.zero;
+                toGuard.y = 0f;
+                desiredMovementInput = toGuard.sqrMagnitude > 100f ? ApplyObstacleAvoidance(toGuard.normalized, toGuard) : Vector3.zero;
+                nextMovementUpdateTime = Time.time + Mathf.Max(0.05f, movementUpdateInterval);
+            }
+
             unit.SetMovementInput(Vector3.MoveTowards(
                 unit.MovementInput,
                 desiredMovementInput,
@@ -115,12 +146,14 @@ public class EnemyController : MonoBehaviour
         guardAnchor = anchor;
         guardRadius = Mathf.Max(1f, radius);
         nextUpdateTime = 0f;
+        nextMovementUpdateTime = 0f;
     }
 
     public void SetPriorityTarget(ControlUnit targetUnit)
     {
         priorityTarget = targetUnit;
         nextUpdateTime = 0f;
+        nextMovementUpdateTime = 0f;
     }
 
     private ControlUnit FindNearestOpponent()
@@ -160,6 +193,17 @@ public class EnemyController : MonoBehaviour
             }
         }
 
+        // 保留仍在发现半径内的有效目标，除非新目标明显更近；任务优先级不受影响。
+        if (IsValidOpponent(currentTarget))
+        {
+            float currentDistance = (currentTarget.transform.position - transform.position).sqrMagnitude;
+            float ratio = Mathf.Clamp(targetSwitchDistanceRatio, 0.1f, 1f);
+            if (currentDistance <= detectionRange * detectionRange && (nearest == null || nearestSqrDistance >= currentDistance * ratio * ratio))
+            {
+                return currentTarget;
+            }
+        }
+
         return nearest;
     }
 
@@ -190,6 +234,7 @@ public class EnemyController : MonoBehaviour
         desiredMovementInput = Vector3.zero;
         nextUpdateTime = 0f;
         _hasIdleHoverHeight = false;
+        nextMovementUpdateTime = 0f;
     }
 
     private void ConfigureHoverThrusters()
@@ -267,19 +312,36 @@ public class EnemyController : MonoBehaviour
     private Vector3 ProbeObstacle(Vector3 direction, float weight)
     {
         Vector3 origin = transform.position + Vector3.up * 0.5f;
-        int hitCount = Physics.SphereCastNonAlloc(
+        PhysicsScene physics = gameObject.scene.GetPhysicsScene();
+        int hitCount = physics.SphereCast(
             origin,
             obstacleProbeRadius,
             direction.normalized,
             obstacleHits,
             obstacleAvoidanceDistance,
-            obstacleLayers);
+            obstacleLayers,
+            QueryTriggerInteraction.Ignore);
+        // 饱和结果不保证包含最近障碍；只在首次遇到更密集布局时扩容。
+        while (hitCount == obstacleHits.Length && obstacleHits.Length < 256)
+        {
+            System.Array.Resize(ref obstacleHits, obstacleHits.Length * 2);
+            hitCount = physics.SphereCast(
+                origin,
+                obstacleProbeRadius,
+                direction.normalized,
+                obstacleHits,
+                obstacleAvoidanceDistance,
+                obstacleLayers,
+                QueryTriggerInteraction.Ignore);
+        }
+
         if (hitCount == 0)
         {
             return Vector3.zero;
         }
 
-        System.Array.Sort(obstacleHits, 0, hitCount, RaycastHitDistanceComparer.Instance);
+        int closest = -1;
+        float closestDistance = float.PositiveInfinity;
         for (int i = 0; i < hitCount; i++)
         {
             RaycastHit hit = obstacleHits[i];
@@ -289,6 +351,38 @@ public class EnemyController : MonoBehaviour
                 continue;
             }
 
+            Vector3 surfaceNormal = hit.normal;
+            if (hit.distance <= 0f)
+            {
+                // 球扫起点重叠时 PhysX 返回反向射线伪法线；地板支撑不能变成水平墙。
+                Vector3 separation = origin - hit.collider.ClosestPoint(origin);
+                if (separation.sqrMagnitude > 0.0001f)
+                {
+                    surfaceNormal = separation.normalized;
+                    if (Vector3.Dot(surfaceNormal, direction) >= -0.001f)
+                    {
+                        continue;
+                    }
+                }
+            }
+
+            if (Mathf.Abs(surfaceNormal.y) > 0.7f)
+            {
+                continue;
+            }
+
+            hit.normal = surfaceNormal;
+            obstacleHits[i] = hit;
+            if (hit.distance < closestDistance)
+            {
+                closest = i;
+                closestDistance = hit.distance;
+            }
+        }
+
+        if (closest >= 0)
+        {
+            RaycastHit hit = obstacleHits[closest];
             Vector3 normal = hit.normal;
             normal.y = 0f;
             if (normal.sqrMagnitude < 0.01f)
@@ -307,14 +401,5 @@ public class EnemyController : MonoBehaviour
         }
 
         return Vector3.zero;
-    }
-
-    private sealed class RaycastHitDistanceComparer : System.Collections.Generic.IComparer<RaycastHit>
-    {
-        public static readonly RaycastHitDistanceComparer Instance = new RaycastHitDistanceComparer();
-        public int Compare(RaycastHit a, RaycastHit b)
-        {
-            return a.distance.CompareTo(b.distance);
-        }
     }
 }

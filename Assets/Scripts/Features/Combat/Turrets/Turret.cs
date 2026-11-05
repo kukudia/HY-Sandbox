@@ -106,7 +106,7 @@ public abstract class Turret : MonoBehaviour
 
     private void RefreshTarget()
     {
-        if (_target != null && (!_target.IsOperational || !_target.IsSimulationActive || _targetDurability == null || !_targetDurability.isActiveAndEnabled || _targetDurability.currentDurability <= 0f || (_targetDurability.transform.position - transform.position).sqrMagnitude > range * range))
+        if (_target != null && (!_target.isActiveAndEnabled || _target.faction != GetEffectiveTargetFaction() || _target.gameObject.scene != gameObject.scene || !_target.IsOperational || !_target.IsSimulationActive || _targetDurability == null || !_targetDurability.isActiveAndEnabled || _targetDurability.currentDurability <= 0f || _targetDurability.GetComponentInParent<ControlUnit>() != _target || (_targetDurability.transform.position - transform.position).sqrMagnitude > range * range))
         {
             _target = null;
             _targetDurability = null;
@@ -131,7 +131,7 @@ public abstract class Turret : MonoBehaviour
 
     private void AimAndFire(Durability aimTarget)
     {
-        Vector3 direction = aimTarget.transform.position - GetMuzzlePosition();
+        Vector3 direction = GetAimPosition(aimTarget, GetMuzzlePosition()) - GetMuzzlePosition();
         if (direction.sqrMagnitude < 0.01f)
         {
             return;
@@ -139,7 +139,7 @@ public abstract class Turret : MonoBehaviour
 
         AimAt(direction.normalized);
         Vector3 origin = GetMuzzlePosition();
-        Vector3 aimDirection = (aimTarget.transform.position - origin).normalized;
+        Vector3 aimDirection = (GetAimPosition(aimTarget, origin) - origin).normalized;
         Vector3 fireDirection = GetAimForward();
         if (Vector3.Angle(fireDirection, aimDirection) <= maxFireAngle && Time.time >= _nextFireTime)
         {
@@ -232,6 +232,12 @@ public abstract class Turret : MonoBehaviour
     protected UnitFaction GetEffectiveTargetFaction()
     {
         return targetFaction != Owner.faction ? targetFaction : Owner.faction == UnitFaction.Player ? UnitFaction.Enemy : UnitFaction.Player;
+    }
+
+    // 激光即时命中；实体炮塔覆盖为基于实际炮速的提前量。
+    protected virtual Vector3 GetAimPosition(Durability target, Vector3 origin)
+    {
+        return target.transform.position;
     }
 
     protected abstract void Fire(Vector3 origin, Vector3 direction, UnitFaction faction);

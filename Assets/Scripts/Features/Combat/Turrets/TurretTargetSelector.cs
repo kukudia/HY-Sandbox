@@ -1,14 +1,13 @@
 // 职责：从有效敌对组中选择范围内最近的伤害目标，支持玩家优先攻击敌方驾驶舱。
 // 入口：FindNearestTarget()；由 Turret 按索敌周期调用，不依赖当前供电。
-// 生命周期：每炮塔独立缓存模块引用；销毁引用在距离计算时跳过。
+// 生命周期：复用扫描缓冲，每次索敌读取当前层级，感知修复新增与重组移出的模块。
 using System.Collections.Generic;
 using UnityEngine;
 
 internal sealed class TurretTargetSelector
 {
     private readonly Transform _weapon;
-    private readonly Dictionary<ControlUnit, Durability[]> _durabilityCache = new Dictionary<ControlUnit, Durability[]>();
-    private readonly List<ControlUnit> _expired = new List<ControlUnit>();
+    private readonly List<Durability> _durabilities = new List<Durability>();
     internal TurretTargetSelector(Transform weapon)
     {
         _weapon = weapon;
@@ -25,20 +24,6 @@ internal sealed class TurretTargetSelector
         ControlUnit nearest = null;
         nearestDurability = null;
         float nearestSqrDistance = range * range;
-        _expired.Clear();
-        foreach (ControlUnit cached in _durabilityCache.Keys)
-        {
-            if (cached == null || !cached.gameObject.activeInHierarchy)
-            {
-                _expired.Add(cached);
-            }
-        }
-
-        foreach (ControlUnit cached in _expired)
-        {
-            _durabilityCache.Remove(cached);
-        }
-
         if (units == null)
         {
             return null;
@@ -53,13 +38,13 @@ internal sealed class TurretTargetSelector
                     continue;
                 }
 
-                if (!candidate.HasValidCockpit || !candidate.IsSimulationActive || (owner != null && candidate.gameObject.scene != owner.gameObject.scene) || candidate.faction != faction)
+                if (!candidate.isActiveAndEnabled || !candidate.HasValidCockpit || !candidate.IsSimulationActive || (owner != null && candidate.gameObject.scene != owner.gameObject.scene) || candidate.faction != faction)
                 {
                     continue;
                 }
 
                 Durability cockpitDurability = FindCockpitDurability(candidate);
-                if (cockpitDurability == null)
+                if (cockpitDurability == null || !cockpitDurability.isActiveAndEnabled || cockpitDurability.currentDurability <= 0f)
                 {
                     continue;
                 }
@@ -86,7 +71,7 @@ internal sealed class TurretTargetSelector
                 continue;
             }
 
-            if (candidate.faction != faction || !candidate.IsSimulationActive || !candidate.IsOperational || (owner != null && candidate.gameObject.scene != owner.gameObject.scene))
+            if (!candidate.isActiveAndEnabled || candidate.faction != faction || !candidate.IsSimulationActive || !candidate.IsOperational || (owner != null && candidate.gameObject.scene != owner.gameObject.scene))
             {
                 continue;
             }
@@ -111,10 +96,10 @@ internal sealed class TurretTargetSelector
 
     private Durability FindNearestDurability(ControlUnit unit)
     {
-        Durability[] durabilities = GetDurabilities(unit);
+        unit.GetComponentsInChildren<Durability>(_durabilities);
         Durability nearest = null;
         float nearestSqrDistance = float.MaxValue;
-        foreach (Durability durability in durabilities)
+        foreach (Durability durability in _durabilities)
         {
             if (durability == null || !durability.isActiveAndEnabled || durability.currentDurability <= 0f || durability.GetComponentInParent<ControlUnit>() != unit)
             {
@@ -130,22 +115,6 @@ internal sealed class TurretTargetSelector
         }
 
         return nearest;
-    }
-
-    private Durability[] GetDurabilities(ControlUnit unit)
-    {
-        if (unit == null)
-        {
-            return System.Array.Empty<Durability>();
-        }
-
-        if (!_durabilityCache.TryGetValue(unit, out Durability[] durabilities) || durabilities == null)
-        {
-            durabilities = unit.GetComponentsInChildren<Durability>();
-            _durabilityCache[unit] = durabilities;
-        }
-
-        return durabilities;
     }
 
     private Durability FindCockpitDurability(ControlUnit unit)

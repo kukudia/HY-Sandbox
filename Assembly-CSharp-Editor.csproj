@@ -119,6 +119,7 @@
     <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegeBlueprintCatalogChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Benchmarks\SiegeBuildingBenchmark.cs" />
     <Compile Include="Assets\Editor\Siege\Authoring\SiegeMainInterfaceAuthoring.cs" />
+    <Compile Include="Assets\Editor\Combat\Validation\AiUpgradePlayChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Buildings\SiegeBuildingPowerProbe.cs" />
     <Compile Include="Assets\Editor\Bots\BotNavigationPlayProbe.cs" />
     <Compile Include="Assets\Editor\Building\BlockDataTables\BlockCsvChecks.cs" />

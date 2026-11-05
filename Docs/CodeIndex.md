@@ -59,6 +59,7 @@ HY-Sandbox/
 │   │   │   ├── Turrets/
 │   │   │   │   └── TurretAssetBaker.cs
 │   │   │   └── Validation/
+│   │   │       ├── AiUpgradePlayChecks.cs
 │   │   │       ├── CombatHudPlayProbe.cs
 │   │   │       ├── EnemyBlueprintPoolChecks.cs
 │   │   │       ├── TurretFlightPlayProbe.cs
@@ -263,6 +264,7 @@ HY-Sandbox/
 │           │   │   └── MeteorShower.cs
 │           │   └── Turrets/
 │           │       ├── LaserTurret.cs
+│           │       ├── ProjectileIntercept.cs
 │           │       ├── ProjectileTurret.cs
 │           │       ├── Turret.cs
 │           │       ├── TurretHitResolver.cs
@@ -981,6 +983,17 @@ HY-Sandbox/
 | TurretAssetBaker | [`Sprite RenderIcon(string name)`](../Assets/Editor/Combat/Turrets/TurretAssetBaker.cs#L287) | private static |
 | TurretAssetBaker | [`void BakeEntry(string name)`](../Assets/Editor/Combat/Turrets/TurretAssetBaker.cs#L300) | private static |
 
+## Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs
+
+// 职责：用真实运行组件检查目标稳定性、局部物理场景避障、修复重组索敌及炮弹相对运动提前量。 // 入口：Run()；仅当前 Play Mode，夹具隔离于本地物理场景，结果写入 Temp/AIUpgrade。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| AiUpgradePlayChecks | [`string Run()`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L14) | public static |
+| AiUpgradePlayChecks | [`ControlUnit Unit(Transform root, string name, UnitFaction faction, Vector3 position)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L214) | private static |
+| AiUpgradePlayChecks | [`Durability Health(Transform root, string name, Vector3 position)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L230) | private static |
+| AiUpgradePlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L241) | private static |
+
 ## Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs
 
 // 职责：在 Play Mode 检查敌方名牌与战斗 HUD 反馈。 // 入口：Run()。 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
@@ -1008,16 +1021,17 @@ HY-Sandbox/
 
 ## Assets/Editor/Combat/Validation/TurretFlightPlayProbe.cs
 
-// 职责：验证真实引擎帧中的无目标空闲、自动申请供电、双管发射及有限飞行时间。 // 入口：Run()；在已进入的Play Mode隔离执行，输出JSON与飞行截图，不保存场景。
+// 职责：验证真实引擎帧中的无目标空闲、自动申请供电、双管发射及有限飞行时间。 // 入口：Run() / RunCrossing()；在已进入的Play Mode隔离执行，输出JSON与飞行截图，不保存场景。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| TurretFlightPlayProbe | [`void Run()`](../Assets/Editor/Combat/Validation/TurretFlightPlayProbe.cs#L38) | public static |
-| TurretFlightPlayProbe | [`ControlUnit Unit(string name, Vector3 position, UnitFaction faction)`](../Assets/Editor/Combat/Validation/TurretFlightPlayProbe.cs#L89) | private static |
-| TurretFlightPlayProbe | [`void Tick()`](../Assets/Editor/Combat/Validation/TurretFlightPlayProbe.cs#L109) | private static |
-| TurretFlightPlayProbe | [`void Check(string label, bool passed)`](../Assets/Editor/Combat/Validation/TurretFlightPlayProbe.cs#L187) | private static |
-| TurretFlightPlayProbe | [`void Capture()`](../Assets/Editor/Combat/Validation/TurretFlightPlayProbe.cs#L192) | private static |
-| TurretFlightPlayProbe | [`void Finish()`](../Assets/Editor/Combat/Validation/TurretFlightPlayProbe.cs#L216) | private static |
+| TurretFlightPlayProbe | [`void RunCrossing()`](../Assets/Editor/Combat/Validation/TurretFlightPlayProbe.cs#L40) | public static |
+| TurretFlightPlayProbe | [`void Run()`](../Assets/Editor/Combat/Validation/TurretFlightPlayProbe.cs#L46) | public static |
+| TurretFlightPlayProbe | [`ControlUnit Unit(string name, Vector3 position, UnitFaction faction)`](../Assets/Editor/Combat/Validation/TurretFlightPlayProbe.cs#L100) | private static |
+| TurretFlightPlayProbe | [`void Tick()`](../Assets/Editor/Combat/Validation/TurretFlightPlayProbe.cs#L123) | private static |
+| TurretFlightPlayProbe | [`void Check(string label, bool passed)`](../Assets/Editor/Combat/Validation/TurretFlightPlayProbe.cs#L208) | private static |
+| TurretFlightPlayProbe | [`void Capture()`](../Assets/Editor/Combat/Validation/TurretFlightPlayProbe.cs#L213) | private static |
+| TurretFlightPlayProbe | [`void Finish()`](../Assets/Editor/Combat/Validation/TurretFlightPlayProbe.cs#L237) | private static |
 
 ## Assets/Editor/Combat/Validation/TurretRuntimeChecks.cs
 
@@ -2834,19 +2848,19 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| EnemyController | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L35) | private |
-| EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L40) | private |
-| EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L88) | private |
-| EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L113) | public |
-| EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L120) | public |
-| EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L126) | private |
-| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L166) | private |
-| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L181) | private |
-| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L195) | private |
-| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L234) | private |
-| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L247) | private |
-| EnemyController | [`Vector3 ProbeObstacle(Vector3 direction, float weight)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L267) | private |
-| RaycastHitDistanceComparer | [`int Compare(RaycastHit a, RaycastHit b)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L315) | public |
+| EnemyController | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L38) | private |
+| EnemyController | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L46) | private |
+| EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L51) | private |
+| EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L119) | private |
+| EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L144) | public |
+| EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L152) | public |
+| EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L159) | private |
+| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L210) | private |
+| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L225) | private |
+| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L240) | private |
+| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L279) | private |
+| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L292) | private |
+| EnemyController | [`Vector3 ProbeObstacle(Vector3 direction, float weight)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L312) | private |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs
 
@@ -2922,19 +2936,28 @@ HY-Sandbox/
 | LaserTurret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L50) | protected override |
 | LaserTurret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L56) | protected override |
 
+## Assets/Scripts/Features/Combat/Turrets/ProjectileIntercept.cs
+
+// 职责：求解无重力、恒速炮弹与匀速目标的最早正交会时间。 // 入口：TryGetTime()；速度采用炮口继承速度的相对参考系，无解或超寿命时由调用者回退。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| ProjectileIntercept | [`bool TryGetTime(Vector3 offset, Vector3 relativeVelocity, float speed, float lifetime, out float time)`](../Assets/Scripts/Features/Combat/Turrets/ProjectileIntercept.cs#L8) | internal static |
+
 ## Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs
 
 // 职责：每炮管发射真实炮弹并播放后退/复位动画；炮弹负责飞行和命中。 // 入口：Turret.Fire()；炮管、速度、寿命和冲量可在 Prefab Inspector 配置。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| ProjectileTurret | [`bool MovesVisual(Transform part)`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L34) | internal |
-| ProjectileTurret | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L52) | protected override |
-| ProjectileTurret | [`void LateUpdate()`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L75) | private |
-| ProjectileTurret | [`void UpdateRecoil(float deltaTime)`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L84) | private |
-| ProjectileTurret | [`void ApplyRecoilPose()`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L102) | private |
-| ProjectileTurret | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L123) | protected override |
-| ProjectileTurret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L131) | protected override |
+| ProjectileTurret | [`bool MovesVisual(Transform part)`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L36) | internal |
+| ProjectileTurret | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L54) | protected override |
+| ProjectileTurret | [`void LateUpdate()`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L77) | private |
+| ProjectileTurret | [`void UpdateRecoil(float deltaTime)`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L86) | private |
+| ProjectileTurret | [`void ApplyRecoilPose()`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L104) | private |
+| ProjectileTurret | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L125) | protected override |
+| ProjectileTurret | [`Vector3 GetAimPosition(Durability target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L133) | protected override |
+| ProjectileTurret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L164) | protected override |
 
 ## Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs
 
@@ -2984,9 +3007,10 @@ HY-Sandbox/
 | Turret | [`Vector3 GetMuzzlePosition()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L215) | protected |
 | Turret | [`Vector3 GetAimForward()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L226) | protected |
 | Turret | [`UnitFaction GetEffectiveTargetFaction()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L232) | protected |
-| Turret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L237) | protected abstract |
-| Turret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L238) | protected virtual |
-| Turret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L242) | protected virtual |
+| Turret | [`Vector3 GetAimPosition(Durability target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L238) | protected virtual |
+| Turret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L243) | protected abstract |
+| Turret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L244) | protected virtual |
+| Turret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L248) | protected virtual |
 
 ## Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs
 
@@ -3007,14 +3031,13 @@ HY-Sandbox/
 
 ## Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs
 
-// 职责：从有效敌对组中选择范围内最近的伤害目标，支持玩家优先攻击敌方驾驶舱。 // 入口：FindNearestTarget()；由 Turret 按索敌周期调用，不依赖当前供电。 // 生命周期：每炮塔独立缓存模块引用；销毁引用在距离计算时跳过。
+// 职责：从有效敌对组中选择范围内最近的伤害目标，支持玩家优先攻击敌方驾驶舱。 // 入口：FindNearestTarget()；由 Turret 按索敌周期调用，不依赖当前供电。 // 生命周期：复用扫描缓冲，每次索敌读取当前层级，感知修复新增与重组移出的模块。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| TurretTargetSelector | [`ControlUnit FindNearestTarget( IReadOnlyList<ControlUnit> units, ControlUnit owner, UnitFaction faction, float range, bool prioritizeCockpit, out Durability nearestDurability)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L17) | internal |
-| TurretTargetSelector | [`Durability FindNearestDurability(ControlUnit unit)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L112) | private |
-| TurretTargetSelector | [`Durability[] GetDurabilities(ControlUnit unit)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L135) | private |
-| TurretTargetSelector | [`Durability FindCockpitDurability(ControlUnit unit)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L151) | private |
+| TurretTargetSelector | [`ControlUnit FindNearestTarget( IReadOnlyList<ControlUnit> units, ControlUnit owner, UnitFaction faction, float range, bool prioritizeCockpit, out Durability nearestDurability)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L16) | internal |
+| TurretTargetSelector | [`Durability FindNearestDurability(ControlUnit unit)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L97) | private |
+| TurretTargetSelector | [`Durability FindCockpitDurability(ControlUnit unit)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L120) | private |
 
 ## Assets/Scripts/Features/Diagnostics/Bots/BotNavigationProbeDriver.cs
 

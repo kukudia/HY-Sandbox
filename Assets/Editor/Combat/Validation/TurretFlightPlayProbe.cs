@@ -1,5 +1,5 @@
 // 职责：验证真实引擎帧中的无目标空闲、自动申请供电、双管发射及有限飞行时间。
-// 入口：Run()；在已进入的Play Mode隔离执行，输出JSON与飞行截图，不保存场景。
+// 入口：Run() / RunCrossing()；在已进入的Play Mode隔离执行，输出JSON与飞行截图，不保存场景。
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,6 +35,14 @@ public static class TurretFlightPlayProbe
     private static bool _sawRecoil;
     private static Camera _camera;
     private static Report _report;
+    private static bool _crossing;
+    private static float _originalTimeScale;
+    public static void RunCrossing()
+    {
+        Run();
+        _crossing = true;
+    }
+
     public static void Run()
     {
         if (!EditorApplication.isPlaying || _root != null)
@@ -42,7 +50,10 @@ public static class TurretFlightPlayProbe
             throw new InvalidOperationException("Requires Play Mode and no pending flight probe.");
         }
 
-        _manager = Object.FindFirstObjectByType<PlayManager>(FindObjectsInactive.Include);
+        _crossing = false;
+        _originalTimeScale = Time.timeScale;
+        Time.timeScale = 1f;
+        _manager = Object.FindAnyObjectByType<PlayManager>(FindObjectsInactive.Include);
         PlayManager.instance = _manager;
         _previousUnits = _manager.allControlUnits;
         _previousMode = _manager.playMode;
@@ -95,12 +106,15 @@ public static class TurretFlightPlayProbe
         body.useGravity = false;
         body.constraints = RigidbodyConstraints.FreezeAll;
         ControlUnit unit = obj.AddComponent<ControlUnit>();
-        unit.enabled = false;
+        unit.enabled = true;
         unit.faction = faction;
         GameObject cockpit = new GameObject("Cockpit");
         cockpit.transform.SetParent(obj.transform, false);
         unit.cockpit = cockpit.AddComponent<Cockpit>();
         unit.cockpit.enabled = false;
+        unit.cockpit.faction = faction;
+        unit.cockpit.SetControlMode(UnitControlMode.Autonomous);
+        unit.RefreshChildren();
         unit.hasValidCockpit = true;
         _manager.allControlUnits.Add(unit);
         return unit;
@@ -129,6 +143,13 @@ public static class TurretFlightPlayProbe
                 _health = target.AddComponent<Durability>();
                 _health.maxDurability = _health.currentDurability = 1000f;
                 _health.debugLog = false;
+                if (_crossing)
+                {
+                    Rigidbody body = enemy.GetComponent<Rigidbody>();
+                    body.constraints = RigidbodyConstraints.FreezeRotation;
+                    body.linearVelocity = Vector3.right * 12f;
+                }
+
                 _phase = 1;
             }
 
@@ -220,6 +241,7 @@ public static class TurretFlightPlayProbe
         _manager.allControlUnits = _previousUnits;
         _manager.enabled = _previousEnabled;
         Application.runInBackground = _previousBackground;
+        Time.timeScale = _originalTimeScale;
         foreach (TurretProjectile shot in Object.FindObjectsByType<TurretProjectile>())
         {
             if (Vector3.Distance(shot.transform.position, _root.transform.position) < 50f)
@@ -231,6 +253,8 @@ public static class TurretFlightPlayProbe
         Object.DestroyImmediate(_root);
         _root = null;
         Directory.CreateDirectory("Temp/TurretRuntime");
-        File.WriteAllText("Temp/TurretRuntime/FlightValidation.json", JsonUtility.ToJson(_report, true));
+        File.WriteAllText(
+            _crossing ? "Temp/TurretRuntime/CrossingValidation.json" : "Temp/TurretRuntime/FlightValidation.json",
+            JsonUtility.ToJson(_report, true));
     }
 }

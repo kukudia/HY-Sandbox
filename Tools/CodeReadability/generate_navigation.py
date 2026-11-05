@@ -487,7 +487,7 @@ def main():
     )
     graph(
         "战斗、损伤、爆炸与残骸清理",
-        "源码推导：Turret独立索敌后申报功率；激光即时命中且无冲量，实体炮塔每炮口生成一发并由物理扫掠命中。碰撞以法向冲量限制质量，按恢复系数扣除反弹能量，动态双方按质心能量份额分摊；CSV默认无半血限幅或碰撞冷却。启用canExplode的单位/建筑方块遭撞击致死同样爆炸，不按DestroyedByCollision排除；单位爆炸仍限制冲量并保护碎片碰撞，建筑沿用范围伤害和地形破坏批次。延迟清理保留原生命周期。",
+        "源码推导：Turret独立索敌后申报功率；激光即时命中且无冲量，实体炮塔先按相对速度求寿命/射程内的提前量，再每炮口生成一发并由物理扫掠命中。碰撞以法向冲量限制质量，按恢复系数扣除反弹能量，动态双方按质心能量份额分摊；CSV默认无半血限幅或碰撞冷却。启用canExplode的单位/建筑方块遭撞击致死同样爆炸，不按DestroyedByCollision排除；单位爆炸仍限制冲量并保护碎片碰撞，建筑沿用范围伤害和地形破坏批次。延迟清理保留原生命周期。",
         {
             "A": "Turret.FixedUpdate",
             "B": "TurretTargetSelector.FindNearestTarget",
@@ -521,9 +521,13 @@ def main():
             "AD": "TurretProjectilePool.Update",
             "AE": "TurretProjectilePool.OnDestroy",
             "AF": "BuildingRuntime.DestroyBlock",
+            "AG": "ProjectileTurret.GetAimPosition",
+            "AH": "ProjectileIntercept.TryGetTime",
         },
         [
             "A --> B",
+            "A -->|实体炮塔预测目标| AG",
+            "AG --> AH",
             "A --> U",
             "A -->|供电、瞄准且冷却满足| P",
             "P --> C",
@@ -1454,7 +1458,7 @@ def main():
     )
     graph(
         "阵地战任务目标与自主索敌",
-        "源码推导：波次明确指派的有效基地任务目标不受自主索敌半径限制，远程任务也生成接近输入；未指定任务仍只发现半径内敌对单位。所有目标继续校验启用、阵营、运行/模拟状态、场景和守卫范围。FixedUpdate只提交平滑意图，实际施力仍由推进器和电网负责。",
+        "源码推导：波次明确指派的有效基地任务目标不受自主索敌半径限制，远程任务也生成接近输入；未指定任务仍只发现半径内敌对单位。所有目标继续校验启用、阵营、运行/模拟状态、场景和守卫范围；物理步即时丢弃失效目标，自主索敌错峰并带距离滞后，警戒返航避障同样降频。FixedUpdate只提交平滑意图，实际施力仍由推进器和电网负责。",
         {
             "A": "SiegeWaveDirector.Tick", "B": "EnemyController.SetPriorityTarget",
             "C": "EnemyController.FixedUpdate", "D": "EnemyController.FindNearestOpponent",

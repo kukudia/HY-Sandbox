@@ -14,6 +14,8 @@ public sealed class ProjectileTurret : Turret
     private float _projectileLifetime = 4f;
     [SerializeField, Min(0f), Tooltip("单发命中冲量，牛顿秒。")]
     private float _impactImpulse = 45f;
+    [SerializeField, Tooltip("按炮弹速度、寿命和射手点速度预测匀速目标提前量；关闭时直接瞄准。")]
+    private bool predictiveAim = true;
     [Header("Barrel Recoil")]
     [SerializeField, Tooltip("只移动炮管模型，炮口随炮管移动；不移动炮架或方块碰撞体。")]
     private Transform[] _recoilBarrels = System.Array.Empty<Transform>();
@@ -126,6 +128,37 @@ public sealed class ProjectileTurret : Turret
         _recoilOffset = 0f;
         ApplyRecoilPose();
         base.OnDisable();
+    }
+
+    protected override Vector3 GetAimPosition(Durability target, Vector3 origin)
+    {
+        if (!predictiveAim)
+        {
+            return target.transform.position;
+        }
+
+        Rigidbody targetBody = target.GetComponentInParent<Rigidbody>();
+        Rigidbody ownerBody = Owner != null ? Owner.GetComponent<Rigidbody>() : null;
+        Vector3 targetPosition = target.transform.position;
+        Vector3 inherited = ownerBody != null ? ownerBody.GetPointVelocity(origin) : Vector3.zero;
+        Vector3 targetVelocity = targetBody != null ? targetBody.GetPointVelocity(targetPosition) : Vector3.zero;
+        if (ProjectileIntercept.TryGetTime(
+            targetPosition - origin,
+            targetVelocity - inherited,
+            _projectileSpeed,
+            _projectileLifetime,
+            out float time))
+        {
+            Vector3 relativeAim = targetPosition - origin + (targetVelocity - inherited) * time;
+            Vector3 worldVelocity = relativeAim.normalized * _projectileSpeed + inherited;
+            // 炮弹按世界路径扣射程；有解但超出寿命/射程时维持直接瞄准。
+            if (worldVelocity.magnitude * time <= range)
+            {
+                return origin + relativeAim;
+            }
+        }
+
+        return targetPosition;
     }
 
     protected override void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)
