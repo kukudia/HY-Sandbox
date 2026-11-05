@@ -93,6 +93,7 @@
     <Compile Include="Assets\Editor\Diagnostics\PhysicsSandboxProbe.cs" />
     <Compile Include="Assets\Editor\World\Validation\Session\WorldSessionPerformanceChecks.cs" />
     <Compile Include="Assets\Editor\Power\ActivePowerPlayChecks.cs" />
+    <Compile Include="Assets\Editor\Diagnostics\Benchmarks\FleetPresentationBenchmark.cs" />
     <Compile Include="Assets\Editor\Art\Authoring\SpaceKitCurator.cs" />
     <Compile Include="Assets\Editor\Diagnostics\Benchmarks\ProjectilePoolChecks.cs" />
     <Compile Include="Assets\Editor\World\Outposts\OutpostContentAuthoring.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Assets\Editor\Building\Outposts\OutpostEditorAuthoring.cs" />
     <Compile Include="Assets\Editor\World\Validation\Terrain\VoxelMeshingChecks.cs" />
     <Compile Include="Assets\Editor\Combat\Validation\TurretFlightPlayProbe.cs" />
+    <Compile Include="Assets\Editor\Diagnostics\Benchmarks\IndustrialMotionChecks.cs" />
     <Compile Include="Assets\Editor\World\Validation\Session\WorldSessionEdgeChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Authoring\SiegeBlueprintSelectionAuthoring.cs" />
     <Compile Include="Assets\Editor\World\Validation\Session\WorldBuildingPlayProbe.cs" />

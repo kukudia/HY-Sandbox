@@ -2123,6 +2123,82 @@ flowchart TD
 - [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L538)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|FlushDirty -->
 
+## 工业零件统一调度与共享发光
+
+源码推导：活动工业零件注册单一跨场景驱动，旋转按scaled delta、浮动与发光按unscaled time；同源材质/颜色/频率/幅度只更新一个临时共享材质。既有或后加PropertyBlock保留兼容路径。建造与游玩选择保存源材质，取消高亮恢复当前有效绑定；禁用/重配释放引用，最后一个使用者销毁临时材质。
+
+```mermaid
+flowchart TD
+    A["IndustrialPartMotion.OnEnable()"]
+    click A "../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L37" "打开源码"
+    B["IndustrialMotionDriver.EnsureExists()"]
+    click B "../Assets/Scripts/Features/Presentation/Blocks/IndustrialMotionDriver.cs#L9" "打开源码"
+    C["IndustrialMotionDriver.Update()"]
+    click C "../Assets/Scripts/Features/Presentation/Blocks/IndustrialMotionDriver.cs#L24" "打开源码"
+    D["IndustrialPartMotion.AnimateAll()"]
+    click D "../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L70" "打开源码"
+    E["IndustrialEmissionBinding.Tick()"]
+    click E "../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L95" "打开源码"
+    F["IndustrialPartMotion.Animate()"]
+    click F "../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L81" "打开源码"
+    G["IndustrialEmissionBinding.Apply()"]
+    click G "../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L73" "打开源码"
+    H["IndustrialPartMotion.OnDisable()"]
+    click H "../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L54" "打开源码"
+    I["IndustrialPartMotion.ReleaseEmission()"]
+    click I "../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L147" "打开源码"
+    J["IndustrialEmissionBinding.Dispose()"]
+    click J "../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L123" "打开源码"
+    K["IndustrialEmissionBinding.CaptureSelection()"]
+    click K "../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L104" "打开源码"
+    L["IndustrialEmissionBinding.RestoreSelection()"]
+    click L "../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L117" "打开源码"
+    M["BuildSelection.SelectBlock()"]
+    click M "../Assets/Scripts/Features/Building/Interaction/BuildSelection.cs#L80" "打开源码"
+    N["PlayBlockSelection.Highlight()"]
+    click N "../Assets/Scripts/Features/Simulation/Presentation/PlayBlockSelection.cs#L9" "打开源码"
+    A --> B
+    B -.->|Unity Update| C
+    C --> D
+    D --> E
+    D --> F
+    F --> G
+    H --> I
+    I --> J
+    M --> K
+    N --> K
+    K -.->|取消选择| L
+```
+
+- [IndustrialPartMotion.OnEnable](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L37)
+<!-- source: Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs|OnEnable -->
+- [IndustrialMotionDriver.EnsureExists](../Assets/Scripts/Features/Presentation/Blocks/IndustrialMotionDriver.cs#L9)
+<!-- source: Assets/Scripts/Features/Presentation/Blocks/IndustrialMotionDriver.cs|EnsureExists -->
+- [IndustrialMotionDriver.Update](../Assets/Scripts/Features/Presentation/Blocks/IndustrialMotionDriver.cs#L24)
+<!-- source: Assets/Scripts/Features/Presentation/Blocks/IndustrialMotionDriver.cs|Update -->
+- [IndustrialPartMotion.AnimateAll](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L70)
+<!-- source: Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs|AnimateAll -->
+- [IndustrialEmissionBinding.Tick](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L95)
+<!-- source: Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs|Tick -->
+- [IndustrialPartMotion.Animate](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L81)
+<!-- source: Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs|Animate -->
+- [IndustrialEmissionBinding.Apply](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L73)
+<!-- source: Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs|Apply -->
+- [IndustrialPartMotion.OnDisable](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L54)
+<!-- source: Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs|OnDisable -->
+- [IndustrialPartMotion.ReleaseEmission](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L147)
+<!-- source: Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs|ReleaseEmission -->
+- [IndustrialEmissionBinding.Dispose](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L123)
+<!-- source: Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs|Dispose -->
+- [IndustrialEmissionBinding.CaptureSelection](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L104)
+<!-- source: Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs|CaptureSelection -->
+- [IndustrialEmissionBinding.RestoreSelection](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L117)
+<!-- source: Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs|RestoreSelection -->
+- [BuildSelection.SelectBlock](../Assets/Scripts/Features/Building/Interaction/BuildSelection.cs#L80)
+<!-- source: Assets/Scripts/Features/Building/Interaction/BuildSelection.cs|SelectBlock -->
+- [PlayBlockSelection.Highlight](../Assets/Scripts/Features/Simulation/Presentation/PlayBlockSelection.cs#L9)
+<!-- source: Assets/Scripts/Features/Simulation/Presentation/PlayBlockSelection.cs|Highlight -->
+
 ## 世界建筑加载与共享渲染
 
 源码推导：流式建筑以可取消枚举分帧建立，完成才发布；部分实例取消即回滚。模块按毫秒预算创建和启用。同父刚性装饰网格按材质合并，同资源/尺寸/层级共享Mesh；炮塔轴、后坐炮管、机械动画与发光Renderer保持身份，方块碰撞/耐久仍独立。会话退出释放缓存。载具蓝图末尾连接重建也按2ms批次让出帧。
@@ -2144,7 +2220,7 @@ flowchart TD
     G["BuildingRuntime.ActivateRoutine()"]
     click G "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L140" "打开源码"
     H["IndustrialPartMotion.ControlsVisual()"]
-    click H "../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L30" "打开源码"
+    click H "../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L32" "打开源码"
     I["ProjectileTurret.MovesVisual()"]
     click I "../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L36" "打开源码"
     J["WorldBuildingManager.ClearSession()"]
@@ -2181,7 +2257,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs|Build -->
 - [BuildingRuntime.ActivateRoutine](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L140)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|ActivateRoutine -->
-- [IndustrialPartMotion.ControlsVisual](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L30)
+- [IndustrialPartMotion.ControlsVisual](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L32)
 <!-- source: Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs|ControlsVisual -->
 - [ProjectileTurret.MovesVisual](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L36)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs|MovesVisual -->

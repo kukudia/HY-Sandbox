@@ -16,6 +16,12 @@ Unity 6000.6.8f1（URP / VFX Graph 17.6.0，Input System 1.20.1）。本文只�
 
 相同隔离夹具连接刷新中位 25.51→1.10ms，40炮塔索敌批次 21.19→3.86ms；自然阵地战60秒 Editor 观察54.6→58.9帧/秒，但战斗轨迹不同，不作为确定性收益或Player帧率。采样局限、逐项证据及剩余Gizmos/渲染热点见 [性能报告](Docs/Validation/2026-11-05-profiler-performance.md) 与 [原始汇总](Docs/Validation/2026-11-05-profiler-performance.json)。
 
+## 多舰表现性能优化
+
+PC管线启用GPU Resident Drawer，并保留BRG着色器变体。`IndustrialPartMotion` 改为活动注册与单个 `IndustrialMotionDriver` 调度；保留 Inspector 配置、scaled旋转和unscaled浮动/发光。GPU绘制路径的 `IndustrialEmissionBinding` 按源材质及脉冲参数共享临时材质，固定8舰的2.79万个发光Renderer只需1个脉冲材质更新；传统渲染和外部PropertyBlock保留原路径，避免破坏自动实例化。建造/游玩高亮同步迁移，禁用、重配、销毁释放材质。关闭连接点调试时跳过 `Block.OnDrawGizmos` 的几何计算；标签复用GUIStyle。
+
+同镜头、固定8艘CODEX_01_Bastion加基地、约1.39万动画组件，独立Play会话各40观察帧暖机和300帧采样：传统路径CPU帧时间中位60.42ms，GPU绘制与共享发光38.02ms，减少约37%。这是Editor静态舰队测试，不代表自然战斗或Player帧率。证据、回归、原生崩溃记录和Player验证缺口见 [多舰表现性能报告](Docs/Validation/2026-11-05-fleet-presentation.md)。`FleetPresentationBenchmark.CreateFixedFleet` / `StartCapture` 可重现夹具与采样；只读配置，不在运行中切换渲染系统。
+
 ## 本轮复用与精简
 
 断片保留修复：建筑超过32模块或残骸数量预算时仍生成完整物理残骸，预算只请求延后退场。建筑、阵地战敌方碎片及载具延迟清理共用 `FragmentLifetime` 最短保留期（`Resources/Salvage/Settings.minimumFragmentLifetime`，当前10秒）；伤害销毁、卸载和会话退出不受此保护。载具重组保留源 PhysicsScene、损伤归因及剩余碰撞保护。验证见 [断片保留报告](Docs/Validation/2026-11-04-fragment-retention.md)。

@@ -68,6 +68,8 @@ HY-Sandbox/
 │   │   │   ├── PhysicsSandboxProbe.cs
 │   │   │   ├── ProfilerCaptureAnalysis.cs
 │   │   │   └── Benchmarks/
+│   │   │       ├── FleetPresentationBenchmark.cs
+│   │   │       ├── IndustrialMotionChecks.cs
 │   │   │       ├── PowerPerformanceChecks.cs
 │   │   │       ├── PresentationPerformanceChecks.cs
 │   │   │       └── ProjectilePoolChecks.cs
@@ -321,6 +323,8 @@ HY-Sandbox/
 │           │   │   ├── CargoHoldView.cs
 │           │   │   ├── CargoVisual.cs
 │           │   │   ├── HoverControllerStatusLight.cs
+│           │   │   ├── IndustrialEmissionBinding.cs
+│           │   │   ├── IndustrialMotionDriver.cs
 │           │   │   └── IndustrialPartMotion.cs
 │           │   ├── Camera/
 │           │   │   ├── CameraController.cs
@@ -1044,6 +1048,35 @@ HY-Sandbox/
 | TurretRuntimeChecks | [`void CallFire(Turret turret, Vector3 origin, Vector3 direction)`](../Assets/Editor/Combat/Validation/TurretRuntimeChecks.cs#L271) | private static |
 | TurretRuntimeChecks | [`ControlUnit Unit(Transform parent, string name, UnitFaction faction, Vector3 localPosition)`](../Assets/Editor/Combat/Validation/TurretRuntimeChecks.cs#L276) | private static |
 | TurretRuntimeChecks | [`void Check(Report report, bool passed, string name)`](../Assets/Editor/Combat/Validation/TurretRuntimeChecks.cs#L293) | private static |
+
+## Assets/Editor/Diagnostics/Benchmarks/FleetPresentationBenchmark.cs
+
+// 职责：采集固定舰队的CPU整帧原始样本；记录当前绘制配置，不在运行中切换渲染系统。 // 入口：StartCapture() / Status / Finish()；Play部署阶段，结果写Temp/FleetPresentation。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| FleetPresentationBenchmark | [`string CreateFixedFleet()`](../Assets/Editor/Diagnostics/Benchmarks/FleetPresentationBenchmark.cs#L31) | public static |
+| FleetPresentationBenchmark | [`void SpawnFleet()`](../Assets/Editor/Diagnostics/Benchmarks/FleetPresentationBenchmark.cs#L42) | private static |
+| FleetPresentationBenchmark | [`string StartCapture(string label = "fixed-fleet")`](../Assets/Editor/Diagnostics/Benchmarks/FleetPresentationBenchmark.cs#L62) | public static |
+| FleetPresentationBenchmark | [`void Tick()`](../Assets/Editor/Diagnostics/Benchmarks/FleetPresentationBenchmark.cs#L96) | private static |
+| FleetPresentationBenchmark | [`string Finish(string reason = "Manual stop")`](../Assets/Editor/Diagnostics/Benchmarks/FleetPresentationBenchmark.cs#L137) | public static |
+| FleetPresentationBenchmark | [`void OnReload()`](../Assets/Editor/Diagnostics/Benchmarks/FleetPresentationBenchmark.cs#L153) | private static |
+| FleetPresentationBenchmark | [`void OnPlayModeChanged(PlayModeStateChange state)`](../Assets/Editor/Diagnostics/Benchmarks/FleetPresentationBenchmark.cs#L158) | private static |
+| FleetPresentationBenchmark | [`bool IsInitialized()`](../Assets/Editor/Diagnostics/Benchmarks/FleetPresentationBenchmark.cs#L166) | private static |
+
+## Assets/Editor/Diagnostics/Benchmarks/IndustrialMotionChecks.cs
+
+// 职责：隔离验证工业动画共享材质、独立属性、高亮恢复、重配及启停生命周期。 // 入口：Run()，仅Play Mode；输出Temp/IndustrialMotion/checks.txt。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| IndustrialMotionChecks | [`string Run()`](../Assets/Editor/Diagnostics/Benchmarks/IndustrialMotionChecks.cs#L12) | public static |
+| IndustrialMotionChecks | [`string RunConventional()`](../Assets/Editor/Diagnostics/Benchmarks/IndustrialMotionChecks.cs#L128) | public static |
+| IndustrialMotionChecks | [`object CallBinding(string method, params object[] arguments)`](../Assets/Editor/Diagnostics/Benchmarks/IndustrialMotionChecks.cs#L173) | private static |
+| IndustrialMotionChecks | [`Renderer Visual(Transform parent, string name, Material source)`](../Assets/Editor/Diagnostics/Benchmarks/IndustrialMotionChecks.cs#L178) | private static |
+| IndustrialMotionChecks | [`void Configure(IndustrialPartMotion motion, Renderer renderer, Color color)`](../Assets/Editor/Diagnostics/Benchmarks/IndustrialMotionChecks.cs#L187) | private static |
+| IndustrialMotionChecks | [`int ActiveCount()`](../Assets/Editor/Diagnostics/Benchmarks/IndustrialMotionChecks.cs#L201) | private static |
+| IndustrialMotionChecks | [`void Check(bool condition, string description, List<string> checks)`](../Assets/Editor/Diagnostics/Benchmarks/IndustrialMotionChecks.cs#L206) | private static |
 
 ## Assets/Editor/Diagnostics/Benchmarks/PowerPerformanceChecks.cs
 
@@ -3467,18 +3500,48 @@ HY-Sandbox/
 | HoverControllerStatusLight | [`void Awake()`](../Assets/Scripts/Features/Presentation/Blocks/HoverControllerStatusLight.cs#L20) | private |
 | HoverControllerStatusLight | [`void Update()`](../Assets/Scripts/Features/Presentation/Blocks/HoverControllerStatusLight.cs#L26) | private |
 
+## Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs
+
+// 职责：按源材质和脉冲配置共享发光材质；保留外部PropertyBlock及选择高亮的所有权。 // 入口：IndustrialPartMotion创建/释放绑定，Tick()每帧更新唯一材质一次。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| IndustrialEmissionBinding | [`bool UsesGpuDrawing()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L67) | private static |
+| IndustrialEmissionBinding | [`void Apply(Color emission)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L73) | internal |
+| IndustrialEmissionBinding | [`void Tick(float unscaledTime)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L95) | internal static |
+| IndustrialEmissionBinding | [`Material[] CaptureSelection(Renderer target)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L104) | internal static |
+| IndustrialEmissionBinding | [`void RestoreSelection(Renderer target, Material[] saved)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L117) | internal static |
+| IndustrialEmissionBinding | [`void Dispose()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L123) | public |
+| IndustrialEmissionBinding | [`bool Matches(Material[] left, Material[] right)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L159) | private static |
+| PulseKey | [`bool Equals(PulseKey other)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L191) | public |
+| PulseKey | [`bool Equals(object other)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L196) | public override |
+| PulseKey | [`int GetHashCode()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L201) | public override |
+| Pulse | [`void Update(float unscaledTime)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L223) | internal |
+
+## Assets/Scripts/Features/Presentation/Blocks/IndustrialMotionDriver.cs
+
+// 职责：只用一个Unity Update驱动工业零件表现，生命周期随Play会话结束。 // 入口：EnsureExists()由活动零件注册调用，Update()调度IndustrialPartMotion.AnimateAll()。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| IndustrialMotionDriver | [`void EnsureExists()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialMotionDriver.cs#L9) | internal static |
+| IndustrialMotionDriver | [`void Update()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialMotionDriver.cs#L24) | private |
+| IndustrialMotionDriver | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialMotionDriver.cs#L29) | private |
+
 ## Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs
 
 // 职责：为工业零件提供配置驱动的机械运动表现。 // 入口：Configure()。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| IndustrialPartMotion | [`bool ControlsVisual(Transform part, Renderer renderer)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L30) | internal |
-| IndustrialPartMotion | [`void Awake()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L35) | private |
-| IndustrialPartMotion | [`void OnEnable()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L40) | private |
-| IndustrialPartMotion | [`void Update()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L45) | private |
-| IndustrialPartMotion | [`void Configure( Transform[] newSpinTargets, Vector3 newSpinAxis, float newDegreesPerSecond, Transform newBobTarget, float newBobAmplitude, float newBobFrequency, Renderer[] newGlowRenderers, Color newBaseEmission, float newEmissionPulse)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L84) | public |
-| IndustrialPartMotion | [`void CacheRuntimeState()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L107) | private |
+| IndustrialPartMotion | [`bool ControlsVisual(Transform part, Renderer renderer)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L32) | internal |
+| IndustrialPartMotion | [`void OnEnable()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L37) | private |
+| IndustrialPartMotion | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L54) | private |
+| IndustrialPartMotion | [`void AnimateAll()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L70) | internal static |
+| IndustrialPartMotion | [`void Animate(float deltaTime, float unscaledTime)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L81) | private |
+| IndustrialPartMotion | [`void Configure( Transform[] newSpinTargets, Vector3 newSpinAxis, float newDegreesPerSecond, Transform newBobTarget, float newBobAmplitude, float newBobFrequency, Renderer[] newGlowRenderers, Color newBaseEmission, float newEmissionPulse)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L105) | public |
+| IndustrialPartMotion | [`void CacheRuntimeState()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L129) | private |
+| IndustrialPartMotion | [`void ReleaseEmission()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L147) | private |
 
 ## Assets/Scripts/Features/Presentation/Camera/CameraController.cs
 
@@ -4279,7 +4342,7 @@ HY-Sandbox/
 | Block | [`void RestoreConnectionParticipation()`](../Assets/Scripts/Features/Simulation/Block.cs#L389) | public |
 | Block | [`void RefreshConnectionStatus()`](../Assets/Scripts/Features/Simulation/Block.cs#L394) | internal |
 | Block | [`bool IsBlockedGhost()`](../Assets/Scripts/Features/Simulation/Block.cs#L402) | public |
-| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L426) | private |
+| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L442) | private |
 
 ## Assets/Scripts/Features/Simulation/Connections/BatchConnectionBuilder.cs
 

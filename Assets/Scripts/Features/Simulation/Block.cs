@@ -423,8 +423,29 @@ public class Block : MonoBehaviour
     }
 
 #if UNITY_EDITOR
+    private static GUIStyle connectorLabelStyle;
+    private static GUIStyle ConnectorLabelStyle
+    {
+        get
+        {
+            if (connectorLabelStyle == null)
+            {
+                connectorLabelStyle = new GUIStyle();
+                connectorLabelStyle.normal.textColor = Color.white;
+                connectorLabelStyle.fontSize = 14;
+            }
+
+            return connectorLabelStyle;
+        }
+    }
+
     private void OnDrawGizmos()
     {
+        if (!showConnectors && !showLabel)
+        {
+            return;
+        }
+
         Transform parent = connectorParent != null ? connectorParent : transform;
         for (int i = 0; i < connectors.Count; i++)
         {
@@ -448,9 +469,7 @@ public class Block : MonoBehaviour
 
             if (showLabel)
             {
-                GUIStyle style = new GUIStyle();
-                style.normal.textColor = Color.white;
-                style.fontSize = 14;
+                GUIStyle style = ConnectorLabelStyle;
                 Handles.Label(worldPos, connectors[i].name, style);
             }
         }

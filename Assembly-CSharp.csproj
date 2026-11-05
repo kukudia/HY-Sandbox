@@ -71,6 +71,7 @@
     <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BlueprintLoadCamera.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Interface\GlobalTextStyler.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Geometry\BlockBounds.cs" />
+    <Compile Include="Assets\Scripts\Features\Presentation\Blocks\IndustrialEmissionBinding.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Actions\AddBlockAction.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interface\BlueprintUIPanel.cs" />
     <Compile Include="Assets\Scripts\Features\World\Validation\OutpostEditorPlayerChecks.cs" />
@@ -130,6 +131,7 @@
     <Compile Include="Assets\Scripts\Features\Siege\Interface\SiegeBattleFeedback.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\MeteorTrailFollower.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Fleet\SiegeFleetPhysics.cs" />
+    <Compile Include="Assets\Scripts\Features\Presentation\Blocks\IndustrialMotionDriver.cs" />
     <Compile Include="Assets\Scripts\Features\Player\InputManager.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Validation\SiegeStressPopulation.cs" />
     <Compile Include="Assets\Scripts\Features\Flight\HoverFlightController.cs" />

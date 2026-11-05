@@ -865,6 +865,30 @@ def main():
         ],
     )
     graph(
+        "工业零件统一调度与共享发光",
+        "源码推导：活动工业零件注册单一跨场景驱动，旋转按scaled delta、浮动与发光按unscaled time；同源材质/颜色/频率/幅度只更新一个临时共享材质。既有或后加PropertyBlock保留兼容路径。建造与游玩选择保存源材质，取消高亮恢复当前有效绑定；禁用/重配释放引用，最后一个使用者销毁临时材质。",
+        {
+            "A": "IndustrialPartMotion.OnEnable",
+            "B": "IndustrialMotionDriver.EnsureExists",
+            "C": "IndustrialMotionDriver.Update",
+            "D": "IndustrialPartMotion.AnimateAll",
+            "E": "IndustrialEmissionBinding.Tick",
+            "F": "IndustrialPartMotion.Animate",
+            "G": "IndustrialEmissionBinding.Apply",
+            "H": "IndustrialPartMotion.OnDisable",
+            "I": "IndustrialPartMotion.ReleaseEmission",
+            "J": "IndustrialEmissionBinding.Dispose",
+            "K": "IndustrialEmissionBinding.CaptureSelection",
+            "L": "IndustrialEmissionBinding.RestoreSelection",
+            "M": "BuildSelection.SelectBlock",
+            "N": "PlayBlockSelection.Highlight",
+        },
+        [
+            "A --> B", "B -.->|Unity Update| C", "C --> D", "D --> E", "D --> F", "F --> G",
+            "H --> I", "I --> J", "M --> K", "N --> K", "K -.->|取消选择| L",
+        ],
+    )
+    graph(
         "世界建筑加载与共享渲染",
         "源码推导：流式建筑以可取消枚举分帧建立，完成才发布；部分实例取消即回滚。模块按毫秒预算创建和启用。同父刚性装饰网格按材质合并，同资源/尺寸/层级共享Mesh；炮塔轴、后坐炮管、机械动画与发光Renderer保持身份，方块碰撞/耐久仍独立。会话退出释放缓存。载具蓝图末尾连接重建也按2ms批次让出帧。",
         {

@@ -19,7 +19,7 @@ internal sealed class PlayBlockSelection
                     continue;
                 }
 
-                Material[] originalMaterials = renderer.sharedMaterials;
+                Material[] originalMaterials = IndustrialEmissionBinding.CaptureSelection(renderer);
                 _originalMaterials[renderer] = originalMaterials;
                 Material[] highlightedMaterials = new Material[originalMaterials.Length];
                 for (int i = 0; i < highlightedMaterials.Length; i++)
@@ -41,7 +41,7 @@ internal sealed class PlayBlockSelection
         {
             if (entry.Key != null)
             {
-                entry.Key.sharedMaterials = entry.Value;
+                IndustrialEmissionBinding.RestoreSelection(entry.Key, entry.Value);
             }
         }
 
