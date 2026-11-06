@@ -6,7 +6,69 @@
 
     维护：业务变化更新受影响图和 DEVELOPMENT；纯格式变化重新生成行号。`dotnet run --project Tools/CodeReadability -- --check .` 会拒绝失效符号。
 
-    ## Unity 6.6 兼容查询与制作验证
+    ## 特效与音频资源管理（Editor）
+
+源码推导：窗口共用 GUID 资源索引、名称/路径搜索及直接引用查询；原始资产通过 Unity Inspector/Prefab Mode 编辑。项目变更使索引失效，关闭窗口释放内嵌 Inspector。运行时继续使用现有 BlockVfxLibrary.Play。
+
+```mermaid
+flowchart TD
+    A["PresentationResourceWindow.Open()"]
+    click A "../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L25" "打开源码"
+    B["PresentationResourceWindow.OnGUI()"]
+    click B "../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L59" "打开源码"
+    C["PresentationAssetIndex.Scan()"]
+    click C "../Assets/Editor/Presentation/Resources/PresentationAssetIndex.cs#L37" "打开源码"
+    D["PresentationAssetIndex.Matches()"]
+    click D "../Assets/Editor/Presentation/Resources/PresentationAssetIndex.cs#L83" "打开源码"
+    E["PresentationResourceWindow.DrawDetails()"]
+    click E "../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L149" "打开源码"
+    F["PresentationAssetIndex.FindReferencers()"]
+    click F "../Assets/Editor/Presentation/Resources/PresentationAssetIndex.cs#L88" "打开源码"
+    G["BlockVfxLibraryEditor.OnInspectorGUI()"]
+    click G "../Assets/Editor/Presentation/Resources/BlockVfxLibraryEditor.cs#L10" "打开源码"
+    H["PresentationResourceWindow.OnDisable()"]
+    click H "../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L38" "打开源码"
+    I["PresentationResourceWindow.ReleaseInspector()"]
+    click I "../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L51" "打开源码"
+    J["BlockVfxLibrary.Play()"]
+    click J "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L54" "打开源码"
+    K["PresentationResourceWindow.Invalidate()"]
+    click K "../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L44" "打开源码"
+    A -.->|Unity GUI| B
+    B --> C
+    B -->|DrawList| D
+    B --> E
+    E -->|按需查询| F
+    E -.->|播放库 Inspector| G
+    G -.->|保存后的资源配置| J
+    K -.->|下一次 GUI 刷新| B
+    H --> I
+```
+
+- [PresentationResourceWindow.Open](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L25)
+<!-- source: Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs|Open -->
+- [PresentationResourceWindow.OnGUI](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L59)
+<!-- source: Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs|OnGUI -->
+- [PresentationAssetIndex.Scan](../Assets/Editor/Presentation/Resources/PresentationAssetIndex.cs#L37)
+<!-- source: Assets/Editor/Presentation/Resources/PresentationAssetIndex.cs|Scan -->
+- [PresentationAssetIndex.Matches](../Assets/Editor/Presentation/Resources/PresentationAssetIndex.cs#L83)
+<!-- source: Assets/Editor/Presentation/Resources/PresentationAssetIndex.cs|Matches -->
+- [PresentationResourceWindow.DrawDetails](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L149)
+<!-- source: Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs|DrawDetails -->
+- [PresentationAssetIndex.FindReferencers](../Assets/Editor/Presentation/Resources/PresentationAssetIndex.cs#L88)
+<!-- source: Assets/Editor/Presentation/Resources/PresentationAssetIndex.cs|FindReferencers -->
+- [BlockVfxLibraryEditor.OnInspectorGUI](../Assets/Editor/Presentation/Resources/BlockVfxLibraryEditor.cs#L10)
+<!-- source: Assets/Editor/Presentation/Resources/BlockVfxLibraryEditor.cs|OnInspectorGUI -->
+- [PresentationResourceWindow.OnDisable](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L38)
+<!-- source: Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs|OnDisable -->
+- [PresentationResourceWindow.ReleaseInspector](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L51)
+<!-- source: Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs|ReleaseInspector -->
+- [BlockVfxLibrary.Play](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L54)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs|Play -->
+- [PresentationResourceWindow.Invalidate](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L44)
+<!-- source: Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs|Invalidate -->
+
+## Unity 6.6 兼容查询与制作验证
 
 源码推导：运行服务限定拥有者场景，制作工具限定活动场景；重复服务拒绝依赖对象顺序。VFX 17.6 桥接仅在 Editor，使用当前程序集和 GetGraph/CreateGraph；验证只修改临时副本。
 

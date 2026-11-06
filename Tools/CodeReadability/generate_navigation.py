@@ -55,6 +55,24 @@ def main():
         )
 
     graph(
+        "特效与音频资源管理（Editor）",
+        "源码推导：窗口共用 GUID 资源索引、名称/路径搜索及直接引用查询；原始资产通过 Unity Inspector/Prefab Mode 编辑。项目变更使索引失效，关闭窗口释放内嵌 Inspector。运行时继续使用现有 BlockVfxLibrary.Play。",
+        {
+            "A": "PresentationResourceWindow.Open", "B": "PresentationResourceWindow.OnGUI",
+            "C": "PresentationAssetIndex.Scan", "D": "PresentationAssetIndex.Matches",
+            "E": "PresentationResourceWindow.DrawDetails", "F": "PresentationAssetIndex.FindReferencers",
+            "G": "BlockVfxLibraryEditor.OnInspectorGUI", "H": "PresentationResourceWindow.OnDisable",
+            "I": "PresentationResourceWindow.ReleaseInspector", "J": "BlockVfxLibrary.Play",
+            "K": "PresentationResourceWindow.Invalidate",
+        },
+        [
+            'A -.->|Unity GUI| B', 'B --> C', 'B -->|DrawList| D', 'B --> E',
+            'E -->|按需查询| F', 'E -.->|播放库 Inspector| G',
+            'G -.->|保存后的资源配置| J', 'K -.->|下一次 GUI 刷新| B', 'H --> I',
+        ],
+    )
+
+    graph(
         "Unity 6.6 兼容查询与制作验证",
         "源码推导：运行服务限定拥有者场景，制作工具限定活动场景；重复服务拒绝依赖对象顺序。VFX 17.6 桥接仅在 Editor，使用当前程序集和 GetGraph/CreateGraph；验证只修改临时副本。",
         {

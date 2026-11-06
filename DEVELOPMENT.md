@@ -2,6 +2,16 @@
 
 Unity 6000.6.8f1（URP / VFX Graph 17.6.0，Input System 1.20.1）。本文只维护当前功能、契约与验证入口；历史变更和旧验收完整保存在 [DevelopmentHistory](Docs/DevelopmentHistory.md)。
 
+## 特效与音频资源管理
+
+Unity 菜单 **Tools → HY Sandbox → 资源管理 → 特效与音频** 打开统一管理入口。`PresentationResourceWindow` 支持名称/路径搜索、类型筛选、定位、原生预览、直接引用查询和保存；Prefab 通过原生 Prefab Mode 编辑完整层级。扫描覆盖 Assets 下的 VFX Graph、包含 VfxEffect/VisualEffect/ParticleSystem/TrailRenderer/LineRenderer 的 Prefab 和 BlockVfxLibrary，可额外显示递归依赖。
+
+“运行时播放库”直接编辑既有 `Resources/VFX/BlockVfxLibrary.asset`，用 Build/Break/Explosion 等具名槽位显示原数组，提供缺失提醒和显式槽位修复。保留运行时入口、原 GUID 和所有场景/Prefab 引用，不复制一套资源库。喷口、机器人等内嵌效果仍由各自 Prefab 配置。
+
+特效与音频两页共用 `PresentationAssetIndex` 的 GUID 索引、搜索与直接引用查询，项目变更后刷新、窗口关闭释放内嵌 Inspector。音频已支持 AudioClip 浏览及 Unity 原生预览，后续音频播放策略可独立接入，不将 GPU 特效生命周期套用到音频。直接引用不包含字符串动态加载；依赖资源也可能服务于其他功能，编辑会影响其所有使用者。
+
+源码入口位于 `Assets/Editor/Presentation/Resources`，真实目录见 [CodeIndex](Docs/CodeIndex.md)，函数图见 [RuntimeFlow](Docs/RuntimeFlow.md)。本轮 Unity 导入与资源检查通过，213 个特效相关资产、408 个含依赖资产；详细验证、SDK 差异与视觉/听觉验证边界见 [资源管理验证](Docs/Validation/2026-11-06-resource-manager.md)。
+
 ## Unity 6.6 升级适配
 
 已迁移禁用的对象/序列化整数身份 API 至 EntityId。后续场景服务使用 SceneObjectQuery 明确归属并拒绝重复实例；VFX 桥接适配 17.6 的 GetGraph/CreateGraph，喷口 FBX 用显式材质 remap 保留引用，Profiler 读取录制帧的类型化计数及可用性。CodeReadability 从真实工程读取条件符号。入口与实际验证/未覆盖边界见 [后续适配报告](Docs/Validation/2026-11-05-unity-6000.6-followup.md)，原始清单见 [升级报告](Docs/Validation/2026-11-05-unity-6000.6-upgrade.md)。函数图和导航已同步。

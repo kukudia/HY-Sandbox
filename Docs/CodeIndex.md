@@ -90,8 +90,13 @@ HY-Sandbox/
 │   │   │   ├── Interface/
 │   │   │   │   ├── BlockStatusSetup.cs
 │   │   │   │   └── ReturnStatusSetup.cs
+│   │   │   ├── Resources/
+│   │   │   │   ├── BlockVfxLibraryEditor.cs
+│   │   │   │   ├── PresentationAssetIndex.cs
+│   │   │   │   └── PresentationResourceWindow.cs
 │   │   │   └── Validation/
-│   │   │       └── NativeVfxPlaybackProbe.cs
+│   │   │       ├── NativeVfxPlaybackProbe.cs
+│   │   │       └── PresentationResourceChecks.cs
 │   │   ├── Salvage/
 │   │   │   ├── CargoReturnFileChecks.cs
 │   │   │   ├── SalvageAssetBaker.cs
@@ -1334,6 +1339,42 @@ HY-Sandbox/
 | InterfaceBaker | [`void BakeTelemetry(MainUIPanels panels)`](../Assets/Editor/Presentation/InterfaceBaker.cs#L310) | private static |
 | InterfaceBaker | [`Text TextAt( Transform parent, string name, string value, float x0, float y0, float x1, float y1, int size)`](../Assets/Editor/Presentation/InterfaceBaker.cs#L363) | private static |
 
+## Assets/Editor/Presentation/Resources/BlockVfxLibraryEditor.cs
+
+// 职责：用玩法名称展示现有播放槽位并检查配置，保留原序列化字段及 GUID。 // 入口：BlockVfxLibrary Inspector；可从资源管理窗口直接编辑，支持 Undo。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlockVfxLibraryEditor | [`void OnInspectorGUI()`](../Assets/Editor/Presentation/Resources/BlockVfxLibraryEditor.cs#L10) | public override |
+| BlockVfxLibraryEditor | [`void DrawReference(SerializedProperty property, string label)`](../Assets/Editor/Presentation/Resources/BlockVfxLibraryEditor.cs#L46) | private static |
+
+## Assets/Editor/Presentation/Resources/PresentationAssetIndex.cs
+
+// 职责：为特效和音频管理共用资源发现、搜索及引用查询，不持有运行时资源。 // 入口：Scan() / Matches() / FindReferencers()；仅在显式刷新或项目资源变更时扫描。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| PresentationAssetIndex | [`List<Entry> Scan(Kind kind, bool includeDependencies)`](../Assets/Editor/Presentation/Resources/PresentationAssetIndex.cs#L37) | public static |
+| PresentationAssetIndex | [`bool Matches(Entry entry, string search, string category)`](../Assets/Editor/Presentation/Resources/PresentationAssetIndex.cs#L83) | public static |
+| PresentationAssetIndex | [`string[] FindReferencers(string path)`](../Assets/Editor/Presentation/Resources/PresentationAssetIndex.cs#L88) | public static |
+
+## Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs
+
+// 职责：统一浏览特效/音频资产，编辑原始配置并按需检查引用；不生成副本、不改场景。 // 入口：Tools/HY Sandbox/资源管理/特效与音频；关闭/重载释放内嵌 Inspector。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| PresentationResourceWindow | [`void Open()`](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L25) | public static |
+| PresentationResourceWindow | [`void OnEnable()`](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L31) | private |
+| PresentationResourceWindow | [`void OnDisable()`](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L38) | private |
+| PresentationResourceWindow | [`void Invalidate()`](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L44) | private |
+| PresentationResourceWindow | [`void ReleaseInspector()`](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L51) | private |
+| PresentationResourceWindow | [`void OnGUI()`](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L59) | private |
+| PresentationResourceWindow | [`void DrawToolbar()`](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L76) | private |
+| PresentationResourceWindow | [`void DrawList()`](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L103) | private |
+| PresentationResourceWindow | [`void SelectAsset(string guid)`](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L133) | private |
+| PresentationResourceWindow | [`void DrawDetails()`](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L149) | private |
+
 ## Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs
 
 // 职责：在 Play Mode 检查原生 VFX 播放、参数和停止生命周期。 // 入口：RunSuite() / Run() / RunPositionTest()。 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
@@ -1350,6 +1391,16 @@ HY-Sandbox/
 | NativeVfxPlaybackProbe | [`void State(PlayModeStateChange state)`](../Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs#L118) | private static |
 | NativeVfxPlaybackProbe | [`void Tick()`](../Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs#L233) | private static |
 | NativeVfxPlaybackProbe | [`void Finish()`](../Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs#L323) | private static |
+
+## Assets/Editor/Presentation/Validation/PresentationResourceChecks.cs
+
+// 职责：在真实 AssetDatabase 中验证特效/音频共享发现、过滤、引用与窗口生命周期。 // 入口：Run()；只读既有资源，临时验证资产在 finally 删除。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| PresentationResourceChecks | [`string Run()`](../Assets/Editor/Presentation/Validation/PresentationResourceChecks.cs#L10) | public static |
+| PresentationResourceChecks | [`void CheckLibraryEditing(string folder)`](../Assets/Editor/Presentation/Validation/PresentationResourceChecks.cs#L73) | private static |
+| PresentationResourceChecks | [`void Require(bool condition, string message)`](../Assets/Editor/Presentation/Validation/PresentationResourceChecks.cs#L106) | private static |
 
 ## Assets/Editor/Salvage/CargoReturnFileChecks.cs
 

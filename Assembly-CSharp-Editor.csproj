@@ -90,10 +90,12 @@
     <Compile Include="Assets\Editor\World\Validation\Session\WorldSessionPlayChecks.cs" />
     <Compile Include="Assets\Editor\World\Validation\Outposts\OutpostContentChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Benchmarks\SiegeTransientEffectBenchmark.cs" />
+    <Compile Include="Assets\Editor\Presentation\Resources\PresentationResourceWindow.cs" />
     <Compile Include="Assets\Editor\Diagnostics\PhysicsSandboxProbe.cs" />
     <Compile Include="Assets\Editor\World\Validation\Session\WorldSessionPerformanceChecks.cs" />
     <Compile Include="Assets\Editor\Power\ActivePowerPlayChecks.cs" />
     <Compile Include="Assets\Editor\Diagnostics\Benchmarks\FleetPresentationBenchmark.cs" />
+    <Compile Include="Assets\Editor\Presentation\Resources\BlockVfxLibraryEditor.cs" />
     <Compile Include="Assets\Editor\Art\Authoring\SpaceKitCurator.cs" />
     <Compile Include="Assets\Editor\Diagnostics\Benchmarks\ProjectilePoolChecks.cs" />
     <Compile Include="Assets\Editor\World\Outposts\OutpostContentAuthoring.cs" />
@@ -146,8 +148,10 @@
     <Compile Include="Assets\Editor\Building\Interface\BuildInteractionSetup.cs" />
     <Compile Include="Assets\Editor\World\WorldSessionAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\SiegeSceneAuthoring.cs" />
+    <Compile Include="Assets\Editor\Presentation\Validation\PresentationResourceChecks.cs" />
     <Compile Include="Assets\Editor\World\WorldLab\WorldLabAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\Benchmarks\SiegeRegroupBaseline.cs" />
+    <Compile Include="Assets\Editor\Presentation\Resources\PresentationAssetIndex.cs" />
     <Compile Include="Assets\Editor\Architecture\ArchitecturePlayProbe.cs" />
     <Compile Include="Assets\Editor\Combat\Interface\HealthHudPreview.cs" />
     <Compile Include="Assets\Editor\Presentation\Camera\SceneCameraPreviewSync.cs" />
