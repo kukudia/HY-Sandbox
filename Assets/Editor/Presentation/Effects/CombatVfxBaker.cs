@@ -230,7 +230,7 @@ public static class CombatVfxBaker
                 new Keyframe(0.18f, 0),
                 new Keyframe(1, 0)));
         Curve(output, "texIndex", AnimationCurve.Linear(0, 8, 1, 52));
-        VfxGraphAuthoring.Attribute(output, "color", new Vector3(5f, 1.2f, 0.12f));
+        VfxGraphAuthoring.Attribute(output, "color", new Vector3(0.5f, 0.12f, 0.012f));
     }
 
     private static void Curve(object output, string attribute, AnimationCurve curve)

@@ -55,7 +55,7 @@ public static class DebrisFireBaker
                 output,
                 "alpha",
                 new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.15f, 0.65f), new Keyframe(0.6f, 0.4f), new Keyframe(1, 0)));
-            VfxGraphAuthoring.Attribute(output, "color", new Vector3(1.1f, 0.8f, 0.45f));
+            VfxGraphAuthoring.Attribute(output, "color", new Vector3(0.11f, 0.08f, 0.045f));
             BuildSmokeVeil(graph);
             VfxGraphAuthoring.Setting(data, "boundsMode", "Manual");
             object bounds = VfxGraphAuthoring.Get(VfxGraphAuthoring.Slot(init, "bounds"), "value");

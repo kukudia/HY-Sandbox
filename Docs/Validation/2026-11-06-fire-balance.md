@@ -19,3 +19,11 @@ Unity 6000.6.8f1 完成导入、编译及两轮最终 Play 验证：1.4×0.65×0
 [大残骸记录](CombatVfx/balanced-lifecycle.json)、[小残骸记录](CombatVfx/balanced-small-lifecycle.json)、[远景](CombatVfx/balanced-far.png)。
 
 CodeReadability 362 脚本通过，50 张源码导航图刷新；SDK 9.0.320 构建 0 错误、22 个已有引用警告；diff 检查通过。未验证全部光照背景、完整自然交战和 Player 性能；包裹仍为模型包围盒近似，非精确表面采样。
+
+## 后续：火光降至 10%
+
+按用户要求，两层火光线性 RGB 输入统一缩小至本报告上一版的 0.1 倍，烟雾参数保持。真实 Editor 导入、旋转残骸 Play 预览通过，5.41s 火焰和烟粒均归零；362 脚本检查通过，构建 0 错误、22 个既有警告，diff 检查通过。纯参数变化，函数图与导航行号未改变。本次未重复全地图或 Player 验证。
+
+![10% 火光](CombatVfx/fire-ten-percent.png)
+
+[生命周期](CombatVfx/fire-ten-percent-lifecycle.json)。
