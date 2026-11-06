@@ -1,0 +1,85 @@
+{
+  "sawTailAfterDestruction": true,
+  "samples": [
+    {
+      "elapsed": 0.6000109,
+      "frame": 49,
+      "debrisAlive": true,
+      "smokeParticles": [
+        3
+      ],
+      "fireParticles": [
+        6
+      ],
+      "fireCenterError": 2.31169338E-07,
+      "fireRotationError": 0.0,
+      "flameSize": [
+        1.94999993
+      ]
+    },
+    {
+      "elapsed": 1.409828,
+      "frame": 122,
+      "debrisAlive": true,
+      "smokeParticles": [
+        27
+      ],
+      "fireParticles": [
+        39
+      ],
+      "fireCenterError": 2.401151E-07,
+      "fireRotationError": 0.0,
+      "flameSize": [
+        1.94999993
+      ]
+    },
+    {
+      "elapsed": 2.408332,
+      "frame": 212,
+      "debrisAlive": false,
+      "smokeParticles": [
+        74
+      ],
+      "fireParticles": [
+        39
+      ],
+      "fireCenterError": 0.0,
+      "fireRotationError": 0.0,
+      "flameSize": [
+        1.95
+      ]
+    },
+    {
+      "elapsed": 3.40437722,
+      "frame": 303,
+      "debrisAlive": false,
+      "smokeParticles": [
+        77
+      ],
+      "fireParticles": [
+        0
+      ],
+      "fireCenterError": 0.0,
+      "fireRotationError": 0.0,
+      "flameSize": [
+        1.95
+      ]
+    },
+    {
+      "elapsed": 5.40344143,
+      "frame": 495,
+      "debrisAlive": false,
+      "smokeParticles": [
+        0
+      ],
+      "fireParticles": [
+        0
+      ],
+      "fireCenterError": 0.0,
+      "fireRotationError": 0.0,
+      "flameSize": [
+        1.95
+      ]
+    }
+  ]
+}

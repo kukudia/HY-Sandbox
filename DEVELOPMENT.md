@@ -4,7 +4,7 @@ Unity 6000.6.8f1（URP / VFX Graph 17.6.0，Input System 1.20.1）。本文只�
 
 ## 特效与音频资源管理
 
-残骸尾烟已提高不透明度并加入短促橙色余火：中低速烟迹保持对比，火光与烟雾共用粒子，仍由集中库 DebrisSmoke 配置。隔离 Play 近远景、销毁后消散通过；参数、截图与验证边界见 [尾烟可见性](Docs/Validation/2026-11-06-debris-visibility.md)。
+残骸新增按模型包围盒自适应的局部包裹火焰，跟随模型中心与旋转；[包裹火焰验证](Docs/Validation/2026-11-06-debris-envelope.md)。尾烟已提高不透明度并加入短促橙色余火：中低速烟迹保持对比，火光与烟雾共用粒子，仍由集中库 DebrisSmoke 配置。隔离 Play 近远景、销毁后消散通过；参数、截图与验证边界见 [尾烟可见性](Docs/Validation/2026-11-06-debris-visibility.md)。
 
 战斗表现增强：残骸烟迹使用 `DebrisSmoke` 世界空间图，挂载点按刚体点速度跟随，残骸销毁/禁用后独立淡出；激光使用 `LaserBeam` 分层亮芯，宽度 0.16m、持续 0.2s；炮弹使用 `ProjectileTracer` 记录真实位置历史，宽度 0.1m、历史 0.09s、最长 7m，复用时清空。特效仍在集中库替换，伤害、命中和弹速不变。制作入口 `CombatVfxBaker.BakeMissing`，规格见 [CombatVfx](ArtSource/VfxGraph/CombatVfx.md)，真实 Play 近/远景与回收验证见 [战斗特效报告](Docs/Validation/2026-11-06-combat-vfx.md)。
 

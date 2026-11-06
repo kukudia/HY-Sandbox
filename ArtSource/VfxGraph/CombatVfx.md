@@ -19,3 +19,5 @@
 验证源：`CombatVfxCapture.StartCapture` 拍摄近/远两档视野、销毁后尾烟；`CombatVfxChecks.RunPlay` 检查真实炮弹池复用和历史重置。最新验证记录见 `Docs/Validation/2026-11-06-combat-vfx.md`。
 
 尾烟可见性调参（2026-11-06）：烟雾 alpha 曲线由峰值 0.48 / 中段 0.28 提高为 0.92 / 0.68，灰烟色乘数改为 (2.1, 2.15, 2.2)。DetachedPartSmokeTrail 的 minimumOpacity 默认 0.85，避免中低速再次把整条尾烟压成近乎透明；发射门槛和停发规则不变。第二个 Additive Output 复用相同世界空间粒子，橙色 (12, 2.4, 0.18)，尺寸 0.28→0.52→0.2m，alpha 在归一化寿命 0.18 处归零（约 0.50s），不增加动态灯。上述参数均在真实 Graph 或组件 Inspector 中编辑；制作入口仍只补缺失资源。
+
+包裹火焰（2026-11-06）：集中库 DebrisSmoke.prefab 新增局部空间 DebrisEnvelope.vfx。模型 MeshRenderer/SkinnedMeshRenderer 的局部包围盒合并为燃烧体积（只统计同一刚体），扩张 1.65 倍；单粒尺寸为模型最短边的 3 倍、最低 0.35m。燃烧层跟随模型中心与旋转，世界空间尾烟保持独立。使用项目已有 UNI uni_fire.png（16×8，帧 0→25），来源和许可继承 Sources.json；90 粒子/s、0.45s 寿命、容量64，一个 Additive Output，无新增灯光。制作入口 DebrisFireBaker.BakeMissing，由 CombatVfxBaker 调用；组件 Inspector 调 flameEnvelopeScale/flameCoverage，Graph 调颜色、帧序与密度。适合紧凑残骸的体积包裹，不是精确网格表面采样；极细长和中空结构需后续按具体模型验收。

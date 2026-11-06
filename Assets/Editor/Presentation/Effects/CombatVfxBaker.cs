@@ -23,6 +23,7 @@ public static class CombatVfxBaker
         BuildGraph("DebrisSmoke", true);
         BuildGraph("CombatBeam", false);
         CreatePrefab("DebrisSmoke", "DebrisSmoke", 1f);
+        DebrisFireBaker.BakeMissing();
         CreatePrefab("LaserBeam", "CombatBeam", 1f);
         CreatePrefab("ProjectileTracer", "CombatBeam", 0.7f);
         var library = AssetDatabase.LoadAssetAtPath<BlockVfxLibrary>("Assets/Resources/VFX/BlockVfxLibrary.asset");

@@ -85,6 +85,7 @@ HY-Sandbox/
 │   │   │   ├── Effects/
 │   │   │   │   ├── BlockVfxBaker.cs
 │   │   │   │   ├── CombatVfxBaker.cs
+│   │   │   │   ├── DebrisFireBaker.cs
 │   │   │   │   ├── NativeVfxLibraryBuilder.cs
 │   │   │   │   ├── NativeVfxMigration.cs
 │   │   │   │   └── VfxGraphAuthoring.cs
@@ -1260,14 +1261,23 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | CombatVfxBaker | [`void BakeMissing()`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L15) | public static |
-| CombatVfxBaker | [`void Register(BlockVfxLibrary library, string id)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L53) | private static |
-| CombatVfxBaker | [`void CreatePrefab(string name, string graphName, float glow)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L79) | private static |
-| CombatVfxBaker | [`void BuildGraph(string name, bool smoke)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L113) | private static |
-| CombatVfxBaker | [`void BuildSmoke(object graph, object init, object output)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L162) | private static |
-| CombatVfxBaker | [`void BuildResidualFire(object graph, object update)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L197) | private static |
-| CombatVfxBaker | [`void Curve(object output, string attribute, AnimationCurve curve)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L235) | private static |
-| CombatVfxBaker | [`void BuildBeam(object graph, object init, object update)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L243) | private static |
-| CombatVfxBaker | [`Mesh CreateBeamMesh()`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L274) | private static |
+| CombatVfxBaker | [`void Register(BlockVfxLibrary library, string id)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L54) | private static |
+| CombatVfxBaker | [`void CreatePrefab(string name, string graphName, float glow)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L80) | private static |
+| CombatVfxBaker | [`void BuildGraph(string name, bool smoke)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L114) | private static |
+| CombatVfxBaker | [`void BuildSmoke(object graph, object init, object output)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L163) | private static |
+| CombatVfxBaker | [`void BuildResidualFire(object graph, object update)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L198) | private static |
+| CombatVfxBaker | [`void Curve(object output, string attribute, AnimationCurve curve)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L236) | private static |
+| CombatVfxBaker | [`void BuildBeam(object graph, object init, object update)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L244) | private static |
+| CombatVfxBaker | [`Mesh CreateBeamMesh()`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L275) | private static |
+
+## Assets/Editor/Presentation/Effects/DebrisFireBaker.cs
+
+// 职责：制作随残骸模型移动的局部空间包裹火焰，组合进集中库烟迹模板。 // 入口：BakeMissing()；已有图和 Prefab 子节点保留，可在 Graph 中继续调参。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| DebrisFireBaker | [`void BakeMissing()`](../Assets/Editor/Presentation/Effects/DebrisFireBaker.cs#L11) | public static |
+| DebrisFireBaker | [`void Curve(object output, string name, AnimationCurve curve)`](../Assets/Editor/Presentation/Effects/DebrisFireBaker.cs#L89) | private static |
 
 ## Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs
 
@@ -1417,11 +1427,12 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | CombatVfxCapture | [`void StartCapture()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L44) | public static |
-| CombatVfxCapture | [`void State(PlayModeStateChange state)`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L66) | private static |
-| CombatVfxCapture | [`void Setup()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L89) | private static |
-| CombatVfxCapture | [`void Tick()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L147) | private static |
-| CombatVfxCapture | [`void Capture(float elapsed)`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L188) | private static |
-| CombatVfxCapture | [`void Finish()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L215) | private static |
+| CombatVfxCapture | [`void StartEnvelopeCapture()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L66) | public static |
+| CombatVfxCapture | [`void State(PlayModeStateChange state)`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L72) | private static |
+| CombatVfxCapture | [`void Setup()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L96) | private static |
+| CombatVfxCapture | [`void Tick()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L154) | private static |
+| CombatVfxCapture | [`void Capture(float elapsed)`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L195) | private static |
+| CombatVfxCapture | [`void Finish()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L227) | private static |
 
 ## Assets/Editor/Presentation/Validation/CombatVfxChecks.cs
 
@@ -3786,13 +3797,15 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| DetachedPartSmokeTrail | [`void Attach(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L33) | public static |
-| DetachedPartSmokeTrail | [`void Initialize(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L58) | private |
-| DetachedPartSmokeTrail | [`void Refresh(Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L78) | private |
-| DetachedPartSmokeTrail | [`void Update()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L90) | private |
-| DetachedPartSmokeTrail | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L126) | private |
-| DetachedPartSmokeTrail | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L148) | private |
-| DetachedPartSmokeTrail | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L160) | private |
+| DetachedPartSmokeTrail | [`void Attach(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L40) | public static |
+| DetachedPartSmokeTrail | [`void Initialize(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L65) | private |
+| DetachedPartSmokeTrail | [`void ConfigureEnvelope()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L86) | private |
+| DetachedPartSmokeTrail | [`void UpdateEnvelope()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L116) | private |
+| DetachedPartSmokeTrail | [`void Refresh(Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L132) | private |
+| DetachedPartSmokeTrail | [`void Update()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L144) | private |
+| DetachedPartSmokeTrail | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L181) | private |
+| DetachedPartSmokeTrail | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L203) | private |
+| DetachedPartSmokeTrail | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L215) | private |
 
 ## Assets/Scripts/Features/Presentation/Effects/LightFade.cs
 

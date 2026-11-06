@@ -63,6 +63,12 @@ public static class CombatVfxCapture
         EditorApplication.isPlaying = true;
     }
 
+    public static void StartEnvelopeCapture()
+    {
+        StartCapture();
+        SessionState.SetBool(Key + "Envelope", true);
+    }
+
     private static void State(PlayModeStateChange state)
     {
         if (!SessionState.GetBool(Key + "Pending", false))
@@ -74,6 +80,7 @@ public static class CombatVfxCapture
         {
             EditorApplication.update -= Tick;
             SessionState.SetBool(Key + "Pending", false);
+            SessionState.SetBool(Key + "Envelope", false);
             string path = SessionState.GetString(Key + "Scene", "");
             if (!string.IsNullOrEmpty(path))
             {
@@ -105,7 +112,7 @@ public static class CombatVfxCapture
         GameObject fragment = GameObject.CreatePrimitive(PrimitiveType.Cube);
         fragment.name = "Moving debris";
         fragment.transform.position = new Vector3(-6, 3.4f, 0);
-        fragment.transform.localScale = Vector3.one * 0.28f;
+        fragment.transform.localScale = SessionState.GetBool(Key + "Envelope", false) ? new Vector3(1.4f, 0.65f, 0.8f) : Vector3.one * 0.28f;
         fragment.GetComponent<Collider>().enabled = false;
         debris = fragment.AddComponent<Rigidbody>();
         debris.useGravity = false;
@@ -202,13 +209,18 @@ public static class CombatVfxCapture
         RenderTexture.active = previous;
         File.WriteAllBytes("Logs/CombatVfxPreview/" + sample + ".png", image.EncodeToPNG());
         VisualEffect[] smoke = Object.FindObjectsByType<VisualEffect>().Where(effect => effect.name == "Graph - DebrisSmoke").ToArray();
+        VisualEffect[] fire = Object.FindObjectsByType<VisualEffect>().Where(effect => effect.name == "Graph - DebrisEnvelope").ToArray();
         sawTail |= debris == null && smoke.Any(effect => effect.aliveParticleCount > 0);
         Rows.Add(new
         {
             elapsed,
             frame = Time.frameCount,
             debrisAlive = debris != null,
-            smokeParticles = smoke.Select(effect => effect.aliveParticleCount).ToArray()
+            smokeParticles = smoke.Select(effect => effect.aliveParticleCount).ToArray(),
+            fireParticles = fire.Select(effect => effect.aliveParticleCount).ToArray(),
+            fireCenterError = debris != null && fire.Length > 0 ? Vector3.Distance(debris.transform.position, fire[0].transform.position) : 0f,
+            fireRotationError = debris != null && fire.Length > 0 ? Quaternion.Angle(debris.transform.rotation, fire[0].transform.rotation) : 0f,
+            flameSize = fire.Select(effect => effect.GetFloat("FlameSize")).ToArray()
         });
     }
 

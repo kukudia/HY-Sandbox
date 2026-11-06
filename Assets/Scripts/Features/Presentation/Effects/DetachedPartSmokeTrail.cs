@@ -1,6 +1,7 @@
 // 职责：管理断裂零件烟迹和停止后的尾烟生命周期。
 // 入口：Attach()。
 using UnityEngine;
+using UnityEngine.VFX;
 
 [DisallowMultipleComponent]
 public class DetachedPartSmokeTrail : MonoBehaviour
@@ -21,11 +22,17 @@ public class DetachedPartSmokeTrail : MonoBehaviour
     private float _initialSmokeIntensity = 0.4f;
     [SerializeField, Range(0f, 1f), Tooltip("运动减弱时仍保留烟团对比；最终消散由粒子自身寿命曲线控制。")]
     private float _minimumOpacity = 0.85f;
+    [SerializeField, Range(1f, 2f), Tooltip("火焰发射体积相对模型包围盒的扩张，确保粒子能覆盖模型前侧。")]
+    private float _flameEnvelopeScale = 1.65f;
+    [SerializeField, Range(1f, 4f)]
+    private float _flameCoverage = 3f;
     private static int activeTrailCount;
     private Rigidbody targetBody;
     private Transform emissionRoot;
     private Vector3 localAnchor;
     private VfxEffect _smokeEffect;
+    private VisualEffect _envelope;
+    private Bounds _modelBounds;
     private float intensity = 1f;
     private float elapsed;
     private bool registered;
@@ -72,7 +79,54 @@ public class DetachedPartSmokeTrail : MonoBehaviour
         _smokeEffect = Instantiate(library.DetachedSmoke, worldAnchor, Quaternion.identity);
         emissionRoot = _smokeEffect.transform;
         localAnchor = transform.InverseTransformPoint(worldAnchor);
+        ConfigureEnvelope();
         _smokeEffect.SetIntensity(0f);
+    }
+
+    private void ConfigureEnvelope()
+    {
+        bool found = false;
+        _modelBounds = new Bounds(localAnchor, Vector3.one * 0.3f);
+        foreach (Renderer renderer in targetBody.GetComponentsInChildren<Renderer>())
+        {
+            // 只统计本刚体的真实模型，排除特效和另一个残骸刚体。
+            if (!(renderer is MeshRenderer || renderer is SkinnedMeshRenderer) || renderer.GetComponentInParent<Rigidbody>() != targetBody)
+            {
+                continue;
+            }
+
+            BlockBounds.Encapsulate(
+                ref _modelBounds,
+                ref found,
+                BlockBounds.Transform(renderer.localBounds, transform.worldToLocalMatrix * renderer.localToWorldMatrix));
+        }
+
+        foreach (VisualEffect graph in _smokeEffect.Graphs)
+        {
+            if (graph != null && graph.HasFloat("FlameSize"))
+            {
+                _envelope = graph;
+                break;
+            }
+        }
+
+        UpdateEnvelope();
+    }
+
+    private void UpdateEnvelope()
+    {
+        if (_envelope == null)
+        {
+            return;
+        }
+
+        Vector3 scale = transform.lossyScale;
+        Vector3 size = Vector3.Scale(_modelBounds.size, new Vector3(Mathf.Abs(scale.x), Mathf.Abs(scale.y), Mathf.Abs(scale.z)));
+        Vector3 extents = size * (0.5f * _flameEnvelopeScale);
+        _envelope.transform.SetPositionAndRotation(transform.TransformPoint(_modelBounds.center), transform.rotation);
+        _envelope.SetVector3("FlameMin", -extents);
+        _envelope.SetVector3("FlameMax", extents);
+        _envelope.SetFloat("FlameSize", Mathf.Max(0.35f, Mathf.Min(size.x, Mathf.Min(size.y, size.z)) * _flameCoverage));
     }
 
     private void Refresh(Vector3 worldAnchor, float effectIntensity)
@@ -104,6 +158,7 @@ public class DetachedPartSmokeTrail : MonoBehaviour
             emissionRoot.position = anchor;
         }
 
+        UpdateEnvelope();
         float speedRatio = Mathf.InverseLerp(minimumSpeed, Mathf.Max(minimumSpeed + 0.01f, fullEmissionSpeed), speed);
         float lifetimeFade = 1f - Mathf.Clamp01(elapsed / Mathf.Max(0.1f, effectLifetime));
         // Explosion impulses can be too small to cross the speed gate; show a brief residual plume.
