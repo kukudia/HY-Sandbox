@@ -23,9 +23,9 @@ public class DetachedPartSmokeTrail : MonoBehaviour
     [SerializeField, Range(0f, 1f), Tooltip("运动减弱时仍保留烟团对比；最终消散由粒子自身寿命曲线控制。")]
     private float _minimumOpacity = 0.85f;
     [SerializeField, Range(1f, 2f), Tooltip("火焰发射体积相对模型包围盒的扩张，确保粒子能覆盖模型前侧。")]
-    private float _flameEnvelopeScale = 1.65f;
+    private float _flameEnvelopeScale = 1.25f;
     [SerializeField, Range(1f, 4f)]
-    private float _flameCoverage = 2.5f;
+    private float _flameCoverage = 1.8f;
     private static int activeTrailCount;
     private Rigidbody targetBody;
     private Transform emissionRoot;
@@ -126,7 +126,7 @@ public class DetachedPartSmokeTrail : MonoBehaviour
         _envelope.transform.SetPositionAndRotation(transform.TransformPoint(_modelBounds.center), transform.rotation);
         _envelope.SetVector3("FlameMin", -extents);
         _envelope.SetVector3("FlameMax", extents);
-        _envelope.SetFloat("FlameSize", Mathf.Max(0.35f, Mathf.Min(size.x, Mathf.Min(size.y, size.z)) * _flameCoverage));
+        _envelope.SetFloat("FlameSize", Mathf.Max(0.25f, Mathf.Min(size.x, Mathf.Min(size.y, size.z)) * _flameCoverage));
     }
 
     private void Refresh(Vector3 worldAnchor, float effectIntensity)

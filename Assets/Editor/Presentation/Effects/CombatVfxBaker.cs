@@ -190,9 +190,9 @@ public static class CombatVfxBaker
         Curve(
             output,
             "alpha",
-            new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.06f, 0.92f), new Keyframe(0.55f, 0.68f), new Keyframe(1, 0)));
+            new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.06f, 0.75f), new Keyframe(0.55f, 0.52f), new Keyframe(1, 0)));
         Curve(output, "texIndex", AnimationCurve.Linear(0, 8, 1, 52));
-        VfxGraphAuthoring.Attribute(output, "color", new Vector3(1.25f, 1.28f, 1.3f));
+        VfxGraphAuthoring.Attribute(output, "color", new Vector3(1.5f, 1.53f, 1.55f));
     }
 
     private static void BuildResidualFire(object graph, object update)

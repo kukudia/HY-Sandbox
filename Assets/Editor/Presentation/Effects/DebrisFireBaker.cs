@@ -20,7 +20,7 @@ public static class DebrisFireBaker
             object output = contexts.First(c => c.GetType().Name == "VFXPlanarPrimitiveOutput");
             object rate = VfxGraphAuthoring.Create("VFXSpawnerConstantRate");
             VfxGraphAuthoring.Add(spawn, rate);
-            VfxGraphAuthoring.Value(rate, "Rate", 60f);
+            VfxGraphAuthoring.Value(rate, "Rate", 36f);
             object data = VfxGraphAuthoring.Call(init, "GetData");
             VfxGraphAuthoring.Set(data, "space", System.Enum.Parse(VfxGraphAuthoring.Get(data, "space").GetType(), "Local"));
             VfxGraphAuthoring.Setting(data, "capacity", (uint)64);
@@ -54,7 +54,7 @@ public static class DebrisFireBaker
             Curve(
                 output,
                 "alpha",
-                new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.15f, 0.65f), new Keyframe(0.6f, 0.4f), new Keyframe(1, 0)));
+                new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.15f, 0.4f), new Keyframe(0.6f, 0.24f), new Keyframe(1, 0)));
             VfxGraphAuthoring.Attribute(output, "color", new Vector3(0.11f, 0.08f, 0.045f));
             BuildSmokeVeil(graph);
             VfxGraphAuthoring.Setting(data, "boundsMode", "Manual");
@@ -113,7 +113,7 @@ public static class DebrisFireBaker
         Curve(
             output,
             "alpha",
-            new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.25f, 0.32f), new Keyframe(0.6f, 0.22f), new Keyframe(1, 0)));
+            new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.25f, 0.18f), new Keyframe(0.6f, 0.12f), new Keyframe(1, 0)));
         VfxGraphAuthoring.Attribute(output, "color", new Vector3(0.8f, 0.82f, 0.85f));
     }
 

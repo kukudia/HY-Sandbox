@@ -27,3 +27,13 @@ CodeReadability 362 脚本通过，50 张源码导航图刷新；SDK 9.0.320 构
 ![10% 火光](CombatVfx/fire-ten-percent.png)
 
 [生命周期](CombatVfx/fire-ten-percent-lifecycle.json)。
+
+## 后续：包裹层弱化与尾烟减淡
+
+包裹体积扩张1.65→1.25（半径缩约24%），粒径系数2.5→1.8，最小粒径0.35→0.25m；发射率60→36/s。火焰alpha峰值0.65→0.4，包裹烟峰值0.32→0.18。尾烟峰值alpha0.92→0.75、中段0.68→0.52，灰色乘数稍提高到(1.5,1.53,1.55)。实际资产与制作源同步；纯参数变化，函数图和源码导航行号仍准确。
+
+Unity Play近远景检查通过：包裹更稀薄、更贴近模型，尾烟更浅；残骸销毁后自然散尽，5.41s烟火粒子均为0。实时Console错误0，362脚本检查通过，构建0错误/22既有警告，diff检查通过。未扩展到所有模型和光照，也未做Player性能验证。
+
+![弱化包裹与尾烟](CombatVfx/soft-envelope-near.png)
+
+[远景](CombatVfx/soft-envelope-far.png) · [生命周期](CombatVfx/soft-envelope-lifecycle.json)
