@@ -56,7 +56,7 @@ def main():
 
     graph(
         "残骸烟迹、激光与炮弹曳光",
-        "源码推导：烟迹按刚体点速度和局部锚点跟随，停止后独立老化。激光有独立库模板和显示持续时间；炮弹物理仍由 TurretProjectile 负责，LateUpdate 只读取实际位置历史绘制短迹，池回收清空。",
+        "源码推导：烟迹按刚体点速度和局部锚点跟随，中低速保留最低不透明度；Graph 共用烟粒绘制短促余火，停止后独立老化。激光有独立库模板和显示持续时间；炮弹物理仍由 TurretProjectile 负责，LateUpdate 只读取实际位置历史绘制短迹，池回收清空。",
         {
             "A": "DetachedPartSmokeTrail.Attach", "B": "DetachedPartSmokeTrail.Initialize",
             "C": "DetachedPartSmokeTrail.Update", "D": "DetachedPartSmokeTrail.StopAndRelease",

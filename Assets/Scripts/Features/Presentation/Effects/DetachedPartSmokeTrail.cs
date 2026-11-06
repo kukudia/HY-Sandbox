@@ -19,6 +19,8 @@ public class DetachedPartSmokeTrail : MonoBehaviour
     private float _initialSmokeDuration = 1.5f;
     [SerializeField, Range(0f, 1f)]
     private float _initialSmokeIntensity = 0.4f;
+    [SerializeField, Range(0f, 1f), Tooltip("运动减弱时仍保留烟团对比；最终消散由粒子自身寿命曲线控制。")]
+    private float _minimumOpacity = 0.85f;
     private static int activeTrailCount;
     private Rigidbody targetBody;
     private Transform emissionRoot;
@@ -110,7 +112,9 @@ public class DetachedPartSmokeTrail : MonoBehaviour
         bool shouldEmit = emissionRatio > 0.025f && !targetBody.isKinematic;
         if (_smokeEffect != null)
         {
-            _smokeEffect.SetIntensity(shouldEmit ? emissionRatio * maximumEmissionRate / 26f : 0f);
+            // 速度决定是否发射，不再把低速尾烟的透明度压到几乎不可见。
+            float opacity = Mathf.Lerp(_minimumOpacity, 1f, Mathf.Clamp01(emissionRatio * maximumEmissionRate / 26f));
+            _smokeEffect.SetIntensity(shouldEmit ? opacity : 0f);
         }
 
         if (elapsed >= effectLifetime)

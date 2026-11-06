@@ -4,7 +4,7 @@
 
 | 资产 | 形态与参数 | 预算与编辑入口 |
 | --- | --- | --- |
-| DebrisSmoke | 世界空间灰黑烟团；8×8 图集逐帧扩散，粒子寿命 2.8s、尺寸曲线 0.35→2.2m；向上漂移并横向散开 | 38 粒子/s、容量 192，保留最多 24 条烟迹门槛；Prefab 停止后 4s 回收 |
+| DebrisSmoke | 世界空间高不透明度灰烟，出生前 0.50s 带橙色余火；8×8 图集逐帧扩散，粒子寿命 2.8s、尺寸曲线 0.35→2.2m；向上漂移并横向散开 | 38 粒子/s、容量 192、2 个共享粒子 Output，保留最多 24 条烟迹门槛；Prefab 停止后 4s 回收 |
 | LaserBeam | 沿局部 +Z 的收尖亮芯与两层橙红外晕；激光宽度参数 0.16m，可见时间 0.2s；外晕比亮芯更宽 | 单粒子、3 个 Mesh Output；无附加动态灯；LaserTurret Inspector 调宽度/时间/HDR 色 |
 | ProjectileTracer | 与激光共用 CombatBeam 图，独立 Prefab 外晕强度 0.7；真实世界位置历史形成 0.09s 短迹，宽度 0.1m、长度最多 7m | 每炮弹 32 槽固定环形缓冲；池化重用时清空；TurretShell 上 ProjectileTracer 调参 |
 
@@ -17,3 +17,5 @@
 集中库入口：残骸烟雾槽、LaserBeam、ProjectileTracer。普通 EnergyBeam 继续服务维修等效果，不扩大它们的宽度/亮度。伤害、物理弹速、弹道扫掠和炮塔射击频率不改。残骸销毁后停止发射，但已有烟粒继续自然老化。当前陨石同样通过共享残骸烟雾槽取得世界空间烟迹。
 
 验证源：`CombatVfxCapture.StartCapture` 拍摄近/远两档视野、销毁后尾烟；`CombatVfxChecks.RunPlay` 检查真实炮弹池复用和历史重置。最新验证记录见 `Docs/Validation/2026-11-06-combat-vfx.md`。
+
+尾烟可见性调参（2026-11-06）：烟雾 alpha 曲线由峰值 0.48 / 中段 0.28 提高为 0.92 / 0.68，灰烟色乘数改为 (2.1, 2.15, 2.2)。DetachedPartSmokeTrail 的 minimumOpacity 默认 0.85，避免中低速再次把整条尾烟压成近乎透明；发射门槛和停发规则不变。第二个 Additive Output 复用相同世界空间粒子，橙色 (12, 2.4, 0.18)，尺寸 0.28→0.52→0.2m，alpha 在归一化寿命 0.18 处归零（约 0.50s），不增加动态灯。上述参数均在真实 Graph 或组件 Inspector 中编辑；制作入口仍只补缺失资源。

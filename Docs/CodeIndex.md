@@ -1263,10 +1263,11 @@ HY-Sandbox/
 | CombatVfxBaker | [`void Register(BlockVfxLibrary library, string id)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L53) | private static |
 | CombatVfxBaker | [`void CreatePrefab(string name, string graphName, float glow)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L79) | private static |
 | CombatVfxBaker | [`void BuildGraph(string name, bool smoke)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L113) | private static |
-| CombatVfxBaker | [`void BuildSmoke(object graph, object init, object output)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L161) | private static |
-| CombatVfxBaker | [`void Curve(object output, string attribute, AnimationCurve curve)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L196) | private static |
-| CombatVfxBaker | [`void BuildBeam(object graph, object init, object update)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L204) | private static |
-| CombatVfxBaker | [`Mesh CreateBeamMesh()`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L235) | private static |
+| CombatVfxBaker | [`void BuildSmoke(object graph, object init, object output)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L162) | private static |
+| CombatVfxBaker | [`void BuildResidualFire(object graph, object update)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L197) | private static |
+| CombatVfxBaker | [`void Curve(object output, string attribute, AnimationCurve curve)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L235) | private static |
+| CombatVfxBaker | [`void BuildBeam(object graph, object init, object update)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L243) | private static |
+| CombatVfxBaker | [`Mesh CreateBeamMesh()`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L274) | private static |
 
 ## Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs
 
@@ -3785,13 +3786,13 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| DetachedPartSmokeTrail | [`void Attach(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L31) | public static |
-| DetachedPartSmokeTrail | [`void Initialize(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L56) | private |
-| DetachedPartSmokeTrail | [`void Refresh(Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L76) | private |
-| DetachedPartSmokeTrail | [`void Update()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L88) | private |
-| DetachedPartSmokeTrail | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L122) | private |
-| DetachedPartSmokeTrail | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L144) | private |
-| DetachedPartSmokeTrail | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L156) | private |
+| DetachedPartSmokeTrail | [`void Attach(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L33) | public static |
+| DetachedPartSmokeTrail | [`void Initialize(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L58) | private |
+| DetachedPartSmokeTrail | [`void Refresh(Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L78) | private |
+| DetachedPartSmokeTrail | [`void Update()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L90) | private |
+| DetachedPartSmokeTrail | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L126) | private |
+| DetachedPartSmokeTrail | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L148) | private |
+| DetachedPartSmokeTrail | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L160) | private |
 
 ## Assets/Scripts/Features/Presentation/Effects/LightFade.cs
 

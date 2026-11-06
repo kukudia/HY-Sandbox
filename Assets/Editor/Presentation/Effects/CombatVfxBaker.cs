@@ -142,6 +142,7 @@ public static class CombatVfxBaker
         {
             VfxGraphAuthoring.Link(VfxGraphAuthoring.Parameter(graph, "SpawnRate", 38f), VfxGraphAuthoring.Slot(emitter, "Rate"));
             BuildSmoke(graph, init, output);
+            BuildResidualFire(graph, update);
         }
         else
         {
@@ -188,9 +189,47 @@ public static class CombatVfxBaker
         Curve(
             output,
             "alpha",
-            new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.08f, 0.48f), new Keyframe(0.55f, 0.28f), new Keyframe(1, 0)));
+            new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.06f, 0.92f), new Keyframe(0.55f, 0.68f), new Keyframe(1, 0)));
         Curve(output, "texIndex", AnimationCurve.Linear(0, 8, 1, 52));
-        VfxGraphAuthoring.Attribute(output, "color", new Vector3(1.35f, 1.4f, 1.5f));
+        VfxGraphAuthoring.Attribute(output, "color", new Vector3(2.1f, 2.15f, 2.2f));
+    }
+
+    private static void BuildResidualFire(object graph, object update)
+    {
+        // 共用烟粒的世界空间轨迹，只在出生后约 0.5 秒绘制火光；不增加粒子或动态灯。
+        object output = VfxGraphAuthoring.Create("VFXPlanarPrimitiveOutput");
+        VfxGraphAuthoring.Add(graph, output);
+        VfxGraphAuthoring.Call(update, "LinkTo", output, 0, 0);
+        VfxGraphAuthoring.Setting(output, "blendMode", "Additive");
+        VfxGraphAuthoring.Setting(output, "uvMode", "Flipbook");
+        object flipbook = VfxGraphAuthoring.Get(VfxGraphAuthoring.Slot(output, "flipBookSize"), "value");
+        flipbook.GetType().GetField("x").SetValue(flipbook, 8);
+        flipbook.GetType().GetField("y").SetValue(flipbook, 8);
+        VfxGraphAuthoring.Value(output, "flipBookSize", flipbook);
+        VfxGraphAuthoring.Value(
+            output,
+            "mainTexture",
+            AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_cloud.png"));
+        VfxGraphAuthoring.Add(output, VfxGraphAuthoring.Create("Block.Orient"));
+        Curve(
+            output,
+            "size",
+            new AnimationCurve(
+                new Keyframe(0, 0.28f),
+                new Keyframe(0.08f, 0.52f),
+                new Keyframe(0.18f, 0.2f),
+                new Keyframe(1, 0.2f)));
+        Curve(
+            output,
+            "alpha",
+            new AnimationCurve(
+                new Keyframe(0, 0),
+                new Keyframe(0.015f, 1f),
+                new Keyframe(0.08f, 0.65f),
+                new Keyframe(0.18f, 0),
+                new Keyframe(1, 0)));
+        Curve(output, "texIndex", AnimationCurve.Linear(0, 8, 1, 52));
+        VfxGraphAuthoring.Attribute(output, "color", new Vector3(12f, 2.4f, 0.18f));
     }
 
     private static void Curve(object output, string attribute, AnimationCurve curve)

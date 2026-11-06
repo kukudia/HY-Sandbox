@@ -1,0 +1,45 @@
+{
+  "sawTailAfterDestruction": true,
+  "samples": [
+    {
+      "elapsed": 0.6055921,
+      "frame": 42,
+      "debrisAlive": true,
+      "smokeParticles": [
+        4
+      ]
+    },
+    {
+      "elapsed": 1.405494,
+      "frame": 114,
+      "debrisAlive": true,
+      "smokeParticles": [
+        28
+      ]
+    },
+    {
+      "elapsed": 2.40257859,
+      "frame": 203,
+      "debrisAlive": false,
+      "smokeParticles": [
+        75
+      ]
+    },
+    {
+      "elapsed": 3.40031624,
+      "frame": 295,
+      "debrisAlive": false,
+      "smokeParticles": [
+        76
+      ]
+    },
+    {
+      "elapsed": 5.40891933,
+      "frame": 488,
+      "debrisAlive": false,
+      "smokeParticles": [
+        0
+      ]
+    }
+  ]
+}

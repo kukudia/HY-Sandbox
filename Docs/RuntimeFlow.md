@@ -8,18 +8,18 @@
 
     ## 残骸烟迹、激光与炮弹曳光
 
-源码推导：烟迹按刚体点速度和局部锚点跟随，停止后独立老化。激光有独立库模板和显示持续时间；炮弹物理仍由 TurretProjectile 负责，LateUpdate 只读取实际位置历史绘制短迹，池回收清空。
+源码推导：烟迹按刚体点速度和局部锚点跟随，中低速保留最低不透明度；Graph 共用烟粒绘制短促余火，停止后独立老化。激光有独立库模板和显示持续时间；炮弹物理仍由 TurretProjectile 负责，LateUpdate 只读取实际位置历史绘制短迹，池回收清空。
 
 ```mermaid
 flowchart TD
     A["DetachedPartSmokeTrail.Attach()"]
-    click A "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L31" "打开源码"
+    click A "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L33" "打开源码"
     B["DetachedPartSmokeTrail.Initialize()"]
-    click B "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L56" "打开源码"
+    click B "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L58" "打开源码"
     C["DetachedPartSmokeTrail.Update()"]
-    click C "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L88" "打开源码"
+    click C "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L90" "打开源码"
     D["DetachedPartSmokeTrail.StopAndRelease()"]
-    click D "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L122" "打开源码"
+    click D "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L126" "打开源码"
     E["VfxEffect.ReleaseAfterPlayback()"]
     click E "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L223" "打开源码"
     F["LaserTurret.Fire()"]
@@ -48,13 +48,13 @@ flowchart TD
     L --> G
 ```
 
-- [DetachedPartSmokeTrail.Attach](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L31)
+- [DetachedPartSmokeTrail.Attach](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L33)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|Attach -->
-- [DetachedPartSmokeTrail.Initialize](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L56)
+- [DetachedPartSmokeTrail.Initialize](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L58)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|Initialize -->
-- [DetachedPartSmokeTrail.Update](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L88)
+- [DetachedPartSmokeTrail.Update](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L90)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|Update -->
-- [DetachedPartSmokeTrail.StopAndRelease](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L122)
+- [DetachedPartSmokeTrail.StopAndRelease](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L126)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|StopAndRelease -->
 - [VfxEffect.ReleaseAfterPlayback](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L223)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|ReleaseAfterPlayback -->
