@@ -6,7 +6,65 @@
 
     维护：业务变化更新受影响图和 DEVELOPMENT；纯格式变化重新生成行号。`dotnet run --project Tools/CodeReadability -- --check .` 会拒绝失效符号。
 
-    ## 特效与音频资源管理（Editor）
+    ## 特效集中配置与挂载生命周期
+
+源码推导：制作工具只创建效果编号挂载点，统一库持有模板引用。首次启用/设置参数生成一次内容；组合控制器聚合子挂载点，禁用清理并保留内容供复用，销毁随拥有者释放。替换库影响新实例，不做逐帧热更新。
+
+```mermaid
+flowchart TD
+    A["BlockVfxBaker.Populate()"]
+    click A "../Assets/Editor/Presentation/Effects/BlockVfxBaker.cs#L64" "打开源码"
+    B["VfxCatalogMigration.Run()"]
+    click B "../Assets/Editor/Presentation/Resources/VfxCatalogMigration.cs#L18" "打开源码"
+    C["VfxEffect.OnEnable()"]
+    click C "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L94" "打开源码"
+    D["VfxEffect.EnsureContent()"]
+    click D "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L44" "打开源码"
+    E["BlockVfxLibrary.Resolve()"]
+    click E "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L46" "打开源码"
+    F["VfxEffect.SetIntensity()"]
+    click F "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L103" "打开源码"
+    G["VfxEffect.Clear()"]
+    click G "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L164" "打开源码"
+    H["VfxEffect.OnDisable()"]
+    click H "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L243" "打开源码"
+    I["VfxEffect.StopAndRelease()"]
+    click I "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L236" "打开源码"
+    J["VfxEffect.ReleaseAfterPlayback()"]
+    click J "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L223" "打开源码"
+    A -.->|保存挂载点后实例化| C
+    B -.->|迁移资产后实例化| C
+    C --> D
+    D --> E
+    C -->|自动播放| F
+    F --> D
+    H --> G
+    I --> F
+    I --> J
+```
+
+- [BlockVfxBaker.Populate](../Assets/Editor/Presentation/Effects/BlockVfxBaker.cs#L64)
+<!-- source: Assets/Editor/Presentation/Effects/BlockVfxBaker.cs|Populate -->
+- [VfxCatalogMigration.Run](../Assets/Editor/Presentation/Resources/VfxCatalogMigration.cs#L18)
+<!-- source: Assets/Editor/Presentation/Resources/VfxCatalogMigration.cs|Run -->
+- [VfxEffect.OnEnable](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L94)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|OnEnable -->
+- [VfxEffect.EnsureContent](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L44)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|EnsureContent -->
+- [BlockVfxLibrary.Resolve](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L46)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs|Resolve -->
+- [VfxEffect.SetIntensity](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L103)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|SetIntensity -->
+- [VfxEffect.Clear](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L164)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|Clear -->
+- [VfxEffect.OnDisable](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L243)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|OnDisable -->
+- [VfxEffect.StopAndRelease](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L236)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|StopAndRelease -->
+- [VfxEffect.ReleaseAfterPlayback](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L223)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|ReleaseAfterPlayback -->
+
+## 特效与音频资源管理（Editor）
 
 源码推导：窗口共用 GUID 资源索引、名称/路径搜索及直接引用查询；原始资产通过 Unity Inspector/Prefab Mode 编辑。项目变更使索引失效，关闭窗口释放内嵌 Inspector。运行时继续使用现有 BlockVfxLibrary.Play。
 
@@ -31,7 +89,7 @@ flowchart TD
     I["PresentationResourceWindow.ReleaseInspector()"]
     click I "../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L51" "打开源码"
     J["BlockVfxLibrary.Play()"]
-    click J "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L54" "打开源码"
+    click J "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L105" "打开源码"
     K["PresentationResourceWindow.Invalidate()"]
     click K "../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L44" "打开源码"
     A -.->|Unity GUI| B
@@ -63,7 +121,7 @@ flowchart TD
 <!-- source: Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs|OnDisable -->
 - [PresentationResourceWindow.ReleaseInspector](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L51)
 <!-- source: Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs|ReleaseInspector -->
-- [BlockVfxLibrary.Play](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L54)
+- [BlockVfxLibrary.Play](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L105)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs|Play -->
 - [PresentationResourceWindow.Invalidate](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L44)
 <!-- source: Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs|Invalidate -->
@@ -1656,7 +1714,7 @@ flowchart TD
     B["VisualEffectsManager.PlayBlockExplosion()"]
     click B "../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L314" "打开源码"
     C["BlockVfxLibrary.Play()"]
-    click C "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L54" "打开源码"
+    click C "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L105" "打开源码"
     D["TransientEffects.CreateLightFlash()"]
     click D "../Assets/Scripts/Features/Presentation/Effects/TransientEffects.cs#L48" "打开源码"
     E["LightFade.Update()"]
@@ -1728,7 +1786,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/VisualEffectsManager.cs|TryPlayBlockExplosion -->
 - [VisualEffectsManager.PlayBlockExplosion](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L314)
 <!-- source: Assets/Scripts/Features/Presentation/VisualEffectsManager.cs|PlayBlockExplosion -->
-- [BlockVfxLibrary.Play](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L54)
+- [BlockVfxLibrary.Play](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L105)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs|Play -->
 - [TransientEffects.CreateLightFlash](../Assets/Scripts/Features/Presentation/Effects/TransientEffects.cs#L48)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/TransientEffects.cs|CreateLightFlash -->

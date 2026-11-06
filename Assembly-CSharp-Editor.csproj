@@ -94,6 +94,7 @@
     <Compile Include="Assets\Editor\Diagnostics\PhysicsSandboxProbe.cs" />
     <Compile Include="Assets\Editor\World\Validation\Session\WorldSessionPerformanceChecks.cs" />
     <Compile Include="Assets\Editor\Power\ActivePowerPlayChecks.cs" />
+    <Compile Include="Assets\Editor\Presentation\Validation\VfxCatalogChecks.cs" />
     <Compile Include="Assets\Editor\Diagnostics\Benchmarks\FleetPresentationBenchmark.cs" />
     <Compile Include="Assets\Editor\Presentation\Resources\BlockVfxLibraryEditor.cs" />
     <Compile Include="Assets\Editor\Art\Authoring\SpaceKitCurator.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="Assets\Editor\Combat\Validation\EnemyBlueprintPoolChecks.cs" />
     <Compile Include="Assets\Editor\Salvage\SalvageAssetBaker.cs" />
     <Compile Include="Assets\Editor\World\Validation\WorldLab\WorldLabPersistenceChecks.cs" />
+    <Compile Include="Assets\Editor\Presentation\Resources\VfxCatalogMigration.cs" />
     <Compile Include="Assets\Editor\Presentation\Interface\ReturnStatusSetup.cs" />
     <Compile Include="Assets\Editor\Art\Validation\BlockArtDependencies.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Interface\SiegeUsabilityChecks.cs" />

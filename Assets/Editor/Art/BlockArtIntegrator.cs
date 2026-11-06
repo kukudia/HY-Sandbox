@@ -354,13 +354,13 @@ public static class BlockArtIntegrator
 
     private static VfxEffect Effect(Transform socket, string name, float scale)
     {
-        var go = (GameObject)PrefabUtility.InstantiatePrefab(BlockVfxBaker.Load(name), socket);
-        BlockArtDependencies.Unpack(go);
+        var go = new GameObject(name);
+        go.transform.SetParent(socket, false);
         go.transform.localPosition = Vector3.zero;
         go.transform.localRotation = Quaternion.identity;
         Vector3 inherited = socket.lossyScale;
         go.transform.localScale = new Vector3(scale / Mathf.Abs(inherited.x), scale / Mathf.Abs(inherited.y), scale / Mathf.Abs(inherited.z));
-        return go.GetComponent<VfxEffect>();
+        return BlockVfxBaker.Populate(go, name);
     }
 
     private static void BindThruster(GameObject root, Transform movingModel)
@@ -484,7 +484,10 @@ public static class BlockArtIntegrator
         }
 
         var controller = flight.AddComponent<VfxEffect>();
-        BlockVfxBaker.SetObjects(controller, "_graphs", flight.GetComponentsInChildren<UnityEngine.VFX.VisualEffect>(true));
+        BlockVfxBaker.SetObjects(
+            controller,
+            "_members",
+            flight.GetComponentsInChildren<VfxEffect>(true).Where(effect => effect != controller).ToArray());
         BlockVfxBaker.SetObject(bot, "_flightEffect", controller);
         var impact = Effect(Socket(root.transform, "RepairTargetEffect", Vector3.zero, Vector3.forward), "RepairContact", 1f);
         BlockVfxBaker.SetObject(bot, "_repairImpact", impact);

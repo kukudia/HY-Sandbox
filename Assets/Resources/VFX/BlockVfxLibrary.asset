@@ -23,3 +23,20 @@ MonoBehaviour:
   _detachedSmoke: {fileID: 4931720626457316845, guid: 198786bf0a0bf644bb1ef7833d5086cd, type: 3}
   _lineMaterial: {fileID: 2100000, guid: de261f394bd4ffb419dcd63ec6259497, type: 2}
   _beam: {fileID: 7531690552696130364, guid: 9d8d0b2b535acc443a08ae6db14ca241, type: 3}
+  _attached:
+  - id: Authored_1F80A96F40AB
+    prefab: {fileID: 2143782692530744560, guid: c1cdf5d074db4e34299c4db56e02669e, type: 3}
+  - id: Authored_8D030D292BBC
+    prefab: {fileID: 4389494546412399060, guid: bf5096dfdc76fb74aaf5da4bc4fe4458, type: 3}
+  - id: BotFlight
+    prefab: {fileID: 6674921695375079037, guid: ca533b3dd80588c4fb51328508addca1, type: 3}
+  - id: EnergyTrail
+    prefab: {fileID: 3807183053095599874, guid: afa294e2701c5df42a27a4dcf3b4c638, type: 3}
+  - id: HoverJet
+    prefab: {fileID: 690657762867257093, guid: ce46129e50188d84a8d9189d7929f4bb, type: 3}
+  - id: LootBurst
+    prefab: {fileID: 7761256427141195994, guid: 0081914e662ccfe4d896f5b82450aff0, type: 3}
+  - id: RepairContact
+    prefab: {fileID: 4986986897562106993, guid: fba70d96e21b45e44b1ec81f4a26d01b, type: 3}
+  - id: ThrusterJet
+    prefab: {fileID: 3538507841168796006, guid: 82cedb6258b64c44c89727209a1c5a44, type: 3}

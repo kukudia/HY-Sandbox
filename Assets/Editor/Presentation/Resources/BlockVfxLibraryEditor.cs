@@ -39,7 +39,21 @@ public sealed class BlockVfxLibraryEditor : Editor
         DrawReference(serializedObject.FindProperty("_detachedSmoke"), "残骸烟雾");
         DrawReference(serializedObject.FindProperty("_beam"), "能量光束");
         DrawReference(serializedObject.FindProperty("_lineMaterial"), "共享线条材质");
-        EditorGUILayout.HelpBox("这里配置已有运行时播放入口。喷口、机器人等 Prefab 内嵌特效请在资源列表打开对应 Prefab 编辑。", MessageType.Info);
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("挂载特效 / 集中配置", EditorStyles.boldLabel);
+        SerializedProperty attached = serializedObject.FindProperty("_attached");
+        for (int i = 0; i < attached.arraySize; i++)
+        {
+            SerializedProperty entry = attached.GetArrayElementAtIndex(i);
+            string id = entry.FindPropertyRelative("id").stringValue;
+            VfxEffect template = entry.FindPropertyRelative("prefab").objectReferenceValue as VfxEffect;
+            string label = id.StartsWith("Authored_") && template != null ? template.name : id;
+            DrawReference(entry.FindPropertyRelative("prefab"), label);
+        }
+
+        EditorGUILayout.HelpBox(
+            "替换此处 Prefab 后，新生成的挂载点统一使用新效果。挂载位置和缩放保留在玩法 Prefab；已生成实例需重新进入 Play 或重新生成。模板不得再引用库中的效果编号。",
+            MessageType.Info);
         serializedObject.ApplyModifiedProperties();
     }
 

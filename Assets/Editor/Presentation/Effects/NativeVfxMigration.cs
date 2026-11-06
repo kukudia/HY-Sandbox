@@ -96,7 +96,11 @@ public static class NativeVfxMigration
 
         foreach (var group in root.GetComponentsInChildren<VfxEffect>(true).Where(e => e.name == "Flight Effects"))
         {
-            BlockVfxBaker.SetObjects(group, "_graphs", group.GetComponentsInChildren<VisualEffect>(true));
+            BlockVfxBaker.SetObjects(
+                group,
+                "_members",
+                group.GetComponentsInChildren<VfxEffect>(true).Where(effect => effect != group).ToArray());
+            BlockVfxBaker.SetObjects(group, "_graphs", Array.Empty<Object>());
         }
 
         foreach (var bot in root.GetComponentsInChildren<Bot>(true))
@@ -155,7 +159,8 @@ public static class NativeVfxMigration
 
             foreach (var effect in root.GetComponentsInChildren<VfxEffect>(true))
             {
-                if (effect.Graphs.Length == 0 || effect.Graphs.Any(g => g == null))
+                bool bound = effect.IsGroup || (!string.IsNullOrEmpty(effect.EffectId) ? BlockVfxLibrary.Instance != null && BlockVfxLibrary.Instance.Resolve(effect.EffectId) != null : effect.Graphs.Length > 0 && effect.Graphs.All(g => g != null));
+                if (!bound)
                 {
                     errors.Add("Unbound controller: " + path + "/" + effect.name);
                 }

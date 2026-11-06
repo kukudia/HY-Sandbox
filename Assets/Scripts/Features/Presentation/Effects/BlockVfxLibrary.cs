@@ -5,6 +5,13 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "HY Sandbox/Block VFX Library")]
 public sealed class BlockVfxLibrary : ScriptableObject
 {
+    [System.Serializable]
+    public sealed class AttachedEffect
+    {
+        public string id;
+        public VfxEffect prefab;
+    }
+
     public enum Effect
     {
         Build,
@@ -32,7 +39,51 @@ public sealed class BlockVfxLibrary : ScriptableObject
     private Material _lineMaterial;
     [SerializeField]
     private VfxEffect _beam;
+    [SerializeField]
+    private AttachedEffect[] _attached = System.Array.Empty<AttachedEffect>();
     public VfxEffect Beam => _beam;
+
+    public VfxEffect Resolve(string id)
+    {
+        switch (id)
+        {
+            case "BuildBurst":
+                return Burst(Effect.Build);
+            case "BreakBurst":
+                return Burst(Effect.Break);
+            case "Explosion":
+                return Burst(Effect.Explosion);
+            case "SmokeBurst":
+                return Burst(Effect.Smoke);
+            case "RepairPulse":
+                return Burst(Effect.Repair);
+            case "MuzzleFlash":
+                return Burst(Effect.Muzzle);
+            case "ImpactBurst":
+                return Burst(Effect.Impact);
+            case "SteamLeak":
+            case "DetachedSmoke":
+                return _detachedSmoke;
+            case "EnergyBeam":
+                return _beam;
+        }
+
+        foreach (AttachedEffect entry in _attached)
+        {
+            if (entry != null && entry.id == id)
+            {
+                return entry.prefab;
+            }
+        }
+
+        return null;
+    }
+
+    private VfxEffect Burst(Effect kind)
+    {
+        int index = (int)kind;
+        return index >= 0 && index < _bursts.Length ? _bursts[index] : null;
+    }
 
     private static BlockVfxLibrary _instance;
     public static BlockVfxLibrary Instance
@@ -60,7 +111,7 @@ public sealed class BlockVfxLibrary : ScriptableObject
         }
 
         int index = (int)kind;
-        if (index >= library._bursts.Length || library._bursts[index] == null)
+        if (index < 0 || index >= library._bursts.Length || library._bursts[index] == null)
         {
             return SpawnResult.MissingPrefab;
         }

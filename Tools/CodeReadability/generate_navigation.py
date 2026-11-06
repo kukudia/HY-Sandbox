@@ -55,6 +55,21 @@ def main():
         )
 
     graph(
+        "特效集中配置与挂载生命周期",
+        "源码推导：制作工具只创建效果编号挂载点，统一库持有模板引用。首次启用/设置参数生成一次内容；组合控制器聚合子挂载点，禁用清理并保留内容供复用，销毁随拥有者释放。替换库影响新实例，不做逐帧热更新。",
+        {
+            "A": "BlockVfxBaker.Populate", "B": "VfxCatalogMigration.Run",
+            "C": "VfxEffect.OnEnable", "D": "VfxEffect.EnsureContent",
+            "E": "BlockVfxLibrary.Resolve", "F": "VfxEffect.SetIntensity",
+            "G": "VfxEffect.Clear", "H": "VfxEffect.OnDisable",
+            "I": "VfxEffect.StopAndRelease", "J": "VfxEffect.ReleaseAfterPlayback",
+        },
+        ['A -.->|保存挂载点后实例化| C', 'B -.->|迁移资产后实例化| C',
+         'C --> D', 'D --> E', 'C -->|自动播放| F', 'F --> D',
+         'H --> G', 'I --> F', 'I --> J'],
+    )
+
+    graph(
         "特效与音频资源管理（Editor）",
         "源码推导：窗口共用 GUID 资源索引、名称/路径搜索及直接引用查询；原始资产通过 Unity Inspector/Prefab Mode 编辑。项目变更使索引失效，关闭窗口释放内嵌 Inspector。运行时继续使用现有 BlockVfxLibrary.Play。",
         {

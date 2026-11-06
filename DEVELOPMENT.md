@@ -6,11 +6,13 @@ Unity 6000.6.8f1（URP / VFX Graph 17.6.0，Input System 1.20.1）。本文只�
 
 Unity 菜单 **Tools → HY Sandbox → 资源管理 → 特效与音频** 打开统一管理入口。`PresentationResourceWindow` 支持名称/路径搜索、类型筛选、定位、原生预览、直接引用查询和保存；Prefab 通过原生 Prefab Mode 编辑完整层级。扫描覆盖 Assets 下的 VFX Graph、包含 VfxEffect/VisualEffect/ParticleSystem/TrailRenderer/LineRenderer 的 Prefab 和 BlockVfxLibrary，可额外显示递归依赖。
 
-“运行时播放库”直接编辑既有 `Resources/VFX/BlockVfxLibrary.asset`，用 Build/Break/Explosion 等具名槽位显示原数组，提供缺失提醒和显式槽位修复。保留运行时入口、原 GUID 和所有场景/Prefab 引用，不复制一套资源库。喷口、机器人等内嵌效果仍由各自 Prefab 配置。
+“运行时播放库”直接编辑既有 `Resources/VFX/BlockVfxLibrary.asset`。一次性效果以及 HoverJet、ThrusterJet、BotFlight、RepairContact、EnergyTrail、LootBurst 和保留外观变体全部集中配置。29 个项目 Prefab 的 54 个挂载点只保留效果编号、位置、朝向、缩放和自动播放标记；3 个组合控制器只引用子挂载点。`VfxEffect.EnsureContent` 在 Play 首次使用时从库实例化模板，保留对象生命周期。替换库中 Prefab 后，新实例使用新效果；已有实例需重新生成或重新进入 Play。
+
+迁移保留原组件 fileID、Prefab GUID 和全部外观参数；两种特殊外观另存到 `Assets/Art/BlockVisuals/VFX/Variants`。`VfxCatalogMigration.Run` 可重复执行；`BlockArtIntegrator` / `BlockVfxBaker.Populate` 后续制作只建立编号挂载点，`PopulateTemplate` 只制作库模板。`BakeMissing` 不覆盖已有非空库选择。第三方原包未迁移，项目已使用的 Art/Resources 特效全部纳入。验证见 [集中引用迁移](Docs/Validation/2026-11-06-vfx-catalog.md)。
 
 特效与音频两页共用 `PresentationAssetIndex` 的 GUID 索引、搜索与直接引用查询，项目变更后刷新、窗口关闭释放内嵌 Inspector。音频已支持 AudioClip 浏览及 Unity 原生预览，后续音频播放策略可独立接入，不将 GPU 特效生命周期套用到音频。直接引用不包含字符串动态加载；依赖资源也可能服务于其他功能，编辑会影响其所有使用者。
 
-源码入口位于 `Assets/Editor/Presentation/Resources`，真实目录见 [CodeIndex](Docs/CodeIndex.md)，函数图见 [RuntimeFlow](Docs/RuntimeFlow.md)。本轮 Unity 导入与资源检查通过，213 个特效相关资产、408 个含依赖资产；详细验证、SDK 差异与视觉/听觉验证边界见 [资源管理验证](Docs/Validation/2026-11-06-resource-manager.md)。
+源码入口位于 `Assets/Editor/Presentation/Resources`，真实目录见 [CodeIndex](Docs/CodeIndex.md)，函数图见 [RuntimeFlow](Docs/RuntimeFlow.md)。集中迁移后资源索引为 215 个特效相关资产、410 个含依赖资产。初版编辑器验证见 [资源管理验证](Docs/Validation/2026-11-06-resource-manager.md)，最新 Play 与迁移保真验证见 [集中引用迁移](Docs/Validation/2026-11-06-vfx-catalog.md)。
 
 ## Unity 6.6 升级适配
 

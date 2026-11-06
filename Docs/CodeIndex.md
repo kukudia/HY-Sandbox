@@ -93,10 +93,12 @@ HY-Sandbox/
 │   │   │   ├── Resources/
 │   │   │   │   ├── BlockVfxLibraryEditor.cs
 │   │   │   │   ├── PresentationAssetIndex.cs
-│   │   │   │   └── PresentationResourceWindow.cs
+│   │   │   │   ├── PresentationResourceWindow.cs
+│   │   │   │   └── VfxCatalogMigration.cs
 │   │   │   └── Validation/
 │   │   │       ├── NativeVfxPlaybackProbe.cs
-│   │   │       └── PresentationResourceChecks.cs
+│   │   │       ├── PresentationResourceChecks.cs
+│   │   │       └── VfxCatalogChecks.cs
 │   │   ├── Salvage/
 │   │   │   ├── CargoReturnFileChecks.cs
 │   │   │   ├── SalvageAssetBaker.cs
@@ -718,8 +720,8 @@ HY-Sandbox/
 | BlockArtIntegrator | [`void ConfigureUniversal(GameObject root, Transform model)`](../Assets/Editor/Art/BlockArtIntegrator.cs#L415) | private static |
 | BlockArtIntegrator | [`void ConfigureTurret(GameObject root)`](../Assets/Editor/Art/BlockArtIntegrator.cs#L435) | private static |
 | BlockArtIntegrator | [`void ConfigureBot(GameObject root)`](../Assets/Editor/Art/BlockArtIntegrator.cs#L446) | private static |
-| BlockArtIntegrator | [`void ConfigureBay(GameObject root, Transform model)`](../Assets/Editor/Art/BlockArtIntegrator.cs#L499) | private static |
-| BlockArtIntegrator | [`void StatusLights(GameObject root, Transform model, bool generator)`](../Assets/Editor/Art/BlockArtIntegrator.cs#L521) | private static |
+| BlockArtIntegrator | [`void ConfigureBay(GameObject root, Transform model)`](../Assets/Editor/Art/BlockArtIntegrator.cs#L502) | private static |
+| BlockArtIntegrator | [`void StatusLights(GameObject root, Transform model, bool generator)`](../Assets/Editor/Art/BlockArtIntegrator.cs#L524) | private static |
 
 ## Assets/Editor/Art/Preview/BlockArtPreview.cs
 
@@ -1242,9 +1244,10 @@ HY-Sandbox/
 | BlockVfxBaker | [`bool Continuous(string name)`](../Assets/Editor/Presentation/Effects/BlockVfxBaker.cs#L62) | public static |
 | BlockVfxBaker | [`GameObject Load(string name)`](../Assets/Editor/Presentation/Effects/BlockVfxBaker.cs#L63) | public static |
 | BlockVfxBaker | [`VfxEffect Populate(GameObject root, string name, bool automatic = false)`](../Assets/Editor/Presentation/Effects/BlockVfxBaker.cs#L64) | public static |
-| BlockVfxBaker | [`void BakeMissing()`](../Assets/Editor/Presentation/Effects/BlockVfxBaker.cs#L109) | public static |
-| BlockVfxBaker | [`void SetObjects(Object target, string field, Object[] values)`](../Assets/Editor/Presentation/Effects/BlockVfxBaker.cs#L141) | public static |
-| BlockVfxBaker | [`void SetObject(Object target, string field, Object value)`](../Assets/Editor/Presentation/Effects/BlockVfxBaker.cs#L156) | public static |
+| BlockVfxBaker | [`VfxEffect PopulateTemplate(GameObject root, string name, bool automatic = false)`](../Assets/Editor/Presentation/Effects/BlockVfxBaker.cs#L74) | public static |
+| BlockVfxBaker | [`void BakeMissing()`](../Assets/Editor/Presentation/Effects/BlockVfxBaker.cs#L119) | public static |
+| BlockVfxBaker | [`void SetObjects(Object target, string field, Object[] values)`](../Assets/Editor/Presentation/Effects/BlockVfxBaker.cs#L187) | public static |
+| BlockVfxBaker | [`void SetObject(Object target, string field, Object value)`](../Assets/Editor/Presentation/Effects/BlockVfxBaker.cs#L202) | public static |
 
 ## Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs
 
@@ -1270,8 +1273,8 @@ HY-Sandbox/
 | --- | --- | --- |
 | NativeVfxMigration | [`void Run()`](../Assets/Editor/Presentation/Effects/NativeVfxMigration.cs#L16) | public static |
 | NativeVfxMigration | [`void Convert(GameObject root)`](../Assets/Editor/Presentation/Effects/NativeVfxMigration.cs#L48) | public static |
-| NativeVfxMigration | [`void RemoveParticles(GameObject root)`](../Assets/Editor/Presentation/Effects/NativeVfxMigration.cs#L123) | private static |
-| NativeVfxMigration | [`string Validate()`](../Assets/Editor/Presentation/Effects/NativeVfxMigration.cs#L136) | public static |
+| NativeVfxMigration | [`void RemoveParticles(GameObject root)`](../Assets/Editor/Presentation/Effects/NativeVfxMigration.cs#L127) | private static |
+| NativeVfxMigration | [`string Validate()`](../Assets/Editor/Presentation/Effects/NativeVfxMigration.cs#L140) | public static |
 
 ## Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs
 
@@ -1346,7 +1349,7 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BlockVfxLibraryEditor | [`void OnInspectorGUI()`](../Assets/Editor/Presentation/Resources/BlockVfxLibraryEditor.cs#L10) | public override |
-| BlockVfxLibraryEditor | [`void DrawReference(SerializedProperty property, string label)`](../Assets/Editor/Presentation/Resources/BlockVfxLibraryEditor.cs#L46) | private static |
+| BlockVfxLibraryEditor | [`void DrawReference(SerializedProperty property, string label)`](../Assets/Editor/Presentation/Resources/BlockVfxLibraryEditor.cs#L60) | private static |
 
 ## Assets/Editor/Presentation/Resources/PresentationAssetIndex.cs
 
@@ -1375,6 +1378,18 @@ HY-Sandbox/
 | PresentationResourceWindow | [`void SelectAsset(string guid)`](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L133) | private |
 | PresentationResourceWindow | [`void DrawDetails()`](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L149) | private |
 
+## Assets/Editor/Presentation/Resources/VfxCatalogMigration.cs
+
+// 职责：将项目 Prefab 中的内嵌效果迁移为集中库编号，保留挂载变换和现有组件身份。 // 入口：Run()；通过 Unity API 保存，重复执行跳过已迁移节点，差异外观保存为独立模板。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VfxCatalogMigration | [`void Run()`](../Assets/Editor/Presentation/Resources/VfxCatalogMigration.cs#L18) | public static |
+| VfxCatalogMigration | [`bool IsBuiltIn(string key)`](../Assets/Editor/Presentation/Resources/VfxCatalogMigration.cs#L135) | private static |
+| VfxCatalogMigration | [`VfxEffect CreateTemplate(VfxEffect source, string key)`](../Assets/Editor/Presentation/Resources/VfxCatalogMigration.cs#L151) | private static |
+| VfxCatalogMigration | [`string Signature(VfxEffect effect)`](../Assets/Editor/Presentation/Resources/VfxCatalogMigration.cs#L177) | public static |
+| VfxCatalogMigration | [`JObject ComponentData(Component component)`](../Assets/Editor/Presentation/Resources/VfxCatalogMigration.cs#L198) | private static |
+
 ## Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs
 
 // 职责：在 Play Mode 检查原生 VFX 播放、参数和停止生命周期。 // 入口：RunSuite() / Run() / RunPositionTest()。 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
@@ -1401,6 +1416,18 @@ HY-Sandbox/
 | PresentationResourceChecks | [`string Run()`](../Assets/Editor/Presentation/Validation/PresentationResourceChecks.cs#L10) | public static |
 | PresentationResourceChecks | [`void CheckLibraryEditing(string folder)`](../Assets/Editor/Presentation/Validation/PresentationResourceChecks.cs#L73) | private static |
 | PresentationResourceChecks | [`void Require(bool condition, string message)`](../Assets/Editor/Presentation/Validation/PresentationResourceChecks.cs#L106) | private static |
+
+## Assets/Editor/Presentation/Validation/VfxCatalogChecks.cs
+
+// 职责：验证集中配置的覆盖、持久引用和真实 Play 挂载/替换/停止生命周期。 // 入口：CheckAssets() / CheckPlay()；Play 检查只创建隔离夹具，finally 还原内存配置并清理。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VfxCatalogChecks | [`string CheckPreservation(string baselineRoot)`](../Assets/Editor/Presentation/Validation/VfxCatalogChecks.cs#L13) | public static |
+| VfxCatalogChecks | [`string CheckAssets()`](../Assets/Editor/Presentation/Validation/VfxCatalogChecks.cs#L45) | public static |
+| VfxCatalogChecks | [`string CheckPlay()`](../Assets/Editor/Presentation/Validation/VfxCatalogChecks.cs#L78) | public static |
+| VfxCatalogChecks | [`VfxEffect LoadAnchor(string path, string id, List<GameObject> fixtures)`](../Assets/Editor/Presentation/Validation/VfxCatalogChecks.cs#L144) | private static |
+| VfxCatalogChecks | [`void Require(bool value, string message)`](../Assets/Editor/Presentation/Validation/VfxCatalogChecks.cs#L152) | private static |
 
 ## Assets/Editor/Salvage/CargoReturnFileChecks.cs
 
@@ -3696,7 +3723,9 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BlockVfxLibrary | [`SpawnResult Play(Effect kind, Vector3 position, Quaternion rotation, float scale = 1f)`](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L54) | public static |
+| BlockVfxLibrary | [`VfxEffect Resolve(string id)`](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L46) | public |
+| BlockVfxLibrary | [`VfxEffect Burst(Effect kind)`](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L82) | private |
+| BlockVfxLibrary | [`SpawnResult Play(Effect kind, Vector3 position, Quaternion rotation, float scale = 1f)`](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L105) | public static |
 
 ## Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs
 
@@ -3782,21 +3811,22 @@ HY-Sandbox/
 
 ## Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs
 
-// 职责：封装原生 VFX Graph 的播放、停止、参数与尾烟处理。 // 入口：SetIntensity() / SetColor() / SetSpawnCount()。
+// 职责：由集中配置库生成挂载特效，封装播放、停止、参数与尾烟处理。 // 入口：SetIntensity() / SetColor() / SetSpawnCount()。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| VfxEffect | [`void OnEnable()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L26) | private |
-| VfxEffect | [`void SetIntensity(float value)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L34) | public |
-| VfxEffect | [`void SetColor(Color color)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L70) | public |
-| VfxEffect | [`void SetSpawnCount(float count)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L81) | public |
-| VfxEffect | [`void Clear()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L92) | public |
-| VfxEffect | [`void PlayOnce()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L107) | public |
-| VfxEffect | [`bool MakeRoomForBurst(bool priority)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L113) | public static |
-| VfxEffect | [`void ReleaseAfterPlayback(bool priority = false)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L151) | public |
-| VfxEffect | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L164) | public |
-| VfxEffect | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L171) | private |
-| VfxEffect | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L172) | private |
+| VfxEffect | [`void EnsureContent()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L44) | private |
+| VfxEffect | [`void OnEnable()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L94) | private |
+| VfxEffect | [`void SetIntensity(float value)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L103) | public |
+| VfxEffect | [`void SetColor(Color color)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L140) | public |
+| VfxEffect | [`void SetSpawnCount(float count)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L152) | public |
+| VfxEffect | [`void Clear()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L164) | public |
+| VfxEffect | [`void PlayOnce()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L179) | public |
+| VfxEffect | [`bool MakeRoomForBurst(bool priority)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L185) | public static |
+| VfxEffect | [`void ReleaseAfterPlayback(bool priority = false)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L223) | public |
+| VfxEffect | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L236) | public |
+| VfxEffect | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L243) | private |
+| VfxEffect | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L244) | private |
 
 ## Assets/Scripts/Features/Presentation/Interface/GlobalTextStyler.cs
 

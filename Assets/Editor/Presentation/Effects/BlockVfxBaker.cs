@@ -64,6 +64,16 @@ public static class BlockVfxBaker
     public static VfxEffect Populate(GameObject root, string name, bool automatic = false)
     {
         var controller = root.GetComponent<VfxEffect>() ?? root.AddComponent<VfxEffect>();
+        using var data = new SerializedObject(controller);
+        data.FindProperty("_effectId").stringValue = name == "Coin burst" ? "LootBurst" : name;
+        data.FindProperty("_playOnEnable").boolValue = automatic;
+        data.ApplyModifiedPropertiesWithoutUndo();
+        return controller;
+    }
+
+    public static VfxEffect PopulateTemplate(GameObject root, string name, bool automatic = false)
+    {
+        var controller = root.GetComponent<VfxEffect>() ?? root.AddComponent<VfxEffect>();
         var child = new GameObject("Graph - " + GraphName(name));
         child.transform.SetParent(root.transform, false);
         var graph = child.AddComponent<VisualEffect>();
@@ -119,7 +129,7 @@ public static class BlockVfxBaker
             var root = new GameObject(name);
             try
             {
-                Populate(root, name);
+                PopulateTemplate(root, name);
                 PrefabUtility.SaveAsPrefabAsset(root, Root + "/" + name + ".prefab");
             }
             finally
@@ -129,12 +139,48 @@ public static class BlockVfxBaker
         }
 
         var library = AssetDatabase.LoadAssetAtPath<BlockVfxLibrary>("Assets/Resources/VFX/BlockVfxLibrary.asset");
-        SetObjects(
-            library,
-            "_bursts",
-            new[] { "BuildBurst", "BreakBurst", "Explosion", "SmokeBurst", "RepairPulse", "MuzzleFlash", "ImpactBurst" }.Select(n => (Object)Load(n).GetComponent<VfxEffect>()).ToArray());
-        SetObject(library, "_detachedSmoke", Load("DetachedSmoke").GetComponent<VfxEffect>());
-        SetObject(library, "_beam", Load("EnergyBeam").GetComponent<VfxEffect>());
+        using (var data = new SerializedObject(library))
+        {
+            string[] names =
+            {
+                "BuildBurst",
+                "BreakBurst",
+                "Explosion",
+                "SmokeBurst",
+                "RepairPulse",
+                "MuzzleFlash",
+                "ImpactBurst"
+            };
+            var bursts = data.FindProperty("_bursts");
+            int previous = bursts.arraySize;
+            bursts.arraySize = names.Length;
+            for (int i = 0; i < names.Length; i++)
+            {
+                var slot = bursts.GetArrayElementAtIndex(i);
+                if (i >= previous || slot.objectReferenceValue == null)
+                {
+                    slot.objectReferenceValue = Load(names[i]).GetComponent<VfxEffect>();
+                }
+            }
+
+            foreach (var binding in new[]
+            {
+                ("_detachedSmoke", "DetachedSmoke"),
+                ("_beam", "EnergyBeam")
+            }
+
+            )
+            {
+                var slot = data.FindProperty(binding.Item1);
+                if (slot.objectReferenceValue == null)
+                {
+                    slot.objectReferenceValue = Load(binding.Item2).GetComponent<VfxEffect>();
+                }
+            }
+
+            data.ApplyModifiedPropertiesWithoutUndo();
+        }
+
         AssetDatabase.SaveAssets();
     }
 
