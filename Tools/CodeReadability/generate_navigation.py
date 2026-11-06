@@ -55,6 +55,14 @@ def main():
         )
 
     graph(
+        "GPU特效对象池与释放",
+        "源码推导：VFX Graph 在GPU模拟粒子；场景池按模板复用对象，没有活动对象数量硬上限，只限制闲置缓存。爆炸、残骸和陨石尾迹共用Rent，复位参数后播放，保留尾烟延时，再归还或清理。场景卸载释放池及子实例。",
+        {"A": "BlockVfxLibrary.Play", "B": "VfxEffectPool.Rent", "C": "VfxEffect.ResetForRent",
+         "D": "VfxEffect.PlayOnce", "E": "VfxEffect.ReleaseAfterPlayback", "F": "VfxEffect.FinishPlayback",
+         "G": "VfxEffectPool.Return", "H": "DetachedPartSmokeTrail.Initialize", "I": "VfxEffectPool.OnDestroy"},
+        ['A --> B', 'B --> C', 'A --> D', 'A --> E', 'H --> B', 'E -.->|到期| F', 'F --> G', 'G -.->|场景卸载| I'],
+    )
+    graph(
         "残骸烟迹、激光与炮弹曳光",
         "源码推导：烟迹按刚体点速度和局部锚点跟随，中低速保留最低不透明度；Graph 共用烟粒绘制短促余火；局部火焰按同刚体模型包围盒包裹并跟随中心/旋转，停止后独立老化。激光有独立库模板和显示持续时间；炮弹物理仍由 TurretProjectile 负责，LateUpdate 只读取实际位置历史绘制短迹，池回收清空。",
         {

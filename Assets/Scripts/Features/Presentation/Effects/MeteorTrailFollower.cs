@@ -8,6 +8,7 @@ public sealed class MeteorTrailFollower : MonoBehaviour
     private VfxEffect _effect;
     public void Initialize(Transform meteor, VfxEffect effect)
     {
+        enabled = true;
         _meteor = meteor;
         _body = meteor.GetComponent<Rigidbody>();
         _effect = effect;

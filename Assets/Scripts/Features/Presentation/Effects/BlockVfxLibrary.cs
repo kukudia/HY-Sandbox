@@ -1,6 +1,7 @@
 // 职责：管理可编辑 VFX 资源和效果生成/回收预算，供玩法调用。
 // 入口：Play()。
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [CreateAssetMenu(menuName = "HY Sandbox/Block VFX Library")]
 public sealed class BlockVfxLibrary : ScriptableObject
@@ -41,6 +42,12 @@ public sealed class BlockVfxLibrary : ScriptableObject
     private VfxEffect _beam;
     [SerializeField]
     private AttachedEffect[] _attached = System.Array.Empty<AttachedEffect>();
+    [SerializeField, Min(0), Tooltip("每个模板保留的闲置实例数；不限制正在播放的特效。")]
+    private int _maxIdlePerTemplate = 32;
+    [SerializeField, Min(0), Tooltip("每个场景闲置 GPU 特效的总缓存上限。")]
+    private int _maxIdleEffects = 128;
+    public int MaxIdlePerTemplate => Mathf.Max(0, _maxIdlePerTemplate);
+    public int MaxIdleEffects => Mathf.Max(0, _maxIdleEffects);
     public VfxEffect Beam => _beam;
 
     public VfxEffect Resolve(string id)
@@ -116,16 +123,10 @@ public sealed class BlockVfxLibrary : ScriptableObject
             return SpawnResult.MissingPrefab;
         }
 
-        bool priority = kind == Effect.Explosion;
-        if (!VfxEffect.MakeRoomForBurst(priority))
-        {
-            return SpawnResult.BurstLimit;
-        }
-
-        VfxEffect effect = Instantiate(library._bursts[index], position, rotation);
+        VfxEffect effect = VfxEffectPool.Rent(library._bursts[index], position, rotation, SceneManager.GetActiveScene());
         effect.transform.localScale *= Mathf.Clamp(scale, 0.05f, 4f);
         effect.PlayOnce();
-        effect.ReleaseAfterPlayback(priority);
+        effect.ReleaseAfterPlayback();
         return SpawnResult.Spawned;
     }
 }

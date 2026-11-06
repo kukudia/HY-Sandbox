@@ -6,7 +6,6 @@ using UnityEngine.VFX;
 [DisallowMultipleComponent]
 public class DetachedPartSmokeTrail : MonoBehaviour
 {
-    private const int MaxActiveTrails = 24;
     [Header("Detached Part Smoke")]
     [Min(0.1f)]
     public float effectLifetime = 6f;
@@ -26,7 +25,6 @@ public class DetachedPartSmokeTrail : MonoBehaviour
     private float _flameEnvelopeScale = 1.25f;
     [SerializeField, Range(1f, 4f)]
     private float _flameCoverage = 1.8f;
-    private static int activeTrailCount;
     private Rigidbody targetBody;
     private Transform emissionRoot;
     private Vector3 localAnchor;
@@ -35,7 +33,6 @@ public class DetachedPartSmokeTrail : MonoBehaviour
     private Bounds _modelBounds;
     private float intensity = 1f;
     private float elapsed;
-    private bool registered;
     private bool stopping;
     public static void Attach(Rigidbody body, Vector3 worldAnchor, float effectIntensity)
     {
@@ -51,14 +48,7 @@ public class DetachedPartSmokeTrail : MonoBehaviour
             return;
         }
 
-        if (activeTrailCount >= MaxActiveTrails)
-        {
-            return;
-        }
-
         DetachedPartSmokeTrail trail = body.gameObject.AddComponent<DetachedPartSmokeTrail>();
-        trail.registered = true;
-        activeTrailCount++;
         trail.Initialize(body, worldAnchor, effectIntensity);
     }
 
@@ -76,7 +66,7 @@ public class DetachedPartSmokeTrail : MonoBehaviour
         }
 
         // 烟迹拥有独立生命周期：残骸被禁用/回收时，已发射的世界空间烟粒仍可自然消散。
-        _smokeEffect = Instantiate(library.DetachedSmoke, worldAnchor, Quaternion.identity);
+        _smokeEffect = VfxEffectPool.Rent(library.DetachedSmoke, worldAnchor, Quaternion.identity, body.gameObject.scene);
         emissionRoot = _smokeEffect.transform;
         localAnchor = transform.InverseTransformPoint(worldAnchor);
         ConfigureEnvelope();
@@ -193,7 +183,6 @@ public class DetachedPartSmokeTrail : MonoBehaviour
 
         if (emissionRoot != null)
         {
-            emissionRoot.SetParent(null, true);
             _smokeEffect.ReleaseAfterPlayback();
         }
 
@@ -203,13 +192,6 @@ public class DetachedPartSmokeTrail : MonoBehaviour
     private void OnDestroy()
     {
         StopAndRelease();
-        if (!registered)
-        {
-            return;
-        }
-
-        registered = false;
-        activeTrailCount = Mathf.Max(0, activeTrailCount - 1);
     }
 
     private void OnDisable()

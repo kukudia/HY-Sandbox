@@ -25,11 +25,14 @@ public sealed class VfxEffect : MonoBehaviour
 
     private bool _emitting;
     private bool _oneShot;
-    private const int MaxActiveBursts = 64;
-    private static readonly List<VfxEffect> ActiveBursts = new List<VfxEffect>(MaxActiveBursts);
-    private bool _priorityBurst;
-    public static bool CanSpawnBurst => ActiveBursts.Count < MaxActiveBursts;
-
+    private VfxEffectPool _pool;
+    private VfxEffect _poolPrefab;
+    private float _releaseAt;
+    private Vector3 _prefabScale;
+    private Vector3[] _graphPositions;
+    private Quaternion[] _graphRotations;
+    private Vector3[] _graphScales;
+    private readonly List<VFXExposedProperty> _properties = new List<VFXExposedProperty>();
     public VisualEffect[] Graphs
     {
         get
@@ -182,45 +185,71 @@ public sealed class VfxEffect : MonoBehaviour
         SetIntensity(1f);
     }
 
-    public static bool MakeRoomForBurst(bool priority)
+    internal void ConfigurePool(VfxEffectPool pool, VfxEffect prefab)
     {
-        for (int i = ActiveBursts.Count - 1; i >= 0; i--)
+        _pool = pool;
+        _poolPrefab = prefab;
+        _prefabScale = transform.localScale;
+        _graphPositions = new Vector3[_graphs.Length];
+        _graphRotations = new Quaternion[_graphs.Length];
+        _graphScales = new Vector3[_graphs.Length];
+        for (int i = 0; i < _graphs.Length; i++)
         {
-            if (ActiveBursts[i] == null)
-            {
-                ActiveBursts.RemoveAt(i);
-            }
-        }
-
-        if (CanSpawnBurst)
-        {
-            return true;
-        }
-
-        if (!priority)
-        {
-            return false;
-        }
-
-        // Evict only lower-priority bursts; an explosion's light may still be active.
-        for (int i = 0; i < ActiveBursts.Count; i++)
-        {
-            VfxEffect oldest = ActiveBursts[i];
-            if (oldest._priorityBurst)
+            if (_graphs[i] == null)
             {
                 continue;
             }
 
-            ActiveBursts.RemoveAt(i);
-            oldest.gameObject.SetActive(false);
-            Destroy(oldest.gameObject);
-            return true;
+            _graphPositions[i] = _graphs[i].transform.localPosition;
+            _graphRotations[i] = _graphs[i].transform.localRotation;
+            _graphScales[i] = _graphs[i].transform.localScale;
         }
-
-        return false;
     }
 
-    public void ReleaseAfterPlayback(bool priority = false)
+    internal void ResetForRent(Vector3 position, Quaternion rotation)
+    {
+        CancelInvoke(nameof(FinishPlayback));
+        _oneShot = false;
+        _releaseAt = 0f;
+        transform.SetPositionAndRotation(position, rotation);
+        transform.localScale = _prefabScale;
+        MeteorTrailFollower follower = GetComponent<MeteorTrailFollower>();
+        if (follower != null)
+        {
+            follower.enabled = false;
+        }
+
+        for (int i = 0; i < _graphs.Length; i++)
+        {
+            VisualEffect graph = _graphs[i];
+            if (graph == null)
+            {
+                continue;
+            }
+
+            graph.transform.SetLocalPositionAndRotation(_graphPositions[i], _graphRotations[i]);
+            graph.transform.localScale = _graphScales[i];
+            // 归还模板的真实覆盖值，避免前一残骸的尺寸/颜色污染后一次使用。
+            VisualEffect source = _poolPrefab._graphs[i];
+            _properties.Clear();
+            graph.visualEffectAsset.GetExposedProperties(_properties);
+            foreach (VFXExposedProperty property in _properties)
+            {
+                if (property.type == typeof(float))
+                {
+                    graph.SetFloat(property.name, source.GetFloat(property.name));
+                }
+                else if (property.type == typeof(Vector3))
+                {
+                    graph.SetVector3(property.name, source.GetVector3(property.name));
+                }
+            }
+        }
+
+        Clear();
+    }
+
+    public void ReleaseAfterPlayback()
     {
         if (_oneShot)
         {
@@ -228,24 +257,46 @@ public sealed class VfxEffect : MonoBehaviour
         }
 
         _oneShot = true;
-        _priorityBurst = priority;
-        ActiveBursts.Add(this);
-        Destroy(gameObject, _releaseAfter);
+        _releaseAt = Time.time + _releaseAfter;
+        Invoke(nameof(FinishPlayback), _releaseAfter);
     }
 
     public void StopAndRelease()
     {
         SetIntensity(0f);
-        transform.SetParent(null, true);
+        if (_pool == null)
+        {
+            transform.SetParent(null, true);
+        }
+
         ReleaseAfterPlayback();
+    }
+
+    private void FinishPlayback()
+    {
+        if (!_oneShot || Time.time < _releaseAt)
+        {
+            return;
+        }
+
+        _oneShot = false;
+        CancelInvoke(nameof(FinishPlayback));
+        if (_pool != null)
+        {
+            _pool.Return(this, _poolPrefab);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void OnDisable() => Clear();
     private void OnDestroy()
     {
-        if (_oneShot)
+        if (_pool != null)
         {
-            ActiveBursts.Remove(this);
+            _pool.Forget(this);
         }
     }
 }

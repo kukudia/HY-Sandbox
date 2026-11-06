@@ -477,13 +477,12 @@ public class VisualEffectsManager : MonoBehaviour
         var library = BlockVfxLibrary.Instance;
         if (meteor.trailEffect == null && library != null && library.DetachedSmoke != null)
         {
-            meteor.trailEffect = Instantiate(library.DetachedSmoke, meteor.transform.position, Quaternion.identity);
+            meteor.trailEffect = VfxEffectPool.Rent(library.DetachedSmoke, meteor.transform.position, Quaternion.identity, meteor.gameObject.scene);
             meteor.trailEffect.transform.localScale = Vector3.Scale(meteor.trailEffect.transform.localScale, meteor.transform.lossyScale);
         }
 
         if (meteor.trailEffect != null)
         {
-            meteor.trailEffect.transform.SetParent(null, true);
             meteor.trailEffect.SetIntensity(1f);
             var follower = meteor.trailEffect.GetComponent<MeteorTrailFollower>() ?? meteor.trailEffect.gameObject.AddComponent<MeteorTrailFollower>();
             follower.Initialize(meteor.transform, meteor.trailEffect);

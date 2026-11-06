@@ -102,7 +102,8 @@ HY-Sandbox/
 │   │   │       ├── CombatVfxChecks.cs
 │   │   │       ├── NativeVfxPlaybackProbe.cs
 │   │   │       ├── PresentationResourceChecks.cs
-│   │   │       └── VfxCatalogChecks.cs
+│   │   │       ├── VfxCatalogChecks.cs
+│   │   │       └── VfxPoolChecks.cs
 │   │   ├── Salvage/
 │   │   │   ├── CargoReturnFileChecks.cs
 │   │   │   ├── SalvageAssetBaker.cs
@@ -354,7 +355,8 @@ HY-Sandbox/
 │           │   │   ├── StylizedBeamEffect.cs
 │           │   │   ├── TransientEffectPool.cs
 │           │   │   ├── TransientEffects.cs
-│           │   │   └── VfxEffect.cs
+│           │   │   ├── VfxEffect.cs
+│           │   │   └── VfxEffectPool.cs
 │           │   └── Interface/
 │           │       ├── GlobalTextStyler.cs
 │           │       ├── IconManager.cs
@@ -1427,13 +1429,13 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| CombatVfxCapture | [`void StartCapture()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L44) | public static |
-| CombatVfxCapture | [`void StartEnvelopeCapture()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L66) | public static |
-| CombatVfxCapture | [`void State(PlayModeStateChange state)`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L72) | private static |
-| CombatVfxCapture | [`void Setup()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L96) | private static |
-| CombatVfxCapture | [`void Tick()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L154) | private static |
-| CombatVfxCapture | [`void Capture(float elapsed)`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L195) | private static |
-| CombatVfxCapture | [`void Finish()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L227) | private static |
+| CombatVfxCapture | [`void StartCapture()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L45) | public static |
+| CombatVfxCapture | [`void StartEnvelopeCapture()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L67) | public static |
+| CombatVfxCapture | [`void State(PlayModeStateChange state)`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L73) | private static |
+| CombatVfxCapture | [`void Setup()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L97) | private static |
+| CombatVfxCapture | [`void Tick()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L156) | private static |
+| CombatVfxCapture | [`void Capture(float elapsed)`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L197) | private static |
+| CombatVfxCapture | [`void Finish()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L231) | private static |
 
 ## Assets/Editor/Presentation/Validation/CombatVfxChecks.cs
 
@@ -1482,6 +1484,15 @@ HY-Sandbox/
 | VfxCatalogChecks | [`string CheckPlay()`](../Assets/Editor/Presentation/Validation/VfxCatalogChecks.cs#L78) | public static |
 | VfxCatalogChecks | [`VfxEffect LoadAnchor(string path, string id, List<GameObject> fixtures)`](../Assets/Editor/Presentation/Validation/VfxCatalogChecks.cs#L144) | private static |
 | VfxCatalogChecks | [`void Require(bool value, string message)`](../Assets/Editor/Presentation/Validation/VfxCatalogChecks.cs#L152) | private static |
+
+## Assets/Editor/Presentation/Validation/VfxPoolChecks.cs
+
+// 职责：验证 GPU 特效峰值扩容、模板复位和旧尾烟名额限制的移除。 // 入口：RunPlay()；仅在隔离 Play 场景执行，销毁本次创建的池和刚体。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VfxPoolChecks | [`string RunPlay()`](../Assets/Editor/Presentation/Validation/VfxPoolChecks.cs#L12) | public static |
+| VfxPoolChecks | [`void Require(bool condition, string message)`](../Assets/Editor/Presentation/Validation/VfxPoolChecks.cs#L118) | private static |
 
 ## Assets/Editor/Salvage/CargoReturnFileChecks.cs
 
@@ -3788,9 +3799,9 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BlockVfxLibrary | [`VfxEffect Resolve(string id)`](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L46) | public |
-| BlockVfxLibrary | [`VfxEffect Burst(Effect kind)`](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L82) | private |
-| BlockVfxLibrary | [`SpawnResult Play(Effect kind, Vector3 position, Quaternion rotation, float scale = 1f)`](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L105) | public static |
+| BlockVfxLibrary | [`VfxEffect Resolve(string id)`](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L53) | public |
+| BlockVfxLibrary | [`VfxEffect Burst(Effect kind)`](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L89) | private |
+| BlockVfxLibrary | [`SpawnResult Play(Effect kind, Vector3 position, Quaternion rotation, float scale = 1f)`](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L112) | public static |
 
 ## Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs
 
@@ -3798,15 +3809,15 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| DetachedPartSmokeTrail | [`void Attach(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L40) | public static |
-| DetachedPartSmokeTrail | [`void Initialize(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L65) | private |
-| DetachedPartSmokeTrail | [`void ConfigureEnvelope()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L86) | private |
-| DetachedPartSmokeTrail | [`void UpdateEnvelope()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L116) | private |
-| DetachedPartSmokeTrail | [`void Refresh(Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L132) | private |
-| DetachedPartSmokeTrail | [`void Update()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L144) | private |
-| DetachedPartSmokeTrail | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L181) | private |
-| DetachedPartSmokeTrail | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L203) | private |
-| DetachedPartSmokeTrail | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L215) | private |
+| DetachedPartSmokeTrail | [`void Attach(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L37) | public static |
+| DetachedPartSmokeTrail | [`void Initialize(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L55) | private |
+| DetachedPartSmokeTrail | [`void ConfigureEnvelope()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L76) | private |
+| DetachedPartSmokeTrail | [`void UpdateEnvelope()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L106) | private |
+| DetachedPartSmokeTrail | [`void Refresh(Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L122) | private |
+| DetachedPartSmokeTrail | [`void Update()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L134) | private |
+| DetachedPartSmokeTrail | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L171) | private |
+| DetachedPartSmokeTrail | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L192) | private |
+| DetachedPartSmokeTrail | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L197) | private |
 
 ## Assets/Scripts/Features/Presentation/Effects/LightFade.cs
 
@@ -3834,8 +3845,8 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | MeteorTrailFollower | [`void Initialize(Transform meteor, VfxEffect effect)`](../Assets/Scripts/Features/Presentation/Effects/MeteorTrailFollower.cs#L9) | public |
-| MeteorTrailFollower | [`void LateUpdate()`](../Assets/Scripts/Features/Presentation/Effects/MeteorTrailFollower.cs#L17) | private |
-| MeteorTrailFollower | [`void Follow()`](../Assets/Scripts/Features/Presentation/Effects/MeteorTrailFollower.cs#L35) | private |
+| MeteorTrailFollower | [`void LateUpdate()`](../Assets/Scripts/Features/Presentation/Effects/MeteorTrailFollower.cs#L18) | private |
+| MeteorTrailFollower | [`void Follow()`](../Assets/Scripts/Features/Presentation/Effects/MeteorTrailFollower.cs#L36) | private |
 
 ## Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs
 
@@ -3883,18 +3894,31 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| VfxEffect | [`void EnsureContent()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L44) | private |
-| VfxEffect | [`void OnEnable()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L94) | private |
-| VfxEffect | [`void SetIntensity(float value)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L103) | public |
-| VfxEffect | [`void SetColor(Color color)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L140) | public |
-| VfxEffect | [`void SetSpawnCount(float count)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L152) | public |
-| VfxEffect | [`void Clear()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L164) | public |
-| VfxEffect | [`void PlayOnce()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L179) | public |
-| VfxEffect | [`bool MakeRoomForBurst(bool priority)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L185) | public static |
-| VfxEffect | [`void ReleaseAfterPlayback(bool priority = false)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L223) | public |
-| VfxEffect | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L236) | public |
-| VfxEffect | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L243) | private |
-| VfxEffect | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L244) | private |
+| VfxEffect | [`void EnsureContent()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L47) | private |
+| VfxEffect | [`void OnEnable()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L97) | private |
+| VfxEffect | [`void SetIntensity(float value)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L106) | public |
+| VfxEffect | [`void SetColor(Color color)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L143) | public |
+| VfxEffect | [`void SetSpawnCount(float count)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L155) | public |
+| VfxEffect | [`void Clear()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L167) | public |
+| VfxEffect | [`void PlayOnce()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L182) | public |
+| VfxEffect | [`void ConfigurePool(VfxEffectPool pool, VfxEffect prefab)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L188) | internal |
+| VfxEffect | [`void ResetForRent(Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L209) | internal |
+| VfxEffect | [`void ReleaseAfterPlayback()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L252) | public |
+| VfxEffect | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L264) | public |
+| VfxEffect | [`void FinishPlayback()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L275) | private |
+| VfxEffect | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L294) | private |
+| VfxEffect | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L295) | private |
+
+## Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs
+
+// 职责：按场景和模板复用 GPU 特效；活动实例按需扩容，仅限制闲置缓存。 // 入口：Rent() / Return()；场景卸载销毁池及其全部实例。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VfxEffectPool | [`VfxEffect Rent(VfxEffect prefab, Vector3 position, Quaternion rotation, Scene scene)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L24) | public static |
+| VfxEffectPool | [`void Return(VfxEffect effect, VfxEffect prefab)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L72) | internal |
+| VfxEffectPool | [`void Forget(VfxEffect effect)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L95) | internal |
+| VfxEffectPool | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L96) | private |
 
 ## Assets/Scripts/Features/Presentation/Interface/GlobalTextStyler.cs
 
@@ -4078,7 +4102,7 @@ HY-Sandbox/
 | VisualEffectsManager | [`void UpdateGhostPreview(Transform ghost, bool isBlocked)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L460) | private |
 | VisualEffectsManager | [`void ClearGhostPreview()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L465) | private |
 | VisualEffectsManager | [`void DecorateMeteor(Meteor meteor)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L469) | private |
-| VisualEffectsManager | [`void PlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L510) | private |
+| VisualEffectsManager | [`void PlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L509) | private |
 
 ## Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs
 

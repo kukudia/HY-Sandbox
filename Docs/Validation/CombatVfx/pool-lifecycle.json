@@ -1,0 +1,107 @@
+{
+  "sawTailAfterDestruction": true,
+  "samples": [
+    {
+      "elapsed": 0.6031353,
+      "frame": 49,
+      "debrisAlive": true,
+      "smokeParticles": [
+        3
+      ],
+      "fireParticles": [
+        3
+      ],
+      "activePoolEffects": 1,
+      "idlePoolEffects": 0,
+      "fireCenterError": 2.31169338E-07,
+      "fireRotationError": 0.0,
+      "flameSize": [
+        1.17
+      ]
+    },
+    {
+      "elapsed": 1.40157962,
+      "frame": 120,
+      "debrisAlive": true,
+      "smokeParticles": [
+        27
+      ],
+      "fireParticles": [
+        16
+      ],
+      "activePoolEffects": 1,
+      "idlePoolEffects": 0,
+      "fireCenterError": 2.401151E-07,
+      "fireRotationError": 0.0,
+      "flameSize": [
+        1.17
+      ]
+    },
+    {
+      "elapsed": 2.40818381,
+      "frame": 211,
+      "debrisAlive": false,
+      "smokeParticles": [
+        74
+      ],
+      "fireParticles": [
+        15
+      ],
+      "activePoolEffects": 1,
+      "idlePoolEffects": 0,
+      "fireCenterError": 0.0,
+      "fireRotationError": 0.0,
+      "flameSize": [
+        1.17000008
+      ]
+    },
+    {
+      "elapsed": 3.40533137,
+      "frame": 303,
+      "debrisAlive": false,
+      "smokeParticles": [
+        77
+      ],
+      "fireParticles": [
+        0
+      ],
+      "activePoolEffects": 1,
+      "idlePoolEffects": 0,
+      "fireCenterError": 0.0,
+      "fireRotationError": 0.0,
+      "flameSize": [
+        1.17000008
+      ]
+    },
+    {
+      "elapsed": 5.402222,
+      "frame": 495,
+      "debrisAlive": false,
+      "smokeParticles": [
+        0
+      ],
+      "fireParticles": [
+        0
+      ],
+      "activePoolEffects": 1,
+      "idlePoolEffects": 0,
+      "fireCenterError": 0.0,
+      "fireRotationError": 0.0,
+      "flameSize": [
+        1.17000008
+      ]
+    },
+    {
+      "elapsed": 7.008716,
+      "frame": 647,
+      "debrisAlive": false,
+      "smokeParticles": [],
+      "fireParticles": [],
+      "activePoolEffects": 0,
+      "idlePoolEffects": 1,
+      "fireCenterError": 0.0,
+      "fireRotationError": 0.0,
+      "flameSize": []
+    }
+  ]
+}

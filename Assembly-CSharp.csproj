@@ -246,6 +246,7 @@
     <Compile Include="Assets\Scripts\Features\Building\Interaction\BuildHandleAxis.cs" />
     <Compile Include="Assets\Scripts\Features\Power\Power.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\MeteorLightToken.cs" />
+    <Compile Include="Assets\Scripts\Features\Presentation\Effects\VfxEffectPool.cs" />
     <Compile Include="Assets\Scripts\Features\World\Buildings\Data\WorldBuildingLibrary.cs" />
     <Compile Include="Assets\Scripts\Features\Power\Presentation\PowerConnectionVisuals.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\Turret.cs" />

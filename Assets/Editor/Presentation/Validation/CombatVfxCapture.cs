@@ -21,7 +21,8 @@ public static class CombatVfxCapture
         1.4f,
         2.4f,
         3.4f,
-        5.4f
+        5.4f,
+        7f
     };
     private static readonly List<object> Rows = new List<object>();
     private static Camera camera;
@@ -97,6 +98,7 @@ public static class CombatVfxCapture
     {
         Directory.CreateDirectory("Logs/CombatVfxPreview");
         File.WriteAllText("Logs/CombatVfxPreview/checks.txt", CombatVfxChecks.RunPlay());
+        File.WriteAllText("Logs/CombatVfxPreview/pool-checks.txt", VfxPoolChecks.RunPlay());
         background = Application.runInBackground;
         Application.runInBackground = true;
         camera = new GameObject("Combat VFX camera").AddComponent<Camera>();
@@ -218,6 +220,8 @@ public static class CombatVfxCapture
             debrisAlive = debris != null,
             smokeParticles = smoke.Select(effect => effect.aliveParticleCount).ToArray(),
             fireParticles = fire.Select(effect => effect.aliveParticleCount).ToArray(),
+            activePoolEffects = Object.FindObjectsByType<VfxEffectPool>().Sum(pool => pool.ActiveCount),
+            idlePoolEffects = Object.FindObjectsByType<VfxEffectPool>().Sum(pool => pool.IdleCount),
             fireCenterError = debris != null && fire.Length > 0 ? Vector3.Distance(debris.transform.position, fire[0].transform.position) : 0f,
             fireRotationError = debris != null && fire.Length > 0 ? Quaternion.Angle(debris.transform.rotation, fire[0].transform.rotation) : 0f,
             flameSize = fire.Select(effect => effect.GetFloat("FlameSize")).ToArray()

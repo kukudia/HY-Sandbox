@@ -6,26 +6,79 @@
 
     维护：业务变化更新受影响图和 DEVELOPMENT；纯格式变化重新生成行号。`dotnet run --project Tools/CodeReadability -- --check .` 会拒绝失效符号。
 
-    ## 残骸烟迹、激光与炮弹曳光
+    ## GPU特效对象池与释放
+
+源码推导：VFX Graph 在GPU模拟粒子；场景池按模板复用对象，没有活动对象数量硬上限，只限制闲置缓存。爆炸、残骸和陨石尾迹共用Rent，复位参数后播放，保留尾烟延时，再归还或清理。场景卸载释放池及子实例。
+
+```mermaid
+flowchart TD
+    A["BlockVfxLibrary.Play()"]
+    click A "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L112" "打开源码"
+    B["VfxEffectPool.Rent()"]
+    click B "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L24" "打开源码"
+    C["VfxEffect.ResetForRent()"]
+    click C "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L209" "打开源码"
+    D["VfxEffect.PlayOnce()"]
+    click D "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L182" "打开源码"
+    E["VfxEffect.ReleaseAfterPlayback()"]
+    click E "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L252" "打开源码"
+    F["VfxEffect.FinishPlayback()"]
+    click F "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L275" "打开源码"
+    G["VfxEffectPool.Return()"]
+    click G "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L72" "打开源码"
+    H["DetachedPartSmokeTrail.Initialize()"]
+    click H "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L55" "打开源码"
+    I["VfxEffectPool.OnDestroy()"]
+    click I "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L96" "打开源码"
+    A --> B
+    B --> C
+    A --> D
+    A --> E
+    H --> B
+    E -.->|到期| F
+    F --> G
+    G -.->|场景卸载| I
+```
+
+- [BlockVfxLibrary.Play](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L112)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs|Play -->
+- [VfxEffectPool.Rent](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L24)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs|Rent -->
+- [VfxEffect.ResetForRent](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L209)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|ResetForRent -->
+- [VfxEffect.PlayOnce](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L182)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|PlayOnce -->
+- [VfxEffect.ReleaseAfterPlayback](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L252)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|ReleaseAfterPlayback -->
+- [VfxEffect.FinishPlayback](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L275)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|FinishPlayback -->
+- [VfxEffectPool.Return](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L72)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs|Return -->
+- [DetachedPartSmokeTrail.Initialize](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L55)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|Initialize -->
+- [VfxEffectPool.OnDestroy](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L96)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs|OnDestroy -->
+
+## 残骸烟迹、激光与炮弹曳光
 
 源码推导：烟迹按刚体点速度和局部锚点跟随，中低速保留最低不透明度；Graph 共用烟粒绘制短促余火；局部火焰按同刚体模型包围盒包裹并跟随中心/旋转，停止后独立老化。激光有独立库模板和显示持续时间；炮弹物理仍由 TurretProjectile 负责，LateUpdate 只读取实际位置历史绘制短迹，池回收清空。
 
 ```mermaid
 flowchart TD
     A["DetachedPartSmokeTrail.Attach()"]
-    click A "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L40" "打开源码"
+    click A "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L37" "打开源码"
     B["DetachedPartSmokeTrail.Initialize()"]
-    click B "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L65" "打开源码"
+    click B "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L55" "打开源码"
     C["DetachedPartSmokeTrail.Update()"]
-    click C "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L144" "打开源码"
+    click C "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L134" "打开源码"
     D["DetachedPartSmokeTrail.StopAndRelease()"]
-    click D "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L181" "打开源码"
+    click D "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L171" "打开源码"
     M["DetachedPartSmokeTrail.ConfigureEnvelope()"]
-    click M "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L86" "打开源码"
+    click M "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L76" "打开源码"
     N["DetachedPartSmokeTrail.UpdateEnvelope()"]
-    click N "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L116" "打开源码"
+    click N "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L106" "打开源码"
     E["VfxEffect.ReleaseAfterPlayback()"]
-    click E "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L223" "打开源码"
+    click E "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L252" "打开源码"
     F["LaserTurret.Fire()"]
     click F "../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L39" "打开源码"
     G["StylizedBeamEffect.SetVisible()"]
@@ -55,19 +108,19 @@ flowchart TD
     L --> G
 ```
 
-- [DetachedPartSmokeTrail.Attach](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L40)
+- [DetachedPartSmokeTrail.Attach](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L37)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|Attach -->
-- [DetachedPartSmokeTrail.Initialize](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L65)
+- [DetachedPartSmokeTrail.Initialize](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L55)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|Initialize -->
-- [DetachedPartSmokeTrail.Update](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L144)
+- [DetachedPartSmokeTrail.Update](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L134)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|Update -->
-- [DetachedPartSmokeTrail.StopAndRelease](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L181)
+- [DetachedPartSmokeTrail.StopAndRelease](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L171)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|StopAndRelease -->
-- [DetachedPartSmokeTrail.ConfigureEnvelope](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L86)
+- [DetachedPartSmokeTrail.ConfigureEnvelope](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L76)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|ConfigureEnvelope -->
-- [DetachedPartSmokeTrail.UpdateEnvelope](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L116)
+- [DetachedPartSmokeTrail.UpdateEnvelope](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L106)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|UpdateEnvelope -->
-- [VfxEffect.ReleaseAfterPlayback](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L223)
+- [VfxEffect.ReleaseAfterPlayback](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L252)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|ReleaseAfterPlayback -->
 - [LaserTurret.Fire](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L39)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs|Fire -->
@@ -95,21 +148,21 @@ flowchart TD
     B["VfxCatalogMigration.Run()"]
     click B "../Assets/Editor/Presentation/Resources/VfxCatalogMigration.cs#L18" "打开源码"
     C["VfxEffect.OnEnable()"]
-    click C "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L94" "打开源码"
+    click C "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L97" "打开源码"
     D["VfxEffect.EnsureContent()"]
-    click D "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L44" "打开源码"
+    click D "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L47" "打开源码"
     E["BlockVfxLibrary.Resolve()"]
-    click E "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L46" "打开源码"
+    click E "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L53" "打开源码"
     F["VfxEffect.SetIntensity()"]
-    click F "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L103" "打开源码"
+    click F "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L106" "打开源码"
     G["VfxEffect.Clear()"]
-    click G "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L164" "打开源码"
+    click G "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L167" "打开源码"
     H["VfxEffect.OnDisable()"]
-    click H "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L243" "打开源码"
+    click H "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L294" "打开源码"
     I["VfxEffect.StopAndRelease()"]
-    click I "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L236" "打开源码"
+    click I "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L264" "打开源码"
     J["VfxEffect.ReleaseAfterPlayback()"]
-    click J "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L223" "打开源码"
+    click J "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L252" "打开源码"
     A -.->|保存挂载点后实例化| C
     B -.->|迁移资产后实例化| C
     C --> D
@@ -125,21 +178,21 @@ flowchart TD
 <!-- source: Assets/Editor/Presentation/Effects/BlockVfxBaker.cs|Populate -->
 - [VfxCatalogMigration.Run](../Assets/Editor/Presentation/Resources/VfxCatalogMigration.cs#L18)
 <!-- source: Assets/Editor/Presentation/Resources/VfxCatalogMigration.cs|Run -->
-- [VfxEffect.OnEnable](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L94)
+- [VfxEffect.OnEnable](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L97)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|OnEnable -->
-- [VfxEffect.EnsureContent](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L44)
+- [VfxEffect.EnsureContent](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L47)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|EnsureContent -->
-- [BlockVfxLibrary.Resolve](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L46)
+- [BlockVfxLibrary.Resolve](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L53)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs|Resolve -->
-- [VfxEffect.SetIntensity](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L103)
+- [VfxEffect.SetIntensity](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L106)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|SetIntensity -->
-- [VfxEffect.Clear](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L164)
+- [VfxEffect.Clear](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L167)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|Clear -->
-- [VfxEffect.OnDisable](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L243)
+- [VfxEffect.OnDisable](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L294)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|OnDisable -->
-- [VfxEffect.StopAndRelease](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L236)
+- [VfxEffect.StopAndRelease](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L264)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|StopAndRelease -->
-- [VfxEffect.ReleaseAfterPlayback](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L223)
+- [VfxEffect.ReleaseAfterPlayback](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L252)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|ReleaseAfterPlayback -->
 
 ## 特效与音频资源管理（Editor）
@@ -167,7 +220,7 @@ flowchart TD
     I["PresentationResourceWindow.ReleaseInspector()"]
     click I "../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L51" "打开源码"
     J["BlockVfxLibrary.Play()"]
-    click J "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L105" "打开源码"
+    click J "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L112" "打开源码"
     K["PresentationResourceWindow.Invalidate()"]
     click K "../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L44" "打开源码"
     A -.->|Unity GUI| B
@@ -199,7 +252,7 @@ flowchart TD
 <!-- source: Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs|OnDisable -->
 - [PresentationResourceWindow.ReleaseInspector](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L51)
 <!-- source: Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs|ReleaseInspector -->
-- [BlockVfxLibrary.Play](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L105)
+- [BlockVfxLibrary.Play](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L112)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs|Play -->
 - [PresentationResourceWindow.Invalidate](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L44)
 <!-- source: Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs|Invalidate -->
@@ -1792,7 +1845,7 @@ flowchart TD
     B["VisualEffectsManager.PlayBlockExplosion()"]
     click B "../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L314" "打开源码"
     C["BlockVfxLibrary.Play()"]
-    click C "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L105" "打开源码"
+    click C "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L112" "打开源码"
     D["TransientEffects.CreateLightFlash()"]
     click D "../Assets/Scripts/Features/Presentation/Effects/TransientEffects.cs#L48" "打开源码"
     E["LightFade.Update()"]
@@ -1864,7 +1917,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/VisualEffectsManager.cs|TryPlayBlockExplosion -->
 - [VisualEffectsManager.PlayBlockExplosion](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L314)
 <!-- source: Assets/Scripts/Features/Presentation/VisualEffectsManager.cs|PlayBlockExplosion -->
-- [BlockVfxLibrary.Play](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L105)
+- [BlockVfxLibrary.Play](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L112)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs|Play -->
 - [TransientEffects.CreateLightFlash](../Assets/Scripts/Features/Presentation/Effects/TransientEffects.cs#L48)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/TransientEffects.cs|CreateLightFlash -->
