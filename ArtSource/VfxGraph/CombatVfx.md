@@ -1,0 +1,19 @@
+# 战斗特效规格与源制作
+
+2026-11-06；Unity 6000.6.8f1 / URP 与 VFX Graph 17.6.0；桌面 Compute 平台。目标是在中远景辨认残骸方向、激光射线与炮弹运动。以正交可视高度 12m 和 24m 作为初始视觉验证基线，不代表全部实战镜头。
+
+| 资产 | 形态与参数 | 预算与编辑入口 |
+| --- | --- | --- |
+| DebrisSmoke | 世界空间灰黑烟团；8×8 图集逐帧扩散，粒子寿命 2.8s、尺寸曲线 0.35→2.2m；向上漂移并横向散开 | 38 粒子/s、容量 192，保留最多 24 条烟迹门槛；Prefab 停止后 4s 回收 |
+| LaserBeam | 沿局部 +Z 的收尖亮芯与两层橙红外晕；激光宽度参数 0.16m，可见时间 0.2s；外晕比亮芯更宽 | 单粒子、3 个 Mesh Output；无附加动态灯；LaserTurret Inspector 调宽度/时间/HDR 色 |
+| ProjectileTracer | 与激光共用 CombatBeam 图，独立 Prefab 外晕强度 0.7；真实世界位置历史形成 0.09s 短迹，宽度 0.1m、长度最多 7m | 每炮弹 32 槽固定环形缓冲；池化重用时清空；TurretShell 上 ProjectileTracer 调参 |
+
+源制作入口：`Assets/Editor/Presentation/Effects/CombatVfxBaker.cs`。通过 Editor Graph API 创建真实 `.vfx`、Prefab 和 Mesh 资产；菜单 **Tools / HY Sandbox / 资源管理 / 制作战斗特效**。只补缺失资产，不覆盖已存在图、模板或非空库选择；首次将旧 DetachedSmoke 默认槽迁入 DebrisSmoke。若需要全新再生，在受版本控制的隔离分支或备份后移走目标资产再执行，不能覆盖用户手改图。
+
+输出：`Assets/Art/VFX/Graphs/{DebrisSmoke,CombatBeam}.vfx`，`Assets/Art/BlockVisuals/VFX/{DebrisSmoke,LaserBeam,ProjectileTracer}.prefab`，以及 `CombatBeamMesh.asset`。Mesh 为 48 顶点、72 三角形、局部 Y 轴长度 2，经 Graph 旋转缩放映射到局部 +Z 长度 1；3 个输出共 216 三角形/束。使用纯色，UV 不适用；无碰撞、骨骼、LOD。
+
+烟雾使用现有 UNI `uni_smoke_cloud.png` 图集及其原导入设置，不重新生成或复制纹理；来源与许可继承项目已有 UNI VFX 包，见 `Assets/Art/VFX/Sources.json`。光束 Mesh、曲线与新图由本项目制作脚本生成。没有外部生成服务或付费资源调用。
+
+集中库入口：残骸烟雾槽、LaserBeam、ProjectileTracer。普通 EnergyBeam 继续服务维修等效果，不扩大它们的宽度/亮度。伤害、物理弹速、弹道扫掠和炮塔射击频率不改。残骸销毁后停止发射，但已有烟粒继续自然老化。当前陨石同样通过共享残骸烟雾槽取得世界空间烟迹。
+
+验证源：`CombatVfxCapture.StartCapture` 拍摄近/远两档视野、销毁后尾烟；`CombatVfxChecks.RunPlay` 检查真实炮弹池复用和历史重置。最新验证记录见 `Docs/Validation/2026-11-06-combat-vfx.md`。

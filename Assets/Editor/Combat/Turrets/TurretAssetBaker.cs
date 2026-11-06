@@ -136,6 +136,7 @@ public static class TurretAssetBaker
             root.AddComponent<SphereCollider>().radius = 0.035f;
             root.GetComponent<SphereCollider>().isTrigger = true;
             root.AddComponent<TurretProjectile>();
+            root.AddComponent<ProjectileTracer>();
             GameObject visual = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             visual.name = "ShellVisual";
             visual.transform.SetParent(root.transform, false);

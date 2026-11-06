@@ -102,6 +102,7 @@ GameObject:
   - component: {fileID: 3080063374396125990}
   - component: {fileID: 7986034105328502047}
   - component: {fileID: 2452372569222074367}
+  - component: {fileID: 5098758962057152580}
   m_Layer: 0
   m_Name: TurretShell
   m_TagString: Untagged
@@ -185,3 +186,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66baac005f8bfb54194c6bdd378052b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TurretProjectile
+--- !u!114 &5098758962057152580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7322980969672051105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2db323a660948fd49b1a12397d01e22a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectileTracer
+  width: 0.1
+  historySeconds: 0.09
+  maximumLength: 7
+  tint: {r: 7, g: 1.5, b: 0.2, a: 1}

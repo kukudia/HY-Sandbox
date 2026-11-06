@@ -20,7 +20,7 @@ MonoBehaviour:
   - {fileID: 8784638916317319554, guid: cfe79660dda36ee4b8b2570ec772ae90, type: 3}
   - {fileID: 5057437636815087030, guid: 045a9655d99ab8547b48251792657861, type: 3}
   - {fileID: 86113267810916037, guid: 83d0dee8eb5ead842bcac2445bfc8447, type: 3}
-  _detachedSmoke: {fileID: 4931720626457316845, guid: 198786bf0a0bf644bb1ef7833d5086cd, type: 3}
+  _detachedSmoke: {fileID: 8379240062783184720, guid: 81a30ba4ef5546047aac39e4e0bf45ea, type: 3}
   _lineMaterial: {fileID: 2100000, guid: de261f394bd4ffb419dcd63ec6259497, type: 2}
   _beam: {fileID: 7531690552696130364, guid: 9d8d0b2b535acc443a08ae6db14ca241, type: 3}
   _attached:
@@ -40,3 +40,7 @@ MonoBehaviour:
     prefab: {fileID: 4986986897562106993, guid: fba70d96e21b45e44b1ec81f4a26d01b, type: 3}
   - id: ThrusterJet
     prefab: {fileID: 3538507841168796006, guid: 82cedb6258b64c44c89727209a1c5a44, type: 3}
+  - id: LaserBeam
+    prefab: {fileID: 2505364128094837820, guid: bdc80cd75be0f504a84fd2a3e9bcd1dd, type: 3}
+  - id: ProjectileTracer
+    prefab: {fileID: 3837505218483738918, guid: 2f56ccbabc8978545ba82c688e0af1a7, type: 3}

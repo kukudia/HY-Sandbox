@@ -6,6 +6,12 @@ public sealed class LaserTurret : Turret
 {
     [SerializeField]
     private VfxEffect _muzzleFlash;
+    [SerializeField, Min(0.005f), Tooltip("激光中心束宽度，米；外层辉光由库模板控制。")]
+    private float beamWidth = 0.16f;
+    [SerializeField, Min(0.02f), Tooltip("单次激光可见时间，秒；不改变开火频率。")]
+    private float beamDuration = 0.2f;
+    [SerializeField, ColorUsage(false, true)]
+    private Color beamColor = new Color(6f, 1.1f, 0.15f);
     private readonly TurretHitscan _hitscan = new TurretHitscan();
     private StylizedBeamEffect _fireBeam;
     private Vector3 _beamEnd;
@@ -25,8 +31,8 @@ public sealed class LaserTurret : Turret
             _fireBeam = gameObject.AddComponent<StylizedBeamEffect>();
         }
 
-        _fireBeam.Configure(0.035f);
-        _fireBeam.SetColor(new Color(1f, 0.46f, 0.08f, 1f));
+        _fireBeam.Configure(beamWidth, "LaserBeam");
+        _fireBeam.SetColor(beamColor);
         _fireBeam.SetVisible(false);
     }
 
@@ -44,7 +50,7 @@ public sealed class LaserTurret : Turret
         _fireBeam.SetEndpoints(origin, _beamEnd);
         _fireBeam.SetIntensity(1f);
         _fireBeam.SetVisible(true);
-        _hideLineTime = Time.time + 0.085f;
+        _hideLineTime = Time.time + beamDuration;
     }
 
     protected override void HideShotFeedback()
@@ -58,7 +64,8 @@ public sealed class LaserTurret : Turret
         if (_fireBeam != null && Time.time < _hideLineTime)
         {
             _fireBeam.SetEndpoints(GetMuzzlePosition(), _beamEnd);
-            _fireBeam.SetIntensity(Mathf.Clamp01((_hideLineTime - Time.time) / 0.085f));
+            float remaining = Mathf.Clamp01((_hideLineTime - Time.time) / Mathf.Max(0.02f, beamDuration));
+            _fireBeam.SetIntensity(Mathf.SmoothStep(0f, 1f, remaining * 1.4f));
         }
         else
         {

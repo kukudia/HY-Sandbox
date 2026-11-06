@@ -84,6 +84,7 @@ HY-Sandbox/
 │   │   │   │   └── SceneCameraPreviewSync.cs
 │   │   │   ├── Effects/
 │   │   │   │   ├── BlockVfxBaker.cs
+│   │   │   │   ├── CombatVfxBaker.cs
 │   │   │   │   ├── NativeVfxLibraryBuilder.cs
 │   │   │   │   ├── NativeVfxMigration.cs
 │   │   │   │   └── VfxGraphAuthoring.cs
@@ -96,6 +97,8 @@ HY-Sandbox/
 │   │   │   │   ├── PresentationResourceWindow.cs
 │   │   │   │   └── VfxCatalogMigration.cs
 │   │   │   └── Validation/
+│   │   │       ├── CombatVfxCapture.cs
+│   │   │       ├── CombatVfxChecks.cs
 │   │   │       ├── NativeVfxPlaybackProbe.cs
 │   │   │       ├── PresentationResourceChecks.cs
 │   │   │       └── VfxCatalogChecks.cs
@@ -282,6 +285,7 @@ HY-Sandbox/
 │           │       ├── TurretHitscan.cs
 │           │       ├── TurretTargetSelector.cs
 │           │       └── Projectiles/
+│           │           ├── ProjectileTracer.cs
 │           │           ├── TurretProjectile.cs
 │           │           └── TurretProjectilePool.cs
 │           ├── Diagnostics/
@@ -991,10 +995,10 @@ HY-Sandbox/
 | TurretAssetBaker | [`void ConfigureRecoil()`](../Assets/Editor/Combat/Turrets/TurretAssetBaker.cs#L62) | public static |
 | TurretAssetBaker | [`void Bake()`](../Assets/Editor/Combat/Turrets/TurretAssetBaker.cs#L105) | public static |
 | TurretAssetBaker | [`TurretProjectile BakeProjectile()`](../Assets/Editor/Combat/Turrets/TurretAssetBaker.cs#L126) | private static |
-| TurretAssetBaker | [`void ConfigureLaser()`](../Assets/Editor/Combat/Turrets/TurretAssetBaker.cs#L170) | private static |
-| TurretAssetBaker | [`void BakeTurret(string name, string variant, float demand, TurretProjectile projectile)`](../Assets/Editor/Combat/Turrets/TurretAssetBaker.cs#L193) | private static |
-| TurretAssetBaker | [`Sprite RenderIcon(string name)`](../Assets/Editor/Combat/Turrets/TurretAssetBaker.cs#L287) | private static |
-| TurretAssetBaker | [`void BakeEntry(string name)`](../Assets/Editor/Combat/Turrets/TurretAssetBaker.cs#L300) | private static |
+| TurretAssetBaker | [`void ConfigureLaser()`](../Assets/Editor/Combat/Turrets/TurretAssetBaker.cs#L171) | private static |
+| TurretAssetBaker | [`void BakeTurret(string name, string variant, float demand, TurretProjectile projectile)`](../Assets/Editor/Combat/Turrets/TurretAssetBaker.cs#L194) | private static |
+| TurretAssetBaker | [`Sprite RenderIcon(string name)`](../Assets/Editor/Combat/Turrets/TurretAssetBaker.cs#L288) | private static |
+| TurretAssetBaker | [`void BakeEntry(string name)`](../Assets/Editor/Combat/Turrets/TurretAssetBaker.cs#L301) | private static |
 
 ## Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs
 
@@ -1249,6 +1253,21 @@ HY-Sandbox/
 | BlockVfxBaker | [`void SetObjects(Object target, string field, Object[] values)`](../Assets/Editor/Presentation/Effects/BlockVfxBaker.cs#L187) | public static |
 | BlockVfxBaker | [`void SetObject(Object target, string field, Object value)`](../Assets/Editor/Presentation/Effects/BlockVfxBaker.cs#L202) | public static |
 
+## Assets/Editor/Presentation/Effects/CombatVfxBaker.cs
+
+// 职责：制作可编辑残骸烟迹、分层激光和炮弹曳光 Graph/Prefab，并接入集中库。 // 入口：BakeMissing()；已有图和模板不覆盖，调参在 VFX Graph / Prefab Inspector。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| CombatVfxBaker | [`void BakeMissing()`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L15) | public static |
+| CombatVfxBaker | [`void Register(BlockVfxLibrary library, string id)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L53) | private static |
+| CombatVfxBaker | [`void CreatePrefab(string name, string graphName, float glow)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L79) | private static |
+| CombatVfxBaker | [`void BuildGraph(string name, bool smoke)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L113) | private static |
+| CombatVfxBaker | [`void BuildSmoke(object graph, object init, object output)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L161) | private static |
+| CombatVfxBaker | [`void Curve(object output, string attribute, AnimationCurve curve)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L196) | private static |
+| CombatVfxBaker | [`void BuildBeam(object graph, object init, object update)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L204) | private static |
+| CombatVfxBaker | [`Mesh CreateBeamMesh()`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L235) | private static |
+
 ## Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs
 
 // 职责：建立原生 VFX Graph 资源库并配置效果参数。 // 入口：Destination() / GraphPath() / RebuildPositionSafeEffects()。 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
@@ -1389,6 +1408,28 @@ HY-Sandbox/
 | VfxCatalogMigration | [`VfxEffect CreateTemplate(VfxEffect source, string key)`](../Assets/Editor/Presentation/Resources/VfxCatalogMigration.cs#L151) | private static |
 | VfxCatalogMigration | [`string Signature(VfxEffect effect)`](../Assets/Editor/Presentation/Resources/VfxCatalogMigration.cs#L177) | public static |
 | VfxCatalogMigration | [`JObject ComponentData(Component component)`](../Assets/Editor/Presentation/Resources/VfxCatalogMigration.cs#L198) | private static |
+
+## Assets/Editor/Presentation/Validation/CombatVfxCapture.cs
+
+// 职责：在隔离 Play 场景自动拍摄残骸尾烟、激光和弹道，记录销毁后烟雾存活证据。 // 入口：StartCapture()；完成/超时恢复原场景，释放截图资源，不保存用户场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| CombatVfxCapture | [`void StartCapture()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L44) | public static |
+| CombatVfxCapture | [`void State(PlayModeStateChange state)`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L66) | private static |
+| CombatVfxCapture | [`void Setup()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L89) | private static |
+| CombatVfxCapture | [`void Tick()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L147) | private static |
+| CombatVfxCapture | [`void Capture(float elapsed)`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L188) | private static |
+| CombatVfxCapture | [`void Finish()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L215) | private static |
+
+## Assets/Editor/Presentation/Validation/CombatVfxChecks.cs
+
+// 职责：验证战斗特效资源与真实炮弹池复用的表现状态，不改变伤害/速度规则。 // 入口：RunPlay()；在隔离 Play 场景同步检查，finally 清理本次炮弹池。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| CombatVfxChecks | [`string RunPlay()`](../Assets/Editor/Presentation/Validation/CombatVfxChecks.cs#L11) | public static |
+| CombatVfxChecks | [`void Require(bool condition, string message)`](../Assets/Editor/Presentation/Validation/CombatVfxChecks.cs#L71) | private static |
 
 ## Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs
 
@@ -3074,10 +3115,10 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| LaserTurret | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L13) | protected override |
-| LaserTurret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L33) | protected override |
-| LaserTurret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L50) | protected override |
-| LaserTurret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L56) | protected override |
+| LaserTurret | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L19) | protected override |
+| LaserTurret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L39) | protected override |
+| LaserTurret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L56) | protected override |
+| LaserTurret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L62) | protected override |
 
 ## Assets/Scripts/Features/Combat/Turrets/ProjectileIntercept.cs
 
@@ -3102,23 +3143,34 @@ HY-Sandbox/
 | ProjectileTurret | [`Vector3 GetAimPosition(Durability target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L133) | protected override |
 | ProjectileTurret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L164) | protected override |
 
+## Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs
+
+// 职责：根据炮弹真实位置历史绘制短曳光，池复用时清空历史，不参与命中/物理计算。 // 入口：TurretProjectile.Launch() 调用 Begin()；LateUpdate 更新两端，OnDisable 清理。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| ProjectileTracer | [`void Begin()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs#L21) | public |
+| ProjectileTracer | [`void Record()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs#L35) | private |
+| ProjectileTracer | [`void LateUpdate()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs#L43) | private |
+| ProjectileTracer | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs#L72) | private |
+
 ## Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs
 
 // 职责：真实刚体炮弹飞行、每步扫掠防穿透、敌对伤害和寿命清理。 // 入口：Launch()；触发器避免物理引擎额外施加冲量，自身构造始终过滤。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| TurretProjectile | [`void SetPool(TurretProjectilePool pool, TurretProjectile prefab)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L25) | internal |
-| TurretProjectile | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L31) | private |
-| TurretProjectile | [`void ClearIgnoredCollisions()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L38) | private |
-| TurretProjectile | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L51) | private |
-| TurretProjectile | [`void Launch( ControlUnit owner, UnitFaction faction, float damage, float impulse, Vector3 velocity, float lifetime, float maxDistance, LayerMask hitLayers)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L63) | public |
-| TurretProjectile | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L96) | private |
-| TurretProjectile | [`bool ResolveOverlaps(Vector3 origin, float radius)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L166) | private |
-| TurretProjectile | [`void OnTriggerEnter(Collider other)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L188) | private |
-| TurretProjectile | [`bool CanHit(Collider collider)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L197) | private |
-| TurretProjectile | [`void ResolveHit(Collider collider, Vector3 point, Vector3 normal)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L202) | private |
-| TurretProjectile | [`void Retire()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L223) | private |
+| TurretProjectile | [`void SetPool(TurretProjectilePool pool, TurretProjectile prefab)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L26) | internal |
+| TurretProjectile | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L32) | private |
+| TurretProjectile | [`void ClearIgnoredCollisions()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L39) | private |
+| TurretProjectile | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L52) | private |
+| TurretProjectile | [`void Launch( ControlUnit owner, UnitFaction faction, float damage, float impulse, Vector3 velocity, float lifetime, float maxDistance, LayerMask hitLayers)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L65) | public |
+| TurretProjectile | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L99) | private |
+| TurretProjectile | [`bool ResolveOverlaps(Vector3 origin, float radius)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L169) | private |
+| TurretProjectile | [`void OnTriggerEnter(Collider other)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L191) | private |
+| TurretProjectile | [`bool CanHit(Collider collider)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L200) | private |
+| TurretProjectile | [`void ResolveHit(Collider collider, Vector3 point, Vector3 normal)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L205) | private |
+| TurretProjectile | [`void Retire()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L226) | private |
 
 ## Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs
 
@@ -3733,12 +3785,13 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| DetachedPartSmokeTrail | [`void Attach(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L30) | public static |
-| DetachedPartSmokeTrail | [`void Initialize(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L55) | private |
-| DetachedPartSmokeTrail | [`void Refresh(Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L74) | private |
-| DetachedPartSmokeTrail | [`void Update()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L85) | private |
-| DetachedPartSmokeTrail | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L119) | private |
-| DetachedPartSmokeTrail | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L141) | private |
+| DetachedPartSmokeTrail | [`void Attach(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L31) | public static |
+| DetachedPartSmokeTrail | [`void Initialize(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L56) | private |
+| DetachedPartSmokeTrail | [`void Refresh(Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L76) | private |
+| DetachedPartSmokeTrail | [`void Update()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L88) | private |
+| DetachedPartSmokeTrail | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L122) | private |
+| DetachedPartSmokeTrail | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L144) | private |
+| DetachedPartSmokeTrail | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L156) | private |
 
 ## Assets/Scripts/Features/Presentation/Effects/LightFade.cs
 
@@ -3775,13 +3828,13 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| StylizedBeamEffect | [`void Configure(float width)`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L16) | public |
-| StylizedBeamEffect | [`void SetEndpoints(Vector3 start, Vector3 end)`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L21) | public |
-| StylizedBeamEffect | [`void SetColor(Color color)`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L28) | public |
-| StylizedBeamEffect | [`void SetIntensity(float value)`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L37) | public |
-| StylizedBeamEffect | [`void SetVisible(bool value)`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L46) | public |
-| StylizedBeamEffect | [`void UpdateBeam()`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L72) | private |
-| StylizedBeamEffect | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L94) | private |
+| StylizedBeamEffect | [`void Configure(float width, string effectId = "EnergyBeam")`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L17) | public |
+| StylizedBeamEffect | [`void SetEndpoints(Vector3 start, Vector3 end)`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L29) | public |
+| StylizedBeamEffect | [`void SetColor(Color color)`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L36) | public |
+| StylizedBeamEffect | [`void SetIntensity(float value)`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L45) | public |
+| StylizedBeamEffect | [`void SetVisible(bool value)`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L54) | public |
+| StylizedBeamEffect | [`void UpdateBeam()`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L84) | private |
+| StylizedBeamEffect | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L106) | private |
 
 ## Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs
 

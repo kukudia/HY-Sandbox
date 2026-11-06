@@ -55,6 +55,22 @@ def main():
         )
 
     graph(
+        "残骸烟迹、激光与炮弹曳光",
+        "源码推导：烟迹按刚体点速度和局部锚点跟随，停止后独立老化。激光有独立库模板和显示持续时间；炮弹物理仍由 TurretProjectile 负责，LateUpdate 只读取实际位置历史绘制短迹，池回收清空。",
+        {
+            "A": "DetachedPartSmokeTrail.Attach", "B": "DetachedPartSmokeTrail.Initialize",
+            "C": "DetachedPartSmokeTrail.Update", "D": "DetachedPartSmokeTrail.StopAndRelease",
+            "E": "VfxEffect.ReleaseAfterPlayback", "F": "LaserTurret.Fire",
+            "G": "StylizedBeamEffect.SetVisible", "H": "TurretProjectile.Launch",
+            "I": "ProjectileTracer.Begin", "J": "ProjectileTracer.LateUpdate",
+            "K": "StylizedBeamEffect.SetEndpoints", "L": "ProjectileTracer.OnDisable",
+        },
+        ['A --> B', 'B -.->|Unity Update| C', 'C -->|超时/对象失效| D', 'D --> E',
+         'F --> G', 'H --> I', 'I -.->|Unity LateUpdate| J', 'J --> K', 'J --> G',
+         'L --> G'],
+    )
+
+    graph(
         "特效集中配置与挂载生命周期",
         "源码推导：制作工具只创建效果编号挂载点，统一库持有模板引用。首次启用/设置参数生成一次内容；组合控制器聚合子挂载点，禁用清理并保留内容供复用，销毁随拥有者释放。替换库影响新实例，不做逐帧热更新。",
         {

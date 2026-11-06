@@ -1,6 +1,6 @@
 # 原生 VFX Graph 特效
 
-Unity 6000.3.11f1 / URP 与 VFX Graph 17.3.0，1 Unity 单位 = 1 米。目标为支持 Compute 的桌面平台。保持 UNI 原生纹理、运动向量、网格和主要节点结构；推进尾焰使用删除烟雾系统的火焰变体。没有使用 Particle System 重制。
+Unity 6000.6.8f1 / URP 与 VFX Graph 17.6.0，1 Unity 单位 = 1 米。目标为支持 Compute 的桌面平台。保持 UNI 原生纹理、运动向量、网格和主要节点结构；推进尾焰使用删除烟雾系统的火焰变体。没有使用 Particle System 重制。
 
 ## 映射与编辑
 
@@ -8,7 +8,8 @@ Unity 6000.3.11f1 / URP 与 VFX Graph 17.3.0，1 Unity 单位 = 1 米。目标�
 | --- | --- |
 | Explosion / BreakBurst | UNI Aerial / Small Explosion |
 | ImpactBurst / MuzzleFlash | UNI Impact Explosion，枪口缩小 |
-| SmokeBurst / DetachedSmoke | UNI Small Smoke Impact / Device Fire |
+| SmokeBurst / DebrisSmoke | UNI Small Smoke Impact / 世界空间残骸烟迹 |
+| LaserBeam / ProjectileTracer | CombatBeam，亮芯与两层外晕，端点收尖 |
 | ThrusterJet / HoverJet / BotFlight | UNI Gas Fire Thruster（无烟） |
 | RepairContact / RepairPulse / BuildBurst | EnergyContact / EnergyBurst |
 | EnergyTrail / EnergyBeam | 世界空间运动历史拖尾 / 局部空间 GPU 网格光束 |
@@ -19,8 +20,8 @@ Unity 6000.3.11f1 / URP 与 VFX Graph 17.3.0，1 Unity 单位 = 1 米。目标�
 - TGA 无损转为 PNG，保留原始分辨率和像素，并复制 Unity 纹理导入设置。ArtSource/VfxGraph/prepare_textures.py 可复现转换。
 - VfxEffect 的 Graphs 数组、回收延时、自动播放开关均可在 Inspector 编辑。连续效果通过 Intensity 调透明度，避免低推力发射断续；Stop 保留最后透明度以自然消散，Clear 显式清空 GPU 模拟。
 - UNI Gas Fire 原生喷射轴为 -X，Prefab 子节点旋转至挂点 +Z；推进器变体保留三套火焰系统，删除完整烟雾系统，模拟统一为 Local。ScaleWSP 随实例实际缩放。修改喷口位置请编辑 Block Prefab 的 Nozzle 挂点。
-- 爆炸、命中、火焰、烟雾及蒸汽系统使用 Local 模拟空间，随宿主移动和转向；EnergyTrail 使用 World 模拟空间保留已发射粒子的轨迹，发射位置输入为 Local。不要把拖尾改为 Local，否则移动时轨迹会整体跟随物体。
-- Block 内的效果已完全解包，模板调参不会自动覆盖这些副本；共享 Graph 节点修改会作用于全部引用。原有 Prefab 和控制器脚本 GUID 保留。
+- 爆炸、命中与推进系统使用 Local 模拟空间；DebrisSmoke 与 EnergyTrail 使用 World 模拟空间保留已发射粒子的轨迹，发射位置输入为 Local。残骸烟迹独立于刚体生存，停止发射后允许烟粒自然消散。
+- Block 内只保存集中库效果编号与挂载变换。通过资源管理窗口替换模板，新实例统一生效。原有 Prefab 和控制器脚本 GUID 保留。
 - 四种主/全向推进器的现有喷口使用 `HoverJet` 模板，普通/大型实例按对应悬浮推进器的世界尺寸保存；`ThrusterJet` 模板仍供其他素材使用。
 - 单次效果最多 64 个并存，分离烟迹最多 24 个；停止后允许 12 秒尾烟回收。CullNone 保证离屏继续老化，防止返回镜头时重新播放。大型战斗 GPU/Overdraw 仍需测量。
 
@@ -36,7 +37,9 @@ Tools/HY Sandbox/VFX Graph：
 6. Rebuild Position-Safe Effects：生成并检查无烟推进器变体，调整 Device Fire/Steam Leak 模拟空间，重绑项目 Prefab。
 7. `NativeVfxPlaybackProbe.RunBlockTest(prefab, output)`：在实际 Play Mode 中隔离拍摄 Block 的连续喷焰，停机、清空后恢复原场景。
 
-VfxGraphAuthoring 是 Unity 6000.3 内部编辑器 API 的隔离桥接；运行时没有反射，也不依赖此工具。重新导入会重映射图依赖；手动改图后应先提交再执行来源重建。
+资源管理菜单下的“制作战斗特效”补齐 DebrisSmoke、LaserBeam 和 ProjectileTracer 及其集中引用；已有非空选择和 Graph 不覆盖。规格、源制作脚本和参数说明见 `ArtSource/VfxGraph/CombatVfx.md`。
+
+VfxGraphAuthoring 是 Unity 6000.6 内部编辑器 API 的隔离桥接；运行时没有反射，也不依赖此工具。重新导入会重映射图依赖；手动改图后应先提交再执行来源重建。
 
 ## 验证说明
 

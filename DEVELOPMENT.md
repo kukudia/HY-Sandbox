@@ -4,6 +4,8 @@ Unity 6000.6.8f1（URP / VFX Graph 17.6.0，Input System 1.20.1）。本文只�
 
 ## 特效与音频资源管理
 
+战斗表现增强：残骸烟迹使用 `DebrisSmoke` 世界空间图，挂载点按刚体点速度跟随，残骸销毁/禁用后独立淡出；激光使用 `LaserBeam` 分层亮芯，宽度 0.16m、持续 0.2s；炮弹使用 `ProjectileTracer` 记录真实位置历史，宽度 0.1m、历史 0.09s、最长 7m，复用时清空。特效仍在集中库替换，伤害、命中和弹速不变。制作入口 `CombatVfxBaker.BakeMissing`，规格见 [CombatVfx](ArtSource/VfxGraph/CombatVfx.md)，真实 Play 近/远景与回收验证见 [战斗特效报告](Docs/Validation/2026-11-06-combat-vfx.md)。
+
 Unity 菜单 **Tools → HY Sandbox → 资源管理 → 特效与音频** 打开统一管理入口。`PresentationResourceWindow` 支持名称/路径搜索、类型筛选、定位、原生预览、直接引用查询和保存；Prefab 通过原生 Prefab Mode 编辑完整层级。扫描覆盖 Assets 下的 VFX Graph、包含 VfxEffect/VisualEffect/ParticleSystem/TrailRenderer/LineRenderer 的 Prefab 和 BlockVfxLibrary，可额外显示递归依赖。
 
 “运行时播放库”直接编辑既有 `Resources/VFX/BlockVfxLibrary.asset`。一次性效果以及 HoverJet、ThrusterJet、BotFlight、RepairContact、EnergyTrail、LootBurst 和保留外观变体全部集中配置。29 个项目 Prefab 的 54 个挂载点只保留效果编号、位置、朝向、缩放和自动播放标记；3 个组合控制器只引用子挂载点。`VfxEffect.EnsureContent` 在 Play 首次使用时从库实例化模板，保留对象生命周期。替换库中 Prefab 后，新实例使用新效果；已有实例需重新生成或重新进入 Play。

@@ -6,7 +6,74 @@
 
     维护：业务变化更新受影响图和 DEVELOPMENT；纯格式变化重新生成行号。`dotnet run --project Tools/CodeReadability -- --check .` 会拒绝失效符号。
 
-    ## 特效集中配置与挂载生命周期
+    ## 残骸烟迹、激光与炮弹曳光
+
+源码推导：烟迹按刚体点速度和局部锚点跟随，停止后独立老化。激光有独立库模板和显示持续时间；炮弹物理仍由 TurretProjectile 负责，LateUpdate 只读取实际位置历史绘制短迹，池回收清空。
+
+```mermaid
+flowchart TD
+    A["DetachedPartSmokeTrail.Attach()"]
+    click A "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L31" "打开源码"
+    B["DetachedPartSmokeTrail.Initialize()"]
+    click B "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L56" "打开源码"
+    C["DetachedPartSmokeTrail.Update()"]
+    click C "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L88" "打开源码"
+    D["DetachedPartSmokeTrail.StopAndRelease()"]
+    click D "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L122" "打开源码"
+    E["VfxEffect.ReleaseAfterPlayback()"]
+    click E "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L223" "打开源码"
+    F["LaserTurret.Fire()"]
+    click F "../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L39" "打开源码"
+    G["StylizedBeamEffect.SetVisible()"]
+    click G "../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L54" "打开源码"
+    H["TurretProjectile.Launch()"]
+    click H "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L65" "打开源码"
+    I["ProjectileTracer.Begin()"]
+    click I "../Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs#L21" "打开源码"
+    J["ProjectileTracer.LateUpdate()"]
+    click J "../Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs#L43" "打开源码"
+    K["StylizedBeamEffect.SetEndpoints()"]
+    click K "../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L29" "打开源码"
+    L["ProjectileTracer.OnDisable()"]
+    click L "../Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs#L72" "打开源码"
+    A --> B
+    B -.->|Unity Update| C
+    C -->|超时/对象失效| D
+    D --> E
+    F --> G
+    H --> I
+    I -.->|Unity LateUpdate| J
+    J --> K
+    J --> G
+    L --> G
+```
+
+- [DetachedPartSmokeTrail.Attach](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L31)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|Attach -->
+- [DetachedPartSmokeTrail.Initialize](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L56)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|Initialize -->
+- [DetachedPartSmokeTrail.Update](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L88)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|Update -->
+- [DetachedPartSmokeTrail.StopAndRelease](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L122)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|StopAndRelease -->
+- [VfxEffect.ReleaseAfterPlayback](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L223)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|ReleaseAfterPlayback -->
+- [LaserTurret.Fire](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L39)
+<!-- source: Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs|Fire -->
+- [StylizedBeamEffect.SetVisible](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L54)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs|SetVisible -->
+- [TurretProjectile.Launch](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L65)
+<!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs|Launch -->
+- [ProjectileTracer.Begin](../Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs#L21)
+<!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs|Begin -->
+- [ProjectileTracer.LateUpdate](../Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs#L43)
+<!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs|LateUpdate -->
+- [StylizedBeamEffect.SetEndpoints](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L29)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs|SetEndpoints -->
+- [ProjectileTracer.OnDisable](../Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs#L72)
+<!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs|OnDisable -->
+
+## 特效集中配置与挂载生命周期
 
 源码推导：制作工具只创建效果编号挂载点，统一库持有模板引用。首次启用/设置参数生成一次内容；组合控制器聚合子挂载点，禁用清理并保留内容供复用，销毁随拥有者释放。替换库影响新实例，不做逐帧热更新。
 
@@ -1351,13 +1418,13 @@ flowchart TD
     O["CargoHold.ReleaseContents()"]
     click O "../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L206" "打开源码"
     P["LaserTurret.Fire()"]
-    click P "../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L33" "打开源码"
+    click P "../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L39" "打开源码"
     Q["ProjectileTurret.Fire()"]
     click Q "../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L164" "打开源码"
     R["TurretProjectile.Launch()"]
-    click R "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L63" "打开源码"
+    click R "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L65" "打开源码"
     S["TurretProjectile.FixedUpdate()"]
-    click S "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L96" "打开源码"
+    click S "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L99" "打开源码"
     T["TurretHitResolver.Apply()"]
     click T "../Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs#L7" "打开源码"
     U["Power.SetWorkRequested()"]
@@ -1373,11 +1440,11 @@ flowchart TD
     Z["TurretProjectilePool.Rent()"]
     click Z "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L11" "打开源码"
     AA["TurretProjectile.Retire()"]
-    click AA "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L223" "打开源码"
+    click AA "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L226" "打开源码"
     AB["TurretProjectilePool.Return()"]
     click AB "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L44" "打开源码"
     AC["TurretProjectile.OnDisable()"]
-    click AC "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L31" "打开源码"
+    click AC "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L32" "打开源码"
     AD["TurretProjectilePool.Update()"]
     click AD "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L57" "打开源码"
     AE["TurretProjectilePool.OnDestroy()"]
@@ -1454,13 +1521,13 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs|CleanupUnitAfterDelay -->
 - [CargoHold.ReleaseContents](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L206)
 <!-- source: Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs|ReleaseContents -->
-- [LaserTurret.Fire](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L33)
+- [LaserTurret.Fire](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L39)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs|Fire -->
 - [ProjectileTurret.Fire](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L164)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs|Fire -->
-- [TurretProjectile.Launch](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L63)
+- [TurretProjectile.Launch](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L65)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs|Launch -->
-- [TurretProjectile.FixedUpdate](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L96)
+- [TurretProjectile.FixedUpdate](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L99)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs|FixedUpdate -->
 - [TurretHitResolver.Apply](../Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs#L7)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs|Apply -->
@@ -1476,11 +1543,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs|OnDisable -->
 - [TurretProjectilePool.Rent](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L11)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs|Rent -->
-- [TurretProjectile.Retire](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L223)
+- [TurretProjectile.Retire](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L226)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs|Retire -->
 - [TurretProjectilePool.Return](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L44)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs|Return -->
-- [TurretProjectile.OnDisable](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L31)
+- [TurretProjectile.OnDisable](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L32)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs|OnDisable -->
 - [TurretProjectilePool.Update](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L57)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs|Update -->

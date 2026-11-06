@@ -13,9 +13,17 @@ public class StylizedBeamEffect : MonoBehaviour
     private float _intensity = 1f;
     private Color _color = Color.cyan;
     private bool _visible;
-    public void Configure(float width)
+    private string _effectId = "EnergyBeam";
+    public void Configure(float width, string effectId = "EnergyBeam")
     {
         _width = Mathf.Max(0.001f, width);
+        if (_effectId != effectId && _beam != null)
+        {
+            Destroy(_beam.gameObject);
+            _beam = null;
+        }
+
+        _effectId = effectId;
     }
 
     public void SetEndpoints(Vector3 start, Vector3 end)
@@ -46,10 +54,14 @@ public class StylizedBeamEffect : MonoBehaviour
     public void SetVisible(bool value)
     {
         _visible = value;
-        if (_beam == null && value && BlockVfxLibrary.Instance != null && BlockVfxLibrary.Instance.Beam != null)
+        if (_beam == null && value && BlockVfxLibrary.Instance != null)
         {
-            _beam = Instantiate(BlockVfxLibrary.Instance.Beam, transform);
-            _beam.SetColor(_color);
+            VfxEffect prefab = BlockVfxLibrary.Instance.Resolve(_effectId);
+            if (prefab != null)
+            {
+                _beam = Instantiate(prefab, transform);
+                _beam.SetColor(_color);
+            }
         }
 
         if (_beam == null)

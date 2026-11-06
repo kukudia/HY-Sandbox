@@ -87,6 +87,7 @@
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\VfxEffect.cs" />
     <Compile Include="Assets\Scripts\Features\Diagnostics\DebugManager.cs" />
     <Compile Include="Assets\Scripts\Features\Diagnostics\Interface\DurabilityDebugLabels.cs" />
+    <Compile Include="Assets\Scripts\Features\Combat\Turrets\Projectiles\ProjectileTracer.cs" />
     <Compile Include="Assets\Scripts\Features\World\Validation\WorldReturnPlayerChecks.cs" />
     <Compile Include="Assets\Scripts\Features\Diagnostics\Bots\BotNavigationProbeDriver.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Battle\SiegeWaveDirector.cs" />

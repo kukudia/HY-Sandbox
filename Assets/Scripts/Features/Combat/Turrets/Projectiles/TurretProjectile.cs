@@ -13,6 +13,7 @@ public sealed class TurretProjectile : MonoBehaviour
     private TurretProjectile _prefab;
     private Rigidbody _body;
     private SphereCollider _collider;
+    private ProjectileTracer _tracer;
     private ControlUnit _owner;
     private UnitFaction _faction;
     private float _damage;
@@ -52,6 +53,7 @@ public sealed class TurretProjectile : MonoBehaviour
     {
         _body = GetComponent<Rigidbody>();
         _collider = GetComponent<SphereCollider>();
+        _tracer = GetComponent<ProjectileTracer>();
         _body.useGravity = false;
         _body.isKinematic = false;
         _body.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
@@ -83,6 +85,7 @@ public sealed class TurretProjectile : MonoBehaviour
         _body.linearVelocity = velocity;
         _launched = true;
         _resolved = false;
+        _tracer?.Begin();
         if (owner != null)
         {
             owner.GetComponentsInChildren<Collider>(_ignoredColliders);

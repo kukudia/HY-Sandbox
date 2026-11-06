@@ -365,6 +365,9 @@ MonoBehaviour:
     m_Bits: 4294967295
   _isStarted: 1
   _muzzleFlash: {fileID: 2632665826765620390}
+  beamWidth: 0.16
+  beamDuration: 0.2
+  beamColor: {r: 6, g: 1.1, b: 0.15, a: 1}
 --- !u!114 &1578290364841887270
 MonoBehaviour:
   m_ObjectHideFlags: 0

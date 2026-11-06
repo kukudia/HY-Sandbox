@@ -22,6 +22,7 @@ public class DetachedPartSmokeTrail : MonoBehaviour
     private static int activeTrailCount;
     private Rigidbody targetBody;
     private Transform emissionRoot;
+    private Vector3 localAnchor;
     private VfxEffect _smokeEffect;
     private float intensity = 1f;
     private float elapsed;
@@ -65,9 +66,10 @@ public class DetachedPartSmokeTrail : MonoBehaviour
             return;
         }
 
-        _smokeEffect = Instantiate(library.DetachedSmoke, transform);
+        // 烟迹拥有独立生命周期：残骸被禁用/回收时，已发射的世界空间烟粒仍可自然消散。
+        _smokeEffect = Instantiate(library.DetachedSmoke, worldAnchor, Quaternion.identity);
         emissionRoot = _smokeEffect.transform;
-        emissionRoot.position = worldAnchor;
+        localAnchor = transform.InverseTransformPoint(worldAnchor);
         _smokeEffect.SetIntensity(0f);
     }
 
@@ -76,6 +78,7 @@ public class DetachedPartSmokeTrail : MonoBehaviour
         intensity = Mathf.Max(intensity, Mathf.Clamp(effectIntensity, 0.25f, 1.5f));
         elapsed = 0f;
         stopping = false;
+        localAnchor = transform.InverseTransformPoint(worldAnchor);
         if (emissionRoot != null)
         {
             emissionRoot.position = worldAnchor;
@@ -91,18 +94,18 @@ public class DetachedPartSmokeTrail : MonoBehaviour
         }
 
         elapsed += Time.deltaTime;
-        Vector3 velocity = targetBody.linearVelocity;
-        float speed = velocity.magnitude + targetBody.angularVelocity.magnitude * 0.08f;
+        Vector3 anchor = transform.TransformPoint(localAnchor);
+        Vector3 velocity = targetBody.GetPointVelocity(anchor);
+        float speed = velocity.magnitude;
         if (emissionRoot != null)
         {
-            Vector3 smokeDirection = velocity.sqrMagnitude > 0.04f ? -velocity.normalized : Vector3.up;
-            emissionRoot.rotation = Quaternion.FromToRotation(Vector3.left, smokeDirection);
+            emissionRoot.position = anchor;
         }
 
         float speedRatio = Mathf.InverseLerp(minimumSpeed, Mathf.Max(minimumSpeed + 0.01f, fullEmissionSpeed), speed);
         float lifetimeFade = 1f - Mathf.Clamp01(elapsed / Mathf.Max(0.1f, effectLifetime));
         // Explosion impulses can be too small to cross the speed gate; show a brief residual plume.
-        float initialSmoke = _initialSmokeIntensity * (1f - Mathf.Clamp01(elapsed / _initialSmokeDuration));
+        float initialSmoke = _initialSmokeIntensity * (1f - Mathf.Clamp01(elapsed / Mathf.Max(0.01f, _initialSmokeDuration)));
         float emissionRatio = Mathf.Max(speedRatio * intensity, initialSmoke) * lifetimeFade;
         bool shouldEmit = emissionRatio > 0.025f && !targetBody.isKinematic;
         if (_smokeEffect != null)
@@ -140,6 +143,7 @@ public class DetachedPartSmokeTrail : MonoBehaviour
 
     private void OnDestroy()
     {
+        StopAndRelease();
         if (!registered)
         {
             return;
@@ -147,5 +151,10 @@ public class DetachedPartSmokeTrail : MonoBehaviour
 
         registered = false;
         activeTrailCount = Mathf.Max(0, activeTrailCount - 1);
+    }
+
+    private void OnDisable()
+    {
+        StopAndRelease();
     }
 }
