@@ -25,7 +25,7 @@ public class DetachedPartSmokeTrail : MonoBehaviour
     [SerializeField, Range(1f, 2f), Tooltip("火焰发射体积相对模型包围盒的扩张，确保粒子能覆盖模型前侧。")]
     private float _flameEnvelopeScale = 1.65f;
     [SerializeField, Range(1f, 4f)]
-    private float _flameCoverage = 3f;
+    private float _flameCoverage = 2.5f;
     private static int activeTrailCount;
     private Rigidbody targetBody;
     private Transform emissionRoot;

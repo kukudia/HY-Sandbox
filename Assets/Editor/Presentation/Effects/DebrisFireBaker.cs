@@ -20,7 +20,7 @@ public static class DebrisFireBaker
             object output = contexts.First(c => c.GetType().Name == "VFXPlanarPrimitiveOutput");
             object rate = VfxGraphAuthoring.Create("VFXSpawnerConstantRate");
             VfxGraphAuthoring.Add(spawn, rate);
-            VfxGraphAuthoring.Value(rate, "Rate", 90f);
+            VfxGraphAuthoring.Value(rate, "Rate", 60f);
             object data = VfxGraphAuthoring.Call(init, "GetData");
             VfxGraphAuthoring.Set(data, "space", System.Enum.Parse(VfxGraphAuthoring.Get(data, "space").GetType(), "Local"));
             VfxGraphAuthoring.Setting(data, "capacity", (uint)64);
@@ -31,6 +31,10 @@ public static class DebrisFireBaker
             VfxGraphAuthoring.Link(VfxGraphAuthoring.Parameter(graph, "FlameMin", Vector3.one * -0.3f), slots[0]);
             VfxGraphAuthoring.Link(VfxGraphAuthoring.Parameter(graph, "FlameMax", Vector3.one * 0.3f), slots[1]);
             VfxGraphAuthoring.Attribute(init, "velocity", new Vector3(0, 0.15f, 0));
+            object angle = VfxGraphAuthoring.Attribute(init, "angleZ", 0f);
+            VfxGraphAuthoring.Setting(angle, "Random", "Uniform");
+            VfxGraphAuthoring.Set(VfxGraphAuthoring.Items(angle, "inputSlots")[0], "value", -180f);
+            VfxGraphAuthoring.Set(VfxGraphAuthoring.Items(angle, "inputSlots")[1], "value", 180f);
             object size = VfxGraphAuthoring.Attribute(init, "size", 1f);
             VfxGraphAuthoring.Link(
                 VfxGraphAuthoring.Parameter(graph, "FlameSize", 1f),
@@ -50,8 +54,9 @@ public static class DebrisFireBaker
             Curve(
                 output,
                 "alpha",
-                new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.15f, 0.8f), new Keyframe(0.6f, 0.65f), new Keyframe(1, 0)));
-            VfxGraphAuthoring.Attribute(output, "color", new Vector3(2f, 1.3f, 0.7f));
+                new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.15f, 0.65f), new Keyframe(0.6f, 0.4f), new Keyframe(1, 0)));
+            VfxGraphAuthoring.Attribute(output, "color", new Vector3(1.1f, 0.8f, 0.45f));
+            BuildSmokeVeil(graph);
             VfxGraphAuthoring.Setting(data, "boundsMode", "Manual");
             object bounds = VfxGraphAuthoring.Get(VfxGraphAuthoring.Slot(init, "bounds"), "value");
             bounds.GetType().GetField("size").SetValue(bounds, Vector3.one * 100f);
@@ -84,6 +89,32 @@ public static class DebrisFireBaker
         {
             PrefabUtility.UnloadPrefabContents(root);
         }
+    }
+
+    private static void BuildSmokeVeil(object graph)
+    {
+        // 与头部火焰共用粒子，少量深烟遮叠亮焰，避免形成均匀发亮的外圈。
+        object update = VfxGraphAuthoring.Items(graph, "children").First(c => c.GetType().Name == "VFXBasicUpdate");
+        object output = VfxGraphAuthoring.Create("VFXPlanarPrimitiveOutput");
+        VfxGraphAuthoring.Add(graph, output);
+        VfxGraphAuthoring.Call(update, "LinkTo", output, 0, 0);
+        VfxGraphAuthoring.Setting(output, "blendMode", "Alpha");
+        VfxGraphAuthoring.Setting(output, "uvMode", "Flipbook");
+        object flipbook = VfxGraphAuthoring.Get(VfxGraphAuthoring.Slot(output, "flipBookSize"), "value");
+        flipbook.GetType().GetField("x").SetValue(flipbook, 8);
+        flipbook.GetType().GetField("y").SetValue(flipbook, 8);
+        VfxGraphAuthoring.Value(output, "flipBookSize", flipbook);
+        VfxGraphAuthoring.Value(
+            output,
+            "mainTexture",
+            AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Art/VFX/UNI/Realistic Explosions, Fire & Smoke/Textures/uni_smoke_cloud.png"));
+        VfxGraphAuthoring.Add(output, VfxGraphAuthoring.Create("Block.Orient"));
+        Curve(output, "texIndex", AnimationCurve.Linear(0, 8, 1, 32));
+        Curve(
+            output,
+            "alpha",
+            new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.25f, 0.32f), new Keyframe(0.6f, 0.22f), new Keyframe(1, 0)));
+        VfxGraphAuthoring.Attribute(output, "color", new Vector3(0.8f, 0.82f, 0.85f));
     }
 
     private static void Curve(object output, string name, AnimationCurve curve)

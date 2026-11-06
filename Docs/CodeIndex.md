@@ -1277,7 +1277,8 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | DebrisFireBaker | [`void BakeMissing()`](../Assets/Editor/Presentation/Effects/DebrisFireBaker.cs#L11) | public static |
-| DebrisFireBaker | [`void Curve(object output, string name, AnimationCurve curve)`](../Assets/Editor/Presentation/Effects/DebrisFireBaker.cs#L89) | private static |
+| DebrisFireBaker | [`void BuildSmokeVeil(object graph)`](../Assets/Editor/Presentation/Effects/DebrisFireBaker.cs#L94) | private static |
+| DebrisFireBaker | [`void Curve(object output, string name, AnimationCurve curve)`](../Assets/Editor/Presentation/Effects/DebrisFireBaker.cs#L120) | private static |
 
 ## Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs
 

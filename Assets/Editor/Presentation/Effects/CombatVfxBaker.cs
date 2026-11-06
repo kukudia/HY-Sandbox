@@ -186,13 +186,13 @@ public static class CombatVfxBaker
         Curve(
             output,
             "size",
-            new AnimationCurve(new Keyframe(0, 0.35f), new Keyframe(0.3f, 1f), new Keyframe(1, 2.2f)));
+            new AnimationCurve(new Keyframe(0, 0.65f), new Keyframe(0.3f, 1.35f), new Keyframe(1, 2.4f)));
         Curve(
             output,
             "alpha",
             new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.06f, 0.92f), new Keyframe(0.55f, 0.68f), new Keyframe(1, 0)));
         Curve(output, "texIndex", AnimationCurve.Linear(0, 8, 1, 52));
-        VfxGraphAuthoring.Attribute(output, "color", new Vector3(2.1f, 2.15f, 2.2f));
+        VfxGraphAuthoring.Attribute(output, "color", new Vector3(1.25f, 1.28f, 1.3f));
     }
 
     private static void BuildResidualFire(object graph, object update)
@@ -230,7 +230,7 @@ public static class CombatVfxBaker
                 new Keyframe(0.18f, 0),
                 new Keyframe(1, 0)));
         Curve(output, "texIndex", AnimationCurve.Linear(0, 8, 1, 52));
-        VfxGraphAuthoring.Attribute(output, "color", new Vector3(12f, 2.4f, 0.18f));
+        VfxGraphAuthoring.Attribute(output, "color", new Vector3(5f, 1.2f, 0.12f));
     }
 
     private static void Curve(object output, string attribute, AnimationCurve curve)
