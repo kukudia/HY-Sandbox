@@ -44,5 +44,7 @@ MonoBehaviour:
     prefab: {fileID: 2505364128094837820, guid: bdc80cd75be0f504a84fd2a3e9bcd1dd, type: 3}
   - id: ProjectileTracer
     prefab: {fileID: 3837505218483738918, guid: 2f56ccbabc8978545ba82c688e0af1a7, type: 3}
+  - id: EnemySpawnPortal
+    prefab: {fileID: 7724064072990583261, guid: 55c7a189dafa88745ba7afd44ba8a72e, type: 3}
   _maxIdlePerTemplate: 32
   _maxIdleEffects: 128

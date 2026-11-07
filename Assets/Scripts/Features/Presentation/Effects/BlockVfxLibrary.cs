@@ -117,14 +117,30 @@ public sealed class BlockVfxLibrary : ScriptableObject
             return SpawnResult.MissingLibrary;
         }
 
-        int index = (int)kind;
-        if (index < 0 || index >= library._bursts.Length || library._bursts[index] == null)
+        return PlayTemplate(library.Burst(kind), position, rotation, Mathf.Clamp(scale, 0.05f, 4f));
+    }
+
+    /// <summary>播放集中库的具名一次性模板；缩放以模板单位为准，不沿用方块爆炸的4倍限制。</summary>
+    public static SpawnResult Play(string id, Vector3 position, Quaternion rotation, float scale = 1f)
+    {
+        BlockVfxLibrary library = Instance;
+        if (library == null)
+        {
+            return SpawnResult.MissingLibrary;
+        }
+
+        return PlayTemplate(library.Resolve(id), position, rotation, Mathf.Max(0.05f, scale));
+    }
+
+    private static SpawnResult PlayTemplate(VfxEffect template, Vector3 position, Quaternion rotation, float scale)
+    {
+        if (template == null)
         {
             return SpawnResult.MissingPrefab;
         }
 
-        VfxEffect effect = VfxEffectPool.Rent(library._bursts[index], position, rotation, SceneManager.GetActiveScene());
-        effect.transform.localScale *= Mathf.Clamp(scale, 0.05f, 4f);
+        VfxEffect effect = VfxEffectPool.Rent(template, position, rotation, SceneManager.GetActiveScene());
+        effect.transform.localScale *= scale;
         effect.PlayOnce();
         effect.ReleaseAfterPlayback();
         return SpawnResult.Spawned;

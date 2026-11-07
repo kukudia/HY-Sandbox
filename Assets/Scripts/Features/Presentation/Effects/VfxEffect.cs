@@ -274,8 +274,16 @@ public sealed class VfxEffect : MonoBehaviour
 
     private void FinishPlayback()
     {
-        if (!_oneShot || Time.time < _releaseAt)
+        if (!_oneShot)
         {
+            return;
+        }
+
+        if (Time.time < _releaseAt)
+        {
+            // Invoke可能在目标帧的Time.time略早于截止值时触发；必须补约，否则效果永久留在活动池。
+            CancelInvoke(nameof(FinishPlayback));
+            Invoke(nameof(FinishPlayback), Mathf.Max(0.01f, _releaseAt - Time.time));
             return;
         }
 

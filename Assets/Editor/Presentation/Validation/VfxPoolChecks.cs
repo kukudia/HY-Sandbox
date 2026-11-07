@@ -86,6 +86,12 @@ public static class VfxPoolChecks
             var follower = reused.gameObject.AddComponent<MeteorTrailFollower>();
             follower.Initialize(meteor.transform, reused);
             reused.StopAndRelease();
+            // 模拟Unity提前消费了一次Invoke；未到期应补约，不能永远占用活动实例。
+            reused.CancelInvoke("FinishPlayback");
+            tick.Invoke(reused, null);
+            Require(
+                reused.gameObject.activeSelf && reused.IsInvoking("FinishPlayback"),
+                "Early return callback lost its retry");
             deadline.SetValue(reused, Time.time - 1f);
             tick.Invoke(reused, null);
             VfxEffect afterMeteor = VfxEffectPool.Rent(prefab, Vector3.zero, Quaternion.identity, SceneManager.GetActiveScene());

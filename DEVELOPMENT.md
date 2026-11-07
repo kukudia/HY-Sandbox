@@ -4,6 +4,8 @@ Unity 6000.6.8f1（URP / VFX Graph 17.6.0，Input System 1.20.1）。本文只�
 
 ## 特效与音频资源管理
 
+敌机出生现由 `EnemySpawner.SpawnBlockData` 与 `SiegeWaveDirector.Tick` 共用 `VisualEffectsManager.TryPlayEnemySpawnPortal`：成功生成/注册后播放金橙光环和紫色旋涡，替换 Siege 旧信标；不延迟生成，不影响据点驻军。传送门按舰体横截面缩放、固定在出生点后方，2.4 秒收拢、3 秒回池。集中库 `EnemySpawnPortal` 可替换 Prefab，管理器 Inspector 可调留白及默认 6–80m 直径。原生 Graph、纹理和补缺制作入口见 [资产规格](ArtSource/VfxGraph/EnemySpawnPortal.md)。真实 Siege 夹具两条生成路径及 GPU 回收通过；同时修复一次性回调略早触发后遗漏重调度的问题，验证及范围见 [传送门验证](Docs/Validation/2026-11-07-enemy-spawn-portal.md)。
+
 GPU 特效已接入按场景、按模板复用的 VfxEffectPool：取消64个一次性效果与24条残骸尾烟的活动数量门槛，峰值按需扩容；爆炸、残骸、陨石共用生命周期，回收前保留尾烟。集中库只配置闲置缓存（每模板32、每场景128），不会拒绝活动请求。VFX Graph 粒子在 GPU 上模拟，CPU 负责对象与跟随；单Graph粒子容量仍为预分配预算。验证见[GPU特效池](Docs/Validation/2026-11-06-vfx-pool.md)。
 
 残骸包裹范围、粒子密度与不透明度已降低，尾烟稍浅且更透明；火光颜色保持 10% 设定。残骸火光已减弱并收紧，新增头部灰黑烟遮叠与随机火焰朝向，尾烟加深加厚；见[烟火平衡验证](Docs/Validation/2026-11-06-fire-balance.md)。残骸新增按模型包围盒自适应的局部包裹火焰，跟随模型中心与旋转；[包裹火焰验证](Docs/Validation/2026-11-06-debris-envelope.md)。尾烟已提高不透明度并加入短促橙色余火：中低速烟迹保持对比，火光与烟雾共用粒子，仍由集中库 DebrisSmoke 配置。隔离 Play 近远景、销毁后消散通过；参数、截图与验证边界见 [尾烟可见性](Docs/Validation/2026-11-06-debris-visibility.md)。

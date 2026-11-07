@@ -1,5 +1,5 @@
-// 职责：为建造、维修、损伤、爆炸和能量反馈提供统一效果入口。
-// 入口：EnsureInstance() / GetSharedLineMaterial() / TryPlayBlockPlaced()。
+// 职责：为建造、维修、损伤、爆炸、敌机出生和能量反馈提供统一效果入口。
+// 入口：EnsureInstance() / GetSharedLineMaterial() / TryPlayBlockPlaced() / TryPlayEnemySpawnPortal()。
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -18,6 +18,13 @@ public class VisualEffectsManager : MonoBehaviour
     public Color selectionColor = new Color(0.38f, 0.95f, 1f, 1f);
     public Color blockedGhostColor = new Color(1f, 0.12f, 0.08f, 1f);
     public Color validGhostColor = new Color(0.24f, 1f, 0.58f, 1f);
+    [Header("Enemy Spawn Portal")]
+    [SerializeField, Min(1f), Tooltip("传送门相对舰体横截面直径的留白比例。")]
+    private float enemyPortalPadding = 1.3f;
+    [SerializeField, Min(0.1f), Tooltip("小型敌机传送门的最小直径，单位米。")]
+    private float enemyPortalMinimumDiameter = 6f;
+    [SerializeField, Min(0.1f), Tooltip("传送门最大直径，限制大蓝图造成的屏幕覆盖。")]
+    private float enemyPortalMaximumDiameter = 80f;
     [Header("Scene Look")]
     [SerializeField, Tooltip("场景雾色；默认值保持既有Main外观，Siege场景单独覆盖为夜色。")]
     private Color sceneFogColor = new Color(0.035f, 0.047f, 0.065f, 1f);
@@ -214,25 +221,39 @@ public class VisualEffectsManager : MonoBehaviour
         Shake.Play(Camera.main, amplitude, duration);
     }
 
-    /// <summary>敌舰入场信标：一次闪光、垂直光柱和短促爆闪，复用既有池，标记进场方向。</summary>
-    public void PlaySpawnBeacon(Vector3 position)
+    /// <summary>成功生成后共用的传送门入口；失败生成不创建管理器或特效。</summary>
+    public static void TryPlayEnemySpawnPortal(ControlUnit unit)
+    {
+        if (unit == null)
+        {
+            return;
+        }
+
+        EnsureInstance().PlayEnemySpawnPortal(unit);
+    }
+
+    private void PlayEnemySpawnPortal(ControlUnit unit)
     {
         if (!enableRuntimeVfx)
         {
             return;
         }
 
-        Color beacon = new Color(1f, 0.44f, 0.2f, 1f);
-        TransientEffects.CreateLightFlash(position, beacon, 7f, 34f, 1.1f);
-        TransientEffects.CreateLineStreak(position, position + Vector3.up * 14f, beacon, 2.2f, 0.5f);
-        TransientEffects.CreateRadialStreakBurst(
-            position,
-            Vector3.up,
-            beacon,
-            6,
-            7f,
-            0.6f,
-            0.07f);
+        Bounds bounds = TransientEffects.GetBounds(unit.gameObject, unit.transform.position, Vector3.one);
+        Vector3 extents = bounds.extents;
+        Vector3 right = unit.transform.right;
+        Vector3 up = unit.transform.up;
+        Vector3 forward = unit.transform.forward;
+        float width = Vector3.Dot(extents, new Vector3(Mathf.Abs(right.x), Mathf.Abs(right.y), Mathf.Abs(right.z)));
+        float height = Vector3.Dot(extents, new Vector3(Mathf.Abs(up.x), Mathf.Abs(up.y), Mathf.Abs(up.z)));
+        float depth = Vector3.Dot(extents, new Vector3(Mathf.Abs(forward.x), Mathf.Abs(forward.y), Mathf.Abs(forward.z)));
+        float diameter = Mathf.Clamp(
+            2f * Mathf.Sqrt(width * width + height * height) * Mathf.Max(1f, enemyPortalPadding),
+            Mathf.Max(0.1f, enemyPortalMinimumDiameter),
+            Mathf.Max(enemyPortalMinimumDiameter, enemyPortalMaximumDiameter));
+        // 固定在出生点后方，不挂到舰体：敌机驶离、重组或死亡后仍能独立收拢并回池。
+        Vector3 position = bounds.center - forward * (depth + 0.3f);
+        BlockVfxLibrary.Play("EnemySpawnPortal", position, unit.transform.rotation, diameter);
     }
 
     private void OnDestroy()

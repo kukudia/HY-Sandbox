@@ -71,8 +71,8 @@ public sealed class SiegeWaveDirector
 
         unit.GetComponent<EnemyController>().SetPriorityTarget(session.Fleet.Base.Unit);
         attackers.Add(new Attacker(id, unit.cockpit));
-        // 进场信标只做一次短时表现，帮助玩家在夜色里看清来袭方向。
-        VisualEffectsManager.instance?.PlaySpawnBeacon(position);
+        // 注册成功后才播放，拒绝生成或预算不足不会留下空传送门。
+        VisualEffectsManager.TryPlayEnemySpawnPortal(unit);
     }
 
     /// <summary>精英波次固定挑最重的蓝图，其余波次沿用玩家指定或按种子随机。</summary>

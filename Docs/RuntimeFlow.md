@@ -8,7 +8,7 @@
 
     ## GPU特效对象池与释放
 
-源码推导：VFX Graph 在GPU模拟粒子；场景池按模板复用对象，没有活动对象数量硬上限，只限制闲置缓存。爆炸、残骸和陨石尾迹共用Rent，复位参数后播放，保留尾烟延时，再归还或清理。场景卸载释放池及子实例。
+源码推导：VFX Graph 在GPU模拟粒子；场景池按模板复用对象，没有活动对象数量硬上限，只限制闲置缓存。爆炸、传送门、残骸和陨石尾迹共用Rent，复位参数后播放，保留尾烟延时，再归还或清理。FinishPlayback若略早于截止时间触发会重新预约，避免丢失回收；场景卸载释放池及子实例。
 
 ```mermaid
 flowchart TD
@@ -30,13 +30,17 @@ flowchart TD
     click H "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L55" "打开源码"
     I["VfxEffectPool.OnDestroy()"]
     click I "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L96" "打开源码"
-    A --> B
+    J["BlockVfxLibrary.PlayTemplate()"]
+    click J "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L135" "打开源码"
+    A --> J
+    J --> B
     B --> C
-    A --> D
-    A --> E
+    J --> D
+    J --> E
     H --> B
     E -.->|到期| F
-    F --> G
+    F -.->|未到截止时间时补约| F
+    F -->|到期| G
     G -.->|场景卸载| I
 ```
 
@@ -58,6 +62,8 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|Initialize -->
 - [VfxEffectPool.OnDestroy](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L96)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs|OnDestroy -->
+- [BlockVfxLibrary.PlayTemplate](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L135)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs|PlayTemplate -->
 
 ## 残骸烟迹、激光与炮弹曳光
 
@@ -158,7 +164,7 @@ flowchart TD
     G["VfxEffect.Clear()"]
     click G "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L167" "打开源码"
     H["VfxEffect.OnDisable()"]
-    click H "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L294" "打开源码"
+    click H "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L302" "打开源码"
     I["VfxEffect.StopAndRelease()"]
     click I "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L264" "打开源码"
     J["VfxEffect.ReleaseAfterPlayback()"]
@@ -188,7 +194,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|SetIntensity -->
 - [VfxEffect.Clear](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L167)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|Clear -->
-- [VfxEffect.OnDisable](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L294)
+- [VfxEffect.OnDisable](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L302)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|OnDisable -->
 - [VfxEffect.StopAndRelease](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L264)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|StopAndRelease -->
@@ -1841,9 +1847,9 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["VisualEffectsManager.TryPlayBlockExplosion()"]
-    click A "../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L78" "打开源码"
+    click A "../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L85" "打开源码"
     B["VisualEffectsManager.PlayBlockExplosion()"]
-    click B "../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L314" "打开源码"
+    click B "../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L335" "打开源码"
     C["BlockVfxLibrary.Play()"]
     click C "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L112" "打开源码"
     D["TransientEffects.CreateLightFlash()"]
@@ -1855,7 +1861,7 @@ flowchart TD
     G["CameraShake.CameraShakeRoutine()"]
     click G "../Assets/Scripts/Features/Presentation/Camera/CameraShake.cs#L57" "打开源码"
     H["VisualEffectsManager.OnDisable()"]
-    click H "../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L206" "打开源码"
+    click H "../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L213" "打开源码"
     I["CameraShake.Cancel()"]
     click I "../Assets/Scripts/Features/Presentation/Camera/CameraShake.cs#L17" "打开源码"
     J["CameraController.SmoothFocusCameraOnBlock()"]
@@ -1913,9 +1919,9 @@ flowchart TD
     R -->|第三人称期望与平滑位置| S
 ```
 
-- [VisualEffectsManager.TryPlayBlockExplosion](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L78)
+- [VisualEffectsManager.TryPlayBlockExplosion](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L85)
 <!-- source: Assets/Scripts/Features/Presentation/VisualEffectsManager.cs|TryPlayBlockExplosion -->
-- [VisualEffectsManager.PlayBlockExplosion](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L314)
+- [VisualEffectsManager.PlayBlockExplosion](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L335)
 <!-- source: Assets/Scripts/Features/Presentation/VisualEffectsManager.cs|PlayBlockExplosion -->
 - [BlockVfxLibrary.Play](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L112)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs|Play -->
@@ -1927,7 +1933,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/Camera/CameraShake.cs|Play -->
 - [CameraShake.CameraShakeRoutine](../Assets/Scripts/Features/Presentation/Camera/CameraShake.cs#L57)
 <!-- source: Assets/Scripts/Features/Presentation/Camera/CameraShake.cs|CameraShakeRoutine -->
-- [VisualEffectsManager.OnDisable](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L206)
+- [VisualEffectsManager.OnDisable](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L213)
 <!-- source: Assets/Scripts/Features/Presentation/VisualEffectsManager.cs|OnDisable -->
 - [CameraShake.Cancel](../Assets/Scripts/Features/Presentation/Camera/CameraShake.cs#L17)
 <!-- source: Assets/Scripts/Features/Presentation/Camera/CameraShake.cs|Cancel -->
@@ -3431,10 +3437,13 @@ flowchart TD
     click Q "../Assets/Scripts/Features/Simulation/PlayManager.cs#L285" "打开源码"
     R["EnemySpawner.EndPlayMode()"]
     click R "../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L57" "打开源码"
+    S["EnemySpawner.SpawnBlockData()"]
+    click S "../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L144" "打开源码"
     A -->|普通模式| B
     B -.->|引擎Update| C
     C -->|间隔到期| D
-    D --> I
+    D --> S
+    S --> I
     E --> F
     F -->|未击败、近距离且预算允许| G
     F -->|远离或地形卸载| P
@@ -3485,6 +3494,88 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
 - [EnemySpawner.EndPlayMode](../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L57)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs|EndPlayMode -->
+- [EnemySpawner.SpawnBlockData](../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L144)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs|SpawnBlockData -->
+
+## 敌机出生传送门
+
+源码推导：EnemySpawner的随机/批量入口共用SpawnBlockData，SiegeWaveDirector在注册成功后调用同一表现入口；失败生成、未到生成时机或关闭enableRuntimeVfx时不播放。传送门固定在舰体出生包围盒后侧，局部XY面朝舰体前方，尺寸按横截面投影自适应。具名集中库模板共用GPU池，播放后按Prefab时限归还；不会延迟生成，不改据点工厂的其他消费者。
+
+```mermaid
+flowchart TD
+    A["EnemySpawner.SpawnBlockData()"]
+    click A "../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L144" "打开源码"
+    B["SiegeWaveDirector.Tick()"]
+    click B "../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L19" "打开源码"
+    C["EnemyBlueprintFactory.Spawn()"]
+    click C "../Assets/Scripts/Features/Combat/Enemies/EnemyBlueprintFactory.cs#L12" "打开源码"
+    D["SiegeMatch.RegisterAttacker()"]
+    click D "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L122" "打开源码"
+    E["VisualEffectsManager.TryPlayEnemySpawnPortal()"]
+    click E "../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L225" "打开源码"
+    F["VisualEffectsManager.PlayEnemySpawnPortal()"]
+    click F "../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L235" "打开源码"
+    G["BlockVfxLibrary.Play()"]
+    click G "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L112" "打开源码"
+    H["BlockVfxLibrary.PlayTemplate()"]
+    click H "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L135" "打开源码"
+    I["VfxEffectPool.Rent()"]
+    click I "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L24" "打开源码"
+    J["VfxEffect.PlayOnce()"]
+    click J "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L182" "打开源码"
+    K["VfxEffect.ReleaseAfterPlayback()"]
+    click K "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L252" "打开源码"
+    L["VfxEffect.FinishPlayback()"]
+    click L "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L275" "打开源码"
+    M["VfxEffectPool.Return()"]
+    click M "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L72" "打开源码"
+    N["EnemySpawnPortalBaker.BakeMissing()"]
+    click N "../Assets/Editor/Presentation/Effects/EnemySpawnPortalBaker.cs#L17" "打开源码"
+    A --> C
+    A -->|返回后，空引用跳过| E
+    B --> C
+    B --> D
+    B -->|注册成功| E
+    E --> F
+    F -->|VFX开启| G
+    G --> H
+    H -->|模板存在| I
+    H --> J
+    H --> K
+    K -.->|Invoke到期| L
+    L -.->|略早触发时按剩余时间补约| L
+    L -->|到期| M
+    N -.->|保存Graph、Prefab和库配置| G
+```
+
+- [EnemySpawner.SpawnBlockData](../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L144)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs|SpawnBlockData -->
+- [SiegeWaveDirector.Tick](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L19)
+<!-- source: Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs|Tick -->
+- [EnemyBlueprintFactory.Spawn](../Assets/Scripts/Features/Combat/Enemies/EnemyBlueprintFactory.cs#L12)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyBlueprintFactory.cs|Spawn -->
+- [SiegeMatch.RegisterAttacker](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L122)
+<!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|RegisterAttacker -->
+- [VisualEffectsManager.TryPlayEnemySpawnPortal](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L225)
+<!-- source: Assets/Scripts/Features/Presentation/VisualEffectsManager.cs|TryPlayEnemySpawnPortal -->
+- [VisualEffectsManager.PlayEnemySpawnPortal](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L235)
+<!-- source: Assets/Scripts/Features/Presentation/VisualEffectsManager.cs|PlayEnemySpawnPortal -->
+- [BlockVfxLibrary.Play](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L112)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs|Play -->
+- [BlockVfxLibrary.PlayTemplate](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L135)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs|PlayTemplate -->
+- [VfxEffectPool.Rent](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L24)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs|Rent -->
+- [VfxEffect.PlayOnce](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L182)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|PlayOnce -->
+- [VfxEffect.ReleaseAfterPlayback](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L252)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|ReleaseAfterPlayback -->
+- [VfxEffect.FinishPlayback](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L275)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|FinishPlayback -->
+- [VfxEffectPool.Return](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L72)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs|Return -->
+- [EnemySpawnPortalBaker.BakeMissing](../Assets/Editor/Presentation/Effects/EnemySpawnPortalBaker.cs#L17)
+<!-- source: Assets/Editor/Presentation/Effects/EnemySpawnPortalBaker.cs|BakeMissing -->
 
 ## 显式 Player 世界验证
 

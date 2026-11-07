@@ -86,6 +86,7 @@ HY-Sandbox/
 │   │   │   │   ├── BlockVfxBaker.cs
 │   │   │   │   ├── CombatVfxBaker.cs
 │   │   │   │   ├── DebrisFireBaker.cs
+│   │   │   │   ├── EnemySpawnPortalBaker.cs
 │   │   │   │   ├── NativeVfxLibraryBuilder.cs
 │   │   │   │   ├── NativeVfxMigration.cs
 │   │   │   │   └── VfxGraphAuthoring.cs
@@ -1282,6 +1283,19 @@ HY-Sandbox/
 | DebrisFireBaker | [`void BuildSmokeVeil(object graph)`](../Assets/Editor/Presentation/Effects/DebrisFireBaker.cs#L94) | private static |
 | DebrisFireBaker | [`void Curve(object output, string name, AnimationCurve curve)`](../Assets/Editor/Presentation/Effects/DebrisFireBaker.cs#L120) | private static |
 
+## Assets/Editor/Presentation/Effects/EnemySpawnPortalBaker.cs
+
+// 职责：制作敌机出生传送门的程序化纹理、原生 GPU Graph 和可编辑 Prefab，接入集中播放库。 // 入口：BakeMissing()；只补缺失资源，保留已有 Graph、Prefab 和库选择。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemySpawnPortalBaker | [`void BakeMissing()`](../Assets/Editor/Presentation/Effects/EnemySpawnPortalBaker.cs#L17) | public static |
+| EnemySpawnPortalBaker | [`void RebuildTexture()`](../Assets/Editor/Presentation/Effects/EnemySpawnPortalBaker.cs#L58) | public static |
+| EnemySpawnPortalBaker | [`void CreateTexture(bool overwrite = false)`](../Assets/Editor/Presentation/Effects/EnemySpawnPortalBaker.cs#L69) | private static |
+| EnemySpawnPortalBaker | [`void CreateGraph()`](../Assets/Editor/Presentation/Effects/EnemySpawnPortalBaker.cs#L120) | private static |
+| EnemySpawnPortalBaker | [`void Curve(object output, string attribute, AnimationCurve curve)`](../Assets/Editor/Presentation/Effects/EnemySpawnPortalBaker.cs#L173) | private static |
+| EnemySpawnPortalBaker | [`void CreatePrefab()`](../Assets/Editor/Presentation/Effects/EnemySpawnPortalBaker.cs#L181) | private static |
+
 ## Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs
 
 // 职责：建立原生 VFX Graph 资源库并配置效果参数。 // 入口：Destination() / GraphPath() / RebuildPositionSafeEffects()。 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
@@ -1492,7 +1506,7 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | VfxPoolChecks | [`string RunPlay()`](../Assets/Editor/Presentation/Validation/VfxPoolChecks.cs#L12) | public static |
-| VfxPoolChecks | [`void Require(bool condition, string message)`](../Assets/Editor/Presentation/Validation/VfxPoolChecks.cs#L118) | private static |
+| VfxPoolChecks | [`void Require(bool condition, string message)`](../Assets/Editor/Presentation/Validation/VfxPoolChecks.cs#L124) | private static |
 
 ## Assets/Editor/Salvage/CargoReturnFileChecks.cs
 
@@ -3094,7 +3108,7 @@ HY-Sandbox/
 | EnemySpawner | [`void SpawnRandomEnemy()`](../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L110) | public |
 | EnemySpawner | [`void SpawnEnemy()`](../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L133) | public |
 | EnemySpawner | [`ControlUnit SpawnBlockData(BlockDataList dataList, string enemyBlueprint, Vector3 spawnPosition, Quaternion spawnRotation)`](../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L144) | internal |
-| EnemySpawner | [`Vector3 GetSpawnPosition()`](../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L149) | private |
+| EnemySpawner | [`Vector3 GetSpawnPosition()`](../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L151) | private |
 
 ## Assets/Scripts/Features/Combat/Interface/CombatHud.cs
 
@@ -3802,6 +3816,8 @@ HY-Sandbox/
 | BlockVfxLibrary | [`VfxEffect Resolve(string id)`](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L53) | public |
 | BlockVfxLibrary | [`VfxEffect Burst(Effect kind)`](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L89) | private |
 | BlockVfxLibrary | [`SpawnResult Play(Effect kind, Vector3 position, Quaternion rotation, float scale = 1f)`](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L112) | public static |
+| BlockVfxLibrary | [`SpawnResult Play(string id, Vector3 position, Quaternion rotation, float scale = 1f)`](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L124) | public static |
+| BlockVfxLibrary | [`SpawnResult PlayTemplate(VfxEffect template, Vector3 position, Quaternion rotation, float scale)`](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L135) | private static |
 
 ## Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs
 
@@ -3906,8 +3922,8 @@ HY-Sandbox/
 | VfxEffect | [`void ReleaseAfterPlayback()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L252) | public |
 | VfxEffect | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L264) | public |
 | VfxEffect | [`void FinishPlayback()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L275) | private |
-| VfxEffect | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L294) | private |
-| VfxEffect | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L295) | private |
+| VfxEffect | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L302) | private |
+| VfxEffect | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L303) | private |
 
 ## Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs
 
@@ -4063,46 +4079,47 @@ HY-Sandbox/
 
 ## Assets/Scripts/Features/Presentation/VisualEffectsManager.cs
 
-// 职责：为建造、维修、损伤、爆炸和能量反馈提供统一效果入口。 // 入口：EnsureInstance() / GetSharedLineMaterial() / TryPlayBlockPlaced()。
+// 职责：为建造、维修、损伤、爆炸、敌机出生和能量反馈提供统一效果入口。 // 入口：EnsureInstance() / GetSharedLineMaterial() / TryPlayBlockPlaced() / TryPlayEnemySpawnPortal()。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| VisualEffectsManager | [`VisualEffectsManager EnsureInstance()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L35) | public static |
-| VisualEffectsManager | [`Material GetSharedLineMaterial()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L53) | public static |
-| VisualEffectsManager | [`void TryPlayBlockPlaced(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L58) | public static |
-| VisualEffectsManager | [`void TryPlayBlockRemoved(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L68) | public static |
-| VisualEffectsManager | [`void TryPlayBlockExplosion(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L78) | public static |
-| VisualEffectsManager | [`void TryPlayRepairPulse(Vector3 origin, Vector3 target, Color color, float width)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L88) | public static |
-| VisualEffectsManager | [`void TryAttachDetachedPartSmoke(Rigidbody body, Vector3 worldAnchor, float intensity)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L93) | public static |
-| VisualEffectsManager | [`void TryPlayObjectDestroyed(GameObject target)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L109) | public static |
-| VisualEffectsManager | [`void TryPlayBlockMoved(Block block, Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L119) | public static |
-| VisualEffectsManager | [`void TryPlayBlockRotated(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L129) | public static |
-| VisualEffectsManager | [`void TryShowBlockSelection(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L139) | public static |
-| VisualEffectsManager | [`void TryClearBlockSelection(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L149) | public static |
-| VisualEffectsManager | [`void TryUpdateGhostPreview(GameObject ghost, bool isBlocked)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L159) | public static |
-| VisualEffectsManager | [`void TryClearGhostPreview(GameObject ghost)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L169) | public static |
-| VisualEffectsManager | [`void TryDecorateMeteor(Meteor meteor)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L179) | public static |
-| VisualEffectsManager | [`void TryPlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L189) | public static |
-| VisualEffectsManager | [`void Awake()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L194) | private |
-| VisualEffectsManager | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L206) | private |
-| VisualEffectsManager | [`void PlayCameraShake(float amplitude, float duration)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L212) | public |
-| VisualEffectsManager | [`void PlaySpawnBeacon(Vector3 position)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L218) | public |
-| VisualEffectsManager | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L238) | private |
-| VisualEffectsManager | [`void OnEnable()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L247) | private |
-| VisualEffectsManager | [`void ApplySceneLook()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L252) | private |
-| VisualEffectsManager | [`void PlayBlockPlaced(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L267) | private |
-| VisualEffectsManager | [`void PlayBlockRemoved(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L291) | private |
-| VisualEffectsManager | [`void PlayBlockExplosion(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L314) | private |
-| VisualEffectsManager | [`void PlayObjectDestroyed(GameObject target)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L348) | private |
-| VisualEffectsManager | [`void PlayRepairPulse(Vector3 origin, Vector3 target, Color color, float width)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L380) | private |
-| VisualEffectsManager | [`void PlayBlockMoved(Block block, Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L407) | private |
-| VisualEffectsManager | [`void PlayBlockRotated(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L420) | private |
-| VisualEffectsManager | [`void ShowBlockSelection(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L441) | private |
-| VisualEffectsManager | [`void ClearBlockSelection(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L455) | private |
-| VisualEffectsManager | [`void UpdateGhostPreview(Transform ghost, bool isBlocked)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L460) | private |
-| VisualEffectsManager | [`void ClearGhostPreview()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L465) | private |
-| VisualEffectsManager | [`void DecorateMeteor(Meteor meteor)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L469) | private |
-| VisualEffectsManager | [`void PlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L509) | private |
+| VisualEffectsManager | [`VisualEffectsManager EnsureInstance()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L42) | public static |
+| VisualEffectsManager | [`Material GetSharedLineMaterial()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L60) | public static |
+| VisualEffectsManager | [`void TryPlayBlockPlaced(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L65) | public static |
+| VisualEffectsManager | [`void TryPlayBlockRemoved(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L75) | public static |
+| VisualEffectsManager | [`void TryPlayBlockExplosion(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L85) | public static |
+| VisualEffectsManager | [`void TryPlayRepairPulse(Vector3 origin, Vector3 target, Color color, float width)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L95) | public static |
+| VisualEffectsManager | [`void TryAttachDetachedPartSmoke(Rigidbody body, Vector3 worldAnchor, float intensity)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L100) | public static |
+| VisualEffectsManager | [`void TryPlayObjectDestroyed(GameObject target)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L116) | public static |
+| VisualEffectsManager | [`void TryPlayBlockMoved(Block block, Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L126) | public static |
+| VisualEffectsManager | [`void TryPlayBlockRotated(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L136) | public static |
+| VisualEffectsManager | [`void TryShowBlockSelection(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L146) | public static |
+| VisualEffectsManager | [`void TryClearBlockSelection(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L156) | public static |
+| VisualEffectsManager | [`void TryUpdateGhostPreview(GameObject ghost, bool isBlocked)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L166) | public static |
+| VisualEffectsManager | [`void TryClearGhostPreview(GameObject ghost)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L176) | public static |
+| VisualEffectsManager | [`void TryDecorateMeteor(Meteor meteor)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L186) | public static |
+| VisualEffectsManager | [`void TryPlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L196) | public static |
+| VisualEffectsManager | [`void Awake()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L201) | private |
+| VisualEffectsManager | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L213) | private |
+| VisualEffectsManager | [`void PlayCameraShake(float amplitude, float duration)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L219) | public |
+| VisualEffectsManager | [`void TryPlayEnemySpawnPortal(ControlUnit unit)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L225) | public static |
+| VisualEffectsManager | [`void PlayEnemySpawnPortal(ControlUnit unit)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L235) | private |
+| VisualEffectsManager | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L259) | private |
+| VisualEffectsManager | [`void OnEnable()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L268) | private |
+| VisualEffectsManager | [`void ApplySceneLook()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L273) | private |
+| VisualEffectsManager | [`void PlayBlockPlaced(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L288) | private |
+| VisualEffectsManager | [`void PlayBlockRemoved(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L312) | private |
+| VisualEffectsManager | [`void PlayBlockExplosion(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L335) | private |
+| VisualEffectsManager | [`void PlayObjectDestroyed(GameObject target)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L369) | private |
+| VisualEffectsManager | [`void PlayRepairPulse(Vector3 origin, Vector3 target, Color color, float width)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L401) | private |
+| VisualEffectsManager | [`void PlayBlockMoved(Block block, Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L428) | private |
+| VisualEffectsManager | [`void PlayBlockRotated(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L441) | private |
+| VisualEffectsManager | [`void ShowBlockSelection(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L462) | private |
+| VisualEffectsManager | [`void ClearBlockSelection(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L476) | private |
+| VisualEffectsManager | [`void UpdateGhostPreview(Transform ghost, bool isBlocked)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L481) | private |
+| VisualEffectsManager | [`void ClearGhostPreview()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L486) | private |
+| VisualEffectsManager | [`void DecorateMeteor(Meteor meteor)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L490) | private |
+| VisualEffectsManager | [`void PlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L530) | private |
 
 ## Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs
 

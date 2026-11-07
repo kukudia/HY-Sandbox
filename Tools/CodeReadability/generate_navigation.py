@@ -56,11 +56,13 @@ def main():
 
     graph(
         "GPU特效对象池与释放",
-        "源码推导：VFX Graph 在GPU模拟粒子；场景池按模板复用对象，没有活动对象数量硬上限，只限制闲置缓存。爆炸、残骸和陨石尾迹共用Rent，复位参数后播放，保留尾烟延时，再归还或清理。场景卸载释放池及子实例。",
+        "源码推导：VFX Graph 在GPU模拟粒子；场景池按模板复用对象，没有活动对象数量硬上限，只限制闲置缓存。爆炸、传送门、残骸和陨石尾迹共用Rent，复位参数后播放，保留尾烟延时，再归还或清理。FinishPlayback若略早于截止时间触发会重新预约，避免丢失回收；场景卸载释放池及子实例。",
         {"A": "BlockVfxLibrary.Play", "B": "VfxEffectPool.Rent", "C": "VfxEffect.ResetForRent",
          "D": "VfxEffect.PlayOnce", "E": "VfxEffect.ReleaseAfterPlayback", "F": "VfxEffect.FinishPlayback",
-         "G": "VfxEffectPool.Return", "H": "DetachedPartSmokeTrail.Initialize", "I": "VfxEffectPool.OnDestroy"},
-        ['A --> B', 'B --> C', 'A --> D', 'A --> E', 'H --> B', 'E -.->|到期| F', 'F --> G', 'G -.->|场景卸载| I'],
+         "G": "VfxEffectPool.Return", "H": "DetachedPartSmokeTrail.Initialize", "I": "VfxEffectPool.OnDestroy",
+         "J": "BlockVfxLibrary.PlayTemplate"},
+        ['A --> J', 'J --> B', 'B --> C', 'J --> D', 'J --> E', 'H --> B', 'E -.->|到期| F',
+         'F -.->|未到截止时间时补约| F', 'F -->|到期| G', 'G -.->|场景卸载| I'],
     )
     graph(
         "残骸烟迹、激光与炮弹曳光",
@@ -1246,13 +1248,31 @@ def main():
             "P": "OutpostEncounterDirector.Hibernate",
             "Q": "PlayManager.PlayEnd",
             "R": "EnemySpawner.EndPlayMode",
+            "S": "EnemySpawner.SpawnBlockData",
         },
         [
             "A -->|普通模式| B", "B -.->|引擎Update| C", "C -->|间隔到期| D",
-            "D --> I", "E --> F", "F -->|未击败、近距离且预算允许| G", "F -->|远离或地形卸载| P",
+            "D --> S", "S --> I", "E --> F", "F -->|未击败、近距离且预算允许| G", "F -->|远离或地形卸载| P",
             "G --> I", "I --> L", "L -->|生成任何实体前| H", "L --> J", "J -->|恢复尺寸后| K",
             "L -->|完整构造后| O", "L --> M", "L --> N",
             "Q --> R",
+        ],
+    )
+    graph(
+        "敌机出生传送门",
+        "源码推导：EnemySpawner的随机/批量入口共用SpawnBlockData，SiegeWaveDirector在注册成功后调用同一表现入口；失败生成、未到生成时机或关闭enableRuntimeVfx时不播放。传送门固定在舰体出生包围盒后侧，局部XY面朝舰体前方，尺寸按横截面投影自适应。具名集中库模板共用GPU池，播放后按Prefab时限归还；不会延迟生成，不改据点工厂的其他消费者。",
+        {
+            "A": "EnemySpawner.SpawnBlockData", "B": "SiegeWaveDirector.Tick",
+            "C": "EnemyBlueprintFactory.Spawn", "D": "SiegeMatch.RegisterAttacker",
+            "E": "VisualEffectsManager.TryPlayEnemySpawnPortal", "F": "VisualEffectsManager.PlayEnemySpawnPortal",
+            "G": "BlockVfxLibrary.Play", "H": "BlockVfxLibrary.PlayTemplate", "I": "VfxEffectPool.Rent",
+            "J": "VfxEffect.PlayOnce", "K": "VfxEffect.ReleaseAfterPlayback", "L": "VfxEffect.FinishPlayback",
+            "M": "VfxEffectPool.Return", "N": "EnemySpawnPortalBaker.BakeMissing",
+        },
+        [
+            "A --> C", "A -->|返回后，空引用跳过| E", "B --> C", "B --> D", "B -->|注册成功| E",
+            "E --> F", "F -->|VFX开启| G", "G --> H", "H -->|模板存在| I", "H --> J", "H --> K",
+            "K -.->|Invoke到期| L", "L -.->|略早触发时按剩余时间补约| L", "L -->|到期| M", "N -.->|保存Graph、Prefab和库配置| G",
         ],
     )
     graph(

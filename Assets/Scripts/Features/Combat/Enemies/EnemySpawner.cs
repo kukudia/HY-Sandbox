@@ -143,7 +143,9 @@ public class EnemySpawner : MonoBehaviour
 
     internal ControlUnit SpawnBlockData(BlockDataList dataList, string enemyBlueprint, Vector3 spawnPosition, Quaternion spawnRotation)
     {
-        return EnemyBlueprintFactory.Spawn(dataList, enemyBlueprint, spawnPosition, spawnRotation);
+        ControlUnit unit = EnemyBlueprintFactory.Spawn(dataList, enemyBlueprint, spawnPosition, spawnRotation);
+        VisualEffectsManager.TryPlayEnemySpawnPortal(unit);
+        return unit;
     }
 
     private Vector3 GetSpawnPosition()
