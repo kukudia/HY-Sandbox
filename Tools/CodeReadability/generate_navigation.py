@@ -1601,6 +1601,21 @@ def main():
             "C -->|每物理步平滑| G",
         ],
     )
+    graph(
+        "友敌 AI 调试绘制",
+        "源码推导：EnemyController 同时驱动友方自主舰和敌机。Draw Debug 默认关闭；启用后仅在模拟运行且未被玩家驾驶时绘制。FixedUpdate 的移动周期清空探测快照，ProbeObstacle 记录实际球扫终点与有效法线；绘制只读快照，不重新查询物理或改变驾驶输入。禁用控制器清空快照。",
+        {
+            "A": "EnemyController.FixedUpdate", "B": "EnemyController.ApplyObstacleAvoidance",
+            "C": "EnemyController.ProbeObstacle", "D": "EnemyController.OnDrawGizmos",
+            "E": "EnemyController.DrawDebug", "F": "EnemyController.DrawDebugCircle",
+            "G": "EnemyController.OnDisable",
+        },
+        [
+            "A -->|经移动计算或警戒返航| B", "B --> C",
+            "D --> E", "E -->|接近及撤退距离| F",
+            "C -.->|缓存球扫结果| E", "G -.->|清空缓存| E",
+        ],
+    )
     doc = """# HY-Sandbox 运行时函数图
 
     这些图根据当前源码和调用者整理，用于寻找功能入口，不是采样得到的实际执行轨迹。实线表示直接调用（标注“经”时包含明确中间函数）；虚线标出协程、事件或注入动作。Unity Update/FixedUpdate 的独立入口不代表脚本执行顺序。

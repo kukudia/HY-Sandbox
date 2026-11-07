@@ -24,6 +24,18 @@ public class EnemyController : MonoBehaviour
     public float sideProbeAngle = 35f;
     public float targetHoverHeightOffset = 3f;
     public LayerMask obstacleLayers = ~0;
+    [Header("AI Debug")]
+    [SerializeField, Tooltip("在 Scene / Game 的 Gizmos 中显示自主友舰和敌机的决策；玩家驾驶时隐藏。")]
+    private bool drawDebug;
+    [SerializeField, Tooltip("显示索敌球、接近/撤退水平距离和守卫范围。")]
+    private bool showDebugRanges = true;
+    [SerializeField, Min(0.1f), Tooltip("移动输入向量的显示长度（米）。")]
+    private float debugVectorLength = 8f;
+    // 保存实际决策时的球扫结果，绘制不触发新的物理查询。
+    private readonly Vector3[] debugProbeOrigins = new Vector3[3];
+    private readonly Vector3[] debugProbeEnds = new Vector3[3];
+    private readonly Vector3[] debugProbeNormals = new Vector3[3];
+    private int debugProbeCount;
     private ControlUnit unit;
     private ControlUnit currentTarget;
     private float nextUpdateTime;
@@ -88,6 +100,7 @@ public class EnemyController : MonoBehaviour
         {
             if (Time.time >= nextMovementUpdateTime)
             {
+                debugProbeCount = 0;
                 Vector3 toGuard = guardAnchor != null ? guardAnchor.position - transform.position : Vector3.zero;
                 toGuard.y = 0f;
                 desiredMovementInput = toGuard.sqrMagnitude > 100f ? ApplyObstacleAvoidance(toGuard.normalized, toGuard) : Vector3.zero;
@@ -105,6 +118,7 @@ public class EnemyController : MonoBehaviour
         Vector3 flatDirection = new Vector3(toTarget.x, 0f, toTarget.z);
         if (Time.time >= nextMovementUpdateTime)
         {
+            debugProbeCount = 0;
             desiredMovementInput = CalculateDesiredMovement(flatDirection);
             nextMovementUpdateTime = Time.time + Mathf.Max(0.05f, movementUpdateInterval);
         }
@@ -230,6 +244,7 @@ public class EnemyController : MonoBehaviour
             unit.SetTarget(null);
         }
 
+        debugProbeCount = 0;
         currentTarget = null;
         desiredMovementInput = Vector3.zero;
         nextUpdateTime = 0f;
@@ -335,6 +350,14 @@ public class EnemyController : MonoBehaviour
                 QueryTriggerInteraction.Ignore);
         }
 
+        int debugIndex = debugProbeCount < debugProbeOrigins.Length ? debugProbeCount++ : -1;
+        if (debugIndex >= 0)
+        {
+            debugProbeOrigins[debugIndex] = origin;
+            debugProbeEnds[debugIndex] = origin + direction.normalized * obstacleAvoidanceDistance;
+            debugProbeNormals[debugIndex] = Vector3.zero;
+        }
+
         if (hitCount == 0)
         {
             return Vector3.zero;
@@ -383,6 +406,13 @@ public class EnemyController : MonoBehaviour
         if (closest >= 0)
         {
             RaycastHit hit = obstacleHits[closest];
+            if (debugIndex >= 0)
+            {
+                // 球心终点与接触点不同；显示球心和实际用于避障的表面法线。
+                debugProbeEnds[debugIndex] = origin + direction.normalized * hit.distance;
+                debugProbeNormals[debugIndex] = hit.normal;
+            }
+
             Vector3 normal = hit.normal;
             normal.y = 0f;
             if (normal.sqrMagnitude < 0.01f)
@@ -401,5 +431,71 @@ public class EnemyController : MonoBehaviour
         }
 
         return Vector3.zero;
+    }
+
+    private void OnDrawGizmos()
+    {
+        DrawDebug();
+    }
+
+    private void DrawDebug()
+    {
+        if (!drawDebug || !Application.isPlaying || !isActiveAndEnabled || unit == null || !unit.HasValidCockpit || unit.AcceptsPlayerInput || unit.faction == UnitFaction.Neutral || PlayManager.instance == null || !PlayManager.instance.playMode)
+        {
+            return;
+        }
+
+        Color previousColor = Gizmos.color;
+        Vector3 origin = transform.position;
+        Gizmos.color = unit.faction == UnitFaction.Player ? Color.green : Color.red;
+        Gizmos.DrawWireSphere(origin, 1f);
+        if (showDebugRanges)
+        {
+            Gizmos.DrawWireSphere(origin, Mathf.Max(0f, detectionRange));
+            DrawDebugCircle(origin, desiredDistance, Color.yellow);
+            DrawDebugCircle(origin, retreatDistance, new Color(1f, 0.4f, 0f));
+            if (guardAnchor != null)
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawLine(origin, guardAnchor.position);
+                Gizmos.DrawWireSphere(guardAnchor.position, guardRadius);
+            }
+        }
+
+        if (currentTarget != null && IsValidOpponent(currentTarget))
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawLine(origin, currentTarget.transform.position);
+            Gizmos.DrawWireSphere(currentTarget.transform.position, 1.5f);
+        }
+
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawRay(origin, desiredMovementInput * debugVectorLength);
+        Gizmos.color = Color.white;
+        Gizmos.DrawRay(origin, unit.MovementInput * debugVectorLength);
+        for (int i = 0; i < debugProbeCount; i++)
+        {
+            Gizmos.color = debugProbeNormals[i] == Vector3.zero ? Color.green : Color.red;
+            Gizmos.DrawLine(debugProbeOrigins[i], debugProbeEnds[i]);
+            Gizmos.DrawWireSphere(debugProbeEnds[i], Mathf.Max(0f, obstacleProbeRadius));
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawRay(debugProbeEnds[i], debugProbeNormals[i] * 2f);
+        }
+
+        Gizmos.color = previousColor;
+    }
+
+    private static void DrawDebugCircle(Vector3 origin, float radius, Color color)
+    {
+        Gizmos.color = color;
+        const int segments = 48;
+        Vector3 previous = origin + Vector3.right * Mathf.Max(0f, radius);
+        for (int i = 1; i <= segments; i++)
+        {
+            float angle = i * (Mathf.PI * 2f / segments);
+            Vector3 next = origin + new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * Mathf.Max(0f, radius);
+            Gizmos.DrawLine(previous, next);
+            previous = next;
+        }
     }
 }

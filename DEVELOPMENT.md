@@ -1,5 +1,13 @@
 # HY-Sandbox 开发入口
 
+## 友敌 AI DrawDebug
+
+友方自主舰与敌机共用 EnemyController。运行时在该组件 Inspector 的 **AI Debug → Draw Debug** 勾选开启，并打开 Scene/Game 的 Gizmos；默认关闭，玩家驾驶、中立、禁用和非模拟状态隐藏。Show Debug Ranges 控制索敌球、接近/撤退水平环及守卫球，Debug Vector Length 调整输入向量长度。
+
+绿色/红色单位标记区分友敌；青色连线指向当前有效目标；紫色为期望移动输入，白色为平滑输入。球扫线及终点球绿色表示无有效障碍、红色表示命中，黄色表示用于避障的法线。显示的是最近一次决策采样的球心路径，不是新的实时查询或完整碰撞接触面。未修改 AI 决策、物理输入、Prefab 或序列化旧字段。
+
+验证：Unity Editor 导入/编译通过；365 脚本规范检查通过，解决方案构建 0 错误、22 警告，本次文件 diff 检查通过。项目锁定 SDK 9.0.318 未安装，静态检查从项目外目录使用现有 9.0.320 执行，未改 global.json。全仓 diff 检查存在原有 UserSettings 布局尾随空白。实际 Play 视觉效果尚未验证。函数图与导航已同步。
+
 Unity 6000.6.8f1（URP / VFX Graph 17.6.0，Input System 1.20.1）。本文只维护当前功能、契约与验证入口；历史变更和旧验收完整保存在 [DevelopmentHistory](Docs/DevelopmentHistory.md)。
 
 ## 特效与音频资源管理
