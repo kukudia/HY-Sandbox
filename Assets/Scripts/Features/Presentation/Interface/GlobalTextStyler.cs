@@ -11,14 +11,6 @@ using UnityEngine.UI;
 public sealed class GlobalTextStyler : MonoBehaviour
 {
     private static readonly Color ShadowColor = new Color(0.015f, 0.035f, 0.055f, 0.68f);
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    private static void CreateInstance()
-    {
-        var host = new GameObject("Global Text Styler");
-        DontDestroyOnLoad(host);
-        host.AddComponent<GlobalTextStyler>();
-    }
-
     private IEnumerator Start()
     {
         while (true)
@@ -57,7 +49,7 @@ public sealed class GlobalTextStyler : MonoBehaviour
 
             if (shadow == null)
             {
-                shadow = text.gameObject.AddComponent<Shadow>();
+                continue;
             }
 
             shadow.enabled = true;

@@ -440,7 +440,8 @@ public class EnemyController : MonoBehaviour
 
     private void DrawDebug()
     {
-        if (!drawDebug || !Application.isPlaying || !isActiveAndEnabled || unit == null || !unit.HasValidCockpit || unit.AcceptsPlayerInput || unit.faction == UnitFaction.Neutral || PlayManager.instance == null || !PlayManager.instance.playMode)
+        bool globallyVisible = DebugManager.instance != null && DebugManager.instance.gameObject.scene == gameObject.scene && DebugManager.instance.ShowsAI(unit != null ? unit.faction : UnitFaction.Neutral);
+        if ((!drawDebug && !globallyVisible) || !Application.isPlaying || !isActiveAndEnabled || unit == null || !unit.HasValidCockpit || unit.AcceptsPlayerInput || unit.faction == UnitFaction.Neutral || PlayManager.instance == null || !PlayManager.instance.playMode)
         {
             return;
         }

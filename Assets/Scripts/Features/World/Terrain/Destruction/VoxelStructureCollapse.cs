@@ -65,10 +65,13 @@ public sealed class VoxelStructureCollapse : MonoBehaviour
                 minimum = Vector3Int.Min(minimum, cell);
             }
 
-            var obj = new GameObject("WorldLab metal debris");
-            obj.transform.SetPositionAndRotation(world.transform.TransformPoint((Vector3)minimum * world.CellSize), world.transform.rotation);
+            VoxelDebrisPiece piece = Instantiate(
+                RuntimeObjectTemplates.Instance.VoxelDebris,
+                world.transform.TransformPoint((Vector3)minimum * world.CellSize),
+                world.transform.rotation);
+            var obj = piece.gameObject;
+            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(obj, world.gameObject.scene);
             obj.transform.localScale = world.transform.lossyScale;
-            VoxelDebrisPiece piece = obj.AddComponent<VoxelDebrisPiece>();
             piece.Initialize(cells, world.CellSize, world.Materials, debrisLifetime);
             pieces.Add(piece);
             foreach (Vector3Int cell in cells)

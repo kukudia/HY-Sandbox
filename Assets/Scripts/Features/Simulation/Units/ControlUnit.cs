@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 public class ControlUnit : MonoBehaviour
 {
+    private bool aiEligibilityInitialized;
+    private bool wasAIEligible;
     private static readonly List<ControlUnit> ActiveUnits = new List<ControlUnit>();
     public static IReadOnlyList<ControlUnit> RuntimeUnits => ActiveUnits;
 
@@ -225,9 +227,17 @@ public class ControlUnit : MonoBehaviour
             hoverFlightController.Init();
         }
 
-        if (hasValidCockpit && (faction == UnitFaction.Enemy || cockpit.ControlMode == UnitControlMode.Autonomous) && GetComponent<EnemyController>() == null)
+        // AI 参数由载具根 Prefab 持有；组装后只启停既有组件。
+        EnemyController ai = GetComponent<EnemyController>();
+        if (ai != null)
         {
-            gameObject.AddComponent<EnemyController>();
+            bool eligible = hasValidCockpit && (faction == UnitFaction.Enemy || cockpit.ControlMode == UnitControlMode.Autonomous);
+            if (!aiEligibilityInitialized || eligible != wasAIEligible)
+            {
+                ai.enabled = eligible;
+                wasAIEligible = eligible;
+                aiEligibilityInitialized = true;
+            }
         }
     }
 
@@ -339,28 +349,5 @@ public class ControlUnit : MonoBehaviour
         {
             PlayManager.instance.UnregisterControlUnit(this);
         }
-    }
-}
-
-public class RuntimeUnitMember : MonoBehaviour
-{
-    public string ownerUnitId;
-    public UnitFaction ownerFaction;
-    public static RuntimeUnitMember Ensure(GameObject obj, string unitId, UnitFaction faction)
-    {
-        if (obj == null)
-        {
-            return null;
-        }
-
-        RuntimeUnitMember member = obj.GetComponent<RuntimeUnitMember>();
-        if (member == null)
-        {
-            member = obj.AddComponent<RuntimeUnitMember>();
-        }
-
-        member.ownerUnitId = unitId;
-        member.ownerFaction = faction;
-        return member;
     }
 }

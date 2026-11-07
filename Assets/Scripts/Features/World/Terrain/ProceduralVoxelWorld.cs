@@ -132,10 +132,10 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
                     required.Add(start);
                     if (!chunks.TryGetValue(start, out VoxelWorldChunk chunk))
                     {
-                        var obj = new GameObject("Chunk_" + start);
+                        chunk = Instantiate(RuntimeObjectTemplates.Instance.TerrainChunk, transform);
+                        var obj = chunk.gameObject;
+                        obj.name = "Chunk_" + start;
                         registerCreated?.Invoke(obj);
-                        obj.transform.SetParent(transform, false);
-                        chunk = obj.AddComponent<VoxelWorldChunk>();
                         chunk.Configure(start);
                         chunks.Add(start, chunk);
                     }
@@ -274,10 +274,10 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
                     }
                 }
                 while (capturedRevision != data.Revision);
-                var obj = new GameObject("StreamingChunk_" + start);
-                obj.transform.SetParent(transform, false);
+                VoxelWorldChunk chunk = Instantiate(RuntimeObjectTemplates.Instance.TerrainChunk, transform);
+                var obj = chunk.gameObject;
+                obj.name = "StreamingChunk_" + start;
                 obj.transform.localPosition = (Vector3)start * cellSize;
-                VoxelWorldChunk chunk = obj.AddComponent<VoxelWorldChunk>();
                 created.Add(chunk);
                 chunk.Configure(start);
                 chunks.Add(start, chunk);

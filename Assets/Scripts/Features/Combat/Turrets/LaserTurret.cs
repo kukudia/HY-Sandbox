@@ -2,6 +2,7 @@
 // 入口：Turret 固定步调用 Fire()；公用配置通过基类保持原序列化字段。
 using UnityEngine;
 
+[RequireComponent(typeof(StylizedBeamEffect))]
 public sealed class LaserTurret : Turret
 {
     [SerializeField]
@@ -26,11 +27,6 @@ public sealed class LaserTurret : Turret
         }
 
         _fireBeam = GetComponent<StylizedBeamEffect>();
-        if (_fireBeam == null)
-        {
-            _fireBeam = gameObject.AddComponent<StylizedBeamEffect>();
-        }
-
         _fireBeam.Configure(beamWidth, "LaserBeam");
         _fireBeam.SetColor(beamColor);
         _fireBeam.SetVisible(false);

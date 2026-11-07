@@ -117,6 +117,7 @@ public static class CombatVfxCapture
         fragment.transform.localScale = SessionState.GetBool(Key + "Envelope", false) ? new Vector3(1.4f, 0.65f, 0.8f) : Vector3.one * 0.28f;
         fragment.GetComponent<Collider>().enabled = false;
         debris = fragment.AddComponent<Rigidbody>();
+        fragment.AddComponent<DetachedPartSmokeTrail>().enabled = false;
         debris.useGravity = false;
         debris.linearVelocity = new Vector3(3.2f, 0, 0);
         debris.angularVelocity = new Vector3(1, 2, 0);

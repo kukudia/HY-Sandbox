@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0563b390fae16af408163b2ee37356bf, type: 3}
+  m_Name: Objects
+  m_EditorClassIdentifier: Assembly-CSharp::RuntimeObjectTemplates
+  building: {fileID: 1670974728441111594, guid: a1130cd2ed73742409419e0faec2b66b, type: 3}
+  buildingDebris: {fileID: 8295582060311473647, guid: c0a363efde9270d49ab52e5fd1c7f2a9, type: 3}
+  terrainChunk: {fileID: 1612160059406090369, guid: ff5afcb4e44a79145bc6fd0871ea17c8, type: 3}
+  voxelDebris: {fileID: 7278867026556466493, guid: 2a45f15a73f4dad44a66953c72111194, type: 3}
+  visualMesh: {fileID: 7195585349204467378, guid: d4e0f34ebf2f6984192bc13f97892195, type: 3}
+  worldLabel: {fileID: 7791328098738396463, guid: 54bbb35c3f8269945939fbea0b0a61a0, type: 3}
+  statusGroup: {fileID: 8630655764766167430, guid: 41936cc37d0f9f14c93ba06df794804a, type: 3}
+  statusIcon: {fileID: 5910812579080717959, guid: f854d6a9792b44a4d8d31fa14112d7ae, type: 3}
+  transientBeam: {fileID: 4579401535175663466, guid: f91ca65c885cde04f93b49480fb0fad5, type: 3}
+  transientLight: {fileID: 7663866872366001699, guid: 366f7e84f9e023c4e9e0f89e60d483db, type: 3}
+  meteorLight: {fileID: 3482491321965881119, guid: 142d891d3475dee42a6fa841f9d76d09, type: 3}
+  workshopLight: {fileID: 3087655570893529714, guid: 1ae6dba29c64f0f43b807b778aa3f163, type: 3}
+  powerConnection: {fileID: 7494814181757983364, guid: 0e83b6382ac04974b8efd030fdd5cff6, type: 3}

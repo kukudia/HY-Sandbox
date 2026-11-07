@@ -261,6 +261,8 @@ GameObject:
   - component: {fileID: 2723974255847565657}
   - component: {fileID: 4461773430517532681}
   - component: {fileID: 7188705834447766622}
+  - component: {fileID: 8306564518275732317}
+  - component: {fileID: 6041034215189080911}
   m_Layer: 3
   m_Name: Structure_3x6x3
   m_TagString: Untagged
@@ -1110,3 +1112,29 @@ MonoBehaviour:
   powerStatus: 0
   iconHeightOffset: 0.25
   _fadeSpeed: 7
+--- !u!114 &8306564518275732317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8792046084806271759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e4268651f8869b4caf5687865f095bf, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::RuntimeUnitMember
+  ownerUnitId:
+  ownerFaction: 0
+--- !u!114 &6041034215189080911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8792046084806271759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81bbcf36bb3067c46af318f3bb5cd263, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::WreckSalvage

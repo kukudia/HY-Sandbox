@@ -19,6 +19,8 @@ public sealed class AbnormalImpulseRecorder : MonoBehaviour
     private float _discoveryInterval = 0.5f;
     [SerializeField, Min(0f)]
     private float _repeatInterval = 0.5f;
+    [SerializeField, Tooltip("仅调试未由项目 Prefab 制作的外部刚体时允许临时补挂观测器；项目刚体已预挂。")]
+    private bool observeUnconfiguredBodies;
     private static AbnormalImpulseRecorder _instance;
     private readonly Dictionary<Rigidbody, Vector3> _previousVelocities = new Dictionary<Rigidbody, Vector3>();
     private readonly Dictionary<Rigidbody, float> _lastWarningTimes = new Dictionary<Rigidbody, float>();
@@ -26,18 +28,6 @@ public sealed class AbnormalImpulseRecorder : MonoBehaviour
     private readonly List<Rigidbody> _sampledBodies = new List<Rigidbody>();
     private float _nextDiscovery;
     private string _logPath;
-    internal static void StartSession()
-    {
-        if (!Application.isPlaying || _instance != null)
-        {
-            return;
-        }
-
-        GameObject host = new GameObject("Abnormal Impulse Recorder (Editor only)");
-        host.hideFlags = HideFlags.DontSave;
-        _instance = host.AddComponent<AbnormalImpulseRecorder>();
-    }
-
     public static void RecordCollision(Rigidbody body, Collision collision)
     {
         if (_instance == null || body == null || collision == null)
@@ -60,7 +50,7 @@ collision.collider != null ? collision.collider.name : null);
     {
         if (_instance != null && _instance != this)
         {
-            Destroy(gameObject);
+            enabled = false;
             return;
         }
 
@@ -84,7 +74,7 @@ _logPath,
                 if (body != null && !_previousVelocities.ContainsKey(body))
                 {
                     _previousVelocities.Add(body, body.linearVelocity);
-                    if (body.GetComponent<AbnormalImpulseBodyProbe>() == null)
+                    if (observeUnconfiguredBodies && body.GetComponent<AbnormalImpulseBodyProbe>() == null)
                     {
                         body.gameObject.AddComponent<AbnormalImpulseBodyProbe>();
                     }
@@ -205,32 +195,6 @@ Csv(body.linearVelocity.ToString("F3")));
         if (_instance == this)
         {
             _instance = null;
-        }
-    }
-}
-
-[InitializeOnLoad]
-internal static class AbnormalImpulseRecorderBootstrap
-{
-    static AbnormalImpulseRecorderBootstrap()
-    {
-        EditorApplication.playModeStateChanged += OnPlayModeChanged;
-        EditorApplication.update += EnsureSession;
-    }
-
-    private static void OnPlayModeChanged(PlayModeStateChange state)
-    {
-        if (state == PlayModeStateChange.EnteredPlayMode)
-        {
-            AbnormalImpulseRecorder.StartSession();
-        }
-    }
-
-    private static void EnsureSession()
-    {
-        if (EditorApplication.isPlaying)
-        {
-            AbnormalImpulseRecorder.StartSession();
         }
     }
 }

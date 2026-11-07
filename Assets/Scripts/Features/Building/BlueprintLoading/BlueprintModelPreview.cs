@@ -49,8 +49,10 @@ public static class BlueprintModelPreview
         MeshRenderer renderer = source.GetComponent<MeshRenderer>();
         if (mesh != null && renderer != null && renderer.enabled && mesh.sharedMesh != null)
         {
-            copy.gameObject.AddComponent<MeshFilter>().sharedMesh = mesh.sharedMesh;
-            MeshRenderer visible = copy.gameObject.AddComponent<MeshRenderer>();
+            MeshFilter geometry = Object.Instantiate(RuntimeObjectTemplates.Instance.VisualMesh, copy);
+            geometry.name = "Static preview geometry";
+            geometry.sharedMesh = mesh.sharedMesh;
+            MeshRenderer visible = geometry.GetComponent<MeshRenderer>();
             visible.sharedMaterials = renderer.sharedMaterials;
             visible.shadowCastingMode = renderer.shadowCastingMode;
             visible.receiveShadows = renderer.receiveShadows;

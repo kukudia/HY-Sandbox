@@ -3,6 +3,7 @@
 // 依赖：RepairTargetSearch 扫描归属与范围；RepairBeamView 显示光束与命中效果。
 using UnityEngine;
 
+[RequireComponent(typeof(StylizedBeamEffect))]
 public class RepairBot : Bot
 {
     private const float MinimumTargetScanInterval = 0.25f;

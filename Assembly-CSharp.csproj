@@ -162,6 +162,7 @@
     <Compile Include="Assets\Scripts\Features\Simulation\Physics\RigidbodyMotion.cs" />
     <Compile Include="Assets\Scripts\Features\Bootstrap\SceneObjectQuery.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\TurretTargetSelector.cs" />
+    <Compile Include="Assets\Scripts\Features\Simulation\Units\RuntimeUnitMember.cs" />
     <Compile Include="Assets\Scripts\Features\Power\Devices\PowerGeneratingUnit.cs" />
     <Compile Include="Assets\Scripts\Features\World\Terrain\ProceduralVoxelWorld.cs" />
     <Compile Include="Assets\Scripts\Features\Salvage\Drops\LootDrop.cs" />
@@ -220,6 +221,7 @@
     <Compile Include="Assets\Scripts\Features\Simulation\Block.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\Navigation\BotObstacleAvoidance.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interaction\BuildPlacementGeometry.cs" />
+    <Compile Include="Assets\Scripts\Features\Bootstrap\RuntimeObjectTemplates.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BlueprintBlockFactory.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Workshop\SiegeWorkshopStage.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Physics\ImpactPhysics.cs" />

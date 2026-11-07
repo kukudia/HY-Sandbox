@@ -41,20 +41,19 @@ public class VisualEffectsManager : MonoBehaviour
 
     public static VisualEffectsManager EnsureInstance()
     {
+        var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+        if (instance != null && instance.gameObject.scene == scene)
+        {
+            return instance;
+        }
+
+        instance = SceneObjectQuery.FindInScene<VisualEffectsManager>(scene);
         if (instance != null)
         {
             return instance;
         }
 
-        instance = FindAnyObjectByType<VisualEffectsManager>();
-        if (instance != null)
-        {
-            return instance;
-        }
-
-        GameObject managerObject = new GameObject("Visual Effects Manager");
-        instance = managerObject.AddComponent<VisualEffectsManager>();
-        return instance;
+        return null;
     }
 
     public static Material GetSharedLineMaterial()
@@ -69,7 +68,7 @@ public class VisualEffectsManager : MonoBehaviour
             return;
         }
 
-        EnsureInstance().PlayBlockPlaced(block);
+        EnsureInstance()?.PlayBlockPlaced(block);
     }
 
     public static void TryPlayBlockRemoved(Block block)
@@ -79,7 +78,7 @@ public class VisualEffectsManager : MonoBehaviour
             return;
         }
 
-        EnsureInstance().PlayBlockRemoved(block);
+        EnsureInstance()?.PlayBlockRemoved(block);
     }
 
     public static void TryPlayBlockExplosion(Block block)
@@ -89,12 +88,12 @@ public class VisualEffectsManager : MonoBehaviour
             return;
         }
 
-        EnsureInstance().PlayBlockExplosion(block);
+        EnsureInstance()?.PlayBlockExplosion(block);
     }
 
     public static void TryPlayRepairPulse(Vector3 origin, Vector3 target, Color color, float width)
     {
-        EnsureInstance().PlayRepairPulse(origin, target, color, width);
+        EnsureInstance()?.PlayRepairPulse(origin, target, color, width);
     }
 
     public static void TryAttachDetachedPartSmoke(Rigidbody body, Vector3 worldAnchor, float intensity)
@@ -105,7 +104,7 @@ public class VisualEffectsManager : MonoBehaviour
         }
 
         VisualEffectsManager manager = EnsureInstance();
-        if (!manager.enableRuntimeVfx)
+        if (manager == null || !manager.enableRuntimeVfx)
         {
             return;
         }
@@ -120,7 +119,7 @@ public class VisualEffectsManager : MonoBehaviour
             return;
         }
 
-        EnsureInstance().PlayObjectDestroyed(target);
+        EnsureInstance()?.PlayObjectDestroyed(target);
     }
 
     public static void TryPlayBlockMoved(Block block, Vector3 from, Vector3 to)
@@ -130,7 +129,7 @@ public class VisualEffectsManager : MonoBehaviour
             return;
         }
 
-        EnsureInstance().PlayBlockMoved(block, from, to);
+        EnsureInstance()?.PlayBlockMoved(block, from, to);
     }
 
     public static void TryPlayBlockRotated(Block block)
@@ -140,7 +139,7 @@ public class VisualEffectsManager : MonoBehaviour
             return;
         }
 
-        EnsureInstance().PlayBlockRotated(block);
+        EnsureInstance()?.PlayBlockRotated(block);
     }
 
     public static void TryShowBlockSelection(Block block)
@@ -150,7 +149,7 @@ public class VisualEffectsManager : MonoBehaviour
             return;
         }
 
-        EnsureInstance().ShowBlockSelection(block);
+        EnsureInstance()?.ShowBlockSelection(block);
     }
 
     public static void TryClearBlockSelection(Block block)
@@ -170,7 +169,7 @@ public class VisualEffectsManager : MonoBehaviour
             return;
         }
 
-        EnsureInstance().UpdateGhostPreview(ghost.transform, isBlocked);
+        EnsureInstance()?.UpdateGhostPreview(ghost.transform, isBlocked);
     }
 
     public static void TryClearGhostPreview(GameObject ghost)
@@ -190,19 +189,20 @@ public class VisualEffectsManager : MonoBehaviour
             return;
         }
 
-        EnsureInstance().DecorateMeteor(meteor);
+        EnsureInstance()?.DecorateMeteor(meteor);
     }
 
     public static void TryPlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)
     {
-        EnsureInstance().PlayMeteorImpact(position, normal, scale, speed);
+        EnsureInstance()?.PlayMeteorImpact(position, normal, scale, speed);
     }
 
     private void Awake()
     {
-        if (instance != null && instance != this)
+        if (instance != null && instance != this && instance.gameObject.scene == gameObject.scene)
         {
-            Destroy(gameObject);
+            Debug.LogError("Scene contains duplicate VisualEffectsManager components.", this);
+            enabled = false;
             return;
         }
 
@@ -229,7 +229,7 @@ public class VisualEffectsManager : MonoBehaviour
             return;
         }
 
-        EnsureInstance().PlayEnemySpawnPortal(unit);
+        EnsureInstance()?.PlayEnemySpawnPortal(unit);
     }
 
     private void PlayEnemySpawnPortal(ControlUnit unit)
@@ -505,16 +505,13 @@ public class VisualEffectsManager : MonoBehaviour
         if (meteor.trailEffect != null)
         {
             meteor.trailEffect.SetIntensity(1f);
-            var follower = meteor.trailEffect.GetComponent<MeteorTrailFollower>() ?? meteor.trailEffect.gameObject.AddComponent<MeteorTrailFollower>();
+            var follower = meteor.trailEffect.GetComponent<MeteorTrailFollower>();
             follower.Initialize(meteor.transform, meteor.trailEffect);
         }
 
         if (meteor.glowLight == null && MeteorLightToken.ActiveCount < MeteorLightToken.Maximum)
         {
-            GameObject lightObject = new GameObject("Meteor Glow VFX");
-            lightObject.transform.SetParent(meteor.transform, false);
-            meteor.glowLight = lightObject.AddComponent<Light>();
-            lightObject.AddComponent<MeteorLightToken>();
+            meteor.glowLight = Instantiate(RuntimeObjectTemplates.Instance.MeteorLight, meteor.transform);
         }
 
         if (meteor.glowLight != null)

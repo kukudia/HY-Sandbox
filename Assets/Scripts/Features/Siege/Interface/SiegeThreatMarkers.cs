@@ -10,7 +10,7 @@ public sealed class SiegeThreatMarkers : MonoBehaviour
     private SiegeSession session;
     [SerializeField, Tooltip("用于投影的相机；留空时使用Camera.main。")]
     private Camera worldCamera;
-    [SerializeField, Min(1), Tooltip("同时显示的最大标记数；应与单波同时在场上限一致。")]
+    [SerializeField, Min(1), Tooltip("制作期标记数量；调整后执行 Bake Editable Components，运行时使用已保存的子对象。")]
     private int poolSize = 6;
     [SerializeField, Min(0f), Tooltip("标记离屏幕边缘的像素距离。")]
     private float edgeMargin = 96f;
@@ -26,6 +26,9 @@ public sealed class SiegeThreatMarkers : MonoBehaviour
     private Vector2 markerSize = new Vector2(18f, 18f);
     [SerializeField, Min(8)]
     private int labelSize = 16;
+    public int AuthoredPoolSize => poolSize;
+    public int AuthoredLabelSize => labelSize;
+
     private readonly List<RectTransform> markers = new List<RectTransform>();
     private readonly List<Text> labels = new List<Text>();
     private readonly List<int> shownDistances = new List<int>();
@@ -45,7 +48,7 @@ public sealed class SiegeThreatMarkers : MonoBehaviour
         }
     }
 
-    /// <summary>建立固定数量的标记；运行时只改位置、旋转、文字与可见性。</summary>
+    /// <summary>绑定已保存的标记池；制作参数变更后通过 EditableComponentBaker 生成缺少的标记。</summary>
     private void Build()
     {
         if (markers.Count > 0 || canvasRect == null)
@@ -53,46 +56,24 @@ public sealed class SiegeThreatMarkers : MonoBehaviour
             return;
         }
 
-        Font font = null;
-        foreach (Text existing in GetComponentsInChildren<Text>(true))
+        foreach (Transform child in canvasRect)
         {
-            font = existing.font;
-            if (font != null)
+            if (!child.name.StartsWith("Threat Marker "))
             {
-                break;
+                continue;
             }
-        }
 
-        for (int index = 0; index < poolSize; index++)
-        {
-            var root = new GameObject("Threat Marker " + (index + 1), typeof(RectTransform), typeof(Image));
-            var rect = (RectTransform)root.transform;
-            rect.SetParent(canvasRect, false);
-            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
-            rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.sizeDelta = markerSize;
-            Image diamond = root.GetComponent<Image>();
-            diamond.color = markerColor;
-            diamond.raycastTarget = false;
-            rect.localRotation = Quaternion.Euler(0f, 0f, 45f);
-            root.SetActive(false);
-            var labelObject = new GameObject("Distance", typeof(RectTransform), typeof(Text));
-            var labelRect = (RectTransform)labelObject.transform;
-            labelRect.SetParent(rect, false);
-            labelRect.anchorMin = labelRect.anchorMax = new Vector2(0.5f, 0.5f);
-            labelRect.pivot = new Vector2(0.5f, 1f);
-            labelRect.anchoredPosition = new Vector2(0f, -6f);
-            labelRect.sizeDelta = new Vector2(90f, 22f);
-            Text label = labelObject.GetComponent<Text>();
-            label.font = font;
-            label.fontSize = labelSize;
-            label.alignment = TextAnchor.UpperCenter;
-            label.color = labelColor;
-            label.raycastTarget = false;
-            label.verticalOverflow = VerticalWrapMode.Overflow;
+            var rect = child as RectTransform;
+            Text label = child.GetComponentInChildren<Text>(true);
+            if (rect == null || label == null)
+            {
+                continue;
+            }
+
             markers.Add(rect);
             labels.Add(label);
             shownDistances.Add(-1);
+            child.gameObject.SetActive(false);
         }
     }
 

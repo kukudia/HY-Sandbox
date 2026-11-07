@@ -1,0 +1,176 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5106242704077059616
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1384485667084048059}
+  - component: {fileID: 5871723653787693556}
+  - component: {fileID: 983420047472304019}
+  - component: {fileID: 1670974728441111594}
+  - component: {fileID: 8256930900376454441}
+  - component: {fileID: 5103302748124771182}
+  - component: {fileID: 6703365244044652136}
+  - component: {fileID: 6504226472683289476}
+  m_Layer: 0
+  m_Name: Building
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1384485667084048059
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5106242704077059616}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5871723653787693556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5106242704077059616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a5fe22249f25274a85d0f62de5a8851, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::ControlUnit
+  runtimeUnitId:
+  hoverFlightController: {fileID: 0}
+  cockpit: {fileID: 0}
+  cockpits: []
+  mainThrusters: []
+  hoverThrusters: []
+  faction: 0
+  hasValidCockpit: 0
+  movementInput: {x: 0, y: 0, z: 0}
+  target: {fileID: 0}
+--- !u!54 &983420047472304019
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5106242704077059616}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &1670974728441111594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5106242704077059616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 671e359a7ca65f14ca3f7ce2d071d0be, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::BuildingRuntime
+--- !u!114 &8256930900376454441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5106242704077059616}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f21b2e181334d6cbfe39c7548fe1adb, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+  targetSwitchDistanceRatio: 0.85
+  detectionRange: 150
+  desiredDistance: 18
+  updateInterval: 0.25
+  movementUpdateInterval: 0.5
+  movementResponseRate: 2.5
+  retreatDistance: 10
+  obstacleAvoidanceDistance: 12
+  obstacleProbeRadius: 1.5
+  obstacleAvoidanceWeight: 1.4
+  sideProbeAngle: 35
+  targetHoverHeightOffset: 3
+  obstacleLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  drawDebug: 0
+  showDebugRanges: 1
+  debugVectorLength: 8
+--- !u!114 &5103302748124771182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5106242704077059616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 739bd11e327f127449ea64229d936483, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::FragmentLifetime
+--- !u!114 &6703365244044652136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5106242704077059616}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a83a0be8c35302648af39c6447ac22d3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::DetachedPartSmokeTrail
+  effectLifetime: 6
+  minimumSpeed: 0.7
+  fullEmissionSpeed: 8
+  maximumEmissionRate: 26
+  _initialSmokeDuration: 1.5
+  _initialSmokeIntensity: 0.4
+  _minimumOpacity: 0.85
+  _flameEnvelopeScale: 1.25
+  _flameCoverage: 1.8
+--- !u!114 &6504226472683289476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5106242704077059616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fae08ac63693f94d9243548ad294a6f, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::AbnormalImpulseBodyProbe

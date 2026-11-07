@@ -79,6 +79,7 @@
     <Compile Include="Assets\Editor\Presentation\Effects\BlockVfxBaker.cs" />
     <Compile Include="Assets\Editor\Presentation\Effects\EnemySpawnPortalBaker.cs" />
     <Compile Include="Assets\Editor\Architecture\DetachedVehicleChecks.cs" />
+    <Compile Include="Assets\Editor\Architecture\EditableComponentBaker.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegeRuntimeConnectionChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\Effects\DebrisFireBaker.cs" />
     <Compile Include="Assets\Editor\Combat\Interface\CombatHudSetup.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="Assets\Editor\Diagnostics\ProfilerCaptureAnalysis.cs" />
     <Compile Include="Assets\Editor\Diagnostics\Benchmarks\PresentationPerformanceChecks.cs" />
     <Compile Include="Assets\Editor\World\Player\WorldPlayerBuildChecks.cs" />
+    <Compile Include="Assets\Editor\Architecture\EditableComponentChecks.cs" />
     <Compile Include="Assets\Editor\World\Validation\Outposts\OutpostResidentChecks.cs" />
     <Compile Include="Assets\Editor\Salvage\SalvagePlayProbe.cs" />
     <Compile Include="Assets\Editor\World\Validation\Terrain\WorldTerrainIntegrationChecks.cs" />

@@ -47,8 +47,6 @@ public sealed class IndustrialPartMotion : MonoBehaviour
             _activeIndex = Active.Count;
             Active.Add(this);
         }
-
-        IndustrialMotionDriver.EnsureExists();
     }
 
     private void OnDisable()
@@ -75,6 +73,20 @@ public sealed class IndustrialPartMotion : MonoBehaviour
         for (int i = 0; i < Active.Count; i++)
         {
             Active[i].Animate(deltaTime, unscaledTime);
+        }
+    }
+
+    internal static void AnimateScene(UnityEngine.SceneManagement.Scene scene)
+    {
+        float deltaTime = Time.deltaTime;
+        float unscaledTime = Time.unscaledTime;
+        IndustrialEmissionBinding.Tick(unscaledTime);
+        for (int i = 0; i < Active.Count; i++)
+        {
+            if (Active[i] != null && Active[i].gameObject.scene == scene)
+            {
+                Active[i].Animate(deltaTime, unscaledTime);
+            }
         }
     }
 

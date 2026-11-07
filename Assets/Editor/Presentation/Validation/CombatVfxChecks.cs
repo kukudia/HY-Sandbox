@@ -10,11 +10,12 @@ public static class CombatVfxChecks
 {
     public static string RunPlay()
     {
-        if (!Application.isPlaying || Object.FindAnyObjectByType<TurretProjectilePool>() != null)
+        if (!Application.isPlaying || SceneObjectQuery.FindInActiveScene<TurretProjectilePool>() != null)
         {
             throw new InvalidOperationException("Requires isolated Play scene without an existing projectile pool.");
         }
 
+        new GameObject("Projectile check pool").AddComponent<TurretProjectilePool>();
         TurretProjectile prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Art/Combat/TurretShell.prefab").GetComponent<TurretProjectile>();
         const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
         MethodInfo retire = typeof(TurretProjectile).GetMethod("Retire", flags);
@@ -60,7 +61,7 @@ public static class CombatVfxChecks
         }
         finally
         {
-            TurretProjectilePool pool = Object.FindAnyObjectByType<TurretProjectilePool>();
+            TurretProjectilePool pool = SceneObjectQuery.FindInActiveScene<TurretProjectilePool>();
             if (pool != null)
             {
                 Object.DestroyImmediate(pool.gameObject);

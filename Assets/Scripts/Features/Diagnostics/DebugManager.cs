@@ -27,9 +27,16 @@ public class DebugManager : MonoBehaviour
     public float connectionDashLength = 0.35f;
     [Min(0f)]
     public float connectionDashScrollSpeed = 0.45f;
+    [Header("AI Debug")]
+    [SerializeField, Tooltip("绘制所有自主友舰的目标、移动意图与避障采样。")]
+    private bool showFriendlyAI;
+    [SerializeField, Tooltip("绘制所有敌机的目标、移动意图与避障采样。")]
+    private bool showEnemyAI;
+    public bool ShowsAI(UnitFaction faction) => faction == UnitFaction.Player ? showFriendlyAI : faction == UnitFaction.Enemy && showEnemyAI;
     private PowerRangeUnionView _powerRanges;
     private PowerRangeUnionView PowerRanges => _powerRanges ?? (_powerRanges = new PowerRangeUnionView(transform));
 
+    [SerializeField]
     private RectTransform statusIconRoot;
     public RectTransform StatusIconRoot
     {
@@ -43,11 +50,6 @@ public class DebugManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        if (GetComponent<DurabilityDebugLabels>() == null)
-        {
-            gameObject.AddComponent<DurabilityDebugLabels>();
-        }
-
         EnsureStatusIconCanvas();
         PowerRanges.Hide();
     }
@@ -119,19 +121,7 @@ public class DebugManager : MonoBehaviour
             return;
         }
 
-        GameObject canvasObject = new GameObject("Block Status Overlay", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
-        canvasObject.transform.SetParent(transform, false);
-        int uiLayer = LayerMask.NameToLayer("UI");
-        canvasObject.layer = uiLayer >= 0 ? uiLayer : gameObject.layer;
-        Canvas canvas = canvasObject.GetComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.overrideSorting = true;
-        canvas.sortingOrder = -1;
-        CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>();
-        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = new Vector2(1920f, 1080f);
-        scaler.matchWidthOrHeight = 0.5f;
-        statusIconRoot = canvasObject.GetComponent<RectTransform>();
+        throw new MissingReferenceException("DebugManager requires an authored Block Status Overlay reference.");
     }
 
     internal void RefreshPowerRangeMesh(IList<PowerTransmissionDevice> devices)

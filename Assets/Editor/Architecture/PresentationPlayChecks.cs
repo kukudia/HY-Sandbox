@@ -97,12 +97,13 @@ internal static class PresentationPlayChecks
             MainUIPanels panelRunner = panelRunnerObject.AddComponent<MainUIPanels>();
             object transitions = GetField(panelRunner, "_transitions");
             GameObject panel = Own(ownedObjects, "Probe transition panel", root.transform);
+            panel.AddComponent<CanvasGroup>();
             Invoke(transitions, "Show", panel, true, 0f);
             CanvasGroup group = panel.GetComponent<CanvasGroup>();
             Check(
                 checks,
                 failures,
-                "Zero-duration show creates CanvasGroup and enables interaction immediately",
+                "Zero-duration show uses authored CanvasGroup and enables interaction immediately",
                 panel.activeSelf && group != null && group.alpha == 1f && group.interactable && group.blocksRaycasts);
             Invoke(transitions, "Show", panel, false, 0f);
             Check(

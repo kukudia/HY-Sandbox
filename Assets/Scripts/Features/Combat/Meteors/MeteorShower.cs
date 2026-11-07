@@ -57,11 +57,6 @@ public class MeteorShower : MonoBehaviour
         meteor.transform.localScale = new Vector3(size, size, size);
         // 添加物理组件
         Rigidbody rb = meteor.GetComponent<Rigidbody>();
-        if (rb == null)
-        {
-            rb = meteor.AddComponent<Rigidbody>();
-        }
-
         rb.mass = size * 100;
         // 设置随机下落速度
         float fallSpeed = Random.Range(minFallSpeed, maxFallSpeed);
@@ -74,20 +69,8 @@ public class MeteorShower : MonoBehaviour
         float rotationSpeed = Random.Range(minRotationSpeed, maxRotationSpeed);
         // Rigidbody.angularVelocity is expressed in radians per second.
         rb.angularVelocity = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized * rotationSpeed * Mathf.Deg2Rad;
-        // 添加碰撞检测
-        //SphereCollider collider = meteor.GetComponent<SphereCollider>();
-        //if (collider == null)
-        //{
-        //    collider = meteor.AddComponent<SphereCollider>();
-        //}
-        //collider.radius = 0.5f;
         // 添加销毁脚本
         Meteor meteorScript = meteor.GetComponent<Meteor>();
-        if (meteorScript == null)
-        {
-            meteorScript = meteor.AddComponent<Meteor>();
-        }
-
         meteorScript.meteorShower = this;
     }
 

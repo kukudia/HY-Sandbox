@@ -5,6 +5,7 @@ using UnityEngine;
 public sealed class FragmentLifetime : MonoBehaviour
 {
     private float createdAt;
+    private bool marked;
     internal static float MinimumLifetime => Mathf.Max(0f, WreckSalvage.Settings != null ? WreckSalvage.Settings.minimumFragmentLifetime : 10f);
 
     private void Awake()
@@ -14,16 +15,23 @@ public sealed class FragmentLifetime : MonoBehaviour
 
     internal static void Mark(GameObject root)
     {
-        if (root.GetComponent<FragmentLifetime>() == null)
+        FragmentLifetime lifetime = root.GetComponent<FragmentLifetime>();
+        if (lifetime == null)
         {
-            root.AddComponent<FragmentLifetime>();
+            throw new MissingComponentException("Fragment root requires an authored FragmentLifetime.");
+        }
+
+        if (!lifetime.marked)
+        {
+            lifetime.createdAt = Time.time;
+            lifetime.marked = true;
         }
     }
 
     internal static float Remaining(GameObject root)
     {
         FragmentLifetime lifetime = root != null ? root.GetComponent<FragmentLifetime>() : null;
-        return lifetime != null ? Mathf.Max(0f, MinimumLifetime - (Time.time - lifetime.createdAt)) : 0f;
+        return lifetime != null && lifetime.marked ? Mathf.Max(0f, MinimumLifetime - (Time.time - lifetime.createdAt)) : 0f;
     }
 
     internal static bool CanRetire(float age)

@@ -92,8 +92,15 @@ internal sealed class IndustrialEmissionBinding : IDisposable
         renderer.SetPropertyBlock(properties);
     }
 
+    private static int lastPulseFrame = -1;
     internal static void Tick(float unscaledTime)
     {
+        if (lastPulseFrame == Time.frameCount)
+        {
+            return;
+        }
+
+        lastPulseFrame = Time.frameCount;
         foreach (Pulse pulse in Pulses.Values)
         {
             pulse.Update(unscaledTime);

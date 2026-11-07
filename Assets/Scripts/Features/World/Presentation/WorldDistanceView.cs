@@ -55,10 +55,10 @@ internal sealed class WorldDistanceView : IDisposable
         world = terrain;
         settings = configuration;
         Focus = world.SpawnPosition;
-        root = new GameObject("Distant terrain - visual only");
-        root.transform.SetParent(world.transform, false);
-        filter = root.AddComponent<MeshFilter>();
-        MeshRenderer renderer = root.AddComponent<MeshRenderer>();
+        filter = Object.Instantiate(RuntimeObjectTemplates.Instance.VisualMesh, world.transform);
+        root = filter.gameObject;
+        root.name = "Distant terrain - visual only";
+        MeshRenderer renderer = root.GetComponent<MeshRenderer>();
         renderer.sharedMaterial = world.Materials[0];
         renderer.shadowCastingMode = ShadowCastingMode.Off;
         renderer.receiveShadows = true;
@@ -288,13 +288,14 @@ internal sealed class WorldDistanceView : IDisposable
         int size = settings.ChunkSize;
         float cell = world.CellSize;
         Mesh mesh = WorldTerrainTransitionMesh.Build(world, settings, coordinate);
-        var column = new GameObject(mesh.name);
+        MeshFilter result = Object.Instantiate(RuntimeObjectTemplates.Instance.VisualMesh, root.transform);
+        var column = result.gameObject;
+        column.name = mesh.name;
         column.SetActive(false);
         column.transform.SetParent(root.transform, false);
         column.transform.localPosition = new Vector3(coordinate.x * size * cell, 0f, coordinate.y * size * cell);
-        MeshFilter result = column.AddComponent<MeshFilter>();
         result.sharedMesh = mesh;
-        MeshRenderer renderer = column.AddComponent<MeshRenderer>();
+        MeshRenderer renderer = column.GetComponent<MeshRenderer>();
         renderer.sharedMaterials = new[]
         {
             world.Materials[0],

@@ -233,7 +233,9 @@ public class StatusIcon : MonoBehaviour
             return;
         }
 
-        GameObject rootObject = new GameObject($"{name} Status Icons", typeof(RectTransform), typeof(CanvasGroup));
+        CanvasGroup group = Instantiate(RuntimeObjectTemplates.Instance.StatusGroup, overlayRoot);
+        GameObject rootObject = group.gameObject;
+        rootObject.name = $"{name} Status Icons";
         _iconRoot = rootObject.GetComponent<RectTransform>();
         _iconRoot.SetParent(overlayRoot, false);
         _iconGroup = rootObject.GetComponent<CanvasGroup>();
@@ -251,7 +253,9 @@ public class StatusIcon : MonoBehaviour
 
     private Image CreateIcon(string iconName)
     {
-        GameObject iconObject = new GameObject(iconName, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        Image template = Instantiate(RuntimeObjectTemplates.Instance.StatusIcon, _iconRoot);
+        GameObject iconObject = template.gameObject;
+        iconObject.name = iconName;
         RectTransform iconTransform = iconObject.GetComponent<RectTransform>();
         iconTransform.SetParent(_iconRoot, false);
         iconTransform.sizeDelta = new Vector2(IconSize, IconSize);

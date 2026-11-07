@@ -5,14 +5,28 @@ using UnityEngine;
 
 public sealed class TurretProjectilePool : MonoBehaviour
 {
-    private const int MaxIdlePerPrefab = 128;
+    [SerializeField, Min(0)]
+    private int maxIdlePerPrefab = 128;
     private static TurretProjectilePool _instance;
     private readonly Dictionary<TurretProjectile, Stack<TurretProjectile>> _idle = new Dictionary<TurretProjectile, Stack<TurretProjectile>>();
-    public static TurretProjectile Rent(TurretProjectile prefab, Vector3 position, Quaternion rotation)
+    public static TurretProjectile Rent(
+        TurretProjectile prefab,
+        Vector3 position,
+        Quaternion rotation,
+        UnityEngine.SceneManagement.Scene scene = default)
     {
-        if (_instance == null)
+        if (!scene.IsValid())
         {
-            _instance = new GameObject("Runtime projectile pool").AddComponent<TurretProjectilePool>();
+            scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+        }
+
+        if (_instance == null || _instance.gameObject.scene != scene)
+        {
+            _instance = SceneObjectQuery.FindInScene<TurretProjectilePool>(scene);
+            if (_instance == null)
+            {
+                throw new MissingReferenceException("Active scene requires an authored TurretProjectilePool.");
+            }
         }
 
         if (!_instance._idle.TryGetValue(prefab, out Stack<TurretProjectile> idle))
@@ -44,7 +58,7 @@ public sealed class TurretProjectilePool : MonoBehaviour
     internal void Return(TurretProjectile shot, TurretProjectile prefab)
     {
         shot.gameObject.SetActive(false);
-        if (prefab != null && _idle.TryGetValue(prefab, out Stack<TurretProjectile> idle) && idle.Count < MaxIdlePerPrefab)
+        if (prefab != null && _idle.TryGetValue(prefab, out Stack<TurretProjectile> idle) && idle.Count < maxIdlePerPrefab)
         {
             idle.Push(shot);
         }
@@ -58,7 +72,15 @@ public sealed class TurretProjectilePool : MonoBehaviour
     {
         if (!ControlUnit.IsSceneSimulationActive(gameObject.scene) && (PlayManager.instance == null || !PlayManager.instance.playMode))
         {
-            Destroy(gameObject);
+            if (transform.childCount > 0)
+            {
+                foreach (Transform child in transform)
+                {
+                    Destroy(child.gameObject);
+                }
+
+                _idle.Clear();
+            }
         }
     }
 

@@ -16,9 +16,13 @@ public sealed class TransientEffectPool : MonoBehaviour
     {
         get
         {
-            if (instance == null)
+            if (instance == null || instance.gameObject.scene != UnityEngine.SceneManagement.SceneManager.GetActiveScene())
             {
-                instance = new GameObject("Scene transient effect pool").AddComponent<TransientEffectPool>();
+                instance = SceneObjectQuery.FindInActiveScene<TransientEffectPool>();
+                if (instance == null)
+                {
+                    throw new MissingReferenceException("Active scene requires an authored TransientEffectPool.");
+                }
             }
 
             return instance;
@@ -36,10 +40,8 @@ public sealed class TransientEffectPool : MonoBehaviour
 
         if (fade == null)
         {
-            var root = new GameObject("Energy Streak VFX");
-            root.transform.SetParent(pool.transform, false);
-            StylizedBeamEffect beam = root.AddComponent<StylizedBeamEffect>();
-            fade = root.AddComponent<BeamFade>();
+            fade = Instantiate(RuntimeObjectTemplates.Instance.TransientBeam, pool.transform);
+            StylizedBeamEffect beam = fade.GetComponent<StylizedBeamEffect>();
             fade.SetPool(pool, beam);
         }
 
@@ -58,12 +60,8 @@ public sealed class TransientEffectPool : MonoBehaviour
 
         if (fade == null)
         {
-            var root = new GameObject("Light Flash VFX");
-            root.transform.SetParent(pool.transform, false);
-            Light light = root.AddComponent<Light>();
-            light.type = LightType.Point;
-            light.shadows = LightShadows.None;
-            fade = root.AddComponent<LightFade>();
+            fade = Instantiate(RuntimeObjectTemplates.Instance.TransientLight, pool.transform);
+            Light light = fade.GetComponent<Light>();
             fade.SetPool(pool, light);
         }
 

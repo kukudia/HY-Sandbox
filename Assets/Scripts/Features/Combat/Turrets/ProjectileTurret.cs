@@ -177,7 +177,7 @@ public sealed class ProjectileTurret : Turret
                 continue;
             }
 
-            TurretProjectile shot = TurretProjectilePool.Rent(_projectilePrefab, barrel.position, barrel.rotation);
+            TurretProjectile shot = TurretProjectilePool.Rent(_projectilePrefab, barrel.position, barrel.rotation, gameObject.scene);
             Vector3 inheritedVelocity = ownerBody != null ? ownerBody.GetPointVelocity(barrel.position) : Vector3.zero;
             shot.Launch(
                 Owner,

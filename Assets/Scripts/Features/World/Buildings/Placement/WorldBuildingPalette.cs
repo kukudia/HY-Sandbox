@@ -183,14 +183,16 @@ public sealed class WorldBuildingPalette : MonoBehaviour
                 continue;
             }
 
-            var part = new GameObject("Preview mesh");
+            MeshFilter visible = Instantiate(RuntimeObjectTemplates.Instance.VisualMesh, preview.transform);
+            var part = visible.gameObject;
+            part.name = "Preview mesh";
             part.layer = LayerMask.NameToLayer("Ignore Raycast");
             part.transform.SetParent(preview.transform, false);
             part.transform.localPosition = localPosition + localRotation * Vector3.Scale(prefab.transform.InverseTransformPoint(filter.transform.position), scale);
             part.transform.localRotation = localRotation * Quaternion.Inverse(prefab.transform.rotation) * filter.transform.rotation;
             part.transform.localScale = Vector3.Scale(filter.transform.lossyScale, scale);
-            part.AddComponent<MeshFilter>().sharedMesh = filter.sharedMesh;
-            MeshRenderer renderer = part.AddComponent<MeshRenderer>();
+            visible.sharedMesh = filter.sharedMesh;
+            MeshRenderer renderer = part.GetComponent<MeshRenderer>();
             var materials = new Material[filter.sharedMesh.subMeshCount];
             Array.Fill(materials, previewMaterial);
             renderer.sharedMaterials = materials;

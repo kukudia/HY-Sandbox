@@ -2,7 +2,7 @@
 // 入口：TickInputThrust() / ShouldActivate() / SetRuntimeReferences() / ApplyThrustChangeRateLimit()。
 using UnityEngine;
 
-[DisallowMultipleComponent, RequireComponent(typeof(Power))]
+[DisallowMultipleComponent, RequireComponent(typeof(Power), typeof(ThrusterVisualEffect))]
 public abstract class Thruster : MonoBehaviour
 {
     // Shared runtime contract for thrust application, reference caching, and visual feedback.
@@ -232,11 +232,6 @@ public abstract class Thruster : MonoBehaviour
         if (visualEffect == null)
         {
             visualEffect = GetComponent<ThrusterVisualEffect>();
-        }
-
-        if (visualEffect == null)
-        {
-            visualEffect = gameObject.AddComponent<ThrusterVisualEffect>();
         }
 
         visualEffect.Initialize(this);

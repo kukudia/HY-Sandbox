@@ -2,7 +2,7 @@
 // 入口：TurretProjectile.Launch() 调用 Begin()；LateUpdate 更新两端，OnDisable 清理。
 using UnityEngine;
 
-[DisallowMultipleComponent]
+[DisallowMultipleComponent, RequireComponent(typeof(StylizedBeamEffect))]
 public sealed class ProjectileTracer : MonoBehaviour
 {
     [SerializeField, Min(0.01f)]
@@ -20,11 +20,7 @@ public sealed class ProjectileTracer : MonoBehaviour
     private int next;
     public void Begin()
     {
-        if (beam == null)
-        {
-            beam = gameObject.AddComponent<StylizedBeamEffect>();
-        }
-
+        beam = GetComponent<StylizedBeamEffect>();
         beam.Configure(width, "ProjectileTracer");
         beam.SetColor(tint);
         count = next = 0;

@@ -127,6 +127,9 @@ GameObject:
   - component: {fileID: 6322784588485783871}
   - component: {fileID: 2440670925692614522}
   - component: {fileID: 4341577508445254787}
+  - component: {fileID: 8359619304010256329}
+  - component: {fileID: 8416001039612027152}
+  - component: {fileID: 5082421415432461761}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -215,3 +218,48 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &8359619304010256329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8217790742953717620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 739bd11e327f127449ea64229d936483, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::FragmentLifetime
+--- !u!114 &8416001039612027152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8217790742953717620}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a83a0be8c35302648af39c6447ac22d3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::DetachedPartSmokeTrail
+  effectLifetime: 6
+  minimumSpeed: 0.7
+  fullEmissionSpeed: 8
+  maximumEmissionRate: 26
+  _initialSmokeDuration: 1.5
+  _initialSmokeIntensity: 0.4
+  _minimumOpacity: 0.85
+  _flameEnvelopeScale: 1.25
+  _flameCoverage: 1.8
+--- !u!114 &5082421415432461761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8217790742953717620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fae08ac63693f94d9243548ad294a6f, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::AbnormalImpulseBodyProbe

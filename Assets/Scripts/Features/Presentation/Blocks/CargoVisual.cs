@@ -30,13 +30,14 @@ public static class CargoVisual
                 continue;
             }
 
-            var model = new GameObject(filter.name, typeof(MeshFilter), typeof(MeshRenderer));
-            model.transform.SetParent(root.transform, false);
+            MeshFilter visible = Object.Instantiate(RuntimeObjectTemplates.Instance.VisualMesh, root.transform);
+            var model = visible.gameObject;
+            model.name = filter.name;
             Matrix4x4 local = prefab.transform.worldToLocalMatrix * filter.transform.localToWorldMatrix;
             model.transform.localPosition = local.GetColumn(3);
             model.transform.localRotation = local.rotation;
             model.transform.localScale = local.lossyScale;
-            model.GetComponent<MeshFilter>().sharedMesh = filter.sharedMesh;
+            visible.sharedMesh = filter.sharedMesh;
             var renderer = model.GetComponent<MeshRenderer>();
             renderer.sharedMaterials = source.sharedMaterials;
             renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;

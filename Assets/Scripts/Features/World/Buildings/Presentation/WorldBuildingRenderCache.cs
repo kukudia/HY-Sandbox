@@ -71,11 +71,13 @@ internal sealed class WorldBuildingRenderCache
                 renderer.enabled = false;
             }
 
-            var combined = new GameObject("World combined visual");
+            MeshFilter filter = Object.Instantiate(RuntimeObjectTemplates.Instance.VisualMesh);
+            var combined = filter.gameObject;
+            combined.name = "World combined visual";
             combined.layer = group.Value[0].gameObject.layer;
             combined.transform.SetParent(group.Key, false);
-            combined.AddComponent<MeshFilter>().sharedMesh = visual.Mesh;
-            MeshRenderer output = combined.AddComponent<MeshRenderer>();
+            filter.sharedMesh = visual.Mesh;
+            MeshRenderer output = combined.GetComponent<MeshRenderer>();
             output.sharedMaterials = visual.Materials;
             output.shadowCastingMode = group.Value[0].shadowCastingMode;
             output.receiveShadows = group.Value[0].receiveShadows;

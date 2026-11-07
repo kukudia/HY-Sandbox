@@ -44,16 +44,24 @@ public class DetachedPartSmokeTrail : MonoBehaviour
         DetachedPartSmokeTrail existing = body.GetComponent<DetachedPartSmokeTrail>();
         if (existing != null)
         {
-            existing.Refresh(worldAnchor, effectIntensity);
+            if (existing.enabled && existing.targetBody != null && !existing.stopping)
+            {
+                existing.Refresh(worldAnchor, effectIntensity);
+            }
+            else
+            {
+                existing.Initialize(body, worldAnchor, effectIntensity);
+            }
+
             return;
         }
 
-        DetachedPartSmokeTrail trail = body.gameObject.AddComponent<DetachedPartSmokeTrail>();
-        trail.Initialize(body, worldAnchor, effectIntensity);
+        throw new MissingComponentException("Rigidbody prefab requires an authored DetachedPartSmokeTrail.");
     }
 
     private void Initialize(Rigidbody body, Vector3 worldAnchor, float effectIntensity)
     {
+        enabled = true;
         targetBody = body;
         intensity = Mathf.Clamp(effectIntensity, 0.25f, 1.5f);
         elapsed = 0f;
@@ -61,7 +69,7 @@ public class DetachedPartSmokeTrail : MonoBehaviour
         BlockVfxLibrary library = BlockVfxLibrary.Instance;
         if (library == null || library.DetachedSmoke == null)
         {
-            Destroy(this);
+            enabled = false;
             return;
         }
 
@@ -186,7 +194,10 @@ public class DetachedPartSmokeTrail : MonoBehaviour
             _smokeEffect.ReleaseAfterPlayback();
         }
 
-        Destroy(this);
+        emissionRoot = null;
+        _smokeEffect = null;
+        _envelope = null;
+        enabled = false;
     }
 
     private void OnDestroy()

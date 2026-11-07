@@ -58,11 +58,6 @@ internal sealed class PanelTransitions
         }
 
         CanvasGroup cg = panel.GetComponent<CanvasGroup>();
-        if (cg == null)
-        {
-            cg = panel.AddComponent<CanvasGroup>();
-        }
-
         float start = cg.alpha;
         float end = show ? 1f : 0f;
         float t = 0f;
@@ -98,11 +93,6 @@ internal sealed class PanelTransitions
         }
 
         CanvasGroup canvasGroup = panel.GetComponent<CanvasGroup>();
-        if (canvasGroup == null)
-        {
-            canvasGroup = panel.AddComponent<CanvasGroup>();
-        }
-
         canvasGroup.interactable = interactable;
         canvasGroup.blocksRaycasts = interactable;
     }

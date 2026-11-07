@@ -100,9 +100,8 @@ internal sealed class PowerConnectionVisuals
             }
             else
             {
-                GameObject lineObject = new GameObject($"Power Connection {_lines.Count + 1}");
-                lineObject.transform.SetParent(_device.transform, false);
-                line = lineObject.AddComponent<LineRenderer>();
+                line = Object.Instantiate(RuntimeObjectTemplates.Instance.PowerConnection, _device.transform);
+                line.gameObject.name = $"Power Connection {_lines.Count + 1}";
             }
 
             ConfigureLine(line);

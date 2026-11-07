@@ -478,6 +478,8 @@ GameObject:
   - component: {fileID: 897094469248047018}
   - component: {fileID: 4663253232767552356}
   - component: {fileID: 247215162008009059}
+  - component: {fileID: 20176124275954296}
+  - component: {fileID: 1360776982122523433}
   m_Layer: 3
   m_Name: ProjectileTurretDouble
   m_TagString: Untagged
@@ -729,6 +731,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BlockCsvBinding
   _prefabGuid: ec24d4ecb7632b74a98d19e187650b5b
+--- !u!114 &20176124275954296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7113379929175768676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e4268651f8869b4caf5687865f095bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RuntimeUnitMember
+  ownerUnitId: 
+  ownerFaction: 0
+--- !u!114 &1360776982122523433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7113379929175768676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81bbcf36bb3067c46af318f3bb5cd263, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WreckSalvage
 --- !u!1 &7791276913125729715
 GameObject:
   m_ObjectHideFlags: 0

@@ -1754,6 +1754,8 @@ GameObject:
   - component: {fileID: 5788947902764421239}
   - component: {fileID: 6581800746009951508}
   - component: {fileID: 9155215506581764318}
+  - component: {fileID: 466381283954263171}
+  - component: {fileID: 5995241465174817212}
   m_Layer: 3
   m_Name: CoinHold
   m_TagString: Untagged
@@ -2001,6 +2003,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BlockCsvBinding
   _prefabGuid: 59951d3b805e77e4a840c70e678cecea
+--- !u!114 &466381283954263171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7389974292843837613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e4268651f8869b4caf5687865f095bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RuntimeUnitMember
+  ownerUnitId: 
+  ownerFaction: 0
+--- !u!114 &5995241465174817212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7389974292843837613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81bbcf36bb3067c46af318f3bb5cd263, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WreckSalvage
 --- !u!1 &7623508415234483570
 GameObject:
   m_ObjectHideFlags: 0

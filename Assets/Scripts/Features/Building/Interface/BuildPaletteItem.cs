@@ -54,10 +54,6 @@ public sealed class BuildPaletteItem : MonoBehaviour, IPointerEnterHandler, IPoi
         _outline.color = Color.white;
         Image preview = transform.Find("Preview").GetComponent<Image>();
         preview.sprite = template.transform.Find("Preview").GetComponent<Image>().sprite;
-        if (GetComponent<UIInteractionFeedback>() == null)
-        {
-            gameObject.AddComponent<UIInteractionFeedback>();
-        }
     }
 
     public void SetSelected(bool selected, Color color)

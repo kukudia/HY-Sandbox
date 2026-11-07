@@ -7,6 +7,7 @@ public enum UnitControlMode
     Autonomous
 }
 
+[RequireComponent(typeof(EnemyIdentity))]
 public class Cockpit : MonoBehaviour
 {
     public UnitFaction faction = UnitFaction.Player;

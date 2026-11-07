@@ -233,6 +233,8 @@ GameObject:
   - component: {fileID: 2116716443451509132}
   - component: {fileID: 5063752402070040966}
   - component: {fileID: 4735527622253169754}
+  - component: {fileID: 2345215020946697950}
+  - component: {fileID: 6730143193437898196}
   m_Layer: 3
   m_Name: HoverFlightController
   m_TagString: Untagged
@@ -481,6 +483,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BlockCsvBinding
   _prefabGuid: f8831fc55e9a0ac468a5f06fbe42b7ce
+--- !u!114 &2345215020946697950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004239489873974274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e4268651f8869b4caf5687865f095bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RuntimeUnitMember
+  ownerUnitId: 
+  ownerFaction: 0
+--- !u!114 &6730143193437898196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004239489873974274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81bbcf36bb3067c46af318f3bb5cd263, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WreckSalvage
 --- !u!1 &6927160853850144166
 GameObject:
   m_ObjectHideFlags: 0

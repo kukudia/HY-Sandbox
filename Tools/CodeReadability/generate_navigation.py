@@ -944,12 +944,12 @@ def main():
     )
     graph(
         "工业零件统一调度与共享发光",
-        "源码推导：活动工业零件注册单一跨场景驱动，旋转按scaled delta、浮动与发光按unscaled time；同源材质/颜色/频率/幅度只更新一个临时共享材质。既有或后加PropertyBlock保留兼容路径。建造与游玩选择保存源材质，取消高亮恢复当前有效绑定；禁用/重配释放引用，最后一个使用者销毁临时材质。",
+        "源码推导：活动工业零件注册到列表，由各场景 Managers 中的 IndustrialMotionDriver 调度本场景实例，旋转按scaled delta、浮动与发光按unscaled time；同源材质/颜色/频率/幅度只更新一个临时共享材质。既有或后加PropertyBlock保留兼容路径。建造与游玩选择保存源材质，取消高亮恢复当前有效绑定；禁用/重配释放引用，最后一个使用者销毁临时材质。",
         {
             "A": "IndustrialPartMotion.OnEnable",
-            "B": "IndustrialMotionDriver.EnsureExists",
+            "B": "IndustrialPartMotion.AnimateScene",
             "C": "IndustrialMotionDriver.Update",
-            "D": "IndustrialPartMotion.AnimateAll",
+            "D": "IndustrialPartMotion.AnimateScene",
             "E": "IndustrialEmissionBinding.Tick",
             "F": "IndustrialPartMotion.Animate",
             "G": "IndustrialEmissionBinding.Apply",
@@ -962,7 +962,7 @@ def main():
             "N": "PlayBlockSelection.Highlight",
         },
         [
-            "A --> B", "B -.->|Unity Update| C", "C --> D", "D --> E", "D --> F", "F --> G",
+            "A -.->|注册列表| B", "C --> D", "D --> E", "D --> F", "F --> G",
             "H --> I", "I --> J", "M --> K", "N --> K", "K -.->|取消选择| L",
         ],
     )
@@ -1603,7 +1603,7 @@ def main():
     )
     graph(
         "友敌 AI 调试绘制",
-        "源码推导：EnemyController 同时驱动友方自主舰和敌机。Draw Debug 默认关闭；启用后仅在模拟运行且未被玩家驾驶时绘制。FixedUpdate 的移动周期清空探测快照，ProbeObstacle 记录实际球扫终点与有效法线；绘制只读快照，不重新查询物理或改变驾驶输入。禁用控制器清空快照。",
+        "源码推导：EnemyController 同时驱动友方自主舰和敌机。DebugManager 的友方/敌方开关可在场景中预配，EnemyController 保留逐实例 Draw Debug；启用后仅在模拟运行且未被玩家驾驶时绘制。FixedUpdate 的移动周期清空探测快照，ProbeObstacle 记录实际球扫终点与有效法线；绘制只读快照，不重新查询物理或改变驾驶输入。禁用控制器清空快照。",
         {
             "A": "EnemyController.FixedUpdate", "B": "EnemyController.ApplyObstacleAvoidance",
             "C": "EnemyController.ProbeObstacle", "D": "EnemyController.OnDrawGizmos",
@@ -1614,6 +1614,23 @@ def main():
             "A -->|经移动计算或警戒返航| B", "B --> C",
             "D --> E", "E -->|接近及撤退距离| F",
             "C -.->|缓存球扫结果| E", "G -.->|清空缓存| E",
+        ],
+    )
+    graph(
+        "显式组件与运行对象模板",
+        "源码推导：常驻驱动、对象池、文字样式与诊断组件由各场景 Managers 序列化持有；AI 参数预挂 BlocksParent，RefreshChildren 仅在驾驶资格改变时启停，不打断阵地战 Park。对象数量与几何动态变化，组件组成由 Runtime/Objects 模板保存。建筑与地形仍按既有异步生命周期组装和释放；体素碎片的逐格碰撞体及第三方诊断观测器是明确例外。Editor Bake 补齐资产依赖、保存场景与模板，重复执行保留已有参数和引用。",
+        {
+            "A": "EditableComponentBaker.Bake", "B": "EditableComponentBaker.BakeTemplates",
+            "C": "EditableComponentBaker.MigrateTree", "D": "EditableComponentBaker.ConfigureServices",
+            "E": "ControlUnit.RefreshChildren", "F": "WorldBuildingManager.Stage",
+            "G": "ProceduralVoxelWorld.Generate", "H": "VfxEffectPool.Rent",
+            "I": "SceneObjectQuery.FindInScene", "J": "SiegeThreatMarkers.Build",
+        },
+        [
+            "A --> B", "A --> C", "A --> D",
+            "D -->|查找场景服务| I", "H -->|池缓存失效时| I",
+            "C -.->|保存的 AI 组件| E", "B -.->|保存的建筑模板| F",
+            "B -.->|保存的地形模板| G", "C -.->|保存的标记池| J",
         ],
     )
     doc = """# HY-Sandbox 运行时函数图

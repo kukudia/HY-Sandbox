@@ -128,20 +128,10 @@ public sealed class SiegeWorkshop : MonoBehaviour
         panels.deletePanel.SetActive(false);
         panels.deathPanel.SetActive(false);
         CanvasGroup group = panels.buildPanel.GetComponent<CanvasGroup>();
-        if (group == null)
-        {
-            group = panels.buildPanel.AddComponent<CanvasGroup>();
-        }
-
         group.alpha = 1f;
         group.interactable = editing;
         group.blocksRaycasts = editing;
         group = panels.playPanel.GetComponent<CanvasGroup>();
-        if (group == null)
-        {
-            group = panels.playPanel.AddComponent<CanvasGroup>();
-        }
-
         group.alpha = 1f;
         group.interactable = !editing;
         group.blocksRaycasts = !editing;

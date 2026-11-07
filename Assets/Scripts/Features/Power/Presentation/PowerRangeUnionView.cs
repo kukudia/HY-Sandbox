@@ -104,10 +104,11 @@ internal sealed class PowerRangeUnionView
             return;
         }
 
-        powerRangeObject = new GameObject("Power Range Union");
+        MeshFilter powerRangeFilter = Object.Instantiate(RuntimeObjectTemplates.Instance.VisualMesh);
+        powerRangeObject = powerRangeFilter.gameObject;
+        powerRangeObject.name = "Power Range Union";
         powerRangeObject.transform.SetParent(_parent, false);
-        MeshFilter powerRangeFilter = powerRangeObject.AddComponent<MeshFilter>();
-        powerRangeRenderer = powerRangeObject.AddComponent<MeshRenderer>();
+        powerRangeRenderer = powerRangeObject.GetComponent<MeshRenderer>();
         powerRangeRenderer.shadowCastingMode = ShadowCastingMode.Off;
         powerRangeRenderer.receiveShadows = false;
         powerRangeRenderer.lightProbeUsage = LightProbeUsage.Off;

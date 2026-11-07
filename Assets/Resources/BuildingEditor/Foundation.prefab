@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 5201824923721747778}
   - component: {fileID: 8899397275458995476}
   - component: {fileID: 751499477456703385}
+  - component: {fileID: 581679273027778047}
+  - component: {fileID: 7317943938698834504}
   m_Layer: 3
   m_Name: Foundation
   m_TagString: Untagged
@@ -260,6 +262,32 @@ MonoBehaviour:
   _model: {fileID: 6594494810413238521}
   _surface: {fileID: 785203331080866465}
   _thickness: 0.1
+--- !u!114 &581679273027778047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1546015300896356416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e4268651f8869b4caf5687865f095bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RuntimeUnitMember
+  ownerUnitId: 
+  ownerFaction: 0
+--- !u!114 &7317943938698834504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1546015300896356416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81bbcf36bb3067c46af318f3bb5cd263, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WreckSalvage
 --- !u!1 &8742894518970045093
 GameObject:
   m_ObjectHideFlags: 0

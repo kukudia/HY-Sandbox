@@ -104,7 +104,7 @@ public static class ModularUnitFactory
             EnemyIdentity identity = unit.cockpit.GetComponent<EnemyIdentity>();
             if (identity == null)
             {
-                identity = unit.cockpit.gameObject.AddComponent<EnemyIdentity>();
+                throw new MissingComponentException("Cockpit prefab requires an authored EnemyIdentity.");
             }
 
             identity.SetDisplayName(root.name);

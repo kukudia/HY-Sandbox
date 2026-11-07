@@ -7,6 +7,8 @@ using UnityEditor;
 #endif
 using UnityEngine;
 
+[RequireComponent(typeof(BoxCollider), typeof(Durability))]
+[RequireComponent(typeof(RuntimeUnitMember), typeof(WreckSalvage))]
 public class Block : MonoBehaviour
 {
     // Block owns grid dimensions and connector state; grouping and physics are handled by managers.
@@ -128,18 +130,11 @@ public class Block : MonoBehaviour
         }
 
 #endif
-        if (GetComponent<BoxCollider>() == null)
+        raycastCollider = GetComponent<BoxCollider>();
+        if (raycastCollider == null || GetComponent<Durability>() == null)
         {
-            raycastCollider = gameObject.AddComponent<BoxCollider>();
-        }
-        else
-        {
-            raycastCollider = GetComponent<BoxCollider>();
-        }
-
-        if (GetComponent<Durability>() == null)
-        {
-            gameObject.AddComponent<Durability>();
+            Debug.LogError("Block prefab requires authored BoxCollider and Durability components.", this);
+            return;
         }
 
         raycastCollider.isTrigger = false;

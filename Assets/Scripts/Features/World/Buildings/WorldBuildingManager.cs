@@ -150,10 +150,10 @@ public sealed class WorldBuildingManager : MonoBehaviour
             throw new InvalidOperationException("Active world building budget exceeded.");
         }
 
-        var root = new GameObject("Building " + state.blueprintName);
+        BuildingRuntime building = Instantiate(RuntimeObjectTemplates.Instance.Building, transform);
+        var root = building.gameObject;
+        root.name = "Building " + state.blueprintName;
         root.SetActive(false);
-        root.transform.SetParent(transform, false);
-        BuildingRuntime building = root.AddComponent<BuildingRuntime>();
         bool complete = false;
         IEnumerator work = building.InitializeRoutine(this, state);
         try
@@ -246,12 +246,12 @@ public sealed class WorldBuildingManager : MonoBehaviour
 
     private BuildingRuntime Stage(WorldBuildingState state, Transform parent)
     {
-        var root = new GameObject("Building " + state.blueprintName);
+        BuildingRuntime building = Instantiate(RuntimeObjectTemplates.Instance.Building, parent);
+        var root = building.gameObject;
+        root.name = "Building " + state.blueprintName;
         root.SetActive(false);
-        root.transform.SetParent(parent, false);
         try
         {
-            var building = root.AddComponent<BuildingRuntime>();
             building.Initialize(this, state);
             return building;
         }
@@ -440,9 +440,12 @@ public sealed class WorldBuildingManager : MonoBehaviour
         debris.RemoveAll(piece => piece == null);
         bool overBudget = debris.Count >= maximumDebrisPieces || group.Count > maximumBlocksPerDebris;
         GroupPhysicsSettings settings = PlayManager.instance != null ? PlayManager.instance.GroupPhysics : GroupPhysicsSettings.FromBody(source);
-        var piece = new GameObject("Building debris");
-        piece.transform.SetParent(transform, false);
-        piece.transform.position = group[0].transform.position;
+        Rigidbody body = Instantiate(
+            RuntimeObjectTemplates.Instance.BuildingDebris,
+            group[0].transform.position,
+            transform.rotation,
+            transform);
+        var piece = body.gameObject;
         float mass = 0f;
         foreach (Block block in group)
         {
@@ -454,7 +457,6 @@ public sealed class WorldBuildingManager : MonoBehaviour
             }
         }
 
-        Rigidbody body = piece.AddComponent<Rigidbody>();
         body.mass = Mathf.Max(0.1f, mass);
         settings.ApplyTo(body);
         motion.Restore(body, settings);

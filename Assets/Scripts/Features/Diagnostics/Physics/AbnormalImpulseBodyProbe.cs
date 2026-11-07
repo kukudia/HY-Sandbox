@@ -1,11 +1,11 @@
 // 职责：采集单个刚体的异常速度/冲量线索，供调试记录器分析。
 // 入口：Awake() / OnCollisionEnter()。
-#if UNITY_EDITOR
 using UnityEngine;
 
 /// <summary>Editor-only contact observer attached to discovered Rigidbody objects in Play Mode.</summary>
 public sealed class AbnormalImpulseBodyProbe : MonoBehaviour
 {
+#if UNITY_EDITOR
     private Rigidbody _body;
     private void Awake()
     {
@@ -16,5 +16,5 @@ public sealed class AbnormalImpulseBodyProbe : MonoBehaviour
     {
         AbnormalImpulseRecorder.RecordCollision(_body, collision);
     }
-}
 #endif
+}

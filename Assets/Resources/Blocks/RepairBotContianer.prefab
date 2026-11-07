@@ -630,6 +630,10 @@ GameObject:
   - component: {fileID: 1831392771485823568}
   - component: {fileID: 9212383954554898909}
   - component: {fileID: 9216598194669526529}
+  - component: {fileID: 7957739877377856737}
+  - component: {fileID: 4164180944998541738}
+  - component: {fileID: 1973543600626435960}
+  - component: {fileID: 5584065380902338469}
   m_Layer: 8
   m_Name: Bot
   m_TagString: Untagged
@@ -770,6 +774,63 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &7957739877377856737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2460853664749291813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcd637ae7930403982de6749fa56d441, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StylizedBeamEffect
+--- !u!114 &4164180944998541738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2460853664749291813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 739bd11e327f127449ea64229d936483, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FragmentLifetime
+--- !u!114 &1973543600626435960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2460853664749291813}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a83a0be8c35302648af39c6447ac22d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DetachedPartSmokeTrail
+  effectLifetime: 6
+  minimumSpeed: 0.7
+  fullEmissionSpeed: 8
+  maximumEmissionRate: 26
+  _initialSmokeDuration: 1.5
+  _initialSmokeIntensity: 0.4
+  _minimumOpacity: 0.85
+  _flameEnvelopeScale: 1.25
+  _flameCoverage: 1.8
+--- !u!114 &5584065380902338469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2460853664749291813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fae08ac63693f94d9243548ad294a6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AbnormalImpulseBodyProbe
 --- !u!1 &2494641480649367808
 GameObject:
   m_ObjectHideFlags: 0
@@ -1181,6 +1242,8 @@ GameObject:
   - component: {fileID: 2284113129267153661}
   - component: {fileID: 351857966155108748}
   - component: {fileID: 4514004345529433331}
+  - component: {fileID: 2345215020946697950}
+  - component: {fileID: 6730143193437898196}
   m_Layer: 3
   m_Name: RepairBotContianer
   m_TagString: Untagged
@@ -1410,6 +1473,32 @@ MonoBehaviour:
   currentPower: 0
   minWorkingPower: 100
   standardWorkingPower: 100
+--- !u!114 &2345215020946697950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004239489873974274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e4268651f8869b4caf5687865f095bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RuntimeUnitMember
+  ownerUnitId: 
+  ownerFaction: 0
+--- !u!114 &6730143193437898196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004239489873974274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81bbcf36bb3067c46af318f3bb5cd263, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WreckSalvage
 --- !u!1 &6248121365020521580
 GameObject:
   m_ObjectHideFlags: 0

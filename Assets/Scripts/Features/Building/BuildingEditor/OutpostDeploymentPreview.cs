@@ -108,9 +108,11 @@ internal sealed class OutpostDeploymentPreview : IDisposable
         mesh.SetIndices(indices, MeshTopology.Lines, 0);
         mesh.RecalculateBounds();
         meshes.Add(mesh);
-        var geometry = new GameObject("Defender " + (index + 1) + " bounds", typeof(MeshFilter), typeof(MeshRenderer));
+        MeshFilter filter = Object.Instantiate(RuntimeObjectTemplates.Instance.VisualMesh, root.transform);
+        var geometry = filter.gameObject;
+        geometry.name = "Defender " + (index + 1) + " bounds";
         geometry.transform.SetParent(root.transform, false);
-        geometry.GetComponent<MeshFilter>().sharedMesh = mesh;
+        filter.sharedMesh = mesh;
         MeshRenderer renderer = geometry.GetComponent<MeshRenderer>();
         renderer.sharedMaterial = material;
         renderer.shadowCastingMode = ShadowCastingMode.Off;
@@ -118,17 +120,12 @@ internal sealed class OutpostDeploymentPreview : IDisposable
         var properties = new MaterialPropertyBlock();
         properties.SetColor("_BaseColor", color);
         renderer.SetPropertyBlock(properties);
-        var label = new GameObject("Defender " + (index + 1) + " label");
+        TextMesh text = Object.Instantiate(RuntimeObjectTemplates.Instance.WorldLabel, root.transform);
+        var label = text.gameObject;
+        label.name = "Defender " + (index + 1) + " label";
         label.transform.SetParent(root.transform, false);
         label.transform.localPosition = bounds.center + Vector3.up * (bounds.extents.y + 1f);
-        TextMesh text = label.AddComponent<TextMesh>();
-        text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        text.GetComponent<MeshRenderer>().sharedMaterial = text.font.material;
-        text.richText = false;
         text.text = (index + 1) + " " + guard.name;
-        text.characterSize = 0.2f;
-        text.fontSize = 32;
-        text.anchor = TextAnchor.LowerCenter;
         text.color = color;
         labels.Add(label.transform);
     }

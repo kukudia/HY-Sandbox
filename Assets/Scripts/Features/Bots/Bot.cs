@@ -4,6 +4,7 @@
 // 不变量：homeOffset 保持 Home 局部坐标；停靠切为运动学刚体，完成后恢复准确局部姿态。
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public abstract class Bot : MonoBehaviour
 {
     [Header("Authored model sockets and effects")]
@@ -62,11 +63,6 @@ public abstract class Bot : MonoBehaviour
         }
 
         rb = GetComponent<Rigidbody>();
-        if (rb == null)
-        {
-            rb = gameObject.AddComponent<Rigidbody>();
-        }
-
         BotNavigationPolicy.ConfigureBody(rb);
         rb.angularDamping = 3f;
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;

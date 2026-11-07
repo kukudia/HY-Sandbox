@@ -22,11 +22,6 @@ public sealed class RepairBeamView
         }
 
         _beam = gameObject.GetComponent<StylizedBeamEffect>();
-        if (_beam == null)
-        {
-            _beam = gameObject.AddComponent<StylizedBeamEffect>();
-        }
-
         _beam.Configure(beamWidth * 0.24f);
         _beam.SetVisible(false);
         _impact = impact;

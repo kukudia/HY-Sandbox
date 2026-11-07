@@ -17,7 +17,7 @@ public class WreckSalvage : MonoBehaviour
         WreckSalvage marker = block.GetComponent<WreckSalvage>();
         if (marker == null)
         {
-            marker = block.gameObject.AddComponent<WreckSalvage>();
+            throw new MissingComponentException("Block prefab requires an authored WreckSalvage.");
         }
 
         if (marker._converted)

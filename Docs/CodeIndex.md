@@ -17,6 +17,8 @@ HY-Sandbox/
 │   │   ├── Architecture/
 │   │   │   ├── ArchitecturePlayProbe.cs
 │   │   │   ├── DetachedVehicleChecks.cs
+│   │   │   ├── EditableComponentBaker.cs
+│   │   │   ├── EditableComponentChecks.cs
 │   │   │   ├── FragmentRetentionChecks.cs
 │   │   │   ├── HoverControlPlayChecks.cs
 │   │   │   ├── PresentationPlayChecks.cs
@@ -194,6 +196,7 @@ HY-Sandbox/
 │       └── Features/
 │           ├── Bootstrap/
 │           │   ├── GameManager.cs
+│           │   ├── RuntimeObjectTemplates.cs
 │           │   └── SceneObjectQuery.cs
 │           ├── Bots/
 │           │   ├── Bot.cs
@@ -438,6 +441,7 @@ HY-Sandbox/
 │           │       ├── ModularUnitFactory.cs
 │           │       ├── ModularUnitValidator.cs
 │           │       ├── Rack.cs
+│           │       ├── RuntimeUnitMember.cs
 │           │       └── UnitFaction.cs
 │           └── World/
 │               ├── WorldGenerationSettings.cs
@@ -565,6 +569,40 @@ HY-Sandbox/
 | DetachedVehicleChecks | [`IEnumerator Scenario()`](../Assets/Editor/Architecture/DetachedVehicleChecks.cs#L80) | private static |
 | DetachedVehicleChecks | [`void Check(string label, bool result)`](../Assets/Editor/Architecture/DetachedVehicleChecks.cs#L258) | private static |
 
+## Assets/Editor/Architecture/EditableComponentBaker.cs
+
+// 职责：把运行对象组件组成烘焙为真实 Prefab，并迁移场景 Managers、模块依赖及 UI。 // 入口：Bake()；只补缺失组件/引用，原资产先备份，重复执行不覆盖用户已配置模板。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EditableComponentBaker | [`string Bake()`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L21) | public static |
+| EditableComponentBaker | [`void Backup(string path)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L113) | private static |
+| EditableComponentBaker | [`T Ensure(GameObject owner)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L128) | private static |
+| EditableComponentBaker | [`void SetReference(Object owner, string field, Object value)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L141) | private static |
+| EditableComponentBaker | [`T Template(string name, Action<GameObject> compose)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L153) | private static |
+| EditableComponentBaker | [`void ConfigurePool(VfxEffectPool pool)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L183) | private static |
+| EditableComponentBaker | [`void BakeTemplates()`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L197) | private static |
+| EditableComponentBaker | [`void MigrateTree(GameObject root)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L316) | private static |
+| EditableComponentBaker | [`T Service(Scene scene, Transform managers)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L464) | private static |
+| EditableComponentBaker | [`void ConfigureServices(Scene scene, Transform managers)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L478) | private static |
+| EditableComponentBaker | [`void BakeMarkers(SiegeThreatMarkers owner)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L512) | private static |
+| EditableComponentBuildStripper | [`void OnProcessScene(Scene scene, BuildReport report)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L561) | public |
+
+## Assets/Editor/Architecture/EditableComponentChecks.cs
+
+// 职责：验证显式组件迁移的资产完整性、场景入口及真实 Play 生命周期。 // 入口：AuditAssets() / RunPlay()；不写玩家存档，隔离夹具结束后恢复活动场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EditableComponentChecks | [`string RunWorkshop()`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L19) | public static |
+| EditableComponentChecks | [`string RunWorldPlay()`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L41) | public static |
+| EditableComponentChecks | [`string VerifyWorldMotion()`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L93) | public static |
+| EditableComponentChecks | [`string AuditAssets()`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L101) | public static |
+| EditableComponentChecks | [`void CheckTree(GameObject root, string path)`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L177) | private static |
+| EditableComponentChecks | [`string RunPlay()`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L211) | public static |
+| EditableComponentChecks | [`string WriteReport(string name, List<string> checks)`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L312) | private static |
+| EditableComponentChecks | [`void Require(bool condition, string message)`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L320) | private static |
+
 ## Assets/Editor/Architecture/FragmentRetentionChecks.cs
 
 // 职责：以真实 Play 帧回归建筑断片、旧清理计时器和驾驶舱恢复的最短保留期。 // 入口：Main 编辑态玩法下调用 Run()；报告 Temp/Reuse/fragment-retention.json。 // 隔离：独立 PhysicsScene，设置仅内存暂存；finally 恢复并卸载，不替代生产延迟清理。
@@ -604,15 +642,15 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | PresentationPlayChecks | [`IEnumerator Run(List<string> checks)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L16) | internal static |
-| PresentationPlayChecks | [`GameObject Own(List<GameObject> owned, string name, Transform parent = null)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L284) | private static |
-| PresentationPlayChecks | [`Type RuntimeType(string name)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L296) | private static |
-| PresentationPlayChecks | [`object CreateRuntimeObject(string name, MonoBehaviour runner)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L301) | private static |
-| PresentationPlayChecks | [`object GetField(object target, string name)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L306) | private static |
-| PresentationPlayChecks | [`void SetField(object target, string name, object value)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L311) | private static |
-| PresentationPlayChecks | [`void Invoke(object target, string name, params object[] arguments)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L316) | private static |
-| PresentationPlayChecks | [`void InvokeStatic(Type type, string name, params object[] arguments)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L321) | private static |
-| PresentationPlayChecks | [`bool Near(Vector3 actual, Vector3 expected)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L326) | private static |
-| PresentationPlayChecks | [`void Check(List<string> checks, List<string> failures, string name, bool passed)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L331) | private static |
+| PresentationPlayChecks | [`GameObject Own(List<GameObject> owned, string name, Transform parent = null)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L285) | private static |
+| PresentationPlayChecks | [`Type RuntimeType(string name)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L297) | private static |
+| PresentationPlayChecks | [`object CreateRuntimeObject(string name, MonoBehaviour runner)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L302) | private static |
+| PresentationPlayChecks | [`object GetField(object target, string name)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L307) | private static |
+| PresentationPlayChecks | [`void SetField(object target, string name, object value)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L312) | private static |
+| PresentationPlayChecks | [`void Invoke(object target, string name, params object[] arguments)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L317) | private static |
+| PresentationPlayChecks | [`void InvokeStatic(Type type, string name, params object[] arguments)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L322) | private static |
+| PresentationPlayChecks | [`bool Near(Vector3 actual, Vector3 expected)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L327) | private static |
+| PresentationPlayChecks | [`void Check(List<string> checks, List<string> failures, string name, bool passed)`](../Assets/Editor/Architecture/PresentationPlayChecks.cs#L332) | private static |
 
 ## Assets/Editor/Architecture/SharedMechanismChecks.cs
 
@@ -1447,9 +1485,9 @@ HY-Sandbox/
 | CombatVfxCapture | [`void StartEnvelopeCapture()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L67) | public static |
 | CombatVfxCapture | [`void State(PlayModeStateChange state)`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L73) | private static |
 | CombatVfxCapture | [`void Setup()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L97) | private static |
-| CombatVfxCapture | [`void Tick()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L156) | private static |
-| CombatVfxCapture | [`void Capture(float elapsed)`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L197) | private static |
-| CombatVfxCapture | [`void Finish()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L231) | private static |
+| CombatVfxCapture | [`void Tick()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L157) | private static |
+| CombatVfxCapture | [`void Capture(float elapsed)`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L198) | private static |
+| CombatVfxCapture | [`void Finish()`](../Assets/Editor/Presentation/Validation/CombatVfxCapture.cs#L232) | private static |
 
 ## Assets/Editor/Presentation/Validation/CombatVfxChecks.cs
 
@@ -1458,7 +1496,7 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | CombatVfxChecks | [`string RunPlay()`](../Assets/Editor/Presentation/Validation/CombatVfxChecks.cs#L11) | public static |
-| CombatVfxChecks | [`void Require(bool condition, string message)`](../Assets/Editor/Presentation/Validation/CombatVfxChecks.cs#L71) | private static |
+| CombatVfxChecks | [`void Require(bool condition, string message)`](../Assets/Editor/Presentation/Validation/CombatVfxChecks.cs#L72) | private static |
 
 ## Assets/Editor/Presentation/Validation/NativeVfxPlaybackProbe.cs
 
@@ -1506,7 +1544,8 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | VfxPoolChecks | [`string RunPlay()`](../Assets/Editor/Presentation/Validation/VfxPoolChecks.cs#L12) | public static |
-| VfxPoolChecks | [`void Require(bool condition, string message)`](../Assets/Editor/Presentation/Validation/VfxPoolChecks.cs#L124) | private static |
+| VfxPoolChecks | [`void CreatePool()`](../Assets/Editor/Presentation/Validation/VfxPoolChecks.cs#L128) | private static |
+| VfxPoolChecks | [`void Require(bool condition, string message)`](../Assets/Editor/Presentation/Validation/VfxPoolChecks.cs#L138) | private static |
 
 ## Assets/Editor/Salvage/CargoReturnFileChecks.cs
 
@@ -2247,6 +2286,12 @@ HY-Sandbox/
 | GameManager | [`void Start()`](../Assets/Scripts/Features/Bootstrap/GameManager.cs#L15) | private |
 | GameManager | [`void Init()`](../Assets/Scripts/Features/Bootstrap/GameManager.cs#L20) | public static |
 
+## Assets/Scripts/Features/Bootstrap/RuntimeObjectTemplates.cs
+
+// 职责：保存数量由玩法决定的运行对象模板；组件组成在 Prefab 中制作，运行时只实例化。 // 入口：Instance；场景常驻服务直接放在 Managers，不通过此库自动创建。
+
+数据/配置/接口定义，无方法体。
+
 ## Assets/Scripts/Features/Bootstrap/SceneObjectQuery.cs
 
 // 职责：显式限定场景的服务查找，拒绝用对象创建顺序解决重复实例。 // 入口：FindInScene()/FindInActiveScene()；缺失返回null，同场景重复抛出明确错误。
@@ -2262,22 +2307,22 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Bot | [`void Start()`](../Assets/Scripts/Features/Bots/Bot.cs#L52) | protected virtual |
-| Bot | [`bool TickNavigation()`](../Assets/Scripts/Features/Bots/Bot.cs#L79) | protected |
-| Bot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Bot.cs#L93) | protected virtual |
-| Bot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/Bot.cs#L112) | protected virtual |
-| Bot | [`Power SetHomePowerRequested(bool requested)`](../Assets/Scripts/Features/Bots/Bot.cs#L118) | protected |
-| Bot | [`bool CanLaunchForWork(bool requiresPower, bool requested)`](../Assets/Scripts/Features/Bots/Bot.cs#L132) | protected |
-| Bot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/Bot.cs#L138) | public virtual |
-| Bot | [`void InitializeTrail()`](../Assets/Scripts/Features/Bots/Bot.cs#L142) | private |
-| Bot | [`void LateUpdate()`](../Assets/Scripts/Features/Bots/Bot.cs#L162) | private |
-| Bot | [`void NavigateToTarget(Transform target)`](../Assets/Scripts/Features/Bots/Bot.cs#L175) | protected |
-| Bot | [`void NavigateHomeSmoothly()`](../Assets/Scripts/Features/Bots/Bot.cs#L195) | protected |
-| Bot | [`Vector3 GetRelativeHomeVelocity(Vector3 worldPosition)`](../Assets/Scripts/Features/Bots/Bot.cs#L232) | private |
-| Bot | [`void ReturnHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L238) | private |
-| Bot | [`void LeaveHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L280) | private |
-| Bot | [`void SetNavigationState(NavigationState nextState)`](../Assets/Scripts/Features/Bots/Bot.cs#L292) | private |
-| Bot | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Bots/Bot.cs#L317) | private |
+| Bot | [`void Start()`](../Assets/Scripts/Features/Bots/Bot.cs#L53) | protected virtual |
+| Bot | [`bool TickNavigation()`](../Assets/Scripts/Features/Bots/Bot.cs#L75) | protected |
+| Bot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Bot.cs#L89) | protected virtual |
+| Bot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/Bot.cs#L108) | protected virtual |
+| Bot | [`Power SetHomePowerRequested(bool requested)`](../Assets/Scripts/Features/Bots/Bot.cs#L114) | protected |
+| Bot | [`bool CanLaunchForWork(bool requiresPower, bool requested)`](../Assets/Scripts/Features/Bots/Bot.cs#L128) | protected |
+| Bot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/Bot.cs#L134) | public virtual |
+| Bot | [`void InitializeTrail()`](../Assets/Scripts/Features/Bots/Bot.cs#L138) | private |
+| Bot | [`void LateUpdate()`](../Assets/Scripts/Features/Bots/Bot.cs#L158) | private |
+| Bot | [`void NavigateToTarget(Transform target)`](../Assets/Scripts/Features/Bots/Bot.cs#L171) | protected |
+| Bot | [`void NavigateHomeSmoothly()`](../Assets/Scripts/Features/Bots/Bot.cs#L191) | protected |
+| Bot | [`Vector3 GetRelativeHomeVelocity(Vector3 worldPosition)`](../Assets/Scripts/Features/Bots/Bot.cs#L228) | private |
+| Bot | [`void ReturnHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L234) | private |
+| Bot | [`void LeaveHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L276) | private |
+| Bot | [`void SetNavigationState(NavigationState nextState)`](../Assets/Scripts/Features/Bots/Bot.cs#L288) | private |
+| Bot | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Bots/Bot.cs#L313) | private |
 
 ## Assets/Scripts/Features/Bots/Collection/CollectionBot.cs
 
@@ -2376,11 +2421,11 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | RepairBeamView | [`void Initialize(GameObject gameObject, VfxEffect impact, float beamWidth)`](../Assets/Scripts/Features/Bots/Repair/RepairBeamView.cs#L15) | public |
-| RepairBeamView | [`void Hide()`](../Assets/Scripts/Features/Bots/Repair/RepairBeamView.cs#L36) | public |
-| RepairBeamView | [`void Update(bool active, Durability target, Vector3 origin, Gradient gradient)`](../Assets/Scripts/Features/Bots/Repair/RepairBeamView.cs#L49) | public |
-| RepairBeamView | [`Vector3 GetRepairTargetPoint(Durability target, Vector3 origin)`](../Assets/Scripts/Features/Bots/Repair/RepairBeamView.cs#L77) | public |
-| RepairBeamView | [`void UpdateRepairImpact(Vector3 targetPoint, Vector3 origin, float pulse)`](../Assets/Scripts/Features/Bots/Repair/RepairBeamView.cs#L98) | private |
-| RepairBeamView | [`void SetRepairImpactActive(bool active)`](../Assets/Scripts/Features/Bots/Repair/RepairBeamView.cs#L115) | private |
+| RepairBeamView | [`void Hide()`](../Assets/Scripts/Features/Bots/Repair/RepairBeamView.cs#L31) | public |
+| RepairBeamView | [`void Update(bool active, Durability target, Vector3 origin, Gradient gradient)`](../Assets/Scripts/Features/Bots/Repair/RepairBeamView.cs#L44) | public |
+| RepairBeamView | [`Vector3 GetRepairTargetPoint(Durability target, Vector3 origin)`](../Assets/Scripts/Features/Bots/Repair/RepairBeamView.cs#L72) | public |
+| RepairBeamView | [`void UpdateRepairImpact(Vector3 targetPoint, Vector3 origin, float pulse)`](../Assets/Scripts/Features/Bots/Repair/RepairBeamView.cs#L93) | private |
+| RepairBeamView | [`void SetRepairImpactActive(bool active)`](../Assets/Scripts/Features/Bots/Repair/RepairBeamView.cs#L110) | private |
 
 ## Assets/Scripts/Features/Bots/Repair/RepairBot.cs
 
@@ -2388,14 +2433,14 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| RepairBot | [`void Start()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L26) | protected override |
-| RepairBot | [`void FixedUpdate()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L36) | private |
-| RepairBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L88) | protected override |
-| RepairBot | [`void FindDamagedBlock()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L94) | private |
-| RepairBot | [`void CheckAndRepair()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L107) | private |
-| RepairBot | [`void UpdateRepairBeam(bool active)`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L148) | private |
-| RepairBot | [`void EnsureRepairBeamGradient()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L153) | private |
-| RepairBot | [`void ClearTarget()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L166) | public |
+| RepairBot | [`void Start()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L27) | protected override |
+| RepairBot | [`void FixedUpdate()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L37) | private |
+| RepairBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L89) | protected override |
+| RepairBot | [`void FindDamagedBlock()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L95) | private |
+| RepairBot | [`void CheckAndRepair()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L108) | private |
+| RepairBot | [`void UpdateRepairBeam(bool active)`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L149) | private |
+| RepairBot | [`void EnsureRepairBeamGradient()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L154) | private |
+| RepairBot | [`void ClearTarget()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L167) | public |
 
 ## Assets/Scripts/Features/Bots/Repair/RepairTargetSearch.cs
 
@@ -2761,13 +2806,13 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | OutpostDeploymentPreview | [`void DrawGuard(OutpostGarrisonData guard, Bounds bounds, int index, bool selected, Color color)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L91) | private |
-| OutpostDeploymentPreview | [`void FaceLabels(Quaternion rotation)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L136) | internal |
-| OutpostDeploymentPreview | [`bool OverlapsBuilding(OutpostGarrisonData guard, Matrix4x4 pose, List<BlockData> building)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L144) | private static |
-| OutpostDeploymentPreview | [`Bounds CalculateBounds(List<BlockData> blocks, Matrix4x4 deployment)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L164) | private static |
-| OutpostDeploymentPreview | [`Vector3 Corner(int index)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L169) | private static |
-| OutpostDeploymentPreview | [`void AddBox(List<Vector3> vertices, List<int> indices, Matrix4x4 transform)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L174) | private static |
-| OutpostDeploymentPreview | [`void AddLine(List<Vector3> vertices, List<int> indices, Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L188) | private static |
-| OutpostDeploymentPreview | [`void Dispose()`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L196) | public |
+| OutpostDeploymentPreview | [`void FaceLabels(Quaternion rotation)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L133) | internal |
+| OutpostDeploymentPreview | [`bool OverlapsBuilding(OutpostGarrisonData guard, Matrix4x4 pose, List<BlockData> building)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L141) | private static |
+| OutpostDeploymentPreview | [`Bounds CalculateBounds(List<BlockData> blocks, Matrix4x4 deployment)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L161) | private static |
+| OutpostDeploymentPreview | [`Vector3 Corner(int index)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L166) | private static |
+| OutpostDeploymentPreview | [`void AddBox(List<Vector3> vertices, List<int> indices, Matrix4x4 transform)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L171) | private static |
+| OutpostDeploymentPreview | [`void AddLine(List<Vector3> vertices, List<int> indices, Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L185) | private static |
+| OutpostDeploymentPreview | [`void Dispose()`](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L193) | public |
 
 ## Assets/Scripts/Features/Building/Interaction/BuildBlueprintEditor.cs
 
@@ -2931,12 +2976,12 @@ HY-Sandbox/
 | BuildPaletteItem | [`void Awake()`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L26) | private |
 | BuildPaletteItem | [`void BindPalette(BuildPalette palette)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L35) | public |
 | BuildPaletteItem | [`void ApplyButtonStyle(BuildPaletteItem template)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L45) | public |
-| BuildPaletteItem | [`void SetSelected(bool selected, Color color)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L63) | public |
-| BuildPaletteItem | [`void OnPointerEnter(PointerEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L68) | public |
-| BuildPaletteItem | [`void OnPointerExit(PointerEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L73) | public |
-| BuildPaletteItem | [`void OnSelect(BaseEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L86) | public |
-| BuildPaletteItem | [`void OnDeselect(BaseEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L91) | public |
-| BuildPaletteItem | [`void OnDisable()`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L96) | private |
+| BuildPaletteItem | [`void SetSelected(bool selected, Color color)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L59) | public |
+| BuildPaletteItem | [`void OnPointerEnter(PointerEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L64) | public |
+| BuildPaletteItem | [`void OnPointerExit(PointerEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L69) | public |
+| BuildPaletteItem | [`void OnSelect(BaseEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L82) | public |
+| BuildPaletteItem | [`void OnDeselect(BaseEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L87) | public |
+| BuildPaletteItem | [`void OnDisable()`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L92) | private |
 
 ## Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs
 
@@ -3085,7 +3130,7 @@ HY-Sandbox/
 | EnemyController | [`Vector3 ProbeObstacle(Vector3 direction, float weight)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L327) | private |
 | EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L436) | private |
 | EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L441) | private |
-| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L488) | private static |
+| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L489) | private static |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs
 
@@ -3148,7 +3193,7 @@ HY-Sandbox/
 | MeteorShower | [`void Start()`](../Assets/Scripts/Features/Combat/Meteors/MeteorShower.cs#L26) | private |
 | MeteorShower | [`IEnumerator SpawnMeteors()`](../Assets/Scripts/Features/Combat/Meteors/MeteorShower.cs#L31) | private |
 | MeteorShower | [`void SpawnMeteor()`](../Assets/Scripts/Features/Combat/Meteors/MeteorShower.cs#L45) | private |
-| MeteorShower | [`void MeteorDestroyed()`](../Assets/Scripts/Features/Combat/Meteors/MeteorShower.cs#L94) | public |
+| MeteorShower | [`void MeteorDestroyed()`](../Assets/Scripts/Features/Combat/Meteors/MeteorShower.cs#L77) | public |
 
 ## Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs
 
@@ -3156,10 +3201,10 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| LaserTurret | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L19) | protected override |
-| LaserTurret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L39) | protected override |
-| LaserTurret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L56) | protected override |
-| LaserTurret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L62) | protected override |
+| LaserTurret | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L20) | protected override |
+| LaserTurret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L35) | protected override |
+| LaserTurret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L52) | protected override |
+| LaserTurret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L58) | protected override |
 
 ## Assets/Scripts/Features/Combat/Turrets/ProjectileIntercept.cs
 
@@ -3191,9 +3236,9 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | ProjectileTracer | [`void Begin()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs#L21) | public |
-| ProjectileTracer | [`void Record()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs#L35) | private |
-| ProjectileTracer | [`void LateUpdate()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs#L43) | private |
-| ProjectileTracer | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs#L72) | private |
+| ProjectileTracer | [`void Record()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs#L31) | private |
+| ProjectileTracer | [`void LateUpdate()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs#L39) | private |
+| ProjectileTracer | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs#L68) | private |
 
 ## Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs
 
@@ -3219,10 +3264,10 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| TurretProjectilePool | [`TurretProjectile Rent(TurretProjectile prefab, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L11) | public static |
-| TurretProjectilePool | [`void Return(TurretProjectile shot, TurretProjectile prefab)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L44) | internal |
-| TurretProjectilePool | [`void Update()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L57) | private |
-| TurretProjectilePool | [`void OnDestroy()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L65) | private |
+| TurretProjectilePool | [`TurretProjectile Rent( TurretProjectile prefab, Vector3 position, Quaternion rotation, UnityEngine.SceneManagement.Scene scene = default)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L12) | public static |
+| TurretProjectilePool | [`void Return(TurretProjectile shot, TurretProjectile prefab)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L58) | internal |
+| TurretProjectilePool | [`void Update()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L71) | private |
+| TurretProjectilePool | [`void OnDestroy()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L87) | private |
 
 ## Assets/Scripts/Features/Combat/Turrets/Turret.cs
 
@@ -3291,17 +3336,18 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| DebugManager | [`void Awake()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L43) | private |
-| DebugManager | [`void OnDestroy()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L55) | private |
-| DebugManager | [`Color GetPowerRangeColor(PowerTransmissionDevice device)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L64) | public |
-| DebugManager | [`void TogglePowerRange()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L79) | public |
-| DebugManager | [`void TogglePowerConnections()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L92) | public |
-| DebugManager | [`void ToggleConnectionStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L97) | public |
-| DebugManager | [`void ToggleDurabilityStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L103) | public |
-| DebugManager | [`void TogglePowerStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L109) | public |
-| DebugManager | [`void EnsureStatusIconCanvas()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L115) | private |
-| DebugManager | [`void RefreshPowerRangeMesh(IList<PowerTransmissionDevice> devices)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L137) | internal |
-| DebugManager | [`void ClearPowerRangeMesh()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L142) | internal |
+| DebugManager | [`bool ShowsAI(UnitFaction faction)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L35) | public |
+| DebugManager | [`void Awake()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L50) | private |
+| DebugManager | [`void OnDestroy()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L57) | private |
+| DebugManager | [`Color GetPowerRangeColor(PowerTransmissionDevice device)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L66) | public |
+| DebugManager | [`void TogglePowerRange()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L81) | public |
+| DebugManager | [`void TogglePowerConnections()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L94) | public |
+| DebugManager | [`void ToggleConnectionStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L99) | public |
+| DebugManager | [`void ToggleDurabilityStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L105) | public |
+| DebugManager | [`void TogglePowerStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L111) | public |
+| DebugManager | [`void EnsureStatusIconCanvas()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L117) | private |
+| DebugManager | [`void RefreshPowerRangeMesh(IList<PowerTransmissionDevice> devices)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L127) | internal |
+| DebugManager | [`void ClearPowerRangeMesh()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L132) | internal |
 
 ## Assets/Scripts/Features/Diagnostics/Interface/DurabilityDebugLabels.cs
 
@@ -3338,16 +3384,13 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| AbnormalImpulseRecorder | [`void StartSession()`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L29) | internal static |
-| AbnormalImpulseRecorder | [`void RecordCollision(Rigidbody body, Collision collision)`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L41) | public static |
-| AbnormalImpulseRecorder | [`void Awake()`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L59) | private |
-| AbnormalImpulseRecorder | [`void FixedUpdate()`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L77) | private |
-| AbnormalImpulseRecorder | [`void Record( Rigidbody body, string source, float impulse, float deltaVelocity, Vector3 point, string other)`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L135) | private |
-| AbnormalImpulseRecorder | [`string Csv(string value)`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L190) | private static |
-| AbnormalImpulseRecorder | [`string HierarchyPath(Transform node)`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L191) | private static |
-| AbnormalImpulseRecorder | [`void OnDestroy()`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L203) | private |
-| AbnormalImpulseRecorderBootstrap | [`void OnPlayModeChanged(PlayModeStateChange state)`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L221) | private static |
-| AbnormalImpulseRecorderBootstrap | [`void EnsureSession()`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L229) | private static |
+| AbnormalImpulseRecorder | [`void RecordCollision(Rigidbody body, Collision collision)`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L31) | public static |
+| AbnormalImpulseRecorder | [`void Awake()`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L49) | private |
+| AbnormalImpulseRecorder | [`void FixedUpdate()`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L67) | private |
+| AbnormalImpulseRecorder | [`void Record( Rigidbody body, string source, float impulse, float deltaVelocity, Vector3 point, string other)`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L125) | private |
+| AbnormalImpulseRecorder | [`string Csv(string value)`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L180) | private static |
+| AbnormalImpulseRecorder | [`string HierarchyPath(Transform node)`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L181) | private static |
+| AbnormalImpulseRecorder | [`void OnDestroy()`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L193) | private |
 
 ## Assets/Scripts/Features/Diagnostics/Physics/PhysicsTelemetryHud.cs
 
@@ -3483,7 +3526,7 @@ HY-Sandbox/
 | Thruster | [`void VisualizeThrust(bool forceUpdate)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L205) | public virtual |
 | Thruster | [`void DisableLegacyLineRenderer()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L221) | private |
 | Thruster | [`void EnsureVisualEffect()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L230) | private |
-| Thruster | [`Vector3 GetNormalizedThrustDirection()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L245) | private |
+| Thruster | [`Vector3 GetNormalizedThrustDirection()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L240) | private |
 
 ## Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs
 
@@ -3639,9 +3682,9 @@ HY-Sandbox/
 | PowerConnectionVisuals | [`void HideUnusedLines(int firstUnusedIndex)`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L53) | private |
 | PowerConnectionVisuals | [`void DrawConnection(int index, Vector3 end, Color color, DebugManager settings)`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L64) | private |
 | PowerConnectionVisuals | [`LineRenderer GetOrCreateLine(int index)`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L92) | private |
-| PowerConnectionVisuals | [`void ConfigureLine(LineRenderer line)`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L115) | private static |
-| PowerConnectionVisuals | [`Material GetDashedLineMaterial()`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L127) | private static |
-| PowerConnectionVisuals | [`Texture2D CreateDashTexture()`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L149) | private static |
+| PowerConnectionVisuals | [`void ConfigureLine(LineRenderer line)`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L114) | private static |
+| PowerConnectionVisuals | [`Material GetDashedLineMaterial()`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L126) | private static |
+| PowerConnectionVisuals | [`Texture2D CreateDashTexture()`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L148) | private static |
 
 ## Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs
 
@@ -3655,18 +3698,18 @@ HY-Sandbox/
 | PowerRangeUnionView | [`void Clear()`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L71) | internal |
 | PowerRangeUnionView | [`void Dispose()`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L79) | internal |
 | PowerRangeUnionView | [`void EnsurePowerRangeObject()`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L100) | private |
-| PowerRangeUnionView | [`void BuildPowerRangeMesh(IList<PowerTransmissionDevice> devices)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L124) | private |
-| PowerRangeUnionView | [`void CollectCoordinates(IList<PowerTransmissionDevice> devices)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L226) | private |
-| PowerRangeUnionView | [`void AddXFace(int x, int y, int z, bool positive, int materialIndex)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L254) | private |
-| PowerRangeUnionView | [`void AddYFace(int x, int y, int z, bool positive, int materialIndex)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L266) | private |
-| PowerRangeUnionView | [`void AddZFace(int x, int y, int z, bool positive, int materialIndex)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L278) | private |
-| PowerRangeUnionView | [`void AddQuad( Vector3 a, Vector3 b, Vector3 c, Vector3 d, int materialIndex, bool reverse)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L290) | private |
-| PowerRangeUnionView | [`void EnsurePowerRangeMaterials( IList<PowerTransmissionDevice> devices, Color isolatedRangeColor, Color connectedRangeColor, Color poweredRangeColor)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L325) | private |
-| PowerRangeUnionView | [`int CalculatePowerRangeSignature(IList<PowerTransmissionDevice> devices)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L381) | private static |
-| PowerRangeUnionView | [`int GetPowerState(PowerTransmissionDevice device)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L405) | private static |
-| PowerRangeUnionView | [`int FindCoordinateIndex(List<float> values, float target)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L415) | private static |
-| PowerRangeUnionView | [`void SortAndUnique(List<float> values)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L432) | private static |
-| PowerRangeUnionView | [`void SetPowerRangeMeshVisible(bool visible)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L444) | private |
+| PowerRangeUnionView | [`void BuildPowerRangeMesh(IList<PowerTransmissionDevice> devices)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L125) | private |
+| PowerRangeUnionView | [`void CollectCoordinates(IList<PowerTransmissionDevice> devices)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L227) | private |
+| PowerRangeUnionView | [`void AddXFace(int x, int y, int z, bool positive, int materialIndex)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L255) | private |
+| PowerRangeUnionView | [`void AddYFace(int x, int y, int z, bool positive, int materialIndex)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L267) | private |
+| PowerRangeUnionView | [`void AddZFace(int x, int y, int z, bool positive, int materialIndex)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L279) | private |
+| PowerRangeUnionView | [`void AddQuad( Vector3 a, Vector3 b, Vector3 c, Vector3 d, int materialIndex, bool reverse)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L291) | private |
+| PowerRangeUnionView | [`void EnsurePowerRangeMaterials( IList<PowerTransmissionDevice> devices, Color isolatedRangeColor, Color connectedRangeColor, Color poweredRangeColor)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L326) | private |
+| PowerRangeUnionView | [`int CalculatePowerRangeSignature(IList<PowerTransmissionDevice> devices)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L382) | private static |
+| PowerRangeUnionView | [`int GetPowerState(PowerTransmissionDevice device)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L406) | private static |
+| PowerRangeUnionView | [`int FindCoordinateIndex(List<float> values, float target)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L416) | private static |
+| PowerRangeUnionView | [`void SortAndUnique(List<float> values)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L433) | private static |
+| PowerRangeUnionView | [`void SetPowerRangeMeshVisible(bool visible)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L445) | private |
 
 ## Assets/Scripts/Features/Presentation/Blocks/BlockStatusLight.cs
 
@@ -3710,25 +3753,23 @@ HY-Sandbox/
 | --- | --- | --- |
 | IndustrialEmissionBinding | [`bool UsesGpuDrawing()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L67) | private static |
 | IndustrialEmissionBinding | [`void Apply(Color emission)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L73) | internal |
-| IndustrialEmissionBinding | [`void Tick(float unscaledTime)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L95) | internal static |
-| IndustrialEmissionBinding | [`Material[] CaptureSelection(Renderer target)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L104) | internal static |
-| IndustrialEmissionBinding | [`void RestoreSelection(Renderer target, Material[] saved)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L117) | internal static |
-| IndustrialEmissionBinding | [`void Dispose()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L123) | public |
-| IndustrialEmissionBinding | [`bool Matches(Material[] left, Material[] right)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L159) | private static |
-| PulseKey | [`bool Equals(PulseKey other)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L191) | public |
-| PulseKey | [`bool Equals(object other)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L196) | public override |
-| PulseKey | [`int GetHashCode()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L201) | public override |
-| Pulse | [`void Update(float unscaledTime)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L223) | internal |
+| IndustrialEmissionBinding | [`void Tick(float unscaledTime)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L96) | internal static |
+| IndustrialEmissionBinding | [`Material[] CaptureSelection(Renderer target)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L111) | internal static |
+| IndustrialEmissionBinding | [`void RestoreSelection(Renderer target, Material[] saved)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L124) | internal static |
+| IndustrialEmissionBinding | [`void Dispose()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L130) | public |
+| IndustrialEmissionBinding | [`bool Matches(Material[] left, Material[] right)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L166) | private static |
+| PulseKey | [`bool Equals(PulseKey other)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L198) | public |
+| PulseKey | [`bool Equals(object other)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L203) | public override |
+| PulseKey | [`int GetHashCode()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L208) | public override |
+| Pulse | [`void Update(float unscaledTime)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialEmissionBinding.cs#L230) | internal |
 
 ## Assets/Scripts/Features/Presentation/Blocks/IndustrialMotionDriver.cs
 
-// 职责：只用一个Unity Update驱动工业零件表现，生命周期随Play会话结束。 // 入口：EnsureExists()由活动零件注册调用，Update()调度IndustrialPartMotion.AnimateAll()。
+// 职责：每场景一个可见调度器，集中驱动该场景工业零件表现。 // 入口：Update()；组件由场景 Managers 持有。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| IndustrialMotionDriver | [`void EnsureExists()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialMotionDriver.cs#L9) | internal static |
-| IndustrialMotionDriver | [`void Update()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialMotionDriver.cs#L24) | private |
-| IndustrialMotionDriver | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialMotionDriver.cs#L29) | private |
+| IndustrialMotionDriver | [`void Update()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialMotionDriver.cs#L7) | private |
 
 ## Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs
 
@@ -3738,12 +3779,13 @@ HY-Sandbox/
 | --- | --- | --- |
 | IndustrialPartMotion | [`bool ControlsVisual(Transform part, Renderer renderer)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L32) | internal |
 | IndustrialPartMotion | [`void OnEnable()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L37) | private |
-| IndustrialPartMotion | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L54) | private |
-| IndustrialPartMotion | [`void AnimateAll()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L70) | internal static |
-| IndustrialPartMotion | [`void Animate(float deltaTime, float unscaledTime)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L81) | private |
-| IndustrialPartMotion | [`void Configure( Transform[] newSpinTargets, Vector3 newSpinAxis, float newDegreesPerSecond, Transform newBobTarget, float newBobAmplitude, float newBobFrequency, Renderer[] newGlowRenderers, Color newBaseEmission, float newEmissionPulse)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L105) | public |
-| IndustrialPartMotion | [`void CacheRuntimeState()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L129) | private |
-| IndustrialPartMotion | [`void ReleaseEmission()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L147) | private |
+| IndustrialPartMotion | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L52) | private |
+| IndustrialPartMotion | [`void AnimateAll()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L68) | internal static |
+| IndustrialPartMotion | [`void AnimateScene(UnityEngine.SceneManagement.Scene scene)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L79) | internal static |
+| IndustrialPartMotion | [`void Animate(float deltaTime, float unscaledTime)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L93) | private |
+| IndustrialPartMotion | [`void Configure( Transform[] newSpinTargets, Vector3 newSpinAxis, float newDegreesPerSecond, Transform newBobTarget, float newBobAmplitude, float newBobFrequency, Renderer[] newGlowRenderers, Color newBaseEmission, float newEmissionPulse)`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L117) | public |
+| IndustrialPartMotion | [`void CacheRuntimeState()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L141) | private |
+| IndustrialPartMotion | [`void ReleaseEmission()`](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L159) | private |
 
 ## Assets/Scripts/Features/Presentation/Camera/CameraController.cs
 
@@ -3829,14 +3871,14 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | DetachedPartSmokeTrail | [`void Attach(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L37) | public static |
-| DetachedPartSmokeTrail | [`void Initialize(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L55) | private |
-| DetachedPartSmokeTrail | [`void ConfigureEnvelope()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L76) | private |
-| DetachedPartSmokeTrail | [`void UpdateEnvelope()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L106) | private |
-| DetachedPartSmokeTrail | [`void Refresh(Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L122) | private |
-| DetachedPartSmokeTrail | [`void Update()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L134) | private |
-| DetachedPartSmokeTrail | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L171) | private |
-| DetachedPartSmokeTrail | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L192) | private |
-| DetachedPartSmokeTrail | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L197) | private |
+| DetachedPartSmokeTrail | [`void Initialize(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L62) | private |
+| DetachedPartSmokeTrail | [`void ConfigureEnvelope()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L84) | private |
+| DetachedPartSmokeTrail | [`void UpdateEnvelope()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L114) | private |
+| DetachedPartSmokeTrail | [`void Refresh(Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L130) | private |
+| DetachedPartSmokeTrail | [`void Update()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L142) | private |
+| DetachedPartSmokeTrail | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L179) | private |
+| DetachedPartSmokeTrail | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L203) | private |
+| DetachedPartSmokeTrail | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L208) | private |
 
 ## Assets/Scripts/Features/Presentation/Effects/LightFade.cs
 
@@ -3887,15 +3929,15 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| TransientEffectPool | [`BeamFade RentBeam()`](../Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs#L28) | public static |
-| TransientEffectPool | [`LightFade RentLight(Vector3 position)`](../Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs#L50) | public static |
-| TransientEffectPool | [`void Return(BeamFade fade)`](../Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs#L75) | internal |
-| TransientEffectPool | [`void Return(LightFade fade)`](../Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs#L94) | internal |
-| TransientEffectPool | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs#L113) | private |
+| TransientEffectPool | [`BeamFade RentBeam()`](../Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs#L32) | public static |
+| TransientEffectPool | [`LightFade RentLight(Vector3 position)`](../Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs#L52) | public static |
+| TransientEffectPool | [`void Return(BeamFade fade)`](../Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs#L73) | internal |
+| TransientEffectPool | [`void Return(LightFade fade)`](../Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs#L92) | internal |
+| TransientEffectPool | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs#L111) | private |
 
 ## Assets/Scripts/Features/Presentation/Effects/TransientEffects.cs
 
-// 职责：配置可复用能量线与灯光闪烁，统一径向碎光、颜色及可见网格包围盒规则。 // 入口：CreateLineStreak() / CreateRadialStreakBurst() / CreateLightFlash()；无模式或场景单例依赖。
+// 职责：配置可复用能量线与灯光闪烁，统一径向碎光、颜色及可见网格包围盒规则。 // 入口：CreateLineStreak() / CreateRadialStreakBurst() / CreateLightFlash()；对象池由当前场景显式配置。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
@@ -3934,7 +3976,7 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| VfxEffectPool | [`VfxEffect Rent(VfxEffect prefab, Vector3 position, Quaternion rotation, Scene scene)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L24) | public static |
+| VfxEffectPool | [`VfxEffect Rent(VfxEffect prefab, Vector3 position, Quaternion rotation, Scene scene)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L25) | public static |
 | VfxEffectPool | [`void Return(VfxEffect effect, VfxEffect prefab)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L72) | internal |
 | VfxEffectPool | [`void Forget(VfxEffect effect)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L95) | internal |
 | VfxEffectPool | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L96) | private |
@@ -3945,9 +3987,8 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| GlobalTextStyler | [`void CreateInstance()`](../Assets/Scripts/Features/Presentation/Interface/GlobalTextStyler.cs#L14) | private static |
-| GlobalTextStyler | [`IEnumerator Start()`](../Assets/Scripts/Features/Presentation/Interface/GlobalTextStyler.cs#L22) | private |
-| GlobalTextStyler | [`void ApplyToSceneTexts()`](../Assets/Scripts/Features/Presentation/Interface/GlobalTextStyler.cs#L31) | private static |
+| GlobalTextStyler | [`IEnumerator Start()`](../Assets/Scripts/Features/Presentation/Interface/GlobalTextStyler.cs#L14) | private |
+| GlobalTextStyler | [`void ApplyToSceneTexts()`](../Assets/Scripts/Features/Presentation/Interface/GlobalTextStyler.cs#L23) | private static |
 
 ## Assets/Scripts/Features/Presentation/Interface/IconManager.cs
 
@@ -4024,7 +4065,7 @@ HY-Sandbox/
 | PanelTransitions | [`void CancelAll()`](../Assets/Scripts/Features/Presentation/Interface/PanelTransitions.cs#L16) | public |
 | PanelTransitions | [`void Show(GameObject panel, bool show, float duration)`](../Assets/Scripts/Features/Presentation/Interface/PanelTransitions.cs#L29) | public |
 | PanelTransitions | [`IEnumerator Fade(GameObject panel, bool show, float duration)`](../Assets/Scripts/Features/Presentation/Interface/PanelTransitions.cs#L53) | private |
-| PanelTransitions | [`void SetInteraction(GameObject panel, bool interactable)`](../Assets/Scripts/Features/Presentation/Interface/PanelTransitions.cs#L93) | public static |
+| PanelTransitions | [`void SetInteraction(GameObject panel, bool interactable)`](../Assets/Scripts/Features/Presentation/Interface/PanelTransitions.cs#L88) | public static |
 
 ## Assets/Scripts/Features/Presentation/Interface/ReturnStatusPanel.cs
 
@@ -4055,13 +4096,13 @@ HY-Sandbox/
 | StatusIcon | [`void RefreshAllStatusIcons()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L186) | public static |
 | StatusIcon | [`void RefreshIcons(DebugManager manager)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L197) | private |
 | StatusIcon | [`void EnsureIconVisuals(DebugManager manager)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L223) | private |
-| StatusIcon | [`Image CreateIcon(string iconName)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L252) | private |
-| StatusIcon | [`bool SetIcon(Image image, string statusName)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L265) | private |
-| StatusIcon | [`Sprite FindStatusIcon(string statusName)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L273) | private |
-| StatusIcon | [`void PositionVisibleIcons(int visibleCount)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L292) | private |
-| StatusIcon | [`void PositionIcon(Image image, ref float x)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L302) | private static |
-| StatusIcon | [`void UpdateIconScreenPosition(DebugManager manager)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L313) | private |
-| StatusIcon | [`void HideIcons()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L362) | private |
+| StatusIcon | [`Image CreateIcon(string iconName)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L254) | private |
+| StatusIcon | [`bool SetIcon(Image image, string statusName)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L269) | private |
+| StatusIcon | [`Sprite FindStatusIcon(string statusName)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L277) | private |
+| StatusIcon | [`void PositionVisibleIcons(int visibleCount)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L296) | private |
+| StatusIcon | [`void PositionIcon(Image image, ref float x)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L306) | private static |
+| StatusIcon | [`void UpdateIconScreenPosition(DebugManager manager)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L317) | private |
+| StatusIcon | [`void HideIcons()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L366) | private |
 
 ## Assets/Scripts/Features/Presentation/Interface/UIInteractionFeedback.cs
 
@@ -4087,22 +4128,22 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | VisualEffectsManager | [`VisualEffectsManager EnsureInstance()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L42) | public static |
-| VisualEffectsManager | [`Material GetSharedLineMaterial()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L60) | public static |
-| VisualEffectsManager | [`void TryPlayBlockPlaced(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L65) | public static |
-| VisualEffectsManager | [`void TryPlayBlockRemoved(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L75) | public static |
-| VisualEffectsManager | [`void TryPlayBlockExplosion(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L85) | public static |
-| VisualEffectsManager | [`void TryPlayRepairPulse(Vector3 origin, Vector3 target, Color color, float width)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L95) | public static |
-| VisualEffectsManager | [`void TryAttachDetachedPartSmoke(Rigidbody body, Vector3 worldAnchor, float intensity)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L100) | public static |
-| VisualEffectsManager | [`void TryPlayObjectDestroyed(GameObject target)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L116) | public static |
-| VisualEffectsManager | [`void TryPlayBlockMoved(Block block, Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L126) | public static |
-| VisualEffectsManager | [`void TryPlayBlockRotated(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L136) | public static |
-| VisualEffectsManager | [`void TryShowBlockSelection(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L146) | public static |
-| VisualEffectsManager | [`void TryClearBlockSelection(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L156) | public static |
-| VisualEffectsManager | [`void TryUpdateGhostPreview(GameObject ghost, bool isBlocked)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L166) | public static |
-| VisualEffectsManager | [`void TryClearGhostPreview(GameObject ghost)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L176) | public static |
-| VisualEffectsManager | [`void TryDecorateMeteor(Meteor meteor)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L186) | public static |
-| VisualEffectsManager | [`void TryPlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L196) | public static |
-| VisualEffectsManager | [`void Awake()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L201) | private |
+| VisualEffectsManager | [`Material GetSharedLineMaterial()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L59) | public static |
+| VisualEffectsManager | [`void TryPlayBlockPlaced(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L64) | public static |
+| VisualEffectsManager | [`void TryPlayBlockRemoved(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L74) | public static |
+| VisualEffectsManager | [`void TryPlayBlockExplosion(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L84) | public static |
+| VisualEffectsManager | [`void TryPlayRepairPulse(Vector3 origin, Vector3 target, Color color, float width)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L94) | public static |
+| VisualEffectsManager | [`void TryAttachDetachedPartSmoke(Rigidbody body, Vector3 worldAnchor, float intensity)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L99) | public static |
+| VisualEffectsManager | [`void TryPlayObjectDestroyed(GameObject target)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L115) | public static |
+| VisualEffectsManager | [`void TryPlayBlockMoved(Block block, Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L125) | public static |
+| VisualEffectsManager | [`void TryPlayBlockRotated(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L135) | public static |
+| VisualEffectsManager | [`void TryShowBlockSelection(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L145) | public static |
+| VisualEffectsManager | [`void TryClearBlockSelection(Block block)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L155) | public static |
+| VisualEffectsManager | [`void TryUpdateGhostPreview(GameObject ghost, bool isBlocked)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L165) | public static |
+| VisualEffectsManager | [`void TryClearGhostPreview(GameObject ghost)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L175) | public static |
+| VisualEffectsManager | [`void TryDecorateMeteor(Meteor meteor)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L185) | public static |
+| VisualEffectsManager | [`void TryPlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L195) | public static |
+| VisualEffectsManager | [`void Awake()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L200) | private |
 | VisualEffectsManager | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L213) | private |
 | VisualEffectsManager | [`void PlayCameraShake(float amplitude, float duration)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L219) | public |
 | VisualEffectsManager | [`void TryPlayEnemySpawnPortal(ControlUnit unit)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L225) | public static |
@@ -4122,7 +4163,7 @@ HY-Sandbox/
 | VisualEffectsManager | [`void UpdateGhostPreview(Transform ghost, bool isBlocked)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L481) | private |
 | VisualEffectsManager | [`void ClearGhostPreview()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L486) | private |
 | VisualEffectsManager | [`void DecorateMeteor(Meteor meteor)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L490) | private |
-| VisualEffectsManager | [`void PlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L530) | private |
+| VisualEffectsManager | [`void PlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L527) | private |
 
 ## Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs
 
@@ -4371,12 +4412,12 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeThreatMarkers | [`void Awake()`](../Assets/Scripts/Features/Siege/Interface/SiegeThreatMarkers.cs#L34) | private |
-| SiegeThreatMarkers | [`void Start()`](../Assets/Scripts/Features/Siege/Interface/SiegeThreatMarkers.cs#L40) | private |
-| SiegeThreatMarkers | [`void Build()`](../Assets/Scripts/Features/Siege/Interface/SiegeThreatMarkers.cs#L49) | private |
-| SiegeThreatMarkers | [`void Update()`](../Assets/Scripts/Features/Siege/Interface/SiegeThreatMarkers.cs#L99) | private |
-| SiegeThreatMarkers | [`void PlaceMarker(int index, Camera camera, Vector3 world, Vector3 viewport, float distance)`](../Assets/Scripts/Features/Siege/Interface/SiegeThreatMarkers.cs#L150) | private |
-| SiegeThreatMarkers | [`void HideAll()`](../Assets/Scripts/Features/Siege/Interface/SiegeThreatMarkers.cs#L189) | private |
+| SiegeThreatMarkers | [`void Awake()`](../Assets/Scripts/Features/Siege/Interface/SiegeThreatMarkers.cs#L37) | private |
+| SiegeThreatMarkers | [`void Start()`](../Assets/Scripts/Features/Siege/Interface/SiegeThreatMarkers.cs#L43) | private |
+| SiegeThreatMarkers | [`void Build()`](../Assets/Scripts/Features/Siege/Interface/SiegeThreatMarkers.cs#L52) | private |
+| SiegeThreatMarkers | [`void Update()`](../Assets/Scripts/Features/Siege/Interface/SiegeThreatMarkers.cs#L80) | private |
+| SiegeThreatMarkers | [`void PlaceMarker(int index, Camera camera, Vector3 world, Vector3 viewport, float distance)`](../Assets/Scripts/Features/Siege/Interface/SiegeThreatMarkers.cs#L131) | private |
+| SiegeThreatMarkers | [`void HideAll()`](../Assets/Scripts/Features/Siege/Interface/SiegeThreatMarkers.cs#L170) | private |
 
 ## Assets/Scripts/Features/Siege/SiegeMatch.cs
 
@@ -4519,7 +4560,7 @@ HY-Sandbox/
 | SiegeWorkshop | [`bool Open(string saveName = null)`](../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshop.cs#L47) | public |
 | SiegeWorkshop | [`bool Close()`](../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshop.cs#L88) | public |
 | SiegeWorkshop | [`void SetPanels(bool editing)`](../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshop.cs#L123) | private |
-| SiegeWorkshop | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshop.cs#L153) | private |
+| SiegeWorkshop | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshop.cs#L143) | private |
 
 ## Assets/Scripts/Features/Siege/Workshop/SiegeWorkshopStage.cs
 
@@ -4528,10 +4569,10 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeWorkshopStage | [`void Open(Scene scene)`](../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshopStage.cs#L21) | public |
-| SiegeWorkshopStage | [`void Move(GameObject target, Scene scene, List<Placement> records)`](../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshopStage.cs#L77) | private static |
-| SiegeWorkshopStage | [`void Transfer(GameObject target, Scene scene)`](../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshopStage.cs#L84) | private static |
-| SiegeWorkshopStage | [`void Dispose()`](../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshopStage.cs#L108) | public |
-| SiegeWorkshopStage | [`void Restore(List<Placement> records)`](../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshopStage.cs#L144) | private static |
+| SiegeWorkshopStage | [`void Move(GameObject target, Scene scene, List<Placement> records)`](../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshopStage.cs#L76) | private static |
+| SiegeWorkshopStage | [`void Transfer(GameObject target, Scene scene)`](../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshopStage.cs#L83) | private static |
+| SiegeWorkshopStage | [`void Dispose()`](../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshopStage.cs#L107) | public |
+| SiegeWorkshopStage | [`void Restore(List<Placement> records)`](../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshopStage.cs#L143) | private static |
 
 ## Assets/Scripts/Features/Simulation/Block.cs
 
@@ -4539,34 +4580,34 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Block | [`void CollectRuntimeNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L52) | internal |
-| Block | [`void RefreshRuntimeConnectionPose()`](../Assets/Scripts/Features/Simulation/Block.cs#L57) | internal |
-| Block | [`void InvalidateRuntimeConnections()`](../Assets/Scripts/Features/Simulation/Block.cs#L62) | internal |
-| Block | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Block.cs#L67) | private |
-| Block | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Block.cs#L72) | private |
-| Block | [`void Awake()`](../Assets/Scripts/Features/Simulation/Block.cs#L77) | private |
-| Block | [`void OnValidate()`](../Assets/Scripts/Features/Simulation/Block.cs#L104) | private |
-| Block | [`void RefreshAuthoringData()`](../Assets/Scripts/Features/Simulation/Block.cs#L121) | public |
-| Block | [`void RefreshRuntimeData(bool rebuildConnectors = false)`](../Assets/Scripts/Features/Simulation/Block.cs#L150) | public |
-| Block | [`void RefreshMass()`](../Assets/Scripts/Features/Simulation/Block.cs#L184) | public |
-| Block | [`void SetMassSettings(bool useCustomMass, float value)`](../Assets/Scripts/Features/Simulation/Block.cs#L197) | public |
-| Block | [`void Reset()`](../Assets/Scripts/Features/Simulation/Block.cs#L205) | private |
-| Block | [`void GenerateConnectionPoints()`](../Assets/Scripts/Features/Simulation/Block.cs#L210) | private |
-| Block | [`string GetDisplayInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L280) | public |
-| Block | [`string GenerateInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L285) | private |
-| Block | [`void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)`](../Assets/Scripts/Features/Simulation/Block.cs#L331) | private |
-| Block | [`Vector3 GetConnectorWorldPosition(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L345) | public |
-| Block | [`Vector3 GetConnectorWorldNormal(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L350) | public |
-| Block | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L355) | public |
-| Block | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/Block.cs#L360) | public |
-| Block | [`void CheckConnectionAfterPhysicsSync()`](../Assets/Scripts/Features/Simulation/Block.cs#L365) | internal |
-| Block | [`List<Block> Neighbors()`](../Assets/Scripts/Features/Simulation/Block.cs#L370) | public |
-| Block | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L378) | internal |
-| Block | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Block.cs#L383) | public |
-| Block | [`void RestoreConnectionParticipation()`](../Assets/Scripts/Features/Simulation/Block.cs#L389) | public |
-| Block | [`void RefreshConnectionStatus()`](../Assets/Scripts/Features/Simulation/Block.cs#L394) | internal |
-| Block | [`bool IsBlockedGhost()`](../Assets/Scripts/Features/Simulation/Block.cs#L402) | public |
-| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L442) | private |
+| Block | [`void CollectRuntimeNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L54) | internal |
+| Block | [`void RefreshRuntimeConnectionPose()`](../Assets/Scripts/Features/Simulation/Block.cs#L59) | internal |
+| Block | [`void InvalidateRuntimeConnections()`](../Assets/Scripts/Features/Simulation/Block.cs#L64) | internal |
+| Block | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Block.cs#L69) | private |
+| Block | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Block.cs#L74) | private |
+| Block | [`void Awake()`](../Assets/Scripts/Features/Simulation/Block.cs#L79) | private |
+| Block | [`void OnValidate()`](../Assets/Scripts/Features/Simulation/Block.cs#L106) | private |
+| Block | [`void RefreshAuthoringData()`](../Assets/Scripts/Features/Simulation/Block.cs#L123) | public |
+| Block | [`void RefreshRuntimeData(bool rebuildConnectors = false)`](../Assets/Scripts/Features/Simulation/Block.cs#L145) | public |
+| Block | [`void RefreshMass()`](../Assets/Scripts/Features/Simulation/Block.cs#L179) | public |
+| Block | [`void SetMassSettings(bool useCustomMass, float value)`](../Assets/Scripts/Features/Simulation/Block.cs#L192) | public |
+| Block | [`void Reset()`](../Assets/Scripts/Features/Simulation/Block.cs#L200) | private |
+| Block | [`void GenerateConnectionPoints()`](../Assets/Scripts/Features/Simulation/Block.cs#L205) | private |
+| Block | [`string GetDisplayInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L275) | public |
+| Block | [`string GenerateInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L280) | private |
+| Block | [`void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)`](../Assets/Scripts/Features/Simulation/Block.cs#L326) | private |
+| Block | [`Vector3 GetConnectorWorldPosition(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L340) | public |
+| Block | [`Vector3 GetConnectorWorldNormal(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L345) | public |
+| Block | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L350) | public |
+| Block | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/Block.cs#L355) | public |
+| Block | [`void CheckConnectionAfterPhysicsSync()`](../Assets/Scripts/Features/Simulation/Block.cs#L360) | internal |
+| Block | [`List<Block> Neighbors()`](../Assets/Scripts/Features/Simulation/Block.cs#L365) | public |
+| Block | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L373) | internal |
+| Block | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Block.cs#L378) | public |
+| Block | [`void RestoreConnectionParticipation()`](../Assets/Scripts/Features/Simulation/Block.cs#L384) | public |
+| Block | [`void RefreshConnectionStatus()`](../Assets/Scripts/Features/Simulation/Block.cs#L389) | internal |
+| Block | [`bool IsBlockedGhost()`](../Assets/Scripts/Features/Simulation/Block.cs#L397) | public |
+| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L437) | private |
 
 ## Assets/Scripts/Features/Simulation/Connections/BatchConnectionBuilder.cs
 
@@ -4698,10 +4739,10 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| FragmentLifetime | [`void Awake()`](../Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs#L10) | private |
-| FragmentLifetime | [`void Mark(GameObject root)`](../Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs#L15) | internal static |
-| FragmentLifetime | [`float Remaining(GameObject root)`](../Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs#L23) | internal static |
-| FragmentLifetime | [`bool CanRetire(float age)`](../Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs#L29) | internal static |
+| FragmentLifetime | [`void Awake()`](../Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs#L11) | private |
+| FragmentLifetime | [`void Mark(GameObject root)`](../Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs#L16) | internal static |
+| FragmentLifetime | [`float Remaining(GameObject root)`](../Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs#L31) | internal static |
+| FragmentLifetime | [`bool CanRetire(float age)`](../Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs#L37) | internal static |
 
 ## Assets/Scripts/Features/Simulation/Physics/ImpactPhysics.cs
 
@@ -4765,8 +4806,8 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Cockpit | [`void SetControlMode(UnitControlMode mode)`](../Assets/Scripts/Features/Simulation/Units/Cockpit.cs#L20) | public |
-| Cockpit | [`void SetAnchored(bool value)`](../Assets/Scripts/Features/Simulation/Units/Cockpit.cs#L25) | public |
+| Cockpit | [`void SetControlMode(UnitControlMode mode)`](../Assets/Scripts/Features/Simulation/Units/Cockpit.cs#L21) | public |
+| Cockpit | [`void SetAnchored(bool value)`](../Assets/Scripts/Features/Simulation/Units/Cockpit.cs#L26) | public |
 
 ## Assets/Scripts/Features/Simulation/Units/ControlUnit.cs
 
@@ -4774,26 +4815,25 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| ControlUnit | [`IReadOnlyList<Durability> GetDamageTargets()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L17) | internal |
-| ControlUnit | [`void OnTransformChildrenChanged()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L30) | private |
-| ControlUnit | [`bool IsSceneSimulationActive(UnityEngine.SceneManagement.Scene scene)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L35) | public static |
-| ControlUnit | [`void BindBuilding(BuildingRuntime building)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L55) | public |
-| ControlUnit | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L60) | private |
-| ControlUnit | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L68) | private |
-| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L89) | public |
-| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L101) | public |
-| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L124) | private |
-| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L136) | private |
-| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L183) | public |
-| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L234) | public |
-| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L255) | public |
-| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L263) | public |
-| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L273) | public |
-| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L278) | public |
-| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L283) | private |
-| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L326) | private |
-| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L336) | private |
-| RuntimeUnitMember | [`RuntimeUnitMember Ensure(GameObject obj, string unitId, UnitFaction faction)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L349) | public static |
+| ControlUnit | [`IReadOnlyList<Durability> GetDamageTargets()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L19) | internal |
+| ControlUnit | [`void OnTransformChildrenChanged()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L32) | private |
+| ControlUnit | [`bool IsSceneSimulationActive(UnityEngine.SceneManagement.Scene scene)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L37) | public static |
+| ControlUnit | [`void BindBuilding(BuildingRuntime building)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L57) | public |
+| ControlUnit | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L62) | private |
+| ControlUnit | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L70) | private |
+| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L91) | public |
+| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L103) | public |
+| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L126) | private |
+| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L138) | private |
+| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L185) | public |
+| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L244) | public |
+| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L265) | public |
+| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L273) | public |
+| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L283) | public |
+| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L288) | public |
+| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L293) | private |
+| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L336) | private |
+| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L346) | private |
 
 ## Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs
 
@@ -4819,6 +4859,14 @@ HY-Sandbox/
 // 职责：管理机器人停泊容器及所属单元关系。
 
 数据/配置/接口定义，无方法体。
+
+## Assets/Scripts/Features/Simulation/Units/RuntimeUnitMember.cs
+
+// 职责：保存模块的运行单元归属；组件预挂在模块 Prefab，运行时只更新数据。 // 入口：Ensure()；脱离主体后仍保留原阵营及身份。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| RuntimeUnitMember | [`RuntimeUnitMember Ensure(GameObject obj, string unitId, UnitFaction faction)`](../Assets/Scripts/Features/Simulation/Units/RuntimeUnitMember.cs#L9) | public static |
 
 ## Assets/Scripts/Features/Simulation/Units/UnitFaction.cs
 
@@ -4893,9 +4941,9 @@ HY-Sandbox/
 | WorldBuildingPalette | [`void Update()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L56) | private |
 | WorldBuildingPalette | [`void BeginPlacement()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L131) | public |
 | WorldBuildingPalette | [`void AddPreviewMeshes(GameObject prefab, Vector3 localPosition, Quaternion localRotation, Vector3? size = null)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L161) | private |
-| WorldBuildingPalette | [`void Cancel()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L201) | public |
-| WorldBuildingPalette | [`void OnDisable()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L216) | private |
-| WorldBuildingPalette | [`void OnGUI()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L221) | private |
+| WorldBuildingPalette | [`void Cancel()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L203) | public |
+| WorldBuildingPalette | [`void OnDisable()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L218) | private |
+| WorldBuildingPalette | [`void OnGUI()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L223) | private |
 
 ## Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs
 
@@ -4930,10 +4978,10 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | WorldBuildingRenderCache | [`void Apply(Block block)`](../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L10) | internal |
-| WorldBuildingRenderCache | [`bool IsVisible(Transform part, Transform model)`](../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L85) | private static |
-| WorldBuildingRenderCache | [`string RelativePath(Transform parent, Transform model)`](../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L98) | private static |
-| WorldBuildingRenderCache | [`Visual Build(Transform model, MeshRenderer[] renderers)`](../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L109) | private static |
-| WorldBuildingRenderCache | [`void Clear()`](../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L189) | internal |
+| WorldBuildingRenderCache | [`bool IsVisible(Transform part, Transform model)`](../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L87) | private static |
+| WorldBuildingRenderCache | [`string RelativePath(Transform parent, Transform model)`](../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L100) | private static |
+| WorldBuildingRenderCache | [`Visual Build(Transform model, MeshRenderer[] renderers)`](../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L111) | private static |
+| WorldBuildingRenderCache | [`void Clear()`](../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L191) | internal |
 
 ## Assets/Scripts/Features/World/Buildings/Topology/BuildingRefit.cs
 
@@ -4979,7 +5027,7 @@ HY-Sandbox/
 | WorldBuildingManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L409) | private |
 | WorldBuildingManager | [`void DamageSphere(Vector3 center, float radius, float damage)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L426) | public |
 | WorldBuildingManager | [`void CreateDebris(List<Block> group, Rigidbody source, RigidbodyMotion motion)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L431) | internal |
-| WorldBuildingManager | [`void ClearDebris()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L467) | private |
+| WorldBuildingManager | [`void ClearDebris()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L469) | private |
 
 ## Assets/Scripts/Features/World/Outposts/EnemyOutpostData.cs
 
@@ -5052,9 +5100,9 @@ HY-Sandbox/
 | WorldDistanceView | [`void UpdateRingVisibility()`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L248) | private |
 | WorldDistanceView | [`void ReleaseExpiredRing(Vector2Int center, int radius)`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L266) | private |
 | WorldDistanceView | [`MeshFilter BuildRingColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L286) | private |
-| WorldDistanceView | [`void AddSkirt(List<Vector3> vertices, List<int> triangles, int a, int b)`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L308) | private |
-| WorldDistanceView | [`void Enter(Camera view)`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L339) | internal |
-| WorldDistanceView | [`void Dispose()`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L366) | public |
+| WorldDistanceView | [`void AddSkirt(List<Vector3> vertices, List<int> triangles, int a, int b)`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L309) | private |
+| WorldDistanceView | [`void Enter(Camera view)`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L340) | internal |
+| WorldDistanceView | [`void Dispose()`](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L367) | public |
 
 ## Assets/Scripts/Features/World/Presentation/WorldLoadingPanel.cs
 
@@ -5132,8 +5180,8 @@ HY-Sandbox/
 | VoxelStructureCollapse | [`void RequestCheck()`](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs#L33) | public |
 | VoxelStructureCollapse | [`void LateUpdate()`](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs#L38) | private |
 | VoxelStructureCollapse | [`void ResolveDetached()`](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs#L51) | public |
-| VoxelStructureCollapse | [`void ClearDebris()`](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs#L85) | public |
-| VoxelStructureCollapse | [`void OnDisable()`](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs#L101) | private |
+| VoxelStructureCollapse | [`void ClearDebris()`](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs#L88) | public |
+| VoxelStructureCollapse | [`void OnDisable()`](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs#L104) | private |
 
 ## Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureSupport.cs
 
@@ -5335,13 +5383,13 @@ HY-Sandbox/
 | WorldPlayerSmokeChecks | [`void Start()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L145) | private |
 | WorldPlayerSmokeChecks | [`void LateUpdate()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L163) | private |
 | WorldPlayerSmokeChecks | [`IEnumerator Scenario()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L192) | private |
-| WorldPlayerSmokeChecks | [`BlockDataList EnemyFixture()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L464) | private static |
-| WorldPlayerSmokeChecks | [`IEnumerator ValidateEnemyBlueprints(EnemySpawner spawner, Vector3 origin)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L500) | private |
-| WorldPlayerSmokeChecks | [`void Check(bool valid, string name)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L560) | private |
-| WorldPlayerSmokeChecks | [`void Next(string name)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L573) | private |
-| WorldPlayerSmokeChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L586) | private |
-| WorldPlayerSmokeChecks | [`void Save()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L594) | private |
-| WorldPlayerSmokeChecks | [`void Finish()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L599) | private |
+| WorldPlayerSmokeChecks | [`BlockDataList EnemyFixture()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L466) | private static |
+| WorldPlayerSmokeChecks | [`IEnumerator ValidateEnemyBlueprints(EnemySpawner spawner, Vector3 origin)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L502) | private |
+| WorldPlayerSmokeChecks | [`void Check(bool valid, string name)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L562) | private |
+| WorldPlayerSmokeChecks | [`void Next(string name)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L575) | private |
+| WorldPlayerSmokeChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L588) | private |
+| WorldPlayerSmokeChecks | [`void Save()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L596) | private |
+| WorldPlayerSmokeChecks | [`void Finish()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L601) | private |
 
 ## Assets/Scripts/Features/World/Validation/WorldReturnPlayerChecks.cs
 

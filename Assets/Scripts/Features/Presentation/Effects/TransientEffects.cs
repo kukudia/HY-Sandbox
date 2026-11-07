@@ -1,5 +1,5 @@
 // 职责：配置可复用能量线与灯光闪烁，统一径向碎光、颜色及可见网格包围盒规则。
-// 入口：CreateLineStreak() / CreateRadialStreakBurst() / CreateLightFlash()；无模式或场景单例依赖。
+// 入口：CreateLineStreak() / CreateRadialStreakBurst() / CreateLightFlash()；对象池由当前场景显式配置。
 using UnityEngine;
 
 internal static class TransientEffects

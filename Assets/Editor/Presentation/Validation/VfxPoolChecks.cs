@@ -11,12 +11,13 @@ public static class VfxPoolChecks
 {
     public static string RunPlay()
     {
-        if (!Application.isPlaying || Object.FindAnyObjectByType<VfxEffectPool>() != null)
+        if (!Application.isPlaying || SceneObjectQuery.FindInActiveScene<VfxEffectPool>() != null)
         {
             throw new InvalidOperationException("Requires isolated Play scene without a VFX pool.");
         }
 
         var bodies = new List<GameObject>();
+        CreatePool();
         const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
         MethodInfo tick = typeof(VfxEffect).GetMethod("FinishPlayback", flags);
         FieldInfo deadline = typeof(VfxEffect).GetField("_releaseAt", flags);
@@ -36,13 +37,14 @@ public static class VfxPoolChecks
                     "Explosion rejected above old limit");
             }
 
-            VfxEffectPool pool = Object.FindAnyObjectByType<VfxEffectPool>();
+            VfxEffectPool pool = SceneObjectQuery.FindInActiveScene<VfxEffectPool>();
             Require(pool.ActiveCount == 176, "Active effects evicted");
             for (int i = 0; i < 40; i++)
             {
-                var body = new GameObject("Pool check debris");
+                Rigidbody piece = Object.Instantiate(RuntimeObjectTemplates.Instance.BuildingDebris);
+                var body = piece.gameObject;
                 bodies.Add(body);
-                DetachedPartSmokeTrail.Attach(body.AddComponent<Rigidbody>(), Vector3.zero, 1f);
+                DetachedPartSmokeTrail.Attach(piece, Vector3.zero, 1f);
             }
 
             Require(pool.ActiveCount == 216, "Debris trails rejected above old limit");
@@ -83,7 +85,7 @@ public static class VfxPoolChecks
             Require(reused.gameObject.activeSelf && pool.ActiveCount == 1, "Previous return timer affected new rental");
             var meteor = new GameObject("Pool meteor check");
             bodies.Add(meteor);
-            var follower = reused.gameObject.AddComponent<MeteorTrailFollower>();
+            var follower = reused.GetComponent<MeteorTrailFollower>();
             follower.Initialize(meteor.transform, reused);
             reused.StopAndRelease();
             // 模拟Unity提前消费了一次Invoke；未到期应补约，不能永远占用活动实例。
@@ -100,8 +102,9 @@ public static class VfxPoolChecks
             Require(follower.enabled, "Meteor follower not re-enabled on reuse");
             Object.DestroyImmediate(pool.gameObject);
             Require(afterMeteor == null, "Active instance survived pool cleanup");
+            CreatePool();
             VfxEffect fresh = VfxEffectPool.Rent(prefab, Vector3.zero, Quaternion.identity, SceneManager.GetActiveScene());
-            VfxEffectPool freshPool = Object.FindAnyObjectByType<VfxEffectPool>();
+            VfxEffectPool freshPool = SceneObjectQuery.FindInActiveScene<VfxEffectPool>();
             Require(
                 fresh != null && freshPool.CreatedCount == 1 && freshPool.IdleCount == 0,
                 "Stale scene pool reused after cleanup");
@@ -114,11 +117,22 @@ public static class VfxPoolChecks
                 Object.DestroyImmediate(body);
             }
 
-            foreach (VfxEffectPool pool in Object.FindObjectsByType<VfxEffectPool>())
+            VfxEffectPool remaining = SceneObjectQuery.FindInActiveScene<VfxEffectPool>();
+            if (remaining != null)
             {
-                Object.DestroyImmediate(pool.gameObject);
+                Object.DestroyImmediate(remaining.gameObject);
             }
         }
+    }
+
+    private static void CreatePool()
+    {
+        var owner = new GameObject("VFX check pool");
+        VfxEffectPool pool = owner.AddComponent<VfxEffectPool>();
+        var inactive = new GameObject("Inactive effects");
+        inactive.transform.SetParent(owner.transform, false);
+        inactive.SetActive(false);
+        typeof(VfxEffectPool).GetField("_inactiveRoot", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(pool, inactive.transform);
     }
 
     private static void Require(bool condition, string message)

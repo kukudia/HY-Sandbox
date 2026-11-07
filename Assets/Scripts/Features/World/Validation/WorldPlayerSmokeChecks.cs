@@ -429,7 +429,9 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
                     session.Outposts != null && session.Outposts.ActiveCount == 0 && session.Outposts.ClearedCount == 0,
                     "New expedition discards outpost defeat history and active defenders");
                 Check(
-                    Object.FindObjectsByType<EnemyIdentity>(FindObjectsInactive.Include).Length == 0,
+                    !System.Array.Exists(
+                        Object.FindObjectsByType<EnemyIdentity>(FindObjectsInactive.Include),
+                        identity => identity.GetComponent<Cockpit>()?.faction == UnitFaction.Enemy),
                     "Expedition cleanup leaves no inactive or active enemy identity objects");
                 Check(
                     !LootDrop.Active.Any() && Object.FindObjectsByType<LootDrop>(FindObjectsInactive.Include).Length == 0,

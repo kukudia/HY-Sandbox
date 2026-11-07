@@ -382,6 +382,10 @@ GameObject:
   - component: {fileID: 62890998115648227}
   - component: {fileID: 7380822992049240430}
   - component: {fileID: 7373213081769946802}
+  - component: {fileID: 5212735230881229287}
+  - component: {fileID: 6939608678108254376}
+  - component: {fileID: 6527554527792612330}
+  - component: {fileID: 971889134356121674}
   m_Layer: 8
   m_Name: Bot
   m_TagString: Untagged
@@ -522,6 +526,63 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &5212735230881229287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4292968782847555990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcd637ae7930403982de6749fa56d441, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StylizedBeamEffect
+--- !u!114 &6939608678108254376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4292968782847555990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 739bd11e327f127449ea64229d936483, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FragmentLifetime
+--- !u!114 &6527554527792612330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4292968782847555990}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a83a0be8c35302648af39c6447ac22d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DetachedPartSmokeTrail
+  effectLifetime: 6
+  minimumSpeed: 0.7
+  fullEmissionSpeed: 8
+  maximumEmissionRate: 26
+  _initialSmokeDuration: 1.5
+  _initialSmokeIntensity: 0.4
+  _minimumOpacity: 0.85
+  _flameEnvelopeScale: 1.25
+  _flameCoverage: 1.8
+--- !u!114 &971889134356121674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4292968782847555990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fae08ac63693f94d9243548ad294a6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AbnormalImpulseBodyProbe
 --- !u!1 &4863982412848199895
 GameObject:
   m_ObjectHideFlags: 0

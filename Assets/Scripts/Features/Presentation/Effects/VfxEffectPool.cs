@@ -9,6 +9,7 @@ public sealed class VfxEffectPool : MonoBehaviour
     private static readonly Dictionary<Scene, VfxEffectPool> Pools = new Dictionary<Scene, VfxEffectPool>();
     private readonly Dictionary<VfxEffect, Stack<VfxEffect>> _idle = new Dictionary<VfxEffect, Stack<VfxEffect>>();
     private readonly HashSet<VfxEffect> _active = new HashSet<VfxEffect>();
+    [SerializeField]
     private Transform _inactiveRoot;
     private bool _disposing;
     public int ActiveCount => _active.Count;
@@ -30,13 +31,12 @@ public sealed class VfxEffectPool : MonoBehaviour
 
         if (!Pools.TryGetValue(scene, out VfxEffectPool pool) || pool == null)
         {
-            var root = new GameObject("Scene GPU effect pool");
-            SceneManager.MoveGameObjectToScene(root, scene);
-            pool = root.AddComponent<VfxEffectPool>();
-            var inactive = new GameObject("Inactive effects");
-            inactive.transform.SetParent(root.transform, false);
-            inactive.SetActive(false);
-            pool._inactiveRoot = inactive.transform;
+            pool = SceneObjectQuery.FindInScene<VfxEffectPool>(scene);
+            if (pool == null)
+            {
+                throw new MissingReferenceException($"Scene {scene.name} requires an authored VfxEffectPool.");
+            }
+
             Pools[scene] = pool;
         }
 

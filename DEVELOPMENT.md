@@ -1,12 +1,14 @@
 # HY-Sandbox 开发入口
 
-## 友敌 AI DrawDebug
+## 显式组件与友敌 AI 调试
 
-友方自主舰与敌机共用 EnemyController。运行时在该组件 Inspector 的 **AI Debug → Draw Debug** 勾选开启，并打开 Scene/Game 的 Gizmos；默认关闭，玩家驾驶、中立、禁用和非模拟状态隐藏。Show Debug Ranges 控制索敌球、接近/撤退水平环及守卫球，Debug Vector Length 调整输入向量长度。
+常驻服务、对象池、工业动画调度与调试组件已保存在各场景的 Managers/服务层级，可在编辑模式查看、调整和禁用。载具根 `Resources/BlocksParent/BlocksParent.prefab` 预挂 `EnemyController`，模块、机器人、武器和 UI 的依赖预挂在各自 Prefab；组装时只初始化或启停。
 
-绿色/红色单位标记区分友敌；青色连线指向当前有效目标；紫色为期望移动输入，白色为平滑输入。球扫线及终点球绿色表示无有效障碍、红色表示命中，黄色表示用于避障的法线。显示的是最近一次决策采样的球心路径，不是新的实时查询或完整碰撞接触面。未修改 AI 决策、物理输入、Prefab 或序列化旧字段。
+友方自主舰与敌机共用 `EnemyController`。运行前在场景 `DebugManager → AI Debug` 勾选 **Show Friendly AI / Show Enemy AI**，并开启 Scene/Game 的 Gizmos；载具 Prefab/实例的 **Draw Debug** 可单独开启。默认关闭，玩家驾驶、中立、禁用和非模拟状态隐藏。绿色/红色标记区分友敌，青色连线指向目标，紫色/白色表示期望/平滑输入；避障线显示最近一次采样，不额外执行物理查询。
 
-验证：Unity Editor 导入/编译通过；365 脚本规范检查通过，解决方案构建 0 错误、22 警告，本次文件 diff 检查通过。项目锁定 SDK 9.0.318 未安装，静态检查从项目外目录使用现有 9.0.320 执行，未改 global.json。全仓 diff 检查存在原有 UserSettings 布局尾随空白。实际 Play 视觉效果尚未验证。函数图与导航已同步。
+数量由玩法决定的建筑、碎片、地形块、网格、标签、状态图标、临时光束/灯光与工坊服务，由 `Resources/Runtime/Objects.asset` 引用的真实 Prefab 实例化。制作/迁移菜单 **Tools → HY Sandbox → Architecture → Bake Editable Components**，重复执行保留已有参数与引用。动态挂载仅保留体素碎片按实际格子创建碰撞体，以及默认关闭的未知外部刚体诊断探针；编辑器制作和隔离测试另行保留。
+
+已验证：205 个自有 Prefab、44 个 Block、7 个保存场景与模板引用；真实 Play 的 AI/载具、炮弹和特效池、断片生命周期、工坊开关及 WorldLab 碎片物理；37 个 Player 脚本程序集编译。完整 Player 打包/运行、全部场景完整玩法和长时压力未验证。入口、证据与静态检查见 [组件迁移报告](Docs/Validation/2026-11-07-editable-components.md)，函数图与导航已同步。
 
 Unity 6000.6.8f1（URP / VFX Graph 17.6.0，Input System 1.20.1）。本文只维护当前功能、契约与验证入口；历史变更和旧验收完整保存在 [DevelopmentHistory](Docs/DevelopmentHistory.md)。
 

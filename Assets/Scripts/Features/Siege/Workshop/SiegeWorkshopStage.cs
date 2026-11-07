@@ -68,9 +68,8 @@ public sealed class SiegeWorkshopStage : IDisposable
 
         SceneManager.SetActiveScene(preview);
         camera.scene = preview;
-        var light = new GameObject("Workshop light");
-        light.AddComponent<Light>().type = LightType.Directional;
-        light.GetComponent<Light>().intensity = 1.3f;
+        var light = UnityEngine.Object.Instantiate(RuntimeObjectTemplates.Instance.WorkshopLight);
+        light.name = "Workshop services";
         light.transform.rotation = Quaternion.Euler(50f, -30f, 0f);
     }
 
