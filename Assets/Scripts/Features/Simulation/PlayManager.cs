@@ -15,6 +15,15 @@ public class PlayManager : MonoBehaviour
     public WorldSessionManager WorldSession => worldSession;
 
     [SerializeField]
+    private GameModeController modes;
+    public GameModeController Modes => modes;
+
+    public void BindWorldSession(WorldSessionManager session)
+    {
+        worldSession = session;
+    }
+
+    [SerializeField]
     private SiegeSession siegeSession;
     public SiegeSession SiegeSession => siegeSession;
 
@@ -110,7 +119,6 @@ public class PlayManager : MonoBehaviour
             return;
         }
 
-        ControlUnit controlUnit = GameManager.instance.blocksParent.GetComponent<ControlUnit>();
         if (worldSession != null)
         {
             if (!worldSession.CanEnterPlay(GameManager.instance.blocksParent, out reason))
@@ -119,9 +127,11 @@ public class PlayManager : MonoBehaviour
                 return;
             }
 
+            modes?.CreateExplorationCopy();
             worldSession.EnterPlay(GameManager.instance.blocksParent);
         }
 
+        ControlUnit controlUnit = GameManager.instance.blocksParent.GetComponent<ControlUnit>();
         if (controlUnit != null)
         {
             controlUnit.AssignRuntimeOwnershipToBlocks(true);
@@ -309,7 +319,11 @@ public class PlayManager : MonoBehaviour
         }
 
         BuildManager.instance.enabled = true;
-        GameManager.Init();
+        if (modes == null || !modes.HasDraft)
+        {
+            GameManager.Init();
+        }
+
         SceneObjectQuery.FindInScene<EnemySpawner>(gameObject.scene)?.EndPlayMode();
     }
 

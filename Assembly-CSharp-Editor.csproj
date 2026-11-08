@@ -164,6 +164,7 @@
     <Compile Include="Assets\Editor\Art\Validation\BlockArtPlayProbe.cs" />
     <Compile Include="Assets\Editor\Architecture\FragmentRetentionChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Authoring\SiegeCommandHudAuthoring.cs" />
+    <Compile Include="Assets\Editor\Simulation\GameModePlayChecks.cs" />
     <Compile Include="Assets\Editor\World\Validation\WorldLab\WorldLabCollapseChecks.cs" />
     <Compile Include="Assets\Editor\Combat\Validation\TurretRuntimeChecks.cs" />
     <Compile Include="Assets\Editor\Art\Authoring\IndustrialArtGenerator.cs" />
@@ -182,6 +183,7 @@
     <Compile Include="Assets\Editor\Presentation\Resources\VfxCatalogMigration.cs" />
     <Compile Include="Assets\Editor\Presentation\Interface\ReturnStatusSetup.cs" />
     <Compile Include="Assets\Editor\Art\Validation\BlockArtDependencies.cs" />
+    <Compile Include="Assets\Editor\Simulation\GameModeAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Interface\SiegeUsabilityChecks.cs" />
     <Compile Include="Assets\Editor\World\Validation\WorldLab\WorldLabChecks.cs" />
     <Compile Include="Assets\Editor\Combat\Turrets\TurretAssetBaker.cs" />

@@ -161,6 +161,9 @@ HY-Sandbox/
 │   │   │           ├── SiegeRulesChecks.cs
 │   │   │           ├── SiegeStressCancellationChecks.cs
 │   │   │           └── SiegeTransientEffectChecks.cs
+│   │   ├── Simulation/
+│   │   │   ├── GameModeAuthoring.cs
+│   │   │   └── GameModePlayChecks.cs
 │   │   └── World/
 │   │       ├── WorldSessionAuthoring.cs
 │   │       ├── Buildings/
@@ -397,6 +400,8 @@ HY-Sandbox/
 │           │   │   ├── SiegeFleetEntry.cs
 │           │   │   ├── SiegeFleetPhysics.cs
 │           │   │   └── SiegeRefit.cs
+│           │   ├── Gameplay/
+│           │   │   └── SiegeGameplayStage.cs
 │           │   ├── Interface/
 │           │   │   ├── SiegeBattleFeedback.cs
 │           │   │   ├── SiegeDeploymentView.cs
@@ -429,6 +434,11 @@ HY-Sandbox/
 │           │   │   ├── GroupPhysicsSettings.cs
 │           │   │   ├── RuntimeGroupBuilder.cs
 │           │   │   └── RuntimeGroupCleanup.cs
+│           │   ├── Modes/
+│           │   │   ├── GameModeController.cs
+│           │   │   ├── PlayDraft.cs
+│           │   │   └── Interface/
+│           │   │       └── GameModePanel.cs
 │           │   ├── Physics/
 │           │   │   ├── FragmentLifetime.cs
 │           │   │   ├── ImpactPhysics.cs
@@ -499,6 +509,7 @@ HY-Sandbox/
 │               │   ├── WorldCombatPlayerChecks.cs
 │               │   ├── WorldPlayerSmokeChecks.cs
 │               │   ├── WorldReturnPlayerChecks.cs
+│               │   ├── WorldSessionValidationHost.cs
 │               │   └── WorldLab/
 │               │       ├── WorldLabDebrisProbe.cs
 │               │       └── WorldLabPhysicsProbe.cs
@@ -1653,7 +1664,7 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeMainInterfaceAuthoring | [`void Install()`](../Assets/Editor/Siege/Authoring/SiegeMainInterfaceAuthoring.cs#L14) | public static |
-| SiegeMainInterfaceAuthoring | [`void FitLayout()`](../Assets/Editor/Siege/Authoring/SiegeMainInterfaceAuthoring.cs#L134) | public static |
+| SiegeMainInterfaceAuthoring | [`void FitLayout()`](../Assets/Editor/Siege/Authoring/SiegeMainInterfaceAuthoring.cs#L145) | public static |
 
 ## Assets/Editor/Siege/Authoring/SiegeMixedStressAuthoring.cs
 
@@ -2029,6 +2040,37 @@ HY-Sandbox/
 | SiegeTransientEffectChecks | [`void Expire(MonoBehaviour fade)`](../Assets/Editor/Siege/Validation/Rules/SiegeTransientEffectChecks.cs#L179) | private static |
 | SiegeTransientEffectChecks | [`void Check(string label, bool passed)`](../Assets/Editor/Siege/Validation/Rules/SiegeTransientEffectChecks.cs#L186) | private static |
 
+## Assets/Editor/Simulation/GameModeAuthoring.cs
+
+// 职责：将Main中的世界会话迁移为探索副场景，保存模式入口与独立阵地战制作骨架。 // 入口：Install()；保留已有世界Prefab覆盖、Main界面布局和旧Siege场景，重复执行不重建资产。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| GameModeAuthoring | [`void Install()`](../Assets/Editor/Simulation/GameModeAuthoring.cs#L18) | public static |
+| GameModeAuthoring | [`GameModePanel CreateModePanel(Scene main)`](../Assets/Editor/Simulation/GameModeAuthoring.cs#L111) | private static |
+| GameModeAuthoring | [`void EnsureValidationTemplate()`](../Assets/Editor/Simulation/GameModeAuthoring.cs#L161) | private static |
+| GameModeAuthoring | [`void EnsureCombatPools(Scene main)`](../Assets/Editor/Simulation/GameModeAuthoring.cs#L186) | private static |
+| GameModeAuthoring | [`void CopyPool(Scene main, Scene target)`](../Assets/Editor/Simulation/GameModeAuthoring.cs#L205) | private static |
+| GameModeAuthoring | [`void CreateSiegeScene(Scene main)`](../Assets/Editor/Simulation/GameModeAuthoring.cs#L220) | private static |
+| GameModeAuthoring | [`RectTransform Rect(string name, Transform parent, Vector2 position, Vector2 size)`](../Assets/Editor/Simulation/GameModeAuthoring.cs#L283) | private static |
+| GameModeAuthoring | [`Text TextAt( string name, Transform parent, string value, Vector2 position, Vector2 size, int fontSize)`](../Assets/Editor/Simulation/GameModeAuthoring.cs#L293) | private static |
+| GameModeAuthoring | [`Button ButtonAt(string name, Transform parent, string title, Vector2 position, Vector2 size)`](../Assets/Editor/Simulation/GameModeAuthoring.cs#L311) | private static |
+| GameModeAuthoring | [`void Set(SerializedObject data, string name, Object value)`](../Assets/Editor/Simulation/GameModeAuthoring.cs#L328) | private static |
+
+## Assets/Editor/Simulation/GameModePlayChecks.cs
+
+// 职责：在真实Main Play Mode验证副场景切换、取消/重试、建造原稿隔离和旧Siege不被启动。 // 入口：Run()；只修改运行时夹具，报告写Temp/GameModes，不写玩家存档或场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| GameModePlayChecks | [`void Run()`](../Assets/Editor/Simulation/GameModePlayChecks.cs#L35) | public static |
+| GameModePlayChecks | [`void Changed(PlayModeStateChange state)`](../Assets/Editor/Simulation/GameModePlayChecks.cs#L47) | private static |
+| GameModePlayChecks | [`void Tick()`](../Assets/Editor/Simulation/GameModePlayChecks.cs#L67) | private static |
+| GameModePlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/Simulation/GameModePlayChecks.cs#L93) | private static |
+| GameModePlayChecks | [`void Check(bool success, string description)`](../Assets/Editor/Simulation/GameModePlayChecks.cs#L314) | private static |
+| GameModePlayChecks | [`void LogError(string message, string stack, LogType type)`](../Assets/Editor/Simulation/GameModePlayChecks.cs#L324) | private static |
+| GameModePlayChecks | [`void Finish()`](../Assets/Editor/Simulation/GameModePlayChecks.cs#L332) | private static |
+
 ## Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs
 
 // 职责：为独立 WorldLab 安装建筑库、示例模板和场景组合；已有模板与布局不覆盖。 // 入口：Tools/HY-Sandbox/World/Install building integration；只保存 WorldLab 与 Assets/WorldLab/Buildings。
@@ -2138,13 +2180,13 @@ HY-Sandbox/
 | WorldSessionEdgeChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Editor/World/Validation/Session/WorldSessionEdgeChecks.cs#L107) | private static |
 | WorldSessionEdgeChecks | [`void Check(bool condition, string description)`](../Assets/Editor/World/Validation/Session/WorldSessionEdgeChecks.cs#L115) | private static |
 | WorldSessionEdgeChecks | [`IEnumerator Scenario()`](../Assets/Editor/World/Validation/Session/WorldSessionEdgeChecks.cs#L125) | private static |
-| WorldSessionEdgeChecks | [`void BindProfile(WorldGenerationSettings value)`](../Assets/Editor/World/Validation/Session/WorldSessionEdgeChecks.cs#L306) | private static |
-| WorldSessionEdgeChecks | [`void ConfigureProfile(int loadRadius, int unloadRadius, float buildingChance)`](../Assets/Editor/World/Validation/Session/WorldSessionEdgeChecks.cs#L313) | private static |
-| WorldSessionEdgeChecks | [`void CreatePlayer()`](../Assets/Editor/World/Validation/Session/WorldSessionEdgeChecks.cs#L327) | private static |
-| WorldSessionEdgeChecks | [`Vector3 ReadGuardVector(object guard, string field)`](../Assets/Editor/World/Validation/Session/WorldSessionEdgeChecks.cs#L359) | private static |
-| WorldSessionEdgeChecks | [`void InvokeSessionPhysics()`](../Assets/Editor/World/Validation/Session/WorldSessionEdgeChecks.cs#L364) | private static |
-| WorldSessionEdgeChecks | [`void CheckSessionHealthy(double timeout, string operation)`](../Assets/Editor/World/Validation/Session/WorldSessionEdgeChecks.cs#L369) | private static |
-| WorldSessionEdgeChecks | [`void Finish(bool exitPlayMode)`](../Assets/Editor/World/Validation/Session/WorldSessionEdgeChecks.cs#L377) | private static |
+| WorldSessionEdgeChecks | [`void BindProfile(WorldGenerationSettings value)`](../Assets/Editor/World/Validation/Session/WorldSessionEdgeChecks.cs#L307) | private static |
+| WorldSessionEdgeChecks | [`void ConfigureProfile(int loadRadius, int unloadRadius, float buildingChance)`](../Assets/Editor/World/Validation/Session/WorldSessionEdgeChecks.cs#L314) | private static |
+| WorldSessionEdgeChecks | [`void CreatePlayer()`](../Assets/Editor/World/Validation/Session/WorldSessionEdgeChecks.cs#L328) | private static |
+| WorldSessionEdgeChecks | [`Vector3 ReadGuardVector(object guard, string field)`](../Assets/Editor/World/Validation/Session/WorldSessionEdgeChecks.cs#L360) | private static |
+| WorldSessionEdgeChecks | [`void InvokeSessionPhysics()`](../Assets/Editor/World/Validation/Session/WorldSessionEdgeChecks.cs#L365) | private static |
+| WorldSessionEdgeChecks | [`void CheckSessionHealthy(double timeout, string operation)`](../Assets/Editor/World/Validation/Session/WorldSessionEdgeChecks.cs#L370) | private static |
+| WorldSessionEdgeChecks | [`void Finish(bool exitPlayMode)`](../Assets/Editor/World/Validation/Session/WorldSessionEdgeChecks.cs#L378) | private static |
 
 ## Assets/Editor/World/Validation/Session/WorldSessionPerformanceChecks.cs
 
@@ -2173,9 +2215,9 @@ HY-Sandbox/
 | WorldSessionPlayChecks | [`void Check(bool condition, string description)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L104) | private static |
 | WorldSessionPlayChecks | [`bool IsPopulatedBuilding(string path)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L114) | private static |
 | WorldSessionPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L129) | private static |
-| WorldSessionPlayChecks | [`IEnumerator StreamingChecks(WorldGenerationSettings settings)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L457) | private static |
-| WorldSessionPlayChecks | [`bool NeighborhoodReady(ProceduralVoxelWorld world, Vector2Int center)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L565) | private static |
-| WorldSessionPlayChecks | [`void Finish(bool exitPlayMode)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L581) | private static |
+| WorldSessionPlayChecks | [`IEnumerator StreamingChecks(WorldGenerationSettings settings)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L458) | private static |
+| WorldSessionPlayChecks | [`bool NeighborhoodReady(ProceduralVoxelWorld world, Vector2Int center)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L566) | private static |
+| WorldSessionPlayChecks | [`void Finish(bool exitPlayMode)`](../Assets/Editor/World/Validation/Session/WorldSessionPlayChecks.cs#L582) | private static |
 
 ## Assets/Editor/World/Validation/Terrain/VoxelMeshingChecks.cs
 
@@ -2262,19 +2304,13 @@ HY-Sandbox/
 
 ## Assets/Editor/World/WorldSessionAuthoring.cs
 
-// 职责：创建可编辑世界配置与会话 Prefab，并将后台预热及加载界面接入 Main。 // 入口：Install()；重复执行保留配置、Prefab 参数及已存在的界面布局。
+// 职责：保留世界配置与制作入口，安装委托模式场景迁移，预览通过正式模式入口加载探索。 // 入口：Install()；重复执行保留配置、Prefab 参数及已存在的界面布局。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldSessionAuthoring | [`void Install()`](../Assets/Editor/World/WorldSessionAuthoring.cs#L17) | public static |
-| WorldSessionAuthoring | [`bool IsInEnvironment(Transform item)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L104) | private static |
-| WorldSessionAuthoring | [`GameObject CreatePrefab(WorldGenerationSettings configuration)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L117) | private static |
-| WorldSessionAuthoring | [`WorldLoadingPanel CreateLoadingPanel(Scene scene)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L174) | private static |
-| WorldSessionAuthoring | [`RectTransform Rect( string name, Transform parent, Vector2 minimum, Vector2 maximum, Vector2 position, Vector2 size)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L282) | private static |
-| WorldSessionAuthoring | [`Text Label( string name, Transform parent, string value, Font font, Vector2 position, Vector2 size, float fontSize, Color color)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L299) | private static |
-| WorldSessionAuthoring | [`T FindInScene(Scene scene)`](../Assets/Editor/World/WorldSessionAuthoring.cs#L326) | private static |
-| WorldSessionAuthoring | [`void SelectConfiguration()`](../Assets/Editor/World/WorldSessionAuthoring.cs#L332) | public static |
-| WorldSessionAuthoring | [`void RegeneratePreview()`](../Assets/Editor/World/WorldSessionAuthoring.cs#L338) | public static |
+| WorldSessionAuthoring | [`void Install()`](../Assets/Editor/World/WorldSessionAuthoring.cs#L13) | public static |
+| WorldSessionAuthoring | [`void SelectConfiguration()`](../Assets/Editor/World/WorldSessionAuthoring.cs#L19) | public static |
+| WorldSessionAuthoring | [`void RegeneratePreview()`](../Assets/Editor/World/WorldSessionAuthoring.cs#L25) | public static |
 
 ## Assets/Scripts/Features/Bootstrap/GameManager.cs
 
@@ -3934,6 +3970,7 @@ HY-Sandbox/
 | TransientEffectPool | [`void Return(BeamFade fade)`](../Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs#L73) | internal |
 | TransientEffectPool | [`void Return(LightFade fade)`](../Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs#L92) | internal |
 | TransientEffectPool | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs#L111) | private |
+| TransientEffectPool | [`void ClearActive()`](../Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs#L122) | public |
 
 ## Assets/Scripts/Features/Presentation/Effects/TransientEffects.cs
 
@@ -3979,7 +4016,8 @@ HY-Sandbox/
 | VfxEffectPool | [`VfxEffect Rent(VfxEffect prefab, Vector3 position, Quaternion rotation, Scene scene)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L25) | public static |
 | VfxEffectPool | [`void Return(VfxEffect effect, VfxEffect prefab)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L72) | internal |
 | VfxEffectPool | [`void Forget(VfxEffect effect)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L95) | internal |
-| VfxEffectPool | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L96) | private |
+| VfxEffectPool | [`void ClearActive()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L96) | public |
+| VfxEffectPool | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L112) | private |
 
 ## Assets/Scripts/Features/Presentation/Interface/GlobalTextStyler.cs
 
@@ -4044,17 +4082,18 @@ HY-Sandbox/
 | MainUIPanels | [`void OnConfirmCreate()`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L167) | public |
 | MainUIPanels | [`void OnConfirmDelete(string save)`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L207) | private |
 | MainUIPanels | [`void PlayStart()`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L233) | public |
-| MainUIPanels | [`void CompletePlayStart()`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L261) | public |
-| MainUIPanels | [`void PlayEnd()`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L281) | public |
-| MainUIPanels | [`void CompletePlayEnd()`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L297) | public |
-| MainUIPanels | [`void PlayerDeath()`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L307) | public |
-| MainUIPanels | [`void EnterEnemyBlueprintBuildMode()`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L335) | public |
-| MainUIPanels | [`void ExitEnemyBlueprintBuildMode()`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L340) | public |
-| MainUIPanels | [`void RefreshBlueprintEditorMode()`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L345) | public |
-| MainUIPanels | [`void RefreshBuildingEditorPanel()`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L364) | public |
-| MainUIPanels | [`void UpdateHealthBar(GameObject obj, float currentHealth, float maxHealth)`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L369) | public |
-| MainUIPanels | [`void SetHealthBar(float currentHealth, float maxHealth)`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L384) | private |
-| MainUIPanels | [`void SetCockpitHealth(Cockpit cockpit)`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L400) | private |
+| MainUIPanels | [`void CompletePlayStart()`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L267) | public |
+| MainUIPanels | [`void PlayEnd()`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L287) | public |
+| MainUIPanels | [`void CompletePlayEnd()`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L304) | public |
+| MainUIPanels | [`void RestoreBuildPanels()`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L315) | public |
+| MainUIPanels | [`void PlayerDeath()`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L323) | public |
+| MainUIPanels | [`void EnterEnemyBlueprintBuildMode()`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L351) | public |
+| MainUIPanels | [`void ExitEnemyBlueprintBuildMode()`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L356) | public |
+| MainUIPanels | [`void RefreshBlueprintEditorMode()`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L361) | public |
+| MainUIPanels | [`void RefreshBuildingEditorPanel()`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L380) | public |
+| MainUIPanels | [`void UpdateHealthBar(GameObject obj, float currentHealth, float maxHealth)`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L385) | public |
+| MainUIPanels | [`void SetHealthBar(float currentHealth, float maxHealth)`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L400) | private |
+| MainUIPanels | [`void SetCockpitHealth(Cockpit cockpit)`](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L416) | private |
 
 ## Assets/Scripts/Features/Presentation/Interface/PanelTransitions.cs
 
@@ -4202,6 +4241,7 @@ HY-Sandbox/
 | --- | --- | --- |
 | CargoPersistence | [`bool SaveReturnCargo(bool survived)`](../Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs#L11) | public static |
 | CargoPersistence | [`bool SaveReturnCargo(bool survived, out string failureReason)`](../Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs#L16) | public static |
+| CargoPersistence | [`Dictionary<string, List<CargoItem>> CapturePlayerContents(bool survived)`](../Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs#L59) | public static |
 
 ## Assets/Scripts/Features/Salvage/Drops/LootDrop.cs
 
@@ -4350,6 +4390,16 @@ HY-Sandbox/
 | SiegeRefit | [`long Quote(SiegeFleetEntry entry, SiegeSettings settings)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L83) | public static |
 | SiegeRefit | [`bool Repair(SiegeFleetEntry entry, SiegeSession session, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L115) | public static |
 | SiegeRefit | [`Dictionary<string, Block> CollectOwned(SiegeFleetEntry entry)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L195) | private static |
+
+## Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs
+
+// 职责：新阵地战副场景的可编辑入口骨架；只展示制作场地与返回，不启动旧SiegeSession或旧HUD。 // 入口：Enter() / Exit()；Main显式注入共享宿主，战斗规则将在后续迁移。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeGameplayStage | [`void Enter(GameModeController host, GameObject[] buildEnvironment)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L15) | public |
+| SiegeGameplayStage | [`void Exit()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L34) | public |
+| SiegeGameplayStage | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L53) | private |
 
 ## Assets/Scripts/Features/Siege/Interface/SiegeBattleFeedback.cs
 
@@ -4733,6 +4783,53 @@ HY-Sandbox/
 | RuntimeGroupCleanup | [`void EnforceLimit(List<ControlUnit> units, int maximumUselessGroups, DestroyManager destruction)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupCleanup.cs#L8) | internal static |
 | RuntimeGroupCleanup | [`void EnforceDistance( List<ControlUnit> units, bool playMode, Transform playerRoot, float cleanupDistance, DestroyManager destruction)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupCleanup.cs#L51) | internal static |
 
+## Assets/Scripts/Features/Simulation/Modes/GameModeController.cs
+
+// 职责：由Main拥有模式选择、Additive场景加载、探索绑定和返回；共享服务始终留在Main活动场景。 // 入口：ShowSelection() / SelectExploration() / SelectSiege() / ReturnToBuild()；同一时间只持有一个玩法场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| GameModeController | [`void Start()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L51) | private |
+| GameModeController | [`void ShowSelection()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L58) | public |
+| GameModeController | [`void SelectExploration()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L76) | public |
+| GameModeController | [`void SelectSiege()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L81) | public |
+| GameModeController | [`void Select(bool exploration)`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L86) | private |
+| GameModeController | [`IEnumerator LoadMode()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L106) | private |
+| GameModeController | [`void CreateExplorationCopy()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L176) | public |
+| GameModeController | [`void CaptureReturnCargo(bool survived)`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L181) | public |
+| GameModeController | [`void ReturnToBuild()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L186) | public |
+| GameModeController | [`void ExplorationEnded()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L206) | public |
+| GameModeController | [`void Retry()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L215) | public |
+| GameModeController | [`IEnumerator GuardTransition(IEnumerator work)`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L220) | private |
+| GameModeController | [`void BeginReturn(bool failed = false)`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L267) | private |
+| GameModeController | [`IEnumerator ReturnRoutine(bool failed)`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L274) | private |
+| GameModeController | [`void CaptureInput()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L311) | private |
+| GameModeController | [`void RestoreInput()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L327) | private |
+| GameModeController | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L338) | private |
+
+## Assets/Scripts/Features/Simulation/Modes/Interface/GameModePanel.cs
+
+// 职责：展示模式选择、场景加载和失败重试；按钮仅调用Main的模式协调器。 // 入口：Bind() / Show()；布局与引用通过Editor制作并保存在Main场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| GameModePanel | [`void Bind(GameModeController controller)`](../Assets/Scripts/Features/Simulation/Modes/Interface/GameModePanel.cs#L23) | public |
+| GameModePanel | [`void Show(bool visible)`](../Assets/Scripts/Features/Simulation/Modes/Interface/GameModePanel.cs#L32) | public |
+| GameModePanel | [`void Update()`](../Assets/Scripts/Features/Simulation/Modes/Interface/GameModePanel.cs#L44) | private |
+| GameModePanel | [`void Refresh()`](../Assets/Scripts/Features/Simulation/Modes/Interface/GameModePanel.cs#L52) | private |
+| GameModePanel | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Modes/Interface/GameModePanel.cs#L62) | private |
+
+## Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs
+
+// 职责：保留未保存的建造原稿与镜头，给探索创建独立副本；返回仅迁移既有货仓结果。 // 入口：Park() / CreateRuntimeCopy() / Restore()；原稿不参加运行时控制单元清理。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| PlayDraft | [`void Park()`](../Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs#L17) | public |
+| PlayDraft | [`void CreateRuntimeCopy(Scene scene)`](../Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs#L44) | public |
+| PlayDraft | [`void Restore()`](../Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs#L55) | public |
+| PlayDraft | [`void CaptureReturnCargo(bool survived)`](../Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs#L89) | public |
+
 ## Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs
 
 // 职责：为建筑与载具碎片提供同一最短物理保留期，避免预算和旧清理计时器吞掉新断片。 // 入口：Mark() 在脱落时调用；Remaining() / CanRetire() 在真正清理前检查；不阻止伤害和场景卸载。
@@ -4773,23 +4870,24 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| PlayManager | [`void BindSiege(SiegeSession session)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L21) | public |
-| PlayManager | [`void Awake()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L63) | private |
-| PlayManager | [`void FixedUpdate()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L68) | private |
-| PlayManager | [`void PlayStart()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L100) | public |
-| PlayManager | [`bool CanStartPlay(out string reason)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L148) | public |
-| PlayManager | [`void RefreshGroup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L183) | public |
-| PlayManager | [`void SetPlayMode(bool lockView)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L214) | public |
-| PlayManager | [`void CalculateVelocity()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L222) | private |
-| PlayManager | [`void HandleSelection()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L231) | private |
-| PlayManager | [`void SelectBlock(Block block)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L260) | private |
-| PlayManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L279) | public |
-| PlayManager | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L285) | public |
-| PlayManager | [`void AssignBlocksToParentGroups(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L316) | public |
-| PlayManager | [`void RegisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L333) | public |
-| PlayManager | [`void RegisterControlUnitWithoutCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L343) | internal |
-| PlayManager | [`void UnregisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L351) | public |
-| PlayManager | [`IReadOnlyList<ControlUnit> GetControlUnits()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L359) | public |
+| PlayManager | [`void BindWorldSession(WorldSessionManager session)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L21) | public |
+| PlayManager | [`void BindSiege(SiegeSession session)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L30) | public |
+| PlayManager | [`void Awake()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L72) | private |
+| PlayManager | [`void FixedUpdate()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L77) | private |
+| PlayManager | [`void PlayStart()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L109) | public |
+| PlayManager | [`bool CanStartPlay(out string reason)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L158) | public |
+| PlayManager | [`void RefreshGroup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L193) | public |
+| PlayManager | [`void SetPlayMode(bool lockView)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L224) | public |
+| PlayManager | [`void CalculateVelocity()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L232) | private |
+| PlayManager | [`void HandleSelection()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L241) | private |
+| PlayManager | [`void SelectBlock(Block block)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L270) | private |
+| PlayManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L289) | public |
+| PlayManager | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L295) | public |
+| PlayManager | [`void AssignBlocksToParentGroups(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L330) | public |
+| PlayManager | [`void RegisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L347) | public |
+| PlayManager | [`void RegisterControlUnitWithoutCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L357) | internal |
+| PlayManager | [`void UnregisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L365) | public |
+| PlayManager | [`IReadOnlyList<ControlUnit> GetControlUnits()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L373) | public |
 
 ## Assets/Scripts/Features/Simulation/Presentation/PlayBlockSelection.cs
 
@@ -5048,12 +5146,12 @@ HY-Sandbox/
 | OutpostEncounterDirector | [`bool TryGetDefender(string site, string guardId, out ControlUnit unit)`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L34) | public |
 | OutpostEncounterDirector | [`void Tick(Vector3 player)`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L51) | public |
 | OutpostEncounterDirector | [`bool Spawn(Encounter encounter, Guard guard, Vector3 position)`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L170) | private |
-| OutpostEncounterDirector | [`void UpdateParkedModel(Encounter encounter, Guard guard, Vector3 position, bool baseReady)`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L242) | private |
-| OutpostEncounterDirector | [`void ClearParkedModel(Guard guard)`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L263) | private static |
-| OutpostEncounterDirector | [`Bounds DeploymentBounds(BlockDataList blueprint, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L273) | private static |
-| OutpostEncounterDirector | [`void Hibernate(Guard guard)`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L285) | private static |
-| OutpostEncounterDirector | [`void RefreshOwner(Guard guard)`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L322) | private static |
-| OutpostEncounterDirector | [`void Clear()`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L331) | public |
+| OutpostEncounterDirector | [`void UpdateParkedModel(Encounter encounter, Guard guard, Vector3 position, bool baseReady)`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L248) | private |
+| OutpostEncounterDirector | [`void ClearParkedModel(Guard guard)`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L269) | private static |
+| OutpostEncounterDirector | [`Bounds DeploymentBounds(BlockDataList blueprint, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L279) | private static |
+| OutpostEncounterDirector | [`void Hibernate(Guard guard)`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L291) | private static |
+| OutpostEncounterDirector | [`void RefreshOwner(Guard guard)`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L328) | private static |
+| OutpostEncounterDirector | [`void Clear()`](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L337) | public |
 
 ## Assets/Scripts/Features/World/Outposts/OutpostHud.cs
 
@@ -5061,9 +5159,10 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| OutpostHud | [`void Update()`](../Assets/Scripts/Features/World/Outposts/OutpostHud.cs#L14) | private |
-| OutpostHud | [`string Format(OutpostEncounterStatus? nearest, int clearedCount)`](../Assets/Scripts/Features/World/Outposts/OutpostHud.cs#L26) | public |
-| OutpostHud | [`string FitName(string name, string suffix)`](../Assets/Scripts/Features/World/Outposts/OutpostHud.cs#L41) | private |
+| OutpostHud | [`void Bind(WorldSessionManager session)`](../Assets/Scripts/Features/World/Outposts/OutpostHud.cs#L14) | public |
+| OutpostHud | [`void Update()`](../Assets/Scripts/Features/World/Outposts/OutpostHud.cs#L19) | private |
+| OutpostHud | [`string Format(OutpostEncounterStatus? nearest, int clearedCount)`](../Assets/Scripts/Features/World/Outposts/OutpostHud.cs#L31) | public |
+| OutpostHud | [`string FitName(string name, string suffix)`](../Assets/Scripts/Features/World/Outposts/OutpostHud.cs#L46) | private |
 
 ## Assets/Scripts/Features/World/Persistence/VoxelWorldEdits.cs
 
@@ -5379,17 +5478,17 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | WorldPlayerSmokeChecks | [`void Initialize()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L69) | private static |
-| WorldPlayerSmokeChecks | [`int ReadInteger(string[] args, int index, string name, int minimum, int maximum)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L135) | private static |
-| WorldPlayerSmokeChecks | [`void Start()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L145) | private |
-| WorldPlayerSmokeChecks | [`void LateUpdate()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L163) | private |
-| WorldPlayerSmokeChecks | [`IEnumerator Scenario()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L192) | private |
-| WorldPlayerSmokeChecks | [`BlockDataList EnemyFixture()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L466) | private static |
-| WorldPlayerSmokeChecks | [`IEnumerator ValidateEnemyBlueprints(EnemySpawner spawner, Vector3 origin)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L502) | private |
-| WorldPlayerSmokeChecks | [`void Check(bool valid, string name)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L562) | private |
-| WorldPlayerSmokeChecks | [`void Next(string name)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L575) | private |
-| WorldPlayerSmokeChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L588) | private |
-| WorldPlayerSmokeChecks | [`void Save()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L596) | private |
-| WorldPlayerSmokeChecks | [`void Finish()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L601) | private |
+| WorldPlayerSmokeChecks | [`int ReadInteger(string[] args, int index, string name, int minimum, int maximum)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L136) | private static |
+| WorldPlayerSmokeChecks | [`void Start()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L146) | private |
+| WorldPlayerSmokeChecks | [`void LateUpdate()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L164) | private |
+| WorldPlayerSmokeChecks | [`IEnumerator Scenario()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L193) | private |
+| WorldPlayerSmokeChecks | [`BlockDataList EnemyFixture()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L467) | private static |
+| WorldPlayerSmokeChecks | [`IEnumerator ValidateEnemyBlueprints(EnemySpawner spawner, Vector3 origin)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L503) | private |
+| WorldPlayerSmokeChecks | [`void Check(bool valid, string name)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L563) | private |
+| WorldPlayerSmokeChecks | [`void Next(string name)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L576) | private |
+| WorldPlayerSmokeChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L589) | private |
+| WorldPlayerSmokeChecks | [`void Save()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L597) | private |
+| WorldPlayerSmokeChecks | [`void Finish()`](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L602) | private |
 
 ## Assets/Scripts/Features/World/Validation/WorldReturnPlayerChecks.cs
 
@@ -5398,6 +5497,14 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | WorldReturnPlayerChecks | [`IEnumerator Run(Action<bool, string> check)`](../Assets/Scripts/Features/World/Validation/WorldReturnPlayerChecks.cs#L13) | internal static |
+
+## Assets/Scripts/Features/World/Validation/WorldSessionValidationHost.cs
+
+// 职责：为历史世界组件/性能套件显式装配旧生命周期夹具；正式Main不会调用，也不用于模式集成验收。 // 入口：Attach()；仅由Editor测试或带显式-world-smoke-report参数的Player调用，不保存场景和玩家数据。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldSessionValidationHost | [`WorldSessionManager Attach()`](../Assets/Scripts/Features/World/Validation/WorldSessionValidationHost.cs#L10) | public static |
 
 ## Assets/Scripts/Features/World/WorldGenerationSettings.cs
 
@@ -5422,28 +5529,30 @@ HY-Sandbox/
 
 ## Assets/Scripts/Features/World/WorldSessionManager.cs
 
-// 职责：在Main建造期间分帧预热世界，进入游玩后启用并跟踪区块，退出即丢弃整个探索会话。 // 入口：BeginPreparation() / RequestPlay() / EnterPlay() / EndSession()；不读写玩家或WorldLab世界存档。
+// 职责：准备并运行独立探索世界；Main通过模式入口加载，独立验证夹具仍可选择启动时预热。 // 入口：BeginPreparation() / RequestPlay() / EnterPlay() / EndSession()；不读写玩家或WorldLab世界存档。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldSessionManager | [`void Start()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L68) | private |
-| WorldSessionManager | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L76) | private |
-| WorldSessionManager | [`void BeginPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L85) | public |
-| WorldSessionManager | [`IEnumerator PrepareWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L125) | private |
-| WorldSessionManager | [`void RequestPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L174) | public |
-| WorldSessionManager | [`void CancelPlayRequest()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L191) | public |
-| WorldSessionManager | [`void CompletePendingPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L197) | private |
-| WorldSessionManager | [`bool CanEnterPlay(Transform construct, out string reason)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L209) | public |
-| WorldSessionManager | [`void EnterPlay(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L231) | public |
-| WorldSessionManager | [`IEnumerator EnableWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L263) | private |
-| WorldSessionManager | [`void FinishEntering()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L297) | private |
-| WorldSessionManager | [`void EndSession()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L306) | public |
-| WorldSessionManager | [`IEnumerator RunGuarded(int version, IEnumerator work)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L311) | private |
-| WorldSessionManager | [`IEnumerator StreamWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L342) | private |
-| WorldSessionManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L390) | private |
-| WorldSessionManager | [`void Update()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L415) | private |
-| WorldSessionManager | [`Bounds ConstructBounds(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L430) | private static |
-| WorldSessionManager | [`void SetBuildEnvironmentVisible(bool visible)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L435) | private |
-| WorldSessionManager | [`void StopPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L465) | private |
-| WorldSessionManager | [`void Fail(Exception error)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L497) | private |
-| WorldSessionManager | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L512) | private |
+| WorldSessionManager | [`void BindHost(GameObject[] environment, WorldLoadingPanel panel, GameModeController owner)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L53) | public |
+| WorldSessionManager | [`void Start()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L79) | private |
+| WorldSessionManager | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L90) | private |
+| WorldSessionManager | [`void BeginPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L99) | public |
+| WorldSessionManager | [`IEnumerator PrepareWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L139) | private |
+| WorldSessionManager | [`void RequestPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L188) | public |
+| WorldSessionManager | [`void CancelPlayRequest()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L205) | public |
+| WorldSessionManager | [`void CompletePendingPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L212) | private |
+| WorldSessionManager | [`bool CanEnterPlay(Transform construct, out string reason)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L230) | public |
+| WorldSessionManager | [`void EnterPlay(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L252) | public |
+| WorldSessionManager | [`IEnumerator EnableWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L284) | private |
+| WorldSessionManager | [`void FinishEntering()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L318) | private |
+| WorldSessionManager | [`void EndSession()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L327) | public |
+| WorldSessionManager | [`IEnumerator RunGuarded(int version, IEnumerator work)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L339) | private |
+| WorldSessionManager | [`IEnumerator StreamWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L370) | private |
+| WorldSessionManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L418) | private |
+| WorldSessionManager | [`void Update()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L443) | private |
+| WorldSessionManager | [`Bounds ConstructBounds(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L458) | private static |
+| WorldSessionManager | [`void SetBuildEnvironmentVisible(bool visible)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L463) | private |
+| WorldSessionManager | [`void StopPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L493) | private |
+| WorldSessionManager | [`void Fail(Exception error)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L525) | private |
+| WorldSessionManager | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L540) | private |
+| WorldSessionManager | [`void StopSession()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L545) | public |

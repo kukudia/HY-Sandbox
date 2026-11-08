@@ -93,6 +93,22 @@ public sealed class VfxEffectPool : MonoBehaviour
     }
 
     internal void Forget(VfxEffect effect) => _active.Remove(effect);
+    public void ClearActive()
+    {
+        var effects = new List<VfxEffect>(_active);
+        foreach (VfxEffect effect in effects)
+        {
+            if (effect != null)
+            {
+                effect.Clear();
+                effect.gameObject.SetActive(false);
+                Destroy(effect.gameObject);
+            }
+        }
+
+        _active.Clear();
+    }
+
     private void OnDestroy()
     {
         _disposing = true;

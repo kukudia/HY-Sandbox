@@ -11,5 +11,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Siege.unity
     guid: 54aa67978bf9c914991a296899dbae25
+  - enabled: 1
+    path: Assets/Scenes/Exploration.unity
+    guid: 1617d2819bd14354299c2b14c9e4a473
+  - enabled: 1
+    path: Assets/Scenes/SiegeGameplay.unity
+    guid: 087fe6afe94b8d242858a6c5bf6bc2b2
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

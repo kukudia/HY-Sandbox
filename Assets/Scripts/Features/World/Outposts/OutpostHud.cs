@@ -11,6 +11,11 @@ public sealed class OutpostHud : MonoBehaviour
     [SerializeField]
     private WorldSessionManager _session;
     private float nextUpdate;
+    public void Bind(WorldSessionManager session)
+    {
+        _session = session;
+    }
+
     private void Update()
     {
         if (Time.unscaledTime < nextUpdate)

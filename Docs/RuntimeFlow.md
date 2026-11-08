@@ -29,7 +29,7 @@ flowchart TD
     H["DetachedPartSmokeTrail.Initialize()"]
     click H "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L62" "打开源码"
     I["VfxEffectPool.OnDestroy()"]
-    click I "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L96" "打开源码"
+    click I "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L112" "打开源码"
     J["BlockVfxLibrary.PlayTemplate()"]
     click J "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L135" "打开源码"
     A --> J
@@ -60,7 +60,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs|Return -->
 - [DetachedPartSmokeTrail.Initialize](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L62)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|Initialize -->
-- [VfxEffectPool.OnDestroy](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L96)
+- [VfxEffectPool.OnDestroy](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L112)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs|OnDestroy -->
 - [BlockVfxLibrary.PlayTemplate](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L135)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs|PlayTemplate -->
@@ -270,7 +270,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["PlayManager.PlayStart()"]
-    click A "../Assets/Scripts/Features/Simulation/PlayManager.cs#L100" "打开源码"
+    click A "../Assets/Scripts/Features/Simulation/PlayManager.cs#L109" "打开源码"
     B["SceneObjectQuery.FindInScene()"]
     click B "../Assets/Scripts/Features/Bootstrap/SceneObjectQuery.cs#L15" "打开源码"
     C["SceneObjectQuery.FindInActiveScene()"]
@@ -298,13 +298,14 @@ flowchart TD
     D --> B
     E --> B
     E --> C
-    F --> G
+    F -->|Main模式入口| U
+    F -->|旧Siege或组件夹具| G
     F --> H
     J --> K
     J --> L
 ```
 
-- [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L100)
+- [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L109)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayStart -->
 - [SceneObjectQuery.FindInScene](../Assets/Scripts/Features/Bootstrap/SceneObjectQuery.cs#L15)
 <!-- source: Assets/Scripts/Features/Bootstrap/SceneObjectQuery.cs|FindInScene -->
@@ -392,11 +393,11 @@ flowchart TD
     B["OutpostDeploymentPreview.CalculateBounds()"]
     click B "../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L161" "打开源码"
     C["WorldSessionManager.ConstructBounds()"]
-    click C "../Assets/Scripts/Features/World/WorldSessionManager.cs#L430" "打开源码"
+    click C "../Assets/Scripts/Features/World/WorldSessionManager.cs#L458" "打开源码"
     D["WorldPlayerStreamingGuard.CaptureLocalBounds()"]
     click D "../Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs#L133" "打开源码"
     E["OutpostEncounterDirector.DeploymentBounds()"]
-    click E "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L273" "打开源码"
+    click E "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L279" "打开源码"
     F["BlueprintLoadCamera.CalculateBlockDataBounds()"]
     click F "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoadCamera.cs#L136" "打开源码"
     G["BlockBounds.FromBlueprint()"]
@@ -457,11 +458,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BuildingEditor/OutpostBaseDesigner.cs|BoundsOf -->
 - [OutpostDeploymentPreview.CalculateBounds](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L161)
 <!-- source: Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs|CalculateBounds -->
-- [WorldSessionManager.ConstructBounds](../Assets/Scripts/Features/World/WorldSessionManager.cs#L430)
+- [WorldSessionManager.ConstructBounds](../Assets/Scripts/Features/World/WorldSessionManager.cs#L458)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|ConstructBounds -->
 - [WorldPlayerStreamingGuard.CaptureLocalBounds](../Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs#L133)
 <!-- source: Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs|CaptureLocalBounds -->
-- [OutpostEncounterDirector.DeploymentBounds](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L273)
+- [OutpostEncounterDirector.DeploymentBounds](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L279)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs|DeploymentBounds -->
 - [BlueprintLoadCamera.CalculateBlockDataBounds](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoadCamera.cs#L136)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintLoadCamera.cs|CalculateBlockDataBounds -->
@@ -611,40 +612,42 @@ flowchart TD
     F["MainUIPanels.PlayStart()"]
     click F "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L233" "打开源码"
     G["PlayManager.CanStartPlay()"]
-    click G "../Assets/Scripts/Features/Simulation/PlayManager.cs#L148" "打开源码"
+    click G "../Assets/Scripts/Features/Simulation/PlayManager.cs#L158" "打开源码"
     H["PlayManager.PlayStart()"]
-    click H "../Assets/Scripts/Features/Simulation/PlayManager.cs#L100" "打开源码"
+    click H "../Assets/Scripts/Features/Simulation/PlayManager.cs#L109" "打开源码"
     I["PlayManager.RefreshGroup()"]
-    click I "../Assets/Scripts/Features/Simulation/PlayManager.cs#L183" "打开源码"
+    click I "../Assets/Scripts/Features/Simulation/PlayManager.cs#L193" "打开源码"
     J["OutpostEncounterDirector.Tick()"]
     click J "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L51" "打开源码"
     K["MainUIPanels.PlayEnd()"]
-    click K "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L281" "打开源码"
+    click K "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L287" "打开源码"
     L["CargoPersistence.SaveReturnCargo()"]
     click L "../Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs#L11" "打开源码"
     M["PlayManager.PlayEnd()"]
-    click M "../Assets/Scripts/Features/Simulation/PlayManager.cs#L285" "打开源码"
+    click M "../Assets/Scripts/Features/Simulation/PlayManager.cs#L295" "打开源码"
     N["MainUIPanels.PlayerDeath()"]
-    click N "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L307" "打开源码"
+    click N "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L323" "打开源码"
     O["WorldSessionManager.RequestPlay()"]
-    click O "../Assets/Scripts/Features/World/WorldSessionManager.cs#L174" "打开源码"
+    click O "../Assets/Scripts/Features/World/WorldSessionManager.cs#L188" "打开源码"
     P["WorldSessionManager.CompletePendingPlay()"]
-    click P "../Assets/Scripts/Features/World/WorldSessionManager.cs#L197" "打开源码"
+    click P "../Assets/Scripts/Features/World/WorldSessionManager.cs#L212" "打开源码"
     Q["MainUIPanels.CompletePlayStart()"]
-    click Q "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L261" "打开源码"
+    click Q "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L267" "打开源码"
     R["MainUIPanels.CompletePlayEnd()"]
-    click R "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L297" "打开源码"
+    click R "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L304" "打开源码"
     S["WorldSessionManager.EndSession()"]
-    click S "../Assets/Scripts/Features/World/WorldSessionManager.cs#L306" "打开源码"
+    click S "../Assets/Scripts/Features/World/WorldSessionManager.cs#L327" "打开源码"
     T["SaveManager.LoadBlueprint()"]
     click T "../Assets/Scripts/Features/Building/SaveManager.cs#L288" "打开源码"
+    U["GameModeController.ShowSelection()"]
+    click U "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L58" "打开源码"
     A --> B
     B --> C
     B --> D
     D --> T
     T --> E
     F --> G
-    F -->|Main绑定世界会话| O
+    F -->|无模式宿主的组件夹具| O
     O -->|世界Ready| P
     P --> Q
     Q -->|再次校验载具| H
@@ -655,8 +658,8 @@ flowchart TD
     K -->|保存成功| R
     R --> M
     M --> S
-    M -->|经 GameManager.Init| D
-    N -->|死亡立即丢弃世界| S
+    M -->|无原稿时经 GameManager.Init| D
+    N -.->|重生后才执行清理| R
     N -.->|用户重生/结束按钮| K
 ```
 
@@ -672,34 +675,175 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|LoadAllBlocks -->
 - [MainUIPanels.PlayStart](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L233)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayStart -->
-- [PlayManager.CanStartPlay](../Assets/Scripts/Features/Simulation/PlayManager.cs#L148)
+- [PlayManager.CanStartPlay](../Assets/Scripts/Features/Simulation/PlayManager.cs#L158)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|CanStartPlay -->
-- [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L100)
+- [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L109)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayStart -->
-- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L183)
+- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L193)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
 - [OutpostEncounterDirector.Tick](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L51)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs|Tick -->
-- [MainUIPanels.PlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L281)
+- [MainUIPanels.PlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L287)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayEnd -->
 - [CargoPersistence.SaveReturnCargo](../Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs#L11)
 <!-- source: Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs|SaveReturnCargo -->
-- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L285)
+- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L295)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
-- [MainUIPanels.PlayerDeath](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L307)
+- [MainUIPanels.PlayerDeath](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L323)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayerDeath -->
-- [WorldSessionManager.RequestPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L174)
+- [WorldSessionManager.RequestPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L188)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|RequestPlay -->
-- [WorldSessionManager.CompletePendingPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L197)
+- [WorldSessionManager.CompletePendingPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L212)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|CompletePendingPlay -->
-- [MainUIPanels.CompletePlayStart](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L261)
+- [MainUIPanels.CompletePlayStart](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L267)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|CompletePlayStart -->
-- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L297)
+- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L304)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|CompletePlayEnd -->
-- [WorldSessionManager.EndSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L306)
+- [WorldSessionManager.EndSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L327)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EndSession -->
 - [SaveManager.LoadBlueprint](../Assets/Scripts/Features/Building/SaveManager.cs#L288)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|LoadBlueprint -->
+- [GameModeController.ShowSelection](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L58)
+<!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|ShowSelection -->
+
+## Main模式选择与副场景往返
+
+源码推导：Main始终为活动场景并拥有共享服务。探索按需加载、绑定后准备；运行副本归Exploration，原稿在Main停用保留。新SiegeGameplay只提供可编辑场地及返回，不启动旧Siege。取消等待加载结束后卸载；失败清理后显示重试。货仓保存成功才返回，恢复未保存原稿与镜头。
+
+```mermaid
+flowchart TD
+    A["MainUIPanels.PlayStart()"]
+    click A "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L233" "打开源码"
+    B["GameModeController.ShowSelection()"]
+    click B "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L58" "打开源码"
+    C["GameModeController.Select()"]
+    click C "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L86" "打开源码"
+    D["GameModeController.GuardTransition()"]
+    click D "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L220" "打开源码"
+    E["GameModeController.LoadMode()"]
+    click E "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L106" "打开源码"
+    F["WorldSessionManager.BindHost()"]
+    click F "../Assets/Scripts/Features/World/WorldSessionManager.cs#L53" "打开源码"
+    G["WorldSessionManager.BeginPreparation()"]
+    click G "../Assets/Scripts/Features/World/WorldSessionManager.cs#L99" "打开源码"
+    H["WorldSessionManager.RequestPlay()"]
+    click H "../Assets/Scripts/Features/World/WorldSessionManager.cs#L188" "打开源码"
+    I["PlayManager.PlayStart()"]
+    click I "../Assets/Scripts/Features/Simulation/PlayManager.cs#L109" "打开源码"
+    J["GameModeController.CreateExplorationCopy()"]
+    click J "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L176" "打开源码"
+    K["PlayDraft.CreateRuntimeCopy()"]
+    click K "../Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs#L44" "打开源码"
+    L["PlayDraft.Park()"]
+    click L "../Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs#L17" "打开源码"
+    M["SiegeGameplayStage.Enter()"]
+    click M "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L15" "打开源码"
+    N["GameModeController.ReturnToBuild()"]
+    click N "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L186" "打开源码"
+    O["MainUIPanels.PlayEnd()"]
+    click O "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L287" "打开源码"
+    P["CargoPersistence.SaveReturnCargo()"]
+    click P "../Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs#L11" "打开源码"
+    Q["GameModeController.CaptureReturnCargo()"]
+    click Q "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L181" "打开源码"
+    R["MainUIPanels.CompletePlayEnd()"]
+    click R "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L304" "打开源码"
+    S["GameModeController.ExplorationEnded()"]
+    click S "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L206" "打开源码"
+    T["GameModeController.BeginReturn()"]
+    click T "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L267" "打开源码"
+    U["GameModeController.ReturnRoutine()"]
+    click U "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L274" "打开源码"
+    V["WorldSessionManager.StopSession()"]
+    click V "../Assets/Scripts/Features/World/WorldSessionManager.cs#L545" "打开源码"
+    W["SiegeGameplayStage.Exit()"]
+    click W "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L34" "打开源码"
+    X["PlayDraft.Restore()"]
+    click X "../Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs#L55" "打开源码"
+    Y["GameModeController.Retry()"]
+    click Y "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L215" "打开源码"
+    Z["MainUIPanels.RestoreBuildPanels()"]
+    click Z "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L315" "打开源码"
+    A --> B
+    C -.->|StartCoroutine| D
+    D -->|推进并捕获异常| E
+    E -->|探索绑定| F
+    E --> G
+    E --> H
+    H -.->|Ready后经CompletePlayStart| I
+    I --> J
+    J --> K
+    K --> L
+    E -->|新Siege| L
+    E --> M
+    N -->|探索| O
+    O --> P
+    O -->|保存成功| Q
+    O -->|保存成功| R
+    R --> S
+    S -->|无加载协程| T
+    N -->|无加载协程| T
+    D -->|取消或失败| T
+    T -.->|StartCoroutine| U
+    U --> V
+    U --> W
+    U -.->|卸载完成后| X
+    U --> Z
+    Y --> C
+```
+
+- [MainUIPanels.PlayStart](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L233)
+<!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayStart -->
+- [GameModeController.ShowSelection](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L58)
+<!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|ShowSelection -->
+- [GameModeController.Select](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L86)
+<!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|Select -->
+- [GameModeController.GuardTransition](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L220)
+<!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|GuardTransition -->
+- [GameModeController.LoadMode](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L106)
+<!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|LoadMode -->
+- [WorldSessionManager.BindHost](../Assets/Scripts/Features/World/WorldSessionManager.cs#L53)
+<!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|BindHost -->
+- [WorldSessionManager.BeginPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L99)
+<!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|BeginPreparation -->
+- [WorldSessionManager.RequestPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L188)
+<!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|RequestPlay -->
+- [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L109)
+<!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayStart -->
+- [GameModeController.CreateExplorationCopy](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L176)
+<!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|CreateExplorationCopy -->
+- [PlayDraft.CreateRuntimeCopy](../Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs#L44)
+<!-- source: Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs|CreateRuntimeCopy -->
+- [PlayDraft.Park](../Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs#L17)
+<!-- source: Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs|Park -->
+- [SiegeGameplayStage.Enter](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L15)
+<!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Enter -->
+- [GameModeController.ReturnToBuild](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L186)
+<!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|ReturnToBuild -->
+- [MainUIPanels.PlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L287)
+<!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayEnd -->
+- [CargoPersistence.SaveReturnCargo](../Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs#L11)
+<!-- source: Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs|SaveReturnCargo -->
+- [GameModeController.CaptureReturnCargo](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L181)
+<!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|CaptureReturnCargo -->
+- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L304)
+<!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|CompletePlayEnd -->
+- [GameModeController.ExplorationEnded](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L206)
+<!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|ExplorationEnded -->
+- [GameModeController.BeginReturn](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L267)
+<!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|BeginReturn -->
+- [GameModeController.ReturnRoutine](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L274)
+<!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|ReturnRoutine -->
+- [WorldSessionManager.StopSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L545)
+<!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|StopSession -->
+- [SiegeGameplayStage.Exit](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L34)
+<!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Exit -->
+- [PlayDraft.Restore](../Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs#L55)
+<!-- source: Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs|Restore -->
+- [GameModeController.Retry](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L215)
+<!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|Retry -->
+- [MainUIPanels.RestoreBuildPanels](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L315)
+<!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|RestoreBuildPanels -->
 
 ## 开发者建筑蓝图编辑
 
@@ -1258,9 +1402,9 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["PlayManager.RefreshGroup()"]
-    click A "../Assets/Scripts/Features/Simulation/PlayManager.cs#L183" "打开源码"
+    click A "../Assets/Scripts/Features/Simulation/PlayManager.cs#L193" "打开源码"
     B["PlayManager.AssignBlocksToParentGroups()"]
-    click B "../Assets/Scripts/Features/Simulation/PlayManager.cs#L316" "打开源码"
+    click B "../Assets/Scripts/Features/Simulation/PlayManager.cs#L330" "打开源码"
     C["RuntimeGroupBuilder.Rebuild()"]
     click C "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16" "打开源码"
     D["BlockGroupManager.GroupRuntimeBlocks()"]
@@ -1272,7 +1416,7 @@ flowchart TD
     G["ControlUnit.RefreshChildren()"]
     click G "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L185" "打开源码"
     H["PlayManager.FixedUpdate()"]
-    click H "../Assets/Scripts/Features/Simulation/PlayManager.cs#L68" "打开源码"
+    click H "../Assets/Scripts/Features/Simulation/PlayManager.cs#L77" "打开源码"
     I["RuntimeGroupCleanup.EnforceDistance()"]
     click I "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupCleanup.cs#L51" "打开源码"
     J["HoverFlightController.FixedUpdate()"]
@@ -1312,7 +1456,7 @@ flowchart TD
     AA["RuntimeGroupBuilder.SelectRetainedGroups()"]
     click AA "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L191" "打开源码"
     AB["PlayManager.RegisterControlUnitWithoutCleanup()"]
-    click AB "../Assets/Scripts/Features/Simulation/PlayManager.cs#L343" "打开源码"
+    click AB "../Assets/Scripts/Features/Simulation/PlayManager.cs#L357" "打开源码"
     AC["BlockConnectionSnapshot.Capture()"]
     click AC "../Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs#L71" "打开源码"
     AD["BlockConnections.ReleaseRuntimePair()"]
@@ -1372,9 +1516,9 @@ flowchart TD
     P --> R
 ```
 
-- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L183)
+- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L193)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
-- [PlayManager.AssignBlocksToParentGroups](../Assets/Scripts/Features/Simulation/PlayManager.cs#L316)
+- [PlayManager.AssignBlocksToParentGroups](../Assets/Scripts/Features/Simulation/PlayManager.cs#L330)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|AssignBlocksToParentGroups -->
 - [RuntimeGroupBuilder.Rebuild](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|Rebuild -->
@@ -1386,7 +1530,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Physics/RigidbodyMotion.cs|Restore -->
 - [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L185)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|RefreshChildren -->
-- [PlayManager.FixedUpdate](../Assets/Scripts/Features/Simulation/PlayManager.cs#L68)
+- [PlayManager.FixedUpdate](../Assets/Scripts/Features/Simulation/PlayManager.cs#L77)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|FixedUpdate -->
 - [RuntimeGroupCleanup.EnforceDistance](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupCleanup.cs#L51)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupCleanup.cs|EnforceDistance -->
@@ -1426,7 +1570,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|CaptureSourceBodies -->
 - [RuntimeGroupBuilder.SelectRetainedGroups](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L191)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|SelectRetainedGroups -->
-- [PlayManager.RegisterControlUnitWithoutCleanup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L343)
+- [PlayManager.RegisterControlUnitWithoutCleanup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L357)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RegisterControlUnitWithoutCleanup -->
 - [BlockConnectionSnapshot.Capture](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs#L71)
 <!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs|Capture -->
@@ -1478,7 +1622,7 @@ flowchart TD
     J["ExplosionPropagation.DisconnectBlocksInExplosionRange()"]
     click J "../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L9" "打开源码"
     K["PlayManager.RefreshGroup()"]
-    click K "../Assets/Scripts/Features/Simulation/PlayManager.cs#L183" "打开源码"
+    click K "../Assets/Scripts/Features/Simulation/PlayManager.cs#L193" "打开源码"
     L["ExplosionPropagation.ApplyExplosionForce()"]
     click L "../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L53" "打开源码"
     M["SalvageCleanupSession.ScheduleUnit()"]
@@ -1581,7 +1725,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|ExplodeBlock -->
 - [ExplosionPropagation.DisconnectBlocksInExplosionRange](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L9)
 <!-- source: Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs|DisconnectBlocksInExplosionRange -->
-- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L183)
+- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L193)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
 - [ExplosionPropagation.ApplyExplosionForce](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L53)
 <!-- source: Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs|ApplyExplosionForce -->
@@ -1637,17 +1781,17 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["MainUIPanels.PlayEnd()"]
-    click A "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L281" "打开源码"
+    click A "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L287" "打开源码"
     B["CargoPersistence.SaveReturnCargo()"]
     click B "../Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs#L11" "打开源码"
     C["ReturnStatusPanel.ShowFailure()"]
     click C "../Assets/Scripts/Features/Presentation/Interface/ReturnStatusPanel.cs#L20" "打开源码"
     D["MainUIPanels.CompletePlayEnd()"]
-    click D "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L297" "打开源码"
+    click D "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L304" "打开源码"
     E["ReturnStatusPanel.Clear()"]
     click E "../Assets/Scripts/Features/Presentation/Interface/ReturnStatusPanel.cs#L37" "打开源码"
     F["PlayManager.PlayEnd()"]
-    click F "../Assets/Scripts/Features/Simulation/PlayManager.cs#L285" "打开源码"
+    click F "../Assets/Scripts/Features/Simulation/PlayManager.cs#L295" "打开源码"
     G["GameManager.Init()"]
     click G "../Assets/Scripts/Features/Bootstrap/GameManager.cs#L20" "打开源码"
     A --> B
@@ -1658,17 +1802,17 @@ flowchart TD
     F -->|清理后| G
 ```
 
-- [MainUIPanels.PlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L281)
+- [MainUIPanels.PlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L287)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayEnd -->
 - [CargoPersistence.SaveReturnCargo](../Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs#L11)
 <!-- source: Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs|SaveReturnCargo -->
 - [ReturnStatusPanel.ShowFailure](../Assets/Scripts/Features/Presentation/Interface/ReturnStatusPanel.cs#L20)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/ReturnStatusPanel.cs|ShowFailure -->
-- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L297)
+- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L304)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|CompletePlayEnd -->
 - [ReturnStatusPanel.Clear](../Assets/Scripts/Features/Presentation/Interface/ReturnStatusPanel.cs#L37)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/ReturnStatusPanel.cs|Clear -->
-- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L285)
+- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L295)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
 - [GameManager.Init](../Assets/Scripts/Features/Bootstrap/GameManager.cs#L20)
 <!-- source: Assets/Scripts/Features/Bootstrap/GameManager.cs|Init -->
@@ -1972,56 +2116,56 @@ flowchart TD
 - [TransientEffectPool.OnDestroy](../Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs#L111)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs|OnDestroy -->
 
-## Main 大世界会话
+## 探索副场景与世界组件会话
 
-源码推导：Main隐藏预热，资源异步读取、建筑按毫秒预算创建。请求游玩可取消；Ready后暂停物理并显示不透明遮罩，下一帧启用根并按预算激活建筑，完成后恢复原timeScale。退出、死亡或激活中断均释放暂停状态并丢弃会话；失败下一Update回到统一退出链。
+源码推导：Main选择探索后Additive加载Exploration，绑定后显式准备；Start预热仅用于独立组件夹具。资源异步读取、建筑按毫秒预算创建。请求游玩可取消；Ready后暂停物理并显示不透明遮罩，下一帧启用根并按预算激活建筑，完成后恢复原timeScale。退出、死亡或激活中断均释放暂停状态并丢弃会话；失败下一Update回到统一退出链。
 
 ```mermaid
 flowchart TD
     A["WorldSessionManager.Start()"]
-    click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L68" "打开源码"
+    click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L79" "打开源码"
     B["WorldSessionManager.BeginPreparation()"]
-    click B "../Assets/Scripts/Features/World/WorldSessionManager.cs#L85" "打开源码"
+    click B "../Assets/Scripts/Features/World/WorldSessionManager.cs#L99" "打开源码"
     C["WorldSessionManager.StopPreparation()"]
-    click C "../Assets/Scripts/Features/World/WorldSessionManager.cs#L465" "打开源码"
+    click C "../Assets/Scripts/Features/World/WorldSessionManager.cs#L493" "打开源码"
     D["WorldSessionManager.RunGuarded()"]
-    click D "../Assets/Scripts/Features/World/WorldSessionManager.cs#L311" "打开源码"
+    click D "../Assets/Scripts/Features/World/WorldSessionManager.cs#L339" "打开源码"
     E["WorldSessionManager.StreamWorld()"]
-    click E "../Assets/Scripts/Features/World/WorldSessionManager.cs#L342" "打开源码"
+    click E "../Assets/Scripts/Features/World/WorldSessionManager.cs#L370" "打开源码"
     F["WorldSessionManager.CompletePendingPlay()"]
-    click F "../Assets/Scripts/Features/World/WorldSessionManager.cs#L197" "打开源码"
+    click F "../Assets/Scripts/Features/World/WorldSessionManager.cs#L212" "打开源码"
     G["WorldSessionManager.RequestPlay()"]
-    click G "../Assets/Scripts/Features/World/WorldSessionManager.cs#L174" "打开源码"
+    click G "../Assets/Scripts/Features/World/WorldSessionManager.cs#L188" "打开源码"
     H["WorldSessionManager.CancelPlayRequest()"]
-    click H "../Assets/Scripts/Features/World/WorldSessionManager.cs#L191" "打开源码"
+    click H "../Assets/Scripts/Features/World/WorldSessionManager.cs#L205" "打开源码"
     I["MainUIPanels.CompletePlayStart()"]
-    click I "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L261" "打开源码"
+    click I "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L267" "打开源码"
     J["PlayManager.PlayStart()"]
-    click J "../Assets/Scripts/Features/Simulation/PlayManager.cs#L100" "打开源码"
+    click J "../Assets/Scripts/Features/Simulation/PlayManager.cs#L109" "打开源码"
     K["WorldSessionManager.EnterPlay()"]
-    click K "../Assets/Scripts/Features/World/WorldSessionManager.cs#L231" "打开源码"
+    click K "../Assets/Scripts/Features/World/WorldSessionManager.cs#L252" "打开源码"
     L["WorldSessionManager.EnableWorld()"]
-    click L "../Assets/Scripts/Features/World/WorldSessionManager.cs#L263" "打开源码"
+    click L "../Assets/Scripts/Features/World/WorldSessionManager.cs#L284" "打开源码"
     M["BuildingRuntime.ActivateRoutine()"]
     click M "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L140" "打开源码"
     N["WorldSessionManager.EndSession()"]
-    click N "../Assets/Scripts/Features/World/WorldSessionManager.cs#L306" "打开源码"
+    click N "../Assets/Scripts/Features/World/WorldSessionManager.cs#L327" "打开源码"
     O["WorldSessionManager.Fail()"]
-    click O "../Assets/Scripts/Features/World/WorldSessionManager.cs#L497" "打开源码"
+    click O "../Assets/Scripts/Features/World/WorldSessionManager.cs#L525" "打开源码"
     P["WorldSessionManager.Update()"]
-    click P "../Assets/Scripts/Features/World/WorldSessionManager.cs#L415" "打开源码"
+    click P "../Assets/Scripts/Features/World/WorldSessionManager.cs#L443" "打开源码"
     Q["MainUIPanels.CompletePlayEnd()"]
-    click Q "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L297" "打开源码"
+    click Q "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L304" "打开源码"
     R["WorldSessionManager.OnDisable()"]
-    click R "../Assets/Scripts/Features/World/WorldSessionManager.cs#L512" "打开源码"
+    click R "../Assets/Scripts/Features/World/WorldSessionManager.cs#L540" "打开源码"
     S["WorldBuildingManager.ClearSession()"]
     click S "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L235" "打开源码"
     T["ProceduralVoxelWorld.ClearStreaming()"]
     click T "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L339" "打开源码"
     U["WorldSessionManager.PrepareWorld()"]
-    click U "../Assets/Scripts/Features/World/WorldSessionManager.cs#L125" "打开源码"
+    click U "../Assets/Scripts/Features/World/WorldSessionManager.cs#L139" "打开源码"
     V["WorldSessionManager.FinishEntering()"]
-    click V "../Assets/Scripts/Features/World/WorldSessionManager.cs#L297" "打开源码"
+    click V "../Assets/Scripts/Features/World/WorldSessionManager.cs#L318" "打开源码"
     W["WorldLoadingPanel.Show()"]
     click W "../Assets/Scripts/Features/World/Presentation/WorldLoadingPanel.cs#L39" "打开源码"
     X["WorldBuildingManager.PrepareForUnload()"]
@@ -2032,6 +2176,8 @@ flowchart TD
     click Z "../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L163" "打开源码"
     AA["LootDrop.Release()"]
     click AA "../Assets/Scripts/Features/Salvage/Drops/LootDrop.cs#L214" "打开源码"
+    AB["WorldSessionManager.StopSession()"]
+    click AB "../Assets/Scripts/Features/World/WorldSessionManager.cs#L545" "打开源码"
     A --> B
     B --> C
     B --> S
@@ -2058,7 +2204,8 @@ flowchart TD
     L --> V
     L -->|完成隐藏遮罩| W
     C --> V
-    N --> B
+    N -->|独立组件夹具| B
+    N -->|Main模式宿主| AB
     O -.->|游玩中故障，下一Update| P
     P --> Q
     Q -->|经PlayManager.PlayEnd| N
@@ -2067,49 +2214,49 @@ flowchart TD
     R --> T
 ```
 
-- [WorldSessionManager.Start](../Assets/Scripts/Features/World/WorldSessionManager.cs#L68)
+- [WorldSessionManager.Start](../Assets/Scripts/Features/World/WorldSessionManager.cs#L79)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Start -->
-- [WorldSessionManager.BeginPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L85)
+- [WorldSessionManager.BeginPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L99)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|BeginPreparation -->
-- [WorldSessionManager.StopPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L465)
+- [WorldSessionManager.StopPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L493)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|StopPreparation -->
-- [WorldSessionManager.RunGuarded](../Assets/Scripts/Features/World/WorldSessionManager.cs#L311)
+- [WorldSessionManager.RunGuarded](../Assets/Scripts/Features/World/WorldSessionManager.cs#L339)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|RunGuarded -->
-- [WorldSessionManager.StreamWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L342)
+- [WorldSessionManager.StreamWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L370)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|StreamWorld -->
-- [WorldSessionManager.CompletePendingPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L197)
+- [WorldSessionManager.CompletePendingPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L212)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|CompletePendingPlay -->
-- [WorldSessionManager.RequestPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L174)
+- [WorldSessionManager.RequestPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L188)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|RequestPlay -->
-- [WorldSessionManager.CancelPlayRequest](../Assets/Scripts/Features/World/WorldSessionManager.cs#L191)
+- [WorldSessionManager.CancelPlayRequest](../Assets/Scripts/Features/World/WorldSessionManager.cs#L205)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|CancelPlayRequest -->
-- [MainUIPanels.CompletePlayStart](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L261)
+- [MainUIPanels.CompletePlayStart](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L267)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|CompletePlayStart -->
-- [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L100)
+- [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L109)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayStart -->
-- [WorldSessionManager.EnterPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L231)
+- [WorldSessionManager.EnterPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L252)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EnterPlay -->
-- [WorldSessionManager.EnableWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L263)
+- [WorldSessionManager.EnableWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L284)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EnableWorld -->
 - [BuildingRuntime.ActivateRoutine](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L140)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|ActivateRoutine -->
-- [WorldSessionManager.EndSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L306)
+- [WorldSessionManager.EndSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L327)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EndSession -->
-- [WorldSessionManager.Fail](../Assets/Scripts/Features/World/WorldSessionManager.cs#L497)
+- [WorldSessionManager.Fail](../Assets/Scripts/Features/World/WorldSessionManager.cs#L525)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Fail -->
-- [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L415)
+- [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L443)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Update -->
-- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L297)
+- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L304)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|CompletePlayEnd -->
-- [WorldSessionManager.OnDisable](../Assets/Scripts/Features/World/WorldSessionManager.cs#L512)
+- [WorldSessionManager.OnDisable](../Assets/Scripts/Features/World/WorldSessionManager.cs#L540)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|OnDisable -->
 - [WorldBuildingManager.ClearSession](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L235)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|ClearSession -->
 - [ProceduralVoxelWorld.ClearStreaming](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L339)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|ClearStreaming -->
-- [WorldSessionManager.PrepareWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L125)
+- [WorldSessionManager.PrepareWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L139)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|PrepareWorld -->
-- [WorldSessionManager.FinishEntering](../Assets/Scripts/Features/World/WorldSessionManager.cs#L297)
+- [WorldSessionManager.FinishEntering](../Assets/Scripts/Features/World/WorldSessionManager.cs#L318)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|FinishEntering -->
 - [WorldLoadingPanel.Show](../Assets/Scripts/Features/World/Presentation/WorldLoadingPanel.cs#L39)
 <!-- source: Assets/Scripts/Features/World/Presentation/WorldLoadingPanel.cs|Show -->
@@ -2121,17 +2268,19 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Bots/Collection/CollectionBot.cs|PrepareForHomeDestruction -->
 - [LootDrop.Release](../Assets/Scripts/Features/Salvage/Drops/LootDrop.cs#L214)
 <!-- source: Assets/Scripts/Features/Salvage/Drops/LootDrop.cs|Release -->
+- [WorldSessionManager.StopSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L545)
+<!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|StopSession -->
 
-## 启动载具与世界加载遮罩
+## 独立世界组件夹具的启动加载遮罩
 
-源码推导：Start开始后台世界准备后显示启动遮罩；BlueprintLoader按恢复数量报告0..95%，连接重建完成才到100%。面板Update等权合成载具/世界进度，两者完成才隐藏。用户请求游玩、取消或新会话显式Show会结束启动遮罩所有权，之后使用原来的世界进入遮罩；不改变蓝图加载间隔和动画镜头。
+源码推导：仅独立组件夹具prepareOnStart启用时，Start开始后台世界准备后显示启动遮罩；正式Main不预热世界。BlueprintLoader按恢复数量报告0..95%，连接重建完成才到100%。面板Update等权合成载具/世界进度，两者完成才隐藏。用户请求游玩、取消或新会话显式Show会结束启动遮罩所有权，之后使用原来的世界进入遮罩；不改变蓝图加载间隔和动画镜头。
 
 ```mermaid
 flowchart TD
     A["WorldSessionManager.Start()"]
-    click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L68" "打开源码"
+    click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L79" "打开源码"
     B["WorldSessionManager.BeginPreparation()"]
-    click B "../Assets/Scripts/Features/World/WorldSessionManager.cs#L85" "打开源码"
+    click B "../Assets/Scripts/Features/World/WorldSessionManager.cs#L99" "打开源码"
     C["WorldLoadingPanel.ShowStartup()"]
     click C "../Assets/Scripts/Features/World/Presentation/WorldLoadingPanel.cs#L63" "打开源码"
     D["WorldLoadingPanel.Update()"]
@@ -2152,9 +2301,9 @@ flowchart TD
     D -->|载具与世界就绪，隐藏| E
 ```
 
-- [WorldSessionManager.Start](../Assets/Scripts/Features/World/WorldSessionManager.cs#L68)
+- [WorldSessionManager.Start](../Assets/Scripts/Features/World/WorldSessionManager.cs#L79)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Start -->
-- [WorldSessionManager.BeginPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L85)
+- [WorldSessionManager.BeginPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L99)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|BeginPreparation -->
 - [WorldLoadingPanel.ShowStartup](../Assets/Scripts/Features/World/Presentation/WorldLoadingPanel.cs#L63)
 <!-- source: Assets/Scripts/Features/World/Presentation/WorldLoadingPanel.cs|ShowStartup -->
@@ -2174,7 +2323,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["WorldSessionManager.PrepareWorld()"]
-    click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L125" "打开源码"
+    click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L139" "打开源码"
     B["WorldBuildingLibrary.LoadRoutine()"]
     click B "../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L19" "打开源码"
     C["WorldBuildingValidation.ValidateBlueprint()"]
@@ -2190,13 +2339,13 @@ flowchart TD
     H["StreamingWorldTerrain.SurfaceHeight()"]
     click H "../Assets/Scripts/Features/World/Terrain/StreamingWorldTerrain.cs#L26" "打开源码"
     I["WorldSessionManager.EnterPlay()"]
-    click I "../Assets/Scripts/Features/World/WorldSessionManager.cs#L231" "打开源码"
+    click I "../Assets/Scripts/Features/World/WorldSessionManager.cs#L252" "打开源码"
     J["ProceduralVoxelWorld.FindSpawnSurface()"]
     click J "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L54" "打开源码"
     K["WorldDistanceView.Enter()"]
     click K "../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L340" "打开源码"
     L["WorldSessionManager.StopPreparation()"]
-    click L "../Assets/Scripts/Features/World/WorldSessionManager.cs#L465" "打开源码"
+    click L "../Assets/Scripts/Features/World/WorldSessionManager.cs#L493" "打开源码"
     M["WorldDistanceView.Dispose()"]
     click M "../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L367" "打开源码"
     N["WorldDistanceView.BuildRingColumn()"]
@@ -2238,7 +2387,7 @@ flowchart TD
     M -->|取消订阅| U
 ```
 
-- [WorldSessionManager.PrepareWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L125)
+- [WorldSessionManager.PrepareWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L139)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|PrepareWorld -->
 - [WorldBuildingLibrary.LoadRoutine](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L19)
 <!-- source: Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs|LoadRoutine -->
@@ -2254,13 +2403,13 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs|Rebuild -->
 - [StreamingWorldTerrain.SurfaceHeight](../Assets/Scripts/Features/World/Terrain/StreamingWorldTerrain.cs#L26)
 <!-- source: Assets/Scripts/Features/World/Terrain/StreamingWorldTerrain.cs|SurfaceHeight -->
-- [WorldSessionManager.EnterPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L231)
+- [WorldSessionManager.EnterPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L252)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EnterPlay -->
 - [ProceduralVoxelWorld.FindSpawnSurface](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L54)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|FindSpawnSurface -->
 - [WorldDistanceView.Enter](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L340)
 <!-- source: Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs|Enter -->
-- [WorldSessionManager.StopPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L465)
+- [WorldSessionManager.StopPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L493)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|StopPreparation -->
 - [WorldDistanceView.Dispose](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L367)
 <!-- source: Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs|Dispose -->
@@ -2288,7 +2437,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["WorldSessionManager.StreamWorld()"]
-    click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L342" "打开源码"
+    click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L370" "打开源码"
     B["WorldRegionStreaming.LoadNext()"]
     click B "../Assets/Scripts/Features/World/Streaming/WorldRegionStreaming.cs#L32" "打开源码"
     C["WorldBuildingStreaming.UnloadDistantRoutine()"]
@@ -2312,7 +2461,7 @@ flowchart TD
     L["WorldBuildingManager.RestoreBuildingRoutine()"]
     click L "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L145" "打开源码"
     M["WorldSessionManager.FixedUpdate()"]
-    click M "../Assets/Scripts/Features/World/WorldSessionManager.cs#L390" "打开源码"
+    click M "../Assets/Scripts/Features/World/WorldSessionManager.cs#L418" "打开源码"
     N["WorldPlayerStreamingGuard.Tick()"]
     click N "../Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs#L31" "打开源码"
     O["WorldPlayerStreamingGuard.HasTerrainForBounds()"]
@@ -2345,7 +2494,7 @@ flowchart TD
     N -.->|预测路径中点Focus，下一渲染帧| A
 ```
 
-- [WorldSessionManager.StreamWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L342)
+- [WorldSessionManager.StreamWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L370)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|StreamWorld -->
 - [WorldRegionStreaming.LoadNext](../Assets/Scripts/Features/World/Streaming/WorldRegionStreaming.cs#L32)
 <!-- source: Assets/Scripts/Features/World/Streaming/WorldRegionStreaming.cs|LoadNext -->
@@ -2369,7 +2518,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs|RestoreAvailable -->
 - [WorldBuildingManager.RestoreBuildingRoutine](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L145)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|RestoreBuildingRoutine -->
-- [WorldSessionManager.FixedUpdate](../Assets/Scripts/Features/World/WorldSessionManager.cs#L390)
+- [WorldSessionManager.FixedUpdate](../Assets/Scripts/Features/World/WorldSessionManager.cs#L418)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|FixedUpdate -->
 - [WorldPlayerStreamingGuard.Tick](../Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs#L31)
 <!-- source: Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs|Tick -->
@@ -3173,7 +3322,7 @@ flowchart TD
     H["BuildingRuntime.InitializeRoutine()"]
     click H "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L84" "打开源码"
     I["WorldSessionManager.Update()"]
-    click I "../Assets/Scripts/Features/World/WorldSessionManager.cs#L415" "打开源码"
+    click I "../Assets/Scripts/Features/World/WorldSessionManager.cs#L443" "打开源码"
     J["OutpostEncounterDirector.Tick()"]
     click J "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L51" "打开源码"
     K["OutpostEncounterDirector.Spawn()"]
@@ -3181,21 +3330,21 @@ flowchart TD
     L["EnemyBlueprintFactory.Spawn()"]
     click L "../Assets/Scripts/Features/Combat/Enemies/EnemyBlueprintFactory.cs#L12" "打开源码"
     M["OutpostEncounterDirector.Hibernate()"]
-    click M "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L285" "打开源码"
+    click M "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L291" "打开源码"
     N["DestroyManager.DestroyGameObject()"]
     click N "../Assets/Scripts/Features/Combat/DestroyManager.cs#L28" "打开源码"
     O["EnemyIdentity.ReportDefeated()"]
     click O "../Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs#L9" "打开源码"
     P["OutpostEncounterDirector.Clear()"]
-    click P "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L331" "打开源码"
+    click P "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L337" "打开源码"
     Q["WorldSessionManager.BeginPreparation()"]
-    click Q "../Assets/Scripts/Features/World/WorldSessionManager.cs#L85" "打开源码"
+    click Q "../Assets/Scripts/Features/World/WorldSessionManager.cs#L99" "打开源码"
     R["OutpostHud.Update()"]
-    click R "../Assets/Scripts/Features/World/Outposts/OutpostHud.cs#L14" "打开源码"
+    click R "../Assets/Scripts/Features/World/Outposts/OutpostHud.cs#L19" "打开源码"
     S["OutpostHud.Format()"]
-    click S "../Assets/Scripts/Features/World/Outposts/OutpostHud.cs#L26" "打开源码"
+    click S "../Assets/Scripts/Features/World/Outposts/OutpostHud.cs#L31" "打开源码"
     T["OutpostHud.FitName()"]
-    click T "../Assets/Scripts/Features/World/Outposts/OutpostHud.cs#L41" "打开源码"
+    click T "../Assets/Scripts/Features/World/Outposts/OutpostHud.cs#L46" "打开源码"
     U["WorldBuildingValidation.ValidateWorldTemplate()"]
     click U "../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs#L109" "打开源码"
     A --> B
@@ -3233,7 +3382,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs|LoadColumn -->
 - [BuildingRuntime.InitializeRoutine](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L84)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|InitializeRoutine -->
-- [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L415)
+- [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L443)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Update -->
 - [OutpostEncounterDirector.Tick](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L51)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs|Tick -->
@@ -3241,21 +3390,21 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs|Spawn -->
 - [EnemyBlueprintFactory.Spawn](../Assets/Scripts/Features/Combat/Enemies/EnemyBlueprintFactory.cs#L12)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyBlueprintFactory.cs|Spawn -->
-- [OutpostEncounterDirector.Hibernate](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L285)
+- [OutpostEncounterDirector.Hibernate](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L291)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs|Hibernate -->
 - [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L28)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyGameObject -->
 - [EnemyIdentity.ReportDefeated](../Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs#L9)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs|ReportDefeated -->
-- [OutpostEncounterDirector.Clear](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L331)
+- [OutpostEncounterDirector.Clear](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L337)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs|Clear -->
-- [WorldSessionManager.BeginPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L85)
+- [WorldSessionManager.BeginPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L99)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|BeginPreparation -->
-- [OutpostHud.Update](../Assets/Scripts/Features/World/Outposts/OutpostHud.cs#L14)
+- [OutpostHud.Update](../Assets/Scripts/Features/World/Outposts/OutpostHud.cs#L19)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostHud.cs|Update -->
-- [OutpostHud.Format](../Assets/Scripts/Features/World/Outposts/OutpostHud.cs#L26)
+- [OutpostHud.Format](../Assets/Scripts/Features/World/Outposts/OutpostHud.cs#L31)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostHud.cs|Format -->
-- [OutpostHud.FitName](../Assets/Scripts/Features/World/Outposts/OutpostHud.cs#L41)
+- [OutpostHud.FitName](../Assets/Scripts/Features/World/Outposts/OutpostHud.cs#L46)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostHud.cs|FitName -->
 - [WorldBuildingValidation.ValidateWorldTemplate](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs#L109)
 <!-- source: Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs|ValidateWorldTemplate -->
@@ -3348,15 +3497,15 @@ flowchart TD
     G["OutpostEncounterDirector.Tick()"]
     click G "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L51" "打开源码"
     H["OutpostEncounterDirector.UpdateParkedModel()"]
-    click H "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L242" "打开源码"
+    click H "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L248" "打开源码"
     I["BlueprintModelPreview.Create()"]
     click I "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintModelPreview.cs#L8" "打开源码"
     J["OutpostEncounterDirector.Spawn()"]
     click J "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L170" "打开源码"
     K["OutpostEncounterDirector.ClearParkedModel()"]
-    click K "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L263" "打开源码"
+    click K "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L269" "打开源码"
     L["OutpostEncounterDirector.Clear()"]
-    click L "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L331" "打开源码"
+    click L "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L337" "打开源码"
     A --> B
     B --> C
     A --> E
@@ -3383,15 +3532,15 @@ flowchart TD
 <!-- source: Assets/Editor/World/Outposts/OutpostContentAuthoring.cs|ExportMatchingBases -->
 - [OutpostEncounterDirector.Tick](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L51)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs|Tick -->
-- [OutpostEncounterDirector.UpdateParkedModel](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L242)
+- [OutpostEncounterDirector.UpdateParkedModel](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L248)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs|UpdateParkedModel -->
 - [BlueprintModelPreview.Create](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintModelPreview.cs#L8)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintModelPreview.cs|Create -->
 - [OutpostEncounterDirector.Spawn](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L170)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs|Spawn -->
-- [OutpostEncounterDirector.ClearParkedModel](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L263)
+- [OutpostEncounterDirector.ClearParkedModel](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L269)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs|ClearParkedModel -->
-- [OutpostEncounterDirector.Clear](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L331)
+- [OutpostEncounterDirector.Clear](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L337)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs|Clear -->
 
 ## 敌方蓝图完整恢复
@@ -3401,7 +3550,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["PlayManager.PlayStart()"]
-    click A "../Assets/Scripts/Features/Simulation/PlayManager.cs#L100" "打开源码"
+    click A "../Assets/Scripts/Features/Simulation/PlayManager.cs#L109" "打开源码"
     B["EnemySpawner.BeginPlayMode()"]
     click B "../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L41" "打开源码"
     C["EnemySpawner.Update()"]
@@ -3409,7 +3558,7 @@ flowchart TD
     D["EnemySpawner.SpawnRandomEnemy()"]
     click D "../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L110" "打开源码"
     E["WorldSessionManager.Update()"]
-    click E "../Assets/Scripts/Features/World/WorldSessionManager.cs#L415" "打开源码"
+    click E "../Assets/Scripts/Features/World/WorldSessionManager.cs#L443" "打开源码"
     F["OutpostEncounterDirector.Tick()"]
     click F "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L51" "打开源码"
     G["OutpostEncounterDirector.Spawn()"]
@@ -3431,9 +3580,9 @@ flowchart TD
     O["EnemyIdentity.SetSpawnMaxHealth()"]
     click O "../Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs#L31" "打开源码"
     P["OutpostEncounterDirector.Hibernate()"]
-    click P "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L285" "打开源码"
+    click P "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L291" "打开源码"
     Q["PlayManager.PlayEnd()"]
-    click Q "../Assets/Scripts/Features/Simulation/PlayManager.cs#L285" "打开源码"
+    click Q "../Assets/Scripts/Features/Simulation/PlayManager.cs#L295" "打开源码"
     R["EnemySpawner.EndPlayMode()"]
     click R "../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L57" "打开源码"
     S["EnemySpawner.SpawnBlockData()"]
@@ -3457,7 +3606,7 @@ flowchart TD
     Q --> R
 ```
 
-- [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L100)
+- [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L109)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayStart -->
 - [EnemySpawner.BeginPlayMode](../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L41)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs|BeginPlayMode -->
@@ -3465,7 +3614,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs|Update -->
 - [EnemySpawner.SpawnRandomEnemy](../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L110)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs|SpawnRandomEnemy -->
-- [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L415)
+- [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L443)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Update -->
 - [OutpostEncounterDirector.Tick](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L51)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs|Tick -->
@@ -3487,9 +3636,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|AssignRuntimeOwnershipToBlocks -->
 - [EnemyIdentity.SetSpawnMaxHealth](../Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs#L31)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs|SetSpawnMaxHealth -->
-- [OutpostEncounterDirector.Hibernate](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L285)
+- [OutpostEncounterDirector.Hibernate](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L291)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs|Hibernate -->
-- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L285)
+- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L295)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
 - [EnemySpawner.EndPlayMode](../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L57)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs|EndPlayMode -->
@@ -3585,29 +3734,29 @@ flowchart TD
     A["WorldPlayerSmokeChecks.Initialize()"]
     click A "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L69" "打开源码"
     B["WorldPlayerSmokeChecks.ReadInteger()"]
-    click B "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L135" "打开源码"
+    click B "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L136" "打开源码"
     C["WorldPlayerSmokeChecks.Start()"]
-    click C "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L145" "打开源码"
+    click C "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L146" "打开源码"
     D["WorldPlayerSmokeChecks.LateUpdate()"]
-    click D "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L163" "打开源码"
+    click D "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L164" "打开源码"
     E["WorldPlayerSmokeChecks.Scenario()"]
-    click E "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L192" "打开源码"
+    click E "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L193" "打开源码"
     F["MainUIPanels.PlayStart()"]
     click F "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L233" "打开源码"
     G["MainUIPanels.CompletePlayEnd()"]
-    click G "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L297" "打开源码"
+    click G "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L304" "打开源码"
     H["WorldPlayerSmokeChecks.Next()"]
-    click H "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L575" "打开源码"
+    click H "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L576" "打开源码"
     I["WorldPlayerSmokeChecks.Save()"]
-    click I "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L596" "打开源码"
+    click I "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L597" "打开源码"
     J["WorldPlayerSmokeChecks.Finish()"]
-    click J "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L601" "打开源码"
+    click J "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L602" "打开源码"
     K["WorldPlayerSmokeChecks.CaptureError()"]
-    click K "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L588" "打开源码"
+    click K "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L589" "打开源码"
     L["WorldPlayerSmokeChecks.ValidateEnemyBlueprints()"]
-    click L "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L502" "打开源码"
+    click L "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L503" "打开源码"
     M["WorldPlayerSmokeChecks.EnemyFixture()"]
-    click M "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L466" "打开源码"
+    click M "../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L467" "打开源码"
     N["EnemySpawner.SpawnBlockData()"]
     click N "../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L144" "打开源码"
     O["WorldCombatPlayerChecks.Run()"]
@@ -3648,29 +3797,29 @@ flowchart TD
 
 - [WorldPlayerSmokeChecks.Initialize](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L69)
 <!-- source: Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs|Initialize -->
-- [WorldPlayerSmokeChecks.ReadInteger](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L135)
+- [WorldPlayerSmokeChecks.ReadInteger](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L136)
 <!-- source: Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs|ReadInteger -->
-- [WorldPlayerSmokeChecks.Start](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L145)
+- [WorldPlayerSmokeChecks.Start](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L146)
 <!-- source: Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs|Start -->
-- [WorldPlayerSmokeChecks.LateUpdate](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L163)
+- [WorldPlayerSmokeChecks.LateUpdate](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L164)
 <!-- source: Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs|LateUpdate -->
-- [WorldPlayerSmokeChecks.Scenario](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L192)
+- [WorldPlayerSmokeChecks.Scenario](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L193)
 <!-- source: Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs|Scenario -->
 - [MainUIPanels.PlayStart](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L233)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayStart -->
-- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L297)
+- [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L304)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|CompletePlayEnd -->
-- [WorldPlayerSmokeChecks.Next](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L575)
+- [WorldPlayerSmokeChecks.Next](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L576)
 <!-- source: Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs|Next -->
-- [WorldPlayerSmokeChecks.Save](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L596)
+- [WorldPlayerSmokeChecks.Save](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L597)
 <!-- source: Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs|Save -->
-- [WorldPlayerSmokeChecks.Finish](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L601)
+- [WorldPlayerSmokeChecks.Finish](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L602)
 <!-- source: Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs|Finish -->
-- [WorldPlayerSmokeChecks.CaptureError](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L588)
+- [WorldPlayerSmokeChecks.CaptureError](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L589)
 <!-- source: Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs|CaptureError -->
-- [WorldPlayerSmokeChecks.ValidateEnemyBlueprints](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L502)
+- [WorldPlayerSmokeChecks.ValidateEnemyBlueprints](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L503)
 <!-- source: Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs|ValidateEnemyBlueprints -->
-- [WorldPlayerSmokeChecks.EnemyFixture](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L466)
+- [WorldPlayerSmokeChecks.EnemyFixture](../Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs#L467)
 <!-- source: Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs|EnemyFixture -->
 - [EnemySpawner.SpawnBlockData](../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L144)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs|SpawnBlockData -->
@@ -4616,7 +4765,7 @@ flowchart TD
     H["RuntimeGroupBuilder.Rebuild()"]
     click H "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16" "打开源码"
     I["PlayManager.RefreshGroup()"]
-    click I "../Assets/Scripts/Features/Simulation/PlayManager.cs#L183" "打开源码"
+    click I "../Assets/Scripts/Features/Simulation/PlayManager.cs#L193" "打开源码"
     J["SiegePerformanceCapture.BeforeReload()"]
     click J "../Assets/Editor/Siege/Benchmarks/SiegePerformanceCapture.cs#L197" "打开源码"
     K["SiegeTopologyBaseline.Run()"]
@@ -4650,7 +4799,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs|GroupBlocks -->
 - [RuntimeGroupBuilder.Rebuild](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|Rebuild -->
-- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L183)
+- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L193)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
 - [SiegePerformanceCapture.BeforeReload](../Assets/Editor/Siege/Benchmarks/SiegePerformanceCapture.cs#L197)
 <!-- source: Assets/Editor/Siege/Benchmarks/SiegePerformanceCapture.cs|BeforeReload -->

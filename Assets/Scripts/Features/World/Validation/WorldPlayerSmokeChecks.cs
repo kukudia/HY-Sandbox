@@ -94,6 +94,7 @@ public sealed class WorldPlayerSmokeChecks : MonoBehaviour
         try
         {
             int seedIndex = Array.IndexOf(args, "-world-smoke-seed");
+            WorldSessionValidationHost.Attach();
             if (seedIndex >= 0)
             {
                 int seed = ReadInteger(args, seedIndex, "seed", int.MinValue, int.MaxValue);

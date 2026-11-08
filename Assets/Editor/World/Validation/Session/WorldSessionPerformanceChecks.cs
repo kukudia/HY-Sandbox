@@ -197,7 +197,8 @@ public static class WorldSessionPerformanceChecks
     private static IEnumerator Scenario()
     {
         yield return null;
-        WorldSessionManager session = SceneObjectQuery.FindInActiveScene<WorldSessionManager>();
+        WorldSessionManager session = WorldSessionValidationHost.Attach();
+        yield return null;
         var configuration = Object.Instantiate(session.Settings);
         var data = new SerializedObject(configuration);
         data.FindProperty("randomizeSeed").boolValue = false;

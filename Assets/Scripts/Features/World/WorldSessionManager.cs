@@ -1,4 +1,4 @@
-// 职责：在Main建造期间分帧预热世界，进入游玩后启用并跟踪区块，退出即丢弃整个探索会话。
+// 职责：准备并运行独立探索世界；Main通过模式入口加载，独立验证夹具仍可选择启动时预热。
 // 入口：BeginPreparation() / RequestPlay() / EnterPlay() / EndSession()；不读写玩家或WorldLab世界存档。
 using System;
 using System.Collections;
@@ -47,6 +47,17 @@ public sealed class WorldSessionManager : MonoBehaviour
     private WorldPlayerStreamingGuard playerGuard;
     private bool failureNeedsExit;
     private bool started;
+    [SerializeField]
+    private bool prepareOnStart = true;
+    private GameModeController host;
+    public void BindHost(GameObject[] environment, WorldLoadingPanel panel, GameModeController owner)
+    {
+        buildEnvironment = environment;
+        loadingPanel = panel;
+        host = owner;
+        loadingPanel?.Bind(this);
+    }
+
     public WorldSessionState State { get; private set; } = WorldSessionState.Preparing;
     public float Progress
     {
@@ -68,14 +79,17 @@ public sealed class WorldSessionManager : MonoBehaviour
     private void Start()
     {
         started = true;
-        loadingPanel?.Bind(this);
-        BeginPreparation();
-        loadingPanel?.ShowStartup();
+        if (prepareOnStart)
+        {
+            loadingPanel?.Bind(this);
+            BeginPreparation();
+            loadingPanel?.ShowStartup();
+        }
     }
 
     private void OnEnable()
     {
-        if (started)
+        if (started && prepareOnStart)
         {
             BeginPreparation();
         }
@@ -192,6 +206,7 @@ public sealed class WorldSessionManager : MonoBehaviour
     {
         playRequested = false;
         loadingPanel?.Show(false);
+        host?.ReturnToBuild();
     }
 
     private void CompletePendingPlay()
@@ -203,6 +218,12 @@ public sealed class WorldSessionManager : MonoBehaviour
 
         playRequested = false;
         loadingPanel?.Show(false);
+        if (!CanEnterPlay(GameManager.instance.blocksParent, out string reason))
+        {
+            Fail(new InvalidOperationException(reason));
+            return;
+        }
+
         MainUIPanels.instance.CompletePlayStart();
     }
 
@@ -305,7 +326,14 @@ public sealed class WorldSessionManager : MonoBehaviour
 
     public void EndSession()
     {
-        BeginPreparation();
+        if (host != null)
+        {
+            StopSession();
+        }
+        else
+        {
+            BeginPreparation();
+        }
     }
 
     private IEnumerator RunGuarded(int version, IEnumerator work)
@@ -510,6 +538,11 @@ public sealed class WorldSessionManager : MonoBehaviour
     }
 
     private void OnDisable()
+    {
+        StopSession();
+    }
+
+    public void StopSession()
     {
         StopPreparation();
         outposts?.Clear();

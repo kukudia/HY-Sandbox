@@ -36,25 +36,7 @@ public static class CargoPersistence
                 throw new InvalidDataException("Invalid player blueprint.");
             }
 
-            var contents = new Dictionary<string, List<CargoItem>>();
-            if (survived)
-            {
-                foreach (CargoHold hold in CargoHold.Active)
-                {
-                    ControlUnit unit = hold.Owner;
-                    if (unit == null || !unit.IsPlayer || !unit.HasValidCockpit)
-                    {
-                        continue;
-                    }
-
-                    Block block = hold.GetComponent<Block>();
-                    if (!string.IsNullOrEmpty(block.uniqueId))
-                    {
-                        contents[block.uniqueId] = hold.CaptureContents();
-                    }
-                }
-            }
-
+            Dictionary<string, List<CargoItem>> contents = CapturePlayerContents(survived);
             foreach (BlockData block in data.blocks)
             {
                 block.cargo = contents.TryGetValue(block.id, out List<CargoItem> cargo) ? cargo : new List<CargoItem>();
@@ -72,5 +54,29 @@ public static class CargoPersistence
             Debug.LogError("Cargo return could not be saved; current session kept: " + exception.Message);
             return false;
         }
+    }
+
+    public static Dictionary<string, List<CargoItem>> CapturePlayerContents(bool survived)
+    {
+        var contents = new Dictionary<string, List<CargoItem>>();
+        if (survived)
+        {
+            foreach (CargoHold hold in CargoHold.Active)
+            {
+                ControlUnit unit = hold.Owner;
+                if (unit == null || !unit.IsPlayer || !unit.HasValidCockpit)
+                {
+                    continue;
+                }
+
+                Block block = hold.GetComponent<Block>();
+                if (!string.IsNullOrEmpty(block.uniqueId))
+                {
+                    contents[block.uniqueId] = hold.CaptureContents();
+                }
+            }
+        }
+
+        return contents;
     }
 }

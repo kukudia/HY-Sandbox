@@ -46,3 +46,17 @@ Assets/Scenes/SiegeMixedStress.unity whitespace=-blank-at-eol
 Assets/Scenes/SiegeMixedStress.unity.meta whitespace=-blank-at-eol
 Assets/Siege.meta whitespace=-blank-at-eol
 Assets/Siege/** whitespace=-blank-at-eol
+# Additive gameplay scenes and Unity-authored mode/validation metadata.
+Assets/Scenes/Exploration.unity whitespace=-blank-at-eol
+Assets/Scenes/Exploration.unity.meta whitespace=-blank-at-eol
+Assets/Scenes/SiegeGameplay.unity whitespace=-blank-at-eol
+Assets/Scenes/SiegeGameplay.unity.meta whitespace=-blank-at-eol
+Assets/Editor/Simulation.meta whitespace=-blank-at-eol
+Assets/Editor/Simulation/*.meta whitespace=-blank-at-eol
+Assets/Scripts/Features/Simulation/Modes.meta whitespace=-blank-at-eol
+Assets/Scripts/Features/Simulation/Modes/**/*.meta whitespace=-blank-at-eol
+Assets/Scripts/Features/Simulation/Modes/*.meta whitespace=-blank-at-eol
+Assets/Scripts/Features/Siege/Gameplay.meta whitespace=-blank-at-eol
+Assets/Scripts/Features/Siege/Gameplay/*.meta whitespace=-blank-at-eol
+Assets/Resources/Validation.meta whitespace=-blank-at-eol
+Assets/Resources/Validation/** whitespace=-blank-at-eol

@@ -67,7 +67,18 @@ public static class SiegeMainInterfaceAuthoring
         build.enabled = false;
         clone.GetComponentInChildren<InputManager>(true).enabled = true;
         PlayManager play = clone.GetComponentInChildren<PlayManager>(true);
+        foreach (GameModePanel modePanel in clone.GetComponentsInChildren<GameModePanel>(true))
+        {
+            Object.DestroyImmediate(modePanel.gameObject);
+        }
+
+        foreach (GameModeController modeController in clone.GetComponentsInChildren<GameModeController>(true))
+        {
+            Object.DestroyImmediate(modeController);
+        }
+
         var playData = new SerializedObject(play);
+        playData.FindProperty("modes").objectReferenceValue = null;
         playData.FindProperty("worldSession").objectReferenceValue = null;
         playData.FindProperty("siegeSession").objectReferenceValue = SceneObjectQuery.FindInActiveScene<SiegeSession>();
         playData.ApplyModifiedPropertiesWithoutUndo();

@@ -118,4 +118,17 @@ public sealed class TransientEffectPool : MonoBehaviour
         beams.Clear();
         lights.Clear();
     }
+
+    public void ClearActive()
+    {
+        foreach (BeamFade beam in GetComponentsInChildren<BeamFade>())
+        {
+            Return(beam);
+        }
+
+        foreach (LightFade light in GetComponentsInChildren<LightFade>())
+        {
+            Return(light);
+        }
+    }
 }

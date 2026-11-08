@@ -126,7 +126,7 @@ def main():
             "J": "ProfilerCaptureAnalysis.Analyze", "K": "ProfilerCaptureAnalysis.AddCounters",
             "L": "ProfilerCaptureAnalysis.WriteCounters",
         },
-        ["A --> B", "C --> B", "D --> B", "E --> B", "E --> C", "F --> G", "F --> H", "J --> K", "J --> L"],
+        ["A --> B", "C --> B", "D --> B", "E --> B", "E --> C", "F -->|Main模式入口| U", "F -->|旧Siege或组件夹具| G", "F --> H", "J --> K", "J --> L"],
     )
 
     graph(
@@ -232,6 +232,7 @@ def main():
             "R": "MainUIPanels.CompletePlayEnd",
             "S": "WorldSessionManager.EndSession",
             "T": "SaveManager.LoadBlueprint",
+            "U": "GameModeController.ShowSelection",
         },
         [
             "A --> B",
@@ -239,7 +240,7 @@ def main():
             "B --> D",
             "D --> T", "T --> E",
             "F --> G",
-            "F -->|Main绑定世界会话| O",
+            "F -->|无模式宿主的组件夹具| O",
             "O -->|世界Ready| P",
             "P --> Q",
             "Q -->|再次校验载具| H",
@@ -250,9 +251,37 @@ def main():
             "K -->|保存成功| R",
             "R --> M",
             "M --> S",
-            "M -->|经 GameManager.Init| D",
-            "N -->|死亡立即丢弃世界| S",
+            "M -->|无原稿时经 GameManager.Init| D",
+            "N -.->|重生后才执行清理| R",
             "N -.->|用户重生/结束按钮| K",
+        ],
+    )
+    graph(
+        "Main模式选择与副场景往返",
+        "源码推导：Main始终为活动场景并拥有共享服务。探索按需加载、绑定后准备；运行副本归Exploration，原稿在Main停用保留。新SiegeGameplay只提供可编辑场地及返回，不启动旧Siege。取消等待加载结束后卸载；失败清理后显示重试。货仓保存成功才返回，恢复未保存原稿与镜头。",
+        {
+            "A": "MainUIPanels.PlayStart", "B": "GameModeController.ShowSelection",
+            "C": "GameModeController.Select", "D": "GameModeController.GuardTransition",
+            "E": "GameModeController.LoadMode", "F": "WorldSessionManager.BindHost",
+            "G": "WorldSessionManager.BeginPreparation", "H": "WorldSessionManager.RequestPlay",
+            "I": "PlayManager.PlayStart", "J": "GameModeController.CreateExplorationCopy",
+            "K": "PlayDraft.CreateRuntimeCopy", "L": "PlayDraft.Park",
+            "M": "SiegeGameplayStage.Enter", "N": "GameModeController.ReturnToBuild",
+            "O": "MainUIPanels.PlayEnd", "P": "CargoPersistence.SaveReturnCargo",
+            "Q": "GameModeController.CaptureReturnCargo", "R": "MainUIPanels.CompletePlayEnd",
+            "S": "GameModeController.ExplorationEnded", "T": "GameModeController.BeginReturn",
+            "U": "GameModeController.ReturnRoutine", "V": "WorldSessionManager.StopSession",
+            "W": "SiegeGameplayStage.Exit", "X": "PlayDraft.Restore",
+            "Y": "GameModeController.Retry", "Z": "MainUIPanels.RestoreBuildPanels",
+        },
+        [
+            "A --> B", "C -.->|StartCoroutine| D", "D -->|推进并捕获异常| E",
+            "E -->|探索绑定| F", "E --> G", "E --> H",
+            "H -.->|Ready后经CompletePlayStart| I", "I --> J", "J --> K", "K --> L",
+            "E -->|新Siege| L", "E --> M", "N -->|探索| O", "O --> P",
+            "O -->|保存成功| Q", "O -->|保存成功| R", "R --> S", "S -->|无加载协程| T",
+            "N -->|无加载协程| T", "D -->|取消或失败| T", "T -.->|StartCoroutine| U",
+            "U --> V", "U --> W", "U -.->|卸载完成后| X", "U --> Z", "Y --> C",
         ],
     )
     graph(
@@ -790,8 +819,8 @@ def main():
         ],
     )
     graph(
-        "Main 大世界会话",
-        "源码推导：Main隐藏预热，资源异步读取、建筑按毫秒预算创建。请求游玩可取消；Ready后暂停物理并显示不透明遮罩，下一帧启用根并按预算激活建筑，完成后恢复原timeScale。退出、死亡或激活中断均释放暂停状态并丢弃会话；失败下一Update回到统一退出链。",
+        "探索副场景与世界组件会话",
+        "源码推导：Main选择探索后Additive加载Exploration，绑定后显式准备；Start预热仅用于独立组件夹具。资源异步读取、建筑按毫秒预算创建。请求游玩可取消；Ready后暂停物理并显示不透明遮罩，下一帧启用根并按预算激活建筑，完成后恢复原timeScale。退出、死亡或激活中断均释放暂停状态并丢弃会话；失败下一Update回到统一退出链。",
         {
             "A": "WorldSessionManager.Start",
             "B": "WorldSessionManager.BeginPreparation",
@@ -820,6 +849,7 @@ def main():
             "Y": "BuildingRuntime.PrepareForUnload",
             "Z": "CollectionBot.PrepareForHomeDestruction",
             "AA": "LootDrop.Release",
+            "AB": "WorldSessionManager.StopSession",
         },
         [
             "A --> B", "B --> C", "B --> S", "B --> T",
@@ -827,14 +857,14 @@ def main():
             "B -.->|StartCoroutine| D", "D --> U", "U --> E", "D -->|捕获异常| O",
             "E -->|全部初始列完成后Ready| F", "G -->|已Ready| F", "H -.->|清除请求，阻止后续切换| F",
             "F -->|存在有效请求| I", "I --> J", "J --> K",
-            "K -->|暂停物理，先呈现遮罩| W", "K -.->|下一帧| L", "L -.->|逐批激活| M", "L --> V", "L -->|完成隐藏遮罩| W", "C --> V", "N --> B",
+            "K -->|暂停物理，先呈现遮罩| W", "K -.->|下一帧| L", "L -.->|逐批激活| M", "L --> V", "L -->|完成隐藏遮罩| W", "C --> V", "N -->|独立组件夹具| B", "N -->|Main模式宿主| AB",
             "O -.->|游玩中故障，下一Update| P", "P --> Q",
             "Q -->|经PlayManager.PlayEnd| N", "R --> C", "R --> S", "R --> T",
         ],
     )
     graph(
-        "启动载具与世界加载遮罩",
-        "源码推导：Start开始后台世界准备后显示启动遮罩；BlueprintLoader按恢复数量报告0..95%，连接重建完成才到100%。面板Update等权合成载具/世界进度，两者完成才隐藏。用户请求游玩、取消或新会话显式Show会结束启动遮罩所有权，之后使用原来的世界进入遮罩；不改变蓝图加载间隔和动画镜头。",
+        "独立世界组件夹具的启动加载遮罩",
+        "源码推导：仅独立组件夹具prepareOnStart启用时，Start开始后台世界准备后显示启动遮罩；正式Main不预热世界。BlueprintLoader按恢复数量报告0..95%，连接重建完成才到100%。面板Update等权合成载具/世界进度，两者完成才隐藏。用户请求游玩、取消或新会话显式Show会结束启动遮罩所有权，之后使用原来的世界进入遮罩；不改变蓝图加载间隔和动画镜头。",
         {
             "A": "WorldSessionManager.Start",
             "B": "WorldSessionManager.BeginPreparation",

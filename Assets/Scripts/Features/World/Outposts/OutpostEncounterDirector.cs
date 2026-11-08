@@ -191,6 +191,12 @@ public sealed class OutpostEncounterDirector
             return false;
         }
 
+        // Main remains active during additive exploration; guards must share the world/ship scene for faction targeting.
+        if (guard.Unit.gameObject.scene != buildings.gameObject.scene)
+        {
+            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(guard.Unit.gameObject, buildings.gameObject.scene);
+        }
+
         Bounds bounds = new Bounds(position, Vector3.zero);
         foreach (Collider collider in guard.Unit.GetComponentsInChildren<Collider>())
         {

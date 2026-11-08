@@ -134,6 +134,8 @@
     <Compile Include="Assets\Scripts\Features\Siege\Fleet\SiegeFleetPhysics.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Blocks\IndustrialMotionDriver.cs" />
     <Compile Include="Assets\Scripts\Features\Player\InputManager.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\Gameplay\SiegeGameplayStage.cs" />
+    <Compile Include="Assets\Scripts\Features\Simulation\Modes\Interface\GameModePanel.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Validation\SiegeStressPopulation.cs" />
     <Compile Include="Assets\Scripts\Features\Flight\HoverFlightController.cs" />
     <Compile Include="Assets\Scripts\Features\World\Presentation\WorldLoadingPanel.cs" />
@@ -143,6 +145,8 @@
     <Compile Include="Assets\Scripts\Features\Combat\Damage\SalvageCleanupSession.cs" />
     <Compile Include="Assets\Scripts\Features\World\Terrain\Meshing\VoxelMeshData.cs" />
     <Compile Include="Assets\Scripts\Features\Power\Devices\PowerTransmissionDevice.cs" />
+    <Compile Include="Assets\Scripts\Features\Simulation\Modes\PlayDraft.cs" />
+    <Compile Include="Assets\Scripts\Features\World\Validation\WorldSessionValidationHost.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Connections\BlockConnectionGraph.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Workshop\SiegeWorkshop.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BuildingEditor\BuildingFoundation.cs" />
@@ -190,6 +194,7 @@
     <Compile Include="Assets\Scripts\Features\Bots\Bot.cs" />
     <Compile Include="Assets\Scripts\Features\Flight\Thrusters\MainThruster.cs" />
     <Compile Include="Assets\Scripts\Features\World\Outposts\EnemyOutpostData.cs" />
+    <Compile Include="Assets\Scripts\Features\Simulation\Modes\GameModeController.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interface\BuildPaletteItem.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\LightFade.cs" />
     <Compile Include="Assets\Scripts\Features\World\Presentation\WorldDistanceView.cs" />

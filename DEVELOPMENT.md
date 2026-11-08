@@ -1,5 +1,30 @@
 # HY-Sandbox 开发入口
 
+## Main 玩法合并入口
+
+Main 的 **Simulate**（或 P）打开模式选择：探索按需 Additive 加载 `Assets/Scenes/Exploration.unity`，新阵地战加载 `Assets/Scenes/SiegeGameplay.unity`。Main 始终为活动场景，持有建造编辑器、共享管理器、摄像机和 EventSystem；探索地形/建筑与运行舰船归探索副场景。未选择探索时不生成世界。原 `Assets/Scenes/Siege.unity` 保留独立预研入口、逻辑/UI及压力场，不由新模式自动启动。
+
+模式状态由 `GameModeController` 管理，探索通过 `BindHost` 显式绑定 Main 的环境、加载 UI 与 HUD。场景异步加载支持取消，失败完整清理后重试；退出卸载玩法场景。Main 建造原稿停用保留，探索使用副本，返回恢复同一个原稿与镜头；正常返回保存货仓后迁移回原稿，死亡返回清空货仓。不会把战斗损毁覆盖到未保存的作品。SiegeGameplay 当前仅提供可编辑地面、基地/部署定位点、总览与返回，尚无战斗、部署或经济迁移。
+
+```text
+Assets/Scripts/Features/
+├── Simulation/
+│   └── Modes/
+│       ├── GameModeController.cs   模式/场景生命周期
+│       ├── PlayDraft.cs            建造原稿与运行副本
+│       └── Interface/
+│           └── GameModePanel.cs    模式选择/重试
+└── Siege/
+    └── Gameplay/
+        └── SiegeGameplayStage.cs   新阵地战制作入口
+Assets/Editor/
+└── Simulation/
+    ├── GameModeAuthoring.cs         可重复制作/迁移入口
+    └── GameModePlayChecks.cs        正式模式集成验证
+```
+
+菜单 **Tools → HY-Sandbox → Modes → Install gameplay subscenes** 保存真实场景与界面；重复执行不重建已有布局。**Validate Main mode transitions** 验证模式往返；函数图见 [RuntimeFlow](Docs/RuntimeFlow.md)。历史世界组件/性能套件通过 `WorldSessionValidationHost.Attach()` 显式装配隔离世界夹具，保留组件生命周期回归；这类通过不能替代正式副场景集成验证。验证记录见 [玩法合并第一阶段](Docs/Validation/2026-11-08-game-modes.md)。
+
 ## 显式组件与友敌 AI 调试
 
 常驻服务、对象池、工业动画调度与调试组件已保存在各场景的 Managers/服务层级，可在编辑模式查看、调整和禁用。载具根 `Resources/BlocksParent/BlocksParent.prefab` 预挂 `EnemyController`，模块、机器人、武器和 UI 的依赖预挂在各自 Prefab；组装时只初始化或启停。

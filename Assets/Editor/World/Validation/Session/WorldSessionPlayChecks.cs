@@ -129,7 +129,8 @@ public static class WorldSessionPlayChecks
     private static IEnumerator Scenario()
     {
         yield return null;
-        WorldSessionManager session = SceneObjectQuery.FindInActiveScene<WorldSessionManager>();
+        WorldSessionManager session = WorldSessionValidationHost.Attach();
+        yield return null;
         Check(
             session != null && PlayManager.instance.WorldSession == session,
             "Main binds the authored world session to PlayManager");

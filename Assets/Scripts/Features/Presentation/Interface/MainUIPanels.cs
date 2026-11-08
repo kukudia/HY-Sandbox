@@ -232,6 +232,12 @@ public class MainUIPanels : MonoBehaviour
 
     public void PlayStart()
     {
+        if (PlayManager.instance.Modes != null)
+        {
+            PlayManager.instance.Modes.ShowSelection();
+            return;
+        }
+
         SiegeSession siege = PlayManager.instance.SiegeSession;
         if (siege != null)
         {
@@ -291,6 +297,7 @@ public class MainUIPanels : MonoBehaviour
             return;
         }
 
+        PlayManager.instance.Modes?.CaptureReturnCargo(PlayManager.instance.playMode);
         CompletePlayEnd();
     }
 
@@ -302,6 +309,15 @@ public class MainUIPanels : MonoBehaviour
         _transitions.Show(deathPanel, false, fadeDuration);
         _transitions.Show(playPanel, false, fadeDuration);
         _transitions.Show(buildPanel, true, fadeDuration);
+        PlayManager.instance.Modes?.ExplorationEnded();
+    }
+
+    public void RestoreBuildPanels()
+    {
+        _transitions.CancelAll();
+        _transitions.Show(deathPanel, false, 0f);
+        _transitions.Show(playPanel, false, 0f);
+        _transitions.Show(buildPanel, true, 0f);
     }
 
     public void PlayerDeath()

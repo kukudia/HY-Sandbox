@@ -45,6 +45,14 @@ public static class OutpostHudAuthoring
         }
 
         Transform statusRoot = parent.Find("OutpostStatus");
+        PlayManager play = SceneObjectQuery.FindInScene<PlayManager>(scene);
+        if (play.Modes != null)
+        {
+            var modeData = new SerializedObject(play.Modes);
+            modeData.FindProperty("outpostHud").objectReferenceValue = statusRoot.GetComponent<OutpostHud>();
+            modeData.ApplyModifiedPropertiesWithoutUndo();
+        }
+
         Undo.RecordObject(statusRoot, "Fit outpost status");
         ((RectTransform)statusRoot).sizeDelta = new Vector2(520f, 72f);
         Text statusText = statusRoot.GetComponent<Text>();

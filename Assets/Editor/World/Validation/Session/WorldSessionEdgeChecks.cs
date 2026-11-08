@@ -125,7 +125,8 @@ public static class WorldSessionEdgeChecks
     private static IEnumerator Scenario()
     {
         yield return null;
-        session = SceneObjectQuery.FindInActiveScene<WorldSessionManager>();
+        session = WorldSessionValidationHost.Attach();
+        yield return null;
         Check(session != null, "Main contains the production world session");
         while (BuildManager.instance.IsLoadingBlocks)
         {
