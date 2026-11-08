@@ -43,5 +43,7 @@ public class BlockDataList
     // 建筑底座独立于可删除的方块；旧玩家/敌人蓝图缺少此字段仍可读取。
     public BuildingFoundationData foundation;
     public EnemyOutpostData outpost;
+    // Optional design metadata; combat never writes damaged runtime state back to this blueprint.
+    public string siegeCoreId;
     public bool IsOutpost => outpost != null && outpost.enabled;
 }

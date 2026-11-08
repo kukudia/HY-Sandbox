@@ -6,7 +6,10 @@ using UnityEngine;
 
 public sealed class SiegeBase : IDisposable
 {
-    private readonly SiegeSession session;
+    private readonly SiegeMatch match;
+    private readonly float repairCoinsPerHealth;
+    private readonly int replacementValue;
+    private readonly Action coreLost;
     public BuildingRuntime Building
     {
         get;
@@ -23,9 +26,19 @@ public sealed class SiegeBase : IDisposable
     public string Id => Building.InstanceId;
     public bool IsAlive => Building != null && Core != null && Core.isActiveAndEnabled && Core.GetComponentInParent<BuildingRuntime>() == Building;
 
-    private SiegeBase(SiegeSession session, BuildingRuntime building, BlockDataList blueprint, Block core)
+    private SiegeBase(
+        SiegeMatch match,
+        float repairCoinsPerHealth,
+        int replacementValue,
+        Action coreLost,
+        BuildingRuntime building,
+        BlockDataList blueprint,
+        Block core)
     {
-        this.session = session;
+        this.match = match;
+        this.repairCoinsPerHealth = repairCoinsPerHealth;
+        this.replacementValue = replacementValue;
+        this.coreLost = coreLost;
         Building = building;
         Blueprint = blueprint;
         Core = core;
@@ -46,6 +59,39 @@ public sealed class SiegeBase : IDisposable
             throw new InvalidOperationException("The configured base core is missing from the building blueprint.");
         }
 
+        return Create(
+            session.Match,
+            session.Settings,
+            buildings,
+            blueprint,
+            session.Settings.BaseCoreBlockId,
+            session.Settings.BaseBlueprint.name,
+            anchor.position,
+            anchor.rotation,
+            session.Settings.BaseReplacementValue,
+            session.LoseBase);
+    }
+
+    public static SiegeBase Create(
+        SiegeMatch match,
+        SiegeSettings settings,
+        WorldBuildingManager buildings,
+        BlockDataList source,
+        string coreId,
+        string name,
+        Vector3 position,
+        Quaternion rotation,
+        int replacementValue,
+        Action coreLost)
+    {
+        // Own an isolated snapshot; stripping cargo and later refits must never mutate the editor cache.
+        BlockDataList blueprint = JsonUtility.FromJson<BlockDataList>(JsonUtility.ToJson(source));
+        WorldBuildingValidation.ValidateBlueprint(blueprint);
+        if (blueprint.blocks.Count(block => block.id == coreId) != 1)
+        {
+            throw new InvalidOperationException("Choose exactly one existing base core.");
+        }
+
         foreach (BlockData block in blueprint.blocks)
         {
             block.cargo = null;
@@ -54,17 +100,24 @@ public sealed class SiegeBase : IDisposable
         var state = new WorldBuildingState
         {
             instanceId = Guid.NewGuid().ToString("N"),
-            blueprintName = session.Settings.BaseBlueprint.name,
+            blueprintName = name,
             faction = UnitFaction.Player,
-            position = anchor.position,
-            rotation = anchor.rotation,
+            position = position,
+            rotation = rotation,
             anchored = true,
             blueprint = blueprint,
             durability = Enumerable.Repeat(float.MaxValue, blueprint.blocks.Count).ToArray()
         };
         BuildingRuntime building = buildings.RestoreBuilding(state);
-        Block core = building.Blocks.Single(block => block.uniqueId == state.instanceId + ":" + session.Settings.BaseCoreBlockId);
-        return new SiegeBase(session, building, blueprint, core);
+        Block core = building.Blocks.Single(block => block.uniqueId == state.instanceId + ":" + coreId);
+        return new SiegeBase(
+            match,
+            settings.RepairCoinsPerHealth,
+            replacementValue,
+            coreLost,
+            building,
+            blueprint,
+            core);
     }
 
     public long Quote()
@@ -92,19 +145,19 @@ public sealed class SiegeBase : IDisposable
             }
         }
 
-        return (long)Math.Ceiling(lostHealth * session.Settings.RepairCoinsPerHealth + (double)session.Settings.BaseReplacementValue * missing / Blueprint.blocks.Count);
+        return (long)Math.Ceiling(lostHealth * repairCoinsPerHealth + (double)replacementValue * missing / Blueprint.blocks.Count);
     }
 
     public bool Repair(out string reason)
     {
         reason = "Building repairs require a surviving core and an intermission.";
-        if (!IsAlive || !session.Match.CanRefit)
+        if (!IsAlive || !match.CanRefit)
         {
             return false;
         }
 
         long price = Quote();
-        if (!session.Match.CanAfford(price))
+        if (!match.CanAfford(price))
         {
             reason = "Insufficient coins for base repair: " + price;
             return false;
@@ -115,7 +168,7 @@ public sealed class SiegeBase : IDisposable
             return false;
         }
 
-        session.Match.TrySpend(price);
+        match.TrySpend(price);
         reason = "Base building refitted for " + price + " coins.";
         return true;
     }
@@ -124,7 +177,7 @@ public sealed class SiegeBase : IDisposable
     {
         if (block == Core)
         {
-            session.LoseBase();
+            coreLost?.Invoke();
         }
     }
 

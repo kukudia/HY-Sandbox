@@ -112,6 +112,7 @@ HY-Sandbox/
 │   │   │   ├── SalvageAssetBaker.cs
 │   │   │   └── SalvagePlayProbe.cs
 │   │   ├── Siege/
+│   │   │   ├── SiegeConstructionPlayChecks.cs
 │   │   │   ├── SiegePlayChecks.cs
 │   │   │   ├── SiegeSceneAuthoring.cs
 │   │   │   ├── Authoring/
@@ -119,6 +120,7 @@ HY-Sandbox/
 │   │   │   │   ├── SiegeBaseBlueprintAuthoring.cs
 │   │   │   │   ├── SiegeBlueprintSelectionAuthoring.cs
 │   │   │   │   ├── SiegeCommandHudAuthoring.cs
+│   │   │   │   ├── SiegeConstructionAuthoring.cs
 │   │   │   │   ├── SiegeInterfaceAuthoring.cs
 │   │   │   │   ├── SiegeMainInterfaceAuthoring.cs
 │   │   │   │   ├── SiegeMixedStressAuthoring.cs
@@ -401,6 +403,9 @@ HY-Sandbox/
 │           │   │   ├── SiegeFleetPhysics.cs
 │           │   │   └── SiegeRefit.cs
 │           │   ├── Gameplay/
+│           │   │   ├── SiegeBaseWorkshop.cs
+│           │   │   ├── SiegeConstructionPanel.cs
+│           │   │   ├── SiegeConstructionSettings.cs
 │           │   │   └── SiegeGameplayStage.cs
 │           │   ├── Interface/
 │           │   │   ├── SiegeBattleFeedback.cs
@@ -1643,6 +1648,24 @@ HY-Sandbox/
 | --- | --- | --- |
 | SiegeCommandHudAuthoring | [`void Apply()`](../Assets/Editor/Siege/Authoring/SiegeCommandHudAuthoring.cs#L7) | public static |
 
+## Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs
+
+// 职责：保存新版基地战配置、Main编辑入口及副场景uGUI/建筑服务；保留旧Siege和Main手工布局。 // 入口：Install()；只重建明确拥有的 Construction Controls / Base Workshop 两个UI根。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeConstructionAuthoring | [`void Install()`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L16) | public static |
+| SiegeConstructionAuthoring | [`SiegeConstructionSettings EnsureSettings()`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L206) | private static |
+| SiegeConstructionAuthoring | [`void CopyPool(Scene main, Scene target)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L244) | private static |
+| SiegeConstructionAuthoring | [`void RemoveOwned(Transform parent, string name)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L255) | private static |
+| SiegeConstructionAuthoring | [`RectTransform Rect(string name, Transform parent, Vector2 size)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L264) | private static |
+| SiegeConstructionAuthoring | [`void At(RectTransform rect, float x, float y, float width, float height)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L273) | private static |
+| SiegeConstructionAuthoring | [`Text Label( string name, Transform parent, string text, float x, float y, float width, float height, int size)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L281) | private static |
+| SiegeConstructionAuthoring | [`Button Button( string name, Transform parent, string title, float x, float y, float width)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L303) | private static |
+| SiegeConstructionAuthoring | [`InputField Input(Transform parent, string name, float x, float y)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L329) | private static |
+| SiegeConstructionAuthoring | [`Dropdown DropdownAt(Transform parent, float x, float y)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L347) | private static |
+| SiegeConstructionAuthoring | [`void Set(SerializedObject data, string field, Object value)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L361) | private static |
+
 ## Assets/Editor/Siege/Authoring/SiegeInterfaceAuthoring.cs
 
 // 职责：将当前Siege场景迁移为场景泊位交互、按需操作卡片和独立阶段HUD，保存可编辑UGUI资产。 // 入口：Apply()；只重建拥有的Siege HUD，保留竞技场布置、部署点和蓝图数据。
@@ -1664,7 +1687,7 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeMainInterfaceAuthoring | [`void Install()`](../Assets/Editor/Siege/Authoring/SiegeMainInterfaceAuthoring.cs#L14) | public static |
-| SiegeMainInterfaceAuthoring | [`void FitLayout()`](../Assets/Editor/Siege/Authoring/SiegeMainInterfaceAuthoring.cs#L145) | public static |
+| SiegeMainInterfaceAuthoring | [`void FitLayout()`](../Assets/Editor/Siege/Authoring/SiegeMainInterfaceAuthoring.cs#L150) | public static |
 
 ## Assets/Editor/Siege/Authoring/SiegeMixedStressAuthoring.cs
 
@@ -1771,6 +1794,20 @@ HY-Sandbox/
 | SiegePlayerBuild | [`void BuildMixedStress()`](../Assets/Editor/Siege/Player/SiegePlayerBuild.cs#L53) | public static |
 | SiegePlayerBuild | [`void Schedule(string scene, string output, string statusPath, BuildOptions options = BuildOptions.None)`](../Assets/Editor/Siege/Player/SiegePlayerBuild.cs#L63) | private static |
 | SiegePlayerBuild | [`void BuildNow(string scene, string output, string statusPath, BuildOptions options)`](../Assets/Editor/Siege/Player/SiegePlayerBuild.cs#L83) | private static |
+
+## Assets/Editor/Siege/SiegeConstructionPlayChecks.cs
+
+// 职责：在真实Main Play Mode验证副场景切换、取消/重试、建造原稿隔离和旧Siege不被启动。 // 入口：Run()；只修改运行时夹具，报告写Temp/BaseConstruction，不写玩家存档或场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeConstructionPlayChecks | [`void Run()`](../Assets/Editor/Siege/SiegeConstructionPlayChecks.cs#L35) | public static |
+| SiegeConstructionPlayChecks | [`void Changed(PlayModeStateChange state)`](../Assets/Editor/Siege/SiegeConstructionPlayChecks.cs#L47) | private static |
+| SiegeConstructionPlayChecks | [`void Tick()`](../Assets/Editor/Siege/SiegeConstructionPlayChecks.cs#L67) | private static |
+| SiegeConstructionPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/Siege/SiegeConstructionPlayChecks.cs#L93) | private static |
+| SiegeConstructionPlayChecks | [`void Check(bool success, string description)`](../Assets/Editor/Siege/SiegeConstructionPlayChecks.cs#L309) | private static |
+| SiegeConstructionPlayChecks | [`void LogError(string message, string stack, LogType type)`](../Assets/Editor/Siege/SiegeConstructionPlayChecks.cs#L319) | private static |
+| SiegeConstructionPlayChecks | [`void Finish()`](../Assets/Editor/Siege/SiegeConstructionPlayChecks.cs#L327) | private static |
 
 ## Assets/Editor/Siege/SiegePlayChecks.cs
 
@@ -3051,27 +3088,27 @@ HY-Sandbox/
 | SaveManager | [`bool RenameBuildingBlueprint(string oldName, string newName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L129) | public |
 | SaveManager | [`string GetBuildingBlueprintPath(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L134) | public |
 | SaveManager | [`void SaveBuildingFoundation(BuildingFoundationData foundation)`](../Assets/Scripts/Features/Building/SaveManager.cs#L144) | public |
-| SaveManager | [`void GetAllSaveNames()`](../Assets/Scripts/Features/Building/SaveManager.cs#L159) | public |
-| SaveManager | [`void SaveBuildingOutpost(EnemyOutpostData outpost)`](../Assets/Scripts/Features/Building/SaveManager.cs#L169) | public |
-| SaveManager | [`string CopyBundledBuilding(string template)`](../Assets/Scripts/Features/Building/SaveManager.cs#L194) | public |
-| SaveManager | [`string SaveNewBuilding(string template, BlockDataList data)`](../Assets/Scripts/Features/Building/SaveManager.cs#L211) | public |
-| SaveManager | [`void GetAllEnemyBlueprintNames()`](../Assets/Scripts/Features/Building/SaveManager.cs#L237) | public |
-| SaveManager | [`void CreateNewSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L247) | public |
-| SaveManager | [`void CreateNewEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L265) | public |
-| SaveManager | [`void LoadSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L278) | public |
-| SaveManager | [`void LoadEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L283) | public |
-| SaveManager | [`void LoadBlueprint(string name, BuildTargetKind kind)`](../Assets/Scripts/Features/Building/SaveManager.cs#L288) | private |
-| SaveManager | [`void DeleteSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L340) | public |
-| SaveManager | [`void DeleteEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L345) | public |
-| SaveManager | [`void DeleteBlueprint(string name, BuildTargetKind kind)`](../Assets/Scripts/Features/Building/SaveManager.cs#L350) | private |
-| SaveManager | [`bool DeleteBlueprintFile(string path)`](../Assets/Scripts/Features/Building/SaveManager.cs#L361) | private static |
-| SaveManager | [`bool RenameSave(string oldSaveName, string newSaveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L372) | public |
-| SaveManager | [`bool RenameEnemyBlueprint(string oldBlueprintName, string newBlueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L377) | public |
-| SaveManager | [`bool RenameBlueprint(string oldName, string newName, BuildTargetKind kind)`](../Assets/Scripts/Features/Building/SaveManager.cs#L382) | private |
-| SaveManager | [`void DuplicateSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L448) | public |
-| SaveManager | [`string GetSavePath(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L461) | public |
-| SaveManager | [`string GetEnemyBlueprintPath(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L466) | public |
-| SaveManager | [`string GetSaveFileSize(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L471) | public |
+| SaveManager | [`void GetAllSaveNames()`](../Assets/Scripts/Features/Building/SaveManager.cs#L160) | public |
+| SaveManager | [`void SaveBuildingOutpost(EnemyOutpostData outpost)`](../Assets/Scripts/Features/Building/SaveManager.cs#L170) | public |
+| SaveManager | [`string CopyBundledBuilding(string template)`](../Assets/Scripts/Features/Building/SaveManager.cs#L195) | public |
+| SaveManager | [`string SaveNewBuilding(string template, BlockDataList data)`](../Assets/Scripts/Features/Building/SaveManager.cs#L212) | public |
+| SaveManager | [`void GetAllEnemyBlueprintNames()`](../Assets/Scripts/Features/Building/SaveManager.cs#L238) | public |
+| SaveManager | [`void CreateNewSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L248) | public |
+| SaveManager | [`void CreateNewEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L266) | public |
+| SaveManager | [`void LoadSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L279) | public |
+| SaveManager | [`void LoadEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L284) | public |
+| SaveManager | [`void LoadBlueprint(string name, BuildTargetKind kind)`](../Assets/Scripts/Features/Building/SaveManager.cs#L289) | private |
+| SaveManager | [`void DeleteSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L341) | public |
+| SaveManager | [`void DeleteEnemyBlueprint(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L346) | public |
+| SaveManager | [`void DeleteBlueprint(string name, BuildTargetKind kind)`](../Assets/Scripts/Features/Building/SaveManager.cs#L351) | private |
+| SaveManager | [`bool DeleteBlueprintFile(string path)`](../Assets/Scripts/Features/Building/SaveManager.cs#L362) | private static |
+| SaveManager | [`bool RenameSave(string oldSaveName, string newSaveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L373) | public |
+| SaveManager | [`bool RenameEnemyBlueprint(string oldBlueprintName, string newBlueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L378) | public |
+| SaveManager | [`bool RenameBlueprint(string oldName, string newName, BuildTargetKind kind)`](../Assets/Scripts/Features/Building/SaveManager.cs#L383) | private |
+| SaveManager | [`void DuplicateSave(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L449) | public |
+| SaveManager | [`string GetSavePath(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L462) | public |
+| SaveManager | [`string GetEnemyBlueprintPath(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L467) | public |
+| SaveManager | [`string GetSaveFileSize(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L472) | public |
 
 ## Assets/Scripts/Features/Combat/Damage/CollisionDamageResolver.cs
 
@@ -4295,11 +4332,12 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeBase | [`SiegeBase Create(SiegeSession session, WorldBuildingManager buildings, Transform anchor)`](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L35) | public static |
-| SiegeBase | [`long Quote()`](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L70) | public |
-| SiegeBase | [`bool Repair(out string reason)`](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L98) | public |
-| SiegeBase | [`void OnBlockDestroyed(Block block)`](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L123) | private |
-| SiegeBase | [`void Dispose()`](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L131) | public |
+| SiegeBase | [`SiegeBase Create(SiegeSession session, WorldBuildingManager buildings, Transform anchor)`](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L48) | public static |
+| SiegeBase | [`SiegeBase Create( SiegeMatch match, SiegeSettings settings, WorldBuildingManager buildings, BlockDataList source, string coreId, string name, Vector3 position, Quaternion rotation, int replacementValue, Action coreLost)`](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L75) | public static |
+| SiegeBase | [`long Quote()`](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L123) | public |
+| SiegeBase | [`bool Repair(out string reason)`](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L151) | public |
+| SiegeBase | [`void OnBlockDestroyed(Block block)`](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L176) | private |
+| SiegeBase | [`void Dispose()`](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L184) | public |
 
 ## Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs
 
@@ -4307,12 +4345,12 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeWaveDirector | [`void Tick(float time)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L19) | public |
-| SiegeWaveDirector | [`SiegeShipOption PickBlueprint(SiegeSettings settings)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L79) | private |
-| SiegeWaveDirector | [`void Stop()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L99) | public |
-| Attacker | [`void OnDefeated()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L129) | private |
-| Attacker | [`void RefreshTarget(ControlUnit core)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L134) | public |
-| Attacker | [`void Unsubscribe()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L147) | public |
+| SiegeWaveDirector | [`void Tick(float time)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L46) | public |
+| SiegeWaveDirector | [`SiegeShipOption PickBlueprint(SiegeSettings settings)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L106) | private |
+| SiegeWaveDirector | [`void Stop()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L126) | public |
+| Attacker | [`void OnDefeated()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L156) | private |
+| Attacker | [`void RefreshTarget(ControlUnit core)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L161) | public |
+| Attacker | [`void Unsubscribe()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L174) | public |
 
 ## Assets/Scripts/Features/Siege/Battle/SiegeWreckBudget.cs
 
@@ -4391,15 +4429,63 @@ HY-Sandbox/
 | SiegeRefit | [`bool Repair(SiegeFleetEntry entry, SiegeSession session, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L115) | public static |
 | SiegeRefit | [`Dictionary<string, Block> CollectOwned(SiegeFleetEntry entry)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L195) | private static |
 
-## Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs
+## Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs
 
-// 职责：新阵地战副场景的可编辑入口骨架；只展示制作场地与返回，不启动旧SiegeSession或旧HUD。 // 入口：Enter() / Exit()；Main显式注入共享宿主，战斗规则将在后续迁移。
+// 职责：在Main暴露建筑编辑、示例复制和唯一核心指定；战斗永不回写这些设计文件。 // 入口：ToggleEditor() / CopyStarter() / DesignateCore()；编辑尺寸和方块继续使用原建筑工具。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeGameplayStage | [`void Enter(GameModeController host, GameObject[] buildEnvironment)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L15) | public |
-| SiegeGameplayStage | [`void Exit()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L34) | public |
-| SiegeGameplayStage | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L53) | private |
+| SiegeBaseWorkshop | [`void Start()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L22) | private |
+| SiegeBaseWorkshop | [`void ToggleEditor()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L31) | public |
+| SiegeBaseWorkshop | [`void CopyStarter()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L40) | public |
+| SiegeBaseWorkshop | [`void DesignateCore()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L56) | public |
+| SiegeBaseWorkshop | [`void TrySave(Action action)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L85) | private |
+| SiegeBaseWorkshop | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L97) | private |
+
+## Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionPanel.cs
+
+// 职责：显示新版基地部署与战斗状态，将输入转发给场景入口；控件由Editor保存。 // 入口：Bind()；不创建运行时Canvas或持有战斗规则。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeConstructionPanel | [`void Bind(SiegeGameplayStage stage)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionPanel.cs#L34) | public |
+| SiegeConstructionPanel | [`void ApplyPose()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionPanel.cs#L62) | private |
+| SiegeConstructionPanel | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionPanel.cs#L74) | private |
+
+## Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs
+
+// 职责：保存新版阵地战基地的预算、尺寸边界和共享战斗配置，供Inspector独立调参。 // 入口：Cost() / Validate()；不读写玩家蓝图。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeConstructionSettings | [`long Cost(BlockDataList data)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs#L25) | public |
+| SiegeConstructionSettings | [`bool Validate(BlockDataList data, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs#L36) | public |
+| SiegeConstructionSettings | [`string Warnings(BlockDataList data)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs#L97) | public |
+
+## Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs
+
+// 职责：新版基地战的设计选择、部署、真实守波和整备；共享波次/修缮机制，不依赖旧Session/HUD。 // 入口：Enter() / SelectDesign() / SetPose() / Deploy() / BeginWave() / Repair() / Retreat() / Exit()。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeGameplayStage | [`void Enter(GameModeController host, GameObject[] buildEnvironment)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L65) | public |
+| SiegeGameplayStage | [`void SelectDesign(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L124) | public |
+| SiegeGameplayStage | [`void SetPose(int x, int z, int quarterTurns)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L158) | public |
+| SiegeGameplayStage | [`void ValidatePose()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L175) | private |
+| SiegeGameplayStage | [`bool Deploy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L207) | public |
+| SiegeGameplayStage | [`bool BeginWave()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L261) | public |
+| SiegeGameplayStage | [`bool Repair()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L274) | public |
+| SiegeGameplayStage | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L286) | private |
+| SiegeGameplayStage | [`void SetSimulation(bool active)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L317) | private |
+| SiegeGameplayStage | [`void LoseBase()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L360) | private |
+| SiegeGameplayStage | [`void Retreat()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L365) | public |
+| SiegeGameplayStage | [`void Settle(string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L370) | private |
+| SiegeGameplayStage | [`void ReturnOrRetreat()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L384) | private |
+| SiegeGameplayStage | [`void ClearPreview()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L396) | private |
+| SiegeGameplayStage | [`void ShowCoreMarker(Transform parent, Vector3 localPosition)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L406) | private |
+| SiegeGameplayStage | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L415) | private |
+| SiegeGameplayStage | [`void Exit()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L423) | public |
+| SiegeGameplayStage | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L458) | private |
 
 ## Assets/Scripts/Features/Siege/Interface/SiegeBattleFeedback.cs
 
@@ -4990,10 +5076,11 @@ HY-Sandbox/
 | BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L191) | public |
 | BuildingRuntime | [`void DestroyBlock(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L244) | public |
 | BuildingRuntime | [`void SplitDisconnected()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L286) | private |
-| BuildingRuntime | [`bool HasPreparedGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L312) | private |
-| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L331) | private |
-| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L352) | public |
-| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L363) | private |
+| BuildingRuntime | [`bool HasFullFoundationSupport()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L313) | public |
+| BuildingRuntime | [`bool HasPreparedGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L328) | private |
+| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L347) | private |
+| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L368) | public |
+| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L379) | private |
 
 ## Assets/Scripts/Features/World/Buildings/Data/WorldBuildingCatalog.cs
 

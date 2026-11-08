@@ -275,7 +275,7 @@ public class BuildManager : MonoBehaviour
 
     public void EnterBuildingBlueprintBuildMode(string blueprintName)
     {
-        if (!InputManager.instance.DeveloperToolsAvailable || (PlayManager.instance != null && PlayManager.instance.playMode))
+        if (PlayManager.instance != null && (PlayManager.instance.playMode || (PlayManager.instance.Modes != null && PlayManager.instance.Modes.State != GameModeState.Building)))
         {
             return;
         }
@@ -346,7 +346,7 @@ public class BuildManager : MonoBehaviour
     public bool ResizeBuildingFoundation(int width, int length, out string reason)
     {
         reason = string.Empty;
-        if (!IsEditingBuildingBlueprint || IsLoadingBlocks || Foundation == null || !InputManager.instance.DeveloperToolsAvailable)
+        if (!IsEditingBuildingBlueprint || IsLoadingBlocks || Foundation == null)
         {
             reason = "Building editor is not ready.";
             return false;
@@ -719,7 +719,7 @@ public class BuildManager : MonoBehaviour
     private bool CanCreateBlock(GameObject prefab, out string reason)
     {
         reason = string.Empty;
-        if (IsEditingDeveloperBlueprint && !InputManager.instance.DeveloperToolsAvailable)
+        if (IsEditingEnemyBlueprint && !InputManager.instance.DeveloperToolsAvailable)
         {
             reason = "Enemy blueprint build mode is developer-only.";
             return false;

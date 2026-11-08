@@ -309,6 +309,22 @@ public sealed class BuildingRuntime : MonoBehaviour
         }
     }
 
+    /// <summary>Deployment checks the same connector graph and virtual ground anchors used after damage.</summary>
+    public bool HasFullFoundationSupport()
+    {
+        Physics.SyncTransforms();
+        connections.Prepare(blocks, transform);
+        foreach (List<Block> group in BlockGroupManager.GroupPreparedBlocks(blocks))
+        {
+            if (!group.Exists(HasPreparedGroundConnector))
+            {
+                return false;
+            }
+        }
+
+        return blocks.Count > 0;
+    }
+
     private bool HasPreparedGroundConnector(Block block)
     {
         Vector2Int footprint = FootprintSize;

@@ -148,7 +148,8 @@ public class SaveManager : MonoBehaviour
         {
             blocks = cachedData.blocks,
             foundation = foundation,
-            outpost = cachedData.outpost
+            outpost = cachedData.outpost,
+            siegeCoreId = cachedData.siegeCoreId
         };
         File.WriteAllText(
             GetBuildingBlueprintPath(BuildManager.instance.CurrentBuildingBlueprintName),

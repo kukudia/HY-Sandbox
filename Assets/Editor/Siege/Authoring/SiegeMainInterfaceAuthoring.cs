@@ -67,6 +67,11 @@ public static class SiegeMainInterfaceAuthoring
         build.enabled = false;
         clone.GetComponentInChildren<InputManager>(true).enabled = true;
         PlayManager play = clone.GetComponentInChildren<PlayManager>(true);
+        foreach (SiegeBaseWorkshop baseWorkshop in clone.GetComponentsInChildren<SiegeBaseWorkshop>(true))
+        {
+            Object.DestroyImmediate(baseWorkshop.gameObject);
+        }
+
         foreach (GameModePanel modePanel in clone.GetComponentsInChildren<GameModePanel>(true))
         {
             Object.DestroyImmediate(modePanel.gameObject);

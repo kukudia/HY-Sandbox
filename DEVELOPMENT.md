@@ -4,7 +4,17 @@
 
 Main 的 **Simulate**（或 P）打开模式选择：探索按需 Additive 加载 `Assets/Scenes/Exploration.unity`，新阵地战加载 `Assets/Scenes/SiegeGameplay.unity`。Main 始终为活动场景，持有建造编辑器、共享管理器、摄像机和 EventSystem；探索地形/建筑与运行舰船归探索副场景。未选择探索时不生成世界。原 `Assets/Scenes/Siege.unity` 保留独立预研入口、逻辑/UI及压力场，不由新模式自动启动。
 
-模式状态由 `GameModeController` 管理，探索通过 `BindHost` 显式绑定 Main 的环境、加载 UI 与 HUD。场景异步加载支持取消，失败完整清理后重试；退出卸载玩法场景。Main 建造原稿停用保留，探索使用副本，返回恢复同一个原稿与镜头；正常返回保存货仓后迁移回原稿，死亡返回清空货仓。不会把战斗损毁覆盖到未保存的作品。SiegeGameplay 当前仅提供可编辑地面、基地/部署定位点、总览与返回，尚无战斗、部署或经济迁移。
+模式状态由 `GameModeController` 管理，探索通过 `BindHost` 显式绑定 Main 的环境、加载 UI 与 HUD。场景异步加载支持取消，失败完整清理后重试；退出卸载玩法场景。Main 建造原稿停用保留，探索使用副本，返回恢复同一个原稿与镜头；正常返回保存货仓后迁移回原稿，死亡返回清空货仓。不会把战斗损毁覆盖到未保存的作品。SiegeGameplay 已接入基地蓝图部署、真实守波、整备修复与结算，见下节。
+
+## 基地自由建造首版
+
+Main 左下 **BASE EDITOR** 打开原建筑编辑器（正式Player也可用）；可新建命名蓝图，或 **COPY STARTER** 复制可修改的示例。调整底座、放置/移动/旋转模块，选中有耐久的模块后 **MARK SELECTED CORE** 指定唯一核心。编辑自动保存到独立 `BuildingBlueprints`；**BACK TO VEHICLE** 返回载具建造，再通过 **Simulate → Siege** 出战。旧建筑蓝图兼容读取，但必须显式指定核心才可作为基地部署。
+
+Siege 中选择蓝图，修改整数 X/Z 与90度朝向，查看无战斗组件的静态模型预览，确认部署。默认预算20000，按模块体积每格5计价；底座最大48×48，限高32m。拒绝越界、穿地、模块重叠、无效身份/资源、缺核心、超预算；确认时复用建筑真实连接图，所有分量必须连接底座向下锚点。无发电机/单发电机/无炮塔只给风险提示。核心有显式标记，独立于驾驶舱。基地和敌机归属副场景，副场景保存自己的炮弹与GPU特效池、照明；Main普通刷怪器不参加模式战斗。
+
+**START NEXT WAVE** 启动共享 `SiegeMatch` / `SiegeWaveDirector` 的真实敌机波次；先读取玩家敌方蓝图库，没有有效蓝图时使用配置中的内置敌机。发电、炮塔、毁伤和建筑断裂沿用生产机制。整备阶段 **REPAIR + REBUILD** 显示报价，复用 `SiegeBase` / `BuildingRefit` 按原设计恢复耐久和缺件；净空或余额不足不扣费。设计预算与局内维修金币分开，初始维修金币6000。首版不支持战中扩建或科技养成。核心丢失自动结算；撤退先展示本局波次、击毁和金币，再返回。原设计文件和Main载具原稿不受战斗损毁覆盖。
+
+配置：`Assets/Siege/Construction/Settings.asset`、`Combat.asset`、`StarterBase.json`。制作菜单 **Tools/HY-Sandbox/Siege/Install base construction**；只重建工具拥有的两个UI根，保留其他手工布局和原预研场景。验证入口 **Validate base construction**，报告与边界见 [基地建造验证](Docs/Validation/2026-11-08-base-construction.md)。
 
 ```text
 Assets/Scripts/Features/

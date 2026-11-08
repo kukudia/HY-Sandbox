@@ -280,7 +280,7 @@ public sealed class GameModeController : MonoBehaviour
         outpostHud?.Bind(null);
         siege?.Exit();
         PlayManager.instance.BindWorldSession(null);
-        if (draft.HasDraft && (PlayManager.instance.blocksParent != null || PlayManager.instance.playMode))
+        if (draft.HasDraft && (siege != null || PlayManager.instance.blocksParent != null || PlayManager.instance.playMode))
         {
             PlayManager.instance.PlayEnd();
         }

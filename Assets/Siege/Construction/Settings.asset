@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50191f65cea61514ea2f9517c547d96c, type: 3}
+  m_Name: Settings
+  m_EditorClassIdentifier: Assembly-CSharp::SiegeConstructionSettings
+  combat: {fileID: 11400000, guid: 7d86578a67d430847adac14d62c54446, type: 2}
+  starter: {fileID: 4900000, guid: 5e20c1c8dfac0834d89452b78ed581c2, type: 3}
+  deploymentBudget: 20000
+  coinsPerCell: 5
+  maximumWidth: 48
+  maximumHeight: 32

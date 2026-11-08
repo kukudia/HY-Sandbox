@@ -3,22 +3,49 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public sealed class SiegeWaveDirector
 {
-    private readonly SiegeSession session;
+    private readonly SiegeMatch match;
+    private readonly SiegeSettings settings;
+    private readonly Func<SiegeBase> getBase;
+    private readonly Func<SiegeShipOption[]> getOptions;
+    private readonly Func<int> getSelected;
+    private readonly Scene scene;
     private readonly System.Random random;
     private readonly List<Attacker> attackers = new List<Attacker>();
     private float nextSpawn;
-    public SiegeWaveDirector(SiegeSession session)
+    public SiegeWaveDirector(SiegeSession session) : this(
+        session.Match,
+        session.Settings,
+        () => session.Fleet.Base,
+        () => session.AttackerOptions,
+        () => session.SelectedAttacker,
+        session.gameObject.scene)
     {
-        this.session = session;
-        random = new System.Random(session.Settings.SpawnSeed);
+    }
+
+    public SiegeWaveDirector(
+        SiegeMatch match,
+        SiegeSettings settings,
+        Func<SiegeBase> getBase,
+        Func<SiegeShipOption[]> getOptions,
+        Func<int> getSelected,
+        Scene scene)
+    {
+        this.match = match;
+        this.settings = settings;
+        this.getBase = getBase;
+        this.getOptions = getOptions;
+        this.getSelected = getSelected;
+        this.scene = scene;
+        random = new System.Random(settings.SpawnSeed);
     }
 
     public void Tick(float time)
     {
-        if (session.Match.Phase != SiegePhase.Battle)
+        if (match.Phase != SiegePhase.Battle)
         {
             return;
         }
@@ -28,31 +55,30 @@ public sealed class SiegeWaveDirector
             Attacker attacker = attackers[index];
             if (!attacker.Defeated && attacker.Cockpit != null && attacker.Cockpit.isActiveAndEnabled)
             {
-                attacker.RefreshTarget(session.Fleet.Base.Unit);
+                attacker.RefreshTarget(getBase().Unit);
                 continue;
             }
 
-            session.Match.ResolveAttacker(attacker.Id, attacker.Defeated);
+            match.ResolveAttacker(attacker.Id, attacker.Defeated);
             attacker.Unsubscribe();
             attackers.RemoveAt(index);
         }
 
-        SiegeSettings settings = session.Settings;
-        if (time < nextSpawn || !session.Match.CanSpawn(settings.MaximumActiveEnemies) || session.AttackerOptions.Length == 0 || session.Fleet.Base.Unit == null)
+        if (time < nextSpawn || !match.CanSpawn(settings.MaximumActiveEnemies) || getOptions().Length == 0 || getBase().Unit == null)
         {
             return;
         }
 
-        float interval = settings.SpawnInterval * (session.Match.IsSwarmWave ? Mathf.Clamp(settings.SwarmSpawnIntervalScale, 0.2f, 1f) : 1f);
+        float interval = settings.SpawnInterval * (match.IsSwarmWave ? Mathf.Clamp(settings.SwarmSpawnIntervalScale, 0.2f, 1f) : 1f);
         nextSpawn = time + Mathf.Max(0.1f, interval);
         SiegeShipOption option = PickBlueprint(settings);
         double angle = random.NextDouble() * Math.PI * 2.0;
         Vector3 offset = new Vector3((float)Math.Cos(angle), 0f, (float)Math.Sin(angle)) * settings.AttackRadius;
-        Vector3 position = session.Fleet.Base.Core.transform.position + offset + Vector3.up * 10f;
+        Vector3 position = getBase().Core.transform.position + offset + Vector3.up * 10f;
         BlockDataList blueprint = SiegeFleet.PrepareBlueprint(option.BlueprintJson, out string id);
         ControlUnit unit = EnemyBlueprintFactory.Spawn(
             blueprint,
-            "Raider " + session.Match.Wave + " / " + option.DisplayName,
+            "Raider " + match.Wave + " / " + option.DisplayName,
             position,
             Quaternion.LookRotation(-offset));
         if (unit == null)
@@ -60,16 +86,17 @@ public sealed class SiegeWaveDirector
             return;
         }
 
+        SceneManager.MoveGameObjectToScene(unit.gameObject, scene);
         unit.runtimeUnitId = id;
         unit.AssignRuntimeOwnershipToBlocks(true);
-        if (!session.Match.RegisterAttacker(id, settings.MaximumActiveEnemies))
+        if (!match.RegisterAttacker(id, settings.MaximumActiveEnemies))
         {
             unit.gameObject.SetActive(false);
             UnityEngine.Object.Destroy(unit.gameObject);
             return;
         }
 
-        unit.GetComponent<EnemyController>().SetPriorityTarget(session.Fleet.Base.Unit);
+        unit.GetComponent<EnemyController>().SetPriorityTarget(getBase().Unit);
         attackers.Add(new Attacker(id, unit.cockpit));
         // 注册成功后才播放，拒绝生成或预算不足不会留下空传送门。
         VisualEffectsManager.TryPlayEnemySpawnPortal(unit);
@@ -78,8 +105,8 @@ public sealed class SiegeWaveDirector
     /// <summary>精英波次固定挑最重的蓝图，其余波次沿用玩家指定或按种子随机。</summary>
     private SiegeShipOption PickBlueprint(SiegeSettings settings)
     {
-        SiegeShipOption[] options = session.AttackerOptions;
-        if (session.Match.IsEliteWave)
+        SiegeShipOption[] options = getOptions();
+        if (match.IsEliteWave)
         {
             SiegeShipOption heaviest = options[0];
             for (int index = 1; index < options.Length; index++)
@@ -93,7 +120,7 @@ public sealed class SiegeWaveDirector
             return heaviest;
         }
 
-        return options[session.SelectedAttacker >= 0 ? session.SelectedAttacker : random.Next(options.Length)];
+        return options[getSelected() >= 0 ? getSelected() : random.Next(options.Length)];
     }
 
     public void Stop()

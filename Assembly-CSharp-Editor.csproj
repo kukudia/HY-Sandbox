@@ -73,6 +73,7 @@
     <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegeFleetChecks.cs" />
     <Compile Include="Assets\Editor\World\Validation\WorldLab\WorldLabSoakChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegePriorityTargetFlight.cs" />
+    <Compile Include="Assets\Editor\Siege\Authoring\SiegeConstructionAuthoring.cs" />
     <Compile Include="Assets\Editor\Presentation\Interface\BlockStatusSetup.cs" />
     <Compile Include="Assets\Editor\Presentation\Validation\NativeVfxPlaybackProbe.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="Assets\Editor\Siege\Authoring\SiegeBaseBlueprintAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Buildings\SiegeBuildingGraphChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Interface\SiegeCombatFeedbackChecks.cs" />
+    <Compile Include="Assets\Editor\Siege\SiegeConstructionPlayChecks.cs" />
     <Compile Include="Assets\Editor\Art\Validation\BlockArtValidation.cs" />
     <Compile Include="Assets\Editor\Siege\Authoring\SiegeProgressAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\Authoring\SiegeMixedStressAuthoring.cs" />

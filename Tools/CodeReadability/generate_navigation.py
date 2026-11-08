@@ -55,6 +55,21 @@ def main():
         )
 
     graph(
+        "基地设计、部署与守波",
+        "源码推导：Main保存基地设计；副场景只读快照和静态预览，确认时复用建筑连接图验证地面支撑。新版与预研共用波次和修缮；净空/余额通过才恢复原设计并扣费。核心事件或撤退汇入结算，返回停止模拟、卸载副场景、恢复Main原稿。",
+        {"A": "SiegeBaseWorkshop.DesignateCore", "B": "GameModeController.LoadMode",
+         "C": "SiegeGameplayStage.Enter", "D": "SiegeGameplayStage.SelectDesign",
+         "E": "SiegeConstructionSettings.Validate", "F": "SiegeGameplayStage.Deploy",
+         "G": "SiegeBase.Create", "H": "BuildingRuntime.HasFullFoundationSupport",
+         "I": "SiegeGameplayStage.BeginWave", "J": "SiegeWaveDirector.Tick",
+         "K": "SiegeBase.Repair", "L": "BuildingRefit.Apply", "M": "SiegeGameplayStage.Settle",
+         "N": "GameModeController.ReturnRoutine", "O": "SiegeGameplayStage.Exit", "P": "PlayDraft.Restore"},
+        ['A -.->|保存后选择模式| B', 'B --> C', 'C --> D', 'D --> E', 'D -.->|用户确认| F',
+         'F --> G', 'F --> H', 'F -.->|用户开始| I', 'I -.->|Unity Update| J',
+         'J -.->|整备阶段用户维修| K', 'K --> L', 'G -.->|核心销毁事件| M',
+         'I -.->|用户撤退| M', 'M -.->|用户返回| N', 'N --> O', 'N --> P'],
+    )
+    graph(
         "GPU特效对象池与释放",
         "源码推导：VFX Graph 在GPU模拟粒子；场景池按模板复用对象，没有活动对象数量硬上限，只限制闲置缓存。爆炸、传送门、残骸和陨石尾迹共用Rent，复位参数后播放，保留尾烟延时，再归还或清理。FinishPlayback若略早于截止时间触发会重新预约，避免丢失回收；场景卸载释放池及子实例。",
         {"A": "BlockVfxLibrary.Play", "B": "VfxEffectPool.Rent", "C": "VfxEffect.ResetForRent",
