@@ -75,6 +75,7 @@
     <Compile Include="Assets\Scripts\Features\Building\Actions\AddBlockAction.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interface\BlueprintUIPanel.cs" />
     <Compile Include="Assets\Scripts\Features\World\Validation\OutpostEditorPlayerChecks.cs" />
+    <Compile Include="Assets\Scripts\Features\MainMenu\Interface\MainMenuView.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interface\SaveUIPanel.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\StylizedBeamEffect.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Units\Cockpit.cs" />
@@ -122,6 +123,7 @@
     <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BlueprintStatistics.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Fleet\SiegeDeploymentPad.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Units\ControlUnit.cs" />
+    <Compile Include="Assets\Scripts\Features\MainMenu\Navigation\WorkshopNavigation.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BuildingEditor\OutpostDeploymentPreview.cs" />
     <Compile Include="Assets\Scripts\Features\World\Validation\EnemyFlightPlayerChecks.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\Presentation\BotNavigationGizmos.cs" />
@@ -138,6 +140,7 @@
     <Compile Include="Assets\Scripts\Features\Simulation\Modes\Interface\GameModePanel.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Validation\SiegeStressPopulation.cs" />
     <Compile Include="Assets\Scripts\Features\Flight\HoverFlightController.cs" />
+    <Compile Include="Assets\Scripts\Features\MainMenu\Settings\MenuSettings.cs" />
     <Compile Include="Assets\Scripts\Features\World\Presentation\WorldLoadingPanel.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Meteors\Meteor.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Fleet\SiegeFleet.cs" />
@@ -160,6 +163,7 @@
     <Compile Include="Assets\Scripts\Features\Building\Actions\BlockActionState.cs" />
     <Compile Include="Assets\Scripts\Features\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Features\Flight\Presentation\ThrusterInfoPanel.cs" />
+    <Compile Include="Assets\Scripts\Features\MainMenu\Library\MenuBlueprintPreview.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Interface\SiegeThreatMarkers.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\Repair\RepairBeamView.cs" />
     <Compile Include="Assets\Scripts\Features\Bootstrap\GameManager.cs" />
@@ -195,6 +199,7 @@
     <Compile Include="Assets\Scripts\Features\Flight\Thrusters\MainThruster.cs" />
     <Compile Include="Assets\Scripts\Features\World\Outposts\EnemyOutpostData.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Modes\GameModeController.cs" />
+    <Compile Include="Assets\Scripts\Features\MainMenu\Library\MenuBlueprintLibrary.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interface\BuildPaletteItem.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\LightFade.cs" />
     <Compile Include="Assets\Scripts\Features\World\Presentation\WorldDistanceView.cs" />
@@ -219,6 +224,7 @@
     <Compile Include="Assets\Scripts\Features\Combat\Damage\CollisionDamageResolver.cs" />
     <Compile Include="Assets\Scripts\Features\World\Persistence\WorldLabPersistence.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
+    <Compile Include="Assets\Scripts\Features\MainMenu\MainMenuController.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Blocks\IndustrialPartMotion.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\Repair\RepairTargetSearch.cs" />
     <Compile Include="Assets\Scripts\Features\Diagnostics\Interface\PerformanceMonitor.cs" />
@@ -255,6 +261,7 @@
     <Compile Include="Assets\Scripts\Features\Building\BlockDataTables\BlockCsvDocument.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interaction\BuildHandleAxis.cs" />
     <Compile Include="Assets\Scripts\Features\Power\Power.cs" />
+    <Compile Include="Assets\Scripts\Features\MainMenu\Navigation\MenuPlayDraft.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\MeteorLightToken.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\VfxEffectPool.cs" />
     <Compile Include="Assets\Scripts\Features\World\Buildings\Data\WorldBuildingLibrary.cs" />

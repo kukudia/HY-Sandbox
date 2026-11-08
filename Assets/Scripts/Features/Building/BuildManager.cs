@@ -52,6 +52,18 @@ public class BuildManager : MonoBehaviour
     public BuildTargetKind CurrentBuildTarget => CurrentBuildContext.Kind;
     public UnitFaction CurrentBuildFaction => CurrentBuildContext.Faction;
     public string CurrentBuildName => CurrentBuildContext.Name;
+    internal BuildTargetContext WorkshopContext => CurrentBuildContext;
+
+    // Menu play requests may temporarily load another vehicle; restore the original objects without reloading disk.
+    internal void RestoreWorkshopContext(BuildTargetContext context, BuildingFoundation foundation)
+    {
+        ResetBuildState();
+        SetBuildTarget(context);
+        Foundation = foundation;
+        currentBlockResourcePath = string.Empty;
+        MainUIPanels.instance.RefreshBlueprintEditorMode();
+        RefreshBlueprintUI();
+    }
 
     public bool penetrationMode;
     [Header("Blueprint Loading")]

@@ -55,6 +55,24 @@ def main():
         )
 
     graph(
+        "主菜单、工坊暂停与蓝图出战",
+        "源码推导：MainMenu冷启动只展示菜单；选择后只读校验蓝图，再按需Additive加载Main。Main跳过默认存档启动，菜单拥有唯一EventSystem。显式编辑示例才创建副本；探索临时选择别的载具时保留工坊对象/上下文/Undo。返回先走模式清理与货仓保存；失败保留活动会话并提示，成功才恢复原稿、暂停Main根对象。取消等待安全载入/卸载完成，不中途丢弃工坊。",
+        {"A": "MainMenuController.Start", "B": "MainMenuController.Choose",
+         "C": "MenuBlueprintLibrary.Inspect", "D": "MainMenuController.Launch",
+         "E": "MainMenuController.EnsureMain", "F": "MenuPlayDraft.Park",
+         "G": "GameModeController.LaunchSiege", "H": "GameModeController.SelectExploration",
+         "I": "WorkshopNavigation.OpenMenu", "J": "MainMenuController.Return",
+         "K": "GameModeController.ReturnToBuild", "L": "MenuPlayDraft.Restore",
+         "M": "MainMenuController.Resume", "N": "MainMenuController.CancelNavigation",
+         "O": "MenuSettings.Initialize", "P": "MainMenuController.OpenBlueprint"},
+        ['A --> O', 'A -.->|用户选择| B', 'B --> C', 'C -.->|用户确认| D', 'D --> C',
+         'D --> E', 'D -->|编辑或临时载具| P', 'D -->|保留其他工坊原稿| F',
+         'D -->|所选基地| G', 'D -->|所选载具| H',
+         'I --> J', 'J --> K', 'K -.->|保存及卸载成功后| L',
+         'J -.->|保存失败保留活动会话| I', 'A -.->|恢复工坊| M', 'M --> E',
+         'N -.->|安全载入或玩法清理完成| J'],
+    )
+    graph(
         "基地设计、部署与守波",
         "源码推导：Main保存基地设计；副场景只读快照和静态预览，确认时复用建筑连接图验证地面支撑。新版与预研共用波次和修缮；净空/余额通过才恢复原设计并扣费。核心事件或撤退汇入结算，返回停止模拟、卸载副场景、恢复Main原稿。",
         {"A": "SiegeBaseWorkshop.DesignateCore", "B": "GameModeController.LoadMode",
@@ -250,7 +268,7 @@ def main():
             "U": "GameModeController.ShowSelection",
         },
         [
-            "A --> B",
+            "A -->|直接Main启动且无菜单宿主| B",
             "B --> C",
             "B --> D",
             "D --> T", "T --> E",

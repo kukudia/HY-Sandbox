@@ -1,8 +1,20 @@
 # HY-Sandbox 开发入口
 
+## 主菜单与工坊导航
+
+Player 首场景为 `Assets/Scenes/MainMenu.unity`。**Exploration** 选择载具，**Siege** 选择基地；**Vehicle / Base Workshop** 打开对应蓝图编辑器。菜单提供静态模块预览、有效性说明、刷新、新建、示例副本、当前工坊恢复与最近设计；不引入科技树或长线养成。界面沿用项目英文标签。示例基地直接出战只读；编辑示例或通过 **CREATE COPY & EXPLORE** 使用示例载具时，明确创建唯一命名的个人副本。
+
+冷启动只载入菜单，不加载Main、不读取默认载具、不生成世界。首次打开工坊/出战才Additive加载Main。Main运行期间为活动场景；回菜单先通过既有模式主链保存货仓、结束战斗和卸载玩法，再停用Main根对象并记录原活动状态。恢复工坊重启同一批对象，保留原稿、镜头和缓存。菜单拥有唯一活动EventSystem；直接运行Main仍使用其原EventSystem。**MENU [ESC]**（或Escape）返回主菜单，直接Main开发入口也可按需加载菜单。
+
+菜单选择其他载具探索时，`MenuPlayDraft` 暂停当前工坊对象及编辑上下文，加载所选载具，再走既有探索副本流程；结束后恢复之前的工坊原稿和Undo/Redo。Siege直接使用菜单指定的基地，不要求先载入载具。显式打开另一工坊设计会替换当前编辑视图，沿用工坊自动保存机制；有实际工坊原稿时才启用 **RESUME CURRENT WORKSHOP**，恢复和同名最近设计不重新加载。加载中 **CANCEL & RETURN** 等待安全载入/清理完成再回菜单。坏文件、缺模块和选中后被删除的文件拒绝打开；货仓保存失败继续保留活动探索会话并显示原因，不能被菜单强行暂停/卸载。
+
+**Settings** 提供全局音量、项目画质档、全屏和鼠标灵敏度，偏好存于 `HY.Menu.*` PlayerPrefs，首次运行沿用项目默认值。按键帮助为说明，首版不提供重绑定。Editor内Quit只提示，Player中退出应用。菜单场景、原生uGUI控件、预览RenderTexture、灯光和相机均为真实可编辑资产；制作入口 **Tools/HY-Sandbox/Main Menu/Install editable menu**，已有菜单布局不会被重建。
+
+源码按功能组织于 `Assets/Scripts/Features/MainMenu`：`MainMenuController` 为导航入口，`Navigation` 管理工坊暂停/临时载具，`Library` 管理只读目录/预览，`Interface` 绑定展示，`Settings` 管理本地偏好。Editor制作/验证入口在 `Assets/Editor/MainMenu`。函数主链见 [RuntimeFlow](Docs/RuntimeFlow.md)，方法导航见 [CodeIndex](Docs/CodeIndex.md)。验证记录见 [主菜单验收](Docs/Validation/2026-11-08-main-menu.md)。
+
 ## Main 玩法合并入口
 
-Main 的 **Simulate**（或 P）打开模式选择：探索按需 Additive 加载 `Assets/Scenes/Exploration.unity`，新阵地战加载 `Assets/Scenes/SiegeGameplay.unity`。Main 始终为活动场景，持有建造编辑器、共享管理器、摄像机和 EventSystem；探索地形/建筑与运行舰船归探索副场景。未选择探索时不生成世界。原 `Assets/Scenes/Siege.unity` 保留独立预研入口、逻辑/UI及压力场，不由新模式自动启动。
+Main 的 **Simulate**（或 P）继续提供工坊内模式选择：探索按需 Additive 加载 `Assets/Scenes/Exploration.unity`，新阵地战加载 `Assets/Scenes/SiegeGameplay.unity`。玩法期间Main为活动场景，持有建造编辑器、共享管理器和摄像机；菜单启动时输入由菜单EventSystem统一管理，直接Main入口仍使用自身EventSystem。探索地形/建筑与运行舰船归探索副场景。未选择探索时不生成世界。原 `Assets/Scenes/Siege.unity` 保留独立预研入口、逻辑/UI及压力场，不由新模式自动启动。
 
 模式状态由 `GameModeController` 管理，探索通过 `BindHost` 显式绑定 Main 的环境、加载 UI 与 HUD。场景异步加载支持取消，失败完整清理后重试；退出卸载玩法场景。Main 建造原稿停用保留，探索使用副本，返回恢复同一个原稿与镜头；正常返回保存货仓后迁移回原稿，死亡返回清空货仓。不会把战斗损毁覆盖到未保存的作品。SiegeGameplay 已接入基地蓝图部署、真实守波、整备修复与结算，见下节。
 

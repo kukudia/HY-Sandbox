@@ -40,6 +40,7 @@ public sealed class GameModeController : MonoBehaviour
     private bool previousKeyInput;
     private bool previousBuildEnabled;
     private bool inputCaptured;
+    private string requestedSiegeDesign;
     public GameModeState State
     {
         get; private set;
@@ -80,6 +81,19 @@ public sealed class GameModeController : MonoBehaviour
 
     public void SelectSiege()
     {
+        Select(false);
+    }
+
+    public void LaunchSiege(string blueprintName)
+    {
+        if (State != GameModeState.Building || transition != null || BuildManager.instance.IsLoadingBlocks)
+        {
+            return;
+        }
+
+        requestedSiegeDesign = blueprintName;
+        CaptureInput();
+        State = GameModeState.Choosing;
         Select(false);
     }
 
@@ -167,6 +181,11 @@ public sealed class GameModeController : MonoBehaviour
             draft.Park();
             MainUIPanels.instance.buildPanel.SetActive(false);
             siege.Enter(this, buildEnvironment);
+            if (!string.IsNullOrEmpty(requestedSiegeDesign))
+            {
+                siege.SelectDesignByName(requestedSiegeDesign);
+            }
+
             panel.Show(false);
             State = GameModeState.Siege;
         }
@@ -294,6 +313,7 @@ public sealed class GameModeController : MonoBehaviour
         SceneObjectQuery.FindInScene<TransientEffectPool>(gameObject.scene)?.ClearActive();
         world = null;
         siege = null;
+        requestedSiegeDesign = null;
         modeScene = default;
         draft.Restore();
         MainUIPanels.instance.RestoreBuildPanels();

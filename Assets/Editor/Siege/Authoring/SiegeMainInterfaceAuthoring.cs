@@ -67,6 +67,23 @@ public static class SiegeMainInterfaceAuthoring
         build.enabled = false;
         clone.GetComponentInChildren<InputManager>(true).enabled = true;
         PlayManager play = clone.GetComponentInChildren<PlayManager>(true);
+        foreach (WorkshopNavigation navigation in clone.GetComponentsInChildren<WorkshopNavigation>(true))
+        {
+            Object.DestroyImmediate(navigation);
+        }
+
+        Transform menuButton = clone.transform.Find("MainCanvas/Main Menu");
+        if (menuButton != null)
+        {
+            Object.DestroyImmediate(menuButton.gameObject);
+        }
+
+        Transform menuNotice = clone.transform.Find("MainCanvas/Menu Notice");
+        if (menuNotice != null)
+        {
+            Object.DestroyImmediate(menuNotice.gameObject);
+        }
+
         foreach (SiegeBaseWorkshop baseWorkshop in clone.GetComponentsInChildren<SiegeBaseWorkshop>(true))
         {
             Object.DestroyImmediate(baseWorkshop.gameObject);

@@ -60,3 +60,12 @@ Assets/Scripts/Features/Siege/Gameplay.meta whitespace=-blank-at-eol
 Assets/Scripts/Features/Siege/Gameplay/*.meta whitespace=-blank-at-eol
 Assets/Resources/Validation.meta whitespace=-blank-at-eol
 Assets/Resources/Validation/** whitespace=-blank-at-eol
+# Native menu scene and metadata retain Unity's empty-value serialization.
+Assets/Scenes/MainMenu.unity whitespace=-blank-at-eol
+Assets/Scenes/MainMenu.unity.meta whitespace=-blank-at-eol
+Assets/Scenes/MenuPreview.renderTexture.meta whitespace=-blank-at-eol
+Assets/Editor/MainMenu.meta whitespace=-blank-at-eol
+Assets/Editor/MainMenu/*.meta whitespace=-blank-at-eol
+Assets/Scripts/Features/MainMenu.meta whitespace=-blank-at-eol
+Assets/Scripts/Features/MainMenu/*.meta whitespace=-blank-at-eol
+Assets/Scripts/Features/MainMenu/**/*.meta whitespace=-blank-at-eol

@@ -155,6 +155,23 @@ public sealed class SiegeGameplayStage : MonoBehaviour
         ValidatePose();
     }
 
+    public bool SelectDesignByName(string blueprintName)
+    {
+        // This entry is for saved menu selections; a user file may share the starter's display label.
+        int index = names.FindIndex(1, name => name == blueprintName);
+        if (index < 0)
+        {
+            ClearPreview();
+            design = null;
+            CanDeploy = false;
+            DesignStatus = "The selected base is no longer available.";
+            return false;
+        }
+
+        SelectDesign(index);
+        return CanDeploy;
+    }
+
     public void SetPose(int x, int z, int quarterTurns)
     {
         if (Base != null || Settled)

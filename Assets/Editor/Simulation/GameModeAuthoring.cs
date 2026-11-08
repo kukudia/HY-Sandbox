@@ -101,6 +101,12 @@ public static class GameModeAuthoring
         scenes.AddRange(EditorBuildSettings.scenes.Where(s => s.path != MainPath && s.path != ExplorationPath && s.path != SiegePath));
         scenes.Add(new EditorBuildSettingsScene(ExplorationPath, true));
         scenes.Add(new EditorBuildSettingsScene(SiegePath, true));
+        if (AssetDatabase.LoadAssetAtPath<SceneAsset>(WorkshopNavigation.MenuPath) != null)
+        {
+            scenes.RemoveAll(s => s.path == WorkshopNavigation.MenuPath);
+            scenes.Insert(0, new EditorBuildSettingsScene(WorkshopNavigation.MenuPath, true));
+        }
+
         EditorBuildSettings.scenes = scenes.ToArray();
         EditorSceneManager.MarkSceneDirty(main);
         EditorSceneManager.SaveScene(main);

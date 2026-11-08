@@ -76,6 +76,11 @@ public class SaveManager : MonoBehaviour
         return instance != null ? instance.BuildingFiles : new BlueprintFileStore(buildingBlueprintDirectory);
     }
 
+    internal static BlueprintFileStore GetPlayerBlueprintFiles()
+    {
+        return instance != null ? instance.PlayerFiles : new BlueprintFileStore(Path.Combine(Application.persistentDataPath, "Saves"));
+    }
+
     public void GetAllBuildingBlueprintNames()
     {
         buildingBlueprints.Clear();

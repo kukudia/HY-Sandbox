@@ -14,12 +14,13 @@
 | Combat | DestroyManager | Damage；Enemies；Meteors；Turrets（再分 Projectiles）；Interface |
 | Diagnostics | DebugManager | Physics；Bots；Interface |
 | Flight | HoverFlightController | Hover；Thrusters；Presentation |
+| MainMenu | MainMenuController、MenuDestination | Navigation（含Main入口与临时原稿）；Library（含静态预览）；Interface；Settings |
 | Player | InputManager、Player、PlayerController、PlayerHealth | 输入与玩家主体4份脚本内聚，暂不机械分层 |
 | Power | Power、PowerNetwork | Devices；Network；Presentation |
 | Presentation | VisualEffectsManager | Camera；Blocks；Effects；Interface |
 | Salvage | SalvageSettings | Cargo；Drops；Economy |
-| Siege | SiegeSession、SiegeMatch、SiegeSettings、SiegeProgress | Battle；Fleet；Interface；Workshop；Validation |
-| Simulation | PlayManager、Block | Connections；Groups；Units；Physics；Presentation；Diagnostics |
+| Siege | SiegeSession、SiegeMatch、SiegeSettings、SiegeProgress | Battle；Fleet；Gameplay（新版基地战）；Interface；Workshop；Validation |
+| Simulation | PlayManager、Block | Connections；Groups；Units；Modes（副场景选择与原稿）；Physics；Presentation；Diagnostics |
 | World | WorldSessionManager、WorldGenerationSettings | Terrain；Buildings；Outposts；Streaming；Persistence；Presentation；WorldLab；Validation |
 
 ## World 的递归结构
@@ -54,6 +55,8 @@ World/
 目录代表职责归属，不引入新的程序集、命名空间、反射装配或运行顺序。仅有一个文件且职责独立的子功能可以保留单文件目录；小而内聚的顶层功能不强制拆分。运行时Player验证仍位于运行时编译范围，只有显式参数启用，不移入 Editor 导致正式Player失去验证入口。
 
 ## Editor 与维护
+
+主菜单制作与Play导航验证在 `Assets/Editor/MainMenu`；菜单场景、Main返回入口和Build Settings均由显式制作工具保存，运行时不拼装菜单控件。
 
 `Assets/Editor` 按相同功能映射组织。Art、Building、Combat、Presentation、Siege、World 将制作、预览、领域验证、基准采样与Player构建入口分开；SiegeSceneAuthoring/SiegePlayChecks、WorldSessionAuthoring等主装配或总验证入口保留根目录。其他小目录沿用内聚结构；不处理第三方工具。
 

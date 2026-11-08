@@ -130,6 +130,7 @@
     <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegeBlueprintCatalogChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Benchmarks\SiegeBuildingBenchmark.cs" />
     <Compile Include="Assets\Editor\Siege\Authoring\SiegeMainInterfaceAuthoring.cs" />
+    <Compile Include="Assets\Editor\MainMenu\MainMenuAuthoring.cs" />
     <Compile Include="Assets\Editor\Combat\Validation\AiUpgradePlayChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Buildings\SiegeBuildingPowerProbe.cs" />
     <Compile Include="Assets\Editor\Bots\BotNavigationPlayProbe.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="Assets\Editor\World\WorldSessionAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\SiegeSceneAuthoring.cs" />
     <Compile Include="Assets\Editor\Presentation\Validation\PresentationResourceChecks.cs" />
+    <Compile Include="Assets\Editor\MainMenu\MainMenuPlayChecks.cs" />
     <Compile Include="Assets\Editor\World\WorldLab\WorldLabAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\Benchmarks\SiegeRegroupBaseline.cs" />
     <Compile Include="Assets\Editor\Presentation\Resources\PresentationAssetIndex.cs" />

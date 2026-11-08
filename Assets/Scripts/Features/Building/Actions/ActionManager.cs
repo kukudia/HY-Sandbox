@@ -63,6 +63,25 @@ public class ActionManager : MonoBehaviour
         redoStack.Clear();
     }
 
+    internal (IBlockAction[] Undo, IBlockAction[] Redo) CaptureHistory()
+    {
+        return (undoStack.ToArray(), redoStack.ToArray());
+    }
+
+    internal void RestoreHistory((IBlockAction[] Undo, IBlockAction[] Redo) history)
+    {
+        Clear();
+        for (int i = history.Undo.Length - 1; i >= 0; i--)
+        {
+            undoStack.Push(history.Undo[i]);
+        }
+
+        for (int i = history.Redo.Length - 1; i >= 0; i--)
+        {
+            redoStack.Push(history.Redo[i]);
+        }
+    }
+
     /// <summary>
     /// 重做最近撤销的动作。
     /// </summary>
