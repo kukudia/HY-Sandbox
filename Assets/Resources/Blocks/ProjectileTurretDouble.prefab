@@ -712,6 +712,7 @@ MonoBehaviour:
   _projectileSpeed: 42
   _projectileLifetime: 2
   _impactImpulse: 10
+  predictiveAim: 1
   _recoilBarrels:
   - {fileID: 2202824898497508548}
   - {fileID: 390231842717226721}
