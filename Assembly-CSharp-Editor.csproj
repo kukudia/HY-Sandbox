@@ -77,6 +77,8 @@
     <Compile Include="Assets\Editor\Presentation\Interface\BlockStatusSetup.cs" />
     <Compile Include="Assets\Editor\Presentation\Validation\NativeVfxPlaybackProbe.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
+    <Compile Include="Assets\Editor\Siege\Hangars\SiegeHangarInterfaceAuthoring.cs" />
+    <Compile Include="Assets\Editor\Siege\Hangars\HangarAssetChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\Effects\BlockVfxBaker.cs" />
     <Compile Include="Assets\Editor\Presentation\Effects\EnemySpawnPortalBaker.cs" />
     <Compile Include="Assets\Editor\Architecture\DetachedVehicleChecks.cs" />
@@ -104,6 +106,7 @@
     <Compile Include="Assets\Editor\Presentation\Resources\BlockVfxLibraryEditor.cs" />
     <Compile Include="Assets\Editor\Art\Authoring\SpaceKitCurator.cs" />
     <Compile Include="Assets\Editor\Diagnostics\Benchmarks\ProjectilePoolChecks.cs" />
+    <Compile Include="Assets\Editor\Siege\Hangars\HangarSceneIntegration.cs" />
     <Compile Include="Assets\Editor\World\Outposts\OutpostContentAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegePriorityTargetChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Buildings\SiegeBuildingDamageChecks.cs" />
@@ -142,12 +145,14 @@
     <Compile Include="Assets\Editor\Siege\Authoring\SiegeInterfaceAuthoring.cs" />
     <Compile Include="Assets\Editor\Building\Validation\BuildPalettePlayProbe.cs" />
     <Compile Include="Assets\Editor\Diagnostics\ProfilerCaptureAnalysis.cs" />
+    <Compile Include="Assets\Editor\Siege\Hangars\SiegeHangarHostChecks.cs" />
     <Compile Include="Assets\Editor\Diagnostics\Benchmarks\PresentationPerformanceChecks.cs" />
     <Compile Include="Assets\Editor\World\Player\WorldPlayerBuildChecks.cs" />
     <Compile Include="Assets\Editor\Architecture\EditableComponentChecks.cs" />
     <Compile Include="Assets\Editor\World\Validation\Outposts\OutpostResidentChecks.cs" />
     <Compile Include="Assets\Editor\Salvage\SalvagePlayProbe.cs" />
     <Compile Include="Assets\Editor\World\Validation\Terrain\WorldTerrainIntegrationChecks.cs" />
+    <Compile Include="Assets\Editor\Siege\Hangars\SiegeHangarPlayChecks.cs" />
     <Compile Include="Assets\Editor\Siege\SiegePlayChecks.cs" />
     <Compile Include="Assets\Editor\Architecture\PresentationPlayChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Benchmarks\SiegeTopologyBaseline.cs" />
@@ -171,9 +176,11 @@
     <Compile Include="Assets\Editor\Architecture\FragmentRetentionChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Authoring\SiegeCommandHudAuthoring.cs" />
     <Compile Include="Assets\Editor\Simulation\GameModePlayChecks.cs" />
+    <Compile Include="Assets\Editor\Siege\Hangars\HangarPrefabAuthoring.cs" />
     <Compile Include="Assets\Editor\World\Validation\WorldLab\WorldLabCollapseChecks.cs" />
     <Compile Include="Assets\Editor\Combat\Validation\TurretRuntimeChecks.cs" />
     <Compile Include="Assets\Editor\Art\Authoring\IndustrialArtGenerator.cs" />
+    <Compile Include="Assets\Editor\Siege\Hangars\HangarWorkshopChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\Validation\VfxPoolChecks.cs" />
     <Compile Include="Assets\Editor\Architecture\SharedMechanismChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Buildings\SiegeBuildingChecks.cs" />
@@ -192,6 +199,7 @@
     <Compile Include="Assets\Editor\Simulation\GameModeAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Interface\SiegeUsabilityChecks.cs" />
     <Compile Include="Assets\Editor\World\Validation\WorldLab\WorldLabChecks.cs" />
+    <Compile Include="Assets\Editor\Siege\Hangars\SiegeReturnChecks.cs" />
     <Compile Include="Assets\Editor\Combat\Turrets\TurretAssetBaker.cs" />
     <Compile Include="Assets\Editor\Build\AutoBuildTool.cs" />
     <Compile Include="Assets\Editor\Presentation\Effects\VfxGraphAuthoring.cs" />

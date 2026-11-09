@@ -74,3 +74,13 @@ Assets/Scenes/Siege*Stress.unity whitespace=-blank-at-eol
 Assets/Editor/Presentation/Interface/DropdownTemplateAuthoring.cs.meta whitespace=-blank-at-eol
 Assets/Editor/Building/Validation/BaseLibraryChecks.cs.meta whitespace=-blank-at-eol
 Assets/Scripts/Features/Building/BlueprintLoading/BaseBlueprintMigration.cs.meta whitespace=-blank-at-eol
+
+# Editable hangar assets and integration metadata.
+Assets/Resources/Hangars.meta whitespace=-blank-at-eol
+Assets/Resources/Hangars/** whitespace=-blank-at-eol
+Assets/Scripts/Features/Siege/Hangars.meta whitespace=-blank-at-eol
+Assets/Scripts/Features/Siege/Hangars/*.meta whitespace=-blank-at-eol
+Assets/Editor/Siege/Hangars.meta whitespace=-blank-at-eol
+Assets/Editor/Siege/Hangars/*.meta whitespace=-blank-at-eol
+Assets/Scripts/Features/Siege/Fleet/Siege*Flight*.cs.meta whitespace=-blank-at-eol
+Assets/Scripts/Features/Siege/Interface/ISiegeDeploymentHost.cs.meta whitespace=-blank-at-eol

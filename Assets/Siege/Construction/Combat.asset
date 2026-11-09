@@ -43,8 +43,8 @@ MonoBehaviour:
   maximumEnemyWreckBlocks: 512
   enemyWreckLifetime: 15
   enemyWreckRetirePerScan: 8
-  autoRepairBase: 0
-  autoRepairFleet: 0
+  autoRepairBase: 1
+  autoRepairFleet: 1
   eliteEveryNWaves: 5
   eliteRewardMultiplier: 2
   comboWindow: 5

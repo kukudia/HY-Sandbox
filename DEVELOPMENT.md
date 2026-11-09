@@ -16,6 +16,36 @@ Player 首场景为 `Assets/Scenes/MainMenu.unity`。**Exploration** 选择载�
 
 源码按功能组织于 `Assets/Scripts/Features/MainMenu`：`MainMenuController` 为导航入口，`Navigation` 管理工坊暂停/临时载具，`Library` 管理只读目录/预览，`Interface` 绑定展示，`Settings` 管理本地偏好。Editor制作/验证入口在 `Assets/Editor/MainMenu`。函数主链见 [RuntimeFlow](Docs/RuntimeFlow.md)，方法导航见 [CodeIndex](Docs/CodeIndex.md)。验证记录见 [主菜单验收](Docs/Validation/2026-11-08-main-menu.md)。
 
+## 可编辑机库与舰队返航
+
+基地编辑器 **PLACE HANGAR** 选择机库构件，沿用原有放置、选中、移动、90°竖轴旋转与复制。深色底板及半透明净空体在编辑时显示，中心标注净宽×净高×净深；选中后面向镜头的面板提供三轴 +/-，尺寸、姿态、身份随基地JSON保存，支持Undo/Redo。机库数量配置为 **6**（`Assets/Resources/Hangars/Limits.asset`），不是尺寸6m；尺寸受基地边界与64m模块安全范围约束。默认外20×9×24m，净空18×8×22m；机库预算按外壳面积计费，不按内部空体积计费，不能作为基地核心或载具模块。
+
+战斗保留实体墙、顶、底板和伸缩滑门，隐藏编辑净空及控件。两套Siege通过 `ISiegeDeploymentHost` 共用 `SiegeFleet` 和部署卡片：点击空库DEPLOY，仅列各轴尺寸不超过净空的有效舰船蓝图；按蓝图真实包围盒居中，购买时再次验证物理净空与余额。一库一舰，舰船离库仍占用原槽位。新版基地战保持俯视镜头，舰船自主作战；预研保留玩家驾驶。
+
+清波进入 **Returning**，击杀/清波/连击收益暂存PendingCoins，锁定购买和下一波。舰船按门外航点、对准、入库自动导航；门口占用阻止关门。持续失去供电/推进能力、机库损毁或返航超时的舰船自动报废。全部存活舰入库或报废后一次性结算，再按原设计和现有金币自动修复基地（含机库）及舰船；余额/净空不足不扣费。导航参数在两个宿主Inspector的Flight Settings中，使用实际有电发动机能力限制辅助刚体推力，仅在达到停泊位置/速度/角度容差后校准最终泊位，不远距离传送舰艇。战斗损伤不回写设计。
+
+预研 `Siege.unity` 使用保留原基地布局的 `BastionHangars.json` 扩建副本，三个默认大机库替换方形占位，原 `BastionBase.json` 保留。正式示例`StarterHangar.json`在原示例旁增设一库并扩展底座；原示例文件保留。玩家基地按设计实际机库数量生成，最多6；没有机库仍可用建筑炮塔守波。制作入口：`HangarPrefabAuthoring.Generate()`、`HangarSceneIntegration.Install()`、`SiegeHangarInterfaceAuthoring.Install()`；重新运行较早的基地制作工具后，应再运行机库接线工具恢复新增按钮。
+
+```text
+Assets/Scripts/Features/Siege/
+├── Hangars/
+│   ├── HangarModule.cs          净空、尺寸、支撑与安全门
+│   ├── HangarRules.cs           数量和姿态校验
+│   ├── HangarLimits.cs          可编辑数量配置
+│   ├── HangarFacePanel.cs       朝镜头的选中控件
+│   ├── HangarResizeButton.cs    尺寸命令
+│   └── ResizeHangarAction.cs    尺寸撤销/重做
+├── Fleet/
+│   ├── SiegeFleet.cs            机库绑定与舰队部署
+│   ├── SiegeReturnFlight.cs     起飞和返航固定步导引
+│   └── SiegeFlightSettings.cs   航行与报废参数
+└── Interface/
+    └── ISiegeDeploymentHost.cs  预研与新版共用入口
+Assets/Editor/Siege/Hangars/      资产制作、接线和隔离验证
+```
+
+本次验收记录见 [机库验证](Docs/Validation/2026-11-09-hangars.md)。
+
 ## Main 玩法合并入口
 
 Main 的 **Simulate**（或 P）继续提供工坊内模式选择：探索按需 Additive 加载 `Assets/Scenes/Exploration.unity`，新阵地战加载 `Assets/Scenes/SiegeGameplay.unity`。玩法期间Main为活动场景，持有建造编辑器、共享管理器和摄像机；菜单启动时输入由菜单EventSystem统一管理，直接Main入口仍使用自身EventSystem。探索地形/建筑与运行舰船归探索副场景。未选择探索时不生成世界。原 `Assets/Scenes/Siege.unity` 保留独立预研入口、逻辑/UI及压力场，不由新模式自动启动。
@@ -26,11 +56,11 @@ Main 的 **Simulate**（或 P）继续提供工坊内模式选择：探索按需
 
 Main 左下 **BASE EDITOR** 打开独立基地编辑目标（正式Player也可用，复用结构编辑能力）；可新建命名蓝图，或 **COPY STARTER** 复制可修改的示例。调整底座、放置/移动/旋转模块，选中有耐久的模块后 **MARK SELECTED CORE** 指定唯一核心。编辑自动保存到独立 `BaseBlueprints`，普通建筑仍使用 `BuildingBlueprints`；**BACK TO VEHICLE** 返回载具建造，再通过 **Simulate → Siege** 出战。旧建筑目录中已标记核心且非据点的文件会迁移到基地目录；同名冲突自动另取名，字节校验后将原文件归档到 `BlueprintMigrationBackups`，不覆盖任何已有设计。
 
-Siege 使用菜单或 Simulate 面板进入前选定的基地，在副场景可编辑的 `Base Spawn` 自动生成；出生点表示底座中心。局内仅显示状态、开始下一波、修复重建和撤退/返回，不再提供选择、编辑、位置、旋转和部署确认。默认预算20000，按模块体积每格5计价；底座最大48×48，限高32m。拒绝越界、穿地、模块重叠、无效身份/资源、缺核心、超预算；自动生成时复用建筑真实连接图，所有分量必须连接底座向下锚点。无发电机/单发电机/无炮塔只给风险提示。核心有显式标记，独立于驾驶舱。基地和敌机归属副场景，副场景保存自己的炮弹与GPU特效池、照明；Main普通刷怪器不参加模式战斗。
+Siege 使用菜单或 Simulate 面板进入前选定的基地，在副场景可编辑的 `Base Spawn` 自动生成；出生点表示底座中心。局内显示状态、开始下一波、修复重建和撤退/返回，并支持机库部署舰船；基地本身不再提供选择、编辑、位置、旋转和部署确认。默认预算20000，普通模块按体积每格5计价、机库按配置的外壳面积单价计价；底座最大64×64，限高32m。拒绝越界、穿地、模块重叠、无效身份/资源、缺核心、超预算；自动生成时复用建筑真实连接图，所有分量必须连接底座向下锚点。无发电机/单发电机/无炮塔只给风险提示。核心有显式标记，独立于驾驶舱。基地和敌机归属副场景，副场景保存自己的炮弹与GPU特效池、照明；Main普通刷怪器不参加模式战斗。
 
 **START NEXT WAVE** 启动共享 `SiegeMatch` / `SiegeWaveDirector` 的真实敌机波次；先读取玩家敌方蓝图库，没有有效蓝图时使用配置中的内置敌机。发电、炮塔、毁伤和建筑断裂沿用生产机制。整备阶段 **REPAIR + REBUILD** 显示报价，复用 `SiegeBase` / `BuildingRefit` 按原设计恢复耐久和缺件；净空或余额不足不扣费。设计预算与局内维修金币分开，初始维修金币6000。首版不支持战中扩建或科技养成。核心丢失自动结算；撤退先展示本局波次、击毁和金币，再返回。原设计文件和Main载具原稿不受战斗损毁覆盖。
 
-配置：`Assets/Siege/Construction/Settings.asset`、`Combat.asset`、`StarterBase.json`。制作菜单 **Tools/HY-Sandbox/Siege/Install base construction**；只重建工具拥有的两个UI根，保留其他手工布局和原预研场景。验证入口 **Validate base construction**，报告与边界见 [基地建造验证](Docs/Validation/2026-11-08-base-construction.md)。
+配置：`Assets/Siege/Construction/Settings.asset`、`Combat.asset`、`StarterHangar.json`（保留原`StarterBase.json`）。制作菜单 **Tools/HY-Sandbox/Siege/Install base construction**；只重建工具拥有的两个UI根，保留其他手工布局和原预研场景。验证入口 **Validate base construction**，报告与边界见 [基地建造验证](Docs/Validation/2026-11-08-base-construction.md)。
 
 ```text
 Assets/Scripts/Features/

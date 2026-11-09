@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b46e438410f230044a80d3e23c4cf0c7, type: 3}
   m_Name: DefaultSiege
   m_EditorClassIdentifier: Assembly-CSharp::SiegeSettings
-  baseBlueprint: {fileID: 4900000, guid: 6286f22730017b14f870a95ecf4bb294, type: 3}
+  baseBlueprint: {fileID: 4900000, guid: 14aeec5b974d7c640bce8c9a932d0195, type: 3}
   baseCoreBlockId: bastion-core
   baseReplacementValue: 6000
   ships:

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Settings
   m_EditorClassIdentifier: Assembly-CSharp::SiegeConstructionSettings
   combat: {fileID: 11400000, guid: 7d86578a67d430847adac14d62c54446, type: 2}
-  starter: {fileID: 4900000, guid: 5e20c1c8dfac0834d89452b78ed581c2, type: 3}
+  starter: {fileID: 4900000, guid: e350b37447621b9449103dd05cfec965, type: 3}
   deploymentBudget: 20000
   coinsPerCell: 5
-  maximumWidth: 48
+  maximumWidth: 64
   maximumHeight: 32

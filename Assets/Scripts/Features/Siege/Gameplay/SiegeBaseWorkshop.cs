@@ -17,6 +17,8 @@ public sealed class SiegeBaseWorkshop : MonoBehaviour
     private Button core;
     [SerializeField]
     private Text status;
+    [SerializeField]
+    private Button hangar;
     private float nextRefresh;
     private string message;
     private void Start()
@@ -24,6 +26,7 @@ public sealed class SiegeBaseWorkshop : MonoBehaviour
         toggle.onClick.AddListener(ToggleEditor);
         starter.onClick.AddListener(CopyStarter);
         core.onClick.AddListener(DesignateCore);
+        hangar?.onClick.AddListener(SelectHangar);
     }
 
     private bool Ready => BuildManager.instance != null && !BuildManager.instance.IsLoadingBlocks && PlayManager.instance != null && !PlayManager.instance.playMode && (PlayManager.instance.Modes == null || PlayManager.instance.Modes.State == GameModeState.Building);
@@ -34,6 +37,15 @@ public sealed class SiegeBaseWorkshop : MonoBehaviour
         {
             BuildManager.instance.ToggleBaseBlueprintBuildMode();
             message = null;
+        }
+    }
+
+    public void SelectHangar()
+    {
+        if (Ready && BuildManager.instance.IsEditingBaseBlueprint)
+        {
+            BuildManager.instance.SetCurrentBlockResource("Hangars/Hangar");
+            message = $"Place a hangar on the foundation. Select it to resize; A/D or Q/E turn it. Maximum {HangarRules.MaximumCount}.";
         }
     }
 
@@ -62,7 +74,7 @@ public sealed class SiegeBaseWorkshop : MonoBehaviour
 
         Block selected = BuildManager.instance.selectedBlock;
         BlockDataList data = SaveManager.instance.cachedData;
-        if (selected == null || selected.GetComponent<BuildingFoundation>() != null || selected.GetComponent<Durability>() == null || !data.blocks.Exists(block => block.id == selected.uniqueId))
+        if (selected == null || selected.GetComponent<BuildingFoundation>() != null || selected.GetComponent<HangarModule>() != null || selected.GetComponent<Durability>() == null || !data.blocks.Exists(block => block.id == selected.uniqueId))
         {
             message = "Select a destructible building module, then mark it as the core.";
             return;
@@ -108,6 +120,12 @@ public sealed class SiegeBaseWorkshop : MonoBehaviour
         toggle.GetComponentInChildren<Text>().text = editing ? "BACK TO VEHICLE" : "BASE EDITOR";
         starter.gameObject.SetActive(editing);
         core.gameObject.SetActive(editing);
+        if (hangar != null)
+        {
+            hangar.gameObject.SetActive(editing);
+            hangar.interactable = Ready && BuildManager.instance.HasBuildingBlueprint;
+        }
+
         starter.interactable = Ready;
         core.interactable = Ready && BuildManager.instance.HasBuildingBlueprint;
         string validation = string.Empty;

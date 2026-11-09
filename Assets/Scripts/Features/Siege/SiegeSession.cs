@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using System.IO;
 
-public sealed class SiegeSession : MonoBehaviour
+public sealed class SiegeSession : MonoBehaviour, ISiegeDeploymentHost
 {
     [SerializeField]
     private SiegeSettings settings;
@@ -15,6 +15,13 @@ public sealed class SiegeSession : MonoBehaviour
     [SerializeField, Tooltip("大型建筑蓝图基地的运行管理器，独立于舰船。")]
     private WorldBuildingManager buildings;
     public WorldBuildingManager Buildings => buildings;
+
+    [SerializeField, Tooltip("机库自动出入库航线与失能报废参数。")]
+    private SiegeFlightSettings flightSettings = new SiegeFlightSettings();
+    public SiegeReturnFlight FlightGuidance
+    {
+        get; private set;
+    }
 
     private SiegeWaveDirector waves;
     public SiegeWorkshop Workshop
@@ -198,6 +205,7 @@ public sealed class SiegeSession : MonoBehaviour
         }
 
         Match = settings.CreateMatch();
+        Match.EnableReturnSettlement();
         RefreshBlueprints();
         Fleet = new SiegeFleet(this, shipDocks);
         if (!Fleet.CreateBase(baseDock))
@@ -206,6 +214,7 @@ public sealed class SiegeSession : MonoBehaviour
             return false;
         }
 
+        FlightGuidance = new SiegeReturnFlight(Fleet, flightSettings, this);
         waves = new SiegeWaveDirector(this);
         wrecks = new SiegeWreckBudget(gameObject.scene);
         previousPhase = Match.Phase;
@@ -235,6 +244,7 @@ public sealed class SiegeSession : MonoBehaviour
         waveStartDefeated = Match.DefeatedAttackers;
         Fleet.SetCombatActive(true);
         SetSimulationActive(true);
+        FlightGuidance.BeginLaunch();
         previousPhase = SiegePhase.Battle;
         Status = "Wave " + Match.Wave + " incoming. Protect the base core.";
         return true;
@@ -266,7 +276,7 @@ public sealed class SiegeSession : MonoBehaviour
 
     public bool TryTakeControl(int slot)
     {
-        bool changed = !IsEditingBlueprint && Fleet != null && Fleet.TakeControl(slot);
+        bool changed = !IsEditingBlueprint && Fleet != null && Match.Phase != SiegePhase.Returning && (slot < 0 || slot >= Fleet.Ships.Length || FlightGuidance == null || !FlightGuidance.IsGuiding(Fleet.Ships[slot])) && Fleet.TakeControl(slot);
         if (changed)
         {
             NotifyRefitChanged();
@@ -307,6 +317,7 @@ public sealed class SiegeSession : MonoBehaviour
 
     public void End()
     {
+        FlightGuidance?.Stop();
         waves?.Stop();
         Fleet?.SetCombatActive(false);
         Match?.LoseBase();
@@ -323,6 +334,7 @@ public sealed class SiegeSession : MonoBehaviour
             return;
         }
 
+        FlightGuidance?.Stop();
         Match.LoseBase();
         if (settings.TrackRecords)
         {
@@ -363,18 +375,39 @@ public sealed class SiegeSession : MonoBehaviour
             settings.EnemyWreckRetirePerScan);
         waves.Tick(Time.time);
         TickKillStreak();
-        if (previousPhase == SiegePhase.Battle && Match.Phase == SiegePhase.Intermission)
+        if (previousPhase == SiegePhase.Battle && Match.Phase == SiegePhase.Returning)
+        {
+            FlightGuidance.BeginReturn();
+            Status = "Wave cleared. Fleet returning to assigned hangars; rewards pending.";
+            NotifyRefitChanged();
+        }
+
+        if (previousPhase == SiegePhase.Returning && Match.Phase == SiegePhase.Intermission)
         {
             LastWaveKills = Mathf.Max(0, Match.DefeatedAttackers - waveStartDefeated);
             LastWaveCoins = Match.Coins - waveStartCoins;
             SetSimulationActive(false);
             Fleet.SetCombatActive(false);
-            Status = "Wave cleared. Repair and reinforce before the next attack.";
+            Status = "Return complete: " + FlightGuidance.CompletedCount + " docked, " + FlightGuidance.FailedCount + " scrapped. Rewards settled.";
             RepairBaseBetweenWaves();
             NotifyRefitChanged();
         }
 
         previousPhase = Match.Phase;
+    }
+
+    private void FixedUpdate()
+    {
+        if (!IsRunning || IsEditingBlueprint || FlightGuidance == null)
+        {
+            return;
+        }
+
+        FlightGuidance.Tick(Time.fixedDeltaTime);
+        if (Match.Phase == SiegePhase.Returning && FlightGuidance.IsReturning && FlightGuidance.IsComplete)
+        {
+            Match.CompleteReturn();
+        }
     }
 
     /// <summary>连击奖励的纯计算：从第二次击毁起每次加钱，并有单次上限；0上限表示不限制。</summary>
@@ -452,6 +485,7 @@ public sealed class SiegeSession : MonoBehaviour
 
     private void OnDestroy()
     {
+        FlightGuidance?.Stop();
         waves?.Stop();
         Fleet?.Base?.Dispose();
         Application.runInBackground = previousBackground;

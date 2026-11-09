@@ -574,10 +574,15 @@ public class BuildManager : MonoBehaviour
 
     public void CreateBlock(GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot)
     {
+        CreateBlockFromTemplate(prefab, resourcePath, pos, rot, null);
+    }
+
+    private Block CreateBlockFromTemplate(GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot, Vector3Int? dimensions)
+    {
         if (!CanCreateBlock(prefab, out string reason))
         {
             Debug.LogWarning(reason);
-            return;
+            return null;
         }
 
         if (prefab != null)
@@ -586,17 +591,28 @@ public class BuildManager : MonoBehaviour
             obj.transform.parent = GameManager.instance.blocksParent;
             Block block = obj.GetComponent<Block>();
             block.resourcePath = resourcePath;
+            if (dimensions.HasValue && block.GetComponent<HangarModule>() != null)
+            {
+                block.x = dimensions.Value.x;
+                block.y = dimensions.Value.y;
+                block.z = dimensions.Value.z;
+                block.RefreshRuntimeData();
+            }
+
             ApplyBlockBuildDefaults(block);
             SaveBlock(block);
             VisualEffectsManager.TryPlayBlockPlaced(block);
             // 记录到 Undo 栈
             var action = new CreateBlockAction(block);
             ActionManager.instance.Push(action);
+            return block;
         }
         else
         {
             Debug.LogWarning($"Prefab not found at Resources/{resourcePath}");
         }
+
+        return null;
     }
 
     public void DeleteBlock()
@@ -629,11 +645,9 @@ public class BuildManager : MonoBehaviour
         }
     }
 
-    private Block CreateDuplicateBlock(GameObject prefab, string path, Vector3 position, Quaternion rotation)
+    private Block CreateDuplicateBlock(GameObject prefab, string path, Vector3 position, Quaternion rotation, Vector3Int dimensions)
     {
-        Block previous = lastSaveBlock;
-        CreateBlock(prefab, path, position, rotation);
-        return lastSaveBlock != previous ? lastSaveBlock : null;
+        return CreateBlockFromTemplate(prefab, path, position, rotation, dimensions);
     }
 
     public void SaveBlock(Block block)
@@ -788,6 +802,15 @@ public class BuildManager : MonoBehaviour
         {
             reason = "Prefab is missing.";
             return false;
+        }
+
+        if (prefab.GetComponent<HangarModule>() != null)
+        {
+            if (!IsEditingBaseBlueprint || GameManager.instance.blocksParent.GetComponentsInChildren<HangarModule>().Length >= HangarRules.MaximumCount)
+            {
+                reason = $"Hangars are base-only modules, limited to {HangarRules.MaximumCount} per base.";
+                return false;
+            }
         }
 
         if (prefab.TryGetComponent(out BuildingFoundation _) || (IsEditingBuildingBlueprint && prefab.GetComponent<Cockpit>() != null))

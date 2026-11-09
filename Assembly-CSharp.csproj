@@ -78,6 +78,7 @@
     <Compile Include="Assets\Scripts\Features\MainMenu\Interface\MainMenuView.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interface\SaveUIPanel.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\StylizedBeamEffect.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\Fleet\SiegeReturnFlight.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Units\Cockpit.cs" />
     <Compile Include="Assets\Scripts\Features\World\Terrain\VoxelWorldData.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\TurretHitResolver.cs" />
@@ -159,6 +160,7 @@
     <Compile Include="Assets\Scripts\Features\Simulation\Groups\BlockGroupManager.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlockDataTables\BlockDataTableSchema.cs" />
     <Compile Include="Assets\Scripts\Features\Player\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\Hangars\HangarFacePanel.cs" />
     <Compile Include="Assets\Scripts\Features\World\Buildings\Placement\WorldBuildingFootprints.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Actions\BlockActionState.cs" />
     <Compile Include="Assets\Scripts\Features\Player\Player.cs" />
@@ -173,6 +175,7 @@
     <Compile Include="Assets\Scripts\Features\Simulation\Units\RuntimeUnitMember.cs" />
     <Compile Include="Assets\Scripts\Features\Power\Devices\PowerGeneratingUnit.cs" />
     <Compile Include="Assets\Scripts\Features\World\Terrain\ProceduralVoxelWorld.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\Hangars\ResizeHangarAction.cs" />
     <Compile Include="Assets\Scripts\Features\Salvage\Drops\LootDrop.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Interface\StatusIcon.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BlueprintModelPreview.cs" />
@@ -206,10 +209,12 @@
     <Compile Include="Assets\Scripts\Features\Presentation\Interface\IconManager.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Connections\BlockConnectionSnapshot.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\Projectiles\TurretProjectilePool.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\Hangars\HangarRules.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Gameplay\SiegeConstructionSettings.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Gameplay\SiegeBaseWorkshop.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interaction\MoveAxisHandle.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\ProjectileTurret.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\Interface\ISiegeDeploymentHost.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\LaserTurret.cs" />
     <Compile Include="Assets\Scripts\Features\Salvage\Cargo\CargoHold.cs" />
     <Compile Include="Assets\Scripts\Features\World\Validation\OutpostPlayerChecks.cs" />
@@ -226,6 +231,7 @@
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\Features\MainMenu\MainMenuController.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Blocks\IndustrialPartMotion.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\Hangars\HangarModule.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\Repair\RepairTargetSearch.cs" />
     <Compile Include="Assets\Scripts\Features\Diagnostics\Interface\PerformanceMonitor.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\Repair\RepairBot.cs" />
@@ -250,6 +256,7 @@
     <Compile Include="Assets\Scripts\Features\World\Terrain\StreamingWorldTerrain.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\DetachedPartSmokeTrail.cs" />
     <Compile Include="Assets\Scripts\Features\World\Validation\WorldPlayerSmokeChecks.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\Hangars\HangarLimits.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Fleet\SiegeRefit.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BaseBlueprintMigration.cs" />
     <Compile Include="Assets\Scripts\Features\World\Buildings\Data\WorldBuildingCatalog.cs" />
@@ -273,6 +280,7 @@
     <Compile Include="Assets\Scripts\Features\World\Buildings\Topology\BuildingRefit.cs" />
     <Compile Include="Assets\Scripts\Features\World\Buildings\Placement\WorldBuildingPlacement.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Interface\PanelTransitions.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\Hangars\HangarResizeButton.cs" />
     <Compile Include="Assets\Scripts\Features\World\Streaming\WorldPlayerStreamingGuard.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interaction\ConnectorPlacementHints.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Enemies\EnemySpawner.cs" />
@@ -280,6 +288,7 @@
     <Compile Include="Assets\Scripts\Features\Siege\SiegeSettings.cs" />
     <Compile Include="Assets\Scripts\Features\World\Terrain\Destruction\VoxelStructureSupport.cs" />
     <Compile Include="Assets\Scripts\Features\World\Terrain\Meshing\VoxelSurfaceMesher.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\Fleet\SiegeFlightSettings.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\VisualEffectsManager.cs" />
     <Compile Include="Assets\Scripts\Features\Power\Network\PowerNetworkBaseline.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interaction\RotateAxisHandle.cs" />

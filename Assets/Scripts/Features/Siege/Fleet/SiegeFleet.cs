@@ -5,11 +5,13 @@ using UnityEngine;
 
 public sealed class SiegeFleet
 {
-    private readonly SiegeSession session;
-    private readonly Transform[] docks;
+    private readonly ISiegeDeploymentHost session;
+    private readonly bool manageCamera;
+    private string[] hangarIds;
+    private Transform[] docks;
     public SiegeFleetEntry[] Ships
     {
-        get;
+        get; private set;
     }
     public SiegeBase Base
     {
@@ -20,18 +22,119 @@ public sealed class SiegeFleet
         get; private set;
     }
 
-    public SiegeFleet(SiegeSession session, Transform[] docks)
+    public SiegeFleet(
+        ISiegeDeploymentHost session,
+        Transform[] docks,
+        SiegeBase existingBase = null,
+        bool manageCamera = true)
     {
         this.session = session;
         this.docks = docks;
+        this.manageCamera = manageCamera;
+        Base = existingBase;
         Ships = new SiegeFleetEntry[docks.Length];
     }
 
     public int DeploymentCount => docks.Length;
+    public bool UsesHangars => hangarIds != null;
 
     public Transform GetDeploymentPoint(int index)
     {
-        return index >= 0 && index < docks.Length ? docks[index] : null;
+        HangarModule hangar = GetHangar(index);
+        return hangar != null ? hangar.transform : index >= 0 && index < docks.Length && hangarIds == null ? docks[index] : null;
+    }
+
+    public void RefreshHangars(HangarModule[] hangars)
+    {
+        if (hangarIds != null)
+        {
+            return; // Slot identity survives module destruction and paid blueprint restoration.
+        }
+
+        int count = Mathf.Min(hangars.Length, HangarRules.MaximumCount);
+        docks = new Transform[count];
+        hangarIds = new string[count];
+        Ships = new SiegeFleetEntry[count];
+        for (int i = 0; i < count; i++)
+        {
+            docks[i] = hangars[i].transform;
+            hangarIds[i] = hangars[i].GetComponent<Block>().uniqueId;
+            hangars[i].SetCombat(true);
+        }
+    }
+
+    public HangarModule GetHangar(int slot)
+    {
+        if (slot < 0 || slot >= docks.Length || hangarIds == null || Base?.Building == null)
+        {
+            return null;
+        }
+
+        foreach (Block block in Base.Building.Blocks)
+        {
+            if (block != null && block.uniqueId == hangarIds[slot] && block.isActiveAndEnabled)
+            {
+                HangarModule hangar = block.GetComponent<HangarModule>();
+                if (hangar != null && !hangar.IsCombat)
+                {
+                    hangar.SetCombat(true);
+                }
+
+                return hangar;
+            }
+        }
+
+        return null;
+    }
+
+    public bool FitsHangar(int slot, BlockDataList blueprint)
+    {
+        if (slot < 0 || slot >= docks.Length)
+        {
+            return false;
+        }
+
+        HangarModule hangar = GetHangar(slot);
+        return hangarIds == null ? docks[slot] != null : hangar != null && hangar.IsOperational && hangar.Fits(blueprint);
+    }
+
+    public Pose GetDeploymentPose(int slot, BlockDataList blueprint)
+    {
+        HangarModule hangar = GetHangar(slot);
+        if (hangar != null)
+        {
+            return hangar.GetDockPose(blueprint);
+        }
+
+        Transform point = GetDeploymentPoint(slot);
+        return point != null ? new Pose(point.position, point.rotation) : default;
+    }
+
+    public void Scrap(int slot)
+    {
+        SiegeFleetEntry entry = slot >= 0 && slot < Ships.Length ? Ships[slot] : null;
+        if (entry == null)
+        {
+            return;
+        }
+
+        foreach (ControlUnit unit in new System.Collections.Generic.List<ControlUnit>(ControlUnit.RuntimeUnits))
+        {
+            if (unit != null && (unit == entry.Unit || unit.runtimeUnitId == entry.Id || Array.Exists(unit.GetComponentsInChildren<RuntimeUnitMember>(), member => member.ownerUnitId == entry.Id)))
+            {
+                unit.gameObject.SetActive(false);
+                UnityEngine.Object.Destroy(unit.gameObject);
+            }
+        }
+
+        entry.MarkLost();
+        if (Driven == entry)
+        {
+            Driven = null;
+            SetBaseCamera();
+        }
+
+        GetHangar(slot)?.SetDoorOpen(false);
     }
 
     public SiegeFleetEntry Find(string id)
@@ -41,7 +144,14 @@ public sealed class SiegeFleet
 
     public bool CreateBase(Transform anchor)
     {
-        Base = SiegeBase.Create(session, session.Buildings, anchor);
+        SiegeSession prototype = (SiegeSession)session;
+        Base = SiegeBase.Create(prototype, prototype.Buildings, anchor);
+        HangarModule[] hangars = Base.Building.GetComponentsInChildren<HangarModule>();
+        if (hangars.Length > 0)
+        {
+            RefreshHangars(hangars);
+        }
+
         SetBaseCamera();
         return true;
     }
@@ -89,7 +199,14 @@ public sealed class SiegeFleet
             }
 
             foundFreeBay = true;
-            if (SiegeRefit.IsClear(blueprint, docks[candidate].position, docks[candidate].rotation, id, out string candidateReason))
+            if (!FitsHangar(candidate, blueprint))
+            {
+                firstObstruction ??= "Blueprint exceeds the hangar clear size or the hangar is destroyed.";
+                continue;
+            }
+
+            Pose pose = GetDeploymentPose(candidate, blueprint);
+            if (SiegeRefit.IsClear(blueprint, pose.position, pose.rotation, id, out string candidateReason))
             {
                 slot = candidate;
                 break;
@@ -109,8 +226,8 @@ public sealed class SiegeFleet
             id,
             option.DisplayName,
             option.Price,
-            docks[slot].position,
-            docks[slot].rotation);
+            GetDeploymentPose(slot, blueprint).position,
+            GetDeploymentPose(slot, blueprint).rotation);
         if (entry == null)
         {
             reason = "Ship blueprint could not be restored.";
@@ -127,7 +244,7 @@ public sealed class SiegeFleet
         }
 
         SiegeFleetPhysics.Park(entry.Unit);
-        if (Driven == null || !Driven.IsAlive)
+        if (manageCamera && (Driven == null || !Driven.IsAlive))
         {
             TakeControl(slot);
         }
@@ -138,7 +255,7 @@ public sealed class SiegeFleet
 
     public bool TakeControl(int slot)
     {
-        if (session.Match.Phase == SiegePhase.Defeat || slot < 0 || slot >= Ships.Length || Ships[slot] == null || !Ships[slot].IsAlive)
+        if (session.Match.Phase == SiegePhase.Defeat || session.Match.Phase == SiegePhase.Returning || slot < 0 || slot >= Ships.Length || Ships[slot] == null || !Ships[slot].IsAlive || session.FlightGuidance?.IsGuiding(Ships[slot]) == true)
         {
             return false;
         }
@@ -182,11 +299,13 @@ public sealed class SiegeFleet
 
             if (active)
             {
+                GetHangar(Array.IndexOf(Ships, entry))?.SetDoorOpen(true);
                 SiegeFleetPhysics.Activate(unit);
             }
             else
             {
                 SiegeFleetPhysics.Park(unit);
+                GetHangar(Array.IndexOf(Ships, entry))?.SetDoorOpen(false);
             }
         }
     }
@@ -247,7 +366,7 @@ public sealed class SiegeFleet
             if (ai != null)
             {
                 ai.SetGuardAnchor(Base.Core.transform, session.Settings.GuardRadius);
-                ai.enabled = session.Match.Phase == SiegePhase.Battle && entry != Driven;
+                ai.enabled = session.Match.Phase == SiegePhase.Battle && entry != Driven && session.FlightGuidance?.IsGuiding(entry) != true;
             }
 
             if (entry == Driven)
@@ -297,6 +416,7 @@ public sealed class SiegeFleet
             return null;
         }
 
+        UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(unit.gameObject, Base.Building.gameObject.scene);
         unit.runtimeUnitId = id;
         unit.AssignRuntimeOwnershipToBlocks(true);
         unit.cockpit.SetControlMode(UnitControlMode.Autonomous);
@@ -351,11 +471,19 @@ public sealed class SiegeFleet
 
     private void SetCamera(ControlUnit unit)
     {
+        if (!manageCamera)
+        {
+            return;
+        }
+
         SiegeFleetView.Focus(unit, Driven != null && Driven.Unit == unit ? Driven.MaximumDurability : 0f);
     }
 
     private void SetBaseCamera()
     {
-        SiegeFleetView.FocusBase(Base);
+        if (manageCamera)
+        {
+            SiegeFleetView.FocusBase(Base);
+        }
     }
 }

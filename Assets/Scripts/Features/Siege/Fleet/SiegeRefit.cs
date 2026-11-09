@@ -43,18 +43,38 @@ public static class SiegeRefit
     {
         reason = string.Empty;
         Physics.SyncTransforms();
+        var shapes = new List<Bounds>();
         foreach (BlockData block in blueprint.blocks)
         {
             Vector3 center = position + rotation * new Vector3(block.posX, block.posY, block.posZ);
-            Vector3 half = new Vector3(block.x, block.y, block.z) * 0.5f - Vector3.one * 0.06f;
             Quaternion blockRotation = rotation * new Quaternion(block.rotX, block.rotY, block.rotZ, block.rotW);
-            foreach (Collider hit in Physics.OverlapBox(center, half, blockRotation, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+            if (HangarRules.IsHangar(block))
             {
-                RuntimeUnitMember member = hit.GetComponentInParent<RuntimeUnitMember>();
-                if (member == null || member.ownerUnitId != ignoredUnitId)
+                // Repairs reserve physical walls, not empty capacity occupied by a correctly docked ship.
+                HangarModule.GetShellBoxes(new Vector3(block.x, block.y, block.z), shapes);
+            }
+            else
+            {
+                shapes.Clear();
+                shapes.Add(new Bounds(Vector3.zero, new Vector3(block.x, block.y, block.z)));
+            }
+
+            foreach (Bounds shape in shapes)
+            {
+                Vector3 half = Vector3.Max(Vector3.one * .01f, shape.extents - Vector3.one * .06f);
+                foreach (Collider hit in Physics.OverlapBox(
+                    center + blockRotation * shape.center,
+                    half,
+                    blockRotation,
+                    Physics.DefaultRaycastLayers,
+                    QueryTriggerInteraction.Ignore))
                 {
-                    reason = DescribeObstruction(hit);
-                    return false;
+                    RuntimeUnitMember member = hit.GetComponentInParent<RuntimeUnitMember>();
+                    if (member == null || member.ownerUnitId != ignoredUnitId)
+                    {
+                        reason = DescribeObstruction(hit);
+                        return false;
+                    }
                 }
             }
         }
@@ -112,7 +132,7 @@ public static class SiegeRefit
         return detached ? Math.Max(1, price) : price;
     }
 
-    public static bool Repair(SiegeFleetEntry entry, SiegeSession session, out string reason)
+    public static bool Repair(SiegeFleetEntry entry, ISiegeDeploymentHost session, out string reason)
     {
         reason = "Repairs require a surviving core and an intermission.";
         if (entry?.Unit == null || !session.Match.CanRefit)

@@ -6,7 +6,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
-public sealed class SiegeGameplayStage : MonoBehaviour
+public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
 {
     [SerializeField]
     private Transform overview;
@@ -22,6 +22,25 @@ public sealed class SiegeGameplayStage : MonoBehaviour
     private SiegeConstructionPanel panel;
     [SerializeField]
     private Transform baseSpawn;
+    [SerializeField]
+    private SiegeFlightSettings flightSettings = new SiegeFlightSettings();
+    private SiegeReturnFlight flight;
+    private bool returning;
+    private SiegeShipOption[] defenders = Array.Empty<SiegeShipOption>();
+    public SiegeSettings Settings => settings.Combat;
+    public SiegeFleet Fleet
+    {
+        get; private set;
+    }
+    public SiegeReturnFlight FlightGuidance => flight;
+    public SiegeShipOption[] DefenderOptions => defenders;
+    public SiegeShipOption[] AttackerOptions => attackers;
+    public int SelectedDefender { get; private set; } = -1;
+    public int SelectedAttacker { get; private set; } = -1;
+    public bool IsEditingBlueprint => false;
+    public bool IsRunning => entered && !Settled && Match != null && Match.Phase != SiegePhase.Defeat;
+
+    public event Action RefitChanged;
     private readonly Dictionary<GameObject, bool> environment = new Dictionary<GameObject, bool>();
     private readonly Dictionary<Rigidbody, bool> parkedBodies = new Dictionary<Rigidbody, bool>();
     private GameModeController owner;
@@ -63,6 +82,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour
         owner = host;
         entered = true;
         Match = settings.Combat.CreateMatch();
+        Match.EnableReturnSettlement();
         buildings.SimulationEnabled = false;
         wrecks = new SiegeWreckBudget(gameObject.scene);
         foreach (GameObject item in buildEnvironment)
@@ -100,6 +120,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour
             attackers = options.ToArray();
         }
 
+        RefreshDefenders();
         selectedName = string.IsNullOrEmpty(blueprintName) ? "Starter Bastion" : blueprintName;
         string json = string.IsNullOrEmpty(blueprintName) ? settings.Starter.text : File.ReadAllText(SaveManager.instance.GetBaseBlueprintPath(blueprintName));
         design = JsonUtility.FromJson<BlockDataList>(json);
@@ -188,6 +209,20 @@ public sealed class SiegeGameplayStage : MonoBehaviour
                 return false;
             }
 
+            HangarModule[] hangars = Base.Building.GetComponentsInChildren<HangarModule>();
+            Array.Sort(
+                hangars,
+                (a, b) => string.CompareOrdinal(a.GetComponent<Block>().uniqueId, b.GetComponent<Block>().uniqueId));
+            var docks = new Transform[hangars.Length];
+            for (int i = 0; i < hangars.Length; i++)
+            {
+                hangars[i].SetCombat(true);
+                docks[i] = hangars[i].transform;
+            }
+
+            Fleet = new SiegeFleet(this, docks, Base, false);
+            Fleet.RefreshHangars(hangars);
+            flight = new SiegeReturnFlight(Fleet, flightSettings, this);
             ShowCoreMarker(Base.Core.transform, Vector3.up * (Base.Core.y * .5f + 1f));
             canDeploy = false;
             waves = new SiegeWaveDirector(
@@ -195,7 +230,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour
                 settings.Combat,
                 () => Base,
                 () => attackers,
-                () => -1,
+                () => SelectedAttacker,
                 gameObject.scene);
             Status = "Base deployed. Start the first wave. Repair coins are separate from the design budget.";
             DesignStatus = selectedName + "\n" + designWarnings;
@@ -220,6 +255,9 @@ public sealed class SiegeGameplayStage : MonoBehaviour
         }
 
         SetSimulation(true);
+        Fleet.SetCombatActive(true);
+        flight.BeginLaunch();
+        RefitChanged?.Invoke();
         Status = "Defend the core. Repairs unlock between waves.";
         return true;
     }
@@ -233,6 +271,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour
 
         bool repaired = Base.Repair(out string reason);
         Status = reason;
+        RefitChanged?.Invoke();
         return repaired;
     }
 
@@ -249,6 +288,15 @@ public sealed class SiegeGameplayStage : MonoBehaviour
             return;
         }
 
+        Fleet?.RefreshBindings();
+        if (Match.Phase == SiegePhase.Returning && !returning)
+        {
+            returning = true;
+            flight.BeginReturn();
+            Status = "Ships returning to assigned hangars. Wave income remains pending.";
+            RefitChanged?.Invoke();
+        }
+
         if (Match.Phase == SiegePhase.Battle)
         {
             SiegeSettings combat = settings.Combat;
@@ -259,12 +307,119 @@ public sealed class SiegeGameplayStage : MonoBehaviour
                 combat.EnemyWreckLifetime,
                 combat.EnemyWreckRetirePerScan);
             waves.Tick(Time.time);
-            if (Match.Phase == SiegePhase.Intermission)
+            if (Match.Phase == SiegePhase.Returning)
             {
-                SetSimulation(false);
-                Status = "Wave cleared. Repair durability and replace missing modules from the original design, then continue.";
+                returning = true;
+                flight.BeginReturn();
+                Status = "Wave cleared. Ships returning to assigned hangars; income settles after recovery.";
+                RefitChanged?.Invoke();
             }
         }
+    }
+
+    public void SelectDefender(int index)
+    {
+        if (Match?.CanRefit == true && index >= 0 && index < defenders.Length)
+        {
+            SelectedDefender = index;
+        }
+    }
+
+    public void SelectAttacker(int index)
+    {
+        if (Match?.CanRefit == true && index >= -1 && index < attackers.Length)
+        {
+            SelectedAttacker = index;
+        }
+    }
+
+    public bool RefreshBlueprints()
+    {
+        if (Match?.CanRefit != true)
+        {
+            return false;
+        }
+
+        RefreshDefenders();
+        return true;
+    }
+
+    private void RefreshDefenders()
+    {
+        defenders = SiegeBlueprintCatalog.Load(Path.Combine(Application.persistentDataPath, "Saves"), Settings.DeploymentCoinsPerBlock, out _);
+        if (defenders.Length == 0)
+        {
+            defenders = Settings.Ships;
+        }
+
+        SelectedDefender = defenders.Length == 0 ? -1 : Mathf.Clamp(SelectedDefender, 0, defenders.Length - 1);
+    }
+
+    public bool TryDeployAt(int optionIndex, int dock, out string reason)
+    {
+        reason = "Deployment requires a surviving base and an intermission.";
+        bool deployed = IsRunning && Fleet != null && Fleet.DeployAt(optionIndex, dock, out reason);
+        Status = reason;
+        RefitChanged?.Invoke();
+        return deployed;
+    }
+
+    public bool TryTakeControl(int slot)
+    {
+        // The new base scene retains its overview camera; deployed defenders are autonomous.
+        return false;
+    }
+
+    public bool TryTakeControl(string id)
+    {
+        return false;
+    }
+
+    public bool TryRepairShip(string id, bool repairBase = false)
+    {
+        if (repairBase)
+        {
+            return Repair();
+        }
+
+        string reason = "Repairs require an intermission.";
+        bool repaired = IsRunning && Fleet != null && SiegeRefit.Repair(Fleet.Find(id), this, out reason);
+        Status = reason;
+        RefitChanged?.Invoke();
+        return repaired;
+    }
+
+    private void FixedUpdate()
+    {
+        if (!IsRunning || flight == null || (Match.Phase != SiegePhase.Battle && Match.Phase != SiegePhase.Returning))
+        {
+            return;
+        }
+
+        flight.Tick(Time.fixedDeltaTime);
+        if (Match.Phase != SiegePhase.Returning || !returning || !flight.IsComplete)
+        {
+            return;
+        }
+
+        Match.CompleteReturn();
+        returning = false;
+        SetSimulation(false);
+        Fleet.SetCombatActive(false);
+        string repairStatus = string.Empty;
+        if (Settings.AutoRepairBase && Base.Quote() > 0)
+        {
+            Base.Repair(out repairStatus);
+        }
+
+        Fleet.RepairBetweenWaves(out int repaired, out int attempted, out long spent, out string failure);
+        Status = $"Recovered {flight.CompletedCount}; scrapped {flight.FailedCount}. Income settled. " + repairStatus;
+        if (attempted > 0)
+        {
+            Status += $" Fleet repaired {repaired}/{attempted} for {spent}. " + failure;
+        }
+
+        RefitChanged?.Invoke();
     }
 
     private void SetSimulation(bool active)
@@ -329,6 +484,8 @@ public sealed class SiegeGameplayStage : MonoBehaviour
 
         Settled = true;
         waves?.Stop();
+        flight?.Stop();
+        Fleet?.SetCombatActive(false);
         SetSimulation(false);
         Status = $"{reason}. Wave {Match.Wave} | destroyed {Match.DefeatedAttackers} | coins {Match.Coins}.\nYour original design is preserved. Return to build to improve it.";
         Match.LoseBase();
@@ -372,6 +529,15 @@ public sealed class SiegeGameplayStage : MonoBehaviour
 
         entered = false;
         waves?.Stop();
+        flight?.Stop();
+        if (Fleet != null)
+        {
+            for (int i = 0; i < Fleet.DeploymentCount; i++)
+            {
+                Fleet.Scrap(i);
+            }
+        }
+
         Base?.Dispose();
         buildings?.PrepareForUnload();
         if (buildings != null)

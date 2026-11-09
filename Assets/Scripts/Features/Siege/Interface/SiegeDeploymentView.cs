@@ -11,6 +11,10 @@ public sealed class SiegeDeploymentView : MonoBehaviour
     [SerializeField]
     private SiegeSession session;
     [SerializeField]
+    private SiegeGameplayStage stage;
+    private ISiegeDeploymentHost Host => stage != null ? stage : session;
+
+    [SerializeField]
     private GameObject card;
     [SerializeField]
     private Text title;
@@ -35,6 +39,8 @@ public sealed class SiegeDeploymentView : MonoBehaviour
     [SerializeField]
     private Button[] markers;
     private SiegeShipOption[] options;
+    private int optionsDock = int.MinValue;
+    private readonly System.Collections.Generic.List<int> filtered = new System.Collections.Generic.List<int>();
     private GameObject preview;
     private int dock = -1;
     private string shipId;
@@ -61,7 +67,10 @@ public sealed class SiegeDeploymentView : MonoBehaviour
         repair.onClick.AddListener(Repair);
         close.onClick.AddListener(Cancel);
         refresh.onClick.AddListener(RefreshBlueprints);
-        session.RefitChanged += RefreshSelection;
+        if (Host != null)
+        {
+            Host.RefitChanged += RefreshSelection;
+        }
     }
 
     private void OnDisable()
@@ -78,34 +87,46 @@ public sealed class SiegeDeploymentView : MonoBehaviour
         repair.onClick.RemoveListener(Repair);
         close.onClick.RemoveListener(Cancel);
         refresh.onClick.RemoveListener(RefreshBlueprints);
-        session.RefitChanged -= RefreshSelection;
+        if (Host != null)
+        {
+            Host.RefitChanged -= RefreshSelection;
+        }
+
         ClearPreview();
     }
 
     private void Update()
     {
-        if (session.Match == null || session.Fleet == null)
+        if (Host == null || Host.Match == null || Host.Fleet == null)
         {
             return;
         }
 
         RefreshOptions();
-        bool editing = session.IsEditingBlueprint;
-        if (editing || phase != session.Match.Phase)
+        bool editing = Host.IsEditingBlueprint;
+        if (editing || phase != Host.Match.Phase)
         {
             Cancel();
             debugPanel.SetActive(false);
-            phase = session.Match.Phase;
+            phase = Host.Match.Phase;
         }
 
-        bool refit = session.Match.CanRefit && !editing;
+        bool refit = Host.Match.CanRefit && !editing;
         Camera camera = Camera.main;
         RectTransform canvas = (RectTransform)transform;
         for (int i = 0; i < markers.Length; i++)
         {
-            Vector3 point = camera.WorldToScreenPoint(session.Fleet.GetDeploymentPoint(i).position);
-            bool empty = session.Fleet.Ships[i] == null || !session.Fleet.Ships[i].IsAlive;
-            bool visible = refit && empty && point.z > 0f && point.x > 0f && point.x < Screen.width && point.y > 0f && point.y < Screen.height;
+            Transform deploymentPoint = Host.Fleet.GetDeploymentPoint(i);
+            if (deploymentPoint == null || i >= Host.Fleet.DeploymentCount)
+            {
+                markers[i].gameObject.SetActive(false);
+                continue;
+            }
+
+            Vector3 point = camera.WorldToScreenPoint(deploymentPoint.position);
+            bool empty = Host.Fleet.Ships[i] == null || !Host.Fleet.Ships[i].IsAlive;
+            bool operational = Host.Fleet.GetHangar(i) == null || Host.Fleet.GetHangar(i).IsOperational;
+            bool visible = refit && operational && empty && point.z > 0f && point.x > 0f && point.x < Screen.width && point.y > 0f && point.y < Screen.height;
             markers[i].gameObject.SetActive(visible);
             if (visible && RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas, point, null, out Vector2 local))
             {
@@ -129,12 +150,12 @@ public sealed class SiegeDeploymentView : MonoBehaviour
             CycleShip();
         }
 
-        if (shipId != null && session.Fleet.Find(shipId) == null)
+        if (shipId != null && Host.Fleet.Find(shipId) == null)
         {
             Cancel();
         }
 
-        if (editing || session.Match.Phase == SiegePhase.Defeat || Mouse.current == null || Cursor.lockState == CursorLockMode.Locked || !Mouse.current.leftButton.wasPressedThisFrame || (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()))
+        if (editing || Host.Match.Phase == SiegePhase.Defeat || Mouse.current == null || Cursor.lockState == CursorLockMode.Locked || !Mouse.current.leftButton.wasPressedThisFrame || (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()))
         {
             return;
         }
@@ -149,7 +170,7 @@ public sealed class SiegeDeploymentView : MonoBehaviour
         {
             SiegeDeploymentPad pad = hit.collider.GetComponentInParent<SiegeDeploymentPad>();
             RuntimeUnitMember member = hit.collider.GetComponentInParent<RuntimeUnitMember>();
-            if (member != null && session.Fleet.Find(member.ownerUnitId) != null)
+            if (member != null && Host.Fleet.Find(member.ownerUnitId) != null)
             {
                 SelectShip(member.ownerUnitId);
             }
@@ -162,12 +183,12 @@ public sealed class SiegeDeploymentView : MonoBehaviour
 
     public void SelectDock(int index)
     {
-        if (session.IsEditingBlueprint || session.Match?.CanRefit != true || session.Fleet.GetDeploymentPoint(index) == null)
+        if (Host.IsEditingBlueprint || Host.Match?.CanRefit != true || Host.Fleet.GetDeploymentPoint(index) == null)
         {
             return;
         }
 
-        SiegeFleetEntry entry = session.Fleet.Ships[index];
+        SiegeFleetEntry entry = Host.Fleet.Ships[index];
         if (entry?.IsAlive == true)
         {
             SelectShip(entry.Id);
@@ -182,7 +203,7 @@ public sealed class SiegeDeploymentView : MonoBehaviour
 
     public void SelectShip(string id)
     {
-        if (session.IsEditingBlueprint || !session.IsRunning || session.Fleet.Find(id) == null)
+        if (Host.IsEditingBlueprint || !Host.IsRunning || Host.Fleet.Find(id) == null)
         {
             return;
         }
@@ -195,92 +216,115 @@ public sealed class SiegeDeploymentView : MonoBehaviour
 
     private void SelectOption(int index)
     {
-        session.SelectDefender(index);
+        if (index >= 0 && index < filtered.Count)
+        {
+            Host.SelectDefender(filtered[index]);
+        }
+
         RefreshSelection();
     }
 
     private void SelectAttacker(int index)
     {
-        session.SelectAttacker(index - 1);
+        Host.SelectAttacker(index - 1);
     }
 
     public void RefreshOptions()
     {
-        if (options == session.DefenderOptions)
+        if (options == Host.DefenderOptions && optionsDock == dock)
         {
             return;
         }
 
-        options = session.DefenderOptions;
+        options = Host.DefenderOptions;
+        optionsDock = dock;
+        filtered.Clear();
+        var labels = new System.Collections.Generic.List<string>();
+        for (int i = 0; i < options.Length; i++)
+        {
+            BlockDataList data = JsonUtility.FromJson<BlockDataList>(options[i].BlueprintJson);
+            if (dock < 0 || Host.Fleet.FitsHangar(dock, data))
+            {
+                filtered.Add(i);
+                labels.Add(options[i].DisplayName + " / " + options[i].Price.ToString("N0"));
+            }
+        }
+
+        if (!filtered.Contains(Host.SelectedDefender) && filtered.Count > 0)
+        {
+            Host.SelectDefender(filtered[0]);
+        }
+
         defenderBlueprint.ClearOptions();
-        defenderBlueprint.AddOptions(new System.Collections.Generic.List<string>(Array.ConvertAll(options, option => option.DisplayName + " / " + option.Price.ToString("N0"))));
+        defenderBlueprint.AddOptions(labels);
+        defenderBlueprint.interactable = filtered.Count > 0;
         attackerBlueprint.ClearOptions();
         var attackers = new System.Collections.Generic.List<string>
         {
             "RANDOM ENEMY"
         };
-        foreach (SiegeShipOption option in session.AttackerOptions)
+        foreach (SiegeShipOption option in Host.AttackerOptions)
         {
             attackers.Add(option.DisplayName);
         }
 
         attackerBlueprint.AddOptions(attackers);
-        defenderBlueprint.SetValueWithoutNotify(Mathf.Max(0, session.SelectedDefender));
-        attackerBlueprint.SetValueWithoutNotify(session.SelectedAttacker + 1);
+        defenderBlueprint.SetValueWithoutNotify(Mathf.Max(0, filtered.IndexOf(Host.SelectedDefender)));
+        attackerBlueprint.SetValueWithoutNotify(Host.SelectedAttacker + 1);
     }
 
     private void RefreshBlueprints()
     {
-        session.RefreshBlueprints();
+        Host.RefreshBlueprints();
         RefreshOptions();
         RefreshSelection();
     }
 
     public void RefreshSelection()
     {
-        if (session.IsEditingBlueprint || session.Match == null || !session.IsRunning)
+        if (Host == null || Host.IsEditingBlueprint || Host.Match == null || !Host.IsRunning)
         {
             Cancel();
             return;
         }
 
-        bool placing = dock >= 0 && session.Match.CanRefit;
-        SiegeFleetEntry ship = session.Fleet.Find(shipId);
+        bool placing = dock >= 0 && Host.Match.CanRefit;
+        SiegeFleetEntry ship = Host.Fleet.Find(shipId);
         card.SetActive(placing || ship != null);
         defenderBlueprint.gameObject.SetActive(placing);
         confirm.gameObject.SetActive(placing);
-        pilot.gameObject.SetActive(ship != null);
-        repair.gameObject.SetActive(ship != null && session.Match.CanRefit);
+        pilot.gameObject.SetActive(ship != null && stage == null);
+        repair.gameObject.SetActive(ship != null && Host.Match.CanRefit);
         ClearPreview();
         if (placing)
         {
-            title.text = "DEPLOY AT PAD " + (dock + 1);
-            int index = session.SelectedDefender;
-            if (index < 0 || index >= session.DefenderOptions.Length)
+            title.text = "HANGAR " + (dock + 1);
+            int index = Host.SelectedDefender;
+            if (filtered.Count == 0 || !filtered.Contains(index))
             {
-                details.text = "No valid Saves blueprint. Open Blueprints or refresh in F3.";
+                details.text = "No ship blueprint fits this hangar. Resize the hangar in Base Editor or refresh blueprints in F3.";
                 confirm.interactable = false;
                 return;
             }
 
-            SiegeShipOption option = session.DefenderOptions[index];
+            SiegeShipOption option = Host.DefenderOptions[index];
             BlockDataList data = SiegeFleet.PrepareBlueprint(option.BlueprintJson, out string id);
-            Transform point = session.Fleet.GetDeploymentPoint(dock);
+            Pose point = Host.Fleet.GetDeploymentPose(dock, data);
             preview = BlueprintModelPreview.Create(data.blocks, null, "Siege deployment preview");
             preview.transform.SetPositionAndRotation(point.position, point.rotation);
             bool clear = SiegeRefit.IsClear(data, point.position, point.rotation, id, out string reason);
-            bool empty = session.Fleet.Ships[dock]?.IsAlive != true;
-            confirm.interactable = empty && clear && session.Match.CanAfford(option.Price);
-            details.text = !empty ? "This deployment position is occupied." : !clear ? reason : !session.Match.CanAfford(option.Price) ? "Insufficient credits: " + option.Price : option.BlockCount + " modules / " + option.Price.ToString("N0") + " credits. Confirm to deploy.";
+            bool empty = Host.Fleet.Ships[dock]?.IsAlive != true;
+            confirm.interactable = empty && clear && Host.Match.CanAfford(option.Price);
+            details.text = !empty ? "This deployment position is occupied." : !clear ? reason : !Host.Match.CanAfford(option.Price) ? "Insufficient credits: " + option.Price : option.BlockCount + " modules / " + option.Price.ToString("N0") + " credits. Confirm to deploy.";
         }
         else if (ship != null)
         {
             title.text = ship.DisplayName;
-            pilot.interactable = ship != session.Fleet.Driven;
-            long quote = session.Match.CanRefit ? SiegeRefit.Quote(ship, session.Settings) : 0;
-            repair.interactable = quote > 0 && session.Match.CanAfford(quote);
-            details.text = ship == session.Fleet.Driven ? "PILOT" : "AUTONOMOUS SUPPORT";
-            if (session.Match.CanRefit)
+            pilot.interactable = Host.Match.Phase != SiegePhase.Returning && ship != Host.Fleet.Driven;
+            long quote = Host.Match.CanRefit ? SiegeRefit.Quote(ship, Host.Settings) : 0;
+            repair.interactable = quote > 0 && Host.Match.CanAfford(quote);
+            details.text = ship == Host.Fleet.Driven ? "PILOT" : "AUTONOMOUS SUPPORT";
+            if (Host.Match.CanRefit)
             {
                 details.text += quote > 0 ? " / REPAIR " + quote.ToString("N0") : " / INTACT";
             }
@@ -289,7 +333,7 @@ public sealed class SiegeDeploymentView : MonoBehaviour
 
     public void Confirm()
     {
-        if (dock >= 0 && session.TryDeployAt(session.SelectedDefender, dock, out _))
+        if (dock >= 0 && Host.TryDeployAt(Host.SelectedDefender, dock, out _))
         {
             Cancel();
         }
@@ -301,25 +345,25 @@ public sealed class SiegeDeploymentView : MonoBehaviour
 
     private void Pilot()
     {
-        session.TryTakeControl(shipId);
+        Host.TryTakeControl(shipId);
         Cancel();
     }
 
     private void Repair()
     {
-        session.TryRepairShip(shipId);
+        Host.TryRepairShip(shipId);
     }
 
     public void CycleShip()
     {
-        SiegeFleetEntry[] ships = session.Fleet.Ships;
-        int start = Array.IndexOf(ships, session.Fleet.Driven);
+        SiegeFleetEntry[] ships = Host.Fleet.Ships;
+        int start = Array.IndexOf(ships, Host.Fleet.Driven);
         for (int step = 1; step <= ships.Length; step++)
         {
             SiegeFleetEntry next = ships[(start + step + ships.Length) % ships.Length];
             if (next?.IsAlive == true)
             {
-                session.TryTakeControl(next.Id);
+                Host.TryTakeControl(next.Id);
                 Cancel();
                 return;
             }

@@ -30,7 +30,7 @@ public sealed class SiegeBattleFeedback : MonoBehaviour
         if (phase != match.Phase)
         {
             phase = match.Phase;
-            banner.text = phase == SiegePhase.Battle ? (match.IsEliteWave ? "ELITE " : match.IsSwarmWave ? "SWARM " : "") + "WAVE " + match.Wave : phase == SiegePhase.Intermission ? "WAVE CLEARED  /  " + session.LastWaveKills + " KILLS" : phase == SiegePhase.Defeat ? "BEST WAVE " + Mathf.Max(session.BestWave, match.Wave) : "CLICK A DEPLOYMENT PAD";
+            banner.text = phase == SiegePhase.Battle ? (match.IsEliteWave ? "ELITE " : match.IsSwarmWave ? "SWARM " : "") + "WAVE " + match.Wave : phase == SiegePhase.Intermission ? "WAVE CLEARED  /  " + session.LastWaveKills + " KILLS" : phase == SiegePhase.Defeat ? "BEST WAVE " + Mathf.Max(session.BestWave, match.Wave) : phase == SiegePhase.Returning ? "RETURN TO HANGAR  /  INCOME PENDING" : "CLICK A HANGAR";
             bannerUntil = Time.unscaledTime + 3f;
         }
 

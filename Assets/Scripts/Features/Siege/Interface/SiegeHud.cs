@@ -81,6 +81,11 @@ public sealed class SiegeHud : MonoBehaviour
         defeat.SetActive(match.Phase == SiegePhase.Defeat);
         heading.text = match.Phase == SiegePhase.Defeat ? "BASTION LOST" : "BASTION  /  WAVE " + match.Wave;
         economy.text = match.CanRefit ? "CREDITS " + match.Coins.ToString("N0") + "    NEXT " + match.NextWaveSize + " RAIDERS" : "RAIDERS " + (match.ActiveAttackers + match.PendingAttackers);
+        if (match.Phase == SiegePhase.Returning)
+        {
+            economy.text = $"RETURNING  {session.FlightGuidance.CompletedCount}/{session.FlightGuidance.TotalCount}    PENDING {match.PendingCoins:N0}";
+        }
+
         status.text = session.Status;
         Durability core = session.Fleet?.Base?.Core != null ? session.Fleet.Base.Core.GetComponent<Durability>() : null;
         string health = core != null ? Mathf.CeilToInt(core.currentDurability) + " / " + Mathf.CeilToInt(core.maxDurability) : "LOST";

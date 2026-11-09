@@ -17,7 +17,7 @@ public static class ModularUnitFactory
         foreach (BlockData data in dataList.blocks)
         {
             GameObject prefab = data != null && !string.IsNullOrWhiteSpace(data.resourcePath) ? BlockPrefabCache.GetPrefab(BlueprintBlockFactory.ToResourcePath(data.resourcePath)) : null;
-            if (prefab == null || prefab.GetComponent<Block>() == null || data.x < 1 || data.y < 1 || data.z < 1)
+            if (prefab == null || prefab.GetComponent<Block>() == null || prefab.GetComponent<HangarModule>() != null || data.x < 1 || data.y < 1 || data.z < 1)
             {
                 Debug.LogWarning($"Unit blueprint {displayName} contains a missing or invalid module; spawn skipped.");
                 return false;

@@ -96,12 +96,18 @@ internal sealed class BuildSelection
         {
             Transform modelRoot = block.transform.Find("Model");
             Renderer[] renderers = modelRoot != null ? modelRoot.GetComponentsInChildren<Renderer>(true) : block.GetComponentsInChildren<Renderer>(true);
+            HangarModule hangar = block.GetComponent<HangarModule>();
             foreach (Renderer renderer in renderers)
             {
                 // Socket effects keep their authored materials while the solid model is selected.
                 if (!(renderer is MeshRenderer) && !(renderer is SkinnedMeshRenderer))
                 {
                     continue;
+                }
+
+                if (hangar != null && hangar.IsCapacityRenderer(renderer))
+                {
+                    continue; // Keep the reserved volume translucent so its dimensions remain readable.
                 }
 
                 Material[] originalMaterials = IndustrialEmissionBinding.CaptureSelection(renderer);

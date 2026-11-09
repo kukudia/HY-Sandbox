@@ -9,11 +9,19 @@ public enum SiegePhase
     Deployment,
     Battle,
     Intermission,
-    Defeat
+    Defeat,
+    Returning
 }
 
 public sealed class SiegeMatch
 {
+    private bool returnSettlement;
+    /// <summary>等待舰队返航完成后统一入账的本波奖励；整备与失败阶段为零。</summary>
+    public long PendingCoins
+    {
+        get; private set;
+    }
+
     private readonly HashSet<string> attackers = new HashSet<string>(StringComparer.Ordinal);
     private readonly int firstWaveSize;
     private readonly int waveGrowth;
@@ -140,14 +148,14 @@ public sealed class SiegeMatch
 
         if (defeated)
         {
-            Coins += KillReward;
+            AddReward(KillReward);
             DefeatedAttackers++;
         }
 
         if (PendingAttackers == 0 && attackers.Count == 0)
         {
-            Coins += IsEliteWave ? completionReward * eliteRewardMultiplier : completionReward;
-            Phase = SiegePhase.Intermission;
+            AddReward(IsEliteWave ? completionReward * eliteRewardMultiplier : completionReward);
+            Phase = returnSettlement ? SiegePhase.Returning : SiegePhase.Intermission;
         }
 
         return true;
@@ -156,13 +164,51 @@ public sealed class SiegeMatch
     /// <summary>战斗与波次结算瞬间的额外奖励（连击）；部署阶段与失败后不发放。</summary>
     public bool GrantBonus(int coins)
     {
-        if ((Phase != SiegePhase.Battle && Phase != SiegePhase.Intermission) || coins <= 0)
+        if ((Phase != SiegePhase.Battle && Phase != SiegePhase.Intermission && Phase != SiegePhase.Returning) || coins <= 0)
         {
             return false;
         }
 
-        Coins += coins;
+        AddReward(coins);
         return true;
+    }
+
+    /// <summary>场景在首波之前启用；纯规则/旧消费者保留即时结算兼容。</summary>
+    public bool EnableReturnSettlement()
+    {
+        if (Phase != SiegePhase.Deployment || Wave != 0)
+        {
+            return false;
+        }
+
+        returnSettlement = true;
+        return true;
+    }
+
+    /// <summary>返航协调器确认全部舰艇入库或报废后仅结算一次。</summary>
+    public bool CompleteReturn()
+    {
+        if (Phase != SiegePhase.Returning)
+        {
+            return false;
+        }
+
+        Coins += PendingCoins;
+        PendingCoins = 0;
+        Phase = SiegePhase.Intermission;
+        return true;
+    }
+
+    private void AddReward(int amount)
+    {
+        if (returnSettlement && Phase != SiegePhase.Intermission)
+        {
+            PendingCoins += amount;
+        }
+        else
+        {
+            Coins += amount;
+        }
     }
 
     public bool CanAfford(long price)
@@ -185,6 +231,7 @@ public sealed class SiegeMatch
     {
         Phase = SiegePhase.Defeat;
         PendingAttackers = 0;
+        PendingCoins = 0;
         attackers.Clear();
     }
 }

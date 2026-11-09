@@ -8,7 +8,7 @@ internal sealed class BuildManipulation
 {
     private readonly BuildPlacementGeometry _geometry;
     private readonly Action<Block> _save;
-    private readonly Func<GameObject, string, Vector3, Quaternion, Block> _create;
+    private readonly Func<GameObject, string, Vector3, Quaternion, Vector3Int, Block> _create;
     private Camera mainCamera;
     private GameObject moveAxis;
     private GameObject rotateAxis;
@@ -43,7 +43,7 @@ internal sealed class BuildManipulation
     public BuildManipulation(
         BuildPlacementGeometry geometry,
         Action<Block> save,
-        Func<GameObject, string, Vector3, Quaternion, Block> create)
+        Func<GameObject, string, Vector3, Quaternion, Vector3Int, Block> create)
     {
         _geometry = geometry;
         _save = save;
@@ -101,7 +101,7 @@ internal sealed class BuildManipulation
         if (type == BuildType.Rotate && block.canRotate)
         {
             RotateAxisHandle handle = hit.collider.GetComponentInParent<RotateAxisHandle>();
-            if (handle != null)
+            if (handle != null && (block.GetComponent<HangarModule>() == null || Mathf.Abs(Vector3.Dot(handle.WorldAxis, Vector3.up)) > .999f))
             {
                 activeRotateHandle = handle;
                 rotateDragStart = hit.point;
@@ -276,6 +276,12 @@ internal sealed class BuildManipulation
             moveEuler -= axisForward * 90;
         }
 
+        if (selectedBlock.GetComponent<HangarModule>() != null)
+        {
+            // A hangar has a floor and doorway; keyboard rotations only turn around world up.
+            moveEuler = Vector3.up * ((Keyboard.current.dKey.wasPressedThisFrame || Keyboard.current.eKey.wasPressedThisFrame ? 90f : 0f) - (Keyboard.current.aKey.wasPressedThisFrame || Keyboard.current.qKey.wasPressedThisFrame ? 90f : 0f));
+        }
+
         if (moveEuler != Vector3.zero)
         {
             Quaternion oldRot = selectedBlock.transform.rotation;
@@ -415,6 +421,7 @@ internal sealed class BuildManipulation
 
     private void HandleDuplicate(Vector3 newPos, Quaternion newRot)
     {
+        Vector3Int dimensions = new Vector3Int(selectedBlock.x, selectedBlock.y, selectedBlock.z);
         string resourcePath = selectedBlock.resourcePath;
         Debug.Log(resourcePath);
         GameObject prefab = Resources.Load<GameObject>(resourcePath);
@@ -423,7 +430,7 @@ internal sealed class BuildManipulation
         // 复制时对齐到步长
         newPos = selectedBlock.transform.position + moveDir * step;
         SelectionChanged?.Invoke(null);
-        Block duplicate = _create(prefab, resourcePath, newPos, newRot);
+        Block duplicate = _create(prefab, resourcePath, newPos, newRot, dimensions);
         if (duplicate != null)
         {
             SelectionChanged?.Invoke(duplicate);

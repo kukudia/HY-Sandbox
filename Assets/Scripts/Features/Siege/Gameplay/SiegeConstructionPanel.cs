@@ -39,7 +39,7 @@ public sealed class SiegeConstructionPanel : MonoBehaviour
         long quote = stage.Base != null ? stage.Base.Quote() : 0;
         repair.GetComponentInChildren<Text>().text = $"REPAIR + REBUILD  {quote}";
         details.text = stage.DesignStatus;
-        summary.text = $"{stage.Match.Phase}  |  WAVE {stage.Match.Wave}\nCoins {stage.Match.Coins}  |  Raiders {stage.Match.ActiveAttackers} + {stage.Match.PendingAttackers}\nDestroyed {stage.Match.DefeatedAttackers}";
+        summary.text = $"{stage.Match.Phase}  |  WAVE {stage.Match.Wave}\nCREDITS {stage.Match.Coins:N0}  |  +{stage.Match.PendingCoins:N0} PENDING\nRAIDERS {stage.Match.ActiveAttackers}+{stage.Match.PendingAttackers}  |  KILLS {stage.Match.DefeatedAttackers}";
         feedback.text = stage.Status;
         returnLabel.text = stage.Base != null && !stage.Settled ? "RETREAT / SETTLEMENT" : "BACK TO BUILD";
     }

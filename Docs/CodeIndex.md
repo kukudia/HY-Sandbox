@@ -138,6 +138,15 @@ HY-Sandbox/
 │   │   │   │   ├── SiegeRegroupBenchmark.cs
 │   │   │   │   ├── SiegeTopologyBaseline.cs
 │   │   │   │   └── SiegeTransientEffectBenchmark.cs
+│   │   │   ├── Hangars/
+│   │   │   │   ├── HangarAssetChecks.cs
+│   │   │   │   ├── HangarPrefabAuthoring.cs
+│   │   │   │   ├── HangarSceneIntegration.cs
+│   │   │   │   ├── HangarWorkshopChecks.cs
+│   │   │   │   ├── SiegeHangarHostChecks.cs
+│   │   │   │   ├── SiegeHangarInterfaceAuthoring.cs
+│   │   │   │   ├── SiegeHangarPlayChecks.cs
+│   │   │   │   └── SiegeReturnChecks.cs
 │   │   │   ├── Player/
 │   │   │   │   └── SiegePlayerBuild.cs
 │   │   │   └── Validation/
@@ -419,13 +428,23 @@ HY-Sandbox/
 │           │   │   ├── SiegeFleet.cs
 │           │   │   ├── SiegeFleetEntry.cs
 │           │   │   ├── SiegeFleetPhysics.cs
-│           │   │   └── SiegeRefit.cs
+│           │   │   ├── SiegeFlightSettings.cs
+│           │   │   ├── SiegeRefit.cs
+│           │   │   └── SiegeReturnFlight.cs
 │           │   ├── Gameplay/
 │           │   │   ├── SiegeBaseWorkshop.cs
 │           │   │   ├── SiegeConstructionPanel.cs
 │           │   │   ├── SiegeConstructionSettings.cs
 │           │   │   └── SiegeGameplayStage.cs
+│           │   ├── Hangars/
+│           │   │   ├── HangarFacePanel.cs
+│           │   │   ├── HangarLimits.cs
+│           │   │   ├── HangarModule.cs
+│           │   │   ├── HangarResizeButton.cs
+│           │   │   ├── HangarRules.cs
+│           │   │   └── ResizeHangarAction.cs
 │           │   ├── Interface/
+│           │   │   ├── ISiegeDeploymentHost.cs
 │           │   │   ├── SiegeBattleFeedback.cs
 │           │   │   ├── SiegeDeploymentView.cs
 │           │   │   ├── SiegeFleetView.cs
@@ -1858,6 +1877,142 @@ HY-Sandbox/
 | SiegeTransientEffectBenchmark | [`string Run(string label)`](../Assets/Editor/Siege/Benchmarks/SiegeTransientEffectBenchmark.cs#L15) | public static |
 | SiegeTransientEffectBenchmark | [`bool IsOwned(MonoBehaviour item, Vector3 origin)`](../Assets/Editor/Siege/Benchmarks/SiegeTransientEffectBenchmark.cs#L81) | private static |
 
+## Assets/Editor/Siege/Hangars/HangarAssetChecks.cs
+
+// 职责：验证真实机库资产、存档恢复、非原点蓝图适配和物理门安全，不写玩家存档。 // 入口：RunEdit() 同步资产检查；Run() 在 Play 开始跨帧门检查，Result/报告保存最终结果。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| HangarAssetChecks | [`string RunEdit()`](../Assets/Editor/Siege/Hangars/HangarAssetChecks.cs#L30) | public static |
+| HangarAssetChecks | [`string Run()`](../Assets/Editor/Siege/Hangars/HangarAssetChecks.cs#L80) | public static |
+| HangarAssetChecks | [`void GeometryChecks(HangarModule module, Report result)`](../Assets/Editor/Siege/Hangars/HangarAssetChecks.cs#L115) | private static |
+| HangarAssetChecks | [`void RestoreChecks(HangarModule module, Report result)`](../Assets/Editor/Siege/Hangars/HangarAssetChecks.cs#L172) | private static |
+| HangarAssetChecks | [`void Tick()`](../Assets/Editor/Siege/Hangars/HangarAssetChecks.cs#L227) | private static |
+| HangarAssetChecks | [`bool EntranceBlocked()`](../Assets/Editor/Siege/Hangars/HangarAssetChecks.cs#L278) | private static |
+| HangarAssetChecks | [`void Check(Report result, string name, bool condition)`](../Assets/Editor/Siege/Hangars/HangarAssetChecks.cs#L285) | private static |
+| HangarAssetChecks | [`void Finish(Exception error)`](../Assets/Editor/Siege/Hangars/HangarAssetChecks.cs#L295) | private static |
+| HangarAssetChecks | [`void Write()`](../Assets/Editor/Siege/Hangars/HangarAssetChecks.cs#L319) | private static |
+
+## Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs
+
+// 职责：制作可编辑机库 Prefab、材质和数量配置；尺寸控件、门和碰撞体均保存为真实子节点。 // 入口：Generate()；只重建本工具拥有的 Hangars 资产，不修改场景或玩家蓝图。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| HangarPrefabAuthoring | [`GameObject Generate()`](../Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs#L12) | public static |
+| HangarPrefabAuthoring | [`void EnsureLimits()`](../Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs#L100) | private static |
+| HangarPrefabAuthoring | [`Transform Cube(Transform parent, string name, Material material, bool collider)`](../Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs#L113) | private static |
+| HangarPrefabAuthoring | [`Canvas Canvas(Transform parent, string name, Vector2 size)`](../Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs#L128) | private static |
+| HangarPrefabAuthoring | [`HangarFacePanel Face(Transform parent, HangarModule module, Vector3 normal, int index)`](../Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs#L140) | private static |
+| HangarPrefabAuthoring | [`void ResizeButton(Transform parent, HangarModule module, int axis, int delta, Vector2 position)`](../Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs#L181) | private static |
+| HangarPrefabAuthoring | [`Text Text( Transform parent, string name, string value, int size, Vector2 dimensions, Vector2 position)`](../Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs#L211) | private static |
+| HangarPrefabAuthoring | [`Material Material(string name, Color color, bool transparent = false)`](../Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs#L237) | private static |
+
+## Assets/Editor/Siege/Hangars/HangarSceneIntegration.cs
+
+// 职责：迁移预研泊位为建筑蓝图机库，并保存Main基地编辑入口；保留旧基地原始资产。 // 入口：Install()；仅在保存后的Edit Mode执行，可重复更新工具拥有的引用。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| HangarSceneIntegration | [`void Install()`](../Assets/Editor/Siege/Hangars/HangarSceneIntegration.cs#L15) | public static |
+| HangarSceneIntegration | [`void InstallPrototype()`](../Assets/Editor/Siege/Hangars/HangarSceneIntegration.cs#L36) | private static |
+| HangarSceneIntegration | [`void InstallStarter()`](../Assets/Editor/Siege/Hangars/HangarSceneIntegration.cs#L88) | private static |
+| HangarSceneIntegration | [`void InstallWorkshop()`](../Assets/Editor/Siege/Hangars/HangarSceneIntegration.cs#L130) | private static |
+
+## Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs
+
+// 职责：通过真实基地放置、已制作按钮和输入管线验证机库尺寸、移动、旋转与六库限制。 // 入口：Run()；从保存的 Main 启动隔离 Play，所有蓝图只写 Temp/Hangars，结束自动退出。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| HangarWorkshopChecks | [`void Run()`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L47) | public static |
+| HangarWorkshopChecks | [`void Changed(PlayModeStateChange state)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L60) | private static |
+| HangarWorkshopChecks | [`void Tick()`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L125) | private static |
+| HangarWorkshopChecks | [`IEnumerator Scenario()`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L173) | private static |
+| HangarWorkshopChecks | [`IEnumerator Frames(int count)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L381) | private static |
+| HangarWorkshopChecks | [`Button ResizeButton(HangarFacePanel panel, int axis, int delta)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L390) | private static |
+| HangarWorkshopChecks | [`BlockData Saved(Block block)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L395) | private static |
+| HangarWorkshopChecks | [`int Dimension(BlockData data, int axis)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L400) | private static |
+| HangarWorkshopChecks | [`void Inject(SaveManager saves, string field, string directory)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L405) | private static |
+| HangarWorkshopChecks | [`void Check(bool condition, string message)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L411) | private static |
+| HangarWorkshopChecks | [`void Capture(string message, string stack, LogType type)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L421) | private static |
+| HangarWorkshopChecks | [`void Finish()`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L429) | private static |
+
+## Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs
+
+// 职责：验证真实菜单新版基地战与独立预研会话复用机库UI、舰队与返航结算。 // 入口：RunStage() / RunPrototype()；只注入运行时蓝图目录，报告写Temp/Hangars/host-*.json。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeHangarHostChecks | [`void RunStage()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L37) | public static |
+| SiegeHangarHostChecks | [`void RunPrototype()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L43) | public static |
+| SiegeHangarHostChecks | [`void Start(string target, string path)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L49) | private static |
+| SiegeHangarHostChecks | [`void Changed(PlayModeStateChange state)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L60) | private static |
+| SiegeHangarHostChecks | [`void Tick()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L81) | private static |
+| SiegeHangarHostChecks | [`IEnumerator Scenario()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L107) | private static |
+| SiegeHangarHostChecks | [`int ClearWave(SiegeMatch match)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L296) | private static |
+| SiegeHangarHostChecks | [`void BackupPreferences()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L322) | private static |
+| SiegeHangarHostChecks | [`void RestorePreferences()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L337) | private static |
+| SiegeHangarHostChecks | [`void Check(bool success, string description)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L359) | private static |
+| SiegeHangarHostChecks | [`void LogError(string message, string stack, LogType type)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L369) | private static |
+| SiegeHangarHostChecks | [`void Finish()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L377) | private static |
+
+## Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs
+
+// 职责：为新版基地战保存共享机库部署UI；只重建工具拥有的Hangar Deployment Interface。 // 入口：Install()；与旧原型使用同一部署面板组件和筛选规则。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeHangarInterfaceAuthoring | [`void Install()`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L13) | public static |
+| SiegeHangarInterfaceAuthoring | [`void Bind(SerializedObject data, string field, UnityEngine.Object value)`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L130) | private static |
+| SiegeHangarInterfaceAuthoring | [`RectTransform Panel(string name, Transform parent, Vector2 position, Vector2 size)`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L135) | private static |
+| SiegeHangarInterfaceAuthoring | [`Text Label( string name, Transform parent, string value, Vector2 position, Vector2 size, int fontSize)`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L144) | private static |
+| SiegeHangarInterfaceAuthoring | [`Button Button(string name, Transform parent, string caption, Vector2 position, Vector2 size)`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L165) | private static |
+| SiegeHangarInterfaceAuthoring | [`void Place(RectTransform rect, Vector2 position, Vector2 size)`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L182) | private static |
+
+## Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs
+
+// 职责：在Main真实Play中验证机库容量、独占绑定、净空、毁坏重建和基地战共享舰队。 // 入口：Run()；夹具远离地图，不写玩家存档，报告写Temp/Hangars/play-checks.json。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| Host | [`void SelectDefender(int index)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L108) | public |
+| Host | [`void SelectAttacker(int index)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L112) | public |
+| Host | [`bool RefreshBlueprints()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L116) | public |
+| Host | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L117) | public |
+| Host | [`bool TryTakeControl(int slot)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L118) | public |
+| Host | [`bool TryTakeControl(string id)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L119) | public |
+| Host | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L120) | public |
+| SiegeHangarPlayChecks | [`void Run()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L128) | public static |
+| SiegeHangarPlayChecks | [`void Changed(PlayModeStateChange state)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L140) | private static |
+| SiegeHangarPlayChecks | [`void Tick()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L160) | private static |
+| SiegeHangarPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L186) | private static |
+| SiegeHangarPlayChecks | [`void SetSimulation(WorldBuildingManager manager, bool active)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L396) | private static |
+| SiegeHangarPlayChecks | [`IEnumerator GuideFlight(SiegeReturnFlight flight, SiegeFleetEntry entry, string phase, Action completed)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L402) | private static |
+| SiegeHangarPlayChecks | [`void SampleFlight(SiegeReturnFlight flight, SiegeFleetEntry entry, string phase)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L424) | private static |
+| SiegeHangarPlayChecks | [`void Check(bool success, string description)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L506) | private static |
+| SiegeHangarPlayChecks | [`void LogError(string message, string stack, LogType type)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L516) | private static |
+| SiegeHangarPlayChecks | [`void Finish()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L524) | private static |
+
+## Assets/Editor/Siege/Hangars/SiegeReturnChecks.cs
+
+// 职责：验证返航经济与真实刚体导引，不修改玩家蓝图或持久场景。 // 入口：Run()，需在有 PlayManager 的 Play Mode 运行；独立 PhysicsScene 手动推进物理。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| Host | [`void SelectDefender(int index)`](../Assets/Editor/Siege/Hangars/SiegeReturnChecks.cs#L49) | public |
+| Host | [`void SelectAttacker(int index)`](../Assets/Editor/Siege/Hangars/SiegeReturnChecks.cs#L53) | public |
+| Host | [`bool RefreshBlueprints()`](../Assets/Editor/Siege/Hangars/SiegeReturnChecks.cs#L57) | public |
+| Host | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Editor/Siege/Hangars/SiegeReturnChecks.cs#L58) | public |
+| Host | [`bool TryTakeControl(int slot)`](../Assets/Editor/Siege/Hangars/SiegeReturnChecks.cs#L64) | public |
+| Host | [`bool TryTakeControl(string id)`](../Assets/Editor/Siege/Hangars/SiegeReturnChecks.cs#L65) | public |
+| Host | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Editor/Siege/Hangars/SiegeReturnChecks.cs#L66) | public |
+| SiegeReturnChecks | [`string Run()`](../Assets/Editor/Siege/Hangars/SiegeReturnChecks.cs#L75) | public static |
+| SiegeReturnChecks | [`SiegeFleetEntry Spawn(Scene scene, Transform dock)`](../Assets/Editor/Siege/Hangars/SiegeReturnChecks.cs#L178) | private static |
+| SiegeReturnChecks | [`void Step(SiegeReturnFlight flight, PhysicsScene physics, bool powered, int maximumSteps)`](../Assets/Editor/Siege/Hangars/SiegeReturnChecks.cs#L201) | private static |
+| SiegeReturnChecks | [`void CheckEconomy(Report report)`](../Assets/Editor/Siege/Hangars/SiegeReturnChecks.cs#L222) | private static |
+| SiegeReturnChecks | [`void Check(Report report, string description, bool success)`](../Assets/Editor/Siege/Hangars/SiegeReturnChecks.cs#L280) | private static |
+
 ## Assets/Editor/Siege/Player/SiegePlayerBuild.cs
 
 // 职责：构建以Siege为入口的独立Windows D3D11验证包，不改全局构建场景或用户发布包。 // 入口：Build() / BuildStress() / BuildLargeStress() / BuildMixedStress() / BuildLargeProfiling()；独立Development包用于引擎归因。
@@ -2880,30 +3035,31 @@ HY-Sandbox/
 | BuildManager | [`Vector3 SnapCenterByMinCorner(Vector3 targetCenter, Quaternion targetRotation, Block b)`](../Assets/Scripts/Features/Building/BuildManager.cs#L564) | public |
 | BuildManager | [`bool IsWithinBuildRange(Vector3 position)`](../Assets/Scripts/Features/Building/BuildManager.cs#L570) | public |
 | BuildManager | [`void CreateBlock(GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot)`](../Assets/Scripts/Features/Building/BuildManager.cs#L575) | public |
-| BuildManager | [`void DeleteBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L602) | public |
-| BuildManager | [`void EnsureBlueprintEditor()`](../Assets/Scripts/Features/Building/BuildManager.cs#L623) | private |
-| BuildManager | [`Block CreateDuplicateBlock(GameObject prefab, string path, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Building/BuildManager.cs#L632) | private |
-| BuildManager | [`void SaveBlock(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L639) | public |
-| BuildManager | [`void RemoveBlock(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L657) | public |
-| BuildManager | [`void LoadAllBlocks()`](../Assets/Scripts/Features/Building/BuildManager.cs#L665) | public |
-| BuildManager | [`BlueprintStatistics GetBlueprintStatistics()`](../Assets/Scripts/Features/Building/BuildManager.cs#L694) | public |
-| BuildManager | [`void EnsureBlueprintLoader()`](../Assets/Scripts/Features/Building/BuildManager.cs#L701) | private |
-| BuildManager | [`void DisplayBlueprintStatistics(BlueprintStatistics statistics)`](../Assets/Scripts/Features/Building/BuildManager.cs#L710) | private |
-| BuildManager | [`BlueprintLoadSettings CreateLoadSettings()`](../Assets/Scripts/Features/Building/BuildManager.cs#L718) | private |
-| BuildManager | [`void ClearUnloadableData(string id)`](../Assets/Scripts/Features/Building/BuildManager.cs#L736) | public |
-| BuildManager | [`bool IsLoadingBuildTarget( BuildTargetKind kind, string saveName, string enemyBlueprintName, string buildingBlueprintName = null)`](../Assets/Scripts/Features/Building/BuildManager.cs#L741) | public |
-| BuildManager | [`bool IsLoadingBuildTarget(BuildTargetContext context)`](../Assets/Scripts/Features/Building/BuildManager.cs#L751) | private |
-| BuildManager | [`void ClearUnloadableData(string id, string targetSavePath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L761) | private |
-| BuildManager | [`void InitialBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L770) | private |
-| BuildManager | [`bool CanCreateBlock(GameObject prefab, out string reason)`](../Assets/Scripts/Features/Building/BuildManager.cs#L778) | private |
-| BuildManager | [`void ApplyBlockBuildDefaults(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L808) | public |
-| BuildManager | [`int CountCockpitsInCurrentConstruct()`](../Assets/Scripts/Features/Building/BuildManager.cs#L813) | private |
-| BuildManager | [`void ResetBuildState()`](../Assets/Scripts/Features/Building/BuildManager.cs#L823) | private |
-| BuildManager | [`void SetBuildTarget(BuildTargetContext context)`](../Assets/Scripts/Features/Building/BuildManager.cs#L833) | private |
-| BuildManager | [`void RefreshBlueprintUI()`](../Assets/Scripts/Features/Building/BuildManager.cs#L852) | private |
-| BuildManager | [`void StopActiveBlockLoad()`](../Assets/Scripts/Features/Building/BuildManager.cs#L860) | private |
-| BuildManager | [`void CancelBlueprintLoad()`](../Assets/Scripts/Features/Building/BuildManager.cs#L865) | public |
-| BuildManager | [`string ConvertToResourcesPath(string fullPath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L870) | public static |
+| BuildManager | [`Block CreateBlockFromTemplate(GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot, Vector3Int? dimensions)`](../Assets/Scripts/Features/Building/BuildManager.cs#L580) | private |
+| BuildManager | [`void DeleteBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L618) | public |
+| BuildManager | [`void EnsureBlueprintEditor()`](../Assets/Scripts/Features/Building/BuildManager.cs#L639) | private |
+| BuildManager | [`Block CreateDuplicateBlock(GameObject prefab, string path, Vector3 position, Quaternion rotation, Vector3Int dimensions)`](../Assets/Scripts/Features/Building/BuildManager.cs#L648) | private |
+| BuildManager | [`void SaveBlock(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L653) | public |
+| BuildManager | [`void RemoveBlock(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L671) | public |
+| BuildManager | [`void LoadAllBlocks()`](../Assets/Scripts/Features/Building/BuildManager.cs#L679) | public |
+| BuildManager | [`BlueprintStatistics GetBlueprintStatistics()`](../Assets/Scripts/Features/Building/BuildManager.cs#L708) | public |
+| BuildManager | [`void EnsureBlueprintLoader()`](../Assets/Scripts/Features/Building/BuildManager.cs#L715) | private |
+| BuildManager | [`void DisplayBlueprintStatistics(BlueprintStatistics statistics)`](../Assets/Scripts/Features/Building/BuildManager.cs#L724) | private |
+| BuildManager | [`BlueprintLoadSettings CreateLoadSettings()`](../Assets/Scripts/Features/Building/BuildManager.cs#L732) | private |
+| BuildManager | [`void ClearUnloadableData(string id)`](../Assets/Scripts/Features/Building/BuildManager.cs#L750) | public |
+| BuildManager | [`bool IsLoadingBuildTarget( BuildTargetKind kind, string saveName, string enemyBlueprintName, string buildingBlueprintName = null)`](../Assets/Scripts/Features/Building/BuildManager.cs#L755) | public |
+| BuildManager | [`bool IsLoadingBuildTarget(BuildTargetContext context)`](../Assets/Scripts/Features/Building/BuildManager.cs#L765) | private |
+| BuildManager | [`void ClearUnloadableData(string id, string targetSavePath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L775) | private |
+| BuildManager | [`void InitialBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L784) | private |
+| BuildManager | [`bool CanCreateBlock(GameObject prefab, out string reason)`](../Assets/Scripts/Features/Building/BuildManager.cs#L792) | private |
+| BuildManager | [`void ApplyBlockBuildDefaults(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L831) | public |
+| BuildManager | [`int CountCockpitsInCurrentConstruct()`](../Assets/Scripts/Features/Building/BuildManager.cs#L836) | private |
+| BuildManager | [`void ResetBuildState()`](../Assets/Scripts/Features/Building/BuildManager.cs#L846) | private |
+| BuildManager | [`void SetBuildTarget(BuildTargetContext context)`](../Assets/Scripts/Features/Building/BuildManager.cs#L856) | private |
+| BuildManager | [`void RefreshBlueprintUI()`](../Assets/Scripts/Features/Building/BuildManager.cs#L875) | private |
+| BuildManager | [`void StopActiveBlockLoad()`](../Assets/Scripts/Features/Building/BuildManager.cs#L883) | private |
+| BuildManager | [`void CancelBlueprintLoad()`](../Assets/Scripts/Features/Building/BuildManager.cs#L888) | public |
+| BuildManager | [`string ConvertToResourcesPath(string fullPath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L893) | public static |
 
 ## Assets/Scripts/Features/Building/BuildingEditor/BuildingEditorPanel.cs
 
@@ -3013,9 +3169,9 @@ HY-Sandbox/
 | BuildManipulation | [`void AlignAxisToNearestWorldDir()`](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L126) | private |
 | BuildManipulation | [`void HandleMovement()`](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L171) | private |
 | BuildManipulation | [`void HandleRotation()`](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L241) | private |
-| BuildManipulation | [`void HandleMoveAxisDrag()`](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L303) | private |
-| BuildManipulation | [`void HandleRotateAxisDrag()`](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L364) | private |
-| BuildManipulation | [`void HandleDuplicate(Vector3 newPos, Quaternion newRot)`](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L416) | private |
+| BuildManipulation | [`void HandleMoveAxisDrag()`](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L309) | private |
+| BuildManipulation | [`void HandleRotateAxisDrag()`](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L370) | private |
+| BuildManipulation | [`void HandleDuplicate(Vector3 newPos, Quaternion newRot)`](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L422) | private |
 
 ## Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs
 
@@ -3053,10 +3209,10 @@ HY-Sandbox/
 | BuildSelection | [`void Configure( Camera camera, LayerMask axes, LayerMask blocks, Material highlight, GameObject move, GameObject rotate)`](../Assets/Scripts/Features/Building/Interaction/BuildSelection.cs#L26) | public |
 | BuildSelection | [`void Poll()`](../Assets/Scripts/Features/Building/Interaction/BuildSelection.cs#L42) | public |
 | BuildSelection | [`void SelectBlock(Block block)`](../Assets/Scripts/Features/Building/Interaction/BuildSelection.cs#L80) | public |
-| BuildSelection | [`void DeselectBlock()`](../Assets/Scripts/Features/Building/Interaction/BuildSelection.cs#L123) | public |
-| BuildSelection | [`void SetGizmosEnabled(bool enabled)`](../Assets/Scripts/Features/Building/Interaction/BuildSelection.cs#L140) | public |
-| BuildSelection | [`void RefreshBuildGizmos()`](../Assets/Scripts/Features/Building/Interaction/BuildSelection.cs#L146) | public |
-| BuildSelection | [`void HideBuildGizmos(GameObject keepVisible = null)`](../Assets/Scripts/Features/Building/Interaction/BuildSelection.cs#L180) | private |
+| BuildSelection | [`void DeselectBlock()`](../Assets/Scripts/Features/Building/Interaction/BuildSelection.cs#L129) | public |
+| BuildSelection | [`void SetGizmosEnabled(bool enabled)`](../Assets/Scripts/Features/Building/Interaction/BuildSelection.cs#L146) | public |
+| BuildSelection | [`void RefreshBuildGizmos()`](../Assets/Scripts/Features/Building/Interaction/BuildSelection.cs#L152) | public |
+| BuildSelection | [`void HideBuildGizmos(GameObject keepVisible = null)`](../Assets/Scripts/Features/Building/Interaction/BuildSelection.cs#L186) | private |
 
 ## Assets/Scripts/Features/Building/Interaction/ConnectorPlacementHints.cs
 
@@ -4586,22 +4742,27 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeFleet | [`Transform GetDeploymentPoint(int index)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L32) | public |
-| SiegeFleet | [`SiegeFleetEntry Find(string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L37) | public |
-| SiegeFleet | [`bool CreateBase(Transform anchor)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L42) | public |
-| SiegeFleet | [`bool Deploy(int optionIndex, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L49) | public |
-| SiegeFleet | [`bool DeployAt(int optionIndex, int requestedDock, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L54) | public |
-| SiegeFleet | [`bool TakeControl(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L139) | public |
-| SiegeFleet | [`void SetCombatActive(bool active)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L172) | public |
-| SiegeFleet | [`void RepairBetweenWaves(out int repairedCount, out int attemptedCount, out long spent, out string firstFailure)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L194) | public |
-| SiegeFleet | [`void RefreshBindings()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L234) | public |
-| SiegeFleet | [`void NotifyLost(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L260) | public |
-| SiegeFleet | [`SiegeFleetEntry Spawn( BlockDataList blueprint, string id, string displayName, int price, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L286) | private |
-| SiegeFleet | [`BlockDataList PrepareBlueprint(TextAsset asset, out string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L321) | public static |
-| SiegeFleet | [`BlockDataList PrepareBlueprint(string json, out string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L326) | public static |
-| SiegeFleet | [`void RestoreView()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L340) | public |
-| SiegeFleet | [`void SetCamera(ControlUnit unit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L352) | private |
-| SiegeFleet | [`void SetBaseCamera()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L357) | private |
+| SiegeFleet | [`Transform GetDeploymentPoint(int index)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L41) | public |
+| SiegeFleet | [`void RefreshHangars(HangarModule[] hangars)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L47) | public |
+| SiegeFleet | [`HangarModule GetHangar(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L66) | public |
+| SiegeFleet | [`bool FitsHangar(int slot, BlockDataList blueprint)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L90) | public |
+| SiegeFleet | [`Pose GetDeploymentPose(int slot, BlockDataList blueprint)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L101) | public |
+| SiegeFleet | [`void Scrap(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L113) | public |
+| SiegeFleet | [`SiegeFleetEntry Find(string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L140) | public |
+| SiegeFleet | [`bool CreateBase(Transform anchor)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L145) | public |
+| SiegeFleet | [`bool Deploy(int optionIndex, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L159) | public |
+| SiegeFleet | [`bool DeployAt(int optionIndex, int requestedDock, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L164) | public |
+| SiegeFleet | [`bool TakeControl(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L256) | public |
+| SiegeFleet | [`void SetCombatActive(bool active)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L289) | public |
+| SiegeFleet | [`void RepairBetweenWaves(out int repairedCount, out int attemptedCount, out long spent, out string firstFailure)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L313) | public |
+| SiegeFleet | [`void RefreshBindings()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L353) | public |
+| SiegeFleet | [`void NotifyLost(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L379) | public |
+| SiegeFleet | [`SiegeFleetEntry Spawn( BlockDataList blueprint, string id, string displayName, int price, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L405) | private |
+| SiegeFleet | [`BlockDataList PrepareBlueprint(TextAsset asset, out string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L441) | public static |
+| SiegeFleet | [`BlockDataList PrepareBlueprint(string json, out string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L446) | public static |
+| SiegeFleet | [`void RestoreView()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L460) | public |
+| SiegeFleet | [`void SetCamera(ControlUnit unit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L472) | private |
+| SiegeFleet | [`void SetBaseCamera()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L482) | private |
 
 ## Assets/Scripts/Features/Siege/Fleet/SiegeFleetEntry.cs
 
@@ -4620,6 +4781,12 @@ HY-Sandbox/
 | SiegeFleetPhysics | [`void Park(ControlUnit unit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleetPhysics.cs#L7) | public static |
 | SiegeFleetPhysics | [`void Activate(ControlUnit unit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleetPhysics.cs#L25) | public static |
 
+## Assets/Scripts/Features/Siege/Fleet/SiegeFlightSettings.cs
+
+// 职责：保存机库出入航线、速度与失能报废阈值，供预研和正式玩法共享。 // 入口：SiegeReturnFlight 读取；宿主通过 Inspector 编辑，不持有运行状态。
+
+数据/配置/接口定义，无方法体。
+
 ## Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs
 
 // 职责：验证泊位净空并报价/执行修缮，复用同源模块、补回缺件，成功后精确扣费。 // 入口：IsClear() / Quote() / Repair()；部署蓝图不含货物，不读取或改写WorldSession。
@@ -4629,10 +4796,32 @@ HY-Sandbox/
 | SiegeRefit | [`bool IsClear( BlockDataList blueprint, Vector3 position, Quaternion rotation, string ignoredUnitId, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L9) | public static |
 | SiegeRefit | [`bool IsBuildingClear( BlockDataList blueprint, Vector3 position, Quaternion rotation, string ignoredUnitId, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L26) | public static |
 | SiegeRefit | [`bool IsGeometryClear( BlockDataList blueprint, Vector3 position, Quaternion rotation, string ignoredUnitId, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L37) | private static |
-| SiegeRefit | [`string DescribeObstruction(Collider hit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L65) | private static |
-| SiegeRefit | [`long Quote(SiegeFleetEntry entry, SiegeSettings settings)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L83) | public static |
-| SiegeRefit | [`bool Repair(SiegeFleetEntry entry, SiegeSession session, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L115) | public static |
-| SiegeRefit | [`Dictionary<string, Block> CollectOwned(SiegeFleetEntry entry)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L195) | private static |
+| SiegeRefit | [`string DescribeObstruction(Collider hit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L85) | private static |
+| SiegeRefit | [`long Quote(SiegeFleetEntry entry, SiegeSettings settings)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L103) | public static |
+| SiegeRefit | [`bool Repair(SiegeFleetEntry entry, ISiegeDeploymentHost session, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L135) | public static |
+| SiegeRefit | [`Dictionary<string, Block> CollectOwned(SiegeFleetEntry entry)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L215) | private static |
+
+## Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs
+
+// 职责：共享机库起飞/返航导引，以有电推进能力限定刚体运动，逐舰入库或报废。 // 入口：BeginLaunch() / BeginReturn()；宿主在 FixedUpdate 调用 Tick()，退出调用 Stop()。 // 约束：自动导引暂时接管姿态与推力；不传送舰艇、不在报废前发放返航奖励。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeReturnFlight | [`bool IsGuiding(SiegeFleetEntry entry)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L63) | public |
+| SiegeReturnFlight | [`void BeginLaunch()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L68) | public |
+| SiegeReturnFlight | [`void BeginReturn()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L73) | public |
+| SiegeReturnFlight | [`void Begin(bool returning)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L78) | private |
+| SiegeReturnFlight | [`void BindUnit(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L119) | private |
+| SiegeReturnFlight | [`void TakeGuidanceControl(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L146) | private |
+| SiegeReturnFlight | [`Vector3 DockPosition(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L178) | private |
+| SiegeReturnFlight | [`void BuildRoute(Flight flight, bool returning)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L203) | private |
+| SiegeReturnFlight | [`void Tick(float deltaTime)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L267) | public |
+| SiegeReturnFlight | [`void TickFlight(Flight flight, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L283) | private |
+| SiegeReturnFlight | [`void ReadPropulsion(Flight flight, out float driveForce, out float liftForce)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L346) | private static |
+| SiegeReturnFlight | [`void ApplyGuidance(Flight flight, Vector3 target, float driveAcceleration, float liftAcceleration, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L369) | private |
+| SiegeReturnFlight | [`void Finish(Flight flight, bool success, string reason = null)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L404) | private |
+| SiegeReturnFlight | [`void ReleasePropulsion(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L437) | private |
+| SiegeReturnFlight | [`void Stop()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L465) | public |
 
 ## Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs
 
@@ -4640,12 +4829,13 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeBaseWorkshop | [`void Start()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L22) | private |
-| SiegeBaseWorkshop | [`void ToggleEditor()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L31) | public |
-| SiegeBaseWorkshop | [`void CopyStarter()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L40) | public |
-| SiegeBaseWorkshop | [`void DesignateCore()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L56) | public |
-| SiegeBaseWorkshop | [`void TrySave(Action action)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L85) | private |
-| SiegeBaseWorkshop | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L97) | private |
+| SiegeBaseWorkshop | [`void Start()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L24) | private |
+| SiegeBaseWorkshop | [`void ToggleEditor()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L34) | public |
+| SiegeBaseWorkshop | [`void SelectHangar()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L43) | public |
+| SiegeBaseWorkshop | [`void CopyStarter()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L52) | public |
+| SiegeBaseWorkshop | [`void DesignateCore()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L68) | public |
+| SiegeBaseWorkshop | [`void TrySave(Action action)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L97) | private |
+| SiegeBaseWorkshop | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L109) | private |
 
 ## Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionPanel.cs
 
@@ -4663,8 +4853,8 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeConstructionSettings | [`long Cost(BlockDataList data)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs#L25) | public |
-| SiegeConstructionSettings | [`bool Validate(BlockDataList data, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs#L36) | public |
-| SiegeConstructionSettings | [`string Warnings(BlockDataList data)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs#L97) | public |
+| SiegeConstructionSettings | [`bool Validate(BlockDataList data, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs#L37) | public |
+| SiegeConstructionSettings | [`string Warnings(BlockDataList data)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs#L103) | public |
 
 ## Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs
 
@@ -4672,21 +4862,111 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeGameplayStage | [`void Enter(GameModeController host, GameObject[] buildEnvironment, string blueprintName = null)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L61) | public |
-| SiegeGameplayStage | [`void ValidatePose()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L129) | private |
-| SiegeGameplayStage | [`bool Deploy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L161) | private |
-| SiegeGameplayStage | [`bool BeginWave()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L214) | public |
-| SiegeGameplayStage | [`bool Repair()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L227) | public |
-| SiegeGameplayStage | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L239) | private |
-| SiegeGameplayStage | [`void SetSimulation(bool active)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L270) | private |
-| SiegeGameplayStage | [`void LoseBase()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L313) | private |
-| SiegeGameplayStage | [`void Retreat()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L318) | public |
-| SiegeGameplayStage | [`void Settle(string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L323) | private |
-| SiegeGameplayStage | [`void ReturnOrRetreat()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L337) | private |
-| SiegeGameplayStage | [`void ShowCoreMarker(Transform parent, Vector3 localPosition)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L349) | private |
-| SiegeGameplayStage | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L358) | private |
-| SiegeGameplayStage | [`void Exit()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L366) | public |
-| SiegeGameplayStage | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L400) | private |
+| SiegeGameplayStage | [`void Enter(GameModeController host, GameObject[] buildEnvironment, string blueprintName = null)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L80) | public |
+| SiegeGameplayStage | [`void ValidatePose()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L150) | private |
+| SiegeGameplayStage | [`bool Deploy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L182) | private |
+| SiegeGameplayStage | [`bool BeginWave()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L249) | public |
+| SiegeGameplayStage | [`bool Repair()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L265) | public |
+| SiegeGameplayStage | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L278) | private |
+| SiegeGameplayStage | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L320) | public |
+| SiegeGameplayStage | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L328) | public |
+| SiegeGameplayStage | [`bool RefreshBlueprints()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L336) | public |
+| SiegeGameplayStage | [`void RefreshDefenders()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L347) | private |
+| SiegeGameplayStage | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L358) | public |
+| SiegeGameplayStage | [`bool TryTakeControl(int slot)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L367) | public |
+| SiegeGameplayStage | [`bool TryTakeControl(string id)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L373) | public |
+| SiegeGameplayStage | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L378) | public |
+| SiegeGameplayStage | [`void FixedUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L392) | private |
+| SiegeGameplayStage | [`void SetSimulation(bool active)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L425) | private |
+| SiegeGameplayStage | [`void LoseBase()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L468) | private |
+| SiegeGameplayStage | [`void Retreat()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L473) | public |
+| SiegeGameplayStage | [`void Settle(string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L478) | private |
+| SiegeGameplayStage | [`void ReturnOrRetreat()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L494) | private |
+| SiegeGameplayStage | [`void ShowCoreMarker(Transform parent, Vector3 localPosition)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L506) | private |
+| SiegeGameplayStage | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L515) | private |
+| SiegeGameplayStage | [`void Exit()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L523) | public |
+| SiegeGameplayStage | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L566) | private |
+
+## Assets/Scripts/Features/Siege/Hangars/HangarFacePanel.cs
+
+// 职责：只显示面向镜头的已选机库尺寸控件；保持背面按钮不拦截点击。 // 入口：ConfigureGeometry() / LateUpdate()。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| HangarFacePanel | [`void ConfigureGeometry(Vector3 outer)`](../Assets/Scripts/Features/Siege/Hangars/HangarFacePanel.cs#L13) | public |
+| HangarFacePanel | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Hangars/HangarFacePanel.cs#L20) | private |
+
+## Assets/Scripts/Features/Siege/Hangars/HangarLimits.cs
+
+// 职责：保存基地机库数量上限；尺寸使用基地自身边界，不与数量限制混用。 // 入口：MaximumCount；Resources/Hangars/Limits 是共享编辑与部署配置。
+
+数据/配置/接口定义，无方法体。
+
+## Assets/Scripts/Features/Siege/Hangars/HangarModule.cs
+
+// 职责：按方块存档尺寸维护机库外壳、净空、泊位和安全滑门，不保存战斗损伤到设计。 // 入口：RefreshGeometry() / TryResize() / Fits() / GetDockPose() / SetCombat() / SetDoorOpen()。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| HangarModule | [`void OnEnable()`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L54) | private |
+| HangarModule | [`void RefreshGeometry()`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L65) | public |
+| HangarModule | [`bool IsCapacityRenderer(Renderer renderer)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L124) | public |
+| HangarModule | [`bool Fits(BlockDataList blueprint)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L129) | public |
+| HangarModule | [`Pose GetDockPose(BlockDataList blueprint)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L141) | public |
+| HangarModule | [`void SetCombat(bool active)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L149) | public |
+| HangarModule | [`void ApplyPresentation()`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L165) | private |
+| HangarModule | [`void SetDoorOpen(bool open)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L195) | public |
+| HangarModule | [`void FixedUpdate()`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L200) | private |
+| HangarModule | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L213) | private |
+| HangarModule | [`bool IsDoorwayClear()`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L221) | private |
+| HangarModule | [`void ApplyDoorPose()`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L249) | private |
+| HangarModule | [`void GetShellBoxes(Vector3 outer, List<Bounds> boxes)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L265) | public static |
+| HangarModule | [`bool TryResize(int axis, int delta, out string reason)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L277) | public |
+| HangarModule | [`void ApplySize(Vector3Int dimensions, Vector3 position)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L319) | internal |
+| HangarModule | [`void SetShape(Transform piece, Vector3 position, Vector3 size)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L330) | private static |
+
+## Assets/Scripts/Features/Siege/Hangars/HangarResizeButton.cs
+
+// 职责：将已制作的世界空间按钮转成机库尺寸命令，不动态创建 UI。 // 入口：OnEnable() 绑定按钮；OnDisable() 对称解除。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| HangarResizeButton | [`void OnEnable()`](../Assets/Scripts/Features/Siege/Hangars/HangarResizeButton.cs#L16) | private |
+| HangarResizeButton | [`void OnDisable()`](../Assets/Scripts/Features/Siege/Hangars/HangarResizeButton.cs#L22) | private |
+| HangarResizeButton | [`void Resize()`](../Assets/Scripts/Features/Siege/Hangars/HangarResizeButton.cs#L30) | public |
+
+## Assets/Scripts/Features/Siege/Hangars/HangarRules.cs
+
+// 职责：共享基地编辑和加载时的机库数量、直立姿态规则。 // 入口：MaximumCount / Validate()；不修改蓝图或玩家存档。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| HangarRules | [`long ShellCost(BlockData block)`](../Assets/Scripts/Features/Siege/Hangars/HangarRules.cs#L21) | public static |
+| HangarRules | [`bool IsHangar(BlockData block)`](../Assets/Scripts/Features/Siege/Hangars/HangarRules.cs#L28) | public static |
+| HangarRules | [`bool Validate(BlockDataList data, out string reason)`](../Assets/Scripts/Features/Siege/Hangars/HangarRules.cs#L34) | public static |
+
+## Assets/Scripts/Features/Siege/Hangars/ResizeHangarAction.cs
+
+// 职责：以原尺寸和底部锚定姿态撤销/重做机库扩缩，并同步蓝图。 // 入口：Undo() / Redo()；由 HangarModule.TryResize() 提交。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| ResizeHangarAction | [`void Undo()`](../Assets/Scripts/Features/Siege/Hangars/ResizeHangarAction.cs#L28) | public |
+| ResizeHangarAction | [`void Redo()`](../Assets/Scripts/Features/Siege/Hangars/ResizeHangarAction.cs#L36) | public |
+
+## Assets/Scripts/Features/Siege/Interface/ISiegeDeploymentHost.cs
+
+// 职责：定义预研与新版基地战共享的舰队部署界面契约，避免复制部署和修缮规则。 // 入口：SiegeFleet / SiegeDeploymentView；会话持有经济、目录和生命周期。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| ISiegeDeploymentHost | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/Interface/ISiegeDeploymentHost.cs#L58) |  |
+| ISiegeDeploymentHost | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/Interface/ISiegeDeploymentHost.cs#L59) |  |
+| ISiegeDeploymentHost | [`bool RefreshBlueprints()`](../Assets/Scripts/Features/Siege/Interface/ISiegeDeploymentHost.cs#L60) |  |
+| ISiegeDeploymentHost | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Interface/ISiegeDeploymentHost.cs#L61) |  |
+| ISiegeDeploymentHost | [`bool TryTakeControl(int slot)`](../Assets/Scripts/Features/Siege/Interface/ISiegeDeploymentHost.cs#L62) |  |
+| ISiegeDeploymentHost | [`bool TryTakeControl(string id)`](../Assets/Scripts/Features/Siege/Interface/ISiegeDeploymentHost.cs#L63) |  |
+| ISiegeDeploymentHost | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Scripts/Features/Siege/Interface/ISiegeDeploymentHost.cs#L64) |  |
 
 ## Assets/Scripts/Features/Siege/Interface/SiegeBattleFeedback.cs
 
@@ -4702,22 +4982,22 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeDeploymentView | [`void OnEnable()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L47) | private |
-| SiegeDeploymentView | [`void OnDisable()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L67) | private |
-| SiegeDeploymentView | [`void Update()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L85) | private |
-| SiegeDeploymentView | [`void SelectDock(int index)`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L163) | public |
-| SiegeDeploymentView | [`void SelectShip(string id)`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L183) | public |
-| SiegeDeploymentView | [`void SelectOption(int index)`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L196) | private |
-| SiegeDeploymentView | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L202) | private |
-| SiegeDeploymentView | [`void RefreshOptions()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L207) | public |
-| SiegeDeploymentView | [`void RefreshBlueprints()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L232) | private |
-| SiegeDeploymentView | [`void RefreshSelection()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L239) | public |
-| SiegeDeploymentView | [`void Confirm()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L290) | public |
-| SiegeDeploymentView | [`void Pilot()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L302) | private |
-| SiegeDeploymentView | [`void Repair()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L308) | private |
-| SiegeDeploymentView | [`void CycleShip()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L313) | public |
-| SiegeDeploymentView | [`void Cancel()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L329) | public |
-| SiegeDeploymentView | [`void ClearPreview()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L337) | private |
+| SiegeDeploymentView | [`void OnEnable()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L53) | private |
+| SiegeDeploymentView | [`void OnDisable()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L76) | private |
+| SiegeDeploymentView | [`void Update()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L98) | private |
+| SiegeDeploymentView | [`void SelectDock(int index)`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L184) | public |
+| SiegeDeploymentView | [`void SelectShip(string id)`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L204) | public |
+| SiegeDeploymentView | [`void SelectOption(int index)`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L217) | private |
+| SiegeDeploymentView | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L227) | private |
+| SiegeDeploymentView | [`void RefreshOptions()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L232) | public |
+| SiegeDeploymentView | [`void RefreshBlueprints()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L276) | private |
+| SiegeDeploymentView | [`void RefreshSelection()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L283) | public |
+| SiegeDeploymentView | [`void Confirm()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L334) | public |
+| SiegeDeploymentView | [`void Pilot()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L346) | private |
+| SiegeDeploymentView | [`void Repair()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L352) | private |
+| SiegeDeploymentView | [`void CycleShip()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L357) | public |
+| SiegeDeploymentView | [`void Cancel()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L373) | public |
+| SiegeDeploymentView | [`void ClearPreview()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L381) | private |
 
 ## Assets/Scripts/Features/Siege/Interface/SiegeFleetView.cs
 
@@ -4738,10 +5018,10 @@ HY-Sandbox/
 | SiegeHud | [`void OnDisable()`](../Assets/Scripts/Features/Siege/Interface/SiegeHud.cs#L41) | private |
 | SiegeHud | [`void Update()`](../Assets/Scripts/Features/Siege/Interface/SiegeHud.cs#L49) | private |
 | SiegeHud | [`void Refresh()`](../Assets/Scripts/Features/Siege/Interface/SiegeHud.cs#L63) | public |
-| SiegeHud | [`void RefreshQuote()`](../Assets/Scripts/Features/Siege/Interface/SiegeHud.cs#L100) | private |
-| SiegeHud | [`void StartWave()`](../Assets/Scripts/Features/Siege/Interface/SiegeHud.cs#L105) | private |
-| SiegeHud | [`void RepairCore()`](../Assets/Scripts/Features/Siege/Interface/SiegeHud.cs#L110) | private |
-| SiegeHud | [`void Restart()`](../Assets/Scripts/Features/Siege/Interface/SiegeHud.cs#L115) | private |
+| SiegeHud | [`void RefreshQuote()`](../Assets/Scripts/Features/Siege/Interface/SiegeHud.cs#L105) | private |
+| SiegeHud | [`void StartWave()`](../Assets/Scripts/Features/Siege/Interface/SiegeHud.cs#L110) | private |
+| SiegeHud | [`void RepairCore()`](../Assets/Scripts/Features/Siege/Interface/SiegeHud.cs#L115) | private |
+| SiegeHud | [`void Restart()`](../Assets/Scripts/Features/Siege/Interface/SiegeHud.cs#L120) | private |
 
 ## Assets/Scripts/Features/Siege/Interface/SiegeThreatMarkers.cs
 
@@ -4762,14 +5042,17 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeMatch | [`bool BeginNextWave()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L101) | public |
-| SiegeMatch | [`bool CanSpawn(int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L117) | public |
-| SiegeMatch | [`bool RegisterAttacker(string id, int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L122) | public |
-| SiegeMatch | [`bool ResolveAttacker(string id, bool defeated)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L134) | public |
-| SiegeMatch | [`bool GrantBonus(int coins)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L157) | public |
-| SiegeMatch | [`bool CanAfford(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L168) | public |
-| SiegeMatch | [`bool TrySpend(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L173) | public |
-| SiegeMatch | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L184) | public |
+| SiegeMatch | [`bool BeginNextWave()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L109) | public |
+| SiegeMatch | [`bool CanSpawn(int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L125) | public |
+| SiegeMatch | [`bool RegisterAttacker(string id, int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L130) | public |
+| SiegeMatch | [`bool ResolveAttacker(string id, bool defeated)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L142) | public |
+| SiegeMatch | [`bool GrantBonus(int coins)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L165) | public |
+| SiegeMatch | [`bool EnableReturnSettlement()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L177) | public |
+| SiegeMatch | [`bool CompleteReturn()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L189) | public |
+| SiegeMatch | [`void AddReward(int amount)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L202) | private |
+| SiegeMatch | [`bool CanAfford(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L214) | public |
+| SiegeMatch | [`bool TrySpend(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L219) | public |
+| SiegeMatch | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L230) | public |
 
 ## Assets/Scripts/Features/Siege/SiegeProgress.cs
 
@@ -4786,31 +5069,32 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeSession | [`void BindWorkshop(SiegeWorkshop workshop)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L26) | public |
-| SiegeSession | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L96) | public |
-| SiegeSession | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L104) | public |
-| SiegeSession | [`bool RefreshBlueprints()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L112) | public |
-| SiegeSession | [`int FindOption(SiegeShipOption[] options, string displayName, int fallback)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L146) | private static |
-| SiegeSession | [`void Awake()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L172) | private |
-| SiegeSession | [`void Start()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L183) | private |
-| SiegeSession | [`bool Begin()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L193) | public |
-| SiegeSession | [`bool BeginNextWave()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L216) | public |
-| SiegeSession | [`void NotifyRefitChanged()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L244) | public |
-| SiegeSession | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L249) | public |
-| SiegeSession | [`bool TryDeploy(int optionIndex, out string reason)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L258) | public |
-| SiegeSession | [`bool TryTakeControl(int slot)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L267) | public |
-| SiegeSession | [`bool TryTakeControl(string id)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L278) | public |
-| SiegeSession | [`bool TryRepair(bool repairBase)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L284) | public |
-| SiegeSession | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L289) | public |
-| SiegeSession | [`void End()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L308) | public |
-| SiegeSession | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L319) | public |
-| SiegeSession | [`void NotifyCockpitDestroyed(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L338) | public |
-| SiegeSession | [`void Update()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L344) | private |
-| SiegeSession | [`int ComboBonusFor(int combo, int perKill, int cap)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L381) | public static |
-| SiegeSession | [`void TickKillStreak()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L393) | private |
-| SiegeSession | [`void RepairBaseBetweenWaves()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L418) | private |
-| SiegeSession | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L453) | private |
-| SiegeSession | [`void SetSimulationActive(bool active)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L460) | private |
+| SiegeSession | [`void BindWorkshop(SiegeWorkshop workshop)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L33) | public |
+| SiegeSession | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L103) | public |
+| SiegeSession | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L111) | public |
+| SiegeSession | [`bool RefreshBlueprints()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L119) | public |
+| SiegeSession | [`int FindOption(SiegeShipOption[] options, string displayName, int fallback)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L153) | private static |
+| SiegeSession | [`void Awake()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L179) | private |
+| SiegeSession | [`void Start()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L190) | private |
+| SiegeSession | [`bool Begin()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L200) | public |
+| SiegeSession | [`bool BeginNextWave()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L225) | public |
+| SiegeSession | [`void NotifyRefitChanged()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L254) | public |
+| SiegeSession | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L259) | public |
+| SiegeSession | [`bool TryDeploy(int optionIndex, out string reason)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L268) | public |
+| SiegeSession | [`bool TryTakeControl(int slot)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L277) | public |
+| SiegeSession | [`bool TryTakeControl(string id)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L288) | public |
+| SiegeSession | [`bool TryRepair(bool repairBase)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L294) | public |
+| SiegeSession | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L299) | public |
+| SiegeSession | [`void End()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L318) | public |
+| SiegeSession | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L330) | public |
+| SiegeSession | [`void NotifyCockpitDestroyed(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L350) | public |
+| SiegeSession | [`void Update()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L356) | private |
+| SiegeSession | [`void FixedUpdate()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L399) | private |
+| SiegeSession | [`int ComboBonusFor(int combo, int perKill, int cap)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L414) | public static |
+| SiegeSession | [`void TickKillStreak()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L426) | private |
+| SiegeSession | [`void RepairBaseBetweenWaves()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L451) | private |
+| SiegeSession | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L486) | private |
+| SiegeSession | [`void SetSimulationActive(bool active)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L494) | private |
 
 ## Assets/Scripts/Features/Siege/SiegeSettings.cs
 
@@ -4926,25 +5210,25 @@ HY-Sandbox/
 | Block | [`void OnValidate()`](../Assets/Scripts/Features/Simulation/Block.cs#L106) | private |
 | Block | [`void RefreshAuthoringData()`](../Assets/Scripts/Features/Simulation/Block.cs#L123) | public |
 | Block | [`void RefreshRuntimeData(bool rebuildConnectors = false)`](../Assets/Scripts/Features/Simulation/Block.cs#L145) | public |
-| Block | [`void RefreshMass()`](../Assets/Scripts/Features/Simulation/Block.cs#L179) | public |
-| Block | [`void SetMassSettings(bool useCustomMass, float value)`](../Assets/Scripts/Features/Simulation/Block.cs#L192) | public |
-| Block | [`void Reset()`](../Assets/Scripts/Features/Simulation/Block.cs#L200) | private |
-| Block | [`void GenerateConnectionPoints()`](../Assets/Scripts/Features/Simulation/Block.cs#L205) | private |
-| Block | [`string GetDisplayInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L275) | public |
-| Block | [`string GenerateInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L280) | private |
-| Block | [`void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)`](../Assets/Scripts/Features/Simulation/Block.cs#L326) | private |
-| Block | [`Vector3 GetConnectorWorldPosition(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L340) | public |
-| Block | [`Vector3 GetConnectorWorldNormal(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L345) | public |
-| Block | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L350) | public |
-| Block | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/Block.cs#L355) | public |
-| Block | [`void CheckConnectionAfterPhysicsSync()`](../Assets/Scripts/Features/Simulation/Block.cs#L360) | internal |
-| Block | [`List<Block> Neighbors()`](../Assets/Scripts/Features/Simulation/Block.cs#L365) | public |
-| Block | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L373) | internal |
-| Block | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Block.cs#L378) | public |
-| Block | [`void RestoreConnectionParticipation()`](../Assets/Scripts/Features/Simulation/Block.cs#L384) | public |
-| Block | [`void RefreshConnectionStatus()`](../Assets/Scripts/Features/Simulation/Block.cs#L389) | internal |
-| Block | [`bool IsBlockedGhost()`](../Assets/Scripts/Features/Simulation/Block.cs#L397) | public |
-| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L437) | private |
+| Block | [`void RefreshMass()`](../Assets/Scripts/Features/Simulation/Block.cs#L185) | public |
+| Block | [`void SetMassSettings(bool useCustomMass, float value)`](../Assets/Scripts/Features/Simulation/Block.cs#L198) | public |
+| Block | [`void Reset()`](../Assets/Scripts/Features/Simulation/Block.cs#L206) | private |
+| Block | [`void GenerateConnectionPoints()`](../Assets/Scripts/Features/Simulation/Block.cs#L211) | private |
+| Block | [`string GetDisplayInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L281) | public |
+| Block | [`string GenerateInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L286) | private |
+| Block | [`void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)`](../Assets/Scripts/Features/Simulation/Block.cs#L332) | private |
+| Block | [`Vector3 GetConnectorWorldPosition(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L346) | public |
+| Block | [`Vector3 GetConnectorWorldNormal(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L351) | public |
+| Block | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L356) | public |
+| Block | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/Block.cs#L361) | public |
+| Block | [`void CheckConnectionAfterPhysicsSync()`](../Assets/Scripts/Features/Simulation/Block.cs#L366) | internal |
+| Block | [`List<Block> Neighbors()`](../Assets/Scripts/Features/Simulation/Block.cs#L371) | public |
+| Block | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L379) | internal |
+| Block | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Block.cs#L384) | public |
+| Block | [`void RestoreConnectionParticipation()`](../Assets/Scripts/Features/Simulation/Block.cs#L390) | public |
+| Block | [`void RefreshConnectionStatus()`](../Assets/Scripts/Features/Simulation/Block.cs#L395) | internal |
+| Block | [`bool IsBlockedGhost()`](../Assets/Scripts/Features/Simulation/Block.cs#L403) | public |
+| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L443) | private |
 
 ## Assets/Scripts/Features/Simulation/Connections/BatchConnectionBuilder.cs
 

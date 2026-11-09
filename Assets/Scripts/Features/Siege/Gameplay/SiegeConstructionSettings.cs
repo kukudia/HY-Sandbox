@@ -24,13 +24,14 @@ public sealed class SiegeConstructionSettings : ScriptableObject
 
     public long Cost(BlockDataList data)
     {
-        long cells = 0;
+        long price = 0;
         foreach (BlockData block in data.blocks)
         {
-            cells += (long)block.x * block.y * block.z;
+            // The hangar interior is reserved empty space; price its shell using the shared design rate.
+            price += HangarRules.IsHangar(block) ? HangarRules.ShellCost(block) : (long)block.x * block.y * block.z * Mathf.Max(1, coinsPerCell);
         }
 
-        return cells * Mathf.Max(1, coinsPerCell);
+        return price;
     }
 
     public bool Validate(BlockDataList data, out string reason)
@@ -38,6 +39,11 @@ public sealed class SiegeConstructionSettings : ScriptableObject
         try
         {
             WorldBuildingValidation.ValidateBlueprint(data);
+            if (!HangarRules.Validate(data, out reason))
+            {
+                return false;
+            }
+
             if (data.IsOutpost || data.blocks.Count == 0 || string.IsNullOrWhiteSpace(data.siegeCoreId) || !data.blocks.Exists(block => block.id == data.siegeCoreId))
             {
                 reason = "Choose a base with one designated core (not an enemy outpost).";

@@ -169,6 +169,12 @@ public class Block : MonoBehaviour
             GenerateConnectionPoints();
         }
 
+        // 机库用外包围盒存档，实体由可编辑外壳和门组成；恢复后同步净空及底板连接。
+        if (TryGetComponent(out HangarModule hangar))
+        {
+            hangar.RefreshGeometry();
+        }
+
         if (!canEditInfo || string.IsNullOrEmpty(info))
         {
             info = GenerateInfo();

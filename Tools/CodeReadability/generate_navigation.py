@@ -102,6 +102,27 @@ def main():
          'G --> N', 'G --> K', 'K -.->|底座准备后刷新| J', 'L --> O', 'O --> P', 'M --> I'],
     )
     graph(
+        "机库建造、独占部署与返航结算",
+        "源码推导：机库尺寸作为Block数据随基地保存。编辑按钮经几何/占位检查提交可撤销尺寸动作；生成真实外壳与底部支撑。两宿主共用容量筛选、居中部署和独占槽位。固定物理步按实际有电推进力导航、开门及入库；失能、损毁机库或超时则报废。全部返回结束才一次性入账，再执行原蓝图付费修理；修理恢复的机库按原Block身份重连槽位。退出解除动力请求和导航，销毁归属副场景的舰队。",
+        {"A": "SiegeBaseWorkshop.SelectHangar", "B": "BuildManager.CreateBlock",
+         "C": "HangarResizeButton.Resize", "D": "HangarModule.TryResize",
+         "E": "HangarModule.RefreshGeometry", "F": "BuildManager.SaveBlock",
+         "G": "SiegeDeploymentView.RefreshOptions", "H": "SiegeFleet.FitsHangar",
+         "I": "SiegeFleet.DeployAt", "J": "HangarModule.GetDockPose",
+         "K": "SiegeReturnFlight.BeginLaunch", "L": "SiegeMatch.ResolveAttacker",
+         "M": "SiegeReturnFlight.BeginReturn", "N": "SiegeReturnFlight.Tick",
+         "O": "HangarModule.FixedUpdate", "P": "SiegeFleet.Scrap",
+         "Q": "SiegeMatch.CompleteReturn", "R": "SiegeBase.Repair",
+         "S": "SiegeFleet.GetHangar", "T": "SiegeReturnFlight.Stop",
+         "U": "SiegeSession.FixedUpdate", "V": "SiegeGameplayStage.FixedUpdate"},
+        ['A -.->|确认放置| B', 'B --> F', 'C --> D', 'D --> E', 'D --> F',
+         'G --> H', 'I --> H', 'I --> J', 'I -.->|开始波次| K',
+         'L -.->|清波后Returning| M', 'K -.->|固定物理步| N', 'M -.->|固定物理步| N',
+         'U --> N', 'V --> N', 'N -.->|门请求| O', 'N -->|失能或超时| P',
+         'N -.->|全部完成后| Q', 'Q -.->|付费整备| R', 'R -.->|缺件恢复| S',
+         'T -.->|解除动力请求与门请求| O'],
+    )
+    graph(
         "GPU特效对象池与释放",
         "源码推导：VFX Graph 在GPU模拟粒子；场景池按模板复用对象，没有活动对象数量硬上限，只限制闲置缓存。爆炸、传送门、残骸和陨石尾迹共用Rent，复位参数后播放，保留尾烟延时，再归还或清理。FinishPlayback若略早于截止时间触发会重新预约，避免丢失回收；场景卸载释放池及子实例。",
         {"A": "BlockVfxLibrary.Play", "B": "VfxEffectPool.Rent", "C": "VfxEffect.ResetForRent",
