@@ -13,6 +13,7 @@ internal sealed class MenuPlayDraft
     private string playerName;
     private string enemyName;
     private string buildingName;
+    private string baseName;
     private (IBlockAction[] Undo, IBlockAction[] Redo) history;
     public bool Parked => objects.HasDraft;
 
@@ -27,6 +28,7 @@ internal sealed class MenuPlayDraft
         playerName = saves.currentSaveName;
         enemyName = saves.currentEnemyBlueprintName;
         buildingName = saves.currentBuildingBlueprintName;
+        baseName = saves.currentBaseBlueprintName;
         history = ActionManager.instance.CaptureHistory();
         build.DeselectBlock();
         objects.Park();
@@ -56,6 +58,7 @@ internal sealed class MenuPlayDraft
         saves.currentSaveName = playerName;
         saves.currentEnemyBlueprintName = enemyName;
         saves.currentBuildingBlueprintName = buildingName;
+        saves.currentBaseBlueprintName = baseName;
         BuildManager.instance.RestoreWorkshopContext(context, foundation);
         objects.Restore();
         PlayManager.instance.blocksParent = GameManager.instance.blocksParent;

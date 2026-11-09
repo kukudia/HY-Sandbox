@@ -161,6 +161,7 @@ public static class GameModeAuthoring
         Set(data, "retry", retry);
         Set(data, "cancel", cancel);
         data.ApplyModifiedPropertiesWithoutUndo();
+        SiegeConstructionAuthoring.InstallPreselection(main);
         return panel;
     }
 

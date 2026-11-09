@@ -40,7 +40,7 @@ public sealed class SiegeConstructionSettings : ScriptableObject
             WorldBuildingValidation.ValidateBlueprint(data);
             if (data.IsOutpost || data.blocks.Count == 0 || string.IsNullOrWhiteSpace(data.siegeCoreId) || !data.blocks.Exists(block => block.id == data.siegeCoreId))
             {
-                reason = "Choose a building with one designated core (not an enemy outpost).";
+                reason = "Choose a base with one designated core (not an enemy outpost).";
                 return false;
             }
 

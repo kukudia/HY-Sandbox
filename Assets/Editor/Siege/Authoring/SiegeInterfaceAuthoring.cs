@@ -488,6 +488,7 @@ public static class SiegeInterfaceAuthoring
         }
 
         Place((RectTransform)obj.transform, x, y, width, 54f);
+        DropdownTemplateAuthoring.Apply(dropdown);
         return dropdown;
     }
 

@@ -545,6 +545,7 @@ public static class MainMenuAuthoring
         control.GetComponent<Image>().color = new Color(.16f, .22f, .3f);
         control.template.GetComponent<Image>().color = new Color(.1f, .15f, .22f);
         StyleFonts(control.gameObject, 19);
+        DropdownTemplateAuthoring.Apply(control);
         return control;
     }
 

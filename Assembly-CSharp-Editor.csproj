@@ -153,6 +153,8 @@
     <Compile Include="Assets\Editor\Siege\Benchmarks\SiegeTopologyBaseline.cs" />
     <Compile Include="Assets\Editor\Diagnostics\UpgradeCompatibilityChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Rules\SiegeRulesChecks.cs" />
+    <Compile Include="Assets\Editor\Building\Validation\BaseLibraryChecks.cs" />
+    <Compile Include="Assets\Editor\Presentation\Interface\DropdownTemplateAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Rules\SiegePlayerSurveyChecks.cs" />
     <Compile Include="Assets\Editor\Building\Interface\BuildInteractionSetup.cs" />
     <Compile Include="Assets\Editor\World\WorldSessionAuthoring.cs" />

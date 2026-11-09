@@ -69,3 +69,8 @@ Assets/Editor/MainMenu/*.meta whitespace=-blank-at-eol
 Assets/Scripts/Features/MainMenu.meta whitespace=-blank-at-eol
 Assets/Scripts/Features/MainMenu/*.meta whitespace=-blank-at-eol
 Assets/Scripts/Features/MainMenu/**/*.meta whitespace=-blank-at-eol
+# Dropdown template repairs saved by the connected Editor.
+Assets/Scenes/Siege*Stress.unity whitespace=-blank-at-eol
+Assets/Editor/Presentation/Interface/DropdownTemplateAuthoring.cs.meta whitespace=-blank-at-eol
+Assets/Editor/Building/Validation/BaseLibraryChecks.cs.meta whitespace=-blank-at-eol
+Assets/Scripts/Features/Building/BlueprintLoading/BaseBlueprintMigration.cs.meta whitespace=-blank-at-eol

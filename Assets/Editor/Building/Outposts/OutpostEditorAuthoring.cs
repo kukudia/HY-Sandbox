@@ -31,6 +31,7 @@ public static class OutpostEditorAuthoring
             {
                 AddTemplateCopy(root, root.GetComponent<BuildingOutpostEditor>());
                 AddMatchingBase(root, root.GetComponent<BuildingOutpostEditor>());
+                GroupOutpostControls(root);
                 PrefabUtility.SaveAsPrefabAsset(root, path);
                 return;
             }
@@ -95,6 +96,7 @@ public static class OutpostEditorAuthoring
                 text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             }
 
+            GroupOutpostControls(root);
             PrefabUtility.SaveAsPrefabAsset(root, path);
         }
         finally
@@ -105,7 +107,7 @@ public static class OutpostEditorAuthoring
 
     private static void AddTemplateCopy(GameObject root, BuildingOutpostEditor editor)
     {
-        if (root.transform.Find("BuildingTemplate") != null)
+        if (root.transform.Find("BuildingTemplate") != null || root.transform.Find("Outpost Controls/BuildingTemplate") != null)
         {
             return;
         }
@@ -136,9 +138,46 @@ public static class OutpostEditorAuthoring
         serialized.ApplyModifiedPropertiesWithoutUndo();
     }
 
+    private static void GroupOutpostControls(GameObject root)
+    {
+        Transform group = root.transform.Find("Outpost Controls");
+        if (group == null)
+        {
+            var obj = new GameObject("Outpost Controls", typeof(RectTransform));
+            RectTransform rect = (RectTransform)obj.transform;
+            rect.SetParent(root.transform, false);
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = rect.offsetMax = Vector2.zero;
+            group = rect;
+            var children = new System.Collections.Generic.List<RectTransform>();
+            foreach (RectTransform child in root.transform)
+            {
+                if (child != group && child.anchoredPosition.y <= -146f)
+                {
+                    children.Add(child);
+                }
+            }
+
+            foreach (RectTransform child in children)
+            {
+                child.SetParent(group, true);
+            }
+        }
+
+        var panel = new SerializedObject(root.GetComponent<BuildingEditorPanel>());
+        panel.FindProperty("_outpostControls").objectReferenceValue = group.gameObject;
+        panel.FindProperty("_title").objectReferenceValue = root.transform.Find("Title").GetComponent<Text>();
+        panel.ApplyModifiedPropertiesWithoutUndo();
+        foreach (Dropdown dropdown in root.GetComponentsInChildren<Dropdown>(true))
+        {
+            DropdownTemplateAuthoring.Apply(dropdown);
+        }
+    }
+
     private static void AddMatchingBase(GameObject root, BuildingOutpostEditor editor)
     {
-        if (root.transform.Find("MatchingBase") != null)
+        if (root.transform.Find("MatchingBase") != null || root.transform.Find("Outpost Controls/MatchingBase") != null)
         {
             return;
         }

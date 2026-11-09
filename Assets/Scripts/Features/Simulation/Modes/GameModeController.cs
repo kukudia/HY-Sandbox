@@ -81,6 +81,7 @@ public sealed class GameModeController : MonoBehaviour
 
     public void SelectSiege()
     {
+        requestedSiegeDesign = panel.SelectedBaseName;
         Select(false);
     }
 
@@ -180,12 +181,7 @@ public sealed class GameModeController : MonoBehaviour
 
             draft.Park();
             MainUIPanels.instance.buildPanel.SetActive(false);
-            siege.Enter(this, buildEnvironment);
-            if (!string.IsNullOrEmpty(requestedSiegeDesign))
-            {
-                siege.SelectDesignByName(requestedSiegeDesign);
-            }
-
+            siege.Enter(this, buildEnvironment, requestedSiegeDesign);
             panel.Show(false);
             State = GameModeState.Siege;
         }
@@ -313,7 +309,11 @@ public sealed class GameModeController : MonoBehaviour
         SceneObjectQuery.FindInScene<TransientEffectPool>(gameObject.scene)?.ClearActive();
         world = null;
         siege = null;
-        requestedSiegeDesign = null;
+        if (!failed)
+        {
+            requestedSiegeDesign = null;
+        }
+
         modeScene = default;
         draft.Restore();
         MainUIPanels.instance.RestoreBuildPanels();

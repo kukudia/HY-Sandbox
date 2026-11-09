@@ -73,11 +73,11 @@ internal static class OutpostEditorPlayerChecks
             check(build.IsEditingBuildingBlueprint, "Actual Player keyboard shortcut opens building authoring");
             BuildingOutpostEditor editor = SceneObjectQuery.FindInActiveScene<BuildingOutpostEditor>();
             check(editor != null, "Saved Main exposes the active outpost authoring panel in Player");
-            Dropdown template = editor.transform.Find("BuildingTemplate").GetComponent<Dropdown>();
+            Dropdown template = editor.transform.Find("Outpost Controls/BuildingTemplate").GetComponent<Dropdown>();
             int index = template.options.FindIndex(option => option.text == "CODEX_E03_Manta Outpost");
             check(index >= 0, "Development Player includes matching Manta base");
             template.value = index;
-            editor.transform.Find("CopyTemplate").GetComponent<Button>().onClick.Invoke();
+            editor.transform.Find("Outpost Controls/CopyTemplate").GetComponent<Button>().onClick.Invoke();
             yield return null;
             while (build.IsLoadingBlocks)
             {

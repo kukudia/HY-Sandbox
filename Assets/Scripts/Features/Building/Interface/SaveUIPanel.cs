@@ -24,8 +24,8 @@ public class SaveUIPanel : MonoBehaviour
 
         if (BuildManager.instance.IsEditingBuildingBlueprint)
         {
-            SaveManager.instance.GetAllBuildingBlueprintNames();
-            ShowEntries(SaveManager.instance.buildingBlueprints, SaveManager.instance.LoadBuildingBlueprint);
+            SaveManager.instance.GetAllStructureBlueprintNames();
+            ShowEntries(SaveManager.instance.CurrentStructureNames, SaveManager.instance.LoadEditedStructure);
         }
         else if (BuildManager.instance.IsEditingEnemyBlueprint)
         {

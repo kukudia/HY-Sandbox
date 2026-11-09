@@ -229,7 +229,7 @@ public sealed class MainMenuController : MonoBehaviour
         else
         {
             BuildManager build = BuildManager.instance;
-            bool same = GameManager.instance.blocksParent != null && build.CurrentBuildTarget == (entry.Building ? BuildTargetKind.BuildingBlueprint : BuildTargetKind.PlayerSave) && build.CurrentBuildName == name;
+            bool same = GameManager.instance.blocksParent != null && build.CurrentBuildTarget == (entry.Building ? BuildTargetKind.BaseBlueprint : BuildTargetKind.PlayerSave) && build.CurrentBuildName == name;
             if (!same)
             {
                 if (!editing)
@@ -300,7 +300,7 @@ public sealed class MainMenuController : MonoBehaviour
         MainUIPanels.instance.HideCreatePanel();
         if (building)
         {
-            SaveManager.instance.LoadBuildingBlueprint(name);
+            SaveManager.instance.LoadBaseBlueprint(name);
         }
         else
         {

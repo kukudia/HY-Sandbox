@@ -4,7 +4,8 @@ public enum BuildTargetKind
 {
     PlayerSave,
     EnemyBlueprint,
-    BuildingBlueprint
+    BuildingBlueprint,
+    BaseBlueprint
 }
 
 public readonly struct BuildTargetContext
@@ -26,14 +27,15 @@ public readonly struct BuildTargetContext
     }
 
     public bool IsEnemyBlueprint => Kind == BuildTargetKind.EnemyBlueprint;
-    public bool IsBuildingBlueprint => Kind == BuildTargetKind.BuildingBlueprint;
+    public bool IsBaseBlueprint => Kind == BuildTargetKind.BaseBlueprint;
+    public bool IsBuildingBlueprint => Kind == BuildTargetKind.BuildingBlueprint || IsBaseBlueprint;
     public bool IsDeveloperBlueprint => Kind != BuildTargetKind.PlayerSave;
     public string Name => IsBuildingBlueprint ? BuildingBlueprintName : IsEnemyBlueprint ? EnemyBlueprintName : SaveName;
     public UnitFaction Faction => IsEnemyBlueprint ? UnitFaction.Enemy : UnitFaction.Player;
 
     public string GetSavePath(SaveManager saveManager)
     {
-        return IsBuildingBlueprint ? saveManager.GetBuildingBlueprintPath(BuildingBlueprintName) : IsEnemyBlueprint ? saveManager.GetEnemyBlueprintPath(EnemyBlueprintName) : saveManager.GetSavePath(SaveName);
+        return IsBaseBlueprint ? saveManager.GetBaseBlueprintPath(BuildingBlueprintName) : IsBuildingBlueprint ? saveManager.GetBuildingBlueprintPath(BuildingBlueprintName) : IsEnemyBlueprint ? saveManager.GetEnemyBlueprintPath(EnemyBlueprintName) : saveManager.GetSavePath(SaveName);
     }
 
     public static BuildTargetContext PlayerSave(string saveName, string enemyBlueprintName)
@@ -49,6 +51,11 @@ public readonly struct BuildTargetContext
     public static BuildTargetContext BuildingBlueprint(string saveName, string enemyBlueprintName, string buildingBlueprintName)
     {
         return new BuildTargetContext(BuildTargetKind.BuildingBlueprint, saveName, enemyBlueprintName, buildingBlueprintName);
+    }
+
+    public static BuildTargetContext BaseBlueprint(string saveName, string enemyBlueprintName, string name)
+    {
+        return new BuildTargetContext(BuildTargetKind.BaseBlueprint, saveName, enemyBlueprintName, name);
     }
 
     private static string NormalizeName(string name, string fallback)

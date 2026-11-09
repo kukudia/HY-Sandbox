@@ -32,14 +32,14 @@ public sealed class SiegeBaseWorkshop : MonoBehaviour
     {
         if (Ready)
         {
-            BuildManager.instance.ToggleBuildingBlueprintBuildMode();
+            BuildManager.instance.ToggleBaseBlueprintBuildMode();
             message = null;
         }
     }
 
     public void CopyStarter()
     {
-        if (!Ready || !BuildManager.instance.IsEditingBuildingBlueprint)
+        if (!Ready || !BuildManager.instance.IsEditingBaseBlueprint)
         {
             return;
         }
@@ -48,14 +48,14 @@ public sealed class SiegeBaseWorkshop : MonoBehaviour
         {
             BlockDataList design = JsonUtility.FromJson<BlockDataList>(settings.Starter.text);
             string name = SaveManager.instance.SaveNewBuilding("Siege Base", design);
-            BuildManager.instance.EnterBuildingBlueprintBuildMode(name);
+            BuildManager.instance.EnterBaseBlueprintBuildMode(name);
             message = "Starter copied to your own blueprint. Changes save automatically.";
         });
     }
 
     public void DesignateCore()
     {
-        if (!Ready || !BuildManager.instance.HasBuildingBlueprint)
+        if (!Ready || !BuildManager.instance.IsEditingBaseBlueprint || !BuildManager.instance.HasBuildingBlueprint)
         {
             return;
         }
@@ -73,7 +73,7 @@ public sealed class SiegeBaseWorkshop : MonoBehaviour
             // Write a new snapshot before updating the live cache so a failed write preserves its metadata.
             BlockDataList copy = JsonUtility.FromJson<BlockDataList>(JsonUtility.ToJson(data));
             copy.siegeCoreId = selected.uniqueId;
-            string path = SaveManager.instance.GetBuildingBlueprintPath(BuildManager.instance.CurrentBuildingBlueprintName);
+            string path = SaveManager.instance.GetBaseBlueprintPath(BuildManager.instance.CurrentBuildingBlueprintName);
             string pending = path + ".pending";
             File.WriteAllText(pending, JsonUtility.ToJson(copy, true));
             File.Replace(pending, path, null);
@@ -102,7 +102,7 @@ public sealed class SiegeBaseWorkshop : MonoBehaviour
         }
 
         nextRefresh = Time.unscaledTime + 1f;
-        bool editing = BuildManager.instance.IsEditingBuildingBlueprint;
+        bool editing = BuildManager.instance.IsEditingBaseBlueprint;
         GetComponent<Image>().enabled = editing;
         toggle.interactable = Ready;
         toggle.GetComponentInChildren<Text>().text = editing ? "BACK TO VEHICLE" : "BASE EDITOR";

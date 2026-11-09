@@ -251,6 +251,7 @@
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\DetachedPartSmokeTrail.cs" />
     <Compile Include="Assets\Scripts\Features\World\Validation\WorldPlayerSmokeChecks.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Fleet\SiegeRefit.cs" />
+    <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BaseBlueprintMigration.cs" />
     <Compile Include="Assets\Scripts\Features\World\Buildings\Data\WorldBuildingCatalog.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\BlockVfxLibrary.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Damage\Durability.cs" />

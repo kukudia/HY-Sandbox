@@ -66,6 +66,7 @@ public static class SiegeConstructionAuthoring
             62,
             14));
         data.ApplyModifiedPropertiesWithoutUndo();
+        InstallPreselection(main);
         EditorSceneManager.SaveScene(main);
         Scene siege = EditorSceneManager.OpenScene(GameModeAuthoring.SiegePath, OpenSceneMode.Additive);
         SceneManager.SetActiveScene(siege);
@@ -101,7 +102,7 @@ public static class SiegeConstructionAuthoring
 
         root.Find("Overview").SetPositionAndRotation(new Vector3(24, 65, -72), Quaternion.Euler(36, -12, 0));
         RemoveOwned(canvas, "Construction Controls");
-        RectTransform controls = Rect("Construction Controls", canvas, new Vector2(325, 550));
+        RectTransform controls = Rect("Construction Controls", canvas, new Vector2(325, 350));
         controls.anchorMin = controls.anchorMax = controls.pivot = new Vector2(0, .5f);
         controls.anchoredPosition = new Vector2(15, 0);
         controls.gameObject.AddComponent<Image>().color = new Color(.025f, .055f, .08f, .96f);
@@ -110,68 +111,41 @@ public static class SiegeConstructionAuthoring
         Label(
             "Title",
             controls,
-            "BASE DEPLOYMENT",
+            "BASE DEFENCE",
             162,
-            510,
+            310,
             300,
             35,
             23);
-        Dropdown dropdown = DropdownAt(controls, 162, 460);
-        Set(panelData, "designs", dropdown);
-        Label(
-            "Coordinates",
-            controls,
-            "GROUND POSITION   X / Z",
-            162,
-            420,
-            300,
-            24,
-            15);
-        Set(panelData, "x", Input(controls, "X", 85, 384));
-        Set(panelData, "z", Input(controls, "Z", 240, 384));
-        Set(panelData, "rotate", Button(
-            "Rotate",
-            controls,
-            "ROTATE 0",
-            162,
-            335,
-            290));
-        Set(panelData, "deploy", Button(
-            "Deploy",
-            controls,
-            "CONFIRM DEPLOYMENT",
-            162,
-            285,
-            290));
         Set(panelData, "details", Label(
             "Design",
             controls,
             "",
             162,
-            220,
+            266,
             295,
-            90,
+            42,
             15));
         Set(panelData, "wave", Button(
             "Wave",
             controls,
             "START NEXT WAVE",
             162,
-            145,
+            204,
             290));
         Set(panelData, "repair", Button(
             "Repair",
             controls,
             "REPAIR + REBUILD",
             162,
-            95,
+            154,
             290));
         Set(panelData, "summary", Label(
             "Summary",
             controls,
             "",
             162,
-            35,
+            83,
             295,
             65,
             16));
@@ -193,6 +167,7 @@ public static class SiegeConstructionAuthoring
         Set(stageData, "buildings", buildings);
         Set(stageData, "arena", arena);
         Set(stageData, "panel", panel);
+        Set(stageData, "baseSpawn", root.Find("Base Spawn"));
         stageData.ApplyModifiedPropertiesWithoutUndo();
         CopyPool<VfxEffectPool>(main, siege);
         CopyPool<TurretProjectilePool>(main, siege);
@@ -239,6 +214,38 @@ public static class SiegeConstructionAuthoring
         data.ApplyModifiedPropertiesWithoutUndo();
         AssetDatabase.CreateAsset(settings, SettingsPath);
         return settings;
+    }
+
+    public static void InstallPreselection(Scene main)
+    {
+        GameModePanel modePanel = SceneObjectQuery.FindInScene<GameModePanel>(main, FindObjectsInactive.Include);
+        Transform old = modePanel.transform.Find("Base Selection");
+        Dropdown picker;
+        if (old == null)
+        {
+            GameObject obj = DefaultControls.CreateDropdown(new DefaultControls.Resources());
+            obj.name = "Base Selection";
+            obj.transform.SetParent(modePanel.transform, false);
+            RectTransform rect = (RectTransform)obj.transform;
+            rect.anchoredPosition = new Vector2(190, -65);
+            rect.sizeDelta = new Vector2(340, 38);
+            picker = obj.GetComponent<Dropdown>();
+            picker.captionText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            picker.itemText.font = picker.captionText.font;
+            picker.captionText.text = "Select Siege base";
+        }
+        else
+        {
+            picker = old.GetComponent<Dropdown>();
+        }
+
+        DropdownTemplateAuthoring.Apply(picker);
+        var data = new SerializedObject(modePanel);
+        Set(data, "baseDesigns", picker);
+        data.ApplyModifiedPropertiesWithoutUndo();
+        Transform details = modePanel.transform.Find("Details");
+        ((RectTransform)details).anchoredPosition = new Vector2(0, -117);
+        details.GetComponent<Text>().text = "Choose the Siege base before entering. It spawns automatically.\nYour construction is preserved when you return.";
     }
 
     private static void CopyPool<T>(Scene main, Scene target)
@@ -324,38 +331,6 @@ public static class SiegeConstructionAuthoring
             34,
             16);
         return button;
-    }
-
-    private static InputField Input(Transform parent, string name, float x, float y)
-    {
-        GameObject obj = DefaultControls.CreateInputField(new DefaultControls.Resources());
-        obj.name = name;
-        obj.transform.SetParent(parent, false);
-        At((RectTransform)obj.transform, x, y, 130, 36);
-        InputField input = obj.GetComponent<InputField>();
-        input.contentType = InputField.ContentType.IntegerNumber;
-        input.text = "-14";
-        foreach (Text label in obj.GetComponentsInChildren<Text>(true))
-        {
-            label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            label.fontSize = 18;
-        }
-
-        return input;
-    }
-
-    private static Dropdown DropdownAt(Transform parent, float x, float y)
-    {
-        GameObject obj = DefaultControls.CreateDropdown(new DefaultControls.Resources());
-        obj.transform.SetParent(parent, false);
-        At((RectTransform)obj.transform, x, y, 295, 38);
-        foreach (Text label in obj.GetComponentsInChildren<Text>(true))
-        {
-            label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            label.fontSize = 16;
-        }
-
-        return obj.GetComponent<Dropdown>();
     }
 
     private static void Set(SerializedObject data, string field, Object value)

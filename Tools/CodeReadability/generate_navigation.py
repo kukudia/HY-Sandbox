@@ -74,18 +74,32 @@ def main():
     )
     graph(
         "基地设计、部署与守波",
-        "源码推导：Main保存基地设计；副场景只读快照和静态预览，确认时复用建筑连接图验证地面支撑。新版与预研共用波次和修缮；净空/余额通过才恢复原设计并扣费。核心事件或撤退汇入结算，返回停止模拟、卸载副场景、恢复Main原稿。",
+        "源码推导：Main保存基地设计；基地使用独立BaseBlueprints目录；副场景只读进入前选定的快照，在可编辑出生点自动生成并验证地面支撑。新版与预研共用波次和修缮；净空/余额通过才恢复原设计并扣费。核心事件或撤退汇入结算，返回停止模拟、卸载副场景、恢复Main原稿。",
         {"A": "SiegeBaseWorkshop.DesignateCore", "B": "GameModeController.LoadMode",
-         "C": "SiegeGameplayStage.Enter", "D": "SiegeGameplayStage.SelectDesign",
+         "C": "SiegeGameplayStage.Enter", "D": "SaveManager.GetBaseBlueprintPath",
          "E": "SiegeConstructionSettings.Validate", "F": "SiegeGameplayStage.Deploy",
          "G": "SiegeBase.Create", "H": "BuildingRuntime.HasFullFoundationSupport",
          "I": "SiegeGameplayStage.BeginWave", "J": "SiegeWaveDirector.Tick",
          "K": "SiegeBase.Repair", "L": "BuildingRefit.Apply", "M": "SiegeGameplayStage.Settle",
          "N": "GameModeController.ReturnRoutine", "O": "SiegeGameplayStage.Exit", "P": "PlayDraft.Restore"},
-        ['A -.->|保存后选择模式| B', 'B --> C', 'C --> D', 'D --> E', 'D -.->|用户确认| F',
+        ['A -.->|保存后选择模式| B', 'B --> C', 'C --> D', 'C --> E', 'C -->|出生点自动部署| F',
          'F --> G', 'F --> H', 'F -.->|用户开始| I', 'I -.->|Unity Update| J',
          'J -.->|整备阶段用户维修| K', 'K --> L', 'G -.->|核心销毁事件| M',
          'I -.->|用户撤退| M', 'M -.->|用户返回| N', 'N --> O', 'N --> P'],
+    )
+    graph(
+        "基地独立库与结构编辑",
+        "源码推导：菜单冷读与Main目录初始化复用同一迁移；仅已标核心且非据点的旧建筑复制到BaseBlueprints，校验字节并归档原件，同名不覆盖。基地和普通建筑共用结构编辑与连接规则，显式目标决定列表、文件路径和CRUD；进入结构编辑恢复输入，使用独立建造距离，基地隐藏据点表单。",
+        {"A": "SaveManager.EnsureSaveDirectories", "B": "BaseBlueprintMigration.Run",
+         "C": "SaveManager.GetBaseBlueprintFiles", "D": "MenuBlueprintLibrary.Files",
+         "E": "SaveManager.LoadBaseBlueprint", "F": "BuildManager.EnterBaseBlueprintBuildMode",
+         "G": "BuildManager.EnterStructureBlueprintBuildMode", "H": "SaveManager.GetAllStructureBlueprintNames",
+         "I": "SaveManager.GetEditedStructurePath", "J": "BuildingEditorPanel.Refresh",
+         "K": "BuildManager.LoadAllBlocks", "L": "SaveManager.RenameBuildingBlueprint",
+         "M": "SaveManager.DeleteBuildingBlueprint", "N": "InputManager.EnterBuildMode",
+         "O": "SaveManager.RenameBlueprint", "P": "SaveManager.FilesFor"},
+        ['A --> B', 'D --> C', 'C --> B', 'E --> F', 'F --> G', 'G --> H', 'G --> I',
+         'G --> N', 'G --> K', 'K -.->|底座准备后刷新| J', 'L --> O', 'O --> P', 'M --> I'],
     )
     graph(
         "GPU特效对象池与释放",

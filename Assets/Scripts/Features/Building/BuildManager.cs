@@ -20,7 +20,9 @@ public class BuildManager : MonoBehaviour
     private ConnectorPlacementHints _connectorHints;
     [SerializeField, Min(0.1f)]
     private float _buildRange = 15f;
-    public float BuildRange => Mathf.Max(0.1f, _buildRange);
+    [SerializeField, Min(1f)]
+    private float _structureBuildRange = 150f;
+    public float BuildRange => Mathf.Max(0.1f, IsEditingBuildingBlueprint ? _structureBuildRange : _buildRange);
 
     public Material highlightMaterial;
     [Header("Current")]
@@ -37,6 +39,8 @@ public class BuildManager : MonoBehaviour
     [SerializeField]
     private bool _buildingBlueprintBuildMode;
     [SerializeField]
+    private bool _baseBlueprintBuildMode;
+    [SerializeField]
     private string _currentBuildingBlueprintName = string.Empty;
     public string CurrentBuildingBlueprintName => _currentBuildingBlueprintName;
     public bool HasBuildingBlueprint => IsEditingBuildingBlueprint && !string.IsNullOrEmpty(CurrentBuildingBlueprintName);
@@ -44,7 +48,8 @@ public class BuildManager : MonoBehaviour
     {
         get; private set;
     }
-    private BuildTargetContext CurrentBuildContext => _buildingBlueprintBuildMode ? BuildTargetContext.BuildingBlueprint(currentSaveName, currentEnemyBlueprintName, _currentBuildingBlueprintName) : enemyBlueprintBuildMode ? BuildTargetContext.EnemyBlueprint(currentSaveName, currentEnemyBlueprintName) : BuildTargetContext.PlayerSave(currentSaveName, currentEnemyBlueprintName);
+    private BuildTargetContext CurrentBuildContext => _baseBlueprintBuildMode ? BuildTargetContext.BaseBlueprint(currentSaveName, currentEnemyBlueprintName, _currentBuildingBlueprintName) : _buildingBlueprintBuildMode ? BuildTargetContext.BuildingBlueprint(currentSaveName, currentEnemyBlueprintName, _currentBuildingBlueprintName) : enemyBlueprintBuildMode ? BuildTargetContext.EnemyBlueprint(currentSaveName, currentEnemyBlueprintName) : BuildTargetContext.PlayerSave(currentSaveName, currentEnemyBlueprintName);
+    public bool IsEditingBaseBlueprint => CurrentBuildContext.IsBaseBlueprint;
     private string savePath => CurrentBuildContext.GetSavePath(SaveManager.instance);
     public bool IsEditingEnemyBlueprint => CurrentBuildContext.IsEnemyBlueprint;
     public bool IsEditingBuildingBlueprint => CurrentBuildContext.IsBuildingBlueprint;
@@ -287,12 +292,35 @@ public class BuildManager : MonoBehaviour
 
     public void EnterBuildingBlueprintBuildMode(string blueprintName)
     {
+        EnterStructureBlueprintBuildMode(blueprintName, false);
+    }
+
+    public void ToggleBaseBlueprintBuildMode()
+    {
+        if (IsEditingBaseBlueprint)
+        {
+            ExitDeveloperBlueprintBuildMode(true);
+            return;
+        }
+
+        SaveManager.instance.GetAllBaseBlueprintNames();
+        string name = SaveManager.instance.baseBlueprints.Contains(SaveManager.instance.currentBaseBlueprintName) ? SaveManager.instance.currentBaseBlueprintName : SaveManager.instance.baseBlueprints.Count > 0 ? SaveManager.instance.baseBlueprints[0] : string.Empty;
+        EnterBaseBlueprintBuildMode(name);
+    }
+
+    public void EnterBaseBlueprintBuildMode(string blueprintName)
+    {
+        EnterStructureBlueprintBuildMode(blueprintName, true);
+    }
+
+    private void EnterStructureBlueprintBuildMode(string blueprintName, bool siegeBase)
+    {
         if (PlayManager.instance != null && (PlayManager.instance.playMode || (PlayManager.instance.Modes != null && PlayManager.instance.Modes.State != GameModeState.Building)))
         {
             return;
         }
 
-        BuildTargetContext target = BuildTargetContext.BuildingBlueprint(currentSaveName, currentEnemyBlueprintName, blueprintName);
+        BuildTargetContext target = siegeBase ? BuildTargetContext.BaseBlueprint(currentSaveName, currentEnemyBlueprintName, blueprintName) : BuildTargetContext.BuildingBlueprint(currentSaveName, currentEnemyBlueprintName, blueprintName);
         if (IsLoadingBuildTarget(target))
         {
             return;
@@ -302,12 +330,23 @@ public class BuildManager : MonoBehaviour
         currentBlockResourcePath = string.Empty;
         ResetBuildState();
         SaveManager saves = SaveManager.instance;
-        saves.GetAllBuildingBlueprintNames();
+        InputManager.instance.EnterBuildMode();
+        InputManager.instance.keyInput = true;
+        enabled = true;
+        saves.GetAllStructureBlueprintNames();
         // Opening is read-only. An absent target becomes an empty editor, never an implicit file.
-        if (string.IsNullOrEmpty(CurrentBuildingBlueprintName) || !System.IO.File.Exists(saves.GetBuildingBlueprintPath(CurrentBuildingBlueprintName)))
+        if (string.IsNullOrEmpty(CurrentBuildingBlueprintName) || !System.IO.File.Exists(saves.GetEditedStructurePath(CurrentBuildingBlueprintName)))
         {
             SetCurrentBuildingBlueprintName(string.Empty);
-            saves.currentBuildingBlueprintName = string.Empty;
+            if (siegeBase)
+            {
+                saves.currentBaseBlueprintName = string.Empty;
+            }
+            else
+            {
+                saves.currentBuildingBlueprintName = string.Empty;
+            }
+
             Foundation = null;
             if (GameManager.instance.blocksParent != null)
             {
@@ -319,7 +358,7 @@ public class BuildManager : MonoBehaviour
             saves.blocks.Clear();
             MainUIPanels.instance.RefreshBlueprintEditorMode();
             RefreshBlueprintUI();
-            if (saves.buildingBlueprints.Count == 0)
+            if (saves.CurrentStructureNames.Count == 0)
             {
                 MainUIPanels.instance.ShowCreatePanel();
             }
@@ -327,7 +366,15 @@ public class BuildManager : MonoBehaviour
             return;
         }
 
-        saves.currentBuildingBlueprintName = CurrentBuildingBlueprintName;
+        if (siegeBase)
+        {
+            saves.currentBaseBlueprintName = CurrentBuildingBlueprintName;
+        }
+        else
+        {
+            saves.currentBuildingBlueprintName = CurrentBuildingBlueprintName;
+        }
+
         MainUIPanels.instance.RefreshBlueprintEditorMode();
         LoadAllBlocks();
     }
@@ -408,7 +455,7 @@ public class BuildManager : MonoBehaviour
         _currentBuildingBlueprintName = blueprintName;
         if (IsEditingBuildingBlueprint)
         {
-            SetBuildTarget(BuildTargetContext.BuildingBlueprint(currentSaveName, currentEnemyBlueprintName, blueprintName));
+            SetBuildTarget(IsEditingBaseBlueprint ? BuildTargetContext.BaseBlueprint(currentSaveName, currentEnemyBlueprintName, blueprintName) : BuildTargetContext.BuildingBlueprint(currentSaveName, currentEnemyBlueprintName, blueprintName));
         }
     }
 
@@ -788,6 +835,7 @@ public class BuildManager : MonoBehaviour
         StopActiveBlockLoad();
         enemyBlueprintBuildMode = context.IsEnemyBlueprint;
         _buildingBlueprintBuildMode = context.IsBuildingBlueprint;
+        _baseBlueprintBuildMode = context.IsBaseBlueprint;
         if (context.IsBuildingBlueprint)
         {
             _currentBuildingBlueprintName = context.BuildingBlueprintName;

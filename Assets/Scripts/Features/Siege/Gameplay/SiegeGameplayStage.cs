@@ -1,5 +1,5 @@
-// 职责：新版基地战的设计选择、部署、真实守波和整备；共享波次/修缮机制，不依赖旧Session/HUD。
-// 入口：Enter() / SelectDesign() / SetPose() / Deploy() / BeginWave() / Repair() / Retreat() / Exit()。
+// 职责：新版基地战的自动部署、真实守波和整备；共享波次/修缮机制，不依赖旧Session/HUD。
+// 入口：Enter() / BeginWave() / Repair() / Retreat() / Exit()。
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,12 +20,12 @@ public sealed class SiegeGameplayStage : MonoBehaviour
     private BoxCollider arena;
     [SerializeField]
     private SiegeConstructionPanel panel;
+    [SerializeField]
+    private Transform baseSpawn;
     private readonly Dictionary<GameObject, bool> environment = new Dictionary<GameObject, bool>();
     private readonly Dictionary<Rigidbody, bool> parkedBodies = new Dictionary<Rigidbody, bool>();
-    private readonly List<string> names = new List<string>();
     private GameModeController owner;
     private BlockDataList design;
-    private GameObject preview;
     private TextMesh coreMarker;
     private string designWarnings;
     private SiegeWaveDirector waves;
@@ -43,7 +43,6 @@ public sealed class SiegeGameplayStage : MonoBehaviour
     {
         get; private set;
     }
-    public IReadOnlyList<string> DesignNames => names;
     public string Status
     {
         get; private set;
@@ -52,17 +51,14 @@ public sealed class SiegeGameplayStage : MonoBehaviour
     {
         get; private set;
     }
-    public bool CanDeploy
-    {
-        get; private set;
-    }
+
+    private bool canDeploy;
     public bool Settled
     {
         get; private set;
     }
-    public Vector3 Placement => position;
 
-    public void Enter(GameModeController host, GameObject[] buildEnvironment)
+    public void Enter(GameModeController host, GameObject[] buildEnvironment, string blueprintName = null)
     {
         owner = host;
         entered = true;
@@ -83,17 +79,6 @@ public sealed class SiegeGameplayStage : MonoBehaviour
         camera.currentMode = CameraMode.Lock;
         camera.transform.SetPositionAndRotation(overview.position, overview.rotation);
         returnButton.onClick.AddListener(ReturnOrRetreat);
-        names.Add("Starter Bastion (read only)");
-        try
-        {
-            SaveManager.instance.GetAllBuildingBlueprintNames();
-            names.AddRange(SaveManager.instance.buildingBlueprints);
-        }
-        catch (Exception error) when (error is IOException || error is UnauthorizedAccessException)
-        {
-            Status = "Could not read building library: " + error.Message;
-        }
-
         attackers = SiegeBlueprintCatalog.Load(Path.Combine(Application.persistentDataPath, "EnemyBlueprints"), 5, out _);
         if (attackers.Length == 0)
         {
@@ -115,83 +100,35 @@ public sealed class SiegeGameplayStage : MonoBehaviour
             attackers = options.ToArray();
         }
 
+        selectedName = string.IsNullOrEmpty(blueprintName) ? "Starter Bastion" : blueprintName;
+        string json = string.IsNullOrEmpty(blueprintName) ? settings.Starter.text : File.ReadAllText(SaveManager.instance.GetBaseBlueprintPath(blueprintName));
+        design = JsonUtility.FromJson<BlockDataList>(json);
+        if (!settings.Validate(design, out string reason))
+        {
+            throw new InvalidOperationException(reason);
+        }
+
+        if (baseSpawn == null)
+        {
+            throw new InvalidOperationException("Siege scene requires an authored base spawn.");
+        }
+
+        rotation = baseSpawn.rotation;
+        // The spawn denotes the foundation centre, independent of the saved footprint size.
+        position = baseSpawn.position - rotation * new Vector3(design.foundation.width * .5f - 2f, 0f, design.foundation.length * .5f - 2f);
+        position.y = arena.bounds.max.y;
+        designWarnings = settings.Warnings(design);
+        if (!Deploy())
+        {
+            throw new InvalidOperationException(Status ?? DesignStatus);
+        }
+
         panel.Bind(this);
-        SetPose(-14, -14, 0);
-        SelectDesign(0);
-        Status = "Choose a base, position and rotate its preview, then deploy. Your designs stay unchanged.";
-    }
-
-    public void SelectDesign(int index)
-    {
-        if (!entered || Base != null || index < 0 || index >= names.Count)
-        {
-            return;
-        }
-
-        ClearPreview();
-        design = null;
-        selectedName = names[index];
-        try
-        {
-            string json = index == 0 ? settings.Starter.text : File.ReadAllText(SaveManager.instance.GetBuildingBlueprintPath(selectedName));
-            BlockDataList candidate = JsonUtility.FromJson<BlockDataList>(json);
-            if (settings.Validate(candidate, out string reason))
-            {
-                design = candidate;
-                preview = BlueprintModelPreview.Create(design.blocks, transform, "Base design preview");
-                preview.transform.SetPositionAndRotation(position, rotation);
-                BlockData core = design.blocks.Find(block => block.id == design.siegeCoreId);
-                ShowCoreMarker(preview.transform, new Vector3(core.posX, core.posY + core.y * .5f + 1f, core.posZ));
-                designWarnings = settings.Warnings(design);
-            }
-
-            DesignStatus = reason;
-        }
-        catch (Exception error) when (error is IOException || error is UnauthorizedAccessException || error is ArgumentException)
-        {
-            DesignStatus = "Cannot load this blueprint: " + error.Message;
-        }
-
-        ValidatePose();
-    }
-
-    public bool SelectDesignByName(string blueprintName)
-    {
-        // This entry is for saved menu selections; a user file may share the starter's display label.
-        int index = names.FindIndex(1, name => name == blueprintName);
-        if (index < 0)
-        {
-            ClearPreview();
-            design = null;
-            CanDeploy = false;
-            DesignStatus = "The selected base is no longer available.";
-            return false;
-        }
-
-        SelectDesign(index);
-        return CanDeploy;
-    }
-
-    public void SetPose(int x, int z, int quarterTurns)
-    {
-        if (Base != null || Settled)
-        {
-            return;
-        }
-
-        position = new Vector3(x, arena.bounds.max.y, z);
-        rotation = Quaternion.Euler(0f, (quarterTurns % 4) * 90f, 0f);
-        if (preview != null)
-        {
-            preview.transform.SetPositionAndRotation(position, rotation);
-        }
-
-        ValidatePose();
     }
 
     private void ValidatePose()
     {
-        CanDeploy = false;
+        canDeploy = false;
         if (design == null || Base != null || Settled)
         {
             return;
@@ -217,14 +154,14 @@ public sealed class SiegeGameplayStage : MonoBehaviour
             return;
         }
 
-        CanDeploy = true;
+        canDeploy = true;
         DesignStatus = $"{design.blocks.Count} modules | {settings.Cost(design)} / {settings.DeploymentBudget} budget\nSupport checked on confirm. Cargo excluded. {designWarnings}";
     }
 
-    public bool Deploy()
+    private bool Deploy()
     {
         ValidatePose();
-        if (!CanDeploy)
+        if (!canDeploy)
         {
             return false;
         }
@@ -251,9 +188,8 @@ public sealed class SiegeGameplayStage : MonoBehaviour
                 return false;
             }
 
-            ClearPreview();
             ShowCoreMarker(Base.Core.transform, Vector3.up * (Base.Core.y * .5f + 1f));
-            CanDeploy = false;
+            canDeploy = false;
             waves = new SiegeWaveDirector(
                 Match,
                 settings.Combat,
@@ -262,7 +198,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour
                 () => -1,
                 gameObject.scene);
             Status = "Base deployed. Start the first wave. Repair coins are separate from the design budget.";
-            DesignStatus = selectedName;
+            DesignStatus = selectedName + "\n" + designWarnings;
             return true;
         }
         catch (Exception error) when (error is InvalidOperationException || error is ArgumentException)
@@ -279,7 +215,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour
     {
         if (Settled || Base == null || !Base.IsAlive || attackers.Length == 0 || !Match.BeginNextWave())
         {
-            Status = "Deploy a surviving base and valid attackers before starting a wave.";
+            Status = "A surviving base and valid attackers are required to start a wave.";
             return false;
         }
 
@@ -410,16 +346,6 @@ public sealed class SiegeGameplayStage : MonoBehaviour
         }
     }
 
-    private void ClearPreview()
-    {
-        if (preview != null)
-        {
-            preview.SetActive(false);
-            Destroy(preview);
-            preview = null;
-        }
-    }
-
     private void ShowCoreMarker(Transform parent, Vector3 localPosition)
     {
         coreMarker = Instantiate(RuntimeObjectTemplates.Instance.WorldLabel, parent);
@@ -453,7 +379,6 @@ public sealed class SiegeGameplayStage : MonoBehaviour
             SetSimulation(false);
         }
 
-        ClearPreview();
         foreach (KeyValuePair<GameObject, bool> item in environment)
         {
             if (item.Key != null)

@@ -10,6 +10,8 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
@@ -134,6 +136,22 @@ public static class MainMenuPlayChecks
         Directory.CreateDirectory("Temp/MainMenu");
         ScreenCapture.CaptureScreenshot("Temp/MainMenu/home.png");
         menu.Choose(MenuDestination.Siege);
+        Dropdown picker = (Dropdown)new SerializedObject(Object.FindAnyObjectByType<MainMenuView>()).FindProperty("blueprints").objectReferenceValue;
+        yield return null;
+        yield return null;
+        picker.Show();
+        for (int frame = 0; frame < 6; frame++)
+        {
+            yield return null;
+        }
+
+        Text option = picker.GetComponentsInChildren<Text>().First(t => t.name == "Item Label");
+        Check(
+            option.rectTransform.rect.height >= option.fontSize + 4 && option.cachedTextGenerator.vertexCount > 4,
+            "expanded dropdown renders visible unclipped option text");
+        ScreenCapture.CaptureScreenshot("Temp/MainMenu/dropdown-fixed.png");
+        yield return null;
+        picker.Hide();
         // Exercise the saved button binding, not only the controller API.
         menu.ShowHome();
         Button siegeButton = (Button)new SerializedObject(Object.FindAnyObjectByType<MainMenuView>()).FindProperty("siege").objectReferenceValue;
@@ -181,6 +199,7 @@ public static class MainMenuPlayChecks
         string directory = Path.Combine(Application.temporaryCachePath, "MainMenuChecks", Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(directory);
         InjectStore("_playerFiles", Path.Combine(directory, "Saves"));
+        InjectStore("_baseFiles", Path.Combine(directory, "Bases"));
         InjectStore("_buildingFiles", Path.Combine(directory, "Buildings"));
         BlockDataList vehicle = Vehicle();
         File.WriteAllText(SaveManager.instance.GetSavePath("Menu Vehicle A"), JsonUtility.ToJson(vehicle));
@@ -189,13 +208,13 @@ public static class MainMenuPlayChecks
         File.WriteAllText(broken, "{}");
         string invalid = SaveManager.instance.GetSavePath("Invalid");
         File.WriteAllText(invalid, "{\"blocks\":[{\"resourcePath\":\"missing\",\"x\":1,\"y\":1,\"z\":1}]}");
-        string basePath = SaveManager.instance.GetBuildingBlueprintPath("Menu Base");
+        string basePath = SaveManager.instance.GetBaseBlueprintPath("Menu Base");
         string starter = AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/Siege/Construction/StarterBase.json").text;
         File.WriteAllText(basePath, starter);
         BlockDataList alias = JsonUtility.FromJson<BlockDataList>(starter);
         alias.foundation.width++;
         File.WriteAllText(
-            SaveManager.instance.GetBuildingBlueprintPath("Starter Bastion (read only)"),
+            SaveManager.instance.GetBaseBlueprintPath("Starter Bastion (read only)"),
             JsonUtility.ToJson(alias));
         BuildManager.instance.BlockLoadIntervalSeconds = 0;
         BuildManager.instance.moveCameraDuringBlockLoad = false;
@@ -329,13 +348,9 @@ public static class MainMenuPlayChecks
         Check(
             (string)typeof(SiegeGameplayStage).GetField("selectedName", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(stage) == "Menu Base",
             "Siege receives the menu-selected saved base");
-        stage.SelectDesignByName("Starter Bastion (read only)");
-        BlockDataList selectedDesign = (BlockDataList)typeof(SiegeGameplayStage).GetField("design", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(stage);
         Check(
-            selectedDesign.foundation.width == alias.foundation.width,
-            "saved base sharing the starter label still selects the saved file");
-        stage.SelectDesignByName("Menu Base");
-        Check(stage.Deploy(), "menu-selected base deploys through production validation");
+            stage.Base != null && stage.Base.IsAlive,
+            "menu-selected base deploys automatically through production validation");
         Check(stage.BeginWave(), "menu-selected base starts a real wave");
         menu.ReturnToMenu();
         while (menu.Busy)
@@ -418,6 +433,33 @@ public static class MainMenuPlayChecks
         Check(
             BuildManager.instance.IsEditingBuildingBlueprint && BuildManager.instance.Foundation != null,
             "base workshop opens with authored foundation");
+        Check(
+            BuildManager.instance.IsEditingBaseBlueprint && SaveManager.instance.GetBaseBlueprintPath("Menu Base") != SaveManager.instance.GetBuildingBlueprintPath("Menu Base"),
+            "base editor uses its independent storage context");
+        SaveManager.instance.GetAllBuildingBlueprintNames();
+        Check(
+            !SaveManager.instance.buildingBlueprints.Contains("Menu Base"),
+            "base list never leaks into the general building library");
+        string ordinaryPath = SaveManager.instance.GetBuildingBlueprintPath("Menu Base");
+        File.WriteAllText(ordinaryPath, "ordinary-building-sentinel");
+        Check(
+            SaveManager.instance.RenameBuildingBlueprint("Menu Base", "Renamed Base") && File.ReadAllText(ordinaryPath) == "ordinary-building-sentinel",
+            "renaming an active base preserves the same-name building");
+        Check(
+            SaveManager.instance.RenameBuildingBlueprint("Renamed Base", "Menu Base"),
+            "renamed base restores its selected identity");
+        SaveManager.instance.DuplicateSave("Menu Base");
+        Check(
+            File.Exists(SaveManager.instance.GetBaseBlueprintPath("Menu Base Copy")) && !File.Exists(SaveManager.instance.GetBuildingBlueprintPath("Menu Base Copy")),
+            "duplicating a base writes only to the base library");
+        SaveManager.instance.DeleteBuildingBlueprint("Menu Base Copy");
+        Check(
+            !File.Exists(SaveManager.instance.GetBaseBlueprintPath("Menu Base Copy")) && File.ReadAllText(ordinaryPath) == "ordinary-building-sentinel",
+            "deleting a base preserves general buildings");
+        BuildingEditorPanel foundationPanel = Object.FindAnyObjectByType<BuildingEditorPanel>();
+        Check(
+            ((RectTransform)foundationPanel.transform).rect.height < 150 && !foundationPanel.GetComponent<BuildingOutpostEditor>().enabled,
+            "base editor hides general outpost controls and their raycast area");
         Transform baseDraft = GameManager.instance.blocksParent;
         menu.ReturnToMenu();
         while (menu.Busy)
@@ -487,6 +529,68 @@ public static class MainMenuPlayChecks
         Check(
             BuildManager.instance.IsEditingBuildingBlueprint && BuildManager.instance.Foundation != null && SaveManager.instance.cachedData.blocks.Count == 0,
             "new base flow opens an empty foundation with no implicit core");
+        menu.ReturnToMenu();
+        while (menu.Busy)
+        {
+            yield return null;
+        }
+
+        menu.Choose(MenuDestination.BaseWorkshop);
+        menu.OpenRecent();
+        while (menu.Busy)
+        {
+            yield return null;
+        }
+
+        BuildManager buildProbe = BuildManager.instance;
+        Check(
+            buildProbe.IsEditingBaseBlueprint && buildProbe.enabled && InputManager.instance.lockView,
+            "Vehicle to Base restores construction input");
+        Camera buildCamera = buildProbe.mainCamera;
+        CameraController.instance.StopCameraMotion();
+        Vector3 aim = buildProbe.Foundation.transform.TransformPoint(new Vector3(.5f, 0f, .5f));
+        buildCamera.transform.position = aim + new Vector3(0f, 36f, -12f);
+        buildCamera.transform.LookAt(aim);
+        buildProbe.SetCurrentBlockResource("Blocks/2x2x2");
+        Vector2 screenAim = buildCamera.WorldToScreenPoint(aim);
+        Mouse physicalMouse = Mouse.current;
+        InputSystem.DisableDevice(physicalMouse);
+        Mouse mouse = InputSystem.AddDevice<Mouse>("BasePlacementCheck");
+        var previousBackground = InputSystem.settings.backgroundBehavior;
+        InputSystem.settings.backgroundBehavior = InputSettings.BackgroundBehavior.IgnoreFocus;
+        try
+        {
+            InputSystem.QueueStateEvent(mouse, new MouseState { position = screenAim });
+            for (int frame = 0; frame < 8; frame++)
+            {
+                yield return null;
+            }
+
+            Check(
+                buildProbe.currentGhost != null && buildProbe.hoveredConnector != null,
+                "base foundation offers a placement ghost beyond the vehicle's 15m range");
+            int blocksBeforeClick = SaveManager.instance.cachedData.blocks.Count;
+            InputSystem.QueueStateEvent(mouse, new MouseState { position = screenAim }.WithButton(MouseButton.Left));
+            for (int frame = 0; frame < 4; frame++)
+            {
+                yield return null;
+            }
+
+            InputSystem.QueueStateEvent(mouse, new MouseState { position = screenAim });
+            yield return null;
+            Check(
+                SaveManager.instance.cachedData.blocks.Count == blocksBeforeClick + 1,
+                "real mouse click places and saves a block after Vehicle to Base navigation");
+            ScreenCapture.CaptureScreenshot("Temp/MainMenu/base-placement-fixed.png");
+            yield return null;
+        }
+        finally
+        {
+            InputSystem.RemoveDevice(mouse);
+            InputSystem.EnableDevice(physicalMouse);
+            InputSystem.settings.backgroundBehavior = previousBackground;
+        }
+
         menu.ReturnToMenu();
         while (menu.Busy)
         {

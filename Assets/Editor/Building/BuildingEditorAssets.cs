@@ -163,6 +163,7 @@ public static class BuildingEditorAssets
             serialized.FindProperty("_width").objectReferenceValue = width;
             serialized.FindProperty("_length").objectReferenceValue = length;
             serialized.FindProperty("_status").objectReferenceValue = status;
+            serialized.FindProperty("_title").objectReferenceValue = root.transform.Find("Title").GetComponent<Text>();
             serialized.ApplyModifiedPropertiesWithoutUndo();
             UnityEventTools.AddPersistentListener(button.onClick, panel.ApplySize);
             PrefabUtility.SaveAsPrefabAsset(root, Folder + "/EditorPanel.prefab");

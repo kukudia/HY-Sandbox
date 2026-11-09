@@ -457,7 +457,7 @@ public static class BuildingEditorPlayProbe
         }
 
         panel.GetComponent<BuildingOutpostEditor>().Refresh();
-        panel.transform.Find("MatchingBase").GetComponent<Button>().onClick.Invoke();
+        panel.transform.Find("Outpost Controls/MatchingBase").GetComponent<Button>().onClick.Invoke();
         while (build.IsLoadingBlocks)
         {
             yield return null;

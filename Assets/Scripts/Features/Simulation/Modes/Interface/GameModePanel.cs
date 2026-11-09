@@ -17,7 +17,10 @@ public sealed class GameModePanel : MonoBehaviour
     private Button retry;
     [SerializeField]
     private Button cancel;
+    [SerializeField]
+    private Dropdown baseDesigns;
     private GameModeController owner;
+    public string SelectedBaseName => baseDesigns != null && baseDesigns.value > 0 ? baseDesigns.options[baseDesigns.value].text : null;
     public bool IsVisible => group != null && group.alpha > 0f;
 
     public void Bind(GameModeController controller)
@@ -36,6 +39,18 @@ public sealed class GameModePanel : MonoBehaviour
         group.blocksRaycasts = visible;
         if (visible)
         {
+            if (owner.State == GameModeState.Choosing && baseDesigns != null)
+            {
+                SaveManager.instance.GetAllBaseBlueprintNames();
+                baseDesigns.ClearOptions();
+                var names = new System.Collections.Generic.List<string>
+                {
+                    "Starter Bastion [EXAMPLE]"
+                };
+                names.AddRange(SaveManager.instance.baseBlueprints);
+                baseDesigns.AddOptions(names);
+            }
+
             transform.SetAsLastSibling();
             Refresh();
         }
@@ -53,6 +68,11 @@ public sealed class GameModePanel : MonoBehaviour
     {
         status.text = owner.Status;
         bool choosing = owner.State == GameModeState.Choosing;
+        if (baseDesigns != null)
+        {
+            baseDesigns.gameObject.SetActive(choosing);
+        }
+
         exploration.gameObject.SetActive(choosing);
         siege.gameObject.SetActive(choosing);
         retry.gameObject.SetActive(owner.State == GameModeState.Failed);

@@ -125,7 +125,7 @@ public static class SiegeConstructionPlayChecks
         Check(!settings.Validate(invalid, out _), "Invalid rotation blocked");
         // Inject a disposable file store rather than writing into the user's blueprint library.
         string folder = Path.GetFullPath("Temp/BaseConstruction/Library-" + Guid.NewGuid().ToString("N"));
-        var storeField = typeof(SaveManager).GetField("_buildingFiles", BindingFlags.Instance | BindingFlags.NonPublic);
+        var storeField = typeof(SaveManager).GetField("_baseFiles", BindingFlags.Instance | BindingFlags.NonPublic);
         storeField.SetValue(SaveManager.instance, Activator.CreateInstance(storeField.FieldType, new object[] { folder }));
         var small = Copy();
         small.blocks = small.blocks.Take(2).ToList();
@@ -135,7 +135,7 @@ public static class SiegeConstructionPlayChecks
         string path = Path.Combine(folder, "Probe.json");
         File.WriteAllText(path, JsonUtility.ToJson(small, true));
         BuildManager.instance.BlockLoadIntervalSeconds = 0;
-        BuildManager.instance.EnterBuildingBlueprintBuildMode("Probe");
+        BuildManager.instance.EnterBaseBlueprintBuildMode("Probe");
         while (BuildManager.instance.IsLoadingBlocks)
         {
             yield return null;
@@ -153,7 +153,7 @@ public static class SiegeConstructionPlayChecks
         Check(
             JsonUtility.FromJson<BlockDataList>(File.ReadAllText(path)).siegeCoreId == small.blocks[1].id,
             "Resize preserves core metadata on disk");
-        BuildManager.instance.ToggleBuildingBlueprintBuildMode();
+        BuildManager.instance.ToggleBaseBlueprintBuildMode();
         while (BuildManager.instance.IsLoadingBlocks)
         {
             yield return null;
@@ -169,6 +169,45 @@ public static class SiegeConstructionPlayChecks
         string designBefore = File.ReadAllText(path);
         Transform draft = GameManager.instance.blocksParent;
         var modes = PlayManager.instance.Modes;
+        modes.LaunchSiege("Airborne");
+        while (modes.State == GameModeState.Loading || modes.State == GameModeState.Returning)
+        {
+            yield return null;
+        }
+
+        Check(
+            modes.State == GameModeState.Failed && draft.gameObject.activeSelf && SceneManager.sceneCount == 1,
+            "Unsupported preselected base rejects entry and restores the draft");
+        modes.ReturnToBuild();
+        while (modes.State != GameModeState.Building)
+        {
+            yield return null;
+        }
+
+        modes.LaunchSiege("Missing Base");
+        while (modes.State == GameModeState.Loading || modes.State == GameModeState.Returning)
+        {
+            yield return null;
+        }
+
+        Check(
+            modes.State == GameModeState.Failed && Object.FindFirstObjectByType<SiegeGameplayStage>() == null,
+            "Missing preselected base never silently falls back to the starter");
+        modes.Retry();
+        while (modes.State == GameModeState.Loading || modes.State == GameModeState.Returning)
+        {
+            yield return null;
+        }
+
+        Check(
+            modes.State == GameModeState.Failed && modes.Status.Contains("Missing Base"),
+            "Retry keeps the originally selected base instead of launching a different design");
+        modes.ReturnToBuild();
+        while (modes.State != GameModeState.Building)
+        {
+            yield return null;
+        }
+
         modes.ShowSelection();
         modes.SelectSiege();
         while (modes.State == GameModeState.Loading)
@@ -183,20 +222,20 @@ public static class SiegeConstructionPlayChecks
             "New stage has no prototype session");
         Check(!draft.gameObject.activeSelf, "Main construction parked before deployment");
         Check(
-            stage.CanDeploy && stage.DesignNames.Contains("Probe"),
-            "Preview and isolated player library available");
-        stage.SelectDesign(stage.DesignNames.ToList().IndexOf("Airborne"));
+            stage.Base != null && stage.Base.IsAlive,
+            "Starter automatically deploys with real foundation support");
         Check(
-            stage.CanDeploy && !stage.Deploy() && stage.Base == null,
-            "Unsupported floating group rejected without consuming deployment");
-        yield return null;
-        stage.SelectDesign(0);
-        stage.SetPose(100, 100, 0);
-        Check(!stage.CanDeploy && !stage.Deploy(), "Out-of-arena deployment blocked");
-        stage.SetPose(-14, -14, 1);
-        Check(stage.CanDeploy, "Quarter-turn preview validated");
-        stage.SetPose(-14, -14, 0);
-        Check(stage.Deploy(), "Starter deploys with real connector support: " + stage.Status);
+            stage.GetComponentsInChildren<UnityEngine.UI.Dropdown>(true).Length == 0 && stage.GetComponentsInChildren<UnityEngine.UI.InputField>(true).Length == 0,
+            "Combat UI has no base selection or pose inputs");
+        Transform spawn = stage.transform.Find("Base Spawn");
+        Vector3 foundationCentre = stage.Base.Building.transform.TransformPoint(new Vector3(original.foundation.width * .5f - 2f, 0f, original.foundation.length * .5f - 2f));
+        Check(
+            Vector2.Distance(
+                new Vector2(foundationCentre.x, foundationCentre.z),
+                new Vector2(spawn.position.x, spawn.position.z)) < .01f,
+            "Automatic base footprint is centred on the authored spawn");
+        Directory.CreateDirectory("Temp/BaseConstruction");
+        ScreenCapture.CaptureScreenshot("Temp/BaseConstruction/automatic-spawn.png");
         Check(
             stage.Base.Building.Blocks.Count == original.blocks.Count && stage.Base.IsAlive,
             "Real building and non-cockpit core created");
@@ -285,6 +324,12 @@ public static class SiegeConstructionPlayChecks
             "Gameplay scene and battle state cleaned up");
         Check(File.ReadAllText(path) == designBefore, "Combat and return never mutate saved base design");
         modes.ShowSelection();
+        var modePanel = Object.FindFirstObjectByType<GameModePanel>();
+        var picker = (UnityEngine.UI.Dropdown)new SerializedObject(modePanel).FindProperty("baseDesigns").objectReferenceValue;
+        Check(
+            picker != null && picker.gameObject.activeInHierarchy && picker.options.Any(option => option.text == "Probe"),
+            "Simulate offers the independent base library before entering Siege");
+        picker.value = picker.options.FindIndex(option => option.text == "Probe");
         modes.SelectSiege();
         while (modes.State == GameModeState.Loading)
         {
@@ -292,9 +337,7 @@ public static class SiegeConstructionPlayChecks
         }
 
         stage = Object.FindFirstObjectByType<SiegeGameplayStage>();
-        stage.SelectDesign(stage.DesignNames.ToList().IndexOf("Probe"));
-        stage.SetPose(0, 0, 0);
-        Check(stage.Deploy(), "Player-authored core blueprint deploys");
+        Check(stage.Base != null && stage.Base.IsAlive, "Player-authored core blueprint automatically deploys");
         stage.Retreat();
         Check(stage.Settled && stage.Status.Contains("Retreated"), "Voluntary retreat displays settlement");
         modes.ReturnToBuild();

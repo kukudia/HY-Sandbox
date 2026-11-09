@@ -48,7 +48,7 @@ public static class MenuBlueprintLibrary
 
     internal static BlueprintFileStore Files(bool building)
     {
-        return building ? SaveManager.GetBuildingBlueprintFiles() : SaveManager.GetPlayerBlueprintFiles();
+        return building ? SaveManager.GetBaseBlueprintFiles() : SaveManager.GetPlayerBlueprintFiles();
     }
 
     public static BlockDataList Inspect(MenuBlueprintEntry entry, SiegeConstructionSettings siege, out bool playable, out string reason)

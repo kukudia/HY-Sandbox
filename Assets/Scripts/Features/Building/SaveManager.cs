@@ -11,6 +11,14 @@ public class SaveManager : MonoBehaviour
     private string saveDirectory => Path.Combine(Application.persistentDataPath, "Saves");
     private string enemyBlueprintDirectory => Path.Combine(Application.persistentDataPath, "EnemyBlueprints");
     private static string buildingBlueprintDirectory => Path.Combine(Application.persistentDataPath, "BuildingBlueprints");
+    private static string baseBlueprintDirectory => Path.Combine(Application.persistentDataPath, "BaseBlueprints");
+
+    public string currentBaseBlueprintName;
+    public List<string> baseBlueprints = new List<string>();
+    private BlueprintFileStore _baseFiles;
+    private BlueprintFileStore BaseFiles => _baseFiles ?? (_baseFiles = new BlueprintFileStore(baseBlueprintDirectory));
+    private bool EditingBase => BuildManager.instance != null && BuildManager.instance.IsEditingBaseBlueprint;
+    public List<string> CurrentStructureNames => EditingBase ? baseBlueprints : buildingBlueprints;
 
     public string currentBuildingBlueprintName;
     public List<string> buildingBlueprints = new List<string>();
@@ -23,7 +31,7 @@ public class SaveManager : MonoBehaviour
 
     private BlueprintFileStore FilesFor(BuildTargetKind kind)
     {
-        return kind == BuildTargetKind.BuildingBlueprint ? BuildingFiles : kind == BuildTargetKind.EnemyBlueprint ? EnemyFiles : PlayerFiles;
+        return kind == BuildTargetKind.BaseBlueprint ? BaseFiles : kind == BuildTargetKind.BuildingBlueprint ? BuildingFiles : kind == BuildTargetKind.EnemyBlueprint ? EnemyFiles : PlayerFiles;
     }
 
     private BlueprintFileStore CurrentFiles => FilesFor(BuildManager.instance != null ? BuildManager.instance.CurrentBuildTarget : BuildTargetKind.PlayerSave);
@@ -58,7 +66,9 @@ public class SaveManager : MonoBehaviour
 
     public void EnsureSaveDirectories()
     {
+        Directory.CreateDirectory(baseBlueprintDirectory);
         Directory.CreateDirectory(buildingBlueprintDirectory);
+        BaseBlueprintMigration.Run(buildingBlueprintDirectory, baseBlueprintDirectory);
         if (!Directory.Exists(saveDirectory))
         {
             Directory.CreateDirectory(saveDirectory);
@@ -81,6 +91,67 @@ public class SaveManager : MonoBehaviour
         return instance != null ? instance.PlayerFiles : new BlueprintFileStore(Path.Combine(Application.persistentDataPath, "Saves"));
     }
 
+    internal static BlueprintFileStore GetBaseBlueprintFiles()
+    {
+        if (instance == null || instance._baseFiles == null)
+        {
+            BaseBlueprintMigration.Run(buildingBlueprintDirectory, baseBlueprintDirectory);
+        }
+
+        return instance != null ? instance.BaseFiles : new BlueprintFileStore(baseBlueprintDirectory);
+    }
+
+    public string GetBaseBlueprintPath(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new System.ArgumentException("Choose or create a base blueprint first.");
+        }
+
+        return BaseFiles.GetPath(name);
+    }
+
+    public string GetEditedStructurePath(string name)
+    {
+        return EditingBase ? GetBaseBlueprintPath(name) : GetBuildingBlueprintPath(name);
+    }
+
+    public void GetAllBaseBlueprintNames()
+    {
+        baseBlueprints.Clear();
+        baseBlueprints.AddRange(GetBaseBlueprintFiles().GetNames());
+        baseBlueprints.Sort(System.StringComparer.OrdinalIgnoreCase);
+    }
+
+    public void GetAllStructureBlueprintNames()
+    {
+        if (EditingBase)
+        {
+            GetAllBaseBlueprintNames();
+        }
+        else
+        {
+            GetAllBuildingBlueprintNames();
+        }
+    }
+
+    public void LoadBaseBlueprint(string name)
+    {
+        BuildManager.instance.EnterBaseBlueprintBuildMode(name);
+    }
+
+    public void LoadEditedStructure(string name)
+    {
+        if (EditingBase)
+        {
+            LoadBaseBlueprint(name);
+        }
+        else
+        {
+            LoadBuildingBlueprint(name);
+        }
+    }
+
     public void GetAllBuildingBlueprintNames()
     {
         buildingBlueprints.Clear();
@@ -90,8 +161,16 @@ public class SaveManager : MonoBehaviour
 
     public void CreateNewBuildingBlueprint(string blueprintName)
     {
-        currentBuildingBlueprintName = blueprintName;
-        string path = GetBuildingBlueprintPath(blueprintName);
+        if (EditingBase)
+        {
+            currentBaseBlueprintName = blueprintName;
+        }
+        else
+        {
+            currentBuildingBlueprintName = blueprintName;
+        }
+
+        string path = GetEditedStructurePath(blueprintName);
         if (!File.Exists(path))
         {
             var data = new BlockDataList
@@ -101,7 +180,7 @@ public class SaveManager : MonoBehaviour
             File.WriteAllText(path, JsonUtility.ToJson(data, true));
         }
 
-        GetAllBuildingBlueprintNames();
+        GetAllStructureBlueprintNames();
     }
 
     public void LoadBuildingBlueprint(string blueprintName)
@@ -111,16 +190,24 @@ public class SaveManager : MonoBehaviour
 
     public void DeleteBuildingBlueprint(string blueprintName)
     {
-        DeleteBlueprintFile(GetBuildingBlueprintPath(blueprintName));
-        GetAllBuildingBlueprintNames();
+        DeleteBlueprintFile(GetEditedStructurePath(blueprintName));
+        GetAllStructureBlueprintNames();
         BuildManager build = BuildManager.instance;
         if (build != null && string.Equals(build.CurrentBuildingBlueprintName, blueprintName, System.StringComparison.OrdinalIgnoreCase))
         {
-            string next = buildingBlueprints.Count > 0 ? buildingBlueprints[0] : string.Empty;
-            currentBuildingBlueprintName = next;
+            string next = CurrentStructureNames.Count > 0 ? CurrentStructureNames[0] : string.Empty;
+            if (EditingBase)
+            {
+                currentBaseBlueprintName = next;
+            }
+            else
+            {
+                currentBuildingBlueprintName = next;
+            }
+
             if (build.IsEditingBuildingBlueprint)
             {
-                build.EnterBuildingBlueprintBuildMode(next);
+                LoadEditedStructure(next);
             }
             else
             {
@@ -133,7 +220,7 @@ public class SaveManager : MonoBehaviour
 
     public bool RenameBuildingBlueprint(string oldName, string newName)
     {
-        return RenameBlueprint(oldName, newName, BuildTargetKind.BuildingBlueprint);
+        return RenameBlueprint(oldName, newName, EditingBase ? BuildTargetKind.BaseBlueprint : BuildTargetKind.BuildingBlueprint);
     }
 
     public string GetBuildingBlueprintPath(string blueprintName)
@@ -157,7 +244,7 @@ public class SaveManager : MonoBehaviour
             siegeCoreId = cachedData.siegeCoreId
         };
         File.WriteAllText(
-            GetBuildingBlueprintPath(BuildManager.instance.CurrentBuildingBlueprintName),
+            GetEditedStructurePath(BuildManager.instance.CurrentBuildingBlueprintName),
             JsonUtility.ToJson(data, true));
         cachedData.foundation = foundation;
     }
@@ -174,7 +261,7 @@ public class SaveManager : MonoBehaviour
 
     public void SaveBuildingOutpost(EnemyOutpostData outpost)
     {
-        if (BuildManager.instance == null || !BuildManager.instance.IsEditingBuildingBlueprint || BuildManager.instance.IsLoadingBlocks)
+        if (BuildManager.instance == null || !BuildManager.instance.IsEditingBuildingBlueprint || EditingBase || BuildManager.instance.IsLoadingBlocks)
         {
             throw new System.InvalidOperationException("Wait until the building editor is ready.");
         }
@@ -199,7 +286,7 @@ public class SaveManager : MonoBehaviour
 
     public string CopyBundledBuilding(string template)
     {
-        if (BuildManager.instance == null || !BuildManager.instance.IsEditingBuildingBlueprint || BuildManager.instance.IsLoadingBlocks)
+        if (BuildManager.instance == null || !BuildManager.instance.IsEditingBuildingBlueprint || EditingBase || BuildManager.instance.IsLoadingBlocks)
         {
             throw new System.InvalidOperationException("Wait until the building editor is ready.");
         }
@@ -223,12 +310,12 @@ public class SaveManager : MonoBehaviour
 
         WorldBuildingValidation.ValidateBlueprint(data);
         string name = template;
-        for (int i = 1; File.Exists(GetBuildingBlueprintPath(name)); i++)
+        for (int i = 1; File.Exists(GetEditedStructurePath(name)); i++)
         {
             name = template + " (" + i + ")";
         }
 
-        using (var stream = new FileStream(GetBuildingBlueprintPath(name), FileMode.CreateNew, FileAccess.Write))
+        using (var stream = new FileStream(GetEditedStructurePath(name), FileMode.CreateNew, FileAccess.Write))
         {
             using (var writer = new StreamWriter(stream))
             {
@@ -236,7 +323,7 @@ public class SaveManager : MonoBehaviour
             }
         }
 
-        GetAllBuildingBlueprintNames();
+        GetAllStructureBlueprintNames();
         return name;
     }
 
@@ -397,14 +484,19 @@ public class SaveManager : MonoBehaviour
 
         BuildManager build = BuildManager.instance;
         bool active = build != null && build.CurrentBuildTarget == kind && build.CurrentBuildName == oldName;
-        if (kind == BuildTargetKind.BuildingBlueprint)
+        if (kind == BuildTargetKind.BuildingBlueprint || kind == BuildTargetKind.BaseBlueprint)
         {
-            if (currentBuildingBlueprintName == oldName)
+            if (kind == BuildTargetKind.BaseBlueprint && currentBaseBlueprintName == oldName)
+            {
+                currentBaseBlueprintName = newName;
+            }
+
+            if (kind == BuildTargetKind.BuildingBlueprint && currentBuildingBlueprintName == oldName)
             {
                 currentBuildingBlueprintName = newName;
             }
 
-            if (build != null && build.CurrentBuildingBlueprintName == oldName)
+            if (active)
             {
                 build.SetCurrentBuildingBlueprintName(newName);
             }

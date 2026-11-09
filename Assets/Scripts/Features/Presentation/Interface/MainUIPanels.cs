@@ -183,7 +183,7 @@ public class MainUIPanels : MonoBehaviour
             if (BuildManager.instance != null && BuildManager.instance.IsEditingBuildingBlueprint)
             {
                 SaveManager.instance.CreateNewBuildingBlueprint(saveName);
-                SaveManager.instance.LoadBuildingBlueprint(saveName);
+                SaveManager.instance.LoadEditedStructure(saveName);
             }
             else if (BuildManager.instance != null && BuildManager.instance.IsEditingEnemyBlueprint)
             {
