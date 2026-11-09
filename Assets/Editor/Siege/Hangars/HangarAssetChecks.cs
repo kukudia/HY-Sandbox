@@ -49,6 +49,20 @@ public static class HangarAssetChecks
                 result,
                 "shared hangar quantity configuration is six",
                 Resources.Load<HangarLimits>("Hangars/Limits").MaximumCount == 6);
+            Renderer roof = prefab.transform.Find("Roof").GetComponent<Renderer>();
+            Check(
+                result,
+                "saved roof is almost transparent with physical collision retained",
+                roof.sharedMaterial.GetColor("_BaseColor").a <= .05f && roof.sharedMaterial.GetFloat("_Surface") == 1f && roof.GetComponent<BoxCollider>() != null);
+            Check(
+                result,
+                "transparent roof does not cast an opaque shadow",
+                roof.shadowCastingMode == UnityEngine.Rendering.ShadowCastingMode.Off);
+            BuildingFoundationData legacy = JsonUtility.FromJson<BuildingFoundationData>("{\"width\":4,\"length\":4}");
+            Check(
+                result,
+                "legacy footprint without offsets preserves original origin",
+                legacy.MinX == -2f && legacy.MinZ == -2f && legacy.IsValid);
             instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab, preview);
             HangarModule module = instance.GetComponent<HangarModule>();
             module.RefreshGeometry();

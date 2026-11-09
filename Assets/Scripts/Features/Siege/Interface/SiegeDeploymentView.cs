@@ -31,6 +31,10 @@ public sealed class SiegeDeploymentView : MonoBehaviour
     [SerializeField]
     private Button repair;
     [SerializeField]
+    private Button replace;
+    [SerializeField]
+    private Button undeploy;
+    [SerializeField]
     private Button close;
     [SerializeField]
     private Button refresh;
@@ -65,6 +69,8 @@ public sealed class SiegeDeploymentView : MonoBehaviour
         confirm.onClick.AddListener(Confirm);
         pilot.onClick.AddListener(Pilot);
         repair.onClick.AddListener(Repair);
+        replace.onClick.AddListener(BeginReplacement);
+        undeploy.onClick.AddListener(Undeploy);
         close.onClick.AddListener(Cancel);
         refresh.onClick.AddListener(RefreshBlueprints);
         if (Host != null)
@@ -85,6 +91,8 @@ public sealed class SiegeDeploymentView : MonoBehaviour
         confirm.onClick.RemoveListener(Confirm);
         pilot.onClick.RemoveListener(Pilot);
         repair.onClick.RemoveListener(Repair);
+        replace.onClick.RemoveListener(BeginReplacement);
+        undeploy.onClick.RemoveListener(Undeploy);
         close.onClick.RemoveListener(Cancel);
         refresh.onClick.RemoveListener(RefreshBlueprints);
         if (Host != null)
@@ -126,8 +134,14 @@ public sealed class SiegeDeploymentView : MonoBehaviour
             Vector3 point = camera.WorldToScreenPoint(deploymentPoint.position);
             bool empty = Host.Fleet.Ships[i] == null || !Host.Fleet.Ships[i].IsAlive;
             bool operational = Host.Fleet.GetHangar(i) == null || Host.Fleet.GetHangar(i).IsOperational;
-            bool visible = refit && operational && empty && point.z > 0f && point.x > 0f && point.x < Screen.width && point.y > 0f && point.y < Screen.height;
+            bool visible = refit && operational && point.z > 0f && point.x > 0f && point.x < Screen.width && point.y > 0f && point.y < Screen.height;
             markers[i].gameObject.SetActive(visible);
+            Text markerLabel = markers[i].GetComponentInChildren<Text>();
+            if (markerLabel != null)
+            {
+                markerLabel.text = empty ? "DEPLOY" : "MANAGE";
+            }
+
             if (visible && RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas, point, null, out Vector2 local))
             {
                 ((RectTransform)markers[i].transform).anchoredPosition = local;
@@ -290,15 +304,19 @@ public sealed class SiegeDeploymentView : MonoBehaviour
 
         bool placing = dock >= 0 && Host.Match.CanRefit;
         SiegeFleetEntry ship = Host.Fleet.Find(shipId);
+        bool replacing = placing && ship != null;
         card.SetActive(placing || ship != null);
         defenderBlueprint.gameObject.SetActive(placing);
         confirm.gameObject.SetActive(placing);
-        pilot.gameObject.SetActive(ship != null && stage == null);
-        repair.gameObject.SetActive(ship != null && Host.Match.CanRefit);
+        pilot.gameObject.SetActive(!placing && ship != null && stage == null);
+        repair.gameObject.SetActive(!placing && ship != null && Host.Match.CanRefit);
+        replace.gameObject.SetActive(!placing && ship != null && Host.Match.CanRefit);
+        undeploy.gameObject.SetActive(!placing && ship != null && Host.Match.CanRefit);
+        confirm.GetComponentInChildren<Text>(true).text = replacing ? "CONFIRM REPLACEMENT" : "DEPLOY SHIP";
         ClearPreview();
         if (placing)
         {
-            title.text = "HANGAR " + (dock + 1);
+            title.text = (replacing ? "REPLACE / HANGAR " : "HANGAR ") + (dock + 1);
             int index = Host.SelectedDefender;
             if (filtered.Count == 0 || !filtered.Contains(index))
             {
@@ -312,10 +330,16 @@ public sealed class SiegeDeploymentView : MonoBehaviour
             Pose point = Host.Fleet.GetDeploymentPose(dock, data);
             preview = BlueprintModelPreview.Create(data.blocks, null, "Siege deployment preview");
             preview.transform.SetPositionAndRotation(point.position, point.rotation);
-            bool clear = SiegeRefit.IsClear(data, point.position, point.rotation, id, out string reason);
-            bool empty = Host.Fleet.Ships[dock]?.IsAlive != true;
-            confirm.interactable = empty && clear && Host.Match.CanAfford(option.Price);
-            details.text = !empty ? "This deployment position is occupied." : !clear ? reason : !Host.Match.CanAfford(option.Price) ? "Insufficient credits: " + option.Price : option.BlockCount + " modules / " + option.Price.ToString("N0") + " credits. Confirm to deploy.";
+            bool clear = SiegeRefit.IsClear(data, point.position, point.rotation, replacing ? ship.Id : id, out string reason);
+            bool available = replacing || Host.Fleet.Ships[dock]?.IsAlive != true;
+            long credit = replacing ? Host.Fleet.CancellationCredit(dock) : 0;
+            bool affordable = Host.Match.CanExchange(option.Price, credit);
+            confirm.interactable = available && clear && affordable;
+            details.text = !available ? "This deployment position is occupied." : !clear ? reason : !affordable ? "Insufficient credits after trade-in: " + credit.ToString("N0") : option.BlockCount + " modules / " + option.Price.ToString("N0") + " credits.";
+            if (replacing)
+            {
+                details.text += "\nTrade-in: " + credit.ToString("N0") + " / Net cost: " + (option.Price - credit).ToString("N0") + ". Old ship retained if replacement fails.";
+            }
         }
         else if (ship != null)
         {
@@ -327,19 +351,44 @@ public sealed class SiegeDeploymentView : MonoBehaviour
             if (Host.Match.CanRefit)
             {
                 details.text += quote > 0 ? " / REPAIR " + quote.ToString("N0") : " / INTACT";
+                int slot = Array.IndexOf(Host.Fleet.Ships, ship);
+                details.text += "\nUndeploy / trade-in refund: " + Host.Fleet.CancellationCredit(slot).ToString("N0") + " credits. Damage reduces the refund by repair cost.";
             }
         }
     }
 
     public void Confirm()
     {
-        if (dock >= 0 && Host.TryDeployAt(Host.SelectedDefender, dock, out _))
+        bool success = dock >= 0 && (shipId != null ? Host.TryReplaceAt(Host.SelectedDefender, dock, out _) : Host.TryDeployAt(Host.SelectedDefender, dock, out _));
+        if (success)
         {
             Cancel();
         }
         else
         {
             RefreshSelection();
+        }
+    }
+
+    public void BeginReplacement()
+    {
+        SiegeFleetEntry ship = Host.Fleet.Find(shipId);
+        if (ship == null || !Host.Match.CanRefit)
+        {
+            return;
+        }
+
+        dock = Array.IndexOf(Host.Fleet.Ships, ship);
+        RefreshOptions();
+        RefreshSelection();
+    }
+
+    public void Undeploy()
+    {
+        SiegeFleetEntry ship = Host.Fleet.Find(shipId);
+        if (ship != null && Host.TryCancelDeployment(Array.IndexOf(Host.Fleet.Ships, ship), out _))
+        {
+            Cancel();
         }
     }
 

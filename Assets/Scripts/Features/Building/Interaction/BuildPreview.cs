@@ -15,6 +15,7 @@ internal sealed class BuildPreview
     private Material _highlight;
     private ConnectorPlacementHints _hints;
     private float _range;
+    private bool _groundPlacement;
     private GameObject _ghostPrefab;
     public string ResourcePath;
     public bool PenetrationMode;
@@ -26,12 +27,18 @@ internal sealed class BuildPreview
         _create = create;
     }
 
-    public void Configure(Camera camera, float range, Material highlight, ConnectorPlacementHints hints)
+    public void Configure(
+        Camera camera,
+        float range,
+        Material highlight,
+        ConnectorPlacementHints hints,
+        bool groundPlacement = false)
     {
         _camera = camera;
         _range = range;
         _highlight = highlight;
         _hints = hints;
+        _groundPlacement = groundPlacement;
     }
 
     public bool IsWithinBuildRange(Vector3 position)
@@ -74,6 +81,8 @@ internal sealed class BuildPreview
         Vector3 nearestNormal = Vector3.zero;
         Vector2 mousePos = Mouse.current.position.ReadValue();
         Ray ray = _camera.ScreenPointToRay(mousePos);
+        bool canUseGround = _groundPlacement;
+        bool onGround = false;
         if (Physics.Raycast(
             ray,
             out RaycastHit hit,
@@ -83,6 +92,7 @@ internal sealed class BuildPreview
             Block block = hit.collider.GetComponentInParent<Block>();
             if (block != null)
             {
+                canUseGround = _groundPlacement && block.GetComponent<BuildingFoundation>() != null;
                 // 找最近的 connector
                 float minDist = float.MaxValue;
                 Connector nearest = null;
@@ -113,17 +123,7 @@ internal sealed class BuildPreview
                 {
                     hoveredConnector = nearest;
                     // 生成或更新 Ghost
-                    if (currentGhost == null)
-                    {
-                        currentGhost = Object.Instantiate(prefab);
-                        _ghostPrefab = prefab;
-                        Collider[] colliders = currentGhost.GetComponentsInChildren<Collider>();
-                        foreach (var collider in colliders)
-                        {
-                            collider.gameObject.layer = 0;
-                        }
-                    }
-
+                    EnsureGhost(prefab);
                     // Put the preview's nearest face on the target connector. The old fixed 0.5 offset
                     // only worked for 1x1x1 blocks and left larger prefabs floating or intersecting.
                     // A rotated neighbour must not change the new block's authored orientation.
@@ -141,15 +141,32 @@ internal sealed class BuildPreview
                 }
             }
         }
-        else
+
+        if (hoveredConnector == null && canUseGround)
         {
-            if (currentGhost != null)
+            Plane plane = new Plane(Vector3.up, Vector3.zero);
+            if (plane.Raycast(ray, out float distance) && IsWithinBuildRange(ray.GetPoint(distance)))
             {
-                Clear(false);
+                EnsureGhost(prefab);
+                Quaternion rotation = _geometry.SnapRotationToGrid(prefab.transform.rotation);
+                Vector3 point = ray.GetPoint(distance);
+                // Ground anchors lie at cell centres; even-size hulls must also keep integer min corners.
+                Vector3 half = new Vector3(
+                    _geometry.GetHalfExtentAlongDirection(prefabBlock, rotation, Vector3.right),
+                    _geometry.GetHalfExtentAlongDirection(prefabBlock, rotation, Vector3.up),
+                    _geometry.GetHalfExtentAlongDirection(prefabBlock, rotation, Vector3.forward));
+                float cell = Mathf.Max(.0001f, _geometry.gridSize);
+                Vector3 position = new Vector3(
+                    Mathf.Round((point.x - half.x) / cell) * cell + half.x,
+                    half.y,
+                    Mathf.Round((point.z - half.z) / cell) * cell + half.z);
+                currentGhost.transform.SetPositionAndRotation(position, rotation);
+                nearestNormal = Vector3.up;
+                onGround = true;
             }
         }
 
-        if (hoveredConnector == null)
+        if (hoveredConnector == null && !onGround)
         {
             Clear(false);
             return;
@@ -197,6 +214,21 @@ internal sealed class BuildPreview
             {
                 _create(prefab, ResourcePath, currentGhost.transform.position, currentGhost.transform.rotation);
             }
+        }
+    }
+
+    private void EnsureGhost(GameObject prefab)
+    {
+        if (currentGhost != null)
+        {
+            return;
+        }
+
+        currentGhost = Object.Instantiate(prefab);
+        _ghostPrefab = prefab;
+        foreach (Collider collider in currentGhost.GetComponentsInChildren<Collider>())
+        {
+            collider.gameObject.layer = 0;
         }
     }
 

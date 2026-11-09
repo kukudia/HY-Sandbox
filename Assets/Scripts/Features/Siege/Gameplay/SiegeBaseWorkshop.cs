@@ -45,7 +45,7 @@ public sealed class SiegeBaseWorkshop : MonoBehaviour
         if (Ready && BuildManager.instance.IsEditingBaseBlueprint)
         {
             BuildManager.instance.SetCurrentBlockResource("Hangars/Hangar");
-            message = $"Place a hangar on the foundation. Select it to resize; A/D or Q/E turn it. Maximum {HangarRules.MaximumCount}.";
+            message = $"Place a hangar anywhere on the ground grid. Select it to resize; A/D or Q/E turn it. Maximum {HangarRules.MaximumCount}.";
         }
     }
 

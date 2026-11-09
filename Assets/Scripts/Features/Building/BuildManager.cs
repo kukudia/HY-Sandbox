@@ -22,6 +22,9 @@ public class BuildManager : MonoBehaviour
     private float _buildRange = 15f;
     [SerializeField, Min(1f)]
     private float _structureBuildRange = 150f;
+    [SerializeField, Range(0, 8), Tooltip("Empty grid cells retained around automatically cropped structures.")]
+    private int _footprintPadding = 1;
+    public int FootprintPadding => _footprintPadding;
     public float BuildRange => Mathf.Max(0.1f, IsEditingBuildingBlueprint ? _structureBuildRange : _buildRange);
 
     public Material highlightMaterial;
@@ -387,11 +390,8 @@ public class BuildManager : MonoBehaviour
             return;
         }
 
-        if (data.foundation == null || !data.foundation.IsValid)
-        {
-            data.foundation = new BuildingFoundationData();
-        }
-
+        // Opening computes a preview only; an existing player file is written on the next actual edit.
+        data.foundation = BuildingFootprint.Calculate(data.blocks, FootprintPadding);
         GameObject prefab = Resources.Load<GameObject>("BuildingEditor/Foundation");
         GameObject obj = Instantiate(prefab, parent);
         // 既有存档/建造吸附使用世界坐标；父 Prefab 自带位移，底座不能继承它。
@@ -402,52 +402,21 @@ public class BuildManager : MonoBehaviour
         MainUIPanels.instance.RefreshBuildingEditorPanel();
     }
 
-    public bool ResizeBuildingFoundation(int width, int length, out string reason)
+    public void RefreshBuildingFootprint()
     {
-        reason = string.Empty;
-        if (!IsEditingBuildingBlueprint || IsLoadingBlocks || Foundation == null)
+        if (!IsEditingBuildingBlueprint || Foundation == null)
         {
-            reason = "Building editor is not ready.";
-            return false;
+            return;
         }
 
-        var data = new BuildingFoundationData
-        {
-            width = width,
-            length = length
-        };
-        if (!data.IsValid)
-        {
-            reason = $"Use whole numbers from 1 to {BuildingFoundationData.MaximumSize}.";
-            return false;
-        }
-
-        // 先提交磁盘，再替换底座连接；写入失败不改变场景和缓存。
-        SaveManager.instance.SaveBuildingFoundation(data);
-        DeselectBlock();
-        ClearCurrentGhost();
-        Foundation.Configure(data);
+        Foundation.Configure(SaveManager.instance.cachedData.foundation);
         Block[] blocks = GameManager.instance.blocksParent.GetComponentsInChildren<Block>();
         foreach (Block block in blocks)
         {
-            if (block != null)
-            {
-                block.CheckConnection();
-            }
+            block.CheckConnection();
         }
 
-        foreach (Block block in blocks)
-        {
-            if (block != null)
-            {
-                block.neighbors = block.Neighbors();
-            }
-        }
-
-        // 尺寸变化使旧连接假设失效；保留所有方块，清空本目标的撤销历史。
-        ActionManager.instance?.Clear();
-        RefreshBlueprintUI();
-        return true;
+        MainUIPanels.instance.RefreshBuildingEditorPanel();
     }
 
     public void SetCurrentBuildingBlueprintName(string blueprintName)
@@ -524,7 +493,12 @@ public class BuildManager : MonoBehaviour
 
         _geometry.gridSize = gridSize;
         _geometry.blockLayer = blockLayer;
-        _preview.Configure(mainCamera, BuildRange, highlightMaterial, _connectorHints);
+        _preview.Configure(
+            mainCamera,
+            BuildRange,
+            highlightMaterial,
+            _connectorHints,
+            IsEditingBuildingBlueprint && HasBuildingBlueprint);
         _preview.ResourcePath = currentBlockResourcePath;
         _preview.PenetrationMode = penetrationMode;
         _manipulation.Configure(mainCamera, moveAxis, rotateAxis);
@@ -815,7 +789,7 @@ public class BuildManager : MonoBehaviour
 
         if (prefab.TryGetComponent(out BuildingFoundation _) || (IsEditingBuildingBlueprint && prefab.GetComponent<Cockpit>() != null))
         {
-            reason = "Buildings use a fixed foundation and cannot contain a Cockpit.";
+            reason = "Buildings use ground support and cannot contain a Cockpit.";
             return false;
         }
 

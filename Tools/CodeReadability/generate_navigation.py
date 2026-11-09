@@ -354,7 +354,7 @@ def main():
     )
     graph(
         "开发者建筑蓝图编辑",
-        "源码推导：Ctrl+Alt+F 进入/退出建筑，Ctrl+Alt+E 切换敌人。建筑使用独立目录；进入/打开不创建文件，只由明确新建写入。删除当前项切换剩余建筑，删空后清除目标/父对象并显示新建；不再使用default_building回退。加载父对象后由注入回调创建底座；底座不参与方块存档和操作栈。尺寸 UI 先保存元数据，再生成向上连接点并刷新已有连接，块坐标不变。",
+        "源码推导：Ctrl+Alt+F 进入/退出建筑，Ctrl+Alt+E 切换敌人。建筑使用独立目录；进入/打开不创建文件，只由明确新建写入。删除当前项切换剩余建筑，删空后清除目标/父对象并显示新建；不再使用default_building回退。加载父对象后由注入回调创建底座；底座不参与方块存档和操作栈。地面放置可越过当前范围；每次保存由旋转模块包围盒收紧占地并记录偏移，再刷新预览网格和连接，块坐标不变。",
         {
             "A": "InputManager.Update",
             "B": "BuildManager.ToggleBuildingBlueprintBuildMode",
@@ -364,9 +364,9 @@ def main():
             "F": "BlueprintLoader.Load",
             "G": "BuildManager.PrepareBuildingFoundation",
             "H": "BuildingFoundation.Configure",
-            "I": "BuildingEditorPanel.ApplySize",
-            "J": "BuildManager.ResizeBuildingFoundation",
-            "K": "SaveManager.SaveBuildingFoundation",
+            "I": "BuildBlueprintEditor.Write",
+            "J": "BuildingFootprint.Calculate",
+            "K": "BuildManager.RefreshBuildingFootprint",
             "L": "Block.CheckConnection",
             "M": "BuildManager.ExitDeveloperBlueprintBuildMode",
             "N": "SaveManager.LoadSave",
@@ -388,12 +388,26 @@ def main():
             "F -.->|prepareParent 回调| G",
             "G --> H",
             "I --> J",
-            "J -->|先写入| K",
-            "J -->|写入成功| H",
-            "J -->|刷新所有块| L",
+            "I -->|写入成功| K",
+            "K --> H",
+            "K -->|刷新所有块| L",
             "B -->|再次按下退出| M",
             "M --> N",
         ],
+    )
+    graph(
+        "地面自由建造、自动占地与舰队调整",
+        "源码推导：普通建筑与基地共享虚拟y=0地面放置，保留模块连接吸附。写入JSON时计算旋转包围盒和边距，只保存占地偏移，不搬动模块。世界地形支撑、流送与基地出生点读取相同范围。整备时管理已部署舰船，残值复用维修报价；换购先检查余额、尺寸和外部障碍，生成成功才替换旧舰并原子结算，取消清理原舰和碎片，禁止重复退款与战斗/返航操作。",
+        {"A": "BuildPreview.Poll", "B": "BuildManager.CreateBlock", "C": "BuildBlueprintEditor.Write",
+         "D": "BuildingFootprint.Calculate", "E": "BuildManager.RefreshBuildingFootprint",
+         "F": "BuildingFoundation.Configure", "G": "BuildingRuntime.HasFullFoundationSupport",
+         "H": "WorldBuildingPlacement.LocalAnchor", "I": "WorldBuildingStreaming.HasLoadedGround",
+         "J": "SiegeDeploymentView.Confirm", "K": "SiegeFleet.ReplaceAt",
+         "L": "SiegeFleet.CancelDeployment", "M": "SiegeFleet.CancellationCredit",
+         "N": "SiegeMatch.TryExchange", "O": "SiegeFleet.Scrap"},
+        ["A -->|鼠标确认| B", "B -->|SaveBlock后写入| C", "C --> D", "C -->|磁盘写入成功| E",
+         "E --> F", "G --> H", "I -.->|读取同一占地| H", "J --> K", "K --> M",
+         "L --> M", "K -->|成功生成再结算| N", "L --> N", "L --> O", "K --> O"],
     )
     graph(
         "蓝图恢复、统计和取消",

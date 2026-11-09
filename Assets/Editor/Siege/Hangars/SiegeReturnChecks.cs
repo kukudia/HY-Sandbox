@@ -61,6 +61,8 @@ public static class SiegeReturnChecks
             return false;
         }
 
+        public bool TryReplaceAt(int optionIndex, int dock, out string reason) => Fleet.ReplaceAt(optionIndex, dock, out reason);
+        public bool TryCancelDeployment(int dock, out string reason) => Fleet.CancelDeployment(dock, out reason);
         public bool TryTakeControl(int slot) => false;
         public bool TryTakeControl(string id) => false;
         public bool TryRepairShip(string id, bool repairBase = false) => false;

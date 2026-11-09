@@ -349,36 +349,16 @@ public static class BuildingEditorPlayProbe
             "Placed block and foundation connect through real PhysX",
             placed != null && placed.Neighbors().Contains(foundation) && foundation.connectors.Any(c => c.isConnected));
         string id = placed.uniqueId;
-        Vector3 oldSocket = foundation.connectors[0].localPos;
-        panel.transform.Find("Width").GetComponent<InputField>().text = "5";
-        panel.transform.Find("Length").GetComponent<InputField>().text = "3";
-        panel.transform.Find("Apply").GetComponent<Button>().onClick.Invoke();
         Check(
-            "Actual size UI applies and persists 5x3",
-            saves.cachedData.foundation.width == 5 && saves.cachedData.foundation.length == 3 && foundation.connectors.Count == 15);
+            "Manual footprint inputs were removed from saved UI",
+            panel.transform.Find("Width") == null && panel.transform.Find("Apply") == null);
+        BuildingFoundationData cropped = BuildingFootprint.Calculate(saves.cachedData.blocks, build.FootprintPadding);
         Check(
-            "Resize preserves old cell position and new-block connections",
-            foundation.connectors[0].localPos == oldSocket && placed.transform.position == position && placed.Neighbors().Contains(foundation));
+            "Actual module automatically crops the saved footprint",
+            saves.cachedData.foundation.width == cropped.width && saves.cachedData.foundation.offsetX == cropped.offsetX);
         Check(
-            "Dimensions survive in JSON with only the ordinary block",
-            JsonUtility.FromJson<BlockDataList>(File.ReadAllText(saves.GetBuildingBlueprintPath(build.CurrentBuildName))).foundation.width == 5 && saves.cachedData.blocks.Count == 1);
-        Check(
-            "Foundation resize preserves outpost and embedded defenders",
-            JsonUtility.FromJson<BlockDataList>(File.ReadAllText(saves.GetBuildingBlueprintPath(build.CurrentBuildName))).IsOutpost);
-        string beforeInvalid = File.ReadAllText(saves.GetBuildingBlueprintPath(build.CurrentBuildName));
-        Check(
-            "Zero and oversized dimensions are rejected",
-            !build.ResizeBuildingFoundation(0, 2, out _) && !build.ResizeBuildingFoundation(65, 2, out _));
-        Check(
-            "Rejected size preserves file and foundation",
-            beforeInvalid == File.ReadAllText(saves.GetBuildingBlueprintPath(build.CurrentBuildName)) && foundation.connectors.Count == 15);
-        Check(
-            "Shrink keeps user blocks without moving them",
-            build.ResizeBuildingFoundation(1, 1, out _) && placed.transform.position == position);
-        Check(
-            "Reexpand reconnects retained blocks",
-            build.ResizeBuildingFoundation(4, 4, out _) && placed.Neighbors().Contains(foundation));
-        Check("Odd dimensions are supported", build.ResizeBuildingFoundation(5, 3, out _));
+            "Cropping preserves outpost metadata and module coordinates",
+            JsonUtility.FromJson<BlockDataList>(File.ReadAllText(saves.GetBuildingBlueprintPath(build.CurrentBuildName))).IsOutpost && placed.transform.position == position);
         string firstName = build.CurrentBuildName;
         saves.DuplicateSave(firstName);
         string copy = firstName + " Copy";
@@ -400,10 +380,10 @@ public static class BuildingEditorPlayProbe
         yield return null;
         Check(
             "Reload restores one foundation, dimensions and block identity",
-            build.Foundation != null && GameManager.instance.blocksParent.GetComponentsInChildren<BuildingFoundation>().Length == 1 && build.Foundation.GetComponent<Block>().connectors.Count == 15 && saves.cachedData.blocks[0].id == id);
+            build.Foundation != null && GameManager.instance.blocksParent.GetComponentsInChildren<BuildingFoundation>().Length == 1 && build.Foundation.GetComponent<Block>().connectors.Count == 9 && saves.cachedData.blocks[0].id == id);
         Check(
-            "Reload restores size input values",
-            panel.transform.Find("Width").GetComponent<InputField>().text == "5" && panel.transform.Find("Length").GetComponent<InputField>().text == "3");
+            "Reload displays automatic footprint status",
+            panel.transform.Find("Status").GetComponent<Text>().text.Contains("Footprint: 3 x 3"));
         Check(
             "Reload rebuilds base connection",
             GameManager.instance.blocksParent.GetComponentsInChildren<Block>().Single(b => b.GetComponent<BuildingFoundation>() == null).Neighbors().Contains(build.Foundation.GetComponent<Block>()));
@@ -426,7 +406,7 @@ public static class BuildingEditorPlayProbe
 
         Check(
             "Enemy to building restores its saved 5x3 foundation",
-            build.IsEditingBuildingBlueprint && build.Foundation.GetComponent<Block>().connectors.Count == 15);
+            build.IsEditingBuildingBlueprint && build.Foundation.GetComponent<Block>().connectors.Count == 9);
         build.mainCamera.transform.position = new Vector3(6f, 6f, -9f);
         build.mainCamera.transform.LookAt(new Vector3(0f, 0f, 0f));
         ScreenCapture.CaptureScreenshot("Temp/BuildingEditor/BuildingEditor.png");

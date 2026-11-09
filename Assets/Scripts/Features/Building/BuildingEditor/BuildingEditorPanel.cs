@@ -1,16 +1,10 @@
-// 职责：建筑编辑的可编辑 uGUI 面板，提交底座整数尺寸并显示结果。
-// 入口：Refresh() / ApplySize()；Prefab 由 BuildingEditorAssets 制作，不改动主场景手工布局。
-using System;
-using System.IO;
+// 职责：显示自动占地和地面自由建造提示，建筑哨站控件独立保留。
+// 入口：Refresh()；面板没有手动地基尺寸输入，实际范围在每次编辑保存时计算。
 using UnityEngine;
 using UnityEngine.UI;
 
 public sealed class BuildingEditorPanel : MonoBehaviour
 {
-    [SerializeField]
-    private InputField _width;
-    [SerializeField]
-    private InputField _length;
     [SerializeField]
     private Text _status;
     [SerializeField]
@@ -23,7 +17,7 @@ public sealed class BuildingEditorPanel : MonoBehaviour
         bool baseEditor = BuildManager.instance.IsEditingBaseBlueprint;
         if (_title != null)
         {
-            _title.text = baseEditor ? "BASE  |  Foundation size" : "BUILDING  |  Ctrl+Alt+F to exit";
+            _title.text = baseEditor ? "BASE  |  Free ground building" : "BUILDING  |  Free ground building";
         }
 
         RectTransform rect = (RectTransform)transform;
@@ -45,30 +39,11 @@ public sealed class BuildingEditorPanel : MonoBehaviour
         }
 
         BuildingFoundationData data = SaveManager.instance?.cachedData?.foundation;
-        _width.text = (data?.width ?? BuildingFoundationData.DefaultSize).ToString();
-        _length.text = (data?.length ?? BuildingFoundationData.DefaultSize).ToString();
-        _status.text = "1-64 cells per side. Changes are saved automatically.";
+        string footprint = data == null ? "Empty design" : $"Footprint: {data.width} x {data.length} m  |  origin ({data.MinX:0}, {data.MinZ:0})";
+        _status.text = "Build anywhere on the ground. Footprint crops automatically.\n" + footprint + (data != null && !data.IsValid ? "\nOver deployment size limit (64 m per side)." : string.Empty);
         if (!baseEditor)
         {
             outpost?.Refresh();
-        }
-    }
-
-    public void ApplySize()
-    {
-        if (!int.TryParse(_width.text, out int width) || !int.TryParse(_length.text, out int length))
-        {
-            _status.text = "Enter whole numbers from 1 to 64.";
-            return;
-        }
-
-        try
-        {
-            _status.text = BuildManager.instance.ResizeBuildingFoundation(width, length, out string reason) ? $"Saved {width} x {length}. Existing blocks keep their positions." : reason;
-        }
-        catch (Exception exception) when (exception is IOException || exception is UnauthorizedAccessException)
-        {
-            _status.text = $"Could not save: {exception.Message}";
         }
     }
 }

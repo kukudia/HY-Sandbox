@@ -40,7 +40,7 @@ public class BlockData
 public class BlockDataList
 {
     public List<BlockData> blocks = new List<BlockData>();
-    // 建筑底座独立于可删除的方块；旧玩家/敌人蓝图缺少此字段仍可读取。
+    // 建筑自动占地独立于可删除模块；尺寸和偏移不改变方块坐标，旧载具蓝图缺少此字段仍可读取。
     public BuildingFoundationData foundation;
     public EnemyOutpostData outpost;
     // Optional design metadata; combat never writes damaged runtime state back to this blueprint.

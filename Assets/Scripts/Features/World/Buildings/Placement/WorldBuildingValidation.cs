@@ -12,7 +12,7 @@ public static class WorldBuildingValidation
     {
         if (blueprint == null || blueprint.foundation == null || !blueprint.foundation.IsValid || blueprint.blocks == null || blueprint.blocks.Count > MaximumBlocks)
         {
-            throw new InvalidOperationException("Building requires a valid foundation and at most 2048 blocks.");
+            throw new InvalidOperationException("Building requires a 1-64 m footprint per side, safe offsets and at most 2048 blocks.");
         }
 
         var ids = new HashSet<string>();
@@ -123,9 +123,11 @@ public static class WorldBuildingValidation
                     half,
                     new Vector3((corner & 1) == 0 ? -1f : 1f, (corner & 2) == 0 ? -1f : 1f, (corner & 4) == 0 ? -1f : 1f));
                 point += new Vector3(block.posX, block.posY, block.posZ);
-                if (point.y < -0.01f || Mathf.Max(Mathf.Abs(point.x), Mathf.Abs(point.z)) > 128f)
+                if (point.y < -0.01f || Mathf.Max(
+                    Mathf.Abs(point.x - blueprint.foundation.Center.x),
+                    Mathf.Abs(point.z - blueprint.foundation.Center.z)) > 128f)
                 {
-                    throw new InvalidOperationException("Building extends below its foundation or beyond the 128 m platform radius.");
+                    throw new InvalidOperationException("Building extends below its ground plane or beyond the 128 m footprint radius.");
                 }
             }
         }

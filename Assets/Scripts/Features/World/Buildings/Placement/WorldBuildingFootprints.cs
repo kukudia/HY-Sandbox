@@ -18,9 +18,7 @@ public sealed class WorldBuildingFootprints
         for (int i = 0; i < footprints.Length; i++)
         {
             BlockDataList template = templates[i];
-            Bounds bounds = new Bounds(
-                new Vector3(template.foundation.width * .5f - 2f, 0f, template.foundation.length * .5f - 2f),
-                new Vector3(template.foundation.width, 0f, template.foundation.length));
+            Bounds bounds = new Bounds(template.foundation.Center, new Vector3(template.foundation.width, 0f, template.foundation.length));
             if (template.blocks.Count > 0)
             {
                 bounds.Encapsulate(OutpostBaseDesigner.BoundsOf(template.blocks, Quaternion.identity));

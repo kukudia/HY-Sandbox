@@ -3,7 +3,6 @@
 using System;
 using System.IO;
 using UnityEditor;
-using UnityEditor.Events;
 using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
@@ -33,6 +32,46 @@ public static class BuildingEditorAssets
         }
 
         AssetDatabase.SaveAssets();
+    }
+
+    [MenuItem("Tools/Building Editor/Migrate free building panel")]
+    public static void MigrateFreeBuildingPanel()
+    {
+        string path = Folder + "/EditorPanel.prefab";
+        GameObject root = PrefabUtility.LoadPrefabContents(path);
+        try
+        {
+            foreach (string name in new[]
+            {
+                "Width",
+                "Length",
+                "WidthLabel",
+                "LengthLabel",
+                "Apply"
+            }
+
+            )
+            {
+                Transform old = root.transform.Find(name);
+                if (old != null)
+                {
+                    Object.DestroyImmediate(old.gameObject);
+                }
+            }
+
+            Text title = root.transform.Find("Title").GetComponent<Text>();
+            title.text = "BUILDING  |  Free ground building";
+            Text status = root.transform.Find("Status").GetComponent<Text>();
+            status.rectTransform.anchoredPosition = new Vector2(14f, -42f);
+            status.rectTransform.sizeDelta = new Vector2(400f, 90f);
+            status.text = "Build anywhere on the ground. Footprint crops automatically.";
+            status.verticalOverflow = VerticalWrapMode.Overflow;
+            PrefabUtility.SaveAsPrefabAsset(root, path);
+        }
+        finally
+        {
+            PrefabUtility.UnloadPrefabContents(root);
+        }
     }
 
     private static Material CreateGridMaterial()
@@ -124,48 +163,18 @@ public static class BuildingEditorAssets
                 new Vector2(402f, 24f),
                 new Vector2(14f, -12f),
                 17);
-            Label(
-                "WidthLabel",
-                root.transform,
-                "Width",
-                new Vector2(50f, 32f),
-                new Vector2(14f, -46f),
-                15);
-            InputField width = Input("Width", root.transform, new Vector2(66f, -46f));
-            Label(
-                "LengthLabel",
-                root.transform,
-                "Length",
-                new Vector2(55f, 32f),
-                new Vector2(146f, -46f),
-                15);
-            InputField length = Input("Length", root.transform, new Vector2(202f, -46f));
-            GameObject apply = Rect("Apply", root.transform, new Vector2(118f, 32f), new Vector2(294f, -46f));
-            apply.AddComponent<Image>().color = new Color(0.12f, 0.42f, 0.55f);
-            Button button = apply.AddComponent<Button>();
-            Text caption = Label(
-                "Text",
-                apply.transform,
-                "Apply size",
-                new Vector2(118f, 32f),
-                Vector2.zero,
-                15);
-            caption.alignment = TextAnchor.MiddleCenter;
             Text status = Label(
                 "Status",
                 root.transform,
-                "1-64 cells per side. Changes are saved automatically.",
-                new Vector2(400f, 52f),
-                new Vector2(14f, -86f),
+                "Build anywhere on the ground. Footprint crops automatically.",
+                new Vector2(400f, 90f),
+                new Vector2(14f, -42f),
                 14);
             BuildingEditorPanel panel = root.AddComponent<BuildingEditorPanel>();
             var serialized = new SerializedObject(panel);
-            serialized.FindProperty("_width").objectReferenceValue = width;
-            serialized.FindProperty("_length").objectReferenceValue = length;
             serialized.FindProperty("_status").objectReferenceValue = status;
             serialized.FindProperty("_title").objectReferenceValue = root.transform.Find("Title").GetComponent<Text>();
             serialized.ApplyModifiedPropertiesWithoutUndo();
-            UnityEventTools.AddPersistentListener(button.onClick, panel.ApplySize);
             PrefabUtility.SaveAsPrefabAsset(root, Folder + "/EditorPanel.prefab");
         }
         finally
@@ -202,24 +211,5 @@ public static class BuildingEditorAssets
         text.alignment = TextAnchor.MiddleLeft;
         text.raycastTarget = false;
         return text;
-    }
-
-    private static InputField Input(string name, Transform parent, Vector2 position)
-    {
-        GameObject root = Rect(name, parent, new Vector2(64f, 32f), position);
-        root.AddComponent<Image>().color = new Color(0.16f, 0.21f, 0.26f);
-        Text text = Label(
-            "Text",
-            root.transform,
-            "4",
-            new Vector2(52f, 32f),
-            new Vector2(6f, 0f),
-            17);
-        InputField field = root.AddComponent<InputField>();
-        field.textComponent = text;
-        field.contentType = InputField.ContentType.IntegerNumber;
-        field.characterLimit = 2;
-        field.text = "4";
-        return field;
     }
 }

@@ -59,6 +59,8 @@ public interface ISiegeDeploymentHost
     void SelectAttacker(int index);
     bool RefreshBlueprints();
     bool TryDeployAt(int optionIndex, int dock, out string reason);
+    bool TryReplaceAt(int optionIndex, int dock, out string reason);
+    bool TryCancelDeployment(int dock, out string reason);
     bool TryTakeControl(int slot);
     bool TryTakeControl(string id);
     bool TryRepairShip(string id, bool repairBase = false);

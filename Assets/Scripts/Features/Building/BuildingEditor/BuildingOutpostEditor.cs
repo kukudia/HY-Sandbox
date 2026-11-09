@@ -196,7 +196,7 @@ public sealed class BuildingOutpostEditor : MonoBehaviour
         Bounds bounds = OutpostBaseDesigner.BoundsOf(templates[_blueprint.value].blocks, Quaternion.identity);
         BlockDataList building = SaveManager.instance.cachedData;
         Bounds baseBounds = OutpostBaseDesigner.BoundsOf(building.blocks, Quaternion.identity);
-        Vector3 center = new Vector3(building.foundation.width * .5f - 2f, 0f, building.foundation.length * .5f - 2f);
+        Vector3 center = building.foundation.Center;
         Vector3 position = center - new Vector3(bounds.center.x, bounds.min.y, bounds.center.z);
         position.y += Mathf.Max(1f, baseBounds.max.y) + .15f;
         data.garrison.Add(new OutpostGarrisonData { id = Guid.NewGuid().ToString("N"), name = names[_blueprint.value], blueprint = new OutpostEnemyBlueprint { blocks = JsonUtility.FromJson<BlockDataList>(JsonUtility.ToJson(templates[_blueprint.value])).blocks }, position = position });

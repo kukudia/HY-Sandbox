@@ -62,7 +62,28 @@ internal sealed class BuildBlueprintEditor
 
     private void Write(string path)
     {
-        File.WriteAllText(path, JsonUtility.ToJson(_saves.cachedData, true));
+        BuildManager build = BuildManager.instance;
+        bool structure = build != null && build.IsEditingBuildingBlueprint;
+        if (structure)
+        {
+            _saves.cachedData.foundation = BuildingFootprint.Calculate(_saves.cachedData.blocks, build.FootprintPadding);
+        }
+
+        string pending = path + ".pending";
+        File.WriteAllText(pending, JsonUtility.ToJson(_saves.cachedData, true));
+        if (File.Exists(path))
+        {
+            File.Replace(pending, path, null);
+        }
+        else
+        {
+            File.Move(pending, path);
+        }
+
+        if (structure)
+        {
+            build.RefreshBuildingFootprint();
+        }
     }
 
     private void RefreshConnectionsAround(Block block)

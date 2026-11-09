@@ -64,8 +64,7 @@ internal sealed class WorldBuildingStreaming
         foreach (KeyValuePair<string, DormantBuilding> entry in dormant)
         {
             WorldBuildingState state = entry.Value.State;
-            var size = new Vector2Int(state.blueprint.foundation.width, state.blueprint.foundation.length);
-            if (!HasLoadedGround(state.position, state.rotation, size) || !manager.HasCapacity(state.blueprint.blocks.Count))
+            if (!HasLoadedGround(state.position, state.rotation, state.blueprint.foundation) || !manager.HasCapacity(state.blueprint.blocks.Count))
             {
                 continue;
             }
@@ -108,7 +107,7 @@ internal sealed class WorldBuildingStreaming
         retiring.Clear();
         foreach (BuildingRuntime building in manager.Buildings)
         {
-            if (building != null && (Distance(world.ColumnAt(building.transform.position), center) > settings.UnloadRadius || !HasLoadedGround(building.transform.position, building.transform.rotation, building.FootprintSize)))
+            if (building != null && (Distance(world.ColumnAt(building.transform.TransformPoint(building.Footprint.Center)), center) > settings.UnloadRadius || !HasLoadedGround(building.transform.position, building.transform.rotation, building.Footprint)))
             {
                 retiring.Add(building);
             }
@@ -149,13 +148,16 @@ internal sealed class WorldBuildingStreaming
         return Mathf.Max(Mathf.Abs(a.x - b.x), Mathf.Abs(a.y - b.y));
     }
 
-    private bool HasLoadedGround(Vector3 position, Quaternion rotation, Vector2Int size)
+    private bool HasLoadedGround(Vector3 position, Quaternion rotation, BuildingFoundationData footprint)
     {
-        Vector2Int minimum = world.ColumnAt(position);
+        Vector2Int minimum = world.ColumnAt(position + rotation * footprint.Center);
         Vector2Int maximum = minimum;
         for (int i = 0; i < 4; i++)
         {
-            Vector3 corner = position + rotation * new Vector3((i & 1) == 0 ? -2.05f : size.x - 1.95f, 0f, (i & 2) == 0 ? -2.05f : size.y - 1.95f);
+            Vector3 corner = position + rotation * new Vector3(
+                (i & 1) == 0 ? footprint.MinX - .05f : footprint.MinX + footprint.width + .05f,
+                0f,
+                (i & 2) == 0 ? footprint.MinZ - .05f : footprint.MinZ + footprint.length + .05f);
             Vector2Int column = world.ColumnAt(corner);
             minimum = Vector2Int.Min(minimum, column);
             maximum = Vector2Int.Max(maximum, column);

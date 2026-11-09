@@ -80,6 +80,7 @@
     <Compile Include="Assets\Editor\Siege\Hangars\SiegeHangarInterfaceAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\Hangars\HangarAssetChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\Effects\BlockVfxBaker.cs" />
+    <Compile Include="Assets\Editor\Building\Validation\WorldBuildingFootprintChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\Effects\EnemySpawnPortalBaker.cs" />
     <Compile Include="Assets\Editor\Architecture\DetachedVehicleChecks.cs" />
     <Compile Include="Assets\Editor\Architecture\EditableComponentBaker.cs" />

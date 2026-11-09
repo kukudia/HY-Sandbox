@@ -23,6 +23,8 @@ public static class HangarPrefabAuthoring
         }
 
         Material floor = Material("Floor", new Color(0.035f, 0.055f, 0.07f, 1f));
+        Material roof = Material("Roof", new Color(0.17f, 0.34f, 0.42f, 0.045f), true);
+        roof.SetShaderPassEnabled("ShadowCaster", false);
         Material shell = Material("Shell", new Color(0.17f, 0.24f, 0.29f, 1f));
         Material door = Material("Door", new Color(0.14f, 0.42f, 0.47f, 1f));
         Material volume = Material("Capacity", new Color(0.12f, 0.75f, 0.95f, 0.13f), true);
@@ -49,7 +51,7 @@ public static class HangarPrefabAuthoring
             HangarModule module = root.AddComponent<HangarModule>();
             var data = new SerializedObject(module);
             data.FindProperty("floor").objectReferenceValue = Cube(root.transform, "Dark Floor", floor, true);
-            data.FindProperty("roof").objectReferenceValue = Cube(root.transform, "Roof", shell, true);
+            data.FindProperty("roof").objectReferenceValue = Cube(root.transform, "Roof", roof, true);
             data.FindProperty("leftWall").objectReferenceValue = Cube(root.transform, "Left Wall", shell, true);
             data.FindProperty("rightWall").objectReferenceValue = Cube(root.transform, "Right Wall", shell, true);
             data.FindProperty("backWall").objectReferenceValue = Cube(root.transform, "Back Wall", shell, true);
@@ -94,6 +96,27 @@ public static class HangarPrefabAuthoring
         finally
         {
             UnityEngine.Object.DestroyImmediate(root);
+        }
+    }
+
+    [MenuItem("HY-Sandbox/Siege/Hangars/Update Transparent Roof")]
+    public static void UpdateTransparentRoof()
+    {
+        Material material = Material("Roof", new Color(0.17f, 0.34f, 0.42f, 0.045f), true);
+        material.SetShaderPassEnabled("ShadowCaster", false);
+        GameObject root = PrefabUtility.LoadPrefabContents(PrefabPath);
+        try
+        {
+            Renderer renderer = root.transform.Find("Roof").GetComponent<Renderer>();
+            renderer.sharedMaterial = material;
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+            PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
+            AssetDatabase.SaveAssets();
+        }
+        finally
+        {
+            PrefabUtility.UnloadPrefabContents(root);
         }
     }
 

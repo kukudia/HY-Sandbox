@@ -37,7 +37,7 @@ public static class WorldBuildingPlacement
         {
             for (int z = 0; z < blueprint.foundation.length; z++)
             {
-                Vector3 sample = position + rotation * (LocalAnchor(x, z) - Vector3.up * 0.05f);
+                Vector3 sample = position + rotation * (LocalAnchor(blueprint.foundation, x, z) - Vector3.up * 0.05f);
                 Vector3Int cell = world.WorldToCell(sample);
                 Vector3 above = sample + rotation * Vector3.up * 0.15f;
                 if (!world.Data.Contains(cell) || world.Data.Get(cell) == 0 || world.Data.Get(world.WorldToCell(above)) != 0)
@@ -108,14 +108,25 @@ public static class WorldBuildingPlacement
         return new Vector3(x - 1.5f, 0f, z - 1.5f);
     }
 
+    public static Vector3 LocalAnchor(BuildingFoundationData footprint, int x, int z)
+    {
+        return new Vector3(footprint.MinX + x + .5f, 0f, footprint.MinZ + z + .5f);
+    }
+
     public static float Support(ProceduralVoxelWorld world, Vector2Int size, Transform pose)
     {
+        return Support(world, new BuildingFoundationData { width = size.x, length = size.y }, pose);
+    }
+
+    public static float Support(ProceduralVoxelWorld world, BuildingFoundationData footprint, Transform pose)
+    {
+        var size = new Vector2Int(footprint.width, footprint.length);
         int supported = 0;
         for (int x = 0; x < size.x; x++)
         {
             for (int z = 0; z < size.y; z++)
             {
-                Vector3 sample = pose.TransformPoint(LocalAnchor(x, z) - Vector3.up * 0.05f);
+                Vector3 sample = pose.TransformPoint(LocalAnchor(footprint, x, z) - Vector3.up * 0.05f);
                 if (world.Data.Get(world.WorldToCell(sample)) != 0)
                 {
                     supported++;
@@ -129,7 +140,7 @@ public static class WorldBuildingPlacement
     public static Bounds Footprint(BuildingRuntime building)
     {
         Vector2Int size = building.FootprintSize;
-        Vector3 center = new Vector3(size.x * 0.5f - 2f, 0f, size.y * 0.5f - 2f);
+        Vector3 center = building.Footprint.Center;
         Bounds bounds = new Bounds(building.transform.TransformPoint(center), Vector3.zero);
         for (int i = 0; i < 8; i++)
         {

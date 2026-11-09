@@ -412,7 +412,7 @@ public sealed class WorldBuildingManager : MonoBehaviour
         {
             if (building != null && building.Anchored)
             {
-                building.SupportRatio = WorldBuildingPlacement.Support(world, building.FootprintSize, building.transform);
+                building.SupportRatio = WorldBuildingPlacement.Support(world, building.Footprint, building.transform);
                 if (collapseUnsupported && building.SupportRatio < minimumSupportRatio)
                 {
                     building.ReleaseAnchor();

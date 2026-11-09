@@ -227,6 +227,23 @@ public sealed class SiegeMatch
         return true;
     }
 
+    /// <summary>整备换购先抵扣旧舰残值，再扣新舰价格；交易失败不改变余额。</summary>
+    public bool CanExchange(long price, long credit)
+    {
+        return CanRefit && price >= 0 && credit >= 0 && credit <= long.MaxValue - Coins && Coins + credit >= price;
+    }
+
+    public bool TryExchange(long price, long credit)
+    {
+        if (!CanExchange(price, credit))
+        {
+            return false;
+        }
+
+        Coins += credit - price;
+        return true;
+    }
+
     public void LoseBase()
     {
         Phase = SiegePhase.Defeat;

@@ -27,6 +27,8 @@ public sealed class BuildingRuntime : MonoBehaviour
     private int damageBatchDepth;
     private bool structureDirty;
     public Vector2Int FootprintSize => new Vector2Int(foundationData.width, foundationData.length);
+    // The offset preserves the authored blueprint origin when automatic cropping trims empty ground.
+    public BuildingFoundationData Footprint => foundationData;
     public bool Anchored => body != null && body.isKinematic;
     public bool IsOperational => isActiveAndEnabled && pendingState == null && blocks.Count > 0;
     public bool IsSimulationActive => manager != null && manager.SimulationEnabled && manager.isActiveAndEnabled && IsOperational;
@@ -88,11 +90,7 @@ public sealed class BuildingRuntime : MonoBehaviour
         outpost = state.blueprint.IsOutpost ? state.blueprint.outpost : null;
         instanceId = state.instanceId;
         blueprintName = state.blueprintName;
-        foundationData = new BuildingFoundationData
-        {
-            width = state.blueprint.foundation.width,
-            length = state.blueprint.foundation.length
-        };
+        foundationData = state.blueprint.foundation.Copy();
         body = GetComponent<Rigidbody>();
         body.isKinematic = state.anchored;
         body.useGravity = true;
@@ -198,11 +196,7 @@ public sealed class BuildingRuntime : MonoBehaviour
         var blueprint = new BlockDataList
         {
             outpost = outpost,
-            foundation = new BuildingFoundationData
-            {
-                width = foundationData.width,
-                length = foundationData.length
-            }
+            foundation = foundationData.Copy()
         };
         var health = new List<float>();
         foreach (Block block in blocks)
@@ -354,9 +348,9 @@ public sealed class BuildingRuntime : MonoBehaviour
             }
 
             Vector3 local = transform.InverseTransformPoint(block.GetConnectorWorldPosition(connector));
-            int x = Mathf.RoundToInt(local.x + 1.5f);
-            int z = Mathf.RoundToInt(local.z + 1.5f);
-            if (x >= 0 && x < foundationData.width && z >= 0 && z < foundationData.length && (local - WorldBuildingPlacement.LocalAnchor(x, z)).sqrMagnitude < 0.25f * 0.25f)
+            int x = Mathf.RoundToInt(local.x - foundationData.MinX - .5f);
+            int z = Mathf.RoundToInt(local.z - foundationData.MinZ - .5f);
+            if (x >= 0 && x < foundationData.width && z >= 0 && z < foundationData.length && (local - WorldBuildingPlacement.LocalAnchor(foundationData, x, z)).sqrMagnitude < 0.25f * 0.25f)
             {
                 return true;
             }

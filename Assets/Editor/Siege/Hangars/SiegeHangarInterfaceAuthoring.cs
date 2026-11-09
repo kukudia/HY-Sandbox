@@ -87,7 +87,7 @@ public static class SiegeHangarInterfaceAuthoring
             Bind(data, "repair", Button("Repair", card, "REPAIR SHIP", new Vector2(20, 360), new Vector2(270, 48)));
             Bind(data, "close", Button("Close", card, "CLOSE", new Vector2(310, 360), new Vector2(130, 48)));
             card.gameObject.SetActive(false);
-            RectTransform debug = Panel("Blueprint Controls", root.transform, new Vector2(1430, 730), new Vector2(460, 180));
+            RectTransform debug = Panel("Blueprint Controls", root.transform, new Vector2(1430, 810), new Vector2(460, 180));
             Label(
                 "Title",
                 debug,
@@ -117,12 +117,138 @@ public static class SiegeHangarInterfaceAuthoring
             }
 
             data.ApplyModifiedPropertiesWithoutUndo();
+            UpgradeActions(view);
             EditorSceneManager.SaveScene(scene);
         }
         finally
         {
             EditorSceneManager.RestoreSceneManagerSetup(setup);
         }
+    }
+
+    [MenuItem("Tools/HY-Sandbox/Siege/Upgrade deployment replacement actions")]
+    public static void UpgradeScenes()
+    {
+        if (EditorApplication.isPlaying || Enumerable.Range(0, SceneManager.sceneCount).Any(i => SceneManager.GetSceneAt(i).isDirty))
+        {
+            throw new InvalidOperationException("Save scenes and exit Play Mode first.");
+        }
+
+        SceneSetup[] setup = EditorSceneManager.GetSceneManagerSetup();
+        try
+        {
+            foreach (string path in new[]
+            {
+                "Assets/Scenes/Siege.unity",
+                "Assets/Scenes/SiegeGameplay.unity",
+                "Assets/Scenes/SiegeStress.unity",
+                "Assets/Scenes/SiegeMixedStress.unity",
+                "Assets/Scenes/SiegeLargeStress.unity"
+            }
+
+            )
+            {
+                Scene scene = EditorSceneManager.OpenScene(path, OpenSceneMode.Single);
+                UpgradeActions(SceneObjectQuery.FindInScene<SiegeDeploymentView>(scene));
+                EditorSceneManager.SaveScene(scene);
+            }
+        }
+        finally
+        {
+            EditorSceneManager.RestoreSceneManagerSetup(setup);
+        }
+    }
+
+    /// <summary>保留已有面板、目录和引用，只补齐换舰/取消按钮及其可编辑布局。</summary>
+    public static void UpgradeActions(SiegeDeploymentView view)
+    {
+        Undo.RegisterFullObjectHierarchyUndo(view.gameObject, "Add deployment replacement actions");
+        SerializedObject data = new SerializedObject(view);
+        RectTransform card = (RectTransform)((GameObject)data.FindProperty("card").objectReferenceValue).transform;
+        card.sizeDelta = new Vector2(460, 555);
+        if (data.FindProperty("stage").objectReferenceValue != null)
+        {
+            GameObject debug = (GameObject)data.FindProperty("debugPanel").objectReferenceValue;
+            Place((RectTransform)debug.transform, new Vector2(1430, 810), new Vector2(460, 180));
+        }
+
+        foreach (string field in new[]
+        {
+            "replace",
+            "undeploy"
+        }
+
+        )
+        {
+            if (data.FindProperty(field).objectReferenceValue == null)
+            {
+                Bind(
+                    data,
+                    field,
+                    Button(
+                        field == "replace" ? "Replace Ship" : "Undeploy Ship",
+                        card,
+                        field == "replace" ? "REPLACE SHIP" : "UNDEPLOY / REFUND",
+                        Vector2.zero,
+                        new Vector2(420, 48)));
+            }
+        }
+
+        data.ApplyModifiedPropertiesWithoutUndo();
+        data.Update();
+        PlaceAction(data, "title", new Vector2(20, 15), new Vector2(420, 44));
+        PlaceAction(data, "defenderBlueprint", new Vector2(20, 75), new Vector2(420, 48));
+        PlaceAction(data, "details", new Vector2(20, 140), new Vector2(420, 130));
+        PlaceAction(data, "confirm", new Vector2(20, 290), new Vector2(420, 48));
+        PlaceAction(data, "pilot", new Vector2(20, 290), new Vector2(420, 48));
+        PlaceAction(data, "repair", new Vector2(20, 350), new Vector2(200, 48));
+        PlaceAction(data, "replace", new Vector2(240, 350), new Vector2(200, 48));
+        PlaceAction(data, "undeploy", new Vector2(20, 410), new Vector2(420, 48));
+        PlaceAction(data, "close", new Vector2(310, 480), new Vector2(130, 48));
+        foreach (string field in new[]
+        {
+            "confirm",
+            "pilot",
+            "repair",
+            "replace",
+            "undeploy",
+            "close"
+        }
+
+        )
+        {
+            Button button = (Button)data.FindProperty(field).objectReferenceValue;
+            Text text = button.GetComponentInChildren<Text>(true);
+            RectTransform rect = text.rectTransform;
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = new Vector2(6, 0);
+            rect.offsetMax = new Vector2(-6, 0);
+            text.fontSize = 18;
+            text.alignment = TextAnchor.MiddleCenter;
+        }
+
+        SerializedProperty markers = data.FindProperty("markers");
+        for (int i = 0; i < markers.arraySize; i++)
+        {
+            Button marker = (Button)markers.GetArrayElementAtIndex(i).objectReferenceValue;
+            ((RectTransform)marker.transform).sizeDelta = new Vector2(110, 42);
+            Text text = marker.GetComponentInChildren<Text>(true);
+            text.fontSize = 18;
+            text.rectTransform.anchorMin = Vector2.zero;
+            text.rectTransform.anchorMax = Vector2.one;
+            text.rectTransform.offsetMin = text.rectTransform.offsetMax = Vector2.zero;
+            text.alignment = TextAnchor.MiddleCenter;
+        }
+
+        EditorUtility.SetDirty(view);
+        EditorSceneManager.MarkSceneDirty(view.gameObject.scene);
+    }
+
+    private static void PlaceAction(SerializedObject data, string field, Vector2 position, Vector2 size)
+    {
+        Component target = (Component)data.FindProperty(field).objectReferenceValue;
+        Place((RectTransform)target.transform, position, size);
     }
 
     private static Font Font => Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");

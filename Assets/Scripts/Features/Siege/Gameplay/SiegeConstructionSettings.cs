@@ -66,9 +66,9 @@ public sealed class SiegeConstructionSettings : ScriptableObject
                     Mathf.Round(euler.y / 90f) * 90f,
                     Mathf.Round(euler.z / 90f) * 90f);
                 Bounds bounds = BlockBounds.FromBlueprint(block, Matrix4x4.identity);
-                if (Quaternion.Angle(rotation, snapped) > .1f || bounds.min.y < -.01f || bounds.max.y > maximumHeight || bounds.min.x < -2.01f || bounds.min.z < -2.01f || bounds.max.x > data.foundation.width - 1.99f || bounds.max.z > data.foundation.length - 1.99f)
+                if (Quaternion.Angle(rotation, snapped) > .1f || bounds.min.y < -.01f || bounds.max.y > maximumHeight || bounds.min.x < data.foundation.MinX - .01f || bounds.min.z < data.foundation.MinZ - .01f || bounds.max.x > data.foundation.MinX + data.foundation.width + .01f || bounds.max.z > data.foundation.MinZ + data.foundation.length + .01f)
                 {
-                    reason = $"Modules must fit the foundation, use quarter turns and stay below {maximumHeight}m.";
+                    reason = $"Modules must fit the footprint, use quarter turns and stay below {maximumHeight}m.";
                     return false;
                 }
 

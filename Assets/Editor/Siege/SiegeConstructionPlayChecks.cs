@@ -148,11 +148,11 @@ public static class SiegeConstructionPlayChecks
             SaveManager.instance.cachedData.siegeCoreId == small.blocks[1].id,
             "Selected real module becomes unique core");
         Check(
-            BuildManager.instance.ResizeBuildingFoundation(5, 5, out _),
-            "Foundation editable in normal construction workflow");
+            SaveManager.instance.cachedData.foundation != null && SaveManager.instance.cachedData.foundation.IsValid,
+            "Automatic footprint available in normal construction workflow");
         Check(
             JsonUtility.FromJson<BlockDataList>(File.ReadAllText(path)).siegeCoreId == small.blocks[1].id,
-            "Resize preserves core metadata on disk");
+            "Automatic footprint preserves core metadata on disk");
         BuildManager.instance.ToggleBaseBlueprintBuildMode();
         while (BuildManager.instance.IsLoadingBlocks)
         {

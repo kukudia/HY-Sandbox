@@ -185,6 +185,85 @@ public static class HangarWorkshopChecks
         saves.baseBlueprints.Clear();
         saves.blocks.Clear();
         saves.cachedData = new BlockDataList();
+        // Ordinary buildings and bases use the same ground placement path; exercise both actual consumers.
+        string buildingPath = saves.GetBuildingBlueprintPath("Free Ground Probe");
+        File.WriteAllText(buildingPath, JsonUtility.ToJson(new BlockDataList { foundation = new BuildingFoundationData() }));
+        build.moveCameraDuringBlockLoad = false;
+        build.BlockLoadIntervalSeconds = 0f;
+        build.EnterBuildingBlueprintBuildMode("Free Ground Probe");
+        while (build.IsLoadingBlocks)
+        {
+            yield return null;
+        }
+
+        yield return Frames(3);
+        Camera groundCamera = build.mainCamera;
+        CameraController.instance.StopCameraMotion();
+        Vector3 groundAim = new Vector3(-18.5f, 0f, -12.5f);
+        groundCamera.transform.position = groundAim + new Vector3(0f, 18f, -8f);
+        groundCamera.transform.LookAt(groundAim);
+        build.SetCurrentBlockResource("Blocks/1x1x1");
+        Vector2 groundPointer = groundCamera.WorldToScreenPoint(groundAim);
+        InputSystem.QueueStateEvent(mouse, new MouseState { position = groundPointer });
+        yield return Frames(6);
+        Check(
+            build.currentGhost != null && build.hoveredConnector == null,
+            "ordinary building previews on virtual ground beyond the old footprint with no connector");
+        InputSystem.QueueStateEvent(mouse, new MouseState { position = groundPointer }.WithButton(MouseButton.Left));
+        yield return Frames(3);
+        InputSystem.QueueStateEvent(mouse, new MouseState { position = groundPointer });
+        yield return Frames(2);
+        Block groundBlock = build.lastSaveBlock;
+        Check(
+            saves.cachedData.blocks.Count == 1 && groundBlock != null && groundBlock.transform.position.y == .5f,
+            "real mouse click places the first ordinary building module directly on ground");
+        Vector3 savedPosition = groundBlock.transform.position;
+        BuildingFoundationData footprint = saves.cachedData.foundation;
+        Check(
+            footprint.width == 3 && footprint.length == 3 && footprint.MinX < -2 && footprint.MinZ < -2,
+            "save crops both negative axes with one-cell margin");
+        Check(
+            groundBlock.Neighbors().Contains(build.Foundation.GetComponent<Block>()),
+            "automatically extended preview grid provides a real ground connector");
+        build.SetCurrentBlockResource(string.Empty);
+        build.CreateBlock(
+            Resources.Load<GameObject>("Blocks/1x1x1"),
+            "Blocks/1x1x1",
+            new Vector3(8.5f, .5f, 9.5f),
+            Quaternion.identity);
+        Block second = build.lastSaveBlock;
+        int wideFootprint = saves.cachedData.foundation.width;
+        Check(
+            wideFootprint > 20 && groundBlock.transform.position == savedPosition,
+            "separate ground module expands positive footprint without rebasing earlier modules");
+        build.selectedBlock = second;
+        build.DeleteBlock();
+        Check(
+            saves.cachedData.foundation.width == 3 && groundBlock.transform.position == savedPosition,
+            "deleting the outermost module crops empty space without moving retained modules");
+        ActionManager.instance.Undo();
+        Check(
+            saves.cachedData.foundation.width == wideFootprint,
+            "delete Undo restores footprint together with the module");
+        ActionManager.instance.Redo();
+        Check(saves.cachedData.foundation.width == 3, "delete Redo crops the footprint again");
+        string groundId = groundBlock.uniqueId;
+        build.EnterBuildingBlueprintBuildMode("Free Ground Probe");
+        while (build.IsLoadingBlocks)
+        {
+            yield return null;
+        }
+
+        yield return Frames(3);
+        Check(
+            saves.cachedData.blocks.Single().id == groundId && GameManager.instance.blocksParent.GetComponentsInChildren<Block>().Single(item => item.uniqueId == groundId).transform.position == savedPosition,
+            "saved negative footprint reloads with identical module identity and position");
+        Check(
+            File.ReadAllText(buildingPath).Contains("offsetX") && saves.cachedData.foundation.width == 3,
+            "crop offset persists in ordinary building JSON");
+        Check(
+            BuildingFootprint.Calculate(saves.cachedData.blocks, 0).width == 1,
+            "padding can be configured independently of design dimensions");
         path = saves.GetBaseBlueprintPath(Name);
         var design = new BlockDataList
         {
@@ -205,14 +284,17 @@ public static class HangarWorkshopChecks
 
         yield return Frames(3);
         Check(
+            WorldBuildingFootprintChecks.RunRuntime().Contains("PASS"),
+            "offset world buildings retain support and capture contracts in real Play Mode");
+        Check(
             build.IsEditingBaseBlueprint && build.Foundation != null && saves.cachedData.blocks.Count == 0,
-            "isolated base opens with an empty 64m foundation");
+            "isolated base opens without requiring a preset footprint");
         Check(
             Path.GetDirectoryName(path) == Path.Combine(folder, "Bases"),
             "base edits use an isolated base-only file store");
         Camera camera = build.mainCamera;
         CameraController.instance.StopCameraMotion();
-        Vector3 aim = build.Foundation.transform.TransformPoint(new Vector3(2.5f, 0f, 2.5f));
+        Vector3 aim = build.Foundation.transform.TransformPoint(new Vector3(-18.5f, 0f, -12.5f));
         camera.transform.position = aim + new Vector3(0f, 36f, -12f);
         camera.transform.LookAt(aim);
         build.SetCurrentBlockResource("Hangars/Hangar");
@@ -220,8 +302,8 @@ public static class HangarWorkshopChecks
         InputSystem.QueueStateEvent(mouse, new MouseState { position = pointer });
         yield return Frames(8);
         Check(
-            build.currentGhost != null && build.hoveredConnector != null,
-            "hangar palette resource creates a real foundation placement preview");
+            build.currentGhost != null,
+            "hangar palette resource previews on ground outside the initial footprint");
         InputSystem.QueueStateEvent(mouse, new MouseState { position = pointer }.WithButton(MouseButton.Left));
         yield return Frames(3);
         InputSystem.QueueStateEvent(mouse, new MouseState { position = pointer });

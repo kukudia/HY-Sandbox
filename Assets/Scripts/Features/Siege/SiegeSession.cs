@@ -274,6 +274,24 @@ public sealed class SiegeSession : MonoBehaviour, ISiegeDeploymentHost
         return deployed;
     }
 
+    public bool TryReplaceAt(int optionIndex, int dock, out string reason)
+    {
+        reason = "Replacement is only available between waves.";
+        bool replaced = !IsEditingBlueprint && Fleet != null && Fleet.ReplaceAt(optionIndex, dock, out reason);
+        Status = reason;
+        NotifyRefitChanged();
+        return replaced;
+    }
+
+    public bool TryCancelDeployment(int dock, out string reason)
+    {
+        reason = "Undeploy is only available between waves.";
+        bool removed = !IsEditingBlueprint && Fleet != null && Fleet.CancelDeployment(dock, out reason);
+        Status = reason;
+        NotifyRefitChanged();
+        return removed;
+    }
+
     public bool TryTakeControl(int slot)
     {
         bool changed = !IsEditingBlueprint && Fleet != null && Match.Phase != SiegePhase.Returning && (slot < 0 || slot >= Fleet.Ships.Length || FlightGuidance == null || !FlightGuidance.IsGuiding(Fleet.Ships[slot])) && Fleet.TakeControl(slot);

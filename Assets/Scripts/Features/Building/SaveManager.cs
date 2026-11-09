@@ -233,22 +233,6 @@ public class SaveManager : MonoBehaviour
         return BuildingFiles.GetPath(blueprintName);
     }
 
-    public void SaveBuildingFoundation(BuildingFoundationData foundation)
-    {
-        // 新包装对象共享只读方块列表，写入成功后才更新缓存元数据。
-        var data = new BlockDataList
-        {
-            blocks = cachedData.blocks,
-            foundation = foundation,
-            outpost = cachedData.outpost,
-            siegeCoreId = cachedData.siegeCoreId
-        };
-        File.WriteAllText(
-            GetEditedStructurePath(BuildManager.instance.CurrentBuildingBlueprintName),
-            JsonUtility.ToJson(data, true));
-        cachedData.foundation = foundation;
-    }
-
     public void GetAllSaveNames()
     {
         saves.Clear();
@@ -308,6 +292,7 @@ public class SaveManager : MonoBehaviour
             throw new System.InvalidOperationException("Wait until the building editor is ready.");
         }
 
+        data.foundation = BuildingFootprint.Calculate(data.blocks, BuildManager.instance.FootprintPadding);
         WorldBuildingValidation.ValidateBlueprint(data);
         string name = template;
         for (int i = 1; File.Exists(GetEditedStructurePath(name)); i++)

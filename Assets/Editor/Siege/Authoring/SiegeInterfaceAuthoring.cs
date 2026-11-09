@@ -387,6 +387,7 @@ public static class SiegeInterfaceAuthoring
         }
 
         preparation.gameObject.SetActive(true);
+        SiegeHangarInterfaceAuthoring.UpgradeActions(view);
         EditorSceneManager.MarkSceneDirty(scene);
         if (!string.IsNullOrEmpty(scene.path))
         {

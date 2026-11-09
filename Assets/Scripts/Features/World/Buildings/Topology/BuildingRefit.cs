@@ -15,7 +15,7 @@ internal static class BuildingRefit
     {
         WorldBuildingValidation.ValidateBlueprint(design);
         reason = "Building refitted.";
-        if (design.foundation.width != building.FootprintSize.x || design.foundation.length != building.FootprintSize.y)
+        if (design.foundation.width != building.FootprintSize.x || design.foundation.length != building.FootprintSize.y || design.foundation.offsetX != building.Footprint.offsetX || design.foundation.offsetZ != building.Footprint.offsetZ)
         {
             reason = "Refit cannot resize an existing building footprint.";
             return false;

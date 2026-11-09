@@ -1,5 +1,5 @@
 // 职责：部署固定泊位舰队、保持唯一玩家驾驶权，并在波次边界切换舰队物理状态。
-// 入口：CreateBase() / Deploy() / TakeControl() / SetCombatActive() / NotifyLost()。
+// 入口：CreateBase() / DeployAt() / ReplaceAt() / CancelDeployment() / SetCombatActive()。
 using System;
 using UnityEngine;
 
@@ -250,6 +250,92 @@ public sealed class SiegeFleet
         }
 
         reason = "Deployed " + option.DisplayName + (parts > 1 ? "  ·  " + parts + " hull parts" : string.Empty);
+        return true;
+    }
+
+    /// <summary>完整舰全额退回；战损按既有维修报价扣除，换购不能绕过维修费用。</summary>
+    public long CancellationCredit(int slot)
+    {
+        SiegeFleetEntry entry = slot >= 0 && slot < Ships.Length ? Ships[slot] : null;
+        return entry?.IsAlive == true ? Math.Max(0, entry.PurchasePrice - SiegeRefit.Quote(entry, session.Settings)) : 0;
+    }
+
+    public bool CancelDeployment(int slot, out string reason)
+    {
+        reason = "Undeploy is only available for a surviving ship between waves.";
+        if (!session.Match.CanRefit || slot < 0 || slot >= Ships.Length || Ships[slot]?.IsAlive != true)
+        {
+            return false;
+        }
+
+        long credit = CancellationCredit(slot);
+        if (!session.Match.TryExchange(0, credit))
+        {
+            return false;
+        }
+
+        Scrap(slot);
+        Ships[slot] = null;
+        reason = "Undeployed ship; refunded " + credit.ToString("N0") + " credits.";
+        return true;
+    }
+
+    public bool ReplaceAt(int optionIndex, int slot, out string reason)
+    {
+        reason = "Replacement requires a surviving ship and an intermission.";
+        if (!session.Match.CanRefit || slot < 0 || slot >= Ships.Length || Ships[slot]?.IsAlive != true || optionIndex < 0 || optionIndex >= session.DefenderOptions.Length)
+        {
+            return false;
+        }
+
+        SiegeFleetEntry previous = Ships[slot];
+        SiegeShipOption option = session.DefenderOptions[optionIndex];
+        BlockDataList blueprint = PrepareBlueprint(option.BlueprintJson, out string id);
+        if (!FitsHangar(slot, blueprint))
+        {
+            reason = "Blueprint exceeds the hangar clear size or the hangar is destroyed.";
+            return false;
+        }
+
+        long credit = CancellationCredit(slot);
+        if (!session.Match.CanExchange(option.Price, credit))
+        {
+            reason = "Insufficient credits after the old ship trade-in.";
+            return false;
+        }
+
+        Pose pose = GetDeploymentPose(slot, blueprint);
+        if (!SiegeRefit.IsClear(blueprint, pose.position, pose.rotation, previous.Id, out reason))
+        {
+            return false;
+        }
+
+        // Validate and restore the replacement before touching the old ship or balance.
+        // Both hulls coexist only within this synchronous transaction, before the next physics step.
+        SiegeFleetEntry replacement = Spawn(
+            blueprint,
+            id,
+            option.DisplayName,
+            option.Price,
+            pose.position,
+            pose.rotation);
+        if (replacement == null)
+        {
+            reason = "Replacement could not be restored; old ship and credits retained.";
+            return false;
+        }
+
+        bool restorePilot = Driven == previous;
+        session.Match.TryExchange(option.Price, credit);
+        Scrap(slot);
+        Ships[slot] = replacement;
+        SiegeFleetPhysics.Park(replacement.Unit);
+        if (manageCamera && (restorePilot || Driven == null || !Driven.IsAlive))
+        {
+            TakeControl(slot);
+        }
+
+        reason = "Replaced with " + option.DisplayName + "; trade-in " + credit.ToString("N0") + " / price " + option.Price.ToString("N0") + " credits.";
         return true;
     }
 

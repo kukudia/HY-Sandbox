@@ -221,6 +221,84 @@ public static class SiegeHangarHostChecks
         Check(
             !host.TryDeployAt(0, 0, out _) && host.Fleet.Ships[0] == ship,
             "Both host adapters reject another purchase in the assigned hangar");
+        yield return null;
+        yield return null;
+        Check(
+            marker.gameObject.activeInHierarchy && marker.GetComponentInChildren<Text>().text == "MANAGE",
+            "Occupied hangar keeps an accessible manage marker");
+        marker.onClick.Invoke();
+        Check(view.SelectedShipId == ship.Id, "Occupied marker selects its assigned ship");
+        Button replace = (Button)ui.FindProperty("replace").objectReferenceValue;
+        Button undeploy = (Button)ui.FindProperty("undeploy").objectReferenceValue;
+        Check(
+            replace.gameObject.activeInHierarchy && undeploy.gameObject.activeInHierarchy,
+            "Both saved action buttons are visible during refit");
+        yield return null;
+        yield return null;
+        ScreenCapture.CaptureScreenshot("Temp/Hangars/host-" + mode + "-actions.png");
+        double actionsCapturedUntil = EditorApplication.timeSinceStartup + .4d;
+        while (EditorApplication.timeSinceStartup < actionsCapturedUntil)
+        {
+            yield return null;
+        }
+
+        string originalId = ship.Id;
+        long beforeExchange = host.Match.Coins;
+        replace.onClick.Invoke();
+        Check(
+            view.SelectedDock == 0 && view.SelectedShipId == originalId && picker.options.Count == 1 && confirm.interactable,
+            "Replacement filters the assigned hangar and ignores only its current hull");
+        Check(
+            !host.TryReplaceAt(1, 0, out _) && host.Fleet.Ships[0] == ship && ship.IsAlive && host.Match.Coins == beforeExchange,
+            "Oversized replacement preserves old hull and balance");
+        options[0] = new SiegeShipOption("Unaffordable Finch", JsonUtility.ToJson(finch), int.MaxValue, finch.blocks.Count);
+        Check(
+            !host.TryReplaceAt(0, 0, out _) && ship.IsAlive && host.Match.Coins == beforeExchange,
+            "Unaffordable replacement is atomic");
+        options[0] = new SiegeShipOption("Host Finch", JsonUtility.ToJson(finch), 1, finch.blocks.Count);
+        GameObject obstruction = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        obstruction.transform.position = ship.Cockpit.transform.position;
+        Check(
+            !host.TryReplaceAt(0, 0, out _) && ship.IsAlive && host.Match.Coins == beforeExchange,
+            "External obstruction blocks replacement without removing its current ship");
+        obstruction.SetActive(false);
+        Object.Destroy(obstruction);
+        view.RefreshSelection();
+        Check(confirm.interactable, "Replacement becomes available after the obstruction is removed");
+        confirm.onClick.Invoke();
+        SiegeFleetEntry replaced = host.Fleet.Ships[0];
+        Check(
+            replaced != null && replaced.IsAlive && replaced.Id != originalId && !ship.IsAlive && host.Match.Coins == beforeExchange,
+            "Replacement trades intact hull once without an extra purchase charge");
+        Check(
+            prototype == null || host.Fleet.Driven == replaced,
+            "Prototype replacement restores pilot to the new ship");
+        yield return null;
+        yield return null;
+        Check(
+            !ControlUnit.RuntimeUnits.Any(unit => unit != null && unit.gameObject.activeInHierarchy && (unit.runtimeUnitId == originalId || unit.GetComponentsInChildren<RuntimeUnitMember>().Any(member => member.ownerUnitId == originalId))),
+            "Replacement removes old owned hulls and fragments");
+        ship = replaced;
+        Durability shipHealth = ship.Cockpit.GetComponent<Durability>();
+        shipHealth.currentDurability = shipHealth.maxDurability * .5f;
+        long tradeIn = host.Fleet.CancellationCredit(0);
+        Check(
+            tradeIn == Math.Max(0, ship.PurchasePrice - SiegeRefit.Quote(ship, host.Settings)) && tradeIn < ship.PurchasePrice,
+            "Damaged ship refund deducts the existing repair quote");
+        marker.onClick.Invoke();
+        undeploy.onClick.Invoke();
+        Check(
+            host.Fleet.Ships[0] == null && !ship.IsAlive && host.Match.Coins == beforeExchange + tradeIn,
+            "Saved undeploy action clears assignment and refunds only its residual value");
+        Check(
+            !host.TryCancelDeployment(0, out _) && host.Match.Coins == beforeExchange + tradeIn,
+            "Repeated undeploy cannot duplicate its refund");
+        yield return null;
+        yield return null;
+        marker.onClick.Invoke();
+        confirm.onClick.Invoke();
+        ship = host.Fleet.Ships[0];
+        Check(ship?.IsAlive == true, "Cancelled hangar can deploy a fresh ship through saved controls");
         string shipId = ship.Id;
         Durability coreHealth = fortress.Core.GetComponent<Durability>();
         Durability hangarHealth = host.Fleet.GetHangar(0).GetComponent<Durability>();
@@ -234,12 +312,18 @@ public static class SiegeHangarHostChecks
         Check(
             began && host.Match.Phase == SiegePhase.Battle,
             "Actual host begins its configured battle lifecycle");
+        Check(
+            !host.TryCancelDeployment(0, out _) && !host.TryReplaceAt(0, 0, out _) && host.Fleet.Ships[0] == ship,
+            "Battle locks undeploy and replacement");
         long beforeReward = host.Match.Coins;
         int kills = ClearWave(host.Match);
         long pending = host.Match.PendingCoins;
         Check(
             host.Match.Phase == SiegePhase.Returning && pending > 0 && host.Match.Coins == beforeReward,
             "Cleared real host defers all wave income during return");
+        Check(
+            !host.TryCancelDeployment(0, out _) && !host.TryReplaceAt(0, 0, out _) && host.Fleet.Ships[0] == ship,
+            "Return locks undeploy and replacement");
         while (host.Match.Phase == SiegePhase.Returning)
         {
             yield return null;

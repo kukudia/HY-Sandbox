@@ -136,7 +136,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
 
         rotation = baseSpawn.rotation;
         // The spawn denotes the foundation centre, independent of the saved footprint size.
-        position = baseSpawn.position - rotation * new Vector3(design.foundation.width * .5f - 2f, 0f, design.foundation.length * .5f - 2f);
+        position = baseSpawn.position - rotation * design.foundation.Center;
         position.y = arena.bounds.max.y;
         designWarnings = settings.Warnings(design);
         if (!Deploy())
@@ -159,12 +159,12 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         for (int i = 0; i < 4; i++)
         {
             Vector3 corner = position + rotation * new Vector3(
-                (i & 1) == 0 ? -2f : design.foundation.width - 2f,
+                design.foundation.MinX + ((i & 1) == 0 ? 0f : design.foundation.width),
                 0f,
-                (i & 2) == 0 ? -2f : design.foundation.length - 2f);
+                design.foundation.MinZ + ((i & 2) == 0 ? 0f : design.foundation.length));
             if (corner.x < bounds.min.x + .1f || corner.x > bounds.max.x - .1f || corner.z < bounds.min.z + .1f || corner.z > bounds.max.z - .1f)
             {
-                DesignStatus = "The entire foundation must remain inside the arena.";
+                DesignStatus = "The entire footprint must remain inside the arena.";
                 return;
             }
         }
@@ -362,6 +362,24 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         Status = reason;
         RefitChanged?.Invoke();
         return deployed;
+    }
+
+    public bool TryReplaceAt(int optionIndex, int dock, out string reason)
+    {
+        reason = "Replacement is only available between waves.";
+        bool replaced = IsRunning && Fleet != null && Fleet.ReplaceAt(optionIndex, dock, out reason);
+        Status = reason;
+        RefitChanged?.Invoke();
+        return replaced;
+    }
+
+    public bool TryCancelDeployment(int dock, out string reason)
+    {
+        reason = "Undeploy is only available between waves.";
+        bool removed = IsRunning && Fleet != null && Fleet.CancelDeployment(dock, out reason);
+        Status = reason;
+        RefitChanged?.Invoke();
+        return removed;
     }
 
     public bool TryTakeControl(int slot)

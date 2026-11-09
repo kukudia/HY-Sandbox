@@ -87,6 +87,7 @@
     <Compile Include="Assets\Scripts\Features\Presentation\Interface\UIInteractionFeedback.cs" />
     <Compile Include="Assets\Layer Lab\Scripts\PanelControl.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\VfxEffect.cs" />
+    <Compile Include="Assets\Scripts\Features\Building\BuildingEditor\BuildingFootprint.cs" />
     <Compile Include="Assets\Scripts\Features\Diagnostics\DebugManager.cs" />
     <Compile Include="Assets\Scripts\Features\Diagnostics\Interface\DurabilityDebugLabels.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\Projectiles\ProjectileTracer.cs" />
