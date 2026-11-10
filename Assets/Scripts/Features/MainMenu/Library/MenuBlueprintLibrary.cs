@@ -51,7 +51,12 @@ public static class MenuBlueprintLibrary
         return building ? SaveManager.GetBaseBlueprintFiles() : SaveManager.GetPlayerBlueprintFiles();
     }
 
-    public static BlockDataList Inspect(MenuBlueprintEntry entry, SiegeConstructionSettings siege, out bool playable, out string reason)
+    public static BlockDataList Inspect(
+        MenuBlueprintEntry entry,
+        SiegeConstructionSettings siege,
+        out bool playable,
+        out string reason,
+        bool forEditing = false)
     {
         string json = entry.IsExample ? entry.Example.text : File.ReadAllText(Files(entry.Building).GetPath(entry.Name));
         if (!(JToken.Parse(json) is JObject document) || !(document["blocks"] is JArray))
@@ -65,8 +70,17 @@ public static class MenuBlueprintLibrary
             throw new InvalidDataException("Blueprint has no module list.");
         }
 
+        // Workshop access must not depend on deployment limits or a finished design.
+        if (forEditing)
+        {
+            playable = false;
+            reason = "Open in the workshop to continue or repair this design.";
+            return data;
+        }
+
         if (entry.Building)
         {
+            data.foundation = BuildingFootprint.Calculate(data.blocks, BuildManager.instance != null ? BuildManager.instance.FootprintPadding : 1);
             WorldBuildingValidation.ValidateBlueprint(data);
             playable = siege.Validate(data, out reason);
         }

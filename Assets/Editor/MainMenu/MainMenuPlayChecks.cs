@@ -232,9 +232,21 @@ public static class MainMenuPlayChecks
             "missing blocks array is rejected without replacing the draft");
         Select(menu, "Invalid");
         menu.LaunchSelected();
+        while (menu.Busy || BuildManager.instance.IsLoadingBlocks)
+        {
+            yield return null;
+        }
+
         Check(
-            !menu.Busy && GameManager.instance.blocksParent == null,
-            "missing module prevents loading and source rewrite");
+            GameManager.instance.blocksParent != null && File.ReadAllText(invalid).Contains("missing"),
+            "repairable blueprint opens in workshop without deleting missing module snapshots");
+        menu.ReturnToMenu();
+        while (menu.Busy)
+        {
+            yield return null;
+        }
+
+        menu.Choose(MenuDestination.VehicleWorkshop);
         Select(menu, "Menu Vehicle A");
         string removed = SaveManager.instance.GetSavePath("Menu Vehicle A");
         string originalJson = File.ReadAllText(removed);

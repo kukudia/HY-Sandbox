@@ -20,6 +20,10 @@ public static class SiegeHangarHostChecks
     private static Report report;
     private static double deadline;
     private static string mode;
+    private static SiegeConstructionSettings changedSettings;
+    private static TextAsset previousStarter;
+    private static TextAsset transientStarter;
+    private static int previousRate;
     private static readonly Dictionary<string, string> preferences = new Dictionary<string, string>();
     [Serializable]
     private sealed class Report
@@ -38,6 +42,11 @@ public static class SiegeHangarHostChecks
     public static void RunStage()
     {
         Start("stage", "Assets/Scenes/MainMenu.unity");
+    }
+
+    public static void RunWideStage()
+    {
+        Start("stage-wide", "Assets/Scenes/MainMenu.unity");
     }
 
     [MenuItem("Tools/HY-Sandbox/Siege/Validate prototype hangar host")]
@@ -112,11 +121,38 @@ public static class SiegeHangarHostChecks
         SiegeBase fortress;
         SiegeGameplayStage stage = null;
         SiegeSession prototype = null;
-        if (mode == "stage")
+        if (mode.StartsWith("stage"))
         {
             BackupPreferences();
             menu = Object.FindAnyObjectByType<MainMenuController>();
             Check(menu != null && menu.MenuVisible && !menu.Busy, "Cold main menu is interactive");
+            if (mode == "stage-wide")
+            {
+                var settings = (SiegeConstructionSettings)typeof(MainMenuController).GetField("siegeSettings", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(menu);
+                var wide = JsonUtility.FromJson<BlockDataList>(settings.Starter.text);
+                BlockData large = new BlockData(Resources.Load<GameObject>("Blocks/1x1x1").GetComponent<Block>());
+                large.id = "wide-ground-check";
+                large.resourcePath = "Blocks/1x1x1";
+                large.x = large.y = large.z = 1;
+                large.posX = 120.5f;
+                large.posY = .5f;
+                large.posZ = .5f;
+                large.rotX = large.rotY = large.rotZ = 0;
+                large.rotW = 1;
+                wide.blocks.Add(large);
+                wide.foundation = BuildingFootprint.Calculate(wide.blocks, 1);
+                changedSettings = settings;
+                previousStarter = settings.Starter;
+                previousRate = (int)typeof(SiegeConstructionSettings).GetField("coinsPerCell", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(settings);
+                typeof(SiegeConstructionSettings).GetField("coinsPerCell", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(settings, 20);
+                TextAsset runtimeStarter = new TextAsset(JsonUtility.ToJson(wide));
+                transientStarter = runtimeStarter;
+                typeof(SiegeConstructionSettings).GetField("starter", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(settings, runtimeStarter);
+                Check(
+                    wide.foundation.width > 64 && settings.Cost(wide) > 20000,
+                    "wide stage fixture exceeds former footprint and budget limits");
+            }
+
             menu.Choose(MenuDestination.Siege);
             menu.SelectBlueprint(0);
             Check(menu.Selected.IsExample, "Menu selects the authored starter without writing a blueprint");
@@ -127,7 +163,9 @@ public static class SiegeHangarHostChecks
             }
 
             stage = Object.FindAnyObjectByType<SiegeGameplayStage>();
-            Check(stage != null && stage.Base != null && stage.Base.IsAlive, "Menu launches the real new Siege host");
+            Check(
+                stage != null && stage.Base != null && stage.Base.IsAlive,
+                "Menu launches the real new Siege host: " + menu.Status);
             Check(Object.FindObjectsByType<SiegeSession>().Length == 0, "New Siege host leaves prototype unloaded");
             host = stage;
             fortress = stage.Base;
@@ -460,6 +498,14 @@ public static class SiegeHangarHostChecks
 
     private static void Finish()
     {
+        if (changedSettings != null)
+        {
+            typeof(SiegeConstructionSettings).GetField("starter", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(changedSettings, previousStarter);
+            typeof(SiegeConstructionSettings).GetField("coinsPerCell", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(changedSettings, previousRate);
+            changedSettings = null;
+            Object.DestroyImmediate(transientStarter);
+        }
+
         Application.logMessageReceived -= LogError;
         EditorApplication.update -= Tick;
         (scenario as IDisposable)?.Dispose();

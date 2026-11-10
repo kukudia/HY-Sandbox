@@ -112,7 +112,6 @@ public static class HangarSceneIntegration
         SiegeConstructionSettings settings = AssetDatabase.LoadAssetAtPath<SiegeConstructionSettings>(SiegeConstructionAuthoring.SettingsPath);
         var values = new SerializedObject(settings);
         values.FindProperty("starter").objectReferenceValue = AssetDatabase.LoadAssetAtPath<TextAsset>(target);
-        values.FindProperty("maximumWidth").intValue = 64;
         values.ApplyModifiedPropertiesWithoutUndo();
         if (!settings.Validate(design, out string reason))
         {

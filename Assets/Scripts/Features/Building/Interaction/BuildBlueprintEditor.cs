@@ -62,13 +62,6 @@ internal sealed class BuildBlueprintEditor
 
     private void Write(string path)
     {
-        BuildManager build = BuildManager.instance;
-        bool structure = build != null && build.IsEditingBuildingBlueprint;
-        if (structure)
-        {
-            _saves.cachedData.foundation = BuildingFootprint.Calculate(_saves.cachedData.blocks, build.FootprintPadding);
-        }
-
         string pending = path + ".pending";
         File.WriteAllText(pending, JsonUtility.ToJson(_saves.cachedData, true));
         if (File.Exists(path))
@@ -80,10 +73,7 @@ internal sealed class BuildBlueprintEditor
             File.Move(pending, path);
         }
 
-        if (structure)
-        {
-            build.RefreshBuildingFootprint();
-        }
+        BuildManager.instance?.MarkBuildingFootprintDirty();
     }
 
     private void RefreshConnectionsAround(Block block)

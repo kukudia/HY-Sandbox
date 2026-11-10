@@ -16,17 +16,19 @@ Player 首场景为 `Assets/Scenes/MainMenu.unity`。**Exploration** 选择载�
 
 源码按功能组织于 `Assets/Scripts/Features/MainMenu`：`MainMenuController` 为导航入口，`Navigation` 管理工坊暂停/临时载具，`Library` 管理只读目录/预览，`Interface` 绑定展示，`Settings` 管理本地偏好。Editor制作/验证入口在 `Assets/Editor/MainMenu`。函数主链见 [RuntimeFlow](Docs/RuntimeFlow.md)，方法导航见 [CodeIndex](Docs/CodeIndex.md)。验证记录见 [主菜单验收](Docs/Validation/2026-11-08-main-menu.md)。
 
-## 地面自由建造与自动占地
+## 地面自由建造与延后裁切
 
-普通建筑和基地无需预设地基宽、长；鼠标可直接在y=0地面放置模块，地面网格吸附与已有模块连接吸附同时保留。放置、移动、旋转、尺寸变化、删除和Undo/Redo保存时，`BuildingFootprint.Calculate`按实际旋转包围盒收紧占地，四边默认留1格（BuildManager Inspector的Footprint Padding可调0–8）。裁切仅改变网格范围和JSON元数据，不删除玩家铺设的平台、不平移模块、不改变核心或驻军姿态。地基网格是编辑预览，不计入模块预算；平台/道路仍可用普通方块自由铺设。
+普通建筑和基地直接在y=0地面自由搭建，无需设置地基宽长。逐步放置、移动、旋转、调尺寸、删除和Undo/Redo只保存模块并设置FootprintDirty，不遍历计算占地、不重建整套地基连接。加载时重新计算内存预览，点击 **FINISH / CROP** 或退出/切换建筑编辑时计算并保存最终占地；缺省边距1格，Footprint Padding可配0–8。不移动模块、不删除玩家平台或缺资源模块快照，保留核心和驻军坐标。手动完成不是退出编辑，后续可继续搭建。
 
-`BuildingFoundationData`增加offsetX/offsetZ，缺省0兼容旧文件左下角(-2,-2)。打开旧文件仅计算预览，下一次真实编辑才保存新范围；不会批量重写玩家文件。世界地形生成、采样支撑、损伤范围、流送、维修及Siege出生点都消费实际偏移。允许多个分别落地的分离建筑群，仍拒绝悬空部署。自由编辑不要求先划地，现有部署安全限制（64m单边、Siege预算和限高）保留并显示；超限设计可继续编辑保存，不截断方块。
+蓝图菜单编辑入口不再要求出战校验通过，可打开缺资源、未完成、超尺寸设计继续修复；损坏JSON仍拒绝。出战取消基地尺寸、预算、限高、整格旋转和内部重叠的设计门槛，占地不再上限64m；参考造价仅用于显示/修理，固定竞技场会按基地包围盒扩展地面。运行所需合法资源、身份/姿态、基地核心、载具驾驶舱、地面支撑与外部障碍检查保留；机库数量6与净空筛船规则保持。模块自身64m尺寸和2048模块是底层数据安全约束，不作为本次设计预算规则。世界建筑目录和Siege加载时从实际模块计算范围，不依赖未完成草稿的旧占地元数据。
 
-界面显示自动占地尺寸和原点，已移除手动宽、长输入。功能入口：`Building/Interaction/BuildPreview.Poll` → `BuildBlueprintEditor.Write` → `BuildingEditor/BuildingFootprint.Calculate` → `BuildManager.RefreshBuildingFootprint`。
+BuildingFoundationData的offsetX/offsetZ缺省0兼容旧坐标。相关入口：BuildPreview.Poll → BuildBlueprintEditor.Write → BuildManager.MarkBuildingFootprintDirty；PrepareBuildingFoundation / CompleteBuildingBlueprint → BuildingFootprint.Calculate → RefreshBuildingFootprint。完成按钮保存于EditorPanel.prefab。
+
+机库建造模式在+Z入口底板显示绿色 **▲ DOOR / FRONT**，随尺寸、旋转更新，战斗自动隐藏。标记为Hangar.prefab真实子节点，制作工具AddEntranceMarker可重复执行；保留用户本轮前已有Roof材质调整。
 
 ## 可编辑机库与舰队返航
 
-基地编辑器 **PLACE HANGAR** 选择机库构件，沿用原有放置、选中、移动、90°竖轴旋转与复制。深色底板及半透明净空体在编辑时显示，中心标注净宽×净高×净深；选中后面向镜头的面板提供三轴 +/-，尺寸、姿态、身份随基地JSON保存，支持Undo/Redo。机库数量配置为 **6**（`Assets/Resources/Hangars/Limits.asset`），不是尺寸6m；尺寸受基地边界与64m模块安全范围约束。默认外20×9×24m，净空18×8×22m；机库预算按外壳面积计费，不按内部空体积计费，不能作为基地核心或载具模块。
+基地编辑器 **PLACE HANGAR** 选择机库构件，沿用原有放置、选中、移动、90°竖轴旋转与复制。深色底板及半透明净空体在编辑时显示，中心标注净宽×净高×净深；选中后面向镜头的面板提供三轴 +/-，尺寸、姿态、身份随基地JSON保存，支持Undo/Redo。机库数量配置为 **6**（`Assets/Resources/Hangars/Limits.asset`），不是尺寸6m；尺寸受64m模块安全范围约束。默认外20×9×24m，净空18×8×22m；机库预算按外壳面积计费，不按内部空体积计费，不能作为基地核心或载具模块。
 
 战斗保留实体墙、顶、底板和伸缩滑门，隐藏编辑净空及控件；顶棚使用独立Roof透明材质（alpha 0.045，不投阴影），保留实体碰撞，便于俯视预览库内舰船。两套Siege通过 `ISiegeDeploymentHost` 共用 `SiegeFleet` 和部署卡片：点击空库DEPLOY，仅列各轴尺寸不超过净空的有效舰船蓝图；按蓝图真实包围盒居中，购买时再次验证物理净空与余额。一库一舰，舰船离库仍占用原槽位。整备阶段点击已占用机库的MANAGE可REPLACE或UNDEPLOY；完整舰按购买价退回，战损残值按购买价减现有维修报价且不低于0，更换抵扣该残值。尺寸、余额或外部障碍检查失败保留原舰与金币，取消同时清理原舰及其碎片，战斗/返航阶段禁用这两项操作。新版基地战保持俯视镜头，舰船自主作战；预研保留玩家驾驶。
 
@@ -52,7 +54,7 @@ Assets/Scripts/Features/Siege/
 Assets/Editor/Siege/Hangars/      资产制作、接线和隔离验证
 ```
 
-本次更新验收见 [自由建造与部署调整](Docs/Validation/2026-11-09-free-building.md)；原机库验收见 [机库验证](Docs/Validation/2026-11-09-hangars.md)。
+本次更新验收见 [延后裁切与设计门槛调整](Docs/Validation/2026-11-10-deferred-crop.md)；前次验收见 [自由建造与部署调整](Docs/Validation/2026-11-09-free-building.md)；原机库验收见 [机库验证](Docs/Validation/2026-11-09-hangars.md)。
 
 ## Main 玩法合并入口
 
@@ -64,7 +66,7 @@ Main 的 **Simulate**（或 P）继续提供工坊内模式选择：探索按需
 
 Main 左下 **BASE EDITOR** 打开独立基地编辑目标（正式Player也可用，复用结构编辑能力）；可新建命名蓝图，或 **COPY STARTER** 复制可修改的示例。在地面自由放置/移动/旋转模块，选中有耐久的模块后 **MARK SELECTED CORE** 指定唯一核心。编辑自动保存到独立 `BaseBlueprints`，普通建筑仍使用 `BuildingBlueprints`；**BACK TO VEHICLE** 返回载具建造，再通过 **Simulate → Siege** 出战。旧建筑目录中已标记核心且非据点的文件会迁移到基地目录；同名冲突自动另取名，字节校验后将原文件归档到 `BlueprintMigrationBackups`，不覆盖任何已有设计。
 
-Siege 使用菜单或 Simulate 面板进入前选定的基地，在副场景可编辑的 `Base Spawn` 自动生成；出生点表示实际占地中心。局内显示状态、开始下一波、修复重建和撤退/返回，并支持机库部署舰船；基地本身不再提供选择、编辑、位置、旋转和部署确认。默认预算20000，普通模块按体积每格5计价、机库按配置的外壳面积单价计价；自动占地最大64×64，限高32m。拒绝越界、穿地、模块重叠、无效身份/资源、缺核心、超预算；自动生成时复用建筑真实连接图，所有分量必须具有连接地面的向下锚点。无发电机/单发电机/无炮塔只给风险提示。核心有显式标记，独立于驾驶舱。基地和敌机归属副场景，副场景保存自己的炮弹与GPU特效池、照明；Main普通刷怪器不参加模式战斗。
+Siege 使用菜单或 Simulate 面板进入前选定的基地，在副场景可编辑的 `Base Spawn` 自动生成；出生点表示实际占地中心。局内显示状态、开始下一波、修复重建和撤退/返回，并支持机库部署舰船；基地本身不再提供选择、编辑、位置、旋转和部署确认。普通模块参考造价按体积每格5、机库按外壳面积配置计价；出战不限制基地占地、预算与高度。拒绝无效身份/资源、缺核心及外部实体阻挡；自动生成时复用建筑真实连接图，所有分量必须具有连接地面的向下锚点。无发电机/单发电机/无炮塔只给风险提示。核心有显式标记，独立于驾驶舱。基地和敌机归属副场景，副场景保存自己的炮弹与GPU特效池、照明；Main普通刷怪器不参加模式战斗。
 
 **START NEXT WAVE** 启动共享 `SiegeMatch` / `SiegeWaveDirector` 的真实敌机波次；先读取玩家敌方蓝图库，没有有效蓝图时使用配置中的内置敌机。发电、炮塔、毁伤和建筑断裂沿用生产机制。整备阶段 **REPAIR + REBUILD** 显示报价，复用 `SiegeBase` / `BuildingRefit` 按原设计恢复耐久和缺件；净空或余额不足不扣费。设计预算与局内维修金币分开，初始维修金币6000。首版不支持战中扩建或科技养成。核心丢失自动结算；撤退先展示本局波次、击毁和金币，再返回。原设计文件和Main载具原稿不受战斗损毁覆盖。
 

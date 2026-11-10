@@ -1,4 +1,4 @@
-// 职责：保存新版阵地战基地的预算、尺寸边界和共享战斗配置，供Inspector独立调参。
+// 职责：保存阵地战基地参考造价及共享战斗配置；出战不限制尺寸、预算和高度，供Inspector独立调参。
 // 入口：Cost() / Validate()；不读写玩家蓝图。
 using System;
 using UnityEngine;
@@ -11,16 +11,9 @@ public sealed class SiegeConstructionSettings : ScriptableObject
     [SerializeField]
     private TextAsset starter;
     [SerializeField, Min(1)]
-    private int deploymentBudget = 20000;
-    [SerializeField, Min(1)]
     private int coinsPerCell = 5;
-    [SerializeField, Range(1, 64)]
-    private int maximumWidth = 48;
-    [SerializeField, Min(1)]
-    private int maximumHeight = 32;
     public SiegeSettings Combat => combat;
     public TextAsset Starter => starter;
-    public int DeploymentBudget => deploymentBudget;
 
     public long Cost(BlockDataList data)
     {
@@ -50,38 +43,6 @@ public sealed class SiegeConstructionSettings : ScriptableObject
                 return false;
             }
 
-            if (data.foundation.width > maximumWidth || data.foundation.length > maximumWidth || Cost(data) > deploymentBudget)
-            {
-                reason = $"Limit: {maximumWidth} x {maximumWidth} cells; budget {deploymentBudget}.";
-                return false;
-            }
-
-            var occupied = new System.Collections.Generic.List<Bounds>();
-            foreach (BlockData block in data.blocks)
-            {
-                Quaternion rotation = new Quaternion(block.rotX, block.rotY, block.rotZ, block.rotW);
-                Vector3 euler = rotation.eulerAngles;
-                Quaternion snapped = Quaternion.Euler(
-                    Mathf.Round(euler.x / 90f) * 90f,
-                    Mathf.Round(euler.y / 90f) * 90f,
-                    Mathf.Round(euler.z / 90f) * 90f);
-                Bounds bounds = BlockBounds.FromBlueprint(block, Matrix4x4.identity);
-                if (Quaternion.Angle(rotation, snapped) > .1f || bounds.min.y < -.01f || bounds.max.y > maximumHeight || bounds.min.x < data.foundation.MinX - .01f || bounds.min.z < data.foundation.MinZ - .01f || bounds.max.x > data.foundation.MinX + data.foundation.width + .01f || bounds.max.z > data.foundation.MinZ + data.foundation.length + .01f)
-                {
-                    reason = $"Modules must fit the footprint, use quarter turns and stay below {maximumHeight}m.";
-                    return false;
-                }
-
-                bounds.Expand(-.12f);
-                if (occupied.Exists(other => other.Intersects(bounds)))
-                {
-                    reason = "Modules overlap inside the design.";
-                    return false;
-                }
-
-                occupied.Add(bounds);
-            }
-
             BlockData core = data.blocks.Find(block => block.id == data.siegeCoreId);
             GameObject prefab = Resources.Load<GameObject>(BlueprintBlockFactory.ToResourcePath(core.resourcePath));
             if (prefab.GetComponent<Durability>() == null)
@@ -90,7 +51,7 @@ public sealed class SiegeConstructionSettings : ScriptableObject
                 return false;
             }
 
-            reason = $"Design valid: {data.blocks.Count} modules, {Cost(data)} / {deploymentBudget}. Support checked on deploy. " + Warnings(data);
+            reason = $"Design valid: {data.blocks.Count} modules, reference value {Cost(data)}. Support checked on deploy. " + Warnings(data);
             return true;
         }
         catch (Exception error) when (error is InvalidOperationException || error is ArgumentException)

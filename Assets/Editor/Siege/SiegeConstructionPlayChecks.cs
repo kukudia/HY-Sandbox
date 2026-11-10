@@ -110,16 +110,16 @@ public static class SiegeConstructionPlayChecks
         Check(!settings.Validate(invalid, out _), "Duplicate identities blocked");
         invalid = Copy();
         invalid.blocks[0].posY = -4;
-        Check(!settings.Validate(invalid, out _), "Buried module blocked");
+        Check(settings.Validate(invalid, out _), "Design validation does not enforce ground-plane layout");
         invalid = Copy();
         invalid.foundation.width = 64;
-        Check(!settings.Validate(invalid, out _), "Foundation size limit enforced");
+        Check(settings.Validate(invalid, out _), "Foundation size no longer blocks deployment");
         invalid = Copy();
         invalid.blocks[0].y = 64;
-        Check(!settings.Validate(invalid, out _), "Height or budget overflow blocked");
+        Check(settings.Validate(invalid, out _), "Height and budget no longer block deployment");
         invalid = Copy();
         invalid.blocks[1].posY = invalid.blocks[0].posY;
-        Check(!settings.Validate(invalid, out _), "Overlapping modules blocked");
+        Check(settings.Validate(invalid, out _), "Internal layout no longer blocks deployment");
         invalid = Copy();
         invalid.blocks[0].rotY = .2f;
         Check(!settings.Validate(invalid, out _), "Invalid rotation blocked");
@@ -228,7 +228,7 @@ public static class SiegeConstructionPlayChecks
             stage.GetComponentsInChildren<UnityEngine.UI.Dropdown>(true).Length == 0 && stage.GetComponentsInChildren<UnityEngine.UI.InputField>(true).Length == 0,
             "Combat UI has no base selection or pose inputs");
         Transform spawn = stage.transform.Find("Base Spawn");
-        Vector3 foundationCentre = stage.Base.Building.transform.TransformPoint(new Vector3(original.foundation.width * .5f - 2f, 0f, original.foundation.length * .5f - 2f));
+        Vector3 foundationCentre = stage.Base.Building.transform.TransformPoint(BuildingFootprint.Calculate(original.blocks, 1).Center);
         Check(
             Vector2.Distance(
                 new Vector2(foundationCentre.x, foundationCentre.z),

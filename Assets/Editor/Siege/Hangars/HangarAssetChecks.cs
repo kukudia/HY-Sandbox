@@ -63,10 +63,37 @@ public static class HangarAssetChecks
                 result,
                 "legacy footprint without offsets preserves original origin",
                 legacy.MinX == -2f && legacy.MinZ == -2f && legacy.IsValid);
+            SiegeConstructionSettings settings = AssetDatabase.LoadAssetAtPath<SiegeConstructionSettings>("Assets/Siege/Construction/Settings.asset");
+            BlockDataList unrestricted = JsonUtility.FromJson<BlockDataList>(settings.Starter.text);
+            foreach (BlockData item in unrestricted.blocks)
+            {
+                item.posX *= 3f;
+                item.posZ *= 3f;
+                item.posY += 40f;
+            }
+
+            unrestricted.foundation = BuildingFootprint.Calculate(unrestricted.blocks, 1);
+            Check(
+                result,
+                "wide high and expensive blueprints pass design validation",
+                unrestricted.foundation.width > 64 && settings.Validate(unrestricted, out _));
             instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab, preview);
             HangarModule module = instance.GetComponent<HangarModule>();
             module.RefreshGeometry();
             GeometryChecks(module, result);
+            Transform marker = module.transform.Find("Entrance Direction (Editor)");
+            module.SetCombat(false);
+            Check(
+                result,
+                "build marker clearly labels the positive-Z door",
+                marker != null && marker.gameObject.activeSelf && marker.localPosition.z > 0 && marker.GetComponentInChildren<UnityEngine.UI.Text>().text.Contains("DOOR"));
+            module.transform.rotation = Quaternion.Euler(0, 90, 0);
+            Check(
+                result,
+                "door marker rotates with hangar heading",
+                Vector3.Dot((marker.position - module.transform.position).normalized, module.transform.forward) > .5f);
+            module.SetCombat(true);
+            Check(result, "door marker is hidden during combat", !marker.gameObject.activeSelf);
             result.completed = true;
             result.passed = true;
         }

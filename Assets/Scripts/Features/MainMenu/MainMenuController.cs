@@ -137,7 +137,7 @@ public sealed class MainMenuController : MonoBehaviour
 
         try
         {
-            BlockDataList data = MenuBlueprintLibrary.Inspect(Selected, siegeSettings, out playable, out string reason);
+            BlockDataList data = MenuBlueprintLibrary.Inspect(Selected, siegeSettings, out playable, out string reason, Editing);
             readable = true;
             preview.Show(data);
             string action = Editing ? (Selected.IsExample ? "CREATE COPY & EDIT" : "OPEN WORKSHOP") : Selected.IsExample && !Building ? "CREATE COPY & EXPLORE" : "START " + (Building ? "SIEGE" : "EXPLORATION");
@@ -203,7 +203,7 @@ public sealed class MainMenuController : MonoBehaviour
     {
         bool editing = target == MenuDestination.VehicleWorkshop || target == MenuDestination.BaseWorkshop;
         // Re-read immediately before switching: removed/corrupt files never replace an in-memory draft.
-        MenuBlueprintLibrary.Inspect(entry, siegeSettings, out bool valid, out string reason);
+        MenuBlueprintLibrary.Inspect(entry, siegeSettings, out bool valid, out string reason, editing);
         if (!editing && !valid)
         {
             throw new InvalidDataException(reason);

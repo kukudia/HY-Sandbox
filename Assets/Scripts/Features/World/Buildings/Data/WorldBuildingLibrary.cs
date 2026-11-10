@@ -96,6 +96,7 @@ internal sealed class WorldBuildingLibrary
                 return;
             }
 
+            blueprint.foundation = BuildingFootprint.Calculate(blueprint.blocks, 1);
             WorldBuildingValidation.ValidateBlueprint(blueprint);
             if (forWorldGeneration)
             {

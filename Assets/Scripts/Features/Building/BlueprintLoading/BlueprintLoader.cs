@@ -258,8 +258,8 @@ internal sealed class BlueprintLoader
             return;
         }
 
-        _saves.cachedData.blocks.RemoveAll(data => data == null || ids.Contains(data.id));
-        File.WriteAllText(_path, JsonUtility.ToJson(_saves.cachedData, true));
+        // Keep unavailable module snapshots so opening a repairable design never silently deletes user data.
+        Debug.LogWarning($"Kept {ids.Count} unavailable module snapshots in the blueprint; restore their resources before deployment.");
     }
 
     private IEnumerator RebuildConnections(int version)

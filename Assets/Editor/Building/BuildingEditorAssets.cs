@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using UnityEditor;
+using UnityEditor.Events;
 using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
@@ -66,12 +67,35 @@ public static class BuildingEditorAssets
             status.rectTransform.sizeDelta = new Vector2(400f, 90f);
             status.text = "Build anywhere on the ground. Footprint crops automatically.";
             status.verticalOverflow = VerticalWrapMode.Overflow;
+            EnsureCompleteButton(root);
             PrefabUtility.SaveAsPrefabAsset(root, path);
         }
         finally
         {
             PrefabUtility.UnloadPrefabContents(root);
         }
+    }
+
+    private static void EnsureCompleteButton(GameObject root)
+    {
+        if (root.transform.Find("Complete Footprint") != null)
+        {
+            return;
+        }
+
+        GameObject obj = Rect("Complete Footprint", root.transform, new Vector2(132f, 26f), new Vector2(280f, -10f));
+        obj.AddComponent<Image>().color = new Color(.12f, .42f, .55f);
+        Button button = obj.AddComponent<Button>();
+        Text text = Label(
+            "Label",
+            obj.transform,
+            "FINISH / CROP",
+            new Vector2(132f, 26f),
+            Vector2.zero,
+            14);
+        text.alignment = TextAnchor.MiddleCenter;
+        UnityEventTools.AddPersistentListener(button.onClick, root.GetComponent<BuildingEditorPanel>().Complete);
+        root.transform.Find("Title").GetComponent<RectTransform>().sizeDelta = new Vector2(260f, 24f);
     }
 
     private static Material CreateGridMaterial()
@@ -175,6 +199,7 @@ public static class BuildingEditorAssets
             serialized.FindProperty("_status").objectReferenceValue = status;
             serialized.FindProperty("_title").objectReferenceValue = root.transform.Find("Title").GetComponent<Text>();
             serialized.ApplyModifiedPropertiesWithoutUndo();
+            EnsureCompleteButton(root);
             PrefabUtility.SaveAsPrefabAsset(root, Folder + "/EditorPanel.prefab");
         }
         finally

@@ -1,5 +1,5 @@
 // 职责：显示自动占地和地面自由建造提示，建筑哨站控件独立保留。
-// 入口：Refresh()；面板没有手动地基尺寸输入，实际范围在每次编辑保存时计算。
+// 入口：Refresh()；面板没有手动地基尺寸输入，实际范围在加载、退出编辑或明确完成时计算。
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +12,23 @@ public sealed class BuildingEditorPanel : MonoBehaviour
     [SerializeField]
     private Text _title;
     private float _fullHeight;
+    public void Complete()
+    {
+        try
+        {
+            BuildManager.instance.CompleteBuildingBlueprint();
+            Refresh();
+        }
+        catch (System.IO.IOException error)
+        {
+            _status.text = "Could not save footprint: " + error.Message;
+        }
+        catch (System.UnauthorizedAccessException error)
+        {
+            _status.text = "Could not save footprint: " + error.Message;
+        }
+    }
+
     public void Refresh()
     {
         bool baseEditor = BuildManager.instance.IsEditingBaseBlueprint;
@@ -40,7 +57,7 @@ public sealed class BuildingEditorPanel : MonoBehaviour
 
         BuildingFoundationData data = SaveManager.instance?.cachedData?.foundation;
         string footprint = data == null ? "Empty design" : $"Footprint: {data.width} x {data.length} m  |  origin ({data.MinX:0}, {data.MinZ:0})";
-        _status.text = "Build anywhere on the ground. Footprint crops automatically.\n" + footprint + (data != null && !data.IsValid ? "\nOver deployment size limit (64 m per side)." : string.Empty);
+        _status.text = "Build freely. Crop on load, finish or exit.\n" + footprint;
         if (!baseEditor)
         {
             outpost?.Refresh();

@@ -87,6 +87,7 @@ public static class HangarPrefabAuthoring
             data.ApplyModifiedPropertiesWithoutUndo();
             block.RefreshAuthoringData();
             block.resourcePath = PrefabPath;
+            EnsureEntranceMarker(root);
             module.SetCombat(false);
             GameObject prefab = PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
             EnsureLimits();
@@ -118,6 +119,45 @@ public static class HangarPrefabAuthoring
         {
             PrefabUtility.UnloadPrefabContents(root);
         }
+    }
+
+    [MenuItem("HY-Sandbox/Siege/Hangars/Add Entrance Direction Marker")]
+    public static void AddEntranceMarker()
+    {
+        GameObject root = PrefabUtility.LoadPrefabContents(PrefabPath);
+        try
+        {
+            EnsureEntranceMarker(root);
+            PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
+        }
+        finally
+        {
+            PrefabUtility.UnloadPrefabContents(root);
+        }
+    }
+
+    private static void EnsureEntranceMarker(GameObject root)
+    {
+        if (root.transform.Find("Entrance Direction (Editor)") != null)
+        {
+            return;
+        }
+
+        Canvas canvas = Canvas(root.transform, "Entrance Direction (Editor)", new Vector2(500f, 160f));
+        canvas.transform.localScale = Vector3.one * .02f;
+        canvas.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+        Text text = Text(
+            canvas.transform,
+            "Door Arrow",
+            "▲\nDOOR / FRONT",
+            44,
+            new Vector2(500f, 160f),
+            Vector2.zero);
+        text.color = new Color(.2f, 1f, .7f, 1f);
+        var data = new SerializedObject(root.GetComponent<HangarModule>());
+        data.FindProperty("entranceMarker").objectReferenceValue = canvas.transform;
+        data.ApplyModifiedPropertiesWithoutUndo();
+        root.GetComponent<HangarModule>().RefreshGeometry();
     }
 
     private static void EnsureLimits()

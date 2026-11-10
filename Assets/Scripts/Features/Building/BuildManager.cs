@@ -25,6 +25,10 @@ public class BuildManager : MonoBehaviour
     [SerializeField, Range(0, 8), Tooltip("Empty grid cells retained around automatically cropped structures.")]
     private int _footprintPadding = 1;
     public int FootprintPadding => _footprintPadding;
+    public bool FootprintDirty
+    {
+        get; private set;
+    }
     public float BuildRange => Mathf.Max(0.1f, IsEditingBuildingBlueprint ? _structureBuildRange : _buildRange);
 
     public Material highlightMaterial;
@@ -242,6 +246,7 @@ public class BuildManager : MonoBehaviour
             return;
         }
 
+        CompleteBuildingBlueprint();
         SetBuildTarget(targetContext);
         currentBlockResourcePath = string.Empty;
         ResetBuildState();
@@ -266,6 +271,7 @@ public class BuildManager : MonoBehaviour
             return;
         }
 
+        CompleteBuildingBlueprint();
         SetBuildTarget(BuildTargetContext.PlayerSave(currentSaveName, currentEnemyBlueprintName));
         currentBlockResourcePath = string.Empty;
         ResetBuildState();
@@ -329,6 +335,7 @@ public class BuildManager : MonoBehaviour
             return;
         }
 
+        CompleteBuildingBlueprint();
         SetBuildTarget(target);
         currentBlockResourcePath = string.Empty;
         ResetBuildState();
@@ -390,6 +397,7 @@ public class BuildManager : MonoBehaviour
             return;
         }
 
+        FootprintDirty = false;
         // Opening computes a preview only; an existing player file is written on the next actual edit.
         data.foundation = BuildingFootprint.Calculate(data.blocks, FootprintPadding);
         GameObject prefab = Resources.Load<GameObject>("BuildingEditor/Foundation");
@@ -400,6 +408,46 @@ public class BuildManager : MonoBehaviour
         Foundation = obj.GetComponent<BuildingFoundation>();
         Foundation.Configure(data.foundation);
         MainUIPanels.instance.RefreshBuildingEditorPanel();
+    }
+
+    public void MarkBuildingFootprintDirty()
+    {
+        if (IsEditingBuildingBlueprint)
+        {
+            FootprintDirty = true;
+        }
+    }
+
+    public void CompleteBuildingBlueprint()
+    {
+        if (!HasBuildingBlueprint || IsLoadingBlocks || !FootprintDirty)
+        {
+            return;
+        }
+
+        SaveManager saves = SaveManager.instance;
+        if (!System.IO.File.Exists(saves.GetEditedStructurePath(CurrentBuildingBlueprintName)))
+        {
+            return;
+        }
+
+        BuildingFoundationData before = saves.cachedData.foundation;
+        saves.cachedData.foundation = BuildingFootprint.Calculate(saves.cachedData.blocks, FootprintPadding);
+        try
+        {
+            string path = saves.GetEditedStructurePath(CurrentBuildingBlueprintName);
+            string pending = path + ".pending";
+            System.IO.File.WriteAllText(pending, JsonUtility.ToJson(saves.cachedData, true));
+            System.IO.File.Replace(pending, path, null);
+        }
+        catch
+        {
+            saves.cachedData.foundation = before;
+            throw;
+        }
+
+        FootprintDirty = false;
+        RefreshBuildingFootprint();
     }
 
     public void RefreshBuildingFootprint()

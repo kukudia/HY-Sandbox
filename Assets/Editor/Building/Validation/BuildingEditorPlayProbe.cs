@@ -345,6 +345,7 @@ public static class BuildingEditorPlayProbe
             !(bool)geometryType.GetMethod("IsBlocked").Invoke(geometry, new object[] { position, Quaternion.identity, cube.GetComponent<Block>() }));
         build.CreateBlock(cube, "Blocks/1x1x1", position, Quaternion.identity);
         Block placed = build.lastSaveBlock;
+        build.CompleteBuildingBlueprint();
         Check(
             "Placed block and foundation connect through real PhysX",
             placed != null && placed.Neighbors().Contains(foundation) && foundation.connectors.Any(c => c.isConnected));

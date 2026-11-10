@@ -124,6 +124,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         selectedName = string.IsNullOrEmpty(blueprintName) ? "Starter Bastion" : blueprintName;
         string json = string.IsNullOrEmpty(blueprintName) ? settings.Starter.text : File.ReadAllText(SaveManager.instance.GetBaseBlueprintPath(blueprintName));
         design = JsonUtility.FromJson<BlockDataList>(json);
+        design.foundation = BuildingFootprint.Calculate(design.blocks, BuildManager.instance != null ? BuildManager.instance.FootprintPadding : 1);
         if (!settings.Validate(design, out string reason))
         {
             throw new InvalidOperationException(reason);
@@ -155,20 +156,14 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
             return;
         }
 
+        // A wide completed design expands the runtime ground instead of being rejected by arena edges.
         Bounds bounds = arena.bounds;
-        for (int i = 0; i < 4; i++)
-        {
-            Vector3 corner = position + rotation * new Vector3(
-                design.foundation.MinX + ((i & 1) == 0 ? 0f : design.foundation.width),
-                0f,
-                design.foundation.MinZ + ((i & 2) == 0 ? 0f : design.foundation.length));
-            if (corner.x < bounds.min.x + .1f || corner.x > bounds.max.x - .1f || corner.z < bounds.min.z + .1f || corner.z > bounds.max.z - .1f)
-            {
-                DesignStatus = "The entire footprint must remain inside the arena.";
-                return;
-            }
-        }
-
+        Vector3 required = BlockBounds.FromBlueprint(design.blocks, Matrix4x4.TRS(position, rotation, Vector3.one)).size;
+        Vector3 scale = arena.transform.localScale;
+        float xRatio = Mathf.Max(1f, (required.x + 8f) / Mathf.Max(.01f, bounds.size.x));
+        float zRatio = Mathf.Max(1f, (required.z + 8f) / Mathf.Max(.01f, bounds.size.z));
+        arena.transform.localScale = new Vector3(scale.x * xRatio, scale.y, scale.z * zRatio);
+        Physics.SyncTransforms();
         if (!SiegeRefit.IsBuildingClear(design, position, rotation, null, out string obstruction))
         {
             DesignStatus = obstruction;
@@ -176,7 +171,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         }
 
         canDeploy = true;
-        DesignStatus = $"{design.blocks.Count} modules | {settings.Cost(design)} / {settings.DeploymentBudget} budget\nSupport checked on confirm. Cargo excluded. {designWarnings}";
+        DesignStatus = $"{design.blocks.Count} modules | reference value {settings.Cost(design)}\nSupport checked on confirm. Cargo excluded. {designWarnings}";
     }
 
     private bool Deploy()

@@ -14,7 +14,7 @@ public sealed class BuildingFoundationData
     public float MinX => offsetX - 2f;
     public float MinZ => offsetZ - 2f;
     public Vector3 Center => new Vector3(MinX + width * .5f, 0f, MinZ + length * .5f);
-    public bool IsValid => width >= 1 && width <= MaximumSize && length >= 1 && length <= MaximumSize && Math.Abs((long)offsetX) <= 1002 && Math.Abs((long)offsetZ) <= 1002;
+    public bool IsValid => width >= 1 && length >= 1 && Math.Abs((long)offsetX) <= 1002 && Math.Abs((long)offsetZ) <= 1002;
 
     public BuildingFoundationData Copy()
     {

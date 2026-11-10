@@ -218,6 +218,12 @@ public static class HangarWorkshopChecks
             saves.cachedData.blocks.Count == 1 && groundBlock != null && groundBlock.transform.position.y == .5f,
             "real mouse click places the first ordinary building module directly on ground");
         Vector3 savedPosition = groundBlock.transform.position;
+        BuildingFoundationData unchanged = saves.cachedData.foundation.Copy();
+        Check(
+            build.FootprintDirty && unchanged.width == 4 && unchanged.offsetX == 0,
+            "placement persists module but does not calculate or rebuild footprint");
+        Object.FindAnyObjectByType<BuildingEditorPanel>(FindObjectsInactive.Include).transform.Find("Complete Footprint").GetComponent<Button>().onClick.Invoke();
+        Check(!build.FootprintDirty, "saved FINISH / CROP button completes footprint calculation");
         BuildingFoundationData footprint = saves.cachedData.foundation;
         Check(
             footprint.width == 3 && footprint.length == 3 && footprint.MinX < -2 && footprint.MinZ < -2,
@@ -232,6 +238,10 @@ public static class HangarWorkshopChecks
             new Vector3(8.5f, .5f, 9.5f),
             Quaternion.identity);
         Block second = build.lastSaveBlock;
+        Check(
+            saves.cachedData.foundation.width == 3 && build.FootprintDirty,
+            "continued placement keeps completed footprint unchanged");
+        build.CompleteBuildingBlueprint();
         int wideFootprint = saves.cachedData.foundation.width;
         Check(
             wideFootprint > 20 && groundBlock.transform.position == savedPosition,
@@ -239,13 +249,20 @@ public static class HangarWorkshopChecks
         build.selectedBlock = second;
         build.DeleteBlock();
         Check(
+            saves.cachedData.foundation.width == wideFootprint && build.FootprintDirty,
+            "deletion defers footprint shrink until completion");
+        build.CompleteBuildingBlueprint();
+        Check(
             saves.cachedData.foundation.width == 3 && groundBlock.transform.position == savedPosition,
             "deleting the outermost module crops empty space without moving retained modules");
         ActionManager.instance.Undo();
+        build.CompleteBuildingBlueprint();
         Check(
             saves.cachedData.foundation.width == wideFootprint,
             "delete Undo restores footprint together with the module");
         ActionManager.instance.Redo();
+        Check(saves.cachedData.foundation.width == wideFootprint, "Redo does not recrop during construction");
+        build.CompleteBuildingBlueprint();
         Check(saves.cachedData.foundation.width == 3, "delete Redo crops the footprint again");
         string groundId = groundBlock.uniqueId;
         build.EnterBuildingBlueprintBuildMode("Free Ground Probe");
@@ -313,6 +330,7 @@ public static class HangarWorkshopChecks
         Check(
             saves.cachedData.blocks.Count == 1 && Saved(block).resourcePath.Contains("Hangar"),
             "real foundation click places and saves one hangar");
+        build.CompleteBuildingBlueprint();
         Check(
             block.Neighbors().Contains(build.Foundation.GetComponent<Block>()),
             "placed floor actually connects to foundation through PhysX");
@@ -353,6 +371,7 @@ public static class HangarWorkshopChecks
         Check(
             Mathf.Approximately(block.transform.position.y - block.y * 0.5f, bottomBefore.y),
             "height adjustments preserve the floor contact plane");
+        build.CompleteBuildingBlueprint();
         Check(
             block.Neighbors().Contains(build.Foundation.GetComponent<Block>()),
             "resized floor retains foundation support");
@@ -360,6 +379,7 @@ public static class HangarWorkshopChecks
         ResizeButton(visible, 1, 1).onClick.Invoke();
         ResizeButton(visible, 2, 1).onClick.Invoke();
         yield return Frames(2);
+        build.CompleteBuildingBlueprint();
         Check(
             block.Neighbors().Contains(build.Foundation.GetComponent<Block>()),
             "odd-size changes retain grid-aligned bottom connections");

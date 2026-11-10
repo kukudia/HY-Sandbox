@@ -28,6 +28,8 @@ public sealed class HangarModule : MonoBehaviour
     [SerializeField]
     private Text sizeText;
     [SerializeField]
+    private Transform entranceMarker;
+    [SerializeField]
     private HangarFacePanel[] faces;
     [SerializeField, Min(0.1f)]
     private float doorSeconds = 1.2f;
@@ -76,6 +78,11 @@ public sealed class HangarModule : MonoBehaviour
         SetShape(rightWall, new Vector3((outer.x - 1f) * 0.5f, 0f, 0f), new Vector3(1f, inner.y, outer.z));
         SetShape(backWall, new Vector3(0f, 0f, -(outer.z - 1f) * 0.5f), new Vector3(inner.x, inner.y, 1f));
         SetShape(capacity, Vector3.zero, inner);
+        if (entranceMarker != null)
+        {
+            entranceMarker.localPosition = new Vector3(0f, -outer.y * .5f + .55f, outer.z * .5f - 1.5f);
+        }
+
         if (sizeLabel != null)
         {
             sizeLabel.localPosition = Vector3.zero;
@@ -164,6 +171,11 @@ public sealed class HangarModule : MonoBehaviour
 
     private void ApplyPresentation()
     {
+        if (entranceMarker != null)
+        {
+            entranceMarker.gameObject.SetActive(!combat);
+        }
+
         if (capacity != null)
         {
             capacity.gameObject.SetActive(!combat);

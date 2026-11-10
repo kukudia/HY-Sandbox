@@ -12,7 +12,7 @@ public static class WorldBuildingValidation
     {
         if (blueprint == null || blueprint.foundation == null || !blueprint.foundation.IsValid || blueprint.blocks == null || blueprint.blocks.Count > MaximumBlocks)
         {
-            throw new InvalidOperationException("Building requires a 1-64 m footprint per side, safe offsets and at most 2048 blocks.");
+            throw new InvalidOperationException("Building requires a positive footprint, finite offsets and at most 2048 blocks.");
         }
 
         var ids = new HashSet<string>();
