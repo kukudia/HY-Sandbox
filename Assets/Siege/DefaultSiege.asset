@@ -51,7 +51,7 @@ MonoBehaviour:
   comboBonusCoins: 60
   comboBonusCap: 300
   flawlessBonusPerWave: 80
-  trackRecords: 1
+  trackRecords: 0
   swarmEveryNWaves: 3
   swarmSizeMultiplier: 2
   swarmSpawnIntervalScale: 0.65
