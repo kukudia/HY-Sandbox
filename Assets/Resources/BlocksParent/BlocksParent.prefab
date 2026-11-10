@@ -113,12 +113,11 @@ MonoBehaviour:
   obstacleLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  useNavMesh: 1
-  navigationSampleDistance: 40
-  navigationCornerDistance: 2
-  navigationSteeringInterval: 0.1
-  navigationCruiseSpeed: 6
-  navigationBrakingAcceleration: 3
+  cruiseSpeed: 6
+  directionHoldTime: 1.5
+  directionDeadZone: 12
+  avoidanceSideHoldTime: 3
+  strafeSwitchInterval: 6
   preferObstacleClimb: 1
   climbLookAhead: 50
   maxObstacleClimb: 32

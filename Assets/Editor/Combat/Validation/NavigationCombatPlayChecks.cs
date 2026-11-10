@@ -1,4 +1,4 @@
-// 职责：在隔离物理场景验证真实导航烘焙、绕墙驾驶意图与两种炮塔的遮挡锁定。
+// 职责：在隔离物理场景验证稳定局部驾驶、爬升净空与两种炮塔的遮挡锁定。
 // 入口：Run()；仅 Play Mode，结果写入 Temp/NavigationCombat，不修改玩家蓝图和场景。
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,6 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
@@ -23,7 +22,7 @@ public static class NavigationCombatPlayChecks
         Pending = Run();
     }
 
-    public static async Task<string> Run()
+    public static Task<string> Run()
     {
         if (!Application.isPlaying || PlayManager.instance == null)
         {
@@ -46,35 +45,9 @@ public static class NavigationCombatPlayChecks
             Box(root.transform, "Ground", Vector3.down * 0.5f, new Vector3(120f, 1f, 140f));
             Physics.SyncTransforms();
             CheckObstacleClimb(checks, root.transform, owner, wall);
-            EnemyNavigationWorld world = root.AddComponent<EnemyNavigationWorld>();
-            world.Rebuild();
-            float timeout = Time.realtimeSinceStartup + 30f;
-            while (!world.IsReady && Time.realtimeSinceStartup < timeout)
-            {
-                await Task.Delay(50);
-            }
-
-            Check(checks, "Runtime static colliders produce registered NavMesh", world.IsReady);
             EnemyController ai = owner.gameObject.AddComponent<EnemyController>();
             ai.enabled = false;
-            typeof(EnemyController).GetField("currentTarget", Instance).SetValue(ai, hidden);
-            MethodInfo move = typeof(EnemyController).GetMethod("CalculateDesiredMovement", Instance);
-            Vector3 direction = (Vector3)move.Invoke(ai, new object[] { hidden.transform.position - owner.transform.position });
-            Check(
-                checks,
-                "NavMesh bends pursuit around wall instead of direct pursuit",
-                Mathf.Abs(direction.z) > 0.2f && direction.x > 0f);
-            Check(
-                checks,
-                "Navigation produces intent without teleporting physics unit",
-                owner.transform.localPosition == new Vector3(-20f, 1f, 0f));
-            ai.desiredDistance = 80f;
-            Vector3 nearWallDirection = (Vector3)move.Invoke(ai, new object[] { hidden.transform.position - owner.transform.position });
-            Check(
-                checks,
-                "Wall detour takes priority over strafing within engagement distance",
-                Mathf.Abs(nearWallDirection.z) > 0.2f && nearWallDirection.x > 0f);
-            ai.desiredDistance = 18f;
+            CheckStableSteering(checks, ai, owner);
             Type selectorType = typeof(Turret).Assembly.GetType("TurretTargetSelector");
             object selector = Activator.CreateInstance(selectorType, Instance, null, new object[] { owner.transform }, null);
             MethodInfo select = selectorType.GetMethod("FindNearestTarget", Instance);
@@ -163,36 +136,10 @@ public static class NavigationCombatPlayChecks
                 turret.enabled = false;
             }
 
-            // 移除中间通路地板后重烘焙，确认覆盖内断路停止，而非回退直冲。
-            wall.enabled = false;
-            BoxCollider ground = root.transform.Find("Ground").GetComponent<BoxCollider>();
-            ground.size = new Vector3(25f, 1f, 140f);
-            ground.transform.localPosition = new Vector3(-25f, -0.5f, 0f);
-            Box(root.transform, "Disconnected ground", new Vector3(25f, -0.5f, 0f), new Vector3(25f, 1f, 140f));
-            world.enabled = false;
-            world.enabled = true;
-            Physics.SyncTransforms();
-            world.Rebuild();
-            timeout = Time.realtimeSinceStartup + 30f;
-            while (!world.IsReady && Time.realtimeSinceStartup < timeout)
-            {
-                await Task.Delay(50);
-            }
-
-            owner.transform.localPosition = new Vector3(-16f, 1f, 0f);
-            Vector3 partial = (Vector3)move.Invoke(ai, new object[] { hidden.transform.position - owner.transform.position });
-            Check(
-                checks,
-                "Disconnected NavMesh stops at reachable edge instead of crossing gap",
-                partial.sqrMagnitude < 0.001f);
-            world.enabled = false;
-            Check(checks, "Disabling navigation unregisters its NavMesh", !world.IsReady);
-            Vector3 fallback = (Vector3)move.Invoke(ai, new object[] { hidden.transform.position - owner.transform.position });
-            Check(checks, "Missing NavMesh preserves physics steering fallback", fallback.x > 0.5f);
             string report = string.Join("\n", checks);
             Directory.CreateDirectory("Temp/NavigationCombat");
             File.WriteAllText("Temp/NavigationCombat/checks.txt", report);
-            return report;
+            return Task.FromResult(report);
         }
         finally
         {
@@ -205,6 +152,46 @@ public static class NavigationCombatPlayChecks
             _ = SceneManager.UnloadSceneAsync(scene);
             PlayManager.instance.playMode = previousMode;
         }
+    }
+
+    private static void CheckStableSteering(List<string> checks, EnemyController ai, ControlUnit owner)
+    {
+        MethodInfo steer = typeof(EnemyController).GetMethod("StabilizeDirection", Instance);
+        FieldInfo next = typeof(EnemyController).GetField("nextDirectionChange", Instance);
+        Vector3 initial = (Vector3)steer.Invoke(ai, new object[] { Vector3.right });
+        Vector3 small = Quaternion.AngleAxis(5f, Vector3.up) * Vector3.right;
+        Check(
+            checks,
+            "Small target-angle noise does not change committed heading",
+            (Vector3)steer.Invoke(ai, new object[] { small }) == initial);
+        Check(
+            checks,
+            "Large direction changes wait for heading hold time",
+            (Vector3)steer.Invoke(ai, new object[] { Vector3.forward }) == initial);
+        next.SetValue(ai, Time.time - 1f);
+        Check(
+            checks,
+            "Meaningful turn is accepted after hold time",
+            (Vector3)steer.Invoke(ai, new object[] { Vector3.forward }) == Vector3.forward);
+        typeof(EnemyController).GetField("urgentAvoidance", Instance).SetValue(ai, true);
+        Check(
+            checks,
+            "Imminent obstacle can override heading hold",
+            (Vector3)steer.Invoke(ai, new object[] { Vector3.left }) == Vector3.left);
+        Check(
+            checks,
+            "Normal movement decisions run no faster than twice per second",
+            (float)typeof(EnemyController).GetMethod("GetMovementInterval", Instance).Invoke(ai, null) >= 0.5f);
+        MethodInfo strafe = typeof(EnemyController).GetMethod("GetStrafeDirection", Instance);
+        Vector3 side = (Vector3)strafe.Invoke(ai, new object[] { Vector3.right });
+        Check(
+            checks,
+            "Strafe side stays fixed between scheduled changes",
+            (Vector3)strafe.Invoke(ai, new object[] { Vector3.right }) == side);
+        Check(
+            checks,
+            "Steering rules do not teleport the unit",
+            owner.transform.localPosition == new Vector3(-20f, 1f, 0f));
     }
 
     private static void CheckObstacleClimb(List<string> checks, Transform root, ControlUnit owner, BoxCollider wall)
@@ -232,6 +219,15 @@ public static class NavigationCombatPlayChecks
         Physics.SyncTransforms();
         Check(checks, "Climb altitude is held while hull crosses obstacle", (bool)query.Invoke(climb, arguments));
         owner.transform.localPosition = new Vector3(6f, 12f, 0f);
+        Physics.SyncTransforms();
+        BoxCollider nextWall = Box(root, "Next wall after descent", new Vector3(20f, 3.5f, 0f), new Vector3(2f, 8f, 40f));
+        Physics.SyncTransforms();
+        Check(
+            checks,
+            "Upcoming wall below current altitude keeps climb before descent",
+            (bool)query.Invoke(climb, arguments));
+        Object.DestroyImmediate(nextWall.gameObject);
+        clear.Invoke(climb, null);
         Physics.SyncTransforms();
         Check(
             checks,

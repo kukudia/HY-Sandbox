@@ -1,5 +1,5 @@
 // 职责：为敌机与自主友舰选择敌对目标并生成驾驶意图；阵营和玩家驾驶权分别判断。
-// 入口：FixedUpdate()；NavMesh 拐点导引与局部避障生成意图，逐物理步平滑输入。
+// 入口：FixedUpdate()；优先爬升与稳定局部避障生成意图，逐物理步平滑输入。
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -24,22 +24,31 @@ public class EnemyController : MonoBehaviour
     public float sideProbeAngle = 35f;
     public float targetHoverHeightOffset = 3f;
     public LayerMask obstacleLayers = ~0;
-    [Header("NavMesh Navigation")]
-    [SerializeField, Tooltip("使用场景 EnemyNavigationWorld 的地面走廊；推进器仍负责物理运动。")]
-    private bool useNavMesh = true;
-    [SerializeField, Min(1f), Tooltip("允许悬浮舰船投影到地面 NavMesh 的距离（米）。")]
-    private float navigationSampleDistance = 40f;
-    [SerializeField, Min(0.1f)]
-    private float navigationCornerDistance = 2f;
-    [SerializeField, Min(0.05f), Tooltip("导航/局部避障驾驶刷新周期（秒）；不提高目标扫描频率。")]
-    private float navigationSteeringInterval = 0.1f;
-    [SerializeField, Min(1f), Tooltip("导航参考速度（米/秒）；用于侧滑补偿与弯前制动，不直接改写刚体。")]
-    private float navigationCruiseSpeed = 6f;
-    [SerializeField, Min(0.1f), Tooltip("NavMesh 导航时允许的弯前减速度估计（米/秒²）。")]
-    private float navigationBrakingAcceleration = 3f;
-    private readonly EnemyNavigationPath navigationPath = new EnemyNavigationPath();
-    private Rigidbody navigationBody;
-    private bool followingNavigation;
+    [Header("Stable Steering")]
+    [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("navigationCruiseSpeed"), Min(1f)]
+    private float cruiseSpeed = 6f;
+    [SerializeField, Min(0.1f), Tooltip("非紧急情况下两次方向切换之间的最短时间（秒）。")]
+    private float directionHoldTime = 1.5f;
+    [SerializeField, Range(1f, 45f), Tooltip("小于此角度的目标偏移不触发转向。")]
+    private float directionDeadZone = 12f;
+    [SerializeField, Min(0.1f), Tooltip("脱离障碍后继续保持绕行侧向的时间（秒）。")]
+    private float avoidanceSideHoldTime = 3f;
+    [SerializeField, Min(1f)]
+    private float strafeSwitchInterval = 6f;
+    private Rigidbody movementBody;
+    private Vector3 steeringDirection;
+    private float nextDirectionChange;
+    private float nextStrafeChange;
+    private float avoidanceSideUntil;
+    private float avoidanceSide;
+    private float strafeSide;
+    private bool urgentAvoidance;
+    public Vector3 SteeringDirection => steeringDirection;
+    public int SteeringChanges
+    {
+        get; private set;
+    }
+
     [Header("Obstacle Climb Priority")]
     [SerializeField, Tooltip("前方静态障碍有上方净空时，优先抬升越障，再考虑水平绕行。")]
     private bool preferObstacleClimb = true;
@@ -83,12 +92,18 @@ public class EnemyController : MonoBehaviour
         float phase = (GetEntityId().GetHashCode() & 1023) / 1024f;
         nextUpdateTime = Time.time + phase * Mathf.Max(0.01f, updateInterval);
         nextMovementUpdateTime = 0f;
+        steeringDirection = Vector3.zero;
+        SteeringChanges = 0;
+        nextDirectionChange = 0f;
+        nextStrafeChange = 0f;
+        strafeSide = 0f;
+        avoidanceSideUntil = 0f;
     }
 
     private void Awake()
     {
         unit = GetComponent<ControlUnit>();
-        navigationBody = GetComponent<Rigidbody>();
+        movementBody = GetComponent<Rigidbody>();
     }
 
     private void FixedUpdate()
@@ -133,17 +148,15 @@ public class EnemyController : MonoBehaviour
                 debugProbeCount = 0;
                 Vector3 toGuard = guardAnchor != null ? guardAnchor.position - transform.position : Vector3.zero;
                 toGuard.y = 0f;
-                followingNavigation = false;
                 climbingObstacle = false;
-                navigationPath.Clear();
-                desiredMovementInput = toGuard.sqrMagnitude > 100f ? ApplyObstacleAvoidance(GetNavigationDirection(guardAnchor.position, toGuard.normalized), toGuard) : Vector3.zero;
+                desiredMovementInput = toGuard.sqrMagnitude > 100f ? ApplyObstacleAvoidance(GetApproachDirection(guardAnchor.position, toGuard.normalized), toGuard) : Vector3.zero;
                 nextMovementUpdateTime = Time.time + GetMovementInterval();
             }
 
             ConfigureHoverThrusters();
             unit.SetMovementInput(Vector3.MoveTowards(
                 unit.MovementInput,
-                desiredMovementInput,
+                GetVelocityInput(),
                 Mathf.Max(0.1f, movementResponseRate) * Time.fixedDeltaTime));
             return;
         }
@@ -160,24 +173,22 @@ public class EnemyController : MonoBehaviour
         ConfigureHoverThrusters();
         Vector3 smoothedInput = Vector3.MoveTowards(
             unit.MovementInput,
-            desiredMovementInput,
+            GetVelocityInput(),
             Mathf.Max(0.1f, movementResponseRate) * Time.fixedDeltaTime);
         unit.SetMovementInput(smoothedInput);
     }
 
     private Vector3 CalculateDesiredMovement(Vector3 flatDirection)
     {
-        followingNavigation = false;
         climbingObstacle = false;
-        navigationPath.Clear();
         float distance = flatDirection.magnitude;
         Vector3 desiredMove = Vector3.zero;
         if (currentTarget == priorityTarget || distance <= detectionRange)
         {
-            Vector3 approach = GetNavigationDirection(currentTarget.transform.position, flatDirection.normalized);
-            if (climbingObstacle || distance > desiredDistance || (followingNavigation && navigationPath.NeedsDetour))
+            Vector3 approach = GetApproachDirection(currentTarget.transform.position, flatDirection.normalized);
+            if (climbingObstacle || distance > desiredDistance)
             {
-                // 隔墙的近处目标也必须先绕墙，不能仅因直线距离短而停下横移。
+                // 翻越期间保持前进任务，不因进入接敌距离而切换横移。
                 desiredMove = approach;
             }
             else if (distance < retreatDistance)
@@ -195,7 +206,7 @@ public class EnemyController : MonoBehaviour
         return desiredMove;
     }
 
-    private Vector3 GetNavigationDirection(Vector3 destination, Vector3 fallback)
+    private Vector3 GetApproachDirection(Vector3 destination, Vector3 fallback)
     {
         climbingObstacle = preferObstacleClimb && unit.hoverFlightController != null && obstacleClimb.TryGetHeight(
             unit,
@@ -206,44 +217,43 @@ public class EnemyController : MonoBehaviour
             obstacleClimbClearance,
             obstacleLayers,
             out obstacleHoverHeight);
-        if (climbingObstacle)
-        {
-            followingNavigation = false;
-            navigationPath.Clear();
-            float speedRatio = transform.position.y < obstacleHoverHeight - 1f ? climbForwardSpeedRatio : 1f;
-            Vector3 climbVelocity = navigationBody != null ? Vector3.ProjectOnPlane(navigationBody.linearVelocity, Vector3.up) : Vector3.zero;
-            return Vector3.ClampMagnitude(
-                (fallback * navigationCruiseSpeed * speedRatio - climbVelocity) / Mathf.Max(1f, navigationCruiseSpeed * 0.5f),
-                1f);
-        }
-
-        Vector3 direction = Vector3.zero;
-        followingNavigation = useNavMesh && navigationPath.TryGetDirection(
-            gameObject.scene,
-            transform.position,
-            destination,
-            Mathf.Max(1f, navigationSampleDistance),
-            Mathf.Max(0.1f, navigationCornerDistance),
-            out direction);
-        if (!followingNavigation || navigationBody == null)
-        {
-            return followingNavigation ? direction : fallback;
-        }
-
-        // 推进器只接受意图；侧滑用反向意图抵消，拐点前预留制动距离，不传送/钳制速度。
-        Vector3 velocity = Vector3.ProjectOnPlane(navigationBody.linearVelocity, Vector3.up);
-        float speed = Mathf.Min(
-            navigationCruiseSpeed,
-            Mathf.Sqrt(2f * navigationBrakingAcceleration * Mathf.Max(0f, navigationPath.SteeringDistance - 0.5f)));
-        Vector3 correction = direction * speed - velocity;
-        return correction.sqrMagnitude > 0.04f ? Vector3.ClampMagnitude(correction / Mathf.Max(1f, navigationCruiseSpeed * 0.5f), 1f) : Vector3.zero;
+        float speedRatio = climbingObstacle && transform.position.y < obstacleHoverHeight - 1f ? climbForwardSpeedRatio : 1f;
+        return fallback * speedRatio;
     }
 
     private float GetMovementInterval()
     {
-        return Mathf.Max(
-            0.05f,
-            useNavMesh ? Mathf.Min(movementUpdateInterval, navigationSteeringInterval) : movementUpdateInterval);
+        return Mathf.Max(0.5f, movementUpdateInterval);
+    }
+
+    private Vector3 GetVelocityInput()
+    {
+        Vector3 velocity = movementBody != null ? Vector3.ProjectOnPlane(movementBody.linearVelocity, Vector3.up) : Vector3.zero;
+        return Vector3.ClampMagnitude((desiredMovementInput * cruiseSpeed - velocity) / Mathf.Max(1f, cruiseSpeed * 0.5f), 1f);
+    }
+
+    private Vector3 StabilizeDirection(Vector3 candidate)
+    {
+        float magnitude = candidate.magnitude;
+        if (magnitude < 0.01f)
+        {
+            return Vector3.zero;
+        }
+
+        Vector3 direction = candidate / magnitude;
+        if (steeringDirection == Vector3.zero)
+        {
+            steeringDirection = direction;
+            nextDirectionChange = Time.time + directionHoldTime;
+        }
+        else if (Vector3.Angle(steeringDirection, direction) >= directionDeadZone && (urgentAvoidance || Time.time >= nextDirectionChange))
+        {
+            steeringDirection = direction;
+            nextDirectionChange = Time.time + directionHoldTime;
+            SteeringChanges++;
+        }
+
+        return steeringDirection * magnitude;
     }
 
     public void SetGuardAnchor(Transform anchor, float radius)
@@ -336,8 +346,6 @@ public class EnemyController : MonoBehaviour
         }
 
         debugProbeCount = 0;
-        followingNavigation = false;
-        navigationPath.Clear();
         currentTarget = null;
         desiredMovementInput = Vector3.zero;
         nextUpdateTime = 0f;
@@ -369,11 +377,6 @@ public class EnemyController : MonoBehaviour
                 targetHeight = Mathf.Max(targetHeight, obstacleHoverHeight);
             }
 
-            if (followingNavigation)
-            {
-                targetHeight = Mathf.Max(targetHeight, navigationPath.SurfaceHeight + Mathf.Max(2f, targetHoverHeightOffset));
-            }
-
             unit.hoverFlightController.targetHoverHeight = Mathf.Max(2f, targetHeight);
         }
     }
@@ -403,10 +406,13 @@ public class EnemyController : MonoBehaviour
             return Vector3.zero;
         }
 
-        // EntityId 只作个体相位种子；限定幅度，避免大整数转 float 后吞掉时间增量。
-        float phase = (GetEntityId().GetHashCode() & 0xFFFF) * (Mathf.PI * 2f / 65536f);
-        float sign = Mathf.Sin(Time.time * 0.7f + phase) >= 0f ? 1f : -1f;
-        return Vector3.Cross(Vector3.up, flatDirection.normalized) * sign * 0.45f;
+        if (Time.time >= nextStrafeChange)
+        {
+            strafeSide = strafeSide == 0f ? ((GetEntityId().GetHashCode() & 1) == 0 ? 1f : -1f) : -strafeSide;
+            nextStrafeChange = Time.time + strafeSwitchInterval;
+        }
+
+        return Vector3.Cross(Vector3.up, flatDirection.normalized) * strafeSide * 0.45f;
     }
 
     private Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)
@@ -417,16 +423,23 @@ public class EnemyController : MonoBehaviour
             return desiredMove;
         }
 
+        urgentAvoidance = false;
+        if (Time.time >= avoidanceSideUntil)
+        {
+            avoidanceSide = (GetEntityId().GetHashCode() & 1) == 0 ? 1f : -1f;
+        }
+
         Vector3 avoidance = Vector3.zero;
         avoidance += ProbeObstacle(probeDirection, 1f);
         avoidance += ProbeObstacle(Quaternion.AngleAxis(sideProbeAngle, Vector3.up) * probeDirection, 0.65f);
         avoidance += ProbeObstacle(Quaternion.AngleAxis(-sideProbeAngle, Vector3.up) * probeDirection, 0.65f);
         if (avoidance.sqrMagnitude > 0.01f)
         {
+            avoidanceSideUntil = Time.time + avoidanceSideHoldTime;
             desiredMove += avoidance.normalized * obstacleAvoidanceWeight;
         }
 
-        return Vector3.ClampMagnitude(desiredMove, 1f);
+        return StabilizeDirection(Vector3.ClampMagnitude(desiredMove, 1f));
     }
 
     private Vector3 ProbeObstacle(Vector3 direction, float weight)
@@ -526,12 +539,8 @@ public class EnemyController : MonoBehaviour
             }
 
             float distanceFactor = 1f - Mathf.Clamp01(hit.distance / obstacleAvoidanceDistance);
-            Vector3 sideStep = Vector3.Cross(Vector3.up, direction).normalized;
-            if (Vector3.Dot(sideStep, normal) < 0f)
-            {
-                sideStep = -sideStep;
-            }
-
+            urgentAvoidance |= hit.distance < Mathf.Max(3f, obstacleProbeRadius * 2f);
+            Vector3 sideStep = Vector3.Cross(Vector3.up, direction).normalized * avoidanceSide;
             return (normal.normalized + sideStep * 0.6f) * distanceFactor * weight;
         }
 
@@ -579,7 +588,6 @@ public class EnemyController : MonoBehaviour
         Gizmos.DrawRay(origin, desiredMovementInput * debugVectorLength);
         Gizmos.color = Color.white;
         Gizmos.DrawRay(origin, unit.MovementInput * debugVectorLength);
-        navigationPath.Draw(origin.y);
         for (int i = 0; i < debugProbeCount; i++)
         {
             Gizmos.color = debugProbeNormals[i] == Vector3.zero ? Color.green : Color.red;

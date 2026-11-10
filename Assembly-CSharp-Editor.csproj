@@ -154,7 +154,6 @@
     <Compile Include="Assets\Editor\Salvage\SalvagePlayProbe.cs" />
     <Compile Include="Assets\Editor\World\Validation\Terrain\WorldTerrainIntegrationChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Hangars\SiegeHangarPlayChecks.cs" />
-    <Compile Include="Assets\Editor\Combat\EnemyNavigationAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\SiegePlayChecks.cs" />
     <Compile Include="Assets\Editor\Architecture\PresentationPlayChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Benchmarks\SiegeTopologyBaseline.cs" />
@@ -1520,10 +1519,6 @@
       <HintPath>Library\ScriptAssemblies\Unity.Rendering.LightTransport.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.AI.Navigation">
-      <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
       <Private>False</Private>
@@ -1544,20 +1539,12 @@
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.AI.Navigation.Updater">
-      <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.Updater.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.Collections.Tests.CoreCLR.PrivateJobNested">
       <HintPath>Library\ScriptAssemblies\Unity.Collections.Tests.CoreCLR.PrivateJobNested.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Pipeline.IlInterpreter">
       <HintPath>Library\ScriptAssemblies\Unity.Pipeline.IlInterpreter.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.AI.Navigation.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.PathTracing.Runtime">
@@ -1606,10 +1593,6 @@
     </Reference>
     <Reference Include="Unity.Pipeline.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Pipeline.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.AI.Navigation.Editor.ConversionSystem">
-      <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.Editor.ConversionSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.InternalAPIEditorBridge.ShaderGraph.Editor">

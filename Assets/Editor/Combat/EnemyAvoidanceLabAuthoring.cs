@@ -94,9 +94,6 @@ public static class EnemyAvoidanceLabAuthoring
                 layouts[i].SetActive(i == 0);
             }
 
-            EnemyNavigationWorld navigation = new GameObject("Enemy Navigation").AddComponent<EnemyNavigationWorld>();
-            Set(navigation, "navigationRadius", 110f);
-            Set(navigation, "navigationHeight", 80f);
             var blueprint = JsonUtility.FromJson<BlockDataList>(Resources.Load<TextAsset>("WorldBlueprints/Enemies/CODEX_E01_Finch").text);
             ControlUnit ship = ModularUnitFactory.Spawn(
                 blueprint,
@@ -134,7 +131,6 @@ public static class EnemyAvoidanceLabAuthoring
             Set(ship.GetComponent<EnemyController>(), "drawDebug", true);
             Set(lab, "ship", ship);
             Set(lab, "target", target);
-            Set(lab, "navigation", navigation);
             var settings = new SerializedObject(lab);
             SerializedProperty list = settings.FindProperty("layouts");
             list.arraySize = layouts.Length;

@@ -76,7 +76,6 @@
     <Compile Include="Assets\Scripts\Features\Building\Interface\BlueprintUIPanel.cs" />
     <Compile Include="Assets\Scripts\Features\World\Validation\OutpostEditorPlayerChecks.cs" />
     <Compile Include="Assets\Scripts\Features\MainMenu\Interface\MainMenuView.cs" />
-    <Compile Include="Assets\Scripts\Features\Combat\Enemies\EnemyNavigationWorld.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interface\SaveUIPanel.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\StylizedBeamEffect.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Fleet\SiegeReturnFlight.cs" />
@@ -213,7 +212,6 @@
     <Compile Include="Assets\Scripts\Features\Simulation\Connections\BlockConnectionSnapshot.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\Projectiles\TurretProjectilePool.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Hangars\HangarRules.cs" />
-    <Compile Include="Assets\Scripts\Features\Combat\Enemies\EnemyNavigationPath.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Gameplay\SiegeConstructionSettings.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Gameplay\SiegeBaseWorkshop.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interaction\MoveAxisHandle.cs" />
@@ -323,6 +321,7 @@
     <Compile Include="Assets\Scripts\Features\Presentation\Blocks\BlockStatusLight.cs" />
     <Compile Include="Assets\Scripts\Features\World\Validation\WorldCombatPlayerChecks.cs" />
     <Compile Include="Assets\Scripts\Features\World\Buildings\Data\WorldBuildingState.cs" />
+    <Compile Include="Assets\Scripts\Features\Combat\Enemies\EnemyObstacleClimb.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Fleet\SiegeFleetEntry.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlockDataTables\BlockCsvBinding.cs" />
     <Compile Include="Assets\Scripts\Features\Flight\Thrusters\Thruster.cs" />
@@ -1593,10 +1592,6 @@
       <HintPath>Library\ScriptAssemblies\Unity.Rendering.LightTransport.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.AI.Navigation">
-      <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
       <Private>False</Private>
@@ -1617,20 +1612,12 @@
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.AI.Navigation.Updater">
-      <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.Updater.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.Collections.Tests.CoreCLR.PrivateJobNested">
       <HintPath>Library\ScriptAssemblies\Unity.Collections.Tests.CoreCLR.PrivateJobNested.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Pipeline.IlInterpreter">
       <HintPath>Library\ScriptAssemblies\Unity.Pipeline.IlInterpreter.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.AI.Navigation.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.PathTracing.Runtime">
@@ -1679,10 +1666,6 @@
     </Reference>
     <Reference Include="Unity.Pipeline.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Pipeline.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.AI.Navigation.Editor.ConversionSystem">
-      <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.Editor.ConversionSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.InternalAPIEditorBridge.ShaderGraph.Editor">

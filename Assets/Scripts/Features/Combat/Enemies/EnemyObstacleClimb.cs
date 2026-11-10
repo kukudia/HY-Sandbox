@@ -58,9 +58,13 @@ internal sealed class EnemyObstacleClimb
         }
 
         PhysicsScene physics = unit.gameObject.scene.GetPhysicsScene();
+        // 提前覆盖恢复常规高度后的走廊，连续矮墙之间不能先下降再重新发现障碍。
+        float bottomOffset = unit.transform.position.y - bounds.min.y;
+        Vector3 scanCenter = bounds.center;
+        scanCenter.y += Mathf.Min(0f, baseHeight - unit.transform.position.y);
         int count = Cast(
             physics,
-            bounds.center,
+            scanCenter,
             bounds.extents,
             direction,
             lookAhead,
@@ -70,7 +74,7 @@ internal sealed class EnemyObstacleClimb
         for (int i = 0; i < count; i++)
         {
             RaycastHit hit = hits[i];
-            if (IsGeometry(hit.collider, unit) && Mathf.Abs(hit.normal.y) < 0.7f && hit.distance < nearest)
+            if (IsGeometry(hit.collider, unit) && hit.collider.bounds.max.y > baseHeight - bottomOffset + 0.25f && Mathf.Abs(hit.normal.y) < 0.7f && hit.distance < nearest)
             {
                 nearest = hit.distance;
                 obstacle = hit.collider;
@@ -80,7 +84,6 @@ internal sealed class EnemyObstacleClimb
         float candidate = active ? height : baseHeight;
         if (obstacle != null)
         {
-            float bottomOffset = unit.transform.position.y - bounds.min.y;
             candidate = Mathf.Max(candidate, obstacle.bounds.max.y + bottomOffset + clearance);
         }
 

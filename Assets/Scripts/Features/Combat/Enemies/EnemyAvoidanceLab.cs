@@ -12,8 +12,6 @@ public sealed class EnemyAvoidanceLab : MonoBehaviour
     [SerializeField]
     private ControlUnit target;
     [SerializeField]
-    private EnemyNavigationWorld navigation;
-    [SerializeField]
     private GameObject[] layouts;
     [SerializeField, Range(0, 3)]
     private int layoutIndex;
@@ -81,17 +79,14 @@ public sealed class EnemyAvoidanceLab : MonoBehaviour
         ship.SetMovementInput(Vector3.zero);
         ai.enabled = true;
         ai.SetPriorityTarget(target);
-        navigation.enabled = false;
-        navigation.enabled = true;
         Physics.SyncTransforms();
-        navigation.Rebuild();
         contacts = 0;
         travel = 0f;
         previous = startPosition;
         running = true;
         started = Time.time;
         settledAt = -1f;
-        Status = "Building navigation";
+        Status = "Ready";
     }
 
     private void FixedUpdate()
@@ -112,7 +107,7 @@ public sealed class EnemyAvoidanceLab : MonoBehaviour
         Status = $"{layouts[layoutIndex].name}: {Time.time - started:F1}s | distance {distance:F1}m | speed {body.linearVelocity.magnitude:F1}m/s | contacts {contacts}";
         if ((settledAt >= 0f && Time.time - settledAt >= 2f) || Time.time - started >= timeout || !ship.HasValidCockpit)
         {
-            results.Add(new Trial { layout = layouts[layoutIndex].name, arrived = settledAt >= 0f, seconds = Time.time - started, distance = distance, travel = travel, contacts = contacts, position = ship.transform.position });
+            results.Add(new Trial { layout = layouts[layoutIndex].name, arrived = settledAt >= 0f, seconds = Time.time - started, distance = distance, travel = travel, contacts = contacts, turns = ship.GetComponent<EnemyController>().SteeringChanges, position = ship.transform.position });
             Directory.CreateDirectory("Temp/EnemyAvoidanceLab");
             File.WriteAllText("Temp/EnemyAvoidanceLab/trials.json", JsonUtility.ToJson(new Report { trials = results }, true));
             running = false;
@@ -147,7 +142,7 @@ public sealed class EnemyAvoidanceLab : MonoBehaviour
     private void OnGUI()
     {
         GUILayout.BeginArea(new Rect(16f, 16f, 800f, 110f), GUI.skin.box);
-        GUILayout.Label("ENEMY AVOIDANCE LAB | blue: NavMesh | cyan: target | magenta: intent | white: smoothed input");
+        GUILayout.Label("ENEMY AVOIDANCE LAB | cyan: target | magenta: intent | white: smoothed input");
         GUILayout.Label(Status);
         GUILayout.BeginHorizontal();
         for (int i = 0; i < layouts.Length; i++)
@@ -184,6 +179,7 @@ public sealed class EnemyAvoidanceLab : MonoBehaviour
         public float distance;
         public float travel;
         public int contacts;
+        public int turns;
         public Vector3 position;
     }
 }

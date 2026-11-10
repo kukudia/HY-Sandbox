@@ -1,22 +1,16 @@
 # HY-Sandbox 开发入口
 
-## AI NavMesh 寻路与炮塔遮挡
+## AI 稳定局部避障与炮塔遮挡
 
-**遇障优先爬升**：EnemyController 默认先用完整舰体包围盒检查目标方向前方50m的静态障碍。有上升净空且高处前进通道畅通时，悬浮目标设为障碍顶端加舰体下沿偏移和3m净空；允许相对常规目标高度最多抬升32m。未到安全高度时前进参考速度降至15%，舰尾越过障碍后再恢复常规高度。有顶棚、过高障碍或高处通道被阻挡时继续NavMesh水平绕行。参数位于 **Obstacle Climb Priority**，不额外施力或修改刚体速度。源码：`EnemyObstacleClimb`；检查与实船记录见 [避障试验场验证](Docs/Validation/2026-11-10-avoidance-lab.md)。
+EnemyController 已移除 NavMesh：删除运行时烘焙/路径类、四个场景中的导航组件、安装菜单和未使用的 AI Navigation 包。接近目标与警戒返航使用直接航向、优先爬升及局部球扫；没有全局路径搜索，封闭迷宫/无法翻越的凹形障碍可能停滞，需要布局上保留可飞越空间。
 
-**避障试验场：`Assets/Scenes/EnemyAvoidanceLab.unity`**。打开后直接Play即可，无需菜单或玩家存档；保存真实Finch舰、静态目标、摄像机、供电/表现服务和四组可手改障碍。Game面板选择 **Single wall / U trap / Slalom / Narrow gate**，或 **Run all** 连续运行，显示时间、目标距离、速度和障碍接触数。到达按18m交战距离外加4m容差判定，默认每组90秒超时；测试专用碰撞伤害系数为0，真实碰撞、惯性、动力和供电保留。结果写`Temp/EnemyAvoidanceLab/trials.json`，重试只重置该试验舰的位置和速度，运行导航从不传送舰体。
+**降低变向次数与频率**：驾驶决策最低间隔0.5秒（之前导航0.1秒）；稳定方向至少保持1.5秒，忽略12°以内的小偏移；同一轮绕障保持侧向，脱离后3秒才重新选择；接敌横移换侧间隔6秒。近障紧急避让可跳过方向冷却。所有参数位于EnemyController的 **Stable Steering**，目标扫描独立，侧滑补偿与推进器输出仍每物理步执行，不能把反向制动输入当作航线换向。
 
-已开启 BlocksParent Prefab 的 **Draw Debug**、Main/Siege/WorldLab 的友敌AI开关，以及试验场Scene/Game Gizmos。蓝色路径、青色目标、紫色期望输入、白色平滑输入、球扫命中与法线用于调试。制作菜单 **Tools/HY-Sandbox/Combat/Create Avoidance Lab** 不覆盖现有试验场；**Enable AI Debug** 可重新应用开关。
+**遇障优先爬升**：整舰包围盒检查前方50m静态障碍，上升与高处走廊均畅通时，目标高度为障碍顶端加舰体底部偏移及3m净空，允许高于正常悬浮目标最多32m。未升到安全高度时前进参考速度降至15%；舰尾越障后恢复常规高度。顶棚、过高墙或高处通道受阻时使用稳定局部绕障。参数位于 **Obstacle Climb Priority**；控制器不写刚体位置/速度。
 
-本轮寻路按真实自主舰水平碰撞包围范围自动提高NavMesh净空，保留Inspector最低净空；额外安全余量默认2.5m。过窄通道选择外部路径。拐点不能仅凭距离容差越过阻挡墙角；导航等待初次烘焙完成再移动。导航驾驶默认0.1秒采样，独立于目标刷新；用6m/s参考速度与3m/s²估计制动距离抵消侧滑并提前转弯，仍通过原推进器施力。完整正常速度飞行与回归范围见 [避障试验场验证](Docs/Validation/2026-11-10-avoidance-lab.md)。
+**可编辑试验场：`Assets/Scenes/EnemyAvoidanceLab.unity`**。直接Play，选择Single wall / U trap / Slalom / Narrow gate或Run all；保存真实Finch舰、固定目标、摄像机及四组障碍。显示距离、速度、时间、障碍接触；结果`Temp/EnemyAvoidanceLab/trials.json`新增turns，统计超过角度死区的驾驶航向变更（不含最初选向和速度制动）。到达仍按水平22m接敌阈值，90秒超时；碰撞伤害系数0，仅重试时重置刚体。Debug开启，青色目标、紫色期望输入、白色实际输入和球扫命中用于观察；已移除蓝色NavMesh路径。
 
-EnemyController 接近目标、警戒返航时通过 NavMesh 地面走廊拐点生成水平驾驶意图，保留 ControlUnit/推进器施力、目标优先级、距离滞后、撤退/横移和近距离球扫避障。无需 NavMeshAgent，不直接修改 Transform。蓝色 Gizmos 线显示路径；导航投影距离、拐点容差和开关在 EnemyController Inspector 调整。路径经过高地时悬浮高度至少覆盖当前导航地表。它是地面走廊辅助飞行，不是完整三维空域寻路。
-
-Main、Siege、WorldLab 场景保存真实 EnemyNavigationWorld 组件；Main 持有探索/基地战 Additive 玩法的共享服务。默认舰队中心半径240m、垂直160m、3秒刷新、0.5m体素、最低2m净空半径，实际按最大自主舰碰撞范围扩大；混编舰队中的小舰也会使用该保守净空。运行时异步从静态碰撞生成导航，纳入建筑/地形变化，排除移动载具、动态碎片和触发器；重建期间使用旧网格，退出模拟/禁用释放。无覆盖时保留球扫回退，覆盖内不可达只接近可达边缘。大型舰队与流式世界性能尚需实际验证。制作入口 **Tools/HY-Sandbox/Combat/Install Enemy Navigation**，重复执行不覆盖已有参数。
-
-激光与实体炮塔共用炮口视线选敌：实墙、地形及其他单位遮挡目标，仅炮塔自身碰撞和触发器不遮挡，同组舰体/基地墙板仍遮挡；使用既有 hitLayers。可见驾驶舱仍优先，遮挡驾驶舱不妨碍选择其他可见模块。每个物理步检查当前目标，出现遮挡立即放弃锁定、撤销无目标功率请求，避免等索敌周期仍瞄准墙后敌人。
-
-验证入口：`Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs`；结果与具体范围见 [本轮验证](Docs/Validation/2026-11-10-navigation-combat.md)。源码主链见 [RuntimeFlow](Docs/RuntimeFlow.md)。
+炮塔实墙遮挡修复保留：从炮口验证视线，触发器和炮塔自身不遮挡，同组墙板及其他单位遮挡。每物理步丢弃被遮挡锁定。验证入口`Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs`保留原名称，现检查稳定驾驶、爬升、视线；与`AiUpgradePlayChecks`共同验证。当前结果见 [移除NavMesh验证](Docs/Validation/2026-11-10-local-steering.md)，旧避障/NavMesh记录仅为历史。
 
 ## 本轮界面与基地修复
 

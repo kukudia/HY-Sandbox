@@ -136086,62 +136086,6 @@ MonoBehaviour:
   - {fileID: 1281893685}
   baseEmission: {r: 0.03, g: 1.65, b: 2.7, a: 1}
   emissionPulse: 0.2
---- !u!1 &471842146
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 471842148}
-  - component: {fileID: 471842147}
-  m_Layer: 0
-  m_Name: Enemy Navigation
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &471842147
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 471842146}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6e0c0df955f13849984415cb99536c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyNavigationWorld
-  agentTypeId: 0
-  navigationRadius: 110
-  navigationHeight: 80
-  rebuildInterval: 3
-  voxelSize: 0.5
-  clearanceRadius: 2
-  clearanceHeight: 3
-  fitActiveShips: 1
-  shipClearancePadding: 2.5
-  geometryLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
---- !u!4 &471842148
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 471842146}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &471851700
 GameObject:
   m_ObjectHideFlags: 0
@@ -285595,12 +285539,11 @@ MonoBehaviour:
   obstacleLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  useNavMesh: 1
-  navigationSampleDistance: 40
-  navigationCornerDistance: 2
-  navigationSteeringInterval: 0.1
-  navigationCruiseSpeed: 6
-  navigationBrakingAcceleration: 3
+  cruiseSpeed: 6
+  directionHoldTime: 1.5
+  directionDeadZone: 12
+  avoidanceSideHoldTime: 3
+  strafeSwitchInterval: 6
   preferObstacleClimb: 1
   climbLookAhead: 50
   maxObstacleClimb: 32
@@ -314765,7 +314708,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAvoidanceLab
   ship: {fileID: 965747889}
   target: {fileID: 1872626030}
-  navigation: {fileID: 471842147}
   layouts:
   - {fileID: 105266583}
   - {fileID: 598864318}
@@ -547470,12 +547412,11 @@ MonoBehaviour:
   obstacleLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  useNavMesh: 1
-  navigationSampleDistance: 40
-  navigationCornerDistance: 2
-  navigationSteeringInterval: 0.1
-  navigationCruiseSpeed: 6
-  navigationBrakingAcceleration: 3
+  cruiseSpeed: 6
+  directionHoldTime: 1.5
+  directionDeadZone: 12
+  avoidanceSideHoldTime: 3
+  strafeSwitchInterval: 6
   preferObstacleClimb: 1
   climbLookAhead: 50
   maxObstacleClimb: 32
@@ -623337,7 +623278,6 @@ SceneRoots:
   - {fileID: 1922641825}
   - {fileID: 855263712}
   - {fileID: 1074857791}
-  - {fileID: 471842148}
   - {fileID: 965747891}
   - {fileID: 1872626032}
   - {fileID: 50565479}
