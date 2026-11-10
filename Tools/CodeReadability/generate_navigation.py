@@ -1707,12 +1707,16 @@ def main():
             "E": "EnemyController.IsValidOpponent", "F": "EnemyController.CalculateDesiredMovement",
             "G": "ControlUnit.SetMovementInput", "H": "EnemyController.GetNavigationDirection",
             "I": "EnemyNavigationPath.TryGetDirection", "J": "EnemyController.ApplyObstacleAvoidance",
+            "K": "EnemyObstacleClimb.TryGetHeight", "L": "EnemyController.ConfigureHoverThrusters",
+            "M": "EnemyObstacleClimb.Blocked",
         },
         [
             "A -->|生成或经Attacker.RefreshTarget重新绑定| B",
             "C -->|目标更新周期| D", "D --> E", "C -->|有目标且到移动周期| F",
             "C -->|每物理步平滑| G",
             "F -->|接近目标| H", "C -->|警戒返航| H", "H --> I", "F --> J",
+            "H -->|先检查静态障碍翻越| K", "K -->|整舰上升与高处通道净空| M",
+            "C -->|决策后逐物理步应用高度| L", "K -.->|爬升期间减小前进并保持舰尾净空| L",
         ],
     )
     graph(

@@ -119,6 +119,11 @@ MonoBehaviour:
   navigationSteeringInterval: 0.1
   navigationCruiseSpeed: 6
   navigationBrakingAcceleration: 3
+  preferObstacleClimb: 1
+  climbLookAhead: 50
+  maxObstacleClimb: 32
+  obstacleClimbClearance: 3
+  climbForwardSpeedRatio: 0.15
   drawDebug: 1
   showDebugRanges: 1
   debugVectorLength: 8

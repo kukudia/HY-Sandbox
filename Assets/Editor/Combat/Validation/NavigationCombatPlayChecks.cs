@@ -45,6 +45,7 @@ public static class NavigationCombatPlayChecks
             BoxCollider wall = Box(root.transform, "Solid wall", new Vector3(0f, 3.5f, 0f), new Vector3(2f, 8f, 40f));
             Box(root.transform, "Ground", Vector3.down * 0.5f, new Vector3(120f, 1f, 140f));
             Physics.SyncTransforms();
+            CheckObstacleClimb(checks, root.transform, owner, wall);
             EnemyNavigationWorld world = root.AddComponent<EnemyNavigationWorld>();
             world.Rebuild();
             float timeout = Time.realtimeSinceStartup + 30f;
@@ -204,6 +205,63 @@ public static class NavigationCombatPlayChecks
             _ = SceneManager.UnloadSceneAsync(scene);
             PlayManager.instance.playMode = previousMode;
         }
+    }
+
+    private static void CheckObstacleClimb(List<string> checks, Transform root, ControlUnit owner, BoxCollider wall)
+    {
+        Type type = typeof(EnemyController).Assembly.GetType("EnemyObstacleClimb");
+        object climb = Activator.CreateInstance(type, true);
+        MethodInfo query = type.GetMethod("TryGetHeight", Instance);
+        MethodInfo clear = type.GetMethod("Clear", Instance);
+        object[] arguments =
+        {
+            owner,
+            Vector3.right,
+            4f,
+            50f,
+            32f,
+            3f,
+            (LayerMask)(~0),
+            0f
+        };
+        Check(
+            checks,
+            "Clear overhead prioritizes obstacle-top altitude with hull clearance",
+            (bool)query.Invoke(climb, arguments) && (float)arguments[7] >= wall.bounds.max.y + 3.4f);
+        owner.transform.localPosition = new Vector3(0f, 12f, 0f);
+        Physics.SyncTransforms();
+        Check(checks, "Climb altitude is held while hull crosses obstacle", (bool)query.Invoke(climb, arguments));
+        owner.transform.localPosition = new Vector3(6f, 12f, 0f);
+        Physics.SyncTransforms();
+        Check(
+            checks,
+            "Climb altitude releases after the whole hull clears obstacle",
+            !(bool)query.Invoke(climb, arguments));
+        owner.transform.localPosition = new Vector3(-20f, 1f, 0f);
+        Physics.SyncTransforms();
+        clear.Invoke(climb, null);
+        BoxCollider ceiling = Box(root, "Climb ceiling", new Vector3(-20f, 8f, 0f), new Vector3(10f, 1f, 10f));
+        Physics.SyncTransforms();
+        Check(
+            checks,
+            "Ceiling above hull rejects climb for horizontal navigation fallback",
+            !(bool)query.Invoke(climb, arguments));
+        ceiling.transform.localPosition = new Vector3(-5f, 11f, 0f);
+        Physics.SyncTransforms();
+        Check(checks, "Blocked elevated forward corridor rejects climb", !(bool)query.Invoke(climb, arguments));
+        Object.DestroyImmediate(ceiling.gameObject);
+        Physics.SyncTransforms();
+        arguments[4] = 2f;
+        Check(
+            checks,
+            "Obstacle above configured climb limit uses horizontal fallback",
+            !(bool)query.Invoke(climb, arguments));
+        arguments[4] = 32f;
+        wall.isTrigger = true;
+        Physics.SyncTransforms();
+        Check(checks, "Trigger and own hull do not request climb", !(bool)query.Invoke(climb, arguments));
+        wall.isTrigger = false;
+        Physics.SyncTransforms();
     }
 
     private static ControlUnit Unit(Transform root, string name, UnitFaction faction, Vector3 position)

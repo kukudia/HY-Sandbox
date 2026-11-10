@@ -2,6 +2,8 @@
 
 ## AI NavMesh 寻路与炮塔遮挡
 
+**遇障优先爬升**：EnemyController 默认先用完整舰体包围盒检查目标方向前方50m的静态障碍。有上升净空且高处前进通道畅通时，悬浮目标设为障碍顶端加舰体下沿偏移和3m净空；允许相对常规目标高度最多抬升32m。未到安全高度时前进参考速度降至15%，舰尾越过障碍后再恢复常规高度。有顶棚、过高障碍或高处通道被阻挡时继续NavMesh水平绕行。参数位于 **Obstacle Climb Priority**，不额外施力或修改刚体速度。源码：`EnemyObstacleClimb`；检查与实船记录见 [避障试验场验证](Docs/Validation/2026-11-10-avoidance-lab.md)。
+
 **避障试验场：`Assets/Scenes/EnemyAvoidanceLab.unity`**。打开后直接Play即可，无需菜单或玩家存档；保存真实Finch舰、静态目标、摄像机、供电/表现服务和四组可手改障碍。Game面板选择 **Single wall / U trap / Slalom / Narrow gate**，或 **Run all** 连续运行，显示时间、目标距离、速度和障碍接触数。到达按18m交战距离外加4m容差判定，默认每组90秒超时；测试专用碰撞伤害系数为0，真实碰撞、惯性、动力和供电保留。结果写`Temp/EnemyAvoidanceLab/trials.json`，重试只重置该试验舰的位置和速度，运行导航从不传送舰体。
 
 已开启 BlocksParent Prefab 的 **Draw Debug**、Main/Siege/WorldLab 的友敌AI开关，以及试验场Scene/Game Gizmos。蓝色路径、青色目标、紫色期望输入、白色平滑输入、球扫命中与法线用于调试。制作菜单 **Tools/HY-Sandbox/Combat/Create Avoidance Lab** 不覆盖现有试验场；**Enable AI Debug** 可重新应用开关。

@@ -40,6 +40,20 @@ public class EnemyController : MonoBehaviour
     private readonly EnemyNavigationPath navigationPath = new EnemyNavigationPath();
     private Rigidbody navigationBody;
     private bool followingNavigation;
+    [Header("Obstacle Climb Priority")]
+    [SerializeField, Tooltip("前方静态障碍有上方净空时，优先抬升越障，再考虑水平绕行。")]
+    private bool preferObstacleClimb = true;
+    [SerializeField, Min(1f)]
+    private float climbLookAhead = 50f;
+    [SerializeField, Min(1f), Tooltip("相对正常悬浮目标高度允许的最大额外爬升（米）。")]
+    private float maxObstacleClimb = 32f;
+    [SerializeField, Min(0.5f)]
+    private float obstacleClimbClearance = 3f;
+    [SerializeField, Range(0f, 1f), Tooltip("尚未爬到安全高度时的前进速度比例。")]
+    private float climbForwardSpeedRatio = 0.15f;
+    private readonly EnemyObstacleClimb obstacleClimb = new EnemyObstacleClimb();
+    private bool climbingObstacle;
+    private float obstacleHoverHeight;
     [Header("AI Debug")]
     [SerializeField, Tooltip("在 Scene / Game 的 Gizmos 中显示自主友舰和敌机的决策；玩家驾驶时隐藏。")]
     private bool drawDebug;
@@ -112,7 +126,6 @@ public class EnemyController : MonoBehaviour
             nextUpdateTime = Time.time + Mathf.Max(0.01f, updateInterval);
         }
 
-        ConfigureHoverThrusters();
         if (currentTarget == null)
         {
             if (Time.time >= nextMovementUpdateTime)
@@ -121,11 +134,13 @@ public class EnemyController : MonoBehaviour
                 Vector3 toGuard = guardAnchor != null ? guardAnchor.position - transform.position : Vector3.zero;
                 toGuard.y = 0f;
                 followingNavigation = false;
+                climbingObstacle = false;
                 navigationPath.Clear();
                 desiredMovementInput = toGuard.sqrMagnitude > 100f ? ApplyObstacleAvoidance(GetNavigationDirection(guardAnchor.position, toGuard.normalized), toGuard) : Vector3.zero;
                 nextMovementUpdateTime = Time.time + GetMovementInterval();
             }
 
+            ConfigureHoverThrusters();
             unit.SetMovementInput(Vector3.MoveTowards(
                 unit.MovementInput,
                 desiredMovementInput,
@@ -142,6 +157,7 @@ public class EnemyController : MonoBehaviour
             nextMovementUpdateTime = Time.time + GetMovementInterval();
         }
 
+        ConfigureHoverThrusters();
         Vector3 smoothedInput = Vector3.MoveTowards(
             unit.MovementInput,
             desiredMovementInput,
@@ -152,13 +168,14 @@ public class EnemyController : MonoBehaviour
     private Vector3 CalculateDesiredMovement(Vector3 flatDirection)
     {
         followingNavigation = false;
+        climbingObstacle = false;
         navigationPath.Clear();
         float distance = flatDirection.magnitude;
         Vector3 desiredMove = Vector3.zero;
         if (currentTarget == priorityTarget || distance <= detectionRange)
         {
             Vector3 approach = GetNavigationDirection(currentTarget.transform.position, flatDirection.normalized);
-            if (distance > desiredDistance || (followingNavigation && navigationPath.NeedsDetour))
+            if (climbingObstacle || distance > desiredDistance || (followingNavigation && navigationPath.NeedsDetour))
             {
                 // 隔墙的近处目标也必须先绕墙，不能仅因直线距离短而停下横移。
                 desiredMove = approach;
@@ -180,6 +197,26 @@ public class EnemyController : MonoBehaviour
 
     private Vector3 GetNavigationDirection(Vector3 destination, Vector3 fallback)
     {
+        climbingObstacle = preferObstacleClimb && unit.hoverFlightController != null && obstacleClimb.TryGetHeight(
+            unit,
+            fallback,
+            GetBaseHoverHeight(),
+            Mathf.Min(climbLookAhead, Vector3.Distance(transform.position, destination)),
+            maxObstacleClimb,
+            obstacleClimbClearance,
+            obstacleLayers,
+            out obstacleHoverHeight);
+        if (climbingObstacle)
+        {
+            followingNavigation = false;
+            navigationPath.Clear();
+            float speedRatio = transform.position.y < obstacleHoverHeight - 1f ? climbForwardSpeedRatio : 1f;
+            Vector3 climbVelocity = navigationBody != null ? Vector3.ProjectOnPlane(navigationBody.linearVelocity, Vector3.up) : Vector3.zero;
+            return Vector3.ClampMagnitude(
+                (fallback * navigationCruiseSpeed * speedRatio - climbVelocity) / Mathf.Max(1f, navigationCruiseSpeed * 0.5f),
+                1f);
+        }
+
         Vector3 direction = Vector3.zero;
         followingNavigation = useNavMesh && navigationPath.TryGetDirection(
             gameObject.scene,
@@ -305,6 +342,8 @@ public class EnemyController : MonoBehaviour
         desiredMovementInput = Vector3.zero;
         nextUpdateTime = 0f;
         _hasIdleHoverHeight = false;
+        climbingObstacle = false;
+        obstacleClimb.Clear();
         nextMovementUpdateTime = 0f;
     }
 
@@ -324,23 +363,10 @@ public class EnemyController : MonoBehaviour
         if (unit.hoverFlightController != null)
         {
             unit.hoverFlightController.setHeight = true;
-            float targetHeight;
-            if (currentTarget != null)
+            float targetHeight = GetBaseHoverHeight();
+            if (climbingObstacle)
             {
-                _hasIdleHoverHeight = false;
-                targetHeight = currentTarget.transform.position.y + targetHoverHeightOffset;
-            }
-            else
-            {
-                // Hold a fixed altitude when the target is lost. Following the falling root
-                // would move the setpoint every tick, preventing the controller from recovering.
-                if (!_hasIdleHoverHeight)
-                {
-                    _idleHoverHeight = unit.hoverFlightController.CurrentHeight;
-                    _hasIdleHoverHeight = true;
-                }
-
-                targetHeight = _idleHoverHeight;
+                targetHeight = Mathf.Max(targetHeight, obstacleHoverHeight);
             }
 
             if (followingNavigation)
@@ -350,6 +376,24 @@ public class EnemyController : MonoBehaviour
 
             unit.hoverFlightController.targetHoverHeight = Mathf.Max(2f, targetHeight);
         }
+    }
+
+    private float GetBaseHoverHeight()
+    {
+        if (currentTarget != null)
+        {
+            _hasIdleHoverHeight = false;
+            return currentTarget.transform.position.y + targetHoverHeightOffset;
+        }
+
+        // 丢失目标时固定高度，不能追随下落中的根节点不断降低设定值。
+        if (!_hasIdleHoverHeight)
+        {
+            _idleHoverHeight = unit.hoverFlightController != null ? unit.hoverFlightController.CurrentHeight : transform.position.y;
+            _hasIdleHoverHeight = true;
+        }
+
+        return _idleHoverHeight;
     }
 
     private Vector3 GetStrafeDirection(Vector3 flatDirection)
