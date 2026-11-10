@@ -106,7 +106,7 @@ internal sealed class BlockConnections
                 ReleaseRuntimePair(connector);
                 if (connectorObject != null && releasedObjects.Add(connectorObject))
                 {
-                    Object.Destroy(connectorObject);
+                    DestroyConnectorVisual(connectorObject);
                 }
 
                 continue;
@@ -118,7 +118,7 @@ internal sealed class BlockConnections
             }
 
             ReleaseConnectionReferences(connectorObject);
-            Object.Destroy(connectorObject);
+            DestroyConnectorVisual(connectorObject);
         }
     }
 
@@ -279,7 +279,20 @@ internal sealed class BlockConnections
                 ReleaseConnectionReferences(connectorObject);
             }
 
+            DestroyConnectorVisual(connectorObject);
+        }
+    }
+
+    private static void DestroyConnectorVisual(GameObject connectorObject)
+    {
+        // 可编辑舰体制作同样会重建连接；Edit Mode 必须立即释放被替代的视觉对象。
+        if (Application.isPlaying)
+        {
             Object.Destroy(connectorObject);
+        }
+        else
+        {
+            Object.DestroyImmediate(connectorObject);
         }
     }
 

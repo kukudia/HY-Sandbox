@@ -31,7 +31,14 @@ public class EnemyController : MonoBehaviour
     private float navigationSampleDistance = 40f;
     [SerializeField, Min(0.1f)]
     private float navigationCornerDistance = 2f;
+    [SerializeField, Min(0.05f), Tooltip("导航/局部避障驾驶刷新周期（秒）；不提高目标扫描频率。")]
+    private float navigationSteeringInterval = 0.1f;
+    [SerializeField, Min(1f), Tooltip("导航参考速度（米/秒）；用于侧滑补偿与弯前制动，不直接改写刚体。")]
+    private float navigationCruiseSpeed = 6f;
+    [SerializeField, Min(0.1f), Tooltip("NavMesh 导航时允许的弯前减速度估计（米/秒²）。")]
+    private float navigationBrakingAcceleration = 3f;
     private readonly EnemyNavigationPath navigationPath = new EnemyNavigationPath();
+    private Rigidbody navigationBody;
     private bool followingNavigation;
     [Header("AI Debug")]
     [SerializeField, Tooltip("在 Scene / Game 的 Gizmos 中显示自主友舰和敌机的决策；玩家驾驶时隐藏。")]
@@ -67,6 +74,7 @@ public class EnemyController : MonoBehaviour
     private void Awake()
     {
         unit = GetComponent<ControlUnit>();
+        navigationBody = GetComponent<Rigidbody>();
     }
 
     private void FixedUpdate()
@@ -115,7 +123,7 @@ public class EnemyController : MonoBehaviour
                 followingNavigation = false;
                 navigationPath.Clear();
                 desiredMovementInput = toGuard.sqrMagnitude > 100f ? ApplyObstacleAvoidance(GetNavigationDirection(guardAnchor.position, toGuard.normalized), toGuard) : Vector3.zero;
-                nextMovementUpdateTime = Time.time + Mathf.Max(0.05f, movementUpdateInterval);
+                nextMovementUpdateTime = Time.time + GetMovementInterval();
             }
 
             unit.SetMovementInput(Vector3.MoveTowards(
@@ -131,7 +139,7 @@ public class EnemyController : MonoBehaviour
         {
             debugProbeCount = 0;
             desiredMovementInput = CalculateDesiredMovement(flatDirection);
-            nextMovementUpdateTime = Time.time + Mathf.Max(0.05f, movementUpdateInterval);
+            nextMovementUpdateTime = Time.time + GetMovementInterval();
         }
 
         Vector3 smoothedInput = Vector3.MoveTowards(
@@ -180,7 +188,25 @@ public class EnemyController : MonoBehaviour
             Mathf.Max(1f, navigationSampleDistance),
             Mathf.Max(0.1f, navigationCornerDistance),
             out direction);
-        return followingNavigation ? direction : fallback;
+        if (!followingNavigation || navigationBody == null)
+        {
+            return followingNavigation ? direction : fallback;
+        }
+
+        // 推进器只接受意图；侧滑用反向意图抵消，拐点前预留制动距离，不传送/钳制速度。
+        Vector3 velocity = Vector3.ProjectOnPlane(navigationBody.linearVelocity, Vector3.up);
+        float speed = Mathf.Min(
+            navigationCruiseSpeed,
+            Mathf.Sqrt(2f * navigationBrakingAcceleration * Mathf.Max(0f, navigationPath.SteeringDistance - 0.5f)));
+        Vector3 correction = direction * speed - velocity;
+        return correction.sqrMagnitude > 0.04f ? Vector3.ClampMagnitude(correction / Mathf.Max(1f, navigationCruiseSpeed * 0.5f), 1f) : Vector3.zero;
+    }
+
+    private float GetMovementInterval()
+    {
+        return Mathf.Max(
+            0.05f,
+            useNavMesh ? Mathf.Min(movementUpdateInterval, navigationSteeringInterval) : movementUpdateInterval);
     }
 
     public void SetGuardAnchor(Transform anchor, float radius)

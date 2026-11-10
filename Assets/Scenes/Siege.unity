@@ -30864,8 +30864,8 @@ MonoBehaviour:
   connectionLineWidth: 0.055
   connectionDashLength: 0.35
   connectionDashScrollSpeed: 0.45
-  showFriendlyAI: 0
-  showEnemyAI: 0
+  showFriendlyAI: 1
+  showEnemyAI: 1
   statusIconRoot: {fileID: 445319039}
 --- !u!114 &1686364037
 MonoBehaviour:
@@ -35756,6 +35756,8 @@ MonoBehaviour:
   voxelSize: 0.5
   clearanceRadius: 2
   clearanceHeight: 3
+  fitActiveShips: 1
+  shipClearancePadding: 2.5
   geometryLayers:
     serializedVersion: 2
     m_Bits: 4294967295

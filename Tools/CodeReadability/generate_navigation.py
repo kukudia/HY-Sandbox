@@ -1723,10 +1723,23 @@ def main():
          "E": "EnemyNavigationWorld.Find", "F": "Turret.FixedUpdate",
          "G": "Turret.RefreshTarget", "H": "TurretTargetSelector.ConfigureVisibility",
          "I": "TurretTargetSelector.HasLineOfSight", "J": "TurretTargetSelector.FindNearestTarget",
-         "K": "EnemyNavigationWorld.OnDisable"},
+         "K": "EnemyNavigationWorld.OnDisable", "L": "EnemyNavigationWorld.CalculateClearanceRadius"},
         ["A -->|模拟运行且到刷新周期| B", "A -->|退出模拟| C", "K --> C",
          "D --> E", "B -.->|异步更新共享数据| D", "F --> G", "G --> H",
-         "G -->|当前锁定即时遮挡验证| I", "G -->|索敌周期| J", "J -->|候选距离筛选后| I"],
+         "G -->|当前锁定即时遮挡验证| I", "G -->|索敌周期| J", "J -->|候选距离筛选后| I", "B -->|自主舰碰撞范围与安全余量| L"],
+    )
+    graph(
+        "EnemyController 可编辑避障试验场",
+        "源码推导：EnemyAvoidanceLabAuthoring.Create 保存舰体、静态目标、服务、四套互斥障碍与摄像机；EnableDebug 保存根Prefab和玩法场景调试开关。EnemyAvoidanceLab.Start 接入PlayManager和真实推进器，ResetTrial仅在新试次重置刚体/意图并重烘焙；正常运行不写舰体位姿或外加推力。FixedUpdate记录位移/距离/超时；EnemyAvoidanceContact只计数实体障碍接触。BeginSuite连续运行四布局，结果写Temp。EnemyController按导航驾驶周期提交侧滑抵消和弯前制动意图，目标扫描仍独立降频。",
+        {"A": "EnemyAvoidanceLabAuthoring.Create", "B": "EnemyAvoidanceLabAuthoring.EnableDebug",
+         "C": "EnemyAvoidanceLab.Start", "D": "EnemyAvoidanceLab.ResetTrial",
+         "E": "EnemyAvoidanceLab.FixedUpdate", "F": "EnemyAvoidanceLab.BeginSuite",
+         "G": "EnemyAvoidanceContact.OnCollisionEnter", "H": "EnemyAvoidanceLab.RecordContact",
+         "I": "EnemyController.GetNavigationDirection", "J": "EnemyNavigationPath.TryGetDirection",
+         "K": "EnemyController.GetMovementInterval", "L": "EnemyNavigationWorld.Rebuild"},
+        ["A -.->|保存可编辑场景| C", "B -.->|序列化调试配置| I", "C --> D", "F --> D",
+         "D --> L", "E -->|到达或超时后切下一布局| D", "G --> H",
+         "I --> J", "K -.->|驾驶采样周期| I"],
     )
     graph(
         "友敌 AI 调试绘制",

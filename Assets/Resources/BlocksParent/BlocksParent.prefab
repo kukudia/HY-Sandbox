@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f21b2e181334d6cbfe39c7548fe1adb, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   targetSwitchDistanceRatio: 0.85
   detectionRange: 150
@@ -113,7 +113,13 @@ MonoBehaviour:
   obstacleLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  drawDebug: 0
+  useNavMesh: 1
+  navigationSampleDistance: 40
+  navigationCornerDistance: 2
+  navigationSteeringInterval: 0.1
+  navigationCruiseSpeed: 6
+  navigationBrakingAcceleration: 3
+  drawDebug: 1
   showDebugRanges: 1
   debugVectorLength: 8
 --- !u!114 &6677930216384983083
@@ -126,7 +132,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 739bd11e327f127449ea64229d936483, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FragmentLifetime
 --- !u!114 &7491236639626960534
 MonoBehaviour:
@@ -138,7 +144,7 @@ MonoBehaviour:
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a83a0be8c35302648af39c6447ac22d3, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DetachedPartSmokeTrail
   effectLifetime: 6
   minimumSpeed: 0.7
@@ -159,5 +165,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0fae08ac63693f94d9243548ad294a6f, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AbnormalImpulseBodyProbe

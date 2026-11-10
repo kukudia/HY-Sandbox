@@ -10,6 +10,10 @@ internal sealed class EnemyNavigationPath
     private NavMeshPath path;
     private Vector3[] corners = new Vector3[32];
     private int cornerCount;
+    internal float SteeringDistance
+    {
+        get; private set;
+    }
     internal bool NeedsDetour
     {
         get; private set;
@@ -30,10 +34,17 @@ internal sealed class EnemyNavigationPath
         direction = Vector3.zero;
         cornerCount = 0;
         NeedsDetour = false;
+        SteeringDistance = 0f;
         EnemyNavigationWorld world = EnemyNavigationWorld.Find(scene);
         if (world == null)
         {
             return false;
+        }
+
+        if (!world.IsReady)
+        {
+            NeedsDetour = true;
+            return true;
         }
 
         path ??= new NavMeshPath();
@@ -78,9 +89,17 @@ internal sealed class EnemyNavigationPath
             Vector3 offset = corners[i] - position;
             offset.y = 0f;
             SurfaceHeight = Mathf.Max(start.position.y, corners[i].y);
-            if (offset.sqrMagnitude > cornerDistance * cornerDistance)
+            // 距离容差不能直接跳过凸墙角：只有下一段在膨胀网格上可直达才允许切换。
+            bool canSkip = i + 1 < cornerCount && !NavMesh.Raycast(start.position, corners[i + 1], out _, filter);
+            if (i == cornerCount - 1 && offset.sqrMagnitude <= cornerDistance * cornerDistance)
             {
-                direction = offset.normalized;
+                return true;
+            }
+
+            if (offset.sqrMagnitude > cornerDistance * cornerDistance || !canSkip)
+            {
+                SteeringDistance = offset.magnitude;
+                direction = SteeringDistance > 0.15f ? offset.normalized : Vector3.zero;
                 return true;
             }
         }
@@ -93,6 +112,7 @@ internal sealed class EnemyNavigationPath
         cornerCount = 0;
         NeedsDetour = false;
         SurfaceHeight = 0f;
+        SteeringDistance = 0f;
     }
 
     internal void Draw(float height)

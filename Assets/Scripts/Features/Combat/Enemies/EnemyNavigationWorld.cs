@@ -21,6 +21,10 @@ public sealed class EnemyNavigationWorld : MonoBehaviour
     private float clearanceRadius = 2f;
     [SerializeField, Min(0.1f)]
     private float clearanceHeight = 3f;
+    [SerializeField, Tooltip("按本物理场景中自主舰船的真实水平碰撞范围提高净空，避免宽舰体贴墙。")]
+    private bool fitActiveShips = true;
+    [SerializeField, Min(0f)]
+    private float shipClearancePadding = 2.5f;
     [SerializeField]
     private LayerMask geometryLayers = ~0;
     private static readonly List<EnemyNavigationWorld> Worlds = new List<EnemyNavigationWorld>();
@@ -31,6 +35,10 @@ public sealed class EnemyNavigationWorld : MonoBehaviour
     private NavMeshDataInstance instance;
     private AsyncOperation build;
     private float nextBuildTime;
+    public float BuiltClearanceRadius
+    {
+        get; private set;
+    }
     public int AgentTypeId => agentTypeId;
     public bool IsReady => instance.valid;
 
@@ -133,7 +141,8 @@ public sealed class EnemyNavigationWorld : MonoBehaviour
 
         settings.overrideVoxelSize = true;
         settings.voxelSize = Mathf.Max(0.1f, voxelSize);
-        settings.agentRadius = Mathf.Max(0.1f, clearanceRadius);
+        settings.agentRadius = CalculateClearanceRadius();
+        BuiltClearanceRadius = settings.agentRadius;
         settings.agentHeight = Mathf.Max(0.1f, clearanceHeight);
         if (data == null)
         {
@@ -142,6 +151,40 @@ public sealed class EnemyNavigationWorld : MonoBehaviour
         }
 
         build = NavMeshBuilder.UpdateNavMeshDataAsync(data, settings, sources, bounds);
+    }
+
+    private float CalculateClearanceRadius()
+    {
+        float radius = Mathf.Max(0.1f, clearanceRadius);
+        if (!fitActiveShips)
+        {
+            return radius;
+        }
+
+        foreach (ControlUnit unit in ControlUnit.RuntimeUnits)
+        {
+            EnemyController controller = unit != null ? unit.GetComponent<EnemyController>() : null;
+            if (controller == null || !controller.isActiveAndEnabled || !unit.HasValidCockpit || unit.gameObject.scene.GetPhysicsScene() != gameObject.scene.GetPhysicsScene())
+            {
+                continue;
+            }
+
+            foreach (Collider collider in unit.GetComponentsInChildren<Collider>())
+            {
+                if (!collider.enabled || collider.isTrigger || collider.attachedRigidbody != unit.GetComponent<Rigidbody>())
+                {
+                    continue;
+                }
+
+                Bounds bounds = collider.bounds;
+                Vector3 offset = bounds.center - unit.transform.position;
+                float x = Mathf.Abs(offset.x) + bounds.extents.x;
+                float z = Mathf.Abs(offset.z) + bounds.extents.z;
+                radius = Mathf.Max(radius, Mathf.Sqrt(x * x + z * z) + shipClearancePadding);
+            }
+        }
+
+        return radius;
     }
 
     private void CollectSources(Bounds bounds)

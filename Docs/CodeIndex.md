@@ -57,6 +57,7 @@ HY-Sandbox/
 │   │   │       ├── BuildPalettePlayProbe.cs
 │   │   │       └── WorldBuildingFootprintChecks.cs
 │   │   ├── Combat/
+│   │   │   ├── EnemyAvoidanceLabAuthoring.cs
 │   │   │   ├── EnemyNavigationAuthoring.cs
 │   │   │   ├── Interface/
 │   │   │   │   ├── CombatHudSetup.cs
@@ -297,6 +298,8 @@ HY-Sandbox/
 │           │   │   ├── ExplosionPropagation.cs
 │           │   │   └── SalvageCleanupSession.cs
 │           │   ├── Enemies/
+│           │   │   ├── EnemyAvoidanceContact.cs
+│           │   │   ├── EnemyAvoidanceLab.cs
 │           │   │   ├── EnemyBlueprintFactory.cs
 │           │   │   ├── EnemyController.cs
 │           │   │   ├── EnemyIdentity.cs
@@ -1083,6 +1086,21 @@ HY-Sandbox/
 | WorldBuildingFootprintChecks | [`void Check(List<string> checks, string label, bool condition)`](../Assets/Editor/Building/Validation/WorldBuildingFootprintChecks.cs#L191) | private static |
 | WorldBuildingFootprintChecks | [`void CheckCondition(bool condition, string label)`](../Assets/Editor/Building/Validation/WorldBuildingFootprintChecks.cs#L197) | private static |
 | WorldBuildingFootprintChecks | [`string Save(string phase, List<string> checks)`](../Assets/Editor/Building/Validation/WorldBuildingFootprintChecks.cs#L205) | private static |
+
+## Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs
+
+// 职责：制作独立避障场景及持久化AI调试开关；不覆盖用户方块表和蓝图。 // 入口：Create() / EnableDebug()；重用既有服务配置，保存真实舰体和可编辑障碍布局。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyAvoidanceLabAuthoring | [`void Create()`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L13) | public static |
+| EnemyAvoidanceLabAuthoring | [`void FrameLab()`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L172) | public static |
+| EnemyAvoidanceLabAuthoring | [`void RefreshPresentation()`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L185) | public static |
+| EnemyAvoidanceLabAuthoring | [`Material LabMaterial(string name, Color color)`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L208) | private static |
+| EnemyAvoidanceLabAuthoring | [`void EnableDebug()`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L223) | public static |
+| EnemyAvoidanceLabAuthoring | [`void SetDebug(Scene scene)`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L273) | private static |
+| EnemyAvoidanceLabAuthoring | [`void Set(UnityEngine.Object owner, string field, object value)`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L282) | private static |
+| EnemyAvoidanceLabAuthoring | [`void Box(string name, Transform parent, Vector3 position, Vector3 size, Material material)`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L302) | private static |
 
 ## Assets/Editor/Combat/EnemyNavigationAuthoring.cs
 
@@ -3492,6 +3510,27 @@ HY-Sandbox/
 | DestroyManager | [`void ScheduleDistantGroupCleanup(ControlUnit unit, Transform reference, float maxDistance)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L177) | public |
 | DestroyManager | [`void EndSalvageSession()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L182) | public |
 
+## Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceContact.cs
+
+// 职责：试验舰的碰撞计数，不对运动、伤害或生产AI施加修正。 // 入口：OnCollisionEnter()；仅对试验布局的实体障碍记数，过滤地面。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyAvoidanceContact | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceContact.cs#L9) | private |
+
+## Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs
+
+// 职责：驱动可编辑避障试验场，复用真实 EnemyController、供电与推进器，记录飞行结果。 // 入口：Start() / ResetTrial()；Inspector选择布局，Game面板可切换或重试，不读写玩家存档。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyAvoidanceLab | [`void Start()`](../Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs#L41) | private |
+| EnemyAvoidanceLab | [`void ResetTrial()`](../Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs#L53) | public |
+| EnemyAvoidanceLab | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs#L97) | private |
+| EnemyAvoidanceLab | [`void RecordContact()`](../Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs#L131) | public |
+| EnemyAvoidanceLab | [`void BeginSuite()`](../Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs#L139) | public |
+| EnemyAvoidanceLab | [`void OnGUI()`](../Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs#L147) | private |
+
 ## Assets/Scripts/Features/Combat/Enemies/EnemyBlueprintFactory.cs
 
 // 职责：保留敌机生成公开入口；所有阵营共用ModularUnitFactory恢复模块与物理归属。 // 入口：IsValidBlueprint() / Spawn()；现有据点和普通刷怪调用者保持兼容。
@@ -3507,23 +3546,24 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| EnemyController | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L59) | private |
-| EnemyController | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L67) | private |
-| EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L72) | private |
-| EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L144) | private |
-| EnemyController | [`Vector3 GetNavigationDirection(Vector3 destination, Vector3 fallback)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L173) | private |
-| EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L186) | public |
-| EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L194) | public |
-| EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L201) | private |
-| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L252) | private |
-| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L267) | private |
-| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L285) | private |
-| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L329) | private |
-| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L342) | private |
-| EnemyController | [`Vector3 ProbeObstacle(Vector3 direction, float weight)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L362) | private |
-| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L471) | private |
-| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L476) | private |
-| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L525) | private static |
+| EnemyController | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L66) | private |
+| EnemyController | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L74) | private |
+| EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L80) | private |
+| EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L152) | private |
+| EnemyController | [`Vector3 GetNavigationDirection(Vector3 destination, Vector3 fallback)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L181) | private |
+| EnemyController | [`float GetMovementInterval()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L205) | private |
+| EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L212) | public |
+| EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L220) | public |
+| EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L227) | private |
+| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L278) | private |
+| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L293) | private |
+| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L311) | private |
+| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L355) | private |
+| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L368) | private |
+| EnemyController | [`Vector3 ProbeObstacle(Vector3 direction, float weight)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L388) | private |
+| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L497) | private |
+| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L502) | private |
+| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L551) | private static |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs
 
@@ -3541,9 +3581,9 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| EnemyNavigationPath | [`bool TryGetDirection( Scene scene, Vector3 position, Vector3 destination, float sampleDistance, float cornerDistance, out Vector3 direction)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPath.cs#L22) | internal |
-| EnemyNavigationPath | [`void Clear()`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPath.cs#L91) | internal |
-| EnemyNavigationPath | [`void Draw(float height)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPath.cs#L98) | internal |
+| EnemyNavigationPath | [`bool TryGetDirection( Scene scene, Vector3 position, Vector3 destination, float sampleDistance, float cornerDistance, out Vector3 direction)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPath.cs#L26) | internal |
+| EnemyNavigationPath | [`void Clear()`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPath.cs#L110) | internal |
+| EnemyNavigationPath | [`void Draw(float height)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPath.cs#L118) | internal |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs
 
@@ -3551,13 +3591,14 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| EnemyNavigationWorld | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L37) | private |
-| EnemyNavigationWorld | [`EnemyNavigationWorld Find(Scene scene)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L43) | public static |
-| EnemyNavigationWorld | [`void Update()`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L56) | private |
-| EnemyNavigationWorld | [`void Rebuild()`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L84) | public |
-| EnemyNavigationWorld | [`void CollectSources(Bounds bounds)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L147) | private |
-| EnemyNavigationWorld | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L176) | private |
-| EnemyNavigationWorld | [`void Release()`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L182) | private |
+| EnemyNavigationWorld | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L45) | private |
+| EnemyNavigationWorld | [`EnemyNavigationWorld Find(Scene scene)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L51) | public static |
+| EnemyNavigationWorld | [`void Update()`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L64) | private |
+| EnemyNavigationWorld | [`void Rebuild()`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L92) | public |
+| EnemyNavigationWorld | [`float CalculateClearanceRadius()`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L156) | private |
+| EnemyNavigationWorld | [`void CollectSources(Bounds bounds)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L190) | private |
+| EnemyNavigationWorld | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L219) | private |
+| EnemyNavigationWorld | [`void Release()`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L225) | private |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs
 
@@ -5381,15 +5422,16 @@ HY-Sandbox/
 | BlockConnections | [`Connector FindMatchingConnector(Block otherBlock, Connector connector, bool requireAvailable = true)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L210) | private |
 | BlockConnections | [`void ConnectTo(Connector connector, Block otherBlock, Connector otherConnector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L232) | private |
 | BlockConnections | [`void ClearConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L259) | private |
-| BlockConnections | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L288) | internal |
-| BlockConnections | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L316) | internal |
-| BlockConnections | [`void RestoreParticipation()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L362) | internal |
-| BlockConnections | [`void ReleaseRuntimePair(Connector connector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L381) | private |
-| BlockConnections | [`void CollectRuntimeNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L407) | internal |
-| BlockConnections | [`void RefreshRuntimePoseIfReady()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L429) | internal |
-| BlockConnections | [`void InvalidateRuntimeLinks()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L434) | internal |
-| BlockConnections | [`void CaptureRuntimePose()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L439) | private |
-| BlockConnections | [`int ConnectionMask()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L444) | private static |
+| BlockConnections | [`void DestroyConnectorVisual(GameObject connectorObject)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L286) | private static |
+| BlockConnections | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L301) | internal |
+| BlockConnections | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L329) | internal |
+| BlockConnections | [`void RestoreParticipation()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L375) | internal |
+| BlockConnections | [`void ReleaseRuntimePair(Connector connector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L394) | private |
+| BlockConnections | [`void CollectRuntimeNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L420) | internal |
+| BlockConnections | [`void RefreshRuntimePoseIfReady()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L442) | internal |
+| BlockConnections | [`void InvalidateRuntimeLinks()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L447) | internal |
+| BlockConnections | [`void CaptureRuntimePose()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L452) | private |
+| BlockConnections | [`int ConnectionMask()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L457) | private static |
 
 ## Assets/Scripts/Features/Simulation/Diagnostics/SimulationWorkMetrics.cs
 
