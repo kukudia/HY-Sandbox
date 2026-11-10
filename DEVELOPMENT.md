@@ -1,5 +1,15 @@
 # HY-Sandbox 开发入口
 
+## AI NavMesh 寻路与炮塔遮挡
+
+EnemyController 接近目标、警戒返航时通过 NavMesh 地面走廊拐点生成水平驾驶意图，保留 ControlUnit/推进器施力、目标优先级、距离滞后、撤退/横移和近距离球扫避障。无需 NavMeshAgent，不直接修改 Transform。蓝色 Gizmos 线显示路径；导航投影距离、拐点容差和开关在 EnemyController Inspector 调整。路径经过高地时悬浮高度至少覆盖当前导航地表。它是地面走廊辅助飞行，不是完整三维空域寻路。
+
+Main、Siege、WorldLab 场景保存真实 EnemyNavigationWorld 组件；Main 持有探索/基地战 Additive 玩法的共享服务。默认舰队中心半径240m、垂直160m、3秒刷新、0.5m体素、2m净空半径，可按舰体和性能调参。运行时异步从静态碰撞生成导航，纳入建筑/地形变化，排除移动载具、动态碎片和触发器；重建期间使用旧网格，退出模拟/禁用释放。无覆盖时保留球扫回退，覆盖内不可达只接近可达边缘。大型舰艇仍需提高净空并实际飞行调试。制作入口 **Tools/HY-Sandbox/Combat/Install Enemy Navigation**，重复执行不覆盖已有参数。
+
+激光与实体炮塔共用炮口视线选敌：实墙、地形及其他单位遮挡目标，仅炮塔自身碰撞和触发器不遮挡，同组舰体/基地墙板仍遮挡；使用既有 hitLayers。可见驾驶舱仍优先，遮挡驾驶舱不妨碍选择其他可见模块。每个物理步检查当前目标，出现遮挡立即放弃锁定、撤销无目标功率请求，避免等索敌周期仍瞄准墙后敌人。
+
+验证入口：`Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs`；结果与具体范围见 [本轮验证](Docs/Validation/2026-11-10-navigation-combat.md)。源码主链见 [RuntimeFlow](Docs/RuntimeFlow.md)。
+
 ## 本轮界面与基地修复
 
 下拉列表统一保存足够行高、文字留白与深色高对比模板；主菜单及现有自有场景/Prefab均应用相同规则。制作入口 **Tools/HY-Sandbox/UI/Repair dropdown templates**。基地编辑隐藏普通建筑据点表单及其遮挡区域，结构建造距离独立可调（默认150m），进入时恢复建造输入，避免沿用载具15m距离与自由镜头状态导致无法放置。菜单72项、基地战48项、普通建筑73项真实Play回归、迁移6项保护检查通过；范围见 [本轮验证](Docs/Validation/2026-11-09-base-menu-fixes.md)。

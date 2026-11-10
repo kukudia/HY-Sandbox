@@ -106,7 +106,8 @@ public abstract class Turret : MonoBehaviour
 
     private void RefreshTarget()
     {
-        if (_target != null && (!_target.isActiveAndEnabled || _target.faction != GetEffectiveTargetFaction() || _target.gameObject.scene != gameObject.scene || !_target.IsOperational || !_target.IsSimulationActive || _targetDurability == null || !_targetDurability.isActiveAndEnabled || _targetDurability.currentDurability <= 0f || _targetDurability.GetComponentInParent<ControlUnit>() != _target || (_targetDurability.transform.position - transform.position).sqrMagnitude > range * range))
+        _targetSelector.ConfigureVisibility(GetMuzzlePosition(), hitLayers);
+        if (_target != null && (!_target.isActiveAndEnabled || _target.faction != GetEffectiveTargetFaction() || _target.gameObject.scene != gameObject.scene || !_target.IsOperational || !_target.IsSimulationActive || _targetDurability == null || !_targetDurability.isActiveAndEnabled || _targetDurability.currentDurability <= 0f || _targetDurability.GetComponentInParent<ControlUnit>() != _target || (_targetDurability.transform.position - GetMuzzlePosition()).sqrMagnitude > range * range || !_targetSelector.HasLineOfSight(Owner, _target, _targetDurability)))
         {
             _target = null;
             _targetDurability = null;

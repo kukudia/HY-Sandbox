@@ -1705,13 +1705,28 @@ def main():
             "A": "SiegeWaveDirector.Tick", "B": "EnemyController.SetPriorityTarget",
             "C": "EnemyController.FixedUpdate", "D": "EnemyController.FindNearestOpponent",
             "E": "EnemyController.IsValidOpponent", "F": "EnemyController.CalculateDesiredMovement",
-            "G": "ControlUnit.SetMovementInput",
+            "G": "ControlUnit.SetMovementInput", "H": "EnemyController.GetNavigationDirection",
+            "I": "EnemyNavigationPath.TryGetDirection", "J": "EnemyController.ApplyObstacleAvoidance",
         },
         [
             "A -->|生成或经Attacker.RefreshTarget重新绑定| B",
             "C -->|目标更新周期| D", "D --> E", "C -->|有目标且到移动周期| F",
             "C -->|每物理步平滑| G",
+            "F -->|接近目标| H", "C -->|警戒返航| H", "H --> I", "F --> J",
         ],
+    )
+    graph(
+        "共享运行时导航与炮塔视线",
+        "源码推导：Main、Siege、WorldLab 显式保存 EnemyNavigationWorld。运行时按舰队中心在有限区域异步重烘焙静态碰撞，过滤移动载具/碎片/触发器；旧网格在重建时继续可用，退出模拟或禁用则取消并释放。EnemyNavigationPath 用同一 Agent Type 的地面走廊生成水平驾驶意图与地表高度；缺少覆盖回退球扫，覆盖内断路停在可达边缘。Turret 每物理步从炮口验证当前锁定，索敌周期只选择可见敌对模块；仅炮塔自身碰撞忽略，同组墙板、其他单位和世界实墙遮挡，触发器忽略，掩码与武器命中一致。",
+        {"A": "EnemyNavigationWorld.Update", "B": "EnemyNavigationWorld.Rebuild",
+         "C": "EnemyNavigationWorld.Release", "D": "EnemyNavigationPath.TryGetDirection",
+         "E": "EnemyNavigationWorld.Find", "F": "Turret.FixedUpdate",
+         "G": "Turret.RefreshTarget", "H": "TurretTargetSelector.ConfigureVisibility",
+         "I": "TurretTargetSelector.HasLineOfSight", "J": "TurretTargetSelector.FindNearestTarget",
+         "K": "EnemyNavigationWorld.OnDisable"},
+        ["A -->|模拟运行且到刷新周期| B", "A -->|退出模拟| C", "K --> C",
+         "D --> E", "B -.->|异步更新共享数据| D", "F --> G", "G --> H",
+         "G -->|当前锁定即时遮挡验证| I", "G -->|索敌周期| J", "J -->|候选距离筛选后| I"],
     )
     graph(
         "友敌 AI 调试绘制",

@@ -100,6 +100,17 @@ public static class AiUpgradePlayChecks
                 hits.Length > 16 && denseAvoidance.sqrMagnitude > 0.01f);
             ai.enabled = false;
             first.gameObject.SetActive(true);
+            // 后续测试重组/修复，不应被前面的实体避障墙遮住目标。
+            wall.SetActive(false);
+            foreach (Transform child in root.transform)
+            {
+                if (child.name.StartsWith("Dense hull ", StringComparison.Ordinal))
+                {
+                    child.gameObject.SetActive(false);
+                }
+            }
+
+            Physics.SyncTransforms();
             Type selectorType = typeof(Turret).Assembly.GetType("TurretTargetSelector");
             object selector = Activator.CreateInstance(selectorType, Instance, null, new object[] { owner.transform }, null);
             MethodInfo select = selectorType.GetMethod("FindNearestTarget", Instance);

@@ -1,5 +1,5 @@
 // 职责：为敌机与自主友舰选择敌对目标并生成驾驶意图；阵营和玩家驾驶权分别判断。
-// 入口：FixedUpdate()；按固定周期更新目标和避障意图，逐物理步平滑输入。
+// 入口：FixedUpdate()；NavMesh 拐点导引与局部避障生成意图，逐物理步平滑输入。
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -24,6 +24,15 @@ public class EnemyController : MonoBehaviour
     public float sideProbeAngle = 35f;
     public float targetHoverHeightOffset = 3f;
     public LayerMask obstacleLayers = ~0;
+    [Header("NavMesh Navigation")]
+    [SerializeField, Tooltip("使用场景 EnemyNavigationWorld 的地面走廊；推进器仍负责物理运动。")]
+    private bool useNavMesh = true;
+    [SerializeField, Min(1f), Tooltip("允许悬浮舰船投影到地面 NavMesh 的距离（米）。")]
+    private float navigationSampleDistance = 40f;
+    [SerializeField, Min(0.1f)]
+    private float navigationCornerDistance = 2f;
+    private readonly EnemyNavigationPath navigationPath = new EnemyNavigationPath();
+    private bool followingNavigation;
     [Header("AI Debug")]
     [SerializeField, Tooltip("在 Scene / Game 的 Gizmos 中显示自主友舰和敌机的决策；玩家驾驶时隐藏。")]
     private bool drawDebug;
@@ -103,7 +112,9 @@ public class EnemyController : MonoBehaviour
                 debugProbeCount = 0;
                 Vector3 toGuard = guardAnchor != null ? guardAnchor.position - transform.position : Vector3.zero;
                 toGuard.y = 0f;
-                desiredMovementInput = toGuard.sqrMagnitude > 100f ? ApplyObstacleAvoidance(toGuard.normalized, toGuard) : Vector3.zero;
+                followingNavigation = false;
+                navigationPath.Clear();
+                desiredMovementInput = toGuard.sqrMagnitude > 100f ? ApplyObstacleAvoidance(GetNavigationDirection(guardAnchor.position, toGuard.normalized), toGuard) : Vector3.zero;
                 nextMovementUpdateTime = Time.time + Mathf.Max(0.05f, movementUpdateInterval);
             }
 
@@ -132,13 +143,17 @@ public class EnemyController : MonoBehaviour
 
     private Vector3 CalculateDesiredMovement(Vector3 flatDirection)
     {
+        followingNavigation = false;
+        navigationPath.Clear();
         float distance = flatDirection.magnitude;
         Vector3 desiredMove = Vector3.zero;
         if (currentTarget == priorityTarget || distance <= detectionRange)
         {
-            if (distance > desiredDistance)
+            Vector3 approach = GetNavigationDirection(currentTarget.transform.position, flatDirection.normalized);
+            if (distance > desiredDistance || (followingNavigation && navigationPath.NeedsDetour))
             {
-                desiredMove = flatDirection.normalized;
+                // 隔墙的近处目标也必须先绕墙，不能仅因直线距离短而停下横移。
+                desiredMove = approach;
             }
             else if (distance < retreatDistance)
             {
@@ -153,6 +168,19 @@ public class EnemyController : MonoBehaviour
         }
 
         return desiredMove;
+    }
+
+    private Vector3 GetNavigationDirection(Vector3 destination, Vector3 fallback)
+    {
+        Vector3 direction = Vector3.zero;
+        followingNavigation = useNavMesh && navigationPath.TryGetDirection(
+            gameObject.scene,
+            transform.position,
+            destination,
+            Mathf.Max(1f, navigationSampleDistance),
+            Mathf.Max(0.1f, navigationCornerDistance),
+            out direction);
+        return followingNavigation ? direction : fallback;
     }
 
     public void SetGuardAnchor(Transform anchor, float radius)
@@ -245,6 +273,8 @@ public class EnemyController : MonoBehaviour
         }
 
         debugProbeCount = 0;
+        followingNavigation = false;
+        navigationPath.Clear();
         currentTarget = null;
         desiredMovementInput = Vector3.zero;
         nextUpdateTime = 0f;
@@ -285,6 +315,11 @@ public class EnemyController : MonoBehaviour
                 }
 
                 targetHeight = _idleHoverHeight;
+            }
+
+            if (followingNavigation)
+            {
+                targetHeight = Mathf.Max(targetHeight, navigationPath.SurfaceHeight + Mathf.Max(2f, targetHoverHeightOffset));
             }
 
             unit.hoverFlightController.targetHoverHeight = Mathf.Max(2f, targetHeight);
@@ -474,6 +509,7 @@ public class EnemyController : MonoBehaviour
         Gizmos.DrawRay(origin, desiredMovementInput * debugVectorLength);
         Gizmos.color = Color.white;
         Gizmos.DrawRay(origin, unit.MovementInput * debugVectorLength);
+        navigationPath.Draw(origin.y);
         for (int i = 0; i < debugProbeCount; i++)
         {
             Gizmos.color = debugProbeNormals[i] == Vector3.zero ? Color.green : Color.red;

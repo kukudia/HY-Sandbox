@@ -57,6 +57,7 @@ HY-Sandbox/
 │   │   │       ├── BuildPalettePlayProbe.cs
 │   │   │       └── WorldBuildingFootprintChecks.cs
 │   │   ├── Combat/
+│   │   │   ├── EnemyNavigationAuthoring.cs
 │   │   │   ├── Interface/
 │   │   │   │   ├── CombatHudSetup.cs
 │   │   │   │   └── HealthHudPreview.cs
@@ -66,6 +67,7 @@ HY-Sandbox/
 │   │   │       ├── AiUpgradePlayChecks.cs
 │   │   │       ├── CombatHudPlayProbe.cs
 │   │   │       ├── EnemyBlueprintPoolChecks.cs
+│   │   │       ├── NavigationCombatPlayChecks.cs
 │   │   │       ├── TurretFlightPlayProbe.cs
 │   │   │       └── TurretRuntimeChecks.cs
 │   │   ├── Diagnostics/
@@ -298,6 +300,8 @@ HY-Sandbox/
 │           │   │   ├── EnemyBlueprintFactory.cs
 │           │   │   ├── EnemyController.cs
 │           │   │   ├── EnemyIdentity.cs
+│           │   │   ├── EnemyNavigationPath.cs
+│           │   │   ├── EnemyNavigationWorld.cs
 │           │   │   └── EnemySpawner.cs
 │           │   ├── Interface/
 │           │   │   └── CombatHud.cs
@@ -1080,6 +1084,14 @@ HY-Sandbox/
 | WorldBuildingFootprintChecks | [`void CheckCondition(bool condition, string label)`](../Assets/Editor/Building/Validation/WorldBuildingFootprintChecks.cs#L197) | private static |
 | WorldBuildingFootprintChecks | [`string Save(string phase, List<string> checks)`](../Assets/Editor/Building/Validation/WorldBuildingFootprintChecks.cs#L205) | private static |
 
+## Assets/Editor/Combat/EnemyNavigationAuthoring.cs
+
+// 职责：把共享导航组件保存到实际玩法场景，保留原场景层级与 Inspector 参数。 // 入口：Install() / Tools 菜单；已打开的脏场景拒绝保存，避免夹带手工改动。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyNavigationAuthoring | [`void Install()`](../Assets/Editor/Combat/EnemyNavigationAuthoring.cs#L11) | public static |
+
 ## Assets/Editor/Combat/Interface/CombatHudSetup.cs
 
 // 职责：配置主场景战斗 HUD 与界面反馈组件。 // 入口：UpgradeDualHealthHud() / Apply()。 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
@@ -1128,9 +1140,9 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | AiUpgradePlayChecks | [`string Run()`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L14) | public static |
-| AiUpgradePlayChecks | [`ControlUnit Unit(Transform root, string name, UnitFaction faction, Vector3 position)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L240) | private static |
-| AiUpgradePlayChecks | [`Durability Health(Transform root, string name, Vector3 position)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L256) | private static |
-| AiUpgradePlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L267) | private static |
+| AiUpgradePlayChecks | [`ControlUnit Unit(Transform root, string name, UnitFaction faction, Vector3 position)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L251) | private static |
+| AiUpgradePlayChecks | [`Durability Health(Transform root, string name, Vector3 position)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L267) | private static |
+| AiUpgradePlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L278) | private static |
 
 ## Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs
 
@@ -1156,6 +1168,18 @@ HY-Sandbox/
 | EnemyBlueprintPoolChecks | [`string Run()`](../Assets/Editor/Combat/Validation/EnemyBlueprintPoolChecks.cs#L23) | public static |
 | EnemyBlueprintPoolChecks | [`string ValidBlueprint()`](../Assets/Editor/Combat/Validation/EnemyBlueprintPoolChecks.cs#L131) | private static |
 | EnemyBlueprintPoolChecks | [`void Check(Report report, string label, bool passed)`](../Assets/Editor/Combat/Validation/EnemyBlueprintPoolChecks.cs#L139) | private static |
+
+## Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs
+
+// 职责：在隔离物理场景验证真实导航烘焙、绕墙驾驶意图与两种炮塔的遮挡锁定。 // 入口：Run()；仅 Play Mode，结果写入 Temp/NavigationCombat，不修改玩家蓝图和场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| NavigationCombatPlayChecks | [`void Begin()`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L21) | public static |
+| NavigationCombatPlayChecks | [`Task<string> Run()`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L26) | public static async |
+| NavigationCombatPlayChecks | [`ControlUnit Unit(Transform root, string name, UnitFaction faction, Vector3 position)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L209) | private static |
+| NavigationCombatPlayChecks | [`BoxCollider Box(Transform root, string name, Vector3 position, Vector3 size)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L229) | private static |
+| NavigationCombatPlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L239) | private static |
 
 ## Assets/Editor/Combat/Validation/TurretFlightPlayProbe.cs
 
@@ -3479,26 +3503,27 @@ HY-Sandbox/
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyController.cs
 
-// 职责：为敌机与自主友舰选择敌对目标并生成驾驶意图；阵营和玩家驾驶权分别判断。 // 入口：FixedUpdate()；按固定周期更新目标和避障意图，逐物理步平滑输入。
+// 职责：为敌机与自主友舰选择敌对目标并生成驾驶意图；阵营和玩家驾驶权分别判断。 // 入口：FixedUpdate()；NavMesh 拐点导引与局部避障生成意图，逐物理步平滑输入。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| EnemyController | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L50) | private |
-| EnemyController | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L58) | private |
-| EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L63) | private |
-| EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L133) | private |
-| EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L158) | public |
-| EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L166) | public |
-| EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L173) | private |
-| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L224) | private |
-| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L239) | private |
-| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L255) | private |
-| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L294) | private |
-| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L307) | private |
-| EnemyController | [`Vector3 ProbeObstacle(Vector3 direction, float weight)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L327) | private |
-| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L436) | private |
-| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L441) | private |
-| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L489) | private static |
+| EnemyController | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L59) | private |
+| EnemyController | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L67) | private |
+| EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L72) | private |
+| EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L144) | private |
+| EnemyController | [`Vector3 GetNavigationDirection(Vector3 destination, Vector3 fallback)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L173) | private |
+| EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L186) | public |
+| EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L194) | public |
+| EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L201) | private |
+| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L252) | private |
+| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L267) | private |
+| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L285) | private |
+| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L329) | private |
+| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L342) | private |
+| EnemyController | [`Vector3 ProbeObstacle(Vector3 direction, float weight)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L362) | private |
+| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L471) | private |
+| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L476) | private |
+| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L525) | private static |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs
 
@@ -3509,6 +3534,30 @@ HY-Sandbox/
 | EnemyIdentity | [`void ReportDefeated()`](../Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs#L9) | public |
 | EnemyIdentity | [`void SetDisplayName(string displayName)`](../Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs#L26) | public |
 | EnemyIdentity | [`void SetSpawnMaxHealth(float maximum)`](../Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs#L31) | public |
+
+## Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPath.cs
+
+// 职责：把 NavMesh 地面走廊转换为物理舰船的水平驾驶方向，不使用 Agent 改写 Transform。 // 入口：TryGetDirection()；EnemyController 按移动决策周期重算，缺少导航覆盖时回退局部避障。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyNavigationPath | [`bool TryGetDirection( Scene scene, Vector3 position, Vector3 destination, float sampleDistance, float cornerDistance, out Vector3 direction)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPath.cs#L22) | internal |
+| EnemyNavigationPath | [`void Clear()`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPath.cs#L91) | internal |
+| EnemyNavigationPath | [`void Draw(float height)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPath.cs#L98) | internal |
+
+## Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs
+
+// 职责：在战斗区域异步生成共享 NavMesh；只采集静态碰撞，移动舰船交给局部避障。 // 入口：Update() / Rebuild()；组件显式保存在玩法场景，禁用时注销并释放导航数据。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyNavigationWorld | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L37) | private |
+| EnemyNavigationWorld | [`EnemyNavigationWorld Find(Scene scene)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L43) | public static |
+| EnemyNavigationWorld | [`void Update()`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L56) | private |
+| EnemyNavigationWorld | [`void Rebuild()`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L84) | public |
+| EnemyNavigationWorld | [`void CollectSources(Bounds bounds)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L147) | private |
+| EnemyNavigationWorld | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L176) | private |
+| EnemyNavigationWorld | [`void Release()`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationWorld.cs#L182) | private |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs
 
@@ -3650,16 +3699,16 @@ HY-Sandbox/
 | Turret | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L93) | protected virtual |
 | Turret | [`void StopWorking()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L98) | private |
 | Turret | [`void RefreshTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L107) | private |
-| Turret | [`void AimAndFire(Durability aimTarget)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L132) | private |
-| Turret | [`void AimAt(Vector3 worldDirection)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L151) | private |
-| Turret | [`void ResolveAimingRig()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L181) | private |
-| Turret | [`Vector3 GetMuzzlePosition()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L215) | protected |
-| Turret | [`Vector3 GetAimForward()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L226) | protected |
-| Turret | [`UnitFaction GetEffectiveTargetFaction()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L232) | protected |
-| Turret | [`Vector3 GetAimPosition(Durability target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L238) | protected virtual |
-| Turret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L243) | protected abstract |
-| Turret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L244) | protected virtual |
-| Turret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L248) | protected virtual |
+| Turret | [`void AimAndFire(Durability aimTarget)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L133) | private |
+| Turret | [`void AimAt(Vector3 worldDirection)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L152) | private |
+| Turret | [`void ResolveAimingRig()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L182) | private |
+| Turret | [`Vector3 GetMuzzlePosition()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L216) | protected |
+| Turret | [`Vector3 GetAimForward()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L227) | protected |
+| Turret | [`UnitFaction GetEffectiveTargetFaction()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L233) | protected |
+| Turret | [`Vector3 GetAimPosition(Durability target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L239) | protected virtual |
+| Turret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L244) | protected abstract |
+| Turret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L245) | protected virtual |
+| Turret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L249) | protected virtual |
 
 ## Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs
 
@@ -3680,13 +3729,15 @@ HY-Sandbox/
 
 ## Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs
 
-// 职责：从有效敌对组中选择范围内最近的伤害目标，支持玩家优先攻击敌方驾驶舱。 // 入口：FindNearestTarget()；由 Turret 按索敌周期调用，不依赖当前供电。 // 生命周期：共享单位当前物理步的层级快照，实时验证伤势、位置和归属；修复/重组使快照失效。
+// 职责：从炮口可见的敌对组中选择最近伤害目标，支持玩家优先攻击可见驾驶舱。 // 入口：FindNearestTarget()；由 Turret 按索敌周期调用，不依赖当前供电。 // 生命周期：共享单位当前物理步的层级快照，实时验证伤势、位置和归属；修复/重组使快照失效。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| TurretTargetSelector | [`ControlUnit FindNearestTarget( IReadOnlyList<ControlUnit> units, ControlUnit owner, UnitFaction faction, float range, bool prioritizeCockpit, out Durability nearestDurability)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L15) | internal |
-| TurretTargetSelector | [`Durability FindNearestDurability(ControlUnit unit, Vector3 origin, float nearestSqrDistance)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L97) | private |
-| TurretTargetSelector | [`Durability FindCockpitDurability(ControlUnit unit)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L120) | private |
+| TurretTargetSelector | [`void ConfigureVisibility(Vector3 origin, LayerMask hitLayers)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L20) | internal |
+| TurretTargetSelector | [`bool HasLineOfSight(ControlUnit owner, ControlUnit target, Durability durability)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L26) | internal |
+| TurretTargetSelector | [`ControlUnit FindNearestTarget( IReadOnlyList<ControlUnit> units, ControlUnit owner, UnitFaction faction, float range, bool prioritizeCockpit, out Durability nearestDurability)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L91) | internal |
+| TurretTargetSelector | [`Durability FindNearestDurability(ControlUnit unit, ControlUnit owner, Vector3 origin, float nearestSqrDistance)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L173) | private |
+| TurretTargetSelector | [`Durability FindCockpitDurability(ControlUnit unit)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L196) | private |
 
 ## Assets/Scripts/Features/Diagnostics/Bots/BotNavigationProbeDriver.cs
 
