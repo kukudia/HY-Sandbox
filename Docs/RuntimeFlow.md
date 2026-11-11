@@ -5575,12 +5575,12 @@ flowchart TD
 
 ## EnemyController 可编辑避障试验场
 
-源码推导：Editor保存十二种互斥布局，默认综合城区含六个可独立选择的起终点；自由相机预挂于场景，以非缩放时间移动，释放右键或失焦恢复鼠标。Panel采集试验操作；Lab复用蓝图目录和正式部署链。碰撞通过ControlUnit事件订阅。导航快照默认10Hz采样；操作和镜头变化写入会话日志，逐轮保存蓝图、几何、参数和结果；禁用时关闭文件并恢复时间设置。
+源码推导：Editor保存十二种互斥布局，默认双层综合城区含十个起终点及四组运动学障碍；高架层、连桥和运动参数均保存为真实场景对象。每轮重试复位障碍相位，FixedUpdate通过MovePosition/MoveRotation运动，暂停随物理停止，切换布局禁用并复位。自由相机使用非缩放时间。导航快照默认10Hz采样；逐轮保存蓝图、几何、运动参数和结果；禁用时关闭文件并恢复时间设置。
 
 ```mermaid
 flowchart TD
     A["EnemyAvoidanceLabAuthoring.UpgradeTestField()"]
-    click A "../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L215" "打开源码"
+    click A "../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L216" "打开源码"
     B["EnemyLabPanel.Draw()"]
     click B "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabPanel.cs#L149" "打开源码"
     C["EnemyAvoidanceLab.Start()"]
@@ -5588,37 +5588,37 @@ flowchart TD
     D["EnemyAvoidanceLab.ResetTrial()"]
     click D "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L263" "打开源码"
     E["EnemyAvoidanceLab.FixedUpdate()"]
-    click E "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L323" "打开源码"
+    click E "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L328" "打开源码"
     F["EnemyAvoidanceLab.BeginSuite()"]
-    click F "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L541" "打开源码"
+    click F "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L546" "打开源码"
     G["ControlUnit.OnCollisionEnter()"]
     click G "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L337" "打开源码"
     H["EnemyAvoidanceLab.OnShipCollision()"]
-    click H "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L498" "打开源码"
+    click H "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L503" "打开源码"
     I["EnemyAvoidanceLab.DeploySelected()"]
     click I "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L174" "打开源码"
     J["ModularUnitFactory.Spawn()"]
     click J "../Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs#L41" "打开源码"
     K["EnemyAvoidanceLab.Sample()"]
-    click K "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L356" "打开源码"
+    click K "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L361" "打开源码"
     L["EnemyLabRecorder.Sample()"]
-    click L "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L133" "打开源码"
+    click L "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L135" "打开源码"
     M["EnemyController.CaptureNavigation()"]
     click M "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L131" "打开源码"
     N["EnemyLabRecorder.Begin()"]
-    click N "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L74" "打开源码"
+    click N "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L75" "打开源码"
     O["EnemyLabPanel.PollInput()"]
     click O "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabPanel.cs#L30" "打开源码"
     P["EnemyLabRecorder.Event()"]
-    click P "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L127" "打开源码"
+    click P "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L129" "打开源码"
     Q["EnemyAvoidanceLab.FinishTrial()"]
-    click Q "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L462" "打开源码"
+    click Q "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L467" "打开源码"
     R["EnemyLabRecorder.Finish()"]
-    click R "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L141" "打开源码"
+    click R "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L143" "打开源码"
     S["EnemyAvoidanceLab.OnDisable()"]
-    click S "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L603" "打开源码"
+    click S "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L608" "打开源码"
     T["EnemyLabRecorder.Dispose()"]
-    click T "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L242" "打开源码"
+    click T "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L244" "打开源码"
     U["EnemyLabComplexAuthoring.Upgrade()"]
     click U "../Assets/Editor/Combat/EnemyLabComplexAuthoring.cs#L11" "打开源码"
     V["EnemyAvoidanceLab.SelectLocation()"]
@@ -5628,7 +5628,15 @@ flowchart TD
     X["EnemyLabCamera.SetFreeView()"]
     click X "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L37" "打开源码"
     Y["EnemyAvoidanceLab.UpdateTraceGradient()"]
-    click Y "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L410" "打开源码"
+    click Y "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L415" "打开源码"
+    Z["EnemyLabExpansionAuthoring.Upgrade()"]
+    click Z "../Assets/Editor/Combat/EnemyLabExpansionAuthoring.cs#L11" "打开源码"
+    AA["EnemyLabMovingObstacle.ResetMotion()"]
+    click AA "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L42" "打开源码"
+    AB["EnemyLabMovingObstacle.FixedUpdate()"]
+    click AB "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L52" "打开源码"
+    AC["EnemyLabMovingObstacle.OnDisable()"]
+    click AC "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L61" "打开源码"
     A -.->|保存真实场景| C
     C --> D
     B --> I
@@ -5653,9 +5661,13 @@ flowchart TD
     W -->|经RecordOperation| P
     X -->|经RecordOperation| P
     K -->|按累计路程将实时速度编码为深浅纹理| Y
+    Z -.->|保存高架层与动态组件| C
+    D -->|每轮相位复位| AA
+    D -.->|后续独立物理回调，无先后保证| AB
+    AC --> AA
 ```
 
-- [EnemyAvoidanceLabAuthoring.UpgradeTestField](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L215)
+- [EnemyAvoidanceLabAuthoring.UpgradeTestField](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L216)
 <!-- source: Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs|UpgradeTestField -->
 - [EnemyLabPanel.Draw](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabPanel.cs#L149)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabPanel.cs|Draw -->
@@ -5663,37 +5675,37 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs|Start -->
 - [EnemyAvoidanceLab.ResetTrial](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L263)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs|ResetTrial -->
-- [EnemyAvoidanceLab.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L323)
+- [EnemyAvoidanceLab.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L328)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs|FixedUpdate -->
-- [EnemyAvoidanceLab.BeginSuite](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L541)
+- [EnemyAvoidanceLab.BeginSuite](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L546)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs|BeginSuite -->
 - [ControlUnit.OnCollisionEnter](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L337)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|OnCollisionEnter -->
-- [EnemyAvoidanceLab.OnShipCollision](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L498)
+- [EnemyAvoidanceLab.OnShipCollision](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L503)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs|OnShipCollision -->
 - [EnemyAvoidanceLab.DeploySelected](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L174)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs|DeploySelected -->
 - [ModularUnitFactory.Spawn](../Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs#L41)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs|Spawn -->
-- [EnemyAvoidanceLab.Sample](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L356)
+- [EnemyAvoidanceLab.Sample](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L361)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs|Sample -->
-- [EnemyLabRecorder.Sample](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L133)
+- [EnemyLabRecorder.Sample](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L135)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs|Sample -->
 - [EnemyController.CaptureNavigation](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L131)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|CaptureNavigation -->
-- [EnemyLabRecorder.Begin](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L74)
+- [EnemyLabRecorder.Begin](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L75)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs|Begin -->
 - [EnemyLabPanel.PollInput](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabPanel.cs#L30)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabPanel.cs|PollInput -->
-- [EnemyLabRecorder.Event](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L127)
+- [EnemyLabRecorder.Event](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L129)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs|Event -->
-- [EnemyAvoidanceLab.FinishTrial](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L462)
+- [EnemyAvoidanceLab.FinishTrial](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L467)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs|FinishTrial -->
-- [EnemyLabRecorder.Finish](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L141)
+- [EnemyLabRecorder.Finish](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L143)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs|Finish -->
-- [EnemyAvoidanceLab.OnDisable](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L603)
+- [EnemyAvoidanceLab.OnDisable](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L608)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs|OnDisable -->
-- [EnemyLabRecorder.Dispose](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L242)
+- [EnemyLabRecorder.Dispose](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L244)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs|Dispose -->
 - [EnemyLabComplexAuthoring.Upgrade](../Assets/Editor/Combat/EnemyLabComplexAuthoring.cs#L11)
 <!-- source: Assets/Editor/Combat/EnemyLabComplexAuthoring.cs|Upgrade -->
@@ -5703,8 +5715,16 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs|Update -->
 - [EnemyLabCamera.SetFreeView](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L37)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs|SetFreeView -->
-- [EnemyAvoidanceLab.UpdateTraceGradient](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L410)
+- [EnemyAvoidanceLab.UpdateTraceGradient](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L415)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs|UpdateTraceGradient -->
+- [EnemyLabExpansionAuthoring.Upgrade](../Assets/Editor/Combat/EnemyLabExpansionAuthoring.cs#L11)
+<!-- source: Assets/Editor/Combat/EnemyLabExpansionAuthoring.cs|Upgrade -->
+- [EnemyLabMovingObstacle.ResetMotion](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L42)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs|ResetMotion -->
+- [EnemyLabMovingObstacle.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L52)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs|FixedUpdate -->
+- [EnemyLabMovingObstacle.OnDisable](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L61)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs|OnDisable -->
 
 ## 友敌 AI 调试绘制
 

@@ -59,6 +59,7 @@ HY-Sandbox/
 │   │   ├── Combat/
 │   │   │   ├── EnemyAvoidanceLabAuthoring.cs
 │   │   │   ├── EnemyLabComplexAuthoring.cs
+│   │   │   ├── EnemyLabExpansionAuthoring.cs
 │   │   │   ├── Interface/
 │   │   │   │   ├── CombatHudSetup.cs
 │   │   │   │   └── HealthHudPreview.cs
@@ -69,6 +70,7 @@ HY-Sandbox/
 │   │   │       ├── CombatHudPlayProbe.cs
 │   │   │       ├── EnemyBlueprintPoolChecks.cs
 │   │   │       ├── EnemyLabEfficiencyChecks.cs
+│   │   │       ├── EnemyLabExpansionChecks.cs
 │   │   │       ├── EnemyLabPlayChecks.cs
 │   │   │       ├── EnemyLabViewChecks.cs
 │   │   │       ├── NavigationCombatPlayChecks.cs
@@ -313,6 +315,7 @@ HY-Sandbox/
 │           │   │       ├── EnemyAvoidanceLab.cs
 │           │   │       ├── EnemyLabBlueprints.cs
 │           │   │       ├── EnemyLabCamera.cs
+│           │   │       ├── EnemyLabMovingObstacle.cs
 │           │   │       ├── EnemyLabPanel.cs
 │           │   │       └── EnemyLabRecorder.cs
 │           │   ├── Interface/
@@ -1103,16 +1106,16 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | EnemyAvoidanceLabAuthoring | [`void Create()`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L13) | public static |
-| EnemyAvoidanceLabAuthoring | [`void FrameLab()`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L170) | public static |
-| EnemyAvoidanceLabAuthoring | [`void AddRoofedTrial()`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L183) | public static |
-| EnemyAvoidanceLabAuthoring | [`void UpgradeTestField()`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L215) | public static |
-| EnemyAvoidanceLabAuthoring | [`LineRenderer TraceLine(Transform parent, string name, Color color)`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L339) | private static |
-| EnemyAvoidanceLabAuthoring | [`void RefreshPresentation()`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L358) | public static |
-| EnemyAvoidanceLabAuthoring | [`Material LabMaterial(string name, Color color)`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L381) | private static |
-| EnemyAvoidanceLabAuthoring | [`void EnableDebug()`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L396) | public static |
-| EnemyAvoidanceLabAuthoring | [`void SetDebug(Scene scene)`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L446) | private static |
-| EnemyAvoidanceLabAuthoring | [`void Set(UnityEngine.Object owner, string field, object value)`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L455) | private static |
-| EnemyAvoidanceLabAuthoring | [`void Box(string name, Transform parent, Vector3 position, Vector3 size, Material material)`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L475) | private static |
+| EnemyAvoidanceLabAuthoring | [`void FrameLab()`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L171) | public static |
+| EnemyAvoidanceLabAuthoring | [`void AddRoofedTrial()`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L184) | public static |
+| EnemyAvoidanceLabAuthoring | [`void UpgradeTestField()`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L216) | public static |
+| EnemyAvoidanceLabAuthoring | [`LineRenderer TraceLine(Transform parent, string name, Color color)`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L340) | private static |
+| EnemyAvoidanceLabAuthoring | [`void RefreshPresentation()`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L359) | public static |
+| EnemyAvoidanceLabAuthoring | [`Material LabMaterial(string name, Color color)`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L382) | private static |
+| EnemyAvoidanceLabAuthoring | [`void EnableDebug()`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L397) | public static |
+| EnemyAvoidanceLabAuthoring | [`void SetDebug(Scene scene)`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L447) | private static |
+| EnemyAvoidanceLabAuthoring | [`void Set(UnityEngine.Object owner, string field, object value)`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L456) | private static |
+| EnemyAvoidanceLabAuthoring | [`void Box(string name, Transform parent, Vector3 position, Vector3 size, Material material)`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L476) | private static |
 
 ## Assets/Editor/Combat/EnemyLabComplexAuthoring.cs
 
@@ -1125,6 +1128,18 @@ HY-Sandbox/
 | EnemyLabComplexAuthoring | [`Material MaterialAsset(string name, Color color)`](../Assets/Editor/Combat/EnemyLabComplexAuthoring.cs#L267) | private static |
 | EnemyLabComplexAuthoring | [`void Decoration(Transform root, string name, Vector3 position, Vector3 size, Material material)`](../Assets/Editor/Combat/EnemyLabComplexAuthoring.cs#L281) | private static |
 | EnemyLabComplexAuthoring | [`void Box(Transform root, string name, Vector3 position, Vector3 size, Material material)`](../Assets/Editor/Combat/EnemyLabComplexAuthoring.cs#L287) | private static |
+
+## Assets/Editor/Combat/EnemyLabExpansionAuthoring.cs
+
+// 职责：在既有综合城区上追加可编辑高架层、部署点和运动学障碍。 // 入口：Upgrade()菜单；只创建缺失分组，重复执行保留人工参数和布局。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyLabExpansionAuthoring | [`void Upgrade()`](../Assets/Editor/Combat/EnemyLabExpansionAuthoring.cs#L11) | public static |
+| EnemyLabExpansionAuthoring | [`void AddLocations(EnemyAvoidanceCourse course, Material material)`](../Assets/Editor/Combat/EnemyLabExpansionAuthoring.cs#L154) | private static |
+| EnemyLabExpansionAuthoring | [`void Moving( Transform root, string name, Vector3 position, Vector3 size, Vector3 travel, float period, float angle, Material material)`](../Assets/Editor/Combat/EnemyLabExpansionAuthoring.cs#L211) | private static |
+| EnemyLabExpansionAuthoring | [`Transform Group(Transform parent, string name)`](../Assets/Editor/Combat/EnemyLabExpansionAuthoring.cs#L236) | private static |
+| EnemyLabExpansionAuthoring | [`GameObject Box(Transform root, string name, Vector3 position, Vector3 size, Material material)`](../Assets/Editor/Combat/EnemyLabExpansionAuthoring.cs#L244) | private static |
 
 ## Assets/Editor/Combat/Interface/CombatHudSetup.cs
 
@@ -1211,6 +1226,18 @@ HY-Sandbox/
 | --- | --- | --- |
 | EnemyLabEfficiencyChecks | [`void Begin(string label)`](../Assets/Editor/Combat/Validation/EnemyLabEfficiencyChecks.cs#L33) | public static |
 | EnemyLabEfficiencyChecks | [`Task<string> RunCourses(string label)`](../Assets/Editor/Combat/Validation/EnemyLabEfficiencyChecks.cs#L43) | private static async |
+
+## Assets/Editor/Combat/Validation/EnemyLabExpansionChecks.cs
+
+// 职责：验证双层场地的持久资产、动态障碍物理运动及试验复位生命周期。 // 入口：ValidateSaved()用于Edit Mode；Begin()用于Play Mode，Pending返回实际检查结果。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyLabExpansionChecks | [`string ValidateSaved()`](../Assets/Editor/Combat/Validation/EnemyLabExpansionChecks.cs#L17) | public static |
+| EnemyLabExpansionChecks | [`void Begin()`](../Assets/Editor/Combat/Validation/EnemyLabExpansionChecks.cs#L60) | public static |
+| EnemyLabExpansionChecks | [`Task<string> Run()`](../Assets/Editor/Combat/Validation/EnemyLabExpansionChecks.cs#L65) | private static async |
+| EnemyLabExpansionChecks | [`void Check(List<string> checks, string label, bool condition)`](../Assets/Editor/Combat/Validation/EnemyLabExpansionChecks.cs#L161) | private static |
+| EnemyLabExpansionChecks | [`string Save(string file, List<string> checks)`](../Assets/Editor/Combat/Validation/EnemyLabExpansionChecks.cs#L170) | private static |
 
 ## Assets/Editor/Combat/Validation/EnemyLabPlayChecks.cs
 
@@ -3693,19 +3720,19 @@ HY-Sandbox/
 | EnemyAvoidanceLab | [`void BindShip(ControlUnit value)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L220) | private |
 | EnemyAvoidanceLab | [`void SelectLayout(int index)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L241) | public |
 | EnemyAvoidanceLab | [`void ResetTrial()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L263) | public |
-| EnemyAvoidanceLab | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L323) | private |
-| EnemyAvoidanceLab | [`void Sample()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L356) | private |
-| EnemyAvoidanceLab | [`void UpdateTraceGradient()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L410) | private |
-| EnemyAvoidanceLab | [`void FinishTrial(string reason)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L462) | private |
-| EnemyAvoidanceLab | [`void OnShipCollision(Collision collision)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L498) | private |
-| EnemyAvoidanceLab | [`void StopTrial()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L532) | public |
-| EnemyAvoidanceLab | [`void BeginSuite()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L541) | public |
-| EnemyAvoidanceLab | [`void SetGoal(Vector3 point)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L548) | public |
-| EnemyAvoidanceLab | [`void SetPaused(bool value)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L563) | public |
-| EnemyAvoidanceLab | [`void Update()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L570) | private |
-| EnemyAvoidanceLab | [`void OnGUI()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L575) | private |
-| EnemyAvoidanceLab | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L580) | private |
-| EnemyAvoidanceLab | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L603) | private |
+| EnemyAvoidanceLab | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L328) | private |
+| EnemyAvoidanceLab | [`void Sample()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L361) | private |
+| EnemyAvoidanceLab | [`void UpdateTraceGradient()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L415) | private |
+| EnemyAvoidanceLab | [`void FinishTrial(string reason)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L467) | private |
+| EnemyAvoidanceLab | [`void OnShipCollision(Collision collision)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L503) | private |
+| EnemyAvoidanceLab | [`void StopTrial()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L537) | public |
+| EnemyAvoidanceLab | [`void BeginSuite()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L546) | public |
+| EnemyAvoidanceLab | [`void SetGoal(Vector3 point)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L553) | public |
+| EnemyAvoidanceLab | [`void SetPaused(bool value)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L568) | public |
+| EnemyAvoidanceLab | [`void Update()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L575) | private |
+| EnemyAvoidanceLab | [`void OnGUI()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L580) | private |
+| EnemyAvoidanceLab | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L585) | private |
+| EnemyAvoidanceLab | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L608) | private |
 
 ## Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabBlueprints.cs
 
@@ -3731,6 +3758,20 @@ HY-Sandbox/
 | EnemyLabCamera | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L194) | private |
 | EnemyLabCamera | [`void OnApplicationFocus(bool focused)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L199) | private |
 
+## Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs
+
+// 职责：按可重复的周期驱动试验场运动学障碍，保留真实碰撞及暂停语义。 // 入口：OnEnable() / ResetMotion()重置相位；FixedUpdate()提交物理运动。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyLabMovingObstacle | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L20) | private |
+| EnemyLabMovingObstacle | [`void CaptureOrigin()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L25) | private |
+| EnemyLabMovingObstacle | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L37) | private |
+| EnemyLabMovingObstacle | [`void ResetMotion()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L42) | public |
+| EnemyLabMovingObstacle | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L52) | private |
+| EnemyLabMovingObstacle | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L61) | private |
+| EnemyLabMovingObstacle | [`void OnDrawGizmosSelected()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L69) | private |
+
 ## Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabPanel.cs
 
 // 职责：绘制试验场控制面板并采集限定场景内的键鼠操作，调用试验协调器。 // 入口：PollInput() / Draw()；普通对象，不动态补挂组件、不改玩家输入系统。
@@ -3748,15 +3789,15 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| EnemyLabRecorder | [`void Begin( string course, string blueprint, string json, EnemyController ai, Vector3 start, Vector3 goal, float interval)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L74) | public |
-| EnemyLabRecorder | [`void Event(string action, string detail)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L127) | public |
-| EnemyLabRecorder | [`EnemyNavigationSnapshot Sample(EnemyController ai)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L133) | public |
-| EnemyLabRecorder | [`void Finish(string json)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L141) | public |
-| EnemyLabRecorder | [`void EnsureSession()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L160) | private |
-| EnemyLabRecorder | [`void Write(Entry entry)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L183) | private |
-| EnemyLabRecorder | [`void Fail(Exception exception)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L217) | private |
-| EnemyLabRecorder | [`void CloseTrial()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L225) | private |
-| EnemyLabRecorder | [`void Dispose()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L242) | public |
+| EnemyLabRecorder | [`void Begin( string course, string blueprint, string json, EnemyController ai, Vector3 start, Vector3 goal, float interval)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L75) | public |
+| EnemyLabRecorder | [`void Event(string action, string detail)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L129) | public |
+| EnemyLabRecorder | [`EnemyNavigationSnapshot Sample(EnemyController ai)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L135) | public |
+| EnemyLabRecorder | [`void Finish(string json)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L143) | public |
+| EnemyLabRecorder | [`void EnsureSession()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L162) | private |
+| EnemyLabRecorder | [`void Write(Entry entry)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L185) | private |
+| EnemyLabRecorder | [`void Fail(Exception exception)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L219) | private |
+| EnemyLabRecorder | [`void CloseTrial()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L227) | private |
+| EnemyLabRecorder | [`void Dispose()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L244) | public |
 
 ## Assets/Scripts/Features/Combat/Interface/CombatHud.cs
 

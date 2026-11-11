@@ -274,6 +274,11 @@ public sealed class EnemyAvoidanceLab : MonoBehaviour
             layouts[i].SetActive(i == layoutIndex);
         }
 
+        foreach (EnemyLabMovingObstacle obstacle in layouts[layoutIndex].GetComponentsInChildren<EnemyLabMovingObstacle>())
+        {
+            obstacle.ResetMotion();
+        }
+
         controller.enabled = false;
         body.position = startPosition;
         body.rotation = Quaternion.LookRotation(Vector3.right);

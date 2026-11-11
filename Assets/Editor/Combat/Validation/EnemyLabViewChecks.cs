@@ -42,7 +42,7 @@ public static class EnemyLabViewChecks
             Check(
                 checks,
                 "Integrated obstacle district is available",
-                lab.LayoutCount >= 12 && lab.LocationCount == 6);
+                lab.LayoutCount >= 12 && lab.LocationCount == 10);
             lab.SetPaused(true);
             for (int i = 0; i < lab.LocationCount; i++)
             {

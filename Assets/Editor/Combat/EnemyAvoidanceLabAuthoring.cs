@@ -156,6 +156,7 @@ public static class EnemyAvoidanceLabAuthoring
             AddRoofedTrial();
             UpgradeTestField();
             EnemyLabComplexAuthoring.Upgrade();
+            EnemyLabExpansionAuthoring.Upgrade();
         }
         finally
         {

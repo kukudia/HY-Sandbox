@@ -43,7 +43,7 @@ internal sealed class EnemyLabRecorder : IDisposable
     [Serializable]
     private sealed class Metadata
     {
-        public int schema = 1;
+        public int schema = 2;
         public string utc;
         public string unity;
         public string course;
@@ -69,6 +69,7 @@ internal sealed class EnemyLabRecorder : IDisposable
         public Quaternion rotation;
         public Vector3 scale;
         public Bounds bounds;
+        public string motionSettings;
     }
 
     public void Begin(
@@ -103,9 +104,10 @@ internal sealed class EnemyLabRecorder : IDisposable
             var geometry = new System.Collections.Generic.List<Geometry>();
             foreach (Collider collider in UnityEngine.Object.FindObjectsByType<Collider>(FindObjectsInactive.Exclude))
             {
-                if (collider.gameObject.scene == ai.gameObject.scene && collider.attachedRigidbody == null && !collider.isTrigger)
+                EnemyLabMovingObstacle motion = collider.GetComponent<EnemyLabMovingObstacle>();
+                if (collider.gameObject.scene == ai.gameObject.scene && (collider.attachedRigidbody == null || motion != null) && !collider.isTrigger)
                 {
-                    geometry.Add(new Geometry { name = collider.name, position = collider.transform.position, rotation = collider.transform.rotation, scale = collider.transform.lossyScale, bounds = collider.bounds });
+                    geometry.Add(new Geometry { name = collider.name, position = collider.transform.position, rotation = collider.transform.rotation, scale = collider.transform.lossyScale, bounds = collider.bounds, motionSettings = motion != null ? JsonUtility.ToJson(motion) : null });
                 }
             }
 

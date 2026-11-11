@@ -117,6 +117,7 @@
     <Compile Include="Assets\Editor\Siege\Validation\Rules\SiegeTransientEffectChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Authoring\SiegeBaseBlueprintAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Buildings\SiegeBuildingGraphChecks.cs" />
+    <Compile Include="Assets\Editor\Combat\Validation\EnemyLabExpansionChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Interface\SiegeCombatFeedbackChecks.cs" />
     <Compile Include="Assets\Editor\Siege\SiegeConstructionPlayChecks.cs" />
     <Compile Include="Assets\Editor\Art\Validation\BlockArtValidation.cs" />
@@ -176,6 +177,7 @@
     <Compile Include="Assets\Editor\Architecture\ArchitecturePlayProbe.cs" />
     <Compile Include="Assets\Editor\Combat\Interface\HealthHudPreview.cs" />
     <Compile Include="Assets\Editor\Presentation\Camera\SceneCameraPreviewSync.cs" />
+    <Compile Include="Assets\Editor\Combat\EnemyLabExpansionAuthoring.cs" />
     <Compile Include="Assets\Editor\Art\Validation\BlockArtPlayProbe.cs" />
     <Compile Include="Assets\Editor\Architecture\FragmentRetentionChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Authoring\SiegeCommandHudAuthoring.cs" />

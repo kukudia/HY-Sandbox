@@ -1736,7 +1736,7 @@ def main():
     )
     graph(
         "EnemyController 可编辑避障试验场",
-        "源码推导：Editor保存十二种互斥布局，默认综合城区含六个可独立选择的起终点；自由相机预挂于场景，以非缩放时间移动，释放右键或失焦恢复鼠标。Panel采集试验操作；Lab复用蓝图目录和正式部署链。碰撞通过ControlUnit事件订阅。导航快照默认10Hz采样；操作和镜头变化写入会话日志，逐轮保存蓝图、几何、参数和结果；禁用时关闭文件并恢复时间设置。",
+        "源码推导：Editor保存十二种互斥布局，默认双层综合城区含十个起终点及四组运动学障碍；高架层、连桥和运动参数均保存为真实场景对象。每轮重试复位障碍相位，FixedUpdate通过MovePosition/MoveRotation运动，暂停随物理停止，切换布局禁用并复位。自由相机使用非缩放时间。导航快照默认10Hz采样；逐轮保存蓝图、几何、运动参数和结果；禁用时关闭文件并恢复时间设置。",
         {"A": "EnemyAvoidanceLabAuthoring.UpgradeTestField", "B": "EnemyLabPanel.Draw",
          "C": "EnemyAvoidanceLab.Start", "D": "EnemyAvoidanceLab.ResetTrial",
          "E": "EnemyAvoidanceLab.FixedUpdate", "F": "EnemyAvoidanceLab.BeginSuite",
@@ -1749,14 +1749,18 @@ def main():
          "S": "EnemyAvoidanceLab.OnDisable", "T": "EnemyLabRecorder.Dispose",
          "U": "EnemyLabComplexAuthoring.Upgrade", "V": "EnemyAvoidanceLab.SelectLocation",
          "W": "EnemyLabCamera.Update", "X": "EnemyLabCamera.SetFreeView",
-         "Y": "EnemyAvoidanceLab.UpdateTraceGradient"},
+         "Y": "EnemyAvoidanceLab.UpdateTraceGradient",
+         "Z": "EnemyLabExpansionAuthoring.Upgrade", "AA": "EnemyLabMovingObstacle.ResetMotion",
+         "AB": "EnemyLabMovingObstacle.FixedUpdate", "AC": "EnemyLabMovingObstacle.OnDisable"},
         ["A -.->|保存真实场景| C", "C --> D", "B --> I", "I --> J", "I --> D",
          "F -->|经SelectLayout| D", "D --> N", "E --> K", "K --> L", "L --> M",
          "G -.->|CollisionEntered事件| H", "H --> P", "O -->|经RecordOperation| P",
          "E --> Q", "Q --> R", "S --> Q", "S --> T",
          "U -.->|保存城区与相机| C", "B --> V", "V -->|经SetStart或SetGoal| D",
          "B --> X", "W -->|经RecordOperation| P", "X -->|经RecordOperation| P",
-         "K -->|按累计路程将实时速度编码为深浅纹理| Y"],
+         "K -->|按累计路程将实时速度编码为深浅纹理| Y",
+         "Z -.->|保存高架层与动态组件| C", "D -->|每轮相位复位| AA",
+         "D -.->|后续独立物理回调，无先后保证| AB", "AC --> AA"],
     )
     graph(
         "友敌 AI 调试绘制",
