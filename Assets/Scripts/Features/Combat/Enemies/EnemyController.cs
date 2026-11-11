@@ -37,6 +37,13 @@ public class EnemyController : MonoBehaviour
     private float strafeSwitchInterval = 6f;
     [SerializeField, Min(0.1f), Tooltip("按实际水平速度预测侧滑路径的时间（秒）；扫描至少覆盖下一次决策。")]
     private float avoidancePredictionTime = 1.5f;
+    [SerializeField, Min(10f), Tooltip("普通战斗航向衔接的最大角速度（度/秒），避免新航向直接要求反向急刹。")]
+    private float courseTurnRate = 90f;
+    [SerializeField, Min(0.1f), Tooltip("普通参考航速的变化率（米/秒²）；停止和紧急避障仍立即制动。")]
+    private float courseAcceleration = 6f;
+    [SerializeField, Min(0.1f), Tooltip("接近接敌半径时混入横移的距离（米）。")]
+    private float engagementBlendDistance = 8f;
+    private Vector3 courseVelocity;
     private Bounds avoidanceBounds;
     private float probeDistance;
     private Rigidbody movementBody;
@@ -99,6 +106,7 @@ public class EnemyController : MonoBehaviour
         nextUpdateTime = Time.time + phase * Mathf.Max(0.01f, updateInterval);
         nextMovementUpdateTime = 0f;
         steeringDirection = Vector3.zero;
+        courseVelocity = movementBody != null ? Vector3.ProjectOnPlane(movementBody.linearVelocity, Vector3.up) : Vector3.zero;
         SteeringChanges = 0;
         nextDirectionChange = 0f;
         nextStrafeChange = 0f;
@@ -197,7 +205,15 @@ public class EnemyController : MonoBehaviour
             if (climbingObstacle || distance > desiredDistance)
             {
                 // 翻越期间保持前进任务，不因进入接敌距离而切换横移。
-                desiredMove = approach;
+                if (climbingObstacle)
+                {
+                    desiredMove = approach;
+                }
+                else
+                {
+                    float blend = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(desiredDistance, desiredDistance + engagementBlendDistance, distance));
+                    desiredMove = Vector3.Slerp(GetStrafeDirection(flatDirection), approach, blend);
+                }
             }
             else if (distance < retreatDistance)
             {
@@ -237,7 +253,32 @@ public class EnemyController : MonoBehaviour
     private Vector3 GetVelocityInput()
     {
         Vector3 velocity = movementBody != null ? Vector3.ProjectOnPlane(movementBody.linearVelocity, Vector3.up) : Vector3.zero;
-        return Vector3.ClampMagnitude((desiredMovementInput * cruiseSpeed - velocity) / Mathf.Max(1f, cruiseSpeed * 0.5f), 1f);
+        Vector3 targetVelocity = desiredMovementInput * cruiseSpeed;
+        if (urgentAvoidance || targetVelocity.sqrMagnitude < 0.0001f)
+        {
+            // 危险和真正结束任务不能被平滑层延迟；无目标仍正常制动。
+            courseVelocity = targetVelocity;
+        }
+        else
+        {
+            float speed = Mathf.MoveTowards(
+                courseVelocity.magnitude,
+                targetVelocity.magnitude,
+                Mathf.Max(0.1f, courseAcceleration) * Time.fixedDeltaTime);
+            if (courseVelocity.sqrMagnitude < 0.0001f)
+            {
+                courseVelocity = targetVelocity.normalized * speed;
+            }
+            else
+            {
+                // 在水平面转弯并单独保持航速；两方向线性插值会在折返中穿过零速。
+                float angle = Vector3.SignedAngle(courseVelocity, targetVelocity, Vector3.up);
+                float step = Mathf.Clamp(angle, -courseTurnRate * Time.fixedDeltaTime, courseTurnRate * Time.fixedDeltaTime);
+                courseVelocity = Quaternion.AngleAxis(step, Vector3.up) * courseVelocity.normalized * speed;
+            }
+        }
+
+        return Vector3.ClampMagnitude((courseVelocity - velocity) / Mathf.Max(1f, cruiseSpeed * 0.5f), 1f);
     }
 
     private Vector3 StabilizeDirection(Vector3 candidate)
@@ -356,6 +397,7 @@ public class EnemyController : MonoBehaviour
         debugProbeCount = 0;
         currentTarget = null;
         desiredMovementInput = Vector3.zero;
+        courseVelocity = Vector3.zero;
         nextUpdateTime = 0f;
         _hasIdleHoverHeight = false;
         climbingObstacle = false;

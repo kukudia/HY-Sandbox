@@ -4,6 +4,8 @@
 
 EnemyController 已移除 NavMesh：删除运行时烘焙/路径类、四个场景中的导航组件、安装菜单和未使用的 AI Navigation 包。接近目标与警戒返航使用直接航向、优先爬升及整舰包围盒扫掠；没有全局路径搜索，封闭迷宫/无法翻越的凹形障碍可能停滞，需要布局上保留可飞越空间。
 
+**战斗航向连续衔接**（[验证记录](Docs/Validation/2026-11-11-continuous-combat-course.md)）：低频决策仍保持，但每个物理步将参考速度按水平角速度90°/s旋转至已接受的新航向，航速独立按6m/s²过渡，避免直线插值在折返中穿过零速；进入接敌距离前8m渐进混入横移。参数位于Stable Steering。停止任务或紧急避障直接使用新参考速度，不延迟制动；180°折返仍需实际推进能力完成转弯，不保证实际速度恒定。
+
 **降低变向次数与频率**：驾驶决策最低间隔0.5秒（之前导航0.1秒）；稳定方向至少保持1.5秒，忽略12°以内的小偏移；同一轮绕障保持侧向，脱离后3秒才重新选择；接敌横移换侧间隔6秒。近障紧急避让可跳过方向冷却。所有参数位于EnemyController的 **Stable Steering**，目标扫描独立，侧滑补偿与推进器输出仍每物理步执行，不能把反向制动输入当作航线换向。`movementUpdateInterval` Inspector 下限已与运行时 0.5s 一致；`MaxObstacleHits` 初始容量 32（EnemyObstacleClimb 的 BoxCast 缓冲 64）以减少密集场景的首次堆分配；`GetEntityId().GetHashCode()` 在 Awake 缓存为 `_entityHashCode`，避免每次移动决策重复求值。
 
 当前身位避障实现与验证见 [整舰避障验证](Docs/Validation/2026-11-11-hull-avoidance.md)。

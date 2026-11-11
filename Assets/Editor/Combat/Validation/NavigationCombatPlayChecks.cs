@@ -48,6 +48,7 @@ public static class NavigationCombatPlayChecks
             EnemyController ai = owner.gameObject.AddComponent<EnemyController>();
             ai.enabled = false;
             CheckStableSteering(checks, ai, owner);
+            CheckContinuousCourse(checks, ai);
             CheckHullAvoidance(checks, root.transform, owner, ai);
             Type selectorType = typeof(Turret).Assembly.GetType("TurretTargetSelector");
             object selector = Activator.CreateInstance(selectorType, Instance, null, new object[] { owner.transform }, null);
@@ -193,6 +194,46 @@ public static class NavigationCombatPlayChecks
             checks,
             "Steering rules do not teleport the unit",
             owner.transform.localPosition == new Vector3(-20f, 1f, 0f));
+    }
+
+    private static void CheckContinuousCourse(List<string> checks, EnemyController ai)
+    {
+        FieldInfo course = typeof(EnemyController).GetField("courseVelocity", Instance);
+        FieldInfo desired = typeof(EnemyController).GetField("desiredMovementInput", Instance);
+        FieldInfo urgent = typeof(EnemyController).GetField("urgentAvoidance", Instance);
+        MethodInfo input = typeof(EnemyController).GetMethod("GetVelocityInput", Instance);
+        urgent.SetValue(ai, false);
+        course.SetValue(ai, Vector3.right * 6f);
+        desired.SetValue(ai, Vector3.left);
+        input.Invoke(ai, null);
+        Vector3 next = (Vector3)course.GetValue(ai);
+        Check(checks, "Reverse course keeps reference speed instead of crossing zero", next.magnitude > 5.9f);
+        Check(
+            checks,
+            "Accepted heading turns gradually each physics step",
+            Vector3.Angle(Vector3.right, next) > 0.1f && Vector3.Angle(Vector3.right, next) <= 2f);
+        for (int i = 0; i < 110; i++)
+        {
+            input.Invoke(ai, null);
+        }
+
+        Check(
+            checks,
+            "Continuous course converges to the new heading",
+            Vector3.Angle(Vector3.left, (Vector3)course.GetValue(ai)) < 0.1f);
+        desired.SetValue(ai, Vector3.zero);
+        input.Invoke(ai, null);
+        Check(checks, "Ending movement does not delay braking", (Vector3)course.GetValue(ai) == Vector3.zero);
+        desired.SetValue(ai, Vector3.forward);
+        urgent.SetValue(ai, true);
+        input.Invoke(ai, null);
+        Check(
+            checks,
+            "Urgent avoidance bypasses course smoothing",
+            (Vector3)course.GetValue(ai) == Vector3.forward * 6f);
+        urgent.SetValue(ai, false);
+        course.SetValue(ai, Vector3.zero);
+        desired.SetValue(ai, Vector3.zero);
     }
 
     private static void CheckHullAvoidance(List<string> checks, Transform root, ControlUnit owner, EnemyController ai)
