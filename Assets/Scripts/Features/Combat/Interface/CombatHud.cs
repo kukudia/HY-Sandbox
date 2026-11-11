@@ -86,8 +86,23 @@ public sealed class CombatHud : MonoBehaviour
         }
 
         _kills++;
-        _killName.text = string.IsNullOrWhiteSpace(enemyName) ? "ENEMY DESTROYED" : enemyName;
-        _killCount.text = $"KILLS  {_kills:00}";
+        ShowNotification(string.IsNullOrWhiteSpace(enemyName) ? "ENEMY DESTROYED" : enemyName, $"KILLS  {_kills:00}");
+    }
+
+    public void ShowCombatKill(string victim, string attacker, string score)
+    {
+        if (!isActiveAndEnabled || PlayManager.instance == null || !PlayManager.instance.playMode)
+        {
+            return;
+        }
+
+        ShowNotification(string.IsNullOrEmpty(attacker) ? victim + " DESTROYED" : attacker + " → " + victim, score);
+    }
+
+    private void ShowNotification(string title, string score)
+    {
+        _killName.text = title;
+        _killCount.text = score;
         _killUntil = Time.unscaledTime + _killDuration;
         _killGroup.alpha = 0f;
         _killGroup.gameObject.SetActive(true);

@@ -68,6 +68,17 @@ public sealed class TurretProjectilePool : MonoBehaviour
         }
     }
 
+    public void ClearAll()
+    {
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(false);
+            Destroy(child.gameObject);
+        }
+
+        _idle.Clear();
+    }
+
     private void Update()
     {
         if (!ControlUnit.IsSceneSimulationActive(gameObject.scene) && (PlayManager.instance == null || !PlayManager.instance.playMode))

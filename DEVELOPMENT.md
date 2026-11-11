@@ -20,6 +20,8 @@ EnemyController 不依赖 NavMesh。接近目标与警戒返航优先使用上/�
 
 炮塔实墙遮挡修复保留：从炮口验证视线，触发器和炮塔自身不遮挡，同组墙板及其他单位遮挡。每物理步丢弃被遮挡锁定。验证入口`Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs`保留原名称，现检查稳定驾驶、爬升、视线；与`AiUpgradePlayChecks`共同验证。当前结果见 [移除NavMesh验证](Docs/Validation/2026-11-10-local-steering.md)，旧避障/NavMesh记录仅为历史。
 
+**自动随机3v3观战：`Assets/Scenes/Random3v3Arena.unity`**（[循环与验收](Docs/Validation/2026-11-11-random-3v3-arena.md)）。双层地图独立副本，进入Play自动为六槽随机抽取内置及EnemyBlueprints敌舰，蓝/红各三艘且均为AI；驾驶舱全灭判负，5秒后清除舰体/碎片/掉落/弹丸/活动特效，再随机补满六槽进入下一轮。保留自由相机姿态，动态障碍复位。复用Exploration击杀提示，加轮次、阵容与双方击杀信息；蓝队AI死亡由对局处理。15项配置与21项Play生命周期检查通过；完整自然胜负及所有随机蓝图组合未全量验证。
+
 ## 本轮界面与基地修复
 
 下拉列表统一保存足够行高、文字留白与深色高对比模板；主菜单及现有自有场景/Prefab均应用相同规则。制作入口 **Tools/HY-Sandbox/UI/Repair dropdown templates**。基地编辑隐藏普通建筑据点表单及其遮挡区域，结构建造距离独立可调（默认150m），进入时恢复建造输入，避免沿用载具15m距离与自由镜头状态导致无法放置。菜单72项、基地战48项、普通建筑73项真实Play回归、迁移6项保护检查通过；范围见 [本轮验证](Docs/Validation/2026-11-09-base-menu-fixes.md)。

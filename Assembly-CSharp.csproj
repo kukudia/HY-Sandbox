@@ -105,6 +105,7 @@
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\BeamFade.cs" />
     <Compile Include="Assets\Scripts\Features\World\Buildings\Presentation\WorldBuildingRenderCache.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Actions\GroupAction.cs" />
+    <Compile Include="Assets\Scripts\Features\Combat\Skirmish\SkirmishMatch.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BlueprintLoader.cs" />
     <Compile Include="Assets\Scripts\Features\World\Validation\OutpostSalvagePlayerChecks.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Units\Rack.cs" />
@@ -322,6 +323,7 @@
     <Compile Include="Assets\Layer Lab\Scripts\PanelView.cs" />
     <Compile Include="Assets\Scripts\Features\World\Buildings\Topology\WorldBuildingDamage.cs" />
     <Compile Include="Assets\Scripts\Features\Diagnostics\Physics\AbnormalImpulseBodyProbe.cs" />
+    <Compile Include="Assets\Scripts\Features\Combat\Skirmish\SkirmishHud.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Groups\RuntimeGroupBuilder.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Camera\CameraController.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Blocks\BlockStatusLight.cs" />

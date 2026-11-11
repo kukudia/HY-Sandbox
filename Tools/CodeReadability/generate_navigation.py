@@ -1763,6 +1763,25 @@ def main():
          "D -.->|后续独立物理回调，无先后保证| AB", "AC --> AA"],
     )
     graph(
+        "自动随机3v3观战",
+        "源码推导：独立场景保存双层地图副本、六个槽位、自由相机与共享探索击杀HUD。Start校验蓝图并自动生成两队各三艘AI。销毁主链在模块重组前按驾驶舱身份通知对局，避免玩家阵营AI死亡触发玩家失败；Update在同一步死亡处理后判定胜负/同时全灭并停止AI/武器。等待五个模拟秒后清除弹丸与活动特效并删除本轮新增根对象，等待Destroy完成再重新随机六槽位；保留地图与摄像机姿态。",
+        {"A": "SkirmishArenaAuthoring.Create", "B": "SkirmishMatch.Start",
+         "C": "SkirmishMatch.BeginRound", "D": "ModularUnitFactory.Spawn",
+         "E": "DestroyManager.DestroyGameObject", "F": "SkirmishMatch.NotifyCockpitDestroyed",
+         "G": "SkirmishMatch.Eliminate", "H": "SkirmishHud.ShowKill",
+         "I": "CombatHud.ShowCombatKill", "J": "CombatHud.ShowNotification",
+         "K": "SkirmishMatch.Update", "L": "SkirmishMatch.ClearAndRestart",
+         "M": "TurretProjectilePool.ClearAll", "N": "VfxEffectPool.ClearActive",
+         "O": "DestroyManager.EndSalvageSession", "P": "SkirmishHud.SetState",
+         "Q": "EnemyLabMovingObstacle.ResetMotion", "R": "EnemyLabCamera.Update",
+         "S": "CombatHud.ShowPlayerKill"},
+        ["A -.->|保存独立场景| B", "B --> C", "C --> D", "C --> Q",
+         "E -->|已登记驾驶舱| F", "F --> G", "G --> H", "H --> I", "I --> J",
+         "S -->|探索沿用原击杀累计| J", "K -->|失效驾驶舱兜底| G", "K --> P",
+         "K -.->|胜负结算等待5秒后启动协程| L", "L --> M", "L --> N", "L --> O",
+         "L -.->|等待旧对象Destroy结束| C", "B -.->|独立自由相机Update| R"],
+    )
+    graph(
         "友敌 AI 调试绘制",
         "源码推导：EnemyController 同时驱动友方自主舰和敌机。DebugManager 的友方/敌方开关可在场景中预配，EnemyController 保留逐实例 Draw Debug；启用后仅在模拟运行且未被玩家驾驶时绘制。FixedUpdate 的移动周期清空探测快照，ProbeObstacle 记录实际整舰BoxCast终点与有效法线；绘制只读快照，不重新查询物理或改变驾驶输入。禁用控制器清空快照。",
         {

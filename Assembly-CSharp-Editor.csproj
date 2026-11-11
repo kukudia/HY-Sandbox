@@ -75,6 +75,7 @@
     <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegePriorityTargetFlight.cs" />
     <Compile Include="Assets\Editor\Siege\Authoring\SiegeConstructionAuthoring.cs" />
     <Compile Include="Assets\Editor\Presentation\Interface\BlockStatusSetup.cs" />
+    <Compile Include="Assets\Editor\Combat\SkirmishArenaAuthoring.cs" />
     <Compile Include="Assets\Editor\Presentation\Validation\NativeVfxPlaybackProbe.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
     <Compile Include="Assets\Editor\Siege\Hangars\SiegeHangarInterfaceAuthoring.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Assets\Editor\World\Validation\Session\WorldBuildingPlayProbe.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Buildings\SiegeFoundationCacheChecks.cs" />
     <Compile Include="Assets\Editor\Diagnostics\Benchmarks\PowerPerformanceChecks.cs" />
+    <Compile Include="Assets\Editor\Combat\Validation\SkirmishArenaChecks.cs" />
     <Compile Include="Assets\Editor\Building\BlockDataTables\BlockCsvPostprocessor.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegeBlueprintCatalogChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Benchmarks\SiegeBuildingBenchmark.cs" />

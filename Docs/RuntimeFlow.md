@@ -652,7 +652,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["PlayManager.PlayStart()"]
-    click A "../Assets/Scripts/Features/Simulation/PlayManager.cs#L109" "打开源码"
+    click A "../Assets/Scripts/Features/Simulation/PlayManager.cs#L113" "打开源码"
     B["SceneObjectQuery.FindInScene()"]
     click B "../Assets/Scripts/Features/Bootstrap/SceneObjectQuery.cs#L15" "打开源码"
     C["SceneObjectQuery.FindInActiveScene()"]
@@ -687,7 +687,7 @@ flowchart TD
     J --> L
 ```
 
-- [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L109)
+- [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L113)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayStart -->
 - [SceneObjectQuery.FindInScene](../Assets/Scripts/Features/Bootstrap/SceneObjectQuery.cs#L15)
 <!-- source: Assets/Scripts/Features/Bootstrap/SceneObjectQuery.cs|FindInScene -->
@@ -994,11 +994,11 @@ flowchart TD
     F["MainUIPanels.PlayStart()"]
     click F "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L233" "打开源码"
     G["PlayManager.CanStartPlay()"]
-    click G "../Assets/Scripts/Features/Simulation/PlayManager.cs#L158" "打开源码"
+    click G "../Assets/Scripts/Features/Simulation/PlayManager.cs#L162" "打开源码"
     H["PlayManager.PlayStart()"]
-    click H "../Assets/Scripts/Features/Simulation/PlayManager.cs#L109" "打开源码"
+    click H "../Assets/Scripts/Features/Simulation/PlayManager.cs#L113" "打开源码"
     I["PlayManager.RefreshGroup()"]
-    click I "../Assets/Scripts/Features/Simulation/PlayManager.cs#L193" "打开源码"
+    click I "../Assets/Scripts/Features/Simulation/PlayManager.cs#L197" "打开源码"
     J["OutpostEncounterDirector.Tick()"]
     click J "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L51" "打开源码"
     K["MainUIPanels.PlayEnd()"]
@@ -1006,7 +1006,7 @@ flowchart TD
     L["CargoPersistence.SaveReturnCargo()"]
     click L "../Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs#L11" "打开源码"
     M["PlayManager.PlayEnd()"]
-    click M "../Assets/Scripts/Features/Simulation/PlayManager.cs#L295" "打开源码"
+    click M "../Assets/Scripts/Features/Simulation/PlayManager.cs#L299" "打开源码"
     N["MainUIPanels.PlayerDeath()"]
     click N "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L323" "打开源码"
     O["WorldSessionManager.RequestPlay()"]
@@ -1057,11 +1057,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|LoadAllBlocks -->
 - [MainUIPanels.PlayStart](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L233)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayStart -->
-- [PlayManager.CanStartPlay](../Assets/Scripts/Features/Simulation/PlayManager.cs#L158)
+- [PlayManager.CanStartPlay](../Assets/Scripts/Features/Simulation/PlayManager.cs#L162)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|CanStartPlay -->
-- [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L109)
+- [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L113)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayStart -->
-- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L193)
+- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L197)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
 - [OutpostEncounterDirector.Tick](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L51)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs|Tick -->
@@ -1069,7 +1069,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayEnd -->
 - [CargoPersistence.SaveReturnCargo](../Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs#L11)
 <!-- source: Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs|SaveReturnCargo -->
-- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L295)
+- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L299)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
 - [MainUIPanels.PlayerDeath](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L323)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayerDeath -->
@@ -1111,7 +1111,7 @@ flowchart TD
     H["WorldSessionManager.RequestPlay()"]
     click H "../Assets/Scripts/Features/World/WorldSessionManager.cs#L188" "打开源码"
     I["PlayManager.PlayStart()"]
-    click I "../Assets/Scripts/Features/Simulation/PlayManager.cs#L109" "打开源码"
+    click I "../Assets/Scripts/Features/Simulation/PlayManager.cs#L113" "打开源码"
     J["GameModeController.CreateExplorationCopy()"]
     click J "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L191" "打开源码"
     K["PlayDraft.CreateRuntimeCopy()"]
@@ -1190,7 +1190,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|BeginPreparation -->
 - [WorldSessionManager.RequestPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L188)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|RequestPlay -->
-- [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L109)
+- [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L113)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayStart -->
 - [GameModeController.CreateExplorationCopy](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L191)
 <!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|CreateExplorationCopy -->
@@ -1867,9 +1867,9 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["PlayManager.RefreshGroup()"]
-    click A "../Assets/Scripts/Features/Simulation/PlayManager.cs#L193" "打开源码"
+    click A "../Assets/Scripts/Features/Simulation/PlayManager.cs#L197" "打开源码"
     B["PlayManager.AssignBlocksToParentGroups()"]
-    click B "../Assets/Scripts/Features/Simulation/PlayManager.cs#L330" "打开源码"
+    click B "../Assets/Scripts/Features/Simulation/PlayManager.cs#L334" "打开源码"
     C["RuntimeGroupBuilder.Rebuild()"]
     click C "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16" "打开源码"
     D["BlockGroupManager.GroupRuntimeBlocks()"]
@@ -1881,7 +1881,7 @@ flowchart TD
     G["ControlUnit.RefreshChildren()"]
     click G "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L185" "打开源码"
     H["PlayManager.FixedUpdate()"]
-    click H "../Assets/Scripts/Features/Simulation/PlayManager.cs#L77" "打开源码"
+    click H "../Assets/Scripts/Features/Simulation/PlayManager.cs#L81" "打开源码"
     I["RuntimeGroupCleanup.EnforceDistance()"]
     click I "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupCleanup.cs#L51" "打开源码"
     J["HoverFlightController.FixedUpdate()"]
@@ -1921,7 +1921,7 @@ flowchart TD
     AA["RuntimeGroupBuilder.SelectRetainedGroups()"]
     click AA "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L191" "打开源码"
     AB["PlayManager.RegisterControlUnitWithoutCleanup()"]
-    click AB "../Assets/Scripts/Features/Simulation/PlayManager.cs#L357" "打开源码"
+    click AB "../Assets/Scripts/Features/Simulation/PlayManager.cs#L361" "打开源码"
     AC["BlockConnectionSnapshot.Capture()"]
     click AC "../Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs#L71" "打开源码"
     AD["BlockConnections.ReleaseRuntimePair()"]
@@ -1981,9 +1981,9 @@ flowchart TD
     P --> R
 ```
 
-- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L193)
+- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L197)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
-- [PlayManager.AssignBlocksToParentGroups](../Assets/Scripts/Features/Simulation/PlayManager.cs#L330)
+- [PlayManager.AssignBlocksToParentGroups](../Assets/Scripts/Features/Simulation/PlayManager.cs#L334)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|AssignBlocksToParentGroups -->
 - [RuntimeGroupBuilder.Rebuild](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|Rebuild -->
@@ -1995,7 +1995,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Physics/RigidbodyMotion.cs|Restore -->
 - [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L185)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|RefreshChildren -->
-- [PlayManager.FixedUpdate](../Assets/Scripts/Features/Simulation/PlayManager.cs#L77)
+- [PlayManager.FixedUpdate](../Assets/Scripts/Features/Simulation/PlayManager.cs#L81)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|FixedUpdate -->
 - [RuntimeGroupCleanup.EnforceDistance](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupCleanup.cs#L51)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupCleanup.cs|EnforceDistance -->
@@ -2035,7 +2035,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|CaptureSourceBodies -->
 - [RuntimeGroupBuilder.SelectRetainedGroups](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L191)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|SelectRetainedGroups -->
-- [PlayManager.RegisterControlUnitWithoutCleanup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L357)
+- [PlayManager.RegisterControlUnitWithoutCleanup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L361)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RegisterControlUnitWithoutCleanup -->
 - [BlockConnectionSnapshot.Capture](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs#L71)
 <!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs|Capture -->
@@ -2083,11 +2083,11 @@ flowchart TD
     H["DestroyManager.DestroyGameObject()"]
     click H "../Assets/Scripts/Features/Combat/DestroyManager.cs#L28" "打开源码"
     I["DestroyManager.ExplodeBlock()"]
-    click I "../Assets/Scripts/Features/Combat/DestroyManager.cs#L135" "打开源码"
+    click I "../Assets/Scripts/Features/Combat/DestroyManager.cs#L137" "打开源码"
     J["ExplosionPropagation.DisconnectBlocksInExplosionRange()"]
     click J "../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L9" "打开源码"
     K["PlayManager.RefreshGroup()"]
-    click K "../Assets/Scripts/Features/Simulation/PlayManager.cs#L193" "打开源码"
+    click K "../Assets/Scripts/Features/Simulation/PlayManager.cs#L197" "打开源码"
     L["ExplosionPropagation.ApplyExplosionForce()"]
     click L "../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L53" "打开源码"
     M["SalvageCleanupSession.ScheduleUnit()"]
@@ -2125,9 +2125,9 @@ flowchart TD
     AC["TurretProjectile.OnDisable()"]
     click AC "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L32" "打开源码"
     AD["TurretProjectilePool.Update()"]
-    click AD "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L71" "打开源码"
+    click AD "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L82" "打开源码"
     AE["TurretProjectilePool.OnDestroy()"]
-    click AE "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L87" "打开源码"
+    click AE "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L98" "打开源码"
     AF["BuildingRuntime.DestroyBlock()"]
     click AF "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L238" "打开源码"
     AG["ProjectileTurret.GetAimPosition()"]
@@ -2186,11 +2186,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|ApplyCollisionEnergy -->
 - [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L28)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyGameObject -->
-- [DestroyManager.ExplodeBlock](../Assets/Scripts/Features/Combat/DestroyManager.cs#L135)
+- [DestroyManager.ExplodeBlock](../Assets/Scripts/Features/Combat/DestroyManager.cs#L137)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|ExplodeBlock -->
 - [ExplosionPropagation.DisconnectBlocksInExplosionRange](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L9)
 <!-- source: Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs|DisconnectBlocksInExplosionRange -->
-- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L193)
+- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L197)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
 - [ExplosionPropagation.ApplyExplosionForce](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L53)
 <!-- source: Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs|ApplyExplosionForce -->
@@ -2228,9 +2228,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs|Return -->
 - [TurretProjectile.OnDisable](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L32)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs|OnDisable -->
-- [TurretProjectilePool.Update](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L71)
+- [TurretProjectilePool.Update](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L82)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs|Update -->
-- [TurretProjectilePool.OnDestroy](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L87)
+- [TurretProjectilePool.OnDestroy](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L98)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs|OnDestroy -->
 - [BuildingRuntime.DestroyBlock](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L238)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|DestroyBlock -->
@@ -2256,7 +2256,7 @@ flowchart TD
     E["ReturnStatusPanel.Clear()"]
     click E "../Assets/Scripts/Features/Presentation/Interface/ReturnStatusPanel.cs#L37" "打开源码"
     F["PlayManager.PlayEnd()"]
-    click F "../Assets/Scripts/Features/Simulation/PlayManager.cs#L295" "打开源码"
+    click F "../Assets/Scripts/Features/Simulation/PlayManager.cs#L299" "打开源码"
     G["GameManager.Init()"]
     click G "../Assets/Scripts/Features/Bootstrap/GameManager.cs#L25" "打开源码"
     A --> B
@@ -2277,7 +2277,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|CompletePlayEnd -->
 - [ReturnStatusPanel.Clear](../Assets/Scripts/Features/Presentation/Interface/ReturnStatusPanel.cs#L37)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/ReturnStatusPanel.cs|Clear -->
-- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L295)
+- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L299)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
 - [GameManager.Init](../Assets/Scripts/Features/Bootstrap/GameManager.cs#L25)
 <!-- source: Assets/Scripts/Features/Bootstrap/GameManager.cs|Init -->
@@ -2410,7 +2410,7 @@ flowchart TD
     E["LootDrop.LateUpdate()"]
     click E "../Assets/Scripts/Features/Salvage/Drops/LootDrop.cs#L320" "打开源码"
     F["CombatHud.IsWorldPointOccluded()"]
-    click F "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L154" "打开源码"
+    click F "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L169" "打开源码"
     G["LootDrop.Carry()"]
     click G "../Assets/Scripts/Features/Salvage/Drops/LootDrop.cs#L200" "打开源码"
     H["LootDrop.ResetDisplayPose()"]
@@ -2438,7 +2438,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Salvage/Drops/LootDrop.cs|Update -->
 - [LootDrop.LateUpdate](../Assets/Scripts/Features/Salvage/Drops/LootDrop.cs#L320)
 <!-- source: Assets/Scripts/Features/Salvage/Drops/LootDrop.cs|LateUpdate -->
-- [CombatHud.IsWorldPointOccluded](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L154)
+- [CombatHud.IsWorldPointOccluded](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L169)
 <!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|IsWorldPointOccluded -->
 - [LootDrop.Carry](../Assets/Scripts/Features/Salvage/Drops/LootDrop.cs#L200)
 <!-- source: Assets/Scripts/Features/Salvage/Drops/LootDrop.cs|Carry -->
@@ -2606,7 +2606,7 @@ flowchart TD
     I["MainUIPanels.CompletePlayStart()"]
     click I "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L267" "打开源码"
     J["PlayManager.PlayStart()"]
-    click J "../Assets/Scripts/Features/Simulation/PlayManager.cs#L109" "打开源码"
+    click J "../Assets/Scripts/Features/Simulation/PlayManager.cs#L113" "打开源码"
     K["WorldSessionManager.EnterPlay()"]
     click K "../Assets/Scripts/Features/World/WorldSessionManager.cs#L252" "打开源码"
     L["WorldSessionManager.EnableWorld()"]
@@ -2697,7 +2697,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|CancelPlayRequest -->
 - [MainUIPanels.CompletePlayStart](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L267)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|CompletePlayStart -->
-- [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L109)
+- [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L113)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayStart -->
 - [WorldSessionManager.EnterPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L252)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EnterPlay -->
@@ -4015,7 +4015,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["PlayManager.PlayStart()"]
-    click A "../Assets/Scripts/Features/Simulation/PlayManager.cs#L109" "打开源码"
+    click A "../Assets/Scripts/Features/Simulation/PlayManager.cs#L113" "打开源码"
     B["EnemySpawner.BeginPlayMode()"]
     click B "../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L41" "打开源码"
     C["EnemySpawner.Update()"]
@@ -4047,7 +4047,7 @@ flowchart TD
     P["OutpostEncounterDirector.Hibernate()"]
     click P "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L291" "打开源码"
     Q["PlayManager.PlayEnd()"]
-    click Q "../Assets/Scripts/Features/Simulation/PlayManager.cs#L295" "打开源码"
+    click Q "../Assets/Scripts/Features/Simulation/PlayManager.cs#L299" "打开源码"
     R["EnemySpawner.EndPlayMode()"]
     click R "../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L57" "打开源码"
     S["EnemySpawner.SpawnBlockData()"]
@@ -4071,7 +4071,7 @@ flowchart TD
     Q --> R
 ```
 
-- [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L109)
+- [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L113)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayStart -->
 - [EnemySpawner.BeginPlayMode](../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L41)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs|BeginPlayMode -->
@@ -4103,7 +4103,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs|SetSpawnMaxHealth -->
 - [OutpostEncounterDirector.Hibernate](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L291)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs|Hibernate -->
-- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L295)
+- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L299)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
 - [EnemySpawner.EndPlayMode](../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L57)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs|EndPlayMode -->
@@ -5230,7 +5230,7 @@ flowchart TD
     H["RuntimeGroupBuilder.Rebuild()"]
     click H "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16" "打开源码"
     I["PlayManager.RefreshGroup()"]
-    click I "../Assets/Scripts/Features/Simulation/PlayManager.cs#L193" "打开源码"
+    click I "../Assets/Scripts/Features/Simulation/PlayManager.cs#L197" "打开源码"
     J["SiegePerformanceCapture.BeforeReload()"]
     click J "../Assets/Editor/Siege/Benchmarks/SiegePerformanceCapture.cs#L197" "打开源码"
     K["SiegeTopologyBaseline.Run()"]
@@ -5264,7 +5264,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs|GroupBlocks -->
 - [RuntimeGroupBuilder.Rebuild](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|Rebuild -->
-- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L193)
+- [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L197)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
 - [SiegePerformanceCapture.BeforeReload](../Assets/Editor/Siege/Benchmarks/SiegePerformanceCapture.cs#L197)
 <!-- source: Assets/Editor/Siege/Benchmarks/SiegePerformanceCapture.cs|BeforeReload -->
@@ -5624,9 +5624,9 @@ flowchart TD
     V["EnemyAvoidanceLab.SelectLocation()"]
     click V "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L108" "打开源码"
     W["EnemyLabCamera.Update()"]
-    click W "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L72" "打开源码"
+    click W "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L74" "打开源码"
     X["EnemyLabCamera.SetFreeView()"]
-    click X "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L37" "打开源码"
+    click X "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L39" "打开源码"
     Y["EnemyAvoidanceLab.UpdateTraceGradient()"]
     click Y "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L415" "打开源码"
     Z["EnemyLabExpansionAuthoring.Upgrade()"]
@@ -5711,9 +5711,9 @@ flowchart TD
 <!-- source: Assets/Editor/Combat/EnemyLabComplexAuthoring.cs|Upgrade -->
 - [EnemyAvoidanceLab.SelectLocation](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L108)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs|SelectLocation -->
-- [EnemyLabCamera.Update](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L72)
+- [EnemyLabCamera.Update](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L74)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs|Update -->
-- [EnemyLabCamera.SetFreeView](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L37)
+- [EnemyLabCamera.SetFreeView](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L39)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs|SetFreeView -->
 - [EnemyAvoidanceLab.UpdateTraceGradient](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L415)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs|UpdateTraceGradient -->
@@ -5725,6 +5725,109 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs|FixedUpdate -->
 - [EnemyLabMovingObstacle.OnDisable](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L61)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs|OnDisable -->
+
+## 自动随机3v3观战
+
+源码推导：独立场景保存双层地图副本、六个槽位、自由相机与共享探索击杀HUD。Start校验蓝图并自动生成两队各三艘AI。销毁主链在模块重组前按驾驶舱身份通知对局，避免玩家阵营AI死亡触发玩家失败；Update在同一步死亡处理后判定胜负/同时全灭并停止AI/武器。等待五个模拟秒后清除弹丸与活动特效并删除本轮新增根对象，等待Destroy完成再重新随机六槽位；保留地图与摄像机姿态。
+
+```mermaid
+flowchart TD
+    A["SkirmishArenaAuthoring.Create()"]
+    click A "../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L14" "打开源码"
+    B["SkirmishMatch.Start()"]
+    click B "../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L55" "打开源码"
+    C["SkirmishMatch.BeginRound()"]
+    click C "../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L86" "打开源码"
+    D["ModularUnitFactory.Spawn()"]
+    click D "../Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs#L41" "打开源码"
+    E["DestroyManager.DestroyGameObject()"]
+    click E "../Assets/Scripts/Features/Combat/DestroyManager.cs#L28" "打开源码"
+    F["SkirmishMatch.NotifyCockpitDestroyed()"]
+    click F "../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L136" "打开源码"
+    G["SkirmishMatch.Eliminate()"]
+    click G "../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L153" "打开源码"
+    H["SkirmishHud.ShowKill()"]
+    click H "../Assets/Scripts/Features/Combat/Skirmish/SkirmishHud.cs#L37" "打开源码"
+    I["CombatHud.ShowCombatKill()"]
+    click I "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L92" "打开源码"
+    J["CombatHud.ShowNotification()"]
+    click J "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L102" "打开源码"
+    K["SkirmishMatch.Update()"]
+    click K "../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L179" "打开源码"
+    L["SkirmishMatch.ClearAndRestart()"]
+    click L "../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L236" "打开源码"
+    M["TurretProjectilePool.ClearAll()"]
+    click M "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L71" "打开源码"
+    N["VfxEffectPool.ClearActive()"]
+    click N "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L96" "打开源码"
+    O["DestroyManager.EndSalvageSession()"]
+    click O "../Assets/Scripts/Features/Combat/DestroyManager.cs#L184" "打开源码"
+    P["SkirmishHud.SetState()"]
+    click P "../Assets/Scripts/Features/Combat/Skirmish/SkirmishHud.cs#L31" "打开源码"
+    Q["EnemyLabMovingObstacle.ResetMotion()"]
+    click Q "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L42" "打开源码"
+    R["EnemyLabCamera.Update()"]
+    click R "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L74" "打开源码"
+    S["CombatHud.ShowPlayerKill()"]
+    click S "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L81" "打开源码"
+    A -.->|保存独立场景| B
+    B --> C
+    C --> D
+    C --> Q
+    E -->|已登记驾驶舱| F
+    F --> G
+    G --> H
+    H --> I
+    I --> J
+    S -->|探索沿用原击杀累计| J
+    K -->|失效驾驶舱兜底| G
+    K --> P
+    K -.->|胜负结算等待5秒后启动协程| L
+    L --> M
+    L --> N
+    L --> O
+    L -.->|等待旧对象Destroy结束| C
+    B -.->|独立自由相机Update| R
+```
+
+- [SkirmishArenaAuthoring.Create](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L14)
+<!-- source: Assets/Editor/Combat/SkirmishArenaAuthoring.cs|Create -->
+- [SkirmishMatch.Start](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L55)
+<!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs|Start -->
+- [SkirmishMatch.BeginRound](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L86)
+<!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs|BeginRound -->
+- [ModularUnitFactory.Spawn](../Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs#L41)
+<!-- source: Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs|Spawn -->
+- [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L28)
+<!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyGameObject -->
+- [SkirmishMatch.NotifyCockpitDestroyed](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L136)
+<!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs|NotifyCockpitDestroyed -->
+- [SkirmishMatch.Eliminate](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L153)
+<!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs|Eliminate -->
+- [SkirmishHud.ShowKill](../Assets/Scripts/Features/Combat/Skirmish/SkirmishHud.cs#L37)
+<!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishHud.cs|ShowKill -->
+- [CombatHud.ShowCombatKill](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L92)
+<!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|ShowCombatKill -->
+- [CombatHud.ShowNotification](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L102)
+<!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|ShowNotification -->
+- [SkirmishMatch.Update](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L179)
+<!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs|Update -->
+- [SkirmishMatch.ClearAndRestart](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L236)
+<!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs|ClearAndRestart -->
+- [TurretProjectilePool.ClearAll](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L71)
+<!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs|ClearAll -->
+- [VfxEffectPool.ClearActive](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L96)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs|ClearActive -->
+- [DestroyManager.EndSalvageSession](../Assets/Scripts/Features/Combat/DestroyManager.cs#L184)
+<!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|EndSalvageSession -->
+- [SkirmishHud.SetState](../Assets/Scripts/Features/Combat/Skirmish/SkirmishHud.cs#L31)
+<!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishHud.cs|SetState -->
+- [EnemyLabMovingObstacle.ResetMotion](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L42)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs|ResetMotion -->
+- [EnemyLabCamera.Update](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L74)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs|Update -->
+- [CombatHud.ShowPlayerKill](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L81)
+<!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|ShowPlayerKill -->
 
 ## 友敌 AI 调试绘制
 

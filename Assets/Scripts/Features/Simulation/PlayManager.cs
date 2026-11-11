@@ -27,6 +27,10 @@ public class PlayManager : MonoBehaviour
     private SiegeSession siegeSession;
     public SiegeSession SiegeSession => siegeSession;
 
+    [SerializeField]
+    private SkirmishMatch skirmish;
+    public SkirmishMatch Skirmish => skirmish;
+
     public void BindSiege(SiegeSession session)
     {
         siegeSession = session;

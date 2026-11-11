@@ -60,6 +60,7 @@ HY-Sandbox/
 │   │   │   ├── EnemyAvoidanceLabAuthoring.cs
 │   │   │   ├── EnemyLabComplexAuthoring.cs
 │   │   │   ├── EnemyLabExpansionAuthoring.cs
+│   │   │   ├── SkirmishArenaAuthoring.cs
 │   │   │   ├── Interface/
 │   │   │   │   ├── CombatHudSetup.cs
 │   │   │   │   └── HealthHudPreview.cs
@@ -74,6 +75,7 @@ HY-Sandbox/
 │   │   │       ├── EnemyLabPlayChecks.cs
 │   │   │       ├── EnemyLabViewChecks.cs
 │   │   │       ├── NavigationCombatPlayChecks.cs
+│   │   │       ├── SkirmishArenaChecks.cs
 │   │   │       ├── TurretFlightPlayProbe.cs
 │   │   │       └── TurretRuntimeChecks.cs
 │   │   ├── Diagnostics/
@@ -323,6 +325,9 @@ HY-Sandbox/
 │           │   ├── Meteors/
 │           │   │   ├── Meteor.cs
 │           │   │   └── MeteorShower.cs
+│           │   ├── Skirmish/
+│           │   │   ├── SkirmishHud.cs
+│           │   │   └── SkirmishMatch.cs
 │           │   └── Turrets/
 │           │       ├── LaserTurret.cs
 │           │       ├── ProjectileIntercept.cs
@@ -1166,6 +1171,19 @@ HY-Sandbox/
 | HealthHudPreview | [`string Render()`](../Assets/Editor/Combat/Interface/HealthHudPreview.cs#L17) | public static |
 | HealthHudPreview | [`void RenderOne(Transform source, Vector2Int size)`](../Assets/Editor/Combat/Interface/HealthHudPreview.cs#L44) | private static |
 
+## Assets/Editor/Combat/SkirmishArenaAuthoring.cs
+
+// 职责：复制双层避障地图为独立3v3观战场景，保存六槽位、自由相机与复用战斗HUD。 // 入口：Create()菜单；已存在场景拒绝覆盖，不修改原避障场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SkirmishArenaAuthoring | [`void Create()`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L14) | public static |
+| SkirmishArenaAuthoring | [`T Find(Scene scene)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L144) | private static |
+| SkirmishArenaAuthoring | [`void UpgradeHud()`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L150) | public static |
+| SkirmishArenaAuthoring | [`void ConfigureCombatHud(CombatHud hud)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L163) | private static |
+| SkirmishArenaAuthoring | [`void Set(UnityEngine.Object owner, string field, UnityEngine.Object value)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L184) | private static |
+| SkirmishArenaAuthoring | [`Text Label( Transform parent, string name, Font font, Vector2 position, Vector2 size, int fontSize)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L191) | private static |
+
 ## Assets/Editor/Combat/Turrets/TurretAssetBaker.cs
 
 // 职责：从指定 SpaceKit 源制作单管/双管炮塔、真实炮弹及独立建造目录资产。 // 入口：Bake()；只保存拥有的 Prefab/材质/图标，不保存当前场景。
@@ -1277,6 +1295,21 @@ HY-Sandbox/
 | NavigationCombatPlayChecks | [`ControlUnit Unit(Transform root, string name, UnitFaction faction, Vector3 position)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L545) | private static |
 | NavigationCombatPlayChecks | [`BoxCollider Box(Transform root, string name, Vector3 position, Vector3 size)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L565) | private static |
 | NavigationCombatPlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L575) | private static |
+
+## Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs
+
+// 职责：验证自动3v3场景持久配置、正式死亡归因、五秒倒计时与连续轮次清理。 // 入口：ValidateSaved()在Edit Mode执行；Begin()在Play启动检查，Pending保存实际结果。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SkirmishArenaChecks | [`string ValidateSaved()`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L18) | public static |
+| SkirmishArenaChecks | [`void Begin()`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L71) | public static |
+| SkirmishArenaChecks | [`Task<string> Run()`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L76) | private static async |
+| SkirmishArenaChecks | [`PlayManager PlayManagerReference(SkirmishMatch match)`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L185) | private static |
+| SkirmishArenaChecks | [`void FreezeCombat(SkirmishMatch match)`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L190) | private static |
+| SkirmishArenaChecks | [`Task Until(Func<bool> condition, float timeout)`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L206) | private static async |
+| SkirmishArenaChecks | [`void Check(List<string> checks, string label, bool condition)`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L220) | private static |
+| SkirmishArenaChecks | [`string Save(string name, List<string> checks)`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L229) | private static |
 
 ## Assets/Editor/Combat/Validation/TurretFlightPlayProbe.cs
 
@@ -3585,10 +3618,10 @@ HY-Sandbox/
 | --- | --- | --- |
 | DestroyManager | [`void Awake()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L23) | private |
 | DestroyManager | [`void DestroyGameObject(GameObject obj)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L28) | public |
-| DestroyManager | [`void ExplodeBlock(Block block)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L135) | public |
-| DestroyManager | [`void ScheduleUnitCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L172) | public |
-| DestroyManager | [`void ScheduleDistantGroupCleanup(ControlUnit unit, Transform reference, float maxDistance)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L177) | public |
-| DestroyManager | [`void EndSalvageSession()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L182) | public |
+| DestroyManager | [`void ExplodeBlock(Block block)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L137) | public |
+| DestroyManager | [`void ScheduleUnitCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L174) | public |
+| DestroyManager | [`void ScheduleDistantGroupCleanup(ControlUnit unit, Transform reference, float maxDistance)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L179) | public |
+| DestroyManager | [`void EndSalvageSession()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L184) | public |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyBlueprintFactory.cs
 
@@ -3748,15 +3781,15 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| EnemyLabCamera | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L31) | private |
-| EnemyLabCamera | [`void SetFreeView(bool enabled)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L37) | public |
-| EnemyLabCamera | [`void ResetOverview()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L61) | public |
-| EnemyLabCamera | [`void SyncAngles()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L66) | private |
-| EnemyLabCamera | [`void Update()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L72) | private |
-| EnemyLabCamera | [`void Record(string action)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L174) | private |
-| EnemyLabCamera | [`void ReleasePointer()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L182) | private |
-| EnemyLabCamera | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L194) | private |
-| EnemyLabCamera | [`void OnApplicationFocus(bool focused)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L199) | private |
+| EnemyLabCamera | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L33) | private |
+| EnemyLabCamera | [`void SetFreeView(bool enabled)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L39) | public |
+| EnemyLabCamera | [`void ResetOverview()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L63) | public |
+| EnemyLabCamera | [`void SyncAngles()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L68) | private |
+| EnemyLabCamera | [`void Update()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L74) | private |
+| EnemyLabCamera | [`void Record(string action)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L176) | private |
+| EnemyLabCamera | [`void ReleasePointer()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L184) | private |
+| EnemyLabCamera | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L196) | private |
+| EnemyLabCamera | [`void OnApplicationFocus(bool focused)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L201) | private |
 
 ## Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs
 
@@ -3809,12 +3842,14 @@ HY-Sandbox/
 | CombatHud | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L56) | private |
 | CombatHud | [`void ResetHud()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L70) | public |
 | CombatHud | [`void ShowPlayerKill(string enemyName)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L81) | public |
-| CombatHud | [`void LateUpdate()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L96) | private |
-| CombatHud | [`bool IsOccluded(Vector3 target, ControlUnit unit)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L149) | private |
-| CombatHud | [`bool IsWorldPointOccluded(Camera camera, Vector3 target, Transform owner, RaycastHit[] hits)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L154) | public static |
-| CombatHud | [`void RefreshEnemies()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L183) | private |
-| CombatHud | [`EnemyView CreateView()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L237) | private |
-| CombatHud | [`void Recycle(EnemyView view)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L254) | private |
+| CombatHud | [`void ShowCombatKill(string victim, string attacker, string score)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L92) | public |
+| CombatHud | [`void ShowNotification(string title, string score)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L102) | private |
+| CombatHud | [`void LateUpdate()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L111) | private |
+| CombatHud | [`bool IsOccluded(Vector3 target, ControlUnit unit)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L164) | private |
+| CombatHud | [`bool IsWorldPointOccluded(Camera camera, Vector3 target, Transform owner, RaycastHit[] hits)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L169) | public static |
+| CombatHud | [`void RefreshEnemies()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L198) | private |
+| CombatHud | [`EnemyView CreateView()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L252) | private |
+| CombatHud | [`void Recycle(EnemyView view)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L269) | private |
 
 ## Assets/Scripts/Features/Combat/Meteors/Meteor.cs
 
@@ -3835,6 +3870,32 @@ HY-Sandbox/
 | MeteorShower | [`IEnumerator SpawnMeteors()`](../Assets/Scripts/Features/Combat/Meteors/MeteorShower.cs#L31) | private |
 | MeteorShower | [`void SpawnMeteor()`](../Assets/Scripts/Features/Combat/Meteors/MeteorShower.cs#L45) | private |
 | MeteorShower | [`void MeteorDestroyed()`](../Assets/Scripts/Features/Combat/Meteors/MeteorShower.cs#L77) | public |
+
+## Assets/Scripts/Features/Combat/Skirmish/SkirmishHud.cs
+
+// 职责：显示自动对战轮次、六槽位阵容和击杀列表，复用探索模式击杀提示表现。 // 入口：SetState() / ShowKill() / ResetRound()；UI引用由场景制作保存。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SkirmishHud | [`void ResetRound()`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishHud.cs#L23) | public |
+| SkirmishHud | [`void SetState(string title, string lineup)`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishHud.cs#L31) | public |
+| SkirmishHud | [`void ShowKill(string victim, string attacker, int blueAlive, int redAlive)`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishHud.cs#L37) | public |
+
+## Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs
+
+// 职责：自动填充随机3v3、按驾驶舱判定淘汰，结算等待后完整清场并开始下一轮。 // 入口：Start()自动开局；NotifyCockpitDestroyed()接收正式销毁主链，Update()处理胜负。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SkirmishMatch | [`Cockpit CockpitAt(int index)`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L53) | public |
+| SkirmishMatch | [`string NameAt(int index)`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L54) | public |
+| SkirmishMatch | [`void Start()`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L55) | private |
+| SkirmishMatch | [`void BeginRound()`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L86) | private |
+| SkirmishMatch | [`bool NotifyCockpitDestroyed(Cockpit cockpit, ControlUnit attacker)`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L136) | public |
+| SkirmishMatch | [`void Eliminate(int index, string attacker)`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L153) | private |
+| SkirmishMatch | [`int CountAlive(int first)`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L165) | private |
+| SkirmishMatch | [`void Update()`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L179) | private |
+| SkirmishMatch | [`IEnumerator ClearAndRestart()`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L236) | private |
 
 ## Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs
 
@@ -3907,8 +3968,9 @@ HY-Sandbox/
 | --- | --- | --- |
 | TurretProjectilePool | [`TurretProjectile Rent( TurretProjectile prefab, Vector3 position, Quaternion rotation, UnityEngine.SceneManagement.Scene scene = default)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L12) | public static |
 | TurretProjectilePool | [`void Return(TurretProjectile shot, TurretProjectile prefab)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L58) | internal |
-| TurretProjectilePool | [`void Update()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L71) | private |
-| TurretProjectilePool | [`void OnDestroy()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L87) | private |
+| TurretProjectilePool | [`void ClearAll()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L71) | public |
+| TurretProjectilePool | [`void Update()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L82) | private |
+| TurretProjectilePool | [`void OnDestroy()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L98) | private |
 
 ## Assets/Scripts/Features/Combat/Turrets/Turret.cs
 
@@ -5771,23 +5833,23 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | PlayManager | [`void BindWorldSession(WorldSessionManager session)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L21) | public |
-| PlayManager | [`void BindSiege(SiegeSession session)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L30) | public |
-| PlayManager | [`void Awake()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L72) | private |
-| PlayManager | [`void FixedUpdate()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L77) | private |
-| PlayManager | [`void PlayStart()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L109) | public |
-| PlayManager | [`bool CanStartPlay(out string reason)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L158) | public |
-| PlayManager | [`void RefreshGroup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L193) | public |
-| PlayManager | [`void SetPlayMode(bool lockView)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L224) | public |
-| PlayManager | [`void CalculateVelocity()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L232) | private |
-| PlayManager | [`void HandleSelection()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L241) | private |
-| PlayManager | [`void SelectBlock(Block block)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L270) | private |
-| PlayManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L289) | public |
-| PlayManager | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L295) | public |
-| PlayManager | [`void AssignBlocksToParentGroups(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L330) | public |
-| PlayManager | [`void RegisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L347) | public |
-| PlayManager | [`void RegisterControlUnitWithoutCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L357) | internal |
-| PlayManager | [`void UnregisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L365) | public |
-| PlayManager | [`IReadOnlyList<ControlUnit> GetControlUnits()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L373) | public |
+| PlayManager | [`void BindSiege(SiegeSession session)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L34) | public |
+| PlayManager | [`void Awake()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L76) | private |
+| PlayManager | [`void FixedUpdate()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L81) | private |
+| PlayManager | [`void PlayStart()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L113) | public |
+| PlayManager | [`bool CanStartPlay(out string reason)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L162) | public |
+| PlayManager | [`void RefreshGroup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L197) | public |
+| PlayManager | [`void SetPlayMode(bool lockView)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L228) | public |
+| PlayManager | [`void CalculateVelocity()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L236) | private |
+| PlayManager | [`void HandleSelection()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L245) | private |
+| PlayManager | [`void SelectBlock(Block block)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L274) | private |
+| PlayManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L293) | public |
+| PlayManager | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L299) | public |
+| PlayManager | [`void AssignBlocksToParentGroups(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L334) | public |
+| PlayManager | [`void RegisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L351) | public |
+| PlayManager | [`void RegisterControlUnitWithoutCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L361) | internal |
+| PlayManager | [`void UnregisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L369) | public |
+| PlayManager | [`IReadOnlyList<ControlUnit> GetControlUnits()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L377) | public |
 
 ## Assets/Scripts/Features/Simulation/Presentation/PlayBlockSelection.cs
 

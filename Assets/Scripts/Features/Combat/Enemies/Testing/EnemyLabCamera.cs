@@ -8,6 +8,8 @@ public sealed class EnemyLabCamera : MonoBehaviour
 {
     [SerializeField]
     private EnemyAvoidanceLab lab;
+    [SerializeField, Min(0f), Tooltip("左侧面板占用的像素宽度；独立观战场景设为0。")]
+    private float reservedLeftWidth = 375f;
     [SerializeField, Min(1f)]
     private float moveSpeed = 35f;
     [SerializeField, Min(1f)]
@@ -79,7 +81,7 @@ public sealed class EnemyLabCamera : MonoBehaviour
             return;
         }
 
-        bool insideField = mouse.position.ReadValue().x >= 375f;
+        bool insideField = mouse.position.ReadValue().x >= reservedLeftWidth;
         if (FreeView && mouse.rightButton.wasPressedThisFrame && insideField)
         {
             previousLock = Cursor.lockState;
