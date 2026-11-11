@@ -140,7 +140,6 @@ public static class EnemyAvoidanceLabAuthoring
             }
 
             settings.ApplyModifiedPropertiesWithoutUndo();
-            Set(ship.gameObject.AddComponent<EnemyAvoidanceContact>(), "lab", lab);
             Camera camera = new GameObject("Lab Camera").AddComponent<Camera>();
             camera.tag = "MainCamera";
             camera.transform.SetPositionAndRotation(new Vector3(0f, 125f, -65f), Quaternion.Euler(64f, 0f, 0f));
@@ -155,6 +154,7 @@ public static class EnemyAvoidanceLabAuthoring
             SetDebug(scene);
             EditorSceneManager.SaveScene(scene, ScenePath);
             AddRoofedTrial();
+            UpgradeTestField();
         }
         finally
         {
@@ -209,6 +209,149 @@ public static class EnemyAvoidanceLabAuthoring
         serialized.ApplyModifiedProperties();
         EditorSceneManager.MarkSceneDirty(lab.gameObject.scene);
         EditorSceneManager.SaveScene(lab.gameObject.scene);
+    }
+
+    [MenuItem("Tools/HY-Sandbox/Combat/Upgrade Navigation Test Field")]
+    public static void UpgradeTestField()
+    {
+        if (EditorApplication.isPlaying || SceneManager.GetActiveScene().path != ScenePath)
+        {
+            throw new InvalidOperationException("Open the lab in Edit Mode.");
+        }
+
+        EnemyAvoidanceLab lab = UnityEngine.Object.FindAnyObjectByType<EnemyAvoidanceLab>();
+        Material walls = LabMaterial("NavigationLabWall", new Color(0.8f, 0.29f, 0.08f));
+        var settings = new SerializedObject(lab);
+        SerializedProperty list = settings.FindProperty("layouts");
+        string[] names =
+        {
+            "Open flight",
+            "Tall wall bypass",
+            "Underpass",
+            "Pillar field",
+            "Switchback corridor",
+            "Sealed chamber"
+        };
+        for (int i = 0; i < names.Length; i++)
+        {
+            if (lab.transform.Find(names[i]) != null)
+            {
+                continue;
+            }
+
+            var layout = new GameObject(names[i]);
+            Undo.RegisterCreatedObjectUndo(layout, "Expand navigation field");
+            layout.transform.SetParent(lab.transform);
+            layout.SetActive(false);
+            Transform root = layout.transform;
+            if (i == 1)
+            {
+                Box("Tall wall", root, new Vector3(0f, 45f, 0f), new Vector3(5f, 90f, 50f), walls);
+            }
+
+            if (i == 2)
+            {
+                Box("Elevated beam", root, new Vector3(0f, 27f, 0f), new Vector3(5f, 26f, 90f), walls);
+                Box("Low roof", root, new Vector3(0f, 43f, 0f), new Vector3(120f, 2f, 100f), walls);
+            }
+
+            if (i == 3)
+            {
+                for (int x = -1; x <= 1; x++)
+                {
+                    for (int z = -1; z <= 1; z++)
+                    {
+                        Box("Pillar " + x + "/" + z, root, new Vector3(x * 28f, 26f, z * 35f), new Vector3(8f, 52f, 8f), walls);
+                    }
+                }
+            }
+
+            if (i == 4)
+            {
+                Box("North turn", root, new Vector3(-24f, 32f, 25f), new Vector3(5f, 64f, 80f), walls);
+                Box("South turn", root, new Vector3(24f, 32f, -25f), new Vector3(5f, 64f, 80f), walls);
+            }
+
+            if (i == 5)
+            {
+                Box("Front", root, new Vector3(-15f, 24f, 0f), new Vector3(4f, 48f, 90f), walls);
+                Box("Rear", root, new Vector3(-100f, 24f, 0f), new Vector3(4f, 48f, 90f), walls);
+                Box("North", root, new Vector3(-57.5f, 24f, 45f), new Vector3(90f, 48f, 4f), walls);
+                Box("South", root, new Vector3(-57.5f, 24f, -45f), new Vector3(90f, 48f, 4f), walls);
+                Box("Roof", root, new Vector3(-57.5f, 49f, 0f), new Vector3(90f, 2f, 94f), walls);
+            }
+
+            int index = list.arraySize++;
+            list.GetArrayElementAtIndex(index).objectReferenceValue = layout;
+        }
+
+        settings.ApplyModifiedProperties();
+        for (int i = 0; i < list.arraySize; i++)
+        {
+            GameObject layout = (GameObject)list.GetArrayElementAtIndex(i).objectReferenceValue;
+            if (layout.GetComponent<EnemyAvoidanceCourse>() != null)
+            {
+                continue;
+            }
+
+            EnemyAvoidanceCourse course = Undo.AddComponent<EnemyAvoidanceCourse>(layout);
+            var config = new SerializedObject(course);
+            bool extended = i >= 5;
+            bool underpass = layout.name == "Underpass";
+            config.FindProperty("start").vector3Value = new Vector3(extended ? -65f : -45f, underpass ? 18f : 6f, 0f);
+            config.FindProperty("goal").vector3Value = new Vector3(extended ? 65f : 45f, underpass ? 15f : 3f, 0f);
+            config.FindProperty("duration").floatValue = layout.name == "Sealed chamber" ? 30f : 150f;
+            config.FindProperty("description").stringValue = layout.name == "Sealed chamber" ? "封闭失败测试：预期找不到路线，用于观察重试和停滞，不要求到达。" : underpass ? "上方封顶，检查下穿净空与高度恢复。" : "真实推进器导航测试；可切换蓝图并点选起点/目标。";
+            config.ApplyModifiedProperties();
+        }
+
+        foreach (MeshRenderer roof in lab.GetComponentsInChildren<MeshRenderer>(true))
+        {
+            if (roof.name.IndexOf("roof", StringComparison.OrdinalIgnoreCase) < 0)
+            {
+                continue;
+            }
+
+            Bounds bounds = roof.bounds;
+            LineRenderer outline = TraceLine(roof.transform, "Ceiling Outline", new Color(1f, 0.7f, 0.1f));
+            outline.positionCount = 5;
+            outline.SetPositions(new[] { new Vector3(bounds.min.x, bounds.min.y, bounds.min.z), new Vector3(bounds.max.x, bounds.min.y, bounds.min.z), new Vector3(bounds.max.x, bounds.min.y, bounds.max.z), new Vector3(bounds.min.x, bounds.min.y, bounds.max.z), new Vector3(bounds.min.x, bounds.min.y, bounds.min.z) });
+        }
+
+        GameObject ground = SceneManager.GetActiveScene().GetRootGameObjects().First(g => g.name == "Ground");
+        ground.transform.localScale = new Vector3(300f, 1f, 300f);
+        Camera camera = Camera.main;
+        if (camera != null)
+        {
+            camera.transform.SetPositionAndRotation(new Vector3(0f, 190f, -100f), Quaternion.Euler(65f, 0f, 0f));
+            camera.orthographicSize = 140f;
+        }
+
+        settings.Update();
+        settings.FindProperty("traceLine").objectReferenceValue = TraceLine(lab.transform, "Flight Trace", new Color(0.1f, 0.9f, 1f));
+        settings.FindProperty("routeLine").objectReferenceValue = TraceLine(lab.transform, "Planned Route", new Color(1f, 0.7f, 0.1f));
+        settings.ApplyModifiedProperties();
+        EditorSceneManager.MarkSceneDirty(lab.gameObject.scene);
+        EditorSceneManager.SaveScene(lab.gameObject.scene);
+    }
+
+    private static LineRenderer TraceLine(Transform parent, string name, Color color)
+    {
+        Transform existing = parent.Find(name);
+        if (existing != null)
+        {
+            return existing.GetComponent<LineRenderer>();
+        }
+
+        var go = new GameObject(name);
+        go.transform.SetParent(parent);
+        LineRenderer line = go.AddComponent<LineRenderer>();
+        line.sharedMaterial = LabMaterial(name.Replace(" ", "") + "Material", color);
+        line.startColor = line.endColor = color;
+        line.widthMultiplier = 0.4f;
+        line.useWorldSpace = true;
+        line.positionCount = 0;
+        return line;
     }
 
     public static void RefreshPresentation()

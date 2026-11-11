@@ -16,6 +16,17 @@ internal sealed class EnemyLocalPath
     private Vector3 offset;
     private float nextPlan;
     private int waypoint;
+    internal string ReplanReason { get; private set; } = "Initial";
+    internal float PlanMilliseconds
+    {
+        get; private set;
+    }
+    internal int Revision
+    {
+        get; private set;
+    }
+    internal int Waypoint => waypoint;
+    internal string Status { get; private set; } = "Idle";
     internal bool Active => waypoint < path.Count;
     internal IReadOnlyList<Vector3> Points => path;
     internal int Expanded
@@ -44,6 +55,11 @@ internal sealed class EnemyLocalPath
         path.Clear();
         waypoint = 0;
         nextPlan = 0f;
+        Revision++;
+        Status = "Cleared";
+        Expanded = 0;
+        PlanMilliseconds = 0f;
+        ReplanReason = "Initial";
     }
 
     internal bool TryFollow(
@@ -66,6 +82,7 @@ internal sealed class EnemyLocalPath
         if (Active && Time.time >= nextPlan && (goal - destination).sqrMagnitude > cellSize * cellSize * 4f)
         {
             Clear();
+            ReplanReason = "GoalMoved";
         }
 
         if (Active)
@@ -76,6 +93,9 @@ internal sealed class EnemyLocalPath
             {
                 path.Clear();
                 waypoint = 0;
+                Revision++;
+                Status = "Blocked";
+                ReplanReason = "GeometryChanged";
             }
             else
             {
@@ -87,6 +107,12 @@ internal sealed class EnemyLocalPath
                 if (Vector3.Distance(position, path[waypoint]) < Mathf.Max(2f, cellSize * 0.6f))
                 {
                     waypoint++;
+                }
+
+                if (!Active)
+                {
+                    Revision++;
+                    Status = "Completed";
                 }
 
                 if (Active)
@@ -102,15 +128,21 @@ internal sealed class EnemyLocalPath
             return false;
         }
 
+        double planStarted = Time.realtimeSinceStartupAsDouble;
         nextPlan = Time.time + Mathf.Max(0.5f, retry);
         destination = goal;
         Capture(owner, hull, layers, radius);
         Vector3 localGoal = position + Vector3.ClampMagnitude(goal - position, radius * 0.8f);
         if (ClearSegment(position, localGoal))
         {
+            Expanded = 0;
+            Status = "Direct";
+            PlanMilliseconds = (float)((Time.realtimeSinceStartupAsDouble - planStarted) * 1000.0);
             return false;
         }
 
+        Revision++;
+        Status = "Searching";
         origin = position;
         nodes.Clear();
         open.Clear();
@@ -154,6 +186,8 @@ internal sealed class EnemyLocalPath
                 path.Reverse();
                 waypoint = 0;
                 point = path[0];
+                Status = "Following";
+                PlanMilliseconds = (float)((Time.realtimeSinceStartupAsDouble - planStarted) * 1000.0);
                 return true;
             }
 
@@ -196,6 +230,8 @@ internal sealed class EnemyLocalPath
             }
         }
 
+        Status = open.Count == 0 ? "NoRoute" : "BudgetExceeded";
+        PlanMilliseconds = (float)((Time.realtimeSinceStartupAsDouble - planStarted) * 1000.0);
         return false;
     }
 

@@ -16,7 +16,7 @@ EnemyController 不依赖 NavMesh。接近目标与警戒返航优先使用上/�
 
 **垂直避让优先**：沿当前实际速度检查静态障碍；整舰上升与上层通道畅通时优先翻越，最高偏离正常悬浮高度32m。上方不通时检查向下避让，下降路径与下层前向通道都必须有净空。安全高度按舰体底部/顶部偏移及3m余量计算，保持到舰尾越障；垂直避让失败才进入水平绕障。允许主动降低高度设定，不能再用Max钳制回正常高度。参数位于 **Obstacle Climb Priority**；控制器不写刚体位置/速度。
 
-**可编辑试验场：`Assets/Scenes/EnemyAvoidanceLab.unity`**。直接Play，选择Single wall / U trap / Slalom / Narrow gate或Run all；保存真实Finch舰、固定目标、摄像机及四组障碍。显示距离、速度、时间、障碍接触；结果`Temp/EnemyAvoidanceLab/trials.json`新增turns，统计超过角度死区的驾驶航向变更（不含最初选向和速度制动）。到达仍按水平22m接敌阈值，90秒超时；碰撞伤害系数0，仅重试时重置刚体。Debug开启，青色目标、紫色期望输入、白色实际输入和整舰扫掠终点用于观察；已移除蓝色NavMesh路径。
+**可编辑试验场：`Assets/Scenes/EnemyAvoidanceLab.unity`**（[操作和记录说明](Docs/Validation/2026-11-11-navigation-test-field.md)）。Play面板包含十一组互斥布局：原五组及空场、高墙、下穿、柱阵、折返通道、封闭失败测试。支持只读浏览内置/Saves/EnemyBlueprints蓝图、手动部署、点选起点/目标、调整高度、暂停、重试和连续测试；真实供电、推进器和碰撞保留，碰撞伤害关闭。青色LineRenderer显示飞行轨迹、橙色显示规划路线。记录位于`Application.persistentDataPath/NavigationLabRecords/<session>/`，会话`operations.jsonl`覆盖键鼠和面板操作，各`trial-xxxx`保存metadata、蓝图快照、timeline.jsonl与result；默认10Hz记录运动、输入、净空、A*状态/耗时/节点/路线版本。停止Play和中断也结束记录并恢复时间设置。场地与轨迹Renderer通过Editor API保存，Upgrade Navigation Test Field菜单幂等扩展，不覆盖原障碍；记录不写玩家蓝图。
 
 炮塔实墙遮挡修复保留：从炮口验证视线，触发器和炮塔自身不遮挡，同组墙板及其他单位遮挡。每物理步丢弃被遮挡锁定。验证入口`Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs`保留原名称，现检查稳定驾驶、爬升、视线；与`AiUpgradePlayChecks`共同验证。当前结果见 [移除NavMesh验证](Docs/Validation/2026-11-10-local-steering.md)，旧避障/NavMesh记录仅为历史。
 

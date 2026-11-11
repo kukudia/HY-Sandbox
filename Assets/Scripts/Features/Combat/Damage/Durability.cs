@@ -36,6 +36,11 @@ public class Durability : MonoBehaviour
     private float _collisionDamageCooldown = 0f;
     private float _nextCollisionDamage;
     private float _explosionProtectionUntil;
+    internal void SetCollisionDamageScale(float scale)
+    {
+        _collisionDamageScale = Mathf.Clamp01(scale);
+    }
+
     public bool DestroyedByCollision
     {
         get; private set;

@@ -2073,13 +2073,13 @@ flowchart TD
     C["TurretHitscan.Fire()"]
     click C "../Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs#L10" "打开源码"
     D["Durability.ApplyDamage()"]
-    click D "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L103" "打开源码"
+    click D "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L108" "打开源码"
     E["ControlUnit.OnCollisionEnter()"]
-    click E "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L336" "打开源码"
+    click E "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L337" "打开源码"
     F["CollisionDamageResolver.ApplyContactDamage()"]
     click F "../Assets/Scripts/Features/Combat/Damage/CollisionDamageResolver.cs#L10" "打开源码"
     G["Durability.ApplyCollisionEnergy()"]
-    click G "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L114" "打开源码"
+    click G "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L119" "打开源码"
     H["DestroyManager.DestroyGameObject()"]
     click H "../Assets/Scripts/Features/Combat/DestroyManager.cs#L28" "打开源码"
     I["DestroyManager.ExplodeBlock()"]
@@ -2176,13 +2176,13 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|FindNearestTarget -->
 - [TurretHitscan.Fire](../Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs#L10)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs|Fire -->
-- [Durability.ApplyDamage](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L103)
+- [Durability.ApplyDamage](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L108)
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|ApplyDamage -->
-- [ControlUnit.OnCollisionEnter](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L336)
+- [ControlUnit.OnCollisionEnter](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L337)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|OnCollisionEnter -->
 - [CollisionDamageResolver.ApplyContactDamage](../Assets/Scripts/Features/Combat/Damage/CollisionDamageResolver.cs#L10)
 <!-- source: Assets/Scripts/Features/Combat/Damage/CollisionDamageResolver.cs|ApplyContactDamage -->
-- [Durability.ApplyCollisionEnergy](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L114)
+- [Durability.ApplyCollisionEnergy](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L119)
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|ApplyCollisionEnergy -->
 - [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L28)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyGameObject -->
@@ -3230,9 +3230,9 @@ flowchart TD
     A["DebugManager.Awake()"]
     click A "../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L50" "打开源码"
     B["Durability.OnEnable()"]
-    click B "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L73" "打开源码"
+    click B "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L78" "打开源码"
     C["Durability.OnDisable()"]
-    click C "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L93" "打开源码"
+    click C "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L98" "打开源码"
     D["DurabilityDebugLabels.OnGUI()"]
     click D "../Assets/Scripts/Features/Diagnostics/Interface/DurabilityDebugLabels.cs#L9" "打开源码"
     E["Turret.FixedUpdate()"]
@@ -3261,9 +3261,9 @@ flowchart TD
 
 - [DebugManager.Awake](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L50)
 <!-- source: Assets/Scripts/Features/Diagnostics/DebugManager.cs|Awake -->
-- [Durability.OnEnable](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L73)
+- [Durability.OnEnable](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L78)
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|OnEnable -->
-- [Durability.OnDisable](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L93)
+- [Durability.OnDisable](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L98)
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|OnDisable -->
 - [DurabilityDebugLabels.OnGUI](../Assets/Scripts/Features/Diagnostics/Interface/DurabilityDebugLabels.cs#L9)
 <!-- source: Assets/Scripts/Features/Diagnostics/Interface/DurabilityDebugLabels.cs|OnGUI -->
@@ -3538,7 +3538,7 @@ flowchart TD
     F["ProceduralVoxelWorld.FlushDirty()"]
     click F "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L543" "打开源码"
     G["Durability.ApplyDamage()"]
-    click G "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L103" "打开源码"
+    click G "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L108" "打开源码"
     H["BuildingRuntime.DestroyBlock()"]
     click H "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L238" "打开源码"
     I["BuildingRuntime.SplitDisconnected()"]
@@ -3638,7 +3638,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|ReleaseAnchor -->
 - [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L543)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|FlushDirty -->
-- [Durability.ApplyDamage](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L103)
+- [Durability.ApplyDamage](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L108)
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|ApplyDamage -->
 - [BuildingRuntime.DestroyBlock](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L238)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|DestroyBlock -->
@@ -4328,7 +4328,7 @@ flowchart TD
     J["TurretHitResolver.Apply()"]
     click J "../Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs#L7" "打开源码"
     K["Durability.ApplyDamage()"]
-    click K "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L103" "打开源码"
+    click K "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L108" "打开源码"
     L["DestroyManager.DestroyGameObject()"]
     click L "../Assets/Scripts/Features/Combat/DestroyManager.cs#L28" "打开源码"
     M["WreckSalvage.Convert()"]
@@ -4376,7 +4376,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs|Fire -->
 - [TurretHitResolver.Apply](../Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs#L7)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs|Apply -->
-- [Durability.ApplyDamage](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L103)
+- [Durability.ApplyDamage](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L108)
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|ApplyDamage -->
 - [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L28)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyGameObject -->
@@ -4400,7 +4400,7 @@ flowchart TD
     B["OutpostSalvagePlayerChecks.Run()"]
     click B "../Assets/Scripts/Features/World/Validation/OutpostSalvagePlayerChecks.cs#L12" "打开源码"
     C["Durability.ApplyDamage()"]
-    click C "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L103" "打开源码"
+    click C "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L108" "打开源码"
     D["BuildingRuntime.DestroyBlock()"]
     click D "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L238" "打开源码"
     E["CargoHold.ReleaseContents()"]
@@ -4434,7 +4434,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Validation/OutpostPlayerChecks.cs|Scenario -->
 - [OutpostSalvagePlayerChecks.Run](../Assets/Scripts/Features/World/Validation/OutpostSalvagePlayerChecks.cs#L12)
 <!-- source: Assets/Scripts/Features/World/Validation/OutpostSalvagePlayerChecks.cs|Run -->
-- [Durability.ApplyDamage](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L103)
+- [Durability.ApplyDamage](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L108)
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|ApplyDamage -->
 - [BuildingRuntime.DestroyBlock](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L238)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|DestroyBlock -->
@@ -4524,7 +4524,7 @@ flowchart TD
     I["ControlUnit.Update()"]
     click I "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L138" "打开源码"
     J["EnemyController.FixedUpdate()"]
-    click J "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L148" "打开源码"
+    click J "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L196" "打开源码"
     K["SiegeFleet.RefreshBindings()"]
     click K "../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L439" "打开源码"
     L["SiegeSession.TryRepairShip()"]
@@ -4627,7 +4627,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Units/Cockpit.cs|SetControlMode -->
 - [ControlUnit.Update](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L138)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|Update -->
-- [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L148)
+- [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L196)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|FixedUpdate -->
 - [SiegeFleet.RefreshBindings](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L439)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs|RefreshBindings -->
@@ -4958,7 +4958,7 @@ flowchart TD
     H["SiegeMatch.ResolveAttacker()"]
     click H "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L142" "打开源码"
     I["Durability.ChangeDurability()"]
-    click I "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L163" "打开源码"
+    click I "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L168" "打开源码"
     J["DestroyManager.DestroyGameObject()"]
     click J "../Assets/Scripts/Features/Combat/DestroyManager.cs#L28" "打开源码"
     K["SiegeSession.NotifyCockpitDestroyed()"]
@@ -5035,7 +5035,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs|ReportDefeated -->
 - [SiegeMatch.ResolveAttacker](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L142)
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|ResolveAttacker -->
-- [Durability.ChangeDurability](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L163)
+- [Durability.ChangeDurability](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L168)
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|ChangeDurability -->
 - [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L28)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyGameObject -->
@@ -5409,27 +5409,27 @@ flowchart TD
     A["SiegeWaveDirector.Tick()"]
     click A "../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L46" "打开源码"
     B["EnemyController.SetPriorityTarget()"]
-    click B "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L359" "打开源码"
+    click B "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L407" "打开源码"
     C["EnemyController.FixedUpdate()"]
-    click C "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L148" "打开源码"
+    click C "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L196" "打开源码"
     D["EnemyController.FindNearestOpponent()"]
-    click D "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L366" "打开源码"
+    click D "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L414" "打开源码"
     E["EnemyController.IsValidOpponent()"]
-    click E "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L417" "打开源码"
+    click E "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L465" "打开源码"
     F["EnemyController.CalculateDesiredMovement()"]
-    click F "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L223" "打开源码"
+    click F "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L271" "打开源码"
     G["ControlUnit.SetMovementInput()"]
     click G "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L283" "打开源码"
     H["EnemyController.GetApproachDirection()"]
-    click H "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L260" "打开源码"
+    click H "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L308" "打开源码"
     I["EnemyController.StabilizeDirection()"]
-    click I "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L327" "打开源码"
+    click I "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L375" "打开源码"
     J["EnemyController.ApplyObstacleAvoidance()"]
-    click J "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L532" "打开源码"
+    click J "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L580" "打开源码"
     K["EnemyObstacleClimb.TryGetHeight()"]
     click K "../Assets/Scripts/Features/Combat/Enemies/EnemyObstacleClimb.cs#L25" "打开源码"
     L["EnemyController.ConfigureHoverThrusters()"]
-    click L "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L456" "打开源码"
+    click L "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L504" "打开源码"
     M["EnemyObstacleClimb.Blocked()"]
     click M "../Assets/Scripts/Features/Combat/Enemies/EnemyObstacleClimb.cs#L180" "打开源码"
     Q["EnemyObstacleClimb.CanPass()"]
@@ -5437,19 +5437,19 @@ flowchart TD
     N["EnemyObstacleClimb.GetHullBounds()"]
     click N "../Assets/Scripts/Features/Combat/Enemies/EnemyObstacleClimb.cs#L158" "打开源码"
     O["EnemyController.ProbeObstacle()"]
-    click O "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L633" "打开源码"
+    click O "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L681" "打开源码"
     P["EnemyController.GetVelocityInput()"]
-    click P "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L272" "打开源码"
+    click P "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L320" "打开源码"
     R["EnemyController.LimitObstacleInput()"]
-    click R "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L303" "打开源码"
+    click R "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L351" "打开源码"
     S["EnemyLocalPath.TryFollow()"]
-    click S "../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L49" "打开源码"
+    click S "../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L65" "打开源码"
     T["EnemyLocalPath.Capture()"]
-    click T "../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L207" "打开源码"
+    click T "../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L243" "打开源码"
     U["EnemyLocalPath.ClearFlight()"]
-    click U "../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L254" "打开源码"
+    click U "../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L290" "打开源码"
     V["EnemyLocalPath.ClearSegment()"]
-    click V "../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L260" "打开源码"
+    click V "../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L296" "打开源码"
     A -->|生成或经Attacker.RefreshTarget重新绑定| B
     C -->|目标更新周期| D
     D --> E
@@ -5479,27 +5479,27 @@ flowchart TD
 
 - [SiegeWaveDirector.Tick](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L46)
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs|Tick -->
-- [EnemyController.SetPriorityTarget](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L359)
+- [EnemyController.SetPriorityTarget](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L407)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|SetPriorityTarget -->
-- [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L148)
+- [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L196)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|FixedUpdate -->
-- [EnemyController.FindNearestOpponent](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L366)
+- [EnemyController.FindNearestOpponent](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L414)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|FindNearestOpponent -->
-- [EnemyController.IsValidOpponent](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L417)
+- [EnemyController.IsValidOpponent](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L465)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|IsValidOpponent -->
-- [EnemyController.CalculateDesiredMovement](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L223)
+- [EnemyController.CalculateDesiredMovement](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L271)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|CalculateDesiredMovement -->
 - [ControlUnit.SetMovementInput](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L283)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|SetMovementInput -->
-- [EnemyController.GetApproachDirection](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L260)
+- [EnemyController.GetApproachDirection](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L308)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|GetApproachDirection -->
-- [EnemyController.StabilizeDirection](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L327)
+- [EnemyController.StabilizeDirection](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L375)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|StabilizeDirection -->
-- [EnemyController.ApplyObstacleAvoidance](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L532)
+- [EnemyController.ApplyObstacleAvoidance](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L580)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|ApplyObstacleAvoidance -->
 - [EnemyObstacleClimb.TryGetHeight](../Assets/Scripts/Features/Combat/Enemies/EnemyObstacleClimb.cs#L25)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyObstacleClimb.cs|TryGetHeight -->
-- [EnemyController.ConfigureHoverThrusters](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L456)
+- [EnemyController.ConfigureHoverThrusters](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L504)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|ConfigureHoverThrusters -->
 - [EnemyObstacleClimb.Blocked](../Assets/Scripts/Features/Combat/Enemies/EnemyObstacleClimb.cs#L180)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyObstacleClimb.cs|Blocked -->
@@ -5507,19 +5507,19 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyObstacleClimb.cs|CanPass -->
 - [EnemyObstacleClimb.GetHullBounds](../Assets/Scripts/Features/Combat/Enemies/EnemyObstacleClimb.cs#L158)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyObstacleClimb.cs|GetHullBounds -->
-- [EnemyController.ProbeObstacle](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L633)
+- [EnemyController.ProbeObstacle](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L681)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|ProbeObstacle -->
-- [EnemyController.GetVelocityInput](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L272)
+- [EnemyController.GetVelocityInput](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L320)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|GetVelocityInput -->
-- [EnemyController.LimitObstacleInput](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L303)
+- [EnemyController.LimitObstacleInput](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L351)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|LimitObstacleInput -->
-- [EnemyLocalPath.TryFollow](../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L49)
+- [EnemyLocalPath.TryFollow](../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L65)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs|TryFollow -->
-- [EnemyLocalPath.Capture](../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L207)
+- [EnemyLocalPath.Capture](../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L243)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs|Capture -->
-- [EnemyLocalPath.ClearFlight](../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L254)
+- [EnemyLocalPath.ClearFlight](../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L290)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs|ClearFlight -->
-- [EnemyLocalPath.ClearSegment](../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L260)
+- [EnemyLocalPath.ClearSegment](../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L296)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs|ClearSegment -->
 
 ## 炮塔视线与遮挡锁定
@@ -5558,80 +5558,109 @@ flowchart TD
 
 ## EnemyController 可编辑避障试验场
 
-源码推导：EnemyAvoidanceLabAuthoring.Create 保存舰体、静态目标、服务、四套互斥障碍与摄像机；EnableDebug 保存根Prefab和玩法场景调试开关。EnemyAvoidanceLab.Start 接入PlayManager和真实推进器，ResetTrial仅在新试次重置刚体/意图；正常运行不写舰体位姿或外加推力。FixedUpdate记录位移/距离/超时；EnemyAvoidanceContact只计数实体障碍接触。BeginSuite连续运行四布局，结果写Temp。EnemyController每0.5秒采样局部障碍、锁定绕行侧、按角度死区和冷却限制方向切换；逐物理步抵消侧滑，目标扫描仍独立降频。
+源码推导：Editor保存十一种互斥布局、推荐起点/目标及真实轨迹LineRenderer。Panel只在试验场采集键鼠及面板操作；Lab复用蓝图目录和正式部署链，成功后退役旧测试舰。碰撞通过ControlUnit事件订阅，未动态补挂诊断组件。导航快照默认10Hz采样并按版本记录路线；操作跨轮写入会话日志，逐轮保存蓝图、几何、参数和结果；禁用时关闭文件并恢复暂停/后台设置。
 
 ```mermaid
 flowchart TD
-    A["EnemyAvoidanceLabAuthoring.Create()"]
-    click A "../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L13" "打开源码"
-    B["EnemyAvoidanceLabAuthoring.EnableDebug()"]
-    click B "../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L252" "打开源码"
+    A["EnemyAvoidanceLabAuthoring.UpgradeTestField()"]
+    click A "../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L214" "打开源码"
+    B["EnemyLabPanel.Draw()"]
+    click B "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabPanel.cs#L166" "打开源码"
     C["EnemyAvoidanceLab.Start()"]
-    click C "../Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs#L39" "打开源码"
+    click C "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L111" "打开源码"
     D["EnemyAvoidanceLab.ResetTrial()"]
-    click D "../Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs#L51" "打开源码"
+    click D "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L237" "打开源码"
     E["EnemyAvoidanceLab.FixedUpdate()"]
-    click E "../Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs#L92" "打开源码"
+    click E "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L296" "打开源码"
     F["EnemyAvoidanceLab.BeginSuite()"]
-    click F "../Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs#L134" "打开源码"
-    G["EnemyAvoidanceContact.OnCollisionEnter()"]
-    click G "../Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceContact.cs#L9" "打开源码"
-    H["EnemyAvoidanceLab.RecordContact()"]
-    click H "../Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs#L126" "打开源码"
-    I["EnemyController.GetApproachDirection()"]
-    click I "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L260" "打开源码"
-    J["EnemyController.StabilizeDirection()"]
-    click J "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L327" "打开源码"
-    K["EnemyController.GetMovementInterval()"]
-    click K "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L267" "打开源码"
-    L["EnemyController.GetVelocityInput()"]
-    click L "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L272" "打开源码"
-    M["EnemyController.FixedUpdate()"]
-    click M "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L148" "打开源码"
-    N["EnemyController.ApplyObstacleAvoidance()"]
-    click N "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L532" "打开源码"
-    A -.->|保存可编辑场景| C
-    B -.->|序列化调试配置| I
+    click F "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L447" "打开源码"
+    G["ControlUnit.OnCollisionEnter()"]
+    click G "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L337" "打开源码"
+    H["EnemyAvoidanceLab.OnShipCollision()"]
+    click H "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L404" "打开源码"
+    I["EnemyAvoidanceLab.DeploySelected()"]
+    click I "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L148" "打开源码"
+    J["ModularUnitFactory.Spawn()"]
+    click J "../Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs#L41" "打开源码"
+    K["EnemyAvoidanceLab.Sample()"]
+    click K "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L329" "打开源码"
+    L["EnemyLabRecorder.Sample()"]
+    click L "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L133" "打开源码"
+    M["EnemyController.CaptureNavigation()"]
+    click M "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L128" "打开源码"
+    N["EnemyLabRecorder.Begin()"]
+    click N "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L74" "打开源码"
+    O["EnemyLabPanel.PollInput()"]
+    click O "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabPanel.cs#L29" "打开源码"
+    P["EnemyLabRecorder.Event()"]
+    click P "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L127" "打开源码"
+    Q["EnemyAvoidanceLab.FinishTrial()"]
+    click Q "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L368" "打开源码"
+    R["EnemyLabRecorder.Finish()"]
+    click R "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L141" "打开源码"
+    S["EnemyAvoidanceLab.OnDisable()"]
+    click S "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L506" "打开源码"
+    T["EnemyLabRecorder.Dispose()"]
+    click T "../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L242" "打开源码"
+    A -.->|保存真实场景| C
     C --> D
-    F --> D
-    M -->|逐物理步补偿速度| L
-    M --> K
-    M -->|经目标或警戒移动计算| I
-    M -->|经目标或警戒移动计算| N
-    N --> J
-    E -->|到达或超时后切下一布局| D
-    G --> H
-    K -.->|驾驶采样周期| I
+    B --> I
+    I --> J
+    I --> D
+    F -->|经SelectLayout| D
+    D --> N
+    E --> K
+    K --> L
+    L --> M
+    G -.->|CollisionEntered事件| H
+    H --> P
+    O -->|经RecordOperation| P
+    E --> Q
+    Q --> R
+    S --> Q
+    S --> T
 ```
 
-- [EnemyAvoidanceLabAuthoring.Create](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L13)
-<!-- source: Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs|Create -->
-- [EnemyAvoidanceLabAuthoring.EnableDebug](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L252)
-<!-- source: Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs|EnableDebug -->
-- [EnemyAvoidanceLab.Start](../Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs#L39)
-<!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs|Start -->
-- [EnemyAvoidanceLab.ResetTrial](../Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs#L51)
-<!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs|ResetTrial -->
-- [EnemyAvoidanceLab.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs#L92)
-<!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs|FixedUpdate -->
-- [EnemyAvoidanceLab.BeginSuite](../Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs#L134)
-<!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs|BeginSuite -->
-- [EnemyAvoidanceContact.OnCollisionEnter](../Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceContact.cs#L9)
-<!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceContact.cs|OnCollisionEnter -->
-- [EnemyAvoidanceLab.RecordContact](../Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs#L126)
-<!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyAvoidanceLab.cs|RecordContact -->
-- [EnemyController.GetApproachDirection](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L260)
-<!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|GetApproachDirection -->
-- [EnemyController.StabilizeDirection](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L327)
-<!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|StabilizeDirection -->
-- [EnemyController.GetMovementInterval](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L267)
-<!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|GetMovementInterval -->
-- [EnemyController.GetVelocityInput](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L272)
-<!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|GetVelocityInput -->
-- [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L148)
-<!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|FixedUpdate -->
-- [EnemyController.ApplyObstacleAvoidance](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L532)
-<!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|ApplyObstacleAvoidance -->
+- [EnemyAvoidanceLabAuthoring.UpgradeTestField](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L214)
+<!-- source: Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs|UpgradeTestField -->
+- [EnemyLabPanel.Draw](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabPanel.cs#L166)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabPanel.cs|Draw -->
+- [EnemyAvoidanceLab.Start](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L111)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs|Start -->
+- [EnemyAvoidanceLab.ResetTrial](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L237)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs|ResetTrial -->
+- [EnemyAvoidanceLab.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L296)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs|FixedUpdate -->
+- [EnemyAvoidanceLab.BeginSuite](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L447)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs|BeginSuite -->
+- [ControlUnit.OnCollisionEnter](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L337)
+<!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|OnCollisionEnter -->
+- [EnemyAvoidanceLab.OnShipCollision](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L404)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs|OnShipCollision -->
+- [EnemyAvoidanceLab.DeploySelected](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L148)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs|DeploySelected -->
+- [ModularUnitFactory.Spawn](../Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs#L41)
+<!-- source: Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs|Spawn -->
+- [EnemyAvoidanceLab.Sample](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L329)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs|Sample -->
+- [EnemyLabRecorder.Sample](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L133)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs|Sample -->
+- [EnemyController.CaptureNavigation](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L128)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|CaptureNavigation -->
+- [EnemyLabRecorder.Begin](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L74)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs|Begin -->
+- [EnemyLabPanel.PollInput](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabPanel.cs#L29)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabPanel.cs|PollInput -->
+- [EnemyLabRecorder.Event](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L127)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs|Event -->
+- [EnemyAvoidanceLab.FinishTrial](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L368)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs|FinishTrial -->
+- [EnemyLabRecorder.Finish](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L141)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs|Finish -->
+- [EnemyAvoidanceLab.OnDisable](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L506)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs|OnDisable -->
+- [EnemyLabRecorder.Dispose](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L242)
+<!-- source: Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs|Dispose -->
 
 ## 友敌 AI 调试绘制
 
@@ -5640,19 +5669,19 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["EnemyController.FixedUpdate()"]
-    click A "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L148" "打开源码"
+    click A "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L196" "打开源码"
     B["EnemyController.ApplyObstacleAvoidance()"]
-    click B "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L532" "打开源码"
+    click B "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L580" "打开源码"
     C["EnemyController.ProbeObstacle()"]
-    click C "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L633" "打开源码"
+    click C "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L681" "打开源码"
     D["EnemyController.OnDrawGizmos()"]
-    click D "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L781" "打开源码"
+    click D "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L829" "打开源码"
     E["EnemyController.DrawDebug()"]
-    click E "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L786" "打开源码"
+    click E "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L834" "打开源码"
     F["EnemyController.DrawDebugCircle()"]
-    click F "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L843" "打开源码"
+    click F "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L891" "打开源码"
     G["EnemyController.OnDisable()"]
-    click G "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L432" "打开源码"
+    click G "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L480" "打开源码"
     A -->|经移动计算或警戒返航| B
     B --> C
     D --> E
@@ -5661,19 +5690,19 @@ flowchart TD
     G -.->|清空缓存| E
 ```
 
-- [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L148)
+- [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L196)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|FixedUpdate -->
-- [EnemyController.ApplyObstacleAvoidance](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L532)
+- [EnemyController.ApplyObstacleAvoidance](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L580)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|ApplyObstacleAvoidance -->
-- [EnemyController.ProbeObstacle](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L633)
+- [EnemyController.ProbeObstacle](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L681)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|ProbeObstacle -->
-- [EnemyController.OnDrawGizmos](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L781)
+- [EnemyController.OnDrawGizmos](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L829)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|OnDrawGizmos -->
-- [EnemyController.DrawDebug](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L786)
+- [EnemyController.DrawDebug](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L834)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|DrawDebug -->
-- [EnemyController.DrawDebugCircle](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L843)
+- [EnemyController.DrawDebugCircle](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L891)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|DrawDebugCircle -->
-- [EnemyController.OnDisable](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L432)
+- [EnemyController.OnDisable](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L480)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|OnDisable -->
 
 ## 显式组件与运行对象模板

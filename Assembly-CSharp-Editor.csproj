@@ -110,6 +110,7 @@
     <Compile Include="Assets\Editor\Siege\Hangars\HangarSceneIntegration.cs" />
     <Compile Include="Assets\Editor\World\Outposts\OutpostContentAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegePriorityTargetChecks.cs" />
+    <Compile Include="Assets\Editor\Combat\Validation\EnemyLabPlayChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Buildings\SiegeBuildingDamageChecks.cs" />
     <Compile Include="Assets\Editor\Building\Validation\BuildingEditorPlayProbe.cs" />
     <Compile Include="Assets\Editor\Art\Preview\BlockArtPreview.cs" />

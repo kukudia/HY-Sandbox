@@ -119,6 +119,54 @@ public class EnemyController : MonoBehaviour
     private ControlUnit priorityTarget;
     private RaycastHit[] obstacleHits = new RaycastHit[MaxObstacleHits];
     private int _entityHashCode;
+    internal void ConfigureDebugDisplay(bool enabled, bool ranges)
+    {
+        drawDebug = enabled;
+        showDebugRanges = ranges;
+    }
+
+    public EnemyNavigationSnapshot CaptureNavigation(int previousRouteRevision = -1)
+    {
+        Vector3[] route = null;
+        if (previousRouteRevision != localPath.Revision)
+        {
+            route = new Vector3[localPath.Points.Count];
+            for (int i = 0; i < route.Length; i++)
+            {
+                route[i] = localPath.Points[i];
+            }
+        }
+
+        return new EnemyNavigationSnapshot
+        {
+            position = transform.position,
+            velocity = movementBody != null ? movementBody.linearVelocity : Vector3.zero,
+            rotation = transform.rotation,
+            angularVelocity = movementBody != null ? movementBody.angularVelocity : Vector3.zero,
+            desiredInput = desiredMovementInput,
+            referenceVelocity = courseVelocity,
+            appliedInput = unit != null ? unit.MovementInput : Vector3.zero,
+            steering = steeringDirection,
+            targetHeight = unit != null && unit.hoverFlightController != null ? unit.hoverFlightController.targetHoverHeight : 0f,
+            probeDistance = probeDistance,
+            throttleRatio = obstacleSpeedRatio,
+            hull = avoidanceBounds,
+            avoiding = avoidingObstacle,
+            changingHeight = climbingObstacle,
+            urgent = urgentAvoidance,
+            followingPath = localPath.Active,
+            turns = SteeringChanges,
+            routeRevision = localPath.Revision,
+            expandedNodes = localPath.Expanded,
+            waypoint = localPath.Waypoint,
+            pathStatus = localPath.Status,
+            routeChanged = route != null,
+            replanReason = localPath.ReplanReason,
+            planMilliseconds = localPath.PlanMilliseconds,
+            route = route
+        };
+    }
+
     private void OnEnable()
     {
         // 同批生成单位错开自主扫描；明确任务指派仍会立即清零调度。

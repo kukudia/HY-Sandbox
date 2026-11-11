@@ -333,6 +333,7 @@ public class ControlUnit : MonoBehaviour
         return Vector3.ClampMagnitude(dir, 1f);
     }
 
+    public event System.Action<Collision> CollisionEntered;
     private void OnCollisionEnter(Collision collision)
     {
         if (!IsSimulationActive || collision.contactCount == 0)
@@ -340,6 +341,7 @@ public class ControlUnit : MonoBehaviour
             return;
         }
 
+        CollisionEntered?.Invoke(collision);
         _collisionDamage.ApplyContactDamage(this, collision);
     }
 

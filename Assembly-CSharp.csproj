@@ -76,6 +76,7 @@
     <Compile Include="Assets\Scripts\Features\Building\Interface\BlueprintUIPanel.cs" />
     <Compile Include="Assets\Scripts\Features\World\Validation\OutpostEditorPlayerChecks.cs" />
     <Compile Include="Assets\Scripts\Features\MainMenu\Interface\MainMenuView.cs" />
+    <Compile Include="Assets\Scripts\Features\Combat\Enemies\Testing\EnemyLabRecorder.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interface\SaveUIPanel.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\StylizedBeamEffect.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Fleet\SiegeReturnFlight.cs" />
@@ -89,7 +90,6 @@
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\VfxEffect.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BuildingEditor\BuildingFootprint.cs" />
     <Compile Include="Assets\Scripts\Features\Diagnostics\DebugManager.cs" />
-    <Compile Include="Assets\Scripts\Features\Combat\Enemies\EnemyAvoidanceLab.cs" />
     <Compile Include="Assets\Scripts\Features\Diagnostics\Interface\DurabilityDebugLabels.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\Projectiles\ProjectileTracer.cs" />
     <Compile Include="Assets\Scripts\Features\World\Validation\WorldReturnPlayerChecks.cs" />
@@ -188,6 +188,7 @@
     <Compile Include="Assets\Scripts\Features\Simulation\Units\ModularUnitValidator.cs" />
     <Compile Include="Assets\Scripts\Features\World\Streaming\WorldRegionStreaming.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Enemies\EnemyBlueprintFactory.cs" />
+    <Compile Include="Assets\Scripts\Features\Combat\Enemies\EnemyNavigationSnapshot.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Interface\SiegeHud.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interface\ActionCounterUI.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\SiegeMatch.cs" />
@@ -204,6 +205,7 @@
     <Compile Include="Assets\Scripts\Features\Bots\Bot.cs" />
     <Compile Include="Assets\Scripts\Features\Flight\Thrusters\MainThruster.cs" />
     <Compile Include="Assets\Scripts\Features\World\Outposts\EnemyOutpostData.cs" />
+    <Compile Include="Assets\Scripts\Features\Combat\Enemies\Testing\EnemyAvoidanceLab.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Modes\GameModeController.cs" />
     <Compile Include="Assets\Scripts\Features\MainMenu\Library\MenuBlueprintLibrary.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interface\BuildPaletteItem.cs" />
@@ -246,8 +248,8 @@
     <Compile Include="Assets\Scripts\Features\Bootstrap\RuntimeObjectTemplates.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BlueprintBlockFactory.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Workshop\SiegeWorkshopStage.cs" />
-    <Compile Include="Assets\Scripts\Features\Combat\Enemies\EnemyAvoidanceContact.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Physics\ImpactPhysics.cs" />
+    <Compile Include="Assets\Scripts\Features\Combat\Enemies\Testing\EnemyLabBlueprints.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\ProjectileIntercept.cs" />
     <Compile Include="Assets\Scripts\Features\World\Presentation\WorldTerrainTransitionMesh.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Gameplay\SiegeConstructionPanel.cs" />
@@ -301,6 +303,7 @@
     <Compile Include="Assets\Scripts\Features\Combat\Damage\ExplosionPropagation.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Interface\SiegeFleetView.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Actions\RotateBlockAction.cs" />
+    <Compile Include="Assets\Scripts\Features\Combat\Enemies\Testing\EnemyAvoidanceCourse.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Interface\CombatHud.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BlueprintLoadSettings.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Actions\ActionManager.cs" />
@@ -327,6 +330,7 @@
     <Compile Include="Assets\Scripts\Features\Building\BlockDataTables\BlockCsvBinding.cs" />
     <Compile Include="Assets\Scripts\Features\Flight\Thrusters\Thruster.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Validation\SiegePlayerSurvey.cs" />
+    <Compile Include="Assets\Scripts\Features\Combat\Enemies\Testing\EnemyLabPanel.cs" />
     <Compile Include="Assets\Scripts\Features\World\WorldSessionManager.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interaction\BuildSelection.cs" />
     <Compile Include="Assets\Scripts\Features\Salvage\Cargo\CargoItem.cs" />
