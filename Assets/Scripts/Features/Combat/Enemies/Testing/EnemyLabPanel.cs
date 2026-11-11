@@ -287,7 +287,7 @@ internal sealed class EnemyLabPanel
 
         GUILayout.Label("自由视角：按住右键 + WASD / Q E升降 / Shift加速");
         GUILayout.Label("R重试 / Space暂停 / 中键平移 / 滚轮缩放");
-        GUILayout.Label("青色：飞行轨迹 / 橙色：规划路线");
+        GUILayout.Label($"轨迹深蓝慢 / 浅青快（0–{lab.TraceFastSpeed:F0}m/s） / 橙色：规划路线");
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("起点高度 -"))
         {

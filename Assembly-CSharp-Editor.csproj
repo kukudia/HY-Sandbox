@@ -167,6 +167,7 @@
     <Compile Include="Assets\Editor\Building\Interface\BuildInteractionSetup.cs" />
     <Compile Include="Assets\Editor\World\WorldSessionAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\SiegeSceneAuthoring.cs" />
+    <Compile Include="Assets\Editor\Combat\Validation\EnemyLabEfficiencyChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\Validation\PresentationResourceChecks.cs" />
     <Compile Include="Assets\Editor\MainMenu\MainMenuPlayChecks.cs" />
     <Compile Include="Assets\Editor\World\WorldLab\WorldLabAuthoring.cs" />

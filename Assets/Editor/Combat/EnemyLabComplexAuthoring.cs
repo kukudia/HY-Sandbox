@@ -159,6 +159,16 @@ public static class EnemyLabComplexAuthoring
             courseSettings.ApplyModifiedProperties();
         }
 
+        const string traceMaterialPath = "Assets/Art/Combat/SpeedTraceMaterial.mat";
+        Material traceMaterial = AssetDatabase.LoadAssetAtPath<Material>(traceMaterialPath);
+        if (traceMaterial == null)
+        {
+            traceMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+            traceMaterial.SetColor("_BaseColor", Color.white);
+            AssetDatabase.CreateAsset(traceMaterial, traceMaterialPath);
+        }
+
+        lab.transform.Find("Flight Trace").GetComponent<LineRenderer>().sharedMaterial = traceMaterial;
         Camera camera = Camera.main;
         EnemyLabCamera flight = camera.GetComponent<EnemyLabCamera>();
         if (flight == null)

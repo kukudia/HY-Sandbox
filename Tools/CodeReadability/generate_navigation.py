@@ -1711,6 +1711,7 @@ def main():
             "M": "EnemyObstacleClimb.Blocked", "Q": "EnemyObstacleClimb.CanPass", "N": "EnemyObstacleClimb.GetHullBounds",
             "O": "EnemyController.ProbeObstacle", "P": "EnemyController.GetVelocityInput", "R": "EnemyController.LimitObstacleInput",
             "S": "EnemyLocalPath.TryFollow", "T": "EnemyLocalPath.Capture", "U": "EnemyLocalPath.ClearFlight", "V": "EnemyLocalPath.ClearSegment",
+            "W": "EnemyObstacleClimb.ForwardRatio", "X": "EnemyController.ConstrainDescent", "Y": "EnemyObstacleClimb.CanLowerTo",
         },
         [
             "A -->|生成或经Attacker.RefreshTarget重新绑定| B",
@@ -1719,9 +1720,11 @@ def main():
             "F -->|接近目标| H", "C -->|警戒返航| H", "J --> I", "F --> J",
             "J -->|整舰边界与速度预测| N", "K --> N", "J --> O",
             "J -->|实际速度加时间及速度平方提前量优先上升再下降| K", "K --> Q", "Q -->|整舰垂直及前向净空| M",
-            "C -->|决策后逐物理步应用高度| L", "K -.->|高度未到位时零水平推进并保持舰尾净空| L",
+            "C -->|决策后逐物理步应用高度| L", "K -.->|保持高度直至舰尾越障| L",
+            "J -->|按现高度走廊和升降期间滑行余量限制水平推进| W", "W --> N",
+            "L -->|下降前验证，未通过保持最后安全航层| X", "X --> Y", "Y --> Q",
             "J -->|上下通道受阻或路线未结束| S", "S -->|静态障碍按整舰尺寸扩张| T",
-            "S -->|缓存复查及跳过中间点| U", "U --> V", "S -->|有界三维栅格扩展| V",
+            "S -->|越障后提前直达或末段滚动接续，失败保留安全旧路线| U", "U --> V", "S -->|有界三维栅格扩展| V",
         ],
     )
     graph(
@@ -1745,13 +1748,15 @@ def main():
          "Q": "EnemyAvoidanceLab.FinishTrial", "R": "EnemyLabRecorder.Finish",
          "S": "EnemyAvoidanceLab.OnDisable", "T": "EnemyLabRecorder.Dispose",
          "U": "EnemyLabComplexAuthoring.Upgrade", "V": "EnemyAvoidanceLab.SelectLocation",
-         "W": "EnemyLabCamera.Update", "X": "EnemyLabCamera.SetFreeView"},
+         "W": "EnemyLabCamera.Update", "X": "EnemyLabCamera.SetFreeView",
+         "Y": "EnemyAvoidanceLab.UpdateTraceGradient"},
         ["A -.->|保存真实场景| C", "C --> D", "B --> I", "I --> J", "I --> D",
          "F -->|经SelectLayout| D", "D --> N", "E --> K", "K --> L", "L --> M",
          "G -.->|CollisionEntered事件| H", "H --> P", "O -->|经RecordOperation| P",
          "E --> Q", "Q --> R", "S --> Q", "S --> T",
          "U -.->|保存城区与相机| C", "B --> V", "V -->|经SetStart或SetGoal| D",
-         "B --> X", "W -->|经RecordOperation| P", "X -->|经RecordOperation| P"],
+         "B --> X", "W -->|经RecordOperation| P", "X -->|经RecordOperation| P",
+         "K -->|按累计路程将实时速度编码为深浅纹理| Y"],
     )
     graph(
         "友敌 AI 调试绘制",

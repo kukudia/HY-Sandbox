@@ -88,13 +88,16 @@ public class EnemyController : MonoBehaviour
     private float maxObstacleDescent = 12f;
     [SerializeField, Min(0.5f)]
     private float obstacleClimbClearance = 3f;
-    // 旧资产保留字段，不再暴露已失效的爬升前进比例；高度未到位统一收油。
+    // 仅保留旧资产字段；当前速度比例由完整升降走廊与滑行余量决定。
     [SerializeField, HideInInspector]
     private float climbForwardSpeedRatio = 0.15f;
     private readonly EnemyObstacleClimb obstacleClimb = new EnemyObstacleClimb();
     private bool climbingObstacle;
     private float obstacleHoverHeight;
     private float _smoothedHoverHeight;
+    private float nextDescentCheck;
+    private float descentCheckHeight;
+    private bool descentClear;
     [Header("AI Debug")]
     [SerializeField, Tooltip("在 Scene / Game 的 Gizmos 中显示自主友舰和敌机的决策；玩家驾驶时隐藏。")]
     private bool drawDebug;
@@ -184,6 +187,7 @@ public class EnemyController : MonoBehaviour
         strafeSide = 0f;
         avoidanceSideUntil = 0f;
         _smoothedHoverHeight = 0f;
+        nextDescentCheck = 0f;
     }
 
     private void Awake()
@@ -524,7 +528,7 @@ public class EnemyController : MonoBehaviour
             }
 
             // 越障结束后高度需平滑回落，避免 PID 看到大误差产生向下猛冲。
-            float desired = Mathf.Max(2f, targetHeight);
+            float desired = Mathf.Max(2f, ConstrainDescent(targetHeight, steeringDirection));
             if (_smoothedHoverHeight < 1f)
             {
                 _smoothedHoverHeight = desired;
@@ -541,6 +545,24 @@ public class EnemyController : MonoBehaviour
             // 高度求解器测量所在模块的位置，导航高度统一以舰体根节点为基准。
             unit.hoverFlightController.targetHoverHeight = _smoothedHoverHeight + unit.hoverFlightController.transform.position.y - transform.position.y;
         }
+    }
+
+    private float ConstrainDescent(float requested, Vector3 direction)
+    {
+        if (requested >= transform.position.y - 1f || _smoothedHoverHeight < 1f)
+        {
+            return requested;
+        }
+
+        if (Time.time >= nextDescentCheck || Mathf.Abs(requested - descentCheckHeight) > 0.5f)
+        {
+            descentCheckHeight = requested;
+            nextDescentCheck = Time.time + GetMovementInterval();
+            descentClear = obstacleClimb.CanLowerTo(unit, requested, direction, Mathf.Max(probeDistance, climbLookAhead), obstacleLayers);
+        }
+
+        // 路线结束或重规划失败不代表下层已安全，保留最后安全航层，避免跌入下一组建筑。
+        return descentClear ? requested : Mathf.Max(_smoothedHoverHeight, transform.position.y);
     }
 
     private float GetBaseHoverHeight()
@@ -608,14 +630,16 @@ public class EnemyController : MonoBehaviour
         if (climbingObstacle)
         {
             avoidingObstacle = true;
-            // 未到安全高度时完全停止水平推进，优先完成高度调整；到位后恢复巡航。
-            urgentAvoidance = Mathf.Abs(transform.position.y - obstacleHoverHeight) > 1f;
-            if (urgentAvoidance)
-            {
-                obstacleSpeedRatio = 0f;
-            }
-
-            float ratio = urgentAvoidance ? 0f : 1f;
+            float ratio = obstacleClimb.ForwardRatio(
+                unit,
+                desiredMove,
+                obstacleHoverHeight,
+                cruiseSpeed,
+                obstacleClimbClearance,
+                horizon,
+                obstacleLayers);
+            obstacleSpeedRatio = ratio;
+            urgentAvoidance = ratio < 0.25f;
             return StabilizeDirection(desiredMove) * ratio;
         }
 
@@ -633,10 +657,18 @@ public class EnemyController : MonoBehaviour
             out Vector3 waypoint))
         {
             climbingObstacle = true;
-            obstacleHoverHeight = waypoint.y;
             avoidingObstacle = true;
-            urgentAvoidance = Mathf.Abs(transform.position.y - waypoint.y) > 1f;
-            float heightRatio = urgentAvoidance ? 0f : 1f;
+            Vector3 alongPath = Vector3.ProjectOnPlane(waypoint - transform.position, Vector3.up);
+            obstacleHoverHeight = ConstrainDescent(waypoint.y, alongPath);
+            float heightRatio = obstacleClimb.ForwardRatio(
+                unit,
+                alongPath,
+                obstacleHoverHeight,
+                cruiseSpeed,
+                obstacleClimbClearance,
+                horizon,
+                obstacleLayers);
+            urgentAvoidance = heightRatio < 0.25f;
             obstacleSpeedRatio = heightRatio;
             if (speed >= 0.1f)
             {
@@ -644,8 +676,7 @@ public class EnemyController : MonoBehaviour
                 ProbeObstacle(probeDirection, 1f);
             }
 
-            Vector3 alongPath = Vector3.ProjectOnPlane(waypoint - transform.position, Vector3.up);
-            // 航点只提供航向，不按航点距离减速；高度先到位，水平段保持连续巡航。
+            // 高度与水平同时跟随；现高度走廊余量决定水平速度，航点距离本身不要求停车。
             return StabilizeDirection(alongPath.normalized) * heightRatio;
         }
 

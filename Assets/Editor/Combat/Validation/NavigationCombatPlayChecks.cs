@@ -50,6 +50,7 @@ public static class NavigationCombatPlayChecks
             CheckStableSteering(checks, ai, owner);
             CheckContinuousCourse(checks, ai);
             CheckHullAvoidance(checks, root.transform, owner, ai);
+            CheckDescentRetention(checks, owner, ai);
             CheckLocalPath(checks, root.transform, owner);
             Type selectorType = typeof(Turret).Assembly.GetType("TurretTargetSelector");
             object selector = Activator.CreateInstance(selectorType, Instance, null, new object[] { owner.transform }, null);
@@ -342,6 +343,16 @@ public static class NavigationCombatPlayChecks
             checks,
             "Clear overhead prioritizes obstacle-top altitude with hull clearance",
             (bool)query.Invoke(climb, arguments) && (float)arguments[7] >= wall.bounds.max.y + 3.4f);
+        MethodInfo forward = type.GetMethod("ForwardRatio", Instance);
+        float farRatio = (float)forward.Invoke(climb, new object[] { owner, Vector3.right, 12f, 6f, 3f, 1.5f, (LayerMask)(~0) });
+        Check(
+            checks,
+            "Distant obstacle allows horizontal progress while climbing",
+            farRatio > 0f && farRatio < 1f);
+        owner.transform.localPosition = new Vector3(-4f, 1f, 0f);
+        Physics.SyncTransforms();
+        float nearRatio = (float)forward.Invoke(climb, new object[] { owner, Vector3.right, 12f, 6f, 3f, 1.5f, (LayerMask)(~0) });
+        Check(checks, "Close obstacle removes forward thrust before safe altitude", nearRatio == 0f);
         owner.transform.localPosition = new Vector3(0f, 12f, 0f);
         Physics.SyncTransforms();
         Check(checks, "Climb altitude is held while hull crosses obstacle", (bool)query.Invoke(climb, arguments));
@@ -419,6 +430,32 @@ public static class NavigationCombatPlayChecks
         Physics.SyncTransforms();
     }
 
+    private static void CheckDescentRetention(List<string> checks, ControlUnit owner, EnemyController ai)
+    {
+        MethodInfo constrain = typeof(EnemyController).GetMethod("ConstrainDescent", Instance);
+        FieldInfo height = typeof(EnemyController).GetField("_smoothedHoverHeight", Instance);
+        FieldInfo nextCheck = typeof(EnemyController).GetField("nextDescentCheck", Instance);
+        Vector3 previous = owner.transform.localPosition;
+        owner.transform.localPosition = new Vector3(-20f, 12f, 0f);
+        height.SetValue(ai, 12f);
+        nextCheck.SetValue(ai, 0f);
+        Physics.SyncTransforms();
+        Check(
+            checks,
+            "Blocked lower corridor retains last safe altitude after route ends",
+            (float)constrain.Invoke(ai, new object[] { 4f, Vector3.right }) >= 12f);
+        owner.transform.localPosition = new Vector3(12f, 12f, 0f);
+        nextCheck.SetValue(ai, 0f);
+        Physics.SyncTransforms();
+        Check(
+            checks,
+            "Passing the full obstacle releases safe descent",
+            (float)constrain.Invoke(ai, new object[] { 4f, Vector3.right }) == 4f);
+        owner.transform.localPosition = previous;
+        height.SetValue(ai, 0f);
+        Physics.SyncTransforms();
+    }
+
     private static void CheckLocalPath(List<string> checks, Transform root, ControlUnit owner)
     {
         Type type = typeof(EnemyController).Assembly.GetType("EnemyLocalPath");
@@ -451,6 +488,18 @@ public static class NavigationCombatPlayChecks
         int expanded = (int)type.GetProperty("Expanded", Instance).GetValue(planner);
         Check(checks, "A star respects expansion budget", expanded > 0 && expanded <= 1024);
         Check(checks, "Cached path continues on next decision", (bool)follow.Invoke(planner, args));
+        owner.transform.localPosition = new Vector3(12f, 4f, -45f);
+        args[1] = new Bounds(owner.transform.position, Vector3.one * 2f);
+        Physics.SyncTransforms();
+        Check(
+            checks,
+            "Clearing the obstacle releases cached route before old endpoint",
+            !(bool)follow.Invoke(planner, args) && (string)type.GetProperty("ReplanReason", Instance).GetValue(planner) == "GoalVisible");
+        owner.transform.localPosition = new Vector3(-20f, 4f, -45f);
+        args[1] = new Bounds(owner.transform.position, Vector3.one * 2f);
+        type.GetMethod("Clear", Instance).Invoke(planner, null);
+        Physics.SyncTransforms();
+        Check(checks, "Bypass can be planned again after early release", (bool)follow.Invoke(planner, args));
         Vector3 blockedPoint = ((Vector3)args[10] + owner.transform.position) * 0.5f;
         BoxCollider blocker = Box(
             root,
@@ -463,6 +512,21 @@ public static class NavigationCombatPlayChecks
             "New geometry invalidates cached path before thrust",
             !(bool)follow.Invoke(planner, args) && !(bool)type.GetProperty("Active", Instance).GetValue(planner));
         Object.DestroyImmediate(blocker.gameObject);
+        type.GetMethod("Clear", Instance).Invoke(planner, null);
+        wall.transform.localPosition = new Vector3(0f, 6f, -45f);
+        wall.size = new Vector3(3f, 12f, 200f);
+        args[2] = root.TransformPoint(new Vector3(100f, 4f, -45f));
+        args[9] = 20f;
+        Physics.SyncTransforms();
+        Check(checks, "Distant task plans a bounded segment over wall", (bool)follow.Invoke(planner, args));
+        points = (IReadOnlyList<Vector3>)type.GetProperty("Points", Instance).GetValue(planner);
+        Check(
+            checks,
+            "Local window exit preserves crest altitude before next search",
+            points.Count > 1 && points[points.Count - 1].y >= System.Linq.Enumerable.Max(points, p => p.y) - 0.01f);
+        args[2] = destination;
+        args[9] = 6f;
+        wall.transform.localPosition = new Vector3(0f, 10f, -45f);
         Physics.SyncTransforms();
         type.GetMethod("Clear", Instance).Invoke(planner, null);
         wall.size = new Vector3(3f, 25f, 200f);

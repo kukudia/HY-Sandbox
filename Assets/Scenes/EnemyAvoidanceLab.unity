@@ -240753,7 +240753,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5cd3b6fb41ba3814fba81eb775751ee1, type: 2}
+  - {fileID: 2100000, guid: 8584a34bfa6a16b48afd3a4608232add, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -324736,6 +324736,7 @@ MonoBehaviour:
   routeLine: {fileID: 773476160}
   recordTrials: 1
   recordInterval: 0.1
+  traceFastSpeed: 8
 --- !u!4 &1074857791
 Transform:
   m_ObjectHideFlags: 0

@@ -79,6 +79,8 @@ internal sealed class EnemyLocalPath
         point = position;
         cellSize = Mathf.Max(2f, cellSize);
         radius = Mathf.Max(cellSize * 2f, radius);
+        Vector3[] fallback = null;
+        int fallbackWaypoint = waypoint;
         if (Active && Time.time >= nextPlan && (goal - destination).sqrMagnitude > cellSize * cellSize * 4f)
         {
             Clear();
@@ -89,6 +91,15 @@ internal sealed class EnemyLocalPath
         {
             // 提前切换中间航点，不要求逐点减速至零；验证跳点整段舰体通道。
             Capture(owner, hull, layers, radius);
+            Vector3 forwardGoal = position + Vector3.ClampMagnitude(goal - position, radius * 0.8f);
+            if (ClearFlight(position, forwardGoal))
+            {
+                Clear();
+                Status = "Direct";
+                ReplanReason = "GoalVisible";
+                return false;
+            }
+
             if (!ClearFlight(position, path[waypoint]))
             {
                 path.Clear();
@@ -118,7 +129,16 @@ internal sealed class EnemyLocalPath
                 if (Active)
                 {
                     point = path[waypoint];
-                    return true;
+                    bool rolling = (destination - path[path.Count - 1]).sqrMagnitude > cellSize * cellSize * 4f && waypoint == path.Count - 1 && (position - path[path.Count - 1]).sqrMagnitude < radius * radius * 0.1225f;
+                    if (!rolling || Time.time < nextPlan)
+                    {
+                        return true;
+                    }
+
+                    // 前移局部搜索窗口；替换失败仍沿已验证的旧路线飞行，不等待窗口终点。
+                    fallback = path.ToArray();
+                    fallbackWaypoint = waypoint;
+                    ReplanReason = "RollingWindow";
                 }
             }
         }
@@ -135,6 +155,9 @@ internal sealed class EnemyLocalPath
         Vector3 localGoal = position + Vector3.ClampMagnitude(goal - position, radius * 0.8f);
         if (ClearSegment(position, localGoal))
         {
+            path.Clear();
+            waypoint = 0;
+            Revision++;
             Expanded = 0;
             Status = "Direct";
             PlanMilliseconds = (float)((Time.realtimeSinceStartupAsDouble - planStarted) * 1000.0);
@@ -144,6 +167,13 @@ internal sealed class EnemyLocalPath
         Revision++;
         Status = "Searching";
         origin = position;
+        // 接敌高度附近的悬浮误差不应变成新的低空航层；否则每次规划都会继续降低设定高度。
+        Vector3 levelOrigin = new Vector3(position.x, goal.y, position.z);
+        if (Mathf.Abs(position.y - goal.y) < 2f && ClearSegment(position, levelOrigin))
+        {
+            origin = levelOrigin;
+        }
+
         nodes.Clear();
         open.Clear();
         nodes[Vector3Int.zero] = new Node
@@ -184,6 +214,23 @@ internal sealed class EnemyLocalPath
                 }
 
                 path.Reverse();
+                if ((goal - position).sqrMagnitude > radius * radius * 0.64f && path.Count > 1)
+                {
+                    // 窗口终点并非任务终点。保留本段最高航层，避免在下一堵墙前先下降再爬升。
+                    float peak = localGoal.y;
+                    foreach (Vector3 routePoint in path)
+                    {
+                        peak = Mathf.Max(peak, routePoint.y);
+                    }
+
+                    Vector3 exit = path[path.Count - 1];
+                    exit.y = peak;
+                    if (ClearFlight(path[path.Count - 2], exit))
+                    {
+                        path[path.Count - 1] = exit;
+                    }
+                }
+
                 waypoint = 0;
                 point = path[0];
                 Status = "Following";
@@ -232,6 +279,16 @@ internal sealed class EnemyLocalPath
 
         Status = open.Count == 0 ? "NoRoute" : "BudgetExceeded";
         PlanMilliseconds = (float)((Time.realtimeSinceStartupAsDouble - planStarted) * 1000.0);
+        if (fallback != null)
+        {
+            path.Clear();
+            path.AddRange(fallback);
+            waypoint = fallbackWaypoint;
+            point = path[waypoint];
+            Status = "FollowingRetained";
+            return true;
+        }
+
         return false;
     }
 

@@ -155,6 +155,73 @@ internal sealed class EnemyObstacleClimb
                 unit);
     }
 
+    internal float ForwardRatio(
+        ControlUnit owner,
+        Vector3 direction,
+        float targetHeight,
+        float cruiseSpeed,
+        float clearance,
+        float lead,
+        LayerMask layers)
+    {
+        direction = Vector3.ProjectOnPlane(direction, Vector3.up).normalized;
+        if (direction.sqrMagnitude < 0.01f)
+        {
+            return 0f;
+        }
+
+        // 高度尚未到位并不等于水平通道已被堵住。只在现高度的可用距离不足时收油。
+        Bounds bounds = GetHullBounds(owner);
+        Vector3 extents = bounds.extents + new Vector3(0.75f, 0.25f, 0.75f);
+        float deltaHeight = targetHeight - owner.transform.position.y;
+        // 升降途中覆盖整个高度区间，尤其不能把当前高度下方的楼顶当作水平净空。
+        extents.y += Mathf.Abs(deltaHeight) * 0.5f;
+        Vector3 center = bounds.center + Vector3.up * (deltaHeight * 0.5f);
+        float heightTime = Mathf.Abs(targetHeight - owner.transform.position.y) / 1.5f;
+        float horizon = Mathf.Max(1f, lead + heightTime);
+        float distance = Mathf.Max(1f, cruiseSpeed) * horizon + clearance;
+        int count = Cast(
+            owner.gameObject.scene.GetPhysicsScene(),
+            center,
+            extents,
+            direction,
+            distance,
+            layers);
+        float available = distance;
+        for (int i = 0; i < count; i++)
+        {
+            RaycastHit hit = hits[i];
+            if (IsGeometry(hit.collider, owner) && Mathf.Abs(hit.normal.y) < 0.7f)
+            {
+                available = Mathf.Min(available, hit.distance);
+            }
+        }
+
+        if (available >= distance)
+        {
+            return 1f;
+        }
+
+        float currentSpeed = _body != null ? Mathf.Max(0f, Vector3.Dot(_body.linearVelocity, direction)) : 0f;
+        // 不允许反推制动，必须预留现有动量在升降期间的滑行距离，不能仅限制新参考速度。
+        float coast = currentSpeed * (heightTime + lead);
+        return Mathf.Clamp01((available - clearance - coast) / Mathf.Max(1f, cruiseSpeed * horizon));
+    }
+
+    internal bool CanLowerTo(ControlUnit unit, float targetHeight, Vector3 direction, float distance, LayerMask layers)
+    {
+        Bounds bounds = GetHullBounds(unit);
+        direction = Vector3.ProjectOnPlane(direction, Vector3.up).normalized;
+        return CanPass(
+            unit.gameObject.scene.GetPhysicsScene(),
+            bounds,
+            direction,
+            distance,
+            targetHeight - unit.transform.position.y,
+            layers,
+            unit);
+    }
+
     internal Bounds GetHullBounds(ControlUnit unit)
     {
         if (hull == null || Time.time >= nextHullRefresh)
