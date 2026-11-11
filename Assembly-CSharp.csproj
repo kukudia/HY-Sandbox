@@ -133,6 +133,7 @@
     <Compile Include="Assets\Scripts\Features\Power\PowerNetwork.cs" />
     <Compile Include="Assets\Scripts\Features\Salvage\Drops\WreckSalvage.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BuildingEditor\BuildingOutpostEditor.cs" />
+    <Compile Include="Assets\Scripts\Features\Combat\Enemies\Testing\EnemyLabCamera.cs" />
     <Compile Include="Assets\Scripts\Features\Salvage\Economy\CoinManager.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Interface\SiegeBattleFeedback.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\MeteorTrailFollower.cs" />

@@ -1733,7 +1733,7 @@ def main():
     )
     graph(
         "EnemyController 可编辑避障试验场",
-        "源码推导：Editor保存十一种互斥布局、推荐起点/目标及真实轨迹LineRenderer。Panel只在试验场采集键鼠及面板操作；Lab复用蓝图目录和正式部署链，成功后退役旧测试舰。碰撞通过ControlUnit事件订阅，未动态补挂诊断组件。导航快照默认10Hz采样并按版本记录路线；操作跨轮写入会话日志，逐轮保存蓝图、几何、参数和结果；禁用时关闭文件并恢复暂停/后台设置。",
+        "源码推导：Editor保存十二种互斥布局，默认综合城区含六个可独立选择的起终点；自由相机预挂于场景，以非缩放时间移动，释放右键或失焦恢复鼠标。Panel采集试验操作；Lab复用蓝图目录和正式部署链。碰撞通过ControlUnit事件订阅。导航快照默认10Hz采样；操作和镜头变化写入会话日志，逐轮保存蓝图、几何、参数和结果；禁用时关闭文件并恢复时间设置。",
         {"A": "EnemyAvoidanceLabAuthoring.UpgradeTestField", "B": "EnemyLabPanel.Draw",
          "C": "EnemyAvoidanceLab.Start", "D": "EnemyAvoidanceLab.ResetTrial",
          "E": "EnemyAvoidanceLab.FixedUpdate", "F": "EnemyAvoidanceLab.BeginSuite",
@@ -1743,11 +1743,15 @@ def main():
          "M": "EnemyController.CaptureNavigation", "N": "EnemyLabRecorder.Begin",
          "O": "EnemyLabPanel.PollInput", "P": "EnemyLabRecorder.Event",
          "Q": "EnemyAvoidanceLab.FinishTrial", "R": "EnemyLabRecorder.Finish",
-         "S": "EnemyAvoidanceLab.OnDisable", "T": "EnemyLabRecorder.Dispose"},
+         "S": "EnemyAvoidanceLab.OnDisable", "T": "EnemyLabRecorder.Dispose",
+         "U": "EnemyLabComplexAuthoring.Upgrade", "V": "EnemyAvoidanceLab.SelectLocation",
+         "W": "EnemyLabCamera.Update", "X": "EnemyLabCamera.SetFreeView"},
         ["A -.->|保存真实场景| C", "C --> D", "B --> I", "I --> J", "I --> D",
          "F -->|经SelectLayout| D", "D --> N", "E --> K", "K --> L", "L --> M",
          "G -.->|CollisionEntered事件| H", "H --> P", "O -->|经RecordOperation| P",
-         "E --> Q", "Q --> R", "S --> Q", "S --> T"],
+         "E --> Q", "Q --> R", "S --> Q", "S --> T",
+         "U -.->|保存城区与相机| C", "B --> V", "V -->|经SetStart或SetGoal| D",
+         "B --> X", "W -->|经RecordOperation| P", "X -->|经RecordOperation| P"],
     )
     graph(
         "友敌 AI 调试绘制",

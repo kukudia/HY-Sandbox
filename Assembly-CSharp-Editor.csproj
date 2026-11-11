@@ -154,6 +154,7 @@
     <Compile Include="Assets\Editor\World\Validation\Outposts\OutpostResidentChecks.cs" />
     <Compile Include="Assets\Editor\Salvage\SalvagePlayProbe.cs" />
     <Compile Include="Assets\Editor\World\Validation\Terrain\WorldTerrainIntegrationChecks.cs" />
+    <Compile Include="Assets\Editor\Combat\Validation\EnemyLabViewChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Hangars\SiegeHangarPlayChecks.cs" />
     <Compile Include="Assets\Editor\Siege\SiegePlayChecks.cs" />
     <Compile Include="Assets\Editor\Architecture\PresentationPlayChecks.cs" />
@@ -196,6 +197,7 @@
     <Compile Include="Assets\Editor\Combat\Validation\EnemyBlueprintPoolChecks.cs" />
     <Compile Include="Assets\Editor\Salvage\SalvageAssetBaker.cs" />
     <Compile Include="Assets\Editor\World\Validation\WorldLab\WorldLabPersistenceChecks.cs" />
+    <Compile Include="Assets\Editor\Combat\EnemyLabComplexAuthoring.cs" />
     <Compile Include="Assets\Editor\Presentation\Resources\VfxCatalogMigration.cs" />
     <Compile Include="Assets\Editor\Presentation\Interface\ReturnStatusSetup.cs" />
     <Compile Include="Assets\Editor\Art\Validation\BlockArtDependencies.cs" />

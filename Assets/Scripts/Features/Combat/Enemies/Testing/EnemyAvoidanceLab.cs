@@ -100,6 +100,31 @@ public sealed class EnemyAvoidanceLab : MonoBehaviour
         panel.BeginPick(start);
     }
 
+    public EnemyLabCamera ViewCamera => Camera.main != null ? Camera.main.GetComponent<EnemyLabCamera>() : null;
+    public int LocationCount => Course != null ? Course.LocationCount : 0;
+
+    public string LocationName(int index) => Course.Location(index) != null ? Course.Location(index).name : "Missing";
+    public bool SelectLocation(int index, bool asStart)
+    {
+        Transform location = Course != null ? Course.Location(index) : null;
+        if (location == null)
+        {
+            return false;
+        }
+
+        recorder.Event(asStart ? "select_start" : "select_goal", location.name);
+        if (asStart)
+        {
+            SetStart(location.position);
+        }
+        else
+        {
+            SetGoal(location.position - Vector3.up * controller.targetHoverHeightOffset);
+        }
+
+        return true;
+    }
+
     public void SetStart(Vector3 position)
     {
         startPosition = position;
@@ -124,7 +149,7 @@ public sealed class EnemyAvoidanceLab : MonoBehaviour
         BindShip(ship);
         panel = new EnemyLabPanel(this);
         SetRoofVisibility(false);
-        ResetTrial();
+        SelectLayout(layoutIndex);
     }
 
     public void RefreshBlueprints()

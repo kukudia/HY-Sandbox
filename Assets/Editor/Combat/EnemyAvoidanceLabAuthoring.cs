@@ -155,6 +155,7 @@ public static class EnemyAvoidanceLabAuthoring
             EditorSceneManager.SaveScene(scene, ScenePath);
             AddRoofedTrial();
             UpgradeTestField();
+            EnemyLabComplexAuthoring.Upgrade();
         }
         finally
         {

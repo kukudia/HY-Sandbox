@@ -37,6 +37,7 @@ public static class EnemyLabPlayChecks
         {
             Check(checks, "Eleven editable courses available", lab.LayoutCount >= 11);
             Check(checks, "Read-only catalog includes built-in ships", lab.BlueprintCount >= 3);
+            lab.ViewCamera.ResetOverview();
             lab.SelectLayout(5);
             lab.SelectBlueprint(0);
             ControlUnit previous = lab.Ship;
@@ -136,6 +137,16 @@ public static class EnemyLabPlayChecks
             if (keyboard != null)
             {
                 InputSystem.RemoveDevice(keyboard);
+            }
+
+            if (mouse != null)
+            {
+                InputSystem.RemoveDevice(mouse);
+            }
+
+            if (originalMouse != null && originalMouse.added)
+            {
+                originalMouse.MakeCurrent();
             }
 
             if (original != null && original.added)

@@ -11,6 +11,7 @@ internal sealed class EnemyLabPanel
     private Vector2 blueprintScroll;
     private Vector2 layoutScroll;
     private Vector2 panelScroll;
+    private Vector2 locationScroll;
     private bool pickStart;
     private bool pickGoal;
     private bool showRoofs;
@@ -44,13 +45,14 @@ internal sealed class EnemyLabPanel
                 }
             }
 
-            if (keyboard.rKey.wasPressedThisFrame)
+            bool flying = lab.ViewCamera != null && lab.ViewCamera.Looking;
+            if (!flying && keyboard.rKey.wasPressedThisFrame)
             {
                 lab.RecordOperation("key", "R reset");
                 lab.ResetTrial();
             }
 
-            if (keyboard.spaceKey.wasPressedThisFrame)
+            if (!flying && keyboard.spaceKey.wasPressedThisFrame)
             {
                 lab.RecordOperation("key", "Space pause");
                 lab.SetPaused(!lab.Paused);
@@ -100,25 +102,6 @@ internal sealed class EnemyLabPanel
             if (mouse.scroll.ReadValue().sqrMagnitude > 0f)
             {
                 lab.RecordOperation("mouse_scroll", mouse.scroll.ReadValue().ToString());
-            }
-        }
-
-        Camera camera = Camera.main;
-        if (mouse != null && camera != null && mouse.position.ReadValue().x >= 375f)
-        {
-            Vector2 delta = mouse.delta.ReadValue();
-            if (mouse.middleButton.isPressed && delta.sqrMagnitude > 0f)
-            {
-                float scale = 2f * camera.orthographicSize / Mathf.Max(1, Screen.height);
-                camera.transform.position -= (camera.transform.right * delta.x + camera.transform.up * delta.y) * scale;
-                lab.RecordOperation("camera_pan", camera.transform.position.ToString("F3"));
-            }
-
-            float scroll = mouse.scroll.ReadValue().y;
-            if (scroll != 0f)
-            {
-                camera.orthographicSize = Mathf.Clamp(camera.orthographicSize * Mathf.Exp(-scroll * 0.001f), 20f, 200f);
-                lab.RecordOperation("camera_zoom", camera.orthographicSize.ToString("F2"));
             }
         }
 
@@ -232,6 +215,25 @@ internal sealed class EnemyLabPanel
         }
 
         GUILayout.EndHorizontal();
+        GUILayout.Label("预设位置：左列设起点 / 右列设终点");
+        locationScroll = GUILayout.BeginScrollView(locationScroll, GUILayout.Height(115f));
+        for (int i = 0; i < lab.LocationCount; i++)
+        {
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("起 " + lab.LocationName(i)))
+            {
+                lab.SelectLocation(i, true);
+            }
+
+            if (GUILayout.Button("终 " + lab.LocationName(i)))
+            {
+                lab.SelectLocation(i, false);
+            }
+
+            GUILayout.EndHorizontal();
+        }
+
+        GUILayout.EndScrollView();
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("点选起点"))
         {
@@ -266,18 +268,25 @@ internal sealed class EnemyLabPanel
             lab.SetRoofVisibility(roofs);
         }
 
-        if (GUILayout.Button("相机复位"))
+        EnemyLabCamera view = lab.ViewCamera;
+        if (view != null)
         {
-            Camera camera = Camera.main;
-            if (camera != null)
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button(view.FreeView ? "切换总览" : "自由视角"))
             {
-                camera.transform.SetPositionAndRotation(new Vector3(0f, 190f, -100f), Quaternion.Euler(65f, 0f, 0f));
-                camera.orthographicSize = 140f;
-                lab.RecordOperation("camera_reset", "overview");
+                view.SetFreeView(!view.FreeView);
             }
+
+            if (GUILayout.Button("相机复位"))
+            {
+                view.ResetOverview();
+            }
+
+            GUILayout.EndHorizontal();
         }
 
-        GUILayout.Label("R重试 / Space暂停 / 中键拖动 / 滚轮缩放");
+        GUILayout.Label("自由视角：按住右键 + WASD / Q E升降 / Shift加速");
+        GUILayout.Label("R重试 / Space暂停 / 中键平移 / 滚轮缩放");
         GUILayout.Label("青色：飞行轨迹 / 橙色：规划路线");
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("起点高度 -"))
