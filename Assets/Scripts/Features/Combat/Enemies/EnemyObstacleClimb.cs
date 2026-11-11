@@ -1,4 +1,4 @@
-// 职责：为自主舰选择优先翻越的静态障碍，验证上升净空并保持高度直到舰尾越障。
+// 职责：为自主舰按真实航迹优先选择上/下避障，验证整舰净空并保持高度直到舰尾越障。
 // 入口：TryGetHeight()；仅输出目标高度，不写刚体，不替代顶棚下的水平寻路。
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -28,7 +28,8 @@ internal sealed class EnemyObstacleClimb
         float maxRise,
         float clearance,
         LayerMask layers,
-        out float targetHeight)
+        out float targetHeight,
+        float maxDrop = 0f)
     {
         targetHeight = baseHeight;
         if (direction.sqrMagnitude < 0.01f)
@@ -61,7 +62,7 @@ internal sealed class EnemyObstacleClimb
         for (int i = 0; i < count; i++)
         {
             RaycastHit hit = hits[i];
-            if (IsGeometry(hit.collider, unit) && hit.collider.bounds.max.y > baseHeight - bottomOffset + 0.25f && Mathf.Abs(hit.normal.y) < 0.7f && hit.distance < nearest)
+            if (IsGeometry(hit.collider, unit) && hit.collider.bounds.max.y > baseHeight - bottomOffset + 0.25f && hit.distance < nearest)
             {
                 nearest = hit.distance;
                 obstacle = hit.collider;
@@ -71,35 +72,37 @@ internal sealed class EnemyObstacleClimb
         float candidate = active ? height : baseHeight;
         if (obstacle != null)
         {
-            candidate = Mathf.Max(candidate, obstacle.bounds.max.y + bottomOffset + clearance);
+            candidate = obstacle.bounds.max.y + bottomOffset + clearance;
+            if (active && height > baseHeight)
+            {
+                candidate = Mathf.Max(height, candidate);
+            }
         }
 
-        if (candidate <= baseHeight + 0.1f || candidate > baseHeight + maxRise)
-        {
-            active = false;
-            return false;
-        }
-
-        float rise = Mathf.Max(0f, candidate - unit.transform.position.y);
-        // 全舰包围盒验证垂直扫掠和高处前进走廊；顶棚/高墙不能被当作可直接翻越。
-        if (Blocked(
+        bool upward = candidate > baseHeight + 0.1f && candidate <= baseHeight + maxRise;
+        if (!upward || !CanPass(
             physics,
-            bounds.center,
-            bounds.extents,
-            Vector3.up,
-            rise,
+            bounds,
+            direction,
+            lookAhead,
+            candidate - unit.transform.position.y,
             layers,
-            unit) || Blocked(
+            unit))
+        {
+            float topOffset = bounds.max.y - unit.transform.position.y;
+            candidate = obstacle != null ? obstacle.bounds.min.y - topOffset - clearance : height;
+            if (maxDrop <= 0f || candidate >= baseHeight - 0.1f || candidate < baseHeight - maxDrop || candidate < 2f || !CanPass(
                 physics,
-                bounds.center + Vector3.up * rise,
-                bounds.extents,
+                bounds,
                 direction,
                 lookAhead,
+                candidate - unit.transform.position.y,
                 layers,
                 unit))
-        {
-            active = false;
-            return false;
+            {
+                active = false;
+                return false;
+            }
         }
 
         if (obstacle != null)
@@ -115,6 +118,33 @@ internal sealed class EnemyObstacleClimb
         height = candidate;
         targetHeight = candidate;
         return true;
+    }
+
+    private bool CanPass(
+        PhysicsScene physics,
+        Bounds bounds,
+        Vector3 direction,
+        float distance,
+        float deltaHeight,
+        LayerMask layers,
+        ControlUnit unit)
+    {
+        Vector3 vertical = deltaHeight >= 0f ? Vector3.up : Vector3.down;
+        return !Blocked(
+            physics,
+            bounds.center,
+            bounds.extents,
+            vertical,
+            Mathf.Abs(deltaHeight),
+            layers,
+            unit) && !Blocked(
+                physics,
+                bounds.center + Vector3.up * deltaHeight,
+                bounds.extents,
+                direction,
+                distance,
+                layers,
+                unit);
     }
 
     internal Bounds GetHullBounds(ControlUnit unit)

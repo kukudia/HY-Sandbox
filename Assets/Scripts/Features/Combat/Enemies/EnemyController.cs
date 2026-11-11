@@ -21,7 +21,8 @@ public class EnemyController : MonoBehaviour
     public float obstacleAvoidanceDistance = 12f;
     public float obstacleProbeRadius = 1.5f;
     public float obstacleAvoidanceWeight = 1.4f;
-    public float sideProbeAngle = 35f;
+    [HideInInspector]
+    public float sideProbeAngle = 35f; // 保留旧序列化数据；当前不再使用扇形探测。
     public float targetHoverHeightOffset = 3f;
     public LayerMask obstacleLayers = ~0;
     [Header("Stable Steering")]
@@ -54,6 +55,8 @@ public class EnemyController : MonoBehaviour
     private float avoidanceSide;
     private float strafeSide;
     private bool urgentAvoidance;
+    private bool avoidingObstacle;
+    private float obstacleSpeedRatio = 1f;
     public Vector3 SteeringDirection => steeringDirection;
     public int SteeringChanges
     {
@@ -67,6 +70,8 @@ public class EnemyController : MonoBehaviour
     private float climbLookAhead = 50f;
     [SerializeField, Min(1f), Tooltip("相对正常悬浮目标高度允许的最大额外爬升（米）。")]
     private float maxObstacleClimb = 32f;
+    [SerializeField, Min(0f), Tooltip("无法向上越障时允许向下避让的最大高度差（米），仍验证地面及完整通道净空。")]
+    private float maxObstacleDescent = 12f;
     [SerializeField, Min(0.5f)]
     private float obstacleClimbClearance = 3f;
     [SerializeField, Range(0f, 1f), Tooltip("尚未爬到安全高度时的前进速度比例。")]
@@ -83,9 +88,9 @@ public class EnemyController : MonoBehaviour
     [SerializeField, Min(0.1f), Tooltip("移动输入向量的显示长度（米）。")]
     private float debugVectorLength = 8f;
     // 保存实际整舰扫掠快照，绘制不触发新的物理查询。
-    private readonly Vector3[] debugProbeOrigins = new Vector3[5];
-    private readonly Vector3[] debugProbeEnds = new Vector3[5];
-    private readonly Vector3[] debugProbeNormals = new Vector3[5];
+    private readonly Vector3[] debugProbeOrigins = new Vector3[1];
+    private readonly Vector3[] debugProbeEnds = new Vector3[1];
+    private readonly Vector3[] debugProbeNormals = new Vector3[1];
     private int debugProbeCount;
     private ControlUnit unit;
     private ControlUnit currentTarget;
@@ -170,10 +175,10 @@ public class EnemyController : MonoBehaviour
             }
 
             ConfigureHoverThrusters();
-            unit.SetMovementInput(Vector3.MoveTowards(
+            unit.SetMovementInput(LimitObstacleInput(Vector3.MoveTowards(
                 unit.MovementInput,
                 GetVelocityInput(),
-                Mathf.Max(0.1f, movementResponseRate) * Time.fixedDeltaTime));
+                Mathf.Max(0.1f, movementResponseRate) * Time.fixedDeltaTime)));
             return;
         }
 
@@ -191,7 +196,7 @@ public class EnemyController : MonoBehaviour
             unit.MovementInput,
             GetVelocityInput(),
             Mathf.Max(0.1f, movementResponseRate) * Time.fixedDeltaTime);
-        unit.SetMovementInput(smoothedInput);
+        unit.SetMovementInput(LimitObstacleInput(smoothedInput));
     }
 
     private Vector3 CalculateDesiredMovement(Vector3 flatDirection)
@@ -232,17 +237,8 @@ public class EnemyController : MonoBehaviour
 
     private Vector3 GetApproachDirection(Vector3 destination, Vector3 fallback)
     {
-        climbingObstacle = preferObstacleClimb && unit.hoverFlightController != null && obstacleClimb.TryGetHeight(
-            unit,
-            fallback,
-            GetBaseHoverHeight(),
-            Mathf.Min(climbLookAhead, Vector3.Distance(transform.position, destination)),
-            maxObstacleClimb,
-            obstacleClimbClearance,
-            obstacleLayers,
-            out obstacleHoverHeight);
-        float speedRatio = climbingObstacle && transform.position.y < obstacleHoverHeight - 1f ? climbForwardSpeedRatio : 1f;
-        return fallback * speedRatio;
+        // 避障只检查当前真实航迹；静止时允许先起步，不因目标方向的远墙提前绕行。
+        return fallback;
     }
 
     private float GetMovementInterval()
@@ -278,7 +274,23 @@ public class EnemyController : MonoBehaviour
             }
         }
 
-        return Vector3.ClampMagnitude((courseVelocity - velocity) / Mathf.Max(1f, cruiseSpeed * 0.5f), 1f);
+        return LimitObstacleInput(Vector3.ClampMagnitude((courseVelocity - velocity) / Mathf.Max(1f, cruiseSpeed * 0.5f), 1f));
+    }
+
+    private Vector3 LimitObstacleInput(Vector3 input)
+    {
+        if (avoidingObstacle && movementBody != null)
+        {
+            Vector3 direction = Vector3.ProjectOnPlane(movementBody.linearVelocity, Vector3.up).normalized;
+            float forward = Vector3.Dot(input, direction);
+            if (forward < 0f)
+            {
+                // 遇障减小前向推力并保留侧向输入，不用反向推力主动刹车。
+                input -= direction * forward;
+            }
+        }
+
+        return input;
     }
 
     private Vector3 StabilizeDirection(Vector3 candidate)
@@ -398,6 +410,7 @@ public class EnemyController : MonoBehaviour
         currentTarget = null;
         desiredMovementInput = Vector3.zero;
         courseVelocity = Vector3.zero;
+        avoidingObstacle = false;
         nextUpdateTime = 0f;
         _hasIdleHoverHeight = false;
         climbingObstacle = false;
@@ -425,7 +438,7 @@ public class EnemyController : MonoBehaviour
             float targetHeight = GetBaseHoverHeight();
             if (climbingObstacle)
             {
-                targetHeight = Mathf.Max(targetHeight, obstacleHoverHeight);
+                targetHeight = obstacleHoverHeight;
             }
 
             // 越障结束后高度需平滑回落，避免 PID 看到大误差产生向下猛冲。
@@ -483,49 +496,65 @@ public class EnemyController : MonoBehaviour
 
     private Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)
     {
-        Vector3 probeDirection = desiredMove.sqrMagnitude > 0.01f ? desiredMove.normalized : targetDirection.normalized;
-        if (probeDirection.sqrMagnitude < 0.01f)
+        urgentAvoidance = false;
+        avoidingObstacle = false;
+        obstacleSpeedRatio = 1f;
+        Vector3 velocity = movementBody != null ? movementBody.linearVelocity : Vector3.zero;
+        climbingObstacle = false;
+        if (velocity.sqrMagnitude < 0.01f)
         {
-            return desiredMove;
+            debugProbeCount = 0;
+            return StabilizeDirection(desiredMove);
         }
 
-        urgentAvoidance = false;
+        Vector3 probeDirection = velocity.normalized;
         avoidanceBounds = obstacleClimb.GetHullBounds(unit);
-        // 保留原探测半径作为最小水平占用半径；宽舰/长舰由真实碰撞体扩展。
         Vector3 extents = avoidanceBounds.extents;
-        extents.x = Mathf.Max(extents.x + 0.25f, obstacleProbeRadius);
-        extents.z = Mathf.Max(extents.z + 0.25f, obstacleProbeRadius);
+        extents.x += 0.25f;
+        extents.z += 0.25f;
         avoidanceBounds.extents = extents;
-        Vector3 velocity = movementBody != null ? Vector3.ProjectOnPlane(movementBody.linearVelocity, Vector3.up) : Vector3.zero;
         float horizon = Mathf.Max(GetMovementInterval(), avoidancePredictionTime);
         probeDistance = Mathf.Max(obstacleAvoidanceDistance, velocity.magnitude * horizon);
+        climbingObstacle = preferObstacleClimb && unit.hoverFlightController != null && obstacleClimb.TryGetHeight(
+            unit,
+            probeDirection,
+            GetBaseHoverHeight(),
+            Mathf.Max(probeDistance, climbLookAhead),
+            maxObstacleClimb,
+            obstacleClimbClearance,
+            obstacleLayers,
+            out obstacleHoverHeight,
+            maxObstacleDescent);
+        if (climbingObstacle)
+        {
+            avoidingObstacle = true;
+            // 垂直通道已验证时不叠加水平排斥，先减速争取高度调整时间。
+            urgentAvoidance = Mathf.Abs(transform.position.y - obstacleHoverHeight) > 1f;
+            float ratio = urgentAvoidance ? climbForwardSpeedRatio : 1f;
+            return StabilizeDirection(desiredMove) * ratio;
+        }
+
         if (Time.time >= avoidanceSideUntil)
         {
             avoidanceSide = (_entityHashCode & 1) == 0 ? 1f : -1f;
         }
 
-        Vector3 avoidance = Vector3.zero;
-        avoidance += ProbeObstacle(probeDirection, 1f);
-        // 意图改变并不代表惯性立即改变；只在实际航迹不同于意图时额外预测。
-        if (velocity.sqrMagnitude > 1f && Vector3.Angle(velocity, probeDirection) > directionDeadZone)
-        {
-            avoidance += ProbeObstacle(velocity.normalized, 1f);
-        }
-
-        if (steeringDirection.sqrMagnitude > 0.01f && Vector3.Angle(steeringDirection, probeDirection) > directionDeadZone)
-        {
-            avoidance += ProbeObstacle(steeringDirection, 0.8f);
-        }
-
-        avoidance += ProbeObstacle(Quaternion.AngleAxis(sideProbeAngle, Vector3.up) * probeDirection, 0.65f);
-        avoidance += ProbeObstacle(Quaternion.AngleAxis(-sideProbeAngle, Vector3.up) * probeDirection, 0.65f);
+        Vector3 avoidance = ProbeObstacle(probeDirection, 1f);
         if (avoidance.sqrMagnitude > 0.01f)
         {
             avoidanceSideUntil = Time.time + avoidanceSideHoldTime;
             desiredMove += avoidance.normalized * obstacleAvoidanceWeight;
         }
 
-        return StabilizeDirection(Vector3.ClampMagnitude(desiredMove, 1f));
+        Vector3 result = StabilizeDirection(Vector3.ClampMagnitude(desiredMove, 1f));
+        if (avoidingObstacle)
+        {
+            Vector3 flatVelocity = Vector3.ProjectOnPlane(velocity, Vector3.up).normalized;
+            result -= flatVelocity * Mathf.Min(0f, Vector3.Dot(result, flatVelocity));
+            result *= obstacleSpeedRatio;
+        }
+
+        return result;
     }
 
     private Vector3 ProbeObstacle(Vector3 direction, float weight)
@@ -661,10 +690,15 @@ public class EnemyController : MonoBehaviour
                 avoidanceSideUntil = Time.time + avoidanceSideHoldTime;
             }
 
+            avoidingObstacle = true;
+            obstacleSpeedRatio = Mathf.Min(obstacleSpeedRatio, Mathf.Clamp01(hit.distance / Mathf.Max(1f, probeDistance)));
             float distanceFactor = 1f - Mathf.Clamp01(hit.distance / Mathf.Max(0.1f, probeDistance));
             urgentAvoidance |= hit.distance < Mathf.Max(3f, obstacleProbeRadius * 2f);
             Vector3 sideStep = Vector3.Cross(Vector3.up, direction).normalized * avoidanceSide;
-            return (normal.normalized + sideStep * 0.6f) * distanceFactor * weight;
+            // 表面法线仅用于侧向引导，不能产生与实际水平速度相反的推进意图。
+            Vector3 forward = Vector3.ProjectOnPlane(direction, Vector3.up).normalized;
+            Vector3 lateralNormal = normal.normalized - forward * Vector3.Dot(normal.normalized, forward);
+            return (lateralNormal + sideStep * 0.6f) * distanceFactor * weight;
         }
 
         return Vector3.zero;

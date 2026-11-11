@@ -55,6 +55,9 @@ public static class AiUpgradePlayChecks
                 checks,
                 "Inactive target is replaced before scheduled search",
                 current.GetValue(ai) as ControlUnit == second && owner.target == second.transform);
+            Rigidbody probeBody = owner.GetComponent<Rigidbody>();
+            probeBody.isKinematic = false;
+            probeBody.linearVelocity = Vector3.forward * 4f;
             // 从真实决策入口准备本轮整舰范围、速度预测距离与绕行状态。
             typeof(EnemyController).GetMethod("ApplyObstacleAvoidance", Instance).Invoke(ai, new object[] { Vector3.forward, Vector3.forward });
             MethodInfo probe = typeof(EnemyController).GetMethod("ProbeObstacle", Instance);

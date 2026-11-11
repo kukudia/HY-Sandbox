@@ -248,7 +248,14 @@ public static class NavigationCombatPlayChecks
         FieldInfo distance = typeof(EnemyController).GetField("probeDistance", Instance);
         FieldInfo next = typeof(EnemyController).GetField("avoidanceSideUntil", Instance);
         MethodInfo probe = typeof(EnemyController).GetMethod("ProbeObstacle", Instance);
-        apply.Invoke(ai, new object[] { Vector3.right, Vector3.right });
+        Rigidbody body = owner.GetComponent<Rigidbody>();
+        body.isKinematic = false;
+        body.linearVelocity = Vector3.right * 4f;
+        apply.Invoke(ai, new object[] { Vector3.forward, Vector3.forward });
+        Check(
+            checks,
+            "Only actual velocity direction is swept",
+            (int)typeof(EnemyController).GetField("debugProbeCount", Instance).GetValue(ai) == 1);
         Check(
             checks,
             "Hull sweep includes wing beyond center probe radius",
@@ -263,17 +270,32 @@ public static class NavigationCombatPlayChecks
             checks,
             "Moving away from overlapping wing wall stays clear",
             ((Vector3)probe.Invoke(ai, new object[] { Vector3.back, 1f })).sqrMagnitude < 0.001f);
+        obstacle.transform.localPosition = origin + new Vector3(3f, 0f, 0f);
+        body.linearVelocity = Vector3.right * 8f;
+        Physics.SyncTransforms();
+        typeof(EnemyController).GetField("debugProbeCount", Instance).SetValue(ai, 0);
+        Vector3 movement = (Vector3)apply.Invoke(ai, new object[] { Vector3.right, Vector3.right });
+        typeof(EnemyController).GetField("desiredMovementInput", Instance).SetValue(ai, movement);
+        Vector3 thrust = (Vector3)typeof(EnemyController).GetMethod("GetVelocityInput", Instance).Invoke(ai, null);
+        Check(checks, "Obstacle reduces forward movement magnitude", movement.magnitude < 0.5f);
+        Check(
+            checks,
+            "Obstacle slowdown never requests reverse thrust",
+            Vector3.Dot(thrust, Vector3.right) >= -0.0001f);
+        Vector3 smoothed = (Vector3)typeof(EnemyController).GetMethod("LimitObstacleInput", Instance).Invoke(ai, new object[] { Vector3.left + Vector3.forward });
+        Check(
+            checks,
+            "Input smoothing cannot retain reverse thrust near obstacle",
+            smoothed.x >= 0f && smoothed.z > 0f);
         obstacle.enabled = false;
-        Rigidbody body = owner.GetComponent<Rigidbody>();
-        body.isKinematic = false;
         body.linearVelocity = Vector3.forward * 20f;
         typeof(EnemyController).GetField("debugProbeCount", Instance).SetValue(ai, 0);
         apply.Invoke(ai, new object[] { Vector3.right, Vector3.right });
         Check(checks, "Prediction distance scales with actual velocity", (float)distance.GetValue(ai) >= 30f);
         Check(
             checks,
-            "Sideways drift adds a velocity-path sweep",
-            (int)typeof(EnemyController).GetField("debugProbeCount", Instance).GetValue(ai) >= 4);
+            "Sideways drift uses one actual-velocity sweep",
+            (int)typeof(EnemyController).GetField("debugProbeCount", Instance).GetValue(ai) == 1);
         body.linearVelocity = Vector3.zero;
         body.isKinematic = true;
         wing.enabled = false;
@@ -294,6 +316,7 @@ public static class NavigationCombatPlayChecks
             32f,
             3f,
             (LayerMask)(~0),
+            0f,
             0f
         };
         Check(
@@ -342,6 +365,30 @@ public static class NavigationCombatPlayChecks
         Physics.SyncTransforms();
         Check(checks, "Trigger and own hull do not request climb", !(bool)query.Invoke(climb, arguments));
         wall.isTrigger = false;
+        owner.transform.localPosition = new Vector3(-20f, 12f, 0f);
+        wall.transform.localPosition = new Vector3(0f, 20f, 0f);
+        wall.size = new Vector3(2f, 24f, 40f);
+        ceiling = Box(root, "Blocked climb permits underpass", new Vector3(-20f, 18f, 0f), new Vector3(10f, 1f, 10f));
+        arguments[2] = 12f;
+        arguments[8] = 12f;
+        clear.Invoke(climb, null);
+        Physics.SyncTransforms();
+        Check(
+            checks,
+            "Blocked upward route prioritizes clear underpass",
+            (bool)query.Invoke(climb, arguments) && (float)arguments[7] < 12f);
+        BoxCollider floor = Box(root, "Underpass floor blockage", new Vector3(-20f, 4f, 0f), new Vector3(10f, 1f, 10f));
+        clear.Invoke(climb, null);
+        Physics.SyncTransforms();
+        Check(
+            checks,
+            "Downward sweep rejects floor before horizontal fallback",
+            !(bool)query.Invoke(climb, arguments));
+        Object.DestroyImmediate(floor.gameObject);
+        Object.DestroyImmediate(ceiling.gameObject);
+        wall.transform.localPosition = new Vector3(0f, 3.5f, 0f);
+        wall.size = new Vector3(2f, 8f, 40f);
+        owner.transform.localPosition = new Vector3(-20f, 1f, 0f);
         Physics.SyncTransforms();
     }
 
