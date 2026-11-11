@@ -2,13 +2,17 @@
 
 ## AI 稳定局部避障与炮塔遮挡
 
-EnemyController 已移除 NavMesh：删除运行时烘焙/路径类、四个场景中的导航组件、安装菜单和未使用的 AI Navigation 包。接近目标与警戒返航使用直接航向、优先爬升及局部球扫；没有全局路径搜索，封闭迷宫/无法翻越的凹形障碍可能停滞，需要布局上保留可飞越空间。
+EnemyController 已移除 NavMesh：删除运行时烘焙/路径类、四个场景中的导航组件、安装菜单和未使用的 AI Navigation 包。接近目标与警戒返航使用直接航向、优先爬升及整舰包围盒扫掠；没有全局路径搜索，封闭迷宫/无法翻越的凹形障碍可能停滞，需要布局上保留可飞越空间。
 
-**降低变向次数与频率**：驾驶决策最低间隔0.5秒（之前导航0.1秒）；稳定方向至少保持1.5秒，忽略12°以内的小偏移；同一轮绕障保持侧向，脱离后3秒才重新选择；接敌横移换侧间隔6秒。近障紧急避让可跳过方向冷却。所有参数位于EnemyController的 **Stable Steering**，目标扫描独立，侧滑补偿与推进器输出仍每物理步执行，不能把反向制动输入当作航线换向。
+**降低变向次数与频率**：驾驶决策最低间隔0.5秒（之前导航0.1秒）；稳定方向至少保持1.5秒，忽略12°以内的小偏移；同一轮绕障保持侧向，脱离后3秒才重新选择；接敌横移换侧间隔6秒。近障紧急避让可跳过方向冷却。所有参数位于EnemyController的 **Stable Steering**，目标扫描独立，侧滑补偿与推进器输出仍每物理步执行，不能把反向制动输入当作航线换向。`movementUpdateInterval` Inspector 下限已与运行时 0.5s 一致；`MaxObstacleHits` 初始容量 32（EnemyObstacleClimb 的 BoxCast 缓冲 64）以减少密集场景的首次堆分配；`GetEntityId().GetHashCode()` 在 Awake 缓存为 `_entityHashCode`，避免每次移动决策重复求值。
 
-**遇障优先爬升**：整舰包围盒检查前方50m静态障碍，上升与高处走廊均畅通时，目标高度为障碍顶端加舰体底部偏移及3m净空，允许高于正常悬浮目标最多32m。未升到安全高度时前进参考速度降至15%；舰尾越障后恢复常规高度。顶棚、过高墙或高处通道受阻时使用稳定局部绕障。参数位于 **Obstacle Climb Priority**；控制器不写刚体位置/速度。
+当前身位避障实现与验证见 [整舰避障验证](Docs/Validation/2026-11-11-hull-avoidance.md)。
 
-**可编辑试验场：`Assets/Scenes/EnemyAvoidanceLab.unity`**。直接Play，选择Single wall / U trap / Slalom / Narrow gate或Run all；保存真实Finch舰、固定目标、摄像机及四组障碍。显示距离、速度、时间、障碍接触；结果`Temp/EnemyAvoidanceLab/trials.json`新增turns，统计超过角度死区的驾驶航向变更（不含最初选向和速度制动）。到达仍按水平22m接敌阈值，90秒超时；碰撞伤害系数0，仅重试时重置刚体。Debug开启，青色目标、紫色期望输入、白色实际输入和球扫命中用于观察；已移除蓝色NavMesh路径。
+**身位与侧滑避障**：水平探测复用爬升的整舰碰撞体世界包围盒，覆盖机翼、舰首和舰尾；水平增加0.25m余量，原`obstacleProbeRadius`作为最小水平半径。意图方向、仍在保持的航向和不同方向的实际水平速度共同预测，预测距离至少为速度×1.5秒，并覆盖下次0.5秒决策。偏侧障碍优先从另一侧绕行，同轮保持绕行侧；远离起点重叠墙面不再反向排斥。Gizmos展示BoxCast盒体终点。AABB对斜向/不规则舰形较保守，暂不具备旋转通过狭缝与全局迷宫规划。
+
+**遇障优先爬升**：整舰包围盒检查前方50m静态障碍，上升与高处走廊均畅通时，目标高度为障碍顶端加舰体底部偏移及3m净空，允许高于正常悬浮目标最多32m。未升到安全高度时前进参考速度降至15%；舰尾越障后恢复常规高度，悬浮高度设定以4m/s速率平滑回落避免PID向下超调。顶棚、过高墙或高处通道受阻时使用稳定局部绕障。参数位于 **Obstacle Climb Priority**；控制器不写刚体位置/速度。
+
+**可编辑试验场：`Assets/Scenes/EnemyAvoidanceLab.unity`**。直接Play，选择Single wall / U trap / Slalom / Narrow gate或Run all；保存真实Finch舰、固定目标、摄像机及四组障碍。显示距离、速度、时间、障碍接触；结果`Temp/EnemyAvoidanceLab/trials.json`新增turns，统计超过角度死区的驾驶航向变更（不含最初选向和速度制动）。到达仍按水平22m接敌阈值，90秒超时；碰撞伤害系数0，仅重试时重置刚体。Debug开启，青色目标、紫色期望输入、白色实际输入和整舰扫掠终点用于观察；已移除蓝色NavMesh路径。
 
 炮塔实墙遮挡修复保留：从炮口验证视线，触发器和炮塔自身不遮挡，同组墙板及其他单位遮挡。每物理步丢弃被遮挡锁定。验证入口`Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs`保留原名称，现检查稳定驾驶、爬升、视线；与`AiUpgradePlayChecks`共同验证。当前结果见 [移除NavMesh验证](Docs/Validation/2026-11-10-local-steering.md)，旧避障/NavMesh记录仅为历史。
 

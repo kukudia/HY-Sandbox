@@ -7,13 +7,13 @@ using UnityEngine.SceneManagement;
 public class EnemyController : MonoBehaviour
 {
     // Produces smoothed movement intent; ControlUnit and thrusters remain the only physics writers.
-    private const int MaxObstacleHits = 16;
+    private const int MaxObstacleHits = 32;
     [SerializeField, Range(0.1f, 1f), Tooltip("新目标必须比当前目标更近的距离比例，抑制交叉飞行时反复换目标。")]
     private float targetSwitchDistanceRatio = 0.85f;
     public float detectionRange = 150f;
     public float desiredDistance = 18f;
     public float updateInterval = 0.25f;
-    [Min(0.05f)]
+    [Min(0.5f)]
     public float movementUpdateInterval = 0.5f;
     [Min(0.1f)]
     public float movementResponseRate = 2.5f;
@@ -35,6 +35,10 @@ public class EnemyController : MonoBehaviour
     private float avoidanceSideHoldTime = 3f;
     [SerializeField, Min(1f)]
     private float strafeSwitchInterval = 6f;
+    [SerializeField, Min(0.1f), Tooltip("按实际水平速度预测侧滑路径的时间（秒）；扫描至少覆盖下一次决策。")]
+    private float avoidancePredictionTime = 1.5f;
+    private Bounds avoidanceBounds;
+    private float probeDistance;
     private Rigidbody movementBody;
     private Vector3 steeringDirection;
     private float nextDirectionChange;
@@ -63,6 +67,7 @@ public class EnemyController : MonoBehaviour
     private readonly EnemyObstacleClimb obstacleClimb = new EnemyObstacleClimb();
     private bool climbingObstacle;
     private float obstacleHoverHeight;
+    private float _smoothedHoverHeight;
     [Header("AI Debug")]
     [SerializeField, Tooltip("在 Scene / Game 的 Gizmos 中显示自主友舰和敌机的决策；玩家驾驶时隐藏。")]
     private bool drawDebug;
@@ -70,10 +75,10 @@ public class EnemyController : MonoBehaviour
     private bool showDebugRanges = true;
     [SerializeField, Min(0.1f), Tooltip("移动输入向量的显示长度（米）。")]
     private float debugVectorLength = 8f;
-    // 保存实际决策时的球扫结果，绘制不触发新的物理查询。
-    private readonly Vector3[] debugProbeOrigins = new Vector3[3];
-    private readonly Vector3[] debugProbeEnds = new Vector3[3];
-    private readonly Vector3[] debugProbeNormals = new Vector3[3];
+    // 保存实际整舰扫掠快照，绘制不触发新的物理查询。
+    private readonly Vector3[] debugProbeOrigins = new Vector3[5];
+    private readonly Vector3[] debugProbeEnds = new Vector3[5];
+    private readonly Vector3[] debugProbeNormals = new Vector3[5];
     private int debugProbeCount;
     private ControlUnit unit;
     private ControlUnit currentTarget;
@@ -86,10 +91,11 @@ public class EnemyController : MonoBehaviour
     private float guardRadius;
     private ControlUnit priorityTarget;
     private RaycastHit[] obstacleHits = new RaycastHit[MaxObstacleHits];
+    private int _entityHashCode;
     private void OnEnable()
     {
         // 同批生成单位错开自主扫描；明确任务指派仍会立即清零调度。
-        float phase = (GetEntityId().GetHashCode() & 1023) / 1024f;
+        float phase = (_entityHashCode & 1023) / 1024f;
         nextUpdateTime = Time.time + phase * Mathf.Max(0.01f, updateInterval);
         nextMovementUpdateTime = 0f;
         steeringDirection = Vector3.zero;
@@ -98,12 +104,14 @@ public class EnemyController : MonoBehaviour
         nextStrafeChange = 0f;
         strafeSide = 0f;
         avoidanceSideUntil = 0f;
+        _smoothedHoverHeight = 0f;
     }
 
     private void Awake()
     {
         unit = GetComponent<ControlUnit>();
         movementBody = GetComponent<Rigidbody>();
+        _entityHashCode = GetEntityId().GetHashCode();
     }
 
     private void FixedUpdate()
@@ -353,6 +361,7 @@ public class EnemyController : MonoBehaviour
         climbingObstacle = false;
         obstacleClimb.Clear();
         nextMovementUpdateTime = 0f;
+        _smoothedHoverHeight = 0f;
     }
 
     private void ConfigureHoverThrusters()
@@ -377,7 +386,22 @@ public class EnemyController : MonoBehaviour
                 targetHeight = Mathf.Max(targetHeight, obstacleHoverHeight);
             }
 
-            unit.hoverFlightController.targetHoverHeight = Mathf.Max(2f, targetHeight);
+            // 越障结束后高度需平滑回落，避免 PID 看到大误差产生向下猛冲。
+            float desired = Mathf.Max(2f, targetHeight);
+            if (_smoothedHoverHeight < 1f)
+            {
+                _smoothedHoverHeight = desired;
+            }
+            else if (!climbingObstacle && desired < _smoothedHoverHeight)
+            {
+                _smoothedHoverHeight = Mathf.MoveTowards(_smoothedHoverHeight, desired, 4f * Time.fixedDeltaTime);
+            }
+            else
+            {
+                _smoothedHoverHeight = desired;
+            }
+
+            unit.hoverFlightController.targetHoverHeight = _smoothedHoverHeight;
         }
     }
 
@@ -408,7 +432,7 @@ public class EnemyController : MonoBehaviour
 
         if (Time.time >= nextStrafeChange)
         {
-            strafeSide = strafeSide == 0f ? ((GetEntityId().GetHashCode() & 1) == 0 ? 1f : -1f) : -strafeSide;
+            strafeSide = strafeSide == 0f ? ((_entityHashCode & 1) == 0 ? 1f : -1f) : -strafeSide;
             nextStrafeChange = Time.time + strafeSwitchInterval;
         }
 
@@ -424,13 +448,33 @@ public class EnemyController : MonoBehaviour
         }
 
         urgentAvoidance = false;
+        avoidanceBounds = obstacleClimb.GetHullBounds(unit);
+        // 保留原探测半径作为最小水平占用半径；宽舰/长舰由真实碰撞体扩展。
+        Vector3 extents = avoidanceBounds.extents;
+        extents.x = Mathf.Max(extents.x + 0.25f, obstacleProbeRadius);
+        extents.z = Mathf.Max(extents.z + 0.25f, obstacleProbeRadius);
+        avoidanceBounds.extents = extents;
+        Vector3 velocity = movementBody != null ? Vector3.ProjectOnPlane(movementBody.linearVelocity, Vector3.up) : Vector3.zero;
+        float horizon = Mathf.Max(GetMovementInterval(), avoidancePredictionTime);
+        probeDistance = Mathf.Max(obstacleAvoidanceDistance, velocity.magnitude * horizon);
         if (Time.time >= avoidanceSideUntil)
         {
-            avoidanceSide = (GetEntityId().GetHashCode() & 1) == 0 ? 1f : -1f;
+            avoidanceSide = (_entityHashCode & 1) == 0 ? 1f : -1f;
         }
 
         Vector3 avoidance = Vector3.zero;
         avoidance += ProbeObstacle(probeDirection, 1f);
+        // 意图改变并不代表惯性立即改变；只在实际航迹不同于意图时额外预测。
+        if (velocity.sqrMagnitude > 1f && Vector3.Angle(velocity, probeDirection) > directionDeadZone)
+        {
+            avoidance += ProbeObstacle(velocity.normalized, 1f);
+        }
+
+        if (steeringDirection.sqrMagnitude > 0.01f && Vector3.Angle(steeringDirection, probeDirection) > directionDeadZone)
+        {
+            avoidance += ProbeObstacle(steeringDirection, 0.8f);
+        }
+
         avoidance += ProbeObstacle(Quaternion.AngleAxis(sideProbeAngle, Vector3.up) * probeDirection, 0.65f);
         avoidance += ProbeObstacle(Quaternion.AngleAxis(-sideProbeAngle, Vector3.up) * probeDirection, 0.65f);
         if (avoidance.sqrMagnitude > 0.01f)
@@ -444,26 +488,28 @@ public class EnemyController : MonoBehaviour
 
     private Vector3 ProbeObstacle(Vector3 direction, float weight)
     {
-        Vector3 origin = transform.position + Vector3.up * 0.5f;
+        Vector3 origin = avoidanceBounds.center;
         PhysicsScene physics = gameObject.scene.GetPhysicsScene();
-        int hitCount = physics.SphereCast(
+        int hitCount = physics.BoxCast(
             origin,
-            obstacleProbeRadius,
+            avoidanceBounds.extents,
             direction.normalized,
             obstacleHits,
-            obstacleAvoidanceDistance,
+            Quaternion.identity,
+            probeDistance,
             obstacleLayers,
             QueryTriggerInteraction.Ignore);
         // 饱和结果不保证包含最近障碍；只在首次遇到更密集布局时扩容。
         while (hitCount == obstacleHits.Length && obstacleHits.Length < 256)
         {
             System.Array.Resize(ref obstacleHits, obstacleHits.Length * 2);
-            hitCount = physics.SphereCast(
+            hitCount = physics.BoxCast(
                 origin,
-                obstacleProbeRadius,
+                avoidanceBounds.extents,
                 direction.normalized,
                 obstacleHits,
-                obstacleAvoidanceDistance,
+                Quaternion.identity,
+                probeDistance,
                 obstacleLayers,
                 QueryTriggerInteraction.Ignore);
         }
@@ -472,7 +518,7 @@ public class EnemyController : MonoBehaviour
         if (debugIndex >= 0)
         {
             debugProbeOrigins[debugIndex] = origin;
-            debugProbeEnds[debugIndex] = origin + direction.normalized * obstacleAvoidanceDistance;
+            debugProbeEnds[debugIndex] = origin + direction.normalized * probeDistance;
             debugProbeNormals[debugIndex] = Vector3.zero;
         }
 
@@ -487,6 +533,13 @@ public class EnemyController : MonoBehaviour
         {
             RaycastHit hit = obstacleHits[i];
             ControlUnit hitUnit = hit.collider.GetComponentInParent<ControlUnit>();
+            // BoxCast 起点可能与地面/屋顶接触；它们不构成水平墙。
+            Bounds obstacleBounds = hit.collider.bounds;
+            if (obstacleBounds.max.y <= avoidanceBounds.min.y + 0.05f || obstacleBounds.min.y >= avoidanceBounds.max.y - 0.05f)
+            {
+                continue;
+            }
+
             if (hitUnit == unit)
             {
                 continue;
@@ -495,8 +548,23 @@ public class EnemyController : MonoBehaviour
             Vector3 surfaceNormal = hit.normal;
             if (hit.distance <= 0f)
             {
-                // 球扫起点重叠时 PhysX 返回反向射线伪法线；地板支撑不能变成水平墙。
+                // 初始重叠使用几何分离方向；远离墙面时不能被反向扫掠伪法线拉回。
                 Vector3 separation = origin - hit.collider.ClosestPoint(origin);
+                if (separation.sqrMagnitude <= 0.0001f)
+                {
+                    // 中心恰在表面/内部时 ClosestPoint 无方向，取包围盒最近面；地板返回竖直法线。
+                    Vector3 offset = origin - obstacleBounds.center;
+                    Vector3 faceDistance = obstacleBounds.extents - new Vector3(Mathf.Abs(offset.x), Mathf.Abs(offset.y), Mathf.Abs(offset.z));
+                    if (faceDistance.y <= faceDistance.x && faceDistance.y <= faceDistance.z)
+                    {
+                        separation = Vector3.up * (offset.y >= 0f ? 1f : -1f);
+                    }
+                    else
+                    {
+                        separation = faceDistance.x <= faceDistance.z ? Vector3.right * Mathf.Sign(offset.x) : Vector3.forward * Mathf.Sign(offset.z);
+                    }
+                }
+
                 if (separation.sqrMagnitude > 0.0001f)
                 {
                     surfaceNormal = separation.normalized;
@@ -526,7 +594,7 @@ public class EnemyController : MonoBehaviour
             RaycastHit hit = obstacleHits[closest];
             if (debugIndex >= 0)
             {
-                // 球心终点与接触点不同；显示球心和实际用于避障的表面法线。
+                // 显示整舰包围盒终点与实际使用的表面法线。
                 debugProbeEnds[debugIndex] = origin + direction.normalized * hit.distance;
                 debugProbeNormals[debugIndex] = hit.normal;
             }
@@ -538,7 +606,20 @@ public class EnemyController : MonoBehaviour
                 normal = -direction;
             }
 
-            float distanceFactor = 1f - Mathf.Clamp01(hit.distance / obstacleAvoidanceDistance);
+            if (Time.time >= avoidanceSideUntil)
+            {
+                Vector3 right = Vector3.Cross(Vector3.up, direction).normalized;
+                float lateral = Vector3.Dot(hit.collider.bounds.center - origin, right);
+                // 障碍偏右则从左绕；正前方保持既有确定性选择，避免左右抖动。
+                if (Mathf.Abs(lateral) > 0.25f)
+                {
+                    avoidanceSide = lateral > 0f ? -1f : 1f;
+                }
+
+                avoidanceSideUntil = Time.time + avoidanceSideHoldTime;
+            }
+
+            float distanceFactor = 1f - Mathf.Clamp01(hit.distance / Mathf.Max(0.1f, probeDistance));
             urgentAvoidance |= hit.distance < Mathf.Max(3f, obstacleProbeRadius * 2f);
             Vector3 sideStep = Vector3.Cross(Vector3.up, direction).normalized * avoidanceSide;
             return (normal.normalized + sideStep * 0.6f) * distanceFactor * weight;
@@ -592,7 +673,7 @@ public class EnemyController : MonoBehaviour
         {
             Gizmos.color = debugProbeNormals[i] == Vector3.zero ? Color.green : Color.red;
             Gizmos.DrawLine(debugProbeOrigins[i], debugProbeEnds[i]);
-            Gizmos.DrawWireSphere(debugProbeEnds[i], Mathf.Max(0f, obstacleProbeRadius));
+            Gizmos.DrawWireCube(debugProbeEnds[i], avoidanceBounds.size);
             Gizmos.color = Color.yellow;
             Gizmos.DrawRay(debugProbeEnds[i], debugProbeNormals[i] * 2f);
         }

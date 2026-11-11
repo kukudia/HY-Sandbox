@@ -5,8 +5,9 @@ using UnityEngine.SceneManagement;
 
 internal sealed class EnemyObstacleClimb
 {
-    private RaycastHit[] hits = new RaycastHit[32];
+    private RaycastHit[] hits = new RaycastHit[64];
     private Collider[] hull;
+    private Rigidbody _body;
     private float nextHullRefresh;
     private float height;
     private float exitProjection;
@@ -16,6 +17,7 @@ internal sealed class EnemyObstacleClimb
     {
         active = false;
         hull = null;
+        _body = null;
     }
 
     internal bool TryGetHeight(
@@ -36,22 +38,7 @@ internal sealed class EnemyObstacleClimb
         }
 
         direction.Normalize();
-        if (hull == null || Time.time >= nextHullRefresh)
-        {
-            hull = unit.GetComponentsInChildren<Collider>();
-            nextHullRefresh = Time.time + 1f;
-        }
-
-        Rigidbody body = unit.GetComponent<Rigidbody>();
-        Bounds bounds = new Bounds(unit.transform.position, Vector3.one * 0.2f);
-        foreach (Collider collider in hull)
-        {
-            if (collider != null && collider.enabled && !collider.isTrigger && collider.attachedRigidbody == body && collider.transform.IsChildOf(unit.transform))
-            {
-                bounds.Encapsulate(collider.bounds);
-            }
-        }
-
+        Bounds bounds = GetHullBounds(unit);
         if (active && (Vector3.Dot(direction, heading) < 0.5f || Vector3.Dot(unit.transform.position, heading) > exitProjection))
         {
             active = false;
@@ -128,6 +115,28 @@ internal sealed class EnemyObstacleClimb
         height = candidate;
         targetHeight = candidate;
         return true;
+    }
+
+    internal Bounds GetHullBounds(ControlUnit unit)
+    {
+        if (hull == null || Time.time >= nextHullRefresh)
+        {
+            hull = unit.GetComponentsInChildren<Collider>();
+            _body = unit.GetComponent<Rigidbody>();
+            nextHullRefresh = Time.time + 1f;
+        }
+
+        Rigidbody body = _body;
+        Bounds bounds = new Bounds(unit.transform.position, Vector3.one * 0.2f);
+        foreach (Collider collider in hull)
+        {
+            if (collider != null && collider.enabled && !collider.isTrigger && collider.attachedRigidbody == body && collider.transform.IsChildOf(unit.transform))
+            {
+                bounds.Encapsulate(collider.bounds);
+            }
+        }
+
+        return bounds;
     }
 
     private bool Blocked(

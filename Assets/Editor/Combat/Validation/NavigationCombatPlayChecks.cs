@@ -48,6 +48,7 @@ public static class NavigationCombatPlayChecks
             EnemyController ai = owner.gameObject.AddComponent<EnemyController>();
             ai.enabled = false;
             CheckStableSteering(checks, ai, owner);
+            CheckHullAvoidance(checks, root.transform, owner, ai);
             Type selectorType = typeof(Turret).Assembly.GetType("TurretTargetSelector");
             object selector = Activator.CreateInstance(selectorType, Instance, null, new object[] { owner.transform }, null);
             MethodInfo select = selectorType.GetMethod("FindNearestTarget", Instance);
@@ -192,6 +193,49 @@ public static class NavigationCombatPlayChecks
             checks,
             "Steering rules do not teleport the unit",
             owner.transform.localPosition == new Vector3(-20f, 1f, 0f));
+    }
+
+    private static void CheckHullAvoidance(List<string> checks, Transform root, ControlUnit owner, EnemyController ai)
+    {
+        Vector3 origin = owner.transform.localPosition;
+        BoxCollider wing = Box(owner.transform, "Wide wing", Vector3.zero, new Vector3(2f, 1f, 10f));
+        BoxCollider obstacle = Box(root, "Wing-only wall", origin + new Vector3(6f, 0f, 4.5f), new Vector3(1f, 3f, 1f));
+        Physics.SyncTransforms();
+        ai.obstacleLayers = 1 << obstacle.gameObject.layer;
+        MethodInfo apply = typeof(EnemyController).GetMethod("ApplyObstacleAvoidance", Instance);
+        FieldInfo bounds = typeof(EnemyController).GetField("avoidanceBounds", Instance);
+        FieldInfo distance = typeof(EnemyController).GetField("probeDistance", Instance);
+        FieldInfo next = typeof(EnemyController).GetField("avoidanceSideUntil", Instance);
+        MethodInfo probe = typeof(EnemyController).GetMethod("ProbeObstacle", Instance);
+        apply.Invoke(ai, new object[] { Vector3.right, Vector3.right });
+        Check(
+            checks,
+            "Hull sweep includes wing beyond center probe radius",
+            ((Bounds)bounds.GetValue(ai)).extents.z >= 5f);
+        next.SetValue(ai, 0f);
+        Vector3 avoid = (Vector3)probe.Invoke(ai, new object[] { Vector3.right, 1f });
+        Check(checks, "Wing-only wall generates avoidance", avoid.sqrMagnitude > 0.01f);
+        Check(checks, "Wall on wing side selects opposite bypass side", avoid.z < 0f);
+        obstacle.transform.localPosition = origin + new Vector3(0f, 0f, 5f);
+        Physics.SyncTransforms();
+        Check(
+            checks,
+            "Moving away from overlapping wing wall stays clear",
+            ((Vector3)probe.Invoke(ai, new object[] { Vector3.back, 1f })).sqrMagnitude < 0.001f);
+        obstacle.enabled = false;
+        Rigidbody body = owner.GetComponent<Rigidbody>();
+        body.isKinematic = false;
+        body.linearVelocity = Vector3.forward * 20f;
+        typeof(EnemyController).GetField("debugProbeCount", Instance).SetValue(ai, 0);
+        apply.Invoke(ai, new object[] { Vector3.right, Vector3.right });
+        Check(checks, "Prediction distance scales with actual velocity", (float)distance.GetValue(ai) >= 30f);
+        Check(
+            checks,
+            "Sideways drift adds a velocity-path sweep",
+            (int)typeof(EnemyController).GetField("debugProbeCount", Instance).GetValue(ai) >= 4);
+        body.linearVelocity = Vector3.zero;
+        body.isKinematic = true;
+        wing.enabled = false;
     }
 
     private static void CheckObstacleClimb(List<string> checks, Transform root, ControlUnit owner, BoxCollider wall)

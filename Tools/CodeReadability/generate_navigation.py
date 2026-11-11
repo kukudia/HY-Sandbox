@@ -1708,13 +1708,15 @@ def main():
             "G": "ControlUnit.SetMovementInput", "H": "EnemyController.GetApproachDirection",
             "I": "EnemyController.StabilizeDirection", "J": "EnemyController.ApplyObstacleAvoidance",
             "K": "EnemyObstacleClimb.TryGetHeight", "L": "EnemyController.ConfigureHoverThrusters",
-            "M": "EnemyObstacleClimb.Blocked",
+            "M": "EnemyObstacleClimb.Blocked", "N": "EnemyObstacleClimb.GetHullBounds",
+            "O": "EnemyController.ProbeObstacle",
         },
         [
             "A -->|生成或经Attacker.RefreshTarget重新绑定| B",
             "C -->|目标更新周期| D", "D --> E", "C -->|有目标且到移动周期| F",
             "C -->|每物理步平滑| G",
             "F -->|接近目标| H", "C -->|警戒返航| H", "J --> I", "F --> J",
+            "J -->|整舰边界与速度预测| N", "K --> N", "J --> O",
             "H -->|先检查静态障碍翻越| K", "K -->|整舰上升与高处通道净空| M",
             "C -->|决策后逐物理步应用高度| L", "K -.->|爬升期间减小前进并保持舰尾净空| L",
         ],
@@ -1743,7 +1745,7 @@ def main():
     )
     graph(
         "友敌 AI 调试绘制",
-        "源码推导：EnemyController 同时驱动友方自主舰和敌机。DebugManager 的友方/敌方开关可在场景中预配，EnemyController 保留逐实例 Draw Debug；启用后仅在模拟运行且未被玩家驾驶时绘制。FixedUpdate 的移动周期清空探测快照，ProbeObstacle 记录实际球扫终点与有效法线；绘制只读快照，不重新查询物理或改变驾驶输入。禁用控制器清空快照。",
+        "源码推导：EnemyController 同时驱动友方自主舰和敌机。DebugManager 的友方/敌方开关可在场景中预配，EnemyController 保留逐实例 Draw Debug；启用后仅在模拟运行且未被玩家驾驶时绘制。FixedUpdate 的移动周期清空探测快照，ProbeObstacle 记录实际整舰BoxCast终点与有效法线；绘制只读快照，不重新查询物理或改变驾驶输入。禁用控制器清空快照。",
         {
             "A": "EnemyController.FixedUpdate", "B": "EnemyController.ApplyObstacleAvoidance",
             "C": "EnemyController.ProbeObstacle", "D": "EnemyController.OnDrawGizmos",
@@ -1753,7 +1755,7 @@ def main():
         [
             "A -->|经移动计算或警戒返航| B", "B --> C",
             "D --> E", "E -->|接近及撤退距离| F",
-            "C -.->|缓存球扫结果| E", "G -.->|清空缓存| E",
+            "C -.->|缓存整舰扫掠结果| E", "G -.->|清空缓存| E",
         ],
     )
     graph(
