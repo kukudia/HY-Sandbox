@@ -1,4 +1,4 @@
-// 职责：复制双层避障地图为独立3v3观战场景，保存六槽位、自由相机与复用战斗HUD。
+// 职责：复制双层避障地图为独立5v5观战场景，保存十槽位、自由相机与复用战斗HUD。
 // 入口：Create()菜单；已存在场景拒绝覆盖，不修改原避障场景。
 using System;
 using System.Linq;
@@ -10,8 +10,8 @@ using UnityEngine.UI;
 
 public static class SkirmishArenaAuthoring
 {
-    public const string ScenePath = "Assets/Scenes/Random3v3Arena.unity";
-    [MenuItem("Tools/HY-Sandbox/Combat/Create Random 3v3 Arena")]
+    public const string ScenePath = "Assets/Scenes/Random5v5Arena.unity";
+    [MenuItem("Tools/HY-Sandbox/Combat/Create Random 5v5 Arena")]
     public static void Create()
     {
         if (EditorApplication.isPlaying || AssetDatabase.LoadAssetAtPath<SceneAsset>(ScenePath) != null)
@@ -47,12 +47,13 @@ public static class SkirmishArenaAuthoring
         play.blocksParent = null;
         play.allControlUnits.Clear();
         play.showUI = false;
+        play.showLabel = false;
         Camera camera = Find<EnemyLabCamera>(arena).GetComponent<Camera>();
         var cameraSettings = new SerializedObject(camera.GetComponent<EnemyLabCamera>());
         cameraSettings.FindProperty("lab").objectReferenceValue = null;
         cameraSettings.FindProperty("reservedLeftWidth").floatValue = 0f;
         cameraSettings.ApplyModifiedPropertiesWithoutUndo();
-        var owner = new GameObject("Automatic 3v3 Match");
+        var owner = new GameObject("Automatic 5v5 Match");
         SkirmishMatch match = owner.AddComponent<SkirmishMatch>();
         var matchSettings = new SerializedObject(match);
         TextAsset[] blueprints = Resources.LoadAll<TextAsset>("WorldBlueprints/Enemies").OrderBy(asset => asset.name).ToArray();
@@ -64,14 +65,14 @@ public static class SkirmishArenaAuthoring
         }
 
         SerializedProperty slots = matchSettings.FindProperty("slots");
-        slots.arraySize = 6;
-        for (int i = 0; i < 6; i++)
+        slots.arraySize = 10;
+        for (int i = 0; i < 10; i++)
         {
-            var slot = new GameObject((i < 3 ? "Blue" : "Red") + " Slot " + (i % 3 + 1));
+            var slot = new GameObject((i < 5 ? "Blue" : "Red") + " Slot " + (i % 5 + 1));
             slot.transform.SetParent(owner.transform, false);
             slot.transform.SetPositionAndRotation(
-                new Vector3(i < 3 ? -124f : 124f, 12f, (i % 3 - 1) * 96f),
-                Quaternion.LookRotation(i < 3 ? Vector3.right : Vector3.left));
+                new Vector3(i < 5 ? -210f : 210f, 12f, (i % 5 - 2) * 80f),
+                Quaternion.LookRotation(i < 5 ? Vector3.right : Vector3.left));
             slots.GetArrayElementAtIndex(i).objectReferenceValue = slot.transform;
         }
 
@@ -108,7 +109,7 @@ public static class SkirmishArenaAuthoring
             "Team Roster",
             font,
             new Vector2(20f, -115f),
-            new Vector2(520f, 180f),
+            new Vector2(520f, 300f),
             17);
         Text feed = Label(
             canvas.transform,
@@ -139,6 +140,105 @@ public static class SkirmishArenaAuthoring
         EditorSceneManager.MarkSceneDirty(arena);
         EditorSceneManager.SaveScene(arena);
         AssetDatabase.SaveAssets();
+        SpreadBattlefield(arena);
+        EditorSceneManager.SaveScene(arena);
+    }
+
+    [MenuItem("Tools/HY-Sandbox/Combat/Upgrade Arena To 5v5")]
+    public static void UpgradeToFive()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+        if (EditorApplication.isPlaying || scene.path != ScenePath || scene.isDirty)
+        {
+            throw new InvalidOperationException("Open the saved arena in Edit Mode.");
+        }
+
+        SkirmishMatch match = Find<SkirmishMatch>(scene);
+        var settings = new SerializedObject(match);
+        if (settings.FindProperty("slots").arraySize != 10)
+        {
+            Undo.RegisterFullObjectHierarchyUndo(match.gameObject, "Upgrade arena to 5v5");
+            foreach (Transform child in match.transform.Cast<Transform>().ToArray())
+            {
+                Undo.DestroyObjectImmediate(child.gameObject);
+            }
+
+            match.name = "Automatic 5v5 Match";
+            SerializedProperty slots = settings.FindProperty("slots");
+            slots.arraySize = 10;
+            for (int i = 0; i < 10; i++)
+            {
+                var slot = new GameObject((i < 5 ? "Blue" : "Red") + " Slot " + (i % 5 + 1));
+                Undo.RegisterCreatedObjectUndo(slot, "Create arena slot");
+                slot.transform.SetParent(match.transform, false);
+                slot.transform.SetPositionAndRotation(
+                    new Vector3(i < 5 ? -210f : 210f, 12f, (i % 5 - 2) * 80f),
+                    Quaternion.LookRotation(i < 5 ? Vector3.right : Vector3.left));
+                slots.GetArrayElementAtIndex(i).objectReferenceValue = slot.transform;
+            }
+
+            settings.ApplyModifiedPropertiesWithoutUndo();
+            SpreadBattlefield(scene);
+        }
+
+        Find<PlayManager>(scene).showLabel = false;
+        Text roster = Find<SkirmishHud>(scene).transform.Find("Team Roster").GetComponent<Text>();
+        roster.rectTransform.sizeDelta = new Vector2(520f, 300f);
+        roster.supportRichText = true;
+        var hud = new SerializedObject(Find<CombatHud>(scene));
+        hud.FindProperty("_maxLabelDistance").floatValue = 850f;
+        hud.ApplyModifiedPropertiesWithoutUndo();
+        EditorSceneManager.MarkSceneDirty(scene);
+        EditorSceneManager.SaveScene(scene);
+    }
+
+    private static void SpreadBattlefield(Scene scene)
+    {
+        Transform map = scene.GetRootGameObjects().Single(root => root.name == "Battlefield").transform;
+        Undo.RegisterFullObjectHierarchyUndo(map.gameObject, "Spread buildings");
+        foreach (Transform item in map)
+        {
+            if (item.name == "Upper deck")
+            {
+                foreach (Transform piece in item)
+                {
+                    Vector3 position = piece.position;
+                    position.x *= 1.6f;
+                    piece.position = position;
+                    if (piece.name.StartsWith("Cross bridge", StringComparison.Ordinal))
+                    {
+                        Vector3 size = piece.localScale;
+                        size.x += 105.6f;
+                        piece.localScale = size;
+                    }
+                }
+            }
+            else if (item.name == "Moving obstacles" || item.name == "District presentation")
+            {
+                foreach (Transform piece in item)
+                {
+                    piece.position = new Vector3(piece.position.x * 1.6f, piece.position.y, piece.position.z * 1.6f);
+                }
+            }
+            else
+            {
+                item.position = new Vector3(
+                    item.position.x * 1.6f,
+                    item.position.y,
+                    item.position.z * (item.name.StartsWith("Upper", StringComparison.Ordinal) ? 1f : 1.6f));
+            }
+        }
+
+        Transform ground = scene.GetRootGameObjects().Single(root => root.name == "Ground").transform;
+        Undo.RecordObject(ground, "Expand arena ground");
+        ground.localScale = new Vector3(480f, 1f, 480f);
+        Transform camera = Find<EnemyLabCamera>(scene).transform;
+        Undo.RecordObject(camera, "Frame expanded arena");
+        camera.position = new Vector3(-320f, 330f, -350f);
+        camera.LookAt(new Vector3(0f, 25f, 0f));
+        var cameraSettings = new SerializedObject(camera.GetComponent<EnemyLabCamera>());
+        cameraSettings.FindProperty("freePosition").vector3Value = camera.position;
+        cameraSettings.ApplyModifiedPropertiesWithoutUndo();
     }
 
     private static T Find<T>(Scene scene)

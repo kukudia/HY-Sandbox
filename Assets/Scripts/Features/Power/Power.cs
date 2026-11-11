@@ -8,6 +8,16 @@ public class Power : MonoBehaviour
 {
     private static readonly HashSet<Power> ActivePowerBlocks = new HashSet<Power>();
     public float currentPower = 0f;
+    /// <summary>所覆盖独立电网的总输出；不依赖当前是否请求工作，供战斗能力判定使用。</summary>
+    public float PotentialPower
+    {
+        get; internal set;
+    }
+    internal bool TracksAvailability
+    {
+        get; private set;
+    }
+
     [Tooltip("开始工作的最低供电功率；达到阈值后 isWorking 为 true。")]
     public float minWorkingPower = 50f;
     [Tooltip("启动后占用的额定功率；供电短缺时按需求比例分配。")]
@@ -56,6 +66,7 @@ public class Power : MonoBehaviour
     {
         ActivePowerBlocks.Remove(this);
         _workRequesters.Clear();
+        PotentialPower = 0f;
         currentPower = 0f;
         _supplyEfficiency = 1f;
         _icon?.CheckPowerStatus();
@@ -96,9 +107,15 @@ public class Power : MonoBehaviour
         _icon?.CheckPowerStatus();
     }
 
+    internal void TrackAvailability(bool tracked)
+    {
+        TracksAvailability = tracked && isActiveAndEnabled;
+    }
+
     /// <summary>开始一轮电网重建时清零；完整汇总后才通过 CommitPowerStatus 刷新状态图标。</summary>
     public void ResetPower()
     {
+        PotentialPower = 0f;
         currentPower = 0f;
     }
 

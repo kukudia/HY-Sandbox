@@ -1,4 +1,4 @@
-// 职责：显示自动对战轮次、六槽位阵容和击杀列表，复用探索模式击杀提示表现。
+// 职责：显示自动对战轮次、十槽位阵容和击杀列表，复用探索模式击杀提示表现。
 // 入口：SetState() / ShowKill() / ResetRound()；UI引用由场景制作保存。
 using System.Collections.Generic;
 using UnityEngine;

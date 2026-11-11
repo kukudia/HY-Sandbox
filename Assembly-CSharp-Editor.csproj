@@ -69,6 +69,7 @@
     <Compile Include="Assets\Editor\Architecture\HoverControlPlayChecks.cs" />
     <Compile Include="Assets\Editor\World\Terrain\ProceduralVoxelWorldEditor.cs" />
     <Compile Include="Assets\Editor\Building\Interface\BuildPaletteBaker.cs" />
+    <Compile Include="Assets\Editor\Combat\Validation\SkirmishPerformanceChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\Effects\CombatVfxBaker.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegeFleetChecks.cs" />
     <Compile Include="Assets\Editor\World\Validation\WorldLab\WorldLabSoakChecks.cs" />

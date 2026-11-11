@@ -1,0 +1,4 @@
+Same fleet/camera; frozen simulation and industrial motion. Editor CPU frames, not Player FPS.
+MeshRenderers=15698
+PropertyBlock: samples=15, medianFrameMs=17.972, meanRenderMs=7.131
+SharedMaterial: samples=15, medianFrameMs=14.648, meanRenderMs=4.539

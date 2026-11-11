@@ -51,6 +51,33 @@ public class ControlUnit : MonoBehaviour
     {
         get; private set;
     }
+
+    private readonly List<Turret> capabilityWeapons = new List<Turret>();
+    /// <summary>仍有完好且电网可供电的武器；不以索敌、瞄准、冷却或瞬时功率分配判断失能。</summary>
+    public bool HasCombatCapability
+    {
+        get
+        {
+            if (!isActiveAndEnabled || !IsOperational || !IsSimulationActive)
+            {
+                return false;
+            }
+
+            GetComponentsInChildren(false, capabilityWeapons);
+            foreach (Turret weapon in capabilityWeapons)
+            {
+                Durability health = weapon.GetComponent<Durability>();
+                Power supply = weapon.GetComponent<Power>();
+                if (weapon.isActiveAndEnabled && weapon.IsStarted && weapon.damage > 0f && weapon.range > 0f && weapon.GetComponentInParent<ControlUnit>() == this && health != null && health.isActiveAndEnabled && health.currentDurability > 0f && supply != null && supply.isActiveAndEnabled && supply.PotentialPower > 0f && supply.PotentialPower >= Mathf.Max(0f, supply.minWorkingPower))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
     public bool IsOperational => HasValidCockpit || (Building != null && Building.IsOperational);
     public bool IsSimulationActive => Building != null ? Building.IsSimulationActive : PlayManager.instance != null && PlayManager.instance.playMode;
 
@@ -109,9 +136,11 @@ public class ControlUnit : MonoBehaviour
             return false;
         }
 
-        foreach (Durability durability in GetComponentsInChildren<Durability>())
+        IReadOnlyList<Durability> targets = GetDamageTargets();
+        for (int i = 0; i < targets.Count; i++)
         {
-            if (durability == null || !durability.enabled || durability.GetComponentInParent<ControlUnit>() != this)
+            Durability durability = targets[i];
+            if (durability == null || !durability.isActiveAndEnabled || durability.GetComponentInParent<ControlUnit>() != this)
             {
                 continue;
             }

@@ -298,7 +298,8 @@ public sealed class PowerNetwork
             load.ResetPower();
             Vector3 position = load.transform.position;
             _loadPositions.Add(position);
-            if (load.IsWorkRequested)
+            // 空闲武器也登记覆盖关系；需求仍为零，不参与实际功率消耗。
+            if (load.IsWorkRequested || load.TracksAvailability)
             {
                 _loadIndex.Add(position, i);
             }
@@ -401,6 +402,7 @@ public sealed class PowerNetwork
         float remainingDemand = 0f;
         foreach (Power load in _componentLoads)
         {
+            load.PotentialPower += totalOutputPower;
             remainingDemand += Mathf.Max(0f, load.RequestedPower - load.currentPower);
         }
 

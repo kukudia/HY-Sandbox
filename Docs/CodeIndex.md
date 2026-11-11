@@ -76,6 +76,7 @@ HY-Sandbox/
 │   │   │       ├── EnemyLabViewChecks.cs
 │   │   │       ├── NavigationCombatPlayChecks.cs
 │   │   │       ├── SkirmishArenaChecks.cs
+│   │   │       ├── SkirmishPerformanceChecks.cs
 │   │   │       ├── TurretFlightPlayProbe.cs
 │   │   │       └── TurretRuntimeChecks.cs
 │   │   ├── Diagnostics/
@@ -1173,16 +1174,18 @@ HY-Sandbox/
 
 ## Assets/Editor/Combat/SkirmishArenaAuthoring.cs
 
-// 职责：复制双层避障地图为独立3v3观战场景，保存六槽位、自由相机与复用战斗HUD。 // 入口：Create()菜单；已存在场景拒绝覆盖，不修改原避障场景。
+// 职责：复制双层避障地图为独立5v5观战场景，保存十槽位、自由相机与复用战斗HUD。 // 入口：Create()菜单；已存在场景拒绝覆盖，不修改原避障场景。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SkirmishArenaAuthoring | [`void Create()`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L14) | public static |
-| SkirmishArenaAuthoring | [`T Find(Scene scene)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L144) | private static |
-| SkirmishArenaAuthoring | [`void UpgradeHud()`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L150) | public static |
-| SkirmishArenaAuthoring | [`void ConfigureCombatHud(CombatHud hud)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L163) | private static |
-| SkirmishArenaAuthoring | [`void Set(UnityEngine.Object owner, string field, UnityEngine.Object value)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L184) | private static |
-| SkirmishArenaAuthoring | [`Text Label( Transform parent, string name, Font font, Vector2 position, Vector2 size, int fontSize)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L191) | private static |
+| SkirmishArenaAuthoring | [`void UpgradeToFive()`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L147) | public static |
+| SkirmishArenaAuthoring | [`void SpreadBattlefield(Scene scene)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L195) | private static |
+| SkirmishArenaAuthoring | [`T Find(Scene scene)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L244) | private static |
+| SkirmishArenaAuthoring | [`void UpgradeHud()`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L250) | public static |
+| SkirmishArenaAuthoring | [`void ConfigureCombatHud(CombatHud hud)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L263) | private static |
+| SkirmishArenaAuthoring | [`void Set(UnityEngine.Object owner, string field, UnityEngine.Object value)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L284) | private static |
+| SkirmishArenaAuthoring | [`Text Label( Transform parent, string name, Font font, Vector2 position, Vector2 size, int fontSize)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L291) | private static |
 
 ## Assets/Editor/Combat/Turrets/TurretAssetBaker.cs
 
@@ -1298,18 +1301,30 @@ HY-Sandbox/
 
 ## Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs
 
-// 职责：验证自动3v3场景持久配置、正式死亡归因、五秒倒计时与连续轮次清理。 // 入口：ValidateSaved()在Edit Mode执行；Begin()在Play启动检查，Pending保存实际结果。
+// 职责：验证自动5v5场景持久配置、正式死亡归因、五秒倒计时与连续轮次清理。 // 入口：ValidateSaved()在Edit Mode执行；Begin()在Play启动检查，Pending保存实际结果。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SkirmishArenaChecks | [`string ValidateSaved()`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L18) | public static |
-| SkirmishArenaChecks | [`void Begin()`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L71) | public static |
-| SkirmishArenaChecks | [`Task<string> Run()`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L76) | private static async |
-| SkirmishArenaChecks | [`PlayManager PlayManagerReference(SkirmishMatch match)`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L185) | private static |
-| SkirmishArenaChecks | [`void FreezeCombat(SkirmishMatch match)`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L190) | private static |
-| SkirmishArenaChecks | [`Task Until(Func<bool> condition, float timeout)`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L206) | private static async |
-| SkirmishArenaChecks | [`void Check(List<string> checks, string label, bool condition)`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L220) | private static |
-| SkirmishArenaChecks | [`string Save(string name, List<string> checks)`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L229) | private static |
+| SkirmishArenaChecks | [`void Begin()`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L80) | public static |
+| SkirmishArenaChecks | [`Task<string> Run()`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L85) | private static async |
+| SkirmishArenaChecks | [`PlayManager PlayManagerReference(SkirmishMatch match)`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L294) | private static |
+| SkirmishArenaChecks | [`void FreezeCombat(SkirmishMatch match)`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L299) | private static |
+| SkirmishArenaChecks | [`Task Until(Func<bool> condition, float timeout)`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L320) | private static async |
+| SkirmishArenaChecks | [`void Check(List<string> checks, string label, bool condition)`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L334) | private static |
+| SkirmishArenaChecks | [`string Save(string name, List<string> checks)`](../Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs#L343) | private static |
+
+## Assets/Editor/Combat/Validation/SkirmishPerformanceChecks.cs
+
+// 职责：在同一批舰船、镜头与冻结模拟下对照属性块染色和共享材质绘制成本。 // 入口：Begin()启动有限帧Profiler捕获；Status显示进度，退出/重载时恢复全部临时状态。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SkirmishPerformanceChecks | [`void Begin()`](../Assets/Editor/Combat/Validation/SkirmishPerformanceChecks.cs#L43) | public static |
+| SkirmishPerformanceChecks | [`void StartWindow()`](../Assets/Editor/Combat/Validation/SkirmishPerformanceChecks.cs#L92) | private static |
+| SkirmishPerformanceChecks | [`void Tick()`](../Assets/Editor/Combat/Validation/SkirmishPerformanceChecks.cs#L104) | private static |
+| SkirmishPerformanceChecks | [`void RestoreProperties()`](../Assets/Editor/Combat/Validation/SkirmishPerformanceChecks.cs#L170) | private static |
+| SkirmishPerformanceChecks | [`void Restore()`](../Assets/Editor/Combat/Validation/SkirmishPerformanceChecks.cs#L181) | private static |
 
 ## Assets/Editor/Combat/Validation/TurretFlightPlayProbe.cs
 
@@ -3838,18 +3853,18 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| CombatHud | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L51) | private |
-| CombatHud | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L56) | private |
-| CombatHud | [`void ResetHud()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L70) | public |
-| CombatHud | [`void ShowPlayerKill(string enemyName)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L81) | public |
-| CombatHud | [`void ShowCombatKill(string victim, string attacker, string score)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L92) | public |
-| CombatHud | [`void ShowNotification(string title, string score)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L102) | private |
-| CombatHud | [`void LateUpdate()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L111) | private |
-| CombatHud | [`bool IsOccluded(Vector3 target, ControlUnit unit)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L164) | private |
-| CombatHud | [`bool IsWorldPointOccluded(Camera camera, Vector3 target, Transform owner, RaycastHit[] hits)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L169) | public static |
-| CombatHud | [`void RefreshEnemies()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L198) | private |
-| CombatHud | [`EnemyView CreateView()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L252) | private |
-| CombatHud | [`void Recycle(EnemyView view)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L269) | private |
+| CombatHud | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L55) | private |
+| CombatHud | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L60) | private |
+| CombatHud | [`void ResetHud()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L74) | public |
+| CombatHud | [`void ShowPlayerKill(string enemyName)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L85) | public |
+| CombatHud | [`void ShowCombatKill(string victim, string attacker, string score)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L96) | public |
+| CombatHud | [`void ShowNotification(string title, string score)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L106) | private |
+| CombatHud | [`void LateUpdate()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L115) | private |
+| CombatHud | [`bool IsOccluded(Vector3 target, ControlUnit unit)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L174) | private |
+| CombatHud | [`bool IsWorldPointOccluded(Camera camera, Vector3 target, Transform owner, RaycastHit[] hits)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L179) | public static |
+| CombatHud | [`void RefreshEnemies()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L208) | private |
+| CombatHud | [`EnemyView CreateView()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L271) | private |
+| CombatHud | [`void Recycle(EnemyView view)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L288) | private |
 
 ## Assets/Scripts/Features/Combat/Meteors/Meteor.cs
 
@@ -3873,7 +3888,7 @@ HY-Sandbox/
 
 ## Assets/Scripts/Features/Combat/Skirmish/SkirmishHud.cs
 
-// 职责：显示自动对战轮次、六槽位阵容和击杀列表，复用探索模式击杀提示表现。 // 入口：SetState() / ShowKill() / ResetRound()；UI引用由场景制作保存。
+// 职责：显示自动对战轮次、十槽位阵容和击杀列表，复用探索模式击杀提示表现。 // 入口：SetState() / ShowKill() / ResetRound()；UI引用由场景制作保存。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
@@ -3883,19 +3898,24 @@ HY-Sandbox/
 
 ## Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs
 
-// 职责：自动填充随机3v3、按驾驶舱判定淘汰，结算等待后完整清场并开始下一轮。 // 入口：Start()自动开局；NotifyCockpitDestroyed()接收正式销毁主链，Update()处理胜负。
+// 职责：自动填充随机5v5、按驾驶舱判定淘汰，结算等待后完整清场并开始下一轮。 // 入口：Start()自动开局；NotifyCockpitDestroyed()接收正式销毁主链，Update()处理胜负。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SkirmishMatch | [`Cockpit CockpitAt(int index)`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L53) | public |
-| SkirmishMatch | [`string NameAt(int index)`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L54) | public |
-| SkirmishMatch | [`void Start()`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L55) | private |
-| SkirmishMatch | [`void BeginRound()`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L86) | private |
-| SkirmishMatch | [`bool NotifyCockpitDestroyed(Cockpit cockpit, ControlUnit attacker)`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L136) | public |
-| SkirmishMatch | [`void Eliminate(int index, string attacker)`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L153) | private |
-| SkirmishMatch | [`int CountAlive(int first)`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L165) | private |
-| SkirmishMatch | [`void Update()`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L179) | private |
-| SkirmishMatch | [`IEnumerator ClearAndRestart()`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L236) | private |
+| SkirmishMatch | [`Color TeamColor(bool blue)`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L57) | public |
+| SkirmishMatch | [`Cockpit CockpitAt(int index)`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L70) | public |
+| SkirmishMatch | [`string NameAt(int index)`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L71) | public |
+| SkirmishMatch | [`void Start()`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L72) | private |
+| SkirmishMatch | [`void BeginRound()`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L106) | private |
+| SkirmishMatch | [`bool NotifyCockpitDestroyed(Cockpit cockpit, ControlUnit attacker)`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L161) | public |
+| SkirmishMatch | [`void Eliminate(int index, string attacker)`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L178) | private |
+| SkirmishMatch | [`int CountAlive(int first)`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L190) | private |
+| SkirmishMatch | [`void Update()`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L204) | private |
+| SkirmishMatch | [`bool TeamCanFight(int first)`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L269) | private |
+| SkirmishMatch | [`void ApplyTeamColor(ControlUnit unit, bool blue)`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L286) | private |
+| SkirmishMatch | [`void OnDestroy()`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L343) | private |
+| SkirmishMatch | [`void ReleaseTeamMaterial(Material material)`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L360) | private static |
+| SkirmishMatch | [`IEnumerator ClearAndRestart()`](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L374) | private |
 
 ## Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs
 
@@ -3979,22 +3999,22 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | Turret | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L44) | protected virtual |
-| Turret | [`void OnValidate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L51) | protected virtual |
-| Turret | [`void SetStarted(bool started)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L62) | public |
-| Turret | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L71) | protected virtual |
-| Turret | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L93) | protected virtual |
-| Turret | [`void StopWorking()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L98) | private |
-| Turret | [`void RefreshTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L107) | private |
-| Turret | [`void AimAndFire(Durability aimTarget)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L133) | private |
-| Turret | [`void AimAt(Vector3 worldDirection)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L152) | private |
-| Turret | [`void ResolveAimingRig()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L182) | private |
-| Turret | [`Vector3 GetMuzzlePosition()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L216) | protected |
-| Turret | [`Vector3 GetAimForward()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L227) | protected |
-| Turret | [`UnitFaction GetEffectiveTargetFaction()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L233) | protected |
-| Turret | [`Vector3 GetAimPosition(Durability target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L239) | protected virtual |
-| Turret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L244) | protected abstract |
-| Turret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L245) | protected virtual |
-| Turret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L249) | protected virtual |
+| Turret | [`void OnValidate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L52) | protected virtual |
+| Turret | [`void SetStarted(bool started)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L63) | public |
+| Turret | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L73) | protected virtual |
+| Turret | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L96) | protected virtual |
+| Turret | [`void StopWorking()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L102) | private |
+| Turret | [`void RefreshTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L111) | private |
+| Turret | [`void AimAndFire(Durability aimTarget)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L137) | private |
+| Turret | [`void AimAt(Vector3 worldDirection)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L156) | private |
+| Turret | [`void ResolveAimingRig()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L186) | private |
+| Turret | [`Vector3 GetMuzzlePosition()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L220) | protected |
+| Turret | [`Vector3 GetAimForward()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L231) | protected |
+| Turret | [`UnitFaction GetEffectiveTargetFaction()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L237) | protected |
+| Turret | [`Vector3 GetAimPosition(Durability target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L243) | protected virtual |
+| Turret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L248) | protected abstract |
+| Turret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L249) | protected virtual |
+| Turret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L253) | protected virtual |
 
 ## Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs
 
@@ -4449,14 +4469,15 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Power | [`void OnEnable()`](../Assets/Scripts/Features/Power/Power.cs#L48) | private |
-| Power | [`void OnDisable()`](../Assets/Scripts/Features/Power/Power.cs#L55) | private |
-| Power | [`void LateUpdate()`](../Assets/Scripts/Features/Power/Power.cs#L64) | private |
-| Power | [`void SetWorkRequested(Object requester, bool requested)`](../Assets/Scripts/Features/Power/Power.cs#L74) | public |
-| Power | [`void ResetPower()`](../Assets/Scripts/Features/Power/Power.cs#L100) | public |
-| Power | [`void ReceivePower(float suppliedPower)`](../Assets/Scripts/Features/Power/Power.cs#L106) | public |
-| Power | [`void CommitPowerStatus()`](../Assets/Scripts/Features/Power/Power.cs#L111) | public |
-| Power | [`bool IsDestroyedRequester(Object requester)`](../Assets/Scripts/Features/Power/Power.cs#L119) | private static |
+| Power | [`void OnEnable()`](../Assets/Scripts/Features/Power/Power.cs#L58) | private |
+| Power | [`void OnDisable()`](../Assets/Scripts/Features/Power/Power.cs#L65) | private |
+| Power | [`void LateUpdate()`](../Assets/Scripts/Features/Power/Power.cs#L75) | private |
+| Power | [`void SetWorkRequested(Object requester, bool requested)`](../Assets/Scripts/Features/Power/Power.cs#L85) | public |
+| Power | [`void TrackAvailability(bool tracked)`](../Assets/Scripts/Features/Power/Power.cs#L110) | internal |
+| Power | [`void ResetPower()`](../Assets/Scripts/Features/Power/Power.cs#L116) | public |
+| Power | [`void ReceivePower(float suppliedPower)`](../Assets/Scripts/Features/Power/Power.cs#L123) | public |
+| Power | [`void CommitPowerStatus()`](../Assets/Scripts/Features/Power/Power.cs#L128) | public |
+| Power | [`bool IsDestroyedRequester(Object requester)`](../Assets/Scripts/Features/Power/Power.cs#L136) | private static |
 
 ## Assets/Scripts/Features/Power/PowerNetwork.cs
 
@@ -4473,13 +4494,13 @@ HY-Sandbox/
 | PowerNetwork | [`void ConnectGenerators(PowerTransmissionDevice device, Vector3 position)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L246) | private |
 | PowerNetwork | [`void CacheConnectedComponents()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L261) | private |
 | PowerNetwork | [`void PrepareLoads()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L291) | private |
-| PowerNetwork | [`void DistributeNetworkPower()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L308) | private |
-| PowerNetwork | [`void CollectConnectedComponent(PowerTransmissionDevice rootDevice)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L331) | private |
-| PowerNetwork | [`void VisitDevices(List<PowerTransmissionDevice> devices)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L355) | private |
-| PowerNetwork | [`void CollectDeviceLoads(PowerTransmissionDevice device)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L366) | private |
-| PowerNetwork | [`void SupplyConnectedComponent()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L382) | private |
-| PowerNetwork | [`void CommitPowerStatuses()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L419) | private |
-| PowerNetwork | [`bool IsWithinBoxRange(Vector3 firstPosition, Vector3 secondPosition, float range)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L427) | private static |
+| PowerNetwork | [`void DistributeNetworkPower()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L309) | private |
+| PowerNetwork | [`void CollectConnectedComponent(PowerTransmissionDevice rootDevice)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L332) | private |
+| PowerNetwork | [`void VisitDevices(List<PowerTransmissionDevice> devices)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L356) | private |
+| PowerNetwork | [`void CollectDeviceLoads(PowerTransmissionDevice device)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L367) | private |
+| PowerNetwork | [`void SupplyConnectedComponent()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L383) | private |
+| PowerNetwork | [`void CommitPowerStatuses()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L421) | private |
+| PowerNetwork | [`bool IsWithinBoxRange(Vector3 firstPosition, Vector3 secondPosition, float range)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L429) | private static |
 
 ## Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs
 
@@ -5878,22 +5899,22 @@ HY-Sandbox/
 | ControlUnit | [`IReadOnlyList<Durability> GetDamageTargets()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L19) | internal |
 | ControlUnit | [`void OnTransformChildrenChanged()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L32) | private |
 | ControlUnit | [`bool IsSceneSimulationActive(UnityEngine.SceneManagement.Scene scene)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L37) | public static |
-| ControlUnit | [`void BindBuilding(BuildingRuntime building)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L57) | public |
-| ControlUnit | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L62) | private |
-| ControlUnit | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L70) | private |
-| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L91) | public |
-| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L103) | public |
-| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L126) | private |
-| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L138) | private |
-| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L185) | public |
-| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L244) | public |
-| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L265) | public |
-| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L273) | public |
-| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L283) | public |
-| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L288) | public |
-| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L293) | private |
-| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L337) | private |
-| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L348) | private |
+| ControlUnit | [`void BindBuilding(BuildingRuntime building)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L84) | public |
+| ControlUnit | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L89) | private |
+| ControlUnit | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L97) | private |
+| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L118) | public |
+| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L130) | public |
+| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L155) | private |
+| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L167) | private |
+| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L214) | public |
+| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L273) | public |
+| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L294) | public |
+| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L302) | public |
+| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L312) | public |
+| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L317) | public |
+| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L322) | private |
+| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L366) | private |
+| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L377) | private |
 
 ## Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs
 

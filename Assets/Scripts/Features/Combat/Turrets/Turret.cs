@@ -44,6 +44,7 @@ public abstract class Turret : MonoBehaviour
     protected virtual void Awake()
     {
         Supply = GetComponent<Power>();
+        Supply.TrackAvailability(_isStarted);
         _targetSelector = new TurretTargetSelector(transform);
         ResolveAimingRig();
     }
@@ -62,6 +63,7 @@ public abstract class Turret : MonoBehaviour
     public void SetStarted(bool started)
     {
         _isStarted = started;
+        Supply?.TrackAvailability(started);
         if (!started)
         {
             StopWorking();
@@ -70,6 +72,7 @@ public abstract class Turret : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
+        Supply.TrackAvailability(_isStarted);
         Owner = GetComponentInParent<ControlUnit>();
         if (!_isStarted || Owner == null || !Owner.IsSimulationActive || !Owner.IsOperational)
         {
@@ -92,6 +95,7 @@ public abstract class Turret : MonoBehaviour
 
     protected virtual void OnDisable()
     {
+        Supply?.TrackAvailability(false);
         StopWorking();
     }
 

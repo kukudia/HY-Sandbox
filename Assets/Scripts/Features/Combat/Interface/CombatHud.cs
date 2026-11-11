@@ -26,6 +26,8 @@ public sealed class CombatHud : MonoBehaviour
     private float _killDuration = 2.8f;
     [SerializeField, Min(0f)]
     private float _labelFadeSpeed = 7f;
+    [SerializeField, Min(0.05f), Tooltip("Nameplate occlusion raycast cadence in seconds.")]
+    private float _occlusionCheckInterval = 0.12f;
     private readonly Dictionary<ControlUnit, EnemyView> _views = new Dictionary<ControlUnit, EnemyView>();
     private readonly Stack<EnemyView> _pool = new Stack<EnemyView>();
     private readonly List<ControlUnit> _remove = new List<ControlUnit>();
@@ -46,6 +48,8 @@ public sealed class CombatHud : MonoBehaviour
         public CanvasGroup group;
         public float health;
         public float maximum;
+        public float nextOcclusionCheck;
+        public bool occluded;
     }
 
     private void OnEnable()
@@ -138,7 +142,13 @@ public sealed class CombatHud : MonoBehaviour
 
             Vector3 world = unit.cockpit.transform.position + Vector3.up * _labelHeight;
             Vector3 screen = _camera.WorldToScreenPoint(world);
-            bool visible = screen.z > 0f && screen.x > 0f && screen.x < Screen.width && screen.y > 0f && screen.y < Screen.height && (world - _camera.transform.position).sqrMagnitude < _maxLabelDistance * _maxLabelDistance && !IsOccluded(world, unit);
+            if (Time.unscaledTime >= view.nextOcclusionCheck)
+            {
+                view.occluded = IsOccluded(world, unit);
+                view.nextOcclusionCheck = Time.unscaledTime + _occlusionCheckInterval;
+            }
+
+            bool visible = screen.z > 0f && screen.x > 0f && screen.x < Screen.width && screen.y > 0f && screen.y < Screen.height && (world - _camera.transform.position).sqrMagnitude < _maxLabelDistance * _maxLabelDistance && !view.occluded;
             view.group.alpha = Mathf.MoveTowards(view.group.alpha, visible ? 1f : 0f, Time.unscaledDeltaTime * _labelFadeSpeed);
             view.root.gameObject.SetActive(view.group.alpha > 0f);
             if (visible && RectTransformUtility.ScreenPointToLocalPointInRectangle(_overlay, screen, null, out Vector2 local))
@@ -200,7 +210,7 @@ public sealed class CombatHud : MonoBehaviour
         _seen.Clear();
         foreach (ControlUnit unit in PlayManager.instance.GetControlUnits())
         {
-            if (unit == null || unit.faction != UnitFaction.Enemy || !unit.HasValidCockpit)
+            if (unit == null || (unit.faction != UnitFaction.Enemy && PlayManager.instance.Skirmish == null) || !unit.HasValidCockpit)
             {
                 continue;
             }
@@ -210,8 +220,17 @@ public sealed class CombatHud : MonoBehaviour
             {
                 view = _pool.Count > 0 ? _pool.Pop() : CreateView();
                 _views.Add(unit, view);
+                view.nextOcclusionCheck = 0f;
+                view.occluded = false;
                 EnemyIdentity identity = unit.cockpit.GetComponent<EnemyIdentity>();
                 view.name.text = identity != null ? identity.DisplayName : unit.name;
+                if (PlayManager.instance.Skirmish != null)
+                {
+                    Color team = PlayManager.instance.Skirmish.TeamColor(unit.faction == UnitFaction.Player);
+                    view.name.color = team;
+                    view.fill.GetComponent<UnityEngine.UI.Image>().color = team;
+                }
+
                 view.group.alpha = 0f;
                 view.maximum = identity != null && identity.SpawnMaxHealth > 0f ? identity.SpawnMaxHealth : 0f;
             }

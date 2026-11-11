@@ -49,7 +49,7 @@ public class PlayManager : MonoBehaviour
     public float verticalVelocity;
     public float horizontalVelocity;
     public bool showConnectors = true;
-    public bool showLabel = true;
+    public bool showLabel = false;
     private float _lastGroupCleanupCheckTime;
     private RuntimeGroupBuilder _groupBuilder;
     private readonly PlayBlockSelection _selection = new PlayBlockSelection();

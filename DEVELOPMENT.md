@@ -20,7 +20,7 @@ EnemyController 不依赖 NavMesh。接近目标与警戒返航优先使用上/�
 
 炮塔实墙遮挡修复保留：从炮口验证视线，触发器和炮塔自身不遮挡，同组墙板及其他单位遮挡。每物理步丢弃被遮挡锁定。验证入口`Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs`保留原名称，现检查稳定驾驶、爬升、视线；与`AiUpgradePlayChecks`共同验证。当前结果见 [移除NavMesh验证](Docs/Validation/2026-11-10-local-steering.md)，旧避障/NavMesh记录仅为历史。
 
-**自动随机3v3观战：`Assets/Scenes/Random3v3Arena.unity`**（[循环与验收](Docs/Validation/2026-11-11-random-3v3-arena.md)）。双层地图独立副本，进入Play自动为六槽随机抽取内置及EnemyBlueprints敌舰，蓝/红各三艘且均为AI；驾驶舱全灭判负，5秒后清除舰体/碎片/掉落/弹丸/活动特效，再随机补满六槽进入下一轮。保留自由相机姿态，动态障碍复位。复用Exploration击杀提示，加轮次、阵容与双方击杀信息；蓝队AI死亡由对局处理。15项配置与21项Play生命周期检查通过；完整自然胜负及所有随机蓝图组合未全量验证。
+**自动随机5v5观战：`Assets/Scenes/Random5v5Arena.unity`**（[循环与验收](Docs/Validation/2026-11-11-random-5v5-arena.md)）。双层避障地图独立副本；十个槽位分别从玩家Saves池及敌方EnemyBlueprints/内置池抽取五艘AI。驾驶舱全灭判胜负，双方连续失去所有可供电完好武器能力3秒则平局；结算5秒后清场重开。名牌遮挡检测降为每舰约8Hz，耐久总量统计复用当前物理步的组件缓存。蓝红阵营材质按源材质共享，避免MaterialPropertyBlock破坏GPU Resident Drawer批处理。地图建筑数量和尺寸不变，通过扩大间距将地面扩至480×480；自由相机、关闭Connector文字、探索模式击杀提示和阵容信息均保留。
 
 ## 本轮界面与基地修复
 

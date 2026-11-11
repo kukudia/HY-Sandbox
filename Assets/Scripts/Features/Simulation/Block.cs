@@ -43,7 +43,7 @@ public class Block : MonoBehaviour
     public bool canRotate = true;
     public bool canExplode = false;
     public bool showConnectors = true;
-    public bool showLabel = true;
+    public bool showLabel = false;
     public string uniqueId;
     private StatusIcon _icon;
     private BlockConnections _connections;
