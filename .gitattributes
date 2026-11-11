@@ -86,3 +86,6 @@ Assets/Editor/Siege/Hangars.meta whitespace=-blank-at-eol
 Assets/Editor/Siege/Hangars/*.meta whitespace=-blank-at-eol
 Assets/Scripts/Features/Siege/Fleet/Siege*Flight*.cs.meta whitespace=-blank-at-eol
 Assets/Scripts/Features/Siege/Interface/ISiegeDeploymentHost.cs.meta whitespace=-blank-at-eol
+Assets/Scenes/Random3v3Arena.unity whitespace=-blank-at-eol
+Assets/Scenes/Random3v3Arena.unity.meta whitespace=-blank-at-eol
+Assets/Scripts/Features/Combat/Skirmish.meta whitespace=-blank-at-eol
