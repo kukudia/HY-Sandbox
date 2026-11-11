@@ -36,8 +36,10 @@ public class EnemyController : MonoBehaviour
     private float avoidanceSideHoldTime = 3f;
     [SerializeField, Min(1f)]
     private float strafeSwitchInterval = 6f;
-    [SerializeField, Min(0.1f), Tooltip("按实际水平速度预测侧滑路径的时间（秒）；扫描至少覆盖下一次决策。")]
+    [SerializeField, Min(0.1f), Tooltip("按实际速度预测移动路径的时间（秒）；扫描至少覆盖下一次决策。")]
     private float avoidancePredictionTime = 1.5f;
+    [SerializeField, Min(0.1f), Tooltip("用于估算高速减速所需提前量的保守减速度（米/秒²）。")]
+    private float predictionBrakingAcceleration = 6f;
     [SerializeField, Min(10f), Tooltip("普通战斗航向衔接的最大角速度（度/秒），避免新航向直接要求反向急刹。")]
     private float courseTurnRate = 90f;
     [SerializeField, Min(0.1f), Tooltip("普通参考航速的变化率（米/秒²）；停止和紧急避障仍立即制动。")]
@@ -514,7 +516,10 @@ public class EnemyController : MonoBehaviour
         extents.z += 0.25f;
         avoidanceBounds.extents = extents;
         float horizon = Mathf.Max(GetMovementInterval(), avoidancePredictionTime);
-        probeDistance = Mathf.Max(obstacleAvoidanceDistance, velocity.magnitude * horizon);
+        float speed = velocity.magnitude;
+        // 速度越高，基础时间预判之外再加入刹停距离，提前量单调增加。
+        float brakingDistance = speed * speed / (2f * Mathf.Max(0.1f, predictionBrakingAcceleration));
+        probeDistance = Mathf.Max(0f, obstacleAvoidanceDistance) + speed * horizon + brakingDistance;
         climbingObstacle = preferObstacleClimb && unit.hoverFlightController != null && obstacleClimb.TryGetHeight(
             unit,
             probeDirection,

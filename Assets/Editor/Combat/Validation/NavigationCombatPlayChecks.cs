@@ -291,7 +291,25 @@ public static class NavigationCombatPlayChecks
         body.linearVelocity = Vector3.forward * 20f;
         typeof(EnemyController).GetField("debugProbeCount", Instance).SetValue(ai, 0);
         apply.Invoke(ai, new object[] { Vector3.right, Vector3.right });
-        Check(checks, "Prediction distance scales with actual velocity", (float)distance.GetValue(ai) >= 30f);
+        float fastDistance = (float)distance.GetValue(ai);
+        Check(checks, "Prediction distance scales with actual velocity", fastDistance >= 30f);
+        body.linearVelocity = Vector3.forward * 4f;
+        typeof(EnemyController).GetField("debugProbeCount", Instance).SetValue(ai, 0);
+        apply.Invoke(ai, new object[] { Vector3.forward, Vector3.forward });
+        float slowDistance = (float)distance.GetValue(ai);
+        Check(checks, "Higher speed gets a longer prediction lead", fastDistance > slowDistance);
+        body.linearVelocity = Vector3.forward * 10f;
+        typeof(EnemyController).GetField("debugProbeCount", Instance).SetValue(ai, 0);
+        apply.Invoke(ai, new object[] { Vector3.forward, Vector3.forward });
+        float mediumDistance = (float)distance.GetValue(ai);
+        Check(
+            checks,
+            "Prediction lead increases across slow, cruise and fast speeds",
+            slowDistance < mediumDistance && mediumDistance < fastDistance);
+        Check(
+            checks,
+            "High speed gets extra braking-distance margin",
+            fastDistance - mediumDistance > mediumDistance - slowDistance);
         Check(
             checks,
             "Sideways drift uses one actual-velocity sweep",
