@@ -13,6 +13,8 @@ internal sealed class EnemyObstacleClimb
     private float exitProjection;
     private Vector3 heading;
     private bool active;
+    internal bool Active => active;
+
     internal void Clear()
     {
         active = false;
@@ -32,9 +34,15 @@ internal sealed class EnemyObstacleClimb
         float maxDrop = 0f)
     {
         targetHeight = baseHeight;
+        // 高度控制会改变垂直速度，不能据此取消尚未完成的水平越障任务。
+        direction = Vector3.ProjectOnPlane(direction, Vector3.up);
         if (direction.sqrMagnitude < 0.01f)
         {
-            Clear();
+            direction = active ? heading : Vector3.zero;
+        }
+
+        if (direction.sqrMagnitude < 0.01f)
+        {
             return false;
         }
 

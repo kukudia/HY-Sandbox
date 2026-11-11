@@ -154,6 +154,7 @@ public static class EnemyAvoidanceLabAuthoring
             RenderSettings.ambientLight = new Color(0.55f, 0.6f, 0.7f);
             SetDebug(scene);
             EditorSceneManager.SaveScene(scene, ScenePath);
+            AddRoofedTrial();
         }
         finally
         {
@@ -176,6 +177,38 @@ public static class EnemyAvoidanceLabAuthoring
             "drawGizmos",
             System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic)?.SetValue(gameView, true);
         view.Repaint();
+    }
+
+    [MenuItem("Tools/HY-Sandbox/Combat/Add Roofed A Star Trial")]
+    public static void AddRoofedTrial()
+    {
+        if (EditorApplication.isPlaying || SceneManager.GetActiveScene().path != ScenePath)
+        {
+            throw new InvalidOperationException("Open the lab in Edit Mode.");
+        }
+
+        EnemyAvoidanceLab lab = UnityEngine.Object.FindAnyObjectByType<EnemyAvoidanceLab>();
+        if (lab.transform.Find("Roofed U trap") != null)
+        {
+            return;
+        }
+
+        var layout = new GameObject("Roofed U trap");
+        Undo.RegisterCreatedObjectUndo(layout, "Add roofed navigation trial");
+        layout.transform.SetParent(lab.transform);
+        Material material = LabMaterial("NavigationLabWall", new Color(0.8f, 0.29f, 0.08f));
+        Box("Back", layout.transform, new Vector3(0f, 10f, 0f), new Vector3(4f, 20f, 42f), material);
+        Box("Upper", layout.transform, new Vector3(-13f, 10f, 21f), new Vector3(30f, 20f, 4f), material);
+        Box("Lower", layout.transform, new Vector3(-13f, 10f, -21f), new Vector3(30f, 20f, 4f), material);
+        Box("Roof", layout.transform, new Vector3(0f, 32f, 0f), new Vector3(100f, 2f, 100f), material);
+        layout.SetActive(false);
+        var serialized = new SerializedObject(lab);
+        SerializedProperty layouts = serialized.FindProperty("layouts");
+        int index = layouts.arraySize++;
+        layouts.GetArrayElementAtIndex(index).objectReferenceValue = layout;
+        serialized.ApplyModifiedProperties();
+        EditorSceneManager.MarkSceneDirty(lab.gameObject.scene);
+        EditorSceneManager.SaveScene(lab.gameObject.scene);
     }
 
     public static void RefreshPresentation()

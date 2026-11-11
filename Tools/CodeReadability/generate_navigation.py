@@ -1700,7 +1700,7 @@ def main():
     )
     graph(
         "阵地战任务目标与自主索敌",
-        "源码推导：波次明确指派的有效基地任务目标不受自主索敌半径限制，远程任务也生成接近输入；未指定任务仍只发现半径内敌对单位。所有目标继续校验启用、阵营、运行/模拟状态、场景和守卫范围；物理步即时丢弃失效目标，自主索敌错峰并带距离滞后，警戒返航避障同样降频。FixedUpdate只提交平滑意图，实际施力仍由推进器和电网负责。",
+        "源码推导：上下净空优先，受阻时有界三维A*生成缓存路线并连续跟随；即时身位检测仍按实际速度限制推力。波次明确指派的有效基地任务目标不受自主索敌半径限制，远程任务也生成接近输入；未指定任务仍只发现半径内敌对单位。所有目标继续校验启用、阵营、运行/模拟状态、场景和守卫范围；物理步即时丢弃失效目标，自主索敌错峰并带距离滞后，警戒返航避障同样降频。FixedUpdate只提交平滑意图，实际施力仍由推进器和电网负责。",
         {
             "A": "SiegeWaveDirector.Tick", "B": "EnemyController.SetPriorityTarget",
             "C": "EnemyController.FixedUpdate", "D": "EnemyController.FindNearestOpponent",
@@ -1710,6 +1710,7 @@ def main():
             "K": "EnemyObstacleClimb.TryGetHeight", "L": "EnemyController.ConfigureHoverThrusters",
             "M": "EnemyObstacleClimb.Blocked", "Q": "EnemyObstacleClimb.CanPass", "N": "EnemyObstacleClimb.GetHullBounds",
             "O": "EnemyController.ProbeObstacle", "P": "EnemyController.GetVelocityInput", "R": "EnemyController.LimitObstacleInput",
+            "S": "EnemyLocalPath.TryFollow", "T": "EnemyLocalPath.Capture", "U": "EnemyLocalPath.ClearFlight", "V": "EnemyLocalPath.ClearSegment",
         },
         [
             "A -->|生成或经Attacker.RefreshTarget重新绑定| B",
@@ -1718,7 +1719,9 @@ def main():
             "F -->|接近目标| H", "C -->|警戒返航| H", "J --> I", "F --> J",
             "J -->|整舰边界与速度预测| N", "K --> N", "J --> O",
             "J -->|实际速度加时间及速度平方提前量优先上升再下降| K", "K --> Q", "Q -->|整舰垂直及前向净空| M",
-            "C -->|决策后逐物理步应用高度| L", "K -.->|爬升期间减小前进并保持舰尾净空| L",
+            "C -->|决策后逐物理步应用高度| L", "K -.->|高度未到位时零水平推进并保持舰尾净空| L",
+            "J -->|上下通道受阻或路线未结束| S", "S -->|静态障碍按整舰尺寸扩张| T",
+            "S -->|缓存复查及跳过中间点| U", "U --> V", "S -->|有界三维栅格扩展| V",
         ],
     )
     graph(

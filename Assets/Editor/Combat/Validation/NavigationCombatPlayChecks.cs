@@ -50,6 +50,7 @@ public static class NavigationCombatPlayChecks
             CheckStableSteering(checks, ai, owner);
             CheckContinuousCourse(checks, ai);
             CheckHullAvoidance(checks, root.transform, owner, ai);
+            CheckLocalPath(checks, root.transform, owner);
             Type selectorType = typeof(Turret).Assembly.GetType("TurretTargetSelector");
             object selector = Activator.CreateInstance(selectorType, Instance, null, new object[] { owner.transform }, null);
             MethodInfo select = selectorType.GetMethod("FindNearestTarget", Instance);
@@ -344,6 +345,14 @@ public static class NavigationCombatPlayChecks
         owner.transform.localPosition = new Vector3(0f, 12f, 0f);
         Physics.SyncTransforms();
         Check(checks, "Climb altitude is held while hull crosses obstacle", (bool)query.Invoke(climb, arguments));
+        arguments[1] = Vector3.zero;
+        Check(checks, "Stopped hull retains committed climb altitude", (bool)query.Invoke(climb, arguments));
+        arguments[1] = Vector3.up;
+        Check(
+            checks,
+            "Vertical velocity cannot cancel horizontal climb commitment",
+            (bool)query.Invoke(climb, arguments));
+        arguments[1] = Vector3.right;
         owner.transform.localPosition = new Vector3(6f, 12f, 0f);
         Physics.SyncTransforms();
         BoxCollider nextWall = Box(root, "Next wall after descent", new Vector3(20f, 3.5f, 0f), new Vector3(2f, 8f, 40f));
@@ -406,6 +415,65 @@ public static class NavigationCombatPlayChecks
         Object.DestroyImmediate(ceiling.gameObject);
         wall.transform.localPosition = new Vector3(0f, 3.5f, 0f);
         wall.size = new Vector3(2f, 8f, 40f);
+        owner.transform.localPosition = new Vector3(-20f, 1f, 0f);
+        Physics.SyncTransforms();
+    }
+
+    private static void CheckLocalPath(List<string> checks, Transform root, ControlUnit owner)
+    {
+        Type type = typeof(EnemyController).Assembly.GetType("EnemyLocalPath");
+        object planner = Activator.CreateInstance(type, true);
+        MethodInfo follow = type.GetMethod("TryFollow", Instance);
+        owner.transform.localPosition = new Vector3(-20f, 4f, -45f);
+        BoxCollider wall = Box(root, "A star unjumpable wall", new Vector3(0f, 10f, -45f), new Vector3(3f, 25f, 16f));
+        Physics.SyncTransforms();
+        Vector3 destination = root.TransformPoint(new Vector3(20f, 4f, -45f));
+        object[] args =
+        {
+            owner,
+            new Bounds(owner.transform.position, Vector3.one * 2f),
+            destination,
+            (LayerMask)(~0),
+            4f,
+            64f,
+            1024,
+            2f,
+            2f,
+            6f,
+            Vector3.zero
+        };
+        Check(checks, "A star routes around wall above climb limit", (bool)follow.Invoke(planner, args));
+        var points = (IReadOnlyList<Vector3>)type.GetProperty("Points", Instance).GetValue(planner);
+        Check(
+            checks,
+            "A star route contains lateral bypass",
+            System.Linq.Enumerable.Any(points, p => Mathf.Abs(p.z - destination.z) > 8f));
+        int expanded = (int)type.GetProperty("Expanded", Instance).GetValue(planner);
+        Check(checks, "A star respects expansion budget", expanded > 0 && expanded <= 1024);
+        Check(checks, "Cached path continues on next decision", (bool)follow.Invoke(planner, args));
+        Vector3 blockedPoint = ((Vector3)args[10] + owner.transform.position) * 0.5f;
+        BoxCollider blocker = Box(
+            root,
+            "New obstruction in cached route",
+            root.InverseTransformPoint(blockedPoint),
+            new Vector3(4f, 25f, 200f));
+        Physics.SyncTransforms();
+        Check(
+            checks,
+            "New geometry invalidates cached path before thrust",
+            !(bool)follow.Invoke(planner, args) && !(bool)type.GetProperty("Active", Instance).GetValue(planner));
+        Object.DestroyImmediate(blocker.gameObject);
+        Physics.SyncTransforms();
+        type.GetMethod("Clear", Instance).Invoke(planner, null);
+        wall.size = new Vector3(3f, 25f, 200f);
+        Physics.SyncTransforms();
+        Check(checks, "Sealed local search returns no unsafe path", !(bool)follow.Invoke(planner, args));
+        Check(checks, "Failed local search retries are throttled", !(bool)follow.Invoke(planner, args));
+        type.GetMethod("Clear", Instance).Invoke(planner, null);
+        wall.isTrigger = true;
+        Physics.SyncTransforms();
+        Check(checks, "Trigger does not require A star detour", !(bool)follow.Invoke(planner, args));
+        Object.DestroyImmediate(wall.gameObject);
         owner.transform.localPosition = new Vector3(-20f, 1f, 0f);
         Physics.SyncTransforms();
     }

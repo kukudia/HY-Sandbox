@@ -13,7 +13,7 @@ public sealed class EnemyAvoidanceLab : MonoBehaviour
     private ControlUnit target;
     [SerializeField]
     private GameObject[] layouts;
-    [SerializeField, Range(0, 3)]
+    [SerializeField, Range(0, 4)]
     private int layoutIndex;
     [SerializeField]
     private Vector3 startPosition = new Vector3(-45f, 6f, 0f);

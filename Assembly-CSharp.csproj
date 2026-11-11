@@ -199,6 +199,7 @@
     <Compile Include="Assets\Scripts\Features\Simulation\Units\UnitFaction.cs" />
     <Compile Include="Assets\Scripts\Features\Building\SaveManager.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interaction\BuildPreview.cs" />
+    <Compile Include="Assets\Scripts\Features\Combat\Enemies\EnemyLocalPath.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BuildTargetContext.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\Bot.cs" />
     <Compile Include="Assets\Scripts\Features\Flight\Thrusters\MainThruster.cs" />
