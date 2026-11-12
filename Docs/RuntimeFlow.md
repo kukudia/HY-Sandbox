@@ -96,6 +96,54 @@ flowchart TD
 - [MainMenuController.OpenBlueprint](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L298)
 <!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|OpenBlueprint -->
 
+## 交错防线实战基地制作
+
+源码推导：Editor菜单制作独立CombatCourtyard蓝图；按尺寸烘焙装甲Prefab的网格缩放、碰撞与连接点，既有资产存在则保留手工调整。校验后保存真实JSON；个人副本经正常主菜单进入SiegeGameplay，不替换默认示例。
+
+```mermaid
+flowchart TD
+    A["SiegeCombatBaseAuthoring.Create()"]
+    click A "../Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs#L12" "打开源码"
+    B["SiegeCombatBaseAuthoring.Generate()"]
+    click B "../Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs#L18" "打开源码"
+    C["SiegeCombatBaseAuthoring.Armor()"]
+    click C "../Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs#L185" "打开源码"
+    D["SiegeCombatBaseAuthoring.Add()"]
+    click D "../Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs#L222" "打开源码"
+    E["Block.RefreshAuthoringData()"]
+    click E "../Assets/Scripts/Features/Simulation/Block.cs#L123" "打开源码"
+    F["SiegeConstructionSettings.Validate()"]
+    click F "../Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs#L30" "打开源码"
+    G["MainMenuController.Launch()"]
+    click G "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L202" "打开源码"
+    H["SiegeGameplayStage.Enter()"]
+    click H "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L80" "打开源码"
+    A --> B
+    B -->|平台、墙体与核心舱| C
+    C -->|独立结构Prefab| E
+    C --> D
+    B -->|炮台、供电与机库| D
+    B -->|写入JSON前| F
+    G -->|经GameModeController加载个人蓝图| H
+```
+
+- [SiegeCombatBaseAuthoring.Create](../Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs#L12)
+<!-- source: Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs|Create -->
+- [SiegeCombatBaseAuthoring.Generate](../Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs#L18)
+<!-- source: Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs|Generate -->
+- [SiegeCombatBaseAuthoring.Armor](../Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs#L185)
+<!-- source: Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs|Armor -->
+- [SiegeCombatBaseAuthoring.Add](../Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs#L222)
+<!-- source: Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs|Add -->
+- [Block.RefreshAuthoringData](../Assets/Scripts/Features/Simulation/Block.cs#L123)
+<!-- source: Assets/Scripts/Features/Simulation/Block.cs|RefreshAuthoringData -->
+- [SiegeConstructionSettings.Validate](../Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs#L30)
+<!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs|Validate -->
+- [MainMenuController.Launch](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L202)
+<!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|Launch -->
+- [SiegeGameplayStage.Enter](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L80)
+<!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Enter -->
+
 ## 基地设计、部署与守波
 
 源码推导：Main保存基地设计；基地使用独立BaseBlueprints目录；副场景只读进入前选定的快照，在可编辑出生点自动生成并验证地面支撑。新版与预研共用波次和修缮；净空/余额通过才恢复原设计并扣费。核心事件或撤退汇入结算，返回停止模拟、卸载副场景、恢复Main原稿。

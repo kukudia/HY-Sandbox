@@ -137,6 +137,7 @@ HY-Sandbox/
 │   │   │   │   ├── SiegeArenaLookAuthoring.cs
 │   │   │   │   ├── SiegeBaseBlueprintAuthoring.cs
 │   │   │   │   ├── SiegeBlueprintSelectionAuthoring.cs
+│   │   │   │   ├── SiegeCombatBaseAuthoring.cs
 │   │   │   │   ├── SiegeCommandHudAuthoring.cs
 │   │   │   │   ├── SiegeConstructionAuthoring.cs
 │   │   │   │   ├── SiegeInterfaceAuthoring.cs
@@ -1933,6 +1934,17 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeBlueprintSelectionAuthoring | [`void Install()`](../Assets/Editor/Siege/Authoring/SiegeBlueprintSelectionAuthoring.cs#L7) | public static |
+
+## Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs
+
+// 职责：制作独立的交错防线实战基地蓝图，保留示例基地与用户设计。 // 入口：Generate()；固定配方可重复预览，输出真实JSON资产，个人副本通过正常菜单出战。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeCombatBaseAuthoring | [`void Create()`](../Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs#L12) | public static |
+| SiegeCombatBaseAuthoring | [`TextAsset Generate()`](../Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs#L18) | public static |
+| SiegeCombatBaseAuthoring | [`void Armor(BlockDataList design, Vector3 position, Vector3Int size)`](../Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs#L185) | private static |
+| SiegeCombatBaseAuthoring | [`void Add( BlockDataList design, string resource, Vector3 position, Vector3Int? size = null, float yaw = 0f, string id = null)`](../Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs#L222) | private static |
 
 ## Assets/Editor/Siege/Authoring/SiegeCommandHudAuthoring.cs
 

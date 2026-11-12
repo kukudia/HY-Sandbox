@@ -73,6 +73,16 @@ def main():
          'N -.->|安全载入或玩法清理完成| J'],
     )
     graph(
+        "交错防线实战基地制作",
+        "源码推导：Editor菜单制作独立CombatCourtyard蓝图；按尺寸烘焙装甲Prefab的网格缩放、碰撞与连接点，既有资产存在则保留手工调整。校验后保存真实JSON；个人副本经正常主菜单进入SiegeGameplay，不替换默认示例。",
+        {"A": "SiegeCombatBaseAuthoring.Create", "B": "SiegeCombatBaseAuthoring.Generate",
+         "C": "SiegeCombatBaseAuthoring.Armor", "D": "SiegeCombatBaseAuthoring.Add",
+         "E": "Block.RefreshAuthoringData", "F": "SiegeConstructionSettings.Validate",
+         "G": "MainMenuController.Launch", "H": "SiegeGameplayStage.Enter"},
+        ["A --> B", "B -->|平台、墙体与核心舱| C", "C -->|独立结构Prefab| E", "C --> D",
+         "B -->|炮台、供电与机库| D", "B -->|写入JSON前| F", "G -->|经GameModeController加载个人蓝图| H"],
+    )
+    graph(
         "基地设计、部署与守波",
         "源码推导：Main保存基地设计；基地使用独立BaseBlueprints目录；副场景只读进入前选定的快照，在可编辑出生点自动生成并验证地面支撑。新版与预研共用波次和修缮；净空/余额通过才恢复原设计并扣费。核心事件或撤退汇入结算，返回停止模拟、卸载副场景、恢复Main原稿。",
         {"A": "SiegeBaseWorkshop.DesignateCore", "B": "GameModeController.LoadMode",

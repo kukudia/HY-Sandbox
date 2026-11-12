@@ -88,6 +88,10 @@ Main 的 **Simulate**（或 P）继续提供工坊内模式选择：探索按需
 
 模式状态由 `GameModeController` 管理，探索通过 `BindHost` 显式绑定 Main 的环境、加载 UI 与 HUD。场景异步加载支持取消，失败完整清理后重试；退出卸载玩法场景。Main 建造原稿停用保留，探索使用副本，返回恢复同一个原稿与镜头；正常返回保存货仓后迁移回原稿，死亡返回清空货仓。不会把战斗损毁覆盖到未保存的作品。SiegeGameplay 已接入基地蓝图部署、真实守波、整备修复与结算，见下节。
 
+## SiegeGameplay 实战基地
+
+[交错防线基地与验证](Docs/Validation/2026-11-12-siege-combat-courtyard.md)：新增 `Assets/Siege/Construction/CombatCourtyard.json`，141模块、106×90米占地，四角炮台加中央双炮核心舱、分段外墙和错位内墙、两个28×12×30米机库。Editor菜单 **Tools/HY-Sandbox/Siege/Generate combat courtyard base** 保存独立蓝图和10种烘焙结构Prefab；已存在资产不覆盖，个人副本 `Combat Courtyard` 可从Base Workshop继续编辑。正常菜单加载SiegeGameplay后部署/完整支撑通过，显式同时工作刺激6/6炮供电效率1.0；首波Finch实战已生成并攻击、核心存活，但两艘个人守军未正常完成出库，未完成清波/返航验收。最终恢复完整基地整备。默认示例与战斗配置保持原样。
+
 ## 基地自由建造首版
 
 Main 左下 **BASE EDITOR** 打开独立基地编辑目标（正式Player也可用，复用结构编辑能力）；可新建命名蓝图，或 **COPY STARTER** 复制可修改的示例。在地面自由放置/移动/旋转模块，选中有耐久的模块后 **MARK SELECTED CORE** 指定唯一核心。编辑自动保存到独立 `BaseBlueprints`，普通建筑仍使用 `BuildingBlueprints`；**BACK TO VEHICLE** 返回载具建造，再通过 **Simulate → Siege** 出战。旧建筑目录中已标记核心且非据点的文件会迁移到基地目录；同名冲突自动另取名，字节校验后将原文件归档到 `BlueprintMigrationBackups`，不覆盖任何已有设计。
