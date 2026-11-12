@@ -187,6 +187,60 @@ public static class EnemyPredictionPlayChecks
                 (float)type.GetProperty("LookAheadDistance", Instance).GetValue(predictor) == 160f);
             arguments[1] = new Bounds(owner.transform.position, Vector3.one * 2f);
             moving.linearVelocity = Vector3.zero;
+            // 远场快照必须真正驱动规划，而非仅显示提示；规划时禁用碰撞体排除第二次物理查询的影响。
+            crossing.transform.position = new Vector3(100f, 20f, 0f);
+            collider.size = new Vector3(4f, 40f, 14f);
+            type.GetProperty("MinimumDistance", Instance).SetValue(predictor, 120f);
+            Physics.SyncTransforms();
+            type.GetMethod("Observe", Instance).Invoke(
+                predictor,
+                new object[] { owner, arguments[1], Vector3.right * 4f, (LayerMask)(~0), 4f, 3f, new Vector3(140f, 20f, 0f), null, 0, 20f });
+            Check(
+                checks,
+                "Far observation requests route before approaching a hundred metre wall",
+                (string)type.GetProperty("FarDecision", Instance).GetValue(predictor) == "RouteBlocked" && (float)type.GetProperty("FarObstacleDistance", Instance).GetValue(predictor) > 90f);
+            Type pathType = typeof(EnemyController).Assembly.GetType("EnemyLocalPath");
+            object planner = Activator.CreateInstance(pathType, true);
+            pathType.GetProperty("Perception", Instance).SetValue(planner, predictor);
+            pathType.GetProperty("PreviewRequest", Instance).SetValue(planner, "FarRouteBlocked");
+            collider.enabled = false;
+            Physics.SyncTransforms();
+            object[] follow =
+            {
+                owner,
+                arguments[1],
+                new Vector3(140f, 20f, 0f),
+                (LayerMask)0,
+                6f,
+                96f,
+                1024,
+                2f,
+                20f,
+                20f,
+                Vector3.zero
+            };
+            MethodInfo tryFollow = pathType.GetMethod("TryFollow", Instance);
+            bool planned = (bool)tryFollow.Invoke(planner, follow);
+            Check(checks, "A star uses shared observations beyond original search range", planned);
+            Check(
+                checks,
+                "Far plan produces lateral bypass before near collision horizon",
+                Mathf.Abs(((Vector3)follow[10]).z) > 5f);
+            Check(
+                checks,
+                "Far planning preserves expansion budget and trigger",
+                (int)pathType.GetProperty("Expanded", Instance).GetValue(planner) <= 1024 && (string)pathType.GetProperty("ReplanReason", Instance).GetValue(planner) == "FarRouteBlocked");
+            int revision = (int)pathType.GetProperty("Revision", Instance).GetValue(planner);
+            Check(
+                checks,
+                "Repeated far risk respects replan cooldown and retains route",
+                (bool)tryFollow.Invoke(planner, follow) && revision == (int)pathType.GetProperty("Revision", Instance).GetValue(planner));
+            choose.Invoke(predictor, arguments);
+            Check(
+                checks,
+                "Near decision reuses prepared snapshot without recapture",
+                (int)type.GetProperty("Observed", Instance).GetValue(predictor) == 1);
+            collider.enabled = true;
             for (int i = 0; i < 260; i++)
             {
                 var clutter = new GameObject("Dense sensor fixture");
@@ -204,7 +258,7 @@ public static class EnemyPredictionPlayChecks
             Check(
                 checks,
                 "Sensor and rollout checks have fixed upper budgets",
-                (int)type.GetProperty("Observed", Instance).GetValue(predictor) <= 256 && (int)type.GetProperty("SegmentChecks", Instance).GetValue(predictor) <= 256 * (12 * 7 + 4));
+                (int)type.GetProperty("Observed", Instance).GetValue(predictor) <= 256 && (int)type.GetProperty("SegmentChecks", Instance).GetValue(predictor) <= 256 * (12 * 7 + 8));
             type.GetMethod("Clear", Instance).Invoke(predictor, null);
             Check(
                 checks,

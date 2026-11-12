@@ -1,5 +1,5 @@
 // 职责：周向采集远场路况，沿路线预读距离/时间，按相对运动扫掠近场候选航迹并提前调速或让行。
-// 入口：Choose()；由EnemyController降频调用，不写刚体、不分配候选数组，不使用试验场运动脚本的未来参数。
+// 入口：Observe() / CopyPlanningBounds() / Choose()；降频采集快照供规划与动作验证，不写刚体，不读取试验场未来参数。
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,7 +10,10 @@ internal sealed class EnemyNavigationPrediction
     private readonly Collider[] overlaps = new Collider[Capacity];
     private readonly Observation[] observations = new Observation[Capacity];
     private Vector3 committed;
+    private Vector3 sensorCenter;
     private float holdUntil;
+    private bool prepared;
+    private float preparationMilliseconds;
     internal int Revision
     {
         get; private set;
@@ -97,6 +100,7 @@ internal sealed class EnemyNavigationPrediction
 
     internal void Clear()
     {
+        prepared = false;
         committed = Vector3.zero;
         holdUntil = 0f;
         Observed = 0;
@@ -121,6 +125,61 @@ internal sealed class EnemyNavigationPrediction
         FarDecision = "Clear";
     }
 
+    internal void Observe(
+        ControlUnit owner,
+        Bounds hull,
+        Vector3 velocity,
+        LayerMask layers,
+        float speed,
+        float horizon,
+        Vector3 destination,
+        System.Collections.Generic.IReadOnlyList<Vector3> route,
+        int waypoint,
+        float height)
+    {
+        double began = Time.realtimeSinceStartupAsDouble;
+        SegmentChecks = 0;
+        Capture(
+            owner,
+            hull,
+            velocity,
+            layers,
+            speed,
+            Mathf.Clamp(horizon, 1f, 4f));
+        Preview(
+            hull,
+            destination + hull.center - owner.transform.position,
+            route,
+            waypoint,
+            owner.transform.position,
+            height,
+            speed);
+        prepared = true;
+        preparationMilliseconds = (float)((Time.realtimeSinceStartupAsDouble - began) * 1000.0);
+    }
+
+    internal void CopyPlanningBounds(System.Collections.Generic.List<Bounds> destination, Vector3 padding, float predictionTime)
+    {
+        destination.Clear();
+        for (int i = 0; i < Observed; i++)
+        {
+            Observation obstacle = observations[i];
+            Bounds bounds = obstacle.Bounds;
+            float horizon = Mathf.Clamp(predictionTime, 0f, 3f);
+            Bounds predicted = bounds;
+            predicted.center += Vector3.ClampMagnitude(obstacle.Velocity * horizon, 12f);
+            bounds.Encapsulate(predicted);
+            float rotation = Mathf.Min(12f, obstacle.AngularSpeed * horizon * obstacle.Radius);
+            bounds.Expand((padding + Vector3.one * rotation) * 2f);
+            destination.Add(bounds);
+        }
+
+        if (Saturated)
+        {
+            destination.Add(new Bounds(sensorCenter, Vector3.one * (SensorRadius + padding.magnitude) * 4f));
+        }
+    }
+
     internal Vector3 Choose(
         ControlUnit owner,
         Bounds hull,
@@ -142,15 +201,21 @@ internal sealed class EnemyNavigationPrediction
         acceleration = Mathf.Clamp(acceleration, 0.25f, 12f);
         turnRate = Mathf.Clamp(turnRate, 10f, 180f);
         Candidates = 0;
-        SegmentChecks = 0;
         Revision++;
-        Capture(
-            owner,
-            hull,
-            velocity,
-            layers,
-            cruiseSpeed,
-            horizon);
+        float perceptionMilliseconds = prepared ? preparationMilliseconds : 0f;
+        if (!prepared)
+        {
+            SegmentChecks = 0;
+            Capture(
+                owner,
+                hull,
+                velocity,
+                layers,
+                cruiseSpeed,
+                horizon);
+        }
+
+        prepared = false;
         Outcome original = Evaluate(
             hull,
             velocity,
@@ -261,7 +326,7 @@ internal sealed class EnemyNavigationPrediction
 
         SelectedCollisionTime = best.HitTime;
         SelectedVelocity = best.Input * cruiseSpeed;
-        Milliseconds = (float)((Time.realtimeSinceStartupAsDouble - began) * 1000.0);
+        Milliseconds = perceptionMilliseconds + (float)((Time.realtimeSinceStartupAsDouble - began) * 1000.0);
         return best.Input;
     }
 
@@ -286,6 +351,7 @@ internal sealed class EnemyNavigationPrediction
             160f);
         float reach = Mathf.Max(LookAheadDistance, Mathf.Max(velocity.magnitude, cruiseSpeed) * horizon) + 24f;
         SensorRadius = reach;
+        sensorCenter = hull.center;
         int count = owner.gameObject.scene.GetPhysicsScene().OverlapBox(
             hull.center,
             hull.extents + Vector3.one * reach,

@@ -1700,7 +1700,7 @@ def main():
     )
     graph(
         "阵地战任务目标与自主索敌",
-        "源码推导：上下净空优先，受阻时有界三维A*生成缓存路线并连续跟随；即时身位检测仍按实际速度限制推力。波次明确指派的有效基地任务目标不受自主索敌半径限制，远程任务也生成接近输入；未指定任务仍只发现半径内敌对单位。所有目标继续校验启用、阵营、运行/模拟状态、场景和守卫范围；物理步即时丢弃失效目标，自主索敌错峰并带距离滞后，警戒返航避障同样降频。FixedUpdate只提交平滑意图，实际施力仍由推进器和电网负责。",
+        "源码推导：远场风险优先有界三维A*生成缓存路线并连续跟随，规划失败可回退安全升降，保持已承诺爬升；即时身位检测仍按实际速度限制推力。波次明确指派的有效基地任务目标不受自主索敌半径限制，远程任务也生成接近输入；未指定任务仍只发现半径内敌对单位。所有目标继续校验启用、阵营、运行/模拟状态、场景和守卫范围；物理步即时丢弃失效目标，自主索敌错峰并带距离滞后，警戒返航避障同样降频。FixedUpdate只提交平滑意图，实际施力仍由推进器和电网负责。",
         {
             "A": "SiegeWaveDirector.Tick", "B": "EnemyController.SetPriorityTarget",
             "C": "EnemyController.FixedUpdate", "D": "EnemyController.FindNearestOpponent",
@@ -1713,6 +1713,7 @@ def main():
             "S": "EnemyLocalPath.TryFollow", "T": "EnemyLocalPath.Capture", "U": "EnemyLocalPath.ClearFlight", "V": "EnemyLocalPath.ClearSegment",
             "W": "EnemyObstacleClimb.ForwardRatio", "X": "EnemyController.ConstrainDescent", "Y": "EnemyObstacleClimb.CanLowerTo",
             "AA": "EnemyLocalPath.Push", "AB": "EnemyLocalPath.Pop", "AC": "EnemyLocalPath.Simplify",
+            "AD": "EnemyController.TryClimbObstacle",
         },
         [
             "A -->|生成或经Attacker.RefreshTarget重新绑定| B",
@@ -1720,18 +1721,18 @@ def main():
             "C -->|逐物理步旋转参考航向并调整航速| P", "P -->|普通避障去除反推；预测让行允许推进器制动| R", "C -->|平滑后再次限制| R", "C -->|平滑输入| G",
             "F -->|接近目标| H", "C -->|警戒返航| H", "J --> I", "F --> J",
             "J -->|整舰边界与速度预测| N", "K --> N", "J --> O",
-            "J -->|实际速度加时间及速度平方提前量优先上升再下降| K", "K --> Q", "Q -->|整舰垂直及前向净空| M",
+            "J -->|保持已承诺升降或远场规划失败回退| AD", "AD -->|实际速度加时间及速度平方提前量优先上升再下降| K", "K --> Q", "Q -->|整舰垂直及前向净空| M",
             "C -->|决策后逐物理步应用高度| L", "K -.->|保持高度直至舰尾越障| L",
-            "J -->|按现高度走廊和升降期间滑行余量限制水平推进| W", "W --> N",
+            "J -->|A星路线跟随净空| W", "AD -->|按现高度走廊和升降期间滑行余量限制水平推进| W", "W --> N",
             "L -->|下降前验证，未通过保持最后安全航层| X", "X --> Y", "Y --> Q",
-            "J -->|上下通道受阻或路线未结束| S", "S -->|整舰膨胀及限时限距运动包络| T",
+            "J -->|远场风险、上下通道受阻或路线未结束| S", "S -->|整舰膨胀及限时限距运动包络| T",
             "S -->|后两段预判、提前直达及滚动接续；失败保留安全当前段| U", "U --> V", "S -->|有界三维栅格及转弯代价| V",
             "S -->|最小堆入队| AA", "S -->|弹出并忽略过期代价| AB", "S -->|保高后最多128次简化检查| AC", "AC --> U",
         ],
     )
     graph(
         "敌舰远场感知与近场候选动作",
-        "源码推导：所有移动分支在降频决策末尾统一预测；远场距离取80米、8身位和10秒航程最大值，上限160米，复用一次OverlapBox最多256碰撞体。远场最多四段沿缓存路线预读，报告障碍距离和到达时间，动态风险提前调速；近场12段相对运动扫掠，最多七动作比较继续、减速、等待及左右绕行。任务目标排除，饱和请求制动；实际推进仍由ControlUnit/推进器负责。不是远期确定性运动预测。",
+        "源码推导：降频决策先采集远场，再以同一份障碍快照驱动A*，最后验证近场动作；远场距离取80米、8身位和10秒航程最大值，上限160米，一次OverlapBox最多256碰撞体。最多四段路线预读；挡路或横穿风险优先请求规划，窗口覆盖远场视距，仍受节点预算和冷却限制。快照的短期运动包络用于整舰净空；近场12段相对运动扫掠，最多七动作，复用快照而不重复查询。任务目标排除，饱和阻止规划并制动。不是远期确定性运动预测。",
         {
             "A": "EnemyController.CalculateDesiredMovement", "B": "EnemyController.PredictMovement",
             "C": "EnemyNavigationPrediction.Choose", "D": "EnemyNavigationPrediction.Capture",
@@ -1740,9 +1741,15 @@ def main():
             "I": "EnemyController.StabilizeDirection", "J": "EnemyController.GetVelocityInput",
             "K": "EnemyController.LimitObstacleInput", "L": "EnemyController.CaptureNavigation",
             "M": "EnemyNavigationPrediction.Clear", "N": "EnemyController.OnDisable",
+            "O": "EnemyController.ApplyObstacleAvoidance", "P": "EnemyNavigationPrediction.Observe",
+            "Q": "EnemyLocalPath.TryFollow", "R": "EnemyNavigationPrediction.CopyPlanningBounds",
+            "S": "EnemyController.TryClimbObstacle",
         },
         [
-            "A -->|爬升/A星/直达结果| B", "B --> C", "C -->|周向远场采集当前几何和运动| D",
+            "A --> O", "O -->|先采集周向远场| P", "P --> D", "P --> E",
+            "O -->|远场风险优先规划，保留预算与冷却| Q", "Q -->|共享快照及短期运动包络| R",
+            "O -->|无运动障碍时保持承诺升降或规划失败回退| S",
+            "O -->|爬升/A星/直达结果| B", "B --> C", "C -->|无预采集时才查询| D",
             "C -->|原意图及风险候选| F", "C -->|已规划路径或任务方向| E",
             "C --> G", "G --> H", "C -->|远场调速前复查近场| F", "B -->|安全决策覆盖航向保持| I",
             "J -->|选定意图转换为真实输入| K", "L -.->|面板和日志读取距离/时间/动作/耗时| C",

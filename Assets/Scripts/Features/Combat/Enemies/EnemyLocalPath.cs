@@ -18,6 +18,14 @@ internal sealed class EnemyLocalPath
     private int waypoint;
     internal float TurnPenalty { get; set; } = 2f;
     internal float PredictionTime { get; set; } = 1.5f;
+    internal EnemyNavigationPrediction Perception
+    {
+        get; set;
+    }
+    internal string PreviewRequest
+    {
+        get; set;
+    }
     internal string ReplanReason { get; private set; } = "Initial";
     internal float PlanMilliseconds
     {
@@ -146,6 +154,12 @@ internal sealed class EnemyLocalPath
         point = position;
         cellSize = Mathf.Max(2f, cellSize);
         radius = Mathf.Max(cellSize * 2f, radius);
+        if (Perception != null)
+        {
+            // 规划到远场视距，同时禁止把尚未感知的空间当作无障碍。
+            radius = Perception.LookAheadDistance;
+        }
+
         Vector3[] fallback = null;
         int fallbackWaypoint = waypoint;
         if (Active && Time.time >= nextPlan && (goal - destination).sqrMagnitude > cellSize * cellSize * 4f)
@@ -158,7 +172,7 @@ internal sealed class EnemyLocalPath
         {
             // 提前切换中间航点，不要求逐点减速至零；验证跳点整段舰体通道。
             Capture(owner, hull, layers, radius);
-            Vector3 forwardGoal = position + Vector3.ClampMagnitude(goal - position, radius * 0.8f);
+            Vector3 forwardGoal = position + Vector3.ClampMagnitude(goal - position, radius);
             if (ClearFlight(position, forwardGoal))
             {
                 Clear();
@@ -198,7 +212,7 @@ internal sealed class EnemyLocalPath
                     point = path[waypoint];
                     bool rolling = (destination - path[path.Count - 1]).sqrMagnitude > cellSize * cellSize * 4f && waypoint == path.Count - 1 && (position - path[path.Count - 1]).sqrMagnitude < radius * radius * 0.1225f;
                     // 只预看后面两段，不逐决策扫描整条路线；当前段安全才可保留旧线。
-                    bool futureBlocked = false;
+                    bool futureBlocked = PreviewRequest != null;
                     for (int i = waypoint; i + 1 < path.Count && i < waypoint + 2; i++)
                     {
                         if (!ClearFlight(path[i], path[i + 1]))
@@ -216,7 +230,7 @@ internal sealed class EnemyLocalPath
                     // 前移局部搜索窗口；替换失败仍沿已验证的旧路线飞行，不等待窗口终点。
                     fallback = path.ToArray();
                     fallbackWaypoint = waypoint;
-                    ReplanReason = futureBlocked ? "FutureBlocked" : "RollingWindow";
+                    ReplanReason = PreviewRequest ?? (futureBlocked ? "FutureBlocked" : "RollingWindow");
                 }
             }
         }
@@ -227,10 +241,15 @@ internal sealed class EnemyLocalPath
         }
 
         double planStarted = Time.realtimeSinceStartupAsDouble;
+        if (PreviewRequest != null)
+        {
+            ReplanReason = PreviewRequest;
+        }
+
         nextPlan = Time.time + Mathf.Max(0.5f, retry);
         destination = goal;
         Capture(owner, hull, layers, radius);
-        Vector3 localGoal = position + Vector3.ClampMagnitude(goal - position, radius * 0.8f);
+        Vector3 localGoal = position + Vector3.ClampMagnitude(goal - position, radius);
         if (ClearSegment(position, localGoal))
         {
             path.Clear();
@@ -285,7 +304,7 @@ internal sealed class EnemyLocalPath
                 }
 
                 path.Reverse();
-                if ((goal - position).sqrMagnitude > radius * radius * 0.64f && path.Count > 1)
+                if ((goal - position).sqrMagnitude > radius * radius && path.Count > 1)
                 {
                     // 窗口终点并非任务终点。保留本段最高航层，避免在下一堵墙前先下降再爬升。
                     float peak = localGoal.y;
@@ -404,6 +423,12 @@ internal sealed class EnemyLocalPath
         // 航向改变会旋转机翼，水平使用保守圆包络，防止只验证当前朝向而切角。
         float horizontal = new Vector2(hull.extents.x, hull.extents.z).magnitude + 0.75f;
         Vector3 padding = new Vector3(horizontal, hull.extents.y + 0.75f, horizontal);
+        if (Perception != null)
+        {
+            Perception.CopyPlanningBounds(obstacles, padding, PredictionTime);
+            return;
+        }
+
         PhysicsScene physics = owner.gameObject.scene.GetPhysicsScene();
         int count;
         do

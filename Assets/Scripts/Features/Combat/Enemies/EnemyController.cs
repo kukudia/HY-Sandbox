@@ -216,6 +216,8 @@ public class EnemyController : MonoBehaviour
         nextUpdateTime = Time.time + phase * Mathf.Max(0.01f, updateInterval);
         nextMovementUpdateTime = 0f;
         localPath.Clear();
+        localPath.Perception = null;
+        localPath.PreviewRequest = null;
         obstacleClimb.Clear();
         prediction.Clear();
         navigationRequested = false;
@@ -365,10 +367,6 @@ public class EnemyController : MonoBehaviour
             return proposed;
         }
 
-        prediction.MinimumDistance = farLookAheadDistance;
-        prediction.BodyLengths = farLookAheadBodyLengths;
-        prediction.LookAheadSeconds = farLookAheadSeconds;
-        prediction.TaskTarget = currentTarget;
         Vector3 selected = prediction.Choose(
             unit,
             avoidanceBounds,
@@ -573,6 +571,8 @@ public class EnemyController : MonoBehaviour
         predictiveBraking = false;
         prediction.TaskTarget = null;
         localPath.Clear();
+        localPath.Perception = null;
+        localPath.PreviewRequest = null;
         obstacleClimb.Clear();
         navigationRequested = false;
         debugProbeCount = 0;
@@ -702,30 +702,38 @@ public class EnemyController : MonoBehaviour
         probeDistance = Mathf.Max(0f, obstacleAvoidanceDistance) + speed * horizon + brakingDistance;
         localPath.TurnPenalty = pathTurnPenalty;
         localPath.PredictionTime = pathPredictionTime;
-        climbingObstacle = !localPath.Active && preferObstacleClimb && unit.hoverFlightController != null && (speed >= 0.1f || obstacleClimb.Active) && obstacleClimb.TryGetHeight(
-            unit,
-            probeDirection,
-            GetBaseHoverHeight(),
-            Mathf.Max(probeDistance, climbLookAhead),
-            maxObstacleClimb,
-            obstacleClimbClearance,
-            obstacleLayers,
-            out obstacleHoverHeight,
-            maxObstacleDescent);
-        if (climbingObstacle)
+        localPath.Perception = usePredictiveDecisions ? prediction : null;
+        localPath.PreviewRequest = null;
+        if (usePredictiveDecisions)
         {
-            avoidingObstacle = true;
-            float ratio = obstacleClimb.ForwardRatio(
+            prediction.MinimumDistance = farLookAheadDistance;
+            prediction.BodyLengths = farLookAheadBodyLengths;
+            prediction.LookAheadSeconds = farLookAheadSeconds;
+            prediction.TaskTarget = currentTarget;
+            // 同一轮先感知再规划，A*与近场动作验证共享快照，避免各自重复查询且看到不同路况。
+            prediction.Observe(
                 unit,
-                desiredMove,
-                obstacleHoverHeight,
+                avoidanceBounds,
+                velocity,
+                obstacleLayers,
                 cruiseSpeed,
-                obstacleClimbClearance,
-                horizon,
-                obstacleLayers);
-            obstacleSpeedRatio = ratio;
-            urgentAvoidance = ratio < 0.25f;
-            return StabilizeDirection(desiredMove) * ratio;
+                decisionHorizon,
+                navigationRequested ? navigationDestination : transform.position + desiredMove * farLookAheadDistance,
+                localPath.Active ? localPath.Points : null,
+                localPath.Waypoint,
+                GetBaseHoverHeight());
+            if (prediction.FarDecision == "RouteBlocked" || prediction.FarDecision == "CrossingWatch")
+            {
+                localPath.PreviewRequest = prediction.FarDecision == "RouteBlocked" ? "FarRouteBlocked" : "FarCrossing";
+            }
+        }
+
+        // 升降回退只有静态净空保证；有运动障碍时，远场风险必须交还共享快照规划与近场让行。
+        bool staticClimbFallback = prediction.Moving == 0 && !prediction.Saturated;
+        bool planFirst = localPath.PreviewRequest != null && !(obstacleClimb.Active && staticClimbFallback);
+        if (!planFirst && TryClimbObstacle(desiredMove, probeDirection, speed, horizon, out Vector3 climbMovement))
+        {
+            return climbMovement;
         }
 
         if (navigationRequested && unit.hoverFlightController != null && localPath.TryFollow(
@@ -765,6 +773,12 @@ public class EnemyController : MonoBehaviour
             return StabilizeDirection(alongPath.normalized) * heightRatio;
         }
 
+        // A*失败或仍在冷却时，允许已验证的升降回退；远场风险不能永久压制可行的爬升。
+        if (planFirst && staticClimbFallback && TryClimbObstacle(desiredMove, probeDirection, speed, horizon, out climbMovement))
+        {
+            return climbMovement;
+        }
+
         if (speed < 0.1f)
         {
             debugProbeCount = 0;
@@ -792,6 +806,39 @@ public class EnemyController : MonoBehaviour
         }
 
         return result;
+    }
+
+    private bool TryClimbObstacle(Vector3 desiredMove, Vector3 probeDirection, float speed, float horizon, out Vector3 movement)
+    {
+        movement = Vector3.zero;
+        climbingObstacle = !localPath.Active && preferObstacleClimb && unit.hoverFlightController != null && (speed >= 0.1f || obstacleClimb.Active) && obstacleClimb.TryGetHeight(
+            unit,
+            probeDirection,
+            GetBaseHoverHeight(),
+            Mathf.Max(probeDistance, climbLookAhead),
+            maxObstacleClimb,
+            obstacleClimbClearance,
+            obstacleLayers,
+            out obstacleHoverHeight,
+            maxObstacleDescent);
+        if (climbingObstacle)
+        {
+            avoidingObstacle = true;
+            float ratio = obstacleClimb.ForwardRatio(
+                unit,
+                desiredMove,
+                obstacleHoverHeight,
+                cruiseSpeed,
+                obstacleClimbClearance,
+                horizon,
+                obstacleLayers);
+            obstacleSpeedRatio = ratio;
+            urgentAvoidance = ratio < 0.25f;
+            movement = StabilizeDirection(desiredMove) * ratio;
+            return true;
+        }
+
+        return false;
     }
 
     private Vector3 ProbeObstacle(Vector3 direction, float weight)
