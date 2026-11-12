@@ -159,6 +159,13 @@ internal sealed class EnemyLabPanel
         GUILayout.Label(lab.Status);
         string mode = lab.Navigation.followingPath ? "A*跟随" : lab.Navigation.changingHeight ? "高度避障" : lab.Navigation.avoiding ? "身位避障" : "接近/战斗";
         GUILayout.Label($"{mode} | 上次A* {lab.Navigation.pathStatus} | 节点 {lab.Navigation.expandedNodes} | 航点 {lab.Navigation.waypoint} | 推进 {lab.Navigation.throttleRatio:F2}");
+        GUILayout.Label($"预判 {lab.Navigation.predictionDecision} | 障碍 {lab.Navigation.observedObstacles} / 运动 {lab.Navigation.movingObstacles} | 候选 {lab.Navigation.predictionCandidates} | {lab.Navigation.predictionMilliseconds:F2}ms");
+        GUILayout.Label($"远场预读 {lab.Navigation.lookAheadDistance:F0}m | {lab.Navigation.farDecision} | 最近 {lab.Navigation.farObstacleDistance:F1}m / 约{lab.Navigation.farArrivalTime:F1}s | {lab.Navigation.farThreat}");
+        if (lab.Navigation.predictedCollisionTime >= 0f)
+        {
+            GUILayout.Label($"原意图预计 {lab.Navigation.predictedCollisionTime:F1}s 后接触 | 替代意图 {(lab.Navigation.selectedCollisionTime < 0f ? "预测窗口内净空" : lab.Navigation.selectedCollisionTime.ToString("F1") + "s后接触")}");
+        }
+
         layoutScroll = GUILayout.BeginScrollView(layoutScroll, GUILayout.Height(145f));
         for (int i = 0; i < lab.LayoutCount; i++)
         {

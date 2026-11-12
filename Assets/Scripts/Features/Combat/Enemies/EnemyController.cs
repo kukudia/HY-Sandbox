@@ -60,6 +60,21 @@ public class EnemyController : MonoBehaviour
     [SerializeField, Range(0f, 3f), Tooltip("运动学障碍短期包络预判秒数；平移和旋转余量各限12米。")]
     private float pathPredictionTime = 1.5f;
     private readonly EnemyLocalPath localPath = new EnemyLocalPath();
+    [Header("Predictive Local Decisions")]
+    [SerializeField, Tooltip("在爬升、A*与直达分支之后统一比较周围障碍和短期候选航迹。")]
+    private bool usePredictiveDecisions = true;
+    [SerializeField, Range(1f, 4f), Tooltip("短期航迹预判秒数；每次移动决策只采集一次周围物体，最多7个动作、每动作12段。")]
+    private float decisionHorizon = 3f;
+    [SerializeField, Range(0.25f, 6f), Tooltip("候选动作模拟的保守加减速度估计（米/秒²）；不是直接写入刚体的加速度。")]
+    private float decisionAcceleration = 2f;
+    [SerializeField, Range(20f, 160f), Tooltip("远场最小预读距离（米），与身位倍数、航速×预读秒数取最大值。")]
+    private float farLookAheadDistance = 80f;
+    [SerializeField, Range(3f, 12f), Tooltip("远场最少预读多少个舰体长度；总距离最多160米。")]
+    private float farLookAheadBodyLengths = 8f;
+    [SerializeField, Range(4f, 16f), Tooltip("按航速换算远场距离的提前秒数，远期运动风险与近处确定碰撞分别记录。")]
+    private float farLookAheadSeconds = 10f;
+    private readonly EnemyNavigationPrediction prediction = new EnemyNavigationPrediction();
+    private bool predictiveBraking;
     private Vector3 navigationDestination;
     private bool navigationRequested;
     private Vector3 courseVelocity;
@@ -170,6 +185,26 @@ public class EnemyController : MonoBehaviour
             routeChanged = route != null,
             replanReason = localPath.ReplanReason,
             planMilliseconds = localPath.PlanMilliseconds,
+            predictionDecision = prediction.Decision,
+            predictionRevision = prediction.Revision,
+            predictedThreat = prediction.ThreatName,
+            predictedThreatVelocity = prediction.ThreatVelocity,
+            sensorRadius = prediction.SensorRadius,
+            lookAheadDistance = prediction.LookAheadDistance,
+            farObstacleDistance = prediction.FarObstacleDistance,
+            farArrivalTime = prediction.FarArrivalTime,
+            farThreat = prediction.FarThreat,
+            farDecision = prediction.FarDecision,
+            observedObstacles = prediction.Observed,
+            movingObstacles = prediction.Moving,
+            predictionCandidates = prediction.Candidates,
+            predictionSegmentChecks = prediction.SegmentChecks,
+            predictedCollisionTime = prediction.CollisionTime,
+            selectedCollisionTime = prediction.SelectedCollisionTime,
+            predictionMilliseconds = prediction.Milliseconds,
+            predictionSaturated = prediction.Saturated,
+            predictiveBraking = predictiveBraking,
+            predictedVelocity = prediction.SelectedVelocity,
             route = route
         };
     }
@@ -182,6 +217,7 @@ public class EnemyController : MonoBehaviour
         nextMovementUpdateTime = 0f;
         localPath.Clear();
         obstacleClimb.Clear();
+        prediction.Clear();
         navigationRequested = false;
         steeringDirection = Vector3.zero;
         courseVelocity = movementBody != null ? Vector3.ProjectOnPlane(movementBody.linearVelocity, Vector3.up) : Vector3.zero;
@@ -247,7 +283,7 @@ public class EnemyController : MonoBehaviour
                 Vector3 toGuard = guardAnchor != null ? guardAnchor.position - transform.position : Vector3.zero;
                 toGuard.y = 0f;
                 climbingObstacle = false;
-                desiredMovementInput = toGuard.sqrMagnitude > 100f ? ApplyObstacleAvoidance(GetApproachDirection(guardAnchor.position, toGuard.normalized), toGuard) : Vector3.zero;
+                desiredMovementInput = toGuard.sqrMagnitude > 100f ? PredictMovement(ApplyObstacleAvoidance(GetApproachDirection(guardAnchor.position, toGuard.normalized), toGuard)) : Vector3.zero;
                 nextMovementUpdateTime = Time.time + GetMovementInterval();
             }
 
@@ -307,7 +343,7 @@ public class EnemyController : MonoBehaviour
                 desiredMove = GetStrafeDirection(flatDirection);
             }
 
-            desiredMove = ApplyObstacleAvoidance(desiredMove, flatDirection);
+            desiredMove = PredictMovement(ApplyObstacleAvoidance(desiredMove, flatDirection));
         }
 
         return desiredMove;
@@ -318,6 +354,46 @@ public class EnemyController : MonoBehaviour
         navigationDestination = new Vector3(destination.x, GetBaseHoverHeight(), destination.z);
         navigationRequested = true;
         return fallback;
+    }
+
+    private Vector3 PredictMovement(Vector3 proposed)
+    {
+        predictiveBraking = false;
+        if (!usePredictiveDecisions)
+        {
+            prediction.Clear();
+            return proposed;
+        }
+
+        prediction.MinimumDistance = farLookAheadDistance;
+        prediction.BodyLengths = farLookAheadBodyLengths;
+        prediction.LookAheadSeconds = farLookAheadSeconds;
+        prediction.TaskTarget = currentTarget;
+        Vector3 selected = prediction.Choose(
+            unit,
+            avoidanceBounds,
+            movementBody != null ? movementBody.linearVelocity : Vector3.zero,
+            proposed,
+            climbingObstacle ? obstacleHoverHeight : GetBaseHoverHeight(),
+            obstacleLayers,
+            cruiseSpeed,
+            decisionHorizon,
+            decisionAcceleration,
+            courseTurnRate,
+            localPath.Active || climbingObstacle,
+            navigationRequested ? navigationDestination : transform.position + proposed * farLookAheadDistance,
+            localPath.Active ? localPath.Points : null,
+            localPath.Waypoint);
+        if (prediction.CollisionTime >= 0f || prediction.Saturated)
+        {
+            // 安全预判必须能覆盖普通航向保持；只改变意图，真实施力继续由推进器负责。
+            urgentAvoidance = true;
+            // 让行需要真实推进器反推来消减惯性；只收油无法执行预测中的等待动作。
+            predictiveBraking = selected.magnitude + 0.05f < proposed.magnitude || prediction.Saturated;
+            selected = StabilizeDirection(selected);
+        }
+
+        return selected;
     }
 
     private float GetMovementInterval()
@@ -370,7 +446,7 @@ public class EnemyController : MonoBehaviour
                     // 遇障按接近比例缩减前向推力，不施加反向推力。
                     input -= direction * (forward * (1f - obstacleSpeedRatio));
                 }
-                else if (forward < 0f)
+                else if (forward < 0f && !predictiveBraking)
                 {
                     input -= direction * forward;
                 }
@@ -493,6 +569,9 @@ public class EnemyController : MonoBehaviour
             unit.SetTarget(null);
         }
 
+        prediction.Clear();
+        predictiveBraking = false;
+        prediction.TaskTarget = null;
         localPath.Clear();
         obstacleClimb.Clear();
         navigationRequested = false;
@@ -878,6 +957,12 @@ public class EnemyController : MonoBehaviour
 
         Color previousColor = Gizmos.color;
         Vector3 origin = transform.position;
+        if (usePredictiveDecisions && prediction.LookAheadDistance > 0f)
+        {
+            // 青色圆表示远场预读范围；原BoxCast盒线只表示近处即时安全检测。
+            DrawDebugCircle(origin, prediction.LookAheadDistance, new Color(0f, 0.75f, 1f, 0.7f));
+        }
+
         Gizmos.color = unit.faction == UnitFaction.Player ? Color.green : Color.red;
         Gizmos.DrawWireSphere(origin, 1f);
         if (showDebugRanges)

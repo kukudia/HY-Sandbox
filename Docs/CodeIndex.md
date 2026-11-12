@@ -74,6 +74,7 @@ HY-Sandbox/
 │   │   │       ├── EnemyLabExpansionChecks.cs
 │   │   │       ├── EnemyLabPlayChecks.cs
 │   │   │       ├── EnemyLabViewChecks.cs
+│   │   │       ├── EnemyPredictionPlayChecks.cs
 │   │   │       ├── NavigationCombatPlayChecks.cs
 │   │   │       ├── SkirmishArenaChecks.cs
 │   │   │       ├── SkirmishPerformanceChecks.cs
@@ -310,6 +311,7 @@ HY-Sandbox/
 │           │   │   ├── EnemyController.cs
 │           │   │   ├── EnemyIdentity.cs
 │           │   │   ├── EnemyLocalPath.cs
+│           │   │   ├── EnemyNavigationPrediction.cs
 │           │   │   ├── EnemyNavigationSnapshot.cs
 │           │   │   ├── EnemyObstacleClimb.cs
 │           │   │   ├── EnemySpawner.cs
@@ -1281,6 +1283,15 @@ HY-Sandbox/
 | EnemyLabViewChecks | [`Task<string> Run()`](../Assets/Editor/Combat/Validation/EnemyLabViewChecks.cs#L24) | private static async |
 | EnemyLabViewChecks | [`void Check(List<string> checks, string name, bool value)`](../Assets/Editor/Combat/Validation/EnemyLabViewChecks.cs#L146) | private static |
 
+## Assets/Editor/Combat/Validation/EnemyPredictionPlayChecks.cs
+
+// 职责：用隔离物理场景验证横向运动感知、相对碰撞时间和候选动作预算。 // 入口：Run()；仅Play Mode，真实PhysX采集，反射调用生产预测器，不修改试验场。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyPredictionPlayChecks | [`string Run()`](../Assets/Editor/Combat/Validation/EnemyPredictionPlayChecks.cs#L13) | public static |
+| EnemyPredictionPlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Combat/Validation/EnemyPredictionPlayChecks.cs#L225) | private static |
+
 ## Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs
 
 // 职责：在隔离物理场景验证稳定局部驾驶、爬升净空与两种炮塔的遮挡锁定。 // 入口：Run()；仅 Play Mode，结果写入 Temp/NavigationCombat，不修改玩家蓝图和场景。
@@ -1292,13 +1303,13 @@ HY-Sandbox/
 | NavigationCombatPlayChecks | [`void CheckStableSteering(List<string> checks, EnemyController ai, ControlUnit owner)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L161) | private static |
 | NavigationCombatPlayChecks | [`void CheckContinuousCourse(List<string> checks, EnemyController ai)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L201) | private static |
 | NavigationCombatPlayChecks | [`void CheckHullAvoidance(List<string> checks, Transform root, ControlUnit owner, EnemyController ai)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L241) | private static |
-| NavigationCombatPlayChecks | [`void CheckObstacleClimb(List<string> checks, Transform root, ControlUnit owner, BoxCollider wall)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L324) | private static |
-| NavigationCombatPlayChecks | [`void CheckDescentRetention(List<string> checks, ControlUnit owner, EnemyController ai)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L433) | private static |
-| NavigationCombatPlayChecks | [`void CheckLocalPath(List<string> checks, Transform root, ControlUnit owner)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L459) | private static |
-| NavigationCombatPlayChecks | [`void CheckMotionPrediction(List<string> checks, Transform root, ControlUnit owner, Type type, object planner)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L578) | private static |
-| NavigationCombatPlayChecks | [`ControlUnit Unit(Transform root, string name, UnitFaction faction, Vector3 position)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L619) | private static |
-| NavigationCombatPlayChecks | [`BoxCollider Box(Transform root, string name, Vector3 position, Vector3 size)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L639) | private static |
-| NavigationCombatPlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L649) | private static |
+| NavigationCombatPlayChecks | [`void CheckObstacleClimb(List<string> checks, Transform root, ControlUnit owner, BoxCollider wall)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L335) | private static |
+| NavigationCombatPlayChecks | [`void CheckDescentRetention(List<string> checks, ControlUnit owner, EnemyController ai)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L444) | private static |
+| NavigationCombatPlayChecks | [`void CheckLocalPath(List<string> checks, Transform root, ControlUnit owner)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L470) | private static |
+| NavigationCombatPlayChecks | [`void CheckMotionPrediction(List<string> checks, Transform root, ControlUnit owner, Type type, object planner)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L589) | private static |
+| NavigationCombatPlayChecks | [`ControlUnit Unit(Transform root, string name, UnitFaction faction, Vector3 position)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L630) | private static |
+| NavigationCombatPlayChecks | [`BoxCollider Box(Transform root, string name, Vector3 position, Vector3 size)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L650) | private static |
+| NavigationCombatPlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L660) | private static |
 
 ## Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs
 
@@ -3654,31 +3665,32 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| EnemyController | [`void ConfigureDebugDisplay(bool enabled, bool ranges)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L129) | internal |
-| EnemyController | [`EnemyNavigationSnapshot CaptureNavigation(int previousRouteRevision = -1)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L135) | public |
-| EnemyController | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L177) | private |
-| EnemyController | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L197) | private |
-| EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L204) | private |
-| EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L279) | private |
-| EnemyController | [`Vector3 GetApproachDirection(Vector3 destination, Vector3 fallback)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L316) | private |
-| EnemyController | [`float GetMovementInterval()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L323) | private |
-| EnemyController | [`Vector3 GetVelocityInput()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L328) | private |
-| EnemyController | [`Vector3 LimitObstacleInput(Vector3 input)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L359) | private |
-| EnemyController | [`Vector3 StabilizeDirection(Vector3 candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L383) | private |
-| EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L407) | public |
-| EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L415) | public |
-| EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L422) | private |
-| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L473) | private |
-| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L488) | private |
-| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L512) | private |
-| EnemyController | [`float ConstrainDescent(float requested, Vector3 direction)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L554) | private |
-| EnemyController | [`float GetBaseHoverHeight()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L572) | private |
-| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L590) | private |
-| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L606) | private |
-| EnemyController | [`Vector3 ProbeObstacle(Vector3 direction, float weight)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L718) | private |
-| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L866) | private |
-| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L871) | private |
-| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L928) | private static |
+| EnemyController | [`void ConfigureDebugDisplay(bool enabled, bool ranges)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L144) | internal |
+| EnemyController | [`EnemyNavigationSnapshot CaptureNavigation(int previousRouteRevision = -1)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L150) | public |
+| EnemyController | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L212) | private |
+| EnemyController | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L233) | private |
+| EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L240) | private |
+| EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L315) | private |
+| EnemyController | [`Vector3 GetApproachDirection(Vector3 destination, Vector3 fallback)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L352) | private |
+| EnemyController | [`Vector3 PredictMovement(Vector3 proposed)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L359) | private |
+| EnemyController | [`float GetMovementInterval()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L399) | private |
+| EnemyController | [`Vector3 GetVelocityInput()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L404) | private |
+| EnemyController | [`Vector3 LimitObstacleInput(Vector3 input)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L435) | private |
+| EnemyController | [`Vector3 StabilizeDirection(Vector3 candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L459) | private |
+| EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L483) | public |
+| EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L491) | public |
+| EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L498) | private |
+| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L549) | private |
+| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L564) | private |
+| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L591) | private |
+| EnemyController | [`float ConstrainDescent(float requested, Vector3 direction)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L633) | private |
+| EnemyController | [`float GetBaseHoverHeight()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L651) | private |
+| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L669) | private |
+| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L685) | private |
+| EnemyController | [`Vector3 ProbeObstacle(Vector3 direction, float weight)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L797) | private |
+| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L945) | private |
+| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L950) | private |
+| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L1013) | private static |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs
 
@@ -3705,6 +3717,21 @@ HY-Sandbox/
 | EnemyLocalPath | [`void Capture(ControlUnit owner, Bounds hull, LayerMask layers, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L400) | private |
 | EnemyLocalPath | [`bool ClearFlight(Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L460) | private |
 | EnemyLocalPath | [`bool ClearSegment(Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L466) | private |
+
+## Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPrediction.cs
+
+// 职责：周向采集远场路况，沿路线预读距离/时间，按相对运动扫掠近场候选航迹并提前调速或让行。 // 入口：Choose()；由EnemyController降频调用，不写刚体、不分配候选数组，不使用试验场运动脚本的未来参数。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyNavigationPrediction | [`void Clear()`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPrediction.cs#L98) | internal |
+| EnemyNavigationPrediction | [`Vector3 Choose( ControlUnit owner, Bounds hull, Vector3 velocity, Vector3 desired, float targetHeight, LayerMask layers, float cruiseSpeed, float horizon, float acceleration, float turnRate, bool preserveCourse, Vector3 destination, System.Collections.Generic.IReadOnlyList<Vector3> route, int waypoint)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPrediction.cs#L124) | internal |
+| EnemyNavigationPrediction | [`void Capture( ControlUnit owner, Bounds hull, Vector3 velocity, LayerMask layers, float cruiseSpeed, float horizon)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPrediction.cs#L268) | private |
+| EnemyNavigationPrediction | [`void Preview( Bounds hull, Vector3 destination, System.Collections.Generic.IReadOnlyList<Vector3> route, int waypoint, Vector3 root, float height, float speed)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPrediction.cs#L327) | private |
+| EnemyNavigationPrediction | [`Outcome Evaluate( Bounds hull, Vector3 velocity, Vector3 input, float deltaHeight, float speed, float horizon, float acceleration, float turnRate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPrediction.cs#L409) | private |
+| EnemyNavigationPrediction | [`void Consider(ref Outcome best, Outcome candidate, Vector3 desired)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPrediction.cs#L491) | private |
+| EnemyNavigationPrediction | [`float Score(Outcome candidate, Vector3 desired)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPrediction.cs#L509) | private |
+| EnemyNavigationPrediction | [`float Clearance(Bounds bounds, Vector3 point)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPrediction.cs#L516) | private static |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyNavigationSnapshot.cs
 

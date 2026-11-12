@@ -289,6 +289,17 @@ public static class NavigationCombatPlayChecks
             checks,
             "Input smoothing cannot retain reverse thrust near obstacle",
             smoothed.x >= 0f && smoothed.z > 0f);
+        typeof(EnemyController).GetField("predictiveBraking", Instance).SetValue(ai, true);
+        Vector3 braking = (Vector3)typeof(EnemyController).GetMethod("LimitObstacleInput", Instance).Invoke(ai, new object[] { Vector3.left });
+        Check(
+            checks,
+            "Predictive yielding permits real thruster braking without velocity writes",
+            braking.x < 0f);
+        typeof(EnemyController).GetField("predictiveBraking", Instance).SetValue(ai, false);
+        Check(
+            checks,
+            "Ending predictive yielding restores ordinary no-reverse policy",
+            ((Vector3)typeof(EnemyController).GetMethod("LimitObstacleInput", Instance).Invoke(ai, new object[] { Vector3.left })).x == 0f);
         obstacle.enabled = false;
         body.linearVelocity = Vector3.forward * 20f;
         typeof(EnemyController).GetField("debugProbeCount", Instance).SetValue(ai, 0);

@@ -200,6 +200,7 @@
     <Compile Include="Assets\Scripts\Features\Building\Interaction\BuildBlueprintEditor.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\TransientEffects.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\SiegeSession.cs" />
+    <Compile Include="Assets\Scripts\Features\Combat\Enemies\EnemyNavigationPrediction.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Units\UnitFaction.cs" />
     <Compile Include="Assets\Scripts\Features\Building\SaveManager.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interaction\BuildPreview.cs" />

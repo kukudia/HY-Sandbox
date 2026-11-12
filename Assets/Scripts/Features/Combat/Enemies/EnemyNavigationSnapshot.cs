@@ -30,5 +30,25 @@ public struct EnemyNavigationSnapshot
     public bool routeChanged;
     public string replanReason;
     public float planMilliseconds;
+    public string predictionDecision;
+    public int predictionRevision;
+    public string predictedThreat;
+    public Vector3 predictedThreatVelocity;
+    public float sensorRadius;
+    public float lookAheadDistance;
+    public float farObstacleDistance;
+    public float farArrivalTime;
+    public string farThreat;
+    public string farDecision;
+    public int observedObstacles;
+    public int movingObstacles;
+    public int predictionCandidates;
+    public int predictionSegmentChecks;
+    public float predictedCollisionTime;
+    public float selectedCollisionTime;
+    public float predictionMilliseconds;
+    public bool predictionSaturated;
+    public bool predictiveBraking;
+    public Vector3 predictedVelocity;
     public Vector3[] route;
 }

@@ -1717,7 +1717,7 @@ def main():
         [
             "A -->|生成或经Attacker.RefreshTarget重新绑定| B",
             "C -->|目标更新周期| D", "D --> E", "C -->|有目标且到移动周期| F",
-            "C -->|逐物理步旋转参考航向并调整航速| P", "P -->|遇障去除反向推进| R", "C -->|平滑后再次限制| R", "C -->|平滑输入| G",
+            "C -->|逐物理步旋转参考航向并调整航速| P", "P -->|普通避障去除反推；预测让行允许推进器制动| R", "C -->|平滑后再次限制| R", "C -->|平滑输入| G",
             "F -->|接近目标| H", "C -->|警戒返航| H", "J --> I", "F --> J",
             "J -->|整舰边界与速度预测| N", "K --> N", "J --> O",
             "J -->|实际速度加时间及速度平方提前量优先上升再下降| K", "K --> Q", "Q -->|整舰垂直及前向净空| M",
@@ -1727,6 +1727,26 @@ def main():
             "J -->|上下通道受阻或路线未结束| S", "S -->|整舰膨胀及限时限距运动包络| T",
             "S -->|后两段预判、提前直达及滚动接续；失败保留安全当前段| U", "U --> V", "S -->|有界三维栅格及转弯代价| V",
             "S -->|最小堆入队| AA", "S -->|弹出并忽略过期代价| AB", "S -->|保高后最多128次简化检查| AC", "AC --> U",
+        ],
+    )
+    graph(
+        "敌舰远场感知与近场候选动作",
+        "源码推导：所有移动分支在降频决策末尾统一预测；远场距离取80米、8身位和10秒航程最大值，上限160米，复用一次OverlapBox最多256碰撞体。远场最多四段沿缓存路线预读，报告障碍距离和到达时间，动态风险提前调速；近场12段相对运动扫掠，最多七动作比较继续、减速、等待及左右绕行。任务目标排除，饱和请求制动；实际推进仍由ControlUnit/推进器负责。不是远期确定性运动预测。",
+        {
+            "A": "EnemyController.CalculateDesiredMovement", "B": "EnemyController.PredictMovement",
+            "C": "EnemyNavigationPrediction.Choose", "D": "EnemyNavigationPrediction.Capture",
+            "E": "EnemyNavigationPrediction.Preview", "F": "EnemyNavigationPrediction.Evaluate",
+            "G": "EnemyNavigationPrediction.Consider", "H": "EnemyNavigationPrediction.Score",
+            "I": "EnemyController.StabilizeDirection", "J": "EnemyController.GetVelocityInput",
+            "K": "EnemyController.LimitObstacleInput", "L": "EnemyController.CaptureNavigation",
+            "M": "EnemyNavigationPrediction.Clear", "N": "EnemyController.OnDisable",
+        },
+        [
+            "A -->|爬升/A星/直达结果| B", "B --> C", "C -->|周向远场采集当前几何和运动| D",
+            "C -->|原意图及风险候选| F", "C -->|已规划路径或任务方向| E",
+            "C --> G", "G --> H", "C -->|远场调速前复查近场| F", "B -->|安全决策覆盖航向保持| I",
+            "J -->|选定意图转换为真实输入| K", "L -.->|面板和日志读取距离/时间/动作/耗时| C",
+            "N --> M",
         ],
     )
     graph(

@@ -176,6 +176,7 @@
     <Compile Include="Assets\Editor\MainMenu\MainMenuPlayChecks.cs" />
     <Compile Include="Assets\Editor\World\WorldLab\WorldLabAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\Benchmarks\SiegeRegroupBaseline.cs" />
+    <Compile Include="Assets\Editor\Combat\Validation\EnemyPredictionPlayChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\Resources\PresentationAssetIndex.cs" />
     <Compile Include="Assets\Editor\Architecture\ArchitecturePlayProbe.cs" />
     <Compile Include="Assets\Editor\Combat\Interface\HealthHudPreview.cs" />
