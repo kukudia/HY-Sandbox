@@ -82,6 +82,36 @@ internal static class HoverControlPlayChecks
                 checks,
                 $"Valid powered owner produces thrust and angular correction (thrust={thruster.thrust}, angular={body.angularVelocity}, up={controller.transform.up}, valid={owner.HasValidCockpit})",
                 thruster.thrust > 0f && body.angularVelocity != originalVelocity);
+            controller.enabled = false;
+            controller.enabled = true;
+            controller.GetComponent<Power>().SetWorkRequested(controller, true);
+            controller.GetComponent<Power>().ReceivePower(1000f);
+            root.transform.rotation = Quaternion.Euler(0f, 359f, 0f);
+            body.rotation = root.transform.rotation;
+            body.angularVelocity = new Vector3(0f, 0.8f, 0f);
+            Tick(controller);
+            Check(
+                checks,
+                "Level powered hover damps yaw instead of skipping rotation control",
+                body.angularVelocity.y > 0f && body.angularVelocity.y < 0.8f);
+            root.transform.rotation = Quaternion.Euler(0f, 1f, 0f);
+            body.rotation = root.transform.rotation;
+            body.angularVelocity = Vector3.zero;
+            Tick(controller);
+            Check(
+                checks,
+                "Heading hold crosses north using the shortest signed correction",
+                body.angularVelocity.y < 0f && body.angularVelocity.y > -0.1f);
+            controller.enabled = false;
+            controller.enabled = true;
+            controller.GetComponent<Power>().SetWorkRequested(controller, true);
+            controller.GetComponent<Power>().ReceivePower(1000f);
+            body.angularVelocity = Vector3.zero;
+            Tick(controller);
+            Check(
+                checks,
+                "New control session captures current heading without stale correction",
+                Mathf.Abs(body.angularVelocity.y) < 0.0001f);
             controller.GetComponent<Power>().currentPower = 0f;
             body.angularVelocity = originalVelocity;
             thruster.thrust = 30f;

@@ -22,6 +22,8 @@ public class HoverFlightController : MonoBehaviour
     public float maxTiltAngle = 15f;
     [Tooltip("姿态调整的平滑度（值越高调整越快）")]
     public float rotationSmoothing = 5f;
+    [SerializeField, Min(0f), Tooltip("有电悬浮时保持接管时航向并抑制偏航自转；响应速度（1/秒），0关闭。")]
+    private float headingResponse = 5f;
     [Header("高度控制参数")]
     [Tooltip("高度比例系数")]
     private float HeightP = 0.5f;
@@ -151,7 +153,7 @@ public class HoverFlightController : MonoBehaviour
         _tiltCorrection = HoverControlSolver.CalculateTilt(currentUp, rb.angularVelocity, maxTiltAngleCos, tiltP, tiltD);
         DistributeThrust(heightAdjustment + gravityCompensation, currentUp);
         // 应用旋转修正
-        ApplyRotationCorrection(currentUp, 1f);
+        ApplyRotationCorrection(currentUp, power.efficiency);
     }
 
     private bool HasActiveHoverThruster()
@@ -395,6 +397,7 @@ public class HoverFlightController : MonoBehaviour
 
     private void ApplyRotationCorrection(Vector3 currentUp, float outputEfficiency)
     {
+        Vector3 stabilized = rb.angularVelocity;
         if (HoverControlSolver.TryCalculateAngularVelocity(
             rb.rotation,
             currentUp,
@@ -403,8 +406,17 @@ public class HoverFlightController : MonoBehaviour
             outputEfficiency,
             out Vector3 angularVelocity))
         {
-            rb.angularVelocity = Vector3.Lerp(rb.angularVelocity, angularVelocity, 0.1f);
+            stabilized = Vector3.Lerp(stabilized, angularVelocity, 0.1f);
         }
+
+        // 偏航与倾斜分开控制；保持水平时仍工作，失电/禁用由StopControlOutput释放航向。
+        stabilized.y = _solver.StepHeading(
+            rb.rotation * Vector3.forward,
+            rb.angularVelocity.y,
+            headingResponse,
+            cachedFixedDeltaTime,
+            outputEfficiency);
+        rb.angularVelocity = stabilized;
     }
 
     // 在编辑器中可视化

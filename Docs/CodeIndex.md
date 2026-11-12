@@ -713,10 +713,10 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | HoverControlPlayChecks | [`string[] Run()`](../Assets/Editor/Architecture/HoverControlPlayChecks.cs#L11) | internal static |
-| HoverControlPlayChecks | [`void Tick(HoverFlightController controller)`](../Assets/Editor/Architecture/HoverControlPlayChecks.cs#L142) | private static |
-| HoverControlPlayChecks | [`void TickThruster(HoverThruster thruster)`](../Assets/Editor/Architecture/HoverControlPlayChecks.cs#L147) | private static |
-| HoverControlPlayChecks | [`void CheckRampDown(List<string> checks, HoverThruster thruster, string reason)`](../Assets/Editor/Architecture/HoverControlPlayChecks.cs#L152) | private static |
-| HoverControlPlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Architecture/HoverControlPlayChecks.cs#L175) | private static |
+| HoverControlPlayChecks | [`void Tick(HoverFlightController controller)`](../Assets/Editor/Architecture/HoverControlPlayChecks.cs#L172) | private static |
+| HoverControlPlayChecks | [`void TickThruster(HoverThruster thruster)`](../Assets/Editor/Architecture/HoverControlPlayChecks.cs#L177) | private static |
+| HoverControlPlayChecks | [`void CheckRampDown(List<string> checks, HoverThruster thruster, string reason)`](../Assets/Editor/Architecture/HoverControlPlayChecks.cs#L182) | private static |
+| HoverControlPlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Architecture/HoverControlPlayChecks.cs#L205) | private static |
 
 ## Assets/Editor/Architecture/PresentationPlayChecks.cs
 
@@ -4177,15 +4177,16 @@ HY-Sandbox/
 
 ## Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs
 
-// 职责：保存高度 PID 历史，计算高度需求、重力补偿、倾斜及旋转修正建议。 // 入口：StepHeight() / CalculateTilt() / TryCalculateAngularVelocity()；不读取组件或写刚体。 // 生命周期：停止输出及切换运行归属时 Reset()，不将旧积分带入新物理会话。
+// 职责：保存高度 PID 与接管航向，计算高度、重力补偿、倾斜及偏航稳定建议。 // 入口：StepHeight() / StepHeading() / CalculateTilt() / TryCalculateAngularVelocity()；不读取组件或写刚体。 // 生命周期：停止输出及切换运行归属时 Reset()，不将旧积分带入新物理会话。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| HoverControlSolver | [`void Reset()`](../Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L23) | internal |
-| HoverControlSolver | [`float StepHeight( float heightError, float proportionalGain, float integralGain, float derivativeGain, float deltaTime)`](../Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L29) | internal |
-| HoverControlSolver | [`float CalculateGravityCompensation( float mass, float gravityMagnitude, float compensationFactor, float absoluteHeightError, float heightTolerance)`](../Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L43) | internal static |
-| HoverControlSolver | [`TiltCorrection CalculateTilt( Vector3 currentUp, Vector3 angularVelocity, float maximumTiltCos, float proportionalGain, float derivativeGain)`](../Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L55) | internal static |
-| HoverControlSolver | [`bool TryCalculateAngularVelocity( Quaternion rotation, Vector3 currentUp, float rotationSmoothing, float deltaTime, float outputEfficiency, out Vector3 velocity)`](../Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L81) | internal static |
+| HoverControlSolver | [`void Reset()`](../Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L25) | internal |
+| HoverControlSolver | [`float StepHeading(Vector3 forward, float angularSpeed, float response, float deltaTime, float efficiency)`](../Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L32) | internal |
+| HoverControlSolver | [`float StepHeight( float heightError, float proportionalGain, float integralGain, float derivativeGain, float deltaTime)`](../Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L54) | internal |
+| HoverControlSolver | [`float CalculateGravityCompensation( float mass, float gravityMagnitude, float compensationFactor, float absoluteHeightError, float heightTolerance)`](../Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L68) | internal static |
+| HoverControlSolver | [`TiltCorrection CalculateTilt( Vector3 currentUp, Vector3 angularVelocity, float maximumTiltCos, float proportionalGain, float derivativeGain)`](../Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L80) | internal static |
+| HoverControlSolver | [`bool TryCalculateAngularVelocity( Quaternion rotation, Vector3 currentUp, float rotationSmoothing, float deltaTime, float outputEfficiency, out Vector3 velocity)`](../Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L106) | internal static |
 
 ## Assets/Scripts/Features/Flight/Hover/ThrusterAllocator.cs
 
@@ -4205,21 +4206,21 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| HoverFlightController | [`void Init()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L64) | public |
-| HoverFlightController | [`void OnEnable()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L85) | private |
-| HoverFlightController | [`void OnDisable()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L91) | private |
-| HoverFlightController | [`void OnValidate()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L97) | private |
-| HoverFlightController | [`void FixedUpdate()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L103) | private |
-| HoverFlightController | [`bool HasActiveHoverThruster()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L157) | private |
-| HoverFlightController | [`void StopControlOutput()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L170) | private |
-| HoverFlightController | [`void ClearHoverThrust()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L177) | private |
-| HoverFlightController | [`bool EnsureControllerReady()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L202) | private |
-| HoverFlightController | [`void RefreshCachedPhysicsValues()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L243) | private |
-| HoverFlightController | [`void RefreshTiltLimitCache()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L270) | private |
-| HoverFlightController | [`void RebuildThrusterCache()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L276) | private |
-| HoverFlightController | [`void DistributeThrust(float heightAdjustment, Vector3 currentUp)`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L348) | private |
-| HoverFlightController | [`void ApplyRotationCorrection(Vector3 currentUp, float outputEfficiency)`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L396) | private |
-| HoverFlightController | [`void OnDrawGizmosSelected()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L411) | private |
+| HoverFlightController | [`void Init()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L66) | public |
+| HoverFlightController | [`void OnEnable()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L87) | private |
+| HoverFlightController | [`void OnDisable()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L93) | private |
+| HoverFlightController | [`void OnValidate()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L99) | private |
+| HoverFlightController | [`void FixedUpdate()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L105) | private |
+| HoverFlightController | [`bool HasActiveHoverThruster()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L159) | private |
+| HoverFlightController | [`void StopControlOutput()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L172) | private |
+| HoverFlightController | [`void ClearHoverThrust()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L179) | private |
+| HoverFlightController | [`bool EnsureControllerReady()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L204) | private |
+| HoverFlightController | [`void RefreshCachedPhysicsValues()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L245) | private |
+| HoverFlightController | [`void RefreshTiltLimitCache()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L272) | private |
+| HoverFlightController | [`void RebuildThrusterCache()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L278) | private |
+| HoverFlightController | [`void DistributeThrust(float heightAdjustment, Vector3 currentUp)`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L350) | private |
+| HoverFlightController | [`void ApplyRotationCorrection(Vector3 currentUp, float outputEfficiency)`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L398) | private |
+| HoverFlightController | [`void OnDrawGizmosSelected()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L423) | private |
 
 ## Assets/Scripts/Features/Flight/Presentation/ThrusterInfoPanel.cs
 

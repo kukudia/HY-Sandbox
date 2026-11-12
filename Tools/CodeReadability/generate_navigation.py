@@ -658,6 +658,8 @@ def main():
             "AK": "BlockConnections.CheckConnection",
             "AL": "BlockConnections.ConnectTo",
             "AM": "BlockConnections.ClearConnector",
+            "AN": "HoverFlightController.ApplyRotationCorrection",
+            "AO": "HoverControlSolver.StepHeading",
         },
         [
             "A -->|建筑按底座支撑分裂| AF",
@@ -677,6 +679,7 @@ def main():
             "J -->|有效游玩/供电/归属| N",
             "J --> O",
             "J --> K",
+            "J -->|有电悬浮，倾斜与偏航独立稳定| AN", "AN --> AO",
             "K --> T",
             "R --> T",
             "U --> M",

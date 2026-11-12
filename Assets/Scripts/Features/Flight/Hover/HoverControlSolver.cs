@@ -1,5 +1,5 @@
-// 职责：保存高度 PID 历史，计算高度需求、重力补偿、倾斜及旋转修正建议。
-// 入口：StepHeight() / CalculateTilt() / TryCalculateAngularVelocity()；不读取组件或写刚体。
+// 职责：保存高度 PID 与接管航向，计算高度、重力补偿、倾斜及偏航稳定建议。
+// 入口：StepHeight() / StepHeading() / CalculateTilt() / TryCalculateAngularVelocity()；不读取组件或写刚体。
 // 生命周期：停止输出及切换运行归属时 Reset()，不将旧积分带入新物理会话。
 using UnityEngine;
 
@@ -20,10 +20,35 @@ internal sealed class HoverControlSolver
 
     private float _heightIntegral;
     private float _lastHeightError;
+    private bool _hasHeading;
+    private float _heading;
     internal void Reset()
     {
         _heightIntegral = 0f;
         _lastHeightError = 0f;
+        _hasHeading = false;
+    }
+
+    internal float StepHeading(Vector3 forward, float angularSpeed, float response, float deltaTime, float efficiency)
+    {
+        if (response <= 0f || forward.x * forward.x + forward.z * forward.z < 0.001f)
+        {
+            _hasHeading = false;
+            return angularSpeed;
+        }
+
+        float heading = Mathf.Atan2(forward.x, forward.z) * Mathf.Rad2Deg;
+        if (!_hasHeading)
+        {
+            _heading = heading;
+            _hasHeading = true;
+        }
+
+        // 水平悬浮也必须消除偏置推进器的偏航转矩；跨越0/360度时取最短误差。
+        float error = Mathf.DeltaAngle(heading, _heading) * Mathf.Deg2Rad;
+        float targetSpeed = Mathf.Clamp(error * 2f, -1f, 1f);
+        float blend = 1f - Mathf.Exp(-response * Mathf.Max(0f, deltaTime) * Mathf.Clamp01(efficiency));
+        return Mathf.Lerp(angularSpeed, targetSpeed, blend);
     }
 
     internal float StepHeight(
