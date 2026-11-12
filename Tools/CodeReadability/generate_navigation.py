@@ -78,9 +78,11 @@ def main():
         {"A": "SiegeCombatBaseAuthoring.Create", "B": "SiegeCombatBaseAuthoring.Generate",
          "C": "SiegeCombatBaseAuthoring.Armor", "D": "SiegeCombatBaseAuthoring.Add",
          "E": "Block.RefreshAuthoringData", "F": "SiegeConstructionSettings.Validate",
-         "G": "MainMenuController.Launch", "H": "SiegeGameplayStage.Enter"},
+         "G": "MainMenuController.Launch", "H": "SiegeGameplayStage.Enter",
+         "I": "SiegeCombatBaseAuthoring.RaiseHangars"},
         ["A --> B", "B -->|平台、墙体与核心舱| C", "C -->|独立结构Prefab| E", "C --> D",
-         "B -->|炮台、供电与机库| D", "B -->|写入JSON前| F", "G -->|经GameModeController加载个人蓝图| H"],
+         "B -->|炮台、供电与机库| D", "B -->|写入JSON前| F", "I -->|新增承重台并抬高6米| C", "I --> F",
+         "G -->|经GameModeController加载个人蓝图| H"],
     )
     graph(
         "基地设计、部署与守波",

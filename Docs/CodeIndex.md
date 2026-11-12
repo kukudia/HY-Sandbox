@@ -1943,8 +1943,9 @@ HY-Sandbox/
 | --- | --- | --- |
 | SiegeCombatBaseAuthoring | [`void Create()`](../Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs#L12) | public static |
 | SiegeCombatBaseAuthoring | [`TextAsset Generate()`](../Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs#L18) | public static |
-| SiegeCombatBaseAuthoring | [`void Armor(BlockDataList design, Vector3 position, Vector3Int size)`](../Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs#L185) | private static |
-| SiegeCombatBaseAuthoring | [`void Add( BlockDataList design, string resource, Vector3 position, Vector3Int? size = null, float yaw = 0f, string id = null)`](../Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs#L222) | private static |
+| SiegeCombatBaseAuthoring | [`void RaiseHangars()`](../Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs#L187) | public static |
+| SiegeCombatBaseAuthoring | [`void Armor(BlockDataList design, Vector3 position, Vector3Int size)`](../Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs#L232) | private static |
+| SiegeCombatBaseAuthoring | [`void Add( BlockDataList design, string resource, Vector3 position, Vector3Int? size = null, float yaw = 0f, string id = null)`](../Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs#L269) | private static |
 
 ## Assets/Editor/Siege/Authoring/SiegeCommandHudAuthoring.cs
 
@@ -5725,25 +5726,25 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BlockConnections | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L39) | internal |
-| BlockConnections | [`void CheckConnection(bool synchronizePhysics = true)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L53) | internal |
-| BlockConnections | [`void ReleaseExistingConnections()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L97) | private |
-| BlockConnections | [`void ReleaseConnectionReferences(GameObject connectorObject)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L125) | private |
-| BlockConnections | [`Block FindBlockAcrossConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L162) | private |
-| BlockConnections | [`bool SharesBuildingScope(Block other)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L203) | private |
-| BlockConnections | [`Connector FindMatchingConnector(Block otherBlock, Connector connector, bool requireAvailable = true)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L210) | private |
-| BlockConnections | [`void ConnectTo(Connector connector, Block otherBlock, Connector otherConnector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L232) | private |
-| BlockConnections | [`void ClearConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L259) | private |
-| BlockConnections | [`void DestroyConnectorVisual(GameObject connectorObject)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L286) | private static |
-| BlockConnections | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L301) | internal |
-| BlockConnections | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L329) | internal |
-| BlockConnections | [`void RestoreParticipation()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L375) | internal |
-| BlockConnections | [`void ReleaseRuntimePair(Connector connector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L394) | private |
-| BlockConnections | [`void CollectRuntimeNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L420) | internal |
-| BlockConnections | [`void RefreshRuntimePoseIfReady()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L442) | internal |
-| BlockConnections | [`void InvalidateRuntimeLinks()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L447) | internal |
-| BlockConnections | [`void CaptureRuntimePose()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L452) | private |
-| BlockConnections | [`int ConnectionMask()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L457) | private static |
+| BlockConnections | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L45) | internal |
+| BlockConnections | [`void CheckConnection(bool synchronizePhysics = true)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L59) | internal |
+| BlockConnections | [`void ReleaseExistingConnections()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L103) | private |
+| BlockConnections | [`void ReleaseConnectionReferences(GameObject connectorObject)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L131) | private |
+| BlockConnections | [`Block FindBlockAcrossConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L168) | private |
+| BlockConnections | [`bool SharesBuildingScope(Block other)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L209) | private |
+| BlockConnections | [`Connector FindMatchingConnector(Block otherBlock, Connector connector, bool requireAvailable = true)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L216) | private |
+| BlockConnections | [`void ConnectTo(Connector connector, Block otherBlock, Connector otherConnector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L238) | private |
+| BlockConnections | [`void ClearConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L265) | private |
+| BlockConnections | [`void DestroyConnectorVisual(GameObject connectorObject)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L292) | private static |
+| BlockConnections | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L307) | internal |
+| BlockConnections | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L335) | internal |
+| BlockConnections | [`void RestoreParticipation()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L381) | internal |
+| BlockConnections | [`void ReleaseRuntimePair(Connector connector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L400) | private |
+| BlockConnections | [`void CollectRuntimeNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L426) | internal |
+| BlockConnections | [`void RefreshRuntimePoseIfReady()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L448) | internal |
+| BlockConnections | [`void InvalidateRuntimeLinks()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L453) | internal |
+| BlockConnections | [`void CaptureRuntimePose()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L458) | private |
+| BlockConnections | [`int ConnectionMask()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L463) | private static |
 
 ## Assets/Scripts/Features/Simulation/Diagnostics/SimulationWorkMetrics.cs
 

@@ -90,7 +90,7 @@ Main 的 **Simulate**（或 P）继续提供工坊内模式选择：探索按需
 
 ## SiegeGameplay 实战基地
 
-[交错防线基地与验证](Docs/Validation/2026-11-12-siege-combat-courtyard.md)：新增 `Assets/Siege/Construction/CombatCourtyard.json`，141模块、106×90米占地，四角炮台加中央双炮核心舱、分段外墙和错位内墙、两个28×12×30米机库。Editor菜单 **Tools/HY-Sandbox/Siege/Generate combat courtyard base** 保存独立蓝图和10种烘焙结构Prefab；已存在资产不覆盖，个人副本 `Combat Courtyard` 可从Base Workshop继续编辑。正常菜单加载SiegeGameplay后部署/完整支撑通过，显式同时工作刺激6/6炮供电效率1.0；首波Finch实战已生成并攻击、核心存活，但两艘个人守军未正常完成出库，未完成清波/返航验收。最终恢复完整基地整备。默认示例与战斗配置保持原样。
+[交错防线基地与验证](Docs/Validation/2026-11-12-siege-combat-courtyard.md)：新增 `Assets/Siege/Construction/CombatCourtyard.json`，143模块、106×90米占地，四角炮台加中央双炮核心舱、分段外墙和错位内墙、两个28×12×30米机库，新增6米高实体承重台，机库中心高度12米。Editor菜单 **Tools/HY-Sandbox/Siege/Generate combat courtyard base** 保存独立蓝图和10种烘焙结构Prefab；已存在资产不覆盖，个人副本 `Combat Courtyard` 可从Base Workshop继续编辑。正常菜单加载SiegeGameplay后部署/完整支撑通过，显式同时工作刺激6/6炮供电效率1.0；首波Finch实战已生成并攻击、核心存活，但两艘个人守军未正常完成出库，未完成清波/返航验收。最终恢复完整基地整备。默认示例与战斗配置保持原样。
 
 ## 基地自由建造首版
 

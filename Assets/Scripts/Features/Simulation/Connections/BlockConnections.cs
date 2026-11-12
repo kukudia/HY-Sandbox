@@ -20,7 +20,13 @@ internal sealed class BlockConnections
     {
         get
         {
-            if (_block == null || !_block.isActiveAndEnabled || _block.raycastCollider == null || !_block.raycastCollider.enabled || !_block.raycastCollider.gameObject.activeInHierarchy)
+            if (_block == null || !_block.isActiveAndEnabled || _block.raycastCollider == null || !_block.raycastCollider.gameObject.activeInHierarchy)
+            {
+                return false;
+            }
+
+            // 战斗机库关闭用于编辑选取的整盒，实体底板仍可承重；否则垫高机库永远被判为孤立组。
+            if (!_block.raycastCollider.enabled && !(_block.TryGetComponent(out HangarModule hangar) && hangar.IsCombat))
             {
                 return false;
             }

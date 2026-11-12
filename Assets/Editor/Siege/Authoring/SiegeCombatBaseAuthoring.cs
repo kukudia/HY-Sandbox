@@ -36,7 +36,7 @@ public static class SiegeCombatBaseAuthoring
         {
             for (int z = -40; z <= 40; z += 8)
             {
-                // 机库通过底部连接直接锚定虚拟地面，不能悬在装甲平台上。
+                // 留出机库和独立承重台的完整占地。
                 if (Mathf.Abs(x) >= 8 && Mathf.Abs(x) <= 40 && z >= -24 && z <= 0)
                 {
                     continue;
@@ -55,7 +55,9 @@ public static class SiegeCombatBaseAuthoring
 
         )
         {
-            Add(design, "Hangars/Hangar", new Vector3(x, 6f, -12f), new Vector3Int(28, 12, 30), 180f);
+            Armor(design, new Vector3(x, 3f, -12f), new Vector3Int(28, 6, 30));
+            Add(design, "Hangars/Hangar", new Vector3(x, 12f, -12f), new Vector3Int(28, 12, 30), 180f);
+            design.blocks[design.blocks.Count - 2].id = design.blocks[design.blocks.Count - 1].id + "-raised-support";
         }
 
         foreach (int x in new[]
@@ -180,6 +182,51 @@ public static class SiegeCombatBaseAuthoring
         Selection.activeObject = asset;
         Debug.Log($"Combat courtyard saved: {design.blocks.Count} modules. {reason}");
         return asset;
+    }
+
+    [MenuItem("Tools/HY-Sandbox/Siege/Raise courtyard hangars")]
+    public static void RaiseHangars()
+    {
+        if (EditorApplication.isPlaying)
+        {
+            throw new InvalidOperationException("Leave Play Mode before updating the saved design.");
+        }
+
+        string json = File.ReadAllText(BlueprintPath);
+        BlockDataList design = JsonUtility.FromJson<BlockDataList>(json);
+        foreach (BlockData hangar in design.blocks.ToArray())
+        {
+            if (hangar.resourcePath != "Hangars/Hangar")
+            {
+                continue;
+            }
+
+            string supportId = hangar.id + "-raised-support";
+            if (design.blocks.Exists(block => block.id == supportId))
+            {
+                continue;
+            }
+
+            // 底板抬至6米，台面与底连接点准确重合；保留机库原姿态、尺寸和身份。
+            float bottom = hangar.posY - hangar.y * .5f;
+            Armor(design, new Vector3(hangar.posX, bottom + 3f, hangar.posZ), new Vector3Int(28, 6, 30));
+            design.blocks[design.blocks.Count - 1].id = supportId;
+            hangar.posY += 6f;
+        }
+
+        design.foundation = BuildingFootprint.Calculate(design.blocks, 1);
+        var settings = AssetDatabase.LoadAssetAtPath<SiegeConstructionSettings>(SiegeConstructionAuthoring.SettingsPath);
+        if (!settings.Validate(design, out string reason))
+        {
+            throw new InvalidOperationException(reason);
+        }
+
+        Directory.CreateDirectory("Temp/Siege");
+        File.WriteAllText(
+            "Temp/Siege/CombatCourtyard-before-raise-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss-fffffff") + ".json",
+            json);
+        File.WriteAllText(BlueprintPath, JsonUtility.ToJson(design, true));
+        AssetDatabase.ImportAsset(BlueprintPath);
     }
 
     private static void Armor(BlockDataList design, Vector3 position, Vector3Int size)
