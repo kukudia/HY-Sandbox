@@ -1712,6 +1712,7 @@ def main():
             "O": "EnemyController.ProbeObstacle", "P": "EnemyController.GetVelocityInput", "R": "EnemyController.LimitObstacleInput",
             "S": "EnemyLocalPath.TryFollow", "T": "EnemyLocalPath.Capture", "U": "EnemyLocalPath.ClearFlight", "V": "EnemyLocalPath.ClearSegment",
             "W": "EnemyObstacleClimb.ForwardRatio", "X": "EnemyController.ConstrainDescent", "Y": "EnemyObstacleClimb.CanLowerTo",
+            "AA": "EnemyLocalPath.Push", "AB": "EnemyLocalPath.Pop", "AC": "EnemyLocalPath.Simplify",
         },
         [
             "A -->|生成或经Attacker.RefreshTarget重新绑定| B",
@@ -1723,8 +1724,9 @@ def main():
             "C -->|决策后逐物理步应用高度| L", "K -.->|保持高度直至舰尾越障| L",
             "J -->|按现高度走廊和升降期间滑行余量限制水平推进| W", "W --> N",
             "L -->|下降前验证，未通过保持最后安全航层| X", "X --> Y", "Y --> Q",
-            "J -->|上下通道受阻或路线未结束| S", "S -->|静态障碍按整舰尺寸扩张| T",
-            "S -->|越障后提前直达或末段滚动接续，失败保留安全旧路线| U", "U --> V", "S -->|有界三维栅格扩展| V",
+            "J -->|上下通道受阻或路线未结束| S", "S -->|整舰膨胀及限时限距运动包络| T",
+            "S -->|后两段预判、提前直达及滚动接续；失败保留安全当前段| U", "U --> V", "S -->|有界三维栅格及转弯代价| V",
+            "S -->|最小堆入队| AA", "S -->|弹出并忽略过期代价| AB", "S -->|保高后最多128次简化检查| AC", "AC --> U",
         ],
     )
     graph(

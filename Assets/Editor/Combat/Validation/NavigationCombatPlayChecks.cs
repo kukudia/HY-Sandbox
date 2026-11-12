@@ -487,7 +487,39 @@ public static class NavigationCombatPlayChecks
             System.Linq.Enumerable.Any(points, p => Mathf.Abs(p.z - destination.z) > 8f));
         int expanded = (int)type.GetProperty("Expanded", Instance).GetValue(planner);
         Check(checks, "A star respects expansion budget", expanded > 0 && expanded <= 1024);
+        Check(checks, "Straight bypass drops intermediate grid steps", points.Count <= 4);
+        Vector3 previousPoint = owner.transform.position;
+        foreach (Vector3 point in points)
+        {
+            Check(
+                checks,
+                "Simplified bypass segment retains whole-hull clearance",
+                (bool)type.GetMethod("ClearFlight", Instance).Invoke(planner, new object[] { previousPoint, point }));
+            previousPoint = point;
+        }
+
         Check(checks, "Cached path continues on next decision", (bool)follow.Invoke(planner, args));
+        var cached = (List<Vector3>)type.GetField("path", Instance).GetValue(planner);
+        cached.Clear();
+        cached.Add(root.TransformPoint(new Vector3(-8f, 4f, -65f)));
+        cached.Add(root.TransformPoint(new Vector3(8f, 4f, -65f)));
+        cached.Add(destination);
+        type.GetField("waypoint", Instance).SetValue(planner, 0);
+        BoxCollider future = Box(root, "Future bypass obstruction", new Vector3(0f, 10f, -62f), new Vector3(3f, 25f, 16f));
+        Physics.SyncTransforms();
+        int revision = (int)type.GetProperty("Revision", Instance).GetValue(planner);
+        follow.Invoke(planner, args);
+        Check(
+            checks,
+            "Future obstruction respects replan cooldown",
+            (int)type.GetProperty("Revision", Instance).GetValue(planner) == revision);
+        type.GetField("nextPlan", Instance).SetValue(planner, Time.time - 1f);
+        follow.Invoke(planner, args);
+        Check(
+            checks,
+            "Safe current segment anticipates blocked next segment",
+            (string)type.GetProperty("ReplanReason", Instance).GetValue(planner) == "FutureBlocked");
+        Object.DestroyImmediate(future.gameObject);
         owner.transform.localPosition = new Vector3(12f, 4f, -45f);
         args[1] = new Bounds(owner.transform.position, Vector3.one * 2f);
         Physics.SyncTransforms();
@@ -523,7 +555,7 @@ public static class NavigationCombatPlayChecks
         Check(
             checks,
             "Local window exit preserves crest altitude before next search",
-            points.Count > 1 && points[points.Count - 1].y >= System.Linq.Enumerable.Max(points, p => p.y) - 0.01f);
+            points.Count > 0 && points[points.Count - 1].y >= System.Linq.Enumerable.Max(points, p => p.y) - 0.01f);
         args[2] = destination;
         args[9] = 6f;
         wall.transform.localPosition = new Vector3(0f, 10f, -45f);
@@ -538,8 +570,50 @@ public static class NavigationCombatPlayChecks
         Physics.SyncTransforms();
         Check(checks, "Trigger does not require A star detour", !(bool)follow.Invoke(planner, args));
         Object.DestroyImmediate(wall.gameObject);
+        CheckMotionPrediction(checks, root, owner, type, planner);
         owner.transform.localPosition = new Vector3(-20f, 1f, 0f);
         Physics.SyncTransforms();
+    }
+
+    private static void CheckMotionPrediction(List<string> checks, Transform root, ControlUnit owner, Type type, object planner)
+    {
+        BoxCollider moving = Box(root, "Predictive crossing gate", new Vector3(-4f, 4f, -30f), Vector3.one * 2f);
+        Rigidbody body = moving.gameObject.AddComponent<Rigidbody>();
+        body.useGravity = false;
+        body.isKinematic = true;
+        Physics.SyncTransforms();
+        body.MovePosition(body.position + Vector3.right * 0.2f);
+        owner.gameObject.scene.GetPhysicsScene().Simulate(0.02f);
+        Check(checks, "Kinematic prediction fixture has measured motion", body.linearVelocity.x > 9f);
+        MethodInfo capture = type.GetMethod("Capture", Instance);
+        object[] arguments =
+        {
+            owner,
+            new Bounds(owner.transform.position, Vector3.one * 2f),
+            (LayerMask)(~0),
+            64f
+        };
+        type.GetProperty("PredictionTime", Instance).SetValue(planner, 0f);
+        capture.Invoke(planner, arguments);
+        var captured = (List<Bounds>)type.GetField("obstacles", Instance).GetValue(planner);
+        Bounds current = captured.Find(bounds => bounds.Contains(moving.bounds.center));
+        type.GetProperty("PredictionTime", Instance).SetValue(planner, 3f);
+        capture.Invoke(planner, arguments);
+        Bounds predicted = captured.Find(bounds => bounds.Contains(moving.bounds.center));
+        Check(
+            checks,
+            "Moving gate reserves the approaching corridor before contact",
+            predicted.max.x > current.max.x + 10f);
+        Check(
+            checks,
+            "Motion lead stays within twelve metre translation budget",
+            predicted.max.x <= current.max.x + 12.01f);
+        Check(
+            checks,
+            "Motion prediction preserves current collider clearance",
+            predicted.min.x <= current.min.x && predicted.min.y <= current.min.y);
+        type.GetProperty("PredictionTime", Instance).SetValue(planner, 1.5f);
+        Object.DestroyImmediate(moving.gameObject);
     }
 
     private static ControlUnit Unit(Transform root, string name, UnitFaction faction, Vector3 position)

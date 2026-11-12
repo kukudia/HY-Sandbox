@@ -1,5 +1,5 @@
 // 职责：在有限三维栅格中规划整舰可通行路线，缓存并简化航点，不直接操纵刚体。
-// 入口：TryFollow()；静态障碍按舰体尺寸膨胀，失败重试和成功重规划均限频。
+// 入口：TryFollow()；转弯代价、限额可视简化和短期运动包络共用整舰净空，重规划限频。
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -9,13 +9,15 @@ internal sealed class EnemyLocalPath
     private readonly List<Vector3> path = new List<Vector3>();
     private readonly List<Bounds> obstacles = new List<Bounds>();
     private readonly Dictionary<Vector3Int, Node> nodes = new Dictionary<Vector3Int, Node>();
-    private readonly List<Vector3Int> open = new List<Vector3Int>();
+    private readonly List<OpenNode> open = new List<OpenNode>();
     private Collider[] overlaps = new Collider[128];
     private Vector3 destination;
     private Vector3 origin;
     private Vector3 offset;
     private float nextPlan;
     private int waypoint;
+    internal float TurnPenalty { get; set; } = 2f;
+    internal float PredictionTime { get; set; } = 1.5f;
     internal string ReplanReason { get; private set; } = "Initial";
     internal float PlanMilliseconds
     {
@@ -48,6 +50,71 @@ internal sealed class EnemyLocalPath
         internal float Cost;
         internal Vector3Int Parent;
         internal bool Closed;
+    }
+
+    private struct OpenNode
+    {
+        internal Vector3Int Key;
+        internal float Cost;
+        internal float Score;
+    }
+
+    // 允许更优代价重复入堆，弹出时丢弃旧项；省去线性扫描和堆索引字典。
+    private void Push(Vector3Int key, float cost, float score)
+    {
+        var entry = new OpenNode
+        {
+            Key = key,
+            Cost = cost,
+            Score = score
+        };
+        int index = open.Count;
+        open.Add(entry);
+        while (index > 0)
+        {
+            int parent = (index - 1) / 2;
+            if (open[parent].Score <= score)
+            {
+                break;
+            }
+
+            open[index] = open[parent];
+            index = parent;
+        }
+
+        open[index] = entry;
+    }
+
+    private OpenNode Pop()
+    {
+        OpenNode result = open[0];
+        OpenNode tail = open[open.Count - 1];
+        open.RemoveAt(open.Count - 1);
+        if (open.Count == 0)
+        {
+            return result;
+        }
+
+        int index = 0;
+        while (index * 2 + 1 < open.Count)
+        {
+            int child = index * 2 + 1;
+            if (child + 1 < open.Count && open[child + 1].Score < open[child].Score)
+            {
+                child++;
+            }
+
+            if (tail.Score <= open[child].Score)
+            {
+                break;
+            }
+
+            open[index] = open[child];
+            index = child;
+        }
+
+        open[index] = tail;
+        return result;
     }
 
     internal void Clear()
@@ -130,7 +197,18 @@ internal sealed class EnemyLocalPath
                 {
                     point = path[waypoint];
                     bool rolling = (destination - path[path.Count - 1]).sqrMagnitude > cellSize * cellSize * 4f && waypoint == path.Count - 1 && (position - path[path.Count - 1]).sqrMagnitude < radius * radius * 0.1225f;
-                    if (!rolling || Time.time < nextPlan)
+                    // 只预看后面两段，不逐决策扫描整条路线；当前段安全才可保留旧线。
+                    bool futureBlocked = false;
+                    for (int i = waypoint; i + 1 < path.Count && i < waypoint + 2; i++)
+                    {
+                        if (!ClearFlight(path[i], path[i + 1]))
+                        {
+                            futureBlocked = true;
+                            break;
+                        }
+                    }
+
+                    if ((!rolling && !futureBlocked) || Time.time < nextPlan)
                     {
                         return true;
                     }
@@ -138,7 +216,7 @@ internal sealed class EnemyLocalPath
                     // 前移局部搜索窗口；替换失败仍沿已验证的旧路线飞行，不等待窗口终点。
                     fallback = path.ToArray();
                     fallbackWaypoint = waypoint;
-                    ReplanReason = "RollingWindow";
+                    ReplanReason = futureBlocked ? "FutureBlocked" : "RollingWindow";
                 }
             }
         }
@@ -180,25 +258,18 @@ internal sealed class EnemyLocalPath
         {
             Cost = 0f
         };
-        open.Add(Vector3Int.zero);
+        Push(Vector3Int.zero, 0f, Vector3.Distance(origin, localGoal));
         Expanded = 0;
-        while (open.Count > 0 && Expanded < Mathf.Max(64, budget))
+        while (open.Count > 0 && Expanded < Mathf.Clamp(budget, 64, 4096))
         {
-            int best = 0;
-            float score = float.PositiveInfinity;
-            for (int i = 0; i < open.Count; i++)
+            OpenNode entry = Pop();
+            Vector3Int key = entry.Key;
+            Node current = nodes[key];
+            if (current.Closed || entry.Cost != current.Cost)
             {
-                float candidate = nodes[open[i]].Cost + Vector3.Distance(World(open[i], cellSize), localGoal);
-                if (candidate < score)
-                {
-                    score = candidate;
-                    best = i;
-                }
+                continue;
             }
 
-            Vector3Int key = open[best];
-            open.RemoveAt(best);
-            Node current = nodes[key];
             current.Closed = true;
             nodes[key] = current;
             Expanded++;
@@ -231,6 +302,7 @@ internal sealed class EnemyLocalPath
                     }
                 }
 
+                Simplify(position);
                 waypoint = 0;
                 point = path[0];
                 Status = "Following";
@@ -259,21 +331,23 @@ internal sealed class EnemyLocalPath
 
                 // 可通行路线中略偏好抬升，再下降；水平绕行保留给确实需要的布局。
                 float cost = current.Cost + cellSize * (step.y > 0 ? 1f : step.y < 0 ? 1.05f : 1.15f);
+                if (key != Vector3Int.zero)
+                {
+                    Vector3 incoming = (Vector3)(key - current.Parent);
+                    cost += Mathf.Clamp(TurnPenalty, 0f, cellSize) * (1f - Vector3.Dot(incoming.normalized, (Vector3)step));
+                }
+
                 if (nodes.ContainsKey(next) && cost >= previous.Cost)
                 {
                     continue;
                 }
 
-                bool exists = nodes.ContainsKey(next);
                 nodes[next] = new Node
                 {
                     Cost = cost,
                     Parent = key
                 };
-                if (!exists)
-                {
-                    open.Add(next);
-                }
+                Push(next, cost, cost + Vector3.Distance(nextWorld, localGoal));
             }
         }
 
@@ -297,6 +371,32 @@ internal sealed class EnemyLocalPath
         return origin + (Vector3)cell * size;
     }
 
+    private void Simplify(Vector3 position)
+    {
+        // 原地压缩，最多128次额外包络测试；预算耗尽时保留已验证的原始相邻段。
+        int checks = 128;
+        int write = 0;
+        for (int read = 0; read < path.Count; read++)
+        {
+            int furthest = read;
+            for (int candidate = path.Count - 1; candidate > read && checks > 0; candidate--)
+            {
+                checks--;
+                if (ClearFlight(position, path[candidate]))
+                {
+                    furthest = candidate;
+                    break;
+                }
+            }
+
+            position = path[furthest];
+            path[write++] = position;
+            read = furthest;
+        }
+
+        path.RemoveRange(write, path.Count - write);
+    }
+
     private void Capture(ControlUnit owner, Bounds hull, LayerMask layers, float radius)
     {
         obstacles.Clear();
@@ -310,7 +410,7 @@ internal sealed class EnemyLocalPath
         {
             count = physics.OverlapBox(
                 owner.transform.position,
-                Vector3.one * (radius + horizontal),
+                Vector3.one * (radius + horizontal + 24f),
                 overlaps,
                 Quaternion.identity,
                 layers,
@@ -333,6 +433,19 @@ internal sealed class EnemyLocalPath
             }
 
             Bounds bounds = collider.bounds;
+            Rigidbody body = collider.attachedRigidbody;
+            if (body != null)
+            {
+                // 短期恒速预测仅用于提前留余量；不把远期位置当作确定轨迹。
+                float horizon = Mathf.Clamp(PredictionTime, 0f, 3f);
+                Vector3 lead = Vector3.ClampMagnitude(body.linearVelocity * horizon, 12f);
+                Bounds predicted = bounds;
+                predicted.center += lead;
+                bounds.Encapsulate(predicted);
+                float rotationMargin = Mathf.Min(12f, body.angularVelocity.magnitude * horizon * collider.bounds.extents.magnitude);
+                bounds.Expand(rotationMargin * 2f);
+            }
+
             bounds.Expand(padding * 2f);
             obstacles.Add(bounds);
         }

@@ -55,6 +55,10 @@ public class EnemyController : MonoBehaviour
     private int pathNodeBudget = 1024;
     [SerializeField, Min(0.5f)]
     private float pathReplanInterval = 2f;
+    [SerializeField, Range(0f, 6f), Tooltip("栅格方向变化的附加米数代价；最终路线仍执行整舰净空简化。")]
+    private float pathTurnPenalty = 2f;
+    [SerializeField, Range(0f, 3f), Tooltip("运动学障碍短期包络预判秒数；平移和旋转余量各限12米。")]
+    private float pathPredictionTime = 1.5f;
     private readonly EnemyLocalPath localPath = new EnemyLocalPath();
     private Vector3 navigationDestination;
     private bool navigationRequested;
@@ -617,6 +621,8 @@ public class EnemyController : MonoBehaviour
         // 速度越高，基础时间预判之外再加入刹停距离，提前量单调增加。
         float brakingDistance = speed * speed / (2f * Mathf.Max(0.1f, predictionBrakingAcceleration));
         probeDistance = Mathf.Max(0f, obstacleAvoidanceDistance) + speed * horizon + brakingDistance;
+        localPath.TurnPenalty = pathTurnPenalty;
+        localPath.PredictionTime = pathPredictionTime;
         climbingObstacle = !localPath.Active && preferObstacleClimb && unit.hoverFlightController != null && (speed >= 0.1f || obstacleClimb.Active) && obstacleClimb.TryGetHeight(
             unit,
             probeDirection,
