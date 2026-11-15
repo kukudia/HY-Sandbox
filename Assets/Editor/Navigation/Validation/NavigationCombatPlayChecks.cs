@@ -246,87 +246,49 @@ public static class NavigationCombatPlayChecks
         Physics.SyncTransforms();
         ai.obstacleLayers = 1 << obstacle.gameObject.layer;
         MethodInfo apply = typeof(EnemyController).GetMethod("ApplyObstacleAvoidance", Instance);
-        FieldInfo bounds = typeof(EnemyController).GetField("avoidanceBounds", Instance);
+        FieldInfo hull = typeof(EnemyController).GetField("avoidanceBounds", Instance);
         FieldInfo distance = typeof(EnemyController).GetField("probeDistance", Instance);
-        FieldInfo next = typeof(EnemyController).GetField("avoidanceSideUntil", Instance);
-        MethodInfo probe = typeof(EnemyController).GetMethod("ProbeObstacle", Instance);
         Rigidbody body = owner.GetComponent<Rigidbody>();
         body.isKinematic = false;
-        body.linearVelocity = Vector3.right * 4f;
-        apply.Invoke(ai, new object[] { Vector3.forward, Vector3.forward });
-        Check(
-            checks,
-            "Only actual velocity direction is swept",
-            (int)typeof(EnemyController).GetField("debugProbeCount", Instance).GetValue(ai) == 1);
-        Check(
-            checks,
-            "Hull sweep includes wing beyond center probe radius",
-            ((Bounds)bounds.GetValue(ai)).extents.z >= 5f);
-        next.SetValue(ai, 0f);
-        Vector3 avoid = (Vector3)probe.Invoke(ai, new object[] { Vector3.right, 1f });
-        Check(checks, "Wing-only wall generates avoidance", avoid.sqrMagnitude > 0.01f);
-        Check(checks, "Wall on wing side selects opposite bypass side", avoid.z < 0f);
-        obstacle.transform.localPosition = origin + new Vector3(0f, 0f, 5f);
-        Physics.SyncTransforms();
-        Check(
-            checks,
-            "Moving away from overlapping wing wall stays clear",
-            ((Vector3)probe.Invoke(ai, new object[] { Vector3.back, 1f })).sqrMagnitude < 0.001f);
-        obstacle.transform.localPosition = origin + new Vector3(3f, 0f, 0f);
-        body.linearVelocity = Vector3.right * 8f;
-        Physics.SyncTransforms();
-        typeof(EnemyController).GetField("debugProbeCount", Instance).SetValue(ai, 0);
+        body.linearVelocity = Vector3.zero;
         Vector3 movement = (Vector3)apply.Invoke(ai, new object[] { Vector3.right, Vector3.right });
-        typeof(EnemyController).GetField("desiredMovementInput", Instance).SetValue(ai, movement);
+        Check(
+            checks,
+            "Stationary vessel detects wing-only wall before acceleration",
+            (bool)typeof(EnemyController).GetField("avoidingObstacle", Instance).GetValue(ai));
+        Check(checks, "Shared hull clearance includes full wing", ((Bounds)hull.GetValue(ai)).extents.z >= 5f);
+        Check(
+            checks,
+            "Local bypass remains a horizontal vessel intent",
+            movement.sqrMagnitude > 0f && Mathf.Abs(movement.y) < 0.001f);
+        body.linearVelocity = Vector3.right * 12f;
+        obstacle.transform.localPosition = origin + new Vector3(2f, 0f, 0f);
+        Physics.SyncTransforms();
+        apply.Invoke(ai, new object[] { Vector3.right, Vector3.right });
+        typeof(EnemyController).GetField("desiredMovementInput", Instance).SetValue(ai, Vector3.right);
+        typeof(EnemyController).GetField("courseVelocity", Instance).SetValue(ai, Vector3.right * 6f);
+        Vector3 before = body.linearVelocity;
         Vector3 thrust = (Vector3)typeof(EnemyController).GetMethod("GetVelocityInput", Instance).Invoke(ai, null);
-        Check(checks, "Obstacle reduces forward movement magnitude", movement.magnitude < 0.5f);
+        Check(checks, "Immediate hull safety requests real braking", Vector3.Dot(thrust, Vector3.right) < 0f);
+        Check(checks, "Navigation does not write rigidbody velocity", body.linearVelocity == before);
         Check(
             checks,
-            "Obstacle slowdown never requests reverse thrust",
-            Vector3.Dot(thrust, Vector3.right) >= -0.0001f);
-        Vector3 smoothed = (Vector3)typeof(EnemyController).GetMethod("LimitObstacleInput", Instance).Invoke(ai, new object[] { Vector3.left + Vector3.forward });
-        Check(
-            checks,
-            "Input smoothing cannot retain reverse thrust near obstacle",
-            smoothed.x >= 0f && smoothed.z > 0f);
-        typeof(EnemyController).GetField("predictiveBraking", Instance).SetValue(ai, true);
-        Vector3 braking = (Vector3)typeof(EnemyController).GetMethod("LimitObstacleInput", Instance).Invoke(ai, new object[] { Vector3.left });
-        Check(
-            checks,
-            "Predictive yielding permits real thruster braking without velocity writes",
-            braking.x < 0f);
-        typeof(EnemyController).GetField("predictiveBraking", Instance).SetValue(ai, false);
-        Check(
-            checks,
-            "Ending predictive yielding restores ordinary no-reverse policy",
-            ((Vector3)typeof(EnemyController).GetMethod("LimitObstacleInput", Instance).Invoke(ai, new object[] { Vector3.left })).x == 0f);
+            "Safety braking survives final input limiting",
+            ((Vector3)typeof(EnemyController).GetMethod("LimitObstacleInput", Instance).Invoke(ai, new object[] { thrust })).x < 0f);
         obstacle.enabled = false;
         body.linearVelocity = Vector3.forward * 20f;
-        typeof(EnemyController).GetField("debugProbeCount", Instance).SetValue(ai, 0);
         apply.Invoke(ai, new object[] { Vector3.right, Vector3.right });
-        float fastDistance = (float)distance.GetValue(ai);
-        Check(checks, "Prediction distance scales with actual velocity", fastDistance >= 30f);
+        float fast = (float)distance.GetValue(ai);
         body.linearVelocity = Vector3.forward * 4f;
-        typeof(EnemyController).GetField("debugProbeCount", Instance).SetValue(ai, 0);
         apply.Invoke(ai, new object[] { Vector3.forward, Vector3.forward });
-        float slowDistance = (float)distance.GetValue(ai);
-        Check(checks, "Higher speed gets a longer prediction lead", fastDistance > slowDistance);
+        float slow = (float)distance.GetValue(ai);
         body.linearVelocity = Vector3.forward * 10f;
-        typeof(EnemyController).GetField("debugProbeCount", Instance).SetValue(ai, 0);
         apply.Invoke(ai, new object[] { Vector3.forward, Vector3.forward });
-        float mediumDistance = (float)distance.GetValue(ai);
+        float medium = (float)distance.GetValue(ai);
         Check(
             checks,
-            "Prediction lead increases across slow, cruise and fast speeds",
-            slowDistance < mediumDistance && mediumDistance < fastDistance);
-        Check(
-            checks,
-            "High speed gets extra braking-distance margin",
-            fastDistance - mediumDistance > mediumDistance - slowDistance);
-        Check(
-            checks,
-            "Sideways drift uses one actual-velocity sweep",
-            (int)typeof(EnemyController).GetField("debugProbeCount", Instance).GetValue(ai) == 1);
+            "Shared vessel lookahead grows with speed and braking distance",
+            slow < medium && medium < fast && fast - medium > medium - slow);
         body.linearVelocity = Vector3.zero;
         body.isKinematic = true;
         wing.enabled = false;
@@ -334,7 +296,7 @@ public static class NavigationCombatPlayChecks
 
     private static void CheckObstacleClimb(List<string> checks, Transform root, ControlUnit owner, BoxCollider wall)
     {
-        Type type = typeof(EnemyController).Assembly.GetType("EnemyObstacleClimb");
+        Type type = typeof(EnemyController).Assembly.GetType("NavigationObstacleClimb");
         object climb = Activator.CreateInstance(type, true);
         MethodInfo query = type.GetMethod("TryGetHeight", Instance);
         MethodInfo clear = type.GetMethod("Clear", Instance);
@@ -469,7 +431,7 @@ public static class NavigationCombatPlayChecks
 
     private static void CheckLocalPath(List<string> checks, Transform root, ControlUnit owner)
     {
-        Type type = typeof(EnemyController).Assembly.GetType("EnemyLocalPath");
+        Type type = typeof(EnemyController).Assembly.GetType("NavigationLocalPath");
         object planner = Activator.CreateInstance(type, true);
         MethodInfo follow = type.GetMethod("TryFollow", Instance);
         owner.transform.localPosition = new Vector3(-20f, 4f, -45f);

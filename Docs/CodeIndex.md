@@ -74,8 +74,6 @@ HY-Sandbox/
 │   │   │       ├── EnemyLabExpansionChecks.cs
 │   │   │       ├── EnemyLabPlayChecks.cs
 │   │   │       ├── EnemyLabViewChecks.cs
-│   │   │       ├── EnemyPredictionPlayChecks.cs
-│   │   │       ├── NavigationCombatPlayChecks.cs
 │   │   │       ├── SkirmishArenaChecks.cs
 │   │   │       ├── SkirmishPerformanceChecks.cs
 │   │   │       ├── TurretFlightPlayProbe.cs
@@ -95,6 +93,11 @@ HY-Sandbox/
 │   │   ├── MainMenu/
 │   │   │   ├── MainMenuAuthoring.cs
 │   │   │   └── MainMenuPlayChecks.cs
+│   │   ├── Navigation/
+│   │   │   └── Validation/
+│   │   │       ├── EnemyPredictionPlayChecks.cs
+│   │   │       ├── NavigationCombatPlayChecks.cs
+│   │   │       └── SharedNavigationPlayChecks.cs
 │   │   ├── Power/
 │   │   │   └── ActivePowerPlayChecks.cs
 │   │   ├── Presentation/
@@ -236,11 +239,8 @@ HY-Sandbox/
 │           │   ├── Collection/
 │           │   │   └── CollectionBot.cs
 │           │   ├── Navigation/
-│           │   │   ├── BotAvoidanceResult.cs
-│           │   │   ├── BotAvoidanceSettings.cs
 │           │   │   ├── BotFlightMotion.cs
-│           │   │   ├── BotNavigationPolicy.cs
-│           │   │   └── BotObstacleAvoidance.cs
+│           │   │   └── BotNavigationPolicy.cs
 │           │   ├── Presentation/
 │           │   │   ├── BotFlightEffects.cs
 │           │   │   └── BotNavigationGizmos.cs
@@ -311,19 +311,7 @@ HY-Sandbox/
 │           │   │   ├── EnemyBlueprintFactory.cs
 │           │   │   ├── EnemyController.cs
 │           │   │   ├── EnemyIdentity.cs
-│           │   │   ├── EnemyLocalPath.cs
-│           │   │   ├── EnemyNavigationPrediction.cs
-│           │   │   ├── EnemyNavigationSnapshot.cs
-│           │   │   ├── EnemyObstacleClimb.cs
-│           │   │   ├── EnemySpawner.cs
-│           │   │   └── Testing/
-│           │   │       ├── EnemyAvoidanceCourse.cs
-│           │   │       ├── EnemyAvoidanceLab.cs
-│           │   │       ├── EnemyLabBlueprints.cs
-│           │   │       ├── EnemyLabCamera.cs
-│           │   │       ├── EnemyLabMovingObstacle.cs
-│           │   │       ├── EnemyLabPanel.cs
-│           │   │       └── EnemyLabRecorder.cs
+│           │   │   └── EnemySpawner.cs
 │           │   ├── Interface/
 │           │   │   └── CombatHud.cs
 │           │   ├── Meteors/
@@ -380,6 +368,30 @@ HY-Sandbox/
 │           │   │   └── WorkshopNavigation.cs
 │           │   └── Settings/
 │           │       └── MenuSettings.cs
+│           ├── Navigation/
+│           │   ├── NavigationAvoidanceResult.cs
+│           │   ├── NavigationAvoidanceSettings.cs
+│           │   ├── Diagnostics/
+│           │   │   ├── EnemyNavigationSnapshot.cs
+│           │   │   └── Lab/
+│           │   │       ├── EnemyAvoidanceCourse.cs
+│           │   │       ├── EnemyAvoidanceLab.cs
+│           │   │       ├── EnemyLabBlueprints.cs
+│           │   │       ├── EnemyLabCamera.cs
+│           │   │       ├── EnemyLabMovingObstacle.cs
+│           │   │       ├── EnemyLabPanel.cs
+│           │   │       └── EnemyLabRecorder.cs
+│           │   ├── Local/
+│           │   │   ├── NavigationAvoidance.cs
+│           │   │   └── NavigationObstacleQuery.cs
+│           │   ├── Planning/
+│           │   │   ├── NavigationLocalPath.cs
+│           │   │   └── NavigationObstacleClimb.cs
+│           │   ├── Prediction/
+│           │   │   └── NavigationPrediction.cs
+│           │   └── Vessels/
+│           │       ├── VesselNavigation.cs
+│           │       └── VesselNavigationSettings.cs
 │           ├── Player/
 │           │   ├── InputManager.cs
 │           │   ├── Player.cs
@@ -911,14 +923,14 @@ HY-Sandbox/
 | BotNavigationPlayProbe | [`void Capture(string condition, string stack, LogType type)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L101) | private static |
 | BotNavigationPlayProbe | [`void Tick()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L109) | private static |
 | BotNavigationPlayProbe | [`void TickCase()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L122) | private static |
-| BotNavigationPlayProbe | [`void ValidateBotFiltering()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L198) | private static |
-| BotNavigationPlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L324) | private static |
-| BotNavigationPlayProbe | [`void ValidateFrozenNavigation()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L336) | private static |
-| BotNavigationPlayProbe | [`void StartCase()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L362) | private static |
-| BotNavigationPlayProbe | [`void Wall(Vector3 position, Vector3 scale)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L426) | private static |
-| BotNavigationPlayProbe | [`void Finish()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L435) | private static |
-| BotNavigationPlayProbe | [`void Restore()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L442) | private static |
-| BotNavigationPlayProbe | [`void WriteReport()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L451) | private static |
+| BotNavigationPlayProbe | [`void ValidateBotFiltering()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L191) | private static |
+| BotNavigationPlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L317) | private static |
+| BotNavigationPlayProbe | [`void ValidateFrozenNavigation()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L329) | private static |
+| BotNavigationPlayProbe | [`void StartCase()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L355) | private static |
+| BotNavigationPlayProbe | [`void Wall(Vector3 position, Vector3 scale)`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L419) | private static |
+| BotNavigationPlayProbe | [`void Finish()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L428) | private static |
+| BotNavigationPlayProbe | [`void Restore()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L435) | private static |
+| BotNavigationPlayProbe | [`void WriteReport()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L444) | private static |
 
 ## Assets/Editor/Bots/BotNavigationPolicyMigration.cs
 
@@ -1213,9 +1225,9 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | AiUpgradePlayChecks | [`string Run()`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L14) | public static |
-| AiUpgradePlayChecks | [`ControlUnit Unit(Transform root, string name, UnitFaction faction, Vector3 position)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L256) | private static |
-| AiUpgradePlayChecks | [`Durability Health(Transform root, string name, Vector3 position)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L272) | private static |
-| AiUpgradePlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L283) | private static |
+| AiUpgradePlayChecks | [`ControlUnit Unit(Transform root, string name, UnitFaction faction, Vector3 position)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L293) | private static |
+| AiUpgradePlayChecks | [`Durability Health(Transform root, string name, Vector3 position)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L309) | private static |
+| AiUpgradePlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L320) | private static |
 
 ## Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs
 
@@ -1283,34 +1295,6 @@ HY-Sandbox/
 | EnemyLabViewChecks | [`void Begin()`](../Assets/Editor/Combat/Validation/EnemyLabViewChecks.cs#L19) | public static |
 | EnemyLabViewChecks | [`Task<string> Run()`](../Assets/Editor/Combat/Validation/EnemyLabViewChecks.cs#L24) | private static async |
 | EnemyLabViewChecks | [`void Check(List<string> checks, string name, bool value)`](../Assets/Editor/Combat/Validation/EnemyLabViewChecks.cs#L146) | private static |
-
-## Assets/Editor/Combat/Validation/EnemyPredictionPlayChecks.cs
-
-// 职责：用隔离物理场景验证横向运动感知、相对碰撞时间和候选动作预算。 // 入口：Run()；仅Play Mode，真实PhysX采集，反射调用生产预测器，不修改试验场。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| EnemyPredictionPlayChecks | [`string Run()`](../Assets/Editor/Combat/Validation/EnemyPredictionPlayChecks.cs#L13) | public static |
-| EnemyPredictionPlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Combat/Validation/EnemyPredictionPlayChecks.cs#L279) | private static |
-
-## Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs
-
-// 职责：在隔离物理场景验证稳定局部驾驶、爬升净空与两种炮塔的遮挡锁定。 // 入口：Run()；仅 Play Mode，结果写入 Temp/NavigationCombat，不修改玩家蓝图和场景。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| NavigationCombatPlayChecks | [`void Begin()`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L20) | public static |
-| NavigationCombatPlayChecks | [`Task<string> Run()`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L25) | public static |
-| NavigationCombatPlayChecks | [`void CheckStableSteering(List<string> checks, EnemyController ai, ControlUnit owner)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L161) | private static |
-| NavigationCombatPlayChecks | [`void CheckContinuousCourse(List<string> checks, EnemyController ai)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L201) | private static |
-| NavigationCombatPlayChecks | [`void CheckHullAvoidance(List<string> checks, Transform root, ControlUnit owner, EnemyController ai)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L241) | private static |
-| NavigationCombatPlayChecks | [`void CheckObstacleClimb(List<string> checks, Transform root, ControlUnit owner, BoxCollider wall)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L335) | private static |
-| NavigationCombatPlayChecks | [`void CheckDescentRetention(List<string> checks, ControlUnit owner, EnemyController ai)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L444) | private static |
-| NavigationCombatPlayChecks | [`void CheckLocalPath(List<string> checks, Transform root, ControlUnit owner)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L470) | private static |
-| NavigationCombatPlayChecks | [`void CheckMotionPrediction(List<string> checks, Transform root, ControlUnit owner, Type type, object planner)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L589) | private static |
-| NavigationCombatPlayChecks | [`ControlUnit Unit(Transform root, string name, UnitFaction faction, Vector3 position)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L630) | private static |
-| NavigationCombatPlayChecks | [`BoxCollider Box(Transform root, string name, Vector3 position, Vector3 size)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L650) | private static |
-| NavigationCombatPlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs#L660) | private static |
 
 ## Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs
 
@@ -1551,6 +1535,44 @@ HY-Sandbox/
 | MainMenuPlayChecks | [`void LogError(string message, string trace, LogType type)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L693) | private static |
 | MainMenuPlayChecks | [`void BackupPreferences()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L701) | private static |
 | MainMenuPlayChecks | [`void Finish()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L721) | private static |
+
+## Assets/Editor/Navigation/Validation/EnemyPredictionPlayChecks.cs
+
+// 职责：用隔离物理场景验证横向运动感知、相对碰撞时间和候选动作预算。 // 入口：Run()；仅Play Mode，真实PhysX采集，反射调用生产预测器，不修改试验场。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyPredictionPlayChecks | [`string Run()`](../Assets/Editor/Navigation/Validation/EnemyPredictionPlayChecks.cs#L13) | public static |
+| EnemyPredictionPlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Navigation/Validation/EnemyPredictionPlayChecks.cs#L279) | private static |
+
+## Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs
+
+// 职责：在隔离物理场景验证稳定局部驾驶、爬升净空与两种炮塔的遮挡锁定。 // 入口：Run()；仅 Play Mode，结果写入 Temp/NavigationCombat，不修改玩家蓝图和场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| NavigationCombatPlayChecks | [`void Begin()`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L20) | public static |
+| NavigationCombatPlayChecks | [`Task<string> Run()`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L25) | public static |
+| NavigationCombatPlayChecks | [`void CheckStableSteering(List<string> checks, EnemyController ai, ControlUnit owner)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L161) | private static |
+| NavigationCombatPlayChecks | [`void CheckContinuousCourse(List<string> checks, EnemyController ai)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L201) | private static |
+| NavigationCombatPlayChecks | [`void CheckHullAvoidance(List<string> checks, Transform root, ControlUnit owner, EnemyController ai)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L241) | private static |
+| NavigationCombatPlayChecks | [`void CheckObstacleClimb(List<string> checks, Transform root, ControlUnit owner, BoxCollider wall)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L297) | private static |
+| NavigationCombatPlayChecks | [`void CheckDescentRetention(List<string> checks, ControlUnit owner, EnemyController ai)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L406) | private static |
+| NavigationCombatPlayChecks | [`void CheckLocalPath(List<string> checks, Transform root, ControlUnit owner)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L432) | private static |
+| NavigationCombatPlayChecks | [`void CheckMotionPrediction(List<string> checks, Transform root, ControlUnit owner, Type type, object planner)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L551) | private static |
+| NavigationCombatPlayChecks | [`ControlUnit Unit(Transform root, string name, UnitFaction faction, Vector3 position)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L592) | private static |
+| NavigationCombatPlayChecks | [`BoxCollider Box(Transform root, string name, Vector3 position, Vector3 size)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L612) | private static |
+| NavigationCombatPlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L622) | private static |
+
+## Assets/Editor/Navigation/Validation/SharedNavigationPlayChecks.cs
+
+// 职责：在隔离 PhysX 场景验证 Bot/舰船共用避障的形状、过滤、查询预算和状态隔离。 // 入口：Run()；Play Mode 执行，结果写入 Temp/NavigationCombat/shared-checks.txt。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SharedNavigationPlayChecks | [`string Run()`](../Assets/Editor/Navigation/Validation/SharedNavigationPlayChecks.cs#L12) | public static |
+| SharedNavigationPlayChecks | [`GameObject Box(Transform parent, string name, Vector3 position, Vector3 size)`](../Assets/Editor/Navigation/Validation/SharedNavigationPlayChecks.cs#L151) | private static |
+| SharedNavigationPlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Navigation/Validation/SharedNavigationPlayChecks.cs#L160) | private static |
 
 ## Assets/Editor/Power/ActivePowerPlayChecks.cs
 
@@ -2829,7 +2851,7 @@ HY-Sandbox/
 
 ## Assets/Scripts/Features/Bots/Bot.cs
 
-// 职责：保存无人机任务/插槽配置并组织任务飞行、返航、离家和精确停靠状态。 // 入口：派生机器人的 FixedUpdate → TickNavigation() → NavigateToTarget()/NavigateHomeSmoothly()。 // 依赖：BotFlightMotion 处理飞行/制动；BotObstacleAvoidance 负责三维净空与脱困。 // 不变量：homeOffset 保持 Home 局部坐标；停靠切为运动学刚体，完成后恢复准确局部姿态。
+// 职责：保存无人机任务/插槽配置并组织任务飞行、返航、离家和精确停靠状态。 // 入口：派生机器人的 FixedUpdate → TickNavigation() → NavigateToTarget()/NavigateHomeSmoothly()。 // 依赖：BotFlightMotion 处理飞行/制动；NavigationAvoidance 负责三维净空与脱困。 // 不变量：homeOffset 保持 Home 局部坐标；停靠切为运动学刚体，完成后恢复准确局部姿态。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
@@ -2867,18 +2889,6 @@ HY-Sandbox/
 | CollectionBot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L157) | protected override |
 | CollectionBot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L163) | public override |
 
-## Assets/Scripts/Features/Bots/Navigation/BotAvoidanceResult.cs
-
-// 职责：表达一次导航采样的方向修正、强度、速度比例和障碍数量。 // Direction 在世界坐标中；没有障碍时 SpeedMultiplier 为 1。
-
-数据/配置/接口定义，无方法体。
-
-## Assets/Scripts/Features/Bots/Navigation/BotAvoidanceSettings.cs
-
-// 职责：携带单次障碍采样的距离、权重、过滤条件；值来自 Bot Inspector。 // 单位：Range/Radius/ProgressDistance 为米，Timeout/HoldTime 为秒，BrakingAcceleration 为米/秒²。
-
-数据/配置/接口定义，无方法体。
-
 ## Assets/Scripts/Features/Bots/Navigation/BotFlightMotion.cs
 
 // 职责：缓存导航采样、平滑飞行方向，执行任务飞行与移动 Home 的相对速度制动。 // 入口：NavigateToTarget()/NavigateHome()；只能由机器人 FixedUpdate 导航路径调用。 // 不变量：Home 目标点每次重新计算；只缓存避障建议，不缓存移动目标的世界位置。
@@ -2900,28 +2910,8 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BotNavigationPolicy | [`BotAvoidanceSettings CreateAvoidanceSettings()`](../Assets/Scripts/Features/Bots/Navigation/BotNavigationPolicy.cs#L19) | public static |
+| BotNavigationPolicy | [`NavigationAvoidanceSettings CreateAvoidanceSettings()`](../Assets/Scripts/Features/Bots/Navigation/BotNavigationPolicy.cs#L19) | public static |
 | BotNavigationPolicy | [`void ConfigureBody(Rigidbody body)`](../Assets/Scripts/Features/Bots/Navigation/BotNavigationPolicy.cs#L35) | public static |
-
-## Assets/Scripts/Features/Bots/Navigation/BotObstacleAvoidance.cs
-
-// 职责：用机器人半径探测三维净空，保持绕障方向，并在没有目标进展时选择脱困路线。 // 入口：Evaluate() 采样导航，ConstrainVelocity() 在每个物理帧阻止继续朝近处障碍加速。 // 生命周期：每台机器人拥有独立缓冲和绕障记忆；切换目标时 Reset() 清理旧路线。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| BotObstacleAvoidance | [`void Reset()`](../Assets/Scripts/Features/Bots/Navigation/BotObstacleAvoidance.cs#L50) | public |
-| BotObstacleAvoidance | [`void ClearDebugHits()`](../Assets/Scripts/Features/Bots/Navigation/BotObstacleAvoidance.cs#L63) | public |
-| BotObstacleAvoidance | [`BotAvoidanceResult Evaluate( Transform target, Vector3 velocity, Vector3 targetDirection, float rangeScale, BotAvoidanceSettings settings, float targetDistance = float.PositiveInfinity)`](../Assets/Scripts/Features/Bots/Navigation/BotObstacleAvoidance.cs#L69) | public |
-| BotObstacleAvoidance | [`bool CheckProgress(float targetDistance)`](../Assets/Scripts/Features/Bots/Navigation/BotObstacleAvoidance.cs#L166) | private |
-| BotObstacleAvoidance | [`Vector3 ChooseClearDirection(Vector3 targetDirection, float range, bool stalled, out float bestClearDistance)`](../Assets/Scripts/Features/Bots/Navigation/BotObstacleAvoidance.cs#L186) | private |
-| BotObstacleAvoidance | [`void ConsiderDirection( Vector3 candidate, Vector3 targetDirection, float range, bool stalled, ref float bestScore, ref Vector3 bestDirection, ref float bestClearDistance)`](../Assets/Scripts/Features/Bots/Navigation/BotObstacleAvoidance.cs#L234) | private |
-| BotObstacleAvoidance | [`Vector3 ConstrainVelocity(Vector3 desiredVelocity, float deltaTime, Vector3 currentVelocity, float brakingAcceleration)`](../Assets/Scripts/Features/Bots/Navigation/BotObstacleAvoidance.cs#L258) | public |
-| BotObstacleAvoidance | [`Vector3 LimitApproachSpeed(Vector3 desiredVelocity, Vector3 corridor, float lookAhead, float margin, float acceleration)`](../Assets/Scripts/Features/Bots/Navigation/BotObstacleAvoidance.cs#L285) | private |
-| BotObstacleAvoidance | [`float GetClearDistance(Vector3 direction, float range)`](../Assets/Scripts/Features/Bots/Navigation/BotObstacleAvoidance.cs#L302) | private |
-| BotObstacleAvoidance | [`bool Cast(Vector3 direction, float range, out RaycastHit nearest)`](../Assets/Scripts/Features/Bots/Navigation/BotObstacleAvoidance.cs#L307) | private |
-| BotObstacleAvoidance | [`bool TryGetOverlapEscape(out Vector3 escape)`](../Assets/Scripts/Features/Bots/Navigation/BotObstacleAvoidance.cs#L340) | private |
-| BotObstacleAvoidance | [`bool IsIgnored(Collider collider)`](../Assets/Scripts/Features/Bots/Navigation/BotObstacleAvoidance.cs#L395) | private |
-| BotObstacleAvoidance | [`bool ShouldIgnoreCollider(Collider collider)`](../Assets/Scripts/Features/Bots/Navigation/BotObstacleAvoidance.cs#L411) | private |
 
 ## Assets/Scripts/Features/Bots/Presentation/BotFlightEffects.cs
 
@@ -3674,37 +3664,35 @@ HY-Sandbox/
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyController.cs
 
-// 职责：为敌机与自主友舰选择敌对目标并生成驾驶意图；阵营和玩家驾驶权分别判断。 // 入口：FixedUpdate()；优先上下避障，受阻时局部三维A*规划，逐物理步连续跟随。
+// 职责：为敌机与自主友舰选择敌对目标并生成驾驶意图；阵营和玩家驾驶权分别判断。 // 入口：FixedUpdate()；战术意图交给 VesselNavigation 选路，ControlUnit/推进器负责物理执行。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| EnemyController | [`void ConfigureDebugDisplay(bool enabled, bool ranges)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L144) | internal |
-| EnemyController | [`EnemyNavigationSnapshot CaptureNavigation(int previousRouteRevision = -1)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L150) | public |
-| EnemyController | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L212) | private |
-| EnemyController | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L235) | private |
-| EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L242) | private |
-| EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L317) | private |
-| EnemyController | [`Vector3 GetApproachDirection(Vector3 destination, Vector3 fallback)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L354) | private |
-| EnemyController | [`Vector3 PredictMovement(Vector3 proposed)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L361) | private |
-| EnemyController | [`float GetMovementInterval()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L397) | private |
-| EnemyController | [`Vector3 GetVelocityInput()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L402) | private |
-| EnemyController | [`Vector3 LimitObstacleInput(Vector3 input)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L433) | private |
-| EnemyController | [`Vector3 StabilizeDirection(Vector3 candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L457) | private |
-| EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L481) | public |
-| EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L489) | public |
-| EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L496) | private |
-| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L547) | private |
-| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L562) | private |
-| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L591) | private |
-| EnemyController | [`float ConstrainDescent(float requested, Vector3 direction)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L633) | private |
-| EnemyController | [`float GetBaseHoverHeight()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L651) | private |
-| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L669) | private |
-| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L685) | private |
-| EnemyController | [`bool TryClimbObstacle(Vector3 desiredMove, Vector3 probeDirection, float speed, float horizon, out Vector3 movement)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L811) | private |
-| EnemyController | [`Vector3 ProbeObstacle(Vector3 direction, float weight)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L844) | private |
-| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L992) | private |
-| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L997) | private |
-| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L1060) | private static |
+| EnemyController | [`void ConfigureDebugDisplay(bool enabled, bool ranges)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L136) | internal |
+| EnemyController | [`EnemyNavigationSnapshot CaptureNavigation(int previousRouteRevision = -1)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L142) | public |
+| EnemyController | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L204) | private |
+| EnemyController | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L223) | private |
+| EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L231) | private |
+| EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L303) | private |
+| EnemyController | [`Vector3 GetApproachDirection(Vector3 destination, Vector3 fallback)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L340) | private |
+| EnemyController | [`Vector3 PredictMovement(Vector3 proposed)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L347) | private |
+| EnemyController | [`float GetMovementInterval()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L383) | private |
+| EnemyController | [`Vector3 GetVelocityInput()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L388) | private |
+| EnemyController | [`Vector3 LimitObstacleInput(Vector3 input)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L429) | private |
+| EnemyController | [`Vector3 StabilizeDirection(Vector3 candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L453) | private |
+| EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L477) | public |
+| EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L485) | public |
+| EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L492) | private |
+| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L543) | private |
+| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L558) | private |
+| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L581) | private |
+| EnemyController | [`float ConstrainDescent(float requested, Vector3 direction)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L623) | private |
+| EnemyController | [`float GetBaseHoverHeight()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L641) | private |
+| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L659) | private |
+| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L675) | private |
+| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L728) | private |
+| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L733) | private |
+| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L796) | private static |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs
 
@@ -3715,61 +3703,6 @@ HY-Sandbox/
 | EnemyIdentity | [`void ReportDefeated()`](../Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs#L9) | public |
 | EnemyIdentity | [`void SetDisplayName(string displayName)`](../Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs#L26) | public |
 | EnemyIdentity | [`void SetSpawnMaxHealth(float maximum)`](../Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs#L31) | public |
-
-## Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs
-
-// 职责：在有限三维栅格中规划整舰可通行路线，缓存并简化航点，不直接操纵刚体。 // 入口：TryFollow()；转弯代价、限额可视简化和短期运动包络共用整舰净空，重规划限频。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| EnemyLocalPath | [`void Push(Vector3Int key, float cost, float score)`](../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L71) | private |
-| EnemyLocalPath | [`OpenNode Pop()`](../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L96) | private |
-| EnemyLocalPath | [`void Clear()`](../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L128) | internal |
-| EnemyLocalPath | [`bool TryFollow( ControlUnit owner, Bounds hull, Vector3 goal, LayerMask layers, float cellSize, float radius, int budget, float retry, float minHeight, float maxHeight, out Vector3 point)`](../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L140) | internal |
-| EnemyLocalPath | [`Vector3 World(Vector3Int cell, float size)`](../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L388) | private |
-| EnemyLocalPath | [`void Simplify(Vector3 position)`](../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L393) | private |
-| EnemyLocalPath | [`void Capture(ControlUnit owner, Bounds hull, LayerMask layers, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L419) | private |
-| EnemyLocalPath | [`bool ClearFlight(Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L485) | private |
-| EnemyLocalPath | [`bool ClearSegment(Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Combat/Enemies/EnemyLocalPath.cs#L491) | private |
-
-## Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPrediction.cs
-
-// 职责：周向采集远场路况，沿路线预读距离/时间，按相对运动扫掠近场候选航迹并提前调速或让行。 // 入口：Observe() / CopyPlanningBounds() / Choose()；降频采集快照供规划与动作验证，不写刚体，不读取试验场未来参数。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| EnemyNavigationPrediction | [`void Clear()`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPrediction.cs#L101) | internal |
-| EnemyNavigationPrediction | [`void Observe( ControlUnit owner, Bounds hull, Vector3 velocity, LayerMask layers, float speed, float horizon, Vector3 destination, System.Collections.Generic.IReadOnlyList<Vector3> route, int waypoint, float height)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPrediction.cs#L128) | internal |
-| EnemyNavigationPrediction | [`void CopyPlanningBounds(System.Collections.Generic.List<Bounds> destination, Vector3 padding, float predictionTime)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPrediction.cs#L161) | internal |
-| EnemyNavigationPrediction | [`Vector3 Choose( ControlUnit owner, Bounds hull, Vector3 velocity, Vector3 desired, float targetHeight, LayerMask layers, float cruiseSpeed, float horizon, float acceleration, float turnRate, bool preserveCourse, Vector3 destination, System.Collections.Generic.IReadOnlyList<Vector3> route, int waypoint)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPrediction.cs#L183) | internal |
-| EnemyNavigationPrediction | [`void Capture( ControlUnit owner, Bounds hull, Vector3 velocity, LayerMask layers, float cruiseSpeed, float horizon)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPrediction.cs#L333) | private |
-| EnemyNavigationPrediction | [`void Preview( Bounds hull, Vector3 destination, System.Collections.Generic.IReadOnlyList<Vector3> route, int waypoint, Vector3 root, float height, float speed)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPrediction.cs#L393) | private |
-| EnemyNavigationPrediction | [`Outcome Evaluate( Bounds hull, Vector3 velocity, Vector3 input, float deltaHeight, float speed, float horizon, float acceleration, float turnRate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPrediction.cs#L475) | private |
-| EnemyNavigationPrediction | [`void Consider(ref Outcome best, Outcome candidate, Vector3 desired)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPrediction.cs#L557) | private |
-| EnemyNavigationPrediction | [`float Score(Outcome candidate, Vector3 desired)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPrediction.cs#L575) | private |
-| EnemyNavigationPrediction | [`float Clearance(Bounds bounds, Vector3 point)`](../Assets/Scripts/Features/Combat/Enemies/EnemyNavigationPrediction.cs#L582) | private static |
-
-## Assets/Scripts/Features/Combat/Enemies/EnemyNavigationSnapshot.cs
-
-// 职责：描述导航控制器当前真实决策，供测试场记录与可视化，不参与驾驶。 // 入口：EnemyController.CaptureNavigation()；路线仅在版本变化时复制。
-
-数据/配置/接口定义，无方法体。
-
-## Assets/Scripts/Features/Combat/Enemies/EnemyObstacleClimb.cs
-
-// 职责：为自主舰按真实航迹优先选择上/下避障，验证整舰净空并保持高度直到舰尾越障。 // 入口：TryGetHeight()；仅输出目标高度，不写刚体，不替代顶棚下的水平寻路。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| EnemyObstacleClimb | [`void Clear()`](../Assets/Scripts/Features/Combat/Enemies/EnemyObstacleClimb.cs#L18) | internal |
-| EnemyObstacleClimb | [`bool TryGetHeight( ControlUnit unit, Vector3 direction, float baseHeight, float lookAhead, float maxRise, float clearance, LayerMask layers, out float targetHeight, float maxDrop = 0f)`](../Assets/Scripts/Features/Combat/Enemies/EnemyObstacleClimb.cs#L25) | internal |
-| EnemyObstacleClimb | [`bool CanPass( PhysicsScene physics, Bounds bounds, Vector3 direction, float distance, float deltaHeight, LayerMask layers, ControlUnit unit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyObstacleClimb.cs#L131) | private |
-| EnemyObstacleClimb | [`float ForwardRatio( ControlUnit owner, Vector3 direction, float targetHeight, float cruiseSpeed, float clearance, float lead, LayerMask layers)`](../Assets/Scripts/Features/Combat/Enemies/EnemyObstacleClimb.cs#L158) | internal |
-| EnemyObstacleClimb | [`bool CanLowerTo(ControlUnit unit, float targetHeight, Vector3 direction, float distance, LayerMask layers)`](../Assets/Scripts/Features/Combat/Enemies/EnemyObstacleClimb.cs#L211) | internal |
-| EnemyObstacleClimb | [`Bounds GetHullBounds(ControlUnit unit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyObstacleClimb.cs#L225) | internal |
-| EnemyObstacleClimb | [`bool Blocked( PhysicsScene physics, Vector3 center, Vector3 extents, Vector3 direction, float distance, LayerMask layers, ControlUnit owner)`](../Assets/Scripts/Features/Combat/Enemies/EnemyObstacleClimb.cs#L247) | private |
-| EnemyObstacleClimb | [`int Cast( PhysicsScene physics, Vector3 center, Vector3 extents, Vector3 direction, float distance, LayerMask layers)`](../Assets/Scripts/Features/Combat/Enemies/EnemyObstacleClimb.cs#L279) | private |
-| EnemyObstacleClimb | [`bool IsGeometry(Collider collider, ControlUnit owner)`](../Assets/Scripts/Features/Combat/Enemies/EnemyObstacleClimb.cs#L309) | private static |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs
 
@@ -3786,113 +3719,6 @@ HY-Sandbox/
 | EnemySpawner | [`void SpawnEnemy()`](../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L133) | public |
 | EnemySpawner | [`ControlUnit SpawnBlockData(BlockDataList dataList, string enemyBlueprint, Vector3 spawnPosition, Quaternion spawnRotation)`](../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L144) | internal |
 | EnemySpawner | [`Vector3 GetSpawnPosition()`](../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L151) | private |
-
-## Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceCourse.cs
-
-// 职责：保存试验布局的推荐起点、目标点和观察时长，保留可编辑场景参数。 // 入口：EnemyAvoidanceLab.SelectLayout()读取；不生成运行时障碍。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| EnemyAvoidanceCourse | [`Transform Location(int index)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceCourse.cs#L19) | public |
-
-## Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs
-
-// 职责：协调可编辑导航试验、手动蓝图部署、目标设置与操作/导航记录。 // 入口：Start() / DeploySelected() / SelectLayout()；真实施力仍由生产AI与推进器完成。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| EnemyAvoidanceLab | [`string LayoutName(int index)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L81) | internal |
-| EnemyAvoidanceLab | [`void RecordOperation(string action, string detail)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L82) | public |
-| EnemyAvoidanceLab | [`void SetRoofVisibility(bool visible)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L83) | internal |
-| EnemyAvoidanceLab | [`void BeginPointPick(bool start)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L99) | public |
-| EnemyAvoidanceLab | [`string LocationName(int index)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L107) | public |
-| EnemyAvoidanceLab | [`bool SelectLocation(int index, bool asStart)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L108) | public |
-| EnemyAvoidanceLab | [`void SetStart(Vector3 position)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L129) | public |
-| EnemyAvoidanceLab | [`void Start()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L137) | private |
-| EnemyAvoidanceLab | [`void RefreshBlueprints()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L156) | public |
-| EnemyAvoidanceLab | [`void SelectBlueprint(int index)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L163) | public |
-| EnemyAvoidanceLab | [`bool DeploySelected()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L174) | public |
-| EnemyAvoidanceLab | [`void BindShip(ControlUnit value)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L220) | private |
-| EnemyAvoidanceLab | [`void SelectLayout(int index)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L241) | public |
-| EnemyAvoidanceLab | [`void ResetTrial()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L263) | public |
-| EnemyAvoidanceLab | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L328) | private |
-| EnemyAvoidanceLab | [`void Sample()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L361) | private |
-| EnemyAvoidanceLab | [`void UpdateTraceGradient()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L415) | private |
-| EnemyAvoidanceLab | [`void FinishTrial(string reason)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L467) | private |
-| EnemyAvoidanceLab | [`void OnShipCollision(Collision collision)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L503) | private |
-| EnemyAvoidanceLab | [`void StopTrial()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L537) | public |
-| EnemyAvoidanceLab | [`void BeginSuite()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L546) | public |
-| EnemyAvoidanceLab | [`void SetGoal(Vector3 point)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L553) | public |
-| EnemyAvoidanceLab | [`void SetPaused(bool value)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L568) | public |
-| EnemyAvoidanceLab | [`void Update()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L575) | private |
-| EnemyAvoidanceLab | [`void OnGUI()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L580) | private |
-| EnemyAvoidanceLab | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L585) | private |
-| EnemyAvoidanceLab | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyAvoidanceLab.cs#L608) | private |
-
-## Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabBlueprints.cs
-
-// 职责：聚合测试用只读蓝图目录，复用正式部署校验，保存明确的来源与JSON快照。 // 入口：Refresh()；包含内置敌舰、玩家Saves和EnemyBlueprints，不写源目录。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| EnemyLabBlueprints | [`void Refresh()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabBlueprints.cs#L22) | internal |
-
-## Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs
-
-// 职责：提供试验场透视自由飞行及正交总览，暂停时仍可观察，不接管玩家相机。 // 入口：Update() / SetFreeView() / ResetOverview()；组件由制作工具预挂在Lab Camera上。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| EnemyLabCamera | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L33) | private |
-| EnemyLabCamera | [`void SetFreeView(bool enabled)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L39) | public |
-| EnemyLabCamera | [`void ResetOverview()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L63) | public |
-| EnemyLabCamera | [`void SyncAngles()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L68) | private |
-| EnemyLabCamera | [`void Update()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L74) | private |
-| EnemyLabCamera | [`void Record(string action)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L176) | private |
-| EnemyLabCamera | [`void ReleasePointer()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L184) | private |
-| EnemyLabCamera | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L196) | private |
-| EnemyLabCamera | [`void OnApplicationFocus(bool focused)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabCamera.cs#L201) | private |
-
-## Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs
-
-// 职责：按可重复的周期驱动试验场运动学障碍，保留真实碰撞及暂停语义。 // 入口：OnEnable() / ResetMotion()重置相位；FixedUpdate()提交物理运动。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| EnemyLabMovingObstacle | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L20) | private |
-| EnemyLabMovingObstacle | [`void CaptureOrigin()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L25) | private |
-| EnemyLabMovingObstacle | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L37) | private |
-| EnemyLabMovingObstacle | [`void ResetMotion()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L42) | public |
-| EnemyLabMovingObstacle | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L52) | private |
-| EnemyLabMovingObstacle | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L61) | private |
-| EnemyLabMovingObstacle | [`void OnDrawGizmosSelected()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabMovingObstacle.cs#L69) | private |
-
-## Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabPanel.cs
-
-// 职责：绘制试验场控制面板并采集限定场景内的键鼠操作，调用试验协调器。 // 入口：PollInput() / Draw()；普通对象，不动态补挂组件、不改玩家输入系统。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| EnemyLabPanel | [`void BeginPick(bool start)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabPanel.cs#L23) | internal |
-| EnemyLabPanel | [`void PollInput()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabPanel.cs#L30) | internal |
-| EnemyLabPanel | [`void ChangeStartHeight(float delta)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabPanel.cs#L144) | private |
-| EnemyLabPanel | [`void Draw()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabPanel.cs#L149) | internal |
-
-## Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs
-
-// 职责：将测试元数据、操作事件及导航采样增量写入独立会话目录，避免长测常驻大日志。 // 入口：Begin() / Event() / Sample() / Finish()；文件错误只关闭记录，不影响飞行。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| EnemyLabRecorder | [`void Begin( string course, string blueprint, string json, EnemyController ai, Vector3 start, Vector3 goal, float interval)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L75) | public |
-| EnemyLabRecorder | [`void Event(string action, string detail)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L129) | public |
-| EnemyLabRecorder | [`EnemyNavigationSnapshot Sample(EnemyController ai)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L135) | public |
-| EnemyLabRecorder | [`void Finish(string json)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L143) | public |
-| EnemyLabRecorder | [`void EnsureSession()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L162) | private |
-| EnemyLabRecorder | [`void Write(Entry entry)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L185) | private |
-| EnemyLabRecorder | [`void Fail(Exception exception)`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L219) | private |
-| EnemyLabRecorder | [`void CloseTrial()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L227) | private |
-| EnemyLabRecorder | [`void Dispose()`](../Assets/Scripts/Features/Combat/Enemies/Testing/EnemyLabRecorder.cs#L244) | public |
 
 ## Assets/Scripts/Features/Combat/Interface/CombatHud.cs
 
@@ -4098,9 +3924,9 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BotNavigationProbeDriver | [`void Initialize(string caseName, Transform target, Rigidbody body, Rigidbody home)`](../Assets/Scripts/Features/Diagnostics/Bots/BotNavigationProbeDriver.cs#L45) | public |
-| BotNavigationProbeDriver | [`void FixedUpdate()`](../Assets/Scripts/Features/Diagnostics/Bots/BotNavigationProbeDriver.cs#L58) | private |
-| BotNavigationProbeDriver | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Diagnostics/Bots/BotNavigationProbeDriver.cs#L88) | private |
+| BotNavigationProbeDriver | [`void Initialize(string caseName, Transform target, Rigidbody body, Rigidbody home)`](../Assets/Scripts/Features/Diagnostics/Bots/BotNavigationProbeDriver.cs#L49) | public |
+| BotNavigationProbeDriver | [`void FixedUpdate()`](../Assets/Scripts/Features/Diagnostics/Bots/BotNavigationProbeDriver.cs#L62) | private |
+| BotNavigationProbeDriver | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Diagnostics/Bots/BotNavigationProbeDriver.cs#L92) | private |
 
 ## Assets/Scripts/Features/Diagnostics/DebugManager.cs
 
@@ -4417,6 +4243,232 @@ HY-Sandbox/
 | MenuSettings | [`void SetSensitivity(float value)`](../Assets/Scripts/Features/MainMenu/Settings/MenuSettings.cs#L75) | private |
 | MenuSettings | [`void SetQuality(int value)`](../Assets/Scripts/Features/MainMenu/Settings/MenuSettings.cs#L82) | private |
 | MenuSettings | [`void SetFullscreen(bool value)`](../Assets/Scripts/Features/MainMenu/Settings/MenuSettings.cs#L89) | private |
+
+## Assets/Scripts/Features/Navigation/Diagnostics/EnemyNavigationSnapshot.cs
+
+// 职责：描述导航控制器当前真实决策，供测试场记录与可视化，不参与驾驶。 // 入口：EnemyController.CaptureNavigation()；路线仅在版本变化时复制。
+
+数据/配置/接口定义，无方法体。
+
+## Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceCourse.cs
+
+// 职责：保存试验布局的推荐起点、目标点和观察时长，保留可编辑场景参数。 // 入口：EnemyAvoidanceLab.SelectLayout()读取；不生成运行时障碍。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyAvoidanceCourse | [`Transform Location(int index)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceCourse.cs#L19) | public |
+
+## Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs
+
+// 职责：协调可编辑导航试验、手动蓝图部署、目标设置与操作/导航记录。 // 入口：Start() / DeploySelected() / SelectLayout()；真实施力仍由生产AI与推进器完成。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyAvoidanceLab | [`string LayoutName(int index)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L81) | internal |
+| EnemyAvoidanceLab | [`void RecordOperation(string action, string detail)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L82) | public |
+| EnemyAvoidanceLab | [`void SetRoofVisibility(bool visible)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L83) | internal |
+| EnemyAvoidanceLab | [`void BeginPointPick(bool start)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L99) | public |
+| EnemyAvoidanceLab | [`string LocationName(int index)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L107) | public |
+| EnemyAvoidanceLab | [`bool SelectLocation(int index, bool asStart)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L108) | public |
+| EnemyAvoidanceLab | [`void SetStart(Vector3 position)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L129) | public |
+| EnemyAvoidanceLab | [`void Start()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L137) | private |
+| EnemyAvoidanceLab | [`void RefreshBlueprints()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L156) | public |
+| EnemyAvoidanceLab | [`void SelectBlueprint(int index)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L163) | public |
+| EnemyAvoidanceLab | [`bool DeploySelected()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L174) | public |
+| EnemyAvoidanceLab | [`void BindShip(ControlUnit value)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L220) | private |
+| EnemyAvoidanceLab | [`void SelectLayout(int index)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L241) | public |
+| EnemyAvoidanceLab | [`void ResetTrial()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L263) | public |
+| EnemyAvoidanceLab | [`void FixedUpdate()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L328) | private |
+| EnemyAvoidanceLab | [`void Sample()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L361) | private |
+| EnemyAvoidanceLab | [`void UpdateTraceGradient()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L415) | private |
+| EnemyAvoidanceLab | [`void FinishTrial(string reason)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L467) | private |
+| EnemyAvoidanceLab | [`void OnShipCollision(Collision collision)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L503) | private |
+| EnemyAvoidanceLab | [`void StopTrial()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L537) | public |
+| EnemyAvoidanceLab | [`void BeginSuite()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L546) | public |
+| EnemyAvoidanceLab | [`void SetGoal(Vector3 point)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L553) | public |
+| EnemyAvoidanceLab | [`void SetPaused(bool value)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L568) | public |
+| EnemyAvoidanceLab | [`void Update()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L575) | private |
+| EnemyAvoidanceLab | [`void OnGUI()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L580) | private |
+| EnemyAvoidanceLab | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L585) | private |
+| EnemyAvoidanceLab | [`void OnDisable()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L608) | private |
+
+## Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabBlueprints.cs
+
+// 职责：聚合测试用只读蓝图目录，复用正式部署校验，保存明确的来源与JSON快照。 // 入口：Refresh()；包含内置敌舰、玩家Saves和EnemyBlueprints，不写源目录。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyLabBlueprints | [`void Refresh()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabBlueprints.cs#L22) | internal |
+
+## Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabCamera.cs
+
+// 职责：提供试验场透视自由飞行及正交总览，暂停时仍可观察，不接管玩家相机。 // 入口：Update() / SetFreeView() / ResetOverview()；组件由制作工具预挂在Lab Camera上。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyLabCamera | [`void Awake()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabCamera.cs#L33) | private |
+| EnemyLabCamera | [`void SetFreeView(bool enabled)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabCamera.cs#L39) | public |
+| EnemyLabCamera | [`void ResetOverview()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabCamera.cs#L63) | public |
+| EnemyLabCamera | [`void SyncAngles()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabCamera.cs#L68) | private |
+| EnemyLabCamera | [`void Update()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabCamera.cs#L74) | private |
+| EnemyLabCamera | [`void Record(string action)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabCamera.cs#L176) | private |
+| EnemyLabCamera | [`void ReleasePointer()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabCamera.cs#L184) | private |
+| EnemyLabCamera | [`void OnDisable()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabCamera.cs#L196) | private |
+| EnemyLabCamera | [`void OnApplicationFocus(bool focused)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabCamera.cs#L201) | private |
+
+## Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabMovingObstacle.cs
+
+// 职责：按可重复的周期驱动试验场运动学障碍，保留真实碰撞及暂停语义。 // 入口：OnEnable() / ResetMotion()重置相位；FixedUpdate()提交物理运动。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyLabMovingObstacle | [`void Awake()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabMovingObstacle.cs#L20) | private |
+| EnemyLabMovingObstacle | [`void CaptureOrigin()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabMovingObstacle.cs#L25) | private |
+| EnemyLabMovingObstacle | [`void OnEnable()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabMovingObstacle.cs#L37) | private |
+| EnemyLabMovingObstacle | [`void ResetMotion()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabMovingObstacle.cs#L42) | public |
+| EnemyLabMovingObstacle | [`void FixedUpdate()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabMovingObstacle.cs#L52) | private |
+| EnemyLabMovingObstacle | [`void OnDisable()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabMovingObstacle.cs#L61) | private |
+| EnemyLabMovingObstacle | [`void OnDrawGizmosSelected()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabMovingObstacle.cs#L69) | private |
+
+## Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabPanel.cs
+
+// 职责：绘制试验场控制面板并采集限定场景内的键鼠操作，调用试验协调器。 // 入口：PollInput() / Draw()；普通对象，不动态补挂组件、不改玩家输入系统。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyLabPanel | [`void BeginPick(bool start)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabPanel.cs#L23) | internal |
+| EnemyLabPanel | [`void PollInput()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabPanel.cs#L30) | internal |
+| EnemyLabPanel | [`void ChangeStartHeight(float delta)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabPanel.cs#L144) | private |
+| EnemyLabPanel | [`void Draw()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabPanel.cs#L149) | internal |
+
+## Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabRecorder.cs
+
+// 职责：将测试元数据、操作事件及导航采样增量写入独立会话目录，避免长测常驻大日志。 // 入口：Begin() / Event() / Sample() / Finish()；文件错误只关闭记录，不影响飞行。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| EnemyLabRecorder | [`void Begin( string course, string blueprint, string json, EnemyController ai, Vector3 start, Vector3 goal, float interval)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabRecorder.cs#L75) | public |
+| EnemyLabRecorder | [`void Event(string action, string detail)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabRecorder.cs#L129) | public |
+| EnemyLabRecorder | [`EnemyNavigationSnapshot Sample(EnemyController ai)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabRecorder.cs#L135) | public |
+| EnemyLabRecorder | [`void Finish(string json)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabRecorder.cs#L143) | public |
+| EnemyLabRecorder | [`void EnsureSession()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabRecorder.cs#L162) | private |
+| EnemyLabRecorder | [`void Write(Entry entry)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabRecorder.cs#L185) | private |
+| EnemyLabRecorder | [`void Fail(Exception exception)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabRecorder.cs#L219) | private |
+| EnemyLabRecorder | [`void CloseTrial()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabRecorder.cs#L227) | private |
+| EnemyLabRecorder | [`void Dispose()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabRecorder.cs#L244) | public |
+
+## Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs
+
+// 职责：为 Bot 与舰船探测球形/整舰净空，保持绕障方向，并在没有目标进展时选择脱困路线。 // 入口：Evaluate() 采样导航，ConstrainVelocity() 在每个物理帧阻止继续朝近处障碍加速。 // 生命周期：每个单位拥有独立缓冲和绕障记忆；切换目标时 Reset() 清理旧路线。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| NavigationAvoidance | [`void UpdateHull(Bounds bounds)`](../Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs#L44) | public |
+| NavigationAvoidance | [`void Configure(NavigationAvoidanceSettings settings)`](../Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs#L49) | public |
+| NavigationAvoidance | [`void Reset()`](../Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs#L55) | public |
+| NavigationAvoidance | [`void ClearDebugHits()`](../Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs#L67) | public |
+| NavigationAvoidance | [`NavigationAvoidanceResult Evaluate( Transform target, Vector3 velocity, Vector3 targetDirection, float rangeScale, NavigationAvoidanceSettings settings, float targetDistance = float.PositiveInfinity)`](../Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs#L73) | public |
+| NavigationAvoidance | [`bool CheckProgress(float targetDistance)`](../Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs#L169) | private |
+| NavigationAvoidance | [`Vector3 ChooseClearDirection(Vector3 targetDirection, float range, bool stalled, out float bestClearDistance)`](../Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs#L189) | private |
+| NavigationAvoidance | [`void ConsiderDirection( Vector3 candidate, Vector3 targetDirection, float range, bool stalled, ref float bestScore, ref Vector3 bestDirection, ref float bestClearDistance)`](../Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs#L243) | private |
+| NavigationAvoidance | [`Vector3 ConstrainVelocity(Vector3 desiredVelocity, float deltaTime, Vector3 currentVelocity, float brakingAcceleration)`](../Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs#L267) | public |
+| NavigationAvoidance | [`Vector3 LimitApproachSpeed(Vector3 desiredVelocity, Vector3 corridor, float lookAhead, float margin, float acceleration)`](../Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs#L300) | private |
+| NavigationAvoidance | [`float GetClearDistance(Vector3 direction, float range)`](../Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs#L317) | private |
+
+## Assets/Scripts/Features/Navigation/Local/NavigationObstacleQuery.cs
+
+// 职责：执行单位所属 PhysicsScene 的球形/整舰查询、碰撞体过滤与重叠分离。 // 入口：Configure()/BeginQuery()、Cast()/TryGetOverlapEscape()；缓存仅属于本单位。 // 饱和查询保守阻止通行；动态舰体缓存定期刷新，忽略条件每次公开决策/物理步失效。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| NavigationObstacleQuery | [`void Configure(NavigationAvoidanceSettings settings, Transform target)`](../Assets/Scripts/Features/Navigation/Local/NavigationObstacleQuery.cs#L38) | internal |
+| NavigationObstacleQuery | [`void BeginQuery()`](../Assets/Scripts/Features/Navigation/Local/NavigationObstacleQuery.cs#L54) | internal |
+| NavigationObstacleQuery | [`void UpdateHull(Bounds bounds)`](../Assets/Scripts/Features/Navigation/Local/NavigationObstacleQuery.cs#L59) | internal |
+| NavigationObstacleQuery | [`void ClearOverlap()`](../Assets/Scripts/Features/Navigation/Local/NavigationObstacleQuery.cs#L65) | internal |
+| NavigationObstacleQuery | [`bool Cast(Vector3 direction, float range, out RaycastHit nearest)`](../Assets/Scripts/Features/Navigation/Local/NavigationObstacleQuery.cs#L71) | internal |
+| NavigationObstacleQuery | [`bool TryGetOverlapEscape(out Vector3 escape)`](../Assets/Scripts/Features/Navigation/Local/NavigationObstacleQuery.cs#L158) | internal |
+| NavigationObstacleQuery | [`Bounds CurrentBounds()`](../Assets/Scripts/Features/Navigation/Local/NavigationObstacleQuery.cs#L240) | private |
+| NavigationObstacleQuery | [`bool IsIgnored(Collider collider)`](../Assets/Scripts/Features/Navigation/Local/NavigationObstacleQuery.cs#L247) | private |
+| NavigationObstacleQuery | [`bool ShouldIgnoreCollider(Collider collider)`](../Assets/Scripts/Features/Navigation/Local/NavigationObstacleQuery.cs#L263) | private |
+
+## Assets/Scripts/Features/Navigation/NavigationAvoidanceResult.cs
+
+// 职责：表达一次导航采样的方向修正、强度、速度比例和障碍数量。 // Direction 在世界坐标中；没有障碍时 SpeedMultiplier 为 1。
+
+数据/配置/接口定义，无方法体。
+
+## Assets/Scripts/Features/Navigation/NavigationAvoidanceSettings.cs
+
+// 职责：携带单次障碍采样的距离、权重、过滤条件；由 Bot 策略或舰船 Inspector 参数构造。 // 单位：Range/Radius/ProgressDistance 为米，Timeout/HoldTime 为秒，BrakingAcceleration 为米/秒²。
+
+数据/配置/接口定义，无方法体。
+
+## Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs
+
+// 职责：在有限三维栅格中规划整舰可通行路线，缓存并简化航点，不直接操纵刚体。 // 入口：TryFollow()；转弯代价、限额可视简化和短期运动包络共用整舰净空，重规划限频。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| NavigationLocalPath | [`void Push(Vector3Int key, float cost, float score)`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L71) | private |
+| NavigationLocalPath | [`OpenNode Pop()`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L96) | private |
+| NavigationLocalPath | [`void Clear()`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L128) | internal |
+| NavigationLocalPath | [`bool TryFollow( ControlUnit owner, Bounds hull, Vector3 goal, LayerMask layers, float cellSize, float radius, int budget, float retry, float minHeight, float maxHeight, out Vector3 point)`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L140) | internal |
+| NavigationLocalPath | [`Vector3 World(Vector3Int cell, float size)`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L388) | private |
+| NavigationLocalPath | [`void Simplify(Vector3 position)`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L393) | private |
+| NavigationLocalPath | [`void Capture(ControlUnit owner, Bounds hull, LayerMask layers, float radius)`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L419) | private |
+| NavigationLocalPath | [`bool ClearFlight(Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L485) | private |
+| NavigationLocalPath | [`bool ClearSegment(Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L491) | private |
+
+## Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs
+
+// 职责：为自主舰按真实航迹优先选择上/下避障，验证整舰净空并保持高度直到舰尾越障。 // 入口：TryGetHeight()；仅输出目标高度，不写刚体，不替代顶棚下的水平寻路。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| NavigationObstacleClimb | [`void Clear()`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L18) | internal |
+| NavigationObstacleClimb | [`bool TryGetHeight( ControlUnit unit, Vector3 direction, float baseHeight, float lookAhead, float maxRise, float clearance, LayerMask layers, out float targetHeight, float maxDrop = 0f)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L25) | internal |
+| NavigationObstacleClimb | [`bool CanPass( PhysicsScene physics, Bounds bounds, Vector3 direction, float distance, float deltaHeight, LayerMask layers, ControlUnit unit)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L131) | private |
+| NavigationObstacleClimb | [`float ForwardRatio( ControlUnit owner, Vector3 direction, float targetHeight, float cruiseSpeed, float clearance, float lead, LayerMask layers)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L158) | internal |
+| NavigationObstacleClimb | [`bool CanLowerTo(ControlUnit unit, float targetHeight, Vector3 direction, float distance, LayerMask layers)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L211) | internal |
+| NavigationObstacleClimb | [`Bounds GetHullBounds(ControlUnit unit)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L225) | internal |
+| NavigationObstacleClimb | [`bool Blocked( PhysicsScene physics, Vector3 center, Vector3 extents, Vector3 direction, float distance, LayerMask layers, ControlUnit owner)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L247) | private |
+| NavigationObstacleClimb | [`int Cast( PhysicsScene physics, Vector3 center, Vector3 extents, Vector3 direction, float distance, LayerMask layers)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L279) | private |
+| NavigationObstacleClimb | [`bool IsGeometry(Collider collider, ControlUnit owner)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L309) | private static |
+
+## Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs
+
+// 职责：周向采集远场路况，沿路线预读距离/时间，按相对运动扫掠近场候选航迹并提前调速或让行。 // 入口：Observe() / CopyPlanningBounds() / Choose()；降频采集快照供规划与动作验证，不写刚体，不读取试验场未来参数。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| NavigationPrediction | [`void Clear()`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L101) | internal |
+| NavigationPrediction | [`void Observe( ControlUnit owner, Bounds hull, Vector3 velocity, LayerMask layers, float speed, float horizon, Vector3 destination, System.Collections.Generic.IReadOnlyList<Vector3> route, int waypoint, float height)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L128) | internal |
+| NavigationPrediction | [`void CopyPlanningBounds(System.Collections.Generic.List<Bounds> destination, Vector3 padding, float predictionTime)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L161) | internal |
+| NavigationPrediction | [`Vector3 Choose( ControlUnit owner, Bounds hull, Vector3 velocity, Vector3 desired, float targetHeight, LayerMask layers, float cruiseSpeed, float horizon, float acceleration, float turnRate, bool preserveCourse, Vector3 destination, System.Collections.Generic.IReadOnlyList<Vector3> route, int waypoint)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L183) | internal |
+| NavigationPrediction | [`void Capture( ControlUnit owner, Bounds hull, Vector3 velocity, LayerMask layers, float cruiseSpeed, float horizon)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L333) | private |
+| NavigationPrediction | [`void Preview( Bounds hull, Vector3 destination, System.Collections.Generic.IReadOnlyList<Vector3> route, int waypoint, Vector3 root, float height, float speed)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L393) | private |
+| NavigationPrediction | [`Outcome Evaluate( Bounds hull, Vector3 velocity, Vector3 input, float deltaHeight, float speed, float horizon, float acceleration, float turnRate)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L475) | private |
+| NavigationPrediction | [`void Consider(ref Outcome best, Outcome candidate, Vector3 desired)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L557) | private |
+| NavigationPrediction | [`float Score(Outcome candidate, Vector3 desired)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L575) | private |
+| NavigationPrediction | [`float Clearance(Bounds bounds, Vector3 point)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L582) | private static |
+
+## Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs
+
+// 职责：组合整舰 A*、升降与动态预测，并复用 NavigationAvoidance 的绕行、脱困和速度安全约束。 // 入口：Evaluate() 降频选路；ConstrainVelocity() 逐物理步验证实际运动走廊；不写刚体。 // 生命周期：每艘友舰/敌舰独占实例；任务改变、禁用与回收均 Reset()。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VesselNavigation | [`void Reset()`](../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L26) | internal |
+| VesselNavigation | [`void ConfigureLocal(VesselNavigationSettings settings)`](../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L41) | private |
+| VesselNavigation | [`Vector3 ConstrainVelocity(ControlUnit unit, Vector3 desired, Vector3 velocity, float brakingAcceleration)`](../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L61) | internal |
+| VesselNavigation | [`Vector3 Evaluate( ControlUnit unit, Rigidbody movementBody, Vector3 desiredMove, Vector3 destination, bool navigationRequested, ControlUnit target, VesselNavigationSettings settings)`](../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L74) | internal |
+| VesselNavigation | [`bool TryClimbObstacle( ControlUnit unit, Vector3 desiredMove, Vector3 probeDirection, float speed, float horizon, VesselNavigationSettings settings, out Vector3 movement)`](../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L205) | private |
+
+## Assets/Scripts/Features/Navigation/Vessels/VesselNavigationSettings.cs
+
+// 职责：传递舰船 Inspector 导航参数的单次快照；不持有单位或运行状态。
+
+数据/配置/接口定义，无方法体。
 
 ## Assets/Scripts/Features/Player/InputManager.cs
 

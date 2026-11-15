@@ -16,9 +16,9 @@ public static class BotNavigationPolicy
     public const float DockingPositionTolerance = 0.08f;
     public const float DockingAlignmentAngle = 8f;
     public const float EffectFullSpeed = 30f;
-    public static BotAvoidanceSettings CreateAvoidanceSettings()
+    public static NavigationAvoidanceSettings CreateAvoidanceSettings()
     {
-        return new BotAvoidanceSettings
+        return new NavigationAvoidanceSettings
         {
             ObstacleMask = LayerMask.GetMask("Default", "Block"),
             ClearanceRadius = ClearanceRadius,
@@ -28,7 +28,7 @@ public static class BotNavigationPolicy
             EmergencyRange = 3f,
             PredictiveRange = PredictiveRange,
             BrakingAcceleration = Acceleration,
-            RayCount = 16
+            RayCount = 8
         };
     }
 

@@ -2,7 +2,7 @@
 // Direction 在世界坐标中；没有障碍时 SpeedMultiplier 为 1。
 using UnityEngine;
 
-public struct BotAvoidanceResult
+public struct NavigationAvoidanceResult
 {
     public Vector3 Direction;
     public bool OverrideDirection;

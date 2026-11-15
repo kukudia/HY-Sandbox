@@ -1,6 +1,6 @@
 // 职责：保存无人机任务/插槽配置并组织任务飞行、返航、离家和精确停靠状态。
 // 入口：派生机器人的 FixedUpdate → TickNavigation() → NavigateToTarget()/NavigateHomeSmoothly()。
-// 依赖：BotFlightMotion 处理飞行/制动；BotObstacleAvoidance 负责三维净空与脱困。
+// 依赖：BotFlightMotion 处理飞行/制动；NavigationAvoidance 负责三维净空与脱困。
 // 不变量：homeOffset 保持 Home 局部坐标；停靠切为运动学刚体，完成后恢复准确局部姿态。
 using UnityEngine;
 

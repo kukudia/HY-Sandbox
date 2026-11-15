@@ -28,7 +28,7 @@ public static class EnemyPredictionPlayChecks
         ControlUnit owner = ownerObject.AddComponent<ControlUnit>();
         owner.enabled = false;
         ownerObject.AddComponent<BoxCollider>();
-        Type type = typeof(EnemyController).Assembly.GetType("EnemyNavigationPrediction");
+        Type type = typeof(EnemyController).Assembly.GetType("NavigationPrediction");
         object predictor = Activator.CreateInstance(type, true);
         MethodInfo choose = type.GetMethod("Choose", Instance);
         var checks = new List<string>();
@@ -199,7 +199,7 @@ public static class EnemyPredictionPlayChecks
                 checks,
                 "Far observation requests route before approaching a hundred metre wall",
                 (string)type.GetProperty("FarDecision", Instance).GetValue(predictor) == "RouteBlocked" && (float)type.GetProperty("FarObstacleDistance", Instance).GetValue(predictor) > 90f);
-            Type pathType = typeof(EnemyController).Assembly.GetType("EnemyLocalPath");
+            Type pathType = typeof(EnemyController).Assembly.GetType("NavigationLocalPath");
             object planner = Activator.CreateInstance(pathType, true);
             pathType.GetProperty("Perception", Instance).SetValue(planner, predictor);
             pathType.GetProperty("PreviewRequest", Instance).SetValue(planner, "FarRouteBlocked");

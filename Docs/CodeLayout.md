@@ -15,6 +15,7 @@
 | Diagnostics | DebugManager | Physics；Bots；Interface |
 | Flight | HoverFlightController | Hover；Thrusters；Presentation |
 | MainMenu | MainMenuController、MenuDestination | Navigation（含Main入口与临时原稿）；Library（含静态预览）；Interface；Settings |
+| Navigation | NavigationAvoidanceSettings、NavigationAvoidanceResult | Local；Planning；Prediction；Vessels；Diagnostics（含 Lab） |
 | Player | InputManager、Player、PlayerController、PlayerHealth | 输入与玩家主体4份脚本内聚，暂不机械分层 |
 | Power | Power、PowerNetwork | Devices；Network；Presentation |
 | Presentation | VisualEffectsManager | Camera；Blocks；Effects；Interface |
@@ -57,6 +58,8 @@ World/
 ## Editor 与维护
 
 主菜单制作与Play导航验证在 `Assets/Editor/MainMenu`；菜单场景、Main返回入口和Build Settings均由显式制作工具保存，运行时不拼装菜单控件。
+
+`Assets/Editor/Navigation/Validation` 保存共享核心、舰船与动态预测的隔离 Play 检查；Bot 任务/返航验证保留在 `Assets/Editor/Bots`。导航试验场和记录器归入 `Navigation/Diagnostics/Lab`，战斗意图留在 `Combat/Enemies`。
 
 `Assets/Editor` 按相同功能映射组织。Art、Building、Combat、Presentation、Siege、World 将制作、预览、领域验证、基准采样与Player构建入口分开；SiegeSceneAuthoring/SiegePlayChecks、WorldSessionAuthoring等主装配或总验证入口保留根目录。其他小目录沿用内聚结构；不处理第三方工具。
 

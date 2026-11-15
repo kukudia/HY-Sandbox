@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-internal sealed class EnemyLocalPath
+internal sealed class NavigationLocalPath
 {
     private readonly List<Vector3> path = new List<Vector3>();
     private readonly List<Bounds> obstacles = new List<Bounds>();
@@ -18,7 +18,7 @@ internal sealed class EnemyLocalPath
     private int waypoint;
     internal float TurnPenalty { get; set; } = 2f;
     internal float PredictionTime { get; set; } = 1.5f;
-    internal EnemyNavigationPrediction Perception
+    internal NavigationPrediction Perception
     {
         get; set;
     }

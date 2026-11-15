@@ -21,13 +21,13 @@ public static class BotNavigationGizmos
                 // 根据避障等级设置颜色
                 switch (info.Level)
                 {
-                    case BotObstacleAvoidance.HazardLevel.Emergency:
+                    case NavigationAvoidance.HazardLevel.Emergency:
                         Gizmos.color = Color.red;
                         break;
-                    case BotObstacleAvoidance.HazardLevel.Primary:
+                    case NavigationAvoidance.HazardLevel.Primary:
                         Gizmos.color = Color.yellow;
                         break;
-                    case BotObstacleAvoidance.HazardLevel.Predictive:
+                    case NavigationAvoidance.HazardLevel.Predictive:
                         Gizmos.color = Color.green;
                         break;
                 }

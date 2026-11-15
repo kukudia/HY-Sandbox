@@ -1,5 +1,5 @@
 // 职责：为敌机与自主友舰选择敌对目标并生成驾驶意图；阵营和玩家驾驶权分别判断。
-// 入口：FixedUpdate()；优先上下避障，受阻时局部三维A*规划，逐物理步连续跟随。
+// 入口：FixedUpdate()；战术意图交给 VesselNavigation 选路，ControlUnit/推进器负责物理执行。
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 public class EnemyController : MonoBehaviour
 {
     // Produces smoothed movement intent; ControlUnit and thrusters remain the only physics writers.
-    private const int MaxObstacleHits = 32;
     [SerializeField, Range(0.1f, 1f), Tooltip("新目标必须比当前目标更近的距离比例，抑制交叉飞行时反复换目标。")]
     private float targetSwitchDistanceRatio = 0.85f;
     public float detectionRange = 150f;
@@ -19,8 +18,10 @@ public class EnemyController : MonoBehaviour
     public float movementResponseRate = 2.5f;
     public float retreatDistance = 10f;
     public float obstacleAvoidanceDistance = 12f;
-    public float obstacleProbeRadius = 1.5f;
-    public float obstacleAvoidanceWeight = 1.4f;
+    [HideInInspector]
+    public float obstacleProbeRadius = 1.5f; // 旧资产兼容；当前使用整舰 Bounds。
+    [HideInInspector]
+    public float obstacleAvoidanceWeight = 1.4f; // 旧资产兼容；共享导航选择路线，不叠加斥力。
     [HideInInspector]
     public float sideProbeAngle = 35f; // 保留旧序列化数据；当前不再使用扇形探测。
     public float targetHoverHeightOffset = 3f;
@@ -59,7 +60,7 @@ public class EnemyController : MonoBehaviour
     private float pathTurnPenalty = 2f;
     [SerializeField, Range(0f, 3f), Tooltip("运动学障碍短期包络预判秒数；平移和旋转余量各限12米。")]
     private float pathPredictionTime = 1.5f;
-    private readonly EnemyLocalPath localPath = new EnemyLocalPath();
+    private VesselNavigation navigation;
     [Header("Predictive Local Decisions")]
     [SerializeField, Tooltip("在爬升、A*与直达分支之后统一比较周围障碍和短期候选航迹。")]
     private bool usePredictiveDecisions = true;
@@ -73,7 +74,6 @@ public class EnemyController : MonoBehaviour
     private float farLookAheadBodyLengths = 8f;
     [SerializeField, Range(4f, 16f), Tooltip("按航速换算远场距离的提前秒数，远期运动风险与近处确定碰撞分别记录。")]
     private float farLookAheadSeconds = 10f;
-    private readonly EnemyNavigationPrediction prediction = new EnemyNavigationPrediction();
     private bool predictiveBraking;
     private Vector3 navigationDestination;
     private bool navigationRequested;
@@ -84,10 +84,9 @@ public class EnemyController : MonoBehaviour
     private Vector3 steeringDirection;
     private float nextDirectionChange;
     private float nextStrafeChange;
-    private float avoidanceSideUntil;
-    private float avoidanceSide;
     private float strafeSide;
     private bool urgentAvoidance;
+    private bool navigationOwnsDirection;
     private bool avoidingObstacle;
     private float obstacleSpeedRatio = 1f;
     public Vector3 SteeringDirection => steeringDirection;
@@ -110,7 +109,6 @@ public class EnemyController : MonoBehaviour
     // 仅保留旧资产字段；当前速度比例由完整升降走廊与滑行余量决定。
     [SerializeField, HideInInspector]
     private float climbForwardSpeedRatio = 0.15f;
-    private readonly EnemyObstacleClimb obstacleClimb = new EnemyObstacleClimb();
     private bool climbingObstacle;
     private float obstacleHoverHeight;
     private float _smoothedHoverHeight;
@@ -124,11 +122,6 @@ public class EnemyController : MonoBehaviour
     private bool showDebugRanges = true;
     [SerializeField, Min(0.1f), Tooltip("移动输入向量的显示长度（米）。")]
     private float debugVectorLength = 8f;
-    // 保存实际整舰扫掠快照，绘制不触发新的物理查询。
-    private readonly Vector3[] debugProbeOrigins = new Vector3[1];
-    private readonly Vector3[] debugProbeEnds = new Vector3[1];
-    private readonly Vector3[] debugProbeNormals = new Vector3[1];
-    private int debugProbeCount;
     private ControlUnit unit;
     private ControlUnit currentTarget;
     private float nextUpdateTime;
@@ -139,7 +132,6 @@ public class EnemyController : MonoBehaviour
     private Transform guardAnchor;
     private float guardRadius;
     private ControlUnit priorityTarget;
-    private RaycastHit[] obstacleHits = new RaycastHit[MaxObstacleHits];
     private int _entityHashCode;
     internal void ConfigureDebugDisplay(bool enabled, bool ranges)
     {
@@ -150,12 +142,12 @@ public class EnemyController : MonoBehaviour
     public EnemyNavigationSnapshot CaptureNavigation(int previousRouteRevision = -1)
     {
         Vector3[] route = null;
-        if (previousRouteRevision != localPath.Revision)
+        if (previousRouteRevision != navigation.Path.Revision)
         {
-            route = new Vector3[localPath.Points.Count];
+            route = new Vector3[navigation.Path.Points.Count];
             for (int i = 0; i < route.Length; i++)
             {
-                route[i] = localPath.Points[i];
+                route[i] = navigation.Path.Points[i];
             }
         }
 
@@ -176,35 +168,35 @@ public class EnemyController : MonoBehaviour
             avoiding = avoidingObstacle,
             changingHeight = climbingObstacle,
             urgent = urgentAvoidance,
-            followingPath = localPath.Active,
+            followingPath = navigation.Path.Active,
             turns = SteeringChanges,
-            routeRevision = localPath.Revision,
-            expandedNodes = localPath.Expanded,
-            waypoint = localPath.Waypoint,
-            pathStatus = localPath.Status,
+            routeRevision = navigation.Path.Revision,
+            expandedNodes = navigation.Path.Expanded,
+            waypoint = navigation.Path.Waypoint,
+            pathStatus = navigation.Path.Status,
             routeChanged = route != null,
-            replanReason = localPath.ReplanReason,
-            planMilliseconds = localPath.PlanMilliseconds,
-            predictionDecision = prediction.Decision,
-            predictionRevision = prediction.Revision,
-            predictedThreat = prediction.ThreatName,
-            predictedThreatVelocity = prediction.ThreatVelocity,
-            sensorRadius = prediction.SensorRadius,
-            lookAheadDistance = prediction.LookAheadDistance,
-            farObstacleDistance = prediction.FarObstacleDistance,
-            farArrivalTime = prediction.FarArrivalTime,
-            farThreat = prediction.FarThreat,
-            farDecision = prediction.FarDecision,
-            observedObstacles = prediction.Observed,
-            movingObstacles = prediction.Moving,
-            predictionCandidates = prediction.Candidates,
-            predictionSegmentChecks = prediction.SegmentChecks,
-            predictedCollisionTime = prediction.CollisionTime,
-            selectedCollisionTime = prediction.SelectedCollisionTime,
-            predictionMilliseconds = prediction.Milliseconds,
-            predictionSaturated = prediction.Saturated,
+            replanReason = navigation.Path.ReplanReason,
+            planMilliseconds = navigation.Path.PlanMilliseconds,
+            predictionDecision = navigation.Prediction.Decision,
+            predictionRevision = navigation.Prediction.Revision,
+            predictedThreat = navigation.Prediction.ThreatName,
+            predictedThreatVelocity = navigation.Prediction.ThreatVelocity,
+            sensorRadius = navigation.Prediction.SensorRadius,
+            lookAheadDistance = navigation.Prediction.LookAheadDistance,
+            farObstacleDistance = navigation.Prediction.FarObstacleDistance,
+            farArrivalTime = navigation.Prediction.FarArrivalTime,
+            farThreat = navigation.Prediction.FarThreat,
+            farDecision = navigation.Prediction.FarDecision,
+            observedObstacles = navigation.Prediction.Observed,
+            movingObstacles = navigation.Prediction.Moving,
+            predictionCandidates = navigation.Prediction.Candidates,
+            predictionSegmentChecks = navigation.Prediction.SegmentChecks,
+            predictedCollisionTime = navigation.Prediction.CollisionTime,
+            selectedCollisionTime = navigation.Prediction.SelectedCollisionTime,
+            predictionMilliseconds = navigation.Prediction.Milliseconds,
+            predictionSaturated = navigation.Prediction.Saturated,
             predictiveBraking = predictiveBraking,
-            predictedVelocity = prediction.SelectedVelocity,
+            predictedVelocity = navigation.Prediction.SelectedVelocity,
             route = route
         };
     }
@@ -215,11 +207,8 @@ public class EnemyController : MonoBehaviour
         float phase = (_entityHashCode & 1023) / 1024f;
         nextUpdateTime = Time.time + phase * Mathf.Max(0.01f, updateInterval);
         nextMovementUpdateTime = 0f;
-        localPath.Clear();
-        localPath.Perception = null;
-        localPath.PreviewRequest = null;
-        obstacleClimb.Clear();
-        prediction.Clear();
+        navigation.Reset();
+        navigationOwnsDirection = false;
         navigationRequested = false;
         steeringDirection = Vector3.zero;
         courseVelocity = movementBody != null ? Vector3.ProjectOnPlane(movementBody.linearVelocity, Vector3.up) : Vector3.zero;
@@ -227,7 +216,6 @@ public class EnemyController : MonoBehaviour
         nextDirectionChange = 0f;
         nextStrafeChange = 0f;
         strafeSide = 0f;
-        avoidanceSideUntil = 0f;
         _smoothedHoverHeight = 0f;
         nextDescentCheck = 0f;
     }
@@ -235,6 +223,7 @@ public class EnemyController : MonoBehaviour
     private void Awake()
     {
         unit = GetComponent<ControlUnit>();
+        navigation = new VesselNavigation(transform);
         movementBody = GetComponent<Rigidbody>();
         _entityHashCode = GetEntityId().GetHashCode();
     }
@@ -267,8 +256,7 @@ public class EnemyController : MonoBehaviour
             currentTarget = FindNearestOpponent();
             if (previousTarget != currentTarget)
             {
-                localPath.Clear();
-                obstacleClimb.Clear();
+                navigation.Reset();
                 climbingObstacle = false;
                 nextMovementUpdateTime = 0f;
             }
@@ -281,7 +269,6 @@ public class EnemyController : MonoBehaviour
         {
             if (Time.time >= nextMovementUpdateTime)
             {
-                debugProbeCount = 0;
                 Vector3 toGuard = guardAnchor != null ? guardAnchor.position - transform.position : Vector3.zero;
                 toGuard.y = 0f;
                 climbingObstacle = false;
@@ -301,7 +288,6 @@ public class EnemyController : MonoBehaviour
         Vector3 flatDirection = new Vector3(toTarget.x, 0f, toTarget.z);
         if (Time.time >= nextMovementUpdateTime)
         {
-            debugProbeCount = 0;
             desiredMovementInput = CalculateDesiredMovement(flatDirection);
             nextMovementUpdateTime = Time.time + GetMovementInterval();
         }
@@ -322,11 +308,11 @@ public class EnemyController : MonoBehaviour
         if (currentTarget == priorityTarget || distance <= detectionRange)
         {
             Vector3 approach = GetApproachDirection(currentTarget.transform.position, flatDirection.normalized);
-            navigationRequested = climbingObstacle || localPath.Active || distance > desiredDistance;
-            if (climbingObstacle || localPath.Active || distance > desiredDistance)
+            navigationRequested = climbingObstacle || navigation.Path.Active || distance > desiredDistance;
+            if (climbingObstacle || navigation.Path.Active || distance > desiredDistance)
             {
                 // 翻越期间保持前进任务，不因进入接敌距离而切换横移。
-                if (climbingObstacle || localPath.Active)
+                if (climbingObstacle || navigation.Path.Active)
                 {
                     desiredMove = approach;
                 }
@@ -363,11 +349,11 @@ public class EnemyController : MonoBehaviour
         predictiveBraking = false;
         if (!usePredictiveDecisions)
         {
-            prediction.Clear();
+            navigation.Prediction.Clear();
             return proposed;
         }
 
-        Vector3 selected = prediction.Choose(
+        Vector3 selected = navigation.Prediction.Choose(
             unit,
             avoidanceBounds,
             movementBody != null ? movementBody.linearVelocity : Vector3.zero,
@@ -378,16 +364,16 @@ public class EnemyController : MonoBehaviour
             decisionHorizon,
             decisionAcceleration,
             courseTurnRate,
-            localPath.Active || climbingObstacle,
+            navigation.Path.Active || climbingObstacle,
             navigationRequested ? navigationDestination : transform.position + proposed * farLookAheadDistance,
-            localPath.Active ? localPath.Points : null,
-            localPath.Waypoint);
-        if (prediction.CollisionTime >= 0f || prediction.Saturated)
+            navigation.Path.Active ? navigation.Path.Points : null,
+            navigation.Path.Waypoint);
+        if (navigation.Prediction.CollisionTime >= 0f || navigation.Prediction.Saturated)
         {
             // 安全预判必须能覆盖普通航向保持；只改变意图，真实施力继续由推进器负责。
             urgentAvoidance = true;
             // 让行需要真实推进器反推来消减惯性；只收油无法执行预测中的等待动作。
-            predictiveBraking = selected.magnitude + 0.05f < proposed.magnitude || prediction.Saturated;
+            predictiveBraking = selected.magnitude + 0.05f < proposed.magnitude || navigation.Prediction.Saturated;
             selected = StabilizeDirection(selected);
         }
 
@@ -425,6 +411,16 @@ public class EnemyController : MonoBehaviour
                 float step = Mathf.Clamp(angle, -courseTurnRate * Time.fixedDeltaTime, courseTurnRate * Time.fixedDeltaTime);
                 courseVelocity = Quaternion.AngleAxis(step, Vector3.up) * courseVelocity.normalized * speed;
             }
+        }
+
+        Vector3 safeVelocity = navigation.ConstrainVelocity(unit, courseVelocity, velocity, predictionBrakingAcceleration);
+        if ((safeVelocity - courseVelocity).sqrMagnitude > 0.0001f)
+        {
+            urgentAvoidance = true;
+            avoidingObstacle = true;
+            predictiveBraking = true;
+            obstacleSpeedRatio = 0f;
+            courseVelocity = safeVelocity;
         }
 
         return LimitObstacleInput(Vector3.ClampMagnitude((courseVelocity - velocity) / Mathf.Max(1f, cruiseSpeed * 0.5f), 1f));
@@ -468,7 +464,7 @@ public class EnemyController : MonoBehaviour
             steeringDirection = direction;
             nextDirectionChange = Time.time + directionHoldTime;
         }
-        else if (Vector3.Angle(steeringDirection, direction) >= directionDeadZone && (urgentAvoidance || Time.time >= nextDirectionChange))
+        else if (Vector3.Angle(steeringDirection, direction) >= directionDeadZone && (urgentAvoidance || navigationOwnsDirection || Time.time >= nextDirectionChange))
         {
             steeringDirection = direction;
             nextDirectionChange = Time.time + directionHoldTime;
@@ -567,15 +563,10 @@ public class EnemyController : MonoBehaviour
             unit.SetTarget(null);
         }
 
-        prediction.Clear();
+        navigation.Reset();
+        navigationOwnsDirection = false;
         predictiveBraking = false;
-        prediction.TaskTarget = null;
-        localPath.Clear();
-        localPath.Perception = null;
-        localPath.PreviewRequest = null;
-        obstacleClimb.Clear();
         navigationRequested = false;
-        debugProbeCount = 0;
         currentTarget = null;
         desiredMovementInput = Vector3.zero;
         courseVelocity = Vector3.zero;
@@ -583,7 +574,6 @@ public class EnemyController : MonoBehaviour
         nextUpdateTime = 0f;
         _hasIdleHoverHeight = false;
         climbingObstacle = false;
-        obstacleClimb.Clear();
         nextMovementUpdateTime = 0f;
         _smoothedHoverHeight = 0f;
     }
@@ -641,7 +631,7 @@ public class EnemyController : MonoBehaviour
         {
             descentCheckHeight = requested;
             nextDescentCheck = Time.time + GetMovementInterval();
-            descentClear = obstacleClimb.CanLowerTo(unit, requested, direction, Mathf.Max(probeDistance, climbLookAhead), obstacleLayers);
+            descentClear = navigation.Climb.CanLowerTo(unit, requested, direction, Mathf.Max(probeDistance, climbLookAhead), obstacleLayers);
         }
 
         // 路线结束或重规划失败不代表下层已安全，保留最后安全航层，避免跌入下一组建筑。
@@ -684,309 +674,55 @@ public class EnemyController : MonoBehaviour
 
     private Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)
     {
-        urgentAvoidance = false;
-        avoidingObstacle = false;
-        obstacleSpeedRatio = 1f;
-        Vector3 velocity = movementBody != null ? movementBody.linearVelocity : Vector3.zero;
-        climbingObstacle = false;
-        Vector3 probeDirection = velocity.normalized;
-        avoidanceBounds = obstacleClimb.GetHullBounds(unit);
-        Vector3 extents = avoidanceBounds.extents;
-        extents.x += 0.25f;
-        extents.z += 0.25f;
-        avoidanceBounds.extents = extents;
-        float horizon = Mathf.Max(GetMovementInterval(), avoidancePredictionTime);
-        float speed = velocity.magnitude;
-        // 速度越高，基础时间预判之外再加入刹停距离，提前量单调增加。
-        float brakingDistance = speed * speed / (2f * Mathf.Max(0.1f, predictionBrakingAcceleration));
-        probeDistance = Mathf.Max(0f, obstacleAvoidanceDistance) + speed * horizon + brakingDistance;
-        localPath.TurnPenalty = pathTurnPenalty;
-        localPath.PredictionTime = pathPredictionTime;
-        localPath.Perception = usePredictiveDecisions ? prediction : null;
-        localPath.PreviewRequest = null;
-        if (usePredictiveDecisions)
+        var settings = new VesselNavigationSettings
         {
-            prediction.MinimumDistance = farLookAheadDistance;
-            prediction.BodyLengths = farLookAheadBodyLengths;
-            prediction.LookAheadSeconds = farLookAheadSeconds;
-            prediction.TaskTarget = currentTarget;
-            // 同一轮先感知再规划，A*与近场动作验证共享快照，避免各自重复查询且看到不同路况。
-            prediction.Observe(
-                unit,
-                avoidanceBounds,
-                velocity,
-                obstacleLayers,
-                cruiseSpeed,
-                decisionHorizon,
-                navigationRequested ? navigationDestination : transform.position + desiredMove * farLookAheadDistance,
-                localPath.Active ? localPath.Points : null,
-                localPath.Waypoint,
-                GetBaseHoverHeight());
-            if (prediction.FarDecision == "RouteBlocked" || prediction.FarDecision == "CrossingWatch")
-            {
-                localPath.PreviewRequest = prediction.FarDecision == "RouteBlocked" ? "FarRouteBlocked" : "FarCrossing";
-            }
-        }
-
-        // 升降回退只有静态净空保证；有运动障碍时，远场风险必须交还共享快照规划与近场让行。
-        bool staticClimbFallback = prediction.Moving == 0 && !prediction.Saturated;
-        bool planFirst = localPath.PreviewRequest != null && !(obstacleClimb.Active && staticClimbFallback);
-        if (!planFirst && TryClimbObstacle(desiredMove, probeDirection, speed, horizon, out Vector3 climbMovement))
-        {
-            return climbMovement;
-        }
-
-        if (navigationRequested && unit.hoverFlightController != null && localPath.TryFollow(
+            ObstacleAvoidanceDistance = obstacleAvoidanceDistance,
+            AvoidancePredictionTime = avoidancePredictionTime,
+            PredictionBrakingAcceleration = predictionBrakingAcceleration,
+            PathTurnPenalty = pathTurnPenalty,
+            PathPredictionTime = pathPredictionTime,
+            UsePredictiveDecisions = usePredictiveDecisions,
+            FarLookAheadDistance = farLookAheadDistance,
+            FarLookAheadBodyLengths = farLookAheadBodyLengths,
+            FarLookAheadSeconds = farLookAheadSeconds,
+            CruiseSpeed = cruiseSpeed,
+            DecisionHorizon = decisionHorizon,
+            PathCellSize = pathCellSize,
+            PathSearchRadius = pathSearchRadius,
+            PathNodeBudget = pathNodeBudget,
+            PathReplanInterval = pathReplanInterval,
+            MaxObstacleDescent = maxObstacleDescent,
+            MaxObstacleClimb = maxObstacleClimb,
+            PreferObstacleClimb = preferObstacleClimb,
+            ClimbLookAhead = climbLookAhead,
+            ObstacleClimbClearance = obstacleClimbClearance,
+            ObstacleLayers = obstacleLayers,
+            AvoidanceSideHoldTime = avoidanceSideHoldTime,
+            MovementInterval = GetMovementInterval(),
+            BaseHoverHeight = GetBaseHoverHeight()
+        };
+        Vector3 movement = navigation.Evaluate(
             unit,
-            avoidanceBounds,
+            movementBody,
+            desiredMove,
             navigationDestination,
-            obstacleLayers,
-            pathCellSize,
-            pathSearchRadius,
-            pathNodeBudget,
-            pathReplanInterval,
-            Mathf.Max(2f, GetBaseHoverHeight() - maxObstacleDescent),
-            GetBaseHoverHeight() + maxObstacleClimb,
-            out Vector3 waypoint))
-        {
-            climbingObstacle = true;
-            avoidingObstacle = true;
-            Vector3 alongPath = Vector3.ProjectOnPlane(waypoint - transform.position, Vector3.up);
-            obstacleHoverHeight = ConstrainDescent(waypoint.y, alongPath);
-            float heightRatio = obstacleClimb.ForwardRatio(
-                unit,
-                alongPath,
-                obstacleHoverHeight,
-                cruiseSpeed,
-                obstacleClimbClearance,
-                horizon,
-                obstacleLayers);
-            urgentAvoidance = heightRatio < 0.25f;
-            obstacleSpeedRatio = heightRatio;
-            if (speed >= 0.1f)
-            {
-                // 规划路线不替代惯性安全检测，仍按当前真实速度限制迎障推力。
-                ProbeObstacle(probeDirection, 1f);
-            }
-
-            // 高度与水平同时跟随；现高度走廊余量决定水平速度，航点距离本身不要求停车。
-            return StabilizeDirection(alongPath.normalized) * heightRatio;
-        }
-
-        // A*失败或仍在冷却时，允许已验证的升降回退；远场风险不能永久压制可行的爬升。
-        if (planFirst && staticClimbFallback && TryClimbObstacle(desiredMove, probeDirection, speed, horizon, out climbMovement))
-        {
-            return climbMovement;
-        }
-
-        if (speed < 0.1f)
-        {
-            debugProbeCount = 0;
-            return StabilizeDirection(desiredMove);
-        }
-
-        if (Time.time >= avoidanceSideUntil)
-        {
-            avoidanceSide = (_entityHashCode & 1) == 0 ? 1f : -1f;
-        }
-
-        Vector3 avoidance = ProbeObstacle(probeDirection, 1f);
-        if (avoidance.sqrMagnitude > 0.01f)
-        {
-            avoidanceSideUntil = Time.time + avoidanceSideHoldTime;
-            desiredMove += avoidance.normalized * obstacleAvoidanceWeight;
-        }
-
-        Vector3 result = StabilizeDirection(Vector3.ClampMagnitude(desiredMove, 1f));
-        if (avoidingObstacle)
-        {
-            Vector3 flatVelocity = Vector3.ProjectOnPlane(velocity, Vector3.up).normalized;
-            result -= flatVelocity * Mathf.Min(0f, Vector3.Dot(result, flatVelocity));
-            result *= obstacleSpeedRatio;
-        }
-
-        return result;
-    }
-
-    private bool TryClimbObstacle(Vector3 desiredMove, Vector3 probeDirection, float speed, float horizon, out Vector3 movement)
-    {
-        movement = Vector3.zero;
-        climbingObstacle = !localPath.Active && preferObstacleClimb && unit.hoverFlightController != null && (speed >= 0.1f || obstacleClimb.Active) && obstacleClimb.TryGetHeight(
-            unit,
-            probeDirection,
-            GetBaseHoverHeight(),
-            Mathf.Max(probeDistance, climbLookAhead),
-            maxObstacleClimb,
-            obstacleClimbClearance,
-            obstacleLayers,
-            out obstacleHoverHeight,
-            maxObstacleDescent);
+            navigationRequested,
+            currentTarget,
+            settings);
+        avoidanceBounds = navigation.avoidanceBounds;
+        probeDistance = navigation.probeDistance;
+        avoidingObstacle = navigation.avoidingObstacle;
+        urgentAvoidance = navigation.urgentAvoidance;
+        obstacleSpeedRatio = navigation.obstacleSpeedRatio;
+        climbingObstacle = navigation.climbingObstacle;
         if (climbingObstacle)
         {
-            avoidingObstacle = true;
-            float ratio = obstacleClimb.ForwardRatio(
-                unit,
-                desiredMove,
-                obstacleHoverHeight,
-                cruiseSpeed,
-                obstacleClimbClearance,
-                horizon,
-                obstacleLayers);
-            obstacleSpeedRatio = ratio;
-            urgentAvoidance = ratio < 0.25f;
-            movement = StabilizeDirection(desiredMove) * ratio;
-            return true;
+            obstacleHoverHeight = ConstrainDescent(navigation.obstacleHoverHeight, movement);
         }
 
-        return false;
-    }
-
-    private Vector3 ProbeObstacle(Vector3 direction, float weight)
-    {
-        // BoxCast自身包含舰体前沿；平移整个盒子会漏掉贴近舰头的障碍。
-        Vector3 origin = avoidanceBounds.center;
-        PhysicsScene physics = gameObject.scene.GetPhysicsScene();
-        int hitCount = physics.BoxCast(
-            origin,
-            avoidanceBounds.extents,
-            direction.normalized,
-            obstacleHits,
-            Quaternion.identity,
-            probeDistance,
-            obstacleLayers,
-            QueryTriggerInteraction.Ignore);
-        // 饱和结果不保证包含最近障碍；只在首次遇到更密集布局时扩容。
-        while (hitCount == obstacleHits.Length && obstacleHits.Length < 256)
-        {
-            System.Array.Resize(ref obstacleHits, obstacleHits.Length * 2);
-            hitCount = physics.BoxCast(
-                origin,
-                avoidanceBounds.extents,
-                direction.normalized,
-                obstacleHits,
-                Quaternion.identity,
-                probeDistance,
-                obstacleLayers,
-                QueryTriggerInteraction.Ignore);
-        }
-
-        int debugIndex = debugProbeCount < debugProbeOrigins.Length ? debugProbeCount++ : -1;
-        if (debugIndex >= 0)
-        {
-            debugProbeOrigins[debugIndex] = origin;
-            debugProbeEnds[debugIndex] = origin + direction.normalized * probeDistance;
-            debugProbeNormals[debugIndex] = Vector3.zero;
-        }
-
-        if (hitCount == 0)
-        {
-            return Vector3.zero;
-        }
-
-        int closest = -1;
-        float closestDistance = float.PositiveInfinity;
-        for (int i = 0; i < hitCount; i++)
-        {
-            RaycastHit hit = obstacleHits[i];
-            ControlUnit hitUnit = hit.collider.GetComponentInParent<ControlUnit>();
-            // BoxCast 起点可能与地面/屋顶接触；它们不构成水平墙。
-            Bounds obstacleBounds = hit.collider.bounds;
-            if (obstacleBounds.max.y <= avoidanceBounds.min.y + 0.05f || obstacleBounds.min.y >= avoidanceBounds.max.y - 0.05f)
-            {
-                continue;
-            }
-
-            if (hitUnit == unit)
-            {
-                continue;
-            }
-
-            Vector3 surfaceNormal = hit.normal;
-            if (hit.distance <= 0f)
-            {
-                // 初始重叠使用几何分离方向；远离墙面时不能被反向扫掠伪法线拉回。
-                Vector3 separation = origin - hit.collider.ClosestPoint(origin);
-                if (separation.sqrMagnitude <= 0.0001f)
-                {
-                    // 中心恰在表面/内部时 ClosestPoint 无方向，取包围盒最近面；地板返回竖直法线。
-                    Vector3 offset = origin - obstacleBounds.center;
-                    Vector3 faceDistance = obstacleBounds.extents - new Vector3(Mathf.Abs(offset.x), Mathf.Abs(offset.y), Mathf.Abs(offset.z));
-                    if (faceDistance.y <= faceDistance.x && faceDistance.y <= faceDistance.z)
-                    {
-                        separation = Vector3.up * (offset.y >= 0f ? 1f : -1f);
-                    }
-                    else
-                    {
-                        separation = faceDistance.x <= faceDistance.z ? Vector3.right * Mathf.Sign(offset.x) : Vector3.forward * Mathf.Sign(offset.z);
-                    }
-                }
-
-                if (separation.sqrMagnitude > 0.0001f)
-                {
-                    surfaceNormal = separation.normalized;
-                    if (Vector3.Dot(surfaceNormal, direction) >= -0.001f)
-                    {
-                        continue;
-                    }
-                }
-            }
-
-            if (Mathf.Abs(surfaceNormal.y) > 0.7f)
-            {
-                continue;
-            }
-
-            hit.normal = surfaceNormal;
-            obstacleHits[i] = hit;
-            if (hit.distance < closestDistance)
-            {
-                closest = i;
-                closestDistance = hit.distance;
-            }
-        }
-
-        if (closest >= 0)
-        {
-            RaycastHit hit = obstacleHits[closest];
-            if (debugIndex >= 0)
-            {
-                // 显示整舰包围盒终点与实际使用的表面法线。
-                debugProbeEnds[debugIndex] = origin + direction.normalized * hit.distance;
-                debugProbeNormals[debugIndex] = hit.normal;
-            }
-
-            Vector3 normal = hit.normal;
-            normal.y = 0f;
-            if (normal.sqrMagnitude < 0.01f)
-            {
-                normal = -direction;
-            }
-
-            if (Time.time >= avoidanceSideUntil)
-            {
-                Vector3 right = Vector3.Cross(Vector3.up, direction).normalized;
-                float lateral = Vector3.Dot(hit.collider.bounds.center - origin, right);
-                // 障碍偏右则从左绕；正前方保持既有确定性选择，避免左右抖动。
-                if (Mathf.Abs(lateral) > 0.25f)
-                {
-                    avoidanceSide = lateral > 0f ? -1f : 1f;
-                }
-
-                avoidanceSideUntil = Time.time + avoidanceSideHoldTime;
-            }
-
-            avoidingObstacle = true;
-            obstacleSpeedRatio = Mathf.Min(obstacleSpeedRatio, Mathf.Clamp01(hit.distance / Mathf.Max(1f, probeDistance)));
-            float distanceFactor = 1f - Mathf.Clamp01(hit.distance / Mathf.Max(0.1f, probeDistance));
-            urgentAvoidance |= hit.distance < Mathf.Max(3f, obstacleProbeRadius * 2f);
-            Vector3 sideStep = Vector3.Cross(Vector3.up, direction).normalized * avoidanceSide;
-            // 表面法线仅用于侧向引导，不能产生与实际水平速度相反的推进意图。
-            Vector3 forward = Vector3.ProjectOnPlane(direction, Vector3.up).normalized;
-            Vector3 lateralNormal = normal.normalized - forward * Vector3.Dot(normal.normalized, forward);
-            return (lateralNormal + sideStep * 0.6f) * distanceFactor * weight;
-        }
-
-        return Vector3.zero;
+        // 路线与局部绕行已有自己的方向承诺；再等待战斗航向冷却会在拐点停滞。
+        navigationOwnsDirection = navigation.Path.Active || navigation.Local.Detouring || climbingObstacle;
+        return StabilizeDirection(movement);
     }
 
     private void OnDrawGizmos()
@@ -1004,10 +740,10 @@ public class EnemyController : MonoBehaviour
 
         Color previousColor = Gizmos.color;
         Vector3 origin = transform.position;
-        if (usePredictiveDecisions && prediction.LookAheadDistance > 0f)
+        if (usePredictiveDecisions && navigation.Prediction.LookAheadDistance > 0f)
         {
             // 青色圆表示远场预读范围；原BoxCast盒线只表示近处即时安全检测。
-            DrawDebugCircle(origin, prediction.LookAheadDistance, new Color(0f, 0.75f, 1f, 0.7f));
+            DrawDebugCircle(origin, navigation.Prediction.LookAheadDistance, new Color(0f, 0.75f, 1f, 0.7f));
         }
 
         Gizmos.color = unit.faction == UnitFaction.Player ? Color.green : Color.red;
@@ -1036,18 +772,18 @@ public class EnemyController : MonoBehaviour
         Gizmos.DrawRay(origin, desiredMovementInput * debugVectorLength);
         Gizmos.color = Color.white;
         Gizmos.DrawRay(origin, unit.MovementInput * debugVectorLength);
-        for (int i = 0; i < debugProbeCount; i++)
+        foreach (NavigationAvoidance.DebugHit hit in navigation.Local.DebugHits)
         {
-            Gizmos.color = debugProbeNormals[i] == Vector3.zero ? Color.green : Color.red;
-            Gizmos.DrawLine(debugProbeOrigins[i], debugProbeEnds[i]);
-            Gizmos.DrawWireCube(debugProbeEnds[i], avoidanceBounds.size);
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(origin, hit.HitPoint);
+            Gizmos.DrawWireCube(hit.HitPoint, avoidanceBounds.size);
             Gizmos.color = Color.yellow;
-            Gizmos.DrawRay(debugProbeEnds[i], debugProbeNormals[i] * 2f);
+            Gizmos.DrawRay(hit.HitPoint, hit.AvoidanceVector * 2f);
         }
 
         Gizmos.color = new Color(1f, 0.6f, 0f);
         Vector3 previous = origin;
-        foreach (Vector3 point in localPath.Points)
+        foreach (Vector3 point in navigation.Path.Points)
         {
             Gizmos.DrawLine(previous, point);
             Gizmos.DrawWireSphere(point, 0.6f);

@@ -40,6 +40,10 @@ public sealed class BotNavigationProbeDriver : MonoBehaviour
     {
         get; private set;
     }
+    public string LastContact
+    {
+        get; private set;
+    }
     public float RemainingDistance => _target == null ? float.PositiveInfinity : Vector3.Distance(transform.position, _target.position);
 
     public void Initialize(string caseName, Transform target, Rigidbody body, Rigidbody home)
@@ -90,6 +94,7 @@ public sealed class BotNavigationProbeDriver : MonoBehaviour
         if (collision.gameObject.name == "NavigationProbeObstacle" && (!CaseName.Contains("initial overlap") || Time.time - _started > 0.5f))
         {
             ObstacleContacts++;
+            LastContact = $"t={Elapsed:F2}s position={transform.position} velocity={_body.linearVelocity} relative={collision.relativeVelocity}";
         }
     }
 }

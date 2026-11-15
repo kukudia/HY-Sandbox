@@ -4,29 +4,41 @@
 
 `HoverFlightController` 在有电悬浮时独立执行航向保持，`HoverControlSolver.StepHeading` 保存接管时航向，按最短角误差平滑抑制偏航角速度。水平状态也持续稳定，避免偏置推进器转矩导致无休止自转；不改变移动路线或自动朝向敌人。Inspector 的 `Heading Response` 默认5（1/秒），0关闭；停供、禁用及重新归属后释放旧航向，下次接管重新捕获。每物理步仅常量计算，不增加物理查询或寻路。Combat Courtyard 两友舰实战65.39秒、每舰66次采样：Spaceship 航向173.292–186.931°，Swordfish 173.095–185.603°，未持续绕圈但仍有小幅摆动；16项悬浮运行回归通过。详见 [验证记录](Docs/Validation/2026-11-12-siege-heading-stability.md)，不等同整波战斗/返航验收。
 
-## AI 稳定局部避障与炮塔遮挡
+## 共享 Navigation：Bot 与友敌舰船
 
-**远场信息驱动路线规划**（[本轮验证](Docs/Validation/2026-11-12-navigation-far-planning.md)，[前版感知验证](Docs/Validation/2026-11-12-navigation-perception.md)）：`EnemyController.ApplyObstacleAvoidance` 先调用 `Observe` 采集远场；挡路/横穿风险优先进入 A*，以同一份障碍快照及短期运动包络生成整舰可通行路线，随后跟随航点并调用 `Choose` 验证近场动作。A*窗口覆盖远场视距，保留默认1024节点、2秒冷却；替换失败保留已验证安全的当前路线；无运动障碍且感知未饱和时才允许远场规划失败后的升降回退。日志 `replanReason` 可见 `FarRouteBlocked` / `FarCrossing`。远场预读距离取80米、8舰体长度、10秒航程的最大值，封顶160米；沿已规划路线最多四段预读，输出障碍距离、预计到达时间和动态交叉风险，提前调速。近场保持3秒、12段相对运动扫掠，风险时最多比较7个继续/减速/等待/绕行候选。每次移动决策一次周向OverlapBox、最多256碰撞体，饱和请求停止；任务目标排除以免接敌阶段绕目标震荡。Inspector新增Predictive Local Decisions参数；试验场面板和timeline包含远场距离/时间/威胁、近处TTC、候选/检查数及耗时。普通即时避障仍不反推；明确预测让行允许推进器制动，不直接写刚体速度。本轮29项预测检查、75项导航/战斗回归通过，最终六路线全部到达、墙体接触0；城区东西66.44秒、23次转向，相比前版62.97秒、24次转向，不能宣称全面提速或减少转向。不保证任意动态相位、全部蓝图或多舰压力场景。
+导航生产实现统一到 `Assets/Scripts/Features/Navigation`。`EnemyController` 保留战术目标、接近/横移/撤退及推进器输入，降频调用 `VesselNavigation.Evaluate`；`BotFlightMotion` 保留任务飞行、实时移动 Home 点速度与停靠。双方复用同一份 `NavigationAvoidance` 的绕行承诺、无进展脱困、初始重叠分离和近场速度约束，不再保留 EnemyController 的侧向斥力算法。
 
-EnemyController 不依赖 NavMesh。接近目标与警戒返航在远场已发现风险时优先规划有限三维栅格 A*，无远场风险时保留上/下净空避障；路线按整舰尺寸扩张障碍，缓存航点并跳过可直达的中间点。实际速度方向的舰体扫掠继续限制推进输入。局部搜索有范围、节点预算与重试间隔，封闭区域不保证可达，不生成不完整路线。参数位于 EnemyController 的 Local 3D A Star；橙色 Gizmos 显示缓存路线。
+**效率优先**：持续到达、到达时间和航程优先于零接触；轻微接触作为观测指标，卡死、反复换向、明显绕远及无法恢复仍属于失败。速度走廊按可执行制动距离逐物理步检查，不额外使用1.5倍保守前瞻。路线和局部绕行已有方向记忆，跟随期间不再等待战斗航向保持冷却；转弯仍由连续驾驶/推进器执行。导航不直接写舰船刚体速度。
 
-**少拐点与有界预判**（[测试与限制](Docs/Validation/2026-11-12-navigation-anticipation.md)）：EnemyLocalPath 用最小堆选取候选，默认1024节点/2秒重试；每次栅格转向附加默认2米代价，属于位置状态下的偏好而非最少转弯最优保证。成功后最多128次整舰通道测试压缩航点，仍保留升降净空及窗口出口保高。缓存路线提前检查后两段，仅到重规划周期才替换，失败保留安全当前段。运动学障碍使用默认1.5秒短期恒速/角速度包络，预测最多3秒，平移、旋转余量各限12米；不预测周期反向或其他动力学载具，也不保证动态无碰撞。Inspector 的 Path Turn Penalty / Path Prediction Time 可调至0进行对比。规划点显著减少和规划耗时下降已实测；实际转向及城区动态通行仍有波动，详见报告。
+- **Bot 轻量策略**：球形净空，受阻时8个水平角×3层高度+上下，共26个候选；默认0.1秒采样，高速缩短至物理步。无阻挡时仅直达及重叠查询，Bot间与任务目标过滤保持原语义；保留逐物理步速度走廊约束。规则由 BotNavigationPolicy 固定，不新增 Inspector/CSV 速度配置。
+- **舰船完整策略**：整舰 Bounds，远场共享快照、有界三维 A*、上下通道及动态候选航迹保持；局部回退复用水平选向/脱困，不把 Bot 的目标忽略规则带入舰船。静止时也沿期望方向探测，近场危险允许真实推进器制动。A*默认1024节点/2秒重试；预测最多7个候选×12段，远场80米/8身位/10秒航程取最大并封顶160米。参数继续由 EnemyController Inspector 保存，既有 public 字段及GUID保留。
+- **查询边界**：NavigationObstacleQuery 使用单位所属 PhysicsScene；球形/整舰查询、自身过滤、缓冲扩容与重叠计算集中管理，状态逐单位独立；查询饱和保守停止。舰船碰撞体缓存定期刷新，逐物理步更新整舰 Bounds。
 
-**战斗航向连续衔接**（[验证记录](Docs/Validation/2026-11-11-continuous-combat-course.md)）：低频决策仍保持，但每个物理步将参考速度按水平角速度90°/s旋转至已接受的新航向，航速独立按6m/s²过渡，避免直线插值在折返中穿过零速；进入接敌距离前8m渐进混入横移。参数位于Stable Steering。停止任务或紧急避障直接使用新参考速度，不延迟制动；180°折返仍需实际推进能力完成转弯，不保证实际速度恒定。
+```text
+Assets/Scripts/Features/Navigation/
+├── NavigationAvoidanceSettings.cs
+├── NavigationAvoidanceResult.cs
+├── Local/
+│   ├── NavigationAvoidance.cs
+│   └── NavigationObstacleQuery.cs
+├── Planning/
+│   ├── NavigationLocalPath.cs
+│   └── NavigationObstacleClimb.cs
+├── Prediction/
+│   └── NavigationPrediction.cs
+├── Vessels/
+│   ├── VesselNavigation.cs
+│   └── VesselNavigationSettings.cs
+└── Diagnostics/
+    ├── EnemyNavigationSnapshot.cs
+    └── Lab/                         原可编辑试验场、记录器与相机，GUID保持
+```
 
-**降低变向次数与频率**：驾驶决策最低间隔0.5秒（之前导航0.1秒）；稳定方向至少保持1.5秒，忽略12°以内的小偏移；同一轮绕障保持侧向，脱离后3秒才重新选择；接敌横移换侧间隔6秒。近障紧急避让可跳过方向冷却。所有参数位于EnemyController的 **Stable Steering**，目标扫描独立，侧滑补偿与推进器输出仍每物理步执行，不能把反向制动输入当作航线换向。`movementUpdateInterval` Inspector 下限已与运行时 0.5s 一致；`MaxObstacleHits` 初始容量 32（EnemyObstacleClimb 的 BoxCast 缓冲 64）以减少密集场景的首次堆分配；`GetEntityId().GetHashCode()` 在 Awake 缓存为 `_entityHashCode`，避免每次移动决策重复求值。
-
-当前身位避障实现与验证见 [整舰避障验证](Docs/Validation/2026-11-11-hull-avoidance.md)。
-
-**按当前速度身位避障与局部 A***（[本轮验证](Docs/Validation/2026-11-11-local-astar.md)，55项Play回归及五布局实船零接触到达）：即时避障仅沿实际刚体速度方向扫掠整舰 AABB（水平0.25m余量），预测距离为基础距离 + 速度×预判时间 + 速度²/(2×预估减速度)。垂直避障先上后下，高度变化时按升降走廊净空及惯性滑行余量限制水平推进，低速或垂直速度变化不再取消已承诺的越障高度；舰尾越障后恢复正常高度。遇障最终输入缩减前向分量并去除反推。BoxCast从真实舰体中心起算，盒体本身覆盖舰头，避免平移盒体漏掉近墙；高度指令补偿悬浮控制模块相对根节点的高度差。上下均受阻时，EnemyLocalPath 在默认96m半径内按6m栅格搜索，默认最多扩展1024节点，两秒重试；水平保守旋转包络和0.75m净空避免机翼切角。缓存路径每次决策复查，目标明显移动或通道失效时重算，不为每个航点停车。旧climbForwardSpeedRatio保留序列化兼容。当前允许边前进边升降，扫掠覆盖当前至目标高度的完整区间，按可用距离减去升降期间滑行余量限制推力；近障收油且仍不施加反推。A*缓存每次决策检查前方局部走廊，越障后能直达即提前释放；末段距局部终点小于搜索半径35%时限频滚动接续，替换失败保留已验证旧路线，局部窗口终点在净空允许时保持本段最高航层，避免在下一堵墙前提前下降。接敌高度附近2m内的悬浮误差不会成为新低空航层。[效率对比与边界](Docs/Validation/2026-11-11-navigation-efficiency.md)。
-
-**遇障只减推、不反推**：命中越近，水平前进参考速度越低；障碍法线只提供侧向绕行，不产生反向驾驶意图。GetVelocityInput及平滑后最终输入均去除与实际水平速度相反的分量，保留侧推与垂直悬浮；正常战斗撤退/无任务停车仍沿用原控制。减推依赖现有阻尼与避让空间，不保证高速贴墙能立即停车。
-
-**垂直避让优先**：沿当前实际速度检查静态障碍；整舰上升与上层通道畅通时优先翻越，最高偏离正常悬浮高度32m。上方不通时检查向下避让，下降路径与下层前向通道都必须有净空。安全高度按舰体底部/顶部偏移及3m余量计算，保持到舰尾越障；垂直避让失败才进入水平绕障。允许主动降低高度设定，不能再用Max钳制回正常高度。参数位于 **Obstacle Climb Priority**；控制器不写刚体位置/速度。
+当前验证与具体边界见 [共享导航验证](Docs/Validation/2026-11-15-shared-navigation.md)。源码函数链见 [RuntimeFlow](Docs/RuntimeFlow.md)，真实方法与完整目录树见 [CodeIndex](Docs/CodeIndex.md)。过去各轮验证保留在 Docs/Validation，旧的“遇障只减推、不反推”已由当前近场安全制动替代。
 
 **可编辑试验场：`Assets/Scenes/EnemyAvoidanceLab.unity`**（[操作和记录说明](Docs/Validation/2026-11-11-navigation-test-field.md)）。Play面板包含十二组互斥布局，默认加载已搭建的综合城区（高低楼群、桥梁、顶棚、隔墙和柱阵），并保留原十一组专项测试。综合城区现有地面街区和60米高架环形连桥，十个位置可独立选作起点/终点（含四个高架部署点），仍支持点选地面及高度调整。预挂自由相机：右键+WASD移动，Q/E升降，Shift加速；暂停仍可观察，可切换正交总览。[自由视角与综合场地验证](Docs/Validation/2026-11-11-complex-field-camera.md)。[双层与动态障碍扩建](Docs/Validation/2026-11-11-upper-deck-moving-obstacles.md)：四组橙色运动学障碍分别横移、升降、摆动和穿行，Inspector保留位移/周期/转轴/摆角；暂停冻结，重试及布局切换复位相位，metadata schema 2保存初始几何及运动参数。支持只读浏览内置/Saves/EnemyBlueprints蓝图、手动部署、点选起点/目标、调整高度、暂停、重试和连续测试；真实供电、推进器和碰撞保留，碰撞伤害关闭。轨迹按采样时实际三维速度由深蓝（慢）变浅青（快），默认0–8m/s固定标尺可在Inspector的Trace Fast Speed调整；沿累计路程编码为2048像素纹理保留历史变化。橙色显示规划路线。记录位于`Application.persistentDataPath/NavigationLabRecords/<session>/`，会话`operations.jsonl`覆盖键鼠和面板操作，各`trial-xxxx`保存metadata、蓝图快照、timeline.jsonl与result；默认10Hz记录运动、输入、净空、A*状态/耗时/节点/路线版本。停止Play和中断也结束记录并恢复时间设置。场地与轨迹Renderer通过Editor API保存，Upgrade Navigation Test Field、Build Complex Navigation Field及Add Upper Deck And Moving Obstacles菜单幂等扩展，不覆盖原障碍；记录不写玩家蓝图。
 
-炮塔实墙遮挡修复保留：从炮口验证视线，触发器和炮塔自身不遮挡，同组墙板及其他单位遮挡。每物理步丢弃被遮挡锁定。验证入口`Assets/Editor/Combat/Validation/NavigationCombatPlayChecks.cs`保留原名称，现检查稳定驾驶、爬升、视线；与`AiUpgradePlayChecks`共同验证。当前结果见 [移除NavMesh验证](Docs/Validation/2026-11-10-local-steering.md)，旧避障/NavMesh记录仅为历史。
+炮塔实墙遮挡修复保留：从炮口验证视线，触发器和炮塔自身不遮挡，同组墙板及其他单位遮挡。每物理步丢弃被遮挡锁定。验证入口`Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs`保留原名称，现检查稳定驾驶、爬升、视线；与`AiUpgradePlayChecks`共同验证。当前结果见 [移除NavMesh验证](Docs/Validation/2026-11-10-local-steering.md)，旧避障/NavMesh记录仅为历史。
 
 **自动随机5v5观战：`Assets/Scenes/Random5v5Arena.unity`**（[循环与验收](Docs/Validation/2026-11-11-random-5v5-arena.md)）。双层避障地图独立副本；十个槽位分别从玩家Saves池及敌方EnemyBlueprints/内置池抽取五艘AI。驾驶舱全灭判胜负，双方连续失去所有可供电完好武器能力3秒则平局；结算5秒后清场重开。名牌遮挡检测降为每舰约8Hz，耐久总量统计复用当前物理步的组件缓存。蓝红阵营材质按源材质共享，避免MaterialPropertyBlock破坏GPU Resident Drawer批处理。地图建筑数量和尺寸不变，通过扩大间距将地面扩至480×480；自由相机、关闭Connector文字、探索模式击杀提示和阵容信息均保留。
 

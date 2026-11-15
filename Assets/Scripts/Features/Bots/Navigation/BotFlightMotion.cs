@@ -8,23 +8,23 @@ public sealed class BotFlightMotion
 {
     private readonly Transform _transform;
     private readonly Rigidbody _rigidbody;
-    private readonly BotObstacleAvoidance _obstacles;
+    private readonly NavigationAvoidance _obstacles;
     private Transform _cachedTarget;
-    private BotAvoidanceResult _cachedResult;
+    private NavigationAvoidanceResult _cachedResult;
     private Vector3 _direction;
     private Vector3 _avoidanceDirection;
     private float _nextSampleTime;
     private float _cachedRangeScale = 1f;
-    private readonly BotAvoidanceSettings _avoidance = BotNavigationPolicy.CreateAvoidanceSettings();
+    private readonly NavigationAvoidanceSettings _avoidance = BotNavigationPolicy.CreateAvoidanceSettings();
     public Vector3 Direction => _direction;
     public Vector3 AvoidanceDirection => _avoidanceDirection;
-    public IReadOnlyList<BotObstacleAvoidance.DebugHit> DebugHits => _obstacles.DebugHits;
+    public IReadOnlyList<NavigationAvoidance.DebugHit> DebugHits => _obstacles.DebugHits;
 
     public BotFlightMotion(Transform transform, Rigidbody rigidbody)
     {
         _transform = transform;
         _rigidbody = rigidbody;
-        _obstacles = new BotObstacleAvoidance(transform);
+        _obstacles = new NavigationAvoidance(transform);
     }
 
     public void ResetDirection()

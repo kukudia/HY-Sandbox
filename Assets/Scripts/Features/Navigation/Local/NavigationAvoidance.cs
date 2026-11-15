@@ -1,10 +1,10 @@
-// 职责：用机器人半径探测三维净空，保持绕障方向，并在没有目标进展时选择脱困路线。
+// 职责：为 Bot 与舰船探测球形/整舰净空，保持绕障方向，并在没有目标进展时选择脱困路线。
 // 入口：Evaluate() 采样导航，ConstrainVelocity() 在每个物理帧阻止继续朝近处障碍加速。
-// 生命周期：每台机器人拥有独立缓冲和绕障记忆；切换目标时 Reset() 清理旧路线。
+// 生命周期：每个单位拥有独立缓冲和绕障记忆；切换目标时 Reset() 清理旧路线。
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class BotObstacleAvoidance
+public sealed class NavigationAvoidance
 {
     public enum HazardLevel
     {
@@ -21,18 +21,10 @@ public sealed class BotObstacleAvoidance
         public HazardLevel Level;
     }
 
-    private readonly Transform _transform;
-    private readonly RaycastHit[] _hits = new RaycastHit[64];
-    private readonly Collider[] _overlaps = new Collider[32];
-    private readonly Collider[] _bodyColliders;
-    // One synchronous decision can hit the same building collider from dozens of directions.
-    // Clear at each public entry so reparented cargo and changed targets are never stale next tick.
-    private readonly Dictionary<Collider, bool> _ignoredColliders = new Dictionary<Collider, bool>();
-    private Collider _overlapObstacle;
-    private Vector3 _overlapEscape;
+    private readonly NavigationObstacleQuery _query;
     private readonly List<DebugHit> _debugHits = new List<DebugHit>();
     private Transform _target;
-    private BotAvoidanceSettings _settings;
+    private NavigationAvoidanceSettings _settings;
     private Vector3 _detourDirection;
     private float _detourUntil;
     private float _bestDistance = float.PositiveInfinity;
@@ -40,24 +32,36 @@ public sealed class BotObstacleAvoidance
     private int _clearSamples;
     private bool _escapingOverlap;
     public IReadOnlyList<DebugHit> DebugHits => _debugHits;
+    public int QueryCount => _query.QueryCount;
+    public bool Saturated => _query.Saturated;
+    public bool Detouring => _detourDirection.sqrMagnitude > 0.01f;
 
-    public BotObstacleAvoidance(Transform transform)
+    public NavigationAvoidance(Transform owner)
     {
-        _transform = transform;
-        _bodyColliders = transform.GetComponentsInChildren<Collider>(true);
+        _query = new NavigationObstacleQuery(owner);
+    }
+
+    public void UpdateHull(Bounds bounds)
+    {
+        _query.UpdateHull(bounds);
+    }
+
+    public void Configure(NavigationAvoidanceSettings settings)
+    {
+        _settings = settings;
+        _query.Configure(settings, _target);
     }
 
     public void Reset()
     {
         _detourDirection = Vector3.zero;
-        _overlapObstacle = null;
-        _overlapEscape = Vector3.zero;
+        _query.ClearOverlap();
         _bestDistance = float.PositiveInfinity;
         _lastProgressTime = Time.time;
         _clearSamples = 0;
         _escapingOverlap = false;
         _debugHits.Clear();
-        _ignoredColliders.Clear();
+        _query.BeginQuery();
     }
 
     public void ClearDebugHits()
@@ -66,12 +70,12 @@ public sealed class BotObstacleAvoidance
     }
 
     /// <summary>优先使用真实目标净空；墙面与凹陷前允许临时离开目标方向，避免斥力相消。</summary>
-    public BotAvoidanceResult Evaluate(
+    public NavigationAvoidanceResult Evaluate(
         Transform target,
         Vector3 velocity,
         Vector3 targetDirection,
         float rangeScale,
-        BotAvoidanceSettings settings,
+        NavigationAvoidanceSettings settings,
         float targetDistance = float.PositiveInfinity)
     {
         if (_target != target)
@@ -80,16 +84,16 @@ public sealed class BotObstacleAvoidance
         }
 
         _target = target;
-        _settings = settings;
-        _ignoredColliders.Clear();
+        Configure(settings);
+        _query.BeginQuery();
         _debugHits.Clear();
-        if (TryGetOverlapEscape(out Vector3 escape))
+        if (_query.TryGetOverlapEscape(out Vector3 escape))
         {
             _escapingOverlap = true;
             _detourDirection = escape;
             _detourUntil = Time.time + Mathf.Max(0.2f, settings.DetourHoldTime);
             _lastProgressTime = Time.time;
-            return new BotAvoidanceResult
+            return new NavigationAvoidanceResult
             {
                 Direction = escape,
                 Strength = 1f,
@@ -113,7 +117,7 @@ public sealed class BotObstacleAvoidance
         float range = Mathf.Max(radius * 3f, settings.PredictiveRange * Mathf.Max(0.2f, rangeScale));
         range = Mathf.Max(range, velocity.sqrMagnitude / (2f * Mathf.Max(0.1f, settings.BrakingAcceleration)) + radius * 2f);
         float directRange = Mathf.Min(range, targetDistance);
-        bool blocked = Cast(targetDirection, directRange, out RaycastHit directHit);
+        bool blocked = _query.Cast(targetDirection, directRange, out RaycastHit directHit);
         bool stalled = CheckProgress(targetDistance);
         // 移动 Home 与机器人同速时距离可保持不变；仅有实际阻挡或已有绕障才触发脱困。
         stalled &= blocked || _detourDirection.sqrMagnitude > 0.01f;
@@ -124,9 +128,8 @@ public sealed class BotObstacleAvoidance
             if (!detouring || _clearSamples >= 2)
             {
                 _detourDirection = Vector3.zero;
-                _overlapObstacle = null;
-                _overlapEscape = Vector3.zero;
-                return new BotAvoidanceResult
+                _query.ClearOverlap();
+                return new NavigationAvoidanceResult
                 {
                     SpeedMultiplier = 1f
                 };
@@ -153,7 +156,7 @@ public sealed class BotObstacleAvoidance
             _debugHits.Add(new DebugHit { HitPoint = directHit.point, AvoidanceVector = _detourDirection, Distance = directHit.distance, Level = directHit.distance < settings.EmergencyRange ? HazardLevel.Emergency : HazardLevel.Predictive });
         }
 
-        return new BotAvoidanceResult
+        return new NavigationAvoidanceResult
         {
             Direction = _detourDirection,
             Strength = 1f,
@@ -195,7 +198,9 @@ public sealed class BotObstacleAvoidance
         float bestScore = float.NegativeInfinity;
         bestClearDistance = 0f;
         int rayCount = Mathf.Clamp(_settings.RayCount, 8, 24);
-        for (int elevation = -1; elevation <= 1; elevation++)
+        int minElevation = _settings.UseHull ? 0 : -1;
+        int maxElevation = _settings.UseHull ? 0 : 1;
+        for (int elevation = minElevation; elevation <= maxElevation; elevation++)
         {
             for (int i = 0; i < rayCount; i++)
             {
@@ -212,22 +217,26 @@ public sealed class BotObstacleAvoidance
             }
         }
 
-        ConsiderDirection(
-            Vector3.up,
-            targetDirection,
-            range,
-            stalled,
-            ref bestScore,
-            ref bestDirection,
-            ref bestClearDistance);
-        ConsiderDirection(
-            Vector3.down,
-            targetDirection,
-            range,
-            stalled,
-            ref bestScore,
-            ref bestDirection,
-            ref bestClearDistance);
+        if (!_settings.UseHull)
+        {
+            ConsiderDirection(
+                Vector3.up,
+                targetDirection,
+                range,
+                stalled,
+                ref bestScore,
+                ref bestDirection,
+                ref bestClearDistance);
+            ConsiderDirection(
+                Vector3.down,
+                targetDirection,
+                range,
+                stalled,
+                ref bestScore,
+                ref bestDirection,
+                ref bestClearDistance);
+        }
+
         return bestDirection;
     }
 
@@ -257,14 +266,19 @@ public sealed class BotObstacleAvoidance
     /// <summary>每个物理帧检查实际速度走廊；删除撞向墙面的速度分量，保留沿墙运动。</summary>
     public Vector3 ConstrainVelocity(Vector3 desiredVelocity, float deltaTime, Vector3 currentVelocity, float brakingAcceleration)
     {
-        _ignoredColliders.Clear();
+        _query.BeginQuery();
         float speed = desiredVelocity.magnitude;
+        if (Saturated)
+        {
+            return Vector3.zero;
+        }
+
         if (speed < 0.01f)
         {
             return desiredVelocity;
         }
 
-        if (TryGetOverlapEscape(out Vector3 escape) && Vector3.Dot(desiredVelocity, escape) <= 0f)
+        if (_query.TryGetOverlapEscape(out Vector3 escape) && Vector3.Dot(desiredVelocity, escape) <= 0f)
         {
             desiredVelocity = escape * Mathf.Clamp(speed, 1f, 3f);
         }
@@ -272,6 +286,7 @@ public sealed class BotObstacleAvoidance
         float acceleration = Mathf.Max(0.1f, brakingAcceleration);
         float margin = Mathf.Max(0.1f, _settings.ClearanceRadius * 0.5f);
         float stoppingSpeed = Mathf.Max(speed, currentVelocity.magnitude);
+        // 按可执行制动距离介入，不额外放大走廊；持续到达优先，近场仍逐物理步限速。
         float lookAhead = stoppingSpeed * stoppingSpeed / (2f * acceleration) + stoppingSpeed * Mathf.Max(0.02f, deltaTime) + margin;
         desiredVelocity = LimitApproachSpeed(desiredVelocity, desiredVelocity.normalized, lookAhead, margin, acceleration);
         if (currentVelocity.sqrMagnitude > 0.25f)
@@ -284,7 +299,7 @@ public sealed class BotObstacleAvoidance
 
     private Vector3 LimitApproachSpeed(Vector3 desiredVelocity, Vector3 corridor, float lookAhead, float margin, float acceleration)
     {
-        if (!Cast(corridor, lookAhead, out RaycastHit hit))
+        if (!_query.Cast(corridor, lookAhead, out RaycastHit hit))
         {
             return desiredVelocity;
         }
@@ -301,129 +316,6 @@ public sealed class BotObstacleAvoidance
 
     private float GetClearDistance(Vector3 direction, float range)
     {
-        return Cast(direction, range, out RaycastHit hit) ? hit.distance : range;
-    }
-
-    private bool Cast(Vector3 direction, float range, out RaycastHit nearest)
-    {
-        nearest = default;
-        if (direction.sqrMagnitude < 0.01f || range <= 0f)
-        {
-            return false;
-        }
-
-        int count = Physics.SphereCastNonAlloc(
-            _transform.position,
-            Mathf.Max(0.05f, _settings.ClearanceRadius),
-            direction.normalized,
-            _hits,
-            range,
-            _settings.ObstacleMask,
-            QueryTriggerInteraction.Ignore);
-        float nearestDistance = float.PositiveInfinity;
-        for (int i = 0; i < count; i++)
-        {
-            RaycastHit hit = _hits[i];
-            if (IsIgnored(hit.collider) || hit.distance >= nearestDistance || hit.collider == _overlapObstacle && Vector3.Dot(direction, _overlapEscape) > 0.05f)
-            {
-                continue;
-            }
-
-            nearest = hit;
-            nearestDistance = hit.distance;
-        }
-
-        return nearestDistance < float.PositiveInfinity;
-    }
-
-    // SphereCast 不报告起点内部的形状；用重叠查询和物理最小分离方向补全该边界。
-    private bool TryGetOverlapEscape(out Vector3 escape)
-    {
-        escape = Vector3.zero;
-        _overlapObstacle = null;
-        _overlapEscape = Vector3.zero;
-        float radius = Mathf.Max(0.05f, _settings.ClearanceRadius);
-        int count = Physics.OverlapSphereNonAlloc(_transform.position, radius, _overlaps, _settings.ObstacleMask, QueryTriggerInteraction.Ignore);
-        float deepest = 0f;
-        for (int i = 0; i < count; i++)
-        {
-            Collider obstacle = _overlaps[i];
-            if (IsIgnored(obstacle))
-            {
-                continue;
-            }
-
-            Vector3 offset = _transform.position - obstacle.ClosestPoint(_transform.position);
-            float distance = offset.magnitude;
-            Vector3 direction = distance > 0.001f ? offset / distance : Vector3.zero;
-            float depth = distance > 0.001f ? radius - distance : 0f;
-            for (int j = 0; j < _bodyColliders.Length; j++)
-            {
-                Collider body = _bodyColliders[j];
-                if (body == null || !body.enabled || body.isTrigger || !body.gameObject.activeInHierarchy)
-                {
-                    continue;
-                }
-
-                if (Physics.ComputePenetration(
-                    body,
-                    body.transform.position,
-                    body.transform.rotation,
-                    obstacle,
-                    obstacle.transform.position,
-                    obstacle.transform.rotation,
-                    out Vector3 separation,
-                    out float penetration) && penetration > depth)
-                {
-                    direction = separation;
-                    depth = penetration;
-                }
-            }
-
-            if (depth > deepest && direction.sqrMagnitude > 0.01f)
-            {
-                deepest = depth;
-                escape = direction;
-                _overlapObstacle = obstacle;
-            }
-        }
-
-        _overlapEscape = escape;
-        return deepest > 0.01f;
-    }
-
-    private bool IsIgnored(Collider collider)
-    {
-        if (collider == null)
-        {
-            return true;
-        }
-
-        if (!_ignoredColliders.TryGetValue(collider, out bool ignored))
-        {
-            ignored = ShouldIgnoreCollider(collider);
-            _ignoredColliders.Add(collider, ignored);
-        }
-
-        return ignored;
-    }
-
-    private bool ShouldIgnoreCollider(Collider collider)
-    {
-        if (collider == null || collider.transform == _transform || collider.transform.IsChildOf(_transform))
-        {
-            return true;
-        }
-
-        // Bot 是动态交通对象，不应进入静态净空和脱困判断。仅依赖 LayerMask
-        // 不可靠：运行时生成的子碰撞体可能继承 Block/Default 层，仍会把另一台 Bot
-        // 当成墙，导致多台机器人互相选绕障方向并持续制动。
-        if (collider.GetComponentInParent<Bot>() != null)
-        {
-            return true;
-        }
-
-        // 携带物属于机器人层级；任务目标或 Home 自身可接近，其他建造部件仍是真实障碍。
-        return _target != null && (collider.transform == _target || collider.transform.IsChildOf(_target));
+        return _query.Cast(direction, range, out RaycastHit hit) ? hit.distance : range;
     }
 }

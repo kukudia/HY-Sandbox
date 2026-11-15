@@ -3,7 +3,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-internal sealed class EnemyObstacleClimb
+internal sealed class NavigationObstacleClimb
 {
     private RaycastHit[] hits = new RaycastHit[64];
     private Collider[] hull;

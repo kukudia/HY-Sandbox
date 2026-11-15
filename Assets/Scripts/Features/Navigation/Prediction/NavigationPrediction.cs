@@ -3,7 +3,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-internal sealed class EnemyNavigationPrediction
+internal sealed class NavigationPrediction
 {
     private const int Capacity = 256;
     private const int Steps = 12;

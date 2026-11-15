@@ -60,7 +60,20 @@ public static class AiUpgradePlayChecks
             probeBody.linearVelocity = Vector3.forward * 4f;
             // 从真实决策入口准备本轮整舰范围、速度预测距离与绕行状态。
             typeof(EnemyController).GetMethod("ApplyObstacleAvoidance", Instance).Invoke(ai, new object[] { Vector3.forward, Vector3.forward });
-            MethodInfo probe = typeof(EnemyController).GetMethod("ProbeObstacle", Instance);
+            object vesselNavigation = typeof(EnemyController).GetField("navigation", Instance).GetValue(ai);
+            var avoidance = (NavigationAvoidance)vesselNavigation.GetType().GetField("Local", Instance).GetValue(vesselNavigation);
+            var settings = new NavigationAvoidanceSettings
+            {
+                UseHull = true,
+                HullBounds = new Bounds(owner.transform.position, Vector3.one),
+                ObstacleMask = ~0,
+                ClearanceRadius = 0.25f,
+                PredictiveRange = 15f,
+                BrakingAcceleration = 6f,
+                RayCount = 16,
+                StuckTimeout = 2f,
+                DetourHoldTime = 0.6f
+            };
             var ground = new GameObject("Support plane");
             ground.transform.SetParent(root.transform, false);
             BoxCollider floor = ground.AddComponent<BoxCollider>();
@@ -70,7 +83,13 @@ public static class AiUpgradePlayChecks
             Check(
                 checks,
                 "Initial ground overlap does not reverse horizontal flight",
-                ((Vector3)probe.Invoke(ai, new object[] { Vector3.forward, 1f })).sqrMagnitude == 0f);
+                !avoidance.Evaluate(
+                    null,
+                    probeBody.linearVelocity,
+                    Vector3.forward,
+                    1f,
+                    settings,
+                    20f).OverrideDirection);
             GameObject wall = new GameObject("Trigger then solid local wall");
             wall.transform.SetParent(root.transform, false);
             wall.transform.position = Vector3.forward * 5f + Vector3.up * 0.5f;
@@ -81,13 +100,25 @@ public static class AiUpgradePlayChecks
             Check(
                 checks,
                 "Trigger volumes do not redirect enemy flight",
-                ((Vector3)probe.Invoke(ai, new object[] { Vector3.forward, 1f })).sqrMagnitude == 0f);
+                !avoidance.Evaluate(
+                    null,
+                    probeBody.linearVelocity,
+                    Vector3.forward,
+                    1f,
+                    settings,
+                    20f).OverrideDirection);
             shape.isTrigger = false;
             Physics.SyncTransforms();
             Check(
                 checks,
                 "Enemy avoidance queries its local PhysicsScene",
-                ((Vector3)probe.Invoke(ai, new object[] { Vector3.forward, 1f })).sqrMagnitude > 0.01f);
+                avoidance.Evaluate(
+                    null,
+                    probeBody.linearVelocity,
+                    Vector3.forward,
+                    1f,
+                    settings,
+                    20f).OverrideDirection);
             for (int index = 0; index < 24; index++)
             {
                 var dense = new GameObject("Dense hull " + index);
@@ -97,12 +128,18 @@ public static class AiUpgradePlayChecks
             }
 
             Physics.SyncTransforms();
-            Vector3 denseAvoidance = (Vector3)probe.Invoke(ai, new object[] { Vector3.forward, 1f });
-            var hits = (RaycastHit[])typeof(EnemyController).GetField("obstacleHits", Instance).GetValue(ai);
+            avoidance.Reset();
+            NavigationAvoidanceResult denseAvoidance = avoidance.Evaluate(
+                null,
+                probeBody.linearVelocity,
+                Vector3.forward,
+                1f,
+                settings,
+                20f);
             Check(
                 checks,
                 "Dense hull query grows buffer and still avoids nearest obstacle",
-                hits.Length > 16 && denseAvoidance.sqrMagnitude > 0.01f);
+                denseAvoidance.OverrideDirection && denseAvoidance.ObstacleCount > 0);
             ai.enabled = false;
             first.gameObject.SetActive(true);
             // 后续测试重组/修复，不应被前面的实体避障墙遮住目标。
