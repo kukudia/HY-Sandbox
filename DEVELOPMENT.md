@@ -1,5 +1,11 @@
 # HY-Sandbox 开发入口
 
+## 工程质量与全项目风险审查
+
+通用Skill主入口已更名为 `engineering-quality`（工程质量与行为验证），旧名称保留兼容；架构、可读性、函数图规范继续适用，新增跨层行为契约和提交前“风险—证据—缺口”复查。项目工具 `Tools/CodeReadability` 保留原名。
+
+[当前风险登记与行为契约](Docs/ProjectRiskRegister.md) 是后续开发的维护入口；[2026-11-15审查覆盖及证据](Docs/Validation/2026-11-15-project-risk-audit.md) 保存本次快照。全量库存涵盖286个运行时脚本、167个Editor脚本及资产/配置，关键调用链采用抽样深入审查；记录23项（2项P1、20项P2、1项P3），不能视为全项目Play验收。高优先级发现是玩家同名新建覆盖和存档路径越界；本轮完成审查记录与Skill治理，未修改这些玩法实现。后续修改需更新受影响风险状态、真实验证证据和剩余缺口。
+
 ## 自主舰船直航稳定
 
 `EnemyController.StabilizeDirection` 在普通直航阶段锁定方向，小于 `directionDeadZone`（默认12度）的目标偏移完全忽略，不做持续微调或插值。普通重选航向至少保持 `directionHoldTime`（默认1.5秒）；目标切换、进入绕障、首次接入路线或真实航点拐角可重新锁定，重规划本身不作为转弯理由。偏离锁定直线超过 `straightCourseTolerance`（默认1.5米）才允许恢复航线；近距离战斗横移及紧急避障及时接管。字段名和已有序列化值保留，Inspector说明已更新。
