@@ -6,9 +6,17 @@ using UnityEngine.SceneManagement;
 internal sealed class NavigationPrediction
 {
     private const int Capacity = 256;
+    private const int MaximumColliders = 8192;
     private const int Steps = 12;
-    private readonly Collider[] overlaps = new Collider[Capacity];
-    private readonly Observation[] observations = new Observation[Capacity];
+    private Collider[] overlaps = new Collider[Capacity];
+    private Observation[] observations = new Observation[Capacity];
+    private readonly System.Collections.Generic.Dictionary<Rigidbody, int> bodyObservations = new System.Collections.Generic.Dictionary<Rigidbody, int>();
+    internal int RawColliderCount
+    {
+        get; private set;
+    }
+    internal int SensorCapacity => overlaps.Length;
+
     private Vector3 committed;
     private Vector3 sensorCenter;
     private float holdUntil;
@@ -105,6 +113,8 @@ internal sealed class NavigationPrediction
         holdUntil = 0f;
         Observed = 0;
         Moving = 0;
+        bodyObservations.Clear();
+        RawColliderCount = 0;
         Candidates = 0;
         SegmentChecks = 0;
         CollisionTime = -1f;
@@ -340,6 +350,7 @@ internal sealed class NavigationPrediction
     {
         Observed = 0;
         Moving = 0;
+        bodyObservations.Clear();
         System.Array.Clear(observations, 0, observations.Length);
         // 周向采集覆盖候选动作和横向驶入者，而非只向当前速度发射射线。额外24米为外部运动余量。
         LookAheadDistance = Mathf.Clamp(
@@ -352,13 +363,33 @@ internal sealed class NavigationPrediction
         float reach = Mathf.Max(LookAheadDistance, Mathf.Max(velocity.magnitude, cruiseSpeed) * horizon) + 24f;
         SensorRadius = reach;
         sensorCenter = hull.center;
-        int count = owner.gameObject.scene.GetPhysicsScene().OverlapBox(
-            hull.center,
-            hull.extents + Vector3.one * reach,
-            overlaps,
-            Quaternion.identity,
-            layers,
-            QueryTriggerInteraction.Ignore);
+        PhysicsScene physics = owner.gameObject.scene.GetPhysicsScene();
+        int count;
+        do
+        {
+            count = physics.OverlapBox(
+                hull.center,
+                hull.extents + Vector3.one * reach,
+                overlaps,
+                Quaternion.identity,
+                layers,
+                QueryTriggerInteraction.Ignore);
+            if (count < overlaps.Length || overlaps.Length >= MaximumColliders)
+            {
+                break;
+            }
+
+            // 模块化舰船每块都有碰撞体；原256项在过滤自身前就截断，误把正常多舰战斗判成紧急停车。
+            // 按需扩容并复用；仍设硬上限，不把不完整查询假作净空。
+            System.Array.Resize(ref overlaps, overlaps.Length * 2);
+        }
+        while (true);
+        RawColliderCount = count;
+        if (observations.Length < count)
+        {
+            System.Array.Resize(ref observations, overlaps.Length);
+        }
+
         Saturated = count == overlaps.Length;
         for (int i = 0; i < count; i++)
         {
@@ -372,6 +403,22 @@ internal sealed class NavigationPrediction
             Bounds bounds = collider.bounds;
             Vector3 motion = body != null ? body.GetPointVelocity(bounds.center) : Vector3.zero;
             float angular = body != null ? body.angularVelocity.magnitude : 0f;
+            if (body != null && bodyObservations.TryGetValue(body, out int existing))
+            {
+                // 同一刚体的模块共享运动；包围盒合并减少候选轨迹开销，静态建筑仍逐碰撞体保留通道。
+                Observation combined = observations[existing];
+                combined.Bounds.Encapsulate(bounds);
+                combined.Velocity = body.GetPointVelocity(combined.Bounds.center);
+                combined.Radius = combined.Bounds.extents.magnitude;
+                observations[existing] = combined;
+                continue;
+            }
+
+            if (body != null)
+            {
+                bodyObservations.Add(body, Observed);
+            }
+
             // 贴地悬浮的初始小误差不能把地板变成水平死路；升降轨迹仍在Evaluate逐段检查。
             observations[Observed++] = new Observation
             {

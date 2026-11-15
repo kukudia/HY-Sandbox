@@ -1,5 +1,13 @@
 # HY-Sandbox 开发入口
 
+## Random5v5Arena 实战导航追踪
+
+场景已保存 `Arena Navigation Debug`，显式挂载 `SkirmishNavigationDebug` 和五组 `NavigationTrack`。进入 Play 后右侧 RED-1～5 切换红方敌舰，`Focus ship` 平移自由相机至所选舰，`Clear selected trace` 只清空当前舰历史；可切换全部历史线和所选未来路线。Inspector 可关闭面板、场景标签并调整采样间隔、轨迹容量和速度标尺。重新制作竞技场会自动安装；已有场景可用 `Tools/HY-Sandbox/Combat/Install Arena Navigation Debug` 幂等安装，不重建地图或舰队配置。
+
+面板显示目标/距离、接敌与索敌阈值、航程、水平停滞时长、接触次数、期望/实际输入、制动、A*失败/重规划及节点耗时、预测威胁/TTC、原始碰撞体数/容量和分别的感知/局部饱和状态。轨迹与 EnemyAvoidanceLab 共用 `Navigation/Diagnostics/Tracking/NavigationFlightTrace`：深蓝0至亮青8m/s，橙色仅表示尚未经过的规划航点；换轮清空、死亡保留最后记录、同驾驶舱重组续接。
+
+实战发现原256碰撞体远场缓存被多模块舰船填满，触发持续 `SensorSaturated` 紧急停车；现按需扩容复用至8192上限，同刚体模块合并为运动包围盒，静态建筑仍独立保留通道。到达效率优先；不把缓存截断当作真实障碍，也不把不完整查询当成净空。验证与剩余边界见 [实战导航追踪记录](Docs/Validation/2026-11-15-arena-navigation-debug.md)。
+
 ## 实战偏航自转修复
 
 `HoverFlightController` 在有电悬浮时独立执行航向保持，`HoverControlSolver.StepHeading` 保存接管时航向，按最短角误差平滑抑制偏航角速度。水平状态也持续稳定，避免偏置推进器转矩导致无休止自转；不改变移动路线或自动朝向敌人。Inspector 的 `Heading Response` 默认5（1/秒），0关闭；停供、禁用及重新归属后释放旧航向，下次接管重新捕获。每物理步仅常量计算，不增加物理查询或寻路。Combat Courtyard 两友舰实战65.39秒、每舰66次采样：Spaceship 航向173.292–186.931°，Swordfish 173.095–185.603°，未持续绕圈但仍有小幅摆动；16项悬浮运行回归通过。详见 [验证记录](Docs/Validation/2026-11-12-siege-heading-stability.md)，不等同整波战斗/返航验收。

@@ -11,11 +11,11 @@
 | Bootstrap | GameManager | 单一启动入口，保持简单 |
 | Bots | Bot | Navigation；Repair（含维修专属搜索/表现）；Collection；Presentation |
 | Building | BuildManager、SaveManager | Actions；BlueprintLoading；BlockDataTables；BuildingEditor；Interaction；Interface |
-| Combat | DestroyManager | Damage；Enemies；Meteors；Turrets（再分 Projectiles）；Interface |
+| Combat | DestroyManager | Damage；Enemies；Meteors；Turrets（再分 Projectiles）；Interface；Skirmish（含 Diagnostics 实战追踪） |
 | Diagnostics | DebugManager | Physics；Bots；Interface |
 | Flight | HoverFlightController | Hover；Thrusters；Presentation |
 | MainMenu | MainMenuController、MenuDestination | Navigation（含Main入口与临时原稿）；Library（含静态预览）；Interface；Settings |
-| Navigation | NavigationAvoidanceSettings、NavigationAvoidanceResult | Local；Planning；Prediction；Vessels；Diagnostics（含 Lab） |
+| Navigation | NavigationAvoidanceSettings、NavigationAvoidanceResult | Local；Planning；Prediction；Vessels；Diagnostics（Lab 试验场；Tracking 共享轨迹/快照文字） |
 | Player | InputManager、Player、PlayerController、PlayerHealth | 输入与玩家主体4份脚本内聚，暂不机械分层 |
 | Power | Power、PowerNetwork | Devices；Network；Presentation |
 | Presentation | VisualEffectsManager | Camera；Blocks；Effects；Interface |

@@ -6,6 +6,19 @@ using UnityEngine;
 [Serializable]
 public struct EnemyNavigationSnapshot
 {
+    public string targetName;
+    public bool hasTarget;
+    public Vector3 targetPosition;
+    public Vector3 navigationDestination;
+    public bool navigationRequested;
+    public bool controllerActive;
+    public bool localDetouring;
+    public int localQueryCount;
+    public bool localSaturated;
+    public int sensorColliders;
+    public int sensorCapacity;
+    public float engagementDistance;
+    public float acquisitionDistance;
     public Vector3 position;
     public Vector3 velocity;
     public Quaternion rotation;

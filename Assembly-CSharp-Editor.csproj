@@ -93,6 +93,7 @@
     <Compile Include="Assets\Editor\World\Validation\WorldLab\WorldLabPerformanceChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\Effects\NativeVfxLibraryBuilder.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Interface\SiegeSceneInteractionChecks.cs" />
+    <Compile Include="Assets\Editor\Combat\Diagnostics\SkirmishNavigationChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegeWreckBudgetChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Rules\SiegeMixedStressChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\InterfaceBaker.cs" />
@@ -131,6 +132,7 @@
     <Compile Include="Assets\Editor\Combat\Validation\TurretFlightPlayProbe.cs" />
     <Compile Include="Assets\Editor\Diagnostics\Benchmarks\IndustrialMotionChecks.cs" />
     <Compile Include="Assets\Editor\World\Validation\Session\WorldSessionEdgeChecks.cs" />
+    <Compile Include="Assets\Editor\Combat\Diagnostics\SkirmishNavigationAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\Authoring\SiegeBlueprintSelectionAuthoring.cs" />
     <Compile Include="Assets\Editor\World\Validation\Session\WorldBuildingPlayProbe.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Buildings\SiegeFoundationCacheChecks.cs" />
@@ -216,6 +218,7 @@
     <Compile Include="Assets\Editor\Combat\Turrets\TurretAssetBaker.cs" />
     <Compile Include="Assets\Editor\Build\AutoBuildTool.cs" />
     <Compile Include="Assets\Editor\Combat\EnemyAvoidanceLabAuthoring.cs" />
+    <Compile Include="Assets\Editor\Combat\Diagnostics\NavigationSensorChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\Effects\VfxGraphAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\Authoring\SiegeArenaLookAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\Benchmarks\SiegePerformanceCapture.cs" />

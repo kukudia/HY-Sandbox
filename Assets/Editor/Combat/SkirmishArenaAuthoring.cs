@@ -141,6 +141,7 @@ public static class SkirmishArenaAuthoring
         EditorSceneManager.SaveScene(arena);
         AssetDatabase.SaveAssets();
         SpreadBattlefield(arena);
+        SkirmishNavigationAuthoring.Ensure(arena);
         EditorSceneManager.SaveScene(arena);
     }
 

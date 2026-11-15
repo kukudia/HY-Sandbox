@@ -50,8 +50,7 @@ public sealed class EnemyAvoidanceLab : MonoBehaviour
     private string blueprintJson;
     private readonly EnemyLabBlueprints blueprints = new EnemyLabBlueprints();
     private readonly EnemyLabRecorder recorder = new EnemyLabRecorder();
-    private readonly List<Vector3> trace = new List<Vector3>();
-    private readonly List<float> traceSpeeds = new List<float>();
+    private NavigationFlightTrace flightTrace;
     private EnemyNavigationSnapshot lastNavigation;
     private Vector3[] displayedRoute = Array.Empty<Vector3>();
     private bool paused;
@@ -304,8 +303,8 @@ public sealed class EnemyAvoidanceLab : MonoBehaviour
         started = Time.time;
         settledAt = -1f;
         nextSample = 0f;
-        trace.Clear();
-        traceSpeeds.Clear();
+        flightTrace ??= new NavigationFlightTrace(traceLine, 12000);
+        flightTrace.Clear();
         displayedRoute = Array.Empty<Vector3>();
         Status = "Ready";
         notice = "起点 " + startPosition.ToString("F1") + " / 目标 " + targetPosition.ToString("F1");
@@ -371,98 +370,13 @@ public sealed class EnemyAvoidanceLab : MonoBehaviour
             }
         }
 
-        if (trace.Count == 0 || Vector3.Distance(trace[trace.Count - 1], ship.transform.position) >= 0.4f)
-        {
-            bool shifted = trace.Count >= 12000;
-            if (shifted)
-            {
-                trace.RemoveAt(0);
-                traceSpeeds.RemoveAt(0);
-            }
-
-            trace.Add(ship.transform.position);
-            traceSpeeds.Add(body != null ? body.linearVelocity.magnitude : 0f);
-            if (traceLine != null)
-            {
-                traceLine.positionCount = trace.Count;
-                if (shifted)
-                {
-                    traceLine.SetPositions(trace.ToArray());
-                }
-                else
-                {
-                    traceLine.SetPosition(trace.Count - 1, ship.transform.position);
-                }
-            }
-        }
-        else if (traceSpeeds.Count > 0)
-        {
-            traceSpeeds[traceSpeeds.Count - 1] = body != null ? body.linearVelocity.magnitude : 0f;
-        }
-
-        UpdateTraceGradient();
+        flightTrace.Sample(ship.transform.position, body != null ? body.linearVelocity.magnitude : 0f, 0.4f, traceFastSpeed);
         nextSample = Time.time + Mathf.Max(0.02f, recordInterval);
     }
 
-    private Texture2D speedTexture;
-    private Material speedMaterial;
-    private Material originalTraceMaterial;
-    private readonly Color32[] speedPixels = new Color32[2048];
     [SerializeField, Min(0.1f), Tooltip("轨迹达到最浅颜色的实际速度（米/秒），固定标尺便于跨轮比较。")]
     private float traceFastSpeed = 8f;
     internal float TraceFastSpeed => traceFastSpeed;
-
-    private void UpdateTraceGradient()
-    {
-        if (traceLine == null || traceSpeeds.Count == 0)
-        {
-            return;
-        }
-
-        if (speedTexture == null)
-        {
-            speedTexture = new Texture2D(speedPixels.Length, 1, TextureFormat.RGBA32, false);
-            speedTexture.wrapMode = TextureWrapMode.Clamp;
-            speedTexture.filterMode = FilterMode.Bilinear;
-            originalTraceMaterial = traceLine.sharedMaterial;
-            speedMaterial = new Material(originalTraceMaterial);
-            speedMaterial.SetColor("_BaseColor", Color.white);
-            speedMaterial.SetTexture("_BaseMap", speedTexture);
-            traceLine.sharedMaterial = speedMaterial;
-            traceLine.textureMode = LineTextureMode.Stretch;
-            traceLine.startColor = traceLine.endColor = Color.white;
-        }
-
-        float length = 0f;
-        for (int i = 1; i < trace.Count; i++)
-        {
-            length += Vector3.Distance(trace[i - 1], trace[i]);
-        }
-
-        int segment = 0;
-        float startDistance = 0f;
-        float endDistance = trace.Count > 1 ? Vector3.Distance(trace[0], trace[1]) : 0f;
-        for (int i = 0; i < speedPixels.Length; i++)
-        {
-            float distance = length * i / (speedPixels.Length - 1);
-            while (segment + 2 < trace.Count && distance > endDistance)
-            {
-                startDistance = endDistance;
-                segment++;
-                endDistance += Vector3.Distance(trace[segment], trace[segment + 1]);
-            }
-
-            float speed = Mathf.Lerp(
-                traceSpeeds[segment],
-                traceSpeeds[Mathf.Min(segment + 1, traceSpeeds.Count - 1)],
-                Mathf.InverseLerp(startDistance, endDistance, distance));
-            speedPixels[i] = Color.Lerp(new Color(0.02f, 0.08f, 0.2f), new Color(0.65f, 1f, 1f), Mathf.Clamp01(speed / traceFastSpeed));
-        }
-
-        // 沿累计路程采样纹理，避免Gradient的有限关键帧把长航程速度细节抹平。
-        speedTexture.SetPixels32(speedPixels);
-        speedTexture.Apply(false, false);
-    }
 
     private void FinishTrial(string reason)
     {
@@ -584,15 +498,7 @@ public sealed class EnemyAvoidanceLab : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        for (int i = 1; i < trace.Count; i++)
-        {
-            Gizmos.color = Color.Lerp(
-                new Color(0.02f, 0.08f, 0.2f),
-                new Color(0.65f, 1f, 1f),
-                Mathf.Clamp01(traceSpeeds[i] / traceFastSpeed));
-            Gizmos.DrawLine(trace[i - 1], trace[i]);
-        }
-
+        flightTrace?.DrawGizmos(traceFastSpeed);
         Gizmos.color = new Color(1f, 0.6f, 0f);
         for (int i = 1; i < displayedRoute.Length; i++)
         {
@@ -607,15 +513,8 @@ public sealed class EnemyAvoidanceLab : MonoBehaviour
 
     private void OnDisable()
     {
-        if (speedMaterial != null)
-        {
-            traceLine.sharedMaterial = originalTraceMaterial;
-            Destroy(speedMaterial);
-            Destroy(speedTexture);
-            speedMaterial = null;
-            speedTexture = null;
-        }
-
+        flightTrace?.Dispose();
+        flightTrace = null;
         if (!initialized)
         {
             return;

@@ -1809,7 +1809,7 @@ def main():
          "S": "EnemyAvoidanceLab.OnDisable", "T": "EnemyLabRecorder.Dispose",
          "U": "EnemyLabComplexAuthoring.Upgrade", "V": "EnemyAvoidanceLab.SelectLocation",
          "W": "EnemyLabCamera.Update", "X": "EnemyLabCamera.SetFreeView",
-         "Y": "EnemyAvoidanceLab.UpdateTraceGradient",
+         "Y": "NavigationFlightTrace.Sample",
          "Z": "EnemyLabExpansionAuthoring.Upgrade", "AA": "EnemyLabMovingObstacle.ResetMotion",
          "AB": "EnemyLabMovingObstacle.FixedUpdate", "AC": "EnemyLabMovingObstacle.OnDisable"},
         ["A -.->|保存真实场景| C", "C --> D", "B --> I", "I --> J", "I --> D",
@@ -1821,6 +1821,21 @@ def main():
          "K -->|按累计路程将实时速度编码为深浅纹理| Y",
          "Z -.->|保存高架层与动态组件| C", "D -->|每轮相位复位| AA",
          "D -.->|后续独立物理回调，无先后保证| AB", "AC --> AA"],
+    )
+    graph(
+        "实战敌舰导航追踪与共享速度轨迹",
+        "源码推导：场景保存五组红方追踪组件；降频采样真实导航快照，换轮清空、死亡保留；实际轨迹与试验场共享有界速度历史，未来路线仅显示剩余航点。面板读取缓存，不参与驾驶决策。",
+        {"A": "SkirmishNavigationDebug.Update", "B": "NavigationTrack.Bind",
+         "C": "NavigationTrack.Sample", "D": "EnemyController.CaptureNavigation",
+         "E": "NavigationFlightTrace.Sample", "F": "NavigationFlightTrace.UpdateColors",
+         "G": "NavigationDebugText.Build", "H": "SkirmishNavigationDebug.OnGUI",
+         "I": "SkirmishNavigationDebug.SelectEnemy", "J": "SkirmishNavigationDebug.FocusSelected",
+         "K": "NavigationTrack.ClearHistory", "L": "NavigationTrack.OnDisable",
+         "M": "NavigationFlightTrace.Dispose", "N": "EnemyAvoidanceLab.Sample",
+         "O": "SkirmishNavigationAuthoring.Ensure", "P": "NavigationTrack.SetVisible"},
+        ["O -.->|保存组件和渲染引用| A", "A -->|换轮或重组| B", "B -->|换轮| K",
+         "A --> C", "C --> D", "C --> E", "N --> E", "E --> F", "A --> G", "A --> P",
+         "H --> I", "H --> J", "H --> K", "L --> M"],
     )
     graph(
         "自动随机5v5观战",

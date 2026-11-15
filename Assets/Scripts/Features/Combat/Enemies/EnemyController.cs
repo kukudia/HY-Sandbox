@@ -153,6 +153,19 @@ public class EnemyController : MonoBehaviour
 
         return new EnemyNavigationSnapshot
         {
+            targetName = currentTarget != null ? currentTarget.name : string.Empty,
+            hasTarget = currentTarget != null,
+            targetPosition = currentTarget != null ? currentTarget.transform.position : Vector3.zero,
+            navigationDestination = navigationDestination,
+            navigationRequested = navigationRequested,
+            controllerActive = isActiveAndEnabled,
+            localDetouring = navigation.Local.Detouring,
+            localQueryCount = navigation.Local.QueryCount,
+            localSaturated = navigation.Local.Saturated,
+            sensorColliders = navigation.Prediction.RawColliderCount,
+            sensorCapacity = navigation.Prediction.SensorCapacity,
+            engagementDistance = desiredDistance,
+            acquisitionDistance = detectionRange,
             position = transform.position,
             velocity = movementBody != null ? movementBody.linearVelocity : Vector3.zero,
             rotation = transform.rotation,

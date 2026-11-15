@@ -124,6 +124,7 @@
     <Compile Include="Assets\Scripts\Features\World\Validation\WorldLab\WorldLabDebrisProbe.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Physics\FragmentLifetime.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\SiegeProgress.cs" />
+    <Compile Include="Assets\Scripts\Features\Navigation\Diagnostics\Tracking\NavigationDebugText.cs" />
     <Compile Include="Assets\Scripts\Features\Navigation\Local\NavigationObstacleQuery.cs" />
     <Compile Include="Assets\Scripts\Features\World\Buildings\Placement\WorldBuildingValidation.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\PlayManager.cs" />
@@ -163,6 +164,7 @@
     <Compile Include="Assets\Scripts\Features\Building\BuildingEditor\BuildingFoundation.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Groups\RuntimeGroupCleanup.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\Presentation\BotFlightEffects.cs" />
+    <Compile Include="Assets\Scripts\Features\Combat\Skirmish\Diagnostics\SkirmishNavigationDebug.cs" />
     <Compile Include="Assets\Scripts\Features\Flight\Presentation\ThrusterVisualEffect.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Groups\BlockGroupManager.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlockDataTables\BlockDataTableSchema.cs" />
@@ -216,6 +218,7 @@
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\LightFade.cs" />
     <Compile Include="Assets\Scripts\Features\World\Presentation\WorldDistanceView.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Interface\IconManager.cs" />
+    <Compile Include="Assets\Scripts\Features\Navigation\Diagnostics\Tracking\NavigationFlightTrace.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Connections\BlockConnectionSnapshot.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\Projectiles\TurretProjectilePool.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Hangars\HangarRules.cs" />
@@ -337,6 +340,7 @@
     <Compile Include="Assets\Scripts\Features\Building\BlockDataTables\BlockCsvBinding.cs" />
     <Compile Include="Assets\Scripts\Features\Flight\Thrusters\Thruster.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Validation\SiegePlayerSurvey.cs" />
+    <Compile Include="Assets\Scripts\Features\Navigation\Diagnostics\Tracking\NavigationTrack.cs" />
     <Compile Include="Assets\Scripts\Features\World\WorldSessionManager.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interaction\BuildSelection.cs" />
     <Compile Include="Assets\Scripts\Features\Salvage\Cargo\CargoItem.cs" />

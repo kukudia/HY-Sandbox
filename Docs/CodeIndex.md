@@ -61,6 +61,10 @@ HY-Sandbox/
 │   │   │   ├── EnemyLabComplexAuthoring.cs
 │   │   │   ├── EnemyLabExpansionAuthoring.cs
 │   │   │   ├── SkirmishArenaAuthoring.cs
+│   │   │   ├── Diagnostics/
+│   │   │   │   ├── NavigationSensorChecks.cs
+│   │   │   │   ├── SkirmishNavigationAuthoring.cs
+│   │   │   │   └── SkirmishNavigationChecks.cs
 │   │   │   ├── Interface/
 │   │   │   │   ├── CombatHudSetup.cs
 │   │   │   │   └── HealthHudPreview.cs
@@ -319,7 +323,9 @@ HY-Sandbox/
 │           │   │   └── MeteorShower.cs
 │           │   ├── Skirmish/
 │           │   │   ├── SkirmishHud.cs
-│           │   │   └── SkirmishMatch.cs
+│           │   │   ├── SkirmishMatch.cs
+│           │   │   └── Diagnostics/
+│           │   │       └── SkirmishNavigationDebug.cs
 │           │   └── Turrets/
 │           │       ├── LaserTurret.cs
 │           │       ├── ProjectileIntercept.cs
@@ -373,14 +379,18 @@ HY-Sandbox/
 │           │   ├── NavigationAvoidanceSettings.cs
 │           │   ├── Diagnostics/
 │           │   │   ├── EnemyNavigationSnapshot.cs
-│           │   │   └── Lab/
-│           │   │       ├── EnemyAvoidanceCourse.cs
-│           │   │       ├── EnemyAvoidanceLab.cs
-│           │   │       ├── EnemyLabBlueprints.cs
-│           │   │       ├── EnemyLabCamera.cs
-│           │   │       ├── EnemyLabMovingObstacle.cs
-│           │   │       ├── EnemyLabPanel.cs
-│           │   │       └── EnemyLabRecorder.cs
+│           │   │   ├── Lab/
+│           │   │   │   ├── EnemyAvoidanceCourse.cs
+│           │   │   │   ├── EnemyAvoidanceLab.cs
+│           │   │   │   ├── EnemyLabBlueprints.cs
+│           │   │   │   ├── EnemyLabCamera.cs
+│           │   │   │   ├── EnemyLabMovingObstacle.cs
+│           │   │   │   ├── EnemyLabPanel.cs
+│           │   │   │   └── EnemyLabRecorder.cs
+│           │   │   └── Tracking/
+│           │   │       ├── NavigationDebugText.cs
+│           │   │       ├── NavigationFlightTrace.cs
+│           │   │       └── NavigationTrack.cs
 │           │   ├── Local/
 │           │   │   ├── NavigationAvoidance.cs
 │           │   │   └── NavigationObstacleQuery.cs
@@ -1120,6 +1130,36 @@ HY-Sandbox/
 | WorldBuildingFootprintChecks | [`void CheckCondition(bool condition, string label)`](../Assets/Editor/Building/Validation/WorldBuildingFootprintChecks.cs#L197) | private static |
 | WorldBuildingFootprintChecks | [`string Save(string phase, List<string> checks)`](../Assets/Editor/Building/Validation/WorldBuildingFootprintChecks.cs#L205) | private static |
 
+## Assets/Editor/Combat/Diagnostics/NavigationSensorChecks.cs
+
+// 职责：回归多模块刚体导致感知缓冲误饱和的问题，检查重复采集与静态通道保留。 // 入口：Play Mode中Validate()；在隔离物理场景构造600模块交通对象，不修改已打开场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| NavigationSensorChecks | [`string Validate()`](../Assets/Editor/Combat/Diagnostics/NavigationSensorChecks.cs#L10) | public static |
+
+## Assets/Editor/Combat/Diagnostics/SkirmishNavigationAuthoring.cs
+
+// 职责：给现有随机5v5保存五组敌舰导航追踪、轨迹/路线与调试面板；不重建地图或阵容。 // 入口：Install()菜单 / Ensure(scene)；幂等，已有追踪配置保留，显式保存目标场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SkirmishNavigationAuthoring | [`void Install()`](../Assets/Editor/Combat/Diagnostics/SkirmishNavigationAuthoring.cs#L12) | public static |
+| SkirmishNavigationAuthoring | [`void Ensure(Scene scene)`](../Assets/Editor/Combat/Diagnostics/SkirmishNavigationAuthoring.cs#L26) | public static |
+| SkirmishNavigationAuthoring | [`LineRenderer Line(Transform parent, string name, Color color, float width)`](../Assets/Editor/Combat/Diagnostics/SkirmishNavigationAuthoring.cs#L75) | private static |
+
+## Assets/Editor/Combat/Diagnostics/SkirmishNavigationChecks.cs
+
+// 职责：验证竞技场显式追踪配置、共享轨迹环形边界及真实战斗中的绑定/换轮清理。 // 入口：ValidateSaved()/Begin()；Play检查保留开火并采集导航，末段通过正式淘汰流程验证重开。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SkirmishNavigationChecks | [`string ValidateSaved()`](../Assets/Editor/Combat/Diagnostics/SkirmishNavigationChecks.cs#L18) | public static |
+| SkirmishNavigationChecks | [`void Begin()`](../Assets/Editor/Combat/Diagnostics/SkirmishNavigationChecks.cs#L70) | public static |
+| SkirmishNavigationChecks | [`Task<string> Run()`](../Assets/Editor/Combat/Diagnostics/SkirmishNavigationChecks.cs#L75) | private static async |
+| SkirmishNavigationChecks | [`string Save(string name, List<string> checks)`](../Assets/Editor/Combat/Diagnostics/SkirmishNavigationChecks.cs#L161) | private static |
+| SkirmishNavigationChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Combat/Diagnostics/SkirmishNavigationChecks.cs#L169) | private static |
+
 ## Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs
 
 // 职责：制作独立避障场景及持久化AI调试开关；不覆盖用户方块表和蓝图。 // 入口：Create() / EnableDebug()；重用既有服务配置，保存真实舰体和可编辑障碍布局。
@@ -1194,13 +1234,13 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SkirmishArenaAuthoring | [`void Create()`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L14) | public static |
-| SkirmishArenaAuthoring | [`void UpgradeToFive()`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L147) | public static |
-| SkirmishArenaAuthoring | [`void SpreadBattlefield(Scene scene)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L195) | private static |
-| SkirmishArenaAuthoring | [`T Find(Scene scene)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L244) | private static |
-| SkirmishArenaAuthoring | [`void UpgradeHud()`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L250) | public static |
-| SkirmishArenaAuthoring | [`void ConfigureCombatHud(CombatHud hud)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L263) | private static |
-| SkirmishArenaAuthoring | [`void Set(UnityEngine.Object owner, string field, UnityEngine.Object value)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L284) | private static |
-| SkirmishArenaAuthoring | [`Text Label( Transform parent, string name, Font font, Vector2 position, Vector2 size, int fontSize)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L291) | private static |
+| SkirmishArenaAuthoring | [`void UpgradeToFive()`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L148) | public static |
+| SkirmishArenaAuthoring | [`void SpreadBattlefield(Scene scene)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L196) | private static |
+| SkirmishArenaAuthoring | [`T Find(Scene scene)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L245) | private static |
+| SkirmishArenaAuthoring | [`void UpgradeHud()`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L251) | public static |
+| SkirmishArenaAuthoring | [`void ConfigureCombatHud(CombatHud hud)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L264) | private static |
+| SkirmishArenaAuthoring | [`void Set(UnityEngine.Object owner, string field, UnityEngine.Object value)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L285) | private static |
+| SkirmishArenaAuthoring | [`Text Label( Transform parent, string name, Font font, Vector2 position, Vector2 size, int fontSize)`](../Assets/Editor/Combat/SkirmishArenaAuthoring.cs#L292) | private static |
 
 ## Assets/Editor/Combat/Turrets/TurretAssetBaker.cs
 
@@ -3670,29 +3710,29 @@ HY-Sandbox/
 | --- | --- | --- |
 | EnemyController | [`void ConfigureDebugDisplay(bool enabled, bool ranges)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L136) | internal |
 | EnemyController | [`EnemyNavigationSnapshot CaptureNavigation(int previousRouteRevision = -1)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L142) | public |
-| EnemyController | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L204) | private |
-| EnemyController | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L223) | private |
-| EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L231) | private |
-| EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L303) | private |
-| EnemyController | [`Vector3 GetApproachDirection(Vector3 destination, Vector3 fallback)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L340) | private |
-| EnemyController | [`Vector3 PredictMovement(Vector3 proposed)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L347) | private |
-| EnemyController | [`float GetMovementInterval()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L383) | private |
-| EnemyController | [`Vector3 GetVelocityInput()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L388) | private |
-| EnemyController | [`Vector3 LimitObstacleInput(Vector3 input)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L429) | private |
-| EnemyController | [`Vector3 StabilizeDirection(Vector3 candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L453) | private |
-| EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L477) | public |
-| EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L485) | public |
-| EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L492) | private |
-| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L543) | private |
-| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L558) | private |
-| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L581) | private |
-| EnemyController | [`float ConstrainDescent(float requested, Vector3 direction)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L623) | private |
-| EnemyController | [`float GetBaseHoverHeight()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L641) | private |
-| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L659) | private |
-| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L675) | private |
-| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L728) | private |
-| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L733) | private |
-| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L796) | private static |
+| EnemyController | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L217) | private |
+| EnemyController | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L236) | private |
+| EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L244) | private |
+| EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L316) | private |
+| EnemyController | [`Vector3 GetApproachDirection(Vector3 destination, Vector3 fallback)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L353) | private |
+| EnemyController | [`Vector3 PredictMovement(Vector3 proposed)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L360) | private |
+| EnemyController | [`float GetMovementInterval()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L396) | private |
+| EnemyController | [`Vector3 GetVelocityInput()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L401) | private |
+| EnemyController | [`Vector3 LimitObstacleInput(Vector3 input)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L442) | private |
+| EnemyController | [`Vector3 StabilizeDirection(Vector3 candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L466) | private |
+| EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L490) | public |
+| EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L498) | public |
+| EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L505) | private |
+| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L556) | private |
+| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L571) | private |
+| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L594) | private |
+| EnemyController | [`float ConstrainDescent(float requested, Vector3 direction)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L636) | private |
+| EnemyController | [`float GetBaseHoverHeight()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L654) | private |
+| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L672) | private |
+| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L688) | private |
+| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L741) | private |
+| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L746) | private |
+| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L809) | private static |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs
 
@@ -3758,6 +3798,19 @@ HY-Sandbox/
 | MeteorShower | [`IEnumerator SpawnMeteors()`](../Assets/Scripts/Features/Combat/Meteors/MeteorShower.cs#L31) | private |
 | MeteorShower | [`void SpawnMeteor()`](../Assets/Scripts/Features/Combat/Meteors/MeteorShower.cs#L45) | private |
 | MeteorShower | [`void MeteorDestroyed()`](../Assets/Scripts/Features/Combat/Meteors/MeteorShower.cs#L77) | public |
+
+## Assets/Scripts/Features/Combat/Skirmish/Diagnostics/SkirmishNavigationDebug.cs
+
+// 职责：在随机5v5中连续追踪红队五个槽位，展示可切换导航文字、实速轨迹与未来路线。 // 入口：Update()降频绑定/采样；OnGUI()只读缓存；FocusSelected()保持当前相机朝向观察所选单位。 // 生命周期：换轮复用场景保存的五组追踪对象；驾驶舱重组续接，死亡保留轨迹，退出自动释放。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SkirmishNavigationDebug | [`NavigationTrack TrackAt(int index)`](../Assets/Scripts/Features/Combat/Skirmish/Diagnostics/SkirmishNavigationDebug.cs#L36) | public |
+| SkirmishNavigationDebug | [`void Update()`](../Assets/Scripts/Features/Combat/Skirmish/Diagnostics/SkirmishNavigationDebug.cs#L37) | private |
+| SkirmishNavigationDebug | [`void SelectEnemy(int index)`](../Assets/Scripts/Features/Combat/Skirmish/Diagnostics/SkirmishNavigationDebug.cs#L69) | public |
+| SkirmishNavigationDebug | [`void FocusSelected()`](../Assets/Scripts/Features/Combat/Skirmish/Diagnostics/SkirmishNavigationDebug.cs#L75) | public |
+| SkirmishNavigationDebug | [`void OnGUI()`](../Assets/Scripts/Features/Combat/Skirmish/Diagnostics/SkirmishNavigationDebug.cs#L84) | private |
+| SkirmishNavigationDebug | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Skirmish/Diagnostics/SkirmishNavigationDebug.cs#L140) | private |
 
 ## Assets/Scripts/Features/Combat/Skirmish/SkirmishHud.cs
 
@@ -4264,33 +4317,32 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| EnemyAvoidanceLab | [`string LayoutName(int index)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L81) | internal |
-| EnemyAvoidanceLab | [`void RecordOperation(string action, string detail)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L82) | public |
-| EnemyAvoidanceLab | [`void SetRoofVisibility(bool visible)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L83) | internal |
-| EnemyAvoidanceLab | [`void BeginPointPick(bool start)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L99) | public |
-| EnemyAvoidanceLab | [`string LocationName(int index)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L107) | public |
-| EnemyAvoidanceLab | [`bool SelectLocation(int index, bool asStart)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L108) | public |
-| EnemyAvoidanceLab | [`void SetStart(Vector3 position)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L129) | public |
-| EnemyAvoidanceLab | [`void Start()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L137) | private |
-| EnemyAvoidanceLab | [`void RefreshBlueprints()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L156) | public |
-| EnemyAvoidanceLab | [`void SelectBlueprint(int index)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L163) | public |
-| EnemyAvoidanceLab | [`bool DeploySelected()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L174) | public |
-| EnemyAvoidanceLab | [`void BindShip(ControlUnit value)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L220) | private |
-| EnemyAvoidanceLab | [`void SelectLayout(int index)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L241) | public |
-| EnemyAvoidanceLab | [`void ResetTrial()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L263) | public |
-| EnemyAvoidanceLab | [`void FixedUpdate()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L328) | private |
-| EnemyAvoidanceLab | [`void Sample()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L361) | private |
-| EnemyAvoidanceLab | [`void UpdateTraceGradient()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L415) | private |
-| EnemyAvoidanceLab | [`void FinishTrial(string reason)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L467) | private |
-| EnemyAvoidanceLab | [`void OnShipCollision(Collision collision)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L503) | private |
-| EnemyAvoidanceLab | [`void StopTrial()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L537) | public |
-| EnemyAvoidanceLab | [`void BeginSuite()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L546) | public |
-| EnemyAvoidanceLab | [`void SetGoal(Vector3 point)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L553) | public |
-| EnemyAvoidanceLab | [`void SetPaused(bool value)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L568) | public |
-| EnemyAvoidanceLab | [`void Update()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L575) | private |
-| EnemyAvoidanceLab | [`void OnGUI()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L580) | private |
-| EnemyAvoidanceLab | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L585) | private |
-| EnemyAvoidanceLab | [`void OnDisable()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L608) | private |
+| EnemyAvoidanceLab | [`string LayoutName(int index)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L80) | internal |
+| EnemyAvoidanceLab | [`void RecordOperation(string action, string detail)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L81) | public |
+| EnemyAvoidanceLab | [`void SetRoofVisibility(bool visible)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L82) | internal |
+| EnemyAvoidanceLab | [`void BeginPointPick(bool start)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L98) | public |
+| EnemyAvoidanceLab | [`string LocationName(int index)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L106) | public |
+| EnemyAvoidanceLab | [`bool SelectLocation(int index, bool asStart)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L107) | public |
+| EnemyAvoidanceLab | [`void SetStart(Vector3 position)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L128) | public |
+| EnemyAvoidanceLab | [`void Start()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L136) | private |
+| EnemyAvoidanceLab | [`void RefreshBlueprints()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L155) | public |
+| EnemyAvoidanceLab | [`void SelectBlueprint(int index)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L162) | public |
+| EnemyAvoidanceLab | [`bool DeploySelected()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L173) | public |
+| EnemyAvoidanceLab | [`void BindShip(ControlUnit value)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L219) | private |
+| EnemyAvoidanceLab | [`void SelectLayout(int index)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L240) | public |
+| EnemyAvoidanceLab | [`void ResetTrial()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L262) | public |
+| EnemyAvoidanceLab | [`void FixedUpdate()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L327) | private |
+| EnemyAvoidanceLab | [`void Sample()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L360) | private |
+| EnemyAvoidanceLab | [`void FinishTrial(string reason)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L381) | private |
+| EnemyAvoidanceLab | [`void OnShipCollision(Collision collision)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L417) | private |
+| EnemyAvoidanceLab | [`void StopTrial()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L451) | public |
+| EnemyAvoidanceLab | [`void BeginSuite()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L460) | public |
+| EnemyAvoidanceLab | [`void SetGoal(Vector3 point)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L467) | public |
+| EnemyAvoidanceLab | [`void SetPaused(bool value)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L482) | public |
+| EnemyAvoidanceLab | [`void Update()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L489) | private |
+| EnemyAvoidanceLab | [`void OnGUI()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L494) | private |
+| EnemyAvoidanceLab | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L499) | private |
+| EnemyAvoidanceLab | [`void OnDisable()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L514) | private |
 
 ## Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabBlueprints.cs
 
@@ -4356,6 +4408,45 @@ HY-Sandbox/
 | EnemyLabRecorder | [`void Fail(Exception exception)`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabRecorder.cs#L219) | private |
 | EnemyLabRecorder | [`void CloseTrial()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabRecorder.cs#L227) | private |
 | EnemyLabRecorder | [`void Dispose()`](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabRecorder.cs#L244) | public |
+
+## Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationDebugText.cs
+
+// 职责：把真实导航快照与轨迹指标格式化为可读的追踪报告；不额外查询物理或影响驾驶。 // 入口：Build()生成降频缓存文本；Mode()也用于场景标签。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| NavigationDebugText | [`string Mode(EnemyNavigationSnapshot value)`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationDebugText.cs#L8) | public static |
+| NavigationDebugText | [`string Build(NavigationTrack track)`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationDebugText.cs#L18) | public static |
+| NavigationDebugText | [`string TimeText(float seconds)`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationDebugText.cs#L51) | private static |
+
+## Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationFlightTrace.cs
+
+// 职责：用有界环形历史绘制实际飞行轨迹，沿累计航程编码固定速度标尺。 // 入口：Sample()/Clear()/DrawGizmos()；由试验场与实战追踪共同调用。 // 生命周期：Dispose()恢复作者材质并释放本实例纹理和材质；不写驾驶或刚体。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| NavigationFlightTrace | [`int Index(int offset)`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationFlightTrace.cs#L37) | private |
+| NavigationFlightTrace | [`void Clear()`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationFlightTrace.cs#L38) | public |
+| NavigationFlightTrace | [`void Sample(Vector3 position, float speed, float minimumSpacing, float fastSpeed)`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationFlightTrace.cs#L48) | public |
+| NavigationFlightTrace | [`void UpdateColors(float fastSpeed)`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationFlightTrace.cs#L94) | private |
+| NavigationFlightTrace | [`Color SpeedColor(float speed, float fastSpeed)`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationFlightTrace.cs#L138) | private static |
+| NavigationFlightTrace | [`void DrawGizmos(float fastSpeed)`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationFlightTrace.cs#L146) | public |
+| NavigationFlightTrace | [`void Dispose()`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationFlightTrace.cs#L155) | public |
+| NavigationFlightTrace | [`void Release(Object value)`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationFlightTrace.cs#L168) | private static |
+
+## Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationTrack.cs
+
+// 职责：采样一艘舰船的生产导航、实际航程/停滞和接触，驱动预制轨迹与规划线。 // 入口：Bind()/Sample()/SetVisible()；场景协调器负责选人和采样频率。 // 生命周期：换轮清空历史，同驾驶舱重组可续接；解绑注销碰撞事件，禁用释放速度纹理。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| NavigationTrack | [`void Bind(ControlUnit owner, string label, bool clearHistory)`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationTrack.cs#L53) | public |
+| NavigationTrack | [`void ClearHistory()`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationTrack.cs#L75) | public |
+| NavigationTrack | [`void Sample()`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationTrack.cs#L93) | public |
+| NavigationTrack | [`void SetVisible(bool showTrace, bool showRoute)`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationTrack.cs#L134) | public |
+| NavigationTrack | [`void OnContact(Collision collision)`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationTrack.cs#L147) | private |
+| NavigationTrack | [`void Unsubscribe()`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationTrack.cs#L155) | private |
+| NavigationTrack | [`void OnDisable()`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationTrack.cs#L163) | private |
 
 ## Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs
 
@@ -4441,16 +4532,16 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| NavigationPrediction | [`void Clear()`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L101) | internal |
-| NavigationPrediction | [`void Observe( ControlUnit owner, Bounds hull, Vector3 velocity, LayerMask layers, float speed, float horizon, Vector3 destination, System.Collections.Generic.IReadOnlyList<Vector3> route, int waypoint, float height)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L128) | internal |
-| NavigationPrediction | [`void CopyPlanningBounds(System.Collections.Generic.List<Bounds> destination, Vector3 padding, float predictionTime)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L161) | internal |
-| NavigationPrediction | [`Vector3 Choose( ControlUnit owner, Bounds hull, Vector3 velocity, Vector3 desired, float targetHeight, LayerMask layers, float cruiseSpeed, float horizon, float acceleration, float turnRate, bool preserveCourse, Vector3 destination, System.Collections.Generic.IReadOnlyList<Vector3> route, int waypoint)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L183) | internal |
-| NavigationPrediction | [`void Capture( ControlUnit owner, Bounds hull, Vector3 velocity, LayerMask layers, float cruiseSpeed, float horizon)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L333) | private |
-| NavigationPrediction | [`void Preview( Bounds hull, Vector3 destination, System.Collections.Generic.IReadOnlyList<Vector3> route, int waypoint, Vector3 root, float height, float speed)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L393) | private |
-| NavigationPrediction | [`Outcome Evaluate( Bounds hull, Vector3 velocity, Vector3 input, float deltaHeight, float speed, float horizon, float acceleration, float turnRate)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L475) | private |
-| NavigationPrediction | [`void Consider(ref Outcome best, Outcome candidate, Vector3 desired)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L557) | private |
-| NavigationPrediction | [`float Score(Outcome candidate, Vector3 desired)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L575) | private |
-| NavigationPrediction | [`float Clearance(Bounds bounds, Vector3 point)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L582) | private static |
+| NavigationPrediction | [`void Clear()`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L109) | internal |
+| NavigationPrediction | [`void Observe( ControlUnit owner, Bounds hull, Vector3 velocity, LayerMask layers, float speed, float horizon, Vector3 destination, System.Collections.Generic.IReadOnlyList<Vector3> route, int waypoint, float height)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L138) | internal |
+| NavigationPrediction | [`void CopyPlanningBounds(System.Collections.Generic.List<Bounds> destination, Vector3 padding, float predictionTime)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L171) | internal |
+| NavigationPrediction | [`Vector3 Choose( ControlUnit owner, Bounds hull, Vector3 velocity, Vector3 desired, float targetHeight, LayerMask layers, float cruiseSpeed, float horizon, float acceleration, float turnRate, bool preserveCourse, Vector3 destination, System.Collections.Generic.IReadOnlyList<Vector3> route, int waypoint)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L193) | internal |
+| NavigationPrediction | [`void Capture( ControlUnit owner, Bounds hull, Vector3 velocity, LayerMask layers, float cruiseSpeed, float horizon)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L343) | private |
+| NavigationPrediction | [`void Preview( Bounds hull, Vector3 destination, System.Collections.Generic.IReadOnlyList<Vector3> route, int waypoint, Vector3 root, float height, float speed)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L440) | private |
+| NavigationPrediction | [`Outcome Evaluate( Bounds hull, Vector3 velocity, Vector3 input, float deltaHeight, float speed, float horizon, float acceleration, float turnRate)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L522) | private |
+| NavigationPrediction | [`void Consider(ref Outcome best, Outcome candidate, Vector3 desired)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L604) | private |
+| NavigationPrediction | [`float Score(Outcome candidate, Vector3 desired)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L622) | private |
+| NavigationPrediction | [`float Clearance(Bounds bounds, Vector3 point)`](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L629) | private static |
 
 ## Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs
 
