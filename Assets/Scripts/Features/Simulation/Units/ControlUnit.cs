@@ -97,6 +97,7 @@ public class ControlUnit : MonoBehaviour
     private void OnDisable()
     {
         ActiveUnits.Remove(this);
+        SetMovementInput(Vector3.zero);
     }
 
     // Runtime aggregate for one construct: owns cockpit validity, movement input, and child component references.
@@ -109,6 +110,12 @@ public class ControlUnit : MonoBehaviour
     public UnitFaction faction = UnitFaction.Player;
     public bool hasValidCockpit;
     public Vector3 movementInput;
+    private Vector3 coastingDirection;
+    private Thruster[] cachedThrusters = System.Array.Empty<Thruster>();
+    public IReadOnlyList<Thruster> Thrusters => cachedThrusters;
+    public Vector3 PropulsionDirection => movementInput.sqrMagnitude > 1e-6f ? movementInput.normalized : coastingDirection;
+    public float PropulsionThrottle => Mathf.Clamp01(movementInput.magnitude);
+
     public Transform target;
     public float ExplosionCollisionProtectedUntil
     {
@@ -179,13 +186,13 @@ public class ControlUnit : MonoBehaviour
 
         if (!HasValidCockpit)
         {
-            movementInput = Vector3.zero;
+            SetMovementInput(Vector3.zero);
             return;
         }
 
         if (AcceptsPlayerInput)
         {
-            movementInput = GetPlayerMovementInput();
+            SetMovementInput(GetPlayerMovementInput());
         }
 
         if (AcceptsPlayerInput && Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
@@ -222,6 +229,7 @@ public class ControlUnit : MonoBehaviour
         hoverThrusters = GetComponentsInChildren<HoverThruster>();
         Rigidbody unitRigidbody = GetComponent<Rigidbody>();
         Thruster[] allThrusters = GetComponentsInChildren<Thruster>();
+        cachedThrusters = allThrusters;
         foreach (Thruster thruster in allThrusters)
         {
             if (thruster == null)
@@ -240,7 +248,7 @@ public class ControlUnit : MonoBehaviour
         }
         else
         {
-            movementInput = Vector3.zero;
+            SetMovementInput(Vector3.zero);
             //Debug.LogWarning($"{name} requires exactly one Cockpit, found {cockpits.Length}.");
         }
 
@@ -306,12 +314,19 @@ public class ControlUnit : MonoBehaviour
             hoverFlightController.enabled = false;
         }
 
-        movementInput = Vector3.zero;
+        SetMovementInput(Vector3.zero);
     }
 
     public void SetMovementInput(Vector3 worldDirection)
     {
-        movementInput = Vector3.ClampMagnitude(worldDirection, 1f);
+        SetPropulsionInput(worldDirection, worldDirection.magnitude);
+    }
+
+    public void SetPropulsionInput(Vector3 worldDirection, float throttle)
+    {
+        // 朝向在滑行时仍有效；零油门不能用瞬时速度误差重新决定喷口朝向。
+        coastingDirection = worldDirection.sqrMagnitude > 1e-6f ? worldDirection.normalized : Vector3.zero;
+        movementInput = coastingDirection * Mathf.Clamp01(throttle);
     }
 
     public void SetTarget(Transform newTarget)

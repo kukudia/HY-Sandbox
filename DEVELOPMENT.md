@@ -4,13 +4,13 @@
 
 `EnemyController.StabilizeDirection` 在普通直航阶段锁定方向，小于 `directionDeadZone`（默认12度）的目标偏移完全忽略，不做持续微调或插值。普通重选航向至少保持 `directionHoldTime`（默认1.5秒）；目标切换、进入绕障、首次接入路线或真实航点拐角可重新锁定，重规划本身不作为转弯理由。偏离锁定直线超过 `straightCourseTolerance`（默认1.5米）才允许恢复航线；近距离战斗横移及紧急避障及时接管。字段名和已有序列化值保留，Inspector说明已更新。
 
-`Flight/FlightControlMath` 是普通C#飞控计算入口：自主参考航速独立限制角速度/加速度，悬浮航向响应继续由 `HoverControlSolver.StepHeading` 调用，状态与执行由各自控制器拥有。导航不直接写刚体，不新增自动组件。既有推进输出与蓝图推力标定保持；当前验证见 [直航锁定回归](Docs/Validation/2026-11-15-straight-course-lock.md)，[上一版平滑试验](Docs/Validation/2026-11-15-flight-course-stability.md)保留为历史记录。
+`Flight/FlightControlMath` 是普通C#飞控计算入口：自主参考航速独立限制角速度/加速度，悬浮航向响应继续由 `HoverControlSolver.StepHeading` 调用，状态与执行由各自控制器拥有。导航不直接写刚体，不新增自动组件。蓝图最大推力标定保持；推进执行另由 `Flight/FlightPropulsionControl` 将参考速度拆为朝向与比例油门，巡航沿锁定方向调速，显著转弯与明确制动才改变推力朝向。`ControlUnit.SetPropulsionInput` 允许零油门保留朝向；`UniversalThruster` 按幅值输出并在未对准时阻止侧向残余施力。执行层验证见 [模拟输入与实际喷口回归](Docs/Validation/2026-11-15-propulsion-input.md)，导航方向验证见 [直航锁定回归](Docs/Validation/2026-11-15-straight-course-lock.md)，[上一版平滑试验](Docs/Validation/2026-11-15-flight-course-stability.md)保留为历史记录。
 
 ## Random5v5Arena 实战导航追踪
 
 场景已保存 `Arena Navigation Debug`，显式挂载 `SkirmishNavigationDebug` 和五组 `NavigationTrack`。进入 Play 后右侧 RED-1～5 切换红方敌舰，`Focus ship` 平移自由相机至所选舰，`Clear selected trace` 只清空当前舰历史；可切换全部历史线和所选未来路线。Inspector 可关闭面板、场景标签并调整采样间隔、轨迹容量和速度标尺。重新制作竞技场会自动安装；已有场景可用 `Tools/HY-Sandbox/Combat/Install Arena Navigation Debug` 幂等安装，不重建地图或舰队配置。
 
-面板显示目标/距离、接敌与索敌阈值、航程、水平停滞时长、接触次数、期望/实际输入、制动、A*失败/重规划及节点耗时、预测威胁/TTC、原始碰撞体数/容量和分别的感知/局部饱和状态。轨迹与 EnemyAvoidanceLab 共用 `Navigation/Diagnostics/Tracking/NavigationFlightTrace`：深蓝0至亮青8m/s，橙色仅表示尚未经过的规划航点；换轮清空、死亡保留最后记录、同驾驶舱重组续接。
+面板显示目标/距离、接敌与索敌阈值、航程、水平停滞时长、接触次数、期望/实际输入、独立推进方向/油门/反推制动、导航限速、A*失败/重规划及节点耗时、预测威胁/TTC、原始碰撞体数/容量和分别的感知/局部饱和状态。轨迹与 EnemyAvoidanceLab 共用 `Navigation/Diagnostics/Tracking/NavigationFlightTrace`：深蓝0至亮青8m/s，橙色仅表示尚未经过的规划航点；换轮清空、死亡保留最后记录、同驾驶舱重组续接。
 
 实战发现原256碰撞体远场缓存被多模块舰船填满，触发持续 `SensorSaturated` 紧急停车；现按需扩容复用至8192上限，同刚体模块合并为运动包围盒，静态建筑仍独立保留通道。到达效率优先；不把缓存截断当作真实障碍，也不把不完整查询当成净空。验证与剩余边界见 [实战导航追踪记录](Docs/Validation/2026-11-15-arena-navigation-debug.md)。
 

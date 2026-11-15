@@ -63,6 +63,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField, Range(0f, 3f), Tooltip("运动学障碍短期包络预判秒数；平移和旋转余量各限12米。")]
     private float pathPredictionTime = 1.5f;
     private VesselNavigation navigation;
+    private readonly FlightPropulsionControl propulsion = new FlightPropulsionControl();
     [Header("Predictive Local Decisions")]
     [SerializeField, Tooltip("在爬升、A*与直达分支之后统一比较周围障碍和短期候选航迹。")]
     private bool usePredictiveDecisions = true;
@@ -180,6 +181,9 @@ public class EnemyController : MonoBehaviour
             desiredInput = desiredMovementInput,
             referenceVelocity = courseVelocity,
             appliedInput = unit != null ? unit.MovementInput : Vector3.zero,
+            propulsionDirection = unit != null ? unit.PropulsionDirection : Vector3.zero,
+            propulsionThrottle = unit != null ? unit.PropulsionThrottle : 0f,
+            propulsionBraking = propulsion.Braking,
             steering = steeringDirection,
             targetHeight = unit != null && unit.hoverFlightController != null ? unit.hoverFlightController.targetHoverHeight : 0f,
             probeDistance = probeDistance,
@@ -228,6 +232,7 @@ public class EnemyController : MonoBehaviour
         nextUpdateTime = Time.time + phase * Mathf.Max(0.01f, updateInterval);
         nextMovementUpdateTime = 0f;
         navigation.Reset();
+        propulsion.Reset();
         navigationOwnsDirection = false;
         navigationRequested = false;
         steeringDirection = Vector3.zero;
@@ -280,6 +285,7 @@ public class EnemyController : MonoBehaviour
             if (previousTarget != currentTarget)
             {
                 navigation.Reset();
+                propulsion.Reset();
                 steeringDirection = Vector3.zero;
                 climbingObstacle = false;
                 nextMovementUpdateTime = 0f;
@@ -301,10 +307,7 @@ public class EnemyController : MonoBehaviour
             }
 
             ConfigureHoverThrusters();
-            unit.SetMovementInput(LimitObstacleInput(Vector3.MoveTowards(
-                unit.MovementInput,
-                GetVelocityInput(),
-                Mathf.Max(0.1f, movementResponseRate) * Time.fixedDeltaTime)));
+            UpdatePropulsionInput();
             return;
         }
 
@@ -317,11 +320,7 @@ public class EnemyController : MonoBehaviour
         }
 
         ConfigureHoverThrusters();
-        Vector3 smoothedInput = Vector3.MoveTowards(
-            unit.MovementInput,
-            GetVelocityInput(),
-            Mathf.Max(0.1f, movementResponseRate) * Time.fixedDeltaTime);
-        unit.SetMovementInput(LimitObstacleInput(smoothedInput));
+        UpdatePropulsionInput();
     }
 
     private Vector3 CalculateDesiredMovement(Vector3 flatDirection)
@@ -409,7 +408,7 @@ public class EnemyController : MonoBehaviour
         return Mathf.Max(0.5f, movementUpdateInterval);
     }
 
-    private Vector3 GetVelocityInput()
+    private Vector3 GetReferenceVelocity()
     {
         Vector3 velocity = movementBody != null ? Vector3.ProjectOnPlane(movementBody.linearVelocity, Vector3.up) : Vector3.zero;
         Vector3 targetVelocity = desiredMovementInput * cruiseSpeed;
@@ -433,31 +432,21 @@ public class EnemyController : MonoBehaviour
             courseVelocity = safeVelocity;
         }
 
-        return LimitObstacleInput(Vector3.ClampMagnitude((courseVelocity - velocity) / Mathf.Max(1f, cruiseSpeed * 0.5f), 1f));
+        return courseVelocity;
     }
 
-    private Vector3 LimitObstacleInput(Vector3 input)
+    private void UpdatePropulsionInput()
     {
-        if (avoidingObstacle && movementBody != null)
-        {
-            Vector3 flatVelocity = Vector3.ProjectOnPlane(movementBody.linearVelocity, Vector3.up);
-            if (flatVelocity.sqrMagnitude > 0.01f)
-            {
-                Vector3 direction = flatVelocity.normalized;
-                float forward = Vector3.Dot(input, direction);
-                if (forward > 0f)
-                {
-                    // 遇障按接近比例缩减前向推力，不施加反向推力。
-                    input -= direction * (forward * (1f - obstacleSpeedRatio));
-                }
-                else if (forward < 0f && !predictiveBraking)
-                {
-                    input -= direction * forward;
-                }
-            }
-        }
-
-        return input;
+        Vector3 reference = GetReferenceVelocity();
+        FlightPropulsionControl.Command command = propulsion.Evaluate(
+            unit,
+            movementBody,
+            reference,
+            predictiveBraking,
+            predictionBrakingAcceleration,
+            movementResponseRate,
+            Time.fixedDeltaTime);
+        unit.SetPropulsionInput(command.Direction, command.Throttle);
     }
 
     private Vector3 StabilizeDirection(Vector3 candidate)
@@ -591,6 +580,7 @@ public class EnemyController : MonoBehaviour
         }
 
         navigation.Reset();
+        propulsion.Reset();
         navigationOwnsDirection = false;
         predictiveBraking = false;
         navigationRequested = false;

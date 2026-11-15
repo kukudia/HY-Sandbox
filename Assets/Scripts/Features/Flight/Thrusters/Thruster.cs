@@ -116,7 +116,7 @@ public abstract class Thruster : MonoBehaviour
         return input.sqrMagnitude > InputEpsilonSqr && IsPlayModeActive() && HasValidRuntimeOwner();
     }
 
-    protected void ApplyDirectionalThrust()
+    protected virtual void ApplyDirectionalThrust()
     {
         if (thrust <= 0f || !CanApplyThrust() || !TryEnsureRigidbody())
         {

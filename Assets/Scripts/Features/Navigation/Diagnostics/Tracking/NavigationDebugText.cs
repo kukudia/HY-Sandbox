@@ -32,7 +32,8 @@ public static class NavigationDebugText
         text.Append("Height: ").Append(s.position.y.ToString("F1")).Append(" -> ").Append(s.targetHeight.ToString("F1")).AppendLine("m");
         text.Append("Desired: ").Append(s.desiredInput.ToString("F2")).AppendLine();
         text.Append("Applied: ").Append(s.appliedInput.ToString("F2")).AppendLine();
-        text.Append("Reference: ").Append(s.referenceVelocity.magnitude.ToString("F1")).Append("m/s  Throttle: ").Append(s.throttleRatio.ToString("F2")).AppendLine();
+        text.Append("Reference: ").Append(s.referenceVelocity.magnitude.ToString("F1")).Append("m/s  Navigation limit: ").Append(s.throttleRatio.ToString("F2")).AppendLine();
+        text.Append("Drive: ").Append(s.propulsionDirection.ToString("F2")).Append("  Throttle: ").Append(s.propulsionThrottle.ToString("F2")).Append("  Reverse brake: ").Append(s.propulsionBraking).AppendLine();
         text.Append("Brake: ").Append(s.predictiveBraking).Append("  Urgent: ").Append(s.urgent).Append("  Probe: ").Append(s.probeDistance.ToString("F1")).AppendLine("m");
         text.Append("A*: ").Append(s.pathStatus).Append("  ").AppendLine(s.replanReason);
         text.Append("Waypoint: ").Append(s.waypoint).Append("  Nodes: ").Append(s.expandedNodes).Append("  Plan: ").Append(s.planMilliseconds.ToString("F2")).AppendLine("ms");

@@ -26,6 +26,9 @@ public struct EnemyNavigationSnapshot
     public Vector3 desiredInput;
     public Vector3 referenceVelocity;
     public Vector3 appliedInput;
+    public Vector3 propulsionDirection;
+    public float propulsionThrottle;
+    public bool propulsionBraking;
     public Vector3 steering;
     public float targetHeight;
     public float probeDistance;

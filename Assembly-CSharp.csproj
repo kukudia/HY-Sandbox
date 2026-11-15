@@ -108,6 +108,7 @@
     <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BlueprintLoader.cs" />
     <Compile Include="Assets\Scripts\Features\Navigation\Diagnostics\Lab\EnemyAvoidanceCourse.cs" />
     <Compile Include="Assets\Scripts\Features\World\Validation\OutpostSalvagePlayerChecks.cs" />
+    <Compile Include="Assets\Scripts\Features\Flight\FlightPropulsionControl.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Units\Rack.cs" />
     <Compile Include="Assets\Scripts\Features\Navigation\Planning\NavigationObstacleClimb.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Interface\SiegeDeploymentView.cs" />

@@ -64,6 +64,7 @@ HY-Sandbox/
 │   │   │   ├── Diagnostics/
 │   │   │   │   ├── FlightCourseChecks.cs
 │   │   │   │   ├── NavigationSensorChecks.cs
+│   │   │   │   ├── PropulsionInputChecks.cs
 │   │   │   │   ├── SkirmishNavigationAuthoring.cs
 │   │   │   │   └── SkirmishNavigationChecks.cs
 │   │   │   ├── Interface/
@@ -352,6 +353,7 @@ HY-Sandbox/
 │           │       └── PhysicsTelemetryHud.cs
 │           ├── Flight/
 │           │   ├── FlightControlMath.cs
+│           │   ├── FlightPropulsionControl.cs
 │           │   ├── HoverFlightController.cs
 │           │   ├── Hover/
 │           │   │   ├── HoverControlSolver.cs
@@ -1150,6 +1152,17 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | NavigationSensorChecks | [`string Validate()`](../Assets/Editor/Combat/Diagnostics/NavigationSensorChecks.cs#L10) | public static |
+
+## Assets/Editor/Combat/Diagnostics/PropulsionInputChecks.cs
+
+// 职责：用用户Type 03蓝图采样真实直航、模拟输入与通用推进器朝向，避免只验证导航期望方向。 // 入口：Begin(label)；独立EnemyAvoidanceLab Play会话，结果写入Temp，不改源蓝图。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| PropulsionInputChecks | [`void Begin(string label)`](../Assets/Editor/Combat/Diagnostics/PropulsionInputChecks.cs#L41) | public static |
+| PropulsionInputChecks | [`string Validate()`](../Assets/Editor/Combat/Diagnostics/PropulsionInputChecks.cs#L46) | public static |
+| PropulsionInputChecks | [`void Require(bool condition, string message)`](../Assets/Editor/Combat/Diagnostics/PropulsionInputChecks.cs#L117) | private static |
+| PropulsionInputChecks | [`Task<string> Capture(string label)`](../Assets/Editor/Combat/Diagnostics/PropulsionInputChecks.cs#L125) | private static async |
 
 ## Assets/Editor/Combat/Diagnostics/SkirmishNavigationAuthoring.cs
 
@@ -3721,31 +3734,31 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| EnemyController | [`void ConfigureDebugDisplay(bool enabled, bool ranges)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L143) | internal |
-| EnemyController | [`EnemyNavigationSnapshot CaptureNavigation(int previousRouteRevision = -1)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L149) | public |
-| EnemyController | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L224) | private |
-| EnemyController | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L246) | private |
-| EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L254) | private |
-| EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L327) | private |
-| EnemyController | [`Vector3 GetApproachDirection(Vector3 destination, Vector3 fallback)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L364) | private |
-| EnemyController | [`Vector3 PredictMovement(Vector3 proposed)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L371) | private |
-| EnemyController | [`float GetMovementInterval()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L407) | private |
-| EnemyController | [`Vector3 GetVelocityInput()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L412) | private |
-| EnemyController | [`Vector3 LimitObstacleInput(Vector3 input)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L439) | private |
-| EnemyController | [`Vector3 StabilizeDirection(Vector3 candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L463) | private |
-| EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L504) | public |
-| EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L512) | public |
-| EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L519) | private |
-| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L570) | private |
-| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L585) | private |
-| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L608) | private |
-| EnemyController | [`float ConstrainDescent(float requested, Vector3 direction)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L650) | private |
-| EnemyController | [`float GetBaseHoverHeight()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L668) | private |
-| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L686) | private |
-| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L702) | private |
-| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L755) | private |
-| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L760) | private |
-| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L823) | private static |
+| EnemyController | [`void ConfigureDebugDisplay(bool enabled, bool ranges)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L144) | internal |
+| EnemyController | [`EnemyNavigationSnapshot CaptureNavigation(int previousRouteRevision = -1)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L150) | public |
+| EnemyController | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L228) | private |
+| EnemyController | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L251) | private |
+| EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L259) | private |
+| EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L326) | private |
+| EnemyController | [`Vector3 GetApproachDirection(Vector3 destination, Vector3 fallback)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L363) | private |
+| EnemyController | [`Vector3 PredictMovement(Vector3 proposed)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L370) | private |
+| EnemyController | [`float GetMovementInterval()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L406) | private |
+| EnemyController | [`Vector3 GetReferenceVelocity()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L411) | private |
+| EnemyController | [`void UpdatePropulsionInput()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L438) | private |
+| EnemyController | [`Vector3 StabilizeDirection(Vector3 candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L452) | private |
+| EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L493) | public |
+| EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L501) | public |
+| EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L508) | private |
+| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L559) | private |
+| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L574) | private |
+| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L598) | private |
+| EnemyController | [`float ConstrainDescent(float requested, Vector3 direction)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L640) | private |
+| EnemyController | [`float GetBaseHoverHeight()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L658) | private |
+| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L676) | private |
+| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L692) | private |
+| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L745) | private |
+| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L750) | private |
+| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L813) | private static |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs
 
@@ -4076,6 +4089,16 @@ HY-Sandbox/
 | FlightControlMath | [`float ResponseBlend(float response, float deltaTime)`](../Assets/Scripts/Features/Flight/FlightControlMath.cs#L7) | internal static |
 | FlightControlMath | [`Vector3 StepCourse(Vector3 current, Vector3 desired, float turnRate, float acceleration, float deltaTime)`](../Assets/Scripts/Features/Flight/FlightControlMath.cs#L12) | internal static |
 
+## Assets/Scripts/Features/Flight/FlightPropulsionControl.cs
+
+// 职责：把参考速度转成独立的喷口朝向、比例油门与显式制动，不把细小速度误差当成直航方向。 // 入口：Evaluate()；已确认的供电能力与刚体阻尼提供前馈，真实施力仍由推进器执行。 // 生命周期：每舰独立持有油门与制动迟滞，停用/重组Reset()；不直接写刚体。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| FlightPropulsionControl | [`void Reset()`](../Assets/Scripts/Features/Flight/FlightPropulsionControl.cs#L26) | internal |
+| FlightPropulsionControl | [`Command Evaluate( ControlUnit owner, Rigidbody body, Vector3 reference, bool requestBrake, float brakingAcceleration, float response, float deltaTime)`](../Assets/Scripts/Features/Flight/FlightPropulsionControl.cs#L32) | internal |
+| FlightPropulsionControl | [`float AvailableAcceleration(ControlUnit owner, Vector3 direction, float mass)`](../Assets/Scripts/Features/Flight/FlightPropulsionControl.cs#L93) | private static |
+
 ## Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs
 
 // 职责：保存高度 PID 与接管航向，计算高度、重力补偿、倾斜及偏航稳定建议。 // 入口：StepHeight() / StepHeading() / CalculateTilt() / TryCalculateAngularVelocity()；不读取组件或写刚体。 // 生命周期：停止输出及切换运行归属时 Reset()，不将旧积分带入新物理会话。
@@ -4190,7 +4213,7 @@ HY-Sandbox/
 | Thruster | [`void TickInputThrust(ref Vector3 input)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L89) | protected |
 | Thruster | [`float CalculateInputThrust(Vector3 input, bool active)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L109) | protected virtual |
 | Thruster | [`bool ShouldActivateInputThrust(Vector3 input)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L114) | protected |
-| Thruster | [`void ApplyDirectionalThrust()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L119) | protected |
+| Thruster | [`void ApplyDirectionalThrust()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L119) | protected virtual |
 | Thruster | [`void CacheLocalReferences()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L158) | protected |
 | Thruster | [`void ApplyThrustChangeRateLimit()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L167) | public virtual |
 | Thruster | [`void SetPowerRequested(bool requested)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L177) | protected |
@@ -4204,15 +4227,17 @@ HY-Sandbox/
 
 ## Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs
 
-// 职责：按移动输入转动通用推进模型，其余输入推进生命周期复用 Thruster。 // 入口：FixedUpdate() → TickInputThrust()；保留 ApplyThrust() / ShouldActivate()。
+// 职责：按明确的推进朝向对齐喷口，按油门比例输出；转向未对准时不施加侧向残余推力。 // 入口：FixedUpdate() → TickInputThrust()；保留 ApplyThrust() / ShouldActivate()。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | UniversalThruster | [`void FixedUpdate()`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L10) | private |
 | UniversalThruster | [`float CalculateInputThrust(Vector3 input, bool active)`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L15) | protected override |
-| UniversalThruster | [`void RotateThruster(Vector3 worldDir, bool active)`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L21) | private |
-| UniversalThruster | [`void ApplyThrust()`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L32) | public |
-| UniversalThruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L37) | public override |
+| UniversalThruster | [`bool IsAligned(Vector3 direction)`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L22) | private |
+| UniversalThruster | [`void ApplyDirectionalThrust()`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L27) | protected override |
+| UniversalThruster | [`void RotateThruster(Vector3 worldDir, bool active)`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L36) | private |
+| UniversalThruster | [`void ApplyThrust()`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L47) | public |
+| UniversalThruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L52) | public override |
 
 ## Assets/Scripts/Features/MainMenu/Interface/MainMenuView.cs
 
@@ -4439,7 +4464,7 @@ HY-Sandbox/
 | --- | --- | --- |
 | NavigationDebugText | [`string Mode(EnemyNavigationSnapshot value)`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationDebugText.cs#L8) | public static |
 | NavigationDebugText | [`string Build(NavigationTrack track)`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationDebugText.cs#L18) | public static |
-| NavigationDebugText | [`string TimeText(float seconds)`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationDebugText.cs#L51) | private static |
+| NavigationDebugText | [`string TimeText(float seconds)`](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationDebugText.cs#L52) | private static |
 
 ## Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationFlightTrace.cs
 
@@ -6115,19 +6140,20 @@ HY-Sandbox/
 | ControlUnit | [`void BindBuilding(BuildingRuntime building)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L84) | public |
 | ControlUnit | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L89) | private |
 | ControlUnit | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L97) | private |
-| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L118) | public |
-| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L130) | public |
-| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L155) | private |
-| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L167) | private |
-| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L214) | public |
-| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L273) | public |
-| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L294) | public |
-| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L302) | public |
-| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L312) | public |
-| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L317) | public |
-| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L322) | private |
-| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L366) | private |
-| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L377) | private |
+| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L125) | public |
+| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L137) | public |
+| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L162) | private |
+| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L174) | private |
+| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L221) | public |
+| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L281) | public |
+| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L302) | public |
+| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L310) | public |
+| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L320) | public |
+| ControlUnit | [`void SetPropulsionInput(Vector3 worldDirection, float throttle)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L325) | public |
+| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L332) | public |
+| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L337) | private |
+| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L381) | private |
+| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L392) | private |
 
 ## Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs
 
