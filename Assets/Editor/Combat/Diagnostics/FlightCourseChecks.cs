@@ -1,4 +1,4 @@
-// 职责：验证连续小幅航向修正、紧急接管及限角速度契约，并采集两艘船的直线飞行。
+// 职责：验证直航锁定与横偏恢复、紧急接管及限角速度契约，并采集两艘船的直线飞行。
 // 入口：Validate()/Begin(label)；仅在导航试验场Play会话运行，不保存测试期配置。
 using System;
 using System.Collections.Generic;
@@ -25,49 +25,85 @@ public static class FlightCourseChecks
         EnemyController controller = lab.Ship.GetComponent<EnemyController>();
         const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
         MethodInfo stabilize = typeof(EnemyController).GetMethod("StabilizeDirection", flags);
-        FieldInfo direction = typeof(EnemyController).GetField("steeringDirection", flags);
-        FieldInfo urgent = typeof(EnemyController).GetField("urgentAvoidance", flags);
-        FieldInfo navigation = typeof(EnemyController).GetField("navigationOwnsDirection", flags);
-        FieldInfo target = typeof(EnemyController).GetField("currentTarget", flags);
-        object oldDirection = direction.GetValue(controller);
-        object oldUrgent = urgent.GetValue(controller);
-        object oldNavigation = navigation.GetValue(controller);
-        object oldTarget = target.GetValue(controller);
+        string[] fields =
+        {
+            "steeringDirection",
+            "steeringOrigin",
+            "nextDirectionChange",
+            "steeringPathRevision",
+            "steeringWaypoint",
+            "steeringFollowingPath",
+            "steeringDetouring",
+            "urgentAvoidance",
+            "navigationOwnsDirection",
+            "currentTarget",
+            "navigation"
+        };
+        var saved = new Dictionary<FieldInfo, object>();
+        foreach (string name in fields)
+        {
+            FieldInfo field = typeof(EnemyController).GetField(name, flags);
+            saved.Add(field, field.GetValue(controller));
+        }
+
         int oldTurns = controller.SteeringChanges;
+        void Set(string name, object value) => typeof(EnemyController).GetField(name, flags).SetValue(controller, value);
         try
         {
-            direction.SetValue(controller, Vector3.right);
-            urgent.SetValue(controller, false);
-            navigation.SetValue(controller, false);
-            target.SetValue(controller, null);
-            Vector3 desired = Quaternion.AngleAxis(8f, Vector3.up) * Vector3.right;
-            Vector3 result = (Vector3)stabilize.Invoke(controller, new object[] { desired });
-            float angle = Vector3.Angle(Vector3.right, result);
-            Require(
-                angle > 0.1f && angle < 7.5f,
-                "Small heading change follows continuously without waiting for the old dead zone");
-            direction.SetValue(controller, Vector3.right);
-            float totalTurn = 0f;
+            Type navigationType = typeof(EnemyController).Assembly.GetType("VesselNavigation", true);
+            Set(
+                "navigation",
+                Activator.CreateInstance(navigationType, flags | BindingFlags.Public, null, new object[] { controller.transform }, null));
+            Set("steeringDirection", Vector3.right);
+            Set("steeringOrigin", controller.transform.position);
+            Set("nextDirectionChange", 0f);
+            Set("steeringFollowingPath", false);
+            Set("steeringDetouring", false);
+            Set("urgentAvoidance", false);
+            Set("navigationOwnsDirection", false);
+            Set("currentTarget", null);
             Vector3 previous = Vector3.right;
             for (int i = 0; i < 20; i++)
             {
-                desired = Quaternion.AngleAxis(i % 2 == 0 ? 8f : -8f, Vector3.up) * Vector3.right;
-                result = (Vector3)stabilize.Invoke(controller, new object[] { desired });
-                totalTurn += Vector3.Angle(previous, result);
-                previous = result;
+                Vector3 desired = Quaternion.AngleAxis(i % 2 == 0 ? 8f : -8f, Vector3.up) * Vector3.right;
+                Vector3 result = (Vector3)stabilize.Invoke(controller, new object[] { desired });
+                Require(
+                    (result - previous).sqrMagnitude < 1e-10f,
+                    "Alternating small offsets never change locked straight heading");
             }
 
-            Require(totalTurn < 65f, "Alternating small target offsets are attenuated instead of copied into zigzags");
-            urgent.SetValue(controller, true);
-            result = (Vector3)stabilize.Invoke(controller, new object[] { Vector3.back });
-            Require(Vector3.Angle(result, Vector3.back) < 0.01f, "Emergency steering bypasses ordinary smoothing");
+            Set("navigationOwnsDirection", true);
+            Vector3 small = Quaternion.AngleAxis(8f, Vector3.up) * Vector3.right;
+            Vector3 locked = (Vector3)stabilize.Invoke(controller, new object[] { small });
+            Require(
+                (locked - Vector3.right).sqrMagnitude < 1e-10f,
+                "Navigation ownership alone cannot unlock micro steering");
+            Set("navigationOwnsDirection", false);
+            Vector3 changed = Quaternion.AngleAxis(25f, Vector3.up) * Vector3.right;
+            Vector3 turn = (Vector3)stabilize.Invoke(controller, new object[] { changed });
+            Require(Vector3.Angle(turn, changed) < 0.01f, "Significant bearing change selects a new straight heading");
+            Vector3 held = (Vector3)stabilize.Invoke(controller, new object[] { Vector3.right });
+            Require(
+                Vector3.Angle(held, changed) < 0.01f,
+                "Ordinary heading commitment prevents immediate reverse selection");
+            Set("steeringDirection", Vector3.right);
+            float tolerance = (float)typeof(EnemyController).GetField("straightCourseTolerance", flags).GetValue(controller);
+            Set("steeringOrigin", controller.transform.position + Vector3.forward * (tolerance + 1f));
+            Vector3 recovered = (Vector3)stabilize.Invoke(controller, new object[] { small });
+            Require(
+                Vector3.Angle(recovered, small) < 0.01f,
+                "Actual lateral departure can rejoin the route despite a small bearing error");
+            Set("urgentAvoidance", true);
+            Vector3 emergency = (Vector3)stabilize.Invoke(controller, new object[] { Vector3.back });
+            Require(Vector3.Angle(emergency, Vector3.back) < 0.01f, "Emergency steering bypasses heading commitment");
         }
         finally
         {
-            direction.SetValue(controller, oldDirection);
-            urgent.SetValue(controller, oldUrgent);
-            navigation.SetValue(controller, oldNavigation);
-            target.SetValue(controller, oldTarget);
+            foreach (var pair in saved)
+            {
+                pair.Key.SetValue(controller, pair.Value);
+            }
+
             typeof(EnemyController).GetProperty("SteeringChanges").SetValue(controller, oldTurns);
         }
 
@@ -77,7 +113,7 @@ public static class FlightCourseChecks
         Require(
             Mathf.Abs(course.magnitude - 6f) < 0.001f && Vector3.Angle(Vector3.right, course) <= 1.81f,
             "Course reversal preserves speed and respects angular rate");
-        return "PASS continuous small heading corrections; alternating offsets attenuated; immediate emergency; bounded course reversal";
+        return "PASS locked heading unchanged across 20 alternating offsets; navigation cannot micro steer; meaningful turn and commitment; lateral recovery; immediate emergency; bounded course reversal";
     }
 
     public static void Begin(string label)

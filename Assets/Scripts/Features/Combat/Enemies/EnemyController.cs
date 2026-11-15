@@ -29,10 +29,12 @@ public class EnemyController : MonoBehaviour
     [Header("Stable Steering")]
     [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("navigationCruiseSpeed"), Min(1f)]
     private float cruiseSpeed = 6f;
-    [SerializeField, Min(0.1f), Tooltip("普通航向小幅修正的响应时间（秒）；紧急避障与已规划路线即时接管。")]
+    [SerializeField, Min(0.1f), Tooltip("普通直航两次重选方向的最短间隔（秒）；真实拐点与紧急避障不等待。")]
     private float directionHoldTime = 1.5f;
-    [SerializeField, Range(1f, 45f), Tooltip("此角度内柔和跟随目标；更大偏移加快响应，不积累后突然切换。")]
+    [SerializeField, Range(1f, 45f), Tooltip("普通直航忽略此角度内的目标偏移，保持已锁定的直线方向。")]
     private float directionDeadZone = 12f;
+    [SerializeField, Min(0.1f), Tooltip("允许偏离锁定直线的横向距离（米）；超出后才重新接入航线。")]
+    private float straightCourseTolerance = 1.5f;
     [SerializeField, Min(0.1f), Tooltip("脱离障碍后继续保持绕行侧向的时间（秒）。")]
     private float avoidanceSideHoldTime = 3f;
     [SerializeField, Min(1f)]
@@ -82,6 +84,12 @@ public class EnemyController : MonoBehaviour
     private float probeDistance;
     private Rigidbody movementBody;
     private Vector3 steeringDirection;
+    private Vector3 steeringOrigin;
+    private float nextDirectionChange;
+    private int steeringPathRevision = -1;
+    private int steeringWaypoint = -1;
+    private bool steeringFollowingPath;
+    private bool steeringDetouring;
     private float nextStrafeChange;
     private float strafeSide;
     private bool urgentAvoidance;
@@ -223,6 +231,10 @@ public class EnemyController : MonoBehaviour
         navigationOwnsDirection = false;
         navigationRequested = false;
         steeringDirection = Vector3.zero;
+        steeringOrigin = transform.position;
+        nextDirectionChange = 0f;
+        steeringPathRevision = steeringWaypoint = -1;
+        steeringFollowingPath = steeringDetouring = false;
         courseVelocity = movementBody != null ? Vector3.ProjectOnPlane(movementBody.linearVelocity, Vector3.up) : Vector3.zero;
         SteeringChanges = 0;
         nextStrafeChange = 0f;
@@ -268,6 +280,7 @@ public class EnemyController : MonoBehaviour
             if (previousTarget != currentTarget)
             {
                 navigation.Reset();
+                steeringDirection = Vector3.zero;
                 climbingObstacle = false;
                 nextMovementUpdateTime = 0f;
             }
@@ -456,35 +469,35 @@ public class EnemyController : MonoBehaviour
         }
 
         Vector3 direction = candidate / magnitude;
-        if (steeringDirection == Vector3.zero)
+        float angle = Vector3.Angle(steeringDirection, direction);
+        float engagementRadius = desiredDistance + engagementBlendDistance;
+        bool closeEngagement = currentTarget != null && Vector3.ProjectOnPlane(currentTarget.transform.position - transform.position, Vector3.up).sqrMagnitude <= engagementRadius * engagementRadius;
+        bool following = navigation.Path.Active;
+        bool detouring = navigation.Local.Detouring;
+        // 重规划本身不是拐点；只在首次接入路线或真正跨过航点时解锁小角转弯。
+        bool corner = following && (!steeringFollowingPath || steeringPathRevision == navigation.Path.Revision && steeringWaypoint != navigation.Path.Waypoint);
+        bool newDetour = detouring && !steeringDetouring;
+        Vector3 offset = Vector3.ProjectOnPlane(transform.position - steeringOrigin, Vector3.up);
+        float lateralError = Vector3.Cross(offset, steeringDirection).magnitude;
+        bool recoverLine = lateralError > Mathf.Max(0.1f, straightCourseTolerance);
+        bool newBearing = angle >= directionDeadZone && (navigationOwnsDirection || Time.time >= nextDirectionChange);
+        if (steeringDirection == Vector3.zero || urgentAvoidance || closeEngagement || corner || newDetour || recoverLine || newBearing)
         {
-            steeringDirection = direction;
-        }
-        else
-        {
-            Vector3 previousDirection = steeringDirection;
-            float angle = Vector3.Angle(steeringDirection, direction);
-            float engagementRadius = desiredDistance + engagementBlendDistance;
-            bool closeEngagement = currentTarget != null && Vector3.ProjectOnPlane(currentTarget.transform.position - transform.position, Vector3.up).sqrMagnitude <= engagementRadius * engagementRadius;
-            if (urgentAvoidance || navigationOwnsDirection && angle >= directionDeadZone || closeEngagement)
-            {
-                steeringDirection = direction;
-            }
-            else
-            {
-                // 小偏移连续吸收，避免12度死区积累成周期性折线；大转弯加快响应。
-                float response = Mathf.Max(1f, angle / Mathf.Max(1f, directionDeadZone)) / Mathf.Max(0.1f, directionHoldTime);
-                float blend = FlightControlMath.ResponseBlend(response, GetMovementInterval());
-                float yaw = Vector3.SignedAngle(steeringDirection, direction, Vector3.up);
-                steeringDirection = Quaternion.AngleAxis(yaw * blend, Vector3.up) * steeringDirection;
-            }
-
-            if (Vector3.Angle(previousDirection, steeringDirection) >= directionDeadZone)
+            if (steeringDirection != Vector3.zero && angle >= directionDeadZone)
             {
                 SteeringChanges++;
             }
+
+            steeringDirection = direction;
+            steeringOrigin = transform.position;
+            nextDirectionChange = Time.time + directionHoldTime;
         }
 
+        // 直航期原样返回锁定方向，不做插值，也不在每次感知时累计微小修正。
+        steeringFollowingPath = following;
+        steeringPathRevision = navigation.Path.Revision;
+        steeringWaypoint = navigation.Path.Waypoint;
+        steeringDetouring = detouring;
         return steeringDirection * magnitude;
     }
 

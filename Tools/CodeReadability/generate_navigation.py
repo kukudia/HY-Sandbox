@@ -1789,14 +1789,14 @@ def main():
     )
     graph(
         "自主航迹稳定与悬浮飞控复用",
-        "源码推导：普通直航的小角偏移连续指数跟随，航迹参考速度独立限角速度和加速度；近距离战斗横移、规划/紧急避障立即接管方向。悬浮航向保持与自主航迹共用帧率无关响应计算，仍由各自调用者持有状态；推进器输出沿用原标定。",
+        "源码推导：普通直航锁定方向，小角偏移完全忽略，不插值。明显目标偏移、实际横偏超容差、首次接入路线、真实航点拐角、进入绕障或紧急情况才重选方向；重规划本身不作为拐点。普通重选有承诺时间，参考速度独立限角速度和加速度；近距离战斗方向及时跟随。悬浮响应和自主航迹计算集中于FlightControlMath，各调用者持有状态；推进器输出沿用原标定。",
         {"A": "EnemyController.StabilizeDirection", "B": "FlightControlMath.ResponseBlend",
          "C": "EnemyController.GetVelocityInput", "D": "FlightControlMath.StepCourse",
          "F": "HoverControlSolver.StepHeading",
          "G": "HoverFlightController.ApplyRotationCorrection", "H": "Thruster.CalculateInputThrust",
          "I": "UniversalThruster.CalculateInputThrust", "J": "Thruster.TickInputThrust",
          "K": "EnemyController.FixedUpdate", "L": "ControlUnit.SetMovementInput"},
-        ["A --> B", "K --> C", "C --> D", "K --> L",
+        ["K -->|经战术意图与导航| A", "K --> C", "C --> D", "K --> L",
          "G --> F", "F --> B", "J -->|虚调用| I", "I --> H"],
     )
     graph(

@@ -2,9 +2,9 @@
 
 ## 自主舰船直航稳定
 
-`EnemyController.StabilizeDirection` 对普通接近阶段的小角偏移采用连续指数响应，避免旧12度死区/1.5秒方向冷却累积误差后突变。`directionHoldTime` 保留序列化字段，语义改为响应时间；`directionDeadZone` 保留为柔和修正角度，超过时加快响应。近距离战斗横移、明确路线转角与紧急避障及时接管，不能用直航滤波延误转弯或在目标范围外盘旋。
+`EnemyController.StabilizeDirection` 在普通直航阶段锁定方向，小于 `directionDeadZone`（默认12度）的目标偏移完全忽略，不做持续微调或插值。普通重选航向至少保持 `directionHoldTime`（默认1.5秒）；目标切换、进入绕障、首次接入路线或真实航点拐角可重新锁定，重规划本身不作为转弯理由。偏离锁定直线超过 `straightCourseTolerance`（默认1.5米）才允许恢复航线；近距离战斗横移及紧急避障及时接管。字段名和已有序列化值保留，Inspector说明已更新。
 
-`Flight/FlightControlMath` 是普通C#计算入口：自主参考航速独立限制角速度/加速度；指数响应与 `HoverControlSolver.StepHeading` 共用，悬浮航向仍由 `HoverFlightController` 持有及执行。导航不直接写刚体，不新增自动组件。既有推进输出与蓝图推力标定保持；验证记录见 [直航稳定回归](Docs/Validation/2026-11-15-flight-course-stability.md)。
+`Flight/FlightControlMath` 是普通C#飞控计算入口：自主参考航速独立限制角速度/加速度，悬浮航向响应继续由 `HoverControlSolver.StepHeading` 调用，状态与执行由各自控制器拥有。导航不直接写刚体，不新增自动组件。既有推进输出与蓝图推力标定保持；当前验证见 [直航锁定回归](Docs/Validation/2026-11-15-straight-course-lock.md)，[上一版平滑试验](Docs/Validation/2026-11-15-flight-course-stability.md)保留为历史记录。
 
 ## Random5v5Arena 实战导航追踪
 
