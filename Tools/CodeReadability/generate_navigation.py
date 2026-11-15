@@ -1763,7 +1763,7 @@ def main():
     )
     graph(
         "敌舰远场感知与近场候选动作",
-        "源码推导：降频决策先采集远场，再以同一份障碍快照驱动A*，最后验证近场动作；远场距离取80米、8身位和10秒航程最大值，上限160米，一次OverlapBox最多256碰撞体。最多四段路线预读；挡路或横穿风险优先请求规划，窗口覆盖远场视距，仍受节点预算和冷却限制。快照的短期运动包络用于整舰净空；近场12段相对运动扫掠，最多七动作，复用快照而不重复查询。任务目标排除，饱和阻止规划并制动。不是远期确定性运动预测。",
+        "源码推导：降频决策先采集远场，再以同一份障碍快照驱动A*，最后验证近场动作；远场距离取80米、8身位和10秒航程最大值，上限160米，OverlapBox缓存按需扩容至8192项，同刚体模块合并为运动Bounds，静态建筑保留独立通道。最多四段路线预读；挡路或横穿风险优先请求规划，窗口覆盖远场视距，仍受节点预算和冷却限制。快照的短期运动包络用于整舰净空；近场12段相对运动扫掠，最多七动作，复用快照而不重复查询。任务目标排除，饱和阻止规划并制动。不是远期确定性运动预测。",
         {
             "A": "EnemyController.CalculateDesiredMovement", "B": "EnemyController.PredictMovement",
             "C": "NavigationPrediction.Choose", "D": "NavigationPrediction.Capture",
@@ -1786,6 +1786,18 @@ def main():
             "J -->|选定意图转换为真实输入| K", "L -.->|面板和日志读取距离/时间/动作/耗时| C",
             "N --> M",
         ],
+    )
+    graph(
+        "自主航迹稳定与悬浮飞控复用",
+        "源码推导：普通直航的小角偏移连续指数跟随，航迹参考速度独立限角速度和加速度；近距离战斗横移、规划/紧急避障立即接管方向。悬浮航向保持与自主航迹共用帧率无关响应计算，仍由各自调用者持有状态；推进器输出沿用原标定。",
+        {"A": "EnemyController.StabilizeDirection", "B": "FlightControlMath.ResponseBlend",
+         "C": "EnemyController.GetVelocityInput", "D": "FlightControlMath.StepCourse",
+         "F": "HoverControlSolver.StepHeading",
+         "G": "HoverFlightController.ApplyRotationCorrection", "H": "Thruster.CalculateInputThrust",
+         "I": "UniversalThruster.CalculateInputThrust", "J": "Thruster.TickInputThrust",
+         "K": "EnemyController.FixedUpdate", "L": "ControlUnit.SetMovementInput"},
+        ["A --> B", "K --> C", "C --> D", "K --> L",
+         "G --> F", "F --> B", "J -->|虚调用| I", "I --> H"],
     )
     graph(
         "炮塔视线与遮挡锁定",

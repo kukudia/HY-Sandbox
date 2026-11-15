@@ -1,5 +1,11 @@
 # HY-Sandbox 开发入口
 
+## 自主舰船直航稳定
+
+`EnemyController.StabilizeDirection` 对普通接近阶段的小角偏移采用连续指数响应，避免旧12度死区/1.5秒方向冷却累积误差后突变。`directionHoldTime` 保留序列化字段，语义改为响应时间；`directionDeadZone` 保留为柔和修正角度，超过时加快响应。近距离战斗横移、明确路线转角与紧急避障及时接管，不能用直航滤波延误转弯或在目标范围外盘旋。
+
+`Flight/FlightControlMath` 是普通C#计算入口：自主参考航速独立限制角速度/加速度；指数响应与 `HoverControlSolver.StepHeading` 共用，悬浮航向仍由 `HoverFlightController` 持有及执行。导航不直接写刚体，不新增自动组件。既有推进输出与蓝图推力标定保持；验证记录见 [直航稳定回归](Docs/Validation/2026-11-15-flight-course-stability.md)。
+
 ## Random5v5Arena 实战导航追踪
 
 场景已保存 `Arena Navigation Debug`，显式挂载 `SkirmishNavigationDebug` 和五组 `NavigationTrack`。进入 Play 后右侧 RED-1～5 切换红方敌舰，`Focus ship` 平移自由相机至所选舰，`Clear selected trace` 只清空当前舰历史；可切换全部历史线和所选未来路线。Inspector 可关闭面板、场景标签并调整采样间隔、轨迹容量和速度标尺。重新制作竞技场会自动安装；已有场景可用 `Tools/HY-Sandbox/Combat/Install Arena Navigation Debug` 幂等安装，不重建地图或舰队配置。

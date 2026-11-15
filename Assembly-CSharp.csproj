@@ -331,6 +331,7 @@
     <Compile Include="Assets\Scripts\Features\Combat\Skirmish\SkirmishHud.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Groups\RuntimeGroupBuilder.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Camera\CameraController.cs" />
+    <Compile Include="Assets\Scripts\Features\Flight\FlightControlMath.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Blocks\BlockStatusLight.cs" />
     <Compile Include="Assets\Scripts\Features\World\Validation\WorldCombatPlayerChecks.cs" />
     <Compile Include="Assets\Scripts\Features\World\Buildings\Data\WorldBuildingState.cs" />

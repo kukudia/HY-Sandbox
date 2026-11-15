@@ -29,9 +29,9 @@ public class EnemyController : MonoBehaviour
     [Header("Stable Steering")]
     [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("navigationCruiseSpeed"), Min(1f)]
     private float cruiseSpeed = 6f;
-    [SerializeField, Min(0.1f), Tooltip("非紧急情况下两次方向切换之间的最短时间（秒）。")]
+    [SerializeField, Min(0.1f), Tooltip("普通航向小幅修正的响应时间（秒）；紧急避障与已规划路线即时接管。")]
     private float directionHoldTime = 1.5f;
-    [SerializeField, Range(1f, 45f), Tooltip("小于此角度的目标偏移不触发转向。")]
+    [SerializeField, Range(1f, 45f), Tooltip("此角度内柔和跟随目标；更大偏移加快响应，不积累后突然切换。")]
     private float directionDeadZone = 12f;
     [SerializeField, Min(0.1f), Tooltip("脱离障碍后继续保持绕行侧向的时间（秒）。")]
     private float avoidanceSideHoldTime = 3f;
@@ -82,7 +82,6 @@ public class EnemyController : MonoBehaviour
     private float probeDistance;
     private Rigidbody movementBody;
     private Vector3 steeringDirection;
-    private float nextDirectionChange;
     private float nextStrafeChange;
     private float strafeSide;
     private bool urgentAvoidance;
@@ -226,7 +225,6 @@ public class EnemyController : MonoBehaviour
         steeringDirection = Vector3.zero;
         courseVelocity = movementBody != null ? Vector3.ProjectOnPlane(movementBody.linearVelocity, Vector3.up) : Vector3.zero;
         SteeringChanges = 0;
-        nextDirectionChange = 0f;
         nextStrafeChange = 0f;
         strafeSide = 0f;
         _smoothedHoverHeight = 0f;
@@ -409,21 +407,7 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            float speed = Mathf.MoveTowards(
-                courseVelocity.magnitude,
-                targetVelocity.magnitude,
-                Mathf.Max(0.1f, courseAcceleration) * Time.fixedDeltaTime);
-            if (courseVelocity.sqrMagnitude < 0.0001f)
-            {
-                courseVelocity = targetVelocity.normalized * speed;
-            }
-            else
-            {
-                // 在水平面转弯并单独保持航速；两方向线性插值会在折返中穿过零速。
-                float angle = Vector3.SignedAngle(courseVelocity, targetVelocity, Vector3.up);
-                float step = Mathf.Clamp(angle, -courseTurnRate * Time.fixedDeltaTime, courseTurnRate * Time.fixedDeltaTime);
-                courseVelocity = Quaternion.AngleAxis(step, Vector3.up) * courseVelocity.normalized * speed;
-            }
+            courseVelocity = FlightControlMath.StepCourse(courseVelocity, targetVelocity, courseTurnRate, courseAcceleration, Time.fixedDeltaTime);
         }
 
         Vector3 safeVelocity = navigation.ConstrainVelocity(unit, courseVelocity, velocity, predictionBrakingAcceleration);
@@ -475,13 +459,30 @@ public class EnemyController : MonoBehaviour
         if (steeringDirection == Vector3.zero)
         {
             steeringDirection = direction;
-            nextDirectionChange = Time.time + directionHoldTime;
         }
-        else if (Vector3.Angle(steeringDirection, direction) >= directionDeadZone && (urgentAvoidance || navigationOwnsDirection || Time.time >= nextDirectionChange))
+        else
         {
-            steeringDirection = direction;
-            nextDirectionChange = Time.time + directionHoldTime;
-            SteeringChanges++;
+            Vector3 previousDirection = steeringDirection;
+            float angle = Vector3.Angle(steeringDirection, direction);
+            float engagementRadius = desiredDistance + engagementBlendDistance;
+            bool closeEngagement = currentTarget != null && Vector3.ProjectOnPlane(currentTarget.transform.position - transform.position, Vector3.up).sqrMagnitude <= engagementRadius * engagementRadius;
+            if (urgentAvoidance || navigationOwnsDirection && angle >= directionDeadZone || closeEngagement)
+            {
+                steeringDirection = direction;
+            }
+            else
+            {
+                // 小偏移连续吸收，避免12度死区积累成周期性折线；大转弯加快响应。
+                float response = Mathf.Max(1f, angle / Mathf.Max(1f, directionDeadZone)) / Mathf.Max(0.1f, directionHoldTime);
+                float blend = FlightControlMath.ResponseBlend(response, GetMovementInterval());
+                float yaw = Vector3.SignedAngle(steeringDirection, direction, Vector3.up);
+                steeringDirection = Quaternion.AngleAxis(yaw * blend, Vector3.up) * steeringDirection;
+            }
+
+            if (Vector3.Angle(previousDirection, steeringDirection) >= directionDeadZone)
+            {
+                SteeringChanges++;
+            }
         }
 
         return steeringDirection * magnitude;

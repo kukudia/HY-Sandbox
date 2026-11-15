@@ -47,7 +47,7 @@ internal sealed class HoverControlSolver
         // 水平悬浮也必须消除偏置推进器的偏航转矩；跨越0/360度时取最短误差。
         float error = Mathf.DeltaAngle(heading, _heading) * Mathf.Deg2Rad;
         float targetSpeed = Mathf.Clamp(error * 2f, -1f, 1f);
-        float blend = 1f - Mathf.Exp(-response * Mathf.Max(0f, deltaTime) * Mathf.Clamp01(efficiency));
+        float blend = FlightControlMath.ResponseBlend(response * Mathf.Clamp01(efficiency), deltaTime);
         return Mathf.Lerp(angularSpeed, targetSpeed, blend);
     }
 

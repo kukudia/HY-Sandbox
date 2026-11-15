@@ -74,6 +74,7 @@
     <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegeFleetChecks.cs" />
     <Compile Include="Assets\Editor\World\Validation\WorldLab\WorldLabSoakChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegePriorityTargetFlight.cs" />
+    <Compile Include="Assets\Editor\Combat\Diagnostics\FlightCourseChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Authoring\SiegeConstructionAuthoring.cs" />
     <Compile Include="Assets\Editor\Navigation\Validation\EnemyPredictionPlayChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\Interface\BlockStatusSetup.cs" />
