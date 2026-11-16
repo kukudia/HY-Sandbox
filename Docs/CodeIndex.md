@@ -155,6 +155,7 @@ HY-Sandbox/
 │   │   │   │   ├── SiegeCommandHudAuthoring.cs
 │   │   │   │   ├── SiegeConstructionAuthoring.cs
 │   │   │   │   ├── SiegeInterfaceAuthoring.cs
+│   │   │   │   ├── SiegeIslandAuthoring.cs
 │   │   │   │   ├── SiegeMainInterfaceAuthoring.cs
 │   │   │   │   ├── SiegeMixedStressAuthoring.cs
 │   │   │   │   ├── SiegeProgressAuthoring.cs
@@ -181,6 +182,7 @@ HY-Sandbox/
 │   │   │   ├── Player/
 │   │   │   │   └── SiegePlayerBuild.cs
 │   │   │   └── Validation/
+│   │   │       ├── SiegeIslandChecks.cs
 │   │   │       ├── Buildings/
 │   │   │       │   ├── SiegeBuildingChecks.cs
 │   │   │       │   ├── SiegeBuildingDamageChecks.cs
@@ -505,7 +507,9 @@ HY-Sandbox/
 │           │   │   ├── SiegeBaseWorkshop.cs
 │           │   │   ├── SiegeConstructionPanel.cs
 │           │   │   ├── SiegeConstructionSettings.cs
-│           │   │   └── SiegeGameplayStage.cs
+│           │   │   ├── SiegeGameplayStage.cs
+│           │   │   ├── SiegeIsland.cs
+│           │   │   └── SiegeIslandSettings.cs
 │           │   ├── Hangars/
 │           │   │   ├── HangarFacePanel.cs
 │           │   │   ├── HangarLimits.cs
@@ -601,6 +605,7 @@ HY-Sandbox/
 │               │   ├── WorldPlayerStreamingGuard.cs
 │               │   └── WorldRegionStreaming.cs
 │               ├── Terrain/
+│               │   ├── FloatingIslandTerrain.cs
 │               │   ├── ProceduralVoxelWorld.cs
 │               │   ├── StreamingWorldTerrain.cs
 │               │   ├── VoxelWorldChunk.cs
@@ -2112,15 +2117,15 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeConstructionAuthoring | [`void Install()`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L16) | public static |
-| SiegeConstructionAuthoring | [`SiegeConstructionSettings EnsureSettings()`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L181) | private static |
-| SiegeConstructionAuthoring | [`void InstallPreselection(Scene main)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L219) | public static |
-| SiegeConstructionAuthoring | [`void CopyPool(Scene main, Scene target)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L251) | private static |
-| SiegeConstructionAuthoring | [`void RemoveOwned(Transform parent, string name)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L262) | private static |
-| SiegeConstructionAuthoring | [`RectTransform Rect(string name, Transform parent, Vector2 size)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L271) | private static |
-| SiegeConstructionAuthoring | [`void At(RectTransform rect, float x, float y, float width, float height)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L280) | private static |
-| SiegeConstructionAuthoring | [`Text Label( string name, Transform parent, string text, float x, float y, float width, float height, int size)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L288) | private static |
-| SiegeConstructionAuthoring | [`Button Button( string name, Transform parent, string title, float x, float y, float width)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L310) | private static |
-| SiegeConstructionAuthoring | [`void Set(SerializedObject data, string field, Object value)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L336) | private static |
+| SiegeConstructionAuthoring | [`SiegeConstructionSettings EnsureSettings()`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L180) | private static |
+| SiegeConstructionAuthoring | [`void InstallPreselection(Scene main)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L218) | public static |
+| SiegeConstructionAuthoring | [`void CopyPool(Scene main, Scene target)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L250) | private static |
+| SiegeConstructionAuthoring | [`void RemoveOwned(Transform parent, string name)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L261) | private static |
+| SiegeConstructionAuthoring | [`RectTransform Rect(string name, Transform parent, Vector2 size)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L270) | private static |
+| SiegeConstructionAuthoring | [`void At(RectTransform rect, float x, float y, float width, float height)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L279) | private static |
+| SiegeConstructionAuthoring | [`Text Label( string name, Transform parent, string text, float x, float y, float width, float height, int size)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L287) | private static |
+| SiegeConstructionAuthoring | [`Button Button( string name, Transform parent, string title, float x, float y, float width)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L309) | private static |
+| SiegeConstructionAuthoring | [`void Set(SerializedObject data, string field, Object value)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L335) | private static |
 
 ## Assets/Editor/Siege/Authoring/SiegeInterfaceAuthoring.cs
 
@@ -2135,6 +2140,17 @@ HY-Sandbox/
 | SiegeInterfaceAuthoring | [`Dropdown Dropdown( GameObject template, Transform parent, string name, float x, float y, float width)`](../Assets/Editor/Siege/Authoring/SiegeInterfaceAuthoring.cs#L473) | private static |
 | SiegeInterfaceAuthoring | [`void Place(RectTransform rect, float x, float y, float width, float height)`](../Assets/Editor/Siege/Authoring/SiegeInterfaceAuthoring.cs#L496) | private static |
 | SiegeInterfaceAuthoring | [`void Bind(Object target, string field, Object value)`](../Assets/Editor/Siege/Authoring/SiegeInterfaceAuthoring.cs#L503) | private static |
+
+## Assets/Editor/Siege/Authoring/SiegeIslandAuthoring.cs
+
+// 职责：为真实Siege场景保存浮空岛组件/配置及World地形材质，移除已替代的无限平板。 // 入口：Install() / Configure()；迁移前唯一备份，不改玩家基地或世界存档。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeIslandAuthoring | [`void PreviewCurrent()`](../Assets/Editor/Siege/Authoring/SiegeIslandAuthoring.cs#L14) | public static |
+| SiegeIslandAuthoring | [`string BakeCurrent()`](../Assets/Editor/Siege/Authoring/SiegeIslandAuthoring.cs#L53) | public static |
+| SiegeIslandAuthoring | [`string Install()`](../Assets/Editor/Siege/Authoring/SiegeIslandAuthoring.cs#L89) | public static |
+| SiegeIslandAuthoring | [`void Configure(Scene scene)`](../Assets/Editor/Siege/Authoring/SiegeIslandAuthoring.cs#L131) | public static |
 
 ## Assets/Editor/Siege/Authoring/SiegeMainInterfaceAuthoring.cs
 
@@ -2280,7 +2296,7 @@ HY-Sandbox/
 | HangarSceneIntegration | [`void Install()`](../Assets/Editor/Siege/Hangars/HangarSceneIntegration.cs#L15) | public static |
 | HangarSceneIntegration | [`void InstallPrototype()`](../Assets/Editor/Siege/Hangars/HangarSceneIntegration.cs#L36) | private static |
 | HangarSceneIntegration | [`void InstallStarter()`](../Assets/Editor/Siege/Hangars/HangarSceneIntegration.cs#L88) | private static |
-| HangarSceneIntegration | [`void InstallWorkshop()`](../Assets/Editor/Siege/Hangars/HangarSceneIntegration.cs#L129) | private static |
+| HangarSceneIntegration | [`void InstallWorkshop()`](../Assets/Editor/Siege/Hangars/HangarSceneIntegration.cs#L110) | private static |
 
 ## Assets/Editor/Siege/Hangars/HangarShellChecks.cs
 
@@ -2340,12 +2356,12 @@ HY-Sandbox/
 | SiegeHangarHostChecks | [`void Changed(PlayModeStateChange state)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L69) | private static |
 | SiegeHangarHostChecks | [`void Tick()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L90) | private static |
 | SiegeHangarHostChecks | [`IEnumerator Scenario()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L116) | private static |
-| SiegeHangarHostChecks | [`int ClearWave(SiegeMatch match)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L418) | private static |
-| SiegeHangarHostChecks | [`void BackupPreferences()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L444) | private static |
-| SiegeHangarHostChecks | [`void RestorePreferences()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L459) | private static |
-| SiegeHangarHostChecks | [`void Check(bool success, string description)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L481) | private static |
-| SiegeHangarHostChecks | [`void LogError(string message, string stack, LogType type)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L491) | private static |
-| SiegeHangarHostChecks | [`void Finish()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L499) | private static |
+| SiegeHangarHostChecks | [`int ClearWave(SiegeMatch match)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L430) | private static |
+| SiegeHangarHostChecks | [`void BackupPreferences()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L456) | private static |
+| SiegeHangarHostChecks | [`void RestorePreferences()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L471) | private static |
+| SiegeHangarHostChecks | [`void Check(bool success, string description)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L493) | private static |
+| SiegeHangarHostChecks | [`void LogError(string message, string stack, LogType type)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L503) | private static |
+| SiegeHangarHostChecks | [`void Finish()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L511) | private static |
 
 ## Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs
 
@@ -2706,6 +2722,18 @@ HY-Sandbox/
 | SiegeTransientEffectChecks | [`T Read(object owner, string field)`](../Assets/Editor/Siege/Validation/Rules/SiegeTransientEffectChecks.cs#L174) | private static |
 | SiegeTransientEffectChecks | [`void Expire(MonoBehaviour fade)`](../Assets/Editor/Siege/Validation/Rules/SiegeTransientEffectChecks.cs#L179) | private static |
 | SiegeTransientEffectChecks | [`void Check(string label, bool passed)`](../Assets/Editor/Siege/Validation/Rules/SiegeTransientEffectChecks.cs#L186) | private static |
+
+## Assets/Editor/Siege/Validation/SiegeIslandChecks.cs
+
+// 职责：验证浮空岛确定性、空气边界、基地支撑及DestroyManager到地形网格/碰撞的生产路径。 // 入口：RunData() / RunLive()；实战检查仅用于临时示例会话，会在基地外制造一个坑。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeIslandChecks | [`string RunData()`](../Assets/Editor/Siege/Validation/SiegeIslandChecks.cs#L22) | public static |
+| SiegeIslandChecks | [`string RunLive()`](../Assets/Editor/Siege/Validation/SiegeIslandChecks.cs#L81) | public static |
+| SiegeIslandChecks | [`string RunBoundary()`](../Assets/Editor/Siege/Validation/SiegeIslandChecks.cs#L181) | public static |
+| SiegeIslandChecks | [`string Save(Report report, string name)`](../Assets/Editor/Siege/Validation/SiegeIslandChecks.cs#L232) | private static |
+| SiegeIslandChecks | [`void Check(Report report, string name, bool condition)`](../Assets/Editor/Siege/Validation/SiegeIslandChecks.cs#L240) | private static |
 
 ## Assets/Editor/Simulation/GameModeAuthoring.cs
 
@@ -5498,12 +5526,12 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeWaveDirector | [`void Tick(float time)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L46) | public |
-| SiegeWaveDirector | [`SiegeShipOption PickBlueprint(SiegeSettings settings)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L106) | private |
-| SiegeWaveDirector | [`void Stop()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L126) | public |
-| Attacker | [`void OnDefeated()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L156) | private |
-| Attacker | [`void RefreshTarget(ControlUnit core)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L161) | public |
-| Attacker | [`void Unsubscribe()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L174) | public |
+| SiegeWaveDirector | [`void Tick(float time)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L50) | public |
+| SiegeWaveDirector | [`SiegeShipOption PickBlueprint(SiegeSettings settings)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L125) | private |
+| SiegeWaveDirector | [`void Stop()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L145) | public |
+| Attacker | [`void OnDefeated()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L175) | private |
+| Attacker | [`void RefreshTarget(ControlUnit core)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L180) | public |
+| Attacker | [`void Unsubscribe()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L193) | public |
 
 ## Assets/Scripts/Features/Siege/Battle/SiegeWreckBudget.cs
 
@@ -5658,32 +5686,50 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeGameplayStage | [`void Enter(GameModeController host, GameObject[] buildEnvironment, string blueprintName = null)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L80) | public |
-| SiegeGameplayStage | [`void ValidatePose()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L151) | private |
-| SiegeGameplayStage | [`bool Deploy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L177) | private |
-| SiegeGameplayStage | [`bool BeginWave()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L244) | public |
-| SiegeGameplayStage | [`bool Repair()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L260) | public |
-| SiegeGameplayStage | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L273) | private |
-| SiegeGameplayStage | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L315) | public |
-| SiegeGameplayStage | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L323) | public |
-| SiegeGameplayStage | [`bool RefreshBlueprints()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L331) | public |
-| SiegeGameplayStage | [`void RefreshDefenders()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L342) | private |
-| SiegeGameplayStage | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L353) | public |
-| SiegeGameplayStage | [`bool TryReplaceAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L362) | public |
-| SiegeGameplayStage | [`bool TryCancelDeployment(int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L371) | public |
-| SiegeGameplayStage | [`bool TryTakeControl(int slot)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L380) | public |
-| SiegeGameplayStage | [`bool TryTakeControl(string id)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L386) | public |
-| SiegeGameplayStage | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L391) | public |
-| SiegeGameplayStage | [`void FixedUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L405) | private |
-| SiegeGameplayStage | [`void SetSimulation(bool active)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L438) | private |
-| SiegeGameplayStage | [`void LoseBase()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L481) | private |
-| SiegeGameplayStage | [`void Retreat()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L486) | public |
-| SiegeGameplayStage | [`void Settle(string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L491) | private |
-| SiegeGameplayStage | [`void ReturnOrRetreat()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L507) | private |
-| SiegeGameplayStage | [`void ShowCoreMarker(Transform parent, Vector3 localPosition)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L519) | private |
-| SiegeGameplayStage | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L528) | private |
-| SiegeGameplayStage | [`void Exit()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L536) | public |
-| SiegeGameplayStage | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L579) | private |
+| SiegeGameplayStage | [`void Enter(GameModeController host, GameObject[] buildEnvironment, string blueprintName = null)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L83) | public |
+| SiegeGameplayStage | [`void ValidatePose()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L156) | private |
+| SiegeGameplayStage | [`bool Deploy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L174) | private |
+| SiegeGameplayStage | [`bool BeginWave()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L242) | public |
+| SiegeGameplayStage | [`bool Repair()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L258) | public |
+| SiegeGameplayStage | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L271) | private |
+| SiegeGameplayStage | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L313) | public |
+| SiegeGameplayStage | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L321) | public |
+| SiegeGameplayStage | [`bool RefreshBlueprints()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L329) | public |
+| SiegeGameplayStage | [`void RefreshDefenders()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L340) | private |
+| SiegeGameplayStage | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L351) | public |
+| SiegeGameplayStage | [`bool TryReplaceAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L360) | public |
+| SiegeGameplayStage | [`bool TryCancelDeployment(int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L369) | public |
+| SiegeGameplayStage | [`bool TryTakeControl(int slot)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L378) | public |
+| SiegeGameplayStage | [`bool TryTakeControl(string id)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L384) | public |
+| SiegeGameplayStage | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L389) | public |
+| SiegeGameplayStage | [`void FixedUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L403) | private |
+| SiegeGameplayStage | [`void SetSimulation(bool active)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L442) | private |
+| SiegeGameplayStage | [`void LoseBase()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L485) | private |
+| SiegeGameplayStage | [`void Retreat()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L490) | public |
+| SiegeGameplayStage | [`void Settle(string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L495) | private |
+| SiegeGameplayStage | [`void ReturnOrRetreat()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L511) | private |
+| SiegeGameplayStage | [`void ShowCoreMarker(Transform parent, Vector3 localPosition)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L523) | private |
+| SiegeGameplayStage | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L532) | private |
+| SiegeGameplayStage | [`void Exit()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L540) | public |
+| SiegeGameplayStage | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L584) | private |
+
+## Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs
+
+// 职责：将基地占地转换为固定有限浮空岛，提供地面、敌人入口和坠落/远离边界。 // 入口：GenerateFor() / SpawnPosition() / BeyondRecovery()；复用ProceduralVoxelWorld的破坏和网格。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeIsland | [`void GenerateFor(BuildingFoundationData foundation, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L19) | public |
+| SiegeIsland | [`bool RecoverFleet(SiegeFleet fleet, SiegeBase fortress)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L33) | public |
+| SiegeIsland | [`void GenerateFor(Bounds foundation)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L55) | public |
+| SiegeIsland | [`Vector3 SpawnPosition(float angle, float desiredRadius)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L86) | public |
+| SiegeIsland | [`bool BeyondRecovery(Vector3 position)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L96) | public |
+
+## Assets/Scripts/Features/Siege/Gameplay/SiegeIslandSettings.cs
+
+// 职责：保存阵地战浮空岛可编辑生成规格与坠落边界；尺寸按基地占地只在部署时确定。 // 入口：Inspector / SiegeIsland.GenerateFor()；单位为游戏米。
+
+数据/配置/接口定义，无方法体。
 
 ## Assets/Scripts/Features/Siege/Hangars/HangarFacePanel.cs
 
@@ -5887,34 +5933,34 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeSession | [`void BindWorkshop(SiegeWorkshop workshop)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L33) | public |
-| SiegeSession | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L103) | public |
-| SiegeSession | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L111) | public |
-| SiegeSession | [`bool RefreshBlueprints()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L119) | public |
-| SiegeSession | [`int FindOption(SiegeShipOption[] options, string displayName, int fallback)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L153) | private static |
-| SiegeSession | [`void Awake()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L179) | private |
-| SiegeSession | [`void Start()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L190) | private |
-| SiegeSession | [`bool Begin()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L200) | public |
-| SiegeSession | [`bool BeginNextWave()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L225) | public |
-| SiegeSession | [`void NotifyRefitChanged()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L254) | public |
-| SiegeSession | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L259) | public |
-| SiegeSession | [`bool TryDeploy(int optionIndex, out string reason)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L268) | public |
-| SiegeSession | [`bool TryReplaceAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L277) | public |
-| SiegeSession | [`bool TryCancelDeployment(int dock, out string reason)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L286) | public |
-| SiegeSession | [`bool TryTakeControl(int slot)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L295) | public |
-| SiegeSession | [`bool TryTakeControl(string id)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L306) | public |
-| SiegeSession | [`bool TryRepair(bool repairBase)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L312) | public |
-| SiegeSession | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L317) | public |
-| SiegeSession | [`void End()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L336) | public |
-| SiegeSession | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L348) | public |
-| SiegeSession | [`void NotifyCockpitDestroyed(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L368) | public |
-| SiegeSession | [`void Update()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L374) | private |
-| SiegeSession | [`void FixedUpdate()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L417) | private |
-| SiegeSession | [`int ComboBonusFor(int combo, int perKill, int cap)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L432) | public static |
-| SiegeSession | [`void TickKillStreak()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L444) | private |
-| SiegeSession | [`void RepairBaseBetweenWaves()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L469) | private |
-| SiegeSession | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L504) | private |
-| SiegeSession | [`void SetSimulationActive(bool active)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L512) | private |
+| SiegeSession | [`void BindWorkshop(SiegeWorkshop workshop)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L37) | public |
+| SiegeSession | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L107) | public |
+| SiegeSession | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L115) | public |
+| SiegeSession | [`bool RefreshBlueprints()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L123) | public |
+| SiegeSession | [`int FindOption(SiegeShipOption[] options, string displayName, int fallback)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L157) | private static |
+| SiegeSession | [`void Awake()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L183) | private |
+| SiegeSession | [`void Start()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L194) | private |
+| SiegeSession | [`bool Begin()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L204) | public |
+| SiegeSession | [`bool BeginNextWave()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L235) | public |
+| SiegeSession | [`void NotifyRefitChanged()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L264) | public |
+| SiegeSession | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L269) | public |
+| SiegeSession | [`bool TryDeploy(int optionIndex, out string reason)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L278) | public |
+| SiegeSession | [`bool TryReplaceAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L287) | public |
+| SiegeSession | [`bool TryCancelDeployment(int dock, out string reason)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L296) | public |
+| SiegeSession | [`bool TryTakeControl(int slot)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L305) | public |
+| SiegeSession | [`bool TryTakeControl(string id)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L316) | public |
+| SiegeSession | [`bool TryRepair(bool repairBase)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L322) | public |
+| SiegeSession | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L327) | public |
+| SiegeSession | [`void End()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L346) | public |
+| SiegeSession | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L358) | public |
+| SiegeSession | [`void NotifyCockpitDestroyed(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L378) | public |
+| SiegeSession | [`void Update()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L384) | private |
+| SiegeSession | [`void FixedUpdate()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L427) | private |
+| SiegeSession | [`int ComboBonusFor(int combo, int perKill, int cap)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L448) | public static |
+| SiegeSession | [`void TickKillStreak()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L460) | private |
+| SiegeSession | [`void RepairBaseBetweenWaves()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L485) | private |
+| SiegeSession | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L520) | private |
+| SiegeSession | [`void SetSimulationActive(bool active)`](../Assets/Scripts/Features/Siege/SiegeSession.cs#L528) | private |
 
 ## Assets/Scripts/Features/Siege/SiegeSettings.cs
 
@@ -6684,6 +6730,14 @@ HY-Sandbox/
 | --- | --- | --- |
 | VoxelStructureSupport | [`List<List<Vector3Int>> FindDetached(VoxelWorldData data, int maximumCells, int maximumGroups)`](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureSupport.cs#L17) | public static |
 
+## Assets/Scripts/Features/World/Terrain/FloatingIslandTerrain.cs
+
+// 职责：生成有空气边界、平整中心与收尖岩底的有限浮空岛体素数据。 // 入口：Generate()；共享World体素与材质编号，不创建场景对象或修改随机全局状态。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| FloatingIslandTerrain | [`VoxelWorldData Generate(Vector3Int size, int seed, int surface, Vector2 flatHalfSize, int depth)`](../Assets/Scripts/Features/World/Terrain/FloatingIslandTerrain.cs#L8) | public static |
+
 ## Assets/Scripts/Features/World/Terrain/Meshing/VoxelMeshData.cs
 
 // 职责：保存不可变邻域快照和纯CPU网格结果，将工作线程计算与Unity对象写入分开。 // 入口：Capture()在主线程读取体素；Upload()在主线程创建Mesh，快照不引用可变世界。
@@ -6718,26 +6772,28 @@ HY-Sandbox/
 | ProceduralVoxelWorld | [`Vector3 FindSpawnSurface(Bounds construct)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L54) | public |
 | ProceduralVoxelWorld | [`void Awake()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L82) | private |
 | ProceduralVoxelWorld | [`void Generate(System.Action<GameObject> registerCreated = null, System.Action<GameObject> destroyObsolete = null)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L101) | public |
-| ProceduralVoxelWorld | [`void InitializeStreaming( WorldGenerationSettings settings, int sessionSeed, IReadOnlyList<BlockDataList> buildingTemplates = null)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L180) | public |
-| ProceduralVoxelWorld | [`bool HasColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L205) | public |
-| ProceduralVoxelWorld | [`bool IsColumnInBounds(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L210) | public |
-| ProceduralVoxelWorld | [`Vector2Int ColumnAt(Vector3 worldPosition)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L215) | public |
-| ProceduralVoxelWorld | [`bool TryGetBuildingSite(Vector2Int coordinate, out Vector3 worldPosition, out Quaternion rotation)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L221) | public |
-| ProceduralVoxelWorld | [`IEnumerator LoadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L236) | public |
-| ProceduralVoxelWorld | [`void UnloadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L318) | public |
-| ProceduralVoxelWorld | [`void ClearStreaming()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L339) | public |
-| ProceduralVoxelWorld | [`void DestroyChunk(VoxelWorldChunk chunk)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L359) | private |
-| ProceduralVoxelWorld | [`void CacheChunks()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L378) | private |
-| ProceduralVoxelWorld | [`Vector3Int WorldToCell(Vector3 position)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L390) | public |
-| ProceduralVoxelWorld | [`Vector3 CellCenter(Vector3Int cell)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L395) | public |
-| ProceduralVoxelWorld | [`bool SetCell(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L400) | public |
-| ProceduralVoxelWorld | [`VoxelWorldEdits CaptureEdits()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L413) | public |
-| ProceduralVoxelWorld | [`void RestoreEdits(VoxelWorldEdits edits)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L423) | public |
-| ProceduralVoxelWorld | [`int DamageSphere(Vector3 center, float radius, float energy)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L451) | public |
-| ProceduralVoxelWorld | [`void QueueCell(Vector3Int cell)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L510) | private |
-| ProceduralVoxelWorld | [`void QueueChunk(Vector3Int cell)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L521) | private |
-| ProceduralVoxelWorld | [`void LateUpdate()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L538) | private |
-| ProceduralVoxelWorld | [`void FlushDirty(int budget = int.MaxValue, float milliseconds = float.PositiveInfinity)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L543) | public |
+| ProceduralVoxelWorld | [`void InitializeFinite(VoxelWorldData terrain, float cellWidth, int terrainSeed)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L124) | public |
+| ProceduralVoxelWorld | [`void RebuildFinite(Action<GameObject> registerCreated, Action<GameObject> destroyObsolete)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L151) | private |
+| ProceduralVoxelWorld | [`void InitializeStreaming( WorldGenerationSettings settings, int sessionSeed, IReadOnlyList<BlockDataList> buildingTemplates = null)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L213) | public |
+| ProceduralVoxelWorld | [`bool HasColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L238) | public |
+| ProceduralVoxelWorld | [`bool IsColumnInBounds(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L243) | public |
+| ProceduralVoxelWorld | [`Vector2Int ColumnAt(Vector3 worldPosition)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L248) | public |
+| ProceduralVoxelWorld | [`bool TryGetBuildingSite(Vector2Int coordinate, out Vector3 worldPosition, out Quaternion rotation)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L254) | public |
+| ProceduralVoxelWorld | [`IEnumerator LoadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L269) | public |
+| ProceduralVoxelWorld | [`void UnloadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L351) | public |
+| ProceduralVoxelWorld | [`void ClearStreaming()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L372) | public |
+| ProceduralVoxelWorld | [`void DestroyChunk(VoxelWorldChunk chunk)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L392) | private |
+| ProceduralVoxelWorld | [`void CacheChunks()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L411) | private |
+| ProceduralVoxelWorld | [`Vector3Int WorldToCell(Vector3 position)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L423) | public |
+| ProceduralVoxelWorld | [`Vector3 CellCenter(Vector3Int cell)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L428) | public |
+| ProceduralVoxelWorld | [`bool SetCell(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L433) | public |
+| ProceduralVoxelWorld | [`VoxelWorldEdits CaptureEdits()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L446) | public |
+| ProceduralVoxelWorld | [`void RestoreEdits(VoxelWorldEdits edits)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L456) | public |
+| ProceduralVoxelWorld | [`int DamageSphere(Vector3 center, float radius, float energy)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L484) | public |
+| ProceduralVoxelWorld | [`void QueueCell(Vector3Int cell)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L543) | private |
+| ProceduralVoxelWorld | [`void QueueChunk(Vector3Int cell)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L554) | private |
+| ProceduralVoxelWorld | [`void LateUpdate()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L571) | private |
+| ProceduralVoxelWorld | [`void FlushDirty(int budget = int.MaxValue, float milliseconds = float.PositiveInfinity)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L576) | public |
 
 ## Assets/Scripts/Features/World/Terrain/StreamingWorldTerrain.cs
 

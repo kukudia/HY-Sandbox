@@ -88,7 +88,6 @@ public static class SiegeConstructionAuthoring
         var buildingData = new SerializedObject(buildings);
         buildingData.FindProperty("initializeOnStart").boolValue = false;
         buildingData.ApplyModifiedPropertiesWithoutUndo();
-        BoxCollider arena = root.Find("Arena Ground").GetComponent<BoxCollider>();
         if (root.Find("Arena Light") == null)
         {
             var lighting = new GameObject("Arena Light", typeof(Light));
@@ -165,7 +164,7 @@ public static class SiegeConstructionAuthoring
         var stageData = new SerializedObject(stage);
         Set(stageData, "settings", settings);
         Set(stageData, "buildings", buildings);
-        Set(stageData, "arena", arena);
+        SiegeIslandAuthoring.Configure(siege);
         Set(stageData, "panel", panel);
         Set(stageData, "baseSpawn", root.Find("Base Spawn"));
         stageData.ApplyModifiedPropertiesWithoutUndo();

@@ -117,6 +117,39 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
         cellSize = Mathf.Max(0.1f, cellSize);
         chunkSize = Mathf.Clamp(chunkSize, 4, 32);
         data.Generate(dimensions, seed);
+        RebuildFinite(registerCreated, destroyObsolete);
+    }
+
+    /// <summary>Install caller-generated finite data; meshes, colliders and destruction use the normal world pipeline.</summary>
+    public void InitializeFinite(VoxelWorldData terrain, float cellWidth, int terrainSeed)
+    {
+        if (terrain == null || !terrain.IsValid || terrain.IsStreaming || !WorldBuildingValidation.Finite(cellWidth) || cellWidth <= 0f)
+        {
+            throw new ArgumentException("Finite terrain requires valid data and a positive cell width.");
+        }
+
+        if (streamingTerrain != null)
+        {
+            ClearStreaming();
+        }
+
+        streaming = false;
+        streamingTerrain = null;
+        data = terrain;
+        dimensions = terrain.Size;
+        cellSize = cellWidth;
+        chunkSize = Mathf.Clamp(chunkSize, 4, 32);
+        seed = terrainSeed;
+        if (TryGetComponent(out VoxelStructureCollapse collapse))
+        {
+            collapse.ClearDebris();
+        }
+
+        RebuildFinite(null, null);
+    }
+
+    private void RebuildFinite(Action<GameObject> registerCreated, Action<GameObject> destroyObsolete)
+    {
         damage.Clear();
         dirty.Clear();
         RemovedCells = 0;

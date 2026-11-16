@@ -87,28 +87,9 @@ public static class HangarSceneIntegration
 
     private static void InstallStarter()
     {
-        const string original = "Assets/Siege/Construction/StarterBase.json";
         const string target = "Assets/Siege/Construction/StarterHangar.json";
-        BlockDataList design = JsonUtility.FromJson<BlockDataList>(File.ReadAllText(original));
-        design.foundation.width = 64;
-        design.foundation.length = 32;
-        Block template = AssetDatabase.LoadAssetAtPath<GameObject>(HangarPrefabAuthoring.PrefabPath).GetComponent<Block>();
-        Quaternion facing = Quaternion.Euler(0f, 90f, 0f);
-        var data = new BlockData(template)
-        {
-            id = "starter-hangar",
-            posX = 45f,
-            posY = template.y * .5f,
-            posZ = 10f,
-            rotX = facing.x,
-            rotY = facing.y,
-            rotZ = facing.z,
-            rotW = facing.w,
-            resourcePath = "Hangars/Hangar"
-        };
-        design.blocks.Add(data);
-        File.WriteAllText(target, JsonUtility.ToJson(design, true));
-        AssetDatabase.ImportAsset(target);
+        ModularBaseExampleAuthoring.Generate();
+        BlockDataList design = JsonUtility.FromJson<BlockDataList>(File.ReadAllText(target));
         SiegeConstructionSettings settings = AssetDatabase.LoadAssetAtPath<SiegeConstructionSettings>(SiegeConstructionAuthoring.SettingsPath);
         var values = new SerializedObject(settings);
         values.FindProperty("starter").objectReferenceValue = AssetDatabase.LoadAssetAtPath<TextAsset>(target);

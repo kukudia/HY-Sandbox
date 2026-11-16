@@ -104,11 +104,19 @@ Player 首场景为 `Assets/Scenes/MainMenu.unity`。**Exploration** 选择载�
 
 普通建筑和基地直接在y=0地面自由搭建，无需设置地基宽长。逐步放置、移动、旋转、调尺寸、删除和Undo/Redo只保存模块并设置FootprintDirty，不遍历计算占地、不重建整套地基连接。加载时重新计算内存预览，点击 **FINISH / CROP** 或退出/切换建筑编辑时计算并保存最终占地；缺省边距1格，Footprint Padding可配0–8。不移动模块、不删除玩家平台或缺资源模块快照，保留核心和驻军坐标。手动完成不是退出编辑，后续可继续搭建。
 
-蓝图菜单编辑入口不再要求出战校验通过，可打开缺资源、未完成、超尺寸设计继续修复；损坏JSON仍拒绝。出战取消基地尺寸、预算、限高、整格旋转和内部重叠的设计门槛，占地不再上限64m；参考造价仅用于显示/修理，固定竞技场会按基地包围盒扩展地面。运行所需合法资源、身份/姿态、基地核心、载具驾驶舱、地面支撑与外部障碍检查保留；机库数量6与净空筛船规则保持。模块自身64m尺寸和2048模块是底层数据安全约束，不作为本次设计预算规则。世界建筑目录和Siege加载时从实际模块计算范围，不依赖未完成草稿的旧占地元数据。
+蓝图菜单编辑入口不再要求出战校验通过，可打开缺资源、未完成、超尺寸设计继续修复；损坏JSON仍拒绝。出战取消基地尺寸、预算、限高、整格旋转和内部重叠的设计门槛，占地不再上限64m；参考造价仅用于显示/修理。Siege使用有限浮空体素岛，部署时按基地占地保留中心平面与边缘缓冲；对局中不再扩展或重生地面。运行所需合法资源、身份/姿态、基地核心、载具驾驶舱、地面支撑与外部障碍检查保留；机库数量6与净空筛船规则保持。模块自身64m尺寸和2048模块是底层数据安全约束，不作为本次设计预算规则。世界建筑目录和Siege加载时从实际模块计算范围，不依赖未完成草稿的旧占地元数据。
 
 BuildingFoundationData的offsetX/offsetZ缺省0兼容旧坐标。相关入口：BuildPreview.Poll → BuildBlueprintEditor.Write → BuildManager.MarkBuildingFootprintDirty；PrepareBuildingFoundation / CompleteBuildingBlueprint → BuildingFootprint.Calculate → RefreshBuildingFootprint。完成按钮保存于EditorPanel.prefab。
 
 机库建造模式在+Z入口底板显示绿色 **▲ DOOR / FRONT**，随尺寸、旋转更新，战斗自动隐藏。标记为Hangar.prefab真实子节点，制作工具AddEntranceMarker可重复执行；旧透明长板顶棚已由真实模块顶板替换。
+
+## Siege 有限浮空岛
+
+两套Siege宿主与压力场通过真实场景组件 `SiegeIsland` / `ProceduralVoxelWorld` 共用World体素网格、碰撞与爆炸破坏。旧Arena Ground平板已删除。`Assets/Siege/FloatingIsland.asset`控制种子、最小宽192m、边缘32m、基础单元2m、厚度40m、坠落阈值80m；部署时按实际基地占地生成平整中心、起伏边缘和收尖岩底。宽设计保留World每轴128格的数据上限，必要时仅在部署前加粗格子。对局期间不按舰船位置扩张岛屿，不自动重建弹坑。
+
+敌舰从岛内周边空中入口生成；超过坠落/远离界限后释放波次登记，不虚构击杀奖励。友舰复用Scrap退场，基地核心坠落触发失败。岛外没有隐藏接盘地板，正常飞行可越过岛缘，保留200m空中恢复缓冲。
+
+制作：`SiegeIslandAuthoring.Install()`迁移五个场景并保存备份；**Preview Island For Current Base**按当前配置生成预览；**Bake Current Island Preview**保存真实Scene、体素数据与网格资产，重复烘焙保留Mesh GUID。正式SiegeGameplay已烘焙72个分块以便编辑查看；运行部署会按本次基地重新生成。新旧地形均经 `ProceduralVoxelWorld.RebuildFinite` 重建；WorldLab生成/差量存档流程保留。证据见[浮空岛验证](Docs/Validation/2026-11-16-siege-island.md)。
 
 ## 可编辑机库与舰队返航
 

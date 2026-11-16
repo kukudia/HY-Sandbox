@@ -13,6 +13,7 @@ public sealed class SiegeWaveDirector
     private readonly Func<SiegeShipOption[]> getOptions;
     private readonly Func<int> getSelected;
     private readonly Scene scene;
+    private readonly SiegeIsland island;
     private readonly System.Random random;
     private readonly List<Attacker> attackers = new List<Attacker>();
     private float nextSpawn;
@@ -22,7 +23,8 @@ public sealed class SiegeWaveDirector
         () => session.Fleet.Base,
         () => session.AttackerOptions,
         () => session.SelectedAttacker,
-        session.gameObject.scene)
+        session.gameObject.scene,
+        session.Island)
     {
     }
 
@@ -32,7 +34,8 @@ public sealed class SiegeWaveDirector
         Func<SiegeBase> getBase,
         Func<SiegeShipOption[]> getOptions,
         Func<int> getSelected,
-        Scene scene)
+        Scene scene,
+        SiegeIsland island = null)
     {
         this.match = match;
         this.settings = settings;
@@ -40,6 +43,7 @@ public sealed class SiegeWaveDirector
         this.getOptions = getOptions;
         this.getSelected = getSelected;
         this.scene = scene;
+        this.island = island;
         random = new System.Random(settings.SpawnSeed);
     }
 
@@ -55,6 +59,21 @@ public sealed class SiegeWaveDirector
             Attacker attacker = attackers[index];
             if (!attacker.Defeated && attacker.Cockpit != null && attacker.Cockpit.isActiveAndEnabled)
             {
+                if (island != null && island.BeyondRecovery(attacker.Cockpit.transform.position))
+                {
+                    ControlUnit escaped = attacker.Cockpit.GetComponentInParent<ControlUnit>();
+                    attacker.Unsubscribe();
+                    match.ResolveAttacker(attacker.Id, false);
+                    attackers.RemoveAt(index);
+                    if (escaped != null)
+                    {
+                        escaped.gameObject.SetActive(false);
+                        UnityEngine.Object.Destroy(escaped.gameObject);
+                    }
+
+                    continue;
+                }
+
                 attacker.RefreshTarget(getBase().Unit);
                 continue;
             }
@@ -74,7 +93,7 @@ public sealed class SiegeWaveDirector
         SiegeShipOption option = PickBlueprint(settings);
         double angle = random.NextDouble() * Math.PI * 2.0;
         Vector3 offset = new Vector3((float)Math.Cos(angle), 0f, (float)Math.Sin(angle)) * settings.AttackRadius;
-        Vector3 position = getBase().Core.transform.position + offset + Vector3.up * 10f;
+        Vector3 position = island != null ? island.SpawnPosition((float)angle, settings.AttackRadius) : getBase().Core.transform.position + offset + Vector3.up * 10f;
         BlockDataList blueprint = SiegeFleet.PrepareBlueprint(option.BlueprintJson, out string id);
         ControlUnit unit = EnemyBlueprintFactory.Spawn(
             blueprint,

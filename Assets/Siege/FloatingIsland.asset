@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 572d0c6a272d5bf4eaf0c78da2fefe86, type: 3}
+  m_Name: FloatingIsland
+  m_EditorClassIdentifier: Assembly-CSharp::SiegeIslandSettings
+  seed: 160611
+  minimumWidth: 192
+  edgeMargin: 32
+  cellSize: 2
+  depth: 40
+  voidDistance: 80

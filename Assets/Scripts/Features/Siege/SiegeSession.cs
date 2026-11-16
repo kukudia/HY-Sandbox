@@ -9,6 +9,10 @@ public sealed class SiegeSession : MonoBehaviour, ISiegeDeploymentHost
     [SerializeField]
     private SiegeSettings settings;
     [SerializeField]
+    private SiegeIsland island;
+    public SiegeIsland Island => island;
+
+    [SerializeField]
     private Transform baseDock;
     [SerializeField]
     private Transform[] shipDocks = new Transform[4];
@@ -207,6 +211,12 @@ public sealed class SiegeSession : MonoBehaviour, ISiegeDeploymentHost
         Match = settings.CreateMatch();
         Match.EnableReturnSettlement();
         RefreshBlueprints();
+        if (island != null)
+        {
+            BlockDataList design = JsonUtility.FromJson<BlockDataList>(settings.BaseBlueprint.text);
+            island.GenerateFor(design.foundation, baseDock.position, baseDock.rotation);
+        }
+
         Fleet = new SiegeFleet(this, shipDocks);
         if (!Fleet.CreateBase(baseDock))
         {
@@ -418,6 +428,12 @@ public sealed class SiegeSession : MonoBehaviour, ISiegeDeploymentHost
     {
         if (!IsRunning || IsEditingBlueprint || FlightGuidance == null)
         {
+            return;
+        }
+
+        if (island != null && !island.RecoverFleet(Fleet, Fleet.Base))
+        {
+            LoseBase();
             return;
         }
 

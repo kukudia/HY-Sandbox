@@ -17,7 +17,9 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
     [SerializeField]
     private WorldBuildingManager buildings;
     [SerializeField]
-    private BoxCollider arena;
+    private SiegeIsland island;
+    public SiegeIsland Island => island;
+
     [SerializeField]
     private SiegeConstructionPanel panel;
     [SerializeField]
@@ -54,6 +56,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
     private Quaternion rotation;
     private string selectedName;
     private bool entered;
+    private bool previousBackground;
     public SiegeMatch Match
     {
         get; private set;
@@ -81,6 +84,8 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
     {
         owner = host;
         entered = true;
+        previousBackground = Application.runInBackground;
+        Application.runInBackground = true;
         Match = settings.Combat.CreateMatch();
         Match.EnableReturnSettlement();
         buildings.SimulationEnabled = false;
@@ -138,7 +143,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         rotation = baseSpawn.rotation;
         // The spawn denotes the foundation centre, independent of the saved footprint size.
         position = baseSpawn.position - rotation * design.foundation.Center;
-        position.y = arena.bounds.max.y;
+        island.GenerateFor(design.foundation, position, rotation);
         designWarnings = settings.Warnings(design);
         if (!Deploy())
         {
@@ -156,14 +161,6 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
             return;
         }
 
-        // A wide completed design expands the runtime ground instead of being rejected by arena edges.
-        Bounds bounds = arena.bounds;
-        Vector3 required = BlockBounds.FromBlueprint(design.blocks, Matrix4x4.TRS(position, rotation, Vector3.one)).size;
-        Vector3 scale = arena.transform.localScale;
-        float xRatio = Mathf.Max(1f, (required.x + 8f) / Mathf.Max(.01f, bounds.size.x));
-        float zRatio = Mathf.Max(1f, (required.z + 8f) / Mathf.Max(.01f, bounds.size.z));
-        arena.transform.localScale = new Vector3(scale.x * xRatio, scale.y, scale.z * zRatio);
-        Physics.SyncTransforms();
         if (!SiegeRefit.IsBuildingClear(design, position, rotation, null, out string obstruction))
         {
             DesignStatus = obstruction;
@@ -226,7 +223,8 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
                 () => Base,
                 () => attackers,
                 () => SelectedAttacker,
-                gameObject.scene);
+                gameObject.scene,
+                island);
             Status = "Base deployed. Start the first wave. Repair coins are separate from the design budget.";
             DesignStatus = selectedName + "\n" + designWarnings;
             return true;
@@ -409,6 +407,12 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
             return;
         }
 
+        if (!island.RecoverFleet(Fleet, Base))
+        {
+            LoseBase();
+            return;
+        }
+
         flight.Tick(Time.fixedDeltaTime);
         if (Match.Phase != SiegePhase.Returning || !returning || !flight.IsComplete)
         {
@@ -541,6 +545,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         }
 
         entered = false;
+        Application.runInBackground = previousBackground;
         waves?.Stop();
         flight?.Stop();
         if (Fleet != null)

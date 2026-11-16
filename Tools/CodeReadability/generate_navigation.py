@@ -55,6 +55,18 @@ def main():
         )
 
     graph(
+        "Siege有限浮空岛与边界",
+        "基地占地决定部署时的有限地形，生成复用World数据/分块/碰撞；爆炸保留弹坑。边界只退场不可恢复单位，敌舰不获虚构击杀收益。编辑器另有预览和真实网格烘焙入口。",
+        {"A": "SiegeGameplayStage.Enter", "B": "SiegeIsland.GenerateFor", "C": "FloatingIslandTerrain.Generate",
+         "D": "ProceduralVoxelWorld.InitializeFinite", "E": "ProceduralVoxelWorld.RebuildFinite",
+         "F": "ExplosionDamageSession.Apply", "G": "ProceduralVoxelWorld.DamageSphere",
+         "H": "ProceduralVoxelWorld.FlushDirty", "I": "SiegeWaveDirector.Tick",
+         "J": "SiegeIsland.SpawnPosition", "K": "SiegeIsland.BeyondRecovery",
+         "L": "SiegeIsland.RecoverFleet", "M": "SiegeFleet.Scrap", "N": "SiegeIslandAuthoring.BakeCurrent"},
+        ['A --> B', 'B --> C', 'B --> D', 'D --> E', 'F --> G', 'G -.->|排队受影响网格| H',
+         'I --> J', 'I --> K', 'L --> K', 'L --> M', 'N --> B'],
+    )
+    graph(
         "模块化机库墙体与损伤快照",
         "逻辑机库在建筑实例化前展开为真实2×2×1金属块，个人设计保持逻辑尺寸。版本化损伤快照不补墙；原设计维修复用建筑缺件恢复，并检查世界预算。",
         {"A": "SiegeBase.Create", "B": "HangarShellBlueprint.Expand", "C": "HangarShellBlueprint.Tiles",

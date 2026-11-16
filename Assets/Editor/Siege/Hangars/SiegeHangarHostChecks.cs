@@ -130,16 +130,28 @@ public static class SiegeHangarHostChecks
             {
                 var settings = (SiegeConstructionSettings)typeof(MainMenuController).GetField("siegeSettings", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(menu);
                 var wide = JsonUtility.FromJson<BlockDataList>(settings.Starter.text);
-                BlockData large = new BlockData(Resources.Load<GameObject>("Blocks/1x1x1").GetComponent<Block>());
+                BlockData large = new BlockData(Resources.Load<GameObject>("Blocks/2x2x2").GetComponent<Block>());
                 large.id = "wide-ground-check";
-                large.resourcePath = "Blocks/1x1x1";
-                large.x = large.y = large.z = 1;
-                large.posX = 120.5f;
-                large.posY = .5f;
-                large.posZ = .5f;
+                large.resourcePath = "Blocks/2x2x2";
+                large.x = large.z = 2;
+                large.y = 2;
+                large.posX = 120f;
+                large.posY = 1f;
+                large.posZ = 0f;
                 large.rotX = large.rotY = large.rotZ = 0;
                 large.rotW = 1;
-                wide.blocks.Add(large);
+                for (int x = 0; x < 8; x++)
+                {
+                    for (int z = 0; z < 8; z++)
+                    {
+                        BlockData tile = JsonUtility.FromJson<BlockData>(JsonUtility.ToJson(large));
+                        tile.id = "wide-ground-check-" + x + "-" + z;
+                        tile.posX = 106 + x * 2;
+                        tile.posZ = -8 + z * 2;
+                        wide.blocks.Add(tile);
+                    }
+                }
+
                 wide.foundation = BuildingFootprint.Calculate(wide.blocks, 1);
                 changedSettings = settings;
                 previousStarter = settings.Starter;
