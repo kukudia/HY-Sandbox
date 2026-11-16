@@ -16,3 +16,9 @@ Automated intensity sampling is not a human visual inspection. Full battle-retur
 
 ## Reproduction
 Open saved Main only, run Tools/HY-Sandbox/Siege/Validate hangar fleet in Play. Report Temp/Hangars/play-checks.json, telemetry Temp/Hangars/flight-telemetry.json. In Main Play, SiegeReturnChecks.Run() and HoverControlPlayChecks.Run() (internal Editor fixture).
+
+## 后续提速 P3a
+
+同夹具完整导引elapsed：出库7.95999秒，返航7.31999秒；原基线13.2801/21.1203秒。采样间隔约1秒，不能把首尾普通采样差7.05秒当成完整导引时间。真实机库34项及隔离返航18项通过。补偿linearDamping仍受现有有电drive/lift上限；预设12m/s、12m/s²，不修改普通驾驶或刚体阻尼。已对准自身前门走廊取消绕顶往返，保留门外精确对齐、门打开、停泊位置/速度/角度门槛。非对准路径保持高空绕行。
+
+SiegeFlightAuthoring将五场景原8/6预设迁移至12/12，备份原文件并保留非默认参数。满尺寸多舰、障碍侵入入口、完整交战返航及人工动态视觉仍待验证。

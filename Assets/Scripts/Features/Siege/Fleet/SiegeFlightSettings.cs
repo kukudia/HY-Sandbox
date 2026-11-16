@@ -11,9 +11,9 @@ public sealed class SiegeFlightSettings
     [Min(0.1f), Tooltip("持续缺电/缺推进能力的宽限时间，避免电网刷新瞬间误报废。")]
     public float disabledGrace = 5f;
     [Min(0.1f), Tooltip("机库自动驾驶最大航速（米/秒）。")]
-    public float speed = 8f;
+    public float speed = 12f;
     [Min(0.1f), Tooltip("自动驾驶加速度上限；还会受现存发动机实际供电推力限制。")]
-    public float acceleration = 6f;
+    public float acceleration = 12f;
     [Min(1f), Tooltip("对准机库航向的最大角速度（度/秒）。")]
     public float angularSpeed = 60f;
     [Min(0.05f), Tooltip("最终停泊位置误差（米），不会远距离传送或吸附。")]

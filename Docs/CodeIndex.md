@@ -171,6 +171,7 @@ HY-Sandbox/
 │   │   │   │   ├── HangarPrefabAuthoring.cs
 │   │   │   │   ├── HangarSceneIntegration.cs
 │   │   │   │   ├── HangarWorkshopChecks.cs
+│   │   │   │   ├── SiegeFlightAuthoring.cs
 │   │   │   │   ├── SiegeHangarHostChecks.cs
 │   │   │   │   ├── SiegeHangarInterfaceAuthoring.cs
 │   │   │   │   ├── SiegeHangarPlayChecks.cs
@@ -2296,6 +2297,14 @@ HY-Sandbox/
 | HangarWorkshopChecks | [`void Check(bool condition, string message)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L513) | private static |
 | HangarWorkshopChecks | [`void Capture(string message, string stack, LogType type)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L523) | private static |
 | HangarWorkshopChecks | [`void Finish()`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L531) | private static |
+
+## Assets/Editor/Siege/Hangars/SiegeFlightAuthoring.cs
+
+// 职责：将已验证起降预设保存到真实Siege场景，保留显式改过的参数和无关对象。 // 入口：UpgradeDefaults()；只将原8/6预设升级12/12，保存前备份原场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeFlightAuthoring | [`string UpgradeDefaults()`](../Assets/Editor/Siege/Hangars/SiegeFlightAuthoring.cs#L13) | public static |
 
 ## Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs
 
@@ -5580,14 +5589,14 @@ HY-Sandbox/
 | SiegeReturnFlight | [`void TakeGuidanceControl(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L146) | private |
 | SiegeReturnFlight | [`Vector3 DockPosition(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L179) | private |
 | SiegeReturnFlight | [`void BuildRoute(Flight flight, bool returning)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L204) | private |
-| SiegeReturnFlight | [`void Tick(float deltaTime)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L268) | public |
-| SiegeReturnFlight | [`void TickFlight(Flight flight, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L284) | private |
-| SiegeReturnFlight | [`void ReadPropulsion(Flight flight, out float driveForce, out float liftForce)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L347) | private static |
-| SiegeReturnFlight | [`void ApplyGuidance(Flight flight, Vector3 target, float driveAcceleration, float liftAcceleration, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L370) | private |
-| SiegeReturnFlight | [`void PublishPropulsion(Flight flight, Vector3 horizontal, float vertical, float driveAcceleration, float liftAcceleration)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L406) | private |
-| SiegeReturnFlight | [`void Finish(Flight flight, bool success, string reason = null)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L424) | private |
-| SiegeReturnFlight | [`void ReleasePropulsion(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L457) | private |
-| SiegeReturnFlight | [`void Stop()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L486) | public |
+| SiegeReturnFlight | [`void Tick(float deltaTime)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L289) | public |
+| SiegeReturnFlight | [`void TickFlight(Flight flight, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L305) | private |
+| SiegeReturnFlight | [`void ReadPropulsion(Flight flight, out float driveForce, out float liftForce)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L368) | private static |
+| SiegeReturnFlight | [`void ApplyGuidance(Flight flight, Vector3 target, float driveAcceleration, float liftAcceleration, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L391) | private |
+| SiegeReturnFlight | [`void PublishPropulsion(Flight flight, Vector3 horizontal, float vertical, float driveAcceleration, float liftAcceleration)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L429) | private |
+| SiegeReturnFlight | [`void Finish(Flight flight, bool success, string reason = null)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L447) | private |
+| SiegeReturnFlight | [`void ReleasePropulsion(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L480) | private |
+| SiegeReturnFlight | [`void Stop()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L509) | public |
 
 ## Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs
 

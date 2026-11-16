@@ -228,6 +228,27 @@ public sealed class SiegeReturnFlight
             return;
         }
 
+        // A ship already aligned with its own entrance corridor needs no climb over the
+        // roof. This is also the common launch-then-return path; retain the precise
+        // outside alignment waypoint before the final approach through the door.
+        Vector3 relative = Quaternion.Inverse(flight.entry.DockRotation) * (flight.body.position - dock);
+        Vector3 inner = flight.hangar != null ? flight.hangar.InnerSize : new Vector3(20f, 10f, 20f);
+        bool alignedCorridor = hangarBlock != null && Mathf.Abs(relative.x) <= Mathf.Max(.05f, (inner.x - hull.size.x) * .5f) && Mathf.Abs(relative.y) <= .15f && relative.z >= -.05f && Quaternion.Angle(flight.body.rotation, flight.dockRotation) < .5f;
+        if (alignedCorridor)
+        {
+            flight.points = relative.z <= depth * .5f ? new[]
+            {
+                dock
+            }
+
+            : new[]
+            {
+                approach,
+                dock
+            };
+            return;
+        }
+
         float cruiseHeight = Mathf.Max(flight.body.position.y, dock.y + height * 0.5f + hull.size.y + settings.approachClearance);
         Vector3 aboveCurrent = new Vector3(flight.body.position.x, cruiseHeight, flight.body.position.z);
         Vector3 aboveApproach = new Vector3(approach.x, cruiseHeight, approach.z);
@@ -374,7 +395,9 @@ public sealed class SiegeReturnFlight
         Vector3 offset = target - body.position;
         float speed = Mathf.Min(Mathf.Max(0.1f, settings.speed), Mathf.Sqrt(2f * Mathf.Max(0f, acceleration) * offset.magnitude));
         Vector3 desiredVelocity = offset.sqrMagnitude > 0.0001f ? offset.normalized * Mathf.Min(speed, offset.magnitude * 1.8f) : Vector3.zero;
-        Vector3 requested = (desiredVelocity - body.linearVelocity) / Mathf.Max(0.1f, dt);
+        // Counter actual linear drag within the existing powered force limits. Without
+        // this term high-damping hulls crawl even when the speed setting is raised.
+        Vector3 requested = (desiredVelocity - body.linearVelocity) / Mathf.Max(0.1f, dt) + body.linearVelocity * body.linearDamping;
         Vector3 horizontal = Vector3.ClampMagnitude(new Vector3(requested.x, 0f, requested.z), acceleration);
         float gravity = body.useGravity ? -Physics.gravity.y : 0f;
         float vertical = Mathf.Clamp(requested.y + gravity, 0f, Mathf.Max(0f, liftAcceleration));

@@ -327,7 +327,7 @@ flowchart TD
 
 ## 机库建造、独占部署与返航结算
 
-源码推导：机库尺寸作为Block数据随基地保存。编辑按钮经几何/占位检查提交可撤销尺寸动作；生成真实外壳与底部支撑。两宿主共用容量筛选、居中部署和独占槽位。固定物理步按实际有电推进力导航、开门及入库；失能、损毁机库或超时则报废。全部返回结束才一次性入账，再执行原蓝图付费修理；修理恢复的机库按原Block身份重连槽位。退出解除动力请求和导航，销毁归属副场景的舰队。
+源码推导：机库尺寸作为Block数据随基地保存。编辑按钮经几何/占位检查提交可撤销尺寸动作；生成真实外壳与底部支撑。两宿主共用容量筛选、居中部署和独占槽位。固定物理步按实际有电推进力上限补偿线性阻尼、开门及入库；自身入口已对准走廊时省去绕顶并保留门外精确对齐；失能、损毁机库或超时则报废。全部返回结束才一次性入账，再执行原蓝图付费修理；修理恢复的机库按原Block身份重连槽位。退出解除动力请求和导航，销毁归属副场景的舰队。
 
 ```mermaid
 flowchart TD
@@ -358,7 +358,7 @@ flowchart TD
     M["SiegeReturnFlight.BeginReturn()"]
     click M "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L73" "打开源码"
     N["SiegeReturnFlight.Tick()"]
-    click N "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L268" "打开源码"
+    click N "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L289" "打开源码"
     O["HangarModule.FixedUpdate()"]
     click O "../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L212" "打开源码"
     P["SiegeFleet.Scrap()"]
@@ -370,13 +370,13 @@ flowchart TD
     S["SiegeFleet.GetHangar()"]
     click S "../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L66" "打开源码"
     T["SiegeReturnFlight.Stop()"]
-    click T "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L486" "打开源码"
+    click T "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L509" "打开源码"
     U["SiegeSession.FixedUpdate()"]
     click U "../Assets/Scripts/Features/Siege/SiegeSession.cs#L417" "打开源码"
     V["SiegeGameplayStage.FixedUpdate()"]
     click V "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L405" "打开源码"
     W["SiegeReturnFlight.PublishPropulsion()"]
-    click W "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L406" "打开源码"
+    click W "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L429" "打开源码"
     X["Thruster.SetGuidanceOutput()"]
     click X "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L47" "打开源码"
     Y["Thruster.BeginGuidance()"]
@@ -386,7 +386,7 @@ flowchart TD
     AA["Thruster.VisualizeThrust()"]
     click AA "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L260" "打开源码"
     AB["SiegeReturnFlight.ReleasePropulsion()"]
-    click AB "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L457" "打开源码"
+    click AB "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L480" "打开源码"
     A -.->|确认放置| B
     B --> F
     C --> D
@@ -442,7 +442,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|ResolveAttacker -->
 - [SiegeReturnFlight.BeginReturn](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L73)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|BeginReturn -->
-- [SiegeReturnFlight.Tick](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L268)
+- [SiegeReturnFlight.Tick](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L289)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|Tick -->
 - [HangarModule.FixedUpdate](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L212)
 <!-- source: Assets/Scripts/Features/Siege/Hangars/HangarModule.cs|FixedUpdate -->
@@ -454,13 +454,13 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeBase.cs|Repair -->
 - [SiegeFleet.GetHangar](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L66)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs|GetHangar -->
-- [SiegeReturnFlight.Stop](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L486)
+- [SiegeReturnFlight.Stop](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L509)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|Stop -->
 - [SiegeSession.FixedUpdate](../Assets/Scripts/Features/Siege/SiegeSession.cs#L417)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|FixedUpdate -->
 - [SiegeGameplayStage.FixedUpdate](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L405)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|FixedUpdate -->
-- [SiegeReturnFlight.PublishPropulsion](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L406)
+- [SiegeReturnFlight.PublishPropulsion](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L429)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|PublishPropulsion -->
 - [Thruster.SetGuidanceOutput](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L47)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|SetGuidanceOutput -->
@@ -470,7 +470,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|EndGuidance -->
 - [Thruster.VisualizeThrust](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L260)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|VisualizeThrust -->
-- [SiegeReturnFlight.ReleasePropulsion](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L457)
+- [SiegeReturnFlight.ReleasePropulsion](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L480)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|ReleasePropulsion -->
 
 ## GPU特效对象池与释放

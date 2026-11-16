@@ -4865,8 +4865,8 @@ MonoBehaviour:
   flightSettings:
     timeout: 120
     disabledGrace: 5
-    speed: 8
-    acceleration: 6
+    speed: 12
+    acceleration: 12
     angularSpeed: 60
     dockingTolerance: 0.15
     approachClearance: 4

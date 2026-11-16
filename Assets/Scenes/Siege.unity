@@ -10134,6 +10134,7 @@ MonoBehaviour:
   worldSession: {fileID: 0}
   modes: {fileID: 0}
   siegeSession: {fileID: 1787994845}
+  skirmish: {fileID: 0}
   playMode: 0
   blocksParent: {fileID: 0}
   mainCamera: {fileID: 376026797}
@@ -26375,6 +26376,7 @@ MonoBehaviour:
   _labelHeight: 2.5
   _killDuration: 2.8
   _labelFadeSpeed: 7
+  _occlusionCheckInterval: 0.12
 --- !u!1 &1471097764
 GameObject:
   m_ObjectHideFlags: 0
@@ -32502,8 +32504,8 @@ MonoBehaviour:
   flightSettings:
     timeout: 120
     disabledGrace: 5
-    speed: 8
-    acceleration: 6
+    speed: 12
+    acceleration: 12
     angularSpeed: 60
     dockingTolerance: 0.15
     approachClearance: 4
@@ -36313,6 +36315,7 @@ MonoBehaviour:
   lastSaveBlock: {fileID: 0}
   currentGhost: {fileID: 0}
   currentBlockResourcePath: 
+  currentMaterialId: metal
   currentSaveName: 
   currentEnemyBlueprintName: default_enemy
   enemyBlueprintBuildMode: 0
