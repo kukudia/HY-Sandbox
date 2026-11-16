@@ -156,6 +156,7 @@ public sealed class BuildingRuntime : MonoBehaviour
             block.x = data.x;
             block.y = data.y;
             block.z = data.z;
+            BlockMaterial.Restore(block, data.materialId);
             block.RefreshRuntimeData(changed);
             Durability health = blocks[i].GetComponent<Durability>();
             if (health != null)

@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d40eec08144e03b4db1c7507acd0889b, type: 3}
+  m_Name: BlockMaterials
+  m_EditorClassIdentifier: Assembly-CSharp::BlockMaterialCatalog
+  materials:
+  - id: metal
+    displayName: "\u91D1\u5C5E"
+    density: 2
+    durabilityPerCell: 150
+    coinsPerCell: 8
+    surface: {fileID: 2100000, guid: 84b4eb61beafc8c4295287aecd9ea2e2, type: 2}
+    breakEffect: {fileID: 6063208913727318916, guid: 0efec6a2138bb9247aeec4f3065df819, type: 3}
+  - id: wood
+    displayName: "\u6728\u6750"
+    density: 0.6
+    durabilityPerCell: 65
+    coinsPerCell: 3
+    surface: {fileID: 2100000, guid: e3194607f8fb5ca459121d78146686ac, type: 2}
+    breakEffect: {fileID: 2471896262276481295, guid: 89a3d83e65853dd43a7285d7c0465fbc, type: 3}
+  - id: stone
+    displayName: "\u77F3\u5934"
+    density: 2.6
+    durabilityPerCell: 190
+    coinsPerCell: 5
+    surface: {fileID: 2100000, guid: f1025d89ac575144899a2750cd76f290, type: 2}
+    breakEffect: {fileID: 7157235850787823762, guid: 369c28d88cc772a4fa917d0dd2ea3794, type: 3}
+  - id: glass
+    displayName: "\u73BB\u7483"
+    density: 1.2
+    durabilityPerCell: 30
+    coinsPerCell: 6
+    surface: {fileID: 2100000, guid: 0e207b88f2f8995468421124e2d18d57, type: 2}
+    breakEffect: {fileID: 4384551697265560125, guid: 5c677dbcd537dc04c872e22f59e4c0cb, type: 3}

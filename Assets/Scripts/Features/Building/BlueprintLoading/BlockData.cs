@@ -10,6 +10,7 @@ public class BlockData
     public float posX, posY, posZ;
     public float rotX, rotY, rotZ, rotW;
     public string resourcePath;
+    public string materialId; // Missing/empty preserves legacy Prefab values.
     public List<CargoItem> cargo;
     public BlockData(Block block)
     {
@@ -31,6 +32,7 @@ public class BlockData
         rotZ = snappedRot.z;
         rotW = snappedRot.w;
         resourcePath = block.resourcePath;
+        materialId = block.GetComponent<BlockMaterial>()?.MaterialId;
         CargoHold hold = block.GetComponent<CargoHold>();
         cargo = hold != null ? hold.CaptureContents() : null;
     }

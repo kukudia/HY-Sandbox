@@ -83,8 +83,32 @@ public class Block : MonoBehaviour
         InvalidateRuntimeConnections();
     }
 
+    private Vector3Int? restoredDimensions;
+    internal void RestoreDimensions(int width, int height, int depth)
+    {
+        x = width;
+        y = height;
+        z = depth;
+        // An inactive parent delays CSV Awake until activation. Keep the instance shape
+        // across that template pass, before ordinary physics and health initialize.
+        if (!gameObject.activeInHierarchy)
+        {
+            restoredDimensions = new Vector3Int(width, height, depth);
+        }
+    }
+
     private void Awake()
     {
+        if (restoredDimensions.HasValue)
+        {
+            Vector3Int dimensions = restoredDimensions.Value;
+            x = dimensions.x;
+            y = dimensions.y;
+            z = dimensions.z;
+            restoredDimensions = null;
+            RefreshRuntimeData(true);
+        }
+
         RefreshMass();
         _icon = GetComponent<StatusIcon>();
         if (string.IsNullOrEmpty(uniqueId))
@@ -155,6 +179,7 @@ public class Block : MonoBehaviour
         y = Mathf.Max(1, y);
         z = Mathf.Max(1, z);
         RefreshMass();
+        GetComponent<BlockMaterial>()?.Refresh();
         if (raycastCollider == null)
         {
             raycastCollider = GetComponent<BoxCollider>();
@@ -295,6 +320,13 @@ public class Block : MonoBehaviour
         var builder = new StringBuilder();
         builder.AppendLine($"Size: {x}x{y}x{z}");
         builder.AppendLine($"Mass: {mass:0.##} kg");
+        var material = GetComponent<BlockMaterial>()?.Definition;
+        if (material != null)
+        {
+            builder.AppendLine($"Material: {material.displayName} ({material.id})");
+            builder.AppendLine($"Density: {material.density:0.##} kg/m³");
+        }
+
         if (cost > 0)
         {
             builder.AppendLine($"Cost: {cost}");

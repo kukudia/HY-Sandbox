@@ -21,7 +21,7 @@ public sealed class SiegeConstructionSettings : ScriptableObject
         foreach (BlockData block in data.blocks)
         {
             // The hangar interior is reserved empty space; price its shell using the shared design rate.
-            price += HangarRules.IsHangar(block) ? HangarRules.ShellCost(block) : (long)block.x * block.y * block.z * Mathf.Max(1, coinsPerCell);
+            price += HangarRules.IsHangar(block) ? HangarRules.ShellCost(block) : !string.IsNullOrEmpty(block.materialId) ? BlockMaterialCatalog.Price(block) : (long)block.x * block.y * block.z * Mathf.Max(1, coinsPerCell);
         }
 
         return price;

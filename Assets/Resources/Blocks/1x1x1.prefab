@@ -200,6 +200,7 @@ GameObject:
   - component: {fileID: 6988365751423549104}
   - component: {fileID: 2345215020946697950}
   - component: {fileID: 6730143193437898196}
+  - component: {fileID: 7770737516157133879}
   m_Layer: 3
   m_Name: 1x1x1
   m_TagString: Untagged
@@ -417,6 +418,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81bbcf36bb3067c46af318f3bb5cd263, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WreckSalvage
+--- !u!114 &7770737516157133879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004239489873974274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5288c6d399590b5479ba49cbbc25d991, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BlockMaterial
+  materialId: 
+  surfaces:
+  - {fileID: 4956276841921973370}
 --- !u!1 &6447913848183592079
 GameObject:
   m_ObjectHideFlags: 0

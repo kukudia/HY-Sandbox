@@ -39,6 +39,18 @@ public class BuildManager : MonoBehaviour
     public Block lastSaveBlock;
     public GameObject currentGhost; // 当前的 ghost 实例
     public string currentBlockResourcePath;
+    [SerializeField]
+    private string currentMaterialId = "metal";
+    public string CurrentMaterialId => currentMaterialId;
+
+    public void SelectMaterial(string id)
+    {
+        if (BlockMaterialCatalog.Resolve(id) != null)
+        {
+            currentMaterialId = id;
+        }
+    }
+
     public string currentSaveName = "default";
     public string currentEnemyBlueprintName = "default_enemy";
     public bool enemyBlueprintBuildMode;
@@ -619,6 +631,11 @@ public class BuildManager : MonoBehaviour
                 block.y = dimensions.Value.y;
                 block.z = dimensions.Value.z;
                 block.RefreshRuntimeData();
+            }
+
+            if (block.TryGetComponent(out BlockMaterial surface))
+            {
+                surface.SetMaterial(currentMaterialId);
             }
 
             ApplyBlockBuildDefaults(block);

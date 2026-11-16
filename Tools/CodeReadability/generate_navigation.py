@@ -696,6 +696,37 @@ def main():
         ],
     )
     graph(
+        "结构材质与蓝图兼容",
+        "源码推导：可编辑目录定义稳定材质ID及单位体积密度/耐久/金币。新放置选材质，空ID旧蓝图保持Prefab参数；恢复先验证支持范围，CSV延后Awake后仍恢复存档尺寸。尺寸/材质刷新保留健康比例；建筑另按快照恢复实际伤势。共享表面及有界非物理碎片不增加战斗碰撞。",
+        {
+            "A": "BuildMaterialSelector.Select",
+            "B": "BuildManager.SelectMaterial",
+            "C": "BuildManager.CreateBlockFromTemplate",
+            "D": "BlockMaterial.SetMaterial",
+            "E": "BlockMaterial.Refresh",
+            "F": "BuildBlueprintEditor.Save",
+            "G": "BlueprintBlockFactory.TryRestore",
+            "H": "BlockMaterial.Restore",
+            "I": "Block.RestoreDimensions",
+            "J": "Block.Awake",
+            "K": "BuildingRuntime.ActivateRoutine",
+            "L": "BlockMaterialCatalog.Price",
+            "M": "SiegeConstructionSettings.Cost",
+            "N": "VisualEffectsManager.PlayBlockRemoved",
+            "O": "BlockMaterial.PlayBreak",
+            "P": "MaterialBreakEffect.Play",
+            "Q": "BlueprintModelPreview.Create",
+        },
+        [
+            "A --> B", "C -->|仅支持材质的结构Prefab| D", "D --> E",
+            "C -->|存档捕获稳定ID| F", "G --> H", "G --> I",
+            "I -.->|禁用父节点延后初始化| J", "J -->|尺寸恢复后刷新| E",
+            "H --> D", "K -->|CSV初始化后重申材质| H",
+            "M -->|已选择材质| L", "N --> O", "O --> P",
+            "F -.->|静态预览共享所选表面| Q",
+        ],
+    )
+    graph(
         "战斗、损伤、爆炸与残骸清理",
         "源码推导：Turret独立索敌后申报功率；激光即时命中且无冲量，实体炮塔先按相对速度求寿命/射程内的提前量，再每炮口生成一发并由物理扫掠命中。碰撞以法向冲量限制质量，按恢复系数扣除反弹能量，动态双方按质心能量份额分摊；CSV默认无半血限幅或碰撞冷却。启用canExplode的单位/建筑方块遭撞击致死同样爆炸，不按DestroyedByCollision排除；舰船/建筑共用ExplosionDamageSession排队结算同PhysicsScene的模块中心径向伤害及体素伤害，连锁完成后统一刷新建筑支撑与舰船重组，再施加限幅冲量和碎片碰撞保护。伤害与冲量独立配置，友伤开启且不做遮挡判定。延迟清理保留原生命周期。",
         {

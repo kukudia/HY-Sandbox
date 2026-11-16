@@ -41,6 +41,7 @@ public static class WorldBuildingValidation
                 throw new InvalidOperationException("Missing or unsupported building block: " + block.resourcePath);
             }
 
+            BlockMaterial.Validate(block.materialId, prefab);
             if (block.cargo != null && block.cargo.Count > 4096)
             {
                 throw new InvalidOperationException("Building cargo exceeds the item limit.");

@@ -316,6 +316,12 @@ public class VisualEffectsManager : MonoBehaviour
             return;
         }
 
+        if (block.TryGetComponent(out BlockMaterial surface) && surface.PlayBreak())
+        {
+            Shake.Play(Camera.main, cameraShakeStrength * .35f, .1f);
+            return;
+        }
+
         Bounds bounds = TransientEffects.GetBounds(block.gameObject, block.transform.position, TransientEffects.GetBlockSize(block));
         float scale = Mathf.Clamp(bounds.size.magnitude * 0.35f, 0.55f, 3.3f);
         Color brightRemove = TransientEffects.Brighten(removeColor, 2.35f, 0.15f);

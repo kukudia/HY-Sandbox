@@ -54,7 +54,7 @@ internal sealed class WorldBuildingRenderCache
                 continue;
             }
 
-            string key = block.resourcePath + ":" + block.x + ":" + block.y + ":" + block.z + ":" + RelativePath(group.Key, model);
+            string key = block.resourcePath + ":" + block.GetComponent<BlockMaterial>()?.MaterialId + ":" + block.x + ":" + block.y + ":" + block.z + ":" + RelativePath(group.Key, model);
             if (!visuals.TryGetValue(key, out Visual visual))
             {
                 visual = Build(group.Key, group.Value.ToArray());

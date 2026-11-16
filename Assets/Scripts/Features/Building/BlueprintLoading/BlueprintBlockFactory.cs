@@ -19,6 +19,7 @@ internal static class BlueprintBlockFactory
             return false;
         }
 
+        BlockMaterial.Validate(data.materialId, prefab);
         GameObject obj = Object.Instantiate(
             prefab,
             new Vector3(data.posX, data.posY, data.posZ),
@@ -32,10 +33,9 @@ internal static class BlueprintBlockFactory
         }
 
         bool shapeChanged = block.x != data.x || block.y != data.y || block.z != data.z;
-        block.x = data.x;
-        block.y = data.y;
-        block.z = data.z;
+        block.RestoreDimensions(data.x, data.y, data.z);
         // 存档保留实例尺寸；自动质量/碰撞体需按恢复后的尺寸重算，手动质量保持 CSV 值。
+        BlockMaterial.Restore(block, data.materialId);
         block.RefreshRuntimeData(shapeChanged);
         block.resourcePath = data.resourcePath;
         block.uniqueId = data.id;

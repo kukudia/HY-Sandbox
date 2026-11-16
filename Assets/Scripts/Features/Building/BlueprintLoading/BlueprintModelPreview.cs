@@ -22,13 +22,13 @@ public static class BlueprintModelPreview
             part.transform.SetLocalPositionAndRotation(
                 new Vector3(block.posX, block.posY, block.posZ),
                 new Quaternion(block.rotX, block.rotY, block.rotZ, block.rotW));
-            CopyVisuals(prefab.transform, part.transform, true);
+            CopyVisuals(prefab.transform, part.transform, true, BlockMaterialCatalog.Resolve(block.materialId)?.surface);
         }
 
         return root;
     }
 
-    private static void CopyVisuals(Transform source, Transform target, bool root)
+    private static void CopyVisuals(Transform source, Transform target, bool root, Material material)
     {
         // Ignore connectors, labels and disabled effect geometry. Never run prefab Awake/OnEnable.
         if (!root && (!source.gameObject.activeSelf || source.name == "Connectors"))
@@ -53,14 +53,14 @@ public static class BlueprintModelPreview
             geometry.name = "Static preview geometry";
             geometry.sharedMesh = mesh.sharedMesh;
             MeshRenderer visible = geometry.GetComponent<MeshRenderer>();
-            visible.sharedMaterials = renderer.sharedMaterials;
+            visible.sharedMaterials = material != null ? System.Array.ConvertAll(renderer.sharedMaterials, _ => material) : renderer.sharedMaterials;
             visible.shadowCastingMode = renderer.shadowCastingMode;
             visible.receiveShadows = renderer.receiveShadows;
         }
 
         foreach (Transform child in source)
         {
-            CopyVisuals(child, copy, false);
+            CopyVisuals(child, copy, false, material);
         }
     }
 }
