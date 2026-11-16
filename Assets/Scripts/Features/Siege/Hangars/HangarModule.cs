@@ -8,15 +8,11 @@ using System.Collections.Generic;
 public sealed class HangarModule : MonoBehaviour
 {
     [SerializeField]
-    private Transform floor;
+    private Transform shellPreview;
     [SerializeField]
-    private Transform roof;
-    [SerializeField]
-    private Transform leftWall;
-    [SerializeField]
-    private Transform rightWall;
-    [SerializeField]
-    private Transform backWall;
+    private Transform tileVisual;
+    [SerializeField, HideInInspector]
+    private Vector3Int previewSize;
     [SerializeField]
     private Transform leftDoor;
     [SerializeField]
@@ -44,7 +40,7 @@ public sealed class HangarModule : MonoBehaviour
         get
         {
             Block current = block != null ? block : GetComponent<Block>();
-            return new Vector3(Mathf.Max(1, current.x - 2), Mathf.Max(1, current.y - 1), Mathf.Max(1, current.z - 2));
+            return new Vector3(Mathf.Max(1, current.x - 2), Mathf.Max(1, current.y - 2), Mathf.Max(1, current.z - 2));
         }
     }
 
@@ -67,16 +63,12 @@ public sealed class HangarModule : MonoBehaviour
     public void RefreshGeometry()
     {
         block = GetComponent<Block>();
-        block.x = Mathf.Clamp(block.x, 3, 64);
-        block.y = Mathf.Clamp(block.y, 2, 64);
-        block.z = Mathf.Clamp(block.z, 3, 64);
+        block.x = HangarShellBlueprint.EvenSize(block.x);
+        block.y = HangarShellBlueprint.EvenSize(block.y);
+        block.z = HangarShellBlueprint.EvenSize(block.z);
         Vector3 outer = new Vector3(block.x, block.y, block.z);
         Vector3 inner = InnerSize;
-        SetShape(floor, new Vector3(0f, -outer.y * 0.5f + 0.25f, 0f), new Vector3(outer.x, 0.5f, outer.z));
-        SetShape(roof, new Vector3(0f, outer.y * 0.5f - 0.25f, 0f), new Vector3(outer.x, 0.5f, outer.z));
-        SetShape(leftWall, new Vector3(-(outer.x - 1f) * 0.5f, 0f, 0f), new Vector3(1f, inner.y, outer.z));
-        SetShape(rightWall, new Vector3((outer.x - 1f) * 0.5f, 0f, 0f), new Vector3(1f, inner.y, outer.z));
-        SetShape(backWall, new Vector3(0f, 0f, -(outer.z - 1f) * 0.5f), new Vector3(inner.x, inner.y, 1f));
+        RefreshShellPreview(new Vector3Int(block.x, block.y, block.z));
         SetShape(capacity, Vector3.zero, inner);
         if (entranceMarker != null)
         {
@@ -186,12 +178,13 @@ public sealed class HangarModule : MonoBehaviour
             sizeLabel.gameObject.SetActive(!combat);
         }
 
+        if (shellPreview != null)
+        {
+            shellPreview.gameObject.SetActive(!combat || GetComponentInParent<BuildingRuntime>() == null);
+        }
+
         Transform[] shell =
         {
-            roof,
-            leftWall,
-            rightWall,
-            backWall,
             leftDoor,
             rightDoor
         };
@@ -277,9 +270,9 @@ public sealed class HangarModule : MonoBehaviour
     public static void GetShellBoxes(Vector3 outer, List<Bounds> boxes)
     {
         boxes.Clear();
-        Vector3 inner = new Vector3(outer.x - 2f, outer.y - 1f, outer.z - 2f);
-        boxes.Add(new Bounds(new Vector3(0f, -outer.y * 0.5f + 0.25f, 0f), new Vector3(outer.x, 0.5f, outer.z)));
-        boxes.Add(new Bounds(new Vector3(0f, outer.y * 0.5f - 0.25f, 0f), new Vector3(outer.x, 0.5f, outer.z)));
+        Vector3 inner = new Vector3(outer.x - 2f, outer.y - 2f, outer.z - 2f);
+        boxes.Add(new Bounds(new Vector3(0f, -outer.y * 0.5f + 0.5f, 0f), new Vector3(outer.x, 1f, outer.z)));
+        boxes.Add(new Bounds(new Vector3(0f, outer.y * 0.5f - 0.5f, 0f), new Vector3(outer.x, 1f, outer.z)));
         boxes.Add(new Bounds(new Vector3(-(outer.x - 1f) * 0.5f, 0f, 0f), new Vector3(1f, inner.y, outer.z)));
         boxes.Add(new Bounds(new Vector3((outer.x - 1f) * 0.5f, 0f, 0f), new Vector3(1f, inner.y, outer.z)));
         boxes.Add(new Bounds(new Vector3(0f, 0f, -(outer.z - 1f) * 0.5f), new Vector3(inner.x, inner.y, 1f)));
@@ -297,15 +290,21 @@ public sealed class HangarModule : MonoBehaviour
 
         Vector3Int before = new Vector3Int(block.x, block.y, block.z);
         Vector3Int after = before;
-        after[axis] += delta;
-        if (after.x < 3 || after.y < 2 || after.z < 3 || after.x > 64 || after.y > 64 || after.z > 64)
+        if (Mathf.Abs(delta) != 2)
         {
-            reason = "Interior dimensions must be at least 1 m; the building safety limit is 64 m outside.";
+            reason = "Hangar dimensions change in 2 m steps.";
+            return false;
+        }
+
+        after[axis] += delta;
+        if (after.x < 4 || after.y < 4 || after.z < 4 || after.x > 64 || after.y > 64 || after.z > 64)
+        {
+            reason = "Interior dimensions must be at least 2 m; the building safety limit is 64 m outside.";
             return false;
         }
 
         Vector3 oldPosition = transform.position;
-        // Keep the lower minimum corner on the building grid when changing odd/even dimensions.
+        // Keep the lower minimum corner fixed on the even building grid.
         Vector3 nextPosition = oldPosition + transform.TransformDirection((Vector3)(after - before) * .5f);
         Collider[] hits = Physics.OverlapBox(
             nextPosition,
@@ -337,6 +336,49 @@ public sealed class HangarModule : MonoBehaviour
         block.RefreshRuntimeData();
         Physics.SyncTransforms();
         BuildManager.instance?.SaveBlock(block);
+    }
+
+    private void RefreshShellPreview(Vector3Int size)
+    {
+        if (GetComponentInParent<BuildingRuntime>() != null || shellPreview == null || tileVisual == null || previewSize == size && shellPreview.childCount > 0)
+        {
+            return;
+        }
+
+        previewSize = size;
+        for (int i = shellPreview.childCount - 1; i >= 0; i--)
+        {
+            GameObject old = shellPreview.GetChild(i).gameObject;
+            old.SetActive(false);
+            if (Application.isPlaying)
+            {
+                Destroy(old);
+            }
+            else
+            {
+                DestroyImmediate(old);
+            }
+        }
+
+        int index = 0;
+        foreach (Pose pose in HangarShellBlueprint.Tiles(size))
+        {
+            Transform tile;
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                tile = ((GameObject)UnityEditor.PrefabUtility.InstantiatePrefab(tileVisual.gameObject, shellPreview)).transform;
+            }
+            else
+#endif
+            {
+                tile = Instantiate(tileVisual, shellPreview);
+            }
+
+            tile.name = "Shell Preview " + index++;
+            tile.SetLocalPositionAndRotation(pose.position, pose.rotation);
+            tile.gameObject.SetActive(true);
+        }
     }
 
     private static void SetShape(Transform piece, Vector3 position, Vector3 size)

@@ -22,10 +22,6 @@ public static class HangarPrefabAuthoring
             AssetDatabase.CreateFolder("Assets/Resources", "Hangars");
         }
 
-        Material floor = Material("Floor", new Color(0.035f, 0.055f, 0.07f, 1f));
-        Material roof = Material("Roof", new Color(0.17f, 0.34f, 0.42f, 0.045f), true);
-        roof.SetShaderPassEnabled("ShadowCaster", false);
-        Material shell = Material("Shell", new Color(0.17f, 0.24f, 0.29f, 1f));
         Material door = Material("Door", new Color(0.14f, 0.42f, 0.47f, 1f));
         Material volume = Material("Capacity", new Color(0.12f, 0.75f, 0.95f, 0.13f), true);
         var root = new GameObject("Hangar");
@@ -34,7 +30,7 @@ public static class HangarPrefabAuthoring
             root.layer = LayerMask.NameToLayer("Block");
             Block block = root.AddComponent<Block>();
             block.x = 20;
-            block.y = 9;
+            block.y = 10;
             block.z = 24;
             block.canSpawnConnector = false;
             block.canEditInfo = true;
@@ -50,11 +46,10 @@ public static class HangarPrefabAuthoring
             health.debugLog = false;
             HangarModule module = root.AddComponent<HangarModule>();
             var data = new SerializedObject(module);
-            data.FindProperty("floor").objectReferenceValue = Cube(root.transform, "Dark Floor", floor, true);
-            data.FindProperty("roof").objectReferenceValue = Cube(root.transform, "Roof", roof, true);
-            data.FindProperty("leftWall").objectReferenceValue = Cube(root.transform, "Left Wall", shell, true);
-            data.FindProperty("rightWall").objectReferenceValue = Cube(root.transform, "Right Wall", shell, true);
-            data.FindProperty("backWall").objectReferenceValue = Cube(root.transform, "Back Wall", shell, true);
+            var preview = new GameObject("Shell Preview (Editor)");
+            preview.transform.SetParent(root.transform, false);
+            data.FindProperty("shellPreview").objectReferenceValue = preview.transform;
+            data.FindProperty("tileVisual").objectReferenceValue = MakePreviewTile().transform;
             data.FindProperty("leftDoor").objectReferenceValue = Cube(root.transform, "Sliding Door Left", door, true);
             data.FindProperty("rightDoor").objectReferenceValue = Cube(root.transform, "Sliding Door Right", door, true);
             data.FindProperty("capacity").objectReferenceValue = Cube(root.transform, "Capacity Volume (Editor)", volume, false);
@@ -100,27 +95,6 @@ public static class HangarPrefabAuthoring
         }
     }
 
-    [MenuItem("HY-Sandbox/Siege/Hangars/Update Transparent Roof")]
-    public static void UpdateTransparentRoof()
-    {
-        Material material = Material("Roof", new Color(0.17f, 0.34f, 0.42f, 0.045f), true);
-        material.SetShaderPassEnabled("ShadowCaster", false);
-        GameObject root = PrefabUtility.LoadPrefabContents(PrefabPath);
-        try
-        {
-            Renderer renderer = root.transform.Find("Roof").GetComponent<Renderer>();
-            renderer.sharedMaterial = material;
-            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            renderer.receiveShadows = false;
-            PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
-            AssetDatabase.SaveAssets();
-        }
-        finally
-        {
-            PrefabUtility.UnloadPrefabContents(root);
-        }
-    }
-
     [MenuItem("HY-Sandbox/Siege/Hangars/Add Entrance Direction Marker")]
     public static void AddEntranceMarker()
     {
@@ -158,6 +132,25 @@ public static class HangarPrefabAuthoring
         data.FindProperty("entranceMarker").objectReferenceValue = canvas.transform;
         data.ApplyModifiedPropertiesWithoutUndo();
         root.GetComponent<HangarModule>().RefreshGeometry();
+    }
+
+    private static GameObject MakePreviewTile()
+    {
+        var root = new GameObject("ShellPreviewTile");
+        try
+        {
+            root.layer = LayerMask.NameToLayer("Block");
+            UnityEngine.Object.Instantiate(
+                Resources.Load<GameObject>(HangarShellBlueprint.TileResource).transform.Find("Model"),
+                root.transform,
+                false);
+            root.AddComponent<BoxCollider>().size = new Vector3(1.96f, 1.96f, .96f);
+            return PrefabUtility.SaveAsPrefabAsset(root, Folder + "/ShellPreviewTile.prefab");
+        }
+        finally
+        {
+            UnityEngine.Object.DestroyImmediate(root);
+        }
     }
 
     private static void EnsureLimits()
@@ -234,8 +227,8 @@ public static class HangarPrefabAuthoring
                 20,
                 new Vector2(130f, 40f),
                 new Vector2(-65f, y));
-            ResizeButton(canvas.transform, module, axis, -1, new Vector2(35f, y));
-            ResizeButton(canvas.transform, module, axis, 1, new Vector2(100f, y));
+            ResizeButton(canvas.transform, module, axis, -2, new Vector2(35f, y));
+            ResizeButton(canvas.transform, module, axis, 2, new Vector2(100f, y));
         }
 
         return face;

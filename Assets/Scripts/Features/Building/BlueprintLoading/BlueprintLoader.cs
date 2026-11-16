@@ -66,6 +66,11 @@ internal sealed class BlueprintLoader
             return;
         }
 
+        for (int i = 0; i < data.blocks.Count; i++)
+        {
+            data.blocks[i] = HangarShellBlueprint.Normalize(data.blocks[i]);
+        }
+
         ReplaceParent(parentPrefab, target.Name);
         _saves.cachedData = data;
         prepareParent?.Invoke(_parent, data);

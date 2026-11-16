@@ -10,6 +10,7 @@ using UnityEngine;
 public sealed class BuildingRuntime : MonoBehaviour
 {
     private WorldBuildingManager manager;
+    private int hangarShellVersion;
     private string blueprintName;
     private string instanceId;
     private readonly List<Block> blocks = new List<Block>();
@@ -87,6 +88,7 @@ public sealed class BuildingRuntime : MonoBehaviour
     {
         manager = owner;
         pendingState = state;
+        hangarShellVersion = state.blueprint.hangarShellVersion;
         outpost = state.blueprint.IsOutpost ? state.blueprint.outpost : null;
         instanceId = state.instanceId;
         blueprintName = state.blueprintName;
@@ -196,6 +198,7 @@ public sealed class BuildingRuntime : MonoBehaviour
 
         var blueprint = new BlockDataList
         {
+            hangarShellVersion = hangarShellVersion,
             outpost = outpost,
             foundation = foundationData.Copy()
         };

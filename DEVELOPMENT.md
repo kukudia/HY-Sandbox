@@ -108,22 +108,23 @@ Player 首场景为 `Assets/Scenes/MainMenu.unity`。**Exploration** 选择载�
 
 BuildingFoundationData的offsetX/offsetZ缺省0兼容旧坐标。相关入口：BuildPreview.Poll → BuildBlueprintEditor.Write → BuildManager.MarkBuildingFootprintDirty；PrepareBuildingFoundation / CompleteBuildingBlueprint → BuildingFootprint.Calculate → RefreshBuildingFootprint。完成按钮保存于EditorPanel.prefab。
 
-机库建造模式在+Z入口底板显示绿色 **▲ DOOR / FRONT**，随尺寸、旋转更新，战斗自动隐藏。标记为Hangar.prefab真实子节点，制作工具AddEntranceMarker可重复执行；保留用户本轮前已有Roof材质调整。
+机库建造模式在+Z入口底板显示绿色 **▲ DOOR / FRONT**，随尺寸、旋转更新，战斗自动隐藏。标记为Hangar.prefab真实子节点，制作工具AddEntranceMarker可重复执行；旧透明长板顶棚已由真实模块顶板替换。
 
 ## 可编辑机库与舰队返航
 
-基地编辑器 **PLACE HANGAR** 选择机库构件，沿用原有放置、选中、移动、90°竖轴旋转与复制。深色底板及半透明净空体在编辑时显示，中心标注净宽×净高×净深；选中后面向镜头的面板提供三轴 +/-，尺寸、姿态、身份随基地JSON保存，支持Undo/Redo。机库数量配置为 **6**（`Assets/Resources/Hangars/Limits.asset`），不是尺寸6m；尺寸受64m模块安全范围约束。默认外20×9×24m，净空18×8×22m；机库预算按外壳面积计费，不按内部空体积计费，不能作为基地核心或载具模块。
+基地编辑器 **PLACE HANGAR** 选择机库构件，沿用原有放置、选中、移动、90°竖轴旋转与复制。深色底板及半透明净空体在编辑时显示，中心标注净宽×净高×净深；选中后面向镜头的面板提供三轴 +/-，尺寸、姿态、身份随基地JSON保存，支持Undo/Redo。机库数量配置为 **6**（`Assets/Resources/Hangars/Limits.asset`），不是尺寸6m；尺寸受64m模块安全范围约束。默认外20×10×24m，净空18×8×22m；长宽高均为4–64的偶数，按钮步长2m。机库预算包含真实金属墙块材料费及外壳面积装配费，不按内部空体积计费，不能作为基地核心或载具模块。
 
-战斗保留实体墙、顶、底板和伸缩滑门，隐藏编辑净空及控件；顶棚使用独立Roof透明材质（alpha 0.045，不投阴影），保留实体碰撞，便于俯视预览库内舰船。两套Siege通过 `ISiegeDeploymentHost` 共用 `SiegeFleet` 和部署卡片：点击空库DEPLOY，仅列各轴尺寸不超过净空的有效舰船蓝图；按蓝图真实包围盒居中，购买时再次验证物理净空与余额。一库一舰，舰船离库仍占用原槽位。整备阶段点击已占用机库的MANAGE可REPLACE或UNDEPLOY；完整舰按购买价退回，战损残值按购买价减现有维修报价且不低于0，更换抵扣该残值。尺寸、余额或外部障碍检查失败保留原舰与金币，取消同时清理原舰及其碎片，战斗/返航阶段禁用这两项操作。新版基地战保持俯视镜头，舰船自主作战；预研保留玩家驾驶。
+战斗墙、顶、底板由现有2×2×1金属建筑方块组成，默认372块；每块独立耐久、爆炸受损、连接断裂和原设计维修。编辑器保存逻辑机库，复用同一铺块配方显示可调整的预览；建筑恢复前展开为扁平真实方块，战斗隐藏预览碰撞，门继续使用可控伸缩面板。损伤快照保存hangarShellVersion和hangarOwnerId，读档不会补回已毁墙体；旧奇数尺寸内存向上迁移为偶数并保持底部最小角，个人文件不自动重写。展开后仍受2048建筑/8192世界模块上限约束，超限在创建前拒绝，维修也检查世界剩余容量。两套Siege通过 `ISiegeDeploymentHost` 共用 `SiegeFleet` 和部署卡片：点击空库DEPLOY，仅列各轴尺寸不超过净空的有效舰船蓝图；按蓝图真实包围盒居中，购买时再次验证物理净空与余额。一库一舰，舰船离库仍占用原槽位。整备阶段点击已占用机库的MANAGE可REPLACE或UNDEPLOY；完整舰按购买价退回，战损残值按购买价减现有维修报价且不低于0，更换抵扣该残值。尺寸、余额或外部障碍检查失败保留原舰与金币，取消同时清理原舰及其碎片，战斗/返航阶段禁用这两项操作。新版基地战保持俯视镜头，舰船自主作战；预研保留玩家驾驶。
 
 清波进入 **Returning**，击杀/清波/连击收益暂存PendingCoins，锁定购买和下一波。舰船按门外航点、对准、入库自动导航；门口占用阻止关门。持续失去供电/推进能力、机库损毁或返航超时的舰船自动报废。全部存活舰入库或报废后一次性结算，再按原设计和现有金币自动修复基地（含机库）及舰船；余额/净空不足不扣费。导航参数在两个宿主Inspector的Flight Settings中，使用实际有电发动机能力限制辅助刚体推力，仅在达到停泊位置/速度/角度容差后校准最终泊位，不远距离传送舰艇。战斗损伤不回写设计。
 
-预研 `Siege.unity` 使用保留原基地布局的 `BastionHangars.json` 扩建副本，三个默认大机库替换方形占位，原 `BastionBase.json` 保留。正式示例`StarterHangar.json`在原示例旁增设一库并扩展底座；原示例文件保留。玩家基地按设计实际机库数量生成，最多6；没有机库仍可用建筑炮塔守波。制作入口：`HangarPrefabAuthoring.Generate()`、`HangarSceneIntegration.Install()`、`SiegeHangarInterfaceAuthoring.Install()`；重新运行较早的基地制作工具后，应再运行机库接线工具恢复新增按钮。
+预研 `Siege.unity` 使用保留原基地布局的 `BastionHangars.json` 扩建副本，三个默认大机库替换方形占位，原 `BastionBase.json` 保留。正式示例`StarterHangar.json`已重做为21个逻辑构件：单机库、独立核心塔与四座炮台，展开后393块；个人基地库保留。`ModularBaseExampleAuthoring.Generate()`可复现制作并备份被替换的官方示例。玩家基地按设计实际机库数量生成，最多6；没有机库仍可用建筑炮塔守波。制作入口：`HangarPrefabAuthoring.Generate()`、`HangarSceneIntegration.Install()`、`SiegeHangarInterfaceAuthoring.Install()`；重新运行较早的基地制作工具后，应再运行机库接线工具恢复新增按钮。
 
 ```text
 Assets/Scripts/Features/Siege/
 ├── Hangars/
 │   ├── HangarModule.cs          净空、尺寸、支撑与安全门
+│   ├── HangarShellBlueprint.cs  真实墙块展开与损伤快照版本
 │   ├── HangarRules.cs           数量和姿态校验
 │   ├── HangarLimits.cs          可编辑数量配置
 │   ├── HangarFacePanel.cs       朝镜头的选中控件
@@ -138,7 +139,7 @@ Assets/Scripts/Features/Siege/
 Assets/Editor/Siege/Hangars/      资产制作、接线和隔离验证
 ```
 
-本次更新验收见 [延后裁切与设计门槛调整](Docs/Validation/2026-11-10-deferred-crop.md)；前次验收见 [自由建造与部署调整](Docs/Validation/2026-11-09-free-building.md)；原机库验收见 [机库验证](Docs/Validation/2026-11-09-hangars.md)。
+模块化墙体验收见 [2026-11-16模块机库](Docs/Validation/2026-11-16-modular-hangars.md)。前次更新验收见 [延后裁切与设计门槛调整](Docs/Validation/2026-11-10-deferred-crop.md)；前次验收见 [自由建造与部署调整](Docs/Validation/2026-11-09-free-building.md)；原机库验收见 [机库验证](Docs/Validation/2026-11-09-hangars.md)。
 
 ## Main 玩法合并入口
 

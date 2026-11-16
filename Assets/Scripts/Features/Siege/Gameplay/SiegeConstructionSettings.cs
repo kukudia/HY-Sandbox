@@ -20,6 +20,11 @@ public sealed class SiegeConstructionSettings : ScriptableObject
         long price = 0;
         foreach (BlockData block in data.blocks)
         {
+            if (!string.IsNullOrEmpty(block.hangarOwnerId))
+            {
+                continue;
+            }
+
             // The hangar interior is reserved empty space; price its shell using the shared design rate.
             price += HangarRules.IsHangar(block) ? HangarRules.ShellCost(block) : !string.IsNullOrEmpty(block.materialId) ? BlockMaterialCatalog.Price(block) : (long)block.x * block.y * block.z * Mathf.Max(1, coinsPerCell);
         }
@@ -31,7 +36,7 @@ public sealed class SiegeConstructionSettings : ScriptableObject
     {
         try
         {
-            WorldBuildingValidation.ValidateBlueprint(data);
+            WorldBuildingValidation.ValidateBlueprint(HangarShellBlueprint.Expand(data));
             if (!HangarRules.Validate(data, out reason))
             {
                 return false;

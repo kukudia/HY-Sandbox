@@ -19,6 +19,7 @@ internal static class BlueprintBlockFactory
             return false;
         }
 
+        data = HangarShellBlueprint.Normalize(data);
         BlockMaterial.Validate(data.materialId, prefab);
         GameObject obj = Object.Instantiate(
             prefab,
@@ -39,6 +40,7 @@ internal static class BlueprintBlockFactory
         block.RefreshRuntimeData(shapeChanged);
         block.resourcePath = data.resourcePath;
         block.uniqueId = data.id;
+        block.hangarOwnerId = data.hangarOwnerId;
         ApplyFaction(block, faction);
         if (obj.TryGetComponent(out CargoHold cargo) && data.cargo != null)
         {

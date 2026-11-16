@@ -55,6 +55,18 @@ def main():
         )
 
     graph(
+        "模块化机库墙体与损伤快照",
+        "逻辑机库在建筑实例化前展开为真实2×2×1金属块，个人设计保持逻辑尺寸。版本化损伤快照不补墙；原设计维修复用建筑缺件恢复，并检查世界预算。",
+        {"A": "SiegeBase.Create", "B": "HangarShellBlueprint.Expand", "C": "HangarShellBlueprint.Tiles",
+         "D": "WorldBuildingManager.RestoreBuilding", "E": "HangarShellBlueprint.ExpandState",
+         "F": "BuildingRuntime.InitializeRoutine", "G": "BlueprintBlockFactory.TryRestore",
+         "H": "BuildingRuntime.DestroyBlock", "I": "BuildingRuntime.Capture",
+         "J": "SiegeBase.Repair", "K": "BuildingRefit.Apply", "L": "WorldBuildingManager.CanAddBlocks"},
+        ['A --> B', 'B --> C', 'A --> D', 'D --> E', 'E --> B', 'D --> F', 'F --> G',
+         'F -.->|独立受损| H', 'H -.->|世界存档| I', 'I -.->|版本与缺口保留| D',
+         'J --> K', 'K --> L', 'K --> G'],
+    )
+    graph(
         "主菜单、工坊暂停与蓝图出战",
         "源码推导：MainMenu冷启动只展示菜单；选择后只读校验蓝图，再按需Additive加载Main。Main跳过默认存档启动，菜单拥有唯一EventSystem。显式编辑示例才创建副本；探索临时选择别的载具时保留工坊对象/上下文/Undo。返回先走模式清理与货仓保存；失败保留活动会话并提示，成功才恢复原稿、暂停Main根对象。取消等待安全载入/卸载完成，不中途丢弃工坊。",
         {"A": "MainMenuController.Start", "B": "MainMenuController.Choose",

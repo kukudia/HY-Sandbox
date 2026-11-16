@@ -1,0 +1,157 @@
+// 职责：验证逻辑机库展开、预算拒绝、独立墙体损伤、快照缺口与原设计维修。
+// 入口：Run()；只使用隔离建筑实例，不读写玩家存档。
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using UnityEditor;
+using UnityEngine;
+using Object = UnityEngine.Object;
+
+public static class HangarShellChecks
+{
+    [Serializable]
+    private sealed class Report
+    {
+        public bool passed;
+        public List<string> checks = new List<string>();
+        public string error;
+    }
+
+    public static string Run()
+    {
+        if (!EditorApplication.isPlaying)
+        {
+            throw new InvalidOperationException("Run the shell checks in Play Mode.");
+        }
+
+        var report = new Report();
+        GameObject owner = null;
+        try
+        {
+            Block prefab = Resources.Load<GameObject>("Hangars/Hangar").GetComponent<Block>();
+            var logical = new BlockDataList
+            {
+                foundation = new BuildingFoundationData
+                {
+                    width = 24,
+                    length = 28
+                }
+            };
+            logical.blocks.Add(new BlockData(prefab) { id = "bay", posX = 0, posY = 5, posZ = 0, rotX = 0, rotY = 0, rotZ = 0, rotW = 1 });
+            BlockData legacy = JsonUtility.FromJson<BlockData>(JsonUtility.ToJson(logical.blocks[0]));
+            legacy.y = 9;
+            legacy.posY = 4.5f;
+            BlockData normalized = HangarShellBlueprint.Normalize(legacy);
+            Check(
+                report,
+                "odd legacy height becomes even without lifting its floor",
+                normalized.y == 10 && normalized.posY == 5 && legacy.y == 9);
+            string original = JsonUtility.ToJson(logical);
+            BlockDataList design = HangarShellBlueprint.Expand(logical);
+            Check(report, "expansion preserves the logical source", JsonUtility.ToJson(logical) == original);
+            Check(report, "20x10x24 bay creates 372 ordinary wall blocks", design.blocks.Count == 373);
+            Check(
+                report,
+                "wall blocks retain real 2x2x1 geometry and metal material",
+                design.blocks.Skip(1).All(tile => tile.x == 2 && tile.y == 2 && tile.z == 1 && tile.materialId == "metal" && tile.hangarOwnerId == "bay"));
+            Check(
+                report,
+                "expanded design is idempotent",
+                ReferenceEquals(design, HangarShellBlueprint.Expand(design)));
+            BlockDataList excessive = JsonUtility.FromJson<BlockDataList>(original);
+            excessive.blocks[0].x = 64;
+            excessive.blocks[0].y = 64;
+            excessive.blocks[0].z = 64;
+            bool refused = false;
+            try
+            {
+                HangarShellBlueprint.Expand(excessive);
+            }
+            catch (InvalidOperationException)
+            {
+                refused = true;
+            }
+
+            Check(report, "oversized shell is rejected before spawning", refused);
+            owner = new GameObject("Isolated modular hangar checks");
+            owner.SetActive(false);
+            WorldBuildingManager manager = owner.AddComponent<WorldBuildingManager>();
+            var config = new SerializedObject(manager);
+            config.FindProperty("initializeOnStart").boolValue = false;
+            config.ApplyModifiedPropertiesWithoutUndo();
+            BuildingRuntime building = manager.RestoreBuilding(new WorldBuildingState { instanceId = "shell-probe", blueprintName = "Shell probe", faction = UnitFaction.Player, position = new Vector3(12000, 2000, 12000), rotation = Quaternion.identity, blueprint = logical, durability = new[] { 1190f }, anchored = true });
+            owner.SetActive(true);
+            building.Activate();
+            Check(
+                report,
+                "production restore expands every wall into building ownership",
+                building.Blocks.Count == 373);
+            Check(
+                report,
+                "legacy root damage survives shell migration",
+                Mathf.Approximately(building.Blocks[0].GetComponent<Durability>().currentDurability, 1190f));
+            Check(
+                report,
+                "combat has no duplicate preview colliders",
+                !building.GetComponentInChildren<HangarModule>().transform.Find("Shell Preview (Editor)").gameObject.activeSelf);
+            Check(report, "the complete shell has foundation support", building.HasFullFoundationSupport());
+            Block target = building.Blocks.Last();
+            string removedId = target.uniqueId;
+            building.DestroyBlock(target);
+            Check(
+                report,
+                "one wall is independently destructible while the hangar survives",
+                building.Blocks.Count == 372 && building.Blocks[0].GetComponent<HangarModule>().IsOperational);
+            WorldBuildingState damaged = building.Capture();
+            Check(
+                report,
+                "damaged capture preserves version and the missing tile",
+                damaged.blueprint.hangarShellVersion == 1 && damaged.blueprint.blocks.Count == 372);
+            Check(
+                report,
+                "loading a damaged snapshot never regenerates holes",
+                HangarShellBlueprint.ExpandState(damaged).blueprint.blocks.Count == 372);
+            object[] arguments =
+            {
+                design,
+                null
+            };
+            bool repaired = (bool)typeof(BuildingRuntime).GetMethod("TryRefit", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(building, arguments);
+            Check(
+                report,
+                "production refit restores the original wall identity",
+                repaired && building.Blocks.Any(block => block.uniqueId == removedId));
+            Check(report, "repaired shell returns to full original count", building.Blocks.Count == 373);
+            report.passed = true;
+        }
+        catch (Exception error)
+        {
+            report.error = error.ToString();
+        }
+        finally
+        {
+            if (owner != null)
+            {
+                owner.SetActive(false);
+                Object.Destroy(owner);
+            }
+        }
+
+        Directory.CreateDirectory("Temp/Hangars");
+        string json = JsonUtility.ToJson(report, true);
+        File.WriteAllText("Temp/Hangars/shell-checks.json", json);
+        return json;
+    }
+
+    private static void Check(Report report, string name, bool condition)
+    {
+        if (!condition)
+        {
+            throw new InvalidOperationException(name);
+        }
+
+        report.checks.Add(name);
+    }
+}

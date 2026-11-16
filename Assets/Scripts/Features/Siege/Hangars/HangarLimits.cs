@@ -7,7 +7,7 @@ public sealed class HangarLimits : ScriptableObject
 {
     [SerializeField, Range(1, 6)]
     private int maximumCount = 6;
-    [SerializeField, Min(1), Tooltip("机库外壳每平方米的设计预算；内部空体积不收费。")]
+    [SerializeField, Min(1), Tooltip("机库外壳每平方米的装配费用；另计真实金属方块材料费，内部空体积不收费。")]
     private int shellCoinsPerSquareMetre = 1;
     public int ShellCoinsPerSquareMetre => Mathf.Max(1, shellCoinsPerSquareMetre);
     public int MaximumCount => Mathf.Clamp(maximumCount, 1, 6);

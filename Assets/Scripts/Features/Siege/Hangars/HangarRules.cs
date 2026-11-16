@@ -22,7 +22,12 @@ public static class HangarRules
     {
         _ = MaximumCount; // Resolve the shared configuration once before either editing or deployment.
         long area = (long)block.x * block.z * 2 + (long)block.y * (block.x + block.z) * 2;
-        return area * (limits != null ? limits.ShellCoinsPerSquareMetre : 1);
+        Vector3Int size = new Vector3Int(
+            HangarShellBlueprint.EvenSize(block.x),
+            HangarShellBlueprint.EvenSize(block.y),
+            HangarShellBlueprint.EvenSize(block.z));
+        long materialCost = (long)HangarShellBlueprint.TileCount(size) * 4 * BlockMaterialCatalog.Resolve("metal").coinsPerCell;
+        return materialCost + area * (limits != null ? limits.ShellCoinsPerSquareMetre : 1);
     }
 
     public static bool IsHangar(BlockData block)

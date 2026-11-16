@@ -11,7 +11,7 @@ public sealed class HangarResizeButton : MonoBehaviour
     [SerializeField, Range(0, 2)]
     private int axis;
     [SerializeField]
-    private int delta = 1;
+    private int delta = 2;
     private Button button;
     private void OnEnable()
     {

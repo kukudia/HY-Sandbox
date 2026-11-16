@@ -85,7 +85,7 @@ public sealed class SiegeBase : IDisposable
         Action coreLost)
     {
         // Own an isolated snapshot; stripping cargo and later refits must never mutate the editor cache.
-        BlockDataList blueprint = JsonUtility.FromJson<BlockDataList>(JsonUtility.ToJson(source));
+        BlockDataList blueprint = HangarShellBlueprint.Expand(JsonUtility.FromJson<BlockDataList>(JsonUtility.ToJson(source)));
         WorldBuildingValidation.ValidateBlueprint(blueprint);
         if (blueprint.blocks.Count(block => block.id == coreId) != 1)
         {

@@ -75,6 +75,7 @@ public sealed class WorldBuildingManager : MonoBehaviour
 
     public bool CanPlace(BlockDataList blueprint, Vector3 position, Quaternion rotation, out string reason)
     {
+        blueprint = HangarShellBlueprint.Expand(blueprint);
         int count = blueprint?.blocks?.Count ?? 0;
         foreach (BuildingRuntime building in buildings)
         {
@@ -126,6 +127,8 @@ public sealed class WorldBuildingManager : MonoBehaviour
     public BuildingRuntime RestoreBuilding(WorldBuildingState state)
     {
         WorldBuildingValidation.ValidateState(state);
+        state = HangarShellBlueprint.ExpandState(state);
+        WorldBuildingValidation.ValidateState(state);
         if (!HasCapacity(state.blueprint.blocks.Count))
         {
             throw new InvalidOperationException("Active world building budget exceeded.");
@@ -144,6 +147,8 @@ public sealed class WorldBuildingManager : MonoBehaviour
     /// <summary>流式恢复逐批创建/启用模块；取消时回滚未完成实例，不发布半栋建筑。</summary>
     internal IEnumerator RestoreBuildingRoutine(WorldBuildingState state, Action<BuildingRuntime> restored)
     {
+        WorldBuildingValidation.ValidateState(state);
+        state = HangarShellBlueprint.ExpandState(state);
         WorldBuildingValidation.ValidateState(state);
         if (!HasCapacity(state.blueprint.blocks.Count))
         {
@@ -199,13 +204,18 @@ public sealed class WorldBuildingManager : MonoBehaviour
 
     public bool HasCapacity(int additionalBlocks)
     {
+        return buildings.Count < maximumBuildings && CanAddBlocks(additionalBlocks);
+    }
+
+    public bool CanAddBlocks(int additionalBlocks)
+    {
         int count = additionalBlocks;
         foreach (BuildingRuntime current in buildings)
         {
             count += current != null ? current.Blocks.Count : 0;
         }
 
-        return buildings.Count < maximumBuildings && count <= WorldBuildingValidation.MaximumWorldBlocks;
+        return count <= WorldBuildingValidation.MaximumWorldBlocks;
     }
 
     public void RemoveBuilding(BuildingRuntime building)
@@ -292,9 +302,13 @@ public sealed class WorldBuildingManager : MonoBehaviour
         snapshot.terrain.Restore(world.Seed, world.Data.Size);
         var identities = new HashSet<string>();
         int blockCount = 0;
-        foreach (WorldBuildingState state in snapshot.buildings)
+        var restoredStates = new List<WorldBuildingState>();
+        foreach (WorldBuildingState original in snapshot.buildings)
         {
+            WorldBuildingValidation.ValidateState(original);
+            WorldBuildingState state = HangarShellBlueprint.ExpandState(original);
             WorldBuildingValidation.ValidateState(state);
+            restoredStates.Add(state);
             blockCount += state.blueprint.blocks.Count;
             if (!identities.Add(state.instanceId) || blockCount > WorldBuildingValidation.MaximumWorldBlocks)
             {
@@ -305,7 +319,7 @@ public sealed class WorldBuildingManager : MonoBehaviour
         var staged = new List<BuildingRuntime>();
         try
         {
-            foreach (WorldBuildingState state in snapshot.buildings)
+            foreach (WorldBuildingState state in restoredStates)
             {
                 staged.Add(Stage(state, transform));
             }

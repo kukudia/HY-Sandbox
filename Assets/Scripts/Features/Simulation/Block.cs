@@ -46,6 +46,8 @@ public class Block : MonoBehaviour
     public bool canExplode = false;
     public bool showConnectors = true;
     public bool showLabel = false;
+    [HideInInspector]
+    public string hangarOwnerId;
     public string uniqueId;
     private StatusIcon _icon;
     private BlockConnections _connections;

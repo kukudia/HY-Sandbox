@@ -10,11 +10,13 @@ public class BlockData
     public float posX, posY, posZ;
     public float rotX, rotY, rotZ, rotW;
     public string resourcePath;
+    public string hangarOwnerId;
     public string materialId; // Missing/empty preserves legacy Prefab values.
     public List<CargoItem> cargo;
     public BlockData(Block block)
     {
         id = block.uniqueId;
+        hangarOwnerId = block.hangarOwnerId;
         x = block.x;
         y = block.y;
         z = block.z;
@@ -47,5 +49,6 @@ public class BlockDataList
     public EnemyOutpostData outpost;
     // Optional design metadata; combat never writes damaged runtime state back to this blueprint.
     public string siegeCoreId;
+    public int hangarShellVersion;
     public bool IsOutpost => outpost != null && outpost.enabled;
 }

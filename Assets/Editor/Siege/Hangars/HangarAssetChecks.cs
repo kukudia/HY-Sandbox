@@ -49,15 +49,10 @@ public static class HangarAssetChecks
                 result,
                 "shared hangar quantity configuration is six",
                 Resources.Load<HangarLimits>("Hangars/Limits").MaximumCount == 6);
-            Renderer roof = prefab.transform.Find("Roof").GetComponent<Renderer>();
             Check(
                 result,
-                "saved roof is almost transparent with physical collision retained",
-                roof.sharedMaterial.GetColor("_BaseColor").a <= .05f && roof.sharedMaterial.GetFloat("_Surface") == 1f && roof.GetComponent<BoxCollider>() != null);
-            Check(
-                result,
-                "transparent roof does not cast an opaque shadow",
-                roof.shadowCastingMode == UnityEngine.Rendering.ShadowCastingMode.Off);
+                "saved walls use modular preview tiles and no long slabs",
+                prefab.transform.Find("Shell Preview (Editor)").childCount > 0 && prefab.transform.Find("Roof") == null);
             BuildingFoundationData legacy = JsonUtility.FromJson<BuildingFoundationData>("{\"width\":4,\"length\":4}");
             Check(
                 result,
@@ -166,12 +161,12 @@ public static class HangarAssetChecks
             module.InnerSize == new Vector3(10f, 6f, 14f));
         Check(
             result,
-            "floor retains half-metre physical thickness",
-            Mathf.Approximately(module.transform.Find("Dark Floor").localScale.y, 0.5f));
+            "shell preview uses real one-metre tile thickness",
+            module.transform.Find("Shell Preview (Editor)").GetChild(0).GetComponent<BoxCollider>().size.z > .9f);
         Check(
             result,
             "bottom support connector follows edited height",
-            Mathf.Approximately(block.connectors[0].localPos.y, -3.5f));
+            Mathf.Approximately(block.connectors[0].localPos.y, -4f));
         var ship = new BlockDataList();
         ship.blocks.Add(new BlockData(block) { id = "offset-fitting-ship", x = 10, y = 6, z = 14, posX = 101f, posY = 42f, posZ = -37f, rotX = 0f, rotY = 0f, rotZ = 0f, rotW = 1f });
         Check(result, "equal-capacity ship is accepted despite far blueprint origin", module.Fits(ship));
@@ -203,11 +198,11 @@ public static class HangarAssetChecks
         Check(
             result,
             "combat disables full-volume collider but retains shell",
-            !block.raycastCollider.enabled && module.transform.Find("Dark Floor").GetComponent<Collider>().enabled);
+            !block.raycastCollider.enabled && module.transform.Find("Shell Preview (Editor)").gameObject.activeSelf);
         Check(
             result,
             "combat shows physical external walls",
-            module.transform.Find("Left Wall").GetComponent<Renderer>().enabled);
+            module.transform.Find("Shell Preview (Editor)").GetChild(0).GetComponentInChildren<Renderer>().enabled);
     }
 
     private static void RestoreChecks(HangarModule module, Report result)
@@ -258,7 +253,7 @@ public static class HangarAssetChecks
         Check(
             result,
             "restored shell uses saved width rather than prefab default",
-            Mathf.Approximately(copy.transform.Find("Dark Floor").localScale.x, data.x));
+            restored.Blocks.Count == 1 + HangarShellBlueprint.Tiles(new Vector3Int(data.x, data.y, data.z)).Count);
         Check(
             result,
             "restored identity remains tied to building and original block",

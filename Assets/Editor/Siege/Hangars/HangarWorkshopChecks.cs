@@ -358,7 +358,7 @@ public static class HangarWorkshopChecks
             ResizeButton(visible, axis, 1).onClick.Invoke();
             yield return Frames(2);
             Vector3Int after = new Vector3Int(block.x, block.y, block.z);
-            Check(after[axis] == before[axis] + 1, "authored plus button grows axis " + axis);
+            Check(after[axis] == before[axis] + 2, "authored plus button grows axis " + axis);
             Check(Dimension(Saved(block), axis) == after[axis], "axis " + axis + " change is persisted to base JSON");
             ActionManager.instance.Undo();
             Check(Dimension(Saved(block), axis) == before[axis], "resize Undo restores JSON for axis " + axis);
@@ -382,7 +382,7 @@ public static class HangarWorkshopChecks
         build.CompleteBuildingBlueprint();
         Check(
             block.Neighbors().Contains(build.Foundation.GetComponent<Block>()),
-            "odd-size changes retain grid-aligned bottom connections");
+            "even-size changes retain grid-aligned bottom connections");
         Vector3 oldPosition = block.transform.position;
         build.SetBuildType(BuildType.Move);
         InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.D));
@@ -473,7 +473,7 @@ public static class HangarWorkshopChecks
         yield return Frames(3);
         Block restored = GameManager.instance.blocksParent.GetComponentsInChildren<Block>().Single(item => item.uniqueId == id);
         Check(
-            new Vector3Int(restored.x, restored.y, restored.z) == dimensions && restored.GetComponent<HangarModule>().InnerSize == (Vector3)dimensions - new Vector3(2f, 1f, 2f),
+            new Vector3Int(restored.x, restored.y, restored.z) == dimensions && restored.GetComponent<HangarModule>().InnerSize == (Vector3)dimensions - new Vector3(2f, 2f, 2f),
             "reopening the base restores the edited capacity and actual geometry");
         Check(
             GameManager.instance.blocksParent.GetComponentsInChildren<HangarModule>().Length == 6,

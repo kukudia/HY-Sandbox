@@ -30,6 +30,21 @@ internal static class BuildingRefit
             }
         }
 
+        int missing = 0;
+        foreach (BlockData data in design.blocks)
+        {
+            if (!owned.ContainsKey(building.InstanceId + ":" + data.id))
+            {
+                missing++;
+            }
+        }
+
+        if (!manager.CanAddBlocks(missing))
+        {
+            reason = "Building repairs exceed the active world block budget.";
+            return false;
+        }
+
         var created = new List<Block>();
         foreach (BlockData data in design.blocks)
         {
