@@ -171,6 +171,7 @@ public sealed class SiegeReturnFlight
             }
 
             // 使用真实电网请求；空闲时 SupplyEfficiency=1 不代表存在可用电源。
+            engine.BeginGuidance(powerRequester);
             engine.GetComponent<Power>()?.SetWorkRequested(powerRequester, true);
         }
     }
@@ -384,6 +385,7 @@ public sealed class SiegeReturnFlight
 
         // 自动对准是机库的辅助驾驶；推进力仍由存活、有电发动机的能力给出硬上限。
         body.AddForce(new Vector3(horizontal.x, vertical, horizontal.z), ForceMode.Acceleration);
+        PublishPropulsion(flight, horizontal, vertical, driveAcceleration, liftAcceleration);
         Quaternion error = flight.dockRotation * Quaternion.Inverse(body.rotation);
         error.ToAngleAxis(out float degrees, out Vector3 axis);
         if (degrees > 180f)
@@ -398,6 +400,24 @@ public sealed class SiegeReturnFlight
         if (driveAcceleration > 0f)
         {
             body.AddTorque(Vector3.ClampMagnitude((targetAngular - body.angularVelocity) * 4f, 4f), ForceMode.Acceleration);
+        }
+    }
+
+    private void PublishPropulsion(Flight flight, Vector3 horizontal, float vertical, float driveAcceleration, float liftAcceleration)
+    {
+        Vector3 drive = flight.body.useGravity ? horizontal : horizontal + Vector3.up * vertical;
+        float driveRatio = driveAcceleration > 0f ? Mathf.Clamp01(drive.magnitude / driveAcceleration) : 0f;
+        float liftRatio = flight.body.useGravity && liftAcceleration > 0f ? Mathf.Clamp01(vertical / liftAcceleration) : 0f;
+        foreach (Thruster engine in flight.engines)
+        {
+            if (engine == null || !engine.isActiveAndEnabled || engine.GetComponentInParent<ControlUnit>() != flight.unit)
+            {
+                continue;
+            }
+
+            bool hover = engine is HoverThruster;
+            float ratio = hover ? liftRatio : driveRatio;
+            engine.SetGuidanceOutput(powerRequester, engine.maxThrust * engine.PowerEfficiency * ratio, hover ? Vector3.up : drive);
         }
     }
 
@@ -450,6 +470,7 @@ public sealed class SiegeReturnFlight
             }
 
             engine.GetComponent<Power>()?.SetWorkRequested(powerRequester, false);
+            engine.EndGuidance(powerRequester);
             if (engine is HoverThruster hover)
             {
                 hover.isHovered = flight.hoverStates[index];

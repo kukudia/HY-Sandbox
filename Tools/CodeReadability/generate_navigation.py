@@ -126,12 +126,17 @@ def main():
          "O": "HangarModule.FixedUpdate", "P": "SiegeFleet.Scrap",
          "Q": "SiegeMatch.CompleteReturn", "R": "SiegeBase.Repair",
          "S": "SiegeFleet.GetHangar", "T": "SiegeReturnFlight.Stop",
-         "U": "SiegeSession.FixedUpdate", "V": "SiegeGameplayStage.FixedUpdate"},
+         "U": "SiegeSession.FixedUpdate", "V": "SiegeGameplayStage.FixedUpdate",
+         "W": "SiegeReturnFlight.PublishPropulsion", "X": "Thruster.SetGuidanceOutput",
+         "Y": "Thruster.BeginGuidance", "Z": "Thruster.EndGuidance",
+         "AA": "Thruster.VisualizeThrust", "AB": "SiegeReturnFlight.ReleasePropulsion"},
         ['A -.->|确认放置| B', 'B --> F', 'C --> D', 'D --> E', 'D --> F',
          'G --> H', 'I --> H', 'I --> J', 'I -.->|开始波次| K',
          'L -.->|清波后Returning| M', 'K -.->|固定物理步| N', 'M -.->|固定物理步| N',
          'U --> N', 'V --> N', 'N -.->|门请求| O', 'N -->|失能或超时| P',
          'N -.->|全部完成后| Q', 'Q -.->|付费整备| R', 'R -.->|缺件恢复| S',
+         'N -->|独占普通推进执行| Y', 'N --> W', 'W --> X', 'X --> AA',
+         'T --> AB', 'N -->|完成或失败| AB', 'AB --> Z',
          'T -.->|解除动力请求与门请求| O'],
     )
     graph(

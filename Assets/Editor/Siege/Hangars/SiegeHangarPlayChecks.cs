@@ -64,6 +64,9 @@ public static class SiegeHangarPlayChecks
         public float requestedPower;
         public bool workRequested;
         public bool working;
+        public bool guided;
+        public float thrust;
+        public float visualIntensity;
     }
 
     private sealed class Host : ISiegeDeploymentHost
@@ -312,6 +315,7 @@ public static class SiegeHangarPlayChecks
             Check(
                 host.FlightGuidance.CompletedCount == 1 && host.FlightGuidance.FailedCount == 0 && entry.IsAlive,
                 "Powered ship physically exits the animated hangar through its door: " + host.FlightGuidance.LastFailureReason);
+            CheckGuidedFeedback("launch");
             Check(
                 Vector3.Distance(entry.Cockpit.transform.position, startingPosition) > hangarData.z * .5f,
                 "Launch travels beyond the external hangar wall under real physics");
@@ -336,6 +340,10 @@ public static class SiegeHangarPlayChecks
             Check(
                 host.FlightGuidance.CompletedCount == 1 && host.FlightGuidance.FailedCount == 0 && entry.IsAlive,
                 "Powered ship returns through the same door and docks without teleportation: " + host.FlightGuidance.LastFailureReason);
+            CheckGuidedFeedback("return");
+            Check(
+                entry.Unit.GetComponentsInChildren<Thruster>().All(engine => !engine.IsGuided && Mathf.Approximately(engine.thrust, 0f)),
+                "Docking releases guidance ownership and resets engine output");
             Check(
                 entry.Unit.GetComponent<Rigidbody>().isKinematic,
                 "Returned ship is parked only after navigation completes");
@@ -475,6 +483,9 @@ public static class SiegeHangarPlayChecks
                     workRequested = power != null && power.IsWorkRequested,
                     working = power != null && power.isWorking
                 };
+                engineSample.guided = engine.IsGuided;
+                engineSample.thrust = engine.thrust;
+                engineSample.visualIntensity = engine.GetComponent<ThrusterVisualEffect>().CurrentIntensity;
                 sample.engines.Add(engineSample);
                 if (engineSample.enabled && engineSample.ownerMatches)
                 {
@@ -503,6 +514,22 @@ public static class SiegeHangarPlayChecks
         report.flightSamples.Add(sample);
         Directory.CreateDirectory("Temp/Hangars");
         File.WriteAllText("Temp/Hangars/flight-telemetry.json", JsonUtility.ToJson(report, true));
+    }
+
+    private static void CheckGuidedFeedback(string phase)
+    {
+        foreach (bool hover in new[]
+        {
+            false,
+            true
+        }
+
+        )
+        {
+            Check(
+                report.flightSamples.Any(sample => sample.phase == phase && sample.engines.Any(engine => engine.hover == hover && engine.guided && engine.thrust > 0f && engine.visualIntensity > 0f)),
+                phase + " powered " + (hover ? "lift" : "drive") + " has actual guided output and visible nozzle intensity");
+        }
     }
 
     private static void Check(bool success, string description)

@@ -358,7 +358,7 @@ flowchart TD
     M["SiegeReturnFlight.BeginReturn()"]
     click M "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L73" "打开源码"
     N["SiegeReturnFlight.Tick()"]
-    click N "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L267" "打开源码"
+    click N "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L268" "打开源码"
     O["HangarModule.FixedUpdate()"]
     click O "../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L212" "打开源码"
     P["SiegeFleet.Scrap()"]
@@ -370,11 +370,23 @@ flowchart TD
     S["SiegeFleet.GetHangar()"]
     click S "../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L66" "打开源码"
     T["SiegeReturnFlight.Stop()"]
-    click T "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L465" "打开源码"
+    click T "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L486" "打开源码"
     U["SiegeSession.FixedUpdate()"]
     click U "../Assets/Scripts/Features/Siege/SiegeSession.cs#L417" "打开源码"
     V["SiegeGameplayStage.FixedUpdate()"]
     click V "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L405" "打开源码"
+    W["SiegeReturnFlight.PublishPropulsion()"]
+    click W "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L406" "打开源码"
+    X["Thruster.SetGuidanceOutput()"]
+    click X "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L47" "打开源码"
+    Y["Thruster.BeginGuidance()"]
+    click Y "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L31" "打开源码"
+    Z["Thruster.EndGuidance()"]
+    click Z "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L70" "打开源码"
+    AA["Thruster.VisualizeThrust()"]
+    click AA "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L260" "打开源码"
+    AB["SiegeReturnFlight.ReleasePropulsion()"]
+    click AB "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L457" "打开源码"
     A -.->|确认放置| B
     B --> F
     C --> D
@@ -394,6 +406,13 @@ flowchart TD
     N -.->|全部完成后| Q
     Q -.->|付费整备| R
     R -.->|缺件恢复| S
+    N -->|独占普通推进执行| Y
+    N --> W
+    W --> X
+    X --> AA
+    T --> AB
+    N -->|完成或失败| AB
+    AB --> Z
     T -.->|解除动力请求与门请求| O
 ```
 
@@ -423,7 +442,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|ResolveAttacker -->
 - [SiegeReturnFlight.BeginReturn](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L73)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|BeginReturn -->
-- [SiegeReturnFlight.Tick](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L267)
+- [SiegeReturnFlight.Tick](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L268)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|Tick -->
 - [HangarModule.FixedUpdate](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L212)
 <!-- source: Assets/Scripts/Features/Siege/Hangars/HangarModule.cs|FixedUpdate -->
@@ -435,12 +454,24 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeBase.cs|Repair -->
 - [SiegeFleet.GetHangar](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L66)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs|GetHangar -->
-- [SiegeReturnFlight.Stop](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L465)
+- [SiegeReturnFlight.Stop](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L486)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|Stop -->
 - [SiegeSession.FixedUpdate](../Assets/Scripts/Features/Siege/SiegeSession.cs#L417)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|FixedUpdate -->
 - [SiegeGameplayStage.FixedUpdate](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L405)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|FixedUpdate -->
+- [SiegeReturnFlight.PublishPropulsion](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L406)
+<!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|PublishPropulsion -->
+- [Thruster.SetGuidanceOutput](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L47)
+<!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|SetGuidanceOutput -->
+- [Thruster.BeginGuidance](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L31)
+<!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|BeginGuidance -->
+- [Thruster.EndGuidance](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L70)
+<!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|EndGuidance -->
+- [Thruster.VisualizeThrust](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L260)
+<!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|VisualizeThrust -->
+- [SiegeReturnFlight.ReleasePropulsion](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L457)
+<!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|ReleasePropulsion -->
 
 ## GPU特效对象池与释放
 
@@ -1945,7 +1976,7 @@ flowchart TD
     L["MainThruster.FixedUpdate()"]
     click L "../Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs#L10" "打开源码"
     M["Thruster.ApplyThrustChangeRateLimit()"]
-    click M "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L167" "打开源码"
+    click M "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L226" "打开源码"
     N["HoverControlSolver.StepHeight()"]
     click N "../Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L54" "打开源码"
     O["HoverControlSolver.CalculateTilt()"]
@@ -1987,9 +2018,9 @@ flowchart TD
     AG["BlockConnectionGraph.PrepareBlocks()"]
     click AG "../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L109" "打开源码"
     AH["Thruster.TickInputThrust()"]
-    click AH "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L89" "打开源码"
+    click AH "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L143" "打开源码"
     AI["Thruster.ApplyDirectionalThrust()"]
-    click AI "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L119" "打开源码"
+    click AI "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L178" "打开源码"
     AJ["GroupPhysicsSettings.ApplyTo()"]
     click AJ "../Assets/Scripts/Features/Simulation/Groups/GroupPhysicsSettings.cs#L12" "打开源码"
     AK["BlockConnections.CheckConnection()"]
@@ -2065,7 +2096,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Flight/HoverFlightController.cs|DistributeThrust -->
 - [MainThruster.FixedUpdate](../Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs#L10)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs|FixedUpdate -->
-- [Thruster.ApplyThrustChangeRateLimit](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L167)
+- [Thruster.ApplyThrustChangeRateLimit](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L226)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|ApplyThrustChangeRateLimit -->
 - [HoverControlSolver.StepHeight](../Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L54)
 <!-- source: Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs|StepHeight -->
@@ -2107,9 +2138,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|RefreshStructure -->
 - [BlockConnectionGraph.PrepareBlocks](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L109)
 <!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs|PrepareBlocks -->
-- [Thruster.TickInputThrust](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L89)
+- [Thruster.TickInputThrust](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L143)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|TickInputThrust -->
-- [Thruster.ApplyDirectionalThrust](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L119)
+- [Thruster.ApplyDirectionalThrust](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L178)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|ApplyDirectionalThrust -->
 - [GroupPhysicsSettings.ApplyTo](../Assets/Scripts/Features/Simulation/Groups/GroupPhysicsSettings.cs#L12)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/GroupPhysicsSettings.cs|ApplyTo -->
@@ -5856,7 +5887,7 @@ flowchart TD
     I["UniversalThruster.CalculateInputThrust()"]
     click I "../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L15" "打开源码"
     J["Thruster.TickInputThrust()"]
-    click J "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L89" "打开源码"
+    click J "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L143" "打开源码"
     K["EnemyController.FixedUpdate()"]
     click K "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L259" "打开源码"
     L["ControlUnit.SetPropulsionInput()"]
@@ -5894,7 +5925,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Flight/FlightPropulsionControl.cs|Evaluate -->
 - [UniversalThruster.CalculateInputThrust](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L15)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs|CalculateInputThrust -->
-- [Thruster.TickInputThrust](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L89)
+- [Thruster.TickInputThrust](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L143)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|TickInputThrust -->
 - [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L259)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|FixedUpdate -->

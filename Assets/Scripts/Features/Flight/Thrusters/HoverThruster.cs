@@ -15,6 +15,11 @@ public class HoverThruster : Thruster
 
     private void FixedUpdate()
     {
+        if (IsGuided)
+        {
+            return;
+        }
+
         if (!IsPlayModeActive())
         {
             SetPowerRequested(false);

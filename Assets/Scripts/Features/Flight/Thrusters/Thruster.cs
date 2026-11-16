@@ -1,5 +1,5 @@
 // 职责：提供推进器共用的供电门控、运行归属和力学输出生命周期。
-// 入口：TickInputThrust() / ShouldActivate() / SetRuntimeReferences() / ApplyThrustChangeRateLimit()。
+// 入口：TickInputThrust()；BeginGuidance/SetGuidanceOutput/EndGuidance 为机库辅助导引独占输出。
 using UnityEngine;
 
 [DisallowMultipleComponent, RequireComponent(typeof(Power), typeof(ThrusterVisualEffect))]
@@ -25,6 +25,60 @@ public abstract class Thruster : MonoBehaviour
     private float nextVisualizationTime;
     private bool modelLookupComplete;
     private ThrusterVisualEffect visualEffect;
+    private Object guidanceOwner;
+    public bool IsGuided => guidanceOwner != null;
+
+    public void BeginGuidance(Object owner)
+    {
+        if (owner == null || (IsGuided && guidanceOwner != owner))
+        {
+            return;
+        }
+
+        if (!IsGuided)
+        {
+            thrust = lastThrustValue = 0f;
+            SetPowerRequested(false);
+        }
+
+        guidanceOwner = owner;
+    }
+
+    public void SetGuidanceOutput(Object owner, float appliedForce, Vector3 worldDirection)
+    {
+        if (owner == null || guidanceOwner != owner)
+        {
+            return;
+        }
+
+        // The hangar assist already applies this force to the body. Only publish its actual
+        // allocated output here; the ordinary FixedUpdate path must not apply it a second time.
+        thrust = lastThrustValue = Mathf.Clamp(appliedForce, 0f, Mathf.Max(0f, maxThrust) * PowerEfficiency);
+        if (worldDirection.sqrMagnitude > DirectionEpsilonSqr)
+        {
+            thrustDirection = worldDirection.normalized;
+            AlignGuidanceVisual(thrustDirection);
+        }
+
+        VisualizeThrust(true);
+    }
+
+    protected virtual void AlignGuidanceVisual(Vector3 worldDirection)
+    {
+    }
+
+    public void EndGuidance(Object owner)
+    {
+        if (guidanceOwner != owner)
+        {
+            return;
+        }
+
+        guidanceOwner = null;
+        thrust = lastThrustValue = 0f;
+        VisualizeThrust(true);
+    }
+
     // 子类必须实现：如何启用推进器（输入控制/自动触发）
     public abstract bool ShouldActivate();
     protected virtual void Awake()
@@ -88,6 +142,11 @@ public abstract class Thruster : MonoBehaviour
     // 输入推进器共享物理步；悬浮推进器仍由高度控制器提交独立目标。
     protected void TickInputThrust(ref Vector3 input)
     {
+        if (IsGuided)
+        {
+            return;
+        }
+
         if (!IsPlayModeActive())
         {
             SetPowerRequested(false);
@@ -186,6 +245,7 @@ public abstract class Thruster : MonoBehaviour
 
     protected virtual void OnDisable()
     {
+        guidanceOwner = null;
         SetPowerRequested(false);
         thrust = 0f;
         lastThrustValue = 0f;
@@ -194,7 +254,7 @@ public abstract class Thruster : MonoBehaviour
     protected bool CanApplyThrust()
     {
         // 实际输出已在限速步骤受供电影响，关机后的衰减尾段仍需要施力。
-        return IsPlayModeActive() && HasValidRuntimeOwner();
+        return !IsGuided && IsPlayModeActive() && HasValidRuntimeOwner();
     }
 
     public virtual void VisualizeThrust()

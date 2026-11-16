@@ -13,6 +13,9 @@ public class ThrusterVisualEffect : MonoBehaviour
     private float _target;
     private float _value;
     private Thruster _owner;
+    public float TargetIntensity => _target;
+    public float CurrentIntensity => _value;
+
     public void Initialize(Thruster owner)
     {
         _owner = owner;

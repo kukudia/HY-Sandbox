@@ -44,6 +44,12 @@ public class UniversalThruster : Thruster
         model.rotation = Quaternion.RotateTowards(model.rotation, targetRot, rotationSpeed * Time.fixedDeltaTime * 60f);
     }
 
+    protected override void AlignGuidanceVisual(Vector3 worldDirection)
+    {
+        CacheLocalReferences();
+        RotateThruster(worldDirection, true);
+    }
+
     public void ApplyThrust()
     {
         ApplyDirectionalThrust();

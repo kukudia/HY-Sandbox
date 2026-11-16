@@ -2281,25 +2281,26 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Host | [`void SelectDefender(int index)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L108) | public |
-| Host | [`void SelectAttacker(int index)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L112) | public |
-| Host | [`bool RefreshBlueprints()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L116) | public |
-| Host | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L117) | public |
-| Host | [`bool TryReplaceAt(int optionIndex, int dock, out string reason)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L118) | public |
-| Host | [`bool TryCancelDeployment(int dock, out string reason)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L119) | public |
-| Host | [`bool TryTakeControl(int slot)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L120) | public |
-| Host | [`bool TryTakeControl(string id)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L121) | public |
-| Host | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L122) | public |
-| SiegeHangarPlayChecks | [`void Run()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L130) | public static |
-| SiegeHangarPlayChecks | [`void Changed(PlayModeStateChange state)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L142) | private static |
-| SiegeHangarPlayChecks | [`void Tick()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L162) | private static |
-| SiegeHangarPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L188) | private static |
-| SiegeHangarPlayChecks | [`void SetSimulation(WorldBuildingManager manager, bool active)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L398) | private static |
-| SiegeHangarPlayChecks | [`IEnumerator GuideFlight(SiegeReturnFlight flight, SiegeFleetEntry entry, string phase, Action completed)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L404) | private static |
-| SiegeHangarPlayChecks | [`void SampleFlight(SiegeReturnFlight flight, SiegeFleetEntry entry, string phase)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L426) | private static |
-| SiegeHangarPlayChecks | [`void Check(bool success, string description)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L508) | private static |
-| SiegeHangarPlayChecks | [`void LogError(string message, string stack, LogType type)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L518) | private static |
-| SiegeHangarPlayChecks | [`void Finish()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L526) | private static |
+| Host | [`void SelectDefender(int index)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L111) | public |
+| Host | [`void SelectAttacker(int index)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L115) | public |
+| Host | [`bool RefreshBlueprints()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L119) | public |
+| Host | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L120) | public |
+| Host | [`bool TryReplaceAt(int optionIndex, int dock, out string reason)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L121) | public |
+| Host | [`bool TryCancelDeployment(int dock, out string reason)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L122) | public |
+| Host | [`bool TryTakeControl(int slot)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L123) | public |
+| Host | [`bool TryTakeControl(string id)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L124) | public |
+| Host | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L125) | public |
+| SiegeHangarPlayChecks | [`void Run()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L133) | public static |
+| SiegeHangarPlayChecks | [`void Changed(PlayModeStateChange state)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L145) | private static |
+| SiegeHangarPlayChecks | [`void Tick()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L165) | private static |
+| SiegeHangarPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L191) | private static |
+| SiegeHangarPlayChecks | [`void SetSimulation(WorldBuildingManager manager, bool active)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L406) | private static |
+| SiegeHangarPlayChecks | [`IEnumerator GuideFlight(SiegeReturnFlight flight, SiegeFleetEntry entry, string phase, Action completed)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L412) | private static |
+| SiegeHangarPlayChecks | [`void SampleFlight(SiegeReturnFlight flight, SiegeFleetEntry entry, string phase)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L434) | private static |
+| SiegeHangarPlayChecks | [`void CheckGuidedFeedback(string phase)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L519) | private static |
+| SiegeHangarPlayChecks | [`void Check(bool success, string description)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L535) | private static |
+| SiegeHangarPlayChecks | [`void LogError(string message, string stack, LogType type)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L545) | private static |
+| SiegeHangarPlayChecks | [`void Finish()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L553) | private static |
 
 ## Assets/Editor/Siege/Hangars/SiegeReturnChecks.cs
 
@@ -4168,10 +4169,10 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| ThrusterVisualEffect | [`void Initialize(Thruster owner)`](../Assets/Scripts/Features/Flight/Presentation/ThrusterVisualEffect.cs#L16) | public |
-| ThrusterVisualEffect | [`void SetThrust(float thrustRatio, Vector3 thrustDirection)`](../Assets/Scripts/Features/Flight/Presentation/ThrusterVisualEffect.cs#L21) | public |
-| ThrusterVisualEffect | [`void LateUpdate()`](../Assets/Scripts/Features/Flight/Presentation/ThrusterVisualEffect.cs#L27) | private |
-| ThrusterVisualEffect | [`void OnDisable()`](../Assets/Scripts/Features/Flight/Presentation/ThrusterVisualEffect.cs#L44) | private |
+| ThrusterVisualEffect | [`void Initialize(Thruster owner)`](../Assets/Scripts/Features/Flight/Presentation/ThrusterVisualEffect.cs#L19) | public |
+| ThrusterVisualEffect | [`void SetThrust(float thrustRatio, Vector3 thrustDirection)`](../Assets/Scripts/Features/Flight/Presentation/ThrusterVisualEffect.cs#L24) | public |
+| ThrusterVisualEffect | [`void LateUpdate()`](../Assets/Scripts/Features/Flight/Presentation/ThrusterVisualEffect.cs#L30) | private |
+| ThrusterVisualEffect | [`void OnDisable()`](../Assets/Scripts/Features/Flight/Presentation/ThrusterVisualEffect.cs#L47) | private |
 
 ## Assets/Scripts/Features/Flight/Thrusters/HoverThruster.cs
 
@@ -4181,8 +4182,8 @@ HY-Sandbox/
 | --- | --- | --- |
 | HoverThruster | [`void SetControlledThrust(float desiredThrust)`](../Assets/Scripts/Features/Flight/Thrusters/HoverThruster.cs#L11) | public |
 | HoverThruster | [`void FixedUpdate()`](../Assets/Scripts/Features/Flight/Thrusters/HoverThruster.cs#L16) | private |
-| HoverThruster | [`void ApplyThrust()`](../Assets/Scripts/Features/Flight/Thrusters/HoverThruster.cs#L46) | public virtual |
-| HoverThruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/Thrusters/HoverThruster.cs#L57) | public override |
+| HoverThruster | [`void ApplyThrust()`](../Assets/Scripts/Features/Flight/Thrusters/HoverThruster.cs#L51) | public virtual |
+| HoverThruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/Thrusters/HoverThruster.cs#L62) | public override |
 
 ## Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs
 
@@ -4197,33 +4198,37 @@ HY-Sandbox/
 
 ## Assets/Scripts/Features/Flight/Thrusters/Thruster.cs
 
-// 职责：提供推进器共用的供电门控、运行归属和力学输出生命周期。 // 入口：TickInputThrust() / ShouldActivate() / SetRuntimeReferences() / ApplyThrustChangeRateLimit()。
+// 职责：提供推进器共用的供电门控、运行归属和力学输出生命周期。 // 入口：TickInputThrust()；BeginGuidance/SetGuidanceOutput/EndGuidance 为机库辅助导引独占输出。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Thruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L29) | public abstract |
-| Thruster | [`void Awake()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L30) | protected virtual |
-| Thruster | [`void Start()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L37) | protected virtual |
-| Thruster | [`void OnTransformChildrenChanged()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L44) | private |
-| Thruster | [`void SetRuntimeReferences(ControlUnit owner, Rigidbody ownerRigidbody)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L49) | public |
-| Thruster | [`bool RefreshRuntimeReferences()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L56) | protected |
-| Thruster | [`bool TryEnsureRigidbody()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L68) | protected |
-| Thruster | [`bool IsPlayModeActive()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L78) | protected |
-| Thruster | [`bool HasValidRuntimeOwner()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L83) | protected |
-| Thruster | [`void TickInputThrust(ref Vector3 input)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L89) | protected |
-| Thruster | [`float CalculateInputThrust(Vector3 input, bool active)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L109) | protected virtual |
-| Thruster | [`bool ShouldActivateInputThrust(Vector3 input)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L114) | protected |
-| Thruster | [`void ApplyDirectionalThrust()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L119) | protected virtual |
-| Thruster | [`void CacheLocalReferences()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L158) | protected |
-| Thruster | [`void ApplyThrustChangeRateLimit()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L167) | public virtual |
-| Thruster | [`void SetPowerRequested(bool requested)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L177) | protected |
-| Thruster | [`void OnDisable()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L187) | protected virtual |
-| Thruster | [`bool CanApplyThrust()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L194) | protected |
-| Thruster | [`void VisualizeThrust()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L200) | public virtual |
-| Thruster | [`void VisualizeThrust(bool forceUpdate)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L205) | public virtual |
-| Thruster | [`void DisableLegacyLineRenderer()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L221) | private |
-| Thruster | [`void EnsureVisualEffect()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L230) | private |
-| Thruster | [`Vector3 GetNormalizedThrustDirection()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L240) | private |
+| Thruster | [`void BeginGuidance(Object owner)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L31) | public |
+| Thruster | [`void SetGuidanceOutput(Object owner, float appliedForce, Vector3 worldDirection)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L47) | public |
+| Thruster | [`void AlignGuidanceVisual(Vector3 worldDirection)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L66) | protected virtual |
+| Thruster | [`void EndGuidance(Object owner)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L70) | public |
+| Thruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L83) | public abstract |
+| Thruster | [`void Awake()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L84) | protected virtual |
+| Thruster | [`void Start()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L91) | protected virtual |
+| Thruster | [`void OnTransformChildrenChanged()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L98) | private |
+| Thruster | [`void SetRuntimeReferences(ControlUnit owner, Rigidbody ownerRigidbody)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L103) | public |
+| Thruster | [`bool RefreshRuntimeReferences()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L110) | protected |
+| Thruster | [`bool TryEnsureRigidbody()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L122) | protected |
+| Thruster | [`bool IsPlayModeActive()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L132) | protected |
+| Thruster | [`bool HasValidRuntimeOwner()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L137) | protected |
+| Thruster | [`void TickInputThrust(ref Vector3 input)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L143) | protected |
+| Thruster | [`float CalculateInputThrust(Vector3 input, bool active)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L168) | protected virtual |
+| Thruster | [`bool ShouldActivateInputThrust(Vector3 input)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L173) | protected |
+| Thruster | [`void ApplyDirectionalThrust()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L178) | protected virtual |
+| Thruster | [`void CacheLocalReferences()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L217) | protected |
+| Thruster | [`void ApplyThrustChangeRateLimit()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L226) | public virtual |
+| Thruster | [`void SetPowerRequested(bool requested)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L236) | protected |
+| Thruster | [`void OnDisable()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L246) | protected virtual |
+| Thruster | [`bool CanApplyThrust()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L254) | protected |
+| Thruster | [`void VisualizeThrust()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L260) | public virtual |
+| Thruster | [`void VisualizeThrust(bool forceUpdate)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L265) | public virtual |
+| Thruster | [`void DisableLegacyLineRenderer()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L281) | private |
+| Thruster | [`void EnsureVisualEffect()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L290) | private |
+| Thruster | [`Vector3 GetNormalizedThrustDirection()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L300) | private |
 
 ## Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs
 
@@ -4236,8 +4241,9 @@ HY-Sandbox/
 | UniversalThruster | [`bool IsAligned(Vector3 direction)`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L22) | private |
 | UniversalThruster | [`void ApplyDirectionalThrust()`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L27) | protected override |
 | UniversalThruster | [`void RotateThruster(Vector3 worldDir, bool active)`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L36) | private |
-| UniversalThruster | [`void ApplyThrust()`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L47) | public |
-| UniversalThruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L52) | public override |
+| UniversalThruster | [`void AlignGuidanceVisual(Vector3 worldDirection)`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L47) | protected override |
+| UniversalThruster | [`void ApplyThrust()`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L53) | public |
+| UniversalThruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L58) | public override |
 
 ## Assets/Scripts/Features/MainMenu/Interface/MainMenuView.cs
 
@@ -5451,15 +5457,16 @@ HY-Sandbox/
 | SiegeReturnFlight | [`void Begin(bool returning)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L78) | private |
 | SiegeReturnFlight | [`void BindUnit(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L119) | private |
 | SiegeReturnFlight | [`void TakeGuidanceControl(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L146) | private |
-| SiegeReturnFlight | [`Vector3 DockPosition(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L178) | private |
-| SiegeReturnFlight | [`void BuildRoute(Flight flight, bool returning)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L203) | private |
-| SiegeReturnFlight | [`void Tick(float deltaTime)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L267) | public |
-| SiegeReturnFlight | [`void TickFlight(Flight flight, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L283) | private |
-| SiegeReturnFlight | [`void ReadPropulsion(Flight flight, out float driveForce, out float liftForce)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L346) | private static |
-| SiegeReturnFlight | [`void ApplyGuidance(Flight flight, Vector3 target, float driveAcceleration, float liftAcceleration, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L369) | private |
-| SiegeReturnFlight | [`void Finish(Flight flight, bool success, string reason = null)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L404) | private |
-| SiegeReturnFlight | [`void ReleasePropulsion(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L437) | private |
-| SiegeReturnFlight | [`void Stop()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L465) | public |
+| SiegeReturnFlight | [`Vector3 DockPosition(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L179) | private |
+| SiegeReturnFlight | [`void BuildRoute(Flight flight, bool returning)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L204) | private |
+| SiegeReturnFlight | [`void Tick(float deltaTime)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L268) | public |
+| SiegeReturnFlight | [`void TickFlight(Flight flight, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L284) | private |
+| SiegeReturnFlight | [`void ReadPropulsion(Flight flight, out float driveForce, out float liftForce)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L347) | private static |
+| SiegeReturnFlight | [`void ApplyGuidance(Flight flight, Vector3 target, float driveAcceleration, float liftAcceleration, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L370) | private |
+| SiegeReturnFlight | [`void PublishPropulsion(Flight flight, Vector3 horizontal, float vertical, float driveAcceleration, float liftAcceleration)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L406) | private |
+| SiegeReturnFlight | [`void Finish(Flight flight, bool success, string reason = null)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L424) | private |
+| SiegeReturnFlight | [`void ReleasePropulsion(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L457) | private |
+| SiegeReturnFlight | [`void Stop()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L486) | public |
 
 ## Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs
 
