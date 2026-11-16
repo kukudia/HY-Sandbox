@@ -5,6 +5,9 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
+  - enabled: 0
+    path: Assets/Scenes/Random5v5Arena.unity
+    guid: dbdb1f9d5fcd747469910f34d82a3c60
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 2006d7c48b52fc9469f887ea23fb5147

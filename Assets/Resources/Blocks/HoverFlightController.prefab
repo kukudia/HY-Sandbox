@@ -373,6 +373,7 @@ MonoBehaviour:
   tiltD: 2
   maxTiltAngle: 15
   rotationSmoothing: 5
+  headingResponse: 5
   heightI: 0.1
   heightD: 2
   gravityCompensationFactor: 1

@@ -114,6 +114,7 @@
     <Compile Include="Assets\Editor\Diagnostics\Benchmarks\ProjectilePoolChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Hangars\HangarSceneIntegration.cs" />
     <Compile Include="Assets\Editor\World\Outposts\OutpostContentAuthoring.cs" />
+    <Compile Include="Assets\Editor\Siege\Authoring\SiegeCombatBaseAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegePriorityTargetChecks.cs" />
     <Compile Include="Assets\Editor\Combat\Validation\EnemyLabPlayChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Buildings\SiegeBuildingDamageChecks.cs" />

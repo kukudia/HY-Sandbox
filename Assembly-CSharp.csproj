@@ -218,8 +218,8 @@
     <Compile Include="Assets\Scripts\Features\Building\Interface\BuildPaletteItem.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\LightFade.cs" />
     <Compile Include="Assets\Scripts\Features\World\Presentation\WorldDistanceView.cs" />
-    <Compile Include="Assets\Scripts\Features\Presentation\Interface\IconManager.cs" />
     <Compile Include="Assets\Scripts\Features\Navigation\Diagnostics\Tracking\NavigationFlightTrace.cs" />
+    <Compile Include="Assets\Scripts\Features\Presentation\Interface\IconManager.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Connections\BlockConnectionSnapshot.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\Projectiles\TurretProjectilePool.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Hangars\HangarRules.cs" />
