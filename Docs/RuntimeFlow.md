@@ -6,7 +6,69 @@
 
     维护：业务变化更新受影响图和 DEVELOPMENT；纯格式变化重新生成行号。`dotnet run --project Tools/CodeReadability -- --check .` 会拒绝失效符号。
 
-    ## 机库可编辑出入口与垂直返航
+    ## 非凸浮岛接触与独立Player验证
+
+炮弹重叠/触发接触和舰船近场避障复用ImpactPhysics.ClosestPoint，非凸地形以bounds保守回退，避免Unity不支持的Collider.ClosestPoint调用。显式Player命令行夹具从真实菜单进入新版Siege，区分脚本伤害闭环与自然观察；结束返回工坊和菜单，不写个人蓝图。
+
+```mermaid
+flowchart TD
+    A["NavigationObstacleQuery.Cast()"]
+    click A "../Assets/Scripts/Features/Navigation/Local/NavigationObstacleQuery.cs#L71" "打开源码"
+    B["NavigationObstacleQuery.TryGetOverlapEscape()"]
+    click B "../Assets/Scripts/Features/Navigation/Local/NavigationObstacleQuery.cs#L158" "打开源码"
+    C["ImpactPhysics.ClosestPoint()"]
+    click C "../Assets/Scripts/Features/Simulation/Physics/ImpactPhysics.cs#L77" "打开源码"
+    D["TurretProjectile.ResolveOverlaps()"]
+    click D "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L169" "打开源码"
+    E["TurretProjectile.OnTriggerEnter()"]
+    click E "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L191" "打开源码"
+    F["SiegeGameplayPlayerChecks.Initialize()"]
+    click F "../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L67" "打开源码"
+    G["SiegeGameplayPlayerChecks.Run()"]
+    click G "../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L153" "打开源码"
+    H["MainMenuController.LaunchSelected()"]
+    click H "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L155" "打开源码"
+    I["SiegeGameplayStage.BeginWave()"]
+    click I "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L246" "打开源码"
+    J["GameModeController.ReturnToBuild()"]
+    click J "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L201" "打开源码"
+    K["SiegeGameplayPlayerChecks.Finish()"]
+    click K "../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L373" "打开源码"
+    A --> C
+    B --> C
+    D --> C
+    E --> C
+    F --> G
+    G --> H
+    G --> I
+    G --> J
+    G -.->|记录真实结果| K
+```
+
+- [NavigationObstacleQuery.Cast](../Assets/Scripts/Features/Navigation/Local/NavigationObstacleQuery.cs#L71)
+<!-- source: Assets/Scripts/Features/Navigation/Local/NavigationObstacleQuery.cs|Cast -->
+- [NavigationObstacleQuery.TryGetOverlapEscape](../Assets/Scripts/Features/Navigation/Local/NavigationObstacleQuery.cs#L158)
+<!-- source: Assets/Scripts/Features/Navigation/Local/NavigationObstacleQuery.cs|TryGetOverlapEscape -->
+- [ImpactPhysics.ClosestPoint](../Assets/Scripts/Features/Simulation/Physics/ImpactPhysics.cs#L77)
+<!-- source: Assets/Scripts/Features/Simulation/Physics/ImpactPhysics.cs|ClosestPoint -->
+- [TurretProjectile.ResolveOverlaps](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L169)
+<!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs|ResolveOverlaps -->
+- [TurretProjectile.OnTriggerEnter](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L191)
+<!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs|OnTriggerEnter -->
+- [SiegeGameplayPlayerChecks.Initialize](../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L67)
+<!-- source: Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs|Initialize -->
+- [SiegeGameplayPlayerChecks.Run](../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L153)
+<!-- source: Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs|Run -->
+- [MainMenuController.LaunchSelected](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L155)
+<!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|LaunchSelected -->
+- [SiegeGameplayStage.BeginWave](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L246)
+<!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|BeginWave -->
+- [GameModeController.ReturnToBuild](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L201)
+<!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|ReturnToBuild -->
+- [SiegeGameplayPlayerChecks.Finish](../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L373)
+<!-- source: Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs|Finish -->
+
+## 机库可编辑出入口与垂直返航
 
 方向随BlockData保存、复制和撤销，旧数据默认前门。顶门使用同一无重叠墙体划分并按实际模块数报价；损伤快照不补墙。门防夹查询转到顶面；导引按真实有电升力垂直进出，偏轴返航先对齐上空再下降。
 

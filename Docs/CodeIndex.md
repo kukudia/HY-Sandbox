@@ -92,6 +92,7 @@ HY-Sandbox/
 │   │   │       ├── TurretFlightPlayProbe.cs
 │   │   │       └── TurretRuntimeChecks.cs
 │   │   ├── Diagnostics/
+│   │   │   ├── ConcaveTerrainChecks.cs
 │   │   │   ├── PhysicsSandboxProbe.cs
 │   │   │   ├── ProfilerCaptureAnalysis.cs
 │   │   │   ├── UpgradeCompatibilityChecks.cs
@@ -540,6 +541,7 @@ HY-Sandbox/
 │           │   ├── Validation/
 │           │   │   ├── SiegeDrivingPlayerChecks.cs
 │           │   │   ├── SiegeEngineCounters.cs
+│           │   │   ├── SiegeGameplayPlayerChecks.cs
 │           │   │   ├── SiegePlayerChecks.cs
 │           │   │   ├── SiegePlayerSurvey.cs
 │           │   │   └── SiegeStressPopulation.cs
@@ -1587,6 +1589,15 @@ HY-Sandbox/
 | ProjectilePoolChecks | [`void Launch(TurretProjectile shot, ControlUnit owner)`](../Assets/Editor/Diagnostics/Benchmarks/ProjectilePoolChecks.cs#L128) | private static |
 | ProjectilePoolChecks | [`void Require(bool condition, string message)`](../Assets/Editor/Diagnostics/Benchmarks/ProjectilePoolChecks.cs#L141) | private static |
 | ProjectilePoolChecks | [`T Median(T[] values)`](../Assets/Editor/Diagnostics/Benchmarks/ProjectilePoolChecks.cs#L149) | private static |
+
+## Assets/Editor/Diagnostics/ConcaveTerrainChecks.cs
+
+// 职责：验证真实非凸地形网格接触时避障与炮弹复用兼容最近点查询，避免Unity不支持API日志。 // 入口：Run()；Play模式隔离远端对象，恢复模拟开关，不写场景或玩家数据。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| ConcaveTerrainChecks | [`string Run()`](../Assets/Editor/Diagnostics/ConcaveTerrainChecks.cs#L12) | public static |
+| ConcaveTerrainChecks | [`void Require(bool value, string name, List<string> checks)`](../Assets/Editor/Diagnostics/ConcaveTerrainChecks.cs#L109) | private static |
 
 ## Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs
 
@@ -6160,6 +6171,25 @@ HY-Sandbox/
 | SiegeEngineCounters | [`Sample Read()`](../Assets/Scripts/Features/Siege/Validation/SiegeEngineCounters.cs#L60) | public |
 | SiegeEngineCounters | [`long ReadCounter(int index)`](../Assets/Scripts/Features/Siege/Validation/SiegeEngineCounters.cs#L81) | private |
 | SiegeEngineCounters | [`void Dispose()`](../Assets/Scripts/Features/Siege/Validation/SiegeEngineCounters.cs#L122) | public |
+
+## Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs
+
+// 职责：仅显式命令行参数启用新版菜单到Siege的独立Player闭环和自然战斗观察，不写玩家蓝图。 // 入口：Initialize()；smoke明确施加真实伤害，soak只观察自然战斗；两类结果分开报告。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeGameplayPlayerChecks | [`void Initialize()`](../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L67) | private static |
+| SiegeGameplayPlayerChecks | [`void Update()`](../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L105) | private |
+| SiegeGameplayPlayerChecks | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L131) | private |
+| SiegeGameplayPlayerChecks | [`IEnumerator Run()`](../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L153) | private |
+| SiegeGameplayPlayerChecks | [`Cockpit[] Enemies()`](../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L325) | private |
+| SiegeGameplayPlayerChecks | [`T Get(object owner, string field)`](../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L330) | private static |
+| SiegeGameplayPlayerChecks | [`void Set(object owner, string field, object value)`](../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L335) | private static |
+| SiegeGameplayPlayerChecks | [`void Capture(string label)`](../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L340) | private |
+| SiegeGameplayPlayerChecks | [`void Check(bool success, string name)`](../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L345) | private |
+| SiegeGameplayPlayerChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L356) | private |
+| SiegeGameplayPlayerChecks | [`void Save()`](../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L367) | private |
+| SiegeGameplayPlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L373) | private |
 
 ## Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs
 

@@ -180,7 +180,7 @@ public sealed class TurretProjectile : MonoBehaviour
         {
             if (CanHit(overlaps[i]))
             {
-                ResolveHit(overlaps[i], overlaps[i].ClosestPoint(origin), -transform.forward);
+                ResolveHit(overlaps[i], ImpactPhysics.ClosestPoint(overlaps[i], origin), -transform.forward);
                 return true;
             }
         }
@@ -192,7 +192,7 @@ public sealed class TurretProjectile : MonoBehaviour
     {
         if (_launched && !_resolved && CanHit(other))
         {
-            Vector3 point = other.ClosestPoint(_body.position);
+            Vector3 point = ImpactPhysics.ClosestPoint(other, _body.position);
             ResolveHit(other, point, -transform.forward);
         }
     }

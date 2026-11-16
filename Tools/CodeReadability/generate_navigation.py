@@ -55,6 +55,18 @@ def main():
         )
 
     graph(
+        "非凸浮岛接触与独立Player验证",
+        "炮弹重叠/触发接触和舰船近场避障复用ImpactPhysics.ClosestPoint，非凸地形以bounds保守回退，避免Unity不支持的Collider.ClosestPoint调用。显式Player命令行夹具从真实菜单进入新版Siege，区分脚本伤害闭环与自然观察；结束返回工坊和菜单，不写个人蓝图。",
+        {"A": "NavigationObstacleQuery.Cast", "B": "NavigationObstacleQuery.TryGetOverlapEscape",
+         "C": "ImpactPhysics.ClosestPoint", "D": "TurretProjectile.ResolveOverlaps",
+         "E": "TurretProjectile.OnTriggerEnter", "F": "SiegeGameplayPlayerChecks.Initialize",
+         "G": "SiegeGameplayPlayerChecks.Run", "H": "MainMenuController.LaunchSelected",
+         "I": "SiegeGameplayStage.BeginWave", "J": "GameModeController.ReturnToBuild",
+         "K": "SiegeGameplayPlayerChecks.Finish"},
+        ['A --> C', 'B --> C', 'D --> C', 'E --> C', 'F --> G', 'G --> H',
+         'G --> I', 'G --> J', 'G -.->|记录真实结果| K'],
+    )
+    graph(
         "机库可编辑出入口与垂直返航",
         "方向随BlockData保存、复制和撤销，旧数据默认前门。顶门使用同一无重叠墙体划分并按实际模块数报价；损伤快照不补墙。门防夹查询转到顶面；导引按真实有电升力垂直进出，偏轴返航先对齐上空再下降。",
         {"A": "HangarEntranceButton.Toggle", "B": "HangarModule.TrySetEntrance",

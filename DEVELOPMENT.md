@@ -1,5 +1,11 @@
 # HY-Sandbox 开发入口
 
+## 独立新版 Siege 验证与非凸地形接触（2026-11-16）
+
+显式 `-siege-gameplay-report <绝对路径>` 启用新版菜单→Additive Siege→真实起降/死亡/返航结算→工坊→菜单检查；`-siege-gameplay-roof` 只在该验证进程内改变示例开口，`-siege-gameplay-soak` 只观察自然战斗，`-siege-gameplay-seconds` 控制30–900秒。不会创建个人示例副本或重写玩家蓝图。普通启动不创建此验证器。
+
+独立前门/顶门脚本伤害闭环各22项通过；首轮自然180秒发现非凸地形ClosestPoint日志。避障与炮弹现复用已有 `ImpactPhysics.ClosestPoint` 的保守包围盒回退，专门接触5项/共用避障10项通过。修复后自然复跑181.83秒完成第一波并进入第二波，错误及ClosestPoint日志均为0；可见窗口截图已检查。首轮隐藏窗口全黑只计流程/物理证据，复跑混合隐藏/可见窗口的帧时不作为完整GPU性能基准。详见[Player验证](Docs/Validation/2026-11-16-siege-gameplay-player.md)。
+
 ## 可选前门／顶门机库（2026-11-16）
 
 基地编辑中选择机库，四面尺寸面板的 `DOOR: FRONT / ROOF` 切换开口；前门可随机库绕竖轴旋转。方向随 `BlockData.hangarEntrance` 保存、复制与撤销，旧JSON默认前门。顶门复用2×2×1无重叠墙块规则并按实际数量报价；已展开损伤快照仍不补墙。Prefab真实门板、净空防夹和方向标记随方向刷新；战斗不允许修改设计。

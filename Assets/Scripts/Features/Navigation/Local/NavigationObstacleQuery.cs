@@ -130,7 +130,7 @@ internal sealed class NavigationObstacleQuery
             if (_settings.UseHull && hit.distance <= 0f)
             {
                 // BoxCast 的初始重叠法线可能只是 -direction；只在朝实际接触面运动时限速。
-                Vector3 separation = bounds.center - hit.collider.ClosestPoint(bounds.center);
+                Vector3 separation = bounds.center - ImpactPhysics.ClosestPoint(hit.collider, bounds.center);
                 if (separation.sqrMagnitude < 0.0001f)
                 {
                     Bounds obstacle = hit.collider.bounds;
@@ -192,7 +192,7 @@ internal sealed class NavigationObstacleQuery
                 continue;
             }
 
-            Vector3 offset = _transform.position - obstacle.ClosestPoint(_transform.position);
+            Vector3 offset = _transform.position - ImpactPhysics.ClosestPoint(obstacle, _transform.position);
             float distance = offset.magnitude;
             Vector3 direction = distance > 0.001f ? offset / distance : Vector3.zero;
             float depth = !_settings.UseHull && distance > 0.001f ? radius - distance : 0f;
