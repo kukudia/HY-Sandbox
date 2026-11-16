@@ -9,6 +9,18 @@ public sealed class BuildMaterialSelector : MonoBehaviour
 {
     private Dropdown dropdown;
     private string[] ids;
+    private void LateUpdate()
+    {
+        if (dropdown != null && ids != null && BuildManager.instance != null)
+        {
+            int selected = System.Array.IndexOf(ids, BuildManager.instance.CurrentMaterialId);
+            if (selected >= 0 && dropdown.value != selected)
+            {
+                dropdown.SetValueWithoutNotify(selected);
+            }
+        }
+    }
+
     private void OnEnable()
     {
         dropdown = GetComponent<Dropdown>();

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public sealed class BuildPaletteItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler
+public sealed class BuildPaletteItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField]
     private string _blockName;
@@ -22,6 +22,21 @@ public sealed class BuildPaletteItem : MonoBehaviour, IPointerEnterHandler, IPoi
     public string BlockName => _blockName;
     public string BlockInfo => _info;
     public int Category => _category;
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        _palette?.PreviewDrag(this, eventData);
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        _palette?.PreviewDrag(this, eventData);
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        _palette?.EndDrag();
+    }
 
     private void Awake()
     {

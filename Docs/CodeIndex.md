@@ -47,6 +47,7 @@ HY-Sandbox/
 │   │   │   │   ├── BlockCsvPostprocessor.cs
 │   │   │   │   └── BlockCsvRegressionChecks.cs
 │   │   │   ├── Interface/
+│   │   │   │   ├── BuildHotbarAuthoring.cs
 │   │   │   │   ├── BuildInteractionSetup.cs
 │   │   │   │   └── BuildPaletteBaker.cs
 │   │   │   ├── Materials/
@@ -56,6 +57,7 @@ HY-Sandbox/
 │   │   │   │   └── OutpostEditorAuthoring.cs
 │   │   │   └── Validation/
 │   │   │       ├── BaseLibraryChecks.cs
+│   │   │       ├── BuildHotbarChecks.cs
 │   │   │       ├── BuildingEditorPlayProbe.cs
 │   │   │       ├── BuildPalettePlayProbe.cs
 │   │   │       └── WorldBuildingFootprintChecks.cs
@@ -313,6 +315,9 @@ HY-Sandbox/
 │           │   ├── Interface/
 │           │   │   ├── ActionCounterUI.cs
 │           │   │   ├── BlueprintUIPanel.cs
+│           │   │   ├── BuildHotbar.cs
+│           │   │   ├── BuildHotbarCatalog.cs
+│           │   │   ├── BuildHotbarSlot.cs
 │           │   │   ├── BuildPalette.cs
 │           │   │   ├── BuildPaletteItem.cs
 │           │   │   └── SaveUIPanel.cs
@@ -1053,6 +1058,18 @@ HY-Sandbox/
 | BuildingEditorAssets | [`GameObject Rect(string name, Transform parent, Vector2 size, Vector2 position)`](../Assets/Editor/Building/BuildingEditorAssets.cs#L211) | private static |
 | BuildingEditorAssets | [`Text Label( string name, Transform parent, string value, Vector2 size, Vector2 position, int fontSize)`](../Assets/Editor/Building/BuildingEditorAssets.cs#L223) | private static |
 
+## Assets/Editor/Building/Interface/BuildHotbarAuthoring.cs
+
+// 职责：将可编辑快捷栏、目录图标和默认槽位保存为真实配置资产及Main场景层级。 // 入口：Install()；只创建自己拥有的QuickBuild层级，保留已有目录和个人快捷栏配置。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BuildHotbarAuthoring | [`void Install()`](../Assets/Editor/Building/Interface/BuildHotbarAuthoring.cs#L14) | public static |
+| BuildHotbarAuthoring | [`RectTransform Child(Transform parent, string name)`](../Assets/Editor/Building/Interface/BuildHotbarAuthoring.cs#L180) | private static |
+| BuildHotbarAuthoring | [`T Component(Component owner)`](../Assets/Editor/Building/Interface/BuildHotbarAuthoring.cs#L193) | private static |
+| BuildHotbarAuthoring | [`Text Text(Transform parent, string name, Font font, int size)`](../Assets/Editor/Building/Interface/BuildHotbarAuthoring.cs#L199) | private static |
+| BuildHotbarAuthoring | [`void Place(RectTransform target, Vector2 position, Vector2 size)`](../Assets/Editor/Building/Interface/BuildHotbarAuthoring.cs#L209) | private static |
+
 ## Assets/Editor/Building/Interface/BuildInteractionSetup.cs
 
 // 职责：配置主场景建造交互、范围与连接点提示。 // 入口：Apply()。 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
@@ -1126,6 +1143,18 @@ HY-Sandbox/
 | --- | --- | --- |
 | BaseLibraryChecks | [`string Run()`](../Assets/Editor/Building/Validation/BaseLibraryChecks.cs#L11) | public static |
 | BaseLibraryChecks | [`void Require(bool condition, string reason)`](../Assets/Editor/Building/Validation/BaseLibraryChecks.cs#L52) | private static |
+
+## Assets/Editor/Building/Validation/BuildHotbarChecks.cs
+
+// 职责：在真实Main界面验证快捷栏输入、拖放、持久化及不干扰文字/战斗的契约。 // 入口：RunLive()；恢复原PlayerPrefs与输入设备，不写玩家蓝图。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BuildHotbarChecks | [`void RunLive()`](../Assets/Editor/Building/Validation/BuildHotbarChecks.cs#L30) | public static |
+| BuildHotbarChecks | [`IEnumerator Scenario()`](../Assets/Editor/Building/Validation/BuildHotbarChecks.cs#L62) | private static |
+| BuildHotbarChecks | [`void Tick()`](../Assets/Editor/Building/Validation/BuildHotbarChecks.cs#L226) | private static |
+| BuildHotbarChecks | [`void Check(bool passed, string name)`](../Assets/Editor/Building/Validation/BuildHotbarChecks.cs#L252) | private static |
+| BuildHotbarChecks | [`void Finish(string error)`](../Assets/Editor/Building/Validation/BuildHotbarChecks.cs#L262) | private static |
 
 ## Assets/Editor/Building/Validation/BuildPalettePlayProbe.cs
 
@@ -3399,64 +3428,64 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BuildManager | [`void SelectMaterial(string id)`](../Assets/Scripts/Features/Building/BuildManager.cs#L46) | public |
-| BuildManager | [`void RestoreWorkshopContext(BuildTargetContext context, BuildingFoundation foundation)`](../Assets/Scripts/Features/Building/BuildManager.cs#L82) | internal |
-| BuildManager | [`void Awake()`](../Assets/Scripts/Features/Building/BuildManager.cs#L112) | private |
-| BuildManager | [`void OnDisable()`](../Assets/Scripts/Features/Building/BuildManager.cs#L117) | private |
-| BuildManager | [`void OnEnable()`](../Assets/Scripts/Features/Building/BuildManager.cs#L123) | private |
-| BuildManager | [`void OnDestroy()`](../Assets/Scripts/Features/Building/BuildManager.cs#L128) | private |
-| BuildManager | [`void Start()`](../Assets/Scripts/Features/Building/BuildManager.cs#L145) | private |
-| BuildManager | [`void Update()`](../Assets/Scripts/Features/Building/BuildManager.cs#L151) | private |
-| BuildManager | [`void SetBuildMode(bool lockView)`](../Assets/Scripts/Features/Building/BuildManager.cs#L216) | public |
-| BuildManager | [`void ToggleEnemyBlueprintBuildMode()`](../Assets/Scripts/Features/Building/BuildManager.cs#L228) | public |
-| BuildManager | [`void EnterEnemyBlueprintBuildMode(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L240) | public |
-| BuildManager | [`void ExitEnemyBlueprintBuildMode(bool reloadPlayerSave)`](../Assets/Scripts/Features/Building/BuildManager.cs#L271) | public |
-| BuildManager | [`void ExitDeveloperBlueprintBuildMode(bool reloadPlayerSave)`](../Assets/Scripts/Features/Building/BuildManager.cs#L279) | public |
-| BuildManager | [`void ToggleBuildingBlueprintBuildMode()`](../Assets/Scripts/Features/Building/BuildManager.cs#L299) | public |
-| BuildManager | [`void EnterBuildingBlueprintBuildMode(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L314) | public |
-| BuildManager | [`void ToggleBaseBlueprintBuildMode()`](../Assets/Scripts/Features/Building/BuildManager.cs#L319) | public |
-| BuildManager | [`void EnterBaseBlueprintBuildMode(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L332) | public |
-| BuildManager | [`void EnterStructureBlueprintBuildMode(string blueprintName, bool siegeBase)`](../Assets/Scripts/Features/Building/BuildManager.cs#L337) | private |
-| BuildManager | [`void PrepareBuildingFoundation(Transform parent, BlockDataList data)`](../Assets/Scripts/Features/Building/BuildManager.cs#L404) | private |
-| BuildManager | [`void MarkBuildingFootprintDirty()`](../Assets/Scripts/Features/Building/BuildManager.cs#L425) | public |
-| BuildManager | [`void CompleteBuildingBlueprint()`](../Assets/Scripts/Features/Building/BuildManager.cs#L433) | public |
-| BuildManager | [`void RefreshBuildingFootprint()`](../Assets/Scripts/Features/Building/BuildManager.cs#L465) | public |
-| BuildManager | [`void SetCurrentBuildingBlueprintName(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L482) | public |
-| BuildManager | [`void SetCurrentBlockResource(string resourcePath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L491) | public |
-| BuildManager | [`void SetCurrentSaveName(string saveName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L506) | public |
-| BuildManager | [`void SetCurrentEnemyBlueprintName(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L511) | public |
-| BuildManager | [`void SetBuildType(BuildType buildType)`](../Assets/Scripts/Features/Building/BuildManager.cs#L516) | public |
-| BuildManager | [`void EnsureBuildInteraction()`](../Assets/Scripts/Features/Building/BuildManager.cs#L543) | private |
-| BuildManager | [`void HandleBuildingPreview()`](../Assets/Scripts/Features/Building/BuildManager.cs#L575) | private |
-| BuildManager | [`void ClearCurrentGhost(bool hideHints = true)`](../Assets/Scripts/Features/Building/BuildManager.cs#L583) | private |
-| BuildManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L591) | public |
-| BuildManager | [`Vector3 SnapCenterByMinCorner(Vector3 targetCenter, Quaternion targetRotation, Block b)`](../Assets/Scripts/Features/Building/BuildManager.cs#L598) | public |
-| BuildManager | [`bool IsWithinBuildRange(Vector3 position)`](../Assets/Scripts/Features/Building/BuildManager.cs#L604) | public |
-| BuildManager | [`void CreateBlock(GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot)`](../Assets/Scripts/Features/Building/BuildManager.cs#L609) | public |
-| BuildManager | [`Block CreateBlockFromTemplate(GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot, Vector3Int? dimensions)`](../Assets/Scripts/Features/Building/BuildManager.cs#L614) | private |
-| BuildManager | [`void DeleteBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L657) | public |
-| BuildManager | [`void EnsureBlueprintEditor()`](../Assets/Scripts/Features/Building/BuildManager.cs#L678) | private |
-| BuildManager | [`Block CreateDuplicateBlock(GameObject prefab, string path, Vector3 position, Quaternion rotation, Vector3Int dimensions)`](../Assets/Scripts/Features/Building/BuildManager.cs#L687) | private |
-| BuildManager | [`void SaveBlock(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L692) | public |
-| BuildManager | [`void RemoveBlock(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L710) | public |
-| BuildManager | [`void LoadAllBlocks()`](../Assets/Scripts/Features/Building/BuildManager.cs#L718) | public |
-| BuildManager | [`BlueprintStatistics GetBlueprintStatistics()`](../Assets/Scripts/Features/Building/BuildManager.cs#L747) | public |
-| BuildManager | [`void EnsureBlueprintLoader()`](../Assets/Scripts/Features/Building/BuildManager.cs#L754) | private |
-| BuildManager | [`void DisplayBlueprintStatistics(BlueprintStatistics statistics)`](../Assets/Scripts/Features/Building/BuildManager.cs#L763) | private |
-| BuildManager | [`BlueprintLoadSettings CreateLoadSettings()`](../Assets/Scripts/Features/Building/BuildManager.cs#L771) | private |
-| BuildManager | [`void ClearUnloadableData(string id)`](../Assets/Scripts/Features/Building/BuildManager.cs#L789) | public |
-| BuildManager | [`bool IsLoadingBuildTarget( BuildTargetKind kind, string saveName, string enemyBlueprintName, string buildingBlueprintName = null)`](../Assets/Scripts/Features/Building/BuildManager.cs#L794) | public |
-| BuildManager | [`bool IsLoadingBuildTarget(BuildTargetContext context)`](../Assets/Scripts/Features/Building/BuildManager.cs#L804) | private |
-| BuildManager | [`void ClearUnloadableData(string id, string targetSavePath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L814) | private |
-| BuildManager | [`void InitialBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L823) | private |
-| BuildManager | [`bool CanCreateBlock(GameObject prefab, out string reason)`](../Assets/Scripts/Features/Building/BuildManager.cs#L831) | private |
-| BuildManager | [`void ApplyBlockBuildDefaults(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L870) | public |
-| BuildManager | [`int CountCockpitsInCurrentConstruct()`](../Assets/Scripts/Features/Building/BuildManager.cs#L875) | private |
-| BuildManager | [`void ResetBuildState()`](../Assets/Scripts/Features/Building/BuildManager.cs#L885) | private |
-| BuildManager | [`void SetBuildTarget(BuildTargetContext context)`](../Assets/Scripts/Features/Building/BuildManager.cs#L895) | private |
-| BuildManager | [`void RefreshBlueprintUI()`](../Assets/Scripts/Features/Building/BuildManager.cs#L914) | private |
-| BuildManager | [`void StopActiveBlockLoad()`](../Assets/Scripts/Features/Building/BuildManager.cs#L922) | private |
-| BuildManager | [`void CancelBlueprintLoad()`](../Assets/Scripts/Features/Building/BuildManager.cs#L927) | public |
-| BuildManager | [`string ConvertToResourcesPath(string fullPath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L932) | public static |
+| BuildManager | [`void RestoreWorkshopContext(BuildTargetContext context, BuildingFoundation foundation)`](../Assets/Scripts/Features/Building/BuildManager.cs#L83) | internal |
+| BuildManager | [`void Awake()`](../Assets/Scripts/Features/Building/BuildManager.cs#L113) | private |
+| BuildManager | [`void OnDisable()`](../Assets/Scripts/Features/Building/BuildManager.cs#L118) | private |
+| BuildManager | [`void OnEnable()`](../Assets/Scripts/Features/Building/BuildManager.cs#L124) | private |
+| BuildManager | [`void OnDestroy()`](../Assets/Scripts/Features/Building/BuildManager.cs#L129) | private |
+| BuildManager | [`void Start()`](../Assets/Scripts/Features/Building/BuildManager.cs#L146) | private |
+| BuildManager | [`void Update()`](../Assets/Scripts/Features/Building/BuildManager.cs#L152) | private |
+| BuildManager | [`void SetBuildMode(bool lockView)`](../Assets/Scripts/Features/Building/BuildManager.cs#L217) | public |
+| BuildManager | [`void ToggleEnemyBlueprintBuildMode()`](../Assets/Scripts/Features/Building/BuildManager.cs#L229) | public |
+| BuildManager | [`void EnterEnemyBlueprintBuildMode(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L241) | public |
+| BuildManager | [`void ExitEnemyBlueprintBuildMode(bool reloadPlayerSave)`](../Assets/Scripts/Features/Building/BuildManager.cs#L272) | public |
+| BuildManager | [`void ExitDeveloperBlueprintBuildMode(bool reloadPlayerSave)`](../Assets/Scripts/Features/Building/BuildManager.cs#L280) | public |
+| BuildManager | [`void ToggleBuildingBlueprintBuildMode()`](../Assets/Scripts/Features/Building/BuildManager.cs#L300) | public |
+| BuildManager | [`void EnterBuildingBlueprintBuildMode(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L315) | public |
+| BuildManager | [`void ToggleBaseBlueprintBuildMode()`](../Assets/Scripts/Features/Building/BuildManager.cs#L320) | public |
+| BuildManager | [`void EnterBaseBlueprintBuildMode(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L333) | public |
+| BuildManager | [`void EnterStructureBlueprintBuildMode(string blueprintName, bool siegeBase)`](../Assets/Scripts/Features/Building/BuildManager.cs#L338) | private |
+| BuildManager | [`void PrepareBuildingFoundation(Transform parent, BlockDataList data)`](../Assets/Scripts/Features/Building/BuildManager.cs#L405) | private |
+| BuildManager | [`void MarkBuildingFootprintDirty()`](../Assets/Scripts/Features/Building/BuildManager.cs#L426) | public |
+| BuildManager | [`void CompleteBuildingBlueprint()`](../Assets/Scripts/Features/Building/BuildManager.cs#L434) | public |
+| BuildManager | [`void RefreshBuildingFootprint()`](../Assets/Scripts/Features/Building/BuildManager.cs#L466) | public |
+| BuildManager | [`void SetCurrentBuildingBlueprintName(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L483) | public |
+| BuildManager | [`void SetCurrentBlockResource(string resourcePath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L492) | public |
+| BuildManager | [`void SetCurrentSaveName(string saveName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L507) | public |
+| BuildManager | [`void SetCurrentEnemyBlueprintName(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L512) | public |
+| BuildManager | [`void SetBuildType(BuildType buildType)`](../Assets/Scripts/Features/Building/BuildManager.cs#L517) | public |
+| BuildManager | [`void EnsureBuildInteraction()`](../Assets/Scripts/Features/Building/BuildManager.cs#L544) | private |
+| BuildManager | [`void HandleBuildingPreview()`](../Assets/Scripts/Features/Building/BuildManager.cs#L576) | private |
+| BuildManager | [`void ClearCurrentGhost(bool hideHints = true)`](../Assets/Scripts/Features/Building/BuildManager.cs#L584) | private |
+| BuildManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L592) | public |
+| BuildManager | [`Vector3 SnapCenterByMinCorner(Vector3 targetCenter, Quaternion targetRotation, Block b)`](../Assets/Scripts/Features/Building/BuildManager.cs#L599) | public |
+| BuildManager | [`bool IsWithinBuildRange(Vector3 position)`](../Assets/Scripts/Features/Building/BuildManager.cs#L605) | public |
+| BuildManager | [`void CreateBlock(GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot)`](../Assets/Scripts/Features/Building/BuildManager.cs#L610) | public |
+| BuildManager | [`Block CreateBlockFromTemplate(GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot, Vector3Int? dimensions)`](../Assets/Scripts/Features/Building/BuildManager.cs#L615) | private |
+| BuildManager | [`void DeleteBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L658) | public |
+| BuildManager | [`void EnsureBlueprintEditor()`](../Assets/Scripts/Features/Building/BuildManager.cs#L679) | private |
+| BuildManager | [`Block CreateDuplicateBlock(GameObject prefab, string path, Vector3 position, Quaternion rotation, Vector3Int dimensions)`](../Assets/Scripts/Features/Building/BuildManager.cs#L688) | private |
+| BuildManager | [`void SaveBlock(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L693) | public |
+| BuildManager | [`void RemoveBlock(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L711) | public |
+| BuildManager | [`void LoadAllBlocks()`](../Assets/Scripts/Features/Building/BuildManager.cs#L719) | public |
+| BuildManager | [`BlueprintStatistics GetBlueprintStatistics()`](../Assets/Scripts/Features/Building/BuildManager.cs#L748) | public |
+| BuildManager | [`void EnsureBlueprintLoader()`](../Assets/Scripts/Features/Building/BuildManager.cs#L755) | private |
+| BuildManager | [`void DisplayBlueprintStatistics(BlueprintStatistics statistics)`](../Assets/Scripts/Features/Building/BuildManager.cs#L764) | private |
+| BuildManager | [`BlueprintLoadSettings CreateLoadSettings()`](../Assets/Scripts/Features/Building/BuildManager.cs#L772) | private |
+| BuildManager | [`void ClearUnloadableData(string id)`](../Assets/Scripts/Features/Building/BuildManager.cs#L790) | public |
+| BuildManager | [`bool IsLoadingBuildTarget( BuildTargetKind kind, string saveName, string enemyBlueprintName, string buildingBlueprintName = null)`](../Assets/Scripts/Features/Building/BuildManager.cs#L795) | public |
+| BuildManager | [`bool IsLoadingBuildTarget(BuildTargetContext context)`](../Assets/Scripts/Features/Building/BuildManager.cs#L805) | private |
+| BuildManager | [`void ClearUnloadableData(string id, string targetSavePath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L815) | private |
+| BuildManager | [`void InitialBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L824) | private |
+| BuildManager | [`bool CanCreateBlock(GameObject prefab, out string reason)`](../Assets/Scripts/Features/Building/BuildManager.cs#L832) | private |
+| BuildManager | [`void ApplyBlockBuildDefaults(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L871) | public |
+| BuildManager | [`int CountCockpitsInCurrentConstruct()`](../Assets/Scripts/Features/Building/BuildManager.cs#L876) | private |
+| BuildManager | [`void ResetBuildState()`](../Assets/Scripts/Features/Building/BuildManager.cs#L886) | private |
+| BuildManager | [`void SetBuildTarget(BuildTargetContext context)`](../Assets/Scripts/Features/Building/BuildManager.cs#L896) | private |
+| BuildManager | [`void RefreshBlueprintUI()`](../Assets/Scripts/Features/Building/BuildManager.cs#L915) | private |
+| BuildManager | [`void StopActiveBlockLoad()`](../Assets/Scripts/Features/Building/BuildManager.cs#L923) | private |
+| BuildManager | [`void CancelBlueprintLoad()`](../Assets/Scripts/Features/Building/BuildManager.cs#L928) | public |
+| BuildManager | [`string ConvertToResourcesPath(string fullPath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L933) | public static |
 
 ## Assets/Scripts/Features/Building/BuildingEditor/BuildingEditorPanel.cs
 
@@ -3680,21 +3709,66 @@ HY-Sandbox/
 | BlueprintUIPanel | [`void UpdateTotalRequiredPower(float newRequiredPower)`](../Assets/Scripts/Features/Building/Interface/BlueprintUIPanel.cs#L82) | public |
 | BlueprintUIPanel | [`void UpdateTotalGeneratorOutput(float newGeneratorOutput)`](../Assets/Scripts/Features/Building/Interface/BlueprintUIPanel.cs#L91) | public |
 
+## Assets/Scripts/Features/Building/Interface/BuildHotbar.cs
+
+// 职责：协调建造快捷栏的输入、稳定ID配置与选择；不修改蓝图、金币或货仓。 // 入口：Choose() / Assign() / Swap() / Clear()；仅建造且无文本输入时响应按键。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BuildHotbar | [`BuildHotbarCatalog.Slot GetSlot(int index)`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L31) | public |
+| BuildHotbar | [`void PreviewDrag(string path, PointerEventData pointer)`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L35) | public |
+| BuildHotbar | [`void EndDrag()`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L55) | public |
+| BuildHotbar | [`void OnDisable()`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L63) | private |
+| BuildHotbar | [`void Awake()`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L68) | private |
+| BuildHotbar | [`BuildHotbarCatalog.Slot Copy(BuildHotbarCatalog.Slot source)`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L104) | private static |
+| BuildHotbar | [`bool Valid(BuildHotbarCatalog.Slot value)`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L113) | private |
+| BuildHotbar | [`void Update()`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L129) | private |
+| BuildHotbar | [`bool Choose(int index)`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L168) | public |
+| BuildHotbar | [`bool Assign(int index, string path, string materialId)`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L186) | public |
+| BuildHotbar | [`void Swap(int first, int second)`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L209) | public |
+| BuildHotbar | [`void Clear(int index)`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L220) | public |
+| BuildHotbar | [`void Save()`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L229) | private |
+| BuildHotbar | [`void Refresh()`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L236) | private |
+
+## Assets/Scripts/Features/Building/Interface/BuildHotbarCatalog.cs
+
+// 职责：保存快捷栏可选部件、稳定Resources路径、图标与默认槽位；个人配置独立保存。 // 入口：Find() / Entries / Defaults；不代表有限库存或货仓物品。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BuildHotbarCatalog | [`Entry Find(string path)`](../Assets/Scripts/Features/Building/Interface/BuildHotbarCatalog.cs#L30) | public |
+
+## Assets/Scripts/Features/Building/Interface/BuildHotbarSlot.cs
+
+// 职责：显示保存的部件/材质并处理点击、目录拖入、槽位互换和右键清空。 // 入口：Bind()/Show()/OnDrop()；所有修改委托BuildHotbar验证和保存。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BuildHotbarSlot | [`void Bind(BuildHotbar hotbar, int slot)`](../Assets/Scripts/Features/Building/Interface/BuildHotbarSlot.cs#L20) | public |
+| BuildHotbarSlot | [`void Show(BuildHotbarCatalog.Slot slot, Sprite preview, bool selected)`](../Assets/Scripts/Features/Building/Interface/BuildHotbarSlot.cs#L27) | public |
+| BuildHotbarSlot | [`void OnPointerClick(PointerEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildHotbarSlot.cs#L36) | public |
+| BuildHotbarSlot | [`void OnBeginDrag(PointerEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildHotbarSlot.cs#L53) | public |
+| BuildHotbarSlot | [`void OnDrag(PointerEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildHotbarSlot.cs#L59) | public |
+| BuildHotbarSlot | [`void OnEndDrag(PointerEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildHotbarSlot.cs#L64) | public |
+| BuildHotbarSlot | [`void OnDrop(PointerEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildHotbarSlot.cs#L70) | public |
+
 ## Assets/Scripts/Features/Building/Interface/BuildPalette.cs
 
 // 职责：管理建造分类、选择与目录滚动显示。 // 入口：SelectCategory() / ShowTooltip() / HideTooltip()。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BuildPalette | [`void Awake()`](../Assets/Scripts/Features/Building/Interface/BuildPalette.cs#L27) | private |
-| BuildPalette | [`void OnValidate()`](../Assets/Scripts/Features/Building/Interface/BuildPalette.cs#L53) | private |
-| BuildPalette | [`void OnEnable()`](../Assets/Scripts/Features/Building/Interface/BuildPalette.cs#L67) | private |
-| BuildPalette | [`void OnDisable()`](../Assets/Scripts/Features/Building/Interface/BuildPalette.cs#L72) | private |
-| BuildPalette | [`void LateUpdate()`](../Assets/Scripts/Features/Building/Interface/BuildPalette.cs#L77) | private |
-| BuildPalette | [`void SelectCategory(int category)`](../Assets/Scripts/Features/Building/Interface/BuildPalette.cs#L98) | public |
-| BuildPalette | [`void ShowTooltip(BuildPaletteItem item)`](../Assets/Scripts/Features/Building/Interface/BuildPalette.cs#L124) | public |
-| BuildPalette | [`void HideTooltip(BuildPaletteItem item)`](../Assets/Scripts/Features/Building/Interface/BuildPalette.cs#L133) | public |
-| BuildPalette | [`BuildPaletteItem GetSelectedItem()`](../Assets/Scripts/Features/Building/Interface/BuildPalette.cs#L145) | public |
+| BuildPalette | [`void PreviewDrag(BuildPaletteItem item, UnityEngine.EventSystems.PointerEventData pointer)`](../Assets/Scripts/Features/Building/Interface/BuildPalette.cs#L29) | public |
+| BuildPalette | [`void EndDrag()`](../Assets/Scripts/Features/Building/Interface/BuildPalette.cs#L34) | public |
+| BuildPalette | [`void Awake()`](../Assets/Scripts/Features/Building/Interface/BuildPalette.cs#L39) | private |
+| BuildPalette | [`void OnValidate()`](../Assets/Scripts/Features/Building/Interface/BuildPalette.cs#L65) | private |
+| BuildPalette | [`void OnEnable()`](../Assets/Scripts/Features/Building/Interface/BuildPalette.cs#L79) | private |
+| BuildPalette | [`void OnDisable()`](../Assets/Scripts/Features/Building/Interface/BuildPalette.cs#L84) | private |
+| BuildPalette | [`void LateUpdate()`](../Assets/Scripts/Features/Building/Interface/BuildPalette.cs#L89) | private |
+| BuildPalette | [`void SelectCategory(int category)`](../Assets/Scripts/Features/Building/Interface/BuildPalette.cs#L110) | public |
+| BuildPalette | [`void ShowTooltip(BuildPaletteItem item)`](../Assets/Scripts/Features/Building/Interface/BuildPalette.cs#L136) | public |
+| BuildPalette | [`void HideTooltip(BuildPaletteItem item)`](../Assets/Scripts/Features/Building/Interface/BuildPalette.cs#L145) | public |
+| BuildPalette | [`BuildPaletteItem GetSelectedItem()`](../Assets/Scripts/Features/Building/Interface/BuildPalette.cs#L157) | public |
 
 ## Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs
 
@@ -3702,15 +3776,18 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BuildPaletteItem | [`void Awake()`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L26) | private |
-| BuildPaletteItem | [`void BindPalette(BuildPalette palette)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L35) | public |
-| BuildPaletteItem | [`void ApplyButtonStyle(BuildPaletteItem template)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L45) | public |
-| BuildPaletteItem | [`void SetSelected(bool selected, Color color)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L59) | public |
-| BuildPaletteItem | [`void OnPointerEnter(PointerEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L64) | public |
-| BuildPaletteItem | [`void OnPointerExit(PointerEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L69) | public |
-| BuildPaletteItem | [`void OnSelect(BaseEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L82) | public |
-| BuildPaletteItem | [`void OnDeselect(BaseEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L87) | public |
-| BuildPaletteItem | [`void OnDisable()`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L92) | private |
+| BuildPaletteItem | [`void OnBeginDrag(PointerEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L26) | public |
+| BuildPaletteItem | [`void OnDrag(PointerEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L31) | public |
+| BuildPaletteItem | [`void OnEndDrag(PointerEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L36) | public |
+| BuildPaletteItem | [`void Awake()`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L41) | private |
+| BuildPaletteItem | [`void BindPalette(BuildPalette palette)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L50) | public |
+| BuildPaletteItem | [`void ApplyButtonStyle(BuildPaletteItem template)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L60) | public |
+| BuildPaletteItem | [`void SetSelected(bool selected, Color color)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L74) | public |
+| BuildPaletteItem | [`void OnPointerEnter(PointerEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L79) | public |
+| BuildPaletteItem | [`void OnPointerExit(PointerEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L84) | public |
+| BuildPaletteItem | [`void OnSelect(BaseEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L97) | public |
+| BuildPaletteItem | [`void OnDeselect(BaseEventData eventData)`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L102) | public |
+| BuildPaletteItem | [`void OnDisable()`](../Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs#L107) | private |
 
 ## Assets/Scripts/Features/Building/Interface/SaveUIPanel.cs
 
@@ -3754,9 +3831,10 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BuildMaterialSelector | [`void OnEnable()`](../Assets/Scripts/Features/Building/Materials/BuildMaterialSelector.cs#L12) | private |
-| BuildMaterialSelector | [`void OnDisable()`](../Assets/Scripts/Features/Building/Materials/BuildMaterialSelector.cs#L38) | private |
-| BuildMaterialSelector | [`void Select(int index)`](../Assets/Scripts/Features/Building/Materials/BuildMaterialSelector.cs#L46) | public |
+| BuildMaterialSelector | [`void LateUpdate()`](../Assets/Scripts/Features/Building/Materials/BuildMaterialSelector.cs#L12) | private |
+| BuildMaterialSelector | [`void OnEnable()`](../Assets/Scripts/Features/Building/Materials/BuildMaterialSelector.cs#L24) | private |
+| BuildMaterialSelector | [`void OnDisable()`](../Assets/Scripts/Features/Building/Materials/BuildMaterialSelector.cs#L50) | private |
+| BuildMaterialSelector | [`void Select(int index)`](../Assets/Scripts/Features/Building/Materials/BuildMaterialSelector.cs#L58) | public |
 
 ## Assets/Scripts/Features/Building/Materials/MaterialBreakEffect.cs
 

@@ -24,6 +24,18 @@ public sealed class BuildPalette : MonoBehaviour
     private BuildPaletteItem _selected;
     [SerializeField]
     private BuildPaletteItem _hovered;
+    [SerializeField]
+    private BuildHotbar hotbar;
+    public void PreviewDrag(BuildPaletteItem item, UnityEngine.EventSystems.PointerEventData pointer)
+    {
+        hotbar?.PreviewDrag("Blocks/" + item.BlockName, pointer);
+    }
+
+    public void EndDrag()
+    {
+        hotbar?.EndDrag();
+    }
+
     private void Awake()
     {
         foreach (GameObject entry in Resources.LoadAll<GameObject>("BuildPaletteEntries"))

@@ -1,0 +1,106 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b121170fdf3e3d54da2a0fd41d70718c, type: 3}
+  m_Name: BuildHotbar
+  m_EditorClassIdentifier: Assembly-CSharp::BuildHotbarCatalog
+  entries:
+  - resourcePath: Blocks/1x1x1
+    icon: {fileID: 21300000, guid: a2e046e57f995a044b0d9349de7dbaa9, type: 3}
+  - resourcePath: Blocks/2x1x1
+    icon: {fileID: 21300000, guid: 29ed49677afaeb8449149218335717fe, type: 3}
+  - resourcePath: Blocks/2x2x1
+    icon: {fileID: 21300000, guid: 155c07ee3501e7441a16f80e4034dbb2, type: 3}
+  - resourcePath: Blocks/2x2x2
+    icon: {fileID: 21300000, guid: 929cb3ab792c2d048b35c778f594624b, type: 3}
+  - resourcePath: Blocks/Armor12x6x2
+    icon: {fileID: 0}
+  - resourcePath: Blocks/Armor16x6x16
+    icon: {fileID: 0}
+  - resourcePath: Blocks/Armor18x2x18
+    icon: {fileID: 0}
+  - resourcePath: Blocks/Armor28x6x30
+    icon: {fileID: 0}
+  - resourcePath: Blocks/Armor2x6x16
+    icon: {fileID: 0}
+  - resourcePath: Blocks/Armor42x12x4
+    icon: {fileID: 0}
+  - resourcePath: Blocks/Armor4x10x18
+    icon: {fileID: 0}
+  - resourcePath: Blocks/Armor4x12x30
+    icon: {fileID: 0}
+  - resourcePath: Blocks/Armor4x14x20
+    icon: {fileID: 0}
+  - resourcePath: Blocks/Armor8x10x8
+    icon: {fileID: 0}
+  - resourcePath: Blocks/Armor8x2x8
+    icon: {fileID: 0}
+  - resourcePath: Blocks/CargoHold
+    icon: {fileID: 21300000, guid: 78a1692122b4ca9498c158313c8ef451, type: 3}
+  - resourcePath: Blocks/Cockpit
+    icon: {fileID: 21300000, guid: 8a6ee8d4e3407164f8e790d671729908, type: 3}
+  - resourcePath: Blocks/CoinHold
+    icon: {fileID: 21300000, guid: 2dde82a484161f64faead2056b16356f, type: 3}
+  - resourcePath: Blocks/CollectionBotContainer
+    icon: {fileID: 21300000, guid: db06a5730cbbd544f8af6d86ecc7d38a, type: 3}
+  - resourcePath: Blocks/Door
+    icon: {fileID: 21300000, guid: eab0193894c88d04e936062cd1b76b3b, type: 3}
+  - resourcePath: Blocks/HoverFlightController
+    icon: {fileID: 21300000, guid: 5d280d3512d0d0440b48735c99206e64, type: 3}
+  - resourcePath: Blocks/HoverThruster
+    icon: {fileID: 21300000, guid: 10b0f5f8c61145541b1ac9b38961edc1, type: 3}
+  - resourcePath: Blocks/HoverThrusterBig
+    icon: {fileID: 21300000, guid: b8a27065ebdded046bf63363550b92b4, type: 3}
+  - resourcePath: Blocks/MainThruster
+    icon: {fileID: 21300000, guid: 22732b586e72fa44698e68ee092bf620, type: 3}
+  - resourcePath: Blocks/MainThrusterBig
+    icon: {fileID: 21300000, guid: 511372731d16ded469f51dba0b87bd3d, type: 3}
+  - resourcePath: Blocks/PowerGeneratingUnit
+    icon: {fileID: 21300000, guid: 8830e896f55492a42bb17adc42b2981a, type: 3}
+  - resourcePath: Blocks/PowerTransmissionDevice
+    icon: {fileID: 21300000, guid: 0c7122bcf0cd23b4980ea8945fa8e73c, type: 3}
+  - resourcePath: Blocks/ProjectileTurretDouble
+    icon: {fileID: 21300000, guid: 14f6185030d5efa429cda1a8e32803e8, type: 3}
+  - resourcePath: Blocks/ProjectileTurretSingle
+    icon: {fileID: 21300000, guid: e34702adac5a85347a4948d7194dfdee, type: 3}
+  - resourcePath: Blocks/Rack
+    icon: {fileID: 21300000, guid: caf57ef64c0a8c342b40b4bd60603b2d, type: 3}
+  - resourcePath: Blocks/RepairBotContianer
+    icon: {fileID: 21300000, guid: b9624e4aa986f1e4496f2cf3a7e8869d, type: 3}
+  - resourcePath: Blocks/Stairs
+    icon: {fileID: 21300000, guid: 79803468d94457d4ea7ee9ae6efe8820, type: 3}
+  - resourcePath: Blocks/TechnologyHold
+    icon: {fileID: 21300000, guid: d3b1819319664cb4b84cde0fc59808d4, type: 3}
+  - resourcePath: Blocks/Turret
+    icon: {fileID: 21300000, guid: 5b419b6032e064944bf440cfb60b8ef6, type: 3}
+  - resourcePath: Blocks/UniversalThruster
+    icon: {fileID: 21300000, guid: b787cb9226d25d742891eac7c5cd8bce, type: 3}
+  - resourcePath: Blocks/UniversalThrusterBig
+    icon: {fileID: 21300000, guid: f52c3301154d64f44aad6b8c525fa7f9, type: 3}
+  - resourcePath: Hangars/Hangar
+    icon: {fileID: 0}
+  defaults:
+  - resourcePath: Blocks/2x2x1
+    materialId: metal
+  - resourcePath: Blocks/2x2x2
+    materialId: metal
+  - resourcePath: Blocks/1x1x1
+    materialId: metal
+  - resourcePath: Blocks/2x1x1
+    materialId: metal
+  - resourcePath: Blocks/Cockpit
+    materialId:
+  - resourcePath: Blocks/UniversalThruster
+    materialId:
+  - resourcePath: Blocks/PowerGeneratingUnit
+    materialId:
+  - resourcePath: Blocks/Turret
+    materialId:

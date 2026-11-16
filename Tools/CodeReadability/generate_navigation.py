@@ -55,6 +55,19 @@ def main():
         )
 
     graph(
+        "建造快捷栏与材质选择",
+        "保存的Main界面与目录资产提供8个槽位。数字键/点击恢复部件及材质，目录拖入和槽位交换共用校验/保存；文本焦点、模态、加载与战斗不响应建造按键。PlayerPrefs仅保存界面配置，不动蓝图和库存。",
+        {"A": "BuildHotbar.Awake", "B": "BuildHotbar.Valid", "C": "BuildHotbar.Update",
+         "D": "BuildHotbar.Choose", "E": "BuildHotbar.Assign", "F": "BuildHotbar.Swap",
+         "G": "BuildHotbar.Save", "H": "BuildHotbarSlot.OnDrop", "I": "BuildHotbarSlot.OnPointerClick",
+         "J": "BuildManager.SelectMaterial", "K": "BuildManager.SetCurrentBlockResource",
+         "L": "BuildHotbar.Refresh", "M": "BuildMaterialSelector.LateUpdate",
+         "N": "BuildPaletteItem.OnDrag", "O": "BuildPalette.PreviewDrag", "P": "BuildHotbar.PreviewDrag"},
+        ['A --> B', 'C -->|无输入焦点且允许建造| D', 'C -->|Shift记录| E', 'D --> J', 'D --> K',
+         'E --> B', 'E --> G', 'H --> E', 'H --> F', 'F --> G', 'I --> D', 'G --> L',
+         'J -.->|同步材质下拉框| M', 'N --> O', 'O --> P'],
+    )
+    graph(
         "Siege有限浮空岛与边界",
         "基地占地决定部署时的有限地形，生成复用World数据/分块/碰撞；爆炸保留弹坑。边界只退场不可恢复单位，敌舰不获虚构击杀收益。编辑器另有预览和真实网格烘焙入口。",
         {"A": "SiegeGameplayStage.Enter", "B": "SiegeIsland.GenerateFor", "C": "FloatingIslandTerrain.Generate",

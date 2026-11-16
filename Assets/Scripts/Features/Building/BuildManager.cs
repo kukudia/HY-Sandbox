@@ -45,9 +45,10 @@ public class BuildManager : MonoBehaviour
 
     public void SelectMaterial(string id)
     {
-        if (BlockMaterialCatalog.Resolve(id) != null)
+        if (currentMaterialId != id && BlockMaterialCatalog.Resolve(id) != null)
         {
             currentMaterialId = id;
+            ClearCurrentGhost();
         }
     }
 
