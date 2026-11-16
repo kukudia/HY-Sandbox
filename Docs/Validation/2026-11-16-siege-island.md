@@ -21,3 +21,5 @@
 
 - dotnet build：0错误，37项既有过时API警告；格式检查470脚本、0差异、0错误。
 - 主菜单→Siege后台回归：进入前runInBackground=false，部署后true，后台采样帧8344→8895、游戏时间139.62→148.81；ReturnToMenu后恢复false且Stage已卸载。退出Play后确认stopped。
+
+后续进展（同日）：完整Windows Player构建、实际部署及短时自然交战已覆盖；发现并修复非凸网格最近点API调用，见[Player验证](2026-11-16-siege-gameplay-player.md)。长期、大规模、多库和自然跌落轨迹仍未验收。

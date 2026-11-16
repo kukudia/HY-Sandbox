@@ -1,5 +1,7 @@
 # HY-Sandbox 开发入口
 
+本轮需求对照、恢复点和后续计划见[Siege阶段交接](Docs/Validation/2026-11-16-siege-stage-handoff.md)。
+
 ## 独立新版 Siege 验证与非凸地形接触（2026-11-16）
 
 显式 `-siege-gameplay-report <绝对路径>` 启用新版菜单→Additive Siege→真实起降/死亡/返航结算→工坊→菜单检查；`-siege-gameplay-roof` 只在该验证进程内改变示例开口，`-siege-gameplay-soak` 只观察自然战斗，`-siege-gameplay-seconds` 控制30–900秒。不会创建个人示例副本或重写玩家蓝图。普通启动不创建此验证器。
