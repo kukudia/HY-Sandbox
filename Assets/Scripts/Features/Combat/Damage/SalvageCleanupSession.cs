@@ -124,6 +124,11 @@ internal sealed class SalvageCleanupSession
                     if (member.ownerUnitId == ownerUnitId)
                     {
                         remaining = Mathf.Max(remaining, FragmentLifetime.Remaining(unit.gameObject));
+                        if (SiegeCleanupSweep.OwnsRetirement(unit))
+                        {
+                            remaining = Mathf.Max(remaining, .25f);
+                        }
+
                         break;
                     }
                 }
@@ -163,12 +168,12 @@ internal sealed class SalvageCleanupSession
         while (unit != null)
         {
             float remaining = FragmentLifetime.Remaining(unit.gameObject);
-            if (remaining <= 0f)
+            if (remaining <= 0f && !SiegeCleanupSweep.OwnsRetirement(unit))
             {
                 yield break;
             }
 
-            yield return new WaitForSeconds(remaining);
+            yield return new WaitForSeconds(Mathf.Max(.25f, remaining));
         }
     }
 }

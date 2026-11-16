@@ -77,10 +77,14 @@ public static class SalvagePlayProbe
             // Reparent just these services in the disposable Play copy; the authored scene is untouched.
             DestroyManager.instance.transform.SetParent(null, true);
             VisualEffectsManager.EnsureInstance().transform.SetParent(null, true);
+            VfxEffectPool pool = SceneObjectQuery.FindInActiveScene<VfxEffectPool>();
+            pool.transform.SetParent(null, true);
+            TransientEffectPool transientPool = SceneObjectQuery.FindInActiveScene<TransientEffectPool>();
+            transientPool.transform.SetParent(null, true);
             // These changes exist only in the Play Mode copy. Unsaved authoring scenes stay untouched.
             foreach (GameObject root in SceneManager.GetActiveScene().GetRootGameObjects())
             {
-                if (root == DestroyManager.instance.gameObject || root == VisualEffectsManager.instance.gameObject)
+                if (root == DestroyManager.instance.gameObject || root == VisualEffectsManager.instance.gameObject || root == pool.gameObject || root == transientPool.gameObject)
                 {
                     continue;
                 }

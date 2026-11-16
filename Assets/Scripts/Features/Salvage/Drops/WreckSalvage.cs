@@ -9,7 +9,12 @@ public class WreckSalvage : MonoBehaviour
 
     public static void Convert(Block block)
     {
-        if (block == null || PlayManager.instance == null || !PlayManager.instance.playMode)
+        Convert(block, false);
+    }
+
+    private static void Convert(Block block, bool allowPausedSimulation)
+    {
+        if (block == null || (!allowPausedSimulation && (PlayManager.instance == null || !PlayManager.instance.playMode)))
         {
             return;
         }
@@ -46,7 +51,8 @@ public class WreckSalvage : MonoBehaviour
 
         LootDrop.Spawn(
             new CargoItem { kind = special ? CargoKind.SpecialPart : CargoKind.Coins, resourcePath = special ? path : string.Empty, amount = special ? 1 : settings != null ? Mathf.Max(1, settings.coinsPerBlock) : 2 },
-            block.transform.position);
+            block.transform.position,
+            block.gameObject.scene);
     }
 
     // 运输必须先解除认领再释放货仓；卸载/休眠不调用本入口，随机奖励仍只属于Convert。
@@ -60,7 +66,7 @@ public class WreckSalvage : MonoBehaviour
         module.GetComponent<CargoHold>()?.ReleaseContents(faction);
     }
 
-    public static void ConvertGroup(ControlUnit unit)
+    public static void ConvertGroup(ControlUnit unit, bool allowPausedSimulation = false)
     {
         if (unit == null || unit.HasAnyCockpit)
         {
@@ -69,7 +75,7 @@ public class WreckSalvage : MonoBehaviour
 
         foreach (Block block in unit.GetComponentsInChildren<Block>())
         {
-            Convert(block);
+            Convert(block, allowPausedSimulation);
         }
     }
 }

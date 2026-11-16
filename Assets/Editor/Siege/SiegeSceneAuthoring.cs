@@ -63,6 +63,8 @@ public static class SiegeSceneAuthoring
             serialized.ApplyModifiedPropertiesWithoutUndo();
             CreateCamera();
             CreateHud(session, settings, docks.Length);
+            SiegeIslandAuthoring.Configure(scene);
+            SiegeCleanupAuthoring.Configure(scene);
             EditorSceneManager.SaveScene(scene, ScenePath);
             EditorBuildSettingsScene[] buildScenes = EditorBuildSettings.scenes;
             if (!buildScenes.Any(item => item.path == ScenePath))

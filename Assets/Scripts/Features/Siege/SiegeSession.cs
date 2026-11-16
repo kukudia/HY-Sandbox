@@ -40,6 +40,9 @@ public sealed class SiegeSession : MonoBehaviour, ISiegeDeploymentHost
     }
 
     private SiegeWreckBudget wrecks;
+    [SerializeField]
+    private SiegeCleanupSweep cleanup;
+    public SiegeCleanupSweep Cleanup => cleanup;
     public SiegeWreckBudget Wrecks => wrecks;
 
     private bool previousBackground;
@@ -227,6 +230,7 @@ public sealed class SiegeSession : MonoBehaviour, ISiegeDeploymentHost
         FlightGuidance = new SiegeReturnFlight(Fleet, flightSettings, this);
         waves = new SiegeWaveDirector(this);
         wrecks = new SiegeWreckBudget(gameObject.scene);
+        cleanup.Stop();
         previousPhase = Match.Phase;
         PlayManager.instance.playMode = false;
         return true;
@@ -251,6 +255,7 @@ public sealed class SiegeSession : MonoBehaviour, ISiegeDeploymentHost
         }
 
         waveStartCoins = Match.Coins;
+        cleanup.Stop();
         waveStartDefeated = Match.DefeatedAttackers;
         Fleet.SetCombatActive(true);
         SetSimulationActive(true);
@@ -345,6 +350,7 @@ public sealed class SiegeSession : MonoBehaviour, ISiegeDeploymentHost
 
     public void End()
     {
+        cleanup?.Stop();
         FlightGuidance?.Stop();
         waves?.Stop();
         Fleet?.SetCombatActive(false);
@@ -363,6 +369,7 @@ public sealed class SiegeSession : MonoBehaviour, ISiegeDeploymentHost
         }
 
         FlightGuidance?.Stop();
+        cleanup?.Stop();
         Match.LoseBase();
         if (settings.TrackRecords)
         {
@@ -395,12 +402,23 @@ public sealed class SiegeSession : MonoBehaviour, ISiegeDeploymentHost
         }
 
         Fleet.RefreshBindings();
-        wrecks.Tick(
-            Time.time,
-            settings.MaximumEnemyWreckGroups,
-            settings.MaximumEnemyWreckBlocks,
-            settings.EnemyWreckLifetime,
-            settings.EnemyWreckRetirePerScan);
+        if (Match.Phase == SiegePhase.Returning || Match.Phase == SiegePhase.Intermission)
+        {
+            Bounds area = island != null ? island.PlayableBounds : new Bounds(baseDock.position, new Vector3(192, 0, 192));
+            cleanup.Begin(Match.Wave, area, Time.time);
+            cleanup.Tick(Time.time);
+        }
+
+        if (Match.Phase == SiegePhase.Battle)
+        {
+            wrecks.Tick(
+                Time.time,
+                settings.MaximumEnemyWreckGroups,
+                settings.MaximumEnemyWreckBlocks,
+                settings.EnemyWreckLifetime,
+                settings.EnemyWreckRetirePerScan);
+        }
+
         waves.Tick(Time.time);
         TickKillStreak();
         if (previousPhase == SiegePhase.Battle && Match.Phase == SiegePhase.Returning)
@@ -519,6 +537,11 @@ public sealed class SiegeSession : MonoBehaviour, ISiegeDeploymentHost
 
     private void OnDestroy()
     {
+        if (cleanup != null)
+        {
+            cleanup.Stop();
+        }
+
         FlightGuidance?.Stop();
         waves?.Stop();
         Fleet?.Base?.Dispose();

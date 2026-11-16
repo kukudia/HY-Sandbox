@@ -18,6 +18,9 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
     private WorldBuildingManager buildings;
     [SerializeField]
     private SiegeIsland island;
+    [SerializeField]
+    private SiegeCleanupSweep cleanup;
+    public SiegeCleanupSweep Cleanup => cleanup;
     public SiegeIsland Island => island;
 
     [SerializeField]
@@ -90,6 +93,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         Match.EnableReturnSettlement();
         buildings.SimulationEnabled = false;
         wrecks = new SiegeWreckBudget(gameObject.scene);
+        cleanup.Stop();
         foreach (GameObject item in buildEnvironment)
         {
             if (item != null && !environment.ContainsKey(item))
@@ -248,6 +252,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         }
 
         SetSimulation(true);
+        cleanup.Stop();
         Fleet.SetCombatActive(true);
         flight.BeginLaunch();
         RefitChanged?.Invoke();
@@ -282,6 +287,12 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         }
 
         Fleet?.RefreshBindings();
+        if (Match.Phase == SiegePhase.Returning || Match.Phase == SiegePhase.Intermission)
+        {
+            cleanup.Begin(Match.Wave, island.PlayableBounds, Time.time);
+            cleanup.Tick(Time.time);
+        }
+
         if (Match.Phase == SiegePhase.Returning && !returning)
         {
             returning = true;
@@ -500,6 +511,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         }
 
         Settled = true;
+        cleanup.Stop();
         waves?.Stop();
         flight?.Stop();
         Fleet?.SetCombatActive(false);
@@ -545,6 +557,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         }
 
         entered = false;
+        cleanup.Stop();
         Application.runInBackground = previousBackground;
         waves?.Stop();
         flight?.Stop();

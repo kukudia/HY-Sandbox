@@ -97,9 +97,11 @@ public sealed class SiegeWreckBudget
             }
 
             // 复用转换的幂等标记，避免与既有延迟清理重复掉落。先退场再延迟Destroy，立即释放活动物理预算。
-            WreckSalvage.ConvertGroup(candidate.Unit);
-            candidate.Unit.gameObject.SetActive(false);
-            Object.Destroy(candidate.Unit.gameObject);
+            if (!EnemyWreckRetirement.Retire(candidate.Unit, scene, blocks, true))
+            {
+                continue;
+            }
+
             firstSeen.Remove(candidate.Unit);
             PendingGroups--;
             PendingBlocks -= candidate.Blocks;
@@ -110,28 +112,7 @@ public sealed class SiegeWreckBudget
 
     private bool Eligible(ControlUnit unit)
     {
-        if (unit == null || !unit.gameObject.activeInHierarchy || unit.gameObject.scene != scene || unit.Building != null || unit.faction != UnitFaction.Enemy || unit.HasAnyCockpit)
-        {
-            return false;
-        }
-
-        blocks.Clear();
-        unit.GetComponentsInChildren(false, blocks);
-        if (blocks.Count == 0)
-        {
-            return false;
-        }
-
-        foreach (Block block in blocks)
-        {
-            RuntimeUnitMember member = block.GetComponent<RuntimeUnitMember>();
-            if (member == null || member.ownerFaction != UnitFaction.Enemy)
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return EnemyWreckRetirement.Eligible(unit, scene, blocks);
     }
 
     private struct Candidate

@@ -165,6 +165,7 @@ public static class SiegeConstructionAuthoring
         Set(stageData, "settings", settings);
         Set(stageData, "buildings", buildings);
         SiegeIslandAuthoring.Configure(siege);
+        SiegeCleanupAuthoring.Configure(siege);
         Set(stageData, "panel", panel);
         Set(stageData, "baseSpawn", root.Find("Base Spawn"));
         stageData.ApplyModifiedPropertiesWithoutUndo();

@@ -384,6 +384,10 @@ public static class SiegeHangarHostChecks
             yield return null;
         }
 
+        SiegeCleanupSweep cleanup = stage != null ? stage.Cleanup : prototype.Cleanup;
+        Check(
+            cleanup != null && cleanup.GetComponentInChildren<Canvas>(true) != null,
+            "Real host retains authored cleanup presentation after return");
         Check(
             host.Match.Phase == SiegePhase.Intermission && host.Match.PendingCoins == 0,
             "Host fixed-step return completes and settles pending income");

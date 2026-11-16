@@ -219,7 +219,7 @@ public class CargoHold : MonoBehaviour
         {
             foreach (CargoItem item in _contents)
             {
-                LootDrop.Spawn(item.Copy(), transform.position + Random.insideUnitSphere * 0.65f);
+                LootDrop.Spawn(item.Copy(), transform.position + Random.insideUnitSphere * 0.65f, gameObject.scene);
             }
         }
 
@@ -236,6 +236,11 @@ public class CargoHold : MonoBehaviour
         foreach (CargoHold hold in ActiveHolds)
         {
             ControlUnit unit = hold.Owner;
+            if (reservation != null && hold.gameObject.scene != reservation.gameObject.scene || owner != null && hold.gameObject.scene != owner.gameObject.scene)
+            {
+                continue;
+            }
+
             if (unit == null || !unit.IsOperational || !unit.IsSimulationActive || (owner != null ? unit != owner : !unit.IsPlayer) || !hold.CanReceive(item, reservation))
             {
                 continue;

@@ -2,6 +2,7 @@
 // 入口：Spawn() / Initialize() / Claim()。
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LootDrop : MonoBehaviour
 {
@@ -82,6 +83,11 @@ public class LootDrop : MonoBehaviour
 
     public static LootDrop Spawn(CargoItem item, Vector3 position)
     {
+        return Spawn(item, position, SceneManager.GetActiveScene());
+    }
+
+    public static LootDrop Spawn(CargoItem item, Vector3 position, Scene scene)
+    {
         if (item == null || !item.IsValid)
         {
             return null;
@@ -94,7 +100,7 @@ public class LootDrop : MonoBehaviour
             float nearest = float.PositiveInfinity;
             foreach (LootDrop candidate in Drops)
             {
-                if (candidate == null || candidate._consumed || candidate.Item.kind == CargoKind.SpecialPart)
+                if (candidate == null || candidate.gameObject.scene != scene || candidate._consumed || candidate.Item.kind == CargoKind.SpecialPart)
                 {
                     continue;
                 }
@@ -125,6 +131,7 @@ public class LootDrop : MonoBehaviour
         }
 
         LootDrop drop = Instantiate(prefab, position, Quaternion.identity);
+        SceneManager.MoveGameObjectToScene(drop.gameObject, scene);
         drop.Initialize(item);
         return drop;
     }

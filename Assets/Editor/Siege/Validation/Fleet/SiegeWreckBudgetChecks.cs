@@ -135,6 +135,7 @@ public static class SiegeWreckBudgetChecks
 
         report.checks = checks;
         const string path = "Temp/Siege/wreck-budget-checks.json";
+        Directory.CreateDirectory("Temp/Siege");
         File.WriteAllText(path, JsonUtility.ToJson(report, true));
         return path;
     }

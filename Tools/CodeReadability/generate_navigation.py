@@ -55,6 +55,18 @@ def main():
         )
 
     graph(
+        "波次清场与共享回收",
+        "返航/整备期宿主显式启动扫描，活动扫描接管合格敌方残骸的旧延迟退场；最短保留期及分批上限仍有效。预算和扫描共用阵营/场景/驾驶舱验证与幂等回收。产出的掉落归属原场景，不产生额外Match收益或免费维修。新波次/撤退/卸载停止表现并释放所有权。",
+        {"A": "SiegeGameplayStage.Update", "B": "SiegeSession.Update", "C": "SiegeCleanupSweep.Begin",
+         "D": "SiegeCleanupSweep.Tick", "E": "SiegeCleanupSweep.Scan", "F": "EnemyWreckRetirement.Eligible",
+         "G": "EnemyWreckRetirement.Retire", "H": "WreckSalvage.ConvertGroup", "I": "WreckSalvage.Convert",
+         "J": "LootDrop.Spawn", "K": "SiegeWreckBudget.Tick", "L": "SiegeCleanupSweep.Stop",
+         "M": "SalvageCleanupSession.WaitForFragment", "N": "SiegeCleanupSweep.OwnsRetirement"},
+        ['A --> C', 'B --> C', 'A --> D', 'B --> D', 'D --> E', 'E --> F', 'E --> G',
+         'K --> G', 'G --> F', 'G --> H', 'H --> I', 'I -->|显式原场景| J',
+         'M -->|活动扫描先处理| N', 'L -.->|释放并隐藏| N'],
+    )
+    graph(
         "建造快捷栏与材质选择",
         "保存的Main界面与目录资产提供8个槽位。数字键/点击恢复部件及材质，目录拖入和槽位交换共用校验/保存；文本焦点、模态、加载与战斗不响应建造按键。PlayerPrefs仅保存界面配置，不动蓝图和库存。",
         {"A": "BuildHotbar.Awake", "B": "BuildHotbar.Valid", "C": "BuildHotbar.Update",
