@@ -192,13 +192,40 @@ internal sealed class BlockConnections
         }
 
         Block result = null;
+        float closest = float.PositiveInfinity;
+        // Expanded bays disable their editing box so the reserved interior stays empty.
+        // Their own downward probe establishes a real floor pair first; the floor's
+        // reciprocal refresh cannot rediscover that invisible controller via physics.
+        Block existing = connector.runtimePeerBlock;
+        if (existing != null && existing != _block && existing.TryGetComponent(out HangarModule bay) && bay.IsCombat && existing.raycastCollider != null && !existing.raycastCollider.enabled && existing.CanParticipateInConnections && SharesBuildingScope(existing))
+        {
+            Connector matching = FindMatchingConnector(existing, connector, false);
+            if (matching != null && connector.runtimePeer == matching && matching.runtimePeer == connector && matching.runtimePeerBlock == _block)
+            {
+                result = existing;
+                closest = (existing.GetConnectorWorldPosition(matching) - worldPos).sqrMagnitude;
+            }
+        }
+
         for (int i = 0; i < hitCount; i++)
         {
             Block otherBlock = _connectionHits[i].GetComponentInParent<Block>();
             if (otherBlock != null && otherBlock != _block && otherBlock.CanParticipateInConnections && SharesBuildingScope(otherBlock))
             {
-                result = otherBlock;
-                break;
+                // Dense shell corners can overlap several colliders. A collider without
+                // a matching face must not hide a valid connector later in the buffer.
+                Connector matching = FindMatchingConnector(otherBlock, connector, false);
+                if (matching == null)
+                {
+                    continue;
+                }
+
+                float distance = (otherBlock.GetConnectorWorldPosition(matching) - worldPos).sqrMagnitude;
+                if (distance < closest || (Mathf.Approximately(distance, closest) && string.CompareOrdinal(otherBlock.uniqueId, result != null ? result.uniqueId : null) < 0))
+                {
+                    result = otherBlock;
+                    closest = distance;
+                }
             }
         }
 

@@ -130,7 +130,7 @@ Player 首场景为 `Assets/Scenes/MainMenu.unity`。**Exploration** 选择载�
 
 普通建筑和基地直接在y=0地面自由搭建，无需设置地基宽长。逐步放置、移动、旋转、调尺寸、删除和Undo/Redo只保存模块并设置FootprintDirty，不遍历计算占地、不重建整套地基连接。加载时重新计算内存预览，点击 **FINISH / CROP** 或退出/切换建筑编辑时计算并保存最终占地；缺省边距1格，Footprint Padding可配0–8。不移动模块、不删除玩家平台或缺资源模块快照，保留核心和驻军坐标。手动完成不是退出编辑，后续可继续搭建。
 
-蓝图菜单编辑入口不再要求出战校验通过，可打开缺资源、未完成、超尺寸设计继续修复；损坏JSON仍拒绝。出战取消基地尺寸、预算、限高、整格旋转和内部重叠的设计门槛，占地不再上限64m；参考造价仅用于显示/修理。Siege使用有限浮空体素岛，部署时按基地占地保留中心平面与边缘缓冲；对局中不再扩展或重生地面。运行所需合法资源、身份/姿态、基地核心、载具驾驶舱、地面支撑与外部障碍检查保留；机库数量6与净空筛船规则保持。模块自身64m尺寸和2048模块是底层数据安全约束，不作为本次设计预算规则。世界建筑目录和Siege加载时从实际模块计算范围，不依赖未完成草稿的旧占地元数据。
+蓝图菜单编辑入口不再要求出战校验通过，可打开缺资源、未完成、超尺寸设计继续修复；损坏JSON仍拒绝。出战取消基地尺寸、预算、限高、整格旋转和内部重叠的设计门槛，占地不再上限64m；参考造价仅用于显示/修理。Siege使用有限浮空体素岛，部署时按基地占地保留中心平面与边缘缓冲；对局中不再扩展或重生地面。运行所需合法资源、身份/姿态、基地核心、载具驾驶舱、地面支撑与外部障碍检查保留；机库数量6与净空筛船规则保持。模块自身64m尺寸校验保留；已解除单建筑2048和世界8192模块硬上限，恢复继续分帧并支持取消回滚。自由建造不限库存，Siege部署/维修继续使用局内预算。世界建筑目录和Siege加载时从实际模块计算范围，不依赖未完成草稿的旧占地元数据。
 
 BuildingFoundationData的offsetX/offsetZ缺省0兼容旧坐标。相关入口：BuildPreview.Poll → BuildBlueprintEditor.Write → BuildManager.MarkBuildingFootprintDirty；PrepareBuildingFoundation / CompleteBuildingBlueprint → BuildingFootprint.Calculate → RefreshBuildingFootprint。完成按钮保存于EditorPanel.prefab。
 
@@ -148,11 +148,11 @@ BuildingFoundationData的offsetX/offsetZ缺省0兼容旧坐标。相关入口：
 
 基地编辑器 **PLACE HANGAR** 选择机库构件，沿用原有放置、选中、移动、90°竖轴旋转与复制。深色底板及半透明净空体在编辑时显示，中心标注净宽×净高×净深；选中后面向镜头的面板提供三轴 +/-，尺寸、姿态、身份随基地JSON保存，支持Undo/Redo。机库数量配置为 **6**（`Assets/Resources/Hangars/Limits.asset`），不是尺寸6m；尺寸受64m模块安全范围约束。默认外20×10×24m，净空18×8×22m；长宽高均为4–64的偶数，按钮步长2m。机库预算包含真实金属墙块材料费及外壳面积装配费，不按内部空体积计费，不能作为基地核心或载具模块。
 
-战斗墙、顶、底板由现有2×2×1金属建筑方块组成，默认372块；每块独立耐久、爆炸受损、连接断裂和原设计维修。编辑器保存逻辑机库，复用同一铺块配方显示可调整的预览；建筑恢复前展开为扁平真实方块，战斗隐藏预览碰撞，门继续使用可控伸缩面板。损伤快照保存hangarShellVersion和hangarOwnerId，读档不会补回已毁墙体；旧奇数尺寸内存向上迁移为偶数并保持底部最小角，个人文件不自动重写。展开后仍受2048建筑/8192世界模块上限约束，超限在创建前拒绝，维修也检查世界剩余容量。两套Siege通过 `ISiegeDeploymentHost` 共用 `SiegeFleet` 和部署卡片：点击空库DEPLOY，仅列各轴尺寸不超过净空的有效舰船蓝图；按蓝图真实包围盒居中，购买时再次验证物理净空与余额。一库一舰，舰船离库仍占用原槽位。整备阶段点击已占用机库的MANAGE可REPLACE或UNDEPLOY；完整舰按购买价退回，战损残值按购买价减现有维修报价且不低于0，更换抵扣该残值。尺寸、余额或外部障碍检查失败保留原舰与金币，取消同时清理原舰及其碎片，战斗/返航阶段禁用这两项操作。新版基地战保持俯视镜头，舰船自主作战；预研保留玩家驾驶。
+战斗墙、顶、底板由现有2×2×1金属建筑方块组成，默认372块；每块独立耐久、爆炸受损、连接断裂和原设计维修。编辑器保存逻辑机库，复用同一铺块配方显示可调整的预览；建筑恢复前展开为扁平真实方块，战斗隐藏预览碰撞，门继续使用可控伸缩面板。损伤快照保存hangarShellVersion和hangarOwnerId，读档不会补回已毁墙体；旧奇数尺寸内存向上迁移为偶数，保留底部高度并将水平中心对齐整格，个人文件不自动重写。展开、加载与维修均不再受2048建筑/8192世界模块硬限制，仍检查合法数据和建筑数量。两套Siege通过 `ISiegeDeploymentHost` 共用 `SiegeFleet` 和部署卡片：点击空库DEPLOY，仅列各轴尺寸不超过净空的有效舰船蓝图；按蓝图真实包围盒居中，购买时再次验证物理净空与余额。一库一舰，舰船离库仍占用原槽位。整备阶段点击已占用机库的MANAGE可REPLACE或UNDEPLOY；完整舰按购买价退回，战损残值按购买价减现有维修报价且不低于0，更换抵扣该残值。尺寸、余额或外部障碍检查失败保留原舰与金币，取消同时清理原舰及其碎片，战斗/返航阶段禁用这两项操作。新版基地战支持自由观察：按住右键配合WASD/QE，Shift加速、滚轮调速、F回总览；UI/菜单/文字输入阻止捕获，退出恢复工坊镜头。舰船自主作战；预研保留玩家驾驶。
 
 清波进入 **Returning**，击杀/清波/连击收益暂存PendingCoins，锁定购买和下一波。舰船按门外航点、对准、入库自动导航；门口占用阻止关门。持续失去供电/推进能力、机库损毁或返航超时的舰船自动报废。全部存活舰入库或报废后一次性结算，再按原设计和现有金币自动修复基地（含机库）及舰船；余额/净空不足不扣费。导航参数在两个宿主Inspector的Flight Settings中，使用实际有电发动机能力限制辅助刚体推力，仅在达到停泊位置/速度/角度容差后校准最终泊位，不远距离传送舰艇。战斗损伤不回写设计。
 
-预研 `Siege.unity` 使用保留原基地布局的 `BastionHangars.json` 扩建副本，三个默认大机库替换方形占位，原 `BastionBase.json` 保留。正式示例`StarterHangar.json`已重做为21个逻辑构件：单机库、独立核心塔与四座炮台，展开后393块；个人基地库保留。`ModularBaseExampleAuthoring.Generate()`可复现制作并备份被替换的官方示例。玩家基地按设计实际机库数量生成，最多6；没有机库仍可用建筑炮塔守波。制作入口：`HangarPrefabAuthoring.Generate()`、`HangarSceneIntegration.Install()`、`SiegeHangarInterfaceAuthoring.Install()`；重新运行较早的基地制作工具后，应再运行机库接线工具恢复新增按钮。
+预研 `Siege.unity` 使用保留原基地布局的 `BastionHangars.json` 扩建副本，三个默认大机库替换方形占位，原 `BastionBase.json` 保留。正式Base Example扩为三套：Starter Bastion（前门堡垒）、Skyline Logistics（顶门物流站）与Twin Foundry（前门+顶门双库）。每套均使用金属/木材/石头/玻璃、三类Hold和维修/收集Bot，功能模块配置真实供电。`SiegeBaseExamplesAuthoring.Generate()`保存真实JSON与配置引用并备份被替换的官方示例；旧制作入口委托同一工具，个人基地库保留。玩家基地按设计实际机库数量生成，最多6；没有机库仍可用建筑炮塔守波。制作入口：`HangarPrefabAuthoring.Generate()`、`HangarSceneIntegration.Install()`、`SiegeHangarInterfaceAuthoring.Install()`；重新运行较早的基地制作工具后，应再运行机库接线工具恢复新增按钮。
 
 ```text
 Assets/Scripts/Features/Siege/
@@ -182,6 +182,8 @@ Main 的 **Simulate**（或 P）继续提供工坊内模式选择：探索按需
 模式状态由 `GameModeController` 管理，探索通过 `BindHost` 显式绑定 Main 的环境、加载 UI 与 HUD。场景异步加载支持取消，失败完整清理后重试；退出卸载玩法场景。Main 建造原稿停用保留，探索使用副本，返回恢复同一个原稿与镜头；正常返回保存货仓后迁移回原稿，死亡返回清空货仓。不会把战斗损毁覆盖到未保存的作品。SiegeGameplay 已接入基地蓝图部署、真实守波、整备修复与结算，见下节。
 
 ## SiegeGameplay 实战基地
+
+本轮补齐结果见[三套示例、自由观察与蓝图修复](Docs/Validation/2026-11-16-siege-completion.md)：三套官方Example各通过23项独立Player闭环；自由视角22项真实输入、8400模块恢复/维修、10份基地支撑审计通过。旧Courtyard与奇数机库个人设计通过兼容/连接修复恢复可部署；55份蓝图审计未发现需隔离的损坏JSON，个人创作保留。以下旧制作记录中的验收缺口以该最新记录为准。
 
 [交错防线基地与验证](Docs/Validation/2026-11-12-siege-combat-courtyard.md)：新增 `Assets/Siege/Construction/CombatCourtyard.json`，143模块、106×90米占地，四角炮台加中央双炮核心舱、分段外墙和错位内墙、两个28×12×30米机库，新增6米高实体承重台，机库中心高度12米。Editor菜单 **Tools/HY-Sandbox/Siege/Generate combat courtyard base** 保存独立蓝图和10种烘焙结构Prefab；已存在资产不覆盖，个人副本 `Combat Courtyard` 可从Base Workshop继续编辑。正常菜单加载SiegeGameplay后部署/完整支撑通过，显式同时工作刺激6/6炮供电效率1.0；首波Finch实战已生成并攻击、核心存活，但两艘个人守军未正常完成出库，未完成清波/返航验收。最终恢复完整基地整备。默认示例与战斗配置保持原样。
 

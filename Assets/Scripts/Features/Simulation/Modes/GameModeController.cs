@@ -41,6 +41,8 @@ public sealed class GameModeController : MonoBehaviour
     private bool previousBuildEnabled;
     private bool inputCaptured;
     private string requestedSiegeDesign;
+    private TextAsset requestedSiegeExample;
+    private string requestedExampleName;
     public GameModeState State
     {
         get; private set;
@@ -82,10 +84,12 @@ public sealed class GameModeController : MonoBehaviour
     public void SelectSiege()
     {
         requestedSiegeDesign = panel.SelectedBaseName;
+        requestedSiegeExample = panel.SelectedBaseExample;
+        requestedExampleName = panel.SelectedExampleName;
         Select(false);
     }
 
-    public void LaunchSiege(string blueprintName)
+    public void LaunchSiege(string blueprintName, TextAsset example = null, string exampleName = null)
     {
         if (State != GameModeState.Building || transition != null || BuildManager.instance.IsLoadingBlocks)
         {
@@ -93,6 +97,8 @@ public sealed class GameModeController : MonoBehaviour
         }
 
         requestedSiegeDesign = blueprintName;
+        requestedSiegeExample = example;
+        requestedExampleName = exampleName;
         CaptureInput();
         State = GameModeState.Choosing;
         Select(false);
@@ -181,7 +187,7 @@ public sealed class GameModeController : MonoBehaviour
 
             draft.Park();
             MainUIPanels.instance.buildPanel.SetActive(false);
-            siege.Enter(this, buildEnvironment, requestedSiegeDesign);
+            siege.Enter(this, buildEnvironment, requestedSiegeDesign, requestedSiegeExample, requestedExampleName);
             panel.Show(false);
             State = GameModeState.Siege;
         }
@@ -312,6 +318,8 @@ public sealed class GameModeController : MonoBehaviour
         if (!failed)
         {
             requestedSiegeDesign = null;
+            requestedSiegeExample = null;
+            requestedExampleName = null;
         }
 
         modeScene = default;

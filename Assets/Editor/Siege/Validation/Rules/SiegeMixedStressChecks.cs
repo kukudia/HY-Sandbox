@@ -48,7 +48,7 @@ public static class SiegeMixedStressChecks
             BuildingRuntime[] buildings = session.Buildings.Buildings.ToArray();
             Check(
                 report,
-                "four real2048 buildings reach8192 budget",
+                "four authored2048 buildings restore8192 modules",
                 buildings.Length == 4 && buildings.All(building => building.Blocks.Count == 2048));
             Check(
                 report,
@@ -66,7 +66,7 @@ public static class SiegeMixedStressChecks
                 report,
                 "satellites preserve player faction",
                 population.Buildings.All(building => building.GetComponent<ControlUnit>().faction == UnitFaction.Player));
-            Check(report, "existing world budget rejects another module", !session.Buildings.HasCapacity(1));
+            Check(report, "former8192 total does not cap additional modules", session.Buildings.HasCapacity(1));
             Check(report, "HUD restored after loading", SceneObjectQuery.FindInActiveScene<SiegeHud>().enabled);
             foreach (BuildingRuntime building in buildings)
             {
@@ -86,7 +86,7 @@ public static class SiegeMixedStressChecks
                 report,
                 "satellite damage uses independent building topology",
                 satellite.Blocks.Count == 2047 && session.Fleet.Base.Building.Blocks.Count == 2048);
-            Check(report, "damage releases existing building capacity", session.Buildings.HasCapacity(1));
+            Check(report, "damage leaves module additions available", session.Buildings.HasCapacity(1));
             Block extraCore = satellite.Blocks.Single(block => block.uniqueId.EndsWith(":bastion-core", StringComparison.Ordinal));
             extraCore.canExplode = false;
             extraCore.GetComponent<Durability>().ApplyDamage(1000000f, null);

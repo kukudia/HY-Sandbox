@@ -11,6 +11,8 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
     [SerializeField]
     private Transform overview;
     [SerializeField]
+    private SiegeObserverCamera observerCamera;
+    [SerializeField]
     private Button returnButton;
     [SerializeField]
     private SiegeConstructionSettings settings;
@@ -83,7 +85,12 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         get; private set;
     }
 
-    public void Enter(GameModeController host, GameObject[] buildEnvironment, string blueprintName = null)
+    public void Enter(
+        GameModeController host,
+        GameObject[] buildEnvironment,
+        string blueprintName = null,
+        TextAsset example = null,
+        string exampleName = null)
     {
         owner = host;
         entered = true;
@@ -105,8 +112,18 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
 
         CameraController camera = CameraController.instance;
         camera.StopCameraMotion();
-        camera.currentMode = CameraMode.Lock;
-        camera.transform.SetPositionAndRotation(overview.position, overview.rotation);
+        if (observerCamera != null)
+        {
+            // Capture the workshop camera before taking the overview pose, so Exit restores its owner.
+            observerCamera.Enter(camera, overview);
+            observerCamera.ResetOverview();
+        }
+        else
+        {
+            camera.currentMode = CameraMode.Lock;
+            camera.transform.SetPositionAndRotation(overview.position, overview.rotation);
+        }
+
         returnButton.onClick.AddListener(ReturnOrRetreat);
         attackers = SiegeBlueprintCatalog.Load(Path.Combine(Application.persistentDataPath, "EnemyBlueprints"), 5, out _);
         if (attackers.Length == 0)
@@ -130,8 +147,8 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         }
 
         RefreshDefenders();
-        selectedName = string.IsNullOrEmpty(blueprintName) ? "Starter Bastion" : blueprintName;
-        string json = string.IsNullOrEmpty(blueprintName) ? settings.Starter.text : File.ReadAllText(SaveManager.instance.GetBaseBlueprintPath(blueprintName));
+        selectedName = string.IsNullOrEmpty(blueprintName) ? exampleName ?? "Starter Bastion" : blueprintName;
+        string json = string.IsNullOrEmpty(blueprintName) ? (example != null ? example : settings.Starter).text : File.ReadAllText(SaveManager.instance.GetBaseBlueprintPath(blueprintName));
         design = JsonUtility.FromJson<BlockDataList>(json);
         design.foundation = BuildingFootprint.Calculate(design.blocks, BuildManager.instance != null ? BuildManager.instance.FootprintPadding : 1);
         if (!settings.Validate(design, out string reason))
@@ -557,6 +574,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         }
 
         entered = false;
+        observerCamera?.Exit();
         cleanup.Stop();
         Application.runInBackground = previousBackground;
         waves?.Stop();

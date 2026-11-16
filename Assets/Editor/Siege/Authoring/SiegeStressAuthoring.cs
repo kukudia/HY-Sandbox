@@ -151,9 +151,9 @@ public static class SiegeStressAuthoring
             // 237组细分使388变为2047；独立顶层测试块有真实地板支撑，不改变核心或炮塔。
             blueprint.blocks.Add(new BlockData(cube) { id = "stress-supported-cap", resourcePath = "Blocks/1x1x1", posX = 7.5f, posY = 2.5f, posZ = 7.5f, rotW = 1f, cargo = null });
             WorldBuildingValidation.ValidateBlueprint(blueprint);
-            if (blueprint.blocks.Count != WorldBuildingValidation.MaximumBlocks)
+            if (blueprint.blocks.Count != 2048)
             {
-                throw new InvalidOperationException("Large stress recipe did not reach the current building limit.");
+                throw new InvalidOperationException("Large stress recipe did not reach its authored 2048-module workload.");
             }
 
             File.WriteAllText(LargeBlueprintPath, JsonUtility.ToJson(blueprint, true));

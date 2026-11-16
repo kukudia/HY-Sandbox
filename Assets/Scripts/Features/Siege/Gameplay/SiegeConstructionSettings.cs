@@ -1,11 +1,23 @@
 // 职责：保存阵地战基地参考造价及共享战斗配置；出战不限制尺寸、预算和高度，供Inspector独立调参。
 // 入口：Cost() / Validate()；不读写玩家蓝图。
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "HY-Sandbox/Siege Construction Settings")]
 public sealed class SiegeConstructionSettings : ScriptableObject
 {
+    [Serializable]
+    public sealed class BaseExample
+    {
+        public string name;
+        public TextAsset blueprint;
+    }
+
+    [SerializeField]
+    private BaseExample[] examples = Array.Empty<BaseExample>();
+    public IReadOnlyList<BaseExample> Examples => examples;
+
     [SerializeField]
     private SiegeSettings combat;
     [SerializeField]

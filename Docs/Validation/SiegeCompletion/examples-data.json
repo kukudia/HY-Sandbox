@@ -1,0 +1,31 @@
+{
+    "passed": true,
+    "checks": [
+        "Settings contains exactly three base examples",
+        "Official asset exists: Starter Bastion",
+        "Production design validation: 0 / Design valid: 72 modules, reference value 15778. Support checked on deploy. ",
+        "All four structural materials used: 0",
+        "Real hold and both bot modules used: 0",
+        "Distinct intended hangar layout: 0",
+        "Logical modules do not overlap: 0",
+        "Catalog references correct named asset: 0",
+        "Examples grant no free cargo: 0",
+        "Official asset exists: Skyline Logistics",
+        "Production design validation: 1 / Design valid: 82 modules, reference value 14092. Support checked on deploy. ",
+        "All four structural materials used: 1",
+        "Real hold and both bot modules used: 1",
+        "Distinct intended hangar layout: 1",
+        "Logical modules do not overlap: 1",
+        "Catalog references correct named asset: 1",
+        "Examples grant no free cargo: 1",
+        "Official asset exists: Twin Foundry",
+        "Production design validation: 2 / Design valid: 75 modules, reference value 27586. Support checked on deploy. ",
+        "All four structural materials used: 2",
+        "Real hold and both bot modules used: 2",
+        "Distinct intended hangar layout: 2",
+        "Logical modules do not overlap: 2",
+        "Catalog references correct named asset: 2",
+        "Examples grant no free cargo: 2"
+    ],
+    "error": ""
+}

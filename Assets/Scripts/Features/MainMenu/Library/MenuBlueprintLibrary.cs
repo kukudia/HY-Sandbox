@@ -46,6 +46,30 @@ public static class MenuBlueprintLibrary
         return entries;
     }
 
+    public static List<MenuBlueprintEntry> ReadBases(SiegeConstructionSettings settings)
+    {
+        var entries = new List<MenuBlueprintEntry>();
+        var included = new HashSet<TextAsset>();
+        if (settings != null)
+        {
+            foreach (SiegeConstructionSettings.BaseExample example in settings.Examples)
+            {
+                if (example != null && example.blueprint != null && included.Add(example.blueprint))
+                {
+                    entries.Add(new MenuBlueprintEntry(example.name, true, example.blueprint));
+                }
+            }
+
+            if (entries.Count == 0 && settings.Starter != null)
+            {
+                entries.Add(new MenuBlueprintEntry("Starter Bastion", true, settings.Starter));
+            }
+        }
+
+        entries.AddRange(Files(true).GetNames().OrderBy(n => n, StringComparer.OrdinalIgnoreCase).Select(n => new MenuBlueprintEntry(n, true)));
+        return entries;
+    }
+
     internal static BlueprintFileStore Files(bool building)
     {
         return building ? SaveManager.GetBaseBlueprintFiles() : SaveManager.GetPlayerBlueprintFiles();
@@ -88,11 +112,6 @@ public static class MenuBlueprintLibrary
         {
             // The menu must reject missing Prefabs too: the loader otherwise skips them and can change a saved design.
             var identities = new HashSet<string>();
-            if (data.blocks.Count > WorldBuildingValidation.MaximumBlocks)
-            {
-                throw new InvalidDataException("Blueprint exceeds the module limit.");
-            }
-
             foreach (BlockData block in data.blocks)
             {
                 if (block == null || string.IsNullOrEmpty(block.resourcePath) || BlockPrefabCache.GetPrefab(BlueprintBlockFactory.ToResourcePath(block.resourcePath)) == null)

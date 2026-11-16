@@ -55,6 +55,17 @@ def main():
         )
 
     graph(
+        "三套基地示例与自由观察",
+        "主菜单和工坊模式面板读取同一配置中的三份真实蓝图，所选TextAsset贯穿模式切换并在Stage恢复，避免回退到Starter。基地战场景预挂观察组件，右键从非UI区域捕获；菜单、文字焦点、失焦及退出释放光标，退出恢复工坊镜头。",
+        {"A": "MenuBlueprintLibrary.ReadBases", "B": "MainMenuController.RefreshLibrary",
+         "C": "GameModePanel.Refresh", "D": "GameModeController.LaunchSiege",
+         "E": "SiegeGameplayStage.Enter", "F": "SiegeObserverCamera.Enter",
+         "G": "SiegeObserverCamera.Update", "H": "SiegeObserverCamera.PointerOverInterface",
+         "I": "SiegeObserverCamera.Exit", "J": "SiegeGameplayStage.Exit"},
+        ['B --> A', 'C --> A', 'D --> E', 'E --> F', 'F -.->|正常帧输入| G',
+         'G --> H', 'J --> I'],
+    )
+    graph(
         "非凸浮岛接触与独立Player验证",
         "炮弹重叠/触发接触和舰船近场避障复用ImpactPhysics.ClosestPoint，非凸地形以bounds保守回退，避免Unity不支持的Collider.ClosestPoint调用。显式Player命令行夹具从真实菜单进入新版Siege，区分脚本伤害闭环与自然观察；结束返回工坊和菜单，不写个人蓝图。",
         {"A": "NavigationObstacleQuery.Cast", "B": "NavigationObstacleQuery.TryGetOverlapEscape",
@@ -117,7 +128,7 @@ def main():
     )
     graph(
         "模块化机库墙体与损伤快照",
-        "逻辑机库在建筑实例化前展开为真实2×2×1金属块，个人设计保持逻辑尺寸。版本化损伤快照不补墙；原设计维修复用建筑缺件恢复，并检查世界预算。",
+        "逻辑机库在建筑实例化前展开为真实2×2×1金属块，个人设计保持逻辑尺寸。版本化损伤快照不补墙；原设计维修复用建筑缺件恢复。取消2048单体/8192世界模块硬限，分帧恢复、取消回滚、金币与建筑数量限制仍保留。",
         {"A": "SiegeBase.Create", "B": "HangarShellBlueprint.Expand", "C": "HangarShellBlueprint.Tiles",
          "D": "WorldBuildingManager.RestoreBuilding", "E": "HangarShellBlueprint.ExpandState",
          "F": "BuildingRuntime.InitializeRoutine", "G": "BlueprintBlockFactory.TryRestore",
@@ -541,7 +552,7 @@ def main():
     )
     graph(
         "蓝图资源缓存与连接批处理",
-        "源码推导：玩家/建筑恢复和敌机校验/创建共享预制体缓存；SubsystemRegistration 清理缓存。连接批处理保留逐块邻接及连接检测，同步版本只在入口同步物理，分帧版本每次恢复重新同步。2ms仅为单块完成后的让出阈值，不保证帧耗时上限。",
+        "源码推导：玩家/建筑恢复和敌机校验/创建共享预制体缓存；SubsystemRegistration 清理缓存。连接探针在密集碰撞体中先检查匹配面再稳定选取；战斗机库禁用编辑整盒时，仍验证并保留真实双侧底板连接。批处理入口同步物理，分帧恢复重新同步。2ms仅为单块完成后的让出阈值，不保证帧耗时上限。",
         {
             "A": "BlueprintBlockFactory.TryRestore",
             "B": "EnemyBlueprintFactory.IsValidBlueprint",
@@ -555,12 +566,15 @@ def main():
             "J": "Block.CollectNeighbors",
             "K": "Block.CheckConnectionAfterPhysicsSync",
             "L": "BlockConnections.CheckConnection",
+            "M": "BlockConnections.FindBlockAcrossConnector",
+            "N": "BlockConnections.FindMatchingConnector",
         },
         [
             "A --> D", "B --> D", "C --> B", "C --> D", "C --> F",
             "E -.->|启动时清理资源引用| D", "G -.->|所有权检查后MoveNext| H",
             "F --> I", "H -.->|每片段统一同步物理| I", "I --> J", "I --> K",
             "K -->|跳过重复同步，仍执行探测| L",
+            "L --> M", "M -->|筛选真实相对连接面| N",
         ],
     )
     graph(

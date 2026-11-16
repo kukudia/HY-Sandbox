@@ -1,0 +1,17 @@
+{
+    "status": "passed",
+    "checks": [
+        "large restore yields before publishing the building",
+        "disposing staged restore rolls back all partial owned objects",
+        "production staged restore creates2100 modules for building0",
+        "production staged restore creates2100 modules for building1",
+        "production staged restore creates2100 modules for building2",
+        "production staged restore creates2100 modules for building3",
+        "production manager owns8400 modules and still accepts additions",
+        "all four actual large buildings activate anchored",
+        "large live building loses one real module",
+        "production refit restores a missing identity beyond8192 aggregate modules",
+        "refit preserves total module count exactly"
+    ],
+    "error": ""
+}

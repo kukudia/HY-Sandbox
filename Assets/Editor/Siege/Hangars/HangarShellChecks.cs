@@ -48,6 +48,13 @@ public static class HangarShellChecks
                 report,
                 "odd legacy height becomes even without lifting its floor",
                 normalized.y == 10 && normalized.posY == 5 && legacy.y == 9);
+            legacy.z = 21;
+            legacy.posZ = 43;
+            normalized = HangarShellBlueprint.Normalize(legacy);
+            Check(
+                report,
+                "odd horizontal legacy bay remains aligned to foundation connectors",
+                normalized.z == 22 && normalized.posZ == 43 && legacy.posZ == 43);
             string original = JsonUtility.ToJson(logical);
             BlockDataList design = HangarShellBlueprint.Expand(logical);
             Check(report, "expansion preserves the logical source", JsonUtility.ToJson(logical) == original);
@@ -84,17 +91,12 @@ public static class HangarShellChecks
             excessive.blocks[0].x = 64;
             excessive.blocks[0].y = 64;
             excessive.blocks[0].z = 64;
-            bool refused = false;
-            try
-            {
-                HangarShellBlueprint.Expand(excessive);
-            }
-            catch (InvalidOperationException)
-            {
-                refused = true;
-            }
-
-            Check(report, "oversized shell is rejected before spawning", refused);
+            BlockDataList largeShell = HangarShellBlueprint.Expand(excessive);
+            WorldBuildingValidation.ValidateBlueprint(largeShell);
+            Check(
+                report,
+                "large valid shell expands beyond the former2048 cap",
+                largeShell.blocks.Count > 2048 && largeShell.blocks.Count == 1 + HangarShellBlueprint.TileCount(new Vector3Int(64, 64, 64)));
             owner = new GameObject("Isolated modular hangar checks");
             owner.SetActive(false);
             WorldBuildingManager manager = owner.AddComponent<WorldBuildingManager>();
@@ -117,6 +119,31 @@ public static class HangarShellChecks
                 "combat has no duplicate preview colliders",
                 !building.GetComponentInChildren<HangarModule>().transform.Find("Shell Preview (Editor)").gameObject.activeSelf);
             Check(report, "the complete shell has foundation support", building.HasFullFoundationSupport());
+            HangarModule module = building.GetComponentInChildren<HangarModule>();
+            Block controller = module.GetComponent<Block>();
+            Check(
+                report,
+                "combat logical controller connects onto the real floor upper face",
+                controller.connectors.All(connector => Mathf.Approximately(connector.localPos.y, -controller.y * .5f + 1f)));
+            module.SetCombat(false);
+            Check(
+                report,
+                "editing keeps the original underside placement connectors",
+                controller.connectors.All(connector => Mathf.Approximately(connector.localPos.y, -controller.y * .5f)));
+            module.SetCombat(true);
+            Check(
+                report,
+                "switching floor mode invalidates the cached connection graph",
+                !(bool)typeof(Block).GetProperty("HasValidRuntimeConnections", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(controller));
+            Check(
+                report,
+                "switching back to combat rebuilds real floor support",
+                building.HasFullFoundationSupport());
+            FieldInfo peer = typeof(Connector).GetField("runtimePeerBlock", BindingFlags.Instance | BindingFlags.NonPublic);
+            Check(
+                report,
+                "logical controller has a matched owned floor peer",
+                controller.connectors.Any(connector => peer.GetValue(connector) is Block attached && attached.hangarOwnerId == "bay"));
             Block target = building.Blocks.Last();
             string removedId = target.uniqueId;
             building.DestroyBlock(target);
@@ -144,6 +171,26 @@ public static class HangarShellChecks
                 "production refit restores the original wall identity",
                 repaired && building.Blocks.Any(block => block.uniqueId == removedId));
             Check(report, "repaired shell returns to full original count", building.Blocks.Count == 373);
+            BlockDataList elevated = JsonUtility.FromJson<BlockDataList>(original);
+            elevated.blocks[0].posY += 6f;
+            BlockData platform = JsonUtility.FromJson<BlockData>("{}");
+            platform.id = "platform";
+            platform.resourcePath = "Blocks/CombatStructures/Armor28x6x30";
+            platform.x = 28;
+            platform.y = 6;
+            platform.z = 30;
+            platform.posY = 3f;
+            platform.rotW = 1f;
+            elevated.blocks.Add(platform);
+            elevated.foundation = BuildingFootprint.Calculate(elevated.blocks, 1);
+            BuildingRuntime raised = manager.RestoreBuilding(new WorldBuildingState { instanceId = "raised-shell-probe", blueprintName = "Raised shell probe", faction = UnitFaction.Player, position = new Vector3(12200, 2000, 12000), rotation = Quaternion.identity, blueprint = elevated, durability = new[] { 1190f, float.MaxValue }, anchored = true });
+            // RestoreBuilding stages an inactive root; explicit activation makes this
+            // assertion independent of the manager's isolated hierarchy enable state.
+            raised.Activate();
+            Check(
+                report,
+                "elevated modular bay remains supported through platform then real floor",
+                raised.HasFullFoundationSupport());
             report.passed = true;
         }
         catch (Exception error)

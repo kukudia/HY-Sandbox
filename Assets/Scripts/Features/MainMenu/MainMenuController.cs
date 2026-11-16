@@ -107,7 +107,7 @@ public sealed class MainMenuController : MonoBehaviour
         try
         {
             string previous = Selected?.Name;
-            entries = MenuBlueprintLibrary.Read(Building, Building ? siegeSettings.Starter : vehicleExample);
+            entries = Building ? MenuBlueprintLibrary.ReadBases(siegeSettings) : MenuBlueprintLibrary.Read(false, vehicleExample);
             int index = entries.FindIndex(e => e.Name == previous);
             selected = Mathf.Max(0, index);
             view.SetChoices(entries.Select(e => e.Label).ToList(), selected);
@@ -224,7 +224,7 @@ public sealed class MainMenuController : MonoBehaviour
 
         if (target == MenuDestination.Siege)
         {
-            Modes.LaunchSiege(entry.IsExample ? null : name);
+            Modes.LaunchSiege(entry.IsExample ? null : name, entry.Example, entry.IsExample ? entry.Name : null);
         }
         else
         {

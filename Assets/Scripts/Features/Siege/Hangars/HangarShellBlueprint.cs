@@ -92,9 +92,11 @@ public static class HangarShellBlueprint
         result.x = size.x;
         result.y = size.y;
         result.z = size.z;
-        result.posX = origin.x;
+        // Even-width walls require an integer horizontal centre to keep their downward
+        // connectors on the foundation half-grid. A legacy odd bay must not shift by .5m.
+        result.posX = Mathf.Floor(origin.x + .001f);
         result.posY = origin.y;
-        result.posZ = origin.z;
+        result.posZ = Mathf.Floor(origin.z + .001f);
         return result;
     }
 
@@ -134,11 +136,6 @@ public static class HangarShellBlueprint
             Quaternion rotation = new Quaternion(hangar.rotX, hangar.rotY, hangar.rotZ, hangar.rotW);
             Vector3 origin = new Vector3(hangar.posX, hangar.posY, hangar.posZ);
             List<Pose> tiles = Tiles(size, hangar.hangarEntrance);
-            if (result.blocks.Count + added.Count + tiles.Count > WorldBuildingValidation.MaximumBlocks)
-            {
-                throw new InvalidOperationException("Hangar walls exceed the 2048 building module budget. Reduce hangar sizes or count.");
-            }
-
             for (int i = 0; i < tiles.Count; i++)
             {
                 string id = hangar.id + "/shell/" + i;

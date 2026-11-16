@@ -76,18 +76,9 @@ public sealed class WorldBuildingManager : MonoBehaviour
     public bool CanPlace(BlockDataList blueprint, Vector3 position, Quaternion rotation, out string reason)
     {
         blueprint = HangarShellBlueprint.Expand(blueprint);
-        int count = blueprint?.blocks?.Count ?? 0;
-        foreach (BuildingRuntime building in buildings)
+        if (buildings.Count >= maximumBuildings)
         {
-            if (building != null)
-            {
-                count += building.Blocks.Count;
-            }
-        }
-
-        if (buildings.Count >= maximumBuildings || count > WorldBuildingValidation.MaximumWorldBlocks)
-        {
-            reason = "World building or block limit reached.";
+            reason = "World building instance limit reached.";
             return false;
         }
 
@@ -131,7 +122,7 @@ public sealed class WorldBuildingManager : MonoBehaviour
         WorldBuildingValidation.ValidateState(state);
         if (!HasCapacity(state.blueprint.blocks.Count))
         {
-            throw new InvalidOperationException("Active world building budget exceeded.");
+            throw new InvalidOperationException("Active world building instance limit exceeded.");
         }
 
         BuildingRuntime building = Stage(state, transform);
@@ -152,7 +143,7 @@ public sealed class WorldBuildingManager : MonoBehaviour
         WorldBuildingValidation.ValidateState(state);
         if (!HasCapacity(state.blueprint.blocks.Count))
         {
-            throw new InvalidOperationException("Active world building budget exceeded.");
+            throw new InvalidOperationException("Active world building instance limit exceeded.");
         }
 
         BuildingRuntime building = Instantiate(RuntimeObjectTemplates.Instance.Building, transform);
@@ -209,13 +200,9 @@ public sealed class WorldBuildingManager : MonoBehaviour
 
     public bool CanAddBlocks(int additionalBlocks)
     {
-        int count = additionalBlocks;
-        foreach (BuildingRuntime current in buildings)
-        {
-            count += current != null ? current.Blocks.Count : 0;
-        }
-
-        return count <= WorldBuildingValidation.MaximumWorldBlocks;
+        // Module count is not a gameplay budget. Staged loading still owns cancellation
+        // and rollback; this rejects only invalid requests, not large intact designs.
+        return additionalBlocks >= 0;
     }
 
     public void RemoveBuilding(BuildingRuntime building)
@@ -301,7 +288,6 @@ public sealed class WorldBuildingManager : MonoBehaviour
 
         snapshot.terrain.Restore(world.Seed, world.Data.Size);
         var identities = new HashSet<string>();
-        int blockCount = 0;
         var restoredStates = new List<WorldBuildingState>();
         foreach (WorldBuildingState original in snapshot.buildings)
         {
@@ -309,10 +295,9 @@ public sealed class WorldBuildingManager : MonoBehaviour
             WorldBuildingState state = HangarShellBlueprint.ExpandState(original);
             WorldBuildingValidation.ValidateState(state);
             restoredStates.Add(state);
-            blockCount += state.blueprint.blocks.Count;
-            if (!identities.Add(state.instanceId) || blockCount > WorldBuildingValidation.MaximumWorldBlocks)
+            if (!identities.Add(state.instanceId))
             {
-                throw new InvalidOperationException("Duplicate building identity or world block budget exceeded.");
+                throw new InvalidOperationException("Duplicate building identity.");
             }
         }
 

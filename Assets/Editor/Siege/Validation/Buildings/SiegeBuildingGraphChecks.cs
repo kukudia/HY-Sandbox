@@ -163,6 +163,7 @@ public static class SiegeBuildingGraphChecks
             verify("original connector reference restoration rebuilds graph", true);
             SparseRemovalChecks(checks, prefab, graphType, prepare, collect);
             ConnectionVisualPolicyChecks(checks, prefab, graphType, prepare, collect);
+            DenseCandidateChecks(checks, prefab, graphType, prepare, collect);
             string json = JsonUtility.ToJson(new Report { checks = checks }, true);
             Directory.CreateDirectory("Temp/Siege");
             File.WriteAllText("Temp/Siege/building-graph-checks.json", json);
@@ -173,6 +174,68 @@ public static class SiegeBuildingGraphChecks
             SimulationWorkMetrics.Enabled = false;
             Physics.queriesHitTriggers = queriesHitTriggers;
             Object.DestroyImmediate(root);
+        }
+    }
+
+    private static void DenseCandidateChecks(List<string> checks, GameObject prefab, Type graphType, MethodInfo prepare, MethodInfo collect)
+    {
+        foreach (bool building in new[]
+        {
+            false,
+            true
+        }
+
+        )
+        {
+            var root = new GameObject("Owned dense connector candidates", typeof(ControlUnit), typeof(Rigidbody));
+            root.transform.position = new Vector3(14500, 2300, 0);
+            root.GetComponent<Rigidbody>().isKinematic = true;
+            if (building)
+            {
+                root.AddComponent<BuildingRuntime>();
+            }
+
+            try
+            {
+                var blocks = new List<Block>();
+                Block source = Object.Instantiate(prefab, root.transform).GetComponent<Block>();
+                source.RefreshRuntimeData(true);
+                blocks.Add(source);
+                // More than the initial physics buffer, all geometrically nearby but
+                // without a matching enabled face. None may hide the genuine neighbor.
+                for (int i = 0; i < 12; i++)
+                {
+                    Block decoy = Object.Instantiate(prefab, root.transform).GetComponent<Block>();
+                    decoy.transform.localPosition = Vector3.right;
+                    decoy.RefreshRuntimeData(true);
+                    foreach (Connector connector in decoy.connectors)
+                    {
+                        connector.canConnect = false;
+                    }
+
+                    blocks.Add(decoy);
+                }
+
+                Block valid = Object.Instantiate(prefab, root.transform).GetComponent<Block>();
+                valid.transform.localPosition = Vector3.right;
+                valid.RefreshRuntimeData(true);
+                blocks.Add(valid);
+                object graph = Activator.CreateInstance(graphType, true);
+                prepare.Invoke(graph, new object[] { blocks, root.transform });
+                var actual = new List<Block>();
+                collect.Invoke(graph, new object[] { source, actual });
+                FieldInfo peer = typeof(Connector).GetField("runtimePeerBlock", BindingFlags.Instance | BindingFlags.NonPublic);
+                if (actual.Count != 1 || actual[0] != valid || !source.connectors.Any(face => face.isConnected && (Block)peer.GetValue(face) == valid))
+                {
+                    throw new InvalidOperationException("Dense collider candidates hid the matching connector.");
+                }
+
+                checks.Add(building ? "PASS building finds matching face through dense unmatched colliders" : "PASS vehicle finds matching face through dense unmatched colliders");
+            }
+            finally
+            {
+                Object.DestroyImmediate(root);
+            }
         }
     }
 

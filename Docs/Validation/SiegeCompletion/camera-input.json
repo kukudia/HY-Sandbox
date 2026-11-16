@@ -1,0 +1,29 @@
+{
+    "status": "passed",
+    "checks": [
+        "real Game View has focus for device input",
+        "real UI graphic is the top pointer hit",
+        "right-button press starting over UI cannot capture or move camera",
+        "free-flight press position has no actual UI graphic hit",
+        "right-button press over playfield captures real pointer",
+        "actual mouse delta rotates the view",
+        "real W input produces the expected world displacement",
+        "real S input produces the expected world displacement",
+        "real A input produces the expected world displacement",
+        "real D input produces the expected world displacement",
+        "real Q input produces the expected world displacement",
+        "real E input produces the expected world displacement",
+        "Shift increases measured travel speed rather than changing a UI value only",
+        "real wheel input adjusts free-flight speed",
+        "right-button release restores pointer for UI",
+        "real F key restores authored overview pose",
+        "camera can recapture after overview reset",
+        "visible real menu consumer releases capture and blocks held movement",
+        "observer captures before keyboard focus interrupts observation",
+        "actual enabled input field owns focus and releases existing camera capture",
+        "held pointer and keyboard input preserve text focus without observer movement or recapture",
+        "Escape releases a captured camera"
+    ],
+    "error": "",
+    "focused": true
+}

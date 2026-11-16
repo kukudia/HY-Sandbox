@@ -4237,6 +4237,7 @@ MonoBehaviour:
   retry: {fileID: 1036654347}
   cancel: {fileID: 119248095}
   baseDesigns: {fileID: 1013771390}
+  siegeSettings: {fileID: 11400000, guid: afaeea489af7bce4f9af1d88a476c7ff, type: 2}
 --- !u!225 &268184558
 CanvasGroup:
   m_ObjectHideFlags: 0

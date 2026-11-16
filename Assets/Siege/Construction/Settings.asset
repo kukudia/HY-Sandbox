@@ -12,6 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50191f65cea61514ea2f9517c547d96c, type: 3}
   m_Name: Settings
   m_EditorClassIdentifier: Assembly-CSharp::SiegeConstructionSettings
+  examples:
+  - name: Starter Bastion
+    blueprint: {fileID: 4900000, guid: e350b37447621b9449103dd05cfec965, type: 3}
+  - name: Skyline Logistics
+    blueprint: {fileID: 4900000, guid: 7740463fee0319a4894ebfff55159b0d, type: 3}
+  - name: Twin Foundry
+    blueprint: {fileID: 4900000, guid: cbd5d1bde6b8968458ad35499fda5988, type: 3}
   combat: {fileID: 11400000, guid: 7d86578a67d430847adac14d62c54446, type: 2}
   starter: {fileID: 4900000, guid: e350b37447621b9449103dd05cfec965, type: 3}
   coinsPerCell: 5

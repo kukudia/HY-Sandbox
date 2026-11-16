@@ -41,7 +41,7 @@ internal static class BuildingRefit
 
         if (!manager.CanAddBlocks(missing))
         {
-            reason = "Building repairs exceed the active world block budget.";
+            reason = "Building repair contains an invalid replacement count.";
             return false;
         }
 

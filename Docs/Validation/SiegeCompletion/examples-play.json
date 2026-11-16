@@ -1,0 +1,24 @@
+{
+    "passed": true,
+    "checks": [
+        "All expanded blocks restored: 0",
+        "Every connected building group has real downward foundation support: 0",
+        "Both real authored bot types present: 0",
+        "Three hold types on both service pads: 0",
+        "Every requested functional load receives real full-rate power: 0",
+        "Real restored surfaces retain all material identities: 0",
+        "All expanded blocks restored: 1",
+        "Every connected building group has real downward foundation support: 1",
+        "Both real authored bot types present: 1",
+        "Three hold types on both service pads: 1",
+        "Every requested functional load receives real full-rate power: 1",
+        "Real restored surfaces retain all material identities: 1",
+        "All expanded blocks restored: 2",
+        "Every connected building group has real downward foundation support: 2",
+        "Both real authored bot types present: 2",
+        "Three hold types on both service pads: 2",
+        "Every requested functional load receives real full-rate power: 2",
+        "Real restored surfaces retain all material identities: 2"
+    ],
+    "error": ""
+}

@@ -6,13 +6,11 @@ using UnityEngine;
 
 public static class WorldBuildingValidation
 {
-    public const int MaximumBlocks = 2048;
-    public const int MaximumWorldBlocks = 8192;
     public static void ValidateBlueprint(BlockDataList blueprint)
     {
-        if (blueprint == null || blueprint.foundation == null || !blueprint.foundation.IsValid || blueprint.blocks == null || blueprint.blocks.Count > MaximumBlocks)
+        if (blueprint == null || blueprint.foundation == null || !blueprint.foundation.IsValid || blueprint.blocks == null)
         {
-            throw new InvalidOperationException("Building requires a positive footprint, finite offsets and at most 2048 blocks.");
+            throw new InvalidOperationException("Building requires a positive footprint, finite offsets and a module list.");
         }
 
         var ids = new HashSet<string>();

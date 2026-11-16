@@ -57,6 +57,7 @@ public sealed class SiegeGameplayPlayerChecks : MonoBehaviour
     private string output;
     private bool soak;
     private bool roof;
+    private int exampleIndex;
     private bool finished;
     private float seconds = 180f;
     private float started;
@@ -81,6 +82,12 @@ public sealed class SiegeGameplayPlayerChecks : MonoBehaviour
         Directory.CreateDirectory(Path.GetDirectoryName(checks.output));
         checks.soak = Array.IndexOf(args, "-siege-gameplay-soak") >= 0;
         checks.roof = Array.IndexOf(args, "-siege-gameplay-roof") >= 0;
+        int exampleArgument = Array.IndexOf(args, "-siege-gameplay-example");
+        if (exampleArgument >= 0 && exampleArgument + 1 < args.Length && int.TryParse(args[exampleArgument + 1], out int exampleIndex))
+        {
+            checks.exampleIndex = Mathf.Clamp(exampleIndex, 0, 2);
+        }
+
         int duration = Array.IndexOf(args, "-siege-gameplay-seconds");
         if (duration >= 0 && duration + 1 < args.Length && float.TryParse(args[duration + 1], out float parsed))
         {
@@ -167,11 +174,16 @@ public sealed class SiegeGameplayPlayerChecks : MonoBehaviour
 
             // An explicit validation process mutates only its loaded asset in memory.
             // No editor assets or personal base files are rewritten.
-            Set(settings, "starter", new TextAsset(JsonUtility.ToJson(source)));
+            TextAsset roofExample = new TextAsset(JsonUtility.ToJson(source));
+            Set(settings, "starter", roofExample);
+            if (settings.Examples.Count > 0)
+            {
+                settings.Examples[0].blueprint = roofExample;
+            }
         }
 
         menu.Choose(MenuDestination.Siege);
-        menu.SelectBlueprint(0);
+        menu.SelectBlueprint(exampleIndex);
         Check(menu.Selected?.IsExample == true, "menu selects official example without creating personal files");
         menu.LaunchSelected();
         while (menu.Busy)
@@ -187,12 +199,23 @@ public sealed class SiegeGameplayPlayerChecks : MonoBehaviour
         Check(
             stage.Island != null && stage.Island.PlayableBounds.size.x > 0f && stage.Cleanup != null,
             "authored floating island and cleanup presentation are available");
+        int expectedHangars = stage.Base.Blueprint.blocks.Count(HangarRules.IsHangar);
         Check(
-            stage.Fleet.UsesHangars && stage.Fleet.DeploymentCount == 1,
-            "official example owns one real modular hangar");
+            stage.Fleet.UsesHangars && stage.Fleet.DeploymentCount == expectedHangars,
+            "selected official example exposes all its actual modular hangars");
         Check(
-            stage.Fleet.GetHangar(0).Entrance == (roof ? HangarEntrance.Roof : HangarEntrance.Front),
-            "deployed hangar has requested physical entrance direction");
+            stage.Base.Blueprint.siegeCoreId == JsonUtility.FromJson<BlockDataList>(menu.Selected.Example.text).siegeCoreId,
+            "menu-selected example reaches the production stage without falling back to Starter");
+        bool entrancesMatch = true;
+        for (int slot = 0; slot < expectedHangars; slot++)
+        {
+            HangarModule actual = stage.Fleet.GetHangar(slot);
+            string identity = actual.GetComponent<Block>().uniqueId;
+            BlockData intended = stage.Base.Blueprint.blocks.Find(block => identity == block.id || identity.EndsWith(":" + block.id, StringComparison.Ordinal));
+            entrancesMatch &= intended != null && actual.Entrance == intended.hangarEntrance;
+        }
+
+        Check(entrancesMatch, "every deployed hangar retains its identity-matched physical entrance direction");
         Check(
             stage.Base.Building.HasFullFoundationSupport(),
             "deployed modular base has actual foundation support");

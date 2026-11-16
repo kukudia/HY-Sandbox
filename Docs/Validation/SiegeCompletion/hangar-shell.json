@@ -1,0 +1,32 @@
+{
+    "passed": true,
+    "checks": [
+        "odd legacy height becomes even without lifting its floor",
+        "odd horizontal legacy bay remains aligned to foundation connectors",
+        "expansion preserves the logical source",
+        "20x10x24 bay creates 372 ordinary wall blocks",
+        "wall blocks retain real 2x2x1 geometry and metal material",
+        "expanded design is idempotent",
+        "roof layout count and price share the actual tiling",
+        "roof expansion retains direction and does not edit the source",
+        "old JSON defaults to a front entrance",
+        "unsupported entrance enum is rejected before deployment",
+        "large valid shell expands beyond the former2048 cap",
+        "production restore expands every wall into building ownership",
+        "legacy root damage survives shell migration",
+        "combat has no duplicate preview colliders",
+        "the complete shell has foundation support",
+        "combat logical controller connects onto the real floor upper face",
+        "editing keeps the original underside placement connectors",
+        "switching floor mode invalidates the cached connection graph",
+        "switching back to combat rebuilds real floor support",
+        "logical controller has a matched owned floor peer",
+        "one wall is independently destructible while the hangar survives",
+        "damaged capture preserves version and the missing tile",
+        "loading a damaged snapshot never regenerates holes",
+        "production refit restores the original wall identity",
+        "repaired shell returns to full original count",
+        "elevated modular bay remains supported through platform then real floor"
+    ],
+    "error": ""
+}

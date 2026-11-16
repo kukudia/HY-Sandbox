@@ -19,8 +19,14 @@ public sealed class GameModePanel : MonoBehaviour
     private Button cancel;
     [SerializeField]
     private Dropdown baseDesigns;
+    [SerializeField]
+    private SiegeConstructionSettings siegeSettings;
+    private System.Collections.Generic.List<MenuBlueprintEntry> baseEntries;
     private GameModeController owner;
-    public string SelectedBaseName => baseDesigns != null && baseDesigns.value > 0 ? baseDesigns.options[baseDesigns.value].text : null;
+    private MenuBlueprintEntry SelectedBase => baseEntries != null && baseDesigns != null && baseDesigns.value >= 0 && baseDesigns.value < baseEntries.Count ? baseEntries[baseDesigns.value] : null;
+    public string SelectedBaseName => SelectedBase != null && !SelectedBase.IsExample ? SelectedBase.Name : null;
+    public TextAsset SelectedBaseExample => SelectedBase?.Example;
+    public string SelectedExampleName => SelectedBase?.IsExample == true ? SelectedBase.Name : null;
     public bool IsVisible => group != null && group.alpha > 0f;
 
     public void Bind(GameModeController controller)
@@ -41,14 +47,9 @@ public sealed class GameModePanel : MonoBehaviour
         {
             if (owner.State == GameModeState.Choosing && baseDesigns != null)
             {
-                SaveManager.instance.GetAllBaseBlueprintNames();
+                baseEntries = MenuBlueprintLibrary.ReadBases(siegeSettings);
                 baseDesigns.ClearOptions();
-                var names = new System.Collections.Generic.List<string>
-                {
-                    "Starter Bastion [EXAMPLE]"
-                };
-                names.AddRange(SaveManager.instance.baseBlueprints);
-                baseDesigns.AddOptions(names);
+                baseDesigns.AddOptions(baseEntries.ConvertAll(entry => entry.Label));
             }
 
             transform.SetAsLastSibling();

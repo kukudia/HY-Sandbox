@@ -40,6 +40,7 @@ public sealed class HangarModule : MonoBehaviour
     private bool doorRequested;
     private float doorFraction;
     private Vector3Int connectionSize;
+    private float connectionFloorOffset;
     private readonly Collider[] doorwayOccupants = new Collider[64];
     public Vector3 InnerSize
     {
@@ -106,21 +107,7 @@ public sealed class HangarModule : MonoBehaviour
 
         block.canSpawnConnector = false;
         block.connectorParent = transform;
-        // 只有底板向下连接，避免把净空或可开合的门当成承重连接面。
-        Vector3Int dimensions = new Vector3Int(block.x, block.y, block.z);
-        if (connectionSize != dimensions || block.connectors.Count != block.x * block.z)
-        {
-            block.connectors.Clear();
-            connectionSize = dimensions;
-            for (int x = 0; x < block.x; x++)
-            {
-                for (int z = 0; z < block.z; z++)
-                {
-                    block.connectors.Add(new Connector { name = $"Down {x * block.z + z + 1}", canConnect = true, connectType = ConnectType.Down, localPos = new Vector3(x - (block.x - 1) * 0.5f, -block.y * 0.5f, z - (block.z - 1) * 0.5f), normal = Vector3.down, order = x * block.z + z + 1 });
-                }
-            }
-        }
-
+        RefreshFloorConnections();
         if (block.raycastCollider != null)
         {
             block.raycastCollider.size = outer - Vector3.one * 0.1f;
@@ -129,6 +116,60 @@ public sealed class HangarModule : MonoBehaviour
 
         ApplyDoorPose();
         ApplyPresentation();
+    }
+
+    private void RefreshFloorConnections()
+    {
+        // Expanded combat bays are logical controllers, not a second solid floor.
+        // Link down onto the real floor's upper face; its lower face alone owns
+        // platform/foundation support. Sharing that lower face competes for one peer.
+        float floorOffset = combat && GetComponentInParent<BuildingRuntime>() != null ? 1f : 0f;
+        Vector3Int dimensions = new Vector3Int(block.x, block.y, block.z);
+        bool shapeChanged = connectionSize != dimensions || block.connectors.Count != block.x * block.z;
+        if (!shapeChanged && Mathf.Approximately(connectionFloorOffset, floorOffset))
+        {
+            return;
+        }
+
+        block.InvalidateRuntimeConnections();
+        connectionSize = dimensions;
+        connectionFloorOffset = floorOffset;
+        if (shapeChanged)
+        {
+            block.connectors.Clear();
+        }
+
+        for (int x = 0; x < block.x; x++)
+        {
+            for (int z = 0; z < block.z; z++)
+            {
+                int index = x * block.z + z;
+                Connector connector;
+                if (shapeChanged)
+                {
+                    connector = new Connector
+                    {
+                        name = $"Down {index + 1}",
+                        canConnect = true,
+                        connectType = ConnectType.Down,
+                        normal = Vector3.down,
+                        order = index + 1
+                    };
+                    block.connectors.Add(connector);
+                }
+                else
+                {
+                    // Keep paired objects during mode transitions so the shared graph
+                    // can release/rebuild both sides instead of leaving stale peers.
+                    connector = block.connectors[index];
+                }
+
+                connector.localPos = new Vector3(x - (block.x - 1) * .5f, -block.y * .5f + floorOffset, z - (block.z - 1) * .5f);
+                // Perimeter floor faces belong to the physical walls; the logical
+                // controller attaches inside the bay without taking their one peer.
+                connector.canConnect = floorOffset == 0f || (x > 0 && x < block.x - 1 && z > 0 && z < block.z - 1);
+            }
+        }
     }
 
     public bool IsCapacityRenderer(Renderer renderer)
@@ -164,6 +205,7 @@ public sealed class HangarModule : MonoBehaviour
             block = GetComponent<Block>();
         }
 
+        RefreshFloorConnections();
         if (block.raycastCollider != null)
         {
             block.raycastCollider.enabled = !active;
