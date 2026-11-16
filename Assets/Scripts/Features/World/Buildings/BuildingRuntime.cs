@@ -237,6 +237,20 @@ public sealed class BuildingRuntime : MonoBehaviour
 
     public void DestroyBlock(Block block)
     {
+        if (block != null && block.canExplode)
+        {
+            // Own the outer scope before disabling the source, so its support refresh also
+            // completes before queued blast impulses are applied to newly created debris.
+            manager.ApplyBuildingLoss(this, () => DestroyBlockCore(block));
+        }
+        else
+        {
+            DestroyBlockCore(block);
+        }
+    }
+
+    private void DestroyBlockCore(Block block)
+    {
         if (block == null || !blocks.Remove(block))
         {
             return;
@@ -247,14 +261,7 @@ public sealed class BuildingRuntime : MonoBehaviour
         {
             // Keep building and construct destruction consistent, including lethal impacts.
             bool explode = block.canExplode;
-            Vector3 center = block.transform.position;
-            float radius = block.explosionRadius;
-            float force = block.explosionForce;
-            if (explode)
-            {
-                VisualEffectsManager.TryPlayBlockExplosion(block);
-            }
-            else
+            if (!explode)
             {
                 VisualEffectsManager.TryPlayBlockRemoved(block);
             }
@@ -265,8 +272,7 @@ public sealed class BuildingRuntime : MonoBehaviour
             structureDirty = true;
             if (explode)
             {
-                manager.DamageSphere(center, radius, force);
-                manager.World?.DamageSphere(center, radius, force);
+                manager.ExplodeBlock(block);
             }
 
             BlockDestroyed?.Invoke(block);

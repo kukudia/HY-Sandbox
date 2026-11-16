@@ -252,7 +252,7 @@ def main():
     )
     graph(
         "CSV 方块配置与质量",
-        "源码推导：CSV 仅管理 25 个常用参数（另有 4 个身份列），高级参数由 Prefab Inspector 管理；Editor 导入后延迟校验、备份并同步 Prefab。旧 density 列已移除，Block 字段保留兼容；BotContainer 要求最低功率等于额定功率，供电只作为起飞门槛，离仓 Bot 继续任务/返航。OnValidate 只排队，不在导入线程写资产；Awake 提前应用配置，随后各组件初始化。空 mass 为体积质量，存档恢复保留实例尺寸再刷新派生数据；运行时不执行制作期组件创建和连接重建，尺寸变化时才重建连接。",
+        "源码推导：CSV 仅管理 26 个常用参数（另有 4 个身份列），高级参数由 Prefab Inspector 管理；Editor 导入后延迟校验、备份并同步 Prefab。旧 density 列已移除，Block 字段保留兼容；BotContainer 要求最低功率等于额定功率，供电只作为起飞门槛，离仓 Bot 继续任务/返航。OnValidate 只排队，不在导入线程写资产；Awake 提前应用配置，随后各组件初始化。空 mass 为体积质量，存档恢复保留实例尺寸再刷新派生数据；运行时不执行制作期组件创建和连接重建，尺寸变化时才重建连接。",
         {
             "A": "BlockCsvPostprocessor.OnPostprocessAllAssets",
             "B": "BlockCsvAuthoring.QueueBake",
@@ -697,7 +697,7 @@ def main():
     )
     graph(
         "战斗、损伤、爆炸与残骸清理",
-        "源码推导：Turret独立索敌后申报功率；激光即时命中且无冲量，实体炮塔先按相对速度求寿命/射程内的提前量，再每炮口生成一发并由物理扫掠命中。碰撞以法向冲量限制质量，按恢复系数扣除反弹能量，动态双方按质心能量份额分摊；CSV默认无半血限幅或碰撞冷却。启用canExplode的单位/建筑方块遭撞击致死同样爆炸，不按DestroyedByCollision排除；单位爆炸仍限制冲量并保护碎片碰撞，建筑沿用范围伤害和地形破坏批次。延迟清理保留原生命周期。",
+        "源码推导：Turret独立索敌后申报功率；激光即时命中且无冲量，实体炮塔先按相对速度求寿命/射程内的提前量，再每炮口生成一发并由物理扫掠命中。碰撞以法向冲量限制质量，按恢复系数扣除反弹能量，动态双方按质心能量份额分摊；CSV默认无半血限幅或碰撞冷却。启用canExplode的单位/建筑方块遭撞击致死同样爆炸，不按DestroyedByCollision排除；舰船/建筑共用ExplosionDamageSession排队结算同PhysicsScene的模块中心径向伤害及体素伤害，连锁完成后统一刷新建筑支撑与舰船重组，再施加限幅冲量和碎片碰撞保护。伤害与冲量独立配置，友伤开启且不做遮挡判定。延迟清理保留原生命周期。",
         {
             "A": "Turret.FixedUpdate",
             "B": "TurretTargetSelector.FindNearestTarget",
@@ -733,6 +733,11 @@ def main():
             "AF": "BuildingRuntime.DestroyBlock",
             "AG": "ProjectileTurret.GetAimPosition",
             "AH": "ProjectileIntercept.TryGetTime",
+            "AI": "ExplosionDamageSession.ApplyExplosion",
+            "AJ": "ExplosionDamageSession.Apply",
+            "AK": "ExplosionDamageSession.FinishBatch",
+            "AL": "WorldBuildingManager.ExplodeBlock",
+            "AM": "ProceduralVoxelWorld.DamageSphere",
         },
         [
             "A --> B",
@@ -762,10 +767,17 @@ def main():
             "G -->|载具耐久为0| H",
             "D -->|建筑耐久为0| AF",
             "G -->|建筑耐久为0| AF",
-            "H -->|可爆炸且非碰撞致死| I",
+            "H -->|可爆炸| I",
+            "AF -->|爆炸源先进入外层批次| AL",
+            "AL --> I",
             "I --> J",
-            "I --> K",
-            "I --> L",
+            "I --> AI",
+            "AI --> AJ",
+            "AJ -->|模块中心径向伤害，连锁入队| D",
+            "AJ --> AM",
+            "AI -->|连锁队列清空| AK",
+            "AK -->|各脏单位一次| K",
+            "AK -->|拓扑完成后| L",
             "H --> O",
             "H -->|敌方驾驶舱| M",
             "M -.->|协程等待并复核| N",
@@ -1247,7 +1259,7 @@ def main():
             "J": "Block.CollectNeighbors",
             "K": "WorldBuildingManager.CreateDebris",
             "L": "WorldBuildingManager.DamageSphere",
-            "M": "WorldBuildingDamage.Apply",
+            "M": "ExplosionDamageSession.ApplyBuildings",
             "W": "BuildingRuntime.EndDamageBatch",
             "X": "BlockConnectionGraph.Prepare",
             "Y": "BlockGroupManager.GroupPreparedBlocks",
@@ -1273,7 +1285,7 @@ def main():
             "A -.->|TerrainChanged事件| B", "B -.->|待检查集合| C", "C --> D",
             "C -->|支撑低于阈值| E", "E --> F", "G -->|建筑耐久为0| H",
             "H -->|标记脏结构| W", "W -->|最外层批次结束| AC", "AC --> I", "I -->|虚拟地面连接点| Z", "Z -->|缓存缺失| R", "I --> X", "X --> AA", "AA -->|几何失效或成员改变| AD", "AD -->|每块准备几何邻接| J", "I -->|与载具共用BFS| Y", "Y -->|经Traverse和Block| AB", "I -->|断裂组| K", "K --> AE", "K --> AF",
-            "H -->|爆炸方块| L", "L --> M", "M -->|顺序结算，连锁入队| G",
+            "L -->|建筑刷子局部伤害| M", "M -->|同域爆炸另见战斗图| G",
             "K -->|禁用/重挂接及预算判断前| S", "S --> AG", "H --> AG", "AG --> U", "AG --> T", "S -->|敌方残骸概率| V", "T -->|建筑既有存量或载具阵营配置| V",
             "N -.->|Regenerated事件| O", "O --> P", "O -->|有效初始布局| Q",
         ],

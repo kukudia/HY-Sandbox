@@ -37,12 +37,13 @@ public static class BlockCsvChecks
             BlockCsvDocument.Parse(BlockCsvDocument.WriteRecords(records));
             Check(
                 report,
-                records.Count == 26 && records[0].Count == 29,
-                "CSV has 25 Block rows, 25 parameter columns and 4 identity columns");
+                records.Count == 26 && records[0].Count == BlockDataTableSchema.CreateColumns().Count + BlockCsvDocument.Identity.Length,
+                "CSV has 25 Block rows and every schema/identity column");
             Set(records, "MainThruster", "Block.mass", "123.5");
             Set(records, "MainThruster", "Block.cost", "789");
             Set(records, "MainThruster", "Durability.maxDurability", "321");
             Set(records, "MainThruster", "Thruster.maxThrust", "456");
+            Set(records, "MainThruster", "Block.explosionDamage", "43");
             float inspectorDamage;
             using (var data = new SerializedObject(Load("MainThruster").GetComponent<Durability>()))
             {
@@ -58,6 +59,10 @@ public static class BlockCsvChecks
             Write(records);
             BlockCsvAuthoring.Bake();
             var thruster = Load("MainThruster");
+            Check(
+                report,
+                Mathf.Approximately(thruster.GetComponent<Block>().explosionDamage, 43f),
+                "Independent blast damage persists through CSV baking");
             Check(
                 report,
                 thruster.GetComponent<Block>().mass == 123.5f && thruster.GetComponent<Block>().UseCustomMass && thruster.GetComponent<Block>().cost == 789,

@@ -29,6 +29,8 @@ public class Block : MonoBehaviour
     public float damageMultiplier = 10f; // 伤害系数（速度越大伤害越高）
     [Header("Explosion Settings")]
     public float explosionForce = 100f; // 爆炸力
+    [Min(0f), Tooltip("爆炸中心的直接伤害；按距离衰减，与物理冲量分别配置。")]
+    public float explosionDamage = 100f;
     public float explosionRadius = 5f; // 爆炸半径
     [Range(0f, 1f)]
     public float explosionDisconnectProbability = 0.35f;
@@ -47,6 +49,10 @@ public class Block : MonoBehaviour
     public string uniqueId;
     private StatusIcon _icon;
     private BlockConnections _connections;
+    internal bool ExplosionQueued
+    {
+        get; set;
+    }
     private BlockConnections Connections => _connections ?? (_connections = new BlockConnections(this));
     internal bool CanParticipateInConnections => Connections.CanParticipate;
     internal bool HasValidRuntimeConnections => Connections.RuntimeLinksValid;
@@ -68,6 +74,7 @@ public class Block : MonoBehaviour
 
     private void OnEnable()
     {
+        ExplosionQueued = false;
         InvalidateRuntimeConnections();
     }
 

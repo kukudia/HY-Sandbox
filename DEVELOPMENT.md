@@ -1,5 +1,11 @@
 # HY-Sandbox 开发入口
 
+## 统一爆炸伤害（2026-11-16）
+
+舰船与建筑爆炸统一由 `DestroyManager` / `ExplosionDamageSession` 排队结算：同 PhysicsScene 的模块按中心距离受一次径向伤害，体素地形同步受损；连锁结束后各建筑一次支撑刷新、各舰船一次重组，随后施加原有有限冲量。独立 WorldLab 使用同一会话实现。保留友伤、攻击者归因、碰撞保护与残骸生命周期，不添加遮挡规则。
+
+`Block.explosionDamage` / CSV 爆炸伤害与 `explosionForce` 分开。此次制作迁移按原冲量×0.1且上限100设置50/80/100的初始伤害；这是有意的暂定平衡，原建筑直接使用500/800冲量作为伤害的行为已改变。跨对象14项、建筑18项、物理33项、CSV Play4项和Edit17项通过；实际多舰平衡与视觉仍待验证。详见 [验证记录](Docs/Validation/2026-11-16-shared-explosions.md)。
+
 ## Siege 起降推进反馈（2026-11-16）
 
 `SiegeReturnFlight` 继续负责按实际供电能力辅助施力；导引通过 `Thruster.BeginGuidance/SetGuidanceOutput/EndGuidance` 独占推进执行，并将实际分配的水平/升力输出交给现有喷口表现。普通推进器物理回调在导引期间不重复加力、不覆盖喷焰；结束、取消及禁用释放归属和输出。通用推进器在导引时同步转动喷口，未改变普通驾驶输入、供电请求或悬浮算法。

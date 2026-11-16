@@ -1,11 +1,30 @@
-// 职责：在源单位内概率断链，并对受影响刚体施加有限冲量及双向碰撞保护。
+// 职责：在源单位内概率断链，并在源PhysicsScene对受影响刚体施加有限冲量及双向碰撞保护。
 // 入口：DisconnectBlocksInExplosionRange() / ApplyExplosionForce()；由 DestroyManager 分别在重组前后调用。
-// 约束：爆炸不直接造成伤害；原始 ownerUnitId 用于查回重组后的同源碎片。
+// 约束：本类仅负责断链与冲量；直接伤害由ExplosionDamageSession统一结算。
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 internal static class ExplosionPropagation
 {
+    internal const float DefaultUpwardsModifier = 1.2f;
+    internal const float DefaultImpulseScale = 0.15f;
+    internal const float DefaultMaximumSpeedChange = 3f;
+    internal const float DefaultCollisionProtection = 3f;
+    internal static void ApplyDefaultExplosionForce(Block block)
+    {
+        ControlUnit unit = block != null ? block.GetComponentInParent<ControlUnit>() : null;
+        ApplyExplosionForce(
+            block,
+            unit != null ? unit.runtimeUnitId : string.Empty,
+            unit != null ? unit.faction : UnitFaction.Enemy,
+            block != null ? block.transform.position : Vector3.zero,
+            DefaultUpwardsModifier,
+            DefaultImpulseScale,
+            DefaultMaximumSpeedChange,
+            DefaultCollisionProtection);
+    }
+
     internal static void DisconnectBlocksInExplosionRange(ControlUnit unit, Block block, Vector3 explosionPosition)
     {
         if (unit == null || block == null)
@@ -67,9 +86,17 @@ internal static class ExplosionPropagation
 
         float radius = block.explosionRadius;
         HashSet<Rigidbody> bodies = new HashSet<Rigidbody>();
-        Collider[] colliders = Physics.OverlapSphere(explosionPosition, radius, Physics.AllLayers, QueryTriggerInteraction.Ignore);
-        foreach (Collider collider in colliders)
+        PhysicsScene physics = block.gameObject.scene.GetPhysicsScene();
+        Collider[] colliders = new Collider[128];
+        int count;
+        while ((count = physics.OverlapSphere(explosionPosition, radius, colliders, Physics.AllLayers, QueryTriggerInteraction.Ignore)) == colliders.Length)
         {
+            System.Array.Resize(ref colliders, checked(colliders.Length * 2));
+        }
+
+        for (int index = 0; index < count; index++)
+        {
+            Collider collider = colliders[index];
             if (collider == null)
             {
                 continue;
@@ -82,41 +109,19 @@ internal static class ExplosionPropagation
             }
         }
 
-        // A grouped Rigidbody can be centered outside the radius while one of its child blocks is inside it.
-        if (!string.IsNullOrEmpty(ownerUnitId))
-        {
-            RuntimeUnitMember[] members = Object.FindObjectsByType<RuntimeUnitMember>();
-            foreach (RuntimeUnitMember member in members)
-            {
-                if (member == null || member.ownerUnitId != ownerUnitId)
-                {
-                    continue;
-                }
-
-                Block memberBlock = member.GetComponent<Block>();
-                ControlUnit group = member.GetComponentInParent<ControlUnit>();
-                if (memberBlock == null || group == null)
-                {
-                    continue;
-                }
-
-                if ((memberBlock.transform.position - explosionPosition).sqrMagnitude <= radius * radius)
-                {
-                    Rigidbody body = group.GetComponent<Rigidbody>();
-                    if (body != null)
-                    {
-                        bodies.Add(body);
-                        group.faction = ownerFaction;
-                    }
-                }
-            }
-        }
-
+        // The source PhysicsScene query already includes child shapes whose body centre is
+        // outside the radius; no global ownership scan is necessary after regrouping.
         foreach (Rigidbody rb in bodies)
         {
             if (rb == null || rb.isKinematic)
             {
                 continue;
+            }
+
+            ControlUnit owner = rb.GetComponent<ControlUnit>();
+            if (owner != null && !string.IsNullOrEmpty(ownerUnitId) && owner.runtimeUnitId == ownerUnitId)
+            {
+                owner.faction = ownerFaction;
             }
 
             Vector3 forcePoint = rb.worldCenterOfMass;

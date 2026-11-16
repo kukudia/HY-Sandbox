@@ -72,6 +72,7 @@ P1：优先处理的数据安全问题；P2：条件性行为/性能风险或关
 
 - 触发/后果：引入LocalPhysicsMode或同时运行隔离测试世界；导航使用所属PhysicsScene，弹丸/维修仍有静态Physics查询，货仓候选使用全局Active。可能跨场景选目标或漏掉所在世界。
 - 证据：[NavigationObstacleQuery](../Assets/Scripts/Features/Navigation/Local/NavigationObstacleQuery.cs)、[TurretProjectile](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs)、[RepairTargetSearch](../Assets/Scripts/Features/Bots/Repair/RepairTargetSearch.cs)、[CargoHold.FindReceiver](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs)。当前共享默认物理场景不等于已发生跨世界错误。
+- 2026-11-16：统一爆炸已限定源PhysicsScene，双隔离场景同坐标验证伤害及冲量均不串域；14项跨对象、18项建筑和33项物理回归通过。见 [统一爆炸验证](Validation/2026-11-16-shared-explosions.md)。
 - 下一步：规定查询/注册归属，双物理场景同坐标夹具验证弹丸、维修、回收和导航只作用于所属域。
 
 ### R12 · P2 · 条件性风险：输入管理依赖完整场景服务

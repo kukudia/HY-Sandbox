@@ -95,6 +95,7 @@ public static class BlockDataTableSchema
             64);
         AddBoolean<Block>(columns, "基础", "canExplode", "销毁时爆炸");
         AddFloat<Block>(columns, "基础", "explosionForce", "爆炸力度");
+        AddFloat<Block>(columns, "基础", "explosionDamage", "爆炸伤害", 0);
         AddFloat<Block>(columns, "基础", "explosionRadius", "爆炸半径 m");
         AddFloat<Thruster>(columns, "动力", "maxThrust", "最大推力 N");
         AddFloat<PowerGeneratingUnit>(columns, "动力", "outputPower", "发电量");

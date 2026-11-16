@@ -1297,6 +1297,7 @@ MonoBehaviour:
   collisionSpeedThreshold: 5
   damageMultiplier: 10
   explosionForce: 500
+  explosionDamage: 50
   explosionRadius: 5
   explosionDisconnectProbability: 0.5
   resourcePath: 

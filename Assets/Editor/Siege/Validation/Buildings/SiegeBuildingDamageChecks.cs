@@ -94,6 +94,7 @@ public static class SiegeBuildingDamageChecks
                 block.canExplode = true;
                 block.explosionRadius = 2f;
                 block.explosionForce = 1000f;
+                block.explosionDamage = 1000f;
             }
 
             Vector3 center = tower.Blocks[0].transform.position;

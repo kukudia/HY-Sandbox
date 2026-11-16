@@ -28,7 +28,7 @@ public sealed class WorldBuildingManager : MonoBehaviour
     private readonly List<BuildingRuntime> buildings = new List<BuildingRuntime>();
     private readonly List<GameObject> debris = new List<GameObject>();
     private readonly HashSet<BuildingRuntime> pendingSupport = new HashSet<BuildingRuntime>();
-    private readonly WorldBuildingDamage damage = new WorldBuildingDamage();
+    private readonly ExplosionDamageSession damage = new ExplosionDamageSession();
     private readonly WorldBuildingRenderCache renderCache = new WorldBuildingRenderCache();
     public bool SimulationEnabled { get; internal set; } = true;
     internal float LoadingFrameBudgetMilliseconds { get; set; } = 2f;
@@ -425,7 +425,45 @@ public sealed class WorldBuildingManager : MonoBehaviour
 
     public void DamageSphere(Vector3 center, float radius, float damage)
     {
-        this.damage.Apply(buildings, center, radius, damage);
+        if (DestroyManager.instance != null)
+        {
+            DestroyManager.instance.DamageBuildings(buildings, center, radius, damage);
+        }
+        else
+        {
+            this.damage.ApplyBuildings(buildings, center, radius, damage);
+        }
+    }
+
+    internal void ExplodeBlock(Block block)
+    {
+        if (DestroyManager.instance != null)
+        {
+            DestroyManager.instance.ExplodeBlock(block);
+        }
+        else if (!block.ExplosionQueued)
+        {
+            // Standalone WorldLab shares damage rules without requiring the gameplay scene.
+            block.ExplosionQueued = true;
+            VisualEffectsManager.TryPlayBlockExplosion(block);
+            damage.ApplyExplosion(
+                block,
+                block.GetComponent<Durability>()?.LastAttacker,
+                null,
+                () => ExplosionPropagation.ApplyDefaultExplosionForce(block));
+        }
+    }
+
+    internal void ApplyBuildingLoss(BuildingRuntime building, Action destroy)
+    {
+        if (DestroyManager.instance != null)
+        {
+            DestroyManager.instance.ApplyBuildingLoss(building, destroy);
+        }
+        else
+        {
+            damage.ApplyBuildingLoss(building, destroy);
+        }
     }
 
     internal void CreateDebris(List<Block> group, Rigidbody source, RigidbodyMotion motion)

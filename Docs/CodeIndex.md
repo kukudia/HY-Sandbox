@@ -60,6 +60,7 @@ HY-Sandbox/
 │   │   │   ├── EnemyAvoidanceLabAuthoring.cs
 │   │   │   ├── EnemyLabComplexAuthoring.cs
 │   │   │   ├── EnemyLabExpansionAuthoring.cs
+│   │   │   ├── ExplosionAuthoring.cs
 │   │   │   ├── SkirmishArenaAuthoring.cs
 │   │   │   ├── Diagnostics/
 │   │   │   │   ├── FlightCourseChecks.cs
@@ -80,6 +81,7 @@ HY-Sandbox/
 │   │   │       ├── EnemyLabExpansionChecks.cs
 │   │   │       ├── EnemyLabPlayChecks.cs
 │   │   │       ├── EnemyLabViewChecks.cs
+│   │   │       ├── ExplosionIntegrationChecks.cs
 │   │   │       ├── SkirmishArenaChecks.cs
 │   │   │       ├── SkirmishPerformanceChecks.cs
 │   │   │       ├── TurretFlightPlayProbe.cs
@@ -311,6 +313,7 @@ HY-Sandbox/
 │           │   ├── Damage/
 │           │   │   ├── CollisionDamageResolver.cs
 │           │   │   ├── Durability.cs
+│           │   │   ├── ExplosionDamageSession.cs
 │           │   │   ├── ExplosionPropagation.cs
 │           │   │   └── SalvageCleanupSession.cs
 │           │   ├── Enemies/
@@ -569,8 +572,7 @@ HY-Sandbox/
 │               │   ├── Presentation/
 │               │   │   └── WorldBuildingRenderCache.cs
 │               │   └── Topology/
-│               │       ├── BuildingRefit.cs
-│               │       └── WorldBuildingDamage.cs
+│               │       └── BuildingRefit.cs
 │               ├── Outposts/
 │               │   ├── EnemyOutpostData.cs
 │               │   ├── OutpostEncounterDirector.cs
@@ -991,12 +993,12 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BlockCsvChecks | [`string RunEditMode()`](../Assets/Editor/Building/BlockDataTables/BlockCsvChecks.cs#L21) | public static |
-| BlockCsvChecks | [`string RunPlayMode()`](../Assets/Editor/Building/BlockDataTables/BlockCsvChecks.cs#L200) | public static |
-| BlockCsvChecks | [`GameObject Load(string name)`](../Assets/Editor/Building/BlockDataTables/BlockCsvChecks.cs#L250) | private static |
-| BlockCsvChecks | [`void Set(List<List<string>> records, string name, string field, string value)`](../Assets/Editor/Building/BlockDataTables/BlockCsvChecks.cs#L255) | private static |
-| BlockCsvChecks | [`void Write(List<List<string>> records)`](../Assets/Editor/Building/BlockDataTables/BlockCsvChecks.cs#L261) | private static |
-| BlockCsvChecks | [`void Check(Report report, bool condition, string description)`](../Assets/Editor/Building/BlockDataTables/BlockCsvChecks.cs#L267) | private static |
-| BlockCsvChecks | [`string SaveReport(Report report, string name)`](../Assets/Editor/Building/BlockDataTables/BlockCsvChecks.cs#L277) | private static |
+| BlockCsvChecks | [`string RunPlayMode()`](../Assets/Editor/Building/BlockDataTables/BlockCsvChecks.cs#L205) | public static |
+| BlockCsvChecks | [`GameObject Load(string name)`](../Assets/Editor/Building/BlockDataTables/BlockCsvChecks.cs#L255) | private static |
+| BlockCsvChecks | [`void Set(List<List<string>> records, string name, string field, string value)`](../Assets/Editor/Building/BlockDataTables/BlockCsvChecks.cs#L260) | private static |
+| BlockCsvChecks | [`void Write(List<List<string>> records)`](../Assets/Editor/Building/BlockDataTables/BlockCsvChecks.cs#L266) | private static |
+| BlockCsvChecks | [`void Check(Report report, bool condition, string description)`](../Assets/Editor/Building/BlockDataTables/BlockCsvChecks.cs#L272) | private static |
+| BlockCsvChecks | [`string SaveReport(Report report, string name)`](../Assets/Editor/Building/BlockDataTables/BlockCsvChecks.cs#L282) | private static |
 
 ## Assets/Editor/Building/BlockDataTables/BlockCsvPostprocessor.cs
 
@@ -1228,6 +1230,15 @@ HY-Sandbox/
 | EnemyLabExpansionAuthoring | [`Transform Group(Transform parent, string name)`](../Assets/Editor/Combat/EnemyLabExpansionAuthoring.cs#L236) | private static |
 | EnemyLabExpansionAuthoring | [`GameObject Box(Transform root, string name, Vector3 position, Vector3 size, Material material)`](../Assets/Editor/Combat/EnemyLabExpansionAuthoring.cs#L244) | private static |
 
+## Assets/Editor/Combat/ExplosionAuthoring.cs
+
+// 职责：为现有方块CSV增加独立爆炸伤害列，并通过现有备份/校验链保存真实Prefab。 // 入口：InstallDamageColumn()；重复运行保留已经编辑的伤害值，不写玩家蓝图或场景。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| ExplosionAuthoring | [`void Install()`](../Assets/Editor/Combat/ExplosionAuthoring.cs#L13) | public static |
+| ExplosionAuthoring | [`string InstallDamageColumn()`](../Assets/Editor/Combat/ExplosionAuthoring.cs#L19) | public static |
+
 ## Assets/Editor/Combat/Interface/CombatHudSetup.cs
 
 // 职责：配置主场景战斗 HUD 与界面反馈组件。 // 入口：UpgradeDualHealthHud() / Apply()。 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
@@ -1362,6 +1373,21 @@ HY-Sandbox/
 | EnemyLabViewChecks | [`Task<string> Run()`](../Assets/Editor/Combat/Validation/EnemyLabViewChecks.cs#L24) | private static async |
 | EnemyLabViewChecks | [`void Check(List<string> checks, string name, bool value)`](../Assets/Editor/Combat/Validation/EnemyLabViewChecks.cs#L146) | private static |
 
+## Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs
+
+// 职责：在真实Play的独立PhysicsScene验证舰船/建筑/体素互伤、归因、去重、连锁及冲量隔离。 // 入口：Run()；只创建自有夹具，不写玩家存档，报告Temp/Combat/explosion-integration.json。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| ExplosionIntegrationChecks | [`string Run()`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L21) | public static |
+| ExplosionIntegrationChecks | [`void TerrainCheck(Scene scene, Report report)`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L146) | private static |
+| ExplosionIntegrationChecks | [`WorldBuildingManager Manager(Scene scene)`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L170) | private static |
+| ExplosionIntegrationChecks | [`BuildingRuntime Building(WorldBuildingManager manager, Vector3 center)`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L183) | private static |
+| ExplosionIntegrationChecks | [`Block Ship(Scene scene, Vector3 position)`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L215) | private static |
+| ExplosionIntegrationChecks | [`void Configure(Block block, float damage, float radius)`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L239) | private static |
+| ExplosionIntegrationChecks | [`void Check(Report report, string name, bool passed)`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L248) | private static |
+| ExplosionIntegrationChecks | [`string Save(Report report)`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L258) | private static |
+
 ## Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs
 
 // 职责：验证自动5v5场景持久配置、正式死亡归因、五秒倒计时与连续轮次清理。 // 入口：ValidateSaved()在Edit Mode执行；Begin()在Play启动检查，Pending保存实际结果。
@@ -1492,15 +1518,16 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| PhysicsSandboxProbe | [`string Run()`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L13) | public static |
-| PhysicsSandboxProbe | [`void CheckLethalImpactExplosion(Scene scene, List<string> checks, bool explosive)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L191) | private static |
-| PhysicsSandboxProbe | [`void CheckBuildingImpactExplosion(Scene scene, List<string> checks)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L217) | private static |
-| PhysicsSandboxProbe | [`int CountExplosionEffects()`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L247) | private static |
-| PhysicsSandboxProbe | [`float Collide( Scene scene, float mass, float speed, List<string> checks, bool checkContacts, float restitution = 0f, float tangentSpeed = 0f)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L263) | private static |
-| PhysicsSandboxProbe | [`void CollideDynamicPair(Scene scene, List<string> checks)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L337) | private static |
-| PhysicsSandboxProbe | [`Rigidbody Body(Scene scene, string name, float mass, Vector3 position)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L379) | private static |
-| PhysicsSandboxProbe | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L392) | private static |
-| PhysicsSandboxProbe | [`string Save(List<string> checks, string error)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L402) | private static |
+| PhysicsSandboxProbe | [`string Run()`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L14) | public static |
+| PhysicsSandboxProbe | [`void CheckLethalImpactExplosion(Scene scene, List<string> checks, bool explosive)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L194) | private static |
+| PhysicsSandboxProbe | [`void CheckBuildingImpactExplosion(Scene scene, List<string> checks)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L220) | private static |
+| PhysicsSandboxProbe | [`int CountExplosionEffects()`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L250) | private static |
+| PhysicsSandboxProbe | [`float Collide( Scene scene, float mass, float speed, List<string> checks, bool checkContacts, float restitution = 0f, float tangentSpeed = 0f)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L266) | private static |
+| PhysicsSandboxProbe | [`void CollideDynamicPair(Scene scene, List<string> checks)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L340) | private static |
+| PhysicsSandboxProbe | [`Rigidbody Body(Scene scene, string name, float mass, Vector3 position)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L382) | private static |
+| PhysicsSandboxProbe | [`void PrepareSceneEffects(Scene scene)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L395) | internal static |
+| PhysicsSandboxProbe | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L408) | private static |
+| PhysicsSandboxProbe | [`string Save(List<string> checks, string error)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L418) | private static |
 
 ## Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs
 
@@ -2399,9 +2426,9 @@ HY-Sandbox/
 | SiegeBuildingDamageChecks | [`string Run()`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L13) | public static |
 | SiegeBuildingDamageChecks | [`void CheckPartialBlast(List<string> checks, bool reverse)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L52) | private static |
 | SiegeBuildingDamageChecks | [`void CheckChain(List<string> checks, bool projectile)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L87) | private static |
-| SiegeBuildingDamageChecks | [`void CheckImmediate(List<string> checks)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L138) | private static |
-| SiegeBuildingDamageChecks | [`GameObject CreateTower(bool reverse, out WorldBuildingManager manager, out BuildingRuntime tower)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L163) | private static |
-| SiegeBuildingDamageChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L206) | private static |
+| SiegeBuildingDamageChecks | [`void CheckImmediate(List<string> checks)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L139) | private static |
+| SiegeBuildingDamageChecks | [`GameObject CreateTower(bool reverse, out WorldBuildingManager manager, out BuildingRuntime tower)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L164) | private static |
+| SiegeBuildingDamageChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L207) | private static |
 
 ## Assets/Editor/Siege/Validation/Buildings/SiegeBuildingGraphChecks.cs
 
@@ -3154,10 +3181,10 @@ HY-Sandbox/
 | --- | --- | --- |
 | Column | [`Component[] FindTargets(GameObject root)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L31) | public |
 | BlockDataTableSchema | [`List<Column> CreateColumns()`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L66) | public static |
-| BlockDataTableSchema | [`void AddFloat( List<Column> columns, string group, string property, string label, double minimum = 0, double maximum = double.PositiveInfinity)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L116) | private static |
-| BlockDataTableSchema | [`void AddInteger( List<Column> columns, string group, string property, string label, double minimum = 0, double maximum = double.PositiveInfinity)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L135) | private static |
-| BlockDataTableSchema | [`void AddBoolean(List<Column> columns, string group, string property, string label)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L154) | private static |
-| BlockDataTableSchema | [`void AddEnum(List<Column> columns, string group, string property, string label, string[] names)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L167) | private static |
+| BlockDataTableSchema | [`void AddFloat( List<Column> columns, string group, string property, string label, double minimum = 0, double maximum = double.PositiveInfinity)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L117) | private static |
+| BlockDataTableSchema | [`void AddInteger( List<Column> columns, string group, string property, string label, double minimum = 0, double maximum = double.PositiveInfinity)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L136) | private static |
+| BlockDataTableSchema | [`void AddBoolean(List<Column> columns, string group, string property, string label)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L155) | private static |
+| BlockDataTableSchema | [`void AddEnum(List<Column> columns, string group, string property, string label, string[] names)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L168) | private static |
 
 ## Assets/Scripts/Features/Building/BlueprintLoading/BaseBlueprintMigration.cs
 
@@ -3681,14 +3708,32 @@ HY-Sandbox/
 | Durability | [`void UpdateDurablility(float value)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L158) | public |
 | Durability | [`void ChangeDurability(float value)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L168) | private |
 
-## Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs
+## Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs
 
-// 职责：在源单位内概率断链，并对受影响刚体施加有限冲量及双向碰撞保护。 // 入口：DisconnectBlocksInExplosionRange() / ApplyExplosionForce()；由 DestroyManager 分别在重组前后调用。 // 约束：爆炸不直接造成伤害；原始 ownerUnitId 用于查回重组后的同源碎片。
+// 职责：统一舰船/建筑/地形爆炸伤害，排队结算连锁并在整批结束后刷新拓扑与冲量。 // 入口：ApplyExplosion() / ApplyBuildings() / RefreshUnit()；实例由显式销毁服务或独立建筑工具拥有。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| ExplosionPropagation | [`void DisconnectBlocksInExplosionRange(ControlUnit unit, Block block, Vector3 explosionPosition)`](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L9) | internal static |
-| ExplosionPropagation | [`void ApplyExplosionForce( Block block, string ownerUnitId, UnitFaction ownerFaction, Vector3 explosionPosition, float upwardsModifier, float impulseScale, float maximumSpeedChange, float collisionProtection)`](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L53) | internal static |
+| ExplosionDamageSession | [`void ApplyBuildings(IReadOnlyList<BuildingRuntime> buildings, Vector3 center, float radius, float damage)`](../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L27) | public |
+| ExplosionDamageSession | [`void ApplyBuildingLoss(BuildingRuntime building, Action destroy)`](../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L32) | public |
+| ExplosionDamageSession | [`void ApplyExplosion(Block source, ControlUnit attacker, ControlUnit dirtyUnit, Action impulse)`](../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L45) | public |
+| ExplosionDamageSession | [`void RefreshUnit(ControlUnit unit)`](../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L65) | public |
+| ExplosionDamageSession | [`void Enqueue(Blast blast)`](../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L82) | private |
+| ExplosionDamageSession | [`void Execute(Action initial)`](../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L105) | private |
+| ExplosionDamageSession | [`void Apply(Blast blast)`](../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L129) | private |
+| ExplosionDamageSession | [`void AddTarget(Durability health, Blast blast)`](../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L184) | private |
+| ExplosionDamageSession | [`void FinishBatch()`](../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L200) | private |
+| ExplosionDamageSession | [`void Attempt(Action action, ref Exception failure)`](../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L248) | private static |
+
+## Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs
+
+// 职责：在源单位内概率断链，并在源PhysicsScene对受影响刚体施加有限冲量及双向碰撞保护。 // 入口：DisconnectBlocksInExplosionRange() / ApplyExplosionForce()；由 DestroyManager 分别在重组前后调用。 // 约束：本类仅负责断链与冲量；直接伤害由ExplosionDamageSession统一结算。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| ExplosionPropagation | [`void ApplyDefaultExplosionForce(Block block)`](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L14) | internal static |
+| ExplosionPropagation | [`void DisconnectBlocksInExplosionRange(ControlUnit unit, Block block, Vector3 explosionPosition)`](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L28) | internal static |
+| ExplosionPropagation | [`void ApplyExplosionForce( Block block, string ownerUnitId, UnitFaction ownerFaction, Vector3 explosionPosition, float upwardsModifier, float impulseScale, float maximumSpeedChange, float collisionProtection)`](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L72) | internal static |
 
 ## Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs
 
@@ -3713,12 +3758,14 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| DestroyManager | [`void Awake()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L23) | private |
-| DestroyManager | [`void DestroyGameObject(GameObject obj)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L28) | public |
-| DestroyManager | [`void ExplodeBlock(Block block)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L137) | public |
-| DestroyManager | [`void ScheduleUnitCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L174) | public |
-| DestroyManager | [`void ScheduleDistantGroupCleanup(ControlUnit unit, Transform reference, float maxDistance)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L179) | public |
-| DestroyManager | [`void EndSalvageSession()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L184) | public |
+| DestroyManager | [`void Awake()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L25) | private |
+| DestroyManager | [`void DestroyGameObject(GameObject obj)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L30) | public |
+| DestroyManager | [`void ExplodeBlock(Block block)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L139) | public |
+| DestroyManager | [`void DamageBuildings(IReadOnlyList<BuildingRuntime> buildings, Vector3 center, float radius, float damage)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L186) | internal |
+| DestroyManager | [`void ApplyBuildingLoss(BuildingRuntime building, System.Action destroy)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L191) | internal |
+| DestroyManager | [`void ScheduleUnitCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L196) | public |
+| DestroyManager | [`void ScheduleDistantGroupCleanup(ControlUnit unit, Transform reference, float maxDistance)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L201) | public |
+| DestroyManager | [`void EndSalvageSession()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L206) | public |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyBlueprintFactory.cs
 
@@ -5856,34 +5903,34 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Block | [`void CollectRuntimeNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L54) | internal |
-| Block | [`void RefreshRuntimeConnectionPose()`](../Assets/Scripts/Features/Simulation/Block.cs#L59) | internal |
-| Block | [`void InvalidateRuntimeConnections()`](../Assets/Scripts/Features/Simulation/Block.cs#L64) | internal |
-| Block | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Block.cs#L69) | private |
-| Block | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Block.cs#L74) | private |
-| Block | [`void Awake()`](../Assets/Scripts/Features/Simulation/Block.cs#L79) | private |
-| Block | [`void OnValidate()`](../Assets/Scripts/Features/Simulation/Block.cs#L106) | private |
-| Block | [`void RefreshAuthoringData()`](../Assets/Scripts/Features/Simulation/Block.cs#L123) | public |
-| Block | [`void RefreshRuntimeData(bool rebuildConnectors = false)`](../Assets/Scripts/Features/Simulation/Block.cs#L145) | public |
-| Block | [`void RefreshMass()`](../Assets/Scripts/Features/Simulation/Block.cs#L185) | public |
-| Block | [`void SetMassSettings(bool useCustomMass, float value)`](../Assets/Scripts/Features/Simulation/Block.cs#L198) | public |
-| Block | [`void Reset()`](../Assets/Scripts/Features/Simulation/Block.cs#L206) | private |
-| Block | [`void GenerateConnectionPoints()`](../Assets/Scripts/Features/Simulation/Block.cs#L211) | private |
-| Block | [`string GetDisplayInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L281) | public |
-| Block | [`string GenerateInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L286) | private |
-| Block | [`void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)`](../Assets/Scripts/Features/Simulation/Block.cs#L332) | private |
-| Block | [`Vector3 GetConnectorWorldPosition(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L346) | public |
-| Block | [`Vector3 GetConnectorWorldNormal(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L351) | public |
-| Block | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L356) | public |
-| Block | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/Block.cs#L361) | public |
-| Block | [`void CheckConnectionAfterPhysicsSync()`](../Assets/Scripts/Features/Simulation/Block.cs#L366) | internal |
-| Block | [`List<Block> Neighbors()`](../Assets/Scripts/Features/Simulation/Block.cs#L371) | public |
-| Block | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L379) | internal |
-| Block | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Block.cs#L384) | public |
-| Block | [`void RestoreConnectionParticipation()`](../Assets/Scripts/Features/Simulation/Block.cs#L390) | public |
-| Block | [`void RefreshConnectionStatus()`](../Assets/Scripts/Features/Simulation/Block.cs#L395) | internal |
-| Block | [`bool IsBlockedGhost()`](../Assets/Scripts/Features/Simulation/Block.cs#L403) | public |
-| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L443) | private |
+| Block | [`void CollectRuntimeNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L60) | internal |
+| Block | [`void RefreshRuntimeConnectionPose()`](../Assets/Scripts/Features/Simulation/Block.cs#L65) | internal |
+| Block | [`void InvalidateRuntimeConnections()`](../Assets/Scripts/Features/Simulation/Block.cs#L70) | internal |
+| Block | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Block.cs#L75) | private |
+| Block | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Block.cs#L81) | private |
+| Block | [`void Awake()`](../Assets/Scripts/Features/Simulation/Block.cs#L86) | private |
+| Block | [`void OnValidate()`](../Assets/Scripts/Features/Simulation/Block.cs#L113) | private |
+| Block | [`void RefreshAuthoringData()`](../Assets/Scripts/Features/Simulation/Block.cs#L130) | public |
+| Block | [`void RefreshRuntimeData(bool rebuildConnectors = false)`](../Assets/Scripts/Features/Simulation/Block.cs#L152) | public |
+| Block | [`void RefreshMass()`](../Assets/Scripts/Features/Simulation/Block.cs#L192) | public |
+| Block | [`void SetMassSettings(bool useCustomMass, float value)`](../Assets/Scripts/Features/Simulation/Block.cs#L205) | public |
+| Block | [`void Reset()`](../Assets/Scripts/Features/Simulation/Block.cs#L213) | private |
+| Block | [`void GenerateConnectionPoints()`](../Assets/Scripts/Features/Simulation/Block.cs#L218) | private |
+| Block | [`string GetDisplayInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L288) | public |
+| Block | [`string GenerateInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L293) | private |
+| Block | [`void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)`](../Assets/Scripts/Features/Simulation/Block.cs#L339) | private |
+| Block | [`Vector3 GetConnectorWorldPosition(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L353) | public |
+| Block | [`Vector3 GetConnectorWorldNormal(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L358) | public |
+| Block | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L363) | public |
+| Block | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/Block.cs#L368) | public |
+| Block | [`void CheckConnectionAfterPhysicsSync()`](../Assets/Scripts/Features/Simulation/Block.cs#L373) | internal |
+| Block | [`List<Block> Neighbors()`](../Assets/Scripts/Features/Simulation/Block.cs#L378) | public |
+| Block | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L386) | internal |
+| Block | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Block.cs#L391) | public |
+| Block | [`void RestoreConnectionParticipation()`](../Assets/Scripts/Features/Simulation/Block.cs#L397) | public |
+| Block | [`void RefreshConnectionStatus()`](../Assets/Scripts/Features/Simulation/Block.cs#L402) | internal |
+| Block | [`bool IsBlockedGhost()`](../Assets/Scripts/Features/Simulation/Block.cs#L410) | public |
+| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L450) | private |
 
 ## Assets/Scripts/Features/Simulation/Connections/BatchConnectionBuilder.cs
 
@@ -6218,12 +6265,13 @@ HY-Sandbox/
 | BuildingRuntime | [`void PrepareForUnload()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L181) | public |
 | BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L189) | public |
 | BuildingRuntime | [`void DestroyBlock(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L238) | public |
-| BuildingRuntime | [`void SplitDisconnected()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L280) | private |
-| BuildingRuntime | [`bool HasFullFoundationSupport()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L307) | public |
-| BuildingRuntime | [`bool HasPreparedGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L322) | private |
-| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L341) | private |
-| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L362) | public |
-| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L373) | private |
+| BuildingRuntime | [`void DestroyBlockCore(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L252) | private |
+| BuildingRuntime | [`void SplitDisconnected()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L286) | private |
+| BuildingRuntime | [`bool HasFullFoundationSupport()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L313) | public |
+| BuildingRuntime | [`bool HasPreparedGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L328) | private |
+| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L347) | private |
+| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L368) | public |
+| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L379) | private |
 
 ## Assets/Scripts/Features/World/Buildings/Data/WorldBuildingCatalog.cs
 
@@ -6321,14 +6369,6 @@ HY-Sandbox/
 | --- | --- | --- |
 | BuildingRefit | [`bool Apply( BuildingRuntime building, List<Block> blocks, WorldBuildingManager manager, BlockDataList design, out string reason)`](../Assets/Scripts/Features/World/Buildings/Topology/BuildingRefit.cs#L9) | internal static |
 
-## Assets/Scripts/Features/World/Buildings/Topology/WorldBuildingDamage.cs
-
-// 职责：顺序结算建筑范围伤害；爆炸连锁排队，避免递归销毁耗尽调用栈。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldBuildingDamage | [`void Apply(IReadOnlyList<BuildingRuntime> buildings, Vector3 center, float radius, float damage)`](../Assets/Scripts/Features/World/Buildings/Topology/WorldBuildingDamage.cs#L18) | public |
-
 ## Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs
 
 // 职责：拥有 WorldLab 建筑实例、初始布局、地形支撑通知和有界残骸。 // 入口：Place() / Capture() / Restore() / ResetBuildings()；初始布局仅按名称查找共用建筑文件仓。
@@ -6356,8 +6396,10 @@ HY-Sandbox/
 | WorldBuildingManager | [`void TerrainChanged(Bounds changed)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L398) | private |
 | WorldBuildingManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L409) | private |
 | WorldBuildingManager | [`void DamageSphere(Vector3 center, float radius, float damage)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L426) | public |
-| WorldBuildingManager | [`void CreateDebris(List<Block> group, Rigidbody source, RigidbodyMotion motion)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L431) | internal |
-| WorldBuildingManager | [`void ClearDebris()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L469) | private |
+| WorldBuildingManager | [`void ExplodeBlock(Block block)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L438) | internal |
+| WorldBuildingManager | [`void ApplyBuildingLoss(BuildingRuntime building, Action destroy)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L457) | internal |
+| WorldBuildingManager | [`void CreateDebris(List<Block> group, Rigidbody source, RigidbodyMotion motion)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L469) | internal |
+| WorldBuildingManager | [`void ClearDebris()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L507) | private |
 
 ## Assets/Scripts/Features/World/Outposts/EnemyOutpostData.cs
 

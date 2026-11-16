@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -93,6 +94,7 @@ public static class PhysicsSandboxProbe
                 UnityEngine.Object.DestroyImmediate(root);
             }
 
+            PrepareSceneEffects(scene);
             var meshObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
             SceneManager.MoveGameObjectToScene(meshObject, scene);
             UnityEngine.Object.DestroyImmediate(meshObject.GetComponent<BoxCollider>());
@@ -137,12 +139,13 @@ public static class PhysicsSandboxProbe
             source.explosionForce = 10000f;
             Rigidbody fragment = Body(scene, "Blast fragment", 1f, Vector3.right * 2f);
             ControlUnit fragmentUnit = fragment.gameObject.AddComponent<ControlUnit>();
+            fragment.gameObject.AddComponent<DetachedPartSmokeTrail>();
             fragmentUnit.enabled = false;
             var armorObject = new GameObject("Fragment armor");
             armorObject.transform.SetParent(fragment.transform, false);
             Durability armor = armorObject.AddComponent<Durability>();
             armor.debugLog = false;
-            // ApplyExplosionForce queries the default scene; use the saved ownership path for this isolated scene.
+            // The impulse path uses this isolated PhysicsScene and still preserves source ownership.
             fragmentUnit.EnsureRuntimeUnitId();
             Block fragmentBlock = armorObject.AddComponent<Block>();
             RuntimeUnitMember.Ensure(armorObject, fragmentUnit.runtimeUnitId, UnitFaction.Enemy);
@@ -160,7 +163,7 @@ public static class PhysicsSandboxProbe
                 fragment.linearVelocity.magnitude > 0.01f && fragment.linearVelocity.magnitude <= 3.01f);
             Check(
                 checks,
-                "Explosion does not directly damage armor",
+                "Impulse-only helper does not apply direct damage a second time",
                 Mathf.Approximately(armor.currentDurability, 100f));
             Check(
                 checks,
@@ -387,6 +390,19 @@ public static class PhysicsSandboxProbe
         body.useGravity = false;
         body.linearDamping = body.angularDamping = 0f;
         return body;
+    }
+
+    internal static void PrepareSceneEffects(Scene scene)
+    {
+        var root = new GameObject("Owned physics fixture VFX pool");
+        SceneManager.MoveGameObjectToScene(root, scene);
+        VfxEffectPool pool = root.AddComponent<VfxEffectPool>();
+        var inactive = new GameObject("Inactive");
+        inactive.transform.SetParent(root.transform, false);
+        inactive.SetActive(false);
+        var data = new SerializedObject(pool);
+        data.FindProperty("_inactiveRoot").objectReferenceValue = inactive.transform;
+        data.ApplyModifiedPropertiesWithoutUndo();
     }
 
     private static void Check(List<string> checks, string name, bool passed)

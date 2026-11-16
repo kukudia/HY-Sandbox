@@ -1,6 +1,7 @@
 // 职责：协调销毁主链、资源释放与驾驶舱死亡；配置并调用爆炸规则及残骸清理会话。
 // 入口：DestroyGameObject() / ExplodeBlock() / ScheduleUnitCleanup()。
 using UnityEngine;
+using System.Collections.Generic;
 
 public class DestroyManager : MonoBehaviour
 {
@@ -10,14 +11,15 @@ public class DestroyManager : MonoBehaviour
     private bool _debugDestruction;
     private float _unitCleanupDelay = 10f;
     [SerializeField]
-    private float _blockExplosionUpwardsModifier = 1.2f;
+    private float _blockExplosionUpwardsModifier = ExplosionPropagation.DefaultUpwardsModifier;
     [SerializeField, Range(0f, 1f)]
-    private float _explosionImpulseScale = 0.15f;
+    private float _explosionImpulseScale = ExplosionPropagation.DefaultImpulseScale;
     [SerializeField, Min(0f)]
-    private float _maximumExplosionSpeedChange = 3f;
+    private float _maximumExplosionSpeedChange = ExplosionPropagation.DefaultMaximumSpeedChange;
     [SerializeField, Min(0f)]
-    private float _explosionCollisionProtection = 3f;
+    private float _explosionCollisionProtection = ExplosionPropagation.DefaultCollisionProtection;
     private SalvageCleanupSession _cleanupSession;
+    private readonly ExplosionDamageSession explosions = new ExplosionDamageSession();
     private SalvageCleanupSession CleanupSession => _cleanupSession ?? (_cleanupSession = new SalvageCleanupSession(this));
 
     private void Awake()
@@ -101,7 +103,7 @@ public class DestroyManager : MonoBehaviour
             block.transform.SetParent(null, true);
             if (unit != null)
             {
-                PlayManager.instance.RefreshGroup(unit);
+                explosions.RefreshUnit(unit);
             }
         }
 
@@ -136,12 +138,18 @@ public class DestroyManager : MonoBehaviour
 
     public void ExplodeBlock(Block block)
     {
-        // Detach the block, selectively break nearby links, regroup the unit, then apply impulse to its groups.
-        if (block == null || !PlayManager.instance.playMode)
+        if (block == null || block.ExplosionQueued)
         {
             return;
         }
 
+        bool building = block.GetComponentInParent<BuildingRuntime>() != null;
+        if (!building && (PlayManager.instance == null || !PlayManager.instance.playMode))
+        {
+            return;
+        }
+
+        block.ExplosionQueued = true;
         Vector3 explosionPosition = block.transform.position;
         ControlUnit unit = block.GetComponentInParent<ControlUnit>();
         if (unit != null)
@@ -151,24 +159,38 @@ public class DestroyManager : MonoBehaviour
 
         string ownerUnitId = unit != null ? unit.runtimeUnitId : string.Empty;
         UnitFaction ownerFaction = unit != null ? unit.faction : UnitFaction.Enemy;
+        ControlUnit attacker = block.GetComponent<Durability>()?.LastAttacker;
         VisualEffectsManager.TryPlayBlockExplosion(block);
-        ExplosionPropagation.DisconnectBlocksInExplosionRange(unit, block, explosionPosition);
-        block.DisConnectAllConnectors();
-        block.transform.SetParent(null, true);
-        if (unit != null)
+        if (!building)
         {
-            PlayManager.instance.RefreshGroup(unit);
+            ExplosionPropagation.DisconnectBlocksInExplosionRange(unit, block, explosionPosition);
+            block.DisConnectAllConnectors();
+            block.transform.SetParent(null, true);
         }
 
-        ExplosionPropagation.ApplyExplosionForce(
+        explosions.ApplyExplosion(
             block,
-            ownerUnitId,
-            ownerFaction,
-            explosionPosition,
-            _blockExplosionUpwardsModifier,
-            _explosionImpulseScale,
-            _maximumExplosionSpeedChange,
-            _explosionCollisionProtection);
+            attacker,
+            building ? null : unit,
+            () => ExplosionPropagation.ApplyExplosionForce(
+                block,
+                ownerUnitId,
+                ownerFaction,
+                explosionPosition,
+                _blockExplosionUpwardsModifier,
+                _explosionImpulseScale,
+                _maximumExplosionSpeedChange,
+                _explosionCollisionProtection));
+    }
+
+    internal void DamageBuildings(IReadOnlyList<BuildingRuntime> buildings, Vector3 center, float radius, float damage)
+    {
+        explosions.ApplyBuildings(buildings, center, radius, damage);
+    }
+
+    internal void ApplyBuildingLoss(BuildingRuntime building, System.Action destroy)
+    {
+        explosions.ApplyBuildingLoss(building, destroy);
     }
 
     public void ScheduleUnitCleanup(ControlUnit unit)
