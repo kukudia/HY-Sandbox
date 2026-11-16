@@ -13,6 +13,12 @@ public sealed class HangarModule : MonoBehaviour
     private Transform tileVisual;
     [SerializeField, HideInInspector]
     private Vector3Int previewSize;
+    [SerializeField, HideInInspector]
+    private HangarEntrance previewEntrance;
+    [SerializeField]
+    private HangarEntrance entrance;
+    public HangarEntrance Entrance => entrance;
+
     [SerializeField]
     private Transform leftDoor;
     [SerializeField]
@@ -72,7 +78,12 @@ public sealed class HangarModule : MonoBehaviour
         SetShape(capacity, Vector3.zero, inner);
         if (entranceMarker != null)
         {
-            entranceMarker.localPosition = new Vector3(0f, -outer.y * .5f + .55f, outer.z * .5f - 1.5f);
+            entranceMarker.localPosition = entrance == HangarEntrance.Roof ? new Vector3(0f, outer.y * .5f + .08f, 0f) : new Vector3(0f, -outer.y * .5f + .55f, outer.z * .5f - 1.5f);
+            Text marker = entranceMarker.GetComponentInChildren<Text>();
+            if (marker != null)
+            {
+                marker.text = entrance == HangarEntrance.Roof ? "▲\nDOOR / ROOF" : "▲\nDOOR / FRONT";
+            }
         }
 
         if (sizeLabel != null)
@@ -226,10 +237,11 @@ public sealed class HangarModule : MonoBehaviour
     private bool IsDoorwayClear()
     {
         Vector3 inner = InnerSize;
-        Vector3 center = transform.TransformPoint(new Vector3(0f, 0f, (block.z - 1f) * 0.5f));
+        bool roof = entrance == HangarEntrance.Roof;
+        Vector3 center = transform.TransformPoint(roof ? new Vector3(0f, (block.y - 1f) * .5f, 0f) : new Vector3(0f, 0f, (block.z - 1f) * .5f));
         int count = Physics.OverlapBoxNonAlloc(
             center,
-            new Vector3(inner.x * 0.5f, inner.y * 0.5f - 0.05f, 0.65f),
+            roof ? new Vector3(inner.x * .5f, .65f, inner.z * .5f - .05f) : new Vector3(inner.x * .5f, inner.y * .5f - .05f, .65f),
             doorwayOccupants,
             transform.rotation,
             ~0,
@@ -262,6 +274,14 @@ public sealed class HangarModule : MonoBehaviour
         // 伸缩门收进两侧墙槽，开门后不侵入相邻机库的建筑占格。
         float width = inner.x * 0.5f * (1f - doorFraction);
         float offset = inner.x * 0.5f - width * 0.5f;
+        if (entrance == HangarEntrance.Roof)
+        {
+            Vector3 roofSize = new Vector3(Mathf.Max(.001f, width), 1f, inner.z);
+            SetShape(leftDoor, new Vector3(-offset, (block.y - 1f) * .5f, 0f), roofSize);
+            SetShape(rightDoor, new Vector3(offset, (block.y - 1f) * .5f, 0f), roofSize);
+            return;
+        }
+
         Vector3 size = new Vector3(Mathf.Max(0.001f, width), inner.y, 1f);
         SetShape(leftDoor, new Vector3(-offset, 0f, (block.z - 1f) * 0.5f), size);
         SetShape(rightDoor, new Vector3(offset, 0f, (block.z - 1f) * 0.5f), size);
@@ -277,6 +297,39 @@ public sealed class HangarModule : MonoBehaviour
         boxes.Add(new Bounds(new Vector3((outer.x - 1f) * 0.5f, 0f, 0f), new Vector3(1f, inner.y, outer.z)));
         boxes.Add(new Bounds(new Vector3(0f, 0f, -(outer.z - 1f) * 0.5f), new Vector3(inner.x, inner.y, 1f)));
         boxes.Add(new Bounds(new Vector3(0f, 0f, (outer.z - 1f) * 0.5f), new Vector3(inner.x, inner.y, 1f)));
+    }
+
+    public bool TrySetEntrance(HangarEntrance value, out string reason)
+    {
+        reason = "Change the door direction in the base editor.";
+        BuildManager build = BuildManager.instance;
+        if (combat || build == null || !build.IsEditingBaseBlueprint || value != HangarEntrance.Front && value != HangarEntrance.Roof)
+        {
+            return false;
+        }
+
+        if (entrance == value)
+        {
+            return true;
+        }
+
+        HangarEntrance before = entrance;
+        RestoreEntrance(value);
+        build.SaveBlock(GetComponent<Block>());
+        ActionManager.instance?.Push(new ChangeHangarEntranceAction(this, before, value));
+        reason = "Hangar door direction saved.";
+        return true;
+    }
+
+    public void RestoreEntrance(HangarEntrance value)
+    {
+        if (value != HangarEntrance.Front && value != HangarEntrance.Roof)
+        {
+            throw new System.ArgumentOutOfRangeException(nameof(value));
+        }
+
+        entrance = value;
+        RefreshGeometry();
     }
 
     public bool TryResize(int axis, int delta, out string reason)
@@ -340,12 +393,13 @@ public sealed class HangarModule : MonoBehaviour
 
     private void RefreshShellPreview(Vector3Int size)
     {
-        if (GetComponentInParent<BuildingRuntime>() != null || shellPreview == null || tileVisual == null || previewSize == size && shellPreview.childCount > 0)
+        if (GetComponentInParent<BuildingRuntime>() != null || shellPreview == null || tileVisual == null || previewSize == size && previewEntrance == entrance && shellPreview.childCount > 0)
         {
             return;
         }
 
         previewSize = size;
+        previewEntrance = entrance;
         for (int i = shellPreview.childCount - 1; i >= 0; i--)
         {
             GameObject old = shellPreview.GetChild(i).gameObject;
@@ -361,7 +415,7 @@ public sealed class HangarModule : MonoBehaviour
         }
 
         int index = 0;
-        foreach (Pose pose in HangarShellBlueprint.Tiles(size))
+        foreach (Pose pose in HangarShellBlueprint.Tiles(size, entrance))
         {
             Transform tile;
 #if UNITY_EDITOR

@@ -13,8 +13,22 @@ public static class HangarShellBlueprint
         return Mathf.Clamp((value + 1) / 2 * 2, 4, 64);
     }
 
-    public static List<Pose> Tiles(Vector3Int size)
+    public static List<Pose> Tiles(Vector3Int size, HangarEntrance entrance = HangarEntrance.Front)
     {
+        if (entrance == HangarEntrance.Roof)
+        {
+            // Rotate the same non-overlapping tiling so its open face becomes the roof.
+            // Front snapshots keep their original ordering and stable tile identities.
+            List<Pose> roof = Tiles(new Vector3Int(size.x, size.z, size.y));
+            Quaternion turn = Quaternion.Euler(-90f, 0f, 0f);
+            for (int i = 0; i < roof.Count; i++)
+            {
+                roof[i] = new Pose(turn * roof[i].position, turn * roof[i].rotation);
+            }
+
+            return roof;
+        }
+
         var tiles = new List<Pose>();
         // Floor/roof cover the full footprint. Side walls fill between them; the back
         // fills between the sides. No overlapping corner blocks or permanent front wall.
@@ -49,8 +63,13 @@ public static class HangarShellBlueprint
         return tiles;
     }
 
-    public static int TileCount(Vector3Int size)
+    public static int TileCount(Vector3Int size, HangarEntrance entrance = HangarEntrance.Front)
     {
+        if (entrance == HangarEntrance.Roof)
+        {
+            size = new Vector3Int(size.x, size.z, size.y);
+        }
+
         return size.x * size.z / 2 + (size.y - 2) * size.z / 2 + (size.x - 2) * (size.y - 2) / 4;
     }
 
@@ -114,7 +133,7 @@ public static class HangarShellBlueprint
             Vector3Int size = new Vector3Int(hangar.x, hangar.y, hangar.z);
             Quaternion rotation = new Quaternion(hangar.rotX, hangar.rotY, hangar.rotZ, hangar.rotW);
             Vector3 origin = new Vector3(hangar.posX, hangar.posY, hangar.posZ);
-            List<Pose> tiles = Tiles(size);
+            List<Pose> tiles = Tiles(size, hangar.hangarEntrance);
             if (result.blocks.Count + added.Count + tiles.Count > WorldBuildingValidation.MaximumBlocks)
             {
                 throw new InvalidOperationException("Hangar walls exceed the 2048 building module budget. Reduce hangar sizes or count.");

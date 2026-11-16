@@ -26,7 +26,7 @@ public static class HangarRules
             HangarShellBlueprint.EvenSize(block.x),
             HangarShellBlueprint.EvenSize(block.y),
             HangarShellBlueprint.EvenSize(block.z));
-        long materialCost = (long)HangarShellBlueprint.TileCount(size) * 4 * BlockMaterialCatalog.Resolve("metal").coinsPerCell;
+        long materialCost = (long)HangarShellBlueprint.TileCount(size, block.hangarEntrance) * 4 * BlockMaterialCatalog.Resolve("metal").coinsPerCell;
         return materialCost + area * (limits != null ? limits.ShellCoinsPerSquareMetre : 1);
     }
 
@@ -47,6 +47,12 @@ public static class HangarRules
             }
 
             count++;
+            if (block.hangarEntrance != HangarEntrance.Front && block.hangarEntrance != HangarEntrance.Roof)
+            {
+                reason = "Unsupported hangar entrance direction.";
+                return false;
+            }
+
             Quaternion rotation = new Quaternion(block.rotX, block.rotY, block.rotZ, block.rotW);
             if (Vector3.Dot(rotation * Vector3.up, Vector3.up) < .999f || block.x < 3 || block.y < 2 || block.z < 3)
             {

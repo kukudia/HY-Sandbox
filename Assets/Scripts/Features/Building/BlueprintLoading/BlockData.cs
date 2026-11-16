@@ -11,12 +11,14 @@ public class BlockData
     public float rotX, rotY, rotZ, rotW;
     public string resourcePath;
     public string hangarOwnerId;
+    public HangarEntrance hangarEntrance;
     public string materialId; // Missing/empty preserves legacy Prefab values.
     public List<CargoItem> cargo;
     public BlockData(Block block)
     {
         id = block.uniqueId;
         hangarOwnerId = block.hangarOwnerId;
+        hangarEntrance = block.GetComponent<HangarModule>()?.Entrance ?? HangarEntrance.Front;
         x = block.x;
         y = block.y;
         z = block.z;

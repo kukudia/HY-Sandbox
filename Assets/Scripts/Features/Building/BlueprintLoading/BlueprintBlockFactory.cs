@@ -20,6 +20,11 @@ internal static class BlueprintBlockFactory
         }
 
         data = HangarShellBlueprint.Normalize(data);
+        if (prefab.GetComponent<HangarModule>() != null && data.hangarEntrance != HangarEntrance.Front && data.hangarEntrance != HangarEntrance.Roof)
+        {
+            throw new System.InvalidOperationException("Unsupported hangar entrance direction.");
+        }
+
         BlockMaterial.Validate(data.materialId, prefab);
         GameObject obj = Object.Instantiate(
             prefab,
@@ -35,6 +40,11 @@ internal static class BlueprintBlockFactory
 
         bool shapeChanged = block.x != data.x || block.y != data.y || block.z != data.z;
         block.RestoreDimensions(data.x, data.y, data.z);
+        if (block.TryGetComponent(out HangarModule hangar))
+        {
+            hangar.RestoreEntrance(data.hangarEntrance);
+        }
+
         // 存档保留实例尺寸；自动质量/碰撞体需按恢复后的尺寸重算，手动质量保持 CSV 值。
         BlockMaterial.Restore(block, data.materialId);
         block.RefreshRuntimeData(shapeChanged);

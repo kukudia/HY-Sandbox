@@ -612,7 +612,13 @@ public class BuildManager : MonoBehaviour
         CreateBlockFromTemplate(prefab, resourcePath, pos, rot, null);
     }
 
-    private Block CreateBlockFromTemplate(GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot, Vector3Int? dimensions)
+    private Block CreateBlockFromTemplate(
+        GameObject prefab,
+        string resourcePath,
+        Vector3 pos,
+        Quaternion rot,
+        Vector3Int? dimensions,
+        HangarEntrance entrance = HangarEntrance.Front)
     {
         if (!CanCreateBlock(prefab, out string reason))
         {
@@ -632,6 +638,11 @@ public class BuildManager : MonoBehaviour
                 block.y = dimensions.Value.y;
                 block.z = dimensions.Value.z;
                 block.RefreshRuntimeData();
+            }
+
+            if (block.TryGetComponent(out HangarModule hangar))
+            {
+                hangar.RestoreEntrance(entrance);
             }
 
             if (block.TryGetComponent(out BlockMaterial surface))
@@ -687,7 +698,14 @@ public class BuildManager : MonoBehaviour
 
     private Block CreateDuplicateBlock(GameObject prefab, string path, Vector3 position, Quaternion rotation, Vector3Int dimensions)
     {
-        return CreateBlockFromTemplate(prefab, path, position, rotation, dimensions);
+        HangarEntrance entrance = selectedBlock != null && selectedBlock.TryGetComponent(out HangarModule source) ? source.Entrance : HangarEntrance.Front;
+        return CreateBlockFromTemplate(
+            prefab,
+            path,
+            position,
+            rotation,
+            dimensions,
+            entrance);
     }
 
     public void SaveBlock(Block block)

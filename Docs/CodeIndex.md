@@ -520,6 +520,9 @@ HY-Sandbox/
 │           │   │   ├── SiegeIsland.cs
 │           │   │   └── SiegeIslandSettings.cs
 │           │   ├── Hangars/
+│           │   │   ├── ChangeHangarEntranceAction.cs
+│           │   │   ├── HangarEntrance.cs
+│           │   │   ├── HangarEntranceButton.cs
 │           │   │   ├── HangarFacePanel.cs
 │           │   │   ├── HangarLimits.cs
 │           │   │   ├── HangarModule.cs
@@ -2328,9 +2331,11 @@ HY-Sandbox/
 | HangarPrefabAuthoring | [`Transform Cube(Transform parent, string name, Material material, bool collider)`](../Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs#L169) | private static |
 | HangarPrefabAuthoring | [`Canvas Canvas(Transform parent, string name, Vector2 size)`](../Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs#L184) | private static |
 | HangarPrefabAuthoring | [`HangarFacePanel Face(Transform parent, HangarModule module, Vector3 normal, int index)`](../Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs#L196) | private static |
-| HangarPrefabAuthoring | [`void ResizeButton(Transform parent, HangarModule module, int axis, int delta, Vector2 position)`](../Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs#L237) | private static |
-| HangarPrefabAuthoring | [`Text Text( Transform parent, string name, string value, int size, Vector2 dimensions, Vector2 position)`](../Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs#L267) | private static |
-| HangarPrefabAuthoring | [`Material Material(string name, Color color, bool transparent = false)`](../Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs#L293) | private static |
+| HangarPrefabAuthoring | [`void AddEntranceControls()`](../Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs#L238) | public static |
+| HangarPrefabAuthoring | [`void EntranceControl(Transform panel, HangarModule module)`](../Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs#L269) | private static |
+| HangarPrefabAuthoring | [`void ResizeButton(Transform parent, HangarModule module, int axis, int delta, Vector2 position)`](../Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs#L306) | private static |
+| HangarPrefabAuthoring | [`Text Text( Transform parent, string name, string value, int size, Vector2 dimensions, Vector2 position)`](../Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs#L336) | private static |
+| HangarPrefabAuthoring | [`Material Material(string name, Color color, bool transparent = false)`](../Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs#L362) | private static |
 
 ## Assets/Editor/Siege/Hangars/HangarSceneIntegration.cs
 
@@ -2350,7 +2355,7 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | HangarShellChecks | [`string Run()`](../Assets/Editor/Siege/Hangars/HangarShellChecks.cs#L22) | public static |
-| HangarShellChecks | [`void Check(Report report, string name, bool condition)`](../Assets/Editor/Siege/Hangars/HangarShellChecks.cs#L148) | private static |
+| HangarShellChecks | [`void Check(Report report, string name, bool condition)`](../Assets/Editor/Siege/Hangars/HangarShellChecks.cs#L168) | private static |
 
 ## Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs
 
@@ -2362,14 +2367,14 @@ HY-Sandbox/
 | HangarWorkshopChecks | [`void Changed(PlayModeStateChange state)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L60) | private static |
 | HangarWorkshopChecks | [`void Tick()`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L125) | private static |
 | HangarWorkshopChecks | [`IEnumerator Scenario()`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L173) | private static |
-| HangarWorkshopChecks | [`IEnumerator Frames(int count)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L483) | private static |
-| HangarWorkshopChecks | [`Button ResizeButton(HangarFacePanel panel, int axis, int delta)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L492) | private static |
-| HangarWorkshopChecks | [`BlockData Saved(Block block)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L497) | private static |
-| HangarWorkshopChecks | [`int Dimension(BlockData data, int axis)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L502) | private static |
-| HangarWorkshopChecks | [`void Inject(SaveManager saves, string field, string directory)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L507) | private static |
-| HangarWorkshopChecks | [`void Check(bool condition, string message)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L513) | private static |
-| HangarWorkshopChecks | [`void Capture(string message, string stack, LogType type)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L523) | private static |
-| HangarWorkshopChecks | [`void Finish()`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L531) | private static |
+| HangarWorkshopChecks | [`IEnumerator Frames(int count)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L503) | private static |
+| HangarWorkshopChecks | [`Button ResizeButton(HangarFacePanel panel, int axis, int delta)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L512) | private static |
+| HangarWorkshopChecks | [`BlockData Saved(Block block)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L517) | private static |
+| HangarWorkshopChecks | [`int Dimension(BlockData data, int axis)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L522) | private static |
+| HangarWorkshopChecks | [`void Inject(SaveManager saves, string field, string directory)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L527) | private static |
+| HangarWorkshopChecks | [`void Check(bool condition, string message)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L533) | private static |
+| HangarWorkshopChecks | [`void Capture(string message, string stack, LogType type)`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L543) | private static |
+| HangarWorkshopChecks | [`void Finish()`](../Assets/Editor/Siege/Hangars/HangarWorkshopChecks.cs#L551) | private static |
 
 ## Assets/Editor/Siege/Hangars/ModularBaseExampleAuthoring.cs
 
@@ -2430,26 +2435,28 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Host | [`void SelectDefender(int index)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L111) | public |
-| Host | [`void SelectAttacker(int index)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L115) | public |
-| Host | [`bool RefreshBlueprints()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L119) | public |
-| Host | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L120) | public |
-| Host | [`bool TryReplaceAt(int optionIndex, int dock, out string reason)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L121) | public |
-| Host | [`bool TryCancelDeployment(int dock, out string reason)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L122) | public |
-| Host | [`bool TryTakeControl(int slot)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L123) | public |
-| Host | [`bool TryTakeControl(string id)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L124) | public |
-| Host | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L125) | public |
-| SiegeHangarPlayChecks | [`void Run()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L133) | public static |
-| SiegeHangarPlayChecks | [`void Changed(PlayModeStateChange state)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L145) | private static |
-| SiegeHangarPlayChecks | [`void Tick()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L165) | private static |
-| SiegeHangarPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L191) | private static |
-| SiegeHangarPlayChecks | [`void SetSimulation(WorldBuildingManager manager, bool active)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L406) | private static |
-| SiegeHangarPlayChecks | [`IEnumerator GuideFlight(SiegeReturnFlight flight, SiegeFleetEntry entry, string phase, Action completed)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L412) | private static |
-| SiegeHangarPlayChecks | [`void SampleFlight(SiegeReturnFlight flight, SiegeFleetEntry entry, string phase)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L434) | private static |
-| SiegeHangarPlayChecks | [`void CheckGuidedFeedback(string phase)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L519) | private static |
-| SiegeHangarPlayChecks | [`void Check(bool success, string description)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L535) | private static |
-| SiegeHangarPlayChecks | [`void LogError(string message, string stack, LogType type)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L545) | private static |
-| SiegeHangarPlayChecks | [`void Finish()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L553) | private static |
+| Host | [`void SelectDefender(int index)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L114) | public |
+| Host | [`void SelectAttacker(int index)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L118) | public |
+| Host | [`bool RefreshBlueprints()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L122) | public |
+| Host | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L123) | public |
+| Host | [`bool TryReplaceAt(int optionIndex, int dock, out string reason)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L124) | public |
+| Host | [`bool TryCancelDeployment(int dock, out string reason)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L125) | public |
+| Host | [`bool TryTakeControl(int slot)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L126) | public |
+| Host | [`bool TryTakeControl(string id)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L127) | public |
+| Host | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L128) | public |
+| SiegeHangarPlayChecks | [`void RunRoof()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L136) | public static |
+| SiegeHangarPlayChecks | [`void Run()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L143) | public static |
+| SiegeHangarPlayChecks | [`void Begin()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L149) | private static |
+| SiegeHangarPlayChecks | [`void Changed(PlayModeStateChange state)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L160) | private static |
+| SiegeHangarPlayChecks | [`void Tick()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L180) | private static |
+| SiegeHangarPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L206) | private static |
+| SiegeHangarPlayChecks | [`void SetSimulation(WorldBuildingManager manager, bool active)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L447) | private static |
+| SiegeHangarPlayChecks | [`IEnumerator GuideFlight(SiegeReturnFlight flight, SiegeFleetEntry entry, string phase, Action completed)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L453) | private static |
+| SiegeHangarPlayChecks | [`void SampleFlight(SiegeReturnFlight flight, SiegeFleetEntry entry, string phase)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L475) | private static |
+| SiegeHangarPlayChecks | [`void CheckGuidedFeedback(string phase)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L560) | private static |
+| SiegeHangarPlayChecks | [`void Check(bool success, string description)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L581) | private static |
+| SiegeHangarPlayChecks | [`void LogError(string message, string stack, LogType type)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L591) | private static |
+| SiegeHangarPlayChecks | [`void Finish()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L599) | private static |
 
 ## Assets/Editor/Siege/Hangars/SiegeReturnChecks.cs
 
@@ -3363,8 +3370,8 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BlueprintBlockFactory | [`bool TryRestore(BlockData data, Transform parent, UnitFaction faction, out Block block)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7) | public static |
-| BlueprintBlockFactory | [`void ApplyFaction(Block block, UnitFaction faction)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L58) | public static |
-| BlueprintBlockFactory | [`string ToResourcePath(string fullPath)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L66) | public static |
+| BlueprintBlockFactory | [`void ApplyFaction(Block block, UnitFaction faction)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L68) | public static |
+| BlueprintBlockFactory | [`string ToResourcePath(string fullPath)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L76) | public static |
 
 ## Assets/Scripts/Features/Building/BlueprintLoading/BlueprintFileStore.cs
 
@@ -3490,31 +3497,31 @@ HY-Sandbox/
 | BuildManager | [`Vector3 SnapCenterByMinCorner(Vector3 targetCenter, Quaternion targetRotation, Block b)`](../Assets/Scripts/Features/Building/BuildManager.cs#L599) | public |
 | BuildManager | [`bool IsWithinBuildRange(Vector3 position)`](../Assets/Scripts/Features/Building/BuildManager.cs#L605) | public |
 | BuildManager | [`void CreateBlock(GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot)`](../Assets/Scripts/Features/Building/BuildManager.cs#L610) | public |
-| BuildManager | [`Block CreateBlockFromTemplate(GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot, Vector3Int? dimensions)`](../Assets/Scripts/Features/Building/BuildManager.cs#L615) | private |
-| BuildManager | [`void DeleteBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L658) | public |
-| BuildManager | [`void EnsureBlueprintEditor()`](../Assets/Scripts/Features/Building/BuildManager.cs#L679) | private |
-| BuildManager | [`Block CreateDuplicateBlock(GameObject prefab, string path, Vector3 position, Quaternion rotation, Vector3Int dimensions)`](../Assets/Scripts/Features/Building/BuildManager.cs#L688) | private |
-| BuildManager | [`void SaveBlock(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L693) | public |
-| BuildManager | [`void RemoveBlock(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L711) | public |
-| BuildManager | [`void LoadAllBlocks()`](../Assets/Scripts/Features/Building/BuildManager.cs#L719) | public |
-| BuildManager | [`BlueprintStatistics GetBlueprintStatistics()`](../Assets/Scripts/Features/Building/BuildManager.cs#L748) | public |
-| BuildManager | [`void EnsureBlueprintLoader()`](../Assets/Scripts/Features/Building/BuildManager.cs#L755) | private |
-| BuildManager | [`void DisplayBlueprintStatistics(BlueprintStatistics statistics)`](../Assets/Scripts/Features/Building/BuildManager.cs#L764) | private |
-| BuildManager | [`BlueprintLoadSettings CreateLoadSettings()`](../Assets/Scripts/Features/Building/BuildManager.cs#L772) | private |
-| BuildManager | [`void ClearUnloadableData(string id)`](../Assets/Scripts/Features/Building/BuildManager.cs#L790) | public |
-| BuildManager | [`bool IsLoadingBuildTarget( BuildTargetKind kind, string saveName, string enemyBlueprintName, string buildingBlueprintName = null)`](../Assets/Scripts/Features/Building/BuildManager.cs#L795) | public |
-| BuildManager | [`bool IsLoadingBuildTarget(BuildTargetContext context)`](../Assets/Scripts/Features/Building/BuildManager.cs#L805) | private |
-| BuildManager | [`void ClearUnloadableData(string id, string targetSavePath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L815) | private |
-| BuildManager | [`void InitialBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L824) | private |
-| BuildManager | [`bool CanCreateBlock(GameObject prefab, out string reason)`](../Assets/Scripts/Features/Building/BuildManager.cs#L832) | private |
-| BuildManager | [`void ApplyBlockBuildDefaults(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L871) | public |
-| BuildManager | [`int CountCockpitsInCurrentConstruct()`](../Assets/Scripts/Features/Building/BuildManager.cs#L876) | private |
-| BuildManager | [`void ResetBuildState()`](../Assets/Scripts/Features/Building/BuildManager.cs#L886) | private |
-| BuildManager | [`void SetBuildTarget(BuildTargetContext context)`](../Assets/Scripts/Features/Building/BuildManager.cs#L896) | private |
-| BuildManager | [`void RefreshBlueprintUI()`](../Assets/Scripts/Features/Building/BuildManager.cs#L915) | private |
-| BuildManager | [`void StopActiveBlockLoad()`](../Assets/Scripts/Features/Building/BuildManager.cs#L923) | private |
-| BuildManager | [`void CancelBlueprintLoad()`](../Assets/Scripts/Features/Building/BuildManager.cs#L928) | public |
-| BuildManager | [`string ConvertToResourcesPath(string fullPath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L933) | public static |
+| BuildManager | [`Block CreateBlockFromTemplate( GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot, Vector3Int? dimensions, HangarEntrance entrance = HangarEntrance.Front)`](../Assets/Scripts/Features/Building/BuildManager.cs#L615) | private |
+| BuildManager | [`void DeleteBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L669) | public |
+| BuildManager | [`void EnsureBlueprintEditor()`](../Assets/Scripts/Features/Building/BuildManager.cs#L690) | private |
+| BuildManager | [`Block CreateDuplicateBlock(GameObject prefab, string path, Vector3 position, Quaternion rotation, Vector3Int dimensions)`](../Assets/Scripts/Features/Building/BuildManager.cs#L699) | private |
+| BuildManager | [`void SaveBlock(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L711) | public |
+| BuildManager | [`void RemoveBlock(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L729) | public |
+| BuildManager | [`void LoadAllBlocks()`](../Assets/Scripts/Features/Building/BuildManager.cs#L737) | public |
+| BuildManager | [`BlueprintStatistics GetBlueprintStatistics()`](../Assets/Scripts/Features/Building/BuildManager.cs#L766) | public |
+| BuildManager | [`void EnsureBlueprintLoader()`](../Assets/Scripts/Features/Building/BuildManager.cs#L773) | private |
+| BuildManager | [`void DisplayBlueprintStatistics(BlueprintStatistics statistics)`](../Assets/Scripts/Features/Building/BuildManager.cs#L782) | private |
+| BuildManager | [`BlueprintLoadSettings CreateLoadSettings()`](../Assets/Scripts/Features/Building/BuildManager.cs#L790) | private |
+| BuildManager | [`void ClearUnloadableData(string id)`](../Assets/Scripts/Features/Building/BuildManager.cs#L808) | public |
+| BuildManager | [`bool IsLoadingBuildTarget( BuildTargetKind kind, string saveName, string enemyBlueprintName, string buildingBlueprintName = null)`](../Assets/Scripts/Features/Building/BuildManager.cs#L813) | public |
+| BuildManager | [`bool IsLoadingBuildTarget(BuildTargetContext context)`](../Assets/Scripts/Features/Building/BuildManager.cs#L823) | private |
+| BuildManager | [`void ClearUnloadableData(string id, string targetSavePath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L833) | private |
+| BuildManager | [`void InitialBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L842) | private |
+| BuildManager | [`bool CanCreateBlock(GameObject prefab, out string reason)`](../Assets/Scripts/Features/Building/BuildManager.cs#L850) | private |
+| BuildManager | [`void ApplyBlockBuildDefaults(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L889) | public |
+| BuildManager | [`int CountCockpitsInCurrentConstruct()`](../Assets/Scripts/Features/Building/BuildManager.cs#L894) | private |
+| BuildManager | [`void ResetBuildState()`](../Assets/Scripts/Features/Building/BuildManager.cs#L904) | private |
+| BuildManager | [`void SetBuildTarget(BuildTargetContext context)`](../Assets/Scripts/Features/Building/BuildManager.cs#L914) | private |
+| BuildManager | [`void RefreshBlueprintUI()`](../Assets/Scripts/Features/Building/BuildManager.cs#L933) | private |
+| BuildManager | [`void StopActiveBlockLoad()`](../Assets/Scripts/Features/Building/BuildManager.cs#L941) | private |
+| BuildManager | [`void CancelBlueprintLoad()`](../Assets/Scripts/Features/Building/BuildManager.cs#L946) | public |
+| BuildManager | [`string ConvertToResourcesPath(string fullPath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L951) | public static |
 
 ## Assets/Scripts/Features/Building/BuildingEditor/BuildingEditorPanel.cs
 
@@ -5772,14 +5779,15 @@ HY-Sandbox/
 | SiegeReturnFlight | [`void TakeGuidanceControl(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L146) | private |
 | SiegeReturnFlight | [`Vector3 DockPosition(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L179) | private |
 | SiegeReturnFlight | [`void BuildRoute(Flight flight, bool returning)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L204) | private |
-| SiegeReturnFlight | [`void Tick(float deltaTime)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L289) | public |
-| SiegeReturnFlight | [`void TickFlight(Flight flight, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L305) | private |
-| SiegeReturnFlight | [`void ReadPropulsion(Flight flight, out float driveForce, out float liftForce)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L368) | private static |
-| SiegeReturnFlight | [`void ApplyGuidance(Flight flight, Vector3 target, float driveAcceleration, float liftAcceleration, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L391) | private |
-| SiegeReturnFlight | [`void PublishPropulsion(Flight flight, Vector3 horizontal, float vertical, float driveAcceleration, float liftAcceleration)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L429) | private |
-| SiegeReturnFlight | [`void Finish(Flight flight, bool success, string reason = null)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L447) | private |
-| SiegeReturnFlight | [`void ReleasePropulsion(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L480) | private |
-| SiegeReturnFlight | [`void Stop()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L509) | public |
+| SiegeReturnFlight | [`void BuildRoofRoute(Flight flight, bool returning, Vector3 dock, Bounds hull)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L295) | private |
+| SiegeReturnFlight | [`void Tick(float deltaTime)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L353) | public |
+| SiegeReturnFlight | [`void TickFlight(Flight flight, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L369) | private |
+| SiegeReturnFlight | [`void ReadPropulsion(Flight flight, out float driveForce, out float liftForce)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L432) | private static |
+| SiegeReturnFlight | [`void ApplyGuidance(Flight flight, Vector3 target, float driveAcceleration, float liftAcceleration, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L455) | private |
+| SiegeReturnFlight | [`void PublishPropulsion(Flight flight, Vector3 horizontal, float vertical, float driveAcceleration, float liftAcceleration)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L493) | private |
+| SiegeReturnFlight | [`void Finish(Flight flight, bool success, string reason = null)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L511) | private |
+| SiegeReturnFlight | [`void ReleasePropulsion(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L544) | private |
+| SiegeReturnFlight | [`void Stop()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L573) | public |
 
 ## Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs
 
@@ -5865,6 +5873,33 @@ HY-Sandbox/
 
 数据/配置/接口定义，无方法体。
 
+## Assets/Scripts/Features/Siege/Hangars/ChangeHangarEntranceAction.cs
+
+// 职责：撤销和重做机库开口方向，同时刷新几何与编辑中的蓝图。 // 入口：Undo() / Redo()；由机库编辑命令创建。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| ChangeHangarEntranceAction | [`void Undo()`](../Assets/Scripts/Features/Siege/Hangars/ChangeHangarEntranceAction.cs#L17) | public |
+| ChangeHangarEntranceAction | [`void Redo()`](../Assets/Scripts/Features/Siege/Hangars/ChangeHangarEntranceAction.cs#L22) | public |
+| ChangeHangarEntranceAction | [`void Apply(HangarEntrance value)`](../Assets/Scripts/Features/Siege/Hangars/ChangeHangarEntranceAction.cs#L27) | private |
+
+## Assets/Scripts/Features/Siege/Hangars/HangarEntrance.cs
+
+// 职责：保存机库开口方向；零值维持旧蓝图的前门行为。
+
+数据/配置/接口定义，无方法体。
+
+## Assets/Scripts/Features/Siege/Hangars/HangarEntranceButton.cs
+
+// 职责：把已制作的机库方向按钮接入蓝图编辑命令，显示当前前门或顶门。 // 入口：OnEnable() / OnDisable() 对称绑定；Toggle() 供按钮调用。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| HangarEntranceButton | [`void OnEnable()`](../Assets/Scripts/Features/Siege/Hangars/HangarEntranceButton.cs#L14) | private |
+| HangarEntranceButton | [`void OnDisable()`](../Assets/Scripts/Features/Siege/Hangars/HangarEntranceButton.cs#L20) | private |
+| HangarEntranceButton | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Hangars/HangarEntranceButton.cs#L28) | private |
+| HangarEntranceButton | [`void Toggle()`](../Assets/Scripts/Features/Siege/Hangars/HangarEntranceButton.cs#L36) | public |
+
 ## Assets/Scripts/Features/Siege/Hangars/HangarFacePanel.cs
 
 // 职责：只显示面向镜头的已选机库尺寸控件；保持背面按钮不拦截点击。 // 入口：ConfigureGeometry() / LateUpdate()。
@@ -5886,23 +5921,25 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| HangarModule | [`void OnEnable()`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L52) | private |
-| HangarModule | [`void RefreshGeometry()`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L63) | public |
-| HangarModule | [`bool IsCapacityRenderer(Renderer renderer)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L123) | public |
-| HangarModule | [`bool Fits(BlockDataList blueprint)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L128) | public |
-| HangarModule | [`Pose GetDockPose(BlockDataList blueprint)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L140) | public |
-| HangarModule | [`void SetCombat(bool active)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L148) | public |
-| HangarModule | [`void ApplyPresentation()`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L164) | private |
-| HangarModule | [`void SetDoorOpen(bool open)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L200) | public |
-| HangarModule | [`void FixedUpdate()`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L205) | private |
-| HangarModule | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L218) | private |
-| HangarModule | [`bool IsDoorwayClear()`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L226) | private |
-| HangarModule | [`void ApplyDoorPose()`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L254) | private |
-| HangarModule | [`void GetShellBoxes(Vector3 outer, List<Bounds> boxes)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L270) | public static |
-| HangarModule | [`bool TryResize(int axis, int delta, out string reason)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L282) | public |
-| HangarModule | [`void ApplySize(Vector3Int dimensions, Vector3 position)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L330) | internal |
-| HangarModule | [`void RefreshShellPreview(Vector3Int size)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L341) | private |
-| HangarModule | [`void SetShape(Transform piece, Vector3 position, Vector3 size)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L384) | private static |
+| HangarModule | [`void OnEnable()`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L58) | private |
+| HangarModule | [`void RefreshGeometry()`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L69) | public |
+| HangarModule | [`bool IsCapacityRenderer(Renderer renderer)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L134) | public |
+| HangarModule | [`bool Fits(BlockDataList blueprint)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L139) | public |
+| HangarModule | [`Pose GetDockPose(BlockDataList blueprint)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L151) | public |
+| HangarModule | [`void SetCombat(bool active)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L159) | public |
+| HangarModule | [`void ApplyPresentation()`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L175) | private |
+| HangarModule | [`void SetDoorOpen(bool open)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L211) | public |
+| HangarModule | [`void FixedUpdate()`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L216) | private |
+| HangarModule | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L229) | private |
+| HangarModule | [`bool IsDoorwayClear()`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L237) | private |
+| HangarModule | [`void ApplyDoorPose()`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L266) | private |
+| HangarModule | [`void GetShellBoxes(Vector3 outer, List<Bounds> boxes)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L290) | public static |
+| HangarModule | [`bool TrySetEntrance(HangarEntrance value, out string reason)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L302) | public |
+| HangarModule | [`void RestoreEntrance(HangarEntrance value)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L324) | public |
+| HangarModule | [`bool TryResize(int axis, int delta, out string reason)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L335) | public |
+| HangarModule | [`void ApplySize(Vector3Int dimensions, Vector3 position)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L383) | internal |
+| HangarModule | [`void RefreshShellPreview(Vector3Int size)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L394) | private |
+| HangarModule | [`void SetShape(Transform piece, Vector3 position, Vector3 size)`](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L438) | private static |
 
 ## Assets/Scripts/Features/Siege/Hangars/HangarResizeButton.cs
 
@@ -5931,11 +5968,11 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | HangarShellBlueprint | [`int EvenSize(int value)`](../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L11) | public static |
-| HangarShellBlueprint | [`List<Pose> Tiles(Vector3Int size)`](../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L16) | public static |
-| HangarShellBlueprint | [`int TileCount(Vector3Int size)`](../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L52) | public static |
-| HangarShellBlueprint | [`BlockData Normalize(BlockData source)`](../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L57) | public static |
-| HangarShellBlueprint | [`BlockDataList Expand(BlockDataList source)`](../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L82) | public static |
-| HangarShellBlueprint | [`WorldBuildingState ExpandState(WorldBuildingState source)`](../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L157) | public static |
+| HangarShellBlueprint | [`List<Pose> Tiles(Vector3Int size, HangarEntrance entrance = HangarEntrance.Front)`](../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L16) | public static |
+| HangarShellBlueprint | [`int TileCount(Vector3Int size, HangarEntrance entrance = HangarEntrance.Front)`](../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L66) | public static |
+| HangarShellBlueprint | [`BlockData Normalize(BlockData source)`](../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L76) | public static |
+| HangarShellBlueprint | [`BlockDataList Expand(BlockDataList source)`](../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L101) | public static |
+| HangarShellBlueprint | [`WorldBuildingState ExpandState(WorldBuildingState source)`](../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L176) | public static |
 
 ## Assets/Scripts/Features/Siege/Hangars/ResizeHangarAction.cs
 

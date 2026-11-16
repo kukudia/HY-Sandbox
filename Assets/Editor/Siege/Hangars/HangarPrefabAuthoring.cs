@@ -231,7 +231,76 @@ public static class HangarPrefabAuthoring
             ResizeButton(canvas.transform, module, axis, 2, new Vector2(100f, y));
         }
 
+        EntranceControl(canvas.transform, module);
         return face;
+    }
+
+    [MenuItem("HY-Sandbox/Siege/Hangars/Add Front or Roof Door Controls")]
+    public static void AddEntranceControls()
+    {
+        if (EditorApplication.isPlaying)
+        {
+            throw new InvalidOperationException("Exit Play Mode before editing hangar assets.");
+        }
+
+        string backup = "Library/HangarEntrance/" + DateTime.Now.ToString("yyyyMMdd-HHmmss-fffffff");
+        System.IO.Directory.CreateDirectory(backup);
+        System.IO.File.Copy(PrefabPath, backup + "/Hangar.prefab");
+        GameObject root = PrefabUtility.LoadPrefabContents(PrefabPath);
+        try
+        {
+            HangarModule module = root.GetComponent<HangarModule>();
+            foreach (HangarFacePanel face in root.GetComponentsInChildren<HangarFacePanel>(true))
+            {
+                EntranceControl(face.transform, module);
+            }
+
+            Block block = root.GetComponent<Block>();
+            block.info = "HANGAR\nOne assigned ship per hangar.\nSelect to resize or choose FRONT / ROOF doors.\nRotate around the vertical axis to aim a front door.";
+            module.RefreshGeometry();
+            PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
+        }
+        finally
+        {
+            PrefabUtility.UnloadPrefabContents(root);
+        }
+    }
+
+    private static void EntranceControl(Transform panel, HangarModule module)
+    {
+        if (panel.Find("Door Direction") != null)
+        {
+            return;
+        }
+
+        panel.GetComponent<RectTransform>().sizeDelta = new Vector2(280f, 220f);
+        Transform background = panel.Find("Background");
+        background.GetComponent<RectTransform>().sizeDelta = new Vector2(280f, 220f);
+        background.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, -25f);
+        var owner = new GameObject(
+            "Door Direction",
+            typeof(RectTransform),
+            typeof(Image),
+            typeof(Button),
+            typeof(HangarEntranceButton));
+        owner.layer = 5;
+        owner.transform.SetParent(panel, false);
+        RectTransform rect = owner.GetComponent<RectTransform>();
+        rect.sizeDelta = new Vector2(250f, 40f);
+        rect.anchoredPosition = new Vector2(0f, -105f);
+        owner.GetComponent<Image>().color = new Color(.13f, .4f, .48f, 1f);
+        owner.GetComponent<Button>().targetGraphic = owner.GetComponent<Image>();
+        Text label = Text(
+            owner.transform,
+            "Label",
+            "DOOR: FRONT",
+            23,
+            new Vector2(250f, 40f),
+            Vector2.zero);
+        var settings = new SerializedObject(owner.GetComponent<HangarEntranceButton>());
+        settings.FindProperty("hangar").objectReferenceValue = module;
+        settings.FindProperty("label").objectReferenceValue = label;
+        settings.ApplyModifiedPropertiesWithoutUndo();
     }
 
     private static void ResizeButton(Transform parent, HangarModule module, int axis, int delta, Vector2 position)

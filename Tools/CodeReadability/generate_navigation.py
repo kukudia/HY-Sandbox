@@ -55,6 +55,18 @@ def main():
         )
 
     graph(
+        "机库可编辑出入口与垂直返航",
+        "方向随BlockData保存、复制和撤销，旧数据默认前门。顶门使用同一无重叠墙体划分并按实际模块数报价；损伤快照不补墙。门防夹查询转到顶面；导引按真实有电升力垂直进出，偏轴返航先对齐上空再下降。",
+        {"A": "HangarEntranceButton.Toggle", "B": "HangarModule.TrySetEntrance",
+         "C": "HangarModule.RestoreEntrance", "D": "HangarModule.RefreshGeometry",
+         "E": "BuildManager.SaveBlock", "F": "BlueprintBlockFactory.TryRestore",
+         "G": "HangarShellBlueprint.Tiles", "H": "SiegeReturnFlight.BuildRoute",
+         "I": "SiegeReturnFlight.BuildRoofRoute", "J": "SiegeReturnFlight.Tick",
+         "K": "ChangeHangarEntranceAction.Undo", "L": "ChangeHangarEntranceAction.Redo"},
+        ['A --> B', 'B --> C', 'B --> E', 'F --> C', 'C --> D', 'D --> G',
+         'H -->|顶门| I', 'I -.->|固定步执行| J', 'K --> C', 'L --> C'],
+    )
+    graph(
         "波次清场与共享回收",
         "返航/整备期宿主显式启动扫描，活动扫描接管合格敌方残骸的旧延迟退场；最短保留期及分批上限仍有效。预算和扫描共用阵营/场景/驾驶舱验证与幂等回收。产出的掉落归属原场景，不产生额外Match收益或免费维修。新波次/撤退/卸载停止表现并释放所有权。",
         {"A": "SiegeGameplayStage.Update", "B": "SiegeSession.Update", "C": "SiegeCleanupSweep.Begin",

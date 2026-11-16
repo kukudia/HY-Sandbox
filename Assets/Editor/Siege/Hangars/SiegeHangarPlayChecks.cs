@@ -15,6 +15,9 @@ using Object = UnityEngine.Object;
 public static class SiegeHangarPlayChecks
 {
     private const string Pending = "HY.HangarPlayChecks";
+    private static bool Roof => SessionState.GetBool("HY.HangarRoofChecks", false);
+    private static string ReportPath => Roof ? "Temp/Hangars/roof-play-checks.json" : "Temp/Hangars/play-checks.json";
+
     private static IEnumerator scenario;
     private static Report report;
     private static double deadline;
@@ -131,7 +134,19 @@ public static class SiegeHangarPlayChecks
     }
 
     [MenuItem("Tools/HY-Sandbox/Siege/Validate hangar fleet in Play")]
+    public static void RunRoof()
+    {
+        SessionState.SetBool("HY.HangarRoofChecks", true);
+        Begin();
+    }
+
     public static void Run()
+    {
+        SessionState.SetBool("HY.HangarRoofChecks", false);
+        Begin();
+    }
+
+    private static void Begin()
     {
         if (EditorApplication.isPlaying || SceneManager.sceneCount != 1 || SceneManager.GetActiveScene().path != "Assets/Scenes/Main.unity" || SceneManager.GetActiveScene().isDirty)
         {
@@ -219,6 +234,7 @@ public static class SiegeHangarPlayChecks
             GameObject hangarPrefab = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Resources" }).Select(AssetDatabase.GUIDToAssetPath).Select(AssetDatabase.LoadAssetAtPath<GameObject>).First(asset => asset != null && asset.GetComponent<HangarModule>() != null);
             BlockData hangarData = new BlockData(hangarPrefab.GetComponent<Block>());
             hangarData.id = "probe-hangar";
+            hangarData.hangarEntrance = Roof ? HangarEntrance.Roof : HangarEntrance.Front;
             hangarData.x = Mathf.CeilToInt(bounds.size.x) + 2;
             hangarData.y = Mathf.CeilToInt(bounds.size.y) + 1;
             hangarData.z = Mathf.CeilToInt(bounds.size.z) + 2;
@@ -317,7 +333,7 @@ public static class SiegeHangarPlayChecks
                 "Powered ship physically exits the animated hangar through its door: " + host.FlightGuidance.LastFailureReason);
             CheckGuidedFeedback("launch");
             Check(
-                Vector3.Distance(entry.Cockpit.transform.position, startingPosition) > hangarData.z * .5f,
+                Vector3.Distance(entry.Cockpit.transform.position, startingPosition) > (Roof ? hangarData.y : hangarData.z) * .5f,
                 "Launch travels beyond the external hangar wall under real physics");
             EnemyController ai = entry.Unit.GetComponent<EnemyController>();
             if (ai != null)
@@ -350,6 +366,31 @@ public static class SiegeHangarPlayChecks
             Check(
                 Vector3.Distance(entry.Cockpit.transform.position, startingPosition) < .35f,
                 "Returning ship restores its authored cockpit dock pose within tolerance");
+            if (Roof)
+            {
+                // A second return starts outside the aligned roof corridor, exercising the
+                // vertical climb and horizontal alignment before the final descent.
+                Rigidbody body = entry.Unit.GetComponent<Rigidbody>();
+                body.position += new Vector3(18f, 15f, 14f);
+                entry.Unit.transform.position = body.position;
+                host.Fleet.SetCombatActive(true);
+                host.FlightGuidance.BeginReturn();
+                navigationComplete = false;
+                manager.StartCoroutine(GuideFlight(host.FlightGuidance, entry, "lateral return", () => navigationComplete = true));
+                while (!navigationComplete)
+                {
+                    yield return null;
+                }
+
+                Check(
+                    host.FlightGuidance.CompletedCount == 1 && host.FlightGuidance.FailedCount == 0 && entry.IsAlive,
+                    "Off-axis ship aligns above the roof before descending: " + host.FlightGuidance.LastFailureReason);
+                CheckGuidedFeedback("lateral return");
+                Check(
+                    Vector3.Distance(entry.Cockpit.transform.position, startingPosition) < .35f,
+                    "Off-axis return restores the exact original cockpit pose");
+            }
+
             host.FlightGuidance.Stop();
             host.Fleet.SetCombatActive(false);
             SetSimulation(manager, previousSimulation);
@@ -526,6 +567,11 @@ public static class SiegeHangarPlayChecks
 
         )
         {
+            if (Roof && !hover && phase != "lateral return")
+            {
+                continue;
+            }
+
             Check(
                 report.flightSamples.Any(sample => sample.phase == phase && sample.engines.Any(engine => engine.hover == hover && engine.guided && engine.thrust > 0f && engine.visualIntensity > 0f)),
                 phase + " powered " + (hover ? "lift" : "drive") + " has actual guided output and visible nozzle intensity");
@@ -559,7 +605,7 @@ public static class SiegeHangarPlayChecks
         SessionState.SetBool(Pending, false);
         report.status = report.errors.Count == 0 ? "passed" : "failed";
         Directory.CreateDirectory("Temp/Hangars");
-        File.WriteAllText("Temp/Hangars/play-checks.json", JsonUtility.ToJson(report, true));
+        File.WriteAllText(ReportPath, JsonUtility.ToJson(report, true));
         Debug.Log("Hangar checks: " + report.status + " / " + report.checks.Count);
         EditorApplication.isPlaying = false;
     }

@@ -383,6 +383,20 @@ public static class HangarWorkshopChecks
         Check(
             block.Neighbors().Contains(build.Foundation.GetComponent<Block>()),
             "even-size changes retain grid-aligned bottom connections");
+        Button entranceButton = visible.transform.Find("Door Direction").GetComponent<Button>();
+        entranceButton.onClick.Invoke();
+        yield return Frames(2);
+        Check(
+            hangar.Entrance == HangarEntrance.Roof && Saved(block).hangarEntrance == HangarEntrance.Roof,
+            "authored door button changes shell and persists roof entrance");
+        ActionManager.instance.Undo();
+        Check(
+            hangar.Entrance == HangarEntrance.Front && Saved(block).hangarEntrance == HangarEntrance.Front,
+            "door Undo restores front geometry and JSON");
+        ActionManager.instance.Redo();
+        Check(
+            hangar.Entrance == HangarEntrance.Roof && Saved(block).hangarEntrance == HangarEntrance.Roof,
+            "door Redo restores roof geometry and JSON");
         Vector3 oldPosition = block.transform.position;
         build.SetBuildType(BuildType.Move);
         InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.D));
@@ -420,6 +434,9 @@ public static class HangarWorkshopChecks
         Check(
             duplicate != null && duplicate != block && duplicate.x == block.x && duplicate.y == block.y && duplicate.z == block.z,
             "hangar copy preserves resized capacity and has a separate selection");
+        Check(
+            duplicate.GetComponent<HangarModule>().Entrance == HangarEntrance.Roof && Saved(duplicate).hangarEntrance == HangarEntrance.Roof,
+            "real duplicate input preserves the roof door and its saved direction");
         for (int index = 2; index < HangarRules.MaximumCount; index++)
         {
             build.CreateBlock(
@@ -475,6 +492,9 @@ public static class HangarWorkshopChecks
         Check(
             new Vector3Int(restored.x, restored.y, restored.z) == dimensions && restored.GetComponent<HangarModule>().InnerSize == (Vector3)dimensions - new Vector3(2f, 2f, 2f),
             "reopening the base restores the edited capacity and actual geometry");
+        Check(
+            restored.GetComponent<HangarModule>().Entrance == HangarEntrance.Roof,
+            "reopening a saved base restores the roof door geometry");
         Check(
             GameManager.instance.blocksParent.GetComponentsInChildren<HangarModule>().Length == 6,
             "six-hangar layout survives closing and reopening the base");

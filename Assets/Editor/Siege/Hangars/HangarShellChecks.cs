@@ -60,6 +60,26 @@ public static class HangarShellChecks
                 report,
                 "expanded design is idempotent",
                 ReferenceEquals(design, HangarShellBlueprint.Expand(design)));
+            BlockDataList roofSource = JsonUtility.FromJson<BlockDataList>(original);
+            roofSource.blocks[0].hangarEntrance = HangarEntrance.Roof;
+            BlockDataList roof = HangarShellBlueprint.Expand(roofSource);
+            Check(
+                report,
+                "roof layout count and price share the actual tiling",
+                roof.blocks.Count == 1 + HangarShellBlueprint.TileCount(new Vector3Int(20, 10, 24), HangarEntrance.Roof) && HangarRules.ShellCost(roofSource.blocks[0]) > 0);
+            Check(
+                report,
+                "roof expansion retains direction and does not edit the source",
+                roof.blocks[0].hangarEntrance == HangarEntrance.Roof && roofSource.blocks.Count == 1);
+            Check(
+                report,
+                "old JSON defaults to a front entrance",
+                JsonUtility.FromJson<BlockData>("{}").hangarEntrance == HangarEntrance.Front);
+            roofSource.blocks[0].hangarEntrance = (HangarEntrance)99;
+            Check(
+                report,
+                "unsupported entrance enum is rejected before deployment",
+                !HangarRules.Validate(roofSource, out _));
             BlockDataList excessive = JsonUtility.FromJson<BlockDataList>(original);
             excessive.blocks[0].x = 64;
             excessive.blocks[0].y = 64;

@@ -205,6 +205,12 @@ public sealed class SiegeReturnFlight
     {
         Vector3 dock = DockPosition(flight);
         Bounds hull = BlockBounds.FromBlueprint(flight.entry.Blueprint.blocks, Matrix4x4.identity);
+        if (flight.hangar != null && flight.hangar.Entrance == HangarEntrance.Roof)
+        {
+            BuildRoofRoute(flight, returning, dock, hull);
+            return;
+        }
+
         Vector3 forward = flight.entry.DockRotation * Vector3.forward;
         Block hangarBlock = flight.hangar != null ? flight.hangar.GetComponent<Block>() : null;
         float depth = hangarBlock != null ? hangarBlock.z : 6f;
@@ -282,6 +288,64 @@ public sealed class SiegeReturnFlight
             aboveCurrent,
             aboveApproach,
             approach,
+            dock
+        };
+    }
+
+    private void BuildRoofRoute(Flight flight, bool returning, Vector3 dock, Bounds hull)
+    {
+        Block bay = flight.hangar.GetComponent<Block>();
+        Vector3 approach = dock + Vector3.up * (bay.y + hull.size.y + settings.approachClearance);
+        if (!returning)
+        {
+            flight.points = new[]
+            {
+                approach
+            };
+            return;
+        }
+
+        Vector3 relative = Quaternion.Inverse(flight.entry.DockRotation) * (flight.body.position - dock);
+        Vector3 inner = flight.hangar.InnerSize;
+        bool aligned = Mathf.Abs(relative.x) <= Mathf.Max(.05f, (inner.x - hull.size.x) * .5f) && Mathf.Abs(relative.z) <= Mathf.Max(.05f, (inner.z - hull.size.z) * .5f) && relative.y >= -.05f && Quaternion.Angle(flight.body.rotation, flight.dockRotation) < .5f;
+        if (aligned)
+        {
+            flight.points = new[]
+            {
+                dock
+            };
+            return;
+        }
+
+        // Align over the roof before descending. An interior ship leaves vertically first;
+        // a distant ship never cuts diagonally through a side wall or the roof frame.
+        Vector3 physicalCenter = flight.body.position;
+        if (flight.entry.Cockpit != null)
+        {
+            BlockData source = flight.entry.Blueprint.blocks.Find(block => block.id == flight.entry.Cockpit.GetComponent<Block>().uniqueId);
+            if (source != null)
+            {
+                Quaternion sourceRotation = new Quaternion(source.rotX, source.rotY, source.rotZ, source.rotW);
+                Vector3 sourcePosition = new Vector3(source.posX, source.posY, source.posZ);
+                physicalCenter = flight.entry.Cockpit.transform.TransformPoint(Quaternion.Inverse(sourceRotation) * (hull.center - sourcePosition));
+            }
+        }
+
+        Vector3 local = flight.hangar.transform.InverseTransformPoint(physicalCenter);
+        bool inside = Mathf.Abs(local.x) < bay.x * .5f && Mathf.Abs(local.z) < bay.z * .5f && Mathf.Abs(local.y) < bay.y * .5f;
+        float cruise = Mathf.Max(flight.body.position.y, approach.y);
+        Vector3 above = new Vector3(flight.body.position.x, cruise, flight.body.position.z);
+        Vector3 alignedAbove = new Vector3(approach.x, cruise, approach.z);
+        flight.points = inside ? new[]
+        {
+            approach,
+            dock
+        }
+
+        : new[]
+        {
+            above,
+            alignedAbove,
             dock
         };
     }
