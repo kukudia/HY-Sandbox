@@ -1035,7 +1035,7 @@ def main():
     )
     graph(
         "表现、镜头与 UI 生命周期",
-        "游戏事件选择效果；新建管理器的逐次毁伤/VFX日志默认关闭。短时光束/点光源按场景复用，闲置有界、活动不裁剪；到期回收，场景卸载释放。GPU突发仍沿原预算释放。镜头取景是计算，输入及协程由 CameraController 持有。",
+        "游戏事件选择效果；新建管理器的逐次毁伤/VFX日志默认关闭。短时光束/点光源按场景复用，闲置有界、活动不裁剪；到期回收，场景卸载释放。GPU突发仍沿原预算释放。镜头抖动统一经过PlayCameraShake，工坊非游玩时取消偏移，防止连接点瞄准漂移。镜头取景是计算，输入及协程由 CameraController 持有。",
         {
             "A": "VisualEffectsManager.TryPlayBlockExplosion",
             "B": "VisualEffectsManager.PlayBlockExplosion",
@@ -1063,6 +1063,7 @@ def main():
             "X": "TransientEffectPool.RentBeam",
             "Y": "BeamFade.Update",
             "Z": "TransientEffectPool.OnDestroy",
+            "AA": "VisualEffectsManager.PlayCameraShake",
         },
         [
             "A --> B",
@@ -1075,7 +1076,9 @@ def main():
             "W -.->|引擎Update| Y",
             "Y -->|到期| V",
             "Z -.->|随场景销毁子对象| V",
-            "B --> F",
+            "B --> AA",
+            "AA -->|仅游玩| F",
+            "AA -->|工坊编辑| I",
             "F -.->|协程| G",
             "H --> I",
             "J --> K",

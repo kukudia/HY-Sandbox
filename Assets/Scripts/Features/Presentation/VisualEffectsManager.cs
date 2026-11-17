@@ -218,6 +218,13 @@ public class VisualEffectsManager : MonoBehaviour
     /// <summary>供独立玩法界面请求一次镜头抖动；不创建对象、不改变效果预算。</summary>
     public void PlayCameraShake(float amplitude, float duration)
     {
+        if (PlayManager.instance != null && !PlayManager.instance.playMode)
+        {
+            // 工坊相机也是连接点射线的输入坐标系；放置反馈不能推移下一次编辑目标。
+            _cameraShake?.Cancel();
+            return;
+        }
+
         Shake.Play(Camera.main, amplitude, duration);
     }
 
@@ -306,7 +313,7 @@ public class VisualEffectsManager : MonoBehaviour
             0.2f,
             0.035f);
         TransientEffects.CreateLightFlash(center, buildColor, 3.4f, scale * 4.2f, 0.26f);
-        Shake.Play(Camera.main, cameraShakeStrength * 0.45f, 0.12f);
+        PlayCameraShake(cameraShakeStrength * 0.45f, 0.12f);
     }
 
     private void PlayBlockRemoved(Block block)
@@ -318,7 +325,7 @@ public class VisualEffectsManager : MonoBehaviour
 
         if (block.TryGetComponent(out BlockMaterial surface) && surface.PlayBreak())
         {
-            Shake.Play(Camera.main, cameraShakeStrength * .35f, .1f);
+            PlayCameraShake(cameraShakeStrength * .35f, .1f);
             return;
         }
 
@@ -335,7 +342,7 @@ public class VisualEffectsManager : MonoBehaviour
             0.28f,
             0.045f);
         TransientEffects.CreateLightFlash(bounds.center, removeColor, 4.2f, scale * 4.8f, 0.34f);
-        Shake.Play(Camera.main, cameraShakeStrength, 0.18f);
+        PlayCameraShake(cameraShakeStrength, 0.18f);
     }
 
     private void PlayBlockExplosion(Block block)
@@ -369,7 +376,7 @@ public class VisualEffectsManager : MonoBehaviour
         }
 
         TransientEffects.CreateLightFlash(center, emberColor, 7.5f, scale * 7f, 0.62f);
-        Shake.Play(Camera.main, cameraShakeStrength * 1.35f, 0.42f);
+        PlayCameraShake(cameraShakeStrength * 1.35f, 0.42f);
     }
 
     private void PlayObjectDestroyed(GameObject target)
@@ -561,6 +568,6 @@ public class VisualEffectsManager : MonoBehaviour
             TransientEffects.CreateLightFlash(position, meteorColor, impactScale * 3.8f, impactScale * 5.5f, 0.32f);
         }
 
-        Shake.Play(Camera.main, cameraShakeStrength * Mathf.Clamp(impactScale, 1f, 3f), 0.2f);
+        PlayCameraShake(cameraShakeStrength * Mathf.Clamp(impactScale, 1f, 3f), 0.2f);
     }
 }

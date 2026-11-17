@@ -2871,7 +2871,7 @@ flowchart TD
     M["SiegeConstructionSettings.Cost()"]
     click M "../Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs#L30" "打开源码"
     N["VisualEffectsManager.PlayBlockRemoved()"]
-    click N "../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L312" "打开源码"
+    click N "../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L319" "打开源码"
     O["BlockMaterial.PlayBreak()"]
     click O "../Assets/Scripts/Features/Building/Materials/BlockMaterial.cs#L83" "打开源码"
     P["MaterialBreakEffect.Play()"]
@@ -2920,7 +2920,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/Materials/BlockMaterialCatalog.cs|Price -->
 - [SiegeConstructionSettings.Cost](../Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs#L30)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs|Cost -->
-- [VisualEffectsManager.PlayBlockRemoved](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L312)
+- [VisualEffectsManager.PlayBlockRemoved](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L319)
 <!-- source: Assets/Scripts/Features/Presentation/VisualEffectsManager.cs|PlayBlockRemoved -->
 - [BlockMaterial.PlayBreak](../Assets/Scripts/Features/Building/Materials/BlockMaterial.cs#L83)
 <!-- source: Assets/Scripts/Features/Building/Materials/BlockMaterial.cs|PlayBreak -->
@@ -3428,14 +3428,14 @@ flowchart TD
 
 ## 表现、镜头与 UI 生命周期
 
-游戏事件选择效果；新建管理器的逐次毁伤/VFX日志默认关闭。短时光束/点光源按场景复用，闲置有界、活动不裁剪；到期回收，场景卸载释放。GPU突发仍沿原预算释放。镜头取景是计算，输入及协程由 CameraController 持有。
+游戏事件选择效果；新建管理器的逐次毁伤/VFX日志默认关闭。短时光束/点光源按场景复用，闲置有界、活动不裁剪；到期回收，场景卸载释放。GPU突发仍沿原预算释放。镜头抖动统一经过PlayCameraShake，工坊非游玩时取消偏移，防止连接点瞄准漂移。镜头取景是计算，输入及协程由 CameraController 持有。
 
 ```mermaid
 flowchart TD
     A["VisualEffectsManager.TryPlayBlockExplosion()"]
     click A "../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L84" "打开源码"
     B["VisualEffectsManager.PlayBlockExplosion()"]
-    click B "../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L341" "打开源码"
+    click B "../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L348" "打开源码"
     C["BlockVfxLibrary.Play()"]
     click C "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L112" "打开源码"
     D["TransientEffects.CreateLightFlash()"]
@@ -3484,6 +3484,8 @@ flowchart TD
     click Y "../Assets/Scripts/Features/Presentation/Effects/BeamFade.cs#L26" "打开源码"
     Z["TransientEffectPool.OnDestroy()"]
     click Z "../Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs#L111" "打开源码"
+    AA["VisualEffectsManager.PlayCameraShake()"]
+    click AA "../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L219" "打开源码"
     A --> B
     B --> C
     B -->|成功生成| D
@@ -3494,7 +3496,9 @@ flowchart TD
     W -.->|引擎Update| Y
     Y -->|到期| V
     Z -.->|随场景销毁子对象| V
-    B --> F
+    B --> AA
+    AA -->|仅游玩| F
+    AA -->|工坊编辑| I
     F -.->|协程| G
     H --> I
     J --> K
@@ -3507,7 +3511,7 @@ flowchart TD
 
 - [VisualEffectsManager.TryPlayBlockExplosion](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L84)
 <!-- source: Assets/Scripts/Features/Presentation/VisualEffectsManager.cs|TryPlayBlockExplosion -->
-- [VisualEffectsManager.PlayBlockExplosion](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L341)
+- [VisualEffectsManager.PlayBlockExplosion](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L348)
 <!-- source: Assets/Scripts/Features/Presentation/VisualEffectsManager.cs|PlayBlockExplosion -->
 - [BlockVfxLibrary.Play](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L112)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs|Play -->
@@ -3557,6 +3561,8 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/Effects/BeamFade.cs|Update -->
 - [TransientEffectPool.OnDestroy](../Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs#L111)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs|OnDestroy -->
+- [VisualEffectsManager.PlayCameraShake](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L219)
+<!-- source: Assets/Scripts/Features/Presentation/VisualEffectsManager.cs|PlayCameraShake -->
 
 ## 探索副场景与世界组件会话
 
@@ -5101,9 +5107,9 @@ flowchart TD
     D["SiegeMatch.RegisterAttacker()"]
     click D "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L130" "打开源码"
     E["VisualEffectsManager.TryPlayEnemySpawnPortal()"]
-    click E "../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L225" "打开源码"
+    click E "../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L232" "打开源码"
     F["VisualEffectsManager.PlayEnemySpawnPortal()"]
-    click F "../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L235" "打开源码"
+    click F "../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L242" "打开源码"
     G["BlockVfxLibrary.Play()"]
     click G "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L112" "打开源码"
     H["BlockVfxLibrary.PlayTemplate()"]
@@ -5145,9 +5151,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyBlueprintFactory.cs|Spawn -->
 - [SiegeMatch.RegisterAttacker](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L130)
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|RegisterAttacker -->
-- [VisualEffectsManager.TryPlayEnemySpawnPortal](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L225)
+- [VisualEffectsManager.TryPlayEnemySpawnPortal](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L232)
 <!-- source: Assets/Scripts/Features/Presentation/VisualEffectsManager.cs|TryPlayEnemySpawnPortal -->
-- [VisualEffectsManager.PlayEnemySpawnPortal](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L235)
+- [VisualEffectsManager.PlayEnemySpawnPortal](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L242)
 <!-- source: Assets/Scripts/Features/Presentation/VisualEffectsManager.cs|PlayEnemySpawnPortal -->
 - [BlockVfxLibrary.Play](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L112)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs|Play -->

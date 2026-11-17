@@ -147,6 +147,7 @@ public static class NightMenuAuthoring
         title.sizeDelta = new Vector2(220, 52);
         if (data.FindProperty("autoRotate").objectReferenceValue != null)
         {
+            StylePreference((Toggle)data.FindProperty("autoRotate").objectReferenceValue);
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             return;
@@ -171,6 +172,7 @@ public static class NightMenuAuthoring
         label.fontSize = 21;
         label.color = Color.white;
         label.text = "AUTO ROTATE TO SURFACE";
+        StylePreference(toggle);
         var help = new GameObject("Auto rotate description", typeof(RectTransform), typeof(Text));
         Place(help.GetComponent<RectTransform>(), preference, new Vector2(-330, -10), new Vector2(750, 110));
         Text description = help.GetComponent<Text>();
@@ -198,6 +200,37 @@ public static class NightMenuAuthoring
 
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
+    }
+
+    private static void StylePreference(Toggle toggle)
+    {
+        Image row = toggle.GetComponent<Image>();
+        if (row == null)
+        {
+            row = toggle.gameObject.AddComponent<Image>();
+        }
+
+        row.color = new Color(.045f, .075f, .10f, .9f);
+        row.raycastTarget = true;
+        RectTransform box = toggle.targetGraphic.rectTransform;
+        box.anchorMin = box.anchorMax = new Vector2(0, .5f);
+        box.pivot = new Vector2(.5f, .5f);
+        box.anchoredPosition = new Vector2(24, 0);
+        box.sizeDelta = new Vector2(28, 28);
+        ((Image)toggle.targetGraphic).sprite = null;
+        toggle.targetGraphic.color = new Color(.22f, .32f, .4f);
+        RectTransform mark = toggle.graphic.rectTransform;
+        mark.anchorMin = mark.anchorMax = mark.pivot = new Vector2(.5f, .5f);
+        mark.anchoredPosition = Vector2.zero;
+        mark.sizeDelta = new Vector2(16, 16);
+        ((Image)toggle.graphic).sprite = null;
+        toggle.graphic.color = new Color(.15f, .85f, .8f);
+        Text label = toggle.GetComponentInChildren<Text>();
+        label.rectTransform.anchorMin = Vector2.zero;
+        label.rectTransform.anchorMax = Vector2.one;
+        label.rectTransform.offsetMin = new Vector2(50, 0);
+        label.rectTransform.offsetMax = new Vector2(-12, 0);
+        label.alignment = TextAnchor.MiddleLeft;
     }
 
     private static RectTransform Page(string name, Transform parent)

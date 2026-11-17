@@ -128,7 +128,7 @@ public static class MainMenuPlayChecks
             Object.FindObjectsByType<WorldSessionManager>(FindObjectsInactive.Include).Length == 0,
             "cold menu does not generate a world");
         Check(
-            EditorBuildSettings.scenes[0].path == WorkshopNavigation.MenuPath,
+            EditorBuildSettings.scenes.First(scene => scene.enabled).path == WorkshopNavigation.MenuPath,
             "MainMenu is the Player startup scene");
         Check(ActiveEvents() == 1, "cold menu has one EventSystem");
         menu.Quit();
@@ -216,7 +216,8 @@ public static class MainMenuPlayChecks
         File.WriteAllText(
             SaveManager.instance.GetBaseBlueprintPath("Starter Bastion (read only)"),
             JsonUtility.ToJson(alias));
-        BuildManager.instance.BlockLoadIntervalSeconds = 0;
+        // A deliberately slow legacy interval makes the production menu's fast path observable.
+        BuildManager.instance.BlockLoadIntervalSeconds = 1f;
         BuildManager.instance.moveCameraDuringBlockLoad = false;
         menu.ReturnToMenu();
         while (menu.Busy)
@@ -258,6 +259,7 @@ public static class MainMenuPlayChecks
         File.WriteAllText(removed, originalJson);
         menu.RefreshLibrary();
         Select(menu, "Menu Vehicle A");
+        double loadStarted = Time.realtimeSinceStartupAsDouble;
         menu.LaunchSelected();
         while (menu.Busy)
         {
@@ -265,6 +267,9 @@ public static class MainMenuPlayChecks
         }
 
         Transform draft = GameManager.instance.blocksParent;
+        Check(
+            Time.realtimeSinceStartupAsDouble - loadStarted < 1f,
+            "menu blueprint restoration bypasses the one-second legacy interval");
         BlockDataList originalCache = SaveManager.instance.cachedData;
         draft.name = "UNSAVED MENU MARKER";
         Vector3 cameraPosition = CameraController.instance.transform.position;
@@ -578,6 +583,16 @@ public static class MainMenuPlayChecks
                 yield return null;
             }
 
+            Check(buildProbe.currentGhost == null, "base placement beyond the 30m construction range has no ghost");
+            buildCamera.transform.position = aim + new Vector3(0f, 22f, -8f);
+            buildCamera.transform.LookAt(aim);
+            screenAim = buildCamera.WorldToScreenPoint(aim);
+            InputSystem.QueueStateEvent(mouse, new MouseState { position = screenAim });
+            for (int frame = 0; frame < 8; frame++)
+            {
+                yield return null;
+            }
+
             Check(
                 buildProbe.currentGhost != null && buildProbe.hoveredConnector != null,
                 "base foundation offers a placement ghost beyond the vehicle's 15m range");
@@ -603,6 +618,19 @@ public static class MainMenuPlayChecks
             InputSystem.settings.backgroundBehavior = previousBackground;
         }
 
+        IEnumerator surface = SurfacePlacement();
+        try
+        {
+            while (surface.MoveNext())
+            {
+                yield return surface.Current;
+            }
+        }
+        finally
+        {
+            (surface as IDisposable)?.Dispose();
+        }
+
         menu.ReturnToMenu();
         while (menu.Busy)
         {
@@ -612,6 +640,33 @@ public static class MainMenuPlayChecks
         menu.ShowHome();
         Object.FindAnyObjectByType<MainMenuView>().Settings();
         MenuSettings settings = Object.FindAnyObjectByType<MenuSettings>();
+        var settingData = new SerializedObject(settings);
+        Button preferenceTab = (Button)settingData.FindProperty("preferenceTab").objectReferenceValue;
+        Button generalTab = (Button)settingData.FindProperty("generalTab").objectReferenceValue;
+        Toggle autoRotate = (Toggle)settingData.FindProperty("autoRotate").objectReferenceValue;
+        GameObject preferencePage = (GameObject)settingData.FindProperty("preferencePage").objectReferenceValue;
+        GameObject generalPage = (GameObject)settingData.FindProperty("generalPage").objectReferenceValue;
+        yield return null;
+        PointerClick(preferenceTab);
+        yield return null;
+        Check(
+            preferencePage.activeInHierarchy && !generalPage.activeInHierarchy,
+            "Preference navigation accepts an unobstructed pointer click");
+        bool oldAutoRotate = autoRotate.isOn;
+        PointerClick(autoRotate);
+        Check(
+            MenuSettings.AutoRotatePlacement == !oldAutoRotate,
+            "auto-rotate toggle pointer click changes persisted placement preference");
+        PointerClick(generalTab);
+        yield return null;
+        Check(
+            generalPage.activeInHierarchy && !preferencePage.activeInHierarchy,
+            "General navigation restores the settings controls");
+        PointerClick(preferenceTab);
+        yield return null;
+        Check(autoRotate.isOn == !oldAutoRotate, "placement preference survives page navigation");
+        PointerClick(generalTab);
+        yield return null;
         Slider volume = (Slider)new SerializedObject(settings).FindProperty("volume").objectReferenceValue;
         Slider sensitivity = (Slider)new SerializedObject(settings).FindProperty("sensitivity").objectReferenceValue;
         volume.value = .37f;
@@ -632,6 +687,100 @@ public static class MainMenuPlayChecks
         Check(
             File.ReadAllText(broken) == "{}" && File.ReadAllText(invalid).Contains("missing"),
             "rejected source files stay byte-for-byte untouched");
+    }
+
+    private static IEnumerator SurfacePlacement()
+    {
+        BuildManager build = BuildManager.instance;
+        Camera camera = build.mainCamera;
+        PlayerPrefs.SetInt("HY.Menu.AutoRotatePlacement", 1);
+        Mouse physical = Mouse.current;
+        InputSystem.DisableDevice(physical);
+        Mouse mouse = InputSystem.AddDevice<Mouse>("Surface placement fixture");
+        InputSettings.BackgroundBehavior previous = InputSystem.settings.backgroundBehavior;
+        InputSystem.settings.backgroundBehavior = InputSettings.BackgroundBehavior.IgnoreFocus;
+        Vector3[] normals =
+        {
+            Vector3.up,
+            Vector3.down,
+            Vector3.left,
+            Vector3.right,
+            Vector3.forward,
+            Vector3.back
+        };
+        try
+        {
+            for (int face = 0; face < normals.Length; face++)
+            {
+                Vector3 center = new Vector3(1200 + face * 30, 1200, 1200);
+                build.CreateBlock(Resources.Load<GameObject>("Blocks/2x2x2"), "Blocks/2x2x2", center, Quaternion.identity);
+                yield return null;
+                build.SetCurrentBlockResource("Blocks/Turret");
+                camera.transform.position = center + normals[face] * 9;
+                camera.transform.rotation = Quaternion.LookRotation(-normals[face], Mathf.Abs(normals[face].y) > .9f ? Vector3.forward : Vector3.up);
+                Vector2 point = camera.WorldToScreenPoint(center);
+                InputSystem.QueueStateEvent(mouse, new MouseState { position = point });
+                for (int frame = 0; frame < 4; frame++)
+                {
+                    yield return null;
+                }
+
+                Check(
+                    build.currentGhost != null && build.hoveredConnector != null,
+                    "restricted turret has a production preview on face " + face);
+                Quaternion rotation = build.currentGhost.transform.rotation;
+                Vector3 position = build.currentGhost.transform.position;
+                Vector3 cameraBefore = camera.transform.position;
+                Vector2 mouseBefore = mouse.position.ReadValue();
+                Vector3 connectorBefore = build.hoveredConnector.localPos;
+                int frameBeforePlacement = Time.frameCount;
+                Check(
+                    Vector3.Dot(rotation * Vector3.up, normals[face]) > .999f,
+                    "turret attachment face follows surface " + face);
+                int count = SaveManager.instance.cachedData.blocks.Count;
+                InputSystem.QueueStateEvent(mouse, new MouseState { position = point }.WithButton(MouseButton.Left));
+                yield return null;
+                yield return null;
+                InputSystem.QueueStateEvent(mouse, new MouseState { position = point });
+                yield return null;
+                Check(
+                    SaveManager.instance.cachedData.blocks.Count == count + 1,
+                    "real mouse places restricted turret on face " + face);
+                Check(
+                    Vector3.Distance(cameraBefore, camera.transform.position) < .0001f,
+                    "placement feedback preserves the workshop aim on face " + face);
+                Block placed = build.lastSaveBlock;
+                float positionError = placed != null ? Vector3.Distance(placed.transform.position, position) : float.PositiveInfinity;
+                float rotationError = placed != null ? Quaternion.Angle(placed.transform.rotation, rotation) : float.PositiveInfinity;
+                Check(
+                    placed != null && positionError < .001f && rotationError < .1f,
+                    "placed turret matches preview pose on face " + face + " (preview=" + position.ToString("F4") + ", actual=" + placed?.transform.position.ToString("F4") + ", position error=" + positionError + ", angle=" + rotationError + ", camera=" + cameraBefore.ToString("F6") + " -> " + camera.transform.position.ToString("F6") + ", mouse=" + mouseBefore.ToString("F6") + " -> " + mouse.position.ReadValue().ToString("F6") + ", connector=" + connectorBefore.ToString("F6") + ", frame=" + frameBeforePlacement + " -> " + Time.frameCount + ")");
+            }
+        }
+        finally
+        {
+            build.SetCurrentBlockResource(string.Empty);
+            InputSystem.RemoveDevice(mouse);
+            InputSystem.EnableDevice(physical);
+            InputSystem.settings.backgroundBehavior = previous;
+        }
+    }
+
+    private static void PointerClick(Selectable control)
+    {
+        Canvas.ForceUpdateCanvases();
+        RectTransform rect = control.GetComponent<RectTransform>();
+        var pointer = new PointerEventData(EventSystem.current)
+        {
+            position = RectTransformUtility.WorldToScreenPoint(null, rect.TransformPoint(rect.rect.center)),
+            button = PointerEventData.InputButton.Left
+        };
+        var hits = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointer, hits);
+        Check(
+            hits.Count > 0 && hits[0].gameObject.GetComponentInParent<Selectable>() == control,
+            control.name + " is topmost pointer target");
+        ExecuteEvents.Execute(control.gameObject, pointer, ExecuteEvents.pointerClickHandler);
     }
 
     private static void Select(MainMenuController menu, string name)
@@ -705,13 +854,14 @@ public static class MainMenuPlayChecks
         {
             "HY.Menu.RecentName",
             "HY.Menu.RecentBuilding",
+            "HY.Menu.AutoRotatePlacement",
             "HY.Menu.Volume",
             "HY.Menu.Sensitivity"
         }
 
         )
         {
-            string kind = key.EndsWith("Name") ? "s" : key.EndsWith("Building") ? "i" : "f";
+            string kind = key.EndsWith("Name") ? "s" : key.EndsWith("Building") || key.EndsWith("AutoRotatePlacement") ? "i" : "f";
             preferences[key] = !PlayerPrefs.HasKey(key) ? null : kind + (kind == "s" ? PlayerPrefs.GetString(key) : kind == "i" ? PlayerPrefs.GetInt(key).ToString() : PlayerPrefs.GetFloat(key).ToString(System.Globalization.CultureInfo.InvariantCulture));
         }
 
