@@ -15,6 +15,7 @@ internal sealed class BuildManipulation
     private GameObject rotateAxis;
     private Block selectedBlock;
     private MoveAxisHandle activeHandle;
+    private Block dragBlock;
     private Vector3 dragStartPos;
     private Vector3 blockStartPos;
     private RotateAxisHandle activeRotateHandle;
@@ -39,6 +40,7 @@ internal sealed class BuildManipulation
     };
     public Vector3 AxisForward => axisForward;
     public Vector3 AxisUp => axisUp;
+    public bool IsDragging => activeHandle != null || activeRotateHandle != null;
 
     public event Action<Block> SelectionChanged;
     public BuildManipulation(
@@ -71,12 +73,20 @@ internal sealed class BuildManipulation
         AlignAxisToNearestWorldDir();
         if (type == BuildType.Move)
         {
-            HandleMovement();
+            if (!IsDragging)
+            {
+                HandleMovement();
+            }
+
             HandleMoveAxisDrag();
         }
         else if (type == BuildType.Rotate && block.canRotate)
         {
-            HandleRotation();
+            if (!IsDragging)
+            {
+                HandleRotation();
+            }
+
             HandleRotateAxisDrag();
         }
     }
@@ -95,6 +105,7 @@ internal sealed class BuildManipulation
             if (handle != null)
             {
                 activeHandle = handle;
+                dragBlock = block;
                 dragStartPos = hit.point;
                 blockStartPos = block.transform.position;
                 return true;
@@ -107,6 +118,7 @@ internal sealed class BuildManipulation
             if (handle != null && (block.GetComponent<HangarModule>() == null || Mathf.Abs(Vector3.Dot(handle.WorldAxis, Vector3.up)) > .999f))
             {
                 activeRotateHandle = handle;
+                dragBlock = block;
                 rotateDragStart = hit.point;
                 blockStartRot = block.transform.rotation;
                 blockStartRotatePos = block.transform.position;
@@ -122,8 +134,22 @@ internal sealed class BuildManipulation
 
     public void CancelDrag()
     {
+        // A cancelled gesture has never entered the save/history transaction.
+        if (dragBlock != null)
+        {
+            if (activeHandle != null)
+            {
+                dragBlock.transform.position = blockStartPos;
+            }
+            else if (activeRotateHandle != null)
+            {
+                dragBlock.transform.SetPositionAndRotation(blockStartRotatePos, blockStartRot);
+            }
+        }
+
         activeHandle = null;
         activeRotateHandle = null;
+        dragBlock = null;
     }
 
     private void AlignAxisToNearestWorldDir()
@@ -352,11 +378,6 @@ internal sealed class BuildManipulation
                         else
                         {
                             selectedBlock.transform.position = newPos;
-                            _save(selectedBlock);
-                            // 记录操作到 Undo 栈
-                            var action = new MoveBlockAction(selectedBlock, oldPos, newPos);
-                            ActionManager.instance.Push(action);
-                            VisualEffectsManager.TryPlayBlockMoved(selectedBlock, oldPos, newPos);
                         }
                     }
                     else
@@ -368,8 +389,17 @@ internal sealed class BuildManipulation
 
         if (Mouse.current.leftButton.wasReleasedThisFrame && activeHandle != null)
         {
-            _save(selectedBlock);
+            Block block = dragBlock;
+            Vector3 origin = blockStartPos;
             activeHandle = null;
+            dragBlock = null;
+            if (block != null && block.transform.position != origin)
+            {
+                Vector3 destination = block.transform.position;
+                _save(block);
+                ActionManager.instance.Push(new MoveBlockAction(block, origin, destination));
+                VisualEffectsManager.TryPlayBlockMoved(block, origin, destination);
+            }
         }
     }
 
@@ -422,6 +452,7 @@ internal sealed class BuildManipulation
             }
 
             activeRotateHandle = null;
+            dragBlock = null;
         }
     }
 

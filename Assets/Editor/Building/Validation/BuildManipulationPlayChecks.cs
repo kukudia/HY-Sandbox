@@ -21,6 +21,7 @@ public static class BuildManipulationPlayChecks
     private static readonly List<string> checks = new List<string>();
     private static readonly List<string> errors = new List<string>();
     private static Keyboard keyboard;
+    private static Mouse mouse;
     public static string Status { get; private set; } = "idle";
 
     public static void RunLive()
@@ -88,6 +89,8 @@ public static class BuildManipulationPlayChecks
         SaveManager saves = SaveManager.instance;
         CameraController camera = CameraController.instance;
         Keyboard hardware = Keyboard.current;
+        Mouse hardwareMouse = Mouse.current;
+        bool mouseEnabled = hardwareMouse != null && hardwareMouse.enabled;
         bool enabled = hardware != null && hardware.enabled;
         var background = InputSystem.settings.backgroundBehavior;
         var editorInput = InputSystem.settings.editorInputBehaviorInPlayMode;
@@ -121,6 +124,14 @@ public static class BuildManipulationPlayChecks
             }
 
             InputSystem.settings.backgroundBehavior = InputSettings.BackgroundBehavior.IgnoreFocus;
+            if (mouseEnabled)
+            {
+                InputSystem.DisableDevice(hardwareMouse);
+            }
+
+            mouse = InputSystem.AddDevice<Mouse>("Build manipulation mouse");
+            mouse.MakeCurrent();
+            InputSystem.QueueStateEvent(mouse, new MouseState { position = new Vector2(Screen.width * .5f, Screen.height * .5f) });
             InputSystem.settings.editorInputBehaviorInPlayMode = InputSettings.EditorInputBehaviorInPlayMode.AllDeviceInputAlwaysGoesToGameView;
             keyboard = InputSystem.AddDevice<Keyboard>("Build manipulation keys");
             keyboard.MakeCurrent();
@@ -220,12 +231,146 @@ public static class BuildManipulationPlayChecks
                 }
             }
 
+            Vector3 dragOrigin = Vector3.one * 1500f;
+            camera.transform.SetPositionAndRotation(dragOrigin, Quaternion.identity);
+            build.CreateBlock(
+                Resources.Load<GameObject>("Blocks/1x1x1"),
+                "Blocks/1x1x1",
+                dragOrigin + new Vector3(.5f, .5f, 6.5f),
+                Quaternion.identity);
+            Block dragged = build.lastSaveBlock;
+            made.Add(dragged);
+            select.Invoke(selection, new object[] { dragged });
+            yield return .15f;
+            MoveAxisHandle handle = build.moveAxis.GetComponentsInChildren<MoveAxisHandle>().Single(item => Vector3.Dot(item.WorldAxis, Vector3.right) > .99f);
+            Collider handleCollider = handle.GetComponentInChildren<Collider>();
+            Vector3 hitPoint = handleCollider.bounds.center;
+            Vector2 pointer = build.mainCamera.WorldToScreenPoint(hitPoint);
+            InputSystem.QueueStateEvent(mouse, new MouseState { position = pointer });
+            yield return .15f;
+            InputSystem.QueueStateEvent(mouse, new MouseState { position = pointer }.WithButton(MouseButton.Left));
+            yield return .15f;
+            object manipulation = typeof(BuildManager).GetField("_manipulation", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(build);
+            FieldInfo active = manipulation.GetType().GetField("activeHandle", BindingFlags.Instance | BindingFlags.NonPublic);
+            Check(active.GetValue(manipulation) == handle, "Real axis collider captures left mouse drag");
+            Vector3 startPosition = dragged.transform.position;
+            string savedBeforeDrag = File.ReadAllText(saves.GetSavePath(build.CurrentBuildName));
+            foreach (int cells in new[]
+            {
+                1,
+                2,
+                3
+            }
+
+            )
+            {
+                Vector2 movedPointer = build.mainCamera.WorldToScreenPoint(hitPoint + Vector3.right * cells);
+                InputSystem.QueueStateEvent(mouse, new MouseState { position = movedPointer }.WithButton(MouseButton.Left));
+                yield return .15f;
+            }
+
+            Check(
+                Vector3.Distance(startPosition, dragged.transform.position) >= 2f && Grid(dragged),
+                "Held real mouse drag traverses multiple aligned cells");
+            Check(
+                File.ReadAllText(saves.GetSavePath(build.CurrentBuildName)) == savedBeforeDrag,
+                "Held drag does not write the blueprint per traversed cell");
+            Vector3 dragEnd = dragged.transform.position;
+            Vector2 releasedPointer = mouse.position.ReadValue();
+            InputSystem.QueueStateEvent(mouse, new MouseState { position = releasedPointer });
+            yield return .15f;
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.LeftCtrl, Key.Z));
+            yield return .15f;
+            Check(
+                Near(dragged.transform.position, startPosition),
+                "One undo restores the start of the whole axis drag");
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+            yield return .1f;
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.LeftCtrl, Key.Y));
+            yield return .15f;
+            Check(
+                Near(dragged.transform.position, dragEnd),
+                "One redo restores the final position of the whole drag");
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+            yield return .1f;
+            camera.transform.position = dragged.transform.position - new Vector3(.5f, .5f, 6.5f);
+            yield return .1f;
+            hitPoint = handleCollider.bounds.center;
+            pointer = build.mainCamera.WorldToScreenPoint(hitPoint);
+            InputSystem.QueueStateEvent(mouse, new MouseState { position = pointer });
+            yield return .15f;
+            InputSystem.QueueStateEvent(mouse, new MouseState { position = pointer }.WithButton(MouseButton.Left));
+            yield return .15f;
+            Check(active.GetValue(manipulation) == handle, "Second real axis gesture begins after redo");
+            InputSystem.QueueStateEvent(
+                mouse,
+                new MouseState { position = build.mainCamera.WorldToScreenPoint(hitPoint + Vector3.right * 2) }.WithButton(MouseButton.Left));
+            yield return .15f;
+            Check(!Near(dragged.transform.position, dragEnd), "Second gesture has an uncommitted live preview");
+            string savedAtEnd = File.ReadAllText(saves.GetSavePath(build.CurrentBuildName));
+            InputSystem.QueueStateEvent(
+                mouse,
+                new MouseState { position = mouse.position.ReadValue() }.WithButton(MouseButton.Left).WithButton(MouseButton.Right));
+            yield return .35f;
+            Check(
+                !InputManager.instance.lockView && Near(dragged.transform.position, dragEnd) && active.GetValue(manipulation) == null,
+                "Navigation cancellation rolls uncommitted drag back to its start");
+            Check(
+                File.ReadAllText(saves.GetSavePath(build.CurrentBuildName)) == savedAtEnd,
+                "Cancelled drag leaves saved blueprint unchanged");
+            InputSystem.QueueStateEvent(mouse, new MouseState { position = pointer });
+            InputManager.instance.EnterBuildMode();
+            yield return .1f;
+            foreach (string interruption in new[]
+            {
+                "focus",
+                "pause",
+                "disable"
+            }
+
+            )
+            {
+                hitPoint = handleCollider.bounds.center;
+                pointer = build.mainCamera.WorldToScreenPoint(hitPoint);
+                InputSystem.QueueStateEvent(mouse, new MouseState { position = pointer });
+                yield return .1f;
+                InputSystem.QueueStateEvent(mouse, new MouseState { position = pointer }.WithButton(MouseButton.Left));
+                yield return .15f;
+                Check(active.GetValue(manipulation) == handle, interruption + " captures a fresh axis drag");
+                InputSystem.QueueStateEvent(
+                    mouse,
+                    new MouseState { position = build.mainCamera.WorldToScreenPoint(hitPoint + Vector3.right * 2) }.WithButton(MouseButton.Left));
+                yield return .15f;
+                Check(!Near(dragged.transform.position, dragEnd), interruption + " has a live uncommitted position");
+                if (interruption == "disable")
+                {
+                    build.enabled = false;
+                }
+                else
+                {
+                    InputManager.instance.SendMessage(interruption == "focus" ? "OnApplicationFocus" : "OnApplicationPause", interruption == "pause");
+                }
+
+                yield return .1f;
+                Check(
+                    Near(dragged.transform.position, dragEnd) && active.GetValue(manipulation) == null,
+                    interruption + " rolls the gesture back");
+                Check(
+                    File.ReadAllText(saves.GetSavePath(build.CurrentBuildName)) == savedAtEnd,
+                    interruption + " preserves the committed blueprint");
+                build.enabled = true;
+                InputSystem.QueueStateEvent(mouse, new MouseState { position = pointer });
+                InputManager.instance.EnterBuildMode();
+                yield return .1f;
+            }
+
             Check(
                 File.Exists(saves.GetSavePath(build.CurrentBuildName)),
                 "Real production edits persisted inside the temporary store");
         }
         finally
         {
+            build.enabled = true;
             build.DeselectBlock();
             foreach (Block item in made)
             {
@@ -238,6 +383,17 @@ public static class BuildManipulationPlayChecks
             saves.cachedData = cache;
             storeField.SetValue(saves, store);
             typeof(ActionManager).GetMethod("RestoreHistory", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(ActionManager.instance, new[] { history });
+            if (mouse != null && mouse.added)
+            {
+                InputSystem.RemoveDevice(mouse);
+            }
+
+            if (mouseEnabled && hardwareMouse != null && hardwareMouse.added)
+            {
+                InputSystem.EnableDevice(hardwareMouse);
+                hardwareMouse.MakeCurrent();
+            }
+
             if (keyboard != null && keyboard.added)
             {
                 InputSystem.RemoveDevice(keyboard);

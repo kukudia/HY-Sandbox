@@ -121,6 +121,7 @@ public class BuildManager : MonoBehaviour
 
     private void OnDisable()
     {
+        _manipulation?.CancelDrag();
         ClearCurrentGhost();
         _selection?.SetGizmosEnabled(false);
     }
@@ -201,6 +202,11 @@ public class BuildManager : MonoBehaviour
 
         // Axis objects stay outside replaceable blueprints; follow edits and Undo each frame.
         _selection.RefreshBuildGizmos();
+        if (_manipulation.IsDragging)
+        {
+            return;
+        }
+
         // 删除
         if (selectedBlock != null)
         {
@@ -230,11 +236,12 @@ public class BuildManager : MonoBehaviour
     public void SetBuildMode(bool lockView)
     {
         EnsureBuildInteraction();
+        // EnterBuildMode also runs on focus/pause recovery; discard unfinished gestures first.
+        _manipulation.CancelDrag();
         _selection.SetGizmosEnabled(lockView);
         if (!lockView)
         {
             // 切换视角只取消拖拽/预览，保留选中方块、类型和待搭建资源。
-            _manipulation.CancelDrag();
             ClearCurrentGhost();
         }
     }
@@ -682,6 +689,7 @@ public class BuildManager : MonoBehaviour
 
     public void DeleteBlock()
     {
+        _manipulation?.CancelDrag();
         if (selectedBlock == null || !selectedBlock.canBeDeleted || selectedBlock.TryGetComponent(out BuildingFoundation _))
         {
             return;
