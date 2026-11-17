@@ -651,7 +651,7 @@ flowchart TD
     E["BuildPlacementGeometry.GetSurfaceRotation()"]
     click E "../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L109" "打开源码"
     F["BuildManipulation.HandleMovement()"]
-    click F "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L200" "打开源码"
+    click F "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L216" "打开源码"
     G["WorkshopNavigation.TogglePause()"]
     click G "../Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs#L74" "打开源码"
     H["PauseMenu.Toggle()"]
@@ -716,7 +716,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPreview.cs|Poll -->
 - [BuildPlacementGeometry.GetSurfaceRotation](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L109)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs|GetSurfaceRotation -->
-- [BuildManipulation.HandleMovement](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L200)
+- [BuildManipulation.HandleMovement](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L216)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs|HandleMovement -->
 - [WorkshopNavigation.TogglePause](../Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs#L74)
 <!-- source: Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs|TogglePause -->
@@ -2403,7 +2403,7 @@ flowchart TD
 
 ## 放置、选中、操作和持久化
 
-源码推导：预览保持资源默认整格朝向，不继承目标旋转；切换资源时重建 Ghost，按真实连接点确定中心并清理尾差。以驾驶舱整数边界为准：奇数尺寸轴中心半整数、偶数轴中心整数。坐标轴独立于可销毁的选中方块，每帧刷新位置/朝向/可见性；视角解锁时隐藏、重锁时恢复。相机轴正交选取，拖拽捕获世界轴；90°旋转锁定整数锚点并换轴半格偏移；阻挡拒绝保护姿态与位置，Undo/Redo记录两者。
+源码推导：预览保持资源默认整格朝向，不继承目标旋转；切换资源时重建 Ghost，按真实连接点确定中心并清理尾差。以驾驶舱整数边界为准：奇数尺寸轴中心半整数、偶数轴中心整数。坐标轴独立于可销毁的选中方块，每帧刷新位置/朝向/可见性；视角解锁时隐藏、重锁时恢复。相机轴正交选取，拖拽捕获世界轴；旋转起点与后续指针统一投影到旋转平面，静止按下不跳转；90°旋转锁定整数锚点并换轴半格偏移；阻挡拒绝保护姿态与位置，Undo/Redo记录两者。
 
 ```mermaid
 flowchart TD
@@ -2450,9 +2450,9 @@ flowchart TD
     T["BuildManager.SetCurrentBlockResource()"]
     click T "../Assets/Scripts/Features/Building/BuildManager.cs#L512" "打开源码"
     U["BuildManipulation.HandleRotation()"]
-    click U "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L270" "打开源码"
+    click U "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L286" "打开源码"
     V["BuildManipulation.HandleRotateAxisDrag()"]
-    click V "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L406" "打开源码"
+    click V "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L422" "打开源码"
     W["BuildPlacementGeometry.CalculateRotationPosition()"]
     click W "../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L19" "打开源码"
     X["BuildPlacementGeometry.SnapRotationToGrid()"]
@@ -2460,13 +2460,13 @@ flowchart TD
     Y["BuildPlacementGeometry.RemoveGridNoise()"]
     click Y "../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L145" "打开源码"
     Z["BuildManipulation.AlignAxisToNearestWorldDir()"]
-    click Z "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L155" "打开源码"
+    click Z "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L171" "打开源码"
     AA["BuildManipulation.TryBeginDrag()"]
     click AA "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L94" "打开源码"
     AC["BuildManipulation.HandleMoveAxisDrag()"]
-    click AC "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L338" "打开源码"
+    click AC "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L354" "打开源码"
     AD["BuildManipulation.CancelDrag()"]
-    click AD "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L135" "打开源码"
+    click AD "../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L151" "打开源码"
     AE["BuildManager.SetBuildMode()"]
     click AE "../Assets/Scripts/Features/Building/BuildManager.cs#L236" "打开源码"
     AF["BuildManager.OnDisable()"]
@@ -2559,9 +2559,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/Interface/BuildPaletteItem.cs|BindPalette -->
 - [BuildManager.SetCurrentBlockResource](../Assets/Scripts/Features/Building/BuildManager.cs#L512)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|SetCurrentBlockResource -->
-- [BuildManipulation.HandleRotation](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L270)
+- [BuildManipulation.HandleRotation](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L286)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs|HandleRotation -->
-- [BuildManipulation.HandleRotateAxisDrag](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L406)
+- [BuildManipulation.HandleRotateAxisDrag](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L422)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs|HandleRotateAxisDrag -->
 - [BuildPlacementGeometry.CalculateRotationPosition](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L19)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs|CalculateRotationPosition -->
@@ -2569,13 +2569,13 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs|SnapRotationToGrid -->
 - [BuildPlacementGeometry.RemoveGridNoise](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L145)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs|RemoveGridNoise -->
-- [BuildManipulation.AlignAxisToNearestWorldDir](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L155)
+- [BuildManipulation.AlignAxisToNearestWorldDir](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L171)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs|AlignAxisToNearestWorldDir -->
 - [BuildManipulation.TryBeginDrag](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L94)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs|TryBeginDrag -->
-- [BuildManipulation.HandleMoveAxisDrag](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L338)
+- [BuildManipulation.HandleMoveAxisDrag](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L354)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs|HandleMoveAxisDrag -->
-- [BuildManipulation.CancelDrag](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L135)
+- [BuildManipulation.CancelDrag](../Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs#L151)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildManipulation.cs|CancelDrag -->
 - [BuildManager.SetBuildMode](../Assets/Scripts/Features/Building/BuildManager.cs#L236)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|SetBuildMode -->

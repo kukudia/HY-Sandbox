@@ -117,12 +117,28 @@ internal sealed class BuildManipulation
             RotateAxisHandle handle = hit.collider.GetComponentInParent<RotateAxisHandle>();
             if (handle != null && (block.GetComponent<HangarModule>() == null || Mathf.Abs(Vector3.Dot(handle.WorldAxis, Vector3.up)) > .999f))
             {
+                // The handle surface is offset from the rotation plane. Project the original
+                // pointer onto that same plane or a stationary press can already snap by 90°.
+                Vector3 axis = handle.WorldAxis;
+                Plane plane = new Plane(axis, block.transform.position);
+                Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+                if (!plane.Raycast(ray, out float distance))
+                {
+                    return false;
+                }
+
+                Vector3 projectedStart = ray.GetPoint(distance);
+                if ((projectedStart - block.transform.position).sqrMagnitude < .000001f)
+                {
+                    return false;
+                }
+
                 activeRotateHandle = handle;
                 dragBlock = block;
-                rotateDragStart = hit.point;
+                rotateDragStart = projectedStart;
                 blockStartRot = block.transform.rotation;
                 blockStartRotatePos = block.transform.position;
-                blockStartRotateAxis = handle.WorldAxis;
+                blockStartRotateAxis = axis;
                 rotateLastRot = blockStartRot;
                 rotateLastPos = blockStartRotatePos;
                 return true;

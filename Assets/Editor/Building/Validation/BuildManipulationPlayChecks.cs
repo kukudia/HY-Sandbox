@@ -367,6 +367,76 @@ public static class BuildManipulationPlayChecks
             Check(
                 File.Exists(saves.GetSavePath(build.CurrentBuildName)),
                 "Real production edits persisted inside the temporary store");
+            build.SetBuildType(BuildType.Rotate);
+            camera.transform.position = dragged.transform.position - new Vector3(.5f, .5f, 6.5f);
+            yield return .15f;
+            RotateAxisHandle rotateHandle = build.rotateAxis.GetComponentsInChildren<RotateAxisHandle>().Single(item => Vector3.Dot(item.WorldAxis, Vector3.forward) > .99f);
+            Collider rotateCollider = rotateHandle.GetComponentInChildren<Collider>();
+            Vector3 rotationStart = dragged.transform.position;
+            Quaternion orientationStart = dragged.transform.rotation;
+            Vector3 rotationHit = rotateCollider.bounds.center + Vector3.right * rotateCollider.bounds.extents.x * .5f;
+            pointer = build.mainCamera.WorldToScreenPoint(rotationHit);
+            InputSystem.QueueStateEvent(mouse, new MouseState { position = pointer });
+            yield return .15f;
+            InputSystem.QueueStateEvent(mouse, new MouseState { position = pointer }.WithButton(MouseButton.Left));
+            yield return .15f;
+            FieldInfo activeRotate = manipulation.GetType().GetField("activeRotateHandle", BindingFlags.Instance | BindingFlags.NonPublic);
+            Check(activeRotate.GetValue(manipulation) == rotateHandle, "Real rotation collider captures left mouse");
+            Check(
+                Quaternion.Angle(dragged.transform.rotation, orientationStart) < .01f && Near(dragged.transform.position, rotationStart),
+                "Rotation press without pointer movement preserves pose");
+            Vector3 projected = (Vector3)manipulation.GetType().GetField("rotateDragStart", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(manipulation);
+            Vector3 turned = rotationStart + Quaternion.AngleAxis(90f, Vector3.forward) * (projected - rotationStart);
+            string savedBeforeRotation = File.ReadAllText(saves.GetSavePath(build.CurrentBuildName));
+            InputSystem.QueueStateEvent(
+                mouse,
+                new MouseState { position = build.mainCamera.WorldToScreenPoint(turned) }.WithButton(MouseButton.Left));
+            yield return .15f;
+            Check(
+                Quaternion.Angle(dragged.transform.rotation, Quaternion.AngleAxis(90f, Vector3.forward) * orientationStart) < .01f && Grid(dragged),
+                "Real rotation pointer turns one aligned quarter turn");
+            Check(
+                File.ReadAllText(saves.GetSavePath(build.CurrentBuildName)) == savedBeforeRotation,
+                "Held rotation does not persist its preview");
+            Vector3 rotatedPosition = dragged.transform.position;
+            Quaternion rotatedOrientation = dragged.transform.rotation;
+            InputSystem.QueueStateEvent(mouse, new MouseState { position = mouse.position.ReadValue() });
+            yield return .15f;
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.LeftCtrl, Key.Z));
+            yield return .15f;
+            Check(
+                Near(dragged.transform.position, rotationStart) && Quaternion.Angle(dragged.transform.rotation, orientationStart) < .01f,
+                "One undo restores rotation and center");
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+            yield return .1f;
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.LeftCtrl, Key.Y));
+            yield return .15f;
+            Check(
+                Near(dragged.transform.position, rotatedPosition) && Quaternion.Angle(dragged.transform.rotation, rotatedOrientation) < .01f,
+                "One redo restores rotation and center");
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+            yield return .1f;
+            rotationHit = rotateCollider.bounds.center + Vector3.right * rotateCollider.bounds.extents.x * .5f;
+            pointer = build.mainCamera.WorldToScreenPoint(rotationHit);
+            InputSystem.QueueStateEvent(mouse, new MouseState { position = pointer });
+            yield return .1f;
+            InputSystem.QueueStateEvent(mouse, new MouseState { position = pointer }.WithButton(MouseButton.Left));
+            yield return .15f;
+            Check(activeRotate.GetValue(manipulation) == rotateHandle, "Rotation recaptures after undo/redo");
+            projected = (Vector3)manipulation.GetType().GetField("rotateDragStart", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(manipulation);
+            turned = rotatedPosition + Quaternion.AngleAxis(90f, Vector3.forward) * (projected - rotatedPosition);
+            InputSystem.QueueStateEvent(
+                mouse,
+                new MouseState { position = build.mainCamera.WorldToScreenPoint(turned) }.WithButton(MouseButton.Left));
+            yield return .15f;
+            Check(
+                Quaternion.Angle(dragged.transform.rotation, rotatedOrientation) > 45f,
+                "Rotation has a cancellable preview");
+            build.SetBuildType(BuildType.Move);
+            Check(
+                Near(dragged.transform.position, rotatedPosition) && Quaternion.Angle(dragged.transform.rotation, rotatedOrientation) < .01f,
+                "Tool change cancels rotation and restores center");
+            InputSystem.QueueStateEvent(mouse, new MouseState { position = pointer });
         }
         finally
         {
