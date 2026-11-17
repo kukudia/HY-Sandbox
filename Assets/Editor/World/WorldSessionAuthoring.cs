@@ -7,7 +7,7 @@ using UnityEngine;
 
 public static class WorldSessionAuthoring
 {
-    public const string MainScenePath = "Assets/Scenes/Main.unity";
+    public const string MainScenePath = "Assets/Scenes/Build.unity";
     public const string SettingsPath = "Assets/World/WorldGeneration.asset";
     public const string PrefabPath = "Assets/World/WorldSession.prefab";
     [MenuItem("Tools/HY-Sandbox/World/Install Main world session")]

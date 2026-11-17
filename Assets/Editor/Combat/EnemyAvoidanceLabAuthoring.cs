@@ -411,7 +411,7 @@ public static class EnemyAvoidanceLabAuthoring
 
         foreach (string scenePath in new[]
         {
-            "Assets/Scenes/Main.unity",
+            "Assets/Scenes/Build.unity",
             "Assets/Scenes/Siege.unity",
             "Assets/Scenes/WorldLab.unity"
         }

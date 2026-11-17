@@ -1,4 +1,4 @@
-// 职责：在真实Play的独立PhysicsScene验证舰船/建筑/体素互伤、归因、去重、连锁及冲量隔离。
+// 职责：在真实Play的独立PhysicsScene验证爆炸仅破坏体素、模块免伤、无连锁及冲量隔离。
 // 入口：Run()；只创建自有夹具，不写玩家存档，报告Temp/Combat/explosion-integration.json。
 using System;
 using System.Collections.Generic;
@@ -50,17 +50,17 @@ public static class ExplosionIntegrationChecks
             source.GetComponent<Durability>().ApplyDamage(200f, attackerUnit);
             Check(
                 report,
-                "ship blast damages another ship once despite multiple colliders",
-                Mathf.Abs(health.currentDurability - 20f) < .01f);
-            Check(report, "collision protection does not block direct blast damage", health.currentDurability < 100f);
+                "ship blast preserves nearby ship despite multiple colliders",
+                Mathf.Approximately(health.currentDurability, 100f));
+            Check(report, "blast does not damage modules", health.currentDurability == 100f);
             Check(
                 report,
-                "ship blast damages anchored building",
-                Mathf.Abs(building.Blocks[0].GetComponent<Durability>().currentDurability - 20f) < .01f);
+                "ship blast preserves anchored building",
+                Mathf.Approximately(building.Blocks[0].GetComponent<Durability>().currentDurability, 100f));
             Check(
                 report,
-                "blast preserves the original attacker for collateral",
-                health.LastAttacker == attackerUnit && building.Blocks[0].GetComponent<Durability>().LastAttacker == attackerUnit);
+                "blast does not manufacture collateral attribution",
+                health.LastAttacker == null && building.Blocks[0].GetComponent<Durability>().LastAttacker == null);
             Check(
                 report,
                 "another PhysicsScene at identical coordinates receives no damage",
@@ -89,8 +89,8 @@ public static class ExplosionIntegrationChecks
             source.GetComponent<Durability>().ApplyDamage(200f, attackerUnit);
             Check(
                 report,
-                "building blast damages a ship through the same damage queue",
-                Mathf.Abs(shipTarget.GetComponent<Durability>().currentDurability - 20f) < .01f);
+                "building blast preserves a nearby ship",
+                Mathf.Approximately(shipTarget.GetComponent<Durability>().currentDurability, 100f));
             Check(report, "building death removes its source before damage scanning", building.Blocks.Count == 0);
             center += Vector3.right * 100f;
             source = Ship(scene, center);
@@ -102,16 +102,16 @@ public static class ExplosionIntegrationChecks
             source.GetComponent<Durability>().ApplyDamage(200f, attackerUnit);
             Check(
                 report,
-                "secondary explosive source is queued and destroyed",
-                chain.GetComponent<Durability>().currentDurability == 0f);
+                "nearby explosive source does not chain detonate",
+                chain.GetComponent<Durability>().currentDurability == 50f);
             Check(
                 report,
-                "secondary blast reaches a ship outside the first blast",
-                shipTarget.GetComponent<Durability>().currentDurability < 100f);
+                "ship outside the blast remains undamaged",
+                shipTarget.GetComponent<Durability>().currentDurability == 100f);
             Check(
                 report,
-                "secondary blast carries the original attacker",
-                shipTarget.GetComponent<Durability>().LastAttacker == attackerUnit);
+                "no secondary blast attribution is manufactured",
+                shipTarget.GetComponent<Durability>().LastAttacker == null);
             TerrainCheck(scene, report);
             return Save(report);
         }

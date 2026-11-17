@@ -138,7 +138,7 @@ public static class BlockMaterialAuthoring
             throw new InvalidOperationException("Exit Play Mode first.");
         }
 
-        var scene = UnityEngine.SceneManagement.SceneManager.GetSceneByPath("Assets/Scenes/Main.unity");
+        var scene = UnityEngine.SceneManagement.SceneManager.GetSceneByPath("Assets/Scenes/Build.unity");
         if (!scene.isLoaded || scene.isDirty)
         {
             throw new InvalidOperationException("Open clean Main before installing the selector.");

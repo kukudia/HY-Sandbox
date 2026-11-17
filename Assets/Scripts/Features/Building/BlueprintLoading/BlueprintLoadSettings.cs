@@ -6,6 +6,8 @@ using UnityEngine;
 internal sealed class BlueprintLoadSettings
 {
     public float InitialInterval;
+    public bool FastLoading;
+    public float FrameBudgetMilliseconds = 4f;
     public float MinimumInterval;
     public float IntervalHalfLife;
     public float GridSize;

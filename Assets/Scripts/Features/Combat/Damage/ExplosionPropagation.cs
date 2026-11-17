@@ -1,5 +1,5 @@
-// 职责：在源单位内概率断链，并在源PhysicsScene对受影响刚体施加有限冲量及双向碰撞保护。
-// 入口：DisconnectBlocksInExplosionRange() / ApplyExplosionForce()；由 DestroyManager 分别在重组前后调用。
+// 职责：在源PhysicsScene对受影响刚体施加有限冲量及双向碰撞保护；不破坏健康模块连接。
+// 入口：ApplyExplosionForce()；由 DestroyManager 在源模块移除与重组后调用。
 // 约束：本类仅负责断链与冲量；直接伤害由ExplosionDamageSession统一结算。
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,50 +23,6 @@ internal static class ExplosionPropagation
             DefaultImpulseScale,
             DefaultMaximumSpeedChange,
             DefaultCollisionProtection);
-    }
-
-    internal static void DisconnectBlocksInExplosionRange(ControlUnit unit, Block block, Vector3 explosionPosition)
-    {
-        if (unit == null || block == null)
-        {
-            return;
-        }
-
-        float radiusSqr = block.explosionRadius * block.explosionRadius;
-        float probability = Mathf.Clamp01(block.explosionDisconnectProbability);
-        Block[] blocks = unit.GetComponentsInChildren<Block>(true);
-        HashSet<Block> neighborsToRefresh = new HashSet<Block>();
-        foreach (Block candidate in blocks)
-        {
-            if (candidate == null || candidate == block)
-            {
-                continue;
-            }
-
-            Vector3 offset = candidate.transform.position - explosionPosition;
-            if (offset.sqrMagnitude > radiusSqr || Random.value > probability)
-            {
-                continue;
-            }
-
-            foreach (Block neighbor in candidate.neighbors)
-            {
-                if (neighbor != null && neighbor != block)
-                {
-                    neighborsToRefresh.Add(neighbor);
-                }
-            }
-
-            candidate.DisConnectAllConnectors(false);
-        }
-
-        foreach (Block neighbor in neighborsToRefresh)
-        {
-            if (neighbor != null)
-            {
-                neighbor.CheckConnection();
-            }
-        }
     }
 
     internal static void ApplyExplosionForce(

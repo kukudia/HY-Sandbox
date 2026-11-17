@@ -106,6 +106,42 @@ internal sealed class BuildPlacementGeometry
         return true;
     }
 
+    public Quaternion GetSurfaceRotation(Block block, Quaternion authored, Vector3 surfaceNormal)
+    {
+        if (block == null || !block.canRotate || block.connectors == null)
+        {
+            return authored;
+        }
+
+        bool restricted = block.connectors.Exists(connector => connector != null && !connector.canConnect);
+        if (!restricted)
+        {
+            return authored;
+        }
+
+        Transform root = block.connectorParent != null ? block.connectorParent : block.transform;
+        Quaternion best = authored;
+        float smallestAngle = float.PositiveInfinity;
+        foreach (Connector connector in block.connectors)
+        {
+            if (connector == null || !connector.canConnect)
+            {
+                continue;
+            }
+
+            Vector3 localNormal = block.transform.InverseTransformDirection(root.TransformDirection(connector.normal));
+            Quaternion candidate = SnapRotationToGrid(Quaternion.FromToRotation(authored * localNormal, -surfaceNormal) * authored);
+            float angle = Quaternion.Angle(authored, candidate);
+            if (angle < smallestAngle)
+            {
+                best = candidate;
+                smallestAngle = angle;
+            }
+        }
+
+        return best;
+    }
+
     private Vector3 RemoveGridNoise(Vector3 position)
     {
         // 只清理由正交旋转带来的近网格尾差，不强制改变特殊底座/自定义连接点的有效位置。
@@ -130,42 +166,9 @@ internal sealed class BuildPlacementGeometry
             return targetCenter;
         }
 
-        // 方块的局部半尺寸（不含旋转）
-        Vector3 halfSize = GetBlockHalfExtents(b);
-        float safeGridSize = Mathf.Max(0.0001f, gridSize);
-        float snapStep = safeGridSize * 0.5f;
-        // 计算旋转后的 8 个顶点
-        Vector3[] corners = new Vector3[8];
-        int i = 0;
-        for (int xi = -1; xi <= 1; xi += 2)
-        {
-            for (int yi = -1; yi <= 1; yi += 2)
-            {
-                for (int zi = -1; zi <= 1; zi += 2)
-                {
-                    Vector3 localCorner = new Vector3(xi * halfSize.x, yi * halfSize.y, zi * halfSize.z);
-                    corners[i++] = targetCenter + targetRotation * localCorner;
-                }
-            }
-        }
-
-        // 得到 AABB 的 min/max
-        Vector3 min = corners[0];
-        Vector3 max = corners[0];
-        foreach (var c in corners)
-        {
-            min = Vector3.Min(min, c);
-            max = Vector3.Max(max, c);
-        }
-
-        // Block centers are allowed on half-grid coordinates (Block.Awake preserves 0.5 steps),
-        // so align bounds to half-grid steps instead of moving odd-sized blocks by half a cell.
-        Vector3 snappedMin = new Vector3(
-            Mathf.Round((min.x - Vector3.zero.x) / snapStep) * snapStep + Vector3.zero.x,
-            Mathf.Round((min.y - Vector3.zero.y) / snapStep) * snapStep + Vector3.zero.y,
-            Mathf.Round((min.z - Vector3.zero.z) / snapStep) * snapStep + Vector3.zero.z);
-        Vector3 snappedCenter = snappedMin + (max - min) * 0.5f;
-        return RemoveGridNoise(snappedCenter);
+        // Placement, movement and rotation share one parity-aware integer anchor.
+        // This also avoids allocating eight AABB corners on every preview frame.
+        return CalculateRotationPosition(targetCenter, targetRotation, targetRotation, b);
     }
 
     public bool IsBlocked(Vector3 targetCenter, Quaternion targetRotation, Block block)

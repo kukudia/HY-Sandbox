@@ -83,7 +83,7 @@ public sealed class SiegeObserverCamera : MonoBehaviour
 
     private void Update()
     {
-        if (cameraOwner == null)
+        if (cameraOwner == null || PauseMenu.IsPaused)
         {
             return;
         }

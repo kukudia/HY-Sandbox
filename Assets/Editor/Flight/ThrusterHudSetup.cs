@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 public static class ThrusterHudSetup
 {
-    private const string ScenePath = "Assets/Scenes/Main.unity";
+    private const string ScenePath = "Assets/Scenes/Build.unity";
     private const string HoverPrefabPath = "Assets/Resources/Blocks/HoverFlightController.prefab";
     private const string LampMaterialPath = "Assets/Art/HoverControllerLamp.mat";
     private static readonly Color Ink = new Color(0.025f, 0.055f, 0.07f, 0.97f);

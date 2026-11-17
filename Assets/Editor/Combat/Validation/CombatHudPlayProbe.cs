@@ -34,7 +34,7 @@ public static class CombatHudPlayProbe
     [MenuItem("Tools/HY-Sandbox/Validate Combat HUD")]
     public static void Run()
     {
-        Begin("siege", "Assets/Scenes/Main.unity");
+        Begin("siege", "Assets/Scenes/Build.unity");
     }
 
     [MenuItem("Tools/HY-Sandbox/Combat/Validate shared HUD in 5v5")]
@@ -46,7 +46,7 @@ public static class CombatHudPlayProbe
     [MenuItem("Tools/HY-Sandbox/Combat/Validate shared HUD in exploration")]
     public static void RunExploration()
     {
-        Begin("exploration", "Assets/Scenes/Main.unity");
+        Begin("exploration", "Assets/Scenes/Build.unity");
     }
 
     [MenuItem("Tools/HY-Sandbox/Combat/Validate shared HUD in legacy Siege")]
@@ -57,12 +57,12 @@ public static class CombatHudPlayProbe
 
     public static void RunFlow()
     {
-        Begin("flow", "Assets/Scenes/Main.unity");
+        Begin("flow", "Assets/Scenes/Build.unity");
     }
 
     public static void RunRecovery()
     {
-        Begin("recovery", "Assets/Scenes/Main.unity");
+        Begin("recovery", "Assets/Scenes/Build.unity");
     }
 
     private static void Begin(string kind, string path)
@@ -341,8 +341,12 @@ public static class CombatHudPlayProbe
         yield return .1f;
         Check("Pointer click changes actual debug service", DebugManager.instance.showPowerRange != before);
         bool allClickable = true;
-        foreach (Toggle control in hud.Panels.GetComponentsInChildren<Toggle>(true))
+        var panelData = new SerializedObject(hud.Panels);
+        SerializedProperty controls = panelData.FindProperty("debugToggles");
+        Check("Exactly six diagnostic controls", controls.arraySize == 6);
+        for (int index = 0; index < controls.arraySize; index++)
         {
+            Toggle control = (Toggle)controls.GetArrayElementAtIndex(index).objectReferenceValue;
             eventData.position = RectTransformUtility.WorldToScreenPoint(
                 null,
                 ((RectTransform)control.transform).TransformPoint(((RectTransform)control.transform).rect.center));
@@ -353,7 +357,7 @@ public static class CombatHudPlayProbe
             allClickable &= hits.Count > 0 && hits[0].gameObject.GetComponentInParent<Toggle>() == control && control.isOn != old;
         }
 
-        Check("All seven debug toggles accept pointer clicks", allClickable);
+        Check("All six debug toggles accept pointer clicks", allClickable);
         hud.Panels.ClearDebug();
         hud.Panels.CloseAll();
         Check("Begin production wave", stage.BeginWave());

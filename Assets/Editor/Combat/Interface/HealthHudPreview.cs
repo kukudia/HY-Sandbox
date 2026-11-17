@@ -22,7 +22,7 @@ public static class HealthHudPreview
             throw new InvalidOperationException("Exit Play Mode before rendering HUD previews.");
         }
 
-        var main = SceneManager.GetSceneByPath("Assets/Scenes/Main.unity");
+        var main = SceneManager.GetSceneByPath("Assets/Scenes/Build.unity");
         var source = main.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<MainUIPanels>(true)).Single().healthValue.transform.parent;
         Directory.CreateDirectory("Temp/BuildRange");
         foreach (Vector2Int size in new[]

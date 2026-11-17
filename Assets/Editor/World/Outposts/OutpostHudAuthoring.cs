@@ -14,7 +14,7 @@ public static class OutpostHudAuthoring
     public static void Apply()
     {
         Scene scene = SceneManager.GetActiveScene();
-        if (EditorApplication.isPlaying || scene.path != "Assets/Scenes/Main.unity" || scene.isDirty)
+        if (EditorApplication.isPlaying || scene.path != "Assets/Scenes/Build.unity" || scene.isDirty)
         {
             throw new InvalidOperationException("Open clean Main in Edit Mode first.");
         }

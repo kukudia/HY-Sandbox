@@ -9,6 +9,7 @@ internal sealed class BuildManipulation
     private readonly BuildPlacementGeometry _geometry;
     private readonly Action<Block> _save;
     private readonly Func<GameObject, string, Vector3, Quaternion, Vector3Int, Block> _create;
+    private readonly Func<Vector3, bool> withinRange;
     private Camera mainCamera;
     private GameObject moveAxis;
     private GameObject rotateAxis;
@@ -43,11 +44,13 @@ internal sealed class BuildManipulation
     public BuildManipulation(
         BuildPlacementGeometry geometry,
         Action<Block> save,
-        Func<GameObject, string, Vector3, Quaternion, Vector3Int, Block> create)
+        Func<GameObject, string, Vector3, Quaternion, Vector3Int, Block> create,
+        Func<Vector3, bool> withinRange)
     {
         _geometry = geometry;
         _save = save;
         _create = create;
+        this.withinRange = withinRange;
     }
 
     public void Configure(Camera camera, GameObject move, GameObject rotate)
@@ -216,7 +219,7 @@ internal sealed class BuildManipulation
             Vector3 oldPos = selectedBlock.transform.position;
             Vector3 newPos = _geometry.SnapCenterByMinCorner(oldPos + moveDir * moveStep, selectedBlock.transform.rotation, selectedBlock);
             // 检查是否被阻挡
-            if (!_geometry.IsBlocked(newPos, selectedBlock.transform.rotation, selectedBlock))
+            if (withinRange(newPos) && !_geometry.IsBlocked(newPos, selectedBlock.transform.rotation, selectedBlock))
             {
                 if (Keyboard.current.shiftKey.isPressed)
                 {
@@ -290,7 +293,7 @@ internal sealed class BuildManipulation
             Vector3 oldPos = selectedBlock.transform.position;
             Vector3 newPos = _geometry.CalculateRotationPosition(oldPos, oldRot, newRot, selectedBlock);
             // 检查是否被阻挡
-            if (!_geometry.IsBlocked(newPos, newRot, selectedBlock))
+            if (withinRange(newPos) && !_geometry.IsBlocked(newPos, newRot, selectedBlock))
             {
                 selectedBlock.transform.position = newPos;
                 selectedBlock.transform.rotation = newRot;
@@ -333,11 +336,14 @@ internal sealed class BuildManipulation
                 float moveAmount = Vector3.Dot(delta, dir.normalized);
                 Vector3 oldPos = selectedBlock.transform.position;
                 // 步进对齐
-                Vector3 newPos = blockStartPos + dir.normalized * Mathf.Round(moveAmount / moveStep) * moveStep;
+                Vector3 newPos = _geometry.SnapCenterByMinCorner(
+                    blockStartPos + dir.normalized * Mathf.Round(moveAmount / moveStep) * moveStep,
+                    selectedBlock.transform.rotation,
+                    selectedBlock);
                 if (newPos != oldPos)
                 {
                     // 检查是否被阻挡
-                    if (!_geometry.IsBlocked(newPos, selectedBlock.transform.rotation, selectedBlock))
+                    if (withinRange(newPos) && !_geometry.IsBlocked(newPos, selectedBlock.transform.rotation, selectedBlock))
                     {
                         if (Keyboard.current.shiftKey.isPressed)
                         {
@@ -396,7 +402,7 @@ internal sealed class BuildManipulation
                 Quaternion newRot = _geometry.SnapRotationToGrid(Quaternion.AngleAxis(snappedAngle, axis) * blockStartRot);
                 // 检查是否阻挡
                 Vector3 newPos = _geometry.CalculateRotationPosition(blockStartRotatePos, blockStartRot, newRot, selectedBlock);
-                if (!_geometry.IsBlocked(newPos, newRot, selectedBlock))
+                if (withinRange(newPos) && !_geometry.IsBlocked(newPos, newRot, selectedBlock))
                 {
                     selectedBlock.transform.position = newPos;
                     selectedBlock.transform.rotation = newRot;
@@ -428,7 +434,12 @@ internal sealed class BuildManipulation
         Vector3 moveDir = (newPos - selectedBlock.transform.position).normalized;
         float step = _geometry.GetMoveStep(selectedBlock, moveDir);
         // 复制时对齐到步长
-        newPos = selectedBlock.transform.position + moveDir * step;
+        newPos = _geometry.SnapCenterByMinCorner(selectedBlock.transform.position + moveDir * step, newRot, selectedBlock);
+        if (!withinRange(newPos) || _geometry.IsBlocked(newPos, newRot, selectedBlock))
+        {
+            return;
+        }
+
         SelectionChanged?.Invoke(null);
         Block duplicate = _create(prefab, resourcePath, newPos, newRot, dimensions);
         if (duplicate != null)

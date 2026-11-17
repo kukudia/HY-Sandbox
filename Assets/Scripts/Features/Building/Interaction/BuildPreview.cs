@@ -129,6 +129,11 @@ internal sealed class BuildPreview
                     // A rotated neighbour must not change the new block's authored orientation.
                     // Use the same grid rotation as Block.Awake so preview and placement agree.
                     currentGhost.transform.rotation = _geometry.SnapRotationToGrid(prefab.transform.rotation);
+                    if (MenuSettings.AutoRotatePlacement)
+                    {
+                        currentGhost.transform.rotation = _geometry.GetSurfaceRotation(prefabBlock, currentGhost.transform.rotation, nearestNormal);
+                    }
+
                     Quaternion previewRotation = currentGhost.transform.rotation;
                     if (!_geometry.TryCalculateConnectorAlignedPosition(prefabBlock, previewRotation, nearestWorldPos, nearestNormal, out snappedPos))
                     {
@@ -137,7 +142,7 @@ internal sealed class BuildPreview
                         snappedPos = _geometry.SnapCenterByMinCorner(rawPos, previewRotation, prefabBlock);
                     }
 
-                    currentGhost.transform.position = snappedPos;
+                    currentGhost.transform.position = _geometry.SnapCenterByMinCorner(snappedPos, previewRotation, prefabBlock);
                 }
             }
         }
@@ -149,6 +154,11 @@ internal sealed class BuildPreview
             {
                 EnsureGhost(prefab);
                 Quaternion rotation = _geometry.SnapRotationToGrid(prefab.transform.rotation);
+                if (MenuSettings.AutoRotatePlacement)
+                {
+                    rotation = _geometry.GetSurfaceRotation(prefabBlock, rotation, Vector3.up);
+                }
+
                 Vector3 point = ray.GetPoint(distance);
                 // Ground anchors lie at cell centres; even-size hulls must also keep integer min corners.
                 Vector3 half = new Vector3(

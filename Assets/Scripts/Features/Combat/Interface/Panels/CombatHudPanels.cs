@@ -18,7 +18,10 @@ public sealed class CombatHudPanels : MonoBehaviour
     private Button thrusterButton;
     [SerializeField]
     private CombatNotifications notifications;
-    private readonly bool[] previous = new bool[7];
+    [SerializeField]
+    private Dropdown factionFilter;
+    private readonly bool[] previous = new bool[6];
+    private int previousFilter;
     private bool captured;
     private bool debugOpen;
     private float debugAlpha;
@@ -36,6 +39,10 @@ public sealed class CombatHudPanels : MonoBehaviour
         }
 
         CloseAll();
+        if (factionFilter != null)
+        {
+            factionFilter.onValueChanged.AddListener(value => DebugManager.instance?.SetFactionFilter(value));
+        }
     }
 
     public void Bind()
@@ -49,6 +56,8 @@ public sealed class CombatHudPanels : MonoBehaviour
             }
 
             captured = true;
+            previousFilter = (int)DebugManager.instance.Filter;
+            factionFilter?.SetValueWithoutNotify(previousFilter);
         }
     }
 
@@ -61,6 +70,8 @@ public sealed class CombatHudPanels : MonoBehaviour
             {
                 SetDebug(i, previous[i]);
             }
+
+            DebugManager.instance.SetFactionFilter(previousFilter);
         }
 
         captured = false;
@@ -104,6 +115,11 @@ public sealed class CombatHudPanels : MonoBehaviour
 
     private void Update()
     {
+        if (PauseMenu.IsPaused)
+        {
+            return;
+        }
+
         notifications.SetToolsOpen(IsOpen);
         if (Keyboard.current != null && Keyboard.current.f1Key.wasPressedThisFrame)
         {
@@ -152,9 +168,9 @@ public sealed class CombatHudPanels : MonoBehaviour
             case 4:
                 return manager.showPowerStatus;
             case 5:
-                return manager.ShowsAI(UnitFaction.Player);
+                return manager.showFlightTrajectories;
             default:
-                return manager.ShowsAI(UnitFaction.Enemy);
+                return false;
         }
     }
 
@@ -184,10 +200,7 @@ public sealed class CombatHudPanels : MonoBehaviour
                 manager.TogglePowerStatus();
                 break;
             case 5:
-                manager.SetAIVisibility(UnitFaction.Player, value);
-                break;
-            case 6:
-                manager.SetAIVisibility(UnitFaction.Enemy, value);
+                manager.showFlightTrajectories = value;
                 break;
         }
     }

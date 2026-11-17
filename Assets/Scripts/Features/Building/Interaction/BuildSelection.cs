@@ -1,5 +1,6 @@
 // 职责：选择方块、恢复高亮材质和管理移动/旋转 Gizmo 的可见性。
 // 入口：Poll() / SelectBlock() / DeselectBlock()；轴拖拽由 BuildManipulation 管理。
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,6 +10,8 @@ internal sealed class BuildSelection
 {
     private readonly BuildManipulation _manipulation;
     private readonly Dictionary<Renderer, Material[]> _selectedMaterials = new Dictionary<Renderer, Material[]>();
+    private readonly Func<Vector3, bool> withinRange;
+    private float buildRange;
     private Camera mainCamera;
     private LayerMask axisLayer;
     private LayerMask blockLayer;
@@ -18,13 +21,15 @@ internal sealed class BuildSelection
     private bool _gizmosEnabled = true;
     public Block selectedBlock;
     public BuildType currentBuildType;
-    public BuildSelection(BuildManipulation manipulation)
+    public BuildSelection(BuildManipulation manipulation, Func<Vector3, bool> withinRange)
     {
         _manipulation = manipulation;
+        this.withinRange = withinRange;
     }
 
     public void Configure(
         Camera camera,
+        float range,
         LayerMask axes,
         LayerMask blocks,
         Material highlight,
@@ -32,6 +37,7 @@ internal sealed class BuildSelection
         GameObject rotate)
     {
         mainCamera = camera;
+        buildRange = range;
         axisLayer = axes;
         blockLayer = blocks;
         highlightMaterial = highlight;
@@ -50,12 +56,12 @@ internal sealed class BuildSelection
         {
             Vector2 mousePos = Mouse.current.position.ReadValue();
             Ray ray = mainCamera.ScreenPointToRay(mousePos);
-            if (Physics.Raycast(ray, out RaycastHit hit, 100f, axisLayer) && _manipulation.TryBeginDrag(hit, selectedBlock, currentBuildType))
+            if (Physics.Raycast(ray, out RaycastHit hit, buildRange, axisLayer) && _manipulation.TryBeginDrag(hit, selectedBlock, currentBuildType))
             {
                 return;
             }
 
-            if (Physics.Raycast(ray, out hit, 100f, blockLayer))
+            if (Physics.Raycast(ray, out hit, buildRange, blockLayer))
             {
                 Block block = hit.collider.GetComponentInParent<Block>();
                 if (block != null)
@@ -79,7 +85,7 @@ internal sealed class BuildSelection
 
     public void SelectBlock(Block block)
     {
-        if (block == null || block.TryGetComponent(out BuildingFoundation _))
+        if (block == null || !withinRange(block.transform.position) || block.TryGetComponent(out BuildingFoundation _))
         {
             DeselectBlock();
             return;

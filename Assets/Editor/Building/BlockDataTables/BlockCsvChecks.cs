@@ -29,7 +29,7 @@ public static class BlockCsvChecks
         string csvPath = BlockCsvDocument.AssetPath;
         byte[] originalCsv = File.ReadAllBytes(csvPath);
         var originals = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Resources/Blocks" }).Select(AssetDatabase.GUIDToAssetPath).ToDictionary(path => path, File.ReadAllBytes);
-        byte[] scene = File.ReadAllBytes("Assets/Scenes/Main.unity");
+        byte[] scene = File.ReadAllBytes("Assets/Scenes/Build.unity");
         bool dirty = UnityEngine.SceneManagement.SceneManager.GetActiveScene().isDirty;
         try
         {
@@ -182,7 +182,7 @@ public static class BlockCsvChecks
                 "Invalid CSV rejects whole batch without writing any Prefab");
             Check(
                 report,
-                scene.SequenceEqual(File.ReadAllBytes("Assets/Scenes/Main.unity")) && UnityEngine.SceneManagement.SceneManager.GetActiveScene().isDirty == dirty,
+                scene.SequenceEqual(File.ReadAllBytes("Assets/Scenes/Build.unity")) && UnityEngine.SceneManagement.SceneManager.GetActiveScene().isDirty == dirty,
                 "Scene bytes and Editor scene dirty state unchanged");
             report.status = "passed";
         }

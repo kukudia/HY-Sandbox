@@ -12,7 +12,7 @@ using Object = UnityEngine.Object;
 
 public static class GameModeAuthoring
 {
-    public const string MainPath = "Assets/Scenes/Main.unity";
+    public const string MainPath = "Assets/Scenes/Build.unity";
     public const string ExplorationPath = "Assets/Scenes/Exploration.unity";
     public const string SiegePath = "Assets/Scenes/SiegeGameplay.unity";
     [MenuItem("Tools/HY-Sandbox/Modes/Install gameplay subscenes")]

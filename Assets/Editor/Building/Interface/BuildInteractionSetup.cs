@@ -15,7 +15,7 @@ public static class BuildInteractionSetup
     [MenuItem("Tools/Build Palette/Apply range and health HUD update")]
     public static void Apply()
     {
-        var scene = UnityEngine.SceneManagement.SceneManager.GetSceneByPath("Assets/Scenes/Main.unity");
+        var scene = UnityEngine.SceneManagement.SceneManager.GetSceneByPath("Assets/Scenes/Build.unity");
         if (EditorApplication.isPlaying || !scene.isLoaded || scene.isDirty)
         {
             throw new InvalidOperationException("Open and save Main in Edit Mode before migrating the health HUD.");

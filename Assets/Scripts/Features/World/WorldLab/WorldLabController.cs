@@ -131,7 +131,6 @@ public sealed class WorldLabController : MonoBehaviour
             if (blast)
             {
                 world.DamageSphere(center, blastRadius, 500f);
-                buildings?.DamageSphere(center, blastRadius, 500f);
             }
             else if (chunk != null)
             {

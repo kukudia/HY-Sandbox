@@ -23,7 +23,7 @@ public static class FragmentRetentionChecks
     private static double deadline;
     public static string Run()
     {
-        if (!Application.isPlaying || SceneManager.GetActiveScene().path != "Assets/Scenes/Main.unity" || PlayManager.instance == null || PlayManager.instance.playMode || Time.timeScale <= 0f || scenario != null)
+        if (!Application.isPlaying || SceneManager.GetActiveScene().path != "Assets/Scenes/Build.unity" || PlayManager.instance == null || PlayManager.instance.playMode || Time.timeScale <= 0f || scenario != null)
         {
             throw new InvalidOperationException("Run once in Main Play with construct simulation idle and time advancing.");
         }

@@ -18,7 +18,7 @@ internal sealed class PowerConnectionVisuals
 
     public void Refresh(DebugManager settings)
     {
-        if (settings == null || !settings.showPowerConnections)
+        if (settings == null || !settings.showPowerConnections || !settings.Includes(_device))
         {
             Hide();
             return;

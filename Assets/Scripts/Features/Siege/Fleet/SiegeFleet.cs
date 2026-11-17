@@ -396,6 +396,26 @@ public sealed class SiegeFleet
         }
     }
 
+    public void ReleaseControl()
+    {
+        Driven = null;
+        foreach (SiegeFleetEntry entry in Ships)
+        {
+            if (entry == null || !entry.IsAlive)
+            {
+                continue;
+            }
+
+            entry.Cockpit.SetControlMode(UnitControlMode.Autonomous);
+            entry.Unit.SetMovementInput(Vector3.zero);
+            EnemyController ai = entry.Unit.GetComponent<EnemyController>();
+            if (ai != null)
+            {
+                ai.enabled = session.Match.Phase == SiegePhase.Battle && session.FlightGuidance?.IsGuiding(entry) != true;
+            }
+        }
+    }
+
     public void RepairBetweenWaves(
         out int repairedCount,
         out int attemptedCount,
@@ -478,7 +498,7 @@ public sealed class SiegeFleet
                 {
                     Driven = null;
                     int next = Array.FindIndex(Ships, ship => ship != null && ship.IsAlive);
-                    if (next >= 0)
+                    if (manageCamera && next >= 0)
                     {
                         TakeControl(next);
                     }

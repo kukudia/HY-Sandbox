@@ -52,7 +52,7 @@ public static class ArchitecturePlayProbe
             throw new InvalidOperationException("Exit Play Mode before running the architecture probe.");
         }
 
-        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().path != "Assets/Scenes/Main.unity")
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().path != "Assets/Scenes/Build.unity")
         {
             throw new InvalidOperationException("Open Assets/Scenes/Main.unity before testing.");
         }

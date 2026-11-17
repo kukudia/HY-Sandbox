@@ -196,9 +196,10 @@ public class StatusIcon : MonoBehaviour
 
     private void RefreshIcons(DebugManager manager)
     {
-        bool showConnection = manager.showConnectionStatus && connectionStatus != ConnectionStatus.Normal;
-        bool showDurability = manager.showDurabilityStatus && durabilityStatus != DurabilityStatus.Normal;
-        bool showPower = manager.showPowerStatus && powerStatus != PowerStatus.Normal;
+        bool included = manager.Includes(this);
+        bool showConnection = included && manager.showConnectionStatus && connectionStatus != ConnectionStatus.Normal;
+        bool showDurability = included && manager.showDurabilityStatus && durabilityStatus != DurabilityStatus.Normal;
+        bool showPower = included && manager.showPowerStatus && powerStatus != PowerStatus.Normal;
         if (!showConnection && !showDurability && !showPower)
         {
             _hasVisibleIcons = false;

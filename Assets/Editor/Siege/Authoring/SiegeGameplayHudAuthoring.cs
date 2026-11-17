@@ -25,7 +25,7 @@ public static class SiegeGameplayHudAuthoring
         Directory.CreateDirectory(backup);
         string[] paths =
         {
-            "Assets/Scenes/Main.unity",
+            MainMenuController.MainPath,
             "Assets/Scenes/Siege.unity",
             "Assets/Scenes/Random5v5Arena.unity",
             "Assets/Scenes/SiegeGameplay.unity"
@@ -93,6 +93,7 @@ public static class SiegeGameplayHudAuthoring
         Transform canvas = stage.transform.Find("Siege Gameplay UI");
         Remove(canvas.Find("Construction Controls"));
         Remove(canvas.Find("Return"));
+        Remove(canvas.Find("Heading"));
         SiegeCombatHud entry = stage.GetComponentInChildren<SiegeCombatHud>(true);
         if (entry == null)
         {
@@ -188,6 +189,19 @@ public static class SiegeGameplayHudAuthoring
                 font,
                 new Vector2(.5f, .5f),
                 new Vector2(0, -94),
+                new Vector2(220, 40)));
+        Button continueButton = (Button)data.FindProperty("dismissFailure").objectReferenceValue;
+        continueButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(140, -94);
+        Set(
+            data,
+            "restartFailure",
+            Button(
+                failure,
+                "Restart",
+                "RESTART",
+                font,
+                new Vector2(.5f, .5f),
+                new Vector2(-140, -94),
                 new Vector2(220, 40)));
         data.ApplyModifiedPropertiesWithoutUndo();
         failure.gameObject.SetActive(false);

@@ -32,7 +32,7 @@ public static class BuildingEditorPlayProbe
     [MenuItem("Tools/Building Editor/Run isolated Play Mode validation")]
     public static void Run()
     {
-        if (EditorApplication.isPlaying || UnityEngine.SceneManagement.SceneManager.GetActiveScene().path != "Assets/Scenes/Main.unity")
+        if (EditorApplication.isPlaying || UnityEngine.SceneManagement.SceneManager.GetActiveScene().path != "Assets/Scenes/Build.unity")
         {
             throw new InvalidOperationException("Open Main in Edit Mode before testing.");
         }

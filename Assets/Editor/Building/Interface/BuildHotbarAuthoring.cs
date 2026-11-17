@@ -19,10 +19,10 @@ public static class BuildHotbarAuthoring
             throw new InvalidOperationException("Exit Play Mode before authoring the build bar.");
         }
 
-        var scene = UnityEngine.SceneManagement.SceneManager.GetSceneByPath("Assets/Scenes/Main.unity");
+        var scene = UnityEngine.SceneManagement.SceneManager.GetSceneByPath("Assets/Scenes/Build.unity");
         if (!scene.isLoaded)
         {
-            scene = EditorSceneManager.OpenScene("Assets/Scenes/Main.unity", OpenSceneMode.Additive);
+            scene = EditorSceneManager.OpenScene("Assets/Scenes/Build.unity", OpenSceneMode.Additive);
         }
 
         if (scene.isDirty)

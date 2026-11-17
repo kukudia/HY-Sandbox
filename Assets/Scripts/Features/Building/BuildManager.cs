@@ -21,7 +21,7 @@ public class BuildManager : MonoBehaviour
     [SerializeField, Min(0.1f)]
     private float _buildRange = 15f;
     [SerializeField, Min(1f)]
-    private float _structureBuildRange = 150f;
+    private float _structureBuildRange = 30f;
     [SerializeField, Range(0, 8), Tooltip("Empty grid cells retained around automatically cropped structures.")]
     private int _footprintPadding = 1;
     public int FootprintPadding => _footprintPadding;
@@ -107,6 +107,10 @@ public class BuildManager : MonoBehaviour
     public float blockLoadCameraOrbitRadiusVariation = 0.25f;
     public float blockLoadCameraOrbitRadiusWaveDegrees = 120f;
     private BlueprintLoader _blueprintLoader;
+    internal bool FastBlueprintLoading
+    {
+        get; set;
+    }
     public bool IsLoadingBlocks => _blueprintLoader != null && _blueprintLoader.IsLoading;
     public float BlueprintLoadProgress => _blueprintLoader?.Progress ?? 0f;
 
@@ -547,8 +551,8 @@ public class BuildManager : MonoBehaviour
         {
             _geometry = new BuildPlacementGeometry();
             _preview = new BuildPreview(_geometry, CreateBlock);
-            _manipulation = new BuildManipulation(_geometry, SaveBlock, CreateDuplicateBlock);
-            _selection = new BuildSelection(_manipulation);
+            _manipulation = new BuildManipulation(_geometry, SaveBlock, CreateDuplicateBlock, IsWithinBuildRange);
+            _selection = new BuildSelection(_manipulation, IsWithinBuildRange);
             _manipulation.SelectionChanged += _selection.SelectBlock;
         }
 
@@ -565,6 +569,7 @@ public class BuildManager : MonoBehaviour
         _manipulation.Configure(mainCamera, moveAxis, rotateAxis);
         _selection.Configure(
             mainCamera,
+            BuildRange,
             axisLayer,
             blockLayer,
             highlightMaterial,
@@ -791,11 +796,12 @@ public class BuildManager : MonoBehaviour
     {
         return new BlueprintLoadSettings
         {
+            FastLoading = FastBlueprintLoading,
             InitialInterval = BlockLoadIntervalSeconds,
             MinimumInterval = _minimumBlockLoadIntervalSeconds,
             IntervalHalfLife = _blockLoadIntervalHalfLifeSeconds,
             GridSize = gridSize,
-            MoveCamera = moveCameraDuringBlockLoad,
+            MoveCamera = moveCameraDuringBlockLoad && !FastBlueprintLoading,
             MinimumOrbitBlocks = minBlocksForLoadCameraOrbit,
             CameraReferenceSecondsPerBlock = _loadCameraReferenceSecondsPerBlock,
             CameraMoveDuration = blockLoadCameraMoveDuration,

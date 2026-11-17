@@ -39,6 +39,8 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
     public bool ShowFailure => Settled && Time.unscaledTime >= defeatAt;
 
     private bool returning;
+    private bool piloting;
+    private ControlUnit pilotedUnit;
     private SiegeShipOption[] defenders = Array.Empty<SiegeShipOption>();
     public SiegeSettings Settings => settings.Combat;
     public SiegeFleet Fleet
@@ -312,6 +314,17 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         }
 
         Fleet?.RefreshBindings();
+        if (piloting && (Fleet?.Driven == null || !Fleet.Driven.IsAlive || Match.Phase != SiegePhase.Battle))
+        {
+            Observe();
+        }
+
+        if (piloting && Fleet.Driven.Unit != pilotedUnit)
+        {
+            pilotedUnit = Fleet.Driven.Unit;
+            SiegeFleetView.Focus(pilotedUnit, Fleet.Driven.MaximumDurability);
+        }
+
         string timeout = clock.Tick(Match.Phase, Time.deltaTime, Fleet, flight);
         if (timeout != null)
         {
@@ -420,13 +433,38 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
 
     public bool TryTakeControl(int slot)
     {
-        // The new base scene retains its overview camera; deployed defenders are autonomous.
-        return false;
+        if (!IsRunning || Match.Phase != SiegePhase.Battle || Fleet == null || !Fleet.TakeControl(slot))
+        {
+            return false;
+        }
+
+        piloting = true;
+        pilotedUnit = Fleet.Driven.Unit;
+        observerCamera?.Exit();
+        SiegeFleetView.Focus(Fleet.Driven.Unit, Fleet.Driven.MaximumDurability);
+        InputManager.instance.keyInput = true;
+        RefitChanged?.Invoke();
+        return true;
     }
 
     public bool TryTakeControl(string id)
     {
-        return false;
+        SiegeFleetEntry entry = Fleet?.Find(id);
+        return entry != null && TryTakeControl(Array.IndexOf(Fleet.Ships, entry));
+    }
+
+    public void Observe()
+    {
+        if (Fleet == null)
+        {
+            return;
+        }
+
+        piloting = false;
+        pilotedUnit = null;
+        Fleet.ReleaseControl();
+        InputManager.instance.keyInput = false;
+        observerCamera?.Enter(CameraController.instance, overview);
     }
 
     public bool TryRepairShip(string id, bool repairBase = false)
@@ -540,6 +578,11 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         if (!entered || Settled)
         {
             return;
+        }
+
+        if (piloting)
+        {
+            Observe();
         }
 
         Settled = true;

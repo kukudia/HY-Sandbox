@@ -3,6 +3,8 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public sealed class SiegeCombatHud : MonoBehaviour
 {
@@ -32,9 +34,13 @@ public sealed class SiegeCombatHud : MonoBehaviour
     private TMP_Text failureDetail;
     [SerializeField]
     private Button dismissFailure;
+    [SerializeField]
+    private Button restartFailure;
     private SiegeGameplayStage stage;
     private int selected;
     private float nextText;
+    private ControlUnit lastClicked;
+    private float lastClickTime;
     public CombatHud Hud => hud;
 
     private void Awake()
@@ -42,6 +48,11 @@ public sealed class SiegeCombatHud : MonoBehaviour
         nextWave.onClick.AddListener(() => stage?.BeginWave());
         repairBase.onClick.AddListener(() => stage?.Repair());
         dismissFailure.onClick.AddListener(() => stage?.ReturnToMenu());
+        if (restartFailure != null)
+        {
+            restartFailure.onClick.AddListener(() => PlayManager.instance.Modes.Restart());
+        }
+
         nextShip.onClick.AddListener(() =>
         {
             selected++;
@@ -79,6 +90,7 @@ public sealed class SiegeCombatHud : MonoBehaviour
 
     private void Update()
     {
+        PollShipControl();
         if (stage == null || stage.Fleet == null || Time.unscaledTime < nextText)
         {
             return;
@@ -152,6 +164,64 @@ public sealed class SiegeCombatHud : MonoBehaviour
         if (stage.Settled)
         {
             panels.CloseAll();
+        }
+    }
+
+    private void PollShipControl()
+    {
+        if (stage == null || PauseMenu.IsPaused || !stage.IsRunning || stage.Match.Phase != SiegePhase.Battle)
+        {
+            return;
+        }
+
+        if (Keyboard.current != null && Keyboard.current.tabKey.wasPressedThisFrame && stage.Fleet.Driven != null)
+        {
+            stage.Observe();
+            return;
+        }
+
+        Mouse mouse = Mouse.current;
+        if (mouse == null || !mouse.leftButton.wasPressedThisFrame || (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()))
+        {
+            return;
+        }
+
+        Camera camera = PlayManager.instance.mainCamera;
+        if (!Physics.Raycast(
+            camera.ScreenPointToRay(mouse.position.ReadValue()),
+            out RaycastHit hit,
+            2000f,
+            Physics.DefaultRaycastLayers,
+            QueryTriggerInteraction.Ignore))
+        {
+            lastClicked = null;
+            return;
+        }
+
+        ControlUnit unit = hit.collider.GetComponentInParent<ControlUnit>();
+        if (unit == null || unit.faction != UnitFaction.Player || !unit.HasValidCockpit || unit.gameObject.scene != stage.gameObject.scene)
+        {
+            lastClicked = null;
+            return;
+        }
+
+        if (unit == lastClicked && Time.unscaledTime - lastClickTime <= .35f)
+        {
+            foreach (SiegeFleetEntry ship in stage.Fleet.Ships)
+            {
+                if (ship != null && ship.Unit == unit)
+                {
+                    stage.TryTakeControl(ship.Id);
+                    break;
+                }
+            }
+
+            lastClicked = null;
+        }
+        else
+        {
+            lastClicked = unit;
+            lastClickTime = Time.unscaledTime;
         }
     }
 

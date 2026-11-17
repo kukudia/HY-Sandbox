@@ -28,7 +28,7 @@ public static class SiegeMainInterfaceAuthoring
 
         GameObject oldManagers = siege.GetRootGameObjects().Single(root => root.name == "Managers");
         GameObject oldCamera = siege.GetRootGameObjects().Single(root => root.name == "Main Camera");
-        Scene main = EditorSceneManager.OpenScene("Assets/Scenes/Main.unity", OpenSceneMode.Additive);
+        Scene main = EditorSceneManager.OpenScene("Assets/Scenes/Build.unity", OpenSceneMode.Additive);
         GameObject clone = null;
         try
         {

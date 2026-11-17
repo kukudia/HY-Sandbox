@@ -111,7 +111,8 @@ internal sealed class BlueprintLoader
 
     private IEnumerator LoadRoutine(int version, List<BlockData> blocks, BlueprintLoadSettings settings, Action createInitialBlock)
     {
-        double start = Time.timeAsDouble;
+        double start = Time.realtimeSinceStartupAsDouble;
+        var budget = System.Diagnostics.Stopwatch.StartNew();
         var missingIds = new HashSet<string>();
         var statistics = new BlueprintStatistics();
         try
@@ -143,8 +144,20 @@ internal sealed class BlueprintLoader
                 if (index < blocks.Count - 1)
                 {
                     Progress = blocks.Count == 0 ? 0.95f : (index + 1f) / blocks.Count * 0.95f;
-                    float interval = settings.GetInterval(Time.timeAsDouble - start);
-                    yield return interval > 0f ? new WaitForSeconds(interval) : null;
+                    if (settings.FastLoading)
+                    {
+                        // Menu navigation restores as much as the frame budget allows, without timed per-block waits.
+                        if (budget.Elapsed.TotalMilliseconds >= Mathf.Max(0.1f, settings.FrameBudgetMilliseconds))
+                        {
+                            yield return null;
+                            budget.Restart();
+                        }
+                    }
+                    else
+                    {
+                        float interval = settings.GetInterval(Time.realtimeSinceStartupAsDouble - start);
+                        yield return interval > 0f ? new WaitForSecondsRealtime(interval) : null;
+                    }
                 }
             }
 
@@ -173,7 +186,7 @@ internal sealed class BlueprintLoader
                 (connections as IDisposable)?.Dispose();
             }
 
-            Debug.Log($"加载{_path}完成，耗时{Time.timeAsDouble - start}s，共{blocks.Count}个方块，恢复成功{statistics.BlockCount}个。");
+            Debug.Log($"加载{_path}完成，耗时{Time.realtimeSinceStartupAsDouble - start}s，共{blocks.Count}个方块，恢复成功{statistics.BlockCount}个。");
             Progress = 1f;
         }
         finally

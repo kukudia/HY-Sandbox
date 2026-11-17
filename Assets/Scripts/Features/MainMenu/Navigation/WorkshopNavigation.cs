@@ -16,6 +16,8 @@ public sealed class WorkshopNavigation : MonoBehaviour
     private Button menuButton;
     [SerializeField]
     private Text notice;
+    [SerializeField]
+    private PauseMenu pauseMenu;
     private bool opening;
     public bool MenuHosted => SceneManager.GetSceneByPath(MenuPath).isLoaded;
 
@@ -26,7 +28,7 @@ public sealed class WorkshopNavigation : MonoBehaviour
             UseMenuEvents();
         }
 
-        menuButton.onClick.AddListener(OpenMenu);
+        menuButton.onClick.AddListener(TogglePause);
     }
 
     public void UseMenuEvents()
@@ -47,7 +49,7 @@ public sealed class WorkshopNavigation : MonoBehaviour
     {
         if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
-            OpenMenu();
+            TogglePause();
         }
     }
 
@@ -69,6 +71,14 @@ public sealed class WorkshopNavigation : MonoBehaviour
         }
     }
 
+    private void TogglePause()
+    {
+        if (pauseMenu != null)
+        {
+            pauseMenu.Toggle();
+        }
+    }
+
     public void ShowNotice(string message)
     {
         notice.text = message;
@@ -87,7 +97,7 @@ public sealed class WorkshopNavigation : MonoBehaviour
     {
         if (menuButton != null)
         {
-            menuButton.onClick.RemoveListener(OpenMenu);
+            menuButton.onClick.RemoveListener(TogglePause);
         }
     }
 }

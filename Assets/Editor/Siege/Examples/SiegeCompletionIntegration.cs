@@ -16,7 +16,7 @@ public static class SiegeCompletionIntegration
             throw new InvalidOperationException("Exit Play before installation.");
         }
 
-        const string path = "Assets/Scenes/Main.unity";
+        const string path = "Assets/Scenes/Build.unity";
         Scene scene = SceneManager.GetSceneByPath(path);
         bool opened = !scene.isLoaded;
         if (!opened && scene.isDirty)

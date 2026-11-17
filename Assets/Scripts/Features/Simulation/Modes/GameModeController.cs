@@ -238,6 +238,43 @@ public sealed class GameModeController : MonoBehaviour
         Select(explorationSelected);
     }
 
+    public void Restart()
+    {
+        if (transition == null && (State == GameModeState.Exploring || State == GameModeState.Siege))
+        {
+            StartCoroutine(RestartRoutine());
+        }
+    }
+
+    private IEnumerator RestartRoutine()
+    {
+        bool exploration = explorationSelected;
+        string design = requestedSiegeDesign;
+        TextAsset example = requestedSiegeExample;
+        string exampleName = requestedExampleName;
+        ReturnToBuild();
+        yield return null;
+        while (State == GameModeState.Returning)
+        {
+            yield return null;
+        }
+
+        if (State != GameModeState.Building)
+        {
+            yield break;
+        }
+
+        if (exploration)
+        {
+            ShowSelection();
+            SelectExploration();
+        }
+        else
+        {
+            LaunchSiege(design, example, exampleName);
+        }
+    }
+
     private IEnumerator GuardTransition(IEnumerator work)
     {
         // Always yield once so the caller stores the coroutine before a synchronous failure starts cleanup.

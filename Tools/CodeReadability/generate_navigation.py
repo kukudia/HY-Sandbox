@@ -139,6 +139,20 @@ def main():
          'J --> K', 'K --> L', 'K --> G'],
     )
     graph(
+        "夜班交互、暂停与诊断",
+        "源码推导：右键临时暂停建造操作；整数边界锚点同时服务预览、移动和旋转。Preference只控制受限Connector模块自动贴面。ESC打开预挂暂停界面，恢复原时钟/音频/输入；重启先清理旧模式再用原设计启动。双击友舰复用唯一驾驶权主链，Tab返回观察。诊断抽屉按阵营筛选，共用NavigationTrack有界历史。",
+        {"A": "InputManager.Update", "B": "BuildManager.SetBuildMode", "C": "BuildPlacementGeometry.CalculateRotationPosition",
+         "D": "BuildPreview.Poll", "E": "BuildPlacementGeometry.GetSurfaceRotation", "F": "BuildManipulation.HandleMovement",
+         "G": "WorkshopNavigation.TogglePause", "H": "PauseMenu.Toggle", "I": "PauseMenu.Resume", "J": "PauseMenu.Restart",
+         "K": "GameModeController.RestartRoutine", "L": "GameModeController.ReturnToBuild", "M": "GameModeController.LaunchSiege",
+         "N": "SiegeCombatHud.PollShipControl", "O": "SiegeGameplayStage.TryTakeControl", "P": "SiegeFleet.TakeControl",
+         "Q": "SiegeGameplayStage.Observe", "R": "SiegeFleet.ReleaseControl", "S": "DebugManager.SetFactionFilter",
+         "T": "CombatFlightTracks.Update", "U": "NavigationTrack.Sample"},
+        ['A --> B', 'D --> C', 'D --> E', 'F --> C', 'G --> H', 'H -->|已暂停| I',
+         'J --> I', 'J --> K', 'K --> L', 'K -.->|清理完成| M', 'N --> O', 'O --> P',
+         'N --> Q', 'Q --> R', 'S -.->|下一次采样| T', 'T --> U'],
+    )
+    graph(
         "主菜单、工坊暂停与蓝图出战",
         "源码推导：MainMenu冷启动只展示菜单；选择后只读校验蓝图，再按需Additive加载Main。Main跳过默认存档启动，菜单拥有唯一EventSystem。显式编辑示例才创建副本；探索临时选择别的载具时保留工坊对象/上下文/Undo。返回先走模式清理与货仓保存；失败保留活动会话并提示，成功才恢复原稿、暂停Main根对象。取消等待安全载入/卸载完成，不中途丢弃工坊。",
         {"A": "MainMenuController.Start", "B": "MainMenuController.Choose",
@@ -364,7 +378,6 @@ def main():
             "G --> H",
             "H -.->|编辑器校验队列| C",
             "C -->|非持久实例| J",
-            "I --> J",
             "J -->|首次读取缓存| E",
             "J --> F",
             "F --> K",
@@ -488,7 +501,6 @@ def main():
             "E --> F",
             "F -.->|prepareParent 回调| G",
             "G --> H",
-            "I --> J",
             "I -->|写入成功| K",
             "K --> H",
             "K -->|刷新所有块| L",
@@ -815,7 +827,7 @@ def main():
     )
     graph(
         "战斗、损伤、爆炸与残骸清理",
-        "源码推导：Turret独立索敌后申报功率；激光即时命中且无冲量，实体炮塔先按相对速度求寿命/射程内的提前量，再每炮口生成一发并由物理扫掠命中。碰撞以法向冲量限制质量，按恢复系数扣除反弹能量，动态双方按质心能量份额分摊；CSV默认无半血限幅或碰撞冷却。启用canExplode的单位/建筑方块遭撞击致死同样爆炸，不按DestroyedByCollision排除；舰船/建筑共用ExplosionDamageSession排队结算同PhysicsScene的模块中心径向伤害及体素伤害，连锁完成后统一刷新建筑支撑与舰船重组，再施加限幅冲量和碎片碰撞保护。伤害与冲量独立配置，友伤开启且不做遮挡判定。延迟清理保留原生命周期。",
+        "源码推导：Turret独立索敌后申报功率；激光即时命中且无冲量，实体炮塔先按相对速度求寿命/射程内的提前量，再每炮口生成一发并由物理扫掠命中。碰撞以法向冲量限制质量，按恢复系数扣除反弹能量，动态双方按质心能量份额分摊；CSV默认无半血限幅或碰撞冷却。启用canExplode的单位/建筑方块遭撞击致死同样爆炸，不按DestroyedByCollision排除；ExplosionDamageSession只破坏同PhysicsScene体素，不伤害周围模块，也不随机断开健康连接；被直接摧毁的源模块移除后刷新拓扑，再施加限幅冲量和碎片碰撞保护。显式建筑伤害刷和弹药直接命中保持独立。延迟清理保留原生命周期。",
         {
             "A": "Turret.FixedUpdate",
             "B": "TurretTargetSelector.FindNearestTarget",
@@ -826,7 +838,6 @@ def main():
             "G": "Durability.ApplyCollisionEnergy",
             "H": "DestroyManager.DestroyGameObject",
             "I": "DestroyManager.ExplodeBlock",
-            "J": "ExplosionPropagation.DisconnectBlocksInExplosionRange",
             "K": "PlayManager.RefreshGroup",
             "L": "ExplosionPropagation.ApplyExplosionForce",
             "M": "SalvageCleanupSession.ScheduleUnit",
@@ -888,12 +899,10 @@ def main():
             "H -->|可爆炸| I",
             "AF -->|爆炸源先进入外层批次| AL",
             "AL --> I",
-            "I --> J",
             "I --> AI",
             "AI --> AJ",
-            "AJ -->|模块中心径向伤害，连锁入队| D",
             "AJ --> AM",
-            "AI -->|连锁队列清空| AK",
+            "AI -->|地形破坏完成| AK",
             "AK -->|各脏单位一次| K",
             "AK -->|拓扑完成后| L",
             "H --> O",
@@ -973,7 +982,6 @@ def main():
             "A --> G",
             "A --> H",
             "I --> B",
-            "I --> J",
             "J --> K",
             "I --> L",
             "L --> D",
@@ -1010,7 +1018,6 @@ def main():
             "E -->|屏幕内文字| F",
             "E -->|携带或非游玩| H",
             "G --> H",
-            "I --> J",
         ],
     )
     graph(

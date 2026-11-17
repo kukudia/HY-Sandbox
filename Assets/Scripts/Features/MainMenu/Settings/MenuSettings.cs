@@ -15,6 +15,18 @@ public sealed class MenuSettings : MonoBehaviour
     private Dropdown quality;
     [SerializeField]
     private Toggle fullscreen;
+    [SerializeField]
+    private Toggle autoRotate;
+    [SerializeField]
+    private Button generalTab;
+    [SerializeField]
+    private Button preferenceTab;
+    [SerializeField]
+    private GameObject generalPage;
+    [SerializeField]
+    private GameObject preferencePage;
+    public static bool AutoRotatePlacement => PlayerPrefs.GetInt(Prefix + "AutoRotatePlacement", 0) != 0;
+
     private bool initialized;
     public void Initialize()
     {
@@ -24,6 +36,15 @@ public sealed class MenuSettings : MonoBehaviour
         }
 
         initialized = true;
+        if (autoRotate != null)
+        {
+            autoRotate.SetIsOnWithoutNotify(AutoRotatePlacement);
+            autoRotate.onValueChanged.AddListener(SetAutoRotate);
+            generalTab.onClick.AddListener(() => ShowPreferences(false));
+            preferenceTab.onClick.AddListener(() => ShowPreferences(true));
+            ShowPreferences(false);
+        }
+
         quality.ClearOptions();
         quality.AddOptions(QualitySettings.names.ToList());
         volume.SetValueWithoutNotify(Mathf.Clamp01(PlayerPrefs.GetFloat(Prefix + "Volume", AudioListener.volume)));
@@ -90,6 +111,18 @@ public sealed class MenuSettings : MonoBehaviour
     {
         Screen.fullScreen = value;
         PlayerPrefs.SetInt(Prefix + "Fullscreen", value ? 1 : 0);
+        PlayerPrefs.Save();
+    }
+
+    private void ShowPreferences(bool preferences)
+    {
+        generalPage.SetActive(!preferences);
+        preferencePage.SetActive(preferences);
+    }
+
+    private void SetAutoRotate(bool value)
+    {
+        PlayerPrefs.SetInt(Prefix + "AutoRotatePlacement", value ? 1 : 0);
         PlayerPrefs.Save();
     }
 }

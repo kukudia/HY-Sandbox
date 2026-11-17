@@ -99,7 +99,7 @@ public static class ModularUnitFactory
         unit.faction = faction;
         unit.RefreshChildren();
         unit.AssignRuntimeOwnershipToBlocks(true);
-        if (faction == UnitFaction.Enemy)
+        if (unit.cockpit != null)
         {
             EnemyIdentity identity = unit.cockpit.GetComponent<EnemyIdentity>();
             if (identity == null)

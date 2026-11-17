@@ -35,7 +35,7 @@ public static class SharedCombatHudAuthoring
         Directory.CreateDirectory(backup);
         string[] paths =
         {
-            "Assets/Scenes/Main.unity",
+            "Assets/Scenes/Build.unity",
             "Assets/Scenes/Siege.unity",
             "Assets/Scenes/Random5v5Arena.unity",
             "Assets/Scenes/SiegeGameplay.unity"
@@ -506,6 +506,7 @@ public static class SharedCombatHudAuthoring
             11,
             Color.gray);
         Set(panels, "thrusters", BuildThrusters(owner));
+        CombatDiagnosticsAuthoring.UpgradePanel(panels);
     }
 
     private static ThrusterInfoPanel BuildThrusters(Transform parent)

@@ -77,7 +77,7 @@ public static class SkirmishArenaAuthoring
         }
 
         matchSettings.ApplyModifiedPropertiesWithoutUndo();
-        Scene main = EditorSceneManager.OpenScene("Assets/Scenes/Main.unity", OpenSceneMode.Additive);
+        Scene main = EditorSceneManager.OpenScene("Assets/Scenes/Build.unity", OpenSceneMode.Additive);
         CombatHud source = Find<CombatHud>(main);
         SceneManager.SetActiveScene(arena);
         var canvasObject = new GameObject("Arena HUD", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));

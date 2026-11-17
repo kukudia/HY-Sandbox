@@ -148,7 +148,7 @@ public static class SiegeHangarPlayChecks
 
     private static void Begin()
     {
-        if (EditorApplication.isPlaying || SceneManager.sceneCount != 1 || SceneManager.GetActiveScene().path != "Assets/Scenes/Main.unity" || SceneManager.GetActiveScene().isDirty)
+        if (EditorApplication.isPlaying || SceneManager.sceneCount != 1 || SceneManager.GetActiveScene().path != "Assets/Scenes/Build.unity" || SceneManager.GetActiveScene().isDirty)
         {
             throw new InvalidOperationException("Open only saved Main in Edit Mode first.");
         }

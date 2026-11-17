@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 public static class CombatHudSetup
 {
-    private const string ScenePath = "Assets/Scenes/Main.unity";
+    private const string ScenePath = "Assets/Scenes/Build.unity";
     private static readonly Color Ink = new Color(0.025f, 0.055f, 0.07f, 0.88f);
     private static readonly Color Coral = new Color(1f, 0.32f, 0.28f);
     private static readonly Color Cyan = new Color(0.31f, 0.88f, 0.95f);

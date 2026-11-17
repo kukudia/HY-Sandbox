@@ -163,7 +163,7 @@ public class DestroyManager : MonoBehaviour
         VisualEffectsManager.TryPlayBlockExplosion(block);
         if (!building)
         {
-            ExplosionPropagation.DisconnectBlocksInExplosionRange(unit, block, explosionPosition);
+            // Only the already-destroyed source is detached; a blast cannot sever healthy neighbours.
             block.DisConnectAllConnectors();
             block.transform.SetParent(null, true);
         }

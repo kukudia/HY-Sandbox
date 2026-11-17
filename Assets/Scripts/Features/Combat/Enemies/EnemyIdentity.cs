@@ -20,12 +20,13 @@ public sealed class EnemyIdentity : MonoBehaviour
     [SerializeField]
     private string _displayName;
     private float _spawnMaxHealth;
-    public string DisplayName => string.IsNullOrWhiteSpace(_displayName) ? "Enemy Unit" : _displayName;
+    public string DisplayName => string.IsNullOrWhiteSpace(_displayName) ? DefaultDisplayName : _displayName;
+    private string DefaultDisplayName => GetComponentInParent<ControlUnit>()?.faction == UnitFaction.Player ? "Allied Unit" : "Enemy Unit";
     public float SpawnMaxHealth => _spawnMaxHealth;
 
     public void SetDisplayName(string displayName)
     {
-        _displayName = string.IsNullOrWhiteSpace(displayName) ? "Enemy Unit" : displayName;
+        _displayName = string.IsNullOrWhiteSpace(displayName) ? null : displayName;
     }
 
     public void SetSpawnMaxHealth(float maximum)

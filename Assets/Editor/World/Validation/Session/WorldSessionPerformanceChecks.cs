@@ -35,7 +35,7 @@ public static class WorldSessionPerformanceChecks
     public static void Run(string label)
     {
         var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
-        if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling || scene.isDirty || scene.path != "Assets/Scenes/Main.unity")
+        if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling || scene.isDirty || scene.path != "Assets/Scenes/Build.unity")
         {
             throw new InvalidOperationException("Run from saved Main in Edit Mode.");
         }

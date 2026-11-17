@@ -1,4 +1,4 @@
-// 职责：统一舰船/建筑/地形爆炸伤害，排队结算连锁并在整批结束后刷新拓扑与冲量。
+// 职责：爆炸只破坏体素地形；显式建筑伤害工具独立结算，批末刷新拓扑与冲量。
 // 入口：ApplyExplosion() / ApplyBuildings() / RefreshUnit()；实例由显式销毁服务或独立建筑工具拥有。
 using System;
 using System.Collections.Generic;
@@ -147,19 +147,9 @@ internal sealed class ExplosionDamageSession
                 }
             }
         }
-        else
-        {
-            // Snapshot once per module before damage disables sources. Collider multiplicity
-            // never multiplies damage; isolated PhysicsScenes cannot affect one another.
-            foreach (Durability health in Durability.Active)
-            {
-                if (health != null && health.gameObject.scene.GetPhysicsScene() == blast.physics)
-                {
-                    AddTarget(health, blast);
-                }
-            }
-        }
 
+        // A block explosion has no module targets. Projectile hits and the explicit building
+        // damage brush keep their own damage contracts; nearby modules never receive blast damage.
         foreach (Durability health in targets)
         {
             if (health != null && health.isActiveAndEnabled && health.currentDurability > 0f)

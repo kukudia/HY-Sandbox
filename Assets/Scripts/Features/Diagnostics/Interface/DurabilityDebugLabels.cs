@@ -23,7 +23,7 @@ public sealed class DurabilityDebugLabels : MonoBehaviour
         style ??= new GUIStyle(GUI.skin.label);
         foreach (Durability health in Durability.Active)
         {
-            if (health == null || !health.debugLog || health.currentDurability >= health.maxDurability)
+            if (health == null || !health.debugLog || health.currentDurability >= health.maxDurability || (DebugManager.instance != null && !DebugManager.instance.Includes(health)))
             {
                 continue;
             }

@@ -11,7 +11,7 @@ using UnityEngine.UI;
 public static class BlockStatusSetup
 {
     private const string BlocksFolder = "Assets/Resources/Blocks";
-    private const string MainScenePath = "Assets/Scenes/Main.unity";
+    private const string MainScenePath = "Assets/Scenes/Build.unity";
     private static readonly (string statusName, string iconPath)[] StatusIcons =
     {
         (nameof(ConnectionStatus.NoConnection), "Assets/Art/Icons/Status/NoConnection.png"),

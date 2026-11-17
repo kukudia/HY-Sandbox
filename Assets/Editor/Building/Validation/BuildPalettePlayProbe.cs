@@ -40,7 +40,7 @@ public static class BuildPalettePlayProbe
             throw new InvalidOperationException("Exit Play Mode first.");
         }
 
-        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().path != "Assets/Scenes/Main.unity")
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().path != "Assets/Scenes/Build.unity")
         {
             throw new InvalidOperationException("Open Main before testing.");
         }

@@ -19,7 +19,7 @@ public enum MenuDestination
 
 public sealed class MainMenuController : MonoBehaviour
 {
-    public const string MainPath = "Assets/Scenes/Main.unity";
+    public const string MainPath = "Assets/Scenes/Build.unity";
     private const string RecentName = "HY.Menu.RecentName";
     private const string RecentBuilding = "HY.Menu.RecentBuilding";
     [SerializeField]
@@ -298,13 +298,21 @@ public sealed class MainMenuController : MonoBehaviour
     private static void OpenBlueprint(bool building, string name)
     {
         MainUIPanels.instance.HideCreatePanel();
-        if (building)
+        BuildManager.instance.FastBlueprintLoading = true;
+        try
         {
-            SaveManager.instance.LoadBaseBlueprint(name);
+            if (building)
+            {
+                SaveManager.instance.LoadBaseBlueprint(name);
+            }
+            else
+            {
+                SaveManager.instance.LoadSave(name);
+            }
         }
-        else
+        finally
         {
-            SaveManager.instance.LoadSave(name);
+            BuildManager.instance.FastBlueprintLoading = false;
         }
 
         SaveUIPanel.instance.RefreshList();

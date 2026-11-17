@@ -2,9 +2,19 @@
 
 本轮需求对照、恢复点和后续计划见[Siege阶段交接](Docs/Validation/2026-11-16-siege-stage-handoff.md)。
 
+## 夜间交互与诊断改进（2026-11-18，进行中）
+
+工坊取消B切换：按住右键临时进入自由视角，WASD/方向键移动，释放恢复当前工具和选择。预览、移动、复制复用旋转的整数边界/尺寸奇偶锚点。基地建造默认30米，放置、选择及操纵均检查范围。Settings新增General/Preference导航，自动贴合受限连接面的旋转偏好默认关闭、独立持久化。主菜单进入蓝图按4毫秒帧预算批量恢复，不再走逐块计时；原加载统计、取消与连接重建链保留。
+
+ESC及工坊顶部按钮进入真实暂停界面，冻结游戏时间、相机、建造及音频；Resume精确恢复，玩法提供Restart。Siege失败面板新增Restart。双击友舰接管、Tab恢复观察，死亡及返航退出驾驶。共享Debug抽屉改为六项开关，新增友方/敌方/全部筛选及有界历史轨迹/规划路线。友舰使用真实蓝图名称；移除与倒计时重叠的旧Heading。
+
+爆炸仅破坏同PhysicsScene体素，不造成飞船/建筑/基地模块径向伤害，也不随机断开完好连接。直接命中伤害、明确建筑伤害刷、已摧毁源模块拆除和有限物理冲量仍由原链处理。
+
+验证：Play爆炸14项、六种真实Prefab网格/六面贴合774项通过；真实输入回归观察到RMB自由视角、方向键位移3.506米、释放恢复、ESC暂停/恢复。后续改动的攻防回归、快捷加载、筛选与接管仍在测试；残舱与待机场景未完成。持续状态与证据见[夜班验证](Docs/Validation/2026-11-18-night-development.md)。仅本地提交，不推送。
+
 ## Siege战斗时限与界面修正（2026-11-17）
 
-SiegeGameplay移除Construction Controls/SiegeConstructionPanel与Return按钮；底部居中只在部署/整备显示StartNextWave，基地有伤时显示手动维修按钮。顶部中央为准备/战斗/返航倒计时，左侧保留核心、关注友舰与精简经济状态。战斗界面改为半透明蓝灰底、青色友军与珊瑚红威胁；共享威胁箭头使用真实uGUI矢量组件。Debug的七个Toggle启用背景射线检测，保持现有DebugManager语义。
+SiegeGameplay移除Construction Controls/SiegeConstructionPanel与Return按钮；底部居中只在部署/整备显示StartNextWave，基地有伤时显示手动维修按钮。顶部中央为准备/战斗/返航倒计时，左侧保留核心、关注友舰与精简经济状态。战斗界面改为半透明蓝灰底、青色友军与珊瑚红威胁；共享威胁箭头使用真实uGUI矢量组件。Debug已升级为六项开关、阵营筛选与轨迹，见本页夜间改进。
 
 `SiegeGameplayStage.Clock`在Inspector配置战斗180秒、返航90秒、连续15秒位移不足2米停滞失败；模拟暂停不计时。`SiegeSettings.WaveSpawnDelay`默认5秒，每波重新准备，战斗180秒从准备结束后计算。时限/返航失败走核心销毁与统一失败结果；普通友舰死亡不调用通用PlayerDeath。核心爆炸后1.5秒显示专用失败面板，Continue通过菜单宿主或模式返回入口退出。成功返航仅自动尝试付费修复存活舰艇，基地保留伤势，手动维修仍需整备及足够金币。
 
@@ -12,7 +22,7 @@ SiegeGameplay移除Construction Controls/SiegeConstructionPanel与Return按钮�
 
 ## 共享战斗 HUD（2026-11-17）
 
-Main探索、Siege、Random5v5Arena与SiegeGameplay复用真实可编辑的 [SharedCombatHud.prefab](Assets/Art/CombatHud/SharedCombatHud.prefab) 和 [Theme.asset](Assets/Art/CombatHud/Theme.asset)。沿用uGUI，战斗文字升级TMP；主题配置采样预算、配色及动画时长。新版Siege由Stage显式绑定副场景、镜头和关注友舰，保持自主守军/自由观察玩法，不新增驾驶权。
+Main探索、Siege、Random5v5Arena与SiegeGameplay复用真实可编辑的 [SharedCombatHud.prefab](Assets/Art/CombatHud/SharedCombatHud.prefab) 和 [Theme.asset](Assets/Art/CombatHud/Theme.asset)。沿用uGUI，战斗文字升级TMP；主题配置采样预算、配色及动画时长。新版Siege由Stage显式绑定副场景、镜头和关注友舰，默认自主守军/自由观察，双击友舰可临时接管。
 
 敌舰方位逐帧更新，距离文字独立限频，包含后方标识、同向聚合和精英波强调；可见名牌与方位标记互斥。名牌显示舰体/驾驶舱耐久、延迟损伤条、受击闪烁和低血脉冲。共享战报滑入、重排、淡出；击杀庆祝使用有界队列，Siege仅响应规则确认死亡，重复致命伤、越界和卸载不重复计数。F1推进器、F2调试，抽屉互斥，Escape关闭；退出恢复调试偏好。新版左上角显示核心/关注友舰状态，可切换存活友舰；推进器面板读取该舰真实执行器输出和供电效率，区分AI/PILOT/GUIDANCE。
 

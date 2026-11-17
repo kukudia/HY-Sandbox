@@ -6,6 +6,38 @@ using UnityEngine.UI;
 
 public class DebugManager : MonoBehaviour
 {
+    public enum FactionFilter
+    {
+        All,
+        Friendly,
+        Enemy
+    }
+
+    [SerializeField]
+    private FactionFilter factionFilter;
+    public FactionFilter Filter => factionFilter;
+
+    public bool showFlightTrajectories;
+    private readonly List<PowerTransmissionDevice> filteredDevices = new List<PowerTransmissionDevice>();
+    public bool Includes(Component component)
+    {
+        if (component == null || factionFilter == FactionFilter.All)
+        {
+            return component != null;
+        }
+
+        ControlUnit unit = component.GetComponentInParent<ControlUnit>();
+        UnitFaction faction = unit != null ? unit.faction : UnitFaction.Player;
+        return factionFilter == FactionFilter.Friendly ? faction == UnitFaction.Player : faction == UnitFaction.Enemy;
+    }
+
+    public void SetFactionFilter(int value)
+    {
+        factionFilter = (FactionFilter)Mathf.Clamp(value, 0, 2);
+        StatusIcon.RefreshAllStatusIcons();
+        _powerRanges?.Invalidate();
+    }
+
     public static DebugManager instance;
     [Header("Power Debug Visibility")]
     public bool showPowerRange = false;
@@ -138,7 +170,16 @@ public class DebugManager : MonoBehaviour
 
     internal void RefreshPowerRangeMesh(IList<PowerTransmissionDevice> devices)
     {
-        PowerRanges.Refresh(devices, showPowerRange, isolatedRangeColor, connectedRangeColor, poweredRangeColor);
+        filteredDevices.Clear();
+        foreach (PowerTransmissionDevice device in devices)
+        {
+            if (Includes(device))
+            {
+                filteredDevices.Add(device);
+            }
+        }
+
+        PowerRanges.Refresh(filteredDevices, showPowerRange, isolatedRangeColor, connectedRangeColor, poweredRangeColor);
     }
 
     internal void ClearPowerRangeMesh()

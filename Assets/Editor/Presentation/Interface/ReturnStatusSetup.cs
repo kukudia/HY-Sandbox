@@ -12,7 +12,7 @@ public static class ReturnStatusSetup
     public static void Apply()
     {
         var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
-        if (EditorApplication.isPlaying || scene.path != "Assets/Scenes/Main.unity" || scene.isDirty)
+        if (EditorApplication.isPlaying || scene.path != "Assets/Scenes/Build.unity" || scene.isDirty)
         {
             throw new InvalidOperationException("Requires clean Main in Edit Mode.");
         }

@@ -47,7 +47,7 @@ public static class HangarWorkshopChecks
     [MenuItem("HY-Sandbox/Siege/Hangars/Validate Base Workshop Interaction")]
     public static void Run()
     {
-        if (EditorApplication.isPlaying || SceneManager.sceneCount != 1 || SceneManager.GetActiveScene().path != "Assets/Scenes/Main.unity" || SceneManager.GetActiveScene().isDirty)
+        if (EditorApplication.isPlaying || SceneManager.sceneCount != 1 || SceneManager.GetActiveScene().path != "Assets/Scenes/Build.unity" || SceneManager.GetActiveScene().isDirty)
         {
             throw new InvalidOperationException("Open only saved Main in Edit Mode before validation.");
         }

@@ -25,7 +25,7 @@ public static class InterfaceBaker
         }
 
         var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
-        if (scene.path != "Assets/Scenes/Main.unity")
+        if (scene.path != "Assets/Scenes/Build.unity")
         {
             throw new System.InvalidOperationException("Open Main before polishing the interface.");
         }

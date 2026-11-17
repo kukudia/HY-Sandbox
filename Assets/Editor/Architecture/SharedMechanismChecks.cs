@@ -27,7 +27,7 @@ public static class SharedMechanismChecks
     private static VisualEffectsManager effects;
     public static string Run()
     {
-        if (!Application.isPlaying || SceneManager.GetActiveScene().path != "Assets/Scenes/Main.unity")
+        if (!Application.isPlaying || SceneManager.GetActiveScene().path != "Assets/Scenes/Build.unity")
         {
             throw new InvalidOperationException("Open Main in Play Mode before running shared mechanism checks.");
         }

@@ -109,7 +109,7 @@ public static class HangarSceneIntegration
 
     private static void InstallWorkshop()
     {
-        Scene scene = EditorSceneManager.OpenScene("Assets/Scenes/Main.unity", OpenSceneMode.Additive);
+        Scene scene = EditorSceneManager.OpenScene("Assets/Scenes/Build.unity", OpenSceneMode.Additive);
         try
         {
             SiegeBaseWorkshop workshop = SceneObjectQuery.FindInScene<SiegeBaseWorkshop>(scene, FindObjectsInactive.Include);

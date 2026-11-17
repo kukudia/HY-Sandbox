@@ -56,6 +56,16 @@ public class InputManager : MonoBehaviour
         }
 
         SiegeSession siege = PlayManager.instance != null ? PlayManager.instance.SiegeSession : null;
+        if (PlayManager.instance?.Modes?.State == GameModeState.Siege && siege == null)
+        {
+            // The production Siege stage owns spectator/pilot switching; do not cycle camera modes with Tab.
+            bool released = keyboard.altKey.isPressed || MainUIPanels.instance.CombatHud.Panels.IsOpen;
+            lockView = released;
+            CameraController.instance.currentMode = released ? CameraMode.ThirdPersonLock : CameraMode.ThirdPerson;
+            ApplyCursorState(released);
+            return;
+        }
+
         if (siege != null && !siege.IsEditingBlueprint)
         {
             PollSiege(siege, keyboard);
@@ -135,9 +145,11 @@ public class InputManager : MonoBehaviour
 
         if (!PlayManager.instance.playMode)
         {
-            if (keyboard.bKey.wasPressedThisFrame)
+            // Camera navigation temporarily suspends editing; release restores the same selection/tool.
+            bool editing = Mouse.current == null || !Mouse.current.rightButton.isPressed;
+            if (lockView != editing)
             {
-                lockView = !lockView;
+                lockView = editing;
                 CameraController.instance.currentMode = lockView ? CameraMode.Lock : CameraMode.FreeFly;
                 BuildManager.instance.SetBuildMode(lockView);
                 ApplyCursorState(lockView);
