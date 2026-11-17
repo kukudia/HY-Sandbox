@@ -1269,10 +1269,10 @@ HY-Sandbox/
 | BuildManipulationPlayChecks | [`void Capture(string message, string trace, LogType type)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L44) | private static |
 | BuildManipulationPlayChecks | [`void Tick()`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L52) | private static |
 | BuildManipulationPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L86) | private static |
-| BuildManipulationPlayChecks | [`Vector3 Half(Block block, Quaternion rotation)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L531) | private static |
-| BuildManipulationPlayChecks | [`bool Grid(Block block)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L542) | private static |
-| BuildManipulationPlayChecks | [`bool Near(Vector3 a, Vector3 b)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L548) | private static |
-| BuildManipulationPlayChecks | [`void Check(bool valid, string name)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L549) | private static |
+| BuildManipulationPlayChecks | [`Vector3 Half(Block block, Quaternion rotation)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L613) | private static |
+| BuildManipulationPlayChecks | [`bool Grid(Block block)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L624) | private static |
+| BuildManipulationPlayChecks | [`bool Near(Vector3 a, Vector3 b)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L630) | private static |
+| BuildManipulationPlayChecks | [`void Check(bool valid, string name)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L631) | private static |
 
 ## Assets/Editor/Building/Validation/BuildNavigationPlayChecks.cs
 
@@ -3744,8 +3744,8 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BlueprintBlockFactory | [`bool TryRestore(BlockData data, Transform parent, UnitFaction faction, out Block block)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7) | public static |
-| BlueprintBlockFactory | [`void ApplyFaction(Block block, UnitFaction faction)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L68) | public static |
-| BlueprintBlockFactory | [`string ToResourcePath(string fullPath)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L76) | public static |
+| BlueprintBlockFactory | [`void ApplyFaction(Block block, UnitFaction faction)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L78) | public static |
+| BlueprintBlockFactory | [`string ToResourcePath(string fullPath)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L86) | public static |
 
 ## Assets/Scripts/Features/Building/BlueprintLoading/BlueprintFileStore.cs
 

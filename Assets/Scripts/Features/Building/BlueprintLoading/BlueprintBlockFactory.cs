@@ -22,10 +22,20 @@ internal static class BlueprintBlockFactory
         data = HangarShellBlueprint.Normalize(data);
         if (prefab.GetComponent<HangarModule>() != null && data.hangarEntrance != HangarEntrance.Front && data.hangarEntrance != HangarEntrance.Roof)
         {
-            throw new System.InvalidOperationException("Unsupported hangar entrance direction.");
+            return false;
         }
 
-        BlockMaterial.Validate(data.materialId, prefab);
+        try
+        {
+            BlockMaterial.Validate(data.materialId, prefab);
+        }
+        catch (System.ArgumentException)
+        {
+            // Repairable workshop loads retain the original snapshot when a module cannot
+            // be restored. Reject before Instantiate instead of aborting halfway through a design.
+            return false;
+        }
+
         GameObject obj = Object.Instantiate(
             prefab,
             new Vector3(data.posX, data.posY, data.posZ),

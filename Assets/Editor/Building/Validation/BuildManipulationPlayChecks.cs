@@ -100,6 +100,7 @@ public static class BuildManipulationPlayChecks
         Block selected = build.selectedBlock;
         Block last = build.lastSaveBlock;
         BlockDataList cache = saves.cachedData;
+        List<Block> registeredBlocks = new List<Block>(saves.blocks);
         FieldInfo storeField = typeof(SaveManager).GetField("_playerFiles", BindingFlags.Instance | BindingFlags.NonPublic);
         object store = storeField.GetValue(saves);
         object history = typeof(ActionManager).GetMethod("CaptureHistory", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(ActionManager.instance, null);
@@ -477,6 +478,85 @@ public static class BuildManipulationPlayChecks
                 Near(dragged.transform.position, rotatedPosition) && Quaternion.Angle(dragged.transform.rotation, rotatedOrientation) < .01f,
                 "Tool change cancels rotation and restores center");
             InputSystem.QueueStateEvent(mouse, new MouseState { position = pointer });
+            // Exercise the real loader separately from the selected-block interaction fixture.
+            build.DeselectBlock();
+            foreach (Block item in made)
+            {
+                if (item != null)
+                {
+                    Object.Destroy(item.gameObject);
+                }
+            }
+
+            made.Clear();
+            yield return .1f;
+            Transform originalParent = GameManager.instance.blocksParent;
+            Transform originalPlayParent = PlayManager.instance.blocksParent;
+            List<Block> originalBlocks = new List<Block>(saves.blocks);
+            GameManager.instance.blocksParent = null;
+            PlayManager.instance.blocksParent = null;
+            GameObject loadedParent = null;
+            object loader = null;
+            try
+            {
+                BlockDataList invalidDesign = JsonUtility.FromJson<BlockDataList>("{\"blocks\":[" + "{\"id\":\"valid-before\",\"resourcePath\":\"Blocks/1x1x1\",\"x\":1,\"y\":1,\"z\":1,\"posX\":2000.5,\"posY\":2000.5,\"posZ\":2000.5,\"rotW\":1}," + "{\"id\":\"bad-material\",\"resourcePath\":\"Blocks/1x1x1\",\"x\":1,\"y\":1,\"z\":1,\"materialId\":\"unavailable-test-material\",\"rotW\":1}," + "{\"id\":\"bad-hangar\",\"resourcePath\":\"Hangars/Hangar\",\"x\":4,\"y\":4,\"z\":4,\"hangarEntrance\":99,\"rotW\":1}," + "{\"id\":\"valid-after\",\"resourcePath\":\"Blocks/1x1x1\",\"x\":1,\"y\":1,\"z\":1,\"posX\":2003.5,\"posY\":2000.5,\"posZ\":2000.5,\"rotW\":1}]}");
+                string path = saves.GetSavePath("Repairable probe");
+                string originalJson = JsonUtility.ToJson(invalidDesign);
+                File.WriteAllText(path, originalJson);
+                Assembly runtime = typeof(BuildManager).Assembly;
+                Type loaderType = runtime.GetType("BlueprintLoader");
+                loader = Activator.CreateInstance(loaderType, build, saves, GameManager.instance, PlayManager.instance);
+                Type contextType = runtime.GetType("BuildTargetContext");
+                object context = contextType.GetMethod("PlayerSave").Invoke(null, new object[] { "Repairable probe", "unused" });
+                Type settingsType = runtime.GetType("BlueprintLoadSettings");
+                object settings = Activator.CreateInstance(settingsType);
+                settingsType.GetField("FastLoading").SetValue(settings, true);
+                settingsType.GetField("GridSize").SetValue(settings, 1f);
+                loaderType.GetMethod("Load").Invoke(loader, new object[] { context, build.blocksParentPrefab, settings, build.mainCamera, null, null });
+                loadedParent = GameManager.instance.blocksParent.gameObject;
+                while ((bool)loaderType.GetProperty("IsLoading").GetValue(loader))
+                {
+                    yield return .05f;
+                }
+
+                Check(
+                    loadedParent.GetComponentsInChildren<Block>().Length == 2,
+                    "Repairable loader continues after invalid material and hangar entrance");
+                Check(
+                    saves.blocks.Any(item => item.uniqueId == "valid-before") && saves.blocks.Any(item => item.uniqueId == "valid-after"),
+                    "Repairable loader restores valid modules on both sides of invalid data");
+                Check(
+                    saves.cachedData.blocks.Count == 4 && saves.cachedData.blocks.Any(item => item.id == "bad-material") && saves.cachedData.blocks.Any(item => item.id == "bad-hangar"),
+                    "Repairable loader retains unavailable module snapshots");
+                Check(File.ReadAllText(path) == originalJson, "Repairable loader leaves source file unchanged");
+                TextAsset finch = Resources.Load<TextAsset>("WorldBlueprints/Enemies/CODEX_E01_Finch");
+                BlockDataList brokenUnit = JsonUtility.FromJson<BlockDataList>(finch.text);
+                brokenUnit.blocks[1].materialId = "unavailable-test-material";
+                ControlUnit refused = ModularUnitFactory.Spawn(
+                    brokenUnit,
+                    "Invalid material spawn fixture",
+                    Vector3.one * 3000f,
+                    Quaternion.identity,
+                    UnitFaction.Enemy);
+                Check(refused == null, "Combat factory rejects a design with an unrestorable material");
+                yield return .1f;
+                Check(
+                    !Object.FindObjectsByType<ControlUnit>(FindObjectsInactive.Include).Any(unit => unit.name == "Invalid material spawn fixture"),
+                    "Combat factory removes its partial root after rejection");
+            }
+            finally
+            {
+                loader?.GetType().GetMethod("Cancel").Invoke(loader, null);
+                if (loadedParent != null)
+                {
+                    Object.Destroy(loadedParent);
+                }
+
+                GameManager.instance.blocksParent = originalParent;
+                PlayManager.instance.blocksParent = originalPlayParent;
+                saves.blocks.Clear();
+                saves.blocks.AddRange(originalBlocks);
+            }
         }
         finally
         {
@@ -491,6 +571,8 @@ public static class BuildManipulationPlayChecks
             }
 
             saves.cachedData = cache;
+            saves.blocks.Clear();
+            saves.blocks.AddRange(registeredBlocks);
             storeField.SetValue(saves, store);
             typeof(ActionManager).GetMethod("RestoreHistory", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(ActionManager.instance, new[] { history });
             if (mouse != null && mouse.added)

@@ -550,7 +550,7 @@ def main():
     )
     graph(
         "蓝图恢复、统计和取消",
-        "Load 先验证文件，再以单位变换创建建造父对象，使Inspector局部坐标与BlockData世界坐标一致；逐块保留原世界姿态，协程按请求版本检查所有权。统计事件指向显示。取消使旧版本失效；缺资源移出缓存和JSON。",
+        "Load 先验证文件，再以单位变换创建建造父对象，使Inspector局部坐标与BlockData世界坐标一致；逐块保留原世界姿态，协程按请求版本检查所有权。统计事件指向显示。取消使旧版本失效；缺资源/不支持材质/机库入口在实例化前返回false，工坊保留原快照和JSON并继续恢复，战斗消费者拒绝并清理半成品。",
         {
             "A": "BuildManager.LoadAllBlocks",
             "B": "BlueprintLoader.Load",
