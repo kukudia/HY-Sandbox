@@ -288,14 +288,14 @@ def main():
         "源码推导：运行服务限定拥有者场景，制作工具限定活动场景；重复服务拒绝依赖对象顺序。VFX 17.6 桥接仅在 Editor，使用当前程序集和 GetGraph/CreateGraph；验证只修改临时副本。",
         {
             "A": "PlayManager.PlayStart", "B": "SceneObjectQuery.FindInScene",
-            "C": "SceneObjectQuery.FindInActiveScene", "D": "SiegeThreatMarkers.Start",
+            "C": "SceneObjectQuery.FindInActiveScene",
             "E": "UpgradeCompatibilityChecks.CheckSceneQueries", "F": "UpgradeCompatibilityChecks.CheckVfxBridge",
             "G": "VfxGraphAuthoring.Graph", "H": "VfxGraphAuthoring.Save",
             "I": "UpgradeCompatibilityChecks.MigrateExhaustImporter",
             "J": "ProfilerCaptureAnalysis.Analyze", "K": "ProfilerCaptureAnalysis.AddCounters",
             "L": "ProfilerCaptureAnalysis.WriteCounters",
         },
-        ["A --> B", "C --> B", "D --> B", "E --> B", "E --> C", "F -->|Main模式入口| U", "F -->|旧Siege或组件夹具| G", "F --> H", "J --> K", "J --> L"],
+        ["A --> B", "C --> B", "E --> B", "E --> C", "F -->|Main模式入口| U", "F -->|旧Siege或组件夹具| G", "F --> H", "J --> K", "J --> L"],
     )
 
     graph(
@@ -1992,7 +1992,7 @@ def main():
          "C": "SkirmishMatch.BeginRound", "D": "ModularUnitFactory.Spawn",
          "E": "DestroyManager.DestroyGameObject", "F": "SkirmishMatch.NotifyCockpitDestroyed",
          "G": "SkirmishMatch.Eliminate", "H": "SkirmishHud.ShowKill",
-         "I": "CombatHud.ShowCombatKill", "J": "CombatHud.ShowNotification",
+         "I": "CombatHud.ShowCombatKill", "J": "CombatNotifications.Push",
          "K": "SkirmishMatch.Update", "L": "SkirmishMatch.ClearAndRestart",
          "M": "TurretProjectilePool.ClearAll", "N": "VfxEffectPool.ClearActive",
          "O": "DestroyManager.EndSalvageSession", "P": "SkirmishHud.SetState",
@@ -2002,7 +2002,7 @@ def main():
          "X": "SkirmishMatch.ApplyTeamColor", "Y": "SkirmishMatch.OnDestroy",
          "AE": "SkirmishMatch.ReleaseTeamMaterial",
          "Z": "ControlUnit.TryGetTotalDurability", "AA": "CombatHud.IsWorldPointOccluded",
-         "AC": "CombatHud.LateUpdate", "AD": "CombatHud.RefreshEnemies",
+         "AC": "CombatHud.LateUpdate", "AD": "CombatHud.Sample",
          "AB": "TurretTargetSelector.FindNearestTarget"},
         ["A -.->|保存独立场景| B", "B --> C", "C --> D", "C --> Q",
          "E -->|已登记驾驶舱| F", "F --> G", "G --> H", "H --> I", "I --> J",
@@ -2038,14 +2038,34 @@ def main():
             "C": "EditableComponentBaker.MigrateTree", "D": "EditableComponentBaker.ConfigureServices",
             "E": "ControlUnit.RefreshChildren", "F": "WorldBuildingManager.Stage",
             "G": "ProceduralVoxelWorld.Generate", "H": "VfxEffectPool.Rent",
-            "I": "SceneObjectQuery.FindInScene", "J": "SiegeThreatMarkers.Build",
+            "I": "SceneObjectQuery.FindInScene",
         },
         [
             "A --> B", "A --> C", "A --> D",
             "D -->|查找场景服务| I", "H -->|池缓存失效时| I",
             "C -.->|保存的 AI 组件| E", "B -.->|保存的建筑模板| F",
-            "B -.->|保存的地形模板| G", "C -.->|保存的标记池| J",
+            "B -.->|保存的地形模板| G",
         ],
+    )
+    graph(
+        "共享战斗HUD与新版Siege绑定",
+        "源码推导：Main探索、旧Siege、5v5和新版Siege使用同一Prefab。Stage显式绑定副场景和镜头；HUD以驾驶舱身份维护名牌，每0.1秒采样、逐帧投影。规则确认敌机死亡后发送战报，卸载和越界不发奖不播击杀。抽屉互斥并在退出恢复调试状态；新版保持自主守军观察玩法。",
+        {"A": "SiegeGameplayStage.Enter", "B": "SiegeCombatHud.Enter",
+         "C": "CombatHud.Bind", "D": "CombatHud.LateUpdate",
+         "E": "CombatHud.Sample", "F": "CombatHud.Project",
+         "G": "CombatNameplate.Sample", "H": "CombatNameplate.Present",
+         "I": "CombatThreatMarkers.LateUpdate", "J": "CombatThreatView.Place",
+         "K": "SiegeWaveDirector.Tick", "L": "SiegeCombatHud.AttackerResolved",
+         "M": "CombatNotifications.Push", "N": "CombatNotifications.Update",
+         "O": "CombatHudPanels.ToggleThrusters", "P": "ThrusterInfoPanel.BindOwner",
+         "V": "ThrusterInfoPanel.Toggle",
+         "Q": "SiegeCombatHud.Update", "R": "SiegeGameplayStage.Exit",
+         "S": "SiegeCombatHud.Exit", "T": "CombatHudPanels.Restore",
+         "U": "CombatHud.Unbind"},
+        ["A --> B", "B --> C", "D --> E", "D --> F", "E --> G", "F --> H",
+         "I --> J", "K -.->|已结算AttackerResolved事件| L", "L -->|经ShowDestruction| M",
+         "M -.->|有界队列，逐帧动效| N", "Q --> P", "O --> V",
+         "R --> S", "S --> T", "S --> U"],
     )
     doc = """# HY-Sandbox 运行时函数图
 

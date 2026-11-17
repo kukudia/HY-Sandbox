@@ -454,11 +454,6 @@ public static class EditableComponentBaker
                 }
             }
         }
-
-        foreach (SiegeThreatMarkers markers in root.GetComponentsInChildren<SiegeThreatMarkers>(true))
-        {
-            BakeMarkers(markers);
-        }
     }
 
     private static T Service<T>(Scene scene, Transform managers)
@@ -506,49 +501,6 @@ public static class EditableComponentBaker
             scaler.referenceResolution = new Vector2(1920f, 1080f);
             scaler.matchWidthOrHeight = 0.5f;
             SetReference(debug, "statusIconRoot", overlay.transform);
-        }
-    }
-
-    private static void BakeMarkers(SiegeThreatMarkers owner)
-    {
-        var settings = new SerializedObject(owner);
-        int count = owner.AuthoredPoolSize;
-        Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        for (int i = 0; i < count; i++)
-        {
-            string name = "Threat Marker " + (i + 1);
-            if (owner.transform.Find(name) != null)
-            {
-                continue;
-            }
-
-            var root = new GameObject(name, typeof(RectTransform), typeof(Image));
-            var rect = (RectTransform)root.transform;
-            rect.SetParent(owner.transform, false);
-            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
-            rect.sizeDelta = settings.FindProperty("markerSize").vector2Value;
-            rect.localRotation = Quaternion.Euler(0f, 0f, 45f);
-            root.GetComponent<Image>().color = settings.FindProperty("markerColor").colorValue;
-            root.GetComponent<Image>().raycastTarget = false;
-            var label = new GameObject("Distance", typeof(RectTransform), typeof(Text));
-            var labelRect = (RectTransform)label.transform;
-            labelRect.SetParent(rect, false);
-            labelRect.anchorMin = labelRect.anchorMax = new Vector2(0.5f, 0.5f);
-            labelRect.pivot = new Vector2(0.5f, 1f);
-            labelRect.anchoredPosition = new Vector2(0f, -6f);
-            labelRect.sizeDelta = new Vector2(90f, 22f);
-            Text text = label.GetComponent<Text>();
-            text.font = font;
-            text.fontSize = owner.AuthoredLabelSize;
-            text.alignment = TextAnchor.UpperCenter;
-            text.color = settings.FindProperty("labelColor").colorValue;
-            text.raycastTarget = false;
-            text.verticalOverflow = VerticalWrapMode.Overflow;
-            Shadow shadow = label.AddComponent<Shadow>();
-            shadow.effectColor = new Color(0.015f, 0.035f, 0.055f, 0.68f);
-            shadow.effectDistance = new Vector2(1f, -1f);
-            root.SetActive(false);
-            additions++;
         }
     }
 }

@@ -153,11 +153,13 @@ public static class EditableComponentChecks
                     debug != null && debug.GetComponent<DurabilityDebugLabels>() != null && debug.StatusIconRoot != null,
                     path + " debug entry");
                 Require(!debug.gameObject.hideFlags.HasFlag(HideFlags.DontSave), path + " visible debug host");
-                foreach (SiegeThreatMarkers markers in Object.FindObjectsByType<SiegeThreatMarkers>(FindObjectsInactive.Include))
+                foreach (CombatThreatMarkers markers in Object.FindObjectsByType<CombatThreatMarkers>(FindObjectsInactive.Include))
                 {
                     if (markers.gameObject.scene == scene)
                     {
-                        Require(markers.transform.Find("Threat Marker 1/Distance") != null, path + " saved threat markers");
+                        Require(
+                            markers.GetComponentsInChildren<CombatThreatView>(true).Length > 0,
+                            path + " saved shared threat markers");
                     }
                 }
 

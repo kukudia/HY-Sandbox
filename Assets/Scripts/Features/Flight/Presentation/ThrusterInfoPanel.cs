@@ -1,6 +1,7 @@
-// 职责：展示选中推进器的可编辑信息与参数。
-// 入口：Toggle() / Close() / SelectCategory()。
+// 职责：以缓存推进器列表展示关注舰的真实推力和供电状态，支持驾驶、AI与返航导引。
+// 入口：BindOwner() / Toggle() / Close() / SelectCategory()；不写推进器参数。
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,180 +12,170 @@ public sealed class ThrusterInfoPanel : MonoBehaviour
     [SerializeField]
     private Button[] _tabs;
     [SerializeField]
-    private Text[] _tabLabels;
+    private TMP_Text[] _tabLabels;
     [SerializeField]
     private RectTransform _content;
     [SerializeField]
     private RectTransform _rowTemplate;
     [SerializeField]
-    private Text _emptyState;
+    private TMP_Text _emptyState;
     [SerializeField]
     private Image _tabIndicator;
     [SerializeField]
-    private float _updateInterval = 0.1f;
-    private readonly List<Row> _rows = new List<Row>();
-    private readonly List<Thruster> _thrusters = new List<Thruster>();
-    private ControlUnit _owner;
-    private int _category;
-    private float _nextRefresh;
+    private TMP_Text _ownerLabel;
+    [SerializeField]
+    private float _updateInterval = .1f;
+    private readonly List<Row> rows = new List<Row>();
+    private readonly List<Thruster> thrusters = new List<Thruster>();
+    private ControlUnit boundOwner;
+    private bool explicitOwner;
+    private bool open;
+    private int category;
+    private float nextRefresh;
+    private float alpha;
+    public bool IsOpen => open;
+
     private sealed class Row
     {
         public RectTransform root;
-        public Text name;
-        public Text value;
+        public TMP_Text name;
+        public TMP_Text value;
         public RectTransform fill;
+        public float target;
     }
-
-    public bool IsOpen => _window != null && _window.activeSelf;
 
     private void Awake()
     {
         for (int i = 0; i < _tabs.Length; i++)
         {
-            int category = i;
-            _tabs[i].onClick.AddListener(() => SelectCategory(category));
+            int index = i;
+            _tabs[i].onClick.AddListener(() => SelectCategory(index));
         }
 
-        // Apply the serialized default immediately so the indicator cannot render
-        // with its editor placeholder size during the first frame.
-        SelectCategory(_category);
-        //if (_window != null) _window.SetActive(false);
+        SelectCategory(0);
+        Close();
+        _window.GetComponent<CanvasGroup>().alpha = 0f;
     }
 
-    private void OnDisable()
+    public void BindOwner(ControlUnit owner, string status)
     {
-        if (_window != null)
+        explicitOwner = true;
+        if (boundOwner != owner)
         {
-            _window.SetActive(false);
+            nextRefresh = 0f;
         }
+
+        boundOwner = owner;
+        _ownerLabel.text = owner != null ? owner.name + " / " + status : "SELECT AN ALLIED SHIP";
     }
 
     public void Toggle()
     {
-        if (_window == null)
-        {
-            return;
-        }
-
-        _window.SetActive(!_window.activeSelf);
-        if (_window.activeSelf)
-        {
-            SelectCategory(_category);
-            _nextRefresh = 0f;
-        }
+        open = !open;
+        nextRefresh = 0f;
     }
 
     public void Close()
     {
-        if (_window != null)
-        {
-            _window.SetActive(false);
-        }
+        open = false;
     }
 
-    public void SelectCategory(int category)
+    private void OnDisable()
     {
-        _category = Mathf.Clamp(category, 0, 2);
+        open = false;
+        alpha = 0f;
+        explicitOwner = false;
+        boundOwner = null;
+    }
+
+    public void SelectCategory(int selected)
+    {
+        category = Mathf.Clamp(selected, 0, 2);
         for (int i = 0; i < _tabs.Length; i++)
         {
-            _tabLabels[i].color = i == _category ? new Color(0.31f, 0.88f, 0.95f) : Color.white;
-            _tabs[i].image.color = i == _category ? new Color(0.08f, 0.19f, 0.22f, 1f) : new Color(0.045f, 0.08f, 0.1f, 1f);
+            _tabLabels[i].color = i == category ? new Color(.3f, .88f, .95f) : Color.white;
         }
 
-        if (_tabIndicator != null)
-        {
-            RectTransform indicator = _tabIndicator.rectTransform;
-            indicator.anchorMin = new Vector2(_category / 3f, 0f);
-            indicator.anchorMax = new Vector2((_category + 1f) / 3f, 0f);
-            indicator.offsetMin = Vector2.zero;
-            indicator.offsetMax = new Vector2(0f, 3f);
-        }
-
-        _nextRefresh = 0f;
+        nextRefresh = 0f;
     }
 
     private void Update()
     {
-        if (!IsOpen || PlayManager.instance == null || !PlayManager.instance.playMode)
+        CanvasGroup group = _window.GetComponent<CanvasGroup>();
+        alpha = Mathf.MoveTowards(alpha, open ? 1f : 0f, Time.unscaledDeltaTime / .18f);
+        group.alpha = alpha;
+        group.interactable = group.blocksRaycasts = open;
+        ((RectTransform)_window.transform).anchoredPosition = new Vector2(-20f + (1f - alpha) * 30f, -65f);
+        if (_tabIndicator != null)
+        {
+            RectTransform indicator = _tabIndicator.rectTransform;
+            float blend = 1f - Mathf.Exp(-20f * Time.unscaledDeltaTime);
+            indicator.anchorMin = Vector2.Lerp(indicator.anchorMin, new Vector2(category / 3f, 0f), blend);
+            indicator.anchorMax = Vector2.Lerp(indicator.anchorMax, new Vector2((category + 1f) / 3f, 0f), blend);
+        }
+
+        foreach (Row row in rows)
+        {
+            row.fill.anchorMax = new Vector2(Mathf.Lerp(row.fill.anchorMax.x, row.target, 1f - Mathf.Exp(-18f * Time.unscaledDeltaTime)), 1f);
+        }
+
+        if (!open || Time.unscaledTime < nextRefresh)
         {
             return;
         }
 
-        if (Time.unscaledTime < _nextRefresh)
+        nextRefresh = Time.unscaledTime + _updateInterval;
+        ControlUnit owner = explicitOwner ? boundOwner : PlayManager.instance != null && PlayManager.instance.blocksParent != null ? PlayManager.instance.blocksParent.GetComponent<ControlUnit>() : null;
+        if (!explicitOwner && _ownerLabel != null)
         {
-            return;
+            _ownerLabel.text = owner != null ? owner.name : "NO ACTIVE SHIP";
         }
 
-        _nextRefresh = Time.unscaledTime + _updateInterval;
-        ControlUnit owner = PlayManager.instance.blocksParent != null ? PlayManager.instance.blocksParent.GetComponent<ControlUnit>() : null;
-        if (owner != _owner)
-        {
-            _owner = owner;
-            _thrusters.Clear();
-        }
-
-        _thrusters.Clear();
+        thrusters.Clear();
         if (owner != null && owner.HasValidCockpit && owner.faction == UnitFaction.Player)
         {
-            foreach (Thruster thruster in owner.GetComponentsInChildren<Thruster>())
+            foreach (Thruster thruster in owner.Thrusters)
             {
-                if (thruster != null && thruster.IsPlayerControllable && MatchesCategory(thruster))
+                if (thruster != null && thruster.isActiveAndEnabled && MatchesCategory(thruster))
                 {
-                    _thrusters.Add(thruster);
+                    thrusters.Add(thruster);
                 }
             }
         }
 
-        _emptyState.gameObject.SetActive(_thrusters.Count == 0);
-        for (int i = 0; i < _thrusters.Count; i++)
+        _emptyState.gameObject.SetActive(thrusters.Count == 0);
+        for (int i = 0; i < thrusters.Count; i++)
         {
-            if (i == _rows.Count)
+            if (i >= rows.Count)
             {
-                _rows.Add(CreateRow());
+                RectTransform root = Instantiate(_rowTemplate, _content);
+                rows.Add(new Row { root = root, name = root.Find("Name").GetComponent<TMP_Text>(), value = root.Find("Value").GetComponent<TMP_Text>(), fill = (RectTransform)root.Find("Track/Fill") });
             }
 
-            UpdateRow(_rows[i], _thrusters[i], i);
+            Row row = rows[i];
+            Thruster thruster = thrusters[i];
+            float efficiency = thruster.PowerSupplyEfficiency;
+            Color color = efficiency <= 0f ? new Color(1f, .36f, .33f) : efficiency < .999f ? new Color(1f, .81f, .34f) : new Color(.3f, .88f, .95f);
+            row.root.gameObject.SetActive(true);
+            row.root.anchoredPosition = new Vector2(0f, -i * 66f);
+            row.name.text = thruster.name;
+            row.name.color = color;
+            row.value.text = $"{thruster.thrust:0.0} / {thruster.maxThrust:0.0} N  |  PWR {efficiency:P0}";
+            row.value.color = color;
+            row.fill.GetComponent<Image>().color = color;
+            row.target = thruster.maxThrust > 0f ? Mathf.Clamp01(thruster.thrust / thruster.maxThrust) : 0f;
         }
 
-        for (int i = _thrusters.Count; i < _rows.Count; i++)
+        for (int i = thrusters.Count; i < rows.Count; i++)
         {
-            _rows[i].root.gameObject.SetActive(false);
+            rows[i].root.gameObject.SetActive(false);
         }
 
-        _content.sizeDelta = new Vector2(0f, Mathf.Max(0f, _thrusters.Count * 62f));
+        _content.sizeDelta = new Vector2(0f, thrusters.Count * 66f);
     }
 
     private bool MatchesCategory(Thruster thruster)
     {
-        return _category == 0 ? thruster is MainThruster : _category == 1 ? thruster is UniversalThruster : thruster is HoverThruster;
-    }
-
-    private Row CreateRow()
-    {
-        RectTransform root = Instantiate(_rowTemplate, _content);
-        root.name = "Thruster Row";
-        root.gameObject.SetActive(true);
-        return new Row
-        {
-            root = root,
-            name = root.Find("Name").GetComponent<Text>(),
-            value = root.Find("Value").GetComponent<Text>(),
-            fill = (RectTransform)root.Find("Track/Fill")
-        };
-    }
-
-    private void UpdateRow(Row row, Thruster thruster, int index)
-    {
-        row.root.gameObject.SetActive(true);
-        row.root.anchoredPosition = new Vector2(0f, -index * 62f);
-        // 只使用电网已确认的供电状态；关机尾推力和分配前的瞬时零值不能作为缺电。
-        float efficiency = thruster.PowerSupplyEfficiency;
-        Color state = efficiency <= 0f ? new Color(1f, 0.36f, 0.33f) : efficiency < 0.999f ? new Color(1f, 0.81f, 0.34f) : Color.white;
-        row.name.text = thruster.name;
-        row.name.color = state;
-        row.value.text = $"{thruster.thrust:0.0} / {thruster.maxThrust:0.0}";
-        row.value.color = state;
-        row.fill.anchorMax = new Vector2(thruster.maxThrust > 0f ? Mathf.Clamp01(thruster.thrust / thruster.maxThrust) : 0f, 1f);
-        row.fill.GetComponent<Image>().color = efficiency <= 0f ? state : new Color(0.31f, 0.88f, 0.95f);
+        return category == 0 ? thruster is MainThruster : category == 1 ? thruster is UniversalThruster : thruster is HoverThruster;
     }
 }

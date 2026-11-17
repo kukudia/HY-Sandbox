@@ -190,7 +190,7 @@ public sealed class SiegeObserverCamera : MonoBehaviour
     {
         if (hint != null)
         {
-            hint.text = $"FREE VIEW  |  Hold RMB + WASD / Q E  |  Shift fast  |  Wheel speed {speed:0}  |  F overview";
+            hint.text = $"RMB + WASD/QE  |  Shift: fast  |  Wheel: {speed:0}  |  F: overview";
         }
     }
 

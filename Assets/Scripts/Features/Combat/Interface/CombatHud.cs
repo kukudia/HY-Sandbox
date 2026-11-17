@@ -1,9 +1,10 @@
-// 职责：展示敌方耐久名牌、玩家相关战斗信息与击杀提示。
-// 入口：ResetHud() / ShowPlayerKill() / IsWorldPointOccluded()。
+// 职责：共享战斗HUD入口，显式绑定战场/镜头/关注舰，限频采样耐久并逐帧投影名牌。
+// 入口：Bind() / ResetHud() / ShowPlayerKill() / ShowCombatKill()；退出绑定时清空视图和通知。
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
+[DefaultExecutionOrder(200)]
 public sealed class CombatHud : MonoBehaviour
 {
     [SerializeField]
@@ -11,45 +12,76 @@ public sealed class CombatHud : MonoBehaviour
     [SerializeField]
     private RectTransform _enemyTemplate;
     [SerializeField]
-    private CanvasGroup _killGroup;
+    private CombatHudTheme theme;
     [SerializeField]
-    private Text _killName;
+    private CombatNotifications notifications;
     [SerializeField]
-    private Text _killCount;
-    [SerializeField, Min(0.05f)]
-    private float _refreshInterval = 0.2f;
-    [SerializeField, Min(1f)]
-    private float _maxLabelDistance = 140f;
-    [SerializeField, Min(0f)]
-    private float _labelHeight = 2.5f;
-    [SerializeField, Min(0.1f)]
-    private float _killDuration = 2.8f;
-    [SerializeField, Min(0f)]
-    private float _labelFadeSpeed = 7f;
-    [SerializeField, Min(0.05f), Tooltip("Nameplate occlusion raycast cadence in seconds.")]
-    private float _occlusionCheckInterval = 0.12f;
-    private readonly Dictionary<ControlUnit, EnemyView> _views = new Dictionary<ControlUnit, EnemyView>();
-    private readonly Stack<EnemyView> _pool = new Stack<EnemyView>();
-    private readonly List<ControlUnit> _remove = new List<ControlUnit>();
-    private readonly HashSet<ControlUnit> _seen = new HashSet<ControlUnit>();
-    private readonly RaycastHit[] _occlusionHits = new RaycastHit[64];
-    private Camera _camera;
-    private float _nextRefresh;
-    private float _killUntil;
-    private int _kills;
-    private sealed class EnemyView
+    private CombatThreatMarkers threats;
+    [SerializeField]
+    private CombatHudPanels panels;
+    [SerializeField, Min(0f), Tooltip("0沿用共享主题；远距观战场景可单独覆盖显示距离。")]
+    private float nameplateDistanceOverride;
+    private readonly Dictionary<Cockpit, View> views = new Dictionary<Cockpit, View>();
+    private readonly Stack<CombatNameplate> pool = new Stack<CombatNameplate>();
+    private readonly List<ControlUnit> candidates = new List<ControlUnit>();
+    private readonly List<Cockpit> removed = new List<Cockpit>();
+    private readonly RaycastHit[] occlusionHits = new RaycastHit[128];
+    private readonly List<Rect> placed = new List<Rect>();
+    private Scene battlefield;
+    private Camera cameraOverride;
+    private bool explicitBinding;
+    private bool allTeams;
+    private float nextSample;
+    private int kills;
+    public ControlUnit FocusedUnit
     {
-        public RectTransform root;
-        public Text name;
-        public RectTransform fill;
-        public RectTransform cockpitFill;
-        public Text value;
-        public Text cockpitValue;
-        public CanvasGroup group;
-        public float health;
+        get; private set;
+    }
+    public Camera WorldCamera
+    {
+        get; private set;
+    }
+    public CombatHudTheme Theme => theme;
+    public CombatNotifications Notifications => notifications;
+    public CombatHudPanels Panels => panels;
+    public bool EliteWave
+    {
+        get; set;
+    }
+    public IReadOnlyList<ControlUnit> Candidates => candidates;
+    public bool IsBattleActive => explicitBinding || (PlayManager.instance != null && PlayManager.instance.playMode);
+    public Scene Battlefield => explicitBinding ? battlefield : PlayManager.instance != null && PlayManager.instance.WorldSession != null ? PlayManager.instance.WorldSession.gameObject.scene : gameObject.scene;
+
+    private sealed class View
+    {
+        public ControlUnit unit;
+        public CombatNameplate plate;
         public float maximum;
-        public float nextOcclusionCheck;
+        public float nextRay;
         public bool occluded;
+    }
+
+    public void Bind(Scene scene, Camera camera, bool showBothTeams)
+    {
+        ResetHud();
+        battlefield = scene;
+        cameraOverride = camera;
+        allTeams = showBothTeams;
+        explicitBinding = true;
+    }
+
+    public void SetFocus(ControlUnit unit)
+    {
+        FocusedUnit = unit;
+    }
+
+    public void Unbind()
+    {
+        explicitBinding = false;
+        EliteWave = false;
+        cameraOverride = null;
+        FocusedUnit = null;
+        ResetHud();
     }
 
     private void OnEnable()
@@ -59,138 +91,225 @@ public sealed class CombatHud : MonoBehaviour
 
     private void OnDisable()
     {
-        foreach (EnemyView view in _views.Values)
-        {
-            Recycle(view);
-        }
-
-        _views.Clear();
-        if (_killGroup != null)
-        {
-            _killGroup.gameObject.SetActive(false);
-        }
+        Unbind();
     }
 
     public void ResetHud()
     {
-        _kills = 0;
-        _killUntil = 0f;
-        _nextRefresh = 0f;
-        if (_killGroup != null)
+        foreach (View view in views.Values)
         {
-            _killGroup.gameObject.SetActive(false);
+            view.plate.gameObject.SetActive(false);
+            pool.Push(view.plate);
         }
+
+        views.Clear();
+        candidates.Clear();
+        kills = 0;
+        nextSample = 0f;
+        notifications?.Clear();
+        threats?.Clear();
     }
 
     public void ShowPlayerKill(string enemyName)
     {
-        if (!isActiveAndEnabled || PlayManager.instance == null || !PlayManager.instance.playMode)
+        if (!IsBattleActive || !isActiveAndEnabled)
         {
             return;
         }
 
-        _kills++;
-        ShowNotification(string.IsNullOrWhiteSpace(enemyName) ? "ENEMY DESTROYED" : enemyName, $"KILLS  {_kills:00}");
+        kills++;
+        notifications.Push(enemyName, null, $"KILLS  {kills:00}", true);
     }
 
     public void ShowCombatKill(string victim, string attacker, string score)
     {
-        if (!isActiveAndEnabled || PlayManager.instance == null || !PlayManager.instance.playMode)
-        {
-            return;
-        }
-
-        ShowNotification(string.IsNullOrEmpty(attacker) ? victim + " DESTROYED" : attacker + " → " + victim, score);
+        ShowDestruction(victim, attacker, score, true);
     }
 
-    private void ShowNotification(string title, string score)
+    public void ShowDestruction(string victim, string attacker, string detail, bool celebrate)
     {
-        _killName.text = title;
-        _killCount.text = score;
-        _killUntil = Time.unscaledTime + _killDuration;
-        _killGroup.alpha = 0f;
-        _killGroup.gameObject.SetActive(true);
+        if (IsBattleActive && isActiveAndEnabled && notifications != null)
+        {
+            notifications.Push(victim, attacker, detail, celebrate);
+        }
     }
 
     private void LateUpdate()
     {
-        if (PlayManager.instance == null || !PlayManager.instance.playMode)
+        if (!IsBattleActive || theme == null)
         {
+            if (views.Count > 0 || candidates.Count > 0)
+            {
+                ResetHud();
+            }
+
             return;
         }
 
-        _camera = PlayManager.instance.mainCamera != null ? PlayManager.instance.mainCamera : Camera.main;
-        if (_camera == null || _overlay == null || _enemyTemplate == null)
+        WorldCamera = cameraOverride != null ? cameraOverride : PlayManager.instance != null && PlayManager.instance.mainCamera != null ? PlayManager.instance.mainCamera : Camera.main;
+        if (WorldCamera == null)
         {
+            ResetHud();
             return;
         }
 
-        if (Time.unscaledTime >= _nextRefresh)
+        if (!explicitBinding && PlayManager.instance != null)
         {
-            RefreshEnemies();
-            _nextRefresh = Time.unscaledTime + _refreshInterval;
+            EliteWave = PlayManager.instance.SiegeSession != null && PlayManager.instance.SiegeSession.Match != null && PlayManager.instance.SiegeSession.Match.IsEliteWave;
+            FocusedUnit = PlayManager.instance.blocksParent != null ? PlayManager.instance.blocksParent.GetComponent<ControlUnit>() : null;
         }
 
-        foreach (KeyValuePair<ControlUnit, EnemyView> pair in _views)
+        if (Time.unscaledTime >= nextSample)
         {
-            ControlUnit unit = pair.Key;
-            EnemyView view = pair.Value;
-            if (unit == null || unit.cockpit == null)
+            Sample();
+            nextSample = Time.unscaledTime + theme.sampleInterval;
+        }
+
+        Project();
+    }
+
+    private void Sample()
+    {
+        candidates.Clear();
+        foreach (ControlUnit unit in ControlUnit.RuntimeUnits)
+        {
+            if (unit != null && unit.gameObject.scene == Battlefield && unit.HasValidCockpit && unit.cockpit.isActiveAndEnabled && unit.isActiveAndEnabled && (unit.faction == UnitFaction.Enemy || allTeams || (PlayManager.instance != null && PlayManager.instance.Skirmish != null)))
+            {
+                candidates.Add(unit);
+            }
+        }
+
+        candidates.Sort(ComparePriority);
+        removed.Clear();
+        foreach (KeyValuePair<Cockpit, View> pair in views)
+        {
+            int rank = pair.Value.unit != null ? candidates.IndexOf(pair.Value.unit) : -1;
+            if (pair.Key == null || !pair.Key.isActiveAndEnabled || rank < 0 || rank >= theme.maximumNameplates)
+            {
+                removed.Add(pair.Key);
+            }
+        }
+
+        foreach (Cockpit cockpit in removed)
+        {
+            View old = views[cockpit];
+            old.plate.gameObject.SetActive(false);
+            pool.Push(old.plate);
+            views.Remove(cockpit);
+        }
+
+        int budget = Mathf.Min(candidates.Count, theme.maximumNameplates);
+        for (int i = 0; i < budget; i++)
+        {
+            ControlUnit unit = candidates[i];
+            if (!views.TryGetValue(unit.cockpit, out View view))
+            {
+                CombatNameplate plate = pool.Count > 0 ? pool.Pop() : Instantiate(_enemyTemplate, _overlay).GetComponent<CombatNameplate>();
+                EnemyIdentity identity = unit.cockpit.GetComponent<EnemyIdentity>();
+                Color color = unit.faction == UnitFaction.Player ? theme.friendly : EliteWave ? theme.warning : theme.hostile;
+                plate.Bind(
+                    theme,
+                    (unit.faction == UnitFaction.Player ? "ALLY  /  " : EliteWave ? "ELITE  /  " : "HOSTILE  /  ") + (identity != null ? identity.DisplayName : unit.name),
+                    color);
+                view = new View
+                {
+                    unit = unit,
+                    plate = plate,
+                    maximum = identity != null ? identity.SpawnMaxHealth : 0f,
+                    nextRay = Time.unscaledTime + (i % 6) * .025f
+                };
+                views.Add(unit.cockpit, view);
+            }
+
+            view.unit = unit;
+            unit.TryGetTotalDurability(out float health, out float maximum);
+            if (view.maximum <= 0f)
+            {
+                view.maximum = maximum;
+            }
+
+            view.maximum = Mathf.Max(view.maximum, maximum);
+            Durability core = unit.cockpit.GetComponent<Durability>();
+            bool detailed = unit == FocusedUnit || (unit.transform.position - WorldCamera.transform.position).sqrMagnitude < 6400f;
+            view.plate.Sample(
+                health,
+                view.maximum,
+                core != null ? core.currentDurability : 0f,
+                core != null ? core.maxDurability : 0f,
+                detailed);
+        }
+    }
+
+    private int ComparePriority(ControlUnit left, ControlUnit right)
+    {
+        if (left == FocusedUnit || right == FocusedUnit)
+        {
+            return left == right ? 0 : left == FocusedUnit ? -1 : 1;
+        }
+
+        Vector3 origin = WorldCamera.transform.position;
+        return (left.transform.position - origin).sqrMagnitude.CompareTo((right.transform.position - origin).sqrMagnitude);
+    }
+
+    private void Project()
+    {
+        placed.Clear();
+        foreach (ControlUnit candidate in candidates)
+        {
+            if (candidate == null || candidate.cockpit == null || !views.TryGetValue(candidate.cockpit, out View view))
             {
                 continue;
             }
 
-            Vector3 world = unit.cockpit.transform.position + Vector3.up * _labelHeight;
-            Vector3 screen = _camera.WorldToScreenPoint(world);
-            if (Time.unscaledTime >= view.nextOcclusionCheck)
+            Vector3 world = candidate.cockpit.transform.position + Vector3.up * 3f;
+            Vector3 screen = WorldCamera.WorldToScreenPoint(world);
+            float distanceLimit = nameplateDistanceOverride > 0f ? nameplateDistanceOverride : theme.nameplateDistance;
+            bool visible = screen.z > 0f && screen.x > 0f && screen.x < Screen.width && screen.y > 0f && screen.y < Screen.height && (world - WorldCamera.transform.position).sqrMagnitude < distanceLimit * distanceLimit;
+            if (visible && Time.unscaledTime >= view.nextRay)
             {
-                view.occluded = IsOccluded(world, unit);
-                view.nextOcclusionCheck = Time.unscaledTime + _occlusionCheckInterval;
+                view.occluded = IsWorldPointOccluded(WorldCamera, world, candidate.transform, occlusionHits);
+                view.nextRay = Time.unscaledTime + theme.occlusionInterval;
             }
 
-            bool visible = screen.z > 0f && screen.x > 0f && screen.x < Screen.width && screen.y > 0f && screen.y < Screen.height && (world - _camera.transform.position).sqrMagnitude < _maxLabelDistance * _maxLabelDistance && !view.occluded;
-            view.group.alpha = Mathf.MoveTowards(view.group.alpha, visible ? 1f : 0f, Time.unscaledDeltaTime * _labelFadeSpeed);
-            view.root.gameObject.SetActive(view.group.alpha > 0f);
-            if (visible && RectTransformUtility.ScreenPointToLocalPointInRectangle(_overlay, screen, null, out Vector2 local))
+            visible &= !view.occluded;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(_overlay, screen, null, out Vector2 local);
+            Rect bounds = new Rect(local - new Vector2(120f, 0f), new Vector2(240f, 64f));
+            foreach (Rect other in placed)
             {
-                view.root.anchoredPosition = local;
+                if (bounds.Overlaps(other))
+                {
+                    visible = false;
+                    break;
+                }
             }
-        }
 
-        if (_killGroup != null && _killGroup.gameObject.activeSelf)
-        {
-            float remaining = _killUntil - Time.unscaledTime;
-            if (remaining <= 0f)
+            if (visible)
             {
-                _killGroup.gameObject.SetActive(false);
+                placed.Add(bounds);
             }
-            else
-            {
-                _killGroup.alpha = Mathf.Min(1f, (_killDuration - remaining) * 5f, remaining * 2f);
-            }
+
+            view.plate.Present(local, visible, Time.unscaledDeltaTime);
         }
     }
 
-    private bool IsOccluded(Vector3 target, ControlUnit unit)
+    public bool HasVisibleNameplate(ControlUnit unit)
     {
-        return IsWorldPointOccluded(_camera, target, unit.transform, _occlusionHits);
+        return unit != null && unit.cockpit != null && views.TryGetValue(unit.cockpit, out View view) && view.plate.IsVisible;
     }
 
     public static bool IsWorldPointOccluded(Camera camera, Vector3 target, Transform owner, RaycastHit[] hits)
     {
-        Vector3 origin = camera.transform.position;
-        Vector3 delta = target - origin;
-        float distance = delta.magnitude;
-        if (distance < 0.01f)
+        Vector3 delta = target - camera.transform.position;
+        if (delta.magnitude < .01f)
         {
             return false;
         }
 
         int count = Physics.RaycastNonAlloc(
-            origin,
-            delta / distance,
+            camera.transform.position,
+            delta.normalized,
             hits,
-            distance - 0.01f,
+            delta.magnitude - .01f,
             ~((1 << 2) | (1 << 5)),
             QueryTriggerInteraction.Ignore);
         for (int i = 0; i < count; i++)
@@ -202,92 +321,6 @@ public sealed class CombatHud : MonoBehaviour
             }
         }
 
-        return false;
-    }
-
-    private void RefreshEnemies()
-    {
-        _seen.Clear();
-        foreach (ControlUnit unit in PlayManager.instance.GetControlUnits())
-        {
-            if (unit == null || (unit.faction != UnitFaction.Enemy && PlayManager.instance.Skirmish == null) || !unit.HasValidCockpit)
-            {
-                continue;
-            }
-
-            _seen.Add(unit);
-            if (!_views.TryGetValue(unit, out EnemyView view))
-            {
-                view = _pool.Count > 0 ? _pool.Pop() : CreateView();
-                _views.Add(unit, view);
-                view.nextOcclusionCheck = 0f;
-                view.occluded = false;
-                EnemyIdentity identity = unit.cockpit.GetComponent<EnemyIdentity>();
-                view.name.text = identity != null ? identity.DisplayName : unit.name;
-                if (PlayManager.instance.Skirmish != null)
-                {
-                    Color team = PlayManager.instance.Skirmish.TeamColor(unit.faction == UnitFaction.Player);
-                    view.name.color = team;
-                    view.fill.GetComponent<UnityEngine.UI.Image>().color = team;
-                }
-
-                view.group.alpha = 0f;
-                view.maximum = identity != null && identity.SpawnMaxHealth > 0f ? identity.SpawnMaxHealth : 0f;
-            }
-
-            unit.TryGetTotalDurability(out float health, out float maximum);
-            view.health = health;
-            if (view.maximum <= 0f)
-            {
-                view.maximum = maximum;
-            }
-
-            float ratio = view.maximum > 0f ? Mathf.Clamp01(health / view.maximum) : 0f;
-            view.fill.anchorMax = new Vector2(ratio, 1f);
-            view.value.text = $"{health:0} / {view.maximum:0}";
-            Durability cockpitHealth = unit.cockpit.GetComponent<Durability>();
-            float cockpitCurrent = cockpitHealth != null ? Mathf.Max(0f, cockpitHealth.currentDurability) : 0f;
-            float cockpitMaximum = cockpitHealth != null ? Mathf.Max(0f, cockpitHealth.maxDurability) : 0f;
-            view.cockpitFill.anchorMax = new Vector2(cockpitMaximum > 0f ? Mathf.Clamp01(cockpitCurrent / cockpitMaximum) : 0f, 1f);
-            view.cockpitValue.text = $"{cockpitCurrent:0} / {cockpitMaximum:0}";
-        }
-
-        _remove.Clear();
-        foreach (ControlUnit unit in _views.Keys)
-        {
-            if (unit == null || !_seen.Contains(unit))
-            {
-                _remove.Add(unit);
-            }
-        }
-
-        foreach (ControlUnit unit in _remove)
-        {
-            Recycle(_views[unit]);
-            _views.Remove(unit);
-        }
-    }
-
-    private EnemyView CreateView()
-    {
-        RectTransform root = Instantiate(_enemyTemplate, _overlay);
-        root.name = "Enemy Nameplate";
-        root.SetSiblingIndex(1);
-        return new EnemyView
-        {
-            root = root,
-            name = root.Find("Name").GetComponent<Text>(),
-            fill = (RectTransform)root.Find("Bar/Fill"),
-            cockpitFill = (RectTransform)root.Find("CockpitBar/Fill"),
-            value = root.Find("Value").GetComponent<Text>(),
-            cockpitValue = root.Find("CockpitValue").GetComponent<Text>(),
-            group = root.GetComponent<CanvasGroup>()
-        };
-    }
-
-    private void Recycle(EnemyView view)
-    {
-        view.root.gameObject.SetActive(false);
-        _pool.Push(view);
+        return count == hits.Length;
     }
 }

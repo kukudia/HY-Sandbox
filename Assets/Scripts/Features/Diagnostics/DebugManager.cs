@@ -33,6 +33,18 @@ public class DebugManager : MonoBehaviour
     [SerializeField, Tooltip("绘制所有敌机的目标、移动意图与避障采样。")]
     private bool showEnemyAI;
     public bool ShowsAI(UnitFaction faction) => faction == UnitFaction.Player ? showFriendlyAI : faction == UnitFaction.Enemy && showEnemyAI;
+    public void SetAIVisibility(UnitFaction faction, bool visible)
+    {
+        if (faction == UnitFaction.Player)
+        {
+            showFriendlyAI = visible;
+        }
+        else if (faction == UnitFaction.Enemy)
+        {
+            showEnemyAI = visible;
+        }
+    }
+
     private PowerRangeUnionView _powerRanges;
     private PowerRangeUnionView PowerRanges => _powerRanges ?? (_powerRanges = new PowerRangeUnionView(transform));
 

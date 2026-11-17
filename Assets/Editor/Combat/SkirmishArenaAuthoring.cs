@@ -91,10 +91,6 @@ public static class SkirmishArenaAuthoring
         copy.name = "CombatHud";
         copy.SetActive(true);
         CombatHud combatHud = copy.GetComponent<CombatHud>();
-        var combatSettings = new SerializedObject(combatHud);
-        combatSettings.FindProperty("_maxLabelDistance").floatValue = 500f;
-        combatSettings.ApplyModifiedPropertiesWithoutUndo();
-        ConfigureCombatHud(combatHud);
         EditorSceneManager.CloseScene(main, true);
         Font font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Fonts/ChakraPetch-Medium.ttf");
         Text title = Label(
@@ -130,13 +126,14 @@ public static class SkirmishArenaAuthoring
         Set(hud, "combatHud", combatHud);
         Set(hud, "status", title);
         Set(hud, "roster", roster);
-        Set(hud, "feed", feed);
+        UnityEngine.Object.DestroyImmediate(feed.gameObject);
         Set(match, "hud", hud);
         Set(match, "play", play);
         Set(match, "destruction", Find<DestroyManager>(arena));
         Set(match, "projectiles", Find<TurretProjectilePool>(arena));
         Set(match, "effects", Find<VfxEffectPool>(arena));
         Set(play, "skirmish", match);
+        SharedCombatHudAuthoring.InstallScene(arena);
         EditorSceneManager.MarkSceneDirty(arena);
         EditorSceneManager.SaveScene(arena);
         AssetDatabase.SaveAssets();
@@ -186,9 +183,7 @@ public static class SkirmishArenaAuthoring
         Text roster = Find<SkirmishHud>(scene).transform.Find("Team Roster").GetComponent<Text>();
         roster.rectTransform.sizeDelta = new Vector2(520f, 300f);
         roster.supportRichText = true;
-        var hud = new SerializedObject(Find<CombatHud>(scene));
-        hud.FindProperty("_maxLabelDistance").floatValue = 850f;
-        hud.ApplyModifiedPropertiesWithoutUndo();
+        SharedCombatHudAuthoring.InstallScene(scene);
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
     }
@@ -263,23 +258,7 @@ public static class SkirmishArenaAuthoring
 
     private static void ConfigureCombatHud(CombatHud hud)
     {
-        // 观战提示同时显示双方长蓝图名；扩大本副本，保持探索原场景的布局。
-        RectTransform notice = (RectTransform)hud.transform.Find("KillNotice");
-        notice.sizeDelta = new Vector2(900f, 110f);
-        RectTransform victim = (RectTransform)notice.Find("EnemyName");
-        victim.offsetMin = new Vector2(22f, 14f);
-        victim.offsetMax = new Vector2(-18f, -39f);
-        victim.GetComponent<Text>().resizeTextMinSize = 12;
-        RectTransform score = (RectTransform)notice.Find("Count");
-        score.offsetMin = new Vector2(550f, 65f);
-        score.offsetMax = new Vector2(-18f, -12f);
-        RectTransform template = (RectTransform)hud.transform.Find("EnemyNameplateTemplate");
-        template.sizeDelta = new Vector2(320f, 74f);
-        RectTransform name = (RectTransform)template.Find("Name");
-        name.offsetMax = new Vector2(210f, name.offsetMax.y);
-        RectTransform value = (RectTransform)template.Find("Value");
-        value.offsetMin = new Vector2(218f, value.offsetMin.y);
-        value.offsetMax = new Vector2(310f, value.offsetMax.y);
+        SharedCombatHudAuthoring.InstallScene(hud.gameObject.scene);
     }
 
     private static void Set(UnityEngine.Object owner, string field, UnityEngine.Object value)

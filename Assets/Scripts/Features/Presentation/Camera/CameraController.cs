@@ -78,6 +78,12 @@ public class CameraController : MonoBehaviour
 
         float mouseX = Mouse.current.delta.x.ReadValue() * mouseSensitivity * Time.deltaTime * 100f;
         float mouseY = Mouse.current.delta.y.ReadValue() * mouseSensitivity * Time.deltaTime * 100f;
+        bool toolsOpen = MainUIPanels.instance != null && MainUIPanels.instance.CombatHud != null && MainUIPanels.instance.CombatHud.Panels != null && MainUIPanels.instance.CombatHud.Panels.IsOpen;
+        if (toolsOpen)
+        {
+            mouseX = mouseY = 0f;
+        }
+
         if (currentMode == CameraMode.FirstPerson)
         {
             xRotation -= mouseY;
@@ -104,7 +110,7 @@ public class CameraController : MonoBehaviour
                 tpPitch = Mathf.Clamp(tpPitch, -30f, 60f);
             }
 
-            float scroll = Mouse.current.scroll.ReadValue().y * zoomSpeed * Time.deltaTime;
+            float scroll = toolsOpen ? 0f : Mouse.current.scroll.ReadValue().y * zoomSpeed * Time.deltaTime;
             thirdPersonOffset.z = Mathf.Clamp(thirdPersonOffset.z + scroll, maxZoom, minZoom);
             Quaternion rotation = Quaternion.Euler(tpPitch, tpYaw, 0f);
             Vector3 desiredPos = playerBody.position + rotation * thirdPersonOffset;

@@ -229,11 +229,17 @@ public sealed class SiegeSession : MonoBehaviour, ISiegeDeploymentHost
 
         FlightGuidance = new SiegeReturnFlight(Fleet, flightSettings, this);
         waves = new SiegeWaveDirector(this);
+        waves.AttackerResolved += OnAttackerResolved;
         wrecks = new SiegeWreckBudget(gameObject.scene);
         cleanup.Stop();
         previousPhase = Match.Phase;
         PlayManager.instance.playMode = false;
         return true;
+    }
+
+    private void OnAttackerResolved(string victim, string attacker, int reward, bool playerCredit)
+    {
+        MainUIPanels.instance?.CombatHud?.ShowDestruction(victim, attacker, "+" + reward + " CREDITS", playerCredit);
     }
 
     public bool BeginNextWave()

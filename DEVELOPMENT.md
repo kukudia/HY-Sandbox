@@ -2,6 +2,29 @@
 
 本轮需求对照、恢复点和后续计划见[Siege阶段交接](Docs/Validation/2026-11-16-siege-stage-handoff.md)。
 
+## 共享战斗 HUD（2026-11-17）
+
+Main探索、Siege、Random5v5Arena与SiegeGameplay复用真实可编辑的 [SharedCombatHud.prefab](Assets/Art/CombatHud/SharedCombatHud.prefab) 和 [Theme.asset](Assets/Art/CombatHud/Theme.asset)。沿用uGUI，战斗文字升级TMP；主题配置采样预算、配色及动画时长。新版Siege由Stage显式绑定副场景、镜头和关注友舰，保持自主守军/自由观察玩法，不新增驾驶权。
+
+敌舰方位逐帧更新，距离文字独立限频，包含后方标识、同向聚合和精英波强调；可见名牌与方位标记互斥。名牌显示舰体/驾驶舱耐久、延迟损伤条、受击闪烁和低血脉冲。共享战报滑入、重排、淡出；击杀庆祝使用有界队列，Siege仅响应规则确认死亡，重复致命伤、越界和卸载不重复计数。F1推进器、F2调试，抽屉互斥，Escape关闭；退出恢复调试偏好。新版左上角显示核心/关注友舰状态，可切换存活友舰；推进器面板读取该舰真实执行器输出和供电效率，区分AI/PILOT/GUIDANCE。
+
+```text
+Assets/Scripts/Features/
+├─ Combat/Interface/
+│  ├─ CombatHud.cs / CombatHudTheme.cs
+│  ├─ Nameplates/CombatNameplate.cs
+│  ├─ Threats/CombatThreatMarkers.cs / CombatThreatView.cs
+│  ├─ Notifications/CombatNotifications.cs / CombatFeedItem.cs
+│  └─ Panels/CombatHudPanels.cs
+├─ Flight/Presentation/ThrusterInfoPanel.cs
+└─ Siege/Gameplay/Interface/SiegeCombatHud.cs
+Assets/Editor/Combat/
+├─ Interface/SharedCombatHudAuthoring.cs / SharedCombatHudPreview.cs
+└─ Validation/CombatHudPlayProbe.cs
+```
+
+制作菜单 `Tools/HY-Sandbox/Combat/Install shared battle HUD` 幂等迁移四场景（先保存，工具自动备份）；`Rebuild shared HUD prefab` 显式重建自己拥有的Prefab。常规调整直接编辑Prefab/Theme，避免重建覆盖手调。验证入口及范围见[共享HUD验收](Docs/Validation/2026-11-17-shared-combat-hud.md)，主链见[函数图](Docs/RuntimeFlow.md)。
+
 ## 独立新版 Siege 验证与非凸地形接触（2026-11-16）
 
 显式 `-siege-gameplay-report <绝对路径>` 启用新版菜单→Additive Siege→真实起降/死亡/返航结算→工坊→菜单检查；`-siege-gameplay-roof` 只在该验证进程内改变示例开口，`-siege-gameplay-soak` 只观察自然战斗，`-siege-gameplay-seconds` 控制30–900秒。不会创建个人示例副本或重写玩家蓝图。普通启动不创建此验证器。

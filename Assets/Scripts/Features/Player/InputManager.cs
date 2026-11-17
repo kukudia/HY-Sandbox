@@ -73,12 +73,6 @@ public class InputManager : MonoBehaviour
             return;
         }
 
-        ThrusterInfoPanel thrusterPanel = MainUIPanels.instance != null ? MainUIPanels.instance.ThrusterInfoPanel : null;
-        if (PlayManager.instance.playMode && keyboard.f1Key.wasPressedThisFrame)
-        {
-            thrusterPanel?.Toggle();
-        }
-
         if (BuildManager.instance.IsLoadingBlocks)
         {
             return;
@@ -152,11 +146,11 @@ public class InputManager : MonoBehaviour
         else
         {
             bool altHeld = keyboard.altKey.isPressed;
-            lockView = altHeld;
+            bool toolsOpen = MainUIPanels.instance != null && MainUIPanels.instance.CombatHud != null && MainUIPanels.instance.CombatHud.Panels.IsOpen;
+            lockView = altHeld || toolsOpen;
             CameraController.instance.currentMode = lockView ? CameraMode.ThirdPersonLock : CameraMode.ThirdPerson;
             PlayManager.instance.SetPlayMode(lockView);
-            // The thruster window freezes the camera, but only Alt releases the pointer.
-            ApplyCursorState(altHeld);
+            ApplyCursorState(lockView);
         }
     }
 
@@ -194,12 +188,8 @@ public class InputManager : MonoBehaviour
             CameraController.instance.FocusCameraOnBlock(PlayManager.instance.blocksParent.gameObject);
         }
 
-        if (keyboard.f1Key.wasPressedThisFrame && PlayManager.instance.playMode)
-        {
-            MainUIPanels.instance?.ThrusterInfoPanel?.Toggle();
-        }
-
-        bool release = siege.Match == null || siege.Match.CanRefit || siege.Fleet.Driven == null || keyboard.altKey.isPressed;
+        bool toolsOpen = MainUIPanels.instance != null && MainUIPanels.instance.CombatHud != null && MainUIPanels.instance.CombatHud.Panels.IsOpen;
+        bool release = toolsOpen || siege.Match == null || siege.Match.CanRefit || siege.Fleet.Driven == null || keyboard.altKey.isPressed;
         lockView = release;
         CameraController.instance.currentMode = release ? CameraMode.ThirdPersonLock : CameraMode.ThirdPerson;
         PlayManager.instance.SetPlayMode(release);

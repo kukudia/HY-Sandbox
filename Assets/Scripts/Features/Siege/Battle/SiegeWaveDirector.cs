@@ -17,6 +17,7 @@ public sealed class SiegeWaveDirector
     private readonly System.Random random;
     private readonly List<Attacker> attackers = new List<Attacker>();
     private float nextSpawn;
+    public event Action<string, string, int, bool> AttackerResolved;
     public SiegeWaveDirector(SiegeSession session) : this(
         session.Match,
         session.Settings,
@@ -78,7 +79,11 @@ public sealed class SiegeWaveDirector
                 continue;
             }
 
-            match.ResolveAttacker(attacker.Id, attacker.Defeated);
+            if (match.ResolveAttacker(attacker.Id, attacker.Defeated) && attacker.Defeated)
+            {
+                AttackerResolved?.Invoke(attacker.Name, attacker.Killer, match.KillReward, attacker.PlayerCredit);
+            }
+
             attacker.Unsubscribe();
             attackers.RemoveAt(index);
         }
@@ -156,6 +161,19 @@ public sealed class SiegeWaveDirector
     {
         public readonly string Id;
         public readonly Cockpit Cockpit;
+        public string Name
+        {
+            get; private set;
+        }
+        public string Killer
+        {
+            get; private set;
+        }
+        public bool PlayerCredit
+        {
+            get; private set;
+        }
+
         private readonly EnemyIdentity identity;
         public bool Defeated
         {
@@ -169,12 +187,17 @@ public sealed class SiegeWaveDirector
             Id = id;
             Cockpit = cockpit;
             identity = cockpit.GetComponent<EnemyIdentity>();
+            Name = identity != null ? identity.DisplayName : cockpit.name;
             identity.Defeated += OnDefeated;
         }
 
         private void OnDefeated()
         {
             Defeated = true;
+            Durability health = Cockpit != null ? Cockpit.GetComponent<Durability>() : null;
+            ControlUnit attacker = health != null ? health.LastAttacker : null;
+            Killer = attacker != null ? attacker.name : null;
+            PlayerCredit = attacker != null && attacker.faction == UnitFaction.Player;
         }
 
         public void RefreshTarget(ControlUnit core)

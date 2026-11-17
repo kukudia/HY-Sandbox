@@ -278,7 +278,7 @@ public class MainUIPanels : MonoBehaviour
             return;
         }
 
-        debugPanel.transform.SetParent(playPanel.transform);
+        // Battle diagnostics use a fixed shared HUD layer; keep the build toolbar in its authored parent.
         _combatHud?.ResetHud();
         _transitions.Show(buildPanel, false, fadeDuration);
         _transitions.Show(playPanel, true, fadeDuration);

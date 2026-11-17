@@ -320,18 +320,6 @@ public static class SiegeInterfaceAuthoring
                 1000f,
                 60f,
                 32));
-        Bind(
-            feedback,
-            "notice",
-            Label(
-                hud.transform,
-                "Kill Feed",
-                "",
-                560f,
-                310f,
-                1100f,
-                45f,
-                22));
         var alarm = Panel(
             hud.transform,
             "Core Alarm",

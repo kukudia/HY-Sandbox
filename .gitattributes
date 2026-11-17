@@ -89,3 +89,13 @@ Assets/Scripts/Features/Siege/Interface/ISiegeDeploymentHost.cs.meta whitespace=
 Assets/Scenes/Random5v5Arena.unity whitespace=-blank-at-eol
 Assets/Scenes/Random5v5Arena.unity.meta whitespace=-blank-at-eol
 Assets/Scripts/Features/Combat/Skirmish.meta whitespace=-blank-at-eol
+
+# Shared HUD assets preserve Unity-generated empty serialized values.
+Assets/Art/CombatHud.meta whitespace=-blank-at-eol
+Assets/Art/CombatHud/**/*.prefab whitespace=-blank-at-eol
+Assets/Art/CombatHud/**/*.asset whitespace=-blank-at-eol
+Assets/Art/CombatHud/**/*.meta whitespace=-blank-at-eol
+Assets/Scripts/Features/Combat/Interface/Nameplates.meta whitespace=-blank-at-eol
+Assets/Scripts/Features/Combat/Interface/Notifications.meta whitespace=-blank-at-eol
+Assets/Scripts/Features/Combat/Interface/Panels.meta whitespace=-blank-at-eol
+Assets/Scripts/Features/Combat/Interface/Threats.meta whitespace=-blank-at-eol

@@ -1,23 +1,29 @@
-// 职责：在 Play Mode 检查敌方名牌与战斗 HUD 反馈。
-// 入口：Run()。
-// 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
+// 职责：通过真实Main模式入口和真实伤害链验证共享HUD的投影、损伤动画、击杀去重与退出恢复。
+// 入口：Run() / RunArena()；只在Play实例上刺激，不修改蓝图、场景或HUD资产。
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
 
 [InitializeOnLoad]
 public static class CombatHudPlayProbe
 {
-    private const string Pending = "HY.CombatHudProbe";
-    private static readonly List<string> Checks = new List<string>();
-    private static readonly List<string> Errors = new List<string>();
-    private static IEnumerator _scenario;
-    private static double _nextStep;
-    private static double _deadline;
+    private const string Pending = "HY.SharedCombatHudProbe";
+    private static readonly List<string> checks = new List<string>();
+    private static IEnumerator scenario;
+    private static double nextStep;
+    private static double deadline;
+    private static string error;
+    private static string mode;
+    private static SceneSetup[] previousSetup;
+    public static string Status { get; private set; } = "idle";
+
     static CombatHudPlayProbe()
     {
         EditorApplication.playModeStateChanged += OnPlayModeChanged;
@@ -26,366 +32,373 @@ public static class CombatHudPlayProbe
     [MenuItem("Tools/HY-Sandbox/Validate Combat HUD")]
     public static void Run()
     {
-        if (EditorApplication.isPlaying)
+        Begin("siege", "Assets/Scenes/Main.unity");
+    }
+
+    [MenuItem("Tools/HY-Sandbox/Combat/Validate shared HUD in 5v5")]
+    public static void RunArena()
+    {
+        Begin("arena", "Assets/Scenes/Random5v5Arena.unity");
+    }
+
+    [MenuItem("Tools/HY-Sandbox/Combat/Validate shared HUD in exploration")]
+    public static void RunExploration()
+    {
+        Begin("exploration", "Assets/Scenes/Main.unity");
+    }
+
+    [MenuItem("Tools/HY-Sandbox/Combat/Validate shared HUD in legacy Siege")]
+    public static void RunLegacy()
+    {
+        Begin("legacy", "Assets/Scenes/Siege.unity");
+    }
+
+    private static void Begin(string kind, string path)
+    {
+        if (EditorApplication.isPlaying || Enumerable.Range(0, SceneManager.sceneCount).Any(i => SceneManager.GetSceneAt(i).isDirty))
         {
-            throw new InvalidOperationException("Exit Play Mode first.");
+            throw new InvalidOperationException("Exit Play Mode and save scenes before validation.");
         }
 
-        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().path != "Assets/Scenes/Main.unity")
-        {
-            throw new InvalidOperationException("Open Main before validating combat HUD.");
-        }
-
-        Directory.CreateDirectory("Temp/CombatHud");
-        SessionState.SetBool(Pending, true);
+        previousSetup = EditorSceneManager.GetSceneManagerSetup();
+        EditorSceneManager.OpenScene(path);
+        SessionState.SetString(Pending, kind);
         EditorApplication.isPlaying = true;
     }
 
     private static void OnPlayModeChanged(PlayModeStateChange state)
     {
-        if (!SessionState.GetBool(Pending, false))
+        string pending = SessionState.GetString(Pending, "");
+        if (string.IsNullOrEmpty(pending))
         {
             return;
         }
 
         if (state == PlayModeStateChange.EnteredPlayMode)
         {
-            Checks.Clear();
-            Errors.Clear();
-            foreach (MonoBehaviour behaviour in UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include))
-            {
-                if (!(behaviour is UnityEngine.EventSystems.UIBehaviour) && !(behaviour is CombatHud) && !(behaviour is MainUIPanels) && !(behaviour is ThrusterInfoPanel))
-                {
-                    behaviour.enabled = false;
-                }
-            }
-
-            foreach (Collider collider in UnityEngine.Object.FindObjectsByType<Collider>(FindObjectsInactive.Include))
-            {
-                collider.enabled = false;
-            }
-
-            _scenario = Scenario();
-            _nextStep = 0;
-            _deadline = EditorApplication.timeSinceStartup + 30;
+            mode = pending;
+            checks.Clear();
+            error = null;
+            Status = "running " + mode;
+            scenario = mode == "arena" ? Arena() : mode == "exploration" ? Exploration() : mode == "legacy" ? Legacy() : Siege();
+            deadline = EditorApplication.timeSinceStartup + 180;
+            nextStep = 0;
             EditorApplication.update += Tick;
         }
-
-        if (state == PlayModeStateChange.EnteredEditMode)
+        else if (state == PlayModeStateChange.EnteredEditMode)
         {
-            SessionState.SetBool(Pending, false);
+            SessionState.EraseString(Pending);
+            if (previousSetup != null)
+            {
+                EditorSceneManager.RestoreSceneManagerSetup(previousSetup);
+            }
         }
     }
 
     private static void Tick()
     {
+        if (EditorApplication.timeSinceStartup < nextStep)
+        {
+            return;
+        }
+
         try
         {
-            EditorApplication.QueuePlayerLoopUpdate();
-            if (EditorApplication.timeSinceStartup > _deadline)
+            if (!EditorApplication.isPlaying || EditorApplication.timeSinceStartup > deadline)
             {
-                throw new TimeoutException("Combat HUD probe timed out.");
+                throw new TimeoutException("HUD scenario stopped or exceeded 180s: " + Status);
             }
 
-            if (EditorApplication.timeSinceStartup < _nextStep)
-            {
-                return;
-            }
-
-            if (!_scenario.MoveNext())
+            if (!scenario.MoveNext())
             {
                 Finish();
                 return;
             }
 
-            _nextStep = EditorApplication.timeSinceStartup + (_scenario.Current is float delay ? delay : 0.1f);
+            nextStep = EditorApplication.timeSinceStartup + (scenario.Current is float delay ? delay : .03f);
         }
-        catch (Exception error)
+        catch (Exception exception)
         {
-            Errors.Add(error.ToString());
+            error = exception.ToString();
             Finish();
         }
     }
 
-    private static IEnumerator Scenario()
+    private static IEnumerator Siege()
     {
-        MainUIPanels panels = MainUIPanels.instance;
-        CombatHud hud = panels.CombatHud;
-        Check(
-            "Combat HUD is bound under PlayPanel",
-            hud != null && hud.transform.IsChildOf(panels.playPanel.transform));
-        panels.buildPanel.SetActive(false);
-        panels.playPanel.SetActive(true);
-        PlayManager.instance.playMode = true;
-        Camera camera = PlayManager.instance.mainCamera;
-        Check("Play camera is available", camera != null);
-        ControlUnit attacker = new GameObject("Probe Player").AddComponent<ControlUnit>();
-        attacker.enabled = false;
-        attacker.faction = UnitFaction.Player;
-        ControlUnit enemy = CreateEnemy("Probe Raider", camera.transform.position + camera.transform.forward * 20f);
-        yield return 0.4f;
-        hud.SendMessage("RefreshEnemies");
-        hud.SendMessage("LateUpdate");
-        RectTransform plate = hud.transform.Find("Enemy Nameplate") as RectTransform;
-        Check("Enemy nameplate is created", plate != null);
-        Vector3 labelPoint = enemy.cockpit.transform.position + Vector3.up * 2.5f;
-        Vector3 projected = camera.WorldToScreenPoint(labelPoint);
-        Check(
-            $"Enemy nameplate is visible ({projected.x:0},{projected.y:0},{projected.z:0}; {Screen.width}x{Screen.height})",
-            plate.gameObject.activeInHierarchy);
-        Check(
-            "Enemy identity survives runtime grouping",
-            plate.Find("Name").GetComponent<Text>().text == "Probe Raider");
-        Check("Aggregate health is displayed", plate.Find("Value").GetComponent<Text>().text == "120 / 150");
-        Check(
-            "Enemy dual bars show unit and cockpit health",
-            plate.Find("CockpitValue").GetComponent<Text>().text == "80 / 100" && Mathf.Abs(((RectTransform)plate.Find("Bar/Fill")).anchorMax.x - 0.8f) < 0.01f && Mathf.Abs(((RectTransform)plate.Find("CockpitBar/Fill")).anchorMax.x - 0.8f) < 0.01f);
-        Transform detachedBlock = enemy.transform.Find("Probe Armor");
-        detachedBlock.SetParent(null);
-        enemy.TryGetTotalDurability(out float detachedCurrent, out float detachedMaximum);
-        Check("Detached block leaves current unit health", detachedCurrent == 80f && detachedMaximum == 100f);
-        hud.SendMessage("RefreshEnemies");
-        string detachedHealth = plate.Find("Value").GetComponent<Text>().text;
-        Check($"Spawn maximum survives block detachment ({detachedHealth})", detachedHealth == "80 / 150");
-        StatusIcon statusIcon = enemy.cockpit.gameObject.AddComponent<StatusIcon>();
-        DebugManager.instance.showDurabilityStatus = true;
-        statusIcon.durabilityStatus = DurabilityStatus.Damaged;
-        statusIcon.RefreshStatusIcons();
-        yield return 0.1f;
-        statusIcon.SendMessage("LateUpdate");
-        CanvasGroup iconGroup = DebugManager.instance.StatusIconRoot.Find("Cockpit Status Icons")?.GetComponent<CanvasGroup>();
-        Check("Status icon appears with visibility fade", iconGroup != null && iconGroup.alpha > 0f);
-        ScreenCapture.CaptureScreenshot("Temp/CombatHud/EnemyNameplate.png");
-        yield return 0.6f;
-        GameObject blocker = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        blocker.name = "Nameplate Occluder";
-        Vector3 target = enemy.cockpit.transform.position + Vector3.up * 2.5f;
-        blocker.transform.position = Vector3.Lerp(camera.transform.position, target, 0.5f);
-        blocker.transform.localScale = Vector3.one * 3f;
-        Physics.SyncTransforms();
-        Check(
-            "Occluder intersects camera ray",
-            blocker.GetComponent<Collider>().Raycast(
-                new Ray(camera.transform.position, (target - camera.transform.position).normalized),
-                out RaycastHit blockerHit,
-                Vector3.Distance(camera.transform.position, target)));
-        RaycastHit[] hits = new RaycastHit[512];
-        int hitCount = Physics.RaycastNonAlloc(
-            camera.transform.position,
-            (target - camera.transform.position).normalized,
-            hits,
-            Vector3.Distance(camera.transform.position, target) - 0.01f,
-            ~((1 << 2) | (1 << 5)),
-            QueryTriggerInteraction.Ignore);
-        Check(
-            $"Physics query includes occluder ({hitCount} hits)",
-            System.Array.Exists(hits, hit => hit.collider == blocker.GetComponent<Collider>()));
-        RaycastHit[] shortHits = new RaycastHit[64];
-        int shortCount = Physics.RaycastNonAlloc(
-            camera.transform.position,
-            (target - camera.transform.position).normalized,
-            shortHits,
-            Vector3.Distance(camera.transform.position, target) - 0.01f,
-            ~((1 << 2) | (1 << 5)),
-            QueryTriggerInteraction.Ignore);
-        Check(
-            $"HUD ray buffer includes occluder ({shortCount} hits)",
-            System.Array.Exists(shortHits, hit => hit.collider == blocker.GetComponent<Collider>()));
-        bool blocked = (bool)typeof(CombatHud).GetMethod("IsOccluded", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(hud, new object[] { target, enemy });
-        Check("HUD occlusion query sees geometry", blocked);
-        float iconAlpha = iconGroup.alpha;
-        statusIcon.SendMessage("LateUpdate");
-        Check("3D geometry fades status icon", iconGroup.alpha < iconAlpha);
-        float visibleAlpha = plate.GetComponent<CanvasGroup>().alpha;
-        hud.SendMessage("LateUpdate");
-        Check("3D geometry fades nameplate", plate.GetComponent<CanvasGroup>().alpha < visibleAlpha);
-        yield return 0.3f;
-        hud.SendMessage("LateUpdate");
-        Check("Occluded nameplate disappears", plate.GetComponent<CanvasGroup>().alpha <= 0.01f);
-        blocker.SetActive(false);
-        Physics.SyncTransforms();
-        yield return 0.1f;
-        hud.SendMessage("LateUpdate");
-        Check(
-            "Nameplate fades back when geometry clears",
-            plate.gameObject.activeSelf && plate.GetComponent<CanvasGroup>().alpha > 0f);
-        statusIcon.SendMessage("LateUpdate");
-        Check("Status icon returns when geometry clears", iconGroup.gameObject.activeSelf);
-        SerializedObject hudSettings = new SerializedObject(hud);
-        hudSettings.FindProperty("_killDuration").floatValue = 8f;
-        hudSettings.ApplyModifiedPropertiesWithoutUndo();
-        enemy.cockpit.GetComponent<Durability>().ApplyDamage(100f, attacker);
-        yield return 0.1f;
-        RectTransform notice = hud.transform.Find("KillNotice") as RectTransform;
-        Check("Player cockpit kill shows notice", notice.gameObject.activeInHierarchy);
-        Check(
-            "Kill notice uses enemy identity",
-            notice.Find("EnemyName").GetComponent<Text>().text == "Probe Raider");
-        Check("Kill count increments once", notice.Find("Count").GetComponent<Text>().text == "KILLS  01");
-        ScreenCapture.CaptureScreenshot("Temp/CombatHud/KillNotice.png");
-        yield return 6f;
-        ControlUnit environmental = CreateEnemy("Collision Victim", camera.transform.position + camera.transform.forward * 22f);
-        environmental.cockpit.GetComponent<Durability>().UpdateDurablility(-100f);
-        Check(
-            "Environment damage does not count as player kill",
-            notice.Find("Count").GetComponent<Text>().text == "KILLS  01");
-        ControlUnit player = CreatePlayer(camera.transform.position + camera.transform.forward * 12f);
-        PlayManager.instance.blocksParent = player.transform;
-        typeof(PlayManager).GetField("maxHealth")?.SetValue(PlayManager.instance, 150f);
-        yield return 0.4f;
-        typeof(MainUIPanels).GetField(
-            "_nextHealthRefresh",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(panels, 0f);
-        panels.SendMessage("Update");
-        Check(
-            $"Player HUD totals all unit durability ({panels.healthValue.text})",
-            panels.healthValue.text == "120 / 150");
-        Check(
-            "Player cockpit bar shows its own durability",
-            panels.healthValue.transform.parent.Find("CockpitBarValue").GetComponent<Text>().text == "80 / 100");
-        Text telemetry = panels.healthValue.transform.parent.Find("FlightTelemetry")?.GetComponent<Text>();
-        Check(
-            "Flight telemetry uses Canvas",
-            player.hoverFlightController.IsUsedByControlUnit && telemetry != null && telemetry.text.Contains("TARGET HEIGHT"));
-        MainThruster main = player.GetComponentInChildren<MainThruster>();
-        main.GetComponent<Power>().currentPower = 100f;
-        main.thrust = 50f;
-        ThrusterInfoPanel thrusterPanel = panels.ThrusterInfoPanel;
-        Check("Thruster panel is bound", thrusterPanel != null);
-        // OnDisable hides the serialized window when this fixture pauses scene scripts;
-        // choose a deterministic closed state before exercising Toggle.
-        thrusterPanel.Close();
-        thrusterPanel.Toggle();
-        yield return 0.4f;
-        main.thrust = 50f;
-        thrusterPanel.SelectCategory(0);
-        thrusterPanel.SendMessage("Update");
-        Check(
-            $"F1 panel shows owned main thruster (open={thrusterPanel.IsOpen}, controlled={main.IsPlayerControllable}, parent={main.transform.parent}, playerValid={player.HasValidCockpit})",
-            thrusterPanel.IsOpen && thrusterPanel.transform.Find("Window/Viewport/Content/Thruster Row") != null);
-        RectTransform fill = thrusterPanel.transform.Find("Window/Viewport/Content/Thruster Row/Track/Fill") as RectTransform;
-        Check("Thrust bar matches force ratio", fill != null && Mathf.Abs(fill.anchorMax.x - 0.5f) < 0.01f);
-        ScreenCapture.CaptureScreenshot("Temp/CombatHud/ThrusterInfoPanel.png");
-        yield return 0.6f;
-        thrusterPanel.SelectCategory(1);
-        yield return 0.3f;
-        thrusterPanel.SendMessage("Update");
-        Check(
-            "Navigation filters thruster types",
-            thrusterPanel.transform.Find("Window/Viewport/EmptyState").gameObject.activeSelf);
-        thrusterPanel.Close();
-        yield return 0.6f;
-    }
-
-    private static ControlUnit CreatePlayer(Vector3 position)
-    {
-        GameObject root = new GameObject("Probe Player Unit");
-        root.transform.position = position;
-        ControlUnit unit = root.AddComponent<ControlUnit>();
-        unit.enabled = false;
-        unit.faction = UnitFaction.Player;
-        GameObject cockpitObject = new GameObject("Cockpit");
-        cockpitObject.transform.SetParent(root.transform, false);
-        Cockpit cockpit = cockpitObject.AddComponent<Cockpit>();
-        cockpit.faction = UnitFaction.Player;
-        Durability cockpitHealth = cockpitObject.AddComponent<Durability>();
-        cockpitHealth.currentDurability = 80f;
-        GameObject block = new GameObject("Probe Thruster");
-        block.transform.SetParent(root.transform, false);
-        Durability blockHealth = block.AddComponent<Durability>();
-        blockHealth.maxDurability = 50f;
-        blockHealth.currentDurability = 40f;
-        MainThruster thruster = block.AddComponent<MainThruster>();
-        thruster.controlUnit = unit;
-        thruster.maxThrust = 100f;
-        unit.cockpit = cockpit;
-        unit.cockpits = new[]
+        while (BuildManager.instance == null || BuildManager.instance.IsLoadingBlocks)
         {
-            cockpit
-        };
-        unit.hasValidCockpit = true;
-        GameObject hoverObject = new GameObject("Hover Controller");
-        hoverObject.transform.SetParent(root.transform, false);
-        HoverFlightController hover = hoverObject.AddComponent<HoverFlightController>();
-        HoverThruster hoverThruster = hoverObject.AddComponent<HoverThruster>();
-        unit.hoverFlightController = hover;
-        hover.thrusters = new[]
-        {
-            hoverThruster
-        };
-        hover.Init();
-        return unit;
-    }
-
-    private static ControlUnit CreateEnemy(string name, Vector3 position)
-    {
-        GameObject root = new GameObject(name);
-        root.transform.position = position;
-        ControlUnit unit = root.AddComponent<ControlUnit>();
-        unit.enabled = false;
-        unit.faction = UnitFaction.Enemy;
-        GameObject cockpitObject = new GameObject("Cockpit");
-        cockpitObject.transform.SetParent(root.transform, false);
-        Cockpit cockpit = cockpitObject.AddComponent<Cockpit>();
-        cockpit.faction = UnitFaction.Enemy;
-        EnemyIdentity identity = cockpitObject.AddComponent<EnemyIdentity>();
-        identity.SetDisplayName(name);
-        Durability durability = cockpitObject.AddComponent<Durability>();
-        durability.enabled = false;
-        durability.currentDurability = 80f;
-        durability.enabled = true;
-        durability.currentDurability = 80f;
-        if (name == "Probe Raider")
-        {
-            GameObject armor = new GameObject("Probe Armor");
-            armor.transform.SetParent(root.transform, false);
-            Durability armorHealth = armor.AddComponent<Durability>();
-            armorHealth.maxDurability = 50f;
-            armorHealth.currentDurability = 40f;
-            identity.SetSpawnMaxHealth(150f);
-        }
-        else
-        {
-            identity.SetSpawnMaxHealth(100f);
+            yield return .1f;
         }
 
-        unit.cockpit = cockpit;
-        unit.cockpits = new[]
+        GameModeController modes = PlayManager.instance.Modes;
+        bool friendlyDebug = DebugManager.instance.ShowsAI(UnitFaction.Player);
+        bool enemyDebug = DebugManager.instance.ShowsAI(UnitFaction.Enemy);
+        modes.LaunchSiege(null);
+        while (modes.State == GameModeState.Loading)
         {
-            cockpit
-        };
-        unit.hasValidCockpit = true;
-        PlayManager.instance.RegisterControlUnit(unit);
-        return unit;
+            yield return .1f;
+        }
+
+        Check("Main loads SiegeGameplay through production mode entry", modes.State == GameModeState.Siege);
+        SiegeGameplayStage stage = Object.FindAnyObjectByType<SiegeGameplayStage>();
+        SiegeCombatHud entry = Object.FindAnyObjectByType<SiegeCombatHud>();
+        CombatHud hud = entry.Hud;
+        Check("HUD is bound to the additive battlefield", hud.Battlefield == stage.gameObject.scene);
+        Check(
+            "Only one combat HUD is active",
+            Object.FindObjectsByType<CombatHud>(FindObjectsSortMode.None).Length == 1);
+        hud.Panels.ClearDebug();
+        Check(
+            "Debug drawer controls existing debug service",
+            !DebugManager.instance.showPowerRange && !DebugManager.instance.ShowsAI(UnitFaction.Enemy));
+        Check("Real wave starts", stage.BeginWave());
+        while (!hud.Candidates.Any(unit => unit.faction == UnitFaction.Enemy))
+        {
+            yield return .1f;
+        }
+
+        Time.timeScale = 0f;
+        ControlUnit enemy = hud.Candidates.First(unit => unit.faction == UnitFaction.Enemy);
+        Camera camera = hud.WorldCamera;
+        Pose pose = new Pose(camera.transform.position, camera.transform.rotation);
+        camera.transform.position = enemy.cockpit.transform.position + new Vector3(0, 12, -35);
+        camera.transform.LookAt(enemy.cockpit.transform.position + Vector3.up * 3f);
+        yield return .45f;
+        CombatNameplate plate = hud.GetComponentsInChildren<CombatNameplate>().First(view => view.IsVisible);
+        Vector3 screen = camera.WorldToScreenPoint(enemy.cockpit.transform.position + Vector3.up * 3f);
+        Vector3 actual = RectTransformUtility.WorldToScreenPoint(null, plate.transform.position);
+        Check("Nameplate anchor matches projected cockpit", Vector2.Distance(screen, actual) < 2f);
+        RectTransform fill = (RectTransform)plate.transform.Find("Bar/Fill");
+        RectTransform lag = (RectTransform)plate.transform.Find("Bar/Damage");
+        Durability health = enemy.cockpit.GetComponent<Durability>();
+        health.ApplyDamage(Mathf.Min(10f, health.currentDurability * .1f), stage.Base.Unit);
+        yield return .13f;
+        Check("Damage trail remains behind immediate health", lag.anchorMax.x > fill.anchorMax.x);
+        yield return .7f;
+        Check(
+            "Damage trail settles while simulation is paused",
+            Mathf.Abs(lag.anchorMax.x - fill.anchorMax.x) < .005f);
+        camera.transform.rotation *= Quaternion.Euler(0, 150, 0);
+        yield return .15f;
+        CombatThreatMarkers threats = hud.GetComponentInChildren<CombatThreatMarkers>();
+        Check("Offscreen enemy produces a direction marker", threats.VisibleCount > 0);
+        CombatThreatView marker = threats.GetComponentsInChildren<CombatThreatView>().First(view => view.Used);
+        Check("Direction marker completes visible fade-in", marker.GetComponent<CanvasGroup>().alpha > .1f);
+        RectTransform bounds = (RectTransform)threats.transform;
+        Check("Direction marker remains inside canvas", bounds.rect.Contains(marker.Position));
+        Vector2 before = marker.Position;
+        camera.transform.rotation *= Quaternion.Euler(0, 12, 0);
+        yield return .04f;
+        Check("Marker responds within 40ms of camera motion", Vector2.Distance(before, marker.Position) > .1f);
+        camera.transform.SetPositionAndRotation(pose.position, pose.rotation);
+        int kills = stage.Match.DefeatedAttackers;
+        int messages = hud.Notifications.TotalMessages;
+        health.ApplyDamage(999999, stage.Base.Unit);
+        health.ApplyDamage(999999, stage.Base.Unit);
+        yield return .3f;
+        Check("Repeated lethal damage resolves one kill", stage.Match.DefeatedAttackers == kills + 1);
+        Check("One confirmed kill produces one notification", hud.Notifications.TotalMessages == messages + 1);
+        for (int i = 0; i < 8; i++)
+        {
+            hud.ShowDestruction("BURST " + i, "BASE", "PRESENTATION STRESS", true);
+        }
+
+        Check("Celebration queue stays bounded during bursts", hud.Notifications.PendingCount <= 4);
+        hud.Panels.ToggleDebug();
+        yield return .25f;
+        Check("Debug drawer opens", hud.Panels.IsOpen);
+        hud.Panels.ToggleThrusters();
+        yield return .25f;
+        Check(
+            "Thrust drawer opens and replaces debug drawer",
+            entry.GetComponentInChildren<ThrusterInfoPanel>().IsOpen);
+        Screenshot("Siege-tools");
+        Time.timeScale = 1f;
+        modes.ReturnToBuild();
+        while (modes.State == GameModeState.Returning)
+        {
+            yield return .1f;
+        }
+
+        Check(
+            "Return unloads Siege HUD",
+            modes.State == GameModeState.Building && Object.FindAnyObjectByType<SiegeCombatHud>() == null);
+        Check(
+            "Return restores debug preferences",
+            DebugManager.instance.ShowsAI(UnitFaction.Player) == friendlyDebug && DebugManager.instance.ShowsAI(UnitFaction.Enemy) == enemyDebug);
+        modes.LaunchSiege(null);
+        while (modes.State == GameModeState.Loading)
+        {
+            yield return .1f;
+        }
+
+        Check(
+            "Reentry starts with empty notifications",
+            Object.FindAnyObjectByType<SiegeCombatHud>().Hud.Notifications.TotalMessages == 0);
+        modes.ReturnToBuild();
+        while (modes.State == GameModeState.Returning)
+        {
+            yield return .1f;
+        }
+    }
+
+    private static IEnumerator Legacy()
+    {
+        SiegeSession session = Object.FindAnyObjectByType<SiegeSession>();
+        while (session.Match == null)
+        {
+            yield return .1f;
+        }
+
+        CombatHud hud = MainUIPanels.instance.CombatHud;
+        Check("Legacy Siege starts real wave", session.BeginNextWave());
+        while (!hud.Candidates.Any(unit => unit.faction == UnitFaction.Enemy))
+        {
+            yield return .1f;
+        }
+
+        Check(
+            "Legacy Siege has one shared HUD",
+            Object.FindObjectsByType<CombatHud>(FindObjectsSortMode.None).Length == 1);
+        Check("Legacy HUD binds its battlefield", hud.Battlefield == session.gameObject.scene);
+        Time.timeScale = 0f;
+        Durability victim = hud.Candidates.First(unit => unit.faction == UnitFaction.Enemy).cockpit.GetComponent<Durability>();
+        int kills = session.Match.DefeatedAttackers;
+        int messages = hud.Notifications.TotalMessages;
+        victim.ApplyDamage(999999, null);
+        victim.ApplyDamage(999999, null);
+        yield return .4f;
+        Check("Legacy repeated lethal damage settles once", session.Match.DefeatedAttackers == kills + 1);
+        Check(
+            "Legacy rule settlement produces one shared notice",
+            hud.Notifications.TotalMessages == messages + 1);
+        hud.Panels.ToggleDebug();
+        yield return .2f;
+        Check("Legacy debug drawer opens", hud.Panels.IsOpen);
+        Screenshot("Legacy-tools");
+        Time.timeScale = 1f;
+    }
+
+    private static IEnumerator Arena()
+    {
+        SkirmishMatch match = Object.FindAnyObjectByType<SkirmishMatch>();
+        while (match == null || match.Round == 0)
+        {
+            yield return .1f;
+            match = Object.FindAnyObjectByType<SkirmishMatch>();
+        }
+
+        yield return .4f;
+        CombatHud hud = Object.FindAnyObjectByType<CombatHud>();
+        Check(
+            "5v5 uses one shared HUD",
+            hud != null && Object.FindObjectsByType<CombatHud>(FindObjectsSortMode.None).Length == 1);
+        Check(
+            "Both teams participate in nameplates",
+            hud.Candidates.Any(unit => unit.faction == UnitFaction.Player) && hud.Candidates.Any(unit => unit.faction == UnitFaction.Enemy));
+        Time.timeScale = 0f;
+        int count = match.Hud.KillMessages;
+        Durability victim = match.CockpitAt(5).GetComponent<Durability>();
+        ControlUnit attacker = match.CockpitAt(0).GetComponentInParent<ControlUnit>();
+        victim.ApplyDamage(999999, attacker);
+        victim.ApplyDamage(999999, attacker);
+        yield return .3f;
+        Check(
+            "5v5 shared feed receives one attributed kill",
+            match.Hud.KillMessages == count + 1 && hud.Notifications.TotalMessages == count + 1);
+        Check("5v5 continues after enemy death", PlayManager.instance.playMode && match.RedAlive == 4);
+        ThrusterInfoPanel thrusters = hud.GetComponentInChildren<ThrusterInfoPanel>();
+        thrusters.BindOwner(attacker, "AI");
+        hud.Panels.ToggleThrusters();
+        Thruster source = attacker.Thrusters.First(item => item != null);
+        int category = source is MainThruster ? 0 : source is UniversalThruster ? 1 : 2;
+        thrusters.SelectCategory(category);
+        yield return .5f;
+        TMPro.TMP_Text value = thrusters.GetComponentsInChildren<TMPro.TMP_Text>().FirstOrDefault(label => label.name == "Value" && label.text.Contains("PWR"));
+        Check("AI thrusters remain visible without player input ownership", value != null);
+        Check(
+            "Thrust text reads real cached actuator output",
+            value.text.Contains($"{source.thrust:0.0} / {source.maxThrust:0.0}"));
+        Screenshot("Arena-kill");
+        Time.timeScale = 1f;
+    }
+
+    private static IEnumerator Exploration()
+    {
+        while (BuildManager.instance == null || BuildManager.instance.IsLoadingBlocks)
+        {
+            yield return .1f;
+        }
+
+        GameModeController modes = PlayManager.instance.Modes;
+        modes.ShowSelection();
+        modes.SelectExploration();
+        while (modes.State == GameModeState.Loading)
+        {
+            yield return .1f;
+        }
+
+        Check("Exploration starts through normal mode selection", modes.State == GameModeState.Exploring);
+        CombatHud hud = MainUIPanels.instance.CombatHud;
+        Check(
+            "Exploration keeps Main-owned shared HUD active",
+            hud.isActiveAndEnabled && hud.Battlefield == PlayManager.instance.WorldSession.gameObject.scene);
+        hud.ShowPlayerKill("PRESENTATION PROBE");
+        yield return .3f;
+        Check("Exploration celebration uses shared notifications", hud.Notifications.TotalMessages == 1);
+        hud.Panels.ToggleDebug();
+        yield return .2f;
+        Check("Exploration debug drawer opens", hud.Panels.IsOpen);
+        hud.Panels.ToggleThrusters();
+        yield return .3f;
+        Check("Exploration thrust drawer opens", MainUIPanels.instance.ThrusterInfoPanel.IsOpen);
+        Screenshot("Exploration-tools");
+        modes.ReturnToBuild();
+        while (modes.State == GameModeState.Returning)
+        {
+            yield return .1f;
+        }
+
+        Check(
+            "Exploration returns to build with drawers closed",
+            modes.State == GameModeState.Building && !hud.Panels.IsOpen);
+    }
+
+    private static void Screenshot(string name)
+    {
+        Directory.CreateDirectory("Temp/SharedCombatHud");
+        ScreenCapture.CaptureScreenshot(Path.GetFullPath("Temp/SharedCombatHud/" + name + ".png"));
     }
 
     private static void Check(string name, bool passed)
     {
+        Status = name;
         if (!passed)
         {
             throw new InvalidOperationException(name);
         }
 
-        Checks.Add(name);
+        checks.Add(name);
     }
 
     private static void Finish()
     {
         EditorApplication.update -= Tick;
+        Time.timeScale = 1f;
+        Directory.CreateDirectory("Temp/SharedCombatHud");
+        Status = error == null ? "passed " + mode : "failed " + mode;
         File.WriteAllText(
-            "Temp/CombatHud/Validation.json",
-            JsonUtility.ToJson(
-                new Report { passed = Errors.Count == 0, checks = Checks.ToArray(), errors = Errors.ToArray(), unity = Application.unityVersion },
-                true));
+            "Temp/SharedCombatHud/" + mode + ".json",
+            JsonUtility.ToJson(new Report { status = Status, checks = checks, error = error }, true));
         EditorApplication.isPlaying = false;
     }
 
     [Serializable]
     private sealed class Report
     {
-        public bool passed;
-        public string unity;
-        public string[] checks;
-        public string[] errors;
+        public string status;
+        public List<string> checks;
+        public string error;
     }
 }

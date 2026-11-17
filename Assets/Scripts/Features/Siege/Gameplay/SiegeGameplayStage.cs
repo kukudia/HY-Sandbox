@@ -28,6 +28,8 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
     [SerializeField]
     private SiegeConstructionPanel panel;
     [SerializeField]
+    private SiegeCombatHud combatHud;
+    [SerializeField]
     private Transform baseSpawn;
     [SerializeField]
     private SiegeFlightSettings flightSettings = new SiegeFlightSettings();
@@ -172,6 +174,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         }
 
         panel.Bind(this);
+        combatHud.Enter(this);
     }
 
     private void ValidatePose()
@@ -246,6 +249,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
                 () => SelectedAttacker,
                 gameObject.scene,
                 island);
+            waves.AttackerResolved += combatHud.AttackerResolved;
             Status = "Base deployed. Start the first wave. Repair coins are separate from the design budget.";
             DesignStatus = selectedName + "\n" + designWarnings;
             return true;
@@ -574,6 +578,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         }
 
         entered = false;
+        combatHud.Exit();
         observerCamera?.Exit();
         cleanup.Stop();
         Application.runInBackground = previousBackground;

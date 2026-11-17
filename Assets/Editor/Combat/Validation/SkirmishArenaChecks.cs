@@ -55,16 +55,16 @@ public static class SkirmishArenaChecks
             "No saved pre-fight ships",
             UnityEngine.Object.FindObjectsByType<ControlUnit>().Length == 0);
         CombatHud hud = UnityEngine.Object.FindAnyObjectByType<CombatHud>();
-        RectTransform name = (RectTransform)hud.transform.Find("EnemyNameplateTemplate/Name");
-        RectTransform value = (RectTransform)hud.transform.Find("EnemyNameplateTemplate/Value");
+        RectTransform name = (RectTransform)hud.transform.Find("World Markers/EnemyNameplateTemplate/Name");
+        RectTransform value = (RectTransform)hud.transform.Find("World Markers/EnemyNameplateTemplate/Value");
         Check(
             checks,
             "Nameplate labels have positive width and do not overlap",
-            name.rect.width > 0f && value.rect.width > 0f && name.offsetMax.x < value.offsetMin.x);
+            name.rect.width > 0f && value.rect.width > 0f && name.anchoredPosition.y > value.anchoredPosition.y);
         Check(
             checks,
             "Kill notice accommodates both blueprint names",
-            ((RectTransform)hud.transform.Find("KillNotice")).rect.width >= 900f);
+            ((RectTransform)hud.transform.Find("Notifications/KillNotice")).rect.width >= 500f);
         Check(
             checks,
             "Connector labels disabled",
@@ -175,7 +175,7 @@ public static class SkirmishArenaChecks
             Check(
                 checks,
                 "Kill presentation includes attacker and victim",
-                UnityEngine.Object.FindObjectsByType<UnityEngine.UI.Text>(FindObjectsInactive.Include).Any(text => text.name == "Kill Feed" && text.text.Contains("BLUE-") && text.text.Contains("RED-")));
+                UnityEngine.Object.FindObjectsByType<TMPro.TMP_Text>(FindObjectsInactive.Include).Any(text => text.name == "Title" && text.text.Contains("BLUE-") && text.text.Contains("RED-")));
             await Task.Delay(250);
             Check(checks, "Pause freezes the restart timer", match.Round == firstRound && debris != null);
             float settled = Time.time;

@@ -1,4 +1,4 @@
-// 职责：显示短时波次、击毁和核心受击反馈；不参与阶段、经济或输入决策。
+// 职责：显示短时波次和核心受击反馈；击杀统一由共享战斗HUD显示。
 // 入口：Update()；关闭时不改变战场状态。
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,14 +10,10 @@ public sealed class SiegeBattleFeedback : MonoBehaviour
     [SerializeField]
     private Text banner;
     [SerializeField]
-    private Text notice;
-    [SerializeField]
     private CanvasGroup damage;
     private SiegePhase phase = SiegePhase.Defeat;
-    private int kills;
     private float health = -1f;
     private float bannerUntil;
-    private float noticeUntil;
     private float damageUntil;
     private void Update()
     {
@@ -32,13 +28,6 @@ public sealed class SiegeBattleFeedback : MonoBehaviour
             phase = match.Phase;
             banner.text = phase == SiegePhase.Battle ? (match.IsEliteWave ? "ELITE " : match.IsSwarmWave ? "SWARM " : "") + "WAVE " + match.Wave : phase == SiegePhase.Intermission ? "WAVE CLEARED  /  " + session.LastWaveKills + " KILLS" : phase == SiegePhase.Defeat ? "BEST WAVE " + Mathf.Max(session.BestWave, match.Wave) : phase == SiegePhase.Returning ? "RETURN TO HANGAR  /  INCOME PENDING" : "CLICK A HANGAR";
             bannerUntil = Time.unscaledTime + 3f;
-        }
-
-        if (match.DefeatedAttackers > kills)
-        {
-            kills = match.DefeatedAttackers;
-            notice.text = "RAIDER DESTROYED  +" + match.KillReward + (session.Combo >= 2 ? "   COMBO x" + session.Combo : "");
-            noticeUntil = Time.unscaledTime + 2f;
         }
 
         Durability core = session.Fleet?.Base?.Core != null ? session.Fleet.Base.Core.GetComponent<Durability>() : null;
@@ -56,6 +45,5 @@ public sealed class SiegeBattleFeedback : MonoBehaviour
         }
 
         banner.enabled = Time.unscaledTime < bannerUntil;
-        notice.enabled = Time.unscaledTime < noticeUntil;
     }
 }

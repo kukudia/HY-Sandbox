@@ -115,7 +115,7 @@ public class DestroyManager : MonoBehaviour
                 PlayManager.instance.SiegeSession.NotifyCockpitDestroyed(cockpit);
             }
 
-            if (!skirmishOwnsDeath && ownerFaction == UnitFaction.Enemy && health != null && health.LastAttacker != null && health.LastAttacker.faction == UnitFaction.Player && unit != null)
+            if (!skirmishOwnsDeath && !siegeOwnsDeath && PlayManager.instance.Modes?.State != GameModeState.Siege && ownerFaction == UnitFaction.Enemy && health != null && health.LastAttacker != null && health.LastAttacker.faction == UnitFaction.Player && unit != null)
             {
                 EnemyIdentity identity = cockpit.GetComponent<EnemyIdentity>();
                 MainUIPanels.instance?.CombatHud?.ShowPlayerKill(identity != null ? identity.DisplayName : unit.name);
