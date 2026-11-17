@@ -140,6 +140,11 @@ public sealed class BlockVfxLibrary : ScriptableObject
         }
 
         VfxEffect effect = VfxEffectPool.Rent(template, position, rotation, SceneManager.GetActiveScene());
+        if (effect == null)
+        {
+            return SpawnResult.BurstLimit;
+        }
+
         effect.transform.localScale *= scale;
         effect.PlayOnce();
         effect.ReleaseAfterPlayback();

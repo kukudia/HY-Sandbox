@@ -94,6 +94,7 @@ HY-Sandbox/
 │   │   │       ├── EnemyLabPlayChecks.cs
 │   │   │       ├── EnemyLabViewChecks.cs
 │   │   │       ├── ExplosionIntegrationChecks.cs
+│   │   │       ├── NightInteractionChecks.cs
 │   │   │       ├── SkirmishArenaChecks.cs
 │   │   │       ├── SkirmishPerformanceChecks.cs
 │   │   │       ├── TurretFlightPlayProbe.cs
@@ -124,6 +125,8 @@ HY-Sandbox/
 │   │   │   └── ActivePowerPlayChecks.cs
 │   │   ├── Presentation/
 │   │   │   ├── InterfaceBaker.cs
+│   │   │   ├── Attract/
+│   │   │   │   └── BattleAttractAuthoring.cs
 │   │   │   ├── Camera/
 │   │   │   │   └── SceneCameraPreviewSync.cs
 │   │   │   ├── Effects/
@@ -149,6 +152,7 @@ HY-Sandbox/
 │   │   │       ├── NativeVfxPlaybackProbe.cs
 │   │   │       ├── PresentationResourceChecks.cs
 │   │   │       ├── VfxCatalogChecks.cs
+│   │   │       ├── VfxPoolBudgetChecks.cs
 │   │   │       └── VfxPoolChecks.cs
 │   │   ├── Salvage/
 │   │   │   ├── CargoReturnFileChecks.cs
@@ -215,6 +219,7 @@ HY-Sandbox/
 │   │   │       │   ├── SiegePriorityTargetFlight.cs
 │   │   │       │   ├── SiegeRegroupChecks.cs
 │   │   │       │   ├── SiegeRuntimeConnectionChecks.cs
+│   │   │       │   ├── SiegeStrandedCockpitChecks.cs
 │   │   │       │   ├── SiegeTopologyChecks.cs
 │   │   │       │   ├── SiegeWorkshopChecks.cs
 │   │   │       │   └── SiegeWreckBudgetChecks.cs
@@ -479,6 +484,9 @@ HY-Sandbox/
 │           │       └── PowerRangeUnionView.cs
 │           ├── Presentation/
 │           │   ├── VisualEffectsManager.cs
+│           │   ├── Attract/
+│           │   │   ├── BattleAttractCamera.cs
+│           │   │   └── BattleAttractStage.cs
 │           │   ├── Blocks/
 │           │   │   ├── BlockStatusLight.cs
 │           │   │   ├── CargoHoldView.cs
@@ -532,6 +540,7 @@ HY-Sandbox/
 │           │   │   ├── EnemyWreckRetirement.cs
 │           │   │   ├── SiegeBase.cs
 │           │   │   ├── SiegeCleanupSweep.cs
+│           │   │   ├── SiegeStrandedCockpit.cs
 │           │   │   ├── SiegeWaveDirector.cs
 │           │   │   └── SiegeWreckBudget.cs
 │           │   ├── Fleet/
@@ -1507,9 +1516,10 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | AiUpgradePlayChecks | [`string Run()`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L14) | public static |
-| AiUpgradePlayChecks | [`ControlUnit Unit(Transform root, string name, UnitFaction faction, Vector3 position)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L293) | private static |
-| AiUpgradePlayChecks | [`Durability Health(Transform root, string name, Vector3 position)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L309) | private static |
-| AiUpgradePlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L320) | private static |
+| AiUpgradePlayChecks | [`void CheckVisibility(Transform root, List<string> checks, Type selectorType, MethodInfo select)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L294) | private static |
+| AiUpgradePlayChecks | [`ControlUnit Unit(Transform root, string name, UnitFaction faction, Vector3 position)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L367) | private static |
+| AiUpgradePlayChecks | [`Durability Health(Transform root, string name, Vector3 position)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L383) | private static |
+| AiUpgradePlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L394) | private static |
 
 ## Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs
 
@@ -1602,6 +1612,18 @@ HY-Sandbox/
 | ExplosionIntegrationChecks | [`void Configure(Block block, float damage, float radius)`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L239) | private static |
 | ExplosionIntegrationChecks | [`void Check(Report report, string name, bool passed)`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L248) | private static |
 | ExplosionIntegrationChecks | [`string Save(Report report)`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L258) | private static |
+
+## Assets/Editor/Combat/Validation/NightInteractionChecks.cs
+
+// 职责：通过真实Siege生命周期与跨帧InputSystem事件回归夜班交互、筛选和重开。 // 入口：RunLive()；只操作Play实例，结束恢复硬件与背景输入设置，不写玩家蓝图。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| NightInteractionChecks | [`void RunLive()`](../Assets/Editor/Combat/Validation/NightInteractionChecks.cs#L32) | public static |
+| NightInteractionChecks | [`IEnumerator Scenario()`](../Assets/Editor/Combat/Validation/NightInteractionChecks.cs#L70) | private static |
+| NightInteractionChecks | [`void Check(string name, bool passed)`](../Assets/Editor/Combat/Validation/NightInteractionChecks.cs#L214) | private static |
+| NightInteractionChecks | [`void Tick()`](../Assets/Editor/Combat/Validation/NightInteractionChecks.cs#L225) | private static |
+| NightInteractionChecks | [`void Finish(string error)`](../Assets/Editor/Combat/Validation/NightInteractionChecks.cs#L253) | private static |
 
 ## Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs
 
@@ -1924,6 +1946,19 @@ HY-Sandbox/
 | ActivePowerPlayChecks | [`bool Near(float first, float second)`](../Assets/Editor/Power/ActivePowerPlayChecks.cs#L335) | private static |
 | ActivePowerPlayChecks | [`void Check(List<string> checks, string description, bool passed)`](../Assets/Editor/Power/ActivePowerPlayChecks.cs#L340) | private static |
 
+## Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs
+
+// 职责：从独立战斗服务场景制作可编辑的待机空战舞台、出生点、烟火点和镜头轨道。 // 入口：Create()；已有场景拒绝覆盖，源5v5和用户蓝图均保持原样。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BattleAttractAuthoring | [`void Create()`](../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L15) | public static |
+| BattleAttractAuthoring | [`void PolishSavedScene()`](../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L205) | public static |
+| BattleAttractAuthoring | [`void Polish(Scene scene)`](../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L225) | private static |
+| BattleAttractAuthoring | [`Transform Point(Transform parent, string name, Vector3 position)`](../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L291) | private static |
+| BattleAttractAuthoring | [`void Ref(SerializedObject target, string name, Object value)`](../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L299) | private static |
+| BattleAttractAuthoring | [`void Bar(Transform parent, string name, bool top)`](../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L304) | private static |
+
 ## Assets/Editor/Presentation/Camera/SceneCameraPreviewSync.cs
 
 // 职责：同步 Scene 视图与游戏镜头预览，供编辑器检查。 // 入口：Toggle() / SyncNow()。 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
@@ -2200,6 +2235,16 @@ HY-Sandbox/
 | VfxCatalogChecks | [`string CheckPlay()`](../Assets/Editor/Presentation/Validation/VfxCatalogChecks.cs#L78) | public static |
 | VfxCatalogChecks | [`VfxEffect LoadAnchor(string path, string id, List<GameObject> fixtures)`](../Assets/Editor/Presentation/Validation/VfxCatalogChecks.cs#L144) | private static |
 | VfxCatalogChecks | [`void Require(bool value, string message)`](../Assets/Editor/Presentation/Validation/VfxCatalogChecks.cs#L152) | private static |
+
+## Assets/Editor/Presentation/Validation/VfxPoolBudgetChecks.cs
+
+// 职责：用真实VFX模板验证显式活动预算、复用、销毁及清场后容量恢复。 // 入口：RunPlay()；独立临时场景，退出恢复原活动场景，不修改生产资源。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| VfxPoolBudgetChecks | [`string RunPlay()`](../Assets/Editor/Presentation/Validation/VfxPoolBudgetChecks.cs#L15) | public static |
+| VfxPoolBudgetChecks | [`void Configure(SerializedObject settings, int total, int perTemplate)`](../Assets/Editor/Presentation/Validation/VfxPoolBudgetChecks.cs#L102) | private static |
+| VfxPoolBudgetChecks | [`void Require(List<string> checks, string label, bool passed)`](../Assets/Editor/Presentation/Validation/VfxPoolBudgetChecks.cs#L110) | private static |
 
 ## Assets/Editor/Presentation/Validation/VfxPoolChecks.cs
 
@@ -2870,6 +2915,15 @@ HY-Sandbox/
 | SiegeRuntimeConnectionChecks | [`List<List<Block>> Groups(List<Block> blocks)`](../Assets/Editor/Siege/Validation/Fleet/SiegeRuntimeConnectionChecks.cs#L170) | private static |
 | SiegeRuntimeConnectionChecks | [`void RobotContainerChecks(List<string> checks)`](../Assets/Editor/Siege/Validation/Fleet/SiegeRuntimeConnectionChecks.cs#L175) | private static |
 | SiegeRuntimeConnectionChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/Validation/Fleet/SiegeRuntimeConnectionChecks.cs#L268) | private static |
+
+## Assets/Editor/Siege/Validation/Fleet/SiegeStrandedCockpitChecks.cs
+
+// 职责：用真实受损舰和生产波次导演验证残舱退场、恢复边界及零击杀奖励。 // 入口：RunLive()；新鲜Build Play的同步规则夹具，时间参数推进不等同自然12秒实飞。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeStrandedCockpitChecks | [`string RunLive()`](../Assets/Editor/Siege/Validation/Fleet/SiegeStrandedCockpitChecks.cs#L13) | public static |
+| SiegeStrandedCockpitChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/Validation/Fleet/SiegeStrandedCockpitChecks.cs#L119) | private static |
 
 ## Assets/Editor/Siege/Validation/Fleet/SiegeTopologyChecks.cs
 
@@ -4584,23 +4638,24 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Turret | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L44) | protected virtual |
-| Turret | [`void OnValidate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L52) | protected virtual |
-| Turret | [`void SetStarted(bool started)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L63) | public |
-| Turret | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L73) | protected virtual |
-| Turret | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L96) | protected virtual |
-| Turret | [`void StopWorking()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L102) | private |
-| Turret | [`void RefreshTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L111) | private |
-| Turret | [`void AimAndFire(Durability aimTarget)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L137) | private |
-| Turret | [`void AimAt(Vector3 worldDirection)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L156) | private |
-| Turret | [`void ResolveAimingRig()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L186) | private |
-| Turret | [`Vector3 GetMuzzlePosition()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L220) | protected |
-| Turret | [`Vector3 GetAimForward()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L231) | protected |
-| Turret | [`UnitFaction GetEffectiveTargetFaction()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L237) | protected |
-| Turret | [`Vector3 GetAimPosition(Durability target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L243) | protected virtual |
-| Turret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L248) | protected abstract |
-| Turret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L249) | protected virtual |
-| Turret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L253) | protected virtual |
+| Turret | [`void DelayTargetSearch(float seconds)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L46) | internal |
+| Turret | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L51) | protected virtual |
+| Turret | [`void OnValidate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L59) | protected virtual |
+| Turret | [`void SetStarted(bool started)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L70) | public |
+| Turret | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L80) | protected virtual |
+| Turret | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L103) | protected virtual |
+| Turret | [`void StopWorking()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L109) | private |
+| Turret | [`void RefreshTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L118) | private |
+| Turret | [`void AimAndFire(Durability aimTarget)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L145) | private |
+| Turret | [`void AimAt(Vector3 worldDirection)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L165) | private |
+| Turret | [`void ResolveAimingRig()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L195) | private |
+| Turret | [`Vector3 GetMuzzlePosition()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L229) | protected |
+| Turret | [`Vector3 GetAimForward()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L240) | protected |
+| Turret | [`UnitFaction GetEffectiveTargetFaction()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L246) | protected |
+| Turret | [`Vector3 GetAimPosition(Durability target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L252) | protected virtual |
+| Turret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L257) | protected abstract |
+| Turret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L258) | protected virtual |
+| Turret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L262) | protected virtual |
 
 ## Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs
 
@@ -4625,11 +4680,11 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| TurretTargetSelector | [`void ConfigureVisibility(Vector3 origin, LayerMask hitLayers)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L20) | internal |
-| TurretTargetSelector | [`bool HasLineOfSight(ControlUnit owner, ControlUnit target, Durability durability)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L26) | internal |
-| TurretTargetSelector | [`ControlUnit FindNearestTarget( IReadOnlyList<ControlUnit> units, ControlUnit owner, UnitFaction faction, float range, bool prioritizeCockpit, out Durability nearestDurability)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L91) | internal |
-| TurretTargetSelector | [`Durability FindNearestDurability(ControlUnit unit, ControlUnit owner, Vector3 origin, float nearestSqrDistance)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L173) | private |
-| TurretTargetSelector | [`Durability FindCockpitDurability(ControlUnit unit)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L196) | private |
+| TurretTargetSelector | [`void ConfigureVisibility(Vector3 origin, LayerMask hitLayers)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L36) | internal |
+| TurretTargetSelector | [`bool HasLineOfSight(ControlUnit owner, ControlUnit target, Durability durability)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L42) | internal |
+| TurretTargetSelector | [`ControlUnit FindNearestTarget( IReadOnlyList<ControlUnit> units, ControlUnit owner, UnitFaction faction, float range, bool prioritizeCockpit, out Durability nearestDurability)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L105) | internal |
+| TurretTargetSelector | [`Durability FindNearestDurability(ControlUnit unit, ControlUnit owner, Vector3 origin, float nearestSqrDistance)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L188) | private |
+| TurretTargetSelector | [`Durability FindCockpitDurability(ControlUnit unit)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L225) | private |
 
 ## Assets/Scripts/Features/Diagnostics/Bots/BotNavigationProbeDriver.cs
 
@@ -5446,6 +5501,26 @@ HY-Sandbox/
 | PowerRangeUnionView | [`void SortAndUnique(List<float> values)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L433) | private static |
 | PowerRangeUnionView | [`void SetPowerRangeMeshVisible(bool visible)`](../Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs#L445) | private |
 
+## Assets/Scripts/Features/Presentation/Attract/BattleAttractCamera.cs
+
+// 职责：轮换可编辑镜头轨道、基地仰视和存活飞船特写，独立于玩家输入相机。 // 入口：LateUpdate()；每段5–10秒，参数和路径保存在场景，暂停时不推进。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BattleAttractCamera | [`void LateUpdate()`](../Assets/Scripts/Features/Presentation/Attract/BattleAttractCamera.cs#L28) | private |
+
+## Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs
+
+// 职责：独立待机战场的内置舰队、基地恢复和有限烟火编排，不访问个人蓝图或结算金币。 // 入口：Start()/Update()；复用生产模块工厂、建筑和武器链，按槽位替换阵亡/越界舰。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BattleAttractStage | [`void Start()`](../Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs#L51) | private |
+| BattleAttractStage | [`void RestoreBase()`](../Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs#L62) | private |
+| BattleAttractStage | [`void Update()`](../Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs#L95) | private |
+| BattleAttractStage | [`void Spawn(int index)`](../Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs#L173) | private |
+| BattleAttractStage | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs#L217) | private |
+
 ## Assets/Scripts/Features/Presentation/Blocks/BlockStatusLight.cs
 
 // 职责：将设备供电、机器人任务与方块状态映射为状态灯表现。 // 入口：Update()。
@@ -5607,13 +5682,13 @@ HY-Sandbox/
 | --- | --- | --- |
 | DetachedPartSmokeTrail | [`void Attach(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L37) | public static |
 | DetachedPartSmokeTrail | [`void Initialize(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L62) | private |
-| DetachedPartSmokeTrail | [`void ConfigureEnvelope()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L84) | private |
-| DetachedPartSmokeTrail | [`void UpdateEnvelope()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L114) | private |
-| DetachedPartSmokeTrail | [`void Refresh(Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L130) | private |
-| DetachedPartSmokeTrail | [`void Update()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L142) | private |
-| DetachedPartSmokeTrail | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L179) | private |
-| DetachedPartSmokeTrail | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L203) | private |
-| DetachedPartSmokeTrail | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L208) | private |
+| DetachedPartSmokeTrail | [`void ConfigureEnvelope()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L90) | private |
+| DetachedPartSmokeTrail | [`void UpdateEnvelope()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L120) | private |
+| DetachedPartSmokeTrail | [`void Refresh(Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L136) | private |
+| DetachedPartSmokeTrail | [`void Update()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L148) | private |
+| DetachedPartSmokeTrail | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L185) | private |
+| DetachedPartSmokeTrail | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L209) | private |
+| DetachedPartSmokeTrail | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L214) | private |
 
 ## Assets/Scripts/Features/Presentation/Effects/LightFade.cs
 
@@ -5708,15 +5783,15 @@ HY-Sandbox/
 
 ## Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs
 
-// 职责：按场景和模板复用 GPU 特效；活动实例按需扩容，仅限制闲置缓存。 // 入口：Rent() / Return()；场景卸载销毁池及其全部实例。
+// 职责：按场景和模板复用GPU特效；默认按需扩容，演出场可显式配置活动预算。 // 入口：Rent() / Return()；场景卸载销毁池及其全部实例。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| VfxEffectPool | [`VfxEffect Rent(VfxEffect prefab, Vector3 position, Quaternion rotation, Scene scene)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L25) | public static |
-| VfxEffectPool | [`void Return(VfxEffect effect, VfxEffect prefab)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L72) | internal |
-| VfxEffectPool | [`void Forget(VfxEffect effect)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L95) | internal |
-| VfxEffectPool | [`void ClearActive()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L96) | public |
-| VfxEffectPool | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L112) | private |
+| VfxEffectPool | [`VfxEffect Rent(VfxEffect prefab, Vector3 position, Quaternion rotation, Scene scene)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L34) | public static |
+| VfxEffectPool | [`void Return(VfxEffect effect, VfxEffect prefab)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L89) | internal |
+| VfxEffectPool | [`void Forget(VfxEffect effect, VfxEffect prefab)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L117) | internal |
+| VfxEffectPool | [`void ClearActive()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L125) | public |
+| VfxEffectPool | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L142) | private |
 
 ## Assets/Scripts/Features/Presentation/Interface/GlobalTextStyler.cs
 
@@ -5901,7 +5976,7 @@ HY-Sandbox/
 | VisualEffectsManager | [`void UpdateGhostPreview(Transform ghost, bool isBlocked)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L487) | private |
 | VisualEffectsManager | [`void ClearGhostPreview()`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L492) | private |
 | VisualEffectsManager | [`void DecorateMeteor(Meteor meteor)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L496) | private |
-| VisualEffectsManager | [`void PlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L533) | private |
+| VisualEffectsManager | [`void PlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L536) | private |
 
 ## Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs
 
@@ -6028,6 +6103,14 @@ HY-Sandbox/
 | SiegeCleanupSweep | [`void ResetRegistry()`](../Assets/Scripts/Features/Siege/Battle/SiegeCleanupSweep.cs#L213) | private static |
 | SiegeCleanupSweep | [`void OnDisable()`](../Assets/Scripts/Features/Siege/Battle/SiegeCleanupSweep.cs#L219) | private |
 
+## Assets/Scripts/Features/Siege/Battle/SiegeStrandedCockpit.cs
+
+// 职责：识别受损后仅余无推进、无武器驾驶舱且持续停滞的来袭者，防止占住波次名额。 // 入口：ShouldRetire()；只提供退场判断，不产生击杀、奖励、伤害或凭空推力。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeStrandedCockpit | [`bool ShouldRetire(Cockpit cockpit, float time, float timeout)`](../Assets/Scripts/Features/Siege/Battle/SiegeStrandedCockpit.cs#L19) | public |
+
 ## Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs
 
 // 职责：在独立在场预算内按固定随机种子调度敌舰，并将真实死亡或移除结算给规则核心。 // 入口：Tick() / Stop()；死亡事件只记事实，由下一次Tick统一结算，避免事件中重入生成。
@@ -6038,9 +6121,9 @@ HY-Sandbox/
 | SiegeWaveDirector | [`void Tick(float time)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L58) | public |
 | SiegeWaveDirector | [`SiegeShipOption PickBlueprint(SiegeSettings settings)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L142) | private |
 | SiegeWaveDirector | [`void Stop()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L162) | public |
-| Attacker | [`void OnDefeated()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L206) | private |
-| Attacker | [`void RefreshTarget(ControlUnit core)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L215) | public |
-| Attacker | [`void Unsubscribe()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L228) | public |
+| Attacker | [`void OnDefeated()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L208) | private |
+| Attacker | [`void RefreshTarget(ControlUnit core)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L217) | public |
+| Attacker | [`void Unsubscribe()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L230) | public |
 
 ## Assets/Scripts/Features/Siege/Battle/SiegeWreckBudget.cs
 
@@ -6531,7 +6614,7 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeSettings | [`SiegeMatch CreateMatch()`](../Assets/Scripts/Features/Siege/SiegeSettings.cs#L112) | public |
+| SiegeSettings | [`SiegeMatch CreateMatch()`](../Assets/Scripts/Features/Siege/SiegeSettings.cs#L116) | public |
 
 ## Assets/Scripts/Features/Siege/Validation/SiegeDrivingPlayerChecks.cs
 

@@ -10,7 +10,11 @@ ESC及工坊顶部按钮进入真实暂停界面，冻结游戏时间、相机�
 
 爆炸仅破坏同PhysicsScene体素，不造成飞船/建筑/基地模块径向伤害，也不随机断开完好连接。直接命中伤害、明确建筑伤害刷、已摧毁源模块拆除和有限物理冲量仍由原链处理。
 
-验证：Play爆炸14项、六种真实Prefab网格/六面贴合774项通过；真实输入回归观察到RMB自由视角、方向键位移3.506米、释放恢复、ESC暂停/恢复。后续改动的攻防回归、快捷加载、筛选与接管仍在测试；残舱与待机场景未完成。持续状态与证据见[夜班验证](Docs/Validation/2026-11-18-night-development.md)。仅本地提交，不推送。
+受损敌舰仅余无推进/武器的单驾驶舱时，连续12秒移动不足2米按未击杀退场，恢复/移动/重组重置窗口；不赠送击杀或金币，不影响原生纯驾驶舱设计。策略入口`Siege/Battle/SiegeStrandedCockpit.cs`，时限见`SiegeSettings`。
+
+独立可编辑待机战场`BattleAttract.unity`复用8艘内置舰与Bastion基地，额外烟火无伤害；四镜头每7秒切换，65秒重开。演出专用1.2秒错峰索敌及VFX总160/单模板24预算，不改变其他场景默认无限活动效果契约。源工具`Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs`，规格见[资产说明](Docs/Art/BattleAttract.md)。
+
+验证：Play爆炸14项、真实Prefab网格/六面贴合774项、Build→Siege生产流程20项、交互/接管/筛选/轨迹/Restart20项、残舱规则10项、VFX预算10项、AI27项及炮塔32项通过。真实输入观察到RMB/方向键/ESC暂停恢复；Tab模拟未通过，偏好/快捷加载/多分辨率与自然残舱待补。持续状态与证据见[夜班验证](Docs/Validation/2026-11-18-night-development.md)。仅本地提交，不推送。
 
 ## Siege战斗时限与界面修正（2026-11-17）
 

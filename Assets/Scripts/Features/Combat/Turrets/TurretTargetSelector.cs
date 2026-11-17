@@ -7,10 +7,26 @@ using UnityEngine.SceneManagement;
 
 internal sealed class TurretTargetSelector
 {
+    private static readonly Unity.Profiling.ProfilerMarker SearchMarker = new Unity.Profiling.ProfilerMarker("HY.Turret.Search");
+    private static readonly Unity.Profiling.ProfilerMarker VisibilityMarker = new Unity.Profiling.ProfilerMarker("HY.Turret.Visibility");
+    private static readonly Unity.Profiling.ProfilerMarker CandidateMarker = new Unity.Profiling.ProfilerMarker("HY.Turret.Candidates");
     private readonly Transform _weapon;
     private Vector3 _origin;
     private int _hitLayers = ~0;
     private RaycastHit[] _visibilityHits = new RaycastHit[16];
+    private readonly List<Candidate> candidates = new List<Candidate>();
+    private struct Candidate
+    {
+        internal Durability health;
+        internal float distanceSquared;
+        internal int hierarchyOrder;
+    }
+
+    private static readonly System.Comparison<Candidate> NearestFirst = (left, right) =>
+    {
+        int distance = left.distanceSquared.CompareTo(right.distanceSquared);
+        return distance != 0 ? distance : left.hierarchyOrder.CompareTo(right.hierarchyOrder);
+    };
     internal TurretTargetSelector(Transform weapon)
     {
         _weapon = weapon;
@@ -25,6 +41,7 @@ internal sealed class TurretTargetSelector
 
     internal bool HasLineOfSight(ControlUnit owner, ControlUnit target, Durability durability)
     {
+        using var sample = VisibilityMarker.Auto();
         if (durability == null)
         {
             return false;
@@ -62,30 +79,27 @@ internal sealed class TurretTargetSelector
             System.Array.Resize(ref _visibilityHits, _visibilityHits.Length * 2);
         }
 
-        float targetDistance = distance;
-        float blockingDistance = float.PositiveInfinity;
+        float nearestDistance = float.PositiveInfinity;
+        Collider nearestCollider = null;
         for (int i = 0; i < count; i++)
         {
             RaycastHit hit = _visibilityHits[i];
-            ControlUnit hitUnit = hit.collider.GetComponentInParent<ControlUnit>();
             // 只忽略炮塔自身。所属基地/舰体的其他墙板仍遮挡，避免库内炮塔透过自家墙锁敌。
-            if (owner != null && hitUnit == owner && (hit.collider.transform == _weapon || hit.collider.transform.IsChildOf(_weapon)))
+            if (owner != null && hit.collider.transform.IsChildOf(_weapon) && hit.collider.GetComponentInParent<ControlUnit>() == owner)
             {
                 continue;
             }
 
-            if (hitUnit == target)
+            if (hit.distance < nearestDistance || (hit.distance == nearestDistance && hit.collider.GetComponentInParent<ControlUnit>() != target))
             {
-                // 目标外壳会先于驾驶舱中心命中；它属于同一个可攻击单位。
-                targetDistance = Mathf.Min(targetDistance, hit.distance);
-            }
-            else
-            {
-                blockingDistance = Mathf.Min(blockingDistance, hit.distance);
+                nearestDistance = hit.distance;
+                nearestCollider = hit.collider;
             }
         }
 
-        return blockingDistance > targetDistance;
+        // NonAlloc结果无序；仅最近非自身命中决定可见性，不必逐个遍历其组件父链。
+        // 目标外壳会先于驾驶舱中心命中，它属于同一个可攻击单位。
+        return nearestCollider == null || nearestCollider.GetComponentInParent<ControlUnit>() == target;
     }
 
     internal ControlUnit FindNearestTarget(
@@ -96,6 +110,7 @@ internal sealed class TurretTargetSelector
         bool prioritizeCockpit,
         out Durability nearestDurability)
     {
+        using var sample = SearchMarker.Auto();
         ControlUnit nearest = null;
         nearestDurability = null;
         float nearestSqrDistance = range * range;
@@ -172,25 +187,39 @@ internal sealed class TurretTargetSelector
 
     private Durability FindNearestDurability(ControlUnit unit, ControlUnit owner, Vector3 origin, float nearestSqrDistance)
     {
-        Durability nearest = null;
-        IReadOnlyList<Durability> targets = unit.GetDamageTargets();
-        for (int index = 0; index < targets.Count; index++)
+        candidates.Clear();
+        using (CandidateMarker.Auto())
         {
-            Durability durability = targets[index];
-            if (durability == null || !durability.isActiveAndEnabled || durability.currentDurability <= 0f)
+            IReadOnlyList<Durability> targets = unit.GetDamageTargets();
+            for (int index = 0; index < targets.Count; index++)
             {
-                continue;
-            }
+                Durability durability = targets[index];
+                if (durability == null || !durability.isActiveAndEnabled || durability.currentDurability <= 0f)
+                {
+                    continue;
+                }
 
-            float sqrDistance = (durability.transform.position - origin).sqrMagnitude;
-            if (sqrDistance < nearestSqrDistance && durability.GetComponentInParent<ControlUnit>() == unit && HasLineOfSight(owner, unit, durability))
-            {
-                nearest = durability;
-                nearestSqrDistance = sqrDistance;
+                float sqrDistance = (durability.transform.position - origin).sqrMagnitude;
+                if (sqrDistance < nearestSqrDistance)
+                {
+                    candidates.Add(new Candidate { health = durability, distanceSquared = sqrDistance, hierarchyOrder = index });
+                }
             }
         }
 
-        return nearest;
+        // 层级顺序与空间距离无关；先检查最近模块，避免对后续必然更远的模块发射可见性射线。
+        // 遮挡时仍继续寻找，不能以最近模块不可见推断整艘船都不可见。
+        candidates.Sort(NearestFirst);
+        for (int index = 0; index < candidates.Count; index++)
+        {
+            Durability health = candidates[index].health;
+            if (health.GetComponentInParent<ControlUnit>() == unit && HasLineOfSight(owner, unit, health))
+            {
+                return health;
+            }
+        }
+
+        return null;
     }
 
     private Durability FindCockpitDurability(ControlUnit unit)

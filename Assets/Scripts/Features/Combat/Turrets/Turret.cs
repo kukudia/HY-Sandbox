@@ -6,6 +6,8 @@ using UnityEngine.Serialization;
 [RequireComponent(typeof(Power))]
 public abstract class Turret : MonoBehaviour
 {
+    private static readonly Unity.Profiling.ProfilerMarker TargetMarker = new Unity.Profiling.ProfilerMarker("HY.Turret.RefreshTarget");
+    private static readonly Unity.Profiling.ProfilerMarker AimMarker = new Unity.Profiling.ProfilerMarker("HY.Turret.AimAndFire");
     public UnitFaction targetFaction = UnitFaction.Enemy;
     public Transform horizontalAxis;
     public Transform verticalAxis;
@@ -40,6 +42,11 @@ public abstract class Turret : MonoBehaviour
         get; private set;
     }
     public bool IsStarted => _isStarted;
+
+    internal void DelayTargetSearch(float seconds)
+    {
+        _nextSearchTime = Time.time + Mathf.Max(0f, seconds);
+    }
 
     protected virtual void Awake()
     {
@@ -110,6 +117,7 @@ public abstract class Turret : MonoBehaviour
 
     private void RefreshTarget()
     {
+        using var sample = TargetMarker.Auto();
         _targetSelector.ConfigureVisibility(GetMuzzlePosition(), hitLayers);
         if (_target != null && (!_target.isActiveAndEnabled || _target.faction != GetEffectiveTargetFaction() || _target.gameObject.scene != gameObject.scene || !_target.IsOperational || !_target.IsSimulationActive || _targetDurability == null || !_targetDurability.isActiveAndEnabled || _targetDurability.currentDurability <= 0f || _targetDurability.GetComponentInParent<ControlUnit>() != _target || (_targetDurability.transform.position - GetMuzzlePosition()).sqrMagnitude > range * range || !_targetSelector.HasLineOfSight(Owner, _target, _targetDurability)))
         {
@@ -136,6 +144,7 @@ public abstract class Turret : MonoBehaviour
 
     private void AimAndFire(Durability aimTarget)
     {
+        using var sample = AimMarker.Auto();
         Vector3 direction = GetAimPosition(aimTarget, GetMuzzlePosition()) - GetMuzzlePosition();
         if (direction.sqrMagnitude < 0.01f)
         {

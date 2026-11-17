@@ -57,6 +57,10 @@ public sealed class SiegeSettings : ScriptableObject
     private float enemyWreckLifetime = 15f;
     [SerializeField, Min(1), Tooltip("每次扫描最多退场组数，控制回收与掉落突发。")]
     private int enemyWreckRetirePerScan = 8;
+    [SerializeField, Min(0f), Tooltip("受损后只剩无推进/武器驾驶舱，连续停滞多少秒后无奖励退场；0关闭，不影响完整舰或暂时缺电。")]
+    private float strandedCockpitSeconds = 12f;
+    public float StrandedCockpitSeconds => strandedCockpitSeconds;
+
     [SerializeField, Tooltip("每次波次结束后按报价自动修缮基地；金币不足或净空受阻时不扣款。")]
     private bool autoRepairBase = true;
     [SerializeField, Tooltip("基地自动修缮后，按驾驶舰优先顺序自动修复存活舰船；余额不足或泊位受阻时保留资产并记录结果。")]

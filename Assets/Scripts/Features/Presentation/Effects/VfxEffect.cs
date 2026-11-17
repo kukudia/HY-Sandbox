@@ -304,7 +304,7 @@ public sealed class VfxEffect : MonoBehaviour
     {
         if (_pool != null)
         {
-            _pool.Forget(this);
+            _pool.Forget(this, _poolPrefab);
         }
     }
 }

@@ -75,6 +75,12 @@ public class DetachedPartSmokeTrail : MonoBehaviour
 
         // 烟迹拥有独立生命周期：残骸被禁用/回收时，已发射的世界空间烟粒仍可自然消散。
         _smokeEffect = VfxEffectPool.Rent(library.DetachedSmoke, worldAnchor, Quaternion.identity, body.gameObject.scene);
+        if (_smokeEffect == null)
+        {
+            enabled = false;
+            return;
+        }
+
         emissionRoot = _smokeEffect.transform;
         localAnchor = transform.InverseTransformPoint(worldAnchor);
         ConfigureEnvelope();

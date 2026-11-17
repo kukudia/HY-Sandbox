@@ -72,7 +72,7 @@ public sealed class SiegeWaveDirector
             Attacker attacker = attackers[index];
             if (!attacker.Defeated && attacker.Cockpit != null && attacker.Cockpit.isActiveAndEnabled)
             {
-                if (island != null && island.BeyondRecovery(attacker.Cockpit.transform.position))
+                if ((island != null && island.BeyondRecovery(attacker.Cockpit.transform.position)) || attacker.Stranded.ShouldRetire(attacker.Cockpit, time, settings.StrandedCockpitSeconds))
                 {
                     ControlUnit escaped = attacker.Cockpit.GetComponentInParent<ControlUnit>();
                     attacker.Unsubscribe();
@@ -133,7 +133,7 @@ public sealed class SiegeWaveDirector
         }
 
         unit.GetComponent<EnemyController>().SetPriorityTarget(getBase().Unit);
-        attackers.Add(new Attacker(id, unit.cockpit));
+        attackers.Add(new Attacker(id, unit.cockpit, blueprint.blocks.Count > 1));
         // 注册成功后才播放，拒绝生成或预算不足不会留下空传送门。
         VisualEffectsManager.TryPlayEnemySpawnPortal(unit);
     }
@@ -173,6 +173,7 @@ public sealed class SiegeWaveDirector
     {
         public readonly string Id;
         public readonly Cockpit Cockpit;
+        public readonly SiegeStrandedCockpit Stranded;
         public string Name
         {
             get; private set;
@@ -194,10 +195,11 @@ public sealed class SiegeWaveDirector
 
         private ControlUnit boundUnit;
         private ControlUnit boundTarget;
-        public Attacker(string id, Cockpit cockpit)
+        public Attacker(string id, Cockpit cockpit, bool hadHull)
         {
             Id = id;
             Cockpit = cockpit;
+            Stranded = new SiegeStrandedCockpit(hadHull);
             identity = cockpit.GetComponent<EnemyIdentity>();
             Name = identity != null ? identity.DisplayName : cockpit.name;
             identity.Defeated += OnDefeated;

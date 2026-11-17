@@ -206,6 +206,7 @@ public static class AiUpgradePlayChecks
                 "Ancestor regroup cannot leave a module selectable by its old unit",
                 args[5] as Durability != inactiveHealth);
             UnityEngine.Object.DestroyImmediate(inactive);
+            CheckVisibility(root.transform, checks, selectorType, select);
             ProjectileTurret cannon = Object.Instantiate(Resources.Load<GameObject>("Blocks/ProjectileTurretSingle"), owner.transform).GetComponent<ProjectileTurret>();
             if (cannon == null)
             {
@@ -288,6 +289,79 @@ public static class AiUpgradePlayChecks
             SceneManager.UnloadSceneAsync(scene);
             PlayManager.instance.playMode = previousMode;
         }
+    }
+
+    private static void CheckVisibility(Transform root, List<string> checks, Type selectorType, MethodInfo select)
+    {
+        ControlUnit owner = Unit(root, "Visibility owner", UnitFaction.Enemy, new Vector3(1000, 0, 0));
+        ControlUnit target = Unit(root, "Visibility target", UnitFaction.Player, new Vector3(1000, 0, 40));
+        var weapon = new GameObject("Visibility weapon");
+        weapon.transform.SetParent(owner.transform, false);
+        weapon.AddComponent<BoxCollider>();
+        object selector = Activator.CreateInstance(selectorType, Instance, null, new object[] { weapon.transform }, null);
+        // 先加入较远模块，确保选择与层级顺序无关。
+        Durability far = Health(target.transform, "Visible far module", new Vector3(12, 0, 0));
+        far.gameObject.AddComponent<BoxCollider>();
+        Durability near = Health(target.transform, "Near module", new Vector3(0, 0, -4));
+        near.gameObject.AddComponent<BoxCollider>();
+        var wall = new GameObject("Visibility wall");
+        wall.transform.SetParent(owner.transform, false);
+        wall.transform.localPosition = new Vector3(0, 0, 20);
+        wall.AddComponent<BoxCollider>().size = new Vector3(4, 4, 1);
+        object[] args =
+        {
+            new List<ControlUnit>
+            {
+                target
+            },
+            owner,
+            UnitFaction.Player,
+            100f,
+            false,
+            null
+        };
+        Physics.SyncTransforms();
+        select.Invoke(selector, args);
+        Check(
+            checks,
+            "Own hull blocks closest module but farther visible module remains selectable",
+            args[5] as Durability == far);
+        wall.SetActive(false);
+        Physics.SyncTransforms();
+        select.Invoke(selector, args);
+        Check(checks, "Nearest visible module wins regardless of hierarchy order", args[5] as Durability == near);
+        wall.SetActive(true);
+        wall.GetComponent<BoxCollider>().size = new Vector3(40, 4, 1);
+        Physics.SyncTransforms();
+        select.Invoke(selector, args);
+        Check(checks, "Fully occluded unit cannot be selected through own hull", args[5] == null);
+        wall.transform.SetParent(weapon.transform, true);
+        Physics.SyncTransforms();
+        select.Invoke(selector, args);
+        Check(checks, "Only the actual weapon hierarchy is ignored by visibility", args[5] as Durability == near);
+        wall.SetActive(false);
+        var shell = new GameObject("Target outer shell");
+        shell.transform.SetParent(target.transform, false);
+        shell.transform.localPosition = new Vector3(0, 0, -8);
+        shell.AddComponent<BoxCollider>().size = new Vector3(4, 4, 1);
+        Physics.SyncTransforms();
+        select.Invoke(selector, args);
+        Check(checks, "Target outer shell does not hide its own damage module", args[5] as Durability == near);
+        for (int i = 0; i < 24; i++)
+        {
+            var dense = new GameObject("Dense target shell " + i);
+            dense.transform.SetParent(target.transform, false);
+            dense.transform.localPosition = new Vector3(0, 0, -5 - i * .03f);
+            dense.AddComponent<BoxCollider>();
+        }
+
+        Physics.SyncTransforms();
+        select.Invoke(selector, args);
+        Check(
+            checks,
+            "Unordered saturated ray buffer grows and preserves target visibility",
+            args[5] as Durability == near);
+        owner.enabled = target.enabled = false;
     }
 
     private static ControlUnit Unit(Transform root, string name, UnitFaction faction, Vector3 position)

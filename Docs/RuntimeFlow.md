@@ -6,7 +6,80 @@
 
     维护：业务变化更新受影响图和 DEVELOPMENT；纯格式变化重新生成行号。`dotnet run --project Tools/CodeReadability -- --check .` 会拒绝失效符号。
 
-    ## 三套基地示例与自由观察
+    ## 残舱退场与待机演出
+
+原有船体受损后仅剩无推进/武器驾驶舱，持续12秒移动不足2米才按未击杀退场；重组和移动重置窗口。待机场景复用真实基地/舰船与战斗服务，错峰低频索敌，生产瞄准与开火仍逐物理步。每65秒重开，额外烟火只有视觉；四镜头每7秒轮换。VFX活动预算仅演出场显式启用，默认场景保持不限。
+
+```mermaid
+flowchart TD
+    A["SiegeWaveDirector.Tick()"]
+    click A "../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L58" "打开源码"
+    B["SiegeStrandedCockpit.ShouldRetire()"]
+    click B "../Assets/Scripts/Features/Siege/Battle/SiegeStrandedCockpit.cs#L19" "打开源码"
+    C["SiegeMatch.ResolveAttacker()"]
+    click C "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L142" "打开源码"
+    D["BattleAttractStage.Start()"]
+    click D "../Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs#L51" "打开源码"
+    E["BattleAttractStage.RestoreBase()"]
+    click E "../Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs#L62" "打开源码"
+    F["BattleAttractStage.Update()"]
+    click F "../Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs#L95" "打开源码"
+    G["BattleAttractStage.Spawn()"]
+    click G "../Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs#L173" "打开源码"
+    H["Turret.DelayTargetSearch()"]
+    click H "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L46" "打开源码"
+    I["BattleAttractCamera.LateUpdate()"]
+    click I "../Assets/Scripts/Features/Presentation/Attract/BattleAttractCamera.cs#L28" "打开源码"
+    J["BlockVfxLibrary.Play()"]
+    click J "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L112" "打开源码"
+    K["VfxEffectPool.Rent()"]
+    click K "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L34" "打开源码"
+    L["VfxEffectPool.Return()"]
+    click L "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L89" "打开源码"
+    M["VfxEffect.FinishPlayback()"]
+    click M "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L275" "打开源码"
+    A --> B
+    B -->|超时且仍失能，非击杀| C
+    D --> E
+    F --> E
+    F --> G
+    G --> H
+    E --> H
+    F -->|纯视觉| J
+    J --> K
+    K -.->|播放结束| M
+    M --> L
+    F -.->|可用友舰| I
+```
+
+- [SiegeWaveDirector.Tick](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L58)
+<!-- source: Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs|Tick -->
+- [SiegeStrandedCockpit.ShouldRetire](../Assets/Scripts/Features/Siege/Battle/SiegeStrandedCockpit.cs#L19)
+<!-- source: Assets/Scripts/Features/Siege/Battle/SiegeStrandedCockpit.cs|ShouldRetire -->
+- [SiegeMatch.ResolveAttacker](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L142)
+<!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|ResolveAttacker -->
+- [BattleAttractStage.Start](../Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs#L51)
+<!-- source: Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs|Start -->
+- [BattleAttractStage.RestoreBase](../Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs#L62)
+<!-- source: Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs|RestoreBase -->
+- [BattleAttractStage.Update](../Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs#L95)
+<!-- source: Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs|Update -->
+- [BattleAttractStage.Spawn](../Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs#L173)
+<!-- source: Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs|Spawn -->
+- [Turret.DelayTargetSearch](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L46)
+<!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|DelayTargetSearch -->
+- [BattleAttractCamera.LateUpdate](../Assets/Scripts/Features/Presentation/Attract/BattleAttractCamera.cs#L28)
+<!-- source: Assets/Scripts/Features/Presentation/Attract/BattleAttractCamera.cs|LateUpdate -->
+- [BlockVfxLibrary.Play](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L112)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs|Play -->
+- [VfxEffectPool.Rent](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L34)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs|Rent -->
+- [VfxEffectPool.Return](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L89)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs|Return -->
+- [VfxEffect.FinishPlayback](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L275)
+<!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|FinishPlayback -->
+
+## 三套基地示例与自由观察
 
 主菜单和工坊模式面板读取同一配置中的三份真实蓝图，所选TextAsset贯穿模式切换并在Stage恢复，避免回退到Starter。基地战场景预挂观察组件，右键从非UI区域捕获；菜单、文字焦点、失焦及退出释放光标，退出恢复工坊镜头。
 
@@ -1089,7 +1162,7 @@ flowchart TD
     A["BlockVfxLibrary.Play()"]
     click A "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L112" "打开源码"
     B["VfxEffectPool.Rent()"]
-    click B "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L25" "打开源码"
+    click B "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L34" "打开源码"
     C["VfxEffect.ResetForRent()"]
     click C "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L209" "打开源码"
     D["VfxEffect.PlayOnce()"]
@@ -1099,11 +1172,11 @@ flowchart TD
     F["VfxEffect.FinishPlayback()"]
     click F "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L275" "打开源码"
     G["VfxEffectPool.Return()"]
-    click G "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L72" "打开源码"
+    click G "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L89" "打开源码"
     H["DetachedPartSmokeTrail.Initialize()"]
     click H "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L62" "打开源码"
     I["VfxEffectPool.OnDestroy()"]
-    click I "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L112" "打开源码"
+    click I "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L142" "打开源码"
     J["BlockVfxLibrary.PlayTemplate()"]
     click J "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L135" "打开源码"
     A --> J
@@ -1120,7 +1193,7 @@ flowchart TD
 
 - [BlockVfxLibrary.Play](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L112)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs|Play -->
-- [VfxEffectPool.Rent](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L25)
+- [VfxEffectPool.Rent](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L34)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs|Rent -->
 - [VfxEffect.ResetForRent](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L209)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|ResetForRent -->
@@ -1130,11 +1203,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|ReleaseAfterPlayback -->
 - [VfxEffect.FinishPlayback](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L275)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|FinishPlayback -->
-- [VfxEffectPool.Return](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L72)
+- [VfxEffectPool.Return](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L89)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs|Return -->
 - [DetachedPartSmokeTrail.Initialize](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L62)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|Initialize -->
-- [VfxEffectPool.OnDestroy](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L112)
+- [VfxEffectPool.OnDestroy](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L142)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs|OnDestroy -->
 - [BlockVfxLibrary.PlayTemplate](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L135)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs|PlayTemplate -->
@@ -1150,13 +1223,13 @@ flowchart TD
     B["DetachedPartSmokeTrail.Initialize()"]
     click B "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L62" "打开源码"
     C["DetachedPartSmokeTrail.Update()"]
-    click C "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L142" "打开源码"
+    click C "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L148" "打开源码"
     D["DetachedPartSmokeTrail.StopAndRelease()"]
-    click D "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L179" "打开源码"
+    click D "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L185" "打开源码"
     M["DetachedPartSmokeTrail.ConfigureEnvelope()"]
-    click M "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L84" "打开源码"
+    click M "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L90" "打开源码"
     N["DetachedPartSmokeTrail.UpdateEnvelope()"]
-    click N "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L114" "打开源码"
+    click N "../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L120" "打开源码"
     E["VfxEffect.ReleaseAfterPlayback()"]
     click E "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L252" "打开源码"
     F["LaserTurret.Fire()"]
@@ -1192,13 +1265,13 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|Attach -->
 - [DetachedPartSmokeTrail.Initialize](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L62)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|Initialize -->
-- [DetachedPartSmokeTrail.Update](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L142)
+- [DetachedPartSmokeTrail.Update](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L148)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|Update -->
-- [DetachedPartSmokeTrail.StopAndRelease](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L179)
+- [DetachedPartSmokeTrail.StopAndRelease](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L185)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|StopAndRelease -->
-- [DetachedPartSmokeTrail.ConfigureEnvelope](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L84)
+- [DetachedPartSmokeTrail.ConfigureEnvelope](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L90)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|ConfigureEnvelope -->
-- [DetachedPartSmokeTrail.UpdateEnvelope](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L114)
+- [DetachedPartSmokeTrail.UpdateEnvelope](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L120)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs|UpdateEnvelope -->
 - [VfxEffect.ReleaseAfterPlayback](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L252)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|ReleaseAfterPlayback -->
@@ -2863,9 +2936,9 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["Turret.FixedUpdate()"]
-    click A "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L73" "打开源码"
+    click A "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L80" "打开源码"
     B["TurretTargetSelector.FindNearestTarget()"]
-    click B "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L91" "打开源码"
+    click B "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L105" "打开源码"
     C["TurretHitscan.Fire()"]
     click C "../Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs#L10" "打开源码"
     D["Durability.ApplyDamage()"]
@@ -2979,9 +3052,9 @@ flowchart TD
     M -.->|协程等待并复核| N
 ```
 
-- [Turret.FixedUpdate](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L73)
+- [Turret.FixedUpdate](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L80)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|FixedUpdate -->
-- [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L91)
+- [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L105)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|FindNearestTarget -->
 - [TurretHitscan.Fire](../Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs#L10)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs|Fire -->
@@ -4140,11 +4213,11 @@ flowchart TD
     D["DurabilityDebugLabels.OnGUI()"]
     click D "../Assets/Scripts/Features/Diagnostics/Interface/DurabilityDebugLabels.cs#L9" "打开源码"
     E["Turret.FixedUpdate()"]
-    click E "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L73" "打开源码"
+    click E "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L80" "打开源码"
     F["Turret.RefreshTarget()"]
-    click F "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L111" "打开源码"
+    click F "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L118" "打开源码"
     G["TurretTargetSelector.FindNearestTarget()"]
-    click G "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L91" "打开源码"
+    click G "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L105" "打开源码"
     H["ControlUnit.GetDamageTargets()"]
     click H "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L19" "打开源码"
     I["Durability.OnTransformParentChanged()"]
@@ -4171,11 +4244,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|OnDisable -->
 - [DurabilityDebugLabels.OnGUI](../Assets/Scripts/Features/Diagnostics/Interface/DurabilityDebugLabels.cs#L9)
 <!-- source: Assets/Scripts/Features/Diagnostics/Interface/DurabilityDebugLabels.cs|OnGUI -->
-- [Turret.FixedUpdate](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L73)
+- [Turret.FixedUpdate](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L80)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|FixedUpdate -->
-- [Turret.RefreshTarget](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L111)
+- [Turret.RefreshTarget](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L118)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|RefreshTarget -->
-- [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L91)
+- [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L105)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|FindNearestTarget -->
 - [ControlUnit.GetDamageTargets](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L19)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|GetDamageTargets -->
@@ -5036,7 +5109,7 @@ flowchart TD
     H["BlockVfxLibrary.PlayTemplate()"]
     click H "../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L135" "打开源码"
     I["VfxEffectPool.Rent()"]
-    click I "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L25" "打开源码"
+    click I "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L34" "打开源码"
     J["VfxEffect.PlayOnce()"]
     click J "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L182" "打开源码"
     K["VfxEffect.ReleaseAfterPlayback()"]
@@ -5044,7 +5117,7 @@ flowchart TD
     L["VfxEffect.FinishPlayback()"]
     click L "../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L275" "打开源码"
     M["VfxEffectPool.Return()"]
-    click M "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L72" "打开源码"
+    click M "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L89" "打开源码"
     N["EnemySpawnPortalBaker.BakeMissing()"]
     click N "../Assets/Editor/Presentation/Effects/EnemySpawnPortalBaker.cs#L17" "打开源码"
     A --> C
@@ -5080,7 +5153,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs|Play -->
 - [BlockVfxLibrary.PlayTemplate](../Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs#L135)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/BlockVfxLibrary.cs|PlayTemplate -->
-- [VfxEffectPool.Rent](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L25)
+- [VfxEffectPool.Rent](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L34)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs|Rent -->
 - [VfxEffect.PlayOnce](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L182)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|PlayOnce -->
@@ -5088,7 +5161,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|ReleaseAfterPlayback -->
 - [VfxEffect.FinishPlayback](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L275)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs|FinishPlayback -->
-- [VfxEffectPool.Return](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L72)
+- [VfxEffectPool.Return](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L89)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs|Return -->
 - [EnemySpawnPortalBaker.BakeMissing](../Assets/Editor/Presentation/Effects/EnemySpawnPortalBaker.cs#L17)
 <!-- source: Assets/Editor/Presentation/Effects/EnemySpawnPortalBaker.cs|BakeMissing -->
@@ -5225,7 +5298,7 @@ flowchart TD
     G["EnemySpawner.SpawnBlockData()"]
     click G "../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L144" "打开源码"
     H["Turret.FixedUpdate()"]
-    click H "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L73" "打开源码"
+    click H "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L80" "打开源码"
     I["ProjectileTurret.Fire()"]
     click I "../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L164" "打开源码"
     J["TurretHitResolver.Apply()"]
@@ -5273,7 +5346,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Validation/WorldCombatPlayerChecks.cs|EnemyCargoFixture -->
 - [EnemySpawner.SpawnBlockData](../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L144)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs|SpawnBlockData -->
-- [Turret.FixedUpdate](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L73)
+- [Turret.FixedUpdate](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L80)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|FixedUpdate -->
 - [ProjectileTurret.Fire](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L164)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs|Fire -->
@@ -5602,7 +5675,7 @@ flowchart TD
     G["SiegeBattleFeedback.Update()"]
     click G "../Assets/Scripts/Features/Siege/Interface/SiegeBattleFeedback.cs#L18" "打开源码"
     H["SiegeSettings.CreateMatch()"]
-    click H "../Assets/Scripts/Features/Siege/SiegeSettings.cs#L112" "打开源码"
+    click H "../Assets/Scripts/Features/Siege/SiegeSettings.cs#L116" "打开源码"
     A -->|精英波次| B
     A --> C
     F --> E
@@ -5625,7 +5698,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|Update -->
 - [SiegeBattleFeedback.Update](../Assets/Scripts/Features/Siege/Interface/SiegeBattleFeedback.cs#L18)
 <!-- source: Assets/Scripts/Features/Siege/Interface/SiegeBattleFeedback.cs|Update -->
-- [SiegeSettings.CreateMatch](../Assets/Scripts/Features/Siege/SiegeSettings.cs#L112)
+- [SiegeSettings.CreateMatch](../Assets/Scripts/Features/Siege/SiegeSettings.cs#L116)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSettings.cs|CreateMatch -->
 
 ## 阵地战场景泊位交互与阶段HUD
@@ -6662,15 +6735,15 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["Turret.FixedUpdate()"]
-    click A "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L73" "打开源码"
+    click A "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L80" "打开源码"
     B["Turret.RefreshTarget()"]
-    click B "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L111" "打开源码"
+    click B "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L118" "打开源码"
     C["TurretTargetSelector.ConfigureVisibility()"]
-    click C "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L20" "打开源码"
+    click C "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L36" "打开源码"
     D["TurretTargetSelector.HasLineOfSight()"]
-    click D "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L26" "打开源码"
+    click D "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L42" "打开源码"
     E["TurretTargetSelector.FindNearestTarget()"]
-    click E "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L91" "打开源码"
+    click E "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L105" "打开源码"
     A --> B
     B --> C
     B --> D
@@ -6678,15 +6751,15 @@ flowchart TD
     E --> D
 ```
 
-- [Turret.FixedUpdate](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L73)
+- [Turret.FixedUpdate](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L80)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|FixedUpdate -->
-- [Turret.RefreshTarget](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L111)
+- [Turret.RefreshTarget](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L118)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|RefreshTarget -->
-- [TurretTargetSelector.ConfigureVisibility](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L20)
+- [TurretTargetSelector.ConfigureVisibility](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L36)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|ConfigureVisibility -->
-- [TurretTargetSelector.HasLineOfSight](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L26)
+- [TurretTargetSelector.HasLineOfSight](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L42)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|HasLineOfSight -->
-- [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L91)
+- [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L105)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|FindNearestTarget -->
 
 ## EnemyController 可编辑避障试验场
@@ -6962,7 +7035,7 @@ flowchart TD
     M["TurretProjectilePool.ClearAll()"]
     click M "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L71" "打开源码"
     N["VfxEffectPool.ClearActive()"]
-    click N "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L96" "打开源码"
+    click N "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L125" "打开源码"
     O["DestroyManager.EndSalvageSession()"]
     click O "../Assets/Scripts/Features/Combat/DestroyManager.cs#L206" "打开源码"
     P["SkirmishHud.SetState()"]
@@ -6978,7 +7051,7 @@ flowchart TD
     V["PowerNetwork.SupplyConnectedComponent()"]
     click V "../Assets/Scripts/Features/Power/PowerNetwork.cs#L383" "打开源码"
     W["Turret.SetStarted()"]
-    click W "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L63" "打开源码"
+    click W "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L70" "打开源码"
     X["SkirmishMatch.ApplyTeamColor()"]
     click X "../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L286" "打开源码"
     Y["SkirmishMatch.OnDestroy()"]
@@ -6994,7 +7067,7 @@ flowchart TD
     AD["CombatHud.Sample()"]
     click AD "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L171" "打开源码"
     AB["TurretTargetSelector.FindNearestTarget()"]
-    click AB "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L91" "打开源码"
+    click AB "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L105" "打开源码"
     A -.->|保存独立场景| B
     B --> C
     C --> D
@@ -7050,7 +7123,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs|ClearAndRestart -->
 - [TurretProjectilePool.ClearAll](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L71)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs|ClearAll -->
-- [VfxEffectPool.ClearActive](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L96)
+- [VfxEffectPool.ClearActive](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L125)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs|ClearActive -->
 - [DestroyManager.EndSalvageSession](../Assets/Scripts/Features/Combat/DestroyManager.cs#L206)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|EndSalvageSession -->
@@ -7066,7 +7139,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs|TeamCanFight -->
 - [PowerNetwork.SupplyConnectedComponent](../Assets/Scripts/Features/Power/PowerNetwork.cs#L383)
 <!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|SupplyConnectedComponent -->
-- [Turret.SetStarted](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L63)
+- [Turret.SetStarted](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L70)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|SetStarted -->
 - [SkirmishMatch.ApplyTeamColor](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L286)
 <!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs|ApplyTeamColor -->
@@ -7082,7 +7155,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|LateUpdate -->
 - [CombatHud.Sample](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L171)
 <!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|Sample -->
-- [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L91)
+- [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L105)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|FindNearestTarget -->
 
 ## 友敌 AI 调试绘制
@@ -7149,7 +7222,7 @@ flowchart TD
     G["ProceduralVoxelWorld.Generate()"]
     click G "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L101" "打开源码"
     H["VfxEffectPool.Rent()"]
-    click H "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L25" "打开源码"
+    click H "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L34" "打开源码"
     I["SceneObjectQuery.FindInScene()"]
     click I "../Assets/Scripts/Features/Bootstrap/SceneObjectQuery.cs#L15" "打开源码"
     A --> B
@@ -7176,7 +7249,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|Stage -->
 - [ProceduralVoxelWorld.Generate](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L101)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|Generate -->
-- [VfxEffectPool.Rent](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L25)
+- [VfxEffectPool.Rent](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L34)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs|Rent -->
 - [SceneObjectQuery.FindInScene](../Assets/Scripts/Features/Bootstrap/SceneObjectQuery.cs#L15)
 <!-- source: Assets/Scripts/Features/Bootstrap/SceneObjectQuery.cs|FindInScene -->

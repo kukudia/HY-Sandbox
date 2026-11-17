@@ -55,6 +55,19 @@ def main():
         )
 
     graph(
+        "残舱退场与待机演出",
+        "原有船体受损后仅剩无推进/武器驾驶舱，持续12秒移动不足2米才按未击杀退场；重组和移动重置窗口。待机场景复用真实基地/舰船与战斗服务，错峰低频索敌，生产瞄准与开火仍逐物理步。每65秒重开，额外烟火只有视觉；四镜头每7秒轮换。VFX活动预算仅演出场显式启用，默认场景保持不限。",
+        {"A": "SiegeWaveDirector.Tick", "B": "SiegeStrandedCockpit.ShouldRetire",
+         "C": "SiegeMatch.ResolveAttacker", "D": "BattleAttractStage.Start",
+         "E": "BattleAttractStage.RestoreBase", "F": "BattleAttractStage.Update",
+         "G": "BattleAttractStage.Spawn", "H": "Turret.DelayTargetSearch",
+         "I": "BattleAttractCamera.LateUpdate", "J": "BlockVfxLibrary.Play",
+         "K": "VfxEffectPool.Rent", "L": "VfxEffectPool.Return", "M": "VfxEffect.FinishPlayback"},
+        ['A --> B', 'B -->|超时且仍失能，非击杀| C', 'D --> E', 'F --> E',
+         'F --> G', 'G --> H', 'E --> H', 'F -->|纯视觉| J', 'J --> K',
+         'K -.->|播放结束| M', 'M --> L', 'F -.->|可用友舰| I'],
+    )
+    graph(
         "三套基地示例与自由观察",
         "主菜单和工坊模式面板读取同一配置中的三份真实蓝图，所选TextAsset贯穿模式切换并在Stage恢复，避免回退到Starter。基地战场景预挂观察组件，右键从非UI区域捕获；菜单、文字焦点、失焦及退出释放光标，退出恢复工坊镜头。",
         {"A": "MenuBlueprintLibrary.ReadBases", "B": "MainMenuController.RefreshLibrary",
