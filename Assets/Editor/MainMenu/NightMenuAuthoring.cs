@@ -10,6 +10,128 @@ using UnityEngine.UI;
 
 public static class NightMenuAuthoring
 {
+    [MenuItem("Tools/HY-Sandbox/Main Menu/Polish pause card")]
+    public static void PolishPauseCard()
+    {
+        if (EditorApplication.isPlaying)
+        {
+            throw new InvalidOperationException("Exit Play before saving pause layout.");
+        }
+
+        Scene scene = SceneManager.GetSceneByPath(MainMenuController.MainPath);
+        PauseMenu pause = SceneObjectQuery.FindInScene<PauseMenu>(scene, FindObjectsInactive.Include);
+        var data = new SerializedObject(pause);
+        Transform panel = ((GameObject)data.FindProperty("panel").objectReferenceValue).transform;
+        Transform existing = panel.Find("Pause Card");
+        RectTransform card;
+        if (existing == null)
+        {
+            card = new GameObject("Pause Card", typeof(RectTransform), typeof(Image)).GetComponent<RectTransform>();
+            Place(card, panel, Vector2.zero, new Vector2(620, 540));
+            card.GetComponent<Image>().color = new Color(.035f, .065f, .09f, .98f);
+        }
+        else
+        {
+            card = (RectTransform)existing;
+        }
+
+        RectTransform content = card.Find("Actions") as RectTransform;
+        if (content == null)
+        {
+            content = new GameObject("Actions", typeof(RectTransform), typeof(VerticalLayoutGroup)).GetComponent<RectTransform>();
+            Place(content, card, new Vector2(0, -25), new Vector2(420, 260));
+            VerticalLayoutGroup layout = content.GetComponent<VerticalLayoutGroup>();
+            layout.childAlignment = TextAnchor.MiddleCenter;
+            layout.childControlWidth = layout.childControlHeight = false;
+            layout.childForceExpandWidth = layout.childForceExpandHeight = false;
+            layout.spacing = 18;
+        }
+
+        foreach (string field in new[]
+        {
+            "resume",
+            "restart",
+            "mainMenu"
+        }
+
+        )
+        {
+            Button button = (Button)data.FindProperty(field).objectReferenceValue;
+            button.transform.SetParent(content, false);
+            button.GetComponent<RectTransform>().sizeDelta = new Vector2(420, 62);
+            Text label = button.GetComponentInChildren<Text>();
+            label.fontSize = 23;
+            label.rectTransform.anchorMin = Vector2.zero;
+            label.rectTransform.anchorMax = Vector2.one;
+            label.rectTransform.offsetMin = new Vector2(16, 0);
+            label.rectTransform.offsetMax = new Vector2(-16, 0);
+        }
+
+        PauseLabel(
+            card,
+            "Heading",
+            "PAUSED",
+            205,
+            38,
+            new Color(.2f, .88f, .83f));
+        PauseLabel(
+            card,
+            "Subtitle",
+            "Take a moment. Your current session is preserved.",
+            145,
+            19,
+            new Color(.65f, .78f, .84f));
+        PauseLabel(
+            card,
+            "Hint",
+            "ESC  /  RESUME",
+            -220,
+            17,
+            new Color(.55f, .7f, .77f));
+        EditorSceneManager.MarkSceneDirty(scene);
+        EditorSceneManager.SaveScene(scene);
+    }
+
+    private static void PauseLabel(
+        Transform parent,
+        string name,
+        string value,
+        float y,
+        int size,
+        Color color)
+    {
+        Transform child = parent.Find(name);
+        Text label = child == null ? new GameObject(name, typeof(RectTransform), typeof(Text)).GetComponent<Text>() : child.GetComponent<Text>();
+        Place(label.rectTransform, parent, new Vector2(0, y), new Vector2(570, 52));
+        label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        label.fontSize = size;
+        label.alignment = TextAnchor.MiddleCenter;
+        label.text = value;
+        label.color = color;
+        label.raycastTarget = false;
+    }
+
+    [MenuItem("Tools/HY-Sandbox/Main Menu/Fit menu to narrow screens")]
+    public static void FitMenuCanvas()
+    {
+        if (EditorApplication.isPlaying)
+        {
+            throw new InvalidOperationException("Exit Play before saving menu layout.");
+        }
+
+        Scene scene = SceneManager.GetSceneByPath(WorkshopNavigation.MenuPath);
+        if (!scene.isLoaded)
+        {
+            throw new InvalidOperationException("Load the saved MainMenu scene first.");
+        }
+
+        CanvasScaler scaler = scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<CanvasScaler>(true)).Single();
+        Undo.RecordObject(scaler, "Fit menu canvas");
+        scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
+        EditorSceneManager.MarkSceneDirty(scene);
+        EditorSceneManager.SaveScene(scene);
+    }
+
     [MenuItem("Tools/HY-Sandbox/Main Menu/Install battle attract entry")]
     public static void InstallAttractEntry()
     {

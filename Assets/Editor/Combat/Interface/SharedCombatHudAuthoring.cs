@@ -15,6 +15,39 @@ using Object = UnityEngine.Object;
 
 public static class SharedCombatHudAuthoring
 {
+    public static void InstallNameplateExclusions()
+    {
+        if (EditorApplication.isPlaying)
+        {
+            throw new InvalidOperationException("Exit Play before saving HUD references.");
+        }
+
+        GameObject root = PrefabUtility.LoadPrefabContents(PrefabPath);
+        try
+        {
+            ConfigureNameplateExclusions(root);
+            PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
+        }
+        finally
+        {
+            PrefabUtility.UnloadPrefabContents(root);
+        }
+    }
+
+    private static void ConfigureNameplateExclusions(GameObject root)
+    {
+        CanvasGroup[] regions = root.GetComponentsInChildren<CanvasGroup>(true).Where(group => group.name == "Debug Panel" || group.name == "Window" || group.name == "KillNotice" || group.GetComponent<CombatFeedItem>() != null).ToArray();
+        var data = new SerializedObject(root.GetComponent<CombatHud>());
+        SerializedProperty array = data.FindProperty("nameplateExclusions");
+        array.arraySize = regions.Length;
+        for (int i = 0; i < regions.Length; i++)
+        {
+            array.GetArrayElementAtIndex(i).objectReferenceValue = regions[i];
+        }
+
+        data.ApplyModifiedPropertiesWithoutUndo();
+    }
+
     public const string Folder = "Assets/Art/CombatHud";
     public const string PrefabPath = Folder + "/SharedCombatHud.prefab";
     private static TMP_FontAsset font;
@@ -249,6 +282,7 @@ public static class SharedCombatHudAuthoring
                 "notifications",
                 root.GetComponentInChildren<CombatNotifications>(true));
             SiegeGameplayHudAuthoring.Restyle(root);
+            ConfigureNameplateExclusions(root.gameObject);
             PrefabUtility.SaveAsPrefabAsset(root.gameObject, PrefabPath);
         }
         finally

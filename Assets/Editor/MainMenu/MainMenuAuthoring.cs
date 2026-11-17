@@ -175,7 +175,7 @@ public static class MainMenuAuthoring
         CanvasScaler scaler = canvasRoot.GetComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
         scaler.referenceResolution = new Vector2(1600, 900);
-        scaler.matchWidthOrHeight = .5f;
+        scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
         RectTransform backdrop = Rect("Backdrop", canvasRoot.transform, Vector2.zero, new Vector2(1600, 900));
         backdrop.anchorMin = Vector2.zero;
         backdrop.anchorMax = Vector2.one;

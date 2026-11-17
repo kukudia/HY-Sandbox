@@ -37,6 +37,8 @@ public static class SharedCombatHudPreview
             foreach (Vector2Int size in new[]
             {
                 new Vector2Int(1280, 720),
+                new Vector2Int(1280, 800),
+                new Vector2Int(1024, 768),
                 new Vector2Int(1920, 1080),
                 new Vector2Int(2560, 1440),
                 new Vector2Int(3440, 1440)
@@ -56,7 +58,7 @@ public static class SharedCombatHudPreview
             Application.logMessageReceived -= capture;
         }
 
-        return "Four shared HUD resolutions rendered and checked";
+        return "Six shared HUD resolutions rendered and checked";
     }
 
     private static void RenderOne(Vector2Int size)
@@ -131,7 +133,7 @@ public static class SharedCombatHudPreview
             row.transform.Find("Value").GetComponent<TMP_Text>().text = "50 / 100 N | PWR 100%";
             ((RectTransform)row.transform.Find("Track/Fill")).anchorMax = new Vector2(.5f, 1f);
             RectTransform feed = (RectTransform)root.transform.Find("Notifications/Kill Feed");
-            feed.anchoredPosition = new Vector2(-420, -155);
+            root.GetComponentInChildren<CombatNotifications>().SetToolsOpen(true, true);
             for (int i = 0; i < 5; i++)
             {
                 Transform item = feed.GetChild(i);
@@ -144,6 +146,52 @@ public static class SharedCombatHudPreview
             Canvas.ForceUpdateCanvases();
             camera.Render();
             Canvas.ForceUpdateCanvases();
+            CombatHud hud = root.GetComponent<CombatHud>();
+            var hudData = new SerializedObject(hud);
+            RectTransform overlay = (RectTransform)hudData.FindProperty("_overlay").objectReferenceValue;
+            SerializedProperty regions = hudData.FindProperty("nameplateExclusions");
+            if (regions.arraySize != 8)
+            {
+                throw new InvalidOperationException("HUD must reserve two tools, five reports and the kill notice.");
+            }
+
+            CanvasGroup[] groups = Enumerable.Range(0, regions.arraySize).Select(i => (CanvasGroup)regions.GetArrayElementAtIndex(i).objectReferenceValue).ToArray();
+            float[] alpha = groups.Select(g => g.alpha).ToArray();
+            foreach (CanvasGroup group in groups)
+            {
+                group.alpha = 0f;
+            }
+
+            foreach (CanvasGroup group in groups)
+            {
+                Vector3 center = overlay.InverseTransformPoint(((RectTransform)group.transform).TransformPoint(((RectTransform)group.transform).rect.center));
+                var area = new Rect((Vector2)center - Vector2.one, Vector2.one * 2f);
+                group.alpha = 1f;
+                if (hud.IsNameplateAreaAvailable(area))
+                {
+                    throw new InvalidOperationException("Visible UI does not reserve " + group.name);
+                }
+
+                group.alpha = 0f;
+                if (!hud.IsNameplateAreaAvailable(area))
+                {
+                    throw new InvalidOperationException("Hidden UI still blocks nameplates: " + group.name);
+                }
+            }
+
+            for (int i = 0; i < groups.Length; i++)
+            {
+                groups[i].alpha = alpha[i];
+            }
+
+            view.Present(
+                plate.anchoredPosition,
+                hud.IsNameplateAreaAvailable(new Rect(plate.anchoredPosition - Vector2.Scale(plate.rect.size, plate.pivot), plate.rect.size)),
+                .3f);
+            RectTransform notice = (RectTransform)root.transform.Find("Notifications/KillNotice");
+            RequireSeparate(feed, notice, camera, size);
+            RequireSeparate(feed, (RectTransform)window, camera, size);
+            RequireSeparate(notice, (RectTransform)window, camera, size);
             string[] names =
             {
                 "Battle Tools/ThrusterInfoPanel/Window",
@@ -194,6 +242,23 @@ public static class SharedCombatHudPreview
             target.Release();
             Object.DestroyImmediate(target);
             EditorSceneManager.ClosePreviewScene(scene);
+        }
+    }
+
+    private static void RequireSeparate(RectTransform first, RectTransform second, Camera camera, Vector2Int size)
+    {
+        Rect Bounds(RectTransform rect)
+        {
+            var corners = new Vector3[4];
+            rect.GetWorldCorners(corners);
+            Vector3 lower = camera.WorldToScreenPoint(corners[0]);
+            Vector3 upper = camera.WorldToScreenPoint(corners[2]);
+            return Rect.MinMaxRect(lower.x, lower.y, upper.x, upper.y);
+        }
+
+        if (Bounds(first).Overlaps(Bounds(second)))
+        {
+            throw new InvalidOperationException(first.name + " overlaps " + second.name + " at " + size);
         }
     }
 }

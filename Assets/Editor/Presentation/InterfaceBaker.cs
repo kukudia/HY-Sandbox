@@ -47,7 +47,7 @@ public static class InterfaceBaker
         CanvasScaler scaler = canvas.GetComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
         scaler.referenceResolution = new Vector2(1920f, 1080f);
-        scaler.matchWidthOrHeight = 0.5f;
+        scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
         Style(canvas.gameObject);
         // Preserve bar semantics and the existing 3D icon/thumbnail sprites.
         foreach (Image fill in canvas.GetComponentsInChildren<Image>(true).Where(i => i.name == "Fill"))

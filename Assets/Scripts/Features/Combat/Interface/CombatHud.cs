@@ -21,6 +21,9 @@ public sealed class CombatHud : MonoBehaviour
     private CombatHudPanels panels;
     [SerializeField, Min(0f), Tooltip("0沿用共享主题；远距观战场景可单独覆盖显示距离。")]
     private float nameplateDistanceOverride;
+    [SerializeField, Tooltip("名牌避让的工具抽屉、战报和击杀提示；只保留当前实际可见区域。")]
+    private CanvasGroup[] nameplateExclusions;
+    private readonly Vector3[] uiCorners = new Vector3[4];
     private readonly Dictionary<Cockpit, View> views = new Dictionary<Cockpit, View>();
     private readonly Stack<CombatNameplate> pool = new Stack<CombatNameplate>();
     private readonly List<ControlUnit> candidates = new List<ControlUnit>();
@@ -273,7 +276,9 @@ public sealed class CombatHud : MonoBehaviour
 
             visible &= !view.occluded;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(_overlay, screen, null, out Vector2 local);
-            Rect bounds = new Rect(local - new Vector2(120f, 0f), new Vector2(240f, 64f));
+            Vector2 plateSize = view.plate.Rect.rect.size;
+            Rect bounds = new Rect(local - Vector2.Scale(plateSize, view.plate.Rect.pivot), plateSize);
+            visible &= IsNameplateAreaAvailable(bounds);
             foreach (Rect other in placed)
             {
                 if (bounds.Overlaps(other))
@@ -295,6 +300,32 @@ public sealed class CombatHud : MonoBehaviour
     public bool HasVisibleNameplate(ControlUnit unit)
     {
         return unit != null && unit.cockpit != null && views.TryGetValue(unit.cockpit, out View view) && view.plate.IsVisible;
+    }
+
+    public bool IsNameplateAreaAvailable(Rect bounds)
+    {
+        if (nameplateExclusions == null)
+        {
+            return true;
+        }
+
+        foreach (CanvasGroup region in nameplateExclusions)
+        {
+            if (region == null || !region.gameObject.activeInHierarchy || region.alpha <= .01f)
+            {
+                continue;
+            }
+
+            ((RectTransform)region.transform).GetWorldCorners(uiCorners);
+            Vector3 low = _overlay.InverseTransformPoint(uiCorners[0]);
+            Vector3 high = _overlay.InverseTransformPoint(uiCorners[2]);
+            if (bounds.Overlaps(Rect.MinMaxRect(low.x, low.y, high.x, high.y)))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public static bool IsWorldPointOccluded(Camera camera, Vector3 target, Transform owner, RaycastHit[] hits)

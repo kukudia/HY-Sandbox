@@ -18,20 +18,31 @@ public sealed class CombatNotifications : MonoBehaviour
     private TMP_Text noticeDetail;
     [SerializeField]
     private RectTransform feedRoot;
+    [SerializeField, Tooltip("工具抽屉展开时战报右边距；保持顶部对齐，避免压住中央击杀提示。")]
+    private Vector2 toolsFeedPosition = new Vector2(-420f, -65f);
+    [SerializeField, Tooltip("工具展开时中央击杀提示水平偏移，给右侧抽屉留出净空。")]
+    private float toolsNoticeOffset = -120f;
     private readonly Queue<Message> pending = new Queue<Message>();
     private float noticeAt = -100f;
     private int combined;
     private Vector2 noticeOrigin;
+    private bool toolsOpen;
+    private Vector2 NoticeAnchor => noticeOrigin + Vector2.right * (toolsOpen ? toolsNoticeOffset : 0f);
     public int TotalMessages
     {
         get; private set;
     }
     public int PendingCount => pending.Count;
 
-    public void SetToolsOpen(bool open)
+    public void SetToolsOpen(bool open, bool immediate = false)
     {
-        Vector2 target = open ? new Vector2(-420f, -155f) : new Vector2(-20f, -65f);
-        feedRoot.anchoredPosition = Vector2.Lerp(feedRoot.anchoredPosition, target, 1f - Mathf.Exp(-16f * Time.unscaledDeltaTime));
+        toolsOpen = open;
+        Vector2 target = open ? toolsFeedPosition : new Vector2(-20f, -65f);
+        feedRoot.anchoredPosition = immediate ? target : Vector2.Lerp(feedRoot.anchoredPosition, target, 1f - Mathf.Exp(-16f * Time.unscaledDeltaTime));
+        if (immediate)
+        {
+            ((RectTransform)notice.transform).anchoredPosition = NoticeAnchor;
+        }
     }
 
     private struct Message
@@ -129,7 +140,7 @@ public sealed class CombatNotifications : MonoBehaviour
         float exit = Mathf.Clamp01((duration - age) / theme.exitDuration);
         notice.alpha = Mathf.Min(enter, exit);
         RectTransform rect = (RectTransform)notice.transform;
-        rect.anchoredPosition = noticeOrigin + Vector2.up * ((1f - exit) * 18f);
+        rect.anchoredPosition = NoticeAnchor + Vector2.up * ((1f - exit) * 18f);
         rect.localScale = Vector3.one * Mathf.Lerp(.94f, 1f, 1f - Mathf.Pow(1f - enter, 3f));
     }
 }

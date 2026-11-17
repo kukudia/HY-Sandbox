@@ -115,7 +115,8 @@ HY-Sandbox/
 │   │   ├── MainMenu/
 │   │   │   ├── MainMenuAuthoring.cs
 │   │   │   ├── MainMenuPlayChecks.cs
-│   │   │   └── NightMenuAuthoring.cs
+│   │   │   ├── NightMenuAuthoring.cs
+│   │   │   └── WorkshopLayoutPreview.cs
 │   │   ├── Navigation/
 │   │   │   └── Validation/
 │   │   │       ├── EnemyPredictionPlayChecks.cs
@@ -1447,27 +1448,29 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SharedCombatHudAuthoring | [`void Install()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L25) | public static |
-| SharedCombatHudAuthoring | [`void InstallScene(Scene scene)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L66) | public static |
-| SharedCombatHudAuthoring | [`void EnsureAssets()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L171) | private static |
-| SharedCombatHudAuthoring | [`void RebuildPrefab()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L216) | public static |
-| SharedCombatHudAuthoring | [`void BakePrefab()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L228) | private static |
-| SharedCombatHudAuthoring | [`RectTransform BuildNameplate(Transform parent)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L260) | private static |
-| SharedCombatHudAuthoring | [`CombatThreatMarkers BuildThreats(Transform parent, CombatHud hud)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L313) | private static |
-| SharedCombatHudAuthoring | [`CombatNotifications BuildNotifications(RectTransform parent)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L365) | private static |
-| SharedCombatHudAuthoring | [`void BuildPanels(RectTransform root)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L446) | private static |
-| SharedCombatHudAuthoring | [`ThrusterInfoPanel BuildThrusters(Transform parent)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L512) | private static |
-| SharedCombatHudAuthoring | [`RectTransform Drawer(string name, Transform parent, Vector2 size)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L609) | private static |
-| SharedCombatHudAuthoring | [`T Find(Scene scene)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L617) | public static |
-| SharedCombatHudAuthoring | [`void Set(Object owner, string field, Object value)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L623) | public static |
-| SharedCombatHudAuthoring | [`void SetArray(Object owner, string field, Object[] values)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L630) | private static |
-| SharedCombatHudAuthoring | [`RectTransform Rect(string name, Transform parent, Vector2 position, Vector2 size)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L643) | private static |
-| SharedCombatHudAuthoring | [`void Stretch(RectTransform rect)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L653) | private static |
-| SharedCombatHudAuthoring | [`Image Back(RectTransform rect, Color color)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L661) | private static |
-| SharedCombatHudAuthoring | [`RectTransform Fill(RectTransform parent, string name, Color color)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L669) | private static |
-| SharedCombatHudAuthoring | [`CanvasGroup Group(RectTransform rect, bool interactive = false)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L678) | private static |
-| SharedCombatHudAuthoring | [`TMP_Text Label( Transform parent, string name, string text, Vector2 position, Vector2 size, int fontSize, Color color)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L685) | private static |
-| SharedCombatHudAuthoring | [`Button Button(Transform parent, string title, Vector2 position, Vector2 size)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L709) | private static |
+| SharedCombatHudAuthoring | [`void InstallNameplateExclusions()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L18) | public static |
+| SharedCombatHudAuthoring | [`void ConfigureNameplateExclusions(GameObject root)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L37) | private static |
+| SharedCombatHudAuthoring | [`void Install()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L58) | public static |
+| SharedCombatHudAuthoring | [`void InstallScene(Scene scene)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L99) | public static |
+| SharedCombatHudAuthoring | [`void EnsureAssets()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L204) | private static |
+| SharedCombatHudAuthoring | [`void RebuildPrefab()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L249) | public static |
+| SharedCombatHudAuthoring | [`void BakePrefab()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L261) | private static |
+| SharedCombatHudAuthoring | [`RectTransform BuildNameplate(Transform parent)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L294) | private static |
+| SharedCombatHudAuthoring | [`CombatThreatMarkers BuildThreats(Transform parent, CombatHud hud)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L347) | private static |
+| SharedCombatHudAuthoring | [`CombatNotifications BuildNotifications(RectTransform parent)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L399) | private static |
+| SharedCombatHudAuthoring | [`void BuildPanels(RectTransform root)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L480) | private static |
+| SharedCombatHudAuthoring | [`ThrusterInfoPanel BuildThrusters(Transform parent)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L546) | private static |
+| SharedCombatHudAuthoring | [`RectTransform Drawer(string name, Transform parent, Vector2 size)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L643) | private static |
+| SharedCombatHudAuthoring | [`T Find(Scene scene)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L651) | public static |
+| SharedCombatHudAuthoring | [`void Set(Object owner, string field, Object value)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L657) | public static |
+| SharedCombatHudAuthoring | [`void SetArray(Object owner, string field, Object[] values)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L664) | private static |
+| SharedCombatHudAuthoring | [`RectTransform Rect(string name, Transform parent, Vector2 position, Vector2 size)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L677) | private static |
+| SharedCombatHudAuthoring | [`void Stretch(RectTransform rect)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L687) | private static |
+| SharedCombatHudAuthoring | [`Image Back(RectTransform rect, Color color)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L695) | private static |
+| SharedCombatHudAuthoring | [`RectTransform Fill(RectTransform parent, string name, Color color)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L703) | private static |
+| SharedCombatHudAuthoring | [`CanvasGroup Group(RectTransform rect, bool interactive = false)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L712) | private static |
+| SharedCombatHudAuthoring | [`TMP_Text Label( Transform parent, string name, string text, Vector2 position, Vector2 size, int fontSize, Color color)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L719) | private static |
+| SharedCombatHudAuthoring | [`Button Button(Transform parent, string title, Vector2 position, Vector2 size)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L743) | private static |
 
 ## Assets/Editor/Combat/Interface/SharedCombatHudPreview.cs
 
@@ -1476,7 +1479,8 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SharedCombatHudPreview | [`string Render()`](../Assets/Editor/Combat/Interface/SharedCombatHudPreview.cs#L17) | public static |
-| SharedCombatHudPreview | [`void RenderOne(Vector2Int size)`](../Assets/Editor/Combat/Interface/SharedCombatHudPreview.cs#L62) | private static |
+| SharedCombatHudPreview | [`void RenderOne(Vector2Int size)`](../Assets/Editor/Combat/Interface/SharedCombatHudPreview.cs#L64) | private static |
+| SharedCombatHudPreview | [`void RequireSeparate(RectTransform first, RectTransform second, Camera camera, Vector2Int size)`](../Assets/Editor/Combat/Interface/SharedCombatHudPreview.cs#L248) | private static |
 
 ## Assets/Editor/Combat/SkirmishArenaAuthoring.cs
 
@@ -1537,14 +1541,14 @@ HY-Sandbox/
 | CombatHudPlayProbe | [`void OnPlayModeChanged(PlayModeStateChange state)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L81) | private static |
 | CombatHudPlayProbe | [`void Tick()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L111) | private static |
 | CombatHudPlayProbe | [`IEnumerator Siege()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L140) | private static |
-| CombatHudPlayProbe | [`IEnumerator Legacy()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L259) | private static |
-| CombatHudPlayProbe | [`IEnumerator Flow()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L296) | private static |
-| CombatHudPlayProbe | [`IEnumerator Recovery()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L439) | private static |
-| CombatHudPlayProbe | [`IEnumerator Arena()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L572) | private static |
-| CombatHudPlayProbe | [`IEnumerator Exploration()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L616) | private static |
-| CombatHudPlayProbe | [`void Screenshot(string name)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L657) | private static |
-| CombatHudPlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L663) | private static |
-| CombatHudPlayProbe | [`void Finish()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L674) | private static |
+| CombatHudPlayProbe | [`IEnumerator Legacy()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L285) | private static |
+| CombatHudPlayProbe | [`IEnumerator Flow()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L322) | private static |
+| CombatHudPlayProbe | [`IEnumerator Recovery()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L465) | private static |
+| CombatHudPlayProbe | [`IEnumerator Arena()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L598) | private static |
+| CombatHudPlayProbe | [`IEnumerator Exploration()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L642) | private static |
+| CombatHudPlayProbe | [`void Screenshot(string name)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L683) | private static |
+| CombatHudPlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L689) | private static |
+| CombatHudPlayProbe | [`void Finish()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L700) | private static |
 
 ## Assets/Editor/Combat/Validation/EnemyBlueprintPoolChecks.cs
 
@@ -1884,15 +1888,27 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| NightMenuAuthoring | [`void InstallAttractEntry()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L13) | public static |
-| NightMenuAuthoring | [`void InstallPause()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L44) | public static |
-| NightMenuAuthoring | [`void InstallSiegeRestart()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L120) | private static |
-| NightMenuAuthoring | [`void InstallPreferences()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L157) | public static |
-| NightMenuAuthoring | [`void StylePreference(Toggle toggle)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L236) | private static |
-| NightMenuAuthoring | [`RectTransform Page(string name, Transform parent)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L267) | private static |
-| NightMenuAuthoring | [`Button Tab(Button template, Transform parent, string name, Vector2 position)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L278) | private static |
-| NightMenuAuthoring | [`void Place(RectTransform rect, Transform parent, Vector2 position, Vector2 size)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L288) | private static |
-| NightMenuAuthoring | [`void Bind(SerializedObject data, string name, UnityEngine.Object value)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L296) | private static |
+| NightMenuAuthoring | [`void PolishPauseCard()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L13) | public static |
+| NightMenuAuthoring | [`void PauseLabel( Transform parent, string name, string value, float y, int size, Color color)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L95) | private static |
+| NightMenuAuthoring | [`void FitMenuCanvas()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L114) | public static |
+| NightMenuAuthoring | [`void InstallAttractEntry()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L135) | public static |
+| NightMenuAuthoring | [`void InstallPause()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L166) | public static |
+| NightMenuAuthoring | [`void InstallSiegeRestart()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L242) | private static |
+| NightMenuAuthoring | [`void InstallPreferences()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L279) | public static |
+| NightMenuAuthoring | [`void StylePreference(Toggle toggle)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L358) | private static |
+| NightMenuAuthoring | [`RectTransform Page(string name, Transform parent)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L389) | private static |
+| NightMenuAuthoring | [`Button Tab(Button template, Transform parent, string name, Vector2 position)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L400) | private static |
+| NightMenuAuthoring | [`void Place(RectTransform rect, Transform parent, Vector2 position, Vector2 size)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L410) | private static |
+| NightMenuAuthoring | [`void Bind(SerializedObject data, string name, UnityEngine.Object value)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L418) | private static |
+
+## Assets/Editor/MainMenu/WorkshopLayoutPreview.cs
+
+// 职责：以保存的真实Canvas制作工坊、暂停及设置页多分辨率预览，检查可见交互区域。 // 入口：Render()；独立PreviewScene，禁止运行态写回，不初始化个人存档。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorkshopLayoutPreview | [`string Render()`](../Assets/Editor/MainMenu/WorkshopLayoutPreview.cs#L15) | public static |
+| WorkshopLayoutPreview | [`void RenderOne(Canvas source, string page, Vector2Int size)`](../Assets/Editor/MainMenu/WorkshopLayoutPreview.cs#L81) | private static |
 
 ## Assets/Editor/Navigation/Validation/EnemyPredictionPlayChecks.cs
 
@@ -4393,21 +4409,22 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| CombatHud | [`void Bind(Scene scene, Camera camera, bool showBothTeams)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L64) | public |
-| CombatHud | [`void SetFocus(ControlUnit unit)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L73) | public |
-| CombatHud | [`void Unbind()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L78) | public |
-| CombatHud | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L87) | private |
-| CombatHud | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L92) | private |
-| CombatHud | [`void ResetHud()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L97) | public |
-| CombatHud | [`void ShowPlayerKill(string enemyName)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L113) | public |
-| CombatHud | [`void ShowCombatKill(string victim, string attacker, string score)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L124) | public |
-| CombatHud | [`void ShowDestruction(string victim, string attacker, string detail, bool celebrate)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L129) | public |
-| CombatHud | [`void LateUpdate()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L137) | private |
-| CombatHud | [`void Sample()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L171) | private |
-| CombatHud | [`int ComparePriority(ControlUnit left, ControlUnit right)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L243) | private |
-| CombatHud | [`void Project()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L254) | private |
-| CombatHud | [`bool HasVisibleNameplate(ControlUnit unit)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L295) | public |
-| CombatHud | [`bool IsWorldPointOccluded(Camera camera, Vector3 target, Transform owner, RaycastHit[] hits)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L300) | public static |
+| CombatHud | [`void Bind(Scene scene, Camera camera, bool showBothTeams)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L67) | public |
+| CombatHud | [`void SetFocus(ControlUnit unit)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L76) | public |
+| CombatHud | [`void Unbind()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L81) | public |
+| CombatHud | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L90) | private |
+| CombatHud | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L95) | private |
+| CombatHud | [`void ResetHud()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L100) | public |
+| CombatHud | [`void ShowPlayerKill(string enemyName)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L116) | public |
+| CombatHud | [`void ShowCombatKill(string victim, string attacker, string score)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L127) | public |
+| CombatHud | [`void ShowDestruction(string victim, string attacker, string detail, bool celebrate)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L132) | public |
+| CombatHud | [`void LateUpdate()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L140) | private |
+| CombatHud | [`void Sample()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L174) | private |
+| CombatHud | [`int ComparePriority(ControlUnit left, ControlUnit right)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L246) | private |
+| CombatHud | [`void Project()`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L257) | private |
+| CombatHud | [`bool HasVisibleNameplate(ControlUnit unit)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L300) | public |
+| CombatHud | [`bool IsNameplateAreaAvailable(Rect bounds)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L305) | public |
+| CombatHud | [`bool IsWorldPointOccluded(Camera camera, Vector3 target, Transform owner, RaycastHit[] hits)`](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L331) | public static |
 
 ## Assets/Scripts/Features/Combat/Interface/CombatHudTheme.cs
 
@@ -4442,12 +4459,12 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| CombatNotifications | [`void SetToolsOpen(bool open)`](../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L31) | public |
-| CombatNotifications | [`void Awake()`](../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L43) | private |
-| CombatNotifications | [`void Push(string victim, string attacker, string detail, bool celebrate)`](../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L49) | public |
-| CombatNotifications | [`void Clear()`](../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L79) | public |
-| CombatNotifications | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L96) | private |
-| CombatNotifications | [`void Update()`](../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L101) | private |
+| CombatNotifications | [`void SetToolsOpen(bool open, bool immediate = false)`](../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L37) | public |
+| CombatNotifications | [`void Awake()`](../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L54) | private |
+| CombatNotifications | [`void Push(string victim, string attacker, string detail, bool celebrate)`](../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L60) | public |
+| CombatNotifications | [`void Clear()`](../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L90) | public |
+| CombatNotifications | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L107) | private |
+| CombatNotifications | [`void Update()`](../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L112) | private |
 
 ## Assets/Scripts/Features/Combat/Interface/Panels/CombatHudPanels.cs
 

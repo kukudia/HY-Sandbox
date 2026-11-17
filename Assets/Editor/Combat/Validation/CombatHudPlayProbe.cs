@@ -164,7 +164,7 @@ public static class CombatHudPlayProbe
         hud.Panels.ClearDebug();
         Check(
             "Debug drawer controls existing debug service",
-            !DebugManager.instance.showPowerRange && !DebugManager.instance.ShowsAI(UnitFaction.Enemy));
+            !DebugManager.instance.showPowerRange && !DebugManager.instance.showPowerConnections && !DebugManager.instance.showConnectionStatus && !DebugManager.instance.showDurabilityStatus && !DebugManager.instance.showPowerStatus && !DebugManager.instance.showFlightTrajectories);
         Check("Real wave starts", stage.BeginWave());
         while (!hud.Candidates.Any(unit => unit.faction == UnitFaction.Enemy))
         {
@@ -182,6 +182,32 @@ public static class CombatHudPlayProbe
         Vector3 screen = camera.WorldToScreenPoint(enemy.cockpit.transform.position + Vector3.up * 3f);
         Vector3 actual = RectTransformUtility.WorldToScreenPoint(null, plate.transform.position);
         Check("Nameplate anchor matches projected cockpit", Vector2.Distance(screen, actual) < 2f);
+        Pose centered = new Pose(camera.transform.position, camera.transform.rotation);
+        hud.Panels.ToggleDebug();
+        yield return .35f;
+        CanvasGroup debugRegion = hud.GetComponentsInChildren<CanvasGroup>(true).Single(group => group.name == "Debug Panel");
+        Vector3 destination = RectTransformUtility.WorldToScreenPoint(null, debugRegion.transform.TransformPoint(((RectTransform)debugRegion.transform).rect.center));
+        Vector3 targetDirection = enemy.cockpit.transform.position + Vector3.up * 3f - camera.transform.position;
+        Ray wantedRay = camera.ScreenPointToRay(destination);
+        camera.transform.rotation = Quaternion.FromToRotation(wantedRay.direction, targetDirection) * camera.transform.rotation;
+        yield return .4f;
+        Check("Projected nameplate yields to visible debug drawer", !hud.HasVisibleNameplate(enemy));
+        hud.Panels.CloseAll();
+        yield return .4f;
+        Check("Closing debug drawer releases projected nameplate", hud.HasVisibleNameplate(enemy));
+        camera.transform.SetPositionAndRotation(centered.position, centered.rotation);
+        PauseMenu pause = Object.FindAnyObjectByType<PauseMenu>();
+        pause.Toggle();
+        yield return .15f;
+        Button[] pauseActions = new SerializedObject(pause).FindProperty("panel").objectReferenceValue is GameObject pauseRoot ? pauseRoot.GetComponentsInChildren<Button>() : Array.Empty<Button>();
+        Check("Combat pause exposes three real actions", PauseMenu.IsPaused && pauseActions.Length == 3);
+        Text menuLabel = pauseActions.Single(button => button.name.StartsWith("Main Menu")).GetComponentInChildren<Text>();
+        Check(
+            "Pause menu label has full text geometry",
+            menuLabel.text == "MAIN MENU" && menuLabel.cachedTextGenerator.characterCountVisible >= 8);
+        pauseActions.Single(button => button.name.StartsWith("Resume")).onClick.Invoke();
+        Check("Pause resumes exact prepaused time scale", !PauseMenu.IsPaused && Time.timeScale == 0f);
+        yield return .25f;
         RectTransform fill = (RectTransform)plate.transform.Find("Bar/Fill");
         RectTransform lag = (RectTransform)plate.transform.Find("Bar/Damage");
         Durability health = enemy.cockpit.GetComponent<Durability>();

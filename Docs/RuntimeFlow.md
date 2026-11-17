@@ -3445,7 +3445,7 @@ flowchart TD
     E["LootDrop.LateUpdate()"]
     click E "../Assets/Scripts/Features/Salvage/Drops/LootDrop.cs#L327" "打开源码"
     F["CombatHud.IsWorldPointOccluded()"]
-    click F "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L300" "打开源码"
+    click F "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L331" "打开源码"
     G["LootDrop.Carry()"]
     click G "../Assets/Scripts/Features/Salvage/Drops/LootDrop.cs#L207" "打开源码"
     H["LootDrop.ResetDisplayPose()"]
@@ -3472,7 +3472,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Salvage/Drops/LootDrop.cs|Update -->
 - [LootDrop.LateUpdate](../Assets/Scripts/Features/Salvage/Drops/LootDrop.cs#L327)
 <!-- source: Assets/Scripts/Features/Salvage/Drops/LootDrop.cs|LateUpdate -->
-- [CombatHud.IsWorldPointOccluded](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L300)
+- [CombatHud.IsWorldPointOccluded](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L331)
 <!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|IsWorldPointOccluded -->
 - [LootDrop.Carry](../Assets/Scripts/Features/Salvage/Drops/LootDrop.cs#L207)
 <!-- source: Assets/Scripts/Features/Salvage/Drops/LootDrop.cs|Carry -->
@@ -7088,9 +7088,9 @@ flowchart TD
     H["SkirmishHud.ShowKill()"]
     click H "../Assets/Scripts/Features/Combat/Skirmish/SkirmishHud.cs#L31" "打开源码"
     I["CombatHud.ShowCombatKill()"]
-    click I "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L124" "打开源码"
+    click I "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L127" "打开源码"
     J["CombatNotifications.Push()"]
-    click J "../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L49" "打开源码"
+    click J "../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L60" "打开源码"
     K["SkirmishMatch.Update()"]
     click K "../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L204" "打开源码"
     L["SkirmishMatch.ClearAndRestart()"]
@@ -7108,7 +7108,7 @@ flowchart TD
     R["EnemyLabCamera.Update()"]
     click R "../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabCamera.cs#L74" "打开源码"
     S["CombatHud.ShowPlayerKill()"]
-    click S "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L113" "打开源码"
+    click S "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L116" "打开源码"
     T["SkirmishMatch.TeamCanFight()"]
     click T "../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L269" "打开源码"
     V["PowerNetwork.SupplyConnectedComponent()"]
@@ -7124,11 +7124,11 @@ flowchart TD
     Z["ControlUnit.TryGetTotalDurability()"]
     click Z "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L137" "打开源码"
     AA["CombatHud.IsWorldPointOccluded()"]
-    click AA "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L300" "打开源码"
+    click AA "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L331" "打开源码"
     AC["CombatHud.LateUpdate()"]
-    click AC "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L137" "打开源码"
+    click AC "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L140" "打开源码"
     AD["CombatHud.Sample()"]
-    click AD "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L171" "打开源码"
+    click AD "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L174" "打开源码"
     AB["TurretTargetSelector.FindNearestTarget()"]
     click AB "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L105" "打开源码"
     A -.->|保存独立场景| B
@@ -7176,9 +7176,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs|Eliminate -->
 - [SkirmishHud.ShowKill](../Assets/Scripts/Features/Combat/Skirmish/SkirmishHud.cs#L31)
 <!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishHud.cs|ShowKill -->
-- [CombatHud.ShowCombatKill](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L124)
+- [CombatHud.ShowCombatKill](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L127)
 <!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|ShowCombatKill -->
-- [CombatNotifications.Push](../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L49)
+- [CombatNotifications.Push](../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L60)
 <!-- source: Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs|Push -->
 - [SkirmishMatch.Update](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L204)
 <!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs|Update -->
@@ -7196,7 +7196,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabMovingObstacle.cs|ResetMotion -->
 - [EnemyLabCamera.Update](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabCamera.cs#L74)
 <!-- source: Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabCamera.cs|Update -->
-- [CombatHud.ShowPlayerKill](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L113)
+- [CombatHud.ShowPlayerKill](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L116)
 <!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|ShowPlayerKill -->
 - [SkirmishMatch.TeamCanFight](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L269)
 <!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs|TeamCanFight -->
@@ -7212,11 +7212,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs|ReleaseTeamMaterial -->
 - [ControlUnit.TryGetTotalDurability](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L137)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|TryGetTotalDurability -->
-- [CombatHud.IsWorldPointOccluded](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L300)
+- [CombatHud.IsWorldPointOccluded](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L331)
 <!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|IsWorldPointOccluded -->
-- [CombatHud.LateUpdate](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L137)
+- [CombatHud.LateUpdate](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L140)
 <!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|LateUpdate -->
-- [CombatHud.Sample](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L171)
+- [CombatHud.Sample](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L174)
 <!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|Sample -->
 - [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L105)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|FindNearestTarget -->
@@ -7328,13 +7328,13 @@ flowchart TD
     B["SiegeCombatHud.Enter()"]
     click B "../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L63" "打开源码"
     C["CombatHud.Bind()"]
-    click C "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L64" "打开源码"
+    click C "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L67" "打开源码"
     D["CombatHud.LateUpdate()"]
-    click D "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L137" "打开源码"
+    click D "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L140" "打开源码"
     E["CombatHud.Sample()"]
-    click E "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L171" "打开源码"
+    click E "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L174" "打开源码"
     F["CombatHud.Project()"]
-    click F "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L254" "打开源码"
+    click F "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L257" "打开源码"
     G["CombatNameplate.Sample()"]
     click G "../Assets/Scripts/Features/Combat/Interface/Nameplates/CombatNameplate.cs#L47" "打开源码"
     H["CombatNameplate.Present()"]
@@ -7348,9 +7348,9 @@ flowchart TD
     L["SiegeCombatHud.AttackerResolved()"]
     click L "../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L86" "打开源码"
     M["CombatNotifications.Push()"]
-    click M "../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L49" "打开源码"
+    click M "../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L60" "打开源码"
     N["CombatNotifications.Update()"]
-    click N "../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L101" "打开源码"
+    click N "../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L112" "打开源码"
     O["CombatHudPanels.ToggleThrusters()"]
     click O "../Assets/Scripts/Features/Combat/Interface/Panels/CombatHudPanels.cs#L87" "打开源码"
     P["ThrusterInfoPanel.BindOwner()"]
@@ -7378,13 +7378,21 @@ flowchart TD
     T["CombatHudPanels.Restore()"]
     click T "../Assets/Scripts/Features/Combat/Interface/Panels/CombatHudPanels.cs#L64" "打开源码"
     U["CombatHud.Unbind()"]
-    click U "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L78" "打开源码"
+    click U "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L81" "打开源码"
+    AC["CombatHud.IsNameplateAreaAvailable()"]
+    click AC "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L305" "打开源码"
+    AD["CombatNotifications.SetToolsOpen()"]
+    click AD "../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L37" "打开源码"
+    AE["CombatHudPanels.Update()"]
+    click AE "../Assets/Scripts/Features/Combat/Interface/Panels/CombatHudPanels.cs#L116" "打开源码"
     A --> B
     B --> C
     D --> E
     D --> F
     E --> G
     F --> H
+    F -->|实际名牌尺寸，避让可见工具和通知| AC
+    AE --> AD
     I --> J
     K -.->|已结算AttackerResolved事件| L
     L -->|经ShowDestruction| M
@@ -7405,13 +7413,13 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Enter -->
 - [SiegeCombatHud.Enter](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L63)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs|Enter -->
-- [CombatHud.Bind](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L64)
+- [CombatHud.Bind](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L67)
 <!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|Bind -->
-- [CombatHud.LateUpdate](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L137)
+- [CombatHud.LateUpdate](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L140)
 <!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|LateUpdate -->
-- [CombatHud.Sample](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L171)
+- [CombatHud.Sample](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L174)
 <!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|Sample -->
-- [CombatHud.Project](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L254)
+- [CombatHud.Project](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L257)
 <!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|Project -->
 - [CombatNameplate.Sample](../Assets/Scripts/Features/Combat/Interface/Nameplates/CombatNameplate.cs#L47)
 <!-- source: Assets/Scripts/Features/Combat/Interface/Nameplates/CombatNameplate.cs|Sample -->
@@ -7425,9 +7433,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs|Tick -->
 - [SiegeCombatHud.AttackerResolved](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L86)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs|AttackerResolved -->
-- [CombatNotifications.Push](../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L49)
+- [CombatNotifications.Push](../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L60)
 <!-- source: Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs|Push -->
-- [CombatNotifications.Update](../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L101)
+- [CombatNotifications.Update](../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L112)
 <!-- source: Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs|Update -->
 - [CombatHudPanels.ToggleThrusters](../Assets/Scripts/Features/Combat/Interface/Panels/CombatHudPanels.cs#L87)
 <!-- source: Assets/Scripts/Features/Combat/Interface/Panels/CombatHudPanels.cs|ToggleThrusters -->
@@ -7455,5 +7463,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs|Exit -->
 - [CombatHudPanels.Restore](../Assets/Scripts/Features/Combat/Interface/Panels/CombatHudPanels.cs#L64)
 <!-- source: Assets/Scripts/Features/Combat/Interface/Panels/CombatHudPanels.cs|Restore -->
-- [CombatHud.Unbind](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L78)
+- [CombatHud.Unbind](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L81)
 <!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|Unbind -->
+- [CombatHud.IsNameplateAreaAvailable](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L305)
+<!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|IsNameplateAreaAvailable -->
+- [CombatNotifications.SetToolsOpen](../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L37)
+<!-- source: Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs|SetToolsOpen -->
+- [CombatHudPanels.Update](../Assets/Scripts/Features/Combat/Interface/Panels/CombatHudPanels.cs#L116)
+<!-- source: Assets/Scripts/Features/Combat/Interface/Panels/CombatHudPanels.cs|Update -->
