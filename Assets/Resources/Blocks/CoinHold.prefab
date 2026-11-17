@@ -1877,6 +1877,7 @@ MonoBehaviour:
   canExplode: 0
   showConnectors: 1
   showLabel: 0
+  hangarOwnerId: 
   uniqueId: 
 --- !u!114 &1238965620047547172
 MonoBehaviour:

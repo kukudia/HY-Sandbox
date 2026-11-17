@@ -61,7 +61,7 @@
     <Analyzer Include="D:\Unity\Editors\6000.6.8f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
     <Analyzer Include="D:\Unity\Editors\6000.6.8f1\Editor\Data\Tools\BuildPipeline\Unity.Analyzers\Unity.Analyzers.Common.dll" />
     <Analyzer Include="D:\Unity\Editors\6000.6.8f1\Editor\Data\Tools\BuildPipeline\Unity.Analyzers\Unity.Analyzers.LongLiving.dll" />
-    <Analyzer Include="D:\git_projects\Unity\HY-Sandbox\Library\PackageCache\com.unity.pipeline@ab05e9cd7f74\Runtime\Analyzers\IlInterpreterAnalyzer.dll" />
+    <Analyzer Include="D:\git_projects\Unity\HY-Sandbox\Library\PackageCache\com.unity.pipeline@178b93997022\Runtime\Analyzers\IlInterpreterAnalyzer.dll" />
     <Analyzer Include="D:\Unity\Editors\6000.6.8f1\Editor\Data\BCLExtensions\TargetingPacks\netstandard2.1\analyzers\dotnet\roslyn4.0\cs\Microsoft.Extensions.Logging.Generators.dll" />
     <Analyzer Include="D:\Unity\Editors\6000.6.8f1\Editor\Data\BCLExtensions\TargetingPacks\netstandard2.1\analyzers\dotnet\roslyn4.0\cs\System.Text.Json.SourceGeneration.dll" />
   </ItemGroup>
@@ -101,12 +101,13 @@
     <Compile Include="Assets\Scripts\Features\Simulation\Units\ModularUnitFactory.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Blocks\HoverControllerStatusLight.cs" />
     <Compile Include="Assets\Scripts\Features\World\Buildings\Placement\WorldBuildingPalette.cs" />
-    <Compile Include="Assets\Scripts\Features\Building\Actions\IBlockAction.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BuildManager.cs" />
+    <Compile Include="Assets\Scripts\Features\Building\Actions\IBlockAction.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\BeamFade.cs" />
     <Compile Include="Assets\Scripts\Features\World\Buildings\Presentation\WorldBuildingRenderCache.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Actions\GroupAction.cs" />
     <Compile Include="Assets\Scripts\Features\Navigation\Diagnostics\Lab\EnemyLabMovingObstacle.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\Gameplay\SiegePhaseClock.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Skirmish\SkirmishMatch.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BlueprintLoader.cs" />
     <Compile Include="Assets\Scripts\Features\Navigation\Diagnostics\Lab\EnemyAvoidanceCourse.cs" />
@@ -279,7 +280,6 @@
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\ProjectileIntercept.cs" />
     <Compile Include="Assets\Scripts\Features\Navigation\Diagnostics\Lab\EnemyLabRecorder.cs" />
     <Compile Include="Assets\Scripts\Features\World\Presentation\WorldTerrainTransitionMesh.cs" />
-    <Compile Include="Assets\Scripts\Features\Siege\Gameplay\SiegeConstructionPanel.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BuildingEditor\OutpostBaseDesigner.cs" />
     <Compile Include="Assets\Scripts\Features\World\WorldLab\WorldLabController.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BuildingEditor\BuildingFoundationData.cs" />
@@ -380,6 +380,7 @@
     <Compile Include="Assets\UNI VFX\Common\Scripts\UNI_SimpleCameraController.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Blocks\CargoHoldView.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Connections\BatchConnectionBuilder.cs" />
+    <Compile Include="Assets\Scripts\Features\Combat\Interface\Threats\CombatThreatIcon.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Enemies\EnemyIdentity.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1045,7 +1046,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityPipeline.Microsoft.CodeAnalysis.CSharp">
-      <HintPath>Library\PackageCache\com.unity.pipeline@ab05e9cd7f74\Runtime\Plugins\CodeAnalysis\UnityPipeline.Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.pipeline@178b93997022\Runtime\Plugins\CodeAnalysis\UnityPipeline.Microsoft.CodeAnalysis.CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="nunit.framework">
@@ -1057,11 +1058,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityPipeline.System.Runtime.CompilerServices.Unsafe">
-      <HintPath>Library\PackageCache\com.unity.pipeline@ab05e9cd7f74\Runtime\Plugins\CodeAnalysis\UnityPipeline.System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.pipeline@178b93997022\Runtime\Plugins\CodeAnalysis\UnityPipeline.System.Runtime.CompilerServices.Unsafe.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityPipeline.System.Collections.Immutable">
-      <HintPath>Library\PackageCache\com.unity.pipeline@ab05e9cd7f74\Runtime\Plugins\CodeAnalysis\UnityPipeline.System.Collections.Immutable.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.pipeline@178b93997022\Runtime\Plugins\CodeAnalysis\UnityPipeline.System.Collections.Immutable.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
@@ -1073,11 +1074,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityPipeline.System.Reflection.Metadata">
-      <HintPath>Library\PackageCache\com.unity.pipeline@ab05e9cd7f74\Runtime\Plugins\CodeAnalysis\UnityPipeline.System.Reflection.Metadata.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.pipeline@178b93997022\Runtime\Plugins\CodeAnalysis\UnityPipeline.System.Reflection.Metadata.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityPipeline.Microsoft.CodeAnalysis">
-      <HintPath>Library\PackageCache\com.unity.pipeline@ab05e9cd7f74\Runtime\Plugins\CodeAnalysis\UnityPipeline.Microsoft.CodeAnalysis.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.pipeline@178b93997022\Runtime\Plugins\CodeAnalysis\UnityPipeline.Microsoft.CodeAnalysis.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Android.Types">
@@ -1770,6 +1771,10 @@
     </Reference>
     <Reference Include="Unity.RenderPipelines.GPUDriven.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.GPUDriven.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Pipeline.ScenePreview">
+      <HintPath>Library\ScriptAssemblies\Unity.Pipeline.ScenePreview.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualScripting.State.Editor">

@@ -61,7 +61,7 @@
     <Analyzer Include="D:\Unity\Editors\6000.6.8f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
     <Analyzer Include="D:\Unity\Editors\6000.6.8f1\Editor\Data\Tools\BuildPipeline\Unity.Analyzers\Unity.Analyzers.Common.dll" />
     <Analyzer Include="D:\Unity\Editors\6000.6.8f1\Editor\Data\Tools\BuildPipeline\Unity.Analyzers\Unity.Analyzers.LongLiving.dll" />
-    <Analyzer Include="D:\git_projects\Unity\HY-Sandbox\Library\PackageCache\com.unity.pipeline@ab05e9cd7f74\Runtime\Analyzers\IlInterpreterAnalyzer.dll" />
+    <Analyzer Include="D:\git_projects\Unity\HY-Sandbox\Library\PackageCache\com.unity.pipeline@178b93997022\Runtime\Analyzers\IlInterpreterAnalyzer.dll" />
     <Analyzer Include="D:\Unity\Editors\6000.6.8f1\Editor\Data\BCLExtensions\TargetingPacks\netstandard2.1\analyzers\dotnet\roslyn4.0\cs\Microsoft.Extensions.Logging.Generators.dll" />
     <Analyzer Include="D:\Unity\Editors\6000.6.8f1\Editor\Data\BCLExtensions\TargetingPacks\netstandard2.1\analyzers\dotnet\roslyn4.0\cs\System.Text.Json.SourceGeneration.dll" />
   </ItemGroup>
@@ -224,6 +224,7 @@
     <Compile Include="Assets\Editor\Combat\ExplosionAuthoring.cs" />
     <Compile Include="Assets\Editor\Architecture\SharedMechanismChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Buildings\SiegeBuildingChecks.cs" />
+    <Compile Include="Assets\Editor\Siege\Authoring\SiegeGameplayHudAuthoring.cs" />
     <Compile Include="Assets\Editor\Combat\Validation\CombatHudPlayProbe.cs" />
     <Compile Include="Assets\Editor\Navigation\Validation\NavigationCombatPlayChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegeTopologyChecks.cs" />
@@ -935,7 +936,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityPipeline.Microsoft.CodeAnalysis.CSharp">
-      <HintPath>Library\PackageCache\com.unity.pipeline@ab05e9cd7f74\Runtime\Plugins\CodeAnalysis\UnityPipeline.Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.pipeline@178b93997022\Runtime\Plugins\CodeAnalysis\UnityPipeline.Microsoft.CodeAnalysis.CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="nunit.framework">
@@ -959,11 +960,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityPipeline.System.Runtime.CompilerServices.Unsafe">
-      <HintPath>Library\PackageCache\com.unity.pipeline@ab05e9cd7f74\Runtime\Plugins\CodeAnalysis\UnityPipeline.System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.pipeline@178b93997022\Runtime\Plugins\CodeAnalysis\UnityPipeline.System.Runtime.CompilerServices.Unsafe.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityPipeline.System.Collections.Immutable">
-      <HintPath>Library\PackageCache\com.unity.pipeline@ab05e9cd7f74\Runtime\Plugins\CodeAnalysis\UnityPipeline.System.Collections.Immutable.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.pipeline@178b93997022\Runtime\Plugins\CodeAnalysis\UnityPipeline.System.Collections.Immutable.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
@@ -979,11 +980,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityPipeline.System.Reflection.Metadata">
-      <HintPath>Library\PackageCache\com.unity.pipeline@ab05e9cd7f74\Runtime\Plugins\CodeAnalysis\UnityPipeline.System.Reflection.Metadata.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.pipeline@178b93997022\Runtime\Plugins\CodeAnalysis\UnityPipeline.System.Reflection.Metadata.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityPipeline.Microsoft.CodeAnalysis">
-      <HintPath>Library\PackageCache\com.unity.pipeline@ab05e9cd7f74\Runtime\Plugins\CodeAnalysis\UnityPipeline.Microsoft.CodeAnalysis.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.pipeline@178b93997022\Runtime\Plugins\CodeAnalysis\UnityPipeline.Microsoft.CodeAnalysis.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Android.Types">
@@ -1696,6 +1697,10 @@
     </Reference>
     <Reference Include="Unity.RenderPipelines.GPUDriven.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.GPUDriven.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Pipeline.ScenePreview">
+      <HintPath>Library\ScriptAssemblies\Unity.Pipeline.ScenePreview.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualScripting.State.Editor">

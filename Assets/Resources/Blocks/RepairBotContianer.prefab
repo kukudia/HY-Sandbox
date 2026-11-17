@@ -1365,6 +1365,7 @@ MonoBehaviour:
   canExplode: 0
   showConnectors: 1
   showLabel: 0
+  hangarOwnerId: 
   uniqueId: 
 --- !u!65 &4245157779349812274
 BoxCollider:
