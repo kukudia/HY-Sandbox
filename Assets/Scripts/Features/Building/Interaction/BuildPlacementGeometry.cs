@@ -7,6 +7,7 @@ internal sealed class BuildPlacementGeometry
 {
     public float gridSize;
     public LayerMask blockLayer;
+    private Collider[] overlapBuffer = new Collider[32];
     public Quaternion SnapRotationToGrid(Quaternion rotation)
     {
         Vector3 euler = rotation.eulerAngles;
@@ -182,20 +183,38 @@ internal sealed class BuildPlacementGeometry
         Vector3 halfExtents = GetBlockHalfExtents(block);
         // 检测范围（目标位置 + 半尺寸）
         Physics.SyncTransforms();
-        Collider[] hits = Physics.OverlapBox(targetCenter, halfExtents, // 稍微缩小，避免边界浮点误差
-            targetRotation, blockLayer // 只检测方块层
-        );
-        foreach (var hit in hits)
+        int count;
+        // A full NonAlloc buffer may omit a blocking neighbour; grow and repeat before deciding.
+        // Keep the original trigger policy and extents so this optimization does not change placement.
+        while ((count = Physics.OverlapBoxNonAlloc(
+            targetCenter,
+            halfExtents,
+            overlapBuffer,
+            targetRotation,
+            blockLayer,
+            QueryTriggerInteraction.UseGlobal)) == overlapBuffer.Length)
         {
+            System.Array.Resize(ref overlapBuffer, overlapBuffer.Length * 2);
+        }
+
+        bool blocked = false;
+        for (int i = 0; i < count; i++)
+        {
+            Collider hit = overlapBuffer[i];
+            overlapBuffer[i] = null;
+            if (blocked)
+            {
+                continue;
+            }
+
             Block other = hit.GetComponentInParent<Block>();
             if (other != null && other != block)
             {
-                Debug.Log($"被{other}阻挡");
-                return true; // 有别的方块 → 阻挡
+                blocked = true;
             }
         }
 
-        return false;
+        return blocked;
     }
 
     public float GetMoveStep(Block block, Vector3 moveDir)

@@ -65,6 +65,7 @@ HY-Sandbox/
 │   │   │       ├── BuildingEditorPlayProbe.cs
 │   │   │       ├── BuildManipulationPlayChecks.cs
 │   │   │       ├── BuildNavigationPlayChecks.cs
+│   │   │       ├── BuildOverlapChecks.cs
 │   │   │       ├── BuildPalettePlayProbe.cs
 │   │   │       └── WorldBuildingFootprintChecks.cs
 │   │   ├── Combat/
@@ -1285,6 +1286,17 @@ HY-Sandbox/
 | BuildNavigationPlayChecks | [`void Tick()`](../Assets/Editor/Building/Validation/BuildNavigationPlayChecks.cs#L60) | private static |
 | BuildNavigationPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/Building/Validation/BuildNavigationPlayChecks.cs#L95) | private static |
 | BuildNavigationPlayChecks | [`void Check(bool passed, string name)`](../Assets/Editor/Building/Validation/BuildNavigationPlayChecks.cs#L303) | private static |
+
+## Assets/Editor/Building/Validation/BuildOverlapChecks.cs
+
+// 职责：验证建造碰撞查询复用缓冲区后与原OverlapBox结果一致，覆盖饱和及触发器。 // 入口：Run()；仅Edit Mode、隔离位置、finally清理，不修改场景与个人存档。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BuildOverlapChecks | [`string Run()`](../Assets/Editor/Building/Validation/BuildOverlapChecks.cs#L13) | public static |
+| BuildOverlapChecks | [`bool Original(Vector3 point, Quaternion rotation, Block block)`](../Assets/Editor/Building/Validation/BuildOverlapChecks.cs#L169) | private static |
+| BuildOverlapChecks | [`void Compare( Vector3 point, Quaternion rotation, Block block, bool expected, string name, Func<Vector3, Quaternion, Block, bool> query, List<string> checks)`](../Assets/Editor/Building/Validation/BuildOverlapChecks.cs#L184) | private static |
+| BuildOverlapChecks | [`void Require(bool valid, string name, List<string> checks)`](../Assets/Editor/Building/Validation/BuildOverlapChecks.cs#L199) | private static |
 
 ## Assets/Editor/Building/Validation/BuildPalettePlayProbe.cs
 
@@ -4012,16 +4024,16 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BuildPlacementGeometry | [`Quaternion SnapRotationToGrid(Quaternion rotation)`](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L10) | public |
-| BuildPlacementGeometry | [`Vector3 CalculateRotationPosition(Vector3 startCenter, Quaternion startRotation, Quaternion targetRotation, Block block)`](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L19) | public |
-| BuildPlacementGeometry | [`Vector3 GetBlockHalfExtents(Block block)`](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L43) | public |
-| BuildPlacementGeometry | [`float GetHalfExtentAlongDirection(Block block, Quaternion rotation, Vector3 worldDirection)`](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L54) | public |
-| BuildPlacementGeometry | [`bool TryCalculateConnectorAlignedPosition( Block prefabBlock, Quaternion previewRotation, Vector3 targetConnectorPosition, Vector3 targetConnectorNormal, out Vector3 position)`](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L64) | public |
-| BuildPlacementGeometry | [`Quaternion GetSurfaceRotation(Block block, Quaternion authored, Vector3 surfaceNormal)`](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L109) | public |
-| BuildPlacementGeometry | [`Vector3 RemoveGridNoise(Vector3 position)`](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L145) | private |
-| BuildPlacementGeometry | [`Vector3 SnapCenterByMinCorner(Vector3 targetCenter, Quaternion targetRotation, Block b)`](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L162) | public |
-| BuildPlacementGeometry | [`bool IsBlocked(Vector3 targetCenter, Quaternion targetRotation, Block block)`](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L174) | public |
-| BuildPlacementGeometry | [`float GetMoveStep(Block block, Vector3 moveDir)`](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L201) | public |
+| BuildPlacementGeometry | [`Quaternion SnapRotationToGrid(Quaternion rotation)`](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L11) | public |
+| BuildPlacementGeometry | [`Vector3 CalculateRotationPosition(Vector3 startCenter, Quaternion startRotation, Quaternion targetRotation, Block block)`](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L20) | public |
+| BuildPlacementGeometry | [`Vector3 GetBlockHalfExtents(Block block)`](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L44) | public |
+| BuildPlacementGeometry | [`float GetHalfExtentAlongDirection(Block block, Quaternion rotation, Vector3 worldDirection)`](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L55) | public |
+| BuildPlacementGeometry | [`bool TryCalculateConnectorAlignedPosition( Block prefabBlock, Quaternion previewRotation, Vector3 targetConnectorPosition, Vector3 targetConnectorNormal, out Vector3 position)`](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L65) | public |
+| BuildPlacementGeometry | [`Quaternion GetSurfaceRotation(Block block, Quaternion authored, Vector3 surfaceNormal)`](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L110) | public |
+| BuildPlacementGeometry | [`Vector3 RemoveGridNoise(Vector3 position)`](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L146) | private |
+| BuildPlacementGeometry | [`Vector3 SnapCenterByMinCorner(Vector3 targetCenter, Quaternion targetRotation, Block b)`](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L163) | public |
+| BuildPlacementGeometry | [`bool IsBlocked(Vector3 targetCenter, Quaternion targetRotation, Block block)`](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L175) | public |
+| BuildPlacementGeometry | [`float GetMoveStep(Block block, Vector3 moveDir)`](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L220) | public |
 
 ## Assets/Scripts/Features/Building/Interaction/BuildPreview.cs
 
