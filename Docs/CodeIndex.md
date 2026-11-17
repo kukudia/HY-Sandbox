@@ -63,6 +63,7 @@ HY-Sandbox/
 │   │   │       ├── BlueprintSupportAudit.cs
 │   │   │       ├── BuildHotbarChecks.cs
 │   │   │       ├── BuildingEditorPlayProbe.cs
+│   │   │       ├── BuildNavigationPlayChecks.cs
 │   │   │       ├── BuildPalettePlayProbe.cs
 │   │   │       └── WorldBuildingFootprintChecks.cs
 │   │   ├── Combat/
@@ -1255,6 +1256,17 @@ HY-Sandbox/
 | BuildHotbarChecks | [`void Check(bool passed, string name)`](../Assets/Editor/Building/Validation/BuildHotbarChecks.cs#L252) | private static |
 | BuildHotbarChecks | [`void Finish(string error)`](../Assets/Editor/Building/Validation/BuildHotbarChecks.cs#L262) | private static |
 
+## Assets/Editor/Building/Validation/BuildNavigationPlayChecks.cs
+
+// 职责：跨真实帧验证工坊右键长按、UI捕获、方向键移动和失焦释放，不写个人存档。 // 入口：RunLive()；完成恢复输入设备/设置，在Temp记录观察结果。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BuildNavigationPlayChecks | [`void RunLive()`](../Assets/Editor/Building/Validation/BuildNavigationPlayChecks.cs#L24) | public static |
+| BuildNavigationPlayChecks | [`void Tick()`](../Assets/Editor/Building/Validation/BuildNavigationPlayChecks.cs#L39) | private static |
+| BuildNavigationPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/Building/Validation/BuildNavigationPlayChecks.cs#L74) | private static |
+| BuildNavigationPlayChecks | [`void Check(bool passed, string name)`](../Assets/Editor/Building/Validation/BuildNavigationPlayChecks.cs#L218) | private static |
+
 ## Assets/Editor/Building/Validation/BuildPalettePlayProbe.cs
 
 // 职责：在 Play Mode 检查分类目录、选择、放置预览与连接点提示。 // 入口：Run()。 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
@@ -1480,7 +1492,7 @@ HY-Sandbox/
 | --- | --- | --- |
 | SharedCombatHudPreview | [`string Render()`](../Assets/Editor/Combat/Interface/SharedCombatHudPreview.cs#L17) | public static |
 | SharedCombatHudPreview | [`void RenderOne(Vector2Int size)`](../Assets/Editor/Combat/Interface/SharedCombatHudPreview.cs#L64) | private static |
-| SharedCombatHudPreview | [`void RequireSeparate(RectTransform first, RectTransform second, Camera camera, Vector2Int size)`](../Assets/Editor/Combat/Interface/SharedCombatHudPreview.cs#L248) | private static |
+| SharedCombatHudPreview | [`void RequireSeparate(RectTransform first, RectTransform second, Camera camera, Vector2Int size)`](../Assets/Editor/Combat/Interface/SharedCombatHudPreview.cs#L254) | private static |
 
 ## Assets/Editor/Combat/SkirmishArenaAuthoring.cs
 
@@ -2940,12 +2952,16 @@ HY-Sandbox/
 
 ## Assets/Editor/Siege/Validation/Fleet/SiegeStrandedCockpitChecks.cs
 
-// 职责：用真实受损舰和生产波次导演验证残舱退场、恢复边界及零击杀奖励。 // 入口：RunLive()；新鲜Build Play的同步规则夹具，时间参数推进不等同自然12秒实飞。
+// 职责：用真实受损舰和生产波次导演验证残舱退场、恢复边界及零击杀奖励。 // 入口：RunLive()为同步规则；RunNaturalLive()跨真实帧损毁并自然等待，均在Build Play运行。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeStrandedCockpitChecks | [`string RunLive()`](../Assets/Editor/Siege/Validation/Fleet/SiegeStrandedCockpitChecks.cs#L13) | public static |
-| SiegeStrandedCockpitChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/Validation/Fleet/SiegeStrandedCockpitChecks.cs#L119) | private static |
+| SiegeStrandedCockpitChecks | [`void RunNaturalLive()`](../Assets/Editor/Siege/Validation/Fleet/SiegeStrandedCockpitChecks.cs#L20) | public static |
+| SiegeStrandedCockpitChecks | [`void CaptureNaturalError(string message, string trace, LogType type)`](../Assets/Editor/Siege/Validation/Fleet/SiegeStrandedCockpitChecks.cs#L36) | private static |
+| SiegeStrandedCockpitChecks | [`void TickNatural()`](../Assets/Editor/Siege/Validation/Fleet/SiegeStrandedCockpitChecks.cs#L44) | private static |
+| SiegeStrandedCockpitChecks | [`IEnumerator NaturalScenario()`](../Assets/Editor/Siege/Validation/Fleet/SiegeStrandedCockpitChecks.cs#L74) | private static |
+| SiegeStrandedCockpitChecks | [`string RunLive()`](../Assets/Editor/Siege/Validation/Fleet/SiegeStrandedCockpitChecks.cs#L205) | public static |
+| SiegeStrandedCockpitChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/Validation/Fleet/SiegeStrandedCockpitChecks.cs#L311) | private static |
 
 ## Assets/Editor/Siege/Validation/Fleet/SiegeTopologyChecks.cs
 
@@ -5362,12 +5378,16 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| InputManager | [`void Awake()`](../Assets/Scripts/Features/Player/InputManager.cs#L24) | private |
-| InputManager | [`void Start()`](../Assets/Scripts/Features/Player/InputManager.cs#L29) | private |
-| InputManager | [`void Update()`](../Assets/Scripts/Features/Player/InputManager.cs#L40) | private |
-| InputManager | [`void EnterBuildMode()`](../Assets/Scripts/Features/Player/InputManager.cs#L169) | public |
-| InputManager | [`void PollSiege(SiegeSession siege, Keyboard keyboard)`](../Assets/Scripts/Features/Player/InputManager.cs#L185) | private |
-| InputManager | [`void ApplyCursorState(bool showCursor)`](../Assets/Scripts/Features/Player/InputManager.cs#L211) | private |
+| InputManager | [`void Awake()`](../Assets/Scripts/Features/Player/InputManager.cs#L30) | private |
+| InputManager | [`void Start()`](../Assets/Scripts/Features/Player/InputManager.cs#L35) | private |
+| InputManager | [`void Update()`](../Assets/Scripts/Features/Player/InputManager.cs#L46) | private |
+| InputManager | [`void EnterBuildMode()`](../Assets/Scripts/Features/Player/InputManager.cs#L168) | public |
+| InputManager | [`void PollBuildNavigation()`](../Assets/Scripts/Features/Player/InputManager.cs#L186) | private |
+| InputManager | [`void OnApplicationFocus(bool focused)`](../Assets/Scripts/Features/Player/InputManager.cs#L212) | private |
+| InputManager | [`void OnApplicationPause(bool paused)`](../Assets/Scripts/Features/Player/InputManager.cs#L220) | private |
+| InputManager | [`void ReleaseBuildNavigation()`](../Assets/Scripts/Features/Player/InputManager.cs#L228) | private |
+| InputManager | [`void PollSiege(SiegeSession siege, Keyboard keyboard)`](../Assets/Scripts/Features/Player/InputManager.cs#L239) | private |
+| InputManager | [`void ApplyCursorState(bool showCursor)`](../Assets/Scripts/Features/Player/InputManager.cs#L265) | private |
 
 ## Assets/Scripts/Features/Player/Player.cs
 

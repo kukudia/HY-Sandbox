@@ -67,6 +67,7 @@ public static class SharedCombatHudPreview
         RenderTexture target = new RenderTexture(size.x, size.y, 24);
         RenderTexture previous = RenderTexture.active;
         Texture2D texture = null;
+        Camera camera = null;
         try
         {
             if (!target.Create())
@@ -76,7 +77,7 @@ public static class SharedCombatHudPreview
 
             var cameraObject = new GameObject("Preview Camera", typeof(Camera));
             SceneManager.MoveGameObjectToScene(cameraObject, scene);
-            Camera camera = cameraObject.GetComponent<Camera>();
+            camera = cameraObject.GetComponent<Camera>();
             camera.scene = scene;
             camera.targetTexture = target;
             camera.clearFlags = CameraClearFlags.SolidColor;
@@ -233,6 +234,11 @@ public static class SharedCombatHudPreview
         }
         finally
         {
+            if (camera != null)
+            {
+                camera.targetTexture = null;
+            }
+
             RenderTexture.active = previous;
             if (texture != null)
             {

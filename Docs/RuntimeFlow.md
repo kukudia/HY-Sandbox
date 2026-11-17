@@ -641,7 +641,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["InputManager.Update()"]
-    click A "../Assets/Scripts/Features/Player/InputManager.cs#L40" "打开源码"
+    click A "../Assets/Scripts/Features/Player/InputManager.cs#L46" "打开源码"
     B["BuildManager.SetBuildMode()"]
     click B "../Assets/Scripts/Features/Building/BuildManager.cs#L221" "打开源码"
     C["BuildPlacementGeometry.CalculateRotationPosition()"]
@@ -700,7 +700,7 @@ flowchart TD
     T --> U
 ```
 
-- [InputManager.Update](../Assets/Scripts/Features/Player/InputManager.cs#L40)
+- [InputManager.Update](../Assets/Scripts/Features/Player/InputManager.cs#L46)
 <!-- source: Assets/Scripts/Features/Player/InputManager.cs|Update -->
 - [BuildManager.SetBuildMode](../Assets/Scripts/Features/Building/BuildManager.cs#L221)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|SetBuildMode -->
@@ -1009,7 +1009,7 @@ flowchart TD
     M["SaveManager.DeleteBuildingBlueprint()"]
     click M "../Assets/Scripts/Features/Building/SaveManager.cs#L191" "打开源码"
     N["InputManager.EnterBuildMode()"]
-    click N "../Assets/Scripts/Features/Player/InputManager.cs#L169" "打开源码"
+    click N "../Assets/Scripts/Features/Player/InputManager.cs#L168" "打开源码"
     O["SaveManager.RenameBlueprint()"]
     click O "../Assets/Scripts/Features/Building/SaveManager.cs#L460" "打开源码"
     P["SaveManager.FilesFor()"]
@@ -1055,7 +1055,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|RenameBuildingBlueprint -->
 - [SaveManager.DeleteBuildingBlueprint](../Assets/Scripts/Features/Building/SaveManager.cs#L191)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|DeleteBuildingBlueprint -->
-- [InputManager.EnterBuildMode](../Assets/Scripts/Features/Player/InputManager.cs#L169)
+- [InputManager.EnterBuildMode](../Assets/Scripts/Features/Player/InputManager.cs#L168)
 <!-- source: Assets/Scripts/Features/Player/InputManager.cs|EnterBuildMode -->
 - [SaveManager.RenameBlueprint](../Assets/Scripts/Features/Building/SaveManager.cs#L460)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|RenameBlueprint -->
@@ -2050,7 +2050,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["InputManager.Update()"]
-    click A "../Assets/Scripts/Features/Player/InputManager.cs#L40" "打开源码"
+    click A "../Assets/Scripts/Features/Player/InputManager.cs#L46" "打开源码"
     B["BuildManager.ToggleBuildingBlueprintBuildMode()"]
     click B "../Assets/Scripts/Features/Building/BuildManager.cs#L304" "打开源码"
     C["BuildManager.EnterBuildingBlueprintBuildMode()"]
@@ -2103,7 +2103,7 @@ flowchart TD
     M --> N
 ```
 
-- [InputManager.Update](../Assets/Scripts/Features/Player/InputManager.cs#L40)
+- [InputManager.Update](../Assets/Scripts/Features/Player/InputManager.cs#L46)
 <!-- source: Assets/Scripts/Features/Player/InputManager.cs|Update -->
 - [BuildManager.ToggleBuildingBlueprintBuildMode](../Assets/Scripts/Features/Building/BuildManager.cs#L304)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|ToggleBuildingBlueprintBuildMode -->
@@ -5868,9 +5868,9 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["InputManager.Update()"]
-    click A "../Assets/Scripts/Features/Player/InputManager.cs#L40" "打开源码"
+    click A "../Assets/Scripts/Features/Player/InputManager.cs#L46" "打开源码"
     B["InputManager.PollSiege()"]
-    click B "../Assets/Scripts/Features/Player/InputManager.cs#L185" "打开源码"
+    click B "../Assets/Scripts/Features/Player/InputManager.cs#L239" "打开源码"
     C["SiegeWorkshop.Open()"]
     click C "../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshop.cs#L47" "打开源码"
     D["SaveManager.LoadSave()"]
@@ -5931,9 +5931,9 @@ flowchart TD
     T -->|保留伤势迁回| U
 ```
 
-- [InputManager.Update](../Assets/Scripts/Features/Player/InputManager.cs#L40)
+- [InputManager.Update](../Assets/Scripts/Features/Player/InputManager.cs#L46)
 <!-- source: Assets/Scripts/Features/Player/InputManager.cs|Update -->
-- [InputManager.PollSiege](../Assets/Scripts/Features/Player/InputManager.cs#L185)
+- [InputManager.PollSiege](../Assets/Scripts/Features/Player/InputManager.cs#L239)
 <!-- source: Assets/Scripts/Features/Player/InputManager.cs|PollSiege -->
 - [SiegeWorkshop.Open](../Assets/Scripts/Features/Siege/Workshop/SiegeWorkshop.cs#L47)
 <!-- source: Assets/Scripts/Features/Siege/Workshop/SiegeWorkshop.cs|Open -->

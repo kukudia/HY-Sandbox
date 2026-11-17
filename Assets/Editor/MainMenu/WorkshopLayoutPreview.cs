@@ -84,6 +84,7 @@ public static class WorkshopLayoutPreview
         var target = new RenderTexture(size.x, size.y, 24);
         RenderTexture previous = RenderTexture.active;
         Texture2D image = null;
+        Camera camera = null;
         try
         {
             if (!target.Create())
@@ -93,7 +94,7 @@ public static class WorkshopLayoutPreview
 
             var cameraRoot = new GameObject("Layout Camera", typeof(Camera));
             SceneManager.MoveGameObjectToScene(cameraRoot, scene);
-            Camera camera = cameraRoot.GetComponent<Camera>();
+            camera = cameraRoot.GetComponent<Camera>();
             camera.scene = scene;
             camera.targetTexture = target;
             camera.clearFlags = CameraClearFlags.SolidColor;
@@ -182,6 +183,11 @@ public static class WorkshopLayoutPreview
         }
         finally
         {
+            if (camera != null)
+            {
+                camera.targetTexture = null;
+            }
+
             RenderTexture.active = previous;
             if (image != null)
             {

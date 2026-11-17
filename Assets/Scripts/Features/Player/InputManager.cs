@@ -2,6 +2,8 @@
 // 入口：EnterBuildMode()。
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class InputManager : MonoBehaviour
 {
@@ -9,6 +11,10 @@ public class InputManager : MonoBehaviour
     public static InputManager instance;
     public bool keyInput = true;
     public bool lockView = false;
+    [SerializeField, Min(0f), Tooltip("工坊右键导航的长按阈值（秒）；短点按仍留给UI和快捷栏。")]
+    private float buildNavigationHoldSeconds = .18f;
+    private float navigationStartedAt = -1f;
+    private bool navigationBlocked;
     public bool DeveloperToolsAvailable
     {
         get
@@ -44,11 +50,11 @@ public class InputManager : MonoBehaviour
             return;
         }
 
-        // Guard scene dependencies first so startup and teardown frames remain no-op instead of throwing.
-        //if (BuildManager.instance == null || PlayManager.instance == null || CameraController.instance == null)
-        //{
-        //    return;
-        //}
+        if (BuildManager.instance == null || PlayManager.instance == null || CameraController.instance == null)
+        {
+            return;
+        }
+
         Keyboard keyboard = Keyboard.current;
         if (keyboard == null)
         {
@@ -103,7 +109,7 @@ public class InputManager : MonoBehaviour
             }
         }
 
-        if (keyboard.tabKey.wasPressedThisFrame)
+        if (PlayManager.instance.playMode && keyboard.tabKey.wasPressedThisFrame)
         {
             if (CameraController.instance.currentMode == CameraMode.FirstPerson)
             {
@@ -146,14 +152,7 @@ public class InputManager : MonoBehaviour
         if (!PlayManager.instance.playMode)
         {
             // Camera navigation temporarily suspends editing; release restores the same selection/tool.
-            bool editing = Mouse.current == null || !Mouse.current.rightButton.isPressed;
-            if (lockView != editing)
-            {
-                lockView = editing;
-                CameraController.instance.currentMode = lockView ? CameraMode.Lock : CameraMode.FreeFly;
-                BuildManager.instance.SetBuildMode(lockView);
-                ApplyCursorState(lockView);
-            }
+            PollBuildNavigation();
         }
         else
         {
@@ -168,6 +167,8 @@ public class InputManager : MonoBehaviour
 
     public void EnterBuildMode()
     {
+        navigationStartedAt = -1f;
+        navigationBlocked = Mouse.current != null && Mouse.current.rightButton.isPressed;
         lockView = true;
         if (CameraController.instance != null)
         {
@@ -180,6 +181,59 @@ public class InputManager : MonoBehaviour
         }
 
         ApplyCursorState(lockView);
+    }
+
+    private void PollBuildNavigation()
+    {
+        bool held = Mouse.current != null && Mouse.current.rightButton.isPressed;
+        if (!held)
+        {
+            navigationStartedAt = -1f;
+            navigationBlocked = false;
+        }
+        else if (navigationStartedAt < 0f)
+        {
+            navigationStartedAt = Time.unscaledTime;
+            GameObject selected = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
+            navigationBlocked |= EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+            navigationBlocked |= selected != null && (selected.GetComponentInParent<InputField>(true) != null || selected.GetComponentInParent<TMPro.TMP_InputField>(true) != null);
+        }
+
+        bool editing = !held || navigationBlocked || Time.unscaledTime - navigationStartedAt < buildNavigationHoldSeconds;
+        if (lockView != editing || CameraController.instance.currentMode != (editing ? CameraMode.Lock : CameraMode.FreeFly))
+        {
+            lockView = editing;
+            CameraController.instance.currentMode = editing ? CameraMode.Lock : CameraMode.FreeFly;
+            BuildManager.instance.SetBuildMode(editing);
+            ApplyCursorState(editing);
+        }
+    }
+
+    private void OnApplicationFocus(bool focused)
+    {
+        if (!focused)
+        {
+            ReleaseBuildNavigation();
+        }
+    }
+
+    private void OnApplicationPause(bool paused)
+    {
+        if (paused)
+        {
+            ReleaseBuildNavigation();
+        }
+    }
+
+    private void ReleaseBuildNavigation()
+    {
+        if (PlayManager.instance != null && !PlayManager.instance.playMode)
+        {
+            EnterBuildMode();
+            // A held physical button must be released before a fresh navigation capture after focus loss.
+            navigationBlocked = true;
+            CameraController.instance?.StopCameraMotion();
+        }
     }
 
     private void PollSiege(SiegeSession siege, Keyboard keyboard)
