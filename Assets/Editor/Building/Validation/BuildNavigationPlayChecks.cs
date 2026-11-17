@@ -5,6 +5,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using UnityEngine.UI;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -13,6 +15,25 @@ using UnityEngine.InputSystem.LowLevel;
 
 public static class BuildNavigationPlayChecks
 {
+    private sealed class UndoSentinel : IBlockAction
+    {
+        public string ActionName => "Typing boundary sentinel";
+        public bool Undone
+        {
+            get; private set;
+        }
+
+        public void Undo()
+        {
+            Undone = true;
+        }
+
+        public void Redo()
+        {
+            Undone = false;
+        }
+    }
+
     private static IEnumerator routine;
     private static double next;
     private static double deadline;
@@ -86,6 +107,9 @@ public static class BuildNavigationPlayChecks
         BuildType tool = build.currentBuildType;
         var inputData = new SerializedObject(input);
         float hold = inputData.FindProperty("buildNavigationHoldSeconds").floatValue;
+        object history = typeof(ActionManager).GetMethod("CaptureHistory", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(ActionManager.instance, null);
+        GameObject fieldObject = null;
+        GameObject previousSelection = EventSystem.current.currentSelectedGameObject;
         try
         {
             if (mouseEnabled)
@@ -181,9 +205,70 @@ public static class BuildNavigationPlayChecks
             InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.Tab));
             yield return .15f;
             Check(camera.currentMode == CameraMode.Lock, "Tab does not put workshop camera into gameplay view");
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+            yield return .1f;
+            fieldObject = new GameObject("Typing boundary field", typeof(RectTransform), typeof(Image), typeof(InputField));
+            fieldObject.transform.SetParent(MainUIButtons.instance.moveButton.GetComponentInParent<Canvas>().transform, false);
+            var labelObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
+            labelObject.transform.SetParent(fieldObject.transform, false);
+            Text label = labelObject.GetComponent<Text>();
+            label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            InputField field = fieldObject.GetComponent<InputField>();
+            field.textComponent = label;
+            field.Select();
+            field.ActivateInputField();
+            yield return .15f;
+            Check(field.isFocused, "Real uGUI text field acquires typing focus");
+            var sentinel = new UndoSentinel();
+            ActionManager.instance.Push(sentinel);
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.LeftCtrl, Key.Z));
+            yield return .15f;
+            Check(!sentinel.Undone, "Text Ctrl-Z does not undo the construction history");
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+            yield return .1f;
+            Vector3 typingPosition = camera.transform.position;
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.F));
+            yield return .2f;
+            Check(
+                (camera.transform.position - typingPosition).sqrMagnitude < .000001f,
+                "Typing F does not focus or move the camera");
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+            yield return .1f;
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.P));
+            yield return .2f;
+            Check(
+                !PlayManager.instance.playMode && PlayManager.instance.Modes.State == GameModeState.Building,
+                "Typing P does not launch gameplay");
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+            yield return .1f;
+            field.DeactivateInputField();
+            EventSystem.current.SetSelectedGameObject(null);
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.LeftCtrl, Key.Z));
+            yield return .15f;
+            Check(sentinel.Undone, "Construction undo resumes after leaving text entry");
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+            yield return .1f;
+            UnityEngine.Object.Destroy(fieldObject);
+            fieldObject = new GameObject("TMP typing boundary", typeof(RectTransform), typeof(TMPro.TMP_InputField));
+            fieldObject.transform.SetParent(MainUIButtons.instance.moveButton.GetComponentInParent<Canvas>().transform, false);
+            EventSystem.current.SetSelectedGameObject(fieldObject);
+            yield return .1f;
+            Check(TextInputFocus.IsEditingText, "TMP text selection shares the same shortcut boundary");
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.LeftCtrl, Key.Y));
+            yield return .15f;
+            Check(sentinel.Undone, "TMP Ctrl-Y does not redo the construction history");
+            fieldObject.SetActive(false);
+            Check(!TextInputFocus.IsEditingText, "Hidden text selection does not block construction shortcuts");
         }
         finally
         {
+            EventSystem.current?.SetSelectedGameObject(previousSelection);
+            if (fieldObject != null)
+            {
+                UnityEngine.Object.Destroy(fieldObject);
+            }
+
+            typeof(ActionManager).GetMethod("RestoreHistory", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(ActionManager.instance, new[] { history });
             if (mouse != null && mouse.added)
             {
                 InputSystem.RemoveDevice(mouse);

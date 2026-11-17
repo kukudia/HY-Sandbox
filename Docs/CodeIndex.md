@@ -63,6 +63,7 @@ HY-Sandbox/
 │   │   │       ├── BlueprintSupportAudit.cs
 │   │   │       ├── BuildHotbarChecks.cs
 │   │   │       ├── BuildingEditorPlayProbe.cs
+│   │   │       ├── BuildManipulationPlayChecks.cs
 │   │   │       ├── BuildNavigationPlayChecks.cs
 │   │   │       ├── BuildPalettePlayProbe.cs
 │   │   │       └── WorldBuildingFootprintChecks.cs
@@ -471,7 +472,8 @@ HY-Sandbox/
 │           │   ├── InputManager.cs
 │           │   ├── Player.cs
 │           │   ├── PlayerController.cs
-│           │   └── PlayerHealth.cs
+│           │   ├── PlayerHealth.cs
+│           │   └── TextInputFocus.cs
 │           ├── Power/
 │           │   ├── Power.cs
 │           │   ├── PowerNetwork.cs
@@ -1256,16 +1258,33 @@ HY-Sandbox/
 | BuildHotbarChecks | [`void Check(bool passed, string name)`](../Assets/Editor/Building/Validation/BuildHotbarChecks.cs#L252) | private static |
 | BuildHotbarChecks | [`void Finish(string error)`](../Assets/Editor/Building/Validation/BuildHotbarChecks.cs#L262) | private static |
 
+## Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs
+
+// 职责：用真实InputSystem和制作Prefab验证所选方块移动、复制、网格及距离边界。 // 入口：RunLive()；仅玩家工坊，临时文件存储，结束恢复缓存、历史、相机和设备。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BuildManipulationPlayChecks | [`void RunLive()`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L26) | public static |
+| BuildManipulationPlayChecks | [`void Capture(string message, string trace, LogType type)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L43) | private static |
+| BuildManipulationPlayChecks | [`void Tick()`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L51) | private static |
+| BuildManipulationPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L85) | private static |
+| BuildManipulationPlayChecks | [`Vector3 Half(Block block, Quaternion rotation)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L265) | private static |
+| BuildManipulationPlayChecks | [`bool Grid(Block block)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L276) | private static |
+| BuildManipulationPlayChecks | [`bool Near(Vector3 a, Vector3 b)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L282) | private static |
+| BuildManipulationPlayChecks | [`void Check(bool valid, string name)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L283) | private static |
+
 ## Assets/Editor/Building/Validation/BuildNavigationPlayChecks.cs
 
 // 职责：跨真实帧验证工坊右键长按、UI捕获、方向键移动和失焦释放，不写个人存档。 // 入口：RunLive()；完成恢复输入设备/设置，在Temp记录观察结果。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BuildNavigationPlayChecks | [`void RunLive()`](../Assets/Editor/Building/Validation/BuildNavigationPlayChecks.cs#L24) | public static |
-| BuildNavigationPlayChecks | [`void Tick()`](../Assets/Editor/Building/Validation/BuildNavigationPlayChecks.cs#L39) | private static |
-| BuildNavigationPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/Building/Validation/BuildNavigationPlayChecks.cs#L74) | private static |
-| BuildNavigationPlayChecks | [`void Check(bool passed, string name)`](../Assets/Editor/Building/Validation/BuildNavigationPlayChecks.cs#L218) | private static |
+| UndoSentinel | [`void Undo()`](../Assets/Editor/Building/Validation/BuildNavigationPlayChecks.cs#L26) | public |
+| UndoSentinel | [`void Redo()`](../Assets/Editor/Building/Validation/BuildNavigationPlayChecks.cs#L31) | public |
+| BuildNavigationPlayChecks | [`void RunLive()`](../Assets/Editor/Building/Validation/BuildNavigationPlayChecks.cs#L45) | public static |
+| BuildNavigationPlayChecks | [`void Tick()`](../Assets/Editor/Building/Validation/BuildNavigationPlayChecks.cs#L60) | private static |
+| BuildNavigationPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/Building/Validation/BuildNavigationPlayChecks.cs#L95) | private static |
+| BuildNavigationPlayChecks | [`void Check(bool passed, string name)`](../Assets/Editor/Building/Validation/BuildNavigationPlayChecks.cs#L303) | private static |
 
 ## Assets/Editor/Building/Validation/BuildPalettePlayProbe.cs
 
@@ -1881,18 +1900,18 @@ HY-Sandbox/
 | MainMenuPlayChecks | [`void Changed(PlayModeStateChange state)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L72) | private static |
 | MainMenuPlayChecks | [`void Tick()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L92) | private static |
 | MainMenuPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L118) | private static |
-| MainMenuPlayChecks | [`IEnumerator SurfacePlacement()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L799) | private static |
-| MainMenuPlayChecks | [`IEnumerator EscapeAttract(MainMenuController menu)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L876) | private static |
-| MainMenuPlayChecks | [`void PointerClick(Selectable control)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L926) | private static |
-| MainMenuPlayChecks | [`void Select(MainMenuController menu, string name)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L943) | private static |
-| MainMenuPlayChecks | [`BlockDataList Vehicle()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L950) | private static |
-| MainMenuPlayChecks | [`void InjectStore(string field, string directory)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L973) | private static |
-| MainMenuPlayChecks | [`int ActiveEvents()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L979) | private static |
-| MainMenuPlayChecks | [`int ActiveScreenCameras()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L984) | private static |
-| MainMenuPlayChecks | [`void Check(bool condition, string message)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L989) | private static |
-| MainMenuPlayChecks | [`void LogError(string message, string trace, LogType type)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L999) | private static |
-| MainMenuPlayChecks | [`void BackupPreferences()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L1007) | private static |
-| MainMenuPlayChecks | [`void Finish()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L1028) | private static |
+| MainMenuPlayChecks | [`IEnumerator SurfacePlacement()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L835) | private static |
+| MainMenuPlayChecks | [`IEnumerator EscapeAttract(MainMenuController menu)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L912) | private static |
+| MainMenuPlayChecks | [`void PointerClick(Selectable control)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L962) | private static |
+| MainMenuPlayChecks | [`void Select(MainMenuController menu, string name)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L979) | private static |
+| MainMenuPlayChecks | [`BlockDataList Vehicle()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L986) | private static |
+| MainMenuPlayChecks | [`void InjectStore(string field, string directory)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L1009) | private static |
+| MainMenuPlayChecks | [`int ActiveEvents()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L1015) | private static |
+| MainMenuPlayChecks | [`int ActiveScreenCameras()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L1020) | private static |
+| MainMenuPlayChecks | [`void Check(bool condition, string message)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L1025) | private static |
+| MainMenuPlayChecks | [`void LogError(string message, string trace, LogType type)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L1035) | private static |
+| MainMenuPlayChecks | [`void BackupPreferences()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L1043) | private static |
+| MainMenuPlayChecks | [`void Finish()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L1064) | private static |
 
 ## Assets/Editor/MainMenu/NightMenuAuthoring.cs
 
@@ -3810,57 +3829,57 @@ HY-Sandbox/
 | BuildManager | [`void OnDestroy()`](../Assets/Scripts/Features/Building/BuildManager.cs#L133) | private |
 | BuildManager | [`void Start()`](../Assets/Scripts/Features/Building/BuildManager.cs#L150) | private |
 | BuildManager | [`void Update()`](../Assets/Scripts/Features/Building/BuildManager.cs#L156) | private |
-| BuildManager | [`void SetBuildMode(bool lockView)`](../Assets/Scripts/Features/Building/BuildManager.cs#L221) | public |
-| BuildManager | [`void ToggleEnemyBlueprintBuildMode()`](../Assets/Scripts/Features/Building/BuildManager.cs#L233) | public |
-| BuildManager | [`void EnterEnemyBlueprintBuildMode(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L245) | public |
-| BuildManager | [`void ExitEnemyBlueprintBuildMode(bool reloadPlayerSave)`](../Assets/Scripts/Features/Building/BuildManager.cs#L276) | public |
-| BuildManager | [`void ExitDeveloperBlueprintBuildMode(bool reloadPlayerSave)`](../Assets/Scripts/Features/Building/BuildManager.cs#L284) | public |
-| BuildManager | [`void ToggleBuildingBlueprintBuildMode()`](../Assets/Scripts/Features/Building/BuildManager.cs#L304) | public |
-| BuildManager | [`void EnterBuildingBlueprintBuildMode(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L319) | public |
-| BuildManager | [`void ToggleBaseBlueprintBuildMode()`](../Assets/Scripts/Features/Building/BuildManager.cs#L324) | public |
-| BuildManager | [`void EnterBaseBlueprintBuildMode(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L337) | public |
-| BuildManager | [`void EnterStructureBlueprintBuildMode(string blueprintName, bool siegeBase)`](../Assets/Scripts/Features/Building/BuildManager.cs#L342) | private |
-| BuildManager | [`void PrepareBuildingFoundation(Transform parent, BlockDataList data)`](../Assets/Scripts/Features/Building/BuildManager.cs#L409) | private |
-| BuildManager | [`void MarkBuildingFootprintDirty()`](../Assets/Scripts/Features/Building/BuildManager.cs#L430) | public |
-| BuildManager | [`void CompleteBuildingBlueprint()`](../Assets/Scripts/Features/Building/BuildManager.cs#L438) | public |
-| BuildManager | [`void RefreshBuildingFootprint()`](../Assets/Scripts/Features/Building/BuildManager.cs#L470) | public |
-| BuildManager | [`void SetCurrentBuildingBlueprintName(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L487) | public |
-| BuildManager | [`void SetCurrentBlockResource(string resourcePath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L496) | public |
-| BuildManager | [`void SetCurrentSaveName(string saveName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L511) | public |
-| BuildManager | [`void SetCurrentEnemyBlueprintName(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L516) | public |
-| BuildManager | [`void SetBuildType(BuildType buildType)`](../Assets/Scripts/Features/Building/BuildManager.cs#L521) | public |
-| BuildManager | [`void EnsureBuildInteraction()`](../Assets/Scripts/Features/Building/BuildManager.cs#L548) | private |
-| BuildManager | [`void HandleBuildingPreview()`](../Assets/Scripts/Features/Building/BuildManager.cs#L581) | private |
-| BuildManager | [`void ClearCurrentGhost(bool hideHints = true)`](../Assets/Scripts/Features/Building/BuildManager.cs#L589) | private |
-| BuildManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L597) | public |
-| BuildManager | [`Vector3 SnapCenterByMinCorner(Vector3 targetCenter, Quaternion targetRotation, Block b)`](../Assets/Scripts/Features/Building/BuildManager.cs#L604) | public |
-| BuildManager | [`bool IsWithinBuildRange(Vector3 position)`](../Assets/Scripts/Features/Building/BuildManager.cs#L610) | public |
-| BuildManager | [`void CreateBlock(GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot)`](../Assets/Scripts/Features/Building/BuildManager.cs#L615) | public |
-| BuildManager | [`Block CreateBlockFromTemplate( GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot, Vector3Int? dimensions, HangarEntrance entrance = HangarEntrance.Front)`](../Assets/Scripts/Features/Building/BuildManager.cs#L620) | private |
-| BuildManager | [`void DeleteBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L674) | public |
-| BuildManager | [`void EnsureBlueprintEditor()`](../Assets/Scripts/Features/Building/BuildManager.cs#L695) | private |
-| BuildManager | [`Block CreateDuplicateBlock(GameObject prefab, string path, Vector3 position, Quaternion rotation, Vector3Int dimensions)`](../Assets/Scripts/Features/Building/BuildManager.cs#L704) | private |
-| BuildManager | [`void SaveBlock(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L716) | public |
-| BuildManager | [`void RemoveBlock(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L734) | public |
-| BuildManager | [`void LoadAllBlocks()`](../Assets/Scripts/Features/Building/BuildManager.cs#L742) | public |
-| BuildManager | [`BlueprintStatistics GetBlueprintStatistics()`](../Assets/Scripts/Features/Building/BuildManager.cs#L771) | public |
-| BuildManager | [`void EnsureBlueprintLoader()`](../Assets/Scripts/Features/Building/BuildManager.cs#L778) | private |
-| BuildManager | [`void DisplayBlueprintStatistics(BlueprintStatistics statistics)`](../Assets/Scripts/Features/Building/BuildManager.cs#L787) | private |
-| BuildManager | [`BlueprintLoadSettings CreateLoadSettings()`](../Assets/Scripts/Features/Building/BuildManager.cs#L795) | private |
-| BuildManager | [`void ClearUnloadableData(string id)`](../Assets/Scripts/Features/Building/BuildManager.cs#L814) | public |
-| BuildManager | [`bool IsLoadingBuildTarget( BuildTargetKind kind, string saveName, string enemyBlueprintName, string buildingBlueprintName = null)`](../Assets/Scripts/Features/Building/BuildManager.cs#L819) | public |
-| BuildManager | [`bool IsLoadingBuildTarget(BuildTargetContext context)`](../Assets/Scripts/Features/Building/BuildManager.cs#L829) | private |
-| BuildManager | [`void ClearUnloadableData(string id, string targetSavePath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L839) | private |
-| BuildManager | [`void InitialBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L848) | private |
-| BuildManager | [`bool CanCreateBlock(GameObject prefab, out string reason)`](../Assets/Scripts/Features/Building/BuildManager.cs#L856) | private |
-| BuildManager | [`void ApplyBlockBuildDefaults(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L895) | public |
-| BuildManager | [`int CountCockpitsInCurrentConstruct()`](../Assets/Scripts/Features/Building/BuildManager.cs#L900) | private |
-| BuildManager | [`void ResetBuildState()`](../Assets/Scripts/Features/Building/BuildManager.cs#L910) | private |
-| BuildManager | [`void SetBuildTarget(BuildTargetContext context)`](../Assets/Scripts/Features/Building/BuildManager.cs#L920) | private |
-| BuildManager | [`void RefreshBlueprintUI()`](../Assets/Scripts/Features/Building/BuildManager.cs#L939) | private |
-| BuildManager | [`void StopActiveBlockLoad()`](../Assets/Scripts/Features/Building/BuildManager.cs#L947) | private |
-| BuildManager | [`void CancelBlueprintLoad()`](../Assets/Scripts/Features/Building/BuildManager.cs#L952) | public |
-| BuildManager | [`string ConvertToResourcesPath(string fullPath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L957) | public static |
+| BuildManager | [`void SetBuildMode(bool lockView)`](../Assets/Scripts/Features/Building/BuildManager.cs#L230) | public |
+| BuildManager | [`void ToggleEnemyBlueprintBuildMode()`](../Assets/Scripts/Features/Building/BuildManager.cs#L242) | public |
+| BuildManager | [`void EnterEnemyBlueprintBuildMode(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L254) | public |
+| BuildManager | [`void ExitEnemyBlueprintBuildMode(bool reloadPlayerSave)`](../Assets/Scripts/Features/Building/BuildManager.cs#L285) | public |
+| BuildManager | [`void ExitDeveloperBlueprintBuildMode(bool reloadPlayerSave)`](../Assets/Scripts/Features/Building/BuildManager.cs#L293) | public |
+| BuildManager | [`void ToggleBuildingBlueprintBuildMode()`](../Assets/Scripts/Features/Building/BuildManager.cs#L313) | public |
+| BuildManager | [`void EnterBuildingBlueprintBuildMode(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L328) | public |
+| BuildManager | [`void ToggleBaseBlueprintBuildMode()`](../Assets/Scripts/Features/Building/BuildManager.cs#L333) | public |
+| BuildManager | [`void EnterBaseBlueprintBuildMode(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L346) | public |
+| BuildManager | [`void EnterStructureBlueprintBuildMode(string blueprintName, bool siegeBase)`](../Assets/Scripts/Features/Building/BuildManager.cs#L351) | private |
+| BuildManager | [`void PrepareBuildingFoundation(Transform parent, BlockDataList data)`](../Assets/Scripts/Features/Building/BuildManager.cs#L418) | private |
+| BuildManager | [`void MarkBuildingFootprintDirty()`](../Assets/Scripts/Features/Building/BuildManager.cs#L439) | public |
+| BuildManager | [`void CompleteBuildingBlueprint()`](../Assets/Scripts/Features/Building/BuildManager.cs#L447) | public |
+| BuildManager | [`void RefreshBuildingFootprint()`](../Assets/Scripts/Features/Building/BuildManager.cs#L479) | public |
+| BuildManager | [`void SetCurrentBuildingBlueprintName(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L496) | public |
+| BuildManager | [`void SetCurrentBlockResource(string resourcePath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L505) | public |
+| BuildManager | [`void SetCurrentSaveName(string saveName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L520) | public |
+| BuildManager | [`void SetCurrentEnemyBlueprintName(string blueprintName)`](../Assets/Scripts/Features/Building/BuildManager.cs#L525) | public |
+| BuildManager | [`void SetBuildType(BuildType buildType)`](../Assets/Scripts/Features/Building/BuildManager.cs#L530) | public |
+| BuildManager | [`void EnsureBuildInteraction()`](../Assets/Scripts/Features/Building/BuildManager.cs#L557) | private |
+| BuildManager | [`void HandleBuildingPreview()`](../Assets/Scripts/Features/Building/BuildManager.cs#L590) | private |
+| BuildManager | [`void ClearCurrentGhost(bool hideHints = true)`](../Assets/Scripts/Features/Building/BuildManager.cs#L598) | private |
+| BuildManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L606) | public |
+| BuildManager | [`Vector3 SnapCenterByMinCorner(Vector3 targetCenter, Quaternion targetRotation, Block b)`](../Assets/Scripts/Features/Building/BuildManager.cs#L613) | public |
+| BuildManager | [`bool IsWithinBuildRange(Vector3 position)`](../Assets/Scripts/Features/Building/BuildManager.cs#L619) | public |
+| BuildManager | [`void CreateBlock(GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot)`](../Assets/Scripts/Features/Building/BuildManager.cs#L624) | public |
+| BuildManager | [`Block CreateBlockFromTemplate( GameObject prefab, string resourcePath, Vector3 pos, Quaternion rot, Vector3Int? dimensions, HangarEntrance entrance = HangarEntrance.Front)`](../Assets/Scripts/Features/Building/BuildManager.cs#L629) | private |
+| BuildManager | [`void DeleteBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L683) | public |
+| BuildManager | [`void EnsureBlueprintEditor()`](../Assets/Scripts/Features/Building/BuildManager.cs#L704) | private |
+| BuildManager | [`Block CreateDuplicateBlock(GameObject prefab, string path, Vector3 position, Quaternion rotation, Vector3Int dimensions)`](../Assets/Scripts/Features/Building/BuildManager.cs#L713) | private |
+| BuildManager | [`void SaveBlock(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L725) | public |
+| BuildManager | [`void RemoveBlock(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L743) | public |
+| BuildManager | [`void LoadAllBlocks()`](../Assets/Scripts/Features/Building/BuildManager.cs#L751) | public |
+| BuildManager | [`BlueprintStatistics GetBlueprintStatistics()`](../Assets/Scripts/Features/Building/BuildManager.cs#L780) | public |
+| BuildManager | [`void EnsureBlueprintLoader()`](../Assets/Scripts/Features/Building/BuildManager.cs#L787) | private |
+| BuildManager | [`void DisplayBlueprintStatistics(BlueprintStatistics statistics)`](../Assets/Scripts/Features/Building/BuildManager.cs#L796) | private |
+| BuildManager | [`BlueprintLoadSettings CreateLoadSettings()`](../Assets/Scripts/Features/Building/BuildManager.cs#L804) | private |
+| BuildManager | [`void ClearUnloadableData(string id)`](../Assets/Scripts/Features/Building/BuildManager.cs#L823) | public |
+| BuildManager | [`bool IsLoadingBuildTarget( BuildTargetKind kind, string saveName, string enemyBlueprintName, string buildingBlueprintName = null)`](../Assets/Scripts/Features/Building/BuildManager.cs#L828) | public |
+| BuildManager | [`bool IsLoadingBuildTarget(BuildTargetContext context)`](../Assets/Scripts/Features/Building/BuildManager.cs#L838) | private |
+| BuildManager | [`void ClearUnloadableData(string id, string targetSavePath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L848) | private |
+| BuildManager | [`void InitialBlock()`](../Assets/Scripts/Features/Building/BuildManager.cs#L857) | private |
+| BuildManager | [`bool CanCreateBlock(GameObject prefab, out string reason)`](../Assets/Scripts/Features/Building/BuildManager.cs#L865) | private |
+| BuildManager | [`void ApplyBlockBuildDefaults(Block block)`](../Assets/Scripts/Features/Building/BuildManager.cs#L904) | public |
+| BuildManager | [`int CountCockpitsInCurrentConstruct()`](../Assets/Scripts/Features/Building/BuildManager.cs#L909) | private |
+| BuildManager | [`void ResetBuildState()`](../Assets/Scripts/Features/Building/BuildManager.cs#L919) | private |
+| BuildManager | [`void SetBuildTarget(BuildTargetContext context)`](../Assets/Scripts/Features/Building/BuildManager.cs#L929) | private |
+| BuildManager | [`void RefreshBlueprintUI()`](../Assets/Scripts/Features/Building/BuildManager.cs#L948) | private |
+| BuildManager | [`void StopActiveBlockLoad()`](../Assets/Scripts/Features/Building/BuildManager.cs#L956) | private |
+| BuildManager | [`void CancelBlueprintLoad()`](../Assets/Scripts/Features/Building/BuildManager.cs#L961) | public |
+| BuildManager | [`string ConvertToResourcesPath(string fullPath)`](../Assets/Scripts/Features/Building/BuildManager.cs#L966) | public static |
 
 ## Assets/Scripts/Features/Building/BuildingEditor/BuildingEditorPanel.cs
 
@@ -4099,12 +4118,12 @@ HY-Sandbox/
 | BuildHotbar | [`BuildHotbarCatalog.Slot Copy(BuildHotbarCatalog.Slot source)`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L104) | private static |
 | BuildHotbar | [`bool Valid(BuildHotbarCatalog.Slot value)`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L113) | private |
 | BuildHotbar | [`void Update()`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L129) | private |
-| BuildHotbar | [`bool Choose(int index)`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L168) | public |
-| BuildHotbar | [`bool Assign(int index, string path, string materialId)`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L186) | public |
-| BuildHotbar | [`void Swap(int first, int second)`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L209) | public |
-| BuildHotbar | [`void Clear(int index)`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L220) | public |
-| BuildHotbar | [`void Save()`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L229) | private |
-| BuildHotbar | [`void Refresh()`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L236) | private |
+| BuildHotbar | [`bool Choose(int index)`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L165) | public |
+| BuildHotbar | [`bool Assign(int index, string path, string materialId)`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L183) | public |
+| BuildHotbar | [`void Swap(int first, int second)`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L206) | public |
+| BuildHotbar | [`void Clear(int index)`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L217) | public |
+| BuildHotbar | [`void Save()`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L226) | private |
+| BuildHotbar | [`void Refresh()`](../Assets/Scripts/Features/Building/Interface/BuildHotbar.cs#L233) | private |
 
 ## Assets/Scripts/Features/Building/Interface/BuildHotbarCatalog.cs
 
@@ -5032,28 +5051,28 @@ HY-Sandbox/
 | MainMenuController | [`IEnumerator EnterAttract()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L131) | private |
 | MainMenuController | [`void ReturnFromAttract()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L159) | public |
 | MainMenuController | [`IEnumerator LeaveAttract()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L167) | private |
-| MainMenuController | [`void RefreshLibrary()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L189) | public |
-| MainMenuController | [`void SelectBlueprint(int index)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L210) | public |
-| MainMenuController | [`void LaunchSelected()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L239) | public |
-| MainMenuController | [`void CreateBlueprint()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L249) | public |
-| MainMenuController | [`IEnumerator CreateAndEdit(bool building)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L257) | private |
-| MainMenuController | [`IEnumerator Launch(MenuBlueprintEntry entry, MenuDestination target)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L286) | private |
-| MainMenuController | [`void OpenBlueprint(bool building, string name)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L382) | private static |
-| MainMenuController | [`void ResumeWorkshop()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L405) | public |
-| MainMenuController | [`IEnumerator Resume()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L413) | private |
-| MainMenuController | [`void OpenRecent()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L425) | public |
-| MainMenuController | [`void ReturnToMenu()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L437) | public |
-| MainMenuController | [`IEnumerator Return()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L451) | private |
-| MainMenuController | [`IEnumerator EnsureMain()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L499) | private |
-| MainMenuController | [`IEnumerator WaitForBlueprint()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L528) | private |
-| MainMenuController | [`void Remember(bool building, string name)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L544) | private static |
-| MainMenuController | [`void SetPresentation(bool visible)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L551) | private |
-| MainMenuController | [`void Quit()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L561) | public |
-| MainMenuController | [`void Run(IEnumerator work)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L579) | private |
-| MainMenuController | [`void CancelNavigation()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L587) | public |
-| MainMenuController | [`IEnumerator Guard(IEnumerator work)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L596) | private |
-| MainMenuController | [`void SetStatus(string message)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L677) | private |
-| MainMenuController | [`bool IsDataError(Exception error)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L683) | private static |
+| MainMenuController | [`void RefreshLibrary()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L196) | public |
+| MainMenuController | [`void SelectBlueprint(int index)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L217) | public |
+| MainMenuController | [`void LaunchSelected()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L246) | public |
+| MainMenuController | [`void CreateBlueprint()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L256) | public |
+| MainMenuController | [`IEnumerator CreateAndEdit(bool building)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L264) | private |
+| MainMenuController | [`IEnumerator Launch(MenuBlueprintEntry entry, MenuDestination target)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L293) | private |
+| MainMenuController | [`void OpenBlueprint(bool building, string name)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L389) | private static |
+| MainMenuController | [`void ResumeWorkshop()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L412) | public |
+| MainMenuController | [`IEnumerator Resume()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L420) | private |
+| MainMenuController | [`void OpenRecent()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L432) | public |
+| MainMenuController | [`void ReturnToMenu()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L444) | public |
+| MainMenuController | [`IEnumerator Return()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L458) | private |
+| MainMenuController | [`IEnumerator EnsureMain()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L506) | private |
+| MainMenuController | [`IEnumerator WaitForBlueprint()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L535) | private |
+| MainMenuController | [`void Remember(bool building, string name)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L551) | private static |
+| MainMenuController | [`void SetPresentation(bool visible)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L558) | private |
+| MainMenuController | [`void Quit()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L568) | public |
+| MainMenuController | [`void Run(IEnumerator work)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L586) | private |
+| MainMenuController | [`void CancelNavigation()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L594) | public |
+| MainMenuController | [`IEnumerator Guard(IEnumerator work)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L603) | private |
+| MainMenuController | [`void SetStatus(string message)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L684) | private |
+| MainMenuController | [`bool IsDataError(Exception error)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L690) | private static |
 
 ## Assets/Scripts/Features/MainMenu/Navigation/MenuPlayDraft.cs
 
@@ -5378,16 +5397,16 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| InputManager | [`void Awake()`](../Assets/Scripts/Features/Player/InputManager.cs#L30) | private |
-| InputManager | [`void Start()`](../Assets/Scripts/Features/Player/InputManager.cs#L35) | private |
-| InputManager | [`void Update()`](../Assets/Scripts/Features/Player/InputManager.cs#L46) | private |
-| InputManager | [`void EnterBuildMode()`](../Assets/Scripts/Features/Player/InputManager.cs#L168) | public |
-| InputManager | [`void PollBuildNavigation()`](../Assets/Scripts/Features/Player/InputManager.cs#L186) | private |
-| InputManager | [`void OnApplicationFocus(bool focused)`](../Assets/Scripts/Features/Player/InputManager.cs#L212) | private |
-| InputManager | [`void OnApplicationPause(bool paused)`](../Assets/Scripts/Features/Player/InputManager.cs#L220) | private |
-| InputManager | [`void ReleaseBuildNavigation()`](../Assets/Scripts/Features/Player/InputManager.cs#L228) | private |
-| InputManager | [`void PollSiege(SiegeSession siege, Keyboard keyboard)`](../Assets/Scripts/Features/Player/InputManager.cs#L239) | private |
-| InputManager | [`void ApplyCursorState(bool showCursor)`](../Assets/Scripts/Features/Player/InputManager.cs#L265) | private |
+| InputManager | [`void Awake()`](../Assets/Scripts/Features/Player/InputManager.cs#L29) | private |
+| InputManager | [`void Start()`](../Assets/Scripts/Features/Player/InputManager.cs#L34) | private |
+| InputManager | [`void Update()`](../Assets/Scripts/Features/Player/InputManager.cs#L45) | private |
+| InputManager | [`void EnterBuildMode()`](../Assets/Scripts/Features/Player/InputManager.cs#L173) | public |
+| InputManager | [`void PollBuildNavigation()`](../Assets/Scripts/Features/Player/InputManager.cs#L191) | private |
+| InputManager | [`void OnApplicationFocus(bool focused)`](../Assets/Scripts/Features/Player/InputManager.cs#L216) | private |
+| InputManager | [`void OnApplicationPause(bool paused)`](../Assets/Scripts/Features/Player/InputManager.cs#L224) | private |
+| InputManager | [`void ReleaseBuildNavigation()`](../Assets/Scripts/Features/Player/InputManager.cs#L232) | private |
+| InputManager | [`void PollSiege(SiegeSession siege, Keyboard keyboard)`](../Assets/Scripts/Features/Player/InputManager.cs#L243) | private |
+| InputManager | [`void ApplyCursorState(bool showCursor)`](../Assets/Scripts/Features/Player/InputManager.cs#L269) | private |
 
 ## Assets/Scripts/Features/Player/Player.cs
 
@@ -5412,6 +5431,12 @@ HY-Sandbox/
 | --- | --- | --- |
 | PlayerHealth | [`void Start()`](../Assets/Scripts/Features/Player/PlayerHealth.cs#L8) | private |
 | PlayerHealth | [`void Update()`](../Assets/Scripts/Features/Player/PlayerHealth.cs#L13) | private |
+
+## Assets/Scripts/Features/Player/TextInputFocus.cs
+
+// 职责：统一识别EventSystem当前文本编辑选择，阻止场景快捷键窃取文字输入。 // 入口：IsEditingText；支持uGUI和TMP，忽略已隐藏或禁用的旧选择。
+
+数据/配置/接口定义，无方法体。
 
 ## Assets/Scripts/Features/Power/Devices/PowerGeneratingUnit.cs
 

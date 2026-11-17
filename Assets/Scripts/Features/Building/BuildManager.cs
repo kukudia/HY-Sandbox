@@ -166,6 +166,15 @@ public class BuildManager : MonoBehaviour
             return;
         }
 
+        if (TextInputFocus.IsEditingText)
+        {
+            // Stop an unfinished drag before editing inspector-style coordinates or blueprint text.
+            _manipulation.CancelDrag();
+            ClearCurrentGhost();
+            _selection.RefreshBuildGizmos();
+            return;
+        }
+
         if (InputManager.instance.lockView)
         {
             if (currentBuildType != BuildType.Build)

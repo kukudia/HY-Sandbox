@@ -169,6 +169,13 @@ public sealed class MainMenuController : MonoBehaviour
         Scene attract = SceneManager.GetSceneByPath(AttractPath);
         if (attract.isLoaded)
         {
+            // Unload is asynchronous: stop producers before their final Update can spawn into a closing scene.
+            SceneManager.SetActiveScene(gameObject.scene);
+            foreach (GameObject root in attract.GetRootGameObjects())
+            {
+                root.SetActive(false);
+            }
+
             yield return SceneManager.UnloadSceneAsync(attract);
         }
 

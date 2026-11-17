@@ -56,7 +56,7 @@ def main():
 
     graph(
         "菜单演出隔离与恢复",
-        "源码推导：冷启动不加载Main或个人蓝图；已加载工坊先停放根对象，保存四个旧战斗服务引用。Additive演出拥有独立服务和状态Canvas，ESC或取消卸载演出，再恢复原服务、菜单展示与原稿。自动友舰阵亡不触发玩家死亡面板；真正玩家驾驶保留原死亡链。",
+        "源码推导：冷启动不加载Main或个人蓝图；已加载工坊先停放根对象，保存四个旧战斗服务引用。Additive演出拥有独立服务和状态Canvas，ESC或取消先停用演出根对象阻止卸载帧继续生成，再卸载演出，再恢复原服务、菜单展示与原稿。自动友舰阵亡不触发玩家死亡面板；真正玩家驾驶保留原死亡链。",
         {"A": "MainMenuController.ShowBattleAttract", "B": "MainMenuController.EnterAttract",
          "C": "MainMenuController.Return", "D": "MainMenuController.Update",
          "E": "MainMenuController.ReturnFromAttract", "F": "MainMenuController.LeaveAttract",
@@ -165,15 +165,16 @@ def main():
     )
     graph(
         "夜班交互、暂停与诊断",
-        "源码推导：右键临时暂停建造操作；整数边界锚点同时服务预览、移动和旋转。Preference只控制受限Connector模块自动贴面。ESC打开预挂暂停界面，恢复原时钟/音频/输入；重启先清理旧模式再用原设计启动。双击友舰复用唯一驾驶权主链，Tab返回观察。诊断抽屉按阵营筛选，共用NavigationTrack有界历史。",
+        "源码推导：右键长按0.18秒临时暂停建造操作；UI起始不捕获，失焦/应用暂停要求释放后新手势；统一文字焦点屏蔽快捷键及拖拽。整数边界锚点同时服务预览、移动和旋转。Preference只控制受限Connector模块自动贴面。ESC打开预挂暂停界面，恢复原时钟/音频/输入；重启先清理旧模式再用原设计启动。双击友舰复用唯一驾驶权主链，Tab返回观察。诊断抽屉按阵营筛选，共用NavigationTrack有界历史。",
         {"A": "InputManager.Update", "B": "BuildManager.SetBuildMode", "C": "BuildPlacementGeometry.CalculateRotationPosition",
          "D": "BuildPreview.Poll", "E": "BuildPlacementGeometry.GetSurfaceRotation", "F": "BuildManipulation.HandleMovement",
          "G": "WorkshopNavigation.TogglePause", "H": "PauseMenu.Toggle", "I": "PauseMenu.Resume", "J": "PauseMenu.Restart",
          "K": "GameModeController.RestartRoutine", "L": "GameModeController.ReturnToBuild", "M": "GameModeController.LaunchSiege",
          "N": "SiegeCombatHud.PollShipControl", "O": "SiegeGameplayStage.TryTakeControl", "P": "SiegeFleet.TakeControl",
          "Q": "SiegeGameplayStage.Observe", "R": "SiegeFleet.ReleaseControl", "S": "DebugManager.SetFactionFilter",
-         "T": "CombatFlightTracks.Update", "U": "NavigationTrack.Sample"},
-        ['A --> B', 'D --> C', 'D --> E', 'F --> C', 'G --> H', 'H -->|已暂停| I',
+         "T": "CombatFlightTracks.Update", "U": "NavigationTrack.Sample",
+         "V": "InputManager.PollBuildNavigation", "W": "InputManager.ReleaseBuildNavigation"},
+        ['A --> V', 'V --> B', 'W -->|经EnterBuildMode| B', 'D --> C', 'D --> E', 'F --> C', 'G --> H', 'H -->|已暂停| I',
          'J --> I', 'J --> K', 'K --> L', 'K -.->|清理完成| M', 'N --> O', 'O --> P',
          'N --> Q', 'Q --> R', 'S -.->|下一次采样| T', 'T --> U'],
     )

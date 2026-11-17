@@ -134,10 +134,7 @@ public sealed class BuildHotbar : MonoBehaviour
         }
 
         Keyboard keyboard = Keyboard.current;
-        GameObject selected = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
-        // EventSystem can retain the selection for one frame after a popup is hidden.
-        bool typing = selected != null && (selected.GetComponentInParent<InputField>(true) != null || selected.GetComponentInParent<TMPro.TMP_InputField>(true) != null);
-        if (keyboard != null && !typing && !keyboard.ctrlKey.isPressed && !keyboard.altKey.isPressed)
+        if (keyboard != null && !TextInputFocus.IsEditingText && !keyboard.ctrlKey.isPressed && !keyboard.altKey.isPressed)
         {
             for (int i = 0; i < Capacity; i++)
             {

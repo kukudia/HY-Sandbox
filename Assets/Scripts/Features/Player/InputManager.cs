@@ -3,7 +3,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class InputManager : MonoBehaviour
 {
@@ -58,6 +57,12 @@ public class InputManager : MonoBehaviour
         Keyboard keyboard = Keyboard.current;
         if (keyboard == null)
         {
+            return;
+        }
+
+        if (TextInputFocus.IsEditingText)
+        {
+            ReleaseBuildNavigation();
             return;
         }
 
@@ -194,9 +199,8 @@ public class InputManager : MonoBehaviour
         else if (navigationStartedAt < 0f)
         {
             navigationStartedAt = Time.unscaledTime;
-            GameObject selected = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
             navigationBlocked |= EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
-            navigationBlocked |= selected != null && (selected.GetComponentInParent<InputField>(true) != null || selected.GetComponentInParent<TMPro.TMP_InputField>(true) != null);
+            navigationBlocked |= TextInputFocus.IsEditingText;
         }
 
         bool editing = !held || navigationBlocked || Time.unscaledTime - navigationStartedAt < buildNavigationHoldSeconds;

@@ -174,6 +174,42 @@ public static class MainMenuPlayChecks
         Check(
             ActiveEvents() == 1 && ActiveScreenCameras() == 1,
             "cold attract cancellation keeps one menu camera and EventSystem");
+        foreach (int frames in new[]
+        {
+            0,
+            1,
+            3,
+            8
+        }
+
+        )
+        {
+            menu.ShowBattleAttract();
+            while (menu.Busy)
+            {
+                yield return null;
+            }
+
+            for (int frame = 0; frame < frames; frame++)
+            {
+                yield return null;
+            }
+
+            GameObject[] closingRoots = SceneManager.GetSceneByPath(MainMenuController.AttractPath).GetRootGameObjects();
+            menu.ReturnFromAttract();
+            Check(
+                closingRoots.All(root => root == null || !root.activeInHierarchy),
+                "attract producers stop synchronously before unload at frame " + frames);
+            while (menu.Busy)
+            {
+                yield return null;
+            }
+
+            Check(
+                menu.MenuVisible && !menu.AttractVisible && PlayManager.instance == null && ActiveEvents() == 1,
+                "early attract exit restores cold menu at frame " + frames);
+        }
+
         menu.Choose(MenuDestination.Siege);
         Dropdown picker = (Dropdown)new SerializedObject(Object.FindAnyObjectByType<MainMenuView>()).FindProperty("blueprints").objectReferenceValue;
         yield return null;
