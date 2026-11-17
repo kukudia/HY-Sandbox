@@ -12,9 +12,9 @@ ESC及工坊顶部按钮进入真实暂停界面，冻结游戏时间、相机�
 
 受损敌舰仅余无推进/武器的单驾驶舱时，连续12秒移动不足2米按未击杀退场，恢复/移动/重组重置窗口；不赠送击杀或金币，不影响原生纯驾驶舱设计。策略入口`Siege/Battle/SiegeStrandedCockpit.cs`，时限见`SiegeSettings`。
 
-独立可编辑待机战场`BattleAttract.unity`复用8艘内置舰与Bastion基地，额外烟火无伤害；四镜头每7秒切换，65秒重开。演出专用1.2秒错峰索敌及VFX总160/单模板24预算，不改变其他场景默认无限活动效果契约。源工具`Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs`，规格见[资产说明](Docs/Art/BattleAttract.md)。
+独立可编辑待机战场`BattleAttract.unity`复用8艘内置舰与Bastion基地，额外烟火无伤害；四镜头每7秒切换，65秒重开。演出专用1.2秒错峰索敌及VFX总160/单模板24预算，不改变其他场景默认无限活动效果契约。主菜单Watch live defence进入，ESC返回；冷启动、取消和工坊原稿恢复已纳入130项菜单Play回归。源工具`Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs`，规格见[资产说明](Docs/Art/BattleAttract.md)。
 
-验证：Play爆炸14项、真实Prefab网格/六面贴合774项、Build→Siege生产流程20项、交互/接管/筛选/轨迹/Restart20项、残舱规则10项、VFX预算10项、AI27项及炮塔32项通过。真实输入观察到RMB/方向键/ESC暂停恢复；菜单/偏好/快捷加载/基地距离及六面真实放置113项Play通过；工坊反馈现禁止镜头抖动以免等距连接点跳格，共享HUD四分辨率离屏通过。Tab模拟、工坊/暂停多分辨率与自然残舱待补。持续状态与证据见[夜班验证](Docs/Validation/2026-11-18-night-development.md)。仅本地提交，不推送。
+验证：Play爆炸14项、真实Prefab网格/六面贴合774项、Build→Siege生产流程20项、交互/接管/筛选/轨迹/Restart20项、残舱规则10项、VFX预算10项、AI27项及炮塔32项通过。真实输入观察到RMB/方向键/ESC暂停恢复；菜单/偏好/快捷加载/基地距离及六面真实放置113项Play通过；工坊反馈现禁止镜头抖动以免等距连接点跳格，共享HUD四分辨率在纠正原GPU分配失败后重跑通过（仅边界/字形）。Tab模拟、工坊/暂停多分辨率与自然残舱待补。持续状态与证据见[夜班验证](Docs/Validation/2026-11-18-night-development.md)。仅本地提交，不推送。
 
 ## Siege战斗时限与界面修正（2026-11-17）
 

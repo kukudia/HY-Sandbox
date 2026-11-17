@@ -6,7 +6,64 @@
 
     维护：业务变化更新受影响图和 DEVELOPMENT；纯格式变化重新生成行号。`dotnet run --project Tools/CodeReadability -- --check .` 会拒绝失效符号。
 
-    ## 残舱退场与待机演出
+    ## 菜单演出隔离与恢复
+
+源码推导：冷启动不加载Main或个人蓝图；已加载工坊先停放根对象，保存四个旧战斗服务引用。Additive演出拥有独立服务和状态Canvas，ESC或取消卸载演出，再恢复原服务、菜单展示与原稿。自动友舰阵亡不触发玩家死亡面板；真正玩家驾驶保留原死亡链。
+
+```mermaid
+flowchart TD
+    A["MainMenuController.ShowBattleAttract()"]
+    click A "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L123" "打开源码"
+    B["MainMenuController.EnterAttract()"]
+    click B "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L131" "打开源码"
+    C["MainMenuController.Return()"]
+    click C "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L451" "打开源码"
+    D["MainMenuController.Update()"]
+    click D "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L91" "打开源码"
+    E["MainMenuController.ReturnFromAttract()"]
+    click E "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L159" "打开源码"
+    F["MainMenuController.LeaveAttract()"]
+    click F "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L167" "打开源码"
+    G["MainMenuController.Guard()"]
+    click G "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L596" "打开源码"
+    H["BattleAttractAuthoring.RepairStatusOverlay()"]
+    click H "../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L300" "打开源码"
+    I["DestroyManager.DestroyGameObject()"]
+    click I "../Assets/Scripts/Features/Combat/DestroyManager.cs#L30" "打开源码"
+    J["MainUIPanels.PlayerDeath()"]
+    click J "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L323" "打开源码"
+    A --> B
+    B -->|需要时停放工坊| C
+    D -->|ESC| E
+    E --> F
+    B -->|取消| F
+    G -->|演出载入异常| F
+    H -.->|保存诊断依赖| B
+    I -->|仅玩家驾驶且未被玩法认领| J
+```
+
+- [MainMenuController.ShowBattleAttract](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L123)
+<!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|ShowBattleAttract -->
+- [MainMenuController.EnterAttract](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L131)
+<!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|EnterAttract -->
+- [MainMenuController.Return](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L451)
+<!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|Return -->
+- [MainMenuController.Update](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L91)
+<!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|Update -->
+- [MainMenuController.ReturnFromAttract](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L159)
+<!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|ReturnFromAttract -->
+- [MainMenuController.LeaveAttract](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L167)
+<!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|LeaveAttract -->
+- [MainMenuController.Guard](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L596)
+<!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|Guard -->
+- [BattleAttractAuthoring.RepairStatusOverlay](../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L300)
+<!-- source: Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs|RepairStatusOverlay -->
+- [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L30)
+<!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyGameObject -->
+- [MainUIPanels.PlayerDeath](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L323)
+<!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayerDeath -->
+
+## 残舱退场与待机演出
 
 原有船体受损后仅剩无推进/武器驾驶舱，持续12秒移动不足2米才按未击杀退场；重组和移动重置窗口。待机场景复用真实基地/舰船与战斗服务，错峰低频索敌，生产瞄准与开火仍逐物理步。每65秒重开，额外烟火只有视觉；四镜头每7秒轮换。VFX活动预算仅演出场显式启用，默认场景保持不限。
 
@@ -88,7 +145,7 @@ flowchart TD
     A["MenuBlueprintLibrary.ReadBases()"]
     click A "../Assets/Scripts/Features/MainMenu/Library/MenuBlueprintLibrary.cs#L49" "打开源码"
     B["MainMenuController.RefreshLibrary()"]
-    click B "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L105" "打开源码"
+    click B "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L189" "打开源码"
     C["GameModePanel.Refresh()"]
     click C "../Assets/Scripts/Features/Simulation/Modes/Interface/GameModePanel.cs#L68" "打开源码"
     D["GameModeController.LaunchSiege()"]
@@ -116,7 +173,7 @@ flowchart TD
 
 - [MenuBlueprintLibrary.ReadBases](../Assets/Scripts/Features/MainMenu/Library/MenuBlueprintLibrary.cs#L49)
 <!-- source: Assets/Scripts/Features/MainMenu/Library/MenuBlueprintLibrary.cs|ReadBases -->
-- [MainMenuController.RefreshLibrary](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L105)
+- [MainMenuController.RefreshLibrary](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L189)
 <!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|RefreshLibrary -->
 - [GameModePanel.Refresh](../Assets/Scripts/Features/Simulation/Modes/Interface/GameModePanel.cs#L68)
 <!-- source: Assets/Scripts/Features/Simulation/Modes/Interface/GameModePanel.cs|Refresh -->
@@ -156,7 +213,7 @@ flowchart TD
     G["SiegeGameplayPlayerChecks.Run()"]
     click G "../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L160" "打开源码"
     H["MainMenuController.LaunchSelected()"]
-    click H "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L155" "打开源码"
+    click H "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L239" "打开源码"
     I["SiegeGameplayStage.BeginWave()"]
     click I "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L271" "打开源码"
     J["GameModeController.ReturnToBuild()"]
@@ -188,7 +245,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs|Initialize -->
 - [SiegeGameplayPlayerChecks.Run](../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L160)
 <!-- source: Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs|Run -->
-- [MainMenuController.LaunchSelected](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L155)
+- [MainMenuController.LaunchSelected](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L239)
 <!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|LaunchSelected -->
 - [SiegeGameplayStage.BeginWave](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L271)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|BeginWave -->
@@ -693,15 +750,15 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["MainMenuController.Start()"]
-    click A "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L62" "打开源码"
+    click A "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L70" "打开源码"
     B["MainMenuController.Choose()"]
-    click B "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L91" "打开源码"
+    click B "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L109" "打开源码"
     C["MenuBlueprintLibrary.Inspect()"]
     click C "../Assets/Scripts/Features/MainMenu/Library/MenuBlueprintLibrary.cs#L78" "打开源码"
     D["MainMenuController.Launch()"]
-    click D "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L202" "打开源码"
+    click D "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L286" "打开源码"
     E["MainMenuController.EnsureMain()"]
-    click E "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L415" "打开源码"
+    click E "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L499" "打开源码"
     F["MenuPlayDraft.Park()"]
     click F "../Assets/Scripts/Features/MainMenu/Navigation/MenuPlayDraft.cs#L20" "打开源码"
     G["GameModeController.LaunchSiege()"]
@@ -711,19 +768,19 @@ flowchart TD
     I["WorkshopNavigation.OpenMenu()"]
     click I "../Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs#L56" "打开源码"
     J["MainMenuController.Return()"]
-    click J "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L367" "打开源码"
+    click J "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L451" "打开源码"
     K["GameModeController.ReturnToBuild()"]
     click K "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L207" "打开源码"
     L["MenuPlayDraft.Restore()"]
     click L "../Assets/Scripts/Features/MainMenu/Navigation/MenuPlayDraft.cs#L37" "打开源码"
     M["MainMenuController.Resume()"]
-    click M "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L329" "打开源码"
+    click M "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L413" "打开源码"
     N["MainMenuController.CancelNavigation()"]
-    click N "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L503" "打开源码"
+    click N "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L587" "打开源码"
     O["MenuSettings.Initialize()"]
     click O "../Assets/Scripts/Features/MainMenu/Settings/MenuSettings.cs#L31" "打开源码"
     P["MainMenuController.OpenBlueprint()"]
-    click P "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L298" "打开源码"
+    click P "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L382" "打开源码"
     A --> O
     A -.->|用户选择| B
     B --> C
@@ -743,15 +800,15 @@ flowchart TD
     N -.->|安全载入或玩法清理完成| J
 ```
 
-- [MainMenuController.Start](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L62)
+- [MainMenuController.Start](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L70)
 <!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|Start -->
-- [MainMenuController.Choose](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L91)
+- [MainMenuController.Choose](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L109)
 <!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|Choose -->
 - [MenuBlueprintLibrary.Inspect](../Assets/Scripts/Features/MainMenu/Library/MenuBlueprintLibrary.cs#L78)
 <!-- source: Assets/Scripts/Features/MainMenu/Library/MenuBlueprintLibrary.cs|Inspect -->
-- [MainMenuController.Launch](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L202)
+- [MainMenuController.Launch](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L286)
 <!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|Launch -->
-- [MainMenuController.EnsureMain](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L415)
+- [MainMenuController.EnsureMain](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L499)
 <!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|EnsureMain -->
 - [MenuPlayDraft.Park](../Assets/Scripts/Features/MainMenu/Navigation/MenuPlayDraft.cs#L20)
 <!-- source: Assets/Scripts/Features/MainMenu/Navigation/MenuPlayDraft.cs|Park -->
@@ -761,19 +818,19 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|SelectExploration -->
 - [WorkshopNavigation.OpenMenu](../Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs#L56)
 <!-- source: Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs|OpenMenu -->
-- [MainMenuController.Return](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L367)
+- [MainMenuController.Return](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L451)
 <!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|Return -->
 - [GameModeController.ReturnToBuild](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L207)
 <!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|ReturnToBuild -->
 - [MenuPlayDraft.Restore](../Assets/Scripts/Features/MainMenu/Navigation/MenuPlayDraft.cs#L37)
 <!-- source: Assets/Scripts/Features/MainMenu/Navigation/MenuPlayDraft.cs|Restore -->
-- [MainMenuController.Resume](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L329)
+- [MainMenuController.Resume](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L413)
 <!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|Resume -->
-- [MainMenuController.CancelNavigation](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L503)
+- [MainMenuController.CancelNavigation](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L587)
 <!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|CancelNavigation -->
 - [MenuSettings.Initialize](../Assets/Scripts/Features/MainMenu/Settings/MenuSettings.cs#L31)
 <!-- source: Assets/Scripts/Features/MainMenu/Settings/MenuSettings.cs|Initialize -->
-- [MainMenuController.OpenBlueprint](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L298)
+- [MainMenuController.OpenBlueprint](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L382)
 <!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|OpenBlueprint -->
 
 ## 交错防线实战基地制作
@@ -795,7 +852,7 @@ flowchart TD
     F["SiegeConstructionSettings.Validate()"]
     click F "../Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs#L47" "打开源码"
     G["MainMenuController.Launch()"]
-    click G "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L202" "打开源码"
+    click G "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L286" "打开源码"
     H["SiegeGameplayStage.Enter()"]
     click H "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L96" "打开源码"
     I["SiegeCombatBaseAuthoring.RaiseHangars()"]
@@ -823,7 +880,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|RefreshAuthoringData -->
 - [SiegeConstructionSettings.Validate](../Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs#L47)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs|Validate -->
-- [MainMenuController.Launch](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L202)
+- [MainMenuController.Launch](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L286)
 <!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|Launch -->
 - [SiegeGameplayStage.Enter](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L96)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Enter -->
@@ -2952,7 +3009,7 @@ flowchart TD
     H["DestroyManager.DestroyGameObject()"]
     click H "../Assets/Scripts/Features/Combat/DestroyManager.cs#L30" "打开源码"
     I["DestroyManager.ExplodeBlock()"]
-    click I "../Assets/Scripts/Features/Combat/DestroyManager.cs#L139" "打开源码"
+    click I "../Assets/Scripts/Features/Combat/DestroyManager.cs#L140" "打开源码"
     K["PlayManager.RefreshGroup()"]
     click K "../Assets/Scripts/Features/Simulation/PlayManager.cs#L197" "打开源码"
     L["ExplosionPropagation.ApplyExplosionForce()"]
@@ -3068,7 +3125,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|ApplyCollisionEnergy -->
 - [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L30)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyGameObject -->
-- [DestroyManager.ExplodeBlock](../Assets/Scripts/Features/Combat/DestroyManager.cs#L139)
+- [DestroyManager.ExplodeBlock](../Assets/Scripts/Features/Combat/DestroyManager.cs#L140)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|ExplodeBlock -->
 - [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L197)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
@@ -7043,7 +7100,7 @@ flowchart TD
     N["VfxEffectPool.ClearActive()"]
     click N "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L125" "打开源码"
     O["DestroyManager.EndSalvageSession()"]
-    click O "../Assets/Scripts/Features/Combat/DestroyManager.cs#L206" "打开源码"
+    click O "../Assets/Scripts/Features/Combat/DestroyManager.cs#L207" "打开源码"
     P["SkirmishHud.SetState()"]
     click P "../Assets/Scripts/Features/Combat/Skirmish/SkirmishHud.cs#L25" "打开源码"
     Q["EnemyLabMovingObstacle.ResetMotion()"]
@@ -7131,7 +7188,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs|ClearAll -->
 - [VfxEffectPool.ClearActive](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L125)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs|ClearActive -->
-- [DestroyManager.EndSalvageSession](../Assets/Scripts/Features/Combat/DestroyManager.cs#L206)
+- [DestroyManager.EndSalvageSession](../Assets/Scripts/Features/Combat/DestroyManager.cs#L207)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|EndSalvageSession -->
 - [SkirmishHud.SetState](../Assets/Scripts/Features/Combat/Skirmish/SkirmishHud.cs#L25)
 <!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishHud.cs|SetState -->

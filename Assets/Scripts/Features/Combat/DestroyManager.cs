@@ -51,6 +51,7 @@ public class DestroyManager : MonoBehaviour
         }
 
         Cockpit cockpit = obj.GetComponent<Cockpit>();
+        bool playerWasDriving = cockpit != null && cockpit.ControlMode == UnitControlMode.Player;
         // 观战对局在模块脱离/重组前按驾驶舱身份认领死亡，避免误触玩家游戏结束。
         bool skirmishOwnsDeath = cockpit != null && PlayManager.instance != null && PlayManager.instance.Skirmish != null && PlayManager.instance.Skirmish.NotifyCockpitDestroyed(cockpit, health != null ? health.LastAttacker : null);
         if (cockpit != null && cockpit.faction == UnitFaction.Enemy && PlayManager.instance != null && PlayManager.instance.playMode)
@@ -122,10 +123,10 @@ public class DestroyManager : MonoBehaviour
             }
 
             Destroy(obj);
-            if (ownerFaction == UnitFaction.Player && PlayManager.instance.playMode && !siegeOwnsDeath && !skirmishOwnsDeath)
+            if (ownerFaction == UnitFaction.Player && playerWasDriving && PlayManager.instance.playMode && !siegeOwnsDeath && !skirmishOwnsDeath)
             {
                 //MainUIPanels.instance.PlayEnd();
-                MainUIPanels.instance.PlayerDeath();
+                MainUIPanels.instance?.PlayerDeath();
                 return;
             }
 

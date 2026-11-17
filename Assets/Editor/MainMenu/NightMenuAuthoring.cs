@@ -10,6 +10,37 @@ using UnityEngine.UI;
 
 public static class NightMenuAuthoring
 {
+    [MenuItem("Tools/HY-Sandbox/Main Menu/Install battle attract entry")]
+    public static void InstallAttractEntry()
+    {
+        if (EditorApplication.isPlaying)
+        {
+            throw new InvalidOperationException("Exit Play Mode before authoring.");
+        }
+
+        Scene scene = SceneManager.GetSceneByPath(WorkshopNavigation.MenuPath);
+        if (!scene.isLoaded)
+        {
+            scene = EditorSceneManager.OpenScene(WorkshopNavigation.MenuPath, OpenSceneMode.Additive);
+        }
+
+        var view = new SerializedObject(SceneObjectQuery.FindInScene<MainMenuView>(scene));
+        Button button = (Button)view.FindProperty("battleAttract").objectReferenceValue;
+        if (button == null)
+        {
+            Button template = (Button)view.FindProperty("recent").objectReferenceValue;
+            button = Tab(template, template.transform.parent, "Watch live defence", new Vector2(0, -205));
+            button.name = "Watch live defence";
+            button.GetComponent<RectTransform>().sizeDelta = new Vector2(540, 46);
+            Bind(view, "battleAttract", button);
+            view.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        button.interactable = true;
+        EditorSceneManager.MarkSceneDirty(scene);
+        EditorSceneManager.SaveScene(scene);
+    }
+
     [MenuItem("Tools/HY-Sandbox/Main Menu/Install pause and restart")]
     public static void InstallPause()
     {

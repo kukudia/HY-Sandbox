@@ -1475,8 +1475,8 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SharedCombatHudPreview | [`string Render()`](../Assets/Editor/Combat/Interface/SharedCombatHudPreview.cs#L16) | public static |
-| SharedCombatHudPreview | [`void RenderOne(Vector2Int size)`](../Assets/Editor/Combat/Interface/SharedCombatHudPreview.cs#L41) | private static |
+| SharedCombatHudPreview | [`string Render()`](../Assets/Editor/Combat/Interface/SharedCombatHudPreview.cs#L17) | public static |
+| SharedCombatHudPreview | [`void RenderOne(Vector2Int size)`](../Assets/Editor/Combat/Interface/SharedCombatHudPreview.cs#L62) | private static |
 
 ## Assets/Editor/Combat/SkirmishArenaAuthoring.cs
 
@@ -1865,17 +1865,18 @@ HY-Sandbox/
 | MainMenuPlayChecks | [`void Changed(PlayModeStateChange state)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L72) | private static |
 | MainMenuPlayChecks | [`void Tick()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L92) | private static |
 | MainMenuPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L118) | private static |
-| MainMenuPlayChecks | [`IEnumerator SurfacePlacement()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L692) | private static |
-| MainMenuPlayChecks | [`void PointerClick(Selectable control)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L769) | private static |
-| MainMenuPlayChecks | [`void Select(MainMenuController menu, string name)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L786) | private static |
-| MainMenuPlayChecks | [`BlockDataList Vehicle()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L793) | private static |
-| MainMenuPlayChecks | [`void InjectStore(string field, string directory)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L816) | private static |
-| MainMenuPlayChecks | [`int ActiveEvents()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L822) | private static |
-| MainMenuPlayChecks | [`int ActiveScreenCameras()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L827) | private static |
-| MainMenuPlayChecks | [`void Check(bool condition, string message)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L832) | private static |
-| MainMenuPlayChecks | [`void LogError(string message, string trace, LogType type)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L842) | private static |
-| MainMenuPlayChecks | [`void BackupPreferences()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L850) | private static |
-| MainMenuPlayChecks | [`void Finish()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L871) | private static |
+| MainMenuPlayChecks | [`IEnumerator SurfacePlacement()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L799) | private static |
+| MainMenuPlayChecks | [`IEnumerator EscapeAttract(MainMenuController menu)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L876) | private static |
+| MainMenuPlayChecks | [`void PointerClick(Selectable control)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L926) | private static |
+| MainMenuPlayChecks | [`void Select(MainMenuController menu, string name)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L943) | private static |
+| MainMenuPlayChecks | [`BlockDataList Vehicle()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L950) | private static |
+| MainMenuPlayChecks | [`void InjectStore(string field, string directory)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L973) | private static |
+| MainMenuPlayChecks | [`int ActiveEvents()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L979) | private static |
+| MainMenuPlayChecks | [`int ActiveScreenCameras()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L984) | private static |
+| MainMenuPlayChecks | [`void Check(bool condition, string message)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L989) | private static |
+| MainMenuPlayChecks | [`void LogError(string message, string trace, LogType type)`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L999) | private static |
+| MainMenuPlayChecks | [`void BackupPreferences()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L1007) | private static |
+| MainMenuPlayChecks | [`void Finish()`](../Assets/Editor/MainMenu/MainMenuPlayChecks.cs#L1028) | private static |
 
 ## Assets/Editor/MainMenu/NightMenuAuthoring.cs
 
@@ -1883,14 +1884,15 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| NightMenuAuthoring | [`void InstallPause()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L13) | public static |
-| NightMenuAuthoring | [`void InstallSiegeRestart()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L89) | private static |
-| NightMenuAuthoring | [`void InstallPreferences()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L126) | public static |
-| NightMenuAuthoring | [`void StylePreference(Toggle toggle)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L205) | private static |
-| NightMenuAuthoring | [`RectTransform Page(string name, Transform parent)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L236) | private static |
-| NightMenuAuthoring | [`Button Tab(Button template, Transform parent, string name, Vector2 position)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L247) | private static |
-| NightMenuAuthoring | [`void Place(RectTransform rect, Transform parent, Vector2 position, Vector2 size)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L257) | private static |
-| NightMenuAuthoring | [`void Bind(SerializedObject data, string name, UnityEngine.Object value)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L265) | private static |
+| NightMenuAuthoring | [`void InstallAttractEntry()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L13) | public static |
+| NightMenuAuthoring | [`void InstallPause()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L44) | public static |
+| NightMenuAuthoring | [`void InstallSiegeRestart()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L120) | private static |
+| NightMenuAuthoring | [`void InstallPreferences()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L157) | public static |
+| NightMenuAuthoring | [`void StylePreference(Toggle toggle)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L236) | private static |
+| NightMenuAuthoring | [`RectTransform Page(string name, Transform parent)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L267) | private static |
+| NightMenuAuthoring | [`Button Tab(Button template, Transform parent, string name, Vector2 position)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L278) | private static |
+| NightMenuAuthoring | [`void Place(RectTransform rect, Transform parent, Vector2 position, Vector2 size)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L288) | private static |
+| NightMenuAuthoring | [`void Bind(SerializedObject data, string name, UnityEngine.Object value)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L296) | private static |
 
 ## Assets/Editor/Navigation/Validation/EnemyPredictionPlayChecks.cs
 
@@ -1956,11 +1958,12 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BattleAttractAuthoring | [`void Create()`](../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L15) | public static |
-| BattleAttractAuthoring | [`void PolishSavedScene()`](../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L205) | public static |
-| BattleAttractAuthoring | [`void Polish(Scene scene)`](../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L225) | private static |
-| BattleAttractAuthoring | [`Transform Point(Transform parent, string name, Vector3 position)`](../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L291) | private static |
-| BattleAttractAuthoring | [`void Ref(SerializedObject target, string name, Object value)`](../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L299) | private static |
-| BattleAttractAuthoring | [`void Bar(Transform parent, string name, bool top)`](../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L304) | private static |
+| BattleAttractAuthoring | [`void PolishSavedScene()`](../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L204) | public static |
+| BattleAttractAuthoring | [`void Polish(Scene scene)`](../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L224) | private static |
+| BattleAttractAuthoring | [`void RepairStatusOverlay(Scene scene)`](../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L300) | private static |
+| BattleAttractAuthoring | [`Transform Point(Transform parent, string name, Vector3 position)`](../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L323) | private static |
+| BattleAttractAuthoring | [`void Ref(SerializedObject target, string name, Object value)`](../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L331) | private static |
+| BattleAttractAuthoring | [`void Bar(Transform parent, string name, bool top)`](../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L336) | private static |
 
 ## Assets/Editor/Presentation/Camera/SceneCameraPreviewSync.cs
 
@@ -4310,12 +4313,12 @@ HY-Sandbox/
 | --- | --- | --- |
 | DestroyManager | [`void Awake()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L25) | private |
 | DestroyManager | [`void DestroyGameObject(GameObject obj)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L30) | public |
-| DestroyManager | [`void ExplodeBlock(Block block)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L139) | public |
-| DestroyManager | [`void DamageBuildings(IReadOnlyList<BuildingRuntime> buildings, Vector3 center, float radius, float damage)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L186) | internal |
-| DestroyManager | [`void ApplyBuildingLoss(BuildingRuntime building, System.Action destroy)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L191) | internal |
-| DestroyManager | [`void ScheduleUnitCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L196) | public |
-| DestroyManager | [`void ScheduleDistantGroupCleanup(ControlUnit unit, Transform reference, float maxDistance)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L201) | public |
-| DestroyManager | [`void EndSalvageSession()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L206) | public |
+| DestroyManager | [`void ExplodeBlock(Block block)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L140) | public |
+| DestroyManager | [`void DamageBuildings(IReadOnlyList<BuildingRuntime> buildings, Vector3 center, float radius, float damage)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L187) | internal |
+| DestroyManager | [`void ApplyBuildingLoss(BuildingRuntime building, System.Action destroy)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L192) | internal |
+| DestroyManager | [`void ScheduleUnitCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L197) | public |
+| DestroyManager | [`void ScheduleDistantGroupCleanup(ControlUnit unit, Transform reference, float maxDistance)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L202) | public |
+| DestroyManager | [`void EndSalvageSession()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L207) | public |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyBlueprintFactory.cs
 
@@ -4952,14 +4955,14 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| MainMenuView | [`void Bind(MainMenuController owner)`](../Assets/Scripts/Features/MainMenu/Interface/MainMenuView.cs#L55) | public |
-| MainMenuView | [`void Home(bool canResume, string recentName)`](../Assets/Scripts/Features/MainMenu/Interface/MainMenuView.cs#L74) | public |
-| MainMenuView | [`void Picker(string title, bool editing)`](../Assets/Scripts/Features/MainMenu/Interface/MainMenuView.cs#L85) | public |
-| MainMenuView | [`void Settings()`](../Assets/Scripts/Features/MainMenu/Interface/MainMenuView.cs#L94) | public |
-| MainMenuView | [`void SetChoices(List<string> labels, int selected)`](../Assets/Scripts/Features/MainMenu/Interface/MainMenuView.cs#L102) | public |
-| MainMenuView | [`void Selection(string text, bool canLaunch, string action)`](../Assets/Scripts/Features/MainMenu/Interface/MainMenuView.cs#L111) | public |
-| MainMenuView | [`void Message(string text)`](../Assets/Scripts/Features/MainMenu/Interface/MainMenuView.cs#L118) | public |
-| MainMenuView | [`void SetBusy(bool busy)`](../Assets/Scripts/Features/MainMenu/Interface/MainMenuView.cs#L123) | public |
+| MainMenuView | [`void Bind(MainMenuController owner)`](../Assets/Scripts/Features/MainMenu/Interface/MainMenuView.cs#L57) | public |
+| MainMenuView | [`void Home(bool canResume, string recentName)`](../Assets/Scripts/Features/MainMenu/Interface/MainMenuView.cs#L81) | public |
+| MainMenuView | [`void Picker(string title, bool editing)`](../Assets/Scripts/Features/MainMenu/Interface/MainMenuView.cs#L92) | public |
+| MainMenuView | [`void Settings()`](../Assets/Scripts/Features/MainMenu/Interface/MainMenuView.cs#L101) | public |
+| MainMenuView | [`void SetChoices(List<string> labels, int selected)`](../Assets/Scripts/Features/MainMenu/Interface/MainMenuView.cs#L109) | public |
+| MainMenuView | [`void Selection(string text, bool canLaunch, string action)`](../Assets/Scripts/Features/MainMenu/Interface/MainMenuView.cs#L118) | public |
+| MainMenuView | [`void Message(string text)`](../Assets/Scripts/Features/MainMenu/Interface/MainMenuView.cs#L125) | public |
+| MainMenuView | [`void SetBusy(bool busy)`](../Assets/Scripts/Features/MainMenu/Interface/MainMenuView.cs#L130) | public |
 
 ## Assets/Scripts/Features/MainMenu/Library/MenuBlueprintLibrary.cs
 
@@ -4988,32 +4991,36 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| MainMenuController | [`void Start()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L62) | private |
-| MainMenuController | [`void ShowHome()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L74) | public |
-| MainMenuController | [`void Update()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L83) | private |
-| MainMenuController | [`void Choose(MenuDestination target)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L91) | public |
-| MainMenuController | [`void RefreshLibrary()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L105) | public |
-| MainMenuController | [`void SelectBlueprint(int index)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L126) | public |
-| MainMenuController | [`void LaunchSelected()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L155) | public |
-| MainMenuController | [`void CreateBlueprint()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L165) | public |
-| MainMenuController | [`IEnumerator CreateAndEdit(bool building)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L173) | private |
-| MainMenuController | [`IEnumerator Launch(MenuBlueprintEntry entry, MenuDestination target)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L202) | private |
-| MainMenuController | [`void OpenBlueprint(bool building, string name)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L298) | private static |
-| MainMenuController | [`void ResumeWorkshop()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L321) | public |
-| MainMenuController | [`IEnumerator Resume()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L329) | private |
-| MainMenuController | [`void OpenRecent()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L341) | public |
-| MainMenuController | [`void ReturnToMenu()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L353) | public |
-| MainMenuController | [`IEnumerator Return()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L367) | private |
-| MainMenuController | [`IEnumerator EnsureMain()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L415) | private |
-| MainMenuController | [`IEnumerator WaitForBlueprint()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L444) | private |
-| MainMenuController | [`void Remember(bool building, string name)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L460) | private static |
-| MainMenuController | [`void SetPresentation(bool visible)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L467) | private |
-| MainMenuController | [`void Quit()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L477) | public |
-| MainMenuController | [`void Run(IEnumerator work)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L495) | private |
-| MainMenuController | [`void CancelNavigation()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L503) | public |
-| MainMenuController | [`IEnumerator Guard(IEnumerator work)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L512) | private |
-| MainMenuController | [`void SetStatus(string message)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L586) | private |
-| MainMenuController | [`bool IsDataError(Exception error)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L592) | private static |
+| MainMenuController | [`void Start()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L70) | private |
+| MainMenuController | [`void ShowHome()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L82) | public |
+| MainMenuController | [`void Update()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L91) | private |
+| MainMenuController | [`void Choose(MenuDestination target)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L109) | public |
+| MainMenuController | [`void ShowBattleAttract()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L123) | public |
+| MainMenuController | [`IEnumerator EnterAttract()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L131) | private |
+| MainMenuController | [`void ReturnFromAttract()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L159) | public |
+| MainMenuController | [`IEnumerator LeaveAttract()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L167) | private |
+| MainMenuController | [`void RefreshLibrary()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L189) | public |
+| MainMenuController | [`void SelectBlueprint(int index)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L210) | public |
+| MainMenuController | [`void LaunchSelected()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L239) | public |
+| MainMenuController | [`void CreateBlueprint()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L249) | public |
+| MainMenuController | [`IEnumerator CreateAndEdit(bool building)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L257) | private |
+| MainMenuController | [`IEnumerator Launch(MenuBlueprintEntry entry, MenuDestination target)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L286) | private |
+| MainMenuController | [`void OpenBlueprint(bool building, string name)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L382) | private static |
+| MainMenuController | [`void ResumeWorkshop()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L405) | public |
+| MainMenuController | [`IEnumerator Resume()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L413) | private |
+| MainMenuController | [`void OpenRecent()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L425) | public |
+| MainMenuController | [`void ReturnToMenu()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L437) | public |
+| MainMenuController | [`IEnumerator Return()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L451) | private |
+| MainMenuController | [`IEnumerator EnsureMain()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L499) | private |
+| MainMenuController | [`IEnumerator WaitForBlueprint()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L528) | private |
+| MainMenuController | [`void Remember(bool building, string name)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L544) | private static |
+| MainMenuController | [`void SetPresentation(bool visible)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L551) | private |
+| MainMenuController | [`void Quit()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L561) | public |
+| MainMenuController | [`void Run(IEnumerator work)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L579) | private |
+| MainMenuController | [`void CancelNavigation()`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L587) | public |
+| MainMenuController | [`IEnumerator Guard(IEnumerator work)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L596) | private |
+| MainMenuController | [`void SetStatus(string message)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L677) | private |
+| MainMenuController | [`bool IsDataError(Exception error)`](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L683) | private static |
 
 ## Assets/Scripts/Features/MainMenu/Navigation/MenuPlayDraft.cs
 

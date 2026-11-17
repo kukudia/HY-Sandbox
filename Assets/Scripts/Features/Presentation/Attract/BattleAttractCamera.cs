@@ -74,7 +74,7 @@ public sealed class BattleAttractCamera : MonoBehaviour
 
         if (caption != null)
         {
-            caption.text = "BASTION  /  LIVE DEFENCE\n" + (shot == starts.Length ? "FLEET CLOSE PASS" : starts[shot].name.ToUpperInvariant());
+            caption.text = "BASTION  /  LIVE DEFENCE  ·  ESC TO MENU\n" + (shot == starts.Length ? "FLEET CLOSE PASS" : starts[shot].name.ToUpperInvariant());
         }
     }
 }

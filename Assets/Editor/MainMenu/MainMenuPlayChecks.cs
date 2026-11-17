@@ -135,6 +135,45 @@ public static class MainMenuPlayChecks
         Check(EditorApplication.isPlaying && menu.Status.Contains("disabled"), "Editor quit is a safe message");
         Directory.CreateDirectory("Temp/MainMenu");
         ScreenCapture.CaptureScreenshot("Temp/MainMenu/home.png");
+        menu.ShowBattleAttract();
+        while (menu.Busy)
+        {
+            yield return null;
+        }
+
+        Check(
+            menu.AttractVisible && SceneManager.sceneCount == 2 && GameManager.instance == null,
+            "cold attract does not initialize the workshop or saves");
+        float coldUntil = Time.realtimeSinceStartup + 3f;
+        while (Time.realtimeSinceStartup < coldUntil)
+        {
+            yield return null;
+        }
+
+        using (var escape = (IDisposable)EscapeAttract(menu))
+        {
+            while (((IEnumerator)escape).MoveNext())
+            {
+                yield return null;
+            }
+        }
+
+        Check(
+            menu.MenuVisible && SceneManager.sceneCount == 1 && PlayManager.instance == null && DestroyManager.instance == null && DebugManager.instance == null && VisualEffectsManager.instance == null,
+            "cold attract ESC releases standalone services");
+        menu.ShowBattleAttract();
+        menu.CancelNavigation();
+        while (menu.Busy)
+        {
+            yield return null;
+        }
+
+        Check(
+            menu.MenuVisible && !menu.AttractVisible && SceneManager.sceneCount == 1,
+            "cancelled attract load returns to the cold menu");
+        Check(
+            ActiveEvents() == 1 && ActiveScreenCameras() == 1,
+            "cold attract cancellation keeps one menu camera and EventSystem");
         menu.Choose(MenuDestination.Siege);
         Dropdown picker = (Dropdown)new SerializedObject(Object.FindAnyObjectByType<MainMenuView>()).FindProperty("blueprints").objectReferenceValue;
         yield return null;
@@ -684,6 +723,74 @@ public static class MainMenuPlayChecks
         Check(
             ActiveEvents() == 1 && ActiveScreenCameras() == 1,
             "final menu has one EventSystem and one screen camera");
+        PlayManager workshopPlay = PlayManager.instance;
+        DestroyManager workshopDestroy = DestroyManager.instance;
+        DebugManager workshopDebug = DebugManager.instance;
+        VisualEffectsManager workshopEffects = VisualEffectsManager.instance;
+        Transform workshopDraft = GameManager.instance.blocksParent;
+        BlockDataList workshopCache = SaveManager.instance.cachedData;
+        Button attractButton = (Button)new SerializedObject(Object.FindAnyObjectByType<MainMenuView>()).FindProperty("battleAttract").objectReferenceValue;
+        yield return null;
+        Check(attractButton.interactable, "attract entry is usable without a recent blueprint");
+        PointerClick(attractButton);
+        while (menu.Busy)
+        {
+            yield return null;
+        }
+
+        Check(menu.AttractVisible && !menu.MenuVisible, "menu opens the independent attract scene");
+        float attractUntil = Time.realtimeSinceStartup + 8f;
+        while (Time.realtimeSinceStartup < attractUntil)
+        {
+            yield return null;
+        }
+
+        BattleAttractStage attract = Object.FindAnyObjectByType<BattleAttractStage>();
+        Check(
+            attract != null && attract.SpawnedShips >= 8 && attract.BaseAlive,
+            "attract restores the real base and eight ships");
+        ControlUnit autonomous = ControlUnit.RuntimeUnits.FirstOrDefault(unit => unit != null && unit.gameObject.scene.path == MainMenuController.AttractPath && unit.Building == null && unit.faction == UnitFaction.Player);
+        Check(
+            autonomous != null && autonomous.cockpit.ControlMode == UnitControlMode.Autonomous,
+            "attract friendly is autonomous");
+        DestroyManager.instance.DestroyGameObject(autonomous.cockpit.gameObject);
+        yield return null;
+        Check(
+            !MainUIPanels.instance.deathPanel.activeSelf,
+            "autonomous friendly loss does not open the player death panel");
+        using (var escape = (IDisposable)EscapeAttract(menu))
+        {
+            while (((IEnumerator)escape).MoveNext())
+            {
+                yield return null;
+            }
+        }
+
+        Check(!menu.AttractVisible && menu.MenuVisible, "attract unloads and returns to the menu");
+        Check(
+            PlayManager.instance == workshopPlay && DestroyManager.instance == workshopDestroy && DebugManager.instance == workshopDebug && VisualEffectsManager.instance == workshopEffects,
+            "attract restores all workshop service references");
+        menu.ResumeWorkshop();
+        while (menu.Busy)
+        {
+            yield return null;
+        }
+
+        Check(
+            GameManager.instance.blocksParent == workshopDraft && ReferenceEquals(SaveManager.instance.cachedData, workshopCache),
+            "attract roundtrip preserves the exact unsaved workshop draft");
+        Check(
+            CameraController.instance.isActiveAndEnabled && InputManager.instance.keyInput,
+            "workshop input and camera resume after attract");
+        menu.ReturnToMenu();
+        while (menu.Busy)
+        {
+            yield return null;
+        }
+
+        Check(
+            ActiveEvents() == 1 && ActiveScreenCameras() == 1,
+            "attract roundtrip leaves one menu camera and EventSystem");
         Check(
             File.ReadAllText(broken) == "{}" && File.ReadAllText(invalid).Contains("missing"),
             "rejected source files stay byte-for-byte untouched");
@@ -763,6 +870,56 @@ public static class MainMenuPlayChecks
             InputSystem.RemoveDevice(mouse);
             InputSystem.EnableDevice(physical);
             InputSystem.settings.backgroundBehavior = previous;
+        }
+    }
+
+    private static IEnumerator EscapeAttract(MainMenuController menu)
+    {
+        Keyboard physical = Keyboard.current;
+        bool enabled = physical != null && physical.enabled;
+        var background = InputSystem.settings.backgroundBehavior;
+        var editorInput = InputSystem.settings.editorInputBehaviorInPlayMode;
+        Keyboard probe = null;
+        try
+        {
+            if (enabled)
+            {
+                InputSystem.DisableDevice(physical);
+            }
+
+            InputSystem.settings.backgroundBehavior = InputSettings.BackgroundBehavior.IgnoreFocus;
+            InputSystem.settings.editorInputBehaviorInPlayMode = InputSettings.EditorInputBehaviorInPlayMode.AllDeviceInputAlwaysGoesToGameView;
+            probe = InputSystem.AddDevice<Keyboard>("Attract escape probe");
+            probe.MakeCurrent();
+            InputSystem.QueueStateEvent(probe, new KeyboardState());
+            yield return null;
+            InputSystem.QueueStateEvent(probe, new KeyboardState(Key.Escape));
+            yield return null;
+            yield return null;
+            InputSystem.QueueStateEvent(probe, new KeyboardState());
+            yield return null;
+            while (menu.Busy)
+            {
+                yield return null;
+            }
+
+            Check(!menu.AttractVisible && menu.MenuVisible, "real ESC returns from attract");
+        }
+        finally
+        {
+            if (probe != null && probe.added)
+            {
+                InputSystem.RemoveDevice(probe);
+            }
+
+            if (enabled && physical != null && physical.added)
+            {
+                InputSystem.EnableDevice(physical);
+                physical.MakeCurrent();
+            }
+
+            InputSystem.settings.backgroundBehavior = background;
+            InputSystem.settings.editorInputBehaviorInPlayMode = editorInput;
         }
     }
 

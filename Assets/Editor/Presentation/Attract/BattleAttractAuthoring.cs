@@ -31,8 +31,7 @@ public static class BattleAttractAuthoring
             "Battlefield",
             "Automatic 5v5 Match",
             "Arena HUD",
-            "Arena Navigation Debug",
-            "Status Overlay"
+            "Arena Navigation Debug"
         }
 
         )
@@ -225,6 +224,7 @@ public static class BattleAttractAuthoring
     private static void Polish(Scene scene)
     {
         SceneManager.SetActiveScene(scene);
+        RepairStatusOverlay(scene);
         Camera camera = SceneObjectQuery.FindInScene<Camera>(scene);
         camera.clearFlags = CameraClearFlags.Skybox;
         var cameraData = camera.GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>();
@@ -275,7 +275,13 @@ public static class BattleAttractAuthoring
         stage.ApplyModifiedPropertiesWithoutUndo();
         if (SceneObjectQuery.FindInScene<UnityEngine.Rendering.Volume>(scene) == null)
         {
-            Scene source = EditorSceneManager.OpenScene(MainMenuController.MainPath, OpenSceneMode.Additive);
+            Scene source = SceneManager.GetSceneByPath(MainMenuController.MainPath);
+            bool openedSource = !source.isLoaded;
+            if (openedSource)
+            {
+                source = EditorSceneManager.OpenScene(MainMenuController.MainPath, OpenSceneMode.Additive);
+            }
+
             UnityEngine.Rendering.Volume volume = SceneObjectQuery.FindInScene<UnityEngine.Rendering.Volume>(source);
             if (volume != null)
             {
@@ -284,8 +290,34 @@ public static class BattleAttractAuthoring
                 SceneManager.MoveGameObjectToScene(copy, scene);
             }
 
-            EditorSceneManager.CloseScene(source, true);
+            if (openedSource)
+            {
+                EditorSceneManager.CloseScene(source, true);
+            }
         }
+    }
+
+    private static void RepairStatusOverlay(Scene scene)
+    {
+        DebugManager debug = SceneObjectQuery.FindInScene<DebugManager>(scene);
+        var data = new SerializedObject(debug);
+        SerializedProperty binding = data.FindProperty("statusIconRoot");
+        if (binding.objectReferenceValue != null)
+        {
+            return;
+        }
+
+        // The source scene's diagnostic service outlives its HUD; it still needs an authored icon host.
+        GameObject overlay = scene.GetRootGameObjects().FirstOrDefault(root => root.name == "Status Overlay");
+        if (overlay == null)
+        {
+            overlay = new GameObject("Status Overlay", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
+            SceneManager.MoveGameObjectToScene(overlay, scene);
+        }
+
+        overlay.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
+        binding.objectReferenceValue = overlay.GetComponent<RectTransform>();
+        data.ApplyModifiedPropertiesWithoutUndo();
     }
 
     private static Transform Point(Transform parent, string name, Vector3 position)

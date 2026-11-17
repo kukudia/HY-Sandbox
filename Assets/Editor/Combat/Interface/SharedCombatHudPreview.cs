@@ -2,6 +2,7 @@
 // 入口：Render()；创建并清理独立Preview Scene，不修改生产场景。
 using System;
 using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEditor;
@@ -22,17 +23,37 @@ public static class SharedCombatHudPreview
         }
 
         Directory.CreateDirectory("Temp/SharedCombatHud");
-        foreach (Vector2Int size in new[]
+        var graphicsErrors = new List<string>();
+        Application.LogCallback capture = (message, trace, type) =>
         {
-            new Vector2Int(1280, 720),
-            new Vector2Int(1920, 1080),
-            new Vector2Int(2560, 1440),
-            new Vector2Int(3440, 1440)
-        }
+            if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert)
+            {
+                graphicsErrors.Add(message);
+            }
+        };
+        Application.logMessageReceived += capture;
+        try
+        {
+            foreach (Vector2Int size in new[]
+            {
+                new Vector2Int(1280, 720),
+                new Vector2Int(1920, 1080),
+                new Vector2Int(2560, 1440),
+                new Vector2Int(3440, 1440)
+            }
 
-        )
+            )
+            {
+                RenderOne(size);
+                if (graphicsErrors.Count > 0)
+                {
+                    throw new InvalidOperationException("HUD preview produced engine errors: " + string.Join("; ", graphicsErrors));
+                }
+            }
+        }
+        finally
         {
-            RenderOne(size);
+            Application.logMessageReceived -= capture;
         }
 
         return "Four shared HUD resolutions rendered and checked";
@@ -46,6 +67,11 @@ public static class SharedCombatHudPreview
         Texture2D texture = null;
         try
         {
+            if (!target.Create())
+            {
+                throw new InvalidOperationException("Could not allocate HUD preview target at " + size);
+            }
+
             var cameraObject = new GameObject("Preview Camera", typeof(Camera));
             SceneManager.MoveGameObjectToScene(cameraObject, scene);
             Camera camera = cameraObject.GetComponent<Camera>();
@@ -165,6 +191,7 @@ public static class SharedCombatHudPreview
                 Object.DestroyImmediate(texture);
             }
 
+            target.Release();
             Object.DestroyImmediate(target);
             EditorSceneManager.ClosePreviewScene(scene);
         }

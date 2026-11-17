@@ -52,8 +52,15 @@ public sealed class MainMenuView : MonoBehaviour
     private Button settingsBack;
     [SerializeField]
     private Button cancelNavigation;
+    [SerializeField]
+    private Button battleAttract;
     public void Bind(MainMenuController owner)
     {
+        if (battleAttract != null)
+        {
+            battleAttract.onClick.AddListener(owner.ShowBattleAttract);
+        }
+
         exploration.onClick.AddListener(() => owner.Choose(MenuDestination.Exploration));
         siege.onClick.AddListener(() => owner.Choose(MenuDestination.Siege));
         vehicleWorkshop.onClick.AddListener(() => owner.Choose(MenuDestination.VehicleWorkshop));

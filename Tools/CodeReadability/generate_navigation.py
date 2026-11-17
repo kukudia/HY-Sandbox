@@ -55,6 +55,18 @@ def main():
         )
 
     graph(
+        "菜单演出隔离与恢复",
+        "源码推导：冷启动不加载Main或个人蓝图；已加载工坊先停放根对象，保存四个旧战斗服务引用。Additive演出拥有独立服务和状态Canvas，ESC或取消卸载演出，再恢复原服务、菜单展示与原稿。自动友舰阵亡不触发玩家死亡面板；真正玩家驾驶保留原死亡链。",
+        {"A": "MainMenuController.ShowBattleAttract", "B": "MainMenuController.EnterAttract",
+         "C": "MainMenuController.Return", "D": "MainMenuController.Update",
+         "E": "MainMenuController.ReturnFromAttract", "F": "MainMenuController.LeaveAttract",
+         "G": "MainMenuController.Guard", "H": "BattleAttractAuthoring.RepairStatusOverlay",
+         "I": "DestroyManager.DestroyGameObject", "J": "MainUIPanels.PlayerDeath"},
+        ['A --> B', 'B -->|需要时停放工坊| C', 'D -->|ESC| E', 'E --> F',
+         'B -->|取消| F', 'G -->|演出载入异常| F', 'H -.->|保存诊断依赖| B',
+         'I -->|仅玩家驾驶且未被玩法认领| J'],
+    )
+    graph(
         "残舱退场与待机演出",
         "原有船体受损后仅剩无推进/武器驾驶舱，持续12秒移动不足2米才按未击杀退场；重组和移动重置窗口。待机场景复用真实基地/舰船与战斗服务，错峰低频索敌，生产瞄准与开火仍逐物理步。每65秒重开，额外烟火只有视觉；四镜头每7秒轮换。VFX活动预算仅演出场显式启用，默认场景保持不限。",
         {"A": "SiegeWaveDirector.Tick", "B": "SiegeStrandedCockpit.ShouldRetire",

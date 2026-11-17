@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public enum MenuDestination
 {
@@ -20,6 +21,7 @@ public enum MenuDestination
 public sealed class MainMenuController : MonoBehaviour
 {
     public const string MainPath = "Assets/Scenes/Build.unity";
+    public const string AttractPath = "Assets/Scenes/BattleAttract.unity";
     private const string RecentName = "HY.Menu.RecentName";
     private const string RecentBuilding = "HY.Menu.RecentBuilding";
     [SerializeField]
@@ -43,6 +45,12 @@ public sealed class MainMenuController : MonoBehaviour
     private bool playable;
     private bool started;
     private bool cancelNavigation;
+    private PlayManager parkedPlay;
+    private DestroyManager parkedDestroy;
+    private DebugManager parkedDebug;
+    private VisualEffectsManager parkedEffects;
+    private bool attractServicesParked;
+    public bool AttractVisible => SceneManager.GetSceneByPath(AttractPath).isLoaded;
     public bool Busy
     {
         get; private set;
@@ -82,6 +90,16 @@ public sealed class MainMenuController : MonoBehaviour
 
     private void Update()
     {
+        if (AttractVisible)
+        {
+            if (!Busy && Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+            {
+                ReturnFromAttract();
+            }
+
+            return;
+        }
+
         if (!Busy && !MenuVisible && playSelection.Parked && Main.isLoaded && Modes.State == GameModeState.Building)
         {
             playSelection.Restore();
@@ -100,6 +118,72 @@ public sealed class MainMenuController : MonoBehaviour
             target == MenuDestination.Exploration ? "EXPLORATION / SELECT VEHICLE" : target == MenuDestination.Siege ? "SIEGE / SELECT BASE" : Building ? "BASE WORKSHOP" : "VEHICLE WORKSHOP",
             Editing);
         RefreshLibrary();
+    }
+
+    public void ShowBattleAttract()
+    {
+        if (!Busy && MenuVisible && !AttractVisible)
+        {
+            Run(EnterAttract());
+        }
+    }
+
+    private IEnumerator EnterAttract()
+    {
+        // Finish parking the workshop before the independent battle acquires legacy scene services.
+        if (Main.isLoaded && parkedRoots.Count == 0)
+        {
+            yield return Return();
+        }
+
+        if (cancelNavigation)
+        {
+            yield break;
+        }
+
+        parkedPlay = PlayManager.instance;
+        parkedDestroy = DestroyManager.instance;
+        parkedDebug = DebugManager.instance;
+        parkedEffects = VisualEffectsManager.instance;
+        attractServicesParked = true;
+        preview.Clear();
+        SetPresentation(false);
+        yield return SceneManager.LoadSceneAsync(AttractPath, LoadSceneMode.Additive);
+        SceneManager.SetActiveScene(SceneManager.GetSceneByPath(AttractPath));
+        if (cancelNavigation)
+        {
+            yield return LeaveAttract();
+        }
+    }
+
+    public void ReturnFromAttract()
+    {
+        if (!Busy && AttractVisible)
+        {
+            Run(LeaveAttract());
+        }
+    }
+
+    private IEnumerator LeaveAttract()
+    {
+        Scene attract = SceneManager.GetSceneByPath(AttractPath);
+        if (attract.isLoaded)
+        {
+            yield return SceneManager.UnloadSceneAsync(attract);
+        }
+
+        PlayManager.instance = parkedPlay;
+        DestroyManager.instance = parkedDestroy;
+        DebugManager.instance = parkedDebug;
+        VisualEffectsManager.instance = parkedEffects;
+        parkedPlay = null;
+        parkedDestroy = null;
+        parkedDebug = null;
+        parkedEffects = null;
+        attractServicesParked = false;
+        SceneManager.SetActiveScene(gameObject.scene);
+        SetPresentation(true);
+        ShowHome();
     }
 
     public void RefreshLibrary()
@@ -539,6 +623,13 @@ public sealed class MainMenuController : MonoBehaviour
                 }
 
                 stack.Clear();
+                if (!recovering && attractServicesParked)
+                {
+                    recovering = true;
+                    stack.Push(LeaveAttract());
+                    continue;
+                }
+
                 if (!recovering && Main.isLoaded && parkedRoots.Count == 0 && PlayManager.instance != null)
                 {
                     recovering = true;
