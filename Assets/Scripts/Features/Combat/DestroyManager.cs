@@ -109,8 +109,8 @@ public class DestroyManager : MonoBehaviour
 
         if (cockpit != null)
         {
-            bool siegeOwnsDeath = PlayManager.instance.SiegeSession != null;
-            if (siegeOwnsDeath)
+            bool siegeOwnsDeath = PlayManager.instance.SiegeSession != null || PlayManager.instance.Modes?.State == GameModeState.Siege;
+            if (PlayManager.instance.SiegeSession != null)
             {
                 PlayManager.instance.SiegeSession.NotifyCockpitDestroyed(cockpit);
             }

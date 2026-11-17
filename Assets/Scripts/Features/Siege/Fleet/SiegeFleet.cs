@@ -396,13 +396,18 @@ public sealed class SiegeFleet
         }
     }
 
-    public void RepairBetweenWaves(out int repairedCount, out int attemptedCount, out long spent, out string firstFailure)
+    public void RepairBetweenWaves(
+        out int repairedCount,
+        out int attemptedCount,
+        out long spent,
+        out string firstFailure,
+        bool forceAutomatic = false)
     {
         repairedCount = 0;
         attemptedCount = 0;
         spent = 0;
         firstFailure = null;
-        if (!session.Settings.AutoRepairFleet)
+        if (!forceAutomatic && !session.Settings.AutoRepairFleet)
         {
             return;
         }

@@ -161,6 +161,8 @@ public static class SharedCombatHudAuthoring
                 label.text = "RMB + WASD/QE  |  Shift: fast  |  Wheel: speed  |  F: overview";
                 label.fontSize = 13;
             }
+
+            SiegeGameplayHudAuthoring.ConfigureStage(stage);
         }
 
         EditorSceneManager.MarkSceneDirty(scene);
@@ -246,6 +248,7 @@ public static class SharedCombatHudAuthoring
                 root.GetComponentInChildren<CombatHudPanels>(true),
                 "notifications",
                 root.GetComponentInChildren<CombatNotifications>(true));
+            SiegeGameplayHudAuthoring.Restyle(root);
             PrefabUtility.SaveAsPrefabAsset(root.gameObject, PrefabPath);
         }
         finally
@@ -476,6 +479,7 @@ public static class SharedCombatHudAuthoring
         {
             RectTransform row = Rect(names[i], window, new Vector2(18, -60 - i * 40), new Vector2(342, 32));
             Image track = Back(row, new Color(.06f, .1f, .13f));
+            track.raycastTarget = true;
             Toggle toggle = row.gameObject.AddComponent<Toggle>();
             toggle.targetGraphic = track;
             toggle.graphic = Back(Rect("Check", row, new Vector2(8, -8), new Vector2(16, 16)), Cyan);

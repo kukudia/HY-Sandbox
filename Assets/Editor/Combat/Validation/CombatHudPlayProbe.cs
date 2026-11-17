@@ -9,6 +9,8 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 [InitializeOnLoad]
@@ -53,6 +55,16 @@ public static class CombatHudPlayProbe
         Begin("legacy", "Assets/Scenes/Siege.unity");
     }
 
+    public static void RunFlow()
+    {
+        Begin("flow", "Assets/Scenes/Main.unity");
+    }
+
+    public static void RunRecovery()
+    {
+        Begin("recovery", "Assets/Scenes/Main.unity");
+    }
+
     private static void Begin(string kind, string path)
     {
         if (EditorApplication.isPlaying || Enumerable.Range(0, SceneManager.sceneCount).Any(i => SceneManager.GetSceneAt(i).isDirty))
@@ -76,11 +88,12 @@ public static class CombatHudPlayProbe
 
         if (state == PlayModeStateChange.EnteredPlayMode)
         {
+            Application.runInBackground = true;
             mode = pending;
             checks.Clear();
             error = null;
             Status = "running " + mode;
-            scenario = mode == "arena" ? Arena() : mode == "exploration" ? Exploration() : mode == "legacy" ? Legacy() : Siege();
+            scenario = mode == "arena" ? Arena() : mode == "exploration" ? Exploration() : mode == "legacy" ? Legacy() : mode == "flow" ? Flow() : mode == "recovery" ? Recovery() : Siege();
             deadline = EditorApplication.timeSinceStartup + 180;
             nextStep = 0;
             EditorApplication.update += Tick;
@@ -278,6 +291,278 @@ public static class CombatHudPlayProbe
         Check("Legacy debug drawer opens", hud.Panels.IsOpen);
         Screenshot("Legacy-tools");
         Time.timeScale = 1f;
+    }
+
+    private static IEnumerator Flow()
+    {
+        while (BuildManager.instance == null || BuildManager.instance.IsLoadingBlocks)
+        {
+            yield return .1f;
+        }
+
+        GameModeController modes = PlayManager.instance.Modes;
+        modes.LaunchSiege(null);
+        while (modes.State == GameModeState.Loading)
+        {
+            yield return .1f;
+        }
+
+        SiegeGameplayStage stage = Object.FindAnyObjectByType<SiegeGameplayStage>();
+        SiegeCombatHud entry = stage.GetComponentInChildren<SiegeCombatHud>();
+        bool deployed = false;
+        for (int option = 0; option < stage.DefenderOptions.Length && !deployed; option++)
+        {
+            deployed = stage.TryDeployAt(option, 0, out _);
+        }
+
+        Check("Real defender deployed through production API", deployed);
+        CombatHud hud = entry.Hud;
+        Button start = entry.transform.Find("StartNextWave").GetComponent<Button>();
+        Check("Start action visible only during refit", start.gameObject.activeInHierarchy);
+        Check(
+            "Construction panel and Return button removed",
+            stage.transform.Find("Siege Gameplay UI/Construction Controls") == null && stage.transform.Find("Siege Gameplay UI/Return") == null);
+        hud.Panels.ToggleDebug();
+        yield return .3f;
+        Toggle toggle = hud.Panels.GetComponentsInChildren<Toggle>(true)[0];
+        Vector2 pointer = RectTransformUtility.WorldToScreenPoint(null, toggle.transform.position);
+        var eventData = new PointerEventData(EventSystem.current)
+        {
+            position = pointer,
+            button = PointerEventData.InputButton.Left
+        };
+        var hits = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, hits);
+        Check(
+            "Debug toggle is topmost raycast target",
+            hits.Count > 0 && hits[0].gameObject.GetComponentInParent<Toggle>() == toggle);
+        bool before = DebugManager.instance.showPowerRange;
+        ExecuteEvents.Execute(toggle.gameObject, eventData, ExecuteEvents.pointerClickHandler);
+        yield return .1f;
+        Check("Pointer click changes actual debug service", DebugManager.instance.showPowerRange != before);
+        bool allClickable = true;
+        foreach (Toggle control in hud.Panels.GetComponentsInChildren<Toggle>(true))
+        {
+            eventData.position = RectTransformUtility.WorldToScreenPoint(
+                null,
+                ((RectTransform)control.transform).TransformPoint(((RectTransform)control.transform).rect.center));
+            hits.Clear();
+            EventSystem.current.RaycastAll(eventData, hits);
+            bool old = control.isOn;
+            ExecuteEvents.Execute(control.gameObject, eventData, ExecuteEvents.pointerClickHandler);
+            allClickable &= hits.Count > 0 && hits[0].gameObject.GetComponentInParent<Toggle>() == control && control.isOn != old;
+        }
+
+        Check("All seven debug toggles accept pointer clicks", allClickable);
+        hud.Panels.ClearDebug();
+        hud.Panels.CloseAll();
+        Check("Begin production wave", stage.BeginWave());
+        yield return .3f;
+        Check("Start action hidden during battle", !start.gameObject.activeInHierarchy);
+        SiegeFleetEntry ship = stage.Fleet.Ships.FirstOrDefault(item => item != null && item.IsAlive);
+        Check("Example has a real defending ship", ship != null);
+        ship.Cockpit.GetComponent<Durability>().ApplyDamage(999999, null);
+        yield return .1f;
+        Check(
+            "Friendly loss does not open generic death panel",
+            !MainUIPanels.instance.deathPanel.activeInHierarchy && !stage.Settled && PlayManager.instance.playMode);
+        yield return 4f;
+        Check(
+            "No enemy spawns before five second preparation",
+            stage.Match.ActiveAttackers == 0 && stage.Clock.PreparationRemaining > 0f);
+        while (stage.Match.ActiveAttackers == 0)
+        {
+            yield return .05f;
+        }
+
+        Check("Enemy spawns after preparation", stage.Clock.PreparationRemaining <= 0f);
+        Check(
+            "Battle timer starts after preparation",
+            stage.Clock.Remaining > 175f && stage.Clock.Remaining <= 180f);
+        ControlUnit attacker = hud.Candidates.FirstOrDefault(unit => unit.faction == UnitFaction.Enemy);
+        while (attacker == null)
+        {
+            yield return .1f;
+            attacker = hud.Candidates.FirstOrDefault(unit => unit.faction == UnitFaction.Enemy);
+        }
+
+        stage.Base.Core.GetComponent<Durability>().ApplyDamage(999999, attacker);
+        yield return .2f;
+        Check(
+            "Core damage settles defeat without generic death UI",
+            stage.Settled && stage.Match.Phase == SiegePhase.Defeat && !MainUIPanels.instance.deathPanel.activeInHierarchy);
+        Check("Failure waits for explosion presentation", !stage.ShowFailure);
+        yield return 1.6f;
+        Check(
+            "Dedicated failure panel appears after explosion",
+            stage.ShowFailure && entry.transform.Find("Siege Failure").gameObject.activeInHierarchy);
+        Screenshot("Flow-core-failure");
+        modes.ReturnToBuild();
+        while (modes.State == GameModeState.Returning)
+        {
+            yield return .1f;
+        }
+
+        modes.LaunchSiege(null);
+        while (modes.State == GameModeState.Loading)
+        {
+            yield return .1f;
+        }
+
+        stage = Object.FindAnyObjectByType<SiegeGameplayStage>();
+        using (var values = new SerializedObject(stage))
+        {
+            values.FindProperty("clock.battleSeconds").floatValue = 1f;
+            values.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        stage.BeginWave();
+        yield return 6.5f;
+        Check(
+            "Production timer timeout causes defeat",
+            stage.Settled && stage.Status.Contains("Wave time limit"));
+        Check("Timeout discards pending rewards", stage.Match.PendingCoins == 0);
+        Check(
+            "Timeout destroys the core through building destruction",
+            stage.Base.Core == null || !stage.Base.Core.isActiveAndEnabled);
+        modes.ReturnToBuild();
+        while (modes.State == GameModeState.Returning)
+        {
+            yield return .1f;
+        }
+    }
+
+    private static IEnumerator Recovery()
+    {
+        while (BuildManager.instance == null || BuildManager.instance.IsLoadingBlocks)
+        {
+            yield return .1f;
+        }
+
+        GameModeController modes = PlayManager.instance.Modes;
+        modes.LaunchSiege(null);
+        while (modes.State == GameModeState.Loading)
+        {
+            yield return .1f;
+        }
+
+        SiegeGameplayStage stage = Object.FindAnyObjectByType<SiegeGameplayStage>();
+        BlockDataList finch = JsonUtility.FromJson<BlockDataList>(Resources.Load<TextAsset>("WorldBlueprints/Enemies/CODEX_E01_Finch").text);
+        var option = new SiegeShipOption("Recovery Finch", JsonUtility.ToJson(finch), 1, finch.blocks.Count);
+        typeof(SiegeGameplayStage).GetField("defenders", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(stage, new[] { option });
+        Check("Real Finch deploys through production refit", stage.TryDeployAt(0, 0, out _));
+        SiegeFleetEntry ship = stage.Fleet.Ships[0];
+        stage.FlightGuidance.BeginReturn();
+        var clock = new SiegePhaseClock();
+        clock.BeginBattle(0f);
+        Check(
+            "Recovery starts a ninety second deadline",
+            clock.Tick(SiegePhase.Returning, 0f, stage.Fleet, stage.FlightGuidance) == null && clock.Remaining == 90f);
+        Check(
+            "Zero delta pauses recovery and movement clocks",
+            clock.Tick(SiegePhase.Returning, 0f, stage.Fleet, stage.FlightGuidance) == null && clock.StallRemaining == 15f);
+        Check(
+            "Stationary ship receives grace window",
+            clock.Tick(SiegePhase.Returning, 14f, stage.Fleet, stage.FlightGuidance) == null);
+        Vector3 original = ship.Unit.transform.position;
+        ship.Unit.transform.position += Vector3.right * 2.1f;
+        Check(
+            "Significant displacement resets stall window",
+            clock.Tick(SiegePhase.Returning, 1f, stage.Fleet, stage.FlightGuidance) == null && clock.StallRemaining == 15f);
+        ship.Unit.transform.position = original;
+        clock.Tick(SiegePhase.Returning, 0f, stage.Fleet, stage.FlightGuidance);
+        Check(
+            "Fifteen seconds without displacement fails",
+            clock.Tick(SiegePhase.Returning, 15f, stage.Fleet, stage.FlightGuidance)?.StartsWith("Recovery stalled") == true);
+        var deadlineClock = new SiegePhaseClock();
+        deadlineClock.BeginBattle(0f);
+        Check(
+            "Recovery hard deadline fails even without tracked ships",
+            deadlineClock.Tick(SiegePhase.Returning, 90f, null, null) == "Recovery time limit exceeded");
+        stage.FlightGuidance.Stop();
+        Durability hull = ship.Cockpit.GetComponent<Durability>();
+        hull.ApplyDamage(10f, null);
+        Durability foundation = stage.Base.Building.Blocks.First(block => block != stage.Base.Core && block.GetComponent<Durability>() != null).GetComponent<Durability>();
+        foundation.ApplyDamage(10f, null);
+        long baseQuote = stage.Base.Quote();
+        Check(
+            "Fixture damages ship and base independently",
+            hull.currentDurability < hull.maxDurability && baseQuote > 0);
+        Check("Begin wave before recovery settlement", stage.BeginWave());
+        // Isolate settlement/repair from enemy AI randomness: consume production rule slots, no claimed damage-kill coverage.
+        int slots = stage.Match.PendingAttackers;
+        for (int i = 0; i < slots; i++)
+        {
+            stage.Match.RegisterAttacker("repair-fixture-" + i, slots);
+            stage.Match.ResolveAttacker("repair-fixture-" + i, true);
+        }
+
+        while (!stage.Match.CanRefit && !stage.Settled)
+        {
+            yield return .1f;
+        }
+
+        Check(
+            "Real recovery settles successfully",
+            !stage.Settled && stage.Match.Phase == SiegePhase.Intermission);
+        Check("Ship damage is automatically repaired", SiegeRefit.Quote(ship, stage.Settings) == 0);
+        Check("Base damage persists after automatic fleet repair", stage.Base.Quote() == baseQuote);
+        Check("Manual base repair succeeds", stage.Repair() && stage.Base.Quote() == 0);
+        yield return .25f;
+        Check(
+            "Next wave action returns only after recovery",
+            stage.GetComponentInChildren<SiegeCombatHud>().transform.Find("StartNextWave").gameObject.activeInHierarchy);
+        Check("Second wave begins", stage.BeginWave());
+        yield return 4f;
+        Check(
+            "Every wave receives five second spawn delay",
+            stage.Match.ActiveAttackers == 0 && stage.Clock.PreparationRemaining > 0f);
+        Screenshot("Recovery-ready");
+        modes.ReturnToBuild();
+        while (modes.State == GameModeState.Returning)
+        {
+            yield return .1f;
+        }
+
+        modes.LaunchSiege(null);
+        while (modes.State == GameModeState.Loading)
+        {
+            yield return .1f;
+        }
+
+        stage = Object.FindAnyObjectByType<SiegeGameplayStage>();
+        typeof(SiegeGameplayStage).GetField("defenders", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(stage, new[] { option });
+        Check("Stall fixture deploys a real ship", stage.TryDeployAt(0, 0, out _));
+        using (var values = new SerializedObject(stage))
+        {
+            values.FindProperty("clock.stalledSeconds").floatValue = .6f;
+            values.FindProperty("flightSettings.disabledGrace").floatValue = 120f;
+            values.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        ControlUnit stalledUnit = stage.Fleet.Ships[0].Unit;
+        stalledUnit.transform.position += new Vector3(0f, 5f, 20f);
+        stalledUnit.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+        stage.BeginWave();
+        slots = stage.Match.PendingAttackers;
+        for (int i = 0; i < slots; i++)
+        {
+            stage.Match.RegisterAttacker("stall-fixture-" + i, slots);
+            stage.Match.ResolveAttacker("stall-fixture-" + i, true);
+        }
+
+        yield return 1.5f;
+        Check(
+            "Production recovery stall causes defeat",
+            stage.Settled && stage.Status.Contains("Recovery stalled"));
+        Check(
+            "Stalled recovery cannot settle pending reward",
+            stage.Match.PendingCoins == 0 && stage.Match.Phase == SiegePhase.Defeat);
+        modes.ReturnToBuild();
+        while (modes.State == GameModeState.Returning)
+        {
+            yield return .1f;
+        }
     }
 
     private static IEnumerator Arena()

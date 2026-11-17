@@ -2,6 +2,14 @@
 
 本轮需求对照、恢复点和后续计划见[Siege阶段交接](Docs/Validation/2026-11-16-siege-stage-handoff.md)。
 
+## Siege战斗时限与界面修正（2026-11-17）
+
+SiegeGameplay移除Construction Controls/SiegeConstructionPanel与Return按钮；底部居中只在部署/整备显示StartNextWave，基地有伤时显示手动维修按钮。顶部中央为准备/战斗/返航倒计时，左侧保留核心、关注友舰与精简经济状态。战斗界面改为半透明蓝灰底、青色友军与珊瑚红威胁；共享威胁箭头使用真实uGUI矢量组件。Debug的七个Toggle启用背景射线检测，保持现有DebugManager语义。
+
+`SiegeGameplayStage.Clock`在Inspector配置战斗180秒、返航90秒、连续15秒位移不足2米停滞失败；模拟暂停不计时。`SiegeSettings.WaveSpawnDelay`默认5秒，每波重新准备，战斗180秒从准备结束后计算。时限/返航失败走核心销毁与统一失败结果；普通友舰死亡不调用通用PlayerDeath。核心爆炸后1.5秒显示专用失败面板，Continue通过菜单宿主或模式返回入口退出。成功返航仅自动尝试付费修复存活舰艇，基地保留伤势，手动维修仍需整备及足够金币。
+
+新增入口：`Siege/Gameplay/SiegePhaseClock.cs`负责时限与逐舰进展；`Siege/Gameplay/Interface/SiegeCombatHud.cs`负责战斗展示/动作；`Combat/Interface/Threats/CombatThreatIcon.cs`负责无贴图箭头；`Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs`原位迁移并保存Prefab/场景，不重建用户共享HUD实例。详情见[专项验证](Docs/Validation/2026-11-17-siege-flow-polish.md)。
+
 ## 共享战斗 HUD（2026-11-17）
 
 Main探索、Siege、Random5v5Arena与SiegeGameplay复用真实可编辑的 [SharedCombatHud.prefab](Assets/Art/CombatHud/SharedCombatHud.prefab) 和 [Theme.asset](Assets/Art/CombatHud/Theme.asset)。沿用uGUI，战斗文字升级TMP；主题配置采样预算、配色及动画时长。新版Siege由Stage显式绑定副场景、镜头和关注友舰，保持自主守军/自由观察玩法，不新增驾驶权。
@@ -17,7 +25,9 @@ Assets/Scripts/Features/
 │  ├─ Notifications/CombatNotifications.cs / CombatFeedItem.cs
 │  └─ Panels/CombatHudPanels.cs
 ├─ Flight/Presentation/ThrusterInfoPanel.cs
-└─ Siege/Gameplay/Interface/SiegeCombatHud.cs
+└─ Siege/Gameplay/
+   ├─ SiegePhaseClock.cs
+   └─ Interface/SiegeCombatHud.cs
 Assets/Editor/Combat/
 ├─ Interface/SharedCombatHudAuthoring.cs / SharedCombatHudPreview.cs
 └─ Validation/CombatHudPlayProbe.cs

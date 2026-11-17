@@ -1,5 +1,5 @@
 // 职责：保存新版基地战配置、Main编辑入口及副场景uGUI/建筑服务；保留旧Siege和Main手工布局。
-// 入口：Install()；只重建明确拥有的 Construction Controls / Base Workshop 两个UI根。
+// 入口：Install()；重建Base Workshop，战斗界面交给共享HUD制作器，不恢复已淘汰的施工面板。
 using System;
 using System.Linq;
 using System.IO;
@@ -100,73 +100,12 @@ public static class SiegeConstructionAuthoring
         }
 
         root.Find("Overview").SetPositionAndRotation(new Vector3(24, 65, -72), Quaternion.Euler(36, -12, 0));
-        RemoveOwned(canvas, "Construction Controls");
-        RectTransform controls = Rect("Construction Controls", canvas, new Vector2(325, 350));
-        controls.anchorMin = controls.anchorMax = controls.pivot = new Vector2(0, .5f);
-        controls.anchoredPosition = new Vector2(15, 0);
-        controls.gameObject.AddComponent<Image>().color = new Color(.025f, .055f, .08f, .96f);
-        SiegeConstructionPanel panel = controls.gameObject.AddComponent<SiegeConstructionPanel>();
-        var panelData = new SerializedObject(panel);
-        Label(
-            "Title",
-            controls,
-            "BASE DEFENCE",
-            162,
-            310,
-            300,
-            35,
-            23);
-        Set(panelData, "details", Label(
-            "Design",
-            controls,
-            "",
-            162,
-            266,
-            295,
-            42,
-            15));
-        Set(panelData, "wave", Button(
-            "Wave",
-            controls,
-            "START NEXT WAVE",
-            162,
-            204,
-            290));
-        Set(panelData, "repair", Button(
-            "Repair",
-            controls,
-            "REPAIR + REBUILD",
-            162,
-            154,
-            290));
-        Set(panelData, "summary", Label(
-            "Summary",
-            controls,
-            "",
-            162,
-            83,
-            295,
-            65,
-            16));
-        Text feedback = Label(
-            "Feedback",
-            controls,
-            "",
-            780,
-            50,
-            820,
-            90,
-            18);
-        Set(panelData, "feedback", feedback);
-        Button back = canvas.Find("Return").GetComponent<Button>();
-        Set(panelData, "returnLabel", back.GetComponentInChildren<Text>());
-        panelData.ApplyModifiedPropertiesWithoutUndo();
+        SharedCombatHudAuthoring.InstallScene(siege);
         var stageData = new SerializedObject(stage);
         Set(stageData, "settings", settings);
         Set(stageData, "buildings", buildings);
         SiegeIslandAuthoring.Configure(siege);
         SiegeCleanupAuthoring.Configure(siege);
-        Set(stageData, "panel", panel);
         Set(stageData, "baseSpawn", root.Find("Base Spawn"));
         stageData.ApplyModifiedPropertiesWithoutUndo();
         CopyPool<VfxEffectPool>(main, siege);

@@ -16,6 +16,22 @@ public sealed class SiegeCombatHud : MonoBehaviour
     private TMP_Text summary;
     [SerializeField]
     private Button nextShip;
+    [SerializeField]
+    private Button nextWave;
+    [SerializeField]
+    private Button repairBase;
+    [SerializeField]
+    private TMP_Text phaseLabel;
+    [SerializeField]
+    private TMP_Text countdown;
+    [SerializeField]
+    private TMP_Text battleStatus;
+    [SerializeField]
+    private CanvasGroup failure;
+    [SerializeField]
+    private TMP_Text failureDetail;
+    [SerializeField]
+    private Button dismissFailure;
     private SiegeGameplayStage stage;
     private int selected;
     private float nextText;
@@ -23,6 +39,9 @@ public sealed class SiegeCombatHud : MonoBehaviour
 
     private void Awake()
     {
+        nextWave.onClick.AddListener(() => stage?.BeginWave());
+        repairBase.onClick.AddListener(() => stage?.Repair());
+        dismissFailure.onClick.AddListener(() => stage?.ReturnToMenu());
         nextShip.onClick.AddListener(() =>
         {
             selected++;
@@ -37,6 +56,8 @@ public sealed class SiegeCombatHud : MonoBehaviour
         panels.Bind();
         selected = 0;
         nextText = 0f;
+        failure.alpha = 0f;
+        failure.gameObject.SetActive(false);
     }
 
     public void Exit()
@@ -64,6 +85,27 @@ public sealed class SiegeCombatHud : MonoBehaviour
         }
 
         nextText = Time.unscaledTime + .1f;
+        bool refit = !stage.Settled && stage.Match.CanRefit;
+        nextWave.gameObject.SetActive(refit);
+        long quote = refit && stage.Base != null ? stage.Base.Quote() : 0;
+        repairBase.gameObject.SetActive(refit && quote > 0);
+        repairBase.interactable = quote <= stage.Match.Coins;
+        repairBase.GetComponentInChildren<TMP_Text>().text = "REPAIR BASE  /  " + quote;
+        phaseLabel.text = stage.Settled ? "SIEGE LOST" : stage.Match.CanRefit ? "WAVE " + (stage.Match.Wave + 1) + "  /  READY" : stage.Clock.Label;
+        float seconds = stage.Clock.PreparationRemaining > 0f ? stage.Clock.PreparationRemaining : stage.Clock.Remaining;
+        int total = Mathf.CeilToInt(seconds);
+        countdown.text = !stage.Settled && stage.Clock.Active ? $"{total / 60:00}:{total % 60:00}" : "--:--";
+        countdown.color = seconds <= 15f && stage.Clock.PreparationRemaining <= 0f ? hud.Theme.hostile : hud.Theme.friendly;
+        battleStatus.text = $"CREDITS {stage.Match.Coins:N0}  +{stage.Match.PendingCoins:N0} PENDING\nHOSTILES {stage.Match.ActiveAttackers + stage.Match.PendingAttackers}  /  KILLS {stage.Match.DefeatedAttackers}";
+        if (stage.Match.Phase == SiegePhase.Returning)
+        {
+            battleStatus.text += $"\nMOVEMENT CHECK  {stage.Clock.StallRemaining:0}s";
+        }
+
+        failure.gameObject.SetActive(stage.ShowFailure);
+        failure.alpha = stage.ShowFailure ? 1f : 0f;
+        failure.blocksRaycasts = failure.interactable = stage.ShowFailure;
+        failureDetail.text = stage.Status;
         hud.EliteWave = stage.Match.IsEliteWave;
         SiegeFleetEntry[] ships = stage.Fleet.Ships;
         SiegeFleetEntry focus = stage.Fleet.Driven;

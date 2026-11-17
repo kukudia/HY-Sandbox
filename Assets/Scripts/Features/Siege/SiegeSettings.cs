@@ -6,6 +6,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "HY-Sandbox/Siege Settings")]
 public sealed class SiegeSettings : ScriptableObject
 {
+    [SerializeField, Min(0f), Tooltip("每波开始后首架敌舰的准备延迟（秒）。")]
+    private float waveSpawnDelay = 5f;
+    public float WaveSpawnDelay => waveSpawnDelay;
+
     [SerializeField]
     private TextAsset baseBlueprint;
     [SerializeField, Tooltip("建筑蓝图中承担基地核心的模块ID；不能指向驾驶舱。")]

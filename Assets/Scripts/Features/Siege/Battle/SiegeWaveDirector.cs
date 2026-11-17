@@ -17,6 +17,13 @@ public sealed class SiegeWaveDirector
     private readonly System.Random random;
     private readonly List<Attacker> attackers = new List<Attacker>();
     private float nextSpawn;
+    private int scheduledWave;
+    public void BeginWave(float time)
+    {
+        scheduledWave = match.Wave;
+        nextSpawn = time + settings.WaveSpawnDelay;
+    }
+
     public event Action<string, string, int, bool> AttackerResolved;
     public SiegeWaveDirector(SiegeSession session) : this(
         session.Match,
@@ -53,6 +60,11 @@ public sealed class SiegeWaveDirector
         if (match.Phase != SiegePhase.Battle)
         {
             return;
+        }
+
+        if (scheduledWave != match.Wave)
+        {
+            BeginWave(time);
         }
 
         for (int index = attackers.Count - 1; index >= 0; index--)

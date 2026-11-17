@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fe11269677f39b4c9b27622457e0c46, type: 3}
   m_Name: Theme
   m_EditorClassIdentifier: Assembly-CSharp::CombatHudTheme
-  background: {r: 0.025, g: 0.045, b: 0.065, a: 0.94}
-  friendly: {r: 0.25, g: 0.85, b: 1, a: 1}
-  hostile: {r: 1, g: 0.38, b: 0.24, a: 1}
-  warning: {r: 1, g: 0.76, b: 0.25, a: 1}
+  background: {r: 0.025, g: 0.055, b: 0.085, a: 0.62}
+  friendly: {r: 0.35, g: 0.85, b: 0.94, a: 0.95}
+  hostile: {r: 1, g: 0.43, b: 0.33, a: 0.95}
+  warning: {r: 1, g: 0.76, b: 0.37, a: 0.95}
   sampleInterval: 0.1
   occlusionInterval: 0.15
   maximumNameplates: 24

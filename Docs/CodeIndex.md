@@ -164,6 +164,7 @@ HY-Sandbox/
 │   │   │   │   ├── SiegeCombatBaseAuthoring.cs
 │   │   │   │   ├── SiegeCommandHudAuthoring.cs
 │   │   │   │   ├── SiegeConstructionAuthoring.cs
+│   │   │   │   ├── SiegeGameplayHudAuthoring.cs
 │   │   │   │   ├── SiegeInterfaceAuthoring.cs
 │   │   │   │   ├── SiegeIslandAuthoring.cs
 │   │   │   │   ├── SiegeMainInterfaceAuthoring.cs
@@ -366,6 +367,7 @@ HY-Sandbox/
 │           │   │   ├── Panels/
 │           │   │   │   └── CombatHudPanels.cs
 │           │   │   └── Threats/
+│           │   │       ├── CombatThreatIcon.cs
 │           │   │       ├── CombatThreatMarkers.cs
 │           │   │       └── CombatThreatView.cs
 │           │   ├── Meteors/
@@ -539,11 +541,11 @@ HY-Sandbox/
 │           │   │   └── SiegeReturnFlight.cs
 │           │   ├── Gameplay/
 │           │   │   ├── SiegeBaseWorkshop.cs
-│           │   │   ├── SiegeConstructionPanel.cs
 │           │   │   ├── SiegeConstructionSettings.cs
 │           │   │   ├── SiegeGameplayStage.cs
 │           │   │   ├── SiegeIsland.cs
 │           │   │   ├── SiegeIslandSettings.cs
+│           │   │   ├── SiegePhaseClock.cs
 │           │   │   └── Interface/
 │           │   │       └── SiegeCombatHud.cs
 │           │   ├── Hangars/
@@ -1424,25 +1426,25 @@ HY-Sandbox/
 | --- | --- | --- |
 | SharedCombatHudAuthoring | [`void Install()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L25) | public static |
 | SharedCombatHudAuthoring | [`void InstallScene(Scene scene)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L66) | public static |
-| SharedCombatHudAuthoring | [`void EnsureAssets()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L169) | private static |
-| SharedCombatHudAuthoring | [`void RebuildPrefab()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L214) | public static |
-| SharedCombatHudAuthoring | [`void BakePrefab()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L226) | private static |
-| SharedCombatHudAuthoring | [`RectTransform BuildNameplate(Transform parent)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L257) | private static |
-| SharedCombatHudAuthoring | [`CombatThreatMarkers BuildThreats(Transform parent, CombatHud hud)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L310) | private static |
-| SharedCombatHudAuthoring | [`CombatNotifications BuildNotifications(RectTransform parent)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L362) | private static |
-| SharedCombatHudAuthoring | [`void BuildPanels(RectTransform root)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L443) | private static |
-| SharedCombatHudAuthoring | [`ThrusterInfoPanel BuildThrusters(Transform parent)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L507) | private static |
-| SharedCombatHudAuthoring | [`RectTransform Drawer(string name, Transform parent, Vector2 size)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L604) | private static |
-| SharedCombatHudAuthoring | [`T Find(Scene scene)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L612) | public static |
-| SharedCombatHudAuthoring | [`void Set(Object owner, string field, Object value)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L618) | public static |
-| SharedCombatHudAuthoring | [`void SetArray(Object owner, string field, Object[] values)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L625) | private static |
-| SharedCombatHudAuthoring | [`RectTransform Rect(string name, Transform parent, Vector2 position, Vector2 size)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L638) | private static |
-| SharedCombatHudAuthoring | [`void Stretch(RectTransform rect)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L648) | private static |
-| SharedCombatHudAuthoring | [`Image Back(RectTransform rect, Color color)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L656) | private static |
-| SharedCombatHudAuthoring | [`RectTransform Fill(RectTransform parent, string name, Color color)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L664) | private static |
-| SharedCombatHudAuthoring | [`CanvasGroup Group(RectTransform rect, bool interactive = false)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L673) | private static |
-| SharedCombatHudAuthoring | [`TMP_Text Label( Transform parent, string name, string text, Vector2 position, Vector2 size, int fontSize, Color color)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L680) | private static |
-| SharedCombatHudAuthoring | [`Button Button(Transform parent, string title, Vector2 position, Vector2 size)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L704) | private static |
+| SharedCombatHudAuthoring | [`void EnsureAssets()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L171) | private static |
+| SharedCombatHudAuthoring | [`void RebuildPrefab()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L216) | public static |
+| SharedCombatHudAuthoring | [`void BakePrefab()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L228) | private static |
+| SharedCombatHudAuthoring | [`RectTransform BuildNameplate(Transform parent)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L260) | private static |
+| SharedCombatHudAuthoring | [`CombatThreatMarkers BuildThreats(Transform parent, CombatHud hud)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L313) | private static |
+| SharedCombatHudAuthoring | [`CombatNotifications BuildNotifications(RectTransform parent)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L365) | private static |
+| SharedCombatHudAuthoring | [`void BuildPanels(RectTransform root)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L446) | private static |
+| SharedCombatHudAuthoring | [`ThrusterInfoPanel BuildThrusters(Transform parent)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L511) | private static |
+| SharedCombatHudAuthoring | [`RectTransform Drawer(string name, Transform parent, Vector2 size)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L608) | private static |
+| SharedCombatHudAuthoring | [`T Find(Scene scene)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L616) | public static |
+| SharedCombatHudAuthoring | [`void Set(Object owner, string field, Object value)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L622) | public static |
+| SharedCombatHudAuthoring | [`void SetArray(Object owner, string field, Object[] values)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L629) | private static |
+| SharedCombatHudAuthoring | [`RectTransform Rect(string name, Transform parent, Vector2 position, Vector2 size)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L642) | private static |
+| SharedCombatHudAuthoring | [`void Stretch(RectTransform rect)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L652) | private static |
+| SharedCombatHudAuthoring | [`Image Back(RectTransform rect, Color color)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L660) | private static |
+| SharedCombatHudAuthoring | [`RectTransform Fill(RectTransform parent, string name, Color color)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L668) | private static |
+| SharedCombatHudAuthoring | [`CanvasGroup Group(RectTransform rect, bool interactive = false)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L677) | private static |
+| SharedCombatHudAuthoring | [`TMP_Text Label( Transform parent, string name, string text, Vector2 position, Vector2 size, int fontSize, Color color)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L684) | private static |
+| SharedCombatHudAuthoring | [`Button Button(Transform parent, string title, Vector2 position, Vector2 size)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L708) | private static |
 
 ## Assets/Editor/Combat/Interface/SharedCombatHudPreview.cs
 
@@ -1501,20 +1503,24 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| CombatHudPlayProbe | [`void Run()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L32) | public static |
-| CombatHudPlayProbe | [`void RunArena()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L38) | public static |
-| CombatHudPlayProbe | [`void RunExploration()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L44) | public static |
-| CombatHudPlayProbe | [`void RunLegacy()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L50) | public static |
-| CombatHudPlayProbe | [`void Begin(string kind, string path)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L56) | private static |
-| CombatHudPlayProbe | [`void OnPlayModeChanged(PlayModeStateChange state)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L69) | private static |
-| CombatHudPlayProbe | [`void Tick()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L98) | private static |
-| CombatHudPlayProbe | [`IEnumerator Siege()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L127) | private static |
-| CombatHudPlayProbe | [`IEnumerator Legacy()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L246) | private static |
-| CombatHudPlayProbe | [`IEnumerator Arena()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L283) | private static |
-| CombatHudPlayProbe | [`IEnumerator Exploration()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L327) | private static |
-| CombatHudPlayProbe | [`void Screenshot(string name)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L368) | private static |
-| CombatHudPlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L374) | private static |
-| CombatHudPlayProbe | [`void Finish()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L385) | private static |
+| CombatHudPlayProbe | [`void Run()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L34) | public static |
+| CombatHudPlayProbe | [`void RunArena()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L40) | public static |
+| CombatHudPlayProbe | [`void RunExploration()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L46) | public static |
+| CombatHudPlayProbe | [`void RunLegacy()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L52) | public static |
+| CombatHudPlayProbe | [`void RunFlow()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L58) | public static |
+| CombatHudPlayProbe | [`void RunRecovery()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L63) | public static |
+| CombatHudPlayProbe | [`void Begin(string kind, string path)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L68) | private static |
+| CombatHudPlayProbe | [`void OnPlayModeChanged(PlayModeStateChange state)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L81) | private static |
+| CombatHudPlayProbe | [`void Tick()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L111) | private static |
+| CombatHudPlayProbe | [`IEnumerator Siege()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L140) | private static |
+| CombatHudPlayProbe | [`IEnumerator Legacy()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L259) | private static |
+| CombatHudPlayProbe | [`IEnumerator Flow()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L296) | private static |
+| CombatHudPlayProbe | [`IEnumerator Recovery()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L435) | private static |
+| CombatHudPlayProbe | [`IEnumerator Arena()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L568) | private static |
+| CombatHudPlayProbe | [`IEnumerator Exploration()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L612) | private static |
+| CombatHudPlayProbe | [`void Screenshot(string name)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L653) | private static |
+| CombatHudPlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L659) | private static |
+| CombatHudPlayProbe | [`void Finish()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L670) | private static |
 
 ## Assets/Editor/Combat/Validation/EnemyBlueprintPoolChecks.cs
 
@@ -2288,20 +2294,37 @@ HY-Sandbox/
 
 ## Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs
 
-// 职责：保存新版基地战配置、Main编辑入口及副场景uGUI/建筑服务；保留旧Siege和Main手工布局。 // 入口：Install()；只重建明确拥有的 Construction Controls / Base Workshop 两个UI根。
+// 职责：保存新版基地战配置、Main编辑入口及副场景uGUI/建筑服务；保留旧Siege和Main手工布局。 // 入口：Install()；重建Base Workshop，战斗界面交给共享HUD制作器，不恢复已淘汰的施工面板。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeConstructionAuthoring | [`void Install()`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L16) | public static |
-| SiegeConstructionAuthoring | [`SiegeConstructionSettings EnsureSettings()`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L181) | private static |
-| SiegeConstructionAuthoring | [`void InstallPreselection(Scene main)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L219) | public static |
-| SiegeConstructionAuthoring | [`void CopyPool(Scene main, Scene target)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L251) | private static |
-| SiegeConstructionAuthoring | [`void RemoveOwned(Transform parent, string name)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L262) | private static |
-| SiegeConstructionAuthoring | [`RectTransform Rect(string name, Transform parent, Vector2 size)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L271) | private static |
-| SiegeConstructionAuthoring | [`void At(RectTransform rect, float x, float y, float width, float height)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L280) | private static |
-| SiegeConstructionAuthoring | [`Text Label( string name, Transform parent, string text, float x, float y, float width, float height, int size)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L288) | private static |
-| SiegeConstructionAuthoring | [`Button Button( string name, Transform parent, string title, float x, float y, float width)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L310) | private static |
-| SiegeConstructionAuthoring | [`void Set(SerializedObject data, string field, Object value)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L336) | private static |
+| SiegeConstructionAuthoring | [`SiegeConstructionSettings EnsureSettings()`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L120) | private static |
+| SiegeConstructionAuthoring | [`void InstallPreselection(Scene main)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L158) | public static |
+| SiegeConstructionAuthoring | [`void CopyPool(Scene main, Scene target)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L190) | private static |
+| SiegeConstructionAuthoring | [`void RemoveOwned(Transform parent, string name)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L201) | private static |
+| SiegeConstructionAuthoring | [`RectTransform Rect(string name, Transform parent, Vector2 size)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L210) | private static |
+| SiegeConstructionAuthoring | [`void At(RectTransform rect, float x, float y, float width, float height)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L219) | private static |
+| SiegeConstructionAuthoring | [`Text Label( string name, Transform parent, string text, float x, float y, float width, float height, int size)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L227) | private static |
+| SiegeConstructionAuthoring | [`Button Button( string name, Transform parent, string title, float x, float y, float width)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L249) | private static |
+| SiegeConstructionAuthoring | [`void Set(SerializedObject data, string field, Object value)`](../Assets/Editor/Siege/Authoring/SiegeConstructionAuthoring.cs#L275) | private static |
+
+## Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs
+
+// 职责：原位迁移Siege战斗界面与共享Prefab，保留已有实例覆盖和用户调整。 // 入口：Upgrade() / ConfigureStage()；显式保存真实资产，修改前备份四场景与Prefab。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeGameplayHudAuthoring | [`void Upgrade()`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L16) | public static |
+| SiegeGameplayHudAuthoring | [`void ConfigureStage(SiegeGameplayStage stage)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L91) | public static |
+| SiegeGameplayHudAuthoring | [`void Restyle(Transform root)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L219) | public static |
+| SiegeGameplayHudAuthoring | [`void Soften(Transform root)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L246) | private static |
+| SiegeGameplayHudAuthoring | [`RectTransform Box(Transform parent, string name, Vector2 anchor, Vector2 position, Vector2 size)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L256) | private static |
+| SiegeGameplayHudAuthoring | [`TMP_Text Label( Transform parent, string name, TMP_FontAsset font, Vector2 position, Vector2 size, int fontSize, Vector2? anchor = null)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L270) | private static |
+| SiegeGameplayHudAuthoring | [`Button Button( Transform parent, string name, string caption, TMP_FontAsset font, Vector2 anchor, Vector2 position, Vector2 size)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L294) | private static |
+| SiegeGameplayHudAuthoring | [`void Set(SerializedObject data, string field, Object value)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L321) | private static |
+| SiegeGameplayHudAuthoring | [`T Ensure(Transform owner)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L326) | private static |
+| SiegeGameplayHudAuthoring | [`void Remove(Transform owned)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L333) | private static |
 
 ## Assets/Editor/Siege/Authoring/SiegeInterfaceAuthoring.cs
 
@@ -4356,6 +4379,15 @@ HY-Sandbox/
 | CombatHudPanels | [`bool GetDebug(int index)`](../Assets/Scripts/Features/Combat/Interface/Panels/CombatHudPanels.cs#L134) | private |
 | CombatHudPanels | [`void SetDebug(int index, bool value)`](../Assets/Scripts/Features/Combat/Interface/Panels/CombatHudPanels.cs#L161) | private |
 
+## Assets/Scripts/Features/Combat/Interface/Threats/CombatThreatIcon.cs
+
+// 职责：以无贴图矢量网格绘制双层威胁箭头，保持各分辨率下的清晰边缘。 // 入口：uGUI OnPopulateMesh；组件与颜色保存在HUD Prefab，不创建运行时对象。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| CombatThreatIcon | [`void OnPopulateMesh(VertexHelper mesh)`](../Assets/Scripts/Features/Combat/Interface/Threats/CombatThreatIcon.cs#L8) | protected override |
+| CombatThreatIcon | [`void Chevron(VertexHelper mesh, Vector2 center, float scale, float offset, Color tint)`](../Assets/Scripts/Features/Combat/Interface/Threats/CombatThreatIcon.cs#L19) | private static |
+
 ## Assets/Scripts/Features/Combat/Interface/Threats/CombatThreatMarkers.cs
 
 // 职责：对共享HUD候选敌舰逐帧投影，稳定绑定屏内定位框/屏外箭头并合并同向威胁。 // 入口：Clear()；LateUpdate在镜头和CombatHud之后运行，文字独立限频。
@@ -5948,12 +5980,13 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeWaveDirector | [`void Tick(float time)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L51) | public |
-| SiegeWaveDirector | [`SiegeShipOption PickBlueprint(SiegeSettings settings)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L130) | private |
-| SiegeWaveDirector | [`void Stop()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L150) | public |
-| Attacker | [`void OnDefeated()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L194) | private |
-| Attacker | [`void RefreshTarget(ControlUnit core)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L203) | public |
-| Attacker | [`void Unsubscribe()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L216) | public |
+| SiegeWaveDirector | [`void BeginWave(float time)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L21) | public |
+| SiegeWaveDirector | [`void Tick(float time)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L58) | public |
+| SiegeWaveDirector | [`SiegeShipOption PickBlueprint(SiegeSettings settings)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L142) | private |
+| SiegeWaveDirector | [`void Stop()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L162) | public |
+| Attacker | [`void OnDefeated()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L206) | private |
+| Attacker | [`void RefreshTarget(ControlUnit core)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L215) | public |
+| Attacker | [`void Unsubscribe()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L228) | public |
 
 ## Assets/Scripts/Features/Siege/Battle/SiegeWreckBudget.cs
 
@@ -5999,15 +6032,15 @@ HY-Sandbox/
 | SiegeFleet | [`bool ReplaceAt(int optionIndex, int slot, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L283) | public |
 | SiegeFleet | [`bool TakeControl(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L342) | public |
 | SiegeFleet | [`void SetCombatActive(bool active)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L375) | public |
-| SiegeFleet | [`void RepairBetweenWaves(out int repairedCount, out int attemptedCount, out long spent, out string firstFailure)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L399) | public |
-| SiegeFleet | [`void RefreshBindings()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L439) | public |
-| SiegeFleet | [`void NotifyLost(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L465) | public |
-| SiegeFleet | [`SiegeFleetEntry Spawn( BlockDataList blueprint, string id, string displayName, int price, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L491) | private |
-| SiegeFleet | [`BlockDataList PrepareBlueprint(TextAsset asset, out string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L527) | public static |
-| SiegeFleet | [`BlockDataList PrepareBlueprint(string json, out string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L532) | public static |
-| SiegeFleet | [`void RestoreView()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L546) | public |
-| SiegeFleet | [`void SetCamera(ControlUnit unit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L558) | private |
-| SiegeFleet | [`void SetBaseCamera()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L568) | private |
+| SiegeFleet | [`void RepairBetweenWaves( out int repairedCount, out int attemptedCount, out long spent, out string firstFailure, bool forceAutomatic = false)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L399) | public |
+| SiegeFleet | [`void RefreshBindings()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L444) | public |
+| SiegeFleet | [`void NotifyLost(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L470) | public |
+| SiegeFleet | [`SiegeFleetEntry Spawn( BlockDataList blueprint, string id, string displayName, int price, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L496) | private |
+| SiegeFleet | [`BlockDataList PrepareBlueprint(TextAsset asset, out string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L532) | public static |
+| SiegeFleet | [`BlockDataList PrepareBlueprint(string json, out string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L537) | public static |
+| SiegeFleet | [`void RestoreView()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L551) | public |
+| SiegeFleet | [`void SetCamera(ControlUnit unit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L563) | private |
+| SiegeFleet | [`void SetBaseCamera()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L573) | private |
 
 ## Assets/Scripts/Features/Siege/Fleet/SiegeFleetEntry.cs
 
@@ -6076,13 +6109,13 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeCombatHud | [`void Awake()`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L24) | private |
-| SiegeCombatHud | [`void Enter(SiegeGameplayStage owner)`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L33) | public |
-| SiegeCombatHud | [`void Exit()`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L42) | public |
-| SiegeCombatHud | [`void OnDisable()`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L49) | private |
-| SiegeCombatHud | [`void AttackerResolved(string victim, string attacker, int reward, bool playerCredit)`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L54) | public |
-| SiegeCombatHud | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L59) | private |
-| SiegeCombatHud | [`string CoreText(Durability health)`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L116) | private static |
+| SiegeCombatHud | [`void Awake()`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L40) | private |
+| SiegeCombatHud | [`void Enter(SiegeGameplayStage owner)`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L52) | public |
+| SiegeCombatHud | [`void Exit()`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L63) | public |
+| SiegeCombatHud | [`void OnDisable()`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L70) | private |
+| SiegeCombatHud | [`void AttackerResolved(string victim, string attacker, int reward, bool playerCredit)`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L75) | public |
+| SiegeCombatHud | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L80) | private |
+| SiegeCombatHud | [`string CoreText(Durability health)`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L158) | private static |
 
 ## Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs
 
@@ -6097,15 +6130,6 @@ HY-Sandbox/
 | SiegeBaseWorkshop | [`void DesignateCore()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L68) | public |
 | SiegeBaseWorkshop | [`void TrySave(Action action)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L97) | private |
 | SiegeBaseWorkshop | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs#L109) | private |
-
-## Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionPanel.cs
-
-// 职责：显示新版基地战斗状态，将输入转发给场景入口；控件由Editor保存。 // 入口：Bind()；不创建运行时Canvas或持有战斗规则。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| SiegeConstructionPanel | [`void Bind(SiegeGameplayStage stage)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionPanel.cs#L22) | public |
-| SiegeConstructionPanel | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionPanel.cs#L29) | private |
 
 ## Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs
 
@@ -6123,32 +6147,32 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeGameplayStage | [`void Enter( GameModeController host, GameObject[] buildEnvironment, string blueprintName = null, TextAsset example = null, string exampleName = null)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L90) | public |
-| SiegeGameplayStage | [`void ValidatePose()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L180) | private |
-| SiegeGameplayStage | [`bool Deploy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L198) | private |
-| SiegeGameplayStage | [`bool BeginWave()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L267) | public |
-| SiegeGameplayStage | [`bool Repair()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L284) | public |
-| SiegeGameplayStage | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L297) | private |
-| SiegeGameplayStage | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L345) | public |
-| SiegeGameplayStage | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L353) | public |
-| SiegeGameplayStage | [`bool RefreshBlueprints()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L361) | public |
-| SiegeGameplayStage | [`void RefreshDefenders()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L372) | private |
-| SiegeGameplayStage | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L383) | public |
-| SiegeGameplayStage | [`bool TryReplaceAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L392) | public |
-| SiegeGameplayStage | [`bool TryCancelDeployment(int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L401) | public |
-| SiegeGameplayStage | [`bool TryTakeControl(int slot)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L410) | public |
-| SiegeGameplayStage | [`bool TryTakeControl(string id)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L416) | public |
-| SiegeGameplayStage | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L421) | public |
-| SiegeGameplayStage | [`void FixedUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L435) | private |
-| SiegeGameplayStage | [`void SetSimulation(bool active)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L474) | private |
-| SiegeGameplayStage | [`void LoseBase()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L517) | private |
-| SiegeGameplayStage | [`void Retreat()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L522) | public |
-| SiegeGameplayStage | [`void Settle(string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L527) | private |
-| SiegeGameplayStage | [`void ReturnOrRetreat()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L544) | private |
-| SiegeGameplayStage | [`void ShowCoreMarker(Transform parent, Vector3 localPosition)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L556) | private |
-| SiegeGameplayStage | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L565) | private |
-| SiegeGameplayStage | [`void Exit()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L573) | public |
-| SiegeGameplayStage | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L620) | private |
+| SiegeGameplayStage | [`void Enter( GameModeController host, GameObject[] buildEnvironment, string blueprintName = null, TextAsset example = null, string exampleName = null)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L94) | public |
+| SiegeGameplayStage | [`void ValidatePose()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L182) | private |
+| SiegeGameplayStage | [`bool Deploy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L200) | private |
+| SiegeGameplayStage | [`bool BeginWave()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L269) | public |
+| SiegeGameplayStage | [`bool Repair()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L288) | public |
+| SiegeGameplayStage | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L301) | private |
+| SiegeGameplayStage | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L356) | public |
+| SiegeGameplayStage | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L364) | public |
+| SiegeGameplayStage | [`bool RefreshBlueprints()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L372) | public |
+| SiegeGameplayStage | [`void RefreshDefenders()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L383) | private |
+| SiegeGameplayStage | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L394) | public |
+| SiegeGameplayStage | [`bool TryReplaceAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L403) | public |
+| SiegeGameplayStage | [`bool TryCancelDeployment(int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L412) | public |
+| SiegeGameplayStage | [`bool TryTakeControl(int slot)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L421) | public |
+| SiegeGameplayStage | [`bool TryTakeControl(string id)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L427) | public |
+| SiegeGameplayStage | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L432) | public |
+| SiegeGameplayStage | [`void FixedUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L446) | private |
+| SiegeGameplayStage | [`void SetSimulation(bool active)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L485) | private |
+| SiegeGameplayStage | [`void LoseBase()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L528) | private |
+| SiegeGameplayStage | [`void Retreat()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L533) | public |
+| SiegeGameplayStage | [`void Settle(string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L538) | private |
+| SiegeGameplayStage | [`void ReturnToMenu()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L562) | public |
+| SiegeGameplayStage | [`void ShowCoreMarker(Transform parent, Vector3 localPosition)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L582) | private |
+| SiegeGameplayStage | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L591) | private |
+| SiegeGameplayStage | [`void Exit()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L599) | public |
+| SiegeGameplayStage | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L641) | private |
 
 ## Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs
 
@@ -6167,6 +6191,15 @@ HY-Sandbox/
 // 职责：保存阵地战浮空岛可编辑生成规格与坠落边界；尺寸按基地占地只在部署时确定。 // 入口：Inspector / SiegeIsland.GenerateFor()；单位为游戏米。
 
 数据/配置/接口定义，无方法体。
+
+## Assets/Scripts/Features/Siege/Gameplay/SiegePhaseClock.cs
+
+// 职责：维护战斗总时限、返航总时限和逐舰位移停滞窗口，不结算经济或操作界面。 // 入口：BeginBattle() / Tick()；使用宿主传入的模拟时间增量，暂停不计时。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegePhaseClock | [`void BeginBattle(float preparation)`](../Assets/Scripts/Features/Siege/Gameplay/SiegePhaseClock.cs#L41) | public |
+| SiegePhaseClock | [`string Tick(SiegePhase phase, float delta, SiegeFleet fleet, SiegeReturnFlight guidance)`](../Assets/Scripts/Features/Siege/Gameplay/SiegePhaseClock.cs#L50) | public |
 
 ## Assets/Scripts/Features/Siege/Hangars/ChangeHangarEntranceAction.cs
 
@@ -6441,7 +6474,7 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeSettings | [`SiegeMatch CreateMatch()`](../Assets/Scripts/Features/Siege/SiegeSettings.cs#L108) | public |
+| SiegeSettings | [`SiegeMatch CreateMatch()`](../Assets/Scripts/Features/Siege/SiegeSettings.cs#L112) | public |
 
 ## Assets/Scripts/Features/Siege/Validation/SiegeDrivingPlayerChecks.cs
 

@@ -13,8 +13,6 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
     [SerializeField]
     private SiegeObserverCamera observerCamera;
     [SerializeField]
-    private Button returnButton;
-    [SerializeField]
     private SiegeConstructionSettings settings;
     [SerializeField]
     private WorldBuildingManager buildings;
@@ -26,14 +24,20 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
     public SiegeIsland Island => island;
 
     [SerializeField]
-    private SiegeConstructionPanel panel;
-    [SerializeField]
     private SiegeCombatHud combatHud;
     [SerializeField]
     private Transform baseSpawn;
     [SerializeField]
     private SiegeFlightSettings flightSettings = new SiegeFlightSettings();
     private SiegeReturnFlight flight;
+    [SerializeField]
+    private SiegePhaseClock clock = new SiegePhaseClock();
+    [SerializeField, Min(0f)]
+    private float defeatPresentationDelay = 1.5f;
+    private float defeatAt;
+    public SiegePhaseClock Clock => clock;
+    public bool ShowFailure => Settled && Time.unscaledTime >= defeatAt;
+
     private bool returning;
     private SiegeShipOption[] defenders = Array.Empty<SiegeShipOption>();
     public SiegeSettings Settings => settings.Combat;
@@ -126,7 +130,6 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
             camera.transform.SetPositionAndRotation(overview.position, overview.rotation);
         }
 
-        returnButton.onClick.AddListener(ReturnOrRetreat);
         attackers = SiegeBlueprintCatalog.Load(Path.Combine(Application.persistentDataPath, "EnemyBlueprints"), 5, out _);
         if (attackers.Length == 0)
         {
@@ -173,7 +176,6 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
             throw new InvalidOperationException(Status ?? DesignStatus);
         }
 
-        panel.Bind(this);
         combatHud.Enter(this);
     }
 
@@ -273,6 +275,8 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         }
 
         SetSimulation(true);
+        waves.BeginWave(Time.time);
+        clock.BeginBattle(Settings.WaveSpawnDelay);
         cleanup.Stop();
         Fleet.SetCombatActive(true);
         flight.BeginLaunch();
@@ -308,6 +312,13 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         }
 
         Fleet?.RefreshBindings();
+        string timeout = clock.Tick(Match.Phase, Time.deltaTime, Fleet, flight);
+        if (timeout != null)
+        {
+            Settle(timeout);
+            return;
+        }
+
         if (Match.Phase == SiegePhase.Returning || Match.Phase == SiegePhase.Intermission)
         {
             cleanup.Begin(Match.Wave, island.PlayableBounds, Time.time);
@@ -446,6 +457,12 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         }
 
         flight.Tick(Time.fixedDeltaTime);
+        if (Match.Phase == SiegePhase.Returning && flight.FailedCount > 0)
+        {
+            Settle("Recovery failed: " + flight.LastFailureReason);
+            return;
+        }
+
         if (Match.Phase != SiegePhase.Returning || !returning || !flight.IsComplete)
         {
             return;
@@ -455,14 +472,8 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         returning = false;
         SetSimulation(false);
         Fleet.SetCombatActive(false);
-        string repairStatus = string.Empty;
-        if (Settings.AutoRepairBase && Base.Quote() > 0)
-        {
-            Base.Repair(out repairStatus);
-        }
-
-        Fleet.RepairBetweenWaves(out int repaired, out int attempted, out long spent, out string failure);
-        Status = $"Recovered {flight.CompletedCount}; scrapped {flight.FailedCount}. Income settled. " + repairStatus;
+        Fleet.RepairBetweenWaves(out int repaired, out int attempted, out long spent, out string failure, true);
+        Status = $"Recovered {flight.CompletedCount}; scrapped {flight.FailedCount}. Income settled. Base repairs are manual.";
         if (attempted > 0)
         {
             Status += $" Fleet repaired {repaired}/{attempted} for {spent}. " + failure;
@@ -532,6 +543,13 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         }
 
         Settled = true;
+        defeatAt = Time.unscaledTime + defeatPresentationDelay;
+        // Timeouts use the same visible core-loss ending. Natural destruction has already queued its explosion.
+        if (Base != null && Base.IsAlive && !Base.Core.ExplosionQueued)
+        {
+            Base.Building.DestroyBlock(Base.Core);
+        }
+
         cleanup.Stop();
         waves?.Stop();
         flight?.Stop();
@@ -541,7 +559,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         Match.LoseBase();
     }
 
-    private void ReturnOrRetreat()
+    public void ReturnToMenu()
     {
         if (Base != null && !Settled)
         {
@@ -549,7 +567,15 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         }
         else
         {
-            owner?.ReturnToBuild();
+            MainMenuController menu = UnityEngine.Object.FindAnyObjectByType<MainMenuController>();
+            if (menu != null)
+            {
+                menu.ReturnToMenu();
+            }
+            else
+            {
+                owner?.ReturnToBuild();
+            }
         }
     }
 
@@ -609,11 +635,6 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
 
         environment.Clear();
         parkedBodies.Clear();
-        if (returnButton != null)
-        {
-            returnButton.onClick.RemoveListener(ReturnOrRetreat);
-        }
-
         owner = null;
     }
 

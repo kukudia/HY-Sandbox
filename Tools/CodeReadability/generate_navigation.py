@@ -2059,13 +2059,17 @@ def main():
          "M": "CombatNotifications.Push", "N": "CombatNotifications.Update",
          "O": "CombatHudPanels.ToggleThrusters", "P": "ThrusterInfoPanel.BindOwner",
          "V": "ThrusterInfoPanel.Toggle",
+         "W": "SiegePhaseClock.BeginBattle", "X": "SiegePhaseClock.Tick",
+         "Y": "SiegeGameplayStage.Update", "Z": "SiegeGameplayStage.Settle",
+         "AA": "SiegeGameplayStage.BeginWave", "AB": "SiegeWaveDirector.BeginWave",
          "Q": "SiegeCombatHud.Update", "R": "SiegeGameplayStage.Exit",
          "S": "SiegeCombatHud.Exit", "T": "CombatHudPanels.Restore",
          "U": "CombatHud.Unbind"},
         ["A --> B", "B --> C", "D --> E", "D --> F", "E --> G", "F --> H",
          "I --> J", "K -.->|已结算AttackerResolved事件| L", "L -->|经ShowDestruction| M",
          "M -.->|有界队列，逐帧动效| N", "Q --> P", "O --> V",
-         "R --> S", "S --> T", "S --> U"],
+         "R --> S", "S --> T", "S --> U", "AA --> W", "AA --> AB",
+         "Y --> X", "Y -->|时限或停滞失败| Z", "Z -.->|延后爆炸结果展示| Q"],
     )
     doc = """# HY-Sandbox 运行时函数图
 
