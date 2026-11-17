@@ -1666,11 +1666,12 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| NightInteractionChecks | [`void RunLive()`](../Assets/Editor/Combat/Validation/NightInteractionChecks.cs#L32) | public static |
-| NightInteractionChecks | [`IEnumerator Scenario()`](../Assets/Editor/Combat/Validation/NightInteractionChecks.cs#L70) | private static |
-| NightInteractionChecks | [`void Check(string name, bool passed)`](../Assets/Editor/Combat/Validation/NightInteractionChecks.cs#L214) | private static |
-| NightInteractionChecks | [`void Tick()`](../Assets/Editor/Combat/Validation/NightInteractionChecks.cs#L225) | private static |
-| NightInteractionChecks | [`void Finish(string error)`](../Assets/Editor/Combat/Validation/NightInteractionChecks.cs#L253) | private static |
+| NightInteractionChecks | [`void RunLive()`](../Assets/Editor/Combat/Validation/NightInteractionChecks.cs#L33) | public static |
+| NightInteractionChecks | [`IEnumerator Scenario()`](../Assets/Editor/Combat/Validation/NightInteractionChecks.cs#L73) | private static |
+| NightInteractionChecks | [`void Check(string name, bool passed)`](../Assets/Editor/Combat/Validation/NightInteractionChecks.cs#L258) | private static |
+| NightInteractionChecks | [`void Tick()`](../Assets/Editor/Combat/Validation/NightInteractionChecks.cs#L269) | private static |
+| NightInteractionChecks | [`void Finish(string error)`](../Assets/Editor/Combat/Validation/NightInteractionChecks.cs#L297) | private static |
+| NightInteractionChecks | [`void Capture(string message, string trace, LogType type)`](../Assets/Editor/Combat/Validation/NightInteractionChecks.cs#L340) | private static |
 
 ## Assets/Editor/Combat/Validation/SkirmishArenaChecks.cs
 
@@ -6341,7 +6342,7 @@ HY-Sandbox/
 | SiegeCombatHud | [`void AttackerResolved(string victim, string attacker, int reward, bool playerCredit)`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L86) | public |
 | SiegeCombatHud | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L91) | private |
 | SiegeCombatHud | [`void PollShipControl()`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L170) | private |
-| SiegeCombatHud | [`string CoreText(Durability health)`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L228) | private static |
+| SiegeCombatHud | [`string CoreText(Durability health)`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L237) | private static |
 
 ## Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs
 

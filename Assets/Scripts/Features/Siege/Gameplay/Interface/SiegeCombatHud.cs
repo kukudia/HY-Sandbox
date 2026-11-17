@@ -171,18 +171,27 @@ public sealed class SiegeCombatHud : MonoBehaviour
     {
         if (stage == null || PauseMenu.IsPaused || !stage.IsRunning || stage.Match.Phase != SiegePhase.Battle)
         {
+            lastClicked = null;
             return;
         }
 
         if (Keyboard.current != null && Keyboard.current.tabKey.wasPressedThisFrame && stage.Fleet.Driven != null)
         {
+            lastClicked = null;
             stage.Observe();
             return;
         }
 
         Mouse mouse = Mouse.current;
-        if (mouse == null || !mouse.leftButton.wasPressedThisFrame || (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()))
+        if (mouse == null || !mouse.leftButton.wasPressedThisFrame)
         {
+            return;
+        }
+
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+        {
+            // A UI click breaks the gesture; the next hull click must not complete an old double click.
+            lastClicked = null;
             return;
         }
 

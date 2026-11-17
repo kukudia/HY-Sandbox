@@ -19,6 +19,7 @@ public static class NightInteractionChecks
     private static double next;
     private static double deadline;
     private static readonly List<string> checks = new List<string>();
+    private static readonly List<string> errors = new List<string>();
     private static Mouse mouse;
     private static Keyboard keyboard;
     private static Mouse physicalMouse;
@@ -37,6 +38,8 @@ public static class NightInteractionChecks
         }
 
         checks.Clear();
+        errors.Clear();
+        Application.logMessageReceived += Capture;
         physicalMouse = Mouse.current;
         physicalKeyboard = Keyboard.current;
         mouseEnabled = physicalMouse != null && physicalMouse.enabled;
@@ -119,6 +122,47 @@ public static class NightInteractionChecks
                 100f,
                 Physics.DefaultRaycastLayers,
                 QueryTriggerInteraction.Ignore) && hit.collider.GetComponentInParent<ControlUnit>() == ship.Unit);
+        InputSystem.QueueStateEvent(mouse, new MouseState { position = point });
+        yield return .05f;
+        float firstClickAt = Time.unscaledTime;
+        InputSystem.QueueStateEvent(mouse, new MouseState { position = point }.WithButton(MouseButton.Left));
+        yield return .03f;
+        InputSystem.QueueStateEvent(mouse, new MouseState { position = point });
+        yield return .03f;
+        GameObject clickShield = new GameObject(
+            "Double click UI boundary fixture",
+            typeof(RectTransform),
+            typeof(Canvas),
+            typeof(GraphicRaycaster));
+        try
+        {
+            Canvas canvas = clickShield.GetComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.sortingOrder = 32000;
+            GameObject image = new GameObject("Click target", typeof(RectTransform), typeof(Image));
+            image.transform.SetParent(clickShield.transform, false);
+            RectTransform rect = image.GetComponent<RectTransform>();
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.sizeDelta = Vector2.zero;
+            Canvas.ForceUpdateCanvases();
+            yield return .03f;
+            Check("UI boundary fixture intercepts pointer", EventSystem.current.IsPointerOverGameObject());
+            InputSystem.QueueStateEvent(mouse, new MouseState { position = point }.WithButton(MouseButton.Left));
+            yield return .03f;
+            InputSystem.QueueStateEvent(mouse, new MouseState { position = point });
+            yield return .03f;
+        }
+        finally
+        {
+            Object.DestroyImmediate(clickShield);
+        }
+
+        yield return .03f;
+        InputSystem.QueueStateEvent(mouse, new MouseState { position = point }.WithButton(MouseButton.Left));
+        yield return .03f;
+        Check("UI interruption tested within double-click time window", Time.unscaledTime - firstClickAt <= .35f);
+        Check("UI click breaks pending hull double click", stage.Fleet.Driven == null);
         InputSystem.QueueStateEvent(mouse, new MouseState { position = point });
         yield return .05f;
         InputSystem.QueueStateEvent(mouse, new MouseState { position = point }.WithButton(MouseButton.Left));
@@ -253,7 +297,14 @@ public static class NightInteractionChecks
     private static void Finish(string error)
     {
         EditorApplication.update -= Tick;
+        (routine as IDisposable)?.Dispose();
         routine = null;
+        Application.logMessageReceived -= Capture;
+        if (errors.Count > 0)
+        {
+            error = (error ?? string.Empty) + string.Join("\n", errors);
+        }
+
         if (mouse != null && mouse.added)
         {
             InputSystem.RemoveDevice(mouse);
@@ -284,6 +335,14 @@ public static class NightInteractionChecks
             "Temp/NightDevelopment/interactions.json",
             JsonUtility.ToJson(new Report { checks = checks, error = error }, true));
         EditorApplication.isPlaying = false;
+    }
+
+    private static void Capture(string message, string trace, LogType type)
+    {
+        if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert)
+        {
+            errors.Add(message + "\n" + trace);
+        }
     }
 
     [Serializable]
