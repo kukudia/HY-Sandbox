@@ -193,6 +193,46 @@ public static class BuildManipulationPlayChecks
                         fixture + " real Ctrl-Y restores aligned move");
                     InputSystem.QueueStateEvent(keyboard, new KeyboardState());
                     yield return .1f;
+                    build.SetBuildType(BuildType.Rotate);
+                    Vector3 beforeRotation = block.transform.position;
+                    Quaternion expectedRotation = Quaternion.AngleAxis(90f, Vector3.forward) * rotation;
+                    Vector3 halfAfterRotation = Half(block, expectedRotation);
+                    Vector3 expectedRotationPosition = new Vector3(
+                        Mathf.Floor(beforeRotation.x) + Mathf.RoundToInt(halfAfterRotation.x * 2f) % 2 * .5f,
+                        Mathf.Floor(beforeRotation.y) + Mathf.RoundToInt(halfAfterRotation.y * 2f) % 2 * .5f,
+                        Mathf.Floor(beforeRotation.z) + Mathf.RoundToInt(halfAfterRotation.z * 2f) % 2 * .5f);
+                    InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.E));
+                    yield return .15f;
+                    Check(
+                        Quaternion.Angle(block.transform.rotation, expectedRotation) < .01f,
+                        fixture + " real E rotates around the camera forward axis");
+                    Check(
+                        Near(block.transform.position, expectedRotationPosition) && Grid(block),
+                        fixture + " rotation swaps parity offsets around the integer anchor");
+                    InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+                    yield return .1f;
+                    InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.LeftCtrl, Key.Z));
+                    yield return .15f;
+                    Check(
+                        Near(block.transform.position, beforeRotation) && Quaternion.Angle(block.transform.rotation, rotation) < .01f,
+                        fixture + " undo restores both rotation and center");
+                    InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+                    yield return .1f;
+                    InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.LeftCtrl, Key.Y));
+                    yield return .15f;
+                    Check(
+                        Near(block.transform.position, expectedRotationPosition) && Quaternion.Angle(block.transform.rotation, expectedRotation) < .01f,
+                        fixture + " redo restores both rotation and swapped center");
+                    InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+                    yield return .1f;
+                    InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.Q));
+                    yield return .15f;
+                    Check(
+                        Near(block.transform.position, beforeRotation) && Quaternion.Angle(block.transform.rotation, rotation) < .01f && Grid(block),
+                        fixture + " reverse rotation has no cell drift");
+                    InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+                    build.SetBuildType(BuildType.Move);
+                    yield return .1f;
                     InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.LeftShift, Key.D));
                     yield return .15f;
                     Block duplicate = build.selectedBlock;
