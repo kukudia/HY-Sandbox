@@ -197,6 +197,16 @@ def main():
          'N -.->|安全载入或玩法清理完成| J'],
     )
     graph(
+        "冷主菜单持续观察（Editor验证）",
+        "源码推导：显式Run仅接受单场景冷菜单Play，每五秒检查菜单所有权、真实帧推进、内存与日志错误。达到时长才通过；停止Play或编译重载标为中断。结束解绑回调、写入Temp报告并退出Play，不触碰蓝图与存档。",
+        {"A": "MainMenuIdleChecks.Run", "B": "MainMenuIdleChecks.Tick",
+         "C": "MainMenuIdleChecks.Capture", "D": "MainMenuIdleChecks.Finish",
+         "E": "MainMenuIdleChecks.Stop", "F": "MainMenuIdleChecks.Write"},
+        ['A -.->|Editor update| B', 'A -.->|日志回调| C',
+         'B -->|采样| F', 'B -->|到时或错误| D', 'E --> D',
+         'D -->|解绑并结束Play| F'],
+    )
+    graph(
         "交错防线实战基地制作",
         "源码推导：Editor菜单制作独立CombatCourtyard蓝图；按尺寸烘焙装甲Prefab的网格缩放、碰撞与连接点，既有资产存在则保留手工调整。校验后保存真实JSON；个人副本经正常主菜单进入SiegeGameplay，不替换默认示例。",
         {"A": "SiegeCombatBaseAuthoring.Create", "B": "SiegeCombatBaseAuthoring.Generate",

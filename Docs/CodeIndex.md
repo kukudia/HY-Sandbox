@@ -117,6 +117,7 @@ HY-Sandbox/
 │   │   │   └── ThrusterHudSetup.cs
 │   │   ├── MainMenu/
 │   │   │   ├── MainMenuAuthoring.cs
+│   │   │   ├── MainMenuIdleChecks.cs
 │   │   │   ├── MainMenuPlayChecks.cs
 │   │   │   ├── NightMenuAuthoring.cs
 │   │   │   └── WorkshopLayoutPreview.cs
@@ -1900,6 +1901,19 @@ HY-Sandbox/
 | MainMenuAuthoring | [`Slider Slider( string name, Transform parent, string label, Vector2 position, float minimum, float maximum)`](../Assets/Editor/MainMenu/MainMenuAuthoring.cs#L552) | private static |
 | MainMenuAuthoring | [`void StyleFonts(GameObject root, int size)`](../Assets/Editor/MainMenu/MainMenuAuthoring.cs#L577) | private static |
 | MainMenuAuthoring | [`void Bind(Object owner, string field, Object value)`](../Assets/Editor/MainMenu/MainMenuAuthoring.cs#L587) | private static |
+
+## Assets/Editor/MainMenu/MainMenuIdleChecks.cs
+
+// 职责：在冷主菜单持续观察真实帧、内存和错误，报告仅写Temp，不加载工坊或存档。 // 入口：Run(seconds) / Stop()；静态Editor回调保留观察状态，正常停止不冒充达到时长。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| MainMenuIdleChecks | [`void Run(float seconds)`](../Assets/Editor/MainMenu/MainMenuIdleChecks.cs#L25) | public static |
+| MainMenuIdleChecks | [`void Stop()`](../Assets/Editor/MainMenu/MainMenuIdleChecks.cs#L50) | public static |
+| MainMenuIdleChecks | [`void Tick()`](../Assets/Editor/MainMenu/MainMenuIdleChecks.cs#L58) | private static |
+| MainMenuIdleChecks | [`void Capture(string message, string trace, LogType type)`](../Assets/Editor/MainMenu/MainMenuIdleChecks.cs#L109) | private static |
+| MainMenuIdleChecks | [`void Finish(string result)`](../Assets/Editor/MainMenu/MainMenuIdleChecks.cs#L117) | private static |
+| MainMenuIdleChecks | [`void Write()`](../Assets/Editor/MainMenu/MainMenuIdleChecks.cs#L131) | private static |
 
 ## Assets/Editor/MainMenu/MainMenuPlayChecks.cs
 

@@ -843,6 +843,45 @@ flowchart TD
 - [MainMenuController.OpenBlueprint](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L389)
 <!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|OpenBlueprint -->
 
+## 冷主菜单持续观察（Editor验证）
+
+源码推导：显式Run仅接受单场景冷菜单Play，每五秒检查菜单所有权、真实帧推进、内存与日志错误。达到时长才通过；停止Play或编译重载标为中断。结束解绑回调、写入Temp报告并退出Play，不触碰蓝图与存档。
+
+```mermaid
+flowchart TD
+    A["MainMenuIdleChecks.Run()"]
+    click A "../Assets/Editor/MainMenu/MainMenuIdleChecks.cs#L25" "打开源码"
+    B["MainMenuIdleChecks.Tick()"]
+    click B "../Assets/Editor/MainMenu/MainMenuIdleChecks.cs#L58" "打开源码"
+    C["MainMenuIdleChecks.Capture()"]
+    click C "../Assets/Editor/MainMenu/MainMenuIdleChecks.cs#L109" "打开源码"
+    D["MainMenuIdleChecks.Finish()"]
+    click D "../Assets/Editor/MainMenu/MainMenuIdleChecks.cs#L117" "打开源码"
+    E["MainMenuIdleChecks.Stop()"]
+    click E "../Assets/Editor/MainMenu/MainMenuIdleChecks.cs#L50" "打开源码"
+    F["MainMenuIdleChecks.Write()"]
+    click F "../Assets/Editor/MainMenu/MainMenuIdleChecks.cs#L131" "打开源码"
+    A -.->|Editor update| B
+    A -.->|日志回调| C
+    B -->|采样| F
+    B -->|到时或错误| D
+    E --> D
+    D -->|解绑并结束Play| F
+```
+
+- [MainMenuIdleChecks.Run](../Assets/Editor/MainMenu/MainMenuIdleChecks.cs#L25)
+<!-- source: Assets/Editor/MainMenu/MainMenuIdleChecks.cs|Run -->
+- [MainMenuIdleChecks.Tick](../Assets/Editor/MainMenu/MainMenuIdleChecks.cs#L58)
+<!-- source: Assets/Editor/MainMenu/MainMenuIdleChecks.cs|Tick -->
+- [MainMenuIdleChecks.Capture](../Assets/Editor/MainMenu/MainMenuIdleChecks.cs#L109)
+<!-- source: Assets/Editor/MainMenu/MainMenuIdleChecks.cs|Capture -->
+- [MainMenuIdleChecks.Finish](../Assets/Editor/MainMenu/MainMenuIdleChecks.cs#L117)
+<!-- source: Assets/Editor/MainMenu/MainMenuIdleChecks.cs|Finish -->
+- [MainMenuIdleChecks.Stop](../Assets/Editor/MainMenu/MainMenuIdleChecks.cs#L50)
+<!-- source: Assets/Editor/MainMenu/MainMenuIdleChecks.cs|Stop -->
+- [MainMenuIdleChecks.Write](../Assets/Editor/MainMenu/MainMenuIdleChecks.cs#L131)
+<!-- source: Assets/Editor/MainMenu/MainMenuIdleChecks.cs|Write -->
+
 ## 交错防线实战基地制作
 
 源码推导：Editor菜单制作独立CombatCourtyard蓝图；按尺寸烘焙装甲Prefab的网格缩放、碰撞与连接点，既有资产存在则保留手工调整。校验后保存真实JSON；个人副本经正常主菜单进入SiegeGameplay，不替换默认示例。
