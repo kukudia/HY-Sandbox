@@ -1572,14 +1572,14 @@ HY-Sandbox/
 | CombatHudPlayProbe | [`void OnPlayModeChanged(PlayModeStateChange state)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L81) | private static |
 | CombatHudPlayProbe | [`void Tick()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L111) | private static |
 | CombatHudPlayProbe | [`IEnumerator Siege()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L140) | private static |
-| CombatHudPlayProbe | [`IEnumerator Legacy()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L285) | private static |
-| CombatHudPlayProbe | [`IEnumerator Flow()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L322) | private static |
-| CombatHudPlayProbe | [`IEnumerator Recovery()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L465) | private static |
-| CombatHudPlayProbe | [`IEnumerator Arena()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L598) | private static |
-| CombatHudPlayProbe | [`IEnumerator Exploration()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L642) | private static |
-| CombatHudPlayProbe | [`void Screenshot(string name)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L683) | private static |
-| CombatHudPlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L689) | private static |
-| CombatHudPlayProbe | [`void Finish()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L700) | private static |
+| CombatHudPlayProbe | [`IEnumerator Legacy()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L311) | private static |
+| CombatHudPlayProbe | [`IEnumerator Flow()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L348) | private static |
+| CombatHudPlayProbe | [`IEnumerator Recovery()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L491) | private static |
+| CombatHudPlayProbe | [`IEnumerator Arena()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L624) | private static |
+| CombatHudPlayProbe | [`IEnumerator Exploration()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L668) | private static |
+| CombatHudPlayProbe | [`void Screenshot(string name)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L709) | private static |
+| CombatHudPlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L715) | private static |
+| CombatHudPlayProbe | [`void Finish()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L726) | private static |
 
 ## Assets/Editor/Combat/Validation/EnemyBlueprintPoolChecks.cs
 
@@ -1934,12 +1934,14 @@ HY-Sandbox/
 
 ## Assets/Editor/MainMenu/WorkshopLayoutPreview.cs
 
-// 职责：以保存的真实Canvas制作工坊、暂停及设置页多分辨率预览，检查可见交互区域。 // 入口：Render()；独立PreviewScene，禁止运行态写回，不初始化个人存档。
+// 职责：以保存的真实Canvas制作工坊、暂停及设置页多分辨率预览，检查可见交互区域。 // 入口：Render()/RenderSiege()；独立PreviewScene，禁止运行态写回，不初始化个人存档。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorkshopLayoutPreview | [`string Render()`](../Assets/Editor/MainMenu/WorkshopLayoutPreview.cs#L15) | public static |
-| WorkshopLayoutPreview | [`void RenderOne(Canvas source, string page, Vector2Int size)`](../Assets/Editor/MainMenu/WorkshopLayoutPreview.cs#L81) | private static |
+| WorkshopLayoutPreview | [`string RenderSiege()`](../Assets/Editor/MainMenu/WorkshopLayoutPreview.cs#L15) | public static |
+| WorkshopLayoutPreview | [`string Render()`](../Assets/Editor/MainMenu/WorkshopLayoutPreview.cs#L77) | public static |
+| WorkshopLayoutPreview | [`void RenderOne(Canvas source, string page, Vector2Int size)`](../Assets/Editor/MainMenu/WorkshopLayoutPreview.cs#L143) | private static |
+| WorkshopLayoutPreview | [`void PrepareSiege(GameObject root, string page)`](../Assets/Editor/MainMenu/WorkshopLayoutPreview.cs#L269) | private static |
 
 ## Assets/Editor/Navigation/Validation/EnemyPredictionPlayChecks.cs
 
@@ -2443,14 +2445,15 @@ HY-Sandbox/
 | --- | --- | --- |
 | SiegeGameplayHudAuthoring | [`void Upgrade()`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L16) | public static |
 | SiegeGameplayHudAuthoring | [`void ConfigureStage(SiegeGameplayStage stage)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L91) | public static |
-| SiegeGameplayHudAuthoring | [`void Restyle(Transform root)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L233) | public static |
-| SiegeGameplayHudAuthoring | [`void Soften(Transform root)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L260) | private static |
-| SiegeGameplayHudAuthoring | [`RectTransform Box(Transform parent, string name, Vector2 anchor, Vector2 position, Vector2 size)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L270) | private static |
-| SiegeGameplayHudAuthoring | [`TMP_Text Label( Transform parent, string name, TMP_FontAsset font, Vector2 position, Vector2 size, int fontSize, Vector2? anchor = null)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L284) | private static |
-| SiegeGameplayHudAuthoring | [`Button Button( Transform parent, string name, string caption, TMP_FontAsset font, Vector2 anchor, Vector2 position, Vector2 size)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L308) | private static |
-| SiegeGameplayHudAuthoring | [`void Set(SerializedObject data, string field, Object value)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L335) | private static |
-| SiegeGameplayHudAuthoring | [`T Ensure(Transform owner)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L340) | private static |
-| SiegeGameplayHudAuthoring | [`void Remove(Transform owned)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L347) | private static |
+| SiegeGameplayHudAuthoring | [`void ConfigureNameplateExclusions(SiegeCombatHud entry)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L234) | public static |
+| SiegeGameplayHudAuthoring | [`void Restyle(Transform root)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L284) | public static |
+| SiegeGameplayHudAuthoring | [`void Soften(Transform root)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L311) | private static |
+| SiegeGameplayHudAuthoring | [`RectTransform Box(Transform parent, string name, Vector2 anchor, Vector2 position, Vector2 size)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L321) | private static |
+| SiegeGameplayHudAuthoring | [`TMP_Text Label( Transform parent, string name, TMP_FontAsset font, Vector2 position, Vector2 size, int fontSize, Vector2? anchor = null)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L335) | private static |
+| SiegeGameplayHudAuthoring | [`Button Button( Transform parent, string name, string caption, TMP_FontAsset font, Vector2 anchor, Vector2 position, Vector2 size)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L359) | private static |
+| SiegeGameplayHudAuthoring | [`void Set(SerializedObject data, string field, Object value)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L386) | private static |
+| SiegeGameplayHudAuthoring | [`T Ensure(Transform owner)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L391) | private static |
+| SiegeGameplayHudAuthoring | [`void Remove(Transform owned)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L398) | private static |
 
 ## Assets/Editor/Siege/Authoring/SiegeInterfaceAuthoring.cs
 

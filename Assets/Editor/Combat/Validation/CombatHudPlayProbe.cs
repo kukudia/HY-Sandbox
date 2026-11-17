@@ -195,6 +195,32 @@ public static class CombatHudPlayProbe
         hud.Panels.CloseAll();
         yield return .4f;
         Check("Closing debug drawer releases projected nameplate", hud.HasVisibleNameplate(enemy));
+        foreach (string field in new[]
+        {
+            "summary",
+            "countdown"
+        }
+
+        )
+        {
+            camera.transform.SetPositionAndRotation(centered.position, centered.rotation);
+            var stageHud = new SerializedObject(stage.GetComponentInChildren<SiegeCombatHud>());
+            Component component = (Component)stageHud.FindProperty(field).objectReferenceValue;
+            CanvasGroup region = field == "countdown" ? component.transform.parent.GetComponent<CanvasGroup>() : component.GetComponent<CanvasGroup>();
+            Check("Saved Siege " + field + " reserves a real UI region", region != null);
+            Vector3 destinationPoint = RectTransformUtility.WorldToScreenPoint(null, region.transform.TransformPoint(((RectTransform)region.transform).rect.center));
+            Ray desired = camera.ScreenPointToRay(destinationPoint);
+            Vector3 toward = enemy.cockpit.transform.position + Vector3.up * 3f - camera.transform.position;
+            camera.transform.rotation = Quaternion.FromToRotation(desired.direction, toward) * camera.transform.rotation;
+            yield return .4f;
+            Check("Projected nameplate yields to Siege " + field, !hud.HasVisibleNameplate(enemy));
+            float alpha = region.alpha;
+            region.alpha = 0f;
+            yield return .4f;
+            Check("Transparent Siege " + field + " releases nameplate", hud.HasVisibleNameplate(enemy));
+            region.alpha = alpha;
+        }
+
         camera.transform.SetPositionAndRotation(centered.position, centered.rotation);
         PauseMenu pause = Object.FindAnyObjectByType<PauseMenu>();
         pause.Toggle();

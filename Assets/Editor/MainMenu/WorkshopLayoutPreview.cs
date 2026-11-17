@@ -1,5 +1,5 @@
 // 职责：以保存的真实Canvas制作工坊、暂停及设置页多分辨率预览，检查可见交互区域。
-// 入口：Render()；独立PreviewScene，禁止运行态写回，不初始化个人存档。
+// 入口：Render()/RenderSiege()；独立PreviewScene，禁止运行态写回，不初始化个人存档。
 using System;
 using System.IO;
 using System.Linq;
@@ -12,6 +12,68 @@ using Object = UnityEngine.Object;
 
 public static class WorkshopLayoutPreview
 {
+    public static string RenderSiege()
+    {
+        if (EditorApplication.isPlaying)
+        {
+            throw new InvalidOperationException("Exit Play before rendering saved layouts.");
+        }
+
+        Scene source = SceneManager.GetSceneByPath("Assets/Scenes/SiegeGameplay.unity");
+        SiegeCombatHud entry = source.isLoaded ? SceneObjectQuery.FindInScene<SiegeCombatHud>(source) : null;
+        if (entry == null)
+        {
+            throw new InvalidOperationException("Load saved SiegeGameplay before previewing.");
+        }
+
+        Directory.CreateDirectory("Temp/WorkshopLayout");
+        var errors = new System.Collections.Generic.List<string>();
+        Application.LogCallback capture = (message, trace, type) =>
+        {
+            if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert)
+            {
+                errors.Add(message);
+            }
+        };
+        Application.logMessageReceived += capture;
+        try
+        {
+            foreach (Vector2Int size in new[]
+            {
+                new Vector2Int(1280, 720),
+                new Vector2Int(1280, 800),
+                new Vector2Int(1024, 768),
+                new Vector2Int(3440, 1440)
+            }
+
+            )
+            {
+                foreach (string page in new[]
+                {
+                    "SiegeBattle",
+                    "SiegeDebug",
+                    "SiegeRecovery",
+                    "SiegeFailure"
+                }
+
+                )
+                {
+                    RenderOne(entry.GetComponentInParent<Canvas>(), page, size);
+                    if (errors.Count > 0)
+                    {
+                        throw new InvalidOperationException(string.Join("; ", errors));
+                    }
+                }
+            }
+        }
+        finally
+        {
+            Application.logMessageReceived -= capture;
+        }
+
+        return "16 saved Siege layouts rendered; interactive bounds and nameplate exclusions checked.";
+    }
+
     public static string Render()
     {
         if (EditorApplication.isPlaying)
@@ -120,6 +182,10 @@ public static class WorkshopLayoutPreview
                     child.gameObject.SetActive(child.name == "BuildPanel" || child.name == "Main Menu" || (page == "Pause" && child.name == "Pause Overlay"));
                 }
             }
+            else if (page.StartsWith("Siege", StringComparison.Ordinal))
+            {
+                PrepareSiege(root, page);
+            }
             else
             {
                 GameObject CopyOf(SerializedObject owner, string name)
@@ -197,6 +263,77 @@ public static class WorkshopLayoutPreview
             target.Release();
             Object.DestroyImmediate(target);
             EditorSceneManager.ClosePreviewScene(scene);
+        }
+    }
+
+    private static void PrepareSiege(GameObject root, string page)
+    {
+        SiegeCombatHud entry = root.GetComponentInChildren<SiegeCombatHud>(true);
+        var data = new SerializedObject(entry);
+        void SetText(string field, string value)
+        {
+            ((TMPro.TMP_Text)data.FindProperty(field).objectReferenceValue).text = value;
+        }
+
+        SetText("summary", "BASE CORE 1200 / 1200\nAirKing / AI\nHULL 61700 / 61900");
+        SetText("phaseLabel", page == "SiegeRecovery" ? "RECOVERY / RETURN TO BASE" : "WAVE LIMIT");
+        SetText("countdown", "01:34");
+        SetText(
+            "battleStatus",
+            "CREDITS 5,188  +1,200 PENDING\nHOSTILES 1  /  KILLS 23" + (page == "SiegeRecovery" ? "\nMOVEMENT CHECK  15s" : string.Empty));
+        SetText(
+            "failureDetail",
+            "CORE LOST\nYour original blueprint is preserved.\nRestart the same base or continue to the menu.");
+        foreach (string field in new[]
+        {
+            "nextWave",
+            "repairBase"
+        }
+
+        )
+        {
+            ((Component)data.FindProperty(field).objectReferenceValue).gameObject.SetActive(false);
+        }
+
+        CanvasGroup failure = (CanvasGroup)data.FindProperty("failure").objectReferenceValue;
+        failure.gameObject.SetActive(page == "SiegeFailure");
+        failure.alpha = page == "SiegeFailure" ? 1f : 0f;
+        CombatHud hud = entry.Hud;
+        hud.ResetHud();
+        foreach (CanvasGroup group in hud.GetComponentsInChildren<CanvasGroup>(true))
+        {
+            if (group.name == "Debug Panel" || group.name == "Window")
+            {
+                group.alpha = group.name == "Debug Panel" && page == "SiegeDebug" ? 1f : 0f;
+                group.blocksRaycasts = group.interactable = group.alpha > .01f;
+            }
+        }
+
+        var hudData = new SerializedObject(hud);
+        RectTransform overlay = (RectTransform)hudData.FindProperty("_overlay").objectReferenceValue;
+        SerializedProperty regions = hudData.FindProperty("nameplateExclusions");
+        if (regions.arraySize < 16)
+        {
+            throw new InvalidOperationException("Siege must reserve its own summary, actions, clock, status, failure and camera help.");
+        }
+
+        Canvas.ForceUpdateCanvases();
+        var corners = new Vector3[4];
+        for (int index = 0; index < regions.arraySize; index++)
+        {
+            CanvasGroup group = (CanvasGroup)regions.GetArrayElementAtIndex(index).objectReferenceValue;
+            if (group == null || !group.gameObject.activeInHierarchy || group.alpha <= .01f)
+            {
+                continue;
+            }
+
+            ((RectTransform)group.transform).GetWorldCorners(corners);
+            Vector3 center = overlay.InverseTransformPoint((corners[0] + corners[2]) * .5f);
+            Rect probe = new Rect((Vector2)center - Vector2.one, Vector2.one * 2);
+            if (hud.IsNameplateAreaAvailable(probe))
+            {
+                throw new InvalidOperationException("Visible Siege UI does not block nameplates: " + group.name);
+            }
         }
     }
 }

@@ -7401,7 +7401,7 @@ flowchart TD
     D --> F
     E --> G
     F --> H
-    F -->|实际名牌尺寸，避让可见工具和通知| AC
+    F -->|实际名牌尺寸，避让可见工具、通知及Siege专属区域| AC
     AE --> AD
     I --> J
     K -.->|已结算AttackerResolved事件| L

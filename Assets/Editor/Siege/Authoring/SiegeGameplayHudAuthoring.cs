@@ -227,7 +227,58 @@ public static class SiegeGameplayHudAuthoring
         }
 
         Soften(canvas);
+        ConfigureNameplateExclusions(entry);
         EditorSceneManager.MarkSceneDirty(stage.gameObject.scene);
+    }
+
+    public static void ConfigureNameplateExclusions(SiegeCombatHud entry)
+    {
+        var data = new SerializedObject(entry);
+        CombatHud hud = (CombatHud)data.FindProperty("hud").objectReferenceValue;
+        var hudData = new SerializedObject(hud);
+        SerializedProperty regions = hudData.FindProperty("nameplateExclusions");
+        var groups = Enumerable.Range(0, regions.arraySize).Select(index => (CanvasGroup)regions.GetArrayElementAtIndex(index).objectReferenceValue).Where(group => group != null).ToList();
+        foreach (string field in new[]
+        {
+            "summary",
+            "nextShip",
+            "nextWave",
+            "repairBase",
+            "battleStatus",
+            "failure",
+            "countdown"
+        }
+
+        )
+        {
+            Component component = (Component)data.FindProperty(field).objectReferenceValue;
+            GameObject surface = field == "countdown" ? component.transform.parent.gameObject : component.gameObject;
+            CanvasGroup group = Ensure<CanvasGroup>(surface.transform);
+            if (!groups.Contains(group))
+            {
+                groups.Add(group);
+            }
+        }
+
+        Transform help = entry.GetComponentInParent<Canvas>().transform.Find("Camera Help");
+        if (help != null)
+        {
+            CanvasGroup group = Ensure<CanvasGroup>(help);
+            if (!groups.Contains(group))
+            {
+                groups.Add(group);
+            }
+        }
+
+        regions.arraySize = groups.Count;
+        for (int index = 0; index < groups.Count; index++)
+        {
+            regions.GetArrayElementAtIndex(index).objectReferenceValue = groups[index];
+        }
+
+        hudData.ApplyModifiedPropertiesWithoutUndo();
+        PrefabUtility.RecordPrefabInstancePropertyModifications(hud);
+        EditorSceneManager.MarkSceneDirty(entry.gameObject.scene);
     }
 
     public static void Restyle(Transform root)
