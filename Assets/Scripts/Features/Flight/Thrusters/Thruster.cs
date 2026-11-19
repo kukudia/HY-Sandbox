@@ -67,7 +67,7 @@ public abstract class Thruster : MonoBehaviour
     {
     }
 
-    public void EndGuidance(Object owner)
+    public void EndGuidance(Object owner, bool retainThrust = false)
     {
         if (guidanceOwner != owner)
         {
@@ -75,7 +75,15 @@ public abstract class Thruster : MonoBehaviour
         }
 
         guidanceOwner = null;
-        thrust = lastThrustValue = 0f;
+        if (retainThrust)
+        {
+            SetPowerRequested(true);
+        }
+        else
+        {
+            thrust = lastThrustValue = 0f;
+        }
+
         VisualizeThrust(true);
     }
 

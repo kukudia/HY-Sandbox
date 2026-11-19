@@ -16,7 +16,8 @@ public static class SiegeHangarPlayChecks
 {
     private const string Pending = "HY.HangarPlayChecks";
     private static bool Roof => SessionState.GetBool("HY.HangarRoofChecks", false);
-    private static string ReportPath => Roof ? "Temp/Hangars/roof-play-checks.json" : "Temp/Hangars/play-checks.json";
+    private static bool AirKing => SessionState.GetBool("HY.HangarAirKingChecks", false);
+    private static string ReportPath => AirKing ? "Temp/Hangars/airking-launch.json" : Roof ? "Temp/Hangars/roof-play-checks.json" : "Temp/Hangars/play-checks.json";
 
     private static IEnumerator scenario;
     private static Report report;
@@ -136,12 +137,21 @@ public static class SiegeHangarPlayChecks
     [MenuItem("Tools/HY-Sandbox/Siege/Validate hangar fleet in Play")]
     public static void RunRoof()
     {
+        SessionState.SetBool("HY.HangarAirKingChecks", false);
         SessionState.SetBool("HY.HangarRoofChecks", true);
         Begin();
     }
 
     public static void Run()
     {
+        SessionState.SetBool("HY.HangarAirKingChecks", false);
+        SessionState.SetBool("HY.HangarRoofChecks", false);
+        Begin();
+    }
+
+    public static void RunAirKing()
+    {
+        SessionState.SetBool("HY.HangarAirKingChecks", true);
         SessionState.SetBool("HY.HangarRoofChecks", false);
         Begin();
     }
@@ -229,7 +239,8 @@ public static class SiegeHangarPlayChecks
         {
             SiegeSettings settings = AssetDatabase.LoadAssetAtPath<SiegeSettings>("Assets/Siege/DefaultSiege.asset");
             TextAsset shipAsset = Resources.Load<TextAsset>("WorldBlueprints/Enemies/CODEX_E01_Finch");
-            BlockDataList ship = JsonUtility.FromJson<BlockDataList>(shipAsset.text);
+            string shipJson = AirKing ? File.ReadAllText(SaveManager.instance.GetSavePath("AirKing")) : shipAsset.text;
+            BlockDataList ship = JsonUtility.FromJson<BlockDataList>(shipJson);
             Bounds bounds = BlockBounds.FromBlueprint(ship.blocks, Matrix4x4.identity);
             GameObject hangarPrefab = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Resources" }).Select(AssetDatabase.GUIDToAssetPath).Select(AssetDatabase.LoadAssetAtPath<GameObject>).First(asset => asset != null && asset.GetComponent<HangarModule>() != null);
             BlockData hangarData = new BlockData(hangarPrefab.GetComponent<Block>());
@@ -264,6 +275,13 @@ public static class SiegeHangarPlayChecks
                     hangarData
                 }
             };
+            if (AirKing)
+            {
+                TextAsset example = AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/Siege/Construction/Examples/MeridianAirworks.json");
+                design = JsonUtility.FromJson<BlockDataList>(example.text);
+                hangarData = design.blocks.Find(block => block.id == "heavy-bay-1");
+            }
+
             host = new Host
             {
                 Match = new SiegeMatch(
@@ -280,13 +298,13 @@ public static class SiegeHangarPlayChecks
                 settings,
                 manager,
                 design,
-                core.id,
+                design.siegeCoreId,
                 "Hangar validation base",
                 new Vector3(3000, 500, 3000),
                 Quaternion.identity,
                 1000,
                 null);
-            HangarModule hangar = fortress.Building.GetComponentsInChildren<HangarModule>().Single();
+            HangarModule hangar = fortress.Building.GetComponentsInChildren<HangarModule>().Single(bay => bay.GetComponent<Block>().uniqueId == fortress.Id + ":" + hangarData.id);
             host.Fleet = new SiegeFleet(host, new[] { hangar.transform }, fortress, false);
             host.Fleet.RefreshHangars(new[] { hangar });
             string smallJson = JsonUtility.ToJson(ship);
@@ -335,6 +353,26 @@ public static class SiegeHangarPlayChecks
             Check(
                 Vector3.Distance(entry.Cockpit.transform.position, startingPosition) > (Roof ? hangarData.y : hangarData.z) * .5f,
                 "Launch travels beyond the external hangar wall under real physics");
+            if (AirKing)
+            {
+                Rigidbody body = entry.Unit.GetComponent<Rigidbody>();
+                float launchHeight = body.position.y;
+                float minimumHeight = launchHeight;
+                float minimumVerticalSpeed = 0f;
+                float observeUntil = Time.fixedTime + 3f;
+                while (Time.fixedTime < observeUntil && entry.IsAlive)
+                {
+                    yield return new WaitForFixedUpdate();
+                    minimumHeight = Mathf.Min(minimumHeight, body.position.y);
+                    minimumVerticalSpeed = Mathf.Min(minimumVerticalSpeed, body.linearVelocity.y);
+                }
+
+                Check(
+                    entry.IsAlive && launchHeight - minimumHeight < 0.75f && minimumVerticalSpeed > -1.5f,
+                    $"AirKing survives normal flight handoff with altitude loss {launchHeight - minimumHeight:F2} and minimum vertical speed {minimumVerticalSpeed:F2}");
+                yield break;
+            }
+
             EnemyController ai = entry.Unit.GetComponent<EnemyController>();
             if (ai != null)
             {

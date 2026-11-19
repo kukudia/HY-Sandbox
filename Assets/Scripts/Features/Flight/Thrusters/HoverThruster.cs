@@ -13,6 +13,12 @@ public class HoverThruster : Thruster
         _controlledThrust = Mathf.Max(0f, desiredThrust);
     }
 
+    internal void InheritGuidedLift()
+    {
+        float efficiency = PowerEfficiency;
+        SetControlledThrust(efficiency > 0f ? lastThrustValue / efficiency : 0f);
+    }
+
     private void FixedUpdate()
     {
         if (IsGuided)

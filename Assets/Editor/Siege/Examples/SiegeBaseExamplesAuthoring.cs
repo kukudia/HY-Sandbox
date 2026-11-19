@@ -208,30 +208,144 @@ public static class SiegeBaseExamplesAuthoring
             }
         }
 
-        foreach (int side in new[] { -1, 1 })
+        foreach (int side in new[]
+        {
+            -1,
+            1
+        }
+
+        )
         {
             int x = side * 22;
-            BlockData large = Add(design, "heavy-bay-" + side, "Hangars/Hangar", new Vector3(x, 5, 14));
-            large.x = 20;
-            large.y = 10;
-            large.z = 24;
-            BlockData small = Add(design, "lift-bay-" + side, "Hangars/Hangar", new Vector3(x, 3, -18));
-            small.x = 12;
-            small.y = 6;
-            small.z = 16;
+            // Keep the dock-facing edges fixed. The two-cell wall allowance is
+            // excluded by HangarModule.Fits when checking AirKing and Type 03.
+            BlockData large = Add(design, "heavy-bay-" + side, "Hangars/Hangar", new Vector3(x, 6, 18));
+            large.x = 22;
+            large.y = 12;
+            large.z = 32;
+            BlockData small = Add(design, "lift-bay-" + side, "Hangars/Hangar", new Vector3(x, 5, -19));
+            small.x = 14;
+            small.y = 10;
+            small.z = 18;
             small.hangarEntrance = HangarEntrance.Roof;
-
+            Add(
+                design,
+                "heavy-bay-repair-" + side,
+                "Blocks/RepairBotContianer",
+                new Vector3(side * 34.5f, .5f, 18.5f));
+            Add(
+                design,
+                "lift-bay-repair-" + side,
+                "Blocks/RepairBotContianer",
+                new Vector3(side * 30.5f, .5f, -18.5f));
+            Add(design, "core-repair-" + side, "Blocks/RepairBotContianer", new Vector3(side * 4.5f, .5f, 2.5f));
+            Add(
+                design,
+                "core-repair-generator-" + side,
+                "Blocks/PowerGeneratingUnit",
+                new Vector3(side * 4, 1, -3));
+            Add(
+                design,
+                "core-repair-relay-" + side,
+                "Blocks/PowerTransmissionDevice",
+                new Vector3(side * 4.5f, .5f, -.5f));
+            Add(
+                design,
+                "heavy-bay-repair-relay-" + side,
+                "Blocks/PowerTransmissionDevice",
+                new Vector3(side * 34.5f, .5f, 20.5f));
+            Add(
+                design,
+                "lift-bay-repair-relay-" + side,
+                "Blocks/PowerTransmissionDevice",
+                new Vector3(side * 30.5f, .5f, -20.5f));
             // Repeated loading docks serve the lane between each pair of hangars.
             for (int dock = 0; dock < 2; dock++)
             {
                 int serviceX = side * (15 + 14 * dock);
-                Service(design, serviceX, -3, 2);
-                Add(design, "secondary-store-" + serviceX, "Blocks/CargoHold", new Vector3(serviceX + 4, 1, -7));
+                AirworksDock(design, serviceX, -3);
             }
 
-            foreach (int z in new[] { -22, -2, 22 })
+            foreach (int z in new[]
+            {
+                -22,
+                -2,
+                22
+            }
+
+            )
             {
                 Defense(design, side * 39, z, z != -2);
+            }
+
+            foreach (int row in new[]
+            {
+                -28,
+                0,
+                28
+            }
+
+            )
+            {
+                AirworksDock(design, side * 50, row);
+                AirworksDock(design, side * 65, row);
+                Defense(design, side * 76, row, row != 0);
+            }
+
+            foreach (int row in new[]
+            {
+                -44,
+                44
+            }
+
+            )
+            {
+                foreach (int column in new[]
+                {
+                    6,
+                    43,
+                    68
+                }
+
+                )
+                {
+                    Defense(design, side * column, row, column != 43);
+                }
+            }
+
+            for (int row = -40; row <= 40; row += 20)
+            {
+                Add(
+                    design,
+                    "side-wall-" + side + "/" + row,
+                    "Blocks/CombatStructures/Armor2x6x16",
+                    new Vector3(side * 84, 3, row));
+            }
+
+            // The wider front openings line up with the two heavy bay doors.
+            foreach (int column in new[]
+            {
+                -72,
+                -56,
+                -40,
+                0,
+                40,
+                56,
+                72
+            }
+
+            )
+            {
+                Add(
+                    design,
+                    "end-wall-" + side + "/" + column,
+                    "Blocks/CombatStructures/Armor12x6x2",
+                    new Vector3(column, 3, side * 54));
+            }
+
+            for (int y = 1; y <= 5; y += 2)
+            {
+                Add(design, "core-facing-" + side + "/" + y, "Blocks/2x2x2", new Vector3(0, y, side * 2), "metal");
             }
 
             // Low inset guide strips mark the apron edges without crossing a bay mouth.
@@ -240,6 +354,27 @@ public static class SiegeBaseExamplesAuthoring
                 Add(design, "apron-" + side + "/" + z, "Blocks/2x1x1", new Vector3(side * 9, .5f, z + .5f), "stone");
             }
         }
+    }
+
+    private static void AirworksDock(BlockDataList design, int x, int z)
+    {
+        string tag = x + "/" + z;
+        tag = z == -3 ? x.ToString() : tag;
+        Service(design, x, z, 2, tag);
+        Add(design, "secondary-store-" + tag, "Blocks/CargoHold", new Vector3(x + 4, 1, z - 4));
+        // Grounded panels surround the storage face and the side of the power plant.
+        // The bot departure side stays open.
+        for (int offset = -4; offset <= 4; offset += 2)
+        {
+            Add(
+                design,
+                "dock-screen-" + tag + "/" + offset,
+                "Blocks/2x2x1",
+                new Vector3(x + offset, 1, z - 6.5f),
+                "metal");
+        }
+
+        Add(design, "plant-screen-" + tag, "Blocks/2x2x2", new Vector3(x - 2, 1, z), "stone");
     }
 
     private static void Hangar(BlockDataList design, string id, Vector3 position, HangarEntrance entrance)
@@ -281,9 +416,9 @@ public static class SiegeBaseExamplesAuthoring
         Add(design, "relay-" + tag, "Blocks/PowerTransmissionDevice", new Vector3(x + 2.5f, .5f, z - 1.5f));
     }
 
-    private static void Service(BlockDataList design, float x, float z, int index)
+    private static void Service(BlockDataList design, float x, float z, int index, string tag = null)
     {
-        string tag = x.ToString();
+        tag ??= x.ToString();
         Add(design, "service-generator-" + tag, "Blocks/PowerGeneratingUnit", new Vector3(x, 1, z));
         Add(
             design,

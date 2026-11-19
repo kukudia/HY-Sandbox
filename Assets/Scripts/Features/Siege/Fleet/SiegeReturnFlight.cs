@@ -527,7 +527,7 @@ public sealed class SiegeReturnFlight
     private void Finish(Flight flight, bool success, string reason = null)
     {
         flight.finished = true;
-        ReleasePropulsion(flight);
+        ReleasePropulsion(flight, success && !IsReturning);
         if (!success)
         {
             FailedCount++;
@@ -551,13 +551,17 @@ public sealed class SiegeReturnFlight
             {
                 flight.entry.Cockpit.SetControlMode(fleet.Driven == flight.entry ? UnitControlMode.Player : UnitControlMode.Autonomous);
                 SiegeFleetPhysics.Activate(flight.unit);
+                if (flight.hoverController != null && flight.hoverController.isActiveAndEnabled)
+                {
+                    flight.hoverController.PrepareFlightHandoff();
+                }
             }
         }
 
         flight.hangar?.SetDoorOpen(false);
     }
 
-    private void ReleasePropulsion(Flight flight)
+    private void ReleasePropulsion(Flight flight, bool launchingIntoFlight = false)
     {
         if (flight.engines == null)
         {
@@ -572,12 +576,19 @@ public sealed class SiegeReturnFlight
                 continue;
             }
 
-            engine.GetComponent<Power>()?.SetWorkRequested(powerRequester, false);
-            engine.EndGuidance(powerRequester);
+            bool retainLift = launchingIntoFlight && engine is HoverThruster && engine.isActiveAndEnabled && engine.GetComponentInParent<ControlUnit>() == flight.unit;
             if (engine is HoverThruster hover)
             {
-                hover.isHovered = flight.hoverStates[index];
+                if (retainLift)
+                {
+                    hover.InheritGuidedLift();
+                }
+
+                hover.isHovered = retainLift || flight.hoverStates[index];
             }
+
+            engine.EndGuidance(powerRequester, retainLift);
+            engine.GetComponent<Power>()?.SetWorkRequested(powerRequester, false);
         }
 
         if (flight.hoverController != null)
@@ -590,7 +601,11 @@ public sealed class SiegeReturnFlight
     {
         foreach (Flight flight in flights)
         {
-            ReleasePropulsion(flight);
+            if (!flight.finished)
+            {
+                ReleasePropulsion(flight);
+            }
+
             flight.hangar?.SetDoorOpen(false);
         }
 

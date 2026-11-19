@@ -127,7 +127,9 @@ public static class SiegeBaseExamplesChecks
                 Check(
                     report,
                     loads.Length > 0 && loads.All(load => load.isWorking && load.efficiency >= .99f),
-                    "Every requested functional load receives real full-rate power: " + index);
+                    "Every requested functional load receives real full-rate power: " + index + " / underpowered: " + string.Join(
+                        ", ",
+                        loads.Where(load => !load.isWorking || load.efficiency < .99f).Select(load => load.GetComponent<Block>()?.uniqueId ?? load.name)));
                 foreach (Power power in loads)
                 {
                     power.SetWorkRequested(owner, false);

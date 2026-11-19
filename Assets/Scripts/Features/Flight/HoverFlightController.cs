@@ -90,6 +90,13 @@ public class HoverFlightController : MonoBehaviour
         thrusterCacheDirty = true;
     }
 
+    internal void PrepareFlightHandoff()
+    {
+        targetHoverHeight = transform.position.y;
+        power = GetComponent<Power>();
+        power?.SetWorkRequested(this, true);
+    }
+
     private void OnDisable()
     {
         power?.SetWorkRequested(this, false);

@@ -2622,29 +2622,31 @@ HY-Sandbox/
 
 ## Assets/Editor/Siege/Examples/SiegeBaseExamplesAuthoring.cs
 
-// 职责：制作三个可独立编辑的官方基地示例，使用真实材质、仓储、无人机、电网和模块机库。 // 入口：Generate() / CreateDesign()；仅更新声明的官方资源，先备份，不改个人蓝图。
+// 职责：制作可独立编辑的官方基地示例，使用真实材质、仓储、无人机、电网和模块机库。 // 入口：Generate() / CreateDesign()；仅更新声明的官方资源，先备份，不改个人蓝图。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeBaseExamplesAuthoring | [`string Generate()`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesAuthoring.cs#L25) | public static |
-| SiegeBaseExamplesAuthoring | [`BlockDataList CreateDesign(int index)`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesAuthoring.cs#L93) | public static |
-| SiegeBaseExamplesAuthoring | [`void Hangar(BlockDataList design, string id, Vector3 position, HangarEntrance entrance)`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesAuthoring.cs#L169) | private static |
-| SiegeBaseExamplesAuthoring | [`void Core(BlockDataList design, float z)`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesAuthoring.cs#L175) | private static |
-| SiegeBaseExamplesAuthoring | [`void Defense(BlockDataList design, float x, float z, bool heavy)`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesAuthoring.cs#L195) | private static |
-| SiegeBaseExamplesAuthoring | [`void Service(BlockDataList design, float x, float z, int index)`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesAuthoring.cs#L208) | private static |
-| SiegeBaseExamplesAuthoring | [`BlockData Add(BlockDataList design, string id, string resource, Vector3 position, string material = null)`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesAuthoring.cs#L234) | private static |
+| SiegeBaseExamplesAuthoring | [`string Generate()`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesAuthoring.cs#L27) | public static |
+| SiegeBaseExamplesAuthoring | [`BlockDataList CreateDesign(int index)`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesAuthoring.cs#L95) | public static |
+| SiegeBaseExamplesAuthoring | [`void BuildAirworks(BlockDataList design)`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesAuthoring.cs#L178) | private static |
+| SiegeBaseExamplesAuthoring | [`void AirworksDock(BlockDataList design, int x, int z)`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesAuthoring.cs#L359) | private static |
+| SiegeBaseExamplesAuthoring | [`void Hangar(BlockDataList design, string id, Vector3 position, HangarEntrance entrance)`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesAuthoring.cs#L380) | private static |
+| SiegeBaseExamplesAuthoring | [`void Core(BlockDataList design, float z)`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesAuthoring.cs#L386) | private static |
+| SiegeBaseExamplesAuthoring | [`void Defense(BlockDataList design, float x, float z, bool heavy)`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesAuthoring.cs#L406) | private static |
+| SiegeBaseExamplesAuthoring | [`void Service(BlockDataList design, float x, float z, int index, string tag = null)`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesAuthoring.cs#L419) | private static |
+| SiegeBaseExamplesAuthoring | [`BlockData Add(BlockDataList design, string id, string resource, Vector3 position, string material = null)`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesAuthoring.cs#L445) | private static |
 
 ## Assets/Editor/Siege/Examples/SiegeBaseExamplesChecks.cs
 
-// 职责：检查三份官方基地的实际目录、材质、无重叠、地面支撑、电网及机器人依赖。 // 入口：RunData() / RunPlay()；Play只创建远端临时实例，不读写个人蓝图。
+// 职责：检查官方基地的实际目录、材质、无重叠、地面支撑、电网及机器人依赖。 // 入口：RunData() / RunPlay()；Play只创建远端临时实例，不读写个人蓝图。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeBaseExamplesChecks | [`string RunData()`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesChecks.cs#L21) | public static |
 | SiegeBaseExamplesChecks | [`string RunPlay()`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesChecks.cs#L77) | public static |
-| SiegeBaseExamplesChecks | [`bool NoOverlaps(BlockDataList design)`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesChecks.cs#L163) | private static |
-| SiegeBaseExamplesChecks | [`void Check(Report report, bool passed, string name)`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesChecks.cs#L184) | private static |
-| SiegeBaseExamplesChecks | [`string Save(Report report, string label)`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesChecks.cs#L194) | private static |
+| SiegeBaseExamplesChecks | [`bool NoOverlaps(BlockDataList design)`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesChecks.cs#L165) | private static |
+| SiegeBaseExamplesChecks | [`void Check(Report report, bool passed, string name)`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesChecks.cs#L186) | private static |
+| SiegeBaseExamplesChecks | [`string Save(Report report, string label)`](../Assets/Editor/Siege/Examples/SiegeBaseExamplesChecks.cs#L196) | private static |
 
 ## Assets/Editor/Siege/Examples/SiegeCompletionIntegration.cs
 
@@ -2787,28 +2789,29 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Host | [`void SelectDefender(int index)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L114) | public |
-| Host | [`void SelectAttacker(int index)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L118) | public |
-| Host | [`bool RefreshBlueprints()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L122) | public |
-| Host | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L123) | public |
-| Host | [`bool TryReplaceAt(int optionIndex, int dock, out string reason)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L124) | public |
-| Host | [`bool TryCancelDeployment(int dock, out string reason)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L125) | public |
-| Host | [`bool TryTakeControl(int slot)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L126) | public |
-| Host | [`bool TryTakeControl(string id)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L127) | public |
-| Host | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L128) | public |
-| SiegeHangarPlayChecks | [`void RunRoof()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L136) | public static |
-| SiegeHangarPlayChecks | [`void Run()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L143) | public static |
-| SiegeHangarPlayChecks | [`void Begin()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L149) | private static |
-| SiegeHangarPlayChecks | [`void Changed(PlayModeStateChange state)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L160) | private static |
-| SiegeHangarPlayChecks | [`void Tick()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L180) | private static |
-| SiegeHangarPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L206) | private static |
-| SiegeHangarPlayChecks | [`void SetSimulation(WorldBuildingManager manager, bool active)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L447) | private static |
-| SiegeHangarPlayChecks | [`IEnumerator GuideFlight(SiegeReturnFlight flight, SiegeFleetEntry entry, string phase, Action completed)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L453) | private static |
-| SiegeHangarPlayChecks | [`void SampleFlight(SiegeReturnFlight flight, SiegeFleetEntry entry, string phase)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L475) | private static |
-| SiegeHangarPlayChecks | [`void CheckGuidedFeedback(string phase)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L560) | private static |
-| SiegeHangarPlayChecks | [`void Check(bool success, string description)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L581) | private static |
-| SiegeHangarPlayChecks | [`void LogError(string message, string stack, LogType type)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L591) | private static |
-| SiegeHangarPlayChecks | [`void Finish()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L599) | private static |
+| Host | [`void SelectDefender(int index)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L115) | public |
+| Host | [`void SelectAttacker(int index)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L119) | public |
+| Host | [`bool RefreshBlueprints()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L123) | public |
+| Host | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L124) | public |
+| Host | [`bool TryReplaceAt(int optionIndex, int dock, out string reason)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L125) | public |
+| Host | [`bool TryCancelDeployment(int dock, out string reason)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L126) | public |
+| Host | [`bool TryTakeControl(int slot)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L127) | public |
+| Host | [`bool TryTakeControl(string id)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L128) | public |
+| Host | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L129) | public |
+| SiegeHangarPlayChecks | [`void RunRoof()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L137) | public static |
+| SiegeHangarPlayChecks | [`void Run()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L145) | public static |
+| SiegeHangarPlayChecks | [`void RunAirKing()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L152) | public static |
+| SiegeHangarPlayChecks | [`void Begin()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L159) | private static |
+| SiegeHangarPlayChecks | [`void Changed(PlayModeStateChange state)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L170) | private static |
+| SiegeHangarPlayChecks | [`void Tick()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L190) | private static |
+| SiegeHangarPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L216) | private static |
+| SiegeHangarPlayChecks | [`void SetSimulation(WorldBuildingManager manager, bool active)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L485) | private static |
+| SiegeHangarPlayChecks | [`IEnumerator GuideFlight(SiegeReturnFlight flight, SiegeFleetEntry entry, string phase, Action completed)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L491) | private static |
+| SiegeHangarPlayChecks | [`void SampleFlight(SiegeReturnFlight flight, SiegeFleetEntry entry, string phase)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L513) | private static |
+| SiegeHangarPlayChecks | [`void CheckGuidedFeedback(string phase)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L598) | private static |
+| SiegeHangarPlayChecks | [`void Check(bool success, string description)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L619) | private static |
+| SiegeHangarPlayChecks | [`void LogError(string message, string stack, LogType type)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L629) | private static |
+| SiegeHangarPlayChecks | [`void Finish()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L637) | private static |
 
 ## Assets/Editor/Siege/Hangars/SiegeReturnChecks.cs
 
@@ -4418,31 +4421,31 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| EnemyController | [`void ConfigureDebugDisplay(bool enabled, bool ranges)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L144) | internal |
-| EnemyController | [`EnemyNavigationSnapshot CaptureNavigation(int previousRouteRevision = -1)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L150) | public |
-| EnemyController | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L228) | private |
-| EnemyController | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L251) | private |
-| EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L259) | private |
-| EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L326) | private |
-| EnemyController | [`Vector3 GetApproachDirection(Vector3 destination, Vector3 fallback)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L363) | private |
-| EnemyController | [`Vector3 PredictMovement(Vector3 proposed)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L370) | private |
-| EnemyController | [`float GetMovementInterval()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L406) | private |
-| EnemyController | [`Vector3 GetReferenceVelocity()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L411) | private |
-| EnemyController | [`void UpdatePropulsionInput()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L438) | private |
-| EnemyController | [`Vector3 StabilizeDirection(Vector3 candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L452) | private |
-| EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L493) | public |
-| EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L501) | public |
-| EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L508) | private |
-| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L559) | private |
-| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L574) | private |
-| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L598) | private |
-| EnemyController | [`float ConstrainDescent(float requested, Vector3 direction)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L640) | private |
-| EnemyController | [`float GetBaseHoverHeight()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L658) | private |
-| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L676) | private |
-| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L692) | private |
-| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L745) | private |
-| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L750) | private |
-| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L813) | private static |
+| EnemyController | [`void ConfigureDebugDisplay(bool enabled, bool ranges)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L145) | internal |
+| EnemyController | [`EnemyNavigationSnapshot CaptureNavigation(int previousRouteRevision = -1)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L151) | public |
+| EnemyController | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L229) | private |
+| EnemyController | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L252) | private |
+| EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L260) | private |
+| EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L327) | private |
+| EnemyController | [`Vector3 GetApproachDirection(Vector3 destination, Vector3 fallback)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L364) | private |
+| EnemyController | [`Vector3 PredictMovement(Vector3 proposed)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L371) | private |
+| EnemyController | [`float GetMovementInterval()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L407) | private |
+| EnemyController | [`Vector3 GetReferenceVelocity()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L412) | private |
+| EnemyController | [`void UpdatePropulsionInput()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L439) | private |
+| EnemyController | [`Vector3 StabilizeDirection(Vector3 candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L453) | private |
+| EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L494) | public |
+| EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L502) | public |
+| EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L509) | private |
+| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L560) | private |
+| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L575) | private |
+| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L599) | private |
+| EnemyController | [`float ConstrainDescent(float requested, Vector3 direction)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L644) | private |
+| EnemyController | [`float GetBaseHoverHeight()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L662) | private |
+| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L680) | private |
+| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L696) | private |
+| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L749) | private |
+| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L754) | private |
+| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L817) | private static |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs
 
@@ -4922,19 +4925,20 @@ HY-Sandbox/
 | --- | --- | --- |
 | HoverFlightController | [`void Init()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L66) | public |
 | HoverFlightController | [`void OnEnable()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L87) | private |
-| HoverFlightController | [`void OnDisable()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L93) | private |
-| HoverFlightController | [`void OnValidate()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L99) | private |
-| HoverFlightController | [`void FixedUpdate()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L105) | private |
-| HoverFlightController | [`bool HasActiveHoverThruster()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L159) | private |
-| HoverFlightController | [`void StopControlOutput()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L172) | private |
-| HoverFlightController | [`void ClearHoverThrust()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L179) | private |
-| HoverFlightController | [`bool EnsureControllerReady()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L204) | private |
-| HoverFlightController | [`void RefreshCachedPhysicsValues()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L245) | private |
-| HoverFlightController | [`void RefreshTiltLimitCache()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L272) | private |
-| HoverFlightController | [`void RebuildThrusterCache()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L278) | private |
-| HoverFlightController | [`void DistributeThrust(float heightAdjustment, Vector3 currentUp)`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L350) | private |
-| HoverFlightController | [`void ApplyRotationCorrection(Vector3 currentUp, float outputEfficiency)`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L398) | private |
-| HoverFlightController | [`void OnDrawGizmosSelected()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L423) | private |
+| HoverFlightController | [`void PrepareFlightHandoff()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L93) | internal |
+| HoverFlightController | [`void OnDisable()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L100) | private |
+| HoverFlightController | [`void OnValidate()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L106) | private |
+| HoverFlightController | [`void FixedUpdate()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L112) | private |
+| HoverFlightController | [`bool HasActiveHoverThruster()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L166) | private |
+| HoverFlightController | [`void StopControlOutput()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L179) | private |
+| HoverFlightController | [`void ClearHoverThrust()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L186) | private |
+| HoverFlightController | [`bool EnsureControllerReady()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L211) | private |
+| HoverFlightController | [`void RefreshCachedPhysicsValues()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L252) | private |
+| HoverFlightController | [`void RefreshTiltLimitCache()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L279) | private |
+| HoverFlightController | [`void RebuildThrusterCache()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L285) | private |
+| HoverFlightController | [`void DistributeThrust(float heightAdjustment, Vector3 currentUp)`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L357) | private |
+| HoverFlightController | [`void ApplyRotationCorrection(Vector3 currentUp, float outputEfficiency)`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L405) | private |
+| HoverFlightController | [`void OnDrawGizmosSelected()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L430) | private |
 
 ## Assets/Scripts/Features/Flight/Presentation/ThrusterInfoPanel.cs
 
@@ -4969,9 +4973,10 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | HoverThruster | [`void SetControlledThrust(float desiredThrust)`](../Assets/Scripts/Features/Flight/Thrusters/HoverThruster.cs#L11) | public |
-| HoverThruster | [`void FixedUpdate()`](../Assets/Scripts/Features/Flight/Thrusters/HoverThruster.cs#L16) | private |
-| HoverThruster | [`void ApplyThrust()`](../Assets/Scripts/Features/Flight/Thrusters/HoverThruster.cs#L51) | public virtual |
-| HoverThruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/Thrusters/HoverThruster.cs#L62) | public override |
+| HoverThruster | [`void InheritGuidedLift()`](../Assets/Scripts/Features/Flight/Thrusters/HoverThruster.cs#L16) | internal |
+| HoverThruster | [`void FixedUpdate()`](../Assets/Scripts/Features/Flight/Thrusters/HoverThruster.cs#L22) | private |
+| HoverThruster | [`void ApplyThrust()`](../Assets/Scripts/Features/Flight/Thrusters/HoverThruster.cs#L57) | public virtual |
+| HoverThruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/Thrusters/HoverThruster.cs#L68) | public override |
 
 ## Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs
 
@@ -4993,30 +4998,30 @@ HY-Sandbox/
 | Thruster | [`void BeginGuidance(Object owner)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L31) | public |
 | Thruster | [`void SetGuidanceOutput(Object owner, float appliedForce, Vector3 worldDirection)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L47) | public |
 | Thruster | [`void AlignGuidanceVisual(Vector3 worldDirection)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L66) | protected virtual |
-| Thruster | [`void EndGuidance(Object owner)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L70) | public |
-| Thruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L83) | public abstract |
-| Thruster | [`void Awake()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L84) | protected virtual |
-| Thruster | [`void Start()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L91) | protected virtual |
-| Thruster | [`void OnTransformChildrenChanged()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L98) | private |
-| Thruster | [`void SetRuntimeReferences(ControlUnit owner, Rigidbody ownerRigidbody)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L103) | public |
-| Thruster | [`bool RefreshRuntimeReferences()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L110) | protected |
-| Thruster | [`bool TryEnsureRigidbody()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L122) | protected |
-| Thruster | [`bool IsPlayModeActive()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L132) | protected |
-| Thruster | [`bool HasValidRuntimeOwner()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L137) | protected |
-| Thruster | [`void TickInputThrust(ref Vector3 input)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L143) | protected |
-| Thruster | [`float CalculateInputThrust(Vector3 input, bool active)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L168) | protected virtual |
-| Thruster | [`bool ShouldActivateInputThrust(Vector3 input)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L173) | protected |
-| Thruster | [`void ApplyDirectionalThrust()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L178) | protected virtual |
-| Thruster | [`void CacheLocalReferences()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L217) | protected |
-| Thruster | [`void ApplyThrustChangeRateLimit()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L226) | public virtual |
-| Thruster | [`void SetPowerRequested(bool requested)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L236) | protected |
-| Thruster | [`void OnDisable()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L246) | protected virtual |
-| Thruster | [`bool CanApplyThrust()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L254) | protected |
-| Thruster | [`void VisualizeThrust()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L260) | public virtual |
-| Thruster | [`void VisualizeThrust(bool forceUpdate)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L265) | public virtual |
-| Thruster | [`void DisableLegacyLineRenderer()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L281) | private |
-| Thruster | [`void EnsureVisualEffect()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L290) | private |
-| Thruster | [`Vector3 GetNormalizedThrustDirection()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L300) | private |
+| Thruster | [`void EndGuidance(Object owner, bool retainThrust = false)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L70) | public |
+| Thruster | [`bool ShouldActivate()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L91) | public abstract |
+| Thruster | [`void Awake()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L92) | protected virtual |
+| Thruster | [`void Start()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L99) | protected virtual |
+| Thruster | [`void OnTransformChildrenChanged()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L106) | private |
+| Thruster | [`void SetRuntimeReferences(ControlUnit owner, Rigidbody ownerRigidbody)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L111) | public |
+| Thruster | [`bool RefreshRuntimeReferences()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L118) | protected |
+| Thruster | [`bool TryEnsureRigidbody()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L130) | protected |
+| Thruster | [`bool IsPlayModeActive()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L140) | protected |
+| Thruster | [`bool HasValidRuntimeOwner()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L145) | protected |
+| Thruster | [`void TickInputThrust(ref Vector3 input)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L151) | protected |
+| Thruster | [`float CalculateInputThrust(Vector3 input, bool active)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L176) | protected virtual |
+| Thruster | [`bool ShouldActivateInputThrust(Vector3 input)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L181) | protected |
+| Thruster | [`void ApplyDirectionalThrust()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L186) | protected virtual |
+| Thruster | [`void CacheLocalReferences()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L225) | protected |
+| Thruster | [`void ApplyThrustChangeRateLimit()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L234) | public virtual |
+| Thruster | [`void SetPowerRequested(bool requested)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L244) | protected |
+| Thruster | [`void OnDisable()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L254) | protected virtual |
+| Thruster | [`bool CanApplyThrust()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L262) | protected |
+| Thruster | [`void VisualizeThrust()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L268) | public virtual |
+| Thruster | [`void VisualizeThrust(bool forceUpdate)`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L273) | public virtual |
+| Thruster | [`void DisableLegacyLineRenderer()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L289) | private |
+| Thruster | [`void EnsureVisualEffect()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L298) | private |
+| Thruster | [`Vector3 GetNormalizedThrustDirection()`](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L308) | private |
 
 ## Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs
 
@@ -6343,8 +6348,8 @@ HY-Sandbox/
 | SiegeReturnFlight | [`void ApplyGuidance(Flight flight, Vector3 target, float driveAcceleration, float liftAcceleration, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L471) | private |
 | SiegeReturnFlight | [`void PublishPropulsion(Flight flight, Vector3 horizontal, float vertical, float driveAcceleration, float liftAcceleration)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L509) | private |
 | SiegeReturnFlight | [`void Finish(Flight flight, bool success, string reason = null)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L527) | private |
-| SiegeReturnFlight | [`void ReleasePropulsion(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L560) | private |
-| SiegeReturnFlight | [`void Stop()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L589) | public |
+| SiegeReturnFlight | [`void ReleasePropulsion(Flight flight, bool launchingIntoFlight = false)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L564) | private |
+| SiegeReturnFlight | [`void Stop()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L600) | public |
 
 ## Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs
 

@@ -120,6 +120,7 @@ public class EnemyController : MonoBehaviour
     private bool climbingObstacle;
     private float obstacleHoverHeight;
     private float _smoothedHoverHeight;
+    private bool _hasSmoothedHoverHeight;
     private float nextDescentCheck;
     private float descentCheckHeight;
     private bool descentClear;
@@ -244,7 +245,7 @@ public class EnemyController : MonoBehaviour
         SteeringChanges = 0;
         nextStrafeChange = 0f;
         strafeSide = 0f;
-        _smoothedHoverHeight = 0f;
+        _hasSmoothedHoverHeight = false;
         nextDescentCheck = 0f;
     }
 
@@ -592,7 +593,7 @@ public class EnemyController : MonoBehaviour
         _hasIdleHoverHeight = false;
         climbingObstacle = false;
         nextMovementUpdateTime = 0f;
-        _smoothedHoverHeight = 0f;
+        _hasSmoothedHoverHeight = false;
     }
 
     private void ConfigureHoverThrusters()
@@ -617,13 +618,16 @@ public class EnemyController : MonoBehaviour
                 targetHeight = obstacleHoverHeight;
             }
 
-            // 越障结束后高度需平滑回落，避免 PID 看到大误差产生向下猛冲。
-            float desired = Mathf.Max(2f, ConstrainDescent(targetHeight, steeringDirection));
-            if (_smoothedHoverHeight < 1f)
+            // Start from the current flight level so AI activation cannot bypass
+            // the normal descent clearance and slew limit.
+            if (!_hasSmoothedHoverHeight)
             {
-                _smoothedHoverHeight = desired;
+                _smoothedHoverHeight = transform.position.y;
+                _hasSmoothedHoverHeight = true;
             }
-            else if (!climbingObstacle && desired < _smoothedHoverHeight)
+
+            float desired = Mathf.Max(2f, ConstrainDescent(targetHeight, steeringDirection));
+            if (!climbingObstacle && desired < _smoothedHoverHeight)
             {
                 _smoothedHoverHeight = Mathf.MoveTowards(_smoothedHoverHeight, desired, 4f * Time.fixedDeltaTime);
             }
@@ -639,7 +643,7 @@ public class EnemyController : MonoBehaviour
 
     private float ConstrainDescent(float requested, Vector3 direction)
     {
-        if (requested >= transform.position.y - 1f || _smoothedHoverHeight < 1f)
+        if (requested >= transform.position.y - 1f)
         {
             return requested;
         }
@@ -666,7 +670,7 @@ public class EnemyController : MonoBehaviour
         // 丢失目标时固定高度，不能追随下落中的根节点不断降低设定值。
         if (!_hasIdleHoverHeight)
         {
-            _idleHoverHeight = unit.hoverFlightController != null ? unit.hoverFlightController.CurrentHeight : transform.position.y;
+            _idleHoverHeight = transform.position.y;
             _hasIdleHoverHeight = true;
         }
 
