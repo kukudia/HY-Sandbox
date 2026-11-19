@@ -1,5 +1,7 @@
 # HY-Sandbox 开发入口
 
+战斗慢帧（2026-11-19）：炮塔完整索敌共享每渲染帧 16 次预算；冷却中仍转向。生成舰体与损毁重建复用每个连接面的探测结果，未播放的挂载特效按需创建，停靠机器人停止刷新尾迹。Unity Play 已验证连接重建与挂载特效；原波次的 Player P95/P99 尚未复测。
+
 ## 方块结构损毁与重组（2026-11-19）
 
 飞船、建筑、基地和独立 WorldLab 共用 `DestroyManager.DestroyTarget` → `ExplosionPropagation.DisconnectBlocksInExplosionRange` → `RuntimeGroupBuilder.RefreshUnit`。爆炸源的概率按同一 ControlUnit 内、半径内的候选块各判定一次；命中断开该块全部连接，不扣邻块耐久。重组完成后对附近刚体施加冲量，体素伤害仍由 explosionDamage 控制。

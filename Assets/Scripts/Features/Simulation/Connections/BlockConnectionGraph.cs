@@ -26,7 +26,7 @@ internal sealed class BlockConnectionGraph
             if (block != null && block.isActiveAndEnabled)
             {
                 current.Add(block);
-                rebuild |= !members.ContainsKey(block) || !block.HasValidRuntimeConnections;
+                rebuild = rebuild || !members.ContainsKey(block) || !block.HasValidRuntimeConnections;
             }
         }
 
@@ -116,7 +116,11 @@ internal sealed class BlockConnectionGraph
         bool rebuild = force;
         foreach (Block block in blocks)
         {
-            rebuild |= block != null && block.isActiveAndEnabled && !block.HasValidRuntimeConnections;
+            if (rebuild || (block != null && block.isActiveAndEnabled && !block.HasValidRuntimeConnections))
+            {
+                rebuild = true;
+                break;
+            }
         }
 
         if (rebuild)

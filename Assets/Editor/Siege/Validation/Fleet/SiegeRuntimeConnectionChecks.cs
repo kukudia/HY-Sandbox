@@ -66,10 +66,15 @@ public static class SiegeRuntimeConnectionChecks
                 "cached detached graph is independent of input order",
                 Groups(blocks).TrueForAll(group => group.Count == 1));
             middle.RestoreConnectionParticipation();
+            SimulationWorkMetrics.Reset();
             Check(
                 checks,
                 "restoring participation invalidates cache and reconnects",
                 Groups(blocks).Count == 1 && SimulationWorkMetrics.PhysicsNeighborQueries > 0);
+            Check(
+                checks,
+                "sparse batch rebuild probes each face once and records geometric neighbors",
+                SimulationWorkMetrics.PhysicsNeighborQueries == blocks.Sum(block => block.connectors.Count(face => face.canConnect)) && middle.neighbors.Count == 2 && middle.neighbors.Contains(blocks[0]) && middle.neighbors.Contains(blocks[2]));
             middle.transform.localPosition += Vector3.up * 2f;
             SimulationWorkMetrics.Reset();
             Check(

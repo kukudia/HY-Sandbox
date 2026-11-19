@@ -112,16 +112,16 @@ public sealed class TurretProjectile : MonoBehaviour
 
         Vector3 origin = _body.position + transform.TransformVector(_collider.center);
         Vector3 step = _body.linearVelocity * Time.fixedDeltaTime;
-        float distance = Mathf.Min(step.magnitude, _remainingDistance);
-        float radius = _collider.radius * Mathf.Max(
-            Mathf.Abs(transform.lossyScale.x),
-            Mathf.Max(Mathf.Abs(transform.lossyScale.y), Mathf.Abs(transform.lossyScale.z)));
+        float stepLength = step.magnitude;
+        float distance = Mathf.Min(stepLength, _remainingDistance);
+        Vector3 scale = transform.lossyScale;
+        float radius = _collider.radius * Mathf.Max(Mathf.Abs(scale.x), Mathf.Max(Mathf.Abs(scale.y), Mathf.Abs(scale.z)));
         if (ResolveOverlaps(origin, radius) || distance <= 0.0001f)
         {
             return;
         }
 
-        Vector3 direction = step.normalized;
+        Vector3 direction = step / stepLength;
         int count = Physics.SphereCastNonAlloc(
             origin,
             radius,
@@ -149,7 +149,7 @@ public sealed class TurretProjectile : MonoBehaviour
         float nearestDistance = float.MaxValue;
         for (int i = 0; i < count; i++)
         {
-            if (!CanHit(hits[i].collider) || hits[i].distance >= nearestDistance)
+            if (hits[i].distance >= nearestDistance || !CanHit(hits[i].collider))
             {
                 continue;
             }
@@ -163,7 +163,7 @@ public sealed class TurretProjectile : MonoBehaviour
             ResolveHit(hits[nearest].collider, hits[nearest].point, hits[nearest].normal);
         }
 
-        _remainingDistance -= step.magnitude;
+        _remainingDistance -= stepLength;
     }
 
     private bool ResolveOverlaps(Vector3 origin, float radius)

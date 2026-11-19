@@ -72,8 +72,9 @@ public abstract class Bot : MonoBehaviour
     }
 
     /// <summary>推进物理帧冷却并核对 Home 与模拟模式；Home 消失时销毁当前机器人。</summary>
-    protected bool TickNavigation()
+    protected bool TickNavigation(out ControlUnit owner)
     {
+        owner = null;
         coolDownTimer += Time.fixedDeltaTime;
         if (home == null)
         {
@@ -81,8 +82,7 @@ public abstract class Bot : MonoBehaviour
             return false;
         }
 
-        homeRigidbody = home.GetComponentInParent<Rigidbody>();
-        ControlUnit owner = home.GetComponentInParent<ControlUnit>();
+        owner = home.GetComponentInParent<ControlUnit>();
         return rb != null && owner != null && owner.IsSimulationActive;
     }
 
@@ -158,6 +158,12 @@ public abstract class Bot : MonoBehaviour
     private void LateUpdate()
     {
         bool flying = currentState == NavigationState.NavigatingToTarget || currentState == NavigationState.ReturningHome;
+        if (!flying)
+        {
+            // SetDocked already stopped the effects on entry to Idle or Docking.
+            return;
+        }
+
         BotFlightEffects.Update(
             rb,
             flying,
@@ -209,6 +215,7 @@ public abstract class Bot : MonoBehaviour
             return;
         }
 
+        homeRigidbody = home.GetComponentInParent<Rigidbody>();
         float dockingCaptureDistance = Mathf.Max(
             BotNavigationPolicy.DockingApproachTolerance,
             GetRelativeHomeVelocity(approachPosition).magnitude * Time.fixedDeltaTime * 1.5f);

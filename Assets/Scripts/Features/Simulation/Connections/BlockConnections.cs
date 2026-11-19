@@ -53,11 +53,13 @@ internal sealed class BlockConnections
         // An occupied face is unavailable even when the opposite Block exists but its
         // matching Connector is disabled. Placement and connection probing must share
         // the same two-sided validation rules.
-        Block otherBlock = FindBlockAcrossConnector(connector);
-        return otherBlock == null || FindMatchingConnector(otherBlock, connector) == null;
+        Vector3 worldPos = _block.GetConnectorWorldPosition(connector);
+        Vector3 worldNormal = _block.GetConnectorWorldNormal(connector);
+        Block otherBlock = FindBlockAcrossConnector(connector, worldPos, worldNormal, out _);
+        return otherBlock == null || FindMatchingConnector(otherBlock, worldPos, worldNormal, true) == null;
     }
 
-    internal void CheckConnection(bool synchronizePhysics = true)
+    internal void CheckConnection(bool synchronizePhysics = true, List<Block> neighborsFound = null)
     {
         // Rebuild connector links from physics probes so edits, loading, and explosions converge on one state.
         if (_block == null)
@@ -72,16 +74,26 @@ internal sealed class BlockConnections
             Physics.SyncTransforms();
         }
 
+        neighborsFound?.Clear();
         foreach (Connector connector in _block.connectors)
         {
-            if (!connector.canConnect)
+            if (connector == null || !connector.canConnect)
             {
                 ClearConnector(connector);
                 continue;
             }
 
-            Block otherBlock = FindBlockAcrossConnector(connector);
-            Connector other = otherBlock != null ? FindMatchingConnector(otherBlock, connector, false) : null;
+            Block otherBlock = FindBlockAcrossConnector(
+                connector,
+                _block.GetConnectorWorldPosition(connector),
+                _block.GetConnectorWorldNormal(connector),
+                out Connector other);
+            // Geometry determines adjacency even when another face already owns the reciprocal link.
+            if (neighborsFound != null && otherBlock != null && !neighborsFound.Contains(otherBlock))
+            {
+                neighborsFound.Add(otherBlock);
+            }
+
             // 重新探测几何，但未改变的双侧连接保留原视觉，避免伤害刷新整舰时成批销毁/创建。
             bool retained = connector.isConnected && other != null && other.isConnected && connector.runtimePeer == other && other.runtimePeer == connector && connector.runtimePeerBlock == otherBlock && other.runtimePeerBlock == _block;
             if (retained)
@@ -166,20 +178,19 @@ internal sealed class BlockConnections
         }
     }
 
-    private Block FindBlockAcrossConnector(Connector connector)
+    private Block FindBlockAcrossConnector(Connector connector, Vector3 worldPos, Vector3 worldNormal, out Connector matchedFace)
     {
+        matchedFace = null;
         // 断开的方块既不能被查询到，也不能向外连接；否则BFS输入顺序会改变分组。
         if (!CanParticipate)
         {
             return null;
         }
 
-        Vector3 worldPos = _block.GetConnectorWorldPosition(connector);
-        Vector3 worldNormal = _block.GetConnectorWorldNormal(connector);
         Vector3 probeCenter = worldPos + worldNormal * connectionProbeOffset;
         int hitCount;
         // Retry full buffers so dense collider arrangements cannot truncate the query.
-        int blockLayer = BuildManager.instance != null ? BuildManager.instance.blockLayer.value : LayerMask.GetMask("Block");
+        int blockLayer = ConnectionMask();
         while (true)
         {
             SimulationWorkMetrics.RecordPhysicsNeighborQuery();
@@ -200,10 +211,11 @@ internal sealed class BlockConnections
         Block existing = connector.runtimePeerBlock;
         if (existing != null && existing != _block && existing.TryGetComponent(out HangarModule bay) && bay.IsCombat && existing.raycastCollider != null && !existing.raycastCollider.enabled && existing.CanParticipateInConnections && SharesUnit(existing))
         {
-            Connector matching = FindMatchingConnector(existing, connector, false);
+            Connector matching = FindMatchingConnector(existing, worldPos, worldNormal, false);
             if (matching != null && connector.runtimePeer == matching && matching.runtimePeer == connector && matching.runtimePeerBlock == _block)
             {
                 result = existing;
+                matchedFace = matching;
                 closest = (existing.GetConnectorWorldPosition(matching) - worldPos).sqrMagnitude;
             }
         }
@@ -215,7 +227,7 @@ internal sealed class BlockConnections
             {
                 // Dense shell corners can overlap several colliders. A collider without
                 // a matching face must not hide a valid connector later in the buffer.
-                Connector matching = FindMatchingConnector(otherBlock, connector, false);
+                Connector matching = FindMatchingConnector(otherBlock, worldPos, worldNormal, false);
                 if (matching == null)
                 {
                     continue;
@@ -225,6 +237,7 @@ internal sealed class BlockConnections
                 if (distance < closest || (Mathf.Approximately(distance, closest) && string.CompareOrdinal(otherBlock.uniqueId, result != null ? result.uniqueId : null) < 0))
                 {
                     result = otherBlock;
+                    matchedFace = matching;
                     closest = distance;
                 }
             }
@@ -239,10 +252,8 @@ internal sealed class BlockConnections
         return _block.GetComponentInParent<ControlUnit>() == other.GetComponentInParent<ControlUnit>();
     }
 
-    private Connector FindMatchingConnector(Block otherBlock, Connector connector, bool requireAvailable = true)
+    private static Connector FindMatchingConnector(Block otherBlock, Vector3 worldPos, Vector3 worldNormal, bool requireAvailable)
     {
-        Vector3 worldPos = _block.GetConnectorWorldPosition(connector);
-        Vector3 worldNormal = _block.GetConnectorWorldNormal(connector);
         foreach (Connector otherConnector in otherBlock.connectors)
         {
             if (otherConnector == null || !otherConnector.canConnect || (requireAvailable && otherConnector.isConnected))
@@ -251,8 +262,7 @@ internal sealed class BlockConnections
             }
 
             Vector3 otherWorldPos = otherBlock.GetConnectorWorldPosition(otherConnector);
-            Vector3 otherWorldNormal = otherBlock.GetConnectorWorldNormal(otherConnector);
-            if ((otherWorldPos - worldPos).sqrMagnitude < connectorMatchDistance * connectorMatchDistance && Vector3.Dot(otherWorldNormal, -worldNormal) > oppositeNormalDotThreshold)
+            if ((otherWorldPos - worldPos).sqrMagnitude < connectorMatchDistance * connectorMatchDistance && Vector3.Dot(otherBlock.GetConnectorWorldNormal(otherConnector), -worldNormal) > oppositeNormalDotThreshold)
             {
                 return otherConnector;
             }
@@ -343,16 +353,17 @@ internal sealed class BlockConnections
                 continue;
             }
 
-            Block otherBlock = FindBlockAcrossConnector(connector);
+            Block otherBlock = FindBlockAcrossConnector(
+                connector,
+                _block.GetConnectorWorldPosition(connector),
+                _block.GetConnectorWorldNormal(connector),
+                out _);
             if (otherBlock == null || !otherBlock.isActiveAndEnabled || result.Contains(otherBlock))
             {
                 continue;
             }
 
-            if (FindMatchingConnector(otherBlock, connector, false) != null)
-            {
-                result.Add(otherBlock);
-            }
+            result.Add(otherBlock);
         }
     }
 

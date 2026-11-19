@@ -10,6 +10,13 @@ internal sealed class TurretTargetSelector
     private static readonly Unity.Profiling.ProfilerMarker SearchMarker = new Unity.Profiling.ProfilerMarker("HY.Turret.Search");
     private static readonly Unity.Profiling.ProfilerMarker VisibilityMarker = new Unity.Profiling.ProfilerMarker("HY.Turret.Visibility");
     private static readonly Unity.Profiling.ProfilerMarker CandidateMarker = new Unity.Profiling.ProfilerMarker("HY.Turret.Candidates");
+    // 补算多个物理步时共享渲染帧预算；FIFO 保证长期无目标的炮塔不会挤掉后面的炮塔。
+    private const int SearchesPerFrame = 16;
+    private static readonly LinkedList<TurretTargetSelector> waiting = new LinkedList<TurretTargetSelector>();
+    private static int budgetFrame = -1;
+    private static int remaining;
+    private readonly LinkedListNode<TurretTargetSelector> _request;
+    private int _grantedFrame = -1;
     private readonly Transform _weapon;
     private Vector3 _origin;
     private int _hitLayers = ~0;
@@ -31,6 +38,52 @@ internal sealed class TurretTargetSelector
     {
         _weapon = weapon;
         _origin = weapon.position;
+        _request = new LinkedListNode<TurretTargetSelector>(this);
+    }
+
+    internal bool TryScheduleSearch()
+    {
+        int frame = Time.frameCount;
+        if (budgetFrame != frame)
+        {
+            budgetFrame = frame;
+            remaining = SearchesPerFrame;
+            while (remaining > 0 && waiting.First != null)
+            {
+                waiting.First.Value._grantedFrame = frame;
+                waiting.RemoveFirst();
+                remaining--;
+            }
+        }
+
+        if (_grantedFrame == frame)
+        {
+            _grantedFrame = -1;
+            return true;
+        }
+
+        if (remaining > 0)
+        {
+            remaining--;
+            return true;
+        }
+
+        if (_request.List == null)
+        {
+            waiting.AddLast(_request);
+        }
+
+        return false;
+    }
+
+    internal void CancelScheduledSearch()
+    {
+        if (_request.List != null)
+        {
+            waiting.Remove(_request);
+        }
+
+        _grantedFrame = -1;
     }
 
     internal void ConfigureVisibility(Vector3 origin, LayerMask hitLayers)
@@ -122,8 +175,9 @@ internal sealed class TurretTargetSelector
 
         if (prioritizeCockpit)
         {
-            foreach (ControlUnit candidate in units)
+            for (int i = 0; i < units.Count; i++)
             {
+                ControlUnit candidate = units[i];
                 if (candidate == null || candidate == owner)
                 {
                     continue;
@@ -155,8 +209,9 @@ internal sealed class TurretTargetSelector
             }
         }
 
-        foreach (ControlUnit candidate in units)
+        for (int i = 0; i < units.Count; i++)
         {
+            ControlUnit candidate = units[i];
             if (candidate == null || candidate == owner)
             {
                 continue;
@@ -188,6 +243,8 @@ internal sealed class TurretTargetSelector
     private Durability FindNearestDurability(ControlUnit unit, ControlUnit owner, Vector3 origin, float nearestSqrDistance)
     {
         candidates.Clear();
+        int closest = -1;
+        float closestDistance = nearestSqrDistance;
         using (CandidateMarker.Auto())
         {
             IReadOnlyList<Durability> targets = unit.GetDamageTargets();
@@ -202,6 +259,12 @@ internal sealed class TurretTargetSelector
                 float sqrDistance = (durability.transform.position - origin).sqrMagnitude;
                 if (sqrDistance < nearestSqrDistance)
                 {
+                    if (sqrDistance < closestDistance)
+                    {
+                        closest = candidates.Count;
+                        closestDistance = sqrDistance;
+                    }
+
                     candidates.Add(new Candidate { health = durability, distanceSquared = sqrDistance, hierarchyOrder = index });
                 }
             }
@@ -209,6 +272,21 @@ internal sealed class TurretTargetSelector
 
         // 层级顺序与空间距离无关；先检查最近模块，避免对后续必然更远的模块发射可见性射线。
         // 遮挡时仍继续寻找，不能以最近模块不可见推断整艘船都不可见。
+        if (closest < 0)
+        {
+            return null;
+        }
+
+        Durability first = candidates[closest].health;
+        if (first.GetComponentInParent<ControlUnit>() == unit && HasLineOfSight(owner, unit, first))
+        {
+            return first;
+        }
+
+        // 最近模块被挡才排序其余候选；比较器用原层级序号打破同距平局。
+        int last = candidates.Count - 1;
+        candidates[closest] = candidates[last];
+        candidates.RemoveAt(last);
         candidates.Sort(NearestFirst);
         for (int index = 0; index < candidates.Count; index++)
         {

@@ -96,7 +96,6 @@ public sealed class VfxEffect : MonoBehaviour
 
     private void OnEnable()
     {
-        EnsureContent();
         if (_playOnEnable)
         {
             SetIntensity(1f);
@@ -105,9 +104,15 @@ public sealed class VfxEffect : MonoBehaviour
 
     public void SetIntensity(float value)
     {
-        EnsureContent();
         value = Mathf.Clamp01(value);
         bool active = value > 0f;
+        // An unused socket needs no catalog instance; active tails retain their last parameters.
+        if (!active && !_emitting)
+        {
+            return;
+        }
+
+        EnsureContent();
         for (int i = 0; i < _graphs.Length; i++)
         {
             var graph = _graphs[i];

@@ -63,8 +63,6 @@ internal sealed class BatchConnectionBuilder
             block.neighbors = new List<Block>();
         }
 
-        block.CollectNeighbors(block.neighbors);
-        // Connection probing still queries physics; only the redundant sync is skipped.
-        block.CheckConnectionAfterPhysicsSync();
+        block.CheckConnectionAfterPhysicsSync(block.neighbors);
     }
 }

@@ -3003,9 +3003,9 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeRuntimeConnectionChecks | [`string Run()`](../Assets/Editor/Siege/Validation/Fleet/SiegeRuntimeConnectionChecks.cs#L15) | public static |
-| SiegeRuntimeConnectionChecks | [`List<List<Block>> Groups(List<Block> blocks)`](../Assets/Editor/Siege/Validation/Fleet/SiegeRuntimeConnectionChecks.cs#L170) | private static |
-| SiegeRuntimeConnectionChecks | [`void RobotContainerChecks(List<string> checks)`](../Assets/Editor/Siege/Validation/Fleet/SiegeRuntimeConnectionChecks.cs#L175) | private static |
-| SiegeRuntimeConnectionChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/Validation/Fleet/SiegeRuntimeConnectionChecks.cs#L268) | private static |
+| SiegeRuntimeConnectionChecks | [`List<List<Block>> Groups(List<Block> blocks)`](../Assets/Editor/Siege/Validation/Fleet/SiegeRuntimeConnectionChecks.cs#L175) | private static |
+| SiegeRuntimeConnectionChecks | [`void RobotContainerChecks(List<string> checks)`](../Assets/Editor/Siege/Validation/Fleet/SiegeRuntimeConnectionChecks.cs#L180) | private static |
+| SiegeRuntimeConnectionChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/Validation/Fleet/SiegeRuntimeConnectionChecks.cs#L273) | private static |
 
 ## Assets/Editor/Siege/Validation/Fleet/SiegeStrandedCockpitChecks.cs
 
@@ -3500,7 +3500,7 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | Bot | [`void Start()`](../Assets/Scripts/Features/Bots/Bot.cs#L53) | protected virtual |
-| Bot | [`bool TickNavigation()`](../Assets/Scripts/Features/Bots/Bot.cs#L75) | protected |
+| Bot | [`bool TickNavigation(out ControlUnit owner)`](../Assets/Scripts/Features/Bots/Bot.cs#L75) | protected |
 | Bot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Bot.cs#L89) | protected virtual |
 | Bot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/Bot.cs#L108) | protected virtual |
 | Bot | [`Power SetHomePowerRequested(bool requested)`](../Assets/Scripts/Features/Bots/Bot.cs#L114) | protected |
@@ -3508,13 +3508,13 @@ HY-Sandbox/
 | Bot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/Bot.cs#L134) | public virtual |
 | Bot | [`void InitializeTrail()`](../Assets/Scripts/Features/Bots/Bot.cs#L138) | private |
 | Bot | [`void LateUpdate()`](../Assets/Scripts/Features/Bots/Bot.cs#L158) | private |
-| Bot | [`void NavigateToTarget(Transform target)`](../Assets/Scripts/Features/Bots/Bot.cs#L171) | protected |
-| Bot | [`void NavigateHomeSmoothly()`](../Assets/Scripts/Features/Bots/Bot.cs#L191) | protected |
-| Bot | [`Vector3 GetRelativeHomeVelocity(Vector3 worldPosition)`](../Assets/Scripts/Features/Bots/Bot.cs#L228) | private |
-| Bot | [`void ReturnHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L234) | private |
-| Bot | [`void LeaveHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L276) | private |
-| Bot | [`void SetNavigationState(NavigationState nextState)`](../Assets/Scripts/Features/Bots/Bot.cs#L288) | private |
-| Bot | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Bots/Bot.cs#L313) | private |
+| Bot | [`void NavigateToTarget(Transform target)`](../Assets/Scripts/Features/Bots/Bot.cs#L177) | protected |
+| Bot | [`void NavigateHomeSmoothly()`](../Assets/Scripts/Features/Bots/Bot.cs#L197) | protected |
+| Bot | [`Vector3 GetRelativeHomeVelocity(Vector3 worldPosition)`](../Assets/Scripts/Features/Bots/Bot.cs#L235) | private |
+| Bot | [`void ReturnHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L241) | private |
+| Bot | [`void LeaveHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L283) | private |
+| Bot | [`void SetNavigationState(NavigationState nextState)`](../Assets/Scripts/Features/Bots/Bot.cs#L295) | private |
+| Bot | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Bots/Bot.cs#L320) | private |
 
 ## Assets/Scripts/Features/Bots/Collection/CollectionBot.cs
 
@@ -3524,14 +3524,14 @@ HY-Sandbox/
 | --- | --- | --- |
 | CollectionBot | [`void Start()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L22) | protected override |
 | CollectionBot | [`void FixedUpdate()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L31) | private |
-| CollectionBot | [`bool IsMissionInvalid(ControlUnit owner, bool canWork)`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L74) | private |
-| CollectionBot | [`void CollectTarget()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L79) | private |
-| CollectionBot | [`void ReturnCargo()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L88) | private |
-| CollectionBot | [`void FindTarget(ControlUnit owner)`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L103) | private |
-| CollectionBot | [`void Abandon()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L140) | private |
-| CollectionBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L151) | protected override |
-| CollectionBot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L157) | protected override |
-| CollectionBot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L163) | public override |
+| CollectionBot | [`bool IsMissionInvalid(ControlUnit owner, bool canWork)`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L73) | private |
+| CollectionBot | [`void CollectTarget()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L78) | private |
+| CollectionBot | [`void ReturnCargo()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L87) | private |
+| CollectionBot | [`void FindTarget(ControlUnit owner)`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L102) | private |
+| CollectionBot | [`void Abandon()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L139) | private |
+| CollectionBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L150) | protected override |
+| CollectionBot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L156) | protected override |
+| CollectionBot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L162) | public override |
 
 ## Assets/Scripts/Features/Bots/Navigation/BotFlightMotion.cs
 
@@ -3594,13 +3594,13 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | RepairBot | [`void Start()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L27) | protected override |
-| RepairBot | [`void FixedUpdate()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L37) | private |
-| RepairBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L89) | protected override |
-| RepairBot | [`void FindDamagedBlock()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L95) | private |
-| RepairBot | [`void CheckAndRepair()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L108) | private |
-| RepairBot | [`void UpdateRepairBeam(bool active)`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L149) | private |
-| RepairBot | [`void EnsureRepairBeamGradient()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L154) | private |
-| RepairBot | [`void ClearTarget()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L167) | public |
+| RepairBot | [`void FixedUpdate()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L36) | private |
+| RepairBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L87) | protected override |
+| RepairBot | [`void FindDamagedBlock()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L93) | private |
+| RepairBot | [`void CheckAndRepair()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L106) | private |
+| RepairBot | [`void UpdateRepairBeam(bool active)`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L147) | private |
+| RepairBot | [`void EnsureRepairBeamGradient()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L152) | private |
+| RepairBot | [`void ClearTarget()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L165) | public |
 
 ## Assets/Scripts/Features/Bots/Repair/RepairTargetSearch.cs
 
@@ -4731,24 +4731,25 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Turret | [`void DelayTargetSearch(float seconds)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L46) | internal |
-| Turret | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L51) | protected virtual |
-| Turret | [`void OnValidate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L59) | protected virtual |
-| Turret | [`void SetStarted(bool started)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L70) | public |
-| Turret | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L80) | protected virtual |
-| Turret | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L103) | protected virtual |
-| Turret | [`void StopWorking()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L109) | private |
-| Turret | [`void RefreshTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L118) | private |
-| Turret | [`void AimAndFire(Durability aimTarget)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L145) | private |
-| Turret | [`void AimAt(Vector3 worldDirection)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L165) | private |
-| Turret | [`void ResolveAimingRig()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L195) | private |
-| Turret | [`Vector3 GetMuzzlePosition()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L229) | protected |
-| Turret | [`Vector3 GetAimForward()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L240) | protected |
-| Turret | [`UnitFaction GetEffectiveTargetFaction()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L246) | protected |
-| Turret | [`Vector3 GetAimPosition(Durability target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L252) | protected virtual |
-| Turret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L257) | protected abstract |
-| Turret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L258) | protected virtual |
-| Turret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L262) | protected virtual |
+| Turret | [`void DelayTargetSearch(float seconds)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L47) | internal |
+| Turret | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L52) | protected virtual |
+| Turret | [`void OnValidate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L60) | protected virtual |
+| Turret | [`void SetStarted(bool started)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L71) | public |
+| Turret | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L81) | protected virtual |
+| Turret | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L104) | protected virtual |
+| Turret | [`void StopWorking()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L110) | private |
+| Turret | [`void RefreshTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L120) | private |
+| Turret | [`void SearchTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L147) | private |
+| Turret | [`void AimAndFire(Durability aimTarget)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L160) | private |
+| Turret | [`void AimAt(Vector3 worldDirection)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L187) | private |
+| Turret | [`void ResolveAimingRig()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L217) | private |
+| Turret | [`Vector3 GetMuzzlePosition()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L251) | protected |
+| Turret | [`Vector3 GetAimForward()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L262) | protected |
+| Turret | [`UnitFaction GetEffectiveTargetFaction()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L268) | protected |
+| Turret | [`Vector3 GetAimPosition(Durability target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L274) | protected virtual |
+| Turret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L279) | protected abstract |
+| Turret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L280) | protected virtual |
+| Turret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L284) | protected virtual |
 
 ## Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs
 
@@ -4756,7 +4757,7 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| TurretHitResolver | [`void Apply( Collider collider, Vector3 point, Vector3 normal, Vector3 direction, ControlUnit owner, UnitFaction faction, float damage, float impulse)`](../Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs#L7) | internal static |
+| TurretHitResolver | [`void Apply( Collider collider, Vector3 point, Vector3 normal, Vector3 direction, ControlUnit owner, UnitFaction faction, float damage, float impulse)`](../Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs#L9) | internal static |
 
 ## Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs
 
@@ -4773,11 +4774,13 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| TurretTargetSelector | [`void ConfigureVisibility(Vector3 origin, LayerMask hitLayers)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L36) | internal |
-| TurretTargetSelector | [`bool HasLineOfSight(ControlUnit owner, ControlUnit target, Durability durability)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L42) | internal |
-| TurretTargetSelector | [`ControlUnit FindNearestTarget( IReadOnlyList<ControlUnit> units, ControlUnit owner, UnitFaction faction, float range, bool prioritizeCockpit, out Durability nearestDurability)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L105) | internal |
-| TurretTargetSelector | [`Durability FindNearestDurability(ControlUnit unit, ControlUnit owner, Vector3 origin, float nearestSqrDistance)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L188) | private |
-| TurretTargetSelector | [`Durability FindCockpitDurability(ControlUnit unit)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L225) | private |
+| TurretTargetSelector | [`bool TryScheduleSearch()`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L44) | internal |
+| TurretTargetSelector | [`void CancelScheduledSearch()`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L79) | internal |
+| TurretTargetSelector | [`void ConfigureVisibility(Vector3 origin, LayerMask hitLayers)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L89) | internal |
+| TurretTargetSelector | [`bool HasLineOfSight(ControlUnit owner, ControlUnit target, Durability durability)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L95) | internal |
+| TurretTargetSelector | [`ControlUnit FindNearestTarget( IReadOnlyList<ControlUnit> units, ControlUnit owner, UnitFaction faction, float range, bool prioritizeCockpit, out Durability nearestDurability)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L158) | internal |
+| TurretTargetSelector | [`Durability FindNearestDurability(ControlUnit unit, ControlUnit owner, Vector3 origin, float nearestSqrDistance)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L243) | private |
+| TurretTargetSelector | [`Durability FindCockpitDurability(ControlUnit unit)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L303) | private |
 
 ## Assets/Scripts/Features/Diagnostics/Bots/BotNavigationProbeDriver.cs
 
@@ -5839,8 +5842,8 @@ HY-Sandbox/
 | StylizedBeamEffect | [`void SetColor(Color color)`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L36) | public |
 | StylizedBeamEffect | [`void SetIntensity(float value)`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L45) | public |
 | StylizedBeamEffect | [`void SetVisible(bool value)`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L54) | public |
-| StylizedBeamEffect | [`void UpdateBeam()`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L84) | private |
-| StylizedBeamEffect | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L106) | private |
+| StylizedBeamEffect | [`void UpdateBeam()`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L89) | private |
+| StylizedBeamEffect | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L111) | private |
 
 ## Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs
 
@@ -5877,18 +5880,18 @@ HY-Sandbox/
 | --- | --- | --- |
 | VfxEffect | [`void EnsureContent()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L47) | private |
 | VfxEffect | [`void OnEnable()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L97) | private |
-| VfxEffect | [`void SetIntensity(float value)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L106) | public |
-| VfxEffect | [`void SetColor(Color color)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L143) | public |
-| VfxEffect | [`void SetSpawnCount(float count)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L155) | public |
-| VfxEffect | [`void Clear()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L167) | public |
-| VfxEffect | [`void PlayOnce()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L182) | public |
-| VfxEffect | [`void ConfigurePool(VfxEffectPool pool, VfxEffect prefab)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L188) | internal |
-| VfxEffect | [`void ResetForRent(Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L209) | internal |
-| VfxEffect | [`void ReleaseAfterPlayback()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L252) | public |
-| VfxEffect | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L264) | public |
-| VfxEffect | [`void FinishPlayback()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L275) | private |
-| VfxEffect | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L302) | private |
-| VfxEffect | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L303) | private |
+| VfxEffect | [`void SetIntensity(float value)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L105) | public |
+| VfxEffect | [`void SetColor(Color color)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L148) | public |
+| VfxEffect | [`void SetSpawnCount(float count)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L160) | public |
+| VfxEffect | [`void Clear()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L172) | public |
+| VfxEffect | [`void PlayOnce()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L187) | public |
+| VfxEffect | [`void ConfigurePool(VfxEffectPool pool, VfxEffect prefab)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L193) | internal |
+| VfxEffect | [`void ResetForRent(Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L214) | internal |
+| VfxEffect | [`void ReleaseAfterPlayback()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L257) | public |
+| VfxEffect | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L269) | public |
+| VfxEffect | [`void FinishPlayback()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L280) | private |
+| VfxEffect | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L307) | private |
+| VfxEffect | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L308) | private |
 
 ## Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs
 
@@ -6864,7 +6867,7 @@ HY-Sandbox/
 | Block | [`Vector3 GetConnectorWorldNormal(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L392) | public |
 | Block | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L397) | public |
 | Block | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/Block.cs#L402) | public |
-| Block | [`void CheckConnectionAfterPhysicsSync()`](../Assets/Scripts/Features/Simulation/Block.cs#L407) | internal |
+| Block | [`void CheckConnectionAfterPhysicsSync(List<Block> neighborsFound)`](../Assets/Scripts/Features/Simulation/Block.cs#L407) | internal |
 | Block | [`List<Block> Neighbors()`](../Assets/Scripts/Features/Simulation/Block.cs#L412) | public |
 | Block | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L420) | internal |
 | Block | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Block.cs#L425) | public |
@@ -6892,7 +6895,7 @@ HY-Sandbox/
 | BlockConnectionGraph | [`void Prepare(List<Block> blocks, Transform root)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L19) | internal |
 | BlockConnectionGraph | [`Bounds ProbeBounds(Block block, Matrix4x4 worldToRoot)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L87) | private static |
 | BlockConnectionGraph | [`bool PrepareBlocks(List<Block> blocks, bool force = false)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L109) | internal static |
-| BlockConnectionGraph | [`void CollectNeighbors(Block block, List<Block> result)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L131) | internal |
+| BlockConnectionGraph | [`void CollectNeighbors(Block block, List<Block> result)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L135) | internal |
 
 ## Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs
 
@@ -6913,24 +6916,24 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BlockConnections | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L46) | internal |
-| BlockConnections | [`void CheckConnection(bool synchronizePhysics = true)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L60) | internal |
-| BlockConnections | [`void ReleaseExistingConnections()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L104) | private |
-| BlockConnections | [`void ReleaseConnectionReferences(GameObject connectorObject)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L132) | private |
-| BlockConnections | [`Block FindBlockAcrossConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L169) | private |
-| BlockConnections | [`bool SharesUnit(Block other)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L237) | private |
-| BlockConnections | [`Connector FindMatchingConnector(Block otherBlock, Connector connector, bool requireAvailable = true)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L242) | private |
-| BlockConnections | [`void ConnectTo(Connector connector, Block otherBlock, Connector otherConnector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L264) | private |
-| BlockConnections | [`void ClearConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L289) | private |
-| BlockConnections | [`void DestroyConnectorVisual(GameObject connectorObject)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L316) | private static |
-| BlockConnections | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L331) | internal |
-| BlockConnections | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L359) | internal |
-| BlockConnections | [`void RestoreParticipation()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L405) | internal |
-| BlockConnections | [`void ReleaseRuntimePair(Connector connector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L424) | private |
-| BlockConnections | [`void CollectRuntimeNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L450) | internal |
-| BlockConnections | [`void RefreshRuntimePoseIfReady()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L472) | internal |
-| BlockConnections | [`void InvalidateRuntimeLinks()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L477) | internal |
-| BlockConnections | [`void CaptureRuntimePose()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L482) | private |
-| BlockConnections | [`int ConnectionMask()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L487) | private static |
+| BlockConnections | [`void CheckConnection(bool synchronizePhysics = true, List<Block> neighborsFound = null)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L62) | internal |
+| BlockConnections | [`void ReleaseExistingConnections()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L116) | private |
+| BlockConnections | [`void ReleaseConnectionReferences(GameObject connectorObject)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L144) | private |
+| BlockConnections | [`Block FindBlockAcrossConnector(Connector connector, Vector3 worldPos, Vector3 worldNormal, out Connector matchedFace)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L181) | private |
+| BlockConnections | [`bool SharesUnit(Block other)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L250) | private |
+| BlockConnections | [`Connector FindMatchingConnector(Block otherBlock, Vector3 worldPos, Vector3 worldNormal, bool requireAvailable)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L255) | private static |
+| BlockConnections | [`void ConnectTo(Connector connector, Block otherBlock, Connector otherConnector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L274) | private |
+| BlockConnections | [`void ClearConnector(Connector connector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L299) | private |
+| BlockConnections | [`void DestroyConnectorVisual(GameObject connectorObject)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L326) | private static |
+| BlockConnections | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L341) | internal |
+| BlockConnections | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L370) | internal |
+| BlockConnections | [`void RestoreParticipation()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L416) | internal |
+| BlockConnections | [`void ReleaseRuntimePair(Connector connector)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L435) | private |
+| BlockConnections | [`void CollectRuntimeNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L461) | internal |
+| BlockConnections | [`void RefreshRuntimePoseIfReady()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L483) | internal |
+| BlockConnections | [`void InvalidateRuntimeLinks()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L488) | internal |
+| BlockConnections | [`void CaptureRuntimePose()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L493) | private |
+| BlockConnections | [`int ConnectionMask()`](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L498) | private static |
 
 ## Assets/Scripts/Features/Simulation/Diagnostics/SimulationWorkMetrics.cs
 

@@ -4,6 +4,8 @@ using UnityEngine;
 
 internal static class TurretHitResolver
 {
+    private static readonly Unity.Profiling.ProfilerMarker ImpactMarker = new Unity.Profiling.ProfilerMarker("HY.Turret.ImpactFeedback");
+    private static readonly Unity.Profiling.ProfilerMarker DamageMarker = new Unity.Profiling.ProfilerMarker("HY.Turret.ApplyDamage");
     internal static void Apply(
         Collider collider,
         Vector3 point,
@@ -21,9 +23,13 @@ internal static class TurretHitResolver
         }
 
         Vector3 impactNormal = normal.sqrMagnitude > 0.001f ? normal : -direction;
-        BlockVfxLibrary.Play(BlockVfxLibrary.Effect.Impact, point, Quaternion.LookRotation(impactNormal), 0.6f);
-        VoxelWorldChunk terrainChunk = collider.GetComponent<VoxelWorldChunk>();
-        if (terrainChunk != null)
+        using (ImpactMarker.Auto())
+        {
+            BlockVfxLibrary.Play(BlockVfxLibrary.Effect.Impact, point, Quaternion.LookRotation(impactNormal), 0.6f);
+        }
+
+        using var damageSample = DamageMarker.Auto();
+        if (collider.TryGetComponent(out VoxelWorldChunk terrainChunk))
         {
             ProceduralVoxelWorld terrain = terrainChunk.GetComponentInParent<ProceduralVoxelWorld>();
             if (terrain != null)
@@ -33,10 +39,13 @@ internal static class TurretHitResolver
         }
 
         ControlUnit unit = collider.GetComponentInParent<ControlUnit>();
-        Durability durability = collider.GetComponentInParent<Durability>();
-        if (unit != null && unit.IsOperational && unit.faction == faction && durability != null)
+        if (unit != null && unit.IsOperational && unit.faction == faction)
         {
-            durability.ApplyDamage(damage, owner);
+            Durability durability = collider.GetComponentInParent<Durability>();
+            if (durability != null)
+            {
+                durability.ApplyDamage(damage, owner);
+            }
         }
     }
 }

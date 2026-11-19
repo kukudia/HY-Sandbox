@@ -404,9 +404,9 @@ public class Block : MonoBehaviour
         Connections.CheckConnection();
     }
 
-    internal void CheckConnectionAfterPhysicsSync()
+    internal void CheckConnectionAfterPhysicsSync(List<Block> neighborsFound)
     {
-        Connections.CheckConnection(false);
+        Connections.CheckConnection(false, neighborsFound);
     }
 
     public List<Block> Neighbors()

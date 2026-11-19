@@ -31,18 +31,16 @@ public class RepairBot : Bot
         _beamView = new RepairBeamView(transform);
         EnsureRepairBeamGradient();
         _beamView.Initialize(gameObject, _repairImpact, beamWidth);
-        _targetSearch.Scan(home, targetRange);
     }
 
     private void FixedUpdate()
     {
-        if (!TickNavigation())
+        if (!TickNavigation(out ControlUnit owner))
         {
             SetHomePowerRequested(false);
             return;
         }
 
-        ControlUnit owner = home.GetComponentInParent<ControlUnit>();
         if (owner == null || !owner.IsOperational)
         {
             ClearTarget();

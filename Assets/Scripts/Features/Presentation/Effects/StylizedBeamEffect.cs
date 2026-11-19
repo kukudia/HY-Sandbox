@@ -53,6 +53,11 @@ public class StylizedBeamEffect : MonoBehaviour
 
     public void SetVisible(bool value)
     {
+        if (_visible == value && (!value || _beam != null))
+        {
+            return;
+        }
+
         _visible = value;
         if (_beam == null && value && BlockVfxLibrary.Instance != null)
         {
@@ -105,6 +110,7 @@ public class StylizedBeamEffect : MonoBehaviour
 
     private void OnDisable()
     {
+        _visible = false;
         if (_beam != null)
         {
             _beam.Clear();

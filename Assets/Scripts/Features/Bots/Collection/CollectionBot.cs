@@ -30,13 +30,12 @@ public class CollectionBot : Bot
 
     private void FixedUpdate()
     {
-        if (!TickNavigation())
+        if (!TickNavigation(out ControlUnit owner))
         {
             SetHomePowerRequested(false);
             return;
         }
 
-        ControlUnit owner = home.GetComponentInParent<ControlUnit>();
         bool canStart = owner != null && owner.IsOperational;
         if (IsMissionInvalid(owner, canStart))
         {

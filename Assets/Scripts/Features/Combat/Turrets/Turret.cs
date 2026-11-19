@@ -8,6 +8,7 @@ public abstract class Turret : MonoBehaviour
 {
     private static readonly Unity.Profiling.ProfilerMarker TargetMarker = new Unity.Profiling.ProfilerMarker("HY.Turret.RefreshTarget");
     private static readonly Unity.Profiling.ProfilerMarker AimMarker = new Unity.Profiling.ProfilerMarker("HY.Turret.AimAndFire");
+    private static readonly Unity.Profiling.ProfilerMarker FireMarker = new Unity.Profiling.ProfilerMarker("HY.Turret.Fire");
     public UnitFaction targetFaction = UnitFaction.Enemy;
     public Transform horizontalAxis;
     public Transform verticalAxis;
@@ -108,6 +109,7 @@ public abstract class Turret : MonoBehaviour
 
     private void StopWorking()
     {
+        _targetSelector?.CancelScheduledSearch();
         Supply?.SetWorkRequested(this, false);
         _target = null;
         _targetDurability = null;
@@ -118,19 +120,32 @@ public abstract class Turret : MonoBehaviour
     private void RefreshTarget()
     {
         using var sample = TargetMarker.Auto();
-        _targetSelector.ConfigureVisibility(GetMuzzlePosition(), hitLayers);
-        if (_target != null && (!_target.isActiveAndEnabled || _target.faction != GetEffectiveTargetFaction() || _target.gameObject.scene != gameObject.scene || !_target.IsOperational || !_target.IsSimulationActive || _targetDurability == null || !_targetDurability.isActiveAndEnabled || _targetDurability.currentDurability <= 0f || _targetDurability.GetComponentInParent<ControlUnit>() != _target || (_targetDurability.transform.position - GetMuzzlePosition()).sqrMagnitude > range * range || !_targetSelector.HasLineOfSight(Owner, _target, _targetDurability)))
+        Vector3 origin = GetMuzzlePosition();
+        _targetSelector.ConfigureVisibility(origin, hitLayers);
+        if (Time.time >= _nextSearchTime && _targetSelector.TryScheduleSearch())
         {
-            _target = null;
-            _targetDurability = null;
-            _nextSearchTime = 0f;
-        }
-
-        if (Time.time < _nextSearchTime)
-        {
+            SearchTarget();
             return;
         }
 
+        // 即使排队等扫描，也不能继续锁定失效或被遮挡的目标。
+        if (_target != null && (!_target.isActiveAndEnabled || _target.faction != GetEffectiveTargetFaction() || _target.gameObject.scene != gameObject.scene || !_target.IsOperational || !_target.IsSimulationActive || _targetDurability == null || !_targetDurability.isActiveAndEnabled || _targetDurability.currentDurability <= 0f || _targetDurability.GetComponentInParent<ControlUnit>() != _target || (_targetDurability.transform.position - origin).sqrMagnitude > range * range || !_targetSelector.HasLineOfSight(Owner, _target, _targetDurability)))
+        {
+            _target = null;
+            _targetDurability = null;
+            if (Time.time < _nextSearchTime)
+            {
+                _nextSearchTime = 0f;
+                if (_targetSelector.TryScheduleSearch())
+                {
+                    SearchTarget();
+                }
+            }
+        }
+    }
+
+    private void SearchTarget()
+    {
         UnitFaction faction = GetEffectiveTargetFaction();
         _target = _targetSelector.FindNearestTarget(
             ControlUnit.RuntimeUnits,
@@ -145,18 +160,25 @@ public abstract class Turret : MonoBehaviour
     private void AimAndFire(Durability aimTarget)
     {
         using var sample = AimMarker.Auto();
-        Vector3 direction = GetAimPosition(aimTarget, GetMuzzlePosition()) - GetMuzzlePosition();
+        Vector3 origin = GetMuzzlePosition();
+        Vector3 direction = GetAimPosition(aimTarget, origin) - origin;
         if (direction.sqrMagnitude < 0.01f)
         {
             return;
         }
 
         AimAt(direction.normalized);
-        Vector3 origin = GetMuzzlePosition();
+        if (Time.time < _nextFireTime)
+        {
+            return;
+        }
+
+        origin = GetMuzzlePosition();
         Vector3 aimDirection = (GetAimPosition(aimTarget, origin) - origin).normalized;
         Vector3 fireDirection = GetAimForward();
-        if (Vector3.Angle(fireDirection, aimDirection) <= maxFireAngle && Time.time >= _nextFireTime)
+        if (Vector3.Angle(fireDirection, aimDirection) <= maxFireAngle)
         {
+            using var fireSample = FireMarker.Auto();
             Fire(origin, fireDirection, GetEffectiveTargetFaction());
             _nextFireTime = Time.time + Mathf.Max(0.01f, fireInterval) / Mathf.Max(Supply.efficiency, 0.0001f);
         }
