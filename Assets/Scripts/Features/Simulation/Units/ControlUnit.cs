@@ -17,18 +17,68 @@ public class ControlUnit : MonoBehaviour
     private int damageTargetsFrame = -1;
     private double damageTargetsStep = -1;
     private uint damageTargetsVersion;
+    private bool targetBoundsReady;
+    private Bounds targetBounds;
+    private static readonly Unity.Profiling.ProfilerMarker BoundsMarker = new Unity.Profiling.ProfilerMarker("HY.Turret.SharedBounds");
     // 多座炮塔共享当前物理步的层级读取；位置、阵营、伤势和真实归属仍在每次选择时验证。
     internal IReadOnlyList<Durability> GetDamageTargets()
     {
         if (damageTargetsFrame != Time.frameCount || damageTargetsStep != Time.fixedTimeAsDouble || damageTargetsVersion != Durability.HierarchyVersion)
         {
             GetComponentsInChildren(true, damageTargets);
+            targetBoundsReady = false;
             damageTargetsFrame = Time.frameCount;
             damageTargetsStep = Time.fixedTimeAsDouble;
             damageTargetsVersion = Durability.HierarchyVersion;
         }
 
         return damageTargets;
+    }
+
+    internal bool TryGetTargetBounds(out Bounds bounds)
+    {
+        GetDamageTargets();
+        if (!Time.inFixedTimeStep)
+        {
+            targetBoundsReady = false;
+        }
+
+        if (!targetBoundsReady && damageTargets.Count > 0)
+        {
+            using var sample = BoundsMarker.Auto();
+            // 包含失活或受损部件：同一步内修复也不会被粗筛漏掉，精筛仍检查实时状态。
+            foreach (Durability target in damageTargets)
+            {
+                if (target == null)
+                {
+                    continue;
+                }
+
+                Vector3 point = target.GetTargetPosition(damageTargetsStep);
+                if (targetBoundsReady)
+                {
+                    targetBounds.Encapsulate(point);
+                }
+                else
+                {
+                    targetBounds = new Bounds(point, Vector3.zero);
+                    targetBoundsReady = true;
+                }
+            }
+        }
+
+        bounds = targetBounds;
+        return targetBoundsReady;
+    }
+
+    private void OnDrawGizmos()
+    {
+        DebugManager debug = DebugManager.instance;
+        if (debug != null && debug.ShowTurretTargeting && targetBoundsReady && damageTargetsStep == Time.fixedTimeAsDouble)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireCube(targetBounds.center, targetBounds.size);
+        }
     }
 
     private void OnTransformChildrenChanged()

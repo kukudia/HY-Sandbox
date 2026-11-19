@@ -129,7 +129,7 @@ public abstract class Turret : MonoBehaviour
         }
 
         // 即使排队等扫描，也不能继续锁定失效或被遮挡的目标。
-        if (_target != null && (!_target.isActiveAndEnabled || _target.faction != GetEffectiveTargetFaction() || _target.gameObject.scene != gameObject.scene || !_target.IsOperational || !_target.IsSimulationActive || _targetDurability == null || !_targetDurability.isActiveAndEnabled || _targetDurability.currentDurability <= 0f || _targetDurability.GetComponentInParent<ControlUnit>() != _target || (_targetDurability.transform.position - origin).sqrMagnitude > range * range || !_targetSelector.HasLineOfSight(Owner, _target, _targetDurability)))
+        if (_target != null && (!_target.isActiveAndEnabled || _target.faction != GetEffectiveTargetFaction() || _target.gameObject.scene != gameObject.scene || !_target.IsOperational || !_target.IsSimulationActive || _targetDurability == null || !_targetDurability.isActiveAndEnabled || _targetDurability.currentDurability <= 0f || _targetDurability.GetComponentInParent<ControlUnit>() != _target || (_targetDurability.GetTargetPosition(Time.fixedTimeAsDouble) - origin).sqrMagnitude > range * range || !_targetSelector.HasLineOfSight(Owner, _target, _targetDurability)))
         {
             _target = null;
             _targetDurability = null;
@@ -273,7 +273,7 @@ public abstract class Turret : MonoBehaviour
     // 激光即时命中；实体炮塔覆盖为基于实际炮速的提前量。
     protected virtual Vector3 GetAimPosition(Durability target, Vector3 origin)
     {
-        return target.transform.position;
+        return target.GetTargetPosition(Time.fixedTimeAsDouble);
     }
 
     protected abstract void Fire(Vector3 origin, Vector3 direction, UnitFaction faction);

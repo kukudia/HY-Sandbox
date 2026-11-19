@@ -94,11 +94,15 @@ public static class TurretRuntimeChecks
                 selectedTarget.GetValue(laser) == null && (float)nextSearch.GetValue(laser) == deadline,
                 "a newly reachable target waits until the configured empty-search interval");
             nextSearch.SetValue(laser, Time.time - 1f);
+            // 舰体中心在射程外，炮塔仍应锁定伸入射程的舰首模块。
+            enemy.transform.position += Vector3.forward * 80f;
+            target.transform.localPosition -= Vector3.forward * 80f;
+            Physics.SyncTransforms();
             refreshTarget.Invoke(laser, null);
             Check(
                 report,
                 (ControlUnit)selectedTarget.GetValue(laser) == enemy,
-                "an expired search interval acquires the reachable enemy");
+                "an expired search acquires an in-range module on a ship with an out-of-range center");
             health.enabled = false;
             refreshTarget.Invoke(laser, null);
             Check(

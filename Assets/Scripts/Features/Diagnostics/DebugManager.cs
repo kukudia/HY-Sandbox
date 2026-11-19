@@ -39,6 +39,10 @@ public class DebugManager : MonoBehaviour
     }
 
     public static DebugManager instance;
+    [Header("Turret Debug"), SerializeField, Tooltip("绘制共享目标包围盒（青色）及炮口实际可见性检查（绿色可见、红色遮挡）。")]
+    private bool showTurretTargeting;
+    public bool ShowTurretTargeting => showTurretTargeting;
+
     [Header("Power Debug Visibility")]
     public bool showPowerRange = false;
     public bool showPowerConnections = false;

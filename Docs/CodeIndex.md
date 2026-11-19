@@ -1726,10 +1726,10 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | TurretRuntimeChecks | [`string RunInCurrentPlayMode()`](../Assets/Editor/Combat/Validation/TurretRuntimeChecks.cs#L23) | public static |
-| TurretRuntimeChecks | [`void PrepareWeapon(Turret turret, ControlUnit owner)`](../Assets/Editor/Combat/Validation/TurretRuntimeChecks.cs#L263) | private static |
-| TurretRuntimeChecks | [`void CallFire(Turret turret, Vector3 origin, Vector3 direction)`](../Assets/Editor/Combat/Validation/TurretRuntimeChecks.cs#L271) | private static |
-| TurretRuntimeChecks | [`ControlUnit Unit(Transform parent, string name, UnitFaction faction, Vector3 localPosition)`](../Assets/Editor/Combat/Validation/TurretRuntimeChecks.cs#L276) | private static |
-| TurretRuntimeChecks | [`void Check(Report report, bool passed, string name)`](../Assets/Editor/Combat/Validation/TurretRuntimeChecks.cs#L293) | private static |
+| TurretRuntimeChecks | [`void PrepareWeapon(Turret turret, ControlUnit owner)`](../Assets/Editor/Combat/Validation/TurretRuntimeChecks.cs#L267) | private static |
+| TurretRuntimeChecks | [`void CallFire(Turret turret, Vector3 origin, Vector3 direction)`](../Assets/Editor/Combat/Validation/TurretRuntimeChecks.cs#L275) | private static |
+| TurretRuntimeChecks | [`ControlUnit Unit(Transform parent, string name, UnitFaction faction, Vector3 localPosition)`](../Assets/Editor/Combat/Validation/TurretRuntimeChecks.cs#L280) | private static |
+| TurretRuntimeChecks | [`void Check(Report report, bool passed, string name)`](../Assets/Editor/Combat/Validation/TurretRuntimeChecks.cs#L297) | private static |
 
 ## Assets/Editor/Diagnostics/Benchmarks/FleetPresentationBenchmark.cs
 
@@ -4340,16 +4340,17 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Durability | [`void OnTransformParentChanged()`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L14) | private |
-| Durability | [`void SetCollisionDamageScale(float scale)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L39) | internal |
-| Durability | [`void Awake()`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L62) | private |
-| Durability | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L78) | private |
-| Durability | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L98) | private |
-| Durability | [`void ApplyDamage(float amount, ControlUnit attacker)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L108) | public |
-| Durability | [`void ApplyCollisionEnergy(float reducedMass, float normalSpeed, float share)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L119) | public |
-| Durability | [`void ProtectFromExplosionCollisions(float duration)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L145) | public |
-| Durability | [`void UpdateDurablility(float value)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L158) | public |
-| Durability | [`void ChangeDurability(float value)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L168) | private |
+| Durability | [`Vector3 GetTargetPosition(double step)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L18) | internal |
+| Durability | [`void OnTransformParentChanged()`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L35) | private |
+| Durability | [`void SetCollisionDamageScale(float scale)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L60) | internal |
+| Durability | [`void Awake()`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L83) | private |
+| Durability | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L99) | private |
+| Durability | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L119) | private |
+| Durability | [`void ApplyDamage(float amount, ControlUnit attacker)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L129) | public |
+| Durability | [`void ApplyCollisionEnergy(float reducedMass, float normalSpeed, float share)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L140) | public |
+| Durability | [`void ProtectFromExplosionCollisions(float duration)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L166) | public |
+| Durability | [`void UpdateDurablility(float value)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L179) | public |
+| Durability | [`void ChangeDurability(float value)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L189) | private |
 
 ## Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs
 
@@ -4774,13 +4775,14 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| TurretTargetSelector | [`bool TryScheduleSearch()`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L44) | internal |
-| TurretTargetSelector | [`void CancelScheduledSearch()`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L79) | internal |
-| TurretTargetSelector | [`void ConfigureVisibility(Vector3 origin, LayerMask hitLayers)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L89) | internal |
-| TurretTargetSelector | [`bool HasLineOfSight(ControlUnit owner, ControlUnit target, Durability durability)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L95) | internal |
-| TurretTargetSelector | [`ControlUnit FindNearestTarget( IReadOnlyList<ControlUnit> units, ControlUnit owner, UnitFaction faction, float range, bool prioritizeCockpit, out Durability nearestDurability)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L158) | internal |
-| TurretTargetSelector | [`Durability FindNearestDurability(ControlUnit unit, ControlUnit owner, Vector3 origin, float nearestSqrDistance)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L243) | private |
-| TurretTargetSelector | [`Durability FindCockpitDurability(ControlUnit unit)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L303) | private |
+| TurretTargetSelector | [`bool TryScheduleSearch()`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L46) | internal |
+| TurretTargetSelector | [`void CancelScheduledSearch()`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L81) | internal |
+| TurretTargetSelector | [`void ConfigureVisibility(Vector3 origin, LayerMask hitLayers)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L91) | internal |
+| TurretTargetSelector | [`bool HasLineOfSight(ControlUnit owner, ControlUnit target, Durability durability)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L98) | internal |
+| TurretTargetSelector | [`ControlUnit FindNearestTarget( IReadOnlyList<ControlUnit> units, ControlUnit owner, UnitFaction faction, float range, bool prioritizeCockpit, out Durability nearestDurability)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L172) | internal |
+| TurretTargetSelector | [`bool IsVisibleCandidate(ControlUnit owner, Candidate candidate)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L278) | private |
+| TurretTargetSelector | [`void CollectCandidates( ControlUnit unit, Vector3 origin, float nearestSqrDistance, ref int closest, ref float closestDistance)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L283) | private |
+| TurretTargetSelector | [`Durability FindCockpitDurability(ControlUnit unit)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L316) | private |
 
 ## Assets/Scripts/Features/Diagnostics/Bots/BotNavigationProbeDriver.cs
 
@@ -4800,19 +4802,19 @@ HY-Sandbox/
 | --- | --- | --- |
 | DebugManager | [`bool Includes(Component component)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L22) | public |
 | DebugManager | [`void SetFactionFilter(int value)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L34) | public |
-| DebugManager | [`bool ShowsAI(UnitFaction faction)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L67) | public |
-| DebugManager | [`void SetAIVisibility(UnitFaction faction, bool visible)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L68) | public |
-| DebugManager | [`void Awake()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L94) | private |
-| DebugManager | [`void OnDestroy()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L101) | private |
-| DebugManager | [`Color GetPowerRangeColor(PowerTransmissionDevice device)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L110) | public |
-| DebugManager | [`void TogglePowerRange()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L125) | public |
-| DebugManager | [`void TogglePowerConnections()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L138) | public |
-| DebugManager | [`void ToggleConnectionStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L143) | public |
-| DebugManager | [`void ToggleDurabilityStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L149) | public |
-| DebugManager | [`void TogglePowerStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L155) | public |
-| DebugManager | [`void EnsureStatusIconCanvas()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L161) | private |
-| DebugManager | [`void RefreshPowerRangeMesh(IList<PowerTransmissionDevice> devices)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L171) | internal |
-| DebugManager | [`void ClearPowerRangeMesh()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L185) | internal |
+| DebugManager | [`bool ShowsAI(UnitFaction faction)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L71) | public |
+| DebugManager | [`void SetAIVisibility(UnitFaction faction, bool visible)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L72) | public |
+| DebugManager | [`void Awake()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L98) | private |
+| DebugManager | [`void OnDestroy()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L105) | private |
+| DebugManager | [`Color GetPowerRangeColor(PowerTransmissionDevice device)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L114) | public |
+| DebugManager | [`void TogglePowerRange()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L129) | public |
+| DebugManager | [`void TogglePowerConnections()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L142) | public |
+| DebugManager | [`void ToggleConnectionStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L147) | public |
+| DebugManager | [`void ToggleDurabilityStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L153) | public |
+| DebugManager | [`void TogglePowerStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L159) | public |
+| DebugManager | [`void EnsureStatusIconCanvas()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L165) | private |
+| DebugManager | [`void RefreshPowerRangeMesh(IList<PowerTransmissionDevice> devices)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L175) | internal |
+| DebugManager | [`void ClearPowerRangeMesh()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L189) | internal |
 
 ## Assets/Scripts/Features/Diagnostics/Interface/CombatFlightTracks.cs
 
@@ -7139,28 +7141,30 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| ControlUnit | [`IReadOnlyList<Durability> GetDamageTargets()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L21) | internal |
-| ControlUnit | [`void OnTransformChildrenChanged()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L34) | private |
-| ControlUnit | [`bool IsSceneSimulationActive(UnityEngine.SceneManagement.Scene scene)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L39) | public static |
-| ControlUnit | [`void NotifyFragmentCreated(ControlUnit fragment, int blockCount)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L58) | internal |
-| ControlUnit | [`void NotifyBlockDestroyed(Block block)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L65) | internal |
-| ControlUnit | [`void BindBuilding(BuildingRuntime building)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L104) | public |
-| ControlUnit | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L109) | private |
-| ControlUnit | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L117) | private |
-| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L145) | public |
-| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L157) | public |
-| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L182) | private |
-| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L194) | private |
-| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L241) | public |
-| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L301) | public |
-| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L322) | public |
-| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L330) | public |
-| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L340) | public |
-| ControlUnit | [`void SetPropulsionInput(Vector3 worldDirection, float throttle)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L345) | public |
-| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L352) | public |
-| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L357) | private |
-| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L401) | private |
-| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L412) | private |
+| ControlUnit | [`IReadOnlyList<Durability> GetDamageTargets()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L24) | internal |
+| ControlUnit | [`bool TryGetTargetBounds(out Bounds bounds)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L38) | internal |
+| ControlUnit | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L74) | private |
+| ControlUnit | [`void OnTransformChildrenChanged()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L84) | private |
+| ControlUnit | [`bool IsSceneSimulationActive(UnityEngine.SceneManagement.Scene scene)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L89) | public static |
+| ControlUnit | [`void NotifyFragmentCreated(ControlUnit fragment, int blockCount)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L108) | internal |
+| ControlUnit | [`void NotifyBlockDestroyed(Block block)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L115) | internal |
+| ControlUnit | [`void BindBuilding(BuildingRuntime building)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L154) | public |
+| ControlUnit | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L159) | private |
+| ControlUnit | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L167) | private |
+| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L195) | public |
+| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L207) | public |
+| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L232) | private |
+| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L244) | private |
+| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L291) | public |
+| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L351) | public |
+| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L372) | public |
+| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L380) | public |
+| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L390) | public |
+| ControlUnit | [`void SetPropulsionInput(Vector3 worldDirection, float throttle)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L395) | public |
+| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L402) | public |
+| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L407) | private |
+| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L451) | private |
+| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L462) | private |
 
 ## Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs
 

@@ -1961,8 +1961,11 @@ def main():
         "炮塔视线与遮挡锁定",
         "源码推导：炮塔每物理步验证炮口视线，仅锁定可见敌对模块；自身炮塔碰撞忽略，同组墙板和其他单位遮挡。",
         {"A": "Turret.FixedUpdate", "B": "Turret.RefreshTarget", "C": "TurretTargetSelector.ConfigureVisibility",
-         "D": "TurretTargetSelector.HasLineOfSight", "E": "TurretTargetSelector.FindNearestTarget"},
-        ["A --> B", "B --> C", "B --> D", "B -->|索敌周期| E", "E --> D"],
+         "D": "TurretTargetSelector.HasLineOfSight", "E": "TurretTargetSelector.FindNearestTarget",
+         "F": "ControlUnit.TryGetTargetBounds", "G": "Durability.GetTargetPosition",
+         "H": "TurretTargetSelector.CollectCandidates"},
+        ["A --> B", "B --> C", "B --> D", "B -->|索敌周期| E", "E -->|舰级粗筛| F", "F --> G",
+         "E -->|射程内模块| H", "H --> G", "E -->|按距离检查遮挡| D"],
     )
     graph(
         "EnemyController 可编辑避障试验场",

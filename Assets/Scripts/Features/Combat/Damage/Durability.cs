@@ -11,6 +11,27 @@ public class Durability : MonoBehaviour
         get; private set;
     }
 
+    private double positionStep = double.NaN;
+    private uint positionVersion;
+    private Vector3 targetPosition;
+    // All turrets sample this target at the same simulation time, including catch-up steps.
+    internal Vector3 GetTargetPosition(double step)
+    {
+        if (!Time.inFixedTimeStep)
+        {
+            return transform.position;
+        }
+
+        if (positionStep != step || positionVersion != HierarchyVersion)
+        {
+            targetPosition = transform.position;
+            positionStep = step;
+            positionVersion = HierarchyVersion;
+        }
+
+        return targetPosition;
+    }
+
     private void OnTransformParentChanged()
     {
         unchecked

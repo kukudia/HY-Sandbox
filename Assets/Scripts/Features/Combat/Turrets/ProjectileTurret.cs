@@ -134,12 +134,12 @@ public sealed class ProjectileTurret : Turret
     {
         if (!predictiveAim)
         {
-            return target.transform.position;
+            return target.GetTargetPosition(Time.fixedTimeAsDouble);
         }
 
         Rigidbody targetBody = target.GetComponentInParent<Rigidbody>();
         Rigidbody ownerBody = Owner != null ? Owner.GetComponent<Rigidbody>() : null;
-        Vector3 targetPosition = target.transform.position;
+        Vector3 targetPosition = target.GetTargetPosition(Time.fixedTimeAsDouble);
         Vector3 inherited = ownerBody != null ? ownerBody.GetPointVelocity(origin) : Vector3.zero;
         Vector3 targetVelocity = targetBody != null ? targetBody.GetPointVelocity(targetPosition) : Vector3.zero;
         if (ProjectileIntercept.TryGetTime(
