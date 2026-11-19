@@ -2087,12 +2087,16 @@ def main():
          "Q": "SiegeCombatHud.Update", "R": "SiegeGameplayStage.Exit",
          "S": "SiegeCombatHud.Exit", "T": "CombatHudPanels.Restore",
          "U": "CombatHud.Unbind", "AC": "CombatHud.IsNameplateAreaAvailable",
-         "AD": "CombatNotifications.SetToolsOpen", "AE": "CombatHudPanels.Update"},
+         "AD": "CombatNotifications.SetToolsOpen", "AE": "CombatHudPanels.Update",
+         "AF": "SiegeReturnFlight.FailReturn", "AG": "SiegeReturnFlight.Finish",
+         "AH": "SiegeGameplayStage.FixedUpdate", "AI": "SiegeMatch.CompleteReturn"},
         ["A --> B", "B --> C", "D --> E", "D --> F", "E --> G", "F --> H", "F -->|实际名牌尺寸，避让可见工具、通知及Siege专属区域| AC", "AE --> AD",
          "I --> J", "K -.->|已结算AttackerResolved事件| L", "L -->|经ShowDestruction| M",
          "M -.->|有界队列，逐帧动效| N", "Q --> P", "O --> V",
          "R --> S", "S --> T", "S --> U", "AA --> W", "AA --> AB",
-         "Y --> X", "Y -->|时限或停滞失败| Z", "Z -.->|延后爆炸结果展示| Q"],
+         "Y --> X", "Y -->|战斗超时| Z", "Z -.->|延后爆炸结果展示| Q",
+         "X -->|返航停滞或到期| AF", "AF -->|仅结算未归舰艇| AG",
+         "AH -->|全舰入库或报废| AI"],
     )
     doc = """# HY-Sandbox 运行时函数图
 

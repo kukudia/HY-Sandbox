@@ -1588,11 +1588,12 @@ HY-Sandbox/
 | CombatHudPlayProbe | [`IEnumerator Legacy()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L311) | private static |
 | CombatHudPlayProbe | [`IEnumerator Flow()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L348) | private static |
 | CombatHudPlayProbe | [`IEnumerator Recovery()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L491) | private static |
-| CombatHudPlayProbe | [`IEnumerator Arena()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L624) | private static |
-| CombatHudPlayProbe | [`IEnumerator Exploration()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L668) | private static |
-| CombatHudPlayProbe | [`void Screenshot(string name)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L709) | private static |
-| CombatHudPlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L715) | private static |
-| CombatHudPlayProbe | [`void Finish()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L726) | private static |
+| CombatHudPlayProbe | [`IEnumerator RecoveryLoss(GameModeController modes, SiegeShipOption option, string loss)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L592) | private static |
+| CombatHudPlayProbe | [`IEnumerator Arena()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L648) | private static |
+| CombatHudPlayProbe | [`IEnumerator Exploration()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L692) | private static |
+| CombatHudPlayProbe | [`void Screenshot(string name)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L733) | private static |
+| CombatHudPlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L739) | private static |
+| CombatHudPlayProbe | [`void Finish()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L750) | private static |
 
 ## Assets/Editor/Combat/Validation/EnemyBlueprintPoolChecks.cs
 
@@ -6329,20 +6330,21 @@ HY-Sandbox/
 | SiegeReturnFlight | [`bool IsGuiding(SiegeFleetEntry entry)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L63) | public |
 | SiegeReturnFlight | [`void BeginLaunch()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L68) | public |
 | SiegeReturnFlight | [`void BeginReturn()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L73) | public |
-| SiegeReturnFlight | [`void Begin(bool returning)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L78) | private |
-| SiegeReturnFlight | [`void BindUnit(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L119) | private |
-| SiegeReturnFlight | [`void TakeGuidanceControl(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L146) | private |
-| SiegeReturnFlight | [`Vector3 DockPosition(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L179) | private |
-| SiegeReturnFlight | [`void BuildRoute(Flight flight, bool returning)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L204) | private |
-| SiegeReturnFlight | [`void BuildRoofRoute(Flight flight, bool returning, Vector3 dock, Bounds hull)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L295) | private |
-| SiegeReturnFlight | [`void Tick(float deltaTime)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L353) | public |
-| SiegeReturnFlight | [`void TickFlight(Flight flight, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L369) | private |
-| SiegeReturnFlight | [`void ReadPropulsion(Flight flight, out float driveForce, out float liftForce)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L432) | private static |
-| SiegeReturnFlight | [`void ApplyGuidance(Flight flight, Vector3 target, float driveAcceleration, float liftAcceleration, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L455) | private |
-| SiegeReturnFlight | [`void PublishPropulsion(Flight flight, Vector3 horizontal, float vertical, float driveAcceleration, float liftAcceleration)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L493) | private |
-| SiegeReturnFlight | [`void Finish(Flight flight, bool success, string reason = null)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L511) | private |
-| SiegeReturnFlight | [`void ReleasePropulsion(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L544) | private |
-| SiegeReturnFlight | [`void Stop()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L573) | public |
+| SiegeReturnFlight | [`void FailReturn(SiegeFleetEntry entry, string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L78) | internal |
+| SiegeReturnFlight | [`void Begin(bool returning)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L94) | private |
+| SiegeReturnFlight | [`void BindUnit(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L135) | private |
+| SiegeReturnFlight | [`void TakeGuidanceControl(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L162) | private |
+| SiegeReturnFlight | [`Vector3 DockPosition(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L195) | private |
+| SiegeReturnFlight | [`void BuildRoute(Flight flight, bool returning)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L220) | private |
+| SiegeReturnFlight | [`void BuildRoofRoute(Flight flight, bool returning, Vector3 dock, Bounds hull)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L311) | private |
+| SiegeReturnFlight | [`void Tick(float deltaTime)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L369) | public |
+| SiegeReturnFlight | [`void TickFlight(Flight flight, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L385) | private |
+| SiegeReturnFlight | [`void ReadPropulsion(Flight flight, out float driveForce, out float liftForce)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L448) | private static |
+| SiegeReturnFlight | [`void ApplyGuidance(Flight flight, Vector3 target, float driveAcceleration, float liftAcceleration, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L471) | private |
+| SiegeReturnFlight | [`void PublishPropulsion(Flight flight, Vector3 horizontal, float vertical, float driveAcceleration, float liftAcceleration)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L509) | private |
+| SiegeReturnFlight | [`void Finish(Flight flight, bool success, string reason = null)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L527) | private |
+| SiegeReturnFlight | [`void ReleasePropulsion(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L560) | private |
+| SiegeReturnFlight | [`void Stop()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L589) | public |
 
 ## Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs
 
@@ -6407,15 +6409,15 @@ HY-Sandbox/
 | SiegeGameplayStage | [`void Observe()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L456) | public |
 | SiegeGameplayStage | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L470) | public |
 | SiegeGameplayStage | [`void FixedUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L484) | private |
-| SiegeGameplayStage | [`void SetSimulation(bool active)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L523) | private |
-| SiegeGameplayStage | [`void LoseBase()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L566) | private |
-| SiegeGameplayStage | [`void Retreat()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L571) | public |
-| SiegeGameplayStage | [`void Settle(string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L576) | private |
-| SiegeGameplayStage | [`void ReturnToMenu()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L605) | public |
-| SiegeGameplayStage | [`void ShowCoreMarker(Transform parent, Vector3 localPosition)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L625) | private |
-| SiegeGameplayStage | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L634) | private |
-| SiegeGameplayStage | [`void Exit()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L642) | public |
-| SiegeGameplayStage | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L684) | private |
+| SiegeGameplayStage | [`void SetSimulation(bool active)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L517) | private |
+| SiegeGameplayStage | [`void LoseBase()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L560) | private |
+| SiegeGameplayStage | [`void Retreat()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L565) | public |
+| SiegeGameplayStage | [`void Settle(string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L570) | private |
+| SiegeGameplayStage | [`void ReturnToMenu()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L599) | public |
+| SiegeGameplayStage | [`void ShowCoreMarker(Transform parent, Vector3 localPosition)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L619) | private |
+| SiegeGameplayStage | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L628) | private |
+| SiegeGameplayStage | [`void Exit()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L636) | public |
+| SiegeGameplayStage | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L678) | private |
 
 ## Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs
 

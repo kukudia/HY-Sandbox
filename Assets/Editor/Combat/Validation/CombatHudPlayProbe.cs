@@ -527,14 +527,6 @@ public static class CombatHudPlayProbe
             clock.Tick(SiegePhase.Returning, 1f, stage.Fleet, stage.FlightGuidance) == null && clock.StallRemaining == 15f);
         ship.Unit.transform.position = original;
         clock.Tick(SiegePhase.Returning, 0f, stage.Fleet, stage.FlightGuidance);
-        Check(
-            "Fifteen seconds without displacement fails",
-            clock.Tick(SiegePhase.Returning, 15f, stage.Fleet, stage.FlightGuidance)?.StartsWith("Recovery stalled") == true);
-        var deadlineClock = new SiegePhaseClock();
-        deadlineClock.BeginBattle(0f);
-        Check(
-            "Recovery hard deadline fails even without tracked ships",
-            deadlineClock.Tick(SiegePhase.Returning, 90f, null, null) == "Recovery time limit exceeded");
         stage.FlightGuidance.Stop();
         Durability hull = ship.Cockpit.GetComponent<Durability>();
         hull.ApplyDamage(10f, null);
@@ -580,40 +572,72 @@ public static class CombatHudPlayProbe
             yield return .1f;
         }
 
+        foreach (string loss in new[]
+        {
+            "stall",
+            "propulsion",
+            "deadline"
+        }
+
+        )
+        {
+            IEnumerator recovery = RecoveryLoss(modes, option, loss);
+            while (recovery.MoveNext())
+            {
+                yield return recovery.Current;
+            }
+        }
+    }
+
+    private static IEnumerator RecoveryLoss(GameModeController modes, SiegeShipOption option, string loss)
+    {
         modes.LaunchSiege(null);
         while (modes.State == GameModeState.Loading)
         {
             yield return .1f;
         }
 
-        stage = Object.FindAnyObjectByType<SiegeGameplayStage>();
+        SiegeGameplayStage stage = Object.FindAnyObjectByType<SiegeGameplayStage>();
         typeof(SiegeGameplayStage).GetField("defenders", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(stage, new[] { option });
-        Check("Stall fixture deploys a real ship", stage.TryDeployAt(0, 0, out _));
+        Check(loss + " fixture deploys a real ship", stage.TryDeployAt(0, 0, out _));
         using (var values = new SerializedObject(stage))
         {
-            values.FindProperty("clock.stalledSeconds").floatValue = .6f;
-            values.FindProperty("flightSettings.disabledGrace").floatValue = 120f;
+            values.FindProperty("clock.stalledSeconds").floatValue = loss == "stall" ? .6f : 15f;
+            values.FindProperty("clock.returnSeconds").floatValue = loss == "deadline" ? .6f : 90f;
+            values.FindProperty("flightSettings.disabledGrace").floatValue = loss == "propulsion" ? .3f : 120f;
             values.ApplyModifiedPropertiesWithoutUndo();
         }
 
         ControlUnit stalledUnit = stage.Fleet.Ships[0].Unit;
         stalledUnit.transform.position += new Vector3(0f, 5f, 20f);
         stalledUnit.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
-        stage.BeginWave();
-        slots = stage.Match.PendingAttackers;
+        if (loss == "propulsion")
+        {
+            foreach (Thruster thruster in stalledUnit.Thrusters)
+            {
+                thruster.enabled = false;
+            }
+        }
+
+        Durability core = stage.Base.Core.GetComponent<Durability>();
+        float coreDurability = core.currentDurability;
+        Check(loss + " fixture starts a wave", stage.BeginWave());
+        int slots = stage.Match.PendingAttackers;
         for (int i = 0; i < slots; i++)
         {
             stage.Match.RegisterAttacker("stall-fixture-" + i, slots);
             stage.Match.ResolveAttacker("stall-fixture-" + i, true);
         }
 
+        long settledCoins = stage.Match.Coins + stage.Match.PendingCoins;
         yield return 1.5f;
+        string expectedReason = loss == "stall" ? "Recovery stalled" : loss == "deadline" ? "Recovery time limit" : "Insufficient powered";
         Check(
-            "Production recovery stall causes defeat",
-            stage.Settled && stage.Status.Contains("Recovery stalled"));
+            loss + " records only a failed flight",
+            stage.FlightGuidance.FailedCount == 1 && !stage.Fleet.Ships[0].IsAlive && !stage.Settled && stage.FlightGuidance.LastFailureReason?.StartsWith(expectedReason) == true);
         Check(
-            "Stalled recovery cannot settle pending reward",
-            stage.Match.PendingCoins == 0 && stage.Match.Phase == SiegePhase.Defeat);
+            loss + " preserves core durability and settles the pending reward",
+            stage.Base.IsAlive && core.currentDurability == coreDurability && stage.Match.PendingCoins == 0 && stage.Match.Coins == settledCoins && stage.Match.Phase == SiegePhase.Intermission);
         modes.ReturnToBuild();
         while (modes.State == GameModeState.Returning)
         {

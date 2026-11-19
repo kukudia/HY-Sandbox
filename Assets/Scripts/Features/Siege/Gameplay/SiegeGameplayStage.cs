@@ -495,12 +495,6 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         }
 
         flight.Tick(Time.fixedDeltaTime);
-        if (Match.Phase == SiegePhase.Returning && flight.FailedCount > 0)
-        {
-            Settle("Recovery failed: " + flight.LastFailureReason);
-            return;
-        }
-
         if (Match.Phase != SiegePhase.Returning || !returning || !flight.IsComplete)
         {
             return;
@@ -587,7 +581,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
 
         Settled = true;
         defeatAt = Time.unscaledTime + defeatPresentationDelay;
-        // Timeouts use the same visible core-loss ending. Natural destruction has already queued its explosion.
+        // The battle deadline uses the same visible core-loss ending as a destroyed base.
         if (Base != null && Base.IsAlive && !Base.Core.ExplosionQueued)
         {
             DestroyManager.DestroyTarget(Base.Core.gameObject);

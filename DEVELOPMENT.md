@@ -28,7 +28,7 @@ ESC及工坊顶部按钮进入真实暂停界面，冻结游戏时间、相机�
 
 SiegeGameplay移除Construction Controls/SiegeConstructionPanel与Return按钮；底部居中只在部署/整备显示StartNextWave，基地有伤时显示手动维修按钮。顶部中央为准备/战斗/返航倒计时，左侧保留核心、关注友舰与精简经济状态。战斗界面改为半透明蓝灰底、青色友军与珊瑚红威胁；共享威胁箭头使用真实uGUI矢量组件。Debug已升级为六项开关、阵营筛选与轨迹，见本页夜间改进。
 
-`SiegeGameplayStage.Clock`在Inspector配置战斗180秒、返航90秒、连续15秒位移不足2米停滞失败；模拟暂停不计时。`SiegeSettings.WaveSpawnDelay`默认5秒，每波重新准备，战斗180秒从准备结束后计算。时限/返航失败走核心销毁与统一失败结果；普通友舰死亡不调用通用PlayerDeath。核心爆炸后1.5秒显示专用失败面板，Continue通过菜单宿主或模式返回入口退出。成功返航仅自动尝试付费修复存活舰艇，基地保留伤势，手动维修仍需整备及足够金币。
+`SiegeGameplayStage.Clock`默认战斗180秒、返航90秒；导引舰连续15秒位移不足2米时只记为该舰无法入库。推进不足等导引失败同样只损失该舰；返航到期时将仍未完成的舰结为无法入库。所有舰艇有结果后结算波次收益并进入整备，返航失败不会损伤核心。暂停不计时；每波默认准备5秒，准备结束才开始计算战斗时限。战斗超时仍触发基地失败。已入库的舰艇可自动付费修复，基地仍需手动维修。
 
 新增入口：`Siege/Gameplay/SiegePhaseClock.cs`负责时限与逐舰进展；`Siege/Gameplay/Interface/SiegeCombatHud.cs`负责战斗展示/动作；`Combat/Interface/Threats/CombatThreatIcon.cs`负责无贴图箭头；`Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs`原位迁移并保存Prefab/场景，不重建用户共享HUD实例。详情见[专项验证](Docs/Validation/2026-11-17-siege-flow-polish.md)。
 

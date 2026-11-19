@@ -161,7 +161,7 @@ flowchart TD
     I["SiegeObserverCamera.Exit()"]
     click I "../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L209" "打开源码"
     J["SiegeGameplayStage.Exit()"]
-    click J "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L642" "打开源码"
+    click J "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L636" "打开源码"
     B --> A
     C --> A
     D --> E
@@ -189,7 +189,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs|PointerOverInterface -->
 - [SiegeObserverCamera.Exit](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L209)
 <!-- source: Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs|Exit -->
-- [SiegeGameplayStage.Exit](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L642)
+- [SiegeGameplayStage.Exit](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L636)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Exit -->
 
 ## 非凸浮岛接触与独立Player验证
@@ -275,11 +275,11 @@ flowchart TD
     G["HangarShellBlueprint.Tiles()"]
     click G "../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L16" "打开源码"
     H["SiegeReturnFlight.BuildRoute()"]
-    click H "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L204" "打开源码"
+    click H "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L220" "打开源码"
     I["SiegeReturnFlight.BuildRoofRoute()"]
-    click I "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L295" "打开源码"
+    click I "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L311" "打开源码"
     J["SiegeReturnFlight.Tick()"]
-    click J "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L353" "打开源码"
+    click J "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L369" "打开源码"
     K["ChangeHangarEntranceAction.Undo()"]
     click K "../Assets/Scripts/Features/Siege/Hangars/ChangeHangarEntranceAction.cs#L17" "打开源码"
     L["ChangeHangarEntranceAction.Redo()"]
@@ -310,11 +310,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs|TryRestore -->
 - [HangarShellBlueprint.Tiles](../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L16)
 <!-- source: Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs|Tiles -->
-- [SiegeReturnFlight.BuildRoute](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L204)
+- [SiegeReturnFlight.BuildRoute](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L220)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|BuildRoute -->
-- [SiegeReturnFlight.BuildRoofRoute](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L295)
+- [SiegeReturnFlight.BuildRoofRoute](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L311)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|BuildRoofRoute -->
-- [SiegeReturnFlight.Tick](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L353)
+- [SiegeReturnFlight.Tick](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L369)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|Tick -->
 - [ChangeHangarEntranceAction.Undo](../Assets/Scripts/Features/Siege/Hangars/ChangeHangarEntranceAction.cs#L17)
 <!-- source: Assets/Scripts/Features/Siege/Hangars/ChangeHangarEntranceAction.cs|Undo -->
@@ -967,11 +967,11 @@ flowchart TD
     L["BuildingRefit.Apply()"]
     click L "../Assets/Scripts/Features/World/Buildings/Topology/BuildingRefit.cs#L9" "打开源码"
     M["SiegeGameplayStage.Settle()"]
-    click M "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L576" "打开源码"
+    click M "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L570" "打开源码"
     N["GameModeController.ReturnRoutine()"]
     click N "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L332" "打开源码"
     O["SiegeGameplayStage.Exit()"]
-    click O "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L642" "打开源码"
+    click O "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L636" "打开源码"
     P["PlayDraft.Restore()"]
     click P "../Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs#L55" "打开源码"
     A -.->|保存后选择模式| B
@@ -1016,11 +1016,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeBase.cs|Repair -->
 - [BuildingRefit.Apply](../Assets/Scripts/Features/World/Buildings/Topology/BuildingRefit.cs#L9)
 <!-- source: Assets/Scripts/Features/World/Buildings/Topology/BuildingRefit.cs|Apply -->
-- [SiegeGameplayStage.Settle](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L576)
+- [SiegeGameplayStage.Settle](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L570)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Settle -->
 - [GameModeController.ReturnRoutine](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L332)
 <!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|ReturnRoutine -->
-- [SiegeGameplayStage.Exit](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L642)
+- [SiegeGameplayStage.Exit](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L636)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Exit -->
 - [PlayDraft.Restore](../Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs#L55)
 <!-- source: Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs|Restore -->
@@ -1144,7 +1144,7 @@ flowchart TD
     M["SiegeReturnFlight.BeginReturn()"]
     click M "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L73" "打开源码"
     N["SiegeReturnFlight.Tick()"]
-    click N "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L353" "打开源码"
+    click N "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L369" "打开源码"
     O["HangarModule.FixedUpdate()"]
     click O "../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L264" "打开源码"
     P["SiegeFleet.Scrap()"]
@@ -1156,13 +1156,13 @@ flowchart TD
     S["SiegeFleet.GetHangar()"]
     click S "../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L66" "打开源码"
     T["SiegeReturnFlight.Stop()"]
-    click T "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L573" "打开源码"
+    click T "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L589" "打开源码"
     U["SiegeSession.FixedUpdate()"]
     click U "../Assets/Scripts/Features/Siege/SiegeSession.cs#L451" "打开源码"
     V["SiegeGameplayStage.FixedUpdate()"]
     click V "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L484" "打开源码"
     W["SiegeReturnFlight.PublishPropulsion()"]
-    click W "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L493" "打开源码"
+    click W "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L509" "打开源码"
     X["Thruster.SetGuidanceOutput()"]
     click X "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L47" "打开源码"
     Y["Thruster.BeginGuidance()"]
@@ -1172,7 +1172,7 @@ flowchart TD
     AA["Thruster.VisualizeThrust()"]
     click AA "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L260" "打开源码"
     AB["SiegeReturnFlight.ReleasePropulsion()"]
-    click AB "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L544" "打开源码"
+    click AB "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L560" "打开源码"
     A -.->|确认放置| B
     B --> F
     C --> D
@@ -1228,7 +1228,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|ResolveAttacker -->
 - [SiegeReturnFlight.BeginReturn](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L73)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|BeginReturn -->
-- [SiegeReturnFlight.Tick](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L353)
+- [SiegeReturnFlight.Tick](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L369)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|Tick -->
 - [HangarModule.FixedUpdate](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L264)
 <!-- source: Assets/Scripts/Features/Siege/Hangars/HangarModule.cs|FixedUpdate -->
@@ -1240,13 +1240,13 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeBase.cs|Repair -->
 - [SiegeFleet.GetHangar](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L66)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs|GetHangar -->
-- [SiegeReturnFlight.Stop](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L573)
+- [SiegeReturnFlight.Stop](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L589)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|Stop -->
 - [SiegeSession.FixedUpdate](../Assets/Scripts/Features/Siege/SiegeSession.cs#L451)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|FixedUpdate -->
 - [SiegeGameplayStage.FixedUpdate](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L484)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|FixedUpdate -->
-- [SiegeReturnFlight.PublishPropulsion](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L493)
+- [SiegeReturnFlight.PublishPropulsion](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L509)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|PublishPropulsion -->
 - [Thruster.SetGuidanceOutput](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L47)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|SetGuidanceOutput -->
@@ -1256,7 +1256,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|EndGuidance -->
 - [Thruster.VisualizeThrust](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L260)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|VisualizeThrust -->
-- [SiegeReturnFlight.ReleasePropulsion](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L544)
+- [SiegeReturnFlight.ReleasePropulsion](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L560)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|ReleasePropulsion -->
 
 ## GPU特效对象池与释放
@@ -2004,7 +2004,7 @@ flowchart TD
     V["WorldSessionManager.StopSession()"]
     click V "../Assets/Scripts/Features/World/WorldSessionManager.cs#L545" "打开源码"
     W["SiegeGameplayStage.Exit()"]
-    click W "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L642" "打开源码"
+    click W "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L636" "打开源码"
     X["PlayDraft.Restore()"]
     click X "../Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs#L55" "打开源码"
     Y["GameModeController.Retry()"]
@@ -2083,7 +2083,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|ReturnRoutine -->
 - [WorldSessionManager.StopSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L545)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|StopSession -->
-- [SiegeGameplayStage.Exit](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L642)
+- [SiegeGameplayStage.Exit](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L636)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Exit -->
 - [PlayDraft.Restore](../Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs#L55)
 <!-- source: Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs|Restore -->
@@ -7318,7 +7318,7 @@ flowchart TD
     Y["SiegeGameplayStage.Update()"]
     click Y "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L303" "打开源码"
     Z["SiegeGameplayStage.Settle()"]
-    click Z "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L576" "打开源码"
+    click Z "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L570" "打开源码"
     AA["SiegeGameplayStage.BeginWave()"]
     click AA "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L271" "打开源码"
     AB["SiegeWaveDirector.BeginWave()"]
@@ -7326,7 +7326,7 @@ flowchart TD
     Q["SiegeCombatHud.Update()"]
     click Q "../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L91" "打开源码"
     R["SiegeGameplayStage.Exit()"]
-    click R "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L642" "打开源码"
+    click R "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L636" "打开源码"
     S["SiegeCombatHud.Exit()"]
     click S "../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L74" "打开源码"
     T["CombatHudPanels.Restore()"]
@@ -7339,6 +7339,14 @@ flowchart TD
     click AD "../Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs#L37" "打开源码"
     AE["CombatHudPanels.Update()"]
     click AE "../Assets/Scripts/Features/Combat/Interface/Panels/CombatHudPanels.cs#L116" "打开源码"
+    AF["SiegeReturnFlight.FailReturn()"]
+    click AF "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L78" "打开源码"
+    AG["SiegeReturnFlight.Finish()"]
+    click AG "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L527" "打开源码"
+    AH["SiegeGameplayStage.FixedUpdate()"]
+    click AH "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L484" "打开源码"
+    AI["SiegeMatch.CompleteReturn()"]
+    click AI "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L189" "打开源码"
     A --> B
     B --> C
     D --> E
@@ -7359,8 +7367,11 @@ flowchart TD
     AA --> W
     AA --> AB
     Y --> X
-    Y -->|时限或停滞失败| Z
+    Y -->|战斗超时| Z
     Z -.->|延后爆炸结果展示| Q
+    X -->|返航停滞或到期| AF
+    AF -->|仅结算未归舰艇| AG
+    AH -->|全舰入库或报废| AI
 ```
 
 - [SiegeGameplayStage.Enter](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L96)
@@ -7403,7 +7414,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegePhaseClock.cs|Tick -->
 - [SiegeGameplayStage.Update](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L303)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Update -->
-- [SiegeGameplayStage.Settle](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L576)
+- [SiegeGameplayStage.Settle](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L570)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Settle -->
 - [SiegeGameplayStage.BeginWave](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L271)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|BeginWave -->
@@ -7411,7 +7422,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs|BeginWave -->
 - [SiegeCombatHud.Update](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L91)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs|Update -->
-- [SiegeGameplayStage.Exit](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L642)
+- [SiegeGameplayStage.Exit](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L636)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Exit -->
 - [SiegeCombatHud.Exit](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L74)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs|Exit -->
@@ -7425,3 +7436,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Interface/Notifications/CombatNotifications.cs|SetToolsOpen -->
 - [CombatHudPanels.Update](../Assets/Scripts/Features/Combat/Interface/Panels/CombatHudPanels.cs#L116)
 <!-- source: Assets/Scripts/Features/Combat/Interface/Panels/CombatHudPanels.cs|Update -->
+- [SiegeReturnFlight.FailReturn](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L78)
+<!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|FailReturn -->
+- [SiegeReturnFlight.Finish](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L527)
+<!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|Finish -->
+- [SiegeGameplayStage.FixedUpdate](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L484)
+<!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|FixedUpdate -->
+- [SiegeMatch.CompleteReturn](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L189)
+<!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|CompleteReturn -->

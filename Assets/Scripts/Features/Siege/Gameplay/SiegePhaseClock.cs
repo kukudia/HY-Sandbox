@@ -68,7 +68,13 @@ public sealed class SiegePhaseClock
         Remaining = Mathf.Max(0f, Remaining - (delta - preparationStep));
         if (Remaining <= 0f)
         {
-            return phase == SiegePhase.Battle ? "Wave time limit exceeded" : "Recovery time limit exceeded";
+            if (phase == SiegePhase.Battle)
+            {
+                return "Wave time limit exceeded";
+            }
+
+            guidance?.FailReturn(null, "Recovery time limit exceeded.");
+            return null;
         }
 
         StallRemaining = stalledSeconds;
@@ -104,11 +110,14 @@ public sealed class SiegePhaseClock
                 sample.idle += delta;
             }
 
-            StallRemaining = Mathf.Min(StallRemaining, Mathf.Max(0f, stalledSeconds - sample.idle));
             if (sample.idle >= stalledSeconds)
             {
-                return "Recovery stalled: " + ship.DisplayName;
+                guidance.FailReturn(ship, "Recovery stalled: " + ship.DisplayName);
+                progress.Remove(ship);
+                continue;
             }
+
+            StallRemaining = Mathf.Min(StallRemaining, stalledSeconds - sample.idle);
         }
 
         return null;

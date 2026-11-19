@@ -75,6 +75,22 @@ public sealed class SiegeReturnFlight
         Begin(true);
     }
 
+    internal void FailReturn(SiegeFleetEntry entry, string reason)
+    {
+        if (!IsReturning)
+        {
+            return;
+        }
+
+        foreach (Flight flight in flights)
+        {
+            if (!flight.finished && (entry == null || flight.entry == entry))
+            {
+                Finish(flight, false, reason);
+            }
+        }
+    }
+
     private void Begin(bool returning)
     {
         Stop();
