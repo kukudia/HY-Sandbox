@@ -372,7 +372,7 @@ internal sealed class NavigationPrediction
                 hull.extents + Vector3.one * reach,
                 overlaps,
                 Quaternion.identity,
-                layers,
+                layers & ~ControlUnit.DebrisMask,
                 QueryTriggerInteraction.Ignore);
             if (count < overlaps.Length || overlaps.Length >= MaximumColliders)
             {

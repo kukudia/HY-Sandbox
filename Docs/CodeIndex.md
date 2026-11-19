@@ -2912,8 +2912,8 @@ HY-Sandbox/
 | SiegeBuildingDamageChecks | [`void CheckExplosiveLoss(List<string> checks, bool projectile)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L88) | private static |
 | SiegeBuildingDamageChecks | [`void CheckImmediate(List<string> checks)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L142) | private static |
 | SiegeBuildingDamageChecks | [`void CheckSecondaryFragments(List<string> checks)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L167) | private static |
-| SiegeBuildingDamageChecks | [`GameObject CreateTower(bool reverse, out WorldBuildingManager manager, out BuildingRuntime tower, int height = 2)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L202) | private static |
-| SiegeBuildingDamageChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L234) | private static |
+| SiegeBuildingDamageChecks | [`GameObject CreateTower(bool reverse, out WorldBuildingManager manager, out BuildingRuntime tower, int height = 2)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L214) | private static |
+| SiegeBuildingDamageChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L246) | private static |
 
 ## Assets/Editor/Siege/Validation/Buildings/SiegeBuildingGraphChecks.cs
 
@@ -6848,35 +6848,37 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Block | [`void CollectRuntimeNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L62) | internal |
-| Block | [`void RefreshRuntimeConnectionPose()`](../Assets/Scripts/Features/Simulation/Block.cs#L67) | internal |
-| Block | [`void InvalidateRuntimeConnections()`](../Assets/Scripts/Features/Simulation/Block.cs#L72) | internal |
-| Block | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Block.cs#L77) | private |
-| Block | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Block.cs#L83) | private |
-| Block | [`void RestoreDimensions(int width, int height, int depth)`](../Assets/Scripts/Features/Simulation/Block.cs#L89) | internal |
-| Block | [`void Awake()`](../Assets/Scripts/Features/Simulation/Block.cs#L102) | private |
-| Block | [`void OnValidate()`](../Assets/Scripts/Features/Simulation/Block.cs#L139) | private |
-| Block | [`void RefreshAuthoringData()`](../Assets/Scripts/Features/Simulation/Block.cs#L156) | public |
-| Block | [`void RefreshRuntimeData(bool rebuildConnectors = false)`](../Assets/Scripts/Features/Simulation/Block.cs#L178) | public |
-| Block | [`void RefreshMass()`](../Assets/Scripts/Features/Simulation/Block.cs#L219) | public |
-| Block | [`void SetMassSettings(bool useCustomMass, float value)`](../Assets/Scripts/Features/Simulation/Block.cs#L232) | public |
-| Block | [`void Reset()`](../Assets/Scripts/Features/Simulation/Block.cs#L240) | private |
-| Block | [`void GenerateConnectionPoints()`](../Assets/Scripts/Features/Simulation/Block.cs#L245) | private |
-| Block | [`string GetDisplayInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L315) | public |
-| Block | [`string GenerateInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L320) | private |
-| Block | [`void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)`](../Assets/Scripts/Features/Simulation/Block.cs#L373) | private |
-| Block | [`Vector3 GetConnectorWorldPosition(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L387) | public |
-| Block | [`Vector3 GetConnectorWorldNormal(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L392) | public |
-| Block | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L397) | public |
-| Block | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/Block.cs#L402) | public |
-| Block | [`void CheckConnectionAfterPhysicsSync(List<Block> neighborsFound)`](../Assets/Scripts/Features/Simulation/Block.cs#L407) | internal |
-| Block | [`List<Block> Neighbors()`](../Assets/Scripts/Features/Simulation/Block.cs#L412) | public |
-| Block | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L420) | internal |
-| Block | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Block.cs#L425) | public |
-| Block | [`void RestoreConnectionParticipation()`](../Assets/Scripts/Features/Simulation/Block.cs#L431) | public |
-| Block | [`void RefreshConnectionStatus()`](../Assets/Scripts/Features/Simulation/Block.cs#L436) | internal |
-| Block | [`bool IsBlockedGhost()`](../Assets/Scripts/Features/Simulation/Block.cs#L444) | public |
-| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L484) | private |
+| Block | [`int ConnectionLayer(GameObject part)`](../Assets/Scripts/Features/Simulation/Block.cs#L55) | internal |
+| Block | [`void SetDebris(bool debris)`](../Assets/Scripts/Features/Simulation/Block.cs#L60) | internal |
+| Block | [`void CollectRuntimeNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L103) | internal |
+| Block | [`void RefreshRuntimeConnectionPose()`](../Assets/Scripts/Features/Simulation/Block.cs#L108) | internal |
+| Block | [`void InvalidateRuntimeConnections()`](../Assets/Scripts/Features/Simulation/Block.cs#L113) | internal |
+| Block | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Block.cs#L118) | private |
+| Block | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Block.cs#L124) | private |
+| Block | [`void RestoreDimensions(int width, int height, int depth)`](../Assets/Scripts/Features/Simulation/Block.cs#L130) | internal |
+| Block | [`void Awake()`](../Assets/Scripts/Features/Simulation/Block.cs#L143) | private |
+| Block | [`void OnValidate()`](../Assets/Scripts/Features/Simulation/Block.cs#L180) | private |
+| Block | [`void RefreshAuthoringData()`](../Assets/Scripts/Features/Simulation/Block.cs#L197) | public |
+| Block | [`void RefreshRuntimeData(bool rebuildConnectors = false)`](../Assets/Scripts/Features/Simulation/Block.cs#L219) | public |
+| Block | [`void RefreshMass()`](../Assets/Scripts/Features/Simulation/Block.cs#L260) | public |
+| Block | [`void SetMassSettings(bool useCustomMass, float value)`](../Assets/Scripts/Features/Simulation/Block.cs#L273) | public |
+| Block | [`void Reset()`](../Assets/Scripts/Features/Simulation/Block.cs#L281) | private |
+| Block | [`void GenerateConnectionPoints()`](../Assets/Scripts/Features/Simulation/Block.cs#L286) | private |
+| Block | [`string GetDisplayInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L356) | public |
+| Block | [`string GenerateInfo()`](../Assets/Scripts/Features/Simulation/Block.cs#L361) | private |
+| Block | [`void CreateConnectionPoint(ConnectType connectType, Vector3 localPos, Vector3 normal, int order)`](../Assets/Scripts/Features/Simulation/Block.cs#L414) | private |
+| Block | [`Vector3 GetConnectorWorldPosition(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L428) | public |
+| Block | [`Vector3 GetConnectorWorldNormal(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L433) | public |
+| Block | [`bool IsConnectorAvailableForPlacement(Connector connector)`](../Assets/Scripts/Features/Simulation/Block.cs#L438) | public |
+| Block | [`void CheckConnection()`](../Assets/Scripts/Features/Simulation/Block.cs#L443) | public |
+| Block | [`void CheckConnectionAfterPhysicsSync(List<Block> neighborsFound)`](../Assets/Scripts/Features/Simulation/Block.cs#L448) | internal |
+| Block | [`List<Block> Neighbors()`](../Assets/Scripts/Features/Simulation/Block.cs#L453) | public |
+| Block | [`void CollectNeighbors(List<Block> result)`](../Assets/Scripts/Features/Simulation/Block.cs#L461) | internal |
+| Block | [`void DisConnectAllConnectors(bool refreshNeighbors = true)`](../Assets/Scripts/Features/Simulation/Block.cs#L466) | public |
+| Block | [`void RestoreConnectionParticipation()`](../Assets/Scripts/Features/Simulation/Block.cs#L475) | public |
+| Block | [`void RefreshConnectionStatus()`](../Assets/Scripts/Features/Simulation/Block.cs#L483) | internal |
+| Block | [`bool IsBlockedGhost()`](../Assets/Scripts/Features/Simulation/Block.cs#L491) | public |
+| Block | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Block.cs#L531) | private |
 
 ## Assets/Scripts/Features/Simulation/Connections/BatchConnectionBuilder.cs
 
@@ -6992,12 +6994,12 @@ HY-Sandbox/
 | RuntimeGroupBuilder | [`void RefreshUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16) | internal static |
 | RuntimeGroupBuilder | [`void Refresh(ControlUnit unit, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L33) | internal |
 | RuntimeGroupBuilder | [`void Rebuild(List<Block> blocks, GroupPhysicsSettings settings, List<List<Block>> preparedGroups = null)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L54) | internal |
-| RuntimeGroupBuilder | [`Dictionary<Block, SourceSnapshot> CaptureSourceBodies(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L193) | private static |
-| RuntimeGroupBuilder | [`List<GroupPlan> PlanGroups(List<List<Block>> groups, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L222) | private static |
-| RuntimeGroupBuilder | [`void MergeFoundationGroups(List<GroupPlan> plans)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L254) | private static |
-| RuntimeGroupBuilder | [`Dictionary<SourceSnapshot, GroupPlan> SelectRetainedGroups(List<GroupPlan> plans, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L282) | private static |
-| IBlockFoundation | [`bool Supports(Block block)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L363) |  |
-| IBlockFoundation | [`void OnFragmentDetached(List<Block> blocks, ControlUnit fragment)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L364) |  |
+| RuntimeGroupBuilder | [`Dictionary<Block, SourceSnapshot> CaptureSourceBodies(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L203) | private static |
+| RuntimeGroupBuilder | [`List<GroupPlan> PlanGroups(List<List<Block>> groups, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L232) | private static |
+| RuntimeGroupBuilder | [`void MergeFoundationGroups(List<GroupPlan> plans)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L264) | private static |
+| RuntimeGroupBuilder | [`Dictionary<SourceSnapshot, GroupPlan> SelectRetainedGroups(List<GroupPlan> plans, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L292) | private static |
+| IBlockFoundation | [`bool Supports(Block block)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L373) |  |
+| IBlockFoundation | [`void OnFragmentDetached(List<Block> blocks, ControlUnit fragment)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L374) |  |
 
 ## Assets/Scripts/Features/Simulation/Groups/RuntimeGroupCleanup.cs
 
@@ -7141,30 +7143,32 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| ControlUnit | [`IReadOnlyList<Durability> GetDamageTargets()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L24) | internal |
-| ControlUnit | [`bool TryGetTargetBounds(out Bounds bounds)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L38) | internal |
-| ControlUnit | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L74) | private |
-| ControlUnit | [`void OnTransformChildrenChanged()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L84) | private |
-| ControlUnit | [`bool IsSceneSimulationActive(UnityEngine.SceneManagement.Scene scene)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L89) | public static |
-| ControlUnit | [`void NotifyFragmentCreated(ControlUnit fragment, int blockCount)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L108) | internal |
-| ControlUnit | [`void NotifyBlockDestroyed(Block block)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L115) | internal |
-| ControlUnit | [`void BindBuilding(BuildingRuntime building)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L154) | public |
-| ControlUnit | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L159) | private |
-| ControlUnit | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L167) | private |
-| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L195) | public |
-| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L207) | public |
-| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L232) | private |
-| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L244) | private |
-| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L291) | public |
-| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L351) | public |
-| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L372) | public |
-| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L380) | public |
-| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L390) | public |
-| ControlUnit | [`void SetPropulsionInput(Vector3 worldDirection, float throttle)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L395) | public |
-| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L402) | public |
-| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L407) | private |
-| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L451) | private |
-| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L462) | private |
+| ControlUnit | [`void SetDebris(bool debris)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L24) | internal |
+| ControlUnit | [`void RefreshCombatMembership()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L38) | private |
+| ControlUnit | [`IReadOnlyList<Durability> GetDamageTargets()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L61) | internal |
+| ControlUnit | [`bool TryGetTargetBounds(out Bounds bounds)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L75) | internal |
+| ControlUnit | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L111) | private |
+| ControlUnit | [`void OnTransformChildrenChanged()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L121) | private |
+| ControlUnit | [`bool IsSceneSimulationActive(UnityEngine.SceneManagement.Scene scene)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L126) | public static |
+| ControlUnit | [`void NotifyFragmentCreated(ControlUnit fragment, int blockCount)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L145) | internal |
+| ControlUnit | [`void NotifyBlockDestroyed(Block block)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L152) | internal |
+| ControlUnit | [`void BindBuilding(BuildingRuntime building)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L191) | public |
+| ControlUnit | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L197) | private |
+| ControlUnit | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L207) | private |
+| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L236) | public |
+| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L248) | public |
+| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L273) | private |
+| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L285) | private |
+| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L332) | public |
+| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L402) | public |
+| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L423) | public |
+| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L431) | public |
+| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L441) | public |
+| ControlUnit | [`void SetPropulsionInput(Vector3 worldDirection, float throttle)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L446) | public |
+| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L453) | public |
+| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L458) | private |
+| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L502) | private |
+| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L513) | private |
 
 ## Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs
 

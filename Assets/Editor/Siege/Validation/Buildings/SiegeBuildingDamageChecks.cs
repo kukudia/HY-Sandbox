@@ -172,6 +172,18 @@ public static class SiegeBuildingDamageChecks
             Block[] levels = tower.Blocks.ToArray();
             levels[0].GetComponent<Durability>().ApplyDamage(150f, null);
             ControlUnit first = levels[1].GetComponentInParent<ControlUnit>();
+            int debris = LayerMask.NameToLayer("Debris");
+            Check(
+                checks,
+                "Detached wall leaves combat roster and changes physical layer",
+                debris >= 0 && first.gameObject.layer == debris && levels[1].raycastCollider.gameObject.layer == debris && !ControlUnit.CombatUnits.Contains(first) && ControlUnit.RuntimeUnits.Contains(first));
+            var wall = levels[1].raycastCollider;
+            Physics.SyncTransforms();
+            Vector3 start = wall.bounds.center - Vector3.forward * 2f;
+            Check(
+                checks,
+                "Debris wall still occludes a muzzle ray",
+                Physics.RaycastAll(start, Vector3.forward, 4f, ~0, QueryTriggerInteraction.Ignore).Any(hit => hit.collider == wall));
             Check(
                 checks,
                 "released three-block wall shares one dynamic root",

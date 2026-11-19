@@ -51,6 +51,47 @@ public class Block : MonoBehaviour
     public string uniqueId;
     private StatusIcon _icon;
     private BlockConnections _connections;
+    private Dictionary<GameObject, int> debrisOriginalLayers;
+    internal int ConnectionLayer(GameObject part)
+    {
+        return debrisOriginalLayers != null && debrisOriginalLayers.TryGetValue(part, out int layer) ? layer : part.layer;
+    }
+
+    internal void SetDebris(bool debris)
+    {
+        if (debris == (debrisOriginalLayers != null))
+        {
+            return;
+        }
+
+        if (debris)
+        {
+            debrisOriginalLayers = new Dictionary<GameObject, int>();
+            foreach (Collider shape in GetComponentsInChildren<Collider>(true))
+            {
+                GameObject part = shape.gameObject;
+                // 保留专用触发器和 IgnoreCollision 等层的语义。
+                if (part.layer == 0 || part.layer == LayerMask.NameToLayer("Block"))
+                {
+                    debrisOriginalLayers.Add(part, part.layer);
+                    part.layer = ControlUnit.DebrisLayer;
+                }
+            }
+        }
+        else
+        {
+            foreach (var entry in debrisOriginalLayers)
+            {
+                if (entry.Key != null)
+                {
+                    entry.Key.layer = entry.Value;
+                }
+            }
+
+            debrisOriginalLayers = null;
+        }
+    }
+
     internal bool ExplosionQueued
     {
         get; set;
@@ -424,13 +465,19 @@ public class Block : MonoBehaviour
 
     public void DisConnectAllConnectors(bool refreshNeighbors = true)
     {
+        bool debris = debrisOriginalLayers != null;
+        SetDebris(false);
         Connections.DisConnectAllConnectors(refreshNeighbors);
+        SetDebris(debris);
     }
 
     // 修缮/底座重建显式恢复参与连接；恢复原碰撞层，不将特效/查询子节点强制改成Block层。
     public void RestoreConnectionParticipation()
     {
+        bool debris = debrisOriginalLayers != null;
+        SetDebris(false);
         Connections.RestoreParticipation();
+        SetDebris(debris);
     }
 
     internal void RefreshConnectionStatus()

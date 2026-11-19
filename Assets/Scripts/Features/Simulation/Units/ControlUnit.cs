@@ -13,6 +13,43 @@ public class ControlUnit : MonoBehaviour
     private static readonly List<ControlUnit> ActiveUnits = new List<ControlUnit>();
     public static IReadOnlyList<ControlUnit> RuntimeUnits => ActiveUnits;
 
+    private static readonly List<ControlUnit> combatUnits = new List<ControlUnit>();
+    public static IReadOnlyList<ControlUnit> CombatUnits => combatUnits;
+
+    internal const int DebrisLayer = 9;
+    internal const int DebrisMask = 1 << DebrisLayer;
+    private int originalRootLayer = -1;
+    internal bool IsDebris => originalRootLayer >= 0;
+
+    internal void SetDebris(bool debris)
+    {
+        if (debris && !IsDebris)
+        {
+            originalRootLayer = gameObject.layer;
+            gameObject.layer = DebrisLayer;
+        }
+        else if (!debris && IsDebris)
+        {
+            gameObject.layer = originalRootLayer;
+            originalRootLayer = -1;
+        }
+    }
+
+    private void RefreshCombatMembership()
+    {
+        if (isActiveAndEnabled && (HasValidCockpit || Building != null))
+        {
+            if (!combatUnits.Contains(this))
+            {
+                combatUnits.Add(this);
+            }
+        }
+        else
+        {
+            combatUnits.Remove(this);
+        }
+    }
+
     private readonly List<Durability> damageTargets = new List<Durability>();
     private int damageTargetsFrame = -1;
     private double damageTargetsStep = -1;
@@ -154,6 +191,7 @@ public class ControlUnit : MonoBehaviour
     public void BindBuilding(BuildingRuntime building)
     {
         Building = building;
+        RefreshCombatMembership();
     }
 
     private void OnEnable()
@@ -162,11 +200,14 @@ public class ControlUnit : MonoBehaviour
         {
             ActiveUnits.Add(this);
         }
+
+        RefreshCombatMembership();
     }
 
     private void OnDisable()
     {
         ActiveUnits.Remove(this);
+        combatUnits.Remove(this);
         SetMovementInput(Vector3.zero);
     }
 
@@ -312,6 +353,16 @@ public class ControlUnit : MonoBehaviour
 
         hasValidCockpit = cockpits.Length == 1;
         cockpit = hasValidCockpit ? cockpits[0] : null;
+        if (IsDebris && (HasValidCockpit || Building != null))
+        {
+            SetDebris(false);
+            foreach (Block block in GetComponentsInChildren<Block>(true))
+            {
+                block.SetDebris(false);
+            }
+        }
+
+        RefreshCombatMembership();
         if (hasValidCockpit)
         {
             faction = cockpit.faction;

@@ -148,7 +148,7 @@ public abstract class Turret : MonoBehaviour
     {
         UnitFaction faction = GetEffectiveTargetFaction();
         _target = _targetSelector.FindNearestTarget(
-            ControlUnit.RuntimeUnits,
+            ControlUnit.CombatUnits,
             Owner,
             faction,
             range,

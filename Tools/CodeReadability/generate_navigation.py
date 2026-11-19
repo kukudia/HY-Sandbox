@@ -358,9 +358,11 @@ def main():
             "G": "SalvageCleanupSession.CleanupGroupAfterDelay",
             "H": "SalvageCleanupSession.CleanupUnitAfterDelay",
             "I": "SalvageCleanupSession.WaitForFragment",
+            "J": "ControlUnit.SetDebris", "K": "Block.SetDebris",
         },
         [
             "A --> C", "A -->|安排清理至少等待保护期| D", "B --> C",
+            "B -->|断片分类| J", "B -->|迁移或恢复碰撞层| K",
             "E --> F", "G -.-> I", "I --> D", "H -.->|旧单位计时器重查新片段| D",
         ],
     )

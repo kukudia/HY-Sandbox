@@ -33,7 +33,7 @@ internal sealed class BlockConnections
             }
 
             int mask = ConnectionMask();
-            return (mask & (1 << _block.raycastCollider.gameObject.layer)) != 0;
+            return (mask & (1 << _block.ConnectionLayer(_block.raycastCollider.gameObject))) != 0;
         }
     }
 
@@ -190,7 +190,7 @@ internal sealed class BlockConnections
         Vector3 probeCenter = worldPos + worldNormal * connectionProbeOffset;
         int hitCount;
         // Retry full buffers so dense collider arrangements cannot truncate the query.
-        int blockLayer = ConnectionMask();
+        int blockLayer = ConnectionMask() | ControlUnit.DebrisMask;
         while (true)
         {
             SimulationWorkMetrics.RecordPhysicsNeighborQuery();

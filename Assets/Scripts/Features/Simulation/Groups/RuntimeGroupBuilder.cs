@@ -136,6 +136,16 @@ internal sealed class RuntimeGroupBuilder
             }
 
             plan.Unit.RefreshChildren();
+            if (plan.Source != null && plan.Unit != plan.Source.Unit && !plan.Unit.HasValidCockpit)
+            {
+                plan.Unit.SetDebris(true);
+            }
+
+            foreach (Block block in plan.Blocks)
+            {
+                block.SetDebris(plan.Unit.IsDebris);
+            }
+
             if (!plan.OnFoundation && !plan.Unit.HasAnyCockpit)
             {
                 FragmentLifetime.Mark(plan.Unit.gameObject);

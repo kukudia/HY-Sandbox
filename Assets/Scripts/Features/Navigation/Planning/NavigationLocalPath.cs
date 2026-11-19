@@ -438,7 +438,7 @@ internal sealed class NavigationLocalPath
                 Vector3.one * (radius + horizontal + 24f),
                 overlaps,
                 Quaternion.identity,
-                layers,
+                layers & ~ControlUnit.DebrisMask,
                 QueryTriggerInteraction.Ignore);
             if (count < overlaps.Length || overlaps.Length >= 4096)
             {
