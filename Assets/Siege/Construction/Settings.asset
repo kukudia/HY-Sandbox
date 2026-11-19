@@ -19,6 +19,8 @@ MonoBehaviour:
     blueprint: {fileID: 4900000, guid: 7740463fee0319a4894ebfff55159b0d, type: 3}
   - name: Twin Foundry
     blueprint: {fileID: 4900000, guid: cbd5d1bde6b8968458ad35499fda5988, type: 3}
+  - name: Meridian Airworks
+    blueprint: {fileID: 4900000, guid: 6f93aea5763d6c245bfa0eaf6b9dd8d6, type: 3}
   combat: {fileID: 11400000, guid: 7d86578a67d430847adac14d62c54446, type: 2}
   starter: {fileID: 4900000, guid: e350b37447621b9449103dd05cfec965, type: 3}
   coinsPerCell: 5

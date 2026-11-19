@@ -1,4 +1,4 @@
-﻿// 职责：制作三个可独立编辑的官方基地示例，使用真实材质、仓储、无人机、电网和模块机库。
+// 职责：制作可独立编辑的官方基地示例，使用真实材质、仓储、无人机、电网和模块机库。
 // 入口：Generate() / CreateDesign()；仅更新声明的官方资源，先备份，不改个人蓝图。
 using System;
 using System.Collections.Generic;
@@ -13,16 +13,18 @@ public static class SiegeBaseExamplesAuthoring
     {
         "Assets/Siege/Construction/StarterHangar.json",
         "Assets/Siege/Construction/Examples/LogisticsRoof.json",
-        "Assets/Siege/Construction/Examples/TwinFoundry.json"
+        "Assets/Siege/Construction/Examples/TwinFoundry.json",
+        "Assets/Siege/Construction/Examples/MeridianAirworks.json"
     };
     public static readonly string[] Names =
     {
         "Starter Bastion",
         "Skyline Logistics",
-        "Twin Foundry"
+        "Twin Foundry",
+        "Meridian Airworks"
     };
     private const string SettingsPath = "Assets/Siege/Construction/Settings.asset";
-    [MenuItem("HY-Sandbox/Siege/Examples/Generate Three Base Examples")]
+    [MenuItem("HY-Sandbox/Siege/Examples/Generate Base Examples")]
     public static string Generate()
     {
         if (EditorApplication.isPlaying)
@@ -87,7 +89,7 @@ public static class SiegeBaseExamplesAuthoring
         EditorUtility.SetDirty(settings);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        return "Three official bases saved; originals backed up to " + backup;
+        return "Official bases saved; originals backed up to " + backup;
     }
 
     public static BlockDataList CreateDesign(int index)
@@ -101,6 +103,13 @@ public static class SiegeBaseExamplesAuthoring
         {
             siegeCoreId = "example-" + index + "-core"
         };
+        if (index == 3)
+        {
+            BuildAirworks(design);
+            design.foundation = BuildingFootprint.Calculate(design.blocks, 2);
+            return design;
+        }
+
         if (index == 2)
         {
             Hangar(design, "west-bay", new Vector3(-13, 5, 2), HangarEntrance.Front);
@@ -164,6 +173,73 @@ public static class SiegeBaseExamplesAuthoring
 
         design.foundation = BuildingFootprint.Calculate(design.blocks, 2);
         return design;
+    }
+
+    private static void BuildAirworks(BlockDataList design)
+    {
+        Core(design, 0);
+        // Set back the glazed watch room above two open galleries. The core shares
+        // their central axis while corner columns carry the upper floors.
+        for (int level = 0; level < 3; level++)
+        {
+            int radius = level == 2 ? 4 : 6;
+            int floor = 7 + level * 6;
+            for (int x = -radius; x <= radius; x += 2)
+            {
+                for (int z = -radius; z <= radius; z += 2)
+                {
+                    string tag = level + "/" + x + "/" + z;
+                    Add(design, "deck-" + tag, "Blocks/2x2x2", new Vector3(x, floor, z), level == 1 ? "wood" : "metal");
+                    bool corner = Mathf.Abs(x) == radius && Mathf.Abs(z) == radius;
+                    bool window = level == 2 && (Mathf.Abs(x) == radius || Mathf.Abs(z) == radius);
+                    if (corner || window)
+                    {
+                        for (int y = floor - 4; y < floor; y += 2)
+                        {
+                            Add(design, "frame-" + tag + "/" + y, "Blocks/2x2x2", new Vector3(x, y, z), corner ? "stone" : "glass");
+                        }
+
+                        if (level == 0)
+                        {
+                            Add(design, "foot-" + tag, "Blocks/2x2x2", new Vector3(x, 1, z), "stone");
+                        }
+                    }
+                }
+            }
+        }
+
+        foreach (int side in new[] { -1, 1 })
+        {
+            int x = side * 22;
+            BlockData large = Add(design, "heavy-bay-" + side, "Hangars/Hangar", new Vector3(x, 5, 14));
+            large.x = 20;
+            large.y = 10;
+            large.z = 24;
+            BlockData small = Add(design, "lift-bay-" + side, "Hangars/Hangar", new Vector3(x, 3, -18));
+            small.x = 12;
+            small.y = 6;
+            small.z = 16;
+            small.hangarEntrance = HangarEntrance.Roof;
+
+            // Repeated loading docks serve the lane between each pair of hangars.
+            for (int dock = 0; dock < 2; dock++)
+            {
+                int serviceX = side * (15 + 14 * dock);
+                Service(design, serviceX, -3, 2);
+                Add(design, "secondary-store-" + serviceX, "Blocks/CargoHold", new Vector3(serviceX + 4, 1, -7));
+            }
+
+            foreach (int z in new[] { -22, -2, 22 })
+            {
+                Defense(design, side * 39, z, z != -2);
+            }
+
+            // Low inset guide strips mark the apron edges without crossing a bay mouth.
+            for (int z = 5; z <= 25; z += 4)
+            {
+                Add(design, "apron-" + side + "/" + z, "Blocks/2x1x1", new Vector3(side * 9, .5f, z + .5f), "stone");
+            }
+        }
     }
 
     private static void Hangar(BlockDataList design, string id, Vector3 position, HangarEntrance entrance)

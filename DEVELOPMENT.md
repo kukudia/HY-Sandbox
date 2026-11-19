@@ -207,7 +207,7 @@ BuildingFoundationData的offsetX/offsetZ缺省0兼容旧坐标。相关入口：
 
 清波进入 **Returning**，击杀/清波/连击收益暂存PendingCoins，锁定购买和下一波。舰船按门外航点、对准、入库自动导航；门口占用阻止关门。持续失去供电/推进能力、机库损毁或返航超时的舰船自动报废。全部存活舰入库或报废后一次性结算，再按原设计和现有金币自动修复基地（含机库）及舰船；余额/净空不足不扣费。导航参数在两个宿主Inspector的Flight Settings中，使用实际有电发动机能力限制辅助刚体推力，仅在达到停泊位置/速度/角度容差后校准最终泊位，不远距离传送舰艇。战斗损伤不回写设计。
 
-预研 `Siege.unity` 使用保留原基地布局的 `BastionHangars.json` 扩建副本，三个默认大机库替换方形占位，原 `BastionBase.json` 保留。正式Base Example扩为三套：Starter Bastion（前门堡垒）、Skyline Logistics（顶门物流站）与Twin Foundry（前门+顶门双库）。每套均使用金属/木材/石头/玻璃、三类Hold和维修/收集Bot，功能模块配置真实供电。`SiegeBaseExamplesAuthoring.Generate()`保存真实JSON与配置引用并备份被替换的官方示例；旧制作入口委托同一工具，个人基地库保留。玩家基地按设计实际机库数量生成，最多6；没有机库仍可用建筑炮塔守波。制作入口：`HangarPrefabAuthoring.Generate()`、`HangarSceneIntegration.Install()`、`SiegeHangarInterfaceAuthoring.Install()`；重新运行较早的基地制作工具后，应再运行机库接线工具恢复新增按钮。
+预研 `Siege.unity` 使用保留原基地布局的 `BastionHangars.json` 扩建副本，三个默认大机库替换方形占位，原 `BastionBase.json` 保留。正式Base Example共四套：Starter Bastion（前门堡垒）、Skyline Logistics（顶门物流站）、Twin Foundry（前门+顶门双库）与 Meridian Airworks（86×57 航空基地，双大前门、双小顶门，中心三层指挥楼）。每套均使用金属/木材/石头/玻璃、三类Hold和维修/收集Bot，功能模块配置真实供电。`SiegeBaseExamplesAuthoring.Generate()`保存真实JSON与配置引用并备份被替换的官方示例；旧制作入口委托同一工具，个人基地库保留。玩家基地按设计实际机库数量生成，最多6；没有机库仍可用建筑炮塔守波。制作入口：`HangarPrefabAuthoring.Generate()`、`HangarSceneIntegration.Install()`、`SiegeHangarInterfaceAuthoring.Install()`；重新运行较早的基地制作工具后，应再运行机库接线工具恢复新增按钮。
 
 ```text
 Assets/Scripts/Features/Siege/

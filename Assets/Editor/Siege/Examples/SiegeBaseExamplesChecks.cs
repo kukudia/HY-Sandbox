@@ -1,4 +1,4 @@
-﻿// 职责：检查三份官方基地的实际目录、材质、无重叠、地面支撑、电网及机器人依赖。
+// 职责：检查官方基地的实际目录、材质、无重叠、地面支撑、电网及机器人依赖。
 // 入口：RunData() / RunPlay()；Play只创建远端临时实例，不读写个人蓝图。
 using System;
 using System.Collections.Generic;
@@ -28,8 +28,8 @@ public static class SiegeBaseExamplesChecks
             SerializedProperty examples = serialized.FindProperty("examples");
             Check(
                 report,
-                examples != null && examples.arraySize == 3,
-                "Settings contains exactly three base examples");
+                examples != null && examples.arraySize == SiegeBaseExamplesAuthoring.Paths.Length,
+                "Settings contains the official base examples");
             for (int index = 0; index < SiegeBaseExamplesAuthoring.Paths.Length; index++)
             {
                 TextAsset asset = AssetDatabase.LoadAssetAtPath<TextAsset>(SiegeBaseExamplesAuthoring.Paths[index]);
@@ -47,7 +47,7 @@ public static class SiegeBaseExamplesChecks
                     report,
                     new[] { "Blocks/CargoHold", "Blocks/CoinHold", "Blocks/TechnologyHold", "Blocks/RepairBotContianer", "Blocks/CollectionBotContainer" }.All(resource => design.blocks.Any(block => block.resourcePath == resource)),
                     "Real hold and both bot modules used: " + index);
-                int expectedHangars = index == 2 ? 2 : 1;
+                int expectedHangars = index == 3 ? 4 : index == 2 ? 2 : 1;
                 Check(
                     report,
                     design.blocks.Count(block => block.resourcePath == "Hangars/Hangar") == expectedHangars,
