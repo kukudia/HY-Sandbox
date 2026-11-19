@@ -265,7 +265,7 @@ public static class SiegeConstructionPlayChecks
         Check(health.currentDurability == health.maxDurability, "Surviving module durability restored");
         Block removed = stage.Base.Building.Blocks.Last(b => b != stage.Base.Core);
         string removedId = removed.uniqueId;
-        stage.Base.Building.DestroyBlock(removed);
+        DestroyManager.DestroyTarget(removed.gameObject);
         yield return null;
         Check(
             stage.Base.IsAlive && stage.Base.Quote() > 0,
@@ -306,7 +306,7 @@ public static class SiegeConstructionPlayChecks
             stage.Match.Phase == SiegePhase.Intermission && stage.Match.DefeatedAttackers > 0,
             "Real enemy deaths clear wave and award rewards");
         Check(!PlayManager.instance.playMode, "Intermission suspends simulation");
-        stage.Base.Building.DestroyBlock(stage.Base.Core);
+        DestroyManager.DestroyTarget(stage.Base.Core.gameObject);
         yield return null;
         Check(stage.Settled && stage.Match.Phase == SiegePhase.Defeat, "Core destruction settles immediately");
         Check(!stage.BeginWave() && !stage.Repair(), "Defeat prevents further combat/refit");

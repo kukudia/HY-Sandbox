@@ -1,6 +1,5 @@
-// 职责：在源PhysicsScene对受影响刚体施加有限冲量及双向碰撞保护；不破坏健康模块连接。
-// 入口：ApplyExplosionForce()；由 DestroyManager 在源模块移除与重组后调用。
-// 约束：本类仅负责断链与冲量；直接伤害由ExplosionDamageSession统一结算。
+// 职责：重组前按爆炸源概率断开本结构的方块；重组后按 PhysicsScene 施加有限冲量。
+// 入口：DisconnectBlocksInExplosionRange() / ApplyExplosionForce()。
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,18 +10,28 @@ internal static class ExplosionPropagation
     internal const float DefaultImpulseScale = 0.15f;
     internal const float DefaultMaximumSpeedChange = 3f;
     internal const float DefaultCollisionProtection = 3f;
-    internal static void ApplyDefaultExplosionForce(Block block)
+    internal static void DisconnectBlocksInExplosionRange(ControlUnit unit, Block source, Vector3 center)
     {
-        ControlUnit unit = block != null ? block.GetComponentInParent<ControlUnit>() : null;
-        ApplyExplosionForce(
-            block,
-            unit != null ? unit.runtimeUnitId : string.Empty,
-            unit != null ? unit.faction : UnitFaction.Enemy,
-            block != null ? block.transform.position : Vector3.zero,
-            DefaultUpwardsModifier,
-            DefaultImpulseScale,
-            DefaultMaximumSpeedChange,
-            DefaultCollisionProtection);
+        if (unit == null || source == null || !(source.explosionDisconnectProbability > 0f) || !(source.explosionRadius > 0f))
+        {
+            return;
+        }
+
+        float probability = Mathf.Clamp01(source.explosionDisconnectProbability);
+        float radiusSquared = source.explosionRadius * source.explosionRadius;
+        foreach (Block candidate in unit.GetComponentsInChildren<Block>())
+        {
+            if (candidate == source || !candidate.isActiveAndEnabled || candidate.GetComponentInParent<ControlUnit>() != unit || (candidate.transform.position - center).sqrMagnitude > radiusSquared)
+            {
+                continue;
+            }
+
+            if (probability >= 1f || Random.value < probability)
+            {
+                // Disconnect clears both ends. The ensuing structure refresh rebuilds the surviving graph once.
+                candidate.DisConnectAllConnectors(false);
+            }
+        }
     }
 
     internal static void ApplyExplosionForce(

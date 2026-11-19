@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 public class ControlUnit : MonoBehaviour
 {
+    internal BlockConnectionGraph Connections { get; } = new BlockConnectionGraph();
+
     private bool aiEligibilityInitialized;
     private bool wasAIEligible;
     private static readonly List<ControlUnit> ActiveUnits = new List<ControlUnit>();
@@ -45,6 +47,24 @@ public class ControlUnit : MonoBehaviour
         }
 
         return false;
+    }
+
+    internal ExplosionDamageSession DamageSession
+    {
+        get; set;
+    }
+
+    internal event System.Action<ControlUnit, int> FragmentCreated;
+    internal void NotifyFragmentCreated(ControlUnit fragment, int blockCount)
+    {
+        fragment.DamageSession = DamageSession;
+        FragmentCreated?.Invoke(fragment, blockCount);
+    }
+
+    internal event System.Action<Block> BlockDestroyed;
+    internal void NotifyBlockDestroyed(Block block)
+    {
+        BlockDestroyed?.Invoke(block);
     }
 
     public BuildingRuntime Building

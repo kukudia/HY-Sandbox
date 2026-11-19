@@ -265,6 +265,12 @@ public static class SiegeBuildingGraphChecks
                     Block block = Object.Instantiate(prefab, root.transform).GetComponent<Block>();
                     block.transform.SetLocalPositionAndRotation(Vector3.right * index, Quaternion.identity);
                     block.RefreshRuntimeData(true);
+                    if (building)
+                    {
+                        // Match WorldBuildingManager's authored runtime decoration policy.
+                        block.connectorPrefab = null;
+                    }
+
                     // Gizmo开关不应控制游戏内接缝装饰；两个领域故意采用相反值。
                     block.showConnectors = building;
                     blocks.Add(block);

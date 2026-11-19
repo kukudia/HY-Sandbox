@@ -1,5 +1,5 @@
 // 职责：拥有一栋世界建筑的方块、虚拟支撑范围与刚体；处理损坏、断裂和脱锚。
-// 入口：Initialize() / Activate() / DestroyBlock() / ReleaseAnchor() / Capture()。
+// 入口：Initialize() / Activate() / ReleaseAnchor() / Capture()；订阅所属单位的方块销毁通知维护主体快照。
 // 生命周期：世界存档只捕获主体；断裂残骸由 WorldBuildingManager 限量管理。
 using System;
 using System.Collections;
@@ -7,14 +7,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(ControlUnit), typeof(Rigidbody))]
-public sealed class BuildingRuntime : MonoBehaviour
+public sealed class BuildingRuntime : MonoBehaviour, IBlockFoundation
 {
     private WorldBuildingManager manager;
     private int hangarShellVersion;
     private string blueprintName;
     private string instanceId;
     private readonly List<Block> blocks = new List<Block>();
-    private readonly BlockConnectionGraph connections = new BlockConnectionGraph();
+    private BlockConnectionGraph Connections => GetComponent<ControlUnit>().Connections;
+
     private readonly Dictionary<Block, bool> groundSupport = new Dictionary<Block, bool>();
     private int groundRevision = -1;
     private Vector2Int groundFootprint;
@@ -25,8 +26,6 @@ public sealed class BuildingRuntime : MonoBehaviour
     public string BlueprintName => blueprintName;
 
     private Rigidbody body;
-    private int damageBatchDepth;
-    private bool structureDirty;
     public Vector2Int FootprintSize => new Vector2Int(foundationData.width, foundationData.length);
     // The offset preserves the authored blueprint origin when automatic cropping trims empty ground.
     public BuildingFoundationData Footprint => foundationData;
@@ -53,29 +52,6 @@ public sealed class BuildingRuntime : MonoBehaviour
         return true;
     }
 
-    internal void RefreshStructure()
-    {
-        Physics.SyncTransforms();
-        SplitDisconnected();
-        body.mass = TotalMass();
-        GetComponent<ControlUnit>().RefreshChildren();
-    }
-
-    internal void BeginDamageBatch()
-    {
-        damageBatchDepth++;
-    }
-
-    internal void EndDamageBatch()
-    {
-        damageBatchDepth--;
-        if (damageBatchDepth == 0 && structureDirty)
-        {
-            structureDirty = false;
-            RefreshStructure();
-        }
-    }
-
     public void Initialize(WorldBuildingManager owner, WorldBuildingState state)
     {
         IEnumerator work = InitializeRoutine(owner, state);
@@ -98,6 +74,9 @@ public sealed class BuildingRuntime : MonoBehaviour
         body.useGravity = true;
         ControlUnit unit = GetComponent<ControlUnit>();
         unit.BindBuilding(this);
+        unit.DamageSession = owner.DamageSession;
+        unit.FragmentCreated += owner.TrackFragment;
+        unit.BlockDestroyed += OnBlockDestroyed;
         unit.runtimeUnitId = instanceId;
         unit.faction = state.faction;
         transform.SetPositionAndRotation(state.position, state.rotation);
@@ -239,77 +218,26 @@ public sealed class BuildingRuntime : MonoBehaviour
         };
     }
 
-    public void DestroyBlock(Block block)
+    private void OnBlockDestroyed(Block block)
     {
-        if (block != null && block.canExplode)
+        if (blocks.Remove(block))
         {
-            // Own the outer scope before disabling the source, so its support refresh also
-            // completes before queued blast impulses are applied to newly created debris.
-            manager.ApplyBuildingLoss(this, () => DestroyBlockCore(block));
-        }
-        else
-        {
-            DestroyBlockCore(block);
-        }
-    }
-
-    private void DestroyBlockCore(Block block)
-    {
-        if (block == null || !blocks.Remove(block))
-        {
-            return;
-        }
-
-        BeginDamageBatch();
-        try
-        {
-            // Keep building and construct destruction consistent, including lethal impacts.
-            bool explode = block.canExplode;
-            if (!explode)
-            {
-                VisualEffectsManager.TryPlayBlockRemoved(block);
-            }
-
-            WreckSalvage.ReleaseContents(block.gameObject, GetComponent<ControlUnit>().faction);
-            block.gameObject.SetActive(false);
-            Destroy(block.gameObject);
-            structureDirty = true;
-            if (explode)
-            {
-                manager.ExplodeBlock(block);
-            }
-
             BlockDestroyed?.Invoke(block);
         }
-        finally
-        {
-            EndDamageBatch();
-        }
     }
 
-    private void SplitDisconnected()
+    float IBlockFoundation.RootMass => 1f;
+
+    bool IBlockFoundation.Supports(Block block)
     {
-        using SimulationWorkMetrics.Scope timing = SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.BuildingSupport, blocks.Count);
-        connections.Prepare(blocks, transform);
-        RigidbodyMotion motion = new RigidbodyMotion(body);
-        // 建筑与载具共享同一双侧邻接和分组算法；建筑只负责判断哪些分量仍连接虚拟地面。
-        foreach (List<Block> group in BlockGroupManager.GroupPreparedBlocks(blocks))
+        return HasPreparedGroundConnector(block);
+    }
+
+    void IBlockFoundation.OnFragmentDetached(List<Block> group, ControlUnit fragment)
+    {
+        foreach (Block block in group)
         {
-            bool supported = group.Exists(HasPreparedGroundConnector);
-            if (supported)
-            {
-                continue;
-            }
-
-            foreach (Block block in group)
-            {
-                blocks.Remove(block);
-            }
-
-            using (SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.BuildingDebris, group.Count))
-            {
-                manager.CreateDebris(group, body, motion);
-            }
+            blocks.Remove(block);
         }
     }
 
@@ -317,7 +245,7 @@ public sealed class BuildingRuntime : MonoBehaviour
     public bool HasFullFoundationSupport()
     {
         Physics.SyncTransforms();
-        connections.Prepare(blocks, transform);
+        Connections.Prepare(blocks, transform);
         foreach (List<Block> group in BlockGroupManager.GroupPreparedBlocks(blocks))
         {
             if (!group.Exists(HasPreparedGroundConnector))
@@ -332,10 +260,15 @@ public sealed class BuildingRuntime : MonoBehaviour
     private bool HasPreparedGroundConnector(Block block)
     {
         Vector2Int footprint = FootprintSize;
-        if (groundRevision != connections.Revision || groundFootprint != footprint)
+        if (!block.CanParticipateInConnections)
+        {
+            return false;
+        }
+
+        if (groundRevision != Connections.Revision || groundFootprint != footprint)
         {
             groundSupport.Clear();
-            groundRevision = connections.Revision;
+            groundRevision = Connections.Revision;
             groundFootprint = footprint;
         }
 

@@ -32,6 +32,7 @@ public sealed class WorldBuildingManager : MonoBehaviour
     private readonly WorldBuildingRenderCache renderCache = new WorldBuildingRenderCache();
     public bool SimulationEnabled { get; internal set; } = true;
     internal float LoadingFrameBudgetMilliseconds { get; set; } = 2f;
+    internal ExplosionDamageSession DamageSession => damage;
     public ProceduralVoxelWorld World => world;
     public WorldBuildingCatalog Catalog => catalog;
     public IReadOnlyList<BuildingRuntime> Buildings => buildings;
@@ -187,6 +188,13 @@ public sealed class WorldBuildingManager : MonoBehaviour
 
     internal void OptimizeVisuals(Block block)
     {
+        // 世界实例不生成接缝装饰，连接检测本身与所有其他结构相同。
+        block.connectorPrefab = null;
+        if (block.TryGetComponent(out HangarModule hangar))
+        {
+            hangar.UseExpandedShell();
+        }
+
         if (!initializeOnStart)
         {
             renderCache.Apply(block);
@@ -422,85 +430,59 @@ public sealed class WorldBuildingManager : MonoBehaviour
         pendingSupport.Clear();
     }
 
-    public void DamageSphere(Vector3 center, float radius, float damage)
+    public void DamageSphere(Vector3 center, float radius, float damageAmount)
     {
-        if (DestroyManager.instance != null)
+        // Snapshot targets before a lethal hit modifies the structure's save membership.
+        var targets = new List<Durability>();
+        foreach (BuildingRuntime building in buildings)
         {
-            DestroyManager.instance.DamageBuildings(buildings, center, radius, damage);
-        }
-        else
-        {
-            this.damage.ApplyBuildings(buildings, center, radius, damage);
-        }
-    }
-
-    internal void ExplodeBlock(Block block)
-    {
-        if (DestroyManager.instance != null)
-        {
-            DestroyManager.instance.ExplodeBlock(block);
-        }
-        else if (!block.ExplosionQueued)
-        {
-            // Standalone WorldLab shares damage rules without requiring the gameplay scene.
-            block.ExplosionQueued = true;
-            VisualEffectsManager.TryPlayBlockExplosion(block);
-            damage.ApplyExplosion(
-                block,
-                block.GetComponent<Durability>()?.LastAttacker,
-                null,
-                () => ExplosionPropagation.ApplyDefaultExplosionForce(block));
-        }
-    }
-
-    internal void ApplyBuildingLoss(BuildingRuntime building, Action destroy)
-    {
-        if (DestroyManager.instance != null)
-        {
-            DestroyManager.instance.ApplyBuildingLoss(building, destroy);
-        }
-        else
-        {
-            damage.ApplyBuildingLoss(building, destroy);
-        }
-    }
-
-    internal void CreateDebris(List<Block> group, Rigidbody source, RigidbodyMotion motion)
-    {
-        // 断裂组已经离开主体快照；先释放运输/货仓并按原阵营转换，再决定物理残骸预算。
-        // 不放在 OnDestroy：流式休眠、恢复和退出会话不能凭空产生掉落。
-        foreach (Block block in group)
-        {
-            WreckSalvage.Convert(block);
-        }
-
-        debris.RemoveAll(piece => piece == null);
-        bool overBudget = debris.Count >= maximumDebrisPieces || group.Count > maximumBlocksPerDebris;
-        GroupPhysicsSettings settings = PlayManager.instance != null ? PlayManager.instance.GroupPhysics : GroupPhysicsSettings.FromBody(source);
-        Rigidbody body = Instantiate(
-            RuntimeObjectTemplates.Instance.BuildingDebris,
-            group[0].transform.position,
-            transform.rotation,
-            transform);
-        var piece = body.gameObject;
-        float mass = 0f;
-        foreach (Block block in group)
-        {
-            block.transform.SetParent(piece.transform, true);
-            mass += block.mass;
-            foreach (MonoBehaviour behaviour in block.GetComponentsInChildren<MonoBehaviour>())
+            if (building == null)
             {
-                behaviour.enabled = false;
+                continue;
+            }
+
+            foreach (Block block in building.Blocks)
+            {
+                if (block != null && block.TryGetComponent(out Durability health))
+                {
+                    targets.Add(health);
+                }
             }
         }
 
-        body.mass = Mathf.Max(0.1f, mass);
-        settings.ApplyTo(body);
-        motion.Restore(body, settings);
+        damage.ApplyTargets(targets, center, radius, damageAmount);
+    }
+
+    internal void TrackFragment(ControlUnit fragment, int blockCount)
+    {
+        // 物理组由共享重组器创建，世界只持有生命周期，退出/卸载时可显式回收。
+        debris.RemoveAll(piece => piece == null);
+        bool overBudget = debris.Count >= maximumDebrisPieces || blockCount > maximumBlocksPerDebris;
+        GameObject piece = fragment.gameObject;
+        if (debris.Contains(piece))
+        {
+            return;
+        }
+
+        fragment.DamageSession = damage;
+        fragment.FragmentCreated += TrackFragment;
+        piece.transform.SetParent(transform, true);
         FragmentLifetime.Mark(piece);
         debris.Add(piece);
         // 预算是退场请求，不再跳过实体生成；即使是大型结构也先完整下落。
-        Destroy(piece, Mathf.Max(FragmentLifetime.Remaining(piece), overBudget ? 0f : debrisLifetime));
+        StartCoroutine(RetireFragment(fragment, Mathf.Max(FragmentLifetime.Remaining(piece), overBudget ? 0f : debrisLifetime)));
+    }
+
+    private IEnumerator RetireFragment(ControlUnit fragment, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        // 清场/读档先清除列表；只有正常退场才结算当前残骸里的货物与掉落。
+        if (fragment != null && debris.Remove(fragment.gameObject))
+        {
+            fragment.FragmentCreated -= TrackFragment;
+            WreckSalvage.ConvertGroup(fragment);
+            Destroy(fragment.gameObject);
+        }
     }
 
     private void ClearDebris()
@@ -509,6 +491,7 @@ public sealed class WorldBuildingManager : MonoBehaviour
         {
             if (piece != null)
             {
+                piece.GetComponent<ControlUnit>().FragmentCreated -= TrackFragment;
                 piece.SetActive(false);
                 Destroy(piece);
             }

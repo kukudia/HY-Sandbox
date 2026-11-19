@@ -3,6 +3,7 @@
 // 约束：批量图遍历自行统一同步物理；探测缓冲满时扩容，连接视觉不决定拓扑。
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 internal sealed class BlockConnections
 {
@@ -182,7 +183,7 @@ internal sealed class BlockConnections
         while (true)
         {
             SimulationWorkMetrics.RecordPhysicsNeighborQuery();
-            hitCount = Physics.OverlapSphereNonAlloc(probeCenter, connectionProbeRadius, _connectionHits, blockLayer);
+            hitCount = _block.gameObject.scene.GetPhysicsScene().OverlapSphere(probeCenter, connectionProbeRadius, _connectionHits, blockLayer, QueryTriggerInteraction.UseGlobal);
             if (hitCount < _connectionHits.Length)
             {
                 break;
@@ -197,7 +198,7 @@ internal sealed class BlockConnections
         // Their own downward probe establishes a real floor pair first; the floor's
         // reciprocal refresh cannot rediscover that invisible controller via physics.
         Block existing = connector.runtimePeerBlock;
-        if (existing != null && existing != _block && existing.TryGetComponent(out HangarModule bay) && bay.IsCombat && existing.raycastCollider != null && !existing.raycastCollider.enabled && existing.CanParticipateInConnections && SharesBuildingScope(existing))
+        if (existing != null && existing != _block && existing.TryGetComponent(out HangarModule bay) && bay.IsCombat && existing.raycastCollider != null && !existing.raycastCollider.enabled && existing.CanParticipateInConnections && SharesUnit(existing))
         {
             Connector matching = FindMatchingConnector(existing, connector, false);
             if (matching != null && connector.runtimePeer == matching && matching.runtimePeer == connector && matching.runtimePeerBlock == _block)
@@ -210,7 +211,7 @@ internal sealed class BlockConnections
         for (int i = 0; i < hitCount; i++)
         {
             Block otherBlock = _connectionHits[i].GetComponentInParent<Block>();
-            if (otherBlock != null && otherBlock != _block && otherBlock.CanParticipateInConnections && SharesBuildingScope(otherBlock))
+            if (otherBlock != null && otherBlock != _block && otherBlock.CanParticipateInConnections && SharesUnit(otherBlock))
             {
                 // Dense shell corners can overlap several colliders. A collider without
                 // a matching face must not hide a valid connector later in the buffer.
@@ -233,11 +234,9 @@ internal sealed class BlockConnections
         return result;
     }
 
-    private bool SharesBuildingScope(Block other)
+    private bool SharesUnit(Block other)
     {
-        BuildingRuntime building = _block.GetComponentInParent<BuildingRuntime>();
-        BuildingRuntime otherBuilding = other.GetComponentInParent<BuildingRuntime>();
-        return building == otherBuilding && _block.GetComponentInParent<ControlUnit>() == other.GetComponentInParent<ControlUnit>();
+        return _block.GetComponentInParent<ControlUnit>() == other.GetComponentInParent<ControlUnit>();
     }
 
     private Connector FindMatchingConnector(Block otherBlock, Connector connector, bool requireAvailable = true)
@@ -267,9 +266,7 @@ internal sealed class BlockConnections
         connector.isConnected = true;
         otherConnector.isConnected = true;
         GameObject connectorObject = connector.connector != null ? connector.connector : otherConnector.connector;
-        // 建筑使用同一连接拓扑，但世界模块不显示载具接缝装饰；showConnectors仅控制编辑器Gizmo。
-        bool showConnectionVisual = _block.GetComponentInParent<BuildingRuntime>() == null;
-        if (connectorObject == null && _block.connectorPrefab != null && showConnectionVisual)
+        if (connectorObject == null && _block.connectorPrefab != null)
         {
             connectorObject = Object.Instantiate(_block.connectorPrefab, _block.connectorParent != null ? _block.connectorParent : _block.transform);
             connectorObject.transform.localPosition = connector.localPos;

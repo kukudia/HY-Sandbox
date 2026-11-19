@@ -21,7 +21,7 @@ public static class SiegeFoundationCacheChecks
 
         BuildingRuntime building = session.Fleet.Base.Building;
         const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
-        object graph = typeof(BuildingRuntime).GetField("connections", flags).GetValue(building);
+        object graph = typeof(ControlUnit).GetProperty("Connections", flags).GetValue(building.GetComponent<ControlUnit>());
         MethodInfo prepare = graph.GetType().GetMethod("Prepare", flags);
         MethodInfo cached = typeof(BuildingRuntime).GetMethod("HasPreparedGroundConnector", flags);
         MethodInfo direct = typeof(BuildingRuntime).GetMethod("HasGroundConnector", flags);

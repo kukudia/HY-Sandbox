@@ -410,7 +410,7 @@ public static class SiegeHangarPlayChecks
             Check(entry.IsAlive, "Base repair preserves its docked ship");
             host.Fleet.Scrap(0);
             Check(!entry.IsAlive, "Scrapping releases the assigned ship");
-            fortress.Building.DestroyBlock(hangar.GetComponent<Block>());
+            DestroyManager.DestroyTarget(hangar.gameObject);
             Check(host.Fleet.GetDeploymentPoint(0) == null, "Destroyed hangar cannot expose a deployment marker");
             Check(!host.TryDeployAt(0, 0, out _), "Destroyed hangar rejects deployment");
             yield return null;

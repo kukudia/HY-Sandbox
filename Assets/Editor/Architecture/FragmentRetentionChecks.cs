@@ -240,33 +240,18 @@ public static class FragmentRetentionChecks
 
     private static GameObject CreateDebris(WorldBuildingManager host, int count, float height)
     {
-        GameObject source = NewObject("Source");
+        GameObject source = NewObject("Detached group");
         source.transform.position = new Vector3(10000f, height, 10000f);
-        Rigidbody sourceBody = source.AddComponent<Rigidbody>();
-        sourceBody.useGravity = true;
-        sourceBody.isKinematic = true;
-        var blocks = new List<Block>();
+        source.AddComponent<Rigidbody>().useGravity = true;
+        ControlUnit fragment = source.AddComponent<ControlUnit>();
         for (int i = 0; i < count; i++)
         {
             Block block = NewBlock("Block " + i, source.transform);
             block.transform.localPosition = new Vector3(i % 6, 0f, i / 6);
-            blocks.Add(block);
         }
 
-        object motion = Activator.CreateInstance(RuntimeType("RigidbodyMotion"), Members, null, new object[] { sourceBody }, null);
-        PlayManager previous = PlayManager.instance;
-        try
-        {
-            // Synchronous call only: avoid salvage/game session effects; source settings exercise production fallback.
-            PlayManager.instance = null;
-            Call(host, "CreateDebris", blocks, sourceBody, motion);
-        }
-        finally
-        {
-            PlayManager.instance = previous;
-        }
-
-        return blocks[0].transform.parent.gameObject;
+        Call(host, "TrackFragment", fragment, count);
+        return source;
     }
 
     private static ControlUnit NewUnit(string name)

@@ -93,16 +93,20 @@
     <Compile Include="Assets\Editor\Presentation\Effects\EnemySpawnPortalBaker.cs" />
     <Compile Include="Assets\Editor\Architecture\DetachedVehicleChecks.cs" />
     <Compile Include="Assets\Editor\Architecture\EditableComponentBaker.cs" />
+    <Compile Include="Assets\Editor\Presentation\Attract\BattleAttractAuthoring.cs" />
+    <Compile Include="Assets\Editor\Building\Validation\BuildNavigationPlayChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegeRuntimeConnectionChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\Effects\DebrisFireBaker.cs" />
     <Compile Include="Assets\Editor\Combat\Interface\CombatHudSetup.cs" />
     <Compile Include="Assets\Editor\World\Validation\WorldLab\WorldLabPerformanceChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\Effects\NativeVfxLibraryBuilder.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Interface\SiegeSceneInteractionChecks.cs" />
+    <Compile Include="Assets\Editor\MainMenu\NightMenuAuthoring.cs" />
     <Compile Include="Assets\Editor\Combat\Diagnostics\SkirmishNavigationChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegeWreckBudgetChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Rules\SiegeMixedStressChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\InterfaceBaker.cs" />
+    <Compile Include="Assets\Editor\MainMenu\WorkshopLayoutPreview.cs" />
     <Compile Include="Assets\Editor\Building\BuildingEditorAssets.cs" />
     <Compile Include="Assets\Editor\Siege\Benchmarks\SiegeRegroupBenchmark.cs" />
     <Compile Include="Assets\Editor\World\Validation\Session\WorldSessionPlayChecks.cs" />
@@ -121,6 +125,7 @@
     <Compile Include="Assets\Editor\Diagnostics\Benchmarks\ProjectilePoolChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Hangars\HangarSceneIntegration.cs" />
     <Compile Include="Assets\Editor\World\Outposts\OutpostContentAuthoring.cs" />
+    <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegeStrandedCockpitChecks.cs" />
     <Compile Include="Assets\Editor\Building\Materials\BlockMaterialChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Authoring\SiegeCombatBaseAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegePriorityTargetChecks.cs" />
@@ -136,7 +141,9 @@
     <Compile Include="Assets\Editor\Siege\SiegeConstructionPlayChecks.cs" />
     <Compile Include="Assets\Editor\Art\Validation\BlockArtValidation.cs" />
     <Compile Include="Assets\Editor\Siege\Authoring\SiegeProgressAuthoring.cs" />
+    <Compile Include="Assets\Editor\MainMenu\MainMenuIdleChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Authoring\SiegeMixedStressAuthoring.cs" />
+    <Compile Include="Assets\Editor\Presentation\Validation\VfxPoolBudgetChecks.cs" />
     <Compile Include="Assets\Editor\Building\Outposts\OutpostEditorAuthoring.cs" />
     <Compile Include="Assets\Editor\World\Validation\Terrain\VoxelMeshingChecks.cs" />
     <Compile Include="Assets\Editor\Combat\Validation\TurretFlightPlayProbe.cs" />
@@ -170,6 +177,7 @@
     <Compile Include="Assets\Editor\Siege\Authoring\SiegeInterfaceAuthoring.cs" />
     <Compile Include="Assets\Editor\Building\Validation\BuildPalettePlayProbe.cs" />
     <Compile Include="Assets\Editor\Diagnostics\ProfilerCaptureAnalysis.cs" />
+    <Compile Include="Assets\Editor\Building\Validation\BuildOverlapChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Hangars\SiegeHangarHostChecks.cs" />
     <Compile Include="Assets\Editor\Diagnostics\Benchmarks\PresentationPerformanceChecks.cs" />
     <Compile Include="Assets\Editor\World\Player\WorldPlayerBuildChecks.cs" />
@@ -186,6 +194,8 @@
     <Compile Include="Assets\Editor\Siege\Validation\Rules\SiegeRulesChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Examples\SiegeBaseExamplesChecks.cs" />
     <Compile Include="Assets\Editor\Building\Validation\BuildHotbarChecks.cs" />
+    <Compile Include="Assets\Editor\Building\Validation\BuildManipulationPlayChecks.cs" />
+    <Compile Include="Assets\Editor\Combat\Validation\NightInteractionChecks.cs" />
     <Compile Include="Assets\Editor\Building\Validation\BaseLibraryChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\Interface\DropdownTemplateAuthoring.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Rules\SiegePlayerSurveyChecks.cs" />
@@ -197,6 +207,7 @@
     <Compile Include="Assets\Editor\Combat\Validation\EnemyLabEfficiencyChecks.cs" />
     <Compile Include="Assets\Editor\Presentation\Validation\PresentationResourceChecks.cs" />
     <Compile Include="Assets\Editor\MainMenu\MainMenuPlayChecks.cs" />
+    <Compile Include="Assets\Editor\Combat\Diagnostics\CombatDiagnosticsAuthoring.cs" />
     <Compile Include="Assets\Editor\World\WorldLab\WorldLabAuthoring.cs" />
     <Compile Include="Assets\Editor\Building\Validation\BlueprintSupportAudit.cs" />
     <Compile Include="Assets\Editor\Siege\Benchmarks\SiegeRegroupBaseline.cs" />

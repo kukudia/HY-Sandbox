@@ -155,7 +155,7 @@ public static class BlueprintCapacityPlayChecks
         Block removed = first.Blocks.Last();
         string missing = removed.uniqueId;
         removed.canExplode = false;
-        first.DestroyBlock(removed);
+        DestroyManager.DestroyTarget(removed.gameObject);
         Require(first.Blocks.Count == 2099, "large live building loses one real module");
         object[] arguments =
         {

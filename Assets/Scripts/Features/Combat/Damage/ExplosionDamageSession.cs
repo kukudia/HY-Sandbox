@@ -1,5 +1,5 @@
-// 职责：爆炸只破坏体素地形；显式建筑伤害工具独立结算，批末刷新拓扑与冲量。
-// 入口：ApplyExplosion() / ApplyBuildings() / RefreshUnit()；实例由显式销毁服务或独立建筑工具拥有。
+// 职责：统一方块损毁批次；先处理目标耐久与体素，再重组失效的连接图，最后施加冲量。
+// 入口：ApplyTargets() / ApplyExplosion() / RefreshUnit()；场景服务和独立模拟宿主持有会话。
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,62 +7,53 @@ using UnityEngine.SceneManagement;
 
 internal sealed class ExplosionDamageSession
 {
-    private readonly Queue<Blast> pending = new Queue<Blast>();
-    private readonly List<Durability> targets = new List<Durability>();
-    private readonly HashSet<BuildingRuntime> batched = new HashSet<BuildingRuntime>();
     private readonly HashSet<ControlUnit> dirtyUnits = new HashSet<ControlUnit>();
     private readonly List<Action> impulses = new List<Action>();
     private bool applying;
-    private struct Blast
+    internal void ApplyTargets(List<Durability> targets, Vector3 center, float radius, float damage)
     {
-        public Vector3 center;
-        public float radius;
-        public float damage;
-        public PhysicsScene physics;
-        public ControlUnit attacker;
-        public IReadOnlyList<BuildingRuntime> buildings;
-        public bool terrain;
-    }
-
-    public void ApplyBuildings(IReadOnlyList<BuildingRuntime> buildings, Vector3 center, float radius, float damage)
-    {
-        Enqueue(new Blast { center = center, radius = radius, damage = damage, buildings = buildings });
-    }
-
-    public void ApplyBuildingLoss(BuildingRuntime building, Action destroy)
-    {
-        Execute(() =>
-        {
-            if (building != null && batched.Add(building))
-            {
-                building.BeginDamageBatch();
-            }
-
-            destroy();
-        });
-    }
-
-    public void ApplyExplosion(Block source, ControlUnit attacker, ControlUnit dirtyUnit, Action impulse)
-    {
-        if (source == null)
+        if (!ValidSphere(center, radius, damage))
         {
             return;
         }
 
-        if (dirtyUnit != null)
+        Execute(() =>
         {
-            dirtyUnits.Add(dirtyUnit);
-        }
-
-        if (impulse != null)
-        {
-            impulses.Add(impulse);
-        }
-
-        Enqueue(new Blast { center = source.transform.position, radius = source.explosionRadius, damage = source.explosionDamage, physics = source.gameObject.scene.GetPhysicsScene(), attacker = attacker, terrain = true });
+            foreach (Durability health in targets)
+            {
+                if (health != null && health.isActiveAndEnabled && health.currentDurability > 0f)
+                {
+                    float falloff = Mathf.Clamp01(1f - Vector3.Distance(health.transform.position, center) / radius);
+                    health.ApplyDamage(damage * falloff, null);
+                }
+            }
+        });
     }
 
-    public void RefreshUnit(ControlUnit unit)
+    internal void ApplyExplosion(Block source, ControlUnit unit, Action impulse)
+    {
+        Execute(() =>
+        {
+            RefreshUnit(unit);
+            impulses.Add(impulse);
+            Vector3 center = source.transform.position;
+            if (!ValidSphere(center, source.explosionRadius, source.explosionDamage))
+            {
+                return;
+            }
+
+            PhysicsScene physics = source.gameObject.scene.GetPhysicsScene();
+            foreach (ProceduralVoxelWorld world in UnityEngine.Object.FindObjectsByType<ProceduralVoxelWorld>())
+            {
+                if (world.gameObject.scene.GetPhysicsScene() == physics)
+                {
+                    world.DamageSphere(center, source.explosionRadius, source.explosionDamage);
+                }
+            }
+        });
+    }
+
+    internal void RefreshUnit(ControlUnit unit)
     {
         if (unit == null)
         {
@@ -75,38 +66,20 @@ internal sealed class ExplosionDamageSession
         }
         else
         {
-            PlayManager.instance?.RefreshGroup(unit);
+            RuntimeGroupBuilder.RefreshUnit(unit);
         }
     }
 
-    private void Enqueue(Blast blast)
+    private static bool ValidSphere(Vector3 center, float radius, float damage)
     {
-        if (!WorldBuildingValidation.Finite(blast.center) || !WorldBuildingValidation.Finite(blast.radius) || !WorldBuildingValidation.Finite(blast.damage) || blast.radius <= 0f || blast.damage < 0f)
-        {
-            if (!applying)
-            {
-                FinishBatch();
-            }
-
-            return;
-        }
-
-        pending.Enqueue(blast);
-        if (applying)
-        {
-            return;
-        }
-
-        Execute(() =>
-        {
-        });
+        return WorldBuildingValidation.Finite(center) && WorldBuildingValidation.Finite(radius) && radius > 0f && WorldBuildingValidation.Finite(damage) && damage > 0f;
     }
 
-    private void Execute(Action initial)
+    private void Execute(Action action)
     {
         if (applying)
         {
-            initial();
+            action();
             return;
         }
 
@@ -114,11 +87,7 @@ internal sealed class ExplosionDamageSession
         using SimulationWorkMetrics.Scope timing = SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.BuildingDamage);
         try
         {
-            initial();
-            while (pending.Count > 0)
-            {
-                Apply(pending.Dequeue());
-            }
+            action();
         }
         finally
         {
@@ -126,89 +95,19 @@ internal sealed class ExplosionDamageSession
         }
     }
 
-    private void Apply(Blast blast)
-    {
-        targets.Clear();
-        if (blast.buildings != null)
-        {
-            foreach (BuildingRuntime building in blast.buildings)
-            {
-                if (building == null)
-                {
-                    continue;
-                }
-
-                foreach (Block block in building.Blocks)
-                {
-                    if (block != null && block.TryGetComponent(out Durability health))
-                    {
-                        AddTarget(health, blast);
-                    }
-                }
-            }
-        }
-
-        // A block explosion has no module targets. Projectile hits and the explicit building
-        // damage brush keep their own damage contracts; nearby modules never receive blast damage.
-        foreach (Durability health in targets)
-        {
-            if (health != null && health.isActiveAndEnabled && health.currentDurability > 0f)
-            {
-                float falloff = Mathf.Clamp01(1f - Vector3.Distance(health.transform.position, blast.center) / blast.radius);
-                health.ApplyDamage(blast.damage * falloff, blast.attacker);
-            }
-        }
-
-        if (blast.terrain && blast.damage > 0f)
-        {
-            foreach (ProceduralVoxelWorld world in UnityEngine.Object.FindObjectsByType<ProceduralVoxelWorld>())
-            {
-                if (world.gameObject.scene.GetPhysicsScene() == blast.physics)
-                {
-                    world.DamageSphere(blast.center, blast.radius, blast.damage);
-                }
-            }
-        }
-    }
-
-    private void AddTarget(Durability health, Blast blast)
-    {
-        if (!health.isActiveAndEnabled || health.currentDurability <= 0f || Vector3.Distance(health.transform.position, blast.center) >= blast.radius)
-        {
-            return;
-        }
-
-        BuildingRuntime building = health.GetComponentInParent<BuildingRuntime>();
-        if (building != null && batched.Add(building))
-        {
-            building.BeginDamageBatch();
-        }
-
-        targets.Add(health);
-    }
-
     private void FinishBatch()
     {
         Exception failure = null;
         try
         {
-            foreach (BuildingRuntime building in batched)
-            {
-                if (building != null)
-                {
-                    Attempt(building.EndDamageBatch, ref failure);
-                }
-            }
-
             foreach (ControlUnit unit in dirtyUnits)
             {
-                if (unit != null && unit.Building == null)
+                if (unit != null)
                 {
-                    Attempt(() => PlayManager.instance?.RefreshGroup(unit), ref failure);
+                    Attempt(() => RuntimeGroupBuilder.RefreshUnit(unit), ref failure);
                 }
             }
 
-            // Detached groups receive impulses only after both kinds of topology settle.
             if (impulses.Count > 0)
             {
                 Physics.SyncTransforms();
@@ -222,9 +121,6 @@ internal sealed class ExplosionDamageSession
         finally
         {
             applying = false;
-            pending.Clear();
-            targets.Clear();
-            batched.Clear();
             dirtyUnits.Clear();
             impulses.Clear();
         }

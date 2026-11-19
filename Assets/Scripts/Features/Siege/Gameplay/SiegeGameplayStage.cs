@@ -590,7 +590,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         // Timeouts use the same visible core-loss ending. Natural destruction has already queued its explosion.
         if (Base != null && Base.IsAlive && !Base.Core.ExplosionQueued)
         {
-            Base.Building.DestroyBlock(Base.Core);
+            DestroyManager.DestroyTarget(Base.Core.gameObject);
         }
 
         cleanup.Stop();

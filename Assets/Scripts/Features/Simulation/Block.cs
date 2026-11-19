@@ -32,7 +32,7 @@ public class Block : MonoBehaviour
     [Min(0f), Tooltip("爆炸中心的直接伤害；按距离衰减，与物理冲量分别配置。")]
     public float explosionDamage = 100f;
     public float explosionRadius = 5f; // 爆炸半径
-    [Range(0f, 1f)]
+    [Range(0f, 1f), Tooltip("同一结构内，爆炸半径内每个其他方块断开全部连接的概率。不会扣除其耐久。")]
     public float explosionDisconnectProbability = 0.35f;
     public string resourcePath; // 运行时使用的预制体路径
     [TextArea]
@@ -118,8 +118,8 @@ public class Block : MonoBehaviour
             uniqueId = System.Guid.NewGuid().ToString();
         }
 
-        // 世界建筑恢复可能带有坍塌姿态；编辑器整格吸附不能改变其持久化位置。
-        if (GetComponentInParent<BuildingRuntime>() != null)
+        // 已归属结构的模块使用其局部姿态；移动或旋转中的根不应触发世界坐标吸附。
+        if (GetComponentInParent<ControlUnit>() != null)
         {
             return;
         }

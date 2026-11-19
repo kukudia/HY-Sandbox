@@ -29,7 +29,7 @@ flowchart TD
     H["BattleAttractAuthoring.RepairStatusOverlay()"]
     click H "../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L300" "打开源码"
     I["DestroyManager.DestroyGameObject()"]
-    click I "../Assets/Scripts/Features/Combat/DestroyManager.cs#L30" "打开源码"
+    click I "../Assets/Scripts/Features/Combat/DestroyManager.cs#L46" "打开源码"
     J["MainUIPanels.PlayerDeath()"]
     click J "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L323" "打开源码"
     A --> B
@@ -58,7 +58,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|Guard -->
 - [BattleAttractAuthoring.RepairStatusOverlay](../Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs#L300)
 <!-- source: Assets/Editor/Presentation/Attract/BattleAttractAuthoring.cs|RepairStatusOverlay -->
-- [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L30)
+- [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L46)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyGameObject -->
 - [MainUIPanels.PlayerDeath](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L323)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayerDeath -->
@@ -263,11 +263,11 @@ flowchart TD
     A["HangarEntranceButton.Toggle()"]
     click A "../Assets/Scripts/Features/Siege/Hangars/HangarEntranceButton.cs#L36" "打开源码"
     B["HangarModule.TrySetEntrance()"]
-    click B "../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L344" "打开源码"
+    click B "../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L350" "打开源码"
     C["HangarModule.RestoreEntrance()"]
-    click C "../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L366" "打开源码"
+    click C "../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L372" "打开源码"
     D["HangarModule.RefreshGeometry()"]
-    click D "../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L70" "打开源码"
+    click D "../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L76" "打开源码"
     E["BuildManager.SaveBlock()"]
     click E "../Assets/Scripts/Features/Building/BuildManager.cs#L733" "打开源码"
     F["BlueprintBlockFactory.TryRestore()"]
@@ -298,11 +298,11 @@ flowchart TD
 
 - [HangarEntranceButton.Toggle](../Assets/Scripts/Features/Siege/Hangars/HangarEntranceButton.cs#L36)
 <!-- source: Assets/Scripts/Features/Siege/Hangars/HangarEntranceButton.cs|Toggle -->
-- [HangarModule.TrySetEntrance](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L344)
+- [HangarModule.TrySetEntrance](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L350)
 <!-- source: Assets/Scripts/Features/Siege/Hangars/HangarModule.cs|TrySetEntrance -->
-- [HangarModule.RestoreEntrance](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L366)
+- [HangarModule.RestoreEntrance](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L372)
 <!-- source: Assets/Scripts/Features/Siege/Hangars/HangarModule.cs|RestoreEntrance -->
-- [HangarModule.RefreshGeometry](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L70)
+- [HangarModule.RefreshGeometry](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L76)
 <!-- source: Assets/Scripts/Features/Siege/Hangars/HangarModule.cs|RefreshGeometry -->
 - [BuildManager.SaveBlock](../Assets/Scripts/Features/Building/BuildManager.cs#L733)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|SaveBlock -->
@@ -504,8 +504,8 @@ flowchart TD
     click D "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L124" "打开源码"
     E["ProceduralVoxelWorld.RebuildFinite()"]
     click E "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L151" "打开源码"
-    F["ExplosionDamageSession.Apply()"]
-    click F "../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L129" "打开源码"
+    F["ExplosionDamageSession.ApplyExplosion()"]
+    click F "../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L33" "打开源码"
     G["ProceduralVoxelWorld.DamageSphere()"]
     click G "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L484" "打开源码"
     H["ProceduralVoxelWorld.FlushDirty()"]
@@ -545,8 +545,8 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|InitializeFinite -->
 - [ProceduralVoxelWorld.RebuildFinite](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L151)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|RebuildFinite -->
-- [ExplosionDamageSession.Apply](../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L129)
-<!-- source: Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs|Apply -->
+- [ExplosionDamageSession.ApplyExplosion](../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L33)
+<!-- source: Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs|ApplyExplosion -->
 - [ProceduralVoxelWorld.DamageSphere](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L484)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|DamageSphere -->
 - [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L576)
@@ -577,23 +577,23 @@ flowchart TD
     C["HangarShellBlueprint.Tiles()"]
     click C "../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L16" "打开源码"
     D["WorldBuildingManager.RestoreBuilding()"]
-    click D "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L118" "打开源码"
+    click D "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L119" "打开源码"
     E["HangarShellBlueprint.ExpandState()"]
     click E "../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L173" "打开源码"
     F["BuildingRuntime.InitializeRoutine()"]
-    click F "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L87" "打开源码"
+    click F "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L63" "打开源码"
     G["BlueprintBlockFactory.TryRestore()"]
     click G "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7" "打开源码"
-    H["BuildingRuntime.DestroyBlock()"]
-    click H "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L242" "打开源码"
+    H["DestroyManager.DestroyTarget()"]
+    click H "../Assets/Scripts/Features/Combat/DestroyManager.cs#L51" "打开源码"
     I["BuildingRuntime.Capture()"]
-    click I "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L192" "打开源码"
+    click I "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L171" "打开源码"
     J["SiegeBase.Repair()"]
     click J "../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L151" "打开源码"
     K["BuildingRefit.Apply()"]
     click K "../Assets/Scripts/Features/World/Buildings/Topology/BuildingRefit.cs#L9" "打开源码"
     L["WorldBuildingManager.CanAddBlocks()"]
-    click L "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L201" "打开源码"
+    click L "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L209" "打开源码"
     A --> B
     B --> C
     A --> D
@@ -615,23 +615,23 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs|Expand -->
 - [HangarShellBlueprint.Tiles](../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L16)
 <!-- source: Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs|Tiles -->
-- [WorldBuildingManager.RestoreBuilding](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L118)
+- [WorldBuildingManager.RestoreBuilding](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L119)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|RestoreBuilding -->
 - [HangarShellBlueprint.ExpandState](../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L173)
 <!-- source: Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs|ExpandState -->
-- [BuildingRuntime.InitializeRoutine](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L87)
+- [BuildingRuntime.InitializeRoutine](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L63)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|InitializeRoutine -->
 - [BlueprintBlockFactory.TryRestore](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs|TryRestore -->
-- [BuildingRuntime.DestroyBlock](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L242)
-<!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|DestroyBlock -->
-- [BuildingRuntime.Capture](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L192)
+- [DestroyManager.DestroyTarget](../Assets/Scripts/Features/Combat/DestroyManager.cs#L51)
+<!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyTarget -->
+- [BuildingRuntime.Capture](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L171)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|Capture -->
 - [SiegeBase.Repair](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L151)
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeBase.cs|Repair -->
 - [BuildingRefit.Apply](../Assets/Scripts/Features/World/Buildings/Topology/BuildingRefit.cs#L9)
 <!-- source: Assets/Scripts/Features/World/Buildings/Topology/BuildingRefit.cs|Apply -->
-- [WorldBuildingManager.CanAddBlocks](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L201)
+- [WorldBuildingManager.CanAddBlocks](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L209)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|CanAddBlocks -->
 
 ## 夜班交互、暂停与诊断
@@ -957,7 +957,7 @@ flowchart TD
     G["SiegeBase.Create()"]
     click G "../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L48" "打开源码"
     H["BuildingRuntime.HasFullFoundationSupport()"]
-    click H "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L317" "打开源码"
+    click H "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L245" "打开源码"
     I["SiegeGameplayStage.BeginWave()"]
     click I "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L271" "打开源码"
     J["SiegeWaveDirector.Tick()"]
@@ -1006,7 +1006,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Deploy -->
 - [SiegeBase.Create](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L48)
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeBase.cs|Create -->
-- [BuildingRuntime.HasFullFoundationSupport](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L317)
+- [BuildingRuntime.HasFullFoundationSupport](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L245)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|HasFullFoundationSupport -->
 - [SiegeGameplayStage.BeginWave](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L271)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|BeginWave -->
@@ -1124,9 +1124,9 @@ flowchart TD
     C["HangarResizeButton.Resize()"]
     click C "../Assets/Scripts/Features/Siege/Hangars/HangarResizeButton.cs#L30" "打开源码"
     D["HangarModule.TryResize()"]
-    click D "../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L377" "打开源码"
+    click D "../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L383" "打开源码"
     E["HangarModule.RefreshGeometry()"]
-    click E "../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L70" "打开源码"
+    click E "../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L76" "打开源码"
     F["BuildManager.SaveBlock()"]
     click F "../Assets/Scripts/Features/Building/BuildManager.cs#L733" "打开源码"
     G["SiegeDeploymentView.RefreshOptions()"]
@@ -1136,7 +1136,7 @@ flowchart TD
     I["SiegeFleet.DeployAt()"]
     click I "../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L164" "打开源码"
     J["HangarModule.GetDockPose()"]
-    click J "../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L192" "打开源码"
+    click J "../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L198" "打开源码"
     K["SiegeReturnFlight.BeginLaunch()"]
     click K "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L68" "打开源码"
     L["SiegeMatch.ResolveAttacker()"]
@@ -1146,7 +1146,7 @@ flowchart TD
     N["SiegeReturnFlight.Tick()"]
     click N "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L353" "打开源码"
     O["HangarModule.FixedUpdate()"]
-    click O "../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L258" "打开源码"
+    click O "../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L264" "打开源码"
     P["SiegeFleet.Scrap()"]
     click P "../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L113" "打开源码"
     Q["SiegeMatch.CompleteReturn()"]
@@ -1208,9 +1208,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|CreateBlock -->
 - [HangarResizeButton.Resize](../Assets/Scripts/Features/Siege/Hangars/HangarResizeButton.cs#L30)
 <!-- source: Assets/Scripts/Features/Siege/Hangars/HangarResizeButton.cs|Resize -->
-- [HangarModule.TryResize](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L377)
+- [HangarModule.TryResize](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L383)
 <!-- source: Assets/Scripts/Features/Siege/Hangars/HangarModule.cs|TryResize -->
-- [HangarModule.RefreshGeometry](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L70)
+- [HangarModule.RefreshGeometry](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L76)
 <!-- source: Assets/Scripts/Features/Siege/Hangars/HangarModule.cs|RefreshGeometry -->
 - [BuildManager.SaveBlock](../Assets/Scripts/Features/Building/BuildManager.cs#L733)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|SaveBlock -->
@@ -1220,7 +1220,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs|FitsHangar -->
 - [SiegeFleet.DeployAt](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L164)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs|DeployAt -->
-- [HangarModule.GetDockPose](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L192)
+- [HangarModule.GetDockPose](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L198)
 <!-- source: Assets/Scripts/Features/Siege/Hangars/HangarModule.cs|GetDockPose -->
 - [SiegeReturnFlight.BeginLaunch](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L68)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|BeginLaunch -->
@@ -1230,7 +1230,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|BeginReturn -->
 - [SiegeReturnFlight.Tick](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L353)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|Tick -->
-- [HangarModule.FixedUpdate](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L258)
+- [HangarModule.FixedUpdate](../Assets/Scripts/Features/Siege/Hangars/HangarModule.cs#L264)
 <!-- source: Assets/Scripts/Features/Siege/Hangars/HangarModule.cs|FixedUpdate -->
 - [SiegeFleet.Scrap](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L113)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs|Scrap -->
@@ -1584,10 +1584,10 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A["WorldBuildingManager.CreateDebris()"]
-    click A "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L468" "打开源码"
+    A["WorldBuildingManager.TrackFragment()"]
+    click A "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L456" "打开源码"
     B["RuntimeGroupBuilder.Rebuild()"]
-    click B "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16" "打开源码"
+    click B "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L54" "打开源码"
     C["FragmentLifetime.Mark()"]
     click C "../Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs#L16" "打开源码"
     D["FragmentLifetime.Remaining()"]
@@ -1611,9 +1611,9 @@ flowchart TD
     H -.->|旧单位计时器重查新片段| D
 ```
 
-- [WorldBuildingManager.CreateDebris](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L468)
-<!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|CreateDebris -->
-- [RuntimeGroupBuilder.Rebuild](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16)
+- [WorldBuildingManager.TrackFragment](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L456)
+<!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|TrackFragment -->
+- [RuntimeGroupBuilder.Rebuild](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L54)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|Rebuild -->
 - [FragmentLifetime.Mark](../Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs#L16)
 <!-- source: Assets/Scripts/Features/Simulation/Physics/FragmentLifetime.cs|Mark -->
@@ -1871,7 +1871,7 @@ flowchart TD
     L["CargoPersistence.SaveReturnCargo()"]
     click L "../Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs#L11" "打开源码"
     M["PlayManager.PlayEnd()"]
-    click M "../Assets/Scripts/Features/Simulation/PlayManager.cs#L299" "打开源码"
+    click M "../Assets/Scripts/Features/Simulation/PlayManager.cs#L281" "打开源码"
     N["MainUIPanels.PlayerDeath()"]
     click N "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L323" "打开源码"
     O["WorldSessionManager.RequestPlay()"]
@@ -1934,7 +1934,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayEnd -->
 - [CargoPersistence.SaveReturnCargo](../Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs#L11)
 <!-- source: Assets/Scripts/Features/Salvage/Cargo/CargoPersistence.cs|SaveReturnCargo -->
-- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L299)
+- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L281)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
 - [MainUIPanels.PlayerDeath](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L323)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayerDeath -->
@@ -2208,7 +2208,7 @@ flowchart TD
     F["BuildingFoundation.Configure()"]
     click F "../Assets/Scripts/Features/Building/BuildingEditor/BuildingFoundation.cs#L17" "打开源码"
     G["BuildingRuntime.HasFullFoundationSupport()"]
-    click G "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L317" "打开源码"
+    click G "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L245" "打开源码"
     H["WorldBuildingPlacement.LocalAnchor()"]
     click H "../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs#L106" "打开源码"
     I["WorldBuildingStreaming.HasLoadedGround()"]
@@ -2253,7 +2253,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|RefreshBuildingFootprint -->
 - [BuildingFoundation.Configure](../Assets/Scripts/Features/Building/BuildingEditor/BuildingFoundation.cs#L17)
 <!-- source: Assets/Scripts/Features/Building/BuildingEditor/BuildingFoundation.cs|Configure -->
-- [BuildingRuntime.HasFullFoundationSupport](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L317)
+- [BuildingRuntime.HasFullFoundationSupport](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L245)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|HasFullFoundationSupport -->
 - [WorldBuildingPlacement.LocalAnchor](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs#L106)
 <!-- source: Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs|LocalAnchor -->
@@ -2390,11 +2390,11 @@ flowchart TD
     K["Block.CheckConnectionAfterPhysicsSync()"]
     click K "../Assets/Scripts/Features/Simulation/Block.cs#L407" "打开源码"
     L["BlockConnections.CheckConnection()"]
-    click L "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L59" "打开源码"
+    click L "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L60" "打开源码"
     M["BlockConnections.FindBlockAcrossConnector()"]
-    click M "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L168" "打开源码"
+    click M "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L169" "打开源码"
     N["BlockConnections.FindMatchingConnector()"]
-    click N "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L243" "打开源码"
+    click N "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L242" "打开源码"
     A --> D
     B --> D
     C --> B
@@ -2433,11 +2433,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|CollectNeighbors -->
 - [Block.CheckConnectionAfterPhysicsSync](../Assets/Scripts/Features/Simulation/Block.cs#L407)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|CheckConnectionAfterPhysicsSync -->
-- [BlockConnections.CheckConnection](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L59)
+- [BlockConnections.CheckConnection](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L60)
 <!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs|CheckConnection -->
-- [BlockConnections.FindBlockAcrossConnector](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L168)
+- [BlockConnections.FindBlockAcrossConnector](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L169)
 <!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs|FindBlockAcrossConnector -->
-- [BlockConnections.FindMatchingConnector](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L243)
+- [BlockConnections.FindMatchingConnector](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L242)
 <!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs|FindMatchingConnector -->
 
 ## 放置、选中、操作和持久化
@@ -2765,18 +2765,18 @@ flowchart TD
 flowchart TD
     A["PlayManager.RefreshGroup()"]
     click A "../Assets/Scripts/Features/Simulation/PlayManager.cs#L197" "打开源码"
-    B["PlayManager.AssignBlocksToParentGroups()"]
-    click B "../Assets/Scripts/Features/Simulation/PlayManager.cs#L334" "打开源码"
+    B["RuntimeGroupBuilder.Refresh()"]
+    click B "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L33" "打开源码"
     C["RuntimeGroupBuilder.Rebuild()"]
-    click C "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16" "打开源码"
+    click C "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L54" "打开源码"
     D["BlockGroupManager.GroupRuntimeBlocks()"]
     click D "../Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs#L15" "打开源码"
     E["BlockConnections.CollectRuntimeNeighbors()"]
-    click E "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L453" "打开源码"
+    click E "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L450" "打开源码"
     F["RigidbodyMotion.Restore()"]
     click F "../Assets/Scripts/Features/Simulation/Physics/RigidbodyMotion.cs#L17" "打开源码"
     G["ControlUnit.RefreshChildren()"]
-    click G "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L221" "打开源码"
+    click G "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L241" "打开源码"
     H["PlayManager.FixedUpdate()"]
     click H "../Assets/Scripts/Features/Simulation/PlayManager.cs#L81" "打开源码"
     I["RuntimeGroupCleanup.EnforceDistance()"]
@@ -2808,25 +2808,25 @@ flowchart TD
     V["UniversalThruster.FixedUpdate()"]
     click V "../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L10" "打开源码"
     W["BlockConnections.DisConnectAllConnectors()"]
-    click W "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L362" "打开源码"
+    click W "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L359" "打开源码"
     X["Block.RestoreConnectionParticipation()"]
     click X "../Assets/Scripts/Features/Simulation/Block.cs#L431" "打开源码"
     Y["BlockConnections.RestoreParticipation()"]
-    click Y "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L408" "打开源码"
+    click Y "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L405" "打开源码"
     Z["RuntimeGroupBuilder.CaptureSourceBodies()"]
-    click Z "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L131" "打开源码"
+    click Z "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L193" "打开源码"
     AA["RuntimeGroupBuilder.SelectRetainedGroups()"]
-    click AA "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L191" "打开源码"
+    click AA "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L282" "打开源码"
     AB["PlayManager.RegisterControlUnitWithoutCleanup()"]
-    click AB "../Assets/Scripts/Features/Simulation/PlayManager.cs#L361" "打开源码"
+    click AB "../Assets/Scripts/Features/Simulation/PlayManager.cs#L343" "打开源码"
     AC["BlockConnectionSnapshot.Capture()"]
     click AC "../Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs#L71" "打开源码"
     AD["BlockConnections.ReleaseRuntimePair()"]
-    click AD "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L427" "打开源码"
+    click AD "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L424" "打开源码"
     AE["BatchConnectionBuilder.RebuildBatchImmediate()"]
     click AE "../Assets/Scripts/Features/Simulation/Connections/BatchConnectionBuilder.cs#L40" "打开源码"
-    AF["BuildingRuntime.RefreshStructure()"]
-    click AF "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L56" "打开源码"
+    AF["RuntimeGroupBuilder.MergeFoundationGroups()"]
+    click AF "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L254" "打开源码"
     AG["BlockConnectionGraph.PrepareBlocks()"]
     click AG "../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L109" "打开源码"
     AH["Thruster.TickInputThrust()"]
@@ -2836,17 +2836,17 @@ flowchart TD
     AJ["GroupPhysicsSettings.ApplyTo()"]
     click AJ "../Assets/Scripts/Features/Simulation/Groups/GroupPhysicsSettings.cs#L12" "打开源码"
     AK["BlockConnections.CheckConnection()"]
-    click AK "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L59" "打开源码"
+    click AK "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L60" "打开源码"
     AL["BlockConnections.ConnectTo()"]
-    click AL "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L265" "打开源码"
+    click AL "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L264" "打开源码"
     AM["BlockConnections.ClearConnector()"]
-    click AM "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L292" "打开源码"
+    click AM "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L289" "打开源码"
     AN["HoverFlightController.ApplyRotationCorrection()"]
     click AN "../Assets/Scripts/Features/Flight/HoverFlightController.cs#L398" "打开源码"
     AO["HoverControlSolver.StepHeading()"]
     click AO "../Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L32" "打开源码"
-    A -->|建筑按底座支撑分裂| AF
-    A -->|舰船| B
+    C -->|合并接地分量| AF
+    A --> B
     B --> C
     C --> D
     C --> Z
@@ -2886,17 +2886,17 @@ flowchart TD
 
 - [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L197)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
-- [PlayManager.AssignBlocksToParentGroups](../Assets/Scripts/Features/Simulation/PlayManager.cs#L334)
-<!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|AssignBlocksToParentGroups -->
-- [RuntimeGroupBuilder.Rebuild](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16)
+- [RuntimeGroupBuilder.Refresh](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L33)
+<!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|Refresh -->
+- [RuntimeGroupBuilder.Rebuild](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L54)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|Rebuild -->
 - [BlockGroupManager.GroupRuntimeBlocks](../Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs#L15)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs|GroupRuntimeBlocks -->
-- [BlockConnections.CollectRuntimeNeighbors](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L453)
+- [BlockConnections.CollectRuntimeNeighbors](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L450)
 <!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs|CollectRuntimeNeighbors -->
 - [RigidbodyMotion.Restore](../Assets/Scripts/Features/Simulation/Physics/RigidbodyMotion.cs#L17)
 <!-- source: Assets/Scripts/Features/Simulation/Physics/RigidbodyMotion.cs|Restore -->
-- [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L221)
+- [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L241)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|RefreshChildren -->
 - [PlayManager.FixedUpdate](../Assets/Scripts/Features/Simulation/PlayManager.cs#L81)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|FixedUpdate -->
@@ -2928,26 +2928,26 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/HoverThruster.cs|FixedUpdate -->
 - [UniversalThruster.FixedUpdate](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L10)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs|FixedUpdate -->
-- [BlockConnections.DisConnectAllConnectors](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L362)
+- [BlockConnections.DisConnectAllConnectors](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L359)
 <!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs|DisConnectAllConnectors -->
 - [Block.RestoreConnectionParticipation](../Assets/Scripts/Features/Simulation/Block.cs#L431)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|RestoreConnectionParticipation -->
-- [BlockConnections.RestoreParticipation](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L408)
+- [BlockConnections.RestoreParticipation](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L405)
 <!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs|RestoreParticipation -->
-- [RuntimeGroupBuilder.CaptureSourceBodies](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L131)
+- [RuntimeGroupBuilder.CaptureSourceBodies](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L193)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|CaptureSourceBodies -->
-- [RuntimeGroupBuilder.SelectRetainedGroups](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L191)
+- [RuntimeGroupBuilder.SelectRetainedGroups](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L282)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|SelectRetainedGroups -->
-- [PlayManager.RegisterControlUnitWithoutCleanup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L361)
+- [PlayManager.RegisterControlUnitWithoutCleanup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L343)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RegisterControlUnitWithoutCleanup -->
 - [BlockConnectionSnapshot.Capture](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs#L71)
 <!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs|Capture -->
-- [BlockConnections.ReleaseRuntimePair](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L427)
+- [BlockConnections.ReleaseRuntimePair](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L424)
 <!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs|ReleaseRuntimePair -->
 - [BatchConnectionBuilder.RebuildBatchImmediate](../Assets/Scripts/Features/Simulation/Connections/BatchConnectionBuilder.cs#L40)
 <!-- source: Assets/Scripts/Features/Simulation/Connections/BatchConnectionBuilder.cs|RebuildBatchImmediate -->
-- [BuildingRuntime.RefreshStructure](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L56)
-<!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|RefreshStructure -->
+- [RuntimeGroupBuilder.MergeFoundationGroups](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L254)
+<!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|MergeFoundationGroups -->
 - [BlockConnectionGraph.PrepareBlocks](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L109)
 <!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs|PrepareBlocks -->
 - [Thruster.TickInputThrust](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L143)
@@ -2956,11 +2956,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|ApplyDirectionalThrust -->
 - [GroupPhysicsSettings.ApplyTo](../Assets/Scripts/Features/Simulation/Groups/GroupPhysicsSettings.cs#L12)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/GroupPhysicsSettings.cs|ApplyTo -->
-- [BlockConnections.CheckConnection](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L59)
+- [BlockConnections.CheckConnection](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L60)
 <!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs|CheckConnection -->
-- [BlockConnections.ConnectTo](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L265)
+- [BlockConnections.ConnectTo](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L264)
 <!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs|ConnectTo -->
-- [BlockConnections.ClearConnector](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L292)
+- [BlockConnections.ClearConnector](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L289)
 <!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs|ClearConnector -->
 - [HoverFlightController.ApplyRotationCorrection](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L398)
 <!-- source: Assets/Scripts/Features/Flight/HoverFlightController.cs|ApplyRotationCorrection -->
@@ -2994,7 +2994,7 @@ flowchart TD
     J["Block.Awake()"]
     click J "../Assets/Scripts/Features/Simulation/Block.cs#L102" "打开源码"
     K["BuildingRuntime.ActivateRoutine()"]
-    click K "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L140" "打开源码"
+    click K "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L119" "打开源码"
     L["BlockMaterialCatalog.Price()"]
     click L "../Assets/Scripts/Features/Building/Materials/BlockMaterialCatalog.cs#L49" "打开源码"
     M["SiegeConstructionSettings.Cost()"]
@@ -3043,7 +3043,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|RestoreDimensions -->
 - [Block.Awake](../Assets/Scripts/Features/Simulation/Block.cs#L102)
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|Awake -->
-- [BuildingRuntime.ActivateRoutine](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L140)
+- [BuildingRuntime.ActivateRoutine](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L119)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|ActivateRoutine -->
 - [BlockMaterialCatalog.Price](../Assets/Scripts/Features/Building/Materials/BlockMaterialCatalog.cs#L49)
 <!-- source: Assets/Scripts/Features/Building/Materials/BlockMaterialCatalog.cs|Price -->
@@ -3060,7 +3060,7 @@ flowchart TD
 
 ## 战斗、损伤、爆炸与残骸清理
 
-源码推导：Turret独立索敌后申报功率；激光即时命中且无冲量，实体炮塔先按相对速度求寿命/射程内的提前量，再每炮口生成一发并由物理扫掠命中。碰撞以法向冲量限制质量，按恢复系数扣除反弹能量，动态双方按质心能量份额分摊；CSV默认无半血限幅或碰撞冷却。启用canExplode的单位/建筑方块遭撞击致死同样爆炸，不按DestroyedByCollision排除；ExplosionDamageSession只破坏同PhysicsScene体素，不伤害周围模块，也不随机断开健康连接；被直接摧毁的源模块移除后刷新拓扑，再施加限幅冲量和碎片碰撞保护。显式建筑伤害刷和弹药直接命中保持独立。延迟清理保留原生命周期。
+源码推导：Turret独立索敌后申报功率；激光即时命中且无冲量，实体炮塔先按相对速度求寿命/射程内的提前量，再每炮口生成一发并由物理扫掠命中。碰撞以法向冲量限制质量，按恢复系数扣除反弹能量，动态双方按质心能量份额分摊；CSV默认无半血限幅或碰撞冷却。启用canExplode的单位/建筑方块遭撞击致死同样爆炸，不按DestroyedByCollision排除；ExplosionDamageSession只破坏同PhysicsScene体素，不扣周围模块耐久；源块按概率断开同结构半径内模块的连接；被直接摧毁的源模块移除后刷新拓扑，再施加限幅冲量和碎片碰撞保护。显式建筑伤害刷和弹药直接命中保持独立。延迟清理保留原生命周期。
 
 ```mermaid
 flowchart TD
@@ -3073,19 +3073,19 @@ flowchart TD
     D["Durability.ApplyDamage()"]
     click D "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L108" "打开源码"
     E["ControlUnit.OnCollisionEnter()"]
-    click E "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L381" "打开源码"
+    click E "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L401" "打开源码"
     F["CollisionDamageResolver.ApplyContactDamage()"]
     click F "../Assets/Scripts/Features/Combat/Damage/CollisionDamageResolver.cs#L10" "打开源码"
     G["Durability.ApplyCollisionEnergy()"]
     click G "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L119" "打开源码"
-    H["DestroyManager.DestroyGameObject()"]
-    click H "../Assets/Scripts/Features/Combat/DestroyManager.cs#L30" "打开源码"
+    H["DestroyManager.DestroyTarget()"]
+    click H "../Assets/Scripts/Features/Combat/DestroyManager.cs#L51" "打开源码"
     I["DestroyManager.ExplodeBlock()"]
-    click I "../Assets/Scripts/Features/Combat/DestroyManager.cs#L140" "打开源码"
+    click I "../Assets/Scripts/Features/Combat/DestroyManager.cs#L216" "打开源码"
     K["PlayManager.RefreshGroup()"]
     click K "../Assets/Scripts/Features/Simulation/PlayManager.cs#L197" "打开源码"
     L["ExplosionPropagation.ApplyExplosionForce()"]
-    click L "../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L28" "打开源码"
+    click L "../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L37" "打开源码"
     M["SalvageCleanupSession.ScheduleUnit()"]
     click M "../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L17" "打开源码"
     N["SalvageCleanupSession.CleanupUnitAfterDelay()"]
@@ -3124,20 +3124,18 @@ flowchart TD
     click AD "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L82" "打开源码"
     AE["TurretProjectilePool.OnDestroy()"]
     click AE "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L98" "打开源码"
-    AF["BuildingRuntime.DestroyBlock()"]
-    click AF "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L242" "打开源码"
+    AF["ControlUnit.NotifyBlockDestroyed()"]
+    click AF "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L65" "打开源码"
     AG["ProjectileTurret.GetAimPosition()"]
     click AG "../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L133" "打开源码"
     AH["ProjectileIntercept.TryGetTime()"]
     click AH "../Assets/Scripts/Features/Combat/Turrets/ProjectileIntercept.cs#L8" "打开源码"
     AI["ExplosionDamageSession.ApplyExplosion()"]
-    click AI "../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L45" "打开源码"
-    AJ["ExplosionDamageSession.Apply()"]
-    click AJ "../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L129" "打开源码"
+    click AI "../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L33" "打开源码"
     AK["ExplosionDamageSession.FinishBatch()"]
-    click AK "../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L190" "打开源码"
-    AL["WorldBuildingManager.ExplodeBlock()"]
-    click AL "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L437" "打开源码"
+    click AK "../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L98" "打开源码"
+    AL["ExplosionPropagation.DisconnectBlocksInExplosionRange()"]
+    click AL "../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L13" "打开源码"
     AM["ProceduralVoxelWorld.DamageSphere()"]
     click AM "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L484" "打开源码"
     A --> B
@@ -3165,14 +3163,11 @@ flowchart TD
     F --> G
     D -->|载具耐久为0| H
     G -->|载具耐久为0| H
-    D -->|建筑耐久为0| AF
-    G -->|建筑耐久为0| AF
-    H -->|可爆炸| I
-    AF -->|爆炸源先进入外层批次| AL
-    AL --> I
-    I --> AI
-    AI --> AJ
-    AJ --> AM
+    H -->|损毁事件| AF
+    I -->|强制爆炸请求| H
+    H -->|概率断链| AL
+    H --> AI
+    AI --> AM
     AI -->|地形破坏完成| AK
     AK -->|各脏单位一次| K
     AK -->|拓扑完成后| L
@@ -3189,19 +3184,19 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs|Fire -->
 - [Durability.ApplyDamage](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L108)
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|ApplyDamage -->
-- [ControlUnit.OnCollisionEnter](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L381)
+- [ControlUnit.OnCollisionEnter](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L401)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|OnCollisionEnter -->
 - [CollisionDamageResolver.ApplyContactDamage](../Assets/Scripts/Features/Combat/Damage/CollisionDamageResolver.cs#L10)
 <!-- source: Assets/Scripts/Features/Combat/Damage/CollisionDamageResolver.cs|ApplyContactDamage -->
 - [Durability.ApplyCollisionEnergy](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L119)
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|ApplyCollisionEnergy -->
-- [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L30)
-<!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyGameObject -->
-- [DestroyManager.ExplodeBlock](../Assets/Scripts/Features/Combat/DestroyManager.cs#L140)
+- [DestroyManager.DestroyTarget](../Assets/Scripts/Features/Combat/DestroyManager.cs#L51)
+<!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyTarget -->
+- [DestroyManager.ExplodeBlock](../Assets/Scripts/Features/Combat/DestroyManager.cs#L216)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|ExplodeBlock -->
 - [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L197)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
-- [ExplosionPropagation.ApplyExplosionForce](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L28)
+- [ExplosionPropagation.ApplyExplosionForce](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L37)
 <!-- source: Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs|ApplyExplosionForce -->
 - [SalvageCleanupSession.ScheduleUnit](../Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs#L17)
 <!-- source: Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs|ScheduleUnit -->
@@ -3241,20 +3236,18 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs|Update -->
 - [TurretProjectilePool.OnDestroy](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L98)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs|OnDestroy -->
-- [BuildingRuntime.DestroyBlock](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L242)
-<!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|DestroyBlock -->
+- [ControlUnit.NotifyBlockDestroyed](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L65)
+<!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|NotifyBlockDestroyed -->
 - [ProjectileTurret.GetAimPosition](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L133)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs|GetAimPosition -->
 - [ProjectileIntercept.TryGetTime](../Assets/Scripts/Features/Combat/Turrets/ProjectileIntercept.cs#L8)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/ProjectileIntercept.cs|TryGetTime -->
-- [ExplosionDamageSession.ApplyExplosion](../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L45)
+- [ExplosionDamageSession.ApplyExplosion](../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L33)
 <!-- source: Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs|ApplyExplosion -->
-- [ExplosionDamageSession.Apply](../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L129)
-<!-- source: Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs|Apply -->
-- [ExplosionDamageSession.FinishBatch](../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L190)
+- [ExplosionDamageSession.FinishBatch](../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L98)
 <!-- source: Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs|FinishBatch -->
-- [WorldBuildingManager.ExplodeBlock](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L437)
-<!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|ExplodeBlock -->
+- [ExplosionPropagation.DisconnectBlocksInExplosionRange](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L13)
+<!-- source: Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs|DisconnectBlocksInExplosionRange -->
 - [ProceduralVoxelWorld.DamageSphere](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L484)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|DamageSphere -->
 
@@ -3275,7 +3268,7 @@ flowchart TD
     E["ReturnStatusPanel.Clear()"]
     click E "../Assets/Scripts/Features/Presentation/Interface/ReturnStatusPanel.cs#L37" "打开源码"
     F["PlayManager.PlayEnd()"]
-    click F "../Assets/Scripts/Features/Simulation/PlayManager.cs#L299" "打开源码"
+    click F "../Assets/Scripts/Features/Simulation/PlayManager.cs#L281" "打开源码"
     G["GameManager.Init()"]
     click G "../Assets/Scripts/Features/Bootstrap/GameManager.cs#L25" "打开源码"
     A --> B
@@ -3296,7 +3289,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|CompletePlayEnd -->
 - [ReturnStatusPanel.Clear](../Assets/Scripts/Features/Presentation/Interface/ReturnStatusPanel.cs#L37)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/ReturnStatusPanel.cs|Clear -->
-- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L299)
+- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L281)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
 - [GameManager.Init](../Assets/Scripts/Features/Bootstrap/GameManager.cs#L25)
 <!-- source: Assets/Scripts/Features/Bootstrap/GameManager.cs|Init -->
@@ -3724,7 +3717,7 @@ flowchart TD
     L["WorldSessionManager.EnableWorld()"]
     click L "../Assets/Scripts/Features/World/WorldSessionManager.cs#L284" "打开源码"
     M["BuildingRuntime.ActivateRoutine()"]
-    click M "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L140" "打开源码"
+    click M "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L119" "打开源码"
     N["WorldSessionManager.EndSession()"]
     click N "../Assets/Scripts/Features/World/WorldSessionManager.cs#L327" "打开源码"
     O["WorldSessionManager.Fail()"]
@@ -3736,7 +3729,7 @@ flowchart TD
     R["WorldSessionManager.OnDisable()"]
     click R "../Assets/Scripts/Features/World/WorldSessionManager.cs#L540" "打开源码"
     S["WorldBuildingManager.ClearSession()"]
-    click S "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L232" "打开源码"
+    click S "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L240" "打开源码"
     T["ProceduralVoxelWorld.ClearStreaming()"]
     click T "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L372" "打开源码"
     U["WorldSessionManager.PrepareWorld()"]
@@ -3746,9 +3739,9 @@ flowchart TD
     W["WorldLoadingPanel.Show()"]
     click W "../Assets/Scripts/Features/World/Presentation/WorldLoadingPanel.cs#L39" "打开源码"
     X["WorldBuildingManager.PrepareForUnload()"]
-    click X "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L221" "打开源码"
+    click X "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L229" "打开源码"
     Y["BuildingRuntime.PrepareForUnload()"]
-    click Y "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L184" "打开源码"
+    click Y "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L163" "打开源码"
     Z["CollectionBot.PrepareForHomeDestruction()"]
     click Z "../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L163" "打开源码"
     AA["LootDrop.Release()"]
@@ -3815,7 +3808,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EnterPlay -->
 - [WorldSessionManager.EnableWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L284)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EnableWorld -->
-- [BuildingRuntime.ActivateRoutine](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L140)
+- [BuildingRuntime.ActivateRoutine](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L119)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|ActivateRoutine -->
 - [WorldSessionManager.EndSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L327)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EndSession -->
@@ -3827,7 +3820,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|CompletePlayEnd -->
 - [WorldSessionManager.OnDisable](../Assets/Scripts/Features/World/WorldSessionManager.cs#L540)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|OnDisable -->
-- [WorldBuildingManager.ClearSession](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L232)
+- [WorldBuildingManager.ClearSession](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L240)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|ClearSession -->
 - [ProceduralVoxelWorld.ClearStreaming](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L372)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|ClearStreaming -->
@@ -3837,9 +3830,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|FinishEntering -->
 - [WorldLoadingPanel.Show](../Assets/Scripts/Features/World/Presentation/WorldLoadingPanel.cs#L39)
 <!-- source: Assets/Scripts/Features/World/Presentation/WorldLoadingPanel.cs|Show -->
-- [WorldBuildingManager.PrepareForUnload](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L221)
+- [WorldBuildingManager.PrepareForUnload](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L229)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|PrepareForUnload -->
-- [BuildingRuntime.PrepareForUnload](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L184)
+- [BuildingRuntime.PrepareForUnload](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L163)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|PrepareForUnload -->
 - [CollectionBot.PrepareForHomeDestruction](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L163)
 <!-- source: Assets/Scripts/Features/Bots/Collection/CollectionBot.cs|PrepareForHomeDestruction -->
@@ -4020,9 +4013,9 @@ flowchart TD
     C["WorldBuildingStreaming.UnloadDistantRoutine()"]
     click C "../Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs#L105" "打开源码"
     D["BuildingRuntime.Capture()"]
-    click D "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L192" "打开源码"
+    click D "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L171" "打开源码"
     E["WorldBuildingManager.RemoveBuilding()"]
-    click E "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L208" "打开源码"
+    click E "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L216" "打开源码"
     F["ProceduralVoxelWorld.UnloadColumn()"]
     click F "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L351" "打开源码"
     G["ProceduralVoxelWorld.LoadColumn()"]
@@ -4036,7 +4029,7 @@ flowchart TD
     K["WorldBuildingStreaming.RestoreAvailable()"]
     click K "../Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs#L61" "打开源码"
     L["WorldBuildingManager.RestoreBuildingRoutine()"]
-    click L "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L139" "打开源码"
+    click L "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L140" "打开源码"
     M["WorldSessionManager.FixedUpdate()"]
     click M "../Assets/Scripts/Features/World/WorldSessionManager.cs#L418" "打开源码"
     N["WorldPlayerStreamingGuard.Tick()"]
@@ -4046,7 +4039,7 @@ flowchart TD
     P["WorldPlayerStreamingGuard.Release()"]
     click P "../Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs#L138" "打开源码"
     Q["BuildingRuntime.PrepareForUnload()"]
-    click Q "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L184" "打开源码"
+    click Q "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L163" "打开源码"
     R["CollectionBot.PrepareForHomeDestruction()"]
     click R "../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L163" "打开源码"
     S["LootDrop.Release()"]
@@ -4077,9 +4070,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Streaming/WorldRegionStreaming.cs|LoadNext -->
 - [WorldBuildingStreaming.UnloadDistantRoutine](../Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs#L105)
 <!-- source: Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs|UnloadDistantRoutine -->
-- [BuildingRuntime.Capture](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L192)
+- [BuildingRuntime.Capture](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L171)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|Capture -->
-- [WorldBuildingManager.RemoveBuilding](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L208)
+- [WorldBuildingManager.RemoveBuilding](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L216)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|RemoveBuilding -->
 - [ProceduralVoxelWorld.UnloadColumn](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L351)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|UnloadColumn -->
@@ -4093,7 +4086,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs|LoadColumn -->
 - [WorldBuildingStreaming.RestoreAvailable](../Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs#L61)
 <!-- source: Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs|RestoreAvailable -->
-- [WorldBuildingManager.RestoreBuildingRoutine](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L139)
+- [WorldBuildingManager.RestoreBuildingRoutine](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L140)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|RestoreBuildingRoutine -->
 - [WorldSessionManager.FixedUpdate](../Assets/Scripts/Features/World/WorldSessionManager.cs#L418)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|FixedUpdate -->
@@ -4103,7 +4096,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs|HasTerrainForBounds -->
 - [WorldPlayerStreamingGuard.Release](../Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs#L138)
 <!-- source: Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs|Release -->
-- [BuildingRuntime.PrepareForUnload](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L184)
+- [BuildingRuntime.PrepareForUnload](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L163)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|PrepareForUnload -->
 - [CollectionBot.PrepareForHomeDestruction](../Assets/Scripts/Features/Bots/Collection/CollectionBot.cs#L163)
 <!-- source: Assets/Scripts/Features/Bots/Collection/CollectionBot.cs|PrepareForHomeDestruction -->
@@ -4269,25 +4262,25 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["WorldBuildingManager.RestoreBuildingRoutine()"]
-    click A "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L139" "打开源码"
+    click A "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L140" "打开源码"
     B["BuildingRuntime.InitializeRoutine()"]
-    click B "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L87" "打开源码"
+    click B "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L63" "打开源码"
     C["BlueprintBlockFactory.TryRestore()"]
     click C "../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7" "打开源码"
     D["WorldBuildingManager.OptimizeVisuals()"]
-    click D "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L188" "打开源码"
+    click D "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L189" "打开源码"
     E["WorldBuildingRenderCache.Apply()"]
     click E "../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L10" "打开源码"
     F["WorldBuildingRenderCache.Build()"]
     click F "../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L111" "打开源码"
     G["BuildingRuntime.ActivateRoutine()"]
-    click G "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L140" "打开源码"
+    click G "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L119" "打开源码"
     H["IndustrialPartMotion.ControlsVisual()"]
     click H "../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L32" "打开源码"
     I["ProjectileTurret.MovesVisual()"]
     click I "../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L36" "打开源码"
     J["WorldBuildingManager.ClearSession()"]
-    click J "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L232" "打开源码"
+    click J "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L240" "打开源码"
     K["WorldBuildingRenderCache.Clear()"]
     click K "../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L191" "打开源码"
     L["BlueprintLoader.LoadRoutine()"]
@@ -4306,25 +4299,25 @@ flowchart TD
     L -.->|连接重建跨帧| M
 ```
 
-- [WorldBuildingManager.RestoreBuildingRoutine](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L139)
+- [WorldBuildingManager.RestoreBuildingRoutine](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L140)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|RestoreBuildingRoutine -->
-- [BuildingRuntime.InitializeRoutine](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L87)
+- [BuildingRuntime.InitializeRoutine](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L63)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|InitializeRoutine -->
 - [BlueprintBlockFactory.TryRestore](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs#L7)
 <!-- source: Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs|TryRestore -->
-- [WorldBuildingManager.OptimizeVisuals](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L188)
+- [WorldBuildingManager.OptimizeVisuals](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L189)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|OptimizeVisuals -->
 - [WorldBuildingRenderCache.Apply](../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L10)
 <!-- source: Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs|Apply -->
 - [WorldBuildingRenderCache.Build](../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L111)
 <!-- source: Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs|Build -->
-- [BuildingRuntime.ActivateRoutine](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L140)
+- [BuildingRuntime.ActivateRoutine](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L119)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|ActivateRoutine -->
 - [IndustrialPartMotion.ControlsVisual](../Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs#L32)
 <!-- source: Assets/Scripts/Features/Presentation/Blocks/IndustrialPartMotion.cs|ControlsVisual -->
 - [ProjectileTurret.MovesVisual](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L36)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs|MovesVisual -->
-- [WorldBuildingManager.ClearSession](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L232)
+- [WorldBuildingManager.ClearSession](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L240)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|ClearSession -->
 - [WorldBuildingRenderCache.Clear](../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L191)
 <!-- source: Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs|Clear -->
@@ -4354,11 +4347,11 @@ flowchart TD
     G["TurretTargetSelector.FindNearestTarget()"]
     click G "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L105" "打开源码"
     H["ControlUnit.GetDamageTargets()"]
-    click H "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L19" "打开源码"
+    click H "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L21" "打开源码"
     I["Durability.OnTransformParentChanged()"]
     click I "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L14" "打开源码"
     J["ControlUnit.RefreshChildren()"]
-    click J "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L221" "打开源码"
+    click J "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L241" "打开源码"
     A -.->|装配单个标签组件，UnityGUI回调| D
     B -.->|活动注册| D
     C -.->|移除注册| D
@@ -4385,11 +4378,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|RefreshTarget -->
 - [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L105)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|FindNearestTarget -->
-- [ControlUnit.GetDamageTargets](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L19)
+- [ControlUnit.GetDamageTargets](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L21)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|GetDamageTargets -->
 - [Durability.OnTransformParentChanged](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L14)
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|OnTransformParentChanged -->
-- [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L221)
+- [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L241)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|RefreshChildren -->
 
 ## WorldLab 程序化世界与破坏
@@ -4516,29 +4509,29 @@ flowchart TD
     D["WorldBuildingPalette.BeginPlacement()"]
     click D "../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L131" "打开源码"
     E["WorldBuildingManager.CanPlace()"]
-    click E "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L76" "打开源码"
+    click E "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L77" "打开源码"
     F["WorldBuildingPlacement.Check()"]
     click F "../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs#L15" "打开源码"
     G["WorldBuildingManager.Place()"]
-    click G "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L88" "打开源码"
+    click G "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L89" "打开源码"
     H["WorldBuildingManager.Stage()"]
-    click H "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L244" "打开源码"
+    click H "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L252" "打开源码"
     I["BuildingRuntime.Initialize()"]
-    click I "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L79" "打开源码"
+    click I "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L55" "打开源码"
     J["BuildingRuntime.Activate()"]
-    click J "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L132" "打开源码"
+    click J "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L111" "打开源码"
     K["WorldLabController.TransferEdits()"]
     click K "../Assets/Scripts/Features/World/WorldLab/WorldLabController.cs#L182" "打开源码"
     L["WorldBuildingManager.Capture()"]
-    click L "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L262" "打开源码"
+    click L "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L270" "打开源码"
     M["BuildingRuntime.Capture()"]
-    click M "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L192" "打开源码"
+    click M "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L171" "打开源码"
     N["WorldLabPersistence.SaveSnapshot()"]
     click N "../Assets/Scripts/Features/World/Persistence/WorldLabPersistence.cs#L15" "打开源码"
     O["WorldLabPersistence.LoadSnapshot()"]
     click O "../Assets/Scripts/Features/World/Persistence/WorldLabPersistence.cs#L68" "打开源码"
     P["WorldBuildingManager.Restore()"]
-    click P "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L282" "打开源码"
+    click P "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L290" "打开源码"
     Q["WorldBuildingValidation.ValidateState()"]
     click Q "../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs#L70" "打开源码"
     R["VoxelWorldEdits.Restore()"]
@@ -4546,15 +4539,15 @@ flowchart TD
     S["ProceduralVoxelWorld.RestoreEdits()"]
     click S "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L456" "打开源码"
     T["WorldBuildingManager.ClearBuildings()"]
-    click T "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L381" "打开源码"
+    click T "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L389" "打开源码"
     U["WorldBuildingManager.RestoreBuilding()"]
-    click U "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L118" "打开源码"
+    click U "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L119" "打开源码"
     V["SaveManager.GetBuildingBlueprintFiles()"]
     click V "../Assets/Scripts/Features/Building/SaveManager.cs#L84" "打开源码"
     W["WorldBuildingLibrary.Load()"]
     click W "../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L51" "打开源码"
     X["WorldBuildingManager.ResetBuildings()"]
-    click X "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L337" "打开源码"
+    click X "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L345" "打开源码"
     A -.->|保存场景/目录供Start读取| B
     B --> V
     B --> W
@@ -4590,29 +4583,29 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs|Update -->
 - [WorldBuildingPalette.BeginPlacement](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L131)
 <!-- source: Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs|BeginPlacement -->
-- [WorldBuildingManager.CanPlace](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L76)
+- [WorldBuildingManager.CanPlace](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L77)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|CanPlace -->
 - [WorldBuildingPlacement.Check](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs#L15)
 <!-- source: Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs|Check -->
-- [WorldBuildingManager.Place](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L88)
+- [WorldBuildingManager.Place](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L89)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|Place -->
-- [WorldBuildingManager.Stage](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L244)
+- [WorldBuildingManager.Stage](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L252)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|Stage -->
-- [BuildingRuntime.Initialize](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L79)
+- [BuildingRuntime.Initialize](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L55)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|Initialize -->
-- [BuildingRuntime.Activate](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L132)
+- [BuildingRuntime.Activate](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L111)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|Activate -->
 - [WorldLabController.TransferEdits](../Assets/Scripts/Features/World/WorldLab/WorldLabController.cs#L182)
 <!-- source: Assets/Scripts/Features/World/WorldLab/WorldLabController.cs|TransferEdits -->
-- [WorldBuildingManager.Capture](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L262)
+- [WorldBuildingManager.Capture](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L270)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|Capture -->
-- [BuildingRuntime.Capture](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L192)
+- [BuildingRuntime.Capture](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L171)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|Capture -->
 - [WorldLabPersistence.SaveSnapshot](../Assets/Scripts/Features/World/Persistence/WorldLabPersistence.cs#L15)
 <!-- source: Assets/Scripts/Features/World/Persistence/WorldLabPersistence.cs|SaveSnapshot -->
 - [WorldLabPersistence.LoadSnapshot](../Assets/Scripts/Features/World/Persistence/WorldLabPersistence.cs#L68)
 <!-- source: Assets/Scripts/Features/World/Persistence/WorldLabPersistence.cs|LoadSnapshot -->
-- [WorldBuildingManager.Restore](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L282)
+- [WorldBuildingManager.Restore](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L290)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|Restore -->
 - [WorldBuildingValidation.ValidateState](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs#L70)
 <!-- source: Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs|ValidateState -->
@@ -4620,189 +4613,78 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Persistence/VoxelWorldEdits.cs|Restore -->
 - [ProceduralVoxelWorld.RestoreEdits](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L456)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|RestoreEdits -->
-- [WorldBuildingManager.ClearBuildings](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L381)
+- [WorldBuildingManager.ClearBuildings](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L389)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|ClearBuildings -->
-- [WorldBuildingManager.RestoreBuilding](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L118)
+- [WorldBuildingManager.RestoreBuilding](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L119)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|RestoreBuilding -->
 - [SaveManager.GetBuildingBlueprintFiles](../Assets/Scripts/Features/Building/SaveManager.cs#L84)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|GetBuildingBlueprintFiles -->
 - [WorldBuildingLibrary.Load](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L51)
 <!-- source: Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs|Load -->
-- [WorldBuildingManager.ResetBuildings](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L337)
+- [WorldBuildingManager.ResetBuildings](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L345)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|ResetBuildings -->
 
 ## WorldLab 建筑支撑与损坏
 
-源码推导：地形修改通知只标记附近固定建筑，FixedUpdate读取体素数据计算虚拟范围的地形支撑比例（不生成地基实体）；按WorldBuildingManager序列化支撑阈值脱锚，先刷新源碰撞再启用刚体。方块死亡后共用载具的双侧Connector缓存和BFS分组，以虚拟地面连接点判断分量是否保留，局部删除重探附近、配置失效重建、复杂层级实时回退；虚拟底座判定按共享图Revision及底座尺寸缓存，图变化或底座尺寸改变时失效；断裂组完整生成物理残骸；32块/12片为软回收阈值，正常寿命12秒，所有预算与寿命均等待共用最短保留期；Main游玩态先按原阵营释放货仓/运输物并转换掉落，再判定残骸预算。普通卸载/会话清理不转换。爆炸连锁排队结算，同轮命中先完成伤害，按脏建筑各执行一次支撑刷新，避免先脱落禁用导致漏伤；单块直接死亡仍同步完成支撑，残骸不写快照，R重生成恢复初始布局。
+地基提供共享锚点：各自接地的分量留在原主体，失去支撑的分量由统一重组流程分离。显式伤害刷对选定目标扣耐久，爆炸只损伤体素并概率断链。
 
 ```mermaid
 flowchart TD
-    A["ProceduralVoxelWorld.SetCell()"]
-    click A "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L433" "打开源码"
-    B["WorldBuildingManager.TerrainChanged()"]
-    click B "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L397" "打开源码"
-    C["WorldBuildingManager.FixedUpdate()"]
-    click C "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L408" "打开源码"
-    D["WorldBuildingPlacement.Support()"]
-    click D "../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs#L116" "打开源码"
-    E["BuildingRuntime.ReleaseAnchor()"]
-    click E "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L372" "打开源码"
-    F["ProceduralVoxelWorld.FlushDirty()"]
-    click F "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L576" "打开源码"
-    G["Durability.ApplyDamage()"]
-    click G "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L108" "打开源码"
-    H["BuildingRuntime.DestroyBlock()"]
-    click H "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L242" "打开源码"
-    I["BuildingRuntime.SplitDisconnected()"]
-    click I "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L290" "打开源码"
-    J["Block.CollectNeighbors()"]
-    click J "../Assets/Scripts/Features/Simulation/Block.cs#L420" "打开源码"
-    K["WorldBuildingManager.CreateDebris()"]
-    click K "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L468" "打开源码"
-    L["WorldBuildingManager.DamageSphere()"]
-    click L "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L425" "打开源码"
-    M["ExplosionDamageSession.ApplyBuildings()"]
-    click M "../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L27" "打开源码"
-    W["BuildingRuntime.EndDamageBatch()"]
-    click W "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L69" "打开源码"
-    X["BlockConnectionGraph.Prepare()"]
-    click X "../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L19" "打开源码"
-    Y["BlockGroupManager.GroupPreparedBlocks()"]
-    click Y "../Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs#L27" "打开源码"
-    N["ProceduralVoxelWorld.Generate()"]
-    click N "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L101" "打开源码"
-    O["WorldBuildingManager.ResetBuildings()"]
-    click O "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L337" "打开源码"
-    P["WorldBuildingManager.ClearDebris()"]
-    click P "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L506" "打开源码"
-    Q["WorldBuildingManager.Place()"]
-    click Q "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L88" "打开源码"
-    R["BuildingRuntime.HasGroundConnector()"]
-    click R "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L351" "打开源码"
-    S["WreckSalvage.Convert()"]
-    click S "../Assets/Scripts/Features/Salvage/Drops/WreckSalvage.cs#L10" "打开源码"
-    T["CargoHold.ReleaseContents()"]
-    click T "../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L206" "打开源码"
-    U["Bot.PrepareForHomeDestruction()"]
-    click U "../Assets/Scripts/Features/Bots/Bot.cs#L134" "打开源码"
-    V["LootDrop.Spawn()"]
-    click V "../Assets/Scripts/Features/Salvage/Drops/LootDrop.cs#L84" "打开源码"
-    Z["BuildingRuntime.HasPreparedGroundConnector()"]
-    click Z "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L332" "打开源码"
-    AA["BlockConnectionGraph.PrepareBlocks()"]
-    click AA "../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L109" "打开源码"
-    AB["BlockConnections.CollectRuntimeNeighbors()"]
-    click AB "../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L453" "打开源码"
-    AC["BuildingRuntime.RefreshStructure()"]
-    click AC "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L56" "打开源码"
-    AD["BatchConnectionBuilder.RebuildBatchImmediate()"]
-    click AD "../Assets/Scripts/Features/Simulation/Connections/BatchConnectionBuilder.cs#L40" "打开源码"
-    AE["RigidbodyMotion.Restore()"]
-    click AE "../Assets/Scripts/Features/Simulation/Physics/RigidbodyMotion.cs#L17" "打开源码"
-    AF["GroupPhysicsSettings.ApplyTo()"]
-    click AF "../Assets/Scripts/Features/Simulation/Groups/GroupPhysicsSettings.cs#L12" "打开源码"
-    AG["WreckSalvage.ReleaseContents()"]
-    click AG "../Assets/Scripts/Features/Salvage/Drops/WreckSalvage.cs#L59" "打开源码"
-    A -.->|TerrainChanged事件| B
-    B -.->|待检查集合| C
-    C --> D
-    C -->|支撑低于阈值| E
+    A["WorldBuildingManager.TerrainChanged()"]
+    click A "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L405" "打开源码"
+    B["WorldBuildingManager.FixedUpdate()"]
+    click B "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L416" "打开源码"
+    C["BuildingRuntime.ReleaseAnchor()"]
+    click C "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L305" "打开源码"
+    D["WorldBuildingManager.DamageSphere()"]
+    click D "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L433" "打开源码"
+    E["ExplosionDamageSession.ApplyTargets()"]
+    click E "../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L13" "打开源码"
+    F["Durability.ApplyDamage()"]
+    click F "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L108" "打开源码"
+    G["DestroyManager.DestroyTarget()"]
+    click G "../Assets/Scripts/Features/Combat/DestroyManager.cs#L51" "打开源码"
+    H["RuntimeGroupBuilder.RefreshUnit()"]
+    click H "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16" "打开源码"
+    I["RuntimeGroupBuilder.Rebuild()"]
+    click I "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L54" "打开源码"
+    J["RuntimeGroupBuilder.MergeFoundationGroups()"]
+    click J "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L254" "打开源码"
+    K["WorldBuildingManager.TrackFragment()"]
+    click K "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L456" "打开源码"
+    A -.-> B
+    B -->|地形支撑不足| C
+    D --> E
     E --> F
-    G -->|建筑耐久为0| H
-    H -->|标记脏结构| W
-    W -->|最外层批次结束| AC
-    AC --> I
-    I -->|虚拟地面连接点| Z
-    Z -->|缓存缺失| R
-    I --> X
-    X --> AA
-    AA -->|几何失效或成员改变| AD
-    AD -->|每块准备几何邻接| J
-    I -->|与载具共用BFS| Y
-    Y -->|经Traverse和Block| AB
-    I -->|断裂组| K
-    K --> AE
-    K --> AF
-    L -->|建筑刷子局部伤害| M
-    M -->|同域爆炸另见战斗图| G
-    K -->|禁用/重挂接及预算判断前| S
-    S --> AG
-    H --> AG
-    AG --> U
-    AG --> T
-    S -->|敌方残骸概率| V
-    T -->|建筑既有存量或载具阵营配置| V
-    N -.->|Regenerated事件| O
-    O --> P
-    O -->|有效初始布局| Q
+    F -->|致死| G
+    G -.->|损毁批末| H
+    H -.-> I
+    I --> J
+    I -.->|通过地基登记脱落块| K
 ```
 
-- [ProceduralVoxelWorld.SetCell](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L433)
-<!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|SetCell -->
-- [WorldBuildingManager.TerrainChanged](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L397)
+- [WorldBuildingManager.TerrainChanged](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L405)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|TerrainChanged -->
-- [WorldBuildingManager.FixedUpdate](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L408)
+- [WorldBuildingManager.FixedUpdate](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L416)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|FixedUpdate -->
-- [WorldBuildingPlacement.Support](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs#L116)
-<!-- source: Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs|Support -->
-- [BuildingRuntime.ReleaseAnchor](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L372)
+- [BuildingRuntime.ReleaseAnchor](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L305)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|ReleaseAnchor -->
-- [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L576)
-<!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|FlushDirty -->
+- [WorldBuildingManager.DamageSphere](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L433)
+<!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|DamageSphere -->
+- [ExplosionDamageSession.ApplyTargets](../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L13)
+<!-- source: Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs|ApplyTargets -->
 - [Durability.ApplyDamage](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L108)
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|ApplyDamage -->
-- [BuildingRuntime.DestroyBlock](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L242)
-<!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|DestroyBlock -->
-- [BuildingRuntime.SplitDisconnected](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L290)
-<!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|SplitDisconnected -->
-- [Block.CollectNeighbors](../Assets/Scripts/Features/Simulation/Block.cs#L420)
-<!-- source: Assets/Scripts/Features/Simulation/Block.cs|CollectNeighbors -->
-- [WorldBuildingManager.CreateDebris](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L468)
-<!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|CreateDebris -->
-- [WorldBuildingManager.DamageSphere](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L425)
-<!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|DamageSphere -->
-- [ExplosionDamageSession.ApplyBuildings](../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L27)
-<!-- source: Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs|ApplyBuildings -->
-- [BuildingRuntime.EndDamageBatch](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L69)
-<!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|EndDamageBatch -->
-- [BlockConnectionGraph.Prepare](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L19)
-<!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs|Prepare -->
-- [BlockGroupManager.GroupPreparedBlocks](../Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs#L27)
-<!-- source: Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs|GroupPreparedBlocks -->
-- [ProceduralVoxelWorld.Generate](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L101)
-<!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|Generate -->
-- [WorldBuildingManager.ResetBuildings](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L337)
-<!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|ResetBuildings -->
-- [WorldBuildingManager.ClearDebris](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L506)
-<!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|ClearDebris -->
-- [WorldBuildingManager.Place](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L88)
-<!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|Place -->
-- [BuildingRuntime.HasGroundConnector](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L351)
-<!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|HasGroundConnector -->
-- [WreckSalvage.Convert](../Assets/Scripts/Features/Salvage/Drops/WreckSalvage.cs#L10)
-<!-- source: Assets/Scripts/Features/Salvage/Drops/WreckSalvage.cs|Convert -->
-- [CargoHold.ReleaseContents](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L206)
-<!-- source: Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs|ReleaseContents -->
-- [Bot.PrepareForHomeDestruction](../Assets/Scripts/Features/Bots/Bot.cs#L134)
-<!-- source: Assets/Scripts/Features/Bots/Bot.cs|PrepareForHomeDestruction -->
-- [LootDrop.Spawn](../Assets/Scripts/Features/Salvage/Drops/LootDrop.cs#L84)
-<!-- source: Assets/Scripts/Features/Salvage/Drops/LootDrop.cs|Spawn -->
-- [BuildingRuntime.HasPreparedGroundConnector](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L332)
-<!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|HasPreparedGroundConnector -->
-- [BlockConnectionGraph.PrepareBlocks](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L109)
-<!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs|PrepareBlocks -->
-- [BlockConnections.CollectRuntimeNeighbors](../Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs#L453)
-<!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs|CollectRuntimeNeighbors -->
-- [BuildingRuntime.RefreshStructure](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L56)
-<!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|RefreshStructure -->
-- [BatchConnectionBuilder.RebuildBatchImmediate](../Assets/Scripts/Features/Simulation/Connections/BatchConnectionBuilder.cs#L40)
-<!-- source: Assets/Scripts/Features/Simulation/Connections/BatchConnectionBuilder.cs|RebuildBatchImmediate -->
-- [RigidbodyMotion.Restore](../Assets/Scripts/Features/Simulation/Physics/RigidbodyMotion.cs#L17)
-<!-- source: Assets/Scripts/Features/Simulation/Physics/RigidbodyMotion.cs|Restore -->
-- [GroupPhysicsSettings.ApplyTo](../Assets/Scripts/Features/Simulation/Groups/GroupPhysicsSettings.cs#L12)
-<!-- source: Assets/Scripts/Features/Simulation/Groups/GroupPhysicsSettings.cs|ApplyTo -->
-- [WreckSalvage.ReleaseContents](../Assets/Scripts/Features/Salvage/Drops/WreckSalvage.cs#L59)
-<!-- source: Assets/Scripts/Features/Salvage/Drops/WreckSalvage.cs|ReleaseContents -->
+- [DestroyManager.DestroyTarget](../Assets/Scripts/Features/Combat/DestroyManager.cs#L51)
+<!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyTarget -->
+- [RuntimeGroupBuilder.RefreshUnit](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16)
+<!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|RefreshUnit -->
+- [RuntimeGroupBuilder.Rebuild](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L54)
+<!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|Rebuild -->
+- [RuntimeGroupBuilder.MergeFoundationGroups](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L254)
+<!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|MergeFoundationGroups -->
+- [WorldBuildingManager.TrackFragment](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L456)
+<!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|TrackFragment -->
 
 ## WorldLab 金属支撑与碎片
 
@@ -4896,7 +4778,7 @@ flowchart TD
     G["WorldBuildingStreaming.LoadColumn()"]
     click G "../Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs#L34" "打开源码"
     H["BuildingRuntime.InitializeRoutine()"]
-    click H "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L87" "打开源码"
+    click H "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L63" "打开源码"
     I["WorldSessionManager.Update()"]
     click I "../Assets/Scripts/Features/World/WorldSessionManager.cs#L443" "打开源码"
     J["OutpostEncounterDirector.Tick()"]
@@ -4908,7 +4790,7 @@ flowchart TD
     M["OutpostEncounterDirector.Hibernate()"]
     click M "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L291" "打开源码"
     N["DestroyManager.DestroyGameObject()"]
-    click N "../Assets/Scripts/Features/Combat/DestroyManager.cs#L30" "打开源码"
+    click N "../Assets/Scripts/Features/Combat/DestroyManager.cs#L46" "打开源码"
     O["EnemyIdentity.ReportDefeated()"]
     click O "../Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs#L9" "打开源码"
     P["OutpostEncounterDirector.Clear()"]
@@ -4956,7 +4838,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs|ReadSource -->
 - [WorldBuildingStreaming.LoadColumn](../Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs#L34)
 <!-- source: Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs|LoadColumn -->
-- [BuildingRuntime.InitializeRoutine](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L87)
+- [BuildingRuntime.InitializeRoutine](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L63)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|InitializeRoutine -->
 - [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L443)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Update -->
@@ -4968,7 +4850,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyBlueprintFactory.cs|Spawn -->
 - [OutpostEncounterDirector.Hibernate](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L291)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs|Hibernate -->
-- [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L30)
+- [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L46)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyGameObject -->
 - [EnemyIdentity.ReportDefeated](../Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs#L9)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs|ReportDefeated -->
@@ -5150,15 +5032,15 @@ flowchart TD
     L["ModularUnitFactory.Spawn()"]
     click L "../Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs#L41" "打开源码"
     M["ControlUnit.RefreshChildren()"]
-    click M "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L221" "打开源码"
+    click M "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L241" "打开源码"
     N["ControlUnit.AssignRuntimeOwnershipToBlocks()"]
-    click N "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L281" "打开源码"
+    click N "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L301" "打开源码"
     O["EnemyIdentity.SetSpawnMaxHealth()"]
     click O "../Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs#L32" "打开源码"
     P["OutpostEncounterDirector.Hibernate()"]
     click P "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L291" "打开源码"
     Q["PlayManager.PlayEnd()"]
-    click Q "../Assets/Scripts/Features/Simulation/PlayManager.cs#L299" "打开源码"
+    click Q "../Assets/Scripts/Features/Simulation/PlayManager.cs#L281" "打开源码"
     R["EnemySpawner.EndPlayMode()"]
     click R "../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L57" "打开源码"
     S["EnemySpawner.SpawnBlockData()"]
@@ -5206,15 +5088,15 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|RefreshRuntimeData -->
 - [ModularUnitFactory.Spawn](../Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs#L41)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs|Spawn -->
-- [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L221)
+- [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L241)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|RefreshChildren -->
-- [ControlUnit.AssignRuntimeOwnershipToBlocks](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L281)
+- [ControlUnit.AssignRuntimeOwnershipToBlocks](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L301)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|AssignRuntimeOwnershipToBlocks -->
 - [EnemyIdentity.SetSpawnMaxHealth](../Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs#L32)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs|SetSpawnMaxHealth -->
 - [OutpostEncounterDirector.Hibernate](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L291)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs|Hibernate -->
-- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L299)
+- [PlayManager.PlayEnd](../Assets/Scripts/Features/Simulation/PlayManager.cs#L281)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
 - [EnemySpawner.EndPlayMode](../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L57)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs|EndPlayMode -->
@@ -5423,7 +5305,7 @@ flowchart TD
     B["WorldCombatPlayerChecks.Spawn()"]
     click B "../Assets/Scripts/Features/World/Validation/WorldCombatPlayerChecks.cs#L135" "打开源码"
     C["ControlUnit.Update()"]
-    click C "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L174" "打开源码"
+    click C "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L194" "打开源码"
     D["MainThruster.FixedUpdate()"]
     click D "../Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs#L10" "打开源码"
     E["PowerTransmissionDevice.Update()"]
@@ -5441,7 +5323,7 @@ flowchart TD
     K["Durability.ApplyDamage()"]
     click K "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L108" "打开源码"
     L["DestroyManager.DestroyGameObject()"]
-    click L "../Assets/Scripts/Features/Combat/DestroyManager.cs#L30" "打开源码"
+    click L "../Assets/Scripts/Features/Combat/DestroyManager.cs#L46" "打开源码"
     M["WreckSalvage.Convert()"]
     click M "../Assets/Scripts/Features/Salvage/Drops/WreckSalvage.cs#L10" "打开源码"
     N["CollectionBot.FixedUpdate()"]
@@ -5471,7 +5353,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Validation/WorldCombatPlayerChecks.cs|Run -->
 - [WorldCombatPlayerChecks.Spawn](../Assets/Scripts/Features/World/Validation/WorldCombatPlayerChecks.cs#L135)
 <!-- source: Assets/Scripts/Features/World/Validation/WorldCombatPlayerChecks.cs|Spawn -->
-- [ControlUnit.Update](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L174)
+- [ControlUnit.Update](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L194)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|Update -->
 - [MainThruster.FixedUpdate](../Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs#L10)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs|FixedUpdate -->
@@ -5489,7 +5371,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs|Apply -->
 - [Durability.ApplyDamage](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L108)
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|ApplyDamage -->
-- [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L30)
+- [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L46)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyGameObject -->
 - [WreckSalvage.Convert](../Assets/Scripts/Features/Salvage/Drops/WreckSalvage.cs#L10)
 <!-- source: Assets/Scripts/Features/Salvage/Drops/WreckSalvage.cs|Convert -->
@@ -5512,8 +5394,8 @@ flowchart TD
     click B "../Assets/Scripts/Features/World/Validation/OutpostSalvagePlayerChecks.cs#L12" "打开源码"
     C["Durability.ApplyDamage()"]
     click C "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L108" "打开源码"
-    D["BuildingRuntime.DestroyBlock()"]
-    click D "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L242" "打开源码"
+    D["DestroyManager.DestroyTarget()"]
+    click D "../Assets/Scripts/Features/Combat/DestroyManager.cs#L51" "打开源码"
     E["CargoHold.ReleaseContents()"]
     click E "../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L206" "打开源码"
     F["LootDrop.Spawn()"]
@@ -5547,8 +5429,8 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Validation/OutpostSalvagePlayerChecks.cs|Run -->
 - [Durability.ApplyDamage](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L108)
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|ApplyDamage -->
-- [BuildingRuntime.DestroyBlock](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L242)
-<!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|DestroyBlock -->
+- [DestroyManager.DestroyTarget](../Assets/Scripts/Features/Combat/DestroyManager.cs#L51)
+<!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyTarget -->
 - [CargoHold.ReleaseContents](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L206)
 <!-- source: Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs|ReleaseContents -->
 - [LootDrop.Spawn](../Assets/Scripts/Features/Salvage/Drops/LootDrop.cs#L84)
@@ -5633,7 +5515,7 @@ flowchart TD
     H["Cockpit.SetControlMode()"]
     click H "../Assets/Scripts/Features/Simulation/Units/Cockpit.cs#L21" "打开源码"
     I["ControlUnit.Update()"]
-    click I "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L174" "打开源码"
+    click I "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L194" "打开源码"
     J["EnemyController.FixedUpdate()"]
     click J "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L259" "打开源码"
     K["SiegeFleet.RefreshBindings()"]
@@ -5651,11 +5533,11 @@ flowchart TD
     Q["SiegeBase.Create()"]
     click Q "../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L48" "打开源码"
     R["WorldBuildingManager.RestoreBuilding()"]
-    click R "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L118" "打开源码"
+    click R "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L119" "打开源码"
     S["SiegeBase.Repair()"]
     click S "../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L151" "打开源码"
     T["BuildingRuntime.TryRefit()"]
-    click T "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L42" "打开源码"
+    click T "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L41" "打开源码"
     U["BuildingRefit.Apply()"]
     click U "../Assets/Scripts/Features/World/Buildings/Topology/BuildingRefit.cs#L9" "打开源码"
     V["SiegeSession.RefreshBlueprints()"]
@@ -5736,7 +5618,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs|TakeControl -->
 - [Cockpit.SetControlMode](../Assets/Scripts/Features/Simulation/Units/Cockpit.cs#L21)
 <!-- source: Assets/Scripts/Features/Simulation/Units/Cockpit.cs|SetControlMode -->
-- [ControlUnit.Update](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L174)
+- [ControlUnit.Update](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L194)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|Update -->
 - [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L259)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|FixedUpdate -->
@@ -5754,11 +5636,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs|OnEnable -->
 - [SiegeBase.Create](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L48)
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeBase.cs|Create -->
-- [WorldBuildingManager.RestoreBuilding](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L118)
+- [WorldBuildingManager.RestoreBuilding](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L119)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|RestoreBuilding -->
 - [SiegeBase.Repair](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L151)
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeBase.cs|Repair -->
-- [BuildingRuntime.TryRefit](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L42)
+- [BuildingRuntime.TryRefit](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L41)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|TryRefit -->
 - [BuildingRefit.Apply](../Assets/Scripts/Features/World/Buildings/Topology/BuildingRefit.cs#L9)
 <!-- source: Assets/Scripts/Features/World/Buildings/Topology/BuildingRefit.cs|Apply -->
@@ -6071,7 +5953,7 @@ flowchart TD
     I["Durability.ChangeDurability()"]
     click I "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L168" "打开源码"
     J["DestroyManager.DestroyGameObject()"]
-    click J "../Assets/Scripts/Features/Combat/DestroyManager.cs#L30" "打开源码"
+    click J "../Assets/Scripts/Features/Combat/DestroyManager.cs#L46" "打开源码"
     K["SiegeSession.NotifyCockpitDestroyed()"]
     click K "../Assets/Scripts/Features/Siege/SiegeSession.cs#L391" "打开源码"
     L["SiegeFleet.NotifyLost()"]
@@ -6084,8 +5966,8 @@ flowchart TD
     click O "../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L162" "打开源码"
     P["SiegeHud.Restart()"]
     click P "../Assets/Scripts/Features/Siege/Interface/SiegeHud.cs#L120" "打开源码"
-    Q["BuildingRuntime.DestroyBlock()"]
-    click Q "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L242" "打开源码"
+    Q["DestroyManager.DestroyTarget()"]
+    click Q "../Assets/Scripts/Features/Combat/DestroyManager.cs#L51" "打开源码"
     R["SiegeBase.OnBlockDestroyed()"]
     click R "../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L176" "打开源码"
     S["SiegeBase.Dispose()"]
@@ -6148,7 +6030,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|ResolveAttacker -->
 - [Durability.ChangeDurability](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L168)
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|ChangeDurability -->
-- [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L30)
+- [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L46)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyGameObject -->
 - [SiegeSession.NotifyCockpitDestroyed](../Assets/Scripts/Features/Siege/SiegeSession.cs#L391)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|NotifyCockpitDestroyed -->
@@ -6162,8 +6044,8 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs|Stop -->
 - [SiegeHud.Restart](../Assets/Scripts/Features/Siege/Interface/SiegeHud.cs#L120)
 <!-- source: Assets/Scripts/Features/Siege/Interface/SiegeHud.cs|Restart -->
-- [BuildingRuntime.DestroyBlock](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L242)
-<!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|DestroyBlock -->
+- [DestroyManager.DestroyTarget](../Assets/Scripts/Features/Combat/DestroyManager.cs#L51)
+<!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyTarget -->
 - [SiegeBase.OnBlockDestroyed](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L176)
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeBase.cs|OnBlockDestroyed -->
 - [SiegeBase.Dispose](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L184)
@@ -6339,7 +6221,7 @@ flowchart TD
     G["BlockGroupManager.GroupBlocks()"]
     click G "../Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs#L9" "打开源码"
     H["RuntimeGroupBuilder.Rebuild()"]
-    click H "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16" "打开源码"
+    click H "../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L54" "打开源码"
     I["PlayManager.RefreshGroup()"]
     click I "../Assets/Scripts/Features/Simulation/PlayManager.cs#L197" "打开源码"
     J["SiegePerformanceCapture.BeforeReload()"]
@@ -6373,7 +6255,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Diagnostics/SimulationWorkMetrics.cs|Read -->
 - [BlockGroupManager.GroupBlocks](../Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs#L9)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/BlockGroupManager.cs|GroupBlocks -->
-- [RuntimeGroupBuilder.Rebuild](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16)
+- [RuntimeGroupBuilder.Rebuild](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L54)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|Rebuild -->
 - [PlayManager.RefreshGroup](../Assets/Scripts/Features/Simulation/PlayManager.cs#L197)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|RefreshGroup -->
@@ -6444,15 +6326,15 @@ flowchart TD
     C["SiegeStressPopulation.Start()"]
     click C "../Assets/Scripts/Features/Siege/Validation/SiegeStressPopulation.cs#L40" "打开源码"
     D["WorldBuildingManager.RestoreBuildingRoutine()"]
-    click D "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L139" "打开源码"
+    click D "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L140" "打开源码"
     E["WorldBuildingManager.HasCapacity()"]
-    click E "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L196" "打开源码"
+    click E "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L204" "打开源码"
     F["SiegeStressPopulation.RestoreHud()"]
     click F "../Assets/Scripts/Features/Siege/Validation/SiegeStressPopulation.cs#L154" "打开源码"
     G["SiegeStressPopulation.OnDestroy()"]
     click G "../Assets/Scripts/Features/Siege/Validation/SiegeStressPopulation.cs#L138" "打开源码"
     H["WorldBuildingManager.RemoveBuilding()"]
-    click H "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L208" "打开源码"
+    click H "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L216" "打开源码"
     B --> A
     C --> E
     C -.->|显式推进分帧迭代器| D
@@ -6467,15 +6349,15 @@ flowchart TD
 <!-- source: Assets/Editor/Siege/Player/SiegePlayerBuild.cs|BuildMixedStress -->
 - [SiegeStressPopulation.Start](../Assets/Scripts/Features/Siege/Validation/SiegeStressPopulation.cs#L40)
 <!-- source: Assets/Scripts/Features/Siege/Validation/SiegeStressPopulation.cs|Start -->
-- [WorldBuildingManager.RestoreBuildingRoutine](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L139)
+- [WorldBuildingManager.RestoreBuildingRoutine](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L140)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|RestoreBuildingRoutine -->
-- [WorldBuildingManager.HasCapacity](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L196)
+- [WorldBuildingManager.HasCapacity](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L204)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|HasCapacity -->
 - [SiegeStressPopulation.RestoreHud](../Assets/Scripts/Features/Siege/Validation/SiegeStressPopulation.cs#L154)
 <!-- source: Assets/Scripts/Features/Siege/Validation/SiegeStressPopulation.cs|RestoreHud -->
 - [SiegeStressPopulation.OnDestroy](../Assets/Scripts/Features/Siege/Validation/SiegeStressPopulation.cs#L138)
 <!-- source: Assets/Scripts/Features/Siege/Validation/SiegeStressPopulation.cs|OnDestroy -->
-- [WorldBuildingManager.RemoveBuilding](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L208)
+- [WorldBuildingManager.RemoveBuilding](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L216)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|RemoveBuilding -->
 
 ## 阵地战敌方碎片预算
@@ -6530,7 +6412,7 @@ flowchart TD
     F["EnemyController.CalculateDesiredMovement()"]
     click F "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L326" "打开源码"
     G["ControlUnit.SetPropulsionInput()"]
-    click G "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L325" "打开源码"
+    click G "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L345" "打开源码"
     H["EnemyController.GetApproachDirection()"]
     click H "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L363" "打开源码"
     I["EnemyController.StabilizeDirection()"]
@@ -6631,7 +6513,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|IsValidOpponent -->
 - [EnemyController.CalculateDesiredMovement](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L326)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|CalculateDesiredMovement -->
-- [ControlUnit.SetPropulsionInput](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L325)
+- [ControlUnit.SetPropulsionInput](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L345)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|SetPropulsionInput -->
 - [EnemyController.GetApproachDirection](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L363)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|GetApproachDirection -->
@@ -6818,7 +6700,7 @@ flowchart TD
     K["EnemyController.FixedUpdate()"]
     click K "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L259" "打开源码"
     L["ControlUnit.SetPropulsionInput()"]
-    click L "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L325" "打开源码"
+    click L "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L345" "打开源码"
     M["EnemyController.UpdatePropulsionInput()"]
     click M "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L438" "打开源码"
     N["UniversalThruster.ApplyDirectionalThrust()"]
@@ -6856,7 +6738,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|TickInputThrust -->
 - [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L259)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|FixedUpdate -->
-- [ControlUnit.SetPropulsionInput](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L325)
+- [ControlUnit.SetPropulsionInput](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L345)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|SetPropulsionInput -->
 - [EnemyController.UpdatePropulsionInput](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L438)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|UpdatePropulsionInput -->
@@ -6916,7 +6798,7 @@ flowchart TD
     F["EnemyAvoidanceLab.BeginSuite()"]
     click F "../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L460" "打开源码"
     G["ControlUnit.OnCollisionEnter()"]
-    click G "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L381" "打开源码"
+    click G "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L401" "打开源码"
     H["EnemyAvoidanceLab.OnShipCollision()"]
     click H "../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L417" "打开源码"
     I["EnemyAvoidanceLab.DeploySelected()"]
@@ -7003,7 +6885,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs|FixedUpdate -->
 - [EnemyAvoidanceLab.BeginSuite](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L460)
 <!-- source: Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs|BeginSuite -->
-- [ControlUnit.OnCollisionEnter](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L381)
+- [ControlUnit.OnCollisionEnter](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L401)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|OnCollisionEnter -->
 - [EnemyAvoidanceLab.OnShipCollision](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L417)
 <!-- source: Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs|OnShipCollision -->
@@ -7152,7 +7034,7 @@ flowchart TD
     D["ModularUnitFactory.Spawn()"]
     click D "../Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs#L41" "打开源码"
     E["DestroyManager.DestroyGameObject()"]
-    click E "../Assets/Scripts/Features/Combat/DestroyManager.cs#L30" "打开源码"
+    click E "../Assets/Scripts/Features/Combat/DestroyManager.cs#L46" "打开源码"
     F["SkirmishMatch.NotifyCockpitDestroyed()"]
     click F "../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L161" "打开源码"
     G["SkirmishMatch.Eliminate()"]
@@ -7172,7 +7054,7 @@ flowchart TD
     N["VfxEffectPool.ClearActive()"]
     click N "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L125" "打开源码"
     O["DestroyManager.EndSalvageSession()"]
-    click O "../Assets/Scripts/Features/Combat/DestroyManager.cs#L207" "打开源码"
+    click O "../Assets/Scripts/Features/Combat/DestroyManager.cs#L238" "打开源码"
     P["SkirmishHud.SetState()"]
     click P "../Assets/Scripts/Features/Combat/Skirmish/SkirmishHud.cs#L25" "打开源码"
     Q["EnemyLabMovingObstacle.ResetMotion()"]
@@ -7194,7 +7076,7 @@ flowchart TD
     AE["SkirmishMatch.ReleaseTeamMaterial()"]
     click AE "../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L360" "打开源码"
     Z["ControlUnit.TryGetTotalDurability()"]
-    click Z "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L137" "打开源码"
+    click Z "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L157" "打开源码"
     AA["CombatHud.IsWorldPointOccluded()"]
     click AA "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L331" "打开源码"
     AC["CombatHud.LateUpdate()"]
@@ -7240,7 +7122,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs|BeginRound -->
 - [ModularUnitFactory.Spawn](../Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs#L41)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs|Spawn -->
-- [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L30)
+- [DestroyManager.DestroyGameObject](../Assets/Scripts/Features/Combat/DestroyManager.cs#L46)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|DestroyGameObject -->
 - [SkirmishMatch.NotifyCockpitDestroyed](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L161)
 <!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs|NotifyCockpitDestroyed -->
@@ -7260,7 +7142,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs|ClearAll -->
 - [VfxEffectPool.ClearActive](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L125)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs|ClearActive -->
-- [DestroyManager.EndSalvageSession](../Assets/Scripts/Features/Combat/DestroyManager.cs#L207)
+- [DestroyManager.EndSalvageSession](../Assets/Scripts/Features/Combat/DestroyManager.cs#L238)
 <!-- source: Assets/Scripts/Features/Combat/DestroyManager.cs|EndSalvageSession -->
 - [SkirmishHud.SetState](../Assets/Scripts/Features/Combat/Skirmish/SkirmishHud.cs#L25)
 <!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishHud.cs|SetState -->
@@ -7282,7 +7164,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs|OnDestroy -->
 - [SkirmishMatch.ReleaseTeamMaterial](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L360)
 <!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs|ReleaseTeamMaterial -->
-- [ControlUnit.TryGetTotalDurability](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L137)
+- [ControlUnit.TryGetTotalDurability](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L157)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|TryGetTotalDurability -->
 - [CombatHud.IsWorldPointOccluded](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L331)
 <!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|IsWorldPointOccluded -->
@@ -7351,9 +7233,9 @@ flowchart TD
     D["EditableComponentBaker.ConfigureServices()"]
     click D "../Assets/Editor/Architecture/EditableComponentBaker.cs#L473" "打开源码"
     E["ControlUnit.RefreshChildren()"]
-    click E "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L221" "打开源码"
+    click E "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L241" "打开源码"
     F["WorldBuildingManager.Stage()"]
-    click F "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L244" "打开源码"
+    click F "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L252" "打开源码"
     G["ProceduralVoxelWorld.Generate()"]
     click G "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L101" "打开源码"
     H["VfxEffectPool.Rent()"]
@@ -7378,9 +7260,9 @@ flowchart TD
 <!-- source: Assets/Editor/Architecture/EditableComponentBaker.cs|MigrateTree -->
 - [EditableComponentBaker.ConfigureServices](../Assets/Editor/Architecture/EditableComponentBaker.cs#L473)
 <!-- source: Assets/Editor/Architecture/EditableComponentBaker.cs|ConfigureServices -->
-- [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L221)
+- [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L241)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|RefreshChildren -->
-- [WorldBuildingManager.Stage](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L244)
+- [WorldBuildingManager.Stage](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L252)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|Stage -->
 - [ProceduralVoxelWorld.Generate](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L101)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|Generate -->

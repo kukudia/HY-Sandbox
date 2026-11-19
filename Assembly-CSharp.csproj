@@ -93,6 +93,7 @@
     <Compile Include="Assets\Scripts\Features\Building\BuildingEditor\BuildingFootprint.cs" />
     <Compile Include="Assets\Scripts\Features\Diagnostics\DebugManager.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Interface\Panels\CombatHudPanels.cs" />
+    <Compile Include="Assets\Scripts\Features\MainMenu\Navigation\PauseMenu.cs" />
     <Compile Include="Assets\Scripts\Features\Diagnostics\Interface\DurabilityDebugLabels.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\Projectiles\ProjectileTracer.cs" />
     <Compile Include="Assets\Scripts\Features\World\Validation\WorldReturnPlayerChecks.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Assets\Scripts\Features\Bots\Navigation\BotFlightMotion.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Battle\SiegeWreckBudget.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interface\BuildPalette.cs" />
+    <Compile Include="Assets\Scripts\Features\Diagnostics\Interface\CombatFlightTracks.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\TurretHitscan.cs" />
     <Compile Include="Assets\Scripts\Features\Diagnostics\Physics\PhysicsTelemetryHud.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Validation\SiegeEngineCounters.cs" />
@@ -165,6 +167,7 @@
     <Compile Include="Assets\Scripts\Features\World\Terrain\Meshing\VoxelMeshData.cs" />
     <Compile Include="Assets\Scripts\Features\Power\Devices\PowerTransmissionDevice.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Hangars\HangarEntrance.cs" />
+    <Compile Include="Assets\Scripts\Features\Player\TextInputFocus.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Modes\PlayDraft.cs" />
     <Compile Include="Assets\Scripts\Features\World\Validation\WorldSessionValidationHost.cs" />
     <Compile Include="Assets\Scripts\Features\Navigation\Diagnostics\EnemyNavigationSnapshot.cs" />
@@ -238,6 +241,7 @@
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\Projectiles\TurretProjectilePool.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Hangars\HangarRules.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Gameplay\SiegeConstructionSettings.cs" />
+    <Compile Include="Assets\Scripts\Features\Siege\Battle\SiegeStrandedCockpit.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Gameplay\SiegeBaseWorkshop.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interaction\MoveAxisHandle.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\ProjectileTurret.cs" />
@@ -318,6 +322,7 @@
     <Compile Include="Assets\Scripts\Features\Diagnostics\Physics\AbnormalImpulseRecorder.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interface\BuildHotbar.cs" />
     <Compile Include="Assets\Scripts\Features\World\Buildings\Topology\BuildingRefit.cs" />
+    <Compile Include="Assets\Scripts\Features\Presentation\Attract\BattleAttractStage.cs" />
     <Compile Include="Assets\Scripts\Features\World\Buildings\Placement\WorldBuildingPlacement.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Interface\PanelTransitions.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Hangars\HangarResizeButton.cs" />
@@ -353,6 +358,7 @@
     <Compile Include="Assets\Scripts\Features\Combat\Enemies\EnemyController.cs" />
     <Compile Include="Assets\Layer Lab\Scripts\PanelView.cs" />
     <Compile Include="Assets\Scripts\Features\Diagnostics\Physics\AbnormalImpulseBodyProbe.cs" />
+    <Compile Include="Assets\Scripts\Features\Presentation\Attract\BattleAttractCamera.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Skirmish\SkirmishHud.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Groups\RuntimeGroupBuilder.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Camera\CameraController.cs" />

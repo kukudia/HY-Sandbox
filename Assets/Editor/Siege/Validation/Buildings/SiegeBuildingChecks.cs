@@ -85,7 +85,7 @@ public static class SiegeBuildingChecks
         Block removed = building.Blocks.FirstOrDefault(block => block.transform.localPosition == new Vector3(1f, 1f, 1f)) ?? building.Blocks.First(block => block.resourcePath == "Blocks/1x1x1");
         string removedId = removed.uniqueId;
         Vector3 missingPosition = removed.transform.position;
-        building.DestroyBlock(removed);
+        DestroyManager.DestroyTarget(removed.gameObject);
         Check(
             checks,
             "non-core building destruction keeps match and core alive",

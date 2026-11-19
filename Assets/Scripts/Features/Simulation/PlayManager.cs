@@ -202,25 +202,7 @@ public class PlayManager : MonoBehaviour
             return;
         }
 
-        if (unit.Building != null)
-        {
-            // 建筑按底座支撑与自身残骸预算分裂，不能进入舰船驾驶舱重组流程。
-            unit.Building.RefreshStructure();
-            return;
-        }
-
-        List<Block> blocks = unit.GetComponentsInChildren<Block>(true).Where(block => block != null && block.isActiveAndEnabled).ToList();
-        using SimulationWorkMetrics.Scope timing = SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.Refresh, blocks.Count);
-        if (blocks.Count > 0)
-        {
-            AssignBlocksToParentGroups(blocks);
-        }
-        else
-        {
-            // 最后一个模块已被移出；清除旧驾驶舱引用，不等待下一帧Destroy空根。
-            unit.RefreshChildren();
-        }
-
+        (_groupBuilder ??= new RuntimeGroupBuilder(this)).Refresh(unit, GroupPhysics);
         RuntimeGroupCleanup.EnforceLimit(allControlUnits, maxUselessControlUnitGroups, DestroyManager.instance);
         RuntimeGroupCleanup.EnforceDistance(allControlUnits, playMode, blocksParent, groupCleanupDistance, DestroyManager.instance);
     }

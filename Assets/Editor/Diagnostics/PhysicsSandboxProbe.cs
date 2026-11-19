@@ -240,7 +240,7 @@ public static class PhysicsSandboxProbe
             checks,
             "Building lethal impact produces explosion",
             durability.DestroyedByCollision && !source.gameObject.activeSelf && CountExplosionEffects() == before + 1);
-        building.DestroyBlock(source);
+        DestroyManager.DestroyTarget(source.gameObject);
         Check(
             checks,
             "Building repeated destruction does not duplicate explosion",

@@ -259,6 +259,10 @@ public static class SharedMechanismChecks
         object motion = Activator.CreateInstance(RuntimeType("RigidbodyMotion"), Members, null, new object[] { source }, null);
         WorldBuildingManager manager = NewObject("Debris manager").AddComponent<WorldBuildingManager>();
         manager.enabled = false;
+        BuildingRuntime building = source.gameObject.AddComponent<BuildingRuntime>();
+        Set(building, "manager", manager);
+        Set(building, "body", source);
+        Set(building, "foundationData", new BuildingFoundationData());
         Block first = NewObject("First fragment").AddComponent<Block>();
         Block second = NewObject("Second fragment").AddComponent<Block>();
         first.transform.position = new Vector3(2f, 0f, 0f);
@@ -269,23 +273,7 @@ public static class SharedMechanismChecks
         try
         {
             PlayManager.instance = null;
-            Call(
-                typeof(WorldBuildingManager),
-                manager,
-                "CreateDebris",
-                new List<Block> { first },
-                source,
-                motion);
-            source.linearVelocity = Vector3.one * 90f;
-            source.angularVelocity = Vector3.one * 9f;
-            source.centerOfMass = new Vector3(10f, 0f, 0f);
-            Call(
-                typeof(WorldBuildingManager),
-                manager,
-                "CreateDebris",
-                new List<Block> { second },
-                source,
-                motion);
+            Call(RuntimeType("RuntimeGroupBuilder"), null, "RefreshUnit", source.GetComponent<ControlUnit>());
         }
         finally
         {
@@ -298,8 +286,8 @@ public static class SharedMechanismChecks
             "Real building debris inherits linear plus angular point velocity",
             Near(a.linearVelocity, new Vector3(3f, 4f, 1f)) && Near(a.angularVelocity, new Vector3(0f, 2f, 0f)));
         Check(
-            "Second fragment uses the original captured motion after source state changes",
-            Near(b.linearVelocity, new Vector3(3f, 4f, 9f)) && Near(b.angularVelocity, new Vector3(0f, 2f, 0f)));
+            "Two unsupported components become independent units with their own point velocities",
+            a != b && b != source && a != source && Near(b.linearVelocity, new Vector3(3f, 4f, 9f)) && Near(b.angularVelocity, new Vector3(0f, 2f, 0f)));
         Check(
             "Debris inherits common damping and depenetration settings",
             Mathf.Approximately(a.linearDamping, 0.15f) && Mathf.Approximately(b.angularDamping, 0.35f) && Mathf.Approximately(a.maxDepenetrationVelocity, 6f));

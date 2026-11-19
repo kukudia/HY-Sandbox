@@ -462,12 +462,13 @@ public static class WorldBuildingPlayProbe
         weapon.SetStarted(false);
         // 结构断裂：生成器支撑顶部炮塔，移除后炮塔成为独立刚体残骸。
         int originalCount = first.Blocks.Count;
+        string originalOwner = first.InstanceId;
         first.Blocks[0].canExplode = false;
         first.Blocks[0].GetComponent<Durability>().ApplyDamage(100000f, null);
         yield return null;
         Check(first.Blocks.Count < originalCount - 1, "destroyed support detaches disconnected blocks");
         Check(
-            Object.FindObjectsByType<Rigidbody>().Any(body => body.name == "Building debris" && !body.isKinematic),
+            manager.GetComponentsInChildren<ControlUnit>().Any(unit => unit.Building == null && !unit.GetComponent<Rigidbody>().isKinematic && unit.GetComponentsInChildren<RuntimeUnitMember>().Any(member => member.ownerUnitId == originalOwner)),
             "disconnected group becomes bounded physical debris");
         WorldLabSnapshot damagedSnapshot = manager.Capture();
         manager.Restore(damagedSnapshot);
@@ -513,7 +514,7 @@ public static class WorldBuildingPlayProbe
         Check(manager.Buildings.Count == 0, "legacy voxel save migrates to empty building list");
         world.Generate();
         Check(
-            manager.Buildings.Count == 1 && !Object.FindObjectsByType<Rigidbody>().Any(body => body.name == "Building debris" && body.gameObject.activeSelf),
+            manager.Buildings.Count == 1 && !manager.GetComponentsInChildren<ControlUnit>().Any(unit => unit.Building == null),
             "regenerate restores configured layout and clears building debris");
         controller.enabled = true;
     }

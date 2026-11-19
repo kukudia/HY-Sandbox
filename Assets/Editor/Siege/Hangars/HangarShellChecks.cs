@@ -146,7 +146,7 @@ public static class HangarShellChecks
                 controller.connectors.Any(connector => peer.GetValue(connector) is Block attached && attached.hangarOwnerId == "bay"));
             Block target = building.Blocks.Last();
             string removedId = target.uniqueId;
-            building.DestroyBlock(target);
+            DestroyManager.DestroyTarget(target.gameObject);
             Check(
                 report,
                 "one wall is independently destructible while the hangar survives",

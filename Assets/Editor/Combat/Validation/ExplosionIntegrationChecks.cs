@@ -1,4 +1,4 @@
-// 职责：在真实Play的独立PhysicsScene验证爆炸仅破坏体素、模块免伤、无连锁及冲量隔离。
+// 职责：在真实Play验证模块免伤、体素破坏、冲量隔离，以及舰船与共享地基的概率断链。
 // 入口：Run()；只创建自有夹具，不写玩家存档，报告Temp/Combat/explosion-integration.json。
 using System;
 using System.Collections.Generic;
@@ -113,6 +113,19 @@ public static class ExplosionIntegrationChecks
                 "no secondary blast attribution is manufactured",
                 shipTarget.GetComponent<Durability>().LastAttacker == null);
             TerrainCheck(scene, report);
+            foreach (float probability in new[]
+            {
+                0f,
+                1f
+            }
+
+            )
+            {
+                Vector3 origin = center + Vector3.forward * (100f + 20f * probability);
+                ShipConnections(scene, origin, probability, report);
+                FoundationConnections(manager, origin + Vector3.right * 40f, probability, report);
+            }
+
             return Save(report);
         }
         catch (Exception error)
@@ -167,6 +180,92 @@ public static class ExplosionIntegrationChecks
             world.Data.Get(cell) == 0 && world.RemovedCells > 0);
     }
 
+    private static void ShipConnections(Scene scene, Vector3 origin, float probability, Report report)
+    {
+        Block source = Ship(scene, origin);
+        Transform owner = source.transform.parent;
+        Block near = ShipPart(owner, Vector3.right);
+        Block far = ShipPart(owner, Vector3.right * 2f);
+        Block tail = ShipPart(owner, Vector3.right * 3f);
+        Block foreign = Ship(scene, origin + Vector3.forward);
+        Block foreignTail = ShipPart(foreign.transform.parent, Vector3.forward);
+        foreach (Block block in new[]
+        {
+            source,
+            near,
+            far,
+            tail,
+            foreign,
+            foreignTail
+        }
+
+        )
+        {
+            block.CheckConnection();
+        }
+
+        Check(
+            report,
+            $"ship fixture starts connected at p={probability}",
+            near.Neighbors().Contains(far) && far.Neighbors().Contains(tail) && foreign.Neighbors().Contains(foreignTail));
+        Configure(source, 0f, 1.1f);
+        source.explosionDisconnectProbability = probability;
+        source.GetComponent<Durability>().ApplyDamage(200f, null);
+        Check(
+            report,
+            $"in-range block separates only at p=1 (p={probability})",
+            (near.GetComponentInParent<Rigidbody>() != far.GetComponentInParent<Rigidbody>()) == (probability == 1f));
+        Check(
+            report,
+            $"outside-radius connection survives at p={probability}",
+            far.GetComponentInParent<Rigidbody>() == tail.GetComponentInParent<Rigidbody>() && far.Neighbors().Contains(tail));
+        Check(
+            report,
+            $"another unit inside the radius keeps its connection at p={probability}",
+            foreign.Neighbors().Contains(foreignTail) && foreign.GetComponentInParent<Rigidbody>() == foreignTail.GetComponentInParent<Rigidbody>());
+    }
+
+    private static void FoundationConnections(WorldBuildingManager manager, Vector3 origin, float probability, Report report)
+    {
+        Vector3 foot = Vector3.one * .5f;
+        BuildingRuntime building = Building(
+            manager,
+            origin,
+            foot,
+            foot + Vector3.up,
+            foot + 2f * Vector3.up,
+            foot - 2f * Vector3.right);
+        Block floor = building.Blocks[0], middle = building.Blocks[1], source = building.Blocks[2], secondWall = building.Blocks[3];
+        Check(
+            report,
+            $"two independent columns have full foundation support at p={probability}",
+            building.HasFullFoundationSupport());
+        int losses = 0;
+        building.BlockDestroyed += lost =>
+        {
+            if (lost == source)
+            {
+                losses++;
+            }
+        };
+        Configure(source, 0f, 1.1f);
+        source.explosionDisconnectProbability = probability;
+        source.GetComponent<Durability>().ApplyDamage(200f, null);
+        Check(
+            report,
+            $"separate grounded walls retain their original base at p={probability}",
+            building.Anchored && floor.GetComponentInParent<Rigidbody>() == building.GetComponent<Rigidbody>() && secondWall.GetComponentInParent<Rigidbody>() == building.GetComponent<Rigidbody>());
+        Rigidbody middleBody = middle.GetComponentInParent<Rigidbody>();
+        Check(
+            report,
+            $"base uses the same probability to release an unsupported wall at p={probability}",
+            middleBody != null && (middleBody == building.GetComponent<Rigidbody>()) == (probability == 0f) && middleBody.isKinematic == (probability == 0f));
+        Check(
+            report,
+            $"base snapshot tracks surviving supported members and one loss event at p={probability}",
+            losses == 1 && building.Blocks.Contains(floor) && building.Blocks.Contains(secondWall) && building.Blocks.Contains(middle) == (probability == 0f) && !building.Blocks.Contains(source) && building.Capture().blueprint.blocks.Count == (probability == 0f ? 3 : 2));
+    }
+
     private static WorldBuildingManager Manager(Scene scene)
     {
         var root = new GameObject("Explosion building owner");
@@ -180,8 +279,16 @@ public static class ExplosionIntegrationChecks
         return manager;
     }
 
-    private static BuildingRuntime Building(WorldBuildingManager manager, Vector3 center)
+    private static BuildingRuntime Building(WorldBuildingManager manager, Vector3 center, params Vector3[] parts)
     {
+        if (parts.Length == 0)
+        {
+            parts = new[]
+            {
+                Vector3.one * .5f
+            };
+        }
+
         var blueprint = new BlockDataList
         {
             foundation = new BuildingFoundationData
@@ -189,26 +296,15 @@ public static class ExplosionIntegrationChecks
                 width = 4,
                 length = 4
             },
-            blocks = new List<BlockData>
-            {
-                new BlockData(Resources.Load<GameObject>("Blocks/1x1x1").GetComponent<Block>())
-                {
-                    id = Guid.NewGuid().ToString("N"),
-                    resourcePath = "Blocks/1x1x1",
-                    x = 1,
-                    y = 1,
-                    z = 1,
-                    posX = .5f,
-                    posY = .5f,
-                    posZ = .5f,
-                    rotW = 1f
-                }
-            }
+            blocks = parts.Select(position => new BlockData(Resources.Load<GameObject>("Blocks/1x1x1").GetComponent<Block>()) { id = Guid.NewGuid().ToString("N"), resourcePath = "Blocks/1x1x1", x = 1, y = 1, z = 1, posX = position.x, posY = position.y, posZ = position.z, rotW = 1f }).ToList()
         };
-        BuildingRuntime building = manager.RestoreBuilding(new WorldBuildingState { instanceId = Guid.NewGuid().ToString("N"), blueprintName = "Explosion fixture", blueprint = blueprint, faction = UnitFaction.Enemy, anchored = true, position = center - Vector3.one * .5f, rotation = Quaternion.identity, durability = new[] { 100f } });
-        Block block = building.Blocks.Single();
-        block.canExplode = false;
-        block.GetComponent<Durability>().maxDurability = block.GetComponent<Durability>().currentDurability = 100f;
+        BuildingRuntime building = manager.RestoreBuilding(new WorldBuildingState { instanceId = Guid.NewGuid().ToString("N"), blueprintName = "Explosion fixture", blueprint = blueprint, faction = UnitFaction.Enemy, anchored = true, position = center - Vector3.one * .5f, rotation = Quaternion.identity, durability = Enumerable.Repeat(100f, parts.Length).ToArray() });
+        foreach (Block block in building.Blocks)
+        {
+            block.canExplode = false;
+            block.GetComponent<Durability>().maxDurability = block.GetComponent<Durability>().currentDurability = 100f;
+        }
+
         return building;
     }
 
@@ -224,15 +320,21 @@ public static class ExplosionIntegrationChecks
         body.isKinematic = false;
         body.linearDamping = 0f;
         body.mass = 10f;
-        GameObject part = Object.Instantiate(Resources.Load<GameObject>("Blocks/1x1x1"), root.transform);
-        part.transform.localPosition = Vector3.zero;
+        Block block = ShipPart(root.transform, Vector3.zero);
+        unit.RefreshChildren();
+        unit.EnsureRuntimeUnitId();
+        unit.AssignRuntimeOwnershipToBlocks(true);
+        return block;
+    }
+
+    private static Block ShipPart(Transform owner, Vector3 position)
+    {
+        GameObject part = Object.Instantiate(Resources.Load<GameObject>("Blocks/1x1x1"), owner);
+        part.transform.localPosition = position;
         Block block = part.GetComponent<Block>();
         block.canExplode = false;
         Durability health = part.GetComponent<Durability>();
         health.maxDurability = health.currentDurability = 100f;
-        unit.RefreshChildren();
-        unit.EnsureRuntimeUnitId();
-        unit.AssignRuntimeOwnershipToBlocks(true);
         return block;
     }
 

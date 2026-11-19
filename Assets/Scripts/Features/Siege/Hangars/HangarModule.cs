@@ -37,6 +37,7 @@ public sealed class HangarModule : MonoBehaviour
     private float doorSeconds = 1.2f;
     private Block block;
     private bool combat;
+    private bool expandedShell;
     private bool doorRequested;
     private float doorFraction;
     private Vector3Int connectionSize;
@@ -60,11 +61,16 @@ public sealed class HangarModule : MonoBehaviour
     {
         block = GetComponent<Block>();
         RefreshGeometry();
-        // 恢复建筑组件时自动使用战斗展示；独立预研泊位由会话显式切换。
-        if (GetComponentInParent<BuildingRuntime>() != null)
+        if (expandedShell)
         {
             SetCombat(true);
         }
+    }
+
+    internal void UseExpandedShell()
+    {
+        expandedShell = true;
+        SetCombat(true);
     }
 
     public void RefreshGeometry()
@@ -123,7 +129,7 @@ public sealed class HangarModule : MonoBehaviour
         // Expanded combat bays are logical controllers, not a second solid floor.
         // Link down onto the real floor's upper face; its lower face alone owns
         // platform/foundation support. Sharing that lower face competes for one peer.
-        float floorOffset = combat && GetComponentInParent<BuildingRuntime>() != null ? 1f : 0f;
+        float floorOffset = combat && expandedShell ? 1f : 0f;
         Vector3Int dimensions = new Vector3Int(block.x, block.y, block.z);
         bool shapeChanged = connectionSize != dimensions || block.connectors.Count != block.x * block.z;
         if (!shapeChanged && Mathf.Approximately(connectionFloorOffset, floorOffset))
@@ -233,7 +239,7 @@ public sealed class HangarModule : MonoBehaviour
 
         if (shellPreview != null)
         {
-            shellPreview.gameObject.SetActive(!combat || GetComponentInParent<BuildingRuntime>() == null);
+            shellPreview.gameObject.SetActive(!combat || !expandedShell);
         }
 
         Transform[] shell =
@@ -435,7 +441,7 @@ public sealed class HangarModule : MonoBehaviour
 
     private void RefreshShellPreview(Vector3Int size)
     {
-        if (GetComponentInParent<BuildingRuntime>() != null || shellPreview == null || tileVisual == null || previewSize == size && previewEntrance == entrance && shellPreview.childCount > 0)
+        if (expandedShell || shellPreview == null || tileVisual == null || previewSize == size && previewEntrance == entrance && shellPreview.childCount > 0)
         {
             return;
         }
