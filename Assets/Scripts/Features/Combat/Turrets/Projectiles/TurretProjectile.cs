@@ -1,11 +1,13 @@
 // 职责：真实刚体炮弹飞行、每步扫掠防穿透、敌对伤害和寿命清理。
 // 入口：Launch()；触发器避免物理引擎额外施加冲量，自身构造始终过滤。
 using System.Collections.Generic;
+using Unity.Profiling;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(SphereCollider))]
 public sealed class TurretProjectile : MonoBehaviour
 {
+    private static readonly ProfilerMarker HitMarker = new ProfilerMarker("HY.Projectile.ResolveHit");
     private RaycastHit[] _hits = new RaycastHit[32];
     private Collider[] _overlaps = new Collider[32];
     private readonly List<Collider> _ignoredColliders = new List<Collider>();
@@ -209,6 +211,7 @@ public sealed class TurretProjectile : MonoBehaviour
             return;
         }
 
+        using var timing = HitMarker.Auto();
         _resolved = true;
         Vector3 direction = _body.linearVelocity.sqrMagnitude > 0.001f ? _body.linearVelocity.normalized : transform.forward;
         TurretHitResolver.Apply(

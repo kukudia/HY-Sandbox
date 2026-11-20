@@ -1,5 +1,7 @@
 # HY-Sandbox 开发入口
 
+建筑断裂按碎片批量移除主体成员；弹丸命中结算可通过 HY.Projectile.ResolveHit 采样。整帧收益待同场景复测。
+
 Siege：战斗双击接管，Tab 或按住 Alt 点击 FREE VIEW 返回观察；Recovery 时限 60 秒。基地手动 Repair 同时补齐占地内已毁地形。波次清除显示 CLEAR，余额变化在 Credits 旁显示。
 
 基础部件遍历规范见 AGENTS.md，现有热点与保留原因见 Docs/ProjectRiskRegister.md 的 R35。总耐久查询复用成员名单，避障同物理步复用碰撞边界，建造预览按状态变化更新外观。

@@ -14,8 +14,11 @@ public sealed class BuildingRuntime : MonoBehaviour, IBlockFoundation
     private string blueprintName;
     private string instanceId;
     private readonly List<Block> blocks = new List<Block>();
-    private BlockConnectionGraph Connections => GetComponent<ControlUnit>().Connections;
+    private ControlUnit unit;
+    private ControlUnit Unit => unit != null ? unit : unit = GetComponent<ControlUnit>();
+    private BlockConnectionGraph Connections => Unit.Connections;
 
+    private readonly HashSet<Block> detachedBlocks = new HashSet<Block>();
     private readonly Dictionary<Block, bool> groundSupport = new Dictionary<Block, bool>();
     private int groundRevision = -1;
     private Vector2Int groundFootprint;
@@ -72,7 +75,7 @@ public sealed class BuildingRuntime : MonoBehaviour, IBlockFoundation
         body = GetComponent<Rigidbody>();
         body.isKinematic = state.anchored;
         body.useGravity = true;
-        ControlUnit unit = GetComponent<ControlUnit>();
+        unit = GetComponent<ControlUnit>();
         unit.BindBuilding(this);
         unit.DamageSession = owner.DamageSession;
         unit.FragmentCreated += owner.TrackFragment;
@@ -235,10 +238,16 @@ public sealed class BuildingRuntime : MonoBehaviour, IBlockFoundation
 
     void IBlockFoundation.OnFragmentDetached(List<Block> group, ControlUnit fragment)
     {
-        foreach (Block block in group)
+        if (group.Count == 1)
         {
-            blocks.Remove(block);
+            blocks.Remove(group[0]);
+            return;
         }
+
+        // Compact once, preserving the blueprint order of surviving blocks.
+        detachedBlocks.UnionWith(group);
+        blocks.RemoveAll(detachedBlocks.Contains);
+        detachedBlocks.Clear();
     }
 
     /// <summary>Deployment checks the same connector graph and virtual ground anchors used after damage.</summary>
@@ -284,7 +293,7 @@ public sealed class BuildingRuntime : MonoBehaviour, IBlockFoundation
     internal void RefreshTerrainSupport()
     {
         groundSupport.Clear();
-        RuntimeGroupBuilder.RefreshUnit(GetComponent<ControlUnit>());
+        RuntimeGroupBuilder.RefreshUnit(Unit);
     }
 
     private bool HasGroundConnector(Block block)

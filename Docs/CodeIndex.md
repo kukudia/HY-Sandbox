@@ -4702,17 +4702,17 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| TurretProjectile | [`void SetPool(TurretProjectilePool pool, TurretProjectile prefab)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L26) | internal |
-| TurretProjectile | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L32) | private |
-| TurretProjectile | [`void ClearIgnoredCollisions()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L39) | private |
-| TurretProjectile | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L52) | private |
-| TurretProjectile | [`void Launch( ControlUnit owner, UnitFaction faction, float damage, float impulse, Vector3 velocity, float lifetime, float maxDistance, LayerMask hitLayers)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L65) | public |
-| TurretProjectile | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L99) | private |
-| TurretProjectile | [`bool ResolveOverlaps(Vector3 origin, float radius)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L169) | private |
-| TurretProjectile | [`void OnTriggerEnter(Collider other)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L191) | private |
-| TurretProjectile | [`bool CanHit(Collider collider)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L200) | private |
-| TurretProjectile | [`void ResolveHit(Collider collider, Vector3 point, Vector3 normal)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L205) | private |
-| TurretProjectile | [`void Retire()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L226) | private |
+| TurretProjectile | [`void SetPool(TurretProjectilePool pool, TurretProjectile prefab)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L28) | internal |
+| TurretProjectile | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L34) | private |
+| TurretProjectile | [`void ClearIgnoredCollisions()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L41) | private |
+| TurretProjectile | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L54) | private |
+| TurretProjectile | [`void Launch( ControlUnit owner, UnitFaction faction, float damage, float impulse, Vector3 velocity, float lifetime, float maxDistance, LayerMask hitLayers)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L67) | public |
+| TurretProjectile | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L101) | private |
+| TurretProjectile | [`bool ResolveOverlaps(Vector3 origin, float radius)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L171) | private |
+| TurretProjectile | [`void OnTriggerEnter(Collider other)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L193) | private |
+| TurretProjectile | [`bool CanHit(Collider collider)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L202) | private |
+| TurretProjectile | [`void ResolveHit(Collider collider, Vector3 point, Vector3 normal)`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L207) | private |
+| TurretProjectile | [`void Retire()`](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs#L229) | private |
 
 ## Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs
 
@@ -7221,22 +7221,22 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BuildingRuntime | [`bool TryRefit(BlockDataList design, out string reason)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L41) | internal |
-| BuildingRuntime | [`void Initialize(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L55) | public |
-| BuildingRuntime | [`IEnumerator InitializeRoutine(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L63) | internal |
-| BuildingRuntime | [`void Activate()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L111) | public |
-| BuildingRuntime | [`IEnumerator ActivateRoutine()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L119) | internal |
-| BuildingRuntime | [`void PrepareForUnload()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L163) | public |
-| BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L171) | public |
-| BuildingRuntime | [`void OnBlockDestroyed(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L221) | private |
-| BuildingRuntime | [`bool Supports(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L231) |  |
-| BuildingRuntime | [`void OnFragmentDetached(List<Block> group, ControlUnit fragment)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L236) |  |
-| BuildingRuntime | [`bool HasFullFoundationSupport()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L245) | public |
-| BuildingRuntime | [`bool HasPreparedGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L260) | private |
-| BuildingRuntime | [`void RefreshTerrainSupport()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L284) | internal |
-| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L290) | private |
-| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L315) | public |
-| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L326) | private |
+| BuildingRuntime | [`bool TryRefit(BlockDataList design, out string reason)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L44) | internal |
+| BuildingRuntime | [`void Initialize(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L58) | public |
+| BuildingRuntime | [`IEnumerator InitializeRoutine(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L66) | internal |
+| BuildingRuntime | [`void Activate()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L114) | public |
+| BuildingRuntime | [`IEnumerator ActivateRoutine()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L122) | internal |
+| BuildingRuntime | [`void PrepareForUnload()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L166) | public |
+| BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L174) | public |
+| BuildingRuntime | [`void OnBlockDestroyed(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L224) | private |
+| BuildingRuntime | [`bool Supports(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L234) |  |
+| BuildingRuntime | [`void OnFragmentDetached(List<Block> group, ControlUnit fragment)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L239) |  |
+| BuildingRuntime | [`bool HasFullFoundationSupport()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L254) | public |
+| BuildingRuntime | [`bool HasPreparedGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L269) | private |
+| BuildingRuntime | [`void RefreshTerrainSupport()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L293) | internal |
+| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L299) | private |
+| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L324) | public |
+| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L335) | private |
 
 ## Assets/Scripts/Features/World/Buildings/Data/WorldBuildingCatalog.cs
 
