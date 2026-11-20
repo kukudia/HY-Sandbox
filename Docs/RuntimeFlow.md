@@ -501,15 +501,15 @@ flowchart TD
     C["FloatingIslandTerrain.Generate()"]
     click C "../Assets/Scripts/Features/World/Terrain/FloatingIslandTerrain.cs#L8" "打开源码"
     D["ProceduralVoxelWorld.InitializeFinite()"]
-    click D "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L124" "打开源码"
+    click D "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L125" "打开源码"
     E["ProceduralVoxelWorld.RebuildFinite()"]
-    click E "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L151" "打开源码"
+    click E "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L152" "打开源码"
     F["ExplosionDamageSession.ApplyExplosion()"]
     click F "../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L33" "打开源码"
     G["ProceduralVoxelWorld.DamageSphere()"]
-    click G "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L484" "打开源码"
+    click G "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L498" "打开源码"
     H["ProceduralVoxelWorld.FlushDirty()"]
-    click H "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L576" "打开源码"
+    click H "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L612" "打开源码"
     I["SiegeWaveDirector.Tick()"]
     click I "../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L62" "打开源码"
     J["SiegeIsland.SpawnPosition()"]
@@ -541,15 +541,15 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs|GenerateFor -->
 - [FloatingIslandTerrain.Generate](../Assets/Scripts/Features/World/Terrain/FloatingIslandTerrain.cs#L8)
 <!-- source: Assets/Scripts/Features/World/Terrain/FloatingIslandTerrain.cs|Generate -->
-- [ProceduralVoxelWorld.InitializeFinite](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L124)
+- [ProceduralVoxelWorld.InitializeFinite](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L125)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|InitializeFinite -->
-- [ProceduralVoxelWorld.RebuildFinite](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L151)
+- [ProceduralVoxelWorld.RebuildFinite](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L152)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|RebuildFinite -->
 - [ExplosionDamageSession.ApplyExplosion](../Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs#L33)
 <!-- source: Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs|ApplyExplosion -->
-- [ProceduralVoxelWorld.DamageSphere](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L484)
+- [ProceduralVoxelWorld.DamageSphere](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L498)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|DamageSphere -->
-- [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L576)
+- [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L612)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|FlushDirty -->
 - [SiegeWaveDirector.Tick](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L62)
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs|Tick -->
@@ -3077,7 +3077,7 @@ flowchart TD
     A["Turret.FixedUpdate()"]
     click A "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L80" "打开源码"
     B["TurretTargetSelector.FindNearestTarget()"]
-    click B "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L172" "打开源码"
+    click B "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L179" "打开源码"
     C["TurretHitscan.Fire()"]
     click C "../Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs#L10" "打开源码"
     D["Durability.ApplyDamage()"]
@@ -3147,7 +3147,7 @@ flowchart TD
     AL["ExplosionPropagation.DisconnectBlocksInExplosionRange()"]
     click AL "../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L13" "打开源码"
     AM["ProceduralVoxelWorld.DamageSphere()"]
-    click AM "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L484" "打开源码"
+    click AM "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L498" "打开源码"
     A --> B
     A -->|实体炮塔预测目标| AG
     AG --> AH
@@ -3188,7 +3188,7 @@ flowchart TD
 
 - [Turret.FixedUpdate](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L80)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|FixedUpdate -->
-- [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L172)
+- [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L179)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|FindNearestTarget -->
 - [TurretHitscan.Fire](../Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs#L10)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs|Fire -->
@@ -3258,7 +3258,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs|FinishBatch -->
 - [ExplosionPropagation.DisconnectBlocksInExplosionRange](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L13)
 <!-- source: Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs|DisconnectBlocksInExplosionRange -->
-- [ProceduralVoxelWorld.DamageSphere](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L484)
+- [ProceduralVoxelWorld.DamageSphere](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L498)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|DamageSphere -->
 
 ## 返航持久化与失败提示
@@ -3741,7 +3741,7 @@ flowchart TD
     S["WorldBuildingManager.ClearSession()"]
     click S "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L240" "打开源码"
     T["ProceduralVoxelWorld.ClearStreaming()"]
-    click T "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L372" "打开源码"
+    click T "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L373" "打开源码"
     U["WorldSessionManager.PrepareWorld()"]
     click U "../Assets/Scripts/Features/World/WorldSessionManager.cs#L139" "打开源码"
     V["WorldSessionManager.FinishEntering()"]
@@ -3832,7 +3832,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|OnDisable -->
 - [WorldBuildingManager.ClearSession](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L240)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|ClearSession -->
-- [ProceduralVoxelWorld.ClearStreaming](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L372)
+- [ProceduralVoxelWorld.ClearStreaming](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L373)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|ClearStreaming -->
 - [WorldSessionManager.PrepareWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L139)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|PrepareWorld -->
@@ -3911,7 +3911,7 @@ flowchart TD
     D["WorldBuildingFootprints.Get()"]
     click D "../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingFootprints.cs#L32" "打开源码"
     E["ProceduralVoxelWorld.InitializeStreaming()"]
-    click E "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L213" "打开源码"
+    click E "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L214" "打开源码"
     F["WorldDistanceView.Refresh()"]
     click F "../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L69" "打开源码"
     G["WorldDistanceView.Rebuild()"]
@@ -3921,7 +3921,7 @@ flowchart TD
     I["WorldSessionManager.EnterPlay()"]
     click I "../Assets/Scripts/Features/World/WorldSessionManager.cs#L252" "打开源码"
     J["ProceduralVoxelWorld.FindSpawnSurface()"]
-    click J "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L54" "打开源码"
+    click J "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L55" "打开源码"
     K["WorldDistanceView.Enter()"]
     click K "../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L340" "打开源码"
     L["WorldSessionManager.StopPreparation()"]
@@ -3939,9 +3939,9 @@ flowchart TD
     R["SaveManager.GetBuildingBlueprintFiles()"]
     click R "../Assets/Scripts/Features/Building/SaveManager.cs#L84" "打开源码"
     S["ProceduralVoxelWorld.LoadColumn()"]
-    click S "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L269" "打开源码"
+    click S "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L270" "打开源码"
     T["ProceduralVoxelWorld.UnloadColumn()"]
-    click T "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L351" "打开源码"
+    click T "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L352" "打开源码"
     U["WorldDistanceView.OnColumnVisibilityChanged()"]
     click U "../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L234" "打开源码"
     A -->|取得共用文件仓| R
@@ -3975,7 +3975,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs|ValidateBlueprint -->
 - [WorldBuildingFootprints.Get](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingFootprints.cs#L32)
 <!-- source: Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingFootprints.cs|Get -->
-- [ProceduralVoxelWorld.InitializeStreaming](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L213)
+- [ProceduralVoxelWorld.InitializeStreaming](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L214)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|InitializeStreaming -->
 - [WorldDistanceView.Refresh](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L69)
 <!-- source: Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs|Refresh -->
@@ -3985,7 +3985,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Terrain/StreamingWorldTerrain.cs|SurfaceHeight -->
 - [WorldSessionManager.EnterPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L252)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EnterPlay -->
-- [ProceduralVoxelWorld.FindSpawnSurface](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L54)
+- [ProceduralVoxelWorld.FindSpawnSurface](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L55)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|FindSpawnSurface -->
 - [WorldDistanceView.Enter](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L340)
 <!-- source: Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs|Enter -->
@@ -4003,9 +4003,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs|ReleaseExpiredRing -->
 - [SaveManager.GetBuildingBlueprintFiles](../Assets/Scripts/Features/Building/SaveManager.cs#L84)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|GetBuildingBlueprintFiles -->
-- [ProceduralVoxelWorld.LoadColumn](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L269)
+- [ProceduralVoxelWorld.LoadColumn](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L270)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|LoadColumn -->
-- [ProceduralVoxelWorld.UnloadColumn](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L351)
+- [ProceduralVoxelWorld.UnloadColumn](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L352)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|UnloadColumn -->
 - [WorldDistanceView.OnColumnVisibilityChanged](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L234)
 <!-- source: Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs|OnColumnVisibilityChanged -->
@@ -4027,9 +4027,9 @@ flowchart TD
     E["WorldBuildingManager.RemoveBuilding()"]
     click E "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L216" "打开源码"
     F["ProceduralVoxelWorld.UnloadColumn()"]
-    click F "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L351" "打开源码"
+    click F "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L352" "打开源码"
     G["ProceduralVoxelWorld.LoadColumn()"]
-    click G "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L269" "打开源码"
+    click G "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L270" "打开源码"
     H["VoxelWorldData.Get()"]
     click H "../Assets/Scripts/Features/World/Terrain/VoxelWorldData.cs#L32" "打开源码"
     I["StreamingWorldTerrain.Sample()"]
@@ -4084,9 +4084,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|Capture -->
 - [WorldBuildingManager.RemoveBuilding](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L216)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|RemoveBuilding -->
-- [ProceduralVoxelWorld.UnloadColumn](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L351)
+- [ProceduralVoxelWorld.UnloadColumn](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L352)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|UnloadColumn -->
-- [ProceduralVoxelWorld.LoadColumn](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L269)
+- [ProceduralVoxelWorld.LoadColumn](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L270)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|LoadColumn -->
 - [VoxelWorldData.Get](../Assets/Scripts/Features/World/Terrain/VoxelWorldData.cs#L32)
 <!-- source: Assets/Scripts/Features/World/Terrain/VoxelWorldData.cs|Get -->
@@ -4120,7 +4120,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["ProceduralVoxelWorld.LoadColumn()"]
-    click A "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L269" "打开源码"
+    click A "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L270" "打开源码"
     B["VoxelChunkSnapshot.Capture()"]
     click B "../Assets/Scripts/Features/World/Terrain/Meshing/VoxelMeshData.cs#L56" "打开源码"
     C["VoxelWorldData.Get()"]
@@ -4136,15 +4136,15 @@ flowchart TD
     H["VoxelWorldChunk.ApplyMesh()"]
     click H "../Assets/Scripts/Features/World/Terrain/VoxelWorldChunk.cs#L23" "打开源码"
     I["ProceduralVoxelWorld.UnloadColumn()"]
-    click I "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L351" "打开源码"
+    click I "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L352" "打开源码"
     J["ProceduralVoxelWorld.ClearStreaming()"]
-    click J "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L372" "打开源码"
+    click J "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L373" "打开源码"
     K["VoxelSurfaceMesher.Build()"]
     click K "../Assets/Scripts/Features/World/Terrain/Meshing/VoxelSurfaceMesher.cs#L61" "打开源码"
     L["VoxelWorldChunk.Rebuild()"]
     click L "../Assets/Scripts/Features/World/Terrain/VoxelWorldChunk.cs#L18" "打开源码"
     M["ProceduralVoxelWorld.FlushDirty()"]
-    click M "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L576" "打开源码"
+    click M "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L612" "打开源码"
     A --> B
     B --> C
     A -.->|Task.Run，独立不可变快照| D
@@ -4163,7 +4163,7 @@ flowchart TD
     L --> H
 ```
 
-- [ProceduralVoxelWorld.LoadColumn](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L269)
+- [ProceduralVoxelWorld.LoadColumn](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L270)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|LoadColumn -->
 - [VoxelChunkSnapshot.Capture](../Assets/Scripts/Features/World/Terrain/Meshing/VoxelMeshData.cs#L56)
 <!-- source: Assets/Scripts/Features/World/Terrain/Meshing/VoxelMeshData.cs|Capture -->
@@ -4179,15 +4179,15 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Terrain/Meshing/VoxelMeshData.cs|Upload -->
 - [VoxelWorldChunk.ApplyMesh](../Assets/Scripts/Features/World/Terrain/VoxelWorldChunk.cs#L23)
 <!-- source: Assets/Scripts/Features/World/Terrain/VoxelWorldChunk.cs|ApplyMesh -->
-- [ProceduralVoxelWorld.UnloadColumn](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L351)
+- [ProceduralVoxelWorld.UnloadColumn](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L352)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|UnloadColumn -->
-- [ProceduralVoxelWorld.ClearStreaming](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L372)
+- [ProceduralVoxelWorld.ClearStreaming](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L373)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|ClearStreaming -->
 - [VoxelSurfaceMesher.Build](../Assets/Scripts/Features/World/Terrain/Meshing/VoxelSurfaceMesher.cs#L61)
 <!-- source: Assets/Scripts/Features/World/Terrain/Meshing/VoxelSurfaceMesher.cs|Build -->
 - [VoxelWorldChunk.Rebuild](../Assets/Scripts/Features/World/Terrain/VoxelWorldChunk.cs#L18)
 <!-- source: Assets/Scripts/Features/World/Terrain/VoxelWorldChunk.cs|Rebuild -->
-- [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L576)
+- [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L612)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|FlushDirty -->
 
 ## 工业零件统一调度与共享发光
@@ -4355,7 +4355,7 @@ flowchart TD
     F["Turret.RefreshTarget()"]
     click F "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L118" "打开源码"
     G["TurretTargetSelector.FindNearestTarget()"]
-    click G "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L172" "打开源码"
+    click G "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L179" "打开源码"
     H["ControlUnit.GetDamageTargets()"]
     click H "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L60" "打开源码"
     I["Durability.OnTransformParentChanged()"]
@@ -4386,7 +4386,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|FixedUpdate -->
 - [Turret.RefreshTarget](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L118)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|RefreshTarget -->
-- [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L172)
+- [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L179)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|FindNearestTarget -->
 - [ControlUnit.GetDamageTargets](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L60)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|GetDamageTargets -->
@@ -4404,7 +4404,7 @@ flowchart TD
     A["WorldLabAuthoring.CreateOrOpen()"]
     click A "../Assets/Editor/World/WorldLab/WorldLabAuthoring.cs#L13" "打开源码"
     B["ProceduralVoxelWorld.Generate()"]
-    click B "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L101" "打开源码"
+    click B "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L102" "打开源码"
     C["VoxelWorldData.Generate()"]
     click C "../Assets/Scripts/Features/World/Terrain/VoxelWorldData.cs#L119" "打开源码"
     D["VoxelWorldChunk.Rebuild()"]
@@ -4416,15 +4416,15 @@ flowchart TD
     G["WorldLabController.Update()"]
     click G "../Assets/Scripts/Features/World/WorldLab/WorldLabController.cs#L57" "打开源码"
     H["ProceduralVoxelWorld.DamageSphere()"]
-    click H "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L484" "打开源码"
+    click H "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L498" "打开源码"
     I["ProceduralVoxelWorld.SetCell()"]
-    click I "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L433" "打开源码"
+    click I "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L434" "打开源码"
     J["ProceduralVoxelWorld.QueueCell()"]
-    click J "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L543" "打开源码"
+    click J "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L579" "打开源码"
     K["ProceduralVoxelWorld.LateUpdate()"]
-    click K "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L571" "打开源码"
+    click K "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L607" "打开源码"
     L["ProceduralVoxelWorld.FlushDirty()"]
-    click L "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L576" "打开源码"
+    click L "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L612" "打开源码"
     M["TurretHitResolver.Apply()"]
     click M "../Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs#L9" "打开源码"
     N["VoxelWorldChunk.OnDestroy()"]
@@ -4438,7 +4438,7 @@ flowchart TD
     R["WorldLabPersistence.Load()"]
     click R "../Assets/Scripts/Features/World/Persistence/WorldLabPersistence.cs#L57" "打开源码"
     S["ProceduralVoxelWorld.RestoreEdits()"]
-    click S "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L456" "打开源码"
+    click S "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L468" "打开源码"
     T["VoxelWorldEdits.Restore()"]
     click T "../Assets/Scripts/Features/World/Persistence/VoxelWorldEdits.cs#L52" "打开源码"
     A --> B
@@ -4465,7 +4465,7 @@ flowchart TD
 
 - [WorldLabAuthoring.CreateOrOpen](../Assets/Editor/World/WorldLab/WorldLabAuthoring.cs#L13)
 <!-- source: Assets/Editor/World/WorldLab/WorldLabAuthoring.cs|CreateOrOpen -->
-- [ProceduralVoxelWorld.Generate](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L101)
+- [ProceduralVoxelWorld.Generate](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L102)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|Generate -->
 - [VoxelWorldData.Generate](../Assets/Scripts/Features/World/Terrain/VoxelWorldData.cs#L119)
 <!-- source: Assets/Scripts/Features/World/Terrain/VoxelWorldData.cs|Generate -->
@@ -4477,15 +4477,15 @@ flowchart TD
 <!-- source: Assets/Editor/World/WorldLab/WorldLabAuthoring.cs|BakeMeshes -->
 - [WorldLabController.Update](../Assets/Scripts/Features/World/WorldLab/WorldLabController.cs#L57)
 <!-- source: Assets/Scripts/Features/World/WorldLab/WorldLabController.cs|Update -->
-- [ProceduralVoxelWorld.DamageSphere](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L484)
+- [ProceduralVoxelWorld.DamageSphere](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L498)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|DamageSphere -->
-- [ProceduralVoxelWorld.SetCell](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L433)
+- [ProceduralVoxelWorld.SetCell](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L434)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|SetCell -->
-- [ProceduralVoxelWorld.QueueCell](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L543)
+- [ProceduralVoxelWorld.QueueCell](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L579)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|QueueCell -->
-- [ProceduralVoxelWorld.LateUpdate](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L571)
+- [ProceduralVoxelWorld.LateUpdate](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L607)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|LateUpdate -->
-- [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L576)
+- [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L612)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|FlushDirty -->
 - [TurretHitResolver.Apply](../Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs#L9)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs|Apply -->
@@ -4499,7 +4499,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Persistence/WorldLabPersistence.cs|Save -->
 - [WorldLabPersistence.Load](../Assets/Scripts/Features/World/Persistence/WorldLabPersistence.cs#L57)
 <!-- source: Assets/Scripts/Features/World/Persistence/WorldLabPersistence.cs|Load -->
-- [ProceduralVoxelWorld.RestoreEdits](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L456)
+- [ProceduralVoxelWorld.RestoreEdits](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L468)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|RestoreEdits -->
 - [VoxelWorldEdits.Restore](../Assets/Scripts/Features/World/Persistence/VoxelWorldEdits.cs#L52)
 <!-- source: Assets/Scripts/Features/World/Persistence/VoxelWorldEdits.cs|Restore -->
@@ -4547,7 +4547,7 @@ flowchart TD
     R["VoxelWorldEdits.Restore()"]
     click R "../Assets/Scripts/Features/World/Persistence/VoxelWorldEdits.cs#L52" "打开源码"
     S["ProceduralVoxelWorld.RestoreEdits()"]
-    click S "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L456" "打开源码"
+    click S "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L468" "打开源码"
     T["WorldBuildingManager.ClearBuildings()"]
     click T "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L389" "打开源码"
     U["WorldBuildingManager.RestoreBuilding()"]
@@ -4621,7 +4621,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs|ValidateState -->
 - [VoxelWorldEdits.Restore](../Assets/Scripts/Features/World/Persistence/VoxelWorldEdits.cs#L52)
 <!-- source: Assets/Scripts/Features/World/Persistence/VoxelWorldEdits.cs|Restore -->
-- [ProceduralVoxelWorld.RestoreEdits](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L456)
+- [ProceduralVoxelWorld.RestoreEdits](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L468)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|RestoreEdits -->
 - [WorldBuildingManager.ClearBuildings](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L389)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|ClearBuildings -->
@@ -4703,7 +4703,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["ProceduralVoxelWorld.DamageSphere()"]
-    click A "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L484" "打开源码"
+    click A "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L498" "打开源码"
     B["VoxelStructureCollapse.RequestCheck()"]
     click B "../Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs#L33" "打开源码"
     C["VoxelStructureCollapse.LateUpdate()"]
@@ -4715,19 +4715,19 @@ flowchart TD
     F["VoxelDebrisPiece.Initialize()"]
     click F "../Assets/Scripts/Features/World/Terrain/Destruction/VoxelDebrisPiece.cs#L13" "打开源码"
     G["ProceduralVoxelWorld.SetCell()"]
-    click G "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L433" "打开源码"
+    click G "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L434" "打开源码"
     H["ProceduralVoxelWorld.FlushDirty()"]
-    click H "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L576" "打开源码"
+    click H "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L612" "打开源码"
     I["VoxelDebrisPiece.Update()"]
     click I "../Assets/Scripts/Features/World/Terrain/Destruction/VoxelDebrisPiece.cs#L51" "打开源码"
     J["VoxelDebrisPiece.OnDestroy()"]
     click J "../Assets/Scripts/Features/World/Terrain/Destruction/VoxelDebrisPiece.cs#L59" "打开源码"
     K["ProceduralVoxelWorld.Generate()"]
-    click K "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L101" "打开源码"
+    click K "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L102" "打开源码"
     L["VoxelStructureCollapse.ClearDebris()"]
     click L "../Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs#L89" "打开源码"
     M["ProceduralVoxelWorld.RestoreEdits()"]
-    click M "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L456" "打开源码"
+    click M "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L468" "打开源码"
     A -->|移除单元后| B
     B -.->|请求标记| C
     C -->|队列空且到间隔| D
@@ -4740,7 +4740,7 @@ flowchart TD
     M -->|校验成功后| L
 ```
 
-- [ProceduralVoxelWorld.DamageSphere](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L484)
+- [ProceduralVoxelWorld.DamageSphere](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L498)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|DamageSphere -->
 - [VoxelStructureCollapse.RequestCheck](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs#L33)
 <!-- source: Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs|RequestCheck -->
@@ -4752,19 +4752,19 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureSupport.cs|FindDetached -->
 - [VoxelDebrisPiece.Initialize](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelDebrisPiece.cs#L13)
 <!-- source: Assets/Scripts/Features/World/Terrain/Destruction/VoxelDebrisPiece.cs|Initialize -->
-- [ProceduralVoxelWorld.SetCell](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L433)
+- [ProceduralVoxelWorld.SetCell](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L434)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|SetCell -->
-- [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L576)
+- [ProceduralVoxelWorld.FlushDirty](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L612)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|FlushDirty -->
 - [VoxelDebrisPiece.Update](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelDebrisPiece.cs#L51)
 <!-- source: Assets/Scripts/Features/World/Terrain/Destruction/VoxelDebrisPiece.cs|Update -->
 - [VoxelDebrisPiece.OnDestroy](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelDebrisPiece.cs#L59)
 <!-- source: Assets/Scripts/Features/World/Terrain/Destruction/VoxelDebrisPiece.cs|OnDestroy -->
-- [ProceduralVoxelWorld.Generate](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L101)
+- [ProceduralVoxelWorld.Generate](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L102)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|Generate -->
 - [VoxelStructureCollapse.ClearDebris](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs#L89)
 <!-- source: Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs|ClearDebris -->
-- [ProceduralVoxelWorld.RestoreEdits](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L456)
+- [ProceduralVoxelWorld.RestoreEdits](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L468)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|RestoreEdits -->
 
 ## 据点编辑与有限驻军会话
@@ -6428,11 +6428,11 @@ flowchart TD
     I["EnemyController.StabilizeDirection()"]
     click I "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L453" "打开源码"
     J["EnemyController.ApplyObstacleAvoidance()"]
-    click J "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L696" "打开源码"
+    click J "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L701" "打开源码"
     K["NavigationObstacleClimb.TryGetHeight()"]
     click K "../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L31" "打开源码"
     L["EnemyController.ConfigureHoverThrusters()"]
-    click L "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L599" "打开源码"
+    click L "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L602" "打开源码"
     M["NavigationObstacleClimb.Blocked()"]
     click M "../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L263" "打开源码"
     Q["NavigationObstacleClimb.CanPass()"]
@@ -6456,7 +6456,7 @@ flowchart TD
     W["NavigationObstacleClimb.ForwardRatio()"]
     click W "../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L164" "打开源码"
     X["EnemyController.ConstrainDescent()"]
-    click X "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L644" "打开源码"
+    click X "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L649" "打开源码"
     Y["NavigationObstacleClimb.CanLowerTo()"]
     click Y "../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L217" "打开源码"
     AA["NavigationLocalPath.Push()"]
@@ -6529,11 +6529,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|GetApproachDirection -->
 - [EnemyController.StabilizeDirection](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L453)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|StabilizeDirection -->
-- [EnemyController.ApplyObstacleAvoidance](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L696)
+- [EnemyController.ApplyObstacleAvoidance](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L701)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|ApplyObstacleAvoidance -->
 - [NavigationObstacleClimb.TryGetHeight](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L31)
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs|TryGetHeight -->
-- [EnemyController.ConfigureHoverThrusters](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L599)
+- [EnemyController.ConfigureHoverThrusters](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L602)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|ConfigureHoverThrusters -->
 - [NavigationObstacleClimb.Blocked](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L263)
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs|Blocked -->
@@ -6557,7 +6557,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs|ClearSegment -->
 - [NavigationObstacleClimb.ForwardRatio](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L164)
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs|ForwardRatio -->
-- [EnemyController.ConstrainDescent](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L644)
+- [EnemyController.ConstrainDescent](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L649)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|ConstrainDescent -->
 - [NavigationObstacleClimb.CanLowerTo](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L217)
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs|CanLowerTo -->
@@ -6609,7 +6609,7 @@ flowchart TD
     N["EnemyController.OnDisable()"]
     click N "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L575" "打开源码"
     O["EnemyController.ApplyObstacleAvoidance()"]
-    click O "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L696" "打开源码"
+    click O "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L701" "打开源码"
     P["NavigationPrediction.Observe()"]
     click P "../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L138" "打开源码"
     Q["NavigationLocalPath.TryFollow()"]
@@ -6670,7 +6670,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs|Clear -->
 - [EnemyController.OnDisable](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L575)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|OnDisable -->
-- [EnemyController.ApplyObstacleAvoidance](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L696)
+- [EnemyController.ApplyObstacleAvoidance](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L701)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|ApplyObstacleAvoidance -->
 - [NavigationPrediction.Observe](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L138)
 <!-- source: Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs|Observe -->
@@ -6766,15 +6766,15 @@ flowchart TD
     B["Turret.RefreshTarget()"]
     click B "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L118" "打开源码"
     C["TurretTargetSelector.ConfigureVisibility()"]
-    click C "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L90" "打开源码"
+    click C "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L89" "打开源码"
     D["TurretTargetSelector.HasLineOfSight()"]
-    click D "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L96" "打开源码"
+    click D "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L95" "打开源码"
     E["TurretTargetSelector.FindNearestTarget()"]
-    click E "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L172" "打开源码"
+    click E "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L179" "打开源码"
     F["ControlUnit.TryGetTargetBounds()"]
     click F "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L76" "打开源码"
     G["TurretTargetSelector.Probe()"]
-    click G "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L101" "打开源码"
+    click G "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L100" "打开源码"
     H["Turret.AimAndFire()"]
     click H "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L156" "打开源码"
     I["LaserTurret.Fire()"]
@@ -6810,15 +6810,15 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|FixedUpdate -->
 - [Turret.RefreshTarget](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L118)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|RefreshTarget -->
-- [TurretTargetSelector.ConfigureVisibility](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L90)
+- [TurretTargetSelector.ConfigureVisibility](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L89)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|ConfigureVisibility -->
-- [TurretTargetSelector.HasLineOfSight](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L96)
+- [TurretTargetSelector.HasLineOfSight](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L95)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|HasLineOfSight -->
-- [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L172)
+- [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L179)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|FindNearestTarget -->
 - [ControlUnit.TryGetTargetBounds](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L76)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|TryGetTargetBounds -->
-- [TurretTargetSelector.Probe](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L101)
+- [TurretTargetSelector.Probe](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L100)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|Probe -->
 - [Turret.AimAndFire](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L156)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|AimAndFire -->
@@ -7140,7 +7140,7 @@ flowchart TD
     AD["CombatHud.Sample()"]
     click AD "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L174" "打开源码"
     AB["TurretTargetSelector.FindNearestTarget()"]
-    click AB "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L172" "打开源码"
+    click AB "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L179" "打开源码"
     A -.->|保存独立场景| B
     B --> C
     C --> D
@@ -7228,7 +7228,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|LateUpdate -->
 - [CombatHud.Sample](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L174)
 <!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|Sample -->
-- [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L172)
+- [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L179)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|FindNearestTarget -->
 
 ## 友敌 AI 调试绘制
@@ -7240,15 +7240,15 @@ flowchart TD
     A["EnemyController.FixedUpdate()"]
     click A "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L260" "打开源码"
     B["EnemyController.ApplyObstacleAvoidance()"]
-    click B "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L696" "打开源码"
+    click B "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L701" "打开源码"
     C["NavigationAvoidance.Evaluate()"]
     click C "../Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs#L73" "打开源码"
     D["EnemyController.OnDrawGizmos()"]
-    click D "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L749" "打开源码"
+    click D "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L754" "打开源码"
     E["EnemyController.DrawDebug()"]
-    click E "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L754" "打开源码"
+    click E "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L759" "打开源码"
     F["EnemyController.DrawDebugCircle()"]
-    click F "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L817" "打开源码"
+    click F "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L822" "打开源码"
     G["EnemyController.OnDisable()"]
     click G "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L575" "打开源码"
     A -->|经移动计算或警戒返航| B
@@ -7261,15 +7261,15 @@ flowchart TD
 
 - [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L260)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|FixedUpdate -->
-- [EnemyController.ApplyObstacleAvoidance](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L696)
+- [EnemyController.ApplyObstacleAvoidance](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L701)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|ApplyObstacleAvoidance -->
 - [NavigationAvoidance.Evaluate](../Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs#L73)
 <!-- source: Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs|Evaluate -->
-- [EnemyController.OnDrawGizmos](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L749)
+- [EnemyController.OnDrawGizmos](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L754)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|OnDrawGizmos -->
-- [EnemyController.DrawDebug](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L754)
+- [EnemyController.DrawDebug](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L759)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|DrawDebug -->
-- [EnemyController.DrawDebugCircle](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L817)
+- [EnemyController.DrawDebugCircle](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L822)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|DrawDebugCircle -->
 - [EnemyController.OnDisable](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L575)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|OnDisable -->
@@ -7293,7 +7293,7 @@ flowchart TD
     F["WorldBuildingManager.Stage()"]
     click F "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L252" "打开源码"
     G["ProceduralVoxelWorld.Generate()"]
-    click G "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L101" "打开源码"
+    click G "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L102" "打开源码"
     H["VfxEffectPool.Rent()"]
     click H "../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L34" "打开源码"
     I["SceneObjectQuery.FindInScene()"]
@@ -7320,7 +7320,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|RefreshChildren -->
 - [WorldBuildingManager.Stage](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L252)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|Stage -->
-- [ProceduralVoxelWorld.Generate](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L101)
+- [ProceduralVoxelWorld.Generate](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L102)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|Generate -->
 - [VfxEffectPool.Rent](../Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs#L34)
 <!-- source: Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs|Rent -->

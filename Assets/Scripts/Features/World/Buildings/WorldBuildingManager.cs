@@ -50,7 +50,7 @@ public sealed class WorldBuildingManager : MonoBehaviour
 
         if (world != null)
         {
-            world.TerrainChanged += TerrainChanged;
+            world.SupportRegionChanged += TerrainChanged;
             world.Regenerated += ResetBuildings;
         }
     }
@@ -67,7 +67,7 @@ public sealed class WorldBuildingManager : MonoBehaviour
     {
         if (world != null)
         {
-            world.TerrainChanged -= TerrainChanged;
+            world.SupportRegionChanged -= TerrainChanged;
             world.Regenerated -= ResetBuildings;
         }
 

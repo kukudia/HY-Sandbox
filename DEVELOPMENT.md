@@ -1,5 +1,7 @@
 # HY-Sandbox 开发入口
 
+爆炸合并建筑支撑通知；炮塔复用候选边界，最近遮挡才查归属；敌机按名单变化与校正周期配置悬停器。实际帧耗时待复测。
+
 建筑断裂按碎片批量移除主体成员；弹丸命中结算可通过 HY.Projectile.ResolveHit 采样。整帧收益待同场景复测。
 
 Siege：战斗双击接管，Tab 或按住 Alt 点击 FREE VIEW 返回观察；Recovery 时限 60 秒。基地手动 Repair 同时补齐占地内已毁地形。波次清除显示 CLEAR，余额变化在 Credits 旁显示。

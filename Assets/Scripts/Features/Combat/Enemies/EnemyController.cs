@@ -312,10 +312,10 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
-        Vector3 toTarget = currentTarget.transform.position - transform.position;
-        Vector3 flatDirection = new Vector3(toTarget.x, 0f, toTarget.z);
         if (Time.time >= nextMovementUpdateTime)
         {
+            Vector3 toTarget = currentTarget.transform.position - transform.position;
+            Vector3 flatDirection = new Vector3(toTarget.x, 0f, toTarget.z);
             desiredMovementInput = CalculateDesiredMovement(flatDirection);
             nextMovementUpdateTime = Time.time + GetMovementInterval();
         }
@@ -574,6 +574,7 @@ public class EnemyController : MonoBehaviour
 
     private void OnDisable()
     {
+        configuredHoverThrusters = null;
         if (unit != null && !unit.AcceptsPlayerInput)
         {
             unit.SetMovementInput(Vector3.zero);
@@ -596,10 +597,14 @@ public class EnemyController : MonoBehaviour
         _hasSmoothedHoverHeight = false;
     }
 
+    private HoverThruster[] configuredHoverThrusters;
+    private float nextHoverSync;
     private void ConfigureHoverThrusters()
     {
-        if (unit.hoverThrusters != null)
+        if (unit.hoverThrusters != null && (configuredHoverThrusters != unit.hoverThrusters || Time.fixedTime >= nextHoverSync))
         {
+            configuredHoverThrusters = unit.hoverThrusters;
+            nextHoverSync = Time.fixedTime + 0.25f;
             foreach (HoverThruster hoverThruster in unit.hoverThrusters)
             {
                 if (hoverThruster != null)

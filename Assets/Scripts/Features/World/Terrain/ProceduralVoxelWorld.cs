@@ -10,6 +10,7 @@ using UnityEngine;
 public sealed class ProceduralVoxelWorld : MonoBehaviour
 {
     public event System.Action<Bounds> TerrainChanged;
+    public event System.Action<Bounds> SupportRegionChanged;
     public event System.Action Regenerated;
     public event Action<Vector2Int, bool> ColumnVisibilityChanged;
     public event Action StreamingCleared;
@@ -432,6 +433,11 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
 
     public bool SetCell(Vector3Int cell, byte material)
     {
+        return SetCell(cell, material, true);
+    }
+
+    private bool SetCell(Vector3Int cell, byte material, bool notifySupport)
+    {
         if (!data.Set(cell, material))
         {
             return false;
@@ -439,7 +445,13 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
 
         damage.Remove(cell);
         QueueCell(cell);
-        TerrainChanged?.Invoke(new Bounds(CellCenter(cell), Vector3.one * (cellSize * transform.lossyScale.magnitude)));
+        Bounds changed = new Bounds(CellCenter(cell), Vector3.one * (cellSize * transform.lossyScale.magnitude));
+        TerrainChanged?.Invoke(changed);
+        if (notifySupport)
+        {
+            SupportRegionChanged?.Invoke(changed);
+        }
+
         return true;
     }
 
@@ -475,9 +487,11 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
             dirty.Add(start);
         }
 
-        TerrainChanged?.Invoke(new Bounds(
+        Bounds changed = new Bounds(
             transform.TransformPoint((Vector3)data.Size * cellSize * 0.5f),
-            Vector3.one * ((Vector3)data.Size * cellSize).magnitude));
+            Vector3.one * ((Vector3)data.Size * cellSize).magnitude);
+        TerrainChanged?.Invoke(changed);
+        SupportRegionChanged?.Invoke(changed);
     }
 
     /// <summary>半径内按距离衰减积累伤害，土/岩/金属分别需要20/60/100；不会创建刚体碎片。</summary>
@@ -501,6 +515,7 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
         Vector3Int minimum = Vector3Int.Max(data.Minimum, Vector3Int.FloorToInt(localCenter - extent));
         Vector3Int maximum = Vector3Int.Min(data.Maximum - Vector3Int.one, Vector3Int.FloorToInt(localCenter + extent));
         int removed = 0;
+        Bounds supportRegion = default;
         for (int z = minimum.z; z <= maximum.z; z++)
         {
             for (int y = minimum.y; y <= maximum.y; y++)
@@ -509,8 +524,14 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
                 {
                     var cell = new Vector3Int(x, y, z);
                     byte material = data.Get(cell);
-                    float distance = Vector3.Distance(CellCenter(cell), center);
-                    if (material == 0 || distance > radius)
+                    if (material == 0)
+                    {
+                        continue;
+                    }
+
+                    Vector3 cellCenter = CellCenter(cell);
+                    float distance = Vector3.Distance(cellCenter, center);
+                    if (distance > radius)
                     {
                         continue;
                     }
@@ -520,7 +541,16 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
                     float hardness = material == 1 ? 20f : material == 2 ? 60f : 100f;
                     if (value >= hardness)
                     {
-                        SetCell(cell, 0);
+                        SetCell(cell, 0, false);
+                        if (removed == 0)
+                        {
+                            supportRegion = new Bounds(cellCenter, Vector3.zero);
+                        }
+                        else
+                        {
+                            supportRegion.Encapsulate(cellCenter);
+                        }
+
                         removed++;
                     }
                     else
@@ -532,6 +562,12 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
         }
 
         RemovedCells += removed;
+        if (removed > 0)
+        {
+            supportRegion.Expand(cellSize * transform.lossyScale.magnitude);
+            SupportRegionChanged?.Invoke(supportRegion);
+        }
+
         if (!streaming && removed > 0 && TryGetComponent(out VoxelStructureCollapse collapse))
         {
             collapse.RequestCheck();

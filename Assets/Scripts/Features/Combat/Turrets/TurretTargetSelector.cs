@@ -34,7 +34,6 @@ internal sealed class TurretTargetSelector
 
     private int phase;
     private const int ProbeCount = 4;
-    private readonly List<ControlUnit> ships = new List<ControlUnit>();
     internal TurretTargetSelector(Transform weapon)
     {
         _weapon = weapon;
@@ -135,23 +134,31 @@ internal sealed class TurretTargetSelector
         float distance = float.PositiveInfinity;
         bool visible = false;
         Vector3 end = _origin + direction * range;
+        // Only the foremost surface can determine visibility. Preserve blocker priority on ties.
         for (int i = 0; i < count; i++)
         {
             RaycastHit hit = _visibilityHits[i];
-            if (hit.distance > distance || hit.collider.transform.IsChildOf(_weapon))
+            if (hit.distance < distance && !hit.collider.transform.IsChildOf(_weapon))
+            {
+                distance = hit.distance;
+            }
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            RaycastHit hit = _visibilityHits[i];
+            if (hit.distance != distance || hit.collider.transform.IsChildOf(_weapon))
             {
                 continue;
             }
 
             bool belongs = hit.collider.GetComponentInParent<ControlUnit>() == target;
-            if (hit.distance == distance && belongs)
-            {
-                continue;
-            }
-
-            distance = hit.distance;
             visible = belongs;
             end = hit.point;
+            if (!visible)
+            {
+                break;
+            }
         }
 
         DebugManager debug = DebugManager.instance;
@@ -178,12 +185,16 @@ internal sealed class TurretTargetSelector
     {
         using var sample = SearchMarker.Auto();
         LastSearchProbes = 0;
-        ships.Clear();
         if (units == null || range <= 0f)
         {
             return null;
         }
 
+        ControlUnit best = null;
+        float bestDistance = float.PositiveInfinity;
+        Vector3 bestPoint = default;
+        int start = phase;
+        phase = (phase + 1) % 6;
         foreach (ControlUnit unit in units)
         {
             if (unit == null || unit == owner || unit.faction != faction || !unit.isActiveAndEnabled || !unit.IsOperational || !unit.IsSimulationActive || unit.gameObject.scene != _weapon.gameObject.scene || !unit.TryGetTargetBounds(out Bounds bounds))
@@ -192,20 +203,12 @@ internal sealed class TurretTargetSelector
             }
 
             Vector3 near = unit.transform.TransformPoint(bounds.ClosestPoint(unit.transform.InverseTransformPoint(_origin)));
-            if ((near - _origin).sqrMagnitude <= range * range)
+            float lowerBound = (near - _origin).sqrMagnitude;
+            if (lowerBound > range * range)
             {
-                ships.Add(unit);
+                continue;
             }
-        }
 
-        ControlUnit best = null;
-        float bestDistance = float.PositiveInfinity;
-        Vector3 bestPoint = default;
-        int start = phase;
-        phase = (phase + 1) % 6;
-        foreach (ControlUnit unit in ships)
-        {
-            unit.TryGetTargetBounds(out Bounds bounds);
             for (int i = 0; i < ProbeCount; i++)
             {
                 Vector3 point;

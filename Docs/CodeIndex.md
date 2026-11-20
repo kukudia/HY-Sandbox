@@ -4439,14 +4439,14 @@ HY-Sandbox/
 | EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L509) | private |
 | EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L560) | private |
 | EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L575) | private |
-| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L599) | private |
-| EnemyController | [`float ConstrainDescent(float requested, Vector3 direction)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L644) | private |
-| EnemyController | [`float GetBaseHoverHeight()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L662) | private |
-| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L680) | private |
-| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L696) | private |
-| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L749) | private |
-| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L754) | private |
-| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L817) | private static |
+| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L602) | private |
+| EnemyController | [`float ConstrainDescent(float requested, Vector3 direction)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L649) | private |
+| EnemyController | [`float GetBaseHoverHeight()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L667) | private |
+| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L685) | private |
+| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L701) | private |
+| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L754) | private |
+| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L759) | private |
+| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L822) | private static |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs
 
@@ -4775,12 +4775,12 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| TurretTargetSelector | [`bool TryScheduleSearch()`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L45) | internal |
-| TurretTargetSelector | [`void CancelScheduledSearch()`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L80) | internal |
-| TurretTargetSelector | [`void ConfigureVisibility(Vector3 origin, LayerMask hitLayers)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L90) | internal |
-| TurretTargetSelector | [`bool HasLineOfSight(ControlUnit owner, ControlUnit target, float range)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L96) | internal |
-| TurretTargetSelector | [`bool Probe(ControlUnit owner, ControlUnit target, Vector3 point, float range)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L101) | private |
-| TurretTargetSelector | [`ControlUnit FindNearestTarget( IReadOnlyList<ControlUnit> units, ControlUnit owner, UnitFaction faction, float range, bool prioritizeCockpit)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L172) | internal |
+| TurretTargetSelector | [`bool TryScheduleSearch()`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L44) | internal |
+| TurretTargetSelector | [`void CancelScheduledSearch()`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L79) | internal |
+| TurretTargetSelector | [`void ConfigureVisibility(Vector3 origin, LayerMask hitLayers)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L89) | internal |
+| TurretTargetSelector | [`bool HasLineOfSight(ControlUnit owner, ControlUnit target, float range)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L95) | internal |
+| TurretTargetSelector | [`bool Probe(ControlUnit owner, ControlUnit target, Vector3 point, float range)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L100) | private |
+| TurretTargetSelector | [`ControlUnit FindNearestTarget( IReadOnlyList<ControlUnit> units, ControlUnit owner, UnitFaction faction, float range, bool prioritizeCockpit)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L179) | internal |
 
 ## Assets/Scripts/Features/Diagnostics/Bots/BotNavigationProbeDriver.cs
 
@@ -7567,32 +7567,33 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| ProceduralVoxelWorld | [`float SurfaceHeight(int x, int z)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L53) | public |
-| ProceduralVoxelWorld | [`Vector3 FindSpawnSurface(Bounds construct)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L54) | public |
-| ProceduralVoxelWorld | [`void Awake()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L82) | private |
-| ProceduralVoxelWorld | [`void Generate(System.Action<GameObject> registerCreated = null, System.Action<GameObject> destroyObsolete = null)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L101) | public |
-| ProceduralVoxelWorld | [`void InitializeFinite(VoxelWorldData terrain, float cellWidth, int terrainSeed)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L124) | public |
-| ProceduralVoxelWorld | [`void RebuildFinite(Action<GameObject> registerCreated, Action<GameObject> destroyObsolete)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L151) | private |
-| ProceduralVoxelWorld | [`void InitializeStreaming( WorldGenerationSettings settings, int sessionSeed, IReadOnlyList<BlockDataList> buildingTemplates = null)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L213) | public |
-| ProceduralVoxelWorld | [`bool HasColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L238) | public |
-| ProceduralVoxelWorld | [`bool IsColumnInBounds(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L243) | public |
-| ProceduralVoxelWorld | [`Vector2Int ColumnAt(Vector3 worldPosition)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L248) | public |
-| ProceduralVoxelWorld | [`bool TryGetBuildingSite(Vector2Int coordinate, out Vector3 worldPosition, out Quaternion rotation)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L254) | public |
-| ProceduralVoxelWorld | [`IEnumerator LoadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L269) | public |
-| ProceduralVoxelWorld | [`void UnloadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L351) | public |
-| ProceduralVoxelWorld | [`void ClearStreaming()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L372) | public |
-| ProceduralVoxelWorld | [`void DestroyChunk(VoxelWorldChunk chunk)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L392) | private |
-| ProceduralVoxelWorld | [`void CacheChunks()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L411) | private |
-| ProceduralVoxelWorld | [`Vector3Int WorldToCell(Vector3 position)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L423) | public |
-| ProceduralVoxelWorld | [`Vector3 CellCenter(Vector3Int cell)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L428) | public |
-| ProceduralVoxelWorld | [`bool SetCell(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L433) | public |
-| ProceduralVoxelWorld | [`VoxelWorldEdits CaptureEdits()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L446) | public |
-| ProceduralVoxelWorld | [`void RestoreEdits(VoxelWorldEdits edits)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L456) | public |
-| ProceduralVoxelWorld | [`int DamageSphere(Vector3 center, float radius, float energy)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L484) | public |
-| ProceduralVoxelWorld | [`void QueueCell(Vector3Int cell)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L543) | private |
-| ProceduralVoxelWorld | [`void QueueChunk(Vector3Int cell)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L554) | private |
-| ProceduralVoxelWorld | [`void LateUpdate()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L571) | private |
-| ProceduralVoxelWorld | [`void FlushDirty(int budget = int.MaxValue, float milliseconds = float.PositiveInfinity)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L576) | public |
+| ProceduralVoxelWorld | [`float SurfaceHeight(int x, int z)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L54) | public |
+| ProceduralVoxelWorld | [`Vector3 FindSpawnSurface(Bounds construct)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L55) | public |
+| ProceduralVoxelWorld | [`void Awake()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L83) | private |
+| ProceduralVoxelWorld | [`void Generate(System.Action<GameObject> registerCreated = null, System.Action<GameObject> destroyObsolete = null)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L102) | public |
+| ProceduralVoxelWorld | [`void InitializeFinite(VoxelWorldData terrain, float cellWidth, int terrainSeed)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L125) | public |
+| ProceduralVoxelWorld | [`void RebuildFinite(Action<GameObject> registerCreated, Action<GameObject> destroyObsolete)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L152) | private |
+| ProceduralVoxelWorld | [`void InitializeStreaming( WorldGenerationSettings settings, int sessionSeed, IReadOnlyList<BlockDataList> buildingTemplates = null)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L214) | public |
+| ProceduralVoxelWorld | [`bool HasColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L239) | public |
+| ProceduralVoxelWorld | [`bool IsColumnInBounds(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L244) | public |
+| ProceduralVoxelWorld | [`Vector2Int ColumnAt(Vector3 worldPosition)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L249) | public |
+| ProceduralVoxelWorld | [`bool TryGetBuildingSite(Vector2Int coordinate, out Vector3 worldPosition, out Quaternion rotation)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L255) | public |
+| ProceduralVoxelWorld | [`IEnumerator LoadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L270) | public |
+| ProceduralVoxelWorld | [`void UnloadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L352) | public |
+| ProceduralVoxelWorld | [`void ClearStreaming()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L373) | public |
+| ProceduralVoxelWorld | [`void DestroyChunk(VoxelWorldChunk chunk)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L393) | private |
+| ProceduralVoxelWorld | [`void CacheChunks()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L412) | private |
+| ProceduralVoxelWorld | [`Vector3Int WorldToCell(Vector3 position)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L424) | public |
+| ProceduralVoxelWorld | [`Vector3 CellCenter(Vector3Int cell)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L429) | public |
+| ProceduralVoxelWorld | [`bool SetCell(Vector3Int cell, byte material)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L434) | public |
+| ProceduralVoxelWorld | [`bool SetCell(Vector3Int cell, byte material, bool notifySupport)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L439) | private |
+| ProceduralVoxelWorld | [`VoxelWorldEdits CaptureEdits()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L458) | public |
+| ProceduralVoxelWorld | [`void RestoreEdits(VoxelWorldEdits edits)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L468) | public |
+| ProceduralVoxelWorld | [`int DamageSphere(Vector3 center, float radius, float energy)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L498) | public |
+| ProceduralVoxelWorld | [`void QueueCell(Vector3Int cell)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L579) | private |
+| ProceduralVoxelWorld | [`void QueueChunk(Vector3Int cell)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L590) | private |
+| ProceduralVoxelWorld | [`void LateUpdate()`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L607) | private |
+| ProceduralVoxelWorld | [`void FlushDirty(int budget = int.MaxValue, float milliseconds = float.PositiveInfinity)`](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L612) | public |
 
 ## Assets/Scripts/Features/World/Terrain/StreamingWorldTerrain.cs
 
