@@ -63,7 +63,6 @@ public class ControlUnit : MonoBehaviour
         if (damageTargetsFrame != Time.frameCount || damageTargetsStep != Time.fixedTimeAsDouble || damageTargetsVersion != Durability.HierarchyVersion)
         {
             GetComponentsInChildren(true, damageTargets);
-            targetBoundsReady = false;
             damageTargetsFrame = Time.frameCount;
             damageTargetsStep = Time.fixedTimeAsDouble;
             damageTargetsVersion = Durability.HierarchyVersion;
@@ -72,54 +71,90 @@ public class ControlUnit : MonoBehaviour
         return damageTargets;
     }
 
+    private readonly Vector3[] hullSamples = new Vector3[6];
+    internal Vector3 HullSample(int side) => transform.TransformPoint(hullSamples[side]);
+    private uint hullVersion;
+    private readonly List<Collider> hullShapes = new List<Collider>();
     internal bool TryGetTargetBounds(out Bounds bounds)
     {
-        GetDamageTargets();
-        if (!Time.inFixedTimeStep)
-        {
-            targetBoundsReady = false;
-        }
-
-        if (!targetBoundsReady && damageTargets.Count > 0)
+        if (!targetBoundsReady || hullVersion != Durability.HierarchyVersion)
         {
             using var sample = BoundsMarker.Auto();
-            // 包含失活或受损部件：同一步内修复也不会被粗筛漏掉，精筛仍检查实时状态。
-            foreach (Durability target in damageTargets)
+            hullVersion = Durability.HierarchyVersion;
+            GetComponentsInChildren(false, hullShapes);
+            targetBoundsReady = false;
+            foreach (Collider shape in hullShapes)
             {
-                if (target == null)
+                if (!shape.enabled || shape.isTrigger || shape.GetComponentInParent<ControlUnit>() != this)
                 {
                     continue;
                 }
 
-                Vector3 point = target.GetTargetPosition(damageTargetsStep);
-                if (targetBoundsReady)
+                Bounds box = shape.bounds;
+                Vector3 center = transform.InverseTransformPoint(box.center);
+                for (int side = 0; side < 6; side++)
                 {
-                    targetBounds.Encapsulate(point);
+                    int axis = side / 2;
+                    bool farther = (side & 1) == 0 ? center[axis] > hullSamples[side][axis] : center[axis] < hullSamples[side][axis];
+                    if (!targetBoundsReady || farther)
+                    {
+                        hullSamples[side] = center;
+                    }
                 }
-                else
+
+                for (int i = 0; i < 8; i++)
                 {
-                    targetBounds = new Bounds(point, Vector3.zero);
-                    targetBoundsReady = true;
+                    Vector3 sign = new Vector3((i & 1) == 0 ? -1 : 1, (i & 2) == 0 ? -1 : 1, (i & 4) == 0 ? -1 : 1);
+                    Vector3 local = transform.InverseTransformPoint(box.center + Vector3.Scale(sign, box.extents));
+                    if (!targetBoundsReady)
+                    {
+                        targetBounds = new Bounds(local, Vector3.zero);
+                        targetBoundsReady = true;
+                    }
+                    else
+                    {
+                        targetBounds.Encapsulate(local);
+                    }
                 }
             }
+
+            hullShapes.Clear();
         }
 
         bounds = targetBounds;
         return targetBoundsReady;
     }
 
+    internal void ApplySurfaceDamage(Collider hit, ControlUnit attacker, UnitFaction targetFaction, float damage)
+    {
+        if (faction != targetFaction || (!IsOperational && !IsDebris))
+        {
+            return;
+        }
+
+        Durability health = hit.GetComponentInParent<Durability>();
+        if (health != null && health.isActiveAndEnabled && health.GetComponentInParent<ControlUnit>() == this)
+        {
+            health.ApplyDamage(damage, attacker);
+        }
+    }
+
     private void OnDrawGizmos()
     {
         DebugManager debug = DebugManager.instance;
-        if (debug != null && debug.ShowTurretTargeting && targetBoundsReady && damageTargetsStep == Time.fixedTimeAsDouble)
+        if (debug != null && debug.ShowTurretTargeting && targetBoundsReady)
         {
             Gizmos.color = Color.cyan;
+            Matrix4x4 previous = Gizmos.matrix;
+            Gizmos.matrix = transform.localToWorldMatrix;
             Gizmos.DrawWireCube(targetBounds.center, targetBounds.size);
+            Gizmos.matrix = previous;
         }
     }
 
     private void OnTransformChildrenChanged()
     {
+        targetBoundsReady = false;
         damageTargetsFrame = -1;
     }
 
@@ -331,6 +366,7 @@ public class ControlUnit : MonoBehaviour
 
     public void RefreshChildren()
     {
+        targetBoundsReady = false;
         damageTargetsFrame = -1;
         // Refresh after loading or regrouping because child components and Rigidbody ownership may have changed.
         EnsureRuntimeUnitId();

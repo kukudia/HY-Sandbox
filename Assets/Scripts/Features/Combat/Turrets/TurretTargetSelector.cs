@@ -19,23 +19,22 @@ internal sealed class TurretTargetSelector
     private int _grantedFrame = -1;
     private readonly Transform _weapon;
     private Vector3 _origin;
-    private double _positionStep;
     private int _hitLayers = ~0;
     private RaycastHit[] _visibilityHits = new RaycastHit[16];
-    private readonly List<Candidate> candidates = new List<Candidate>();
-    private struct Candidate
+    internal Vector3 SurfacePoint
     {
-        internal Durability health;
-        internal ControlUnit unit;
-        internal float distanceSquared;
-        internal int hierarchyOrder;
+        get; private set;
     }
 
-    private static readonly System.Comparison<Candidate> NearestFirst = (left, right) =>
+    private Vector3 localHit;
+    internal int LastSearchProbes
     {
-        int distance = left.distanceSquared.CompareTo(right.distanceSquared);
-        return distance != 0 ? distance : left.hierarchyOrder.CompareTo(right.hierarchyOrder);
-    };
+        get; private set;
+    }
+
+    private int phase;
+    private const int ProbeCount = 4;
+    private readonly List<ControlUnit> ships = new List<ControlUnit>();
     internal TurretTargetSelector(Transform weapon)
     {
         _weapon = weapon;
@@ -91,34 +90,33 @@ internal sealed class TurretTargetSelector
     internal void ConfigureVisibility(Vector3 origin, LayerMask hitLayers)
     {
         _origin = origin;
-        _positionStep = Time.fixedTimeAsDouble;
         _hitLayers = hitLayers;
     }
 
-    internal bool HasLineOfSight(ControlUnit owner, ControlUnit target, Durability durability)
+    internal bool HasLineOfSight(ControlUnit owner, ControlUnit target, float range)
+    {
+        return Probe(owner, target, target.transform.TransformPoint(localHit), range);
+    }
+
+    private bool Probe(ControlUnit owner, ControlUnit target, Vector3 point, float range)
     {
         using var sample = VisibilityMarker.Auto();
-        if (durability == null)
+        Vector3 delta = point - _origin;
+        if (delta.sqrMagnitude < 0.000001f || range <= 0f)
         {
             return false;
         }
 
-        Vector3 offset = durability.GetTargetPosition(_positionStep) - _origin;
-        float distance = offset.magnitude;
-        if (distance < 0.001f)
-        {
-            return true;
-        }
-
+        Vector3 direction = delta.normalized;
         PhysicsScene physics = _weapon.gameObject.scene.GetPhysicsScene();
         int count;
         while (true)
         {
             count = physics.Raycast(
                 _origin,
-                offset / distance,
+                direction,
                 _visibilityHits,
-                distance,
+                range,
                 _hitLayers,
                 QueryTriggerInteraction.Ignore);
             if (count < _visibilityHits.Length)
@@ -126,44 +124,46 @@ internal sealed class TurretTargetSelector
                 break;
             }
 
-            // NonAlloc 结果无序；饱和时不能假定墙或目标已包含在返回值中。
-            if (_visibilityHits.Length >= 4096)
+            if (count >= 4096)
             {
                 return false;
             }
 
-            System.Array.Resize(ref _visibilityHits, _visibilityHits.Length * 2);
+            System.Array.Resize(ref _visibilityHits, count * 2);
         }
 
-        float nearestDistance = float.PositiveInfinity;
-        Collider nearestCollider = null;
+        float distance = float.PositiveInfinity;
+        bool visible = false;
+        Vector3 end = _origin + direction * range;
         for (int i = 0; i < count; i++)
         {
             RaycastHit hit = _visibilityHits[i];
-            // 只忽略炮塔自身。所属基地/舰体的其他墙板仍遮挡，避免库内炮塔透过自家墙锁敌。
-            if (owner != null && hit.collider.transform.IsChildOf(_weapon) && hit.collider.GetComponentInParent<ControlUnit>() == owner)
+            if (hit.distance > distance || hit.collider.transform.IsChildOf(_weapon))
             {
                 continue;
             }
 
-            if (hit.distance < nearestDistance || (hit.distance == nearestDistance && hit.collider.GetComponentInParent<ControlUnit>() != target))
+            bool belongs = hit.collider.GetComponentInParent<ControlUnit>() == target;
+            if (hit.distance == distance && belongs)
             {
-                nearestDistance = hit.distance;
-                nearestCollider = hit.collider;
+                continue;
             }
+
+            distance = hit.distance;
+            visible = belongs;
+            end = hit.point;
         }
 
-        // NonAlloc结果无序；仅最近非自身命中决定可见性，不必逐个遍历其组件父链。
-        // 目标外壳会先于驾驶舱中心命中，它属于同一个可攻击单位。
-        bool visible = nearestCollider == null || nearestCollider.GetComponentInParent<ControlUnit>() == target;
         DebugManager debug = DebugManager.instance;
         if (debug != null && debug.ShowTurretTargeting && debug.Includes(_weapon))
         {
-            Debug.DrawLine(
-                _origin,
-                visible ? _origin + offset : _origin + offset * (nearestDistance / distance),
-                visible ? Color.green : Color.red,
-                Time.fixedDeltaTime);
+            Debug.DrawLine(_origin, end, visible ? Color.green : Color.red, Time.fixedDeltaTime);
+        }
+
+        if (visible)
+        {
+            SurfacePoint = end;
+            localHit = target.transform.InverseTransformPoint(end);
         }
 
         return visible;
@@ -174,152 +174,79 @@ internal sealed class TurretTargetSelector
         ControlUnit owner,
         UnitFaction faction,
         float range,
-        bool prioritizeCockpit,
-        out Durability nearestDurability)
+        bool prioritizeCockpit)
     {
         using var sample = SearchMarker.Auto();
-        ControlUnit nearest = null;
-        nearestDurability = null;
-        float nearestSqrDistance = range * range;
-        Vector3 origin = _origin;
-        if (units == null)
+        LastSearchProbes = 0;
+        ships.Clear();
+        if (units == null || range <= 0f)
         {
             return null;
         }
 
-        if (prioritizeCockpit)
+        foreach (ControlUnit unit in units)
         {
-            for (int i = 0; i < units.Count; i++)
-            {
-                ControlUnit candidate = units[i];
-                if (candidate == null || candidate == owner)
-                {
-                    continue;
-                }
-
-                if (!candidate.isActiveAndEnabled || !candidate.HasValidCockpit || !candidate.IsSimulationActive || (owner != null && candidate.gameObject.scene != owner.gameObject.scene) || candidate.faction != faction)
-                {
-                    continue;
-                }
-
-                Durability cockpitDurability = FindCockpitDurability(candidate);
-                if (cockpitDurability == null || !cockpitDurability.isActiveAndEnabled || cockpitDurability.currentDurability <= 0f)
-                {
-                    continue;
-                }
-
-                float sqrDistance = (cockpitDurability.GetTargetPosition(_positionStep) - origin).sqrMagnitude;
-                if (sqrDistance < nearestSqrDistance && HasLineOfSight(owner, candidate, cockpitDurability))
-                {
-                    nearest = candidate;
-                    nearestDurability = cockpitDurability;
-                    nearestSqrDistance = sqrDistance;
-                }
-            }
-
-            if (nearestDurability != null)
-            {
-                return nearest;
-            }
-        }
-
-        candidates.Clear();
-        int closest = -1;
-        float closestDistance = nearestSqrDistance;
-        for (int i = 0; i < units.Count; i++)
-        {
-            ControlUnit candidate = units[i];
-            if (candidate == null || candidate == owner)
+            if (unit == null || unit == owner || unit.faction != faction || !unit.isActiveAndEnabled || !unit.IsOperational || !unit.IsSimulationActive || unit.gameObject.scene != _weapon.gameObject.scene || !unit.TryGetTargetBounds(out Bounds bounds))
             {
                 continue;
             }
 
-            if (!candidate.isActiveAndEnabled || candidate.faction != faction || !candidate.IsSimulationActive || !candidate.IsOperational || (owner != null && candidate.gameObject.scene != owner.gameObject.scene))
+            Vector3 near = unit.transform.TransformPoint(bounds.ClosestPoint(unit.transform.InverseTransformPoint(_origin)));
+            if ((near - _origin).sqrMagnitude <= range * range)
             {
-                continue;
+                ships.Add(unit);
             }
-
-            if (!candidate.TryGetTargetBounds(out Bounds bounds) || bounds.SqrDistance(origin) > nearestSqrDistance)
-            {
-                continue;
-            }
-
-            CollectCandidates(candidate, origin, nearestSqrDistance, ref closest, ref closestDistance);
         }
 
-        if (closest < 0)
+        ControlUnit best = null;
+        float bestDistance = float.PositiveInfinity;
+        Vector3 bestPoint = default;
+        int start = phase;
+        phase = (phase + 1) % 6;
+        foreach (ControlUnit unit in ships)
         {
-            return null;
-        }
-
-        Candidate result = candidates[closest];
-        if (!IsVisibleCandidate(owner, result))
-        {
-            int last = candidates.Count - 1;
-            candidates[closest] = candidates[last];
-            candidates.RemoveAt(last);
-            candidates.Sort(NearestFirst);
-            foreach (Candidate alternative in candidates)
+            unit.TryGetTargetBounds(out Bounds bounds);
+            for (int i = 0; i < ProbeCount; i++)
             {
-                if (IsVisibleCandidate(owner, alternative))
+                Vector3 point;
+                if (i == 0 && prioritizeCockpit && unit.HasValidCockpit)
                 {
-                    nearestDurability = alternative.health;
-                    return alternative.unit;
+                    point = unit.cockpit.transform.position;
                 }
-            }
+                else if (i == 0)
+                {
+                    point = unit.transform.TransformPoint(bounds.center);
+                }
+                else
+                {
+                    int side = (start + i - 1) % 6;
+                    point = unit.HullSample(side);
+                }
 
-            return null;
-        }
-
-        nearestDurability = result.health;
-        return result.unit;
-    }
-
-    private bool IsVisibleCandidate(ControlUnit owner, Candidate candidate)
-    {
-        return candidate.health.GetComponentInParent<ControlUnit>() == candidate.unit && HasLineOfSight(owner, candidate.unit, candidate.health);
-    }
-
-    private void CollectCandidates(
-        ControlUnit unit,
-        Vector3 origin,
-        float nearestSqrDistance,
-        ref int closest,
-        ref float closestDistance)
-    {
-        using (CandidateMarker.Auto())
-        {
-            IReadOnlyList<Durability> targets = unit.GetDamageTargets();
-            for (int index = 0; index < targets.Count; index++)
-            {
-                Durability durability = targets[index];
-                if (durability == null || !durability.isActiveAndEnabled || durability.currentDurability <= 0f)
+                LastSearchProbes++;
+                if (!Probe(owner, unit, point, range))
                 {
                     continue;
                 }
 
-                float sqrDistance = (durability.GetTargetPosition(_positionStep) - origin).sqrMagnitude;
-                if (sqrDistance < nearestSqrDistance)
+                float distance = (SurfacePoint - _origin).sqrMagnitude;
+                if (distance < bestDistance)
                 {
-                    if (sqrDistance < closestDistance)
-                    {
-                        closest = candidates.Count;
-                        closestDistance = sqrDistance;
-                    }
-
-                    candidates.Add(new Candidate { unit = unit, health = durability, distanceSquared = sqrDistance, hierarchyOrder = candidates.Count });
+                    best = unit;
+                    bestDistance = distance;
+                    bestPoint = SurfacePoint;
                 }
+
+                break;
             }
         }
-    }
 
-    private Durability FindCockpitDurability(ControlUnit unit)
-    {
-        if (unit == null || unit.cockpit == null)
+        if (best != null)
         {
-            return null;
+            SurfacePoint = bestPoint;
+            localHit = best.transform.InverseTransformPoint(bestPoint);
         }
 
-        return unit.cockpit.GetComponentInParent<Durability>();
+        return best;
     }
 }

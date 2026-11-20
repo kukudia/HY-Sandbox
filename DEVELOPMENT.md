@@ -1,5 +1,7 @@
 # HY-Sandbox 开发入口
 
+2026-11-20 炮塔按 ControlUnit 选择舰体，不再枚举 Durability。局部包围盒与六个外侧采样点共享；每次重选每艘射程内候选舰最多探测四个方向，实际命中表面用于瞄准。激光与炮弹按最终命中 Collider 扣对应部件耐久。见 Docs/RuntimeFlow.md 的“炮塔舰体索敌到实际命中扣血”。
+
 战斗断裂后，无有效驾驶舱的脱离分组使用 Debris（层 9）。远距预测和局部路径规划过滤残骸，近场避障和炮口遮挡继续查询实体。炮塔遍历 CombatUnits，清理与回收仍可遍历 RuntimeUnits。
 
 炮塔索敌（2026-11-19）：每舰按物理步共享目标点包围盒，各炮塔按自身射程和炮口遮挡选择最近可见部件。DebugManager → Turret Debug 可显示青色目标包围盒、绿色可见射线及截至遮挡点的红线；性能采样时关闭。Profiler 的 `HY.Turret.SharedBounds` 表示实际重建，与 `HY.Turret.Search`、`HY.Turret.Visibility` 对照查看。

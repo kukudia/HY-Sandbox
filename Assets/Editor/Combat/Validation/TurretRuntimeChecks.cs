@@ -103,13 +103,13 @@ public static class TurretRuntimeChecks
                 report,
                 (ControlUnit)selectedTarget.GetValue(laser) == enemy,
                 "an expired search acquires an in-range module on a ship with an out-of-range center");
-            health.enabled = false;
+            collider.enabled = false;
             refreshTarget.Invoke(laser, null);
             Check(
                 report,
                 selectedTarget.GetValue(laser) == null,
-                "a disabled current damage target is invalidated immediately");
-            health.enabled = true;
+                "a ship with no hittable surface is invalidated immediately");
+            collider.enabled = true;
             owner.enabled = false;
             enemy.enabled = false;
             laser.SetStarted(false);

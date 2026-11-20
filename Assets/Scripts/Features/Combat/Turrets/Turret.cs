@@ -30,7 +30,6 @@ public abstract class Turret : MonoBehaviour
     [SerializeField, Tooltip("启动后自动索敌；没有有效目标时不请求功率。")]
     private bool _isStarted = true;
     private ControlUnit _target;
-    private Durability _targetDurability;
     private TurretTargetSelector _targetSelector;
     private float _nextSearchTime;
     private float _nextFireTime;
@@ -89,7 +88,7 @@ public abstract class Turret : MonoBehaviour
         }
 
         RefreshTarget();
-        bool hasTarget = _target != null && _targetDurability != null;
+        bool hasTarget = _target != null;
         Supply.SetWorkRequested(this, hasTarget);
         if (!hasTarget || !Supply.isWorking)
         {
@@ -97,7 +96,7 @@ public abstract class Turret : MonoBehaviour
             return;
         }
 
-        AimAndFire(_targetDurability);
+        AimAndFire(_target);
         UpdateShotFeedback();
     }
 
@@ -112,7 +111,6 @@ public abstract class Turret : MonoBehaviour
         _targetSelector?.CancelScheduledSearch();
         Supply?.SetWorkRequested(this, false);
         _target = null;
-        _targetDurability = null;
         _nextSearchTime = 0f;
         HideShotFeedback();
     }
@@ -129,10 +127,9 @@ public abstract class Turret : MonoBehaviour
         }
 
         // 即使排队等扫描，也不能继续锁定失效或被遮挡的目标。
-        if (_target != null && (!_target.isActiveAndEnabled || _target.faction != GetEffectiveTargetFaction() || _target.gameObject.scene != gameObject.scene || !_target.IsOperational || !_target.IsSimulationActive || _targetDurability == null || !_targetDurability.isActiveAndEnabled || _targetDurability.currentDurability <= 0f || _targetDurability.GetComponentInParent<ControlUnit>() != _target || (_targetDurability.GetTargetPosition(Time.fixedTimeAsDouble) - origin).sqrMagnitude > range * range || !_targetSelector.HasLineOfSight(Owner, _target, _targetDurability)))
+        if (_target != null && (!_target.isActiveAndEnabled || _target.faction != GetEffectiveTargetFaction() || _target.gameObject.scene != gameObject.scene || !_target.IsOperational || !_target.IsSimulationActive || !_targetSelector.HasLineOfSight(Owner, _target, range)))
         {
             _target = null;
-            _targetDurability = null;
             if (Time.time < _nextSearchTime)
             {
                 _nextSearchTime = 0f;
@@ -152,12 +149,11 @@ public abstract class Turret : MonoBehaviour
             Owner,
             faction,
             range,
-            Owner.faction == UnitFaction.Player && faction == UnitFaction.Enemy,
-            out _targetDurability);
+            Owner.faction == UnitFaction.Player && faction == UnitFaction.Enemy);
         _nextSearchTime = Time.time + Mathf.Max(0.01f, targetRefreshInterval);
     }
 
-    private void AimAndFire(Durability aimTarget)
+    private void AimAndFire(ControlUnit aimTarget)
     {
         using var sample = AimMarker.Auto();
         Vector3 origin = GetMuzzlePosition();
@@ -271,9 +267,11 @@ public abstract class Turret : MonoBehaviour
     }
 
     // 激光即时命中；实体炮塔覆盖为基于实际炮速的提前量。
-    protected virtual Vector3 GetAimPosition(Durability target, Vector3 origin)
+    protected Vector3 TargetSurfacePoint => _targetSelector.SurfacePoint;
+
+    protected virtual Vector3 GetAimPosition(ControlUnit target, Vector3 origin)
     {
-        return target.GetTargetPosition(Time.fixedTimeAsDouble);
+        return TargetSurfacePoint;
     }
 
     protected abstract void Fire(Vector3 origin, Vector3 direction, UnitFaction faction);

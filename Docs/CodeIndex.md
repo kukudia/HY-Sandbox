@@ -1564,10 +1564,10 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | AiUpgradePlayChecks | [`string Run()`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L14) | public static |
-| AiUpgradePlayChecks | [`void CheckVisibility(Transform root, List<string> checks, Type selectorType, MethodInfo select)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L294) | private static |
-| AiUpgradePlayChecks | [`ControlUnit Unit(Transform root, string name, UnitFaction faction, Vector3 position)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L367) | private static |
-| AiUpgradePlayChecks | [`Durability Health(Transform root, string name, Vector3 position)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L383) | private static |
-| AiUpgradePlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L394) | private static |
+| AiUpgradePlayChecks | [`void CheckVisibility(Transform root, List<string> checks, Type selectorType, MethodInfo select)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L236) | private static |
+| AiUpgradePlayChecks | [`ControlUnit Unit(Transform root, string name, UnitFaction faction, Vector3 position)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L300) | private static |
+| AiUpgradePlayChecks | [`Durability Health(Transform root, string name, Vector3 position)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L316) | private static |
+| AiUpgradePlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Combat/Validation/AiUpgradePlayChecks.cs#L327) | private static |
 
 ## Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs
 
@@ -1991,16 +1991,16 @@ HY-Sandbox/
 | --- | --- | --- |
 | NavigationCombatPlayChecks | [`void Begin()`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L20) | public static |
 | NavigationCombatPlayChecks | [`Task<string> Run()`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L25) | public static |
-| NavigationCombatPlayChecks | [`void CheckStableSteering(List<string> checks, EnemyController ai, ControlUnit owner)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L161) | private static |
-| NavigationCombatPlayChecks | [`void CheckContinuousCourse(List<string> checks, EnemyController ai)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L201) | private static |
-| NavigationCombatPlayChecks | [`void CheckHullAvoidance(List<string> checks, Transform root, ControlUnit owner, EnemyController ai)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L241) | private static |
-| NavigationCombatPlayChecks | [`void CheckObstacleClimb(List<string> checks, Transform root, ControlUnit owner, BoxCollider wall)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L297) | private static |
-| NavigationCombatPlayChecks | [`void CheckDescentRetention(List<string> checks, ControlUnit owner, EnemyController ai)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L406) | private static |
-| NavigationCombatPlayChecks | [`void CheckLocalPath(List<string> checks, Transform root, ControlUnit owner)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L432) | private static |
-| NavigationCombatPlayChecks | [`void CheckMotionPrediction(List<string> checks, Transform root, ControlUnit owner, Type type, object planner)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L551) | private static |
-| NavigationCombatPlayChecks | [`ControlUnit Unit(Transform root, string name, UnitFaction faction, Vector3 position)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L592) | private static |
-| NavigationCombatPlayChecks | [`BoxCollider Box(Transform root, string name, Vector3 position, Vector3 size)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L612) | private static |
-| NavigationCombatPlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L622) | private static |
+| NavigationCombatPlayChecks | [`void CheckStableSteering(List<string> checks, EnemyController ai, ControlUnit owner)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L157) | private static |
+| NavigationCombatPlayChecks | [`void CheckContinuousCourse(List<string> checks, EnemyController ai)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L197) | private static |
+| NavigationCombatPlayChecks | [`void CheckHullAvoidance(List<string> checks, Transform root, ControlUnit owner, EnemyController ai)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L237) | private static |
+| NavigationCombatPlayChecks | [`void CheckObstacleClimb(List<string> checks, Transform root, ControlUnit owner, BoxCollider wall)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L293) | private static |
+| NavigationCombatPlayChecks | [`void CheckDescentRetention(List<string> checks, ControlUnit owner, EnemyController ai)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L402) | private static |
+| NavigationCombatPlayChecks | [`void CheckLocalPath(List<string> checks, Transform root, ControlUnit owner)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L428) | private static |
+| NavigationCombatPlayChecks | [`void CheckMotionPrediction(List<string> checks, Transform root, ControlUnit owner, Type type, object planner)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L547) | private static |
+| NavigationCombatPlayChecks | [`ControlUnit Unit(Transform root, string name, UnitFaction faction, Vector3 position)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L588) | private static |
+| NavigationCombatPlayChecks | [`BoxCollider Box(Transform root, string name, Vector3 position, Vector3 size)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L608) | private static |
+| NavigationCombatPlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Navigation/Validation/NavigationCombatPlayChecks.cs#L618) | private static |
 
 ## Assets/Editor/Navigation/Validation/SharedNavigationPlayChecks.cs
 
@@ -4682,7 +4682,7 @@ HY-Sandbox/
 | ProjectileTurret | [`void UpdateRecoil(float deltaTime)`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L86) | private |
 | ProjectileTurret | [`void ApplyRecoilPose()`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L104) | private |
 | ProjectileTurret | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L125) | protected override |
-| ProjectileTurret | [`Vector3 GetAimPosition(Durability target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L133) | protected override |
+| ProjectileTurret | [`Vector3 GetAimPosition(ControlUnit target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L133) | protected override |
 | ProjectileTurret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L164) | protected override |
 
 ## Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs
@@ -4732,25 +4732,25 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Turret | [`void DelayTargetSearch(float seconds)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L47) | internal |
-| Turret | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L52) | protected virtual |
-| Turret | [`void OnValidate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L60) | protected virtual |
-| Turret | [`void SetStarted(bool started)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L71) | public |
-| Turret | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L81) | protected virtual |
-| Turret | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L104) | protected virtual |
-| Turret | [`void StopWorking()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L110) | private |
-| Turret | [`void RefreshTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L120) | private |
-| Turret | [`void SearchTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L147) | private |
-| Turret | [`void AimAndFire(Durability aimTarget)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L160) | private |
-| Turret | [`void AimAt(Vector3 worldDirection)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L187) | private |
-| Turret | [`void ResolveAimingRig()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L217) | private |
-| Turret | [`Vector3 GetMuzzlePosition()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L251) | protected |
-| Turret | [`Vector3 GetAimForward()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L262) | protected |
-| Turret | [`UnitFaction GetEffectiveTargetFaction()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L268) | protected |
-| Turret | [`Vector3 GetAimPosition(Durability target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L274) | protected virtual |
-| Turret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L279) | protected abstract |
-| Turret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L280) | protected virtual |
-| Turret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L284) | protected virtual |
+| Turret | [`void DelayTargetSearch(float seconds)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L46) | internal |
+| Turret | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L51) | protected virtual |
+| Turret | [`void OnValidate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L59) | protected virtual |
+| Turret | [`void SetStarted(bool started)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L70) | public |
+| Turret | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L80) | protected virtual |
+| Turret | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L103) | protected virtual |
+| Turret | [`void StopWorking()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L109) | private |
+| Turret | [`void RefreshTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L118) | private |
+| Turret | [`void SearchTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L144) | private |
+| Turret | [`void AimAndFire(ControlUnit aimTarget)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L156) | private |
+| Turret | [`void AimAt(Vector3 worldDirection)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L183) | private |
+| Turret | [`void ResolveAimingRig()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L213) | private |
+| Turret | [`Vector3 GetMuzzlePosition()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L247) | protected |
+| Turret | [`Vector3 GetAimForward()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L258) | protected |
+| Turret | [`UnitFaction GetEffectiveTargetFaction()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L264) | protected |
+| Turret | [`Vector3 GetAimPosition(ControlUnit target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L272) | protected virtual |
+| Turret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L277) | protected abstract |
+| Turret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L278) | protected virtual |
+| Turret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L282) | protected virtual |
 
 ## Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs
 
@@ -4775,14 +4775,12 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| TurretTargetSelector | [`bool TryScheduleSearch()`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L46) | internal |
-| TurretTargetSelector | [`void CancelScheduledSearch()`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L81) | internal |
-| TurretTargetSelector | [`void ConfigureVisibility(Vector3 origin, LayerMask hitLayers)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L91) | internal |
-| TurretTargetSelector | [`bool HasLineOfSight(ControlUnit owner, ControlUnit target, Durability durability)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L98) | internal |
-| TurretTargetSelector | [`ControlUnit FindNearestTarget( IReadOnlyList<ControlUnit> units, ControlUnit owner, UnitFaction faction, float range, bool prioritizeCockpit, out Durability nearestDurability)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L172) | internal |
-| TurretTargetSelector | [`bool IsVisibleCandidate(ControlUnit owner, Candidate candidate)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L278) | private |
-| TurretTargetSelector | [`void CollectCandidates( ControlUnit unit, Vector3 origin, float nearestSqrDistance, ref int closest, ref float closestDistance)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L283) | private |
-| TurretTargetSelector | [`Durability FindCockpitDurability(ControlUnit unit)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L316) | private |
+| TurretTargetSelector | [`bool TryScheduleSearch()`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L45) | internal |
+| TurretTargetSelector | [`void CancelScheduledSearch()`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L80) | internal |
+| TurretTargetSelector | [`void ConfigureVisibility(Vector3 origin, LayerMask hitLayers)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L90) | internal |
+| TurretTargetSelector | [`bool HasLineOfSight(ControlUnit owner, ControlUnit target, float range)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L96) | internal |
+| TurretTargetSelector | [`bool Probe(ControlUnit owner, ControlUnit target, Vector3 point, float range)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L101) | private |
+| TurretTargetSelector | [`ControlUnit FindNearestTarget( IReadOnlyList<ControlUnit> units, ControlUnit owner, UnitFaction faction, float range, bool prioritizeCockpit)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L172) | internal |
 
 ## Assets/Scripts/Features/Diagnostics/Bots/BotNavigationProbeDriver.cs
 
@@ -7146,29 +7144,31 @@ HY-Sandbox/
 | ControlUnit | [`void SetDebris(bool debris)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L24) | internal |
 | ControlUnit | [`void RefreshCombatMembership()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L38) | private |
 | ControlUnit | [`IReadOnlyList<Durability> GetDamageTargets()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L61) | internal |
-| ControlUnit | [`bool TryGetTargetBounds(out Bounds bounds)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L75) | internal |
-| ControlUnit | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L111) | private |
-| ControlUnit | [`void OnTransformChildrenChanged()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L121) | private |
-| ControlUnit | [`bool IsSceneSimulationActive(UnityEngine.SceneManagement.Scene scene)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L126) | public static |
-| ControlUnit | [`void NotifyFragmentCreated(ControlUnit fragment, int blockCount)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L145) | internal |
-| ControlUnit | [`void NotifyBlockDestroyed(Block block)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L152) | internal |
-| ControlUnit | [`void BindBuilding(BuildingRuntime building)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L191) | public |
-| ControlUnit | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L197) | private |
-| ControlUnit | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L207) | private |
-| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L236) | public |
-| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L248) | public |
-| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L273) | private |
-| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L285) | private |
-| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L332) | public |
-| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L402) | public |
-| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L423) | public |
-| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L431) | public |
-| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L441) | public |
-| ControlUnit | [`void SetPropulsionInput(Vector3 worldDirection, float throttle)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L446) | public |
-| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L453) | public |
-| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L458) | private |
-| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L502) | private |
-| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L513) | private |
+| ControlUnit | [`Vector3 HullSample(int side)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L75) | internal |
+| ControlUnit | [`bool TryGetTargetBounds(out Bounds bounds)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L78) | internal |
+| ControlUnit | [`void ApplySurfaceDamage(Collider hit, ControlUnit attacker, UnitFaction targetFaction, float damage)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L128) | internal |
+| ControlUnit | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L142) | private |
+| ControlUnit | [`void OnTransformChildrenChanged()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L155) | private |
+| ControlUnit | [`bool IsSceneSimulationActive(UnityEngine.SceneManagement.Scene scene)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L161) | public static |
+| ControlUnit | [`void NotifyFragmentCreated(ControlUnit fragment, int blockCount)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L180) | internal |
+| ControlUnit | [`void NotifyBlockDestroyed(Block block)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L187) | internal |
+| ControlUnit | [`void BindBuilding(BuildingRuntime building)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L226) | public |
+| ControlUnit | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L232) | private |
+| ControlUnit | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L242) | private |
+| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L271) | public |
+| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L283) | public |
+| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L308) | private |
+| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L320) | private |
+| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L367) | public |
+| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L438) | public |
+| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L459) | public |
+| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L467) | public |
+| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L477) | public |
+| ControlUnit | [`void SetPropulsionInput(Vector3 worldDirection, float throttle)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L482) | public |
+| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L489) | public |
+| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L494) | private |
+| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L538) | private |
+| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L549) | private |
 
 ## Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs
 

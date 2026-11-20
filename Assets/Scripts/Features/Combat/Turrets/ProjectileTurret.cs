@@ -130,16 +130,16 @@ public sealed class ProjectileTurret : Turret
         base.OnDisable();
     }
 
-    protected override Vector3 GetAimPosition(Durability target, Vector3 origin)
+    protected override Vector3 GetAimPosition(ControlUnit target, Vector3 origin)
     {
         if (!predictiveAim)
         {
-            return target.GetTargetPosition(Time.fixedTimeAsDouble);
+            return TargetSurfacePoint;
         }
 
         Rigidbody targetBody = target.GetComponentInParent<Rigidbody>();
         Rigidbody ownerBody = Owner != null ? Owner.GetComponent<Rigidbody>() : null;
-        Vector3 targetPosition = target.GetTargetPosition(Time.fixedTimeAsDouble);
+        Vector3 targetPosition = TargetSurfacePoint;
         Vector3 inherited = ownerBody != null ? ownerBody.GetPointVelocity(origin) : Vector3.zero;
         Vector3 targetVelocity = targetBody != null ? targetBody.GetPointVelocity(targetPosition) : Vector3.zero;
         if (ProjectileIntercept.TryGetTime(

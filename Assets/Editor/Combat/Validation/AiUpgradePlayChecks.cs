@@ -156,56 +156,7 @@ public static class AiUpgradePlayChecks
             Type selectorType = typeof(Turret).Assembly.GetType("TurretTargetSelector");
             object selector = Activator.CreateInstance(selectorType, Instance, null, new object[] { owner.transform }, null);
             MethodInfo select = selectorType.GetMethod("FindNearestTarget", Instance);
-            object[] args =
-            {
-                new List<ControlUnit>
-                {
-                    first
-                },
-                owner,
-                UnitFaction.Player,
-                100f,
-                false,
-                null
-            };
             Durability original = Health(first.transform, "Original", Vector3.zero);
-            select.Invoke(selector, args);
-            Check(checks, "Initial scan acquires original damage module", args[5] as Durability == original);
-            original.enabled = false;
-            Durability repaired = Health(first.transform, "Repaired", Vector3.zero);
-            select.Invoke(selector, args);
-            Check(checks, "Existing selector discovers newly repaired module", args[5] as Durability == repaired);
-            repaired.transform.SetParent(second.transform, true);
-            select.Invoke(selector, args);
-            Check(checks, "Reparented damage module is removed from old target", args[5] == null);
-            repaired.transform.SetParent(first.transform, true);
-            original.enabled = true;
-            select.Invoke(selector, args);
-            var inactive = new GameObject("Inactive nested module");
-            inactive.SetActive(false);
-            inactive.transform.SetParent(first.transform, false);
-            Durability inactiveHealth = Health(inactive.transform, "Health", Vector3.back * 5f);
-            select.Invoke(selector, args);
-            inactive.SetActive(true);
-            select.Invoke(selector, args);
-            Check(
-                checks,
-                "Same-step activation invalidates shared hierarchy snapshot",
-                args[5] as Durability == inactiveHealth);
-            inactiveHealth.transform.localPosition = Vector3.forward * 50f;
-            select.Invoke(selector, args);
-            Check(
-                checks,
-                "Shared membership still reads live module positions",
-                args[5] as Durability != inactiveHealth);
-            inactive.transform.SetParent(second.transform, true);
-            inactiveHealth.transform.localPosition = Vector3.zero;
-            select.Invoke(selector, args);
-            Check(
-                checks,
-                "Ancestor regroup cannot leave a module selectable by its old unit",
-                args[5] as Durability != inactiveHealth);
-            UnityEngine.Object.DestroyImmediate(inactive);
             CheckVisibility(root.transform, checks, selectorType, select);
             ProjectileTurret cannon = Object.Instantiate(Resources.Load<GameObject>("Blocks/ProjectileTurretSingle"), owner.transform).GetComponent<ProjectileTurret>();
             if (cannon == null)
@@ -219,7 +170,9 @@ public static class AiUpgradePlayChecks
             owner.GetComponent<Rigidbody>().linearVelocity = Vector3.right * 5f;
             first.GetComponent<Rigidbody>().linearVelocity = Vector3.right * 20f;
             Vector3 origin = owner.transform.position;
-            Vector3 aimPoint = (Vector3)aim.Invoke(cannon, new object[] { original, origin });
+            object tracker = typeof(Turret).GetField("_targetSelector", Instance).GetValue(cannon);
+            selectorType.GetProperty("SurfacePoint", Instance).SetValue(tracker, original.transform.position);
+            Vector3 aimPoint = (Vector3)aim.Invoke(cannon, new object[] { first, origin });
             float speed = (float)typeof(ProjectileTurret).GetField("_projectileSpeed", Instance).GetValue(cannon);
             Vector3 shotVelocity = (aimPoint - origin).normalized * speed + Vector3.right * 5f;
             float time = (original.transform.position.z - origin.z) / shotVelocity.z;
@@ -230,7 +183,6 @@ public static class AiUpgradePlayChecks
                 "Projectile lead matches crossing target with shooter velocity",
                 time > 0f && Vector3.Distance(impact, future) < 0.01f);
             typeof(Turret).GetField("_target", Instance).SetValue(cannon, first);
-            typeof(Turret).GetField("_targetDurability", Instance).SetValue(cannon, original);
             typeof(Turret).GetField("_nextSearchTime", Instance).SetValue(cannon, Time.time + 100f);
             first.faction = owner.faction;
             typeof(Turret).GetMethod("RefreshTarget", Instance).Invoke(cannon, null);
@@ -239,21 +191,11 @@ public static class AiUpgradePlayChecks
                 "Faction change invalidates turret target before scheduled scan",
                 typeof(Turret).GetField("_target", Instance).GetValue(cannon) == null);
             first.faction = UnitFaction.Player;
-            original.transform.SetParent(second.transform, true);
-            typeof(Turret).GetField("_target", Instance).SetValue(cannon, first);
-            typeof(Turret).GetField("_targetDurability", Instance).SetValue(cannon, original);
-            typeof(Turret).GetField("_nextSearchTime", Instance).SetValue(cannon, Time.time + 100f);
-            typeof(Turret).GetMethod("RefreshTarget", Instance).Invoke(cannon, null);
-            Check(
-                checks,
-                "Regrouped module immediately stops being the old turret aim target",
-                typeof(Turret).GetField("_target", Instance).GetValue(cannon) as ControlUnit != first || typeof(Turret).GetField("_targetDurability", Instance).GetValue(cannon) as Durability != original);
-            original.transform.SetParent(first.transform, true);
             cannon.range = 1f;
             Check(
                 checks,
                 "Out-of-range intercept falls back to direct aim",
-                (Vector3)aim.Invoke(cannon, new object[] { original, origin }) == original.transform.position);
+                (Vector3)aim.Invoke(cannon, new object[] { first, origin }) == original.transform.position);
             Type solver = typeof(Turret).Assembly.GetType("ProjectileIntercept");
             MethodInfo solve = solver.GetMethod("TryGetTime", BindingFlags.Static | BindingFlags.NonPublic);
             object[] solveArgs =
@@ -317,50 +259,41 @@ public static class AiUpgradePlayChecks
             owner,
             UnitFaction.Player,
             100f,
-            false,
-            null
+            false
         };
         Physics.SyncTransforms();
-        select.Invoke(selector, args);
-        Check(
-            checks,
-            "Own hull blocks closest module but farther visible module remains selectable",
-            args[5] as Durability == far);
-        wall.SetActive(false);
-        Physics.SyncTransforms();
-        select.Invoke(selector, args);
-        Check(checks, "Nearest visible module wins regardless of hierarchy order", args[5] as Durability == near);
-        wall.SetActive(true);
+        bool Found()
+        {
+            for (int attempt = 0; attempt < 6; attempt++)
+            {
+                if (select.Invoke(selector, args) as ControlUnit == target)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        Check(checks, "Exposed side of ship acquired through a real surface hit", Found());
         wall.GetComponent<BoxCollider>().size = new Vector3(40, 4, 1);
         Physics.SyncTransforms();
-        select.Invoke(selector, args);
-        Check(checks, "Fully occluded unit cannot be selected through own hull", args[5] == null);
-        wall.transform.SetParent(weapon.transform, true);
-        Physics.SyncTransforms();
-        select.Invoke(selector, args);
-        Check(checks, "Only the actual weapon hierarchy is ignored by visibility", args[5] as Durability == near);
-        wall.SetActive(false);
-        var shell = new GameObject("Target outer shell");
-        shell.transform.SetParent(target.transform, false);
-        shell.transform.localPosition = new Vector3(0, 0, -8);
-        shell.AddComponent<BoxCollider>().size = new Vector3(4, 4, 1);
-        Physics.SyncTransforms();
-        select.Invoke(selector, args);
-        Check(checks, "Target outer shell does not hide its own damage module", args[5] as Durability == near);
-        for (int i = 0; i < 24; i++)
+        Check(checks, "Fully occluded hull rejected", !Found());
+        var probeCount = selectorType.GetProperty("LastSearchProbes", Instance);
+        int baseline = (int)probeCount.GetValue(selector);
+        for (int i = 0; i < 200; i++)
         {
-            var dense = new GameObject("Dense target shell " + i);
-            dense.transform.SetParent(target.transform, false);
-            dense.transform.localPosition = new Vector3(0, 0, -5 - i * .03f);
-            dense.AddComponent<BoxCollider>();
+            Health(target.transform, "Interior " + i, Vector3.zero).gameObject.AddComponent<BoxCollider>();
         }
 
         Physics.SyncTransforms();
-        select.Invoke(selector, args);
         Check(
             checks,
-            "Unordered saturated ray buffer grows and preserves target visibility",
-            args[5] as Durability == near);
+            "Occluded 2 vs 202 collider modules: both searches spend four probes",
+            !Found() && baseline == 4 && (int)probeCount.GetValue(selector) == baseline);
+        wall.transform.SetParent(weapon.transform, true);
+        Physics.SyncTransforms();
+        Check(checks, "Weapon geometry ignored while hull remains selectable", Found());
         owner.enabled = target.enabled = false;
     }
 

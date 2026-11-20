@@ -67,8 +67,7 @@ public static class NavigationCombatPlayChecks
                 owner,
                 UnitFaction.Enemy,
                 100f,
-                true,
-                null
+                true
             };
             Check(
                 checks,
@@ -77,7 +76,7 @@ public static class NavigationCombatPlayChecks
             Check(
                 checks,
                 "Solid local-physics wall blocks line of sight",
-                !(bool)sight.Invoke(selector, new object[] { owner, hidden, hidden.cockpit.GetComponent<Durability>() }));
+                !(bool)sight.Invoke(selector, new object[] { owner, hidden, 100f }));
             wall.isTrigger = true;
             Physics.SyncTransforms();
             Check(
@@ -92,10 +91,7 @@ public static class NavigationCombatPlayChecks
                 (LayerMask)0
             };
             selectorType.GetMethod("ConfigureVisibility", Instance).Invoke(selector, maskedOrigin);
-            Check(
-                checks,
-                "Visibility uses configured hit layer mask",
-                select.Invoke(selector, arguments) as ControlUnit == hidden);
+            Check(checks, "Visibility uses configured hit layer mask", select.Invoke(selector, arguments) == null);
             selectorType.GetMethod("ConfigureVisibility", Instance).Invoke(selector, new object[] { owner.transform.position, (LayerMask)(~0) });
             foreach (Type turretType in new[]
             {

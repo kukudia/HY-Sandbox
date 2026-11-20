@@ -1960,14 +1960,16 @@ def main():
          "G --> F", "F --> B", "J -->|比例油门与喷口对准| I", "J -->|物理施力门控| N", "L -.->|读取命令| I"],
     )
     graph(
-        "炮塔视线与遮挡锁定",
-        "源码推导：炮塔每物理步验证炮口视线，仅锁定可见敌对模块；自身炮塔碰撞忽略，同组墙板和其他单位遮挡。",
+        "炮塔舰体索敌到实际命中扣血",
+        "船体局部采样只提供方向，首个有效碰撞决定可见表面；发射后按实际命中重新解析归属。",
         {"A": "Turret.FixedUpdate", "B": "Turret.RefreshTarget", "C": "TurretTargetSelector.ConfigureVisibility",
          "D": "TurretTargetSelector.HasLineOfSight", "E": "TurretTargetSelector.FindNearestTarget",
-         "F": "ControlUnit.TryGetTargetBounds", "G": "Durability.GetTargetPosition",
-         "H": "TurretTargetSelector.CollectCandidates"},
-        ["A --> B", "B --> C", "B --> D", "B -->|索敌周期| E", "E -->|舰级粗筛| F", "F --> G",
-         "E -->|射程内模块| H", "H --> G", "E -->|按距离检查遮挡| D"],
+         "F": "ControlUnit.TryGetTargetBounds", "G": "TurretTargetSelector.Probe",
+         "H": "Turret.AimAndFire", "I": "LaserTurret.Fire", "J": "ProjectileTurret.Fire",
+         "K": "TurretProjectile.ResolveHit", "L": "TurretHitResolver.Apply",
+         "M": "ControlUnit.ApplySurfaceDamage", "N": "Durability.ApplyDamage"},
+        ["A --> B", "B --> C", "B --> D", "B -->|重选| E", "E --> F", "E --> G", "D --> G",
+         "A -->|有目标且有电| H", "H --> I", "H --> J", "J -.->|炮弹命中| K", "I --> L", "K --> L", "L --> M", "M --> N"],
     )
     graph(
         "EnemyController 可编辑避障试验场",
