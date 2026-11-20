@@ -13206,7 +13206,7 @@ MonoBehaviour:
     approachClearance: 4
   clock:
     battleSeconds: 180
-    returnSeconds: 90
+    returnSeconds: 60
     stalledSeconds: 15
     significantMovement: 2
   defeatPresentationDelay: 1.5

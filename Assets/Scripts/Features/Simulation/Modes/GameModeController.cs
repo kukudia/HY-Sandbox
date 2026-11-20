@@ -246,8 +246,27 @@ public sealed class GameModeController : MonoBehaviour
         }
     }
 
+    private bool restarting;
+    private void OnGUI()
+    {
+        if (restarting)
+        {
+            GUI.depth = -10000;
+            GUI.DrawTexture(
+                new Rect(0, 0, Screen.width, Screen.height),
+                Texture2D.whiteTexture,
+                ScaleMode.StretchToFill,
+                false,
+                0f,
+                Color.black,
+                0f,
+                0f);
+        }
+    }
+
     private IEnumerator RestartRoutine()
     {
+        restarting = true;
         bool exploration = explorationSelected;
         string design = requestedSiegeDesign;
         TextAsset example = requestedSiegeExample;
@@ -261,6 +280,7 @@ public sealed class GameModeController : MonoBehaviour
 
         if (State != GameModeState.Building)
         {
+            restarting = false;
             yield break;
         }
 
@@ -273,6 +293,13 @@ public sealed class GameModeController : MonoBehaviour
         {
             LaunchSiege(design, example, exampleName);
         }
+
+        while (State == GameModeState.Loading || State == GameModeState.Returning)
+        {
+            yield return null;
+        }
+
+        restarting = false;
     }
 
     private IEnumerator GuardTransition(IEnumerator work)

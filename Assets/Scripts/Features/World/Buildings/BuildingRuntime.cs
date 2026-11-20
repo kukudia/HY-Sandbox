@@ -281,6 +281,12 @@ public sealed class BuildingRuntime : MonoBehaviour, IBlockFoundation
         return supported;
     }
 
+    internal void RefreshTerrainSupport()
+    {
+        groundSupport.Clear();
+        RuntimeGroupBuilder.RefreshUnit(GetComponent<ControlUnit>());
+    }
+
     private bool HasGroundConnector(Block block)
     {
         foreach (Connector connector in block.connectors)
@@ -295,7 +301,11 @@ public sealed class BuildingRuntime : MonoBehaviour, IBlockFoundation
             int z = Mathf.RoundToInt(local.z - foundationData.MinZ - .5f);
             if (x >= 0 && x < foundationData.width && z >= 0 && z < foundationData.length && (local - WorldBuildingPlacement.LocalAnchor(foundationData, x, z)).sqrMagnitude < 0.25f * 0.25f)
             {
-                return true;
+                ProceduralVoxelWorld terrain = manager.World;
+                if (terrain == null || !terrain.Data.IsValid || terrain.Data.Get(terrain.WorldToCell(transform.TransformPoint(local - Vector3.up * .05f))) != 0)
+                {
+                    return true;
+                }
             }
         }
 

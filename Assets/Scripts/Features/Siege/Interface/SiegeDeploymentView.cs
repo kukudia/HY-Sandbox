@@ -110,6 +110,24 @@ public sealed class SiegeDeploymentView : MonoBehaviour
             return;
         }
 
+        if (PauseMenu.IsPaused || (stage != null && Host.Match.Phase == SiegePhase.Battle))
+        {
+            if (phase == Host.Match.Phase && !card.activeSelf && !debugPanel.activeSelf)
+            {
+                return;
+            }
+
+            phase = Host.Match.Phase;
+            Cancel();
+            debugPanel.SetActive(false);
+            foreach (Button marker in markers)
+            {
+                marker.gameObject.SetActive(false);
+            }
+
+            return;
+        }
+
         RefreshOptions();
         bool editing = Host.IsEditingBlueprint;
         if (editing || phase != Host.Match.Phase)

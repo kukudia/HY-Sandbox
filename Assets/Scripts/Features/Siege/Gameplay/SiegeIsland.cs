@@ -11,6 +11,9 @@ public sealed class SiegeIsland : MonoBehaviour
     private SiegeIslandSettings settings;
     [SerializeField, HideInInspector]
     private Bounds playableBounds;
+    private readonly System.Collections.Generic.Dictionary<Vector3Int, byte> originalGround = new System.Collections.Generic.Dictionary<Vector3Int, byte>();
+    private readonly System.Collections.Generic.HashSet<Vector3Int> damagedGround = new System.Collections.Generic.HashSet<Vector3Int>();
+    public bool NeedsGroundRepair => damagedGround.Count > 0;
     public ProceduralVoxelWorld World => world;
     public Bounds PlayableBounds => playableBounds;
     public float SurfaceY => playableBounds.center.y;
@@ -28,6 +31,27 @@ public sealed class SiegeIsland : MonoBehaviour
         }
 
         GenerateFor(bounds);
+    }
+
+    private float nextDebrisScan;
+    private void Update()
+    {
+        if (!IsGenerated || Time.time < nextDebrisScan)
+        {
+            return;
+        }
+
+        nextDebrisScan = Time.time + .5f;
+        var units = ControlUnit.RuntimeUnits;
+        for (int i = units.Count - 1; i >= 0; i--)
+        {
+            ControlUnit unit = units[i];
+            if (unit != null && unit.IsDebris && unit.gameObject.scene == gameObject.scene && BeyondRecovery(unit.transform.position))
+            {
+                unit.gameObject.SetActive(false);
+                Destroy(unit.gameObject);
+            }
+        }
     }
 
     public bool RecoverFleet(SiegeFleet fleet, SiegeBase fortress)
@@ -79,8 +103,56 @@ public sealed class SiegeIsland : MonoBehaviour
             Quaternion.identity);
         world.transform.localScale = Vector3.one;
         world.InitializeFinite(terrain, cell, settings.Seed);
+        originalGround.Clear();
+        damagedGround.Clear();
+        Vector3Int low = world.WorldToCell(foundation.min);
+        Vector3Int high = world.WorldToCell(foundation.max - Vector3.one * .001f);
+        for (int z = low.z; z <= high.z; z++)
+        {
+            for (int x = low.x; x <= high.x; x++)
+            {
+                for (int y = 0; y < surface; y++)
+                {
+                    var cellId = new Vector3Int(x, y, z);
+                    byte material = terrain.Get(cellId);
+                    if (material != 0)
+                    {
+                        originalGround.Add(cellId, material);
+                    }
+                }
+            }
+        }
+
+        world.TerrainChanged -= TrackGround;
+        world.TerrainChanged += TrackGround;
         playableBounds = new Bounds(center, new Vector3(size.x * cell, 0, size.z * cell));
         Physics.SyncTransforms();
+    }
+
+    private void TrackGround(Bounds changed)
+    {
+        Vector3Int cell = world.WorldToCell(changed.center);
+        if (originalGround.TryGetValue(cell, out byte material))
+        {
+            if (world.Data.Get(cell) != material)
+            {
+                damagedGround.Add(cell);
+            }
+            else
+            {
+                damagedGround.Remove(cell);
+            }
+        }
+    }
+
+    public void RepairGround()
+    {
+        foreach (Vector3Int cell in new System.Collections.Generic.List<Vector3Int>(damagedGround))
+        {
+            world.SetCell(cell, originalGround[cell]);
+        }
+
+        world.FlushDirty();
     }
 
     public Vector3 SpawnPosition(float angle, float desiredRadius)

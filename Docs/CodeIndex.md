@@ -1588,12 +1588,12 @@ HY-Sandbox/
 | CombatHudPlayProbe | [`IEnumerator Legacy()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L311) | private static |
 | CombatHudPlayProbe | [`IEnumerator Flow()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L348) | private static |
 | CombatHudPlayProbe | [`IEnumerator Recovery()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L491) | private static |
-| CombatHudPlayProbe | [`IEnumerator RecoveryLoss(GameModeController modes, SiegeShipOption option, string loss)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L592) | private static |
-| CombatHudPlayProbe | [`IEnumerator Arena()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L648) | private static |
-| CombatHudPlayProbe | [`IEnumerator Exploration()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L692) | private static |
-| CombatHudPlayProbe | [`void Screenshot(string name)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L733) | private static |
-| CombatHudPlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L739) | private static |
-| CombatHudPlayProbe | [`void Finish()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L750) | private static |
+| CombatHudPlayProbe | [`IEnumerator RecoveryLoss(GameModeController modes, SiegeShipOption option, string loss)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L601) | private static |
+| CombatHudPlayProbe | [`IEnumerator Arena()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L657) | private static |
+| CombatHudPlayProbe | [`IEnumerator Exploration()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L701) | private static |
+| CombatHudPlayProbe | [`void Screenshot(string name)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L742) | private static |
+| CombatHudPlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L748) | private static |
+| CombatHudPlayProbe | [`void Finish()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L759) | private static |
 
 ## Assets/Editor/Combat/Validation/EnemyBlueprintPoolChecks.cs
 
@@ -5130,11 +5130,11 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | PauseMenu | [`void Awake()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L30) | private |
-| PauseMenu | [`void Toggle()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L38) | public |
-| PauseMenu | [`void Resume()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L73) | public |
-| PauseMenu | [`void Restart()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L91) | public |
-| PauseMenu | [`void ReturnToMenu()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L97) | private |
-| PauseMenu | [`void OnDisable()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L103) | private |
+| PauseMenu | [`void Toggle()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L51) | public |
+| PauseMenu | [`void Resume()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L86) | public |
+| PauseMenu | [`void Restart()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L104) | public |
+| PauseMenu | [`void ReturnToMenu()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L110) | private |
+| PauseMenu | [`void OnDisable()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L116) | private |
 
 ## Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs
 
@@ -5143,14 +5143,14 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | WorkshopNavigation | [`void Awake()`](../Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs#L24) | private |
-| WorkshopNavigation | [`void UseMenuEvents()`](../Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs#L34) | public |
-| WorkshopNavigation | [`void OnEnable()`](../Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs#L39) | private |
-| WorkshopNavigation | [`void Update()`](../Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs#L48) | private |
-| WorkshopNavigation | [`void OpenMenu()`](../Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs#L56) | public |
-| WorkshopNavigation | [`void TogglePause()`](../Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs#L74) | private |
-| WorkshopNavigation | [`void ShowNotice(string message)`](../Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs#L82) | public |
-| WorkshopNavigation | [`IEnumerator LoadMenu()`](../Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs#L88) | private |
-| WorkshopNavigation | [`void OnDestroy()`](../Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs#L96) | private |
+| WorkshopNavigation | [`void UseMenuEvents()`](../Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs#L37) | public |
+| WorkshopNavigation | [`void OnEnable()`](../Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs#L42) | private |
+| WorkshopNavigation | [`void Update()`](../Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs#L51) | private |
+| WorkshopNavigation | [`void OpenMenu()`](../Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs#L59) | public |
+| WorkshopNavigation | [`void TogglePause()`](../Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs#L77) | private |
+| WorkshopNavigation | [`void ShowNotice(string message)`](../Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs#L85) | public |
+| WorkshopNavigation | [`IEnumerator LoadMenu()`](../Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs#L91) | private |
+| WorkshopNavigation | [`void OnDestroy()`](../Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs#L99) | private |
 
 ## Assets/Scripts/Features/MainMenu/Settings/MenuSettings.cs
 
@@ -6229,13 +6229,15 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeWaveDirector | [`void BeginWave(float time)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L21) | public |
-| SiegeWaveDirector | [`void Tick(float time)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L58) | public |
-| SiegeWaveDirector | [`SiegeShipOption PickBlueprint(SiegeSettings settings)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L142) | private |
-| SiegeWaveDirector | [`void Stop()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L162) | public |
-| Attacker | [`void OnDefeated()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L208) | private |
-| Attacker | [`void RefreshTarget(ControlUnit core)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L217) | public |
-| Attacker | [`void Unsubscribe()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L230) | public |
+| SiegeWaveDirector | [`void BeginWave(float time)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L23) | public |
+| SiegeWaveDirector | [`void Tick(float time)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L62) | public |
+| SiegeWaveDirector | [`SiegeShipOption PickBlueprint(SiegeSettings settings)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L146) | private |
+| SiegeWaveDirector | [`void CheckFleetStalemate(SiegeFleet fleet, float time, float grace)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L166) | public |
+| SiegeWaveDirector | [`bool CanAct(ControlUnit unit)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L215) | private static |
+| SiegeWaveDirector | [`void Stop()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L233) | public |
+| Attacker | [`void OnDefeated()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L279) | private |
+| Attacker | [`void RefreshTarget(ControlUnit core)`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L288) | public |
+| Attacker | [`void Unsubscribe()`](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L301) | public |
 
 ## Assets/Scripts/Features/Siege/Battle/SiegeWreckBudget.cs
 
@@ -6360,14 +6362,14 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeCombatHud | [`void Awake()`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L46) | private |
-| SiegeCombatHud | [`void Enter(SiegeGameplayStage owner)`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L63) | public |
-| SiegeCombatHud | [`void Exit()`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L74) | public |
-| SiegeCombatHud | [`void OnDisable()`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L81) | private |
-| SiegeCombatHud | [`void AttackerResolved(string victim, string attacker, int reward, bool playerCredit)`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L86) | public |
-| SiegeCombatHud | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L91) | private |
-| SiegeCombatHud | [`void PollShipControl()`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L170) | private |
-| SiegeCombatHud | [`string CoreText(Durability health)`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L237) | private static |
+| SiegeCombatHud | [`void Awake()`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L54) | private |
+| SiegeCombatHud | [`void Enter(SiegeGameplayStage owner)`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L89) | public |
+| SiegeCombatHud | [`void Exit()`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L102) | public |
+| SiegeCombatHud | [`void OnDisable()`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L109) | private |
+| SiegeCombatHud | [`void AttackerResolved(string victim, string attacker, int reward, bool playerCredit)`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L114) | public |
+| SiegeCombatHud | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L119) | private |
+| SiegeCombatHud | [`void PollShipControl()`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L230) | private |
+| SiegeCombatHud | [`string CoreText(Durability health)`](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L297) | private static |
 
 ## Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs
 
@@ -6404,28 +6406,28 @@ HY-Sandbox/
 | SiegeGameplayStage | [`bool Deploy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L202) | private |
 | SiegeGameplayStage | [`bool BeginWave()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L271) | public |
 | SiegeGameplayStage | [`bool Repair()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L290) | public |
-| SiegeGameplayStage | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L303) | private |
-| SiegeGameplayStage | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L369) | public |
-| SiegeGameplayStage | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L377) | public |
-| SiegeGameplayStage | [`bool RefreshBlueprints()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L385) | public |
-| SiegeGameplayStage | [`void RefreshDefenders()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L396) | private |
-| SiegeGameplayStage | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L407) | public |
-| SiegeGameplayStage | [`bool TryReplaceAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L416) | public |
-| SiegeGameplayStage | [`bool TryCancelDeployment(int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L425) | public |
-| SiegeGameplayStage | [`bool TryTakeControl(int slot)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L434) | public |
-| SiegeGameplayStage | [`bool TryTakeControl(string id)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L450) | public |
-| SiegeGameplayStage | [`void Observe()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L456) | public |
-| SiegeGameplayStage | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L470) | public |
-| SiegeGameplayStage | [`void FixedUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L484) | private |
-| SiegeGameplayStage | [`void SetSimulation(bool active)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L517) | private |
-| SiegeGameplayStage | [`void LoseBase()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L560) | private |
-| SiegeGameplayStage | [`void Retreat()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L565) | public |
-| SiegeGameplayStage | [`void Settle(string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L570) | private |
-| SiegeGameplayStage | [`void ReturnToMenu()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L599) | public |
-| SiegeGameplayStage | [`void ShowCoreMarker(Transform parent, Vector3 localPosition)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L619) | private |
-| SiegeGameplayStage | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L628) | private |
-| SiegeGameplayStage | [`void Exit()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L636) | public |
-| SiegeGameplayStage | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L678) | private |
+| SiegeGameplayStage | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L316) | private |
+| SiegeGameplayStage | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L383) | public |
+| SiegeGameplayStage | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L391) | public |
+| SiegeGameplayStage | [`bool RefreshBlueprints()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L399) | public |
+| SiegeGameplayStage | [`void RefreshDefenders()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L410) | private |
+| SiegeGameplayStage | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L421) | public |
+| SiegeGameplayStage | [`bool TryReplaceAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L430) | public |
+| SiegeGameplayStage | [`bool TryCancelDeployment(int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L439) | public |
+| SiegeGameplayStage | [`bool TryTakeControl(int slot)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L448) | public |
+| SiegeGameplayStage | [`bool TryTakeControl(string id)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L464) | public |
+| SiegeGameplayStage | [`void Observe()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L470) | public |
+| SiegeGameplayStage | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L484) | public |
+| SiegeGameplayStage | [`void FixedUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L498) | private |
+| SiegeGameplayStage | [`void SetSimulation(bool active)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L531) | private |
+| SiegeGameplayStage | [`void LoseBase()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L574) | private |
+| SiegeGameplayStage | [`void Retreat()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L579) | public |
+| SiegeGameplayStage | [`void Settle(string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L584) | private |
+| SiegeGameplayStage | [`void ReturnToMenu()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L613) | public |
+| SiegeGameplayStage | [`void ShowCoreMarker(Transform parent, Vector3 localPosition)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L633) | private |
+| SiegeGameplayStage | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L642) | private |
+| SiegeGameplayStage | [`void Exit()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L650) | public |
+| SiegeGameplayStage | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L692) | private |
 
 ## Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs
 
@@ -6433,11 +6435,14 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeIsland | [`void GenerateFor(BuildingFoundationData foundation, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L19) | public |
-| SiegeIsland | [`bool RecoverFleet(SiegeFleet fleet, SiegeBase fortress)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L33) | public |
-| SiegeIsland | [`void GenerateFor(Bounds foundation)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L55) | public |
-| SiegeIsland | [`Vector3 SpawnPosition(float angle, float desiredRadius)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L86) | public |
-| SiegeIsland | [`bool BeyondRecovery(Vector3 position)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L96) | public |
+| SiegeIsland | [`void GenerateFor(BuildingFoundationData foundation, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L22) | public |
+| SiegeIsland | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L37) | private |
+| SiegeIsland | [`bool RecoverFleet(SiegeFleet fleet, SiegeBase fortress)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L57) | public |
+| SiegeIsland | [`void GenerateFor(Bounds foundation)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L79) | public |
+| SiegeIsland | [`void TrackGround(Bounds changed)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L132) | private |
+| SiegeIsland | [`void RepairGround()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L148) | public |
+| SiegeIsland | [`Vector3 SpawnPosition(float angle, float desiredRadius)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L158) | public |
+| SiegeIsland | [`bool BeyondRecovery(Vector3 position)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L168) | public |
 
 ## Assets/Scripts/Features/Siege/Gameplay/SiegeIslandSettings.cs
 
@@ -6599,21 +6604,21 @@ HY-Sandbox/
 | SiegeDeploymentView | [`void OnEnable()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L57) | private |
 | SiegeDeploymentView | [`void OnDisable()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L82) | private |
 | SiegeDeploymentView | [`void Update()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L106) | private |
-| SiegeDeploymentView | [`void SelectDock(int index)`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L198) | public |
-| SiegeDeploymentView | [`void SelectShip(string id)`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L218) | public |
-| SiegeDeploymentView | [`void SelectOption(int index)`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L231) | private |
-| SiegeDeploymentView | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L241) | private |
-| SiegeDeploymentView | [`void RefreshOptions()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L246) | public |
-| SiegeDeploymentView | [`void RefreshBlueprints()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L290) | private |
-| SiegeDeploymentView | [`void RefreshSelection()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L297) | public |
-| SiegeDeploymentView | [`void Confirm()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L360) | public |
-| SiegeDeploymentView | [`void BeginReplacement()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L373) | public |
-| SiegeDeploymentView | [`void Undeploy()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L386) | public |
-| SiegeDeploymentView | [`void Pilot()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L395) | private |
-| SiegeDeploymentView | [`void Repair()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L401) | private |
-| SiegeDeploymentView | [`void CycleShip()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L406) | public |
-| SiegeDeploymentView | [`void Cancel()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L422) | public |
-| SiegeDeploymentView | [`void ClearPreview()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L430) | private |
+| SiegeDeploymentView | [`void SelectDock(int index)`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L216) | public |
+| SiegeDeploymentView | [`void SelectShip(string id)`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L236) | public |
+| SiegeDeploymentView | [`void SelectOption(int index)`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L249) | private |
+| SiegeDeploymentView | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L259) | private |
+| SiegeDeploymentView | [`void RefreshOptions()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L264) | public |
+| SiegeDeploymentView | [`void RefreshBlueprints()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L308) | private |
+| SiegeDeploymentView | [`void RefreshSelection()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L315) | public |
+| SiegeDeploymentView | [`void Confirm()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L378) | public |
+| SiegeDeploymentView | [`void BeginReplacement()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L391) | public |
+| SiegeDeploymentView | [`void Undeploy()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L404) | public |
+| SiegeDeploymentView | [`void Pilot()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L413) | private |
+| SiegeDeploymentView | [`void Repair()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L419) | private |
+| SiegeDeploymentView | [`void CycleShip()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L424) | public |
+| SiegeDeploymentView | [`void Cancel()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L440) | public |
+| SiegeDeploymentView | [`void ClearPreview()`](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L448) | private |
 
 ## Assets/Scripts/Features/Siege/Interface/SiegeFleetView.cs
 
@@ -6646,16 +6651,16 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeObserverCamera | [`void Enter(CameraController camera, Transform overviewPose)`](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L42) | public |
-| SiegeObserverCamera | [`void ResetOverview()`](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L65) | public |
-| SiegeObserverCamera | [`void SyncAngles()`](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L78) | private |
-| SiegeObserverCamera | [`void Update()`](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L84) | private |
-| SiegeObserverCamera | [`bool IsTyping()`](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L152) | private static |
-| SiegeObserverCamera | [`bool PointerOverInterface(Vector2 position)`](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L158) | private |
-| SiegeObserverCamera | [`void RefreshHint()`](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L189) | private |
-| SiegeObserverCamera | [`void ReleasePointer()`](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L197) | private |
-| SiegeObserverCamera | [`void Exit()`](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L209) | public |
-| SiegeObserverCamera | [`void OnDisable()`](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L224) | private |
-| SiegeObserverCamera | [`void OnApplicationFocus(bool focused)`](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L229) | private |
+| SiegeObserverCamera | [`void ResetOverview()`](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L67) | public |
+| SiegeObserverCamera | [`void SyncAngles()`](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L80) | private |
+| SiegeObserverCamera | [`void Update()`](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L86) | private |
+| SiegeObserverCamera | [`bool IsTyping()`](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L154) | private static |
+| SiegeObserverCamera | [`bool PointerOverInterface(Vector2 position)`](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L160) | private |
+| SiegeObserverCamera | [`void RefreshHint()`](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L191) | private |
+| SiegeObserverCamera | [`void ReleasePointer()`](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L199) | private |
+| SiegeObserverCamera | [`void Exit()`](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L211) | public |
+| SiegeObserverCamera | [`void OnDisable()`](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L226) | private |
+| SiegeObserverCamera | [`void OnApplicationFocus(bool focused)`](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L231) | private |
 
 ## Assets/Scripts/Features/Siege/SiegeMatch.cs
 
@@ -7027,13 +7032,14 @@ HY-Sandbox/
 | GameModeController | [`void ExplorationEnded()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L227) | public |
 | GameModeController | [`void Retry()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L236) | public |
 | GameModeController | [`void Restart()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L241) | public |
-| GameModeController | [`IEnumerator RestartRoutine()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L249) | private |
-| GameModeController | [`IEnumerator GuardTransition(IEnumerator work)`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L278) | private |
-| GameModeController | [`void BeginReturn(bool failed = false)`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L325) | private |
-| GameModeController | [`IEnumerator ReturnRoutine(bool failed)`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L332) | private |
-| GameModeController | [`void CaptureInput()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L376) | private |
-| GameModeController | [`void RestoreInput()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L392) | private |
-| GameModeController | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L403) | private |
+| GameModeController | [`void OnGUI()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L250) | private |
+| GameModeController | [`IEnumerator RestartRoutine()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L267) | private |
+| GameModeController | [`IEnumerator GuardTransition(IEnumerator work)`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L305) | private |
+| GameModeController | [`void BeginReturn(bool failed = false)`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L352) | private |
+| GameModeController | [`IEnumerator ReturnRoutine(bool failed)`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L359) | private |
+| GameModeController | [`void CaptureInput()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L403) | private |
+| GameModeController | [`void RestoreInput()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L419) | private |
+| GameModeController | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L430) | private |
 
 ## Assets/Scripts/Features/Simulation/Modes/Interface/GameModePanel.cs
 
@@ -7227,9 +7233,10 @@ HY-Sandbox/
 | BuildingRuntime | [`void OnFragmentDetached(List<Block> group, ControlUnit fragment)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L236) |  |
 | BuildingRuntime | [`bool HasFullFoundationSupport()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L245) | public |
 | BuildingRuntime | [`bool HasPreparedGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L260) | private |
-| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L284) | private |
-| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L305) | public |
-| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L316) | private |
+| BuildingRuntime | [`void RefreshTerrainSupport()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L284) | internal |
+| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L290) | private |
+| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L315) | public |
+| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L326) | private |
 
 ## Assets/Scripts/Features/World/Buildings/Data/WorldBuildingCatalog.cs
 
@@ -7354,10 +7361,10 @@ HY-Sandbox/
 | WorldBuildingManager | [`void ClearBuildings()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L389) | private |
 | WorldBuildingManager | [`void TerrainChanged(Bounds changed)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L405) | private |
 | WorldBuildingManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L416) | private |
-| WorldBuildingManager | [`void DamageSphere(Vector3 center, float radius, float damageAmount)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L433) | public |
-| WorldBuildingManager | [`void TrackFragment(ControlUnit fragment, int blockCount)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L456) | internal |
-| WorldBuildingManager | [`IEnumerator RetireFragment(ControlUnit fragment, float delay)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L476) | private |
-| WorldBuildingManager | [`void ClearDebris()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L488) | private |
+| WorldBuildingManager | [`void DamageSphere(Vector3 center, float radius, float damageAmount)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L434) | public |
+| WorldBuildingManager | [`void TrackFragment(ControlUnit fragment, int blockCount)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L457) | internal |
+| WorldBuildingManager | [`IEnumerator RetireFragment(ControlUnit fragment, float delay)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L477) | private |
+| WorldBuildingManager | [`void ClearDebris()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L489) | private |
 
 ## Assets/Scripts/Features/World/Outposts/EnemyOutpostData.cs
 
@@ -7497,9 +7504,9 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| VoxelDebrisPiece | [`void Initialize(List<Vector3Int> cells, float cellSize, Material[] materials, float lifetime)`](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelDebrisPiece.cs#L11) | public |
-| VoxelDebrisPiece | [`void Update()`](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelDebrisPiece.cs#L49) | private |
-| VoxelDebrisPiece | [`void OnDestroy()`](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelDebrisPiece.cs#L57) | private |
+| VoxelDebrisPiece | [`void Initialize(List<Vector3Int> cells, float cellSize, Material[] materials, float lifetime)`](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelDebrisPiece.cs#L13) | public |
+| VoxelDebrisPiece | [`void Update()`](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelDebrisPiece.cs#L51) | private |
+| VoxelDebrisPiece | [`void OnDestroy()`](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelDebrisPiece.cs#L59) | private |
 
 ## Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs
 
@@ -7511,8 +7518,8 @@ HY-Sandbox/
 | VoxelStructureCollapse | [`void RequestCheck()`](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs#L33) | public |
 | VoxelStructureCollapse | [`void LateUpdate()`](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs#L38) | private |
 | VoxelStructureCollapse | [`void ResolveDetached()`](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs#L51) | public |
-| VoxelStructureCollapse | [`void ClearDebris()`](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs#L88) | public |
-| VoxelStructureCollapse | [`void OnDisable()`](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs#L104) | private |
+| VoxelStructureCollapse | [`void ClearDebris()`](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs#L89) | public |
+| VoxelStructureCollapse | [`void OnDisable()`](../Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureCollapse.cs#L105) | private |
 
 ## Assets/Scripts/Features/World/Terrain/Destruction/VoxelStructureSupport.cs
 

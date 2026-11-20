@@ -8,6 +8,8 @@ public sealed class VoxelDebrisPiece : MonoBehaviour
 {
     private Mesh ownedMesh;
     private float expiresAt;
+    public float VoidHeight { private get; set; } = float.NegativeInfinity;
+
     public void Initialize(List<Vector3Int> cells, float cellSize, Material[] materials, float lifetime)
     {
         Vector3Int minimum = cells[0];
@@ -48,7 +50,7 @@ public sealed class VoxelDebrisPiece : MonoBehaviour
 
     private void Update()
     {
-        if (Time.time >= expiresAt)
+        if (Time.time >= expiresAt || transform.position.y < VoidHeight)
         {
             Destroy(gameObject);
         }

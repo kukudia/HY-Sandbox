@@ -18,8 +18,12 @@ public sealed class SiegeWaveDirector
     private readonly List<Attacker> attackers = new List<Attacker>();
     private float nextSpawn;
     private int scheduledWave;
+    private float disabledSince = -1f;
+    private float nextCapabilityCheck;
     public void BeginWave(float time)
     {
+        disabledSince = -1f;
+        nextCapabilityCheck = time;
         scheduledWave = match.Wave;
         nextSpawn = time + settings.WaveSpawnDelay;
     }
@@ -157,6 +161,73 @@ public sealed class SiegeWaveDirector
         }
 
         return options[getSelected() >= 0 ? getSelected() : random.Next(options.Length)];
+    }
+
+    public void CheckFleetStalemate(SiegeFleet fleet, float time, float grace)
+    {
+        if (match.Phase != SiegePhase.Battle || attackers.Count == 0 || time < nextCapabilityCheck)
+        {
+            return;
+        }
+
+        nextCapabilityCheck = time + .25f;
+        foreach (Attacker enemy in attackers)
+        {
+            if (CanAct(enemy.Cockpit?.GetComponentInParent<ControlUnit>()))
+            {
+                disabledSince = -1f;
+                return;
+            }
+        }
+
+        foreach (SiegeFleetEntry ally in fleet.Ships)
+        {
+            if (CanAct(ally?.Unit))
+            {
+                disabledSince = -1f;
+                return;
+            }
+        }
+
+        if (disabledSince < 0f)
+        {
+            disabledSince = time;
+        }
+        else if (time - disabledSince >= grace)
+        {
+            foreach (Attacker enemy in attackers)
+            {
+                ControlUnit unit = enemy.Cockpit != null ? enemy.Cockpit.GetComponentInParent<ControlUnit>() : null;
+                enemy.Unsubscribe();
+                match.ResolveAttacker(enemy.Id, false);
+                if (unit != null)
+                {
+                    unit.gameObject.SetActive(false);
+                    UnityEngine.Object.Destroy(unit.gameObject);
+                }
+            }
+
+            attackers.Clear();
+            disabledSince = -1f;
+        }
+    }
+
+    private static bool CanAct(ControlUnit unit)
+    {
+        if (unit == null)
+        {
+            return false;
+        }
+
+        foreach (Thruster engine in unit.Thrusters)
+        {
+            if (engine != null && engine.isActiveAndEnabled && !(engine is HoverThruster) && engine.maxThrust * engine.PowerEfficiency > .01f)
+            {
+                return true;
+            }
+        }
+
+        return unit.HasCombatCapability;
     }
 
     public void Stop()

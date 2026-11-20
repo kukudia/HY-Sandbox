@@ -28,6 +28,9 @@ public sealed class WorkshopNavigation : MonoBehaviour
             UseMenuEvents();
         }
 
+        RectTransform shortcut = (RectTransform)menuButton.transform;
+        shortcut.anchorMin = shortcut.anchorMax = shortcut.pivot = new Vector2(1f, 0f);
+        shortcut.anchoredPosition = new Vector2(-16f, 12f);
         menuButton.onClick.AddListener(TogglePause);
     }
 

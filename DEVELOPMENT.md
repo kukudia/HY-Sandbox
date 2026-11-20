@@ -1,5 +1,7 @@
 # HY-Sandbox 开发入口
 
+Siege：战斗双击接管，Tab 或按住 Alt 点击 FREE VIEW 返回观察；Recovery 时限 60 秒。基地手动 Repair 同时补齐占地内已毁地形。波次清除显示 CLEAR，余额变化在 Credits 旁显示。
+
 基础部件遍历规范见 AGENTS.md，现有热点与保留原因见 Docs/ProjectRiskRegister.md 的 R35。总耐久查询复用成员名单，避障同物理步复用碰撞边界，建造预览按状态变化更新外观。
 
 2026-11-20 炮塔按 ControlUnit 选择舰体，不再枚举 Durability。局部包围盒与六个外侧采样点共享；每次重选每艘射程内候选舰最多探测四个方向，实际命中表面用于瞄准。激光与炮弹按最终命中 Collider 扣对应部件耐久。见 Docs/RuntimeFlow.md 的“炮塔舰体索敌到实际命中扣血”。

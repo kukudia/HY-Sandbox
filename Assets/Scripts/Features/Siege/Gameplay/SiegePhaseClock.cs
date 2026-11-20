@@ -10,7 +10,7 @@ public sealed class SiegePhaseClock
     [SerializeField, Min(1f)]
     private float battleSeconds = 180f;
     [SerializeField, Min(1f)]
-    private float returnSeconds = 90f;
+    private float returnSeconds = 60f;
     [SerializeField, Min(1f)]
     private float stalledSeconds = 15f;
     [SerializeField, Min(.1f)]

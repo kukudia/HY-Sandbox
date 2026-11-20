@@ -37,6 +37,14 @@ public sealed class SiegeCombatHud : MonoBehaviour
     [SerializeField]
     private Button restartFailure;
     private SiegeGameplayStage stage;
+    private TMP_Text shipButtonLabel;
+    private string cycleLabel;
+    private TMP_Text clear;
+    private int shownWave;
+    private float clearAt;
+    private long balance;
+    private long delta;
+    private float deltaUntil;
     private int selected;
     private float nextText;
     private ControlUnit lastClicked;
@@ -53,8 +61,26 @@ public sealed class SiegeCombatHud : MonoBehaviour
             restartFailure.onClick.AddListener(() => PlayManager.instance.Modes.Restart());
         }
 
+        shipButtonLabel = nextShip.GetComponentInChildren<TMP_Text>(true);
+        cycleLabel = shipButtonLabel.text;
+        clear = Instantiate(countdown, countdown.canvas.rootCanvas.transform);
+        clear.name = "Wave Clear";
+        clear.raycastTarget = false;
+        clear.alignment = TextAlignmentOptions.Center;
+        clear.rectTransform.anchorMin = clear.rectTransform.anchorMax = clear.rectTransform.pivot = Vector2.one * .5f;
+        clear.rectTransform.sizeDelta = new Vector2(680f, 150f);
+        clear.rectTransform.anchoredPosition = Vector2.zero;
+        clear.enableAutoSizing = false;
+        clear.fontSize = 96f;
+        clear.text = "CLEAR";
+        clear.gameObject.SetActive(false);
         nextShip.onClick.AddListener(() =>
         {
+            if (stage?.Fleet?.Driven != null)
+            {
+                stage.Observe();
+            }
+
             selected++;
             nextText = 0f;
         });
@@ -63,6 +89,8 @@ public sealed class SiegeCombatHud : MonoBehaviour
     public void Enter(SiegeGameplayStage owner)
     {
         stage = owner;
+        balance = owner.Match.Coins;
+        shownWave = 0;
         hud.Bind(owner.gameObject.scene, PlayManager.instance.mainCamera, true);
         panels.Bind();
         selected = 0;
@@ -90,6 +118,29 @@ public sealed class SiegeCombatHud : MonoBehaviour
 
     private void Update()
     {
+        if (PauseMenu.IsPaused)
+        {
+            return;
+        }
+
+        if (stage != null && stage.Match != null)
+        {
+            if (stage.Match.Wave > shownWave && (stage.Match.Phase == SiegePhase.Returning || stage.Match.Phase == SiegePhase.Intermission))
+            {
+                shownWave = stage.Match.Wave;
+                clearAt = Time.time;
+                clear.gameObject.SetActive(true);
+            }
+
+            if (clear.gameObject.activeSelf)
+            {
+                float age = Time.time - clearAt;
+                clear.rectTransform.localScale = Vector3.one * Mathf.Lerp(1.25f, 1f, age * 4f);
+                clear.alpha = Mathf.Clamp01((1.8f - age) * 2f);
+                clear.gameObject.SetActive(age < 1.8f);
+            }
+        }
+
         PollShipControl();
         if (stage == null || stage.Fleet == null || Time.unscaledTime < nextText)
         {
@@ -100,7 +151,7 @@ public sealed class SiegeCombatHud : MonoBehaviour
         bool refit = !stage.Settled && stage.Match.CanRefit;
         nextWave.gameObject.SetActive(refit);
         long quote = refit && stage.Base != null ? stage.Base.Quote() : 0;
-        repairBase.gameObject.SetActive(refit && quote > 0);
+        repairBase.gameObject.SetActive(refit && (quote > 0 || stage.Island.NeedsGroundRepair));
         repairBase.interactable = quote <= stage.Match.Coins;
         repairBase.GetComponentInChildren<TMP_Text>().text = "REPAIR BASE  /  " + quote;
         phaseLabel.text = stage.Settled ? "SIEGE LOST" : stage.Match.CanRefit ? "WAVE " + (stage.Match.Wave + 1) + "  /  READY" : stage.Clock.Label;
@@ -108,7 +159,15 @@ public sealed class SiegeCombatHud : MonoBehaviour
         int total = Mathf.CeilToInt(seconds);
         countdown.text = !stage.Settled && stage.Clock.Active ? $"{total / 60:00}:{total % 60:00}" : "--:--";
         countdown.color = seconds <= 15f && stage.Clock.PreparationRemaining <= 0f ? hud.Theme.hostile : hud.Theme.friendly;
-        battleStatus.text = $"CREDITS {stage.Match.Coins:N0}  +{stage.Match.PendingCoins:N0} PENDING\nHOSTILES {stage.Match.ActiveAttackers + stage.Match.PendingAttackers}  /  KILLS {stage.Match.DefeatedAttackers}";
+        if (balance != stage.Match.Coins)
+        {
+            delta = stage.Match.Coins - balance;
+            balance = stage.Match.Coins;
+            deltaUntil = Time.time + 2f;
+        }
+
+        string change = Time.time < deltaUntil ? $"  <color={(delta > 0 ? "#76E5AD" : "#FF998B")}>{delta:+#,0;-#,0}</color>" : "";
+        battleStatus.text = $"CREDITS  <b>{balance:N0}</b>{change}\nPENDING  +{stage.Match.PendingCoins:N0}    HOSTILES  {stage.Match.ActiveAttackers + stage.Match.PendingAttackers}";
         if (stage.Match.Phase == SiegePhase.Returning)
         {
             battleStatus.text += $"\nMOVEMENT CHECK  {stage.Clock.StallRemaining:0}s";
@@ -160,7 +219,8 @@ public sealed class SiegeCombatHud : MonoBehaviour
             }
         }
 
-        nextShip.interactable = alive > 1 && stage.Fleet.Driven == null;
+        shipButtonLabel.text = stage.Fleet.Driven != null ? "FREE VIEW  [TAB]" : cycleLabel;
+        nextShip.interactable = stage.Fleet.Driven != null || alive > 1;
         if (stage.Settled)
         {
             panels.CloseAll();

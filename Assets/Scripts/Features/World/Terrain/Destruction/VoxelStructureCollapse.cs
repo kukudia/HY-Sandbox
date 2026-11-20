@@ -73,6 +73,7 @@ public sealed class VoxelStructureCollapse : MonoBehaviour
             UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(obj, world.gameObject.scene);
             obj.transform.localScale = world.transform.lossyScale;
             piece.Initialize(cells, world.CellSize, world.Materials, debrisLifetime);
+            piece.VoidHeight = world.transform.position.y - world.CellSize;
             pieces.Add(piece);
             foreach (Vector3Int cell in cells)
             {

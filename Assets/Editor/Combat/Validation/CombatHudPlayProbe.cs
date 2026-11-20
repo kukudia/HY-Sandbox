@@ -512,8 +512,8 @@ public static class CombatHudPlayProbe
         var clock = new SiegePhaseClock();
         clock.BeginBattle(0f);
         Check(
-            "Recovery starts a ninety second deadline",
-            clock.Tick(SiegePhase.Returning, 0f, stage.Fleet, stage.FlightGuidance) == null && clock.Remaining == 90f);
+            "Recovery starts a sixty second deadline",
+            clock.Tick(SiegePhase.Returning, 0f, stage.Fleet, stage.FlightGuidance) == null && clock.Remaining == 60f);
         Check(
             "Zero delta pauses recovery and movement clocks",
             clock.Tick(SiegePhase.Returning, 0f, stage.Fleet, stage.FlightGuidance) == null && clock.StallRemaining == 15f);
@@ -555,7 +555,16 @@ public static class CombatHudPlayProbe
             !stage.Settled && stage.Match.Phase == SiegePhase.Intermission);
         Check("Ship damage is automatically repaired", SiegeRefit.Quote(ship, stage.Settings) == 0);
         Check("Base damage persists after automatic fleet repair", stage.Base.Quote() == baseQuote);
-        Check("Manual base repair succeeds", stage.Repair() && stage.Base.Quote() == 0);
+        ProceduralVoxelWorld ground = stage.Island.World;
+        Vector3 center = stage.Base.Building.transform.TransformPoint(stage.Base.Building.Footprint.Center);
+        Vector3Int groundCell = ground.WorldToCell(center - Vector3.up * .1f);
+        byte originalMaterial = ground.Data.Get(groundCell);
+        Check(
+            "Destroyed foundation cell is tracked",
+            originalMaterial != 0 && ground.SetCell(groundCell, 0) && stage.Island.NeedsGroundRepair);
+        Check(
+            "Manual base repair restores both hull and terrain",
+            stage.Repair() && stage.Base.Quote() == 0 && ground.Data.Get(groundCell) == originalMaterial);
         yield return .25f;
         Check(
             "Next wave action returns only after recovery",

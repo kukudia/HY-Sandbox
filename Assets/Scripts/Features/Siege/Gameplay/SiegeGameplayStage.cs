@@ -294,7 +294,20 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
             return false;
         }
 
+        if (Match.CanRefit && Base.IsAlive && Base.Quote() == 0 && island.NeedsGroundRepair)
+        {
+            island.RepairGround();
+            Status = "Base ground restored.";
+            RefitChanged?.Invoke();
+            return true;
+        }
+
         bool repaired = Base.Repair(out string reason);
+        if (repaired && island.NeedsGroundRepair)
+        {
+            island.RepairGround();
+        }
+
         Status = reason;
         RefitChanged?.Invoke();
         return repaired;
@@ -356,6 +369,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
                 combat.EnemyWreckLifetime,
                 combat.EnemyWreckRetirePerScan);
             waves.Tick(Time.time);
+            waves.CheckFleetStalemate(Fleet, Time.time, flightSettings.disabledGrace);
             if (Match.Phase == SiegePhase.Returning)
             {
                 returning = true;

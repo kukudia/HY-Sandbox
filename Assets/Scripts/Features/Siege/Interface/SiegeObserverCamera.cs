@@ -47,6 +47,8 @@ public sealed class SiegeObserverCamera : MonoBehaviour
             return;
         }
 
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         cameraOwner = camera;
         overview = overviewPose;
         menu = Object.FindAnyObjectByType<MainMenuController>();
