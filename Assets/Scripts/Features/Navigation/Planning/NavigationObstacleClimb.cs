@@ -9,6 +9,10 @@ internal sealed class NavigationObstacleClimb
     private Collider[] hull;
     private Rigidbody _body;
     private float nextHullRefresh;
+    private ControlUnit hullOwner;
+    private double boundsStep = double.NaN;
+    private Bounds stepBounds;
+    private uint hullVersion;
     private float height;
     private float exitProjection;
     private Vector3 heading;
@@ -19,6 +23,8 @@ internal sealed class NavigationObstacleClimb
     {
         active = false;
         hull = null;
+        hullOwner = null;
+        boundsStep = double.NaN;
         _body = null;
     }
 
@@ -224,11 +230,19 @@ internal sealed class NavigationObstacleClimb
 
     internal Bounds GetHullBounds(ControlUnit unit)
     {
-        if (hull == null || Time.time >= nextHullRefresh)
+        if (hull == null || hullOwner != unit || hullVersion != Durability.HierarchyVersion || Time.time >= nextHullRefresh)
         {
             hull = unit.GetComponentsInChildren<Collider>();
             _body = unit.GetComponent<Rigidbody>();
             nextHullRefresh = Time.time + 1f;
+            hullOwner = unit;
+            hullVersion = Durability.HierarchyVersion;
+            boundsStep = double.NaN;
+        }
+
+        if (Time.inFixedTimeStep && boundsStep == Time.fixedTimeAsDouble)
+        {
+            return stepBounds;
         }
 
         Rigidbody body = _body;
@@ -241,6 +255,8 @@ internal sealed class NavigationObstacleClimb
             }
         }
 
+        stepBounds = bounds;
+        boundsStep = Time.inFixedTimeStep ? Time.fixedTimeAsDouble : double.NaN;
         return bounds;
     }
 

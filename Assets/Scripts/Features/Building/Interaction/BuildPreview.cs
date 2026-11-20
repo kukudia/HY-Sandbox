@@ -17,6 +17,9 @@ internal sealed class BuildPreview
     private float _range;
     private bool _groundPlacement;
     private GameObject _ghostPrefab;
+    private Renderer[] _ghostRenderers;
+    private bool? _lastBlocked;
+    private Material _lastHighlight;
     public string ResourcePath;
     public bool PenetrationMode;
     public GameObject currentGhost;
@@ -203,18 +206,20 @@ internal sealed class BuildPreview
             }
 
             isBlocked |= !IsWithinBuildRange(currentGhost.transform.position);
-            Renderer[] renderers = currentGhost.GetComponentsInChildren<Renderer>();
-            foreach (Renderer renderer in renderers)
+            if (_lastBlocked != isBlocked || _lastHighlight != _highlight)
             {
-                if (!(renderer is MeshRenderer) && !(renderer is SkinnedMeshRenderer))
+                _lastBlocked = isBlocked;
+                _lastHighlight = _highlight;
+                foreach (Renderer renderer in _ghostRenderers)
                 {
-                    continue;
-                }
-
-                renderer.material = _highlight;
-                if (renderer.material.HasProperty("_Color"))
-                {
-                    renderer.material.color = isBlocked ? new Color(1, 0, 0, 0.5f) : new Color(0, 1, 0, 0.5f);
+                    if (renderer != null && (renderer is MeshRenderer || renderer is SkinnedMeshRenderer))
+                    {
+                        renderer.material = _highlight;
+                        if (renderer.material.HasProperty("_Color"))
+                        {
+                            renderer.material.color = isBlocked ? new Color(1, 0, 0, 0.5f) : new Color(0, 1, 0, 0.5f);
+                        }
+                    }
                 }
             }
 
@@ -236,6 +241,8 @@ internal sealed class BuildPreview
 
         currentGhost = Object.Instantiate(prefab);
         _ghostPrefab = prefab;
+        _ghostRenderers = currentGhost.GetComponentsInChildren<Renderer>(true);
+        _lastBlocked = null;
         foreach (Collider collider in currentGhost.GetComponentsInChildren<Collider>())
         {
             collider.gameObject.layer = 0;
@@ -251,6 +258,8 @@ internal sealed class BuildPreview
 
         hoveredConnector = null;
         _ghostPrefab = null;
+        _ghostRenderers = null;
+        _lastHighlight = null;
         if (currentGhost == null)
         {
             return;

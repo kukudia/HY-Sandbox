@@ -51,20 +51,18 @@ public class ControlUnit : MonoBehaviour
     }
 
     private readonly List<Durability> damageTargets = new List<Durability>();
-    private int damageTargetsFrame = -1;
-    private double damageTargetsStep = -1;
+    private bool damageTargetsDirty = true;
     private uint damageTargetsVersion;
     private bool targetBoundsReady;
     private Bounds targetBounds;
     private static readonly Unity.Profiling.ProfilerMarker BoundsMarker = new Unity.Profiling.ProfilerMarker("HY.Turret.SharedBounds");
-    // 多座炮塔共享当前物理步的层级读取；位置、阵营、伤势和真实归属仍在每次选择时验证。
+    // HUD 复用成员名单；当前伤势与实际归属仍在查询时读取。
     internal IReadOnlyList<Durability> GetDamageTargets()
     {
-        if (damageTargetsFrame != Time.frameCount || damageTargetsStep != Time.fixedTimeAsDouble || damageTargetsVersion != Durability.HierarchyVersion)
+        if (damageTargetsDirty || damageTargetsVersion != Durability.HierarchyVersion)
         {
             GetComponentsInChildren(true, damageTargets);
-            damageTargetsFrame = Time.frameCount;
-            damageTargetsStep = Time.fixedTimeAsDouble;
+            damageTargetsDirty = false;
             damageTargetsVersion = Durability.HierarchyVersion;
         }
 
@@ -155,7 +153,7 @@ public class ControlUnit : MonoBehaviour
     private void OnTransformChildrenChanged()
     {
         targetBoundsReady = false;
-        damageTargetsFrame = -1;
+        damageTargetsDirty = true;
     }
 
     public static bool IsSceneSimulationActive(UnityEngine.SceneManagement.Scene scene)
@@ -367,7 +365,7 @@ public class ControlUnit : MonoBehaviour
     public void RefreshChildren()
     {
         targetBoundsReady = false;
-        damageTargetsFrame = -1;
+        damageTargetsDirty = true;
         // Refresh after loading or regrouping because child components and Rigidbody ownership may have changed.
         EnsureRuntimeUnitId();
         hoverFlightController = GetComponentInChildren<HoverFlightController>();

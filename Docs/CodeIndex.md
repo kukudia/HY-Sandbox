@@ -4064,11 +4064,11 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BuildPreview | [`void Configure( Camera camera, float range, Material highlight, ConnectorPlacementHints hints, bool groundPlacement = false)`](../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L30) | public |
-| BuildPreview | [`bool IsWithinBuildRange(Vector3 position)`](../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L44) | public |
-| BuildPreview | [`void Poll()`](../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L49) | public |
-| BuildPreview | [`void EnsureGhost(GameObject prefab)`](../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L230) | private |
-| BuildPreview | [`void Clear(bool hideHints = true)`](../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L245) | public |
+| BuildPreview | [`void Configure( Camera camera, float range, Material highlight, ConnectorPlacementHints hints, bool groundPlacement = false)`](../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L33) | public |
+| BuildPreview | [`bool IsWithinBuildRange(Vector3 position)`](../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L47) | public |
+| BuildPreview | [`void Poll()`](../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L52) | public |
+| BuildPreview | [`void EnsureGhost(GameObject prefab)`](../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L235) | private |
+| BuildPreview | [`void Clear(bool hideHints = true)`](../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L252) | public |
 
 ## Assets/Scripts/Features/Building/Interaction/BuildSelection.cs
 
@@ -5386,15 +5386,15 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| NavigationObstacleClimb | [`void Clear()`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L18) | internal |
-| NavigationObstacleClimb | [`bool TryGetHeight( ControlUnit unit, Vector3 direction, float baseHeight, float lookAhead, float maxRise, float clearance, LayerMask layers, out float targetHeight, float maxDrop = 0f)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L25) | internal |
-| NavigationObstacleClimb | [`bool CanPass( PhysicsScene physics, Bounds bounds, Vector3 direction, float distance, float deltaHeight, LayerMask layers, ControlUnit unit)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L131) | private |
-| NavigationObstacleClimb | [`float ForwardRatio( ControlUnit owner, Vector3 direction, float targetHeight, float cruiseSpeed, float clearance, float lead, LayerMask layers)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L158) | internal |
-| NavigationObstacleClimb | [`bool CanLowerTo(ControlUnit unit, float targetHeight, Vector3 direction, float distance, LayerMask layers)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L211) | internal |
-| NavigationObstacleClimb | [`Bounds GetHullBounds(ControlUnit unit)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L225) | internal |
-| NavigationObstacleClimb | [`bool Blocked( PhysicsScene physics, Vector3 center, Vector3 extents, Vector3 direction, float distance, LayerMask layers, ControlUnit owner)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L247) | private |
-| NavigationObstacleClimb | [`int Cast( PhysicsScene physics, Vector3 center, Vector3 extents, Vector3 direction, float distance, LayerMask layers)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L279) | private |
-| NavigationObstacleClimb | [`bool IsGeometry(Collider collider, ControlUnit owner)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L309) | private static |
+| NavigationObstacleClimb | [`void Clear()`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L22) | internal |
+| NavigationObstacleClimb | [`bool TryGetHeight( ControlUnit unit, Vector3 direction, float baseHeight, float lookAhead, float maxRise, float clearance, LayerMask layers, out float targetHeight, float maxDrop = 0f)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L31) | internal |
+| NavigationObstacleClimb | [`bool CanPass( PhysicsScene physics, Bounds bounds, Vector3 direction, float distance, float deltaHeight, LayerMask layers, ControlUnit unit)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L137) | private |
+| NavigationObstacleClimb | [`float ForwardRatio( ControlUnit owner, Vector3 direction, float targetHeight, float cruiseSpeed, float clearance, float lead, LayerMask layers)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L164) | internal |
+| NavigationObstacleClimb | [`bool CanLowerTo(ControlUnit unit, float targetHeight, Vector3 direction, float distance, LayerMask layers)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L217) | internal |
+| NavigationObstacleClimb | [`Bounds GetHullBounds(ControlUnit unit)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L231) | internal |
+| NavigationObstacleClimb | [`bool Blocked( PhysicsScene physics, Vector3 center, Vector3 extents, Vector3 direction, float distance, LayerMask layers, ControlUnit owner)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L263) | private |
+| NavigationObstacleClimb | [`int Cast( PhysicsScene physics, Vector3 center, Vector3 extents, Vector3 direction, float distance, LayerMask layers)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L295) | private |
+| NavigationObstacleClimb | [`bool IsGeometry(Collider collider, ControlUnit owner)`](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L325) | private static |
 
 ## Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs
 
@@ -7143,32 +7143,32 @@ HY-Sandbox/
 | --- | --- | --- |
 | ControlUnit | [`void SetDebris(bool debris)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L24) | internal |
 | ControlUnit | [`void RefreshCombatMembership()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L38) | private |
-| ControlUnit | [`IReadOnlyList<Durability> GetDamageTargets()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L61) | internal |
-| ControlUnit | [`Vector3 HullSample(int side)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L75) | internal |
-| ControlUnit | [`bool TryGetTargetBounds(out Bounds bounds)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L78) | internal |
-| ControlUnit | [`void ApplySurfaceDamage(Collider hit, ControlUnit attacker, UnitFaction targetFaction, float damage)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L128) | internal |
-| ControlUnit | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L142) | private |
-| ControlUnit | [`void OnTransformChildrenChanged()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L155) | private |
-| ControlUnit | [`bool IsSceneSimulationActive(UnityEngine.SceneManagement.Scene scene)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L161) | public static |
-| ControlUnit | [`void NotifyFragmentCreated(ControlUnit fragment, int blockCount)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L180) | internal |
-| ControlUnit | [`void NotifyBlockDestroyed(Block block)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L187) | internal |
-| ControlUnit | [`void BindBuilding(BuildingRuntime building)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L226) | public |
-| ControlUnit | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L232) | private |
-| ControlUnit | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L242) | private |
-| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L271) | public |
-| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L283) | public |
-| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L308) | private |
-| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L320) | private |
-| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L367) | public |
-| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L438) | public |
-| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L459) | public |
-| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L467) | public |
-| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L477) | public |
-| ControlUnit | [`void SetPropulsionInput(Vector3 worldDirection, float throttle)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L482) | public |
-| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L489) | public |
-| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L494) | private |
-| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L538) | private |
-| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L549) | private |
+| ControlUnit | [`IReadOnlyList<Durability> GetDamageTargets()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L60) | internal |
+| ControlUnit | [`Vector3 HullSample(int side)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L73) | internal |
+| ControlUnit | [`bool TryGetTargetBounds(out Bounds bounds)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L76) | internal |
+| ControlUnit | [`void ApplySurfaceDamage(Collider hit, ControlUnit attacker, UnitFaction targetFaction, float damage)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L126) | internal |
+| ControlUnit | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L140) | private |
+| ControlUnit | [`void OnTransformChildrenChanged()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L153) | private |
+| ControlUnit | [`bool IsSceneSimulationActive(UnityEngine.SceneManagement.Scene scene)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L159) | public static |
+| ControlUnit | [`void NotifyFragmentCreated(ControlUnit fragment, int blockCount)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L178) | internal |
+| ControlUnit | [`void NotifyBlockDestroyed(Block block)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L185) | internal |
+| ControlUnit | [`void BindBuilding(BuildingRuntime building)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L224) | public |
+| ControlUnit | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L230) | private |
+| ControlUnit | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L240) | private |
+| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L269) | public |
+| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L281) | public |
+| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L306) | private |
+| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L318) | private |
+| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L365) | public |
+| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L436) | public |
+| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L457) | public |
+| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L465) | public |
+| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L475) | public |
+| ControlUnit | [`void SetPropulsionInput(Vector3 worldDirection, float throttle)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L480) | public |
+| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L487) | public |
+| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L492) | private |
+| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L536) | private |
+| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L547) | private |
 
 ## Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs
 

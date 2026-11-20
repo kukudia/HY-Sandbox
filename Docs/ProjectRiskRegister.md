@@ -1,5 +1,18 @@
 # HY-Sandbox 风险登记与行为契约
 
+### R35 · 基础部件遍历（2026-11-20）
+
+| 入口 | 触发、范围与处理 | 保留原因与验证缺口 |
+| --- | --- | --- |
+| ControlUnit.GetDamageTargets / TryGetTotalDurability | HUD 等调用者复用本单位成员名单；直接子节点变化、RefreshChildren 或耐久层级版本变化后重建。查询时仍逐成员汇总有效耐久。 | 当前耐久可直接写入，不能永久缓存总数；跨舰版本变化仍可能引起额外刷新。 |
+| NavigationObstacleClimb.GetHullBounds | 爬升、下降、路径选择复用同单位同物理步边界；单位切换、结构变化、Clear 或定时刷新使缓存失效。物理步外仍实时合并。 | 使用真实、启用且属于本刚体的 Collider，避免简化外壳改变净空；同一步内几何变化可能延迟一步可见。 |
+| BuildPreview.EnsureGhost / Poll | 新建 Ghost 时收集 Renderer 和 Collider；仅初次、有效性或高亮材质变化时更新 Renderer。Clear 丢弃名单。 | 预览假定同一实例的模型结构稳定；需目视验证动态模型及红绿切换。 |
+| TurretProjectile.Launch / ClearIgnoredCollisions | 每枚实体弹遍历发射单位碰撞体建立忽略对，回收时解除。 | 现有实体物理依赖逐对忽略，不能只过滤伤害；大型母舰连射仍需度量。 |
+| ExplosionPropagation、RuntimeGroupBuilder、ControlUnit.RefreshChildren | 爆炸、断裂、加载和重组时访问相关块、刚体或子组件。 | 保留逐块伤害、拓扑与所有权正确性；大型结构连续断裂需测峰值。 |
+| ControlUnit.HasCombatCapability、BlockConnectionSnapshot、建造连接提示及推进器输出 | 能力查询扫描武器、连接验证读取碰撞体或连接面、推进控制逐执行器施力。 | 不把必要的单件操作计作可省略；建议按调用者、结构规模和调用频次采样。 |
+
+审查覆盖自有运行时脚本的层级查询检索及上述调用链抽查，不等于逐行审查所有 LINQ、循环或 Editor 验证脚本。当前没有同场景 Player P99 对照。
+
 2026-11-20 舰体索敌：Unity Play 的 18 项 AI 与 32 项炮塔检查通过。单舰全遮挡时，2 与 202 个带 Collider 的部件均为 4 次逻辑探测；缓冲饱和可重试物理查询。有限采样不保证发现任意细缝中露出的部件。未复现原波次测量 P99，缓存重建成本和密集碰撞命中遍历仍需单独采样。
 
 ### 战斗帧时间与响应延迟（2026-11-19）

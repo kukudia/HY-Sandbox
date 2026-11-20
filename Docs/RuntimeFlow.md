@@ -647,7 +647,7 @@ flowchart TD
     C["BuildPlacementGeometry.CalculateRotationPosition()"]
     click C "../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L20" "打开源码"
     D["BuildPreview.Poll()"]
-    click D "../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L49" "打开源码"
+    click D "../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L52" "打开源码"
     E["BuildPlacementGeometry.GetSurfaceRotation()"]
     click E "../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L110" "打开源码"
     F["BuildManipulation.HandleMovement()"]
@@ -712,7 +712,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|SetBuildMode -->
 - [BuildPlacementGeometry.CalculateRotationPosition](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L20)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs|CalculateRotationPosition -->
-- [BuildPreview.Poll](../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L49)
+- [BuildPreview.Poll](../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L52)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPreview.cs|Poll -->
 - [BuildPlacementGeometry.GetSurfaceRotation](../Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs#L110)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPlacementGeometry.cs|GetSurfaceRotation -->
@@ -2206,7 +2206,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["BuildPreview.Poll()"]
-    click A "../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L49" "打开源码"
+    click A "../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L52" "打开源码"
     B["BuildManager.CreateBlock()"]
     click B "../Assets/Scripts/Features/Building/BuildManager.cs#L631" "打开源码"
     C["BuildManager.CompleteBuildingBlueprint()"]
@@ -2251,7 +2251,7 @@ flowchart TD
     K --> O
 ```
 
-- [BuildPreview.Poll](../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L49)
+- [BuildPreview.Poll](../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L52)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPreview.cs|Poll -->
 - [BuildManager.CreateBlock](../Assets/Scripts/Features/Building/BuildManager.cs#L631)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|CreateBlock -->
@@ -2461,7 +2461,7 @@ flowchart TD
     B["BuildManager.HandleBuildingPreview()"]
     click B "../Assets/Scripts/Features/Building/BuildManager.cs#L597" "打开源码"
     C["BuildPreview.Poll()"]
-    click C "../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L49" "打开源码"
+    click C "../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L52" "打开源码"
     AB["BuildSelection.RefreshBuildGizmos()"]
     click AB "../Assets/Scripts/Features/Building/Interaction/BuildSelection.cs#L158" "打开源码"
     D["BuildPlacementGeometry.TryCalculateConnectorAlignedPosition()"]
@@ -2570,7 +2570,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|Update -->
 - [BuildManager.HandleBuildingPreview](../Assets/Scripts/Features/Building/BuildManager.cs#L597)
 <!-- source: Assets/Scripts/Features/Building/BuildManager.cs|HandleBuildingPreview -->
-- [BuildPreview.Poll](../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L49)
+- [BuildPreview.Poll](../Assets/Scripts/Features/Building/Interaction/BuildPreview.cs#L52)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildPreview.cs|Poll -->
 - [BuildSelection.RefreshBuildGizmos](../Assets/Scripts/Features/Building/Interaction/BuildSelection.cs#L158)
 <!-- source: Assets/Scripts/Features/Building/Interaction/BuildSelection.cs|RefreshBuildGizmos -->
@@ -2786,7 +2786,7 @@ flowchart TD
     F["RigidbodyMotion.Restore()"]
     click F "../Assets/Scripts/Features/Simulation/Physics/RigidbodyMotion.cs#L17" "打开源码"
     G["ControlUnit.RefreshChildren()"]
-    click G "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L367" "打开源码"
+    click G "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L365" "打开源码"
     H["PlayManager.FixedUpdate()"]
     click H "../Assets/Scripts/Features/Simulation/PlayManager.cs#L81" "打开源码"
     I["RuntimeGroupCleanup.EnforceDistance()"]
@@ -2906,7 +2906,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnections.cs|CollectRuntimeNeighbors -->
 - [RigidbodyMotion.Restore](../Assets/Scripts/Features/Simulation/Physics/RigidbodyMotion.cs#L17)
 <!-- source: Assets/Scripts/Features/Simulation/Physics/RigidbodyMotion.cs|Restore -->
-- [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L367)
+- [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L365)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|RefreshChildren -->
 - [PlayManager.FixedUpdate](../Assets/Scripts/Features/Simulation/PlayManager.cs#L81)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|FixedUpdate -->
@@ -3083,7 +3083,7 @@ flowchart TD
     D["Durability.ApplyDamage()"]
     click D "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L129" "打开源码"
     E["ControlUnit.OnCollisionEnter()"]
-    click E "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L538" "打开源码"
+    click E "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L536" "打开源码"
     F["CollisionDamageResolver.ApplyContactDamage()"]
     click F "../Assets/Scripts/Features/Combat/Damage/CollisionDamageResolver.cs#L10" "打开源码"
     G["Durability.ApplyCollisionEnergy()"]
@@ -3135,7 +3135,7 @@ flowchart TD
     AE["TurretProjectilePool.OnDestroy()"]
     click AE "../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L98" "打开源码"
     AF["ControlUnit.NotifyBlockDestroyed()"]
-    click AF "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L187" "打开源码"
+    click AF "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L185" "打开源码"
     AG["ProjectileTurret.GetAimPosition()"]
     click AG "../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L133" "打开源码"
     AH["ProjectileIntercept.TryGetTime()"]
@@ -3194,7 +3194,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs|Fire -->
 - [Durability.ApplyDamage](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L129)
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|ApplyDamage -->
-- [ControlUnit.OnCollisionEnter](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L538)
+- [ControlUnit.OnCollisionEnter](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L536)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|OnCollisionEnter -->
 - [CollisionDamageResolver.ApplyContactDamage](../Assets/Scripts/Features/Combat/Damage/CollisionDamageResolver.cs#L10)
 <!-- source: Assets/Scripts/Features/Combat/Damage/CollisionDamageResolver.cs|ApplyContactDamage -->
@@ -3246,7 +3246,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs|Update -->
 - [TurretProjectilePool.OnDestroy](../Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs#L98)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectilePool.cs|OnDestroy -->
-- [ControlUnit.NotifyBlockDestroyed](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L187)
+- [ControlUnit.NotifyBlockDestroyed](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L185)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|NotifyBlockDestroyed -->
 - [ProjectileTurret.GetAimPosition](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L133)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs|GetAimPosition -->
@@ -4357,11 +4357,11 @@ flowchart TD
     G["TurretTargetSelector.FindNearestTarget()"]
     click G "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L172" "打开源码"
     H["ControlUnit.GetDamageTargets()"]
-    click H "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L61" "打开源码"
+    click H "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L60" "打开源码"
     I["Durability.OnTransformParentChanged()"]
     click I "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L35" "打开源码"
     J["ControlUnit.RefreshChildren()"]
-    click J "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L367" "打开源码"
+    click J "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L365" "打开源码"
     A -.->|装配单个标签组件，UnityGUI回调| D
     B -.->|活动注册| D
     C -.->|移除注册| D
@@ -4388,11 +4388,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|RefreshTarget -->
 - [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L172)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|FindNearestTarget -->
-- [ControlUnit.GetDamageTargets](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L61)
+- [ControlUnit.GetDamageTargets](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L60)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|GetDamageTargets -->
 - [Durability.OnTransformParentChanged](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L35)
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|OnTransformParentChanged -->
-- [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L367)
+- [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L365)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|RefreshChildren -->
 
 ## WorldLab 程序化世界与破坏
@@ -5042,9 +5042,9 @@ flowchart TD
     L["ModularUnitFactory.Spawn()"]
     click L "../Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs#L41" "打开源码"
     M["ControlUnit.RefreshChildren()"]
-    click M "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L367" "打开源码"
+    click M "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L365" "打开源码"
     N["ControlUnit.AssignRuntimeOwnershipToBlocks()"]
-    click N "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L438" "打开源码"
+    click N "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L436" "打开源码"
     O["EnemyIdentity.SetSpawnMaxHealth()"]
     click O "../Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs#L32" "打开源码"
     P["OutpostEncounterDirector.Hibernate()"]
@@ -5098,9 +5098,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Block.cs|RefreshRuntimeData -->
 - [ModularUnitFactory.Spawn](../Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs#L41)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs|Spawn -->
-- [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L367)
+- [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L365)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|RefreshChildren -->
-- [ControlUnit.AssignRuntimeOwnershipToBlocks](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L438)
+- [ControlUnit.AssignRuntimeOwnershipToBlocks](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L436)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|AssignRuntimeOwnershipToBlocks -->
 - [EnemyIdentity.SetSpawnMaxHealth](../Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs#L32)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs|SetSpawnMaxHealth -->
@@ -5315,7 +5315,7 @@ flowchart TD
     B["WorldCombatPlayerChecks.Spawn()"]
     click B "../Assets/Scripts/Features/World/Validation/WorldCombatPlayerChecks.cs#L135" "打开源码"
     C["ControlUnit.Update()"]
-    click C "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L320" "打开源码"
+    click C "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L318" "打开源码"
     D["MainThruster.FixedUpdate()"]
     click D "../Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs#L10" "打开源码"
     E["PowerTransmissionDevice.Update()"]
@@ -5363,7 +5363,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Validation/WorldCombatPlayerChecks.cs|Run -->
 - [WorldCombatPlayerChecks.Spawn](../Assets/Scripts/Features/World/Validation/WorldCombatPlayerChecks.cs#L135)
 <!-- source: Assets/Scripts/Features/World/Validation/WorldCombatPlayerChecks.cs|Spawn -->
-- [ControlUnit.Update](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L320)
+- [ControlUnit.Update](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L318)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|Update -->
 - [MainThruster.FixedUpdate](../Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs#L10)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs|FixedUpdate -->
@@ -5525,7 +5525,7 @@ flowchart TD
     H["Cockpit.SetControlMode()"]
     click H "../Assets/Scripts/Features/Simulation/Units/Cockpit.cs#L21" "打开源码"
     I["ControlUnit.Update()"]
-    click I "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L320" "打开源码"
+    click I "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L318" "打开源码"
     J["EnemyController.FixedUpdate()"]
     click J "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L260" "打开源码"
     K["SiegeFleet.RefreshBindings()"]
@@ -5628,7 +5628,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs|TakeControl -->
 - [Cockpit.SetControlMode](../Assets/Scripts/Features/Simulation/Units/Cockpit.cs#L21)
 <!-- source: Assets/Scripts/Features/Simulation/Units/Cockpit.cs|SetControlMode -->
-- [ControlUnit.Update](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L320)
+- [ControlUnit.Update](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L318)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|Update -->
 - [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L260)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|FixedUpdate -->
@@ -6422,7 +6422,7 @@ flowchart TD
     F["EnemyController.CalculateDesiredMovement()"]
     click F "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L327" "打开源码"
     G["ControlUnit.SetPropulsionInput()"]
-    click G "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L482" "打开源码"
+    click G "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L480" "打开源码"
     H["EnemyController.GetApproachDirection()"]
     click H "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L364" "打开源码"
     I["EnemyController.StabilizeDirection()"]
@@ -6430,15 +6430,15 @@ flowchart TD
     J["EnemyController.ApplyObstacleAvoidance()"]
     click J "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L696" "打开源码"
     K["NavigationObstacleClimb.TryGetHeight()"]
-    click K "../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L25" "打开源码"
+    click K "../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L31" "打开源码"
     L["EnemyController.ConfigureHoverThrusters()"]
     click L "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L599" "打开源码"
     M["NavigationObstacleClimb.Blocked()"]
-    click M "../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L247" "打开源码"
+    click M "../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L263" "打开源码"
     Q["NavigationObstacleClimb.CanPass()"]
-    click Q "../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L131" "打开源码"
+    click Q "../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L137" "打开源码"
     N["NavigationObstacleClimb.GetHullBounds()"]
-    click N "../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L225" "打开源码"
+    click N "../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L231" "打开源码"
     O["NavigationAvoidance.Evaluate()"]
     click O "../Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs#L73" "打开源码"
     P["EnemyController.GetReferenceVelocity()"]
@@ -6454,11 +6454,11 @@ flowchart TD
     V["NavigationLocalPath.ClearSegment()"]
     click V "../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L491" "打开源码"
     W["NavigationObstacleClimb.ForwardRatio()"]
-    click W "../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L158" "打开源码"
+    click W "../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L164" "打开源码"
     X["EnemyController.ConstrainDescent()"]
     click X "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L644" "打开源码"
     Y["NavigationObstacleClimb.CanLowerTo()"]
-    click Y "../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L211" "打开源码"
+    click Y "../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L217" "打开源码"
     AA["NavigationLocalPath.Push()"]
     click AA "../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L71" "打开源码"
     AB["NavigationLocalPath.Pop()"]
@@ -6523,7 +6523,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|IsValidOpponent -->
 - [EnemyController.CalculateDesiredMovement](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L327)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|CalculateDesiredMovement -->
-- [ControlUnit.SetPropulsionInput](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L482)
+- [ControlUnit.SetPropulsionInput](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L480)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|SetPropulsionInput -->
 - [EnemyController.GetApproachDirection](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L364)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|GetApproachDirection -->
@@ -6531,15 +6531,15 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|StabilizeDirection -->
 - [EnemyController.ApplyObstacleAvoidance](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L696)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|ApplyObstacleAvoidance -->
-- [NavigationObstacleClimb.TryGetHeight](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L25)
+- [NavigationObstacleClimb.TryGetHeight](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L31)
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs|TryGetHeight -->
 - [EnemyController.ConfigureHoverThrusters](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L599)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|ConfigureHoverThrusters -->
-- [NavigationObstacleClimb.Blocked](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L247)
+- [NavigationObstacleClimb.Blocked](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L263)
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs|Blocked -->
-- [NavigationObstacleClimb.CanPass](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L131)
+- [NavigationObstacleClimb.CanPass](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L137)
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs|CanPass -->
-- [NavigationObstacleClimb.GetHullBounds](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L225)
+- [NavigationObstacleClimb.GetHullBounds](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L231)
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs|GetHullBounds -->
 - [NavigationAvoidance.Evaluate](../Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs#L73)
 <!-- source: Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs|Evaluate -->
@@ -6555,11 +6555,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs|ClearFlight -->
 - [NavigationLocalPath.ClearSegment](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L491)
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs|ClearSegment -->
-- [NavigationObstacleClimb.ForwardRatio](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L158)
+- [NavigationObstacleClimb.ForwardRatio](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L164)
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs|ForwardRatio -->
 - [EnemyController.ConstrainDescent](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L644)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|ConstrainDescent -->
-- [NavigationObstacleClimb.CanLowerTo](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L211)
+- [NavigationObstacleClimb.CanLowerTo](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L217)
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs|CanLowerTo -->
 - [NavigationLocalPath.Push](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L71)
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs|Push -->
@@ -6710,7 +6710,7 @@ flowchart TD
     K["EnemyController.FixedUpdate()"]
     click K "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L260" "打开源码"
     L["ControlUnit.SetPropulsionInput()"]
-    click L "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L482" "打开源码"
+    click L "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L480" "打开源码"
     M["EnemyController.UpdatePropulsionInput()"]
     click M "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L439" "打开源码"
     N["UniversalThruster.ApplyDirectionalThrust()"]
@@ -6748,7 +6748,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|TickInputThrust -->
 - [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L260)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|FixedUpdate -->
-- [ControlUnit.SetPropulsionInput](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L482)
+- [ControlUnit.SetPropulsionInput](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L480)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|SetPropulsionInput -->
 - [EnemyController.UpdatePropulsionInput](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L439)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|UpdatePropulsionInput -->
@@ -6772,7 +6772,7 @@ flowchart TD
     E["TurretTargetSelector.FindNearestTarget()"]
     click E "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L172" "打开源码"
     F["ControlUnit.TryGetTargetBounds()"]
-    click F "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L78" "打开源码"
+    click F "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L76" "打开源码"
     G["TurretTargetSelector.Probe()"]
     click G "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L101" "打开源码"
     H["Turret.AimAndFire()"]
@@ -6786,7 +6786,7 @@ flowchart TD
     L["TurretHitResolver.Apply()"]
     click L "../Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs#L9" "打开源码"
     M["ControlUnit.ApplySurfaceDamage()"]
-    click M "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L128" "打开源码"
+    click M "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L126" "打开源码"
     N["Durability.ApplyDamage()"]
     click N "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L129" "打开源码"
     A --> B
@@ -6816,7 +6816,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|HasLineOfSight -->
 - [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L172)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|FindNearestTarget -->
-- [ControlUnit.TryGetTargetBounds](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L78)
+- [ControlUnit.TryGetTargetBounds](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L76)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|TryGetTargetBounds -->
 - [TurretTargetSelector.Probe](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L101)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|Probe -->
@@ -6830,7 +6830,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Projectiles/TurretProjectile.cs|ResolveHit -->
 - [TurretHitResolver.Apply](../Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs#L9)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs|Apply -->
-- [ControlUnit.ApplySurfaceDamage](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L128)
+- [ControlUnit.ApplySurfaceDamage](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L126)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|ApplySurfaceDamage -->
 - [Durability.ApplyDamage](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L129)
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|ApplyDamage -->
@@ -6854,7 +6854,7 @@ flowchart TD
     F["EnemyAvoidanceLab.BeginSuite()"]
     click F "../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L460" "打开源码"
     G["ControlUnit.OnCollisionEnter()"]
-    click G "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L538" "打开源码"
+    click G "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L536" "打开源码"
     H["EnemyAvoidanceLab.OnShipCollision()"]
     click H "../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L417" "打开源码"
     I["EnemyAvoidanceLab.DeploySelected()"]
@@ -6941,7 +6941,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs|FixedUpdate -->
 - [EnemyAvoidanceLab.BeginSuite](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L460)
 <!-- source: Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs|BeginSuite -->
-- [ControlUnit.OnCollisionEnter](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L538)
+- [ControlUnit.OnCollisionEnter](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L536)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|OnCollisionEnter -->
 - [EnemyAvoidanceLab.OnShipCollision](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs#L417)
 <!-- source: Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs|OnShipCollision -->
@@ -7132,7 +7132,7 @@ flowchart TD
     AE["SkirmishMatch.ReleaseTeamMaterial()"]
     click AE "../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L360" "打开源码"
     Z["ControlUnit.TryGetTotalDurability()"]
-    click Z "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L283" "打开源码"
+    click Z "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L281" "打开源码"
     AA["CombatHud.IsWorldPointOccluded()"]
     click AA "../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L331" "打开源码"
     AC["CombatHud.LateUpdate()"]
@@ -7220,7 +7220,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs|OnDestroy -->
 - [SkirmishMatch.ReleaseTeamMaterial](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L360)
 <!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs|ReleaseTeamMaterial -->
-- [ControlUnit.TryGetTotalDurability](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L283)
+- [ControlUnit.TryGetTotalDurability](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L281)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|TryGetTotalDurability -->
 - [CombatHud.IsWorldPointOccluded](../Assets/Scripts/Features/Combat/Interface/CombatHud.cs#L331)
 <!-- source: Assets/Scripts/Features/Combat/Interface/CombatHud.cs|IsWorldPointOccluded -->
@@ -7289,7 +7289,7 @@ flowchart TD
     D["EditableComponentBaker.ConfigureServices()"]
     click D "../Assets/Editor/Architecture/EditableComponentBaker.cs#L473" "打开源码"
     E["ControlUnit.RefreshChildren()"]
-    click E "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L367" "打开源码"
+    click E "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L365" "打开源码"
     F["WorldBuildingManager.Stage()"]
     click F "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L252" "打开源码"
     G["ProceduralVoxelWorld.Generate()"]
@@ -7316,7 +7316,7 @@ flowchart TD
 <!-- source: Assets/Editor/Architecture/EditableComponentBaker.cs|MigrateTree -->
 - [EditableComponentBaker.ConfigureServices](../Assets/Editor/Architecture/EditableComponentBaker.cs#L473)
 <!-- source: Assets/Editor/Architecture/EditableComponentBaker.cs|ConfigureServices -->
-- [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L367)
+- [ControlUnit.RefreshChildren](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L365)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|RefreshChildren -->
 - [WorldBuildingManager.Stage](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L252)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|Stage -->
