@@ -3,9 +3,12 @@
 // 约束：自动导引暂时接管姿态与推力；不传送舰艇、不在报废前发放返航奖励。
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Profiling;
 
 public sealed class SiegeReturnFlight
 {
+    private static readonly ProfilerMarker ReadPropulsionMarker = new ProfilerMarker("HY.SiegeReturnFlight.ReadPropulsion");
+    private static readonly ProfilerMarker PublishPropulsionMarker = new ProfilerMarker("HY.SiegeReturnFlight.PublishPropulsion");
     private sealed class Flight
     {
         public int slot;
@@ -15,6 +18,8 @@ public sealed class SiegeReturnFlight
         public ControlUnit unit;
         public Rigidbody body;
         public Thruster[] engines;
+        public Power[] enginePowers;
+        public bool[] engineIsHover;
         public bool[] hoverStates;
         public HoverFlightController hoverController;
         public bool hoverControllerEnabled;
@@ -143,11 +148,33 @@ public sealed class SiegeReturnFlight
         }
 
         flight.unit.RefreshChildren();
-        flight.engines = flight.unit.GetComponentsInChildren<Thruster>();
-        flight.hoverStates = new bool[flight.engines.Length];
-        for (int index = 0; index < flight.engines.Length; index++)
+        Thruster[] discoveredEngines = flight.unit.GetComponentsInChildren<Thruster>();
+        int validEngineCount = 0;
+        for (int index = 0; index < discoveredEngines.Length; index++)
+        {
+            Thruster engine = discoveredEngines[index];
+            if (engine == null || engine.GetComponentInParent<ControlUnit>() != flight.unit)
+            {
+                continue;
+            }
+
+            discoveredEngines[validEngineCount++] = engine;
+        }
+
+        if (validEngineCount != discoveredEngines.Length)
+        {
+            System.Array.Resize(ref discoveredEngines, validEngineCount);
+        }
+
+        flight.engines = discoveredEngines;
+        flight.enginePowers = new Power[validEngineCount];
+        flight.engineIsHover = new bool[validEngineCount];
+        flight.hoverStates = new bool[validEngineCount];
+        for (int index = 0; index < validEngineCount; index++)
         {
             Thruster engine = flight.engines[index];
+            flight.enginePowers[index] = engine.GetComponent<Power>();
+            flight.engineIsHover[index] = engine is HoverThruster;
             flight.hoverStates[index] = engine is HoverThruster hover && hover.isHovered;
             engine.thrust = 0f;
             engine.lastThrustValue = 0f;
@@ -174,9 +201,10 @@ public sealed class SiegeReturnFlight
             flight.hoverController.enabled = false;
         }
 
-        foreach (Thruster engine in flight.engines)
+        for (int index = 0; index < flight.engines.Length; index++)
         {
-            if (engine == null || !engine.isActiveAndEnabled || engine.GetComponentInParent<ControlUnit>() != flight.unit)
+            Thruster engine = flight.engines[index];
+            if (engine == null || !engine.isActiveAndEnabled || !engine.transform.IsChildOf(flight.unit.transform))
             {
                 continue;
             }
@@ -188,7 +216,7 @@ public sealed class SiegeReturnFlight
 
             // 使用真实电网请求；空闲时 SupplyEfficiency=1 不代表存在可用电源。
             engine.BeginGuidance(powerRequester);
-            engine.GetComponent<Power>()?.SetWorkRequested(powerRequester, true);
+            flight.enginePowers[index]?.SetWorkRequested(powerRequester, true);
         }
     }
 
@@ -447,17 +475,19 @@ public sealed class SiegeReturnFlight
 
     private static void ReadPropulsion(Flight flight, out float driveForce, out float liftForce)
     {
+        using var measurement = ReadPropulsionMarker.Auto();
         driveForce = 0f;
         liftForce = 0f;
-        foreach (Thruster engine in flight.engines)
+        for (int index = 0; index < flight.engines.Length; index++)
         {
-            if (engine == null || !engine.isActiveAndEnabled || engine.GetComponentInParent<ControlUnit>() != flight.unit)
+            Thruster engine = flight.engines[index];
+            if (engine == null || !engine.isActiveAndEnabled || !engine.transform.IsChildOf(flight.unit.transform))
             {
                 continue;
             }
 
             float force = Mathf.Max(0f, engine.maxThrust) * engine.PowerEfficiency;
-            if (engine is HoverThruster)
+            if (flight.engineIsHover[index])
             {
                 liftForce += force;
             }
@@ -508,17 +538,19 @@ public sealed class SiegeReturnFlight
 
     private void PublishPropulsion(Flight flight, Vector3 horizontal, float vertical, float driveAcceleration, float liftAcceleration)
     {
+        using var measurement = PublishPropulsionMarker.Auto();
         Vector3 drive = flight.body.useGravity ? horizontal : horizontal + Vector3.up * vertical;
         float driveRatio = driveAcceleration > 0f ? Mathf.Clamp01(drive.magnitude / driveAcceleration) : 0f;
         float liftRatio = flight.body.useGravity && liftAcceleration > 0f ? Mathf.Clamp01(vertical / liftAcceleration) : 0f;
-        foreach (Thruster engine in flight.engines)
+        for (int index = 0; index < flight.engines.Length; index++)
         {
-            if (engine == null || !engine.isActiveAndEnabled || engine.GetComponentInParent<ControlUnit>() != flight.unit)
+            Thruster engine = flight.engines[index];
+            if (engine == null || !engine.isActiveAndEnabled)
             {
                 continue;
             }
 
-            bool hover = engine is HoverThruster;
+            bool hover = flight.engineIsHover[index];
             float ratio = hover ? liftRatio : driveRatio;
             engine.SetGuidanceOutput(powerRequester, engine.maxThrust * engine.PowerEfficiency * ratio, hover ? Vector3.up : drive);
         }
@@ -576,7 +608,7 @@ public sealed class SiegeReturnFlight
                 continue;
             }
 
-            bool retainLift = launchingIntoFlight && engine is HoverThruster && engine.isActiveAndEnabled && engine.GetComponentInParent<ControlUnit>() == flight.unit;
+            bool retainLift = launchingIntoFlight && flight.engineIsHover[index] && engine.isActiveAndEnabled;
             if (engine is HoverThruster hover)
             {
                 if (retainLift)
@@ -588,7 +620,7 @@ public sealed class SiegeReturnFlight
             }
 
             engine.EndGuidance(powerRequester, retainLift);
-            engine.GetComponent<Power>()?.SetWorkRequested(powerRequester, false);
+            flight.enginePowers[index]?.SetWorkRequested(powerRequester, false);
         }
 
         if (flight.hoverController != null)

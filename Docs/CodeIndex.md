@@ -3499,22 +3499,24 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Bot | [`void Start()`](../Assets/Scripts/Features/Bots/Bot.cs#L53) | protected virtual |
-| Bot | [`bool TickNavigation(out ControlUnit owner)`](../Assets/Scripts/Features/Bots/Bot.cs#L75) | protected |
-| Bot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Bot.cs#L89) | protected virtual |
-| Bot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/Bot.cs#L108) | protected virtual |
-| Bot | [`Power SetHomePowerRequested(bool requested)`](../Assets/Scripts/Features/Bots/Bot.cs#L114) | protected |
-| Bot | [`bool CanLaunchForWork(bool requiresPower, bool requested)`](../Assets/Scripts/Features/Bots/Bot.cs#L128) | protected |
-| Bot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/Bot.cs#L134) | public virtual |
-| Bot | [`void InitializeTrail()`](../Assets/Scripts/Features/Bots/Bot.cs#L138) | private |
-| Bot | [`void LateUpdate()`](../Assets/Scripts/Features/Bots/Bot.cs#L158) | private |
-| Bot | [`void NavigateToTarget(Transform target)`](../Assets/Scripts/Features/Bots/Bot.cs#L177) | protected |
-| Bot | [`void NavigateHomeSmoothly()`](../Assets/Scripts/Features/Bots/Bot.cs#L197) | protected |
-| Bot | [`Vector3 GetRelativeHomeVelocity(Vector3 worldPosition)`](../Assets/Scripts/Features/Bots/Bot.cs#L235) | private |
-| Bot | [`void ReturnHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L241) | private |
-| Bot | [`void LeaveHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L283) | private |
-| Bot | [`void SetNavigationState(NavigationState nextState)`](../Assets/Scripts/Features/Bots/Bot.cs#L295) | private |
-| Bot | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Bots/Bot.cs#L320) | private |
+| Bot | [`void Start()`](../Assets/Scripts/Features/Bots/Bot.cs#L58) | protected virtual |
+| Bot | [`bool TickNavigation(out ControlUnit owner)`](../Assets/Scripts/Features/Bots/Bot.cs#L80) | protected |
+| Bot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Bot.cs#L94) | protected virtual |
+| Bot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/Bot.cs#L113) | protected virtual |
+| Bot | [`Power SetHomePowerRequested(bool requested)`](../Assets/Scripts/Features/Bots/Bot.cs#L119) | protected |
+| Bot | [`ControlUnit GetHomeOwner()`](../Assets/Scripts/Features/Bots/Bot.cs#L132) | protected |
+| Bot | [`Power GetHomePower()`](../Assets/Scripts/Features/Bots/Bot.cs#L151) | private |
+| Bot | [`bool CanLaunchForWork(bool requiresPower, bool requested)`](../Assets/Scripts/Features/Bots/Bot.cs#L170) | protected |
+| Bot | [`void PrepareForHomeDestruction()`](../Assets/Scripts/Features/Bots/Bot.cs#L176) | public virtual |
+| Bot | [`void InitializeTrail()`](../Assets/Scripts/Features/Bots/Bot.cs#L180) | private |
+| Bot | [`void LateUpdate()`](../Assets/Scripts/Features/Bots/Bot.cs#L200) | private |
+| Bot | [`void NavigateToTarget(Transform target)`](../Assets/Scripts/Features/Bots/Bot.cs#L219) | protected |
+| Bot | [`void NavigateHomeSmoothly()`](../Assets/Scripts/Features/Bots/Bot.cs#L239) | protected |
+| Bot | [`Vector3 GetRelativeHomeVelocity(Vector3 worldPosition)`](../Assets/Scripts/Features/Bots/Bot.cs#L277) | private |
+| Bot | [`void ReturnHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L283) | private |
+| Bot | [`void LeaveHome()`](../Assets/Scripts/Features/Bots/Bot.cs#L325) | private |
+| Bot | [`void SetNavigationState(NavigationState nextState)`](../Assets/Scripts/Features/Bots/Bot.cs#L337) | private |
+| Bot | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Bots/Bot.cs#L362) | private |
 
 ## Assets/Scripts/Features/Bots/Collection/CollectionBot.cs
 
@@ -3593,14 +3595,17 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| RepairBot | [`void Start()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L27) | protected override |
-| RepairBot | [`void FixedUpdate()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L36) | private |
-| RepairBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L87) | protected override |
-| RepairBot | [`void FindDamagedBlock()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L93) | private |
-| RepairBot | [`void CheckAndRepair()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L106) | private |
-| RepairBot | [`void UpdateRepairBeam(bool active)`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L147) | private |
-| RepairBot | [`void EnsureRepairBeamGradient()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L152) | private |
-| RepairBot | [`void ClearTarget()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L165) | public |
+| RepairBot | [`void Start()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L29) | protected override |
+| RepairBot | [`void OnEnable()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L38) | private |
+| RepairBot | [`void FixedUpdate()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L47) | private |
+| RepairBot | [`void OnDisable()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L104) | protected override |
+| RepairBot | [`void OnDestroy()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L116) | protected override |
+| RepairBot | [`void OnOwnerDamaged(ControlUnit owner)`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L122) | private |
+| RepairBot | [`void FindDamagedBlock()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L134) | private |
+| RepairBot | [`void CheckAndRepair()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L148) | private |
+| RepairBot | [`void UpdateRepairBeam(bool active)`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L189) | private |
+| RepairBot | [`void EnsureRepairBeamGradient()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L194) | private |
+| RepairBot | [`void ClearTarget()`](../Assets/Scripts/Features/Bots/Repair/RepairBot.cs#L207) | public |
 
 ## Assets/Scripts/Features/Bots/Repair/RepairTargetSearch.cs
 
@@ -4340,17 +4345,17 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Durability | [`Vector3 GetTargetPosition(double step)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L18) | internal |
-| Durability | [`void OnTransformParentChanged()`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L35) | private |
-| Durability | [`void SetCollisionDamageScale(float scale)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L60) | internal |
-| Durability | [`void Awake()`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L83) | private |
-| Durability | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L99) | private |
-| Durability | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L119) | private |
-| Durability | [`void ApplyDamage(float amount, ControlUnit attacker)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L129) | public |
-| Durability | [`void ApplyCollisionEnergy(float reducedMass, float normalSpeed, float share)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L140) | public |
-| Durability | [`void ProtectFromExplosionCollisions(float duration)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L166) | public |
-| Durability | [`void UpdateDurablility(float value)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L179) | public |
-| Durability | [`void ChangeDurability(float value)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L189) | private |
+| Durability | [`Vector3 GetTargetPosition(double step)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L20) | internal |
+| Durability | [`void OnTransformParentChanged()`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L37) | private |
+| Durability | [`void SetCollisionDamageScale(float scale)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L62) | internal |
+| Durability | [`void Awake()`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L85) | private |
+| Durability | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L101) | private |
+| Durability | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L121) | private |
+| Durability | [`void ApplyDamage(float amount, ControlUnit attacker)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L131) | public |
+| Durability | [`void ApplyCollisionEnergy(float reducedMass, float normalSpeed, float share)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L142) | public |
+| Durability | [`void ProtectFromExplosionCollisions(float duration)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L168) | public |
+| Durability | [`void UpdateDurablility(float value)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L181) | public |
+| Durability | [`void ChangeDurability(float value)`](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L191) | private |
 
 ## Assets/Scripts/Features/Combat/Damage/ExplosionDamageSession.cs
 
@@ -4800,19 +4805,20 @@ HY-Sandbox/
 | --- | --- | --- |
 | DebugManager | [`bool Includes(Component component)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L22) | public |
 | DebugManager | [`void SetFactionFilter(int value)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L34) | public |
-| DebugManager | [`bool ShowsAI(UnitFaction faction)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L71) | public |
-| DebugManager | [`void SetAIVisibility(UnitFaction faction, bool visible)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L72) | public |
-| DebugManager | [`void Awake()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L98) | private |
-| DebugManager | [`void OnDestroy()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L105) | private |
-| DebugManager | [`Color GetPowerRangeColor(PowerTransmissionDevice device)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L114) | public |
-| DebugManager | [`void TogglePowerRange()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L129) | public |
-| DebugManager | [`void TogglePowerConnections()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L142) | public |
-| DebugManager | [`void ToggleConnectionStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L147) | public |
-| DebugManager | [`void ToggleDurabilityStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L153) | public |
-| DebugManager | [`void TogglePowerStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L159) | public |
-| DebugManager | [`void EnsureStatusIconCanvas()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L165) | private |
-| DebugManager | [`void RefreshPowerRangeMesh(IList<PowerTransmissionDevice> devices)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L175) | internal |
-| DebugManager | [`void ClearPowerRangeMesh()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L189) | internal |
+| DebugManager | [`int GetPowerConnectionVisualHash()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L49) | internal |
+| DebugManager | [`bool ShowsAI(UnitFaction faction)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L85) | public |
+| DebugManager | [`void SetAIVisibility(UnitFaction faction, bool visible)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L86) | public |
+| DebugManager | [`void Awake()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L112) | private |
+| DebugManager | [`void OnDestroy()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L119) | private |
+| DebugManager | [`Color GetPowerRangeColor(PowerTransmissionDevice device)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L128) | public |
+| DebugManager | [`void TogglePowerRange()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L143) | public |
+| DebugManager | [`void TogglePowerConnections()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L156) | public |
+| DebugManager | [`void ToggleConnectionStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L161) | public |
+| DebugManager | [`void ToggleDurabilityStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L167) | public |
+| DebugManager | [`void TogglePowerStatus()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L173) | public |
+| DebugManager | [`void EnsureStatusIconCanvas()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L179) | private |
+| DebugManager | [`void RefreshPowerRangeMesh(IList<PowerTransmissionDevice> devices)`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L189) | internal |
+| DebugManager | [`void ClearPowerRangeMesh()`](../Assets/Scripts/Features/Diagnostics/DebugManager.cs#L203) | internal |
 
 ## Assets/Scripts/Features/Diagnostics/Interface/CombatFlightTracks.cs
 
@@ -5484,8 +5490,10 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| PowerGeneratingUnit | [`void OnEnable()`](../Assets/Scripts/Features/Power/Devices/PowerGeneratingUnit.cs#L16) | private |
-| PowerGeneratingUnit | [`void OnDisable()`](../Assets/Scripts/Features/Power/Devices/PowerGeneratingUnit.cs#L21) | private |
+| PowerGeneratingUnit | [`void OnValidate()`](../Assets/Scripts/Features/Power/Devices/PowerGeneratingUnit.cs#L17) | private |
+| PowerGeneratingUnit | [`void OnEnable()`](../Assets/Scripts/Features/Power/Devices/PowerGeneratingUnit.cs#L22) | private |
+| PowerGeneratingUnit | [`void Update()`](../Assets/Scripts/Features/Power/Devices/PowerGeneratingUnit.cs#L29) | private |
+| PowerGeneratingUnit | [`void OnDisable()`](../Assets/Scripts/Features/Power/Devices/PowerGeneratingUnit.cs#L40) | private |
 
 ## Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs
 
@@ -5493,15 +5501,16 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| PowerTransmissionDevice | [`void Awake()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L40) | private |
-| PowerTransmissionDevice | [`void OnValidate()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L45) | private |
-| PowerTransmissionDevice | [`void OnEnable()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L50) | private |
-| PowerTransmissionDevice | [`void Update()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L61) | private |
-| PowerTransmissionDevice | [`void OnDisable()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L74) | private |
-| PowerTransmissionDevice | [`void Disconnect()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L92) | private |
-| PowerTransmissionDevice | [`void CacheDebugReferences()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L115) | private |
-| PowerTransmissionDevice | [`void UpdateDebugVisuals()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L129) | private |
-| PowerTransmissionDevice | [`void OnDrawGizmosSelected()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L142) | private |
+| PowerTransmissionDevice | [`void Awake()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L55) | private |
+| PowerTransmissionDevice | [`void OnValidate()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L60) | private |
+| PowerTransmissionDevice | [`void OnEnable()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L66) | private |
+| PowerTransmissionDevice | [`void MarkNetworkDirty()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L85) | public static |
+| PowerTransmissionDevice | [`void Update()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L90) | private |
+| PowerTransmissionDevice | [`void OnDisable()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L121) | private |
+| PowerTransmissionDevice | [`void Disconnect()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L141) | private |
+| PowerTransmissionDevice | [`void CacheDebugReferences()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L164) | private |
+| PowerTransmissionDevice | [`void UpdateDebugVisuals()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L178) | private |
+| PowerTransmissionDevice | [`void OnDrawGizmosSelected()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L210) | private |
 
 ## Assets/Scripts/Features/Power/Network/PowerNetworkBaseline.cs
 
@@ -5541,14 +5550,14 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | Power | [`void OnEnable()`](../Assets/Scripts/Features/Power/Power.cs#L58) | private |
-| Power | [`void OnDisable()`](../Assets/Scripts/Features/Power/Power.cs#L65) | private |
-| Power | [`void LateUpdate()`](../Assets/Scripts/Features/Power/Power.cs#L75) | private |
-| Power | [`void SetWorkRequested(Object requester, bool requested)`](../Assets/Scripts/Features/Power/Power.cs#L85) | public |
-| Power | [`void TrackAvailability(bool tracked)`](../Assets/Scripts/Features/Power/Power.cs#L110) | internal |
-| Power | [`void ResetPower()`](../Assets/Scripts/Features/Power/Power.cs#L116) | public |
-| Power | [`void ReceivePower(float suppliedPower)`](../Assets/Scripts/Features/Power/Power.cs#L123) | public |
-| Power | [`void CommitPowerStatus()`](../Assets/Scripts/Features/Power/Power.cs#L128) | public |
-| Power | [`bool IsDestroyedRequester(Object requester)`](../Assets/Scripts/Features/Power/Power.cs#L136) | private static |
+| Power | [`void OnDisable()`](../Assets/Scripts/Features/Power/Power.cs#L66) | private |
+| Power | [`void LateUpdate()`](../Assets/Scripts/Features/Power/Power.cs#L77) | private |
+| Power | [`void SetWorkRequested(Object requester, bool requested)`](../Assets/Scripts/Features/Power/Power.cs#L87) | public |
+| Power | [`void TrackAvailability(bool tracked)`](../Assets/Scripts/Features/Power/Power.cs#L118) | internal |
+| Power | [`void ResetPower()`](../Assets/Scripts/Features/Power/Power.cs#L124) | public |
+| Power | [`void ReceivePower(float suppliedPower)`](../Assets/Scripts/Features/Power/Power.cs#L131) | public |
+| Power | [`void CommitPowerStatus()`](../Assets/Scripts/Features/Power/Power.cs#L136) | public |
+| Power | [`bool IsDestroyedRequester(Object requester)`](../Assets/Scripts/Features/Power/Power.cs#L144) | private static |
 
 ## Assets/Scripts/Features/Power/PowerNetwork.cs
 
@@ -5556,22 +5565,22 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| PowerNetwork | [`void Rebuild( IEnumerable<PowerTransmissionDevice> devices, IEnumerable<PowerGeneratingUnit> generators, IEnumerable<Power> loads)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L50) | public |
-| PowerNetwork | [`void Clear(IEnumerable<Power> loads)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L71) | public |
-| PowerNetwork | [`void CollectActiveParticipants( IEnumerable<PowerTransmissionDevice> devices, IEnumerable<PowerGeneratingUnit> generators, IEnumerable<Power> loads)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L101) | private |
-| PowerNetwork | [`void ResetConnections()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L134) | private |
-| PowerNetwork | [`bool CaptureTopology()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L149) | private |
-| PowerNetwork | [`void BuildConnections()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L206) | private |
-| PowerNetwork | [`void ConnectGenerators(PowerTransmissionDevice device, Vector3 position)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L246) | private |
-| PowerNetwork | [`void CacheConnectedComponents()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L261) | private |
-| PowerNetwork | [`void PrepareLoads()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L291) | private |
-| PowerNetwork | [`void DistributeNetworkPower()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L309) | private |
-| PowerNetwork | [`void CollectConnectedComponent(PowerTransmissionDevice rootDevice)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L332) | private |
-| PowerNetwork | [`void VisitDevices(List<PowerTransmissionDevice> devices)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L356) | private |
-| PowerNetwork | [`void CollectDeviceLoads(PowerTransmissionDevice device)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L367) | private |
-| PowerNetwork | [`void SupplyConnectedComponent()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L383) | private |
-| PowerNetwork | [`void CommitPowerStatuses()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L421) | private |
-| PowerNetwork | [`bool IsWithinBoxRange(Vector3 firstPosition, Vector3 secondPosition, float range)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L429) | private static |
+| PowerNetwork | [`void Rebuild( IEnumerable<PowerTransmissionDevice> devices, IEnumerable<PowerGeneratingUnit> generators, IEnumerable<Power> loads)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L61) | public |
+| PowerNetwork | [`void Clear(IEnumerable<Power> loads)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L100) | public |
+| PowerNetwork | [`void CollectActiveParticipants( IEnumerable<PowerTransmissionDevice> devices, IEnumerable<PowerGeneratingUnit> generators, IEnumerable<Power> loads)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L134) | private |
+| PowerNetwork | [`void ResetConnections()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L167) | private |
+| PowerNetwork | [`bool CaptureTopology()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L182) | private |
+| PowerNetwork | [`void BuildConnections()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L240) | private |
+| PowerNetwork | [`void ConnectGenerators(PowerTransmissionDevice device, Vector3 position)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L280) | private |
+| PowerNetwork | [`void CacheConnectedComponents()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L295) | private |
+| PowerNetwork | [`void PrepareLoads()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L325) | private |
+| PowerNetwork | [`void DistributeNetworkPower()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L343) | private |
+| PowerNetwork | [`void CollectConnectedComponent(PowerTransmissionDevice rootDevice)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L358) | private |
+| PowerNetwork | [`void VisitDevices(List<PowerTransmissionDevice> devices)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L382) | private |
+| PowerNetwork | [`void CollectDeviceLoads(PowerTransmissionDevice device)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L393) | private |
+| PowerNetwork | [`void SupplyConnectedComponent(ConnectedComponent component)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L409) | private |
+| PowerNetwork | [`void CommitPowerStatuses()`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L447) | private |
+| PowerNetwork | [`bool IsWithinBoxRange(Vector3 firstPosition, Vector3 secondPosition, float range)`](../Assets/Scripts/Features/Power/PowerNetwork.cs#L455) | private static |
 
 ## Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs
 
@@ -5579,14 +5588,14 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| PowerConnectionVisuals | [`void Refresh(DebugManager settings)`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L19) | public |
-| PowerConnectionVisuals | [`void Hide()`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L48) | public |
-| PowerConnectionVisuals | [`void HideUnusedLines(int firstUnusedIndex)`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L53) | private |
-| PowerConnectionVisuals | [`void DrawConnection(int index, Vector3 end, Color color, DebugManager settings)`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L64) | private |
-| PowerConnectionVisuals | [`LineRenderer GetOrCreateLine(int index)`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L92) | private |
-| PowerConnectionVisuals | [`void ConfigureLine(LineRenderer line)`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L114) | private static |
-| PowerConnectionVisuals | [`Material GetDashedLineMaterial()`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L126) | private static |
-| PowerConnectionVisuals | [`Texture2D CreateDashTexture()`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L148) | private static |
+| PowerConnectionVisuals | [`void Refresh(DebugManager settings)`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L21) | public |
+| PowerConnectionVisuals | [`void Hide()`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L51) | public |
+| PowerConnectionVisuals | [`void HideUnusedLines(int firstUnusedIndex)`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L56) | private |
+| PowerConnectionVisuals | [`void DrawConnection(int index, Vector3 end, Color color, DebugManager settings)`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L67) | private |
+| PowerConnectionVisuals | [`LineRenderer GetOrCreateLine(int index)`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L95) | private |
+| PowerConnectionVisuals | [`void ConfigureLine(LineRenderer line)`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L117) | private static |
+| PowerConnectionVisuals | [`Material GetDashedLineMaterial()`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L129) | private static |
+| PowerConnectionVisuals | [`Texture2D CreateDashTexture()`](../Assets/Scripts/Features/Power/Presentation/PowerConnectionVisuals.cs#L151) | private static |
 
 ## Assets/Scripts/Features/Power/Presentation/PowerRangeUnionView.cs
 
@@ -6268,31 +6277,31 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeFleet | [`Transform GetDeploymentPoint(int index)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L41) | public |
-| SiegeFleet | [`void RefreshHangars(HangarModule[] hangars)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L47) | public |
-| SiegeFleet | [`HangarModule GetHangar(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L66) | public |
-| SiegeFleet | [`bool FitsHangar(int slot, BlockDataList blueprint)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L90) | public |
-| SiegeFleet | [`Pose GetDeploymentPose(int slot, BlockDataList blueprint)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L101) | public |
-| SiegeFleet | [`void Scrap(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L113) | public |
-| SiegeFleet | [`SiegeFleetEntry Find(string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L140) | public |
-| SiegeFleet | [`bool CreateBase(Transform anchor)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L145) | public |
-| SiegeFleet | [`bool Deploy(int optionIndex, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L159) | public |
-| SiegeFleet | [`bool DeployAt(int optionIndex, int requestedDock, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L164) | public |
-| SiegeFleet | [`long CancellationCredit(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L257) | public |
-| SiegeFleet | [`bool CancelDeployment(int slot, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L263) | public |
-| SiegeFleet | [`bool ReplaceAt(int optionIndex, int slot, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L283) | public |
-| SiegeFleet | [`bool TakeControl(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L342) | public |
-| SiegeFleet | [`void SetCombatActive(bool active)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L375) | public |
-| SiegeFleet | [`void ReleaseControl()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L399) | public |
-| SiegeFleet | [`void RepairBetweenWaves( out int repairedCount, out int attemptedCount, out long spent, out string firstFailure, bool forceAutomatic = false)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L419) | public |
-| SiegeFleet | [`void RefreshBindings()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L464) | public |
-| SiegeFleet | [`void NotifyLost(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L490) | public |
-| SiegeFleet | [`SiegeFleetEntry Spawn( BlockDataList blueprint, string id, string displayName, int price, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L516) | private |
-| SiegeFleet | [`BlockDataList PrepareBlueprint(TextAsset asset, out string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L552) | public static |
-| SiegeFleet | [`BlockDataList PrepareBlueprint(string json, out string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L557) | public static |
-| SiegeFleet | [`void RestoreView()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L571) | public |
-| SiegeFleet | [`void SetCamera(ControlUnit unit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L583) | private |
-| SiegeFleet | [`void SetBaseCamera()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L593) | private |
+| SiegeFleet | [`Transform GetDeploymentPoint(int index)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L44) | public |
+| SiegeFleet | [`void RefreshHangars(HangarModule[] hangars)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L50) | public |
+| SiegeFleet | [`HangarModule GetHangar(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L69) | public |
+| SiegeFleet | [`bool FitsHangar(int slot, BlockDataList blueprint)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L93) | public |
+| SiegeFleet | [`Pose GetDeploymentPose(int slot, BlockDataList blueprint)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L104) | public |
+| SiegeFleet | [`void Scrap(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L116) | public |
+| SiegeFleet | [`SiegeFleetEntry Find(string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L143) | public |
+| SiegeFleet | [`bool CreateBase(Transform anchor)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L148) | public |
+| SiegeFleet | [`bool Deploy(int optionIndex, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L162) | public |
+| SiegeFleet | [`bool DeployAt(int optionIndex, int requestedDock, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L167) | public |
+| SiegeFleet | [`long CancellationCredit(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L260) | public |
+| SiegeFleet | [`bool CancelDeployment(int slot, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L266) | public |
+| SiegeFleet | [`bool ReplaceAt(int optionIndex, int slot, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L286) | public |
+| SiegeFleet | [`bool TakeControl(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L345) | public |
+| SiegeFleet | [`void SetCombatActive(bool active)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L378) | public |
+| SiegeFleet | [`void ReleaseControl()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L403) | public |
+| SiegeFleet | [`void RepairBetweenWaves( out int repairedCount, out int attemptedCount, out long spent, out string firstFailure, bool forceAutomatic = false)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L423) | public |
+| SiegeFleet | [`void RefreshBindings()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L474) | public |
+| SiegeFleet | [`void NotifyLost(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L500) | public |
+| SiegeFleet | [`SiegeFleetEntry Spawn( BlockDataList blueprint, string id, string displayName, int price, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L526) | private |
+| SiegeFleet | [`BlockDataList PrepareBlueprint(TextAsset asset, out string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L562) | public static |
+| SiegeFleet | [`BlockDataList PrepareBlueprint(string json, out string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L567) | public static |
+| SiegeFleet | [`void RestoreView()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L581) | public |
+| SiegeFleet | [`void SetCamera(ControlUnit unit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L593) | private |
+| SiegeFleet | [`void SetBaseCamera()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L603) | private |
 
 ## Assets/Scripts/Features/Siege/Fleet/SiegeFleetEntry.cs
 
@@ -6328,8 +6337,10 @@ HY-Sandbox/
 | SiegeRefit | [`bool IsGeometryClear( BlockDataList blueprint, Vector3 position, Quaternion rotation, string ignoredUnitId, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L37) | private static |
 | SiegeRefit | [`string DescribeObstruction(Collider hit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L85) | private static |
 | SiegeRefit | [`long Quote(SiegeFleetEntry entry, SiegeSettings settings)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L103) | public static |
-| SiegeRefit | [`bool Repair(SiegeFleetEntry entry, ISiegeDeploymentHost session, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L135) | public static |
-| SiegeRefit | [`Dictionary<string, Block> CollectOwned(SiegeFleetEntry entry)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L215) | private static |
+| SiegeRefit | [`long Quote(SiegeFleetEntry entry, SiegeSettings settings, Dictionary<string, Block> owned)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L113) | private static |
+| SiegeRefit | [`bool Repair(SiegeFleetEntry entry, ISiegeDeploymentHost session, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L139) | public static |
+| SiegeRefit | [`bool Repair(SiegeFleetEntry entry, ISiegeDeploymentHost session, bool skipUndamaged, out bool attempted, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L144) | internal static |
+| SiegeRefit | [`Dictionary<string, Block> CollectOwned(SiegeFleetEntry entry)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L231) | private static |
 
 ## Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs
 
@@ -6337,24 +6348,24 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeReturnFlight | [`bool IsGuiding(SiegeFleetEntry entry)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L63) | public |
-| SiegeReturnFlight | [`void BeginLaunch()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L68) | public |
-| SiegeReturnFlight | [`void BeginReturn()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L73) | public |
-| SiegeReturnFlight | [`void FailReturn(SiegeFleetEntry entry, string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L78) | internal |
-| SiegeReturnFlight | [`void Begin(bool returning)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L94) | private |
-| SiegeReturnFlight | [`void BindUnit(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L135) | private |
-| SiegeReturnFlight | [`void TakeGuidanceControl(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L162) | private |
-| SiegeReturnFlight | [`Vector3 DockPosition(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L195) | private |
-| SiegeReturnFlight | [`void BuildRoute(Flight flight, bool returning)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L220) | private |
-| SiegeReturnFlight | [`void BuildRoofRoute(Flight flight, bool returning, Vector3 dock, Bounds hull)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L311) | private |
-| SiegeReturnFlight | [`void Tick(float deltaTime)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L369) | public |
-| SiegeReturnFlight | [`void TickFlight(Flight flight, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L385) | private |
-| SiegeReturnFlight | [`void ReadPropulsion(Flight flight, out float driveForce, out float liftForce)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L448) | private static |
-| SiegeReturnFlight | [`void ApplyGuidance(Flight flight, Vector3 target, float driveAcceleration, float liftAcceleration, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L471) | private |
-| SiegeReturnFlight | [`void PublishPropulsion(Flight flight, Vector3 horizontal, float vertical, float driveAcceleration, float liftAcceleration)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L509) | private |
-| SiegeReturnFlight | [`void Finish(Flight flight, bool success, string reason = null)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L527) | private |
-| SiegeReturnFlight | [`void ReleasePropulsion(Flight flight, bool launchingIntoFlight = false)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L564) | private |
-| SiegeReturnFlight | [`void Stop()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L600) | public |
+| SiegeReturnFlight | [`bool IsGuiding(SiegeFleetEntry entry)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L68) | public |
+| SiegeReturnFlight | [`void BeginLaunch()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L73) | public |
+| SiegeReturnFlight | [`void BeginReturn()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L78) | public |
+| SiegeReturnFlight | [`void FailReturn(SiegeFleetEntry entry, string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L83) | internal |
+| SiegeReturnFlight | [`void Begin(bool returning)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L99) | private |
+| SiegeReturnFlight | [`void BindUnit(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L140) | private |
+| SiegeReturnFlight | [`void TakeGuidanceControl(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L189) | private |
+| SiegeReturnFlight | [`Vector3 DockPosition(Flight flight)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L223) | private |
+| SiegeReturnFlight | [`void BuildRoute(Flight flight, bool returning)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L248) | private |
+| SiegeReturnFlight | [`void BuildRoofRoute(Flight flight, bool returning, Vector3 dock, Bounds hull)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L339) | private |
+| SiegeReturnFlight | [`void Tick(float deltaTime)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L397) | public |
+| SiegeReturnFlight | [`void TickFlight(Flight flight, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L413) | private |
+| SiegeReturnFlight | [`void ReadPropulsion(Flight flight, out float driveForce, out float liftForce)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L476) | private static |
+| SiegeReturnFlight | [`void ApplyGuidance(Flight flight, Vector3 target, float driveAcceleration, float liftAcceleration, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L501) | private |
+| SiegeReturnFlight | [`void PublishPropulsion(Flight flight, Vector3 horizontal, float vertical, float driveAcceleration, float liftAcceleration)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L539) | private |
+| SiegeReturnFlight | [`void Finish(Flight flight, bool success, string reason = null)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L559) | private |
+| SiegeReturnFlight | [`void ReleasePropulsion(Flight flight, bool launchingIntoFlight = false)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L596) | private |
+| SiegeReturnFlight | [`void Stop()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L632) | public |
 
 ## Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs
 
@@ -6401,33 +6412,33 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeGameplayStage | [`void Enter( GameModeController host, GameObject[] buildEnvironment, string blueprintName = null, TextAsset example = null, string exampleName = null)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L96) | public |
-| SiegeGameplayStage | [`void ValidatePose()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L184) | private |
-| SiegeGameplayStage | [`bool Deploy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L202) | private |
-| SiegeGameplayStage | [`bool BeginWave()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L271) | public |
-| SiegeGameplayStage | [`bool Repair()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L290) | public |
-| SiegeGameplayStage | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L316) | private |
-| SiegeGameplayStage | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L383) | public |
-| SiegeGameplayStage | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L391) | public |
-| SiegeGameplayStage | [`bool RefreshBlueprints()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L399) | public |
-| SiegeGameplayStage | [`void RefreshDefenders()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L410) | private |
-| SiegeGameplayStage | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L421) | public |
-| SiegeGameplayStage | [`bool TryReplaceAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L430) | public |
-| SiegeGameplayStage | [`bool TryCancelDeployment(int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L439) | public |
-| SiegeGameplayStage | [`bool TryTakeControl(int slot)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L448) | public |
-| SiegeGameplayStage | [`bool TryTakeControl(string id)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L464) | public |
-| SiegeGameplayStage | [`void Observe()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L470) | public |
-| SiegeGameplayStage | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L484) | public |
-| SiegeGameplayStage | [`void FixedUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L498) | private |
-| SiegeGameplayStage | [`void SetSimulation(bool active)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L531) | private |
-| SiegeGameplayStage | [`void LoseBase()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L574) | private |
-| SiegeGameplayStage | [`void Retreat()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L579) | public |
-| SiegeGameplayStage | [`void Settle(string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L584) | private |
-| SiegeGameplayStage | [`void ReturnToMenu()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L613) | public |
-| SiegeGameplayStage | [`void ShowCoreMarker(Transform parent, Vector3 localPosition)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L633) | private |
-| SiegeGameplayStage | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L642) | private |
-| SiegeGameplayStage | [`void Exit()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L650) | public |
-| SiegeGameplayStage | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L692) | private |
+| SiegeGameplayStage | [`void Enter( GameModeController host, GameObject[] buildEnvironment, string blueprintName = null, TextAsset example = null, string exampleName = null)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L99) | public |
+| SiegeGameplayStage | [`void ValidatePose()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L187) | private |
+| SiegeGameplayStage | [`bool Deploy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L205) | private |
+| SiegeGameplayStage | [`bool BeginWave()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L274) | public |
+| SiegeGameplayStage | [`bool Repair()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L293) | public |
+| SiegeGameplayStage | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L319) | private |
+| SiegeGameplayStage | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L386) | public |
+| SiegeGameplayStage | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L394) | public |
+| SiegeGameplayStage | [`bool RefreshBlueprints()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L402) | public |
+| SiegeGameplayStage | [`void RefreshDefenders()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L413) | private |
+| SiegeGameplayStage | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L424) | public |
+| SiegeGameplayStage | [`bool TryReplaceAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L433) | public |
+| SiegeGameplayStage | [`bool TryCancelDeployment(int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L442) | public |
+| SiegeGameplayStage | [`bool TryTakeControl(int slot)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L451) | public |
+| SiegeGameplayStage | [`bool TryTakeControl(string id)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L467) | public |
+| SiegeGameplayStage | [`void Observe()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L473) | public |
+| SiegeGameplayStage | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L487) | public |
+| SiegeGameplayStage | [`void FixedUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L501) | private |
+| SiegeGameplayStage | [`void SetSimulation(bool active)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L543) | private |
+| SiegeGameplayStage | [`void LoseBase()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L586) | private |
+| SiegeGameplayStage | [`void Retreat()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L591) | public |
+| SiegeGameplayStage | [`void Settle(string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L596) | private |
+| SiegeGameplayStage | [`void ReturnToMenu()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L625) | public |
+| SiegeGameplayStage | [`void ShowCoreMarker(Transform parent, Vector3 localPosition)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L645) | private |
+| SiegeGameplayStage | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L654) | private |
+| SiegeGameplayStage | [`void Exit()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L662) | public |
+| SiegeGameplayStage | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L704) | private |
 
 ## Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs
 
@@ -6435,14 +6446,14 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeIsland | [`void GenerateFor(BuildingFoundationData foundation, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L22) | public |
-| SiegeIsland | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L37) | private |
-| SiegeIsland | [`bool RecoverFleet(SiegeFleet fleet, SiegeBase fortress)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L57) | public |
-| SiegeIsland | [`void GenerateFor(Bounds foundation)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L79) | public |
-| SiegeIsland | [`void TrackGround(Bounds changed)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L132) | private |
-| SiegeIsland | [`void RepairGround()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L148) | public |
-| SiegeIsland | [`Vector3 SpawnPosition(float angle, float desiredRadius)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L158) | public |
-| SiegeIsland | [`bool BeyondRecovery(Vector3 position)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L168) | public |
+| SiegeIsland | [`void GenerateFor(BuildingFoundationData foundation, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L24) | public |
+| SiegeIsland | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L39) | private |
+| SiegeIsland | [`bool RecoverFleet(SiegeFleet fleet, SiegeBase fortress)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L59) | public |
+| SiegeIsland | [`void GenerateFor(Bounds foundation)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L82) | public |
+| SiegeIsland | [`void TrackGround(Bounds changed)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L135) | private |
+| SiegeIsland | [`void RepairGround()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L151) | public |
+| SiegeIsland | [`Vector3 SpawnPosition(float angle, float desiredRadius)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L161) | public |
+| SiegeIsland | [`bool BeyondRecovery(Vector3 position)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L171) | public |
 
 ## Assets/Scripts/Features/Siege/Gameplay/SiegeIslandSettings.cs
 
@@ -7221,22 +7232,22 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| BuildingRuntime | [`bool TryRefit(BlockDataList design, out string reason)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L44) | internal |
-| BuildingRuntime | [`void Initialize(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L58) | public |
-| BuildingRuntime | [`IEnumerator InitializeRoutine(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L66) | internal |
-| BuildingRuntime | [`void Activate()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L114) | public |
-| BuildingRuntime | [`IEnumerator ActivateRoutine()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L122) | internal |
-| BuildingRuntime | [`void PrepareForUnload()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L166) | public |
-| BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L174) | public |
-| BuildingRuntime | [`void OnBlockDestroyed(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L224) | private |
-| BuildingRuntime | [`bool Supports(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L234) |  |
-| BuildingRuntime | [`void OnFragmentDetached(List<Block> group, ControlUnit fragment)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L239) |  |
-| BuildingRuntime | [`bool HasFullFoundationSupport()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L254) | public |
-| BuildingRuntime | [`bool HasPreparedGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L269) | private |
-| BuildingRuntime | [`void RefreshTerrainSupport()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L293) | internal |
-| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L299) | private |
-| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L324) | public |
-| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L335) | private |
+| BuildingRuntime | [`bool TryRefit(BlockDataList design, out string reason)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L49) | internal |
+| BuildingRuntime | [`void Initialize(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L63) | public |
+| BuildingRuntime | [`IEnumerator InitializeRoutine(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L71) | internal |
+| BuildingRuntime | [`void Activate()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L119) | public |
+| BuildingRuntime | [`IEnumerator ActivateRoutine()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L127) | internal |
+| BuildingRuntime | [`void PrepareForUnload()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L171) | public |
+| BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L179) | public |
+| BuildingRuntime | [`void OnBlockDestroyed(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L229) | private |
+| BuildingRuntime | [`bool Supports(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L239) |  |
+| BuildingRuntime | [`void OnFragmentDetached(List<Block> group, ControlUnit fragment)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L244) |  |
+| BuildingRuntime | [`bool HasFullFoundationSupport()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L259) | public |
+| BuildingRuntime | [`bool HasPreparedGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L280) | private |
+| BuildingRuntime | [`void RefreshTerrainSupport()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L304) | internal |
+| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L319) | private |
+| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L344) | public |
+| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L355) | private |
 
 ## Assets/Scripts/Features/World/Buildings/Data/WorldBuildingCatalog.cs
 

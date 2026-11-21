@@ -24,6 +24,8 @@ public class RepairBot : Bot
     public bool isRepairing;
     private RepairTargetSearch _targetSearch;
     private RepairBeamView _beamView;
+    private bool _sleeping;
+    private bool _lastSearchFoundNoTarget;
     protected override void Start()
     {
         base.Start();
@@ -31,6 +33,15 @@ public class RepairBot : Bot
         _beamView = new RepairBeamView(transform);
         EnsureRepairBeamGradient();
         _beamView.Initialize(gameObject, _repairImpact, beamWidth);
+    }
+
+    private void OnEnable()
+    {
+        // A sleeping bot keeps this listener while its component is disabled;
+        // remove first so re-enabling cannot register the same delegate twice.
+        Durability.Damaged -= OnOwnerDamaged;
+        Durability.Damaged += OnOwnerDamaged;
+        _sleeping = false;
     }
 
     private void FixedUpdate()
@@ -82,12 +93,42 @@ public class RepairBot : Bot
                 CheckAndRepair();
             }
         }
+
+        if (_lastSearchFoundNoTarget && currentTarget == null && transform.parent == home && currentState == NavigationState.Idle)
+        {
+            _sleeping = true;
+            enabled = false;
+        }
     }
 
     protected override void OnDisable()
     {
+        if (_sleeping)
+        {
+            return;
+        }
+
+        Durability.Damaged -= OnOwnerDamaged;
         base.OnDisable();
         _beamView?.Hide();
+    }
+
+    protected override void OnDestroy()
+    {
+        Durability.Damaged -= OnOwnerDamaged;
+        base.OnDestroy();
+    }
+
+    private void OnOwnerDamaged(ControlUnit owner)
+    {
+        if (!_sleeping || owner == null || owner != GetHomeOwner())
+        {
+            return;
+        }
+
+        _sleeping = false;
+        _lastSearchFoundNoTarget = false;
+        enabled = true;
     }
 
     private void FindDamagedBlock()
@@ -101,6 +142,7 @@ public class RepairBot : Bot
         lastFindTime = Time.time;
         _targetSearch.Scan(home, targetRange);
         currentTarget = _targetSearch.FindClosestDamaged(transform.position);
+        _lastSearchFoundNoTarget = currentTarget == null;
     }
 
     private void CheckAndRepair()
@@ -165,8 +207,9 @@ public class RepairBot : Bot
     public void ClearTarget()
     {
         currentTarget = null;
+        _lastSearchFoundNoTarget = false;
         isRepairing = false;
-        ControlUnit owner = home != null ? home.GetComponentInParent<ControlUnit>() : null;
+        ControlUnit owner = GetHomeOwner();
         SetHomePowerRequested(_requiresPower && owner != null && owner.IsSimulationActive && transform.parent != home);
         UpdateRepairBeam(false);
         if (trailRenderer != null)

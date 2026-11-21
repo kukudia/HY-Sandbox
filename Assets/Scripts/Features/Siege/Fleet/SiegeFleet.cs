@@ -2,9 +2,12 @@
 // 入口：CreateBase() / DeployAt() / ReplaceAt() / CancelDeployment() / SetCombatActive()。
 using System;
 using UnityEngine;
+using Unity.Profiling;
 
 public sealed class SiegeFleet
 {
+    private static readonly ProfilerMarker SetCombatActiveMarker = new ProfilerMarker("HY.SiegeFleet.SetCombatActive");
+    private static readonly ProfilerMarker RepairBetweenWavesMarker = new ProfilerMarker("HY.SiegeFleet.RepairBetweenWaves");
     private readonly ISiegeDeploymentHost session;
     private readonly bool manageCamera;
     private string[] hangarIds;
@@ -374,6 +377,7 @@ public sealed class SiegeFleet
 
     public void SetCombatActive(bool active)
     {
+        using var marker = SetCombatActiveMarker.Auto();
         using var measurement = SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.SiegeFleetPhysics);
         foreach (SiegeFleetEntry entry in Ships)
         {
@@ -423,6 +427,7 @@ public sealed class SiegeFleet
         out string firstFailure,
         bool forceAutomatic = false)
     {
+        using var measurement = RepairBetweenWavesMarker.Auto();
         repairedCount = 0;
         attemptedCount = 0;
         spent = 0;
@@ -436,14 +441,19 @@ public sealed class SiegeFleet
         {
             int slot = Driven != null ? (Array.IndexOf(Ships, Driven) + offset) % Ships.Length : offset;
             SiegeFleetEntry entry = Ships[slot];
-            if (entry == null || !entry.IsAlive || SiegeRefit.Quote(entry, session.Settings) == 0)
+            if (entry == null || !entry.IsAlive)
+            {
+                continue;
+            }
+
+            long balanceBefore = session.Match.Coins;
+            bool repaired = SiegeRefit.Repair(entry, session, true, out bool attempted, out string reason);
+            if (!attempted)
             {
                 continue;
             }
 
             attemptedCount++;
-            long balanceBefore = session.Match.Coins;
-            bool repaired = SiegeRefit.Repair(entry, session, out string reason);
             if (repaired)
             {
                 repairedCount++;

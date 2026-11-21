@@ -59,6 +59,7 @@ public class Power : MonoBehaviour
     {
         _icon = GetComponent<StatusIcon>();
         ActivePowerBlocks.Add(this);
+        PowerTransmissionDevice.MarkNetworkDirty();
         _icon?.CheckPowerStatus();
     }
 
@@ -69,6 +70,7 @@ public class Power : MonoBehaviour
         PotentialPower = 0f;
         currentPower = 0f;
         _supplyEfficiency = 1f;
+        PowerTransmissionDevice.MarkNetworkDirty();
         _icon?.CheckPowerStatus();
     }
 
@@ -89,6 +91,7 @@ public class Power : MonoBehaviour
             return;
         }
 
+        bool wasRequested = IsWorkRequested;
         if (requested)
         {
             _workRequesters.Add(requester);
@@ -96,6 +99,11 @@ public class Power : MonoBehaviour
         else
         {
             _workRequesters.Remove(requester);
+        }
+
+        if (wasRequested != IsWorkRequested)
+        {
+            PowerTransmissionDevice.MarkNetworkDirty();
         }
 
         if (!IsWorkRequested)

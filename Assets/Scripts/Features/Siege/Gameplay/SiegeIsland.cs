@@ -2,9 +2,11 @@
 // 入口：GenerateFor() / SpawnPosition() / BeyondRecovery()；复用ProceduralVoxelWorld的破坏和网格。
 using System;
 using UnityEngine;
+using Unity.Profiling;
 
 public sealed class SiegeIsland : MonoBehaviour
 {
+    private static readonly ProfilerMarker RecoverMarker = new ProfilerMarker("HY.SiegeIsland.RecoverFleet");
     [SerializeField]
     private ProceduralVoxelWorld world;
     [SerializeField]
@@ -56,6 +58,7 @@ public sealed class SiegeIsland : MonoBehaviour
 
     public bool RecoverFleet(SiegeFleet fleet, SiegeBase fortress)
     {
+        using var measurement = RecoverMarker.Auto();
         if (fortress?.Core != null && BeyondRecovery(fortress.Core.transform.position))
         {
             return false;

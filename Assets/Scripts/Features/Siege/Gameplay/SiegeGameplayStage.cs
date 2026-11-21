@@ -4,10 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using Unity.Profiling;
 using UnityEngine.UI;
 
 public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
 {
+    private static readonly ProfilerMarker FlightMarker = new ProfilerMarker("HY.SiegeReturnFlight.Tick");
+    private static readonly ProfilerMarker FixedUpdateMarker = new ProfilerMarker("HY.SiegeGameplayStage.FixedUpdate");
     [SerializeField]
     private Transform overview;
     [SerializeField]
@@ -497,6 +500,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
 
     private void FixedUpdate()
     {
+        using var fixedUpdate = FixedUpdateMarker.Auto();
         if (!IsRunning || flight == null || (Match.Phase != SiegePhase.Battle && Match.Phase != SiegePhase.Returning))
         {
             return;
@@ -508,7 +512,11 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
             return;
         }
 
-        flight.Tick(Time.fixedDeltaTime);
+        using (FlightMarker.Auto())
+        {
+            flight.Tick(Time.fixedDeltaTime);
+        }
+
         if (Match.Phase != SiegePhase.Returning || !returning || !flight.IsComplete)
         {
             return;
@@ -518,7 +526,11 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         returning = false;
         SetSimulation(false);
         Fleet.SetCombatActive(false);
-        Fleet.RepairBetweenWaves(out int repaired, out int attempted, out long spent, out string failure, true);
+        int repaired;
+        int attempted;
+        long spent;
+        string failure;
+        Fleet.RepairBetweenWaves(out repaired, out attempted, out spent, out failure, true);
         Status = $"Recovered {flight.CompletedCount}; scrapped {flight.FailedCount}. Income settled. Base repairs are manual.";
         if (attempted > 0)
         {

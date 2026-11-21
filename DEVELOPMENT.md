@@ -1,5 +1,7 @@
 # HY-Sandbox 开发入口
 
+地形变化后，建筑复核各连接组的地面支撑；全部仍受支撑就保留刚体。Profiler 的 HY.Building.CheckTerrainSupport 包含检查和可能的重组，HY.Building.RegroupAfterSupportLoss 单独计量重组。波间维修按舰复用报价的模块快照；供电分配直接读取连通组名单。
+
 爆炸合并建筑支撑通知；炮塔复用候选边界，最近遮挡才查归属；敌机按名单变化与校正周期配置悬停器。实际帧耗时待复测。
 
 建筑断裂按碎片批量移除主体成员；弹丸命中结算可通过 HY.Projectile.ResolveHit 采样。整帧收益待同场景复测。
@@ -332,6 +334,14 @@ Player 回归发现并修复近景列提交与远景环刷新的同步空窗：�
 敌机新增稳定索敌、即时失效与错峰调度，避障过滤触发器和地板重叠伪法线；实体炮塔按目标/射手点速度预测交会，修复新增模块与重组变更在索敌时可见。机器人导航基线通过，本轮保留其现有算法。入口、Inspector 开关、真实 Play 证据和性能/长时验证缺口见 [AI 升级报告](Docs/Validation/2026-11-05-ai-upgrade.md)。
 
 ## 最新 Profiler 与战斗性能
+
+### 2026-11-20 供电、维修机器人与 Siege 返航热点
+
+`PowerTransmissionDevice.Update` 现在由网络脏标记或 0.25 秒低频校正触发 `PowerNetwork.Rebuild`；连接线关闭时直接跳过，开启时按网络版本、Debug 配置、位姿和低频动画刷新。网络收集、拓扑、供电分配、状态提交、范围网格、调试可视化和连接线分别有 `HY.*` ProfilerMarker。`PowerNetwork` 保留全局连通图和独立网络共同补足负载的行为契约，没有改成单向“首个对象”查找。
+
+`RepairBot` 停靠且无目标时禁用自身 `FixedUpdate`，`Durability.Damaged` 事件唤醒同一 Home 的机器人；Home 所属 `ControlUnit` 与 `Power` 按层级版本缓存。`SiegeReturnFlight.BindUnit` 缓存有效推进器、推进器类型和 `Power` 引用，`Tick` 的推进器读取/发布以及 `SiegeIsland.RecoverFleet`、舰队结算步骤均有独立 marker。
+
+本轮已完成静态格式检查和 `dotnet build HY-Sandbox.sln --no-restore`；Unity 6000.6.8f1 Editor 已连接并完成脚本重编译。`PowerPerformanceChecks.Run()` 在 Play Mode 完成 9 组中继/负载微基准与 300 次等价检查，结果见 `Docs/Validation/2026-10-14-power-performance.json`；该数据只证明网络重建子系统，不代表完整场景帧率。相同场景 Play/Profiler 对照（调用次数、P95、峰值及成本转移）尚未重录，不能据此宣称实际帧时间收益。风险登记与源码函数图已同步记录该缺口。
 
 已分析 2026-11-05 16:35 的 2,000 帧采样：炮塔固定步及伤害触发的连接视觉重复创建/销毁是主要可修复热点。`BlockConnections.CheckConnection` 保留未改变的双侧连接视觉；`ControlUnit.GetDamageTargets` 共享当前物理步的模块层级快照，炮塔仍实时验证位置、伤势和归属。新增同一步激活、移动、重组及视觉身份回归；没有降低物理频率、伤害或渲染质量。
 

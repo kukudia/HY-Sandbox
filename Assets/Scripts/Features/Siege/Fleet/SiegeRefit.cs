@@ -107,7 +107,11 @@ public static class SiegeRefit
             return 0;
         }
 
-        Dictionary<string, Block> owned = CollectOwned(entry);
+        return Quote(entry, settings, CollectOwned(entry));
+    }
+
+    private static long Quote(SiegeFleetEntry entry, SiegeSettings settings, Dictionary<string, Block> owned)
+    {
         int missing = 0;
         double lostHealth = 0;
         bool detached = false;
@@ -134,13 +138,31 @@ public static class SiegeRefit
 
     public static bool Repair(SiegeFleetEntry entry, ISiegeDeploymentHost session, out string reason)
     {
+        return Repair(entry, session, false, out _, out reason);
+    }
+
+    internal static bool Repair(
+        SiegeFleetEntry entry,
+        ISiegeDeploymentHost session,
+        bool skipUndamaged,
+        out bool attempted,
+        out string reason)
+    {
+        attempted = false;
         reason = "Repairs require a surviving core and an intermission.";
         if (entry?.Unit == null || !session.Match.CanRefit)
         {
             return false;
         }
 
-        long price = Quote(entry, session.Settings);
+        Dictionary<string, Block> owned = CollectOwned(entry);
+        long price = Quote(entry, session.Settings, owned);
+        if (skipUndamaged && price == 0)
+        {
+            return false;
+        }
+
+        attempted = true;
         if (!session.Match.CanAfford(price))
         {
             reason = "Insufficient coins for repair: " + price;
@@ -152,7 +174,6 @@ public static class SiegeRefit
             return false;
         }
 
-        Dictionary<string, Block> owned = CollectOwned(entry);
         var created = new List<Block>();
         foreach (BlockData data in entry.Blueprint.blocks)
         {

@@ -1,5 +1,7 @@
 # HY-Sandbox 风险登记与行为契约
 
+BuildingRuntime.RefreshTerrainSupport 在地形脏区域命中后按建筑检查支撑：连接图版本变化才重建组清单，地面接触每次重新取样，任一组失撑仍走完整重组。连接组检查只适用于建筑主体；脱锚阈值仍由经理逐次判定。SiegeRefit 自动维修只在单舰同步调用内复用归属快照，不跨船缓存；阻挡、扣费规则不变。需用相同破坏与返航窗口复测耗时。
+
 EnemyController.ConfigureHoverThrusters 遍历本机悬停器：数组替换、重新启用或每 0.25 模拟秒校正；保留外部改写恢复能力，需验证接管与返航切换。炮塔按同一射线最近距离判断遮挡，等距遮挡优先。建筑按单次爆炸的保守包围盒排队，可能包含空隙中的建筑；逐格存档事件保持原序。以上需 Player 复测。
 
 BuildingRuntime.OnFragmentDetached：每次多块碎片分离时扫描一次该碎片与主体成员，保留存档顺序；临时集合在回调结束时清空。基线建筑回调峰值 162.06 ms，未证明全部来自移除操作；仍需大建筑断裂与存档回读复测。
@@ -13,6 +15,8 @@ Siege 地形变化按建筑去重，每物理步每个受影响建筑最多调�
 | ControlUnit.GetDamageTargets / TryGetTotalDurability | HUD 等调用者复用本单位成员名单；直接子节点变化、RefreshChildren 或耐久层级版本变化后重建。查询时仍逐成员汇总有效耐久。 | 当前耐久可直接写入，不能永久缓存总数；跨舰版本变化仍可能引起额外刷新。 |
 | NavigationObstacleClimb.GetHullBounds | 爬升、下降、路径选择复用同单位同物理步边界；单位切换、结构变化、Clear 或定时刷新使缓存失效。物理步外仍实时合并。 | 使用真实、启用且属于本刚体的 Collider，避免简化外壳改变净空；同一步内几何变化可能延迟一步可见。 |
 | BuildPreview.EnsureGhost / Poll | 新建 Ghost 时收集 Renderer 和 Collider；仅初次、有效性或高亮材质变化时更新 Renderer。Clear 丢弃名单。 | 预览假定同一实例的模型结构稳定；需目视验证动态模型及红绿切换。 |
+| PowerTransmissionDevice.Update / PowerNetwork.Rebuild | 网络仅由脏标记或 0.25 秒低频校正触发；一次重建收集所有活动发电机、中继和负载，拓扑变化时更新连接组件，其余阶段仍按负载名单分配并提交状态。连接线按网络版本、配置、位姿和约 15Hz 动画刷新。 | 全局图保留独立网络共同补足负载的行为；需同场景对照确认供电启停、移动/范围变化、调试开关和低频校正，及网络/范围网格/连接线 marker 的峰值。 |
+| RepairBot.FixedUpdate / SiegeReturnFlight.Tick | RepairBot 只有完成一次空目标扫描后才会在 Home 停靠时禁用 FixedUpdate；同 Home 的 Durability.Damaged 事件唤醒后会强制重新扫描。Home 组件按层级版本缓存。返航在 BindUnit 缓存有效推进器、类型和 Power，读取/发布各遍历一次。 | 事件唤醒依赖损伤事件归属正确；返航仍需覆盖重组、推进器启停、供电变化和失能结算。需比较全量机器人与仅活跃机器人调用次数及 Siege 子 marker。 |
 | TurretProjectile.Launch / ClearIgnoredCollisions | 每枚实体弹遍历发射单位碰撞体建立忽略对，回收时解除。 | 现有实体物理依赖逐对忽略，不能只过滤伤害；大型母舰连射仍需度量。 |
 | ExplosionPropagation、RuntimeGroupBuilder、ControlUnit.RefreshChildren | 爆炸、断裂、加载和重组时访问相关块、刚体或子组件。 | 保留逐块伤害、拓扑与所有权正确性；大型结构连续断裂需测峰值。 |
 | ControlUnit.HasCombatCapability、BlockConnectionSnapshot、建造连接提示及推进器输出 | 能力查询扫描武器、连接验证读取碰撞体或连接面、推进控制逐执行器施力。 | 不把必要的单件操作计作可省略；建议按调用者、结构规模和调用频次采样。 |

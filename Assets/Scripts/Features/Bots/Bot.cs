@@ -42,6 +42,11 @@ public abstract class Bot : MonoBehaviour
     private BotFlightMotion _flightMotion;
     private bool _navigationStateInitialized;
     private Power _homePower;
+    private ControlUnit _homeOwner;
+    private uint _homeHierarchyVersion;
+    private Transform _cachedHome;
+    private Transform _cachedPowerHome;
+    private uint _homePowerHierarchyVersion;
     public enum NavigationState
     {
         Idle,
@@ -82,7 +87,7 @@ public abstract class Bot : MonoBehaviour
             return false;
         }
 
-        owner = home.GetComponentInParent<ControlUnit>();
+        owner = GetHomeOwner();
         return rb != null && owner != null && owner.IsSimulationActive;
     }
 
@@ -113,7 +118,7 @@ public abstract class Bot : MonoBehaviour
     /// <summary>任务意图独立于供电结果；脱离 Home 后仍向原机器人仓请求功率。</summary>
     protected Power SetHomePowerRequested(bool requested)
     {
-        Power actualPower = home != null ? home.GetComponentInParent<Power>() : null;
+        Power actualPower = GetHomePower();
         if (_homePower != actualPower)
         {
             _homePower?.SetWorkRequested(this, false);
@@ -121,6 +126,43 @@ public abstract class Bot : MonoBehaviour
         }
 
         _homePower?.SetWorkRequested(this, requested);
+        return _homePower;
+    }
+
+    protected ControlUnit GetHomeOwner()
+    {
+        if (home == null)
+        {
+            _homeOwner = null;
+            return null;
+        }
+
+        uint version = Durability.HierarchyVersion;
+        if (_cachedHome != home || _homeHierarchyVersion != version)
+        {
+            _cachedHome = home;
+            _homeOwner = home.GetComponentInParent<ControlUnit>();
+            _homeHierarchyVersion = version;
+        }
+
+        return _homeOwner;
+    }
+
+    private Power GetHomePower()
+    {
+        if (home == null)
+        {
+            return null;
+        }
+
+        uint version = Durability.HierarchyVersion;
+        if (_cachedPowerHome != home || _homePowerHierarchyVersion != version)
+        {
+            _cachedPowerHome = home;
+            _homePower = home.GetComponentInParent<Power>();
+            _homePowerHierarchyVersion = version;
+        }
+
         return _homePower;
     }
 

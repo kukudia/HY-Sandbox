@@ -13,14 +13,34 @@ public class PowerGeneratingUnit : MonoBehaviour
     public List<PowerTransmissionDevice> connectedDevices = new List<PowerTransmissionDevice>();
     public static IEnumerable<PowerGeneratingUnit> ActiveUnits => ActiveGenerators;
 
+    private Vector3 _lastObservedPosition;
+    private void OnValidate()
+    {
+        PowerTransmissionDevice.MarkNetworkDirty();
+    }
+
     private void OnEnable()
     {
         ActiveGenerators.Add(this);
+        _lastObservedPosition = transform.position;
+        PowerTransmissionDevice.MarkNetworkDirty();
+    }
+
+    private void Update()
+    {
+        if (_lastObservedPosition == transform.position)
+        {
+            return;
+        }
+
+        _lastObservedPosition = transform.position;
+        PowerTransmissionDevice.MarkNetworkDirty();
     }
 
     private void OnDisable()
     {
         ActiveGenerators.Remove(this);
+        PowerTransmissionDevice.MarkNetworkDirty();
         foreach (PowerTransmissionDevice device in connectedDevices)
         {
             if (device != null)

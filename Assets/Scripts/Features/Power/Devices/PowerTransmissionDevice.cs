@@ -3,12 +3,20 @@
 // 生命周期：退出时移除双向连接；最后一个中继退出立即清除全体负载供电。
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Profiling;
 
 public class PowerTransmissionDevice : MonoBehaviour
 {
     private static readonly HashSet<PowerTransmissionDevice> ActiveDevices = new HashSet<PowerTransmissionDevice>();
     private static readonly PowerNetwork Network = new PowerNetwork();
     private static int _lastNetworkUpdateFrame = -1;
+    private static bool _networkDirty = true;
+    private static float _nextFallbackRebuild;
+    private const float FallbackRebuildInterval = 0.25f;
+    private const float VisualRefreshInterval = 0.0667f;
+    private static readonly ProfilerMarker NetworkMarker = new ProfilerMarker("HY.PowerTransmissionDevice.Network.Rebuild");
+    private static readonly ProfilerMarker RangeMarker = new ProfilerMarker("HY.PowerTransmissionDevice.RefreshPowerRangeMesh");
+    private static readonly ProfilerMarker VisualMarker = new ProfilerMarker("HY.PowerTransmissionDevice.UpdateDebugVisuals");
     public List<PowerGeneratingUnit> connectedGenerators = new List<PowerGeneratingUnit>();
     public List<PowerTransmissionDevice> connectedDevices = new List<PowerTransmissionDevice>();
     [Min(0)]
@@ -28,6 +36,13 @@ public class PowerTransmissionDevice : MonoBehaviour
 
     private PowerConnectionVisuals _connectionVisuals;
     private Renderer _debugRenderer;
+    private int _lastVisualNetworkVersion = -1;
+    private int _lastVisualConfigHash;
+    private Vector3 _lastVisualPosition;
+    private Quaternion _lastVisualRotation;
+    private bool _visualsWereEnabled;
+    private Vector3 _lastObservedPosition;
+    private float _nextVisualRefresh;
     internal Material DebugRangeMaterial
     {
         get
@@ -45,6 +60,7 @@ public class PowerTransmissionDevice : MonoBehaviour
     private void OnValidate()
     {
         CacheDebugReferences();
+        MarkNetworkDirty();
     }
 
     private void OnEnable()
@@ -55,17 +71,48 @@ public class PowerTransmissionDevice : MonoBehaviour
         }
 
         ActiveDevices.Add(this);
+        _lastObservedPosition = transform.position;
+        CacheDebugReferences();
+        if (debugCube != null)
+        {
+            debugCube.SetActive(false);
+        }
+
+        MarkNetworkDirty();
         UpdateDebugVisuals();
+    }
+
+    public static void MarkNetworkDirty()
+    {
+        _networkDirty = true;
     }
 
     private void Update()
     {
-        // 无论多少个中继执行 Update，供电规则每帧只运行一次；每个中继仍刷新自己的连线。
-        if (_lastNetworkUpdateFrame != Time.frameCount)
+        if (_lastObservedPosition != transform.position)
+        {
+            _lastObservedPosition = transform.position;
+            MarkNetworkDirty();
+        }
+
+        // 工作意图/拓扑变化立即更新；没有事件的外部 Inspector/运行时输出变更由低频校正兜底。
+        if (_lastNetworkUpdateFrame != Time.frameCount && (_networkDirty || Time.unscaledTime >= _nextFallbackRebuild))
         {
             _lastNetworkUpdateFrame = Time.frameCount;
-            Network.Rebuild(ActiveDevices, PowerGeneratingUnit.ActiveUnits, Power.ActiveBlocks);
-            DebugManager.instance?.RefreshPowerRangeMesh(Network.Devices);
+            _networkDirty = false;
+            _nextFallbackRebuild = Time.unscaledTime + FallbackRebuildInterval;
+            using (NetworkMarker.Auto())
+            {
+                Network.Rebuild(ActiveDevices, PowerGeneratingUnit.ActiveUnits, Power.ActiveBlocks);
+            }
+
+            if (DebugManager.instance != null && DebugManager.instance.showPowerRange)
+            {
+                using (RangeMarker.Auto())
+                {
+                    DebugManager.instance.RefreshPowerRangeMesh(Network.Devices);
+                }
+            }
         }
 
         UpdateDebugVisuals();
@@ -75,6 +122,7 @@ public class PowerTransmissionDevice : MonoBehaviour
     {
         ActiveDevices.Remove(this);
         Disconnect();
+        MarkNetworkDirty();
         _connectionVisuals?.Hide();
         if (debugCube != null)
         {
@@ -85,6 +133,7 @@ public class PowerTransmissionDevice : MonoBehaviour
         {
             Network.Clear(Power.ActiveBlocks);
             _lastNetworkUpdateFrame = -1;
+            _networkDirty = true;
             DebugManager.instance?.ClearPowerRangeMesh();
         }
     }
@@ -128,15 +177,34 @@ public class PowerTransmissionDevice : MonoBehaviour
 
     private void UpdateDebugVisuals()
     {
-        CacheDebugReferences();
-        if (debugCube != null)
+        using var marker = VisualMarker.Auto();
+        DebugManager settings = DebugManager.instance;
+        bool enabled = settings != null && settings.showPowerConnections && settings.Includes(this);
+        if (!enabled)
         {
-            // 范围合并网格由 DebugManager 绘制，旧 Prefab 内的单独方块保持隐藏。
-            debugCube.transform.rotation = transform.rotation;
-            debugCube.SetActive(false);
+            if (_visualsWereEnabled)
+            {
+                _connectionVisuals?.Hide();
+                _visualsWereEnabled = false;
+            }
+
+            return;
         }
 
-        _connectionVisuals?.Refresh(DebugManager.instance);
+        int configHash = settings.GetPowerConnectionVisualHash();
+        bool changed = !_visualsWereEnabled || _lastVisualNetworkVersion != Network.Version || _lastVisualConfigHash != configHash || _lastVisualPosition != transform.position || _lastVisualRotation != transform.rotation;
+        if (!changed && Time.unscaledTime < _nextVisualRefresh)
+        {
+            return;
+        }
+
+        _connectionVisuals?.Refresh(settings);
+        _visualsWereEnabled = true;
+        _lastVisualNetworkVersion = Network.Version;
+        _lastVisualConfigHash = configHash;
+        _lastVisualPosition = transform.position;
+        _lastVisualRotation = transform.rotation;
+        _nextVisualRefresh = Time.unscaledTime + VisualRefreshInterval;
     }
 
     private void OnDrawGizmosSelected()

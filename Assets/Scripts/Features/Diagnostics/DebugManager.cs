@@ -46,6 +46,20 @@ public class DebugManager : MonoBehaviour
     [Header("Power Debug Visibility")]
     public bool showPowerRange = false;
     public bool showPowerConnections = false;
+    internal int GetPowerConnectionVisualHash()
+    {
+        unchecked
+        {
+            int hash = (int)factionFilter;
+            hash = hash * 31 + generatorConnectionColor.GetHashCode();
+            hash = hash * 31 + deviceConnectionColor.GetHashCode();
+            hash = hash * 31 + connectionLineWidth.GetHashCode();
+            hash = hash * 31 + connectionDashLength.GetHashCode();
+            hash = hash * 31 + connectionDashScrollSpeed.GetHashCode();
+            return hash;
+        }
+    }
+
     [Header("Block Status Visibility")]
     public bool showConnectionStatus = false;
     public bool showDurabilityStatus = false;

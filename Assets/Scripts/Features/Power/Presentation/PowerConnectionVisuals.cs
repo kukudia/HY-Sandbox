@@ -4,9 +4,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Unity.Profiling;
 
 internal sealed class PowerConnectionVisuals
 {
+    private static readonly ProfilerMarker RefreshMarker = new ProfilerMarker("HY.PowerConnectionVisuals.Refresh");
     private static Material _dashedLineMaterial;
     private readonly PowerTransmissionDevice _device;
     private readonly List<LineRenderer> _lines = new List<LineRenderer>();
@@ -18,6 +20,7 @@ internal sealed class PowerConnectionVisuals
 
     public void Refresh(DebugManager settings)
     {
+        using var marker = RefreshMarker.Auto();
         if (settings == null || !settings.showPowerConnections || !settings.Includes(_device))
         {
             Hide();

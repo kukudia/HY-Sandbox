@@ -5,10 +5,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Profiling;
 
 [RequireComponent(typeof(ControlUnit), typeof(Rigidbody))]
 public sealed class BuildingRuntime : MonoBehaviour, IBlockFoundation
 {
+    private static readonly ProfilerMarker TerrainSupportMarker = new ProfilerMarker("HY.Building.CheckTerrainSupport");
+    private static readonly ProfilerMarker TerrainRegroupMarker = new ProfilerMarker("HY.Building.RegroupAfterSupportLoss");
     private WorldBuildingManager manager;
     private int hangarShellVersion;
     private string blueprintName;
@@ -21,6 +24,8 @@ public sealed class BuildingRuntime : MonoBehaviour, IBlockFoundation
     private readonly HashSet<Block> detachedBlocks = new HashSet<Block>();
     private readonly Dictionary<Block, bool> groundSupport = new Dictionary<Block, bool>();
     private int groundRevision = -1;
+    private int supportGroupsRevision = -1;
+    private List<List<Block>> supportGroups;
     private Vector2Int groundFootprint;
     private BuildingFoundationData foundationData;
     private WorldBuildingState pendingState;
@@ -255,7 +260,13 @@ public sealed class BuildingRuntime : MonoBehaviour, IBlockFoundation
     {
         Physics.SyncTransforms();
         Connections.Prepare(blocks, transform);
-        foreach (List<Block> group in BlockGroupManager.GroupPreparedBlocks(blocks))
+        if (supportGroups == null || supportGroupsRevision != Connections.Revision)
+        {
+            supportGroups = BlockGroupManager.GroupPreparedBlocks(blocks);
+            supportGroupsRevision = Connections.Revision;
+        }
+
+        foreach (List<Block> group in supportGroups)
         {
             if (!group.Exists(HasPreparedGroundConnector))
             {
@@ -292,7 +303,16 @@ public sealed class BuildingRuntime : MonoBehaviour, IBlockFoundation
 
     internal void RefreshTerrainSupport()
     {
+        using var sample = TerrainSupportMarker.Auto();
         groundSupport.Clear();
+        // Terrain edits do not change module connectivity. Keep the existing body
+        // when every connected group still has at least one occupied anchor.
+        if (HasFullFoundationSupport())
+        {
+            return;
+        }
+
+        using var regroup = TerrainRegroupMarker.Auto();
         RuntimeGroupBuilder.RefreshUnit(Unit);
     }
 

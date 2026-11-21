@@ -3,9 +3,14 @@
 // 边界：不调度 Unity 帧或绘制调试图；复用实例缓冲，在一次分配结束后提交负载状态。
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Profiling;
 
 public sealed class PowerNetwork
 {
+    private static readonly ProfilerMarker CollectMarker = new ProfilerMarker("HY.PowerNetwork.CollectParticipants");
+    private static readonly ProfilerMarker TopologyMarker = new ProfilerMarker("HY.PowerNetwork.Topology");
+    private static readonly ProfilerMarker DistributionMarker = new ProfilerMarker("HY.PowerNetwork.DistributePower");
+    private static readonly ProfilerMarker CommitMarker = new ProfilerMarker("HY.PowerNetwork.CommitStatuses");
     private readonly List<PowerTransmissionDevice> _devices = new List<PowerTransmissionDevice>();
     private readonly List<PowerGeneratingUnit> _generators = new List<PowerGeneratingUnit>();
     private readonly List<Power> _loads = new List<Power>();
@@ -24,10 +29,16 @@ public sealed class PowerNetwork
     private readonly List<ConnectedComponent> _components = new List<ConnectedComponent>();
     private int _componentCount;
     private bool _hasTopology;
+    public int Version
+    {
+        get; private set;
+    }
+
     private struct DeviceSnapshot
     {
         public PowerTransmissionDevice device;
         public Vector3 position;
+        public int powerRange;
         public int connectionRange;
     }
 
@@ -52,19 +63,37 @@ public sealed class PowerNetwork
         IEnumerable<PowerGeneratingUnit> generators,
         IEnumerable<Power> loads)
     {
-        CollectActiveParticipants(devices, generators, loads);
-        bool topologyChanged = CaptureTopology();
-        if (!_hasTopology || topologyChanged)
+        using (CollectMarker.Auto())
         {
-            ResetConnections();
-            BuildConnections();
-            CacheConnectedComponents();
-            _hasTopology = true;
+            CollectActiveParticipants(devices, generators, loads);
         }
 
-        PrepareLoads();
-        DistributeNetworkPower();
-        CommitPowerStatuses();
+        using (TopologyMarker.Auto())
+        {
+            bool topologyChanged = CaptureTopology();
+            if (!_hasTopology || topologyChanged)
+            {
+                ResetConnections();
+                BuildConnections();
+                CacheConnectedComponents();
+                _hasTopology = true;
+                unchecked
+                {
+                    Version++;
+                }
+            }
+        }
+
+        using (DistributionMarker.Auto())
+        {
+            PrepareLoads();
+            DistributeNetworkPower();
+        }
+
+        using (CommitMarker.Auto())
+        {
+            CommitPowerStatuses();
+        }
     }
 
     /// <summary>最后一个中继退出时立即清除残留供电，并释放网络持有的对象快照。</summary>
@@ -96,6 +125,10 @@ public sealed class PowerNetwork
         _components.Clear();
         _componentCount = 0;
         _hasTopology = false;
+        unchecked
+        {
+            Version++;
+        }
     }
 
     private void CollectActiveParticipants(
@@ -156,12 +189,13 @@ public sealed class PowerNetwork
             {
                 device = device,
                 position = device.transform.position,
+                powerRange = device.powerRange,
                 connectionRange = device.maxConnectionDistance
             };
             if (i < _deviceSnapshots.Count)
             {
                 DeviceSnapshot old = _deviceSnapshots[i];
-                changed |= old.device != device || !old.position.Equals(next.position) || old.connectionRange != next.connectionRange;
+                changed |= old.device != device || !old.position.Equals(next.position) || old.powerRange != next.powerRange || old.connectionRange != next.connectionRange;
                 _deviceSnapshots[i] = next;
             }
             else
@@ -311,21 +345,13 @@ public sealed class PowerNetwork
         for (int i = 0; i < _componentCount; i++)
         {
             ConnectedComponent component = _components[i];
-            _componentDevices.Clear();
-            _componentGenerators.Clear();
             _componentLoads.Clear();
-            _componentDevices.AddRange(component.devices);
-            foreach (PowerGeneratingUnit generator in component.generators)
-            {
-                _componentGenerators.Add(generator);
-            }
-
             foreach (PowerTransmissionDevice device in component.devices)
             {
                 CollectDeviceLoads(device);
             }
 
-            SupplyConnectedComponent();
+            SupplyConnectedComponent(component);
         }
     }
 
@@ -380,15 +406,15 @@ public sealed class PowerNetwork
         }
     }
 
-    private void SupplyConnectedComponent()
+    private void SupplyConnectedComponent(ConnectedComponent component)
     {
         float totalOutputPower = 0f;
-        foreach (PowerGeneratingUnit generator in _componentGenerators)
+        foreach (PowerGeneratingUnit generator in component.generators)
         {
             totalOutputPower += Mathf.Max(0f, generator.outputPower);
         }
 
-        foreach (PowerTransmissionDevice device in _componentDevices)
+        foreach (PowerTransmissionDevice device in component.devices)
         {
             device.availableNetworkPower = totalOutputPower;
         }

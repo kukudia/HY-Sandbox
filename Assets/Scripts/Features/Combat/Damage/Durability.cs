@@ -2,9 +2,11 @@
 // 入口：ApplyDamage() / ApplyCollisionEnergy() / ProtectFromExplosionCollisions()。
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class Durability : MonoBehaviour
 {
+    public static event Action<ControlUnit> Damaged;
     // 同步索敌快照仅在当前物理步复用；修复新增和模块换父级必须能在同一步被发现。
     internal static uint HierarchyVersion
     {
@@ -201,6 +203,11 @@ public class Durability : MonoBehaviour
         }
 
         currentDurability += value;
+        if (value < 0f && currentDurability < maxDurability)
+        {
+            Damaged?.Invoke(owner);
+        }
+
         if (currentDurability > maxDurability)
         {
             currentDurability = maxDurability;
