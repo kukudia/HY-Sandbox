@@ -313,7 +313,17 @@ public sealed class BuildingRuntime : MonoBehaviour, IBlockFoundation
         }
 
         using var regroup = TerrainRegroupMarker.Auto();
-        RuntimeGroupBuilder.RefreshUnit(Unit);
+        if (blocks.Count > 0)
+        {
+            // Transfer ownership: foundation merging consumes the component lists.
+            var groups = supportGroups;
+            supportGroups = null;
+            RuntimeGroupBuilder.RefreshPreparedUnit(Unit, blocks, groups);
+        }
+        else
+        {
+            RuntimeGroupBuilder.RefreshUnit(Unit);
+        }
     }
 
     private bool HasGroundConnector(Block block)

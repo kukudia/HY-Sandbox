@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 internal sealed class NavigationLocalPath
 {
     private readonly List<Vector3> path = new List<Vector3>();
+    private static readonly Unity.Profiling.ProfilerMarker PlanMarker = new("HY.Enemy.PathReplan");
     private readonly List<Bounds> obstacles = new List<Bounds>();
     private readonly Dictionary<Vector3Int, Node> nodes = new Dictionary<Vector3Int, Node>();
     private readonly List<OpenNode> open = new List<OpenNode>();
@@ -240,6 +241,7 @@ internal sealed class NavigationLocalPath
             return false;
         }
 
+        using var planSample = PlanMarker.Auto();
         double planStarted = Time.realtimeSinceStartupAsDouble;
         if (PreviewRequest != null)
         {

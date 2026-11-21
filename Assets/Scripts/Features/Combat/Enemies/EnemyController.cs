@@ -368,8 +368,10 @@ public class EnemyController : MonoBehaviour
         return fallback;
     }
 
+    private static readonly Unity.Profiling.ProfilerMarker PredictionMarker = new("HY.Enemy.Prediction");
     private Vector3 PredictMovement(Vector3 proposed)
     {
+        using var sample = PredictionMarker.Auto();
         predictiveBraking = false;
         if (!usePredictiveDecisions)
         {
@@ -436,8 +438,10 @@ public class EnemyController : MonoBehaviour
         return courseVelocity;
     }
 
+    private static readonly Unity.Profiling.ProfilerMarker PropulsionMarker = new("HY.Enemy.Propulsion");
     private void UpdatePropulsionInput()
     {
+        using var sample = PropulsionMarker.Auto();
         Vector3 reference = GetReferenceVelocity();
         FlightPropulsionControl.Command command = propulsion.Evaluate(
             unit,
@@ -506,8 +510,10 @@ public class EnemyController : MonoBehaviour
         nextMovementUpdateTime = 0f;
     }
 
+    private static readonly Unity.Profiling.ProfilerMarker TargetSearchMarker = new("HY.Enemy.TargetSearch");
     private ControlUnit FindNearestOpponent()
     {
+        using var sample = TargetSearchMarker.Auto();
         // 任务目标由波次明确指派；索敌半径只限制自主发现，不能让远处增援失去进攻方向。
         if (IsValidOpponent(priorityTarget))
         {
@@ -698,8 +704,10 @@ public class EnemyController : MonoBehaviour
         return Vector3.Cross(Vector3.up, flatDirection.normalized) * strafeSide * 0.45f;
     }
 
+    private static readonly Unity.Profiling.ProfilerMarker AvoidanceMarker = new("HY.Enemy.Avoidance");
     private Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)
     {
+        using var sample = AvoidanceMarker.Auto();
         var settings = new VesselNavigationSettings
         {
             ObstacleAvoidanceDistance = obstacleAvoidanceDistance,

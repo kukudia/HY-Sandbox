@@ -4434,24 +4434,24 @@ HY-Sandbox/
 | EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L260) | private |
 | EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L327) | private |
 | EnemyController | [`Vector3 GetApproachDirection(Vector3 destination, Vector3 fallback)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L364) | private |
-| EnemyController | [`Vector3 PredictMovement(Vector3 proposed)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L371) | private |
-| EnemyController | [`float GetMovementInterval()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L407) | private |
-| EnemyController | [`Vector3 GetReferenceVelocity()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L412) | private |
-| EnemyController | [`void UpdatePropulsionInput()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L439) | private |
-| EnemyController | [`Vector3 StabilizeDirection(Vector3 candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L453) | private |
-| EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L494) | public |
-| EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L502) | public |
-| EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L509) | private |
-| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L560) | private |
-| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L575) | private |
-| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L602) | private |
-| EnemyController | [`float ConstrainDescent(float requested, Vector3 direction)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L649) | private |
-| EnemyController | [`float GetBaseHoverHeight()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L667) | private |
-| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L685) | private |
-| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L701) | private |
-| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L754) | private |
-| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L759) | private |
-| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L822) | private static |
+| EnemyController | [`Vector3 PredictMovement(Vector3 proposed)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L372) | private |
+| EnemyController | [`float GetMovementInterval()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L409) | private |
+| EnemyController | [`Vector3 GetReferenceVelocity()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L414) | private |
+| EnemyController | [`void UpdatePropulsionInput()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L442) | private |
+| EnemyController | [`Vector3 StabilizeDirection(Vector3 candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L457) | private |
+| EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L498) | public |
+| EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L506) | public |
+| EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L514) | private |
+| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L566) | private |
+| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L581) | private |
+| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L608) | private |
+| EnemyController | [`float ConstrainDescent(float requested, Vector3 direction)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L655) | private |
+| EnemyController | [`float GetBaseHoverHeight()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L673) | private |
+| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L691) | private |
+| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L708) | private |
+| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L762) | private |
+| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L767) | private |
+| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L830) | private static |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs
 
@@ -5376,15 +5376,15 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| NavigationLocalPath | [`void Push(Vector3Int key, float cost, float score)`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L71) | private |
-| NavigationLocalPath | [`OpenNode Pop()`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L96) | private |
-| NavigationLocalPath | [`void Clear()`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L128) | internal |
-| NavigationLocalPath | [`bool TryFollow( ControlUnit owner, Bounds hull, Vector3 goal, LayerMask layers, float cellSize, float radius, int budget, float retry, float minHeight, float maxHeight, out Vector3 point)`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L140) | internal |
-| NavigationLocalPath | [`Vector3 World(Vector3Int cell, float size)`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L388) | private |
-| NavigationLocalPath | [`void Simplify(Vector3 position)`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L393) | private |
-| NavigationLocalPath | [`void Capture(ControlUnit owner, Bounds hull, LayerMask layers, float radius)`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L419) | private |
-| NavigationLocalPath | [`bool ClearFlight(Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L485) | private |
-| NavigationLocalPath | [`bool ClearSegment(Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L491) | private |
+| NavigationLocalPath | [`void Push(Vector3Int key, float cost, float score)`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L72) | private |
+| NavigationLocalPath | [`OpenNode Pop()`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L97) | private |
+| NavigationLocalPath | [`void Clear()`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L129) | internal |
+| NavigationLocalPath | [`bool TryFollow( ControlUnit owner, Bounds hull, Vector3 goal, LayerMask layers, float cellSize, float radius, int budget, float retry, float minHeight, float maxHeight, out Vector3 point)`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L141) | internal |
+| NavigationLocalPath | [`Vector3 World(Vector3Int cell, float size)`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L390) | private |
+| NavigationLocalPath | [`void Simplify(Vector3 position)`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L395) | private |
+| NavigationLocalPath | [`void Capture(ControlUnit owner, Bounds hull, LayerMask layers, float radius)`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L421) | private |
+| NavigationLocalPath | [`bool ClearFlight(Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L487) | private |
+| NavigationLocalPath | [`bool ClearSegment(Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L493) | private |
 
 ## Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs
 
@@ -7002,14 +7002,15 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | RuntimeGroupBuilder | [`void RefreshUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L16) | internal static |
-| RuntimeGroupBuilder | [`void Refresh(ControlUnit unit, GroupPhysicsSettings settings)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L33) | internal |
-| RuntimeGroupBuilder | [`void Rebuild(List<Block> blocks, GroupPhysicsSettings settings, List<List<Block>> preparedGroups = null)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L54) | internal |
-| RuntimeGroupBuilder | [`Dictionary<Block, SourceSnapshot> CaptureSourceBodies(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L203) | private static |
-| RuntimeGroupBuilder | [`List<GroupPlan> PlanGroups(List<List<Block>> groups, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L232) | private static |
-| RuntimeGroupBuilder | [`void MergeFoundationGroups(List<GroupPlan> plans)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L264) | private static |
-| RuntimeGroupBuilder | [`Dictionary<SourceSnapshot, GroupPlan> SelectRetainedGroups(List<GroupPlan> plans, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L292) | private static |
-| IBlockFoundation | [`bool Supports(Block block)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L373) |  |
-| IBlockFoundation | [`void OnFragmentDetached(List<Block> blocks, ControlUnit fragment)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L374) |  |
+| RuntimeGroupBuilder | [`void RefreshPreparedUnit(ControlUnit unit, List<Block> blocks, List<List<Block>> groups)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L21) | internal static |
+| RuntimeGroupBuilder | [`void Refresh( ControlUnit unit, GroupPhysicsSettings settings, List<Block> blocks = null, List<List<Block>> groups = null)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L38) | internal |
+| RuntimeGroupBuilder | [`void Rebuild(List<Block> blocks, GroupPhysicsSettings settings, List<List<Block>> preparedGroups = null)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L70) | internal |
+| RuntimeGroupBuilder | [`Dictionary<Block, SourceSnapshot> CaptureSourceBodies(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L219) | private static |
+| RuntimeGroupBuilder | [`List<GroupPlan> PlanGroups(List<List<Block>> groups, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L248) | private static |
+| RuntimeGroupBuilder | [`void MergeFoundationGroups(List<GroupPlan> plans)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L280) | private static |
+| RuntimeGroupBuilder | [`Dictionary<SourceSnapshot, GroupPlan> SelectRetainedGroups(List<GroupPlan> plans, Dictionary<Block, SourceSnapshot> sources)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L308) | private static |
+| IBlockFoundation | [`bool Supports(Block block)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L389) |  |
+| IBlockFoundation | [`void OnFragmentDetached(List<Block> blocks, ControlUnit fragment)`](../Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs#L390) |  |
 
 ## Assets/Scripts/Features/Simulation/Groups/RuntimeGroupCleanup.cs
 
@@ -7118,17 +7119,18 @@ HY-Sandbox/
 | PlayManager | [`void PlayStart()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L113) | public |
 | PlayManager | [`bool CanStartPlay(out string reason)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L162) | public |
 | PlayManager | [`void RefreshGroup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L197) | public |
-| PlayManager | [`void SetPlayMode(bool lockView)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L210) | public |
-| PlayManager | [`void CalculateVelocity()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L218) | private |
-| PlayManager | [`void HandleSelection()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L227) | private |
-| PlayManager | [`void SelectBlock(Block block)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L256) | private |
-| PlayManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L275) | public |
-| PlayManager | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L281) | public |
-| PlayManager | [`void AssignBlocksToParentGroups(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L316) | public |
-| PlayManager | [`void RegisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L333) | public |
-| PlayManager | [`void RegisterControlUnitWithoutCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L343) | internal |
-| PlayManager | [`void UnregisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L351) | public |
-| PlayManager | [`IReadOnlyList<ControlUnit> GetControlUnits()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L359) | public |
+| PlayManager | [`void RefreshGroup(ControlUnit unit, List<Block> blocks, List<List<Block>> groups)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L202) | internal |
+| PlayManager | [`void SetPlayMode(bool lockView)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L215) | public |
+| PlayManager | [`void CalculateVelocity()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L223) | private |
+| PlayManager | [`void HandleSelection()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L232) | private |
+| PlayManager | [`void SelectBlock(Block block)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L261) | private |
+| PlayManager | [`void DeselectBlock()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L280) | public |
+| PlayManager | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L286) | public |
+| PlayManager | [`void AssignBlocksToParentGroups(List<Block> blocks)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L321) | public |
+| PlayManager | [`void RegisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L338) | public |
+| PlayManager | [`void RegisterControlUnitWithoutCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L348) | internal |
+| PlayManager | [`void UnregisterControlUnit(ControlUnit unit)`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L356) | public |
+| PlayManager | [`IReadOnlyList<ControlUnit> GetControlUnits()`](../Assets/Scripts/Features/Simulation/PlayManager.cs#L364) | public |
 
 ## Assets/Scripts/Features/Simulation/Presentation/PlayBlockSelection.cs
 
@@ -7242,9 +7244,9 @@ HY-Sandbox/
 | BuildingRuntime | [`bool HasFullFoundationSupport()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L259) | public |
 | BuildingRuntime | [`bool HasPreparedGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L280) | private |
 | BuildingRuntime | [`void RefreshTerrainSupport()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L304) | internal |
-| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L319) | private |
-| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L344) | public |
-| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L355) | private |
+| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L329) | private |
+| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L354) | public |
+| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L365) | private |
 
 ## Assets/Scripts/Features/World/Buildings/Data/WorldBuildingCatalog.cs
 

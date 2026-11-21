@@ -15,6 +15,11 @@ internal sealed class RuntimeGroupBuilder
 
     internal static void RefreshUnit(ControlUnit unit)
     {
+        RefreshPreparedUnit(unit, null, null);
+    }
+
+    internal static void RefreshPreparedUnit(ControlUnit unit, List<Block> blocks, List<List<Block>> groups)
+    {
         if (unit == null)
         {
             return;
@@ -23,16 +28,27 @@ internal sealed class RuntimeGroupBuilder
         PlayManager play = PlayManager.instance;
         if (play != null && play.gameObject.scene.GetPhysicsScene() == unit.gameObject.scene.GetPhysicsScene())
         {
-            play.RefreshGroup(unit);
+            play.RefreshGroup(unit, blocks, groups);
             return;
         }
 
-        new RuntimeGroupBuilder(null).Refresh(unit, GroupPhysicsSettings.FromBody(unit.GetComponent<Rigidbody>()));
+        new RuntimeGroupBuilder(null).Refresh(unit, GroupPhysicsSettings.FromBody(unit.GetComponent<Rigidbody>()), blocks, groups);
     }
 
-    internal void Refresh(ControlUnit unit, GroupPhysicsSettings settings)
+    internal void Refresh(
+        ControlUnit unit,
+        GroupPhysicsSettings settings,
+        List<Block> blocks = null,
+        List<List<Block>> groups = null)
     {
-        var blocks = new List<Block>();
+        if (groups != null)
+        {
+            using var prepared = SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.Refresh, blocks.Count);
+            Rebuild(blocks, settings, groups);
+            return;
+        }
+
+        blocks = new List<Block>();
         unit.GetComponentsInChildren(false, blocks);
         blocks.RemoveAll(block => !block.isActiveAndEnabled || block.GetComponentInParent<ControlUnit>() != unit);
         using SimulationWorkMetrics.Scope timing = SimulationWorkMetrics.Measure(SimulationWorkMetrics.Stage.Refresh, blocks.Count);

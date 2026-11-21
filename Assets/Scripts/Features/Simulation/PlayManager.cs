@@ -196,13 +196,18 @@ public class PlayManager : MonoBehaviour
 
     public void RefreshGroup(ControlUnit unit)
     {
+        RefreshGroup(unit, null, null);
+    }
+
+    internal void RefreshGroup(ControlUnit unit, List<Block> blocks, List<List<Block>> groups)
+    {
         // Recalculate connected components, then restore each component's Rigidbody and thruster references.
         if (unit == null)
         {
             return;
         }
 
-        (_groupBuilder ??= new RuntimeGroupBuilder(this)).Refresh(unit, GroupPhysics);
+        (_groupBuilder ??= new RuntimeGroupBuilder(this)).Refresh(unit, GroupPhysics, blocks, groups);
         RuntimeGroupCleanup.EnforceLimit(allControlUnits, maxUselessControlUnitGroups, DestroyManager.instance);
         RuntimeGroupCleanup.EnforceDistance(allControlUnits, playMode, blocksParent, groupCleanupDistance, DestroyManager.instance);
     }
