@@ -1276,8 +1276,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Power
   currentPower: 0
-  minWorkingPower: 10
-  standardWorkingPower: 20
+  _minWorkingPower: 10
+  _standardWorkingPower: 20
 --- !u!114 &4851417719189446648
 MonoBehaviour:
   m_ObjectHideFlags: 0

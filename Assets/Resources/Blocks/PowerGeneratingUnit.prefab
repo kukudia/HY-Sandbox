@@ -683,7 +683,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40f363da8d12ff64fbb824114be4d4ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerGeneratingUnit
-  outputPower: 4000
+  _outputPower: 4000
   connectedDevices: []
 --- !u!114 &8663989922556544006
 MonoBehaviour:
