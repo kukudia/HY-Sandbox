@@ -9,46 +9,74 @@ public class PowerGeneratingUnit : MonoBehaviour
     private static readonly HashSet<PowerGeneratingUnit> ActiveGenerators = new HashSet<PowerGeneratingUnit>();
     [Min(0f)]
     [Tooltip("加入所连电网的总输出功率，按该电网中已启动负载的需求分配。")]
-    public float outputPower = 1000f;
+    [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("outputPower")]
+    private float _outputPower = 1000f;
+    public float outputPower
+    {
+        get => _outputPower;
+        set
+        {
+            if (_outputPower != value)
+            {
+                _outputPower = value;
+                NotifyPowerChanged();
+            }
+        }
+    }
+
     public List<PowerTransmissionDevice> connectedDevices = new List<PowerTransmissionDevice>();
     public static IEnumerable<PowerGeneratingUnit> ActiveUnits => ActiveGenerators;
 
-    private Vector3 _lastObservedPosition;
+    private ControlUnit powerOwner;
+    internal void NotifyPowerChanged()
+    {
+        if (powerOwner != null)
+        {
+            powerOwner.powerDirty = true;
+        }
+    }
+
     private void OnValidate()
     {
-        PowerTransmissionDevice.MarkNetworkDirty();
+        NotifyPowerChanged();
+    }
+
+    internal void BindPowerOwner()
+    {
+        ControlUnit next = isActiveAndEnabled ? GetComponentInParent<ControlUnit>() : null;
+        if (next == powerOwner)
+        {
+            return;
+        }
+
+        if (powerOwner != null)
+        {
+            powerOwner.generators.Remove(this);
+            powerOwner.powerDirty = true;
+        }
+
+        powerOwner = next;
+        if (next != null)
+        {
+            next.generators.Add(this);
+            next.powerDirty = true;
+        }
+    }
+
+    private void OnTransformParentChanged()
+    {
+        BindPowerOwner();
     }
 
     private void OnEnable()
     {
         ActiveGenerators.Add(this);
-        _lastObservedPosition = transform.position;
-        PowerTransmissionDevice.MarkNetworkDirty();
-    }
-
-    private void Update()
-    {
-        if (_lastObservedPosition == transform.position)
-        {
-            return;
-        }
-
-        _lastObservedPosition = transform.position;
-        PowerTransmissionDevice.MarkNetworkDirty();
+        BindPowerOwner();
     }
 
     private void OnDisable()
     {
         ActiveGenerators.Remove(this);
-        PowerTransmissionDevice.MarkNetworkDirty();
-        foreach (PowerTransmissionDevice device in connectedDevices)
-        {
-            if (device != null)
-            {
-                device.connectedGenerators.Remove(this);
-            }
-        }
-
-        connectedDevices.Clear();
+        BindPowerOwner();
     }
 }

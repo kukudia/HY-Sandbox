@@ -89,7 +89,7 @@ public static class BlockCsvAuthoring
                 }
 
                 using var serialized = new SerializedObject(targets[0]);
-                SerializedProperty property = serialized.FindProperty(column.Property);
+                SerializedProperty property = serialized.FindProperty(column.SerializedPropertyName);
                 if (property == null)
                 {
                     throw new InvalidDataException(path + "：字段不存在 " + column.Id);
@@ -98,7 +98,7 @@ public static class BlockCsvAuthoring
                 foreach (Component other in targets.Skip(1))
                 {
                     using var otherSerialized = new SerializedObject(other);
-                    if (ReadValue(otherSerialized.FindProperty(column.Property)) != ReadValue(property))
+                    if (ReadValue(otherSerialized.FindProperty(column.SerializedPropertyName)) != ReadValue(property))
                     {
                         throw new InvalidDataException(path + "：共享 requiresPower 初值不一致，不能自动合并。");
                     }

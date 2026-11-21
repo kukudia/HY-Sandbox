@@ -23,6 +23,8 @@ public static class BlockDataTableSchema
         public string Group;
         public Type ComponentType;
         public string Property;
+        public string SerializedPropertyName => ComponentType == typeof(PowerGeneratingUnit) && Property == "outputPower" || ComponentType == typeof(Power) && (Property == "minWorkingPower" || Property == "standardWorkingPower") ? "_" + Property : Property;
+
         public string Label;
         public double Minimum;
         public double Maximum;

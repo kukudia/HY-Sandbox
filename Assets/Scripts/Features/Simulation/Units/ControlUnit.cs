@@ -239,6 +239,13 @@ public class ControlUnit : MonoBehaviour
 
     private void OnDisable()
     {
+        foreach (Power load in loads)
+        {
+            load.ResetPower();
+            load.CommitPowerStatus();
+        }
+
+        powerDirty = true;
         ActiveUnits.Remove(this);
         combatUnits.Remove(this);
         SetMovementInput(Vector3.zero);
@@ -315,8 +322,43 @@ public class ControlUnit : MonoBehaviour
         Invoke(nameof(RefreshChildren), 2f);
     }
 
+    internal readonly HashSet<Power> loads = new HashSet<Power>();
+    internal readonly HashSet<PowerGeneratingUnit> generators = new HashSet<PowerGeneratingUnit>();
+    internal bool powerDirty = true;
+    private static readonly Unity.Profiling.ProfilerMarker SupplyMarker = new Unity.Profiling.ProfilerMarker("HY.ControlUnit.DistributePower");
+    private void UpdatePower()
+    {
+        if (!powerDirty)
+        {
+            return;
+        }
+
+        using var marker = SupplyMarker.Auto();
+        powerDirty = false;
+        float supply = 0f;
+        foreach (PowerGeneratingUnit generator in generators)
+        {
+            supply += Mathf.Max(0f, generator.outputPower);
+        }
+
+        float demand = 0f;
+        foreach (Power load in loads)
+        {
+            demand += load.RequestedPower;
+        }
+
+        float ratio = demand > 0f ? Mathf.Min(1f, supply / demand) : 0f;
+        foreach (Power load in loads)
+        {
+            load.PotentialPower = supply;
+            load.currentPower = load.RequestedPower * ratio;
+            load.CommitPowerStatus();
+        }
+    }
+
     private void Update()
     {
+        UpdatePower();
         if (!IsSimulationActive)
         {
             return;
@@ -364,6 +406,16 @@ public class ControlUnit : MonoBehaviour
 
     public void RefreshChildren()
     {
+        foreach (Power load in GetComponentsInChildren<Power>())
+        {
+            load.BindPowerOwner();
+        }
+
+        foreach (PowerGeneratingUnit generator in GetComponentsInChildren<PowerGeneratingUnit>())
+        {
+            generator.BindPowerOwner();
+        }
+
         targetBoundsReady = false;
         damageTargetsDirty = true;
         // Refresh after loading or regrouping because child components and Rigidbody ownership may have changed.

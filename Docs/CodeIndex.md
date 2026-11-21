@@ -3721,12 +3721,12 @@ HY-Sandbox/
 | --- | --- | --- |
 | BlockCsvDocument | [`BlockCsvDocument Parse(string text)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L33) | public static |
 | BlockCsvDocument | [`bool Apply(GameObject root, string guid)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L73) | public |
-| BlockCsvDocument | [`string PathFor(string guid)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L144) | public |
-| BlockCsvDocument | [`void ValidateRow(List<string> values)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L151) | private |
-| BlockCsvDocument | [`string Normalize(BlockDataTableSchema.Column column, string value, string name)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L174) | private static |
-| BlockCsvDocument | [`string Quote(string text)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L219) | private static |
-| BlockCsvDocument | [`string WriteRecords(IEnumerable<IEnumerable<string>> records)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L225) | public static |
-| BlockCsvDocument | [`List<List<string>> ParseRecords(string text)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L237) | public static |
+| BlockCsvDocument | [`string PathFor(string guid)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L152) | public |
+| BlockCsvDocument | [`void ValidateRow(List<string> values)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L159) | private |
+| BlockCsvDocument | [`string Normalize(BlockDataTableSchema.Column column, string value, string name)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L182) | private static |
+| BlockCsvDocument | [`string Quote(string text)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L227) | private static |
+| BlockCsvDocument | [`string WriteRecords(IEnumerable<IEnumerable<string>> records)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L233) | public static |
+| BlockCsvDocument | [`List<List<string>> ParseRecords(string text)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockCsvDocument.cs#L245) | public static |
 
 ## Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs
 
@@ -3734,12 +3734,12 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Column | [`Component[] FindTargets(GameObject root)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L31) | public |
-| BlockDataTableSchema | [`List<Column> CreateColumns()`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L66) | public static |
-| BlockDataTableSchema | [`void AddFloat( List<Column> columns, string group, string property, string label, double minimum = 0, double maximum = double.PositiveInfinity)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L117) | private static |
-| BlockDataTableSchema | [`void AddInteger( List<Column> columns, string group, string property, string label, double minimum = 0, double maximum = double.PositiveInfinity)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L136) | private static |
-| BlockDataTableSchema | [`void AddBoolean(List<Column> columns, string group, string property, string label)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L155) | private static |
-| BlockDataTableSchema | [`void AddEnum(List<Column> columns, string group, string property, string label, string[] names)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L168) | private static |
+| Column | [`Component[] FindTargets(GameObject root)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L33) | public |
+| BlockDataTableSchema | [`List<Column> CreateColumns()`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L68) | public static |
+| BlockDataTableSchema | [`void AddFloat( List<Column> columns, string group, string property, string label, double minimum = 0, double maximum = double.PositiveInfinity)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L119) | private static |
+| BlockDataTableSchema | [`void AddInteger( List<Column> columns, string group, string property, string label, double minimum = 0, double maximum = double.PositiveInfinity)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L138) | private static |
+| BlockDataTableSchema | [`void AddBoolean(List<Column> columns, string group, string property, string label)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L157) | private static |
+| BlockDataTableSchema | [`void AddEnum(List<Column> columns, string group, string property, string label, string[] names)`](../Assets/Scripts/Features/Building/BlockDataTables/BlockDataTableSchema.cs#L170) | private static |
 
 ## Assets/Scripts/Features/Building/BlueprintLoading/BaseBlueprintMigration.cs
 
@@ -5490,27 +5490,20 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| PowerGeneratingUnit | [`void OnValidate()`](../Assets/Scripts/Features/Power/Devices/PowerGeneratingUnit.cs#L17) | private |
-| PowerGeneratingUnit | [`void OnEnable()`](../Assets/Scripts/Features/Power/Devices/PowerGeneratingUnit.cs#L22) | private |
-| PowerGeneratingUnit | [`void Update()`](../Assets/Scripts/Features/Power/Devices/PowerGeneratingUnit.cs#L29) | private |
-| PowerGeneratingUnit | [`void OnDisable()`](../Assets/Scripts/Features/Power/Devices/PowerGeneratingUnit.cs#L40) | private |
+| PowerGeneratingUnit | [`void NotifyPowerChanged()`](../Assets/Scripts/Features/Power/Devices/PowerGeneratingUnit.cs#L31) | internal |
+| PowerGeneratingUnit | [`void OnValidate()`](../Assets/Scripts/Features/Power/Devices/PowerGeneratingUnit.cs#L39) | private |
+| PowerGeneratingUnit | [`void BindPowerOwner()`](../Assets/Scripts/Features/Power/Devices/PowerGeneratingUnit.cs#L44) | internal |
+| PowerGeneratingUnit | [`void OnTransformParentChanged()`](../Assets/Scripts/Features/Power/Devices/PowerGeneratingUnit.cs#L66) | private |
+| PowerGeneratingUnit | [`void OnEnable()`](../Assets/Scripts/Features/Power/Devices/PowerGeneratingUnit.cs#L71) | private |
+| PowerGeneratingUnit | [`void OnDisable()`](../Assets/Scripts/Features/Power/Devices/PowerGeneratingUnit.cs#L77) | private |
 
 ## Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs
 
-// 职责：保存中继参数，登记生命周期并装配每帧一次的无线电网重建。 // 入口：Update() → PowerNetwork.Rebuild()；调试连接由 PowerConnectionVisuals 独立绘制。 // 生命周期：退出时移除双向连接；最后一个中继退出立即清除全体负载供电。
+// 职责：保留旧蓝图的中继序列化字段。 // 入口：OnEnable 隐藏已停用的范围及连线。 // 供电由所属 ControlUnit 分配。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| PowerTransmissionDevice | [`void Awake()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L55) | private |
-| PowerTransmissionDevice | [`void OnValidate()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L60) | private |
-| PowerTransmissionDevice | [`void OnEnable()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L66) | private |
-| PowerTransmissionDevice | [`void MarkNetworkDirty()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L85) | public static |
-| PowerTransmissionDevice | [`void Update()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L90) | private |
-| PowerTransmissionDevice | [`void OnDisable()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L121) | private |
-| PowerTransmissionDevice | [`void Disconnect()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L141) | private |
-| PowerTransmissionDevice | [`void CacheDebugReferences()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L164) | private |
-| PowerTransmissionDevice | [`void UpdateDebugVisuals()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L178) | private |
-| PowerTransmissionDevice | [`void OnDrawGizmosSelected()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L210) | private |
+| PowerTransmissionDevice | [`void OnEnable()`](../Assets/Scripts/Features/Power/Devices/PowerTransmissionDevice.cs#L27) | private |
 
 ## Assets/Scripts/Features/Power/Network/PowerNetworkBaseline.cs
 
@@ -5549,15 +5542,18 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Power | [`void OnEnable()`](../Assets/Scripts/Features/Power/Power.cs#L58) | private |
-| Power | [`void OnDisable()`](../Assets/Scripts/Features/Power/Power.cs#L66) | private |
-| Power | [`void LateUpdate()`](../Assets/Scripts/Features/Power/Power.cs#L77) | private |
-| Power | [`void SetWorkRequested(Object requester, bool requested)`](../Assets/Scripts/Features/Power/Power.cs#L87) | public |
-| Power | [`void TrackAvailability(bool tracked)`](../Assets/Scripts/Features/Power/Power.cs#L118) | internal |
-| Power | [`void ResetPower()`](../Assets/Scripts/Features/Power/Power.cs#L124) | public |
-| Power | [`void ReceivePower(float suppliedPower)`](../Assets/Scripts/Features/Power/Power.cs#L131) | public |
-| Power | [`void CommitPowerStatus()`](../Assets/Scripts/Features/Power/Power.cs#L136) | public |
-| Power | [`bool IsDestroyedRequester(Object requester)`](../Assets/Scripts/Features/Power/Power.cs#L144) | private static |
+| Power | [`void NotifyPowerChanged()`](../Assets/Scripts/Features/Power/Power.cs#L86) | internal |
+| Power | [`void OnValidate()`](../Assets/Scripts/Features/Power/Power.cs#L94) | private |
+| Power | [`void BindPowerOwner()`](../Assets/Scripts/Features/Power/Power.cs#L99) | internal |
+| Power | [`void OnTransformParentChanged()`](../Assets/Scripts/Features/Power/Power.cs#L124) | private |
+| Power | [`void OnEnable()`](../Assets/Scripts/Features/Power/Power.cs#L129) | private |
+| Power | [`void OnDisable()`](../Assets/Scripts/Features/Power/Power.cs#L137) | private |
+| Power | [`void SetWorkRequested(Object requester, bool requested)`](../Assets/Scripts/Features/Power/Power.cs#L149) | public |
+| Power | [`void TrackAvailability(bool tracked)`](../Assets/Scripts/Features/Power/Power.cs#L171) | internal |
+| Power | [`void ResetPower()`](../Assets/Scripts/Features/Power/Power.cs#L177) | public |
+| Power | [`void ReceivePower(float suppliedPower)`](../Assets/Scripts/Features/Power/Power.cs#L184) | public |
+| Power | [`void CommitPowerStatus()`](../Assets/Scripts/Features/Power/Power.cs#L189) | public |
+| Power | [`bool IsDestroyedRequester(Object requester)`](../Assets/Scripts/Features/Power/Power.cs#L196) | private static |
 
 ## Assets/Scripts/Features/Power/PowerNetwork.cs
 
@@ -6339,8 +6335,8 @@ HY-Sandbox/
 | SiegeRefit | [`long Quote(SiegeFleetEntry entry, SiegeSettings settings)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L103) | public static |
 | SiegeRefit | [`long Quote(SiegeFleetEntry entry, SiegeSettings settings, Dictionary<string, Block> owned)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L113) | private static |
 | SiegeRefit | [`bool Repair(SiegeFleetEntry entry, ISiegeDeploymentHost session, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L139) | public static |
-| SiegeRefit | [`bool Repair(SiegeFleetEntry entry, ISiegeDeploymentHost session, bool skipUndamaged, out bool attempted, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L144) | internal static |
-| SiegeRefit | [`Dictionary<string, Block> CollectOwned(SiegeFleetEntry entry)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L231) | private static |
+| SiegeRefit | [`bool Repair( SiegeFleetEntry entry, ISiegeDeploymentHost session, bool skipUndamaged, out bool attempted, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L144) | internal static |
+| SiegeRefit | [`Dictionary<string, Block> CollectOwned(SiegeFleetEntry entry)`](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L236) | private static |
 
 ## Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs
 
@@ -7172,20 +7168,21 @@ HY-Sandbox/
 | ControlUnit | [`void BindBuilding(BuildingRuntime building)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L224) | public |
 | ControlUnit | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L230) | private |
 | ControlUnit | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L240) | private |
-| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L269) | public |
-| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L281) | public |
-| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L306) | private |
-| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L318) | private |
-| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L365) | public |
-| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L436) | public |
-| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L457) | public |
-| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L465) | public |
-| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L475) | public |
-| ControlUnit | [`void SetPropulsionInput(Vector3 worldDirection, float throttle)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L480) | public |
-| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L487) | public |
-| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L492) | private |
-| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L536) | private |
-| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L547) | private |
+| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L276) | public |
+| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L288) | public |
+| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L313) | private |
+| ControlUnit | [`void UpdatePower()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L329) | private |
+| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L359) | private |
+| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L407) | public |
+| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L488) | public |
+| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L509) | public |
+| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L517) | public |
+| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L527) | public |
+| ControlUnit | [`void SetPropulsionInput(Vector3 worldDirection, float throttle)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L532) | public |
+| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L539) | public |
+| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L544) | private |
+| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L588) | private |
+| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L599) | private |
 
 ## Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs
 

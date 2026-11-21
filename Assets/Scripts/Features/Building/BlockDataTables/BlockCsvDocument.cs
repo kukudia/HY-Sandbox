@@ -112,7 +112,7 @@ public sealed class BlockCsvDocument
                     componentJson.Add(target, properties);
                 }
 
-                properties.Add(Quote(column.Property) + ":" + jsonValue);
+                properties.Add(Quote(column.SerializedPropertyName) + ":" + jsonValue);
             }
         }
 
@@ -122,6 +122,14 @@ public sealed class BlockCsvDocument
         foreach (var pair in componentJson)
         {
             JsonUtility.FromJsonOverwrite("{" + string.Join(",", pair.Value) + "}", pair.Key);
+            if (pair.Key is Power load)
+            {
+                load.NotifyPowerChanged();
+            }
+            else if (pair.Key is PowerGeneratingUnit generator)
+            {
+                generator.NotifyPowerChanged();
+            }
         }
 
         if (block != null)

@@ -19,13 +19,40 @@ public class Power : MonoBehaviour
     }
 
     [Tooltip("开始工作的最低供电功率；达到阈值后 isWorking 为 true。")]
-    public float minWorkingPower = 50f;
+    [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("minWorkingPower")]
+    private float _minWorkingPower = 50f;
+    public float minWorkingPower
+    {
+        get => _minWorkingPower;
+        set
+        {
+            if (_minWorkingPower != value)
+            {
+                _minWorkingPower = value;
+                NotifyPowerChanged();
+            }
+        }
+    }
+
     [Tooltip("启动后占用的额定功率；供电短缺时按需求比例分配。")]
-    public float standardWorkingPower = 100f;
+    [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("standardWorkingPower")]
+    private float _standardWorkingPower = 100f;
+    public float standardWorkingPower
+    {
+        get => _standardWorkingPower;
+        set
+        {
+            if (_standardWorkingPower != value)
+            {
+                _standardWorkingPower = value;
+                NotifyPowerChanged();
+            }
+        }
+    }
+
     private StatusIcon _icon;
     private readonly HashSet<Object> _workRequesters = new HashSet<Object>();
     private float _supplyEfficiency = 1f;
-    private int _lastStatusCommitFrame = -1;
     /// <summary>电网完成分配后确认的供电状态，供UI读取；空闲或尚未分配不等同于缺电。</summary>
     public float SupplyEfficiency => _supplyEfficiency;
 
@@ -55,11 +82,55 @@ public class Power : MonoBehaviour
     public float efficiency => IsWorkRequested && standardWorkingPower > 0f ? Mathf.Clamp01(currentPower / standardWorkingPower) : 0f;
     public static IEnumerable<Power> ActiveBlocks => ActivePowerBlocks;
 
+    private ControlUnit powerOwner;
+    internal void NotifyPowerChanged()
+    {
+        if (powerOwner != null)
+        {
+            powerOwner.powerDirty = true;
+        }
+    }
+
+    private void OnValidate()
+    {
+        NotifyPowerChanged();
+    }
+
+    internal void BindPowerOwner()
+    {
+        ControlUnit next = isActiveAndEnabled ? GetComponentInParent<ControlUnit>() : null;
+        if (next == powerOwner)
+        {
+            return;
+        }
+
+        if (powerOwner != null)
+        {
+            powerOwner.loads.Remove(this);
+            powerOwner.powerDirty = true;
+        }
+
+        powerOwner = next;
+        if (next != null)
+        {
+            next.loads.Add(this);
+            next.powerDirty = true;
+        }
+
+        ResetPower();
+        CommitPowerStatus();
+    }
+
+    private void OnTransformParentChanged()
+    {
+        BindPowerOwner();
+    }
+
     private void OnEnable()
     {
         _icon = GetComponent<StatusIcon>();
         ActivePowerBlocks.Add(this);
-        PowerTransmissionDevice.MarkNetworkDirty();
+        BindPowerOwner();
         _icon?.CheckPowerStatus();
     }
 
@@ -70,17 +141,8 @@ public class Power : MonoBehaviour
         PotentialPower = 0f;
         currentPower = 0f;
         _supplyEfficiency = 1f;
-        PowerTransmissionDevice.MarkNetworkDirty();
+        BindPowerOwner();
         _icon?.CheckPowerStatus();
-    }
-
-    private void LateUpdate()
-    {
-        // 没有中继时也要确认真实缺电；等待Update阶段结束，避免把分配中的零值提交给UI。
-        if (_lastStatusCommitFrame != Time.frameCount)
-        {
-            CommitPowerStatus();
-        }
     }
 
     /// <summary>先提交工作意图再读取供电，避免断电后无法再次启动；同一负载允许多个使用者独立请求。</summary>
@@ -91,28 +153,19 @@ public class Power : MonoBehaviour
             return;
         }
 
-        bool wasRequested = IsWorkRequested;
-        if (requested)
+        if (!(requested ? _workRequesters.Add(requester) : _workRequesters.Remove(requester)))
         {
-            _workRequesters.Add(requester);
-        }
-        else
-        {
-            _workRequesters.Remove(requester);
+            return;
         }
 
-        if (wasRequested != IsWorkRequested)
-        {
-            PowerTransmissionDevice.MarkNetworkDirty();
-        }
-
+        NotifyPowerChanged();
         if (!IsWorkRequested)
         {
             currentPower = 0f;
             _supplyEfficiency = 1f;
         }
 
-        _icon?.CheckPowerStatus();
+        CommitPowerStatus();
     }
 
     internal void TrackAvailability(bool tracked)
@@ -135,7 +188,6 @@ public class Power : MonoBehaviour
 
     public void CommitPowerStatus()
     {
-        _lastStatusCommitFrame = Time.frameCount;
         _workRequesters.RemoveWhere(IsDestroyedRequester);
         _supplyEfficiency = IsWorkRequested && standardWorkingPower > 0f ? isWorking ? efficiency : 0f : 1f;
         _icon?.CheckPowerStatus();
