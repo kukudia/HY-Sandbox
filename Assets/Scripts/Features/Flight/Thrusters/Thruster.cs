@@ -13,7 +13,7 @@ public abstract class Thruster : MonoBehaviour
     public float thrust; // 推力大小
     public float lastThrustValue;
     public float maxThrust = 100f;
-    [Tooltip("最大推力变化率（单位/秒），防止推力瞬间变化")]
+    [Tooltip("悬浮推进器的最大推力变化率（单位/秒）。主推进与通用推进使用舰船输入的共享油门。")]
     public float maxThrustChangeRate = 50f;
     public Vector3 thrustDirection = Vector3.forward; // 推力方向（本地坐标）
     public Transform cameraTransform; // 主摄像机
@@ -24,6 +24,7 @@ public abstract class Thruster : MonoBehaviour
     public float visualizationInterval = 0.05f;
     private float nextVisualizationTime;
     private bool modelLookupComplete;
+    private Transform cachedParent;
     private ThrusterVisualEffect visualEffect;
     private Object guidanceOwner;
     public bool IsGuided => guidanceOwner != null;
@@ -108,22 +109,35 @@ public abstract class Thruster : MonoBehaviour
         modelLookupComplete = false;
     }
 
+    private void OnTransformParentChanged()
+    {
+        controlUnit = null;
+        rb = null;
+    }
+
     public void SetRuntimeReferences(ControlUnit owner, Rigidbody ownerRigidbody)
     {
         controlUnit = owner;
         rb = ownerRigidbody;
+        cachedParent = transform.parent;
         CacheLocalReferences();
     }
 
     protected bool RefreshRuntimeReferences()
     {
         CacheLocalReferences();
-        if (controlUnit == null)
+        if (controlUnit == null || transform.parent != cachedParent)
         {
             controlUnit = GetComponentInParent<ControlUnit>();
+            rb = controlUnit != null ? controlUnit.GetComponent<Rigidbody>() : GetComponentInParent<Rigidbody>();
+            cachedParent = transform.parent;
         }
 
-        TryEnsureRigidbody();
+        if (rb == null)
+        {
+            TryEnsureRigidbody();
+        }
+
         return controlUnit != null && rb != null;
     }
 
@@ -147,7 +161,7 @@ public abstract class Thruster : MonoBehaviour
         return controlUnit != null && controlUnit.HasValidCockpit;
     }
 
-    // 输入推进器共享物理步；悬浮推进器仍由高度控制器提交独立目标。
+    // 舰船命令已包含油门；此处只处理单个喷口的方向、供电和实际施力。
     protected void TickInputThrust(ref Vector3 input)
     {
         if (IsGuided)
@@ -168,7 +182,7 @@ public abstract class Thruster : MonoBehaviour
         input = hasValidOwner ? controlUnit.MovementInput : Vector3.zero;
         thrust = CalculateInputThrust(input, hasValidOwner && input.sqrMagnitude > InputEpsilonSqr);
         SetPowerRequested(thrust > 0f);
-        ApplyThrustChangeRateLimit();
+        thrust = lastThrustValue = GetPoweredThrust();
         ApplyDirectionalThrust();
         VisualizeThrust();
     }
@@ -231,11 +245,15 @@ public abstract class Thruster : MonoBehaviour
         }
     }
 
+    private float GetPoweredThrust()
+    {
+        return Mathf.Clamp(thrust * PowerEfficiency, 0f, Mathf.Max(0f, maxThrust));
+    }
+
     public virtual void ApplyThrustChangeRateLimit()
     {
-        float powerEfficiency = PowerEfficiency;
         // 供电只限制目标输出；撤销工作请求后的残余推力仍按变化率衰减。
-        float targetThrust = Mathf.Clamp(thrust * powerEfficiency, 0f, Mathf.Max(0f, maxThrust));
+        float targetThrust = GetPoweredThrust();
         float maxChange = Mathf.Max(0f, maxThrustChangeRate) * Time.fixedDeltaTime;
         thrust = Mathf.MoveTowards(lastThrustValue, targetThrust, maxChange);
         lastThrustValue = thrust;
@@ -261,7 +279,7 @@ public abstract class Thruster : MonoBehaviour
 
     protected bool CanApplyThrust()
     {
-        // 实际输出已在限速步骤受供电影响，关机后的衰减尾段仍需要施力。
+        // 供电已计入实际输出；悬浮推进器仍可能施加闭环控制的衰减尾段。
         return !IsGuided && IsPlayModeActive() && HasValidRuntimeOwner();
     }
 

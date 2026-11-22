@@ -6,7 +6,7 @@ ControlUnit.UpdatePower 只在成员、工作请求或功率配置变化后遍�
 
 BuildingRuntime.RefreshTerrainSupport 在地形脏区域命中后按建筑检查支撑：连接图版本变化才重建组清单，地面接触每次重新取样，任一组失撑仍走完整重组。连接组检查只适用于建筑主体；脱锚阈值仍由经理逐次判定。SiegeRefit 自动维修只在单舰同步调用内复用归属快照，不跨船缓存；阻挡、扣费规则不变。需用相同破坏与返航窗口复测耗时。
 
-EnemyController.ConfigureHoverThrusters 遍历本机悬停器：数组替换、重新启用或每 0.25 模拟秒校正；保留外部改写恢复能力，需验证接管与返航切换。炮塔按同一射线最近距离判断遮挡，等距遮挡优先。建筑按单次爆炸的保守包围盒排队，可能包含空隙中的建筑；逐格存档事件保持原序。以上需 Player 复测。
+EnemyController.ConfigureHoverThrusters 遍历本机悬停器：移动决策刷新、数组替换、重新启用或每 0.25 模拟秒校正；保留外部改写恢复能力，需验证接管与返航切换。炮塔按同一射线最近距离判断遮挡，等距遮挡优先。建筑按单次爆炸的保守包围盒排队，可能包含空隙中的建筑；逐格存档事件保持原序。以上需 Player 复测。
 
 BuildingRuntime.OnFragmentDetached：每次多块碎片分离时扫描一次该碎片与主体成员，保留存档顺序；临时集合在回调结束时清空。基线建筑回调峰值 162.06 ms，未证明全部来自移除操作；仍需大建筑断裂与存档回读复测。
 
@@ -206,6 +206,9 @@ P1：优先处理的数据安全问题；P2：条件性行为/性能风险或关
 
 - 触发/后果：只看无碰撞/到达标志忽略接敌范围外徘徊、直航微调、供电变化和战斗移动目标。Lab关闭碰撞伤害，上一轮Type03等短回归不能证明多轮5v5效率。
 - 证据：[推进执行层回归](Validation/2026-11-15-propulsion-input.md)、[竞技场追踪](Validation/2026-11-15-arena-navigation-debug.md)、[EnemyLabRecorder](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabRecorder.cs)。记录器有约1秒Flush和IO异常保护，不能按10Hz采样误报每样本强制刷盘。
+- 2026-11-21：舰船遇障决策改为先尝试经整舰垂直/前向净空验证的升降通道，失败后才进入水平 A*；尚未以 Unity Play 对照记录证明到达时间、航程或停滞改善。
+- 2026-11-21：EnemyController 高度配置改为决策/组件校正边界刷新，完全停止时跳过重复推进命令；运动和制动仍逐物理步更新，需在多舰场景比较 FixedUpdate、推进器和到达响应指标。
+- 2026-11-21：Main/Universal 每个有权执行的喷口仍逐物理步输出，以保留各自方向、供电与作用点力矩；模拟油门只在舰级计算，取消逐喷口输出限速。Unity Play 隔离推进专项7项通过，包括不同旧限速值下双喷口同一0.4输出比例及归零清理。完整 ActivePowerPlayChecks 在后续 RepairBot 任务供电请求断言失败（Main/Universal 专项已通过），本轮未归因或改动机器人行为。失去驾驶舱、无油门、断供或导引接管时普通输出失效。玩家键盘输入立即生效，需实测接管、停车和低供电恢复。AI 的 `FlightPropulsionControl.AvailableAcceleration` 仍在活动步扫描舰船缓存推进器以估计方向相关的供电推力，应在 Profiler 中单独量化。
 - 下一步：固定种子/蓝图的多轮5v5，按舰记录有效接敌时间、航程、停滞、范围外徘徊、喷口/命令变向次数及真实供电；效率优先，轻微接触单独观测，卡死和反复换向算失败。
 
 ### R22 · P2 · 验证缺口：制作工具批量重建与用户调整的长期兼容
@@ -288,3 +291,5 @@ P1：优先处理的数据安全问题；P2：条件性行为/性能风险或关
 - Meridian Airworks 官方示例已通过 Unity 数据与 Play Mode 恢复检查：扩建后 612 个设计模块无重叠，所有结构有地基支撑，功能负载全开时供电充足。四库同时收放载具、受击后的设施存活率及完整守波尚未实测。
 
 - Meridian Airworks 大型前门库至常规飞控的 AirKing 交接已在隔离 Play Mode 验证。交接后 3 秒最大掉高 0.36 米，最低垂直速度 -0.47 米/秒。带敌波和完整浮空岛的战斗仍待实测。
+
+- FlightPropulsionControl.AvailableAcceleration 按方向与供电状态短时缓存，缓存期限 0.08 秒。Thruster 的 ControlUnit/Rigidbody 引用在重挂父级时失效，正常物理帧不再重复 GetComponentInParent。需用相同敌舰数量复测推进器单次和敌舰推进 marker。

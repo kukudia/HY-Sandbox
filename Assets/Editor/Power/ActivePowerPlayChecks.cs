@@ -198,6 +198,28 @@ public static class ActivePowerPlayChecks
             checks,
             "Powered main thruster starts after requested supply arrives",
             power.isWorking && thruster.thrust > 0f);
+        UniversalThruster universal = Child<UniversalThruster>(owner.transform, "Universal thruster");
+        universal.SetRuntimeReferences(owner, body);
+        universal.alignVisual = false;
+        universal.maxThrust = 300f;
+        universal.maxThrustChangeRate = 1f;
+        Power universalPower = universal.GetComponent<Power>();
+        owner.SetPropulsionInput(Vector3.forward, 0.4f);
+        Tick(universal);
+        universalPower.ReceivePower(universalPower.RequestedPower);
+        Tick(thruster);
+        Tick(universal);
+        Check(
+            checks,
+            "Main and universal thrusters consume the same throttle despite different legacy rates",
+            Near(thruster.thrust / thruster.maxThrust, 0.4f) && Near(universal.thrust / universal.maxThrust, 0.4f));
+        owner.SetPropulsionInput(Vector3.forward, 0f);
+        Tick(thruster);
+        Tick(universal);
+        Check(
+            checks,
+            "Zero shared throttle releases both loads and clears output in the same tick",
+            !power.IsWorkRequested && !universalPower.IsWorkRequested && thruster.thrust == 0f && universal.thrust == 0f);
         owner.movementInput = Vector3.back;
         Tick(thruster);
         Check(
@@ -327,9 +349,9 @@ public static class ActivePowerPlayChecks
         return child.AddComponent<T>();
     }
 
-    private static void Tick(MainThruster thruster)
+    private static void Tick(Thruster thruster)
     {
-        typeof(MainThruster).GetMethod("FixedUpdate", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(thruster, null);
+        thruster.GetType().GetMethod("FixedUpdate", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(thruster, null);
     }
 
     private static bool Near(float first, float second)

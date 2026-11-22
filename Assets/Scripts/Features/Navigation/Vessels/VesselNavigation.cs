@@ -125,10 +125,10 @@ internal sealed class VesselNavigation
             }
         }
 
-        // 升降回退只有静态净空保证；有运动障碍时，远场风险必须交还共享快照规划与近场让行。
-        bool staticClimbFallback = Prediction.Moving == 0 && !Prediction.Saturated;
-        bool planFirst = Path.PreviewRequest != null && !(Climb.Active && staticClimbFallback);
-        if (!planFirst && TryClimbObstacle(
+        // 先尝试经过验证的垂直通道；只有上升/下降不成立时，才把障碍交给水平 A*。
+        // TryGetHeight 仍会验证整舰垂直与前向净空，动态障碍继续受本轮预测快照约束。
+        bool staticClimbAvailable = Prediction.Moving == 0 && !Prediction.Saturated;
+        if (staticClimbAvailable && TryClimbObstacle(
             unit,
             desiredMove,
             probeDirection,
@@ -140,6 +140,7 @@ internal sealed class VesselNavigation
             return climbMovement;
         }
 
+        // 垂直通道不可行后，再沿远场 A* 路线水平绕行。
         if (navigationRequested && unit.hoverFlightController != null && Path.TryFollow(
             unit,
             avoidanceBounds,
@@ -169,19 +170,6 @@ internal sealed class VesselNavigation
             obstacleSpeedRatio = heightRatio;
             // 高度与水平同时跟随；现高度走廊余量决定水平速度，航点距离本身不要求停车。
             return alongPath.normalized * heightRatio;
-        }
-
-        // A*失败或仍在冷却时，允许已验证的升降回退；远场风险不能永久压制可行的爬升。
-        if (planFirst && staticClimbFallback && TryClimbObstacle(
-            unit,
-            desiredMove,
-            probeDirection,
-            speed,
-            horizon,
-            settings,
-            out climbMovement))
-        {
-            return climbMovement;
         }
 
         if (desiredMove.sqrMagnitude < 0.0001f)

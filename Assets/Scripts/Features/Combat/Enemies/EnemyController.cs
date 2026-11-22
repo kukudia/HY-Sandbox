@@ -3,7 +3,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-[RequireComponent(typeof(ControlUnit))]
+[DefaultExecutionOrder(-10), RequireComponent(typeof(ControlUnit))]
 public class EnemyController : MonoBehaviour
 {
     // Produces smoothed movement intent; ControlUnit and thrusters remain the only physics writers.
@@ -16,6 +16,8 @@ public class EnemyController : MonoBehaviour
     public float movementUpdateInterval = 0.5f;
     [Min(0.1f)]
     public float movementResponseRate = 2.5f;
+    [SerializeField, Range(0f, 1f), Tooltip("全舰模拟油门变化率的倍率。1 使用 Movement Response Rate，0 关闭普通推进。显式制动不受此倍率限制。")]
+    private float propulsionResponseScale = 1f;
     public float retreatDistance = 10f;
     public float obstacleAvoidanceDistance = 12f;
     [HideInInspector]
@@ -259,7 +261,8 @@ public class EnemyController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Sample targets/obstacles at a bounded rate, while interpolating input every physics tick.
+        // Sample targets/obstacles at a bounded rate. Propulsion remains per physics tick while moving;
+        // hover target configuration is only refreshed on a decision or component-sync boundary.
         if (PlayManager.instance == null || !PlayManager.instance.playMode)
         {
             return;
@@ -298,6 +301,7 @@ public class EnemyController : MonoBehaviour
 
         if (currentTarget == null)
         {
+            bool movementUpdated = false;
             if (Time.time >= nextMovementUpdateTime)
             {
                 Vector3 toGuard = guardAnchor != null ? guardAnchor.position - transform.position : Vector3.zero;
@@ -305,23 +309,34 @@ public class EnemyController : MonoBehaviour
                 climbingObstacle = false;
                 desiredMovementInput = toGuard.sqrMagnitude > 100f ? PredictMovement(ApplyObstacleAvoidance(GetApproachDirection(guardAnchor.position, toGuard.normalized), toGuard)) : Vector3.zero;
                 nextMovementUpdateTime = Time.time + GetMovementInterval();
+                movementUpdated = true;
             }
 
-            ConfigureHoverThrusters();
-            UpdatePropulsionInput();
+            if (movementUpdated || IsHoverConfigurationRefreshDue())
+            {
+                ConfigureHoverThrusters();
+            }
+
+            UpdatePropulsionInputIfNeeded();
             return;
         }
 
+        bool movementUpdatedForTarget = false;
         if (Time.time >= nextMovementUpdateTime)
         {
             Vector3 toTarget = currentTarget.transform.position - transform.position;
             Vector3 flatDirection = new Vector3(toTarget.x, 0f, toTarget.z);
             desiredMovementInput = CalculateDesiredMovement(flatDirection);
             nextMovementUpdateTime = Time.time + GetMovementInterval();
+            movementUpdatedForTarget = true;
         }
 
-        ConfigureHoverThrusters();
-        UpdatePropulsionInput();
+        if (movementUpdatedForTarget || IsHoverConfigurationRefreshDue())
+        {
+            ConfigureHoverThrusters();
+        }
+
+        UpdatePropulsionInputIfNeeded();
     }
 
     private Vector3 CalculateDesiredMovement(Vector3 flatDirection)
@@ -439,6 +454,22 @@ public class EnemyController : MonoBehaviour
     }
 
     private static readonly Unity.Profiling.ProfilerMarker PropulsionMarker = new("HY.Enemy.Propulsion");
+    private bool IsHoverConfigurationRefreshDue()
+    {
+        return unit.hoverThrusters != null && (configuredHoverThrusters != unit.hoverThrusters || Time.fixedTime >= nextHoverSync);
+    }
+
+    private void UpdatePropulsionInputIfNeeded()
+    {
+        Vector3 velocity = movementBody != null ? Vector3.ProjectOnPlane(movementBody.linearVelocity, Vector3.up) : Vector3.zero;
+        if (desiredMovementInput.sqrMagnitude < 0.0001f && velocity.sqrMagnitude < 0.0025f && unit.MovementInput.sqrMagnitude == 0f && !predictiveBraking && !propulsion.Braking)
+        {
+            return;
+        }
+
+        UpdatePropulsionInput();
+    }
+
     private void UpdatePropulsionInput()
     {
         using var sample = PropulsionMarker.Auto();
@@ -449,7 +480,7 @@ public class EnemyController : MonoBehaviour
             reference,
             predictiveBraking,
             predictionBrakingAcceleration,
-            movementResponseRate,
+            Mathf.Max(0.1f, movementResponseRate) * Mathf.Clamp01(propulsionResponseScale),
             Time.fixedDeltaTime);
         unit.SetPropulsionInput(command.Direction, command.Throttle);
     }

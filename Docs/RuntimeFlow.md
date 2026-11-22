@@ -1164,13 +1164,13 @@ flowchart TD
     W["SiegeReturnFlight.PublishPropulsion()"]
     click W "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L539" "打开源码"
     X["Thruster.SetGuidanceOutput()"]
-    click X "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L47" "打开源码"
+    click X "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L48" "打开源码"
     Y["Thruster.BeginGuidance()"]
-    click Y "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L31" "打开源码"
+    click Y "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L32" "打开源码"
     Z["Thruster.EndGuidance()"]
-    click Z "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L70" "打开源码"
+    click Z "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L71" "打开源码"
     AA["Thruster.VisualizeThrust()"]
-    click AA "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L268" "打开源码"
+    click AA "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L286" "打开源码"
     AB["SiegeReturnFlight.ReleasePropulsion()"]
     click AB "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L596" "打开源码"
     A -.->|确认放置| B
@@ -1248,13 +1248,13 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|FixedUpdate -->
 - [SiegeReturnFlight.PublishPropulsion](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L539)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|PublishPropulsion -->
-- [Thruster.SetGuidanceOutput](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L47)
+- [Thruster.SetGuidanceOutput](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L48)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|SetGuidanceOutput -->
-- [Thruster.BeginGuidance](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L31)
+- [Thruster.BeginGuidance](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L32)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|BeginGuidance -->
-- [Thruster.EndGuidance](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L70)
+- [Thruster.EndGuidance](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L71)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|EndGuidance -->
-- [Thruster.VisualizeThrust](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L268)
+- [Thruster.VisualizeThrust](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L286)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|VisualizeThrust -->
 - [SiegeReturnFlight.ReleasePropulsion](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L596)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|ReleasePropulsion -->
@@ -2690,7 +2690,7 @@ flowchart TD
     L["MainThruster.FixedUpdate()"]
     click L "../Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs#L10" "打开源码"
     M["Thruster.ApplyThrustChangeRateLimit()"]
-    click M "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L234" "打开源码"
+    click M "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L253" "打开源码"
     N["HoverControlSolver.StepHeight()"]
     click N "../Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L54" "打开源码"
     O["HoverControlSolver.CalculateTilt()"]
@@ -2732,9 +2732,9 @@ flowchart TD
     AG["BlockConnectionGraph.PrepareBlocks()"]
     click AG "../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L109" "打开源码"
     AH["Thruster.TickInputThrust()"]
-    click AH "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L151" "打开源码"
+    click AH "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L165" "打开源码"
     AI["Thruster.ApplyDirectionalThrust()"]
-    click AI "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L186" "打开源码"
+    click AI "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L200" "打开源码"
     AJ["GroupPhysicsSettings.ApplyTo()"]
     click AJ "../Assets/Scripts/Features/Simulation/Groups/GroupPhysicsSettings.cs#L12" "打开源码"
     AK["BlockConnections.CheckConnection()"]
@@ -2777,8 +2777,7 @@ flowchart TD
     U --> M
     V --> AH
     L --> AH
-    AH --> M
-    AH --> AI
+    AH -->|共享油门经单喷口供电后施力| AI
     C --> AJ
     J -->|停止或失效| P
     S --> P
@@ -2810,7 +2809,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Flight/HoverFlightController.cs|DistributeThrust -->
 - [MainThruster.FixedUpdate](../Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs#L10)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs|FixedUpdate -->
-- [Thruster.ApplyThrustChangeRateLimit](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L234)
+- [Thruster.ApplyThrustChangeRateLimit](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L253)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|ApplyThrustChangeRateLimit -->
 - [HoverControlSolver.StepHeight](../Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs#L54)
 <!-- source: Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs|StepHeight -->
@@ -2852,9 +2851,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Groups/RuntimeGroupBuilder.cs|MergeFoundationGroups -->
 - [BlockConnectionGraph.PrepareBlocks](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L109)
 <!-- source: Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs|PrepareBlocks -->
-- [Thruster.TickInputThrust](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L151)
+- [Thruster.TickInputThrust](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L165)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|TickInputThrust -->
-- [Thruster.ApplyDirectionalThrust](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L186)
+- [Thruster.ApplyDirectionalThrust](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L200)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|ApplyDirectionalThrust -->
 - [GroupPhysicsSettings.ApplyTo](../Assets/Scripts/Features/Simulation/Groups/GroupPhysicsSettings.cs#L12)
 <!-- source: Assets/Scripts/Features/Simulation/Groups/GroupPhysicsSettings.cs|ApplyTo -->
@@ -3198,7 +3197,7 @@ flowchart TD
 
 ## 共享导航核心与轻量/舰船策略
 
-源码推导：BotFlightMotion 使用球形净空与26方向候选，VesselNavigation 使用整舰包围盒并组合有界A*、升降与动态预测；两者只维护一份局部绕行、脱困和速度约束。选路降频，实际速度走廊逐物理步验证；导航不写刚体。路线和绕行拥有方向承诺，避免再等待战斗方向冷却。效率以持续到达、耗时和航程衡量，接触次数仅记录，不作为失败条件。
+源码推导：BotFlightMotion 使用球形净空与26方向候选，VesselNavigation 使用整舰包围盒；静态且感知完整时先验证升降通道，垂直通道失败后才进入有界A*，动态障碍继续由预测快照和速度走廊约束。两者只维护一份局部绕行、脱困和速度约束。选路降频，实际速度走廊逐物理步验证；导航不写刚体。路线和绕行拥有方向承诺，避免再等待战斗方向冷却。效率以持续到达、耗时和航程衡量，接触次数仅记录，不作为失败条件。
 
 ```mermaid
 flowchart TD
@@ -3223,9 +3222,9 @@ flowchart TD
     J["NavigationPrediction.Observe()"]
     click J "../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L138" "打开源码"
     K["VesselNavigation.TryClimbObstacle()"]
-    click K "../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L205" "打开源码"
+    click K "../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L193" "打开源码"
     L["EnemyController.GetReferenceVelocity()"]
-    click L "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L414" "打开源码"
+    click L "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L429" "打开源码"
     M["VesselNavigation.ConstrainVelocity()"]
     click M "../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L61" "打开源码"
     N["VesselNavigation.Reset()"]
@@ -3272,9 +3271,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs|TryFollow -->
 - [NavigationPrediction.Observe](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L138)
 <!-- source: Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs|Observe -->
-- [VesselNavigation.TryClimbObstacle](../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L205)
+- [VesselNavigation.TryClimbObstacle](../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L193)
 <!-- source: Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs|TryClimbObstacle -->
-- [EnemyController.GetReferenceVelocity](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L414)
+- [EnemyController.GetReferenceVelocity](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L429)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|GetReferenceVelocity -->
 - [VesselNavigation.ConstrainVelocity](../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L61)
 <!-- source: Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs|ConstrainVelocity -->
@@ -5419,7 +5418,7 @@ flowchart TD
     I["ControlUnit.Update()"]
     click I "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L359" "打开源码"
     J["EnemyController.FixedUpdate()"]
-    click J "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L260" "打开源码"
+    click J "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L262" "打开源码"
     K["SiegeFleet.RefreshBindings()"]
     click K "../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L474" "打开源码"
     L["SiegeSession.TryRepairShip()"]
@@ -5522,7 +5521,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Units/Cockpit.cs|SetControlMode -->
 - [ControlUnit.Update](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L359)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|Update -->
-- [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L260)
+- [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L262)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|FixedUpdate -->
 - [SiegeFleet.RefreshBindings](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L474)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs|RefreshBindings -->
@@ -6304,27 +6303,27 @@ flowchart TD
     A["SiegeWaveDirector.Tick()"]
     click A "../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L62" "打开源码"
     B["EnemyController.SetPriorityTarget()"]
-    click B "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L506" "打开源码"
+    click B "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L537" "打开源码"
     C["EnemyController.FixedUpdate()"]
-    click C "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L260" "打开源码"
+    click C "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L262" "打开源码"
     D["EnemyController.FindNearestOpponent()"]
-    click D "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L514" "打开源码"
+    click D "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L545" "打开源码"
     E["EnemyController.IsValidOpponent()"]
-    click E "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L566" "打开源码"
+    click E "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L597" "打开源码"
     F["EnemyController.CalculateDesiredMovement()"]
-    click F "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L327" "打开源码"
+    click F "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L342" "打开源码"
     G["ControlUnit.SetPropulsionInput()"]
     click G "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L532" "打开源码"
     H["EnemyController.GetApproachDirection()"]
-    click H "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L364" "打开源码"
+    click H "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L379" "打开源码"
     I["EnemyController.StabilizeDirection()"]
-    click I "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L457" "打开源码"
+    click I "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L488" "打开源码"
     J["EnemyController.ApplyObstacleAvoidance()"]
-    click J "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L708" "打开源码"
+    click J "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L739" "打开源码"
     K["NavigationObstacleClimb.TryGetHeight()"]
     click K "../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L31" "打开源码"
     L["EnemyController.ConfigureHoverThrusters()"]
-    click L "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L608" "打开源码"
+    click L "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L639" "打开源码"
     M["NavigationObstacleClimb.Blocked()"]
     click M "../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L263" "打开源码"
     Q["NavigationObstacleClimb.CanPass()"]
@@ -6334,9 +6333,9 @@ flowchart TD
     O["NavigationAvoidance.Evaluate()"]
     click O "../Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs#L73" "打开源码"
     P["EnemyController.GetReferenceVelocity()"]
-    click P "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L414" "打开源码"
+    click P "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L429" "打开源码"
     R["EnemyController.UpdatePropulsionInput()"]
-    click R "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L442" "打开源码"
+    click R "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L473" "打开源码"
     S["NavigationLocalPath.TryFollow()"]
     click S "../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L141" "打开源码"
     T["NavigationLocalPath.Capture()"]
@@ -6348,7 +6347,7 @@ flowchart TD
     W["NavigationObstacleClimb.ForwardRatio()"]
     click W "../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L164" "打开源码"
     X["EnemyController.ConstrainDescent()"]
-    click X "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L655" "打开源码"
+    click X "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L686" "打开源码"
     Y["NavigationObstacleClimb.CanLowerTo()"]
     click Y "../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L217" "打开源码"
     AA["NavigationLocalPath.Push()"]
@@ -6358,7 +6357,7 @@ flowchart TD
     AC["NavigationLocalPath.Simplify()"]
     click AC "../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L395" "打开源码"
     AD["VesselNavigation.TryClimbObstacle()"]
-    click AD "../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L205" "打开源码"
+    click AD "../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L193" "打开源码"
     AE["VesselNavigation.Evaluate()"]
     click AE "../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L74" "打开源码"
     AF["VesselNavigation.ConstrainVelocity()"]
@@ -6367,9 +6366,9 @@ flowchart TD
     C -->|目标更新周期| D
     D --> E
     C -->|有目标且到移动周期| F
-    C -->|每物理步提交方向和油门| R
+    C -->|有移动、制动或待清空命令时| R
     R -->|先求参考速度| P
-    R -->|执行命令| G
+    R -->|发布全舰方向和油门| G
     F -->|接近目标| H
     C -->|警戒返航| H
     J --> I
@@ -6380,11 +6379,11 @@ flowchart TD
     AE --> O
     P --> AF
     AF -.->|返回安全参考速度| P
-    AE -->|保持已承诺升降或远场规划失败回退| AD
+    AE -->|静态且感知完整时先尝试升降| AD
     AD -->|实际速度加时间及速度平方提前量优先上升再下降| K
     K --> Q
     Q -->|整舰垂直及前向净空| M
-    C -->|决策后逐物理步应用高度| L
+    C -->|移动决策刷新或组件校正到期| L
     K -.->|保持高度直至舰尾越障| L
     AE -->|A星路线跟随净空| W
     AD -->|按现高度走廊和升降期间滑行余量限制水平推进| W
@@ -6392,7 +6391,7 @@ flowchart TD
     L -->|下降前验证，未通过保持最后安全航层| X
     X --> Y
     Y --> Q
-    AE -->|远场风险、上下通道受阻或路线未结束| S
+    AE -->|垂直通道不可行后，远场风险或路线未结束| S
     S -->|整舰膨胀及限时限距运动包络| T
     S -->|后两段预判、提前直达及滚动接续；失败保留安全当前段| U
     U --> V
@@ -6405,27 +6404,27 @@ flowchart TD
 
 - [SiegeWaveDirector.Tick](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L62)
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs|Tick -->
-- [EnemyController.SetPriorityTarget](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L506)
+- [EnemyController.SetPriorityTarget](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L537)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|SetPriorityTarget -->
-- [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L260)
+- [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L262)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|FixedUpdate -->
-- [EnemyController.FindNearestOpponent](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L514)
+- [EnemyController.FindNearestOpponent](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L545)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|FindNearestOpponent -->
-- [EnemyController.IsValidOpponent](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L566)
+- [EnemyController.IsValidOpponent](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L597)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|IsValidOpponent -->
-- [EnemyController.CalculateDesiredMovement](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L327)
+- [EnemyController.CalculateDesiredMovement](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L342)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|CalculateDesiredMovement -->
 - [ControlUnit.SetPropulsionInput](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L532)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|SetPropulsionInput -->
-- [EnemyController.GetApproachDirection](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L364)
+- [EnemyController.GetApproachDirection](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L379)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|GetApproachDirection -->
-- [EnemyController.StabilizeDirection](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L457)
+- [EnemyController.StabilizeDirection](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L488)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|StabilizeDirection -->
-- [EnemyController.ApplyObstacleAvoidance](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L708)
+- [EnemyController.ApplyObstacleAvoidance](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L739)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|ApplyObstacleAvoidance -->
 - [NavigationObstacleClimb.TryGetHeight](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L31)
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs|TryGetHeight -->
-- [EnemyController.ConfigureHoverThrusters](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L608)
+- [EnemyController.ConfigureHoverThrusters](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L639)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|ConfigureHoverThrusters -->
 - [NavigationObstacleClimb.Blocked](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L263)
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs|Blocked -->
@@ -6435,9 +6434,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs|GetHullBounds -->
 - [NavigationAvoidance.Evaluate](../Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs#L73)
 <!-- source: Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs|Evaluate -->
-- [EnemyController.GetReferenceVelocity](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L414)
+- [EnemyController.GetReferenceVelocity](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L429)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|GetReferenceVelocity -->
-- [EnemyController.UpdatePropulsionInput](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L442)
+- [EnemyController.UpdatePropulsionInput](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L473)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|UpdatePropulsionInput -->
 - [NavigationLocalPath.TryFollow](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L141)
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs|TryFollow -->
@@ -6449,7 +6448,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs|ClearSegment -->
 - [NavigationObstacleClimb.ForwardRatio](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L164)
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs|ForwardRatio -->
-- [EnemyController.ConstrainDescent](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L655)
+- [EnemyController.ConstrainDescent](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L686)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|ConstrainDescent -->
 - [NavigationObstacleClimb.CanLowerTo](../Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs#L217)
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationObstacleClimb.cs|CanLowerTo -->
@@ -6459,7 +6458,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs|Pop -->
 - [NavigationLocalPath.Simplify](../Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs#L395)
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs|Simplify -->
-- [VesselNavigation.TryClimbObstacle](../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L205)
+- [VesselNavigation.TryClimbObstacle](../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L193)
 <!-- source: Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs|TryClimbObstacle -->
 - [VesselNavigation.Evaluate](../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L74)
 <!-- source: Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs|Evaluate -->
@@ -6473,9 +6472,9 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["EnemyController.CalculateDesiredMovement()"]
-    click A "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L327" "打开源码"
+    click A "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L342" "打开源码"
     B["EnemyController.PredictMovement()"]
-    click B "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L372" "打开源码"
+    click B "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L387" "打开源码"
     C["NavigationPrediction.Choose()"]
     click C "../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L193" "打开源码"
     D["NavigationPrediction.Capture()"]
@@ -6489,19 +6488,19 @@ flowchart TD
     H["NavigationPrediction.Score()"]
     click H "../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L622" "打开源码"
     I["EnemyController.StabilizeDirection()"]
-    click I "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L457" "打开源码"
+    click I "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L488" "打开源码"
     J["EnemyController.GetReferenceVelocity()"]
-    click J "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L414" "打开源码"
+    click J "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L429" "打开源码"
     K["EnemyController.UpdatePropulsionInput()"]
-    click K "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L442" "打开源码"
+    click K "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L473" "打开源码"
     L["EnemyController.CaptureNavigation()"]
-    click L "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L151" "打开源码"
+    click L "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L153" "打开源码"
     M["NavigationPrediction.Clear()"]
     click M "../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L109" "打开源码"
     N["EnemyController.OnDisable()"]
-    click N "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L581" "打开源码"
+    click N "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L612" "打开源码"
     O["EnemyController.ApplyObstacleAvoidance()"]
-    click O "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L708" "打开源码"
+    click O "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L739" "打开源码"
     P["NavigationPrediction.Observe()"]
     click P "../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L138" "打开源码"
     Q["NavigationLocalPath.TryFollow()"]
@@ -6509,7 +6508,7 @@ flowchart TD
     R["NavigationPrediction.CopyPlanningBounds()"]
     click R "../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L171" "打开源码"
     S["VesselNavigation.TryClimbObstacle()"]
-    click S "../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L205" "打开源码"
+    click S "../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L193" "打开源码"
     T["VesselNavigation.Evaluate()"]
     click T "../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L74" "打开源码"
     A --> O
@@ -6519,7 +6518,7 @@ flowchart TD
     P --> E
     T -->|远场风险优先规划，保留预算与冷却| Q
     Q -->|共享快照及短期运动包络| R
-    T -->|无运动障碍时保持承诺升降或规划失败回退| S
+    T -->|静态且感知完整时先验证升降净空| S
     O -->|爬升/A星/直达结果| B
     B --> C
     C -->|无预采集时才查询| D
@@ -6534,9 +6533,9 @@ flowchart TD
     N --> M
 ```
 
-- [EnemyController.CalculateDesiredMovement](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L327)
+- [EnemyController.CalculateDesiredMovement](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L342)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|CalculateDesiredMovement -->
-- [EnemyController.PredictMovement](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L372)
+- [EnemyController.PredictMovement](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L387)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|PredictMovement -->
 - [NavigationPrediction.Choose](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L193)
 <!-- source: Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs|Choose -->
@@ -6550,19 +6549,19 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs|Consider -->
 - [NavigationPrediction.Score](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L622)
 <!-- source: Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs|Score -->
-- [EnemyController.StabilizeDirection](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L457)
+- [EnemyController.StabilizeDirection](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L488)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|StabilizeDirection -->
-- [EnemyController.GetReferenceVelocity](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L414)
+- [EnemyController.GetReferenceVelocity](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L429)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|GetReferenceVelocity -->
-- [EnemyController.UpdatePropulsionInput](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L442)
+- [EnemyController.UpdatePropulsionInput](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L473)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|UpdatePropulsionInput -->
-- [EnemyController.CaptureNavigation](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L151)
+- [EnemyController.CaptureNavigation](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L153)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|CaptureNavigation -->
 - [NavigationPrediction.Clear](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L109)
 <!-- source: Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs|Clear -->
-- [EnemyController.OnDisable](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L581)
+- [EnemyController.OnDisable](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L612)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|OnDisable -->
-- [EnemyController.ApplyObstacleAvoidance](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L708)
+- [EnemyController.ApplyObstacleAvoidance](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L739)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|ApplyObstacleAvoidance -->
 - [NavigationPrediction.Observe](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L138)
 <!-- source: Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs|Observe -->
@@ -6570,7 +6569,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Navigation/Planning/NavigationLocalPath.cs|TryFollow -->
 - [NavigationPrediction.CopyPlanningBounds](../Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs#L171)
 <!-- source: Assets/Scripts/Features/Navigation/Prediction/NavigationPrediction.cs|CopyPlanningBounds -->
-- [VesselNavigation.TryClimbObstacle](../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L205)
+- [VesselNavigation.TryClimbObstacle](../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L193)
 <!-- source: Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs|TryClimbObstacle -->
 - [VesselNavigation.Evaluate](../Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs#L74)
 <!-- source: Assets/Scripts/Features/Navigation/Vessels/VesselNavigation.cs|Evaluate -->
@@ -6582,11 +6581,11 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["EnemyController.StabilizeDirection()"]
-    click A "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L457" "打开源码"
+    click A "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L488" "打开源码"
     B["FlightControlMath.ResponseBlend()"]
     click B "../Assets/Scripts/Features/Flight/FlightControlMath.cs#L7" "打开源码"
     C["EnemyController.GetReferenceVelocity()"]
-    click C "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L414" "打开源码"
+    click C "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L429" "打开源码"
     D["FlightControlMath.StepCourse()"]
     click D "../Assets/Scripts/Features/Flight/FlightControlMath.cs#L12" "打开源码"
     F["HoverControlSolver.StepHeading()"]
@@ -6594,37 +6593,40 @@ flowchart TD
     G["HoverFlightController.ApplyRotationCorrection()"]
     click G "../Assets/Scripts/Features/Flight/HoverFlightController.cs#L405" "打开源码"
     H["FlightPropulsionControl.Evaluate()"]
-    click H "../Assets/Scripts/Features/Flight/FlightPropulsionControl.cs#L32" "打开源码"
+    click H "../Assets/Scripts/Features/Flight/FlightPropulsionControl.cs#L38" "打开源码"
     I["UniversalThruster.CalculateInputThrust()"]
     click I "../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L15" "打开源码"
     J["Thruster.TickInputThrust()"]
-    click J "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L151" "打开源码"
+    click J "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L165" "打开源码"
     K["EnemyController.FixedUpdate()"]
-    click K "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L260" "打开源码"
+    click K "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L262" "打开源码"
     L["ControlUnit.SetPropulsionInput()"]
     click L "../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L532" "打开源码"
     M["EnemyController.UpdatePropulsionInput()"]
-    click M "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L442" "打开源码"
+    click M "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L473" "打开源码"
     N["UniversalThruster.ApplyDirectionalThrust()"]
     click N "../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L27" "打开源码"
+    O["MainThruster.CalculateInputThrust()"]
+    click O "../Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs#L15" "打开源码"
     K -->|经战术意图与导航| A
     K --> M
     M --> C
     C --> D
-    M --> H
+    M -->|每舰只更新一次比例油门，制动直达| H
     M --> L
     G --> F
     F --> B
     J -->|比例油门与喷口对准| I
+    J -->|油门按固定轴投影| O
     J -->|物理施力门控| N
-    L -.->|读取命令| I
+    L -.->|各喷口读取同一份舰船命令| J
 ```
 
-- [EnemyController.StabilizeDirection](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L457)
+- [EnemyController.StabilizeDirection](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L488)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|StabilizeDirection -->
 - [FlightControlMath.ResponseBlend](../Assets/Scripts/Features/Flight/FlightControlMath.cs#L7)
 <!-- source: Assets/Scripts/Features/Flight/FlightControlMath.cs|ResponseBlend -->
-- [EnemyController.GetReferenceVelocity](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L414)
+- [EnemyController.GetReferenceVelocity](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L429)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|GetReferenceVelocity -->
 - [FlightControlMath.StepCourse](../Assets/Scripts/Features/Flight/FlightControlMath.cs#L12)
 <!-- source: Assets/Scripts/Features/Flight/FlightControlMath.cs|StepCourse -->
@@ -6632,20 +6634,22 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Flight/Hover/HoverControlSolver.cs|StepHeading -->
 - [HoverFlightController.ApplyRotationCorrection](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L405)
 <!-- source: Assets/Scripts/Features/Flight/HoverFlightController.cs|ApplyRotationCorrection -->
-- [FlightPropulsionControl.Evaluate](../Assets/Scripts/Features/Flight/FlightPropulsionControl.cs#L32)
+- [FlightPropulsionControl.Evaluate](../Assets/Scripts/Features/Flight/FlightPropulsionControl.cs#L38)
 <!-- source: Assets/Scripts/Features/Flight/FlightPropulsionControl.cs|Evaluate -->
 - [UniversalThruster.CalculateInputThrust](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L15)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs|CalculateInputThrust -->
-- [Thruster.TickInputThrust](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L151)
+- [Thruster.TickInputThrust](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L165)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|TickInputThrust -->
-- [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L260)
+- [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L262)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|FixedUpdate -->
 - [ControlUnit.SetPropulsionInput](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L532)
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|SetPropulsionInput -->
-- [EnemyController.UpdatePropulsionInput](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L442)
+- [EnemyController.UpdatePropulsionInput](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L473)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|UpdatePropulsionInput -->
 - [UniversalThruster.ApplyDirectionalThrust](../Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs#L27)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/UniversalThruster.cs|ApplyDirectionalThrust -->
+- [MainThruster.CalculateInputThrust](../Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs#L15)
+<!-- source: Assets/Scripts/Features/Flight/Thrusters/MainThruster.cs|CalculateInputThrust -->
 
 ## 炮塔舰体索敌到实际命中扣血
 
@@ -6758,7 +6762,7 @@ flowchart TD
     L["EnemyLabRecorder.Sample()"]
     click L "../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabRecorder.cs#L135" "打开源码"
     M["EnemyController.CaptureNavigation()"]
-    click M "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L151" "打开源码"
+    click M "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L153" "打开源码"
     N["EnemyLabRecorder.Begin()"]
     click N "../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabRecorder.cs#L75" "打开源码"
     O["EnemyLabPanel.PollInput()"]
@@ -6845,7 +6849,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyAvoidanceLab.cs|Sample -->
 - [EnemyLabRecorder.Sample](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabRecorder.cs#L135)
 <!-- source: Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabRecorder.cs|Sample -->
-- [EnemyController.CaptureNavigation](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L151)
+- [EnemyController.CaptureNavigation](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L153)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|CaptureNavigation -->
 - [EnemyLabRecorder.Begin](../Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabRecorder.cs#L75)
 <!-- source: Assets/Scripts/Features/Navigation/Diagnostics/Lab/EnemyLabRecorder.cs|Begin -->
@@ -6893,7 +6897,7 @@ flowchart TD
     C["NavigationTrack.Sample()"]
     click C "../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationTrack.cs#L93" "打开源码"
     D["EnemyController.CaptureNavigation()"]
-    click D "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L151" "打开源码"
+    click D "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L153" "打开源码"
     E["NavigationFlightTrace.Sample()"]
     click E "../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationFlightTrace.cs#L48" "打开源码"
     F["NavigationFlightTrace.UpdateColors()"]
@@ -6940,7 +6944,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationTrack.cs|Bind -->
 - [NavigationTrack.Sample](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationTrack.cs#L93)
 <!-- source: Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationTrack.cs|Sample -->
-- [EnemyController.CaptureNavigation](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L151)
+- [EnemyController.CaptureNavigation](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L153)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|CaptureNavigation -->
 - [NavigationFlightTrace.Sample](../Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationFlightTrace.cs#L48)
 <!-- source: Assets/Scripts/Features/Navigation/Diagnostics/Tracking/NavigationFlightTrace.cs|Sample -->
@@ -7130,19 +7134,19 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["EnemyController.FixedUpdate()"]
-    click A "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L260" "打开源码"
+    click A "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L262" "打开源码"
     B["EnemyController.ApplyObstacleAvoidance()"]
-    click B "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L708" "打开源码"
+    click B "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L739" "打开源码"
     C["NavigationAvoidance.Evaluate()"]
     click C "../Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs#L73" "打开源码"
     D["EnemyController.OnDrawGizmos()"]
-    click D "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L762" "打开源码"
+    click D "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L793" "打开源码"
     E["EnemyController.DrawDebug()"]
-    click E "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L767" "打开源码"
+    click E "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L798" "打开源码"
     F["EnemyController.DrawDebugCircle()"]
-    click F "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L830" "打开源码"
+    click F "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L861" "打开源码"
     G["EnemyController.OnDisable()"]
-    click G "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L581" "打开源码"
+    click G "../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L612" "打开源码"
     A -->|经移动计算或警戒返航| B
     B -->|经VesselNavigation近场回退| C
     D --> E
@@ -7151,19 +7155,19 @@ flowchart TD
     G -.->|清空缓存| E
 ```
 
-- [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L260)
+- [EnemyController.FixedUpdate](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L262)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|FixedUpdate -->
-- [EnemyController.ApplyObstacleAvoidance](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L708)
+- [EnemyController.ApplyObstacleAvoidance](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L739)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|ApplyObstacleAvoidance -->
 - [NavigationAvoidance.Evaluate](../Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs#L73)
 <!-- source: Assets/Scripts/Features/Navigation/Local/NavigationAvoidance.cs|Evaluate -->
-- [EnemyController.OnDrawGizmos](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L762)
+- [EnemyController.OnDrawGizmos](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L793)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|OnDrawGizmos -->
-- [EnemyController.DrawDebug](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L767)
+- [EnemyController.DrawDebug](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L798)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|DrawDebug -->
-- [EnemyController.DrawDebugCircle](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L830)
+- [EnemyController.DrawDebugCircle](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L861)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|DrawDebugCircle -->
-- [EnemyController.OnDisable](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L581)
+- [EnemyController.OnDisable](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L612)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyController.cs|OnDisable -->
 
 ## 显式组件与运行对象模板
@@ -7300,7 +7304,7 @@ flowchart TD
     AK["SiegeReturnFlight.ReleasePropulsion()"]
     click AK "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L596" "打开源码"
     AL["Thruster.EndGuidance()"]
-    click AL "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L70" "打开源码"
+    click AL "../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L71" "打开源码"
     AM["HoverFlightController.PrepareFlightHandoff()"]
     click AM "../Assets/Scripts/Features/Flight/HoverFlightController.cs#L93" "打开源码"
     A --> B
@@ -7409,7 +7413,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|Tick -->
 - [SiegeReturnFlight.ReleasePropulsion](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L596)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|ReleasePropulsion -->
-- [Thruster.EndGuidance](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L70)
+- [Thruster.EndGuidance](../Assets/Scripts/Features/Flight/Thrusters/Thruster.cs#L71)
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|EndGuidance -->
 - [HoverFlightController.PrepareFlightHandoff](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L93)
 <!-- source: Assets/Scripts/Features/Flight/HoverFlightController.cs|PrepareFlightHandoff -->

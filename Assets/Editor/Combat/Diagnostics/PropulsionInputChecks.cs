@@ -102,9 +102,22 @@ public static class PropulsionInputChecks
             Require(Vector3.Angle(stopped, Vector3.left) < 0.001f, "Stopping explicitly brakes");
             Vector3 emergency = Evaluate(Vector3.right * 6f, Vector3.right * 2f, true);
             Require(Vector3.Angle(emergency, Vector3.left) < 0.001f, "Safety slowdown explicitly brakes");
+            FieldInfo throttleField = solverType.GetNestedType("Command", BindingFlags.Public | BindingFlags.NonPublic).GetField("Throttle", flags);
+            object ScaledEvaluate(Vector3 velocity, Vector3 reference, bool brake, float response)
+            {
+                body.linearVelocity = velocity;
+                return evaluate.Invoke(solver, new object[] { owner, body, reference, brake, 6f, response, Time.fixedDeltaTime });
+            }
+
+            object suppressed = ScaledEvaluate(Vector3.zero, Vector3.right * 6f, false, 0f);
+            object brakeBypass = ScaledEvaluate(Vector3.right * 6f, Vector3.right * 2f, true, 0f);
+            Require(
+                (float)throttleField.GetValue(suppressed) == 0f,
+                "Zero global response scale suppresses ordinary propulsion");
+            Require((float)throttleField.GetValue(brakeBypass) > 0f, "Explicit braking bypasses global response scale");
             owner.SetMovementInput(Vector3.zero);
             Require(owner.PropulsionDirection == Vector3.zero, "Legacy clear removes coasting aim");
-            return "PASS proportional throttle; coasting aim; zero request; misalignment gate; 20 alternating cruise errors; genuine turn; stop; safety braking; legacy clear";
+            return "PASS proportional throttle; coasting aim; zero request; misalignment gate; 20 alternating cruise errors; genuine turn; stop; safety braking; zero response scale; braking bypass; legacy clear";
         }
         finally
         {

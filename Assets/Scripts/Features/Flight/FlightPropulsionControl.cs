@@ -5,6 +5,7 @@ using UnityEngine;
 
 internal sealed class FlightPropulsionControl
 {
+    private static readonly Unity.Profiling.ProfilerMarker CapacityMarker = new("HY.Flight.AvailableAcceleration");
     internal readonly struct Command
     {
         internal readonly Vector3 Direction;
@@ -18,6 +19,10 @@ internal sealed class FlightPropulsionControl
 
     private float throttle;
     private bool turning;
+    private Vector3 cachedCapacityDirection;
+    private float cachedCapacity;
+    private float capacityCacheTime = float.NegativeInfinity;
+    private const float CapacityCacheDuration = 0.08f;
     internal bool Braking
     {
         get; private set;
@@ -27,6 +32,7 @@ internal sealed class FlightPropulsionControl
     {
         throttle = 0f;
         turning = Braking = false;
+        capacityCacheTime = float.NegativeInfinity;
     }
 
     internal Command Evaluate(
@@ -83,11 +89,26 @@ internal sealed class FlightPropulsionControl
             }
         }
 
-        float capacity = AvailableAcceleration(owner, heading, body.mass);
+        float capacity = GetAvailableAcceleration(owner, heading, body.mass);
         // 空闲供电状态默认可尝试启动；确认全部缺电时也保持请求，避免恢复后永远无法重启。
         float requested = capacity > 0.001f ? Mathf.Clamp01(acceleration.magnitude / capacity) : acceleration.sqrMagnitude > 0.0001f ? 1f : 0f;
-        throttle = Braking ? requested : Mathf.MoveTowards(throttle, requested, Mathf.Max(0.1f, response) * deltaTime);
+        throttle = Braking ? requested : response > 0f ? Mathf.MoveTowards(throttle, requested, response * deltaTime) : 0f;
         return new Command(heading, throttle);
+    }
+
+    private float GetAvailableAcceleration(ControlUnit owner, Vector3 direction, float mass)
+    {
+        float now = Time.fixedTime;
+        bool directionChanged = cachedCapacityDirection.sqrMagnitude < 0.001f || Vector3.Dot(cachedCapacityDirection, direction) < 0.995f;
+        if (directionChanged || now - capacityCacheTime >= CapacityCacheDuration)
+        {
+            using var sample = CapacityMarker.Auto();
+            cachedCapacityDirection = direction;
+            cachedCapacity = AvailableAcceleration(owner, direction, mass);
+            capacityCacheTime = now;
+        }
+
+        return cachedCapacity;
     }
 
     private static float AvailableAcceleration(ControlUnit owner, Vector3 direction, float mass)

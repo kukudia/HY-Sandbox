@@ -26,7 +26,7 @@ public class UniversalThruster : Thruster
 
     protected override void ApplyDirectionalThrust()
     {
-        // 推力限速历史仍由基类维护；喷口尚未对准时不把旧推力扫向侧面。
+        // 外部调用 ApplyThrust() 时也不能在喷口未对准的情况下施力。
         if (IsAligned(controlUnit != null ? controlUnit.PropulsionDirection : inputDir))
         {
             base.ApplyDirectionalThrust();
