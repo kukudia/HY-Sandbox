@@ -415,6 +415,12 @@ public sealed class WorldBuildingManager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (RuntimePerformanceSwitches.DisableBuildingSupportChecks)
+        {
+            pendingSupport.Clear();
+            return;
+        }
+
         foreach (BuildingRuntime building in pendingSupport)
         {
             if (building != null && building.Anchored)

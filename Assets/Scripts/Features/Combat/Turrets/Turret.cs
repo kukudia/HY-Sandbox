@@ -79,6 +79,12 @@ public abstract class Turret : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
+        if (RuntimePerformanceSwitches.DisableTurretCombat)
+        {
+            StopWorking();
+            return;
+        }
+
         Supply.TrackAvailability(_isStarted);
         Owner = GetComponentInParent<ControlUnit>();
         if (!_isStarted || Owner == null || !Owner.IsSimulationActive || !Owner.IsOperational)

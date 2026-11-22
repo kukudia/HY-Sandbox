@@ -739,6 +739,18 @@ public class EnemyController : MonoBehaviour
     private Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)
     {
         using var sample = AvoidanceMarker.Auto();
+        if (RuntimePerformanceSwitches.DisableEnemyAvoidance)
+        {
+            avoidanceBounds = default;
+            probeDistance = 0f;
+            avoidingObstacle = false;
+            urgentAvoidance = false;
+            obstacleSpeedRatio = 1f;
+            climbingObstacle = false;
+            navigationOwnsDirection = false;
+            return StabilizeDirection(desiredMove);
+        }
+
         var settings = new VesselNavigationSettings
         {
             ObstacleAvoidanceDistance = obstacleAvoidanceDistance,

@@ -369,6 +369,7 @@
     <Compile Include="Assets\Scripts\Features\Navigation\Diagnostics\Lab\EnemyLabCamera.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Interface\CombatHudTheme.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Fleet\SiegeFleetEntry.cs" />
+    <Compile Include="Assets\Scripts\Features\Performance\RuntimePerformanceSwitches.cs" />
     <Compile Include="Assets\Scripts\Features\Navigation\Prediction\NavigationPrediction.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlockDataTables\BlockCsvBinding.cs" />
     <Compile Include="Assets\Scripts\Features\Flight\Thrusters\Thruster.cs" />
